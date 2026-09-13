@@ -32,6 +32,13 @@ class TestResUsersApikeys(TransactionCase):
             self.Apikeys._check_credentials(scope="rpc", key=key), self.user.id
         )
 
+    def test_generate_refreshes_cached_user_keys(self):
+        self.assertFalse(self.user.api_key_ids)
+        self._generate()
+        self.assertEqual(len(self.user.api_key_ids), 1)
+        self._generate()
+        self.assertEqual(len(self.user.api_key_ids), 2)
+
     def test_check_credentials_wrong_key(self):
         self._generate(scope="rpc")
         self.assertIsNone(self.Apikeys._check_credentials(scope="rpc", key="0" * 40))

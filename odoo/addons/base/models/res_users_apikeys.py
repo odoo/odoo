@@ -226,6 +226,8 @@ class ResUsersApikeys(models.Model):
             )
         )
 
+        self.env.user.invalidate_recordset(["api_key_ids"])
+
         ip = request.httprequest.environ["REMOTE_ADDR"] if request else "n/a"
         _logger.info(
             "%s generated: scope: <%s> for '%s' (#%s) from %s",

@@ -84,8 +84,10 @@ class PosPrinter(models.Model):
 
     @api.model
     def use_local_network_access(self):
-        use_lna = bool(
-            self.env["ir.config_parameter"].sudo().get_param("point_of_sale.use_lna")
+        use_lna = (
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param_bool("point_of_sale.use_lna")
         )
         return {"use_lna": use_lna}
 

@@ -1,18 +1,17 @@
 import json
-import logging
 from datetime import date, timedelta
 
-from psycopg.errors import LockNotAvailable
+from psycopg.errors import UniqueViolation
 
 from odoo import _, fields, http
-from odoo.fields import Domain
+from odoo.exceptions import LockError
 from odoo.http import request
-from odoo.tools import file_open, format_amount
+from odoo.tools import escape_psql, file_open, format_amount, str2bool
 
 from ..tools import debug_log as dbg
 from odoo.addons.account.controllers.portal import PortalAccount
 
-_logger = logging.getLogger(__name__)
+_POS_MENU_URL = "/odoo/action-point_of_sale.action_client_pos_menu"
 
 
 class PosController(PortalAccount):
@@ -41,7 +40,6 @@ class PosController(PortalAccount):
     )
     def pos_web(self, config_id=False, from_backend=False, subpath=None, **k):
         is_internal_user = request.env.user._is_internal()
-        pos_config = False
         dbg.lifecycle.debug(
             "[http] /pos/ui config=%s uid=%s from_backend=%s subpath=%s internal=%s",
             config_id,
@@ -54,59 +52,58 @@ class PosController(PortalAccount):
             return request.prepare_not_found_error()
         if not request.env.user.has_group("point_of_sale.group_pos_user"):
             dbg.logic.debug("[http] /pos/ui: not a pos user, redirect to menu")
-            return request.redirect("/odoo/action-point_of_sale.action_client_pos_menu")
+            return request.redirect(_POS_MENU_URL)
         if config_id:
             try:
                 config_id = int(config_id)
             except TypeError, ValueError:
                 return request.prepare_not_found_error()
-        domain = [
-            ("state", "in", ["opening_control", "opened"]),
-            ("user_id", "=", request.session.uid),
-            ("rescue", "=", False),
-        ]
-        if config_id and request.env["pos.config"].sudo().browse(config_id).exists():
-            domain = Domain.AND([domain, [("config_id", "=", config_id)]])
-            pos_config = request.env["pos.config"].sudo().browse(config_id)
-        pos_session = request.env["pos.session"].sudo().search(domain, limit=1)
-
-        if not pos_session and config_id:
-            domain = [
-                ("state", "in", ["opening_control", "opened"]),
-                ("rescue", "=", False),
-                ("config_id", "=", config_id),
-            ]
-            pos_session = request.env["pos.session"].sudo().search(domain, limit=1)
-
-        dbg.logic.debug(
-            "[http] /pos/ui config=%s active=%s has_active_session=%s session=%s",
-            pos_config.id if pos_config else None,
-            pos_config.active if pos_config else None,
-            pos_config.has_active_session if pos_config else None,
-            dbg.rec(pos_session),
-        )
+        pos_config = request.env["pos.config"].sudo().browse(config_id).exists()
         if (
             not pos_config
             or not pos_config.active
-            or (pos_config.has_active_session and not pos_session)
+            or pos_config.company_id not in request.env.user.company_ids
         ):
-            return request.redirect("/odoo/action-point_of_sale.action_client_pos_menu")
+            dbg.logic.debug(
+                "[http] /pos/ui config=%s unavailable, inactive, or outside user companies",
+                config_id,
+            )
+            return request.redirect(_POS_MENU_URL)
+        pos_config = pos_config.with_company(pos_config.company_id)
+        pos_session = pos_config.current_session_id
+
+        dbg.logic.debug(
+            "[http] /pos/ui config=%s active=%s has_active_session=%s session=%s",
+            pos_config.id,
+            pos_config.active,
+            pos_config.has_active_session,
+            dbg.rec(pos_session),
+        )
+        if pos_config.has_active_session and (
+            not pos_session or pos_session.state not in ("opening_control", "opened")
+        ):
+            return request.redirect(_POS_MENU_URL)
 
         if not pos_config.has_active_session:
             try:
-                request.env.cr.execute(
-                    "SELECT id FROM pos_config WHERE id = %s FOR UPDATE NOWAIT",
-                    (pos_config.id,),
-                )
-            except LockNotAvailable:
+                with request.env.cr.savepoint():
+                    pos_config.lock_for_update()
+                    pos_config.open_ui()
+            except LockError:
                 dbg.logic.debug(
                     "[http] /pos/ui config %s locked by another opener", pos_config.id
                 )
-                return request.redirect(
-                    "/odoo/action-point_of_sale.action_client_pos_menu"
+                return request.redirect(_POS_MENU_URL)
+            except UniqueViolation as exc:
+                if exc.diag.constraint_name != "pos_session_open_per_config_uniq":
+                    raise
+                # A committed opener can be invisible to this request's snapshot.
+                dbg.logic.debug(
+                    "[http] /pos/ui config %s opened after this request's snapshot",
+                    pos_config.id,
                 )
-            pos_config.open_ui()
-            pos_session = request.env["pos.session"].sudo().search(domain, limit=1)
+                return request.redirect(_POS_MENU_URL)
+            pos_session = pos_config.current_session_id
             dbg.pipeline.debug(
                 "[http] /pos/ui opened session %s on config %s",
                 dbg.rec(pos_session),
@@ -122,7 +119,7 @@ class PosController(PortalAccount):
                 company.id,
                 list(allowed_companies),
             )
-            return request.redirect("/odoo/action-point_of_sale.action_client_pos_menu")
+            return request.redirect(_POS_MENU_URL)
         session_info["user_context"]["allowed_company_ids"] = company.ids
         session_info["user_companies"] = {
             "current_company": company.id,
@@ -132,12 +129,12 @@ class PosController(PortalAccount):
         session_info["fallback_nomenclature_id"] = (
             pos_session.config_id.fallback_nomenclature_id.id
         )
-        use_lna = bool(
-            pos_session.env["ir.config_parameter"].get_param("point_of_sale.use_lna")
+        use_lna = pos_session.env["ir.config_parameter"].get_param_bool(
+            "point_of_sale.use_lna"
         )
         context = {
-            "from_backend": 1 if from_backend else 0,
-            "use_pos_fake_tours": bool(k.get("tours")),
+            "from_backend": int(str2bool(from_backend, default=False)),
+            "use_pos_fake_tours": str2bool(k.get("tours", False), default=False),
             "session_info": session_info,
             "pos_session_id": pos_session.id,
             "pos_config_id": pos_session.config_id.id,
@@ -185,9 +182,13 @@ class PosController(PortalAccount):
     @staticmethod
     def _parse_ticket_date(value):
         try:
-            return date.fromisoformat(value)
+            ticket_date = date.fromisoformat(value)
         except TypeError, ValueError:
             return None
+        # The lookup includes the previous day and the following two days.
+        if date.min < ticket_date <= date.max - timedelta(days=2):
+            return ticket_date
+        return None
 
     @http.route(
         ["/pos/ticket"], type="http", auth="public", website=True, sitemap=False
@@ -205,7 +206,9 @@ class PosController(PortalAccount):
                 if not kwargs.get(field):
                     errors[field] = " "
                 else:
-                    form_values[field] = kwargs.get(field)
+                    form_values[field] = kwargs[field].strip()
+                    if not form_values[field]:
+                        errors[field] = " "
 
             date_order = None
             if not errors:
@@ -230,11 +233,7 @@ class PosController(PortalAccount):
                             (
                                 "pos_reference",
                                 "=like",
-                                "%"
-                                + form_values["pos_reference"]
-                                .strip()
-                                .replace("%", r"\%")
-                                .replace("_", r"\_"),
+                                "%" + escape_psql(form_values["pos_reference"]),
                             ),
                             ("date_order", ">=", date_order - timedelta(days=1)),
                             ("date_order", "<", date_order + timedelta(days=2)),
@@ -285,15 +284,7 @@ class PosController(PortalAccount):
         sitemap=False,
     )
     def show_ticket_validation_screen(self, access_token="", **kwargs):
-        def _parse_additional_values(fields, prefix, kwargs):
-            res, res_prefixed = {}, {}
-            for field in fields:
-                key = prefix + field.name
-                if key in kwargs:
-                    val = kwargs.pop(key)
-                    res[field.name] = val
-                    res_prefixed[key] = val
-            return res, res_prefixed
+        kwargs = self._sanitize_client_address_params(kwargs)
 
         if not access_token:
             return request.prepare_not_found_error()
@@ -320,13 +311,7 @@ class PosController(PortalAccount):
         )
 
         if pos_order.account_move and pos_order.account_move.is_sale_document():
-            return request.redirect(
-                "/my/invoices/%s?access_token=%s"
-                % (
-                    pos_order.account_move.id,
-                    pos_order.account_move._portal_ensure_token(),
-                )
-            )
+            return self._redirect_to_invoice(pos_order.account_move)
 
         if not request.env["res.company"]._with_locked_records(
             pos_order, allow_raising=False
@@ -334,7 +319,14 @@ class PosController(PortalAccount):
             dbg.logic.debug(
                 "[order:%s] ticket validation: order locked", pos_order.uuid
             )
-            return None
+            return request.prepare_response(
+                _("Some orders are already being invoiced. Please try again later."),
+                status=409,
+                headers=[
+                    ("Retry-After", "1"),
+                    ("Content-Type", "text/plain; charset=utf-8"),
+                ],
+            )
 
         pos_order_country = pos_order.company_id.account_fiscal_country_id
         additional_partner_fields = request.env[
@@ -351,27 +343,37 @@ class PosController(PortalAccount):
             user_is_connected and request.env.user.partner_id
         ) or pos_order.partner_id
         if kwargs and request.httprequest.method == "POST":
-            form_values.update(kwargs)
-            partner_values, prefixed_partner_values = _parse_additional_values(
-                additional_partner_fields, "partner_", kwargs
+            partner_values, prefixed_partner_values, invalid_fields, error_messages = (
+                self._parse_ticket_extra_fields(
+                    additional_partner_fields, "partner_", kwargs
+                )
             )
             form_values["extra_field_values"].update(prefixed_partner_values)
-            invoice_values, prefixed_invoice_values = _parse_additional_values(
+            (
+                invoice_values,
+                prefixed_invoice_values,
+                invalid_invoice_fields,
+                invoice_errors,
+            ) = self._parse_ticket_extra_fields(
                 additional_invoice_fields, "invoice_", kwargs
             )
             form_values["extra_field_values"].update(prefixed_invoice_values)
-            missing_fields, error_messages = self._get_missing_fields_and_errors(
-                partner_values | invoice_values,
-                additional_partner_fields + additional_invoice_fields,
+            invalid_fields |= invalid_invoice_fields
+            error_messages += invoice_errors
+            address_relations, invalid_address_fields, address_errors = (
+                self._parse_ticket_address_relations(kwargs)
             )
+            kwargs.update(address_relations)
+            invalid_fields |= invalid_address_fields
+            error_messages += address_errors
             dbg.logic.debug(
-                "[order:%s] ticket form: partner=%s connected=%s missing=%s",
+                "[order:%s] ticket form: partner=%s connected=%s invalid=%s",
                 pos_order.uuid,
                 dbg.rec(partner) if partner else None,
                 user_is_connected,
-                sorted(missing_fields),
+                sorted(invalid_fields),
             )
-            if not missing_fields:
+            if not invalid_fields:
                 address_values = (
                     self._get_ticket_address_values(partner)
                     if user_is_connected
@@ -380,32 +382,28 @@ class PosController(PortalAccount):
                 partner, feedback_dict = self._create_or_update_address(
                     partner, **(address_values | kwargs | partner_values)
                 )
+                dbg.logic.debug(
+                    "[order:%s] ticket address validation: invalid=%s",
+                    pos_order.uuid,
+                    feedback_dict.get("invalid_fields", []),
+                )
                 form_values.update(feedback_dict)
             form_values.update(
                 {
                     "invalid_fields": form_values.get("invalid_fields", [])
-                    + list(missing_fields),
+                    + list(invalid_fields),
                     "messages": form_values.get("messages", []) + error_messages,
                 }
             )
             if not form_values.get("invalid_fields"):
-                return self._get_invoice(
-                    partner,
-                    invoice_values,
-                    pos_order,
-                    additional_invoice_fields,
-                    kwargs,
+                return self._invoice_order_and_redirect(
+                    partner, invoice_values, pos_order
                 )
 
         elif user_is_connected and not (
             additional_partner_fields or additional_invoice_fields
         ):
-            return self._get_invoice(
-                partner, {}, pos_order, additional_invoice_fields, kwargs
-            )
-
-        if "country" not in form_values:
-            form_values["country"] = pos_order_country
+            return self._invoice_order_and_redirect(partner, {}, pos_order)
 
         if partner:
             if additional_partner_fields:
@@ -429,7 +427,9 @@ class PosController(PortalAccount):
         return request.render(
             "point_of_sale.ticket_validation_screen",
             {
-                **self._prepare_address_form_values(partner, **kwargs),
+                **self._get_ticket_address_form_values(
+                    partner, pos_order_country, kwargs
+                ),
                 "partner": partner,
                 "address_url": f"/my/account?redirect=/pos/ticket/validate?access_token={access_token}",
                 "user_is_connected": user_is_connected,
@@ -444,6 +444,59 @@ class PosController(PortalAccount):
             },
         )
 
+    def _parse_ticket_address_relations(self, form_data):
+        relation_fields = [
+            request.env["ir.model.fields"]._get("res.partner", name)
+            for name in ("country_id", "state_id")
+            if form_data.get(name)
+        ]
+        values, _submitted, invalid_fields, messages = self._parse_ticket_extra_fields(
+            relation_fields, "", dict(form_data)
+        )
+        return values, invalid_fields, messages
+
+    def _get_ticket_address_form_values(self, partner, fiscal_country, form_data):
+        values = self._prepare_address_form_values(partner, **form_data)
+        country = values["country"] or fiscal_country
+        submitted = {}
+        if request.httprequest.method == "POST":
+            submitted = {
+                name: form_data[name]
+                for name in (
+                    "name",
+                    "email",
+                    "phone",
+                    "company_name",
+                    "vat",
+                    "street",
+                    "street2",
+                    "city",
+                    "zip",
+                    "country_id",
+                    "state_id",
+                )
+                if name in form_data
+            }
+            if "zipcode" in form_data and "zip" not in submitted:
+                submitted["zip"] = form_data["zipcode"]
+            if "country_id" in submitted:
+                try:
+                    country_id = int(submitted["country_id"])
+                except TypeError, ValueError:
+                    country_id = False
+                country = request.env["res.country"].sudo().browse(country_id).exists()
+        address_fields = country.get_fields_address() if country else ["city", "zip"]
+        values.update(
+            submitted_address=submitted,
+            country=country,
+            country_states=country.state_ids,
+            zip_before_city=(
+                "zip" in address_fields
+                and address_fields.index("zip") < address_fields.index("city")
+            ),
+        )
+        return values
+
     def _get_ticket_address_values(self, partner):
         values = {
             name: partner[name]
@@ -453,25 +506,60 @@ class PosController(PortalAccount):
         values.update(country_id=partner.country_id.id, state_id=partner.state_id.id)
         return values
 
-    def _get_missing_fields_and_errors(
-        self, additional_form_values, additional_required_fields
-    ):
-        missing_fields = set()
-        error_messages = []
-        for field in additional_required_fields:
-            if (
-                field.name not in additional_form_values
-                or not additional_form_values[field.name]
-            ):
-                missing_fields.add(field.name)
-                error_messages.append(
+    def _parse_ticket_extra_fields(self, required_fields, prefix, form_data):
+        values, submitted_values = {}, {}
+        invalid_fields, messages = set(), []
+        for field in required_fields:
+            key = prefix + field.name
+            is_submitted = key in form_data
+            value = form_data.pop(key, "")
+            if isinstance(value, str):
+                value = value.strip()
+            if is_submitted:
+                submitted_values[key] = value
+            if not value:
+                invalid_fields.add(field.name)
+                messages.append(
                     _("The field %s must be filled.", field.field_description.lower())
                 )
-        return missing_fields, error_messages
+                continue
+            try:
+                values[field.name] = self._parse_ticket_field_value(field, value)
+                submitted_values[key] = values[field.name]
+            except TypeError, ValueError:
+                invalid_fields.add(field.name)
+                messages.append(
+                    _(
+                        "Please select a valid value for %s.",
+                        field.field_description.lower(),
+                    )
+                )
+        return values, submitted_values, invalid_fields, messages
 
-    def _get_invoice(
-        self, partner, invoice_values, pos_order, additional_invoice_fields, kwargs
-    ):
+    def _parse_ticket_field_value(self, field, value):
+        model_field = request.env[field.model]._fields[field.name]
+        if field.ttype == "many2one":
+            record_id = int(value)
+            if (
+                record_id <= 0
+                or not request.env[model_field.comodel_name]
+                .sudo()
+                .browse(record_id)
+                .exists()
+            ):
+                raise ValueError("Missing related record")
+            return record_id
+        if field.ttype == "selection":
+            choices = {
+                str(key): key
+                for key, label in model_field._description_selection(request.env)
+            }
+            if str(value) not in choices:
+                raise ValueError("Invalid selection")
+            return choices[str(value)]
+        return value
+
+    def _invoice_order_and_redirect(self, partner, invoice_values, pos_order):
         dbg.pipeline.debug(
             "[order:%s] portal invoice request: partner=%s extra=%s",
             pos_order.uuid,
@@ -480,13 +568,13 @@ class PosController(PortalAccount):
         )
 
         pos_order.partner_id = partner
-        with_context = {}
-        for field in additional_invoice_fields:
-            with_context.update(
-                {f"default_{field.name}": invoice_values.get(field.name)}
-            )
-        pos_order.with_context(with_context).action_pos_order_invoice()
+        pos_order.with_context(
+            pos_ticket_invoice_values=invoice_values
+        ).action_pos_order_invoice()
+        return self._redirect_to_invoice(pos_order.account_move)
+
+    def _redirect_to_invoice(self, invoice):
         return request.redirect(
             "/my/invoices/%s?access_token=%s"
-            % (pos_order.account_move.id, pos_order.account_move._portal_ensure_token())
+            % (invoice.id, invoice._portal_ensure_token())
         )

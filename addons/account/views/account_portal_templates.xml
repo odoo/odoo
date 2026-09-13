@@ -381,28 +381,25 @@
                     t-value="env[required_field.model]._fields[required_field.name]" />
                 <t
                     t-set="default_value"
-                    t-value="extra_field_values.get(field_prefix + required_field.name) or field_info.default and field_info.default(required_field.model)" />
+                    t-value="extra_field_values[field_prefix + required_field.name] if field_prefix + required_field.name in extra_field_values else env[required_field.model].default_get([required_field.name]).get(required_field.name)" />
                 <t t-if="required_field.ttype in ('selection', 'many2one')">
                     <label class="col-form-label" t-att-for="field_prefix + required_field.name"><t t-out="required_field.field_description" /></label>
                     <select
                         class="form-select"
+                        t-att-id="field_prefix + required_field.name"
                         t-att-name="field_prefix + required_field.name"
                         required="required">
                         <option t-att-selected="not default_value" disabled="disabled" value=""><t t-out="'Select the %s ...' % required_field.field_description.lower()" /></option>
-                        <t
-                            t-if="required_field.ttype == 'selection'"
-                            t-foreach="required_field.selection_ids"
-                            t-as="selection">
-                            <option t-att-selected="default_value and default_value == selection.value" t-att-value="selection.value"><t t-out="selection.name" /></option>
+                        <t t-if="required_field.ttype == 'selection'">
+                            <t t-foreach="required_field.selection_ids" t-as="selection">
+                                <option t-att-selected="bool(default_value) and default_value == selection.value" t-att-value="selection.value"><t t-out="selection.name" /></option>
+                            </t>
                         </t>
                         <t t-else="">
                             <t
-                                t-set="default_id"
-                                t-value="int(default_value) if str(default_value or '').isdigit() else 0" />
-                            <t
                                 t-foreach="env[field_info.comodel_name].sudo().search([])"
                                 t-as="record">
-                                <option t-att-selected="default_id == record.id" t-att-value="record.id"><t t-out="record.display_name" /></option>
+                                <option t-att-selected="str(default_value) == str(record.id)" t-att-value="record.id"><t t-out="record.display_name" /></option>
                             </t>
                         </t>
                     </select>

@@ -732,7 +732,7 @@ class PosConfig(models.Model):
     def _get_current_session(self):
         return self._get_open_sessions().filtered(lambda s: not s.rescue)[:1]
 
-    @api.depends("session_ids", "session_ids.state")
+    @api.depends("session_ids", "session_ids.state", "session_ids.rescue")
     def _compute_current_session(self):
         self.session_ids.fetch(["state"])
         for pos_config in self:

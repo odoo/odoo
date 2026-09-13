@@ -149,13 +149,14 @@
     </template>
 
     <template id="portal.address_form_fields" name="Address Details">
+        <t t-set="submitted_address" t-value="submitted_address or {}" />
         <div id="div_name" class="col-lg-12 mb-2">
             <label class="col-form-label" for="o_name">Your name</label>
             <input
                 id="o_name"
                 type="text"
                 name="name"
-                t-att-value="partner_sudo.name"
+                t-att-value="submitted_address.get('name', partner_sudo.name)"
                 class="form-control" />
         </div>
         <div class="w-100" />
@@ -165,7 +166,7 @@
                 id="o_email"
                 type="email"
                 name="email"
-                t-att-value="partner_sudo.email"
+                t-att-value="submitted_address.get('email', partner_sudo.email)"
                 class="form-control" />
         </div>
         <div id="div_phone" class="col-lg-6 mb-2">
@@ -174,7 +175,7 @@
                 id="o_phone"
                 type="tel"
                 name="phone"
-                t-att-value="partner_sudo.phone_ids._primary().number"
+                t-att-value="submitted_address.get('phone', partner_sudo.phone_ids._primary().number)"
                 class="form-control" />
         </div>
         <t name="b2b_fields">
@@ -193,7 +194,7 @@
                         id="o_company_name"
                         type="text"
                         name="company_name"
-                        t-att-value="current_partner.commercial_company_name"
+                        t-att-value="submitted_address.get('company_name', current_partner.commercial_company_name)"
                         t-att-readonly="'1' if not is_main_address else None"
                         class="form-control" />
                 </div>
@@ -205,7 +206,7 @@
                         type="text"
                         id="o_vat"
                         name="vat"
-                        t-att-value="current_partner.vat"
+                        t-att-value="submitted_address.get('vat', current_partner.vat)"
                         t-att-readonly="'1' if (not is_commercial_address or vat_warning) else None"
                         class="form-control" />
                     <!-- Even on new addresses, first tell the customer if their VAT cannot be
@@ -248,7 +249,7 @@
                 id="o_street"
                 type="text"
                 class="form-control"
-                t-att-value="partner_sudo.street" />
+                t-att-value="submitted_address.get('street', partner_sudo.street)" />
         </div>
         <div id="div_street2" class="col-lg-12 mb-2">
             <label class="col-form-label label-optional" for="o_street2">
@@ -259,7 +260,7 @@
                 type="text"
                 name="street2"
                 class="form-control"
-                t-att-value="partner_sudo.street2" />
+                t-att-value="submitted_address.get('street2', partner_sudo.street2)" />
         </div>
         <div class="w-100" />
         <t t-if="zip_before_city">
@@ -272,7 +273,7 @@
                     type="text"
                     name="zip"
                     class="form-control"
-                    t-att-value="partner_sudo.zip" />
+                    t-att-value="submitted_address.get('zip', partner_sudo.zip)" />
             </div>
         </t>
         <div id="div_city" class="col-md-8 mb-2">
@@ -282,7 +283,7 @@
                 type="text"
                 name="city"
                 class="form-control"
-                t-att-value="partner_sudo.city" />
+                t-att-value="submitted_address.get('city', partner_sudo.city)" />
         </div>
         <t t-if="not zip_before_city">
             <div id="div_zip" class="col-md-4 mb-2">
@@ -294,7 +295,7 @@
                     type="text"
                     name="zip"
                     class="form-control"
-                    t-att-value="partner_sudo.zip" />
+                    t-att-value="submitted_address.get('zip', partner_sudo.zip)" />
             </div>
         </t>
         <div class="w-100" />
@@ -311,7 +312,7 @@
                     t-foreach="countries"
                     t-as="c"
                     t-att-value="c.id"
-                    t-att-selected="c.id == (country.id if country else partner_sudo.country_id.id)"
+                    t-att-selected="str(c.id) == str(submitted_address.get('country_id', country.id if country else partner_sudo.country_id.id))"
                     t-att-code="c.code"
                     t-out="c.name" />
             </select>
@@ -337,7 +338,7 @@
                     t-as="s"
                     t-att-value="s.id"
                     t-att-data-code="s.code"
-                    t-att-selected="s.id == (int(state_id) if state_id else partner_sudo.state_id.id)"
+                    t-att-selected="str(s.id) == str(submitted_address.get('state_id', state_id or partner_sudo.state_id.id))"
                     t-out="s.name" />
             </select>
         </div>

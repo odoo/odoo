@@ -2097,8 +2097,17 @@ class PosOrder(models.Model):
         self.state = "done"
 
         company = self.company_id
-        invoice_vals = self._prepare_invoice_vals()
-        invoice = self._create_invoice(invoice_vals)
+        # Portal defaults belong to the invoice, not its payment journal entries.
+        invoice_order = self.with_context(
+            {
+                f"default_{name}": value
+                for name, value in self.env.context.get(
+                    "pos_ticket_invoice_values", {}
+                ).items()
+            }
+        )
+        invoice_vals = invoice_order._prepare_invoice_vals()
+        invoice = invoice_order._create_invoice(invoice_vals)
         with dbg.timer(self.env, "[order:%s] invoice post", dbg.names(self, "uuid")):
             invoice.sudo().with_company(company).with_context(
                 **self._get_invoice_post_context()

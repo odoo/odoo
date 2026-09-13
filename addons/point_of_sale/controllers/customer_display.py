@@ -17,24 +17,21 @@ class PosCustomerDisplay(http.Controller):
             config_id = int(id_)
         except TypeError, ValueError:
             return request.prepare_not_found_error()
-        pos_config_sudo = request.env["pos.config"].sudo().browse(config_id)
+        pos_config_sudo = request.env["pos.config"].sudo().browse(config_id).exists()
+        if not pos_config_sudo:
+            return request.prepare_not_found_error()
         token_ok = bool(access_token) and consteq(
-            access_token, pos_config_sudo.access_token or ""
+            access_token.encode(), (pos_config_sudo.access_token or "").encode()
         )
         dbg.lifecycle.debug(
             "[http] customer display config=%s device=%s exists=%s active=%s token=%s",
             config_id,
             device_uuid,
-            pos_config_sudo.exists(),
+            bool(pos_config_sudo),
             pos_config_sudo.has_active_session,
             token_ok,
         )
-        if (
-            not pos_config_sudo.exists()
-            or not pos_config_sudo.has_active_session
-            or not access_token
-            or not consteq(access_token, pos_config_sudo.access_token or "")
-        ):
+        if not token_ok or not pos_config_sudo.has_active_session:
             return request.prepare_not_found_error()
         return request.render(
             "point_of_sale.customer_display_index",

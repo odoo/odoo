@@ -1,5 +1,9 @@
+import json
 import re
 from datetime import datetime
+from unittest.mock import patch
+
+from lxml import html
 
 import odoo
 
@@ -296,6 +300,21 @@ class TestPoSController(TestPointOfSaleHttpCommon):
 
 @odoo.tests.tagged("post_install", "-at_install")
 class TestPoSControllerInput(TestPointOfSaleHttpCommon):
+    def _create_ticket_order(self, reference):
+        self.main_pos_config.open_ui()
+        return self.env["pos.order"].create(
+            {
+                "session_id": self.main_pos_config.current_session_id.id,
+                "pos_reference": reference,
+                "ticket_code": "abcde",
+                "date_order": "2026-01-15 12:00:00",
+                "amount_tax": 0,
+                "amount_total": 0,
+                "amount_paid": 0,
+                "amount_return": 0,
+            }
+        )
+
     def _post_ticket_form(self, **values):
         page = self.url_open("/pos/ticket")
         token = re.search(r'name="csrf_token"\s+value="([^"]+)"', page.text)
@@ -330,6 +349,273 @@ class TestPoSControllerInput(TestPointOfSaleHttpCommon):
         )
         self.assertEqual(res.status_code, 200)
 
+    def test_ticket_form_rejects_dates_outside_lookup_range(self):
+        for date_order in ("0001-01-01", "9999-12-30", "9999-12-31"):
+            with self.subTest(date_order=date_order):
+                res = self._post_ticket_form(
+                    pos_reference="123456789012",
+                    date_order=date_order,
+                    ticket_code="abcde",
+                )
+                self.assertEqual(res.status_code, 200)
+                self.assertIn("Please fill all the required fields", res.text)
+
+    def test_ticket_reference_length_excludes_surrounding_whitespace(self):
+        res = self._post_ticket_form(
+            pos_reference="           1", date_order="2026-01-15", ticket_code="abcde"
+        )
+        self.assertEqual(res.status_code, 200)
+        self.assertIn("at least 12 characters", res.text)
+
+    def test_ticket_lookup_treats_pattern_characters_literally(self):
+        reference = r"Ticket 12345678\_%"
+        order = self._create_ticket_order(reference)
+        res = self._post_ticket_form(
+            pos_reference=reference,
+            date_order="2026-01-15",
+            ticket_code=order.ticket_code,
+        )
+        self.assertEqual(res.status_code, 303)
+        self.assertEqual(
+            res.headers["Location"],
+            f"/pos/ticket/validate?access_token={order.access_token}",
+        )
+
+    def test_ticket_uuid_redirect(self):
+        order = self._create_ticket_order("Ticket 123456789012")
+        res = self.url_open(
+            f"/pos/ticket?order_uuid={order.uuid}", allow_redirects=False
+        )
+        self.assertEqual(res.status_code, 303)
+        self.assertEqual(
+            res.headers["Location"],
+            f"/pos/ticket/validate?access_token={order.access_token}",
+        )
+
+    def test_ticket_lookup_cannot_expand_an_escaped_underscore(self):
+        order = self._create_ticket_order(r"Ticket 12345678\x%")
+        res = self._post_ticket_form(
+            pos_reference=r"Ticket 12345678\_%",
+            date_order="2026-01-15",
+            ticket_code=order.ticket_code,
+        )
+        self.assertEqual(res.status_code, 200)
+        self.assertIn("No sale order found", res.text)
+
+    def test_customer_display_rejects_missing_configs(self):
+        for config_id in ("not-a-number", "0", "-1", "2147483647"):
+            with self.subTest(config_id=config_id):
+                res = self.url_open(
+                    f"/pos_customer_display/{config_id}/test-device?access_token=invalid"
+                )
+                self.assertEqual(res.status_code, 404)
+
+    def test_customer_display_requires_token_and_session(self):
+        url = f"/pos_customer_display/{self.main_pos_config.id}/test-device"
+        res = self.url_open(f"{url}?access_token={self.main_pos_config.access_token}")
+        self.assertEqual(res.status_code, 404)
+        self.main_pos_config.open_ui()
+        for suffix in ("", "?access_token=invalid", "?access_token=%C3%A9"):
+            with self.subTest(suffix=suffix):
+                self.assertEqual(self.url_open(url + suffix).status_code, 404)
+        res = self.url_open(f"{url}?access_token={self.main_pos_config.access_token}")
+        self.assertEqual(res.status_code, 200)
+
+    def test_pos_ui_resumes_another_cashiers_session(self):
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        session = self.main_pos_config.current_session_id
+        self.authenticate("pos_admin", "pos_admin")
+        res = self.url_open(f"/pos/ui/{self.main_pos_config.id}", allow_redirects=False)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(self.main_pos_config.current_session_id, session)
+
+    def test_pos_ui_rejects_closing_session(self):
+        self.main_pos_config.open_ui()
+        self.main_pos_config.current_session_id.state = "closing_control"
+        self.authenticate("pos_admin", "pos_admin")
+        res = self.url_open(f"/pos/ui/{self.main_pos_config.id}", allow_redirects=False)
+        self.assertEqual(res.status_code, 303)
+
+    def test_pos_ui_foreign_company_cannot_open_a_session(self):
+        elsewhere = self.env["res.company"].create({"name": "Foreign POS user company"})
+        outsider = mail_new_test_user(
+            self.env,
+            login="pos_foreign_opener",
+            groups="base.group_user,point_of_sale.group_pos_user",
+            company_id=elsewhere.id,
+            company_ids=[odoo.fields.Command.set(elsewhere.ids)],
+        )
+        self.assertFalse(self.main_pos_config.session_ids)
+        self.authenticate(outsider.login, outsider.login)
+        res = self.url_open(f"/pos/ui/{self.main_pos_config.id}", allow_redirects=False)
+        self.assertEqual(res.status_code, 303)
+        self.assertFalse(self.main_pos_config.session_ids)
+
+    def test_pos_ui_uses_authorized_config_company(self):
+        elsewhere = self.env["res.company"].create({"name": "Other default company"})
+        cashier = mail_new_test_user(
+            self.env,
+            login="pos_multiple_companies",
+            groups="base.group_user,point_of_sale.group_pos_user",
+            company_id=elsewhere.id,
+            company_ids=[
+                odoo.fields.Command.set(
+                    (elsewhere | self.main_pos_config.company_id).ids
+                )
+            ],
+        )
+        self.authenticate(cashier.login, cashier.login)
+        res = self.url_open(f"/pos/ui/{self.main_pos_config.id}", allow_redirects=False)
+        self.assertEqual(res.status_code, 200)
+        session = self.main_pos_config.current_session_id
+        self.assertEqual(session.company_id, self.main_pos_config.company_id)
+        self.assertEqual(session.user_id, cashier)
+
+    def test_pos_ui_rolls_back_a_competing_session_creation(self):
+        def open_competing_sessions(config):
+            config.env["res.partner"].create({"name": "Rolled back POS opener"})
+            sessions = config.env["pos.session"].with_context(onboarding_creation=True)
+            sessions.create({"config_id": config.id})
+            sessions.create({"config_id": config.id})
+
+        self.authenticate("pos_user", "pos_user")
+        with patch.object(
+            type(self.main_pos_config), "open_ui", open_competing_sessions
+        ):
+            res = self.url_open(
+                f"/pos/ui/{self.main_pos_config.id}", allow_redirects=False
+            )
+        self.assertEqual(res.status_code, 303)
+        self.assertFalse(self.main_pos_config.session_ids)
+        self.assertFalse(
+            self.env["res.partner"].search_count(
+                [("name", "=", "Rolled back POS opener")]
+            )
+        )
+
+    def test_pos_ui_refuses_rescue_only_config(self):
+        self.main_pos_config.open_ui()
+        self.main_pos_config.current_session_id.rescue = True
+        self.assertFalse(self.main_pos_config.current_session_id)
+        self.authenticate("pos_user", "pos_user")
+        res = self.url_open(f"/pos/ui/{self.main_pos_config.id}", allow_redirects=False)
+        self.assertEqual(res.status_code, 303)
+        self.assertEqual(len(self.main_pos_config.session_ids), 1)
+
+    def test_pos_ui_missing_or_archived_config_cannot_open_session(self):
+        self.main_pos_config.active = False
+        self.authenticate("pos_user", "pos_user")
+        for path in (
+            "/pos/ui",
+            "/pos/web",
+            "/pos/ui/0",
+            "/pos/ui/-1",
+            f"/pos/ui/{self.main_pos_config.id}",
+        ):
+            with self.subTest(path=path):
+                res = self.url_open(path, allow_redirects=False)
+                self.assertEqual(res.status_code, 303)
+        self.assertFalse(self.main_pos_config.session_ids)
+
+    def test_ticket_validation_rejects_client_template_state_over_http(self):
+        self.authenticate(None, None)
+        order = self._create_ticket_order("Ticket 123456789012")
+        order.state = "paid"
+        res = self.url_open(
+            f"/pos/ticket/validate?access_token={order.access_token}",
+            data={
+                "csrf_token": odoo.http.Request.csrf_token(self),
+                "name": "Invoice customer",
+                "extra_field_values": "untrusted",
+                "invalid_fields": "untrusted",
+                "messages": "untrusted",
+                "pos_order": "untrusted",
+                "partner_sudo": "untrusted",
+            },
+        )
+        self.assertEqual(res.status_code, 200)
+        self.assertFalse(order.account_move)
+
+    def test_invalid_ticket_address_preserves_submitted_values(self):
+        self.authenticate(None, None)
+        order = self._create_ticket_order("Ticket 123456789012")
+        order.state = "paid"
+        country = self.env.ref("base.ca")
+        state = self.env["res.country.state"].search(
+            [("country_id", "=", country.id)], limit=1
+        )
+        submitted = {
+            "name": "Customer <entered>",
+            "email": "invalid-email",
+            "street": "New street",
+            "street2": "",
+            "city": "New city",
+            "zip": "K1A 0B1",
+            "phone": "123456789",
+            "country_id": str(country.id),
+            "state_id": str(state.id),
+        }
+        response = self.url_open(
+            f"/pos/ticket/validate?access_token={order.access_token}",
+            data={"csrf_token": odoo.http.Request.csrf_token(self), **submitted},
+        )
+        self.assertEqual(response.status_code, 200)
+        document = html.fromstring(response.content)
+        for name, value in submitted.items():
+            with self.subTest(name=name):
+                if name in ("country_id", "state_id"):
+                    selected = document.xpath(
+                        f"//select[@name='{name}']/option[@selected]/@value"
+                    )
+                    self.assertEqual(selected, [value])
+                else:
+                    self.assertEqual(
+                        document.xpath(f"//input[@name='{name}']/@value"), [value]
+                    )
+        self.assertFalse(order.account_move)
+        self.assertFalse(order.partner_id)
+
+    def test_malformed_ticket_address_relations_render_errors(self):
+        self.authenticate(None, None)
+        order = self._create_ticket_order("Ticket 123456789012")
+        order.state = "paid"
+        response = self.url_open(
+            f"/pos/ticket/validate?access_token={order.access_token}",
+            data={
+                "csrf_token": odoo.http.Request.csrf_token(self),
+                "country_id": "not-a-country",
+                "state_id": "not-a-state",
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Please select a valid value", response.text)
+        self.assertFalse(order.account_move)
+
+    def test_ticket_address_relation_values_are_normalized(self):
+        self.authenticate(None, None)
+        order = self._create_ticket_order("Ticket 123456789012")
+        order.state = "paid"
+        country = self.env.ref("base.us")
+        state = self.env.ref("base.state_us_1")
+        response = self.url_open(
+            f"/pos/ticket/validate?access_token={order.access_token}",
+            data={
+                "csrf_token": odoo.http.Request.csrf_token(self),
+                "name": "Customer",
+                "email": "invalid-email",
+                "country_id": f"+{country.id}",
+                "state_id": f"00{state.id}",
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        document = html.fromstring(response.content)
+        for name, record in (("country_id", country), ("state_id", state)):
+            self.assertEqual(
+                document.xpath(f"//select[@name='{name}']/option[@selected]/@value"),
+                [str(record.id)],
+            )
+        self.assertFalse(order.account_move)
+
     def test_ticket_form_accepts_a_well_formed_date(self):
         res = self._post_ticket_form(
             pos_reference="123456789012",
@@ -345,12 +631,35 @@ class TestPoSControllerInput(TestPointOfSaleHttpCommon):
         self.assertEqual(res.status_code, 404)
 
     def test_pos_ui_accepts_a_numeric_config_id(self):
-        self.authenticate("admin", "admin")
+        self.authenticate("pos_user", "pos_user")
         res = self.url_open(
             "/pos/ui/%d" % self.main_pos_config.id, allow_redirects=False
         )
-        self.assertNotEqual(res.status_code, 404)
-        self.assertNotEqual(res.status_code, 500)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.headers["Cache-Control"], "no-store")
+
+    def test_pos_boot_and_printer_use_boolean_values(self):
+        self.authenticate("pos_user", "pos_user")
+        for value, expected in (("False", False), ("0", False), ("true", True)):
+            with self.subTest(value=value):
+                self.env["ir.config_parameter"].sudo().set_param(
+                    "point_of_sale.use_lna", value
+                )
+                res = self.url_open(
+                    f"/pos/ui/{self.main_pos_config.id}?from_backend={value}&tours={value}",
+                    allow_redirects=False,
+                )
+                self.assertEqual(res.status_code, 200)
+                match = re.search(r"var odoo = (\{.*?\});", res.text, re.DOTALL)
+                self.assertTrue(match, "POS page must contain its boot payload")
+                boot = json.loads(match.group(1))
+                self.assertEqual(boot["from_backend"], int(expected))
+                self.assertEqual(boot["use_pos_fake_tours"], expected)
+                self.assertEqual(boot["use_lna"], expected)
+                self.assertEqual(
+                    self.env["pos.printer"].use_local_network_access(),
+                    {"use_lna": expected},
+                )
 
     def test_pos_ui_on_a_foreign_company_redirects(self):
         elsewhere = self.env["res.company"].create({"name": "Elsewhere Co"})
