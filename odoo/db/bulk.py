@@ -17,8 +17,8 @@ from odoo.libs.datetime import real_time
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.sql import SQL
 
+from .ddl import get_value_marker_positions
 from .errors import CURSOR_LOGGER_NAME, has_reached_server
-from .utils import get_value_marker_positions
 
 _logger = logging.getLogger(CURSOR_LOGGER_NAME)
 _debug = DebugLog(__name__)

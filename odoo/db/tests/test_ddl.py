@@ -8,6 +8,7 @@ from odoo.db.ddl import (
     _has_schema_changing_statement,
     _inline_ddl_params,
     classify_statement,
+    get_value_marker_positions,
 )
 
 
@@ -440,3 +441,30 @@ class TestChangesSchema(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestFindValueMarkers(unittest.TestCase):
+    def test_basic_and_escapes(self):
+        self.assertEqual(get_value_marker_positions("%s and %s"), [0, 7])
+        self.assertEqual(get_value_marker_positions("LIKE 'a%%s'"), [])
+        self.assertEqual(get_value_marker_positions("x %s y %% z %s"), [2, 12])
+        self.assertEqual(get_value_marker_positions("%%"), [])
+        self.assertEqual(get_value_marker_positions("ends %s"), [5])
+
+    def test_a_literal_percent_s_inside_a_string_is_not_a_marker(self):
+        query = "INSERT INTO t (a,b) VALUES ('has a %s inside', %s)"
+        markers = get_value_marker_positions(query)
+        self.assertEqual(markers, [len(query) - 3])
+        self.assertEqual(query[markers[0] : markers[0] + 2], "%s")
+
+    def test_a_literal_percent_s_inside_a_line_comment_is_not_a_marker(self):
+        self.assertEqual(get_value_marker_positions("SELECT 1 -- %s\n"), [])
+
+    def test_a_literal_percent_s_inside_a_block_comment_is_not_a_marker(self):
+        query = "SELECT 1 /* %s */ %s"
+        self.assertEqual(get_value_marker_positions(query), [query.rindex("%s")])
+
+    def test_a_doubled_quote_inside_a_literal_does_not_end_it_early(self):
+        query = "a = 'it''s %s' AND b = %s"
+        markers = get_value_marker_positions(query)
+        self.assertEqual(markers, [len(query) - 2])

@@ -5,9 +5,63 @@ from psycopg import sql as _sql
 
 from odoo.libs.debug_log import DebugLog
 
-from .utils import get_value_marker_positions, iter_sql_code_ranges
-
 _debug = DebugLog(__name__)
+
+
+def iter_sql_code_ranges(query: str) -> list[tuple[int, int]]:
+    ranges = []
+    i, n = 0, len(query)
+    start = 0
+    while i < n:
+        c = query[i]
+        if c in ("'", '"'):
+            if i > start:
+                ranges.append((start, i))
+            quote = c
+            i += 1
+            while i < n:
+                if query[i] == quote:
+                    if i + 1 < n and query[i + 1] == quote:
+                        i += 2
+                        continue
+                    i += 1
+                    break
+                i += 1
+            start = i
+            continue
+        if c == "-" and query[i : i + 2] == "--":
+            if i > start:
+                ranges.append((start, i))
+            nl = query.find("\n", i)
+            i = n if nl == -1 else nl
+            start = i
+            continue
+        if c == "/" and query[i : i + 2] == "/*":
+            if i > start:
+                ranges.append((start, i))
+            end_comment = query.find("*/", i + 2)
+            i = n if end_comment == -1 else end_comment + 2
+            start = i
+            continue
+        i += 1
+    if start < n:
+        ranges.append((start, n))
+    return ranges
+
+
+def get_value_marker_positions(query: str) -> list[int]:
+    out = []
+    for start, end in iter_sql_code_ranges(query):
+        i = start
+        while i < end - 1:
+            if query[i] == "%":
+                if query[i + 1] == "s":
+                    out.append(i)
+                i += 2
+            else:
+                i += 1
+    return out
+
 
 _DDL_KEYWORDS: tuple[str, ...] = (
     "CREATE",

@@ -99,9 +99,11 @@ live process state through `from . import _process_state`.
 > **The bracketed tiers carry contracts of their own** —
 > `db-resilience-below-connectivity` and `http-features-below-serving`, both in
 > the table below. Filing a module in the right bracket is a decision, not a
-> caption: `db/errors.py` and `dsn.py` import nothing else in `db/`, `utils.py`
-> only its `[foundation]` sibling `settings`, and all three are used by both
-> tiers, so they are `[foundation]`, not `[connectivity]`;
+> caption: `db/errors.py` and `dsn.py` import nothing else in `db/` and are
+> used by both tiers; `utils.py` imports only its `[foundation]` sibling
+> `settings` and, since its statement-text scanners moved to `ddl.py`
+> (2026-09-13), is read by `[connectivity]` alone — it stays `[foundation]`
+> for what it imports, not for who reads it;
 > `http/helpers.py` imports `core` and is imported by
 > `dispatcher`/`_serve`/`request_class`/`_retry`, so it is `[serving]`, not
 > `[features]`; `http/constants.py`, `exceptions.py` and `_protocols.py` import

@@ -8,7 +8,6 @@ from odoo.db.settings import PoolSettings
 from odoo.db.utils import (
     _HEALTH_PARAMS,
     get_connection_info_for_database,
-    get_value_marker_positions,
     is_maintenance_db,
 )
 
@@ -184,33 +183,6 @@ class TestConnectionInfoForUri(unittest.TestCase):
     def test_postgres_scheme_is_accepted_too(self):
         db, _ = self._info("postgres://user@host/thedb")
         self.assertEqual(db, "thedb")
-
-
-class TestFindValueMarkers(unittest.TestCase):
-    def test_basic_and_escapes(self):
-        self.assertEqual(get_value_marker_positions("%s and %s"), [0, 7])
-        self.assertEqual(get_value_marker_positions("LIKE 'a%%s'"), [])
-        self.assertEqual(get_value_marker_positions("x %s y %% z %s"), [2, 12])
-        self.assertEqual(get_value_marker_positions("%%"), [])
-        self.assertEqual(get_value_marker_positions("ends %s"), [5])
-
-    def test_a_literal_percent_s_inside_a_string_is_not_a_marker(self):
-        query = "INSERT INTO t (a,b) VALUES ('has a %s inside', %s)"
-        markers = get_value_marker_positions(query)
-        self.assertEqual(markers, [len(query) - 3])
-        self.assertEqual(query[markers[0] : markers[0] + 2], "%s")
-
-    def test_a_literal_percent_s_inside_a_line_comment_is_not_a_marker(self):
-        self.assertEqual(get_value_marker_positions("SELECT 1 -- %s\n"), [])
-
-    def test_a_literal_percent_s_inside_a_block_comment_is_not_a_marker(self):
-        query = "SELECT 1 /* %s */ %s"
-        self.assertEqual(get_value_marker_positions(query), [query.rindex("%s")])
-
-    def test_a_doubled_quote_inside_a_literal_does_not_end_it_early(self):
-        query = "a = 'it''s %s' AND b = %s"
-        markers = get_value_marker_positions(query)
-        self.assertEqual(markers, [len(query) - 2])
 
 
 if __name__ == "__main__":
