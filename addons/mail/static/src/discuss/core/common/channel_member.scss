@@ -4,12 +4,12 @@
     &.o-offline {
         opacity: 33%;
 
-        &.cursor-pointer:hover, &.o-showingActions {
+        &.cursor-pointer:hover, &.o-showingActions, &[data-right-clicking] {
             opacity: 75%;
         }
     }
 
-    &.cursor-pointer:hover, &.o-active {
+    &.cursor-pointer:hover, &.o-active, &[data-right-clicking] {
         &:not(:has(.o-discuss-ChannelMember-actions:hover)) {
             background-color: var(--discuss-ChannelMember-hoverBg, mix($gray-100, $gray-200));
         }
