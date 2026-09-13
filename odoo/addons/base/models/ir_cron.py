@@ -56,6 +56,7 @@ _intervalTypes = {
     'weeks': lambda interval: relativedelta(days=7 * interval),
     'months': lambda interval: relativedelta(months=interval),
     'minutes': lambda interval: relativedelta(minutes=interval),
+    'never': lambda _: relativedelta(year=9999),
 }
 
 
@@ -111,12 +112,15 @@ class IrCron(models.Model):
     user_id = fields.Many2one('res.users', string='Scheduler User', default=lambda self: self.env.user, required=True)
     state = fields.Selection(related='ir_actions_server_id.state', inherited=True, default='code')
     active = fields.Boolean(default=True)
-    interval_number = fields.Integer(default=1, help="Repeat every x.", required=True, aggregator='avg')
-    interval_type = fields.Selection([('minutes', 'Minutes'),
-                                      ('hours', 'Hours'),
-                                      ('days', 'Days'),
-                                      ('weeks', 'Weeks'),
-                                      ('months', 'Months')], string='Interval Unit', default='months', required=True)
+    interval_number = fields.Integer(default=1, help="Repeat every x.", required=True, aggregator=None)
+    interval_type = fields.Selection([
+        ('minutes', 'Minutes'),
+        ('hours', 'Hours'),
+        ('days', 'Days'),
+        ('weeks', 'Weeks'),
+        ('months', 'Months'),
+        ('never', 'Never'),
+    ], string='Interval Unit', default='never', required=True)
     nextcall = fields.Datetime(string='Next Execution Date', required=True, default=fields.Datetime.now, help="Next planned execution date for this job.")
     lastcall = fields.Datetime(string='Last Execution Date', help="Previous time the cron ran successfully, provided to the job through the context on the `lastcall` key")
     priority = fields.Integer(default=5, aggregator=None, help='The priority of the job, as an integer: 0 means higher priority, 10 means lower priority.')
@@ -137,6 +141,8 @@ class IrCron(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             vals['usage'] = 'ir_cron'
+            if vals.get('interval_type') == 'never' and 'nextcall' not in vals:
+                vals['nextcall'] = datetime(9999, 1, 1)
         if os.getenv('ODOO_NOTIFY_CRON_CHANGES'):
             self.env.cr.postcommit.add(self._notifydb)
         return super().create(vals_list)
