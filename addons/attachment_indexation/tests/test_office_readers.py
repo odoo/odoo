@@ -1,7 +1,7 @@
 import io
 import zipfile
 
-from odoo.libs.documents import TEXT, Document, get_readers, get_known_reader_names
+from odoo.libs.documents import TEXT, Document, get_known_reader_names, get_readers
 from odoo.tests import TransactionCase, tagged
 
 from odoo.addons.attachment_indexation.tools.readers import (
