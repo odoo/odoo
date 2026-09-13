@@ -201,6 +201,12 @@ class TestSignupUrl(TransactionCase):
         self.env["ir.config_parameter"].sudo().set_param(
             "auth_signup.invitation_scope", "b2c"
         )
+        # website, when installed, decides the scope per website and overrides
+        # the parameter; the setting an administrator changes writes both
+        if "website" in self.env:
+            self.env["website"].sudo().search([]).write(
+                {"auth_signup_uninvited": "b2c"}
+            )
         res = self.partner.signup_get_auth_param()
         self.assertTrue(res[self.partner.id]["auth_signup_token"])
 
