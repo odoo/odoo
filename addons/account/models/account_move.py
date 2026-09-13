@@ -1628,7 +1628,18 @@ class AccountMove(models.Model):
             else:
                 move.expected_currency_rate = 1
 
-    @api.depends("expected_currency_rate")
+    # The invoice's own rate inputs, not expected_currency_rate: on an
+    # editable compute the dependencies say when a rate set by hand is
+    # discarded, and expected_currency_rate also follows `date` and, in
+    # l10n_hu_edi, `delivery_date` -- a post that fills the delivery date
+    # would reset the rate the user typed.
+    @api.depends(
+        "currency_id",
+        "company_currency_id",
+        "company_id",
+        "invoice_date",
+        "taxable_supply_date",
+    )
     def _compute_invoice_currency_rate(self):
         self._update_invoice_currency_rate()
 

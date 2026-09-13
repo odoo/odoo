@@ -109,12 +109,31 @@ class TestInvoiceCurrencyRateDepends(AccountTestInvoicingCommon):
         super().setUpClass()
         cls.other_currency = cls.setup_other_currency("EUR")
 
-    def test_the_declaration_names_what_the_body_reads(self):
+    def test_the_declaration_names_the_inputs_that_discard_a_manual_rate(self):
         field = self.env["account.move"]._fields["invoice_currency_rate"]
         self.assertEqual(
             tuple(self.env.registry.field_depends[field]),
-            ("expected_currency_rate",),
+            (
+                "currency_id",
+                "company_currency_id",
+                "company_id",
+                "invoice_date",
+                "taxable_supply_date",
+            ),
         )
+
+    def test_a_manual_rate_survives_the_dates_a_post_moves(self):
+        invoice = self.init_invoice(
+            "out_invoice",
+            amounts=[100.0],
+            currency=self.other_currency,
+            invoice_date="2016-01-01",
+            post=False,
+        )
+        invoice.invoice_currency_rate = 42.0
+        invoice.write({"date": "2016-02-01", "delivery_date": "2016-01-15"})
+        invoice.action_post()
+        self.assertEqual(invoice.invoice_currency_rate, 42.0)
 
     def test_the_rate_still_follows_the_date(self):
         invoice = self.init_invoice(
