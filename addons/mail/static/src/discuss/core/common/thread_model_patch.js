@@ -359,6 +359,9 @@ const threadPatch = {
     get isChatChannel() {
         return ["chat", "group"].includes(this.channel_type);
     },
+    get isMultiMemberChannel() {
+        return this.channel_type === "channel" || this.channel_type === "group";
+    },
     get allowedToLeaveChannelTypes() {
         return ["channel", "group"];
     },
@@ -381,7 +384,7 @@ const threadPatch = {
     computeDisplayToSelf() {
         return (
             this.self_member_id?.is_pinned ||
-            (["channel", "group"].includes(this.channel_type) &&
+            (this.isMultiMemberChannel &&
                 this.hasSelfAsMember &&
                 !this.parent_channel_id)
         );
@@ -400,7 +403,7 @@ const threadPatch = {
         return this.isChatChannel && this.channel_type !== "group";
     },
     get allowDescription() {
-        return ["channel", "group"].includes(this.channel_type);
+        return this.isMultiMemberChannel;
     },
     get invitationLink() {
         if (!this.uuid || this.isDirectChat) {
@@ -557,11 +560,9 @@ const threadPatch = {
             log.logic("rename", () => ({
                 thread: this.localId,
                 channel_type: this.channel_type,
-                custom: !(
-                    this.channel_type === "channel" || this.channel_type === "group"
-                ),
+                custom: !this.isMultiMemberChannel,
             }));
-            if (this.channel_type === "channel" || this.channel_type === "group") {
+            if (this.isMultiMemberChannel) {
                 const previousName = this.name;
                 this.name = newName;
                 try {
@@ -645,7 +646,7 @@ const threadPatch = {
         return this.member_count === this.channel_member_ids.length;
     },
     get avatarUrl() {
-        if (this.channel_type === "channel" || this.channel_type === "group") {
+        if (this.isMultiMemberChannel) {
             return imageUrl("discuss.channel", Number(this.id), "avatar_128", {
                 unique: this.avatar_cache_key,
             });
@@ -664,7 +665,7 @@ const threadPatch = {
     },
     /** @returns {import("models").ChannelMember} */
     computeCorrespondent() {
-        if (["channel", "group"].includes(this.channel_type)) {
+        if (this.isMultiMemberChannel) {
             return undefined;
         }
         const correspondents = this.correspondents;
@@ -775,7 +776,7 @@ const threadPatch = {
         }
     },
     get hasMemberList() {
-        return ["channel", "group"].includes(this.channel_type);
+        return this.isMultiMemberChannel;
     },
     get hasSelfAsMember() {
         return Boolean(this.self_member_id);

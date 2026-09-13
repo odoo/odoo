@@ -77,6 +77,7 @@ declare module "models" {
         group_ids: ResGroups[];
         has_mail_thread: boolean | undefined;
         hasMemberList: Readonly<boolean>;
+        isMultiMemberChannel: Readonly<boolean>;
         hasOtherMembersTyping: boolean;
         hasSeenFeature: boolean;
         hasSelfAsMember: Readonly<boolean>;

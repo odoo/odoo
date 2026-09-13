@@ -72,7 +72,7 @@ export class DiscussContent extends Component {
         return (
             !this.thread.parent_channel_id &&
             this.thread.is_editable &&
-            ["channel", "group"].includes(this.thread.channel_type)
+            this.thread.isMultiMemberChannel
         );
     }
 

@@ -121,7 +121,7 @@ const threadPatch = {
         return super.allowCalls && !this.parent_channel_id;
     },
     get hasSubChannelFeature() {
-        return ["channel", "group"].includes(this.channel_type);
+        return this.isMultiMemberChannel;
     },
     get isEmpty() {
         return !this.from_message_id && super.isEmpty;
