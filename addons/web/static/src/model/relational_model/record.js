@@ -41,6 +41,7 @@ export class Record extends DataPoint {
 
     /**
      * @type {typeof DataPoint.prototype.setup<{
+     *  group?: import("./group").Group;
      *  manuallyAdded?: boolean;
      *  onUpdate?: () => unknown;
      *  parentRecord?: Record;
@@ -48,6 +49,8 @@ export class Record extends DataPoint {
      * }>}
      */
     setup(_config, data, options = {}) {
+        /** set only when the record comes from a grouped list */
+        this.group = options.group;
         this._manuallyAdded = options.manuallyAdded === true;
         this._onUpdate = options.onUpdate || (() => {});
         this._parentRecord = options.parentRecord;

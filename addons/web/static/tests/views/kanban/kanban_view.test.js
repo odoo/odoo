@@ -1356,6 +1356,61 @@ test("Open new card in form view, without reloading the kanban view", async () =
     ]);
 });
 
+test.tags("desktop");
+test("kanban grouped by many2many: a multi drag leaves the other columns alone", async () => {
+    Partner._records[0].category_ids = [6]; // yop, int_field 10
+    Partner._records[1].category_ids = [6]; // blip, int_field 9
+    Partner._records[2].category_ids = [6]; // gnap, int_field 17
+    Partner._records[3].category_ids = [7]; // blip, int_field -4
+
+    onRpc("web_save", () => expect.step("web_save"));
+    onRpc("web_save_multi", () => expect.step("web_save_multi"));
+    onRpc("web_resequence", ({ args }) => {
+        expect.step(["web_resequence", args[0]]);
+        return [];
+    });
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban>
+                <field name="int_field" widget="handle"/>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        groupBy: ["category_ids"],
+    });
+    expect(".o_kanban_group").toHaveCount(2);
+    expect(getKanbanRecordTexts(0)).toEqual(["blip", "yop", "gnap"]);
+    expect(getKanbanRecordTexts(1)).toEqual(["blip"]);
+
+    // select the two first cards of the first column, plus the card of the second one
+    await keyDown("alt");
+    await animationFrame();
+    await contains(".o_kanban_group:eq(0) .o_kanban_record:eq(0)").click();
+    await contains(".o_kanban_group:eq(0) .o_kanban_record:eq(1)").click();
+    await keyUp("alt");
+    await animationFrame();
+    await contains(".o_kanban_group:eq(1) .o_kanban_record:eq(0)").click();
+    expect(".o_record_selected").toHaveCount(3);
+
+    // a record can't change column when grouped by a many2many, so only the two selected
+    // cards of the dragged column come along: the third one is left where it is, and no
+    // record is written
+    await contains(".o_kanban_group:eq(0) .o_kanban_record:eq(1)").dragAndDrop(
+        ".o_kanban_group:eq(0) .o_kanban_record:eq(2)"
+    );
+
+    expect.verifySteps([["web_resequence", [3, 2, 1]]]);
+    expect(getKanbanRecordTexts(0)).toEqual(["gnap", "blip", "yop"]);
+    expect(getKanbanRecordTexts(1)).toEqual(["blip"]);
+    expect(".o_record_selected").toHaveCount(3);
+});
+
 test("prevent deletion when grouped by many2many field", async () => {
     Partner._records[0].category_ids = [6, 7];
     Partner._records[3].category_ids = [7];
@@ -5647,6 +5702,384 @@ test("ungrouped kanban without handle field", async () => {
     expect.verifySteps([]);
 });
 
+test.tags("desktop");
+test("kanban with handle field: drag and drop multiple selected records", async () => {
+    Partner._records = [
+        { id: 1, int_field: 0, foo: "alpha" },
+        { id: 2, int_field: 1, foo: "bravo" },
+        { id: 3, int_field: 2, foo: "charlie" },
+        { id: 4, int_field: 3, foo: "delta" },
+    ];
+
+    const resequenceDef = Promise.withResolvers();
+    onRpc("web_resequence", ({ args, kwargs }) => {
+        expect.step(["web_resequence", args[0], kwargs.field_name, kwargs.offset]);
+        return resequenceDef.promise;
+    });
+
+    await mountView({
+        resModel: "partner",
+        type: "kanban",
+        arch: `
+            <kanban>
+                <field name="int_field" widget="handle"/>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+    });
+    expect(queryAllTexts(".o_kanban_record:not(.o_kanban_ghost)")).toEqual([
+        "alpha",
+        "bravo",
+        "charlie",
+        "delta",
+    ]);
+
+    // select "bravo" and "delta"
+    await keyDown("alt");
+    await animationFrame();
+    await contains(".o_kanban_record:contains(bravo)").click();
+    await keyUp("alt");
+    await animationFrame();
+    await contains(".o_kanban_record:contains(delta)").click();
+    expect(".o_record_selected").toHaveCount(2);
+
+    // drag "delta" and drop it before "alpha": "bravo" and "delta" move together, in that order
+    const { drop, moveTo } = await contains(".o_kanban_record:contains(delta)").drag();
+    await moveTo(".o_kanban_record:contains(alpha)");
+    expect(".o_kanban_record.o_dragged .o_multi_drag_placeholder").toHaveText("Move 2 records");
+    expect(".o_kanban_record.o_multi_drag_hidden").toHaveCount(1);
+    expect(".o_kanban_record.o_multi_drag_hidden").not.toBeVisible();
+    expect(".o_dragged > .o_multi_drag_hidden").not.toBeVisible();
+    await drop();
+
+    // the cards reappear at their new position before the resequence rpc resolves
+    expect(".o_multi_drag_placeholder").toHaveCount(0);
+    expect(".o_kanban_record.o_multi_drag_hidden").toHaveCount(0);
+    expect(queryAllTexts(".o_kanban_record:not(.o_kanban_ghost):visible")).toEqual([
+        "bravo",
+        "delta",
+        "alpha",
+        "charlie",
+    ]);
+    resequenceDef.resolve();
+    await animationFrame();
+
+    expect.verifySteps([["web_resequence", [2, 4, 1, 3], "int_field", 0]]);
+    expect(queryAllTexts(".o_kanban_record:not(.o_kanban_ghost)")).toEqual([
+        "bravo",
+        "delta",
+        "alpha",
+        "charlie",
+    ]);
+    expect(".o_record_selected").toHaveCount(2, {
+        message: "the moved records should still be selected after the move",
+    });
+});
+
+test.tags("desktop");
+test("kanban with handle field: drag and drop a single selected record is unaffected", async () => {
+    Partner._records = [
+        { id: 1, int_field: 0, foo: "alpha" },
+        { id: 2, int_field: 1, foo: "bravo" },
+        { id: 3, int_field: 2, foo: "charlie" },
+        { id: 4, int_field: 3, foo: "delta" },
+    ];
+
+    onRpc("web_resequence", ({ args, kwargs }) => {
+        expect.step(["web_resequence", args[0], kwargs.field_name, kwargs.offset]);
+    });
+
+    await mountView({
+        resModel: "partner",
+        type: "kanban",
+        arch: `
+            <kanban>
+                <field name="int_field" widget="handle"/>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+    });
+
+    // a single selected record behaves like a normal drag
+    await keyDown("alt");
+    await animationFrame();
+    await contains(".o_kanban_record:contains(delta)").click();
+    await keyUp("alt");
+    expect(".o_record_selected").toHaveCount(1);
+
+    const { drop, moveTo } = await contains(".o_kanban_record:contains(delta)").drag();
+    await moveTo(".o_kanban_record:contains(alpha)");
+    expect(".o_multi_drag_placeholder").toHaveCount(0);
+    await drop();
+
+    expect.verifySteps([["web_resequence", [4, 1, 2, 3], "int_field", 0]]);
+    expect(queryAllTexts(".o_kanban_record:not(.o_kanban_ghost)")).toEqual([
+        "delta",
+        "alpha",
+        "bravo",
+        "charlie",
+    ]);
+    expect(".o_record_selected").toHaveCount(0, {
+        message: "the selection is dropped when the drag isn't a multi record one",
+    });
+});
+
+test.tags("desktop");
+test("kanban with handle field: drag and drop a record outside of the selection", async () => {
+    Partner._records = [
+        { id: 1, int_field: 0, foo: "alpha" },
+        { id: 2, int_field: 1, foo: "bravo" },
+        { id: 3, int_field: 2, foo: "charlie" },
+        { id: 4, int_field: 3, foo: "delta" },
+    ];
+
+    onRpc("web_resequence", ({ args, kwargs }) => {
+        expect.step(["web_resequence", args[0], kwargs.field_name, kwargs.offset]);
+    });
+
+    await mountView({
+        resModel: "partner",
+        type: "kanban",
+        arch: `
+            <kanban>
+                <field name="int_field" widget="handle"/>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+    });
+
+    // select "alpha" and "bravo"
+    await keyDown("alt");
+    await animationFrame();
+    await contains(".o_kanban_record:contains(alpha)").click();
+    await keyUp("alt");
+    await animationFrame();
+    await contains(".o_kanban_record:contains(bravo)").click();
+    expect(".o_record_selected").toHaveCount(2);
+
+    // drag "delta", which isn't part of the selection: it moves on its own
+    const { drop, moveTo } = await contains(".o_kanban_record:contains(delta)").drag();
+    await moveTo(".o_kanban_record:contains(alpha)");
+    expect(".o_multi_drag_placeholder").toHaveCount(0);
+    expect(".o_kanban_record.o_multi_drag_hidden").toHaveCount(0);
+    await drop();
+
+    expect.verifySteps([["web_resequence", [4, 1, 2, 3], "int_field", 0]]);
+    expect(queryAllTexts(".o_kanban_record:not(.o_kanban_ghost)")).toEqual([
+        "delta",
+        "alpha",
+        "bravo",
+        "charlie",
+    ]);
+    expect(".o_record_selected").toHaveCount(0, {
+        message: "the selection is dropped when the drag isn't a multi record one",
+    });
+});
+
+test.tags("desktop");
+test("grouped kanban: an invalid record is not saved when dropped in another column", async () => {
+    Partner._records = [
+        { id: 1, bar: false, foo: false },
+        { id: 2, bar: false, foo: "bravo" },
+        { id: 4, bar: true, foo: "charlie" },
+    ];
+    onRpc("web_save", ({ args }) => {
+        expect.step(["web_save", args[0]]);
+    });
+
+    await mountView({
+        resModel: "partner",
+        type: "kanban",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo" required="1"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        groupBy: ["bar"],
+    });
+    expect(".o_kanban_group:eq(0) .o_kanban_record").toHaveCount(2);
+
+    // the first record has no "foo" while the field is required: it can't be saved,
+    // so the whole selection stays put
+    await keyDown("alt");
+    await animationFrame();
+    await contains(".o_kanban_group:eq(0) .o_kanban_record:eq(0)").click();
+    await keyUp("alt");
+    await animationFrame();
+    await contains(".o_kanban_group:eq(0) .o_kanban_record:eq(1)").click();
+    expect(".o_record_selected").toHaveCount(2);
+
+    await contains(".o_kanban_group:eq(0) .o_kanban_record:eq(1)").dragAndDrop(
+        ".o_kanban_group:eq(1)"
+    );
+
+    expect.verifySteps([]);
+    expect(".o_notification").toHaveCount(1);
+    expect(".o_kanban_group:eq(0) .o_kanban_record").toHaveCount(2);
+    expect(".o_kanban_group:eq(1) .o_kanban_record").toHaveCount(1);
+});
+
+test.tags("desktop");
+test("grouped kanban with handle field: drag and drop multiple selected records across groups", async () => {
+    Partner._records = [
+        { id: 1, int_field: 0, bar: false, foo: "alpha" },
+        { id: 2, int_field: 1, bar: false, foo: "bravo" },
+        { id: 3, int_field: 2, bar: false, foo: "echo" },
+        { id: 4, int_field: 0, bar: true, foo: "charlie" },
+        { id: 5, int_field: 1, bar: true, foo: "delta" },
+    ];
+
+    onRpc("web_resequence", ({ args, kwargs }) => {
+        expect.step(["web_resequence", args[0], kwargs.field_name, kwargs.offset]);
+    });
+    onRpc("web_save", ({ args }) => {
+        expect.step(["web_save", args[0]]);
+    });
+
+    await mountView({
+        resModel: "partner",
+        type: "kanban",
+        arch: `
+            <kanban>
+                <field name="int_field" widget="handle"/>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        groupBy: ["bar"],
+    });
+    expect(".o_kanban_group").toHaveCount(2);
+
+    // select "alpha" and "bravo", in the group that also contains "echo" (which stays behind)
+    await keyDown("alt");
+    await animationFrame();
+    await contains(".o_kanban_record:contains(alpha)").click();
+    await keyUp("alt");
+    await animationFrame();
+    await contains(".o_kanban_record:contains(bravo)").click();
+    expect(".o_record_selected").toHaveCount(2);
+
+    // drag "bravo" into "charlie"'s group: "alpha" and "bravo" move there together, in that order
+    const { drop, moveTo } = await contains(".o_kanban_record:contains(bravo)").drag();
+    await moveTo(".o_kanban_record:contains(charlie)");
+    await drop();
+
+    expect.verifySteps([
+        ["web_save", [1, 2]],
+        ["web_resequence", [1, 2, 4, 5], "int_field", 0],
+    ]);
+    expect(queryAllTexts(".o_kanban_record")).toEqual([
+        "echo",
+        "alpha",
+        "bravo",
+        "charlie",
+        "delta",
+    ]);
+    expect(".o_record_selected").toHaveCount(2, {
+        message: "the moved records should still be selected after the move",
+    });
+});
+
+test.tags("desktop");
+test("grouped kanban with handle field: drag and drop selected records lumped across different groups", async () => {
+    Partner._records = [
+        { id: 1, int_field: 0, bar: false, foo: "alpha" },
+        { id: 2, int_field: 1, bar: false, foo: "bravo" },
+        { id: 3, int_field: 2, bar: false, foo: "echo" },
+        { id: 4, int_field: 0, bar: true, foo: "charlie" },
+        { id: 5, int_field: 1, bar: true, foo: "delta" },
+    ];
+
+    const saveDef = Promise.withResolvers();
+    onRpc("web_resequence", ({ args, kwargs }) => {
+        expect.step(["web_resequence", args[0], kwargs.field_name, kwargs.offset]);
+    });
+    onRpc("web_save", async ({ args }) => {
+        expect.step(["web_save", args[0]]);
+        await saveDef.promise;
+    });
+
+    await mountView({
+        resModel: "partner",
+        type: "kanban",
+        arch: `
+            <kanban>
+                <field name="int_field" widget="handle"/>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        groupBy: ["bar"],
+    });
+    expect(".o_kanban_group").toHaveCount(2);
+    expect(queryAllTexts(".o_kanban_record")).toEqual([
+        "alpha",
+        "bravo",
+        "echo",
+        "charlie",
+        "delta",
+    ]);
+
+    // select "bravo" and "delta", which belong to two different groups
+    await keyDown("alt");
+    await animationFrame();
+    await contains(".o_kanban_record:contains(bravo)").click();
+    await keyUp("alt");
+    await animationFrame();
+    await contains(".o_kanban_record:contains(delta)").click();
+    expect(".o_record_selected").toHaveCount(2);
+
+    // drop "bravo" at the top of its own group: "delta" comes along and changes group,
+    // while "bravo" stays in its group and needs no update
+    const { drop, moveTo } = await contains(".o_kanban_record:contains(bravo)").drag();
+    await moveTo(".o_kanban_record:contains(alpha)");
+    await drop();
+
+    // both reappear at their new position at once, before the web_save resolves
+    expect(".o_multi_drag_placeholder").toHaveCount(0);
+    expect(".o_kanban_record.o_multi_drag_hidden").toHaveCount(0);
+    expect(queryAllTexts(".o_kanban_record:visible")).toEqual([
+        "bravo",
+        "delta",
+        "alpha",
+        "echo",
+        "charlie",
+    ]);
+    saveDef.resolve();
+    await animationFrame();
+
+    expect.verifySteps([
+        ["web_save", [5]],
+        ["web_resequence", [2, 5, 1, 3], "int_field", 0],
+    ]);
+    expect(queryAllTexts(".o_kanban_record")).toEqual([
+        "bravo",
+        "delta",
+        "alpha",
+        "echo",
+        "charlie",
+    ]);
+    expect(".o_record_selected").toHaveCount(2, {
+        message: "the moved records should still be selected after the move",
+    });
+});
+
 test("click on image field in kanban (with default global_click)", async () => {
     expect.assertions(2);
 
@@ -7021,6 +7454,98 @@ test("group by properties and drag and drop", async () => {
     expect(".o_kanban_group:nth-child(3) .o_kanban_record").toHaveCount(2);
 });
 
+test.tags("desktop");
+test("group by properties and drag and drop multiple selected records", async () => {
+    Partner._fields.properties = fields.Properties({
+        definition_record: "parent_id",
+        definition_record_field: "properties_definition",
+    });
+    Partner._fields.parent_id = fields.Many2one({ relation: "partner" });
+    Partner._fields.properties_definition = fields.PropertiesDefinition();
+
+    const definition = [
+        { name: "my_char", string: "My Char", type: "char" },
+        { name: "my_int", string: "My Int", type: "integer" },
+    ];
+    Partner._records[0].properties_definition = definition;
+    Partner._records[1].parent_id = 1;
+    Partner._records[2].parent_id = 1;
+
+    const properties = (value, int) => [
+        { ...definition[0], value },
+        { ...definition[1], value: int },
+    ];
+
+    onRpc("web_read_group", () => ({
+        groups: [
+            {
+                "properties.my_char": "aaa",
+                __extra_domain: [["properties.my_char", "=", "aaa"]],
+                __count: 2,
+                __records: [
+                    { id: 2, properties: properties("aaa", 1) },
+                    { id: 3, properties: properties("aaa", 2) },
+                ],
+            },
+            {
+                "properties.my_char": "bbb",
+                __extra_domain: [["properties.my_char", "=", "bbb"]],
+                __count: 0,
+                __records: [],
+            },
+        ],
+        length: 2,
+    }));
+    onRpc("get_property_definition", () => definition[0]);
+    onRpc("web_resequence", () => []);
+    onRpc("web_save_multi", ({ args }) => {
+        expect.step(["web_save_multi", args[0], args[1]]);
+    });
+    onRpc("web_save", ({ args }) => {
+        expect.step(["web_save", args[0]]);
+    });
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        groupBy: ["properties.my_char"],
+    });
+    expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(2);
+
+    // select both records of the first group and drag them into the second one
+    await keyDown("alt");
+    await animationFrame();
+    await contains(".o_kanban_group:first-child .o_kanban_record:eq(0)").click();
+    await keyUp("alt");
+    await animationFrame();
+    await contains(".o_kanban_group:first-child .o_kanban_record:eq(1)").click();
+    expect(".o_record_selected").toHaveCount(2);
+
+    await contains(".o_kanban_group:first-child .o_kanban_record:eq(1)").dragAndDrop(
+        ".o_kanban_group:nth-child(2)"
+    );
+
+    // the property is written as part of the whole properties field, so each record
+    // has its own values: they can't share a single web_save
+    expect.verifySteps([
+        [
+            "web_save_multi",
+            [2, 3],
+            [{ properties: properties("bbb", 1) }, { properties: properties("bbb", 2) }],
+        ],
+    ]);
+    expect(".o_kanban_group:first-child .o_kanban_record").toHaveCount(0);
+    expect(".o_kanban_group:nth-child(2) .o_kanban_record").toHaveCount(2);
+});
+
 test("grouped on field with readonly expression depending on context", async () => {
     await mountView({
         type: "kanban",
@@ -7609,13 +8134,16 @@ test("groups will be scrolled to on unfold if outside of viewport", async () => 
     await contains(".o_column_folded:eq(0)").click();
     await animationFrame();
     expect(".o_content").toHaveProperty("scrollLeft", 0, {
-        message: "Group should be completely inside the viewport after unfold, no scroll"
+        message: "Group should be completely inside the viewport after unfold, no scroll",
     });
 
     // "column 6" is followed by a folded group ("column 7"), which ends up outside
     // of the viewport after the unfold: scroll to that group
     contains(".o_content").scroll({
-        left: content().scrollLeft + queryRect(".o_column_folded:eq(0)").right - queryRect(".o_content").right,
+        left:
+            content().scrollLeft +
+            queryRect(".o_column_folded:eq(0)").right -
+            queryRect(".o_content").right,
     });
     let scrollLeft = content().scrollLeft;
     await contains(".o_column_folded:eq(0)").click();

@@ -18,6 +18,7 @@ import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { MOVABLE_RECORD_TYPES } from "@web/model/relational_model/dynamic_group_list";
+import { getMultiDragRecordIds, startMultiDrag, stopMultiDrag } from "@web/views/multi_drag";
 import { isNull } from "@web/views/utils";
 import { ColumnProgress } from "@web/views/view_components/column_progress";
 import { useBounceButton } from "@web/views/view_hook";
@@ -104,6 +105,7 @@ export class KanbanRenderer extends Component {
         // Sortable
         let dataRecordId;
         let dataGroupId;
+        this.multiDragRecordIds = null;
         if (this.canUseSortable) {
             useSortable({
                 enable: () => this.canResequenceRecords,
@@ -117,20 +119,31 @@ export class KanbanRenderer extends Component {
                 placeholderClasses: ["visible", "opacity-50", "my-2", "pe-none"],
                 // Hooks
                 onDragStart: (params) => {
-                    const { element, group } = params;
+                    const { element } = params;
                     dataRecordId = element.dataset.id;
-                    dataGroupId = group && group.dataset.id;
-                    if (this.props.list.selection?.length) {
-                        this.props.list.selection.forEach((record) => {
-                            record.toggleSelection(false);
+                    this.multiDragRecordIds = getMultiDragRecordIds(this.props.list, dataRecordId, {
+                        // a selection spans the whole view: when records may not change
+                        // column, only drag along the ones already in the dragged column
+                        sameGroupOnly: !this.canMoveRecords,
+                    });
+                    if (this.multiDragRecordIds) {
+                        startMultiDrag(this.rootRef(), element, this.multiDragRecordIds, {
+                            recordSelector: ".o_kanban_record",
+                            placeholderTag: "div",
+                            placeholderClass:
+                                "d-flex align-items-center justify-content-center fw-bold flex-grow-1 text-center",
                         });
+                    } else {
+                        for (const record of this.props.list.selection) {
+                            record.toggleSelection(false);
+                        }
                     }
                     return this.sortStart(params);
                 },
                 onDragEnd: (params) => this.sortStop(params),
                 onGroupEnter: (params) => this.sortRecordGroupEnter(params),
                 onGroupLeave: (params) => this.sortRecordGroupLeave(params),
-                onDrop: (params) => this.sortRecordDrop(dataRecordId, dataGroupId, params),
+                onDrop: (params) => this.sortRecordDrop(dataRecordId, params),
             });
             useSortable({
                 enable: () => this.canResequenceGroups,
@@ -336,7 +349,9 @@ export class KanbanRenderer extends Component {
         const indexToCheck = this.getResequenceOrderIndex();
         return Boolean(
             recordsDraggable &&
-                (isGrouped || (handleField && (!orderBy[indexToCheck] || orderBy[indexToCheck].name === handleField)))
+                (isGrouped ||
+                    (handleField &&
+                        (!orderBy[indexToCheck] || orderBy[indexToCheck].name === handleField)))
         );
     }
 
@@ -587,7 +602,6 @@ export class KanbanRenderer extends Component {
 
     /**
      * @param {string} dataRecordId
-     * @param {string} dataGroupId
      * @param {Object} params
      * @param {HTMLElement} params.element
      * @param {HTMLElement} [params.group]
@@ -595,7 +609,7 @@ export class KanbanRenderer extends Component {
      * @param {HTMLElement} [params.parent]
      * @param {HTMLElement} [params.previous]
      */
-    async sortRecordDrop(dataRecordId, dataGroupId, { element, parent, previous }) {
+    async sortRecordDrop(dataRecordId, { element, parent, previous }) {
         if (
             !this.props.list.isGrouped ||
             parent.classList.contains("o_kanban_hover") ||
@@ -607,18 +621,23 @@ export class KanbanRenderer extends Component {
                 // in the model. In that case, we can't to anything else than abort.
                 return;
             }
-            this.toggleProcessing(dataRecordId, true);
+            const recordIds = this.multiDragRecordIds || [dataRecordId];
+            // every moved card is processing, not only the one under the pointer
+            const toggleProcessing = (isProcessing) =>
+                recordIds.forEach((id) => this.toggleProcessing(id, isProcessing));
+            toggleProcessing(true);
 
             parent?.classList.remove("o_kanban_hover");
-            while (previous && !previous.dataset.id) {
+            // skip cards with no id, and cards hidden as part of this same multi drag
+            while (previous && (!previous.dataset.id || recordIds.includes(previous.dataset.id))) {
                 previous = previous.previousElementSibling;
             }
             const refId = previous ? previous.dataset.id : null;
             const targetGroupId = parent?.dataset.id;
             try {
-                await this.props.list.moveRecord(dataRecordId, dataGroupId, refId, targetGroupId);
+                await this.props.list.moveRecords(recordIds, refId, targetGroupId);
             } finally {
-                this.toggleProcessing(dataRecordId, false);
+                toggleProcessing(false);
             }
         }
     }
@@ -654,6 +673,13 @@ export class KanbanRenderer extends Component {
      * @param {HTMLElement} [params.group]
      */
     sortStop({ element, group }) {
+        if (this.multiDragRecordIds) {
+            this.multiDragRecordIds = null;
+            // `onDrop` isn't awaited before `onDragEnd`, so this runs right after the
+            // synchronous part of `sortRecordDrop`: the cards are back in their new
+            // position in the model by then, and all reappear there at the next render
+            stopMultiDrag(this.rootRef());
+        }
         element.classList.remove("shadow");
         if (group) {
             group.classList.remove("o_kanban_hover");

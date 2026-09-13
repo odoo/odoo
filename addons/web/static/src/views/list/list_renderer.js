@@ -15,6 +15,7 @@ import { AGGREGATABLE_FIELD_TYPES, combineModifiers } from "@web/model/relationa
 import { onWillRender, render } from "@web/owl2/utils";
 import { Field, getPropertyFieldInfo } from "@web/views/fields/field";
 import { getTooltipInfo } from "@web/views/fields/field_tooltip";
+import { getMultiDragRecordIds, startMultiDrag, stopMultiDrag } from "@web/views/multi_drag";
 import {
     TOUCH_SELECTION_THRESHOLD,
     computeAggregatedValue,
@@ -246,8 +247,16 @@ export class ListRenderer extends Component {
         });
         useAutofocus({ ref: this.groupInputRef });
         let dataRowId;
-        let dataGroupId;
         this.resequencePromise = Promise.resolve();
+        this.multiDragRecordIds = null;
+        // a record must leave the edition to be dragged along with the selection
+        const getEditedRecordToDrag = (el) => {
+            const editedRecord = this.props.list.editedRecord;
+            const { id } = el.closest(".o_row_draggable").dataset;
+            return getMultiDragRecordIds(this.props.list, id)?.includes(editedRecord?.id)
+                ? editedRecord
+                : null;
+        };
         useSortable({
             enable: () => this.canResequenceRows,
             // Params
@@ -256,15 +265,34 @@ export class ListRenderer extends Component {
             handle: ".o_handle_cell",
             cursor: "grabbing",
             placeholderClasses: ["d-table-row"],
+            preventDrag: (el) => {
+                // pending changes are the user's to commit, not the drag's
+                const record = getEditedRecordToDrag(el);
+                return Boolean(record && (record.dirty || this.lastIsDirty));
+            },
             // Hooks
+            onWillStartDrag: ({ element }) => {
+                if (getEditedRecordToDrag(element)) {
+                    this.props.list.leaveEditMode();
+                }
+            },
             onDragStart: (params) => {
                 const { element } = params;
                 dataRowId = element.dataset.id;
-                dataGroupId = this.props.list.isGrouped && element.dataset.groupId;
-                return this.sortStart(params);
+                // sets the width of the cells, so it must be done before hiding them
+                this.sortStart(params);
+                this.multiDragRecordIds = getMultiDragRecordIds(this.props.list, dataRowId);
+                if (this.multiDragRecordIds) {
+                    startMultiDrag(this.tableRef(), element, this.multiDragRecordIds, {
+                        recordSelector: ".o_data_row",
+                        placeholderTag: "td",
+                        placeholderClass: "fw-bold d-flex align-items-center flex-fill text-nowrap",
+                        leadingChildSelector: ".o_list_record_selector, .o_handle_cell",
+                    });
+                }
             },
             onDragEnd: (params) => this.sortStop(params),
-            onDrop: (params) => this.sortDrop(dataRowId, dataGroupId, params),
+            onDrop: (params) => this.sortDrop(dataRowId, params),
         });
 
         if (this.env.searchModel) {
@@ -2480,24 +2508,26 @@ export class ListRenderer extends Component {
      * @param {HTMLElement} [params.parent]
      * @param {HTMLElement} [params.previous]
      */
-    async sortDrop(dataRowId, dataGroupId, { element, previous }) {
+    async sortDrop(dataRowId, { element, previous }) {
         element.classList.remove("o_row_draggable");
+        const recordIds = this.multiDragRecordIds || [dataRowId];
+        // rows hidden by this same multi drag are still in the DOM, but can't be a reference
+        while (previous && recordIds.includes(previous.dataset.id)) {
+            previous = previous.previousElementSibling;
+        }
         const refId = previous ? previous.dataset.id : null;
         try {
-            if (dataGroupId) {
+            if (this.props.list.isGrouped) {
                 if (!previous?.dataset?.groupId) {
                     return;
                 }
-                this.resequencePromise = this.props.list.moveRecord(
-                    dataRowId,
-                    dataGroupId,
+                this.resequencePromise = this.props.list.moveRecords(
+                    recordIds,
                     refId,
                     previous.dataset.groupId
                 );
             } else {
-                this.resequencePromise = this.props.list.resequence(dataRowId, refId, {
-                    handleField: this.props.list.handleField,
-                });
+                this.resequencePromise = this.props.list.resequence(recordIds, refId);
             }
             await this.resequencePromise;
         } finally {
@@ -2534,6 +2564,13 @@ export class ListRenderer extends Component {
      * @param {HTMLElement} [params.group]
      */
     sortStop({ element }) {
+        if (this.multiDragRecordIds) {
+            this.multiDragRecordIds = null;
+            // `onDrop` isn't awaited before `onDragEnd`, so this runs right after the
+            // synchronous part of `sortDrop`: the rows are back in their new position
+            // in the model by then, and all reappear there at the next render
+            stopMultiDrag(this.tableRef());
+        }
         for (const cell of element.querySelectorAll("td")) {
             cell.style.width = null;
         }
