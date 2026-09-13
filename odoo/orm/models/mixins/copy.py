@@ -85,7 +85,7 @@ class CopyMixin(_ModelStubs):
                     lines = record[name].sorted(key="id")
                     lines = lines.filtered(
                         lambda line: line.id not in seen_map[line._name]
-                    )
+                    ).with_prefetch(lines._prefetch_ids)
                     vals[name] = [
                         Command.create(line) for line in lines.copy_data() if line
                     ]
