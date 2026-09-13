@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from lxml import etree
-from psycopg.errors import ReadOnlySqlTransaction
+from psycopg.errors import LockNotAvailable, ReadOnlySqlTransaction
 from rjsmin import jsmin as _rjsmin
 
 from odoo import SUPERUSER_ID, api, models, tools
@@ -60,6 +60,7 @@ EsmNodePair = tuple[list[AssetNode], list[AssetNode]]
 
 _esm_log = get_asset_logger("esm")
 _attach_log = get_asset_logger("attach")
+_AUTONOMOUS_LOCK_TIMEOUT = "2s"
 _fallback_log = get_asset_logger("fallback")
 _loader_log = get_asset_logger("loader")
 _pregen_log = get_asset_logger("pregen")
@@ -1677,10 +1678,21 @@ class IrQweb(models.AbstractModel):
         from odoo.db import db_connect
 
         with db_connect(self.env.cr.dbname).cursor() as own_cr:
-            fresh = self._drop_rows_already_present(own_cr, vals_list)
-            if fresh:
-                api.Environment(own_cr, SUPERUSER_ID, {})["ir.attachment"].create(fresh)
-            own_cr.commit()
+            own_cr.execute(f"SET LOCAL lock_timeout = '{_AUTONOMOUS_LOCK_TIMEOUT}'")
+            try:
+                fresh = self._drop_rows_already_present(own_cr, vals_list)
+                if fresh:
+                    api.Environment(own_cr, SUPERUSER_ID, {})["ir.attachment"].create(
+                        fresh
+                    )
+                own_cr.commit()
+            except LockNotAvailable:
+                own_cr.rollback()
+                _debug.lifecycle(
+                    "esm_rows_not_persisted",
+                    reason="lock_timeout",
+                    rows=len(vals_list),
+                )
 
     def _save_esm_attachment_rows_in_test(
         self, vals_list: list[dict], touch_ids: Sequence[int]

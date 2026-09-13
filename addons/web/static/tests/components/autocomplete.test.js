@@ -286,6 +286,33 @@ test("scroll outside should cancel result", async () => {
     expect(".o-autocomplete input").toHaveValue("Hello");
 });
 
+test("a scroll that did not move the input does not cancel the result", async () => {
+    class Parent extends Component {
+        static components = { AutoComplete };
+        static template = xml`
+            <div class="autocomplete_container overflow-auto" style="max-height: 100px;">
+                <div style="height: 1000px;">
+                    <AutoComplete value="'Hello'" sources="sources" autoSelect="true"/>
+                </div>
+            </div>
+        `;
+        static props = [];
+
+        sources = buildSources(() => [item("World"), item("Hello")]);
+    }
+
+    await mountWithCleanup(Parent);
+    await contains(".o-autocomplete input").click();
+    await contains(".o-autocomplete input").edit("H", { confirm: false });
+    await runAllTimers();
+    expect(".o-autocomplete .dropdown-menu").toHaveCount(1);
+
+    queryOne(".autocomplete_container").dispatchEvent(new Event("scroll"));
+    await animationFrame();
+    expect(".o-autocomplete .dropdown-menu").toHaveCount(1);
+    expect(".o-autocomplete input").toHaveValue("H");
+});
+
 test("arrow navigation does not scroll an ancestor of the fixed menu", async () => {
     class Parent extends Component {
         static components = { AutoComplete };

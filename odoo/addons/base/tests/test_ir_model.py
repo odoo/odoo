@@ -936,6 +936,15 @@ class TestIrModelFields(TransactionCase):
             self.env.registry[model_name]._fields[field.name].help, "Tooltip"
         )
 
+    def test_a_label_write_is_visible_to_an_environment_without_a_language(self):
+        Model, field = self._make_manual_field("nolang")
+        field.write({"field_description": "Relabelled"})
+        no_lang = self.env(context={**self.env.context, "lang": False})
+        self.assertEqual(
+            no_lang[Model._name].fields_get([field.name])[field.name]["string"],
+            "Relabelled",
+        )
+
     def test_presence_preserving_label_write_still_skips_setup(self):
         Model, field = self._make_manual_field("keepfast", help="Tip")
         with patch.object(self.env.registry, "setup_models") as mock_setup:

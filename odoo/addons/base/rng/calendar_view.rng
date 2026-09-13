@@ -8,6 +8,7 @@
     <rng:include href="common.rng"/>
     <rng:define name="calendar">
         <rng:element name="calendar">
+            <rng:ref name="access_rights"/>
             <rng:optional><rng:attribute name="string" /></rng:optional>
             <rng:optional><rng:attribute name="date_start" /></rng:optional>
             <rng:optional><rng:attribute name="date_stop" /></rng:optional>

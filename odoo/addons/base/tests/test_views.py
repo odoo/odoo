@@ -8520,6 +8520,16 @@ class TestNestedSubviewsAreChecked(ViewCase):
             "Invalid <list> subview definition",
         )
 
+    def test_groups_on_nested_lists_are_accepted(self):
+        self.assertValid(
+            """<form>
+                <field name="inherit_children_ids">
+                    <list groups="base.group_user"><field name="name"/></list>
+                    <list groups="base.group_system"><field name="model"/></list>
+                </field>
+            </form>"""
+        )
+
     def test_no_open_on_a_nested_list_is_accepted(self):
         self.assertValid(
             """<form>

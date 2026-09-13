@@ -1615,6 +1615,23 @@ class TestEsmRowsOutliveTheTest(TransactionCase):
         self.env["ir.qweb"]._save_esm_attachment_rows([vals], bundle="outlives")
         self.assertEqual(len(self._rows_elsewhere()), 1, "saved once, by url")
 
+    def test_a_table_the_test_altered_does_not_hang_the_save(self):
+        self.addCleanup(self._forget_elsewhere)
+        self.env.cr.execute("LOCK TABLE res_company IN ACCESS EXCLUSIVE MODE")
+        vals = {
+            "name": "web.assets_test_outlives.esm.js",
+            "url": self.URL,
+            "mimetype": "text/javascript",
+            "raw": b"export const outlives = true;",
+            "public": True,
+            "res_model": "ir.ui.view",
+        }
+        self.env["ir.qweb"]._save_esm_attachment_rows([vals], bundle="outlives")
+        self.assertEqual(self._rows_elsewhere(), [])
+        self.assertEqual(
+            self.env["ir.attachment"].search_count([("url", "=", self.URL)]), 1
+        )
+
     def test_public_asset_persistence_does_not_wait_for_the_test_company(self):
         self.addCleanup(self._forget_elsewhere)
         self.env.cr.execute(

@@ -213,7 +213,8 @@ export class AutoComplete extends Component {
                 target === document ||
                 target === document.documentElement ||
                 target === document.body ||
-                this.root.el?.contains(target)
+                this.root.el?.contains(target) ||
+                this._readAnchorPosition() === this._anchorPosition
             ) {
                 return;
             }
@@ -333,6 +334,7 @@ export class AutoComplete extends Component {
         }));
         this.state.open = true;
         this.dismissed = false;
+        this._anchorPosition = this._readAnchorPosition();
         this._addGlobalListeners();
         return this.loadSources(useInput, entryDirection);
     }
@@ -359,6 +361,11 @@ export class AutoComplete extends Component {
             this._entry = null;
         }
         this._removeGlobalListeners();
+    }
+
+    _readAnchorPosition() {
+        const rect = this.inputRef.el?.getBoundingClientRect();
+        return rect ? `${rect.top},${rect.left}` : "";
     }
 
     _addGlobalListeners() {

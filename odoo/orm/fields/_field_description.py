@@ -77,14 +77,14 @@ class _FieldDescriptionMixin(_FieldStubs):
             return None
 
     def _description_string(self, env: Environment) -> str | None:
-        if self.string and env.lang:
+        if self.string and (env.lang or self.base_field.manual):
             model_name = self.base_field.model_name
             field_string = env.registry.metaschema.field_strings(env, model_name)
             return field_string.get(self.name) or self.string
         return self.string
 
     def _description_help(self, env: Environment) -> str | None:
-        if self.help and env.lang:
+        if self.help and (env.lang or self.base_field.manual):
             model_name = self.base_field.model_name
             field_help = env.registry.metaschema.field_helps(env, model_name)
             return field_help.get(self.name) or self.help
