@@ -136,10 +136,15 @@ class ApprovalRequestRouting(models.Model):
     def _get_applicable_steps(self):
         """The category's steps whose condition this request meets, in order."""
         self.check_singleton()
-        if self.state != "new" and self.approver_ids and not self.approver_ids.step_ids:
-            # Confirmed on the flat approver list before its category gained steps
-            # (by conversion, or by hand): it finishes routing as it started, so a
-            # later edit extends its approvers from the list, not from the steps.
+        if (
+            self.state != "new"
+            and self.approver_ids
+            and not self.approver_ids.step_ids
+            and not self.env.context.get("approval_adopt_list_routing")
+        ):
+            # Confirmed on the flat approver list before its category was given
+            # steps by hand: it finishes routing as it started. A conversion moves
+            # its pending requests onto the steps (_adopt_list_routing_into_steps).
             trace.STEPS.event("confirmed_flat", request=self.id, state=self.state)
             return self.env["approval.category.step"]
         applicable = self.category_id.step_ids.filtered(
@@ -540,6 +545,65 @@ class ApprovalRequestRouting(models.Model):
                 continue
             added |= request._extend_approvers_live_one(group_sequence)
         return added
+
+    def _adopt_list_routing_into_steps(self) -> bool:
+        self.check_singleton()
+        if (
+            self.state != "pending"
+            or self.approver_ids.step_ids
+            or not self.category_id.step_ids
+        ):
+            trace.STEPS.event(
+                "adoption_skipped",
+                request=self.id,
+                state=self.state,
+                routed_by_steps=bool(self.approver_ids.step_ids),
+                category_steps=len(self.category_id.step_ids),
+            )
+            return False
+        adopting = self.with_context(approval_adopt_list_routing=True)
+        desired = adopting._compute_desired_approvers(self._get_sequence_group())
+        adopted = self.env["approval.approver"]
+        for row in self.approver_ids:
+            vals = desired.staging.get(row.user_id.id)
+            if vals is None:
+                continue
+            row_vals = {
+                "step_ids": [Command.set(vals["step_ids"])],
+                "required": vals["required"],
+                "sequence": vals["sequence"],
+                "source_synced": vals.get("source_synced", True),
+            }
+            if row.state == "approved":
+                row_vals["decided_step_ids"] = [Command.set(vals["step_ids"])]
+            if row.state == "waiting":
+                row_vals["state"] = "pending"
+            row.sudo().write(row_vals)
+            adopted |= row
+        created = adopting._create_live_approver_rows(desired.to_create)
+        for row in created:
+            row.write(
+                {
+                    "step_ids": [
+                        Command.set(desired.to_create[row.user_id.id]["step_ids"])
+                    ]
+                }
+            )
+        steps = adopting._get_applicable_steps()
+        self.sudo().approval_minimum = sum(steps.mapped("minimum"))
+        self.invalidate_recordset()
+        trace.STEPS.note(
+            "list_routing_adopted",
+            request=self.id,
+            adopted=adopted.ids,
+            kept=(self.approver_ids - adopted - created).ids,
+            created=created.ids,
+        )
+        self.approver_ids.filtered(
+            lambda row: row.state == "pending"
+        )._create_activity()
+        self._retire_unasked_approval_activities()
+        return True
 
     def _extend_approvers_live_one(self, group_sequence: int) -> models.BaseModel:
         self.check_singleton()

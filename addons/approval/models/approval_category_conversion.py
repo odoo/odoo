@@ -543,6 +543,22 @@ class ApprovalCategoryConversion(models.Model):
         categories.write({"approve_sequentially": False})
         return categories
 
+    def _adopt_list_routed_requests(self):
+        domain = [("state", "=", "pending"), ("category_id.step_ids", "!=", False)]
+        if self:
+            domain.append(("category_id", "in", self.ids))
+        pending = self.env["approval.request"].sudo().search(domain)
+        adopted = pending.filtered(
+            lambda request: request._adopt_list_routing_into_steps()
+        )
+        trace.STEPS.note(
+            "list_routed_requests_adopted",
+            categories=self.ids,
+            pending=len(pending),
+            adopted=adopted.ids,
+        )
+        return adopted
+
     def _has_steps_from_its_module(self) -> bool:
         return False
 
@@ -653,3 +669,4 @@ class ApprovalCategoryConversion(models.Model):
             )
             read.write({"action_type": "condition"})
             (rules - read).write({"active": False})
+            category._adopt_list_routed_requests()

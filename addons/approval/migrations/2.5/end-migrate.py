@@ -23,6 +23,14 @@ def migrate(cr, version):
             category.id,
             len(category.step_ids),
         )
+    for request in categories._adopt_list_routed_requests():
+        _logger.info(
+            "approval request %s (#%s) now routes by the steps of %s, keeping its "
+            "approvers and their decisions",
+            request.name,
+            request.id,
+            request.category_id.name,
+        )
     result = categories._route_rules_of_step_categories_by_steps()
     for rule in result["added"]:
         _logger.info(
