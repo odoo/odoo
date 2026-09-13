@@ -55,7 +55,6 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
         self.start_tour(self.env['website'].get_client_action_url('/blog'), 'blog_tags', login='admin')
 
     def test_autocomplete_with_date(self):
-        self.env.ref('website_blog.opt_blog_sidebar_show').active = True
         self.env.ref('website_blog.opt_sidebar_blog_index_archives').active = True
         self.env.ref('website_blog.opt_sidebar_blog_index_follow_us').active = False
         self.start_tour("/blog", 'blog_autocomplete_with_date')
@@ -63,7 +62,6 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
     def test_blog_context_and_social_media(self):
         # Create a second blog to make the blog navigation appear (only shows when len(blogs) > 1)
         self.env['blog.blog'].create({'name': 'Second Blog'})
-        self.env.ref('website_blog.opt_blog_sidebar_show').active = True
         # Sidebar markup only renders when at least one sidebar block is enabled (see opt_blog_sidebar_show).
         # Follow Us provides the s_social_media snippet exercised by the tour.
         self.env.ref('website_blog.opt_sidebar_blog_index_follow_us').active = True
@@ -121,9 +119,7 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
             'published_date': datetime(2025, 1, 15, 14, 30, 0),
         })
 
-        self.env.ref("website_blog.opt_blog_sidebar_show").active = True
         self.env.ref("website_blog.opt_sidebar_blog_index_archives").active = True
-        self.env.ref("website_blog.opt_blog_post_sidebar").active = True
         # Post sidebar "Add some" / #edit-in-backend lives in the Tags block (empty tags, managers).
         self.env.ref("website_blog.opt_blog_post_tags_display").active = True
         self.start_tour(self.env["website"].get_client_action_url("/blog"), "blog_sidebar_with_date_and_tag", login="admin")
@@ -166,7 +162,6 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
             'is_published': True,
         })
 
-        self.env.ref('website_blog.opt_blog_sidebar_show').active = True
         # Activate tags in sidebar
         self.env.ref("website_blog.opt_sidebar_blog_index_tags").active = True
         response = self.url_open(blog.website_url)
