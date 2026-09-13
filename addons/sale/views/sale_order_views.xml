@@ -261,7 +261,7 @@
         <field name="name">sale.order.form</field>
         <field name="model">sale.order</field>
         <field name="arch" type="xml">
-            <form string="Sales Order" class="o_sale_order">
+            <form string="Sales Order" class="o_sale_order" js_class="sale_order_form">
             <header>
                 <button
                     string="Capture Transaction"
@@ -778,7 +778,6 @@
                                     <field
                                         name="section_uom_id"
                                         invisible="display_type not in ('line_section', 'line_subsection')"
-                                        widget="section_uom"
                                         options="{'no_open': True, 'no_create': True}"
                                         class="fw-normal text-muted"
                                     />

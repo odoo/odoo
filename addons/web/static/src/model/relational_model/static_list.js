@@ -944,7 +944,8 @@ export class StaticList extends DataPoint {
             virtualId: params.virtualId,
             manuallyAdded: params.manuallyAdded,
         };
-        const record = new this.model.constructor.Record(this.model, config, data, options);
+        const RecordClass = this.getRecordClass();
+        const record = new RecordClass(this.model, config, data, options);
         this._cache[id] = record;
         if (!params.dontApplyCommands) {
             const commands = this._unknownRecordCommands[id];
@@ -954,6 +955,10 @@ export class StaticList extends DataPoint {
             }
         }
         return record;
+    }
+
+    getRecordClass() {
+        return this.model.constructor.Record;
     }
 
     _clearCommands() {
@@ -1013,12 +1018,9 @@ export class StaticList extends DataPoint {
             return changes;
         });
 
-        const fieldsSpec = getFieldsSpec(
-            this.activeFields,
-            this.fields,
-            this.evalContext,
-            { withInvisible: true }
-        );
+        const fieldsSpec = getFieldsSpec(this.activeFields, this.fields, this.evalContext, {
+            withInvisible: true,
+        });
 
         const responses = await this.model.orm.call(
             this.resModel,
