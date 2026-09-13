@@ -1349,6 +1349,16 @@ class TestDiscuss(HttpCase, MailCommon, TestRecipients):
         message.with_user(self.user_employee).set_message_done()
         self.assertMailNotifications(message, [{'notif': [{'partner': self.partner_employee, 'type': 'inbox', 'is_read': True}]}])
 
+    def test_message_fetch_chatter_filters(self):
+        record = self.test_record.with_user(self.user_employee)
+        comment = record.message_post(body='Conversation', message_type='comment')
+        record.message_post(body='Notification', message_type='notification')
+        record.message_post(body='Tracking', message_type='tracking')
+        res = self.env['mail.message'].with_user(self.user_employee)._message_fetch([], thread=record, is_notification=False)
+        self.assertEqual(res["messages"], comment, "conversations filter should return comment messages")
+        res = self.env['mail.message'].with_user(self.user_employee)._message_fetch([], thread=record, is_notification=True)
+        self.assertEqual(res["messages"], record.message_ids - comment, "tracked changes filter should return notification and tracking messages")
+
     def test_message_fetch_needaction(self):
         user1 = self.env['res.users'].create({'login': 'user1', 'name': 'User 1'})
         user1.notification_type = 'inbox'
