@@ -208,11 +208,18 @@ class TestEventEdges(TimedEdgeCase):
         with self.assertRaises(ValidationError):
             link(self.env, first, second, condition="event")
 
-    def test_a_no_event_edge_needs_a_window(self):
+    def test_a_no_event_edge_refuses_a_negative_window(self):
         first, second = self._action("first"), self._action("second")
 
         with self.assertRaises(ValidationError):
-            link(self.env, first, second, condition="no_event", event_code="open")
+            link(
+                self.env,
+                first,
+                second,
+                condition="no_event",
+                event_code="open",
+                delay=-1,
+            )
 
 
 class TestEdgeTimingTravels(TimedEdgeCase):

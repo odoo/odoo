@@ -63,6 +63,17 @@ class IrActionsServer(models.Model):
         required=True,
     )
 
+    start_delay = fields.Integer(
+        default=0,
+        help="For a step no edge leads to: how long after its run starts it "
+        "becomes ready. Ignored on a step with predecessors, whose edges carry "
+        "their own delays.",
+    )
+    start_delay_unit = fields.Selection(
+        selection=time_unit_selection("minute", "hour", "day", "week", "month"),
+        default="hour",
+        required=True,
+    )
     validity_delay = fields.Integer(
         string="Valid For",
         default=0,
@@ -187,9 +198,16 @@ class IrActionsServer(models.Model):
                     )
                 )
 
-    @api.constrains("validity_delay")
+    @api.constrains("validity_delay", "start_delay")
     def _check_validity_delay(self):
         for action in self:
+            if action.start_delay < 0:
+                raise exceptions.ValidationError(
+                    _(
+                        "Step '%(action)s' has a negative start delay.",
+                        action=action.name,
+                    ),
+                )
             if action.validity_delay < 0:
                 raise exceptions.ValidationError(
                     _(
@@ -197,6 +215,10 @@ class IrActionsServer(models.Model):
                         action=action.name,
                     ),
                 )
+
+    def _get_start_delta(self):
+        self.check_singleton()
+        return get_timedelta(self.start_delay, self.start_delay_unit)
 
     def _get_validity_delta(self):
         self.check_singleton()

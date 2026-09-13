@@ -191,15 +191,16 @@ class WorkflowEdge(models.Model):
                         target=edge.target_node_id.name,
                     ),
                 )
-            if edge.condition == "no_event" and edge.delay <= 0:
-                raise exceptions.ValidationError(
-                    _(
-                        "Edge '%(source)s' -> '%(target)s' waits for an event not "
-                        "to happen, but gives it no time to happen in. Set a delay.",
-                        source=edge.source_node_id.name,
-                        target=edge.target_node_id.name,
-                    ),
-                )
+
+    def _runtime_copy_vals(self):
+        self.check_singleton()
+        return {
+            "condition": self.condition,
+            "condition_expr": self.condition_expr,
+            "event_code": self.event_code,
+            "delay": self.delay,
+            "delay_unit": self.delay_unit,
+        }
 
     @api.depends("source_node_id", "target_node_id", "condition", "label")
     def _compute_display_name(self):

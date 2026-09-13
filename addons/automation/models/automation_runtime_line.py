@@ -79,6 +79,17 @@ class AutomationRuntimeLine(models.Model):
         help="When the step finished, failed, was skipped or was cancelled; "
         "a delayed edge out of it counts from here",
     )
+    skip_reason = fields.Selection(
+        selection=[
+            ("branch", "Branch not taken"),
+            ("revoked", "Revoked by an exclusive event"),
+            ("expired", "Validity passed"),
+            ("filtered", "Filtered out"),
+            ("cancelled", "Cancelled"),
+        ],
+        readonly=True,
+        copy=False,
+    )
     error_message = fields.Text(
         string="Error Details",
         readonly=True,
@@ -164,13 +175,20 @@ class AutomationRuntimeLine(models.Model):
     def _settle_readiness(self):
         self.check_singleton()
         edges = self.edge_in_ids
+        now = self.env.cr.now()
+        if not edges:
+            due = self._start_due()
+            if due and due > now:
+                self._schedule(due)
+            else:
+                self.action_mark_ready()
+            return
         if any(edge.source_line_id.state not in SETTLED_STATES for edge in edges):
             return
         live = edges.filtered(lambda edge: edge.source_line_id.state != "skipped")
-        now = self.env.cr.now()
         verdicts = [edge._verdict(now) for edge in live]
         if not live or any(satisfied is False for satisfied, _due in verdicts):
-            self._skip()
+            self._skip(reason="revoked" if any(live.mapped("revoked")) else "branch")
             return
         if any(satisfied is None for satisfied, _due in verdicts):
             if self.state == "scheduled":
@@ -183,13 +201,21 @@ class AutomationRuntimeLine(models.Model):
         self.action_mark_ready()
         _logger.info("Action '%s' (#%d) is now ready", self.name, self.id)
 
-    def _skip(self):
+    def _start_due(self):
+        self.check_singleton()
+        action = self.action_id
+        if not action.start_delay:
+            return None
+        return (self.create_date or self.env.cr.now()) + action._get_start_delta()
+
+    def _skip(self, reason="branch", message=False):
         self.write(
             {
                 "state": "skipped",
+                "skip_reason": reason,
                 "date_resume": False,
                 "date_settled": self.env.cr.now(),
-                "error_message": False,
+                "error_message": message,
             }
         )
         for line in self:
@@ -235,6 +261,13 @@ class AutomationRuntimeLine(models.Model):
         self.check_singleton()
         return any(
             edge.condition in ("on_error", "always") for edge in self.edge_out_ids
+        )
+
+    def _contains_its_error(self):
+        self.check_singleton()
+        return (
+            self._has_error_handler()
+            or self.runtime_id.automation_id.step_error_policy == "close_branch"
         )
 
     def action_pause(self):
@@ -311,7 +344,7 @@ class AutomationRuntimeLine(models.Model):
                 runtime.state = "in_progress"
             line.action_mark_error(reason or _("Approval was refused."))
             activities.unlink()
-            if line._has_error_handler():
+            if line._contains_its_error():
                 runtime._advance()
             else:
                 runtime.action_error()
@@ -330,7 +363,7 @@ class AutomationRuntimeLine(models.Model):
             line.action_mark_error(
                 _("The approval activity was removed before anyone acted on it."),
             )
-            if line._has_error_handler():
+            if line._contains_its_error():
                 runtime._advance()
             else:
                 runtime.action_error()
@@ -376,7 +409,7 @@ class AutomationRuntimeLine(models.Model):
                 "error_message": error_msg,
             }
         )
-        for line in self.filtered(lambda line: line._has_error_handler()):
+        for line in self.filtered(lambda line: line._contains_its_error()):
             line._activate_successors()
 
     def action_execute(self):
@@ -386,17 +419,19 @@ class AutomationRuntimeLine(models.Model):
             raise UserError(_("Action is not ready to execute"))
 
         if self._is_expired():
-            self._skip()
             action = self.action_id
             units = dict(
                 action._fields["validity_unit"]._description_selection(self.env)
             )
-            self.error_message = _(
-                "Skipped: it became ready at %(ready)s, and its validity of "
-                "%(delay)s %(unit)s had passed when it came to run.",
-                ready=self.date_ready,
-                delay=action.validity_delay,
-                unit=units.get(action.validity_unit, action.validity_unit),
+            self._skip(
+                reason="expired",
+                message=_(
+                    "Skipped: it became ready at %(ready)s, and its validity of "
+                    "%(delay)s %(unit)s had passed when it came to run.",
+                    ready=self.date_ready,
+                    delay=action.validity_delay,
+                    unit=units.get(action.validity_unit, action.validity_unit),
+                ),
             )
             self.runtime_id._finish_if_settled()
             return False
@@ -461,7 +496,7 @@ class AutomationRuntimeLine(models.Model):
             )
 
             self.action_mark_error(error_msg)
-            if not self._has_error_handler():
+            if not self._contains_its_error():
                 self.runtime_id.action_error()
             return False
 

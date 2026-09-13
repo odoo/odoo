@@ -81,6 +81,11 @@
                                 options="{'no_create': True}"
                                 invisible="node_type != 'subflow'"
                                 required="node_type == 'subflow'" />
+                            <label for="start_delay" invisible="edge_in_ids" />
+                            <div class="o_row" invisible="edge_in_ids">
+                                <field name="start_delay" class="oe_inline" />
+                                <field name="start_delay_unit" class="oe_inline" />
+                            </div>
                             <label for="validity_delay" />
                             <div class="o_row">
                                 <field name="validity_delay" class="oe_inline" />

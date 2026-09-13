@@ -42,6 +42,7 @@ channel and an open canvas reloads.
 | `tests/test_webhook_decrypt_budget.py` | Webhook payload decryption budget |
 | `tests/test_inbound_access_log.py` | Inbound access logging |
 | `tests/test_audit_regressions.py` | Regressions from the audit, webhook cases as `HttpCase` (`@tagged post_install`) |
+| `tests/test_runtime_sync.py` | Skip reasons, root start delays, syncing running runs to an edited definition, archived rules |
 | `tests/test_step_validity.py` | A step skipped once its validity has passed |
 | `tests/test_queued_dispatch.py` | Queued runs, the batched dispatcher, commit policy |
 | `tests/test_timed_event_edges.py` | Delayed edges, event and no-event edges, exclusive events, the scheduled state |

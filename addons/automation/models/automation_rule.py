@@ -245,6 +245,19 @@ class AutomationRule(models.Model):
         "In Batches: steps wait for the background dispatcher, which executes the "
         "ready steps of all runs together, one batch per step.",
     )
+    step_error_policy = fields.Selection(
+        selection=[
+            ("fail_run", "Fail the run"),
+            ("close_branch", "Close only its branch"),
+        ],
+        default="fail_run",
+        required=True,
+        help="What an unhandled failure of a step does.\n"
+        "Fail the run: the whole run stops, and its unfinished steps are marked "
+        "failed.\n"
+        "Close only its branch: what depended on the failed step is skipped, and "
+        "the run's other branches carry on.",
+    )
     create_runtime_instance = fields.Boolean(
         string="Record Every Run",
         default=False,
@@ -686,11 +699,7 @@ class AutomationRule(models.Model):
                     "id": edge.id,
                     "source": edge.source_node_id.id,
                     "target": edge.target_node_id.id,
-                    "condition": edge.condition,
-                    "condition_expr": edge.condition_expr,
-                    "event_code": edge.event_code,
-                    "delay": edge.delay,
-                    "delay_unit": edge.delay_unit,
+                    **edge._runtime_copy_vals(),
                     "label": edge.label,
                 }
                 for edge in self.edge_ids
@@ -721,11 +730,7 @@ class AutomationRule(models.Model):
                 {
                     "source_node_id": new_by_old[edge.source_node_id.id].id,
                     "target_node_id": new_by_old[edge.target_node_id.id].id,
-                    "condition": edge.condition,
-                    "condition_expr": edge.condition_expr,
-                    "event_code": edge.event_code,
-                    "delay": edge.delay,
-                    "delay_unit": edge.delay_unit,
+                    **edge._runtime_copy_vals(),
                     "label": edge.label,
                 }
                 for edge in self.edge_ids

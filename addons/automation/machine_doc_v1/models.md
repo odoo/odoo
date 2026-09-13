@@ -95,6 +95,7 @@ server action model AND the workflow node definition.
 | `approval_user_ids` / `approval_note` | Many2many `res.users` / Char | Who must approve, and what the activity asks |
 | `subflow_automation_id` | Many2one `automation.rule` | What a Sub-workflow step runs; a cycle is refused |
 | `wait_delay` / `wait_unit` | Integer / Selection | How long a `wait` node pauses the run; a non-positive delay is refused |
+| `start_delay` / `start_delay_unit` | Integer / Selection | For a step with no incoming edge only: how long after its line was created (the run's start, or the sync that added it) it becomes ready; the line is `scheduled` until then |
 | `validity_delay` / `validity_unit` | Integer / Selection | How long after its line became ready (`date_ready`) the step may still run; a line reached later is skipped with the reason in `error_message`. Zero never expires; a negative value is refused |
 | `pos_x` | Integer | Node's horizontal position on the workflow canvas |
 | `pos_y` | Integer | Node's vertical position on the workflow canvas |
@@ -211,7 +212,7 @@ while a run is in flight must not change how that run routes.
 | `always` | settled, however it settled |
 | `expression` | settled **and** `condition_expr` is truthy |
 | `event` | settled **and** has received `event_code` |
-| `no_event` | settled **and** has not received `event_code` within `delay` |
+| `no_event` | settled **and** has not received `event_code` within `delay` (a zero window fires as the source settles, unless the event already arrived) |
 
 An **unsettled** source satisfies nothing, whatever the condition: the answer is
 not yet knowable, and treating "not yet" as "no" would race the target into
@@ -348,6 +349,7 @@ Fully isolated per-execution — no shared state with the definition.
 | `error_message` | Text | Error details |
 | `date_resume` | Datetime | When a scheduled step or a paused Wait step is due |
 | `date_ready` | Datetime | When the step became ready; its node's validity counts from here |
+| `skip_reason` | Selection | Why a `skipped` line was skipped: `branch` (dead path or false edge), `revoked` (an exclusive event), `expired` (validity), `filtered` and `cancelled` (set by a caller through `_skip(reason=, message=)`) |
 | `date_settled` | Datetime | When the step settled; delays on its outgoing edges count from here |
 | `edge_in_ids` / `edge_out_ids` | One2many `automation.runtime.edge` | DAG dependency at execution level |
 
@@ -430,6 +432,14 @@ databases and triggers it once.
 **Decision 2 requires this to be easy to delete.** It is one line state, one
 datetime, one method and one cron record; nothing else consults the polling.
 
+**One trap it exposed.** A sweep settles every unfinished line `error` to clean
+up whatever a *failure* stranded. A paused line is unfinished but not stranded,
+so the sweep must never run on a live run. It first sat at the end of
+`action_run_all`, guarded against `in_progress` and `waiting_resume`; without
+that guard a wait node's own line was marked failed the moment it paused, which
+is what the first run of `TestWaitNode` reported. It now lives in
+`action_error`, which only a failed run reaches.
+
 ## Queued runs and the dispatcher
 
 `automation.rule.run_mode` is `immediate` (the default: a run executes as soon as
@@ -450,13 +460,44 @@ now runs `_dispatch_due_steps()` (migration `1.10` rewrites its code and name):
    `ir.cron._commit_progress` when it runs under a cron (never in a test), and
    loops until no ready line is left that it has not already handed out.
 
-Immediate runs are never dispatched. A run that a person steps through with
-`action_next_step` keeps its ready lines until they click.
+Immediate runs are never dispatched: a run that a person steps through with
+`action_next_step` keeps its ready lines until they click. Neither are the queued runs of an
+archived rule: both `_resume_waiting_executions` and the dispatcher filter on
+`automation_id.active`, so archiving a rule pauses its runs where they stand and
+unarchiving resumes them.
 
-**One trap it exposed.** A sweep settles every unfinished line `error` to clean
-up whatever a *failure* stranded. A paused line is unfinished but not stranded,
-so the sweep must never run on a live run. It first sat at the end of
-`action_run_all`, guarded against `in_progress` and `waiting_resume`; without
-that guard a wait node's own line was marked failed the moment it paused, which
-is what the first run of `TestWaitNode` reported. It now lives in
-`action_error`, which only a failed run reaches.
+`_dispatch_due_steps(rules=None)` and `_resume_waiting_executions(rules=None)`
+take an optional recordset of rules, so an application can dispatch its own rules
+now (a campaign's "execute" button) without touching anyone else's queue.
+
+### What a failed step does
+
+`automation.rule.step_error_policy` decides what an *unhandled* failure does.
+`fail_run`, the default and the behaviour until now, stops the run and settles
+its unfinished steps `error`. `close_branch` treats the failure as handled:
+`automation.runtime.line._contains_its_error()` is true, so the failed step's
+successors are settled by their edges (an `on_success` successor is skipped) and
+the run's other branches carry on. Every path that used to ask
+`_has_error_handler()` before failing a run now asks `_contains_its_error()`:
+step execution, `action_mark_error`, a refused or deleted approval, and a failed
+subflow. A campaign uses `close_branch`, so one bounced SMS does not cancel a
+participant's other branches.
+
+The dispatcher re-filters each node's group to lines still `ready` before
+handing it over, because a failure earlier in the same page can already have
+settled a run's other ready lines.
+
+### Editing a workflow under running runs
+
+A run snapshots its lines and edges at start (decision D11 keeps that eager).
+`automation.runtime._sync_to_definition()` brings runs still in progress or
+waiting up to date with an edited definition, without rewriting history:
+
+- a node the run has no line for gets one, with its edges (`_materialize`, which
+  `_create_action_lines` also uses);
+- a runtime edge whose target is still `waiting` or `scheduled` takes the
+  definition's condition, event and delay again (`workflow.edge._runtime_copy_vals`);
+  an edge into a step already ready, running or settled keeps what it ran under;
+- every waiting or scheduled line is re-settled, so a longer delay reschedules it
+  and a new branch whose source already settled runs;
+- a finished run is left alone.
