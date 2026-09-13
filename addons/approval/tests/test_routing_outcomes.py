@@ -1182,14 +1182,14 @@ class TestConvertingEveryCategory(RoutingOutcomesCase):
             **vals,
         )
 
-    def test_every_category_without_a_blocker_converts_and_the_rest_are_named(self):
+    def test_the_sweep_converts_every_category_whatever_its_case_count(self):
         convertible = self._flat_category()
-        blocked = self._flat_category(has_amount="required")
+        many_cases = self._flat_category(has_amount="required")
         for index in range(6):
             self.env["approval.rule"].create(
                 {
                     "name": f"Case {index}",
-                    "category_id": blocked.id,
+                    "category_id": many_cases.id,
                     "condition_type": "threshold",
                     "condition_field": "amount",
                     "operator": "gte" if index % 2 else "lte",
@@ -1201,9 +1201,9 @@ class TestConvertingEveryCategory(RoutingOutcomesCase):
         result = self.env["approval.category"]._convert_every_category_to_steps()
         self.assertIn(convertible, result["converted"])
         self.assertTrue(convertible.step_ids)
-        self.assertIn(blocked, result["blocked"])
-        self.assertFalse(blocked.step_ids)
-        self.assertNotIn(blocked, result["converted"])
+        self.assertIn(many_cases, result["converted"])
+        self.assertEqual(len(many_cases.step_ids), 64)
+        self.assertFalse(result["blocked"].get(many_cases))
 
     def test_every_category_a_module_ships_routes_by_steps_or_says_why(self):
         shipped = self.env["ir.model.data"].search(

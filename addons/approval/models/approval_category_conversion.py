@@ -91,7 +91,8 @@ class ApprovalCategoryConversion(models.Model):
             blockers.append(self.env._("The category already routes by steps."))
         combinations = (len(bands) + 1) * 2 ** len(added)
         if (
-            not self._routes_by_figures(added, bands)
+            not self.env.context.get("approval_conversion_uncapped")
+            and not self._routes_by_figures(added, bands)
             and combinations > _MAX_COMBINATIONS
         ):
             blockers.append(
@@ -508,7 +509,7 @@ class ApprovalCategoryConversion(models.Model):
         blocker; the others keep that list. Returns what happened to each."""
         categories = (
             self.sudo()
-            .with_context(active_test=False)
+            .with_context(active_test=False, approval_conversion_uncapped=True)
             .search([("step_ids", "=", False)])
         )
         converted = self.browse()
