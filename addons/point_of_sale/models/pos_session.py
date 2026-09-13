@@ -334,6 +334,52 @@ class PosSession(models.Model):
         for session in self:
             session.is_in_company_currency = session.currency_id == session.company_id.currency_id
 
+<<<<<<< 014b3281c05d36a9f84daea2f789030af18cb2b0
+||||||| 39c220829b1053c4ee4f57b699344ade2a6f1906
+    @api.depends('payment_method_ids', 'order_ids', 'cash_register_balance_start')
+    def _compute_cash_balance(self):
+        for session in self:
+            cash_payment_method = session.payment_method_ids.filtered('is_cash_count')[:1]
+            if cash_payment_method:
+                total_cash_payment = 0.0
+                captured_cash_payments_domain = Domain.AND([session._get_captured_payments_domain(), [('payment_method_id', '=', cash_payment_method.id)]])
+                result = self.env['pos.payment']._read_group(captured_cash_payments_domain, aggregates=['amount:sum'])
+                total_cash_payment = result[0][0] or 0.0
+                if session.state == 'closed':
+                    total_cash = session.cash_real_transaction + total_cash_payment
+                else:
+                    total_cash = sum(session.statement_line_ids.mapped('amount')) + total_cash_payment
+
+                session.cash_register_balance_end = session.cash_register_balance_start + total_cash
+                session.cash_register_difference = session.cash_register_balance_end_real - session.cash_register_balance_end
+            else:
+                session.cash_register_balance_end = 0.0
+                session.cash_register_difference = 0.0
+
+=======
+    @api.depends('payment_method_ids', 'order_ids', 'cash_register_balance_start')
+    def _compute_cash_balance(self):
+        for session in self:
+            cash_payment_method = session.payment_method_ids.filtered('is_cash_count')[:1]
+            if cash_payment_method:
+                total_cash_payment = 0.0
+                captured_cash_payments_domain = Domain.AND([session._get_captured_payments_domain(), [('payment_method_id', '=', cash_payment_method.id)]])
+                result = self.env['pos.payment']._read_group(captured_cash_payments_domain, aggregates=['amount:sum'])
+                total_cash_payment = result[0][0] or 0.0
+                if session.state == 'closed':
+                    total_cash = session.cash_real_transaction + total_cash_payment
+                else:
+                    # sudo: cash moves are hidden by the account.move record rules
+                    # from users without accounting rights, who can still create them
+                    total_cash = sum(session.sudo().statement_line_ids.mapped('amount')) + total_cash_payment
+
+                session.cash_register_balance_end = session.cash_register_balance_start + total_cash
+                session.cash_register_difference = session.cash_register_balance_end_real - session.cash_register_balance_end
+            else:
+                session.cash_register_balance_end = 0.0
+                session.cash_register_difference = 0.0
+
+>>>>>>> 4069c6fda11ef9504309e029d79324787470cfa5
     @api.depends('order_ids.payment_ids.amount')
     def _compute_total_payments_amount(self):
         result = self.env['pos.payment']._read_group(self._get_captured_payments_domain(), ['session_id'], ['amount:sum'])
