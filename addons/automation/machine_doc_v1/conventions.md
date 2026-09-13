@@ -37,15 +37,6 @@ dropped at runtime, leaving the node `waiting` with nothing that could ever
 complete it. Correspondingly, `_create_action_lines` decides readiness from the
 *resolved* lines, never from the definition's edges.
 
-## Webhook Checks Are Ordered: Authenticate, Then Rate-Limit
-
-`_check_webhook_request` runs the cheap guards (IP allowlist, payload size),
-then authentication (timestamp, signature), and only then the rate limit. The
-bucket is shared with the legitimate sender, so spending a token on an
-unauthenticated request let anyone holding just the URL lock that sender out.
-Header lookups go through `CaseInsensitiveHeaders` because HTTP header names are
-case-insensitive and the configured name is free text.
-
 ## What NOT to Add to `ir.actions.server`
 
 Do not add fields to `ir.actions.server` that track execution state.
@@ -102,12 +93,6 @@ removed. If the last 1-minute automation is deleted, the cron stays at 1-minute
 until manually reset or Odoo restarts. This is acceptable — over-frequent cron
 execution is harmless (just slightly wasteful).
 
-## Webhook UUID Rotation
-
-`action_rotate_webhook_uuid()` generates a new UUID, invalidating all existing
-webhook URLs for that automation. There is no grace period. Use with caution in
-production — notify all external systems before rotating.
-
 ## `automation.runtime` Domain Restriction — REMOVED
 
 The `automation_id` domain was removed in Phase 1; any automation can have
@@ -149,13 +134,7 @@ Two model-side things gate the canvas regardless of library:
 - `test_automation.py`: `@tagged("post_install", "-at_install")` — correct
 - `test_triggers.py`: no `@tagged` — runs at-install, correct for basic model tests
 - `test_workflow_dag.py`: no `@tagged` — runs at-install, correct
-- `test_webhook_security.py`: `@tagged("post_install", "-at_install")` — calls
-  `_check_webhook_request` directly with plain dicts
-- `test_audit_regressions.py`: `@tagged("post_install", "-at_install")`; its
-  webhook cases are `HttpCase` **on purpose**. The dict-based tests above cannot
-  see a case-sensitive header lookup or a rate limiter placed before
-  authentication — both shipped and both were invisible to them. Any change to
-  the webhook path needs a real request in its test.
+- `test_audit_regressions.py`: `@tagged("post_install", "-at_install")`
 
 Do not add `@tagged("post_install")` to `test_triggers.py` or
 `test_workflow_dag.py` — these tests do not require post-install state.

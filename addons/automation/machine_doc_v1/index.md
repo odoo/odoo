@@ -31,17 +31,13 @@ channel and an open canvas reloads.
 | `models/ir_websocket.py` | Turns the canvas's requested string channel into a record channel the user may read |
 | `models/automation_canvas_viewport.py` | Where each reader last left the canvas of each automation |
 | `models/_canvas.py` | The canvas geometry contract both of those read; not a model |
-| `controllers/main.py` | Webhook HTTP endpoint (`/web/hook/<uuid>`) |
 | `static/src/workflow_canvas.js` | The Workflow page's canvas: draws the DAG, drags nodes, draws edges |
 | `static/src/workflow_graph.js` | Its pure parts — the connection guard and the class/label maps |
 | `tests/test_automation.py` | Core trigger tests (`@tagged post_install`) |
 | `tests/test_triggers.py` | All trigger types (no `@tagged`, runs at-install) |
 | `tests/test_workflow_dag.py` | DAG dependency and orchestration (no `@tagged`) |
 | `tests/test_mail_composer.py` | Mail trigger tests |
-| `tests/test_webhook_security.py` | Webhook authentication and rate limiting (`@tagged post_install`) |
-| `tests/test_webhook_decrypt_budget.py` | Webhook payload decryption budget |
-| `tests/test_inbound_access_log.py` | Inbound access logging |
-| `tests/test_audit_regressions.py` | Regressions from the audit, webhook cases as `HttpCase` (`@tagged post_install`) |
+| `tests/test_audit_regressions.py` | Regressions from the audit (`@tagged post_install`) |
 | `tests/test_registry_hooks.py` | Only rules whose trigger patches a model reload the registry |
 | `tests/test_runtime_sync.py` | Skip reasons, root start delays, syncing running runs to an edited definition, adding steps, archived rules, the error policy |
 | `tests/test_step_validity.py` | A step skipped once its validity has passed |

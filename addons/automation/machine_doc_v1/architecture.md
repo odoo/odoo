@@ -98,14 +98,10 @@ ir.cron: "Automation Rules: check and execute"
 
 ### WEBHOOK Trigger
 
-```
-POST /web/hook/<uuid>
-    │
-    controllers/main.py → automation._execute_webhook(payload)
-    │
-    record = safe_eval(automation.record_getter, {model, payload, ...})
-    automation._process(record)
-```
+Not in this module. The automation_webhook bridge, which depends on automation
+and credential and auto-installs with automation, adds the on_webhook value, the
+POST /web/hook/<uuid> route, the inbound gate and the fields they use, and runs
+the rule's `_process` on the record its getter returns.
 
 ### MAIL Triggers
 
@@ -186,26 +182,6 @@ If no time automations exist: `interval = 240 minutes` (4 hours).
 The cron interval is only updated downward (if new automations need a faster
 schedule). It is not automatically increased when short-delay automations are
 removed — manual cron reset may be needed.
-
----
-
-## Webhook Controller
-
-`controllers/main.py` exposes:
-
-```
-POST /web/hook/<webhook_uuid>
-```
-
-- Looks up `automation.rule` by `webhook_uuid` **and `trigger = on_webhook`**,
-  `limit=1` (active automations only). Every rule carries a `webhook_uuid`
-  whatever its trigger, so the UUID alone must never be sufficient.
-- Accepts JSON body or URL query params as payload
-- Calls `automation._execute_webhook(payload)`
-- Returns HTTP 200 with JSON result or raises on error
-
-Payload is available in `record_getter` and in code actions as the `payload`
-variable via `_prepare_eval_context()`.
 
 ---
 

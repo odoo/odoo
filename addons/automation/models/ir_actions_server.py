@@ -6,7 +6,6 @@ from odoo.tools.date_utils import get_timedelta, time_unit_selection
 from odoo.tools.json import scriptsafe as json_scriptsafe
 
 from ._canvas import NODE_SIZE_MAX, NODE_SIZE_MIN
-from .automation_rule import get_webhook_request_payload
 
 _logger = logging.getLogger(__name__)
 
@@ -290,12 +289,6 @@ class IrActionsServer(models.Model):
         eval_context = super()._prepare_eval_context(action)
         if action.state == "code":
             eval_context["json"] = json_scriptsafe
-            payload = self.env.context.get("webhook_payload")
-            if payload is None:
-                payload = get_webhook_request_payload()
-            if payload is not None:
-                eval_context["payload"] = payload
-
             line_id = self.env.context.get("runtime_line_id")
             if line_id:
                 line = self.env["automation.runtime.line"].browse(line_id)

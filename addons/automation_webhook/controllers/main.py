@@ -1,6 +1,6 @@
 from odoo.http import Controller, request, route
 
-from odoo.addons.automation.models.automation_rule import (
+from odoo.addons.automation_webhook.models.automation_rule import (
     get_webhook_request_payload,
 )
 

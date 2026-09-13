@@ -604,7 +604,7 @@ registry.category("web_tour.tours").add("test_form_view_custom_reference_field",
         },
         {
             trigger:
-                ".o_field_widget[name='trg_field_ref'] .o-autocomplete--dropdown-menu:not(:has(a .fa-spin))",
+                ".o_field_widget[name='trg_field_ref'] .o-autocomplete--dropdown-menu:not(:has(.o_loading))",
             run() {
                 // Assert the record is offered, not the dropdown's chrome:
                 // "Search more..." only appears once the results exceed the
@@ -624,7 +624,7 @@ registry.category("web_tour.tours").add("test_form_view_custom_reference_field",
         },
         {
             trigger:
-                ".o_field_widget[name='trg_field_ref'] :not(:has(.o-autocomplete--dropdown-menu))",
+                ".o_field_widget[name='trg_field_ref']:not(:has(.o-autocomplete--dropdown-menu))",
         },
         {
             trigger: ".o_field_widget[name='trg_field_ref'] input",
@@ -632,7 +632,7 @@ registry.category("web_tour.tours").add("test_form_view_custom_reference_field",
         },
         {
             trigger:
-                ".o_field_widget[name='trg_field_ref'] .o-autocomplete--dropdown-menu:not(:has(a .fa-spin)",
+                ".o_field_widget[name='trg_field_ref'] .o-autocomplete--dropdown-menu:not(:has(.o_loading))",
             run() {
                 // See the "test stage" assertion above: "Search more..." is a
                 // function of how many records exist, not of this behaviour.

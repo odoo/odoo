@@ -17,6 +17,7 @@ This module includes:
     "license": "LGPL-3",
     "depends": [
         "automation",
+        "automation_webhook",
         "test_mail",
     ],
     "data": [

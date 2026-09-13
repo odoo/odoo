@@ -188,6 +188,7 @@ done <<< "$constants_report"
 # Forward: every shipped source and test file is named in index.md's table. The
 # test half of this is what caught index.md listing 4 of 8.
 for f in "$MOD"/models/*.py "$MOD"/controllers/*.py "$MOD"/tests/test_*.py; do
+    [ -f "$f" ] || continue
     base="$(basename "$f")"
     [ "$base" = "__init__.py" ] && continue
     rel="${f#"$MOD"/}"

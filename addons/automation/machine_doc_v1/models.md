@@ -9,7 +9,7 @@ and the set of `ir.actions.server` nodes that form the DAG.
 
 | Field | Type | Purpose |
 |-------|------|---------|
-| `trigger` | Selection (19 values) | When this workflow fires |
+| `trigger` | Selection (18 values) | When this workflow fires |
 | `model_id` | Many2one `ir.model` | Target model (required) |
 | `filter_pre_domain` | Char | Pre-condition: record state *before* write |
 | `filter_domain` | Char | Post-condition: record state *after* event |
@@ -21,9 +21,6 @@ and the set of `ir.actions.server` nodes that form the DAG.
 | `trg_date_range_type` | Selection | minute / hour / day / month, the shared `time_unit_selection` units |
 | `trg_date_range_mode` | Selection | before / after the trigger date |
 | `trg_date_calendar_id` | Many2one `resource.calendar` | Working-day calendar |
-| `webhook_uuid` | Char | UUID for webhook URL (rotatable) |
-| `record_getter` | Char | Python expression: payload → record |
-| `log_webhook_calls` | Boolean | Log webhook calls to `ir.logging` |
 | `last_run` | Datetime | Last successful cron execution |
 | ~~`use_workflow_dag`~~ | ~~Boolean~~ | **REMOVED in Phase 1** — all automations are DAG-capable |
 | ~~`auto_execute_workflow`~~ | ~~Boolean~~ | **REMOVED in Phase 1** — execution is always auto-advancing |
@@ -45,11 +42,10 @@ MAIL triggers:     on_message_received, on_message_sent
 UNLINK trigger:    on_unlink
 
 MANUAL trigger:    on_hand
-WEBHOOK trigger:   on_webhook
 ONCHANGE trigger:  on_change  (UI-only, form view onchange)
 ```
 
-Every one of the 19 values appears above; `factcheck.sh` asserts that both ways,
+Every one of the 18 values appears above; `factcheck.sh` asserts that both ways,
 so a value added to the Selection without a line here fails the gate.
 
 ### Constants (module-level)

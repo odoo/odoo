@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_automation_form" model="ir.ui.view">
+        <field name="name">automation.rule.form.webhook</field>
+        <field name="model">automation.rule</field>
+        <field name="inherit_id" ref="automation.view_automation_form" />
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button
+                    name="action_view_webhook_logs"
+                    type="object"
+                    string="Logs"
+                    icon="fa-list"
+                    groups="base.group_no_one"
+                    invisible="trigger != 'on_webhook'"
+                    class="oe_stat_button" />
+            </div>
+            <label for="trg_date_range" position="before">
+                <label
+                    for="url"
+                    string="Secret URL"
+                    invisible="trigger != 'on_webhook'" />
+                <div class="d-flex flex-row" invisible="trigger != 'on_webhook'">
+                    <field
+                        name="url"
+                        widget="CopyClipboardURL"
+                        class="oe_inline mb-0" />
+                    <button
+                        name="action_rotate_webhook_uuid"
+                        type="object"
+                        string="Renew"
+                        help="If renewed, update the secret URL in the third-party app that calls this webhook."
+                        icon="fa-refresh"
+                        groups="base.group_no_one"
+                        class="oe_inline btn btn-link flex-shrink-0 px-1 py-0" />
+                </div>
+                <field
+                    name="log_webhook_calls"
+                    widget="boolean_toggle"
+                    groups="base.group_no_one"
+                    invisible="trigger != 'on_webhook'" />
+                <label
+                    for="auth_type"
+                    string="Authentication"
+                    invisible="trigger != 'on_webhook'" />
+                <div invisible="trigger != 'on_webhook'">
+                    <field name="auth_type" class="oe_inline" />
+                    <field
+                        name="credential_id"
+                        invisible="auth_type == 'none'"
+                        required="auth_type != 'none'"
+                        class="oe_inline ms-2" />
+                    <div
+                        class="d-flex flex-row gap-2 mt8"
+                        invisible="auth_type not in ['hmac_sha256', 'hmac_sha512']">
+                        <field name="signature_header" placeholder="Signature header" />
+                        <field name="signature_prefix" placeholder="Prefix" />
+                    </div>
+                    <div class="mt8">
+                        <field
+                            name="timestamp_verification_enabled"
+                            widget="boolean_toggle"
+                            class="oe_inline" />
+                        <span class="ms-1">Verify timestamp (replay protection)</span>
+                        <div
+                            class="d-flex flex-row gap-2"
+                            invisible="not timestamp_verification_enabled">
+                            <field
+                                name="timestamp_header"
+                                placeholder="Timestamp header" />
+                            <field name="timestamp_max_age_seconds" />
+                        </div>
+                    </div>
+                    <div class="mt8">
+                        <field
+                            name="rate_limit_enabled"
+                            widget="boolean_toggle"
+                            class="oe_inline" />
+                        <span class="ms-1">Rate limit</span>
+                        <div
+                            class="d-flex flex-row gap-2"
+                            invisible="not rate_limit_enabled">
+                            <field name="rate_limit_requests" />
+                            <field name="rate_limit_window_seconds" />
+                        </div>
+                    </div>
+                    <div class="d-flex flex-row gap-2 mt8">
+                        <field
+                            name="ip_whitelist"
+                            placeholder="IP allowlist (CIDR, comma-separated)" />
+                        <field name="max_payload_size" />
+                    </div>
+                </div>
+            </label>
+            <group name="trigger_target" position="inside">
+                <label
+                    for="record_getter"
+                    string="Target Record"
+                    invisible="trigger != 'on_webhook'" />
+                <div invisible="trigger != 'on_webhook'">
+                    <field name="record_getter" string="Target Record" />
+                    <div>
+                        <div class="text-muted"><i class="fa-solid fa-info-circle" />
+                            Leave empty to run the rule <strong>without a record</strong>
+                            (a create-from-payload receiver): the actions run once with
+                            the parsed body available as <code>payload</code>.</div>
+                        <div class="text-muted mt-1">For a webhook sent by another Odoo
+                            instance, which posts <code>_model</code> and <code>_id</code>,
+                            use:
+                            <code>model.env[payload.get('_model')].browse(int(payload.get('_id')))</code>
+                        </div>
+                        <span class="text-muted"> Available variables: </span>
+                        <ul class="text-muted">
+                            <li><code>model</code>: model of the record on which the
+                                action is triggered; is a void recordset. The environment
+                                is reachable as <code>model.env</code> — there is no bare
+                                <code>env</code> variable here.</li>
+                            <li><code>time</code>, <code>datetime</code>, <code>dateutil</code>
+                                , <code>timezone</code>: useful Python libraries</li>
+                            <li><code>payload</code>: the payload of the call (GET
+                                parameters, JSON body), as a dict.</li>
+                        </ul>
+                    </div>
+                </div>
+            </group>
+        </field>
+    </record>
+
+</odoo>
