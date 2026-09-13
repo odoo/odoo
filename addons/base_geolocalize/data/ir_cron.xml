@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="ir_cron_geolocalize_required_partners" model="ir.cron">
+            <field name="name">Geolocalize Partners</field>
+            <field name="model_id" ref="model_res_partner"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_geolocalize_required_partners()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">9999</field>
+            <field name="interval_type">months</field>
+        </record>
+    </data>
+</odoo>
