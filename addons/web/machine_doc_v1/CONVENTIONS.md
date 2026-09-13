@@ -831,3 +831,24 @@ When refactoring a widget:
     `node.__owl__.fiber.root.node` tells a self-triggered render from one driven
     by the parent. `render_instrumentation.js` (`__renderTrace` /
     `__renderStats`) counts renders per component label.
+
+### Property definitions and record identity
+
+The field service exposes two representations of property definitions.
+`loadPropertyDefinitions(model, fieldName, domain)` returns the name-indexed
+mapping used by field-path consumers; duplicate names retain the historical
+last-definition behavior. `loadPropertyDefinitionsByRecord(model, fieldName,
+domain)` returns records with `definitionRecordId`, `definitionRecordName`, and
+`definitions`, preserving properties with the same name in different records.
+Both use the same RPC-loading implementation in `static/src/core/field_service.js`.
+
+Search filters use the record-preserving representation because their domains
+include the definition record. Group-by paths have no such record discriminator:
+search combines compatible duplicate names into one item, and excludes paths
+whose definitions disagree on type or relation. If such a conflict appears during
+a refresh, the old group-by and synthesized field metadata are retired.
+
+Property responses are applied only while their search item/view and active
+record still match. A newer expansion supersedes the previous expansion for that
+item; group-definition requests coalesce only within the same field and active
+record. Superseded failures are ignored, while current failures propagate.
