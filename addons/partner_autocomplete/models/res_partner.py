@@ -86,6 +86,14 @@ class ResPartner(models.Model):
 
     @api.model
     def autocomplete_by_field(self, fieldName, query, query_country_id, timeout=15):
+        if (
+            fieldName == 'name'
+            and query.isdigit()
+            and len(query) in (9, 14)
+            and self.env['ir.module.module']._get('l10n_fr').state == 'installed'
+        ):
+            return self.autocomplete_by_vat(query, self.env.ref('base.fr').id)
+
         match fieldName:
             case "name":
                 return self.autocomplete_by_name(query, query_country_id)
@@ -102,6 +110,7 @@ class ResPartner(models.Model):
         response, _ = self.env['iap.autocomplete.api']._request_partner_autocomplete('search_by_name', {
             'query': query,
             'query_country_code': query_country_code,
+            'supported_enrichment_types': ['duns', 'vat'],
         }, timeout=timeout)
         if response and not response.get("error"):
             results = []
@@ -118,6 +127,7 @@ class ResPartner(models.Model):
         response, _ = self.env['iap.autocomplete.api']._request_partner_autocomplete('search_by_vat', {
             'query': vat,
             'query_country_code': query_country_code,
+            'supported_enrichment_types': ['duns', 'vat'],
         }, timeout=timeout)
         if response and not response.get("error"):
             results = []

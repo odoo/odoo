@@ -214,6 +214,37 @@ test("Partner autocomplete : VAT search", async () => {
     }
 });
 
+test("Partner autocomplete: enrich by registration number", async () => {
+    onRpc("res.partner", "autocomplete_by_field", () => [
+        {
+            name: "ETABLISSEMENTS ADRIEN RIQUIER",
+            enrichment_type: "vat",
+            enrichment_query: "005520325",
+            city: "Dargnies",
+            country_id: { id: 1, name: "France" },
+        },
+    ]);
+    onRpc("res.partner", "enrich_by_vat", ({ args }) => {
+        expect.step(args[0]);
+        return {
+            name: "ETABLISSEMENTS ADRIEN RIQUIER",
+            street: "12 RUE HENRI BARBUSSE",
+            city: "Dargnies",
+            zip: "80570",
+        };
+    });
+    await mountView({
+        resModel: "res.partner",
+        type: "form",
+    });
+
+    await editAutocomplete("[name='name'] .dropdown input", "005520325");
+    await contains("[name='name'] .o-autocomplete ul li").click();
+
+    expect.verifySteps(["005520325"]);
+    expect("[name='street'] input").toHaveValue("12 RUE HENRI BARBUSSE");
+});
+
 test.tags("desktop");
 test("Click out after edition", async () => {
     expect.assertions(2);
