@@ -1,6 +1,5 @@
 import typing
 from itertools import batched
-from typing import Self
 
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.profiling import _OrmProfile
@@ -62,9 +61,8 @@ class UnlinkMixin(_ModelStubs):
 
         cr = self.env.cr
         Defaults = self.env["ir.default"].sudo()
-        Attachment = self.env["ir.attachment"].sudo()
         ir_model_data_unlink = self.env.registry.xmlids.records_of(self)
-        ir_attachment_unlink = Attachment
+        ir_attachment_unlink = self.env.registry.file_store.of_records(self)
 
         with self.env.protecting(self._fields.values(), self):
             self._modified_before(self._fields)
@@ -74,9 +72,7 @@ class UnlinkMixin(_ModelStubs):
 
         deleted_ids: list[int] = self.ids
         for sub_ids in batched(deleted_ids, cr.BATCH_SIZE, strict=False):
-            ir_attachment_unlink |= self._unlink_process_batch(
-                sub_ids, Defaults, Attachment
-            )
+            self._unlink_process_batch(sub_ids, Defaults)
         prof.mark("sql")
 
         if self.env.context.get(MODULE_UNINSTALL_FLAG):
@@ -194,13 +190,7 @@ class UnlinkMixin(_ModelStubs):
         )
 
     def _unlink_process_batch(
-        self, sub_ids: tuple[int, ...], Defaults: typing.Any, Attachment: typing.Any
-    ) -> Self:
-        attachments = self.env.backend.unlink_rows(self, sub_ids, Defaults, Attachment)
-        _debug.perf.count(
-            "unlink.batch",
-            model=self._name,
-            records=len(sub_ids),
-            attachments=len(attachments),
-        )
-        return attachments
+        self, sub_ids: tuple[int, ...], Defaults: typing.Any
+    ) -> None:
+        self.env.backend.unlink_rows(self, sub_ids, Defaults)
+        _debug.perf.count("unlink.batch", model=self._name, records=len(sub_ids))

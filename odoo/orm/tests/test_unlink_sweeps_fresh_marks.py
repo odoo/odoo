@@ -41,6 +41,8 @@ class _IrAttachment(models.Model):
     _description = "ir.attachment stub for the unlink flow"
 
     name = fields.Char()
+    res_model = fields.Char()
+    res_id = fields.Integer()
 
 
 @pytest.fixture

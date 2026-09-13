@@ -221,18 +221,13 @@ class Binary(Field[bytes | typing.Literal[False]]):
             return s
 
         assert self.attachment
-        domain = [
-            ("res_model", "=", records._name),
-            ("res_field", "=", self.name),
-            ("res_id", "in", records.ids),
-        ]
         context = records.env.context
         bin_size = context.get("bin_size") or context.get("bin_size_" + self.name)
-        attachments = records.env["ir.attachment"].sudo()._with_bin_size_disabled()
-        data = {
-            att.res_id: (_encode(human_size(att.file_size)) if bin_size else att.datas)
-            for att in attachments.search_fetch(domain)
-        }
+        data = records.env.registry.file_store.read_field(
+            records, self.name, bin_size=bool(bin_size)
+        )
+        if bin_size:
+            data = {res_id: _encode(size) for res_id, size in data.items()}
         _debug.perf.count(
             "field.binary.attachments_read",
             model=self.model_name,
@@ -249,23 +244,11 @@ class Binary(Field[bytes | typing.Literal[False]]):
         if not record_values:
             return
         env = record_values[0][0].env
-        attachments = (
-            env["ir.attachment"]
-            .sudo()
-            .create(
-                [
-                    {
-                        "name": self.name,
-                        "res_model": self.model_name,
-                        "res_field": self.name,
-                        "res_id": record.id,
-                        "type": "binary",
-                        "datas": value,
-                    }
-                    for record, value in record_values
-                    if value
-                ]
-            )
+        attachments = env.registry.file_store.create_field(
+            env,
+            self.model_name,
+            self.name,
+            [(record.id, value) for record, value in record_values if value],
         )
         _debug.lifecycle(
             "field.binary.attachments_created",
@@ -294,15 +277,10 @@ class Binary(Field[bytes | typing.Literal[False]]):
 
         if self.store and any(records._ids):
             real_records = records.filtered("id")
-            atts = records.env["ir.attachment"].sudo()
-            if not_null:
-                atts = atts.search(
-                    [
-                        ("res_model", "=", self.model_name),
-                        ("res_field", "=", self.name),
-                        ("res_id", "in", real_records.ids),
-                    ]
-                )
+            file_store = records.env.registry.file_store
+            atts = file_store.of_field(
+                real_records if not_null else records.browse(), self.name
+            )
             if value:
                 atts.write({"datas": value})
                 atts_records = records.browse(atts.mapped("res_id"))
@@ -316,18 +294,11 @@ class Binary(Field[bytes | typing.Literal[False]]):
                     created=len(missing),
                 )
                 if missing:
-                    atts.create(
-                        [
-                            {
-                                "name": self.name,
-                                "res_model": record._name,
-                                "res_field": self.name,
-                                "res_id": record.id,
-                                "type": "binary",
-                                "datas": value,
-                            }
-                            for record in missing
-                        ]
+                    file_store.create_field(
+                        records.env,
+                        self.model_name,
+                        self.name,
+                        [(record.id, value) for record in missing],
                     )
             else:
                 _debug.logic(
@@ -355,12 +326,12 @@ class Binary(Field[bytes | typing.Literal[False]]):
         assert operator in ("in", "not in") and set(value) == {False}, (
             "Should have been done in Domain optimization"
         )
+        with_file = model.env.registry.file_store.field_set_query(model, self.name)
         return SQL(
-            "%sEXISTS (SELECT 1 FROM ir_attachment WHERE res_model = %s AND res_field = %s AND res_id = %s)",
-            SQL("NOT ") if operator == "in" else SQL(),
-            model._name,
-            self.name,
+            "%s%s IN %s",
             model._field_to_sql(alias, "id", query),
+            SQL(" NOT") if operator == "in" else SQL(),
+            with_file.subselect("res_id"),
         )
 
 
@@ -442,37 +413,10 @@ class Image(Binary):
         if img and guess_mimetype(img, "") == "image/webp":
             if not self.max_width and not self.max_height:
                 return value
-            Attachment = env["ir.attachment"]
-            checksum = Attachment._get_content_checksum(img)
-            origins = Attachment.search(
-                [
-                    ["id", "!=", False],
-                    ["checksum", "=", checksum],
-                ]
+            resized = env.registry.file_store.resized_webp(
+                env, img, max(self.max_width, self.max_height)
             )
-            if origins:
-                origin_ids = [attachment.id for attachment in origins]
-                resized_domain = [
-                    ["id", "!=", False],
-                    ["res_model", "=", "ir.attachment"],
-                    ["res_id", "in", origin_ids],
-                    [
-                        "description",
-                        "=",
-                        f"resize: {max(self.max_width, self.max_height)}",
-                    ],
-                ]
-                resized = Attachment.sudo().search(resized_domain, limit=1)
-                _debug.logic(
-                    "field.image.webp_resize_lookup",
-                    model=self.model_name,
-                    field=self.name,
-                    origins=len(origins),
-                    resized=bool(resized),
-                )
-                if resized:
-                    return resized.datas or value
-            return value
+            return resized or value
 
         return (
             base64.b64encode(

@@ -463,12 +463,8 @@ class StorageBackend(typing.Protocol):
     ) -> BaseModel: ...
 
     def unlink_rows(
-        self,
-        model: BaseModel,
-        sub_ids: tuple[int, ...],
-        Defaults: typing.Any,
-        Attachment: BaseModel,
-    ) -> BaseModel: ...
+        self, model: BaseModel, sub_ids: tuple[int, ...], Defaults: typing.Any
+    ) -> None: ...
 
     def read_m2m_pairs(
         self,
@@ -1044,12 +1040,8 @@ class PostgresBackend:
         return model.browse(i for i in model._ids if i in valid_ids)
 
     def unlink_rows(
-        self,
-        model: BaseModel,
-        sub_ids: tuple[int, ...],
-        Defaults: typing.Any,
-        Attachment: BaseModel,
-    ) -> BaseModel:
+        self, model: BaseModel, sub_ids: tuple[int, ...], Defaults: typing.Any
+    ) -> None:
         env = model.env
         cr = env.cr
         records = model.browse(sub_ids)
@@ -1062,22 +1054,12 @@ class PostgresBackend:
             )
         )
 
-        cr.execute(
-            SQL(
-                "SELECT id FROM ir_attachment WHERE res_model=%s AND res_id = ANY(%s)",
-                model._name,
-                list(sub_ids),
-            )
-        )
-        attachments = Attachment.browse(row[0] for row in cr.fetchall())
-
         many2one_fields = env.registry.many2one_company_dependents[model._name]
         uninstalling = env.context.get(MODULE_UNINSTALL_FLAG)
         _debug.pipeline(
             "backend.unlink_rows",
             model=model._name,
             rows=len(sub_ids),
-            attachments=len(attachments),
             company_dependent_referrers=len(many2one_fields),
             uninstalling=bool(uninstalling),
         )
@@ -1098,8 +1080,6 @@ class PostgresBackend:
                 self._unlink_clear_company_dependent(referrer, field, sub_ids)
 
         Defaults.discard_records(records)
-
-        return attachments
 
     @staticmethod
     def _unlink_default_guard(
@@ -1748,14 +1728,9 @@ class InMemoryBackend:
         return model.browse(locked)
 
     def unlink_rows(
-        self,
-        model: BaseModel,
-        sub_ids: tuple[int, ...],
-        Defaults: typing.Any,
-        Attachment: BaseModel,
-    ) -> BaseModel:
+        self, model: BaseModel, sub_ids: tuple[int, ...], Defaults: typing.Any
+    ) -> None:
         self.storage.remove_rows(model._table, list(sub_ids))
-        return Attachment.browse()
 
     def _iter_m2m_rows(self, relation: str):
         for row_id in self.storage.get_table_ids(relation):

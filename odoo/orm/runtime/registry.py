@@ -33,6 +33,7 @@ from ._registry_models import _RegistryModelsMixin
 from ._registry_schema import _RegistrySchemaMixin
 from ._registry_signaling import _RegistrySignalingMixin
 from .access_policy import ACCESS_POLICY, AccessPolicy
+from .filestore import FILE_STORE, FileStore
 from .metaschema import META_SCHEMA, MetaSchema
 from .xmlids import XMLIDS, Xmlids
 
@@ -87,6 +88,7 @@ class Registry(
     metaschema: MetaSchema = META_SCHEMA
     access_policy: AccessPolicy = ACCESS_POLICY
     xmlids: Xmlids = XMLIDS
+    file_store: FileStore = FILE_STORE
 
     @classmethod
     def _new_finalize(cls, db_name: str, update_module: bool, t0: float) -> Registry:
