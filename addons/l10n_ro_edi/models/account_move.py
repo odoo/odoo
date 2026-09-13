@@ -1,4 +1,3 @@
-import base64
 import requests
 from markupsafe import Markup
 
@@ -212,7 +211,7 @@ class AccountMove(models.Model):
                 'key_download': result['key_download'],
                 'key_signature': download_data['signature']['key_signature'],
                 'key_certificate': download_data['signature']['key_certificate'],
-                'attachment': BinaryBytes(base64.b64decode(download_data['signature']['attachment_raw'])),
+                'attachment': BinaryBytes(download_data['signature']['attachment_raw']),
             }
             if result['state_status'] == 'nok':  # Invoice refused
                 error_message = download_data['invoice']['error'].replace('\t', '')
@@ -371,7 +370,7 @@ class AccountMove(models.Model):
                 'key_download': message['id'],
                 'key_signature': message['answer']['signature']['key_signature'],
                 'key_certificate': message['answer']['signature']['key_certificate'],
-                'attachment': BinaryBytes(base64.b64decode(message['answer']['signature']['attachment_raw'])),
+                'attachment': BinaryBytes(message['answer']['signature']['attachment_raw']),
             })
 
         self.env['l10n_ro_edi.document'].sudo().browse(document_ids_to_delete).unlink()
@@ -425,7 +424,7 @@ class AccountMove(models.Model):
                 'key_download': message['id'],
                 'key_signature': message['answer']['signature']['key_signature'],
                 'key_certificate': message['answer']['signature']['key_certificate'],
-                'attachment': BinaryBytes(base64.b64decode(message['answer']['signature']['attachment_raw'])),
+                'attachment': BinaryBytes(message['answer']['signature']['attachment_raw']),
             })
 
         self.env['l10n_ro_edi.document'].sudo().browse(document_ids_to_delete).unlink()
@@ -498,7 +497,7 @@ class AccountMove(models.Model):
                 'key_download': message['id'],
                 'key_signature': message['answer']['signature']['key_signature'],
                 'key_certificate': message['answer']['signature']['key_certificate'],
-                'attachment': BinaryBytes(base64.b64decode(message['answer']['signature']['attachment_raw'])),
+                'attachment': BinaryBytes(message['answer']['signature']['attachment_raw']),
             })
             xml_attachment_raw = message['answer']['invoice']['attachment_raw']
             xml_attachment_id = self.env['ir.attachment'].sudo().create({
