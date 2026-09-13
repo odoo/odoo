@@ -9,10 +9,6 @@
                  are focused in priority when navigating the page with tab. -->
             <div class="o_horizontal_controllers container position-absolute start-50 bottom-0 translate-middle-x w-100 mb-md-4 z-1 o_not_editable">
                 <div class="o_horizontal_controllers_container d-flex">
-                    <button class="o_carousel_pause o_snippet_not_selectable o_not_editable o_btn_reset z-2" t-attf-aria-controls="myQuoteCarouselCompact{{uniq}}" title="Pause slides">
-                        <span class="o_carousel_pause_icon oi oi-filled" data-icon="pause" aria-hidden="true"/>
-                        <span class="visually-hidden">Pause slides</span>
-                    </button>
                     <div class="o_horizontal_controllers_row row gap-3 gap-lg-5 justify-content-between flex-nowrap flex-row-reverse flex-grow-1 mx-0">
                         <!-- Controls -->
                         <div class="o_arrows_wrapper gap-2 w-auto p-0">
@@ -25,6 +21,10 @@
                                 <span class="visually-hidden">Next slide</span>
                             </button>
                         </div>
+                        <button class="o_carousel_pause o_snippet_not_selectable o_not_editable o_btn_reset z-2 order-first" t-attf-aria-controls="myQuoteCarouselCompact{{uniq}}" title="Pause slides">
+                            <span class="o_carousel_pause_icon oi oi-filled" data-icon="pause" aria-hidden="true"/>
+                            <span class="visually-hidden">Pause slides</span>
+                        </button>
                         <!-- Indicators -->
                         <div class="s_carousel_indicators_numbers carousel-indicators align-items-center flex-shrink-1 w-auto" role="tablist">
                             <button type="button" t-attf-data-bs-target="#myQuoteCarouselCompact{{uniq}}" data-bs-slide-to="0" class="active" aria-label="Slide 1 of 3" role="tab" aria-selected="true" t-attf-aria-controls="myQuoteCarouselCompact{{uniq}}_1"/>
