@@ -2165,6 +2165,10 @@ class TestFieldDeclarationLint(BaseCase):
                 related=False,
                 compute="_compute_unrelated",
             )
+            extended = fields.Selection(
+                required=True,
+                precompute=True,
+            )
         """,
             rule="dead-field-attribute",
         )

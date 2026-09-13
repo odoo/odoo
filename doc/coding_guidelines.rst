@@ -1010,7 +1010,8 @@ precedes.
 
 **An attribute setup ignores is a dead attribute** ``[test_lint E8527]``:
 ``index=`` on a One2many, a Many2many or a non-stored compute (no column to
-index), ``precompute=`` without ``store=True`` (dropped with a warning), and
+index), ``precompute=`` on a compute without ``store=True`` (dropped with a
+warning), and
 ``compute=`` beside a truthy ``related=`` (replaced by the related path's own
 compute).
 

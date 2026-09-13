@@ -303,9 +303,13 @@ def _check_dead(name: str, call: ast.Call) -> Iterator[Violation]:
             isinstance(value, ast.Constant) and not value.value
         )
 
+    # A declaration that states no compute= may be extending a stored one
+    # from another module, so store= is judged only beside the compute it
+    # belongs to.
     stored = truthy("store")
+    computed_here = "compute" in keys
     if truthy("index") and (
-        kind in ("One2many", "Many2many") or ("compute" in keys and not stored)
+        kind in ("One2many", "Many2many") or (computed_here and not stored)
     ):
         yield Violation(
             call.lineno,
@@ -313,7 +317,7 @@ def _check_dead(name: str, call: ast.Call) -> Iterator[Violation]:
             "dead-field-attribute",
             f"{name}: index= on a field with no column",
         )
-    if truthy("precompute") and not stored:
+    if truthy("precompute") and computed_here and not stored:
         yield Violation(
             call.lineno,
             call.col_offset,
