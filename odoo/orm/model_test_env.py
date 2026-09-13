@@ -29,7 +29,7 @@ from .runtime._registry_models import (
 )
 from .runtime.access_policy import ACCESS_POLICY
 from .runtime.filestore import FILE_STORE
-from .runtime.locale import LOCALE
+from .runtime.locale import LOCALE, Locale
 from .runtime.metaschema import META_SCHEMA
 from .runtime.registry import CACHES_BY_KEY
 from .runtime.settings import SYSTEM_SETTINGS
@@ -584,15 +584,31 @@ class ModelRegistry(_RegistryFieldsMixin, Mapping):
                     )
 
 
+class _InstalledLangs(Locale):
+    __slots__ = ("codes",)
+
+    def __init__(self, codes: Iterable[str]) -> None:
+        self.codes = frozenset(codes) | {"en_US"}
+
+    def installed_langs(self, env: Environment) -> list[str]:
+        return sorted(self.codes)
+
+    def is_lang_installed(self, env: Environment, code: str) -> bool:
+        return code in self.codes
+
+
 @contextmanager
 def model_test_env(
     *model_classes: type[BaseModel],
     registry: ModelRegistry | None = None,
     db_name: str = ":memory:",
     fixtures: dict[str, list[tuple]] | None = None,
+    langs: Iterable[str] = (),
 ):
     if registry is None:
         registry = ModelRegistry(model_classes, db_name=db_name)
+    if langs:
+        registry.locale = _InstalledLangs(langs)
 
     for cache in registry.ormcache_lrus.values():
         cache.clear()

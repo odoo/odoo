@@ -320,6 +320,15 @@ class ColumnStore(typing.Protocol):
         self, model: BaseModel, column: str, record_id: int, value: typing.Any
     ) -> bool: ...
 
+    def merge_json(
+        self,
+        model: BaseModel,
+        column: str,
+        record_id: int,
+        fallback: dict[str, typing.Any],
+        value: dict[str, typing.Any],
+    ) -> int: ...
+
 
 class PostgresColumnStore:
     __slots__ = ()
@@ -401,6 +410,31 @@ class PostgresColumnStore:
                 return False
         return True
 
+    def merge_json(
+        self,
+        model: BaseModel,
+        column: str,
+        record_id: int,
+        fallback: dict[str, typing.Any],
+        value: dict[str, typing.Any],
+    ) -> int:
+        # fallback under the stored object under the new value; a null entry
+        # deletes its key and an object left empty becomes NULL
+        cr = model.env.cr
+        cr.execute(
+            SQL(
+                "UPDATE %(table)s SET %(column)s = NULLIF(jsonb_strip_nulls("
+                "%(fallback)s || COALESCE(%(column)s, '{}'::jsonb) || %(value)s"
+                "), '{}'::jsonb) WHERE id = %(id)s",
+                table=SQL.identifier(model._table),
+                column=SQL.identifier(column),
+                fallback=Jsonb(fallback),
+                value=Jsonb(value),
+                id=record_id,
+            )
+        )
+        return cr.rowcount
+
 
 class InMemoryColumnStore:
     __slots__ = ("storage",)
@@ -437,6 +471,30 @@ class InMemoryColumnStore:
     ) -> bool:
         self.storage.update_rows(model._table, [(record_id, {column: value})])
         return True
+
+    def merge_json(
+        self,
+        model: BaseModel,
+        column: str,
+        record_id: int,
+        fallback: dict[str, typing.Any],
+        value: dict[str, typing.Any],
+    ) -> int:
+        row = self.storage.get_row(model._table, record_id)
+        if row is None:
+            return 0
+        stored = _unwrap_json(row.get(column)) or {}
+        merged = {
+            key: item
+            for key, item in {
+                **_unwrap_json(fallback),
+                **stored,
+                **_unwrap_json(value),
+            }.items()
+            if item is not None
+        }
+        self.storage.update_rows(model._table, [(record_id, {column: merged or None})])
+        return 1
 
 
 @typing.runtime_checkable

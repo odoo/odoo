@@ -1,10 +1,7 @@
 import typing
 
-from psycopg.types.json import Jsonb
-
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import SQL
 from odoo.tools.translate import _
 
 if typing.TYPE_CHECKING:
@@ -82,20 +79,8 @@ class TranslationMixin(_ModelStubs):
             )
         )
         self.invalidate_recordset([field_name])
-        self.env.cr.execute(
-            SQL(
-                """ UPDATE %(table)s
-                SET %(field)s = NULLIF(
-                    jsonb_strip_nulls(%(fallback)s || COALESCE(%(field)s, '{}'::jsonb) || %(value)s),
-                    '{}'::jsonb)
-                WHERE id = %(id)s
-            """,
-                table=SQL.identifier(self._table),
-                field=SQL.identifier(field_name),
-                fallback=Jsonb({"en_US": translation_fallback}),
-                value=Jsonb(translations),
-                id=self.id,
-            )
+        rows = self.env.backend.columns.merge_json(
+            self, field_name, self.id, {"en_US": translation_fallback}, translations
         )
         _debug.lifecycle(
             "translation.model_updated",
@@ -104,7 +89,7 @@ class TranslationMixin(_ModelStubs):
             record=self.id,
             langs=len(translations),
             fallback=translation_fallback is not None,
-            rows=self.env.cr.rowcount,
+            rows=rows,
         )
         self.modified([field_name])
         return True
