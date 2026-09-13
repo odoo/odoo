@@ -27,6 +27,7 @@ from .errors import (
     _log_sql_error,
     has_reached_server,
     is_handled_by_seam,
+    mark_failed_statement,
     mark_handled_by_seam,
     mark_stale_cached_plan,
 )
@@ -539,8 +540,12 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
         mark_handled_by_seam(exc)
         if prepared:
             self._invalidate_cached_plans_if_stale(exc)
-        if log_exceptions:
-            _log_sql_error(exc, _render_query(query), label=label)
+        if log_exceptions or isinstance(exc, PG_USER_FAULT_EXCEPTIONS):
+            rendered = _render_query(query)
+            if isinstance(exc, PG_USER_FAULT_EXCEPTIONS):
+                mark_failed_statement(exc, _get_statement_text(rendered))
+            if log_exceptions:
+                _log_sql_error(exc, rendered, label=label)
         _debug.logic(
             "cursor.statement_failed",
             db=vars(self).get("dbname"),

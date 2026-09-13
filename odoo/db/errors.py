@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import re
 from typing import Any
 
 import psycopg
@@ -32,6 +33,10 @@ _STALE_PLAN_ATTR = "_odoo_stale_cached_plan"
 
 _SEAM_ATTR = "_odoo_handled_by_statement_seam"
 
+_STATEMENT_VERB_ATTR = "_odoo_failed_statement_verb"
+
+_STATEMENT_VERB_RE = re.compile(r"\b(INSERT|UPDATE|DELETE|MERGE|COPY)\b", re.IGNORECASE)
+
 PG_STALE_PLAN_EXCEPTIONS: tuple[type[Exception], ...] = (
     psycopg.errors.FeatureNotSupported,
 )
@@ -56,6 +61,19 @@ def mark_handled_by_seam(exc: BaseException) -> None:
 
 def is_handled_by_seam(exc: BaseException) -> bool:
     return getattr(exc, _SEAM_ATTR, False) is True
+
+
+def mark_failed_statement(exc: BaseException, query: Any) -> None:
+    # PostgreSQL reports both sides of a foreign-key violation with the same
+    # SQLSTATE and diagnostics; only lc_messages-dependent prose tells an
+    # INSERT that points nowhere from a DELETE something still points at.
+    # The statement verb is the locale-proof witness.
+    if match := _STATEMENT_VERB_RE.search(str(query)):
+        setattr(exc, _STATEMENT_VERB_ATTR, match[1].upper())
+
+
+def failed_statement_verb(exc: BaseException) -> str | None:
+    return getattr(exc, _STATEMENT_VERB_ATTR, None)
 
 
 def _classify_sql_error(exc: Exception) -> str:

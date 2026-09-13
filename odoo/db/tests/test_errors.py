@@ -11,9 +11,11 @@ from odoo.db.errors import (
     PG_STALE_PLAN_EXCEPTIONS,
     PG_USER_FAULT_EXCEPTIONS,
     _log_sql_error,
+    failed_statement_verb,
     has_reached_server,
     is_handled_by_seam,
     is_stale_cached_plan,
+    mark_failed_statement,
     mark_handled_by_seam,
     mark_stale_cached_plan,
 )
@@ -195,6 +197,31 @@ class TestSeamMarker(unittest.TestCase):
         other = psycopg.errors.FeatureNotSupported("y")
         mark_stale_cached_plan(other)
         self.assertFalse(is_handled_by_seam(other))
+
+
+class TestFailedStatementVerb(unittest.TestCase):
+    def test_an_unmarked_exception_names_no_statement(self):
+        self.assertIsNone(
+            failed_statement_verb(psycopg.errors.ForeignKeyViolation("x"))
+        )
+
+    def test_the_verb_is_read_from_the_statement_not_the_message(self):
+        cases = {
+            'INSERT INTO "ir_attachment" ("website_id") VALUES (2)': "INSERT",
+            'update "res_partner" set parent_id = 9 where id = 1': "UPDATE",
+            'DELETE FROM "website" WHERE id IN (2)': "DELETE",
+            'COPY "ir_attachment" ("id", "website_id") FROM STDIN': "COPY",
+            "WITH moved AS (DELETE FROM a RETURNING id) INSERT INTO b SELECT id FROM moved": "DELETE",
+            b'INSERT INTO "t" DEFAULT VALUES': "INSERT",
+            "SELECT 1": None,
+        }
+        for statement, verb in cases.items():
+            with self.subTest(statement=statement):
+                exc = psycopg.errors.ForeignKeyViolation(
+                    "Einf\u00fcgen oder Aktualisieren in Tabelle verletzt Fremdschl\u00fcssel"
+                )
+                mark_failed_statement(exc, statement)
+                self.assertEqual(failed_statement_verb(exc), verb)
 
 
 if __name__ == "__main__":

@@ -4,6 +4,7 @@ import psycopg
 import psycopg.errors
 
 from odoo.db import schema as sql
+from odoo.db.errors import failed_statement_verb
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, format_list, ormcache
 
@@ -347,6 +348,13 @@ class SchemaMixin(_ModelStubs):
         ):
             if len(columns) != 1:
                 info["field_display"] = info["constraint_name"]
+            if failed_statement_verb(exc) in ("INSERT", "UPDATE", "MERGE", "COPY"):
+                return self.env._(
+                    "%(field_display)s of %(model_display)s refers to a record "
+                    "that does not exist.\n\n"
+                    "It may have been deleted meanwhile: reload and pick it again.",
+                    **info,
+                )
             return self.env._(
                 "Another model is using the record you are trying to delete.\n\n"
                 "The troublemaker is: %(model_display)s\n"
