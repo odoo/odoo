@@ -17,6 +17,7 @@ export default class IndexedDB {
         this.dialog = dialog;
         this._isReconnecting = false;
         this._reloadDialogShown = false;
+        this._isClosing = false;
         this.databaseEventListener(whenReady);
     }
 
@@ -80,6 +81,7 @@ export default class IndexedDB {
             if (needsUpgrade) {
                 const newVersion = this.db.version + 1;
                 this.db.close();
+                this.db = null;
                 this.dbVersion = newVersion;
 
                 logPosMessage(
@@ -93,6 +95,7 @@ export default class IndexedDB {
                 return;
             }
 
+            this._isClosing = false;
             this._setupVisibilityProbe();
             logPosMessage(
                 "IndexedDB",
@@ -127,7 +130,10 @@ export default class IndexedDB {
             const transaction = this.getNewTransaction([storeName], "readwrite");
 
             if (!transaction) {
-                results.push(Promise.reject("Transaction could not be created"));
+                results.push({
+                    status: "rejected",
+                    reason: "Transaction could not be created",
+                });
                 continue;
             }
 
@@ -225,6 +231,16 @@ export default class IndexedDB {
 
     getNewTransaction(dbStore) {
         try {
+            if (this._isClosing) {
+                logPosMessage(
+                    "IndexedDB",
+                    "getNewTransaction.closing",
+                    "db is closing, transaction skipped",
+                    CONSOLE_COLOR
+                );
+                return false;
+            }
+
             if (!this.db) {
                 logPosMessage(
                     "IndexedDB",
@@ -322,8 +338,10 @@ export default class IndexedDB {
 
     reset() {
         return new Promise((resolve) => {
+            this._isClosing = true;
             if (this.db) {
                 this.db.close();
+                this.db = null;
             }
 
             if (!this.dbInstance) {
@@ -344,7 +362,6 @@ export default class IndexedDB {
 
             request.onsuccess = () => {
                 logPosMessage("IndexedDB", "reset", "Database deleted successfully", CONSOLE_COLOR);
-                this.db = null;
                 clearTimeout(timeout);
                 resolve(true);
             };
