@@ -18,6 +18,27 @@ export const BaseProductAttributeProps = {
 
 export class BaseProductAttribute extends Component {
     static template = "";
+<<<<<<< 014b3281c05d36a9f84daea2f789030af18cb2b0
+||||||| 39c220829b1053c4ee4f57b699344ade2a6f1906
+    static props = [
+        "attribute",
+        "selected",
+        "setSelected",
+        "customValue",
+        "setCustomValue",
+        "allSelectedValues",
+    ];
+=======
+    static props = [
+        "attribute",
+        "selected",
+        "setSelected",
+        "customValue",
+        "setCustomValue",
+        "allSelectedValues",
+        "showExtraPrice",
+    ];
+>>>>>>> fa831b92b8a21a77ea961f5aedff19305cd6f486
 
     setup() {
         super.setup(...arguments);
@@ -99,6 +120,7 @@ export class ProductConfiguratorPopup extends Component {
         MultiProductAttribute,
         Dialog,
     };
+<<<<<<< 014b3281c05d36a9f84daea2f789030af18cb2b0
     props = useProps({
         productTemplate: t.instanceOf(ProductTemplate),
         getPayload: t.function(),
@@ -107,6 +129,26 @@ export class ProductConfiguratorPopup extends Component {
         forceVariantValue: t.array().optional(),
         line: t.instanceOf(PosOrderline).optional(),
     });
+||||||| 39c220829b1053c4ee4f57b699344ade2a6f1906
+    static props = {
+        productTemplate: Object,
+        getPayload: Function,
+        close: Function,
+        hideAlwaysVariants: { type: Boolean, optional: true },
+        forceVariantValue: { type: Object, optional: true },
+        line: { type: Object, optional: true },
+    };
+=======
+    static props = {
+        productTemplate: Object,
+        getPayload: Function,
+        close: Function,
+        hideAlwaysVariants: { type: Boolean, optional: true },
+        forceVariantValue: { type: Object, optional: true },
+        line: { type: Object, optional: true },
+        comboItem: { type: Object, optional: true },
+    };
+>>>>>>> fa831b92b8a21a77ea961f5aedff19305cd6f486
 
     setup() {
         this.pos = usePos();
@@ -291,6 +333,22 @@ export class ProductConfiguratorPopup extends Component {
         return this.selectedValues
             .filter((value) => value.attribute_id.create_variant === "no_variant")
             .reduce((acc, val) => acc + val.price_extra, 0);
+    }
+
+    get showExtraPrice() {
+        // Combo items add their extras on top of the combo price, always.
+        if (this.props.comboItem) {
+            return true;
+        }
+        // A fixed pricelist rule replaces the whole price of the product, attribute
+        // extra prices included, so those extras must not be advertised either.
+        const template = this.props.productTemplate;
+        const pricelist = this.pos.getOrder()?.pricelist_id;
+        const variant = this.product || false;
+        return (
+            template.getPrice(pricelist, 1, 1, false, variant) !==
+            template.getPrice(pricelist, 1, 0, false, variant)
+        );
     }
 
     confirm() {

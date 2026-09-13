@@ -16,7 +16,7 @@
                         />
                         <label role="button" t-attf-for="{{ value.attribute_id.id }}_{{ value.id }}">
                             <span t-att-class="{ 'text-muted': this.pos.doHaveConflictWith(value, this.props.allSelectedValues) }" t-out="value.name"/>
-                            <div t-if="value.price_extra" class="price-extra-cell d-inline-block ms-2">
+                            <div t-if="value.price_extra and this.props.showExtraPrice" class="price-extra-cell d-inline-block ms-2">
                                 <span class="price_extra px-2 py-1 rounded-pill text-bg-info">
                                     <t t-out="this.getFormatPriceExtra(value.price_extra)"/>
                                 </span>
@@ -51,7 +51,7 @@
                             t-att-name="value.name"
                             t-attf-for="{{ value.attribute_id.id }}_{{ value.id }}">
                             <span t-att-class="{ 'text-muted': this.pos.doHaveConflictWith(value, this.props.allSelectedValues) }" t-out="value.name"/>
-                            <div t-if="value.price_extra" class="price-extra-cell d-inline-block ms-2">
+                            <div t-if="value.price_extra and this.props.showExtraPrice" class="price-extra-cell d-inline-block ms-2">
                                 <span class="price_extra px-2 py-1 rounded-pill text-bg-info">
                                     <t t-out="this.getFormatPriceExtra(value.price_extra)"/>
                                 </span>
@@ -75,7 +75,7 @@
                     <option t-att-value="value.id" t-att-class="{'ptav-not-available': value.excluded}" t-att-selected="this.props.selected?.id === value.id ? 'selected' : ''">
                         <t t-set="is_custom" t-value="is_custom || (value.is_custom and value.id == this.props.selected.id)"/>
                         <t t-out="value.name"/>
-                        <t t-if="value.price_extra">
+                        <t t-if="value.price_extra and this.props.showExtraPrice">
                             <t t-out="this.getFormatPriceExtra(value.price_extra)"/>
                         </t>
                     </option>
@@ -109,7 +109,7 @@
                                 class="m-2 opacity-0"
                             />
                         </label>
-                        <div t-if="value.price_extra" class="price-extra-cell d-inline-block ms-2" t-att-class="{'ptav-not-available' : value.excluded}">
+                        <div t-if="value.price_extra and this.props.showExtraPrice" class="price-extra-cell d-inline-block ms-2" t-att-class="{'ptav-not-available' : value.excluded}">
                             <span class="price_extra px-2 py-1 rounded-pill text-bg-info">
                                 <t t-out="this.getFormatPriceExtra(value.price_extra)"/>
                             </span>
@@ -138,7 +138,7 @@
                     t-attf-name="multi-{{value.id}}"
                     t-attf-for="multi-{{value.id}}">
                     <span t-att-class="{ 'text-muted': this.pos.doHaveConflictWith(value, this.props.allSelectedValues) }" t-out="value.name"/>
-                    <div t-if="value.price_extra" class="price-extra-cell d-inline-block ms-2">
+                    <div t-if="value.price_extra and this.props.showExtraPrice" class="price-extra-cell d-inline-block ms-2">
                         <span class="price_extra px-2 py-1 rounded-pill text-bg-info">
                             <t t-out="this.getFormatPriceExtra(value.price_extra)"/>
                         </span>
@@ -178,7 +178,7 @@
                                 t-out="value.name"/>
                         </div>
 
-                        <div t-if="value.price_extra"
+                        <div t-if="value.price_extra and this.props.showExtraPrice"
                             class="price-extra-cell d-inline-block mt-1"
                             t-att-class="{'ptav-not-available' : value.excluded}">
                             <span class="price_extra px-2 py-1 rounded-pill text-bg-info">
@@ -210,27 +210,27 @@
                     <RadioProductAttribute t-if="attribute.attribute_id.display_type === 'radio'" attribute="attribute" 
                         selected="this.state.attributes[attribute.attribute_id.id].selected" setSelected="this.setSelected(attribute)" 
                         customValue="this.state.attributes[attribute.attribute_id.id].custom_value" setCustomValue="this.setCustomValue(attribute)"
-                        allSelectedValues="this.selectedValues"/>
+                        allSelectedValues="this.selectedValues" showExtraPrice="this.showExtraPrice"/>
                     <PillsProductAttribute t-elif="attribute.attribute_id.display_type === 'pills'" attribute="attribute" 
                         selected="this.state.attributes[attribute.attribute_id.id].selected" setSelected="this.setSelected(attribute)" 
                         customValue="this.state.attributes[attribute.attribute_id.id].custom_value" setCustomValue="this.setCustomValue(attribute)"
-                        allSelectedValues="this.selectedValues"/>
+                        allSelectedValues="this.selectedValues" showExtraPrice="this.showExtraPrice"/>
                     <SelectProductAttribute t-elif="attribute.attribute_id.display_type === 'select'" attribute="attribute" 
                         selected="this.state.attributes[attribute.attribute_id.id].selected" setSelected="this.setSelected(attribute)" 
                         customValue="this.state.attributes[attribute.attribute_id.id].custom_value" setCustomValue="this.setCustomValue(attribute)"
-                        allSelectedValues="this.selectedValues"/>
+                        allSelectedValues="this.selectedValues" showExtraPrice="this.showExtraPrice"/>
                     <ColorProductAttribute t-elif="attribute.attribute_id.display_type === 'color'" attribute="attribute" 
                         selected="this.state.attributes[attribute.attribute_id.id].selected" setSelected="this.setSelected(attribute)" 
                         customValue="this.state.attributes[attribute.attribute_id.id].custom_value" setCustomValue="this.setCustomValue(attribute)"
-                        allSelectedValues="this.selectedValues"/>
+                        allSelectedValues="this.selectedValues" showExtraPrice="this.showExtraPrice"/>
                     <MultiProductAttribute t-elif="attribute.attribute_id.display_type === 'multi'" attribute="attribute" 
                         selected="this.state.attributes[attribute.attribute_id.id]?.selected" setSelected="this.setSelected(attribute)" 
                         customValue="this.state.attributes[attribute.attribute_id.id]?.custom_value" setCustomValue="this.setCustomValue(attribute)"
-                        allSelectedValues="this.selectedValues"/>
+                        allSelectedValues="this.selectedValues" showExtraPrice="this.showExtraPrice"/>
                     <ImageProductAttribute t-elif="attribute.attribute_id.display_type === 'image'" attribute="attribute"
                         selected="this.state.attributes[attribute.attribute_id.id].selected" setSelected="this.setSelected(attribute)"
                         customValue="this.state.attributes[attribute.attribute_id.id].custom_value" setCustomValue="this.setCustomValue(attribute)"
-                        allSelectedValues="this.selectedValues"/>
+                        allSelectedValues="this.selectedValues" showExtraPrice="this.showExtraPrice"/>
                 </div>
             </div>
             <t t-set-slot="footer">
