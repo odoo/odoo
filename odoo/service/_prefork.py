@@ -782,6 +782,59 @@ class PreforkServer(CommonServer):
                     self.port,
                 )
 
+    def _spawn_candidate(self, ready_fd: int) -> subprocess.Popen:
+        env = dict(os.environ)
+        env["ODOO_RELOAD_SUPERVISOR_PID"] = str(self.pid)
+        env["ODOO_RELOAD_READY_FD"] = str(ready_fd)
+        pass_fds = [ready_fd]
+        if self.socket is not None:
+            env["ODOO_HTTP_SOCKET_FD"] = str(self.socket.fileno())
+            pass_fds.append(self.socket.fileno())
+        args = stripped_sys_argv()
+        if not args or args[0] not in (sys.executable, Path(sys.executable).name):
+            args.insert(0, sys.executable)
+        return subprocess.Popen(
+            args, env=env, pass_fds=pass_fds, start_new_session=True
+        )
+
+    def _await_candidate(
+        self, candidate: subprocess.Popen, read_fd: int, timeout: float
+    ) -> bool:
+        deadline = time.monotonic() + timeout
+        with selectors.DefaultSelector() as selector:
+            self._reload_reader = (read_fd, selector)
+            selector.register(read_fd, selectors.EVENT_READ)
+            while time.monotonic() < deadline:
+                # Shutdown must not wait for a stuck preload's deadline.
+                if any(sig in (signal.SIGINT, signal.SIGTERM) for sig in self.queue):
+                    _debug.logic(
+                        "prefork.reload.aborted",
+                        reason="shutdown_requested",
+                        pid=candidate.pid,
+                    )
+                    return False
+                if self._replacement is None:
+                    # The first generation still depends on this master
+                    # while the candidate preloads. Read queued heartbeats
+                    # before enforcing deadlines or recovering capacity.
+                    self.sleep(timeout=0)
+                    self.reap_exited_workers()
+                    self.kill_timed_out_workers()
+                    self.spawn_missing_workers()
+                    self._publish_census()
+                if selector.select(min(0.1, max(0, deadline - time.monotonic()))):
+                    promoted = os.read(read_fd, 1) == b"1"
+                    _debug.pipeline(
+                        "prefork.reload.candidate_answered",
+                        pid=candidate.pid,
+                        promoted=promoted,
+                        waited_s=timeout - (deadline - time.monotonic()),
+                    )
+                    return promoted and candidate.poll() is None
+                if candidate.poll() is not None:
+                    return False
+        return False
+
     def reload(self) -> bool:
         """Promote a fresh generation only after its preload and worker startup.
 
@@ -792,20 +845,7 @@ class PreforkServer(CommonServer):
         self.logger.info("Reloading server")
         read_fd, write_fd = os.pipe2(os.O_CLOEXEC)
         try:
-            env = dict(os.environ)
-            env["ODOO_RELOAD_SUPERVISOR_PID"] = str(self.pid)
-            env["ODOO_RELOAD_READY_FD"] = str(write_fd)
-            pass_fds = [write_fd]
-            if self.socket is not None:
-                env["ODOO_HTTP_SOCKET_FD"] = str(self.socket.fileno())
-                pass_fds.append(self.socket.fileno())
-            args = stripped_sys_argv()
-            if not args or args[0] not in (sys.executable, Path(sys.executable).name):
-                args.insert(0, sys.executable)
-            promoted = False
-            self._candidate = subprocess.Popen(
-                args, env=env, pass_fds=pass_fds, start_new_session=True
-            )
+            self._candidate = self._spawn_candidate(write_fd)
             os.close(write_fd)
             write_fd = -1
             timeout = get_env_float(
@@ -816,42 +856,7 @@ class PreforkServer(CommonServer):
                 pid=self._candidate.pid,
                 timeout=timeout,
             )
-            deadline = time.monotonic() + timeout
-            with selectors.DefaultSelector() as selector:
-                self._reload_reader = (read_fd, selector)
-                selector.register(read_fd, selectors.EVENT_READ)
-                while time.monotonic() < deadline:
-                    # Shutdown must not wait for a stuck preload's deadline.
-                    if any(
-                        sig in (signal.SIGINT, signal.SIGTERM) for sig in self.queue
-                    ):
-                        _debug.logic(
-                            "prefork.reload.aborted",
-                            reason="shutdown_requested",
-                            pid=self._candidate.pid,
-                        )
-                        return False
-                    if self._replacement is None:
-                        # The first generation still depends on this master
-                        # while the candidate preloads. Read queued heartbeats
-                        # before enforcing deadlines or recovering capacity.
-                        self.sleep(timeout=0)
-                        self.reap_exited_workers()
-                        self.kill_timed_out_workers()
-                        self.spawn_missing_workers()
-                        self._publish_census()
-                    if selector.select(min(0.1, max(0, deadline - time.monotonic()))):
-                        promoted = os.read(read_fd, 1) == b"1"
-                        _debug.pipeline(
-                            "prefork.reload.candidate_answered",
-                            pid=self._candidate.pid,
-                            promoted=promoted,
-                            waited_s=timeout - (deadline - time.monotonic()),
-                        )
-                        break
-                    if self._candidate.poll() is not None:
-                        break
-            if not promoted or self._candidate.poll() is not None:
+            if not self._await_candidate(self._candidate, read_fd, timeout):
                 self.logger.error(
                     "Reload aborted: replacement not ready; keeping current workers"
                 )
@@ -860,7 +865,6 @@ class PreforkServer(CommonServer):
                     reason="candidate_exited"
                     if self._candidate.poll() is not None
                     else "timed_out",
-                    promoted=promoted,
                     returncode=self._candidate.returncode,
                     timeout=timeout,
                 )

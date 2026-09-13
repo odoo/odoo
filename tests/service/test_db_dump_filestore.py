@@ -144,7 +144,9 @@ def test_a_hardlink_is_not_in_scope_and_that_is_correct(filestore):
     )
 
 
-def test_members_are_ordered_by_path_whatever_the_directory_listing_order(filestore):
+def test_members_are_ordered_by_name_whatever_the_directory_listing_order(filestore):
+    """Files of a directory first, then its subdirectories, each set sorted by
+    name: the same dump twice yields the same member order."""
     store, _, _ = filestore
     for name in ("zz", "aa", "mm"):
         (store / name).mkdir()
@@ -153,5 +155,13 @@ def test_members_are_ordered_by_path_whatever_the_directory_listing_order(filest
     buf = io.BytesIO()
     with zipfile.ZipFile(buf, "w") as zipf:
         _add_filestore_to_zip(zipf, str(store))
-    names = zipfile.ZipFile(buf).namelist()
-    assert names == sorted(names)
+    assert zipfile.ZipFile(buf).namelist() == [
+        "filestore/normal.bin",
+        "filestore/aa/a.bin",
+        "filestore/aa/b.bin",
+        "filestore/mm/a.bin",
+        "filestore/mm/b.bin",
+        "filestore/sub/nested.bin",
+        "filestore/zz/a.bin",
+        "filestore/zz/b.bin",
+    ]
