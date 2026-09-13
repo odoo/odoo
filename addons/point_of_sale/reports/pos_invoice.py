@@ -1,39 +1,34 @@
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 
 from ..tools import debug_log as dbg
 
 
-class ReportPoint_Of_SaleReport_Invoice(models.AbstractModel):
+class ReportPosInvoice(models.AbstractModel):
     _name = "report.point_of_sale.report_invoice"
     _description = "Point of Sale Invoice Report"
 
     @api.model
     def _get_report_values(self, docids, data=None):
-        PosOrder = self.env["pos.order"]
-        ids_to_print = []
-        invoiced_posorders_ids = []
-        selected_orders = PosOrder.browse(docids)
-        for order in selected_orders.filtered(lambda o: o.account_move):
-            ids_to_print.append(order.account_move.id)
-            invoiced_posorders_ids.append(order.id)
-        not_invoiced_orders_ids = list(set(docids) - set(invoiced_posorders_ids))
+        orders = self.env["pos.order"].browse(docids)
+        orders.check_access("read")
+        uninvoiced_orders = orders.filtered(lambda order: not order.account_move)
         dbg.lifecycle.debug(
             "[report:invoice] docids=%s invoices=%s not invoiced=%s",
             docids,
-            ids_to_print,
-            not_invoiced_orders_ids,
+            orders.account_move.ids,
+            uninvoiced_orders.ids,
         )
-        if not_invoiced_orders_ids:
-            not_invoiced_posorders = PosOrder.browse(not_invoiced_orders_ids)
-            not_invoiced_orders_names = [a.name for a in not_invoiced_posorders]
+        if uninvoiced_orders:
             raise UserError(
-                _("No link to an invoice for %s.", ", ".join(not_invoiced_orders_names))
+                self.env._(
+                    "No link to an invoice for %s.",
+                    ", ".join(uninvoiced_orders.mapped("name")),
+                )
             )
 
-        return {
-            "docs": self.env["account.move"].sudo().browse(ids_to_print),
-            "qr_code_urls": self.env["report.account.report_invoice"]
-            .sudo()
-            ._get_report_values(ids_to_print)["qr_code_urls"],
-        }
+        invoices = orders.account_move
+        invoices.check_access("read")
+        return self.env["report.account.report_invoice"]._get_report_values(
+            invoices.ids, data={"report_type": "pdf", **(data or {})}
+        )

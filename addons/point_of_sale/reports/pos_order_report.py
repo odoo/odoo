@@ -9,8 +9,43 @@ class ReportPosOrder(models.Model):
     _inherit = "mixin.order.report"
     _description = "Point of Sale Orders Report"
     _auto = False
-    _order = "date_order desc"
+    _order = "date_order desc, id desc"
     _rec_name = "order_id"
+
+    # The query reads source tables directly. Without these dependencies a
+    # pending currency/configuration recomputation can leave analytics stale
+    # even though the corresponding order already shows the new value.
+    _depends = {
+        "pos.order": [
+            "date_order",
+            "create_date",
+            "partner_id",
+            "state",
+            "user_id",
+            "company_id",
+            "sale_journal",
+            "config_id",
+            "session_id",
+            "pricelist_id",
+            "account_move",
+            "currency_rate",
+        ],
+        "pos.order.line": [
+            "order_id",
+            "product_id",
+            "qty",
+            "price_unit",
+            "price_subtotal",
+            "price_subtotal_incl",
+            "discount",
+            "total_cost",
+        ],
+        "pos.payment": ["pos_order_id", "payment_method_id"],
+        "product.product": ["product_tmpl_id", "weight", "volume"],
+        "product.template": ["categ_id", "uom_id", "pos_categ_ids"],
+        "res.company": ["currency_id"],
+        "res.currency": ["decimal_places"],
+    }
 
     order_id = fields.Many2one(
         comodel_name="pos.order",
@@ -28,6 +63,11 @@ class ReportPosOrder(models.Model):
     product_tmpl_id = fields.Many2one(
         comodel_name="product.template",
         string="Product Template",
+        readonly=True,
+    )
+    product_uom_id = fields.Many2one(
+        comodel_name="uom.uom",
+        string="Unit",
         readonly=True,
     )
     pos_categ_id = fields.Many2one(
@@ -69,6 +109,7 @@ class ReportPosOrder(models.Model):
     payment_method_id = fields.Many2one(
         comodel_name="pos.payment.method",
         readonly=True,
+        help="First recorded payment method of the order; split payments do not split report lines.",
     )
     product_uom_qty = fields.Float(
         string="Product Quantity",
@@ -78,14 +119,25 @@ class ReportPosOrder(models.Model):
         string="Average Price",
         readonly=True,
         aggregator="avg",
+        help="Quantity-weighted price before discount, per product unit of measure, in company currency.",
     )
     price_subtotal_nodiscount = fields.Monetary(
         string="Subtotal w/o Discount",
         readonly=True,
     )
-    discount_amount = fields.Monetary(readonly=True)
-    margin = fields.Monetary(readonly=True)
-    delay_validation = fields.Integer(readonly=True)
+    discount_amount = fields.Monetary(
+        readonly=True,
+    )
+    margin = fields.Monetary(
+        readonly=True,
+    )
+    delay_validation = fields.Float(
+        string="Days to Order",
+        readonly=True,
+        aggregator="avg",
+        digits=(16, 2),
+        help="Calendar days between order creation and the order date, averaged over order lines.",
+    )
     invoiced = fields.Boolean(readonly=True)
 
     def action_view_order(self):
@@ -99,29 +151,20 @@ class ReportPosOrder(models.Model):
 
     def _with_cte(self) -> SQL:
         return SQL("""
-            payment_method_by_order_line AS (
-                -- Map each "pos_order_line" to the "payment_method_id" of its
-                -- "pos_order", always showing the first one.
-                SELECT
-                    pol.id AS pos_order_line_id,
-                    pm.pos_order_id AS pos_order_id,
-                    (array_agg(pm.payment_method_id ORDER BY pm.id ASC))[1] AS payment_method_id
-                FROM pos_order_line pol
-                LEFT JOIN pos_order po ON (po.id = pol.order_id)
-                LEFT JOIN pos_payment pm ON (pm.pos_order_id = po.id)
-                GROUP BY pol.id, pm.pos_order_id
+            first_payment_by_order AS (
+                -- Pick once per order, before joining its lines. The lowest
+                -- payment ID preserves the first-recorded-payment convention.
+                SELECT DISTINCT ON (pos_order_id)
+                    pos_order_id, payment_method_id
+                FROM pos_payment
+                ORDER BY pos_order_id, id
             ),
             first_pos_category AS (
                 SELECT
-                    pt.id AS product_template_id,
-                    -- ORDER BY makes the pick deterministic: a product template may
-                    -- belong to several PoS categories, and without it the reported
-                    -- pos_categ_id could differ between runs of the same query.
-                    (array_agg(pc.id ORDER BY pc.id))[1] AS id
-                FROM product_template pt
-                LEFT JOIN pos_category_product_template_rel pcpt ON (pt.id = pcpt.product_template_id)
-                LEFT JOIN pos_category pc ON (pcpt.pos_category_id = pc.id)
-                GROUP BY pt.id
+                    product_template_id,
+                    MIN(pos_category_id) AS id
+                FROM pos_category_product_template_rel
+                GROUP BY product_template_id
             )
         """)
 
@@ -137,12 +180,13 @@ class ReportPosOrder(models.Model):
             "company_id": "s.company_id",
             "currency_id": "co.currency_id",
             "journal_id": "s.sale_journal",
-            "config_id": "ps.config_id",
+            "config_id": "s.config_id",
             "session_id": "s.session_id",
             "pricelist_id": "s.pricelist_id",
             "payment_method_id": "pm.payment_method_id",
             "product_id": "l.product_id",
             "product_tmpl_id": "p.product_tmpl_id",
+            "product_uom_id": "pt.uom_id",
             "product_category_id": "pt.categ_id",
             "pos_categ_id": "fpc.id",
             "invoiced": "s.account_move IS NOT NULL",
@@ -155,16 +199,11 @@ class ReportPosOrder(models.Model):
             "price_subtotal_nodiscount": f"l.qty * l.price_unit / {CURRENCY_RATE}",
             "discount_amount": f"(l.qty * l.price_unit) * (l.discount / 100) / {CURRENCY_RATE}",
             "price_average": f"""CASE
-                    WHEN l.qty * u.factor = 0 THEN NULL
-                    ELSE (l.qty * l.price_unit / {CURRENCY_RATE}) / (l.qty * u.factor)::decimal
+                    WHEN l.qty = 0 THEN NULL
+                    ELSE l.price_unit / {CURRENCY_RATE}
                 END""",
             "margin": f"(l.price_subtotal - COALESCE(l.total_cost, 0)) / {CURRENCY_RATE}",
-            "delay_validation": """cast(
-                    to_char(
-                        date_trunc('day', s.date_order) - date_trunc('day', s.create_date),
-                        'DD'
-                    ) AS INT
-                )""",
+            "delay_validation": "s.date_order::date - s.create_date::date",
         }
 
     def _get_from_tables(self) -> list:
@@ -173,15 +212,13 @@ class ReportPosOrder(models.Model):
             ("pos_order", "s", "INNER JOIN", "s.id = l.order_id"),
             ("product_product", "p", "LEFT JOIN", "l.product_id = p.id"),
             ("product_template", "pt", "LEFT JOIN", "p.product_tmpl_id = pt.id"),
-            ("uom_uom", "u", "LEFT JOIN", "u.id = pt.uom_id"),
-            ("pos_session", "ps", "LEFT JOIN", "s.session_id = ps.id"),
             ("res_company", "co", "LEFT JOIN", "s.company_id = co.id"),
             ("res_currency", "cu", "LEFT JOIN", "co.currency_id = cu.id"),
             (
-                "payment_method_by_order_line",
+                "first_payment_by_order",
                 "pm",
                 "LEFT JOIN",
-                "pm.pos_order_line_id = l.id",
+                "pm.pos_order_id = s.id",
             ),
             (
                 "first_pos_category",

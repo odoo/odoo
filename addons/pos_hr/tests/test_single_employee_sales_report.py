@@ -110,6 +110,10 @@ class TestSingleEmployeeSalesReport(TestPoSCommon):
         self.make_payment(order, self.bank_pm1, 100)
         employee = self.env["hr.employee"].sudo().create({"name": "Report Cashier"})
         order.sudo().employee_id = employee.id
+        analysis = self.env["report.pos.order"].search([("order_id", "=", order.id)])
+        self.assertEqual(analysis.employee_id, employee)
+        self.assertEqual(analysis.order_id, order)
+        self.assertAlmostEqual(sum(analysis.mapped("price_total")), 100)
 
         wizard = self.env["pos.daily.sales.reports.wizard"].create(
             {"pos_session_id": session.id}

@@ -2823,7 +2823,7 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__delay_validation
-msgid "Delay Validation"
+msgid "Days to Order"
 msgstr ""
 
 #. module: point_of_sale
@@ -9609,6 +9609,7 @@ msgid "Unique code"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__product_uom_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Unit"
 msgstr ""
@@ -11029,4 +11030,19 @@ msgstr ""
 msgid ""
 "Fast payment validation on the point of sale %s needs at least one fast "
 "payment method."
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_report_pos_order__payment_method_id
+msgid "First recorded payment method of the order; split payments do not split report lines."
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_report_pos_order__price_average
+msgid "Quantity-weighted price before discount, per product unit of measure, in company currency."
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_report_pos_order__delay_validation
+msgid "Calendar days between order creation and the order date, averaged over order lines."
 msgstr ""
