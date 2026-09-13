@@ -6,7 +6,7 @@ from odoo.tests import TransactionCase, tagged
 from odoo.addons.api_transport.tools import get_api_client
 from odoo.addons.api_transport.tools.api_client import is_private_host
 
-_RESOLVER = "odoo.addons.api_transport.tools.api_client.socket.getaddrinfo"
+_RESOLVER = "socket.getaddrinfo"
 
 
 def _addrinfo(*ips):

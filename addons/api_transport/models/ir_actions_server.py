@@ -120,7 +120,9 @@ class _EndpointDelivery:
                 env = Environment(
                     cr, self.uid, {"allowed_company_ids": [self.company_id]}
                 )
-                client = get_api_client(env, self.endpoint_code, self.company_id)
+                client = get_api_client(
+                    env, self.endpoint_code, self.company_id, egress_policy="public"
+                )
                 client.post(
                     self.url,
                     data=json_values,

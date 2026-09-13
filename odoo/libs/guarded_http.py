@@ -278,15 +278,18 @@ def guarded_session(
     max_bytes: int | None = DEFAULT_MAX_BYTES,
     max_seconds: float | None = None,
     max_redirects: int = DEFAULT_MAX_REDIRECTS,
-) -> requests.Session:
+    session_class: type[GuardedSession] = GuardedSession,
+    **adapter_options: typing.Any,
+) -> GuardedSession:
     adapter = GuardedAdapter(
         policy,
         resolver=resolver,
         timeout=timeout,
         max_bytes=max_bytes,
         max_seconds=max_seconds,
+        **adapter_options,
     )
-    session = GuardedSession()
+    session = session_class()
     session.mount("http://", adapter)
     session.mount("https://", adapter)
     session.max_redirects = max_redirects

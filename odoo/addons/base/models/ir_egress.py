@@ -62,13 +62,17 @@ class IrEgress(models.AbstractModel):
         max_bytes: int | None = guarded_http.DEFAULT_MAX_BYTES,
         max_seconds: float | None = None,
         max_redirects: int = guarded_http.DEFAULT_MAX_REDIRECTS,
-    ) -> requests.Session:
+        session_class: type[guarded_http.GuardedSession] = guarded_http.GuardedSession,
+        **adapter_options: Any,
+    ) -> guarded_http.GuardedSession:
         session = guarded_http.guarded_session(
             self._get_policy(policy),
             timeout=timeout,
             max_bytes=max_bytes,
             max_seconds=max_seconds,
             max_redirects=max_redirects,
+            session_class=session_class,
+            **adapter_options,
         )
         self._prepare_session(session, purpose=purpose, policy=policy)
         return session

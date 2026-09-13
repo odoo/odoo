@@ -4,19 +4,19 @@ import json
 import logging
 import random
 import re
-import socket
 import uuid
 from datetime import datetime
 from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
 
 import requests
-from requests.adapters import HTTPAdapter
 from requests.auth import HTTPDigestAuth
 from urllib3.exceptions import ReadTimeoutError
 from urllib3.util.retry import Retry
 
 from odoo import _, api, fields
 from odoo.exceptions import UserError
+from odoo.libs import netguard
+from odoo.libs.guarded_http import GuardedSession
 
 from .exceptions import (
     AuthenticationError,
@@ -147,32 +147,20 @@ def _error_type_for_status(status_code):
 
 _PRIVATE_SUFFIXES = (".local", ".lan", ".internal", ".home")
 
-
-def _resolve_addresses(host):
-    try:
-        return [ipaddress.ip_address(host)]
-    except ValueError:
-        pass
-    try:
-        return [
-            ipaddress.ip_address(info[4][0])
-            for info in socket.getaddrinfo(host, None, proto=socket.IPPROTO_TCP)
-        ]
-    except OSError, ValueError:
-        return []
+_PRIVATE_SCOPES = frozenset(
+    {netguard.Scope.PRIVATE, netguard.Scope.LOOPBACK, netguard.Scope.LINK_LOCAL}
+)
 
 
 def is_private_host(host):
     if not host:
         return False
     host = host.strip("[]").lower()
-    addresses = _resolve_addresses(host)
-    if addresses:
-        return all(
-            address.is_private or address.is_loopback or address.is_link_local
-            for address in addresses
-        )
-    return host == "localhost" or host.endswith(_PRIVATE_SUFFIXES)
+    try:
+        addresses = netguard.resolve(host)
+    except netguard.UnresolvableDestination:
+        return host == "localhost" or host.endswith(_PRIVATE_SUFFIXES)
+    return all(netguard.classify(address) in _PRIVATE_SCOPES for address in addresses)
 
 
 _URL_IN_TEXT_PATTERN = re.compile(r"https?://[^\s'\"<>]+")
@@ -236,7 +224,7 @@ def _masked_cause(exc: BaseException) -> BaseException:
     return exc
 
 
-class _CredentialSession(requests.Session):
+class _CredentialSession(GuardedSession):
     # requests strips only Authorization on a cross-host redirect; a vendor key
     # in X-API-Key or a custom header would follow the redirect to the new host.
     credential_header_names = frozenset()
@@ -253,8 +241,16 @@ class _CredentialSession(requests.Session):
 
 
 class OutboundAPIClient:
-    def __init__(self, env, endpoint_code, company_id=None, credential_id=None):
+    def __init__(
+        self,
+        env,
+        endpoint_code,
+        company_id=None,
+        credential_id=None,
+        egress_policy="private",
+    ):
         self.env = env
+        self.egress_policy = egress_policy
         self.endpoint_code = endpoint_code
         self.company_id = company_id or env.company.id
         self.user_id = env.user.id
@@ -335,6 +331,7 @@ class OutboundAPIClient:
         cache = get_session_cache(self.env)
         cache_key = (
             f"{self.endpoint_code}:{self.company_id}:{self.credential.credential_hash}"
+            f":{self.egress_policy}"
         )
 
         session = cache.get(cache_key)
@@ -346,16 +343,18 @@ class OutboundAPIClient:
         return session
 
     def _create_session(self):
-        session = _CredentialSession()
-
-        adapter = HTTPAdapter(
+        # No byte cap and requests' own redirect budget: an endpoint's payloads and
+        # redirects are the vendor's contract, not input to be distrusted.
+        session = self.env["ir.egress"].session(
+            purpose=f"api_transport:{self.endpoint_code}",
+            policy=self.egress_policy,
+            max_bytes=None,
+            max_redirects=requests.models.DEFAULT_REDIRECT_LIMIT,
+            session_class=_CredentialSession,
             pool_connections=10,
             pool_maxsize=50,
             max_retries=(self._get_retry_config() if self.service.retry_enabled else 0),
         )
-
-        session.mount("http://", adapter)
-        session.mount("https://", adapter)
 
         session.headers.update(
             {
@@ -1169,7 +1168,9 @@ class OutboundAPIClient:
             return False
 
 
-def get_api_client(env, endpoint_code, company_id=None, credential_id=None):
+def get_api_client(
+    env, endpoint_code, company_id=None, credential_id=None, egress_policy="private"
+):
     service = (
         env["api.endpoint.outbound"]
         .sudo()
@@ -1185,4 +1186,6 @@ def get_api_client(env, endpoint_code, company_id=None, credential_id=None):
     if not service:
         raise UserError(_("API service '%s' not found or inactive") % endpoint_code)
 
-    return OutboundAPIClient(env, endpoint_code, company_id, credential_id)
+    return OutboundAPIClient(
+        env, endpoint_code, company_id, credential_id, egress_policy=egress_policy
+    )
