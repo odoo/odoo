@@ -81,12 +81,16 @@ class AttachmentController(ThreadController):
             # sudo: ir.attachment - posting a new attachment on an accessible thread
             attachment = request.env["ir.attachment"].sudo().create(vals)
             attachment._post_add_create(**kwargs)
+            extra_fields = None
+            if request.env.user.share:
+                # Only return ownership token if external users
+                extra_fields = request.env["ir.attachment"]._get_store_ownership_fields()
             res = {
                 "data": {
 
                     "store_data": Store().add(
                         attachment,
-                        extra_fields=request.env["ir.attachment"]._get_store_ownership_fields(),
+                        extra_fields=extra_fields,
                     ).get_result(),
                     "attachment_id": attachment.id,
                 }
@@ -99,11 +103,18 @@ class AttachmentController(ThreadController):
     @add_guest_to_context
     def mail_attachment_delete(self, attachment_id, access_token=None):
         attachment = request.env["ir.attachment"].browse(int(attachment_id)).exists()
-        if not attachment or not attachment._has_attachments_ownership([access_token]):
+        if not attachment or request.env.user.share and not attachment._has_attachments_ownership([access_token]):
             request.env.user._bus_send("ir.attachment/delete", {"id": attachment_id})
             raise NotFound()
+
         message = request.env["mail.message"].sudo().search(
             [("attachment_ids", "in", attachment.ids)], limit=1)
+
+        if not request.env.user.share:
+            # Check through standard access rights/rules for internal users.
+            attachment._delete_and_notify(message)
+            return
+
         # sudo: ir.attachment: access is validated with _has_attachments_ownership
         attachment.sudo()._delete_and_notify(message)
 
