@@ -1,6 +1,11 @@
 import { expect, test, advanceTime } from "@odoo/hoot";
 import { animationFrame, dblclick, waitFor, queryOne } from "@odoo/hoot-dom";
-import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
+import {
+    defineWebsiteModels,
+    setupWebsiteBuilder,
+    setupWebsiteBuilderWithSnippet,
+} from "./website_helpers";
+import { contains } from "@web/../tests/web_test_helpers";
 
 defineWebsiteModels();
 
@@ -64,4 +69,15 @@ test("vertical toggle of video options", async () => {
     await waitFor(
         ".modal-content:contains(Select a media) .media_iframe_video .media_iframe_video_size_for_vertical"
     );
+});
+
+test("Description option for videos", async () => {
+    await setupWebsiteBuilderWithSnippet("s_video");
+    await contains(":iframe .media_iframe_video").click();
+    expect(".o_customize_tab .options-container").toHaveCount(1);
+    expect(":iframe .media_iframe_video").not.toHaveAttribute("title");
+    await contains(".o_customize_tab [data-label='Description'] input").edit(
+        "My video description"
+    );
+    expect(":iframe .media_iframe_video").toHaveAttribute("title", "My video description");
 });
