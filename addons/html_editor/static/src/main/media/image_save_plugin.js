@@ -7,6 +7,7 @@ import {
 import { loadImage } from "@html_editor/utils/image_processing";
 import { rpc } from "@web/core/network/rpc";
 import { ATTACHMENT_PENDING_RECORD_ID } from "./media_plugin";
+import { selectElements } from "@html_editor/utils/dom_traversal";
 
 /**
  * @typedef { Object } ImageSaveShared
@@ -21,19 +22,20 @@ import { ATTACHMENT_PENDING_RECORD_ID } from "./media_plugin";
 
 export class ImageSavePlugin extends Plugin {
     static id = "imageSave";
-    static shared = ["savePendingImages"];
+    static shared = ["createAttachment", "savePendingImages"];
     static dependencies = ["imagePostProcess"];
 
     /** @type {import("plugins").EditorResources} */
     resources = {
+        on_save_pending_images_handlers: this.savePendingImages.bind(this),
         on_will_save_handlers: this.savePendingImages.bind(this),
-
+        on_clean_after_image_saved_handlers: this.cleanAfterImageSaved.bind(this),
         ...(this.config.dropImageAsAttachment && {
             on_image_added_handlers: (img) => img.classList.add("o_b64_image_to_save"),
         }),
     };
 
-    async savePendingImages(editableEl = this.editable) {
+    async savePendingImages(editableEl = this.editable, sourceEditableEl = this.editable) {
         // When saving a webp, o_b64_image_to_save is turned into
         // o_modified_image_to_save by saveB64Image to request the saving
         // of the pre-converted webp resizes and all the equivalent jpgs.
@@ -46,20 +48,20 @@ export class ImageSavePlugin extends Plugin {
             }
         };
         const oldSrcToNewSrcMap = new Map();
-        const b64Proms = [...editableEl.querySelectorAll(".o_b64_image_to_save")].map(
+        const b64Proms = [...selectElements(editableEl, ".o_b64_image_to_save")].map(async (el) => {
+            const { resModel, resId } = this.getRecordInfo(getClosestSavable(el));
+            const oldSrc = el.getAttribute("src");
+            await this.saveB64Image(el, resModel, resId);
+            oldSrcToNewSrcMap.set(oldSrc, el.getAttribute("src"));
+        });
+        const modifiedProms = [...selectElements(editableEl, ".o_modified_image_to_save")].map(
             async (el) => {
                 const { resModel, resId } = this.getRecordInfo(getClosestSavable(el));
-                const oldSrc = el.getAttribute("src");
-                await this.saveB64Image(el, resModel, resId);
-                oldSrcToNewSrcMap.set(oldSrc, el.getAttribute("src"));
-            }
-        );
-        const modifiedProms = [...editableEl.querySelectorAll(".o_modified_image_to_save")].map(
-            async (el) => {
-                const { resModel, resId } = this.getRecordInfo(getClosestSavable(el));
-                const oldSrc = el.getAttribute("src");
+                const isBackground = !el.matches("img");
+                const oldSrc = isBackground ? el.style["background-image"] : el.getAttribute("src");
                 await this.saveModifiedImage(el, resModel, resId);
-                oldSrcToNewSrcMap.set(oldSrc, el.getAttribute("src"));
+                const newSrc = isBackground ? el.style["background-image"] : el.getAttribute("src");
+                oldSrcToNewSrcMap.set(oldSrc, newSrc);
             }
         );
         const proms = [...b64Proms, ...modifiedProms];
@@ -67,12 +69,41 @@ export class ImageSavePlugin extends Plugin {
         if (hasChange) {
             await Promise.all(proms);
         }
-        return hasChange ? oldSrcToNewSrcMap : undefined;
+        if (this.isDestroyed || !hasChange) {
+            return;
+        }
+        this.trigger("on_clean_after_image_saved_handlers", editableEl, sourceEditableEl, {
+            oldSrcToNewSrcMap,
+        });
     }
 
-    createAttachment({ el, imageData, resModel, resId }) {
+    cleanAfterImageSaved(editableEl, sourceEditableEl, { oldSrcToNewSrcMap }) {
+        const isInSource = sourceEditableEl.contains(editableEl);
+        if (isInSource) {
+            return;
+        }
+        // Update the source editable if editableEl is disconnected from it
+        selectElements(sourceEditableEl, ".o_b64_image_to_save, .o_modified_image_to_save").forEach(
+            (unsavedImage) => {
+                const isBackground = !unsavedImage.matches("img");
+                const oldSrc = isBackground
+                    ? unsavedImage.style["background-image"]
+                    : unsavedImage.getAttribute("src");
+                if (oldSrcToNewSrcMap.has(oldSrc)) {
+                    if (isBackground) {
+                        unsavedImage.style["background-image"] = oldSrcToNewSrcMap.get(oldSrc);
+                    } else {
+                        unsavedImage.setAttribute("src", oldSrcToNewSrcMap.get(oldSrc));
+                    }
+                }
+                unsavedImage.classList.remove("o_b64_image_to_save", "o_modified_image_to_save");
+            }
+        );
+    }
+
+    createAttachment({ name, imageData, resModel, resId }) {
         return rpc("/html_editor/attachment/add_data", {
-            name: el.dataset.fileName || "",
+            name: name || "",
             data: imageData,
             is_image: true,
             res_model: resModel,
@@ -99,7 +130,7 @@ export class ImageSavePlugin extends Plugin {
             return;
         }
         const attachment = await this.createAttachment({
-            el,
+            name: el.dataset.fileName,
             imageData,
             resId,
             resModel,
@@ -149,6 +180,13 @@ export class ImageSavePlugin extends Plugin {
      */
     async saveModifiedImage(el, resModel, resId) {
         const isBackground = !el.matches("img");
+        let attributesToRestore;
+        if (!isBackground) {
+            attributesToRestore = {};
+            for (const name of el.getAttributeNames()) {
+                attributesToRestore[name] = el.getAttribute(name);
+            }
+        }
         // Modifying an image always creates a copy of the original, even if
         // it was modified previously, as the other modified image may be used
         // elsewhere if the snippet was duplicated or was saved as a custom one.
@@ -253,7 +291,6 @@ export class ImageSavePlugin extends Plugin {
         }
 
         el.classList.remove("o_modified_image_to_save");
-        let targetEl = el;
         if (isBackground) {
             const parts = backgroundImageCssToParts(el.style["background-image"]);
             parts.url = `url('${newAttachmentUrls["original"]}')`;
@@ -261,17 +298,27 @@ export class ImageSavePlugin extends Plugin {
             el.style["background-image"] = combined;
         } else {
             if (attachmentNotFound) {
-                // Reset image to a clean state if a placeholder is returned.
-                targetEl = document.createElement("img");
-                el.insertAdjacentElement("afterend", targetEl);
-                el.remove();
+                // Reset image to a clean state if a placeholder is returned,
+                // without changing its reference and keeping its original
+                // style.
+                for (const name of el.getAttributeNames()) {
+                    if (name in attributesToRestore) {
+                        el.setAttribute(name, attributesToRestore[name]);
+                        delete attributesToRestore[name];
+                    } else {
+                        el.removeAttribute(name);
+                    }
+                }
+                for (const name of Object.keys(attributesToRestore)) {
+                    el.setAttribute(name, attributesToRestore[name]);
+                }
             }
-            targetEl.setAttribute("src", newAttachmentUrls["original"]);
+            el.setAttribute("src", newAttachmentUrls["original"]);
             if (srcset.length) {
-                targetEl.setAttribute("srcset", srcset.join(", "));
+                el.setAttribute("srcset", srcset.join(", "));
             }
         }
-        this.trigger("on_image_saved_handlers", { imageEl: targetEl });
+        this.trigger("on_image_saved_handlers", { imageEl: el });
     }
 
     getImageBase64Payload(el) {

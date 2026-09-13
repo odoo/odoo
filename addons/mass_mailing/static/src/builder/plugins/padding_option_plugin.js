@@ -13,4 +13,4 @@ export class PaddingOptionPlugin extends Plugin {
     };
 }
 
-registry.category("mass_mailing-plugins").add(PaddingOptionPlugin.id, PaddingOptionPlugin);
+registry.category("mass_mailing-builder-plugins").add(PaddingOptionPlugin.id, PaddingOptionPlugin);

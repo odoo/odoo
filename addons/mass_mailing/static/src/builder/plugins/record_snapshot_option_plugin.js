@@ -100,5 +100,5 @@ class SelectRecordAction extends BuilderAction {
     }
 }
 
-registry.category("mass_mailing-plugins").add(RecordSnapshotPlugin.id, RecordSnapshotPlugin);
+registry.category("mass_mailing-builder-plugins").add(RecordSnapshotPlugin.id, RecordSnapshotPlugin);
 registry.category("mass_mailing-options").add(RecordSnapshotOption.id, RecordSnapshotOption);

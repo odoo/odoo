@@ -1,12 +1,11 @@
 import { HtmlField, htmlField, htmlFieldProps } from "@html_editor/fields/html_field";
 import { registry } from "@web/core/registry";
-import { getCSSRules, toInline } from "./convert_inline";
 import { ColumnPlugin } from "@html_editor/main/column_plugin";
 import { MoveNodePlugin } from "@html_editor/main/movenode_plugin";
 import { user } from "@web/core/user";
-import { t, useProps } from "@odoo/owl";
-
-const cssRulesByElement = new WeakMap();
+import { t, useProps, useScope } from "@odoo/owl";
+import { useEmailHtmlConverter, useSavePendingImage } from "@mail/convert_inline/hooks";
+import { childNodes } from "@html_editor/utils/dom_traversal";
 
 export class HtmlMailField extends HtmlField {
     props = useProps({
@@ -14,27 +13,41 @@ export class HtmlMailField extends HtmlField {
         disableMoveNodePlugin: t.boolean().optional(),
     });
 
-    /**
-     * @param {WeakMap} cssRulesByElement
-     * @param {Editor} editor
-     * @param {HTMLElement} el
-     */
-    static async getInlinedEditorContent(cssRulesByElement, editor, el) {
-        if (!cssRulesByElement.has(editor.editable)) {
-            cssRulesByElement.set(editor.editable, getCSSRules(editor.document));
-        }
-        const cssRules = cssRulesByElement.get(editor.editable);
-        // Insert the cloned element inside an DOM so we can get its computed style.
-        editor.editable.after(el);
-        el.classList.remove("odoo-editor-editable");
-        await toInline(el, cssRules);
-        el.remove();
+    setup() {
+        super.setup();
+        this.scope = useScope();
+        this.converter = useEmailHtmlConverter({
+            bundles: ["mail.assets_convert_inline"],
+        });
+        this._savePendingImages = useSavePendingImage({
+            getLastChangeId: () => this.lastChangeId,
+            setLastChangeId: (id) => (this.lastChangeId = id),
+        });
     }
 
+    /**
+     * @see useSavePendingImage
+     * @override
+     */
+    async savePendingImages(content) {
+        await this._savePendingImages({ content, editor: this.editor });
+    }
+
+    /**
+     * Convert editor content to mail compliant html
+     * @override
+     */
     async getEditorContent() {
-        const el = await super.getEditorContent();
-        await HtmlMailField.getInlinedEditorContent(cssRulesByElement, this.editor, el);
-        return el;
+        const content = await super.getEditorContent();
+        const fragment = document.createDocumentFragment();
+        fragment.append(...childNodes(content.cloneNode(true)));
+        const template = await this.converter.convertToEmailHtml(fragment, {
+            debug: this.env.debug,
+        });
+        if (template) {
+            content.replaceChildren(template.content);
+        }
+        return content;
     }
 
     getConfig() {
@@ -45,7 +58,12 @@ export class HtmlMailField extends HtmlField {
         if (this.props.disableMoveNodePlugin) {
             disabledPlugins.add(MoveNodePlugin);
         }
-        config.Plugins = config.Plugins.filter((plugin) => !disabledPlugins.has(plugin));
+        config.Plugins = [
+            ...new Set(config.Plugins.filter((plugin) => !disabledPlugins.has(plugin))).union(
+                new Set(registry.category("mail-core-plugins").getAll())
+            ),
+        ];
+        config.measureReference = this.converter.measureReference;
         config.dynamicFieldFilter = this.dynamicFieldFilter.bind(this);
         config.dynamicFieldPreprocess = ({ resModel }) => this.loadAllowedExpressions(resModel);
         config.dynamicFieldPostprocess = this.dynamicFieldPostprocess.bind(this);

@@ -77,24 +77,9 @@
             'mass_mailing/static/src/snippets/**/*.xml',
             ('remove', 'mass_mailing/static/src/builder/**/*.inside.scss'),
         ],
-        # Minimal assets for mass_mailing isolated iframes from web.
-        'mass_mailing.assets_iframe_helpers': [
-            ('include', 'web._assets_helpers'),
-            'web/static/src/scss/bootstrap_overridden.scss',
-            ('include', 'web._assets_frontend_helpers'),
-            'web/static/src/scss/pre_variables.scss',
-            'web/static/lib/bootstrap/scss/_variables.scss',
-            'web/static/lib/bootstrap/scss/_maps.scss',
-            'web/static/lib/bootstrap/scss/_alert.scss',
-            ('include', 'web._assets_bootstrap_frontend'),
-            ('include', 'web.icons_fonts'),
-            'web/static/src/scss/animation.scss',
-            'web/static/src/scss/mimetypes.scss',
-            'web/static/src/scss/ui.scss',
-        ],
         # Minimal assets for theme selector iframe
         'mass_mailing.assets_iframe_theme_selector': [
-            ('include', 'mass_mailing.assets_iframe_helpers'),
+            ('include', 'mail.assets_iframe_helpers'),
             'mass_mailing/static/src/themes/iframe_assets/**/*',
         ],
         # Assets for theme selector template preview shadowdom
@@ -112,36 +97,40 @@
             'html_editor/static/src/scss/html_editor.frontend.scss',
             'html_editor/static/src/scss/base_style.scss',
 
-            ('after', 'web/static/lib/bootstrap/scss/_maps.scss', 'mass_mailing/static/src/scss/mass_mailing.ui.scss'),
-
             'html_builder/static/src/scss/background.scss',
 
             ('include', 'mass_mailing.assets_mail_themes'),
-            'mass_mailing/static/src/scss/mass_mailing_mail.scss',
             'mass_mailing/static/src/iframe_assets/**/*',
             'mass_mailing/static/src/snippets/**/*.scss',
         ],
         # Complete style assets required to view the mail content.
         # convert_inline ONLY uses this and inline styles.
         'mass_mailing.assets_iframe_style': [
-            ('include', 'mass_mailing.assets_iframe_helpers'),
+            ('include', 'mail.assets_iframe_helpers'),
             ('include', 'html_editor.assets_readonly'),
             ('include', 'mass_mailing.assets_iframe_style_base'),
         ],
         # style assets used to view the mail content with a basic editor
         'mass_mailing.assets_inside_basic_editor_iframe': [
-            ('include', 'mass_mailing.assets_iframe_helpers'),
+            ('include', 'mail.assets_iframe_helpers'),
             ('include', 'html_editor.assets_editor'),
             ('include', 'mass_mailing.assets_iframe_style_base'),
         ],
         # style assets used to view the mail content in Odoo, but not used
         # during html conversion, specific to the builder
         'mass_mailing.assets_inside_builder_iframe': [
-            ('include', 'mass_mailing.assets_iframe_helpers'),
+            ('include', 'mail.assets_iframe_helpers'),
             ('include', 'html_editor.assets_editor'),
             ('include', 'html_builder.assets_inside_builder_iframe'),
             ('include', 'mass_mailing.assets_iframe_style_base'),
             'mass_mailing/static/src/builder/**/*.inside.scss'
+        ],
+        'mass_mailing.assets_mail_clients': [
+            # style sheet added in _prepare_mail_values in the
+            # email sent, they are added here to create as many inline style
+            # rules as possible during html conversion.
+            # Files added here should also be handled in _prepare_mail_values
+            'mass_mailing/static/src/mail_clients_css/mass_mailing_mail.css',
         ],
         'mass_mailing.iframe_add_dialog': [
             ('include', 'html_builder.iframe_add_dialog'),
