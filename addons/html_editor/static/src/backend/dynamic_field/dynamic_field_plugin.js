@@ -68,6 +68,14 @@ export class DynamicFieldPlugin extends Plugin {
         normalize_processors: withSequence(11, this.normalizeQwebPlaceholders.bind(this)),
         clipboard_content_processors: withSequence(11, this.cleanQwebExpressionsForCopy.bind(this)),
         clean_for_save_processors: withSequence(11, this.cleanQwebExpressionsForSave.bind(this)),
+
+        /** Predicates */
+        is_selectable_on_click_predicates: (el) => {
+            // Select dynamic field elements on click.
+            if (this.isSelectable(el)) {
+                return true;
+            }
+        },
     };
 
     fieldTagName = "T";
@@ -81,26 +89,6 @@ export class DynamicFieldPlugin extends Plugin {
             editable: this.editable,
             className: "bg-light rounded border shadow",
         });
-
-        this.addDomListener(
-            this.editable,
-            "click",
-            (ev) => {
-                if (ev.detail === 1 && this.isSelectable(ev.target)) {
-                    this.dependencies.selection.selectElement(ev.target);
-                }
-            },
-            true
-        );
-    }
-
-    isValidTargetForDomListener(ev) {
-        return (
-            (ev.type === "click" &&
-                ev.target &&
-                closestElement(ev.target, `[${this.fieldAttribute}]`)) ||
-            super.isValidTargetForDomListener(ev)
-        );
     }
 
     updateDynamicModel(resModel) {
@@ -307,6 +295,7 @@ export class DynamicFieldPlugin extends Plugin {
 
     isSelectable(element) {
         return (
+            element.hasAttribute(this.fieldAttribute) &&
             element.getAttribute("data-oe-expression-readable") &&
             !isContentEditable(element) &&
             this.editable.contains(element)

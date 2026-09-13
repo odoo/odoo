@@ -161,6 +161,14 @@ export class ImagePlugin extends Plugin {
             }
         },
 
+        /** Predicates */
+        is_selectable_on_click_predicates: (el) => {
+            // Clicking an image selects it rather than putting a cursor next to it.
+            if (el.nodeName === "IMG") {
+                return true;
+            }
+        },
+
         /** Providers */
         paste_media_url_command_providers: this.getCommandForImageUrlPaste.bind(this),
     };
@@ -174,11 +182,6 @@ export class ImagePlugin extends Plugin {
             }
         });
         this.imageAlignment = proxy({ displayIcon: "format_image_inline_left" });
-        this.addDomListener(this.editable, "click", (e) => {
-            if (e.target.tagName === "IMG") {
-                this.setSelectionAroundImage(e.target);
-            }
-        });
         this.fileViewer = this.services.fileViewer();
     }
 
