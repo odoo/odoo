@@ -1,12 +1,15 @@
 // @ts-check
 
 import { describe, expect, test } from "@odoo/hoot";
+import { animationFrame } from "@odoo/hoot-mock";
+import { EventBus } from "@odoo/owl";
 import { makeLogger } from "@web/core/debug/debug_logger";
+import { ModelEvent } from "@web/core/events";
 import { UrgentSaveCoordinator } from "@web/model/relational_model/urgent_save_coordinator";
 
 describe.current.tags("headless");
 
-test("a throwing notification hook leaves urgent saving idle and usable", async () => {
+test("a throwing bus trigger leaves urgent saving idle and usable", async () => {
     let notifications = 0;
     const coord = new UrgentSaveCoordinator({
         trigger: (_event, payload) => {
@@ -199,4 +202,34 @@ test("flushPendingEdits() fires WILL_SAVE_URGENTLY synchronously, in urgent mode
     const done = coord.flushPendingEdits();
     expect(seenActive).toEqual([true]);
     expect(done).toBeInstanceOf(Promise);
+});
+
+test("Owl listener exceptions are reported globally while urgent save continues", async () => {
+    expect.errors(1);
+    const bus = new EventBus();
+    let workSettled = false;
+    bus.addEventListener(
+        ModelEvent.WILL_SAVE_URGENTLY,
+        ({ detail }) => {
+            detail.proms.push(
+                Promise.resolve().then(() => {
+                    workSettled = true;
+                }),
+            );
+            throw new Error("urgent listener failed");
+        },
+        { once: true },
+    );
+    const coordinator = new UrgentSaveCoordinator(bus);
+    const result = await coordinator.run(async () => "saved");
+    await animationFrame();
+    makeLogger("web.model.audit").logic("Owl urgent event boundary", {
+        result,
+        workSettled,
+        active: coordinator.isActive,
+    });
+    expect(result).toBe("saved");
+    expect(workSettled).toBe(true);
+    expect(coordinator.isActive).toBe(false);
+    expect.verifyErrors([/urgent listener failed/]);
 });

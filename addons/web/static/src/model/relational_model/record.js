@@ -1056,19 +1056,39 @@ export class RelationalRecord extends DataPoint {
         const relatedPropertyNames = Object.keys(changes).filter(
             (name) => this.fields[name]?.relatedPropertyField,
         );
-        return Promise.all([
-            preprocessMany2oneChanges(this, changes),
-            preprocessMany2OneReferenceChanges(this, changes),
-            preprocessReferenceChanges(this, changes),
-            preprocessX2manyChanges(this, changes),
-            preprocessPropertiesChanges(this, changes),
-            preprocessHtmlChanges(this, changes),
-        ]).then((results) => {
-            // Keep the initial synchronous composition for urgent saves, but
-            // replace incomplete relation values before a normal save/onchange.
-            preprocessRelatedPropertyChanges(this, changes, relatedPropertyNames);
-            return results;
-        });
+        /** @type {Promise<unknown>[]} */
+        const pending = [];
+        for (const preprocess of [
+            preprocessMany2oneChanges,
+            preprocessMany2OneReferenceChanges,
+            preprocessReferenceChanges,
+            preprocessX2manyChanges,
+            preprocessPropertiesChanges,
+            preprocessHtmlChanges,
+        ]) {
+            try {
+                // Invoke synchronously: urgent saves depend on the initial
+                // property composition even when they skip asynchronous waits.
+                pending.push(Promise.resolve(preprocess(this, changes)));
+            } catch (error) {
+                pending.push(Promise.reject(error));
+                break;
+            }
+        }
+        return Promise.all(pending).then(
+            (results) => {
+                // Keep the initial synchronous composition for urgent saves, but
+                // replace incomplete relation values before a normal save/onchange.
+                preprocessRelatedPropertyChanges(this, changes, relatedPropertyNames);
+                return results;
+            },
+            async (error) => {
+                // Join started work before rollback without adding a promise
+                // continuation to successful updates (which changes render timing).
+                await Promise.allSettled(pending);
+                throw error;
+            },
+        );
     }
 
     /**
@@ -1164,6 +1184,7 @@ export class RelationalRecord extends DataPoint {
             await this._onUpdate({ withoutParentUpdate });
         } catch (e) {
             undoChanges();
+            rollbackLists();
             restoreDirty();
             throw e;
         }

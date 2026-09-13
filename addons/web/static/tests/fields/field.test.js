@@ -53,7 +53,7 @@ test("duplicate field widgets preserve their own context objects across renders"
         resModel: "res.partner",
         resId: 1,
         type: "form",
-        arch: `<form><field name="name" widget="context_owner_probe" context="{'limit': 10}"/><field name="name" widget="context_owner_probe" context="{'limit': 20}"/></form>`,
+        arch: `<form><field name="name" widget="context_owner_probe" context="{'limit': 10, 'label': name}"/><field name="name" widget="context_owner_probe" context="{'limit': 20, 'label': name}"/></form>`,
     });
     expect(owners).toHaveLength(2);
     await Promise.all(owners.map((owner) => owner.render(true)));
@@ -66,6 +66,27 @@ test("duplicate field widgets preserve their own context objects across renders"
         const contexts = seen.filter((context) => context.limit === limit);
         expect(contexts.length).toBeGreaterThan(1);
         expect(contexts.every((context) => context === contexts[0])).toBe(true);
+    }
+    await owners[0].props.record.update({ name: "b" });
+    await animationFrame();
+    expect(owners).toHaveLength(2);
+    expect(seen.slice(-2).map((context) => context.label)).toEqual(["b", "b"]);
+    await Promise.all(owners.map((owner) => owner.render(true)));
+    await animationFrame();
+    makeLogger("web.model.audit").logic(
+        "reactive field contexts",
+        JSON.stringify(seen),
+    );
+    for (const limit of [10, 20]) {
+        const previous = seen.find(
+            (context) => context.limit === limit && context.label === "a",
+        );
+        const changed = seen.filter(
+            (context) => context.limit === limit && context.label === "b",
+        );
+        expect(changed.length).toBeGreaterThan(1);
+        expect(changed[0]).not.toBe(previous);
+        expect(changed.every((context) => context === changed[0])).toBe(true);
     }
 });
 

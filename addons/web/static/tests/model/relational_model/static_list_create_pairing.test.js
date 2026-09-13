@@ -169,3 +169,33 @@ test("empty and prefix create batches do not scan unrelated membership tails", (
         expect(reads).toBe(hasCreate ? 2 : 0);
     }
 });
+
+test("unique membership permutations preserve the positional pairing contract", () => {
+    const permutations = [
+        [0, 1, 2],
+        [0, 2, 1],
+        [1, 0, 2],
+        [1, 2, 0],
+        [2, 0, 1],
+        [2, 1, 0],
+    ];
+    let checked = 0;
+    for (const left of permutations) {
+        for (const right of permutations) {
+            const clientIds = left.map((i) => [1, "v1", "v2"][i]);
+            const serverIds = right.map((i) => [1, 10, 11][i]);
+            const expected =
+                clientIds.indexOf("v1") === serverIds.indexOf(10) &&
+                clientIds.indexOf("v2") === serverIds.indexOf(11);
+            const result = pairCreatedRows(["v1", "v2"], [11, 10], {
+                clientIds,
+                serverIds,
+            });
+            expect(result !== null).toBe(expected);
+            checked++;
+        }
+    }
+    makeLogger("web.model.audit").logic("create pairing permutation oracle", {
+        checked,
+    });
+});

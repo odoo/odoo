@@ -488,9 +488,20 @@ time.
 `navigator.sendBeacon()` to fire-and-forget unsaved changes. This bypasses
 the mutex and normal flow.
 
-`UrgentSaveCoordinator` restores its idle state when its notification hook throws.
-Work registered by the hook before throwing is still observed. This cleanup is not
-a deadline for pending work or a guarantee of beacon delivery.
+`UrgentSaveCoordinator` restores its idle state if the bus's `trigger()` throws.
+Work registered before that throw is still observed. Owl's EventBus uses
+`EventTarget`: listener exceptions are reported globally and do not propagate
+through `trigger()`. The coordinator cleanup does not convert those exceptions
+into rejected saves, impose a deadline, or guarantee beacon delivery.
+
+**Preprocessing failure**: a normal record update waits for every started
+preprocessor promise to settle before restoring touched relation-list snapshots.
+This includes a synchronous preprocessor exception after asynchronous work has
+started. If parent notification rejects after values were applied, rollback also
+restores the earlier, pre-preprocessing list snapshots; the apply/undo snapshot
+alone already contains the edited membership. Urgent saves retain synchronous
+preprocessing and their existing skipped waits. Client rollback does not undo
+separately completed server-side calls.
 
 > **Optimistic-locking parity — field-scoped baseline values**: both paths
 > send `kwargs.known_values`, a `{field: originally-loaded value}` map built

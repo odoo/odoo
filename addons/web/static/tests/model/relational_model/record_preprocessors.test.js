@@ -1,6 +1,7 @@
 // @ts-check
 
 import { describe, expect, test } from "@odoo/hoot";
+import { animationFrame, Deferred } from "@odoo/hoot-mock";
 import { markup } from "@odoo/owl";
 import { MODEL_LIFECYCLE_PROTO } from "@web/../tests/model/relational_model/model_doubles";
 import { makeTestRelationalModel } from "@web/../tests/model/relational_model/model_test_helpers";
@@ -452,7 +453,13 @@ for (const reverse of [false, true]) {
         const entries = [
             ["props.owner", { display_name: "New" }],
             ["props.color", "blue"],
-            ["props.watchers", []],
+            [
+                "props.watchers",
+                [
+                    x2ManyCommands.unlink(3),
+                    [x2ManyCommands.LINK, 5, { id: 5, display_name: "Added" }],
+                ],
+            ],
         ];
         await model.root.update(
             Object.fromEntries(reverse ? entries.reverse() : entries),
@@ -471,8 +478,8 @@ for (const reverse of [false, true]) {
                 "watchers",
                 [
                     [2, "Old"],
-                    [3, "Removed"],
                     [4, "Hidden"],
+                    [5, "Added"],
                 ],
             ],
         ]);
@@ -503,5 +510,76 @@ for (const reverse of [false, true]) {
         expect(failure?.message).toBe("creation rejected");
         expect(model.root.getChangesLocked()).toEqual({});
         expect(model.root.data["props.color"]).toBe("red");
+
+        const originalProcessProperties = model.root.processProperties;
+        const originalOnUpdate = model.root._onUpdate;
+        for (const failurePoint of ["relation", "properties", "parent"]) {
+            const synchronous = failurePoint === "properties";
+            model.root._onUpdate =
+                failurePoint === "parent"
+                    ? async () => {
+                          throw new Error("parent rejected");
+                      }
+                    : originalOnUpdate;
+            const pending = new Deferred();
+            let loadStarted = false;
+            model.loadRecords = async () => {
+                loadStarted = true;
+                return pending;
+            };
+            model.root.processProperties = synchronous
+                ? () => {
+                      throw new Error("properties rejected");
+                  }
+                : originalProcessProperties;
+            let settled = false;
+            const delayedId = failurePoint === "parent" ? 8 : synchronous ? 7 : 6;
+            const update = {
+                "props.watchers": [x2ManyCommands.set([2, delayedId])],
+                ...(synchronous
+                    ? { props: [] }
+                    : failurePoint === "relation"
+                      ? { "props.owner": { display_name: "Rejected" } }
+                      : {}),
+            };
+            const updating = model.root.update(update, { withoutOnchange: true }).then(
+                () => {
+                    settled = true;
+                },
+                (error) => {
+                    settled = true;
+                    failure = error;
+                },
+            );
+            await animationFrame();
+            expect(loadStarted).toBe(true);
+            makeLogger("web.model.audit").logic(
+                "property preprocessing before delayed completion",
+                { failurePoint, settled },
+            );
+            expect(settled).toBe(false);
+            pending.resolve([{ id: delayedId, display_name: "Delayed" }]);
+            await updating;
+            await animationFrame();
+            model.root.processProperties = originalProcessProperties;
+            model.root._onUpdate = originalOnUpdate;
+            makeLogger("web.model.audit").logic(
+                "property preprocessing after rejection",
+                {
+                    failurePoint,
+                    ids: [...model.root.data["props.watchers"].currentIds],
+                    changes: model.root.getChangesLocked(),
+                },
+            );
+            expect(failure?.message).toBe(
+                failurePoint === "parent"
+                    ? "parent rejected"
+                    : synchronous
+                      ? "properties rejected"
+                      : "creation rejected",
+            );
+            expect(model.root.data["props.watchers"].currentIds).toEqual([2, 3, 4]);
+            expect(model.root.getChangesLocked()).toEqual({});
+        }
     });
 }
