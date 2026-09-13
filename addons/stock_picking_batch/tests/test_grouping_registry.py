@@ -51,3 +51,31 @@ class TestGroupingRegistry(TransactionCase):
         product = criteria["wave_group_by_product"]
         self.assertEqual(partner.batch_path, "picking_ids.partner_id")
         self.assertEqual(product.batch_path, "move_line_ids.product_id")
+
+    def test_a_criterion_whose_label_is_empty_adds_nothing_to_the_description(self):
+        self.picking_type.write(
+            {
+                "auto_batch": True,
+                "batch_group_by_partner": True,
+                "batch_group_by_src_loc": True,
+            }
+        )
+        # A delivery address created from a form with no name is still a
+        # partner the batch groups on; its label is False, not a word.
+        company_partner = self.env["res.partner"].create({"name": "Grouped Co"})
+        partner = self.env["res.partner"].create(
+            {"type": "delivery", "parent_id": company_partner.id}
+        )
+        picking = self.env["stock.picking"].create(
+            {
+                "picking_type_id": self.picking_type.id,
+                "partner_id": partner.id,
+                "location_id": self.picking_type.default_location_src_id.id,
+                "location_dest_id": self.picking_type.default_location_dest_id.id,
+            }
+        )
+        self.assertFalse(partner.name)
+        self.assertEqual(
+            picking._get_auto_batch_description(),
+            self.picking_type.default_location_src_id.display_name,
+        )

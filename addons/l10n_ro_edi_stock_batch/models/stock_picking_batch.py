@@ -27,6 +27,8 @@ class StockPickingBatch(models.Model):
     def action_done(self):
         # EXTENDS 'stock_picking_batch'
         self.check_singleton()
+        if not self.l10n_ro_edi_stock_enable:
+            return super().action_done()
         self._check_company()
 
         self.picking_ids.with_context(

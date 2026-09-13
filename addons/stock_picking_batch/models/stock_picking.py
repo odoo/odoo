@@ -235,8 +235,8 @@ class StockPicking(models.Model):
         description_items = []
         for criterion in self.picking_type_id._get_active_batch_criteria().values():
             value = self.mapped(criterion.picking_path)
-            if value:
-                description_items.append(value[criterion.label_field])
+            if value and (label := value[criterion.label_field]):
+                description_items.append(label)
         return ", ".join(description_items)
 
     def _is_single_transfer(self):
