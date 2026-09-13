@@ -36,13 +36,12 @@
         <field name="arch" type="xml">
             <list>
                 <field name="sequence" widget="handle"/>
-                <field name="name"/>
-                <field name="code" string="Code"/>
-                <field name="display_code" string="Display"/>
+                <field name="display_code" string="Name" widget="work_entry_type_badge" width="220px"/>
+                <field name="code" string="Code" width="160px"/>
+                <field name="description" class="text-muted"/>
                 <field name="external_code" optional="hide"/>
                 <field string="Considered as" name="count_as"/>
                 <field name="country_id" optional="hide"/>
-                <field name="color" widget="color_picker"/>
             </list>
         </field>
     </record>

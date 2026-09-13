@@ -102,9 +102,12 @@
         <field name="model">hr.work.entry.type</field>
         <field name="inherit_id" ref="hr_work_entry.hr_work_entry_type_view_tree"/>
         <field name="arch" type="xml">
+             <field name="count_as" position="attributes">
+                <attribute name="column_invisible">1</attribute>
+            </field>
             <field name="count_as" position="after">
-                <field name="unit_of_measure"/>
-                <field name="request_unit"/>
+                <field name="unit_of_measure" optional="hide"/>
+                <field name="request_unit" optional="hide"/>
                 <field name="leave_validation_type" optional="hide" string="Time Type Approval"/>
                 <field name="time_off_selectable" optional="hide"/>
                 <field name="requires_allocation" optional="hide"/>
