@@ -50,8 +50,14 @@ class PosSession(models.Model):
         if self.update_stock_at_closing:
             self._create_picking_at_end_of_session()
             self._get_closed_orders().filtered(lambda o: not o.is_total_cost_computed)._compute_total_cost_at_session_closing()
+<<<<<<< 6dd4c4d4af086f19ee6b128c26cc7966c2e88864
         self.picking_ids.move_ids.sudo()._trigger_scheduler()
         return result
+||||||| fd4ec49dd3c0e1d02deafd63f2d9445daae7895b
+        super()._process_session_validation(balancing_account, amount_to_balance, bank_payment_method_diffs)
+=======
+        return super()._process_session_validation(balancing_account, amount_to_balance, bank_payment_method_diffs)
+>>>>>>> 1cbc60716da9adb7be8283f72d5d4f4754c01eb4
 
     def _create_picking_at_end_of_session(self):
         self.ensure_one()
