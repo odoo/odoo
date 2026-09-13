@@ -1463,6 +1463,8 @@ class _InMemoryReadGroup:
         # the compiled query carries a GROUP BY meant for SQL; the in-memory search
         # answers the domain itself
         self.records = model.browse(model._search(domain).get_result_ids())
+        self.groupby_specs = list(groupby)
+        self.aggregate_specs = list(aggregates)
         self.groupby = [self._groupby_reader(spec) for spec in groupby]
         self.aggregates = [self._aggregate_reader(spec) for spec in aggregates]
 
@@ -1567,18 +1569,67 @@ class _InMemoryReadGroup:
             )
             for key, members in groups.items()
         ]
-        rows.sort(key=lambda row: self._sort_key(row, order))
+        self._sort(rows, order)
         if self.groupby:
             rows = rows[offset:]
             if limit is not None:
                 rows = rows[:limit]
         return rows
 
-    def _sort_key(self, row: tuple, order: str | None):
-        if order:
-            self._unsupported(f"order {order!r}")
-        # SQL orders by the groupby terms ascending, nulls last
-        return tuple((value is None, value) for value in row[: len(self.groupby)])
+    def _sort(self, rows: list[tuple], order: str | None) -> None:
+        # one stable pass per term, last term first, so the first term wins;
+        # PostgreSQL puts NULLs last ascending and first descending
+        for index, rank, desc, nulls_first in reversed(self._order_terms(rows, order)):
+            # a NULL sorts first when its flag is the largest in the direction
+            # of the pass: None-is-True ascending puts it last, descending first
+            null_is_true = nulls_first == desc
+
+            def key(row, index=index, rank=rank, null_is_true=null_is_true):
+                value = row[index]
+                if value is not None and rank is not None:
+                    value = rank[value]
+                if isinstance(value, list):
+                    self._unsupported("ordering by an array aggregate")
+                return (value is None if null_is_true else value is not None, value)
+
+            rows.sort(key=key, reverse=desc)
+
+    def _order_terms(self, rows: list[tuple], order: str | None) -> list[tuple]:
+        from ..parsing import parse_read_group_spec, regex_order_part_read_group
+
+        if not order:
+            # SQL orders by the groupby terms as they are, ascending
+            return [(index, None, False, False) for index in range(len(self.groupby))]
+        terms = []
+        for order_part in order.split(","):
+            match = regex_order_part_read_group.fullmatch(order_part)
+            if not match:
+                raise ValueError(f"Invalid order {order!r} for _read_group()")
+            term = match["term"]
+            desc = (match["direction"] or "asc").lower() == "desc"
+            nulls = (match["nulls"] or "").lower()
+            nulls_first = nulls == "nulls first" if nulls else desc
+            rank = None
+            if term in self.groupby_specs:
+                index = self.groupby_specs.index(term)
+                fname, _, granularity = parse_read_group_spec(term)
+                if granularity == "day_of_week":
+                    self._unsupported(f"order {order_part.strip()!r}")
+                field = self.model._fields[fname]
+                if field.is_many2one:
+                    comodel = self.model.env[field.comodel_name]
+                    if comodel._order != "id":
+                        ids = [row[index] for row in rows if row[index] is not None]
+                        ordered = comodel.browse(ids).sorted(key=comodel._order)
+                        rank = {
+                            id_: position for position, id_ in enumerate(ordered._ids)
+                        }
+            elif term in self.aggregate_specs:
+                index = len(self.groupby) + self.aggregate_specs.index(term)
+            else:
+                self._unsupported(f"order {order_part.strip()!r}")
+            terms.append((index, rank, desc, nulls_first))
+        return terms
 
 
 class InMemoryBackend:
