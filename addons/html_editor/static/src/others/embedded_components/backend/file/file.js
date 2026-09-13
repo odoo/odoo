@@ -59,13 +59,13 @@ export class EmbeddedFileComponent extends ReadonlyEmbeddedFileComponent {
         if (newName === this.fileModel.filename) {
             return true;
         }
+        this.fileModel.filename = newName;
         if (this.fileModel.extension) {
             const pattern = new RegExp(`\\.${this.fileModel.extension}$`, "i");
             if (!newName.match(pattern)) {
                 newName += `.${this.fileModel.extension}`;
             }
         }
-        this.fileModel.filename = newName;
         this.fileModel.name = newName;
         return true;
     }
