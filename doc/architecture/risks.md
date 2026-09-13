@@ -63,13 +63,17 @@ each migration an addon author writes. A review rule, not a gate.
 models; neither executes the framework against PostgreSQL. A change can satisfy
 both and still be wrong at runtime.
 
-**Evidence.** `InMemoryBackend` differs from `PostgresBackend` at the sites
-`odoo/orm/tests/test_backend_dispatch_surface.py` marks `LOSSY` — fetch
-bookkeeping, jsonb translation merges, company-dependent columns, unlink
-cleanup, translation mirroring — and at the three sites that branch on a
-capability instead of calling the port
-([`module.md`](module.md#seams-that-keep-the-layers-decoupled)). Record rules,
-translated fetches and parent-store behaviour require the DB-backed suites.
+**Evidence.** As of odoo `f7e799ce3578` (2026-09-13) no dispatch site branches on a
+capability instead of calling the port, and record rules, the parent store and
+translation echoes run on `InMemoryBackend` as they do on PostgreSQL; what
+`odoo/orm/tests/test_backend_dispatch_surface.py` still marks `LOSSY` is fetch
+bookkeeping (`bin_size`, to-flush), jsonb translation merges and
+company-dependent columns on update, and the `ir.default` cleanup on unlink.
+The gap that remains is not in the port but in the harness: a module's test
+class cannot yet be hosted on the in-memory tier, because building a registry
+from `base`'s real models and their data files stops at the shared id space of
+`ir.actions` -- so the eligibility figures ([`ARCHITECTURE.md`](ARCHITECTURE.md#forces))
+say which tests *could* run without a database, not which do.
 
 **Cost.** A green DB-free run reads as "the framework works" when it means "the
 structure holds". Nearly every integration suite is run `--no-http` (R4), so

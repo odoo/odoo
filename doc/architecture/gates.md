@@ -82,6 +82,19 @@ extension every developer database inherits from `db_template`.
 counted by method, not by line. **A suite outside the set is a suite nobody
 runs.**
 
+### The architecture's own tests
+
+Three Tier-2 files pin structure rather than behaviour and fail the day a move
+is undone. `odoo/orm/tests/test_backend_protocol.py`: every `StorageBackend`
+method has a caller and every capability flag a consumer; the in-memory backend
+implements the whole protocol. `test_backend_dispatch_surface.py`: the inventory
+of `env.backend` dispatch sites, its header count, and which of them the
+in-memory backend answers differently. `test_architecture_pins.py`: the nine
+`env["<base model>"]` sites outside the six port files and the fifteen
+statements the models, fields and domain layers execute themselves, as frozen
+maps that may shrink and must not grow. None of them is a re-homed gate tree;
+each is a test of one claim this document makes.
+
 ### The limits of "enforced"
 
 **The integration suites are the only thing that runs addon tests in Python.**

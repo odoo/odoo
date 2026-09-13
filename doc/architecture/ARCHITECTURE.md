@@ -60,7 +60,7 @@ a reason.
 | **Horizontal scale** | N processes with no shared memory | database-mediated registry/cache signaling |
 | **Write throughput** | a loop that touches 10k records must not issue 10k `UPDATE`s | deferred writes; the flush fixpoint loop; `cr.pipeline()` |
 | **Correctness under contention** | concurrent requests must not corrupt or silently lose writes | `retrying()` on serialization/deadlock; savepoints; the RO→RW promotion |
-| **Testability without a database** | the hardest logic must be exercisable in milliseconds | `orm/components/` as pure Python; `InMemoryBackend` behind the `env.backend` port |
+| **Testability without a database** | the hardest logic must be exercisable in milliseconds | `orm/components/` as pure Python; `InMemoryBackend` behind the `env.backend` port with no lossy or blocking branch; the ORM's dependence on `addons/base` behind six port objects. Measured on 2026-09-13 (odoo `f7e799ce3578`, frozen): the share of a module's tests that touch nothing storage-specific is base 81 %, stock 95 %, mail 68 %, account 67 % |
 | **A refactorable core** | internal layout must move without breaking hundreds of addons | the façade boundary and the layer contracts |
 
 ## Non-goals
@@ -116,12 +116,30 @@ methods on the recordset: model-level permissions per CRUD operation,
 record-level rules contributing a domain, field-level (`_has_field_access`,
 `check_field_access_rights`) and multi-company (`_check_company`).
 `_check_access(operation)` returns the accessible subset plus the callable that
-explains the refusal, so one code path serves both filtering and raising.
+explains the refusal, so one code path serves both filtering and raising. The
+answers themselves -- may this model be touched, which records may this user
+read -- come from `registry.access_policy`, the one object that names
+`ir.model.access` and `ir.rule`; both storage backends ask it, so record rules
+filter an in-memory search as they filter a PostgreSQL one.
 
 Superuser is not a bypass flag: `sudo()` returns an environment whose `su` is
 part of the `(cr, uid, su, context)` interning key. Two recordsets differing
 only in privilege are different objects by construction. `uid == SUPERUSER_ID`
 forces `su`, so the superuser has one environment per `(cr, context)`.
+
+### The ORM talks to `addons/base` through six objects
+
+The framework cannot import the models it needs from `base`, and for years it
+named them by string at every site. It now names them in six files: the
+meta-schema (`registry.metaschema`), access (`registry.access_policy`), external
+ids (`registry.xmlids`), files (`registry.file_store`), settings
+(`registry.settings`) and the locale (`registry.locale`), each a small object
+whose methods are the questions the ORM asks. A PostgreSQL install runs the same
+calls it always did; the in-memory registry carries the same six and answers
+from its own storage where it can. What this buys is a place: a new need of the
+ORM's is a method on a port, and a site that names a base model elsewhere is a
+regression the ORM's own tests report
+([`module.md`](module.md#the-set-of-addon-owned-models-the-framework-may-name-is-closed)).
 
 ### A request is a transaction, and it may run twice
 
@@ -164,6 +182,9 @@ one; a figure is as of that date.
 | Model behaviour | a mixin under `odoo/orm/models/mixins/` | prefer a leaf nothing else in the composition depends on |
 | Cache / compute logic | `odoo/orm/components/` | pure Python, collaborators injected, no `pool` or `env` reach |
 | A persistence primitive | `odoo/db/` | no ORM import; cross the boundary by injection |
+| Something the ORM needs from a `base` model | the matching port in `odoo/orm/runtime/` (`metaschema`, `access_policy`, `xmlids`, `filestore`, `settings`, `locale`) | a method on the port, implemented for both registries; never a new `env["ir.*"]` in a mixin or field |
+| A statement the ORM must run | `odoo/orm/runtime/backend.py` | a `StorageBackend` method with a PostgreSQL and an in-memory body; the protocol test refuses one without a caller |
+| A view type | the addon's own module | `register("<root tag>")` an `ElementHandler` from `odoo/addons/base/models/ir_ui_view_arch.py`; do not inherit `ir.ui.view` for it |
 | An HTTP feature | `odoo/http/` `[features]` | must not import `[serving]` |
 | A third-party patch | `odoo/_monkeypatches/<module>.py` | expose `patch_module()` (names starting with `_` are helpers) |
 | An addon | `odoo/addons/<module>/` | import through `odoo.api` / `odoo.fields` / `odoo.models` — `test_lint` rule `orm-import` (`E8508`) fails any other |

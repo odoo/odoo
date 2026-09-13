@@ -288,4 +288,9 @@ Row I/O at the bottom goes through `env.backend`, the persistence port described
 under **Seams** in [`module.md`](module.md#seams-that-keep-the-layers-decoupled)
 — which is what lets the whole ORM run against `InMemoryBackend` with no
 database. **`backend` is non-optional and has two implementors**, which is why
-the sketch above names one rather than leaving it unset.
+the sketch above names one rather than leaving it unset. Beside it the registry
+carries the six port objects through which the ORM talks to `addons/base`
+(`registry.metaschema`, `access_policy`, `xmlids`, `file_store`, `settings`,
+`locale`); the in-memory `ModelRegistry` carries the same six, so a mixin that
+needs a meta-schema answer or an access domain asks the same object on either
+tier.

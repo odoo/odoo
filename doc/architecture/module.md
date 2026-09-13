@@ -427,6 +427,19 @@ Seven subtrees reach no addon model at all — `orm/components`, `libs`, `db`,
 the `api`/`fields`/`models` shims, `_monkeypatches` — each for an independent
 reason, so a first reach there is a contradiction rather than a cost.
 
+Inside the ORM the reach is narrower still. Everything the ORM asks of the
+models-that-describe-models, of access, of external ids, of files, of settings
+and of the locale goes through the six port objects named under **Seams**; the
+`env["<base model>"]` sites left outside them are nine (`res.company` in
+`helpers.py`, `res.groups` in `mixins/access.py`, `base` in
+`fields/properties.py`, the import converter and the module list in
+`mixins/load.py`, `res.currency.rate` in `read_group/sql.py`, the in-memory
+reflection in `model_test_env.py` and `registration.py`) and are frozen by
+`odoo/orm/tests/test_architecture_pins.py`, which also freezes the fifteen
+statements the models, fields and domain layers still execute themselves (DDL,
+schema, read_group's aggregation, four field lookups). Both maps may shrink and
+must not grow; a regression names the file and where the site belongs.
+
 ### Direction rules are blind to cycles
 
 Every edge of a cycle can sit inside one layer and cross no boundary. Python
@@ -464,8 +477,10 @@ seam, not an import.**
 | `http/`, `service/` ↔ `tools.config` | the same slot shape (`odoo.libs.settings.SettingsSlot`), one per tier, and the same rule as `db/`: `ServerSettings` and `HttpSettings` name every option their package reads and `from_config` is the one place each key is spelled, but nothing is installed at boot — `current()` derives a snapshot from the live option dict per read, which is what keeps `config.patch(...)`, `config.options.new_child(...)` and the test sites that write a key after boot meaningful; a lifetime that genuinely freezes one captures it (`ThreadedWSGIServerReloadable` captures the snapshot its thread bound is computed from), and a test installs its own instead of patching the dict. The `/web/database/manager` service (`service/db/`) stays on the dict on purpose — `list_db` is flipped at run time by `odoo-bin db`, and the admin password is a credential it verifies and rewrites, not a setting |
 | `components/` ↔ runtime | `FieldCache`/`ComputeEngine` take callbacks for SQL and recompute, so the engine never imports `Environment` |
 | Layer 1 ↔ `BaseModel` | the model layer injects `BaseModel` into `orm/_recordset.py` via `set_base_model()`, so `fields/` and `domain/` recognise recordsets without importing Layer 2 |
-| CRUD ↔ persistence | the model mixins dispatch row I/O through `env.backend` |
-| framework ↔ addon models | string key (`env["res.users"]`), never an import |
+| CRUD ↔ persistence | the model mixins dispatch row I/O through `env.backend`; a locked or conditional column write goes through `env.backend.columns` (`fetch_and_add`, `try_write`), a sequence through `env.backend.sequences` |
+| ORM ↔ `addons/base` | six port objects on the registry, each the one file that names the base models it needs: `registry.metaschema` (ir.model, ir.model.fields, ir.model.constraint, ir.default, ir.model.data's load end), `registry.access_policy` (ir.model.access, ir.rule), `registry.xmlids` (ir.model.data), `registry.file_store` (ir.attachment), `registry.settings` (ir.config_parameter), `registry.locale` (res.lang, decimal.precision). The in-memory `ModelRegistry` carries the same six |
+| framework ↔ addon models | string key (`env["res.users"]`), never an import; nine such sites remain in the ORM outside the ports and are pinned (below) |
+| `ir.ui.view` ↔ view types | an addon that adds a view type registers an `ElementHandler` for its root tag (`addons/base/models/ir_ui_view_arch.py`) instead of inheriting the model; the pipeline stages stay on the model |
 
 **`env.backend` is non-optional and has two implementors**: `PostgresBackend`
 owns the SQL — every `INSERT`, `UPDATE`, `DELETE`, locking `SELECT` and
@@ -490,20 +505,31 @@ pins the database-free boundary.
 Production CRUD sniffs the test backend neither via `transaction.storage` nor
 via a null check.
 
-**Capabilities: 5 declared, 6 read sites, 3 of them instead of a port call.**
-Pinned by `odoo/orm/tests/test_backend_dispatch_surface.py`:
+**Capabilities: 2 declared, no branch that is lossy or blocking** (frozen at
+odoo `f7e799ce3578`, 2026-09-13; pinned by `odoo/orm/tests/test_backend_dispatch_surface.py`
+and `test_backend_protocol.py`):
 
 | Measure | Value | What it counts |
 |---|---:|---|
-| declared capabilities | 5 | `supports_parent_store`, `supports_record_rules`, `supports_joined_m2m_read`, `supports_column_scan`, `supports_translation_terms` (`runtime/backend.py`; both implementors set all five) |
-| capability reads in the ORM | 6 | every `backend.supports_*` in non-test source |
-| dispatch sites that **branch instead of calling the port** | 3 of 15 | `many2many.read`, `reference._reference_exists`, `_field_translation.get_mirrored_ids_by_language` |
+| declared capabilities | 2 | `supports_column_scan`, `supports_recursive_queries` -- each guards a site whose in-memory branch the inventory marks *equivalent* |
+| dispatch sites | 20 across 12 files, 5 in Layer 1 | every `env.backend.<method>(` in the mixins, fields and domain |
+| protocol methods without a caller | 0 | every `StorageBackend` method is dispatched from the ORM or from a base model spelling `env.backend.` |
 
-The other three reads guard a site that *does* dispatch: `create._update_parent_path_on_create`
-and `write._get_records_with_parent_changed` on `supports_parent_store`, and
-`_query._search` on `supports_record_rules`.
+What used to branch now calls the port: a many2many read is `read_m2m_groups`
+(PostgreSQL joins the relation onto the comodel query, memory walks its rows in
+the query's order); the parent store is `set_parent_paths`,
+`records_with_parent_changed` and `move_parent_paths`, so a `_parent_store`
+model keeps its paths in memory and `child_of` resolves through them; translation
+echoes follow a write on both backends because the mirror logic reads the stored
+dicts through `columns`; record rules apply in memory because the in-memory search
+asks `registry.access_policy` for the domain, as PostgreSQL's search does.
+`descendants` and `ancestors` are the two tree walks (a recursive CTE, a level
+walk); `unlink_rows(model, ids)` deletes rows and runs the company-dependent
+cleanup, and nothing else -- the xmlids and attachments a deletion drops are
+collected by the mixin through `registry.xmlids` and `registry.file_store` before
+the first batch.
 
-The three that branch are where the two backends run genuinely different
-*algorithms* rather than two implementations of one. The sharpest is
-`Many2many.read`: the SQL path fuses a JOIN into the comodel's `Query`, and the
-port's `read_m2m_pairs` signature has nowhere to put it.
+The DB-free tier's safety marker is unchanged in what it protects: a registry
+without `ir.rule` raises `InMemoryRecordRulesNotSupported` the moment an
+access-checked search asks the policy for a domain; one handed an `ir.rule` class
+gets real filtering.

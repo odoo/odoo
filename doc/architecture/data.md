@@ -61,6 +61,14 @@ deployment.** Two databases served by one process have different model sets,
 different columns, and genuinely different runtime classes for the same `_name`.
 Nothing may be cached per process without a database key.
 
+The ORM reads and writes this meta-schema through one object, `registry.metaschema`
+(`orm/runtime/metaschema.py`): reflection at model init, the manual models and
+fields, a model's translated description and a field's labels and selection, a
+model's defaults and a column's company fallbacks, the constraint messages. The
+same object answers on the in-memory registry from its own storage, which is what
+lets a DB-free environment reflect its models into `ir.model` and `ir.model.fields`
+rows and register their external ids through `registry.xmlids`.
+
 ## 2. The signalling tables — cross-process coordination
 
 Ten tables, one for the registry and one for each key in `CACHES_BY_KEY`
