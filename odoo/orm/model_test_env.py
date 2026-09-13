@@ -25,6 +25,7 @@ from .primitives import SUPERUSER_ID
 from .runtime._registry_fields import _RegistryFieldsMixin
 from .runtime.access_policy import ACCESS_POLICY
 from .runtime.filestore import FILE_STORE
+from .runtime.locale import LOCALE
 from .runtime.metaschema import META_SCHEMA
 from .runtime.registry import CACHES_BY_KEY
 from .runtime.settings import SYSTEM_SETTINGS
@@ -276,6 +277,7 @@ class ModelRegistry(_RegistryFieldsMixin, Mapping):
     xmlids = XMLIDS
     file_store = FILE_STORE
     settings = SYSTEM_SETTINGS
+    locale = LOCALE
 
     def __init__(
         self,

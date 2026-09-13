@@ -246,7 +246,7 @@ def insert_cache(
                     )
                 return sub
 
-            installed = [lang for lang, _ in env["res.lang"].get_installed()]
+            installed = env.registry.locale.installed_langs(env)
             langs = OrderedSet[str](installed + ["en_US"])
             _debug.pipeline(
                 "field.translation.prefetch_langs_inserted",
@@ -273,7 +273,7 @@ def insert_cache(
 
     field_cache = env.core.get_field_data(field)
     if env.context.get("prefetch_langs"):
-        installed = [lang for lang, _ in env["res.lang"].get_installed()]
+        installed = env.registry.locale.installed_langs(env)
         langs = OrderedSet[str](installed + ["en_US"])
         u_langs: list[str] = (
             [f"_{lang}" for lang in langs] if env._lang.startswith("_") else []
@@ -439,10 +439,10 @@ def _mark_dirty_model_translation(
     clean_records = records.filtered(lambda rec: rec.id not in dirty_ids)
     clean_records.invalidate_recordset([field.name])
     field._update_cache(records, cache_value, dirty=True)
-    en_us_mirrored = lang != "en_US" and not records.env["res.lang"]._get_data(
-        code="en_US"
+    en_us_mirrored = lang != "en_US" and not (
+        records.env.registry.locale.is_lang_installed(records.env, "en_US")
     )  # debuglog
-    if lang != "en_US" and not records.env["res.lang"]._get_data(code="en_US"):
+    if en_us_mirrored:
         field._update_cache(records.with_context(lang="en_US"), cache_value, dirty=True)
     if _debug.logic.enabled and (mirrored_ids or en_us_mirrored):
         _debug.logic(
@@ -470,7 +470,9 @@ def get_mirrored_ids_by_language(
     ids = [id_ for id_ in records._ids if id_]
     if not ids or not records.env.backend.supports_translation_terms:
         return {}
-    if lang == "en_US" and not records.env["res.lang"]._get_data(code="en_US"):
+    if lang == "en_US" and not records.env.registry.locale.is_lang_installed(
+        records.env, "en_US"
+    ):
         return {}
     stored = get_stored_translations_multi(field, records.browse(ids), dirty_ids)
     followers = defaultdict(list)
@@ -535,7 +537,7 @@ def mark_dirty_model_term_translation(
             new_store_translations = new_translations
         new_store_translations[lang] = cache_value
 
-        if not records.env["res.lang"]._get_data(code="en_US"):
+        if not records.env.registry.locale.is_lang_installed(records.env, "en_US"):
             new_store_translations["en_US"] = cache_value
             new_store_translations.pop("_en_US", None)
         new_translations_list.append(new_store_translations)

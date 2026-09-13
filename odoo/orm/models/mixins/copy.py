@@ -112,9 +112,7 @@ class CopyMixin(_ModelStubs):
             )
             return
         seen_map[old._name].add(old.id)
-        valid_langs = {code for code, _ in self.env["res.lang"].get_installed()} | {
-            "en_US"
-        }
+        valid_langs = {*self.env.registry.locale.installed_langs(self.env), "en_US"}
 
         for name, field in old._fields.items():
             if not field.copy:
@@ -231,8 +229,7 @@ class CopyMixin(_ModelStubs):
         )
         if not stored_translations:
             return
-        valid_langs = {code for code, _name in self.env["res.lang"].get_installed()}
-        valid_langs.add("en_US")
+        valid_langs = {*self.env.registry.locale.installed_langs(self.env), "en_US"}
         renamed = {
             lang: rename(self.with_context(lang=lang), term)
             for lang, term in stored_translations.items()

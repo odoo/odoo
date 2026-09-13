@@ -34,6 +34,7 @@ from ._registry_schema import _RegistrySchemaMixin
 from ._registry_signaling import _RegistrySignalingMixin
 from .access_policy import ACCESS_POLICY, AccessPolicy
 from .filestore import FILE_STORE, FileStore
+from .locale import LOCALE, Locale
 from .metaschema import META_SCHEMA, MetaSchema
 from .settings import SYSTEM_SETTINGS, SystemSettings
 from .xmlids import XMLIDS, Xmlids
@@ -91,6 +92,7 @@ class Registry(
     xmlids: Xmlids = XMLIDS
     file_store: FileStore = FILE_STORE
     settings: SystemSettings = SYSTEM_SETTINGS
+    locale: Locale = LOCALE
 
     @classmethod
     def _new_finalize(cls, db_name: str, update_module: bool, t0: float) -> Registry:

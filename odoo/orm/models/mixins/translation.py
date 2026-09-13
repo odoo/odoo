@@ -30,9 +30,7 @@ class TranslationMixin(_ModelStubs):
         )
 
     def _check_translation_langs(self, translations: dict, source_lang: str) -> None:
-        valid_langs = {code for code, _ in self.env["res.lang"].get_installed()} | {
-            "en_US"
-        }
+        valid_langs = {*self.env.registry.locale.installed_langs(self.env), "en_US"}
         missing_langs = (set(translations) | {source_lang}) - valid_langs
         if missing_langs:
             _debug.logic(
@@ -270,7 +268,7 @@ class TranslationMixin(_ModelStubs):
     ) -> tuple[list[dict[str, str]], dict[str, typing.Any]]:
         self.check_singleton()
         field = self._fields[field_name]
-        langs = set(langs or [l[0] for l in self.env["res.lang"].get_installed()])
+        langs = set(langs or self.env.registry.locale.installed_langs(self.env))
         self_lang = self.with_context(check_translations=True, prefetch_langs=True)
         val_en = self_lang.with_context(lang="en_US")[field_name]
         if not field.translate:
