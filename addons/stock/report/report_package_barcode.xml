@@ -203,45 +203,6 @@
     </t>
 </template>
 
-<template id="report_package_barcode_small">
-    <t t-call="web.basic_layout">
-        <t t-foreach="docs" t-as="o">
-            <t>
-                <div class="page">
-                    <div class="oe_structure"/>
-                    <t t-if="o.valid_sscc">
-                        <div class="row">
-                            <t t-set="barcode" t-value="'00' + o.name"/>
-                            <t t-if="o.pack_date" t-set="barcode" t-value="barcode + '13' + o.pack_date.strftime('%y%m%d')"/>
-                            <div class="col-5 text-end" name="datamatrix_barcode" style="margin: 0px 20px 40px 60px">
-                                <span t-out="barcode" t-options="{'widget': 'barcode', 'symbology': 'ECC200DataMatrix', 'width': 200, 'height': 200}">Barcode Demo</span>
-                            </div>
-                            <div class="col-7 text-start" style="font-size:20px;">
-                                <div class="row">SSCC: <span t-field="o.name">SSCC Demo</span></div>
-                                <div t-if="o.pack_date" class="row">Pack Date: <span t-field="o.pack_date">Pack Date Demo</span></div>
-                                <div t-if="o.package_type_id" class="row" name="datamatrix_pack_type">Package Type: <span t-field="o.package_type_id.name">Package Type Demo</span></div>
-                            </div>
-                        </div>
-                    </t>
-                    <t t-else="">
-                        <div class="row">
-                            <div class="text-center col-12">
-                                <span t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:600px;height:100px;'}">Name Demo</span>
-                                <span t-field="o.name" style="font-size:20px; margin:100px; white-space: nowrap;">Name Demo</span>
-                            </div>
-                        </div>
-                        <div t-if="o.pack_date" class="col-12 text-center" style="font-size:24px; font-weight:bold;">Pack Date: <span t-field="o.pack_date">2023-01-01</span></div>
-                        <div class="row o_packaging_type" t-if="o.package_type_id">
-                            <div class="col-12 text-center" style="font-size:24px; font-weight:bold;"><span>Package Type: </span><span t-field="o.package_type_id.name">Package Type Demo</span></div>
-                        </div>
-                    </t>
-                    <div class="oe_structure"/>
-                </div>
-            </t>
-        </t>
-    </t>
-</template>
-
 <template id="report_picking_packages">
     <t t-set="docs" t-value="docs._get_packages_for_print()"/>
     <t t-call="stock.report_package_barcode"/>
@@ -252,9 +213,5 @@
     <t t-call="stock.report_package_barcode"/>
 </template>
 
-<template id="report_package_history_barcode_small">
-    <t t-set="docs" t-value="docs.package_id"/>
-    <t t-call="stock.report_package_barcode_small"/>
-</template>
 </data>
 </odoo>
