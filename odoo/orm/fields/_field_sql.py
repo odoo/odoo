@@ -61,6 +61,9 @@ def _get_like_regex(value: str, exact: bool) -> str:
 
 
 class _FieldSqlMixin(_FieldStubs):
+    _fetch_term: SQL | None = None
+    _fetch_terms_by_langs: dict[tuple[str, ...], SQL] | None = None
+
     def to_sql(self, model: ModelLike, alias: str) -> SQL:
         if not self.store or not self.column_type:
             raise ValueError(f"Cannot convert {self} to SQL because it is not stored")

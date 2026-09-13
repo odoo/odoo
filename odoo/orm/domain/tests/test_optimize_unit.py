@@ -95,6 +95,7 @@ class _StubField:
 
 class _StubEnv:
     tz = utc
+    su = False
     registry: typing.Any = None
 
     def __init__(self, model):
@@ -526,7 +527,14 @@ class _HierarchyStubModel(_StubModel):
         return self
 
     def search(self, domain, order=None):
+        self.searched = True
         return self
+
+    def browse(self, ids=()):
+        return self
+
+    def check_access(self, operation):
+        self.access_checked = operation
 
 
 class TestHierarchyBooleanValues(unittest.TestCase):
@@ -555,6 +563,20 @@ class TestHierarchyBooleanValues(unittest.TestCase):
             DomainCondition("id", "child_of", [False]), _HierarchyStubModel()
         )
         self.assertIs(result, Domain.FALSE)
+
+    def test_integer_roots_skip_the_search_but_keep_the_read_check(self):
+        model = _HierarchyStubModel()
+        optimizations._optimize_hierarchy(
+            DomainCondition("id", "child_of", [False]), model
+        )
+        self.assertFalse(hasattr(model, "searched"))
+        self.assertEqual(model.access_checked, "read")
+        model = _HierarchyStubModel()
+        model.env.su = True
+        optimizations._optimize_hierarchy(
+            DomainCondition("id", "child_of", [False]), model
+        )
+        self.assertFalse(hasattr(model, "access_checked"))
 
 
 class TestInRequiredPredicateSafety(unittest.TestCase):

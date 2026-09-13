@@ -714,7 +714,11 @@ def _optimize_hierarchy(condition, model):
         search_domain |= Domain.OR(
             Domain("display_name", "ilike", v) for v in other_values
         )
-    coids += comodel.search(search_domain, order="id").ids
+    if search_domain.is_false():
+        if not comodel.env.su:
+            comodel.browse().check_access("read")
+    else:
+        coids += comodel.search(search_domain, order="id").ids
     if not coids:
         _debug.logic(
             "domain.hierarchy.no_roots",

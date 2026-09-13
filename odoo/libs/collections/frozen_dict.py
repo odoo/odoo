@@ -27,13 +27,25 @@ def _freehash(arg: Any, path: set[int]) -> int:
     try:
         if isinstance(arg, Mapping):
             return hash(
-                frozenset((key, _freehash(val, path)) for key, val in arg.items())
+                frozenset(
+                    (key, hash(val) if type(val) in _SCALARS else _freehash(val, path))
+                    for key, val in arg.items()
+                )
             )
         if isinstance(arg, Iterable):
-            return hash(frozenset(_freehash(item, path) for item in arg))
+            return hash(
+                frozenset(
+                    hash(item) if type(item) in _SCALARS else _freehash(item, path)
+                    for item in arg
+                )
+            )
         return id(arg)
     finally:
         path.discard(marker)
+
+
+# the values a context mostly holds; hashed in place instead of through a call
+_SCALARS = frozenset({str, int, bool, float, type(None), bytes})
 
 
 class frozendict[K, T](dict[K, T]):
