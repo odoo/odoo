@@ -2,6 +2,8 @@ import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
 import { AvatarsHeaderMiddleButtons } from "./avatars_header_buttons";
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
+import { WebsiteBorderConfigurator } from "@website/builder/plugins/options/website_border_configurator_option";
 
 /**
  * Updates the avatars z-index, depending on the chosen overlapping order.
@@ -66,4 +68,13 @@ export class AvatarsChangeOrderAction extends ClassAction {
     }
 }
 
+export class AvatarsOption extends BaseOptionComponent {
+    static id = "avatars_option";
+    static template = "website.AvatarsOption";
+    static components = {
+        WebsiteBorderConfigurator,
+    };
+}
+
 registry.category("website-plugins").add(AvatarsOptionPlugin.id, AvatarsOptionPlugin);
+registry.category("website-options").add(AvatarsOption.id, AvatarsOption);

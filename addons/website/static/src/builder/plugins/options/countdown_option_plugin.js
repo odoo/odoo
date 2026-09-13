@@ -8,9 +8,13 @@ import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { renderToElement } from "@web/core/utils/render";
 import { SelectTemplateAction } from "../customize_website_plugin";
+import { WebsiteBorderConfigurator } from "@website/builder/plugins/options/website_border_configurator_option";
 
 export class CountdownOption extends BaseOptionComponent {
     static id = "countdown_option";
+    static components = {
+        WebsiteBorderConfigurator,
+    };
     static template = "website.CountdownOption";
     static dependencies = ["versionError"];
     static cleanForSave = (editingEl) => {

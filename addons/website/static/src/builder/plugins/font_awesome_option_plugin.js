@@ -3,6 +3,7 @@ import { registry } from "@web/core/registry";
 import { ClassAction } from "@html_builder/core/core_builder_action_plugin";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
+import { WebsiteBorderConfigurator } from "@website/builder/plugins/options/website_border_configurator_option";
 
 export class FontAwesomeOptionPlugin extends Plugin {
     static id = "fontAwesomeOptionPlugin";
@@ -26,6 +27,7 @@ export class FaResizeAction extends ClassAction {
 export class FontAwesomeOption extends BaseOptionComponent {
     static id = "font_awesome_option";
     static template = "website.FontAwesomeOption";
+    static components = { WebsiteBorderConfigurator };
     setup() {
         super.setup();
         this.state = useDomState((editingElement) => {

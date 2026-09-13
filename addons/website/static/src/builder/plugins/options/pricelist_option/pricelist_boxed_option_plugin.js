@@ -1,6 +1,8 @@
+import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { Plugin } from "@html_editor/plugin";
 import { isElement } from "@html_editor/utils/dom_info";
 import { registry } from "@web/core/registry";
+import { WebsiteBorderConfigurator } from "@website/builder/plugins/options/website_border_configurator_option";
 
 export class PriceListBoxedOptionPlugin extends Plugin {
     static id = "priceListBoxedOption";
@@ -26,4 +28,13 @@ export class PriceListBoxedOptionPlugin extends Plugin {
     };
 }
 
+export class PriceListBoxedDescriptionOption extends BaseOptionComponent {
+    static id = "price_list_boxed_description_option";
+    static template = "website.PriceListBoxedDescriptionOption";
+    static components = { WebsiteBorderConfigurator };
+}
+
 registry.category("website-plugins").add(PriceListBoxedOptionPlugin.id, PriceListBoxedOptionPlugin);
+registry
+    .category("website-options")
+    .add(PriceListBoxedDescriptionOption.id, PriceListBoxedDescriptionOption);
