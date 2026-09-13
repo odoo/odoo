@@ -12,6 +12,7 @@ import {
     onRpc,
     serverState,
 } from "@web/../tests/web_test_helpers";
+import { SaleOrderLineProductField } from "../src/js/sale_product_field/sale_product_field";
 import { saleModels } from "./sale_test_helpers";
 
 class SaleOrderLine extends saleModels.SaleOrderLine {
@@ -219,4 +220,16 @@ test("Show full description if SOL name is not started with product name", async
     });
 
     expect(".o_field_product_label_section_and_note_cell .o_input").toHaveText("A description");
+});
+
+test("configuration button can be evaluated without a parent sale order", () => {
+    const field = Object.create(SaleOrderLineProductField.prototype);
+    field.props = {
+        record: {
+            data: { is_configurable_product: true },
+            model: { root: {} },
+        },
+    };
+
+    expect(field.hasConfigurationButton).toBe(true);
 });
