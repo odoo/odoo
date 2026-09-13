@@ -117,6 +117,7 @@ export class DateTimePickerController {
         /** @type {(() => void) | null} */
         this.disableListeners = null;
         this.propsValueRevision = 0;
+        this.closing = false;
         /** @type {{ value: string, promise: Promise<any>, revision: number } | null} */
         this.pendingApply = null;
         /** @type {(() => void) | null} */
@@ -210,7 +211,12 @@ export class DateTimePickerController {
         }
         this.updateValueFromInputs();
         this.setFocusClass(null);
-        await this.apply();
+        this.closing = true;
+        try {
+            await this.apply();
+        } finally {
+            this.closing = false;
+        }
         if (!this.destroyed) {
             this.params.onClose?.();
         }
@@ -435,6 +441,12 @@ export class DateTimePickerController {
 
     /** @param {number} inputIndex */
     open = (inputIndex) => {
+        if (this.closing) {
+            // The owner re-renders while the value it closed with is saved, and may
+            // ask to reopen before onClose tells it the picker is closed.
+            log.logic("open refused while closing", () => ({ inputIndex }));
+            return;
+        }
         log.logic("open", () => ({ inputIndex, wasOpen: this.isOpen() }));
         this.pickerProps.focusedDateIndex = inputIndex;
 

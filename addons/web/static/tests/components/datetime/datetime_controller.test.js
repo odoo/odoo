@@ -555,6 +555,55 @@ test("distinct applies retain ownership when their callback shares a promise", a
     expect.verifySteps(["2023-07-07"]);
 });
 
+test("a close still saving refuses to reopen until the owner is told it closed", async () => {
+    const saved = new Deferred();
+    const [input] = makeInputs(1);
+    const { controller, getPopover } = createController({
+        pickerProps: { type: "date", value: DateTime.fromSQL("2023-07-07") },
+        getInputs: () => [input],
+        onApply: () => {
+            expect.step("apply");
+            return saved;
+        },
+        onClose: () => expect.step("closed"),
+    });
+    controller.enable();
+    input.value = "08/08/2023";
+    const closing = controller.onPopoverClose();
+    expect.verifySteps(["apply"]);
+    controller.open(0);
+    expect(getPopover().isOpen).toBe(false);
+    saved.resolve();
+    await closing;
+    expect.verifySteps(["closed"]);
+    controller.open(0);
+    expect(getPopover().isOpen).toBe(true);
+});
+
+test("a close whose save fails still lets the picker reopen", async () => {
+    const saved = new Deferred();
+    const [input] = makeInputs(1);
+    const { controller, getPopover } = createController({
+        pickerProps: { type: "date", value: DateTime.fromSQL("2023-07-07") },
+        getInputs: () => [input],
+        onApply: () => saved,
+    });
+    controller.enable();
+    getPopover().open(document.body, {});
+    input.value = "08/08/2023";
+    const closing = controller
+        .onPopoverClose()
+        .catch((/** @type {Error} */ error) => expect.step(error.message));
+    controller.pickerProps.focusedDateIndex = 1;
+    controller.open(0);
+    expect(controller.pickerProps.focusedDateIndex).toBe(1);
+    saved.reject(new Error("save failed"));
+    await closing;
+    expect.verifySteps(["save failed"]);
+    controller.open(0);
+    expect(controller.pickerProps.focusedDateIndex).toBe(0);
+});
+
 test("disposing during close does not notify the former owner after save", async () => {
     const saved = new Deferred();
     const [input] = makeInputs(1);
