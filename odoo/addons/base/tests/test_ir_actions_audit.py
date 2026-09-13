@@ -140,6 +140,28 @@ class TestSafeEvalDict(TransactionCase):
             {"search_default_x": 1, "default_parent_id": False},
         )
 
+    def test_an_act_window_context_reads_the_allowed_companies(self):
+        action = self.env["ir.actions.act_window"].create(
+            {
+                "name": "audit-companies",
+                "res_model": "res.partner",
+                "context": "{'default_company_id': allowed_company_ids[0]}",
+            }
+        )
+        self.assertNotIn("allowed_company_ids", action.env.context)
+        with self.assertNoLogs("odoo.addons.base.models.ir_actions_actions", "WARNING"):
+            self.assertEqual(
+                action._eval_action_context(action.context),
+                {"default_company_id": self.env.company.id},
+            )
+        self.assertEqual(
+            action.with_context(allowed_company_ids=[42])._eval_action_context(
+                action.context
+            ),
+            {"default_company_id": 42},
+            "a context the page sent keeps its own list",
+        )
+
 
 @tagged("post_install", "-at_install")
 class TestIrActionsUnlinkCascadesEmbedded(TransactionCase):

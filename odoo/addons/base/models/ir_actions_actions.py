@@ -487,6 +487,7 @@ class IrActionsActions(models.Model):
         return {
             "uid": self.env.uid,
             "user": self.env.user,
+            "allowed_company_ids": self.env.companies.ids,
             "time": tools.safe_eval.time,
             "datetime": tools.safe_eval.datetime,
             "dateutil": tools.safe_eval.dateutil,
