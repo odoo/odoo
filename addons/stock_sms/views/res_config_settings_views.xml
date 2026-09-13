@@ -16,7 +16,6 @@
                         required="stock_text_confirmation and stock_confirmation_type == 'sms'"
                         context="{'default_model': 'stock.picking'}"/>
                 </div>
-                <widget name="iap_buy_more_credits" service_name="sms" invisible="stock_confirmation_type != 'sms' or not stock_text_confirmation"/>
             </xpath>
         </field>
     </record>
