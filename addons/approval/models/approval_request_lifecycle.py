@@ -188,7 +188,8 @@ class ApprovalRequestLifecycle(models.Model):
         if steps:
             approver = candidate.filtered(
                 lambda a: (
-                    a.state in ("pending", "waiting", "approved") and steps <= a.step_ids
+                    a.state in ("pending", "waiting", "approved")
+                    and steps <= a.step_ids
                 )
             )
             trace.DECISION.event(
@@ -249,7 +250,7 @@ class ApprovalRequestLifecycle(models.Model):
                 decided_steps = [Command.link(step.id) for step in decided]
             else:
                 decided_steps = [Command.set(decided.ids)]
-            row.write(
+            row.with_context(approval_decision=True).write(
                 {
                     "state": approver_state,
                     "decision_date": now,

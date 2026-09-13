@@ -6,7 +6,7 @@ from freezegun import freeze_time
 from odoo import fields
 from odoo.tests import common, tagged
 
-from .common import ApprovalCommon, isolate_group_approval_manager
+from .common import ApprovalCommon, isolate_group_approval_manager, record_approval
 from .common import isolate_group_approval_manager as _isolate_group_approval_manager
 from odoo.addons.approval.models import approval_request_escalation
 
@@ -163,7 +163,7 @@ class TestDeadlineEscalation(common.TransactionCase):
             approver = request.approver_ids.filtered(
                 lambda a: a.user_id == self.approver_user
             )
-            approver.sudo().write({"state": "approved"})
+            record_approval(approver)
 
             with freeze_time("2025-10-19 11:00:00"):
                 request.invalidate_recordset(["is_overdue", "state"])

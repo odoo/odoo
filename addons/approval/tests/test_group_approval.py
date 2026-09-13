@@ -1,6 +1,8 @@
 from odoo.exceptions import ValidationError
 from odoo.tests import common, tagged
 
+from .common import record_approval
+
 
 @tagged("post_install", "-at_install")
 class TestGroupApproval(common.TransactionCase):
@@ -216,7 +218,7 @@ class TestGroupApproval(common.TransactionCase):
         request.action_confirm()
 
         approver1 = request.approver_ids.filtered(lambda a: a.user_id == self.user1)
-        approver1.sudo().write({"state": "approved"})
+        record_approval(approver1)
         self.assertEqual(
             request.state,
             "pending",
@@ -224,7 +226,7 @@ class TestGroupApproval(common.TransactionCase):
         )
 
         approver2 = request.approver_ids.filtered(lambda a: a.user_id == self.user2)
-        approver2.sudo().write({"state": "approved"})
+        record_approval(approver2)
         self.assertEqual(
             request.state,
             "approved",

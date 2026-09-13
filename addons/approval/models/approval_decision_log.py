@@ -90,6 +90,8 @@ class ApprovalDecisionLog(models.Model):
     )
 
     def write(self, vals):
+        if not self:
+            return True
         trace.REFUSAL.event("decision_log_rewritten", rows=self.ids)
         raise UserError(self.env._("A recorded approval decision cannot be changed."))
 

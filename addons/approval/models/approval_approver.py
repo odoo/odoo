@@ -7,6 +7,8 @@ from odoo.fields import Command, Domain
 from . import approval_trace as trace
 from .approval_utils import boolean_search_domain, is_approval_manager
 
+DECISION_CONTEXT = "approval_decision"
+
 
 class ApprovalApprover(models.Model):
     _name = "approval.approver"
@@ -285,6 +287,8 @@ class ApprovalApprover(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list: list[dict]) -> Self:
+        if any(vals.get("state") == "approved" for vals in vals_list):
+            self._check_approval_through_a_decision()
         self._check_access_create(vals_list)
         self._check_business_rules_create(vals_list)
         return super().create([self._stamp_pending_since(v) for v in vals_list])
@@ -298,17 +302,8 @@ class ApprovalApprover(models.Model):
             if delegation
             else {}
         )
-        if vals.get("state") == "approved" and "decided_step_ids" not in vals:
-            undecided = self.filtered(lambda row: row.step_ids - row.decided_step_ids)
-            trace.DECISION.event(
-                "approved_without_named_steps",
-                rows=self.ids,
-                completed=undecided.ids,
-            )
-            for row in undecided:
-                super(ApprovalApprover, row).write(
-                    {"decided_step_ids": [Command.set(row.step_ids.ids)]}
-                )
+        if vals.get("state") == "approved":
+            self._check_approval_through_a_decision()
         result = super().write(self._stamp_pending_since(vals))
         if delegation:
             self._hand_activities_to_effective_approver(previous_delegates)
@@ -367,6 +362,19 @@ class ApprovalApprover(models.Model):
         self.search(
             [("state", "=", "pending"), ("delegate_id", "!=", False)]
         )._hand_activities_to_effective_approver()
+
+    def _check_approval_through_a_decision(self) -> None:
+        if self.env.context.get(DECISION_CONTEXT):
+            return
+        trace.REFUSAL.event(
+            "approval_written_outside_a_decision", rows=self.ids, uid=self.env.uid
+        )
+        raise AccessError(
+            self.env._(
+                "An approval is recorded by deciding the request, never by writing an "
+                "approver's status."
+            )
+        )
 
     def _stamp_pending_since(self, vals: dict) -> dict:
         state = vals.get("state")
@@ -704,7 +712,7 @@ class ApprovalApprover(models.Model):
         """Approve rows nobody decided -- consent, an automatic rule -- for all their steps."""
         trace.DECISION.note("approve_every_step", rows=self.ids)
         for approver in self:
-            approver.write(
+            approver.with_context(**{DECISION_CONTEXT: True}).write(
                 {
                     "state": "approved",
                     "decided_step_ids": [Command.set(approver.step_ids.ids)],

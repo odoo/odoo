@@ -6,7 +6,7 @@ from odoo import fields
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import tagged
 
-from .common import ApprovalCommon, isolate_group_approval_manager
+from .common import ApprovalCommon, isolate_group_approval_manager, record_approval
 
 
 @tagged("post_install", "-at_install")
@@ -315,7 +315,7 @@ class TestDelegationPaths(ApprovalCommon):
         request = self._prepare_request(category)
         rows = request.approver_ids.sorted("sequence")
         self.assertEqual(rows.mapped("state"), ["pending", "waiting", "waiting"])
-        rows[0].sudo().state = "approved"
+        record_approval(rows[0])
 
         request.sudo()._refresh_turn_states()
         self.assertEqual(rows[1:].mapped("state"), ["pending", "waiting"])
@@ -405,7 +405,7 @@ class TestActionLocking(ApprovalCommon):
         )
         self.assertTrue(approver)
 
-        approver.sudo().write({"state": "approved"})
+        record_approval(approver)
 
         with self.assertRaises(UserError):
             request.sudo().action_approve(approver)
@@ -421,8 +421,8 @@ class TestActionWithdrawMultiRecord(ApprovalCommon):
         ap1 = req1.approver_ids.filtered(lambda a: a.user_id == self.approver_1)
         ap2 = req2.approver_ids.filtered(lambda a: a.user_id == self.approver_1)
 
-        ap1.sudo().write({"state": "approved"})
-        ap2.sudo().write({"state": "approved"})
+        record_approval(ap1)
+        record_approval(ap2)
 
         combined = req1 + req2
         combined.with_user(self.approver_1).action_withdraw()

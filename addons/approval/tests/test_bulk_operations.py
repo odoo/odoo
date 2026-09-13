@@ -3,7 +3,7 @@ from unittest.mock import patch
 from odoo.exceptions import UserError
 from odoo.tests import common, tagged
 
-from .common import ApprovalCommon
+from .common import ApprovalCommon, record_approval
 
 
 @tagged("post_install", "-at_install")
@@ -205,9 +205,9 @@ class TestBulkOperations(common.TransactionCase):
             }
         )
         request2.action_confirm()
-        request2.approver_ids.filtered(
-            lambda a: a.user_id == self.approver1
-        ).sudo().write({"state": "approved"})
+        record_approval(
+            request2.approver_ids.filtered(lambda a: a.user_id == self.approver1)
+        )
 
         request3 = self.env["approval.request"].create(
             {

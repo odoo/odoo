@@ -37,6 +37,24 @@ class TestStateGuards(ApprovalCommon):
                 approver_ids_computation=True
             ).write({"approver_ids": [(0, 0, {"user_id": self.manager_user.id})]})
 
+    def test_an_approval_written_under_sudo_is_refused(self):
+        category = self._parallel_category()
+        request = self._prepare_request(category)
+        row = request.approver_ids.filtered(lambda a: a.user_id == self.approver_1)
+
+        with self.assertRaisesRegex(AccessError, "recorded by deciding the request"):
+            row.sudo().write({"state": "approved"})
+        with self.assertRaisesRegex(AccessError, "recorded by deciding the request"):
+            self.env["approval.approver"].sudo().create(
+                {
+                    "request_id": request.id,
+                    "user_id": self.manager_user.id,
+                    "state": "approved",
+                }
+            )
+        self.assertEqual(row.state, "pending")
+        self.assertEqual(request.state, "pending")
+
     def test_approver_cannot_write_own_state(self):
         category = self._parallel_category()
         request = self._prepare_request(category)

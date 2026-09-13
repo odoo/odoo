@@ -3,7 +3,7 @@ from datetime import timedelta
 from odoo import fields
 from odoo.tests import common, tagged
 
-from .common import ApprovalCommon, new_trip_category
+from .common import ApprovalCommon, new_trip_category, record_approval
 
 
 @tagged("post_install", "-at_install")
@@ -83,7 +83,7 @@ class TestSLATracking(common.TransactionCase):
         approver = request.approver_ids.filtered(
             lambda a: a.user_id == self.approver_user
         )
-        approver.sudo().write({"state": "approved"})
+        record_approval(approver)
         request.invalidate_recordset(["sla_status", "state"])
         self.assertEqual(request.sla_status, "met")
 
@@ -93,7 +93,7 @@ class TestSLATracking(common.TransactionCase):
         approver = request.approver_ids.filtered(
             lambda a: a.user_id == self.approver_user
         )
-        approver.sudo().write({"state": "approved"})
+        record_approval(approver)
         request.invalidate_recordset(["sla_status", "state"])
         self.assertEqual(request.sla_status, "breached")
 

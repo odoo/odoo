@@ -2,7 +2,7 @@ from odoo import Command, fields
 from odoo.exceptions import UserError
 from odoo.tests import Form, common, tagged
 
-from .common import ApprovalCommon, new_trip_category
+from .common import ApprovalCommon, new_trip_category, record_approval
 
 
 @tagged("post_install", "-at_install")
@@ -196,7 +196,7 @@ class TestRequest(common.TransactionCase):
                 }
             )
             historical.action_confirm()
-            historical.approver_ids.sudo().write({"state": "approved"})
+            record_approval(historical.approver_ids)
         source = self.env["approval.request"].create(
             {
                 "name": "source",
@@ -298,7 +298,7 @@ class TestRequest(common.TransactionCase):
             }
         )
         previous_request.action_confirm()
-        previous_request.approver_ids.sudo().write({"state": "approved"})
+        record_approval(previous_request.approver_ids)
 
         new_request = self.env["approval.request"].new(
             {
@@ -355,7 +355,7 @@ class TestRequest(common.TransactionCase):
             }
         )
         previous_request.action_confirm()
-        previous_request.approver_ids.sudo().write({"state": "approved"})
+        record_approval(previous_request.approver_ids)
 
         new_request = self.env["approval.request"].new(
             {
@@ -402,7 +402,7 @@ class TestRequest(common.TransactionCase):
             }
         )
         previous_request.action_confirm()
-        previous_request.approver_ids.sudo().write({"state": "approved"})
+        record_approval(previous_request.approver_ids)
 
         new_request = self.env["approval.request"].new(
             {
@@ -471,7 +471,7 @@ class TestRequest(common.TransactionCase):
             }
         )
         older_request.action_confirm()
-        older_request.approver_ids.sudo().write({"state": "approved"})
+        record_approval(older_request.approver_ids)
         older_request.sudo().write({"date_confirmed": "2025-01-01 10:00:00"})
 
         newer_request = self.env["approval.request"].create(
@@ -489,7 +489,7 @@ class TestRequest(common.TransactionCase):
             }
         )
         newer_request.action_confirm()
-        newer_request.approver_ids.sudo().write({"state": "approved"})
+        record_approval(newer_request.approver_ids)
         newer_request.sudo().write({"date_confirmed": "2025-10-01 10:00:00"})
 
         new_request = self.env["approval.request"].new(
@@ -541,7 +541,7 @@ class TestRequest(common.TransactionCase):
             }
         )
         other_user_request.action_confirm()
-        other_user_request.approver_ids.sudo().write({"state": "approved"})
+        record_approval(other_user_request.approver_ids)
 
         new_request = self.env["approval.request"].new(
             {
@@ -579,7 +579,7 @@ class TestRequestAuditRegressions(ApprovalCommon):
             request.action_confirm()
 
         request.approver_ids.sudo().write({"state": "pending"})
-        request.approver_ids.sudo().write({"state": "approved"})
+        record_approval(request.approver_ids)
         request.invalidate_recordset(["state"])
         self.assertNotEqual(
             request.state,

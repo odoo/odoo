@@ -6,7 +6,7 @@ from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import common, tagged
 from odoo.tools import mute_logger
 
-from .common import ApprovalCommon
+from .common import ApprovalCommon, record_approval
 
 
 class MultiCompanyCase(common.TransactionCase):
@@ -111,7 +111,7 @@ class MultiCompanyCase(common.TransactionCase):
             )
             cls.request_b.action_confirm()
         with freeze_time("2026-01-05 09:00:00"):
-            cls.request_b.approver_ids.sudo().write({"state": "approved"})
+            record_approval(cls.request_b.approver_ids)
         cls.env.flush_all()
 
 

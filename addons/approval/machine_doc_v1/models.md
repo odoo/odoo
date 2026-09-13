@@ -1185,7 +1185,9 @@ closure with it. Read their fields in those modules.
 | `refusal_reason_id` / `note` | | as given |
 | `date` | Datetime | |
 
-**Invariants.** Created only by `_append_decision_log`, which every funnel calls: `_apply_decision`, `action_withdraw`, `_withdraw_decided_steps`, `_force_draft` (before it clears the rows), `_force_terminal`, `_revoke`, `_approve_without_decision`. `write` and `unlink` raise for every caller.
+**Invariants.** Created only by `_append_decision_log`, which every funnel calls: `_apply_decision`, `action_withdraw`, `_withdraw_decided_steps`, `_force_draft` (before it clears the rows), `_force_terminal`, `_revoke`, `_approve_without_decision`. `write` and `unlink` raise for every caller, except a write to an empty recordset, which changes nothing.
+
+**An approval is only ever decided (P5b).** `approval.approver` refuses a create or write that sets `state` to `approved` unless the `approval_decision` context says a funnel is recording it (`_check_approval_through_a_decision`, before the superuser access return, so `sudo()` does not pass): `_apply_decision` and `_approve_for_every_step` set it, and so does mrp_plm's import of a stage's history. A server action, an import or adopter code writing the status is refused. Tests that need a decided row without deciding it use `tests/common.record_approval`.
 
 **Separation of duties (19.0.2.1.0).** `approval.category.allow_self_approval`, mirrored on the request: when false, `_compute_desired_approvers` never stages the request owner, on any routing path, and `_check_not_deciding_own_request` refuses a decision on a row whose effective approver is the owner -- checked before `_check_decision_actor`'s superuser return, so `sudo()` does not reopen it. Categories existing at the upgrade were migrated to allowing. The Studio editor's categories allow it by design: a button's approval restricts who may press, and the presser is the approver.
 
