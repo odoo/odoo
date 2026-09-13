@@ -25,9 +25,11 @@ DISPATCH_SITES: dict[tuple[str, str], str] = {
         "does not"
     ),
     ("models/mixins/write.py", "_execute_update"): (
-        "LOSSY: PostgresBackend.update_rows merges jsonb translations "
-        "(COALESCE(...jsonb_build_object('en_US', ...)) || expr) and handles "
-        "company_dependent columns; InMemoryBackend.update_rows does neither"
+        "equivalent: PostgresBackend.update_rows merges jsonb translations "
+        "(COALESCE(...jsonb_build_object('en_US', ...)) || expr) and "
+        "company_dependent objects in SQL; InMemoryBackend.update_rows merges "
+        "the same object over the stored row's dict, seeding en_US from the "
+        "first value when the column was not an object yet"
     ),
     ("models/mixins/write.py", "_get_records_with_parent_changed"): "equivalent",
     ("models/mixins/write.py", "_update_parent_path_on_write"): "equivalent",
