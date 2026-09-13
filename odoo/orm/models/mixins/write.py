@@ -152,7 +152,9 @@ class WriteMixin(_ModelStubs):
                     inherited=fields[0].inherited,
                 )
                 if fields[0].inherited:
-                    description = self.env["ir.model"]._get(self._name).name
+                    description = self.env.registry.metaschema.model_description(
+                        self.env, self._name
+                    )
                     raise AccessError(
                         _(
                             "%(previous_message)s\n\nImplicitly accessed through '%(document_kind)s' (%(document_model)s).",

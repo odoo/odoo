@@ -752,8 +752,8 @@ class PostgresBackend:
                     expr=expr,
                 )
             if field.company_dependent:
-                fallbacks = model.env["ir.default"]._get_field_column_fallbacks(
-                    model._name, fname
+                fallbacks = model.env.registry.metaschema.field_column_fallbacks(
+                    model.env, model._name, fname
                 )
                 _debug.logic(
                     "backend.update_rows.company_dependent_merge",
@@ -1113,9 +1113,9 @@ class PostgresBackend:
         Defaults: typing.Any,
         many2one_fields,
     ) -> None:
-        IrModelFields = model.env["ir.model.fields"]
+        metaschema = model.env.registry.metaschema
         field_ids = tuple(
-            IrModelFields._get_ids_by_name(field.model_name).get(field.name)
+            metaschema.field_ids_by_name(model.env, field.model_name).get(field.name)
             for field in many2one_fields
         )
         sub_ids_json_text = tuple(json_dumps(id_) for id_ in sub_ids)

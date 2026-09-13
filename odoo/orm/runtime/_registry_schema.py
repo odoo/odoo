@@ -328,7 +328,7 @@ class _RegistrySchemaMixin(_RegistryStubs):
                 conname = sql.get_fk_constraint_names(
                     cr, table1, column1, table2, column2, ondelete
                 )[0]
-                model.env["ir.model.constraint"]._reflect_constraint(
+                model.env.registry.metaschema.reflect_constraint(
                     model, conname, "f", None, module
                 )
             elif (spec[1], spec[2], spec[3]) != (table2, column2, deltype):
@@ -345,7 +345,7 @@ class _RegistrySchemaMixin(_RegistryStubs):
                 conname = sql.get_fk_constraint_names(
                     cr, table1, column1, table2, column2, ondelete
                 )[0]
-                model.env["ir.model.constraint"]._reflect_constraint(
+                model.env.registry.metaschema.reflect_constraint(
                     model, conname, "f", None, module
                 )
 

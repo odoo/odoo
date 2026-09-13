@@ -116,7 +116,9 @@ def compute_related(field: Field, records: BaseModel) -> None:
         try:
             values = [next(iter(val := value[name]), val) for value in values]
         except AccessError as e:
-            description = records.env["ir.model"]._get(records._name).name
+            description = records.env.registry.metaschema.model_description(
+                records.env, records._name
+            )
             env = records.env
             _debug.logic(
                 "field.related.access_denied_through",

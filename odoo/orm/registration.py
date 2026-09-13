@@ -615,7 +615,7 @@ def _add_manual_models(env: Environment):
         manual=len(manual_models),
     )
     for model_data in manual_models:
-        attrs = env["ir.model"]._prepare_class_attrs(model_data)
+        attrs = env.registry.metaschema.manual_class_attrs(env, model_data)
 
         table_name = model_data["model"].replace(".", "_")
         table_kind = sql.get_table_kind(env.cr, table_name)
@@ -637,7 +637,7 @@ def _add_manual_models(env: Environment):
 def _add_manual_fields(model_cls: type[BaseModel], env: Environment):
     IrModelFields = env["ir.model.fields"]
 
-    fields_data = IrModelFields._get_manual_field_data(model_cls._name)
+    fields_data = env.registry.metaschema.manual_field_data(env, model_cls._name)
     if _debug.pipeline.enabled and fields_data:
         _debug.pipeline(
             "registration.manual_fields",

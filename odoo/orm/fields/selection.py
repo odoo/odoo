@@ -228,7 +228,7 @@ class Selection[T = str | typing.Literal[False]](Field[T]):
             return selection
 
         translations = dict(
-            env["ir.model.fields"].get_field_selection(self.model_name, self.name)
+            env.registry.metaschema.field_selection(env, self.model_name, self.name)
         )
         return [(key, translations.get(key, label)) for key, label in selection]
 

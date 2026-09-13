@@ -1612,7 +1612,7 @@ class _ModuleLoader:
             modules=len(self.registry.updated_modules),
             xmlids_written=len(self.registry.loading.xmlids_written),
         ):
-            env["ir.model.data"]._process_end(self.registry.updated_modules)
+            self.registry.metaschema.finish_load(env, self.registry.updated_modules)
         self.registry.loading.xmlids_written.clear()
         vacuum_cron = typing.cast(
             "IrCronProtocol | None",
@@ -1636,7 +1636,9 @@ class _ModuleLoader:
             ),
             self.registry.init_models_window(install=False),
         ):
-            self.env["ir.model.inherit"]._reflect_inherits(list(self.registry.models))
+            self.registry.metaschema.reflect_inherits(
+                self.env, list(self.registry.models)
+            )
 
     def uninstall_removed_modules(self) -> None:
         if not self.update_module:

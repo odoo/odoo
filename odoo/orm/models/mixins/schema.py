@@ -307,7 +307,10 @@ class SchemaMixin(_ModelStubs):
     def _sql_error_to_message_generic(self, exc: psycopg.Error) -> str:
         diag = exc.diag
         unknown = self.env._("Unknown")
-        model_string = self.env["ir.model"]._get(self._name).name or self._description
+        model_string = (
+            self.env.registry.metaschema.model_description(self.env, self._name)
+            or self._description
+        )
         info = {
             "model_display": f"'{model_string}' ({self._name})",
             "table_name": diag.table_name,

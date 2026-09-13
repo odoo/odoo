@@ -84,7 +84,9 @@ class AccessMixin(_ModelStubs):
             write_groups=bool(field.write_groups),
         )
 
-        description = self.env["ir.model"]._get(self._name).name
+        description = self.env.registry.metaschema.model_description(
+            self.env, self._name
+        )
 
         error_msg = _(
             'You do not have enough rights to access the field "%(field)s"'

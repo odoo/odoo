@@ -23,6 +23,7 @@ from .fields import Boolean, Char, Many2one
 from .models import AbstractModel, Model
 from .primitives import SUPERUSER_ID
 from .runtime._registry_fields import _RegistryFieldsMixin
+from .runtime.metaschema import META_SCHEMA
 from .runtime.registry import CACHES_BY_KEY
 from .runtime.transaction import Transaction
 
@@ -266,6 +267,7 @@ class InMemoryCursor(BaseCursor):
 
 class ModelRegistry(_RegistryFieldsMixin, Mapping):
     _lock: threading.RLock = threading.RLock()
+    metaschema = META_SCHEMA
 
     def __init__(
         self,

@@ -61,8 +61,8 @@ class _HooksMixin(_ModelStubs):
             def onchange_default(field, self):
                 value = field.convert_to_write(self[field.name], self)
                 condition = f"{field.name}={value}"
-                defaults = self.env["ir.default"]._get_model_defaults(
-                    self._name, condition
+                defaults = self.env.registry.metaschema.model_defaults(
+                    self.env, self._name, condition
                 )
                 self.update(defaults)
 

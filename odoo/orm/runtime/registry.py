@@ -32,6 +32,7 @@ from ._registry_loading_phase import _RegistryLoadingPhaseMixin
 from ._registry_models import _RegistryModelsMixin
 from ._registry_schema import _RegistrySchemaMixin
 from ._registry_signaling import _RegistrySignalingMixin
+from .metaschema import META_SCHEMA, MetaSchema
 
 if typing.TYPE_CHECKING:
     from odoo.db import BaseCursor, Cursor
@@ -81,6 +82,7 @@ class Registry(
 
     ready: bool
     loaded: bool
+    metaschema: MetaSchema = META_SCHEMA
 
     @classmethod
     def _new_finalize(cls, db_name: str, update_module: bool, t0: float) -> Registry:
@@ -501,13 +503,11 @@ class Registry(
                     model._auto_init()
                     model.init()
 
-                env["ir.model"]._reflect_models(model_names)
-                env["ir.model.fields"]._reflect_fields(model_names)
-                env["ir.model.fields.selection"]._reflect_selections(model_names)
-                env["ir.model.constraint"]._reflect_constraints(model_names)
-                env["ir.model.inherit"]._reflect_inherits(model_names)
-                env["ir.model.relation"]._reflect_relations(
-                    phase.relation_reflections, model_tables=phase.model_tables
+                self.metaschema.reflect(
+                    env,
+                    model_names,
+                    relation_reflections=phase.relation_reflections,
+                    model_tables=phase.model_tables,
                 )
 
                 self._ordinary_tables = {}

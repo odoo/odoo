@@ -348,8 +348,8 @@ class _FieldSqlMixin(_FieldStubs):
             self.company_dependent
             and self.index == "btree_not_null"
             and not (self.is_temporal and field_expr != self.name)
-            and model.env["ir.default"]._evaluate_condition_with_fallback(
-                model._name, field_expr, operator, value
+            and model.env.registry.metaschema.evaluate_default_condition(
+                model.env, model._name, field_expr, operator, value
             )
             is False
         ):
