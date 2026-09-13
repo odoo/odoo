@@ -10,9 +10,9 @@ import { subscribeToTransitionChange } from "../mock/animation.js";
 import { mockLocation } from "../mock/network.js";
 import { getViewPortHeight, getViewPortWidth } from "../mock/window.js";
 
-/** A link on the mocked app location is the router's, not a way out of the page. */
+/** A link on the mocked app host is the router's, not a way out of the page. */
 const EVENT_ACTION_OPTIONS = {
-    isAppOrigin: (/** @type {URL} */ url) => url.origin === mockLocation.origin,
+    isAppHost: (/** @type {URL} */ url) => url.host === mockLocation.host,
 };
 
 /**
