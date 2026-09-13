@@ -119,16 +119,7 @@
     }
 
     &.o_kanban_ungrouped {
-        --KanbanRecord-width: 100%;
-
-        padding: 0px;
         container-type: inline-size;
-
-        .o_kanban_record:not(.o_kanban_ghost) {
-            margin: 0;
-            border: none;
-            border-bottom: $border-width solid $border-color;
-        }
 
         @container (max-width: 750px) {
             .o_hr_holidays_kanban {

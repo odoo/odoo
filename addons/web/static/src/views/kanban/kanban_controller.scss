@@ -77,6 +77,30 @@
             display: none;
         }
     }
+
+    &.o_kanban_list {
+        .o_kanban_renderer.o_kanban_ungrouped {
+            --Kanban-gap: 0;
+            --KanbanRecord-width: 100%;
+
+            .o_kanban_record {
+                --KanbanRecord-margin-v: 0;
+                --KanbanRecord-margin-h: 0;
+
+                &:not(:only-of-type, :first-of-type) {
+                    margin-top: -1px;
+                }
+
+                &:not(:first-of-type) {
+                    --Card-border-radius-top: 0;
+                }
+
+                &:not(:last-of-type) {
+                    --Card-border-radius-bottom: 0;
+                }
+            }
+        }
+    }
 }
 
 // ------- Kanban renderer -------
