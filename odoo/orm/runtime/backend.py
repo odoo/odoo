@@ -45,7 +45,7 @@ _orm_crud = logging.getLogger("odoo.orm.crud")
 _orm_read = logging.getLogger("odoo.orm.read")
 _debug = DebugLog(__name__)
 
-COPY_THRESHOLD = int(os.environ.get("ODOO_COPY_THRESHOLD", "10"))
+COPY_THRESHOLD = int(os.environ.get("ODOO_COPY_THRESHOLD", "50"))
 COPY_DISABLED = os.environ.get("ODOO_DISABLE_COPY", "").lower() in (
     "1",
     "true",
