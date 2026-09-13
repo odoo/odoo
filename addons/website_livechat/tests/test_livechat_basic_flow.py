@@ -78,18 +78,28 @@ class TestLivechatBasicFlowHttpCase(HttpCase, TestLivechatCommon):
         self.authenticate(self.operator.login, 'ideboulonate')
 
         # Retrieve channels information, visitor info should be there
-        init_messaging = self.make_jsonrpc_request(
-            f"{self.livechat_base_url}/mail/store", {"fetch_params": ["channels_as_member"]}
+        data = self.make_jsonrpc_request(
+            f"{self.livechat_base_url}/mail/store",
+            {
+                "fetch_params": [
+                    ["/mail/messaging_menu/discuss.channel/load_more", {"tab_id": "livechat", "limit": 30}]
+                ]
+            },
         )
-        livechat_info = next(c for c in init_messaging["discuss.channel"] if c["id"] == channel.id)
+        livechat_info = next(c for c in data["discuss.channel"] if c["id"] == channel.id)
         self.assertIn("livechat_visitor_id", livechat_info)
 
         # Remove access to visitors and try again, visitors info shouldn't be included
         self.operator.group_ids -= self.group_livechat_user
-        init_messaging = self.make_jsonrpc_request(
-            f"{self.livechat_base_url}/mail/store", {"fetch_params": ["channels_as_member"]}
+        data = self.make_jsonrpc_request(
+            f"{self.livechat_base_url}/mail/store",
+            {
+                "fetch_params": [
+                    ["/mail/messaging_menu/discuss.channel/load_more", {"tab_id": "livechat", "limit": 30}]
+                ]
+            },
         )
-        livechat_info = next(c for c in init_messaging["discuss.channel"] if c["id"] == channel.id)
+        livechat_info = next(c for c in data["discuss.channel"] if c["id"] == channel.id)
         self.assertNotIn("livechat_visitor_id", livechat_info)
 
     def _common_basic_flow(self):

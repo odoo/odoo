@@ -59,7 +59,6 @@
             </div>
         </div>
         <div class="o-mail-DiscussContent-main d-flex overflow-hidden flex-grow-1 gap-2" t-att-class="{ 'position-relative': this.ui.isSmall }">
-            <t t-if="this.ui.isSmall" t-call="mail.Discuss.loading"/>
             <t t-set="hasActivePanel" t-value="this.threadActions.activeAction?.actionPanelComponentCondition"/>
             <div class="o-mail-DiscussContent-core overflow-auto o-scrollbar-thin d-flex flex-grow-1 w-100 gap-2" t-att-class="{ 'me-1': hasActivePanel, 'me-2': !hasActivePanel }">
                 <t name="core-content">
