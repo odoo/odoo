@@ -4,8 +4,8 @@ import { after, defineTags, describe, expect, test } from "@odoo/hoot";
 
 import { Runner } from "../../core/runner.js";
 import { Suite } from "../../core/suite.js";
-import { Test } from "../../core/test.js";
 import { undefineTags } from "../../core/tag.js";
+import { Test } from "../../core/test.js";
 import { parseUrl } from "../local_helpers.js";
 
 const makeTestRunner = () => {
@@ -225,6 +225,9 @@ describe(parseUrl(import.meta.url), () => {
         });
         const errors = [];
         runner._handleError = (error) => errors.push(String(error));
+        const reported = [];
+        runner._reportFailedTest = (test, reasons) =>
+            reported.push([test.fullName, reasons.join("\n")]);
         // the nested run's own verdict lines would read as this page's
         runner.stop = async () => false;
 
@@ -236,6 +239,8 @@ describe(parseUrl(import.meta.url), () => {
         expect(runner.reporting.passed).toBe(0);
         expect(errors).toHaveLength(1);
         expect(errors[0]).toInclude("timed out after 20 milliseconds");
+        expect(reported).toHaveLength(1);
+        expect(reported[0][0]).toBe("stuck suite/hangs");
     });
 
     test("what the orphaned hooks throw after the timeout is dropped", async () => {

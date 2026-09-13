@@ -696,6 +696,16 @@ export class Runner {
     }
 
     /** @param {() => Promise<void>} callback */
+    /**
+     * @param {Test} test
+     * @param {string[]} failReasons
+     */
+    _reportFailedTest(test, failReasons) {
+        logger.global.error(
+            [`Test ${stringify(test.fullName)} failed:`, ...failReasons].join("\n"),
+        );
+    }
+
     async dryRun(callback) {
         if (this.state.status !== "ready") {
             throw new HootError("cannot run a dry run after the test runner started", {
@@ -1005,11 +1015,7 @@ export class Runner {
                         }),
                     );
                 }
-                logger.global.error(
-                    [`Test ${stringify(test.fullName)} failed:`, ...failReasons].join(
-                        "\n",
-                    ),
-                );
+                this._reportFailedTest(test, failReasons);
 
                 if (!this.aborted) {
                     if (this._failed === 1) {
