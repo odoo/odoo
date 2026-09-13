@@ -316,6 +316,7 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
         self._pipeline_statement_time = 0.0
         self._pipeline_wait_time = 0.0
         self._pipeline_exit_started = 0.0
+        self._pipeline_pending = False
 
         self._thread = threading.current_thread()
 
@@ -369,13 +370,15 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
     def _wait_in_pipeline[T](self, wait: Callable[..., T], *args: Any) -> T:
         t0 = monotonic()
         try:
-            return wait(*args)
+            result = wait(*args)
         finally:
             self._pipeline_wait_time += monotonic() - t0
+        self._pipeline_pending = False
+        return result
 
     def _sync_pipeline_results(self) -> None:
         pipeline = self._pipeline
-        if pipeline is not None and self._obj.pgresult is None:
+        if pipeline is not None and self._pipeline_pending:
             _debug.pipeline("cursor.pipeline_synced_for_result", db=self.dbname)
             self._wait_in_pipeline(pipeline.sync)
 
@@ -654,6 +657,7 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
         try:
             obj.execute(query, params, prepare=prepare)
             counts = True
+            self._pipeline_pending = self._pipeline_entered
         except Exception as e:
             counts = self._statement_failed(
                 e, query, log_exceptions=log_exceptions, prepared=prepare is not False
@@ -825,6 +829,7 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
         try:
             obj.executemany(query, rows, returning=returning)
             counts = True
+            self._pipeline_pending = self._pipeline_entered
         except Exception as e:
             counts = self._statement_failed(e, query, log_exceptions=log_exceptions)
             raise
@@ -925,6 +930,7 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
             self._pipeline = None
             self._pipeline_depth = 0
             self._pipeline_entered = False
+            self._pipeline_pending = False
 
     def close(self) -> None:
         if not self._closed:

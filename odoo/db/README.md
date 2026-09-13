@@ -572,11 +572,30 @@ library.
   **`rowcount` and `description` sync on demand for the same reason.** psycopg's
   `rowcount` reads a field that the pipeline has not filled yet: measured, every
   statement after the mode arms answered **−1**, and `bool(-1)` is `True`, so an
-  `if cr.rowcount:` in a pipelined path passes for zero rows. psycopg's own
-  fetches sync when the cursor has no `pgresult` yet; `Cursor.rowcount` and
-  `Cursor.description` do the same through the public `Pipeline.sync()` of the
-  pipeline the block entered, and the sync counts as a wait. Pinned in
+  `if cr.rowcount:` in a pipelined path passes for zero rows. `Cursor.rowcount`
+  and `Cursor.description` sync through the public `Pipeline.sync()` of the
+  pipeline the block entered when the cursor has queued a statement since the
+  last sync, and the sync counts as a wait. The condition is the cursor's own
+  `_pipeline_pending` flag, not psycopg's `pgresult`: after a pipelined
+  `executemany(returning=False)` psycopg keeps `pgresult` at `None` even once
+  synced, so that test both missed the sync when it was due and would have
+  re-synced on every later read. What psycopg then reports is psycopg's:
+  measured on the raw cursor, an `executemany` queued behind an *unfetched*
+  SELECT folds that SELECT's row into its count (3 for two inserts) in pipeline
+  mode and not outside it. Pinned in
   `tests/test_cursor.py::TestPipelineAccountsForTheSyncCost`.
+
+  **How big the over-report was on real work, not on a `sleep`**: a JSON-RPC
+  `res.partner.create` of 300 records, three runs each against the same
+  database, read `query_time` **0.041 / 0.032 / 0.046 s before and 0.029 /
+  0.024 / 0.026 s after** on identical query counts (331 / 320) — about a third
+  of the reported figure, some 12 ms of a ~150 ms request. In-process, the same
+  shape showed 50 pipeline blocks whose wall was 57 ms against 19 ms of
+  statements and 16 ms of measured waits; the difference is the ORM's own value
+  building inside `_flush`, not compute methods — traced with the
+  `recompute` and `db.cursor` channels, 0 of 312 recompute events fell inside
+  an entered block, because `flush_until_converged` recomputes before it
+  flushes.
 - **The libpq health parameters are ones every supported libpq accepts.**
   `_HEALTH_PARAMS` reaches libpq as keywords on every connect, pooled and
   direct, and libpq rejects a keyword it does not know outright — not with a
@@ -833,7 +852,7 @@ campaign ends; the recipe, the cost figures and the first findings are in
   `pytest odoo/db/tests` (it is in no `testpaths` and shares the Tier-2
   invocation of `pytest.ini`, because a handful of its tests reach state in the
   package `__init__.py` that the Tier-1 stubs replace; measured 2026-09-13,
-  591 passed named alone). One class, `TestPipelineAccountsForTheSyncCost`,
+  592 passed named alone). One class, `TestPipelineAccountsForTheSyncCost`,
   needs a local `createdb` and skips without it:
   pure modules (`ddl`, `dsn`, `errors`, `schema_cache` bookkeeping, `savepoint`
   depth accounting, `bulk`'s argument validation and encoding cost model,

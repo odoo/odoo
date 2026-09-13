@@ -535,6 +535,13 @@ class TestPipelineAccountsForTheSyncCost(unittest.TestCase):
                 cr.execute("SELECT id FROM t_pipeline_rowcount ORDER BY id")
                 self.assertEqual([c.name for c in cr.description], ["id"])
                 self.assertEqual(cr.fetchone(), (1,))
+                # executemany keeps no pgresult at all after its sync, so the
+                # cursor tracks "queued since the last sync" itself.
+                cr.executemany(
+                    "INSERT INTO t_pipeline_rowcount VALUES (%s)", [(8,), (9,)]
+                )
+                self.assertEqual(cr.rowcount, 2)
+                self.assertEqual(cr.rowcount, 2)
             cr.rollback()
 
 
