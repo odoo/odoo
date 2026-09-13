@@ -19,7 +19,7 @@ from odoo.models import regex_order, READ_GROUP_DISPLAY_FORMAT, READ_GROUP_NUMBE
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, BinaryBytes, BinaryValue, date_utils, get_lang, unique, OrderedSet
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.date_utils import all_timezones
-from odoo.tools.misc import LazyDict
+from odoo.tools.misc import LazyDict, SENTINEL
 from odoo.tools.translate import LazyTranslate
 
 if typing.TYPE_CHECKING:
@@ -2264,10 +2264,15 @@ class Base(models.AbstractModel):
                 # copy the cache of lines to their corresponding new records;
                 # this avoids computing computed stored fields on new_lines
                 new_lines = lines.browse(map(NewId, line_ids))
-                for field_name in sub_fields_spec:
-                    field = lines._fields[field_name]
-                    for new_line, line in zip(new_lines, lines):
-                        line_value = field.convert_to_cache(line[field_name], new_line, validate=False)
+                for field in lines._fields.values():
+                    field_cache = field._get_cache(env)
+                    if not (field.store and field_cache):
+                        continue
+                    for new_line, line_id in zip(new_lines, lines._ids):
+                        value = field_cache.get(line_id, SENTINEL)
+                        if value is SENTINEL:
+                            continue
+                        line_value = field.convert_to_cache(value, new_line, validate=False)
                         field._update_cache(new_line, line_value)
 
         # Isolate changed values, to handle inconsistent data sent from the
