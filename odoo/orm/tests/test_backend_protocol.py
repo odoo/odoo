@@ -11,7 +11,6 @@ _MIXINS_DIR = _ORM_DIR / "models" / "mixins"
 _DISPATCH_DIRS = (_MIXINS_DIR, _ORM_DIR / "fields", _ORM_DIR / "domain")
 
 _CAPABILITY_MEMBERS = {
-    "supports_record_rules",
     "supports_column_scan",
     "supports_recursive_queries",
 }
@@ -47,14 +46,6 @@ def test_every_protocol_method_has_a_dispatch_site():
     assert not unknown_dispatch, (
         f"dispatch to backend methods not on the Protocol: {sorted(unknown_dispatch)}"
     )
-
-
-def test_supports_record_rules_is_consulted():
-    consulted = any(
-        "backend.supports_record_rules" in path.read_text()
-        for path in _MIXINS_DIR.rglob("*.py")
-    )
-    assert consulted, "supports_record_rules attribute is never consulted"
 
 
 def test_every_capability_is_consulted_somewhere():

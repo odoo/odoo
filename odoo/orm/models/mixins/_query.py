@@ -224,18 +224,6 @@ class _QueryMixin(_ModelStubs):
             return self.browse()._as_query()
 
         backend = self.env.backend
-        if check_access and not backend.supports_record_rules:
-            _debug.logic(
-                "query.search.backend_without_rules",
-                model=self._name,
-                backend=type(backend).__name__,
-            )
-            raise NotImplementedError(
-                f"{type(backend).__name__} does not enforce ir.rule record "
-                f"rules, so it cannot serve an access-checked search on "
-                f"{self._name}. Use a database-backed test tier, or pass "
-                f"bypass_access=True if the caller is genuinely trusted."
-            )
         return backend.search(
             self, domain, offset, limit, order, check_access=check_access, prof=prof
         )

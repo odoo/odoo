@@ -34,7 +34,7 @@ def test_env_ir_rule_access_raises_loud_marker():
             env["ir.rule"]
         message = str(excinfo.value)
         assert "record rules are NOT enforced" in message
-        assert "supports_record_rules" in message
+        assert "access_policy" in message
         assert "TransactionCase" in message
         with pytest.raises(InMemoryRecordRulesNotSupported):
             env.registry["ir.rule"]

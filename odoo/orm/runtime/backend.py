@@ -373,8 +373,6 @@ class StorageBackend(typing.Protocol):
     sequences: SequenceStore
     columns: ColumnStore
 
-    supports_record_rules: bool
-
     supports_column_scan: bool
 
     supports_recursive_queries: bool
@@ -563,8 +561,6 @@ def _single_table_where(model: BaseModel, domain: Domain) -> SQL | None:
 class PostgresBackend:
     sequences: SequenceStore = PostgresSequenceStore()
     columns: ColumnStore = PostgresColumnStore()
-
-    supports_record_rules: bool = True
 
     supports_column_scan: bool = True
 
@@ -1479,8 +1475,6 @@ class _InMemoryReadGroup:
 
 
 class InMemoryBackend:
-    supports_record_rules: bool = False
-
     supports_column_scan: bool = False
 
     supports_recursive_queries: bool = False
@@ -1649,6 +1643,21 @@ class InMemoryBackend:
             matching = all_records.filtered_domain(domain)
         else:
             matching = all_records
+
+        if check_access:
+            sec_domain = model.env.registry.access_policy.record_domain(
+                model.env, model._name, "read"
+            )
+            if not sec_domain.is_true():
+                _debug.logic(
+                    "backend.memory.rules_applied", model=model._name, uid=model.env.uid
+                )
+                allowed = (
+                    matching.sudo()
+                    .with_context(active_test=False)
+                    .filtered_domain(sec_domain)
+                )
+                matching = model.browse(allowed._ids)
 
         if order:
             matching = matching.sorted(key=order)

@@ -325,14 +325,14 @@ class ModelRegistry(_RegistryFieldsMixin, Mapping):
             if model_name == "ir.rule":
                 raise InMemoryRecordRulesNotSupported(
                     "ModelRegistry (DB-free model_test_env) has no 'ir.rule' "
-                    "model: record rules are NOT enforced in this tier — "
-                    "search() dispatches to the in-memory backend before the "
-                    "ir.rule security domain (DictBackend declares "
-                    "supports_record_rules = False). A security-adjacent "
+                    "model: record rules are NOT enforced in this tier -- an "
+                    "access-checked search asks registry.access_policy for the "
+                    "ir.rule domain and there is none to answer. A security-adjacent "
                     "assertion would go green here while production filters "
                     "records. Use a DB-backed TransactionCase to test record-"
                     "rule behaviour, or pass your own ir.rule model class to "
-                    "model_test_env(...) if you intend to stub it."
+                    "model_test_env(...): the in-memory backend applies the "
+                    "domain it returns."
                 ) from None
             raise
 

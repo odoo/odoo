@@ -690,13 +690,15 @@ class TestBackendDifferential(TransactionCase):
 
         self._diff((CalendarTest,), script, "date boundaries")
 
-    def test_divergence_record_rules_not_enforced(self):
+    def test_divergence_record_rules_need_an_ir_rule_model(self):
         registry = _isolated_registry(TestOrmFoo)
         with model_test_env(registry=registry) as env_a:
-            self.assertFalse(env_a.backend.supports_record_rules)
             with self.assertRaises(InMemoryRecordRulesNotSupported):
                 _ = env_a["ir.rule"]
-        self.assertTrue(self.env.backend.supports_record_rules)
+            # the isolated registry has neither ir.model.access nor ir.rule: the
+            # ACL lookup fails first, the rule marker would fire right after
+            with self.assertRaises((KeyError, InMemoryRecordRulesNotSupported)):
+                env_a(user=2, su=False)["test_orm.foo"].search([])
         self.assertIn("ir.rule", self.env.registry)
 
     def test_divergence_raw_sql_fails_loud(self):
