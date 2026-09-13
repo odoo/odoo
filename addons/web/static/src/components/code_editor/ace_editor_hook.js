@@ -3,6 +3,9 @@
 
 import { onMounted, status, useComponent, useEffect } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
+import { makeLogger } from "@web/core/debug/debug_logger";
+
+const log = makeLogger("web.components.code_editor");
 
 /**
  * @typedef {{ row: number, column: number }} CursorPosition
@@ -26,7 +29,7 @@ export class AceEditorController {
     constructor(params) {
         this.params = params;
         /** @type {Record<string | number, any>} */
-        this.sessions = {};
+        this.sessions = Object.create(null);
         /** @type {any} */
         this.editor = null;
         this.ignoreAceChange = false;
@@ -105,6 +108,9 @@ export class AceEditorController {
      * @returns {any}
      */
     acquireSession(sessionId) {
+        log.logic("acquire session", () => ({
+            cached: Object.hasOwn(this.sessions, sessionId),
+        }));
         if (!this.sessions[sessionId]) {
             const session = new window.ace.EditSession(this.params.getValue());
             session.setUndoManager(new window.ace.UndoManager());

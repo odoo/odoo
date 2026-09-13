@@ -166,3 +166,19 @@ test("options and theme are inert before an editor exists", () => {
     expect(() => controller.syncValue("a", "x")).not.toThrow();
     expect(() => controller.placeCursor({ row: 1, column: 2 })).not.toThrow();
 });
+
+for (const id of ["constructor", "toString", "__proto__"]) {
+    test(`session id ${id} adopts and reuses its owned Ace session`, () => {
+        const { editor, log } = makeAce();
+        const { controller } = makeController({ getSessionId: () => id });
+        const teardown = controller.attach(document.createElement("div"));
+        expect(controller.acquireSession(id)).toBe(editor.session);
+        expect(() => controller.showSession(id, "xml")).not.toThrow();
+        teardown();
+        expect(log.filter((entry) => entry === "session destroyed")).toHaveLength(1);
+        expect(() =>
+            controller.acquireSession(id).setMode("ace/mode/python"),
+        ).not.toThrow();
+        controller.detach();
+    });
+}
