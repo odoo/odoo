@@ -5,7 +5,8 @@ class Website(models.Model):
     _inherit = "website"
 
     website_slide_google_app_key = fields.Char(
-        "Google Doc Key", groups="base.group_system"
+        string="Google Doc Key",
+        groups="base.group_system",
     )
 
     def get_suggested_controllers(self):

@@ -13,32 +13,24 @@ class ResourceResource(models.Model):
 
     user_id = fields.Many2one(copy=False)
     employee_id = fields.One2many(
-        "hr.employee",
-        "resource_id",
-        check_company=True,
+        comodel_name="hr.employee",
+        inverse_name="resource_id",
         context={"active_test": False},
+        check_company=True,
     )
     job_title = fields.Char(
         compute="_compute_job_title",
         compute_sudo=True,
     )
     department_id = fields.Many2one(
-        "hr.department",
+        comodel_name="hr.department",
         compute="_compute_department_id",
         compute_sudo=True,
     )
-    work_location_id = fields.Many2one(
-        related="employee_id.work_location_id",
-    )
-    work_email = fields.Char(
-        related="employee_id.work_email",
-    )
-    show_hr_icon_display = fields.Boolean(
-        related="employee_id.show_hr_icon_display",
-    )
-    hr_icon_display = fields.Selection(
-        related="employee_id.hr_icon_display",
-    )
+    work_location_id = fields.Many2one(related="employee_id.work_location_id")
+    work_email = fields.Char(related="employee_id.work_email")
+    show_hr_icon_display = fields.Boolean(related="employee_id.show_hr_icon_display")
+    hr_icon_display = fields.Selection(related="employee_id.hr_icon_display")
 
     def get_avatar_card_data(self, field_names):
         stored = [fname for fname in field_names if fname != "work_phone"]

@@ -27,18 +27,30 @@ class MixinMailAliasMixinOptional(models.AbstractModel):
     ]
 
     alias_id: MailAlias = fields.Many2one(
-        "mail.alias", ondelete="restrict", required=False, copy=False
+        comodel_name="mail.alias",
+        copy=False,
+        required=False,
+        ondelete="restrict",
     )
-    alias_name = fields.Char(related="alias_id.alias_name", readonly=False)
-    alias_domain_id: MailAliasDomain = fields.Many2one(
-        "mail.alias.domain",
-        string="Alias Domain",
-        related="alias_id.alias_domain_id",
+    alias_name = fields.Char(
+        related="alias_id.alias_name",
         readonly=False,
     )
-    alias_domain = fields.Char("Alias Domain Name", related="alias_id.alias_domain")
+    alias_domain_id: MailAliasDomain = fields.Many2one(
+        comodel_name="mail.alias.domain",
+        related="alias_id.alias_domain_id",
+        string="Alias Domain",
+        readonly=False,
+    )
+    alias_domain = fields.Char(
+        related="alias_id.alias_domain",
+        string="Alias Domain Name",
+    )
     alias_defaults = fields.Text(related="alias_id.alias_defaults")
-    alias_email = fields.Char("Email Alias", related="alias_id.alias_full_name")
+    alias_email = fields.Char(
+        related="alias_id.alias_full_name",
+        string="Email Alias",
+    )
 
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:

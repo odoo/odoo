@@ -5,12 +5,12 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     l10n_it_origin_document_type = fields.Selection(
-        string="Origin Document Type",
         selection=[
             ("purchase_order", "Purchase Order"),
             ("contract", "Contract"),
             ("agreement", "Agreement"),
         ],
+        string="Origin Document Type",
         copy=False,
     )
     l10n_it_origin_document_name = fields.Char(
@@ -23,13 +23,13 @@ class SaleOrder(models.Model):
     )
     l10n_it_cig = fields.Char(
         string="CIG",
-        copy=False,
         help="Tender Unique Identifier",
+        copy=False,
     )
     l10n_it_cup = fields.Char(
         string="CUP",
-        copy=False,
         help="Public Investment Unique Identifier",
+        copy=False,
     )
     # Technical field for showing the above fields or not
     l10n_it_partner_pa = fields.Boolean(compute="_compute_l10n_it_partner_pa")

@@ -5,13 +5,16 @@ class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
     subscribed_courses = fields.Many2many(
-        "slide.channel", related="partner_id.slide_channel_ids"
+        comodel_name="slide.channel",
+        related="partner_id.slide_channel_ids",
     )
     has_subscribed_courses = fields.Boolean(
-        compute="_compute_courses_completion_text", compute_sudo=True
+        compute="_compute_courses_completion_text",
+        compute_sudo=True,
     )
     courses_completion_text = fields.Char(
-        compute="_compute_courses_completion_text", compute_sudo=True
+        compute="_compute_courses_completion_text",
+        compute_sudo=True,
     )
 
     @api.depends_context("lang")

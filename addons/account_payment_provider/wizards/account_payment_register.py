@@ -8,23 +8,24 @@ class AccountPaymentRegister(models.TransientModel):
     payment_token_id = fields.Many2one(
         comodel_name="payment.token",
         string="Saved payment token",
+        help="Note that tokens from providers set to only authorize transactions (instead of capturing the amount) are "
+        "not available.",
+        compute="_compute_payment_token_id",
         store=True,
         readonly=False,
-        compute="_compute_payment_token_id",
         domain="""[
             ('id', 'in', suitable_payment_token_ids),
         ]""",
-        help="Note that tokens from providers set to only authorize transactions (instead of capturing the amount) are "
-        "not available.",
     )
 
     # == Display purpose fields ==
     suitable_payment_token_ids = fields.Many2many(
-        comodel_name="payment.token", compute="_compute_suitable_payment_token_ids"
+        comodel_name="payment.token",
+        compute="_compute_suitable_payment_token_ids",
     )
     # Technical field used to hide or show the payment_token_id if needed
     use_electronic_payment_method = fields.Boolean(
-        compute="_compute_use_electronic_payment_method",
+        compute="_compute_use_electronic_payment_method"
     )
 
     # -------------------------------------------------------------------------

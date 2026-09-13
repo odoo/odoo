@@ -7,84 +7,105 @@ class ImLivechatChannelMemberHistory(models.Model):
     _description = "Keep the channel member history"
     _rec_names_search = ["partner_id", "guest_id"]
 
-    member_id = fields.Many2one("discuss.channel.member", index="btree_not_null")
+    member_id = fields.Many2one(
+        comodel_name="discuss.channel.member",
+        index="btree_not_null",
+    )
     livechat_member_type = fields.Selection(
-        [("agent", "Agent"), ("visitor", "Visitor"), ("bot", "Chatbot")],
+        selection=[("agent", "Agent"), ("visitor", "Visitor"), ("bot", "Chatbot")],
         compute="_compute_member_fields",
         store=True,
     )
     channel_id = fields.Many2one(
-        "discuss.channel",
+        comodel_name="discuss.channel",
         compute="_compute_member_fields",
+        store=True,
         index=True,
         ondelete="cascade",
-        store=True,
     )
     guest_id = fields.Many2one(
-        "mail.guest",
+        comodel_name="mail.guest",
         compute="_compute_member_fields",
-        index="btree_not_null",
         store=True,
+        index="btree_not_null",
     )
     partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         compute="_compute_member_fields",
-        index="btree_not_null",
         store=True,
+        index="btree_not_null",
     )
     chatbot_script_id = fields.Many2one(
-        "chatbot.script",
+        comodel_name="chatbot.script",
         compute="_compute_member_fields",
-        index="btree_not_null",
         store=True,
+        index="btree_not_null",
     )
     agent_expertise_ids = fields.Many2many(
-        "im_livechat.expertise", compute="_compute_member_fields", store=True
+        comodel_name="im_livechat.expertise",
+        compute="_compute_member_fields",
+        store=True,
     )
     conversation_tag_ids = fields.Many2many(
-        "im_livechat.conversation.tag",
+        comodel_name="im_livechat.conversation.tag",
         related="channel_id.livechat_conversation_tag_ids",
     )
     avatar_128 = fields.Binary(compute="_compute_avatar_128")
 
-    session_country_id = fields.Many2one("res.country", related="channel_id.country_id")
+    session_country_id = fields.Many2one(
+        comodel_name="res.country",
+        related="channel_id.country_id",
+    )
     session_livechat_channel_id = fields.Many2one(
-        "im_livechat.channel",
-        "Live chat channel",
+        comodel_name="im_livechat.channel",
         related="channel_id.livechat_channel_id",
+        string="Live chat channel",
     )
     session_outcome = fields.Selection(related="channel_id.livechat_outcome")
     session_start_hour = fields.Float(related="channel_id.livechat_start_hour")
     session_week_day = fields.Selection(related="channel_id.livechat_week_day")
     session_duration_hour = fields.Float(
-        "Session Duration",
+        string="Session Duration",
         help="Time spent by the persona in the session in hours",
         compute="_compute_session_duration_hour",
-        aggregator="avg",
         store=True,
+        aggregator="avg",
     )
     rating_id = fields.Many2one(
-        "rating.rating", compute="_compute_rating_id", store=True
+        comodel_name="rating.rating",
+        compute="_compute_rating_id",
+        store=True,
     )
     rating = fields.Float(related="rating_id.rating")
     rating_text = fields.Selection(
-        string="Rating text", related="rating_id.rating_text"
+        related="rating_id.rating_text",
+        string="Rating text",
     )
-    call_history_ids = fields.Many2many("discuss.call.history")
-    has_call = fields.Float(compute="_compute_has_call", store=True)
-    call_count = fields.Float(
-        "# of Sessions with Calls", related="has_call", aggregator="sum"
-    )
-    call_percentage = fields.Float(
-        "Session with Calls (%)", related="has_call", aggregator="avg"
-    )
-    call_duration_hour = fields.Float(
-        "Call Duration",
-        compute="_compute_call_duration_hour",
-        aggregator="sum",
+    call_history_ids = fields.Many2many(comodel_name="discuss.call.history")
+    has_call = fields.Float(
+        compute="_compute_has_call",
         store=True,
     )
-    message_count = fields.Integer("# of Messages per Session", aggregator="avg")
+    call_count = fields.Float(
+        related="has_call",
+        string="# of Sessions with Calls",
+        aggregator="sum",
+    )
+    call_percentage = fields.Float(
+        related="has_call",
+        string="Session with Calls (%)",
+        aggregator="avg",
+    )
+    call_duration_hour = fields.Float(
+        string="Call Duration",
+        compute="_compute_call_duration_hour",
+        store=True,
+        aggregator="sum",
+    )
+    message_count = fields.Integer(
+        string="# of Messages per Session",
+        aggregator="avg",
+    )
     help_status = fields.Selection(
         selection=[
             ("requested", "Help Requested"),
@@ -93,7 +114,10 @@ class ImLivechatChannelMemberHistory(models.Model):
         compute="_compute_help_status",
         store=True,
     )
-    response_time_hour = fields.Float("Response Time", aggregator="avg")
+    response_time_hour = fields.Float(
+        string="Response Time",
+        aggregator="avg",
+    )
 
     _member_id_unique = models.Constraint(
         "UNIQUE(member_id)", "Members can only be linked to one history"

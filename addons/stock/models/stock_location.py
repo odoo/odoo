@@ -59,16 +59,19 @@ class StockLocation(models.Model):
     _rec_names_search = ["complete_name", "barcode"]
     _check_company_auto = True
 
-    name = fields.Char(string="Location Name", required=True)
+    name = fields.Char(
+        string="Location Name",
+        required=True,
+    )
     complete_name = fields.Char(
         string="Full Location Name",
         compute="_compute_complete_name",
-        store=True,
         recursive=True,
+        store=True,
     )
     active = fields.Boolean(
-        default=True,
         help="By unchecking the active field, you may hide a location without deleting it.",
+        default=True,
     )
     usage = fields.Selection(
         selection=[
@@ -81,9 +84,6 @@ class StockLocation(models.Model):
             ("transit", "Transit"),
         ],
         string="Location Type",
-        required=True,
-        default="internal",
-        index=True,
         help="* Vendor: Virtual location representing the source location for products coming from your vendors"
         "\n* Virtual: Virtual location used to create a hierarchical structure for your warehouse by aggregating its child locations. Can't directly contain products"
         "\n* Internal: Physical locations inside your warehouses,"
@@ -91,13 +91,16 @@ class StockLocation(models.Model):
         "\n* Inventory Loss: Virtual location serving as the counterpart for inventory operations done to correct stock levels (Physical inventories)"
         "\n* Production: Virtual counterpart location for production operations. I.e. This location consumes components and produces finished products"
         "\n* Transit: Counterpart location that should be used for inter-company or inter-warehouses operations",
+        default="internal",
+        index=True,
+        required=True,
     )
     location_id = fields.Many2one(
         comodel_name="stock.location",
         string="Parent Location",
-        check_company=True,
-        index=True,
         help="The parent location that includes this location. Example : The 'Dispatch Zone' is the 'Gate 1' parent location.",
+        index=True,
+        check_company=True,
     )
     child_ids = fields.One2many(
         comodel_name="stock.location",
@@ -107,23 +110,23 @@ class StockLocation(models.Model):
     child_internal_location_ids = fields.Many2many(
         comodel_name="stock.location",
         string="Internal locations among descendants",
-        compute="_compute_child_internal_location_ids",
         help="This location (if it's internal) and all its descendants filtered by type=Internal.",
+        compute="_compute_child_internal_location_ids",
     )
     parent_path = fields.Char(index=True)
     company_id = fields.Many2one(
         comodel_name="res.company",
+        help="Let this field empty if this location is shared between companies",
         default=lambda self: self.env.company,
         index=True,
-        help="Let this field empty if this location is shared between companies",
     )
     replenish_location = fields.Boolean(
         string="Replenishments",
+        help="Trigger replenishment suggestions for this location when required",
         compute="_compute_replenish_location",
         store=True,
-        readonly=False,
         copy=False,
-        help="Trigger replenishment suggestions for this location when required",
+        readonly=False,
     )
     removal_strategy_id = fields.Many2one(
         comodel_name="product.removal",
@@ -150,19 +153,19 @@ class StockLocation(models.Model):
     )
     cyclic_inventory_frequency = fields.Integer(
         string="Inventory Frequency",
-        default=0,
         help=" When different than 0, inventory count date for products stored at this location will be automatically set at the defined frequency.",
+        default=0,
     )
     last_inventory_date = fields.Date(
         string="Last Inventory",
-        readonly=True,
         help="Date of the last inventory at this location.",
+        readonly=True,
     )
     next_inventory_date = fields.Date(
         string="Next Expected",
+        help="Date for next planned inventory based on cyclic schedule.",
         compute="_compute_next_inventory_date",
         store=True,
-        help="Date for next planned inventory based on cyclic schedule.",
     )
     warehouse_view_ids = fields.One2many(
         comodel_name="stock.warehouse",
@@ -172,13 +175,13 @@ class StockLocation(models.Model):
     warehouse_id = fields.Many2one(
         comodel_name="stock.warehouse",
         compute="_compute_warehouse_id",
-        store=True,
         recursive=True,
+        store=True,
     )
     storage_category_id = fields.Many2one(
         comodel_name="stock.storage.category",
-        check_company=True,
         index="btree_not_null",
+        check_company=True,
     )
     outgoing_move_line_ids = fields.One2many(
         comodel_name="stock.move.line",
@@ -188,9 +191,7 @@ class StockLocation(models.Model):
         comodel_name="stock.move.line",
         inverse_name="location_dest_id",
     )
-    net_weight = fields.Float(
-        compute="_compute_weight",
-    )
+    net_weight = fields.Float(compute="_compute_weight")
     forecast_weight = fields.Float(
         string="Forecasted Weight",
         compute="_compute_weight",
@@ -201,9 +202,6 @@ class StockLocation(models.Model):
     )
     block_type = fields.Selection(
         selection=BLOCK_TYPE_SELECTION,
-        required=True,
-        default="none",
-        tracking=True,
         help="Blocking Mode:\n\n"
         "\u2022 No Blocking: Normal warehouse operations\n\n"
         "\u2022 Soft Block Incoming: Prevents NEW incoming stock but allows:\n"
@@ -223,44 +221,47 @@ class StockLocation(models.Model):
         "  - Requires the Hard Block override group to lift, to archive the\n"
         "    location, or to move it out from under the block\n"
         "  Use for: Inventory counts, audits, legal holds, emergency quarantine",
+        default="none",
+        required=True,
+        tracking=True,
     )
     effective_block_type = fields.Selection(
         selection=BLOCK_TYPE_SELECTION,
-        compute="_compute_effective_block_type",
-        store=True,
-        recursive=True,
-        readonly=True,
         string="Effective Blocking",
         help="The blocking actually in force here: this location's own mode merged "
         "with every ancestor's. Stored so the reservation and visibility filters "
         "are a single indexed join instead of a subtree walk per query.",
+        compute="_compute_effective_block_type",
+        recursive=True,
+        store=True,
+        readonly=True,
     )
     block_reason = fields.Text(
         string="Blocking Reason",
-        tracking=True,
         help="Detailed explanation for why this location is blocked",
+        tracking=True,
     )
     blocked_date = fields.Datetime(
         string="Blocked Since",
-        readonly=True,
-        copy=False,
         help="Date and time when blocking was applied",
+        copy=False,
+        readonly=True,
     )
     blocked_by_user_id = fields.Many2one(
         comodel_name="res.users",
         string="Blocked By",
-        readonly=True,
-        copy=False,
         help="User who applied the block",
+        copy=False,
+        readonly=True,
     )
     reserved_qty_when_blocked = fields.Float(
-        digits="Product Unit",
-        readonly=True,
-        copy=False,
         help="Reserved quantity in this location and its children at the time "
         "blocking was applied, summed across products.\n"
         "Comparable only where the location holds a single unit of measure; the "
         "chatter entry posted at blocking time carries the per-unit breakdown.",
+        digits="Product Unit",
+        copy=False,
+        readonly=True,
     )
 
     _barcode_company_unique_idx = models.UniqueIndex(

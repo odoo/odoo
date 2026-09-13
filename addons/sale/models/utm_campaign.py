@@ -28,8 +28,8 @@ class UtmCampaign(models.Model):
         default=lambda self: self.env.company,
     )
     currency_id = fields.Many2one(
-        related="company_id.currency_id",
         comodel_name="res.currency",
+        related="company_id.currency_id",
         string="Currency",
     )
 

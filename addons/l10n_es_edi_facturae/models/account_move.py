@@ -317,8 +317,8 @@ class AccountMove(models.Model):
         depends=["l10n_es_edi_facturae_xml_file"],
     )
     l10n_es_edi_facturae_xml_file = fields.Binary(
-        attachment=True,
         string="Facturae File",
+        attachment=True,
         copy=False,
     )
     l10n_es_edi_facturae_reason_code = fields.Selection(

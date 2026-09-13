@@ -6,9 +6,9 @@ class ResPartnerGrade(models.Model):
     _inherit = ["res.partner.grade", "mixin.website.published"]
 
     partner_weight = fields.Integer(
-        "Level Weight",
-        default=1,
+        string="Level Weight",
         help="Gives the probability to assign a lead to this partner. (0 means no assignment.)",
+        default=1,
     )
 
     def _compute_website_url(self):

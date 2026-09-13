@@ -5,8 +5,8 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     l10n_ar_withholding_ids = fields.One2many(
-        "account.move.line",
-        "move_id",
+        comodel_name="account.move.line",
+        inverse_name="move_id",
         string="Withholdings",
         compute="_compute_l10n_ar_withholding_ids",
         readonly=True,

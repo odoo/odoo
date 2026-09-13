@@ -15,16 +15,38 @@ class AccountInvoiceReport(models.Model):
     _rec_name = "invoice_date"
     _order = "invoice_date desc"
 
-    move_id = fields.Many2one("account.move", readonly=True)
-    journal_id = fields.Many2one("account.journal", readonly=True)
-    company_id = fields.Many2one("res.company", readonly=True)
-    company_currency_id = fields.Many2one("res.currency", readonly=True)
-    partner_id = fields.Many2one("res.partner", readonly=True)
-    commercial_partner_id = fields.Many2one("res.partner", string="Main Partner")
-    country_id = fields.Many2one("res.country")
-    invoice_user_id = fields.Many2one("res.users", string="Salesperson", readonly=True)
+    move_id = fields.Many2one(
+        comodel_name="account.move",
+        readonly=True,
+    )
+    journal_id = fields.Many2one(
+        comodel_name="account.journal",
+        readonly=True,
+    )
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        readonly=True,
+    )
+    company_currency_id = fields.Many2one(
+        comodel_name="res.currency",
+        readonly=True,
+    )
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        readonly=True,
+    )
+    commercial_partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Main Partner",
+    )
+    country_id = fields.Many2one(comodel_name="res.country")
+    invoice_user_id = fields.Many2one(
+        comodel_name="res.users",
+        string="Salesperson",
+        readonly=True,
+    )
     move_type = fields.Selection(
-        [
+        selection=[
             ("out_invoice", "Customer Invoice"),
             ("in_invoice", "Vendor Bill"),
             ("out_refund", "Customer Credit Note"),
@@ -33,38 +55,78 @@ class AccountInvoiceReport(models.Model):
         readonly=True,
     )
     state = fields.Selection(
-        [("draft", "Draft"), ("posted", "Open"), ("cancel", "Cancelled")],
+        selection=[("draft", "Draft"), ("posted", "Open"), ("cancel", "Cancelled")],
         string="Invoice Status",
         readonly=True,
     )
     payment_state = fields.Selection(
-        selection=PAYMENT_STATE_SELECTION, string="Payment Status", readonly=True
+        selection=PAYMENT_STATE_SELECTION,
+        string="Payment Status",
+        readonly=True,
     )
-    fiscal_position_id = fields.Many2one("account.fiscal.position", readonly=True)
+    fiscal_position_id = fields.Many2one(
+        comodel_name="account.fiscal.position",
+        readonly=True,
+    )
     invoice_date = fields.Date(readonly=True)
 
-    quantity = fields.Float(string="Product Quantity", readonly=True)
-    product_id = fields.Many2one("product.product", readonly=True)
-    product_uom_id = fields.Many2one("uom.uom", string="Unit", readonly=True)
-    product_categ_id = fields.Many2one(
-        "product.category", string="Product Category", readonly=True
+    quantity = fields.Float(
+        string="Product Quantity",
+        readonly=True,
     )
-    invoice_date_due = fields.Date(string="Due Date", readonly=True)
+    product_id = fields.Many2one(
+        comodel_name="product.product",
+        readonly=True,
+    )
+    product_uom_id = fields.Many2one(
+        comodel_name="uom.uom",
+        string="Unit",
+        readonly=True,
+    )
+    product_categ_id = fields.Many2one(
+        comodel_name="product.category",
+        string="Product Category",
+        readonly=True,
+    )
+    invoice_date_due = fields.Date(
+        string="Due Date",
+        readonly=True,
+    )
     account_id = fields.Many2one(
-        "account.account", string="Revenue/Expense Account", readonly=True
+        comodel_name="account.account",
+        string="Revenue/Expense Account",
+        readonly=True,
     )
     price_subtotal_currency = fields.Float(
-        string="Untaxed Amount in Currency", readonly=True
+        string="Untaxed Amount in Currency",
+        readonly=True,
     )
-    price_subtotal = fields.Float(string="Untaxed Amount", readonly=True)
-    price_total = fields.Float(string="Total", readonly=True)
-    price_total_currency = fields.Float(string="Total in Currency", readonly=True)
+    price_subtotal = fields.Float(
+        string="Untaxed Amount",
+        readonly=True,
+    )
+    price_total = fields.Float(
+        string="Total",
+        readonly=True,
+    )
+    price_total_currency = fields.Float(
+        string="Total in Currency",
+        readonly=True,
+    )
     price_average = fields.Float(
-        string="Average Price", readonly=True, aggregator="avg"
+        string="Average Price",
+        readonly=True,
+        aggregator="avg",
     )
-    price_margin = fields.Float(string="Margin", readonly=True)
+    price_margin = fields.Float(
+        string="Margin",
+        readonly=True,
+    )
     inventory_value = fields.Float(readonly=True)
-    currency_id = fields.Many2one("res.currency", readonly=True)
+    currency_id = fields.Many2one(
+        comodel_name="res.currency",
+        readonly=True,
+    )
 
     _depends = {
         "account.move": [

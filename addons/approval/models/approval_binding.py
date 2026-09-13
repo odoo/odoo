@@ -41,46 +41,49 @@ class ApprovalBinding(models.Model):
     _description = "Approval Binding"
     _order = "model_name, method, sequence, id"
 
-    name = fields.Char(compute="_compute_name", store=True)
+    name = fields.Char(
+        compute="_compute_name",
+        store=True,
+    )
     sequence = fields.Integer(default=10)
     active = fields.Boolean(default=True)
 
     model_id = fields.Many2one(
         comodel_name="ir.model",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
     model_name = fields.Char(
-        string="Model Name",
         related="model_id.model",
+        string="Model Name",
         store=True,
         index=True,
     )
     method = fields.Char(
         help="Method to gate. It is wrapped at registry load, so the gate "
         "holds for every caller, not only the user interface. A binding gates "
-        "a method or an action, never both.",
+        "a method or an action, never both."
     )
     action_id = fields.Many2one(
         comodel_name="ir.actions.actions",
-        ondelete="cascade",
-        index="btree_not_null",
         help="Action to gate, instead of a method. A server action or a report is "
         "refused on the server; a window or client action only opens a view, so a "
         "binding on one is honoured by the client's check alone.",
+        index="btree_not_null",
+        ondelete="cascade",
     )
     is_enforced = fields.Boolean(
-        compute="_compute_is_enforced",
         help="Whether the server itself refuses the operation. False for a window "
         "or client action: opening a view is nothing the server can intercept, so "
         "only the client's check stands in the way.",
+        compute="_compute_is_enforced",
     )
     category_id = fields.Many2one(
         comodel_name="approval.category",
-        ondelete="cascade",
         help="Approval configuration consulted for this operation. Required "
         "for every mode but 'Observe'.",
+        ondelete="cascade",
     )
     subject_domain = fields.Char(
         string="Applies When",
@@ -92,8 +95,6 @@ class ApprovalBinding(models.Model):
             ("block", "Block"),
             ("request", "Request"),
         ],
-        required=True,
-        default="advise",
         help="""What the binding does when it applies:
 
         • Observe: the operation runs. Every call is recorded, including
@@ -108,6 +109,8 @@ class ApprovalBinding(models.Model):
           Approval, the operation then runs once the request is approved --
           exactly once, and as the person who called it; without it, approval
           only clears the gate for the next call.""",
+        default="advise",
+        required=True,
     )
     sudo_policy = fields.Selection(
         selection=[
@@ -115,8 +118,6 @@ class ApprovalBinding(models.Model):
             ("superuser", "Superuser passes"),
             ("bypass", "Any elevated caller passes"),
         ],
-        required=True,
-        default="superuser",
         help="""Who the gate does NOT apply to.
 
         `sudo()` flips `su` and keeps `uid`, so "elevated" covers both the
@@ -129,6 +130,8 @@ class ApprovalBinding(models.Model):
           ordinary user cannot self-elevate past the gate.
         • Any elevated caller passes: what `web_studio` does unconditionally.
           Every bypass is still recorded, which is the part it does not do.""",
+        default="superuser",
+        required=True,
     )
 
     approve_on_invoke = fields.Boolean(
@@ -136,26 +139,25 @@ class ApprovalBinding(models.Model):
         "this record calls the operation, the call records their approval -- the "
         "way a Studio approval button works -- and the operation runs if nothing "
         "is left to approve. Otherwise the remaining approvers are asked and the "
-        "call waits.",
+        "call waits."
     )
     run_on_approval = fields.Boolean(
-        default=True,
         help="Request mode only. Run the operation, once and as the person who "
         "asked, when the request is approved. Off, approval only clears the gate "
         "and the operation runs when it is next called, which is how Studio "
         "approvals behave.",
+        default=True,
     )
     observation_ids = fields.One2many(
         comodel_name="approval.binding.observation",
         inverse_name="binding_id",
     )
-    observation_count = fields.Count("observation_ids", "Observations")
-    elevated_count = fields.Integer(
-        compute="_compute_elevation_counts",
+    observation_count = fields.Count(
+        count_of="observation_ids",
+        string="Observations",
     )
-    self_elevated_count = fields.Integer(
-        compute="_compute_elevation_counts",
-    )
+    elevated_count = fields.Integer(compute="_compute_elevation_counts")
+    self_elevated_count = fields.Integer(compute="_compute_elevation_counts")
 
     _model_method_domain_uniq = models.Constraint(
         "unique nulls not distinct (model_id, method, action_id, subject_domain)",

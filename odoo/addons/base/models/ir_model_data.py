@@ -31,22 +31,34 @@ class IrModelData(models.Model):
 
     name = fields.Char(
         string="External Identifier",
-        required=True,
         help="External Key/Identifier that can be used for data integration with third-party systems",
+        required=True,
     )
-    complete_name = fields.Char(compute="_compute_complete_name", string="Complete ID")
-    model = fields.Char(string="Model Name", required=True)
-    module = fields.Char(default="", required=True)
+    complete_name = fields.Char(
+        string="Complete ID",
+        compute="_compute_complete_name",
+    )
+    model = fields.Char(
+        string="Model Name",
+        required=True,
+    )
+    module = fields.Char(
+        default="",
+        required=True,
+    )
     res_id = fields.Many2oneReference(
+        model_field="model",
         string="Record ID",
         help="ID of the target record in the database",
-        model_field="model",
     )
-    noupdate = fields.Boolean(string="Non Updatable", default=False)
+    noupdate = fields.Boolean(
+        string="Non Updatable",
+        default=False,
+    )
     reference = fields.Char(
         compute="_compute_reference",
-        readonly=True,
         store=False,
+        readonly=True,
     )
 
     _name_nospaces = models.Constraint(

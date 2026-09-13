@@ -6,12 +6,14 @@ class LoyaltyCard(models.Model):
     _inherit = ["loyalty.card", "mixin.pos.load"]
 
     source_pos_order_id = fields.Many2one(
-        "pos.order",
-        "PoS Order Reference",
+        comodel_name="pos.order",
+        string="PoS Order Reference",
         help="PoS order where this coupon was generated.",
     )
     source_pos_order_partner_id = fields.Many2one(
-        "res.partner", "PoS Order Customer", related="source_pos_order_id.partner_id"
+        comodel_name="res.partner",
+        related="source_pos_order_id.partner_id",
+        string="PoS Order Customer",
     )
 
     @api.model

@@ -5,17 +5,29 @@ class MailNotification(models.Model):
     _inherit = "mail.notification"
 
     notification_type = fields.Selection(
-        selection_add=[("sms", "SMS")], ondelete={"sms": "cascade"}
+        selection_add=[("sms", "SMS")],
+        ondelete={"sms": "cascade"},
     )
-    sms_id_int = fields.Integer("SMS ID", index="btree_not_null")
+    sms_id_int = fields.Integer(
+        string="SMS ID",
+        index="btree_not_null",
+    )
     # Used to give links on form view without foreign key. In most cases, you'd want to use sms_id_int or sms_tracker_ids.sms_uuid.
     sms_id = fields.Many2one(
-        "sms.sms", string="SMS", store=False, compute="_compute_sms_id"
+        comodel_name="sms.sms",
+        string="SMS",
+        compute="_compute_sms_id",
+        store=False,
     )
     sms_tracker_ids = fields.One2many(
-        "sms.tracker", "mail_notification_id", string="SMS Trackers"
+        comodel_name="sms.tracker",
+        inverse_name="mail_notification_id",
+        string="SMS Trackers",
     )
-    sms_number = fields.Char("SMS Number", groups="base.group_user")
+    sms_number = fields.Char(
+        string="SMS Number",
+        groups="base.group_user",
+    )
     failure_type = fields.Selection(
         selection_add=[
             ("sms_number_missing", "Missing Number"),

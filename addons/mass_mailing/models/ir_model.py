@@ -6,9 +6,9 @@ class IrModel(models.Model):
 
     is_mailing_enabled = fields.Boolean(
         string="Mailing Enabled",
+        help="Whether this model supports marketing mailing capabilities (notably email and SMS).",
         compute="_compute_is_mailing_enabled",
         search="_search_is_mailing_enabled",
-        help="Whether this model supports marketing mailing capabilities (notably email and SMS).",
     )
 
     def _compute_is_mailing_enabled(self):

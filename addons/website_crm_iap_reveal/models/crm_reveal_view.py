@@ -15,12 +15,14 @@ class CrmRevealView(models.Model):
 
     reveal_ip = fields.Char(string="IP Address")
     reveal_rule_id = fields.Many2one(
-        "crm.reveal.rule", string="Lead Generation Rule", index="btree_not_null"
+        comodel_name="crm.reveal.rule",
+        string="Lead Generation Rule",
+        index="btree_not_null",
     )
     reveal_state = fields.Selection(
-        [("to_process", "To Process"), ("not_found", "Not Found")],
-        default="to_process",
+        selection=[("to_process", "To Process"), ("not_found", "Not Found")],
         string="State",
+        default="to_process",
         index=True,
     )
     create_date = fields.Datetime(index=True)

@@ -28,7 +28,10 @@ class MixinAvatar(models.AbstractModel):
     _description = "Avatar Mixin"
     _avatar_name_field = "name"
 
-    avatar_1920 = fields.Image("Avatar", compute="_compute_avatar_1920")
+    avatar_1920 = fields.Image(
+        string="Avatar",
+        compute="_compute_avatar_1920",
+    )
     avatar_1024 = fields.Image(compute="_compute_avatar_1024")
     avatar_512 = fields.Image(compute="_compute_avatar_512")
     avatar_256 = fields.Image(compute="_compute_avatar_256")

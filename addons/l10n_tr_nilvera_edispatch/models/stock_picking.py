@@ -15,73 +15,78 @@ class StockPicking(models.Model):
     _inherit = "stock.picking"
 
     l10n_tr_nilvera_dispatch_type = fields.Selection(
-        string="Dispatch Type",
-        help="Used to populate the type of dispatch.",
         selection=[
             ("SEVK", "Online"),
             ("MATBUDAN", "Pre-printed"),
         ],
+        string="Dispatch Type",
+        help="Used to populate the type of dispatch.",
         default="SEVK",
-        tracking=True,
         copy=False,
+        tracking=True,
     )
     l10n_tr_nilvera_carrier_id = fields.Many2one(
+        comodel_name="res.partner",
         string="Carrier (TR)",
         help="Used when the dispatch is made through a third-party carrier company. Populating this makes the Vehicle Plate and Drivers optional.",
-        comodel_name="res.partner",
         copy=False,
     )
     l10n_tr_nilvera_buyer_id = fields.Many2one(
+        comodel_name="res.partner",
         string="Buyer",
         help="Used for the original party who purchases the good when the Delivery Address is for another recipient",
-        comodel_name="res.partner",
         copy=False,
     )
     l10n_tr_nilvera_seller_supplier_id = fields.Many2one(
+        comodel_name="res.partner",
         string="Seller Supplier",
         help="Used for the information of the supplier of the goods in the delivery note.",
-        comodel_name="res.partner",
         copy=False,
     )
     l10n_tr_nilvera_buyer_originator_id = fields.Many2one(
+        comodel_name="res.partner",
         string="Buyer Originator",
         help="Used for the original initiator of the goods acquisition and requesting process.",
-        comodel_name="res.partner",
         copy=False,
     )
     l10n_tr_nilvera_delivery_printed_number = fields.Char(
-        string="Printed Delivery Note Number", copy=False
+        string="Printed Delivery Note Number",
+        copy=False,
     )
     l10n_tr_nilvera_delivery_date = fields.Date(
-        string="Printed Delivery Note Date", copy=False
+        string="Printed Delivery Note Date",
+        copy=False,
     )
     l10n_tr_vehicle_plate = fields.Many2one(
+        comodel_name="l10n_tr.nilvera.trailer.plate",
         string="Vehicle Plate",
         help="Used to input the plate number of the truck.",
-        comodel_name="l10n_tr.nilvera.trailer.plate",
-        domain="[('plate_number_type', '=', 'vehicle')]",
         copy=False,
+        domain="[('plate_number_type', '=', 'vehicle')]",
     )
     l10n_tr_nilvera_trailer_plate_ids = fields.Many2many(
+        comodel_name="l10n_tr.nilvera.trailer.plate",
+        relation="l10n_tr_nilvera_delivery_vehicle_rel",
         string="Trailer Plates",
         help="Used to input the plate numbers of the trailers attached to the truck.",
-        comodel_name="l10n_tr.nilvera.trailer.plate",
-        domain="[('plate_number_type', '=', 'trailer')]",
-        relation="l10n_tr_nilvera_delivery_vehicle_rel",
         copy=False,
+        domain="[('plate_number_type', '=', 'trailer')]",
     )
     l10n_tr_nilvera_driver_ids = fields.Many2many(
+        comodel_name="res.partner",
         string="Drivers",
         help="Used for the individuals driving the truck.",
-        comodel_name="res.partner",
         copy=False,
     )
-    l10n_tr_nilvera_delivery_notes = fields.Char(string="Delivery Notes", copy=False)
-    l10n_tr_nilvera_dispatch_state = fields.Selection(
-        string="e-Dispatch State",
-        selection=[("to_send", "To Send"), ("sent", "Sent")],
-        tracking=True,
+    l10n_tr_nilvera_delivery_notes = fields.Char(
+        string="Delivery Notes",
         copy=False,
+    )
+    l10n_tr_nilvera_dispatch_state = fields.Selection(
+        selection=[("to_send", "To Send"), ("sent", "Sent")],
+        string="e-Dispatch State",
+        copy=False,
+        tracking=True,
     )
     l10n_tr_nilvera_edispatch_warnings = fields.Json(
         compute="_compute_edispatch_warnings"

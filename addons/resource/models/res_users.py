@@ -6,14 +6,14 @@ class ResUsers(models.Model):
     _inherit = "res.users"
 
     resource_ids = fields.One2many(
-        "resource.resource",
-        "user_id",
-        "Resources",
+        comodel_name="resource.resource",
+        inverse_name="user_id",
+        string="Resources",
     )
     resource_calendar_id = fields.Many2one(
-        "resource.calendar",
-        "Default Working Hours",
+        comodel_name="resource.calendar",
         related="resource_ids.calendar_id",
+        string="Default Working Hours",
         readonly=False,
     )
 

@@ -16,7 +16,7 @@ class MixinMailThreadCc(models.AbstractModel):
     _inherit = ["mixin.mail.thread"]
     _description = "Email CC management"
 
-    email_cc = fields.Char("Email cc")
+    email_cc = fields.Char(string="Email cc")
 
     def _mail_cc_sanitized_raw_dict(self, cc_string: str | Literal[False]) -> dict:
         if not cc_string:

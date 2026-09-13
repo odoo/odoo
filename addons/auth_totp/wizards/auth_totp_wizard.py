@@ -20,16 +20,31 @@ class Auth_TotpWizard(models.TransientModel):
     _name = "auth_totp.wizard"
     _description = "2-Factor Setup Wizard"
 
-    user_id = fields.Many2one("res.users", required=True, readonly=True)
-    secret = fields.Char(required=True, readonly=True)
-    url = fields.Char(store=True, readonly=True, compute="_compute_qrcode")
-    qrcode = fields.Binary(
-        attachment=False,
+    user_id = fields.Many2one(
+        comodel_name="res.users",
+        readonly=True,
+        required=True,
+    )
+    secret = fields.Char(
+        readonly=True,
+        required=True,
+    )
+    url = fields.Char(
+        compute="_compute_qrcode",
         store=True,
         readonly=True,
-        compute="_compute_qrcode",
     )
-    code = fields.Char(string="Verification Code", size=7, store=False)
+    qrcode = fields.Binary(
+        attachment=False,
+        compute="_compute_qrcode",
+        store=True,
+        readonly=True,
+    )
+    code = fields.Char(
+        string="Verification Code",
+        size=7,
+        store=False,
+    )
 
     @api.depends("user_id.login", "user_id.company_id.display_name", "secret")
     def _compute_qrcode(self):

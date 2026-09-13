@@ -151,7 +151,7 @@ class ResPartner(models.Model):
     )
 
     company_id = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
         index=True,
     )
     name = fields.Char(
@@ -170,121 +170,119 @@ class ResPartner(models.Model):
     )
 
     commercial_partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Commercial Entity",
         compute="_compute_commercial_partner_id",
-        store=True,
         recursive=True,
+        store=True,
         index=True,
     )
     commercial_company_name = fields.Char(
-        "Company Name Entity",
+        string="Company Name Entity",
         compute="_compute_commercial_company_name",
         store=True,
     )
 
     parent_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Related Company",
         index=True,
     )
     parent_name = fields.Char(
         related="parent_id.name",
-        readonly=True,
         string="Parent name",
+        readonly=True,
     )
     child_ids = fields.One2many(
-        "res.partner",
-        "parent_id",
+        comodel_name="res.partner",
+        inverse_name="parent_id",
         string="Contact",
         domain=[("active", "=", True)],
     )
     user_id: ResUsers = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Salesperson",
+        help="The internal user in charge of this contact.",
         compute="_compute_user_id",
         precompute=True,
-        readonly=False,
         store=True,
-        help="The internal user in charge of this contact.",
+        readonly=False,
     )
     tag_ids = fields.Many2many(
-        "res.partner.tag",
+        comodel_name="res.partner.tag",
         column1="partner_id",
         column2="tag_id",
         string="Tags",
         default=lambda self: self._default_tag_ids(),
     )
     barcode = fields.Char(
+        help="Use a barcode to identify this contact.",
         copy=False,
         company_dependent=True,
-        help="Use a barcode to identify this contact.",
     )
     ref = fields.Char(
         string="Reference",
         index=True,
     )
     lang = fields.Selection(
-        _selection_installed_langs,
+        selection=_selection_installed_langs,
         string="Language",
-        compute="_compute_lang",
-        readonly=False,
-        store=True,
         help="All the emails and documents sent to this contact will be translated in this language.",
+        compute="_compute_lang",
+        store=True,
+        readonly=False,
     )
-    active_lang_count = fields.Integer(
-        compute="_compute_active_lang_count",
-    )
+    active_lang_count = fields.Integer(compute="_compute_active_lang_count")
     tz = fields.Selection(
-        _tzs,
+        selection=_tzs,
         string="Timezone",
-        default=lambda self: self.env.context.get("tz"),
         help="When printing documents and exporting/importing data, time values are computed according to this timezone.\n"
         "If the timezone is not set, UTC (Coordinated Universal Time) is used.\n"
         "Anywhere else, time values are computed according to the time offset of your web client.",
+        default=lambda self: self.env.context.get("tz"),
     )
     tz_offset = fields.Char(
-        compute="_compute_tz_offset",
         string="Timezone offset",
+        compute="_compute_tz_offset",
     )
     vat = fields.Char(
         string="Tax ID",
-        index=True,
         help="The Tax Identification Number. Values here will be validated based on the country format. You can use '/' to indicate that the partner is not subject to tax.",
+        index=True,
     )
     vat_label = fields.Char(
         string="Tax ID Label",
         compute="_compute_vat_label",
     )
     same_vat_partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Partner with same Tax ID",
         compute="_compute_same_identifier_partners",
         store=False,
     )
     company_registry = fields.Char(
         string="Company ID",
+        help="The registry number of the company. Use it if it is different from the Tax ID. It must be unique across all partners of a same country",
         compute="_compute_company_registry",
         store=True,
-        readonly=False,
         index="btree_not_null",
-        help="The registry number of the company. Use it if it is different from the Tax ID. It must be unique across all partners of a same country",
+        readonly=False,
     )
     company_registry_label = fields.Char(
         string="Company ID Label",
         compute="_compute_company_registry_label",
     )
     company_registry_placeholder = fields.Char(
-        compute="_compute_company_registry_placeholder",
+        compute="_compute_company_registry_placeholder"
     )
     same_company_registry_partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Partner with same Company Registry",
         compute="_compute_same_identifier_partners",
         store=False,
     )
     type = fields.Selection(
-        [
+        selection=[
             ("contact", "Contact"),
             ("invoice", "Invoice"),
             ("delivery", "Delivery"),
@@ -295,7 +293,7 @@ class ResPartner(models.Model):
         default="contact",
     )
     type_address_label = fields.Char(
-        "Address Type Description",
+        string="Address Type Description",
         compute="_compute_type_address_label",
     )
     street = fields.Char()
@@ -303,12 +301,12 @@ class ResPartner(models.Model):
     zip = fields.Char(change_default=True)
     city = fields.Char()
     state_id = fields.Many2one(
-        "res.country.state",
-        ondelete="restrict",
+        comodel_name="res.country.state",
         domain="[('country_id', '=?', country_id)]",
+        ondelete="restrict",
     )
     country_id = fields.Many2one(
-        "res.country",
+        comodel_name="res.country",
         ondelete="restrict",
     )
     country_code = fields.Char(
@@ -316,14 +314,14 @@ class ResPartner(models.Model):
         string="Country Code",
     )
     nationality_id = fields.Many2one(
-        "res.country",
+        comodel_name="res.country",
         help="The country this person is a national of. Distinct from the "
         "address country, which says where they are: a person may be resident "
         "in one country and a national of another.",
     )
     contact_address = fields.Char(
-        compute="_compute_contact_address",
         string="Complete Address",
+        compute="_compute_contact_address",
     )
     partner_latitude = fields.Float(
         string="Geo Latitude",
@@ -334,47 +332,47 @@ class ResPartner(models.Model):
         digits=(10, 7),
     )
     function = fields.Char(string="Job Position")
-    website = fields.Char("Website Link")
+    website = fields.Char(string="Website Link")
     email = fields.Char()
     email_formatted = fields.Char(
-        "Formatted Email",
-        compute="_compute_email_formatted",
+        string="Formatted Email",
         help='Format email address "Name <email@domain>"',
+        compute="_compute_email_formatted",
     )
     phone_ids = fields.Many2many(
-        "phone.number",
-        "res_partner_phone_number_rel",
-        "partner_id",
-        "phone_number_id",
+        comodel_name="phone.number",
+        relation="res_partner_phone_number_rel",
+        column1="partner_id",
+        column2="phone_number_id",
         string="Phone Numbers",
     )
     main_phone_id = fields.Many2one(
-        "phone.number",
-        compute="_compute_main_phone_ids",
-        store=True,
+        comodel_name="phone.number",
         help="The landline this contact is reached on when a single number is "
         "needed. The first active number typed Landline, by the order phone "
         "numbers carry.",
-    )
-    main_mobile_id = fields.Many2one(
-        "phone.number",
         compute="_compute_main_phone_ids",
         store=True,
+    )
+    main_mobile_id = fields.Many2one(
+        comodel_name="phone.number",
         help="The mobile this contact is reached on when a single number is "
         "needed. The first active number typed Mobile, by the order phone "
         "numbers carry.",
+        compute="_compute_main_phone_ids",
+        store=True,
     )
     gender = fields.Selection(
         selection=[
             ("male", "Male"),
             ("female", "Female"),
             ("other", "Other"),
-        ],
+        ]
     )
     birthdate = fields.Date()
     comment = fields.Html(string="Notes")
     industry_ids = fields.Many2many(
-        "res.partner.industry",
+        comodel_name="res.partner.industry",
         relation="res_partner_industry_rel",
         column1="partner_id",
         column2="industry_id",
@@ -383,68 +381,66 @@ class ResPartner(models.Model):
         "packing house belongs to two of them at once.",
     )
     primary_industry_id = fields.Many2one(
-        "res.partner.industry",
-        compute="_compute_primary_industry_id",
-        store=True,
-        readonly=False,
+        comodel_name="res.partner.industry",
         help="The one sector analytics report this contact under, because a sum "
         "cannot be split across several. Defaults to the first of Industries, and "
         "returns to it whenever Industries changes and the current pick is no "
         "longer among them.",
+        compute="_compute_primary_industry_id",
+        store=True,
+        readonly=False,
     )
     user_ids: ResUsers = fields.One2many(
-        "res.users",
-        "partner_id",
+        comodel_name="res.users",
+        inverse_name="partner_id",
         string="Users",
         bypass_search_access=True,
     )
     main_user_id = fields.Many2one(
-        "res.users",
-        compute="_compute_main_user_id",
+        comodel_name="res.users",
         help="There can be several users related to the same partner. "
         "When a single user is needed, this field attempts to find the most appropriate one.",
+        compute="_compute_main_user_id",
     )
     duplicate_ids = fields.Many2many(
-        "res.partner",
+        comodel_name="res.partner",
         string="Possible Duplicates",
         compute="_compute_possible_duplicates",
     )
-    duplicate_count = fields.Integer(
-        compute="_compute_possible_duplicates",
-    )
+    duplicate_count = fields.Integer(compute="_compute_possible_duplicates")
     identifier_ids = fields.One2many(
         comodel_name="res.partner.identifier",
         inverse_name="partner_id",
         string="Identifiers",
     )
     bank_ids = fields.One2many(
-        "res.partner.bank",
-        "partner_id",
+        comodel_name="res.partner.bank",
+        inverse_name="partner_id",
         string="Banks",
     )
     main_bank_id = fields.Many2one(
-        "res.partner.bank",
+        comodel_name="res.partner.bank",
         string="Main Bank Account",
-        compute="_compute_main_bank_id",
-        store=True,
         help="The account this contact is paid on when a single one is needed. "
         "The first active account, by the order bank accounts carry.",
+        compute="_compute_main_bank_id",
+        store=True,
     )
     is_company = fields.Boolean(
         string="Is a Company",
-        default=False,
         help="Check if the contact is a company, otherwise it is a person",
+        default=False,
     )
     is_public = fields.Boolean(
         compute="_compute_is_public",
         compute_sudo=True,
     )
     partner_share = fields.Boolean(
-        "Share Partner",
-        compute="_compute_partner_share",
-        store=True,
+        string="Share Partner",
         help="Either customer (not a user), either shared user. Indicated the current partner is a customer without "
         "access or with a limited access created for sharing data.",
+        compute="_compute_partner_share",
+        store=True,
     )
 
     application_statistics = fields.Json(

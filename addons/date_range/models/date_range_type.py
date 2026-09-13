@@ -18,37 +18,42 @@ class DateRangeType(models.Model):
     _description = "Date Range Type"
     _order = "name,id"
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
     allow_overlap = fields.Boolean(
-        default=False,
         help="If set, date ranges of this type are allowed to overlap each "
         "other. Leave unset to require them to be disjoint.",
+        default=False,
     )
     active = fields.Boolean(
-        default=True,
         help="The active field allows you to hide the date range type without removing it.",
+        default=True,
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
         default=lambda self: self.env.company.id,
         index=True,
     )
-    date_range_ids = fields.One2many("date.range", "type_id", string="Ranges")
+    date_range_ids = fields.One2many(
+        comodel_name="date.range",
+        inverse_name="type_id",
+        string="Ranges",
+    )
     date_ranges_exist = fields.Boolean(compute="_compute_date_ranges_exist")
 
     # Defaults for generating date ranges
     name_expr = fields.Text(
-        "Range name expression",
-        help=(
-            "Evaluated expression. E.g. "
-            "\"'FY%s' % date_start.strftime('%Y%m%d')\"\nYou can "
-            "use the Date types 'date_end' and 'date_start', as well as "
-            "the 'index' variable."
-        ),
+        string="Range name expression",
+        help="Evaluated expression. E.g. "
+        "\"'FY%s' % date_start.strftime('%Y%m%d')\"\nYou can "
+        "use the Date types 'date_end' and 'date_start', as well as "
+        "the 'index' variable.",
     )
     range_name_preview = fields.Char(compute="_compute_range_name_preview")
-    name_prefix = fields.Char("Range name prefix")
-    duration_count = fields.Integer("Duration")
+    name_prefix = fields.Char(string="Range name prefix")
+    duration_count = fields.Integer(string="Duration")
     duration_unit = fields.Selection(selection=UNIT_SELECTION)
     autogeneration_date_start = fields.Date(
         string="Autogeneration Start Date",

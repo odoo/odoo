@@ -11,26 +11,24 @@ class ResourceCalendarAttendance(models.Model):
     _order = "sequence, week_type, dayofweek, hour_from"
 
     calendar_id = fields.Many2one(
-        "resource.calendar",
+        comodel_name="resource.calendar",
         string="Resource's Calendar",
-        required=True,
         index=True,
+        required=True,
         ondelete="cascade",
     )
-    duration_based = fields.Boolean(
-        related="calendar_id.duration_based",
-    )
+    duration_based = fields.Boolean(related="calendar_id.duration_based")
     two_weeks_calendar = fields.Boolean(
-        "Calendar in 2 weeks mode",
         related="calendar_id.two_weeks_calendar",
+        string="Calendar in 2 weeks mode",
     )
     name = fields.Char(required=True)
     sequence = fields.Integer(
-        default=10,
         help="Gives the sequence of this line when displaying the resource calendar.",
+        default=10,
     )
     dayofweek = fields.Selection(
-        [
+        selection=[
             ("0", "Monday"),
             ("1", "Tuesday"),
             ("2", "Wednesday"),
@@ -39,52 +37,56 @@ class ResourceCalendarAttendance(models.Model):
             ("5", "Saturday"),
             ("6", "Sunday"),
         ],
-        "Day of Week",
-        required=True,
-        index=True,
+        string="Day of Week",
         default="0",
+        index=True,
+        required=True,
     )
     hour_from = fields.Float(
         string="Work from",
-        default=0,
-        required=True,
-        index=True,
         help="Start and End time of working.\n"
         "A specific value of 24:00 is interpreted as 23:59:59.999999.",
+        default=0,
+        index=True,
+        required=True,
     )
-    hour_to = fields.Float(string="Work to", default=0, required=True)
+    hour_to = fields.Float(
+        string="Work to",
+        default=0,
+        required=True,
+    )
     duration_hours = fields.Float(
+        string="Duration (hours)",
         compute="_compute_duration_hours",
         inverse="_inverse_duration_hours",
-        string="Duration (hours)",
         store=True,
         readonly=False,
     )
     duration_days = fields.Float(
-        compute="_compute_duration_days",
         string="Duration (days)",
+        compute="_compute_duration_days",
         store=True,
         readonly=False,
     )
     day_period = fields.Selection(
-        [
+        selection=[
             ("morning", "Morning"),
             ("lunch", "Break"),
             ("afternoon", "Afternoon"),
             ("full_day", "Full Day"),
         ],
-        required=True,
         default="morning",
+        required=True,
     )
     week_type = fields.Selection(
-        [("1", "Second"), ("0", "First")],
-        "Week Number",
+        selection=[("1", "Second"), ("0", "First")],
+        string="Week Number",
         default=False,
     )
     display_type = fields.Selection(
-        [("line_section", "Section")],
-        default=False,
+        selection=[("line_section", "Section")],
         help="Technical field for UX purpose.",
+        default=False,
     )
 
     @api.constrains("day_period")

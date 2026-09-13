@@ -9,14 +9,14 @@ class ProductAttribute(models.Model):
         default="visible",
     )
     preview_variants = fields.Selection(
-        string="On Product Cards",
         selection=[
             ("visible", "Visible"),
             ("hidden", "Hidden"),
             ("hover", "Hover"),
         ],
-        default="hidden",
+        string="On Product Cards",
         help="Instantly created variants are available for selection from your /shop page.",
+        default="hidden",
     )
     is_thumbnail_visible = fields.Boolean(
         string="Show Thumbnails",

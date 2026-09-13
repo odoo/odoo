@@ -9,8 +9,8 @@ class ResourceCalendarLeaves(models.Model):
     _inherit = "resource.calendar.leaves"
 
     timesheet_ids = fields.One2many(
-        "account.analytic.line",
-        "global_leave_id",
+        comodel_name="account.analytic.line",
+        inverse_name="global_leave_id",
         string="Analytic Lines",
         export_string_translation=False,
     )

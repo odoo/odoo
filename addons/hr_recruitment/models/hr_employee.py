@@ -5,7 +5,10 @@ class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
     applicant_ids = fields.One2many(
-        "hr.applicant", "employee_id", "Applicants", groups="hr.group_hr_user"
+        comodel_name="hr.applicant",
+        inverse_name="employee_id",
+        string="Applicants",
+        groups="hr.group_hr_user",
     )
 
     def _get_partner_count_depends(self):

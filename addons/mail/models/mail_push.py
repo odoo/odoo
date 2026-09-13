@@ -29,7 +29,10 @@ class MailPush(models.Model):
     _description = "Push Notifications"
 
     mail_push_device_id: MailPushDevice = fields.Many2one(
-        "mail.push.device", string="devices", required=True, ondelete="cascade"
+        comodel_name="mail.push.device",
+        string="devices",
+        required=True,
+        ondelete="cascade",
     )
     payload = fields.Text()
     retry_after = fields.Datetime(

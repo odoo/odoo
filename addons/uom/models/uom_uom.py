@@ -22,41 +22,54 @@ class UomUom(models.Model):
     # `parent_path` groups a family in one indexed column, with no join.
     _order = "sequence, parent_path, id"
 
-    name = fields.Char("Unit Name", required=True, translate=True)
+    name = fields.Char(
+        string="Unit Name",
+        translate=True,
+        required=True,
+    )
     sequence = fields.Integer(
-        compute="_compute_sequence", store=True, readonly=False, precompute=True
+        compute="_compute_sequence",
+        precompute=True,
+        store=True,
+        readonly=False,
     )
     relative_factor = fields.Float(
-        "Contains",
-        default=1.0,
-        digits=0,  # falsy digits force NUMERIC with unlimited precision
-        required=True,
+        string="Contains",
         help="How much bigger or smaller this unit is compared to the reference UoM for this unit",
+        digits=0,  # falsy digits force NUMERIC with unlimited precision
+        default=1.0,
+        required=True,
     )
-    rounding = fields.Float("Rounding Precision", compute="_compute_rounding")
+    rounding = fields.Float(
+        string="Rounding Precision",
+        compute="_compute_rounding",
+    )
     active = fields.Boolean(
-        default=True,
         help="Uncheck the active field to disable a unit of measure without deleting it.",
+        default=True,
     )
     relative_uom_id = fields.Many2one(
-        "uom.uom", "Reference Unit", ondelete="cascade", index="btree_not_null"
+        comodel_name="uom.uom",
+        string="Reference Unit",
+        index="btree_not_null",
+        ondelete="cascade",
     )
     factor = fields.Float(
-        "Absolute Quantity",
+        string="Absolute Quantity",
         digits=0,
         compute="_compute_factor",
         recursive=True,
         store=True,
     )
     reference_uom_id = fields.Many2one(
-        "uom.uom",
-        "Dimension",
+        comodel_name="uom.uom",
+        string="Dimension",
+        help="The root unit this one is ultimately defined against."
+        " Two units are convertible if and only if they share it.",
         compute="_compute_reference_uom_id",
         recursive=True,
         store=True,
         index="btree_not_null",
-        help="The root unit this one is ultimately defined against."
-        " Two units are convertible if and only if they share it.",
     )
     parent_path = fields.Char(index=True)
 

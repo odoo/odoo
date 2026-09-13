@@ -15,19 +15,29 @@ class MailingFilter(models.Model):
 
     # override create_uid field to display default value while creating filter from 'Configuration' menus
     create_uid = fields.Many2one(
-        "res.users",
-        "Saved by",
+        comodel_name="res.users",
+        string="Saved by",
+        default=lambda self: self.env.user,
         index=True,
         readonly=True,
-        default=lambda self: self.env.user,
     )
-    name = fields.Char(string="Filter Name", required=True)
-    mailing_domain = fields.Char(string="Filter Domain", required=True)
+    name = fields.Char(
+        string="Filter Name",
+        required=True,
+    )
+    mailing_domain = fields.Char(
+        string="Filter Domain",
+        required=True,
+    )
     mailing_model_id = fields.Many2one(
-        "ir.model", string="Recipients Model", required=True, ondelete="cascade"
+        comodel_name="ir.model",
+        string="Recipients Model",
+        required=True,
+        ondelete="cascade",
     )
     mailing_model_name = fields.Char(
-        string="Recipients Model Name", related="mailing_model_id.model"
+        related="mailing_model_id.model",
+        string="Recipients Model Name",
     )
 
     @api.constrains("mailing_domain", "mailing_model_id")

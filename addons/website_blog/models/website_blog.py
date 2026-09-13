@@ -25,12 +25,29 @@ class BlogBlog(models.Model):
         return (self.search([], order="sequence desc", limit=1).sequence or 0) + 1
 
     sequence = fields.Integer(default=_default_sequence)
-    name = fields.Char("Blog Name", required=True, translate=True)
-    subtitle = fields.Char("Blog Subtitle", translate=True)
+    name = fields.Char(
+        string="Blog Name",
+        translate=True,
+        required=True,
+    )
+    subtitle = fields.Char(
+        string="Blog Subtitle",
+        translate=True,
+    )
     active = fields.Boolean(default=True)
-    content = fields.Html(translate=html_translate, sanitize=False)
-    blog_post_ids = fields.One2many("blog.post", "blog_id", "Blog Posts")
-    blog_post_count = fields.Count("blog_post_ids", "Posts")
+    content = fields.Html(
+        translate=html_translate,
+        sanitize=False,
+    )
+    blog_post_ids = fields.One2many(
+        comodel_name="blog.post",
+        inverse_name="blog_id",
+        string="Blog Posts",
+    )
+    blog_post_count = fields.Count(
+        count_of="blog_post_ids",
+        string="Posts",
+    )
 
     def write(self, vals):
         res = super().write(vals)
@@ -129,8 +146,15 @@ class BlogTagCategory(models.Model):
     _description = "Blog Tag Category"
     _order = "name"
 
-    name = fields.Char(required=True, translate=True)
-    tag_ids = fields.One2many("blog.tag", "category_id", string="Tags")
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
+    tag_ids = fields.One2many(
+        comodel_name="blog.tag",
+        inverse_name="category_id",
+        string="Tags",
+    )
 
     _name_src_uniq = name_uniq_index(
         message="Tag category already exists!",
@@ -143,10 +167,19 @@ class BlogTag(models.Model):
     _inherit = ["mixin.website.seo.metadata"]
     _order = "name"
 
-    name = fields.Char(required=True, translate=True)
-    category_id = fields.Many2one("blog.tag.category", index=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
+    category_id = fields.Many2one(
+        comodel_name="blog.tag.category",
+        index=True,
+    )
     color = fields.Integer()
-    post_ids = fields.Many2many("blog.post", string="Posts")
+    post_ids = fields.Many2many(
+        comodel_name="blog.post",
+        string="Posts",
+    )
 
     _name_src_uniq = name_uniq_index(
         message="Tag name already exists!",
@@ -182,38 +215,58 @@ class BlogPost(models.Model):
             <p>%(text)s</p>
         """ % {"text": text}
 
-    name = fields.Char("Title", required=True, translate=True, default="")
-    subtitle = fields.Char("Sub Title", translate=True)
+    name = fields.Char(
+        string="Title",
+        translate=True,
+        default="",
+        required=True,
+    )
+    subtitle = fields.Char(
+        string="Sub Title",
+        translate=True,
+    )
     author_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         default=lambda self: self.env.user.partner_id,
         index="btree_not_null",
     )
     author_avatar = fields.Binary(
-        related="author_id.image_128", string="Avatar", readonly=False
+        related="author_id.image_128",
+        string="Avatar",
+        readonly=False,
     )
     author_name = fields.Char(
         related="author_id.display_name",
         string="Author Name",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     active = fields.Boolean(default=True)
     blog_id = fields.Many2one(
-        "blog.blog",
-        required=True,
-        index=True,
-        ondelete="cascade",
+        comodel_name="blog.blog",
         default=lambda self: self.env["blog.blog"].search([], limit=1),
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
-    tag_ids = fields.Many2many("blog.tag", string="Tags")
+    tag_ids = fields.Many2many(
+        comodel_name="blog.tag",
+        string="Tags",
+    )
     content = fields.Html(
-        default=_default_content, translate=html_translate, sanitize=False
+        translate=html_translate,
+        sanitize=False,
+        default=_default_content,
     )
     teaser = fields.Text(
-        compute="_compute_teaser", inverse="_inverse_teaser", translate=True
+        translate=True,
+        compute="_compute_teaser",
+        inverse="_inverse_teaser",
     )
-    teaser_manual = fields.Text(string="Teaser Content", translate=True)
+    teaser_manual = fields.Text(
+        string="Teaser Content",
+        translate=True,
+    )
 
     website_message_ids = fields.One2many(
         domain=lambda self: [
@@ -222,21 +275,42 @@ class BlogPost(models.Model):
         ]
     )
 
-    create_date = fields.Datetime("Created on", readonly=True)
+    create_date = fields.Datetime(
+        string="Created on",
+        readonly=True,
+    )
     published_date = fields.Datetime()
     post_date = fields.Datetime(
-        "Publishing date",
+        string="Publishing date",
+        help="The blog post will be visible for your visitors as of this date on the website if it is set as published.",
         compute="_compute_post_date",
         inverse="_inverse_post_date",
         store=True,
-        help="The blog post will be visible for your visitors as of this date on the website if it is set as published.",
     )
-    create_uid = fields.Many2one("res.users", "Created by", readonly=True)
-    write_date = fields.Datetime("Last Updated on", readonly=True)
-    write_uid = fields.Many2one("res.users", "Last Contributor", readonly=True)
-    visits = fields.Integer("No of Views", copy=False, default=0, readonly=True)
+    create_uid = fields.Many2one(
+        comodel_name="res.users",
+        string="Created by",
+        readonly=True,
+    )
+    write_date = fields.Datetime(
+        string="Last Updated on",
+        readonly=True,
+    )
+    write_uid = fields.Many2one(
+        comodel_name="res.users",
+        string="Last Contributor",
+        readonly=True,
+    )
+    visits = fields.Integer(
+        string="No of Views",
+        default=0,
+        copy=False,
+        readonly=True,
+    )
     website_id = fields.Many2one(
-        related="blog_id.website_id", readonly=True, store=True
+        related="blog_id.website_id",
+        store=True,
+        readonly=True,
     )
 
     @api.depends("content", "teaser_manual")

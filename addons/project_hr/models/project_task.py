@@ -9,27 +9,27 @@ class ProjectTask(models.Model):
     _inherit = ["mixin.hr", "project.task"]
 
     employee_ids = fields.Many2many(
-        "hr.employee",
+        comodel_name="hr.employee",
         relation="project_task_employee_rel",
         column1="task_id",
         column2="employee_id",
         string="Assignees",
-        tracking=True,
         default=lambda self: self._default_employee_ids(),
         falsy_value_label=_lt("👤 Unassigned"),
+        tracking=True,
     )
 
     user_ids = fields.Many2many(
-        "res.users",
+        comodel_name="res.users",
         relation="project_task_user_rel",
         column1="task_id",
         column2="user_id",
+        string="Assignees (Users)",
         compute="_compute_user_ids",
+        default=None,
         store=True,
         readonly=True,
-        string="Assignees (Users)",
         tracking=False,
-        default=None,
     )
 
     @api.model

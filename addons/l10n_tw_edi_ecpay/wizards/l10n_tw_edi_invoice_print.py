@@ -11,28 +11,29 @@ class L10nTwEDIInvoicePrint(models.TransientModel):
     invoice_id = fields.Many2one(
         comodel_name="account.move",
         string="Document To Print",
-        required=True,
         readonly=True,
+        required=True,
     )
     print_format_b2c = fields.Selection(
-        string="Print Format (B2C)",
         selection=[
             ("1", "single-sided printing"),
             ("2", "double-sided printing"),
             ("3", "printing with thermal paper"),
         ],
+        string="Print Format (B2C)",
         default="1",
     )
     print_format_b2b = fields.Selection(
-        string="Print Format (B2B)",
         selection=[
             ("1", "A4 printing "),
             ("2", "A5 printing "),
         ],
+        string="Print Format (B2B)",
         default="1",
     )
     l10n_tw_edi_is_b2b = fields.Boolean(
-        string="Is B2B", related="invoice_id.l10n_tw_edi_is_b2b"
+        related="invoice_id.l10n_tw_edi_is_b2b",
+        string="Is B2B",
     )
 
     def button_print(self):

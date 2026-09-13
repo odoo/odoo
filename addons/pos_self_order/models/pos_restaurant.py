@@ -9,10 +9,10 @@ class RestaurantTable(models.Model):
     _inherit = "restaurant.table"
 
     identifier = fields.Char(
-        "Security Token",
+        string="Security Token",
+        default=lambda self: self._get_identifier(),
         copy=False,
         required=True,
-        default=lambda self: self._get_identifier(),
     )
 
     @staticmethod

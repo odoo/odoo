@@ -25,7 +25,9 @@ class ProductProduct(models.Model):
     _inherit = "product.product"
 
     event_ticket_ids = fields.One2many(
-        "event.event.ticket", "product_id", string="Event Tickets"
+        comodel_name="event.event.ticket",
+        inverse_name="product_id",
+        string="Event Tickets",
     )
 
     @api.constrains("event_ticket_ids", "service_tracking")

@@ -34,8 +34,8 @@ class ResConfigSettings(models.TransientModel):
     )
     group_proforma_sales = fields.Boolean(
         string="Pro-Forma Invoice",
-        implied_group="sale.group_proforma_sales",
         help="Allows you to send pro-forma invoice.",
+        implied_group="sale.group_proforma_sales",
     )
     group_warning_sale = fields.Boolean(
         string="Sale Order Warnings",
@@ -54,9 +54,9 @@ class ResConfigSettings(models.TransientModel):
     invoice_mail_template_id = fields.Many2one(
         comodel_name="mail.template",
         string="Email Template",
-        domain=[("model", "=", "account.move")],
         help="Email sent to the customer once the invoice is available.",
         config_parameter="sale.default_invoice_email_template",
+        domain=[("model", "=", "account.move")],
     )
     quotation_validity_days = fields.Integer(
         related="company_id.quotation_validity_days",
@@ -71,7 +71,8 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
     )
     prepayment_percent = fields.Float(
-        related="company_id.prepayment_percent", readonly=False
+        related="company_id.prepayment_percent",
+        readonly=False,
     )
     downpayment_account_id = fields.Many2one(
         related="company_id.downpayment_account_id",

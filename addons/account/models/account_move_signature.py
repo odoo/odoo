@@ -8,8 +8,8 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     signing_user = fields.Many2one(
-        string="Signer",
         comodel_name="res.users",
+        string="Signer",
         compute="_compute_signing_user",
         store=True,
         copy=False,

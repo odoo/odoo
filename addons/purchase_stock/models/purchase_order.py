@@ -21,19 +21,19 @@ class PurchaseOrder(models.Model):
     picking_type_id = fields.Many2one(
         comodel_name="stock.picking.type",
         string="Deliver To",
-        required=True,
+        help="This will determine operation type of incoming shipment",
         compute="_compute_picking_type_id",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
+        required=True,
         domain="['|', ('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id)]",
-        help="This will determine operation type of incoming shipment",
     )
     default_location_dest_id_usage = fields.Selection(
         related="picking_type_id.default_location_dest_id.usage",
         string="Destination Location Type",
-        readonly=True,
         help="Technical field used to display the Drop Ship Address",
+        readonly=True,
     )
     dest_address_id = fields.Many2one(
         comodel_name="res.partner",
@@ -51,9 +51,7 @@ class PurchaseOrder(models.Model):
         string="Incoming Shipment count",
         compute="_compute_incoming_transfer_counts",
     )
-    is_shipped = fields.Boolean(
-        compute="_compute_is_shipped",
-    )
+    is_shipped = fields.Boolean(compute="_compute_is_shipped")
     reference_ids = fields.Many2many(
         comodel_name="stock.reference",
         relation="stock_reference_purchase_rel",

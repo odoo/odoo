@@ -16,12 +16,12 @@ class ChatbotScriptStep(models.Model):
         ondelete={"create_lead": "cascade", "create_lead_and_forward": "cascade"},
     )
     crm_team_id = fields.Many2one(
-        "crm.team",
+        comodel_name="crm.team",
         string="Sales Team",
-        ondelete="set null",
-        index="btree_not_null",
         help="Used in combination with 'create_lead' step type in order to automatically "
         "assign the created lead/opportunity to the defined team",
+        index="btree_not_null",
+        ondelete="set null",
     )
 
     def _compute_is_forward_operator(self):

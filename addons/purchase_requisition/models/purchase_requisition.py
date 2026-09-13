@@ -12,51 +12,63 @@ class PurchaseRequisition(models.Model):
 
     name = fields.Char(
         string="Agreement",
+        default=lambda self: _("New"),
         copy=False,
         readonly=True,
         required=True,
-        default=lambda self: _("New"),
     )
     active = fields.Boolean(default=True)
     reference = fields.Char()
-    order_count = fields.Count("purchase_ids", string="Number of Orders")
-    vendor_id = fields.Many2one("res.partner", check_company=True)
+    order_count = fields.Count(
+        count_of="purchase_ids",
+        string="Number of Orders",
+    )
+    vendor_id = fields.Many2one(
+        comodel_name="res.partner",
+        check_company=True,
+    )
     requisition_type = fields.Selection(
-        [
+        selection=[
             ("blanket_order", "Blanket Order"),
             ("purchase_template", "Purchase Template"),
         ],
         string="Agreement Type",
-        required=True,
         default="blanket_order",
+        required=True,
     )
-    date_start = fields.Date(string="Start Date", tracking=True)
-    date_end = fields.Date(string="End Date", tracking=True)
+    date_start = fields.Date(
+        string="Start Date",
+        tracking=True,
+    )
+    date_end = fields.Date(
+        string="End Date",
+        tracking=True,
+    )
     user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Purchase Representative",
         default=lambda self: self.env.user,
         check_company=True,
     )
     description = fields.Html()
     company_id = fields.Many2one(
-        "res.company",
-        required=True,
+        comodel_name="res.company",
         default=lambda self: self.env.company,
+        required=True,
     )
     purchase_ids = fields.One2many(
-        "purchase.order",
-        "requisition_id",
+        comodel_name="purchase.order",
+        inverse_name="requisition_id",
         string="Purchase Orders",
     )
     line_ids = fields.One2many(
-        "purchase.requisition.line",
-        "requisition_id",
+        comodel_name="purchase.requisition.line",
+        inverse_name="requisition_id",
         string="Products to Purchase",
         copy=True,
     )
     product_id = fields.Many2one(
-        "product.product",
+        comodel_name="product.product",
         related="line_ids.product_id",
         string="Product",
     )
@@ -68,18 +80,18 @@ class PurchaseRequisition(models.Model):
             ("cancel", "Cancelled"),
         ],
         string="Status",
-        tracking=True,
-        required=True,
-        copy=False,
         default="draft",
+        copy=False,
+        required=True,
+        tracking=True,
     )
     currency_id = fields.Many2one(
-        "res.currency",
-        required=True,
-        precompute=True,
+        comodel_name="res.currency",
         compute="_compute_currency_id",
+        precompute=True,
         store=True,
         readonly=False,
+        required=True,
     )
 
     @api.onchange("vendor_id")
@@ -254,50 +266,51 @@ class PurchaseRequisitionLine(models.Model):
     _rec_name = "product_id"
 
     product_id = fields.Many2one(
-        "product.product",
-        domain=[("purchase_ok", "=", True)],
+        comodel_name="product.product",
         required=True,
+        domain=[("purchase_ok", "=", True)],
     )
     product_uom_id = fields.Many2one(
-        "uom.uom",
-        "Unit",
+        comodel_name="uom.uom",
+        string="Unit",
         compute="_compute_product_uom_id",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
     )
     product_qty = fields.Float(
         string="Quantity",
         digits="Product Unit",
     )
-    product_description_variants = fields.Char("Description")
+    product_description_variants = fields.Char(string="Description")
     price_unit = fields.Float(
         string="Unit Price",
         min_display_digits="Product Price",
         compute="_compute_price_unit",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     qty_ordered = fields.Float(
-        compute="_compute_qty_ordered",
         string="Ordered",
+        compute="_compute_qty_ordered",
     )
     requisition_id = fields.Many2one(
-        "purchase.requisition",
-        required=True,
+        comodel_name="purchase.requisition",
         string="Purchase Agreement",
-        ondelete="cascade",
         index=True,
+        required=True,
+        ondelete="cascade",
     )
     company_id = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
         related="requisition_id.company_id",
         string="Company",
         store=True,
         readonly=True,
     )
     supplier_info_ids = fields.One2many(
-        "product.supplierinfo", "purchase_requisition_line_id"
+        comodel_name="product.supplierinfo",
+        inverse_name="purchase_requisition_line_id",
     )
 
     @api.depends("requisition_id.purchase_ids.state")

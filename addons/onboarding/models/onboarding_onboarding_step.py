@@ -10,60 +10,67 @@ class OnboardingOnboardingStep(models.Model):
     _order = "sequence asc, id asc"
     _rec_name = "title"
 
-    onboarding_ids = fields.Many2many("onboarding.onboarding", string="Onboardings")
+    onboarding_ids = fields.Many2many(
+        comodel_name="onboarding.onboarding",
+        string="Onboardings",
+    )
 
     title = fields.Char(translate=True)
     description = fields.Char(translate=True)
     button_text = fields.Char(
-        "Button text",
-        required=True,
-        default=lambda s: s.env._("Let's do it"),
-        translate=True,
+        string="Button text",
         help="Text on the panel's button to start this step",
+        translate=True,
+        default=lambda s: s.env._("Let's do it"),
+        required=True,
     )
     done_icon = fields.Char(
-        "Font Awesome Icon when completed", default="fa-solid fa-star"
+        string="Font Awesome Icon when completed",
+        default="fa-solid fa-star",
     )
     done_text = fields.Char(
-        "Text to show when step is completed",
-        default=lambda s: s.env._("Step Completed!"),
+        string="Text to show when step is completed",
         translate=True,
+        default=lambda s: s.env._("Step Completed!"),
     )
     step_image = fields.Binary()
     step_image_filename = fields.Char()
     step_image_alt = fields.Char(
-        "Alt Text for the Step Image",
-        default="Onboarding Step Image",
-        translate=True,
+        string="Alt Text for the Step Image",
         help="Show when impossible to load the image",
+        translate=True,
+        default="Onboarding Step Image",
     )
     panel_step_open_action_name = fields.Char(
         string="Opening action",
-        required=False,
         help="Name of the onboarding step model action to execute when opening the step, "
         "e.g. action_view_onboarding_1_step_1",
+        required=False,
     )
 
     current_progress_step_id = fields.Many2one(
-        "onboarding.progress.step",
+        comodel_name="onboarding.progress.step",
         string="Step Progress",
-        compute="_compute_current_progress",
         help="Onboarding Progress Step for the current context (company).",
+        compute="_compute_current_progress",
     )
     current_step_state = fields.Selection(
-        ONBOARDING_PROGRESS_STATES,
+        selection=ONBOARDING_PROGRESS_STATES,
         string="Completion State",
         compute="_compute_current_progress",
     )
     progress_ids = fields.One2many(
-        "onboarding.progress.step",
-        "step_id",
+        comodel_name="onboarding.progress.step",
+        inverse_name="step_id",
         string="Onboarding Progress Step Records",
-        readonly=True,
         help="All related Onboarding Progress Step Records (across companies)",
+        readonly=True,
     )
 
-    is_per_company = fields.Boolean("Is per company", default=True)
+    is_per_company = fields.Boolean(
+        string="Is per company",
+        default=True,
+    )
     sequence = fields.Integer(default=10)
 
     @api.depends_context("company")

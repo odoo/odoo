@@ -14,9 +14,13 @@ _logger = logging.getLogger(__name__)
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    l10n_eg_long_id = fields.Char(string="ETA Long ID", compute="_compute_eta_long_id")
+    l10n_eg_long_id = fields.Char(
+        string="ETA Long ID",
+        compute="_compute_eta_long_id",
+    )
     l10n_eg_qr_code = fields.Char(
-        string="ETA QR Code", compute="_compute_eta_qr_code_str"
+        string="ETA QR Code",
+        compute="_compute_eta_qr_code_str",
     )
     l10n_eg_submission_number = fields.Char(
         string="Submission ID",
@@ -35,7 +39,10 @@ class AccountMove(models.Model):
         attachment=True,
         copy=False,
     )
-    l10n_eg_signing_time = fields.Datetime("Signing Time", copy=False)
+    l10n_eg_signing_time = fields.Datetime(
+        string="Signing Time",
+        copy=False,
+    )
     l10n_eg_is_signed = fields.Boolean(copy=False)
 
     def _auto_init(self):

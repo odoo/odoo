@@ -25,11 +25,9 @@ class MixinCatalog(models.AbstractModel):
     _description = "Catalog Entry (unique translated name, archivable)"
 
     name = fields.Char(
-        required=True,
         translate=True,
+        required=True,
     )
-    active = fields.Boolean(
-        default=True,
-    )
+    active = fields.Boolean(default=True)
 
     _name_src_uniq = name_uniq_index()

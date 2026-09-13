@@ -35,53 +35,69 @@ class CardCampaign(models.Model):
     name = fields.Char(required=True)
     active = fields.Boolean(default=True)
     body_html = fields.Html(
-        related="card_template_id.body", render_engine="qweb", readonly=False
+        related="card_template_id.body",
+        readonly=False,
+        render_engine="qweb",
     )
 
     card_count = fields.Integer(compute="_compute_card_stats")
     card_click_count = fields.Integer(compute="_compute_card_stats")
     card_share_count = fields.Integer(compute="_compute_card_stats")
 
-    mailing_ids = fields.One2many("mailing.mailing", "card_campaign_id")
+    mailing_ids = fields.One2many(
+        comodel_name="mailing.mailing",
+        inverse_name="card_campaign_id",
+    )
     mailing_count = fields.Integer(compute="_compute_mailing_count")
 
-    card_ids = fields.One2many("card.card", inverse_name="campaign_id")
+    card_ids = fields.One2many(
+        comodel_name="card.card",
+        inverse_name="campaign_id",
+    )
     card_template_id = fields.Many2one(
-        "card.template",
+        comodel_name="card.template",
         string="Design",
         default=_default_card_template_id,
         required=True,
     )
     image_preview = fields.Image(
+        attachment=False,
         compute="_compute_image_preview",
         compute_sudo=False,
-        readonly=True,
         store=True,
-        attachment=False,
+        readonly=True,
     )
-    link_tracker_id = fields.Many2one("link.tracker", ondelete="restrict")
+    link_tracker_id = fields.Many2one(
+        comodel_name="link.tracker",
+        ondelete="restrict",
+    )
     res_model = fields.Selection(
+        selection="_selection_campaign_models",
         string="Model Name",
         compute="_compute_res_model",
-        selection="_selection_campaign_models",
         precompute=True,
+        store=True,
         readonly=True,
         required=True,
-        store=True,
     )
 
     post_suggestion = fields.Text(
         help="Description below the card and default text when sharing on X"
     )
     preview_record_ref = fields.Reference(
-        string="Preview On", selection="_selection_campaign_models", required=True
+        selection="_selection_campaign_models",
+        string="Preview On",
+        required=True,
     )
-    tag_ids = fields.Many2many("card.campaign.tag", string="Tags")
+    tag_ids = fields.Many2many(
+        comodel_name="card.campaign.tag",
+        string="Tags",
+    )
     target_url = fields.Char(string="Post Link")
     target_url_click_count = fields.Integer(related="link_tracker_id.count")
 
     user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Responsible",
         default=lambda self: self.env.user,
         domain="[('share', '=', False)]",
@@ -90,40 +106,41 @@ class CardCampaign(models.Model):
     reward_message = fields.Html(string="Thank You Message")
     reward_target_url = fields.Char(string="Reward Link")
     request_title = fields.Char(
-        "Request", default=lambda self: _("Help us share the news")
+        string="Request",
+        default=lambda self: _("Help us share the news"),
     )
     request_description = fields.Text()
 
     # Static Content fields
-    content_background = fields.Image("Background")
-    content_button = fields.Char("Button")
+    content_background = fields.Image(string="Background")
+    content_button = fields.Char(string="Button")
 
     # Dynamic Content fields
-    content_header = fields.Char("Header")
-    content_header_dyn = fields.Boolean("Is Dynamic Header")
-    content_header_path = fields.Char("Header Path")
-    content_header_color = fields.Char("Header Color")
+    content_header = fields.Char(string="Header")
+    content_header_dyn = fields.Boolean(string="Is Dynamic Header")
+    content_header_path = fields.Char(string="Header Path")
+    content_header_color = fields.Char(string="Header Color")
 
-    content_sub_header = fields.Char("Sub-Header")
-    content_sub_header_dyn = fields.Boolean("Is Dynamic Sub-Header")
-    content_sub_header_path = fields.Char("Sub-Header Path")
-    content_sub_header_color = fields.Char("Sub Header Color")
+    content_sub_header = fields.Char(string="Sub-Header")
+    content_sub_header_dyn = fields.Boolean(string="Is Dynamic Sub-Header")
+    content_sub_header_path = fields.Char(string="Sub-Header Path")
+    content_sub_header_color = fields.Char(string="Sub Header Color")
 
-    content_section = fields.Char("Section")
-    content_section_dyn = fields.Boolean("Is Dynamic Section")
-    content_section_path = fields.Char("Section Path")
+    content_section = fields.Char(string="Section")
+    content_section_dyn = fields.Boolean(string="Is Dynamic Section")
+    content_section_path = fields.Char(string="Section Path")
 
-    content_sub_section1 = fields.Char("Sub-Section 1")
-    content_sub_section1_dyn = fields.Boolean("Is Dynamic Sub-Section 1")
-    content_sub_section1_path = fields.Char("Sub-Section 1 Path")
+    content_sub_section1 = fields.Char(string="Sub-Section 1")
+    content_sub_section1_dyn = fields.Boolean(string="Is Dynamic Sub-Section 1")
+    content_sub_section1_path = fields.Char(string="Sub-Section 1 Path")
 
-    content_sub_section2 = fields.Char("Sub-Section 2")
-    content_sub_section2_dyn = fields.Boolean("Is Dynamic Sub-Section 2")
-    content_sub_section2_path = fields.Char("Sub-Section 2 Path")
+    content_sub_section2 = fields.Char(string="Sub-Section 2")
+    content_sub_section2_dyn = fields.Boolean(string="Is Dynamic Sub-Section 2")
+    content_sub_section2_path = fields.Char(string="Sub-Section 2 Path")
 
     # images are always dynamic
-    content_image1_path = fields.Char("Dynamic Image 1")
-    content_image2_path = fields.Char("Dynamic Image 2")
+    content_image1_path = fields.Char(string="Dynamic Image 1")
+    content_image2_path = fields.Char(string="Dynamic Image 2")
 
     @api.depends("card_ids")
     def _compute_card_stats(self):

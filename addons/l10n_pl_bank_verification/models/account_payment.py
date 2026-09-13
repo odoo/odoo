@@ -8,12 +8,12 @@ class L10nPlAccountPayment(models.Model):
     _inherit = "account.payment"
 
     l10n_pl_verification_id = fields.Many2one(
-        string="PL Bank Verification",
         comodel_name="l10n_pl.bank.account.verification",
+        string="PL Bank Verification",
         compute="_compute_l10n_pl_verification_id",
         store=True,
-        readonly=True,
         copy=False,
+        readonly=True,
     )
     l10n_pl_verification_status = fields.Selection(
         related="l10n_pl_verification_id.verification_status"

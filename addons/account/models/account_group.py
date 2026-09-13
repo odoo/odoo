@@ -15,32 +15,32 @@ class AccountGroup(models.Model):
     _check_company_domain = models.check_company_domain_parent_of
 
     company_id = fields.Many2one(
-        "res.company",
-        required=True,
-        readonly=True,
+        comodel_name="res.company",
         default=lambda self: self.env.company.root_id,
+        readonly=True,
+        required=True,
     )
     name = fields.Char(
-        required=True,
         translate=True,
+        required=True,
     )
     code_prefix_start = fields.Char(
         compute="_compute_code_prefix_start",
-        readonly=False,
-        store=True,
         precompute=True,
+        store=True,
+        readonly=False,
     )
     code_prefix_end = fields.Char(
         compute="_compute_code_prefix_end",
-        readonly=False,
-        store=True,
         precompute=True,
+        store=True,
+        readonly=False,
     )
     parent_id = fields.Many2one(
-        "account.group",
+        comodel_name="account.group",
         index=True,
-        ondelete="cascade",
         readonly=True,
+        ondelete="cascade",
         check_company=True,
     )
 

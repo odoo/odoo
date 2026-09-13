@@ -48,27 +48,27 @@ class MixinMicrosoftOutlook(models.AbstractModel):
     # the views and in every caller.
     microsoft_outlook_refresh_token = fields.Char(
         string="Outlook Refresh Token",
-        groups="base.group_system",
-        copy=False,
         compute="_compute_microsoft_outlook_tokens",
         inverse="_inverse_microsoft_outlook_refresh_token",
+        copy=False,
+        groups="base.group_system",
     )
     microsoft_outlook_access_token = fields.Char(
         string="Outlook Access Token",
-        groups="base.group_system",
-        copy=False,
         compute="_compute_microsoft_outlook_tokens",
         inverse="_inverse_microsoft_outlook_access_token",
+        copy=False,
+        groups="base.group_system",
     )
     microsoft_outlook_access_token_expiration = fields.Integer(
         string="Outlook Access Token Expiration Timestamp",
-        groups="base.group_system",
         copy=False,
+        groups="base.group_system",
     )
     microsoft_outlook_uri = fields.Char(
-        compute="_compute_outlook_uri",
         string="Authentication URI",
         help="The URL to generate the authorization code from Outlook",
+        compute="_compute_outlook_uri",
         groups="base.group_system",
     )
 

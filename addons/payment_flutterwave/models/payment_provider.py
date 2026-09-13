@@ -18,18 +18,18 @@ class PaymentProvider(models.Model):
     )
     flutterwave_public_key = fields.Char(
         help="The key solely used to identify the account with Flutterwave.",
-        required_if_provider="flutterwave",
         copy=False,
+        required_if_provider="flutterwave",
     )
     flutterwave_secret_key = fields.Char(
-        required_if_provider="flutterwave",
         copy=False,
         groups="base.group_system",
+        required_if_provider="flutterwave",
     )
     flutterwave_webhook_secret = fields.Char(
-        required_if_provider="flutterwave",
         copy=False,
         groups="base.group_system",
+        required_if_provider="flutterwave",
     )
 
     # === COMPUTE METHODS ===#

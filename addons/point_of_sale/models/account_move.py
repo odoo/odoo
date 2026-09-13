@@ -7,29 +7,40 @@ class AccountMove(models.Model):
     _name = "account.move"
     _inherit = ["account.move", "mixin.pos.load"]
 
-    pos_order_ids = fields.One2many("pos.order", "account_move")
-    pos_payment_ids = fields.One2many("pos.payment", "account_move_id")
+    pos_order_ids = fields.One2many(
+        comodel_name="pos.order",
+        inverse_name="account_move",
+    )
+    pos_payment_ids = fields.One2many(
+        comodel_name="pos.payment",
+        inverse_name="account_move_id",
+    )
     pos_refunded_invoice_ids = fields.Many2many(
-        "account.move",
-        "refunded_invoices",
-        "refund_account_move",
-        "original_account_move",
+        comodel_name="account.move",
+        relation="refunded_invoices",
+        column1="refund_account_move",
+        column2="original_account_move",
     )
     reversed_pos_order_id = fields.Many2one(
-        "pos.order",
+        comodel_name="pos.order",
         string="Reversed POS Order",
-        index="btree_not_null",
         help="The pos order that was reverted after closing the session to create an invoice for it.",
+        index="btree_not_null",
     )
     pos_diff_session_id = fields.Many2one(
-        "pos.session",
-        "POS Closing Difference",
-        index="btree_not_null",
+        comodel_name="pos.session",
+        string="POS Closing Difference",
         help="Session whose closing produced this payment-method difference entry.",
+        index="btree_not_null",
     )
-    pos_session_ids = fields.One2many("pos.session", "move_id", "POS Sessions")
+    pos_session_ids = fields.One2many(
+        comodel_name="pos.session",
+        inverse_name="move_id",
+        string="POS Sessions",
+    )
     pos_order_count = fields.Integer(
-        compute="_compute_pos_order_count", string="POS Order Count"
+        string="POS Order Count",
+        compute="_compute_pos_order_count",
     )
 
     @api.depends("pos_order_ids")

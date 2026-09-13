@@ -80,103 +80,101 @@ class MrpProduction(models.Model):
         return not self.env.user.has_group("mrp.group_unlocked_by_default")
 
     name = fields.Char(
-        "Reference",
+        string="Reference",
         default=lambda self: _("New"),
         copy=False,
         readonly=True,
     )
     priority = fields.Selection(
-        PROCUREMENT_PRIORITIES,
-        default="0",
+        selection=PROCUREMENT_PRIORITIES,
         help="Components will be reserved first for the MO with the highest priorities.",
+        default="0",
     )
     backorder_sequence = fields.Integer(
+        help="Backorder sequence, if equals to 0 means there is not related backorder",
         default=0,
         copy=False,
-        help="Backorder sequence, if equals to 0 means there is not related backorder",
     )
     origin = fields.Char(
-        "Source",
-        copy=False,
+        string="Source",
         help="Reference of the document that generated this production order request.",
+        copy=False,
     )
 
     product_id = fields.Many2one(
-        "product.product",
-        domain="[('type', '=', 'consu')]",
+        comodel_name="product.product",
         compute="_compute_product_id",
+        precompute=True,
         store=True,
         copy=True,
-        precompute=True,
         readonly=False,
         required=True,
+        domain="[('type', '=', 'consu')]",
         check_company=True,
     )
     production_group_id = fields.Many2one(
-        "mrp.production.group",
+        comodel_name="mrp.production.group",
         index=True,
         copy=False,
     )
 
     product_variant_attributes = fields.Many2many(
-        "product.template.attribute.value",
+        comodel_name="product.template.attribute.value",
         related="product_id.product_template_attribute_value_ids",
     )
     valid_product_template_attribute_line_ids = fields.Many2many(
         related="product_tmpl_id.valid_product_template_attribute_line_ids"
     )
     never_product_template_attribute_value_ids = fields.Many2many(
-        "product.template.attribute.value",
-        "template_attribute_value_mrp_production_rel",
-        "production_id",
-        "template_attribute_value_id",
+        comodel_name="product.template.attribute.value",
+        relation="template_attribute_value_mrp_production_rel",
+        column1="production_id",
+        column2="template_attribute_value_id",
+        string="Never attribute values",
         domain="""[
             '&',
                 ('attribute_line_id', 'in', valid_product_template_attribute_line_ids),
                 ('attribute_id.create_variant', '=', 'no_variant')]""",
-        string="Never attribute values",
     )
 
     workcenter_id = fields.Many2one(
-        "mrp.workcenter",
+        comodel_name="mrp.workcenter",
         store=False,
     )
-    product_tracking = fields.Selection(
-        related="product_id.tracking",
-    )
+    product_tracking = fields.Selection(related="product_id.tracking")
     product_tmpl_id = fields.Many2one(
-        "product.template",
-        "Product Template",
+        comodel_name="product.template",
         related="product_id.product_tmpl_id",
+        string="Product Template",
     )
     product_qty = fields.Float(
-        "Quantity To Produce",
+        string="Quantity To Produce",
         digits="Product Unit",
+        compute="_compute_product_qty",
+        precompute=True,
+        store=True,
+        copy=True,
         readonly=False,
         required=True,
         tracking=True,
-        precompute=True,
-        compute="_compute_product_qty",
-        store=True,
-        copy=True,
     )
     allowed_uom_ids = fields.Many2many(
-        "uom.uom",
+        comodel_name="uom.uom",
         compute="_compute_allowed_uom_ids",
     )
     product_uom_id = fields.Many2one(
-        "uom.uom",
-        "Unit",
-        domain="[('id', 'in', allowed_uom_ids)]",
-        readonly=False,
-        required=True,
+        comodel_name="uom.uom",
+        string="Unit",
         compute="_compute_product_uom_id",
+        precompute=True,
         store=True,
         copy=True,
-        precompute=True,
+        readonly=False,
+        required=True,
+        domain="[('id', 'in', allowed_uom_ids)]",
     )
     lot_producing_ids = fields.Many2many(
-        "stock.lot",
+        comodel_name="stock.lot",
         string="Lot/Serial Number",
         copy=False,
         domain="[('product_id', '=', product_id)]",
@@ -193,88 +191,92 @@ class MrpProduction(models.Model):
         store=True,
     )
     picking_type_id = fields.Many2one(
-        "stock.picking.type",
-        "Operation Type",
+        comodel_name="stock.picking.type",
+        string="Operation Type",
+        compute="_compute_picking_type_id",
+        precompute=True,
+        store=True,
+        index=True,
         copy=True,
         readonly=False,
-        compute="_compute_picking_type_id",
-        store=True,
-        precompute=True,
-        domain="[('code', '=', 'mrp_operation')]",
         required=True,
+        domain="[('code', '=', 'mrp_operation')]",
         check_company=True,
-        index=True,
     )
     use_create_components_lots = fields.Boolean(
         related="picking_type_id.use_create_components_lots"
     )
     location_src_id = fields.Many2one(
-        "stock.location",
-        "Components Location",
+        comodel_name="stock.location",
+        string="Components Location",
+        help="Location where the system will look for components.",
         compute="_compute_locations",
+        precompute=True,
         store=True,
-        check_company=True,
         readonly=False,
         required=True,
-        precompute=True,
         domain="[('usage','=','internal')]",
-        help="Location where the system will look for components.",
+        check_company=True,
     )
     warehouse_id = fields.Many2one(related="location_src_id.warehouse_id")
     location_dest_id = fields.Many2one(
-        "stock.location",
-        "Finished Products Location",
+        comodel_name="stock.location",
+        string="Finished Products Location",
+        help="Location where the system will stock the finished products.",
         compute="_compute_locations",
+        precompute=True,
         store=True,
-        check_company=True,
         readonly=False,
         required=True,
-        precompute=True,
         domain="[('usage','=','internal')]",
-        help="Location where the system will stock the finished products.",
+        check_company=True,
     )
     location_final_id = fields.Many2one(
-        "stock.location",
-        "Final Location from procurement",
+        comodel_name="stock.location",
+        string="Final Location from procurement",
     )
     date_deadline = fields.Datetime(
-        "Deadline",
-        copy=False,
-        store=True,
-        readonly=False,
-        compute="_compute_date_deadline",
+        string="Deadline",
         help="Informative date allowing to define when the manufacturing order should be processed at the latest to fulfill delivery on time.",
+        compute="_compute_date_deadline",
+        store=True,
+        copy=False,
+        readonly=False,
     )
     date_start = fields.Datetime(
-        "Start",
-        copy=False,
-        default=_default_date_start,
+        string="Start",
         help="Date you plan to start production or date you actually started production.",
+        default=_default_date_start,
         index=True,
+        copy=False,
         required=True,
     )
     date_end = fields.Datetime(
-        "End",
-        copy=False,
-        default=_default_date_end,
-        compute="_compute_date_end",
-        store=True,
+        string="End",
         help="Date you expect to finish production or actual date you finished production.",
+        compute="_compute_date_end",
+        default=_default_date_end,
+        store=True,
+        copy=False,
     )
     duration_expected = fields.Float(
-        "Expected Duration",
+        string="Expected Duration",
         help="Total expected duration (in minutes)",
         compute="_compute_duration_expected",
     )
     duration = fields.Float(
-        "Real Duration",
+        string="Real Duration",
         help="Total real duration (in minutes)",
         compute="_compute_duration",
     )
 
     bom_id = fields.Many2one(
-        "mrp.bom",
-        "Bill of Material",
+        comodel_name="mrp.bom",
+        string="Bill of Material",
+        help="Bills of Materials, also called recipes, are used to autocomplete components and work order instructions.",
+        compute="_compute_bom_id",
+        precompute=True,
+        store=True,
         readonly=False,
         domain="""[
         '&',
@@ -289,14 +291,10 @@ class MrpProduction(models.Model):
                         ('product_id','=',False),
         ('type', '=', 'normal')]""",
         check_company=True,
-        compute="_compute_bom_id",
-        store=True,
-        precompute=True,
-        help="Bills of Materials, also called recipes, are used to autocomplete components and work order instructions.",
     )
 
     state = fields.Selection(
-        [
+        selection=[
             ("draft", "Draft"),
             ("confirmed", "Confirmed"),
             ("progress", "In Progress"),
@@ -304,202 +302,224 @@ class MrpProduction(models.Model):
             ("done", "Done"),
             ("cancel", "Cancelled"),
         ],
-        compute="_compute_state",
-        copy=False,
-        index=True,
-        readonly=True,
-        store=True,
-        tracking=True,
         help=" * Draft: The MO is not confirmed yet.\n"
         " * Confirmed: The MO is confirmed, the stock rules and the reordering of the components are trigerred.\n"
         " * In Progress: The production has started (on the MO or on the WO).\n"
         " * To Close: The production is done, the MO has to be closed.\n"
         " * Done: The MO is closed, the stock moves are posted. \n"
         " * Cancelled: The MO has been cancelled, can't be confirmed anymore.",
+        compute="_compute_state",
+        store=True,
+        index=True,
+        copy=False,
+        readonly=True,
+        tracking=True,
     )
     reservation_state = fields.Selection(
-        [
+        selection=[
             ("confirmed", "Waiting"),
             ("assigned", "Ready"),
             ("waiting", "Waiting Another Operation"),
         ],
         string="MO Readiness",
-        compute="_compute_reservation_state",
-        copy=False,
-        index=True,
-        readonly=True,
-        store=True,
-        tracking=True,
         help="Manufacturing readiness for this MO, as per bill of material configuration:\n\
             * Ready: The material is available to start the production.\n\
             * Waiting: The material is not available to start the production.\n",
+        compute="_compute_reservation_state",
+        store=True,
+        index=True,
+        copy=False,
+        readonly=True,
+        tracking=True,
     )
 
     move_raw_ids = fields.One2many(
-        "stock.move",
-        "raw_material_production_id",
-        "Components",
+        comodel_name="stock.move",
+        inverse_name="raw_material_production_id",
+        string="Components",
         compute="_compute_move_raw_ids",
         store=True,
-        readonly=False,
         copy=False,
+        readonly=False,
         domain=_NON_INVENTORY_MOVE_DOMAIN,
     )
     move_finished_ids = fields.One2many(
-        "stock.move",
-        "production_id",
-        "Finished Products",
-        readonly=False,
+        comodel_name="stock.move",
+        inverse_name="production_id",
+        string="Finished Products",
         compute="_compute_move_finished_ids",
         store=True,
         copy=False,
+        readonly=False,
         domain=_NON_INVENTORY_MOVE_DOMAIN,
     )
-    all_move_raw_ids = fields.One2many("stock.move", "raw_material_production_id")
-    all_move_ids = fields.One2many("stock.move", "production_id")
+    all_move_raw_ids = fields.One2many(
+        comodel_name="stock.move",
+        inverse_name="raw_material_production_id",
+    )
+    all_move_ids = fields.One2many(
+        comodel_name="stock.move",
+        inverse_name="production_id",
+    )
     move_byproduct_ids = fields.One2many(
-        "stock.move",
+        comodel_name="stock.move",
         compute="_compute_move_byproduct_ids",
         inverse="_inverse_move_byproduct_ids",
     )
     finished_move_line_ids = fields.One2many(
-        "stock.move.line",
+        comodel_name="stock.move.line",
+        string="Finished Product",
         compute="_compute_finished_move_line_ids",
         inverse="_inverse_finished_move_line_ids",
-        string="Finished Product",
     )
     workorder_ids = fields.One2many(
-        "mrp.workorder",
-        "production_id",
-        "Work Orders",
-        copy=True,
+        comodel_name="mrp.workorder",
+        inverse_name="production_id",
+        string="Work Orders",
         compute="_compute_workorder_ids",
         store=True,
+        copy=True,
         readonly=False,
     )
     move_dest_ids = fields.One2many(
-        "stock.move",
-        "created_production_id",
+        comodel_name="stock.move",
+        inverse_name="created_production_id",
         string="Stock Movements of Produced Goods",
     )
 
     unreserve_visible = fields.Boolean(
-        "Allowed to Unreserve Production",
-        compute="_compute_reservation_visibility",
+        string="Allowed to Unreserve Production",
         help="Technical field to check when we can unreserve",
+        compute="_compute_reservation_visibility",
     )
     reserve_visible = fields.Boolean(
-        "Allowed to Reserve Production",
-        compute="_compute_reservation_visibility",
+        string="Allowed to Reserve Production",
         help="Technical field to check when we can reserve quantities",
+        compute="_compute_reservation_visibility",
     )
     user_id = fields.Many2one(
-        "res.users",
-        "Responsible",
+        comodel_name="res.users",
+        string="Responsible",
         default=lambda self: self.env.user,
         domain=lambda self: [
             ("all_group_ids", "in", self.env.ref("mrp.group_mrp_user").id)
         ],
     )
     company_id = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
         default=lambda self: self.env.company,
         index=True,
         required=True,
     )
 
     qty_produced = fields.Float(
-        compute="_compute_qty_produced",
         string="Quantity Produced",
+        compute="_compute_qty_produced",
     )
     reference_ids = fields.Many2many(
-        "stock.reference",
-        "stock_reference_production_rel",
-        "production_id",
-        "reference_id",
-        "References",
+        comodel_name="stock.reference",
+        relation="stock_reference_production_rel",
+        column1="production_id",
+        column2="reference_id",
+        string="References",
         copy=False,
     )
-    product_description_variants = fields.Char("Custom Description")
+    product_description_variants = fields.Char(string="Custom Description")
     orderpoint_id = fields.Many2one(
-        "stock.warehouse.orderpoint",
-        copy=False,
+        comodel_name="stock.warehouse.orderpoint",
         index="btree_not_null",
+        copy=False,
     )
     propagate_cancel = fields.Boolean(
-        "Propagate cancel and split",
+        string="Propagate cancel and split",
         help="If checked, when the previous move of the move (which was generated by a next procurement) is cancelled or split, the move generated by this move will too",
     )
     date_delay_alert = fields.Datetime(
-        "Delay Alert Date",
+        string="Delay Alert Date",
         compute="_compute_date_delay_alert",
         store=True,
     )
     json_popover = fields.Char(
-        "JSON data for the popover widget",
+        string="JSON data for the popover widget",
         compute="_compute_json_popover",
     )
-    scrap_ids = fields.One2many("stock.scrap", "production_id", "Scraps")
-    scrap_count = fields.Integer(
-        compute="_compute_scrap_count",
-        string="Scrap Move",
+    scrap_ids = fields.One2many(
+        comodel_name="stock.scrap",
+        inverse_name="production_id",
+        string="Scraps",
     )
-    unbuild_ids = fields.One2many("mrp.unbuild", "mo_id", "Unbuilds")
-    unbuild_count = fields.Count("unbuild_ids", string="Number of Unbuilds")
-    is_locked = fields.Boolean(default=_default_is_locked, copy=False)
+    scrap_count = fields.Integer(
+        string="Scrap Move",
+        compute="_compute_scrap_count",
+    )
+    unbuild_ids = fields.One2many(
+        comodel_name="mrp.unbuild",
+        inverse_name="mo_id",
+        string="Unbuilds",
+    )
+    unbuild_count = fields.Count(
+        count_of="unbuild_ids",
+        string="Number of Unbuilds",
+    )
+    is_locked = fields.Boolean(
+        default=_default_is_locked,
+        copy=False,
+    )
     is_planned = fields.Boolean(
-        "Its Operations are Planned",
+        string="Its Operations are Planned",
         compute="_compute_is_planned",
         store=True,
     )
 
-    show_final_lots = fields.Boolean(
-        compute="_compute_show_final_lots",
-    )
+    show_final_lots = fields.Boolean(compute="_compute_show_final_lots")
     production_location_id = fields.Many2one(
-        "stock.location",
+        comodel_name="stock.location",
         compute="_compute_production_location_id",
         store=True,
     )
     picking_ids = fields.Many2many(
-        "stock.picking",
-        compute="_compute_picking_ids",
+        comodel_name="stock.picking",
         string="Picking associated to this manufacturing order",
+        compute="_compute_picking_ids",
     )
-    count_transfer_outgoing = fields.Count("picking_ids", string="Delivery Orders")
+    count_transfer_outgoing = fields.Count(
+        count_of="picking_ids",
+        string="Delivery Orders",
+    )
     consumption = fields.Selection(
-        [
+        selection=[
             ("flexible", "Allowed"),
             ("warning", "Allowed with warning"),
             ("strict", "Blocked"),
         ],
-        required=True,
-        readonly=True,
         default="flexible",
+        readonly=True,
+        required=True,
     )
 
     mrp_production_child_count = fields.Integer(
-        "Number of generated MO",
+        string="Number of generated MO",
         compute="_compute_mrp_production_child_count",
     )
     mrp_production_source_count = fields.Integer(
-        "Number of source MO",
+        string="Number of source MO",
         compute="_compute_mrp_production_source_count",
     )
     mrp_production_backorder_count = fields.Integer(
-        "Count of linked backorder", compute="_compute_mrp_production_backorder_count"
+        string="Count of linked backorder",
+        compute="_compute_mrp_production_backorder_count",
     )
     show_lock = fields.Boolean(
-        "Show Lock/unlock buttons",
+        string="Show Lock/unlock buttons",
         compute="_compute_show_lock",
     )
     components_availability = fields.Char(
         string="Component Status",
-        compute="_compute_component_availability",
         help="Latest component availability status for this MO. If green, then the MO's readiness status is ready, as per BOM configuration.",
+        compute="_compute_component_availability",
     )
     components_availability_state = fields.Selection(
-        [
+        selection=[
             ("available", "Available"),
             ("expected", "Expected"),
             ("late", "Late"),
@@ -509,42 +529,43 @@ class MrpProduction(models.Model):
         search="_search_components_availability_state",
     )
     production_capacity = fields.Float(
-        compute="_compute_production_capacity",
         help="Quantity that can be produced with the current stock of components",
+        compute="_compute_production_capacity",
     )
     show_lot_ids = fields.Boolean(
-        "Display the serial number shortcut on the moves",
+        string="Display the serial number shortcut on the moves",
         compute="_compute_show_lot_ids",
     )
-    forecasted_issue = fields.Boolean(
-        compute="_compute_forecasted_issue",
-    )
+    forecasted_issue = fields.Boolean(compute="_compute_forecasted_issue")
     show_allocation = fields.Boolean(
-        compute="_compute_show_allocation",
         help='Technical Field used to decide whether the button "Allocation" should be displayed.',
+        compute="_compute_show_allocation",
     )
-    allow_workorder_dependencies = fields.Boolean("Allow Work Order Dependencies")
+    allow_workorder_dependencies = fields.Boolean(
+        string="Allow Work Order Dependencies"
+    )
     show_produce = fields.Boolean(
-        compute="_compute_produce_visibility",
         help="Technical field to check if produce button can be shown",
+        compute="_compute_produce_visibility",
     )
     show_generate_bom = fields.Boolean(
-        "Show Generate BOM",
+        string="Show Generate BOM",
         compute="_compute_show_generate_bom",
     )
     show_produce_all = fields.Boolean(
-        compute="_compute_produce_visibility",
         help="Technical field to check if produce all button can be shown",
+        compute="_compute_produce_visibility",
     )
     is_outdated_bom = fields.Boolean(
-        "Outdated BoM", help="The BoM has been updated since creation of the MO"
+        string="Outdated BoM",
+        help="The BoM has been updated since creation of the MO",
     )
     is_delayed = fields.Boolean(
         compute="_compute_is_delayed",
         search="_search_is_delayed",
     )
     serial_numbers_count = fields.Integer(
-        "Count of serial numbers",
+        string="Count of serial numbers",
         compute="_compute_serial_numbers_count",
     )
 

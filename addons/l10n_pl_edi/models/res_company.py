@@ -9,30 +9,42 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     l10n_pl_edi_register = fields.Boolean(
-        "KSeF Integration Enabled",
+        string="KSeF Integration Enabled",
         compute="_compute_l10n_pl_edi_register",
         compute_sudo=True,
     )
     l10n_pl_edi_certificate = fields.Many2one(
-        "certificate.certificate",
-        "KSeF Certificate",
+        comodel_name="certificate.certificate",
+        string="KSeF Certificate",
         store=True,
         groups="base.group_system",
     )
     l10n_pl_edi_access_token = fields.Char(
-        "KSeF Token", readonly=True, copy=False, groups="base.group_system"
+        string="KSeF Token",
+        copy=False,
+        readonly=True,
+        groups="base.group_system",
     )
     l10n_pl_edi_refresh_token = fields.Char(
-        "KSeF Token Expiration", readonly=True, copy=False, groups="base.group_system"
+        string="KSeF Token Expiration",
+        copy=False,
+        readonly=True,
+        groups="base.group_system",
     )
     l10n_pl_edi_session_id = fields.Char(
-        "Reference number", readonly=True, groups="base.group_system"
+        string="Reference number",
+        readonly=True,
+        groups="base.group_system",
     )
     l10n_pl_edi_session_key = fields.Binary(
-        "Session key", readonly=True, groups="base.group_system"
+        string="Session key",
+        readonly=True,
+        groups="base.group_system",
     )
     l10n_pl_edi_session_iv = fields.Binary(
-        "Session iv", readonly=True, groups="base.group_system"
+        string="Session iv",
+        readonly=True,
+        groups="base.group_system",
     )
 
     @api.depends("l10n_pl_edi_certificate")

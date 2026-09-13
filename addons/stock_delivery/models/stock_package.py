@@ -31,22 +31,22 @@ class StockPackage(models.Model):
         self.weight_uom_rounding = uom_id.rounding
 
     weight = fields.Float(
-        compute="_compute_weight",
-        digits="Stock Weight",
         help="Total weight of all the products contained in the package.",
+        digits="Stock Weight",
+        compute="_compute_weight",
     )
     weight_uom_name = fields.Char(
         string="Weight unit of measure label",
         compute="_compute_weight_uom_name",
-        readonly=True,
         default=_default_weight_uom_name,
+        readonly=True,
     )
     weight_is_kg = fields.Boolean(
-        "Technical field indicating whether weight uom is kg or not (i.e. lb)",
+        string="Technical field indicating whether weight uom is kg or not (i.e. lb)",
         compute="_compute_weight_uom_info",
     )
     weight_uom_rounding = fields.Float(
-        "Technical field indicating weight's number of decimal places",
+        string="Technical field indicating weight's number of decimal places",
         compute="_compute_weight_uom_info",
     )
     package_carrier_type = fields.Selection(

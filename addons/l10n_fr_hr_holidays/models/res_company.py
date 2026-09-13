@@ -6,7 +6,8 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     l10n_fr_reference_leave_type = fields.Many2one(
-        "hr.leave.type", string="Company Paid Time Off Type"
+        comodel_name="hr.leave.type",
+        string="Company Paid Time Off Type",
     )
 
     def _get_fr_reference_leave_type(self):

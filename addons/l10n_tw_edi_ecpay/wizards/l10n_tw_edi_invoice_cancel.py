@@ -9,8 +9,8 @@ class L10nTwEDIInvoiceCancel(models.TransientModel):
     invoice_id = fields.Many2one(
         comodel_name="account.move",
         string="Document To Cancel",
-        required=True,
         readonly=True,
+        required=True,
     )
     reason = fields.Char(
         help="Reason for cancelling the document.",

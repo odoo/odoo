@@ -5,23 +5,24 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     l10n_bg_document_type = fields.Selection(
-        string="Document Type (BG)",
         selection="_selection_l10n_bg_document_types",
+        string="Document Type (BG)",
         compute="_compute_l10n_bg_document_type",
-        readonly=False,
         store=True,
         copy=False,
+        readonly=False,
     )
     l10n_bg_document_number = fields.Char(
-        string="Document Number (BG)", compute="_compute_l10n_bg_document_number"
+        string="Document Number (BG)",
+        compute="_compute_l10n_bg_document_number",
     )
     l10n_bg_exemption_reason = fields.Selection(
-        string="Exemption reason (BG)",
         selection=[
             ("01", "01 - A delivery under Part 1 of Appendix 2 of LVAT"),
             ("02", "02 - A delivery under Part 2 of Appendix 2 of LVAT"),
             ("03", "03 - Import under Appendix 3 of VAT act"),
         ],
+        string="Exemption reason (BG)",
     )
 
     def _selection_l10n_bg_document_types(self):

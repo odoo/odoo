@@ -5,14 +5,14 @@ class PosConfig(models.Model):
     _inherit = "pos.config"
 
     crm_team_id = fields.Many2one(
-        "crm.team",
+        comodel_name="crm.team",
         string="Sales Team",
-        ondelete="set null",
-        index="btree_not_null",
         help="This Point of sale's sales will be related to this Sales Team.",
+        index="btree_not_null",
+        ondelete="set null",
     )
     down_payment_product_id = fields.Many2one(
-        "product.product",
+        comodel_name="product.product",
         help="This product will be used as down payment on a sale order.",
     )
 

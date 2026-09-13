@@ -8,14 +8,14 @@ class SlideChannelPartner(models.Model):
     _inherit = "slide.channel.partner"
 
     nbr_certification = fields.Integer(related="channel_id.nbr_certification")
-    survey_certification_success = fields.Boolean("Certified")
+    survey_certification_success = fields.Boolean(string="Certified")
 
 
 class SlideChannel(models.Model):
     _inherit = "slide.channel"
 
     members_certified_count = fields.Integer(
-        "# Certified Attendees",
+        string="# Certified Attendees",
         compute="_compute_members_certified_count",
     )
 

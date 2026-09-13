@@ -15,45 +15,48 @@ class ResourceCalendarLeaves(models.Model):
     _order = "date_from"
     _check_company_auto = True
 
-    name = fields.Char("Reason")
+    name = fields.Char(string="Reason")
     company_id = fields.Many2one(
-        "res.company",
-        readonly=True,
-        default=lambda self: self.env.company,
+        comodel_name="res.company",
         compute="_compute_company_id",
+        default=lambda self: self.env.company,
         store=True,
+        readonly=True,
     )
     calendar_id = fields.Many2one(
-        "resource.calendar",
-        "Working Hours",
+        comodel_name="resource.calendar",
+        string="Working Hours",
         compute="_compute_calendar_id",
         store=True,
+        index=True,
         readonly=False,
         domain="[('company_id', 'in', [company_id, False])]",
-        check_company=True,
-        index=True,
         ondelete="cascade",
+        check_company=True,
     )
     resource_id = fields.Many2one(
-        "resource.resource",
-        index=True,
-        check_company=True,
-        ondelete="cascade",
+        comodel_name="resource.resource",
         help="If empty, this is a generic time off for the company. If a resource is set, the time off is only for this resource",
+        index=True,
+        ondelete="cascade",
+        check_company=True,
     )
     time_type = fields.Selection(
-        [("leave", "Time Off"), ("other", "Other")],
-        default="leave",
+        selection=[("leave", "Time Off"), ("other", "Other")],
         help="Whether this should be computed as a time off or as work time (eg: formation)",
+        default="leave",
     )
-    date_from = fields.Datetime("Start Date", required=True)
+    date_from = fields.Datetime(
+        string="Start Date",
+        required=True,
+    )
     date_to = fields.Datetime(
-        "End Date",
+        string="End Date",
         compute="_compute_date_to",
+        precompute=True,
+        store=True,
         readonly=False,
         required=True,
-        store=True,
-        precompute=True,
     )
 
     @api.constrains("date_from", "date_to")

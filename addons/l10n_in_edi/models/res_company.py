@@ -13,16 +13,20 @@ class ResCompany(models.Model):
     # E-Invoice fields
     l10n_in_edi_feature = fields.Boolean(string="Indian E-Invoicing")
     l10n_in_edi_username = fields.Char(
-        string="E-invoice (IN) Username", groups="base.group_system"
+        string="E-invoice (IN) Username",
+        groups="base.group_system",
     )
     l10n_in_edi_password = fields.Char(
-        string="E-invoice (IN) Password", groups="base.group_system"
+        string="E-invoice (IN) Password",
+        groups="base.group_system",
     )
     l10n_in_edi_token = fields.Char(
-        string="E-invoice (IN) Token", groups="base.group_system"
+        string="E-invoice (IN) Token",
+        groups="base.group_system",
     )
     l10n_in_edi_token_validity = fields.Datetime(
-        string="E-invoice (IN) Valid Until", groups="base.group_system"
+        string="E-invoice (IN) Valid Until",
+        groups="base.group_system",
     )
 
     # E-Invoice Business Methods

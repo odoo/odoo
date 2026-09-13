@@ -8,24 +8,25 @@ class UtmCampaign(models.Model):
     _inherit = "utm.campaign"
 
     mailing_sms_ids = fields.One2many(
-        "mailing.mailing",
-        "campaign_id",
-        domain=[("mailing_type", "=", "sms")],
+        comodel_name="mailing.mailing",
+        inverse_name="campaign_id",
         string="Mass SMS",
+        domain=[("mailing_type", "=", "sms")],
         groups="mass_mailing.group_mass_mailing_user",
     )
     mailing_sms_count = fields.Integer(
-        "Number of Mass SMS",
+        string="Number of Mass SMS",
         compute="_compute_mailing_sms_count",
         groups="mass_mailing.group_mass_mailing_user",
     )
 
     # A/B Testing
     ab_testing_mailings_sms_count = fields.Integer(
-        "A/B Test Mailings SMS #", compute="_compute_mailing_sms_count"
+        string="A/B Test Mailings SMS #",
+        compute="_compute_mailing_sms_count",
     )
     ab_testing_sms_winner_selection = fields.Selection(
-        [("manual", "Manual"), ("clicks_ratio", "Highest Click Rate")],
+        selection=[("manual", "Manual"), ("clicks_ratio", "Highest Click Rate")],
         string="SMS Winner Selection",
         default="clicks_ratio",
     )

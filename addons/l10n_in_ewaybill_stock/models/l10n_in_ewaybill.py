@@ -10,19 +10,24 @@ class L10nInEwaybill(models.Model):
     _check_company_auto = True
 
     state = fields.Selection(
-        selection_add=[("challan", "Challan")], ondelete={"challan": "cascade"}
+        selection_add=[("challan", "Challan")],
+        ondelete={"challan": "cascade"},
     )
     type_description = fields.Char(string="Description")
 
     # Stock picking details
-    picking_id = fields.Many2one("stock.picking", "Stock Transfer", copy=False)
+    picking_id = fields.Many2one(
+        comodel_name="stock.picking",
+        string="Stock Transfer",
+        copy=False,
+    )
     move_ids = fields.One2many(related="picking_id.move_ids")
     fiscal_position_id = fields.Many2one(
         comodel_name="account.fiscal.position",
         compute="_compute_fiscal_position_id",
-        check_company=True,
         store=True,
         readonly=False,
+        check_company=True,
     )
 
     @api.depends("name", "state")

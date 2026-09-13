@@ -29,8 +29,8 @@ class MixinOrderLineStockMatch(models.AbstractModel):
         readonly=True,
     )
     product_uom_id = fields.Many2one(
-        related="product_id.uom_id",
         comodel_name="uom.uom",
+        related="product_id.uom_id",
     )
 
     order_line_id = fields.Many2one(
@@ -50,49 +50,33 @@ class MixinOrderLineStockMatch(models.AbstractModel):
         readonly=True,
     )
 
-    state = fields.Char(
-        readonly=True,
-    )
-    transfer_state = fields.Char(
-        readonly=True,
-    )
-    reference = fields.Char(
-        compute="_compute_reference",
-    )
+    state = fields.Char(readonly=True)
+    transfer_state = fields.Char(readonly=True)
+    reference = fields.Char(compute="_compute_reference")
 
     line_uom_id = fields.Many2one(
         comodel_name="uom.uom",
         readonly=True,
     )
-    line_qty = fields.Float(
-        readonly=True,
-    )
-    qty_transferred = fields.Float(
-        readonly=True,
-    )
+    line_qty = fields.Float(readonly=True)
+    qty_transferred = fields.Float(readonly=True)
     qty_to_transfer = fields.Float(
         string="Qty to transfer",
         readonly=True,
     )
     product_uom_qty = fields.Float(
         compute="_compute_product_uom_qty",
-        readonly=False,
         inverse="_inverse_product_uom_qty",
+        readonly=False,
     )
 
-    date_expected = fields.Datetime(
-        readonly=True,
-    )
+    date_expected = fields.Datetime(readonly=True)
     lot_ids = fields.Many2many(
         comodel_name="stock.lot",
         compute="_compute_lot_ids",
     )
-    transferred_qty = fields.Float(
-        compute="_compute_side_quantities",
-    )
-    ordered_qty = fields.Float(
-        compute="_compute_side_quantities",
-    )
+    transferred_qty = fields.Float(compute="_compute_side_quantities")
+    ordered_qty = fields.Float(compute="_compute_side_quantities")
 
     def _compute_side_quantities(self):
         for line in self:

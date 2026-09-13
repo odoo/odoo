@@ -10,10 +10,17 @@ class EventLeadRequest(models.Model):
 
     _REGISTRATIONS_BATCH_SIZE = 200
 
-    event_id = fields.Many2one("event.event", required=True, ondelete="cascade")
-    event_lead_rule_ids = fields.Many2many("event.lead.rule", string="Lead Rules")
+    event_id = fields.Many2one(
+        comodel_name="event.event",
+        required=True,
+        ondelete="cascade",
+    )
+    event_lead_rule_ids = fields.Many2many(
+        comodel_name="event.lead.rule",
+        string="Lead Rules",
+    )
     processed_registration_id = fields.Integer(
-        help="The ID of the last processed event.registration, used to know where to resume.",
+        help="The ID of the last processed event.registration, used to know where to resume."
     )
 
     _uniq_event = models.Constraint(

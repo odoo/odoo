@@ -11,7 +11,11 @@ class ProjectTaskRecurrence(models.Model):
     _description = "Task Recurrence"
     _inherit = ["mixin.recurrence.rule"]
 
-    task_ids = fields.One2many("project.task", "recurrence_id", copy=False)
+    task_ids = fields.One2many(
+        comodel_name="project.task",
+        inverse_name="recurrence_id",
+        copy=False,
+    )
 
     repeat_until = fields.Date(string="End Date")
 

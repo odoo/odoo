@@ -10,10 +10,10 @@ class ResCity(models.Model):
     _rec_names_search = ["name", "zipcode"]
 
     name = fields.Char(
-        required=True,
         translate=True,
+        required=True,
     )
-    zipcode = fields.Char("Zip")
+    zipcode = fields.Char(string="Zip")
     country_id = fields.Many2one(
         comodel_name="res.country",
         required=True,

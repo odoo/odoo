@@ -5,9 +5,9 @@ class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
 
     subcontracting_resupply_picking_count = fields.Integer(
-        "Count of Subcontracting Resupply",
-        compute="_compute_subcontracting_resupply_picking_count",
+        string="Count of Subcontracting Resupply",
         help="Count of Subcontracting Resupply for component",
+        compute="_compute_subcontracting_resupply_picking_count",
     )
 
     @api.depends("line_ids.move_ids")

@@ -7,14 +7,17 @@ class PrivacyLog(models.Model):
     _description = "Privacy Log"
     _rec_name = "user_id"
 
-    date = fields.Datetime(default=fields.Datetime.now, required=True)
+    date = fields.Datetime(
+        default=fields.Datetime.now,
+        required=True,
+    )
     anonymized_name = fields.Char(required=True)
     anonymized_email = fields.Char(required=True)
     user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Handled By",
-        required=True,
         default=lambda self: self.env.user,
+        required=True,
     )
     execution_details = fields.Text()
     records_description = fields.Text(string="Found Records")

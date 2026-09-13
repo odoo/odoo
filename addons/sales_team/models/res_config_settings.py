@@ -5,5 +5,6 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     is_membership_multi = fields.Boolean(
-        string="Multi Teams", config_parameter="sales_team.membership_multi"
+        string="Multi Teams",
+        config_parameter="sales_team.membership_multi",
     )

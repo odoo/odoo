@@ -7,13 +7,14 @@ class ProjectTask(models.Model):
     _inherit = "project.task"
 
     leave_types_count = fields.Integer(
-        compute="_compute_leave_types_count", string="Time Off Types Count"
+        string="Time Off Types Count",
+        compute="_compute_leave_types_count",
     )
     is_timeoff_task = fields.Boolean(
-        "Is Time off Task",
+        string="Is Time off Task",
+        export_string_translation=False,
         compute="_compute_is_timeoff_task",
         search="_search_is_timeoff_task",
-        export_string_translation=False,
         groups="hr_timesheet.group_hr_timesheet_user",
     )
 

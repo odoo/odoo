@@ -18,9 +18,10 @@ class MixinMailThread(models.AbstractModel):
     _mail_post_token_field = "access_token"
 
     website_message_ids = fields.One2many(
-        "mail.message",
-        "res_id",
+        comodel_name="mail.message",
+        inverse_name="res_id",
         string="Portal Messages",
+        help="Portal communication history for this record.",
         domain=lambda self: [
             ("model", "=", self._name),
             (
@@ -30,7 +31,6 @@ class MixinMailThread(models.AbstractModel):
             ),
         ],
         bypass_search_access=True,
-        help="Portal communication history for this record.",
     )
 
     def _get_domain_portal_message_fetch(self, message_domain=None):

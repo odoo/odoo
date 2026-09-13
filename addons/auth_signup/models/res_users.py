@@ -18,10 +18,10 @@ class ResUsers(models.Model):
     _inherit = "res.users"
 
     state = fields.Selection(
+        selection=[("new", "Invited"), ("active", "Confirmed")],
+        string="Status",
         compute="_compute_state",
         search="_search_state",
-        string="Status",
-        selection=[("new", "Invited"), ("active", "Confirmed")],
     )
 
     def _search_state(self, operator, value):

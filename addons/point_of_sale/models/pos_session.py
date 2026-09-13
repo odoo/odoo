@@ -56,105 +56,142 @@ class PosSession(models.Model):
     )
 
     company_id = fields.Many2one(
-        "res.company", related="config_id.company_id", string="Company", readonly=True
+        comodel_name="res.company",
+        related="config_id.company_id",
+        string="Company",
+        readonly=True,
     )
 
     config_id = fields.Many2one(
-        "pos.config", string="Point of Sale", required=True, index=True
-    )
-    name = fields.Char(string="Session ID", readonly=True, default="/")
-    user_id = fields.Many2one(
-        "res.users",
-        string="Opened By",
+        comodel_name="pos.config",
+        string="Point of Sale",
+        index=True,
         required=True,
+    )
+    name = fields.Char(
+        string="Session ID",
+        default="/",
+        readonly=True,
+    )
+    user_id = fields.Many2one(
+        comodel_name="res.users",
+        string="Opened By",
+        default=lambda self: self.env.uid,
         index=True,
         readonly=False,
-        default=lambda self: self.env.uid,
+        required=True,
         ondelete="restrict",
     )
     currency_id = fields.Many2one(
-        "res.currency",
+        comodel_name="res.currency",
         related="config_id.currency_id",
         string="Currency",
         readonly=False,
     )
-    start_at = fields.Datetime(string="Opening Date", readonly=True)
-    stop_at = fields.Datetime(string="Closing Date", readonly=True, copy=False)
+    start_at = fields.Datetime(
+        string="Opening Date",
+        readonly=True,
+    )
+    stop_at = fields.Datetime(
+        string="Closing Date",
+        copy=False,
+        readonly=True,
+    )
 
     state = fields.Selection(
-        POS_SESSION_STATE,
+        selection=POS_SESSION_STATE,
         string="Status",
-        required=True,
-        readonly=True,
+        default="opening_control",
         index=True,
         copy=False,
-        default="opening_control",
+        readonly=True,
+        required=True,
     )
 
     opening_notes = fields.Text()
     closing_notes = fields.Text()
     cash_control = fields.Boolean(
-        compute="_compute_cash_control", string="Has Cash Control"
+        string="Has Cash Control",
+        compute="_compute_cash_control",
     )
     cash_journal_id = fields.Many2one(
-        "account.journal",
+        comodel_name="account.journal",
         compute="_compute_cash_journal_id",
         store=True,
     )
 
     cash_register_balance_end_real = fields.Monetary(
-        string="Ending Balance", readonly=True
+        string="Ending Balance",
+        readonly=True,
     )
     cash_register_balance_start = fields.Monetary(
-        string="Starting Balance", readonly=True
+        string="Starting Balance",
+        readonly=True,
     )
     cash_register_balance_end = fields.Monetary(
-        compute="_compute_cash_balance",
         string="Theoretical Closing Balance",
         help="Opening balance summed to all cash transactions.",
+        compute="_compute_cash_balance",
         readonly=True,
     )
     cash_register_difference = fields.Monetary(
-        compute="_compute_cash_balance",
         string="Before Closing Difference",
         help="Difference between the theoretical closing balance and the real closing balance.",
+        compute="_compute_cash_balance",
         readonly=True,
     )
 
-    cash_real_transaction = fields.Monetary(string="Transaction", readonly=True)
+    cash_real_transaction = fields.Monetary(
+        string="Transaction",
+        readonly=True,
+    )
 
-    order_ids = fields.One2many("pos.order", "session_id", string="Orders")
+    order_ids = fields.One2many(
+        comodel_name="pos.order",
+        inverse_name="session_id",
+        string="Orders",
+    )
     order_count = fields.Integer(compute="_compute_order_count")
     statement_line_ids = fields.One2many(
-        "account.bank.statement.line",
-        "pos_session_id",
+        comodel_name="account.bank.statement.line",
+        inverse_name="pos_session_id",
         string="Cash Lines",
         readonly=True,
     )
     failed_pickings = fields.Boolean(compute="_compute_pickings")
     picking_count = fields.Integer(compute="_compute_pickings")
-    picking_ids = fields.One2many("stock.picking", "pos_session_id")
+    picking_ids = fields.One2many(
+        comodel_name="stock.picking",
+        inverse_name="pos_session_id",
+    )
     rescue = fields.Boolean(
         string="Recovery Session",
         help="Auto-generated session for orphan orders, ignored in constraints",
-        readonly=True,
         copy=False,
+        readonly=True,
     )
-    move_id = fields.Many2one("account.move", string="Journal Entry", index=True)
+    move_id = fields.Many2one(
+        comodel_name="account.move",
+        string="Journal Entry",
+        index=True,
+    )
     payment_method_ids = fields.Many2many(
-        "pos.payment.method",
+        comodel_name="pos.payment.method",
         related="config_id.payment_method_ids",
         string="Payment Methods",
     )
     total_payments_amount = fields.Float(compute="_compute_total_payments_amount")
     is_in_company_currency = fields.Boolean(
-        "Is Using Company Currency", compute="_compute_is_in_company_currency"
+        string="Is Using Company Currency",
+        compute="_compute_is_in_company_currency",
     )
-    update_stock_at_closing = fields.Boolean("Stock should be updated at closing")
+    update_stock_at_closing = fields.Boolean(
+        string="Stock should be updated at closing"
+    )
     bank_payment_ids = fields.One2many(
-        "account.payment",
-        "pos_session_id",
-        "Bank Payments",
+        comodel_name="account.payment",
+        inverse_name="pos_session_id",
+        string="Bank Payments",
         help="Account payments representing aggregated and bank split payments.",
     )
 

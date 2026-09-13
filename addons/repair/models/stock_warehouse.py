@@ -6,9 +6,16 @@ class StockWarehouse(models.Model):
     _inherit = "stock.warehouse"
 
     repair_type_id = fields.Many2one(
-        "stock.picking.type", "Repair Operation Type", check_company=True, copy=False
+        comodel_name="stock.picking.type",
+        string="Repair Operation Type",
+        copy=False,
+        check_company=True,
     )
-    repair_mto_pull_id = fields.Many2one("stock.rule", "Repair MTO Rule", copy=False)
+    repair_mto_pull_id = fields.Many2one(
+        comodel_name="stock.rule",
+        string="Repair MTO Rule",
+        copy=False,
+    )
 
     def _get_picking_type_codes(self):
         codes = super()._get_picking_type_codes()

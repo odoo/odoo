@@ -8,7 +8,10 @@ class SmsAccountPhone(models.TransientModel):
     _name = "sms.account.phone"
     _description = "SMS Account Registration Phone Number Wizard"
 
-    account_id = fields.Many2one("iap.account", required=True)
+    account_id = fields.Many2one(
+        comodel_name="iap.account",
+        required=True,
+    )
     phone_number = fields.Char(required=True)
 
     def action_send_verification_code(self):

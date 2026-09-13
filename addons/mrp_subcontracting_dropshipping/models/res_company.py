@@ -4,7 +4,9 @@ from odoo import api, fields, models
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    dropship_subcontractor_pick_type_id = fields.Many2one("stock.picking.type")
+    dropship_subcontractor_pick_type_id = fields.Many2one(
+        comodel_name="stock.picking.type"
+    )
 
     def _create_subcontracting_dropshipping_sequence(self):
         seq_vals = [

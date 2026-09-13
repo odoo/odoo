@@ -18,19 +18,19 @@ class AccountTaxGroup(models.Model):
 
     tax_payable_account_id = fields.Many2one(
         comodel_name="account.account",
-        check_company=True,
         help="Tax current account used as a counterpart to the Tax Closing Entry when in favor of the authorities.",
+        check_company=True,
     )
     tax_receivable_account_id = fields.Many2one(
         comodel_name="account.account",
-        check_company=True,
         help="Tax current account used as a counterpart to the Tax Closing Entry when in favor of the company.",
+        check_company=True,
     )
     advance_tax_payment_account_id = fields.Many2one(
         comodel_name="account.account",
-        check_company=True,
         string="Tax Advance Account",
         help="Downpayments posted on this account will be considered by the Tax Closing Entry.",
+        check_company=True,
     )
 
 
@@ -50,26 +50,27 @@ class AccountTax(models.Model):
         column1="dest_tax_id",
         column2="src_tax_id",
         string="Replaces",
+        help="List of taxes to replace when applying any of the stipulated fiscal positions.",
         domain="""[
             ('type_tax_use', '=', type_tax_use),
             ('is_domestic', '=', True),
         ]""",
         ondelete="cascade",
-        help="List of taxes to replace when applying any of the stipulated fiscal positions.",
     )
     replacing_tax_ids = fields.Many2many(
         comodel_name="account.tax",
         relation="account_tax_alternatives",
         column1="src_tax_id",
         column2="dest_tax_id",
-        readonly=True,
         string="Replaced by",
+        readonly=True,
     )
     display_alternative_taxes_field = fields.Boolean(
         compute="_compute_display_alternative_taxes_field"
     )
     is_domestic = fields.Boolean(
-        compute="_compute_is_domestic", search="_search_is_domestic"
+        compute="_compute_is_domestic",
+        search="_search_is_domestic",
     )
     analytic = fields.Boolean(
         string="Include in Analytic Cost",
@@ -80,30 +81,33 @@ class AccountTax(models.Model):
         compute="_compute_hide_tax_exigibility",
     )
     tax_exigibility = fields.Selection(
-        [
+        selection=[
             ("on_invoice", "Based on Invoice"),
             ("on_payment", "Based on Payment"),
         ],
-        default="on_invoice",
         help="Based on Invoice: the tax is due as soon as the invoice is validated.\n"
         "Based on Payment: the tax is due as soon as the payment of the invoice is received.",
+        default="on_invoice",
     )
     cash_basis_transition_account_id = fields.Many2one(
         comodel_name="account.account",
-        check_company=True,
-        domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable'))]",
         help="Account used to transition the tax amount for cash basis taxes. It will contain the tax amount as long as the original invoice has not been reconciled ; at reconciliation, this amount cancelled on this account and put on the regular tax account.",
+        domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable'))]",
+        check_company=True,
     )
-    is_used = fields.Boolean(string="Tax used", compute="_compute_is_used")
+    is_used = fields.Boolean(
+        string="Tax used",
+        compute="_compute_is_used",
+    )
     repartition_lines_str = fields.Char(
         string="Repartition Lines",
-        tracking=True,
         compute="_compute_repartition_lines_str",
+        tracking=True,
     )
     invoice_legal_notes = fields.Html(
         string="Legal Notes",
-        translate=True,
         help="Legal mentions that have to be printed on the invoices.",
+        translate=True,
     )
 
     @api.constrains("tax_exigibility", "cash_basis_transition_account_id")
@@ -1306,23 +1310,23 @@ class AccountTaxRepartitionLine(models.Model):
 
     account_id = fields.Many2one(
         comodel_name="account.account",
+        help="Account on which to post the tax amount",
         domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]",
         check_company=True,
-        help="Account on which to post the tax amount",
     )
     tag_ids = fields.Many2many(
-        string="Tax Grids",
         comodel_name="account.account.tag",
-        domain=[("applicability", "=", "taxes")],
+        string="Tax Grids",
         copy=True,
+        domain=[("applicability", "=", "taxes")],
         ondelete="restrict",
     )
     use_in_tax_closing = fields.Boolean(
         string="Tax Closing Entry",
         compute="_compute_use_in_tax_closing",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
     )
     tag_ids_domain = fields.Binary(
         string="tag domain",

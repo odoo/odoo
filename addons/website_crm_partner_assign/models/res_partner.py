@@ -23,34 +23,39 @@ class ResPartner(models.Model):
         return default_vals
 
     partner_weight = fields.Integer(
-        "Level Weight",
-        compute="_compute_partner_weight",
-        readonly=False,
-        store=True,
-        tracking=True,
+        string="Level Weight",
         help="This should be a numerical value greater than 0 which will decide the contention for this partner to take this lead/opportunity.",
+        compute="_compute_partner_weight",
+        store=True,
+        readonly=False,
+        tracking=True,
     )
     grade_sequence = fields.Integer(
-        related="grade_id.sequence", readonly=True, store=True
+        related="grade_id.sequence",
+        store=True,
+        readonly=True,
     )
     activation = fields.Many2one(
-        "res.partner.activation", index="btree_not_null", tracking=True
+        comodel_name="res.partner.activation",
+        index="btree_not_null",
+        tracking=True,
     )
-    date_partnership = fields.Date("Partnership Date")
-    date_review = fields.Date("Latest Review")
-    date_review_next = fields.Date("Next Review")
+    date_partnership = fields.Date(string="Partnership Date")
+    date_review = fields.Date(string="Latest Review")
+    date_review_next = fields.Date(string="Next Review")
     assigned_partner_id = fields.Many2one(
-        "res.partner",
-        "Implemented by",
+        comodel_name="res.partner",
+        string="Implemented by",
         index="btree_not_null",
     )
     implemented_partner_ids = fields.One2many(
-        "res.partner",
-        "assigned_partner_id",
+        comodel_name="res.partner",
+        inverse_name="assigned_partner_id",
         string="Implementation References",
     )
     implemented_partner_count = fields.Integer(
-        compute="_compute_implemented_partner_count", store=True
+        compute="_compute_implemented_partner_count",
+        store=True,
     )
 
     @api.depends(

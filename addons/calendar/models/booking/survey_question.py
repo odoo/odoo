@@ -17,26 +17,26 @@ class SurveyQuestion(models.Model):
     _inherit = "survey.question"
 
     appointment_type_ids = fields.Many2many(
-        "appointment.type",
+        comodel_name="appointment.type",
         relation="appointment_type_survey_question_rel",
         column1="survey_question_id",
         column2="appointment_type_id",
         string="Appointment Types",
     )
     appointment_count = fields.Integer(
-        "# Appointments",
+        string="# Appointments",
         compute="_compute_appointment_count",
     )
     is_default = fields.Boolean(
-        "Default question",
+        string="Default question",
         help="Include by default in new appointment types.",
     )
     is_reusable = fields.Boolean(
+        help="Will appear in the list of available questions when adding one in any appointment. Always true for default questions.",
         compute="_compute_is_reusable",
         default=True,
         store=True,
         readonly=False,
-        help="Will appear in the list of available questions when adding one in any appointment. Always true for default questions.",
     )
     _check_default_question_is_reusable = models.Constraint(
         "CHECK(is_default IS DISTINCT FROM TRUE OR is_reusable IS TRUE)",

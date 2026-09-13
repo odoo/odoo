@@ -13,10 +13,12 @@ class ResUsersSettings(models.Model):
     _inherit = "res.users.settings"
 
     is_discuss_sidebar_category_channel_open = fields.Boolean(
-        string="Is discuss sidebar category channel open?", default=True
+        string="Is discuss sidebar category channel open?",
+        default=True,
     )
     is_discuss_sidebar_category_chat_open = fields.Boolean(
-        string="Is discuss sidebar category chat open?", default=True
+        string="Is discuss sidebar category chat open?",
+        default=True,
     )
 
     push_to_talk_key = fields.Char(
@@ -24,21 +26,22 @@ class ResUsersSettings(models.Model):
         help="String formatted to represent a key with modifiers following this pattern: shift.ctrl.alt.key, e.g: truthy.1.true.b",
     )
     use_push_to_talk = fields.Boolean(
-        string="Use the push to talk feature", default=False
+        string="Use the push to talk feature",
+        default=False,
     )
     voice_active_duration = fields.Integer(
         string="Duration of voice activity in ms",
-        default=200,
         help="How long the audio broadcast will remain active after passing the volume threshold",
+        default=200,
     )
     volume_settings_ids: ResUsersSettingsVolumes = fields.One2many(
-        "res.users.settings.volumes",
-        "user_setting_id",
+        comodel_name="res.users.settings.volumes",
+        inverse_name="user_setting_id",
         string="Volumes of other partners",
     )
 
     channel_notifications = fields.Selection(
-        [("all", "All Messages"), ("no_notif", "Nothing")],
+        selection=[("all", "All Messages"), ("no_notif", "Nothing")],
         help="This setting will only be applied to channels. Mentions only if not specified.",
     )
 

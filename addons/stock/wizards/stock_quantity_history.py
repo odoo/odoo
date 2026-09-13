@@ -9,8 +9,8 @@ class StockQuantityHistory(models.TransientModel):
 
     inventory_datetime = fields.Datetime(
         string="Inventory at Date",
-        default=fields.Datetime.now,
         help="Choose a date to get the inventory at that date",
+        default=fields.Datetime.now,
     )
 
     def action_view_products_at_date(self):

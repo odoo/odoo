@@ -16,24 +16,27 @@ class AccountMove(models.Model):
 
     l10n_sa_uuid = fields.Char(
         string="Document UUID (SA)",
-        copy=False,
         help="Universally unique identifier of the Invoice",
+        copy=False,
     )
 
-    l10n_sa_invoice_signature = fields.Char("Unsigned XML Signature", copy=False)
+    l10n_sa_invoice_signature = fields.Char(
+        string="Unsigned XML Signature",
+        copy=False,
+    )
 
     l10n_sa_chain_index = fields.Integer(
         string="ZATCA chain index",
+        help="Invoice index in chain, set if and only if an in-chain XML was submitted and did not error",
         copy=False,
         readonly=True,
-        help="Invoice index in chain, set if and only if an in-chain XML was submitted and did not error",
     )
     l10n_sa_edi_chain_head_id = fields.Many2one(
-        "account.move",
+        comodel_name="account.move",
         string="ZATCA chain stopping move",
+        help="Technical field to know if the chain has been stopped by a previous invoice",
         copy=False,
         readonly=True,
-        help="Technical field to know if the chain has been stopped by a previous invoice",
     )
 
     def _l10n_gcc_get_invoice_title(self):

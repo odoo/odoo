@@ -13,7 +13,8 @@ class PaymentProvider(models.Model):
     )
 
     code = fields.Selection(
-        selection_add=[("custom", "Custom")], ondelete={"custom": "set default"}
+        selection_add=[("custom", "Custom")],
+        ondelete={"custom": "set default"},
     )
     custom_mode = fields.Selection(
         selection=[("wire_transfer", "Wire Transfer")],

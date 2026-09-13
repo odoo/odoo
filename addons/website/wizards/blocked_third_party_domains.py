@@ -10,7 +10,8 @@ class WebsiteCustom_Blocked_Third_Party_Domains(models.TransientModel):
     _description = "User list of blocked 3rd-party domains"
 
     website_id = fields.Many2one(
-        "website", default=lambda s: s.env["website"].get_current_website()
+        comodel_name="website",
+        default=lambda s: s.env["website"].get_current_website(),
     )
     content = fields.Text(
         default=lambda s: (

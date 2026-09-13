@@ -19,13 +19,13 @@ class StockLot(models.Model):
 
     name = fields.Char(
         string="Lot/Serial Number",
-        required=True,
-        compute="_compute_name",
-        store=True,
-        precompute=True,
-        readonly=False,
-        index="trigram",
         help="Unique Lot/Serial Number",
+        compute="_compute_name",
+        precompute=True,
+        store=True,
+        index="trigram",
+        readonly=False,
+        required=True,
     )
     active = fields.Boolean(default=True)
     ref = fields.Char(
@@ -34,26 +34,24 @@ class StockLot(models.Model):
     )
     product_id = fields.Many2one(
         comodel_name="product.product",
-        required=True,
-        check_company=True,
-        domain=(
-            "[('tracking', '!=', 'none'), ('is_storable', '=', True)] +"
-            " ([('product_tmpl_id', '=', context['default_product_tmpl_id'])] if context.get('default_product_tmpl_id') else [])"
-        ),
         index=True,
+        required=True,
+        domain="[('tracking', '!=', 'none'), ('is_storable', '=', True)] +"
+        " ([('product_tmpl_id', '=', context['default_product_tmpl_id'])] if context.get('default_product_tmpl_id') else [])",
+        check_company=True,
         tracking=True,
     )
     product_uom_id = fields.Many2one(
-        related="product_id.uom_id",
         comodel_name="uom.uom",
+        related="product_id.uom_id",
         string="Unit",
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
         compute="_compute_company_id",
         store=True,
-        readonly=False,
         index=True,
+        readonly=False,
     )
     note = fields.Html(string="Description")
     display_complete = fields.Boolean(compute="_compute_display_complete")
@@ -74,7 +72,7 @@ class StockLot(models.Model):
         compute="_compute_delivery_ids",
     )
     count_transfer_outgoing = fields.Count(
-        "delivery_ids",
+        count_of="delivery_ids",
         string="Delivery order count",
     )
     partner_ids = fields.Many2many(
@@ -83,18 +81,18 @@ class StockLot(models.Model):
         search="_search_partner_ids",
     )
     lot_properties = fields.Properties(
-        string="Properties",
         definition="product_id.lot_properties_definition",
+        string="Properties",
         copy=True,
     )
     location_id = fields.Many2one(
         comodel_name="stock.location",
         compute="_compute_location_id",
+        inverse="_inverse_location_id",
         store=True,
         readonly=False,
-        inverse="_inverse_location_id",
-        domain="[('usage', '!=', 'view')]",
         group_expand="_read_group_location_id",
+        domain="[('usage', '!=', 'view')]",
     )
 
     _name_product_company_uniq = models.Constraint(

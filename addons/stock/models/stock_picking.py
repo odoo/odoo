@@ -33,24 +33,24 @@ class StockPicking(models.Model):
     name = fields.Char(
         string="Reference",
         default="/",
-        readonly=True,
-        copy=False,
         index="trigram",
+        copy=False,
+        readonly=True,
     )
     origin = fields.Char(
         string="Source Document",
-        index="trigram",
         help="Reference of the document",
+        index="trigram",
     )
     note = fields.Html(string="Notes")
     backorder_id = fields.Many2one(
         comodel_name="stock.picking",
         string="Back Order of",
+        help="If this shipment was split, then this field links to the shipment which contains the already processed part.",
+        index="btree_not_null",
+        copy=False,
         readonly=True,
         check_company=True,
-        copy=False,
-        index="btree_not_null",
-        help="If this shipment was split, then this field links to the shipment which contains the already processed part.",
     )
     backorder_ids = fields.One2many(
         comodel_name="stock.picking",
@@ -60,18 +60,22 @@ class StockPicking(models.Model):
     return_id = fields.Many2one(
         comodel_name="stock.picking",
         string="Return of",
+        help="If this picking was created as a return of another picking, this field links to the original picking.",
+        index="btree_not_null",
+        copy=False,
         readonly=True,
         check_company=True,
-        copy=False,
-        index="btree_not_null",
-        help="If this picking was created as a return of another picking, this field links to the original picking.",
     )
     return_ids = fields.One2many(
         comodel_name="stock.picking",
         inverse_name="return_id",
         string="Returns",
     )
-    return_count = fields.Count("return_ids", string="# Returns", compute_sudo=False)
+    return_count = fields.Count(
+        count_of="return_ids",
+        string="# Returns",
+        compute_sudo=False,
+    )
 
     move_type = fields.Selection(
         selection=[
@@ -79,12 +83,12 @@ class StockPicking(models.Model):
             ("one", "When all products are ready"),
         ],
         string="Shipping Policy",
-        required=True,
-        compute="_compute_move_type",
-        store=True,
-        precompute=True,
-        readonly=False,
         help="It specifies goods to be deliver partially or all at once",
+        compute="_compute_move_type",
+        precompute=True,
+        store=True,
+        readonly=False,
+        required=True,
     )
     state = fields.Selection(
         selection=[
@@ -96,56 +100,56 @@ class StockPicking(models.Model):
             ("cancel", "Cancelled"),
         ],
         string="Status",
-        compute="_compute_state",
-        store=True,
-        readonly=True,
-        copy=False,
-        index=True,
-        tracking=True,
         help=" * Draft: The transfer is not confirmed yet. Reservation doesn't apply.\n"
         " * Waiting another operation: This transfer is waiting for another operation before being ready.\n"
         ' * Waiting: The transfer is waiting for the availability of some products.\n(a) The shipping policy is "As soon as possible": no product could be reserved.\n(b) The shipping policy is "When all products are ready": not all the products could be reserved.\n'
         ' * Ready: The transfer is ready to be processed.\n(a) The shipping policy is "As soon as possible": at least one product has been reserved.\n(b) The shipping policy is "When all products are ready": all product have been reserved.\n'
         " * Done: The transfer has been processed.\n"
         " * Cancelled: The transfer has been cancelled.",
+        compute="_compute_state",
+        store=True,
+        index=True,
+        copy=False,
+        readonly=True,
+        tracking=True,
     )
     reference_ids = fields.Many2many(
-        related="move_ids.reference_ids",
         comodel_name="stock.reference",
+        related="move_ids.reference_ids",
         string="References",
         readonly=True,
     )
     priority = fields.Selection(
         selection=PROCUREMENT_PRIORITIES,
-        default="0",
         help="Products will be reserved first for the transfers with the highest priorities.",
+        default="0",
     )
     date_planned = fields.Datetime(
         string="Scheduled Date",
+        help="Scheduled time for the first part of the shipment to be processed. Setting manually a value here would set it as expected date for all the stock moves.",
         compute="_compute_date_planned",
-        store=True,
         inverse="_inverse_date_planned",
+        store=True,
         index=True,
         tracking=True,
-        help="Scheduled time for the first part of the shipment to be processed. Setting manually a value here would set it as expected date for all the stock moves.",
     )
     date_deadline = fields.Datetime(
         string="Deadline",
-        compute="_compute_date_deadline",
-        store=True,
         help="In case of outgoing flow, validate the transfer before this date to allow to deliver at promised date to the customer.\n\
         In case of incoming flow, validate the transfer before this date in order to have these products in stock at the date promised by the supplier",
+        compute="_compute_date_deadline",
+        store=True,
     )
     has_deadline_issue = fields.Boolean(
         string="Is late",
+        help="Is late or will be late depending on the deadline and scheduled date",
         compute="_compute_has_deadline_issue",
         store=True,
-        help="Is late or will be late depending on the deadline and scheduled date",
     )
     date_done = fields.Datetime(
         string="Date of Transfer",
-        copy=False,
         help="Date at which the transfer was processed. Cancelling never sets it.",
+        copy=False,
     )
     date_delay_alert = fields.Datetime(
         string="Delay Alert Date",
@@ -159,21 +163,21 @@ class StockPicking(models.Model):
     location_id = fields.Many2one(
         comodel_name="stock.location",
         string="Source Location",
-        required=True,
         compute="_compute_location_id",
-        store=True,
         precompute=True,
+        store=True,
         readonly=False,
+        required=True,
         check_company=True,
     )
     location_dest_id = fields.Many2one(
         comodel_name="stock.location",
         string="Destination Location",
-        required=True,
         compute="_compute_location_dest_id",
-        store=True,
         precompute=True,
+        store=True,
         readonly=False,
+        required=True,
         check_company=True,
     )
     move_ids = fields.One2many(
@@ -189,14 +193,14 @@ class StockPicking(models.Model):
     picking_type_id = fields.Many2one(
         comodel_name="stock.picking.type",
         string="Operation Type",
-        required=True,
         default=lambda self: self._default_picking_type_id(),
         index=True,
+        required=True,
         tracking=True,
     )
     warehouse_address_id = fields.Many2one(
-        related="picking_type_id.warehouse_id.partner_id",
         comodel_name="res.partner",
+        related="picking_type_id.warehouse_id.partner_id",
     )
     picking_type_code = fields.Selection(
         related="picking_type_id.code",
@@ -204,45 +208,41 @@ class StockPicking(models.Model):
     )
 
     batch_id = fields.Many2one(
-        "stock.picking.batch",
+        comodel_name="stock.picking.batch",
         string="Batch Transfer",
-        check_company=True,
         help="Batch associated to this transfer",
         index=True,
         copy=False,
+        check_company=True,
     )
     batch_sequence = fields.Integer(string="Sequence")
     picking_type_entire_packs = fields.Boolean(
-        related="picking_type_id.show_entire_packs",
+        related="picking_type_id.show_entire_packs"
     )
-    use_create_lots = fields.Boolean(
-        related="picking_type_id.use_create_lots",
-    )
-    use_existing_lots = fields.Boolean(
-        related="picking_type_id.use_existing_lots",
-    )
+    use_create_lots = fields.Boolean(related="picking_type_id.use_create_lots")
+    use_existing_lots = fields.Boolean(related="picking_type_id.use_existing_lots")
     partner_id = fields.Many2one(
         comodel_name="res.partner",
         string="Contact",
-        check_company=True,
         index="btree_not_null",
+        check_company=True,
     )
     company_id = fields.Many2one(
-        related="picking_type_id.company_id",
         comodel_name="res.company",
+        related="picking_type_id.company_id",
         string="Company",
         store=True,
-        readonly=True,
         index=True,
+        readonly=True,
     )
     user_id = fields.Many2one(
         comodel_name="res.users",
         string="Responsible",
         default=lambda self: self.env.user,
+        copy=False,
         domain=lambda self: [
             ("all_group_ids", "in", self.env.ref("stock.group_stock_user").id),
         ],
-        copy=False,
         tracking=True,
     )
     move_line_ids = fields.One2many(
@@ -260,61 +260,59 @@ class StockPicking(models.Model):
         copy=False,
     )
     show_check_availability = fields.Boolean(
-        compute="_compute_show_check_availability",
         help='Technical field used to compute whether the button "Check Availability" should be displayed.',
+        compute="_compute_show_check_availability",
     )
     show_allocation = fields.Boolean(
-        compute="_compute_show_allocation",
         help='Technical Field used to decide whether the button "Allocation" should be displayed.',
+        compute="_compute_show_allocation",
     )
     owner_id = fields.Many2one(
         comodel_name="res.partner",
         string="Assign Owner",
-        check_company=True,
-        index="btree_not_null",
         help="When validating the transfer, the products will be assigned to this owner.",
+        index="btree_not_null",
+        check_company=True,
     )
     printed = fields.Boolean(copy=False)
     signature = fields.Image(
         attachment=True,
         copy=False,
     )
-    is_signed = fields.Boolean(
-        compute="_compute_is_signed",
-    )
+    is_signed = fields.Boolean(compute="_compute_is_signed")
     is_cancelled = fields.Boolean(
         string="Cancelled",
-        readonly=True,
-        copy=False,
         help="Records that this transfer was cancelled. Its moves express that "
         "while they exist; this is what answers once they are gone.",
+        copy=False,
+        readonly=True,
     )
     is_locked = fields.Boolean(
-        default=True,
-        copy=False,
         help="When the picking is not done this allows changing the "
         "initial demand. When the picking is done this allows "
         "changing the done quantities.",
+        default=True,
+        copy=False,
     )
     is_date_editable = fields.Boolean(
-        "Is Scheduled Date Editable",
+        string="Is Scheduled Date Editable",
         compute="_compute_is_date_editable",
     )
 
     weight_bulk = fields.Float(
         string="Bulk Weight",
-        compute="_compute_weight_bulk",
         help="Total weight of products which are not in a package.",
+        compute="_compute_weight_bulk",
     )
     shipping_weight = fields.Float(
         string="Weight for Shipping",
+        help="Total weight of packages and products not in a package. "
+        "Packages with no shipping weight specified will default to their products' total weight. "
+        "This is the weight used to compute the cost of the shipping.",
         digits="Stock Weight",
         compute="_compute_shipping_weight",
         store=True,
         readonly=False,
-        help="Total weight of packages and products not in a package. "
-        "Packages with no shipping weight specified will default to their products' total weight. "
-        "This is the weight used to compute the cost of the shipping.",
     )
     shipping_volume = fields.Float(
         string="Volume for Shipping",
@@ -322,14 +320,14 @@ class StockPicking(models.Model):
     )
 
     product_id = fields.Many2one(
-        related="move_ids.product_id",
         comodel_name="product.product",
+        related="move_ids.product_id",
         string="Product",
         readonly=True,
     )
     lot_id = fields.Many2one(
-        related="move_line_ids.lot_id",
         comodel_name="stock.lot",
+        related="move_line_ids.lot_id",
         string="Lot/Serial Number",
         readonly=True,
     )
@@ -337,8 +335,8 @@ class StockPicking(models.Model):
     has_tracking = fields.Boolean(compute="_compute_has_tracking")
     products_availability = fields.Char(
         string="Product Availability",
-        compute="_compute_availability_status",
         help="Latest product availability status of the picking",
+        compute="_compute_availability_status",
     )
     products_availability_state = fields.Selection(
         selection=[
@@ -351,21 +349,19 @@ class StockPicking(models.Model):
     )
 
     picking_properties = fields.Properties(
-        string="Properties",
         definition="picking_type_id.picking_properties_definition",
+        string="Properties",
         copy=True,
     )
-    show_next_pickings = fields.Boolean(
-        compute="_compute_show_next_pickings",
-    )
+    show_next_pickings = fields.Boolean(compute="_compute_show_next_pickings")
     partner_country_id = fields.Many2one(
-        related="partner_id.country_id",
         comodel_name="res.country",
+        related="partner_id.country_id",
     )
     picking_warning_text = fields.Text(
         string="Picking Instructions",
-        compute="_compute_picking_warning_text",
         help="Internal instructions for the partner or its parent company as set by the user.",
+        compute="_compute_picking_warning_text",
     )
 
     _name_uniq = models.UniqueIndex(

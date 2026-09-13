@@ -11,7 +11,7 @@ class ResUsers(models.Model):
     _inherit = "res.users"
 
     calendar_default_privacy = fields.Selection(
-        [
+        selection=[
             ("public", "Public by default"),
             ("private", "Private by default"),
             ("confidential", "Internal users only"),

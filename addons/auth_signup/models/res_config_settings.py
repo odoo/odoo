@@ -18,7 +18,7 @@ class ResConfigSettings(models.TransientModel):
         config_parameter="auth_signup.invitation_scope",
     )
     auth_signup_template_user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Template user for new users created through signup",
         config_parameter="base.template_portal_user_id",
     )

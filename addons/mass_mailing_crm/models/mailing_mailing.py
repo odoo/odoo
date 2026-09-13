@@ -8,7 +8,8 @@ class MailingMailing(models.Model):
 
     use_leads = fields.Boolean(compute="_compute_use_leads")
     crm_lead_count = fields.Integer(
-        "Leads/Opportunities Count", compute="_compute_crm_lead_count"
+        string="Leads/Opportunities Count",
+        compute="_compute_crm_lead_count",
     )
 
     def _compute_use_leads(self):

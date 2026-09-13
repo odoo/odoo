@@ -8,28 +8,27 @@ class StockPackageType(models.Model):
     _description = "Stock package type"
     _order = "sequence, id"
 
-    name = fields.Char(string="Package Type", required=True)
+    name = fields.Char(
+        string="Package Type",
+        required=True,
+    )
     sequence = fields.Integer(
-        default=1,
         help="The first in the sequence is the default one.",
+        default=1,
     )
     sequence_id = fields.Many2one(
         comodel_name="ir.sequence",
         string="Reference Sequence",
-        check_company=True,
         copy=False,
+        check_company=True,
     )
     sequence_code = fields.Char(
         related="sequence_id.code",
         string="Sequence Prefix",
         readonly=False,
     )
-    height = fields.Float(
-        help="Packaging Height",
-    )
-    width = fields.Float(
-        help="Packaging Width",
-    )
+    height = fields.Float(help="Packaging Height")
+    width = fields.Float(help="Packaging Width")
     packaging_length = fields.Float(
         string="Length",
         help="Packaging Length",
@@ -38,19 +37,17 @@ class StockPackageType(models.Model):
         string="Weight",
         help="Weight of the package type",
     )
-    max_weight = fields.Float(
-        help="Maximum weight shippable in this packaging",
-    )
+    max_weight = fields.Float(help="Maximum weight shippable in this packaging")
     barcode = fields.Char(copy=False)
     weight_uom_name = fields.Char(
         string="Weight unit of measure label",
-        default=lambda self: self._default_weight_uom_name(),
         compute="_compute_weight_uom_name",
+        default=lambda self: self._default_weight_uom_name(),
     )
     length_uom_name = fields.Char(
         string="Length unit of measure label",
-        default=lambda self: self._default_length_uom_name(),
         compute="_compute_length_uom_name",
+        default=lambda self: self._default_length_uom_name(),
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
@@ -61,10 +58,10 @@ class StockPackageType(models.Model):
             ("disposable", "Disposable Box"),
             ("reusable", "Reusable Box (totes)"),
         ],
-        required=True,
-        default="disposable",
         help="""Reusable boxes are used for batch picking and emptied afterwards to be reused. In the barcode application, scanning a reusable box will add the products in this box.
         Disposable boxes aren't reused, when scanning a disposable box in the barcode application, the contained products are added to the transfer.""",
+        default="disposable",
+        required=True,
     )
     has_quants = fields.Boolean(
         string="Has Contents",

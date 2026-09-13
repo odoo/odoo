@@ -7,17 +7,20 @@ class EventRegistration(models.Model):
     _inherit = ["event.registration", "mixin.pos.load"]
 
     pos_order_id = fields.Many2one(
-        related="pos_order_line_id.order_id", string="PoS Order"
+        related="pos_order_line_id.order_id",
+        string="PoS Order",
     )
     pos_order_line_id = fields.Many2one(
-        "pos.order.line",
+        comodel_name="pos.order.line",
         string="PoS Order Line",
-        ondelete="cascade",
-        copy=False,
         index="btree_not_null",
+        copy=False,
+        ondelete="cascade",
     )
     phone = fields.Char(
-        string="Phone Number", compute="_compute_phone", inverse="_inverse_phone"
+        string="Phone Number",
+        compute="_compute_phone",
+        inverse="_inverse_phone",
     )
 
     @api.depends("phone_ids")

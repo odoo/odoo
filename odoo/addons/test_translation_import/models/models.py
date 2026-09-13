@@ -13,15 +13,22 @@ class TestTranslationImportModel1(models.Model):
     _name = "test.translation.import.model1"
     _description = "Translation Test 1"
 
-    name = fields.Char("Name", translate=True, help="Help, English")
+    name = fields.Char(
+        string="Name",
+        help="Help, English",
+        translate=True,
+    )
     selection = fields.Selection(
-        [
+        selection=[
             ("foo", "Selection Foo"),
             ("bar", "Selection Bar"),
         ],
         export_string_translation=False,
     )
-    xml = fields.Text("XML", translate=xml_translate)
+    xml = fields.Text(
+        string="XML",
+        translate=xml_translate,
+    )
 
     def get_code_translation(self):
         _("slot")
@@ -100,5 +107,7 @@ class TestTranslationImportModel2(models.Model):
     _description = "Translation Test 2"
 
     model1_id = fields.Many2one(
-        "test.translation.import.model1", required=True, ondelete="cascade"
+        comodel_name="test.translation.import.model1",
+        required=True,
+        ondelete="cascade",
     )

@@ -7,25 +7,29 @@ class SaleLoyaltyRewardWizard(models.TransientModel):
     _description = "Sale Loyalty - Reward Selection Wizard"
 
     order_id = fields.Many2one(
-        "sale.order",
+        comodel_name="sale.order",
         default=lambda self: self.env.context.get("active_id"),
         required=True,
     )
 
-    reward_ids = fields.Many2many("loyalty.reward", compute="_compute_reward_ids")
+    reward_ids = fields.Many2many(
+        comodel_name="loyalty.reward",
+        compute="_compute_reward_ids",
+    )
     selected_reward_id = fields.Many2one(
-        "loyalty.reward", domain="[('id', 'in', reward_ids)]"
+        comodel_name="loyalty.reward",
+        domain="[('id', 'in', reward_ids)]",
     )
     multi_product_reward = fields.Boolean(related="selected_reward_id.multi_product")
     reward_product_ids = fields.Many2many(
         related="selected_reward_id.reward_product_ids"
     )
     selected_product_id = fields.Many2one(
-        "product.product",
-        domain="[('id', 'in', reward_product_ids)]",
+        comodel_name="product.product",
         compute="_compute_selected_product_id",
-        readonly=False,
         store=True,
+        readonly=False,
+        domain="[('id', 'in', reward_product_ids)]",
     )
 
     @api.depends("order_id")

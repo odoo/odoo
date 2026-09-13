@@ -7,7 +7,7 @@ class MailBlacklist(models.Model):
     _inherit = "mail.blacklist"
 
     opt_out_reason_id = fields.Many2one(
-        "mailing.subscription.optout",
+        comodel_name="mailing.subscription.optout",
         string="Opt-out Reason",
         ondelete="restrict",
         tracking=10,

@@ -16,16 +16,15 @@ class ApiEndpointInbound(models.AbstractModel):
     _api_event_direction = "inbound"
 
     duplicate_detection_enabled = fields.Boolean(
-        default=True,
         help="Prevent duplicate event processing using payload hash",
+        default=True,
     )
     duplicate_window_seconds = fields.Integer(
-        default=60,
         help="Time window for duplicate detection",
+        default=60,
     )
 
     log_request_payload_max_bytes = fields.Integer(
-        default=0,
         help="Store at most this many bytes of each request body on the "
         "api.event.log row; 0 keeps the whole body.\n\n"
         "For an endpoint that accepts a file the body is the file: a phone "
@@ -34,6 +33,7 @@ class ApiEndpointInbound(models.AbstractModel):
         "Duplicate detection is unaffected -- the hash of the body as received "
         "is kept either way. Ignored for an asynchronous endpoint, where the "
         "stored body is the work queue and not merely a record of it.",
+        default=0,
     )
 
     @api.constrains("log_request_payload_max_bytes")
@@ -55,14 +55,12 @@ class ApiEndpointInbound(models.AbstractModel):
             ("sync", "Synchronous"),
             ("async", "Asynchronous"),
         ],
+        help="Sync: Process immediately. Async: Queue for background processing.",
         default="async",
         required=True,
-        help="Sync: Process immediately. Async: Queue for background processing.",
     )
 
-    event_count = fields.Integer(
-        compute="_compute_event_count",
-    )
+    event_count = fields.Integer(compute="_compute_event_count")
 
     @api.constrains("max_payload_size")
     def _check_max_payload_size(self):

@@ -11,7 +11,10 @@ from odoo.addons.base.models.res_users import check_identity
 class ResUsers(models.Model):
     _inherit = "res.users"
 
-    auth_passkey_key_ids = fields.One2many("auth.passkey.key", "create_uid")
+    auth_passkey_key_ids = fields.One2many(
+        comodel_name="auth.passkey.key",
+        inverse_name="create_uid",
+    )
 
     @property
     def SELF_READABLE_FIELDS(self):

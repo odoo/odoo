@@ -5,8 +5,8 @@ class Test_Read_GroupOn_Date(models.Model):
     _name = "test_read_group.on_date"
     _description = "Group Test Read On Date"
 
-    date = fields.Date("Date")
-    value = fields.Integer("Value")
+    date = fields.Date(string="Date")
+    value = fields.Integer(string="Value")
 
 
 class Test_Read_GroupAggregateBoolean(models.Model):
@@ -15,18 +15,27 @@ class Test_Read_GroupAggregateBoolean(models.Model):
     _order = "key DESC"
 
     key = fields.Integer()
-    bool_and = fields.Boolean(default=False, aggregator="bool_and")
-    bool_or = fields.Boolean(default=False, aggregator="bool_or")
-    bool_array = fields.Boolean(default=False, aggregator="array_agg")
+    bool_and = fields.Boolean(
+        default=False,
+        aggregator="bool_and",
+    )
+    bool_or = fields.Boolean(
+        default=False,
+        aggregator="bool_or",
+    )
+    bool_array = fields.Boolean(
+        default=False,
+        aggregator="array_agg",
+    )
 
 
 class TestReadGroupAggregateMonetaryRelated(models.Model):
     _name = "test_read_group.aggregate.monetary.related"
     _description = "To test related currency fields in Monetary aggregates"
 
-    stored_currency_id = fields.Many2one("res.currency")
+    stored_currency_id = fields.Many2one(comodel_name="res.currency")
     non_stored_currency_id = fields.Many2one(
-        "res.currency",
+        comodel_name="res.currency",
         compute="_compute_non_stored_currency_id",
         store=False,
     )
@@ -42,14 +51,16 @@ class Test_Read_GroupAggregateMonetary(models.Model):
     _description = "Group Test Read Monetary Aggregate"
 
     name = fields.Char()
-    related_model_id = fields.Many2one("test_read_group.aggregate.monetary.related")
+    related_model_id = fields.Many2one(
+        comodel_name="test_read_group.aggregate.monetary.related"
+    )
 
-    currency_id = fields.Many2one("res.currency")
+    currency_id = fields.Many2one(comodel_name="res.currency")
     related_stored_currency_id = fields.Many2one(
-        related="related_model_id.stored_currency_id",
+        related="related_model_id.stored_currency_id"
     )
     related_non_stored_currency_id = fields.Many2one(
-        related="related_model_id.non_stored_currency_id",
+        related="related_model_id.non_stored_currency_id"
     )
 
     total_in_currency_id = fields.Monetary(currency_field="currency_id")
@@ -67,9 +78,9 @@ class Test_Read_GroupAggregate(models.Model):
     _description = "Group Test Aggregate"
 
     key = fields.Integer()
-    value = fields.Integer("Value")
+    value = fields.Integer(string="Value")
     numeric_value = fields.Float(digits=(4, 2))
-    partner_id = fields.Many2one("res.partner")
+    partner_id = fields.Many2one(comodel_name="res.partner")
     display_name = fields.Char(store=True)
 
 
@@ -80,10 +91,19 @@ class Test_Read_GroupOn_Selection(models.Model):
     _name = "test_read_group.on_selection"
     _description = "Group Test Read On Selection"
 
-    state = fields.Selection([("a", "A"), ("b", "B")], group_expand="_expand_states")
-    static_expand = fields.Selection(SELECTION, group_expand=True)
-    dynamic_expand = fields.Selection(lambda self: SELECTION, group_expand=True)
-    no_expand = fields.Selection(SELECTION)
+    state = fields.Selection(
+        selection=[("a", "A"), ("b", "B")],
+        group_expand="_expand_states",
+    )
+    static_expand = fields.Selection(
+        selection=SELECTION,
+        group_expand=True,
+    )
+    dynamic_expand = fields.Selection(
+        selection=lambda self: SELECTION,
+        group_expand=True,
+    )
+    no_expand = fields.Selection(selection=SELECTION)
     value = fields.Integer()
 
     def _expand_states(self, states, domain):
@@ -103,10 +123,13 @@ class Test_Read_GroupOrder(models.Model):
     _name = "test_read_group.order"
     _description = "Sales order"
 
-    line_ids = fields.One2many("test_read_group.order.line", "order_id")
+    line_ids = fields.One2many(
+        comodel_name="test_read_group.order.line",
+        inverse_name="order_id",
+    )
     date = fields.Date()
     company_dependent_name = fields.Char(company_dependent=True)
-    many2one_id = fields.Many2one("test_read_group.order")
+    many2one_id = fields.Many2one(comodel_name="test_read_group.order")
     name = fields.Char()
     fold = fields.Boolean()
 
@@ -121,9 +144,10 @@ class Test_Read_GroupOrderLine(models.Model):
     _name = "test_read_group.order.line"
     _description = "Sales order line"
 
-    order_id = fields.Many2one("test_read_group.order")
+    order_id = fields.Many2one(comodel_name="test_read_group.order")
     order_expand_id = fields.Many2one(
-        "test_read_group.order", group_expand="_read_group_expand_full"
+        comodel_name="test_read_group.order",
+        group_expand="_read_group_expand_full",
     )
     value = fields.Integer()
     date = fields.Date(related="order_id.date")
@@ -135,10 +159,10 @@ class Test_Read_GroupUser(models.Model):
 
     name = fields.Char(required=True)
     task_ids = fields.Many2many(
-        "test_read_group.task",
-        "test_read_group_task_user_rel",
-        "user_id",
-        "task_id",
+        comodel_name="test_read_group.task",
+        relation="test_read_group_task_user_rel",
+        column1="user_id",
+        column2="task_id",
         string="Tasks",
     )
 
@@ -149,39 +173,39 @@ class Test_Read_GroupTask(models.Model):
 
     name = fields.Char(required=True)
     user_ids = fields.Many2many(
-        "test_read_group.user",
-        "test_read_group_task_user_rel",
-        "task_id",
-        "user_id",
+        comodel_name="test_read_group.user",
+        relation="test_read_group_task_user_rel",
+        column1="task_id",
+        column2="user_id",
         string="Collaborators",
     )
     customer_ids = fields.Many2many(
-        "test_read_group.user",
-        "test_read_group_task_user_rel_2",
-        "task_id",
-        "user_id",
+        comodel_name="test_read_group.user",
+        relation="test_read_group_task_user_rel_2",
+        column1="task_id",
+        column2="user_id",
         string="Customers",
     )
     tag_ids = fields.Many2many(
-        "test_read_group.tag",
-        "test_read_group_task_tag_rel",
-        "task_id",
-        "tag_id",
+        comodel_name="test_read_group.tag",
+        relation="test_read_group_task_tag_rel",
+        column1="task_id",
+        column2="tag_id",
         string="Tags",
     )
     active_tag_ids = fields.Many2many(
-        "test_read_group.tag",
-        "test_read_group_task_tag_rel",
-        "task_id",
-        "tag_id",
+        comodel_name="test_read_group.tag",
+        relation="test_read_group_task_tag_rel",
+        column1="task_id",
+        column2="tag_id",
         string="Active Tags",
         domain=[("active", "=", True)],
     )
     all_tag_ids = fields.Many2many(
-        "test_read_group.tag",
-        "test_read_group_task_tag_rel",
-        "task_id",
-        "tag_id",
+        comodel_name="test_read_group.tag",
+        relation="test_read_group_task_tag_rel",
+        column1="task_id",
+        column2="tag_id",
         string="All Tags",
         context={"active_test": False},
     )
@@ -203,9 +227,14 @@ class Test_Read_GroupPrefixCollision(models.Model):
     _description = "Prefix-colliding groupby specs (tag / tag_id)"
 
     tag = fields.Many2many(
-        "test_read_group.tag", relation="trg_prefix_tag_rel", string="Tag (m2m)"
+        comodel_name="test_read_group.tag",
+        relation="trg_prefix_tag_rel",
+        string="Tag (m2m)",
     )
-    tag_id = fields.Many2one("test_read_group.tag", string="Tag (m2o)")
+    tag_id = fields.Many2one(
+        comodel_name="test_read_group.tag",
+        string="Tag (m2o)",
+    )
     value = fields.Integer()
 
 
@@ -221,12 +250,19 @@ class Test_Read_GroupRelated_Bar(models.Model):
 
     name = fields.Char(aggregator="count_distinct")
 
-    foo_ids = fields.One2many("test_read_group.related_foo", "bar_id")
-    foo_names_sudo = fields.Char("name_one2many_related", related="foo_ids.name")
+    foo_ids = fields.One2many(
+        comodel_name="test_read_group.related_foo",
+        inverse_name="bar_id",
+    )
+    foo_names_sudo = fields.Char(
+        related="foo_ids.name",
+        string="name_one2many_related",
+    )
 
-    base_ids = fields.Many2many("test_read_group.related_base")
+    base_ids = fields.Many2many(comodel_name="test_read_group.related_base")
     computed_base_ids = fields.Many2many(
-        "test_read_group.related_base", compute="_compute_computed_base_ids"
+        comodel_name="test_read_group.related_base",
+        compute="_compute_computed_base_ids",
     )
 
     def _compute_computed_base_ids(self):
@@ -238,10 +274,17 @@ class Test_Read_GroupRelated_Foo(models.Model):
     _description = "RelatedFoo"
 
     name = fields.Char()
-    bar_id = fields.Many2one("test_read_group.related_bar")
+    bar_id = fields.Many2one(comodel_name="test_read_group.related_bar")
 
-    bar_name_sudo = fields.Char("bar_name_sudo", related="bar_id.name")
-    bar_name = fields.Char("bar_name", related="bar_id.name", related_sudo=False)
+    bar_name_sudo = fields.Char(
+        related="bar_id.name",
+        string="bar_name_sudo",
+    )
+    bar_name = fields.Char(
+        related="bar_id.name",
+        string="bar_name",
+        related_sudo=False,
+    )
 
     bar_base_ids = fields.Many2many(related="bar_id.base_ids")
 
@@ -254,15 +297,29 @@ class Test_Read_GroupRelated_Base(models.Model):
 
     name = fields.Char()
     value = fields.Integer()
-    foo_id = fields.Many2one("test_read_group.related_foo")
+    foo_id = fields.Many2one(comodel_name="test_read_group.related_foo")
 
-    foo_id_name = fields.Char("foo_id_name", related="foo_id.name", related_sudo=False)
-    foo_id_name_sudo = fields.Char("foo_id_name_sudo", related="foo_id.name")
+    foo_id_name = fields.Char(
+        related="foo_id.name",
+        string="foo_id_name",
+        related_sudo=False,
+    )
+    foo_id_name_sudo = fields.Char(
+        related="foo_id.name",
+        string="foo_id_name_sudo",
+    )
 
-    foo_id_bar_id_name = fields.Char("foo_bar_name_sudo", related="foo_id.bar_id.name")
-    foo_id_bar_name = fields.Char("foo_bar_name_sudo_1", related="foo_id.bar_name")
+    foo_id_bar_id_name = fields.Char(
+        related="foo_id.bar_id.name",
+        string="foo_bar_name_sudo",
+    )
+    foo_id_bar_name = fields.Char(
+        related="foo_id.bar_name",
+        string="foo_bar_name_sudo_1",
+    )
     foo_id_bar_name_sudo = fields.Char(
-        "foo_bar_name_sudo_2", related="foo_id.bar_name_sudo"
+        related="foo_id.bar_name_sudo",
+        string="foo_bar_name_sudo_2",
     )
 
 
@@ -274,7 +331,9 @@ class Test_Read_GroupRelated_Inherits(models.Model):
     }
 
     base_id = fields.Many2one(
-        "test_read_group.related_base", required=True, ondelete="cascade"
+        comodel_name="test_read_group.related_base",
+        required=True,
+        ondelete="cascade",
     )
 
 
@@ -282,4 +341,7 @@ class Test_Read_GroupChain_Inherits(models.Model):
     _name = "test_read_group.chain_inherits"
     _description = "ChainInherits"
 
-    inherited_id = fields.Many2one("test_read_group.related_inherits", required=True)
+    inherited_id = fields.Many2one(
+        comodel_name="test_read_group.related_inherits",
+        required=True,
+    )

@@ -10,19 +10,20 @@ class ProjectPhaseDeleteWizard(models.TransientModel):
     _description = "Project Phase Delete Wizard"
 
     phase_ids = fields.Many2many(
-        "project.phase",
+        comodel_name="project.phase",
         string="Phases To Delete",
-        ondelete="cascade",
-        context={"active_test": False},
         export_string_translation=False,
+        context={"active_test": False},
+        ondelete="cascade",
     )
     projects_count = fields.Integer(
-        "Number of Projects",
-        compute="_compute_projects_count",
+        string="Number of Projects",
         export_string_translation=False,
+        compute="_compute_projects_count",
     )
     phases_active = fields.Boolean(
-        compute="_compute_phases_active", export_string_translation=False
+        export_string_translation=False,
+        compute="_compute_phases_active",
     )
 
     @api.depends("phase_ids")

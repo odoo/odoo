@@ -27,78 +27,88 @@ class CrmLead2opportunityPartner(models.TransientModel):
         return result
 
     name = fields.Selection(
-        [
+        selection=[
             ("convert", "Convert to opportunity"),
             ("merge", "Merge with existing opportunities"),
         ],
-        "Conversion Action",
+        string="Conversion Action",
         compute="_compute_name",
-        readonly=False,
-        store=True,
         compute_sudo=False,
+        store=True,
+        readonly=False,
     )
     action = fields.Selection(
-        [
+        selection=[
             ("create", "Create a new customer"),
             ("exist", "Link to an existing customer"),
         ],
         string="Related Customer",
         compute="_compute_action",
         precompute=True,
+        compute_sudo=False,
+        store=True,
         readonly=False,
         required=True,
-        store=True,
-        compute_sudo=False,
     )
-    lead_id = fields.Many2one("crm.lead", "Associated Lead", required=True)
-    lead_partner_name = fields.Char(related="lead_id.partner_name", help=False)
-    lead_contact_name = fields.Char(related="lead_id.contact_name", help=False)
+    lead_id = fields.Many2one(
+        comodel_name="crm.lead",
+        string="Associated Lead",
+        required=True,
+    )
+    lead_partner_name = fields.Char(
+        related="lead_id.partner_name",
+        help=False,
+    )
+    lead_contact_name = fields.Char(
+        related="lead_id.contact_name",
+        help=False,
+    )
     duplicated_lead_ids = fields.Many2many(
-        "crm.lead",
+        comodel_name="crm.lead",
         string="Opportunities",
-        context={"active_test": False},
         compute="_compute_duplicated_lead_ids",
-        readonly=False,
-        store=True,
         compute_sudo=False,
+        store=True,
+        readonly=False,
+        context={"active_test": False},
     )
     commercial_partner_id = fields.Many2one(
-        "res.partner",
-        "Company",
-        domain=[("is_company", "=", True)],
+        comodel_name="res.partner",
+        string="Company",
         compute="_compute_commercial_partner_id",
-        readonly=False,
-        store=True,
         compute_sudo=False,
+        store=True,
+        readonly=False,
+        domain=[("is_company", "=", True)],
     )
     partner_id = fields.Many2one(
-        "res.partner",
-        "Customer",
+        comodel_name="res.partner",
+        string="Customer",
         compute="_compute_partner_id",
-        readonly=False,
-        store=True,
         compute_sudo=False,
+        store=True,
+        readonly=False,
     )
     user_id = fields.Many2one(
-        "res.users",
-        "Salesperson",
+        comodel_name="res.users",
+        string="Salesperson",
         compute="_compute_user_id",
-        readonly=False,
-        store=True,
         compute_sudo=False,
+        store=True,
+        readonly=False,
     )
     team_id = fields.Many2one(
-        "crm.team",
-        "Sales Team",
+        comodel_name="crm.team",
+        string="Sales Team",
         compute="_compute_team_id",
-        readonly=False,
-        store=True,
         compute_sudo=False,
+        store=True,
+        readonly=False,
     )
     force_assignment = fields.Boolean(
-        "Force assignment",
-        default=True,
+        string="Force assignment",
         help="If checked, forces salesman to be updated on updated opportunities even if already set.",
+        default=True,
     )
 
     @api.depends("duplicated_lead_ids")

@@ -11,8 +11,8 @@ class PickingLabelType(models.TransientModel):
     label_type = fields.Selection(
         selection=[("products", "Product Labels"), ("lots", "Lot/SN Labels")],
         string="Labels to print",
-        required=True,
         default="products",
+        required=True,
     )
 
     def process(self):

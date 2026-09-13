@@ -5,7 +5,7 @@ class AccountTax(models.Model):
     _inherit = "account.tax"
 
     l10n_pe_edi_tax_code = fields.Selection(
-        [
+        selection=[
             ("1000", "IGV - General Sales Tax"),
             ("1016", "IVAP - Tax on Sale Paddy Rice"),
             ("2000", "ISC - Selective Excise Tax"),
@@ -21,7 +21,7 @@ class AccountTax(models.Model):
     )
 
     l10n_pe_edi_unece_category = fields.Selection(
-        [
+        selection=[
             ("E", "Exempt from tax"),
             ("G", "Free export item, tax not charged"),
             ("O", "Services outside scope of tax"),
@@ -33,11 +33,11 @@ class AccountTax(models.Model):
         "information http://www.unece.org/trade/untdid/d08a/tred/tred5305.html",
     )
     l10n_pe_edi_isc_type = fields.Selection(
-        [
+        selection=[
             ("01", "System to value"),
             ("02", "Application of the Fixed Amount"),
             ("03", "Retail Price System"),
         ],
-        "ISC Type",
+        string="ISC Type",
         help="Used in Selective Consumption Tax to indicate the type of calculation for the ISC.",
     )

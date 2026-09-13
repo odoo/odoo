@@ -9,10 +9,13 @@ class L10nInEwaybillCancel(models.TransientModel):
     _description = "Cancel Ewaybill"
 
     l10n_in_ewaybill_id = fields.Many2one(
-        "l10n.in.ewaybill", string="Ewaybill", required=True
+        comodel_name="l10n.in.ewaybill",
+        string="Ewaybill",
+        required=True,
     )
     cancel_reason = fields.Selection(
-        selection=list(EDI_CANCEL_REASON.items()), required=True
+        selection=list(EDI_CANCEL_REASON.items()),
+        required=True,
     )
     cancel_remarks = fields.Char()
 

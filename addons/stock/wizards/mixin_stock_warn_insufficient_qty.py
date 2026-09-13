@@ -17,10 +17,14 @@ class MixinStockWarnInsufficientQty(models.AbstractModel):
         domain="[('usage', '=', 'internal')]",
     )
     quant_ids = fields.Many2many(
-        comodel_name="stock.quant", compute="_compute_quant_ids"
+        comodel_name="stock.quant",
+        compute="_compute_quant_ids",
     )
     quantity = fields.Float(required=True)
-    product_uom_name = fields.Char(string="Unit", required=True)
+    product_uom_name = fields.Char(
+        string="Unit",
+        required=True,
+    )
 
     def _get_reference_document_company_id(self):
         raise NotImplementedError

@@ -23,8 +23,8 @@ class ResPartner(models.Model):
             ("einvoice", "E-Invoice"),
         ],
         string="Nilvera Status",
-        copy=False,
         default="not_checked",
+        copy=False,
         readonly=True,
         tracking=True,
     )
@@ -32,10 +32,10 @@ class ResPartner(models.Model):
         comodel_name="l10n_tr.nilvera.alias",
         string="Alias",
         compute="_compute_nilvera_customer_alias_id",
-        domain="[('partner_id', '=', id)]",
-        copy=False,
         store=True,
+        copy=False,
         readonly=False,
+        domain="[('partner_id', '=', id)]",
     )
 
     # This field is only used technically for optimisation purposes. It's needed for _check_nilvera_customer.

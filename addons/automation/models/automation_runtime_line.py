@@ -17,25 +17,25 @@ class AutomationRuntimeLine(models.Model):
     runtime_id = fields.Many2one(
         comodel_name="automation.runtime",
         string="Workflow Runtime",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
     action_id = fields.Many2one(
         comodel_name="ir.actions.server",
         string="Server Action",
+        help="The server action to execute",
         required=True,
         ondelete="restrict",
-        help="The server action to execute",
     )
     name = fields.Char(
         string="Step Name",
-        required=True,
         help="Description of this workflow step",
+        required=True,
     )
     sequence = fields.Integer(
-        default=10,
         help="Execution order (lower = earlier)",
+        default=10,
     )
     state = fields.Selection(
         selection=[
@@ -49,11 +49,11 @@ class AutomationRuntimeLine(models.Model):
             ("cancel", "Cancelled"),
             ("error", "Error"),
         ],
-        default="waiting",
-        required=True,
-        readonly=True,
-        copy=False,
         help="Action execution state",
+        default="waiting",
+        copy=False,
+        readonly=True,
+        required=True,
     )
     activity_ids = fields.One2many(
         comodel_name="mail.activity",
@@ -63,22 +63,22 @@ class AutomationRuntimeLine(models.Model):
     )
     date_resume = fields.Datetime(
         string="Resumes At",
-        readonly=True,
-        copy=False,
         help="When a scheduled step becomes ready, or a paused Wait step completes",
+        copy=False,
+        readonly=True,
     )
     date_ready = fields.Datetime(
         string="Ready Since",
-        readonly=True,
-        copy=False,
         help="When the step became ready; its validity counts from here",
+        copy=False,
+        readonly=True,
     )
     date_settled = fields.Datetime(
         string="Settled At",
-        readonly=True,
-        copy=False,
         help="When the step finished, failed, was skipped or was cancelled; "
         "a delayed edge out of it counts from here",
+        copy=False,
+        readonly=True,
     )
     skip_reason = fields.Selection(
         selection=[
@@ -88,13 +88,13 @@ class AutomationRuntimeLine(models.Model):
             ("filtered", "Filtered out"),
             ("cancelled", "Cancelled"),
         ],
-        readonly=True,
         copy=False,
+        readonly=True,
     )
     error_message = fields.Text(
         string="Error Details",
-        readonly=True,
         help="Error message if execution failed",
+        readonly=True,
     )
 
     edge_in_ids = fields.One2many(
@@ -108,15 +108,15 @@ class AutomationRuntimeLine(models.Model):
         comodel_name="automation.runtime.edge",
         inverse_name="source_line_id",
         string="Enables",
-        readonly=True,
         help="Edges this step's outcome can satisfy",
+        readonly=True,
     )
 
     created_record_ref = fields.Reference(
-        string="Created Record",
         selection="_selection_created_record_models",
-        readonly=True,
+        string="Created Record",
         help="Record created or modified by this action",
+        readonly=True,
     )
 
     @api.model

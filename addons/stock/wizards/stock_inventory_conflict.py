@@ -12,7 +12,10 @@ class StockInventoryConflict(models.TransientModel):
         relation="stock_conflict_quant_rel",
         string="Quants",
     )
-    quant_to_fix_ids = fields.Many2many(comodel_name="stock.quant", string="Conflicts")
+    quant_to_fix_ids = fields.Many2many(
+        comodel_name="stock.quant",
+        string="Conflicts",
+    )
 
     def action_keep_counted_quantity(self):
         dbg.logic.debug(

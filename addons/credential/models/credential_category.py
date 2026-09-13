@@ -8,27 +8,27 @@ class CredentialCategory(models.Model):
 
     name = fields.Char(
         string="Category Name",
-        required=True,
-        translate=True,
         help="Display name for this credential category",
+        translate=True,
+        required=True,
     )
     code = fields.Char(
         string="Technical Code",
-        required=True,
-        index=True,
         help="Technical identifier (e.g., 'api_key', 'oauth2'). Used for programmatic access.",
+        index=True,
+        required=True,
     )
     description = fields.Text(
-        translate=True,
         help="Detailed description of this credential type",
+        translate=True,
     )
     sequence = fields.Integer(
-        default=10,
         help="Display order in lists",
+        default=10,
     )
     active = fields.Boolean(
-        default=True,
         help="Inactive categories cannot be used for new credentials",
+        default=True,
     )
     storage_hint = fields.Selection(
         selection=[
@@ -36,43 +36,43 @@ class CredentialCategory(models.Model):
             ("json", "JSON Data"),
         ],
         string="Storage Type",
-        default="simple",
-        required=True,
         help="Recommended storage method for credentials of this type:\n"
         "• Simple Value: Single string (API keys, tokens)\n"
         "• JSON Data: Multiple key-value pairs (OAuth2, Basic Auth)",
+        default="simple",
+        required=True,
     )
     icon = fields.Char(
-        default="fa-key",
         help="FontAwesome icon class for UI display",
+        default="fa-key",
     )
 
     default_decrypt_rate_limit_enabled = fields.Boolean(
         string="Enable Rate Limiting (Default)",
-        default=True,
         help="Default rate limiting setting for credentials of this category. Can be overridden per credential.",
+        default=True,
     )
     default_decrypt_rate_limit_max = fields.Integer(
         string="Rate Limit (Default)",
-        default=100,
         help="Default maximum decryption attempts per hour. Can be overridden per credential.",
+        default=100,
     )
     default_auto_validate_health = fields.Boolean(
         string="Auto Health Check (Default)",
-        default=False,
         help="Default setting for automatic health validation. Can be overridden per credential.",
+        default=False,
     )
     default_allow_key_fallback = fields.Boolean(
         string="Allow Key Fallback (Default)",
-        default=True,
         help="Default setting for allowing decryption with old key versions. Can be overridden per credential.",
+        default=True,
     )
 
     requirement_message = fields.Char(
-        translate=True,
         help="Sentence shown when a credential of this category is saved without "
         "one of the values it requires. Generated from the field labels when "
         "left empty.",
+        translate=True,
     )
 
     field_ids = fields.One2many(

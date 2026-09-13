@@ -7,8 +7,14 @@ class GamificationBadgeUserWizard(models.TransientModel):
     _name = "gamification.badge.user.wizard"
     _description = "Gamification User Badge Wizard"
 
-    user_id = fields.Many2one("res.users", required=True)
-    badge_id = fields.Many2one("gamification.badge", required=True)
+    user_id = fields.Many2one(
+        comodel_name="res.users",
+        required=True,
+    )
+    badge_id = fields.Many2one(
+        comodel_name="gamification.badge",
+        required=True,
+    )
     comment = fields.Text()
 
     def action_grant_badge(self) -> bool:

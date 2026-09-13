@@ -15,49 +15,49 @@ class MixinRating(models.AbstractModel):
     _inherit = ["mixin.mail.thread"]
 
     rating_last_value = fields.Float(
-        groups="base.group_user",
         compute="_compute_rating_last_value",
         compute_sudo=True,
         store=True,
         aggregator="avg",
+        groups="base.group_user",
     )
     rating_last_feedback = fields.Text(
-        "Rating Last Feedback",
-        groups="base.group_user",
         related="rating_ids.feedback",
+        string="Rating Last Feedback",
+        groups="base.group_user",
     )
     rating_last_image = fields.Binary(
-        "Rating Last Image",
-        groups="base.group_user",
         related="rating_ids.rating_image",
+        string="Rating Last Image",
+        groups="base.group_user",
     )
     rating_count = fields.Integer(
-        "Rating count",
+        string="Rating count",
         compute="_compute_rating_stats",
         compute_sudo=True,
     )
     rating_avg = fields.Float(
-        "Average Rating",
-        groups="base.group_user",
+        string="Average Rating",
         compute="_compute_rating_stats",
-        compute_sudo=True,
         search="_search_rating_avg",
+        compute_sudo=True,
+        groups="base.group_user",
     )
     rating_avg_text = fields.Selection(
-        rating_data.RATING_TEXT,
-        groups="base.group_user",
+        selection=rating_data.RATING_TEXT,
         compute="_compute_rating_avg_text",
         compute_sudo=True,
+        groups="base.group_user",
     )
     rating_percentage_satisfaction = fields.Float(
-        "Rating Satisfaction",
+        string="Rating Satisfaction",
         compute="_compute_rating_percentage_satisfaction",
         compute_sudo=True,
     )
     rating_last_text = fields.Selection(
+        related="rating_ids.rating_text",
         string="Rating Text",
         groups="base.group_user",
-        related="rating_ids.rating_text",
     )
 
     @api.depends("rating_ids", "rating_ids.rating", "rating_ids.consumed")

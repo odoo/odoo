@@ -20,10 +20,10 @@ class MixinAnalytic(models.AbstractModel):
         readonly=False,
     )
     analytic_precision = fields.Integer(
-        store=False,
         default=lambda self: self.env["decimal.precision"].get_precision(
             "Percentage Analytic"
         ),
+        store=False,
     )
     distribution_analytic_account_ids = fields.Many2many(
         comodel_name="account.analytic.account",

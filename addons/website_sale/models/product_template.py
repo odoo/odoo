@@ -65,53 +65,62 @@ class ProductTemplate(models.Model):
     )
 
     alternative_product_ids = fields.Many2many(
-        string="Alternative Products",
         comodel_name="product.template",
         relation="product_alternative_rel",
         column1="src_id",
         column2="dest_id",
-        check_company=True,
+        string="Alternative Products",
         help="Suggest alternatives to your customer (upsell strategy)."
         " Those products show up on the product page.",
+        check_company=True,
     )
     accessory_product_ids = fields.Many2many(
-        string="Accessory Products",
         comodel_name="product.product",
         relation="product_accessory_rel",
         column1="src_id",
         column2="dest_id",
-        check_company=True,
+        string="Accessory Products",
         help="Accessories show up when the customer reviews the cart before payment"
         " (cross-sell strategy).",
+        check_company=True,
     )
 
-    website_size_x = fields.Integer(string="Size X", default=1)
-    website_size_y = fields.Integer(string="Size Y", default=1)
-    website_ribbon_id = fields.Many2one(string="Ribbon", comodel_name="product.ribbon")
+    website_size_x = fields.Integer(
+        string="Size X",
+        default=1,
+    )
+    website_size_y = fields.Integer(
+        string="Size Y",
+        default=1,
+    )
+    website_ribbon_id = fields.Many2one(
+        comodel_name="product.ribbon",
+        string="Ribbon",
+    )
     website_sequence = fields.Integer(
         help="Determine the display order in the Website E-commerce",
         default=_default_website_sequence,
-        copy=False,
         index=True,
+        copy=False,
     )
     public_categ_ids = fields.Many2many(
+        comodel_name="product.public.category",
+        relation="product_public_category_product_template_rel",
         string="Website Product Category",
         help="The product will be available in each mentioned eCommerce category. Go to Shop > Edit"
         " Click on the page and enable 'Categories' to view all eCommerce categories.",
-        comodel_name="product.public.category",
-        relation="product_public_category_product_template_rel",
     )
 
     publish_date = fields.Datetime(
         compute="_compute_publish_date",
-        store=True,
         precompute=True,
+        store=True,
     )
 
     product_template_image_ids = fields.One2many(
-        string="Extra Product Media",
         comodel_name="product.image",
         inverse_name="product_tmpl_id",
+        string="Extra Product Media",
         copy=True,
     )
 
@@ -119,25 +128,26 @@ class ProductTemplate(models.Model):
         help="Display base unit price on your eCommerce pages. Set to 0 to hide it for this product.",
         compute="_compute_base_unit_count",
         inverse="_inverse_base_unit_count",
+        default=0,
         store=True,
         required=True,
-        default=0,
     )
     base_unit_id = fields.Many2one(
+        comodel_name="website.base.unit",
         string="Custom Unit of Measure",
         help="Define a custom unit to display in the price per unit of measure field.",
-        comodel_name="website.base.unit",
         compute="_compute_base_unit_id",
         inverse="_inverse_base_unit_id",
         store=True,
     )
     base_unit_price = fields.Monetary(
-        string="Price Per Unit", compute="_compute_base_unit_price"
+        string="Price Per Unit",
+        compute="_compute_base_unit_price",
     )
     base_unit_name = fields.Char(
-        compute="_compute_base_unit_name",
         help="Displays the custom unit for the products if defined or the selected unit of measure"
         " otherwise.",
+        compute="_compute_base_unit_name",
     )
 
     compare_list_price = fields.Monetary(
@@ -146,11 +156,11 @@ class ProductTemplate(models.Model):
         "It will not be displayed if pricelists apply.",
     )
     variants_default_code = fields.Char(
+        help="Technical field to enhance performance when looking up default code of product"
+        "variants (LIKE/ILIKE)",
         compute="_compute_variants_default_code",
         store=True,
         index="trigram",
-        help="Technical field to enhance performance when looking up default code of product"
-        "variants (LIKE/ILIKE)",
     )
     description = fields.Html(index="trigram")
     description_sale = fields.Text(index="trigram")

@@ -79,48 +79,51 @@ class HrVersion(models.Model):
         ) or StructureType.search([("country_id", "=", False)], limit=1)
 
     company_id = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
         compute="_compute_company_id",
-        readonly=False,
         store=True,
+        readonly=False,
         tracking=True,
     )
     employee_id = fields.Many2one(
-        "hr.employee",
-        tracking=True,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        comodel_name="hr.employee",
         index=True,
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        tracking=True,
     )
     name = fields.Char(tracking=True)
     display_name = fields.Char(compute="_compute_display_name")
-    active = fields.Boolean(default=True, tracking=True)
+    active = fields.Boolean(
+        default=True,
+        tracking=True,
+    )
 
     date_version = fields.Date(
-        required=True,
         default=fields.Date.today,
-        tracking=True,
+        required=True,
         groups="hr.group_hr_user",
+        tracking=True,
     )
     pending_employee_vals = fields.Json(
         copy=False,
         groups="hr.group_hr_user",
     )
     last_modified_uid = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Last Modified by",
-        required=True,
         default=lambda self: self.env.uid,
+        required=True,
         groups="hr.group_hr_user",
     )
     last_modified_date = fields.Datetime(
         string="Last Modified on",
-        required=True,
         default=fields.Datetime.now,
+        required=True,
         groups="hr.group_hr_user",
     )
 
     employee_type = fields.Selection(
-        [
+        selection=[
             ("employee", "Employee"),
             ("worker", "Worker"),
             ("student", "Student"),
@@ -128,39 +131,44 @@ class HrVersion(models.Model):
             ("contractor", "Contractor"),
             ("freelance", "Freelancer"),
         ],
-        required=True,
         default="employee",
-        tracking=True,
+        required=True,
         groups="hr.group_hr_user",
+        tracking=True,
     )
     department_id = fields.Many2one(
-        "hr.department",
+        comodel_name="hr.department",
+        index=True,
         check_company=True,
         tracking=True,
-        index=True,
     )
     member_of_department = fields.Boolean(
-        "Member of department",
+        string="Member of department",
+        help="Whether the employee is a member of the active user's department or one of it's child department.",
         compute="_compute_member_of_department",
         search="_search_member_of_department",
-        help="Whether the employee is a member of the active user's department or one of it's child department.",
     )
-    job_id = fields.Many2one("hr.job", check_company=True, tracking=True, index=True)
+    job_id = fields.Many2one(
+        comodel_name="hr.job",
+        index=True,
+        check_company=True,
+        tracking=True,
+    )
     job_title = fields.Char(
         compute="_compute_job_title",
-        store=True,
         inverse="_inverse_job_title",
+        store=True,
         readonly=False,
         tracking=True,
     )
     is_custom_job_title = fields.Boolean(
-        default=False,
         compute="_compute_is_custom_job_title",
+        default=False,
         store=True,
         groups="hr.group_hr_user",
     )
     address_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Work Address",
         default=_default_address_id,
         store=True,
@@ -169,16 +177,16 @@ class HrVersion(models.Model):
         tracking=True,
     )
     work_location_id = fields.Many2one(
-        "hr.work.location",
+        comodel_name="hr.work.location",
         domain="[('address_id', '=', address_id)]",
         tracking=True,
     )
 
     departure_reason_id = fields.Many2one(
-        "hr.departure.reason",
-        groups="hr.group_hr_user",
+        comodel_name="hr.departure.reason",
         copy=False,
         ondelete="restrict",
+        groups="hr.group_hr_user",
         tracking=True,
     )
     departure_description = fields.Html(
@@ -188,18 +196,18 @@ class HrVersion(models.Model):
     )
     departure_date = fields.Date(
         copy=False,
-        tracking=True,
         groups="hr.group_hr_user",
+        tracking=True,
     )
 
     resource_calendar_id = fields.Many2one(
-        "resource.calendar",
+        comodel_name="resource.calendar",
+        string="Working Hours",
         compute="_compute_resource_calendar_id",
         inverse="_inverse_resource_calendar_id",
         store=True,
         readonly=False,
         check_company=True,
-        string="Working Hours",
         tracking=True,
     )
     is_flexible = fields.Boolean(
@@ -215,21 +223,21 @@ class HrVersion(models.Model):
     tz = fields.Selection(related="employee_id.tz")
 
     contract_date_start = fields.Date(
-        "Contract Start Date",
-        tracking=True,
+        string="Contract Start Date",
         groups="hr.group_hr_manager",
+        tracking=True,
     )
     contract_date_end = fields.Date(
-        "Contract End Date",
-        tracking=True,
-        groups="hr.group_hr_manager",
+        string="Contract End Date",
         help="End date of the contract (if it's a fixed-term contract).",
+        groups="hr.group_hr_manager",
+        tracking=True,
     )
     trial_date_end = fields.Date(
-        "End of Trial Period",
-        tracking=True,
-        groups="hr.group_hr_manager",
+        string="End of Trial Period",
         help="End date of the trial period (if there is one).",
+        groups="hr.group_hr_manager",
+        tracking=True,
     )
     date_start = fields.Date(
         compute="_compute_dates",
@@ -259,20 +267,20 @@ class HrVersion(models.Model):
     )
 
     contract_template_id = fields.Many2one(
-        "hr.version",
-        groups="hr.group_hr_user",
-        domain="[('company_id', '=', company_id), ('employee_id', '=', False)]",
-        tracking=True,
+        comodel_name="hr.version",
         help="Select a contract template to auto-fill the contract form with predefined values. You can still edit the fields as needed after applying the template.",
+        domain="[('company_id', '=', company_id), ('employee_id', '=', False)]",
+        groups="hr.group_hr_user",
+        tracking=True,
     )
     structure_type_id = fields.Many2one(
-        "hr.payroll.structure.type",
+        comodel_name="hr.payroll.structure.type",
         string="Salary Structure Type",
         compute="_compute_structure_type_id",
-        readonly=False,
         store=True,
-        tracking=True,
+        readonly=False,
         groups="hr.group_hr_manager",
+        tracking=True,
     )
     active_employee = fields.Boolean(
         related="employee_id.active",
@@ -280,24 +288,24 @@ class HrVersion(models.Model):
         groups="hr.group_hr_user",
     )
     currency_id = fields.Many2one(
-        string="Currency",
         related="company_id.currency_id",
+        string="Currency",
         readonly=True,
     )
     wage = fields.Monetary(
-        tracking=True,
         help="Employee's monthly gross wage.",
         aggregator="avg",
         groups="hr.group_hr_manager",
+        tracking=True,
     )
     contract_wage = fields.Monetary(
         compute="_compute_contract_wage",
         groups="hr.group_hr_manager",
     )
     company_country_id = fields.Many2one(
-        "res.country",
-        string="Company country",
+        comodel_name="res.country",
         related="company_id.country_id",
+        string="Company country",
         readonly=True,
     )
     country_code = fields.Char(
@@ -306,9 +314,9 @@ class HrVersion(models.Model):
         readonly=True,
     )
     contract_type_id = fields.Many2one(
-        "hr.contract.type",
-        tracking=True,
+        comodel_name="hr.contract.type",
         groups="hr.group_hr_manager",
+        tracking=True,
     )
     additional_note = fields.Text(
         groups="hr.group_hr_user",
@@ -322,14 +330,14 @@ class HrVersion(models.Model):
         )
 
     hr_responsible_id = fields.Many2one(
-        "res.users",
-        "HR Responsible",
-        tracking=True,
+        comodel_name="res.users",
+        string="HR Responsible",
         help="Person responsible for validating the employee's contracts.",
-        domain=_domain_hr_responsible_id,
         default=lambda self: self.env.user,
         required=True,
+        domain=_domain_hr_responsible_id,
         groups="hr.group_hr_user",
+        tracking=True,
     )
 
     _check_contract_start_date_defined = models.Constraint(

@@ -16,30 +16,28 @@ class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
     leave_manager_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Time Off Approver",
+        help='Select the user responsible for approving "Time Off" of this employee.\n'
+        "If empty, the approval is done by an Administrator or Approver (determined in settings/users).",
         compute="_compute_leave_manager_id",
         store=True,
         readonly=False,
         domain="[('share', '=', False), ('company_ids', 'in', company_id)]",
-        help='Select the user responsible for approving "Time Off" of this employee.\n'
-        "If empty, the approval is done by an Administrator or Approver (determined in settings/users).",
     )
     leave_ids = fields.One2many(
-        "hr.leave",
-        "employee_id",
+        comodel_name="hr.leave",
+        inverse_name="employee_id",
         string="Time Off",
         groups="hr.group_hr_user",
     )
     current_leave_id = fields.Many2one(
-        "hr.leave.type",
-        compute="_compute_current_leave_id",
+        comodel_name="hr.leave.type",
         string="Current Time Off Type",
+        compute="_compute_current_leave_id",
         groups="hr.group_hr_user",
     )
     current_leave_state = fields.Selection(
-        compute="_compute_leave_status",
-        string="Current Time Off Status",
         selection=[
             ("confirm", "Waiting Approval"),
             ("refuse", "Refused"),
@@ -47,27 +45,37 @@ class HrEmployee(models.Model):
             ("validate", "Approved"),
             ("cancel", "Cancelled"),
         ],
+        string="Current Time Off Status",
+        compute="_compute_leave_status",
         groups="hr.group_hr_user",
     )
     leave_date_from = fields.Date(
-        "From Date", compute="_compute_leave_status", groups="hr.group_hr_user"
+        string="From Date",
+        compute="_compute_leave_status",
+        groups="hr.group_hr_user",
     )
-    leave_date_to = fields.Date("To Date", compute="_compute_leave_status")
+    leave_date_to = fields.Date(
+        string="To Date",
+        compute="_compute_leave_status",
+    )
     allocation_count = fields.Float(
-        "Total number of days allocated.",
+        string="Total number of days allocated.",
         compute="_compute_allocation_counts",
         groups="hr.group_hr_user",
     )
     allocations_count = fields.Integer(
-        "Total number of allocations",
+        string="Total number of allocations",
         compute="_compute_allocation_counts",
         groups="hr.group_hr_user",
     )
     show_leaves = fields.Boolean(
-        "Able to see Remaining Time Off", compute="_compute_show_leaves"
+        string="Able to see Remaining Time Off",
+        compute="_compute_show_leaves",
     )
     is_absent = fields.Boolean(
-        "Absent Today", compute="_compute_leave_status", search="_search_is_absent"
+        string="Absent Today",
+        compute="_compute_leave_status",
+        search="_search_is_absent",
     )
     allocation_display = fields.Char(compute="_compute_allocation_displays")
     allocation_remaining_display = fields.Char(compute="_compute_allocation_displays")

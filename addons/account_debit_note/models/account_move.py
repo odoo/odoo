@@ -6,20 +6,21 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     debit_origin_id = fields.Many2one(
-        "account.move",
-        "Original Invoice Debited",
-        readonly=True,
-        copy=False,
+        comodel_name="account.move",
+        string="Original Invoice Debited",
         index="btree_not_null",
+        copy=False,
+        readonly=True,
     )
     debit_note_ids = fields.One2many(
-        "account.move",
-        "debit_origin_id",
-        "Debit Notes",
+        comodel_name="account.move",
+        inverse_name="debit_origin_id",
+        string="Debit Notes",
         help="The debit notes created for this invoice",
     )
     debit_note_count = fields.Integer(
-        "Number of Debit Notes", compute="_compute_debit_count"
+        string="Number of Debit Notes",
+        compute="_compute_debit_count",
     )
 
     @api.depends("debit_note_ids")

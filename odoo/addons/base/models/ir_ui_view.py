@@ -244,12 +244,19 @@ class IrUiView(models.Model):
     _order = "priority,name,id"
     _allow_sudo_commands = False
 
-    name = fields.Char(string="View Name", required=True)
+    name = fields.Char(
+        string="View Name",
+        required=True,
+    )
     model = fields.Char(index=True)
     key = fields.Char(index="btree_not_null")
-    priority = fields.Integer(string="Sequence", default=16, required=True)
+    priority = fields.Integer(
+        string="Sequence",
+        default=16,
+        required=True,
+    )
     type = fields.Selection(
-        [
+        selection=[
             ("list", "List"),
             ("form", "Form"),
             ("graph", "Graph"),
@@ -262,22 +269,22 @@ class IrUiView(models.Model):
         string="View Type",
     )
     arch = fields.Text(
-        compute="_compute_arch",
-        inverse="_inverse_arch",
         string="View Architecture",
         help="""This field should be used when accessing view arch. It will use translation.
                                Note that it will read `arch_db` or `arch_fs` if in dev-xml mode.""",
+        compute="_compute_arch",
+        inverse="_inverse_arch",
     )
     arch_base = fields.Text(
-        compute="_compute_arch_base",
-        inverse="_inverse_arch_base",
         string="Base View Architecture",
         help="This field is the same as `arch` field without translations",
+        compute="_compute_arch_base",
+        inverse="_inverse_arch_base",
     )
     arch_db = fields.Text(
         string="Arch Blob",
-        translate=xml_translate,
         help="This field stores the view arch.",
+        translate=xml_translate,
     )
     arch_fs = fields.Char(
         string="Arch Filename",
@@ -291,37 +298,37 @@ class IrUiView(models.Model):
                                                                          Useful to (soft) reset a broken view.""",
     )
     inherit_id = fields.Many2one(
-        "ir.ui.view",
+        comodel_name="ir.ui.view",
         string="Inherited View",
-        ondelete="restrict",
         index=True,
+        ondelete="restrict",
     )
     inherit_children_ids = fields.One2many(
-        "ir.ui.view", "inherit_id", string="Views which inherit from this one"
+        comodel_name="ir.ui.view",
+        inverse_name="inherit_id",
+        string="Views which inherit from this one",
     )
     model_data_id = fields.Many2one(
-        "ir.model.data",
+        comodel_name="ir.model.data",
         compute="_compute_model_data",
         search="_search_model_data_id",
     )
     xml_id = fields.Char(
         string="External ID",
-        compute="_compute_model_data",
         help="ID of the view defined in xml file",
+        compute="_compute_model_data",
     )
     group_ids = fields.Many2many(
-        "res.groups",
-        "ir_ui_view_group_rel",
-        "view_id",
-        "group_id",
+        comodel_name="res.groups",
+        relation="ir_ui_view_group_rel",
+        column1="view_id",
+        column2="group_id",
         string="Groups",
         help="If this field is empty, the view applies to all users. Otherwise, the view applies to the users of those groups only.",
     )
     mode = fields.Selection(
-        [("primary", "Base view"), ("extension", "Extension View")],
+        selection=[("primary", "Base view"), ("extension", "Extension View")],
         string="View inheritance mode",
-        default="primary",
-        required=True,
         help="Only applies if this view inherits from an other one"
         " (inherit_id is not False/Null).\n\n"
         "* if extension (default), if this view is requested the closest primary view"
@@ -331,6 +338,8 @@ class IrUiView(models.Model):
         " different model than this one), then this view's inheritance specs"
         " (<xpath/>) are applied, and the result is used as if it were this view's"
         " actual arch.",
+        default="primary",
+        required=True,
     )
 
     warning_info = fields.Html(
@@ -339,13 +348,13 @@ class IrUiView(models.Model):
     )
 
     active = fields.Boolean(
-        default=True,
         help="If this view is inherited,\n\n"
         "* if True, the view always extends its parent\n"
         "* if False, the view currently does not extend its parent but can be enabled",
+        default=True,
     )
     model_id = fields.Many2one(
-        "ir.model",
+        comodel_name="ir.model",
         string="Model of the view",
         compute="_compute_model_id",
         inverse="_inverse_model_id",

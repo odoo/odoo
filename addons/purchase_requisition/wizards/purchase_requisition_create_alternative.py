@@ -8,23 +8,23 @@ class PurchaseRequisitionCreateAlternative(models.TransientModel):
     _description = "Wizard to preset values for alternative PO"
 
     origin_po_id = fields.Many2one(
-        "purchase.order",
+        comodel_name="purchase.order",
         help="The original PO that this alternative PO is being created for.",
     )
     partner_ids = fields.Many2many(
-        "res.partner",
+        comodel_name="res.partner",
         string="Vendor",
-        required=True,
         help="Choose a vendor for alternative PO",
+        required=True,
     )
     purchase_warn_msg = fields.Text(
-        "Warning Messages",
+        string="Warning Messages",
         compute="_compute_purchase_warn_msg",
         groups="purchase.group_warning_purchase",
     )
     copy_products = fields.Boolean(
-        default=True,
         help="If this is checked, the product quantities of the original PO will be copied",
+        default=True,
     )
 
     @api.depends("partner_ids", "copy_products")

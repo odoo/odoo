@@ -5,10 +5,12 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     cal_client_id = fields.Char(
-        "Client_id", config_parameter="google_calendar_client_id", default=""
+        string="Client_id",
+        default="",
+        config_parameter="google_calendar_client_id",
     )
     cal_client_secret = fields.Char(
-        "Client_key",
+        string="Client_key",
         compute="_compute_cal_client_secret",
         inverse="_inverse_cal_client_secret",
     )
@@ -27,7 +29,7 @@ class ResConfigSettings(models.TransientModel):
             )
 
     cal_sync_paused = fields.Boolean(
-        "Google Synchronization Paused",
-        config_parameter="google_calendar_sync_paused",
+        string="Google Synchronization Paused",
         help="Indicates if synchronization with Google Calendar is paused or not.",
+        config_parameter="google_calendar_sync_paused",
     )

@@ -5,9 +5,15 @@ class Test_UninstallModel(models.Model):
     _name = "test_uninstall.model"
     _description = "Testing Uninstall Model"
 
-    name = fields.Char("Name")
-    ref = fields.Many2one("res.users", string="User")
-    rel = fields.Many2many("res.users", string="Users")
+    name = fields.Char(string="Name")
+    ref = fields.Many2one(
+        comodel_name="res.users",
+        string="User",
+    )
+    rel = fields.Many2many(
+        comodel_name="res.users",
+        string="Users",
+    )
 
     _name_uniq = models.Constraint(
         "unique (name)",

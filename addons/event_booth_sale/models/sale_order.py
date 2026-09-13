@@ -6,9 +6,14 @@ from odoo.fields import Domain
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    event_booth_ids = fields.One2many("event.booth", "sale_order_id", string="Booths")
+    event_booth_ids = fields.One2many(
+        comodel_name="event.booth",
+        inverse_name="sale_order_id",
+        string="Booths",
+    )
     event_booth_count = fields.Integer(
-        string="Booth Count", compute="_compute_event_booth_count"
+        string="Booth Count",
+        compute="_compute_event_booth_count",
     )
 
     @api.depends("event_booth_ids")

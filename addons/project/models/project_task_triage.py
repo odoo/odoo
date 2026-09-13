@@ -8,24 +8,24 @@ class ProjectTaskTriage(models.Model):
     _rec_name = "triage_id"
 
     task_id = fields.Many2one(
-        "project.task",
+        comodel_name="project.task",
+        export_string_translation=False,
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
-        export_string_translation=False,
     )
     user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
+        export_string_translation=False,
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
-        export_string_translation=False,
     )
     triage_id = fields.Many2one(
-        "project.triage",
+        comodel_name="project.triage",
+        export_string_translation=False,
         domain="[('user_id', '=', user_id)]",
         ondelete="set null",
-        export_string_translation=False,
     )
 
     _project_task_triage_unique = models.Constraint(

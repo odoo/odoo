@@ -27,15 +27,15 @@ class AccountMove(models.Model):
 
     # E-Invoice Fields
     l10n_in_edi_status = fields.Selection(
-        string="India E-Invoice Status",
         selection=[
             ("to_send", "To Send"),
             ("sent", "Sent"),
             ("cancelled", "Cancelled"),
         ],
+        string="India E-Invoice Status",
         copy=False,
-        tracking=True,
         readonly=True,
+        tracking=True,
     )
     l10n_in_edi_attachment_id = fields.Many2one(
         comodel_name="ir.attachment",
@@ -46,7 +46,9 @@ class AccountMove(models.Model):
         depends=["l10n_in_edi_attachment_file"],
     )
     l10n_in_edi_attachment_file = fields.Binary(
-        string="E-Invoice(IN) File", attachment=True, copy=False
+        string="E-Invoice(IN) File",
+        attachment=True,
+        copy=False,
     )
     l10n_in_edi_cancel_reason = fields.Selection(
         selection=list(EDI_CANCEL_REASON.items()),
@@ -54,12 +56,17 @@ class AccountMove(models.Model):
         copy=False,
     )
     l10n_in_edi_cancel_remarks = fields.Char(
-        string="E-Invoice(IN) Cancel Remarks", copy=False
+        string="E-Invoice(IN) Cancel Remarks",
+        copy=False,
     )
     l10n_in_edi_content = fields.Binary(
-        compute="_compute_l10n_in_edi_content", string="E-Invoice(IN) Content"
+        string="E-Invoice(IN) Content",
+        compute="_compute_l10n_in_edi_content",
     )
-    l10n_in_edi_error = fields.Html(readonly=True, copy=False)
+    l10n_in_edi_error = fields.Html(
+        copy=False,
+        readonly=True,
+    )
 
     # E-Invoice compute
     def _compute_l10n_in_edi_content(self):

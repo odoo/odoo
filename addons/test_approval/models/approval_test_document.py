@@ -9,7 +9,10 @@ class ApprovalTestDocument(models.Model):
     _inherit = ["mixin.mail.thread", "mixin.approval"]
     _operation_checkpoints = {"action_record_operation": "_check_record_operation"}
 
-    name = fields.Char(required=True, tracking=True)
+    name = fields.Char(
+        required=True,
+        tracking=True,
+    )
     description = fields.Text()
     amount = fields.Float(tracking=True)
     currency_id = fields.Many2one(
@@ -36,27 +39,27 @@ class ApprovalTestDocument(models.Model):
         default=lambda self: self.env.company,
     )
     hook_call_count = fields.Integer(
-        default=0,
         help="Tracks how many times _on_approval_state_changed was called",
+        default=0,
     )
     last_approval_state = fields.Char(
-        help="Records the last state received by _on_approval_state_changed",
+        help="Records the last state received by _on_approval_state_changed"
     )
     progress_call_count = fields.Integer(
-        default=0,
         help="How many times _on_approval_progress was called",
+        default=0,
     )
     test_category_id = fields.Many2one(
         comodel_name="approval.category",
         help="Category to use for approval (for testing)",
     )
     protected_field_names = fields.Char(
-        help="Comma-separated fields this document protects, for the tests",
+        help="Comma-separated fields this document protects, for the tests"
     )
     keeps_approval_on_change = fields.Boolean()
     operation_count = fields.Integer(
-        default=0,
         help="How many times action_record_operation actually ran",
+        default=0,
     )
 
     def action_record_operation(self) -> None:

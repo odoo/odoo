@@ -6,18 +6,25 @@ class EventTrack(models.Model):
     _inherit = "event.track"
 
     quiz_id = fields.Many2one(
-        "event.quiz",
+        comodel_name="event.quiz",
         compute="_compute_quiz_id",
         store=True,
         groups="event.group_event_user",
     )
-    quiz_ids = fields.One2many("event.quiz", "event_track_id", string="Quizzes")
+    quiz_ids = fields.One2many(
+        comodel_name="event.quiz",
+        inverse_name="event_track_id",
+        string="Quizzes",
+    )
     quiz_questions_count = fields.Integer(
         string="# Quiz Questions",
         compute="_compute_quiz_questions_count",
         groups="event.group_event_user",
     )
-    is_quiz_completed = fields.Boolean("Is Quiz Done", compute="_compute_quiz_data")
+    is_quiz_completed = fields.Boolean(
+        string="Is Quiz Done",
+        compute="_compute_quiz_data",
+    )
     quiz_points = fields.Integer(compute="_compute_quiz_data")
 
     @api.depends("quiz_ids.event_track_id")

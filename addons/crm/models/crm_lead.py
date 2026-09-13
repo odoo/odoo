@@ -89,247 +89,260 @@ class CrmLead(models.Model):
     _track_duration_field = "stage_id"
 
     name = fields.Char(
-        "Opportunity",
-        index="trigram",
-        required=True,
+        string="Opportunity",
         compute="_compute_name",
-        readonly=False,
         store=True,
+        index="trigram",
+        readonly=False,
+        required=True,
     )
     user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Salesperson",
         default=lambda self: self.env.user,
+        index=True,
         domain="[('share', '=', False)]",
         check_company=True,
-        index=True,
         tracking=True,
     )
     user_company_ids = fields.Many2many(
-        "res.company",
-        compute="_compute_user_company_ids",
+        comodel_name="res.company",
         help="UX: Limit to lead company or all if no company",
+        compute="_compute_user_company_ids",
     )
     team_id = fields.Many2one(
-        "crm.team",
+        comodel_name="crm.team",
         string="Sales Team",
-        check_company=True,
-        index=True,
-        tracking=True,
         compute="_compute_team_id",
-        ondelete="set null",
-        readonly=False,
-        store=True,
         precompute=True,
+        store=True,
+        index=True,
+        readonly=False,
+        ondelete="set null",
+        check_company=True,
+        tracking=True,
     )
     lead_properties = fields.Properties(
-        "Properties", definition="team_id.lead_properties_definition", copy=True
+        definition="team_id.lead_properties_definition",
+        string="Properties",
+        copy=True,
     )
     company_id = fields.Many2one(
-        "res.company",
-        index=True,
+        comodel_name="res.company",
         compute="_compute_company_id",
-        readonly=False,
         store=True,
-    )
-    referred = fields.Char("Referred By")
-    description = fields.Html("Notes")
-    active = fields.Boolean(default=True, tracking=72)
-    type = fields.Selection(
-        [("lead", "Lead"), ("opportunity", "Opportunity")],
-        required=True,
-        tracking=15,
         index=True,
+        readonly=False,
+    )
+    referred = fields.Char(string="Referred By")
+    description = fields.Html(string="Notes")
+    active = fields.Boolean(
+        default=True,
+        tracking=72,
+    )
+    type = fields.Selection(
+        selection=[("lead", "Lead"), ("opportunity", "Opportunity")],
         default=lambda self: (
             "lead" if self.env.user.has_group("crm.group_use_lead") else "opportunity"
         ),
+        index=True,
+        required=True,
+        tracking=15,
     )
     priority = fields.Selection(
-        crm_stage.AVAILABLE_PRIORITIES,
-        index=True,
+        selection=crm_stage.AVAILABLE_PRIORITIES,
         default=crm_stage.AVAILABLE_PRIORITIES[0][0],
+        index=True,
     )
     stage_id = fields.Many2one(
-        "crm.stage",
-        index=True,
-        tracking=True,
+        comodel_name="crm.stage",
         compute="_compute_stage_id",
-        readonly=False,
         store=True,
+        index=True,
         copy=False,
+        readonly=False,
         group_expand="_read_group_stage_ids",
-        ondelete="restrict",
         domain="['|', ('team_ids', '=', False), ('team_ids', 'in', team_id)]",
+        ondelete="restrict",
+        tracking=True,
     )
     stage_id_color = fields.Integer(
-        string="Stage Color", related="stage_id.color", export_string_translation=False
+        related="stage_id.color",
+        string="Stage Color",
+        export_string_translation=False,
     )
     tag_ids = fields.Many2many(
-        "crm.tag",
-        "crm_tag_rel",
-        "lead_id",
-        "tag_id",
+        comodel_name="crm.tag",
+        relation="crm_tag_rel",
+        column1="lead_id",
+        column2="tag_id",
         string="Tags",
         help="Classify and analyze your lead/opportunity categories like: Training, Service",
     )
-    color = fields.Integer("Color Index", default=0)
+    color = fields.Integer(
+        string="Color Index",
+        default=0,
+    )
     expected_revenue = fields.Monetary(
         currency_field="company_currency",
-        tracking=True,
         default=0.0,
+        tracking=True,
     )
     prorated_revenue = fields.Monetary(
         currency_field="company_currency",
-        store=True,
         compute="_compute_prorated_revenue",
+        store=True,
     )
     recurring_revenue = fields.Monetary(
-        "Recurring Revenues",
+        string="Recurring Revenues",
         currency_field="company_currency",
-        tracking=True,
         default=0.0,
+        tracking=True,
     )
-    recurring_plan = fields.Many2one("crm.recurring.plan")
+    recurring_plan = fields.Many2one(comodel_name="crm.recurring.plan")
     recurring_revenue_monthly = fields.Monetary(
-        "Expected MRR",
+        string="Expected MRR",
         currency_field="company_currency",
-        store=True,
         compute="_compute_recurring_revenue_monthly",
+        store=True,
     )
     recurring_revenue_monthly_prorated = fields.Monetary(
-        "Prorated MRR",
+        string="Prorated MRR",
         currency_field="company_currency",
-        store=True,
         compute="_compute_recurring_revenue_monthly_prorated",
+        store=True,
     )
     recurring_revenue_prorated = fields.Monetary(
-        "Prorated Recurring Revenues",
+        string="Prorated Recurring Revenues",
         currency_field="company_currency",
         compute="_compute_recurring_revenue_prorated",
         store=True,
     )
     company_currency = fields.Many2one(
-        "res.currency",
+        comodel_name="res.currency",
         string="Currency",
         compute="_compute_company_currency",
         compute_sudo=True,
     )
     date_closed = fields.Datetime(
-        "Closed Date",
-        readonly=True,
+        string="Closed Date",
         copy=False,
+        readonly=True,
     )
     date_automation_last = fields.Datetime(
-        "Last Action",
+        string="Last Action",
         readonly=True,
     )
     date_open = fields.Datetime(
-        "Assignment Date",
+        string="Assignment Date",
         compute="_compute_date_open",
-        readonly=True,
         store=True,
+        readonly=True,
     )
     day_open = fields.Float(
-        "Days to Assign",
+        string="Days to Assign",
         compute="_compute_day_open",
         store=True,
     )
     day_close = fields.Float(
-        "Days to Close",
+        string="Days to Close",
         compute="_compute_day_close",
         store=True,
     )
     date_last_stage_update = fields.Datetime(
-        "Last Stage Update",
+        string="Last Stage Update",
         compute="_compute_date_last_stage_update",
+        store=True,
         index=True,
         readonly=True,
-        store=True,
     )
-    date_conversion = fields.Datetime("Conversion Date", readonly=True)
+    date_conversion = fields.Datetime(
+        string="Conversion Date",
+        readonly=True,
+    )
     date_deadline = fields.Date(
-        "Expected Closing",
+        string="Expected Closing",
         help="Estimate of the date on which the opportunity will be won.",
     )
 
     commercial_partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Customer Company",
-        domain="[('is_company', '=', True)]",
         compute="_compute_commercial_partner_id",
-        readonly=False,
         store=False,
+        readonly=False,
+        domain="[('is_company', '=', True)]",
     )
     partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Contact",
-        check_company=True,
-        index=True,
-        tracking=10,
         help="Linked partner (optional). Usually created when converting the lead. You can find a partner by its Name, TIN, Email or Internal Reference.",
+        index=True,
+        check_company=True,
+        tracking=10,
     )
     partner_is_blacklisted = fields.Boolean(
-        "Partner is blacklisted",
         related="partner_id.is_blacklisted",
+        string="Partner is blacklisted",
         readonly=True,
     )
     contact_name = fields.Char(
-        index="trigram",
-        tracking=30,
         compute="_compute_contact_name",
-        readonly=False,
         store=True,
+        index="trigram",
+        readonly=False,
+        tracking=30,
     )
     partner_name = fields.Char(
-        "Company Name",
-        index="trigram",
-        tracking=20,
-        compute="_compute_partner_name",
-        readonly=False,
-        store=True,
+        string="Company Name",
         help="The name of the future partner company that will be created while converting the lead into opportunity",
+        compute="_compute_partner_name",
+        store=True,
+        index="trigram",
+        readonly=False,
+        tracking=20,
     )
     function = fields.Char(
-        "Job Position",
+        string="Job Position",
         compute="_compute_function",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     email_from = fields.Char(
-        "Email",
-        tracking=40,
-        index="trigram",
+        string="Email",
         compute="_compute_email_from",
         inverse="_inverse_email_from",
-        readonly=False,
         store=True,
+        index="trigram",
+        readonly=False,
+        tracking=40,
     )
     email_normalized = fields.Char(index="trigram")
     email_domain_criterion = fields.Char(
         compute="_compute_email_domain_criterion",
-        index="btree_not_null",
         store=True,
+        index="btree_not_null",
     )
     phone_ids = fields.Many2many(
-        "phone.number",
-        "crm_lead_phone_number_rel",
-        "lead_id",
-        "phone_number_id",
-        tracking=50,
+        comodel_name="phone.number",
+        relation="crm_lead_phone_number_rel",
+        column1="lead_id",
+        column2="phone_number_id",
         compute="_compute_phone_ids",
         inverse="_inverse_phone_ids",
-        readonly=False,
         store=True,
+        readonly=False,
+        tracking=50,
     )
     phone_sanitized = fields.Char(index="btree_not_null")
     phone_state = fields.Selection(
-        [("correct", "Correct"), ("incorrect", "Incorrect")],
+        selection=[("correct", "Correct"), ("incorrect", "Incorrect")],
         string="Phone Quality",
         compute="_compute_phone_state",
         store=True,
     )
     email_state = fields.Selection(
-        [("correct", "Correct"), ("incorrect", "Incorrect")],
+        selection=[("correct", "Correct"), ("incorrect", "Incorrect")],
         string="Email Quality",
         compute="_compute_email_state",
         store=True,
@@ -337,70 +350,70 @@ class CrmLead(models.Model):
     website = fields.Char(
         help="Website of the contact",
         compute="_compute_website",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     lang_id = fields.Many2one(
-        "res.lang",
+        comodel_name="res.lang",
         string="Language",
         compute="_compute_lang_id",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     lang_code = fields.Char(related="lang_id.code")
     lang_active_count = fields.Integer(compute="_compute_lang_active_count")
     street = fields.Char(
         compute="_compute_partner_address_values",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     street2 = fields.Char(
         compute="_compute_partner_address_values",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     zip = fields.Char(
-        change_default=True,
         compute="_compute_partner_address_values",
-        readonly=False,
+        change_default=True,
         store=True,
+        readonly=False,
     )
     city = fields.Char(
         compute="_compute_partner_address_values",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     state_id = fields.Many2one(
-        "res.country.state",
+        comodel_name="res.country.state",
         compute="_compute_partner_address_values",
-        readonly=False,
         store=True,
+        readonly=False,
         domain="[('country_id', '=?', country_id)]",
     )
     country_id = fields.Many2one(
-        "res.country",
+        comodel_name="res.country",
         compute="_compute_partner_address_values",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     probability = fields.Float(
-        aggregator="avg",
-        copy=False,
         compute="_compute_probabilities",
-        readonly=False,
         store=True,
+        copy=False,
+        readonly=False,
+        aggregator="avg",
     )
     automated_probability = fields.Float(
         compute="_compute_probabilities",
-        readonly=True,
         store=True,
+        readonly=True,
     )
     is_automated_probability = fields.Boolean(
-        "Is automated probability?",
+        string="Is automated probability?",
         compute="_compute_is_automated_probability",
     )
     won_status = fields.Selection(
-        [
+        selection=[
             ("won", "Won"),
             ("lost", "Lost"),
             ("pending", "Pending"),
@@ -411,33 +424,37 @@ class CrmLead(models.Model):
         tracking=70,
     )
     lost_reason_id = fields.Many2one(
-        "crm.lost.reason",
+        comodel_name="crm.lost.reason",
         index=True,
         ondelete="restrict",
         tracking=71,
     )
     calendar_event_ids = fields.One2many(
-        "calendar.event", "opportunity_id", string="Meetings"
+        comodel_name="calendar.event",
+        inverse_name="opportunity_id",
+        string="Meetings",
     )
     duplicate_lead_ids = fields.Many2many(
-        "crm.lead",
-        compute="_compute_potential_lead_duplicates",
+        comodel_name="crm.lead",
         string="Potential Duplicate Lead",
-        context={"active_test": False},
+        compute="_compute_potential_lead_duplicates",
         compute_sudo=True,
+        context={"active_test": False},
     )
     duplicate_lead_count = fields.Integer(
-        compute="_compute_potential_lead_duplicates",
         string="Potential Duplicate Lead Count",
+        compute="_compute_potential_lead_duplicates",
         compute_sudo=True,
     )
     meeting_display_date = fields.Date(compute="_compute_meeting_display")
     meeting_display_label = fields.Char(compute="_compute_meeting_display")
     partner_email_update = fields.Boolean(
-        "Partner Email will Update", compute="_compute_partner_email_update"
+        string="Partner Email will Update",
+        compute="_compute_partner_email_update",
     )
     partner_phone_update = fields.Boolean(
-        "Partner Phone will Update", compute="_compute_partner_phone_update"
+        string="Partner Phone will Update",
+        compute="_compute_partner_phone_update",
     )
     is_partner_visible = fields.Boolean(compute="_compute_is_partner_visible")
     campaign_id = fields.Many2one(ondelete="set null")

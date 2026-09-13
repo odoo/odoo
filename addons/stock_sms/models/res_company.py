@@ -11,10 +11,10 @@ class ResCompany(models.Model):
             return False
 
     stock_sms_confirmation_template_id = fields.Many2one(
-        "sms.template",
+        comodel_name="sms.template",
         string="SMS Template",
-        domain="[('model', '=', 'stock.picking')]",
-        default=_default_stock_sms_confirmation_template_id,
         help="SMS sent to the customer once the order is delivered.",
+        default=_default_stock_sms_confirmation_template_id,
+        domain="[('model', '=', 'stock.picking')]",
     )
     has_received_warning_stock_sms = fields.Boolean()

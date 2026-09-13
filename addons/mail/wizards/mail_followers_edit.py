@@ -17,22 +17,32 @@ class MailFollowersEdit(models.TransientModel):
     _description = "Followers edit wizard"
 
     res_model = fields.Char(
-        "Related Document Model", required=True, help="Model of the followed resource"
+        string="Related Document Model",
+        help="Model of the followed resource",
+        required=True,
     )
-    res_ids = fields.Char("Related Document IDs", help="Ids of the followed resources")
+    res_ids = fields.Char(
+        string="Related Document IDs",
+        help="Ids of the followed resources",
+    )
     operation = fields.Selection(
-        [
+        selection=[
             ("add", "Add"),
             ("remove", "Remove"),
         ],
-        required=True,
         default="add",
+        required=True,
     )
     partner_ids: ResPartner = fields.Many2many(
-        "res.partner", required=True, string="Followers"
+        comodel_name="res.partner",
+        string="Followers",
+        required=True,
     )
     message = fields.Html()
-    notify = fields.Boolean("Notify Recipients", default=False)
+    notify = fields.Boolean(
+        string="Notify Recipients",
+        default=False,
+    )
 
     def edit_followers(self) -> dict:
         for wizard in self:

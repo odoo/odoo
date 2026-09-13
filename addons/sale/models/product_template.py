@@ -12,13 +12,13 @@ class ProductTemplate(models.Model):
     service_type = fields.Selection(
         selection=[("manual", "Manually set quantities on order")],
         string="Track Service",
-        compute="_compute_service_type",
-        store=True,
-        precompute=True,
-        readonly=False,
         help="Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
         "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
         "Create a task and track hours: Create a task on the sales order validation and track the work hours.",
+        compute="_compute_service_type",
+        precompute=True,
+        store=True,
+        readonly=False,
     )
     expense_policy = fields.Selection(
         selection=[
@@ -27,11 +27,11 @@ class ProductTemplate(models.Model):
             ("sales_price", "Sales price"),
         ],
         string="Re-Invoice Costs",
-        default="no",
+        help="Validated expenses, vendor bills, or stock pickings (set up to track costs) can be invoiced to the customer at either cost or sales price.",
         compute="_compute_expense_policy",
+        default="no",
         store=True,
         readonly=False,
-        help="Validated expenses, vendor bills, or stock pickings (set up to track costs) can be invoiced to the customer at either cost or sales price.",
     )
     invoice_policy = fields.Selection(
         selection=[
@@ -39,13 +39,13 @@ class ProductTemplate(models.Model):
             ("transferred", "Delivered quantities"),
         ],
         string="Invoicing Policy",
-        compute="_compute_invoice_policy",
-        store=True,
-        precompute=True,
-        readonly=False,
-        tracking=True,
         help="Ordered Quantity: Invoice quantities ordered by the customer.\n"
         "Delivered Quantity: Invoice quantities delivered to the customer.",
+        compute="_compute_invoice_policy",
+        precompute=True,
+        store=True,
+        readonly=False,
+        tracking=True,
     )
     sale_line_warn_msg = fields.Text(string="Sales Order Line Warning")
     visible_expense_policy = fields.Boolean(
@@ -59,10 +59,10 @@ class ProductTemplate(models.Model):
         column1="src_id",
         column2="dest_id",
         string="Optional Products",
-        check_company=True,
         help="Optional Products are suggested "
         "whenever the customer hits *Add to Cart* (cross-sell strategy, "
         "e.g. for computers: warranty, software, etc.).",
+        check_company=True,
     )
     sales_count = fields.Float(
         string="Sold",

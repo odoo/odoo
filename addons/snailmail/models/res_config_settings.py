@@ -5,13 +5,19 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     snailmail_color = fields.Boolean(
-        string="Print In Color", related="company_id.snailmail_color", readonly=False
+        related="company_id.snailmail_color",
+        string="Print In Color",
+        readonly=False,
     )
     snailmail_cover = fields.Boolean(
-        string="Add a Cover Page", related="company_id.snailmail_cover", readonly=False
+        related="company_id.snailmail_cover",
+        string="Add a Cover Page",
+        readonly=False,
     )
     snailmail_duplex = fields.Boolean(
-        string="Print Both sides", related="company_id.snailmail_duplex", readonly=False
+        related="company_id.snailmail_duplex",
+        string="Print Both sides",
+        readonly=False,
     )
 
     snailmail_cover_readonly = fields.Boolean(compute="_compute_cover_readonly")

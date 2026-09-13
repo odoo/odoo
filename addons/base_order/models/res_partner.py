@@ -9,13 +9,13 @@ class ResPartner(models.Model):
 
     recent_orders_count = fields.Integer(
         string="Recent Orders",
-        compute="_compute_recent_orders_count",
         help="Number of orders this partner placed within the order cycle "
         "configured on the company.",
+        compute="_compute_recent_orders_count",
     )
     days_since_last_order = fields.Integer(
-        compute="_compute_days_since_last_order",
         help="Number of days since this partner's last order.",
+        compute="_compute_days_since_last_order",
     )
 
     def _compute_order_count(self, order_model, count_field, group, domain=None):

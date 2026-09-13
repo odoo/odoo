@@ -18,13 +18,14 @@ class CalendarEvent(models.Model):
     MEET_ROUTE = "meet.google.com"
 
     google_id = fields.Char(
-        "Google Calendar Event Id",
+        string="Google Calendar Event Id",
         compute="_compute_google_id",
         store=True,
         readonly=False,
     )
     guests_readonly = fields.Boolean(
-        "Guests Event Modification Permission", default=False
+        string="Guests Event Modification Permission",
+        default=False,
     )
     videocall_source = fields.Selection(
         selection_add=[("google_meet", "Google Meet")],

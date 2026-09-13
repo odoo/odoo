@@ -15,47 +15,45 @@ class StockPutawayRule(models.Model):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        required=True,
         default=lambda s: s.env.company.id,
         index=True,
+        required=True,
     )
     product_id = fields.Many2one(
         comodel_name="product.product",
         default=lambda self: self._default_product_id(),
-        check_company=True,
+        index="btree_not_null",
         domain="[('product_tmpl_id', '=', context.get('active_id', False))] if context.get('active_model') == 'product.template' else [('type', '!=', 'service')]",
         ondelete="cascade",
-        index="btree_not_null",
+        check_company=True,
     )
     category_id = fields.Many2one(
         comodel_name="product.category",
         string="Product Category",
         default=lambda self: self._default_category_id(),
+        index="btree_not_null",
         domain=[("filter_for_stock_putaway_rule", "=", True)],
         ondelete="cascade",
-        index="btree_not_null",
     )
     location_in_id = fields.Many2one(
         comodel_name="stock.location",
         string="When product arrives in",
-        required=True,
         default=lambda self: self._default_location_in_id(),
-        check_company=True,
+        index=True,
+        required=True,
         domain="[('child_ids', '!=', False)]",
         ondelete="cascade",
-        index=True,
+        check_company=True,
     )
     location_out_id = fields.Many2one(
         comodel_name="stock.location",
         string="Store to sublocation",
         required=True,
-        check_company=True,
         domain="[('id', 'child_of', location_in_id)]",
         ondelete="cascade",
+        check_company=True,
     )
-    active = fields.Boolean(
-        default=True,
-    )
+    active = fields.Boolean(default=True)
     sequence = fields.Integer(
         string="Priority",
         help="Give to the more specialized category, a higher priority to have them in top of the list.",
@@ -69,8 +67,8 @@ class StockPutawayRule(models.Model):
         compute="_compute_storage_category_id",
         store=True,
         readonly=False,
-        check_company=True,
         ondelete="cascade",
+        check_company=True,
     )
     sublocation = fields.Selection(
         selection=[

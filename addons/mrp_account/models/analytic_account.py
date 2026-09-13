@@ -4,13 +4,20 @@ from odoo import _, api, fields, models
 class AccountAnalyticAccount(models.Model):
     _inherit = "account.analytic.account"
 
-    production_ids = fields.Many2many("mrp.production")
-    production_count = fields.Count("production_ids", "Manufacturing Orders Count")
-    bom_ids = fields.Many2many("mrp.bom")
-    bom_count = fields.Count("bom_ids", "BoM Count")
-    workcenter_ids = fields.Many2many("mrp.workcenter")
+    production_ids = fields.Many2many(comodel_name="mrp.production")
+    production_count = fields.Count(
+        count_of="production_ids",
+        string="Manufacturing Orders Count",
+    )
+    bom_ids = fields.Many2many(comodel_name="mrp.bom")
+    bom_count = fields.Count(
+        count_of="bom_ids",
+        string="BoM Count",
+    )
+    workcenter_ids = fields.Many2many(comodel_name="mrp.workcenter")
     workorder_count = fields.Integer(
-        "Work Order Count", compute="_compute_workorder_count"
+        string="Work Order Count",
+        compute="_compute_workorder_count",
     )
 
     def _get_workorders(self):

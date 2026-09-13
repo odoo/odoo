@@ -61,10 +61,10 @@ class MrpBomLine(models.Model):
     _inherit = "mrp.bom.line"
 
     cost_share = fields.Float(
-        "Cost Share (%)",
-        digits=0,
+        string="Cost Share (%)",
         help="The percentage of the component repartition cost when purchasing a kit."
         "The total of all components' cost have to be equal to 100.",
+        digits=0,
     )
 
     @api.constrains("cost_share")

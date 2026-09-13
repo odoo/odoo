@@ -71,7 +71,7 @@ class ResConfigSettings(models.TransientModel):
         config_parameter="product.fuel_efficiency_in_mpg",
     )
     module_loyalty = fields.Boolean(
-        string="Promotions, Coupons, Gift Card & Loyalty Program",
+        string="Promotions, Coupons, Gift Card & Loyalty Program"
     )
 
     @api.onchange("group_product_pricelist")

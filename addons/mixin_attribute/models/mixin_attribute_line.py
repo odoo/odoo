@@ -23,13 +23,12 @@ class MixinAttributeLine(models.AbstractModel):
     # slot awaiting capture.
     _requires_value = False
 
-    sequence = fields.Integer(
-        default=10,
+    sequence = fields.Integer(default=10)
+    active = fields.Boolean(default=True)
+    value_count = fields.Count(
+        count_of="value_ids",
+        store=True,
     )
-    active = fields.Boolean(
-        default=True,
-    )
-    value_count = fields.Count("value_ids", store=True)
 
     def _subject_label(self):
         """Name the record this line hangs off, for error messages.

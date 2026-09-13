@@ -9,10 +9,11 @@ class DocumentsTag(models.Model):
     _order = "sequence, name"
 
     sequence = fields.Integer(default=10)
-    tooltip = fields.Char(
-        help="Text shown when hovering on this tag",
+    tooltip = fields.Char(help="Text shown when hovering on this tag")
+    document_ids = fields.Many2many(
+        comodel_name="document.document",
+        relation="document_tag_rel",
     )
-    document_ids = fields.Many2many("document.document", "document_tag_rel")
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_used_in_server_action(self) -> None:

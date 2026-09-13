@@ -21,39 +21,45 @@ class ResUsersSettings(models.Model):
     google_calendar_credential_id = fields.Many2one(
         comodel_name="credential.credential",
         string="Google Credential",
-        ondelete="restrict",
-        copy=False,
-        groups="base.group_system",
         help="Holds this user's Google OAuth tokens.",
+        copy=False,
+        ondelete="restrict",
+        groups="base.group_system",
     )
     google_calendar_rtoken = fields.Char(
-        "Refresh Token",
-        copy=False,
-        groups="base.group_system",
+        string="Refresh Token",
         compute="_compute_google_calendar_tokens",
         inverse="_inverse_google_calendar_rtoken",
+        copy=False,
+        groups="base.group_system",
     )
     google_calendar_token = fields.Char(
-        "User token",
-        copy=False,
-        groups="base.group_system",
+        string="User token",
         compute="_compute_google_calendar_tokens",
         inverse="_inverse_google_calendar_token",
-    )
-    google_calendar_token_validity = fields.Datetime(
-        "Token Validity", copy=False, groups="base.group_system"
-    )
-    google_calendar_sync_token = fields.Char(
-        "Next Sync Token", copy=False, groups="base.group_system"
-    )
-    google_calendar_cal_id = fields.Char(
-        "Calendar ID",
         copy=False,
         groups="base.group_system",
+    )
+    google_calendar_token_validity = fields.Datetime(
+        string="Token Validity",
+        copy=False,
+        groups="base.group_system",
+    )
+    google_calendar_sync_token = fields.Char(
+        string="Next Sync Token",
+        copy=False,
+        groups="base.group_system",
+    )
+    google_calendar_cal_id = fields.Char(
+        string="Calendar ID",
         help="Last Calendar ID who has been synchronized. If it is changed, we remove all links between GoogleID and Odoo Google Internal ID",
+        copy=False,
+        groups="base.group_system",
     )
     google_synchronization_stopped = fields.Boolean(
-        "Google Synchronization stopped", copy=False, groups="base.group_system"
+        string="Google Synchronization stopped",
+        copy=False,
+        groups="base.group_system",
     )
 
     @api.model

@@ -20,27 +20,32 @@ class EventTypeTicket(models.Model):
         )
 
     description = fields.Text(
-        compute="_compute_description", readonly=False, store=True
+        compute="_compute_description",
+        store=True,
+        readonly=False,
     )
     # product
     product_id = fields.Many2one(
-        "product.product",
-        required=True,
-        index=True,
-        domain=[("service_tracking", "=", "event")],
+        comodel_name="product.product",
         default=_default_product_id,
+        index=True,
+        required=True,
+        domain=[("service_tracking", "=", "event")],
     )
-    currency_id = fields.Many2one(related="product_id.currency_id", string="Currency")
+    currency_id = fields.Many2one(
+        related="product_id.currency_id",
+        string="Currency",
+    )
     price = fields.Float(
-        compute="_compute_price",
         min_display_digits="Product Price",
-        readonly=False,
+        compute="_compute_price",
         store=True,
+        readonly=False,
     )
     price_reduce = fields.Float(
+        min_display_digits="Product Price",
         compute="_compute_price_reduce",
         compute_sudo=True,
-        min_display_digits="Product Price",
     )
 
     @api.constrains("product_id")

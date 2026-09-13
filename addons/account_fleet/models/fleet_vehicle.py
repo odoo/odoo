@@ -4,8 +4,14 @@ from odoo import Command, api, fields, models
 class FleetVehicle(models.Model):
     _inherit = "fleet.vehicle"
 
-    bill_count = fields.Count("account_move_ids", string="Bills Count")
-    account_move_ids = fields.One2many("account.move", compute="_compute_move_ids")
+    bill_count = fields.Count(
+        count_of="account_move_ids",
+        string="Bills Count",
+    )
+    account_move_ids = fields.One2many(
+        comodel_name="account.move",
+        compute="_compute_move_ids",
+    )
 
     # `uid`: this answers `False` outright for a user without the accounting
     # group, so the value is the acting user's. A non-stored compute's cache is

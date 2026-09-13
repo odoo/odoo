@@ -11,8 +11,8 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     l10n_ch_is_qr_valid = fields.Boolean(
-        compute="_compute_l10n_ch_qr_is_valid",
         help="Determines whether an invoice can be printed as a QR or not",
+        compute="_compute_l10n_ch_qr_is_valid",
     )
 
     @api.depends("partner_id", "currency_id")

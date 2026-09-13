@@ -22,7 +22,10 @@ class PosConfirmationWizard(models.TransientModel):
             customer_name=customer_name,
         )
 
-    message = fields.Text(default=_default_message, readonly=True)
+    message = fields.Text(
+        default=_default_message,
+        readonly=True,
+    )
 
     def action_confirm(self):
         selected_orders = self.get_selected_orders()

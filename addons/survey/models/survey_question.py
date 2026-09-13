@@ -32,13 +32,15 @@ class SurveyQuestion(models.Model):
 
     active = fields.Boolean(default=True)
     char_box_type = fields.Selection(
-        [("text", "Text"), ("phone", "Phone")], default="text", required=True
+        selection=[("text", "Text"), ("phone", "Phone")],
+        default="text",
+        required=True,
     )
 
     survey_id = fields.Many2one(
-        "survey.survey",
-        ondelete="cascade",
+        comodel_name="survey.survey",
         index="btree_not_null",
+        ondelete="cascade",
     )
     scoring_type = fields.Selection(
         related="survey_id.scoring_type",
@@ -57,19 +59,22 @@ class SurveyQuestion(models.Model):
         related="survey_id.session_speed_rating_time_limit",
         string="General Time limit (seconds)",
     )
-    title = fields.Char(required=True, translate=True)
+    title = fields.Char(
+        translate=True,
+        required=True,
+    )
     sequence = fields.Integer(default=10)
     description = fields.Html(
-        translate=True,
-        sanitize=True,
-        sanitize_overridable=True,
         help="Use this field to add additional explanations about your question or to "
         "illustrate it with pictures or a video.\n"
         "Write {{Q42}} to pipe in the respondent's answer to question 42 — the same "
         "question id a calculated field's Q42 refers to.",
+        translate=True,
+        sanitize=True,
+        sanitize_overridable=True,
     )
     question_placeholder = fields.Char(
-        "Placeholder",
+        string="Placeholder",
         translate=True,
         compute="_compute_question_placeholder",
         store=True,
@@ -81,34 +86,34 @@ class SurveyQuestion(models.Model):
         readonly=False,
     )
     background_image_url = fields.Char(
-        "Background Url",
+        string="Background Url",
         compute="_compute_background_image_url",
     )
 
-    is_page = fields.Boolean("Is a page?")
+    is_page = fields.Boolean(string="Is a page?")
     question_ids = fields.One2many(
-        "survey.question",
+        comodel_name="survey.question",
         string="Questions",
         compute="_compute_question_ids",
     )
     questions_selection = fields.Selection(
         related="survey_id.questions_selection",
-        readonly=True,
         help="If randomized is selected, add the number of random questions next to the section.",
+        readonly=True,
     )
     random_questions_count = fields.Integer(
-        "# Questions Randomly Picked",
-        default=1,
+        string="# Questions Randomly Picked",
         help="Used on randomized sections to take X random questions from all the questions of that section.",
+        default=1,
     )
 
     page_id = fields.Many2one(
-        "survey.question",
+        comodel_name="survey.question",
         compute="_compute_page_id",
         store=True,
     )
     question_type = fields.Selection(
-        [
+        selection=[
             ("simple_choice", "Multiple choice: only one answer"),
             ("dropdown", "Dropdown"),
             ("multiple_choice", "Multiple choice: multiple answers allowed"),
@@ -130,73 +135,77 @@ class SurveyQuestion(models.Model):
             ("statement", "Statement / Info Screen"),
         ],
         compute="_compute_question_type",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     is_scored_question = fields.Boolean(
-        "Scored",
+        string="Scored",
+        help="Include this question as part of quiz scoring. Requires an answer and answer score to be taken into account.",
         compute="_compute_is_scored_question",
-        readonly=False,
         store=True,
         copy=True,
-        help="Include this question as part of quiz scoring. Requires an answer and answer score to be taken into account.",
+        readonly=False,
     )
     has_image_only_suggested_answer = fields.Boolean(
-        "Has image only suggested answer",
+        string="Has image only suggested answer",
         compute="_compute_has_image_only_suggested_answer",
     )
     answer_numerical_box = fields.Float(
-        "Correct numerical answer",
+        string="Correct numerical answer",
         help="Correct number answer for this question.",
     )
     answer_date = fields.Date(
-        "Correct date answer",
+        string="Correct date answer",
         help="Correct date answer for this question.",
     )
     answer_datetime = fields.Datetime(
-        "Correct datetime answer",
+        string="Correct datetime answer",
         help="Correct date and time answer for this question.",
     )
     answer_score = fields.Float(
-        "Score", help="Score value for a correct answer to this question."
+        string="Score",
+        help="Score value for a correct answer to this question.",
     )
     save_as_email = fields.Boolean(
-        "Save as user email",
+        string="Save as user email",
+        help="If checked, this option will save the user's answer as its email address.",
         compute="_compute_save_as_email",
-        readonly=False,
         store=True,
         copy=True,
-        help="If checked, this option will save the user's answer as its email address.",
+        readonly=False,
     )
     save_as_nickname = fields.Boolean(
-        "Save as user nickname",
+        string="Save as user nickname",
+        help="If checked, this option will save the user's answer as its nickname.",
         compute="_compute_save_as_nickname",
-        readonly=False,
         store=True,
         copy=True,
-        help="If checked, this option will save the user's answer as its nickname.",
+        readonly=False,
     )
     suggested_answer_ids = fields.One2many(
-        "survey.question.answer",
-        "question_id",
+        comodel_name="survey.question.answer",
+        inverse_name="question_id",
         string="Types of answers",
-        copy=True,
         help="Labels used for proposed choices: simple choice, multiple choice and columns of matrix",
+        copy=True,
     )
     matrix_subtype = fields.Selection(
-        [("simple", "One choice per row"), ("multiple", "Multiple choices per row")],
+        selection=[
+            ("simple", "One choice per row"),
+            ("multiple", "Multiple choices per row"),
+        ],
         string="Matrix Type",
         default="simple",
     )
     matrix_row_ids = fields.One2many(
-        "survey.question.answer",
-        "matrix_question_id",
+        comodel_name="survey.question.answer",
+        inverse_name="matrix_question_id",
         string="Matrix Rows",
-        copy=True,
         help="Labels used for proposed choices: rows of matrix or Likert statements",
+        copy=True,
     )
     likert_preset = fields.Selection(
-        [
+        selection=[
             ("agreement_5", "Agreement (5-point)"),
             ("agreement_7", "Agreement (7-point)"),
             ("frequency_5", "Frequency (5-point)"),
@@ -205,107 +214,153 @@ class SurveyQuestion(models.Model):
         ],
         help="Predefined scale labels. Select a preset then add your statements as matrix rows.",
     )
-    scale_min = fields.Integer("Scale Minimum Value", default=0)
-    scale_max = fields.Integer("Scale Maximum Value", default=10)
-    scale_min_label = fields.Char("Scale Minimum Label", translate=True)
-    scale_mid_label = fields.Char("Scale Middle Label", translate=True)
-    scale_max_label = fields.Char("Scale Maximum Label", translate=True)
-    slider_min = fields.Float("Slider Minimum", default=0)
-    slider_max = fields.Float("Slider Maximum", default=100)
+    scale_min = fields.Integer(
+        string="Scale Minimum Value",
+        default=0,
+    )
+    scale_max = fields.Integer(
+        string="Scale Maximum Value",
+        default=10,
+    )
+    scale_min_label = fields.Char(
+        string="Scale Minimum Label",
+        translate=True,
+    )
+    scale_mid_label = fields.Char(
+        string="Scale Middle Label",
+        translate=True,
+    )
+    scale_max_label = fields.Char(
+        string="Scale Maximum Label",
+        translate=True,
+    )
+    slider_min = fields.Float(
+        string="Slider Minimum",
+        default=0,
+    )
+    slider_max = fields.Float(
+        string="Slider Maximum",
+        default=100,
+    )
     slider_step = fields.Float(default=1)
     slider_unit = fields.Char(
-        help="Unit label displayed next to the value (e.g., '%', 'kg', '$').",
+        help="Unit label displayed next to the value (e.g., '%', 'kg', '$')."
     )
     rating_max = fields.Integer(
-        "Rating Maximum", default=5, help="Number of rating icons (1 to 10)."
+        string="Rating Maximum",
+        help="Number of rating icons (1 to 10).",
+        default=5,
     )
     rating_icon = fields.Selection(
-        [("star", "Stars"), ("heart", "Hearts"), ("thumb", "Thumbs Up")],
+        selection=[("star", "Stars"), ("heart", "Hearts"), ("thumb", "Thumbs Up")],
         default="star",
     )
     constant_sum_total = fields.Integer(
-        "Total Points",
-        default=100,
+        string="Total Points",
         help="The total that all distributed values must sum to.",
+        default=100,
     )
     file_upload_types = fields.Char(
-        "Allowed File Types",
-        default=".pdf,.doc,.docx,.jpg,.png",
+        string="Allowed File Types",
         help="Comma-separated list of allowed file extensions.",
+        default=".pdf,.doc,.docx,.jpg,.png",
     )
     file_upload_max_size = fields.Integer(
-        "Max File Size (MB)",
-        default=10,
+        string="Max File Size (MB)",
         help="Maximum file size in megabytes.",
+        default=10,
     )
     calculated_expression = fields.Char(
-        "Formula",
+        string="Formula",
         help="Arithmetic expression using question references. Use Q<id> to reference "
         "other questions' numerical answers. Supports +, -, *, /, parentheses, and "
         "the functions: min(), max(), abs(), round().\n"
         "Example: Q42 * 0.3 + Q43 * 0.7",
     )
     is_time_limited = fields.Boolean(
-        "The question is limited in time",
+        string="The question is limited in time",
         help="Currently only supported for live sessions.",
     )
-    is_time_customized = fields.Boolean("Customized speed rewards")
-    time_limit = fields.Integer("Time limit (seconds)")
+    is_time_customized = fields.Boolean(string="Customized speed rewards")
+    time_limit = fields.Integer(string="Time limit (seconds)")
     shuffle_answers = fields.Boolean(
         help="Randomize the display order of suggested answers for each respondent. "
-        "The order is deterministic per respondent (seeded by their access token).",
+        "The order is deterministic per respondent (seeded by their access token)."
     )
-    comments_allowed = fields.Boolean("Show Comments Field")
-    comments_message = fields.Char("Comment Message", translate=True)
-    comment_count_as_answer = fields.Boolean("Comment is an answer")
+    comments_allowed = fields.Boolean(string="Show Comments Field")
+    comments_message = fields.Char(
+        string="Comment Message",
+        translate=True,
+    )
+    comment_count_as_answer = fields.Boolean(string="Comment is an answer")
     validation_required = fields.Boolean(
-        "Validate entry",
+        string="Validate entry",
         compute="_compute_validation_required",
-        readonly=False,
         store=True,
+        readonly=False,
     )
-    validation_email = fields.Boolean("Input must be an email")
-    validation_length_min = fields.Integer("Minimum Text Length", default=0)
-    validation_length_max = fields.Integer("Maximum Text Length", default=0)
-    validation_min_float_value = fields.Float("Minimum value", default=0.0)
-    validation_max_float_value = fields.Float("Maximum value", default=0.0)
-    validation_min_date = fields.Date("Minimum Date")
-    validation_max_date = fields.Date("Maximum Date")
-    validation_min_datetime = fields.Datetime("Minimum Datetime")
-    validation_max_datetime = fields.Datetime("Maximum Datetime")
-    validation_error_msg = fields.Char("Validation Error", translate=True)
-    constr_mandatory = fields.Boolean("Mandatory Answer")
-    constr_error_msg = fields.Char("Error message", translate=True)
+    validation_email = fields.Boolean(string="Input must be an email")
+    validation_length_min = fields.Integer(
+        string="Minimum Text Length",
+        default=0,
+    )
+    validation_length_max = fields.Integer(
+        string="Maximum Text Length",
+        default=0,
+    )
+    validation_min_float_value = fields.Float(
+        string="Minimum value",
+        default=0.0,
+    )
+    validation_max_float_value = fields.Float(
+        string="Maximum value",
+        default=0.0,
+    )
+    validation_min_date = fields.Date(string="Minimum Date")
+    validation_max_date = fields.Date(string="Maximum Date")
+    validation_min_datetime = fields.Datetime(string="Minimum Datetime")
+    validation_max_datetime = fields.Datetime(string="Maximum Datetime")
+    validation_error_msg = fields.Char(
+        string="Validation Error",
+        translate=True,
+    )
+    constr_mandatory = fields.Boolean(string="Mandatory Answer")
+    constr_error_msg = fields.Char(
+        string="Error message",
+        translate=True,
+    )
     user_input_line_ids = fields.One2many(
-        "survey.user_input.line",
-        "question_id",
+        comodel_name="survey.user_input.line",
+        inverse_name="question_id",
         string="Answers",
         domain=[("skipped", "=", False)],
         groups="survey.group_survey_user",
     )
 
     triggering_question_ids = fields.Many2many(
-        "survey.question",
+        comodel_name="survey.question",
         string="Triggering Questions",
+        help="Questions containing the triggering answer(s) to display the current question.",
         compute="_compute_triggering_question_ids",
         store=False,
-        help="Questions containing the triggering answer(s) to display the current question.",
     )
 
     allowed_triggering_question_ids = fields.Many2many(
-        "survey.question",
+        comodel_name="survey.question",
         string="Allowed Triggering Questions",
-        copy=False,
         compute="_compute_triggering_questions",
+        copy=False,
     )
     is_placed_before_trigger = fields.Boolean(
         string="Is misplaced?",
-        compute="_compute_triggering_questions",
         help="Is this question placed before any of its trigger questions?",
+        compute="_compute_triggering_questions",
     )
     triggering_answer_ids = fields.Many2many(
-        "survey.question.answer",
+        comodel_name="survey.question.answer",
         string="Triggering Answers",
+        help="Picking any of these answers will trigger this question.\n"
+        "Leave the field empty if the question should always be displayed.",
         copy=False,
         readonly=False,
         domain="""[
@@ -315,13 +370,12 @@ class SurveyQuestion(models.Model):
                      ('question_id.sequence', '<', sequence),
                      '&', ('question_id.sequence', '=', sequence), ('question_id.id', '<', id)
         ]""",
-        help="Picking any of these answers will trigger this question.\n"
-        "Leave the field empty if the question should always be displayed.",
     )
     triggering_question_id = fields.Many2one(
-        "survey.question",
+        comodel_name="survey.question",
         string="Triggering Question (value-based)",
-        ondelete="set null",
+        help="Show this question only when the selected question's answer meets the operator condition.\n"
+        "Use this for non-choice questions (numerical, text, date, scale, etc.).",
         domain="""[
             ('survey_id', '=', survey_id),
             ('is_page', '=', False),
@@ -329,11 +383,10 @@ class SurveyQuestion(models.Model):
             '|', ('sequence', '<', sequence),
                  '&', ('sequence', '=', sequence), ('id', '<', id)
         ]""",
-        help="Show this question only when the selected question's answer meets the operator condition.\n"
-        "Use this for non-choice questions (numerical, text, date, scale, etc.).",
+        ondelete="set null",
     )
     triggering_operator = fields.Selection(
-        [
+        selection=[
             ("is_answered", "Is answered"),
             ("is_not_answered", "Is not answered"),
             ("eq", "Equals"),
@@ -345,11 +398,11 @@ class SurveyQuestion(models.Model):
             ("contains", "Contains"),
         ],
         string="Trigger Operator",
-        default="is_answered",
         help="Comparison operator for value-based conditional trigger.",
+        default="is_answered",
     )
     triggering_value = fields.Char(
-        "Trigger Value",
+        string="Trigger Value",
         help="The value to compare against. For numerical questions use a number, "
         "for date questions use YYYY-MM-DD format.",
     )

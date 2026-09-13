@@ -9,16 +9,22 @@ class SaleOrder(models.Model):
 
     pickup_location_data = fields.Json()
     carrier_id = fields.Many2one(
-        "delivery.carrier",
+        comodel_name="delivery.carrier",
         string="Delivery Method",
-        check_company=True,
         help="Fill this field if you plan to invoice the shipping based on picking.",
+        check_company=True,
     )
-    delivery_message = fields.Char(readonly=True, copy=False)
+    delivery_message = fields.Char(
+        copy=False,
+        readonly=True,
+    )
     delivery_set = fields.Boolean(compute="_compute_delivery_set")
-    recompute_delivery_price = fields.Boolean("Delivery cost should be recomputed")
+    recompute_delivery_price = fields.Boolean(
+        string="Delivery cost should be recomputed"
+    )
     is_all_service = fields.Boolean(
-        "Service Product", compute="_compute_is_all_service"
+        string="Service Product",
+        compute="_compute_is_all_service",
     )
     shipping_weight = fields.Float(
         compute="_compute_shipping_weight",

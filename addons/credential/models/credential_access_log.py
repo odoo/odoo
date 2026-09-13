@@ -17,38 +17,38 @@ class CredentialAccessLog(models.Model):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
+        help="Company context for the access (empty for system-wide credentials)",
+        index=True,
         required=False,
         ondelete="cascade",
-        index=True,
-        help="Company context for the access (empty for system-wide credentials)",
     )
     user_id = fields.Many2one(
         comodel_name="res.users",
-        required=False,
-        ondelete="set null",
-        index=True,
         help="User who accessed the credential. Nullable with ondelete=set "
         "null so deleting a user does NOT erase the audit trail of what they "
         "accessed; the login is denormalized into user_login for readability.",
+        index=True,
+        required=False,
+        ondelete="set null",
     )
     user_login = fields.Char(
         help="Login of the accessing user, captured at access time. Survives "
-        "deletion of the res.users record so the audit row stays readable.",
+        "deletion of the res.users record so the audit row stays readable."
     )
     credential_id = fields.Many2one(
         comodel_name="credential.credential",
-        required=False,
-        ondelete="set null",
-        index=True,
         help="Credential that was accessed. Nullable with ondelete=set null: "
         "an audit trail MUST outlive the credential it describes, so deleting "
         "a credential nulls this FK instead of cascade-wiping its history. The "
         "name is denormalized into credential_name so the row stays readable.",
+        index=True,
+        required=False,
+        ondelete="set null",
     )
     credential_name = fields.Char(
-        index=True,
         help="Name of the accessed credential, captured at access time. "
         "Survives deletion of the credential so the audit row stays readable.",
+        index=True,
     )
     operation = fields.Selection(
         selection=[
@@ -59,24 +59,24 @@ class CredentialAccessLog(models.Model):
             ("delete", "Delete"),
             ("read_rate_limited", "Read (Rate Limited)"),
         ],
-        required=True,
-        index=True,
         help="Type of operation performed",
+        index=True,
+        required=True,
     )
     DENIED_OPERATIONS = {
         "read_rate_limited": "Decryption rate limit exceeded for this user",
     }
 
     timestamp = fields.Datetime(
-        required=True,
+        help="When the access occurred",
         default=fields.Datetime.now,
         index=True,
-        help="When the access occurred",
+        required=True,
     )
     source_ip = fields.Char(
         string="Source IP",
-        index=True,
         help="IP address of the request origin (if available)",
+        index=True,
     )
     display_name = fields.Char(
         compute="_compute_display_name",

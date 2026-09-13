@@ -5,8 +5,8 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     l10n_it_edi_doi_ids = fields.One2many(
-        "l10n_it_edi_doi.declaration_of_intent",
-        "partner_id",
+        comodel_name="l10n_it_edi_doi.declaration_of_intent",
+        inverse_name="partner_id",
         string="Available Declarations of Intent of this partner",
         domain=lambda self: [("company_id", "=", self.env.company.id)],
     )

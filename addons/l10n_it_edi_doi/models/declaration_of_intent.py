@@ -10,28 +10,28 @@ class L10n_It_Edi_DoiDeclaration_Of_Intent(models.Model):
     _order = "protocol_number_part1, protocol_number_part2"
 
     state = fields.Selection(
-        [
+        selection=[
             ("draft", "Draft"),
             ("active", "Active"),
             ("revoked", "Revoked"),
             ("terminated", "Terminated"),
         ],
-        tracking=True,
-        default="draft",
-        required=True,
-        readonly=True,
         help="The state of this Declaration of Intent. \n"
         "- 'Draft' means that the Declaration of Intent still needs to be confirmed before being usable. \n"
         "- 'Active' means that the Declaration of Intent is usable. \n"
         "- 'Terminated' designates that the Declaration of Intent has been marked as not to use anymore without invalidating usages of it. \n"
         "- 'Revoked' means the Declaration of Intent should not have been used. You will probably need to revert previous usages of it, if any.\n",
+        default="draft",
+        readonly=True,
+        required=True,
+        tracking=True,
     )
 
     company_id = fields.Many2one(
         comodel_name="res.company",
+        default=lambda self: self.env.company._get_accessible_branches()[:1],
         index=True,
         required=True,
-        default=lambda self: self.env.company._get_accessible_branches()[:1],
     )
 
     partner_id = fields.Many2one(
@@ -44,81 +44,81 @@ class L10n_It_Edi_DoiDeclaration_Of_Intent(models.Model):
     currency_id = fields.Many2one(
         comodel_name="res.currency",
         default=lambda self: self.env.ref("base.EUR", raise_if_not_found=False).id,
-        required=True,
         readonly=True,
+        required=True,
     )
 
     issue_date = fields.Date(
         string="Date of Issue",
-        required=True,
-        copy=False,
-        default=fields.Date.context_today,
         help="Date on which the Declaration of Intent was issued",
+        default=fields.Date.context_today,
+        copy=False,
+        required=True,
     )
 
     start_date = fields.Date(
-        required=True,
-        copy=False,
         help="First date on which the Declaration of Intent is valid",
+        copy=False,
+        required=True,
     )
 
     end_date = fields.Date(
-        required=True,
-        copy=False,
         help="Last date on which the Declaration of Intent is valid",
+        copy=False,
+        required=True,
     )
 
     threshold = fields.Monetary(
-        required=True,
         help="Total amount of allowed sales without VAT under this Declaration of Intent",
+        required=True,
     )
 
     invoiced = fields.Monetary(
+        help="Total amount of sales under this Declaration of Intent",
         compute="_compute_invoiced",
         store=True,
         readonly=True,
-        help="Total amount of sales under this Declaration of Intent",
     )
 
     not_yet_invoiced = fields.Monetary(
+        help="Total amount of planned sales under this Declaration of Intent (i.e. current quotation and sales orders) that can still be invoiced",
         compute="_compute_not_yet_invoiced",
         store=True,
         readonly=True,
-        help="Total amount of planned sales under this Declaration of Intent (i.e. current quotation and sales orders) that can still be invoiced",
     )
 
     remaining = fields.Monetary(
+        help="Remaining amount after deduction of the Invoiced and Not Yet Invoiced amounts.",
         compute="_compute_remaining",
         store=True,
         readonly=True,
-        help="Remaining amount after deduction of the Invoiced and Not Yet Invoiced amounts.",
     )
 
     protocol_number_part1 = fields.Char(
         string="Protocol 1",
-        required=True,
-        readonly=False,
         copy=False,
+        readonly=False,
+        required=True,
     )
 
     protocol_number_part2 = fields.Char(
         string="Protocol 2",
-        required=True,
-        readonly=False,
         copy=False,
+        readonly=False,
+        required=True,
     )
 
     invoice_ids = fields.One2many(
-        "account.move",
-        "l10n_it_edi_doi_id",
+        comodel_name="account.move",
+        inverse_name="l10n_it_edi_doi_id",
         string="Invoices / Refunds",
         copy=False,
         readonly=True,
     )
 
     sale_order_ids = fields.One2many(
-        "sale.order",
-        "l10n_it_edi_doi_id",
+        comodel_name="sale.order",
+        inverse_name="l10n_it_edi_doi_id",
         string="Sales Orders / Quotations",
         copy=False,
         readonly=True,

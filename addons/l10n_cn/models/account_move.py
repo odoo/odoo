@@ -11,7 +11,12 @@ except ImportError:
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    fapiao = fields.Char(string="Fapiao Number", size=8, copy=False, tracking=True)
+    fapiao = fields.Char(
+        string="Fapiao Number",
+        size=8,
+        copy=False,
+        tracking=True,
+    )
 
     @api.constrains("fapiao")
     def _check_fapiao(self):

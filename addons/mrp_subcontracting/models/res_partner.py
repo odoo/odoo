@@ -5,32 +5,32 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     property_stock_subcontractor = fields.Many2one(
-        "stock.location",
+        comodel_name="stock.location",
         string="Subcontractor Location",
-        company_dependent=True,
         help="The stock location used as source and destination when sending\
         goods to this contact during a subcontracting process.",
+        company_dependent=True,
     )
     is_subcontractor = fields.Boolean(
         string="Subcontractor",
-        store=False,
-        search="_search_is_subcontractor",
         compute="_compute_is_subcontractor",
+        search="_search_is_subcontractor",
+        store=False,
     )
     bom_ids = fields.Many2many(
-        "mrp.bom",
-        compute="_compute_bom_ids",
+        comodel_name="mrp.bom",
         string="BoMs for which the Partner is one of the subcontractors",
+        compute="_compute_bom_ids",
     )
     production_ids = fields.Many2many(
-        "mrp.production",
-        compute="_compute_production_ids",
+        comodel_name="mrp.production",
         string="MRP Productions for which the Partner is the subcontractor",
+        compute="_compute_production_ids",
     )
     picking_ids = fields.Many2many(
-        "stock.picking",
-        compute="_compute_picking_ids",
+        comodel_name="stock.picking",
         string="Stock Pickings for which the Partner is the subcontractor",
+        compute="_compute_picking_ids",
     )
 
     def _compute_bom_ids(self):

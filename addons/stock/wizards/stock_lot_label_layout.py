@@ -13,15 +13,15 @@ class LotLabelLayout(models.TransientModel):
     label_quantity = fields.Selection(
         selection=[("lots", "One per lot/SN"), ("units", "One per unit")],
         string="Quantity to print",
-        required=True,
-        default="lots",
         help="If the UoM of a lot is not 'units', the lot will be considered as a unit and only one label will be printed for this lot.",
+        default="lots",
+        required=True,
     )
     print_format = fields.Selection(
         selection=[("4x12", "4 x 12"), ("zpl", "ZPL Labels")],
         string="Format",
-        required=True,
         default="4x12",
+        required=True,
     )
 
     def process(self):

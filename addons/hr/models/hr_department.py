@@ -15,9 +15,9 @@ class HrDepartment(models.Model):
     _rec_name = "complete_name"
 
     name = fields.Char(
-        "Department Name",
-        required=True,
+        string="Department Name",
         translate=True,
+        required=True,
     )
     complete_name = fields.Char(
         compute="_compute_complete_name",
@@ -26,53 +26,59 @@ class HrDepartment(models.Model):
     )
     active = fields.Boolean(default=True)
     company_id = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
         compute="_compute_company_id",
-        store=True,
+        precompute=True,
         recursive=True,
+        store=True,
         index=True,
         readonly=False,
         tracking=True,
-        precompute=True,
     )
     parent_id = fields.Many2one(
-        "hr.department",
+        comodel_name="hr.department",
         string="Parent Department",
         index=True,
         check_company=True,
     )
     child_ids = fields.One2many(
-        "hr.department",
-        "parent_id",
+        comodel_name="hr.department",
+        inverse_name="parent_id",
         string="Child Departments",
     )
     manager_id = fields.Many2one(
-        "hr.employee",
-        tracking=True,
+        comodel_name="hr.employee",
         domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]",
+        tracking=True,
     )
     member_ids = fields.One2many(
-        "hr.employee",
-        "department_id",
+        comodel_name="hr.employee",
+        inverse_name="department_id",
         string="Members",
         readonly=True,
     )
     has_read_access = fields.Boolean(
+        export_string_translation=False,
         search="_search_has_read_access",
         store=False,
-        export_string_translation=False,
     )
     total_employee = fields.Integer(
-        compute="_compute_total_employee",
         export_string_translation=False,
+        compute="_compute_total_employee",
     )
-    jobs_ids = fields.One2many("hr.job", "department_id")
-    plan_ids = fields.One2many("mail.activity.plan", "department_id")
+    jobs_ids = fields.One2many(
+        comodel_name="hr.job",
+        inverse_name="department_id",
+    )
+    plan_ids = fields.One2many(
+        comodel_name="mail.activity.plan",
+        inverse_name="department_id",
+    )
     plans_count = fields.Integer(compute="_compute_plans_count")
     note = fields.Text()
-    color = fields.Integer("Color Index")
+    color = fields.Integer(string="Color Index")
     master_department_id = fields.Many2one(
-        "hr.department",
+        comodel_name="hr.department",
         compute="_compute_master_department_id",
         store=True,
     )

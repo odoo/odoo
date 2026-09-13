@@ -7,7 +7,9 @@ class StockWarehouse(models.Model):
     _inherit = "stock.warehouse"
 
     pos_type_id = fields.Many2one(
-        "stock.picking.type", string="Point of Sale Operation Type", copy=False
+        comodel_name="stock.picking.type",
+        string="Point of Sale Operation Type",
+        copy=False,
     )
 
     def _prepare_picking_type_update_vals(self):

@@ -25,12 +25,12 @@ class AccountAnalyticApplicability(models.Model):
         help="Prefix that defines which accounts from the financial accounting this applicability should apply on.",
     )
     product_categ_id = fields.Many2one(
-        "product.category",
+        comodel_name="product.category",
         string="Product Category",
     )
     display_account_prefix = fields.Boolean(
-        compute="_compute_display_account_prefix",
         help="Defines if the field account prefix should be displayed",
+        compute="_compute_display_account_prefix",
     )
     account_prefix_placeholder = fields.Char(
         compute="_compute_account_prefix_placeholder"

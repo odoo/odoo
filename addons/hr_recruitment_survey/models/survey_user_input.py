@@ -4,7 +4,10 @@ from odoo import _, fields, models
 class SurveyUser_Input(models.Model):
     _inherit = "survey.user_input"
 
-    applicant_id = fields.Many2one("hr.applicant", index="btree_not_null")
+    applicant_id = fields.Many2one(
+        comodel_name="hr.applicant",
+        index="btree_not_null",
+    )
 
     def _mark_done(self):
         odoobot = self.env.ref("base.partner_root")

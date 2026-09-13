@@ -34,28 +34,40 @@ class AccountReturn(models.Model):
     _order = "is_completed, date_deadline, name, id"
     _check_company_domain = check_company_domain_account_return
 
-    active = fields.Boolean(default=True, tracking=True)
-    name = fields.Char(required=True, translate=True)
+    active = fields.Boolean(
+        default=True,
+        tracking=True,
+    )
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
     date_from = fields.Date(required=True)
     date_to = fields.Date(required=True)
     type_id = fields.Many2one(
-        comodel_name="account.return.type", string="Return Type", required=True
+        comodel_name="account.return.type",
+        string="Return Type",
+        required=True,
     )
 
     # IMPORTANT: To change the state of a return you should always write on the 'state' field; its
     # inverse dispatches the value to the selection field named by type_id.states_workflow.
-    state = fields.Char(compute="_compute_state", inverse="_inverse_state", store=True)
+    state = fields.Char(
+        compute="_compute_state",
+        inverse="_inverse_state",
+        store=True,
+    )
     next_state = fields.Char(compute="_compute_next_state")
     generic_state_tax_report = fields.Selection(
-        string="Generic State",
         selection=[
             ("new", "New"),
             ("reviewed", "Review"),
             ("submitted", "Submit"),
             ("paid", "Pay"),
         ],
-        default="new",
+        string="Generic State",
         help="The state of the return for generic tax report flows",
+        default="new",
         tracking=True,
     )
     generic_state_only_pay = fields.Selection(
@@ -63,8 +75,8 @@ class AccountReturn(models.Model):
             ("new", "New"),
             ("paid", "Pay"),
         ],
-        default="new",
         help="The state of the return for report flows when only payment is needed",
+        default="new",
         tracking=True,
     )
     generic_state_review_submit = fields.Selection(
@@ -73,8 +85,8 @@ class AccountReturn(models.Model):
             ("reviewed", "Review"),
             ("submitted", "Submit"),
         ],
-        default="new",
         help="The state of the return for report flows when review and submission are needed",
+        default="new",
         tracking=True,
     )
     generic_state_review = fields.Selection(
@@ -82,44 +94,60 @@ class AccountReturn(models.Model):
             ("new", "New"),
             ("reviewed", "Review"),
         ],
-        default="new",
         help="The default state for audit and custom generated return types",
+        default="new",
         tracking=True,
     )
     is_completed = fields.Boolean(
-        default=False, tracking=True
+        default=False,
+        tracking=True,
     )  # Set to true when all steps are done
-    company_id = fields.Many2one(comodel_name="res.company", required=True)
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        required=True,
+    )
     tax_unit_id = fields.Many2one(comodel_name="account.tax.unit")
     company_ids = fields.Many2many(
         comodel_name="res.company",
         string="Companies",
         compute="_compute_company_ids",
+        precompute=True,
         compute_sudo=True,
         store=True,
-        precompute=True,
     )
     closing_move_ids = fields.One2many(
-        comodel_name="account.move", inverse_name="closing_return_id", tracking=True
+        comodel_name="account.move",
+        inverse_name="closing_return_id",
+        tracking=True,
     )
     attachment_ids = fields.Many2many(
-        comodel_name="ir.attachment", bypass_search_access=True
+        comodel_name="ir.attachment",
+        bypass_search_access=True,
     )
     type_external_id = fields.Char(compute="_compute_type_external_id")
     date_deadline = fields.Date(
-        string="Deadline", compute="_compute_date_deadline", store=True
+        string="Deadline",
+        compute="_compute_date_deadline",
+        store=True,
     )
     date_lock = fields.Date(string="Lock Date")
     date_submission = fields.Date(string="Submission Date")
     check_ids = fields.One2many(
-        comodel_name="account.return.check", inverse_name="return_id", string="Checks"
+        comodel_name="account.return.check",
+        inverse_name="return_id",
+        string="Checks",
     )
-    check_count = fields.Count("check_ids", string="Checks Count")
+    check_count = fields.Count(
+        count_of="check_ids",
+        string="Checks Count",
+    )
     unresolved_check_count = fields.Integer(
-        string="Issues", compute="_compute_unresolved_check_count"
+        string="Issues",
+        compute="_compute_unresolved_check_count",
     )
     resolved_check_count = fields.Integer(
-        string="Passed", compute="_compute_resolved_check_count"
+        string="Passed",
+        compute="_compute_resolved_check_count",
     )
     manually_created = fields.Boolean()
 
@@ -127,7 +155,8 @@ class AccountReturn(models.Model):
     total_amount_to_pay = fields.Monetary(currency_field="amount_to_pay_currency_id")
     period_amount_to_pay = fields.Monetary(currency_field="amount_to_pay_currency_id")
     amount_to_pay_currency_id = fields.Many2one(
-        comodel_name="res.currency", compute="_compute_amount_to_pay_currency_id"
+        comodel_name="res.currency",
+        compute="_compute_amount_to_pay_currency_id",
     )
     show_amount_to_pay = fields.Boolean(compute="_compute_show_amount_to_pay")
 
@@ -136,10 +165,12 @@ class AccountReturn(models.Model):
     is_report_set = fields.Boolean(compute="_compute_is_report_set")
     has_move_entries = fields.Boolean(compute="_compute_has_move_entries")
     report_opened_once = fields.Boolean(
-        help="Has the report been opened once", default=False
+        help="Has the report been opened once",
+        default=False,
     )
     report_name = fields.Char(
-        string="Report Name", related="type_id.report_id.display_name"
+        related="type_id.report_id.display_name",
+        string="Report Name",
     )
     show_companies = fields.Boolean(compute="_compute_show_companies")
     show_companies_mismatch_warning = fields.Boolean(
@@ -167,12 +198,13 @@ class AccountReturn(models.Model):
     )
 
     audit_account_status_ids = fields.One2many(
-        string="Account Status",
         comodel_name="account.audit.account.status",
         inverse_name="audit_id",
+        string="Account Status",
     )
     audit_balances_count = fields.Integer(
-        string="Balances Count", compute="_compute_audit_balances_count"
+        string="Balances Count",
+        compute="_compute_audit_balances_count",
     )
     audit_balances_completed_count = fields.Integer(
         string="Completed Balances Count",

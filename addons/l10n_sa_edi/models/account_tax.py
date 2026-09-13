@@ -39,14 +39,14 @@ class AccountTax(models.Model):
     _inherit = "account.tax"
 
     l10n_sa_is_retention = fields.Boolean(
-        "Is Retention",
-        default=False,
+        string="Is Retention",
         help="Determines whether or not a tax counts as a Withholding Tax",
+        default=False,
     )
 
     l10n_sa_exemption_reason_code = fields.Selection(
-        string="Exemption Reason Code",
         selection=EXEMPTION_REASON_CODES,
+        string="Exemption Reason Code",
         help="Tax Exemption Reason Code (ZATCA)",
     )
 

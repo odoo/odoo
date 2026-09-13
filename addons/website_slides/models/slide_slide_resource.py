@@ -11,16 +11,36 @@ class SlideSlideResource(models.Model):
     _order = "sequence, id"
 
     slide_id = fields.Many2one(
-        "slide.slide", required=True, index=True, ondelete="cascade"
+        comodel_name="slide.slide",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
-    resource_type = fields.Selection([("file", "File"), ("url", "Link")], required=True)
-    name = fields.Char(compute="_compute_name", readonly=False, store=True)
+    resource_type = fields.Selection(
+        selection=[("file", "File"), ("url", "Link")],
+        required=True,
+    )
+    name = fields.Char(
+        compute="_compute_name",
+        store=True,
+        readonly=False,
+    )
     data = fields.Binary(
-        "Resource", compute="_compute_reset_resources", store=True, readonly=False
+        string="Resource",
+        compute="_compute_reset_resources",
+        store=True,
+        readonly=False,
     )
     file_name = fields.Char(store=True)
-    link = fields.Char(compute="_compute_reset_resources", store=True, readonly=False)
-    download_url = fields.Char("Download URL", compute="_compute_download_url")
+    link = fields.Char(
+        compute="_compute_reset_resources",
+        store=True,
+        readonly=False,
+    )
+    download_url = fields.Char(
+        string="Download URL",
+        compute="_compute_download_url",
+    )
     sequence = fields.Integer()
 
     _check_url = models.Constraint(

@@ -32,8 +32,8 @@ class PosPaymentMethod(models.Model):
     )
     dpopay_payment_mode = fields.Selection(
         selection=[("card", "Card"), ("momo", "Mobile Money")],
-        default="card",
         help="Choose allowed payment mode:\nCard - regular card payments\nMobile Money - M-Pesa / Airtel Mobile Money",
+        default="card",
     )
     dpopay_chain_id = fields.Char(
         string="DPO Pay Chain-ID",
@@ -44,8 +44,8 @@ class PosPaymentMethod(models.Model):
         help="Check this to use DPO Pay's sandbox environment for testing purposes.",
     )
     dpopay_bearer_token = fields.Char(
-        default="Token",
         help="Bearer token used for authenticating requests. Automatically refreshed when expired.",
+        default="Token",
     )
 
     def _selection_payment_terminals(self):

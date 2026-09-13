@@ -23,18 +23,24 @@ class CrmMergeOpportunity(models.TransientModel):
         return result
 
     opportunity_ids = fields.Many2many(
-        "crm.lead",
-        "merge_opportunity_rel",
-        "merge_id",
-        "opportunity_id",
+        comodel_name="crm.lead",
+        relation="merge_opportunity_rel",
+        column1="merge_id",
+        column2="opportunity_id",
         string="Leads/Opportunities",
         context={"active_test": False},
     )
     user_id = fields.Many2one(
-        "res.users", "Salesperson", domain="[('share', '=', False)]"
+        comodel_name="res.users",
+        string="Salesperson",
+        domain="[('share', '=', False)]",
     )
     team_id = fields.Many2one(
-        "crm.team", "Sales Team", compute="_compute_team_id", readonly=False, store=True
+        comodel_name="crm.team",
+        string="Sales Team",
+        compute="_compute_team_id",
+        store=True,
+        readonly=False,
     )
 
     def action_merge(self):

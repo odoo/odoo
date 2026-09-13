@@ -7,7 +7,10 @@ class SlideTag(models.Model):
     _name = "slide.tag"
     _description = "Slide Tag"
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
 
     _name_src_uniq = name_uniq_index(
         message="A tag must be unique!",

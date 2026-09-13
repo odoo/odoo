@@ -4,7 +4,7 @@ from odoo import api, fields, models
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    l10n_eg_building_no = fields.Char("Building No.")
+    l10n_eg_building_no = fields.Char(string="Building No.")
 
     @api.model
     def _commercial_fields(self):

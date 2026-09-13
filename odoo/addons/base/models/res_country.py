@@ -41,12 +41,16 @@ class ResCountry(models.Model):
     _order = "name, id"
     _rec_names_search = ["name", "code"]
 
-    name = fields.Char(string="Country Name", required=True, translate=True)
+    name = fields.Char(
+        string="Country Name",
+        translate=True,
+        required=True,
+    )
     code = fields.Char(
         string="Country Code",
+        help="The ISO country code in two chars. \nYou can use this field for quick search.",
         size=2,
         required=True,
-        help="The ISO country code in two chars. \nYou can use this field for quick search.",
     )
     address_format = fields.Text(
         string="Layout in Reports",
@@ -62,41 +66,45 @@ class ResCountry(models.Model):
     address_view_id = fields.Many2one(
         comodel_name="ir.ui.view",
         string="Input View",
-        domain=[("model", "=", "res.partner"), ("type", "=", "form")],
         help="Use this field if you want to replace the usual way to encode a complete address. "
         "Note that the address_format field is used to modify the way to display addresses "
         "(in reports for example), while this field is used to modify the input form for "
         "addresses.",
+        domain=[("model", "=", "res.partner"), ("type", "=", "form")],
     )
-    currency_id = fields.Many2one("res.currency")
+    currency_id = fields.Many2one(comodel_name="res.currency")
     image_url = fields.Char(
-        compute="_compute_image_url",
         string="Flag",
         help="Url of static flag image",
+        compute="_compute_image_url",
     )
     phone_code = fields.Integer(string="Country Calling Code")
     country_group_ids = fields.Many2many(
-        "res.country.group",
-        "res_country_res_country_group_rel",
-        "res_country_id",
-        "res_country_group_id",
+        comodel_name="res.country.group",
+        relation="res_country_res_country_group_rel",
+        column1="res_country_id",
+        column2="res_country_group_id",
         string="Country Groups",
     )
     country_group_codes = fields.Json(compute="_compute_country_group_codes")
-    state_ids = fields.One2many("res.country.state", "country_id", string="States")
+    state_ids = fields.One2many(
+        comodel_name="res.country.state",
+        inverse_name="country_id",
+        string="States",
+    )
     name_position = fields.Selection(
-        [
+        selection=[
             ("before", "Before Address"),
             ("after", "After Address"),
         ],
         string="Customer Name Position",
-        default="before",
         help="Determines where the customer/company name should be placed, i.e. after or before the address.",
+        default="before",
     )
     vat_label = fields.Char(
+        help="Use this field if you want to change vat label.",
         translate=True,
         prefetch=True,
-        help="Use this field if you want to change vat label.",
     )
 
     state_required = fields.Boolean(default=False)
@@ -220,13 +228,16 @@ class ResCountryGroup(models.Model):
     _name = "res.country.group"
     _description = "Country Group"
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
     code = fields.Char()
     country_ids = fields.Many2many(
-        "res.country",
-        "res_country_res_country_group_rel",
-        "res_country_group_id",
-        "res_country_id",
+        comodel_name="res.country",
+        relation="res_country_res_country_group_rel",
+        column1="res_country_group_id",
+        column2="res_country_id",
         string="Countries",
     )
 
@@ -258,13 +269,21 @@ class ResCountryState(models.Model):
     _order = "code, id"
     _rec_names_search = ["name", "code"]
 
-    country_id = fields.Many2one("res.country", required=True, index=True)
+    country_id = fields.Many2one(
+        comodel_name="res.country",
+        index=True,
+        required=True,
+    )
     name = fields.Char(
         string="State Name",
-        required=True,
         help="Administrative divisions of a country. E.g. Fed. State, Department, Canton",
+        required=True,
     )
-    code = fields.Char(string="State Code", help="The state code.", required=True)
+    code = fields.Char(
+        string="State Code",
+        help="The state code.",
+        required=True,
+    )
 
     _name_code_uniq = models.Constraint(
         "unique(country_id, code)",

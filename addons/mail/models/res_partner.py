@@ -37,8 +37,8 @@ class ResPartner(models.Model):
     user_id: ResUsers = fields.Many2one(tracking=4)
     vat = fields.Char(tracking=5)
     contact_address_inline = fields.Char(
-        compute="_compute_contact_address_inline",
         string="Inlined Complete Address",
+        compute="_compute_contact_address_inline",
         tracking=True,
     )
 

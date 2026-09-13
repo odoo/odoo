@@ -13,7 +13,10 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     user_livechat_username = fields.Char(compute="_compute_user_livechat_username")
-    chatbot_script_ids = fields.One2many("chatbot.script", "operator_partner_id")
+    chatbot_script_ids = fields.One2many(
+        comodel_name="chatbot.script",
+        inverse_name="operator_partner_id",
+    )
     livechat_channel_count = fields.Integer(compute="_compute_livechat_channel_count")
 
     def _search_for_channel_invite_to_store(self, store: Store, channel):

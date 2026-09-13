@@ -12,8 +12,8 @@ class SaleOrder(models.Model):
         groups="stock.group_stock_user",
     )
     repair_count = fields.Count(
-        "repair_order_ids",
-        "Repair Order(s)",
+        count_of="repair_order_ids",
+        string="Repair Order(s)",
         groups="stock.group_stock_user",
     )
 

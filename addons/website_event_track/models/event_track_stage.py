@@ -6,26 +6,34 @@ class EventTrackStage(models.Model):
     _description = "Event Track Stage"
     _order = "sequence, id"
 
-    name = fields.Char(string="Stage Name", required=True, translate=True)
+    name = fields.Char(
+        string="Stage Name",
+        translate=True,
+        required=True,
+    )
     sequence = fields.Integer(default=1)
     mail_template_id = fields.Many2one(
-        "mail.template",
+        comodel_name="mail.template",
         string="Email Template",
-        domain=[("model", "=", "event.track")],
         help="If set an email will be sent to the customer when the track reaches this step.",
+        domain=[("model", "=", "event.track")],
     )
     color = fields.Integer()
     description = fields.Text(translate=True)
     legend_blocked = fields.Char(
-        "Red Kanban Label", default=lambda s: s.env._("Blocked"), translate=True
+        string="Red Kanban Label",
+        translate=True,
+        default=lambda s: s.env._("Blocked"),
     )
     legend_done = fields.Char(
-        "Green Kanban Label",
-        default=lambda s: s.env._("Ready for Next Stage"),
+        string="Green Kanban Label",
         translate=True,
+        default=lambda s: s.env._("Ready for Next Stage"),
     )
     legend_normal = fields.Char(
-        "Grey Kanban Label", default=lambda s: s.env._("In Progress"), translate=True
+        string="Grey Kanban Label",
+        translate=True,
+        default=lambda s: s.env._("In Progress"),
     )
     fold = fields.Boolean(
         string="Folded in Kanban",
@@ -33,15 +41,15 @@ class EventTrackStage(models.Model):
     )
     is_visible_in_agenda = fields.Boolean(
         string="Visible in agenda",
+        help="If checked, the related tracks will be visible in the frontend.",
         compute="_compute_is_visible_in_agenda",
         store=True,
-        help="If checked, the related tracks will be visible in the frontend.",
     )
     is_fully_accessible = fields.Boolean(
         string="Fully accessible",
+        help="If checked, automatically publish tracks so that access links to customers are provided.",
         compute="_compute_is_fully_accessible",
         store=True,
-        help="If checked, automatically publish tracks so that access links to customers are provided.",
     )
     is_cancel = fields.Boolean(string="Cancelled Stage")
 

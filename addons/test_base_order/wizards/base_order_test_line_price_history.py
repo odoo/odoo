@@ -19,13 +19,13 @@ class BaseOrderTestLinePriceHistory(models.TransientModel):
     _price_history_action = "test_base_order.action_base_order_test_history"
 
     line_id = fields.Many2one(
-        string="Target Line",
         comodel_name="base.order.test.line",
+        string="Target Line",
     )
     line_ids = fields.One2many(
-        string="Historical Lines",
         comodel_name="base.order.test.line.price.history.line",
         inverse_name="wizard_id",
+        string="Historical Lines",
     )
 
 
@@ -38,33 +38,13 @@ class BaseOrderTestLinePriceHistoryLine(models.TransientModel):
         comodel_name="base.order.test.line.price.history",
         ondelete="cascade",
     )
-    line_id = fields.Many2one(
-        comodel_name="base.order.test.line",
-    )
-    currency_id = fields.Many2one(
-        related="wizard_id.currency_id",
-    )
-    order_id = fields.Many2one(
-        related="line_id.order_id",
-    )
-    partner_id = fields.Many2one(
-        related="line_id.partner_id",
-    )
-    date = fields.Datetime(
-        related="line_id.date_order",
-    )
-    qty = fields.Float(
-        related="line_id.product_qty",
-    )
-    product_uom_id = fields.Many2one(
-        related="line_id.product_uom_id",
-    )
-    price_unit = fields.Float(
-        related="line_id.price_unit",
-    )
-    discount = fields.Float(
-        related="line_id.discount",
-    )
-    tax_ids = fields.Many2many(
-        related="line_id.tax_ids",
-    )
+    line_id = fields.Many2one(comodel_name="base.order.test.line")
+    currency_id = fields.Many2one(related="wizard_id.currency_id")
+    order_id = fields.Many2one(related="line_id.order_id")
+    partner_id = fields.Many2one(related="line_id.partner_id")
+    date = fields.Datetime(related="line_id.date_order")
+    qty = fields.Float(related="line_id.product_qty")
+    product_uom_id = fields.Many2one(related="line_id.product_uom_id")
+    price_unit = fields.Float(related="line_id.price_unit")
+    discount = fields.Float(related="line_id.discount")
+    tax_ids = fields.Many2many(related="line_id.tax_ids")

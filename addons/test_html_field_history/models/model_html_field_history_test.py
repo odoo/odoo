@@ -13,4 +13,7 @@ class HtmlFieldHistoryTest(models.Model):
         ]
 
     versioned_field_1 = fields.Html(string="vf1")
-    versioned_field_2 = fields.Html(string="vf2", sanitize=False)
+    versioned_field_2 = fields.Html(
+        string="vf2",
+        sanitize=False,
+    )

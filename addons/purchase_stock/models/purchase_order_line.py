@@ -28,9 +28,9 @@ class PurchaseOrderLine(models.Model):
     )
     orderpoint_id = fields.Many2one(
         comodel_name="stock.warehouse.orderpoint",
-        ondelete="set null",
-        copy=False,
         index="btree_not_null",
+        copy=False,
+        ondelete="set null",
     )
     move_dest_ids = fields.Many2many(
         comodel_name="stock.move",
@@ -47,19 +47,15 @@ class PurchaseOrderLine(models.Model):
         comodel_name="stock.move",
         inverse_name="purchase_line_id",
         string="Stock Moves",
-        readonly=True,
         copy=False,
+        readonly=True,
     )
-    product_description_variants = fields.Char(
-        string="Custom Description",
-    )
+    product_description_variants = fields.Char(string="Custom Description")
     propagate_cancel = fields.Boolean(
         string="Propagate cancellation",
         default=True,
     )
-    forecasted_issue = fields.Boolean(
-        compute="_compute_forecasted_issue",
-    )
+    forecasted_issue = fields.Boolean(compute="_compute_forecasted_issue")
 
     def write(self, vals):
         if vals.get("date_commitment"):

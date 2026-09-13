@@ -29,13 +29,13 @@ class ResConfigSettings(models.TransientModel):
     )
     group_send_reminder = fields.Boolean(
         string="Receipt Reminder",
+        help="Allow automatically send email to remind your vendor the receipt date",
         default=True,
         implied_group="purchase.group_send_reminder",
-        help="Allow automatically send email to remind your vendor the receipt date",
     )
 
     module_account_3way_match = fields.Boolean(
-        string="3-way matching: purchases, receptions and bills",
+        string="3-way matching: purchases, receptions and bills"
     )
     module_purchase_requisition = fields.Boolean(string="Purchase Agreements")
     module_purchase_product_matrix = fields.Boolean(string="Purchase Grid Entry")

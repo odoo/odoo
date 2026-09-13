@@ -10,8 +10,8 @@ class SaleOrderDiscount(models.TransientModel):
 
     sale_order_id = fields.Many2one(
         comodel_name="sale.order",
-        required=True,
         default=lambda self: self.env.context.get("active_id"),
+        required=True,
     )
     company_id = fields.Many2one(related="sale_order_id.company_id")
     currency_id = fields.Many2one(related="sale_order_id.currency_id")

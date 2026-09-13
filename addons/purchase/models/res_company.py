@@ -6,8 +6,8 @@ class ResCompany(models.Model):
 
     po_quotation_validity_days = fields.Integer(
         string="Default RFQ Validity (Days)",
-        default=0,
         help="Number of days for RFQ validity. Set to 0 for no default expiration.",
+        default=0,
     )
     order_lock_po = fields.Selection(
         selection=[
@@ -15,8 +15,8 @@ class ResCompany(models.Model):
             ("lock", "Confirmed purchase orders are not editable"),
         ],
         string="Purchase Order Modification",
-        default="edit",
         help="Purchase Order Modification used when you want to purchase order editable after confirm",
+        default="edit",
     )
 
     _check_po_quotation_validity_days = models.Constraint(

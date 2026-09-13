@@ -16,10 +16,10 @@ class AccountAnalyticAccount(models.Model):
 
     name = fields.Char(
         string="Analytic Account",
+        translate=True,
         index="trigram",
         required=True,
         tracking=True,
-        translate=True,
     )
     code = fields.Char(
         string="Reference",
@@ -32,51 +32,45 @@ class AccountAnalyticAccount(models.Model):
         tracking=True,
     )
     plan_id = fields.Many2one(
-        "account.analytic.plan",
-        required=True,
+        comodel_name="account.analytic.plan",
         index=True,
+        required=True,
     )
     root_plan_id = fields.Many2one(
-        "account.analytic.plan",
-        string="Root Plan",
+        comodel_name="account.analytic.plan",
         related="plan_id.root_id",
+        string="Root Plan",
         store=True,
     )
     color = fields.Integer(
-        "Color Index",
         related="plan_id.color",
+        string="Color Index",
     )
 
     line_ids = fields.One2many(
-        "account.analytic.line",
-        "auto_account_id",  # magic link to the right column (plan) by using the context in the view
+        comodel_name="account.analytic.line",
+        inverse_name="auto_account_id",  # magic link to the right column (plan) by using the context in the view
         string="Analytic Lines",
     )
 
     company_id = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
         default=lambda self: self.env.company,
     )
 
     partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Customer",
+        index="btree_not_null",
+        check_company=True,
         # use bypass_search_access to speed up name_search call
         bypass_search_access=True,
         tracking=True,
-        check_company=True,
-        index="btree_not_null",
     )
 
-    balance = fields.Monetary(
-        compute="_compute_debit_credit_balance",
-    )
-    debit = fields.Monetary(
-        compute="_compute_debit_credit_balance",
-    )
-    credit = fields.Monetary(
-        compute="_compute_debit_credit_balance",
-    )
+    balance = fields.Monetary(compute="_compute_debit_credit_balance")
+    debit = fields.Monetary(compute="_compute_debit_credit_balance")
+    credit = fields.Monetary(compute="_compute_debit_credit_balance")
 
     currency_id = fields.Many2one(
         related="company_id.currency_id",

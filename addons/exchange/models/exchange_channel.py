@@ -17,18 +17,18 @@ class ExchangeChannel(models.Model):
     # Transport block
     endpoint_id = fields.Many2one(
         comodel_name="api.endpoint.outbound",
-        required=True,
-        ondelete="cascade",
-        index=True,
         help="Auth, rate limiting, retry policy, caching and TLS live on the "
         "endpoint. A channel adds only what the counterparty decides.",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
 
     # Protocol block
     protocol = fields.Selection(
         selection="_selection_protocol",
-        required=True,
         index=True,
+        required=True,
     )
     counterparty = fields.Selection(
         selection=[
@@ -36,56 +36,50 @@ class ExchangeChannel(models.Model):
             ("partner", "Trading partner"),
             ("agent", "Licensed agent or access point"),
         ],
-        required=True,
-        default="authority",
-        index=True,
         help="The three things 'EDI' names -- fiscal clearance, partner "
         "interchange, document import -- on the record rather than in a "
         "module name. Only 'partner' is interchange in the strict sense.",
+        default="authority",
+        index=True,
+        required=True,
     )
 
     # Identity block
     certificate_id = fields.Many2one(
         comodel_name="certificate.certificate",
-        ondelete="restrict",
         help="Signing material this counterparty requires. Shared with every "
         "other consumer of certificate.certificate rather than re-uploaded.",
+        ondelete="restrict",
     )
     participant = fields.Char(
         help="Our identifier at the counterparty -- a Peppol participant id, "
-        "an issuer RFC, a taxpayer number.",
+        "an issuer RFC, a taxpayer number."
     )
 
     # Policy block
     annul_window_days = fields.Integer(
-        default=0,
         help="Days after acceptance during which an annulment is still "
         "admissible. Zero means the counterparty sets no window.",
+        default=0,
     )
     is_chained = fields.Boolean(
         help="The counterparty requires each document to reference the "
-        "previous one, so transmissions on this channel form a chain.",
+        "previous one, so transmissions on this channel form a chain."
     )
     is_inbox_enabled = fields.Boolean(
-        default=False,
         help="The counterparty holds documents addressed to us that must be "
         "polled for. Off for a send-only channel.",
+        default=False,
     )
-    date_last_inbox = fields.Datetime(
-        readonly=True,
-    )
+    date_last_inbox = fields.Datetime(readonly=True)
 
     # Transmission block
     transmission_ids = fields.One2many(
         comodel_name="exchange.transmission",
         inverse_name="channel_id",
     )
-    count_transmission = fields.Integer(
-        compute="_compute_transmission_counts",
-    )
-    count_transmission_open = fields.Integer(
-        compute="_compute_transmission_counts",
-    )
+    count_transmission = fields.Integer(compute="_compute_transmission_counts")
+    count_transmission_open = fields.Integer(compute="_compute_transmission_counts")
 
     # SELECTION METHODS
 

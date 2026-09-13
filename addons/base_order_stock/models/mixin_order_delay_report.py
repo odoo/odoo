@@ -31,10 +31,22 @@ class MixinOrderDelayReport(models.AbstractModel):
         comodel_name="res.company",
         readonly=True,
     )
-    date = fields.Datetime(string="Effective Date", readonly=True)
-    qty_total = fields.Float(string="Total Quantity", readonly=True)
-    qty_on_time = fields.Float(string="On-Time Quantity", readonly=True)
-    on_time_rate = fields.Float(string="On-Time Delivery Rate", readonly=True)
+    date = fields.Datetime(
+        string="Effective Date",
+        readonly=True,
+    )
+    qty_total = fields.Float(
+        string="Total Quantity",
+        readonly=True,
+    )
+    qty_on_time = fields.Float(
+        string="On-Time Quantity",
+        readonly=True,
+    )
+    on_time_rate = fields.Float(
+        string="On-Time Delivery Rate",
+        readonly=True,
+    )
 
     def _get_date_commitment(self):
         return f"{self._date_commitment_alias}.date_commitment"

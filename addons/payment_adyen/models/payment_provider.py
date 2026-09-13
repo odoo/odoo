@@ -14,40 +14,41 @@ class PaymentProvider(models.Model):
     _inherit = "payment.provider"
 
     code = fields.Selection(
-        selection_add=[("adyen", "Adyen")], ondelete={"adyen": "set default"}
+        selection_add=[("adyen", "Adyen")],
+        ondelete={"adyen": "set default"},
     )
     adyen_merchant_account = fields.Char(
         string="Merchant Account",
         help="The code of the merchant account to use with this provider",
-        required_if_provider="adyen",
         copy=False,
         groups="base.group_system",
+        required_if_provider="adyen",
     )
     adyen_api_key = fields.Char(
         string="API Key",
         help="The API key of the webservice user",
-        required_if_provider="adyen",
         copy=False,
         groups="base.group_system",
+        required_if_provider="adyen",
     )
     adyen_client_key = fields.Char(
         string="Client Key",
         help="The client key of the webservice user",
-        required_if_provider="adyen",
         copy=False,
+        required_if_provider="adyen",
     )
     adyen_hmac_key = fields.Char(
         string="HMAC Key",
         help="The HMAC key of the webhook",
-        required_if_provider="adyen",
         copy=False,
         groups="base.group_system",
+        required_if_provider="adyen",
     )
     adyen_api_url_prefix = fields.Char(
         string="API URL Prefix",
         help="The base URL for the API endpoints",
-        required_if_provider="adyen",
         copy=False,
+        required_if_provider="adyen",
     )
 
     # === CRUD METHODS === #

@@ -21,8 +21,8 @@ class AccountReportSend(models.TransientModel):
             ("multi", "Multiple Recipients"),
         ],
         compute="_compute_mode",
-        readonly=False,
         store=True,
+        readonly=False,
     )
 
     # == PRINT ==
@@ -31,7 +31,10 @@ class AccountReportSend(models.TransientModel):
 
     # == MAIL ==
     enable_send_mail = fields.Boolean(default=True)
-    checkbox_send_mail = fields.Boolean(string="Email", default=True)
+    checkbox_send_mail = fields.Boolean(
+        string="Email",
+        default=True,
+    )
 
     display_mail_composer = fields.Boolean(compute="_compute_send_mail_extra_fields")
     warnings = fields.Json(compute="_compute_warnings")

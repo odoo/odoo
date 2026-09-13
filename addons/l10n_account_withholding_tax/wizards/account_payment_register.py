@@ -13,14 +13,14 @@ class AccountPaymentRegister(models.TransientModel):
     should_withhold_tax = fields.Boolean(
         string="Withhold Tax Amounts",
         compute="_compute_should_withhold_tax",
-        readonly=False,
         store=True,
         copy=False,
+        readonly=False,
     )
     withholding_line_ids = fields.One2many(
-        string="Withholding Lines",
         comodel_name="account.payment.register.withholding.line",
         inverse_name="payment_register_id",
+        string="Withholding Lines",
         compute="_compute_withholding_line_ids",
         store=True,
         readonly=False,
@@ -34,17 +34,17 @@ class AccountPaymentRegister(models.TransientModel):
     # We need to define the outstanding account of the payment in order for it to have the proper journal entry.
     # To that end, we'll have this field required if we have a withholding tax impacting the payment, and we don't have a payment account set on the payment method.
     withholding_default_account_id = fields.Many2one(
-        related="journal_id.default_account_id",
+        related="journal_id.default_account_id"
     )
     withholding_outstanding_account_id = fields.Many2one(
         comodel_name="account.account",
         string="Outstanding Account",
-        copy=False,
-        domain="['|', ('account_type', 'in', ('asset_current', 'liability_current')), ('id', '=', withholding_default_account_id)]",
-        check_company=True,
         compute="_compute_withholding_outstanding_account_id",
         store=True,
+        copy=False,
         readonly=False,
+        domain="['|', ('account_type', 'in', ('asset_current', 'liability_current')), ('id', '=', withholding_default_account_id)]",
+        check_company=True,
     )
     withholding_payment_account_id = fields.Many2one(
         related="payment_channel_id.payment_account_id"

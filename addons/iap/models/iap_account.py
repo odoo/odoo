@@ -20,28 +20,34 @@ class IapAccount(models.Model):
     _description = "IAP Account"
 
     name = fields.Char()
-    service_id = fields.Many2one("iap.service", required=True)
+    service_id = fields.Many2one(
+        comodel_name="iap.service",
+        required=True,
+    )
     service_name = fields.Char(related="service_id.technical_name")
     service_locked = fields.Boolean(
         default=False
     )  # If True, the service can't be edited anymore
     description = fields.Char(related="service_id.description")
     account_token = fields.Char(
-        default=lambda s: uuid.uuid4().hex,
         help="Account token is your authentication key for this service. Do not share it.",
         size=43,
+        default=lambda s: uuid.uuid4().hex,
         copy=False,
         groups="base.group_system",
     )
-    company_ids = fields.Many2many("res.company")
+    company_ids = fields.Many2many(comodel_name="res.company")
 
     # Set from the IAP server when the view loads, except warning_user_ids, which
     # is local; both warning fields are pushed to IAP on write
     balance = fields.Char(readonly=True)
-    warning_threshold = fields.Float("Email Alert Threshold")
-    warning_user_ids = fields.Many2many("res.users", string="Email Alert Recipients")
+    warning_threshold = fields.Float(string="Email Alert Threshold")
+    warning_user_ids = fields.Many2many(
+        comodel_name="res.users",
+        string="Email Alert Recipients",
+    )
     state = fields.Selection(
-        [
+        selection=[
             ("banned", "Banned"),
             ("registered", "Registered"),
             ("unregistered", "Unregistered"),

@@ -4,9 +4,11 @@ from odoo import api, fields, models
 class PosOrderLine(models.Model):
     _inherit = "pos.order.line"
 
-    event_ticket_id = fields.Many2one("event.event.ticket")
+    event_ticket_id = fields.Many2one(comodel_name="event.event.ticket")
     event_registration_ids = fields.One2many(
-        "event.registration", "pos_order_line_id", string="Event Registrations"
+        comodel_name="event.registration",
+        inverse_name="pos_order_line_id",
+        string="Event Registrations",
     )
 
     @api.model

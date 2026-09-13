@@ -18,58 +18,69 @@ class MailingList(models.Model):
     # As this model has their own data merge, avoid to enable the generic data_merge on that model.
     _disable_data_merge = True
 
-    name = fields.Char(string="Mailing List", required=True)
+    name = fields.Char(
+        string="Mailing List",
+        required=True,
+    )
     active = fields.Boolean(default=True)
     contact_count = fields.Integer(
-        compute="_compute_mailing_list_statistics", string="Number of Contacts"
+        string="Number of Contacts",
+        compute="_compute_mailing_list_statistics",
     )
     contact_count_email = fields.Integer(
-        compute="_compute_mailing_list_statistics", string="Number of Emails"
+        string="Number of Emails",
+        compute="_compute_mailing_list_statistics",
     )
     contact_count_opt_out = fields.Integer(
-        compute="_compute_mailing_list_statistics", string="Number of Opted-out"
+        string="Number of Opted-out",
+        compute="_compute_mailing_list_statistics",
     )
     contact_pct_opt_out = fields.Float(
-        compute="_compute_mailing_list_statistics", string="Percentage of Opted-out"
+        string="Percentage of Opted-out",
+        compute="_compute_mailing_list_statistics",
     )
     contact_count_blacklisted = fields.Integer(
-        compute="_compute_mailing_list_statistics", string="Number of Blacklisted"
+        string="Number of Blacklisted",
+        compute="_compute_mailing_list_statistics",
     )
     contact_pct_blacklisted = fields.Float(
-        compute="_compute_mailing_list_statistics", string="Percentage of Blacklisted"
+        string="Percentage of Blacklisted",
+        compute="_compute_mailing_list_statistics",
     )
     contact_pct_bounce = fields.Float(
-        compute="_compute_mailing_list_statistics", string="Percentage of Bouncing"
+        string="Percentage of Bouncing",
+        compute="_compute_mailing_list_statistics",
     )
     contact_ids = fields.Many2many(
-        "mailing.contact",
-        "mailing_subscription",
-        "list_id",
-        "contact_id",
+        comodel_name="mailing.contact",
+        relation="mailing_subscription",
+        column1="list_id",
+        column2="contact_id",
         string="Mailing Lists",
         copy=False,
     )
     mailing_count = fields.Integer(
-        compute="_compute_mailing_count", string="Number of Mailing"
+        string="Number of Mailing",
+        compute="_compute_mailing_count",
     )
     mailing_ids = fields.Many2many(
-        "mailing.mailing",
-        "mail_mass_mailing_list_rel",
+        comodel_name="mailing.mailing",
+        relation="mail_mass_mailing_list_rel",
         string="Mass Mailings",
         copy=False,
     )
     subscription_ids = fields.One2many(
-        "mailing.subscription",
-        "list_id",
+        comodel_name="mailing.subscription",
+        inverse_name="list_id",
         string="Subscription Information",
-        copy=True,
         depends=["contact_ids"],
+        copy=True,
     )
     is_public = fields.Boolean(
         string="Show In Preferences",
-        default=False,
         help="The mailing list can be accessible by recipients in the subscription "
         "management page to allow them to update their preferences.",
+        default=False,
     )
 
     # ------------------------------------------------------

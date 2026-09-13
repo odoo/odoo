@@ -5,7 +5,6 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     l10n_pl_vat_gtu = fields.Selection(
-        string="GTU Codes",
         selection=[
             ("GTU_01", "GTU_01 - Alcoholic beverages"),
             ("GTU_02", "GTU_02 - Goods referred to under Art. 103 sec 5aa"),
@@ -27,5 +26,6 @@ class ProductTemplate(models.Model):
             ("GTU_12", "GTU_12 - Intangible services"),
             ("GTU_13", "GTU_13 - Transport services and warehouse management services"),
         ],
+        string="GTU Codes",
         help="Codes for specific types of products, needed for VAT declaration",
     )

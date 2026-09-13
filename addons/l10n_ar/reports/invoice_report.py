@@ -6,9 +6,14 @@ class AccountInvoiceReport(models.Model):
     _inherit = "account.invoice.report"
 
     l10n_ar_state_id = fields.Many2one(
-        "res.country.state", "Delivery Province", readonly=True
+        comodel_name="res.country.state",
+        string="Delivery Province",
+        readonly=True,
     )
-    date = fields.Date(readonly=True, string="Accounting Date")
+    date = fields.Date(
+        string="Accounting Date",
+        readonly=True,
+    )
 
     _depends = {
         "account.move": ["partner_shipping_id", "date"],

@@ -11,8 +11,8 @@ class LunchCashmoveReport(models.Model):
     id = fields.Id(string="ID")
     amount = fields.Float()
     date = fields.Date()
-    currency_id = fields.Many2one("res.currency")
-    user_id = fields.Many2one("res.users")
+    currency_id = fields.Many2one(comodel_name="res.currency")
+    user_id = fields.Many2one(comodel_name="res.users")
     description = fields.Text()
 
     def _compute_display_name(self):

@@ -33,7 +33,7 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     l10n_hu_payment_mode = fields.Selection(
-        [
+        selection=[
             ("TRANSFER", "Transfer"),
             ("CASH", "Cash"),
             ("CARD", "Credit/debit card"),
@@ -67,8 +67,8 @@ class AccountMove(models.Model):
             ("cancelled", "Cancelled"),
         ],
         string="NAV 3.0 status",
-        copy=False,
         index="btree_not_null",
+        copy=False,
     )
     l10n_hu_edi_batch_upload_index = fields.Integer(
         string="Index of invoice within a batch upload",

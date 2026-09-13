@@ -14,7 +14,7 @@ class MailTemplateReset(models.TransientModel):
     _name = "mail.template.reset"
     _description = "Mail Template Reset"
 
-    template_ids: MailTemplate = fields.Many2many("mail.template")
+    template_ids: MailTemplate = fields.Many2many(comodel_name="mail.template")
 
     def reset_template(self) -> dict | Literal[False]:
         if not self.template_ids:

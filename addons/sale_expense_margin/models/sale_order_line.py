@@ -4,7 +4,7 @@ from odoo import api, fields, models
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
-    expense_id = fields.Many2one("hr.expense")
+    expense_id = fields.Many2one(comodel_name="hr.expense")
 
     @api.depends("is_expense")
     def _compute_purchase_price(self):

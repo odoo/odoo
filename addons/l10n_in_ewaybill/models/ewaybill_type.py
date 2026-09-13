@@ -5,12 +5,12 @@ class L10nInEwaybillType(models.Model):
     _name = "l10n.in.ewaybill.type"
     _description = "E-Waybill Document Type"
 
-    name = fields.Char("Type")
-    code = fields.Char("Type Code")
-    sub_type = fields.Char("Sub-type")
-    sub_type_code = fields.Char("Sub-type Code")
+    name = fields.Char(string="Type")
+    code = fields.Char(string="Type Code")
+    sub_type = fields.Char(string="Sub-type")
+    sub_type_code = fields.Char(string="Sub-type Code")
     allowed_supply_type = fields.Selection(
-        [
+        selection=[
             ("both", "Incoming and Outgoing"),
             ("out", "Outgoing"),
             ("in", "Incoming"),

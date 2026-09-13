@@ -47,30 +47,28 @@ class CertificateKey(models.Model):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        required=True,
         default=lambda self: self.env.company,
+        required=True,
         ondelete="cascade",
     )
     name = fields.Char(default="New key")
     active = fields.Boolean(
-        name="Active",
         help="Set active to false to archive the key.",
         default=True,
+        name="Active",
     )
     content = fields.Binary(
         string="Key file",
-        required=True,
         compute="_compute_content",
         inverse="_inverse_content",
         store=False,
+        required=True,
     )
     content_encrypted = fields.Binary(
         string="Key file (encrypted)",
         attachment=False,
     )
-    content_plain = fields.Binary(
-        string="Key file (unencrypted)",
-    )
+    content_plain = fields.Binary(string="Key file (unencrypted)")
     password = fields.Char(
         string="Private key password",
         compute="_compute_password",
@@ -81,9 +79,7 @@ class CertificateKey(models.Model):
         string="Private key password (encrypted)",
         attachment=False,
     )
-    password_plain = fields.Char(
-        string="Private key password (unencrypted)",
-    )
+    password_plain = fields.Char(string="Private key password (unencrypted)")
     pem_key = fields.Binary(
         string="Key bytes in PEM format",
         compute="_compute_pem_key",

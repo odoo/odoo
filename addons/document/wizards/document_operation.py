@@ -30,7 +30,7 @@ class DocumentsOperation(models.TransientModel):
         return result
 
     operation = fields.Selection(
-        [
+        selection=[
             ("move", "Move"),
             ("shortcut", "Create shortcuts"),
             ("copy", "Duplicate to"),
@@ -38,12 +38,15 @@ class DocumentsOperation(models.TransientModel):
         ],
         required=True,
     )
-    document_ids = fields.Many2many("document.document", string="Documents")
-    attachment_id = fields.Many2one("ir.attachment")
+    document_ids = fields.Many2many(
+        comodel_name="document.document",
+        string="Documents",
+    )
+    attachment_id = fields.Many2one(comodel_name="ir.attachment")
 
     destination = fields.Char(required=True)
     destination_children_ids = fields.One2many(
-        "document.document",
+        comodel_name="document.document",
         string="Siblings",
         compute="_compute_destination_children_ids",
     )
@@ -51,10 +54,12 @@ class DocumentsOperation(models.TransientModel):
     # Destination-related fields updated by the client for the client - do not use in the backend. No need
     # for compute/search because all is already fetched for the searchpanel and must be kept locally consistent
     display_name = fields.Char(
-        string="Destination Display Name", compute=None, search=None
+        string="Destination Display Name",
+        compute=None,
+        search=None,
     )
     user_permission = fields.Selection(
-        [("edit", "Editor"), ("view", "Viewer"), ("none", "None")],
+        selection=[("edit", "Editor"), ("view", "Viewer"), ("none", "None")],
         string="Destination User Permission",
         default="edit",
         required=True,

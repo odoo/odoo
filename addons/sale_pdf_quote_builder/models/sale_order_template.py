@@ -6,8 +6,8 @@ class SaleOrderTemplate(models.Model):
     _check_company_auto = True
 
     quotation_document_ids = fields.Many2many(
-        string="Headers and footers",
         comodel_name="quotation.document",
         relation="header_footer_quotation_template_rel",
+        string="Headers and footers",
         check_company=True,
     )

@@ -6,9 +6,15 @@ class JobAddApplicants(models.TransientModel):
     _description = "Add applicants to a job"
 
     applicant_ids = fields.Many2many(
-        "hr.applicant", string="Applications", required=True
+        comodel_name="hr.applicant",
+        string="Applications",
+        required=True,
     )
-    job_ids = fields.Many2many("hr.job", string="Job Positions", required=True)
+    job_ids = fields.Many2many(
+        comodel_name="hr.job",
+        string="Job Positions",
+        required=True,
+    )
 
     def _add_applicants_to_job(self):
         applicant_data = self.with_context(

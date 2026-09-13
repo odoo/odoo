@@ -5,21 +5,21 @@ class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
     goal_ids = fields.One2many(
-        "gamification.goal",
+        comodel_name="gamification.goal",
         string="Employee HR Goals",
         compute="_compute_employee_goals",
         groups="hr.group_hr_user",
     )
     badge_ids = fields.One2many(
-        "gamification.badge.user",
+        comodel_name="gamification.badge.user",
         string="Employee Badges",
-        compute="_compute_employee_badges",
         help="All employee badges, linked to the employee either directly or through the user",
+        compute="_compute_employee_badges",
     )
     has_badges = fields.Boolean(compute="_compute_employee_badges")
     direct_badge_ids = fields.One2many(
-        "gamification.badge.user",
-        "employee_id",
+        comodel_name="gamification.badge.user",
+        inverse_name="employee_id",
         help="Badges directly linked to the employee",
         groups="hr.group_hr_user",
     )

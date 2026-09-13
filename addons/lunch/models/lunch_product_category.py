@@ -16,12 +16,19 @@ class LunchProductCategory(models.Model):
         with file_open("lunch/static/img/lunch.png", "rb") as f:
             return base64.b64encode(f.read())
 
-    name = fields.Char("Product Category", required=True, translate=True)
-    company_id = fields.Many2one("res.company")
-    currency_id = fields.Many2one("res.currency", related="company_id.currency_id")
+    name = fields.Char(
+        string="Product Category",
+        translate=True,
+        required=True,
+    )
+    company_id = fields.Many2one(comodel_name="res.company")
+    currency_id = fields.Many2one(
+        comodel_name="res.currency",
+        related="company_id.currency_id",
+    )
     product_count = fields.Integer(
-        compute="_compute_product_count",
         help="The number of products related to this category",
+        compute="_compute_product_count",
     )
     active = fields.Boolean(default=True)
     image_1920 = fields.Image(default=_default_image_1920)

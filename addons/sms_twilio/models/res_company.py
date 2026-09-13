@@ -10,17 +10,25 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     sms_provider = fields.Selection(
-        string="SMS Provider",
         selection=[
             ("iap", "Send via Odoo"),
             ("twilio", "Send via Twilio"),
         ],
+        string="SMS Provider",
         default="iap",
     )
-    sms_twilio_account_sid = fields.Char("Account SID", groups="base.group_system")
-    sms_twilio_auth_token = fields.Char("Auth Token", groups="base.group_system")
+    sms_twilio_account_sid = fields.Char(
+        string="Account SID",
+        groups="base.group_system",
+    )
+    sms_twilio_auth_token = fields.Char(
+        string="Auth Token",
+        groups="base.group_system",
+    )
     sms_twilio_number_ids = fields.One2many(
-        "sms.twilio.number", "company_id", "Numbers"
+        comodel_name="sms.twilio.number",
+        inverse_name="company_id",
+        string="Numbers",
     )
 
     def _get_sms_api_class(self):

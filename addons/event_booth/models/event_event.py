@@ -7,28 +7,31 @@ class EventEvent(models.Model):
     _inherit = "event.event"
 
     event_booth_ids = fields.One2many(
-        "event.booth",
-        "event_id",
+        comodel_name="event.booth",
+        inverse_name="event_id",
         string="Booths",
-        copy=True,
         compute="_compute_event_booth_ids",
-        readonly=False,
-        store=True,
         precompute=True,
+        store=True,
+        copy=True,
+        readonly=False,
     )
     event_booth_count = fields.Integer(
-        string="Total Booths", compute="_compute_event_booth_count"
+        string="Total Booths",
+        compute="_compute_event_booth_count",
     )
     event_booth_count_available = fields.Integer(
-        string="Available Booths", compute="_compute_event_booth_count"
+        string="Available Booths",
+        compute="_compute_event_booth_count",
     )
     event_booth_category_ids = fields.Many2many(
-        "event.booth.category", compute="_compute_event_booth_category_ids"
+        comodel_name="event.booth.category",
+        compute="_compute_event_booth_category_ids",
     )
     event_booth_category_available_ids = fields.Many2many(
-        "event.booth.category",
-        compute="_compute_event_booth_category_available_ids",
+        comodel_name="event.booth.category",
         help="Booth Category for which booths are still available. Used in frontend",
+        compute="_compute_event_booth_category_available_ids",
     )
 
     @api.depends("event_type_id")

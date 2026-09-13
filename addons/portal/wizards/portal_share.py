@@ -29,15 +29,33 @@ class PortalShare(models.TransientModel):
         )
         return [(name, names.get(name, name)) for name in portal_model_names]
 
-    res_model = fields.Char("Related Document Model", required=True)
-    res_id = fields.Integer("Related Document ID", required=True)
-    resource_ref = fields.Reference(
-        "_selection_target_model", "Related Document", compute="_compute_resource_ref"
+    res_model = fields.Char(
+        string="Related Document Model",
+        required=True,
     )
-    partner_ids = fields.Many2many("res.partner", string="Recipients", required=True)
+    res_id = fields.Integer(
+        string="Related Document ID",
+        required=True,
+    )
+    resource_ref = fields.Reference(
+        selection="_selection_target_model",
+        string="Related Document",
+        compute="_compute_resource_ref",
+    )
+    partner_ids = fields.Many2many(
+        comodel_name="res.partner",
+        string="Recipients",
+        required=True,
+    )
     note = fields.Text(help="Add extra content to display in the email")
-    share_link = fields.Char(string="Link", compute="_compute_share_link")
-    access_warning = fields.Text("Access warning", compute="_compute_access_warning")
+    share_link = fields.Char(
+        string="Link",
+        compute="_compute_share_link",
+    )
+    access_warning = fields.Text(
+        string="Access warning",
+        compute="_compute_access_warning",
+    )
 
     @api.depends("res_model", "res_id")
     def _compute_resource_ref(self):

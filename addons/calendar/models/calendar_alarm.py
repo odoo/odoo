@@ -9,40 +9,50 @@ class CalendarAlarm(models.Model):
 
     _interval_selection = {"minutes": "Minutes", "hours": "Hours", "days": "Days"}
 
-    name = fields.Char(translate=True, required=True)
-    alarm_type = fields.Selection(
-        [("notification", "Notification"), ("email", "Email")],
-        string="Type",
+    name = fields.Char(
+        translate=True,
         required=True,
-        default="email",
     )
-    duration = fields.Integer("Remind Before", required=True, default=1)
+    alarm_type = fields.Selection(
+        selection=[("notification", "Notification"), ("email", "Email")],
+        string="Type",
+        default="email",
+        required=True,
+    )
+    duration = fields.Integer(
+        string="Remind Before",
+        default=1,
+        required=True,
+    )
     interval = fields.Selection(
-        list(_interval_selection.items()), "Unit", required=True, default="hours"
+        selection=list(_interval_selection.items()),
+        string="Unit",
+        default="hours",
+        required=True,
     )
     duration_minutes = fields.Integer(
-        "Duration in minutes",
-        store=True,
-        search="_search_duration_minutes",
+        string="Duration in minutes",
         compute="_compute_duration_minutes",
+        search="_search_duration_minutes",
+        store=True,
     )
     mail_template_id = fields.Many2one(
-        "mail.template",
+        comodel_name="mail.template",
         string="Email Template",
-        domain=[("model", "in", ["calendar.attendee"])],
-        compute="_compute_mail_template_id",
-        readonly=False,
-        store=True,
         help="Template used to render mail reminder content.",
+        compute="_compute_mail_template_id",
+        store=True,
+        readonly=False,
+        domain=[("model", "in", ["calendar.attendee"])],
     )
     body = fields.Text(
-        "Additional Message",
+        string="Additional Message",
         help="Additional message that would be sent with the notification for the reminder",
     )
     notify_responsible = fields.Boolean(default=False)
     notify_responsible_available = fields.Boolean(
-        compute="_compute_notify_responsible_available",
         help="Technical: whether this alarm's channel can single out the organizer.",
+        compute="_compute_notify_responsible_available",
     )
 
     @api.constrains("duration")

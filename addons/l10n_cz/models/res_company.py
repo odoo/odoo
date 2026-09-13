@@ -6,8 +6,8 @@ class ResCompany(models.Model):
 
     trade_registry = fields.Char()
     l10n_cz_tax_office_id = fields.Many2one(
-        string="Tax Office (CZ)",
         comodel_name="l10n_cz.tax_office",
+        string="Tax Office (CZ)",
     )
 
 

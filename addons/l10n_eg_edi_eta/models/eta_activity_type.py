@@ -7,5 +7,8 @@ class L10n_Eg_EdiActivityType(models.Model):
     _rec_name = "name"
     _rec_names_search = ["name", "code"]
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
     code = fields.Char(required=True)

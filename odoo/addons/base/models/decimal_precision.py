@@ -14,8 +14,14 @@ class DecimalPrecision(models.Model):
     _name = "decimal.precision"
     _description = "Decimal Precision"
 
-    name = fields.Char("Usage", required=True)
-    digits = fields.Integer(required=True, default=2)
+    name = fields.Char(
+        string="Usage",
+        required=True,
+    )
+    digits = fields.Integer(
+        default=2,
+        required=True,
+    )
 
     _name_uniq = models.Constraint(
         "unique (name)",

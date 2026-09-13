@@ -6,7 +6,8 @@ class StockWarehouse(models.Model):
     _inherit = "stock.warehouse"
 
     opening_hours = fields.Many2one(
-        comodel_name="resource.calendar", check_company=True
+        comodel_name="resource.calendar",
+        check_company=True,
     )
 
     def _prepare_pickup_location_data(self):

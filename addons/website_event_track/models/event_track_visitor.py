@@ -9,16 +9,23 @@ class EventTrackVisitor(models.Model):
     _order = "track_id"
 
     partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         compute="_compute_partner_id",
-        index=True,
-        ondelete="set null",
-        readonly=False,
         store=True,
+        index=True,
+        readonly=False,
+        ondelete="set null",
     )
-    visitor_id = fields.Many2one("website.visitor", index=True, ondelete="cascade")
+    visitor_id = fields.Many2one(
+        comodel_name="website.visitor",
+        index=True,
+        ondelete="cascade",
+    )
     track_id = fields.Many2one(
-        "event.track", index=True, required=True, ondelete="cascade"
+        comodel_name="event.track",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     is_wishlisted = fields.Boolean()
     is_blacklisted = fields.Boolean(

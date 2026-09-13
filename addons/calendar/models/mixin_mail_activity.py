@@ -5,7 +5,7 @@ class MixinMailActivity(models.AbstractModel):
     _inherit = "mixin.mail.activity"
 
     activity_calendar_event_id = fields.Many2one(
-        "calendar.event",
+        comodel_name="calendar.event",
         string="Next Activity Calendar Event",
         compute="_compute_activity_calendar_event_id",
         groups="base.group_user",

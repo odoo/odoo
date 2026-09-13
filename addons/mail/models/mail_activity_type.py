@@ -21,29 +21,38 @@ class MailActivityType(models.Model):
     _order = "sequence, id"
     _rec_name = "name"
 
-    name = fields.Char(required=True, translate=True)
-    summary = fields.Char("Default Summary", translate=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
+    summary = fields.Char(
+        string="Default Summary",
+        translate=True,
+    )
     sequence = fields.Integer(default=10)
     active = fields.Boolean(default=True)
-    create_uid: ResUsers = fields.Many2one("res.users", index=True)
+    create_uid: ResUsers = fields.Many2one(
+        comodel_name="res.users",
+        index=True,
+    )
     delay_count = fields.Integer(
-        "Schedule",
+        string="Schedule",
         help="Number of days/week/month before executing the action. It allows to plan the action deadline.",
     )
     delay_label = fields.Char(compute="_compute_delay_label")
     delay_from = fields.Selection(
-        [
+        selection=[
             ("current_date", "after previous activity completion date"),
             ("previous_activity", "after previous activity deadline"),
         ],
         string="Delay Type",
         help="Type of delay",
-        required=True,
         default="previous_activity",
+        required=True,
     )
     icon = fields.Char(help="Font awesome icon e.g. fa-tasks")
     decoration_type = fields.Selection(
-        [("warning", "Alert"), ("danger", "Error")],
+        selection=[("warning", "Alert"), ("danger", "Error")],
         help="Change the background color of the related activities of this type.",
     )
     res_model = fields.Selection(
@@ -53,56 +62,60 @@ class MailActivityType(models.Model):
         " and not available when managing activities for other models.",
     )
     triggered_next_type_id: MailActivityType = fields.Many2one(
-        "mail.activity.type",
+        comodel_name="mail.activity.type",
         string="Trigger",
+        help="Automatically schedule this activity once the current one is marked as done.",
         compute="_compute_triggered_next_type_id",
         inverse="_inverse_triggered_next_type_id",
         store=True,
         readonly=False,
         domain="['|', ('res_model', '=', False), ('res_model', '=', res_model)]",
         ondelete="restrict",
-        help="Automatically schedule this activity once the current one is marked as done.",
     )
     chaining_type = fields.Selection(
-        [("suggest", "Suggest Next Activity"), ("trigger", "Trigger Next Activity")],
-        required=True,
+        selection=[
+            ("suggest", "Suggest Next Activity"),
+            ("trigger", "Trigger Next Activity"),
+        ],
         default="suggest",
+        required=True,
     )
     suggested_next_type_ids: MailActivityType = fields.Many2many(
-        "mail.activity.type",
-        "mail_activity_rel",
-        "activity_id",
-        "recommended_id",
+        comodel_name="mail.activity.type",
+        relation="mail_activity_rel",
+        column1="activity_id",
+        column2="recommended_id",
         string="Suggest",
-        domain="['|', ('res_model', '=', False), ('res_model', '=', res_model)]",
+        help="Suggest these activities once the current one is marked as done.",
         compute="_compute_suggested_next_type_ids",
         inverse="_inverse_suggested_next_type_ids",
         store=True,
         readonly=False,
-        help="Suggest these activities once the current one is marked as done.",
+        domain="['|', ('res_model', '=', False), ('res_model', '=', res_model)]",
     )
     previous_type_ids: MailActivityType = fields.Many2many(
-        "mail.activity.type",
-        "mail_activity_rel",
-        "recommended_id",
-        "activity_id",
-        domain="['|', ('res_model', '=', False), ('res_model', '=', res_model)]",
+        comodel_name="mail.activity.type",
+        relation="mail_activity_rel",
+        column1="recommended_id",
+        column2="activity_id",
         string="Preceding Activities",
+        domain="['|', ('res_model', '=', False), ('res_model', '=', res_model)]",
     )
     category = fields.Selection(
-        [
+        selection=[
             ("default", "None"),
             ("upload_file", "Upload Document"),
             ("phonecall", "Phonecall"),
         ],
-        default="default",
         string="Action",
         help="Actions may trigger specific behavior like opening calendar view or automatically mark as done when a document is uploaded",
+        default="default",
     )
     mail_template_ids: MailTemplate = fields.Many2many(
-        "mail.template", string="Email templates"
+        comodel_name="mail.template",
+        string="Email templates",
     )
-    default_user_id: ResUsers = fields.Many2one("res.users")
+    default_user_id: ResUsers = fields.Many2one(comodel_name="res.users")
     default_note = fields.Html(translate=True)
 
     @api.constrains("res_model")

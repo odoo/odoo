@@ -5,7 +5,7 @@ class MrpProduction(models.Model):
     _inherit = "mrp.production"
 
     purchase_order_count = fields.Integer(
-        "Count of generated PO",
+        string="Count of generated PO",
         compute="_compute_purchase_order_count",
         groups="purchase.group_purchase_user",
     )

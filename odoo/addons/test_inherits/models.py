@@ -6,11 +6,24 @@ class TestUnit(models.Model):
     _name = "test.unit"
     _description = "Test Unit"
 
-    name = fields.Char("Name", required=True, translate=True)
-    state = fields.Selection([("a", "A"), ("b", "B")], string="State")
+    name = fields.Char(
+        string="Name",
+        translate=True,
+        required=True,
+    )
+    state = fields.Selection(
+        selection=[("a", "A"), ("b", "B")],
+        string="State",
+    )
     surname = fields.Char(compute="_compute_surname")
-    line_ids = fields.One2many("test.unit.line", "unit_id")
-    readonly_name = fields.Char("Readonly Name", readonly=True)
+    line_ids = fields.One2many(
+        comodel_name="test.unit.line",
+        inverse_name="unit_id",
+    )
+    readonly_name = fields.Char(
+        string="Readonly Name",
+        readonly=True,
+    )
     size = fields.Integer()
 
     @api.depends("name")
@@ -23,8 +36,14 @@ class TestUnitLine(models.Model):
     _name = "test.unit.line"
     _description = "Test Unit Line"
 
-    name = fields.Char("Name", required=True)
-    unit_id = fields.Many2one("test.unit", required=True)
+    name = fields.Char(
+        string="Name",
+        required=True,
+    )
+    unit_id = fields.Many2one(
+        comodel_name="test.unit",
+        required=True,
+    )
 
 
 class TestBox(models.Model):
@@ -32,8 +51,13 @@ class TestBox(models.Model):
     _inherits = {"test.unit": "unit_id"}
     _description = "Test Box"
 
-    unit_id = fields.Many2one("test.unit", "Unit", required=True, ondelete="cascade")
-    field_in_box = fields.Char("Field1")
+    unit_id = fields.Many2one(
+        comodel_name="test.unit",
+        string="Unit",
+        required=True,
+        ondelete="cascade",
+    )
+    field_in_box = fields.Char(string="Field1")
     size = fields.Integer()
 
 
@@ -42,15 +66,23 @@ class TestPallet(models.Model):
     _inherits = {"test.box": "box_id"}
     _description = "Test Pallet"
 
-    box_id = fields.Many2one("test.box", "Box", required=True, ondelete="cascade")
-    field_in_pallet = fields.Char("Field2")
+    box_id = fields.Many2one(
+        comodel_name="test.box",
+        string="Box",
+        required=True,
+        ondelete="cascade",
+    )
+    field_in_pallet = fields.Char(string="Field2")
 
 
 class TestAnotherUnit(models.Model):
     _name = "test.another_unit"
     _description = "Another Test Unit"
 
-    val1 = fields.Integer("Value 1", required=True)
+    val1 = fields.Integer(
+        string="Value 1",
+        required=True,
+    )
 
 
 class TestAnotherBox(models.Model):
@@ -59,9 +91,15 @@ class TestAnotherBox(models.Model):
     _description = "Another Test Box"
 
     another_unit_id = fields.Many2one(
-        "test.another_unit", "Another Unit", required=True, ondelete="cascade"
+        comodel_name="test.another_unit",
+        string="Another Unit",
+        required=True,
+        ondelete="cascade",
     )
-    val2 = fields.Integer("Value 2", required=True)
+    val2 = fields.Integer(
+        string="Value 2",
+        required=True,
+    )
 
     @api.constrains("val1", "val2")
     def _check_values(self):
@@ -74,10 +112,10 @@ class TestUnstoredInheritsChild(models.Model):
     _description = "Test Unstored Inherits Child"
 
     contract_name = fields.Char()
-    parent_id = fields.Many2one("test.unstored.inherits.parent")
+    parent_id = fields.Many2one(comodel_name="test.unstored.inherits.parent")
     test_unstored_inherits_shared_line_ids = fields.One2many(
-        "test.unstored.inherits.shared.line",
-        "test_unstored_inherits_child_id",
+        comodel_name="test.unstored.inherits.shared.line",
+        inverse_name="test_unstored_inherits_child_id",
         compute="_compute_test_unstored_inherits_shared_line_ids",
         store=True,
         readonly=False,
@@ -106,13 +144,13 @@ class TestUnstoredInheritsParent(models.Model):
 
     name = fields.Char()
     child_id = fields.Many2one(
-        "test.unstored.inherits.child",
+        comodel_name="test.unstored.inherits.child",
         compute="_compute_child_id",
         search="_search_child_id",
-        ondelete="cascade",
-        required=True,
-        store=False,
         compute_sudo=True,
+        store=False,
+        required=True,
+        ondelete="cascade",
     )
 
     @api.depends("name")
@@ -145,4 +183,6 @@ class TestUnstoredInheritsSharedLine(models.Model):
     _description = "Test Unstored Inherits Shared Line"
 
     name = fields.Char()
-    test_unstored_inherits_child_id = fields.Many2one("test.unstored.inherits.child")
+    test_unstored_inherits_child_id = fields.Many2one(
+        comodel_name="test.unstored.inherits.child"
+    )

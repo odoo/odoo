@@ -10,18 +10,22 @@ class DigestTip(models.Model):
     _order = "sequence"
 
     sequence = fields.Integer(
-        default=1,
         help="Used to display digest tip in email template base on order",
+        default=1,
     )
     name = fields.Char(translate=True)
     user_ids = fields.Many2many(
-        "res.users", string="Recipients", help="Users having already received this tip"
+        comodel_name="res.users",
+        string="Recipients",
+        help="Users having already received this tip",
     )
     tip_description = fields.Html(
-        "Tip description", translate=html_translate, sanitize=False
+        string="Tip description",
+        translate=html_translate,
+        sanitize=False,
     )
     group_id = fields.Many2one(
-        "res.groups",
+        comodel_name="res.groups",
         string="Authorized Group",
         default=lambda self: self.env.ref("base.group_user"),
     )

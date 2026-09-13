@@ -12,14 +12,14 @@ class StockQuant(models.Model):
         groups="stock.group_stock_manager",
     )
     currency_id = fields.Many2one(
-        "res.currency",
+        comodel_name="res.currency",
         related="company_id.currency_id",
         groups="stock.group_stock_manager",
     )
     accounting_date = fields.Date(
         help="Date at which the accounting entries will be created"
         " in case of automated inventory valuation."
-        " If empty, the inventory date will be used.",
+        " If empty, the inventory date will be used."
     )
     cost_method = fields.Selection(
         selection=COST_METHOD_SELECTION,

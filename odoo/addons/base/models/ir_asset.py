@@ -91,8 +91,8 @@ class IrAsset(models.Model):
     )
     bundle = fields.Char(
         string="Bundle name",
-        required=True,
         index=True,
+        required=True,
     )
     directive = fields.Selection(
         selection=[
@@ -107,7 +107,10 @@ class IrAsset(models.Model):
         default=APPEND_DIRECTIVE,
         required=True,
     )
-    path = fields.Char(string="Path (or glob pattern)", required=True)
+    path = fields.Char(
+        string="Path (or glob pattern)",
+        required=True,
+    )
     target = fields.Char()
 
     def _warn_bundle_name(self) -> None:

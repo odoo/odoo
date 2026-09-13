@@ -7,23 +7,23 @@ class LoyaltyRule(models.Model):
     _inherit = ["loyalty.rule", "mixin.pos.load"]
 
     valid_product_ids = fields.Many2many(
-        "product.product",
-        "Valid Products",
-        compute="_compute_valid_products",
+        comodel_name="product.product",
+        relation="Valid Products",
         help="These are the products that are valid for this rule.",
+        compute="_compute_valid_products",
     )
     any_product = fields.Boolean(
-        compute="_compute_valid_products",
         help="Technical field, whether all product match",
+        compute="_compute_valid_products",
     )
 
     promo_barcode = fields.Char(
-        "Barcode",
+        string="Barcode",
+        help="A technical field used as an alternative to the promo code. "
+        "This is automatically generated when the promo code is changed.",
         compute="_compute_promo_barcode",
         store=True,
         readonly=False,
-        help="A technical field used as an alternative to the promo code. "
-        "This is automatically generated when the promo code is changed.",
     )
 
     @api.model

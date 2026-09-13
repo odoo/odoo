@@ -102,7 +102,7 @@ class HrLeave(models.Model):
         return values
 
     name = fields.Char(
-        "Description",
+        string="Description",
         compute="_compute_name",
         inverse="_inverse_name",
         search="_search_name",
@@ -110,10 +110,11 @@ class HrLeave(models.Model):
         copy=False,
     )
     private_name = fields.Char(
-        "Time Off Description", groups="hr_holidays.group_hr_holidays_responsible"
+        string="Time Off Description",
+        groups="hr_holidays.group_hr_holidays_responsible",
     )
     state = fields.Selection(
-        [
+        selection=[
             ("confirm", "To Approve"),
             ("refuse", "Refused"),
             ("validate1", "Second Approval"),
@@ -121,29 +122,29 @@ class HrLeave(models.Model):
             ("cancel", "Cancelled"),
         ],
         string="Status",
+        default="confirm",
         store=True,
-        tracking=True,
         copy=False,
         readonly=False,
-        default="confirm",
+        tracking=True,
     )
     user_id = fields.Many2one(
-        "res.users",
-        string="User",
+        comodel_name="res.users",
         related="employee_id.user_id",
-        related_sudo=True,
+        string="User",
         compute_sudo=True,
+        related_sudo=True,
         store=True,
-        readonly=True,
         index=True,
+        readonly=True,
     )
     holiday_status_id = fields.Many2one(
-        "hr.leave.type",
+        comodel_name="hr.leave.type",
+        string="Time Off Type",
         compute="_compute_holiday_status_id",
         store=True,
-        string="Time Off Type",
-        required=True,
         readonly=False,
+        required=True,
         domain="""[
             '|',
                 ('requires_allocation', '=', False),
@@ -154,105 +155,137 @@ class HrLeave(models.Model):
     holiday_status_requires_allocation = fields.Boolean(
         related="holiday_status_id.requires_allocation"
     )
-    color = fields.Integer("Color", related="holiday_status_id.color")
+    color = fields.Integer(
+        related="holiday_status_id.color",
+        string="Color",
+    )
     validation_type = fields.Selection(
-        string="Validation Type",
         related="holiday_status_id.leave_validation_type",
+        string="Validation Type",
         readonly=False,
     )
 
     employee_id = fields.Many2one(
-        "hr.employee",
-        index=True,
-        ondelete="restrict",
-        required=True,
-        tracking=True,
-        domain=lambda self: self._domain_employee_id(),
+        comodel_name="hr.employee",
         default=lambda self: self.env.user.employee_id,
+        index=True,
+        required=True,
+        domain=lambda self: self._domain_employee_id(),
+        ondelete="restrict",
+        tracking=True,
     )
     employee_company_id = fields.Many2one(
-        related="employee_id.company_id", string="Employee Company", store=True
+        related="employee_id.company_id",
+        string="Employee Company",
+        store=True,
     )
     company_id = fields.Many2one(
-        "res.company", compute="_compute_company_id", store=True
+        comodel_name="res.company",
+        compute="_compute_company_id",
+        store=True,
     )
     active_employee = fields.Boolean(
-        related="employee_id.active", string="Employee Active"
+        related="employee_id.active",
+        string="Employee Active",
     )
     tz_mismatch = fields.Boolean(compute="_compute_tz_mismatch")
-    tz = fields.Selection(_selection_timezones, compute="_compute_tz")
+    tz = fields.Selection(
+        selection=_selection_timezones,
+        compute="_compute_tz",
+    )
     department_id = fields.Many2one(
-        "hr.department",
+        comodel_name="hr.department",
         compute="_compute_department_id",
         store=True,
         readonly=False,
     )
-    notes = fields.Text("Reasons", readonly=False)
+    notes = fields.Text(
+        string="Reasons",
+        readonly=False,
+    )
     resource_calendar_id = fields.Many2one(
-        "resource.calendar",
+        comodel_name="resource.calendar",
         compute="_compute_resource_calendar_id",
         store=True,
-        readonly=False,
         copy=False,
+        readonly=False,
     )
     max_leaves = fields.Float(compute="_compute_leaves")
     virtual_remaining_leaves = fields.Float(
-        compute="_compute_leaves", string="Available Time Off"
+        string="Available Time Off",
+        compute="_compute_leaves",
     )
     date_from = fields.Datetime(
-        "Start Date",
+        string="Start Date",
         compute="_compute_date_from_to",
         store=True,
         index=True,
         tracking=True,
     )
     date_to = fields.Datetime(
-        "End Date", compute="_compute_date_from_to", store=True, tracking=True
+        string="End Date",
+        compute="_compute_date_from_to",
+        store=True,
+        tracking=True,
     )
     number_of_days = fields.Float(
-        "Duration (Days)",
+        string="Duration (Days)",
+        help="Number of days of the time off request. Used in the calculation.",
         compute="_compute_duration",
         store=True,
         tracking=True,
-        help="Number of days of the time off request. Used in the calculation.",
     )
     number_of_hours = fields.Float(
-        "Duration (Hours)",
+        string="Duration (Hours)",
+        help="Number of hours of the time off request. Used in the calculation.",
         compute="_compute_duration",
         store=True,
         tracking=True,
-        help="Number of hours of the time off request. Used in the calculation.",
     )
-    last_several_days = fields.Boolean("All day", compute="_compute_last_several_days")
+    last_several_days = fields.Boolean(
+        string="All day",
+        compute="_compute_last_several_days",
+    )
     duration_display = fields.Char(
-        "Requested", compute="_compute_duration_display", store=True
+        string="Requested",
+        compute="_compute_duration_display",
+        store=True,
     )
-    meeting_id = fields.Many2one("calendar.event", copy=False)
-    first_approver_id = fields.Many2one(
-        "hr.employee",
-        string="First Approval",
-        readonly=True,
+    meeting_id = fields.Many2one(
+        comodel_name="calendar.event",
         copy=False,
+    )
+    first_approver_id = fields.Many2one(
+        comodel_name="hr.employee",
+        string="First Approval",
         help="This area is automatically filled by the user who validate the time off",
+        copy=False,
+        readonly=True,
     )
     second_approver_id = fields.Many2one(
-        "hr.employee",
+        comodel_name="hr.employee",
         string="Second Approval",
-        readonly=True,
-        copy=False,
         help="This area is automatically filled by the user who validate the time off with second level (If time off type need second validation)",
+        copy=False,
+        readonly=True,
     )
 
     can_cancel = fields.Boolean(
-        compute="_compute_can_cancel", export_string_translation=False
+        export_string_translation=False,
+        compute="_compute_can_cancel",
     )
     can_back_to_approve = fields.Boolean(
-        compute="_compute_can_back_to_approve", export_string_translation=False
+        export_string_translation=False,
+        compute="_compute_can_back_to_approve",
     )
 
-    attachment_ids = fields.One2many("ir.attachment", "res_id", string="Attachments")
+    attachment_ids = fields.One2many(
+        comodel_name="ir.attachment",
+        inverse_name="res_id",
+        string="Attachments",
+    )
     supported_attachment_ids = fields.Many2many(
-        "ir.attachment",
+        comodel_name="ir.attachment",
         string="Attach File",
         compute="_compute_supported_attachments",
         inverse="_inverse_supported_attachment_ids",
@@ -261,41 +294,54 @@ class HrLeave(models.Model):
         compute="_compute_supported_attachments"
     )
     leave_type_request_unit = fields.Selection(
-        related="holiday_status_id.request_unit", readonly=True
+        related="holiday_status_id.request_unit",
+        readonly=True,
     )
     leave_type_support_document = fields.Boolean(
         related="holiday_status_id.support_document"
     )
-    request_date_from = fields.Date("Request Start Date")
-    request_date_to = fields.Date("Request End Date")
+    request_date_from = fields.Date(string="Request Start Date")
+    request_date_to = fields.Date(string="Request End Date")
     request_hour_from = fields.Float(
         string="Hour from",
         compute="_compute_request_hour_from_to",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     request_hour_to = fields.Float(
         string="Hour to",
         compute="_compute_request_hour_from_to",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     request_date_from_period = fields.Selection(
-        [("am", "Morning"), ("pm", "Afternoon")],
+        selection=[("am", "Morning"), ("pm", "Afternoon")],
         string="Date Period Start",
         default="am",
     )
     request_date_to_period = fields.Selection(
-        [("am", "Morning"), ("pm", "Afternoon")], string="Date Period End", default="pm"
+        selection=[("am", "Morning"), ("pm", "Afternoon")],
+        string="Date Period End",
+        default="pm",
     )
     request_unit_half = fields.Boolean(
-        "Half-Day", compute="_compute_request_unit_half", store=True
+        string="Half-Day",
+        compute="_compute_request_unit_half",
+        store=True,
     )
     request_unit_hours = fields.Boolean(
-        "Specific Time", compute="_compute_request_unit_hours", store=True
+        string="Specific Time",
+        compute="_compute_request_unit_hours",
+        store=True,
     )
-    is_hatched = fields.Boolean("Hatched", compute="_compute_is_hatched_and_striked")
-    is_striked = fields.Boolean("Striked", compute="_compute_is_hatched_and_striked")
+    is_hatched = fields.Boolean(
+        string="Hatched",
+        compute="_compute_is_hatched_and_striked",
+    )
+    is_striked = fields.Boolean(
+        string="Striked",
+        compute="_compute_is_hatched_and_striked",
+    )
     has_mandatory_day = fields.Boolean(compute="_compute_has_mandatory_day")
     leave_type_increases_duration = fields.Char(
         compute="_compute_leave_type_increases_duration"

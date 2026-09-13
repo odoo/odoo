@@ -12,9 +12,12 @@ class ReportProjectTaskUser(models.Model):
     _order = "name desc, project_id"
     _auto = False
 
-    name = fields.Char(string="Task Title", readonly=True)
+    name = fields.Char(
+        string="Task Title",
+        readonly=True,
+    )
     user_ids = fields.Many2many(
-        "res.users",
+        comodel_name="res.users",
         relation="project_task_user_rel",
         column1="task_id",
         column2="user_id",
@@ -22,14 +25,27 @@ class ReportProjectTaskUser(models.Model):
         readonly=True,
     )
     create_date = fields.Datetime(readonly=True)
-    date_assign = fields.Datetime(string="Assignment Date", readonly=True)
-    date_closed = fields.Datetime(string="Closed Date", readonly=True)
-    date_end = fields.Datetime(string="Deadline", readonly=True)
+    date_assign = fields.Datetime(
+        string="Assignment Date",
+        readonly=True,
+    )
+    date_closed = fields.Datetime(
+        string="Closed Date",
+        readonly=True,
+    )
+    date_end = fields.Datetime(
+        string="Deadline",
+        readonly=True,
+    )
     date_last_status_change = fields.Datetime(
-        string="Last Status Change", readonly=True
+        string="Last Status Change",
+        readonly=True,
     )
     display_in_project = fields.Boolean(export_string_translation=False)
-    project_id = fields.Many2one("project.project", readonly=True)
+    project_id = fields.Many2one(
+        comodel_name="project.project",
+        readonly=True,
+    )
     lead_time_days = fields.Float(
         string="Lead Time (days)",
         digits=(16, 2),
@@ -45,10 +61,13 @@ class ReportProjectTaskUser(models.Model):
     delay_endings_days = fields.Float(
         string="Days to Deadline",
         digits=(16, 2),
+        readonly=True,
         aggregator="avg",
+    )
+    nbr = fields.Integer(
+        string="# of Tasks",
         readonly=True,
     )
-    nbr = fields.Integer("# of Tasks", readonly=True)
     queue_time_hours = fields.Float(
         string="Queue Time (hours)",
         digits=(16, 2),
@@ -62,11 +81,17 @@ class ReportProjectTaskUser(models.Model):
         aggregator="avg",
     )
     rating_last_value = fields.Float(
-        "Last Rating (1-5)", aggregator="avg", readonly=True
+        string="Last Rating (1-5)",
+        readonly=True,
+        aggregator="avg",
     )
-    rating_avg = fields.Float("Average Rating (1-5)", readonly=True, aggregator="avg")
+    rating_avg = fields.Float(
+        string="Average Rating (1-5)",
+        readonly=True,
+        aggregator="avg",
+    )
     priority = fields.Selection(
-        [
+        selection=[
             ("0", "Normal"),
             ("1", "Important"),
             ("2", "High"),
@@ -76,7 +101,7 @@ class ReportProjectTaskUser(models.Model):
     )
 
     state = fields.Selection(
-        [
+        selection=[
             ("todo", "To Do"),
             ("in_progress", "In Progress"),
             ("changes_requested", "Changes Requested"),
@@ -87,27 +112,52 @@ class ReportProjectTaskUser(models.Model):
         ],
         readonly=True,
     )
-    is_closed = fields.Boolean(string="Closed state", readonly=True)
-    company_id = fields.Many2one("res.company", readonly=True)
-    partner_id = fields.Many2one("res.partner", string="Customer", readonly=True)
-    step_id = fields.Many2one(
-        "project.workflow.step", string="Workflow Step", readonly=True
+    is_closed = fields.Boolean(
+        string="Closed state",
+        readonly=True,
     )
-    task_id = fields.Many2one("project.task", readonly=True)
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        readonly=True,
+    )
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Customer",
+        readonly=True,
+    )
+    step_id = fields.Many2one(
+        comodel_name="project.workflow.step",
+        string="Workflow Step",
+        readonly=True,
+    )
+    task_id = fields.Many2one(
+        comodel_name="project.task",
+        readonly=True,
+    )
     tag_ids = fields.Many2many(
-        "project.tags",
+        comodel_name="project.tags",
         relation="project_tags_project_task_rel",
         column1="project_task_id",
         column2="project_tags_id",
         string="Tags",
         readonly=True,
     )
-    parent_id = fields.Many2one("project.task", string="Parent Task", readonly=True)
-    milestone_id = fields.Many2one("project.milestone", readonly=True)
-    lost_reason_id = fields.Many2one("project.task.lost.reason", readonly=True)
+    parent_id = fields.Many2one(
+        comodel_name="project.task",
+        string="Parent Task",
+        readonly=True,
+    )
+    milestone_id = fields.Many2one(
+        comodel_name="project.milestone",
+        readonly=True,
+    )
+    lost_reason_id = fields.Many2one(
+        comodel_name="project.task.lost.reason",
+        readonly=True,
+    )
     message_is_follower = fields.Boolean(related="task_id.message_is_follower")
     successor_ids = fields.Many2many(
-        "project.task",
+        comodel_name="project.task",
         relation="project_task_dependency_rel",
         column1="depends_on_id",
         column2="task_id",
@@ -116,7 +166,10 @@ class ReportProjectTaskUser(models.Model):
         domain="[('allow_dependencies', '=', True), ('id', '!=', id)]",
     )
     description = fields.Text(readonly=True)
-    date_start = fields.Datetime("Start date", readonly=True)
+    date_start = fields.Datetime(
+        string="Start date",
+        readonly=True,
+    )
     is_template = fields.Boolean(readonly=True)
     has_template_ancestor = fields.Boolean(readonly=True)
 

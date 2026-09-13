@@ -38,20 +38,18 @@ class MixinAttribute(models.AbstractModel):
     # constraint watches.
     _attribute_line_model = None
 
-    sequence = fields.Integer(
-        default=10,
-    )
+    sequence = fields.Integer(default=10)
     value_type = fields.Selection(
         selection=[
             ("single", "Single value"),
             ("multi", "Multiple values"),
         ],
-        required=True,
-        default="single",
         help="How many values of this attribute a single line may hold. This "
         "is a data rule, orthogonal to display_type, which only picks the "
         "widget: a 'single' attribute may still render as radio, pills, "
         "select or colour swatches.",
+        default="single",
+        required=True,
     )
     display_type = fields.Selection(
         selection=[
@@ -62,9 +60,9 @@ class MixinAttribute(models.AbstractModel):
             ("multi", "Multi-checkbox"),
             ("image", "Image"),
         ],
-        required=True,
-        default="radio",
         help="Widget used to pick values of this attribute.",
+        default="radio",
+        required=True,
     )
 
     # ------------------------------------------------------------

@@ -5,7 +5,7 @@ class SmsTemplateReset(models.TransientModel):
     _name = "sms.template.reset"
     _description = "SMS Template Reset"
 
-    template_ids = fields.Many2many("sms.template")
+    template_ids = fields.Many2many(comodel_name="sms.template")
 
     def reset_template(self):
         if not self.template_ids:

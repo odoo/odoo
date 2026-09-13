@@ -16,11 +16,14 @@ class PhoneNumber(models.Model):
     _inherit = "phone.number"
     _phone_search_min_length = 3
 
-    valid = fields.Boolean(compute="_compute_valid", store=True)
+    valid = fields.Boolean(
+        compute="_compute_valid",
+        store=True,
+    )
     blacklisted = fields.Boolean(
         compute="_compute_blacklisted",
-        compute_sudo=True,
         search="_search_blacklisted",
+        compute_sudo=True,
         groups="base.group_user",
     )
 

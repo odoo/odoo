@@ -5,13 +5,12 @@ class PaymentLinkWizard(models.TransientModel):
     _inherit = "payment.link.wizard"
     _description = "Generate Sales Payment Link"
 
-    amount_paid = fields.Monetary(string="Already Paid", readonly=True)
-    prepayment_amount = fields.Monetary(
-        currency_field="currency_id",
+    amount_paid = fields.Monetary(
+        string="Already Paid",
+        readonly=True,
     )
-    confirmation_message = fields.Char(
-        compute="_compute_confirmation_message",
-    )
+    prepayment_amount = fields.Monetary(currency_field="currency_id")
+    confirmation_message = fields.Char(compute="_compute_confirmation_message")
 
     @api.depends("amount")
     def _compute_confirmation_message(self):

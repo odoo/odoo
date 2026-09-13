@@ -5,7 +5,10 @@ from odoo.exceptions import ValidationError
 class LoyaltyRule(models.Model):
     _inherit = "loyalty.rule"
 
-    website_id = fields.Many2one(related="program_id.website_id", store=True)
+    website_id = fields.Many2one(
+        related="program_id.website_id",
+        store=True,
+    )
 
     @api.constrains("code", "website_id", "active")
     def _check_code(self):

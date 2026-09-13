@@ -18,49 +18,67 @@ class EventSlot(models.Model):
     _order = "event_id, date, start_hour, end_hour, id"
 
     event_id = fields.Many2one(
-        "event.event", required=True, ondelete="cascade", index=True
+        comodel_name="event.event",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     color = fields.Integer(default=0)
     date = fields.Date(required=True)
     date_tz = fields.Selection(related="event_id.date_tz")
     start_hour = fields.Float(
-        "Starting Hour", required=True, help="Expressed in the event timezone."
+        string="Starting Hour",
+        help="Expressed in the event timezone.",
+        required=True,
     )
     end_hour = fields.Float(
-        "Ending Hour", required=True, help="Expressed in the event timezone."
+        string="Ending Hour",
+        help="Expressed in the event timezone.",
+        required=True,
     )
-    start_datetime = fields.Datetime(compute="_compute_datetimes", store=True)
-    end_datetime = fields.Datetime(compute="_compute_datetimes", store=True)
+    start_datetime = fields.Datetime(
+        compute="_compute_datetimes",
+        store=True,
+    )
+    end_datetime = fields.Datetime(
+        compute="_compute_datetimes",
+        store=True,
+    )
 
     # Registrations
     is_sold_out = fields.Boolean(
-        "Sold Out",
-        compute="_compute_is_sold_out",
+        string="Sold Out",
         help="Whether seats are sold out for this slot.",
+        compute="_compute_is_sold_out",
     )
     registration_ids = fields.One2many(
-        "event.registration", "event_slot_id", string="Attendees"
+        comodel_name="event.registration",
+        inverse_name="event_slot_id",
+        string="Attendees",
     )
     seats_available = fields.Integer(
-        string="Available Seats", store=False, readonly=True, compute="_compute_seats"
+        string="Available Seats",
+        compute="_compute_seats",
+        store=False,
+        readonly=True,
     )
     seats_reserved = fields.Integer(
         string="Number of Registrations",
+        compute="_compute_seats",
         store=False,
         readonly=True,
-        compute="_compute_seats",
     )
     seats_taken = fields.Integer(
         string="Number of Taken Seats",
+        compute="_compute_seats",
         store=False,
         readonly=True,
-        compute="_compute_seats",
     )
     seats_used = fields.Integer(
         string="Number of Attendees",
+        compute="_compute_seats",
         store=False,
         readonly=True,
-        compute="_compute_seats",
     )
 
     @api.constrains("start_hour", "end_hour")

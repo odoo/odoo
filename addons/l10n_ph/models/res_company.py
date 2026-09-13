@@ -5,6 +5,10 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     branch_code = fields.Char(
-        string="Company Branch Code", related="partner_id.branch_code"
+        related="partner_id.branch_code",
+        string="Company Branch Code",
     )
-    l10n_ph_rdo = fields.Char(related="partner_id.l10n_ph_rdo", readonly=False)
+    l10n_ph_rdo = fields.Char(
+        related="partner_id.l10n_ph_rdo",
+        readonly=False,
+    )

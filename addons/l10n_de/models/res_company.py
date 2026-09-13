@@ -14,7 +14,9 @@ class ResCompany(models.Model):
         tracking=True,
     )
     l10n_de_widnr = fields.Char(
-        string="W-IdNr.", help="Business identification number.", tracking=True
+        string="W-IdNr.",
+        help="Business identification number.",
+        tracking=True,
     )
 
     def write(self, vals):

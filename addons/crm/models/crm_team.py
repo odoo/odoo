@@ -19,47 +19,50 @@ class CrmTeam(models.Model):
     _description = "Sales Team"
 
     use_leads = fields.Boolean(
-        "Leads",
+        string="Leads",
         help="Check this box to filter and qualify incoming requests as leads before converting them into opportunities and assigning them to a salesperson.",
     )
     use_opportunities = fields.Boolean(
-        "Pipeline",
-        default=True,
+        string="Pipeline",
         help="Check this box to manage a presales process with opportunities.",
+        default=True,
     )
     alias_id = fields.Many2one(
         help="The email address associated with this channel. New emails received will automatically create new leads assigned to the channel."
     )
     assignment_enabled = fields.Boolean(
-        "Lead Assign", compute="_compute_assignment_enabled"
+        string="Lead Assign",
+        compute="_compute_assignment_enabled",
     )
     assignment_auto_enabled = fields.Boolean(
-        "Auto Assignment", compute="_compute_assignment_enabled"
+        string="Auto Assignment",
+        compute="_compute_assignment_enabled",
     )
-    assignment_optout = fields.Boolean("Skip auto assignment")
+    assignment_optout = fields.Boolean(string="Skip auto assignment")
     assignment_max = fields.Integer(
-        "Lead Average Capacity",
-        compute="_compute_assignment_max",
+        string="Lead Average Capacity",
         help="Monthly average leads capacity for all salesmen belonging to the team",
+        compute="_compute_assignment_max",
     )
     assignment_domain = fields.Char(
-        tracking=True,
         help="Additional filter domain when fetching unassigned leads to allocate to the team.",
+        tracking=True,
     )
     lead_unassigned_count = fields.Integer(
-        string="# Unassigned Leads", compute="_compute_lead_unassigned_count"
+        string="# Unassigned Leads",
+        compute="_compute_lead_unassigned_count",
     )
     lead_all_assigned_month_count = fields.Integer(
         string="# Leads/Opps assigned this month",
-        compute="_compute_lead_all_assigned_month_count",
         help="Number of leads and opportunities assigned this last month.",
+        compute="_compute_lead_all_assigned_month_count",
     )
     lead_all_assigned_month_exceeded = fields.Boolean(
-        "Exceed monthly lead assignement",
-        compute="_compute_lead_all_assigned_month_count",
+        string="Exceed monthly lead assignement",
         help="True if the monthly lead assignment count is greater than the maximum assignment limit, false otherwise.",
+        compute="_compute_lead_all_assigned_month_count",
     )
-    lead_properties_definition = fields.PropertiesDefinition("Lead Properties")
+    lead_properties_definition = fields.PropertiesDefinition(string="Lead Properties")
 
     # `crm_team_member_ids` is active-filtered and archiving a team archives its
     # members, so the set itself changes on a write nothing here declared: a

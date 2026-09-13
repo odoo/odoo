@@ -14,46 +14,40 @@ class AccountSecureEntriesWizard(models.TransientModel):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        required=True,
-        readonly=True,
         default=lambda self: self.env.company,
+        readonly=True,
+        required=True,
     )
-    country_code = fields.Char(
-        related="company_id.account_fiscal_country_id.code",
-    )
+    country_code = fields.Char(related="company_id.account_fiscal_country_id.code")
     hash_date = fields.Date(
         string="Hash All Entries",
-        required=True,
+        help="The selected Date",
         compute="_compute_hash_date",
         store=True,
         readonly=False,
-        help="The selected Date",
+        required=True,
     )
-    chains_to_hash_with_gaps = fields.Json(
-        compute="_compute_data",
-    )
+    chains_to_hash_with_gaps = fields.Json(compute="_compute_data")
     max_hash_date = fields.Date(
-        compute="_compute_max_hash_date",
         help="Highest Date such that all posted journal entries prior to (including) the date are secured. Only journal entries after the hard lock date are considered.",
+        compute="_compute_max_hash_date",
     )
     unreconciled_bank_statement_line_ids = fields.Many2many(
-        compute="_compute_data",
         comodel_name="account.bank.statement.line",
         help="All unreconciled bank statement lines before the selected date.",
+        compute="_compute_data",
     )
     not_hashable_unlocked_move_ids = fields.Many2many(
-        compute="_compute_data",
         comodel_name="account.move",
         help="All unhashable moves before the selected date that are not protected by the Hard Lock Date",
+        compute="_compute_data",
     )
     move_to_hash_ids = fields.Many2many(
-        compute="_compute_data",
         comodel_name="account.move",
         help="All moves that will be hashed",
+        compute="_compute_data",
     )
-    warnings = fields.Json(
-        compute="_compute_warnings",
-    )
+    warnings = fields.Json(compute="_compute_warnings")
 
     @api.depends("max_hash_date")
     def _compute_hash_date(self):

@@ -7,8 +7,8 @@ class ProductAttributeCustomValue(models.Model):
     sale_order_line_id = fields.Many2one(
         comodel_name="sale.order.line",
         string="Sales Order Line",
-        ondelete="cascade",
         index="btree_not_null",
+        ondelete="cascade",
     )
 
     _sol_custom_value_unique = models.UniqueIndex(

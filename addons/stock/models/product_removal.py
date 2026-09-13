@@ -6,11 +6,11 @@ class ProductRemoval(models.Model):
     _description = "Removal Strategy"
 
     name = fields.Char(
-        required=True,
         translate=True,
+        required=True,
     )
     method = fields.Char(
-        required=True,
-        translate=True,
         help="FIFO, LIFO...",
+        translate=True,
+        required=True,
     )

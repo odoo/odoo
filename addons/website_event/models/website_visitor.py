@@ -7,22 +7,22 @@ class WebsiteVisitor(models.Model):
     _inherit = "website.visitor"
 
     event_registration_ids = fields.One2many(
-        "event.registration",
-        "visitor_id",
+        comodel_name="event.registration",
+        inverse_name="visitor_id",
         string="Event Registrations",
         groups="event.group_event_registration_desk",
     )
     event_registration_count = fields.Integer(
-        "# Registrations",
+        string="# Registrations",
         compute="_compute_event_registration_count",
         groups="event.group_event_registration_desk",
     )
     event_registered_ids = fields.Many2many(
-        "event.event",
+        comodel_name="event.event",
         string="Registered Events",
         compute="_compute_event_registered_ids",
-        compute_sudo=True,
         search="_search_event_registered_ids",
+        compute_sudo=True,
         groups="event.group_event_registration_desk",
     )
 

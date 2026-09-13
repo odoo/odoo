@@ -5,23 +5,25 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     enable_recaptcha = fields.Boolean(
-        "Enable reCAPTCHA",
+        string="Enable reCAPTCHA",
+        default=True,
         config_parameter="enable_recaptcha",
         groups="base.group_system",
-        default=True,
     )
     recaptcha_public_key = fields.Char(
-        "Site Key", config_parameter="recaptcha_public_key", groups="base.group_system"
+        string="Site Key",
+        config_parameter="recaptcha_public_key",
+        groups="base.group_system",
     )
     recaptcha_private_key = fields.Char(
-        "Secret Key",
+        string="Secret Key",
         config_parameter="recaptcha_private_key",
         groups="base.group_system",
     )
     recaptcha_min_score = fields.Float(
-        "Minimum score",
+        string="Minimum score",
+        help="By default, should be one of 0.1, 0.3, 0.7, 0.9.\n1.0 is very likely a good interaction, 0.0 is very likely a bot",
+        default="0.7",
         config_parameter="recaptcha_min_score",
         groups="base.group_system",
-        default="0.7",
-        help="By default, should be one of 0.1, 0.3, 0.7, 0.9.\n1.0 is very likely a good interaction, 0.0 is very likely a bot",
     )

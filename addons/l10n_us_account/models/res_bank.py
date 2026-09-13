@@ -7,8 +7,8 @@ class ResBank(models.Model):
 
     intermediary_bank_id = fields.Many2one(
         comodel_name="res.bank",
-        domain="[('id', '!=', id)]",
         help="An intermediary bank facilitates international wire transfers between your bank and the beneficiary's bank when they don’t have a direct relationship.",
+        domain="[('id', '!=', id)]",
     )
 
     @api.constrains("intermediary_bank_id")

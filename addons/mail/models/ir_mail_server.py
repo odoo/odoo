@@ -24,7 +24,11 @@ class IrMail_Server(models.Model):
         readonly=True,
     )
 
-    owner_user_id: ResUsers = fields.Many2one("res.users", "Owner", copy=False)
+    owner_user_id: ResUsers = fields.Many2one(
+        comodel_name="res.users",
+        string="Owner",
+        copy=False,
+    )
 
     owner_limit_time = fields.Datetime(copy=False)
     owner_limit_count = fields.Integer(copy=False)

@@ -6,14 +6,17 @@ class MrpProductionBackorderLine(models.TransientModel):
     _description = "Backorder Confirmation Line"
 
     mrp_production_backorder_id = fields.Many2one(
-        "mrp.production.backorder", "MO Backorder", required=True, ondelete="cascade"
-    )
-    mrp_production_id = fields.Many2one(
-        "mrp.production",
-        "Manufacturing Order",
+        comodel_name="mrp.production.backorder",
+        string="MO Backorder",
         required=True,
         ondelete="cascade",
+    )
+    mrp_production_id = fields.Many2one(
+        comodel_name="mrp.production",
+        string="Manufacturing Order",
         readonly=True,
+        required=True,
+        ondelete="cascade",
     )
     to_backorder = fields.Boolean()
 
@@ -22,15 +25,16 @@ class MrpProductionBackorder(models.TransientModel):
     _name = "mrp.production.backorder"
     _description = "Wizard to mark as done or create back order"
 
-    mrp_production_ids = fields.Many2many("mrp.production")
+    mrp_production_ids = fields.Many2many(comodel_name="mrp.production")
 
     mrp_production_backorder_line_ids = fields.One2many(
-        "mrp.production.backorder.line",
-        "mrp_production_backorder_id",
+        comodel_name="mrp.production.backorder.line",
+        inverse_name="mrp_production_backorder_id",
         string="Backorder Confirmation Lines",
     )
     show_backorder_lines = fields.Boolean(
-        "Show backorder lines", compute="_compute_show_backorder_lines"
+        string="Show backorder lines",
+        compute="_compute_show_backorder_lines",
     )
 
     @api.depends("mrp_production_backorder_line_ids")

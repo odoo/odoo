@@ -10,7 +10,10 @@ class AccountMove(models.Model):
             ("BusinessReject", "Rejected"),
         ]
     )
-    nemhandel_response_ids = fields.One2many("nemhandel.response", "move_id")
+    nemhandel_response_ids = fields.One2many(
+        comodel_name="nemhandel.response",
+        inverse_name="move_id",
+    )
     nemhandel_can_send_response = fields.Boolean(
         compute="_compute_nemhandel_can_send_response"
     )

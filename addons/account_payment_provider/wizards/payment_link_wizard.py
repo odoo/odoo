@@ -9,12 +9,13 @@ class PaymentLinkWizard(models.TransientModel):
 
     invoice_amount_due = fields.Monetary(
         string="Amount Due",
-        compute="_compute_invoice_amount_due",
         currency_field="currency_id",
+        compute="_compute_invoice_amount_due",
     )
     open_installments = fields.Json(export_string_translation=False)
     open_installments_preview = fields.Html(
-        export_string_translation=False, compute="_compute_open_installments_preview"
+        export_string_translation=False,
+        compute="_compute_open_installments_preview",
     )
     display_open_installments = fields.Boolean(
         compute="_compute_display_open_installments"

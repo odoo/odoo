@@ -8,7 +8,9 @@ class MrpProductionSplitMulti(models.TransientModel):
     _description = "Wizard to Split Multiple Productions"
 
     production_ids = fields.One2many(
-        "mrp.production.split", "production_split_multi_id", "Productions To Split"
+        comodel_name="mrp.production.split",
+        inverse_name="production_split_multi_id",
+        string="Productions To Split",
     )
 
 
@@ -17,31 +19,39 @@ class MrpProductionSplit(models.TransientModel):
     _description = "Wizard to Split a Production"
 
     production_split_multi_id = fields.Many2one(
-        "mrp.production.split.multi", "Split Productions"
+        comodel_name="mrp.production.split.multi",
+        string="Split Productions",
     )
     production_id = fields.Many2one(
-        "mrp.production", "Manufacturing Order", readonly=True
+        comodel_name="mrp.production",
+        string="Manufacturing Order",
+        readonly=True,
     )
     product_id = fields.Many2one(related="production_id.product_id")
     product_qty = fields.Float(related="production_id.product_qty")
     product_uom_id = fields.Many2one(related="production_id.product_uom_id")
     production_capacity = fields.Float(related="production_id.production_capacity")
     production_detailed_vals_ids = fields.One2many(
-        "mrp.production.split.line",
-        "mrp_production_split_id",
-        "Split Details",
+        comodel_name="mrp.production.split.line",
+        inverse_name="mrp_production_split_id",
+        string="Split Details",
         compute="_compute_production_detailed_vals_ids",
         store=True,
         readonly=False,
     )
-    valid_details = fields.Boolean("Valid", compute="_compute_valid_details")
+    valid_details = fields.Boolean(
+        string="Valid",
+        compute="_compute_valid_details",
+    )
     max_batch_size = fields.Float(
-        compute="_compute_max_batch_size",
         digits="Product Unit",
+        compute="_compute_max_batch_size",
         readonly=False,
     )
     num_splits = fields.Integer(
-        "# Splits", compute="_compute_num_splits", readonly=True
+        string="# Splits",
+        compute="_compute_num_splits",
+        readonly=True,
     )
 
     MAX_SPLITS = 1000
@@ -167,14 +177,21 @@ class MrpProductionSplitLine(models.TransientModel):
     _description = "Split Production Detail"
 
     mrp_production_split_id = fields.Many2one(
-        "mrp.production.split", "Split Production", required=True, ondelete="cascade"
+        comodel_name="mrp.production.split",
+        string="Split Production",
+        required=True,
+        ondelete="cascade",
     )
-    quantity = fields.Float("Quantity To Produce", digits="Product Unit", required=True)
+    quantity = fields.Float(
+        string="Quantity To Produce",
+        digits="Product Unit",
+        required=True,
+    )
     user_id = fields.Many2one(
-        "res.users",
-        "Responsible",
+        comodel_name="res.users",
+        string="Responsible",
         domain=lambda self: [
             ("all_group_ids", "in", self.env.ref("mrp.group_mrp_user").id)
         ],
     )
-    date = fields.Datetime("Schedule Date")
+    date = fields.Datetime(string="Schedule Date")

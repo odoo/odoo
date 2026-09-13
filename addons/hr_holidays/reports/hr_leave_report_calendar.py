@@ -11,19 +11,50 @@ class HrLeaveReportCalendar(models.Model):
     _auto = False
     _order = "start_datetime DESC, employee_id"
 
-    name = fields.Char(readonly=True, compute="_compute_name")
-    start_datetime = fields.Datetime(string="From", readonly=True)
-    stop_datetime = fields.Datetime(string="To", readonly=True)
-    duration_display = fields.Char(related="leave_id.duration_display", readonly=True)
-    tz = fields.Selection(_selection_timezones, string="Timezone", readonly=True)
+    name = fields.Char(
+        compute="_compute_name",
+        readonly=True,
+    )
+    start_datetime = fields.Datetime(
+        string="From",
+        readonly=True,
+    )
+    stop_datetime = fields.Datetime(
+        string="To",
+        readonly=True,
+    )
+    duration_display = fields.Char(
+        related="leave_id.duration_display",
+        readonly=True,
+    )
+    tz = fields.Selection(
+        selection=_selection_timezones,
+        string="Timezone",
+        readonly=True,
+    )
     duration = fields.Float(readonly=True)
-    employee_id = fields.Many2one("hr.employee", readonly=True)
-    user_id = fields.Many2one("res.users", readonly=True)
-    department_id = fields.Many2one("hr.department", readonly=True)
-    job_id = fields.Many2one("hr.job", readonly=True)
-    company_id = fields.Many2one("res.company", readonly=True)
+    employee_id = fields.Many2one(
+        comodel_name="hr.employee",
+        readonly=True,
+    )
+    user_id = fields.Many2one(
+        comodel_name="res.users",
+        readonly=True,
+    )
+    department_id = fields.Many2one(
+        comodel_name="hr.department",
+        readonly=True,
+    )
+    job_id = fields.Many2one(
+        comodel_name="hr.job",
+        readonly=True,
+    )
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        readonly=True,
+    )
     state = fields.Selection(
-        [
+        selection=[
             ("cancel", "Cancelled"),
             ("confirm", "To Approve"),
             ("refuse", "Refused"),
@@ -33,17 +64,24 @@ class HrLeaveReportCalendar(models.Model):
         readonly=True,
     )
     description = fields.Char(
-        readonly=True, groups="hr_holidays.group_hr_holidays_user"
+        readonly=True,
+        groups="hr_holidays.group_hr_holidays_user",
     )
     holiday_status_id = fields.Many2one(
-        "hr.leave.type",
-        readonly=True,
+        comodel_name="hr.leave.type",
         string="Time Off Type",
+        readonly=True,
         groups="hr_holidays.group_hr_holidays_user",
     )
 
-    is_hatched = fields.Boolean("Hatched", readonly=True)
-    is_striked = fields.Boolean("Striked", readonly=True)
+    is_hatched = fields.Boolean(
+        string="Hatched",
+        readonly=True,
+    )
+    is_striked = fields.Boolean(
+        string="Striked",
+        readonly=True,
+    )
 
     is_absent = fields.Boolean(related="employee_id.is_absent")
     member_of_department = fields.Boolean(related="employee_id.member_of_department")
@@ -53,7 +91,10 @@ class HrLeaveReportCalendar(models.Model):
         readonly=True,
         groups="hr_holidays.group_hr_holidays_user",
     )
-    is_manager = fields.Boolean("Manager", compute="_compute_is_manager")
+    is_manager = fields.Boolean(
+        string="Manager",
+        compute="_compute_is_manager",
+    )
 
     def init(self):
         drop_view_if_exists(self.env.cr, "hr_leave_report_calendar")

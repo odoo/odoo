@@ -7,25 +7,29 @@ class PaymentCaptureWizard(models.TransientModel):
     _name = "payment.capture.wizard"
     _description = "Payment Capture Wizard"
 
-    transaction_ids = (
-        fields.Many2many(  # All the source txs related to the capture request
-            comodel_name="payment.transaction",
-            default=lambda self: self.env.context.get("active_ids"),
-            readonly=True,
-        )
+    transaction_ids = fields.Many2many(
+        # All the source txs related to the capture request
+        comodel_name="payment.transaction",
+        default=lambda self: self.env.context.get("active_ids"),
+        readonly=True,
     )
     authorized_amount = fields.Monetary(compute="_compute_authorized_amount")
     captured_amount = fields.Monetary(
-        string="Already Captured", compute="_compute_captured_amount"
+        string="Already Captured",
+        compute="_compute_captured_amount",
     )
     voided_amount = fields.Monetary(
-        string="Already Voided", compute="_compute_voided_amount"
+        string="Already Voided",
+        compute="_compute_voided_amount",
     )
     available_amount = fields.Monetary(
-        string="Maximum Capture Allowed", compute="_compute_available_amount"
+        string="Maximum Capture Allowed",
+        compute="_compute_available_amount",
     )
     amount_to_capture = fields.Monetary(
-        compute="_compute_amount_to_capture", store=True, readonly=False
+        compute="_compute_amount_to_capture",
+        store=True,
+        readonly=False,
     )
     is_amount_to_capture_valid = fields.Boolean(
         compute="_compute_is_amount_to_capture_valid"

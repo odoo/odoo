@@ -41,44 +41,64 @@ class WebsiteMenu(models.Model):
                 menu.mega_menu_content = False
                 menu.mega_menu_classes = False
 
-    name = fields.Char("Menu", required=True, translate=True)
+    name = fields.Char(
+        string="Menu",
+        translate=True,
+        required=True,
+    )
     url = fields.Char(
         compute="_compute_url",
-        store=True,
-        required=True,
-        readonly=False,
         precompute=True,
+        store=True,
         copy=True,
+        readonly=False,
+        required=True,
     )
     page_id = fields.Many2one(
-        "website.page", "Related Page", ondelete="cascade", index="btree_not_null"
+        comodel_name="website.page",
+        string="Related Page",
+        index="btree_not_null",
+        ondelete="cascade",
     )
     controller_page_id = fields.Many2one(
-        "website.controller.page",
-        "Related Model Page",
-        ondelete="cascade",
+        comodel_name="website.controller.page",
+        string="Related Model Page",
         index="btree_not_null",
+        ondelete="cascade",
     )
     new_window = fields.Boolean()
     sequence = fields.Integer(default=_default_sequence)
-    website_id = fields.Many2one("website", ondelete="cascade")
-    parent_id = fields.Many2one(
-        "website.menu", "Parent Menu", index=True, ondelete="cascade"
+    website_id = fields.Many2one(
+        comodel_name="website",
+        ondelete="cascade",
     )
-    child_id = fields.One2many("website.menu", "parent_id", string="Child Menus")
+    parent_id = fields.Many2one(
+        comodel_name="website.menu",
+        string="Parent Menu",
+        index=True,
+        ondelete="cascade",
+    )
+    child_id = fields.One2many(
+        comodel_name="website.menu",
+        inverse_name="parent_id",
+        string="Child Menus",
+    )
     parent_path = fields.Char(index=True)
     is_visible = fields.Boolean(compute="_compute_is_visible")
     group_ids = fields.Many2many(
-        "res.groups",
+        comodel_name="res.groups",
         string="Visible Groups",
-        groups="base.group_user",
         help="User needs to be at least in one of these groups to see the menu",
+        groups="base.group_user",
     )
     is_mega_menu = fields.Boolean(
-        compute=_compute_is_mega_menu, inverse=_inverse_is_mega_menu
+        compute=_compute_is_mega_menu,
+        inverse=_inverse_is_mega_menu,
     )
     mega_menu_content = fields.Html(
-        translate=html_translate, sanitize=False, prefetch=True
+        translate=html_translate,
+        sanitize=False,
+        prefetch=True,
     )
     mega_menu_classes = fields.Char()
 

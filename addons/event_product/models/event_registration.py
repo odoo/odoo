@@ -11,10 +11,10 @@ class EventRegistration(models.Model):
             ("free", "Free"),
         ],
         compute="_compute_registration_status",
+        precompute=True,
         compute_sudo=True,
         store=True,
         readonly=True,
-        precompute=True,
     )
 
     def _has_order(self):

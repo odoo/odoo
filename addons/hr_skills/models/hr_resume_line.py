@@ -9,17 +9,29 @@ class HrResumeLine(models.Model):
     _order = "line_type_id, date_end desc, date_start desc"
 
     employee_id = fields.Many2one(
-        "hr.employee", required=True, ondelete="cascade", index=True
+        comodel_name="hr.employee",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     avatar_128 = fields.Image(related="employee_id.avatar_128")
     company_id = fields.Many2one(related="employee_id.company_id")
     department_id = fields.Many2one(related="employee_id.department_id")
-    name = fields.Char(required=True, translate=True)
-    date_start = fields.Date(required=True, default=fields.Date.context_today)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
+    date_start = fields.Date(
+        default=fields.Date.context_today,
+        required=True,
+    )
     date_end = fields.Date()
     duration = fields.Integer()
     description = fields.Html(translate=True)
-    line_type_id = fields.Many2one("hr.resume.line.type", string="Type")
+    line_type_id = fields.Many2one(
+        comodel_name="hr.resume.line.type",
+        string="Type",
+    )
     is_course = fields.Boolean(related="line_type_id.is_course")
     course_type = fields.Selection(
         selection=[("external", "External")],
@@ -36,7 +48,8 @@ class HrResumeLine(models.Model):
     certificate_filename = fields.Char()
     certificate_file = fields.Binary(string="Certificate")
     resume_line_properties = fields.Properties(
-        "Properties", definition="line_type_id.resume_line_type_properties_definition"
+        definition="line_type_id.resume_line_type_properties_definition",
+        string="Properties",
     )
 
     _date_check = models.Constraint(

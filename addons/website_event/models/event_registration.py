@@ -5,7 +5,9 @@ class EventRegistration(models.Model):
     _inherit = "event.registration"
 
     visitor_id = fields.Many2one(
-        "website.visitor", ondelete="set null", index="btree_not_null"
+        comodel_name="website.visitor",
+        index="btree_not_null",
+        ondelete="set null",
     )
 
     def _get_fields_website_registration_allowed(self):

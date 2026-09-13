@@ -6,12 +6,22 @@ class EventStage(models.Model):
     _description = "Event Stage"
     _order = "sequence, name"
 
-    name = fields.Char(string="Stage Name", required=True, translate=True)
-    description = fields.Text(string="Stage description", translate=True)
+    name = fields.Char(
+        string="Stage Name",
+        translate=True,
+        required=True,
+    )
+    description = fields.Text(
+        string="Stage description",
+        translate=True,
+    )
     sequence = fields.Integer(default=1)
-    fold = fields.Boolean(string="Folded in Kanban", default=False)
+    fold = fields.Boolean(
+        string="Folded in Kanban",
+        default=False,
+    )
     pipe_end = fields.Boolean(
         string="End Stage",
-        default=False,
         help="Events will automatically be moved into this stage when they are finished. The event moved into this stage will automatically be set as green.",
+        default=False,
     )

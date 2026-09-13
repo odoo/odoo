@@ -24,16 +24,12 @@ class MixinOrderLinePriceHistory(models.AbstractModel):
             ("last_12m", "Last 12 Months"),
             ("current_year", "Current Year"),
         ],
+        help="Period the statistics and the shortlist below are computed over.",
         default="last_12m",
         required=True,
-        help="Period the statistics and the shortlist below are computed over.",
     )
-    product_id = fields.Many2one(
-        comodel_name="product.product",
-    )
-    partner_id = fields.Many2one(
-        comodel_name="res.partner",
-    )
+    product_id = fields.Many2one(comodel_name="product.product")
+    partner_id = fields.Many2one(comodel_name="res.partner")
     include_draft = fields.Boolean(
         string="Include Draft Documents",
         help="Add unconfirmed documents to the shortlist. Statistics always "
@@ -41,37 +37,37 @@ class MixinOrderLinePriceHistory(models.AbstractModel):
     )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
-        compute="_compute_currency_id",
-        store=True,
-        precompute=True,
-        readonly=False,
         help="Currency every price on this screen is normalized to.",
+        compute="_compute_currency_id",
+        precompute=True,
+        store=True,
+        readonly=False,
     )
     avg_price_unit = fields.Monetary(
         string="Average Price",
-        compute="_compute_price_stats",
-        currency_field="currency_id",
         help="Quantity-weighted average over confirmed documents in the "
         "period, all partners, target line excluded. Prices are normalized to "
         "the currency above and to the product reference unit of measure.",
+        currency_field="currency_id",
+        compute="_compute_price_stats",
     )
     min_price_unit = fields.Monetary(
         string="Lowest Price",
-        compute="_compute_price_stats",
-        currency_field="currency_id",
         help="Lowest normalized price in the period sample.",
+        currency_field="currency_id",
+        compute="_compute_price_stats",
     )
     max_price_unit = fields.Monetary(
         string="Highest Price",
-        compute="_compute_price_stats",
-        currency_field="currency_id",
         help="Highest normalized price in the period sample.",
+        currency_field="currency_id",
+        compute="_compute_price_stats",
     )
     avg_price_unit_exact = fields.Float(
-        compute="_compute_price_stats",
         help="`avg_price_unit` before the currency rounds it. Every divergence "
         "on this screen divides by this one, so the wizard total and each row "
         "cannot disagree in the last decimal.",
+        compute="_compute_price_stats",
     )
     avg_sample_count = fields.Integer(
         string="Sample Size",
@@ -79,12 +75,12 @@ class MixinOrderLinePriceHistory(models.AbstractModel):
     )
     partner_avg_price_unit = fields.Monetary(
         string="Average with this Partner",
-        compute="_compute_price_stats",
-        currency_field="currency_id",
         help="Quantity-weighted average over the same period, restricted to "
         "the selected partner and its commercial group. Read against the "
         "all-partner average beside it: that comparison, not the global figure "
         "alone, is what says whether this partner is priced with the market.",
+        currency_field="currency_id",
+        compute="_compute_price_stats",
     )
     partner_avg_sample_count = fields.Integer(
         string="Partner Sample Size",
@@ -92,34 +88,32 @@ class MixinOrderLinePriceHistory(models.AbstractModel):
     )
     partner_divergence_pct = fields.Float(
         string="Partner vs Market",
-        compute="_compute_price_stats",
         help="Relative difference between the partner average and the "
         "all-partner average.",
-    )
-    partner_divergence_favorable = fields.Boolean(
         compute="_compute_price_stats",
     )
+    partner_divergence_favorable = fields.Boolean(compute="_compute_price_stats")
     avg_sample_truncated = fields.Boolean(
-        compute="_compute_price_stats",
         help="The period holds more documents than the sample cap, so the "
         "statistics read the most recent ones only.",
+        compute="_compute_price_stats",
     )
     current_price_unit = fields.Monetary(
         string="Current Price",
-        compute="_compute_price_stats",
-        currency_field="currency_id",
         help="Target line effective price, normalized like the average.",
+        currency_field="currency_id",
+        compute="_compute_price_stats",
     )
     divergence_pct = fields.Float(
         string="Divergence",
-        compute="_compute_price_stats",
         help="Relative difference between the target line price and the "
         "period average.",
+        compute="_compute_price_stats",
     )
     divergence_favorable = fields.Boolean(
-        compute="_compute_price_stats",
         help="Whether the divergence goes the way this document type wants: "
         "below average when buying, above average when selling.",
+        compute="_compute_price_stats",
     )
 
     def _get_price_direction(self) -> int:
@@ -353,21 +347,19 @@ class MixinOrderLinePriceHistoryLine(models.AbstractModel):
     )
     price_unit_normalized = fields.Monetary(
         string="Normalized Price",
-        compute="_compute_divergence",
-        currency_field="currency_id",
         help="This line's discounted price, converted to the wizard currency "
         "and to the product reference unit of measure. This is the only "
         "column comparable across units and currencies.",
+        currency_field="currency_id",
+        compute="_compute_divergence",
     )
     divergence_pct = fields.Float(
         string="vs Average",
-        compute="_compute_divergence",
         help="Relative difference between this line's normalized price and "
         "the period average.",
-    )
-    divergence_favorable = fields.Boolean(
         compute="_compute_divergence",
     )
+    divergence_favorable = fields.Boolean(compute="_compute_divergence")
 
     @api.depends("line_id", "wizard_id.avg_price_unit_exact", "wizard_id.currency_id")
     def _compute_divergence(self):

@@ -45,7 +45,6 @@ class IrActionsServer(models.Model):
     webhook_url = fields.Char(tracking=True)
 
     state = fields.Selection(
-        tracking=True,
         selection_add=[
             ("next_activity", "Create Activity"),
             ("mail_post", "Send Email"),
@@ -59,6 +58,7 @@ class IrActionsServer(models.Model):
             "remove_followers": "cascade",
             "next_activity": "cascade",
         },
+        tracking=True,
     )
     followers_type = fields.Selection(
         selection=[
@@ -70,85 +70,104 @@ class IrActionsServer(models.Model):
             - Dynamic Followers: all contacts of the chosen record's field will be added/removed from followers.
         """,
         compute="_compute_followers_type",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     followers_partner_field_name = fields.Char(
         string="Followers Field",
         compute="_compute_followers_info",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     partner_ids: ResPartner = fields.Many2many(
-        "res.partner", compute="_compute_followers_info", readonly=False, store=True
+        comodel_name="res.partner",
+        compute="_compute_followers_info",
+        store=True,
+        readonly=False,
     )
 
     template_id: MailTemplate = fields.Many2one(
-        "mail.template",
-        "Email Template",
-        domain="[('model_id', '=', model_id)]",
+        comodel_name="mail.template",
+        string="Email Template",
         compute="_compute_template_id",
-        ondelete="set null",
-        readonly=False,
         store=True,
+        readonly=False,
+        domain="[('model_id', '=', model_id)]",
+        ondelete="set null",
     )
-    mail_post_autofollow = fields.Boolean("Subscribe Recipients", default=True)
+    mail_post_autofollow = fields.Boolean(
+        string="Subscribe Recipients",
+        default=True,
+    )
     mail_post_method = fields.Selection(
         selection=[("email", "Email"), ("comment", "Message"), ("note", "Note")],
         string="Send Email As",
         compute="_compute_mail_post_method",
-        readonly=False,
         store=True,
+        readonly=False,
     )
 
     activity_type_id: MailActivityType = fields.Many2one(
-        "mail.activity.type",
+        comodel_name="mail.activity.type",
         string="Activity Type",
-        domain="['|', ('res_model', '=', False), ('res_model', '=', model_name)]",
         compute="_compute_activity_info",
-        readonly=False,
         store=True,
+        readonly=False,
+        domain="['|', ('res_model', '=', False), ('res_model', '=', model_name)]",
         ondelete="restrict",
     )
     activity_summary = fields.Char(
-        "Title", compute="_compute_activity_summaries", readonly=False, store=True
+        string="Title",
+        compute="_compute_activity_summaries",
+        store=True,
+        readonly=False,
     )
     automated_activity_summary = fields.Char(
-        compute="_compute_activity_summaries", store=True
+        compute="_compute_activity_summaries",
+        store=True,
     )
     activity_note = fields.Html(
-        "Note", compute="_compute_activity_info", readonly=False, store=True
+        string="Note",
+        compute="_compute_activity_info",
+        store=True,
+        readonly=False,
     )
     activity_date_deadline_range = fields.Integer(
         string="Due Date In",
         compute="_compute_activity_info",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     activity_date_deadline_range_type = fields.Selection(
-        time_unit_selection("day", "week", "month"),
+        selection=time_unit_selection("day", "week", "month"),
         string="Due type",
         compute="_compute_activity_info",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     activity_user_type = fields.Selection(
-        [("specific", "Specific User"), ("generic", "Dynamic User (based on record)")],
+        selection=[
+            ("specific", "Specific User"),
+            ("generic", "Dynamic User (based on record)"),
+        ],
         string="User Type",
-        compute="_compute_activity_info",
-        readonly=False,
-        store=True,
         help="Use 'Specific User' to always assign the same user on the next activity. Use 'Dynamic User' to specify the field name of the user to choose on the record.",
+        compute="_compute_activity_info",
+        store=True,
+        readonly=False,
     )
     activity_user_id: ResUsers = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Responsible",
         compute="_compute_activity_user_info",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     activity_user_field_name = fields.Char(
-        "User Field", compute="_compute_activity_user_info", readonly=False, store=True
+        string="User Field",
+        compute="_compute_activity_user_info",
+        store=True,
+        readonly=False,
     )
 
     @api.model

@@ -58,22 +58,22 @@ class AccountMove(models.Model):
         return super()._auto_init()
 
     l10n_latam_available_document_type_ids = fields.Many2many(
-        "l10n_latam.document.type",
+        comodel_name="l10n_latam.document.type",
         compute="_compute_l10n_latam_available_document_types",
     )
     l10n_latam_document_type_id = fields.Many2one(
-        "l10n_latam.document.type",
+        comodel_name="l10n_latam.document.type",
         string="Document Type",
-        readonly=False,
-        bypass_search_access=True,
-        index="btree_not_null",
         compute="_compute_l10n_latam_document_type_id",
         store=True,
+        index="btree_not_null",
+        readonly=False,
+        bypass_search_access=True,
     )
     l10n_latam_document_number = fields.Char(
+        string="Document Number",
         compute="_compute_l10n_latam_document_number",
         inverse="_inverse_l10n_latam_document_number",
-        string="Document Number",
         readonly=False,
     )
     l10n_latam_use_documents = fields.Boolean(
@@ -81,10 +81,12 @@ class AccountMove(models.Model):
         search="_search_l10n_latam_use_documents",
     )
     l10n_latam_manual_document_number = fields.Boolean(
-        compute="_compute_l10n_latam_manual_document_number", string="Manual Number"
+        string="Manual Number",
+        compute="_compute_l10n_latam_manual_document_number",
     )
     l10n_latam_document_type_id_code = fields.Char(
-        related="l10n_latam_document_type_id.code", string="Doc Type"
+        related="l10n_latam_document_type_id.code",
+        string="Doc Type",
     )
 
     @api.depends("l10n_latam_document_type_id")

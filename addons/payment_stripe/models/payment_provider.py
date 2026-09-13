@@ -20,19 +20,20 @@ class PaymentProvider(models.Model):
     _inherit = "payment.provider"
 
     code = fields.Selection(
-        selection_add=[("stripe", "Stripe")], ondelete={"stripe": "set default"}
+        selection_add=[("stripe", "Stripe")],
+        ondelete={"stripe": "set default"},
     )
     stripe_publishable_key = fields.Char(
         string="Publishable Key",
         help="The key solely used to identify the account with Stripe",
-        required_if_provider="stripe",
         copy=False,
+        required_if_provider="stripe",
     )
     stripe_secret_key = fields.Char(
         string="Secret Key",
-        required_if_provider="stripe",
         copy=False,
         groups="base.group_system",
+        required_if_provider="stripe",
     )
     stripe_webhook_secret = fields.Char(
         string="Webhook Signing Secret",

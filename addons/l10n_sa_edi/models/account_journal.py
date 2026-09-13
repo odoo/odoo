@@ -64,58 +64,61 @@ class AccountJournal(models.Model):
     """
 
     l10n_sa_csr = fields.Binary(
+        help="The Certificate Signing Request that is submitted to the Compliance API",
         attachment=True,
         copy=False,
         groups="base.group_system",
-        help="The Certificate Signing Request that is submitted to the Compliance API",
     )
-    l10n_sa_csr_errors = fields.Html("Onboarding Errors", copy=False)
+    l10n_sa_csr_errors = fields.Html(
+        string="Onboarding Errors",
+        copy=False,
+    )
 
     l10n_sa_compliance_csid_json = fields.Char(
-        "CCSID JSON",
-        copy=False,
-        groups="base.group_system",
+        string="CCSID JSON",
         help="Compliance CSID data received from the Compliance CSID API "
         "in dumped json format",
+        copy=False,
+        groups="base.group_system",
     )
     l10n_sa_production_csid_certificate_id = fields.Many2one(
-        string="PCSID Certificate",
         comodel_name="certificate.certificate",
+        string="PCSID Certificate",
         domain=[("is_valid", "=", True)],
     )
     l10n_sa_production_csid_json = fields.Char(
-        "PCSID JSON",
-        copy=False,
-        groups="base.group_system",
+        string="PCSID JSON",
         help="Production CSID data received from the Production CSID API "
         "in dumped json format",
+        copy=False,
+        groups="base.group_system",
     )
     l10n_sa_production_csid_validity = fields.Datetime(
         related="l10n_sa_production_csid_certificate_id.date_end"
     )
     l10n_sa_compliance_csid_certificate_id = fields.Many2one(
-        string="CCSID certificate",
         comodel_name="certificate.certificate",
+        string="CCSID certificate",
         domain=[("is_valid", "=", True)],
     )
     l10n_sa_compliance_checks_passed = fields.Boolean(
-        "Compliance Checks Done",
+        string="Compliance Checks Done",
+        help="Specifies if the Compliance Checks have been completed successfully",
         default=False,
         copy=False,
-        help="Specifies if the Compliance Checks have been completed successfully",
     )
 
     l10n_sa_chain_sequence_id = fields.Many2one(
-        "ir.sequence",
+        comodel_name="ir.sequence",
         string="ZATCA account.move chain sequence",
-        readonly=True,
         copy=False,
+        readonly=True,
     )
 
     l10n_sa_latest_submission_hash = fields.Char(
-        "Latest Submission Hash",
-        copy=False,
+        string="Latest Submission Hash",
         help="Hash of the latest submitted invoice to be used as the Previous Invoice Hash (KSA-13)",
+        copy=False,
     )
 
     def _l10n_sa_reset_chain_head_error(self):

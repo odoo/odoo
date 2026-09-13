@@ -5,26 +5,33 @@ class ReportProjectTaskUser(models.Model):
     _inherit = "report.project.task.user"
 
     allocated_hours = fields.Float(
-        "Allocated Time", readonly=True, groups="hr_timesheet.group_hr_timesheet_user"
+        string="Allocated Time",
+        readonly=True,
+        groups="hr_timesheet.group_hr_timesheet_user",
     )
     effective_hours = fields.Float(
-        "Time Spent", readonly=True, groups="hr_timesheet.group_hr_timesheet_user"
+        string="Time Spent",
+        readonly=True,
+        groups="hr_timesheet.group_hr_timesheet_user",
     )
     remaining_hours = fields.Float(
-        "Time Remaining", readonly=True, groups="hr_timesheet.group_hr_timesheet_user"
+        string="Time Remaining",
+        readonly=True,
+        groups="hr_timesheet.group_hr_timesheet_user",
     )
     remaining_hours_percentage = fields.Float(
-        "Time Remaining Percentage",
+        string="Time Remaining Percentage",
         readonly=True,
         groups="hr_timesheet.group_hr_timesheet_user",
     )
     progress = fields.Float(
-        aggregator="avg",
         readonly=True,
+        aggregator="avg",
         groups="hr_timesheet.group_hr_timesheet_user",
     )
     overtime = fields.Float(
-        readonly=True, groups="hr_timesheet.group_hr_timesheet_user"
+        readonly=True,
+        groups="hr_timesheet.group_hr_timesheet_user",
     )
 
     def _select(self):

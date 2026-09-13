@@ -16,25 +16,21 @@ class ResPartnerAgeRange(models.Model):
     _description = "Partner Age Range"
     _order = "min_value, id"
 
-    name = fields.Char(
-        required=True,
-    )
-    active = fields.Boolean(
-        default=True,
-    )
+    name = fields.Char(required=True)
+    active = fields.Boolean(default=True)
     min_value = fields.Float(
         string="From year",
+        help="First birth year of the cohort, inclusive.",
         digits=(16, 0),
         default=lambda self: self._default_min_value(),
-        help="First birth year of the cohort, inclusive.",
     )
     max_value = fields.Float(
         string="To year",
-        digits=(16, 0),
         help="First birth year *after* the cohort -- it is the lower bound of "
         "the next one. 0 means no upper limit, which the newest cohort should "
         "use so a newborn still classifies. The oldest cohort stays closed on "
         "its lower side: a birth year before it predates every cohort here.",
+        digits=(16, 0),
     )
     partner_count = fields.Integer(
         string="Contacts",
@@ -42,10 +38,10 @@ class ResPartnerAgeRange(models.Model):
     )
     gap_before = fields.Char(
         string="Uncovered",
-        compute="_compute_gap_before",
         help="Birth years left between this cohort and the one below it. A "
         "contact born in those years is classified into nothing at all, which "
         "the scale gives no other sign of.",
+        compute="_compute_gap_before",
     )
 
     _name_uniq = models.UniqueIndex(

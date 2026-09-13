@@ -7,16 +7,19 @@ class HrWorkEntryType(models.Model):
     _description = "HR Work Entry Type"
     _order = "sequence, id"
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
     display_code = fields.Char(
+        help="This code can be changed, it is only for a display purpose (3 letters max)",
         size=3,
         translate=True,
-        help="This code can be changed, it is only for a display purpose (3 letters max)",
     )
     code = fields.Char(
         string="Payroll Code",
-        required=True,
         help="Careful, the Code is used in many references, changing it could lead to unwanted changes.",
+        required=True,
     )
     external_code = fields.Char(
         help="Use this code to export your data to a third party"
@@ -24,30 +27,30 @@ class HrWorkEntryType(models.Model):
     color = fields.Integer(default=0)
     sequence = fields.Integer(default=25)
     active = fields.Boolean(
-        default=True,
         help="If the active field is set to false, it will allow you to hide the work entry type without removing it.",
+        default=True,
     )
     country_id = fields.Many2one(
-        "res.country",
+        comodel_name="res.country",
         domain=lambda self: [("id", "in", self.env.companies.country_id.ids)],
     )
     country_code = fields.Char(related="country_id.code")
     is_leave = fields.Boolean(
-        default=False,
         string="Time Off",
         help="Allow the work entry type to be linked with time off types.",
+        default=False,
     )
     is_work = fields.Boolean(
+        string="Working Time",
+        help="If checked, the work entry is counted as work time in the working schedule",
         compute="_compute_is_work",
         inverse="_inverse_is_work",
-        string="Working Time",
         readonly=False,
-        help="If checked, the work entry is counted as work time in the working schedule",
     )
     amount_rate = fields.Float(
         string="Rate",
-        default=1.0,
         help="If you want the hours should be paid double, the rate should be 200%.",
+        default=1.0,
     )
     is_extra_hours = fields.Boolean(
         string="Added to Monthly Pay",

@@ -18,8 +18,14 @@ class WebsiteConfiguratorFeature(models.Model):
     website_config_preselection = fields.Char(
         help="Comma-separated list of website type/purpose for which this feature should be pre-selected"
     )
-    page_view_id = fields.Many2one("ir.ui.view", ondelete="cascade")
-    module_id = fields.Many2one("ir.module.module", ondelete="cascade")
+    page_view_id = fields.Many2one(
+        comodel_name="ir.ui.view",
+        ondelete="cascade",
+    )
+    module_id = fields.Many2one(
+        comodel_name="ir.module.module",
+        ondelete="cascade",
+    )
     feature_url = fields.Char()
     menu_sequence = fields.Integer(
         help="If set, a website menu will be created for the feature."

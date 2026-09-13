@@ -31,17 +31,23 @@ class StockAddToWave(models.TransientModel):
         return res
 
     wave_id = fields.Many2one(
-        "stock.picking.batch",
+        comodel_name="stock.picking.batch",
         string="Wave Transfer",
         domain="[('is_wave', '=', True), ('state', 'in', ('draft', 'in_progress'))]",
     )
-    picking_ids = fields.Many2many("stock.picking")
-    line_ids = fields.Many2many("stock.move.line")
+    picking_ids = fields.Many2many(comodel_name="stock.picking")
+    line_ids = fields.Many2many(comodel_name="stock.move.line")
     mode = fields.Selection(
-        [("existing", "an existing wave transfer"), ("new", "a new wave transfer")],
+        selection=[
+            ("existing", "an existing wave transfer"),
+            ("new", "a new wave transfer"),
+        ],
         default="existing",
     )
-    user_id = fields.Many2one("res.users", string="Responsible")
+    user_id = fields.Many2one(
+        comodel_name="res.users",
+        string="Responsible",
+    )
 
     def attach_pickings(self):
         self.check_singleton()

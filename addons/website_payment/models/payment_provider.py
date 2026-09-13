@@ -11,10 +11,10 @@ class PaymentProvider(models.Model):
     _inherit = "payment.provider"
 
     website_id = fields.Many2one(
-        "website",
-        check_company=True,
+        comodel_name="website",
         copy=False,
         ondelete="restrict",
+        check_company=True,
     )
 
     @api.model

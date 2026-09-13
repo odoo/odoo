@@ -17,9 +17,9 @@ class MixinMailThreadPhone(models.AbstractModel):
     phone_sanitized_blacklisted = fields.Boolean(
         string="Phone Blacklisted",
         compute="_compute_blacklisted",
+        search="_search_phone_sanitized_blacklisted",
         compute_sudo=True,
         store=False,
-        search="_search_phone_sanitized_blacklisted",
         groups="base.group_user",
     )
     phone_blacklisted = fields.Boolean(
@@ -30,7 +30,9 @@ class MixinMailThreadPhone(models.AbstractModel):
         groups="base.group_user",
     )
     phone_mobile_search = fields.Char(
-        "Phone Number", store=False, search="_search_phone_mobile_search"
+        string="Phone Number",
+        search="_search_phone_mobile_search",
+        store=False,
     )
 
     def _search_phone_mobile_search(self, operator, value):

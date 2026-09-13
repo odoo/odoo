@@ -11,9 +11,13 @@ class PosPaymentMethod(models.Model):
     def _selection_payment_terminals(self):
         return super()._selection_payment_terminals() + [("mollie", "Mollie")]
 
-    mollie_terminal_id = fields.Char("Mollie Terminal ID", copy=False)
+    mollie_terminal_id = fields.Char(
+        string="Mollie Terminal ID",
+        copy=False,
+    )
     mollie_payment_provider_id = fields.Many2one(
-        "payment.provider", domain=[("code", "=", "mollie")]
+        comodel_name="payment.provider",
+        domain=[("code", "=", "mollie")],
     )
 
     @api.constrains("mollie_payment_provider_id")

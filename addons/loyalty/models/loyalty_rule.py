@@ -36,24 +36,37 @@ class LoyaltyRule(models.Model):
 
     active = fields.Boolean(default=True)
     program_id = fields.Many2one(
-        comodel_name="loyalty.program", ondelete="cascade", required=True, index=True
+        comodel_name="loyalty.program",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     program_type = fields.Selection(related="program_id.program_type")
     # Stored for security rules
-    company_id = fields.Many2one(related="program_id.company_id", store=True)
+    company_id = fields.Many2one(
+        related="program_id.company_id",
+        store=True,
+    )
     currency_id = fields.Many2one(related="program_id.currency_id")
 
     # Only for dev mode
     user_has_debug = fields.Boolean(compute="_compute_user_has_debug")
     product_domain = fields.Char(default="[]")
 
-    product_ids = fields.Many2many(string="Products", comodel_name="product.product")
+    product_ids = fields.Many2many(
+        comodel_name="product.product",
+        string="Products",
+    )
     product_category_id = fields.Many2one(
-        string="Categories", comodel_name="product.category"
+        comodel_name="product.category",
+        string="Categories",
     )
     product_tag_id = fields.Many2one(comodel_name="product.tag")
 
-    reward_point_amount = fields.Float(string="Reward", default=1)
+    reward_point_amount = fields.Float(
+        string="Reward",
+        default=1,
+    )
     # Only used for program_id.applies_on == 'future'
     reward_point_split = fields.Boolean(
         string="Split per unit",
@@ -61,35 +74,44 @@ class LoyaltyRule(models.Model):
         default=False,
     )
     reward_point_name = fields.Char(
-        related="program_id.portal_point_name", readonly=True
+        related="program_id.portal_point_name",
+        readonly=True,
     )
     reward_point_mode = fields.Selection(
-        selection=_selection_reward_point_modes, required=True, default="order"
+        selection=_selection_reward_point_modes,
+        default="order",
+        required=True,
     )
 
-    minimum_qty = fields.Integer(string="Minimum Quantity", default=1)
+    minimum_qty = fields.Integer(
+        string="Minimum Quantity",
+        default=1,
+    )
     minimum_amount = fields.Monetary(string="Minimum Purchase")
     minimum_amount_tax_mode = fields.Selection(
         selection=[
             ("incl", "tax included"),
             ("excl", "tax excluded"),
         ],
-        required=True,
         default="incl",
+        required=True,
     )
 
     mode = fields.Selection(
-        string="Application",
         selection=[
             ("auto", "Automatic"),
             ("with_code", "With a promotion code"),
         ],
+        string="Application",
         compute="_compute_mode",
         store=True,
         readonly=False,
     )
     code = fields.Char(
-        string="Discount code", compute="_compute_code", store=True, readonly=False
+        string="Discount code",
+        compute="_compute_code",
+        store=True,
+        readonly=False,
     )
 
     _reward_point_amount_positive = models.Constraint(

@@ -49,12 +49,12 @@ class ResPartnerBank(models.Model):
 
     l10n_ch_qr_iban = fields.Char(
         string="QR-IBAN",
-        compute="_compute_l10n_ch_qr_iban",
-        store=True,
-        readonly=False,
         help="Put the QR-IBAN here for your own bank accounts.  That way, you can "
         "still use the main IBAN in the Account Number while you will see the "
         "QR-IBAN for the barcode.  ",
+        compute="_compute_l10n_ch_qr_iban",
+        store=True,
+        readonly=False,
     )
 
     # fields to configure payment slip generation

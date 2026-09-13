@@ -5,9 +5,7 @@ from odoo.tools.translate import _
 class AccountAnalyticAccount(models.Model):
     _inherit = "account.analytic.account"
 
-    purchase_order_count = fields.Integer(
-        compute="_compute_purchase_order_count",
-    )
+    purchase_order_count = fields.Integer(compute="_compute_purchase_order_count")
 
     def _get_domain_purchase_order(self):
         return [

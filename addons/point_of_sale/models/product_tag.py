@@ -8,7 +8,10 @@ class ProductTag(models.Model):
     _name = "product.tag"
     _inherit = ["product.tag", "mixin.pos.load"]
 
-    pos_description = fields.Html(string="Description", translate=True)
+    pos_description = fields.Html(
+        string="Description",
+        translate=True,
+    )
     has_image = fields.Boolean(compute="_compute_has_image")
 
     @api.model

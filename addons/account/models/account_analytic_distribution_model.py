@@ -14,16 +14,16 @@ class AccountAnalyticDistributionModel(models.Model):
         help="This analytic distribution will apply to all financial accounts sharing the prefix specified.",
     )
     product_id = fields.Many2one(
-        "product.product",
+        comodel_name="product.product",
+        help="Select a product for which the analytic distribution will be used (e.g. create new customer invoice or Sales order if we select this product, it will automatically take this as an analytic account)",
         ondelete="cascade",
         check_company=True,
-        help="Select a product for which the analytic distribution will be used (e.g. create new customer invoice or Sales order if we select this product, it will automatically take this as an analytic account)",
     )
     product_categ_id = fields.Many2one(
-        "product.category",
+        comodel_name="product.category",
         string="Product Category",
-        ondelete="cascade",
         help="Select a product category which will use analytic account specified in analytic default (e.g. create new customer invoice or Sales order if we select this product, it will automatically take this as an analytic account)",
+        ondelete="cascade",
     )
     prefix_placeholder = fields.Char(compute="_compute_prefix_placeholder")
 

@@ -15,42 +15,40 @@ class ProjectTaskDependency(models.Model):
     _rec_name = "display_name"
 
     task_id = fields.Many2one(
-        "project.task",
+        comodel_name="project.task",
         string="Dependent Task",
+        help="The task that is blocked or constrained.",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
-        help="The task that is blocked or constrained.",
     )
     depends_on_id = fields.Many2one(
-        "project.task",
+        comodel_name="project.task",
         string="Predecessor Task",
+        help="The task that must complete (or start) first.",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
-        help="The task that must complete (or start) first.",
     )
     dependency_type = fields.Selection(
-        [
+        selection=[
             ("fs", "Finish-to-Start"),
             ("ss", "Start-to-Start"),
             ("ff", "Finish-to-Finish"),
             ("sf", "Start-to-Finish"),
         ],
         string="Type",
+        help="FS: B waits for A to finish (default). "
+        "SS: B waits for A to start. "
+        "FF: B cannot finish until A finishes. "
+        "SF: B cannot finish until A starts.",
         default="fs",
         required=True,
-        help=(
-            "FS: B waits for A to finish (default). "
-            "SS: B waits for A to start. "
-            "FF: B cannot finish until A finishes. "
-            "SF: B cannot finish until A starts."
-        ),
     )
     lag_hours = fields.Float(
-        "Lag (hours)",
-        default=0.0,
+        string="Lag (hours)",
         help="Delay after the dependency condition is met. Negative = lead time.",
+        default=0.0,
     )
     project_id = fields.Many2one(
         related="task_id.project_id",

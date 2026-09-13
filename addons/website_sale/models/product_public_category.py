@@ -21,21 +21,25 @@ class ProductPublicCategory(models.Model):
             return cat.sequence + 5
         return 10000
 
-    name = fields.Char(required=True, translate=True)
-    cover_image = fields.Image(
-        help="Displayed only in the Category List Snippet.",
+    name = fields.Char(
+        translate=True,
+        required=True,
     )
-    sequence = fields.Integer(default=_default_sequence, index=True)
+    cover_image = fields.Image(help="Displayed only in the Category List Snippet.")
+    sequence = fields.Integer(
+        default=_default_sequence,
+        index=True,
+    )
 
     parent_id = fields.Many2one(
         comodel_name="product.public.category",
-        ondelete="cascade",
         index=True,
+        ondelete="cascade",
     )
     child_id = fields.One2many(
-        string="Children Categories",
         comodel_name="product.public.category",
         inverse_name="parent_id",
+        string="Children Categories",
     )
     parents_and_self = fields.Many2many(
         comodel_name="product.public.category",
@@ -55,32 +59,32 @@ class ProductPublicCategory(models.Model):
 
     website_description = fields.Html(
         string="Description",
+        translate=html_translate,
+        sanitize_overridable=True,
         sanitize_attributes=False,
         sanitize_form=False,
-        sanitize_overridable=True,
-        translate=html_translate,
     )
 
     website_footer = fields.Html(
         string="Category Footer",
+        translate=html_translate,
         sanitize_attributes=False,
         sanitize_form=False,
-        translate=html_translate,
     )
 
     show_category_title = fields.Boolean(
-        default=False,
         help="Display the category title on the shop page. Corresponds to the 'Show Title' editor option.",
+        default=False,
     )
 
     show_category_description = fields.Boolean(
-        default=True,
         help="Display the category description on the shop page. Corresponds to the 'Show Description' editor option.",
+        default=True,
     )
 
     align_category_content = fields.Boolean(
-        default=False,
         help="Align the category content on the shop page. Corresponds to the 'Center Content' editor option.",
+        default=False,
     )
 
     @api.depends("parent_path")

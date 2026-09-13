@@ -6,7 +6,7 @@ class DiscoveredIotBox(models.TransientModel):
     _description = "An IoT box that is in pairing mode"
 
     name = fields.Char(compute="_compute_name")
-    add_iot_box_wizard_id = fields.Many2one("add.iot.box")
+    add_iot_box_wizard_id = fields.Many2one(comodel_name="add.iot.box")
     serial_number = fields.Char(readonly=True)
     pairing_code = fields.Char(readonly=True)
 

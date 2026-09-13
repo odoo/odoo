@@ -32,16 +32,19 @@ class AccountReportExpression(models.Model):
 
     report_line_id = fields.Many2one(
         comodel_name="account.report.line",
-        required=True,
         index=True,
+        required=True,
         ondelete="cascade",
     )
     report_line_name = fields.Char(
-        string="Report Line Name", related="report_line_id.name"
+        related="report_line_id.name",
+        string="Report Line Name",
     )
-    label = fields.Char(required=True, copy=True)
+    label = fields.Char(
+        copy=True,
+        required=True,
+    )
     engine = fields.Selection(
-        string="Computation Engine",
         selection=[
             ("domain", "Odoo Domain"),
             ("tax_tags", "Tax Tags"),
@@ -50,6 +53,7 @@ class AccountReportExpression(models.Model):
             ("external", "External Value"),
             ("custom", "Custom Python Function"),
         ],
+        string="Computation Engine",
         required=True,
     )
     formula = fields.Char(required=True)
@@ -63,18 +67,23 @@ class AccountReportExpression(models.Model):
             ("strict_range", "Strictly on the given dates"),
             ("previous_return_period", "From previous return period"),
         ],
-        required=True,
         default="strict_range",
+        required=True,
     )
     figure_type = fields.Selection(selection=FIGURE_TYPE_SELECTION_VALUES)
     green_on_positive = fields.Boolean(
-        string="Is Growth Good when Positive", default=True
+        string="Is Growth Good when Positive",
+        default=True,
     )
     blank_if_zero = fields.Boolean(
         string="Blank if Zero",
         help="When checked, 0 values will not show when displaying this expression's value.",
     )
-    auditable = fields.Boolean(store=True, readonly=False, compute="_compute_auditable")
+    auditable = fields.Boolean(
+        compute="_compute_auditable",
+        store=True,
+        readonly=False,
+    )
 
     carryover_target = fields.Char(
         string="Carry Over To",

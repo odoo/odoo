@@ -5,8 +5,8 @@ class HrDepartment(models.Model):
     _inherit = "hr.department"
 
     new_applicant_count = fields.Integer(
-        compute="_compute_new_applicant_count",
         string="New Applicant",
+        compute="_compute_new_applicant_count",
         compute_sudo=True,
     )
     new_hired_employee = fields.Integer(compute="_compute_recruitment_stats")

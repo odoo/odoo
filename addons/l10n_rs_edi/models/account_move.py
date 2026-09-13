@@ -15,23 +15,23 @@ class AccountMove(models.Model):
 
     l10n_rs_edi_uuid = fields.Char(
         string="RS Invoice UUID",
-        compute="_compute_l10n_rs_edi_uuid",
-        copy=False,
-        store=True,
         help="Unique Identifier for an invoice used as request id",
+        compute="_compute_l10n_rs_edi_uuid",
+        store=True,
+        copy=False,
     )
 
     l10n_rs_edi_is_eligible = fields.Boolean(
+        help="Technical field to determine if this invoice is eligible to be e-invoiced.",
         compute="_compute_l10n_rs_edi_is_eligible",
         store=True,
-        help="Technical field to determine if this invoice is eligible to be e-invoiced.",
     )
 
     l10n_rs_edi_attachment_file = fields.Binary(
         string="Serbian E-Invoice XML File",
-        copy=False,
-        attachment=True,
         help="Serbia: technical field holding the e-invoice XML data.",
+        attachment=True,
+        copy=False,
     )
 
     l10n_rs_edi_attachment_id = fields.Many2one(
@@ -44,14 +44,14 @@ class AccountMove(models.Model):
     )
 
     l10n_rs_edi_state = fields.Selection(
-        string="Serbia E-Invoice state",
         selection=[
             ("sent", "Sent"),
             ("sending_failed", "Error"),
         ],
-        tracking=True,
-        readonly=True,
+        string="Serbia E-Invoice state",
         copy=False,
+        readonly=True,
+        tracking=True,
     )
 
     l10n_rs_edi_error = fields.Text(
@@ -61,19 +61,28 @@ class AccountMove(models.Model):
     )
 
     l10n_rs_tax_date_obligations_code = fields.Selection(
-        string="Tax Date Obligations",
         selection=[
             ("35", "By Delivery Date"),
             ("3", "By Issuance Date"),
             ("432", "By Billing System"),
         ],
+        string="Tax Date Obligations",
+        compute="_compute_l10n_rs_tax_date_obligations_code",
         store=True,
         readonly=False,
-        compute="_compute_l10n_rs_tax_date_obligations_code",
     )
-    l10n_rs_edi_invoice = fields.Char(string="Invoice Id", copy=False)
-    l10n_rs_edi_sales_invoice = fields.Char(string="Sales Invoice Id", copy=False)
-    l10n_rs_edi_purchase_invoice = fields.Char(string="Purchase Invoice Id", copy=False)
+    l10n_rs_edi_invoice = fields.Char(
+        string="Invoice Id",
+        copy=False,
+    )
+    l10n_rs_edi_sales_invoice = fields.Char(
+        string="Sales Invoice Id",
+        copy=False,
+    )
+    l10n_rs_edi_purchase_invoice = fields.Char(
+        string="Purchase Invoice Id",
+        copy=False,
+    )
 
     @api.depends("country_code", "move_type")
     def _compute_show_delivery_date(self):

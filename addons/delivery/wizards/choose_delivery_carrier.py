@@ -13,32 +13,52 @@ class ChooseDeliveryCarrier(models.TransientModel):
             "product.template"
         ]._get_weight_uom_name_from_ir_config_parameter()
 
-    order_id = fields.Many2one("sale.order", required=True, ondelete="cascade")
+    order_id = fields.Many2one(
+        comodel_name="sale.order",
+        required=True,
+        ondelete="cascade",
+    )
     partner_id = fields.Many2one(
-        "res.partner", related="order_id.partner_id", required=True
+        comodel_name="res.partner",
+        related="order_id.partner_id",
+        required=True,
     )
     carrier_id = fields.Many2one(
-        "delivery.carrier",
+        comodel_name="delivery.carrier",
         string="Shipping Method",
         required=True,
         domain="[('id', 'in', available_carrier_ids)]",
     )
     delivery_type = fields.Selection(related="carrier_id.delivery_type")
     delivery_price = fields.Float()
-    display_price = fields.Float(string="Cost", readonly=True)
-    currency_id = fields.Many2one("res.currency", related="order_id.currency_id")
-    company_id = fields.Many2one("res.company", related="order_id.company_id")
+    display_price = fields.Float(
+        string="Cost",
+        readonly=True,
+    )
+    currency_id = fields.Many2one(
+        comodel_name="res.currency",
+        related="order_id.currency_id",
+    )
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        related="order_id.company_id",
+    )
     available_carrier_ids = fields.Many2many(
-        "delivery.carrier",
-        compute="_compute_available_carrier_ids",
+        comodel_name="delivery.carrier",
         string="Available Carriers",
+        compute="_compute_available_carrier_ids",
     )
     invoicing_message = fields.Text(compute="_compute_invoicing_message")
     delivery_message = fields.Text(readonly=True)
     total_weight = fields.Float(
-        string="Total Order Weight", related="order_id.shipping_weight", readonly=False
+        related="order_id.shipping_weight",
+        string="Total Order Weight",
+        readonly=False,
     )
-    weight_uom_name = fields.Char(readonly=True, default=_default_weight_uom_name)
+    weight_uom_name = fields.Char(
+        default=_default_weight_uom_name,
+        readonly=True,
+    )
 
     @api.onchange("carrier_id", "total_weight")
     def _onchange_carrier_id(self):

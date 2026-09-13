@@ -18,7 +18,7 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     l10n_es_tbai_state = fields.Selection(
-        [
+        selection=[
             ("to_send", "To Send"),
             ("sent", "Sent"),
             ("cancelled", "Cancelled"),
@@ -27,37 +27,37 @@ class AccountMove(models.Model):
         compute="_compute_l10n_es_tbai_state",
     )
     l10n_es_tbai_chain_index = fields.Integer(
+        related="l10n_es_tbai_post_document_id.chain_index",
         string="TicketBAI chain index",
         help="Invoice index in chain, set if and only if an in-chain XML was submitted and did not error",
-        related="l10n_es_tbai_post_document_id.chain_index",
     )
 
     l10n_es_tbai_post_document_id = fields.Many2one(
         comodel_name="l10n_es_edi_tbai.document",
-        readonly=True,
         copy=False,
+        readonly=True,
     )
     l10n_es_tbai_cancel_document_id = fields.Many2one(
         comodel_name="l10n_es_edi_tbai.document",
-        readonly=True,
         copy=False,
+        readonly=True,
     )
 
     l10n_es_tbai_post_file = fields.Binary(
-        string="TicketBAI Post File",
         related="l10n_es_tbai_post_document_id.xml_attachment_id.datas",
+        string="TicketBAI Post File",
     )
     l10n_es_tbai_post_file_name = fields.Char(
-        string="TicketBAI Post Attachment Name",
         related="l10n_es_tbai_post_document_id.xml_attachment_id.name",
+        string="TicketBAI Post Attachment Name",
     )
     l10n_es_tbai_cancel_file = fields.Binary(
-        string="TicketBAI Cancel File",
         related="l10n_es_tbai_cancel_document_id.xml_attachment_id.datas",
+        string="TicketBAI Cancel File",
     )
     l10n_es_tbai_cancel_file_name = fields.Char(
-        string="TicketBAI Cancel File Name",
         related="l10n_es_tbai_cancel_document_id.xml_attachment_id.name",
+        string="TicketBAI Cancel File Name",
     )
 
     l10n_es_tbai_is_required = fields.Boolean(
@@ -74,13 +74,13 @@ class AccountMove(models.Model):
         copy=False,
     )
     l10n_es_tbai_reversed_ids = fields.Many2many(
-        "account.move",
-        "account_move_tbai_reversed_moves",
-        "refund_id",
-        "reversed_move_id",
+        comodel_name="account.move",
+        relation="account_move_tbai_reversed_moves",
+        column1="refund_id",
+        column2="reversed_move_id",
         string="Refunded Vendor Bills",
-        domain="[('move_type', '=', 'in_invoice'), ('commercial_partner_id', '=', commercial_partner_id)]",
         help="In the case where a vendor refund has multiple original invoices, you can set them here. ",
+        domain="[('move_type', '=', 'in_invoice'), ('commercial_partner_id', '=', commercial_partner_id)]",
     )
 
     # -------------------------------------------------------------------------

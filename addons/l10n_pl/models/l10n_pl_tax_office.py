@@ -8,7 +8,10 @@ class L10n_PlL10n_Pl_Tax_Office(models.Model):
     _order = "code"
 
     code = fields.Char(required=True)
-    name = fields.Char("Description", required=True)
+    name = fields.Char(
+        string="Description",
+        required=True,
+    )
 
     _code_company_uniq = models.Constraint(
         "unique (code)",

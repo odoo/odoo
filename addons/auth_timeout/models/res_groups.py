@@ -59,13 +59,16 @@ class ResGroups(models.Model):
         readonly=False,
     )
     lock_timeout_delay_unit = fields.Selection(
-        DELAY_UNITS, compute="_compute_lock_timeout_delay_unit", readonly=False
+        selection=DELAY_UNITS,
+        compute="_compute_lock_timeout_delay_unit",
+        readonly=False,
     )
     lock_timeout_delay_in_unit = fields.Integer(
-        compute="_compute_lock_timeout_delay_unit", readonly=False
+        compute="_compute_lock_timeout_delay_unit",
+        readonly=False,
     )
     lock_timeout_2fa_selection = fields.Selection(
-        [
+        selection=[
             ("without_2fa", "Logout"),
             ("with_2fa", "Logout with two-factor authentication"),
         ],
@@ -79,7 +82,7 @@ class ResGroups(models.Model):
         readonly=False,
     )
     lock_timeout_inactivity_delay_unit = fields.Selection(
-        DELAY_UNITS,
+        selection=DELAY_UNITS,
         compute="_compute_lock_timeout_inactivity_delay_unit",
         readonly=False,
     )
@@ -88,7 +91,7 @@ class ResGroups(models.Model):
         readonly=False,
     )
     lock_timeout_inactivity_2fa_selection = fields.Selection(
-        [
+        selection=[
             ("without_2fa", "Screen lock"),
             ("with_2fa", "Screen lock with two-factor authentication"),
         ],

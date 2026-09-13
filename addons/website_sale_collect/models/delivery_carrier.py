@@ -13,7 +13,10 @@ class DeliveryCarrier(models.Model):
         selection_add=[("in_store", "Pick up in store")],
         ondelete={"in_store": "set default"},
     )
-    warehouse_ids = fields.Many2many(string="Stores", comodel_name="stock.warehouse")
+    warehouse_ids = fields.Many2many(
+        comodel_name="stock.warehouse",
+        string="Stores",
+    )
 
     @api.constrains("delivery_type", "is_published", "warehouse_ids")
     def _check_in_store_dm_has_warehouses_when_published(self):

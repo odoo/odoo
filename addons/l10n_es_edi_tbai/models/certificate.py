@@ -8,9 +8,7 @@ from odoo import fields, models
 class CertificateCertificate(models.Model):
     _inherit = "certificate.certificate"
 
-    scope = fields.Selection(
-        selection_add=[("tbai", "TBAI")],
-    )
+    scope = fields.Selection(selection_add=[("tbai", "TBAI")])
 
     def _l10n_es_edi_tbai_get_issuer(self):
         self.check_singleton()

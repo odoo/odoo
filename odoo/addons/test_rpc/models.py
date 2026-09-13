@@ -7,10 +7,14 @@ class Test_RpcModel_A(models.Model):
 
     name = fields.Char(required=True)
     field_b1 = fields.Many2one(
-        "test_rpc.model_b", string="required field", required=True
+        comodel_name="test_rpc.model_b",
+        string="required field",
+        required=True,
     )
     field_b2 = fields.Many2one(
-        "test_rpc.model_b", string="restricted field", ondelete="restrict"
+        comodel_name="test_rpc.model_b",
+        string="restricted field",
+        ondelete="restrict",
     )
 
     @api.private

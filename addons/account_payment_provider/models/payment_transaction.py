@@ -22,26 +22,26 @@ class PaymentTransaction(models.Model):
     # is what makes `payment_id` invalidate when a payment is linked; read
     # `payment_id`.
     payment_ids = fields.One2many(
-        string="Payments",
         comodel_name="account.payment",
         inverse_name="transaction_id",
+        string="Payments",
         readonly=True,
     )
     payment_id = fields.Many2one(
         comodel_name="account.payment",
-        readonly=True,
         compute="_compute_payment_id",
         search="_search_payment_id",
+        readonly=True,
     )
 
     invoice_ids = fields.Many2many(
-        string="Invoices",
         comodel_name="account.move",
         relation="account_invoice_transaction_rel",
         column1="transaction_id",
         column2="invoice_id",
-        readonly=True,
+        string="Invoices",
         copy=False,
+        readonly=True,
         domain=[
             (
                 "move_type",
@@ -50,7 +50,7 @@ class PaymentTransaction(models.Model):
             )
         ],
     )
-    invoices_count = fields.Count("invoice_ids")
+    invoices_count = fields.Count(count_of="invoice_ids")
 
     # === COMPUTE METHODS ===#
 

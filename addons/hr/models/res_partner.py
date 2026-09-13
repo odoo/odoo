@@ -9,14 +9,15 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     employee_ids = fields.One2many(
-        "hr.employee",
-        "partner_id",
+        comodel_name="hr.employee",
+        inverse_name="partner_id",
         string="Employees",
-        groups="hr.group_hr_user",
         help="Related employees based on their private address",
+        groups="hr.group_hr_user",
     )
     employees_count = fields.Integer(
-        compute="_compute_employees_count", groups="hr.group_hr_user"
+        compute="_compute_employees_count",
+        groups="hr.group_hr_user",
     )
     employee = fields.Boolean(
         help="Whether this contact is an Employee.",
@@ -29,7 +30,7 @@ class ResPartner(models.Model):
     # They are declared by hr because hr owns their vocabulary and is their
     # only reader; base owns the facet and its rule.
     place_of_birth = fields.Char()
-    country_of_birth = fields.Many2one("res.country")
+    country_of_birth = fields.Many2one(comodel_name="res.country")
     marital = fields.Selection(
         selection="_selection_marital_status",
         string="Marital Status",

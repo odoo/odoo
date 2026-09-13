@@ -12,7 +12,10 @@ class MailingTestPartnerUnstored(models.Model):
     name = fields.Char()
     email_from = fields.Char()
     partner_id = fields.Many2one(
-        "res.partner", "Customer", compute="_compute_partner_id", store=False
+        comodel_name="res.partner",
+        string="Customer",
+        compute="_compute_partner_id",
+        store=False,
     )
 
     @api.depends("email_from")

@@ -14,11 +14,11 @@ class ResCompany(models.Model):
     )
     l10n_vn_edi_token = fields.Char(
         string="Sinvoice Access Token",
-        groups="base.group_system",
         readonly=True,
+        groups="base.group_system",
     )
     l10n_vn_edi_token_expiry = fields.Datetime(
         string="Sinvoice Access Token Expiration Date",
-        groups="base.group_system",
         readonly=True,
+        groups="base.group_system",
     )

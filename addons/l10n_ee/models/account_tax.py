@@ -12,6 +12,6 @@ class AccountTax(models.Model):
             ("12", "Purchase KMS §41^1"),
         ],
         string="KMD INF Code",
-        default=False,
         help="This field is used for the comments/special code column in the KMD INF report.",
+        default=False,
     )

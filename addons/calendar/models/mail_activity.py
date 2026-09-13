@@ -11,7 +11,7 @@ class MailActivity(models.Model):
     _inherit = "mail.activity"
 
     calendar_event_id = fields.Many2one(
-        "calendar.event",
+        comodel_name="calendar.event",
         string="Calendar Meeting",
         index="btree_not_null",
         ondelete="cascade",

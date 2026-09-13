@@ -69,29 +69,25 @@ class StockMoveLine(models.Model):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        required=True,
-        readonly=True,
         index=True,
+        readonly=True,
+        required=True,
     )
 
     picking_id = fields.Many2one(
         comodel_name="stock.picking",
         string="Transfer",
-        bypass_search_access=True,
-        check_company=True,
-        index=True,
         help="The stock operation where the packing has been made",
+        index=True,
+        check_company=True,
+        bypass_search_access=True,
     )
     picking_partner_id = fields.Many2one(
         related="picking_id.partner_id",
         readonly=True,
     )
-    picking_location_id = fields.Many2one(
-        related="picking_id.location_id",
-    )
-    picking_location_dest_id = fields.Many2one(
-        related="picking_id.location_dest_id",
-    )
+    picking_location_id = fields.Many2one(related="picking_id.location_id")
+    picking_location_dest_id = fields.Many2one(related="picking_id.location_dest_id")
     picking_type_id = fields.Many2one(
         comodel_name="stock.picking.type",
         string="Operation type",
@@ -114,8 +110,8 @@ class StockMoveLine(models.Model):
     move_id = fields.Many2one(
         comodel_name="stock.move",
         string="Stock Operation",
-        check_company=True,
         index=True,
+        check_company=True,
     )
     state = fields.Selection(
         related="move_id.state",
@@ -129,50 +125,42 @@ class StockMoveLine(models.Model):
         related="move_id.partner_id",
         readonly=True,
     )
-    scrap_id = fields.Many2one(
-        related="move_id.scrap_id",
-    )
-    is_inventory = fields.Boolean(
-        related="move_id.is_inventory",
-    )
+    scrap_id = fields.Many2one(related="move_id.scrap_id")
+    is_inventory = fields.Boolean(related="move_id.is_inventory")
     is_locked = fields.Boolean(
         related="move_id.is_locked",
         readonly=True,
     )
-    reference = fields.Char(
-        related="move_id.reference",
-    )
+    reference = fields.Char(related="move_id.reference")
     origin = fields.Char(
         related="move_id.origin",
         string="Source",
     )
-    description_picking = fields.Text(
-        related="move_id.description_picking",
-    )
+    description_picking = fields.Text(related="move_id.description_picking")
 
     location_id = fields.Many2one(
         comodel_name="stock.location",
         string="From",
-        required=True,
         compute="_compute_locations",
-        store=True,
         precompute=True,
-        readonly=False,
-        check_company=True,
-        domain="[('usage', '!=', 'view')]",
+        store=True,
         index=True,
+        readonly=False,
+        required=True,
+        domain="[('usage', '!=', 'view')]",
+        check_company=True,
     )
     location_dest_id = fields.Many2one(
         comodel_name="stock.location",
         string="To",
-        required=True,
         compute="_compute_locations",
-        store=True,
         precompute=True,
-        readonly=False,
-        check_company=True,
-        domain="[('usage', '!=', 'view')]",
+        store=True,
         index=True,
+        readonly=False,
+        required=True,
+        domain="[('usage', '!=', 'view')]",
+        check_company=True,
     )
     location_usage = fields.Selection(
         related="location_id.usage",
@@ -185,22 +173,22 @@ class StockMoveLine(models.Model):
     owner_id = fields.Many2one(
         comodel_name="res.partner",
         string="From Owner",
-        check_company=True,
-        index="btree_not_null",
         help="When validating the transfer, the products will be taken from this owner.",
+        index="btree_not_null",
+        check_company=True,
     )
     date = fields.Datetime(
-        required=True,
-        default=fields.Datetime.now,
         help="Creation date of this move line until updated due to: quantity being increased, 'picked' status has updated, or move line is done.",
+        default=fields.Datetime.now,
+        required=True,
     )
 
     product_id = fields.Many2one(
         comodel_name="product.product",
-        check_company=True,
+        index=True,
         domain="[('type', '!=', 'service')]",
         ondelete="cascade",
-        index=True,
+        check_company=True,
     )
     product_category_name = fields.Char(
         related="product_id.categ_id.complete_name",
@@ -217,23 +205,23 @@ class StockMoveLine(models.Model):
     product_uom_id = fields.Many2one(
         comodel_name="uom.uom",
         string="Unit",
-        required=True,
         compute="_compute_product_uom_id",
-        store=True,
         precompute=True,
+        store=True,
         readonly=False,
+        required=True,
         domain="[('id', 'in', allowed_uom_ids)]",
     )
     quantity = fields.Float(
         digits="Product Unit",
         compute="_compute_quantity",
         store=True,
-        readonly=False,
         copy=False,
+        readonly=False,
     )
     quantity_product_uom = fields.Float(
-        min_display_digits="Product Unit",
         string="Quantity in Product UoM",
+        min_display_digits="Product Unit",
         compute="_compute_quantity_product_uom",
         store=True,
         copy=False,
@@ -241,29 +229,29 @@ class StockMoveLine(models.Model):
     picked = fields.Boolean(
         compute="_compute_picked",
         store=True,
-        readonly=False,
         copy=False,
+        readonly=False,
     )
     package_id = fields.Many2one(
         comodel_name="stock.package",
         string="Source Package",
-        check_company=True,
         domain="[('location_id', '=', location_id)]",
         ondelete="restrict",
+        check_company=True,
     )
     lot_id = fields.Many2one(
         comodel_name="stock.lot",
         string="Lot/Serial Number",
-        check_company=True,
-        domain="[('product_id', '=', product_id)]",
         index=True,
+        domain="[('product_id', '=', product_id)]",
+        check_company=True,
     )
     lot_name = fields.Char(string="Lot/Serial Number Name")
     result_package_id = fields.Many2one(
         comodel_name="stock.package",
         string="Destination Package",
+        help="If set, the operations are packed into this package",
         required=False,
-        check_company=True,
         domain="""[
         '|', '|',
         ('location_id', '=', location_dest_id),
@@ -273,7 +261,7 @@ class StockMoveLine(models.Model):
         ('move_line_ids.location_dest_id', '=', location_dest_id)
         ]""",
         ondelete="restrict",
-        help="If set, the operations are packed into this package",
+        check_company=True,
     )
     result_package_dest_name = fields.Char(
         related="result_package_id.dest_complete_name",
@@ -283,12 +271,8 @@ class StockMoveLine(models.Model):
         comodel_name="stock.package.history",
         index="btree_not_null",
     )
-    is_entire_pack = fields.Boolean(
-        string="Is added through entire package",
-    )
-    lots_visible = fields.Boolean(
-        compute="_compute_lots_visible",
-    )
+    is_entire_pack = fields.Boolean(string="Is added through entire package")
+    lots_visible = fields.Boolean(compute="_compute_lots_visible")
     consume_line_ids = fields.Many2many(
         comodel_name="stock.move.line",
         relation="stock_move_line_consume_rel",

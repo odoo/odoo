@@ -10,26 +10,38 @@ class ResPartnerRelation(models.Model):
     _rec_names_search = ["partner_id", "other_partner_id", "type_id"]
 
     partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Contact",
-        required=True,
         index=True,
+        required=True,
         ondelete="cascade",
     )
     other_partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Related Contact",
-        required=True,
         index=True,
+        required=True,
         ondelete="cascade",
     )
 
     type_id = fields.Many2one(
-        "res.partner.relation.type", string="Relationship", required=True
+        comodel_name="res.partner.relation.type",
+        string="Relationship",
+        required=True,
     )
-    category = fields.Selection(related="type_id.category", store=True, index=True)
-    degree = fields.Integer(related="type_id.degree", store=True)
-    weight_risk = fields.Float(related="type_id.weight_risk", store=True)
+    category = fields.Selection(
+        related="type_id.category",
+        store=True,
+        index=True,
+    )
+    degree = fields.Integer(
+        related="type_id.degree",
+        store=True,
+    )
+    weight_risk = fields.Float(
+        related="type_id.weight_risk",
+        store=True,
+    )
 
     label = fields.Char(compute="_compute_labels")
     label_inverse = fields.Char(compute="_compute_labels")

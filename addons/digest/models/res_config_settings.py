@@ -6,7 +6,7 @@ class ResConfigSettings(models.TransientModel):
 
     digest_emails = fields.Boolean(config_parameter="digest.default_digest_emails")
     digest_id = fields.Many2one(
-        "digest.digest",
+        comodel_name="digest.digest",
         string="Digest Email",
         config_parameter="digest.default_digest_id",
     )

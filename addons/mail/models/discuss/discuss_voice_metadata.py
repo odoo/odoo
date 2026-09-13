@@ -11,9 +11,9 @@ class DiscussVoiceMetadata(models.Model):
     _description = "Metadata for voice attachments"
 
     attachment_id: IrAttachment = fields.Many2one(
-        "ir.attachment",
+        comodel_name="ir.attachment",
+        index=True,
+        copy=False,
         ondelete="cascade",
         bypass_search_access=True,
-        copy=False,
-        index=True,
     )

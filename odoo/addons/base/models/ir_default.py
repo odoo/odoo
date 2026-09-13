@@ -21,27 +21,28 @@ class IrDefault(models.Model):
     _allow_sudo_commands = False
 
     field_id = fields.Many2one(
-        "ir.model.fields",
+        comodel_name="ir.model.fields",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
     user_id = fields.Many2one(
-        "res.users",
-        ondelete="cascade",
-        index=True,
+        comodel_name="res.users",
         help="If set, this default only applies for this user.",
+        index=True,
+        ondelete="cascade",
     )
     company_id = fields.Many2one(
-        "res.company",
-        ondelete="cascade",
-        index=True,
+        comodel_name="res.company",
         help="If set, this default only applies for this company",
+        index=True,
+        ondelete="cascade",
     )
-    condition = fields.Char(
-        help="If set, applies the default upon condition.",
+    condition = fields.Char(help="If set, applies the default upon condition.")
+    json_value = fields.Char(
+        string="Default Value (JSON format)",
+        required=True,
     )
-    json_value = fields.Char("Default Value (JSON format)", required=True)
 
     _unique_scope = models.UniqueIndex(
         "(field_id, COALESCE(user_id, 0), COALESCE(company_id, 0),"

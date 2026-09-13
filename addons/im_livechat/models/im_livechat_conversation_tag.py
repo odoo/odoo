@@ -6,10 +6,10 @@ class Im_LivechatConversationTag(models.Model):
     _description = "Live Chat Conversation Tags"
     _inherit = ["mixin.tag"]
 
-    name = fields.Char("Name")
+    name = fields.Char(string="Name")
     conversation_ids = fields.Many2many(
-        "discuss.channel",
-        "livechat_conversation_tag_rel",
+        comodel_name="discuss.channel",
+        relation="livechat_conversation_tag_rel",
         string="Discuss Channels",
     )
 

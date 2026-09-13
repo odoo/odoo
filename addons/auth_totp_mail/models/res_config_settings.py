@@ -4,11 +4,12 @@ from odoo import api, fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
-    auth_totp_enforce = fields.Boolean(
-        string="Enforce two-factor authentication",
-    )
+    auth_totp_enforce = fields.Boolean(string="Enforce two-factor authentication")
     auth_totp_policy = fields.Selection(
-        [("employee_required", "Employees only"), ("all_required", "All users")],
+        selection=[
+            ("employee_required", "Employees only"),
+            ("all_required", "All users"),
+        ],
         string="Two-factor authentication enforcing policy",
         config_parameter="auth_totp.policy",
     )

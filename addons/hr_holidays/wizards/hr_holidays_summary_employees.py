@@ -9,20 +9,26 @@ class HrHolidaysSummaryEmployee(models.TransientModel):
     _description = "HR Time Off Summary Report By Employee"
 
     date_from = fields.Date(
-        string="From", required=True, default=lambda *a: time.strftime("%Y-%m-01")
+        string="From",
+        default=lambda *a: time.strftime("%Y-%m-01"),
+        required=True,
     )
     emp = fields.Many2many(
-        "hr.employee", "summary_emp_rel", "sum_id", "emp_id", string="Employee(s)"
+        comodel_name="hr.employee",
+        relation="summary_emp_rel",
+        column1="sum_id",
+        column2="emp_id",
+        string="Employee(s)",
     )
     holiday_type = fields.Selection(
-        [
+        selection=[
             ("Approved", "Approved"),
             ("Confirmed", "Confirmed"),
             ("both", "Both Approved and Confirmed"),
         ],
         string="Select Time Off Type",
-        required=True,
         default="Approved",
+        required=True,
     )
 
     def print_report(self):

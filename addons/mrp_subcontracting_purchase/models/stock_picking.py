@@ -5,9 +5,9 @@ class StockPicking(models.Model):
     _inherit = "stock.picking"
 
     subcontracting_source_purchase_count = fields.Integer(
-        "Number of subcontracting PO Source",
-        compute="_compute_subcontracting_source_purchase_count",
+        string="Number of subcontracting PO Source",
         help="Number of subcontracting Purchase Order Source",
+        compute="_compute_subcontracting_source_purchase_count",
     )
 
     @api.depends("move_ids.move_dest_ids.raw_material_production_id")

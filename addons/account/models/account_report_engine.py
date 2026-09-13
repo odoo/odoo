@@ -40,9 +40,13 @@ class AccountReportAnnotation(models.Model):
     _description = "Account Report Annotation"
 
     # This field is a OneToOne to a mail.message.
-    message_id = fields.Many2one("mail.message", required=True)
+    message_id = fields.Many2one(
+        comodel_name="mail.message",
+        required=True,
+    )
     date = fields.Date(
-        help="Date considered as annotated by the annotation.", required=True
+        help="Date considered as annotated by the annotation.",
+        required=True,
     )
 
 
@@ -50,18 +54,20 @@ class AccountReport(models.Model):
     _inherit = "account.report"
 
     horizontal_group_ids = fields.Many2many(
-        string="Horizontal Groups", comodel_name="account.report.horizontal.group"
+        comodel_name="account.report.horizontal.group",
+        string="Horizontal Groups",
     )
     return_type_ids = fields.One2many(
-        string="Return Types",
         comodel_name="account.return.type",
         inverse_name="report_id",
+        string="Return Types",
     )
 
     # Those fields allow case-by-case fine-tuning of the engine, for custom reports.
     custom_handler_model_id = fields.Many2one(comodel_name="ir.model")
     custom_handler_model_name = fields.Char(
-        string="Custom Handler Model Name", related="custom_handler_model_id.model"
+        related="custom_handler_model_id.model",
+        string="Custom Handler Model Name",
     )
 
     # Account Coverage Report
@@ -77,10 +83,10 @@ class AccountReport(models.Model):
         compute=lambda x: x._compute_report_option_filter(
             "allow_account_audit_status_on_lines"
         ),
-        readonly=False,
+        depends=["root_report_id"],
         precompute=True,
         store=True,
-        depends=["root_report_id"],
+        readonly=False,
     )
 
     @api.constrains("custom_handler_model_id")
@@ -2284,14 +2290,20 @@ class AccountReportHorizontalGroup(models.Model):
     _name = "account.report.horizontal.group"
     _description = "Horizontal group for reports"
 
-    name = fields.Char(required=True, translate=True)
-    rule_ids = fields.One2many(
-        string="Rules",
-        comodel_name="account.report.horizontal.group.rule",
-        inverse_name="horizontal_group_id",
+    name = fields.Char(
+        translate=True,
         required=True,
     )
-    report_ids = fields.Many2many(string="Reports", comodel_name="account.report")
+    rule_ids = fields.One2many(
+        comodel_name="account.report.horizontal.group.rule",
+        inverse_name="horizontal_group_id",
+        string="Rules",
+        required=True,
+    )
+    report_ids = fields.Many2many(
+        comodel_name="account.report",
+        string="Reports",
+    )
 
     _name_src_uniq = name_uniq_index(
         message="A horizontal group with the same name already exists.",
@@ -2316,16 +2328,22 @@ class AccountReportHorizontalGroupRule(models.Model):
 
     horizontal_group_id = fields.Many2one(
         comodel_name="account.report.horizontal.group",
-        required=True,
         index=True,
-    )
-    domain = fields.Char(required=True, default="[]")
-    field_name = fields.Selection(
-        string="Field",
-        selection="_selection_move_line_relational_fields",
         required=True,
     )
-    res_model_name = fields.Char(string="Model", compute="_compute_res_model_name")
+    domain = fields.Char(
+        default="[]",
+        required=True,
+    )
+    field_name = fields.Selection(
+        selection="_selection_move_line_relational_fields",
+        string="Field",
+        required=True,
+    )
+    res_model_name = fields.Char(
+        string="Model",
+        compute="_compute_res_model_name",
+    )
 
     @api.depends("field_name")
     def _compute_res_model_name(self):

@@ -6,18 +6,18 @@ class ResConfigSettings(models.TransientModel):
 
     documents_product_settings = fields.Boolean(
         related="company_id.documents_product_settings",
-        readonly=False,
         string="Product",
+        readonly=False,
     )
     product_folder_id = fields.Many2one(
-        "document.document",
+        comodel_name="document.document",
         related="company_id.product_folder_id",
-        readonly=False,
         string="product default folder",
+        readonly=False,
     )
     product_tag_ids = fields.Many2many(
-        "document.tag",
+        comodel_name="document.tag",
         related="company_id.product_tag_ids",
-        readonly=False,
         string="Product Tags",
+        readonly=False,
     )

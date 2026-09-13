@@ -18,7 +18,7 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     l10n_in_gst_treatment = fields.Selection(
-        [
+        selection=[
             ("regular", "Registered Business - Regular"),
             ("composition", "Registered Business - Composition"),
             ("unregistered", "Unregistered Business"),
@@ -34,16 +34,17 @@ class ResPartner(models.Model):
     l10n_in_pan_entity_id = fields.Many2one(
         comodel_name="l10n_in.pan.entity",
         string="PAN",
-        ondelete="restrict",
         help="PAN enables the department to link all transactions of the person with the department.\n"
         "These transactions include taxpayments, TDS/TCS credits, returns of income/wealth/gift/FBT,"
         " specified transactions, correspondence, and so on.\n"
         "Thus, PAN acts as an identifier for the person with the tax department.",
+        ondelete="restrict",
     )
-    l10n_in_tan = fields.Char("TAN")
+    l10n_in_tan = fields.Char(string="TAN")
 
     display_pan_warning = fields.Boolean(
-        string="Display pan warning", compute="_compute_display_pan_warning"
+        string="Display pan warning",
+        compute="_compute_display_pan_warning",
     )
     l10n_in_gst_state_warning = fields.Char(
         compute="_compute_l10n_in_gst_state_warning"
@@ -53,9 +54,13 @@ class ResPartner(models.Model):
     )
 
     # gstin_status related field
-    l10n_in_gstin_verified_status = fields.Boolean(string="GST Status", tracking=True)
+    l10n_in_gstin_verified_status = fields.Boolean(
+        string="GST Status",
+        tracking=True,
+    )
     l10n_in_gstin_verified_date = fields.Date(
-        string="GSTIN Verified Date", tracking=True
+        string="GSTIN Verified Date",
+        tracking=True,
     )
     l10n_in_gstin_status_feature_enabled = fields.Boolean(
         compute="_compute_l10n_in_gst_registered_and_status"

@@ -18,20 +18,24 @@ class StockPickingType(models.Model):
         },
     )
     count_mo_todo = fields.Integer(
-        string="Number of Manufacturing Orders to Process", compute="_compute_mo_counts"
+        string="Number of Manufacturing Orders to Process",
+        compute="_compute_mo_counts",
     )
     count_mo_waiting = fields.Integer(
-        string="Number of Manufacturing Orders Waiting", compute="_compute_mo_counts"
+        string="Number of Manufacturing Orders Waiting",
+        compute="_compute_mo_counts",
     )
     count_mo_late = fields.Integer(
-        string="Number of Manufacturing Orders Late", compute="_compute_mo_counts"
+        string="Number of Manufacturing Orders Late",
+        compute="_compute_mo_counts",
     )
     count_mo_in_progress = fields.Integer(
         string="Number of Manufacturing Orders In Progress",
         compute="_compute_mo_counts",
     )
     count_mo_to_close = fields.Integer(
-        string="Number of Manufacturing Orders To Close", compute="_compute_mo_counts"
+        string="Number of Manufacturing Orders To Close",
+        compute="_compute_mo_counts",
     )
     use_create_components_lots = fields.Boolean(
         string="Create New Lots/Serial Numbers for Components",
@@ -40,37 +44,41 @@ class StockPickingType(models.Model):
     )
 
     auto_print_done_production_order = fields.Boolean(
-        help="If this checkbox is ticked, Odoo will automatically print the production order of a MO when it is done.",
+        help="If this checkbox is ticked, Odoo will automatically print the production order of a MO when it is done."
     )
     auto_print_done_mrp_product_labels = fields.Boolean(
-        "Auto Print Produced Product Labels",
+        string="Auto Print Produced Product Labels",
         help="If this checkbox is ticked, Odoo will automatically print the product labels of a MO when it is done.",
     )
     mrp_product_label_to_print = fields.Selection(
-        [("pdf", "PDF"), ("zpl", "ZPL")], "Product Label to Print", default="pdf"
+        selection=[("pdf", "PDF"), ("zpl", "ZPL")],
+        string="Product Label to Print",
+        default="pdf",
     )
     auto_print_done_mrp_lot = fields.Boolean(
-        "Auto Print Produced Lot Label",
+        string="Auto Print Produced Lot Label",
         help="If this checkbox is ticked, Odoo will automatically print the lot/SN label of a MO when it is done.",
     )
     done_mrp_lot_label_to_print = fields.Selection(
-        [("pdf", "PDF"), ("zpl", "ZPL")], "Lot/SN Label to Print", default="pdf"
+        selection=[("pdf", "PDF"), ("zpl", "ZPL")],
+        string="Lot/SN Label to Print",
+        default="pdf",
     )
     auto_print_mrp_reception_report = fields.Boolean(
-        "Auto Print Allocation Report",
+        string="Auto Print Allocation Report",
         help="If this checkbox is ticked, Odoo will automatically print the allocation report of a MO when it is done and has assigned moves.",
     )
     auto_print_mrp_reception_report_labels = fields.Boolean(
-        "Auto Print Allocation Report Labels",
+        string="Auto Print Allocation Report Labels",
         help="If this checkbox is ticked, Odoo will automatically print the allocation report labels of a MO when it is done.",
     )
     auto_print_generated_mrp_lot = fields.Boolean(
-        "Auto Print Generated Lot/SN Label",
+        string="Auto Print Generated Lot/SN Label",
         help='Automatically print the lot/SN label when the "Create a new serial/lot number" button is used.',
     )
     generated_mrp_lot_label_to_print = fields.Selection(
-        [("pdf", "PDF"), ("zpl", "ZPL")],
-        "Generated Lot/SN Label to Print",
+        selection=[("pdf", "PDF"), ("zpl", "ZPL")],
+        string="Generated Lot/SN Label to Print",
         default="pdf",
     )
 
@@ -189,15 +197,15 @@ class StockPicking(models.Model):
 
     has_kits = fields.Boolean(compute="_compute_has_kits")
     production_count = fields.Integer(
-        "Count of MO generated",
+        string="Count of MO generated",
         compute="_compute_production_count",
         groups="mrp.group_mrp_user",
     )
 
     production_ids = fields.One2many(
-        "mrp.production",
-        compute="_compute_production_ids",
+        comodel_name="mrp.production",
         string="Manufacturing Orders",
+        compute="_compute_production_ids",
         groups="mrp.group_mrp_user",
     )
 

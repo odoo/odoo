@@ -5,12 +5,13 @@ class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
     subordinate_ids = fields.One2many(
-        "hr.employee",
+        comodel_name="hr.employee",
         string="Subordinates",
-        compute="_compute_subordinates",
         help="Direct and indirect subordinates",
+        compute="_compute_subordinates",
         compute_sudo=True,
     )
     is_subordinate = fields.Boolean(
-        compute="_compute_is_subordinate", search="_search_is_subordinate"
+        compute="_compute_is_subordinate",
+        search="_search_is_subordinate",
     )

@@ -6,9 +6,9 @@ class MailingContact(models.Model):
     _inherit = ["mailing.contact", "mixin.mail.thread.phone"]
 
     phone_ids = fields.Many2many(
-        "phone.number",
-        "mailing_contact_phone_number_rel",
-        "contact_id",
-        "phone_number_id",
+        comodel_name="phone.number",
+        relation="mailing_contact_phone_number_rel",
+        column1="contact_id",
+        column2="phone_number_id",
         string="Phone Numbers",
     )

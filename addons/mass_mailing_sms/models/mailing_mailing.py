@@ -25,7 +25,8 @@ class MailingMailing(models.Model):
 
     # mailing options
     mailing_type = fields.Selection(
-        selection_add=[("sms", "SMS")], ondelete={"sms": "set default"}
+        selection_add=[("sms", "SMS")],
+        ondelete={"sms": "set default"},
     )
 
     # 'sms_subject' added to override 'subject' field (string attribute should be labelled "Title" when mailing_type == 'sms').
@@ -34,38 +35,48 @@ class MailingMailing(models.Model):
     # overriding 'subject' field helper in this model is not working, since the helper will keep the new value
     # even when 'mass_mailing_sms' removed (see 'mailing_mailing_view_form_sms' for more details).
     sms_subject = fields.Char(
-        "Title",
         related="subject",
-        readonly=False,
-        translate=False,
+        string="Title",
         help="For an email, the subject your recipients will see in their inbox.\n"
         "For an SMS, the internal title of the message.",
+        translate=False,
+        readonly=False,
     )
     # sms options
     body_plaintext = fields.Text(
-        "SMS Body", compute="_compute_body_plaintext", store=True, readonly=False
+        string="SMS Body",
+        compute="_compute_body_plaintext",
+        store=True,
+        readonly=False,
     )
     sms_template_id = fields.Many2one(
-        "sms.template", string="SMS Template", ondelete="set null"
+        comodel_name="sms.template",
+        string="SMS Template",
+        ondelete="set null",
     )
     sms_has_insufficient_credit = fields.Boolean(
-        "Insufficient IAP credits", compute="_compute_sms_has_iap_failure"
+        string="Insufficient IAP credits",
+        compute="_compute_sms_has_iap_failure",
     )  # used to propose buying IAP credits
     sms_has_unregistered_account = fields.Boolean(
-        "Unregistered IAP account", compute="_compute_sms_has_iap_failure"
+        string="Unregistered IAP account",
+        compute="_compute_sms_has_iap_failure",
     )  # used to propose to Register the SMS IAP account
     sms_force_send = fields.Boolean(
-        "Send Directly",
+        string="Send Directly",
         help="Immediately send the SMS Mailing instead of queuing up. Use at your own risk.",
     )
     # opt_out_link
-    sms_allow_unsubscribe = fields.Boolean("Include opt-out link", default=False)
+    sms_allow_unsubscribe = fields.Boolean(
+        string="Include opt-out link",
+        default=False,
+    )
     # A/B Testing
     ab_testing_sms_winner_selection = fields.Selection(
         related="campaign_id.ab_testing_sms_winner_selection",
         default="clicks_ratio",
-        readonly=False,
         copy=True,
+        readonly=False,
     )
     ab_testing_mailings_sms_count = fields.Integer(
         related="campaign_id.ab_testing_mailings_sms_count"

@@ -12,48 +12,50 @@ class AppointmentSlot(models.Model):
     _order = "weekday, start_hour, start_datetime, end_datetime"
 
     appointment_type_id = fields.Many2one(
-        "appointment.type", index=True, ondelete="cascade"
+        comodel_name="appointment.type",
+        index=True,
+        ondelete="cascade",
     )
     schedule_based_on = fields.Selection(
         related="appointment_type_id.schedule_based_on"
     )
     slot_type = fields.Selection(
-        [("recurring", "Regular"), ("unique", "One Shot")],
+        selection=[("recurring", "Regular"), ("unique", "One Shot")],
         string="Slot type",
-        default="recurring",
-        required=True,
-        compute="_compute_slot_type",
-        store=True,
         help="""Defines the type of slot. The regular slot is the default type which is used for
         appointment type that are used recurringly in type like medical appointment.
         The one shot type is only used when an user create a custom appointment type for a client by
         defining non-recurring time slot (e.g. 10th of April 2021 from 10 to 11 am) from its calendar.""",
+        compute="_compute_slot_type",
+        default="recurring",
+        store=True,
+        required=True,
     )
     allday = fields.Boolean(
-        "All day",
+        string="All day",
         help="Determine if the slot englobe the whole day, mainly used for unique slot type",
     )
     restrict_to_user_ids = fields.Many2many(
-        "res.users",
+        comodel_name="res.users",
         string="Restrict to Users",
-        compute="_compute_restrict_to_user_ids",
-        readonly=False,
-        store=True,
         help="If empty, all users are considered to be available.\n"
         "If set, only the selected users will be taken into account for this slot.",
+        compute="_compute_restrict_to_user_ids",
+        store=True,
+        readonly=False,
     )
     restrict_to_resource_ids = fields.Many2many(
-        "appointment.resource",
+        comodel_name="appointment.resource",
         string="Restrict to Resources",
-        compute="_compute_restrict_to_resource_ids",
-        readonly=False,
-        store=True,
         help="If empty, all resources are considered to be available.\n"
         "If set, only the selected resources will be taken into account for this slot.",
+        compute="_compute_restrict_to_resource_ids",
+        store=True,
+        readonly=False,
     )
     # Recurring slot
     weekday = fields.Selection(
-        [
+        selection=[
             ("1", "Monday"),
             ("2", "Tuesday"),
             ("3", "Wednesday"),
@@ -63,24 +65,30 @@ class AppointmentSlot(models.Model):
             ("7", "Sunday"),
         ],
         string="Week Day",
-        required=True,
         default="1",
-    )
-    start_hour = fields.Float("Starting Hour", required=True, default=8.0)
-    end_hour = fields.Float(
-        "Ending Hour",
         required=True,
-        default=17.0,
+    )
+    start_hour = fields.Float(
+        string="Starting Hour",
+        default=8.0,
+        required=True,
+    )
+    end_hour = fields.Float(
+        string="Ending Hour",
         compute="_compute_end_hour",
-        readonly=False,
+        default=17.0,
         store=True,
+        readonly=False,
+        required=True,
     )
     # Real time slot
     start_datetime = fields.Datetime(
-        "From", help="Start datetime for unique slot type management"
+        string="From",
+        help="Start datetime for unique slot type management",
     )
     end_datetime = fields.Datetime(
-        "To", help="End datetime for unique slot type management"
+        string="To",
+        help="End datetime for unique slot type management",
     )
     duration = fields.Float(compute="_compute_duration")
 

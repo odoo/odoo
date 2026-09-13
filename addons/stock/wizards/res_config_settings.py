@@ -35,8 +35,8 @@ class ResConfigSettings(models.TransientModel):
     )
     group_stock_adv_location = fields.Boolean(
         string="Multi-Step Routes",
-        implied_group="stock.group_adv_location",
         help="Add and customize route operations to process product moves in your warehouse(s): e.g. unload > quality control > stock for incoming products, pick > pack > ship for outgoing products. \n You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks).",
+        implied_group="stock.group_adv_location",
     )
     group_warning_stock = fields.Boolean(
         string="Warnings for Stock",
@@ -71,15 +71,16 @@ class ResConfigSettings(models.TransientModel):
     module_quality_control_worksheet = fields.Boolean(string="Quality Worksheet")
     group_stock_multi_locations = fields.Boolean(
         string="Storage Locations",
-        implied_group="stock.group_stock_multi_locations",
         help="Store products in specific locations of your warehouse (e.g. bins, racks) and to track inventory accordingly.",
+        implied_group="stock.group_stock_multi_locations",
     )
     annual_inventory_month = fields.Selection(
         related="company_id.annual_inventory_month",
         readonly=False,
     )
     annual_inventory_day = fields.Integer(
-        related="company_id.annual_inventory_day", readonly=False
+        related="company_id.annual_inventory_day",
+        readonly=False,
     )
     group_stock_reception_report = fields.Boolean(
         string="Reception Report",
@@ -88,8 +89,8 @@ class ResConfigSettings(models.TransientModel):
     module_stock_dropshipping = fields.Boolean(string="Dropshipping")
     barcode_separator = fields.Char(
         string="Separator",
-        config_parameter="stock.barcode_separator",
         help="Character(s) used to separate data contained within an aggregate barcode (i.e. a barcode containing multiple barcode encodings)",
+        config_parameter="stock.barcode_separator",
     )
     module_stock_fleet = fields.Boolean(string="Dispatch Management System")
     replenish_on_order = fields.Boolean(
@@ -107,7 +108,10 @@ class ResConfigSettings(models.TransientModel):
         string="Stock Text Validation type",
         readonly=False,
     )
-    horizon_days = fields.Integer(related="company_id.horizon_days", readonly=False)
+    horizon_days = fields.Integer(
+        related="company_id.horizon_days",
+        readonly=False,
+    )
 
     def _compute_replenish_on_order(self):
         route = self.env.ref("stock.route_warehouse0_mto", raise_if_not_found=False)

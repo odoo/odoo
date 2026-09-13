@@ -19,14 +19,14 @@ class ChatbotScriptStep(models.Model):
     message = fields.Html(translate=True)
     sequence = fields.Integer()
     chatbot_script_id = fields.Many2one(
-        "chatbot.script",
+        comodel_name="chatbot.script",
         string="Chatbot",
-        required=True,
         index=True,
+        required=True,
         ondelete="cascade",
     )
     step_type = fields.Selection(
-        [
+        selection=[
             ("text", "Text"),
             ("question_selection", "Question"),
             ("question_email", "Email"),
@@ -39,24 +39,27 @@ class ChatbotScriptStep(models.Model):
         required=True,
     )
     answer_ids = fields.One2many(
-        "chatbot.script.answer", "script_step_id", copy=True, string="Answers"
+        comodel_name="chatbot.script.answer",
+        inverse_name="script_step_id",
+        string="Answers",
+        copy=True,
     )
     triggering_answer_ids = fields.Many2many(
-        "chatbot.script.answer",
-        domain="[('script_step_id.sequence', '<', sequence), ('script_step_id.chatbot_script_id', '=', chatbot_script_id)]",
-        compute="_compute_triggering_answer_ids",
-        readonly=False,
-        store=True,
-        copy=False,
+        comodel_name="chatbot.script.answer",
         string="Only If",
         help="Show this step only if all of these answers have been selected.",
+        compute="_compute_triggering_answer_ids",
+        store=True,
+        copy=False,
+        readonly=False,
+        domain="[('script_step_id.sequence', '<', sequence), ('script_step_id.chatbot_script_id', '=', chatbot_script_id)]",
     )
     is_forward_operator = fields.Boolean(compute="_compute_is_forward_operator")
     is_forward_operator_child = fields.Boolean(
         compute="_compute_is_forward_operator_child"
     )
     operator_expertise_ids = fields.Many2many(
-        "im_livechat.expertise",
+        comodel_name="im_livechat.expertise",
         help="When forwarding live chat conversations, the chatbot will prioritize users with matching expertise.",
     )
 

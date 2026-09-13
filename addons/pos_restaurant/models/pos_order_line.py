@@ -4,10 +4,10 @@ from odoo import api, fields, models
 class PosOrderLine(models.Model):
     _inherit = "pos.order.line"
     course_id = fields.Many2one(
-        "restaurant.order.course",
+        comodel_name="restaurant.order.course",
         string="Course Ref",
-        ondelete="set null",
         index="btree_not_null",
+        ondelete="set null",
     )
 
     @api.model

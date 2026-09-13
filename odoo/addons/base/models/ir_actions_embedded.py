@@ -17,9 +17,9 @@ class IrEmbeddedActions(models.Model):
     name = fields.Char(translate=True)
     sequence = fields.Integer()
     parent_action_id = fields.Many2one(
-        "ir.actions.act_window",
-        required=True,
+        comodel_name="ir.actions.act_window",
         index=True,
+        required=True,
         ondelete="cascade",
     )
     parent_res_id = fields.Integer(string="Active Parent Id")
@@ -28,44 +28,40 @@ class IrEmbeddedActions(models.Model):
         required=True,
     )
     action_id = fields.Many2one(
-        "ir.actions.actions",
+        comodel_name="ir.actions.actions",
         ondelete="cascade",
     )
-    python_method = fields.Char(
-        help="Python method returning an action",
-    )
+    python_method = fields.Char(help="Python method returning an action")
     user_id = fields.Many2one(
-        "res.users",
-        ondelete="cascade",
+        comodel_name="res.users",
         help="User specific embedded action. If empty, shared embedded action",
+        ondelete="cascade",
     )
-    is_deletable = fields.Boolean(
-        compute="_compute_is_deletable",
-    )
+    is_deletable = fields.Boolean(compute="_compute_is_deletable")
     default_view_mode = fields.Char(
         string="Default View",
         help="Default view (if none, default view of the action is taken)",
     )
     filter_ids = fields.One2many(
-        "ir.filters",
-        "embedded_action_id",
+        comodel_name="ir.filters",
+        inverse_name="embedded_action_id",
         help="Default filter of the embedded action (if none, no filters)",
     )
     is_visible = fields.Boolean(
         string="Embedded visibility",
-        compute="_compute_is_visible",
         help="Computed field to check if the record should be visible according to the domain",
+        compute="_compute_is_visible",
     )
     domain = fields.Char(
-        default="[]",
         help="Domain applied to the active id of the parent model",
+        default="[]",
     )
     context = fields.Char(
-        default="{}",
         help="Context dictionary as Python expression, empty by default (Default: {})",
+        default="{}",
     )
     group_ids = fields.Many2many(
-        "res.groups",
+        comodel_name="res.groups",
         help="Groups that can execute the embedded action. Leave empty to allow everybody.",
     )
 

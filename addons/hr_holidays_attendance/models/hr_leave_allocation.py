@@ -23,7 +23,8 @@ class HrLeaveAllocation(models.Model):
 
     overtime_deductible = fields.Boolean(compute="_compute_overtime_deductible")
     employee_overtime = fields.Float(
-        compute="_compute_employee_overtime", groups="base.group_user"
+        compute="_compute_employee_overtime",
+        groups="base.group_user",
     )
 
     @api.depends("holiday_status_id")

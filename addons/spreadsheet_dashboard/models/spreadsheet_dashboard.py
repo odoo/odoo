@@ -10,27 +10,39 @@ class SpreadsheetDashboard(models.Model):
     _inherit = ["mixin.spreadsheet", "mixin.user.favorite"]
     _order = "sequence"
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
     dashboard_group_id = fields.Many2one(
-        "spreadsheet.dashboard.group", required=True, index=True
+        comodel_name="spreadsheet.dashboard.group",
+        index=True,
+        required=True,
     )
     sequence = fields.Integer()
     sample_dashboard_file_path = fields.Char(export_string_translation=False)
     is_published = fields.Boolean(default=True)
-    company_ids = fields.Many2many("res.company", string="Companies")
+    company_ids = fields.Many2many(
+        comodel_name="res.company",
+        string="Companies",
+    )
     group_ids = fields.Many2many(
-        "res.groups", default=lambda self: self.env.ref("base.group_user")
+        comodel_name="res.groups",
+        default=lambda self: self.env.ref("base.group_user"),
     )
     favorite_user_ids = fields.Many2many(
-        domain=lambda self: [("id", "=", self.env.uid)],
         string="Favorite Users",
         help="Users who have favorited this dashboard",
+        domain=lambda self: [("id", "=", self.env.uid)],
     )
     is_user_favorite = fields.Boolean(
         string="Is Favorite",
         help="Indicates whether the dashboard is favorited by the current user",
     )
-    main_data_model_ids = fields.Many2many("ir.model", copy=False)
+    main_data_model_ids = fields.Many2many(
+        comodel_name="ir.model",
+        copy=False,
+    )
 
     def _get_serialized_readonly_dashboard(self):
         snapshot = json.loads(self.spreadsheet_data)

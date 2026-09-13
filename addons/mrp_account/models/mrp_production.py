@@ -6,15 +6,21 @@ from odoo import Command, _, fields, models
 class MrpProduction(models.Model):
     _inherit = "mrp.production"
 
-    extra_cost = fields.Float(copy=False, string="Extra Unit Cost")
-    wip_move_ids = fields.Many2many(
-        "account.move",
-        "wip_move_production_rel",
-        "production_id",
-        "move_id",
+    extra_cost = fields.Float(
+        string="Extra Unit Cost",
         copy=False,
     )
-    wip_move_count = fields.Count("wip_move_ids", "WIP Journal Entry Count")
+    wip_move_ids = fields.Many2many(
+        comodel_name="account.move",
+        relation="wip_move_production_rel",
+        column1="production_id",
+        column2="move_id",
+        copy=False,
+    )
+    wip_move_count = fields.Count(
+        count_of="wip_move_ids",
+        string="WIP Journal Entry Count",
+    )
 
     def write(self, vals):
         res = super().write(vals)

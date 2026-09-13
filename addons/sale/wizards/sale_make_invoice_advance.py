@@ -15,12 +15,15 @@ class SaleAdvancePaymentInv(models.TransientModel):
             ("fixed", "Down payment (fixed amount)"),
         ],
         string="Create Invoice",
-        required=True,
-        default="delivered",
         help="A standard invoice is issued with all the order lines ready for invoicing,"
         "according to their invoicing policy (based on ordered or delivered quantity).",
+        default="delivered",
+        required=True,
     )
-    count = fields.Count("sale_order_ids", string="Order Count")
+    count = fields.Count(
+        count_of="sale_order_ids",
+        string="Order Count",
+    )
     sale_order_ids = fields.Many2many(
         comodel_name="sale.order",
         default=lambda self: self.env.context.get("active_ids"),
@@ -30,7 +33,10 @@ class SaleAdvancePaymentInv(models.TransientModel):
         string="Has down payments",
         compute="_compute_has_down_payments",
     )
-    deduct_down_payments = fields.Boolean(string="Deduct down payments", default=True)
+    deduct_down_payments = fields.Boolean(
+        string="Deduct down payments",
+        default=True,
+    )
 
     amount = fields.Float(
         string="Down Payment",
@@ -52,17 +58,17 @@ class SaleAdvancePaymentInv(models.TransientModel):
     )
     amount_taxinc_invoiced = fields.Monetary(
         string="Already invoiced",
-        compute="_compute_amount_taxinc_invoiced",
         help="Only confirmed down payments are considered.",
+        compute="_compute_amount_taxinc_invoiced",
     )
 
     display_draft_invoice_warning = fields.Boolean(
         compute="_compute_display_draft_invoice_warning"
     )
     consolidated_billing = fields.Boolean(
-        default=True,
         help="Create one invoice for all orders related to same customer, same invoicing address"
         " and same delivery address.",
+        default=True,
     )
 
     @api.depends("sale_order_ids")

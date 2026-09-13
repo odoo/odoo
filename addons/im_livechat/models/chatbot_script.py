@@ -19,24 +19,34 @@ class ChatbotScript(models.Model):
     _rec_name = "title"
     _order = "title, id"
 
-    title = fields.Char(required=True, translate=True, default="Chatbot")
+    title = fields.Char(
+        translate=True,
+        default="Chatbot",
+        required=True,
+    )
     active = fields.Boolean(default=True)
-    image_1920 = fields.Image(related="operator_partner_id.image_1920", readonly=False)
+    image_1920 = fields.Image(
+        related="operator_partner_id.image_1920",
+        readonly=False,
+    )
 
     script_step_ids = fields.One2many(
-        "chatbot.script.step", "chatbot_script_id", copy=True, string="Script Steps"
+        comodel_name="chatbot.script.step",
+        inverse_name="chatbot_script_id",
+        string="Script Steps",
+        copy=True,
     )
     operator_partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Bot Operator",
-        ondelete="restrict",
-        required=True,
-        copy=False,
         index=True,
+        copy=False,
+        required=True,
+        ondelete="restrict",
     )
     livechat_channel_count = fields.Integer(compute="_compute_livechat_channel_count")
     first_step_warning = fields.Selection(
-        [
+        selection=[
             ("first_step_operator", "First Step Operator"),
             ("first_step_invalid", "First Step Invalid"),
         ],

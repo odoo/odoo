@@ -51,24 +51,24 @@ class ProductTemplate(models.Model):
     categ_id = fields.Many2one(
         comodel_name="product.category",
         string="Product Category",
-        tracking=True,
         index=True,
         group_expand="_read_group_categ_id",
         check_company=True,
+        tracking=True,
     )
 
     name = fields.Char(
-        required=True,
         translate=True,
         index="trigram",
+        required=True,
     )
     active = fields.Boolean(
-        default=True,
         help="If unchecked, it will allow you to hide the product without removing it.",
+        default=True,
     )
     sequence = fields.Integer(
-        default=1,
         help="Gives the sequence order when displaying a product list",
+        default=1,
     )
     color = fields.Integer(string="Color Index")
     is_product_variant = fields.Boolean(
@@ -82,39 +82,42 @@ class ProductTemplate(models.Model):
             ("combo", "Combo"),
         ],
         string="Product Type",
-        required=True,
-        default="consu",
         help="Goods are tangible materials and merchandise you provide.\n"
         "A service is a non-material product you provide.",
+        default="consu",
+        required=True,
     )
     service_tracking = fields.Selection(
         selection=[
             ("no", "Nothing"),
         ],
         string="Create on Order",
-        required=True,
-        default="no",
         compute="_compute_service_tracking",
+        default="no",
         store=True,
         readonly=False,
+        required=True,
     )
 
     description = fields.Html(translate=True)
-    description_purchase = fields.Text(string="Purchase Description", translate=True)
+    description_purchase = fields.Text(
+        string="Purchase Description",
+        translate=True,
+    )
     description_sale = fields.Text(
         string="Sales Description",
-        translate=True,
         help="A description of the Product that you want to communicate to your customers. "
         "This description will be copied to every Sales Order, Delivery Order and Customer Invoice/Credit Note",
+        translate=True,
     )
 
     uom_id = fields.Many2one(
         comodel_name="uom.uom",
         string="Unit",
-        required=True,
-        default=lambda self: self._default_uom_id(),
-        tracking=True,
         help="Default unit of measure used for all stock operations.",
+        default=lambda self: self._default_uom_id(),
+        required=True,
+        tracking=True,
     )
     uom_name = fields.Char(
         related="uom_id.name",
@@ -124,10 +127,10 @@ class ProductTemplate(models.Model):
     uom_ids = fields.Many2many(
         comodel_name="uom.uom",
         string="Packagings",
-        domain="[('id', '!=', uom_id)]",
         help="Additional packagings for this product which can be used for sales.\n"
         "They must measure the same thing as the product's unit (a box of 6, a"
         " pallet, ...), so that a quantity or a price can be converted between them.",
+        domain="[('id', '!=', uom_id)]",
     )
 
     combo_ids = fields.Many2many(
@@ -150,28 +153,28 @@ class ProductTemplate(models.Model):
 
     list_price = fields.Float(
         string="Sales Price",
+        help="Price at which the product is sold to customers.",
         min_display_digits="Product Price",
         default=1.0,
         tracking=True,
-        help="Price at which the product is sold to customers.",
     )
     standard_price = fields.Float(
         string="Cost",
+        help="""Value of the product (automatically computed in AVCO).
+        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).
+        Used to compute margins on sale orders.""",
         min_display_digits="Product Price",
         compute="_compute_standard_price",
         inverse="_inverse_standard_price",
         search="_search_standard_price",
         groups="base.group_user",
-        help="""Value of the product (automatically computed in AVCO).
-        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).
-        Used to compute margins on sale orders.""",
     )
 
     volume = fields.Float(
         digits="Volume",
         compute="_compute_volume",
-        store=True,
         inverse="_inverse_volume",
+        store=True,
     )
     volume_uom_name = fields.Char(
         string="Volume unit of measure label",
@@ -180,8 +183,8 @@ class ProductTemplate(models.Model):
     weight = fields.Float(
         digits="Stock Weight",
         compute="_compute_weight",
-        store=True,
         inverse="_inverse_weight",
+        store=True,
     )
     weight_uom_name = fields.Char(
         string="Weight unit of measure label",
@@ -221,7 +224,7 @@ class ProductTemplate(models.Model):
         compute="_compute_product_variant_id",
     )
     product_variant_count = fields.Count(
-        "product_variant_ids",
+        count_of="product_variant_ids",
         string="# Product Variants",
     )
 
@@ -233,8 +236,8 @@ class ProductTemplate(models.Model):
     default_code = fields.Char(
         string="Internal Reference",
         compute="_compute_default_code",
-        store=True,
         inverse="_inverse_default_code",
+        store=True,
     )
     # The four manufacturer fields, their strings and the two hook names below
     # are OCA product-attribute's design (AGPL-3; see the note in
@@ -287,14 +290,12 @@ class ProductTemplate(models.Model):
     )
     purchase_ok = fields.Boolean(
         string="Purchase",
-        default=True,
         compute="_compute_purchase_ok",
+        default=True,
         store=True,
         readonly=False,
     )
-    is_dynamically_created = fields.Boolean(
-        compute="_compute_is_dynamically_created",
-    )
+    is_dynamically_created = fields.Boolean(compute="_compute_is_dynamically_created")
 
     product_tooltip = fields.Char(compute="_compute_product_tooltip")
     product_tag_ids = fields.Many2many(
@@ -303,8 +304,8 @@ class ProductTemplate(models.Model):
         string="Tags",
     )
     product_properties = fields.Properties(
-        string="Properties",
         definition="categ_id.product_properties_definition",
+        string="Properties",
         copy=True,
     )
 

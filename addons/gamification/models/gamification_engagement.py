@@ -19,83 +19,112 @@ class GamificationEngagementSnapshot(models.Model):
     _rec_name = "snapshot_date"
 
     snapshot_date = fields.Date(
-        "Date",
-        required=True,
-        readonly=True,
+        string="Date",
         default=fields.Date.today,
         index=True,
+        readonly=True,
+        required=True,
     )
     company_id = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
         default=lambda self: self.env.company,
         index=True,
     )
 
     # ── User Activity ───────────────────────────────────────────────
-    total_users = fields.Integer("Total Internal Users", readonly=True)
-    users_with_karma = fields.Integer("Users with Karma > 0", readonly=True)
-    active_users_7d = fields.Integer(
-        "Active Users (7 days)",
+    total_users = fields.Integer(
+        string="Total Internal Users",
         readonly=True,
+    )
+    users_with_karma = fields.Integer(
+        string="Users with Karma > 0",
+        readonly=True,
+    )
+    active_users_7d = fields.Integer(
+        string="Active Users (7 days)",
         help="Users who earned karma in the last 7 days.",
+        readonly=True,
     )
     active_users_30d = fields.Integer(
-        "Active Users (30 days)",
-        readonly=True,
+        string="Active Users (30 days)",
         help="Users who earned karma in the last 30 days.",
+        readonly=True,
     )
 
     # ── Challenge & Goals ───────────────────────────────────────────
     active_challenges = fields.Integer(readonly=True)
     goals_in_progress = fields.Integer(readonly=True)
     goals_reached_7d = fields.Integer(
-        "Goals Reached (7 days)",
-        readonly=True,
+        string="Goals Reached (7 days)",
         help="Goals that reached their target in the last 7 days.",
+        readonly=True,
     )
     goal_completion_rate = fields.Float(
-        "Goal Completion Rate %",
-        readonly=True,
+        string="Goal Completion Rate %",
         help="Percentage of non-draft, non-canceled goals that are reached.",
+        readonly=True,
     )
 
     # ── Badges ──────────────────────────────────────────────────────
     total_badges_granted = fields.Integer(readonly=True)
-    badges_granted_7d = fields.Integer("Badges Granted (7 days)", readonly=True)
+    badges_granted_7d = fields.Integer(
+        string="Badges Granted (7 days)",
+        readonly=True,
+    )
     unique_badge_holders = fields.Integer(readonly=True)
 
     # ── Kudos ───────────────────────────────────────────────────────
-    total_kudos = fields.Integer("Total Kudos Sent", readonly=True)
-    kudos_7d = fields.Integer("Kudos Sent (7 days)", readonly=True)
+    total_kudos = fields.Integer(
+        string="Total Kudos Sent",
+        readonly=True,
+    )
+    kudos_7d = fields.Integer(
+        string="Kudos Sent (7 days)",
+        readonly=True,
+    )
     unique_kudos_senders_7d = fields.Integer(
-        "Unique Kudos Senders (7 days)", readonly=True
+        string="Unique Kudos Senders (7 days)",
+        readonly=True,
     )
     unique_kudos_recipients_7d = fields.Integer(
-        "Unique Kudos Recipients (7 days)", readonly=True
+        string="Unique Kudos Recipients (7 days)",
+        readonly=True,
     )
 
     # ── Streaks ─────────────────────────────────────────────────────
     active_streaks = fields.Integer(readonly=True)
     broken_streaks = fields.Integer(readonly=True)
-    avg_streak_length = fields.Float("Avg Active Streak Length (days)", readonly=True)
-    streaks_past_7d = fields.Integer(
-        "Streaks >= 7 days",
+    avg_streak_length = fields.Float(
+        string="Avg Active Streak Length (days)",
         readonly=True,
+    )
+    streaks_past_7d = fields.Integer(
+        string="Streaks >= 7 days",
         help="Active streaks that have survived at least 7 days.",
+        readonly=True,
     )
     streaks_past_30d = fields.Integer(
-        "Streaks >= 30 days",
-        readonly=True,
+        string="Streaks >= 30 days",
         help="Active streaks that have survived at least 30 days.",
+        readonly=True,
     )
 
     # ── Achievements ────────────────────────────────────────────────
-    total_unlocks = fields.Integer("Total Achievement Unlocks", readonly=True)
-    unlocks_7d = fields.Integer("Achievement Unlocks (7 days)", readonly=True)
+    total_unlocks = fields.Integer(
+        string="Total Achievement Unlocks",
+        readonly=True,
+    )
+    unlocks_7d = fields.Integer(
+        string="Achievement Unlocks (7 days)",
+        readonly=True,
+    )
 
     # ── Karma ───────────────────────────────────────────────────────
     total_karma_granted = fields.Integer(readonly=True)
-    karma_granted_7d = fields.Integer("Karma Granted (7 days)", readonly=True)
+    karma_granted_7d = fields.Integer(
+        string="Karma Granted (7 days)",
+        readonly=True,
+    )
     avg_user_karma = fields.Float(readonly=True)
 
     _snapshot_date_company_uniq = models.UniqueIndex(

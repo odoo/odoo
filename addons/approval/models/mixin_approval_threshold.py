@@ -15,26 +15,26 @@ class MixinApprovalThreshold(models.AbstractModel):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        compute="_compute_company_id",
-        store=True,
-        readonly=False,
-        precompute=True,
-        index=True,
         help="Company this record is scoped to. Empty means it applies to "
         "every company, which is how a shared category carries global "
         "tiers and rules (see approval.request._rule_applies_to_company).",
+        compute="_compute_company_id",
+        precompute=True,
+        store=True,
+        index=True,
+        readonly=False,
     )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
-        compute="_compute_currency_id",
-        store=True,
-        readonly=False,
-        precompute=True,
-        required=True,
         help="Currency this record's amount thresholds are expressed in. "
         "A request's amount is converted into it before any comparison, "
         "so a global tier or rule on a shared category evaluates "
         "correctly across companies with different currencies.",
+        compute="_compute_currency_id",
+        precompute=True,
+        store=True,
+        readonly=False,
+        required=True,
     )
 
     condition_field = fields.Selection(
@@ -63,7 +63,7 @@ class MixinApprovalThreshold(models.AbstractModel):
     threshold = fields.Float(
         help="Numeric threshold to compare against, and the lower bound "
         "(inclusive) when the comparison is 'Between'. "
-        "For priority: 0=Low, 1=Normal, 2=High, 3=Urgent.",
+        "For priority: 0=Low, 1=Normal, 2=High, 3=Urgent."
     )
     threshold_max = fields.Float(
         string="Upper Bound (exclusive)",

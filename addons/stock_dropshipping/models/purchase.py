@@ -6,7 +6,8 @@ class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
 
     dropship_picking_count = fields.Integer(
-        "Dropship Count", compute="_compute_incoming_transfer_counts"
+        string="Dropship Count",
+        compute="_compute_incoming_transfer_counts",
     )
 
     @api.depends("picking_ids.is_dropship")

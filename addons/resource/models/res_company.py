@@ -8,13 +8,13 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     resource_calendar_ids = fields.One2many(
-        "resource.calendar",
-        "company_id",
-        "Working Hours",
+        comodel_name="resource.calendar",
+        inverse_name="company_id",
+        string="Working Hours",
     )
     resource_calendar_id = fields.Many2one(
-        "resource.calendar",
-        "Default Working Hours",
+        comodel_name="resource.calendar",
+        string="Default Working Hours",
         ondelete="restrict",
     )
 

@@ -9,16 +9,20 @@ class ChatbotScriptAnswer(models.Model):
     _description = "Chatbot Script Answer"
     _order = "script_step_id, sequence, id"
 
-    name = fields.Char(string="Answer", required=True, translate=True)
+    name = fields.Char(
+        string="Answer",
+        translate=True,
+        required=True,
+    )
     sequence = fields.Integer(default=1)
     redirect_link = fields.Char(
         help="The visitor will be redirected to this link upon clicking the option "
-        "(note that the script will end if the link is external to the livechat website).",
+        "(note that the script will end if the link is external to the livechat website)."
     )
     script_step_id = fields.Many2one(
-        "chatbot.script.step",
-        required=True,
+        comodel_name="chatbot.script.step",
         index=True,
+        required=True,
         ondelete="cascade",
     )
     chatbot_script_id = fields.Many2one(related="script_step_id.chatbot_script_id")

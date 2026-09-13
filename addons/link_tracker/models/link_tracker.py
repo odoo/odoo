@@ -43,28 +43,49 @@ class LinkTracker(models.Model):
     _inherit = ["mixin.utm"]
 
     # URL info
-    url = fields.Char(string="Target URL", required=True)
-    absolute_url = fields.Char("Absolute URL", compute="_compute_absolute_url")
-    short_url = fields.Char(string="Tracked URL", compute="_compute_short_url")
+    url = fields.Char(
+        string="Target URL",
+        required=True,
+    )
+    absolute_url = fields.Char(
+        string="Absolute URL",
+        compute="_compute_absolute_url",
+    )
+    short_url = fields.Char(
+        string="Tracked URL",
+        compute="_compute_short_url",
+    )
     redirected_url = fields.Char(
-        string="Redirected URL", compute="_compute_redirected_url"
+        string="Redirected URL",
+        compute="_compute_redirected_url",
     )
     short_url_host = fields.Char(
-        string="Host of the short URL", compute="_compute_short_url_host"
+        string="Host of the short URL",
+        compute="_compute_short_url_host",
     )
     title = fields.Char(string="Page Title")
     label = fields.Char(string="Button label")
     # Tracking
-    link_code_ids = fields.One2many("link.tracker.code", "link_id", string="Codes")
+    link_code_ids = fields.One2many(
+        comodel_name="link.tracker.code",
+        inverse_name="link_id",
+        string="Codes",
+    )
     code = fields.Char(
         string="Short URL code",
         compute="_compute_code",
         inverse="_inverse_code",
         readonly=False,
     )
-    link_click_ids = fields.One2many("link.tracker.click", "link_id", string="Clicks")
+    link_click_ids = fields.One2many(
+        comodel_name="link.tracker.click",
+        inverse_name="link_id",
+        string="Clicks",
+    )
     count = fields.Integer(
-        string="Number of Clicks", compute="_compute_count", store=True
+        string="Number of Clicks",
+        compute="_compute_count",
+        store=True,
     )
     # The five unique fields, digested. Indexing the tuple itself is not an
     # option: `url` and `label` are unbounded, and a btree entry is capped at
@@ -655,9 +676,15 @@ class LinkTrackerCode(models.Model):
     _description = "Link Tracker Code"
     _rec_name = "code"
 
-    code = fields.Char(string="Short URL Code", required=True)
+    code = fields.Char(
+        string="Short URL Code",
+        required=True,
+    )
     link_id = fields.Many2one(
-        "link.tracker", required=True, index=True, ondelete="cascade"
+        comodel_name="link.tracker",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
 
     _code = models.Constraint(
@@ -697,18 +724,21 @@ class LinkTrackerClick(models.Model):
     _description = "Link Tracker Click"
 
     campaign_id = fields.Many2one(
-        "utm.campaign",
-        "UTM Campaign",
-        index="btree_not_null",
+        comodel_name="utm.campaign",
         related="link_id.campaign_id",
+        string="UTM Campaign",
         store=True,
+        index="btree_not_null",
         ondelete="set null",
     )
     link_id = fields.Many2one(
-        "link.tracker", index=True, required=True, ondelete="cascade"
+        comodel_name="link.tracker",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     ip = fields.Char(string="Internet Protocol")
-    country_id = fields.Many2one("res.country")
+    country_id = fields.Many2one(comodel_name="res.country")
 
     def _prepare_click_values_from_route(self, **route_values):
         click_values = {

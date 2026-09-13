@@ -10,14 +10,16 @@ class MailActivityTodoCreate(models.TransientModel):
 
     summary = fields.Char()
     date_deadline = fields.Date(
-        "Due Date", required=True, default=fields.Date.context_today
+        string="Due Date",
+        default=fields.Date.context_today,
+        required=True,
     )
     user_id = fields.Many2one(
-        "res.users",
-        "Assigned to",
+        comodel_name="res.users",
+        string="Assigned to",
         default=lambda self: self.env.user,
-        required=True,
         readonly=True,
+        required=True,
     )
     note = fields.Html(sanitize_style=True)
 

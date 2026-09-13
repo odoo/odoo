@@ -8,50 +8,60 @@ class OnboardingOnboarding(models.Model):
     _description = "Onboarding"
     _order = "sequence asc, id desc"
 
-    name = fields.Char("Name of the onboarding", translate=True)
+    name = fields.Char(
+        string="Name of the onboarding",
+        translate=True,
+    )
     # One word identifier of the onboarding panel, used as its key by the modules that render it.
-    route_name = fields.Char("One word name", required=True)
-    step_ids = fields.Many2many("onboarding.onboarding.step", string="Onboarding steps")
+    route_name = fields.Char(
+        string="One word name",
+        required=True,
+    )
+    step_ids = fields.Many2many(
+        comodel_name="onboarding.onboarding.step",
+        string="Onboarding steps",
+    )
 
     text_completed = fields.Char(
-        "Message at completion",
-        default=lambda s: s.env._("Nice work! Your configuration is done."),
+        string="Message at completion",
         help="Text shown on onboarding when completed",
+        default=lambda s: s.env._("Nice work! Your configuration is done."),
     )
 
     is_per_company = fields.Boolean(
-        "Should be done per company?",
+        string="Should be done per company?",
         compute="_compute_is_per_company",
-        readonly=True,
         store=False,
+        readonly=True,
     )
     panel_close_action_name = fields.Char(
-        "Closing action",
+        string="Closing action",
         help="Name of the onboarding model action to execute when closing the panel.",
     )
 
     current_progress_id = fields.Many2one(
-        "onboarding.progress",
-        "Onboarding Progress",
-        compute="_compute_current_progress",
+        comodel_name="onboarding.progress",
+        string="Onboarding Progress",
         help="Onboarding Progress for the current context (company).",
+        compute="_compute_current_progress",
     )
     current_onboarding_state = fields.Selection(
-        ONBOARDING_PROGRESS_STATES,
+        selection=ONBOARDING_PROGRESS_STATES,
         string="Completion State",
         compute="_compute_current_progress",
         readonly=True,
     )
     is_onboarding_closed = fields.Boolean(
-        string="Was panel closed?", compute="_compute_current_progress"
+        string="Was panel closed?",
+        compute="_compute_current_progress",
     )
 
     progress_ids = fields.One2many(
-        "onboarding.progress",
-        "onboarding_id",
+        comodel_name="onboarding.progress",
+        inverse_name="onboarding_id",
         string="Onboarding Progress Records",
-        readonly=True,
         help="All Onboarding Progress Records (across companies).",
+        readonly=True,
     )
 
     sequence = fields.Integer(default=10)

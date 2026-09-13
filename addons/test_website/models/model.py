@@ -17,8 +17,15 @@ class TestModel(models.Model):
     ]
     _description = "Website Model Test"
 
-    name = fields.Char(required=True, translate=True)
-    submodel_ids = fields.One2many("test.submodel", "test_model_id", "Submodels")
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
+    submodel_ids = fields.One2many(
+        comodel_name="test.submodel",
+        inverse_name="test_model_id",
+        string="Submodels",
+    )
     website_description = fields.Html(
         string="Description for the website",
         translate=html_translate,
@@ -27,7 +34,7 @@ class TestModel(models.Model):
         sanitize_form=False,
         default="""<div class="o_test_website_description"><p>A simple website description content.</p></div>""",
     )
-    tag_id = fields.Many2one("test.tag")
+    tag_id = fields.Many2one(comodel_name="test.tag")
 
     @api.model
     def _search_get_detail(self, website, order, options):
@@ -54,8 +61,8 @@ class TestSubmodel(models.Model):
     _description = "Website Submodel Test"
 
     name = fields.Char(required=True)
-    test_model_id = fields.Many2one("test.model")
-    tag_id = fields.Many2one("test.tag")
+    test_model_id = fields.Many2one(comodel_name="test.model")
+    tag_id = fields.Many2one(comodel_name="test.tag")
 
 
 class TestTag(models.Model):
@@ -77,7 +84,11 @@ class TestModelMultiWebsite(models.Model):
     # to website 2 (demo website). But some tests are unlinking the website 2,
     # which would fail if the `cascade` is not set. Note that the website 2 is
     # never set on any records in all other modules.
-    website_id = fields.Many2one("website", string="Website", ondelete="cascade")
+    website_id = fields.Many2one(
+        comodel_name="website",
+        string="Website",
+        ondelete="cascade",
+    )
 
 
 class TestModelExposed(models.Model):

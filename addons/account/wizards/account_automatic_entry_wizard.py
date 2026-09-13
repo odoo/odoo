@@ -19,72 +19,84 @@ class AccountAutomaticEntryWizard(models.TransientModel):
     _check_company_auto = True
 
     action = fields.Selection(
-        [("change_period", "Change Period"), ("change_account", "Change Account")],
+        selection=[
+            ("change_period", "Change Period"),
+            ("change_account", "Change Account"),
+        ],
         required=True,
     )
     move_data = fields.Text(compute="_compute_move_data")
     preview_move_data = fields.Text(compute="_compute_preview_move_data")
-    move_line_ids = fields.Many2many("account.move.line")
-    date = fields.Date(required=True, default=fields.Date.context_today)
-    company_id = fields.Many2one("res.company", required=True, readonly=True)
+    move_line_ids = fields.Many2many(comodel_name="account.move.line")
+    date = fields.Date(
+        default=fields.Date.context_today,
+        required=True,
+    )
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        readonly=True,
+        required=True,
+    )
     company_currency_id = fields.Many2one(
-        "res.currency", related="company_id.currency_id"
+        comodel_name="res.currency",
+        related="company_id.currency_id",
     )
     percentage = fields.Float(
-        compute="_compute_percentage",
-        readonly=False,
-        store=True,
         help="Percentage of each line to execute the action on.",
+        compute="_compute_percentage",
+        store=True,
+        readonly=False,
     )
     total_amount = fields.Monetary(
+        help="Total amount impacted by the automatic entry.",
+        currency_field="company_currency_id",
         compute="_compute_total_amount",
         store=True,
         readonly=False,
-        currency_field="company_currency_id",
-        help="Total amount impacted by the automatic entry.",
     )
     journal_id = fields.Many2one(
-        "account.journal",
-        required=True,
-        readonly=False,
-        check_company=True,
-        domain="[('type', '=', 'general')]",
+        comodel_name="account.journal",
+        help="Journal where to create the entry.",
         compute="_compute_journal_id",
         inverse="_inverse_journal_id",
-        help="Journal where to create the entry.",
+        readonly=False,
+        required=True,
+        domain="[('type', '=', 'general')]",
+        check_company=True,
     )
 
     account_type = fields.Selection(
-        [("income", "Revenue"), ("expense", "Expense")],
+        selection=[("income", "Revenue"), ("expense", "Expense")],
         compute="_compute_account_type",
         store=True,
     )
     expense_accrual_account = fields.Many2one(
-        "account.account",
-        readonly=False,
-        check_company=True,
-        domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]",
+        comodel_name="account.account",
         compute="_compute_expense_accrual_account",
         inverse="_inverse_expense_accrual_account",
+        readonly=False,
+        domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]",
+        check_company=True,
     )
     revenue_accrual_account = fields.Many2one(
-        "account.account",
-        readonly=False,
-        check_company=True,
-        domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]",
+        comodel_name="account.account",
         compute="_compute_revenue_accrual_account",
         inverse="_inverse_revenue_accrual_account",
+        readonly=False,
+        domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]",
+        check_company=True,
     )
     lock_date_message = fields.Char(compute="_compute_lock_date_message")
 
     destination_account_id = fields.Many2one(
-        string="To",
         comodel_name="account.account",
+        string="To",
         help="Account to transfer to.",
         check_company=True,
     )
     display_currency_helper = fields.Boolean(
-        string="Currency Conversion Helper", compute="_compute_display_currency_helper"
+        string="Currency Conversion Helper",
+        compute="_compute_display_currency_helper",
     )
 
     @api.depends("company_id")

@@ -19,20 +19,20 @@ class IrActionsClient(models.Model):
     type = fields.Char(default="ir.actions.client")
     tag = fields.Char(
         string="Client action tag",
-        required=True,
         help="An arbitrary string, interpreted by the client"
         " according to its own needs and wishes. There "
         "is no central tag repository across clients.",
+        required=True,
     )
     target = fields.Selection(
-        [
+        selection=[
             ("current", "Current Window"),
             ("new", "New Window"),
             ("fullscreen", "Full Screen"),
             ("main", "Main action of Current Window"),
         ],
-        default="current",
         string="Target Window",
+        default="current",
     )
     res_model = fields.Char(
         string="Destination Model",
@@ -40,18 +40,20 @@ class IrActionsClient(models.Model):
     )
     context = fields.Char(
         string="Context Value",
+        help="Context dictionary as Python expression, empty by default (Default: {})",
         default="{}",
         required=True,
-        help="Context dictionary as Python expression, empty by default (Default: {})",
     )
     params = fields.Binary(
-        compute="_compute_params",
-        inverse="_inverse_params",
         string="Supplementary arguments",
         help="Arguments sent to the client along with the view tag",
+        compute="_compute_params",
+        inverse="_inverse_params",
     )
     params_store = fields.Binary(
-        string="Params storage", readonly=True, attachment=False
+        string="Params storage",
+        attachment=False,
+        readonly=True,
     )
 
     @api.depends("params_store")

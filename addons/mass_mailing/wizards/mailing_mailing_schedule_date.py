@@ -6,7 +6,10 @@ class MailingMailingScheduleDate(models.TransientModel):
     _description = "schedule a mailing"
 
     schedule_date = fields.Datetime(string="Scheduled for")
-    mass_mailing_id = fields.Many2one("mailing.mailing", required=True)
+    mass_mailing_id = fields.Many2one(
+        comodel_name="mailing.mailing",
+        required=True,
+    )
 
     def action_schedule_date(self):
         self.mass_mailing_id.write(

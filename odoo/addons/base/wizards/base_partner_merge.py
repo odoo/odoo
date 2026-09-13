@@ -23,9 +23,12 @@ class BasePartnerMergeLine(models.TransientModel):
     _description = "Merge Partner Line"
     _order = "min_id asc"
 
-    wizard_id = fields.Many2one("base.partner.merge.automatic.wizard")
-    min_id = fields.Integer("MinID")
-    aggr_ids = fields.Char("Ids", required=True)
+    wizard_id = fields.Many2one(comodel_name="base.partner.merge.automatic.wizard")
+    min_id = fields.Integer(string="MinID")
+    aggr_ids = fields.Char(
+        string="Ids",
+        required=True,
+    )
 
 
 class BasePartnerMergeAutomaticWizard(models.TransientModel):
@@ -46,45 +49,59 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
                 res["dst_partner_id"] = self._get_ordered_partner(active_ids)[-1].id
         return res
 
-    group_by_email = fields.Boolean("Email")
-    group_by_name = fields.Boolean("Name")
-    group_by_is_company = fields.Boolean("Is Company")
-    group_by_vat = fields.Boolean("VAT")
-    group_by_parent_id = fields.Boolean("Parent Company")
+    group_by_email = fields.Boolean(string="Email")
+    group_by_name = fields.Boolean(string="Name")
+    group_by_is_company = fields.Boolean(string="Is Company")
+    group_by_vat = fields.Boolean(string="VAT")
+    group_by_parent_id = fields.Boolean(string="Parent Company")
     match_similar_names = fields.Boolean(
-        "Similar Names",
+        string="Similar Names",
         help="Also group contacts whose names differ slightly, such as "
         "'Acme Corp' and 'ACME Corporation'. The exact criteria above can only "
         "match names that are already identical.",
     )
 
     state = fields.Selection(
-        [
+        selection=[
             ("option", "Option"),
             ("selection", "Selection"),
             ("finished", "Finished"),
         ],
+        default="option",
         readonly=True,
         required=True,
-        default="option",
     )
 
-    number_group = fields.Integer("Group of Contacts", readonly=True)
-    current_line_id = fields.Many2one("base.partner.merge.line")
-    line_ids = fields.One2many("base.partner.merge.line", "wizard_id", string="Lines")
+    number_group = fields.Integer(
+        string="Group of Contacts",
+        readonly=True,
+    )
+    current_line_id = fields.Many2one(comodel_name="base.partner.merge.line")
+    line_ids = fields.One2many(
+        comodel_name="base.partner.merge.line",
+        inverse_name="wizard_id",
+        string="Lines",
+    )
     partner_ids = fields.Many2many(
-        "res.partner", string="Contacts", context={"active_test": False}
+        comodel_name="res.partner",
+        string="Contacts",
+        context={"active_test": False},
     )
-    dst_partner_id = fields.Many2one("res.partner", string="Destination Contact")
+    dst_partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Destination Contact",
+    )
 
-    exclude_contact = fields.Boolean("A user associated to the contact")
-    exclude_journal_item = fields.Boolean("Journal Items associated to the contact")
-    maximum_group = fields.Integer("Maximum of Group of Contacts")
+    exclude_contact = fields.Boolean(string="A user associated to the contact")
+    exclude_journal_item = fields.Boolean(
+        string="Journal Items associated to the contact"
+    )
+    maximum_group = fields.Integer(string="Maximum of Group of Contacts")
     absorb_source_values = fields.Boolean(
-        default=True,
         help="Fill the destination's empty fields from the contacts merged into "
         "it. Turn it off to keep the destination's own identity, which is what a "
         "catch-all contact needs.",
+        default=True,
     )
 
     _MERGE_SIZE_LIMIT = 3

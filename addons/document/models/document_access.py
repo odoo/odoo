@@ -9,25 +9,31 @@ class DocumentsAccess(models.Model):
     _log_access = False
 
     document_id = fields.Many2one(
-        "document.document",
-        required=True,
-        bypass_search_access=True,
+        comodel_name="document.document",
         index=True,
+        required=True,
         ondelete="cascade",
+        bypass_search_access=True,
     )
     partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
     role = fields.Selection(
-        [("view", "Viewer"), ("edit", "Editor")],
+        selection=[("view", "Viewer"), ("edit", "Editor")],
+        index=True,
         required=False,
+    )
+    last_access_date = fields.Datetime(
+        string="Last Accessed On",
+        required=False,
+    )
+    expiration_date = fields.Datetime(
+        string="Expiration",
         index=True,
     )
-    last_access_date = fields.Datetime("Last Accessed On", required=False)
-    expiration_date = fields.Datetime("Expiration", index=True)
 
     _unique_document_access_partner = models.Constraint(
         "unique(document_id, partner_id)",

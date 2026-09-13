@@ -8,9 +8,9 @@ class AccountMoveReversal(models.TransientModel):
     _inherit = "account.move.reversal"
 
     l10n_es_tbai_is_required = fields.Boolean(
+        string="Is TicketBai required for this reversal",
         compute="_compute_l10n_es_tbai_is_required",
         readonly=True,
-        string="Is TicketBai required for this reversal",
     )
 
     l10n_es_tbai_refund_reason = fields.Selection(

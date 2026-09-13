@@ -16,7 +16,7 @@ class ResPartnerBank(models.Model):
         ],
         ondelete={"bakong_id_solo": "set default", "bakong_id_merchant": "set default"},
     )
-    l10n_kh_merchant_id = fields.Char("Merchant ID")
+    l10n_kh_merchant_id = fields.Char(string="Merchant ID")
 
     @api.constrains("proxy_type", "proxy_value")
     def _check_kh_proxy(self):

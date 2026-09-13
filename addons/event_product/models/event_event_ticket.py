@@ -12,10 +12,10 @@ class EventEventTicket(models.Model):
     )
     price_incl = fields.Float(
         string="Price include",
-        compute="_compute_price_incl",
         min_display_digits="Product Price",
-        readonly=False,
+        compute="_compute_price_incl",
         compute_sudo=True,
+        readonly=False,
     )
 
     @api.depends("product_id.active")

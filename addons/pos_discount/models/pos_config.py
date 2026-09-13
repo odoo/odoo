@@ -15,9 +15,9 @@ class PosConfig(models.Model):
         default=10.0,
     )
     discount_product_id = fields.Many2one(
-        "product.product",
-        domain=[("sale_ok", "=", True)],
+        comodel_name="product.product",
         help="The product used to apply the discount on the ticket.",
+        domain=[("sale_ok", "=", True)],
     )
 
     @api.model

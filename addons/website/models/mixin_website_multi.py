@@ -12,10 +12,10 @@ class MixinWebsiteMulti(models.AbstractModel):
     _description = "Multi Website Mixin"
 
     website_id = fields.Many2one(
-        "website",
-        ondelete="restrict",
+        comodel_name="website",
         help="Restrict to a specific website.",
         index=True,
+        ondelete="restrict",
     )
 
     def can_access_from_current_website(self, website_id=False):

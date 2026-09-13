@@ -26,31 +26,46 @@ class IrProfile(models.Model):
     _order = "session desc, id desc"
     _allow_sudo_commands = False
 
-    create_date = fields.Datetime("Creation Date")
+    create_date = fields.Datetime(string="Creation Date")
 
     session = fields.Char(index=True)
-    name = fields.Char("Description")
-    duration = fields.Float(digits=(9, 3), help="Real elapsed time")
-    cpu_duration = fields.Float(
-        "CPU Duration",
+    name = fields.Char(string="Description")
+    duration = fields.Float(
+        help="Real elapsed time",
         digits=(9, 3),
+    )
+    cpu_duration = fields.Float(
+        string="CPU Duration",
         help="CPU clock (not including other processes or SQL)",
+        digits=(9, 3),
     )
 
-    init_stack_trace = fields.Text("Initial stack trace", prefetch=False)
+    init_stack_trace = fields.Text(
+        string="Initial stack trace",
+        prefetch=False,
+    )
 
     sql = fields.Text(prefetch=False)
-    sql_count = fields.Integer("Queries Count")
+    sql_count = fields.Integer(string="Queries Count")
     traces_async = fields.Text(prefetch=False)
     traces_sync = fields.Text(prefetch=False)
-    others = fields.Text("others", prefetch=False)
+    others = fields.Text(
+        string="others",
+        prefetch=False,
+    )
     qweb = fields.Text(prefetch=False)
-    entry_count = fields.Integer("Entry count")
+    entry_count = fields.Integer(string="Entry count")
 
     speedscope = fields.Binary(compute="_compute_speedscope")
-    speedscope_url = fields.Text("Open", compute="_compute_speedscope_url")
+    speedscope_url = fields.Text(
+        string="Open",
+        compute="_compute_speedscope_url",
+    )
 
-    config_url = fields.Text("Open profiles config", compute="_compute_config_url")
+    config_url = fields.Text(
+        string="Open profiles config",
+        compute="_compute_config_url",
+    )
 
     @api.autovacuum
     def _gc_profile(self) -> tuple[int, bool]:
@@ -308,7 +323,7 @@ class BaseEnableProfilingWizard(models.TransientModel):
     _description = "Enable profiling for some time"
 
     duration = fields.Selection(
-        [
+        selection=[
             ("minutes_5", "5 Minutes"),
             ("hours_1", "1 Hour"),
             ("days_1", "1 Day"),
@@ -317,7 +332,7 @@ class BaseEnableProfilingWizard(models.TransientModel):
         string="Enable profiling for",
     )
     expiration = fields.Datetime(
-        "Enable profiling until",
+        string="Enable profiling until",
         compute="_compute_expiration",
         store=True,
         readonly=False,

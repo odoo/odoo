@@ -6,29 +6,29 @@ class AccountJournal(models.Model):
 
     l10n_hr_business_premises_label = fields.Char(
         string="Business premises label",
+        help="Must contain at least one character and a maximum of 20 numeric (0-9) and/or alphabetic (a-z, A-Z) characters.",
+        size=20,
         default="1",
         required=True,
-        size=20,
-        help="Must contain at least one character and a maximum of 20 numeric (0-9) and/or alphabetic (a-z, A-Z) characters.",
     )
     l10n_hr_issuing_device_label = fields.Char(
         string="Issuing device label",
+        help="Must contain only numeric characters",
         default="1",
         required=True,
-        help="Must contain only numeric characters",
     )
     l10n_hr_business_premises_label_refund = fields.Char(
         string="Business premises label (refund approval)",
+        help="Must contain at least one character and a maximum of 20 numeric (0-9) and/or alphabetic (a-z, A-Z) characters.",
+        size=20,
         default="1",
         required=True,
-        size=20,
-        help="Must contain at least one character and a maximum of 20 numeric (0-9) and/or alphabetic (a-z, A-Z) characters.",
     )
     l10n_hr_issuing_device_label_refund = fields.Char(
         string="Issuing device label (refund approval)",
+        help="Must contain only numeric characters",
         default="2",
         required=True,
-        help="Must contain only numeric characters",
     )
     # MER-specific fields
     l10n_hr_mer_connection_state = fields.Selection(

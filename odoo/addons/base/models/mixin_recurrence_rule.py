@@ -18,8 +18,8 @@ class MixinRecurrenceRule(models.AbstractModel):
     _inherit = ["mixin.recurrence.interval"]
 
     repeat_type = fields.Selection(
-        REPEAT_TYPE_SELECTION,
-        default="forever",
+        selection=REPEAT_TYPE_SELECTION,
         string="Until",
         export_string_translation=False,
+        default="forever",
     )

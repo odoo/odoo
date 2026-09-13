@@ -13,29 +13,33 @@ class AccountReportExternalValue(models.Model):
     date = fields.Date(required=True)
 
     target_report_expression_id = fields.Many2one(
-        string="Target Expression",
         comodel_name="account.report.expression",
-        required=True,
+        string="Target Expression",
         index=True,
+        required=True,
         ondelete="cascade",
     )
     target_report_line_id = fields.Many2one(
-        string="Target Line", related="target_report_expression_id.report_line_id"
+        related="target_report_expression_id.report_line_id",
+        string="Target Line",
     )
     target_report_expression_label = fields.Char(
-        string="Target Expression Label", related="target_report_expression_id.label"
+        related="target_report_expression_id.label",
+        string="Target Expression Label",
     )
     report_country_id = fields.Many2one(
-        string="Country", related="target_report_line_id.report_id.country_id"
+        related="target_report_line_id.report_id.country_id",
+        string="Country",
     )
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        required=True,
         default=lambda self: self.env.company,
+        required=True,
     )
 
     carryover_origin_expression_label = fields.Char(string="Origin Expression Label")
     carryover_origin_report_line_id = fields.Many2one(
-        string="Origin Line", comodel_name="account.report.line"
+        comodel_name="account.report.line",
+        string="Origin Line",
     )

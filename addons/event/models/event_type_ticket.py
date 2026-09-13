@@ -9,23 +9,26 @@ class EventTypeTicket(models.Model):
     sequence = fields.Integer(default=10)
     # description
     name = fields.Char(
+        translate=True,
         default=lambda self: _("Registration"),
         required=True,
-        translate=True,
     )
     description = fields.Text(
-        translate=True,
         help="A description of the ticket that you want to communicate to your customers.",
+        translate=True,
     )
     event_type_id = fields.Many2one(
-        "event.type", string="Event Category", ondelete="cascade", required=True
+        comodel_name="event.type",
+        string="Event Category",
+        required=True,
+        ondelete="cascade",
     )
     # seats
     seats_limited = fields.Boolean(
         string="Limit Attendees",
-        readonly=True,
-        store=True,
         compute="_compute_seats_limited",
+        store=True,
+        readonly=True,
     )
     seats_max = fields.Integer(
         string="Maximum Attendees",

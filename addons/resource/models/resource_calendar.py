@@ -65,95 +65,103 @@ class ResourceCalendar(models.Model):
 
     name = fields.Char(required=True)
     active = fields.Boolean(
-        default=True,
         help="If the active field is set to false, it will allow you to hide the Working Time without removing it.",
+        default=True,
     )
     attendance_ids = fields.One2many(
-        "resource.calendar.attendance",
-        "calendar_id",
-        "Working Time",
+        comodel_name="resource.calendar.attendance",
+        inverse_name="calendar_id",
+        string="Working Time",
         compute="_compute_attendance_ids",
         store=True,
-        readonly=False,
         copy=True,
+        readonly=False,
     )
     attendance_ids_1st_week = fields.One2many(
-        "resource.calendar.attendance",
-        "calendar_id",
-        "Working Time 1st Week",
+        comodel_name="resource.calendar.attendance",
+        inverse_name="calendar_id",
+        string="Working Time 1st Week",
         compute="_compute_two_weeks_attendance",
         inverse="_inverse_two_weeks_calendar",
     )
     attendance_ids_2nd_week = fields.One2many(
-        "resource.calendar.attendance",
-        "calendar_id",
-        "Working Time 2nd Week",
+        comodel_name="resource.calendar.attendance",
+        inverse_name="calendar_id",
+        string="Working Time 2nd Week",
         compute="_compute_two_weeks_attendance",
         inverse="_inverse_two_weeks_calendar",
     )
     company_id = fields.Many2one(
-        "res.company",
-        domain=lambda self: [("id", "in", self.env.companies.ids)],
+        comodel_name="res.company",
         default=lambda self: self.env.company,
         index="btree_not_null",
+        domain=lambda self: [("id", "in", self.env.companies.ids)],
     )
-    leave_ids = fields.One2many("resource.calendar.leaves", "calendar_id", "Time Off")
+    leave_ids = fields.One2many(
+        comodel_name="resource.calendar.leaves",
+        inverse_name="calendar_id",
+        string="Time Off",
+    )
     resource_ids = fields.One2many(
-        "resource.resource",
-        "calendar_id",
-        "Work Resources",
+        comodel_name="resource.resource",
+        inverse_name="calendar_id",
+        string="Work Resources",
     )
     schedule_type = fields.Selection(
-        [
+        selection=[
             ("flexible", "Flexible"),
             ("fully_fixed", "Fully Fixed"),
         ],
-        compute="_compute_schedule_type",
-        inverse="_inverse_schedule_type",
         help="Choose which level of definition you want to define on your Schedule\n"
         "- Flexible : Define an amount of hours to work on the week.\n"
         "- Fully Fixed : define the days, periods and the start & end time for each period of the day",
+        compute="_compute_schedule_type",
+        inverse="_inverse_schedule_type",
     )
     duration_based = fields.Boolean(
-        "Attendance based on duration",
+        string="Attendance based on duration",
         help="The hours will be centered around 12:00 to cover the duration for the day",
     )
     flexible_hours = fields.Boolean(
-        help="When enabled, it will allow employees to work flexibly, without relying on the company's working schedule (working hours).",
+        help="When enabled, it will allow employees to work flexibly, without relying on the company's working schedule (working hours)."
     )
     full_time_required_hours = fields.Float(
         string="Full Time Equivalent",
+        help="Number of hours to work on the company schedule to be considered as fulltime.",
         compute="_compute_full_time_required_hours",
         store=True,
         readonly=False,
-        help="Number of hours to work on the company schedule to be considered as fulltime.",
     )
     global_leave_ids = fields.One2many(
-        "resource.calendar.leaves",
-        "calendar_id",
-        "Global Time Off",
-        domain=[("resource_id", "=", False)],
+        comodel_name="resource.calendar.leaves",
+        inverse_name="calendar_id",
+        string="Global Time Off",
         copy=True,
+        domain=[("resource_id", "=", False)],
     )
     hours_per_day = fields.Float(
-        "Average Hour per Day",
-        store=True,
-        compute="_compute_hours_per_day",
-        digits=(2, 2),
-        readonly=False,
+        string="Average Hour per Day",
         help="Average hours per day a resource is supposed to work with this calendar.",
+        digits=(2, 2),
+        compute="_compute_hours_per_day",
+        store=True,
+        readonly=False,
     )
     hours_per_week = fields.Float(
         string="Hours per Week",
         compute="_compute_hours_per_week",
         store=True,
-        readonly=False,
         copy=False,
+        readonly=False,
     )
-    is_fulltime = fields.Boolean(compute="_compute_work_time", string="Is Full Time")
+    is_fulltime = fields.Boolean(
+        string="Is Full Time",
+        compute="_compute_work_time",
+    )
     two_weeks_calendar = fields.Boolean(string="Calendar in 2 weeks mode")
     two_weeks_explanation = fields.Char(
-        "Explanation", compute="_compute_two_weeks_explanation"
+        string="Explanation",
+        compute="_compute_two_weeks_explanation",
     )
 
     def _default_tz(self):
@@ -166,20 +174,24 @@ class ResourceCalendar(models.Model):
         )
 
     tz = fields.Selection(
-        _selection_timezones,
+        selection=_selection_timezones,
         string="Timezone",
-        required=True,
-        default=lambda self: self._default_tz(),
         help="This field is used in order to define in which timezone the resources will work.",
+        default=lambda self: self._default_tz(),
+        required=True,
     )
-    tz_offset = fields.Char(compute="_compute_tz_offset", string="Timezone offset")
+    tz_offset = fields.Char(
+        string="Timezone offset",
+        compute="_compute_tz_offset",
+    )
     work_resources_count = fields.Integer(
-        "Work Resources count", compute="_compute_work_resources_count"
+        string="Work Resources count",
+        compute="_compute_work_resources_count",
     )
     work_time_rate = fields.Float(
+        help="Work time rate versus full time working schedule, should be between 0 and 100 %.",
         compute="_compute_work_time",
         search="_search_work_time_rate",
-        help="Work time rate versus full time working schedule, should be between 0 and 100 %.",
     )
 
     @api.constrains("attendance_ids", "two_weeks_calendar")

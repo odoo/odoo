@@ -8,9 +8,14 @@ class L10n_In_EdiCancel(models.TransientModel):
 
     _description = "Cancel E-Invoice"
 
-    move_id = fields.Many2one("account.move", string="Invoice", required=True)
+    move_id = fields.Many2one(
+        comodel_name="account.move",
+        string="Invoice",
+        required=True,
+    )
     cancel_reason = fields.Selection(
-        selection=list(EDI_CANCEL_REASON.items()), required=True
+        selection=list(EDI_CANCEL_REASON.items()),
+        required=True,
     )
     cancel_remarks = fields.Char(required=True)
 

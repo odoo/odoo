@@ -10,10 +10,12 @@ class ResConfigSettings(models.TransientModel):
     # ------------------
 
     l10n_my_edi_mode = fields.Selection(
-        related="company_id.l10n_my_edi_mode", readonly=False
+        related="company_id.l10n_my_edi_mode",
+        readonly=False,
     )
     l10n_my_edi_default_import_journal_id = fields.Many2one(
-        related="company_id.l10n_my_edi_default_import_journal_id", readonly=False
+        related="company_id.l10n_my_edi_default_import_journal_id",
+        readonly=False,
     )
     l10n_my_edi_proxy_user_id = fields.Many2one(
         related="company_id.l10n_my_edi_proxy_user_id"

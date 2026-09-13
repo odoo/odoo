@@ -52,42 +52,54 @@ class EventType(models.Model):
             .ids
         )
 
-    name = fields.Char("Event Template", required=True, translate=True)
+    name = fields.Char(
+        string="Event Template",
+        translate=True,
+        required=True,
+    )
     note = fields.Html()
     sequence = fields.Integer(default=10)
     # tickets
     event_type_ticket_ids = fields.One2many(
-        "event.type.ticket", "event_type_id", string="Tickets"
+        comodel_name="event.type.ticket",
+        inverse_name="event_type_id",
+        string="Tickets",
     )
-    tag_ids = fields.Many2many("event.tag", string="Tags")
+    tag_ids = fields.Many2many(
+        comodel_name="event.tag",
+        string="Tags",
+    )
     # registration
-    has_seats_limitation = fields.Boolean("Limited Seats")
+    has_seats_limitation = fields.Boolean(string="Limited Seats")
     seats_max = fields.Integer(
-        "Maximum Registrations",
-        compute="_compute_seats_max",
-        readonly=False,
-        store=True,
+        string="Maximum Registrations",
         help="It will select this default maximum value when you choose this event",
+        compute="_compute_seats_max",
+        store=True,
+        readonly=False,
     )
     default_timezone = fields.Selection(
-        _selection_timezones,
+        selection=_selection_timezones,
         string="Timezone",
         default=lambda self: self.env.user.tz or "UTC",
     )
     # communication
     event_type_mail_ids = fields.One2many(
-        "event.type.mail",
-        "event_type_id",
+        comodel_name="event.type.mail",
+        inverse_name="event_type_id",
         string="Mail Schedule",
         default=_default_event_type_mail_ids,
     )
     # ticket reports
     ticket_instructions = fields.Html(
-        translate=True,
         help="This information will be printed on your tickets.",
+        translate=True,
     )
     question_ids = fields.Many2many(
-        "event.question", default=_default_question_ids, string="Questions", copy=True
+        comodel_name="event.question",
+        string="Questions",
+        default=_default_question_ids,
+        copy=True,
     )
 
     @api.depends("has_seats_limitation")

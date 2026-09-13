@@ -26,79 +26,115 @@ class FleetVehicleModel(models.Model):
         current_year = datetime.now().year
         return [(str(i), i) for i in range(1970, current_year + 1)]
 
-    name = fields.Char("Model name", required=True, tracking=True)
-    brand_id = fields.Many2one(
-        "fleet.vehicle.model.brand",
-        "Manufacturer",
+    name = fields.Char(
+        string="Model name",
         required=True,
         tracking=True,
+    )
+    brand_id = fields.Many2one(
+        comodel_name="fleet.vehicle.model.brand",
+        string="Manufacturer",
         index="btree_not_null",
+        required=True,
+        tracking=True,
     )
-    category_id = fields.Many2one("fleet.vehicle.model.category", tracking=True)
+    category_id = fields.Many2one(
+        comodel_name="fleet.vehicle.model.category",
+        tracking=True,
+    )
     vendors = fields.Many2many(
-        "res.partner",
-        "fleet_vehicle_model_vendors",
-        "model_id",
-        "partner_id",
+        comodel_name="res.partner",
+        relation="fleet_vehicle_model_vendors",
+        column1="model_id",
+        column2="partner_id",
     )
-    image_128 = fields.Image(related="brand_id.image_128", readonly=True)
+    image_128 = fields.Image(
+        related="brand_id.image_128",
+        readonly=True,
+    )
     active = fields.Boolean(default=True)
     vehicle_type = fields.Selection(
-        [("car", "Car"), ("bike", "Bike")], default="car", required=True, tracking=True
+        selection=[("car", "Car"), ("bike", "Bike")],
+        default="car",
+        required=True,
+        tracking=True,
     )
     transmission = fields.Selection(
-        [("manual", "Manual"), ("automatic", "Automatic")],
+        selection=[("manual", "Manual"), ("automatic", "Automatic")],
         tracking=True,
     )
     vehicle_count = fields.Integer(
-        compute="_compute_vehicle_count", search="_search_vehicle_count"
+        compute="_compute_vehicle_count",
+        search="_search_vehicle_count",
     )
-    model_year = fields.Selection(selection="_selection_years", tracking=True)
+    model_year = fields.Selection(
+        selection="_selection_years",
+        tracking=True,
+    )
     color = fields.Char(tracking=True)
-    seats = fields.Integer(string="Seating Capacity", tracking=True)
+    seats = fields.Integer(
+        string="Seating Capacity",
+        tracking=True,
+    )
     doors = fields.Integer(
         string="Number of Doors",
-        tracking=True,
         help="Specifies the total number of doors, including the truck and hatch doors, if applicable.",
+        tracking=True,
     )
     trailer_hook = fields.Boolean(
-        default=False,
         string="Trailer Hitch",
-        tracking=True,
         help="A trailer hitch is a device attached to a vehicle's chassis for towing purposes,\
             such as pulling trailers, boats, or other vehicles.",
+        default=False,
+        tracking=True,
     )
-    default_co2 = fields.Float("CO₂ Emissions", tracking=True)
+    default_co2 = fields.Float(
+        string="CO₂ Emissions",
+        tracking=True,
+    )
     co2_emission_unit = fields.Selection(
-        [("g/km", "g/km"), ("g/mi", "g/mi")],
+        selection=[("g/km", "g/km"), ("g/mi", "g/mi")],
         compute="_compute_co2_emission_unit",
         required=True,
     )
     co2_standard = fields.Char(
         string="Emission Standard",
-        tracking=True,
         help="""Emission Standard specifies the regulatory test procedure or \
             guideline under which a vehicle's emissions are measured.""",
+        tracking=True,
     )
     default_fuel_type = fields.Selection(
-        FUEL_TYPES, "Fuel Type", default="electric", tracking=True
+        selection=FUEL_TYPES,
+        string="Fuel Type",
+        default="electric",
+        tracking=True,
     )
     power = fields.Float(tracking=True)
     horsepower = fields.Float(tracking=True)
-    horsepower_tax = fields.Float("Horsepower Taxation", tracking=True)
-    electric_assistance = fields.Boolean(default=False, tracking=True)
+    horsepower_tax = fields.Float(
+        string="Horsepower Taxation",
+        tracking=True,
+    )
+    electric_assistance = fields.Boolean(
+        default=False,
+        tracking=True,
+    )
     power_unit = fields.Selection(
-        [("power", "kW"), ("horsepower", "Horsepower (hp)")],
+        selection=[("power", "kW"), ("horsepower", "Horsepower (hp)")],
         default="power",
         required=True,
     )
-    vehicle_properties_definition = fields.PropertiesDefinition("Vehicle Properties")
+    vehicle_properties_definition = fields.PropertiesDefinition(
+        string="Vehicle Properties"
+    )
     vehicle_range = fields.Integer(string="Range")
     range_unit = fields.Selection(
-        [("km", "km"), ("mi", "mi")], default="km", required=True
+        selection=[("km", "km"), ("mi", "mi")],
+        default="km",
+        required=True,
     )
     drive_type = fields.Selection(
-        [
+        selection=[
             ("fwd", "Front-Wheel Drive (FWD)"),
             ("awd", "All-Wheel Drive (AWD)"),
             ("rwd", "Rear-Wheel Drive (RWD)"),

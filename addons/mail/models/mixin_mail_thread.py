@@ -151,12 +151,15 @@ class MixinMailThread(models.AbstractModel):
     )
 
     message_is_follower = fields.Boolean(
-        "Is Follower",
+        string="Is Follower",
         compute="_compute_message_is_follower",
         search="_search_message_is_follower",
     )
     message_follower_ids: MailFollowers = fields.One2many(
-        "mail.followers", "res_id", string="Followers", groups="base.group_user"
+        comodel_name="mail.followers",
+        inverse_name="res_id",
+        string="Followers",
+        groups="base.group_user",
     )
     message_partner_ids: ResPartner = fields.Many2many(
         comodel_name="res.partner",
@@ -167,39 +170,41 @@ class MixinMailThread(models.AbstractModel):
         groups="base.group_user",
     )
     message_ids: MailMessage = fields.One2many(
-        "mail.message",
-        "res_id",
+        comodel_name="mail.message",
+        inverse_name="res_id",
         string="Messages",
         domain=lambda self: [("message_type", "!=", "user_notification")],
         bypass_search_access=True,
     )
     has_message = fields.Boolean(
-        compute="_compute_has_message", search="_search_has_message", store=False
+        compute="_compute_has_message",
+        search="_search_has_message",
+        store=False,
     )
     message_needaction = fields.Boolean(
-        "Action Needed",
+        string="Action Needed",
+        help="If checked, new messages require your attention.",
         compute="_compute_message_needaction_stats",
         search="_search_message_needaction",
-        help="If checked, new messages require your attention.",
     )
     message_needaction_counter = fields.Integer(
-        "Number of Actions",
-        compute="_compute_message_needaction_stats",
+        string="Number of Actions",
         help="Number of messages requiring action",
+        compute="_compute_message_needaction_stats",
     )
     message_has_error = fields.Boolean(
-        "Message Delivery error",
+        string="Message Delivery error",
+        help="If checked, some messages have a delivery error.",
         compute="_compute_message_has_error_stats",
         search="_search_message_has_error",
-        help="If checked, some messages have a delivery error.",
     )
     message_has_error_counter = fields.Integer(
-        "Number of errors",
-        compute="_compute_message_has_error_stats",
+        string="Number of errors",
         help="Number of messages with delivery error",
+        compute="_compute_message_has_error_stats",
     )
     message_attachment_count = fields.Integer(
-        "Attachment Count",
+        string="Attachment Count",
         compute="_compute_message_attachment_count",
         groups="base.group_user",
     )

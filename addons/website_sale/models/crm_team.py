@@ -5,9 +5,9 @@ class CrmTeam(models.Model):
     _inherit = "crm.team"
 
     website_ids = fields.One2many(
-        string="Websites",
         comodel_name="website",
         inverse_name="salesteam_id",
+        string="Websites",
     )
     abandoned_carts_amount = fields.Integer(
         string="Amount of Abandoned Carts",

@@ -7,8 +7,8 @@ class SaleOrderLine(models.Model):
 
     is_optional = fields.Boolean(
         string="Optional Line",
-        copy=True,
         default=False,
+        copy=True,
     )
 
     @api.depends("product_id")

@@ -388,7 +388,10 @@ class Base_ImportMapping(models.Model):
     _name = "base_import.mapping"
     _description = "Base Import Mapping"
 
-    res_model = fields.Char(index=True, required=True)
+    res_model = fields.Char(
+        index=True,
+        required=True,
+    )
     column_name = fields.Char(required=True)
     field_name = fields.Char(required=True)
 
@@ -424,7 +427,7 @@ class Base_ImportImport(models.TransientModel):
     # any match between them. (see '_get_mapping_suggestion' for more details)
     FUZZY_MATCH_DISTANCE = 0.2
 
-    res_model = fields.Char("Model")
+    res_model = fields.Char(string="Model")
     file = fields.Binary(
         help="File to check and/or import, raw binary (not base64)",
         attachment=False,

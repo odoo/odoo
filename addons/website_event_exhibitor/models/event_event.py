@@ -4,17 +4,21 @@ from odoo import _, api, fields, models
 class EventEvent(models.Model):
     _inherit = "event.event"
 
-    sponsor_ids = fields.One2many("event.sponsor", "event_id", "Sponsors")
+    sponsor_ids = fields.One2many(
+        comodel_name="event.sponsor",
+        inverse_name="event_id",
+        string="Sponsors",
+    )
     sponsor_count = fields.Integer(compute="_compute_sponsor_count")
     exhibitor_menu = fields.Boolean(
         string="Showcase Exhibitors",
         compute="_compute_exhibitor_menu",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     exhibitor_menu_ids = fields.One2many(
-        "website.event.menu",
-        "event_id",
+        comodel_name="website.event.menu",
+        inverse_name="event_id",
         string="Exhibitors Menus",
         domain=[("menu_type", "=", "exhibitor")],
     )

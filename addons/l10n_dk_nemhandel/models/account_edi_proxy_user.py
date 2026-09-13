@@ -17,7 +17,8 @@ class AccountEdiProxyClientUser(models.Model):
 
     nemhandel_verification_code = fields.Char(string="Nemhandel SMS verification code")
     proxy_type = fields.Selection(
-        selection_add=[("nemhandel", "Nemhandel")], ondelete={"nemhandel": "cascade"}
+        selection_add=[("nemhandel", "Nemhandel")],
+        ondelete={"nemhandel": "cascade"},
     )
 
     # -------------------------------------------------------------------------

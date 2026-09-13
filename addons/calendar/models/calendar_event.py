@@ -196,40 +196,53 @@ class CalendarEvent(models.Model):
         return start + timedelta(hours=duration_hours)
 
     # description
-    name = fields.Char("Meeting Subject", required=True)
+    name = fields.Char(
+        string="Meeting Subject",
+        required=True,
+    )
     description = fields.Html(
         help="""When synchronization with an external calendar is active, this description is synchronized \
         with the one of the associated meeting in that external calendar. Any update will be propagated there \
-        and vice versa.""",
+        and vice versa."""
     )
     user_id = fields.Many2one(
-        "res.users",
-        "Organizer",
+        comodel_name="res.users",
+        string="Organizer",
         default=lambda self: self.env.user,
         index="btree_not_null",
     )
     partner_id = fields.Many2one(
-        "res.partner",
-        string="Scheduled by",
+        comodel_name="res.partner",
         related="user_id.partner_id",
+        string="Scheduled by",
         readonly=True,
     )
     location = fields.Char(tracking=True)
     notes = fields.Html()  # Unlike description, internal use only
     videocall_location = fields.Char(
-        "Meeting URL", compute="_compute_videocall_location", store=True, copy=True
+        string="Meeting URL",
+        compute="_compute_videocall_location",
+        store=True,
+        copy=True,
     )
-    access_token = fields.Char("Invitation Token", store=True, copy=False, index=True)
+    access_token = fields.Char(
+        string="Invitation Token",
+        store=True,
+        index=True,
+        copy=False,
+    )
     videocall_source = fields.Selection(
-        [("discuss", "Discuss"), ("custom", "Custom")],
+        selection=[("discuss", "Discuss"), ("custom", "Custom")],
         compute="_compute_videocall_source",
     )
     videocall_channel_id = fields.Many2one(
-        "discuss.channel", "Discuss Channel", index="btree_not_null"
+        comodel_name="discuss.channel",
+        string="Discuss Channel",
+        index="btree_not_null",
     )
     # visibility
     privacy = fields.Selection(
-        [
+        selection=[
             ("public", "Public"),
             ("private", "Private"),
             ("confidential", "Only internal users"),
@@ -237,7 +250,7 @@ class CalendarEvent(models.Model):
         help="People to whom this event will be visible.",
     )
     effective_privacy = fields.Selection(
-        [
+        selection=[
             ("public", "Public"),
             ("private", "Private"),
             ("confidential", "Only internal users"),
@@ -246,86 +259,119 @@ class CalendarEvent(models.Model):
         compute="_compute_effective_privacy",
     )
     show_as = fields.Selection(
-        [("free", "Available"), ("busy", "Busy")],
-        "Show as",
-        default="busy",
-        required=True,
+        selection=[("free", "Available"), ("busy", "Busy")],
+        string="Show as",
         help="If the time is shown as 'busy', this event will be visible to other people with either the full \
         information or simply 'busy' written depending on its privacy. Use this option to let other people know \
         that you are unavailable during that period of time. \n If the event is shown as 'free', other users know \
         that you are available during that period of time.",
+        default="busy",
+        required=True,
     )
     is_highlighted = fields.Boolean(
-        compute="_compute_is_highlighted", string="Is the Event Highlighted"
+        string="Is the Event Highlighted",
+        compute="_compute_is_highlighted",
     )
     is_organizer_alone = fields.Boolean(
-        compute="_compute_is_organizer_alone",
         string="Is the Organizer Alone",
         help="""Check if the organizer is alone in the event, i.e. if the organizer is the only one that hasn't declined
         the event (only if the organizer is not the only attendee)""",
+        compute="_compute_is_organizer_alone",
     )
     # filtering
     active = fields.Boolean(
+        help="If the active field is set to false, it will allow you to hide the event alarm information without removing it.",
         default=True,
         tracking=True,
-        help="If the active field is set to false, it will allow you to hide the event alarm information without removing it.",
     )
     categ_ids = fields.Many2many(
-        "calendar.event.type", "meeting_category_rel", "event_id", "type_id", "Tags"
+        comodel_name="calendar.event.type",
+        relation="meeting_category_rel",
+        column1="event_id",
+        column2="type_id",
+        string="Tags",
     )
     # timing
     start = fields.Datetime(
-        required=True,
-        tracking=True,
+        help="Start date of an event, without time for full days events",
         default=_default_start,
         index=True,
-        help="Start date of an event, without time for full days events",
-    )
-    stop = fields.Datetime(
         required=True,
         tracking=True,
-        default=_default_stop,
-        compute="_compute_stop",
-        readonly=False,
-        store=True,
-        help="Stop date of an event, without time for full days events",
     )
-    display_time = fields.Char("Event Time", compute="_compute_display_time")
-    allday = fields.Boolean("All Day", default=False)
-    start_date = fields.Date(
+    stop = fields.Datetime(
+        help="Stop date of an event, without time for full days events",
+        compute="_compute_stop",
+        default=_default_stop,
         store=True,
+        readonly=False,
+        required=True,
         tracking=True,
+    )
+    display_time = fields.Char(
+        string="Event Time",
+        compute="_compute_display_time",
+    )
+    allday = fields.Boolean(
+        string="All Day",
+        default=False,
+    )
+    start_date = fields.Date(
         compute="_compute_dates",
         inverse="_inverse_dates",
+        store=True,
+        tracking=True,
     )
     stop_date = fields.Date(
-        "End Date",
-        store=True,
-        tracking=True,
+        string="End Date",
         compute="_compute_dates",
         inverse="_inverse_dates",
+        store=True,
+        tracking=True,
     )
-    duration = fields.Float(compute="_compute_duration", store=True, readonly=False)
+    duration = fields.Float(
+        compute="_compute_duration",
+        store=True,
+        readonly=False,
+    )
     # linked document
-    res_id = fields.Many2oneReference("Document ID", model_field="res_model")
-    res_model_id = fields.Many2one("ir.model", "Document Model", ondelete="cascade")
+    res_id = fields.Many2oneReference(
+        model_field="res_model",
+        string="Document ID",
+    )
+    res_model_id = fields.Many2one(
+        comodel_name="ir.model",
+        string="Document Model",
+        ondelete="cascade",
+    )
     res_model = fields.Char(
-        "Document Model Name", related="res_model_id.model", readonly=True, store=True
+        related="res_model_id.model",
+        string="Document Model Name",
+        store=True,
+        readonly=True,
     )
     res_model_name = fields.Char(related="res_model_id.name")
     # messaging
     activity_ids = fields.One2many(
-        "mail.activity", "calendar_event_id", string="Activities"
+        comodel_name="mail.activity",
+        inverse_name="calendar_event_id",
+        string="Activities",
     )
     # attendees
-    attendee_ids = fields.One2many("calendar.attendee", "event_id", "Participant")
+    attendee_ids = fields.One2many(
+        comodel_name="calendar.attendee",
+        inverse_name="event_id",
+        string="Participant",
+    )
     current_attendee = fields.Many2one(
-        "calendar.attendee",
+        comodel_name="calendar.attendee",
         compute="_compute_current_attendee",
         search="_search_current_attendee",
     )
     current_status = fields.Selection(
-        string="Attending?", related="current_attendee.state", readonly=False
+        related="current_attendee.state",
+        string="Attending?",
+        readonly=False,
     )
     should_show_status = fields.Boolean(compute="_compute_should_show_status")
     # `active_test` off because `partner_ids` and `attendee_ids` are two views of
@@ -339,38 +385,41 @@ class CalendarEvent(models.Model):
     # `removed_partner_ids`) and were re-added as a second attendee by the next
     # write that named them (always in `added_partner_ids`).
     partner_ids = fields.Many2many(
-        "res.partner",
-        "calendar_event_res_partner_rel",
+        comodel_name="res.partner",
+        relation="calendar_event_res_partner_rel",
         string="Attendees",
-        context={"active_test": False},
         default=_default_partner_ids,
+        context={"active_test": False},
     )
     invalid_email_partner_ids = fields.Many2many(
-        "res.partner", compute="_compute_invalid_email_partner_ids"
+        comodel_name="res.partner",
+        compute="_compute_invalid_email_partner_ids",
     )
     unavailable_partner_ids = fields.Many2many(
-        "res.partner",
+        comodel_name="res.partner",
         string="Unavailable Attendees",
         compute="_compute_unavailable_partner_ids",
     )
     # alarms
     alarm_ids = fields.Many2many(
-        "calendar.alarm",
-        "calendar_alarm_calendar_event_rel",
+        comodel_name="calendar.alarm",
+        relation="calendar_alarm_calendar_event_rel",
         string="Reminders",
-        ondelete="restrict",
         help="Notifications sent to all attendees to remind of the meeting.",
+        ondelete="restrict",
     )
     # RECURRENCE FIELD
-    recurrency = fields.Boolean("Recurrent")
+    recurrency = fields.Boolean(string="Recurrent")
     recurrence_id = fields.Many2one(
-        "calendar.recurrence", string="Recurrence Rule", index="btree_not_null"
+        comodel_name="calendar.recurrence",
+        string="Recurrence Rule",
+        index="btree_not_null",
     )
     follow_recurrence = fields.Boolean(
         default=False
     )  # Indicates if an event follows the recurrence, i.e. is not an exception
     recurrence_update = fields.Selection(
-        [
+        selection=[
             ("this", "This event"),
             ("subsequent", "This and following events"),
             ("all", "All events"),
@@ -382,38 +431,42 @@ class CalendarEvent(models.Model):
     # when recurrence_id is not created yet.
     # If some of these fields are set and recurrence_id does not exists,
     # a `calendar.recurrence.rule` will be dynamically created.
-    rrule = fields.Char("Recurrent Rule", compute="_compute_recurrence", readonly=False)
+    rrule = fields.Char(
+        string="Recurrent Rule",
+        compute="_compute_recurrence",
+        readonly=False,
+    )
     repeat_unit_ui = fields.Selection(
-        REPEAT_UNIT_SELECTION_UI,
+        selection=REPEAT_UNIT_SELECTION_UI,
         string="Repeat",
+        help="Let the event automatically repeat at that interval",
         compute="_compute_repeat_unit_ui",
         readonly=False,
-        help="Let the event automatically repeat at that interval",
     )
     repeat_unit = fields.Selection(
-        REPEAT_UNIT_SELECTION,
+        selection=REPEAT_UNIT_SELECTION,
         string="Recurrence",
         help="Let the event automatically repeat at that interval",
         compute="_compute_recurrence",
         readonly=False,
     )
     event_tz = fields.Selection(
-        _selection_timezones,
+        selection=_selection_timezones,
         string="Timezone",
         compute="_compute_recurrence",
         readonly=False,
     )
     repeat_type = fields.Selection(
-        REPEAT_TYPE_SELECTION_RRULE,
+        selection=REPEAT_TYPE_SELECTION_RRULE,
         string="Recurrence Termination",
         compute="_compute_recurrence",
         readonly=False,
     )
     repeat_interval = fields.Integer(
         string="Repeat On",
+        help="Repeat every (Days/Week/Month/Year)",
         compute="_compute_recurrence",
         readonly=False,
-        help="Repeat every (Days/Week/Month/Year)",
     )
     repeat_number = fields.Integer(
         string="Number of Repetitions",
@@ -421,27 +474,60 @@ class CalendarEvent(models.Model):
         compute="_compute_recurrence",
         readonly=False,
     )
-    mon = fields.Boolean(compute="_compute_recurrence", readonly=False)
-    tue = fields.Boolean(compute="_compute_recurrence", readonly=False)
-    wed = fields.Boolean(compute="_compute_recurrence", readonly=False)
-    thu = fields.Boolean(compute="_compute_recurrence", readonly=False)
-    fri = fields.Boolean(compute="_compute_recurrence", readonly=False)
-    sat = fields.Boolean(compute="_compute_recurrence", readonly=False)
-    sun = fields.Boolean(compute="_compute_recurrence", readonly=False)
+    mon = fields.Boolean(
+        compute="_compute_recurrence",
+        readonly=False,
+    )
+    tue = fields.Boolean(
+        compute="_compute_recurrence",
+        readonly=False,
+    )
+    wed = fields.Boolean(
+        compute="_compute_recurrence",
+        readonly=False,
+    )
+    thu = fields.Boolean(
+        compute="_compute_recurrence",
+        readonly=False,
+    )
+    fri = fields.Boolean(
+        compute="_compute_recurrence",
+        readonly=False,
+    )
+    sat = fields.Boolean(
+        compute="_compute_recurrence",
+        readonly=False,
+    )
+    sun = fields.Boolean(
+        compute="_compute_recurrence",
+        readonly=False,
+    )
     month_by = fields.Selection(
-        MONTH_BY_SELECTION,
+        selection=MONTH_BY_SELECTION,
         string="Option",
         compute="_compute_recurrence",
         readonly=False,
     )
-    day = fields.Integer("Date of month", compute="_compute_recurrence", readonly=False)
+    day = fields.Integer(
+        string="Date of month",
+        compute="_compute_recurrence",
+        readonly=False,
+    )
     weekday = fields.Selection(
-        WEEKDAY_SELECTION, compute="_compute_recurrence", readonly=False
+        selection=WEEKDAY_SELECTION,
+        compute="_compute_recurrence",
+        readonly=False,
     )
     byday = fields.Selection(
-        BYDAY_SELECTION, string="By day", compute="_compute_recurrence", readonly=False
+        selection=BYDAY_SELECTION,
+        string="By day",
+        compute="_compute_recurrence",
+        readonly=False,
     )
-    repeat_until = fields.Date(compute="_compute_recurrence", readonly=False)
+    repeat_until = fields.Date(
+        compute="_compute_recurrence",
+        readonly=False,
+    )
     # UI Fields.
     display_description = fields.Boolean(compute="_compute_display_description")
     attendees_count = fields.Integer(compute="_compute_attendees_count")

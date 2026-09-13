@@ -29,13 +29,19 @@ class PaymentTransaction(models.Model):
         return self.env["res.lang"].get_installed()
 
     provider_id = fields.Many2one(
-        comodel_name="payment.provider", readonly=True, required=True
+        comodel_name="payment.provider",
+        readonly=True,
+        required=True,
     )
-    provider_code = fields.Selection(string="Provider Code", related="provider_id.code")
-    company_id = (
-        fields.Many2one(  # Indexed to speed-up ORM searches (from ir_rule or others)
-            related="provider_id.company_id", store=True, index=True
-        )
+    provider_code = fields.Selection(
+        related="provider_id.code",
+        string="Provider Code",
+    )
+    company_id = fields.Many2one(
+        # Indexed to speed-up ORM searches (from ir_rule or others)
+        related="provider_id.company_id",
+        store=True,
+        index=True,
     )
     payment_method_id = fields.Many2one(
         comodel_name="payment.method",
@@ -43,7 +49,8 @@ class PaymentTransaction(models.Model):
         required=True,
     )
     payment_method_code = fields.Char(
-        string="Payment Method Code", related="payment_method_id.code"
+        related="payment_method_id.code",
+        string="Payment Method Code",
     )
     primary_payment_method_id = fields.Many2one(
         comodel_name="payment.method",
@@ -58,20 +65,25 @@ class PaymentTransaction(models.Model):
         help="The provider reference of the transaction",
         readonly=True,
     )  # This is not the same thing as the provider reference of the token.
-    amount = fields.Monetary(currency_field="currency_id", readonly=True, required=True)
+    amount = fields.Monetary(
+        currency_field="currency_id",
+        readonly=True,
+        required=True,
+    )
     currency_id = fields.Many2one(
-        comodel_name="res.currency", readonly=True, required=True
+        comodel_name="res.currency",
+        readonly=True,
+        required=True,
     )
     token_id = fields.Many2one(
-        string="Payment Token",
         comodel_name="payment.token",
-        readonly=True,
+        string="Payment Token",
         index="btree_not_null",
+        readonly=True,
         domain='[("provider_id", "=", "provider_id")]',
         ondelete="restrict",
     )
     state = fields.Selection(
-        string="Status",
         selection=[
             ("draft", "Draft"),
             ("pending", "Pending"),
@@ -80,11 +92,12 @@ class PaymentTransaction(models.Model):
             ("cancel", "Canceled"),
             ("error", "Error"),
         ],
+        string="Status",
         default="draft",
+        index=True,
+        copy=False,
         readonly=True,
         required=True,
-        copy=False,
-        index=True,
     )
     state_message = fields.Text(
         string="Message",
@@ -92,11 +105,14 @@ class PaymentTransaction(models.Model):
         readonly=True,
     )
     last_state_change = fields.Datetime(
-        string="Last State Change Date", readonly=True, default=fields.Datetime.now
+        string="Last State Change Date",
+        default=fields.Datetime.now,
+        readonly=True,
     )
 
     # Fields used for traceability.
-    operation = fields.Selection(  # This should not be trusted if the state is draft or pending.
+    operation = fields.Selection(
+        # This should not be trusted if the state is draft or pending.
         selection=[
             ("online_redirect", "Online payment with redirection"),
             ("online_direct", "Online direct payment"),
@@ -105,8 +121,8 @@ class PaymentTransaction(models.Model):
             ("offline", "Offline payment by token"),
             ("refund", "Refund"),
         ],
-        readonly=True,
         index=True,
+        readonly=True,
     )
     is_live = fields.Boolean(
         string="Production Environment",
@@ -115,51 +131,62 @@ class PaymentTransaction(models.Model):
     )
     source_transaction_id = fields.Many2one(
         comodel_name="payment.transaction",
-        index="btree_not_null",
         help="The source transaction of the related child transactions",
+        index="btree_not_null",
         readonly=True,
     )
     child_transaction_ids = fields.One2many(
-        string="Child Transactions",
-        help="The child transactions of the transaction.",
         comodel_name="payment.transaction",
         inverse_name="source_transaction_id",
+        string="Child Transactions",
+        help="The child transactions of the transaction.",
         readonly=True,
     )
     refunds_count = fields.Integer(compute="_compute_refunds_count")
 
     # Fields used for user redirection & payment post-processing
     is_post_processed = fields.Boolean(
-        string="Is Post-processed", help="Has the payment been post-processed"
+        string="Is Post-processed",
+        help="Has the payment been post-processed",
     )
     tokenize = fields.Boolean(
         string="Create Token",
         help="Whether a payment token should be created when post-processing the transaction",
     )
     landing_route = fields.Char(
-        help="The route the user is redirected to after the transaction",
+        help="The route the user is redirected to after the transaction"
     )
 
     # Duplicated partner values allowing to keep a record of them, should they be later updated.
     partner_id = fields.Many2one(
-        string="Customer",
         comodel_name="res.partner",
+        string="Customer",
         readonly=True,
         required=True,
         ondelete="restrict",
     )
     partner_name = fields.Char()
     partner_lang = fields.Selection(
-        string="Language", selection=_selection_installed_langs
+        selection=_selection_installed_langs,
+        string="Language",
     )
     partner_email = fields.Char(string="Email")
     partner_address = fields.Char(string="Address")
     partner_zip = fields.Char(string="Zip")
     partner_city = fields.Char(string="City")
-    partner_state_id = fields.Many2one(string="State", comodel_name="res.country.state")
-    partner_country_id = fields.Many2one(string="Country", comodel_name="res.country")
+    partner_state_id = fields.Many2one(
+        comodel_name="res.country.state",
+        string="State",
+    )
+    partner_country_id = fields.Many2one(
+        comodel_name="res.country",
+        string="Country",
+    )
     partner_phone = fields.Char(
-        string="Phone", compute="_compute_partner_phone", store=True, readonly=False
+        string="Phone",
+        compute="_compute_partner_phone",
+        store=True,
+        readonly=False,
     )
 
     _reference_uniq = models.Constraint(

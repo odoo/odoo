@@ -105,18 +105,18 @@ class L10nEsEdiVerifactuDocument(models.Model):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        required=True,
         readonly=True,
+        required=True,
     )
     move_id = fields.Many2one(
-        string="Journal Entry",
         comodel_name="account.move",
+        string="Journal Entry",
         readonly=True,
     )
     chain_index = fields.Integer(
+        help="Index in the chain of Veri*Factu Documents. It is only set if the generation was succesful.",
         copy=False,
         readonly=True,
-        help="Index in the chain of Veri*Factu Documents. It is only set if the generation was succesful.",
     )
     document_type = fields.Selection(
         selection=[
@@ -128,15 +128,15 @@ class L10nEsEdiVerifactuDocument(models.Model):
     )
     # Note: Noone has write access of any kind to the model 'verifactu.document' (see ir.model.access.csv)
     json_attachment_id = fields.Many2one(
-        string="JSON Attachment",
         comodel_name="ir.attachment",
-        readonly=True,
+        string="JSON Attachment",
         copy=False,
+        readonly=True,
     )
     # To use the binary widget in the form view to download the attachment
     json_attachment_base64 = fields.Binary(
-        string="JSON",
         related="json_attachment_id.datas",
+        string="JSON",
     )
     json_attachment_filename = fields.Char(
         string="JSON Filename",
@@ -148,22 +148,22 @@ class L10nEsEdiVerifactuDocument(models.Model):
     )
     response_csv = fields.Char(
         string="Response CSV",
+        help="The CSV of the response from the tax agency. There may not be one in case all documents of the batch were rejected.",
         copy=False,
         readonly=True,
-        help="The CSV of the response from the tax agency. There may not be one in case all documents of the batch were rejected.",
     )
     state = fields.Selection(
-        string="Status",
         selection=[
             ("rejected", "Rejected"),
             ("registered_with_errors", "Registered with Errors"),
             ("accepted", "Accepted"),
         ],
-        copy=False,
-        readonly=True,
+        string="Status",
         help="""- Rejected: Successfully sent to the AEAT, but it was rejected during validation
                 - Registered with Errors: Registered at the AEAT, but the AEAT has some issues with the sent record
                 - Accepted: Registered by the AEAT without errors""",
+        copy=False,
+        readonly=True,
     )
 
     @api.depends("document_type")

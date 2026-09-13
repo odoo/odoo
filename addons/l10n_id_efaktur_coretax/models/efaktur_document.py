@@ -10,22 +10,26 @@ class EfakturDocument(models.Model):
     _description = "E-Faktur Document"
     _inherit = ["mixin.mail.thread.main.attachment", "mixin.mail.activity"]
 
-    name = fields.Char(compute="_compute_name", store=True)
+    name = fields.Char(
+        compute="_compute_name",
+        store=True,
+    )
     company_id = fields.Many2one(
-        "res.company",
-        required=True,
-        readonly=True,
+        comodel_name="res.company",
         default=lambda self: self.env.company,
+        readonly=True,
+        required=True,
     )
-    active = fields.Boolean(
-        default=True,
-    )
+    active = fields.Boolean(default=True)
     invoice_ids = fields.One2many(
         comodel_name="account.move",
         inverse_name="l10n_id_coretax_document",
         domain="[('move_type', 'in', ['out_invoice', 'out_refund']), ('company_id', '=', company_id), ('l10n_id_coretax_document', '=', False), ('state', '=', 'posted')]",
     )
-    attachment_id = fields.Many2one(comodel_name="ir.attachment", readonly=True)
+    attachment_id = fields.Many2one(
+        comodel_name="ir.attachment",
+        readonly=True,
+    )
 
     @api.depends("invoice_ids")
     def _compute_name(self):

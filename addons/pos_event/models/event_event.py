@@ -5,7 +5,11 @@ class EventEvent(models.Model):
     _name = "event.event"
     _inherit = ["event.event", "mixin.pos.load"]
 
-    image_1024 = fields.Image("PoS Image", max_width=1024, max_height=1024)
+    image_1024 = fields.Image(
+        string="PoS Image",
+        max_width=1024,
+        max_height=1024,
+    )
 
     @api.model
     def _load_pos_data_domain(self, data, config):

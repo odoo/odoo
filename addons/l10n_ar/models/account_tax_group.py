@@ -7,7 +7,7 @@ class AccountTaxGroup(models.Model):
 
     # values from http://www.afip.gob.ar/fe/documentos/otros_Tributos.xlsx
     l10n_ar_tribute_afip_code = fields.Selection(
-        [
+        selection=[
             ("01", "01 - National Taxes"),
             ("02", "02 - Provincial Taxes"),
             ("03", "03 - Municipal Taxes"),
@@ -24,7 +24,7 @@ class AccountTaxGroup(models.Model):
     )
     # values from http://www.afip.gob.ar/fe/documentos/OperacionCondicionIVA.xls
     l10n_ar_vat_afip_code = fields.Selection(
-        [
+        selection=[
             ("0", "Not Applicable"),
             ("1", "Untaxed"),
             ("2", "Exempt"),

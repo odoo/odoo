@@ -9,10 +9,18 @@ class PaymentToken(models.Model):
     _check_company_auto = True
     _rec_names_search = ["payment_details", "partner_id", "provider_id"]
 
-    provider_id = fields.Many2one(comodel_name="payment.provider", required=True)
-    provider_code = fields.Selection(string="Provider Code", related="provider_id.code")
+    provider_id = fields.Many2one(
+        comodel_name="payment.provider",
+        required=True,
+    )
+    provider_code = fields.Selection(
+        related="provider_id.code",
+        string="Provider Code",
+    )
     company_id = fields.Many2one(
-        related="provider_id.company_id", store=True, index=True
+        related="provider_id.company_id",
+        store=True,
+        index=True,
     )  # Indexed to speed-up ORM searches (from ir_rule or others).
     payment_method_id = fields.Many2one(
         comodel_name="payment.method",
@@ -20,21 +28,26 @@ class PaymentToken(models.Model):
         required=True,
     )
     payment_method_code = fields.Char(
-        string="Payment Method Code", related="payment_method_id.code"
+        related="payment_method_id.code",
+        string="Payment Method Code",
     )
     payment_details = fields.Char(
-        help="The clear part of the payment method's payment details.",
+        help="The clear part of the payment method's payment details."
     )
-    partner_id = fields.Many2one(comodel_name="res.partner", required=True, index=True)
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        index=True,
+        required=True,
+    )
     provider_ref = fields.Char(
         string="Provider Reference",
         help="The provider reference of the token of the transaction.",
         required=True,
     )  # This is not the same thing as the provider reference of the transaction.
     transaction_ids = fields.One2many(
-        string="Payment Transactions",
         comodel_name="payment.transaction",
         inverse_name="token_id",
+        string="Payment Transactions",
     )
     active = fields.Boolean(default=True)
 

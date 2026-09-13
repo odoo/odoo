@@ -8,13 +8,13 @@ class DocumentsDocument(models.Model):
     _inherit = "document.document"
 
     product_template_id = fields.Many2one(
-        "product.template",
+        comodel_name="product.template",
         string="Product",
         compute="_compute_product",
         search="_search_product_template_id",
     )
     product_id = fields.Many2one(
-        "product.product",
+        comodel_name="product.product",
         string="Product Variant",
         compute="_compute_product",
         search="_search_product_id",

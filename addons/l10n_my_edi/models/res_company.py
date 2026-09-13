@@ -13,16 +13,19 @@ class ResCompany(models.Model):
         compute="_compute_l10n_my_edi_proxy_user_id",
     )
     l10n_my_identification_type = fields.Selection(
-        related="partner_id.l10n_my_identification_type", readonly=False
+        related="partner_id.l10n_my_identification_type",
+        readonly=False,
     )
     l10n_my_identification_number = fields.Char(
-        related="partner_id.l10n_my_identification_number", readonly=False
+        related="partner_id.l10n_my_identification_number",
+        readonly=False,
     )
     l10n_my_identification_number_placeholder = fields.Char(
         compute="_compute_l10n_my_identification_number_placeholder"
     )
     l10n_my_edi_industrial_classification = fields.Many2one(
-        related="partner_id.l10n_my_edi_industrial_classification", readonly=False
+        related="partner_id.l10n_my_edi_industrial_classification",
+        readonly=False,
     )
     l10n_my_edi_mode = fields.Selection(
         selection=[
@@ -35,9 +38,9 @@ class ResCompany(models.Model):
     # /!\ this was a planned feature that got scrapped due to API limitations. It may come back if their system provides better support for it.
     l10n_my_edi_default_import_journal_id = fields.Many2one(
         comodel_name="account.journal",
-        domain="[('type', '=', 'purchase')]",
         string="Default import journal",
         help="The journal on which invoices imported from MyInvois will be booked. Leave empty to use the default purchase journal.",
+        domain="[('type', '=', 'purchase')]",
     )
 
     # --------------------------------

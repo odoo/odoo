@@ -22,20 +22,20 @@ class PaymentProvider(models.Model):
     authorize_login = fields.Char(
         string="API Login ID",
         help="The ID solely used to identify the account with Authorize.Net",
-        required_if_provider="authorize",
         copy=False,
+        required_if_provider="authorize",
     )
     authorize_transaction_key = fields.Char(
         string="API Transaction Key",
-        required_if_provider="authorize",
         copy=False,
         groups="base.group_system",
+        required_if_provider="authorize",
     )
     authorize_signature_key = fields.Char(
         string="API Signature Key",
-        required_if_provider="authorize",
         copy=False,
         groups="base.group_system",
+        required_if_provider="authorize",
     )
     authorize_client_key = fields.Char(
         string="API Client Key",

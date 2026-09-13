@@ -13,7 +13,7 @@ class AddIotBox(models.TransientModel):
 
     # Depending on the stage different window actions are available
     stage = fields.Selection(
-        [
+        selection=[
             ("start", "Start"),
             ("connect", "Connect"),
             ("manual", "Manual"),
@@ -22,16 +22,19 @@ class AddIotBox(models.TransientModel):
         default="start",
     )
 
-    discovered_box_ids = fields.One2many("iot.discovered.box", "add_iot_box_wizard_id")
-    iot_box_to_connect = fields.Many2one("iot.discovered.box")
+    discovered_box_ids = fields.One2many(
+        comodel_name="iot.discovered.box",
+        inverse_name="add_iot_box_wizard_id",
+    )
+    iot_box_to_connect = fields.Many2one(comodel_name="iot.discovered.box")
     serial_number = fields.Char()
     pairing_code = fields.Char()
 
     offline_pairing_token = fields.Char(
-        "Token",
+        string="Token",
         default=lambda self: self._default_offline_pairing_token(),
-        readonly=True,
         store=False,
+        readonly=True,
     )
 
     # ------------------------- IOT-PROXY CALLING METHODS -------------------------

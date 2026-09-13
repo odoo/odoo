@@ -62,21 +62,21 @@ class Website(models.Model):
         domain=[("share", "=", False)],
     )
     salesteam_id = fields.Many2one(
-        string="Sales Team",
         comodel_name="crm.team",
+        string="Sales Team",
+        default=_default_salesteam_id,
         index="btree_not_null",
         ondelete="set null",
-        default=_default_salesteam_id,
     )
     show_line_subtotals_tax_selection = fields.Selection(
-        string="Line Subtotals Tax Display",
         selection=[
             ("tax_excluded", "Tax Excluded"),
             ("tax_included", "Tax Included"),
         ],
+        string="Line Subtotals Tax Display",
         compute="_compute_show_line_subtotals_tax_selection",
-        readonly=False,
         store=True,
+        readonly=False,
     )
 
     add_to_cart_action = fields.Selection(
@@ -88,28 +88,31 @@ class Website(models.Model):
     )
     auth_signup_uninvited = fields.Selection(default="b2c")
     account_on_checkout = fields.Selection(
-        string="Customer Accounts",
         selection=[
             ("optional", "Optional"),
             ("disabled", "Disabled (buy as guest)"),
             ("mandatory", "Mandatory (no guest checkout)"),
         ],
+        string="Customer Accounts",
         default="optional",
     )
     cart_recovery_mail_template_id = fields.Many2one(
-        string="Cart Recovery Email",
         comodel_name="mail.template",
-        domain=[("model", "=", "sale.order")],
+        string="Cart Recovery Email",
         default=_default_cart_recovery_mail_template_id,
+        domain=[("model", "=", "sale.order")],
     )
     contact_us_button_url = fields.Char(
         string="Contact Us Button URL",
         translate=True,
         default="/contactus",
     )
-    cart_abandoned_delay = fields.Float(string="Abandoned Delay", default=10.0)
+    cart_abandoned_delay = fields.Float(
+        string="Abandoned Delay",
+        default=10.0,
+    )
     send_abandoned_cart_email = fields.Boolean(
-        string="Send email to customers who abandoned their cart.",
+        string="Send email to customers who abandoned their cart."
     )
     send_abandoned_cart_email_activation_time = fields.Datetime(
         string="Time when the 'Send abandoned cart email' feature was activated.",
@@ -140,28 +143,26 @@ class Website(models.Model):
 
     shop_opt_products_design_classes = fields.Char(
         string="Shop Design Class",
-        default=(
-            "o_wsale_products_opt_layout_catalog o_wsale_products_opt_design_thumbs "
-            "o_wsale_products_opt_name_color_regular o_wsale_products_opt_rounded_2 "
-            "o_wsale_products_opt_thumb_cover o_wsale_products_opt_img_secondary_show "
-            "o_wsale_products_opt_img_hover_zoom_out_light o_wsale_products_opt_has_cta "
-            "o_wsale_products_opt_actions_onhover o_wsale_products_opt_has_wishlist "
-            "o_wsale_products_opt_wishlist_fixed o_wsale_products_opt_has_description "
-            "o_wsale_products_opt_actions_subtle o_wsale_products_opt_cc1"
-        ),
         help="CSS class for shop products design",
+        default="o_wsale_products_opt_layout_catalog o_wsale_products_opt_design_thumbs "
+        "o_wsale_products_opt_name_color_regular o_wsale_products_opt_rounded_2 "
+        "o_wsale_products_opt_thumb_cover o_wsale_products_opt_img_secondary_show "
+        "o_wsale_products_opt_img_hover_zoom_out_light o_wsale_products_opt_has_cta "
+        "o_wsale_products_opt_actions_onhover o_wsale_products_opt_has_wishlist "
+        "o_wsale_products_opt_wishlist_fixed o_wsale_products_opt_has_description "
+        "o_wsale_products_opt_actions_subtle o_wsale_products_opt_cc1",
     )
 
     shop_default_sort = fields.Selection(
         selection="_selection_product_sorts",
-        required=True,
         default="website_sequence asc",
+        required=True,
     )
 
     shop_extra_field_ids = fields.One2many(
-        string="E-Commerce Extra Fields",
         comodel_name="website.sale.extra.field",
         inverse_name="website_id",
+        string="E-Commerce Extra Fields",
     )
 
     product_page_container = fields.Selection(
@@ -187,8 +188,8 @@ class Website(models.Model):
             ("carousel", "Carousel"),
             ("grid", "Grid"),
         ],
-        required=True,
         default="carousel",
+        required=True,
     )
     product_page_image_width = fields.Selection(
         selection=[
@@ -198,8 +199,8 @@ class Website(models.Model):
             ("66_pc", "66 %"),
             ("100_pc", "100 %"),
         ],
-        required=True,
         default="50_pc",
+        required=True,
     )
     product_page_image_spacing = fields.Selection(
         selection=[
@@ -208,8 +209,8 @@ class Website(models.Model):
             ("medium", "Medium"),
             ("big", "Big"),
         ],
-        required=True,
         default="none",
+        required=True,
     )
     product_page_image_roundness = fields.Selection(
         selection=[
@@ -218,8 +219,8 @@ class Website(models.Model):
             ("medium", "Medium"),
             ("big", "Big"),
         ],
-        required=True,
         default="none",
+        required=True,
     )
     product_page_image_ratio = fields.Selection(
         selection=[
@@ -232,8 +233,8 @@ class Website(models.Model):
             ("4_5", "Portrait (4/5)"),
             ("2_3", "Vertical (2/3)"),
         ],
-        required=True,
         default="1_1",
+        required=True,
     )
     product_page_image_ratio_mobile = fields.Selection(
         selection=[
@@ -246,16 +247,16 @@ class Website(models.Model):
             ("4_5", "Portrait (4/5)"),
             ("2_3", "Vertical (2/3)"),
         ],
-        required=True,
         default="auto",
+        required=True,
     )
     ecommerce_access = fields.Selection(
         selection=[
             ("everyone", "All users"),
             ("logged_in", "Logged in users"),
         ],
-        required=True,
         default="everyone",
+        required=True,
     )
     product_page_grid_columns = fields.Integer(default=2)
 
@@ -269,19 +270,19 @@ class Website(models.Model):
     )
 
     currency_id = fields.Many2one(
-        string="Default Currency",
         comodel_name="res.currency",
+        string="Default Currency",
         compute="_compute_currency_id",
     )
     pricelist_ids = fields.One2many(
-        string="Price list available for this Ecommerce/Website",
         comodel_name="product.pricelist",
+        string="Price list available for this Ecommerce/Website",
         compute="_compute_pricelist_ids",
     )
     confirmation_email_template_id = fields.Many2one(
         comodel_name="mail.template",
-        domain=[("model", "=", "sale.order")],
         default=_default_confirmation_email_template_id,
+        domain=[("model", "=", "sale.order")],
     )
 
     def _compute_pricelist_ids(self):

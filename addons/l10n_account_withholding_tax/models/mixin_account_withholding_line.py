@@ -29,9 +29,9 @@ class MixinAccountWithholdingLine(models.AbstractModel):
             ("not_defined", "Not defined"),
         ],
         compute="_compute_placeholder_type",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
         required=True,
     )
     previous_placeholder_type = fields.Selection(
@@ -41,16 +41,16 @@ class MixinAccountWithholdingLine(models.AbstractModel):
             ("not_defined", "Not defined"),
         ],
         compute="_compute_placeholder_type",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
     )
     type_tax_use = fields.Char(compute="_compute_type_tax_use")
     tax_id = fields.Many2one(
         comodel_name="account.tax",
-        check_company=True,
         required=True,
         domain="[('type_tax_use', '=', type_tax_use), ('is_withholding_tax_on_payment', '=', True)]",
+        check_company=True,
     )
     withholding_sequence_id = fields.Many2one(related="tax_id.withholding_sequence_id")
     source_base_amount_currency = fields.Monetary(currency_field="source_currency_id")
@@ -68,18 +68,18 @@ class MixinAccountWithholdingLine(models.AbstractModel):
         compute="_compute_original_amounts",
     )
     base_amount = fields.Monetary(
-        currency_field="comodel_currency_id",
         string="Withholding base",
+        currency_field="comodel_currency_id",
         compute="_compute_base_amount",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     amount = fields.Monetary(
-        currency_field="comodel_currency_id",
         string="Withholding amount",
+        currency_field="comodel_currency_id",
         compute="_compute_amount",
-        readonly=False,
         store=True,
+        readonly=False,
     )
 
     # Fields related to the comodel, computed in child models.
@@ -87,16 +87,14 @@ class MixinAccountWithholdingLine(models.AbstractModel):
         comodel_name="account.account",
         compute="_compute_account_id",
         precompute=True,
-        required=True,
-        readonly=False,
         store=True,
+        readonly=False,
+        required=True,
     )
     comodel_percentage_paid_factor = fields.Float(
-        compute="_compute_comodel_percentage_paid_factor",
+        compute="_compute_comodel_percentage_paid_factor"
     )
-    comodel_date = fields.Date(
-        compute="_compute_comodel_date",
-    )
+    comodel_date = fields.Date(compute="_compute_comodel_date")
     comodel_payment_type = fields.Selection(
         selection=[
             ("outbound", "Send Money"),
@@ -108,12 +106,10 @@ class MixinAccountWithholdingLine(models.AbstractModel):
         comodel_name="res.company",
         compute="_compute_company_id",
         precompute=True,
-        required=True,
         store=True,
+        required=True,
     )
-    comodel_company_currency_id = fields.Many2one(
-        related="company_id.currency_id",
-    )
+    comodel_company_currency_id = fields.Many2one(related="company_id.currency_id")
     comodel_currency_id = fields.Many2one(
         comodel_name="res.currency",
         compute="_compute_comodel_currency_id",

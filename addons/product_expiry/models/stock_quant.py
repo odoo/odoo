@@ -40,9 +40,7 @@ class StockQuant(models.Model):
         related="lot_id.removal_date",
         store=True,
     )
-    use_expiration_date = fields.Boolean(
-        related="product_id.use_expiration_date",
-    )
+    use_expiration_date = fields.Boolean(related="product_id.use_expiration_date")
     available_quantity = fields.Float(
         help="On hand quantity which hasn't been reserved on a transfer and is still fresh, in the default unit of measure of the product"
     )

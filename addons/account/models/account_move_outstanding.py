@@ -251,10 +251,13 @@ class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
     move_attachment_ids = fields.One2many(
-        "ir.attachment", compute="_compute_move_attachment_ids", exportable=False
+        comodel_name="ir.attachment",
+        compute="_compute_move_attachment_ids",
+        exportable=False,
     )
     full_amount_switch_html = fields.Html(
-        compute="_compute_full_amount_switch_html", exportable=False
+        compute="_compute_full_amount_switch_html",
+        exportable=False,
     )
 
     def _get_statement_line_residual_in(self, currency, company):

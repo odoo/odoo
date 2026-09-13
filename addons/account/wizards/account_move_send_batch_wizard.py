@@ -12,7 +12,10 @@ class AccountMoveSendBatchWizard(models.TransientModel):
     _inherit = ["mixin.account.move.send"]
     _description = "Account Move Send Batch Wizard"
 
-    move_ids = fields.Many2many(comodel_name="account.move", required=True)
+    move_ids = fields.Many2many(
+        comodel_name="account.move",
+        required=True,
+    )
     summary_data = fields.Json(compute="_compute_summary_data")
     alerts = fields.Json(compute="_compute_alerts")
 

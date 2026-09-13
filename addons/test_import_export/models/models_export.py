@@ -9,19 +9,29 @@ class ExportAggregator(models.Model):
     int_max = fields.Integer(aggregator="max")
     float_min = fields.Float(aggregator="min")
     float_avg = fields.Float(aggregator="avg")
-    float_monetary = fields.Monetary(currency_field="currency_id", aggregator="sum")
-    currency_id = fields.Many2one("res.currency")
+    float_monetary = fields.Monetary(
+        currency_field="currency_id",
+        aggregator="sum",
+    )
+    currency_id = fields.Many2one(comodel_name="res.currency")
     date_max = fields.Date(aggregator="max")
     bool_and = fields.Boolean(aggregator="bool_and")
     bool_or = fields.Boolean(aggregator="bool_or")
-    many2one = fields.Many2one("export.integer")
-    one2many = fields.One2many("export.aggregator.one2many", "parent_id")
+    many2one = fields.Many2one(comodel_name="export.integer")
+    one2many = fields.One2many(
+        comodel_name="export.aggregator.one2many",
+        inverse_name="parent_id",
+    )
     many2many = fields.Many2many(comodel_name="res.partner")
     active = fields.Boolean(default=True)
-    parent_id = fields.Many2one("export.aggregator", string="Parent")
-    definition_properties = fields.PropertiesDefinition("Definitions")
+    parent_id = fields.Many2one(
+        comodel_name="export.aggregator",
+        string="Parent",
+    )
+    definition_properties = fields.PropertiesDefinition(string="Definitions")
     properties = fields.Properties(
-        "Properties", definition="parent_id.definition_properties"
+        definition="parent_id.definition_properties",
+        string="Properties",
     )
 
 
@@ -30,12 +40,13 @@ class ExportAggregatorOne2many(models.Model):
     _description = "Export Aggregator One2Many"
 
     name = fields.Char()
-    parent_id = fields.Many2one("export.aggregator")
+    parent_id = fields.Many2one(comodel_name="export.aggregator")
     value = fields.Integer()
     active = fields.Boolean(default=True)
-    admin_property_def = fields.Many2one("export.aggregator.admin")
+    admin_property_def = fields.Many2one(comodel_name="export.aggregator.admin")
     admin_property = fields.Properties(
-        "Properties", definition="admin_property_def.definition_properties"
+        definition="admin_property_def.definition_properties",
+        string="Properties",
     )
 
 
@@ -43,4 +54,4 @@ class ExportAggregatorAdminOnly(models.Model):
     _name = "export.aggregator.admin"
     _description = "Export Aggregator only for admin"
 
-    definition_properties = fields.PropertiesDefinition("Definitions")
+    definition_properties = fields.PropertiesDefinition(string="Definitions")

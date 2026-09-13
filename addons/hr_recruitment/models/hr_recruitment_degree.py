@@ -7,8 +7,15 @@ class HrRecruitmentDegree(models.Model):
     _name = "hr.recruitment.degree"
     _description = "Applicant Degree"
 
-    name = fields.Char("Degree Name", required=True, translate=True)
-    score = fields.Float(required=True, default=0)
+    name = fields.Char(
+        string="Degree Name",
+        translate=True,
+        required=True,
+    )
+    score = fields.Float(
+        default=0,
+        required=True,
+    )
     sequence = fields.Integer(default=1)
 
     _name_src_uniq = name_uniq_index(

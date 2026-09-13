@@ -14,34 +14,48 @@ class AccountMoveReversal(models.TransientModel):
     _check_company_auto = True
 
     move_ids = fields.Many2many(
-        "account.move",
-        "account_move_reversal_move",
-        "reversal_id",
-        "move_id",
+        comodel_name="account.move",
+        relation="account_move_reversal_move",
+        column1="reversal_id",
+        column2="move_id",
         domain=[("state", "=", "posted")],
     )
     new_move_ids = fields.Many2many(
-        "account.move", "account_move_reversal_new_move", "reversal_id", "new_move_id"
+        comodel_name="account.move",
+        relation="account_move_reversal_new_move",
+        column1="reversal_id",
+        column2="new_move_id",
     )
-    date = fields.Date(string="Reversal date", default=fields.Date.context_today)
+    date = fields.Date(
+        string="Reversal date",
+        default=fields.Date.context_today,
+    )
     reason = fields.Char(string="Reason displayed on Credit Note")
     journal_id = fields.Many2one(
         comodel_name="account.journal",
-        required=True,
-        compute="_compute_journal_id",
-        readonly=False,
-        store=True,
-        check_company=True,
         help="If empty, uses the journal of the journal entry to be reversed.",
+        compute="_compute_journal_id",
+        store=True,
+        readonly=False,
+        required=True,
+        check_company=True,
     )
-    company_id = fields.Many2one("res.company", required=True, readonly=True)
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        readonly=True,
+        required=True,
+    )
     available_journal_ids = fields.Many2many(
-        "account.journal", compute="_compute_available_journal_ids"
+        comodel_name="account.journal",
+        compute="_compute_available_journal_ids",
     )
     country_code = fields.Char(related="company_id.country_id.code")
 
     residual = fields.Monetary(compute="_compute_from_moves")
-    currency_id = fields.Many2one("res.currency", compute="_compute_from_moves")
+    currency_id = fields.Many2one(
+        comodel_name="res.currency",
+        compute="_compute_from_moves",
+    )
     move_type = fields.Char(compute="_compute_from_moves")
 
     @api.depends("move_ids")

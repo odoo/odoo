@@ -10,13 +10,19 @@ class MixinPortal(models.AbstractModel):
     _description = "Portal Mixin"
 
     access_url = fields.Char(
-        "Portal Access URL",
-        compute="_compute_access_url",
+        string="Portal Access URL",
         help="Portal URL for this record (overridden by concrete models).",
+        compute="_compute_access_url",
     )
-    access_token = fields.Char("Security Token", copy=False)
+    access_token = fields.Char(
+        string="Security Token",
+        copy=False,
+    )
 
-    access_warning = fields.Text("Access warning", compute="_compute_access_warning")
+    access_warning = fields.Text(
+        string="Access warning",
+        compute="_compute_access_warning",
+    )
 
     def _compute_access_warning(self):
         for record in self:

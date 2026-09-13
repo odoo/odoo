@@ -9,5 +9,6 @@ class ResCompany(models.Model):
         help="Enable if your company is registered for GST.",
     )
     l10n_au_trading_name = fields.Char(
-        string="Trading Name", help="The trading name of the company."
+        string="Trading Name",
+        help="The trading name of the company.",
     )

@@ -5,7 +5,9 @@ class ResourceAsset(models.Model):
     _inherit = "resource.asset"
 
     workcenter_id = fields.Many2one(
-        "mrp.workcenter", compute="_compute_workcenter_id", string="Work Center"
+        comodel_name="mrp.workcenter",
+        string="Work Center",
+        compute="_compute_workcenter_id",
     )
 
     def _compute_workcenter_id(self):

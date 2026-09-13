@@ -28,13 +28,15 @@ class SalePdfFormField(models.Model):
     )
     path = fields.Char(
         help="The path to follow to dynamically fill the form field. \n"
-        "Leave empty to be able to customized it in the quotation form.",
+        "Leave empty to be able to customized it in the quotation form."
     )
     product_document_ids = fields.Many2many(
-        string="Product Documents", comodel_name="document.document"
+        comodel_name="document.document",
+        string="Product Documents",
     )
     quotation_document_ids = fields.Many2many(
-        string="Quotation Documents", comodel_name="quotation.document"
+        comodel_name="quotation.document",
+        string="Quotation Documents",
     )
 
     _unique_name_per_doc_type = models.Constraint(

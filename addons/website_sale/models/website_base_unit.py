@@ -8,6 +8,6 @@ class WebsiteBaseUnit(models.Model):
 
     name = fields.Char(
         help="Define a custom unit to display in the price per unit of measure field.",
-        required=True,
         translate=True,
+        required=True,
     )

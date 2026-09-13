@@ -7,7 +7,7 @@ from odoo.tools.misc import clean_context
 class SurveyInvite(models.TransientModel):
     _inherit = "survey.invite"
 
-    applicant_id = fields.Many2one("hr.applicant")
+    applicant_id = fields.Many2one(comodel_name="hr.applicant")
 
     def _get_done_partners_emails(self, existing_answers):
         partners_done, emails_done, answers = super()._get_done_partners_emails(

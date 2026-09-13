@@ -5,16 +5,21 @@ class SurveySurvey(models.Model):
     _inherit = "survey.survey"
 
     generate_lead = fields.Boolean(
-        "Lead Generating", compute="_compute_generate_lead", store="True"
+        string="Lead Generating",
+        compute="_compute_generate_lead",
+        store="True",
     )
     lead_count = fields.Integer(
-        "Leads",
+        string="Leads",
         help="Number of leads created by this survey",
         compute="_compute_lead_count",
     )
-    lead_ids = fields.One2many("crm.lead", "origin_survey_id")
+    lead_ids = fields.One2many(
+        comodel_name="crm.lead",
+        inverse_name="origin_survey_id",
+    )
     team_id = fields.Many2one(
-        "crm.team",
+        comodel_name="crm.team",
         string="Assign Leads to",
         index="btree_not_null",
         ondelete="set null",

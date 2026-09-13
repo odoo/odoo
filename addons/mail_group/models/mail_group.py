@@ -42,38 +42,55 @@ class MailGroup(models.Model):
         return res
 
     active = fields.Boolean(default=True)
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
     description = fields.Text()
-    image_128 = fields.Image("Image", max_width=128, max_height=128)
+    image_128 = fields.Image(
+        string="Image",
+        max_width=128,
+        max_height=128,
+    )
     is_closed = fields.Boolean(
         help="Closed groups might still be accessed, but emails sent to it will bounce",
         copy=False,
     )
     mail_group_message_ids = fields.One2many(
-        "mail.group.message", "mail_group_id", string="Pending Messages"
+        comodel_name="mail.group.message",
+        inverse_name="mail_group_id",
+        string="Pending Messages",
     )
     mail_group_message_last_month_count = fields.Integer(
-        "Messages Per Month", compute="_compute_mail_group_message_last_month_count"
+        string="Messages Per Month",
+        compute="_compute_mail_group_message_last_month_count",
     )
     mail_group_message_count = fields.Integer(
-        "Messages Count",
+        string="Messages Count",
         help="Number of message in this group",
         compute="_compute_mail_group_message_count",
     )
     mail_group_message_moderation_count = fields.Integer(
-        "Pending Messages Count",
+        string="Pending Messages Count",
         help="Messages that need an action",
         compute="_compute_mail_group_message_moderation_count",
     )
     is_member = fields.Boolean(compute="_compute_is_member")
-    member_ids = fields.One2many("mail.group.member", "mail_group_id", string="Members")
+    member_ids = fields.One2many(
+        comodel_name="mail.group.member",
+        inverse_name="mail_group_id",
+        string="Members",
+    )
     member_partner_ids = fields.Many2many(
-        "res.partner",
+        comodel_name="res.partner",
         string="Partners Member",
         compute="_compute_member_partner_ids",
         search="_search_member_partner_ids",
     )
-    member_count = fields.Count("member_ids", "Members Count")
+    member_count = fields.Count(
+        count_of="member_ids",
+        string="Members Count",
+    )
     is_moderator = fields.Boolean(
         string="Moderator",
         help="Current user is a moderator of the group",
@@ -81,15 +98,17 @@ class MailGroup(models.Model):
     )
     moderation = fields.Boolean(string="Moderate")
     moderation_rule_count = fields.Count(
-        "moderation_rule_ids",
+        count_of="moderation_rule_ids",
         string="Moderated emails count",
     )
     moderation_rule_ids = fields.One2many(
-        "mail.group.moderation", "mail_group_id", string="Moderated Emails"
+        comodel_name="mail.group.moderation",
+        inverse_name="mail_group_id",
+        string="Moderated Emails",
     )
     moderator_ids = fields.Many2many(
-        "res.users",
-        "mail_group_moderator_rel",
+        comodel_name="res.users",
+        relation="mail_group_moderator_rel",
         string="Moderators",
         domain=lambda self: [
             ("all_group_ids", "in", self.env.ref("base.group_user").id)
@@ -106,22 +125,24 @@ class MailGroup(models.Model):
     )
     moderation_guidelines_msg = fields.Html(string="Guidelines")
     access_mode = fields.Selection(
-        [
+        selection=[
             ("public", "Everyone"),
             ("members", "Members only"),
             ("groups", "Selected group of users"),
         ],
         string="Privacy",
-        required=True,
         default="public",
+        required=True,
     )
     access_group_id = fields.Many2one(
-        "res.groups",
+        comodel_name="res.groups",
         string="Authorized Group",
         default=lambda self: self.env.ref("base.group_user"),
     )
     can_manage_group = fields.Boolean(
-        "Can Manage", help="Can manage the members", compute="_compute_can_manage_group"
+        string="Can Manage",
+        help="Can manage the members",
+        compute="_compute_can_manage_group",
     )
 
     @api.depends(

@@ -36,21 +36,23 @@ class HrDepartureWizard(models.TransientModel):
         return [("active", "=", True), ("company_id", "in", self.env.companies.ids)]
 
     departure_reason_id = fields.Many2one(
-        "hr.departure.reason",
-        required=True,
+        comodel_name="hr.departure.reason",
         default=lambda self: self.env["hr.departure.reason"].search([], limit=1),
+        required=True,
     )
     departure_description = fields.Html(string="Additional Information")
     departure_date = fields.Date(
-        string="Contract End Date", required=True, default=_default_departure_date
+        string="Contract End Date",
+        default=_default_departure_date,
+        required=True,
     )
     employee_ids = fields.Many2many(
-        "hr.employee",
+        comodel_name="hr.employee",
         string="Employees",
-        required=True,
         default=_default_employee_ids,
-        context={"active_test": False},
+        required=True,
         domain=_domain_employee_ids,
+        context={"active_test": False},
     )
 
     is_user_employee = fields.Boolean(
@@ -64,8 +66,8 @@ class HrDepartureWizard(models.TransientModel):
 
     set_date_end = fields.Boolean(
         string="Set Contract End Date",
-        default=lambda self: self.env.user.has_group("hr.group_hr_manager"),
         help="Set the end date on the current contract.",
+        default=lambda self: self.env.user.has_group("hr.group_hr_manager"),
     )
 
     @api.depends("employee_ids.user_id")

@@ -59,28 +59,34 @@ class BaseDocumentLayout(models.TransientModel):
         return address_format
 
     company_id = fields.Many2one(
-        "res.company",
-        required=True,
+        comodel_name="res.company",
         default=lambda self: self.env.company,
+        required=True,
     )
-    logo = fields.Binary(related="company_id.logo", readonly=False)
-    preview_logo = fields.Binary(related="logo", string="Preview logo")
+    logo = fields.Binary(
+        related="company_id.logo",
+        readonly=False,
+    )
+    preview_logo = fields.Binary(
+        related="logo",
+        string="Preview logo",
+    )
     report_header = fields.Html(
         related="company_id.report_header",
         readonly=False,
     )
     report_footer = fields.Html(
         related="company_id.report_footer",
-        readonly=False,
         default=_default_report_footer,
+        readonly=False,
     )
     company_details = fields.Html(
         related="company_id.company_details",
-        readonly=False,
         default=_default_company_details,
+        readonly=False,
     )
     is_company_details_empty = fields.Boolean(
-        compute="_compute_is_company_details_empty",
+        compute="_compute_is_company_details_empty"
     )
     paperformat_id = fields.Many2one(
         related="company_id.paperformat_id",
@@ -90,10 +96,22 @@ class BaseDocumentLayout(models.TransientModel):
         related="company_id.external_report_layout_id",
         readonly=False,
     )
-    font = fields.Selection(related="company_id.font", readonly=False)
-    primary_color = fields.Char(related="company_id.primary_color", readonly=False)
-    secondary_color = fields.Char(related="company_id.secondary_color", readonly=False)
-    custom_colors = fields.Boolean(compute="_compute_custom_colors", readonly=False)
+    font = fields.Selection(
+        related="company_id.font",
+        readonly=False,
+    )
+    primary_color = fields.Char(
+        related="company_id.primary_color",
+        readonly=False,
+    )
+    secondary_color = fields.Char(
+        related="company_id.secondary_color",
+        readonly=False,
+    )
+    custom_colors = fields.Boolean(
+        compute="_compute_custom_colors",
+        readonly=False,
+    )
     logo_primary_color = fields.Char(compute="_compute_logo_colors")
     logo_secondary_color = fields.Char(compute="_compute_logo_colors")
     layout_background = fields.Selection(
@@ -104,18 +122,43 @@ class BaseDocumentLayout(models.TransientModel):
         related="company_id.layout_background_image",
         readonly=False,
     )
-    report_layout_id = fields.Many2one("report.layout")
+    report_layout_id = fields.Many2one(comodel_name="report.layout")
     report_theme_id = fields.Many2one(
-        related="company_id.report_theme_id", readonly=False
+        related="company_id.report_theme_id",
+        readonly=False,
     )
-    preview = fields.Html(compute="_compute_preview", sanitize=False)
-    partner_id = fields.Many2one(related="company_id.partner_id", readonly=True)
-    phone_ids = fields.Many2many(related="company_id.phone_ids", readonly=True)
-    email = fields.Char(related="company_id.email", readonly=True)
-    website = fields.Char(related="company_id.website", readonly=True)
-    vat = fields.Char(related="company_id.vat", readonly=True)
-    name = fields.Char(related="company_id.name", readonly=True)
-    country_id = fields.Many2one(related="company_id.country_id", readonly=True)
+    preview = fields.Html(
+        sanitize=False,
+        compute="_compute_preview",
+    )
+    partner_id = fields.Many2one(
+        related="company_id.partner_id",
+        readonly=True,
+    )
+    phone_ids = fields.Many2many(
+        related="company_id.phone_ids",
+        readonly=True,
+    )
+    email = fields.Char(
+        related="company_id.email",
+        readonly=True,
+    )
+    website = fields.Char(
+        related="company_id.website",
+        readonly=True,
+    )
+    vat = fields.Char(
+        related="company_id.vat",
+        readonly=True,
+    )
+    name = fields.Char(
+        related="company_id.name",
+        readonly=True,
+    )
+    country_id = fields.Many2one(
+        related="company_id.country_id",
+        readonly=True,
+    )
 
     @api.depends(
         "logo_primary_color",

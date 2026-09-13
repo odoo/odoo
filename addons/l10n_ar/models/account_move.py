@@ -26,7 +26,7 @@ class AccountMove(models.Model):
         return {"invoice_number": int(invoice_number), "point_of_sale": int(pos)}
 
     l10n_ar_afip_responsibility_type_id = fields.Many2one(
-        "l10n_ar.afip.responsibility.type",
+        comodel_name="l10n_ar.afip.responsibility.type",
         string="ARCA Responsibility Type",
         help="Defined by ARCA to"
         " identify the type of responsibilities that a person or a legal entity could have and that impacts in the"
@@ -35,10 +35,10 @@ class AccountMove(models.Model):
 
     # Mostly used on reports
     l10n_ar_afip_concept = fields.Selection(
-        compute="_compute_l10n_ar_afip_concept",
         selection="_selection_afip_invoice_concepts",
         string="ARCA Concept",
         help="A concept is suggested regarding the type of the products on the invoice.",
+        compute="_compute_l10n_ar_afip_concept",
     )
     l10n_ar_afip_service_start = fields.Date(string="ARCA Service Start Date")
     l10n_ar_afip_service_end = fields.Date(string="ARCA Service End Date")

@@ -6,18 +6,24 @@ class CrmLead(models.Model):
     _inherit = "crm.lead"
 
     sale_amount_total = fields.Monetary(
-        compute="_compute_sale_data",
         string="Sum of Orders",
         help="Untaxed Total of Confirmed Orders",
         currency_field="company_currency",
+        compute="_compute_sale_data",
     )
     quotation_count = fields.Integer(
-        compute="_compute_sale_data", string="Number of Quotations"
+        string="Number of Quotations",
+        compute="_compute_sale_data",
     )
     sale_order_count = fields.Integer(
-        compute="_compute_sale_data", string="Number of Sale Orders"
+        string="Number of Sale Orders",
+        compute="_compute_sale_data",
     )
-    order_ids = fields.One2many("sale.order", "opportunity_id", string="Orders")
+    order_ids = fields.One2many(
+        comodel_name="sale.order",
+        inverse_name="opportunity_id",
+        string="Orders",
+    )
 
     @api.depends(
         "order_ids.state",

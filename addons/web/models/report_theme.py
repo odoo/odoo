@@ -10,7 +10,10 @@ class ReportTheme(models.Model):
     _description = "Report Theme"
     _order = "sequence, id"
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
     sequence = fields.Integer(default=50)
 
     font_body = fields.Char(
@@ -25,19 +28,19 @@ class ReportTheme(models.Model):
 
     row_padding = fields.Char(
         string="Table row padding",
-        default="0.5rem",
         help="Vertical padding of table rows (CSS length), e.g. 0.3rem for a "
         "dense ledger or 0.7rem for a roomier document.",
+        default="0.5rem",
     )
     border_radius = fields.Char(
         string="Corner radius",
-        default="0",
         help="Corner radius for totals bands and boxed elements (CSS length).",
+        default="0",
     )
     rule_weight = fields.Char(
         string="Rule weight",
-        default="1px",
         help="Thickness of the accent rule under table headers (CSS length).",
+        default="1px",
     )
 
     _STYLE_FIELDS = frozenset(

@@ -40,11 +40,14 @@ class ThemeIrAsset(models.Model):
     path = fields.Char(required=True)
     target = fields.Char()
     active = fields.Boolean(default=True)
-    sequence = fields.Integer(default=DEFAULT_SEQUENCE, required=True)
+    sequence = fields.Integer(
+        default=DEFAULT_SEQUENCE,
+        required=True,
+    )
     copy_ids = fields.One2many(
-        "ir.asset",
-        "theme_template_id",
-        "Assets using a copy of me",
+        comodel_name="ir.asset",
+        inverse_name="theme_template_id",
+        string="Assets using a copy of me",
         copy=False,
         readonly=True,
     )
@@ -80,8 +83,13 @@ class ThemeIrUiView(models.Model):
     name = fields.Char(required=True)
     key = fields.Char()
     type = fields.Char()
-    priority = fields.Integer(default=DEFAULT_SEQUENCE, required=True)
-    mode = fields.Selection([("primary", "Base view"), ("extension", "Extension View")])
+    priority = fields.Integer(
+        default=DEFAULT_SEQUENCE,
+        required=True,
+    )
+    mode = fields.Selection(
+        selection=[("primary", "Base view"), ("extension", "Extension View")]
+    )
     active = fields.Boolean(default=True)
     arch = fields.Text(translate=xml_translate)
     arch_fs = fields.Char(default=_default_arch_fs)
@@ -92,9 +100,9 @@ class ThemeIrUiView(models.Model):
         ]
     )
     copy_ids = fields.One2many(
-        "ir.ui.view",
-        "theme_template_id",
-        "Views using a copy of me",
+        comodel_name="ir.ui.view",
+        inverse_name="theme_template_id",
+        string="Views using a copy of me",
         copy=False,
         readonly=True,
     )
@@ -150,9 +158,9 @@ class ThemeIrAttachment(models.Model):
     key = fields.Char(required=True)
     url = fields.Char()
     copy_ids = fields.One2many(
-        "ir.attachment",
-        "theme_template_id",
-        "Attachment using a copy of me",
+        comodel_name="ir.attachment",
+        inverse_name="theme_template_id",
+        string="Attachment using a copy of me",
         copy=False,
         readonly=True,
     )
@@ -175,22 +183,31 @@ class ThemeWebsiteMenu(models.Model):
     _name = "theme.website.menu"
     _description = "Website Theme Menu"
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
     url = fields.Char(default="")
     page_id = fields.Many2one(
-        "theme.website.page", ondelete="cascade", index="btree_not_null"
+        comodel_name="theme.website.page",
+        index="btree_not_null",
+        ondelete="cascade",
     )
     new_window = fields.Boolean()
     sequence = fields.Integer()
-    parent_id = fields.Many2one("theme.website.menu", index=True, ondelete="cascade")
+    parent_id = fields.Many2one(
+        comodel_name="theme.website.menu",
+        index=True,
+        ondelete="cascade",
+    )
     mega_menu_content = fields.Html()
     mega_menu_classes = fields.Char()
 
     use_main_menu_as_parent = fields.Boolean(default=True)
     copy_ids = fields.One2many(
-        "website.menu",
-        "theme_template_id",
-        "Menu using a copy of me",
+        comodel_name="website.menu",
+        inverse_name="theme_template_id",
+        string="Menu using a copy of me",
         copy=False,
         readonly=True,
     )
@@ -230,16 +247,22 @@ class ThemeWebsitePage(models.Model):
 
     url = fields.Char()
     view_id = fields.Many2one(
-        "theme.ir.ui.view", required=True, index=True, ondelete="cascade"
+        comodel_name="theme.ir.ui.view",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
-    website_indexed = fields.Boolean("Page Indexed", default=True)
+    website_indexed = fields.Boolean(
+        string="Page Indexed",
+        default=True,
+    )
     is_published = fields.Boolean()
     is_new_page_template = fields.Boolean(string="New Page Template")
 
     copy_ids = fields.One2many(
-        "website.page",
-        "theme_template_id",
-        "Page using a copy of me",
+        comodel_name="website.page",
+        inverse_name="theme_template_id",
+        string="Page using a copy of me",
         copy=False,
         readonly=True,
     )
@@ -405,7 +428,9 @@ class IrUiView(models.Model):
     _inherit = "ir.ui.view"
 
     theme_template_id = fields.Many2one(
-        "theme.ir.ui.view", copy=False, index="btree_not_null"
+        comodel_name="theme.ir.ui.view",
+        index="btree_not_null",
+        copy=False,
     )
 
     def write(self, vals):
@@ -431,7 +456,9 @@ class IrAsset(models.Model):
     _inherit = "ir.asset"
 
     theme_template_id = fields.Many2one(
-        "theme.ir.asset", copy=False, index="btree_not_null"
+        comodel_name="theme.ir.asset",
+        index="btree_not_null",
+        copy=False,
     )
 
 
@@ -440,7 +467,9 @@ class IrAttachment(models.Model):
 
     key = fields.Char(copy=False)
     theme_template_id = fields.Many2one(
-        "theme.ir.attachment", copy=False, index="btree_not_null"
+        comodel_name="theme.ir.attachment",
+        index="btree_not_null",
+        copy=False,
     )
 
 
@@ -448,7 +477,9 @@ class WebsiteMenu(models.Model):
     _inherit = "website.menu"
 
     theme_template_id = fields.Many2one(
-        "theme.website.menu", copy=False, index="btree_not_null"
+        comodel_name="theme.website.menu",
+        index="btree_not_null",
+        copy=False,
     )
 
 
@@ -456,5 +487,7 @@ class WebsitePage(models.Model):
     _inherit = "website.page"
 
     theme_template_id = fields.Many2one(
-        "theme.website.page", copy=False, index="btree_not_null"
+        comodel_name="theme.website.page",
+        index="btree_not_null",
+        copy=False,
     )

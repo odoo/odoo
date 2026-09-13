@@ -6,9 +6,9 @@ class AccountJournal(models.Model):
 
     l10n_tr_default_sales_return_account_id = fields.Many2one(
         comodel_name="account.account",
-        readonly=False,
-        store=True,
         compute="_compute_l10n_tr_default_sales_return_account_id",
+        store=True,
+        readonly=False,
         check_company=True,
     )
 

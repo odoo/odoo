@@ -10,13 +10,21 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     allow_out_of_stock_order = fields.Boolean(
-        string="Sell when Out-of-Stock", default=True
+        string="Sell when Out-of-Stock",
+        default=True,
     )
 
-    available_threshold = fields.Float(string="Show Threshold", default=5.0)
-    show_availability = fields.Boolean(string="Show availability Qty", default=False)
+    available_threshold = fields.Float(
+        string="Show Threshold",
+        default=5.0,
+    )
+    show_availability = fields.Boolean(
+        string="Show availability Qty",
+        default=False,
+    )
     out_of_stock_message = fields.Html(
-        string="Out-of-Stock Message", translate=html_translate
+        string="Out-of-Stock Message",
+        translate=html_translate,
     )
 
     def _is_sold_out(self):

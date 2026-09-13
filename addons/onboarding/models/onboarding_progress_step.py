@@ -9,22 +9,26 @@ class OnboardingProgressStep(models.Model):
     _rec_name = "step_id"
 
     progress_ids = fields.Many2many(
-        "onboarding.progress", string="Related Onboarding Progress Tracker"
+        comodel_name="onboarding.progress",
+        string="Related Onboarding Progress Tracker",
     )
     step_state = fields.Selection(
-        ONBOARDING_PROGRESS_STATES,
+        selection=ONBOARDING_PROGRESS_STATES,
         string="Onboarding Step Progress",
         default="not_done",
     )
     step_id = fields.Many2one(
-        "onboarding.onboarding.step",
+        comodel_name="onboarding.onboarding.step",
         string="Onboarding Step",
-        required=True,
         index=True,
+        required=True,
         ondelete="cascade",
     )
 
-    company_id = fields.Many2one("res.company", ondelete="cascade")
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        ondelete="cascade",
+    )
 
     _company_uniq = models.UniqueIndex("(step_id, COALESCE(company_id, 0))")
 

@@ -7,7 +7,7 @@ class StockInventoryAdjustmentName(models.TransientModel):
     accounting_date = fields.Date(
         help="Date at which the accounting entries will be created"
         " in case of automated inventory valuation."
-        " If empty, the inventory date will be used.",
+        " If empty, the inventory date will be used."
     )
     should_show_accounting_date = fields.Boolean(
         compute="_compute_should_show_accounting_date"

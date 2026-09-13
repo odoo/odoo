@@ -14,9 +14,12 @@ class ResUsersIdentitycheck(models.TransientModel):
     _name = "res.users.identitycheck"
     _description = "Password Check Wizard"
 
-    request = fields.Char(readonly=True, groups=fields.NO_ACCESS)
+    request = fields.Char(
+        readonly=True,
+        groups=fields.NO_ACCESS,
+    )
     auth_method = fields.Selection(
-        [("password", "Password")],
+        selection=[("password", "Password")],
         default=lambda self: self._default_auth_method(),
     )
     password = fields.Char(store=False)

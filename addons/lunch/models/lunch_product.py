@@ -14,21 +14,40 @@ class LunchProduct(models.Model):
     _order = "name"
     _check_company_auto = True
 
-    name = fields.Char("Product Name", required=True, translate=True)
+    name = fields.Char(
+        string="Product Name",
+        translate=True,
+        required=True,
+    )
     category_id = fields.Many2one(
-        "lunch.product.category", "Product Category", check_company=True, required=True
+        comodel_name="lunch.product.category",
+        string="Product Category",
+        required=True,
+        check_company=True,
     )
     description = fields.Html(translate=True)
-    price = fields.Float(digits="Account", required=True)
+    price = fields.Float(
+        digits="Account",
+        required=True,
+    )
     supplier_id = fields.Many2one(
-        "lunch.supplier", "Vendor", check_company=True, required=True
+        comodel_name="lunch.supplier",
+        string="Vendor",
+        required=True,
+        check_company=True,
     )
     active = fields.Boolean(default=True)
 
     company_id = fields.Many2one(
-        "res.company", related="supplier_id.company_id", readonly=False, store=True
+        comodel_name="res.company",
+        related="supplier_id.company_id",
+        store=True,
+        readonly=False,
     )
-    currency_id = fields.Many2one("res.currency", related="company_id.currency_id")
+    currency_id = fields.Many2one(
+        comodel_name="res.currency",
+        related="company_id.currency_id",
+    )
 
     new_until = fields.Date()
     is_new = fields.Boolean(compute="_compute_is_new")
@@ -40,8 +59,8 @@ class LunchProduct(models.Model):
     product_image = fields.Image(compute="_compute_product_image")
     # This field is used only for searching
     is_available_at = fields.Many2one(
-        "lunch.location",
-        "Product Availability",
+        comodel_name="lunch.location",
+        string="Product Availability",
         compute="_compute_is_available_at",
         search="_search_is_available_at",
     )

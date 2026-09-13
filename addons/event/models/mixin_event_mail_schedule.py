@@ -10,15 +10,21 @@ class MixinEventMailSchedule(models.AbstractModel):
     _name = "mixin.event.mail.schedule"
     _description = "Event Communication Scheduling"
 
-    interval_nbr = fields.Integer("Interval", default=1)
+    interval_nbr = fields.Integer(
+        string="Interval",
+        default=1,
+    )
     interval_unit = fields.Selection(
-        [("now", "Immediately"), *time_unit_selection("hour", "day", "week", "month")],
+        selection=[
+            ("now", "Immediately"),
+            *time_unit_selection("hour", "day", "week", "month"),
+        ],
         string="Unit",
         default="hour",
         required=True,
     )
     interval_type = fields.Selection(
-        [
+        selection=[
             # attendee based
             ("after_sub", "After each registration"),
             # event based: start date
@@ -29,19 +35,21 @@ class MixinEventMailSchedule(models.AbstractModel):
             ("before_event_end", "Before the event ends"),
         ],
         string="Trigger",
-        default="before_event",
-        required=True,
         help="Indicates when the communication is sent. "
         "If the event has multiple slots, the interval is related to each time slot instead of the whole event.",
+        default="before_event",
+        required=True,
     )
     notification_type = fields.Selection(
-        [("mail", "Mail")], string="Send", compute="_compute_notification_type"
+        selection=[("mail", "Mail")],
+        string="Send",
+        compute="_compute_notification_type",
     )
     template_ref = fields.Reference(
-        string="Template",
-        ondelete={"mail.template": "cascade"},
-        required=True,
         selection=[("mail.template", "Mail")],
+        string="Template",
+        required=True,
+        ondelete={"mail.template": "cascade"},
     )
 
     @api.depends("template_ref")

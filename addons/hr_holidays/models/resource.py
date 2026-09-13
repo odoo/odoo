@@ -9,11 +9,14 @@ from odoo.libs.datetime import timezone
 class ResourceCalendarLeaves(models.Model):
     _inherit = "resource.calendar.leaves"
 
-    holiday_id = fields.Many2one("hr.leave", string="Time Off Request")
+    holiday_id = fields.Many2one(
+        comodel_name="hr.leave",
+        string="Time Off Request",
+    )
     eligible_for_accrual_rate = fields.Boolean(
         string="Eligible for Accrual Rate",
-        default=False,
         help="If checked, this time off type will be taken into account for accruals computation.",
+        default=False,
     )
 
     @api.constrains("date_from", "date_to", "calendar_id")
@@ -210,7 +213,8 @@ class ResourceCalendar(models.Model):
     _inherit = "resource.calendar"
 
     associated_leaves_count = fields.Integer(
-        "Time Off Count", compute="_compute_associated_leaves_count"
+        string="Time Off Count",
+        compute="_compute_associated_leaves_count",
     )
 
     def _compute_associated_leaves_count(self):

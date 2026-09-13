@@ -86,35 +86,35 @@ class MailActivity(models.Model):
         )
 
     res_model_id: IrModel = fields.Many2one(
-        "ir.model",
-        "Document Model",
+        comodel_name="ir.model",
+        string="Document Model",
         index=True,
-        ondelete="cascade",
         required=False,
+        ondelete="cascade",
     )
     res_model = fields.Char(
-        "Related Document Model",
         related="res_model_id.model",
+        string="Related Document Model",
         precompute=True,
         store=True,
         readonly=True,
     )
     res_id = fields.Many2oneReference(
-        string="Related Document ID",
         model_field="res_model",
+        string="Related Document ID",
     )
     res_name = fields.Char(
-        "Document Name",
+        string="Document Name",
         compute="_compute_res_name",
         compute_sudo=True,
         store=True,
         readonly=True,
     )
     activity_type_id: MailActivityType = fields.Many2one(
-        "mail.activity.type",
+        comodel_name="mail.activity.type",
+        default=_default_activity_type_id,
         domain="['|', ('res_model', '=', False), ('res_model', '=', res_model)]",
         ondelete="restrict",
-        default=_default_activity_type_id,
     )
     activity_category = fields.Selection(
         related="activity_type_id.category",
@@ -124,48 +124,52 @@ class MailActivity(models.Model):
         related="activity_type_id.decoration_type",
         readonly=True,
     )
-    icon = fields.Char("Icon", related="activity_type_id.icon", readonly=True)
+    icon = fields.Char(
+        related="activity_type_id.icon",
+        string="Icon",
+        readonly=True,
+    )
     summary = fields.Char()
     note = fields.Html(sanitize_style=True)
     date_deadline = fields.Date(
-        "Due Date",
+        string="Due Date",
+        default=_default_date_deadline,
         index=True,
         required=True,
-        default=_default_date_deadline,
     )
     date_done = fields.Date(
-        "Done Date",
+        string="Done Date",
         compute="_compute_date_done",
         store=True,
     )
     feedback = fields.Text()
     automated = fields.Boolean(
-        "Automated activity",
-        readonly=True,
+        string="Automated activity",
         help="Indicates this activity has been created automatically and not by any user.",
+        readonly=True,
     )
     attachment_ids: IrAttachment = fields.Many2many(
-        "ir.attachment",
-        "activity_attachment_rel",
-        "activity_id",
-        "attachment_id",
+        comodel_name="ir.attachment",
+        relation="activity_attachment_rel",
+        column1="activity_id",
+        column2="attachment_id",
         string="Attachments",
         bypass_search_access=True,
     )
     user_id: ResUsers = fields.Many2one(
-        "res.users",
-        "Assigned to",
+        comodel_name="res.users",
+        string="Assigned to",
         index=True,
         required=False,
         ondelete="cascade",
     )
     user_tz = fields.Selection(
-        string="Timezone",
         related="user_id.tz",
+        string="Timezone",
         store=True,
     )
     state = fields.Selection(
-        [
+        selection=[
             ("overdue", "Overdue"),
             ("today", "Today"),
             ("planned", "Planned"),
@@ -175,14 +179,14 @@ class MailActivity(models.Model):
         search="_search_state",
     )
     recommended_activity_type_id: MailActivityType = fields.Many2one(
-        "mail.activity.type",
+        comodel_name="mail.activity.type"
     )
     previous_activity_type_id: MailActivityType = fields.Many2one(
-        "mail.activity.type",
+        comodel_name="mail.activity.type",
         readonly=True,
     )
     has_recommended_activities = fields.Boolean(
-        "Next activities available",
+        string="Next activities available",
         compute="_compute_has_recommended_activities",
     )
     mail_template_ids: MailTemplate = fields.Many2many(
@@ -190,7 +194,8 @@ class MailActivity(models.Model):
         readonly=True,
     )
     chaining_type = fields.Selection(
-        related="activity_type_id.chaining_type", readonly=True
+        related="activity_type_id.chaining_type",
+        readonly=True,
     )
     can_write = fields.Boolean(compute="_compute_can_write")
     active = fields.Boolean(default=True)

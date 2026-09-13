@@ -6,7 +6,7 @@ class StockWarnInsufficientQtyUnbuild(models.TransientModel):
     _inherit = ["mixin.stock.warn.insufficient.qty"]
     _description = "Warn Insufficient Unbuild Quantity"
 
-    unbuild_id = fields.Many2one("mrp.unbuild")
+    unbuild_id = fields.Many2one(comodel_name="mrp.unbuild")
 
     def _get_reference_document_company_id(self):
         return self.unbuild_id.company_id

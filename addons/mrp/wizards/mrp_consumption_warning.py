@@ -5,11 +5,11 @@ class MrpConsumptionWarning(models.TransientModel):
     _name = "mrp.consumption.warning"
     _description = "Wizard in case of consumption in warning/strict and more component has been used for a MO (related to the bom)"
 
-    mrp_production_ids = fields.Many2many("mrp.production")
-    mrp_production_count = fields.Count("mrp_production_ids")
+    mrp_production_ids = fields.Many2many(comodel_name="mrp.production")
+    mrp_production_count = fields.Count(count_of="mrp_production_ids")
 
     consumption = fields.Selection(
-        [
+        selection=[
             ("flexible", "Allowed"),
             ("warning", "Allowed with warning"),
             ("strict", "Blocked"),
@@ -17,7 +17,8 @@ class MrpConsumptionWarning(models.TransientModel):
         compute="_compute_consumption",
     )
     mrp_consumption_warning_line_ids = fields.One2many(
-        "mrp.consumption.warning.line", "mrp_consumption_warning_id"
+        comodel_name="mrp.consumption.warning.line",
+        inverse_name="mrp_consumption_warning_id",
     )
 
     @api.depends("mrp_consumption_warning_line_ids.consumption")
@@ -93,24 +94,37 @@ class MrpConsumptionWarningLine(models.TransientModel):
     _description = "Line of issue consumption"
 
     mrp_consumption_warning_id = fields.Many2one(
-        "mrp.consumption.warning",
-        "Parent Wizard",
+        comodel_name="mrp.consumption.warning",
+        string="Parent Wizard",
         readonly=True,
         required=True,
         ondelete="cascade",
     )
     mrp_production_id = fields.Many2one(
-        "mrp.production",
-        "Manufacturing Order",
+        comodel_name="mrp.production",
+        string="Manufacturing Order",
         readonly=True,
         required=True,
         ondelete="cascade",
     )
     consumption = fields.Selection(related="mrp_production_id.consumption")
 
-    product_id = fields.Many2one("product.product", readonly=True, required=True)
-    product_uom_id = fields.Many2one(
-        "uom.uom", "Unit", related="product_id.uom_id", readonly=True
+    product_id = fields.Many2one(
+        comodel_name="product.product",
+        readonly=True,
+        required=True,
     )
-    product_consumed_qty_uom = fields.Float("Consumed", readonly=True)
-    product_expected_qty_uom = fields.Float("To Consume", readonly=True)
+    product_uom_id = fields.Many2one(
+        comodel_name="uom.uom",
+        related="product_id.uom_id",
+        string="Unit",
+        readonly=True,
+    )
+    product_consumed_qty_uom = fields.Float(
+        string="Consumed",
+        readonly=True,
+    )
+    product_expected_qty_uom = fields.Float(
+        string="To Consume",
+        readonly=True,
+    )

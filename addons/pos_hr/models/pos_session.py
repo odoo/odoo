@@ -5,7 +5,7 @@ from odoo.tools import plaintext2html
 class PosSession(models.Model):
     _inherit = "pos.session"
     employee_id = fields.Many2one(
-        "hr.employee",
+        comodel_name="hr.employee",
         string="Cashier",
         help="The employee who currently uses the cash register",
         tracking=True,

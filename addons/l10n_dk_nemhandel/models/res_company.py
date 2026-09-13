@@ -16,17 +16,17 @@ class ResCompany(models.Model):
 
     nemhandel_contact_email = fields.Char(
         string="Nemhandel Contact email",
+        help="Primary contact email for Nemhandel-related communication",
         compute="_compute_nemhandel_contact_email",
         store=True,
         readonly=False,
-        help="Primary contact email for Nemhandel-related communication",
     )
     nemhandel_phone_number = fields.Char(
         string="Nemhandel Phone number (for validation)",
+        help="You will receive a verification code to this phone number",
         compute="_compute_nemhandel_phone_number",
         store=True,
         readonly=False,
-        help="You will receive a verification code to this phone number",
     )
     l10n_dk_nemhandel_proxy_state = fields.Selection(
         selection=[
@@ -36,21 +36,23 @@ class ResCompany(models.Model):
             ("rejected", "Rejected"),
         ],
         string="Nemhandel status",
-        required=True,
         default="not_registered",
+        required=True,
     )
     nemhandel_identifier_type = fields.Selection(
-        related="partner_id.nemhandel_identifier_type", readonly=False
+        related="partner_id.nemhandel_identifier_type",
+        readonly=False,
     )
     nemhandel_identifier_value = fields.Char(
-        related="partner_id.nemhandel_identifier_value", readonly=False
+        related="partner_id.nemhandel_identifier_value",
+        readonly=False,
     )
     nemhandel_purchase_journal_id = fields.Many2one(
         comodel_name="account.journal",
-        domain=[("type", "=", "purchase")],
         compute="_compute_nemhandel_purchase_journal_id",
         store=True,
         readonly=False,
+        domain=[("type", "=", "purchase")],
     )
     nemhandel_edi_user = fields.Many2one(
         comodel_name="account_edi_proxy_client.user",

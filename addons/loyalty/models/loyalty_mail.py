@@ -9,18 +9,21 @@ class LoyaltyMail(models.Model):
 
     active = fields.Boolean(default=True)
     program_id = fields.Many2one(
-        comodel_name="loyalty.program", ondelete="cascade", required=True, index=True
+        comodel_name="loyalty.program",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     trigger = fields.Selection(
-        string="When",
         selection=[("create", "At Creation"), ("points_reach", "When Reaching")],
+        string="When",
         required=True,
     )
     points = fields.Float()
     mail_template_id = fields.Many2one(
-        string="Email Template",
         comodel_name="mail.template",
-        ondelete="cascade",
-        domain=[("model", "=", "loyalty.card")],
+        string="Email Template",
         required=True,
+        domain=[("model", "=", "loyalty.card")],
+        ondelete="cascade",
     )

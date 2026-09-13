@@ -16,19 +16,20 @@ class PaymentProvider(models.Model):
     _inherit = "payment.provider"
 
     code = fields.Selection(
-        selection_add=[("paypal", "PayPal")], ondelete={"paypal": "set default"}
+        selection_add=[("paypal", "PayPal")],
+        ondelete={"paypal": "set default"},
     )
     paypal_email_account = fields.Char(
         string="Email",
         help="The public business email solely used to identify the account with PayPal",
-        required_if_provider="paypal",
         default=lambda self: self.env.company.email,
         copy=False,
+        required_if_provider="paypal",
     )
     paypal_client_id = fields.Char(
         string="PayPal Client ID",
-        required_if_provider="paypal",
         copy=False,
+        required_if_provider="paypal",
     )
     paypal_client_secret = fields.Char(
         string="PayPal Client Secret",
@@ -48,7 +49,10 @@ class PaymentProvider(models.Model):
         copy=False,
         groups="base.group_system",
     )
-    paypal_webhook_id = fields.Char(string="PayPal Webhook ID", copy=False)
+    paypal_webhook_id = fields.Char(
+        string="PayPal Webhook ID",
+        copy=False,
+    )
 
     # === COMPUTE METHODS === #
 

@@ -40,30 +40,47 @@ class MailScheduledMessage(models.Model):
     _SEARCH_ACCESS_CHUNK_MAX = 8192
 
     subject = fields.Char()
-    body = fields.Html("Contents", sanitize_style=True)
+    body = fields.Html(
+        string="Contents",
+        sanitize_style=True,
+    )
     scheduled_date = fields.Datetime(required=True)
     attachment_ids: IrAttachment = fields.Many2many(
-        "ir.attachment",
-        "scheduled_message_attachment_rel",
-        "scheduled_message_id",
-        "attachment_id",
+        comodel_name="ir.attachment",
+        relation="scheduled_message_attachment_rel",
+        column1="scheduled_message_id",
+        column2="attachment_id",
         string="Attachments",
         bypass_search_access=True,
     )
     composition_comment_option = fields.Selection(
-        [("reply_all", "Reply-All"), ("forward", "Forward")], string="Comment Options"
+        selection=[("reply_all", "Reply-All"), ("forward", "Forward")],
+        string="Comment Options",
     )
-    model = fields.Char("Related Document Model", required=True)
+    model = fields.Char(
+        string="Related Document Model",
+        required=True,
+    )
     res_id = fields.Many2oneReference(
-        "Related Document Id", model_field="model", required=True
+        model_field="model",
+        string="Related Document Id",
+        required=True,
     )
-    author_id: ResPartner = fields.Many2one("res.partner", required=True)
-    partner_ids: ResPartner = fields.Many2many("res.partner", string="Recipients")
+    author_id: ResPartner = fields.Many2one(
+        comodel_name="res.partner",
+        required=True,
+    )
+    partner_ids: ResPartner = fields.Many2many(
+        comodel_name="res.partner",
+        string="Recipients",
+    )
     is_note = fields.Boolean(
-        "Is a note", default=False, help="If the message will be posted as a Note."
+        string="Is a note",
+        help="If the message will be posted as a Note.",
+        default=False,
     )
-    notification_parameters = fields.Text("Notification parameters")
-    send_context = fields.Json("Sending Context")
+    notification_parameters = fields.Text(string="Notification parameters")
+    send_context = fields.Json(string="Sending Context")
 
     @api.constrains("model")
     def _check_model(self) -> None:

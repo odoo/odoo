@@ -62,111 +62,159 @@ class SlideSlide(models.Model):
         "application/vnd.google-apps.presentation": "slides",
     }
 
-    name = fields.Char("Title", required=True, translate=True)
-    image_1920 = fields.Image(compute="_compute_image_1920", store=True, readonly=False)
-    active = fields.Boolean(default=True, tracking=100)
+    name = fields.Char(
+        string="Title",
+        translate=True,
+        required=True,
+    )
+    image_1920 = fields.Image(
+        compute="_compute_image_1920",
+        store=True,
+        readonly=False,
+    )
+    active = fields.Boolean(
+        default=True,
+        tracking=100,
+    )
     sequence = fields.Integer(default=0)
     user_id = fields.Many2one(
-        "res.users", string="Uploaded by", default=lambda self: self.env.uid
+        comodel_name="res.users",
+        string="Uploaded by",
+        default=lambda self: self.env.uid,
     )
     description = fields.Html(
         translate=True,
-        sanitize_attributes=False,
         sanitize_overridable=True,
+        sanitize_attributes=False,
     )
     channel_id = fields.Many2one(
-        "slide.channel", string="Course", required=True, index=True, ondelete="cascade"
+        comodel_name="slide.channel",
+        string="Course",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     tag_ids = fields.Many2many(
-        "slide.tag", "rel_slide_tag", "slide_id", "tag_id", string="Tags"
+        comodel_name="slide.tag",
+        relation="rel_slide_tag",
+        column1="slide_id",
+        column2="tag_id",
+        string="Tags",
     )
     is_preview = fields.Boolean(
-        "Allow Preview",
-        default=False,
+        string="Allow Preview",
         help="The course is accessible by anyone : the users don't need to join the channel to access the content of the course.",
+        default=False,
     )
     is_new_slide = fields.Boolean(compute="_compute_is_new_slide")
     completion_time = fields.Float(
-        "Duration",
+        string="Duration",
         digits=(10, 4),
         compute="_compute_category_completion_time",
         recursive=True,
-        readonly=False,
         store=True,
+        readonly=False,
     )
-    is_category = fields.Boolean("Is a category", default=False)
+    is_category = fields.Boolean(
+        string="Is a category",
+        default=False,
+    )
     category_id = fields.Many2one(
-        "slide.slide",
+        comodel_name="slide.slide",
         string="Section",
         compute="_compute_category_id",
         store=True,
         index="btree_not_null",
     )
-    slide_ids = fields.One2many("slide.slide", "category_id", string="Content")
+    slide_ids = fields.One2many(
+        comodel_name="slide.slide",
+        inverse_name="category_id",
+        string="Content",
+    )
     partner_ids = fields.Many2many(
-        "res.partner",
-        "slide_slide_partner",
-        "slide_id",
-        "partner_id",
+        comodel_name="res.partner",
+        relation="slide_slide_partner",
+        column1="slide_id",
+        column2="partner_id",
         string="Subscribers",
-        groups="website_slides.group_website_slides_officer",
         copy=False,
+        groups="website_slides.group_website_slides_officer",
     )
     slide_partner_ids = fields.One2many(
-        "slide.slide.partner",
-        "slide_id",
+        comodel_name="slide.slide.partner",
+        inverse_name="slide_id",
         string="Subscribers information",
-        groups="website_slides.group_website_slides_officer",
         copy=False,
+        groups="website_slides.group_website_slides_officer",
     )
     user_membership_id = fields.Many2one(
-        "slide.slide.partner",
+        comodel_name="slide.slide.partner",
         string="Subscriber information",
+        help="Subscriber information for the current logged in user",
         compute="_compute_user_membership_id",
         compute_sudo=False,
-        help="Subscriber information for the current logged in user",
     )
     user_vote = fields.Integer(
-        "User vote", compute="_compute_user_membership_id", compute_sudo=False
+        string="User vote",
+        compute="_compute_user_membership_id",
+        compute_sudo=False,
     )
     user_has_completed = fields.Boolean(
-        "Is Member", compute="_compute_user_membership_id", compute_sudo=False
+        string="Is Member",
+        compute="_compute_user_membership_id",
+        compute_sudo=False,
     )
     user_has_completed_category = fields.Boolean(
-        "Is Category Completed", compute="_compute_category_completed"
+        string="Is Category Completed",
+        compute="_compute_category_completed",
     )
     survey_id = fields.Many2one(
-        "survey.survey", "Linked Survey", index="btree_not_null"
+        comodel_name="survey.survey",
+        string="Linked Survey",
+        index="btree_not_null",
     )
     has_questions = fields.Boolean(
+        help="Whether this slide has quiz/certification questions (via its linked survey).",
         compute="_compute_has_questions",
         store=True,
-        help="Whether this slide has quiz/certification questions (via its linked survey).",
     )
     questions_count = fields.Integer(
-        "Number of Questions", compute="_compute_questions_count"
+        string="Number of Questions",
+        compute="_compute_questions_count",
     )
-    quiz_first_attempt_reward = fields.Integer("Reward: first attempt", default=10)
-    quiz_second_attempt_reward = fields.Integer("Reward: second attempt", default=7)
-    quiz_third_attempt_reward = fields.Integer("Reward: third attempt", default=5)
+    quiz_first_attempt_reward = fields.Integer(
+        string="Reward: first attempt",
+        default=10,
+    )
+    quiz_second_attempt_reward = fields.Integer(
+        string="Reward: second attempt",
+        default=7,
+    )
+    quiz_third_attempt_reward = fields.Integer(
+        string="Reward: third attempt",
+        default=5,
+    )
     quiz_fourth_attempt_reward = fields.Integer(
-        "Reward: every attempt after the third try", default=2
+        string="Reward: every attempt after the third try",
+        default=2,
     )
     nbr_certification = fields.Integer(
-        "Number of Certifications", compute="_compute_slides_statistics", store=True
+        string="Number of Certifications",
+        compute="_compute_slides_statistics",
+        store=True,
     )
     can_self_mark_completed = fields.Boolean(
-        "Can Mark Completed",
-        compute="_compute_mark_complete_actions",
+        string="Can Mark Completed",
         help="The slide can be marked as completed even without opening it",
+        compute="_compute_mark_complete_actions",
     )
     can_self_mark_uncompleted = fields.Boolean(
-        "Can Mark Uncompleted",
-        compute="_compute_mark_complete_actions",
+        string="Can Mark Uncompleted",
         help="The slide can be marked as not completed and the progression",
+        compute="_compute_mark_complete_actions",
     )
     slide_category = fields.Selection(
-        [
+        selection=[
             ("infographic", "Image"),
             ("article", "Article"),
             ("document", "Document"),
@@ -175,11 +223,11 @@ class SlideSlide(models.Model):
             ("certification", "Certification"),
         ],
         string="Category",
-        required=True,
         default="document",
+        required=True,
     )
     source_type = fields.Selection(
-        [
+        selection=[
             ("local_file", "Upload from Device"),
             ("external", "Retrieve from Google Drive"),
         ],
@@ -187,45 +235,53 @@ class SlideSlide(models.Model):
         required=True,
     )
     url = fields.Char(
-        "External URL", help="URL of the Google Drive file or URL of the YouTube video"
+        string="External URL",
+        help="URL of the Google Drive file or URL of the YouTube video",
     )
-    binary_content = fields.Binary("File", attachment=True)
+    binary_content = fields.Binary(
+        string="File",
+        attachment=True,
+    )
     slide_resource_ids = fields.One2many(
-        "slide.slide.resource",
-        "slide_id",
+        comodel_name="slide.slide.resource",
+        inverse_name="slide_id",
         string="Additional Resource for this slide",
         copy=True,
     )
     slide_resource_downloadable = fields.Boolean(
-        "Allow Download",
-        default=False,
+        string="Allow Download",
         help="Allow the user to download the content of the slide.",
+        default=False,
     )
     google_drive_id = fields.Char(
-        "Google Drive ID of the external URL", compute="_compute_google_drive_id"
+        string="Google Drive ID of the external URL",
+        compute="_compute_google_drive_id",
     )
     html_content = fields.Html(
-        "HTML Content",
+        string="HTML Content",
+        help="Custom HTML content for slides of category 'Article'.",
         translate=True,
+        sanitize_overridable=True,
         sanitize_attributes=False,
         sanitize_form=False,
-        sanitize_overridable=True,
-        help="Custom HTML content for slides of category 'Article'.",
     )
     image_binary_content = fields.Binary(
-        "Image Content", related="binary_content", readonly=False
+        related="binary_content",
+        string="Image Content",
+        readonly=False,
     )
     image_google_url = fields.Char(
-        "Image Link",
         related="url",
-        readonly=False,
+        string="Image Link",
         help="Link of the image (we currently only support Google Drive as source)",
+        readonly=False,
     )
     slide_icon_class = fields.Char(
-        "Slide Icon fa-class", compute="_compute_slide_icon_class"
+        string="Slide Icon fa-class",
+        compute="_compute_slide_icon_class",
     )
     slide_type = fields.Selection(
-        [
+        selection=[
             ("image", "Image"),
             ("article", "Article"),
             ("quiz", "Quiz"),
@@ -238,90 +294,148 @@ class SlideSlide(models.Model):
             ("vimeo_video", "Vimeo Video"),
             ("certification", "Certification"),
         ],
+        help="Subtype of the slide category, allows more precision on the actual file type / source type.",
         compute="_compute_slide_type",
         store=True,
         readonly=False,
-        help="Subtype of the slide category, allows more precision on the actual file type / source type.",
     )
     document_google_url = fields.Char(
-        "Document Link",
         related="url",
-        readonly=False,
+        string="Document Link",
         help="Link of the document (we currently only support Google Drive as source)",
+        readonly=False,
     )
     document_binary_content = fields.Binary(
-        "PDF Content", related="binary_content", readonly=False
+        related="binary_content",
+        string="PDF Content",
+        readonly=False,
     )
     video_url = fields.Char(
-        "Video Link",
         related="url",
-        readonly=False,
+        string="Video Link",
         help="Link of the video (we support YouTube, Google Drive and Vimeo as sources)",
+        readonly=False,
     )
     video_source_type = fields.Selection(
-        [("youtube", "YouTube"), ("google_drive", "Google Drive"), ("vimeo", "Vimeo")],
+        selection=[
+            ("youtube", "YouTube"),
+            ("google_drive", "Google Drive"),
+            ("vimeo", "Vimeo"),
+        ],
         string="Video Source",
         compute="_compute_video_source_type",
     )
-    youtube_id = fields.Char("Video YouTube ID", compute="_compute_youtube_id")
-    vimeo_id = fields.Char("Video Vimeo ID", compute="_compute_vimeo_id")
-    website_id = fields.Many2one(related="channel_id.website_id", readonly=True)
-    date_published = fields.Datetime(
-        "Publish Date", readonly=True, tracking=False, copy=False
+    youtube_id = fields.Char(
+        string="Video YouTube ID",
+        compute="_compute_youtube_id",
     )
-    likes = fields.Integer(compute="_compute_like_info", store=True, compute_sudo=False)
+    vimeo_id = fields.Char(
+        string="Video Vimeo ID",
+        compute="_compute_vimeo_id",
+    )
+    website_id = fields.Many2one(
+        related="channel_id.website_id",
+        readonly=True,
+    )
+    date_published = fields.Datetime(
+        string="Publish Date",
+        copy=False,
+        readonly=True,
+        tracking=False,
+    )
+    likes = fields.Integer(
+        compute="_compute_like_info",
+        compute_sudo=False,
+        store=True,
+    )
     dislikes = fields.Integer(
-        compute="_compute_like_info", store=True, compute_sudo=False
+        compute="_compute_like_info",
+        compute_sudo=False,
+        store=True,
     )
     embed_code = fields.Html(
-        readonly=True, compute="_compute_embed_code", sanitize=False
+        sanitize=False,
+        compute="_compute_embed_code",
+        readonly=True,
     )
     embed_code_external = fields.Html(
-        "External Embed Code",
-        readonly=True,
-        compute="_compute_embed_code",
-        sanitize=False,
+        string="External Embed Code",
         help="Same as 'Embed Code' but used to embed the content on an external website.",
+        sanitize=False,
+        compute="_compute_embed_code",
+        readonly=True,
     )
-    website_share_url = fields.Char("Share URL", compute="_compute_website_share_url")
+    website_share_url = fields.Char(
+        string="Share URL",
+        compute="_compute_website_share_url",
+    )
     embed_ids = fields.One2many(
-        "slide.embed", "slide_id", string="External Slide Embeds"
+        comodel_name="slide.embed",
+        inverse_name="slide_id",
+        string="External Slide Embeds",
     )
-    embed_count = fields.Integer("# of Embed Views", compute="_compute_embed_count")
+    embed_count = fields.Integer(
+        string="# of Embed Views",
+        compute="_compute_embed_count",
+    )
     slide_views = fields.Integer(
-        "# of Website Views", store=True, compute="_compute_slide_views"
+        string="# of Website Views",
+        compute="_compute_slide_views",
+        store=True,
     )
     public_views = fields.Integer(
-        "# of Public Views", copy=False, default=0, readonly=True
+        string="# of Public Views",
+        default=0,
+        copy=False,
+        readonly=True,
     )
     total_views = fields.Integer(
-        "# Total Views", default="0", compute="_compute_total", store=True
+        string="# Total Views",
+        compute="_compute_total",
+        default="0",
+        store=True,
     )
     comments_count = fields.Integer(
-        "Number of comments", compute="_compute_comments_count"
+        string="Number of comments",
+        compute="_compute_comments_count",
     )
     channel_type = fields.Selection(
-        related="channel_id.channel_type", string="Channel type"
+        related="channel_id.channel_type",
+        string="Channel type",
     )
     channel_allow_comment = fields.Boolean(
-        related="channel_id.allow_comment", string="Allows comment"
+        related="channel_id.allow_comment",
+        string="Allows comment",
     )
     nbr_document = fields.Integer(
-        "Number of Documents", compute="_compute_slides_statistics", store=True
+        string="Number of Documents",
+        compute="_compute_slides_statistics",
+        store=True,
     )
     nbr_video = fields.Integer(
-        "Number of Videos", compute="_compute_slides_statistics", store=True
+        string="Number of Videos",
+        compute="_compute_slides_statistics",
+        store=True,
     )
     nbr_infographic = fields.Integer(
-        "Number of Images", compute="_compute_slides_statistics", store=True
+        string="Number of Images",
+        compute="_compute_slides_statistics",
+        store=True,
     )
     nbr_article = fields.Integer(
-        "Number of Articles", compute="_compute_slides_statistics", store=True
+        string="Number of Articles",
+        compute="_compute_slides_statistics",
+        store=True,
     )
     nbr_quiz = fields.Integer(
-        "Number of Quizs", compute="_compute_slides_statistics", store=True
+        string="Number of Quizs",
+        compute="_compute_slides_statistics",
+        store=True,
     )
-    total_slides = fields.Integer(compute="_compute_slides_statistics", store=True)
+    total_slides = fields.Integer(
+        compute="_compute_slides_statistics",
+        store=True,
+    )
     is_published = fields.Boolean(tracking=1)
     website_published = fields.Boolean(tracking=False)
 

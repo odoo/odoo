@@ -10,64 +10,64 @@ class ProjectHistory(models.Model):
     _order = "date_completed desc, id desc"
 
     project_id = fields.Many2one(
-        "project.project",
-        ondelete="set null",
-        index=True,
+        comodel_name="project.project",
         help="Link to the original project (may be archived or deleted).",
+        index=True,
+        ondelete="set null",
     )
     name = fields.Char(
-        "Project Name (snapshot)",
-        required=True,
+        string="Project Name (snapshot)",
         help="Frozen project name at time of archival.",
+        required=True,
     )
     date_completed = fields.Date(required=True)
-    date_start = fields.Date("Date Started")
+    date_start = fields.Date(string="Date Started")
     planned_duration_days = fields.Integer(
-        "Planned Duration (days)",
+        string="Planned Duration (days)",
         help="Days from date_start to planned end date.",
     )
     actual_duration_days = fields.Integer(
-        "Actual Duration (days)",
+        string="Actual Duration (days)",
         help="Days from date_start to actual completion.",
     )
     duration_variance_pct = fields.Float(
-        "Duration Variance %",
-        compute="_compute_variances",
-        store=True,
+        string="Duration Variance %",
         help="(actual - planned) / planned * 100. Positive = over-schedule.",
         export_string_translation=False,
-    )
-    planned_hours = fields.Float("Planned Hours (sum of task.planned_hours)")
-    actual_hours = fields.Float(
-        help="Sum of effective_hours (requires timesheet module).",
-    )
-    hours_variance_pct = fields.Float(
-        "Hours Variance %",
         compute="_compute_variances",
         store=True,
+    )
+    planned_hours = fields.Float(string="Planned Hours (sum of task.planned_hours)")
+    actual_hours = fields.Float(
+        help="Sum of effective_hours (requires timesheet module)."
+    )
+    hours_variance_pct = fields.Float(
+        string="Hours Variance %",
         help="(actual - planned) / planned * 100. Positive = over-budget.",
         export_string_translation=False,
+        compute="_compute_variances",
+        store=True,
     )
-    task_count = fields.Integer("Total Tasks")
-    team_size = fields.Integer("Team Size (distinct assignees)")
+    task_count = fields.Integer(string="Total Tasks")
+    team_size = fields.Integer(string="Team Size (distinct assignees)")
     tag_ids = fields.Many2many(
-        "project.tags",
-        "project_history_tags_rel",
-        "history_id",
-        "tag_id",
+        comodel_name="project.tags",
+        relation="project_history_tags_rel",
+        column1="history_id",
+        column2="tag_id",
         string="Tags",
         help="Copied from project tags for reference class search.",
     )
     avg_lead_time = fields.Float(
-        "Avg Lead Time (hours)",
+        string="Avg Lead Time (hours)",
         help="Average lead_time_hours (create→end) at project completion.",
     )
     avg_cycle_time = fields.Float(
-        "Avg Cycle Time (hours)",
+        string="Avg Cycle Time (hours)",
         help="Average cycle_time_hours (assign→end) at project completion.",
     )
     deadline_compliance_pct = fields.Float(
-        "Deadline Compliance %",
+        string="Deadline Compliance %",
         help="Percentage of tasks that met their deadlines.",
     )
 

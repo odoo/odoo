@@ -9,65 +9,84 @@ class FleetVehicleLogServices(models.Model):
     _description = "Services for vehicles"
 
     active = fields.Boolean(default=True)
-    vehicle_id = fields.Many2one("fleet.vehicle", required=True, index=True)
+    vehicle_id = fields.Many2one(
+        comodel_name="fleet.vehicle",
+        index=True,
+        required=True,
+    )
     model_id = fields.Many2one(
-        "fleet.vehicle.model", "Model", related="vehicle_id.model_id", store=True
+        comodel_name="fleet.vehicle.model",
+        related="vehicle_id.model_id",
+        string="Model",
+        store=True,
     )
     brand_id = fields.Many2one(
-        "fleet.vehicle.model.brand",
-        "Brand",
+        comodel_name="fleet.vehicle.model.brand",
         related="vehicle_id.model_id.brand_id",
+        string="Brand",
         store=True,
     )
     manager_id = fields.Many2one(
-        "res.users", "Fleet Manager", related="vehicle_id.manager_id", store=True
+        comodel_name="res.users",
+        related="vehicle_id.manager_id",
+        string="Fleet Manager",
+        store=True,
     )
-    amount = fields.Monetary("Cost")
+    amount = fields.Monetary(string="Cost")
     description = fields.Char()
     odometer_id = fields.Many2one(
-        "fleet.vehicle.odometer",
+        comodel_name="fleet.vehicle.odometer",
         help="Odometer measure of the vehicle at the moment of this log",
     )
     odometer = fields.Float(
-        compute="_compute_odometer",
-        inverse="_inverse_odometer",
         string="Odometer Value",
         help="Odometer measure of the vehicle at the moment of this log",
+        compute="_compute_odometer",
+        inverse="_inverse_odometer",
     )
     odometer_unit = fields.Selection(
-        related="vehicle_id.odometer_unit", string="Unit", readonly=True
+        related="vehicle_id.odometer_unit",
+        string="Unit",
+        readonly=True,
     )
     date = fields.Date(
-        help="Date when the cost has been executed", default=fields.Date.context_today
+        help="Date when the cost has been executed",
+        default=fields.Date.context_today,
     )
-    company_id = fields.Many2one("res.company", default=lambda self: self.env.company)
-    currency_id = fields.Many2one("res.currency", related="company_id.currency_id")
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        default=lambda self: self.env.company,
+    )
+    currency_id = fields.Many2one(
+        comodel_name="res.currency",
+        related="company_id.currency_id",
+    )
     purchaser_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Driver",
         compute="_compute_purchaser_id",
-        readonly=False,
         store=True,
+        readonly=False,
     )
-    inv_ref = fields.Char("Vendor Reference")
-    vendor_id = fields.Many2one("res.partner")
+    inv_ref = fields.Char(string="Vendor Reference")
+    vendor_id = fields.Many2one(comodel_name="res.partner")
     notes = fields.Text()
     service_type_id = fields.Many2one(
-        "fleet.service.type",
-        required=True,
+        comodel_name="fleet.service.type",
         default=lambda self: self.env.ref(
             "fleet.type_service_service_7", raise_if_not_found=False
         ),
+        required=True,
     )
     state = fields.Selection(
-        [
+        selection=[
             ("new", "New"),
             ("running", "Running"),
             ("done", "Done"),
             ("cancelled", "Cancelled"),
         ],
-        default="new",
         string="Stage",
+        default="new",
         group_expand=True,
         tracking=True,
     )

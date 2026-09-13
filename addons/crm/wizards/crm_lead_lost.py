@@ -9,10 +9,15 @@ class CrmLeadLost(models.TransientModel):
     _description = "Get Lost Reason"
 
     lead_ids = fields.Many2many(
-        "crm.lead", string="Leads", context={"active_test": False}
+        comodel_name="crm.lead",
+        string="Leads",
+        context={"active_test": False},
     )
-    lost_reason_id = fields.Many2one("crm.lost.reason")
-    lost_feedback = fields.Html("Closing Note", sanitize=True)
+    lost_reason_id = fields.Many2one(comodel_name="crm.lost.reason")
+    lost_feedback = fields.Html(
+        string="Closing Note",
+        sanitize=True,
+    )
 
     def action_lost_reason_apply(self):
         self.check_singleton()

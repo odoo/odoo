@@ -17,15 +17,18 @@ class Account_ReportsExportWizard(models.TransientModel):
     _description = "Export wizard for accounting's reports"
 
     export_format_ids = fields.Many2many(
-        string="Export to",
         comodel_name="account_reports.export.wizard.format",
         relation="dms_acc_rep_export_wizard_format_rel",
+        string="Export to",
     )
     report_id = fields.Many2one(
-        string="Parent Report Id", comodel_name="account.report", required=True
+        comodel_name="account.report",
+        string="Parent Report Id",
+        required=True,
     )
     doc_name = fields.Char(
-        string="Documents Name", help="Name to give to the generated documents."
+        string="Documents Name",
+        help="Name to give to the generated documents.",
     )
 
     @api.model_create_multi
@@ -105,11 +108,14 @@ class Account_ReportsExportWizardFormat(models.TransientModel):
     _description = "Export format for accounting's reports"
 
     name = fields.Char(required=True)
-    fun_to_call = fields.Char(string="Function to Call", required=True)
+    fun_to_call = fields.Char(
+        string="Function to Call",
+        required=True,
+    )
     fun_param = fields.Char(string="Function Parameter")
     export_wizard_id = fields.Many2one(
-        string="Parent Wizard",
         comodel_name="account_reports.export.wizard",
+        string="Parent Wizard",
         required=True,
         ondelete="cascade",
     )

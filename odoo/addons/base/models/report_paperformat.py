@@ -200,59 +200,82 @@ class ReportPaperformat(models.Model):
 
     name = fields.Char(required=True)
     format = fields.Selection(
-        [(ps["key"], ps["description"]) for ps in PAPER_SIZES],
-        "Paper size",
-        default="A4",
+        selection=[(ps["key"], ps["description"]) for ps in PAPER_SIZES],
+        string="Paper size",
         help="Select Proper Paper size",
+        default="A4",
     )
-    margin_top = fields.Float("Top Margin (mm)", default=40)
-    margin_bottom = fields.Float("Bottom Margin (mm)", default=20)
-    margin_left = fields.Float("Left Margin (mm)", default=7)
-    margin_right = fields.Float("Right Margin (mm)", default=7)
-    page_height = fields.Integer("Page height (mm)", default=False)
-    page_width = fields.Integer("Page width (mm)", default=False)
+    margin_top = fields.Float(
+        string="Top Margin (mm)",
+        default=40,
+    )
+    margin_bottom = fields.Float(
+        string="Bottom Margin (mm)",
+        default=20,
+    )
+    margin_left = fields.Float(
+        string="Left Margin (mm)",
+        default=7,
+    )
+    margin_right = fields.Float(
+        string="Right Margin (mm)",
+        default=7,
+    )
+    page_height = fields.Integer(
+        string="Page height (mm)",
+        default=False,
+    )
+    page_width = fields.Integer(
+        string="Page width (mm)",
+        default=False,
+    )
     orientation = fields.Selection(
-        [("Landscape", "Landscape"), ("Portrait", "Portrait")],
+        selection=[("Landscape", "Landscape"), ("Portrait", "Portrait")],
         default="Landscape",
     )
-    header_line = fields.Boolean("Display a header line", default=False)
+    header_line = fields.Boolean(
+        string="Display a header line",
+        default=False,
+    )
     header_spacing = fields.Integer(
-        "Header spacing (mm)",
-        default=35,
+        string="Header spacing (mm)",
         help="Height in mm of the header area. Used by report templates (e.g. DIN 5008) "
         "as a layout variable. Has no effect on standard Odoo reports.",
+        default=35,
     )
     disable_shrinking = fields.Boolean(
-        "Disable auto-shrinking",
+        string="Disable auto-shrinking",
         help="When enabled, the Web Studio report preview skips viewport-shrink "
         "correction. Has no effect on WeasyPrint PDF generation.",
     )
     dpi = fields.Integer(
-        "Preview DPI",
-        required=True,
-        default=90,
+        string="Preview DPI",
         help="DPI used to scale the HTML preview in Web Studio (96 / dpi = zoom factor). "
         "Does not affect WeasyPrint PDF output, which is resolution-independent.",
+        default=90,
+        required=True,
     )
     report_ids = fields.One2many(
-        "ir.actions.report",
-        "paperformat_id",
-        "Associated reports",
+        comodel_name="ir.actions.report",
+        inverse_name="paperformat_id",
+        string="Associated reports",
         help="Explicitly associated reports",
     )
     print_page_width = fields.Float(
-        "Print page width (mm)", compute="_compute_print_page_size"
+        string="Print page width (mm)",
+        compute="_compute_print_page_size",
     )
     print_page_height = fields.Float(
-        "Print page height (mm)", compute="_compute_print_page_size"
+        string="Print page height (mm)",
+        compute="_compute_print_page_size",
     )
     css_margins = fields.Boolean(
-        "Use body padding margins",
-        default=False,
+        string="Use body padding margins",
         help="When enabled, horizontal spacing is applied as CSS body padding (8 mm) "
         "rather than @page margin rules. Header/footer running elements add matching "
         "padding to stay aligned with the body content. Typically used together with "
         "margin_left=0 and margin_right=0.",
+        default=False,
     )
 
     @api.constrains("format", "page_width", "page_height")

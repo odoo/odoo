@@ -8,11 +8,14 @@ class StockStorageCategory(models.Model):
     _description = "Storage Category"
     _order = "name"
 
-    name = fields.Char(string="Storage Category", required=True)
+    name = fields.Char(
+        string="Storage Category",
+        required=True,
+    )
     max_weight = fields.Float(
-        digits="Stock Weight",
         help="Maximum weight the locations of this storage category can hold. "
         "Leave 0 for no weight limit.",
+        digits="Stock Weight",
     )
     capacity_ids = fields.One2many(
         comodel_name="stock.storage.category.capacity",
@@ -35,8 +38,8 @@ class StockStorageCategory(models.Model):
             ("same", "If all products are same"),
             ("mixed", "Allow mixed products"),
         ],
-        required=True,
         default="mixed",
+        required=True,
     )
     location_ids = fields.One2many(
         comodel_name="stock.location",
@@ -44,7 +47,8 @@ class StockStorageCategory(models.Model):
     )
     company_id = fields.Many2one(comodel_name="res.company")
     weight_uom_name = fields.Char(
-        string="Weight unit", compute="_compute_weight_uom_name"
+        string="Weight unit",
+        compute="_compute_weight_uom_name",
     )
 
     _positive_max_weight = models.Constraint(
@@ -96,32 +100,30 @@ class StockStorageCategoryCapacity(models.Model):
 
     storage_category_id = fields.Many2one(
         comodel_name="stock.storage.category",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
     product_id = fields.Many2one(
         comodel_name="product.product",
-        check_company=True,
-        domain=(
-            "[('product_tmpl_id', '=', context.get('active_id', False))] if context.get('active_model') == 'product.template' else"
-            " [('id', '=', context.get('default_product_id', False))] if context.get('default_product_id') else"
-            " [('is_storable', '=', True)]"
-        ),
-        ondelete="cascade",
         index="btree_not_null",
+        domain="[('product_tmpl_id', '=', context.get('active_id', False))] if context.get('active_model') == 'product.template' else"
+        " [('id', '=', context.get('default_product_id', False))] if context.get('default_product_id') else"
+        " [('is_storable', '=', True)]",
+        ondelete="cascade",
+        check_company=True,
     )
     package_type_id = fields.Many2one(
         comodel_name="stock.package.type",
-        check_company=True,
-        ondelete="cascade",
         index="btree_not_null",
+        ondelete="cascade",
+        check_company=True,
     )
     quantity = fields.Float(required=True)
     product_uom_id = fields.Many2one(related="product_id.uom_id")
     company_id = fields.Many2one(
-        related="storage_category_id.company_id",
         comodel_name="res.company",
+        related="storage_category_id.company_id",
         string="Company",
     )
 

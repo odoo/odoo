@@ -10,10 +10,18 @@ class LunchCashmove(models.Model):
     _order = "date desc"
 
     currency_id = fields.Many2one(
-        "res.currency", default=lambda self: self.env.company.currency_id, required=True
+        comodel_name="res.currency",
+        default=lambda self: self.env.company.currency_id,
+        required=True,
     )
-    user_id = fields.Many2one("res.users", default=lambda self: self.env.uid)
-    date = fields.Date(required=True, default=fields.Date.context_today)
+    user_id = fields.Many2one(
+        comodel_name="res.users",
+        default=lambda self: self.env.uid,
+    )
+    date = fields.Date(
+        default=fields.Date.context_today,
+        required=True,
+    )
     amount = fields.Float(required=True)
     description = fields.Text()
 

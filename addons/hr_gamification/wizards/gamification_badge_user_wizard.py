@@ -5,13 +5,16 @@ from odoo.exceptions import UserError
 class GamificationBadgeUserWizard(models.TransientModel):
     _inherit = "gamification.badge.user.wizard"
 
-    employee_id = fields.Many2one("hr.employee", required=False)
+    employee_id = fields.Many2one(
+        comodel_name="hr.employee",
+        required=False,
+    )
     user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         compute="_compute_user_id",
+        compute_sudo=True,
         store=True,
         readonly=False,
-        compute_sudo=True,
     )
 
     def action_grant_badge(self):

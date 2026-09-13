@@ -23,7 +23,8 @@ class L10n_IdQrisTransaction(models.Model):
     qris_creation_datetime = fields.Datetime(readonly=True)
 
     bank_id = fields.Many2one(
-        "res.partner.bank", help="Bank used to generate the current QRIS transaction"
+        comodel_name="res.partner.bank",
+        help="Bank used to generate the current QRIS transaction",
     )
     paid = fields.Boolean(help="Payment Status of QRIS")
 

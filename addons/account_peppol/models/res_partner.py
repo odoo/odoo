@@ -18,9 +18,7 @@ _logger = logging.getLogger(__name__)
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    invoice_sending_method = fields.Selection(
-        selection_add=[("peppol", "by Peppol")],
-    )
+    invoice_sending_method = fields.Selection(selection_add=[("peppol", "by Peppol")])
     peppol_eas = fields.Selection(
         selection_add=[("odemo", "Odoo Demo ID")]
     )  # Not a real EAS, used for demonstration.

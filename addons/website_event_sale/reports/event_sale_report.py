@@ -4,7 +4,10 @@ from odoo import fields, models
 class EventSaleReport(models.Model):
     _inherit = "event.sale.report"
 
-    is_published = fields.Boolean("Published Events", readonly=True)
+    is_published = fields.Boolean(
+        string="Published Events",
+        readonly=True,
+    )
 
     def _select_clause(self, *select):
         return super()._select_clause(

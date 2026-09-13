@@ -5,14 +5,14 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     opportunity_ids = fields.One2many(
-        "crm.lead",
-        "partner_id",
+        comodel_name="crm.lead",
+        inverse_name="partner_id",
         string="Opportunities",
         domain=[("type", "=", "opportunity")],
     )
     opportunity_count = fields.Integer(
-        groups="sales_team.group_sale_salesman",
         compute="_compute_opportunity_count",
+        groups="sales_team.group_sale_salesman",
     )
 
     def _get_children_partners_for_hierarchy(self):

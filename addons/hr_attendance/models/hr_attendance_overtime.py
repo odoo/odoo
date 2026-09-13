@@ -8,29 +8,40 @@ class HrAttendanceOvertimeLine(models.Model):
     _order = "time_start"
 
     attendance_id = fields.Many2one(
-        "hr.attendance",
-        ondelete="cascade",
+        comodel_name="hr.attendance",
         index=True,
+        ondelete="cascade",
     )
     employee_id = fields.Many2one(
-        "hr.employee", required=True, ondelete="cascade", index=True
+        comodel_name="hr.employee",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     company_id = fields.Many2one(related="employee_id.company_id")
 
-    date = fields.Date(string="Day", index=True, required=True)
+    date = fields.Date(
+        string="Day",
+        index=True,
+        required=True,
+    )
     status = fields.Selection(
-        [
+        selection=[
             ("to_approve", "To Approve"),
             ("approved", "Approved"),
             ("refused", "Refused"),
         ],
         compute="_compute_status",
-        required=True,
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
+        required=True,
     )
-    duration = fields.Float(string="Extra Hours", default=0.0, required=True)
+    duration = fields.Float(
+        string="Extra Hours",
+        default=0.0,
+        required=True,
+    )
     manual_duration = fields.Float(
         string="Extra Hours (encoded)",
         compute="_compute_manual_duration",
@@ -40,11 +51,18 @@ class HrAttendanceOvertimeLine(models.Model):
 
     time_start = fields.Datetime(string="Start")
     time_stop = fields.Datetime(string="Stop")
-    amount_rate = fields.Float("Overtime pay rate", required=True, default=1.0)
+    amount_rate = fields.Float(
+        string="Overtime pay rate",
+        default=1.0,
+        required=True,
+    )
 
     is_manager = fields.Boolean(compute="_compute_is_manager")
 
-    rule_ids = fields.Many2many("hr.attendance.overtime.rule", string="Applied Rules")
+    rule_ids = fields.Many2many(
+        comodel_name="hr.attendance.overtime.rule",
+        string="Applied Rules",
+    )
 
     _overtime_start_before_end = models.Constraint(
         "CHECK (time_stop > time_start)",

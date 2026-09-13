@@ -5,7 +5,10 @@ from odoo.exceptions import ValidationError
 class StockLocation(models.Model):
     _inherit = "stock.location"
 
-    subcontractor_ids = fields.One2many("res.partner", "property_stock_subcontractor")
+    subcontractor_ids = fields.One2many(
+        comodel_name="res.partner",
+        inverse_name="property_stock_subcontractor",
+    )
 
     @api.constrains("usage", "location_id")
     def _check_subcontracting_location(self):

@@ -52,17 +52,17 @@ class HrJob(models.Model):
     )
 
     address_id = fields.Many2one(
-        "res.partner",
-        "Job Location",
+        comodel_name="res.partner",
+        string="Job Location",
+        help="Select the location where the applicant will work. Addresses listed here are defined on the company's contact information.",
         default=_default_address_id,
         domain=lambda self: self._domain_address_id(),
         tracking=True,
-        help="Select the location where the applicant will work. Addresses listed here are defined on the company's contact information.",
     )
     application_ids = fields.One2many(
-        "hr.applicant",
-        "job_id",
-        "Job Applications",
+        comodel_name="hr.applicant",
+        inverse_name="job_id",
+        string="Job Applications",
         groups="hr_recruitment.group_hr_recruitment_interviewer",
     )
     application_count = fields.Integer(
@@ -70,47 +70,47 @@ class HrJob(models.Model):
         groups="hr_recruitment.group_hr_recruitment_interviewer",
     )
     open_application_count = fields.Integer(
+        help="Number of applications that are still ongoing (not hired or refused)",
         compute="_compute_open_application_count",
         groups="hr_recruitment.group_hr_recruitment_interviewer",
-        help="Number of applications that are still ongoing (not hired or refused)",
     )
     all_application_count = fields.Integer(
         compute="_compute_all_application_count",
         groups="hr_recruitment.group_hr_recruitment_interviewer",
     )
     new_application_count = fields.Integer(
-        compute="_compute_new_application_count",
         string="New Application",
-        groups="hr_recruitment.group_hr_recruitment_interviewer",
         help="Number of applications that are new in the flow (typically at first step of the flow)",
+        compute="_compute_new_application_count",
+        groups="hr_recruitment.group_hr_recruitment_interviewer",
     )
     old_application_count = fields.Integer(
-        compute="_compute_old_application_count",
         string="Old Application",
+        compute="_compute_old_application_count",
         groups="hr_recruitment.group_hr_recruitment_interviewer",
     )
     applicant_hired = fields.Integer(
-        compute="_compute_applicant_hired",
         string="Applicants Hired",
+        compute="_compute_applicant_hired",
         groups="hr_recruitment.group_hr_recruitment_interviewer",
     )
     manager_id = fields.Many2one(
-        "hr.employee",
+        comodel_name="hr.employee",
         related="department_id.manager_id",
         string="Department Manager",
-        readonly=True,
         store=True,
+        readonly=True,
         groups="hr_recruitment.group_hr_recruitment_interviewer,hr.group_hr_user",
     )
     document_ids = fields.One2many(
-        "ir.attachment",
-        compute="_compute_documents",
+        comodel_name="ir.attachment",
         string="Documents",
+        compute="_compute_documents",
         readonly=True,
         groups="hr_recruitment.group_hr_recruitment_interviewer",
     )
     documents_count = fields.Count(
-        "document_ids",
+        count_of="document_ids",
         string="Document Count",
         groups="hr_recruitment.group_hr_recruitment_interviewer",
     )
@@ -119,7 +119,7 @@ class HrJob(models.Model):
         help="Email alias for this job position. New emails will automatically create new applicants for this job position.",
         groups="hr_recruitment.group_hr_recruitment_interviewer",
     )
-    color = fields.Integer("Color Index")
+    color = fields.Integer(string="Color Index")
     favorite_user_ids = fields.Many2many(
         relation="job_favorite_user_rel",
         column1="job_id",
@@ -127,26 +127,26 @@ class HrJob(models.Model):
         default=_default_favorite_user_ids,
     )
     interviewer_ids = fields.Many2many(
-        "res.users",
-        domain="[('share', '=', False), ('company_ids', '=?', company_id)]",
+        comodel_name="res.users",
         string="Interviewers",
-        groups="hr_recruitment.group_hr_recruitment_interviewer",
         help="The Interviewers set on the job position can see all Applicants in it. They have access to the information, the attachments, the meeting management and they can refuse him. You don't need to have Recruitment rights to be set as an interviewer.",
+        domain="[('share', '=', False), ('company_ids', '=?', company_id)]",
+        groups="hr_recruitment.group_hr_recruitment_interviewer",
     )
     extended_interviewer_ids = fields.Many2many(
-        "res.users",
-        "hr_job_extended_interviewer_res_users",
+        comodel_name="res.users",
+        relation="hr_job_extended_interviewer_res_users",
         compute="_compute_extended_interviewer_ids",
         store=True,
         groups="hr_recruitment.group_hr_recruitment_interviewer",
     )
     industry_id = fields.Many2one(
-        "res.partner.industry",
-        tracking=True,
+        comodel_name="res.partner.industry",
         groups="hr_recruitment.group_hr_recruitment_interviewer",
+        tracking=True,
     )
     expected_degree = fields.Many2one(
-        "hr.recruitment.degree",
+        comodel_name="hr.recruitment.degree",
         groups="hr_recruitment.group_hr_recruitment_interviewer",
     )
 
@@ -156,26 +156,27 @@ class HrJob(models.Model):
     )
 
     job_properties = fields.Properties(
-        "Properties",
         definition="company_id.job_properties_definition",
+        string="Properties",
         groups="hr_recruitment.group_hr_recruitment_interviewer",
     )
 
     applicant_properties_definition = fields.PropertiesDefinition(
-        "Applicant Properties", groups="hr_recruitment.group_hr_recruitment_interviewer"
+        string="Applicant Properties",
+        groups="hr_recruitment.group_hr_recruitment_interviewer",
     )
     no_of_hired_employee = fields.Integer(
-        compute="_compute_no_of_hired_employee",
         string="Hired",
+        help="Number of hired employees for this job position during recruitment phase.",
+        compute="_compute_no_of_hired_employee",
+        store=True,
         copy=False,
         groups="hr_recruitment.group_hr_recruitment_interviewer",
-        help="Number of hired employees for this job position during recruitment phase.",
-        store=True,
     )
 
     job_source_ids = fields.One2many(
-        "hr.recruitment.source",
-        "job_id",
+        comodel_name="hr.recruitment.source",
+        inverse_name="job_id",
         groups="hr_recruitment.group_hr_recruitment_interviewer",
     )
 

@@ -8,11 +8,11 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     landed_cost_ok = fields.Boolean(
-        "Is a Landed Cost",
+        string="Is a Landed Cost",
         help="Indicates whether the product is a landed cost: when receiving a vendor bill, you can allocate this cost on preceding receipts.",
     )
     split_method_landed_cost = fields.Selection(
-        SPLIT_METHOD,
+        selection=SPLIT_METHOD,
         string="Default Split Method",
         help="Default Split Method when used for Landed Cost",
     )

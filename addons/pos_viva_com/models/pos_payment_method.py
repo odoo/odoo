@@ -30,16 +30,19 @@ class PosPaymentMethod(models.Model):
         help="Log into Viva.com then navigate to Settings > API Access > POS APIs Credentials",
     )
     viva_com_terminal_id = fields.Char(
-        string="Terminal ID", help="[ID of the Viva.com terminal], e.g. 16002169"
+        string="Terminal ID",
+        help="[ID of the Viva.com terminal], e.g. 16002169",
     )
     viva_com_bearer_token = fields.Char(default="Bearer Token")
     viva_com_webhook_verification_key = fields.Char()
     viva_com_latest_response = fields.Json()  # not used anymore, to remove in master
     viva_com_test_mode = fields.Boolean(
-        string="Test mode", help="Run transactions in the test environment."
+        string="Test mode",
+        help="Run transactions in the test environment.",
     )
     viva_com_webhook_endpoint = fields.Char(
-        compute="_compute_viva_com_webhook_endpoint", readonly=True
+        compute="_compute_viva_com_webhook_endpoint",
+        readonly=True,
     )
 
     def _viva_com_account_get_endpoint(self):

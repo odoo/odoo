@@ -5,5 +5,5 @@ class DiscussCallHistory(models.Model):
     _inherit = "discuss.call.history"
 
     livechat_participant_history_ids = fields.Many2many(
-        "im_livechat.channel.member.history"
+        comodel_name="im_livechat.channel.member.history"
     )

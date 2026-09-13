@@ -8,7 +8,10 @@ class ProductTemplate(models.Model):
         selection_add=[("partnership", "Membership / Partnership")],
         ondelete={"partnership": "set default"},
     )
-    grade_id = fields.Many2one("res.partner.grade", string="Assigned Level")
+    grade_id = fields.Many2one(
+        comodel_name="res.partner.grade",
+        string="Assigned Level",
+    )
 
     @api.model
     def _get_saleable_tracking_types(self):

@@ -7,20 +7,20 @@ class PosConfig(models.Model):
     _inherit = ["mixin.hr", "pos.config"]
 
     minimal_employee_ids = fields.Many2many(
-        "hr.employee",
-        "pos_hr_minimal_employee_hr_employee",
+        comodel_name="hr.employee",
+        relation="pos_hr_minimal_employee_hr_employee",
         string="Employees with minimal access",
         help="If left empty, all employees can log in to PoS",
     )
     basic_employee_ids = fields.Many2many(
-        "hr.employee",
-        "pos_hr_basic_employee_hr_employee",
+        comodel_name="hr.employee",
+        relation="pos_hr_basic_employee_hr_employee",
         string="Employees with basic access",
         help="If left empty, all employees can log in to PoS",
     )
     advanced_employee_ids = fields.Many2many(
-        "hr.employee",
-        "pos_hr_advanced_employee_hr_employee",
+        comodel_name="hr.employee",
+        relation="pos_hr_advanced_employee_hr_employee",
         string="Employees with manager access",
         help="Employees linked to users with the PoS Manager role are automatically added to this list",
     )

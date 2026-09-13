@@ -13,11 +13,11 @@ class SaleOrderLine(models.Model):
     )
 
     is_service = fields.Boolean(
-        "Is a Service",
-        compute="_compute_is_service",
-        store=True,
-        compute_sudo=True,
+        string="Is a Service",
         export_string_translation=False,
+        compute="_compute_is_service",
+        compute_sudo=True,
+        store=True,
     )
 
     def _domain_sale_line_service(self, **kwargs):

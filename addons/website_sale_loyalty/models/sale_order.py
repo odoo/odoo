@@ -11,7 +11,8 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     disabled_auto_rewards = fields.Many2many(
-        "loyalty.reward", relation="sale_order_disabled_auto_rewards_rel"
+        comodel_name="loyalty.reward",
+        relation="sale_order_disabled_auto_rewards_rel",
     )
 
     def _get_domain_program(self):

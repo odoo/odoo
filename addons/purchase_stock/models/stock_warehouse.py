@@ -8,10 +8,10 @@ class StockWarehouse(models.Model):
 
     buy_to_resupply = fields.Boolean(
         string="Buy to Resupply",
-        default=True,
+        help="When products are bought, they can be delivered to this warehouse",
         compute="_compute_buy_to_resupply",
         inverse="_inverse_buy_to_resupply",
-        help="When products are bought, they can be delivered to this warehouse",
+        default=True,
     )
     buy_pull_id = fields.Many2one(
         comodel_name="stock.rule",

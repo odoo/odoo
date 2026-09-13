@@ -25,15 +25,15 @@ class ProjectTemplateCreateWizard(models.TransientModel):
     date_start = fields.Date(string="Start Date")
     date = fields.Date(string="Expiration Date")
     alias_name = fields.Char()
-    alias_domain_id = fields.Many2one("mail.alias.domain")
+    alias_domain_id = fields.Many2one(comodel_name="mail.alias.domain")
     template_id = fields.Many2one(
-        "project.project",
+        comodel_name="project.project",
         default=lambda self: self.env.context.get("template_id"),
     )
     template_has_dates = fields.Boolean(compute="_compute_template_has_dates")
     role_to_users_ids = fields.One2many(
-        "project.template.role.to.users.map",
-        "wizard_id",
+        comodel_name="project.template.role.to.users.map",
+        inverse_name="wizard_id",
         default=_default_role_to_users_ids,
     )
 
@@ -100,11 +100,16 @@ class ProjectTemplateRoleToUsersMap(models.TransientModel):
     _description = "Project role to users mapping"
 
     wizard_id = fields.Many2one(
-        "project.template.create.wizard", export_string_translation=False
+        comodel_name="project.template.create.wizard",
+        export_string_translation=False,
     )
-    role_id = fields.Many2one("resource.role", string="Project Role", required=True)
+    role_id = fields.Many2one(
+        comodel_name="resource.role",
+        string="Project Role",
+        required=True,
+    )
     user_ids = fields.Many2many(
-        "res.users",
+        comodel_name="res.users",
         string="Assignees",
         domain=[("share", "=", False), ("active", "=", True)],
     )

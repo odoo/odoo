@@ -9,20 +9,18 @@ class AIModelFallback(models.Model):
 
     model_id = fields.Many2one(
         comodel_name="ai.model",
-        required=True,
-        index=True,
-        ondelete="cascade",
         help="Model whose failure sends the request down this hop",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
-    sequence = fields.Integer(
-        default=10,
-    )
+    sequence = fields.Integer(default=10)
     fallback_id = fields.Many2one(
         comodel_name="ai.model",
-        required=True,
-        index=True,
-        ondelete="cascade",
         help="Model tried when the one before it in the chain fails",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
 
     _hop_uniq = models.Constraint(

@@ -9,7 +9,11 @@ class CrmLeadScoringFrequency(models.Model):
     value = fields.Char()
     won_count = fields.Float(digits=(16, 1))
     lost_count = fields.Float(digits=(16, 1))
-    team_id = fields.Many2one("crm.team", "Sales Team", ondelete="cascade")
+    team_id = fields.Many2one(
+        comodel_name="crm.team",
+        string="Sales Team",
+        ondelete="cascade",
+    )
 
 
 class CrmLeadScoringFrequencyField(models.Model):
@@ -19,9 +23,9 @@ class CrmLeadScoringFrequencyField(models.Model):
 
     name = fields.Char(related="field_id.field_description")
     field_id = fields.Many2one(
-        "ir.model.fields",
-        domain=[("model_id.model", "=", "crm.lead")],
+        comodel_name="ir.model.fields",
         required=True,
+        domain=[("model_id.model", "=", "crm.lead")],
         ondelete="cascade",
     )
     color = fields.Integer(default=lambda self: self._default_color())

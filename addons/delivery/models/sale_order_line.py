@@ -4,7 +4,10 @@ from odoo import fields, models
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
-    is_delivery = fields.Boolean(string="Is a Delivery", default=False)
+    is_delivery = fields.Boolean(
+        string="Is a Delivery",
+        default=False,
+    )
     recompute_delivery_price = fields.Boolean(
         related="order_id.recompute_delivery_price"
     )

@@ -14,13 +14,20 @@ class L10n_Eg_EdiThumbDrive(models.Model):
     _description = "Thumb drive used to sign invoices in Egypt"
 
     user_id = fields.Many2one(
-        "res.users", required=True, default=lambda self: self.env.user
+        comodel_name="res.users",
+        default=lambda self: self.env.user,
+        required=True,
     )
     company_id = fields.Many2one(
-        "res.company", required=True, default=lambda self: self.env.company
+        comodel_name="res.company",
+        default=lambda self: self.env.company,
+        required=True,
     )
-    certificate = fields.Binary("ETA Certificate")
-    pin = fields.Char("ETA USB Pin", required=True)
+    certificate = fields.Binary(string="ETA Certificate")
+    pin = fields.Char(
+        string="ETA USB Pin",
+        required=True,
+    )
     access_token = fields.Char(required=True)
 
     _user_drive_uniq = models.Constraint(

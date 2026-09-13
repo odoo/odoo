@@ -9,8 +9,8 @@ class PurchaseOrder(models.Model):
 
     report_grids = fields.Boolean(
         string="Print Variant Grids",
-        default=True,
         help="If set, the matrix of configurable products will be shown on the report of this order.",
+        default=True,
     )
 
     """ Matrix loading and update: fields and methods :
@@ -24,18 +24,18 @@ class PurchaseOrder(models.Model):
     """
 
     grid_product_tmpl_id = fields.Many2one(
-        "product.template",
-        store=False,
+        comodel_name="product.template",
         help="Technical field for product_matrix functionalities.",
+        store=False,
     )
     grid_update = fields.Boolean(
+        help="Whether the grid field contains a new matrix to apply or not.",
         default=False,
         store=False,
-        help="Whether the grid field contains a new matrix to apply or not.",
     )
     grid = fields.Char(
-        store=False,
         help="Technical storage of grid. \nIf grid_update, will be loaded on the PO. \nIf not, represents the matrix to open.",
+        store=False,
     )
 
     @api.onchange("grid_product_tmpl_id")
@@ -194,15 +194,16 @@ class PurchaseOrderLine(models.Model):
     _inherit = "purchase.order.line"
 
     product_template_id = fields.Many2one(
-        "product.template",
-        string="Product Template",
+        comodel_name="product.template",
         related="product_id.product_tmpl_id",
+        string="Product Template",
         domain=[("purchase_ok", "=", True)],
     )
     is_configurable_product = fields.Boolean(
-        "Is the product configurable?",
         related="product_template_id.has_configurable_attributes",
+        string="Is the product configurable?",
     )
     product_template_attribute_value_ids = fields.Many2many(
-        related="product_id.product_template_attribute_value_ids", readonly=True
+        related="product_id.product_template_attribute_value_ids",
+        readonly=True,
     )

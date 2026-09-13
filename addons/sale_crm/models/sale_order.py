@@ -5,10 +5,10 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     opportunity_id = fields.Many2one(
-        "crm.lead",
-        check_company=True,
+        comodel_name="crm.lead",
         index="btree_not_null",
         domain="[('type', '=', 'opportunity'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        check_company=True,
     )
 
     def action_confirm(self):

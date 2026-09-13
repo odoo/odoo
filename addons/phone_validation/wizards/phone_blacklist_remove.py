@@ -7,7 +7,11 @@ class PhoneBlacklistRemove(models.TransientModel):
     _name = "phone.blacklist.remove"
     _description = "Remove phone from blacklist"
 
-    phone = fields.Char(string="Phone Number", readonly=True, required=True)
+    phone = fields.Char(
+        string="Phone Number",
+        readonly=True,
+        required=True,
+    )
     reason = fields.Char()
 
     def action_unblacklist_apply(self):

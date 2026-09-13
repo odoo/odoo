@@ -28,28 +28,38 @@ class MailNotification(models.Model):
     _log_access = False
     _description = "Message Notifications"
 
-    author_id: ResPartner = fields.Many2one("res.partner", ondelete="set null")
+    author_id: ResPartner = fields.Many2one(
+        comodel_name="res.partner",
+        ondelete="set null",
+    )
     mail_message_id: MailMessage = fields.Many2one(
-        "mail.message", "Message", index=True, ondelete="cascade", required=True
+        comodel_name="mail.message",
+        string="Message",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     mail_mail_id: MailMail = fields.Many2one(
-        "mail.mail",
-        "Mail",
-        index=True,
+        comodel_name="mail.mail",
+        string="Mail",
         help="Optional mail_mail ID. Used mainly to optimize searches.",
+        index=True,
     )
     res_partner_id: ResPartner = fields.Many2one(
-        "res.partner", "Recipient", index=True, ondelete="cascade"
+        comodel_name="res.partner",
+        string="Recipient",
+        index=True,
+        ondelete="cascade",
     )
     mail_email_address = fields.Char(help="Recipient email address")
     notification_type = fields.Selection(
-        [("inbox", "Inbox"), ("email", "Email")],
+        selection=[("inbox", "Inbox"), ("email", "Email")],
         default="inbox",
         index=True,
         required=True,
     )
     notification_status = fields.Selection(
-        [
+        selection=[
             ("ready", "Ready to Send"),
             ("process", "Processing"),
             (
@@ -71,7 +81,10 @@ class MailNotification(models.Model):
         selection=DELIVERY_FAILURE_TYPES,
         string="Failure type",
     )
-    failure_reason = fields.Text("Failure reason", copy=False)
+    failure_reason = fields.Text(
+        string="Failure reason",
+        copy=False,
+    )
 
     _notification_partner_required = models.Constraint(
         "CHECK(notification_type != 'inbox' OR res_partner_id IS NOT NULL)",

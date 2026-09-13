@@ -20,26 +20,40 @@ class EventMail(models.Model):
     _description = "Event Automated Mailing"
 
     event_id = fields.Many2one(
-        "event.event", required=True, index=True, ondelete="cascade"
+        comodel_name="event.event",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
-    sequence = fields.Integer("Display order")
+    sequence = fields.Integer(string="Display order")
     scheduled_date = fields.Datetime(
-        "Schedule Date", compute="_compute_scheduled_date", store=True
+        string="Schedule Date",
+        compute="_compute_scheduled_date",
+        store=True,
     )
-    error_datetime = fields.Datetime("Last Error")
+    error_datetime = fields.Datetime(string="Last Error")
     # contact and status
-    last_registration_id = fields.Many2one("event.registration", "Last Attendee")
+    last_registration_id = fields.Many2one(
+        comodel_name="event.registration",
+        string="Last Attendee",
+    )
     mail_registration_ids = fields.One2many(
-        "event.mail.registration",
-        "scheduler_id",
+        comodel_name="event.mail.registration",
+        inverse_name="scheduler_id",
         help="Communication related to event registrations",
     )
     mail_slot_ids = fields.One2many(
-        "event.mail.slot", "scheduler_id", help="Slot-based communication"
+        comodel_name="event.mail.slot",
+        inverse_name="scheduler_id",
+        help="Slot-based communication",
     )
-    mail_done = fields.Boolean("Sent", copy=False, readonly=True)
+    mail_done = fields.Boolean(
+        string="Sent",
+        copy=False,
+        readonly=True,
+    )
     mail_state = fields.Selection(
-        [
+        selection=[
             ("running", "Running"),
             ("scheduled", "Scheduled"),
             ("sent", "Sent"),
@@ -49,7 +63,11 @@ class EventMail(models.Model):
         string="Global communication Status",
         compute="_compute_mail_state",
     )
-    mail_count_done = fields.Integer("# Sent", copy=False, readonly=True)
+    mail_count_done = fields.Integer(
+        string="# Sent",
+        copy=False,
+        readonly=True,
+    )
 
     @api.depends(
         "event_id.date_begin",

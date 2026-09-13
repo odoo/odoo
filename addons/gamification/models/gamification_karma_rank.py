@@ -15,38 +15,53 @@ class GamificationKarmaRank(models.Model):
     _inherit = ["mixin.image"]
     _order = "karma_min"
 
-    name = fields.Text(string="Rank Name", translate=True, required=True)
+    name = fields.Text(
+        string="Rank Name",
+        translate=True,
+        required=True,
+    )
     description = fields.Html(
         translate=html_translate,
         sanitize_attributes=False,
     )
     description_motivational = fields.Html(
         string="Motivational",
-        translate=html_translate,
-        sanitize_attributes=False,
-        sanitize_overridable=True,
         help="Motivational phrase to reach this rank on your profile page.",
+        translate=html_translate,
+        sanitize_overridable=True,
+        sanitize_attributes=False,
     )
     description_perks = fields.Html(
         string="Unlocked Perks",
+        help="Describe what capabilities or permissions this rank unlocks.",
         translate=html_translate,
         sanitize_attributes=False,
-        help="Describe what capabilities or permissions this rank unlocks.",
     )
-    karma_min = fields.Integer(string="Required Karma (XP)", required=True, default=1)
+    karma_min = fields.Integer(
+        string="Required Karma (XP)",
+        default=1,
+        required=True,
+    )
     level_number = fields.Integer(
         string="Level",
-        default=0,
         help="Sequential level number for display (1, 2, 3, ...). "
         "Set to 0 for auto-ordering by karma_min.",
+        default=0,
     )
     unlock_badge_ids = fields.Many2many(
-        "gamification.badge",
+        comodel_name="gamification.badge",
         string="Auto-Grant Badges",
         help="Badges automatically granted when a user reaches this rank.",
     )
-    user_ids = fields.One2many("res.users", "rank_id", string="Users")
-    rank_users_count = fields.Count("user_ids", "# Users")
+    user_ids = fields.One2many(
+        comodel_name="res.users",
+        inverse_name="rank_id",
+        string="Users",
+    )
+    rank_users_count = fields.Count(
+        count_of="user_ids",
+        string="# Users",
+    )
 
     _karma_min_check = models.Constraint(
         "CHECK( karma_min > 0 )",

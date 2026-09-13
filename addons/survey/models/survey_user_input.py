@@ -37,141 +37,150 @@ class SurveyUser_Input(models.Model):
     _inherit = ["mixin.mail.thread", "mixin.mail.activity"]
 
     survey_id = fields.Many2one(
-        "survey.survey",
-        readonly=True,
+        comodel_name="survey.survey",
         index=True,
+        readonly=True,
         ondelete="cascade",
     )
     scoring_type = fields.Selection(
-        string="Scoring",
         related="survey_id.scoring_type",
+        string="Scoring",
     )
-    start_datetime = fields.Datetime("Start date and time", readonly=True)
-    end_datetime = fields.Datetime("End date and time", readonly=True)
+    start_datetime = fields.Datetime(
+        string="Start date and time",
+        readonly=True,
+    )
+    end_datetime = fields.Datetime(
+        string="End date and time",
+        readonly=True,
+    )
     deadline = fields.Datetime(
-        help="Datetime until customer can open the survey and submit answers",
+        help="Datetime until customer can open the survey and submit answers"
     )
-    lang_id = fields.Many2one("res.lang", string="Language")
+    lang_id = fields.Many2one(
+        comodel_name="res.lang",
+        string="Language",
+    )
     state = fields.Selection(
-        [("new", "New"), ("in_progress", "In Progress"), ("done", "Completed")],
+        selection=[
+            ("new", "New"),
+            ("in_progress", "In Progress"),
+            ("done", "Completed"),
+        ],
         string="Status",
         default="new",
         readonly=True,
     )
     test_entry = fields.Boolean(readonly=True)
     last_displayed_page_id = fields.Many2one(
-        "survey.question",
+        comodel_name="survey.question",
         string="Last displayed question/page",
     )
     is_attempts_limited = fields.Boolean(
-        "Limited number of attempts",
         related="survey_id.is_attempts_limited",
+        string="Limited number of attempts",
     )
     attempts_limit = fields.Integer(
-        "Number of attempts",
         related="survey_id.attempts_limit",
+        string="Number of attempts",
     )
-    attempts_count = fields.Integer(
-        compute="_compute_attempts_info",
-    )
+    attempts_count = fields.Integer(compute="_compute_attempts_info")
     attempts_number = fields.Integer(
-        "Attempt n°",
+        string="Attempt n°",
         compute="_compute_attempts_info",
     )
     survey_time_limit_reached = fields.Boolean(
-        compute="_compute_survey_time_limit_reached",
+        compute="_compute_survey_time_limit_reached"
     )
     access_token = fields.Char(
-        "Identification token",
+        string="Identification token",
         default=lambda self: str(uuid.uuid4()),
+        copy=False,
         readonly=True,
         required=True,
-        copy=False,
     )
     invite_token = fields.Char(
-        "Invite token",
-        readonly=True,
+        string="Invite token",
         copy=False,
+        readonly=True,
     )
     partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Contact",
-        readonly=True,
         index="btree_not_null",
-    )
-    email = fields.Char(
         readonly=True,
     )
+    email = fields.Char(readonly=True)
     nickname = fields.Char(
-        help="Attendee nickname, mainly used to identify them in the survey session leaderboard.",
+        help="Attendee nickname, mainly used to identify them in the survey session leaderboard."
     )
     ip_address = fields.Char(
-        "IP Address",
-        readonly=True,
+        string="IP Address",
         help="Respondent's IP address. Not stored if survey has 'Anonymize IP' enabled.",
+        readonly=True,
     )
     save_later_datetime = fields.Datetime(
-        "Resume Link Sent",
-        readonly=True,
-        copy=False,
+        string="Resume Link Sent",
         help="When the 'continue later' link was last emailed for this attempt.",
+        copy=False,
+        readonly=True,
     )
     user_input_line_ids = fields.One2many(
-        "survey.user_input.line",
-        "user_input_id",
+        comodel_name="survey.user_input.line",
+        inverse_name="user_input_id",
         string="Answers",
         copy=True,
     )
     predefined_question_ids = fields.Many2many(
-        "survey.question",
+        comodel_name="survey.question",
         string="Predefined Questions",
         readonly=True,
         context={"active_test": False},
     )
     scoring_percentage = fields.Float(
-        "Score (%)",
+        string="Score (%)",
         compute="_compute_scoring_values",
-        store=True,
         compute_sudo=True,
+        store=True,
     )
     scoring_total = fields.Float(
-        "Total Score",
-        compute="_compute_scoring_values",
-        store=True,
-        compute_sudo=True,
+        string="Total Score",
         digits=(10, 2),
+        compute="_compute_scoring_values",
+        compute_sudo=True,
+        store=True,
     )
     scoring_success = fields.Boolean(
-        "Quiz Passed",
+        string="Quiz Passed",
         compute="_compute_scoring_success",
-        store=True,
         compute_sudo=True,
+        store=True,
     )
     survey_first_submitted = fields.Boolean()
     is_speeder = fields.Boolean(
-        "Speeder",
-        compute="_compute_is_speeder",
-        search="_search_is_speeder",
+        string="Speeder",
         help="Respondent completed the survey in less than a third of this survey's "
         "median duration, compared against every response as it stands now.",
+        compute="_compute_is_speeder",
+        search="_search_is_speeder",
     )
     is_straight_liner = fields.Boolean(
-        "Straight-liner",
+        string="Straight-liner",
+        help="Respondent selected the same answer for every choice/matrix question.",
         compute="_compute_is_straight_liner",
         store=True,
-        help="Respondent selected the same answer for every choice/matrix question.",
     )
     quality_score = fields.Integer(
+        help="Response quality from 0 (worst) to 100 (best). Based on speed and answer variety.",
         compute="_compute_quality_score",
         search="_search_quality_score",
-        help="Response quality from 0 (worst) to 100 (best). Based on speed and answer variety.",
     )
     is_session_answer = fields.Boolean(
-        "Is in a Session",
+        string="Is in a Session",
         help="Is that user input part of a survey session or not.",
     )
     question_time_limit_reached = fields.Boolean(
-        compute="_compute_question_time_limit_reached",
+        compute="_compute_question_time_limit_reached"
     )
 
     _unique_token = models.Constraint(

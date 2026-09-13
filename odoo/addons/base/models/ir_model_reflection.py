@@ -41,39 +41,39 @@ class IrModelConstraint(models.Model):
 
     name = fields.Char(
         string="Constraint",
-        required=True,
+        help="PostgreSQL constraint or foreign key name.",
         index=True,
         readonly=True,
-        help="PostgreSQL constraint or foreign key name.",
+        required=True,
     )
     definition = fields.Char(
-        readonly=True,
         help="PostgreSQL constraint definition",
+        readonly=True,
     )
     message = fields.Char(
-        translate=True,
         help="Error message returned when the constraint is violated.",
+        translate=True,
     )
     model = fields.Many2one(
-        "ir.model",
-        required=True,
-        ondelete="cascade",
+        comodel_name="ir.model",
         index=True,
         readonly=True,
+        required=True,
+        ondelete="cascade",
     )
     module = fields.Many2one(
-        "ir.module.module",
-        required=True,
+        comodel_name="ir.module.module",
         index=True,
-        ondelete="cascade",
         readonly=True,
+        required=True,
+        ondelete="cascade",
     )
     type = fields.Char(
         string="Constraint Type",
-        required=True,
+        help="Type of the constraint: `f` for a foreign key, `u` for other constraints.",
         size=1,
         readonly=True,
-        help="Type of the constraint: `f` for a foreign key, `u` for other constraints.",
+        required=True,
     )
 
     _module_name_uniq = models.Constraint(
@@ -352,13 +352,21 @@ class IrModelRelation(models.Model):
 
     name = fields.Char(
         string="Relation Name",
-        required=True,
-        index=True,
         help="PostgreSQL table name implementing a many2many relation.",
+        index=True,
+        required=True,
     )
-    model = fields.Many2one("ir.model", required=True, index=True, ondelete="cascade")
+    model = fields.Many2one(
+        comodel_name="ir.model",
+        index=True,
+        required=True,
+        ondelete="cascade",
+    )
     module = fields.Many2one(
-        "ir.module.module", required=True, index=True, ondelete="cascade"
+        comodel_name="ir.module.module",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     write_date = fields.Datetime()
     create_date = fields.Datetime()

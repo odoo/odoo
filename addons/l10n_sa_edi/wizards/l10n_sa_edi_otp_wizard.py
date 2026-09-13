@@ -7,18 +7,18 @@ class L10n_Sa_EdiOtpWizard(models.TransientModel):
     _description = "Request ZATCA OTP"
 
     l10n_sa_renewal = fields.Boolean(
-        "PCSID Renewal",
+        string="PCSID Renewal",
         help="Used to decide whether we should call the PCSID renewal API or the CCSID API",
         default=False,
     )
     l10n_sa_otp = fields.Char(
-        "OTP",
-        copy=False,
+        string="OTP",
         help="OTP required to get a CCSID. Can only be acquired through "
         "the Fatoora portal.",
+        copy=False,
     )
     journal_id = fields.Many2one(
-        "account.journal",
+        comodel_name="account.journal",
         default=lambda self: self.env.context.get("active_id"),
         required=True,
     )

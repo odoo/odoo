@@ -9,12 +9,16 @@ class MailGroupModeration(models.Model):
 
     email = fields.Char(required=True)
     status = fields.Selection(
-        [("allow", "Always Allow"), ("ban", "Permanent Ban")],
-        required=True,
+        selection=[("allow", "Always Allow"), ("ban", "Permanent Ban")],
         default="ban",
+        required=True,
     )
     mail_group_id = fields.Many2one(
-        "mail.group", string="Group", required=True, index=True, ondelete="cascade"
+        comodel_name="mail.group",
+        string="Group",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
 
     _mail_group_email_uniq = models.Constraint(

@@ -11,9 +11,15 @@ class WizardIrModelMenuCreate(models.TransientModel):
     _description = "Create Menu Wizard"
 
     menu_id = fields.Many2one(
-        "ir.ui.menu", string="Parent Menu", required=True, ondelete="cascade"
+        comodel_name="ir.ui.menu",
+        string="Parent Menu",
+        required=True,
+        ondelete="cascade",
     )
-    name = fields.Char(string="Menu Name", required=True)
+    name = fields.Char(
+        string="Menu Name",
+        required=True,
+    )
 
     def action_create_menu(self) -> dict[str, Any]:
         for menu in self:

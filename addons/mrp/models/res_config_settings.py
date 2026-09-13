@@ -5,25 +5,29 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     group_mrp_byproducts = fields.Boolean(
-        "By-Products", implied_group="mrp.group_mrp_byproducts"
+        string="By-Products",
+        implied_group="mrp.group_mrp_byproducts",
     )
-    module_mrp_mps = fields.Boolean("Master Production Schedule")
-    module_mrp_plm = fields.Boolean("Product Lifecycle Management (PLM)")
-    module_quality_control = fields.Boolean("Quality")
-    module_quality_control_worksheet = fields.Boolean("Quality Worksheet")
-    module_mrp_subcontracting = fields.Boolean("Subcontracting")
+    module_mrp_mps = fields.Boolean(string="Master Production Schedule")
+    module_mrp_plm = fields.Boolean(string="Product Lifecycle Management (PLM)")
+    module_quality_control = fields.Boolean(string="Quality")
+    module_quality_control_worksheet = fields.Boolean(string="Quality Worksheet")
+    module_mrp_subcontracting = fields.Boolean(string="Subcontracting")
     group_mrp_routings = fields.Boolean(
-        "MRP Work Orders", implied_group="mrp.group_mrp_routings"
+        string="MRP Work Orders",
+        implied_group="mrp.group_mrp_routings",
     )
     group_unlocked_by_default = fields.Boolean(
-        "Unlock Manufacturing Orders", implied_group="mrp.group_unlocked_by_default"
+        string="Unlock Manufacturing Orders",
+        implied_group="mrp.group_unlocked_by_default",
     )
     group_mrp_reception_report = fields.Boolean(
-        "Allocation Report for Manufacturing Orders",
+        string="Allocation Report for Manufacturing Orders",
         implied_group="mrp.group_mrp_reception_report",
     )
     group_mrp_workorder_dependencies = fields.Boolean(
-        "Work Order Dependencies", implied_group="mrp.group_mrp_workorder_dependencies"
+        string="Work Order Dependencies",
+        implied_group="mrp.group_mrp_workorder_dependencies",
     )
 
     def set_values(self):

@@ -29,13 +29,15 @@ class SaleOrderTemplateLine(models.Model):
     )
 
     company_id = fields.Many2one(
-        related="sale_order_template_id.company_id", store=True, index=True
+        related="sale_order_template_id.company_id",
+        store=True,
+        index=True,
     )
 
     product_id = fields.Many2one(
         comodel_name="product.product",
-        check_company=True,
         domain=lambda self: self._domain_product_id(),
+        check_company=True,
     )
 
     name = fields.Text(
@@ -43,22 +45,28 @@ class SaleOrderTemplateLine(models.Model):
         translate=True,
     )
 
-    allowed_uom_ids = fields.Many2many("uom.uom", compute="_compute_allowed_uom_ids")
+    allowed_uom_ids = fields.Many2many(
+        comodel_name="uom.uom",
+        compute="_compute_allowed_uom_ids",
+    )
     product_uom_id = fields.Many2one(
         comodel_name="uom.uom",
         string="Unit",
-        domain="[('id', 'in', allowed_uom_ids)]",
         compute="_compute_product_uom_id",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
+        domain="[('id', 'in', allowed_uom_ids)]",
     )
     product_uom_qty = fields.Float(
-        string="Quantity", required=True, digits="Product Unit", default=1
+        string="Quantity",
+        digits="Product Unit",
+        default=1,
+        required=True,
     )
 
     display_type = fields.Selection(
-        [
+        selection=[
             ("line_section", "Section"),
             ("line_subsection", "Subsection"),
             ("line_note", "Note"),
@@ -67,14 +75,14 @@ class SaleOrderTemplateLine(models.Model):
     )
 
     parent_id = fields.Many2one(
-        string="Parent Section Line",
         comodel_name="sale.order.template.line",
+        string="Parent Section Line",
         compute="_compute_parent_id",
     )
     is_optional = fields.Boolean(
         string="Optional Line",
-        copy=True,
         default=False,
+        copy=True,
     )
 
     @api.depends("product_id", "product_id.uom_id", "product_id.uom_ids")

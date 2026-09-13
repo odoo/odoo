@@ -87,43 +87,51 @@ class AppointmentType(models.Model):
 
     # Global Settings
     sequence = fields.Integer(default=10)
-    name = fields.Char("Appointment Title", required=True, translate=True)
+    name = fields.Char(
+        string="Appointment Title",
+        translate=True,
+        required=True,
+    )
     active = fields.Boolean(default=True)
 
     # Global Appointment Type Settings
-    appointment_duration = fields.Float("Duration", required=True, default=1.0)
+    appointment_duration = fields.Float(
+        string="Duration",
+        default=1.0,
+        required=True,
+    )
     appointment_duration_formatted = fields.Char(
-        "Appointment Duration Formatted ",
+        string="Appointment Duration Formatted ",
+        help="Appointment Duration formatted in words",
         compute="_compute_appointment_duration_formatted",
         readonly=True,
-        help="Appointment Duration formatted in words",
     )
     appointment_tz = fields.Selection(
-        _selection_timezones,
+        selection=_selection_timezones,
         string="Timezone",
-        required=True,
-        default=lambda self: self.env.user.tz or "UTC",
         help="Timezone where appointment take place",
+        default=lambda self: self.env.user.tz or "UTC",
+        required=True,
     )
     auto_confirm = fields.Boolean(
-        default=True,
         help="""Automatically confirm appointments at creation, up to the given percentage of the total capacity reserved.
             If unchecked, the appointments will be created as requests and will need manual confirmation.
             Requested appointments are still considered as reserved for the slots availability""",
+        default=True,
     )
     # Technical field. True when bookings will always be confirmed
     # e.g. 1.0 manual_confirmation_percentage and auto_confirm True
     is_always_confirm = fields.Boolean(compute="_compute_is_always_confirm")
-    image_1920 = fields.Image("Background Image")  # mixin.image override
-    location_id = fields.Many2one("res.partner")
+    image_1920 = fields.Image(string="Background Image")  # mixin.image override
+    location_id = fields.Many2one(comodel_name="res.partner")
     location = fields.Char(
-        "Location formatted",
+        string="Location formatted",
+        help="Location formatted for one line uses",
         compute="_compute_location",
         compute_sudo=True,
-        help="Location formatted for one line uses",
     )
     event_videocall_source = fields.Selection(
-        [("discuss", "Odoo Discuss")],
+        selection=[("discuss", "Odoo Discuss")],
         string="Video Link",
         help="Defines the type of video call link that will be used for the generated events. Keep it empty to prevent generating meeting url.",
     )
@@ -132,85 +140,85 @@ class AppointmentType(models.Model):
         help="Let attendees invite guests when registering a meeting.",
     )
     manual_confirmation_percentage = fields.Float(
-        "Capacity Percentage",
-        default=1.0,
+        string="Capacity Percentage",
         help="""Bookings will not be automatically confirmed once the total
         reserved user/resource capacity exceeds this percentage of total capacity.""",
+        default=1.0,
     )
     manage_capacity = fields.Boolean(
-        "Manage Capacities",
+        string="Manage Capacities",
         help="""Manage the maximum amount of people a user/resource can handle (e.g. Table for 6 persons, ...)""",
     )
     max_bookings = fields.Integer(
-        "Total Bookings",
-        default=1,
+        string="Total Bookings",
         help="""The maximum amount of bookings per slot the appointment can handle (e.g. Allow 6 bookings for the given user/resource).
             This field is only used if the appointment type is not set to manage capacity.""",
+        default=1,
     )
     # 'punctual' types are time-bound
     start_datetime = fields.Datetime()
     end_datetime = fields.Datetime()
     # mail templates
     booked_mail_template_id = fields.Many2one(
-        "mail.template",
+        comodel_name="mail.template",
         string="Booking Email",
-        ondelete="restrict",
-        domain=[("model", "=", "calendar.attendee")],
-        default=_default_booked_mail_template_id,
         help="If set an email will be sent to the customer when the appointment is booked.",
+        default=_default_booked_mail_template_id,
+        domain=[("model", "=", "calendar.attendee")],
+        ondelete="restrict",
     )
     canceled_mail_template_id = fields.Many2one(
-        "mail.template",
+        comodel_name="mail.template",
         string="Cancellation Email",
-        ondelete="restrict",
-        domain=[("model", "=", "calendar.event")],
-        default=_default_canceled_mail_template_id,
         help="If set an email will be sent to the customer when the appointment is cancelled.",
+        default=_default_canceled_mail_template_id,
+        domain=[("model", "=", "calendar.event")],
+        ondelete="restrict",
     )
 
     # Assignment flow
     assignment_method = fields.Selection(
-        [("auto", "Automatically"), ("manual", "By visitor")],
+        selection=[("auto", "Automatically"), ("manual", "By visitor")],
         string="Assignment",
+        help="How users and resources will be assigned to the meetings that customers book on your website.",
         compute="_compute_assignment_method",
         readonly=False,
-        help="How users and resources will be assigned to the meetings that customers book on your website.",
     )
-    is_auto_assign = fields.Boolean("Assign automatically")
-    is_date_first = fields.Boolean("Select date and time first")
+    is_auto_assign = fields.Boolean(string="Assign automatically")
+    is_date_first = fields.Boolean(string="Select date and time first")
     select_first = fields.Selection(
-        [("date", "Date"), ("user_resource", "User / Resource")],
+        selection=[("date", "Date"), ("user_resource", "User / Resource")],
         string="Starts with",
+        help="What is selected first by the customer when booking an appointment.",
         compute="_compute_select_first",
         readonly=False,
-        help="What is selected first by the customer when booking an appointment.",
     )
 
     category = fields.Selection(
-        [
+        selection=[
             ("recurring", "Weekly Schedule"),
             ("punctual", "Date-limited"),
             ("custom", "Flexible Schedule"),
             ("anytime", "Calendar Link"),
         ],
-        compute="_compute_category_id",
-        inverse="_inverse_category",
-        store="True",
         help="""Used to define this appointment type's category.\n
         Can be one of:\n
             - Weekly Schedule: the default category, weekly recurring slots. Accessible from the website\n
             - Date-limited: regular slots limited between 2 datetimes. Accessible from the website\n
             - Flexible Schedule: the user will create and share to another user a custom appointment type with hand-picked time slots\n
             - Calendar Link: the user will create and share to another user an appointment type covering all their time slots""",
+        compute="_compute_category_id",
+        inverse="_inverse_category",
+        store="True",
     )
     category_slot_scheduling = fields.Selection(
-        [("weekly", "Weekly"), ("flexible", "Flexible")],
+        selection=[("weekly", "Weekly"), ("flexible", "Flexible")],
         string="Schedule",
-        readonly=False,
         compute="_compute_category_slot_scheduling",
+        readonly=False,
     )
     category_time_display = fields.Selection(
-        [
+        selection=[
             ("recurring_fields", "Within the next"),
             ("punctual_fields", "On specific dates"),
         ],
@@ -219,49 +227,55 @@ class AppointmentType(models.Model):
         readonly=False,
     )
     country_ids = fields.Many2many(
-        "res.country",
-        "appointment_type_country_rel",
+        comodel_name="res.country",
+        relation="appointment_type_country_rel",
         string="Allowed Countries",
         help="Keep empty to allow visitors from any country, otherwise you only allow visitors from selected countries",
     )
 
     # Frontend Settings
     message_confirmation = fields.Html(
-        "Confirmation Message",
-        translate=True,
+        string="Confirmation Message",
         help="Extra information provided once the appointment is booked.",
+        translate=True,
     )
     message_intro = fields.Html(
-        "Introduction Message",
+        string="Introduction Message",
+        help="Small description of the appointment type.",
         translate=True,
         sanitize_attributes=False,
-        help="Small description of the appointment type.",
     )
 
     # Display Settings
     hide_duration = fields.Boolean()
-    hide_timezone = fields.Boolean("Hide Time Zone")
+    hide_timezone = fields.Boolean(string="Hide Time Zone")
     show_avatars = fields.Boolean(
-        "Display pictures",
-        compute="_compute_show_avatars",
-        readonly=False,
-        store=True,
+        string="Display pictures",
         help="""Display user or resource images across the entire booking flow.""",
+        compute="_compute_show_avatars",
+        store=True,
+        readonly=False,
     )
 
     # Scheduling Configuration
     min_cancellation_hours = fields.Float(
-        "Cancel Before (hours)", required=True, default=1.0
+        string="Cancel Before (hours)",
+        default=1.0,
+        required=True,
     )
     min_schedule_hours = fields.Float(
-        "Schedule before (hours)", required=True, default=1.0
+        string="Schedule before (hours)",
+        default=1.0,
+        required=True,
     )
     max_schedule_days = fields.Integer(
-        "Schedule not after (days)", required=True, default=15
+        string="Schedule not after (days)",
+        default=15,
+        required=True,
     )
 
     question_ids = fields.Many2many(
-        "survey.question",
+        comodel_name="survey.question",
         relation="appointment_type_survey_question_rel",
         column1="appointment_type_id",
         column2="survey_question_id",
@@ -269,78 +283,96 @@ class AppointmentType(models.Model):
         default=_default_question_ids,
     )
     reminder_ids = fields.Many2many(
-        "calendar.alarm",
+        comodel_name="calendar.alarm",
         string="Reminders",
         default=lambda self: self.env["calendar.alarm"].search(
             [("default_for_new_appointment_type", "=", True)]
         ),
     )
     schedule_based_on = fields.Selection(
-        [("users", "Users"), ("resources", "Resources")],
+        selection=[("users", "Users"), ("resources", "Resources")],
         string="Book",
         default="users",
         required=True,
     )
     slot_ids = fields.One2many(
-        "appointment.slot", "appointment_type_id", "Availabilities", copy=True
+        comodel_name="appointment.slot",
+        inverse_name="appointment_type_id",
+        string="Availabilities",
+        copy=True,
     )
     slot_creation_interval = fields.Float(
-        "Create slot every",
-        default=1.0,
+        string="Create slot every",
         help="Starting from the beginning of the time slot, Odoo will create a new slot at regular intervals based on the time specified here.",
+        default=1.0,
     )
 
     # Staff Users Management
     staff_user_ids = fields.Many2many(
-        "res.users",
-        "appointment_type_res_users_rel",
-        domain="[('share', '=', False)]",
+        comodel_name="res.users",
+        relation="appointment_type_res_users_rel",
         string="Users",
-        default=lambda self: self.env.user,
         compute="_compute_staff_user_ids",
+        default=lambda self: self.env.user,
         store=True,
         readonly=False,
+        domain="[('share', '=', False)]",
         tracking=True,
     )
-    staff_user_count = fields.Count("staff_user_ids", "# Staff Users")
+    staff_user_count = fields.Count(
+        count_of="staff_user_ids",
+        string="# Staff Users",
+    )
     user_capacity = fields.Integer(
-        default=1,
         help="The maximum amount of capacity a user can handle when manage capacity is enabled.",
+        default=1,
     )
 
     # Resources Management
     resource_ids = fields.Many2many(
-        "appointment.resource",
-        string="Resources",
+        comodel_name="appointment.resource",
         relation="appointment_type_appointment_resource_rel",
+        string="Resources",
         compute="_compute_resource_ids",
         store=True,
         readonly=False,
         tracking=True,
     )
-    resource_count = fields.Integer("# Resources", compute="_compute_resource_info")
+    resource_count = fields.Integer(
+        string="# Resources",
+        compute="_compute_resource_info",
+    )
     resource_total_capacity = fields.Integer(
-        "Total Capacity", compute="_compute_resource_info"
+        string="Total Capacity",
+        compute="_compute_resource_info",
     )
 
     # Statistics / Technical / Misc
     appointment_count = fields.Integer(
-        "# Appointments", compute="_compute_appointment_counts"
+        string="# Appointments",
+        compute="_compute_appointment_counts",
     )
     appointment_count_request = fields.Integer(
-        "# Appointments To Confirm", compute="_compute_appointment_counts"
+        string="# Appointments To Confirm",
+        compute="_compute_appointment_counts",
     )
     appointment_count_upcoming = fields.Integer(
-        "# Upcoming Appointments", compute="_compute_appointment_counts"
+        string="# Upcoming Appointments",
+        compute="_compute_appointment_counts",
     )
     appointment_invite_ids = fields.Many2many(
-        "appointment.invite", string="Invitation Links", copy=False
+        comodel_name="appointment.invite",
+        string="Invitation Links",
+        copy=False,
     )
     appointment_invite_count = fields.Integer(
-        "# Invitation Links", compute="_compute_appointment_invite_count"
+        string="# Invitation Links",
+        compute="_compute_appointment_invite_count",
     )
     meeting_ids = fields.One2many(
-        "calendar.event", "appointment_type_id", string="Appointment Meetings"
+        comodel_name="calendar.event",
+        inverse_name="appointment_type_id",
+        string="Appointment Meetings",
     )
 
     # Onboarding connectors display (see o_appointment_cal_sync_alert)

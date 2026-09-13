@@ -6,7 +6,9 @@ class HrLeave(models.Model):
     _inherit = "hr.leave"
 
     timesheet_ids = fields.One2many(
-        "account.analytic.line", "holiday_id", string="Analytic Lines"
+        comodel_name="account.analytic.line",
+        inverse_name="holiday_id",
+        string="Analytic Lines",
     )
 
     def _apply_leave_request(self):

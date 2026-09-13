@@ -36,26 +36,29 @@ class MailGuest(models.Model):
     name = fields.Char(required=True)
     access_token = fields.Char(
         default=lambda self: str(uuid.uuid4()),
-        groups="base.group_system",
-        required=True,
-        readonly=True,
         copy=False,
+        readonly=True,
+        required=True,
+        groups="base.group_system",
     )
     country_id: ResCountry = fields.Many2one(comodel_name="res.country")
     email = fields.Char()
-    lang = fields.Selection(string="Language", selection=_selection_langs)
+    lang = fields.Selection(
+        selection=_selection_langs,
+        string="Language",
+    )
     timezone = fields.Selection(selection=_selection_timezones)
     channel_ids: DiscussChannel = fields.Many2many(
-        string="Channels",
         comodel_name="discuss.channel",
         relation="discuss_channel_member",
         column1="guest_id",
         column2="channel_id",
+        string="Channels",
         copy=False,
     )
     presence_ids: MailPresence = fields.One2many(
-        "mail.presence",
-        "guest_id",
+        comodel_name="mail.presence",
+        inverse_name="guest_id",
         groups="base.group_system",
     )
 

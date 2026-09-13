@@ -5,7 +5,9 @@ class StockWarehouse(models.Model):
     _inherit = "stock.warehouse"
 
     subcontracting_dropshipping_pull_id = fields.Many2one(
-        "stock.rule", "Subcontracting-Dropshipping MTS Rule", copy=False
+        comodel_name="stock.rule",
+        string="Subcontracting-Dropshipping MTS Rule",
+        copy=False,
     )
 
     @api.model_create_multi

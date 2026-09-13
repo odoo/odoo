@@ -7,13 +7,18 @@ class ResConfigSettings(models.TransientModel):
 
     # E-Invoice
     l10n_in_edi_feature = fields.Boolean(
-        related="company_id.l10n_in_edi_feature", readonly=False
+        related="company_id.l10n_in_edi_feature",
+        readonly=False,
     )
     l10n_in_edi_username = fields.Char(
-        "Indian EDI username", related="company_id.l10n_in_edi_username", readonly=False
+        related="company_id.l10n_in_edi_username",
+        string="Indian EDI username",
+        readonly=False,
     )
     l10n_in_edi_password = fields.Char(
-        "Indian EDI password", related="company_id.l10n_in_edi_password", readonly=False
+        related="company_id.l10n_in_edi_password",
+        string="Indian EDI password",
+        readonly=False,
     )
 
     # E-Invoice Methods

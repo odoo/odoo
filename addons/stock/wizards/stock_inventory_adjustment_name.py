@@ -9,11 +9,12 @@ class StockInventoryAdjustmentName(models.TransientModel):
 
     quant_ids = fields.Many2many(comodel_name="stock.quant")
     inventory_adjustment_name = fields.Char(
-        string="Inventory Reason", default="Physical Inventory"
+        string="Inventory Reason",
+        default="Physical Inventory",
     )
     counting_date = fields.Datetime(
-        default=fields.Datetime.now,
         help="Date at which the resulting moves will be dated.",
+        default=fields.Datetime.now,
     )
 
     def _get_quants_context(self):

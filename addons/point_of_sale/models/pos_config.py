@@ -89,23 +89,23 @@ class PosConfig(models.Model):
 
     name = fields.Char(
         string="Point of Sale",
-        required=True,
         help="An internal identification of the point of sale.",
+        required=True,
     )
     printer_ids = fields.Many2many(
-        "pos.printer",
-        "pos_config_printer_rel",
-        "config_id",
-        "printer_id",
+        comodel_name="pos.printer",
+        relation="pos_config_printer_rel",
+        column1="config_id",
+        column2="printer_id",
         string="Order Printers",
     )
-    is_order_printer = fields.Boolean("Order Printer")
+    is_order_printer = fields.Boolean(string="Order Printer")
     is_installed_account_accountant = fields.Boolean(
         string="Is the Full Accounting Installed",
         compute="_compute_is_installed_account_accountant",
     )
     picking_type_id = fields.Many2one(
-        "stock.picking.type",
+        comodel_name="stock.picking.type",
         string="Operation Type",
         default=_default_picking_type_id,
         required=True,
@@ -116,44 +116,58 @@ class PosConfig(models.Model):
         ondelete="restrict",
     )
     journal_id = fields.Many2one(
-        "account.journal",
+        comodel_name="account.journal",
         string="Point of Sale Journal",
-        domain=[("type", "in", ("general", "sale"))],
-        check_company=True,
         help="Accounting journal used to post POS session journal entries and POS invoice payments.",
         default=_default_journal_id,
+        domain=[("type", "in", ("general", "sale"))],
         ondelete="restrict",
+        check_company=True,
     )
     invoice_journal_id = fields.Many2one(
-        "account.journal",
-        check_company=True,
-        domain=[("type", "=", "sale")],
+        comodel_name="account.journal",
         help="Accounting journal used to create invoices.",
         default=_default_invoice_journal_id,
+        domain=[("type", "=", "sale")],
+        check_company=True,
     )
     currency_id = fields.Many2one(
-        "res.currency",
+        comodel_name="res.currency",
         compute="_compute_currency_id",
-        store=True,
         compute_sudo=True,
+        store=True,
     )
     order_seq_id = fields.Many2one(
-        "ir.sequence", string="Order Sequence", readonly=True, copy=False
+        comodel_name="ir.sequence",
+        string="Order Sequence",
+        copy=False,
+        readonly=True,
     )
     order_backend_seq_id = fields.Many2one(
-        "ir.sequence", string="Order Backend Sequence", readonly=True, copy=False
+        comodel_name="ir.sequence",
+        string="Order Backend Sequence",
+        copy=False,
+        readonly=True,
     )
     order_line_seq_id = fields.Many2one(
-        "ir.sequence", string="Order Line Sequence", readonly=True, copy=False
+        comodel_name="ir.sequence",
+        string="Order Line Sequence",
+        copy=False,
+        readonly=True,
     )
     device_seq_id = fields.Many2one(
-        "ir.sequence", string="Device Sequence", readonly=True, copy=False
+        comodel_name="ir.sequence",
+        string="Device Sequence",
+        copy=False,
+        readonly=True,
     )
     iface_cashdrawer = fields.Boolean(
-        string="Cashdrawer", help="Automatically open the cashdrawer."
+        string="Cashdrawer",
+        help="Automatically open the cashdrawer.",
     )
     iface_electronic_scale = fields.Boolean(
-        string="Electronic Scale", help="Enables Electronic Scale integration."
+        string="Electronic Scale",
+        help="Enables Electronic Scale integration.",
     )
     iface_print_via_proxy = fields.Boolean(
         string="Print via Proxy",
@@ -164,34 +178,38 @@ class PosConfig(models.Model):
         help="Enable barcode scanning with a remotely connected barcode scanner and card swiping with a Vantiv card reader.",
     )
     iface_big_scrollbars = fields.Boolean(
-        "Large Scrollbars", help="For imprecise industrial touchscreens."
+        string="Large Scrollbars",
+        help="For imprecise industrial touchscreens.",
     )
     iface_group_by_categ = fields.Boolean(
-        "Group products by categories", help="Display products grouped by categories."
+        string="Group products by categories",
+        help="Display products grouped by categories.",
     )
     iface_print_auto = fields.Boolean(
         string="Automatic Receipt Printing",
-        default=False,
         help="The receipt will automatically be printed at the end of each order.",
+        default=False,
     )
     iface_print_skip_screen = fields.Boolean(
         string="Skip Preview Screen",
-        default=True,
         help="The receipt screen will be skipped if the receipt can be printed automatically.",
+        default=True,
     )
     iface_tax_included = fields.Selection(
-        [("subtotal", "Tax-Excluded Price"), ("total", "Tax-Included Price")],
+        selection=[("subtotal", "Tax-Excluded Price"), ("total", "Tax-Included Price")],
         string="Tax Display",
         default="total",
         required=True,
     )
     iface_available_categ_ids = fields.Many2many(
-        "pos.category",
+        comodel_name="pos.category",
         string="Available PoS Product Categories",
         help="The point of sale will only display products which are within one of the selected category trees. If no category is specified, all available products will be shown",
     )
     customer_display_bg_img = fields.Image(
-        string="Background Image", max_width=1920, max_height=1920
+        string="Background Image",
+        max_width=1920,
+        max_height=1920,
     )
     customer_display_bg_img_name = fields.Char(string="Background Image Name")
     restrict_price_control = fields.Boolean(
@@ -200,45 +218,51 @@ class PosConfig(models.Model):
     )
     is_margins_costs_accessible_to_every_user = fields.Boolean(
         string="Margins & Costs",
-        default=False,
         help="When disabled, only PoS manager can view the margin and cost of product among the Product info.",
+        default=False,
     )
     cash_control = fields.Boolean(
         string="Advanced Cash Control",
-        compute="_compute_cash_control",
         help="Check the amount of the cashbox at opening and closing.",
+        compute="_compute_cash_control",
     )
     set_maximum_difference = fields.Boolean(
-        help="Set a maximum difference allowed between the expected and counted money during the closing of the session.",
+        help="Set a maximum difference allowed between the expected and counted money during the closing of the session."
     )
     receipt_header = fields.Text(
-        help="A short text that will be inserted as a header in the printed receipt.",
+        help="A short text that will be inserted as a header in the printed receipt."
     )
     receipt_footer = fields.Text(
-        help="A short text that will be inserted as a footer in the printed receipt.",
+        help="A short text that will be inserted as a footer in the printed receipt."
     )
     basic_receipt = fields.Boolean(
-        help="Print basic ticket without prices. Can be used for gifts.",
+        help="Print basic ticket without prices. Can be used for gifts."
     )
     proxy_ip = fields.Char(
         string="IP Address",
-        size=45,
         help="The hostname or ip address of the hardware proxy, Will be autodetected if left empty.",
+        size=45,
     )
     active = fields.Boolean(default=True)
     uuid = fields.Char(
-        readonly=True,
+        help="A globally unique identifier for this pos configuration, used to prevent conflicts in client-generated data.",
         default=lambda self: str(uuid4()),
         copy=False,
-        help="A globally unique identifier for this pos configuration, used to prevent conflicts in client-generated data.",
+        readonly=True,
     )
-    session_ids = fields.One2many("pos.session", "config_id", string="Sessions")
+    session_ids = fields.One2many(
+        comodel_name="pos.session",
+        inverse_name="config_id",
+        string="Sessions",
+    )
     current_session_id = fields.Many2one(
-        "pos.session", compute="_compute_current_session"
+        comodel_name="pos.session",
+        compute="_compute_current_session",
     )
     current_session_state = fields.Char(compute="_compute_current_session")
     number_of_rescue_session = fields.Integer(
-        string="Number of Rescue Session", compute="_compute_current_session"
+        string="Number of Rescue Session",
+        compute="_compute_current_session",
     )
     last_session_closing_cash = fields.Float(compute="_compute_last_session")
     last_session_closing_date = fields.Date(compute="_compute_last_session")
@@ -246,109 +270,129 @@ class PosConfig(models.Model):
     pos_session_state = fields.Char(compute="_compute_current_session_user")
     pos_session_duration = fields.Char(compute="_compute_current_session_user")
     pricelist_id = fields.Many2one(
-        "product.pricelist",
+        comodel_name="product.pricelist",
         string="Default Pricelist",
         help="The pricelist used if no customer is selected or if the customer has no Sale Pricelist configured if any.",
     )
     available_pricelist_ids = fields.Many2many(
-        "product.pricelist",
+        comodel_name="product.pricelist",
         string="Available Pricelists",
         help="Make several pricelists available in the Point of Sale. You can also apply a pricelist to specific customers from their contact form (in Sales tab). To be valid, this pricelist must be listed here as an available pricelist. Otherwise the default pricelist will apply.",
     )
     company_id = fields.Many2one(
-        "res.company",
-        required=True,
+        comodel_name="res.company",
         default=lambda self: self.env.company,
+        required=True,
     )
     group_pos_manager_id = fields.Many2one(
-        "res.groups",
+        comodel_name="res.groups",
         string="Point of Sale Manager Group",
-        default=_default_group_pos_manager_id,
         help="This field is there to pass the id of the pos manager group to the point of sale client.",
+        default=_default_group_pos_manager_id,
     )
     group_pos_user_id = fields.Many2one(
-        "res.groups",
+        comodel_name="res.groups",
         string="Point of Sale User Group",
-        default=_default_group_pos_user_id,
         help="This field is there to pass the id of the pos user group to the point of sale client.",
+        default=_default_group_pos_user_id,
     )
     iface_tipproduct = fields.Boolean(string="Product tips")
     tip_product_id = fields.Many2one(
-        "product.product",
-        default=_default_tip_product_id,
+        comodel_name="product.product",
         help="This product is used as reference on customer receipts.",
+        default=_default_tip_product_id,
     )
     fiscal_position_ids = fields.Many2many(
-        "account.fiscal.position",
+        comodel_name="account.fiscal.position",
         string="Fiscal Positions",
         help="This is useful for restaurants with onsite and take-away services that imply specific tax rates.",
     )
-    default_fiscal_position_id = fields.Many2one("account.fiscal.position")
-    default_bill_ids = fields.Many2many("pos.bill", string="Coins/Bills")
-    use_pricelist = fields.Boolean("Use a pricelist.")
-    use_presets = fields.Boolean()
-    default_preset_id = fields.Many2one("pos.preset")
-    available_preset_ids = fields.Many2many("pos.preset", string="Available Presets")
-    tax_regime_selection = fields.Boolean("Tax Regime Selection value")
-    limit_categories = fields.Boolean("Restrict Categories")
-    module_pos_restaurant = fields.Boolean("Is a Bar/Restaurant")
-    module_pos_avatax = fields.Boolean(
-        "AvaTax PoS Integration", help="Use automatic taxes mapping with Avatax in PoS"
+    default_fiscal_position_id = fields.Many2one(comodel_name="account.fiscal.position")
+    default_bill_ids = fields.Many2many(
+        comodel_name="pos.bill",
+        string="Coins/Bills",
     )
-    module_pos_discount = fields.Boolean("Global Discounts")
-    module_pos_appointment = fields.Boolean("Online Booking")
-    is_posbox = fields.Boolean("PosBox")
-    is_header_or_footer = fields.Boolean("Custom Header & Footer")
+    use_pricelist = fields.Boolean(string="Use a pricelist.")
+    use_presets = fields.Boolean()
+    default_preset_id = fields.Many2one(comodel_name="pos.preset")
+    available_preset_ids = fields.Many2many(
+        comodel_name="pos.preset",
+        string="Available Presets",
+    )
+    tax_regime_selection = fields.Boolean(string="Tax Regime Selection value")
+    limit_categories = fields.Boolean(string="Restrict Categories")
+    module_pos_restaurant = fields.Boolean(string="Is a Bar/Restaurant")
+    module_pos_avatax = fields.Boolean(
+        string="AvaTax PoS Integration",
+        help="Use automatic taxes mapping with Avatax in PoS",
+    )
+    module_pos_discount = fields.Boolean(string="Global Discounts")
+    module_pos_appointment = fields.Boolean(string="Online Booking")
+    is_posbox = fields.Boolean(string="PosBox")
+    is_header_or_footer = fields.Boolean(string="Custom Header & Footer")
     module_pos_hr = fields.Boolean(help="Show employee login screen")
     amount_authorized_diff = fields.Float(
-        "Amount Authorized Difference",
+        string="Amount Authorized Difference",
         help="This field depicts the maximum difference allowed between the ending balance and the theoretical cash when "
         "closing a session, for non-POS managers. If this maximum is reached, the user will have an error message at "
         "the closing of his session saying that he needs to contact his manager.",
     )
     payment_method_ids = fields.Many2many(
-        "pos.payment.method",
+        comodel_name="pos.payment.method",
         string="Payment Methods",
         default=lambda self: self._default_payment_method_ids(),
         copy=False,
     )
     company_has_template = fields.Boolean(
-        string="Company has chart of accounts", compute="_compute_company_has_template"
+        string="Company has chart of accounts",
+        compute="_compute_company_has_template",
     )
     current_user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Current Session Responsible",
         compute="_compute_current_session_user",
     )
     other_devices = fields.Boolean(
         help="Connect devices to your PoS without an IoT Box."
     )
-    rounding_method = fields.Many2one("account.cash.rounding", string="Cash rounding")
+    rounding_method = fields.Many2one(
+        comodel_name="account.cash.rounding",
+        string="Cash rounding",
+    )
     cash_rounding = fields.Boolean()
     only_round_cash_method = fields.Boolean(string="Only apply rounding on cash")
     has_active_session = fields.Boolean(compute="_compute_current_session")
-    manual_discount = fields.Boolean(string="Line Discounts", default=True)
+    manual_discount = fields.Boolean(
+        string="Line Discounts",
+        default=True,
+    )
     ship_later = fields.Boolean()
     warehouse_id = fields.Many2one(
-        "stock.warehouse", default=_default_warehouse_id, ondelete="restrict"
+        comodel_name="stock.warehouse",
+        default=_default_warehouse_id,
+        ondelete="restrict",
     )
     route_id = fields.Many2one(
-        "stock.route", string="Spefic route for products delivered later."
+        comodel_name="stock.route",
+        string="Spefic route for products delivered later.",
     )
     picking_policy = fields.Selection(
-        [("direct", "As soon as possible"), ("one", "When all products are ready")],
+        selection=[
+            ("direct", "As soon as possible"),
+            ("one", "When all products are ready"),
+        ],
         string="Shipping Policy",
-        required=True,
-        default="direct",
         help="If you deliver all products at once, the delivery order will be scheduled based on the greatest "
         "product lead time. Otherwise, it will be based on the shortest.",
+        default="direct",
+        required=True,
     )
     auto_validate_terminal_payment = fields.Boolean(
-        default=True,
         help="Automatically validates orders paid with a payment terminal.",
+        default=True,
     )
     trusted_config_ids = fields.Many2many(
-        "pos.config",
+        comodel_name="pos.config",
         relation="pos_config_trust_relation",
         column1="is_trusting",
         column2="is_trusted",
@@ -364,12 +408,13 @@ class PosConfig(models.Model):
         default=True,
     )
     note_ids = fields.Many2many(
-        "pos.note",
+        comodel_name="pos.note",
         string="Note Models",
         help="The predefined notes of this point of sale.",
     )
     module_pos_sms = fields.Boolean(
-        string="SMS Enabled", help="Activate SMS feature for point_of_sale"
+        string="SMS Enabled",
+        help="Activate SMS feature for point_of_sale",
     )
     is_closing_entry_by_product = fields.Boolean(
         string="Closing Entry by product",
@@ -382,33 +427,32 @@ class PosConfig(models.Model):
     )
     last_data_change = fields.Datetime(
         string="Last Write Date",
-        readonly=True,
         compute="_compute_last_data_change",
         store=True,
+        readonly=True,
     )
-    fallback_nomenclature_id = fields.Many2one("barcode.nomenclature")
+    fallback_nomenclature_id = fields.Many2one(comodel_name="barcode.nomenclature")
     epson_printer_ip = fields.Char(
         string="Epson Printer IP",
-        help=(
-            "Local IP address of an Epson receipt printer, or its serial number if the "
-            "'Automatic Certificate Update' option is enabled in the printer settings."
-        ),
+        help="Local IP address of an Epson receipt printer, or its serial number if the "
+        "'Automatic Certificate Update' option is enabled in the printer settings.",
     )
     use_fast_payment = fields.Boolean(
-        "Fast Payment Validation",
+        string="Fast Payment Validation",
         help="Enable fast payment methods to validate orders on the product screen.",
     )
     fast_payment_method_ids = fields.Many2many(
-        "pos.payment.method",
-        string="Fast Payment Methods",
-        compute="_compute_fast_payment_method_ids",
+        comodel_name="pos.payment.method",
         relation="pos_payment_method_config_fast_validation_relation",
-        store=True,
+        string="Fast Payment Methods",
         help="These payment methods will be available for fast payment",
+        compute="_compute_fast_payment_method_ids",
+        store=True,
         readonly=False,
     )
     statistics_for_current_session = fields.Json(
-        string="Session Statistics", compute="_compute_statistics_for_current_session"
+        string="Session Statistics",
+        compute="_compute_statistics_for_current_session",
     )
 
     def _get_next_order_refs(self, device_identifier="0"):

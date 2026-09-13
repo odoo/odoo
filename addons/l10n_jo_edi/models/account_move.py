@@ -17,47 +17,50 @@ class AccountMove(models.Model):
 
     l10n_jo_edi_uuid = fields.Char(
         string="Invoice UUID",
-        copy=False,
         compute="_compute_l10n_jo_edi_uuid",
         store=True,
+        copy=False,
     )
-    l10n_jo_edi_qr = fields.Char(string="QR", copy=False)
+    l10n_jo_edi_qr = fields.Char(
+        string="QR",
+        copy=False,
+    )
 
     l10n_jo_edi_is_needed = fields.Boolean(
-        compute="_compute_l10n_jo_edi_is_needed",
         help="Jordan: technical field to determine if this invoice is eligible to be e-invoiced.",
+        compute="_compute_l10n_jo_edi_is_needed",
     )
     l10n_jo_edi_state = fields.Selection(
         selection=[("to_send", "To Send"), ("sent", "Sent"), ("demo", "Sent (Demo)")],
         string="JoFotara State",
-        tracking=True,
         copy=False,
+        tracking=True,
     )
     l10n_jo_edi_error = fields.Text(
         string="JoFotara Error",
+        help="Jordan: Error details.",
         copy=False,
         readonly=True,
-        help="Jordan: Error details.",
     )
     l10n_jo_edi_computed_xml = fields.Binary(
         string="Jordan E-Invoice computed XML File",
-        compute="_compute_l10n_jo_edi_computed_xml",
         help="Jordan: technical field computing e-invoice XML data, useful at submission failure scenarios.",
+        compute="_compute_l10n_jo_edi_computed_xml",
     )
     l10n_jo_edi_xml_attachment_file = fields.Binary(
         string="Jordan E-Invoice XML File",
-        copy=False,
-        attachment=True,
         help="Jordan: technical field holding the e-invoice XML data.",
+        attachment=True,
+        copy=False,
     )
     l10n_jo_edi_xml_attachment_id = fields.Many2one(
         comodel_name="ir.attachment",
         string="Jordan E-Invoice XML",
+        help="Jordan: e-invoice XML.",
         compute=lambda self: self._compute_linked_attachment_id(
             "l10n_jo_edi_xml_attachment_id", "l10n_jo_edi_xml_attachment_file"
         ),
         depends=["l10n_jo_edi_xml_attachment_file"],
-        help="Jordan: e-invoice XML.",
     )
     reversed_entry_id = fields.Many2one(tracking=True)
     l10n_jo_edi_invoice_type = fields.Selection(
@@ -67,12 +70,12 @@ class AccountMove(models.Model):
             ("development", "Development Area"),
         ],
         string="Invoice Type",
-        precompute=True,
-        compute="_compute_l10n_jo_edi_invoice_type",
-        readonly=False,
-        store=True,
-        tracking=True,
         help="Invoice Types as per the Income and Sales Tax Department for JoFotara",
+        compute="_compute_l10n_jo_edi_invoice_type",
+        precompute=True,
+        store=True,
+        readonly=False,
+        tracking=True,
     )
 
     @api.depends("country_code", "move_type")

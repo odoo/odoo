@@ -40,55 +40,75 @@ class MailTemplatePreview(models.TransientModel):
         return self.env["res.lang"].get_installed()
 
     mail_template_id: MailTemplate = fields.Many2one(
-        "mail.template", string="Related Mail Template", required=True
+        comodel_name="mail.template",
+        string="Related Mail Template",
+        required=True,
     )
     model_id: IrModel = fields.Many2one(
-        "ir.model", string="Targeted model", related="mail_template_id.model_id"
+        comodel_name="ir.model",
+        related="mail_template_id.model_id",
+        string="Targeted model",
     )
     resource_ref = fields.Reference(
+        selection="_selection_target_model",
         string="Record",
         compute="_compute_resource_ref",
         compute_sudo=False,
-        readonly=False,
-        selection="_selection_target_model",
         store=True,
+        readonly=False,
     )
-    lang = fields.Selection(_selection_languages, string="Template Preview Language")
+    lang = fields.Selection(
+        selection=_selection_languages,
+        string="Template Preview Language",
+    )
     no_record = fields.Boolean(compute="_compute_no_record")
-    error_msg = fields.Char("Error Message", compute="_compute_mail_template_fields")
+    error_msg = fields.Char(
+        string="Error Message",
+        compute="_compute_mail_template_fields",
+    )
     subject = fields.Char(compute="_compute_mail_template_fields")
     email_from = fields.Char(
-        "From", compute="_compute_mail_template_fields", help="Sender address"
+        string="From",
+        help="Sender address",
+        compute="_compute_mail_template_fields",
     )
     email_to = fields.Char(
-        "To",
-        compute="_compute_mail_template_fields",
+        string="To",
         help="Comma-separated recipient addresses",
+        compute="_compute_mail_template_fields",
     )
     email_cc = fields.Char(
-        "Cc", compute="_compute_mail_template_fields", help="Carbon copy recipients"
+        string="Cc",
+        help="Carbon copy recipients",
+        compute="_compute_mail_template_fields",
     )
     reply_to = fields.Char(
-        "Reply-To",
-        compute="_compute_mail_template_fields",
+        string="Reply-To",
         help="Preferred response address",
+        compute="_compute_mail_template_fields",
     )
     scheduled_date = fields.Char(
-        compute="_compute_mail_template_fields",
         help="The queue manager will send the email after the date",
+        compute="_compute_mail_template_fields",
     )
     body_html = fields.Html(
-        "Body", compute="_compute_mail_template_fields", sanitize=False
+        string="Body",
+        sanitize=False,
+        compute="_compute_mail_template_fields",
     )
     attachment_ids: IrAttachment = fields.Many2many(
-        "ir.attachment", string="Attachments", compute="_compute_mail_template_fields"
+        comodel_name="ir.attachment",
+        string="Attachments",
+        compute="_compute_mail_template_fields",
     )
     has_attachments = fields.Boolean(compute="_compute_has_attachments")
     has_several_languages_installed = fields.Boolean(
         compute="_compute_has_several_languages_installed"
     )
     partner_ids: ResPartner = fields.Many2many(
-        "res.partner", string="Recipients", compute="_compute_mail_template_fields"
+        comodel_name="res.partner",
+        string="Recipients",
+        compute="_compute_mail_template_fields",
     )
 
     @api.depends("model_id")

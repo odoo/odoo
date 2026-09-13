@@ -43,8 +43,8 @@ class CertificateCertificate(models.Model):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        required=True,
         default=lambda self: self.env.company,
+        required=True,
         ondelete="cascade",
     )
     country_code = fields.Char(
@@ -53,25 +53,23 @@ class CertificateCertificate(models.Model):
     )
     name = fields.Char()
     active = fields.Boolean(
-        name="Active",
         help="Set active to false to archive the certificate",
         default=True,
+        name="Active",
     )
     content = fields.Binary(
         string="Certificate",
-        readonly=False,
-        required=True,
         compute="_compute_content",
         inverse="_inverse_content",
         store=False,
+        readonly=False,
+        required=True,
     )
     content_encrypted = fields.Binary(
         string="Certificate (encrypted)",
         attachment=False,
     )
-    content_plain = fields.Binary(
-        string="Certificate (unencrypted)",
-    )
+    content_plain = fields.Binary(string="Certificate (unencrypted)")
     pkcs12_password = fields.Char(
         string="Certificate Password",
         help="Password to decrypt the PKS file.",
@@ -83,34 +81,32 @@ class CertificateCertificate(models.Model):
         string="Certificate Password (encrypted)",
         attachment=False,
     )
-    pkcs12_password_plain = fields.Char(
-        string="Certificate Password (unencrypted)",
-    )
+    pkcs12_password_plain = fields.Char(string="Certificate Password (unencrypted)")
     private_key_id = fields.Many2one(
         comodel_name="certificate.key",
-        check_company=True,
-        domain=[("public", "=", False)],
         compute="_compute_private_key_id",
         store=True,
         readonly=False,
+        domain=[("public", "=", False)],
+        check_company=True,
     )
     public_key_id = fields.Many2one(
         comodel_name="certificate.key",
-        check_company=True,
-        domain=[("public", "=", True)],
         help="""Used to set a public key in case the one self-contained in the certificate is erroneus.
                 When a public key is set this way, it will be used instead of the one in the certificate.
              """,
+        domain=[("public", "=", True)],
+        check_company=True,
     )
     scope = fields.Selection(
-        string="Certificate scope",
         selection=[
             ("general", "General"),
         ],
-        default="general",
+        string="Certificate scope",
         help="What this certificate may be used for. Every consumer selects on "
         "this field, so a certificate is inert until it is scoped "
         "deliberately -- 'General' is the safe default, not a fiscal role.",
+        default="general",
     )
     content_format = fields.Selection(
         selection=[

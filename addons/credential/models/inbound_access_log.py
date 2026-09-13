@@ -19,23 +19,29 @@ class InboundAccessLog(models.Model):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        ondelete="cascade",
         index=True,
+        ondelete="cascade",
     )
     timestamp = fields.Datetime(
         string="First Seen",
         default=fields.Datetime.now,
-        required=True,
         index=True,
+        required=True,
     )
     last_seen_at = fields.Datetime(
         help="Same as First Seen unless this row collapses repeated refusals "
         "AND those refusals are counted. Audit-mode admissions are collapsed "
-        "but not counted, so on those rows it stays equal to First Seen.",
+        "but not counted, so on those rows it stays equal to First Seen."
     )
 
-    gate_model = fields.Char(required=True, index=True)
-    gate_id = fields.Integer(required=True, index=True)
+    gate_model = fields.Char(
+        index=True,
+        required=True,
+    )
+    gate_id = fields.Integer(
+        index=True,
+        required=True,
+    )
     gate_name = fields.Char()
 
     allowed = fields.Boolean(index=True)
@@ -50,41 +56,41 @@ class InboundAccessLog(models.Model):
             ("rate_limited", "Refused: endpoint rate limit"),
             ("unauthenticated", "Refused: authentication failed"),
         ],
-        required=True,
-        index=True,
         help="The verdict, categorised so it can be grouped and alerted on "
         "without parsing the reason text. `misconfigured` and "
         "`unauthenticated` are both 401s and were once the same value: the "
         "first is the gate refusing everything because its own configuration "
         "is incomplete, the second is a caller presenting bad credentials. "
         "They are separated because only the first is a standing condition.",
+        index=True,
+        required=True,
     )
     status_code = fields.Integer()
     reason = fields.Char(
-        help="The gate's own words. Empty when the request was allowed.",
+        help="The gate's own words. Empty when the request was allowed."
     )
     attempt_count = fields.Integer(
-        default=1,
         help="Requests this row stands for. Above 1 only where repeated "
         "refusals from one caller were collapsed into a single row. It stays "
         "at 1 on an audit-mode row, which stands for a whole window of "
         "admissions but does not count them: counting is an UPDATE of a row "
         "every concurrent request shares, and on an ingest path that is a "
         "serialisation failure per burst.",
+        default=1,
     )
 
     source_ip = fields.Char(
-        index=True,
         help="The caller. On a row that stands for repeated audit-mode "
         "admissions this is the first one seen in the window, not the only "
         "one: what that row records is the gate having no credential.",
+        index=True,
     )
     user_agent = fields.Char()
     auth_type = fields.Char(
-        help="The scheme the gate was configured to require, snapshotted.",
+        help="The scheme the gate was configured to require, snapshotted."
     )
     mode = fields.Char(
-        help="enforce or audit. `off` is not recorded: the gate did not run.",
+        help="enforce or audit. `off` is not recorded: the gate did not run."
     )
 
     display_name = fields.Char(compute="_compute_display_name")

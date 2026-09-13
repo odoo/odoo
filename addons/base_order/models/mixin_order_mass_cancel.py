@@ -5,7 +5,7 @@ class MixinOrderMassCancel(models.AbstractModel):
     _name = "mixin.order.mass.cancel"
     _description = "Cancel Multiple Orders"
 
-    orders_count = fields.Count("order_ids")
+    orders_count = fields.Count(count_of="order_ids")
     has_confirmed_order = fields.Boolean(compute="_compute_has_confirmed_order")
 
     @api.depends("order_ids")

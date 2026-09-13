@@ -33,43 +33,43 @@ class HrAttendance(models.Model):
         return None
 
     employee_id = fields.Many2one(
-        "hr.employee",
+        comodel_name="hr.employee",
         default=_default_employee_id,
-        required=True,
-        ondelete="cascade",
         index=True,
+        required=True,
         group_expand="_read_group_employee_id",
+        ondelete="cascade",
     )
     department_id = fields.Many2one(
-        "hr.department",
-        string="Department",
+        comodel_name="hr.department",
         related="employee_id.department_id",
+        string="Department",
         readonly=True,
     )
     manager_id = fields.Many2one(
         comodel_name="hr.employee",
         related="employee_id.parent_id",
-        readonly=True,
         export_string_translation=False,
+        readonly=True,
     )
     attendance_manager_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         related="employee_id.attendance_manager_id",
         export_string_translation=False,
     )
     is_manager = fields.Boolean(compute="_compute_is_manager")
     check_in = fields.Datetime(
         default=fields.Datetime.now,
+        index=True,
         required=True,
         tracking=True,
-        index=True,
     )
     check_out = fields.Datetime(tracking=True)
     date = fields.Date(
         compute="_compute_date",
+        precompute=True,
         store=True,
         index=True,
-        precompute=True,
         required=True,
     )
     worked_hours = fields.Float(
@@ -79,7 +79,9 @@ class HrAttendance(models.Model):
     )
     color = fields.Integer(compute="_compute_color")
     overtime_hours = fields.Float(
-        string="Over Time", compute="_compute_overtime_hours", store=True
+        string="Over Time",
+        compute="_compute_overtime_hours",
+        store=True,
     )
     overtime_status = fields.Selection(
         selection=[
@@ -89,40 +91,60 @@ class HrAttendance(models.Model):
         ],
         compute="_compute_overtime_status",
         store=True,
-        tracking=True,
         readonly=False,
+        tracking=True,
     )
     validated_overtime_hours = fields.Float(
         string="Extra Hours",
         compute="_compute_validated_overtime_hours",
-        tracking=True,
         store=True,
         readonly=True,
+        tracking=True,
     )
     in_latitude = fields.Float(
-        string="Latitude", digits=(10, 7), readonly=True, aggregator=None
+        string="Latitude",
+        digits=(10, 7),
+        readonly=True,
+        aggregator=None,
     )
     in_longitude = fields.Float(
-        string="Longitude", digits=(10, 7), readonly=True, aggregator=None
+        string="Longitude",
+        digits=(10, 7),
+        readonly=True,
+        aggregator=None,
     )
     in_location = fields.Char(
         help="Based on GPS-Coordinates if available or on IP Address"
     )
-    in_ip_address = fields.Char(string="IP Address", readonly=True)
-    in_browser = fields.Char(string="Browser", readonly=True)
+    in_ip_address = fields.Char(
+        string="IP Address",
+        readonly=True,
+    )
+    in_browser = fields.Char(
+        string="Browser",
+        readonly=True,
+    )
     in_mode = fields.Selection(
-        string="Mode",
         selection=[
             ("kiosk", "Kiosk"),
             ("systray", "Systray"),
             ("manual", "Manual"),
             ("technical", "Technical"),
         ],
-        readonly=True,
+        string="Mode",
         default="manual",
+        readonly=True,
     )
-    out_latitude = fields.Float(digits=(10, 7), readonly=True, aggregator=None)
-    out_longitude = fields.Float(digits=(10, 7), readonly=True, aggregator=None)
+    out_latitude = fields.Float(
+        digits=(10, 7),
+        readonly=True,
+        aggregator=None,
+    )
+    out_longitude = fields.Float(
+        digits=(10, 7),
+        readonly=True,
+        aggregator=None,
+    )
     out_location = fields.Char(
         help="Based on GPS-Coordinates if available or on IP Address"
     )
@@ -136,18 +158,20 @@ class HrAttendance(models.Model):
             ("technical", "Technical"),
             ("auto_check_out", "Automatic Check-Out"),
         ],
-        readonly=True,
         default="manual",
+        readonly=True,
     )
     expected_hours = fields.Float(
-        compute="_compute_expected_hours", store=True, aggregator="sum"
+        compute="_compute_expected_hours",
+        store=True,
+        aggregator="sum",
     )
     device_tracking_enabled = fields.Boolean(
         related="employee_id.company_id.attendance_device_tracking"
     )
     linked_overtime_ids = fields.One2many(
-        "hr.attendance.overtime.line",
-        "attendance_id",
+        comodel_name="hr.attendance.overtime.line",
+        inverse_name="attendance_id",
         readonly=False,
     )
 

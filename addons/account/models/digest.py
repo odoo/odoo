@@ -8,7 +8,7 @@ _debug = DebugLog(__name__)
 class DigestDigest(models.Model):
     _inherit = "digest.digest"
 
-    kpi_account_total_revenue = fields.Boolean("Revenue")
+    kpi_account_total_revenue = fields.Boolean(string="Revenue")
     kpi_account_total_revenue_value = fields.Monetary(
         compute="_compute_kpi_account_total_revenue_value"
     )

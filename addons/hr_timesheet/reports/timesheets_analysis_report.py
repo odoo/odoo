@@ -9,22 +9,61 @@ class TimesheetsAnalysisReport(models.Model):
     _description = "Timesheets Analysis Report"
     _auto = False
 
-    name = fields.Char("Description", readonly=True)
-    user_id = fields.Many2one("res.users", readonly=True)
-    project_id = fields.Many2one("project.project", readonly=True)
-    task_id = fields.Many2one("project.task", readonly=True)
-    parent_task_id = fields.Many2one("project.task", readonly=True)
-    manager_id = fields.Many2one("hr.employee", readonly=True)
-    company_id = fields.Many2one("res.company", readonly=True)
-    department_id = fields.Many2one("hr.department", readonly=True)
-    currency_id = fields.Many2one("res.currency", readonly=True)
+    name = fields.Char(
+        string="Description",
+        readonly=True,
+    )
+    user_id = fields.Many2one(
+        comodel_name="res.users",
+        readonly=True,
+    )
+    project_id = fields.Many2one(
+        comodel_name="project.project",
+        readonly=True,
+    )
+    task_id = fields.Many2one(
+        comodel_name="project.task",
+        readonly=True,
+    )
+    parent_task_id = fields.Many2one(
+        comodel_name="project.task",
+        readonly=True,
+    )
+    manager_id = fields.Many2one(
+        comodel_name="hr.employee",
+        readonly=True,
+    )
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        readonly=True,
+    )
+    department_id = fields.Many2one(
+        comodel_name="hr.department",
+        readonly=True,
+    )
+    currency_id = fields.Many2one(
+        comodel_name="res.currency",
+        readonly=True,
+    )
     date = fields.Date(readonly=True)
-    amount = fields.Monetary(currency_field="currency_id", readonly=True)
-    unit_amount = fields.Float("Time Spent", readonly=True)
-    partner_id = fields.Many2one("res.partner", readonly=True)
-    milestone_id = fields.Many2one("project.milestone", related="task_id.milestone_id")
+    amount = fields.Monetary(
+        currency_field="currency_id",
+        readonly=True,
+    )
+    unit_amount = fields.Float(
+        string="Time Spent",
+        readonly=True,
+    )
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        readonly=True,
+    )
+    milestone_id = fields.Many2one(
+        comodel_name="project.milestone",
+        related="task_id.milestone_id",
+    )
     message_partner_ids = fields.Many2many(
-        "res.partner",
+        comodel_name="res.partner",
         compute="_compute_message_partner_ids",
         search="_search_message_partner_ids",
         readonly=True,

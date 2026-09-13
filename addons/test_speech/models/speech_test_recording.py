@@ -13,7 +13,10 @@ class SpeechTestRecording(models.Model):
     _inherit = ["mixin.media.timeline"]
     _description = "Speech Test Recording"
 
-    name = fields.Char(required=True, default="recording")
+    name = fields.Char(
+        default="recording",
+        required=True,
+    )
     transcribed_count = fields.Integer(default=0)
     failed_count = fields.Integer(default=0)
     completed = fields.Boolean(default=False)
@@ -33,8 +36,12 @@ class SpeechTestCallWithItsOwnTranscript(models.Model):
     _inherit = ["mixin.media.timeline"]
     _description = "Speech Test Owner Declaring Its Own Transcript"
 
-    name = fields.Char(required=True, default="call")
+    name = fields.Char(
+        default="call",
+        required=True,
+    )
     transcript = fields.Text()
     transcription_status = fields.Selection(
-        [("pending", "Pending"), ("done", "Done")], default="pending"
+        selection=[("pending", "Pending"), ("done", "Done")],
+        default="pending",
     )

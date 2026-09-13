@@ -8,13 +8,22 @@ class StockLot(models.Model):
     _inherit = "stock.lot"
 
     repair_line_ids = fields.Many2many(
-        "repair.order", string="Repair Orders", compute="_compute_repair_line_ids"
+        comodel_name="repair.order",
+        string="Repair Orders",
+        compute="_compute_repair_line_ids",
     )
-    repair_part_count = fields.Count("repair_line_ids", "Repair part count")
+    repair_part_count = fields.Count(
+        count_of="repair_line_ids",
+        string="Repair part count",
+    )
     in_repair_count = fields.Integer(
-        "In repair count", compute="_compute_in_repair_count"
+        string="In repair count",
+        compute="_compute_in_repair_count",
     )
-    repaired_count = fields.Integer("Repaired count", compute="_compute_repaired_count")
+    repaired_count = fields.Integer(
+        string="Repaired count",
+        compute="_compute_repaired_count",
+    )
 
     @api.depends("name")
     def _compute_repair_line_ids(self):

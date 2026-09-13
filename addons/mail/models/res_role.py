@@ -16,7 +16,7 @@ class ResRole(models.Model):
 
     name = fields.Char(required=True)
     user_ids: ResUsers = fields.Many2many(
-        "res.users",
+        comodel_name="res.users",
         relation="res_role_res_users_rel",
         string="Users",
     )

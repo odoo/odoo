@@ -17,25 +17,25 @@ class ResPartner(models.Model):
         string="Tin Validation State",
         help="Technical field, hold the result of TIN validation using MyInvois API.\n"
         "It is non blocking, and will simply help ensure that the customer of an invoice is valid to avoid submission errors.",
-        compute="_compute_l10n_my_tin_validation_state",
-        readonly=False,
-        store=True,
         export_string_translation=False,
+        compute="_compute_l10n_my_tin_validation_state",
+        store=True,
+        readonly=False,
     )
     l10n_my_edi_display_tin_warning = fields.Boolean(
-        compute="_compute_l10n_my_edi_display_tin_warning",
+        compute="_compute_l10n_my_edi_display_tin_warning"
     )
 
     l10n_my_identification_type = fields.Selection(
-        string="ID Type",
         selection=[
             ("NRIC", "MyKad/MyTentera/MyPR/MyKAS"),
             ("BRN", "Business Registration Number"),
             ("PASSPORT", "Passport"),
             ("ARMY", "Army"),
         ],
-        default="BRN",
+        string="ID Type",
         help="The identification type and number used by the MyTax/MyInvois system to identify the user.\nNote: For MyPR and MyKAS to use NRIC scheme",
+        default="BRN",
     )
     l10n_my_identification_number = fields.Char(string="ID Number")
     l10n_my_identification_number_placeholder = fields.Char(

@@ -9,7 +9,10 @@ class ResConfigSettings(models.TransientModel):
         store=True,
         readonly=False,
     )
-    newsletter_id = fields.Many2one(related="website_id.newsletter_id", readonly=False)
+    newsletter_id = fields.Many2one(
+        related="website_id.newsletter_id",
+        readonly=False,
+    )
 
     @api.depends("website_id")
     def _compute_is_newsletter_enabled(self):

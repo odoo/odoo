@@ -255,27 +255,27 @@ class IrJobChannel(models.Model):
 
     name = fields.Char(required=True)
     capacity = fields.Integer(
-        default=1,
-        required=True,
         help="Maximum number of jobs of this channel running concurrently, "
         "across all job workers. A channel with no record of its own is not "
         "capped here at all: its concurrency is whatever the worker fleet "
         "provides. Create a record to restrict a channel below that.",
+        default=1,
+        required=True,
     )
     active = fields.Boolean(
-        default=True,
         help="Archived channels are paused: none of their jobs is claimed "
         "until the channel is restored.",
+        default=True,
     )
     running_count = fields.Integer(
         string="Running",
-        compute="_compute_job_counts",
         help="Jobs of this channel currently executing, across all workers.",
+        compute="_compute_job_counts",
     )
     pending_count = fields.Integer(
         string="Pending",
-        compute="_compute_job_counts",
         help="Jobs of this channel waiting to be claimed.",
+        compute="_compute_job_counts",
     )
 
     _name_uniq = models.UniqueIndex("(name)", "Channel names must be unique.")
@@ -311,42 +311,78 @@ class IrJob(models.Model):
     _allow_sudo_commands = False
 
     name = fields.Char(
-        readonly=True,
         help="Optional human-readable label shown instead of "
         "the technical model.method display name.",
+        readonly=True,
     )
-    uuid = fields.Char(readonly=True, index=True)
-    channel = fields.Char(required=True, default="root", readonly=True)
+    uuid = fields.Char(
+        index=True,
+        readonly=True,
+    )
+    channel = fields.Char(
+        default="root",
+        readonly=True,
+        required=True,
+    )
     state = fields.Selection(
-        STATES, required=True, default=JobState.PENDING, index=True
+        selection=STATES,
+        default=JobState.PENDING,
+        index=True,
+        required=True,
     )
-    priority = fields.Integer(default=10, readonly=True)
+    priority = fields.Integer(
+        default=10,
+        readonly=True,
+    )
     eta = fields.Datetime(
-        string="Execute After", help="Earliest execution time (empty: ASAP)."
+        string="Execute After",
+        help="Earliest execution time (empty: ASAP).",
     )
     identity_key = fields.Char(readonly=True)
 
-    model_name = fields.Char(required=True, readonly=True)
-    method_name = fields.Char(required=True, readonly=True)
+    model_name = fields.Char(
+        readonly=True,
+        required=True,
+    )
+    method_name = fields.Char(
+        readonly=True,
+        required=True,
+    )
     record_ids = fields.Json(readonly=True)
     args = fields.Json(readonly=True)
     kwargs = fields.Json(readonly=True)
-    user_id = fields.Many2one("res.users", required=True, readonly=True)
-    company_id = fields.Many2one("res.company", readonly=True)
+    user_id = fields.Many2one(
+        comodel_name="res.users",
+        readonly=True,
+        required=True,
+    )
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        readonly=True,
+    )
     context = fields.Json(readonly=True)
 
-    retry = fields.Integer(default=0, readonly=True)
-    max_retries = fields.Integer(default=5, readonly=True)
-    defer_count = fields.Integer(
+    retry = fields.Integer(
         default=0,
         readonly=True,
+    )
+    max_retries = fields.Integer(
+        default=5,
+        readonly=True,
+    )
+    defer_count = fields.Integer(
         help="Times the job asked to be run again later. A deferral is not a "
         "failure, so it has its own budget and does not consume a retry.",
-    )
-    max_defers = fields.Integer(default=100, readonly=True)
-    defer_reason = fields.Char(
+        default=0,
         readonly=True,
+    )
+    max_defers = fields.Integer(
+        default=100,
+        readonly=True,
+    )
+    defer_reason = fields.Char(
         help="Why the job last asked to be run again later.",
+        readonly=True,
     )
     exc_name = fields.Char(readonly=True)
     exc_message = fields.Char(readonly=True)
@@ -357,16 +393,16 @@ class IrJob(models.Model):
     worker_ident = fields.Char(readonly=True)
 
     depends_on_ids = fields.Many2many(
-        "ir.job",
+        comodel_name="ir.job",
         relation="ir_job_dependency",
         column1="job_id",
         column2="depends_on_id",
-        readonly=True,
         help="This job stays in 'Waiting Dependencies' until every listed "
         "job is done; it is cancelled if any of them fails.",
+        readonly=True,
     )
     dependent_ids = fields.Many2many(
-        "ir.job",
+        comodel_name="ir.job",
         relation="ir_job_dependency",
         column1="depends_on_id",
         column2="job_id",

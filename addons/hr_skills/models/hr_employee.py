@@ -13,28 +13,32 @@ class HrEmployee(models.Model):
     _inherit = ["mixin.hr.individual.skill.owner", "hr.employee"]
 
     resume_line_ids = fields.One2many(
-        "hr.resume.line", "employee_id", string="Resume lines"
+        comodel_name="hr.resume.line",
+        inverse_name="employee_id",
+        string="Resume lines",
     )
     employee_skill_ids = fields.One2many(
-        "hr.employee.skill",
-        "employee_id",
+        comodel_name="hr.employee.skill",
+        inverse_name="employee_id",
         string="Skills",
         domain=[("skill_type_id.active", "=", True)],
     )
     current_employee_skill_ids = fields.One2many(
-        "hr.employee.skill",
+        comodel_name="hr.employee.skill",
         compute="_compute_current_employee_skill_ids",
         search="_search_current_employee_skill_ids",
         readonly=False,
     )
     skill_ids = fields.Many2many(
-        "hr.skill",
+        comodel_name="hr.skill",
         compute="_compute_skill_ids",
         search="_search_skill_ids",
         groups="hr.group_hr_user",
     )
     certification_ids = fields.One2many(
-        "hr.employee.skill", compute="_compute_certification_ids", readonly=False
+        comodel_name="hr.employee.skill",
+        compute="_compute_certification_ids",
+        readonly=False,
     )
     display_certification_page = fields.Boolean(
         compute="_compute_display_certification_page"

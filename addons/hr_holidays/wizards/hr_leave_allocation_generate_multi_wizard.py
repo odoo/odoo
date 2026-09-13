@@ -32,55 +32,68 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
         return Domain.AND([domain, [("employee_requests", "=", True)]])
 
     name = fields.Char(
-        "Description", compute="_compute_name", store=True, readonly=False
+        string="Description",
+        compute="_compute_name",
+        store=True,
+        readonly=False,
     )
     duration = fields.Float(string="Allocation")
     holiday_status_id = fields.Many2one(
-        "hr.leave.type",
+        comodel_name="hr.leave.type",
         string="Time Off Type",
         required=True,
         domain=_domain_holiday_status_id,
     )
     request_unit = fields.Selection(related="holiday_status_id.request_unit")
     allocation_mode = fields.Selection(
-        [
+        selection=[
             ("employee", "By Employee"),
             ("company", "By Company"),
             ("department", "By Department"),
             ("category", "By Employee Tag"),
         ],
-        readonly=False,
-        required=True,
-        default="employee",
         help="Allow to create requests in batchs:\n- By Employee: for a specific employee"
         "\n- By Company: all employees of the specified company"
         "\n- By Department: all employees of the specified department"
         "\n- By Employee Tag: all employees of the specific employee group category",
+        default="employee",
+        readonly=False,
+        required=True,
     )
     employee_ids = fields.Many2many(
-        "hr.employee",
+        comodel_name="hr.employee",
         string="Employees",
         domain=lambda self: self._domain_employee_ids(),
     )
     company_id = fields.Many2one(
-        "res.company", default=lambda self: self.env.company, required=True
+        comodel_name="res.company",
+        default=lambda self: self.env.company,
+        required=True,
     )
-    department_id = fields.Many2one("hr.department")
-    tag_id = fields.Many2one("res.partner.tag", string="Employee Tag")
+    department_id = fields.Many2one(comodel_name="hr.department")
+    tag_id = fields.Many2one(
+        comodel_name="res.partner.tag",
+        string="Employee Tag",
+    )
     allocation_type = fields.Selection(
-        [("regular", "Regular Allocation"), ("accrual", "Based on Accrual Plan")],
+        selection=[
+            ("regular", "Regular Allocation"),
+            ("accrual", "Based on Accrual Plan"),
+        ],
         default="regular",
         required=True,
     )
     accrual_plan_id = fields.Many2one(
-        "hr.leave.accrual.plan",
+        comodel_name="hr.leave.accrual.plan",
         domain="['|', ('time_off_type_id', '=', False), ('time_off_type_id', '=', holiday_status_id)]",
     )
     date_from = fields.Date(
-        "Start Date", default=fields.Date.context_today, required=True
+        string="Start Date",
+        default=fields.Date.context_today,
+        required=True,
     )
-    date_to = fields.Date("End Date")
-    notes = fields.Text("Reasons")
+    date_to = fields.Date(string="End Date")
+    notes = fields.Text(string="Reasons")
 
     @api.depends("holiday_status_id", "duration")
     def _compute_name(self):

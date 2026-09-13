@@ -12,7 +12,7 @@ class StockLot(models.Model):
         compute="_compute_purchase_order_ids",
     )
     purchase_order_count = fields.Count(
-        "purchase_order_ids",
+        count_of="purchase_order_ids",
         string="Purchase order count",
     )
 

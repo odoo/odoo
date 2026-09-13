@@ -17,19 +17,25 @@ class SmsTwilioAccountManage(models.TransientModel):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        required=True,
-        readonly=True,
         default=lambda self: self.env.company,
+        readonly=True,
+        required=True,
     )
-    sms_provider = fields.Selection(related="company_id.sms_provider", readonly=False)
+    sms_provider = fields.Selection(
+        related="company_id.sms_provider",
+        readonly=False,
+    )
     sms_twilio_account_sid = fields.Char(
-        related="company_id.sms_twilio_account_sid", readonly=False
+        related="company_id.sms_twilio_account_sid",
+        readonly=False,
     )
     sms_twilio_auth_token = fields.Char(
-        related="company_id.sms_twilio_auth_token", readonly=False
+        related="company_id.sms_twilio_auth_token",
+        readonly=False,
     )
     sms_twilio_number_ids = fields.One2many(
-        related="company_id.sms_twilio_number_ids", readonly=False
+        related="company_id.sms_twilio_number_ids",
+        readonly=False,
     )
     test_number = fields.Char()
 

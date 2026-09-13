@@ -28,25 +28,28 @@ class ResBank(models.Model):
     zip = fields.Char()
     city = fields.Char()
     state = fields.Many2one(
-        "res.country.state",
-        "Fed. State",
+        comodel_name="res.country.state",
+        string="Fed. State",
         domain="[('country_id', '=?', country)]",
     )
-    country = fields.Many2one("res.country")
-    country_code = fields.Char(related="country.code", string="Country Code")
+    country = fields.Many2one(comodel_name="res.country")
+    country_code = fields.Char(
+        related="country.code",
+        string="Country Code",
+    )
     email = fields.Char()
     phone_ids = fields.Many2many(
-        "phone.number",
-        "res_bank_phone_number_rel",
-        "bank_id",
-        "phone_number_id",
+        comodel_name="phone.number",
+        relation="res_bank_phone_number_rel",
+        column1="bank_id",
+        column2="phone_number_id",
         string="Phone Numbers",
     )
     active = fields.Boolean(default=True)
     bic = fields.Char(
-        "Bank Identifier Code",
-        index=True,
+        string="Bank Identifier Code",
         help="Sometimes called BIC or Swift.",
+        index=True,
     )
 
     @api.depends("name", "bic")
@@ -108,56 +111,67 @@ class ResPartnerBank(models.Model):
     active = fields.Boolean(default=True)
     acc_type = fields.Selection(
         selection=lambda x: x.env["res.partner.bank"]._get_account_types_supported(),
-        compute="_compute_acc_type",
         string="Type",
         help="Bank account type: Normal or IBAN. Inferred from the bank account number.",
+        compute="_compute_acc_type",
     )
     acc_number = fields.Char(
-        "Account Number", required=True, search="_search_acc_number"
+        string="Account Number",
+        search="_search_acc_number",
+        required=True,
     )
     clearing_number = fields.Char()
     sanitized_acc_number = fields.Char(
-        compute="_compute_sanitized_acc_number",
         string="Sanitized Account Number",
-        readonly=True,
+        compute="_compute_sanitized_acc_number",
         store=True,
+        readonly=True,
     )
     acc_holder_name = fields.Char(
         string="Account Holder Name",
         help="Account holder name, in case it is different than the name of the Account Holder",
         compute="_compute_acc_holder_name",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     partner_id = fields.Many2one(
-        "res.partner",
-        "Account Holder",
-        ondelete="cascade",
+        comodel_name="res.partner",
+        string="Account Holder",
         index=True,
-        domain=["|", ("is_company", "=", True), ("parent_id", "=", False)],
         required=True,
+        domain=["|", ("is_company", "=", True), ("parent_id", "=", False)],
+        ondelete="cascade",
     )
     allow_out_payment = fields.Boolean(
-        "Send Money",
+        string="Send Money",
         help="This account can be used for outgoing payments",
         default=False,
         copy=False,
         readonly=False,
     )
-    bank_id = fields.Many2one("res.bank")
-    bank_name = fields.Char(related="bank_id.name", readonly=False)
-    bank_bic = fields.Char(related="bank_id.bic", readonly=False)
+    bank_id = fields.Many2one(comodel_name="res.bank")
+    bank_name = fields.Char(
+        related="bank_id.name",
+        readonly=False,
+    )
+    bank_bic = fields.Char(
+        related="bank_id.bic",
+        readonly=False,
+    )
     sequence = fields.Integer(default=10)
-    currency_id = fields.Many2one("res.currency")
+    currency_id = fields.Many2one(comodel_name="res.currency")
     company_id = fields.Many2one(
-        "res.company",
-        "Company",
+        comodel_name="res.company",
         related="partner_id.company_id",
+        string="Company",
         store=True,
         readonly=True,
     )
-    country_code = fields.Char(related="partner_id.country_code", string="Country Code")
-    note = fields.Text("Notes")
+    country_code = fields.Char(
+        related="partner_id.country_code",
+        string="Country Code",
+    )
+    note = fields.Text(string="Notes")
     color = fields.Integer(compute="_compute_color")
 
     _unique_number = models.UniqueIndex(

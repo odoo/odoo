@@ -20,24 +20,24 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     channel_ids: DiscussChannel = fields.Many2many(
-        "discuss.channel",
-        "discuss_channel_member",
-        "partner_id",
-        "channel_id",
+        comodel_name="discuss.channel",
+        relation="discuss_channel_member",
+        column1="partner_id",
+        column2="channel_id",
         string="Channels",
         copy=False,
     )
     channel_member_ids: DiscussChannelMember = fields.One2many(
-        "discuss.channel.member",
-        "partner_id",
+        comodel_name="discuss.channel.member",
+        inverse_name="partner_id",
     )
     is_in_call = fields.Boolean(
         compute="_compute_is_in_call",
         groups="base.group_system",
     )
     rtc_session_ids: DiscussChannelRtcSession = fields.One2many(
-        "discuss.channel.rtc.session",
-        "partner_id",
+        comodel_name="discuss.channel.rtc.session",
+        inverse_name="partner_id",
     )
 
     @api.depends("rtc_session_ids")

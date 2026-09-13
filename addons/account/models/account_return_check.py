@@ -18,7 +18,10 @@ class AccountReturnCheck(models.Model):
     _description = "Accounting Return Check"
     _order = "name, id"
 
-    code = fields.Char(string="Check ID", required=True)
+    code = fields.Char(
+        string="Check ID",
+        required=True,
+    )
     type = fields.Selection(
         selection=CHECK_TYPES,
         default="check",
@@ -30,16 +33,28 @@ class AccountReturnCheck(models.Model):
     )
 
     # Refreshed fields
-    name = fields.Char(required=True, translate=True)
-    message = fields.Text(string="Description", translate=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
+    message = fields.Text(
+        string="Description",
+        translate=True,
+    )
     state = fields.Char(
-        string="Return State To Check For", default="new", required=True
+        string="Return State To Check For",
+        default="new",
+        required=True,
     )
     records_count = fields.Integer(readonly=True)
     records_name = fields.Char(
-        compute="_compute_records_name", compute_sudo=True
+        compute="_compute_records_name",
+        compute_sudo=True,
     )  # sudo is necessary because we're accessing ir.model
-    records_model = fields.Many2one(string="Model", comodel_name="ir.model")
+    records_model = fields.Many2one(
+        comodel_name="ir.model",
+        string="Model",
+    )
     action = fields.Json()
     result = fields.Selection(
         selection=STATUS_SELECTION,
@@ -55,16 +70,24 @@ class AccountReturnCheck(models.Model):
     return_id = fields.Many2one(
         comodel_name="account.return",
         string="Account Return",
-        required=True,
         index=True,
+        required=True,
         ondelete="cascade",
     )
     is_return_active = fields.Boolean(related="return_id.active")
     return_state = fields.Char(
-        string="Return State", related="return_id.state", store=True
+        related="return_id.state",
+        string="Return State",
+        store=True,
     )
-    return_name = fields.Char(string="Return Name", related="return_id.name")
-    date_deadline = fields.Date("Deadline", related="return_id.date_deadline")
+    return_name = fields.Char(
+        related="return_id.name",
+        string="Return Name",
+    )
+    date_deadline = fields.Date(
+        related="return_id.date_deadline",
+        string="Deadline",
+    )
 
     # Editable fields
     refresh_result = fields.Boolean(default=True)
@@ -75,7 +98,9 @@ class AccountReturnCheck(models.Model):
         context={"active_test": False},
     )
     supervisor_id = fields.Many2one(
-        comodel_name="res.users", string="Supervised By", readonly=True
+        comodel_name="res.users",
+        string="Supervised By",
+        readonly=True,
     )
     approver_supervisor_ids = fields.Many2many(
         comodel_name="res.users",

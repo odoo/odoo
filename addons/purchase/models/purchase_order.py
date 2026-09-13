@@ -51,17 +51,15 @@ class PurchaseOrder(models.Model):
         string="Vendor",
         help="You can find a vendor by its Name, TIN, Email or Internal Reference.",
     )
-    partner_bill_count = fields.Integer(
-        related="partner_id.supplier_invoice_count",
-    )
+    partner_bill_count = fields.Integer(related="partner_id.supplier_invoice_count")
     dest_address_id = fields.Many2one(
         comodel_name="res.partner",
         string="Dropship Address",
-        check_company=True,
-        index=True,
-        tracking=True,
         help="Put an address if you want to deliver directly from the vendor to the customer. "
         "Otherwise, keep empty to deliver to your own company.",
+        index=True,
+        check_company=True,
+        tracking=True,
     )
     user_id = fields.Many2one(
         string="Buyer",
@@ -76,13 +74,11 @@ class PurchaseOrder(models.Model):
         ),
     )
     journal_id = fields.Many2one(
-        domain=[("type", "=", "purchase")],
         help="If set, the PO will invoice in this journal; "
         "otherwise the purchase journal with the lowest sequence is used.",
+        domain=[("type", "=", "purchase")],
     )
-    state = fields.Selection(
-        selection=const.ORDER_STATE,
-    )
+    state = fields.Selection(selection=const.ORDER_STATE)
     tag_ids = fields.Many2many(
         comodel_name="srm.tag",
         relation="purchase_order_tag_rel",
@@ -90,12 +86,8 @@ class PurchaseOrder(models.Model):
         column2="tag_id",
         string="Tags",
     )
-    date_validity = fields.Date(
-        help="Validity of the RFQ, after which it expires.",
-    )
-    date_confirmed = fields.Datetime(
-        help="Date when the purchase order was confirmed.",
-    )
+    date_validity = fields.Date(help="Validity of the RFQ, after which it expires.")
+    date_confirmed = fields.Datetime(help="Date when the purchase order was confirmed.")
     date_calendar_start = fields.Datetime(
         compute="_compute_date_calendar_start",
         store=True,
@@ -105,12 +97,12 @@ class PurchaseOrder(models.Model):
     line_ids = fields.One2many(comodel_name="purchase.order.line")
     date_commitment = fields.Datetime(
         string="Expected Arrival",
-        compute="_compute_date_commitment",
-        store=True,
-        readonly=False,
-        index=True,
         help="Delivery date promised by vendor. "
         "This date is used to determine expected arrival of products.",
+        compute="_compute_date_commitment",
+        store=True,
+        index=True,
+        readonly=False,
     )
     invoice_ids = fields.Many2many(string="Bills")
     invoice_count = fields.Integer(string="Bill Count")
@@ -128,19 +120,15 @@ class PurchaseOrder(models.Model):
         "delivery order sent by your vendor.",
     )
     acknowledged = fields.Boolean(
-        help="It indicates that the vendor has acknowledged the receipt of the purchase order.",
+        help="It indicates that the vendor has acknowledged the receipt of the purchase order."
     )
-    sent = fields.Boolean(
-        help="The RFQ has been sent to the vendor.",
-    )
-    printed_before = fields.Boolean(
-        help="The RFQ has already been printed.",
-    )
+    sent = fields.Boolean(help="The RFQ has been sent to the vendor.")
+    printed_before = fields.Boolean(help="The RFQ has already been printed.")
     purchase_warning_text = fields.Text(
         string="Purchase Warning",
+        help="Internal warning for the partner or the products as set by the user.",
         compute="_compute_purchase_warning_text",
         depends_context=("uid",),
-        help="Internal warning for the partner or the products as set by the user.",
     )
     duplicated_order_ids = fields.Many2many(comodel_name="purchase.order")
     receipt_reminder_email = fields.Boolean(

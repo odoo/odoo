@@ -36,7 +36,7 @@ class AccountAnalyticLine(models.Model):
         return str(domain)
 
     timesheet_invoice_type = fields.Selection(
-        TIMESHEET_INVOICE_TYPES,
+        selection=TIMESHEET_INVOICE_TYPES,
         string="Billable Type",
         compute="_compute_timesheet_invoice_type",
         compute_sudo=True,
@@ -44,28 +44,32 @@ class AccountAnalyticLine(models.Model):
         readonly=True,
     )
     commercial_partner_id = fields.Many2one(
-        "res.partner", compute="_compute_commercial_partner_id"
+        comodel_name="res.partner",
+        compute="_compute_commercial_partner_id",
     )
     timesheet_invoice_id = fields.Many2one(
-        "account.move",
+        comodel_name="account.move",
         string="Invoice",
-        readonly=True,
-        copy=False,
         help="Invoice created from the timesheet",
         index="btree_not_null",
+        copy=False,
+        readonly=True,
     )
     so_line = fields.Many2one(
+        help="Sales order item to which the time spent will be added in order to be invoiced to your customer. Remove the sales order item for the timesheet entry to be non-billable.",
         compute="_compute_so_line",
         store=True,
         readonly=False,
-        domain=_domain_so_line,
         falsy_value_label="Non-billable",
-        help="Sales order item to which the time spent will be added in order to be invoiced to your customer. Remove the sales order item for the timesheet entry to be non-billable.",
+        domain=_domain_so_line,
     )
     order_id = fields.Many2one(
-        related="so_line.order_id", store=True, readonly=True, index=True
+        related="so_line.order_id",
+        store=True,
+        index=True,
+        readonly=True,
     )
-    is_so_line_edited = fields.Boolean("Is Sales Order Item Manually Edited")
+    is_so_line_edited = fields.Boolean(string="Is Sales Order Item Manually Edited")
     allow_billable = fields.Boolean(related="project_id.allow_billable")
     sale_order_state = fields.Selection(related="order_id.state")
 

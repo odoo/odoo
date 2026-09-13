@@ -52,11 +52,6 @@ class ProductProduct(models.Model):
     )
     qty_available = fields.Float(
         string="Quantity On Hand",
-        min_display_digits="Product Unit",
-        compute="_compute_quantities",
-        compute_sudo=False,
-        inverse="_inverse_qty_available",
-        search="_search_qty_available",
         help="Current quantity of products.\n"
         "In a context with a single Stock Location, this includes "
         "goods stored at this Location, or any of its children.\n"
@@ -65,13 +60,14 @@ class ProductProduct(models.Model):
         "of its children.\n"
         "Otherwise, this includes goods stored in any Stock Location "
         "with 'internal' type.",
+        min_display_digits="Product Unit",
+        compute="_compute_quantities",
+        inverse="_inverse_qty_available",
+        search="_search_qty_available",
+        compute_sudo=False,
     )
     qty_available_virtual = fields.Float(
         string="Forecasted Quantity",
-        min_display_digits="Product Unit",
-        compute="_compute_quantities",
-        compute_sudo=False,
-        search="_search_qty_available_virtual",
         help="Forecast quantity (computed as Quantity On Hand "
         "- Outgoing + Incoming)\n"
         "In a context with a single Stock Location, this includes "
@@ -81,13 +77,13 @@ class ProductProduct(models.Model):
         "of its children.\n"
         "Otherwise, this includes goods stored in any Stock Location "
         "with 'internal' type.",
+        min_display_digits="Product Unit",
+        compute="_compute_quantities",
+        search="_search_qty_available_virtual",
+        compute_sudo=False,
     )
     qty_free = fields.Float(
         string="Free To Use Quantity",
-        min_display_digits="Product Unit",
-        compute="_compute_quantities",
-        compute_sudo=False,
-        search="_search_qty_free",
         help="Available quantity (computed as Quantity On Hand "
         "- reserved quantity)\n"
         "In a context with a single Stock Location, this includes "
@@ -97,13 +93,13 @@ class ProductProduct(models.Model):
         "of its children.\n"
         "Otherwise, this includes goods stored in any Stock Location "
         "with 'internal' type.",
+        min_display_digits="Product Unit",
+        compute="_compute_quantities",
+        search="_search_qty_free",
+        compute_sudo=False,
     )
     qty_incoming = fields.Float(
         string="Incoming",
-        min_display_digits="Product Unit",
-        compute="_compute_quantities",
-        compute_sudo=False,
-        search="_search_qty_incoming",
         help="Quantity of planned incoming products.\n"
         "In a context with a single Stock Location, this includes "
         "goods arriving to this Location, or any of its children.\n"
@@ -112,13 +108,13 @@ class ProductProduct(models.Model):
         "any of its children.\n"
         "Otherwise, this includes goods arriving to any Stock "
         "Location with 'internal' type.",
+        min_display_digits="Product Unit",
+        compute="_compute_quantities",
+        search="_search_qty_incoming",
+        compute_sudo=False,
     )
     qty_outgoing = fields.Float(
         string="Outgoing",
-        min_display_digits="Product Unit",
-        compute="_compute_quantities",
-        compute_sudo=False,
-        search="_search_qty_outgoing",
         help="Quantity of planned outgoing products.\n"
         "In a context with a single Stock Location, this includes "
         "goods leaving this Location, or any of its children.\n"
@@ -127,6 +123,10 @@ class ProductProduct(models.Model):
         "any of its children.\n"
         "Otherwise, this includes goods leaving any Stock "
         "Location with 'internal' type.",
+        min_display_digits="Product Unit",
+        compute="_compute_quantities",
+        search="_search_qty_outgoing",
+        compute_sudo=False,
     )
 
     orderpoint_ids = fields.One2many(
@@ -135,14 +135,14 @@ class ProductProduct(models.Model):
         string="Minimum Stock Rules",
     )
     count_moves_in = fields.Integer(
+        help="Number of incoming stock moves in the past 12 months",
         compute="_compute_count_moves",
         compute_sudo=False,
-        help="Number of incoming stock moves in the past 12 months",
     )
     count_moves_out = fields.Integer(
+        help="Number of outgoing stock moves in the past 12 months",
         compute="_compute_count_moves",
         compute_sudo=False,
-        help="Number of outgoing stock moves in the past 12 months",
     )
     count_reordering_rules = fields.Integer(
         string="Reordering Rules",
@@ -167,27 +167,25 @@ class ProductProduct(models.Model):
         inverse_name="product_id",
     )
     show_on_hand_qty_status_button = fields.Boolean(
-        related="product_tmpl_id.show_on_hand_qty_status_button",
+        related="product_tmpl_id.show_on_hand_qty_status_button"
     )
     show_forecasted_qty_status_button = fields.Boolean(
-        related="product_tmpl_id.show_forecasted_qty_status_button",
+        related="product_tmpl_id.show_forecasted_qty_status_button"
     )
-    show_qty_update_button = fields.Boolean(
-        compute="_compute_show_qty_update_button",
-    )
+    show_qty_update_button = fields.Boolean(compute="_compute_show_qty_update_button")
     valid_ean = fields.Boolean(
         string="Barcode is valid EAN",
         compute="_compute_valid_ean",
     )
-    lot_properties_definition = fields.PropertiesDefinition("Lot Properties")
+    lot_properties_definition = fields.PropertiesDefinition(string="Lot Properties")
     lot_ids = fields.One2many(
         comodel_name="stock.lot",
         inverse_name="product_id",
         string="Lot/Serial Numbers",
     )
     count_lot_ids = fields.Integer(
-        compute="_compute_count_lot_ids",
         string="Lots Count",
+        compute="_compute_count_lot_ids",
     )
 
     @dbg.timed

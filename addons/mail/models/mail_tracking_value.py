@@ -41,19 +41,22 @@ class MailTrackingValue(models.Model):
     _order = "id DESC"
 
     field_id: IrModelFields = fields.Many2one(
-        "ir.model.fields",
-        required=False,
-        readonly=True,
+        comodel_name="ir.model.fields",
         index=True,
+        readonly=True,
+        required=False,
         ondelete="set null",
     )
-    field_info = fields.Json("Removed field information")
+    field_info = fields.Json(string="Removed field information")
 
     old_value_integer = fields.Integer(readonly=True)
     old_value_float = fields.Float(readonly=True)
     old_value_char = fields.Char(readonly=True)
     old_value_text = fields.Text(readonly=True)
-    old_value_datetime = fields.Datetime("Old Value DateTime", readonly=True)
+    old_value_datetime = fields.Datetime(
+        string="Old Value DateTime",
+        readonly=True,
+    )
 
     new_value_integer = fields.Integer(readonly=True)
     new_value_float = fields.Float(readonly=True)
@@ -62,14 +65,18 @@ class MailTrackingValue(models.Model):
     new_value_datetime = fields.Datetime(readonly=True)
 
     currency_id: ResCurrency = fields.Many2one(
-        "res.currency",
+        comodel_name="res.currency",
+        help="Used to display the currency when tracking monetary values",
         readonly=True,
         ondelete="set null",
-        help="Used to display the currency when tracking monetary values",
     )
 
     mail_message_id: MailMessage = fields.Many2one(
-        "mail.message", "Message ID", required=True, index=True, ondelete="cascade"
+        comodel_name="mail.message",
+        string="Message ID",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
 
     def _filtered_has_field_access(self, env: Environment) -> Self:

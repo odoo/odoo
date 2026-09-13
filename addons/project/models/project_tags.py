@@ -12,17 +12,19 @@ class ProjectTags(models.Model):
     _inherit = ["mixin.tag"]
 
     is_strategic = fields.Boolean(
-        "Strategic Objective",
+        string="Strategic Objective",
         help="Mark this tag as representing a strategic objective for portfolio alignment.",
     )
     project_ids = fields.Many2many(
-        "project.project",
-        "project_project_project_tags_rel",
+        comodel_name="project.project",
+        relation="project_project_project_tags_rel",
         string="Projects",
         export_string_translation=False,
     )
     task_ids = fields.Many2many(
-        "project.task", string="Tasks", export_string_translation=False
+        comodel_name="project.task",
+        string="Tasks",
+        export_string_translation=False,
     )
 
     @api.model

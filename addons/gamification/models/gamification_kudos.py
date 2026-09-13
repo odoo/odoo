@@ -13,29 +13,42 @@ class GamificationKudosCategory(models.Model):
     _description = "Kudos Category"
     _order = "sequence, name"
 
-    name = fields.Char("Category", required=True, translate=True)
+    name = fields.Char(
+        string="Category",
+        translate=True,
+        required=True,
+    )
     description = fields.Text(translate=True)
     sequence = fields.Integer(default=10)
     icon = fields.Char(
-        "Icon CSS Class",
-        default="fa fa-thumbs-up",
+        string="Icon CSS Class",
         help="Font Awesome icon class, e.g. 'fa fa-star', 'fa fa-heart'.",
+        default="fa fa-thumbs-up",
     )
-    color = fields.Integer("Color Index", default=0)
+    color = fields.Integer(
+        string="Color Index",
+        default=0,
+    )
     karma_granted = fields.Integer(
-        "Karma Bonus",
-        default=5,
+        string="Karma Bonus",
         help="Karma automatically granted to the recipient when kudos is sent.",
+        default=5,
     )
     active = fields.Boolean(default=True)
-    kudos_ids = fields.One2many("gamification.kudos", "category_id")
+    kudos_ids = fields.One2many(
+        comodel_name="gamification.kudos",
+        inverse_name="category_id",
+    )
     # The hand-rolled compute this replaces carried no @api.depends at all, so
     # the ORM cached its result for the whole transaction and nothing ever marked
     # it dirty: the count was simply wrong from the first kudos onwards.  The
     # category had no inverse one2many, which is why it hand-rolled a _read_group
     # in the first place; declaring the relation makes the counter one line and
     # its invalidation the ORM's problem.
-    kudos_count = fields.Count("kudos_ids", "# Kudos")
+    kudos_count = fields.Count(
+        count_of="kudos_ids",
+        string="# Kudos",
+    )
 
 
 # Fields whose value the sender picked at send-time (or that were derived
@@ -69,43 +82,47 @@ class GamificationKudos(models.Model):
     _mail_partner_fields = ("recipient_partner_id",)
 
     sender_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="From",
-        required=True,
-        readonly=True,
         default=lambda self: self.env.uid,
         index=True,
+        readonly=True,
+        required=True,
         ondelete="cascade",
     )
     sender_partner_id = fields.Many2one(
-        "res.partner",
-        string="Sender Partner",
+        comodel_name="res.partner",
         related="sender_id.partner_id",
+        string="Sender Partner",
         store=True,
     )
     recipient_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="To",
-        required=True,
         index=True,
+        required=True,
         ondelete="cascade",
     )
     recipient_partner_id = fields.Many2one(
-        "res.partner",
-        string="Recipient Partner",
+        comodel_name="res.partner",
         related="recipient_id.partner_id",
+        string="Recipient Partner",
         store=True,
     )
     category_id = fields.Many2one(
-        "gamification.kudos.category",
+        comodel_name="gamification.kudos.category",
         required=True,
         ondelete="restrict",
     )
     message = fields.Text(required=True)
-    summary = fields.Char(compute="_compute_summary", store=True, precompute=True)
+    summary = fields.Char(
+        compute="_compute_summary",
+        precompute=True,
+        store=True,
+    )
     karma_granted = fields.Integer(
-        readonly=True,
         help="Karma points granted to the recipient.",
+        readonly=True,
     )
 
     @api.depends("sender_id.name", "recipient_id.name", "category_id.name")

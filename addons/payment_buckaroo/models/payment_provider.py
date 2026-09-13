@@ -10,18 +10,19 @@ class PaymentProvider(models.Model):
     _inherit = "payment.provider"
 
     code = fields.Selection(
-        selection_add=[("buckaroo", "Buckaroo")], ondelete={"buckaroo": "set default"}
+        selection_add=[("buckaroo", "Buckaroo")],
+        ondelete={"buckaroo": "set default"},
     )
     buckaroo_website_key = fields.Char(
         string="Website Key",
         help="The key solely used to identify the website with Buckaroo",
-        required_if_provider="buckaroo",
         copy=False,
+        required_if_provider="buckaroo",
     )
     buckaroo_secret_key = fields.Char(
-        required_if_provider="buckaroo",
         copy=False,
         groups="base.group_system",
+        required_if_provider="buckaroo",
     )
 
     # === COMPUTE METHODS ===#

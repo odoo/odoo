@@ -17,7 +17,7 @@ class HrEmployee(models.Model):
     manually_set_presence = fields.Boolean(default=False)
 
     hr_presence_state_display = fields.Selection(
-        [
+        selection=[
             ("out_of_working_hour", "Off-Hours"),
             ("present", "Present"),
             ("absent", "Absent"),

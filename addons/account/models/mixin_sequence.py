@@ -44,8 +44,14 @@ class MixinSequence(models.AbstractModel):
     _sequence_yearly_regex = rf"^{prefix}(?P<year>((?<=\D)|(?<=^))((19|20|21)?\d{{2}}))(?P<prefix2>\D+?){seq}{suffix}$"
     _sequence_fixed_regex = rf"^{prefix}(?P<seq>\d{{0,9}}){suffix}$"
 
-    sequence_prefix = fields.Char(compute="_compute_split_sequence", store=True)
-    sequence_number = fields.Integer(compute="_compute_split_sequence", store=True)
+    sequence_prefix = fields.Char(
+        compute="_compute_split_sequence",
+        store=True,
+    )
+    sequence_number = fields.Integer(
+        compute="_compute_split_sequence",
+        store=True,
+    )
 
     @_debug.perf.timed
     def init(self):

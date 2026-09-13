@@ -5,8 +5,8 @@ class Website(models.Model):
     _inherit = "website"
 
     in_store_dm_id = fields.Many2one(
-        string="In-store Delivery Method",
         comodel_name="delivery.carrier",
+        string="In-store Delivery Method",
         compute="_compute_in_store_dm_id",
     )
 

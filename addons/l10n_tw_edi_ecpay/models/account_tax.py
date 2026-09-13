@@ -6,19 +6,18 @@ class AccountTax(models.Model):
     _inherit = "account.tax"
 
     l10n_tw_edi_tax_type = fields.Selection(
-        string="Ecpay Tax Type",
         selection=[
             ("1", "Taxable"),
             ("2", "Zero tax rate"),
             ("3", "Duty free"),
             ("4", "Taxable (special tax rate)"),
         ],
+        string="Ecpay Tax Type",
+        compute="_compute_l10n_tw_edi_tax_type",
         store=True,
         readonly=False,
-        compute="_compute_l10n_tw_edi_tax_type",
     )
     l10n_tw_edi_special_tax_type = fields.Selection(
-        string="Ecpay Special Tax Type",
         selection=[
             (
                 "1",
@@ -51,6 +50,7 @@ class AccountTax(models.Model):
             ),
             ("8", "Duty free or non-output data"),
         ],
+        string="Ecpay Special Tax Type",
     )
 
     @api.depends("country_id", "amount")

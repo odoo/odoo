@@ -32,30 +32,33 @@ class DiscussChannelRtcSession(models.Model):
     _rec_name = "channel_member_id"
 
     channel_member_id: DiscussChannelMember = fields.Many2one(
-        "discuss.channel.member",
+        comodel_name="discuss.channel.member",
         required=True,
         ondelete="cascade",
     )
     channel_id: DiscussChannel = fields.Many2one(
-        "discuss.channel",
+        comodel_name="discuss.channel",
         related="channel_member_id.channel_id",
         store=True,
-        readonly=True,
         index="btree_not_null",
+        readonly=True,
     )
     partner_id: ResPartner = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         related="channel_member_id.partner_id",
         string="Partner",
         store=True,
         index=True,
     )
     guest_id: MailGuest = fields.Many2one(
-        "mail.guest",
+        comodel_name="mail.guest",
         related="channel_member_id.guest_id",
     )
 
-    write_date = fields.Datetime("Last Updated On", index=True)
+    write_date = fields.Datetime(
+        string="Last Updated On",
+        index=True,
+    )
 
     is_screen_sharing_on = fields.Boolean(string="Is sharing the screen")
     is_camera_on = fields.Boolean(string="Is sending user video")

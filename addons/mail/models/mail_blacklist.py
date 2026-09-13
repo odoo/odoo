@@ -18,12 +18,15 @@ class MailBlacklist(models.Model):
 
     email = fields.Char(
         string="Email Address",
-        required=True,
-        index="trigram",
         help="This field is case insensitive.",
+        index="trigram",
+        required=True,
         tracking=1,
     )
-    active = fields.Boolean(default=True, tracking=2)
+    active = fields.Boolean(
+        default=True,
+        tracking=2,
+    )
 
     _unique_email = models.Constraint(
         "unique (email)",

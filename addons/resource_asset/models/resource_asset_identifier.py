@@ -13,20 +13,20 @@ class ResourceAssetIdentifier(models.Model):
     _rec_name = "value"
 
     asset_id = fields.Many2one(
-        "resource.asset",
+        comodel_name="resource.asset",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
     company_id = fields.Many2one(
         related="asset_id.company_id",
         store=True,
     )
     type_id = fields.Many2one(
-        "resource.asset.identifier.type",
+        comodel_name="resource.asset.identifier.type",
+        index=True,
         required=True,
         ondelete="restrict",
-        index=True,
     )
     value = fields.Char(required=True)
     normalized_value = fields.Char(

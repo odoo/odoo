@@ -15,10 +15,15 @@ class CalendarRecurrence(models.Model):
     _privacy_event_fname = "calendar_event_ids"
 
     base_event_id = fields.Many2one(
-        "calendar.event", ondelete="set null", copy=False
+        comodel_name="calendar.event",
+        copy=False,
+        ondelete="set null",
     )  # store=False ?
-    calendar_event_ids = fields.One2many("calendar.event", "recurrence_id")
-    trigger_id = fields.Many2one("ir.cron.trigger")
+    calendar_event_ids = fields.One2many(
+        comodel_name="calendar.event",
+        inverse_name="recurrence_id",
+    )
+    trigger_id = fields.Many2one(comodel_name="ir.cron.trigger")
 
     # ------------------------------------------------------------
     # PRIVACY

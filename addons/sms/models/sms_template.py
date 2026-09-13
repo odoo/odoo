@@ -23,29 +23,32 @@ class SmsTemplate(models.Model):
 
     name = fields.Char(translate=True)
     model_id = fields.Many2one(
-        "ir.model",
+        comodel_name="ir.model",
         string="Applies to",
+        help="The type of document this template can be used with",
         required=True,
         domain=["&", ("is_mail_thread_sms", "=", True), ("transient", "=", False)],
-        help="The type of document this template can be used with",
         ondelete="cascade",
     )
     model = fields.Char(
-        "Related Document Model",
         related="model_id.model",
-        index=True,
+        string="Related Document Model",
         store=True,
+        index=True,
         readonly=True,
     )
-    body = fields.Char(translate=True, required=True)
+    body = fields.Char(
+        translate=True,
+        required=True,
+    )
     # Use to create contextual action (same as for email template)
     sidebar_action_id = fields.Many2one(
-        "ir.actions.act_window",
-        "Sidebar action",
-        readonly=True,
-        copy=False,
+        comodel_name="ir.actions.act_window",
+        string="Sidebar action",
         help="Sidebar action to make this template available on records "
         "of the related document model",
+        copy=False,
+        readonly=True,
     )
 
     # Overrides of mixin.mail.render

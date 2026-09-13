@@ -7,12 +7,8 @@ _debug = DebugLog(__name__)
 class AccountAnalyticAccount(models.Model):
     _inherit = "account.analytic.account"
 
-    invoice_count = fields.Integer(
-        compute="_compute_invoice_count",
-    )
-    vendor_bill_count = fields.Integer(
-        compute="_compute_vendor_bill_count",
-    )
+    invoice_count = fields.Integer(compute="_compute_invoice_count")
+    vendor_bill_count = fields.Integer(compute="_compute_vendor_bill_count")
 
     @api.depends("line_ids")
     def _compute_invoice_count(self):

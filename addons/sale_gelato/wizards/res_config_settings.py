@@ -4,7 +4,11 @@ from odoo import fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
-    gelato_api_key = fields.Char(related="company_id.gelato_api_key", readonly=False)
+    gelato_api_key = fields.Char(
+        related="company_id.gelato_api_key",
+        readonly=False,
+    )
     gelato_webhook_secret = fields.Char(
-        related="company_id.gelato_webhook_secret", readonly=False
+        related="company_id.gelato_webhook_secret",
+        readonly=False,
     )

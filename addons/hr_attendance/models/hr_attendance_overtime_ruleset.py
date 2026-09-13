@@ -7,28 +7,35 @@ class HrAttendanceOvertimeRuleset(models.Model):
 
     name = fields.Char(required=True)
     description = fields.Html()
-    rule_ids = fields.One2many("hr.attendance.overtime.rule", "ruleset_id")
-    company_id = fields.Many2one("res.company", default=lambda self: self.env.company)
+    rule_ids = fields.One2many(
+        comodel_name="hr.attendance.overtime.rule",
+        inverse_name="ruleset_id",
+    )
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        default=lambda self: self.env.company,
+    )
     country_id = fields.Many2one(
-        "res.country",
+        comodel_name="res.country",
         default=lambda self: self.env.company.country_id,
     )
     rate_combination_mode = fields.Selection(
-        [
+        selection=[
             ("max", "Maximum Rate"),
             ("sum", "Sum of all rates"),
         ],
-        required=True,
+        help="Controls how the rates from the different rules that apply are combined.\n"
+        "  Max: use the highest rate. (e.g.: combined for 150% and 120 = 150%)\n"
+        "  Sum: sum the *extra* pay (i.e. above 100%).\n"
+        "    e.g.: combined rate for 150% & 120% = 100% (baseline) + (150-100)% + (120-100)% = 170%\n",
         default="max",
-        help=(
-            "Controls how the rates from the different rules that apply are combined.\n"
-            "  Max: use the highest rate. (e.g.: combined for 150% and 120 = 150%)\n"
-            "  Sum: sum the *extra* pay (i.e. above 100%).\n"
-            "    e.g.: combined rate for 150% & 120% = 100% (baseline) + (150-100)% + (120-100)% = 170%\n"
-        ),
+        required=True,
     )
-    rules_count = fields.Count("rule_ids")
-    active = fields.Boolean(default=True, readonly=False)
+    rules_count = fields.Count(count_of="rule_ids")
+    active = fields.Boolean(
+        default=True,
+        readonly=False,
+    )
 
     def _attendances_to_regenerate_for(self):
         self.check_singleton()

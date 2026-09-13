@@ -9,7 +9,10 @@ _logger = logging.getLogger(__name__)
 class PosOrderLine(models.Model):
     _inherit = "pos.order.line"
 
-    combo_id = fields.Many2one("product.combo", string="Combo reference")
+    combo_id = fields.Many2one(
+        comodel_name="product.combo",
+        string="Combo reference",
+    )
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -49,7 +52,9 @@ class PosOrder(models.Model):
 
     table_stand_number = fields.Char()
     self_ordering_table_id = fields.Many2one(
-        "restaurant.table", string="Table reference", readonly=True
+        comodel_name="restaurant.table",
+        string="Table reference",
+        readonly=True,
     )
     source = fields.Selection(
         selection_add=[("mobile", "Self-Order Mobile"), ("kiosk", "Self-Order Kiosk")]

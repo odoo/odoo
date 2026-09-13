@@ -9,11 +9,11 @@ class ResCompany(models.Model):
 
     order_cycle_count = fields.Integer(
         string="Order Cycle",
-        default=3,
         help="How long a partner may go without ordering before it counts as "
         "having gone quiet. Ordering rhythms differ by company and by "
         "industry: a seasonal crop supplier may need twelve months where a "
         "convenience retailer needs one.",
+        default=3,
     )
     order_cycle_unit = fields.Selection(
         selection=time_unit_selection("day", "week", "month", "year"),

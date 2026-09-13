@@ -5,10 +5,10 @@ class EventEvent(models.Model):
     _inherit = "event.event"
 
     sale_order_lines_ids = fields.One2many(
-        "sale.order.line",
-        "event_id",
-        groups="sales_team.group_sale_salesman",
+        comodel_name="sale.order.line",
+        inverse_name="event_id",
         string="All sale order lines pointing to this event",
+        groups="sales_team.group_sale_salesman",
     )
     sale_price_total = fields.Monetary(
         string="Sales (Tax Included)",

@@ -9,8 +9,8 @@ class HrApplicantSkill(models.Model):
 
     applicant_id = fields.Many2one(
         comodel_name="hr.applicant",
-        required=True,
         index=True,
+        required=True,
         ondelete="cascade",
     )
 

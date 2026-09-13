@@ -38,7 +38,10 @@ class StockRule(models.Model):
 class StockPicking(models.Model):
     _inherit = "stock.picking"
 
-    is_dropship = fields.Boolean("Is a Dropship", compute="_compute_is_dropship")
+    is_dropship = fields.Boolean(
+        string="Is a Dropship",
+        compute="_compute_is_dropship",
+    )
 
     @api.depends(
         "location_dest_id.usage",

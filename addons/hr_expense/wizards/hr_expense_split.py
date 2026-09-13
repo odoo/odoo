@@ -32,31 +32,38 @@ class HrExpenseSplit(models.TransientModel):
             result["manager_id"] = expense.manager_id
         return result
 
-    name = fields.Char(string="Description", required=True)
+    name = fields.Char(
+        string="Description",
+        required=True,
+    )
     wizard_id = fields.Many2one(comodel_name="hr.expense.split.wizard")
     expense_id = fields.Many2one(comodel_name="hr.expense")
     product_id = fields.Many2one(
         comodel_name="product.product",
         required=True,
-        check_company=True,
         domain=[("can_be_expensed", "=", True)],
+        check_company=True,
     )
     tax_ids = fields.Many2many(
         comodel_name="account.tax",
-        check_company=True,
         domain="[('type_tax_use', '=', 'purchase')]",
+        check_company=True,
     )
     total_amount_currency = fields.Monetary(
         string="Total In Currency",
-        required=True,
         compute="_compute_from_product_id",
         store=True,
         readonly=False,
+        required=True,
     )
     tax_amount_currency = fields.Monetary(
-        string="Tax amount in Currency", compute="_compute_tax_amount_currency"
+        string="Tax amount in Currency",
+        compute="_compute_tax_amount_currency",
     )
-    employee_id = fields.Many2one(comodel_name="hr.employee", required=True)
+    employee_id = fields.Many2one(
+        comodel_name="hr.employee",
+        required=True,
+    )
     company_id = fields.Many2one(comodel_name="res.company")
     currency_id = fields.Many2one(comodel_name="res.currency")
     product_has_tax = fields.Boolean(

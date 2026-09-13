@@ -16,22 +16,35 @@ class MediaSegment(models.Model):
     _description = "Media Segment"
     _order = "res_model, res_id, start_ms, id"
 
-    res_model = fields.Char("Resource Model", required=True, index="btree_not_null")
+    res_model = fields.Char(
+        string="Resource Model",
+        index="btree_not_null",
+        required=True,
+    )
     res_id = fields.Many2oneReference(
-        "Resource ID", model_field="res_model", required=True
+        model_field="res_model",
+        string="Resource ID",
+        required=True,
     )
     attachment_id: IrAttachment = fields.Many2one(
-        "ir.attachment",
+        comodel_name="ir.attachment",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
-    start_ms = fields.Integer(required=True, default=0)
-    end_ms = fields.Integer(required=True, default=0)
+    start_ms = fields.Integer(
+        default=0,
+        required=True,
+    )
+    end_ms = fields.Integer(
+        default=0,
+        required=True,
+    )
     duration_ms = fields.Integer(compute="_compute_duration_ms")
     mimetype = fields.Char(related="attachment_id.mimetype")
     transcription_state = fields.Selection(
-        related="attachment_id.speech_state", string="Transcription"
+        related="attachment_id.speech_state",
+        string="Transcription",
     )
     speech_cues = fields.Json(related="attachment_id.speech_cues")
 

@@ -16,15 +16,19 @@ class MailTestTLead(models.Model):
     _primary_email = "email_from"
 
     name = fields.Char()
-    company_id = fields.Many2one("res.company")
-    user_id = fields.Many2one("res.users", tracking=1)
+    company_id = fields.Many2one(comodel_name="res.company")
+    user_id = fields.Many2one(
+        comodel_name="res.users",
+        tracking=1,
+    )
     email_from = fields.Char()
     customer_name = fields.Char()
-    partner_id = fields.Many2one("res.partner", tracking=2)
-    lang_code = fields.Char()
-    phone_ids = fields.Many2many(
-        "phone.number",
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        tracking=2,
     )
+    lang_code = fields.Char()
+    phone_ids = fields.Many2many(comodel_name="phone.number")
 
     def _creation_message(self):
         self.check_singleton()

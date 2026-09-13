@@ -5,9 +5,9 @@ class StockReference(models.Model):
     _inherit = "stock.reference"
 
     pos_order_ids = fields.Many2many(
-        "pos.order",
-        "stock_reference_pos_order_rel",
-        "reference_id",
-        "pos_order_id",
+        comodel_name="pos.order",
+        relation="stock_reference_pos_order_rel",
+        column1="reference_id",
+        column2="pos_order_id",
         string="PoS Orders",
     )

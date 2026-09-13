@@ -23,7 +23,7 @@ class PosPaymentMethod(models.Model):
         copy=False,
     )
     pine_labs_security_token = fields.Char(
-        help="A security token issued directly to the merchant by Pine Labs.",
+        help="A security token issued directly to the merchant by Pine Labs."
     )
     pine_labs_allowed_payment_mode = fields.Selection(
         selection=[("all", "All"), ("card", "Card"), ("upi", "Upi")],

@@ -36,12 +36,19 @@ class DeliveryCarrier(models.Model):
     # Internals for shipping providers #
     # -------------------------------- #
 
-    name = fields.Char("Delivery Method", required=True, translate=True)
+    name = fields.Char(
+        string="Delivery Method",
+        translate=True,
+        required=True,
+    )
     active = fields.Boolean(default=True)
-    sequence = fields.Integer(help="Determine the display order", default=10)
+    sequence = fields.Integer(
+        help="Determine the display order",
+        default=10,
+    )
     # This field will be overwritten by internal shipping providers by adding their own type (ex: 'fedex')
     delivery_type = fields.Selection(
-        [("base_on_rule", "Based on Rules"), ("fixed", "Fixed Price")],
+        selection=[("base_on_rule", "Based on Rules"), ("fixed", "Fixed Price")],
         string="Provider",
         default="fixed",
         required=True,
@@ -51,26 +58,33 @@ class DeliveryCarrier(models.Model):
         help="Allow customers to choose Cash on Delivery as their payment method.",
     )
     integration_level = fields.Selection(
-        [("rate", "Get Rate"), ("rate_and_ship", "Get Rate and Create Shipment")],
-        default="rate_and_ship",
+        selection=[
+            ("rate", "Get Rate"),
+            ("rate_and_ship", "Get Rate and Create Shipment"),
+        ],
         help="Action while validating Delivery Orders",
+        default="rate_and_ship",
     )
     prod_environment = fields.Boolean(
-        "Environment",
+        string="Environment",
         help="Set to True if your credentials are certified for production.",
     )
     debug_logging = fields.Boolean(
-        "Debug logging", help="Log requests in order to ease debugging"
+        string="Debug logging",
+        help="Log requests in order to ease debugging",
     )
     company_id = fields.Many2one(
-        "res.company",
-        string="Company",
+        comodel_name="res.company",
         related="product_id.company_id",
+        string="Company",
         store=True,
         readonly=False,
     )
     product_id = fields.Many2one(
-        "product.product", string="Delivery Product", required=True, ondelete="restrict"
+        comodel_name="product.product",
+        string="Delivery Product",
+        required=True,
+        ondelete="restrict",
     )
     tracking_url = fields.Char(
         string="Tracking Link",
@@ -81,36 +95,36 @@ class DeliveryCarrier(models.Model):
     invoice_policy = fields.Selection(
         selection=[("estimated", "Estimated cost")],
         string="Invoicing Policy",
+        help="Estimated Cost: the customer will be invoiced the estimated cost of the shipping.",
         default="estimated",
         required=True,
-        help="Estimated Cost: the customer will be invoiced the estimated cost of the shipping.",
     )
 
     country_ids = fields.Many2many(
-        "res.country",
-        "delivery_carrier_country_rel",
-        "carrier_id",
-        "country_id",
-        "Countries",
+        comodel_name="res.country",
+        relation="delivery_carrier_country_rel",
+        column1="carrier_id",
+        column2="country_id",
+        string="Countries",
     )
     state_ids = fields.Many2many(
-        "res.country.state",
-        "delivery_carrier_state_rel",
-        "carrier_id",
-        "state_id",
-        "States",
+        comodel_name="res.country.state",
+        relation="delivery_carrier_state_rel",
+        column1="carrier_id",
+        column2="state_id",
+        string="States",
     )
     zip_prefix_ids = fields.Many2many(
-        "delivery.zip.prefix",
-        "delivery_zip_prefix_rel",
-        "carrier_id",
-        "zip_prefix_id",
-        "Zip Prefixes",
+        comodel_name="delivery.zip.prefix",
+        relation="delivery_zip_prefix_rel",
+        column1="carrier_id",
+        column2="zip_prefix_id",
+        string="Zip Prefixes",
         help="Prefixes of zip codes that this carrier applies to. Note that regular expressions can be used to support countries with varying zip code lengths, i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' will only match '100' and not '1000')",
     )
 
     max_weight = fields.Float(
-        help="If the total weight of the order is over this weight, the method won't be available.",
+        help="If the total weight of the order is over this weight, the method won't be available."
     )
     # Every carrier's secrets rest in credential.credential, and the
     # plumbing is here rather than in each carrier module because the shape
@@ -125,38 +139,40 @@ class DeliveryCarrier(models.Model):
     carrier_credential_id = fields.Many2one(
         comodel_name="credential.credential",
         string="Credential",
-        ondelete="restrict",
-        copy=False,
-        groups="base.group_system",
         help="Holds this carrier's API secrets.",
+        copy=False,
+        ondelete="restrict",
+        groups="base.group_system",
     )
 
     weight_uom_name = fields.Char(
-        string="Weight unit of measure label", compute="_compute_weight_uom_name"
+        string="Weight unit of measure label",
+        compute="_compute_weight_uom_name",
     )
     max_volume = fields.Float(
-        help="If the total volume of the order is over this volume, the method won't be available.",
+        help="If the total volume of the order is over this volume, the method won't be available."
     )
     volume_uom_name = fields.Char(
-        string="Volume unit of measure label", compute="_compute_volume_uom_name"
+        string="Volume unit of measure label",
+        compute="_compute_volume_uom_name",
     )
     must_have_tag_ids = fields.Many2many(
-        string="Must Have Tags",
         comodel_name="product.tag",
         relation="product_tag_delivery_carrier_must_have_rel",
+        string="Must Have Tags",
         help="The method is available only if at least one product of the order has one of these tags.",
     )
     excluded_tag_ids = fields.Many2many(
-        string="Excluded Tags",
         comodel_name="product.tag",
         relation="product_tag_delivery_carrier_excluded_rel",
+        string="Excluded Tags",
         help="The method is NOT available if at least one product of the order has one of these tags.",
     )
 
     carrier_description = fields.Text(
-        translate=True,
         help="A description of the delivery method that you want to communicate to your customers on the Sales Order and sales confirmation email."
         "E.g. instructions for customers to follow.",
+        translate=True,
     )
 
     margin = fields.Float(help="This percentage will be added to the shipping price.")
@@ -164,13 +180,13 @@ class DeliveryCarrier(models.Model):
         help="This fixed amount will be added to the shipping price."
     )
     free_over = fields.Boolean(
-        "Free if order amount is above",
+        string="Free if order amount is above",
         help="If the order total amount (shipping excluded) is above or equal to this value, the customer benefits from a free shipping",
         default=False,
     )
     amount = fields.Float(
-        default=1000,
         help="Amount of the order to benefit from a free shipping, expressed in the company currency",
+        default=1000,
     )
 
     can_generate_return = fields.Boolean(compute="_compute_can_generate_return")
@@ -187,13 +203,16 @@ class DeliveryCarrier(models.Model):
         compute="_compute_supports_shipping_insurance"
     )
     shipping_insurance = fields.Integer(
-        "Insurance Percentage",
+        string="Insurance Percentage",
         help="Shipping insurance is a service which may reimburse senders whose parcels are lost, stolen, and/or damaged in transit.",
         default=0,
     )
 
     price_rule_ids = fields.One2many(
-        "delivery.price.rule", "carrier_id", "Pricing Rules", copy=True
+        comodel_name="delivery.price.rule",
+        inverse_name="carrier_id",
+        string="Pricing Rules",
+        copy=True,
     )
 
     _margin_not_under_100_percent = models.Constraint(

@@ -76,7 +76,6 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     l10n_it_edi_state = fields.Selection(
-        string="SDI State",
         selection=[
             ("being_sent", "Being Sent To SdI"),
             (
@@ -95,46 +94,66 @@ class AccountMove(models.Model):
                 "SdI Accepted, PA Partner Expired Terms",
             ),
         ],
+        string="SDI State",
+        help="This state is updated by default, but you can force the value. ",
         copy=False,
         tracking=True,
-        help="This state is updated by default, but you can force the value. ",
     )
     l10n_it_edi_header = fields.Html(
         help="User description of the current state, with hints to make the flow progress",
+        copy=False,
         readonly=True,
+    )
+    l10n_it_edi_transaction = fields.Char(
+        string="FatturaPA Transaction",
         copy=False,
     )
-    l10n_it_edi_transaction = fields.Char(copy=False, string="FatturaPA Transaction")
-    l10n_it_edi_attachment_file = fields.Binary(copy=False, attachment=True)
+    l10n_it_edi_attachment_file = fields.Binary(
+        attachment=True,
+        copy=False,
+    )
     l10n_it_edi_attachment_name = fields.Char(string="FatturaPA Attachment")
     l10n_it_edi_proxy_mode = fields.Selection(
-        related="company_id.l10n_it_edi_proxy_user_id.edi_mode", depends=["company_id"]
+        related="company_id.l10n_it_edi_proxy_user_id.edi_mode",
+        depends=["company_id"],
     )
     l10n_it_edi_button_label = fields.Char(compute="_compute_l10n_it_edi_button_label")
     l10n_it_edi_is_self_invoice = fields.Boolean(
         compute="_compute_l10n_it_edi_is_self_invoice"
     )
     l10n_it_stamp_duty = fields.Float(string="Dati Bollo")
-    l10n_it_ddt_id = fields.Many2one("l10n_it.ddt", string="DDT", copy=False)
+    l10n_it_ddt_id = fields.Many2one(
+        comodel_name="l10n_it.ddt",
+        string="DDT",
+        copy=False,
+    )
 
     l10n_it_origin_document_type = fields.Selection(
-        string="Origin Document Type",
         selection=[
             ("purchase_order", "Purchase Order"),
             ("contract", "Contract"),
             ("agreement", "Agreement"),
         ],
+        string="Origin Document Type",
         copy=False,
     )
     l10n_it_origin_document_name = fields.Char(
-        string="Origin Document Name", copy=False
+        string="Origin Document Name",
+        copy=False,
     )
     l10n_it_origin_document_date = fields.Date(
-        string="Origin Document Date", copy=False
+        string="Origin Document Date",
+        copy=False,
     )
-    l10n_it_cig = fields.Char(string="CIG", copy=False, help="Tender Unique Identifier")
+    l10n_it_cig = fields.Char(
+        string="CIG",
+        help="Tender Unique Identifier",
+        copy=False,
+    )
     l10n_it_cup = fields.Char(
-        string="CUP", copy=False, help="Public Investment Unique Identifier"
+        string="CUP",
+        help="Public Investment Unique Identifier",
+        copy=False,
     )
     # Technical field for showing the above fields or not
     l10n_it_partner_pa = fields.Boolean(compute="_compute_l10n_it_partner_pa")
@@ -150,8 +169,8 @@ class AccountMove(models.Model):
         comodel_name="l10n_it.document.type",
         compute="_compute_l10n_it_document_type",
         store=True,
-        readonly=False,
         copy=False,
+        readonly=False,
     )
 
     def _auto_init(self):

@@ -70,37 +70,39 @@ class ResLang(models.Model):
     name = fields.Char(required=True)
     code = fields.Char(
         string="Locale Code",
-        required=True,
         help="This field is used to set/get locales for user",
+        required=True,
     )
     iso_code = fields.Char(
         string="ISO code",
         help="This ISO code is the name of po files to use for translations",
     )
     url_code = fields.Char(
-        "URL Code", required=True, help="The Lang Code displayed in the URL"
+        string="URL Code",
+        help="The Lang Code displayed in the URL",
+        required=True,
     )
     active = fields.Boolean()
     direction = fields.Selection(
-        [("ltr", "Left-to-Right"), ("rtl", "Right-to-Left")],
-        required=True,
+        selection=[("ltr", "Left-to-Right"), ("rtl", "Right-to-Left")],
         default="ltr",
+        required=True,
     )
     date_format = fields.Selection(
         selection=_selection_date_formats,
-        required=True,
         default="%m/%d/%Y",
+        required=True,
     )
     time_format = fields.Selection(
-        [
+        selection=[
             ("%H:%M:%S", "13:00:00"),
             ("%I:%M:%S %p", " 1:00:00 PM"),
         ],
-        required=True,
         default="%H:%M:%S",
+        required=True,
     )
     week_start = fields.Selection(
-        [
+        selection=[
             ("1", "Monday"),
             ("2", "Tuesday"),
             ("3", "Wednesday"),
@@ -110,24 +112,31 @@ class ResLang(models.Model):
             ("7", "Sunday"),
         ],
         string="First Day of Week",
-        required=True,
         default="7",
+        required=True,
     )
     grouping = fields.Selection(
-        [
+        selection=[
             ("[3,0]", "International Grouping"),
             ("[3,2,0]", "Indian Grouping"),
         ],
         string="Separator Format",
-        required=True,
-        default="[3,0]",
         help="The International Grouping will represent 123456789 to be 123,456,789.00; "
         "The Indian Grouping will represent 123456789 to be 12,34,56,789.00",
+        default="[3,0]",
+        required=True,
     )
     decimal_point = fields.Char(
-        string="Decimal Separator", required=True, default=".", trim=False
+        string="Decimal Separator",
+        trim=False,
+        default=".",
+        required=True,
     )
-    thousands_sep = fields.Char(string="Thousands Separator", default=",", trim=False)
+    thousands_sep = fields.Char(
+        string="Thousands Separator",
+        trim=False,
+        default=",",
+    )
 
     @api.depends("code", "flag_image")
     def _compute_flag_image_url(self) -> None:
@@ -145,7 +154,7 @@ class ResLang(models.Model):
                     f"/base/static/img/country_flags/{country_code}.png"
                 )
 
-    flag_image = fields.Image("Image")
+    flag_image = fields.Image(string="Image")
     flag_image_url = fields.Char(compute=_compute_flag_image_url)
 
     _name_uniq = models.Constraint(

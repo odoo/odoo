@@ -8,9 +8,16 @@ class MixinUtmSource(models.AbstractModel):
     _name = "mixin.utm.source"
     _description = "UTM Source Mixin"
 
-    name = fields.Char("Name", related="source_id.name", readonly=False)
+    name = fields.Char(
+        related="source_id.name",
+        string="Name",
+        readonly=False,
+    )
     source_id = fields.Many2one(
-        "utm.source", required=True, ondelete="restrict", copy=False
+        comodel_name="utm.source",
+        copy=False,
+        required=True,
+        ondelete="restrict",
     )
 
     @api.model

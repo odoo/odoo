@@ -5,7 +5,7 @@ class RepairOrder(models.Model):
     _inherit = "repair.order"
 
     production_count = fields.Integer(
-        "Count of MOs generated",
+        string="Count of MOs generated",
         compute="_compute_production_count",
         groups="mrp.group_mrp_user",
     )

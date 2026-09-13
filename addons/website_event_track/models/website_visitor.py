@@ -7,21 +7,21 @@ class WebsiteVisitor(models.Model):
     _inherit = "website.visitor"
 
     event_track_visitor_ids = fields.One2many(
-        "event.track.visitor",
-        "visitor_id",
+        comodel_name="event.track.visitor",
+        inverse_name="visitor_id",
         string="Track Visitors",
         groups="event.group_event_user",
     )
     event_track_wishlisted_ids = fields.Many2many(
-        "event.track",
+        comodel_name="event.track",
         string="Wishlisted Tracks",
         compute="_compute_event_track_wishlisted_ids",
-        compute_sudo=True,
         search="_search_event_track_wishlisted_ids",
+        compute_sudo=True,
         groups="event.group_event_user",
     )
     event_track_wishlisted_count = fields.Count(
-        "event_track_wishlisted_ids",
+        count_of="event_track_wishlisted_ids",
         string="# Wishlisted",
         compute_sudo=True,
         groups="event.group_event_user",

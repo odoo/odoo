@@ -7,14 +7,12 @@ class HrLeaveAccrualLevel(models.Model):
 
     accrual_basis = fields.Selection(
         selection_add=[("worked_hour", "Per Hour Worked")],
-        ondelete={"worked_hour": "set default"},
         compute="_compute_accrual_basis",
         store=True,
         readonly=False,
+        ondelete={"worked_hour": "set default"},
     )
-    frequency = fields.Selection(
-        selection_add=[("worked_hours", "Per Hour Worked")],
-    )
+    frequency = fields.Selection(selection_add=[("worked_hours", "Per Hour Worked")])
 
     @api.constrains("accrual_basis")
     def _check_worked_hours(self):

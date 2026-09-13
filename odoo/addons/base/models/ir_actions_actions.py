@@ -70,24 +70,37 @@ class IrActionsActions(models.Model):
     _order = "name, id"
     _allow_sudo_commands = False
 
-    name = fields.Char(string="Action Name", required=True, translate=True)
-    type = fields.Char(string="Action Type", required=True)
-    xml_id = fields.Char(compute="_compute_xml_id", string="External ID")
-    path = fields.Char(string="Path to show in the URL", copy=False)
+    name = fields.Char(
+        string="Action Name",
+        translate=True,
+        required=True,
+    )
+    type = fields.Char(
+        string="Action Type",
+        required=True,
+    )
+    xml_id = fields.Char(
+        string="External ID",
+        compute="_compute_xml_id",
+    )
+    path = fields.Char(
+        string="Path to show in the URL",
+        copy=False,
+    )
     help = fields.Html(
         string="Action Description",
-        translate=True,
         help="Optional help text for the users with a description of the target view, such as its usage and purpose.",
+        translate=True,
     )
     binding_model_id = fields.Many2one(
-        "ir.model",
-        ondelete="cascade",
+        comodel_name="ir.model",
         help="Setting a value makes this action available in the sidebar for the given model.",
+        ondelete="cascade",
     )
     binding_type = fields.Selection(
-        [("action", "Action"), ("report", "Report")],
-        required=True,
+        selection=[("action", "Action"), ("report", "Report")],
         default="action",
+        required=True,
     )
     binding_view_types = fields.Char(default="list,form")
 

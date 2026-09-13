@@ -5,7 +5,9 @@ class Website(models.Model):
     _inherit = "website"
 
     some_translatable_field = fields.Char(
-        string="A translatable field", translate=True, default="something"
+        string="A translatable field",
+        translate=True,
+        default="something",
     )
 
     def _search_get_details(self, search_type, order, options):

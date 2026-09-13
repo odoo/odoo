@@ -10,9 +10,9 @@ class AccountUpdateTaxTagsWizard(models.TransientModel):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        required=True,
-        readonly=True,
         default=lambda self: self.env.company,
+        readonly=True,
+        required=True,
     )
     date_from = fields.Date(
         string="Starting from",

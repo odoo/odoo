@@ -69,47 +69,45 @@ class ProjectProject(models.Model):
         return self.env["project.phase"].search([], limit=1)
 
     company_id = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
         compute="_compute_company_id",
         inverse="_inverse_company_id",
         store=True,
         readonly=False,
     )
     currency_id = fields.Many2one(
-        "res.currency",
+        comodel_name="res.currency",
+        export_string_translation=False,
         compute="_compute_currency_id",
         readonly=True,
-        export_string_translation=False,
     )
     account_id = fields.Many2one(
-        "account.analytic.account",
+        comodel_name="account.analytic.account",
         copy=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=?', company_id)]",
         ondelete="set null",
     )
-    amount_analytic_balance = fields.Monetary(
-        related="account_id.balance",
-    )
+    amount_analytic_balance = fields.Monetary(related="account_id.balance")
     partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Customer",
+        index="btree_not_null",
+        domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]",
         bypass_search_access=True,
         tracking=True,
-        domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]",
-        index="btree_not_null",
     )
     resource_calendar_id = fields.Many2one(
-        "resource.calendar",
+        comodel_name="resource.calendar",
         string="Working Time",
-        compute="_compute_resource_calendar_id",
         export_string_translation=False,
+        compute="_compute_resource_calendar_id",
     )
     user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Project Manager",
         default=lambda self: self.env.user,
-        tracking=True,
         falsy_value_label=_lt("👤 Unassigned"),
+        tracking=True,
     )
     alias_id = fields.Many2one(
         help="Internal email associated with this project. Incoming emails are automatically synchronized "
@@ -117,56 +115,62 @@ class ProjectProject(models.Model):
     )
 
     phase_id = fields.Many2one(
-        "project.phase",
+        comodel_name="project.phase",
+        default=_default_phase_id,
+        index=True,
+        copy=False,
+        group_expand="_read_group_expand_full",
         ondelete="restrict",
         groups="project.group_project_stages",
         tracking=True,
-        index=True,
-        copy=False,
-        default=_default_phase_id,
-        group_expand="_read_group_expand_full",
     )
     phase_color = fields.Integer(
-        string="Phase Color",
         related="phase_id.color",
+        string="Phase Color",
         export_string_translation=False,
     )
 
     name = fields.Char(
+        translate=True,
         index="trigram",
         required=True,
         tracking=True,
-        translate=True,
         default_export_compatible=True,
     )
     active = fields.Boolean(
+        export_string_translation=False,
         default=True,
         copy=False,
-        export_string_translation=False,
     )
     sequence = fields.Integer(
-        default=10,
         export_string_translation=False,
+        default=10,
     )
     description = fields.Html(
         help="Description to provide more information and context about this project"
     )
     label_tasks = fields.Char(
         string="Use Tasks as",
-        default=lambda s: s.env._("Tasks"),
-        translate=True,
         help="Name used to refer to the tasks of your project e.g. tasks, tickets, sprints, etc...",
+        translate=True,
+        default=lambda s: s.env._("Tasks"),
     )
-    color = fields.Integer(string="Color Index", export_string_translation=False)
+    color = fields.Integer(
+        string="Color Index",
+        export_string_translation=False,
+    )
     duration_tracking = fields.Json(groups="project.group_project_stages")
-    date_start = fields.Date(string="Start Date", copy=False)
+    date_start = fields.Date(
+        string="Start Date",
+        copy=False,
+    )
     date_end = fields.Date(
         string="End Date",
-        copy=False,
-        index=True,
-        tracking=True,
         help="Date on which this project ends. The timeframe defined on the "
         "project is taken into account when viewing its planning.",
+        index=True,
+        copy=False,
+        tracking=True,
     )
     date = fields.Date(
         related="date_end",
@@ -175,16 +179,13 @@ class ProjectProject(models.Model):
     )
 
     privacy_visibility = fields.Selection(
-        [
+        selection=[
             ("followers", "Invited internal users"),
             ("invited_users", "Invited internal and portal users"),
             ("employees", "All internal users"),
             ("portal", " All internal users and invited portal users"),
         ],
         string="Visibility",
-        required=True,
-        default="portal",
-        tracking=True,
         help="Project and Task Visibility:\n"
         "- Invited internal users: Can access only the project or tasks they follow. Assignees automatically get access.\n"
         "- Invited internal and portal users: Same as above, extended to portal users.\n"
@@ -197,112 +198,113 @@ class ProjectProject(models.Model):
         "Other Rules:\n"
         "- Internal users can open a task from a direct link, even without project access.\n"
         "- Project admins have access to private projects, even if not followers.\n",
+        default="portal",
+        required=True,
+        tracking=True,
     )
     privacy_visibility_warning = fields.Char(
-        compute="_compute_privacy_visibility_warning",
         export_string_translation=False,
+        compute="_compute_privacy_visibility_warning",
     )
     access_instruction_message = fields.Char(
-        compute="_compute_access_instruction_message",
         export_string_translation=False,
+        compute="_compute_access_instruction_message",
     )
     allow_dependencies = fields.Boolean(
-        "Task Dependencies",
+        string="Task Dependencies",
         inverse="_inverse_allow_dependencies",
     )
     allow_milestones = fields.Boolean(
-        "Milestones",
+        string="Milestones",
         inverse="_inverse_allow_milestones",
     )
     allow_recurring_tasks = fields.Boolean(
-        "Recurring Tasks",
+        string="Recurring Tasks",
         inverse="_inverse_allow_recurring_tasks",
     )
-    use_sprints = fields.Boolean(
-        help="Enable time-boxed iterations for this project.",
-    )
+    use_sprints = fields.Boolean(help="Enable time-boxed iterations for this project.")
 
     sprint_ids = fields.One2many(
-        "project.sprint",
-        "project_id",
+        comodel_name="project.sprint",
+        inverse_name="project_id",
         string="Sprints",
         export_string_translation=False,
     )
     active_sprint_id = fields.Many2one(
-        "project.sprint",
-        compute="_compute_active_sprint_id",
+        comodel_name="project.sprint",
         export_string_translation=False,
+        compute="_compute_active_sprint_id",
     )
     sprint_count = fields.Count(
-        "sprint_ids",
+        count_of="sprint_ids",
         export_string_translation=False,
     )
 
     tag_ids = fields.Many2many(
-        "project.tags",
+        comodel_name="project.tags",
         relation="project_project_project_tags_rel",
         string="Tags",
     )
     favorite_user_ids = fields.Many2many(string="Members")
     is_user_favorite = fields.Boolean(string="Show Project on Dashboard")
     workflow_step_ids = fields.Many2many(
-        "project.workflow.step",
-        "project_workflow_step_project_rel",
-        "project_id",
-        "step_id",
+        comodel_name="project.workflow.step",
+        relation="project_workflow_step_project_rel",
+        column1="project_id",
+        column2="step_id",
         string="Workflow Steps",
         export_string_translation=False,
     )
     task_ids = fields.One2many(
-        "project.task",
-        "project_id",
+        comodel_name="project.task",
+        inverse_name="project_id",
         string="Tasks",
     )
-    task_properties_definition = fields.PropertiesDefinition("Task Properties")
+    task_properties_definition = fields.PropertiesDefinition(string="Task Properties")
     task_count = fields.Integer(
-        compute="_compute_task_counts",
         export_string_translation=False,
+        compute="_compute_task_counts",
     )
     open_task_count = fields.Integer(
-        compute="_compute_task_counts",
         export_string_translation=False,
+        compute="_compute_task_counts",
     )
     closed_task_count = fields.Integer(
-        compute="_compute_task_counts",
         export_string_translation=False,
+        compute="_compute_task_counts",
     )
     task_completion_percentage = fields.Float(
-        compute="_compute_task_completion_percentage",
         export_string_translation=False,
+        compute="_compute_task_completion_percentage",
     )
 
     collaborator_ids = fields.One2many(
-        "project.collaborator",
-        "project_id",
+        comodel_name="project.collaborator",
+        inverse_name="project_id",
         string="Collaborators",
-        copy=False,
         export_string_translation=False,
+        copy=False,
     )
     collaborator_count = fields.Integer(
-        "# Collaborators",
+        string="# Collaborators",
+        export_string_translation=False,
         compute="_compute_collaborator_count",
         compute_sudo=True,
-        export_string_translation=False,
     )
 
     update_ids = fields.One2many(
-        "project.update",
-        "project_id",
+        comodel_name="project.update",
+        inverse_name="project_id",
         export_string_translation=False,
     )
     update_count = fields.Integer(
-        compute="_compute_update_count",
         export_string_translation=False,
+        compute="_compute_update_count",
     )
     last_update_id = fields.Many2one(
-        "project.update",
-        copy=False,
+        comodel_name="project.update",
         export_string_translation=False,
+        copy=False,
     )
     last_update_status = fields.Selection(
         selection=[
@@ -313,213 +315,217 @@ class ProjectProject(models.Model):
             ("to_define", "Set Status"),
             ("done", "Complete"),
         ],
-        default="to_define",
+        export_string_translation=False,
         compute="_compute_last_update_status",
+        default="to_define",
         store=True,
         readonly=False,
         required=True,
-        export_string_translation=False,
     )
     last_update_color = fields.Integer(
-        compute="_compute_last_update_color",
         export_string_translation=False,
+        compute="_compute_last_update_color",
     )
 
     milestone_ids = fields.One2many(
-        "project.milestone",
-        "project_id",
-        copy=True,
+        comodel_name="project.milestone",
+        inverse_name="project_id",
         export_string_translation=False,
+        copy=True,
     )
     milestone_count = fields.Integer(
+        export_string_translation=False,
         compute="_compute_milestone_count",
         groups="project.group_project_milestone",
-        export_string_translation=False,
     )
     milestone_count_reached = fields.Integer(
+        export_string_translation=False,
         compute="_compute_milestone_reached_count",
         groups="project.group_project_milestone",
-        export_string_translation=False,
     )
     is_milestone_exceeded = fields.Boolean(
+        export_string_translation=False,
         compute="_compute_is_milestone_exceeded",
         search="_search_is_milestone_exceeded",
-        export_string_translation=False,
     )
     milestone_progress = fields.Integer(
-        "Milestones Reached",
+        string="Milestones Reached",
+        export_string_translation=False,
         compute="_compute_milestone_reached_count",
         groups="project.group_project_milestone",
-        export_string_translation=False,
     )
     next_milestone_id = fields.Many2one(
-        "project.milestone",
+        comodel_name="project.milestone",
+        export_string_translation=False,
         compute="_compute_next_milestone_indicators",
         groups="project.group_project_milestone",
-        export_string_translation=False,
     )
     can_mark_milestone_as_done = fields.Boolean(
+        export_string_translation=False,
         compute="_compute_next_milestone_indicators",
         groups="project.group_project_milestone",
-        export_string_translation=False,
     )
     is_milestone_deadline_exceeded = fields.Boolean(
+        export_string_translation=False,
         compute="_compute_next_milestone_indicators",
         groups="project.group_project_milestone",
-        export_string_translation=False,
     )
 
     benefit_ids = fields.One2many(
-        "project.benefit",
-        "project_id",
+        comodel_name="project.benefit",
+        inverse_name="project_id",
         string="Benefits",
         export_string_translation=False,
     )
     benefit_count = fields.Count(
-        "benefit_ids",
+        count_of="benefit_ids",
         export_string_translation=False,
     )
 
     baseline_ids = fields.One2many(
-        "project.baseline",
-        "project_id",
+        comodel_name="project.baseline",
+        inverse_name="project_id",
         string="Baselines",
         export_string_translation=False,
     )
     current_baseline_id = fields.Many2one(
-        "project.baseline",
-        compute="_compute_current_baseline_id",
+        comodel_name="project.baseline",
         export_string_translation=False,
+        compute="_compute_current_baseline_id",
     )
 
     gate_ids = fields.One2many(
-        "project.gate",
-        "project_id",
+        comodel_name="project.gate",
+        inverse_name="project_id",
         string="Gate Reviews",
         export_string_translation=False,
     )
-    gate_count = fields.Count("gate_ids", "Gates", export_string_translation=False)
+    gate_count = fields.Count(
+        count_of="gate_ids",
+        string="Gates",
+        export_string_translation=False,
+    )
 
     history_ids = fields.One2many(
-        "project.history",
-        "project_id",
+        comodel_name="project.history",
+        inverse_name="project_id",
         string="History Records",
         export_string_translation=False,
     )
 
     premortem_done = fields.Boolean(
-        "Pre-Mortem Conducted",
+        string="Pre-Mortem Conducted",
         help="Was a pre-mortem exercise conducted at project kickoff?",
     )
-    date_premortem = fields.Date("Pre-Mortem Date")
+    date_premortem = fields.Date(string="Pre-Mortem Date")
     premortem_participant_ids = fields.Many2many(
-        "res.users",
-        "project_premortem_participants_rel",
-        "project_id",
-        "user_id",
+        comodel_name="res.users",
+        relation="project_premortem_participants_rel",
+        column1="project_id",
+        column2="user_id",
         string="Pre-Mortem Participants",
     )
     premortem_notes = fields.Html(
-        "Pre-Mortem Notes",
+        string="Pre-Mortem Notes",
         help="'Imagine this project has failed. Why?' — capture all identified failure modes.",
     )
 
     retrospective_ids = fields.One2many(
-        "project.retrospective",
-        "project_id",
+        comodel_name="project.retrospective",
+        inverse_name="project_id",
         string="Retrospectives",
         export_string_translation=False,
     )
     retrospective_count = fields.Integer(
-        compute="_compute_retrospective_count",
         export_string_translation=False,
+        compute="_compute_retrospective_count",
     )
 
     health_score = fields.Integer(
-        compute="_compute_health_indicators",
-        store=True,
         help="Composite 0-100 score based on deadlines, milestones, risk, and staleness.",
         export_string_translation=False,
+        compute="_compute_health_indicators",
+        store=True,
     )
     health_status = fields.Selection(
-        [
+        selection=[
             ("healthy", "Healthy"),
             ("attention", "Needs Attention"),
             ("warning", "Warning"),
             ("critical", "Critical"),
         ],
         string="Health",
-        compute="_compute_health_indicators",
-        store=True,
         help="Derived from health_score: healthy (80-100), attention (60-79), warning (40-59), critical (0-39).",
         export_string_translation=False,
+        compute="_compute_health_indicators",
+        store=True,
     )
 
     risk_ids = fields.One2many(
-        "project.risk",
-        "project_id",
+        comodel_name="project.risk",
+        inverse_name="project_id",
         string="Risks",
         export_string_translation=False,
     )
     risk_count = fields.Integer(
-        compute="_compute_risk_counts",
         export_string_translation=False,
+        compute="_compute_risk_counts",
     )
     high_risk_count = fields.Integer(
-        "High/Critical Risks",
-        compute="_compute_risk_counts",
+        string="High/Critical Risks",
         export_string_translation=False,
+        compute="_compute_risk_counts",
     )
 
     wip_count = fields.Integer(
-        "WIP Count",
-        compute="_compute_flow_metrics",
-        store=True,
+        string="WIP Count",
         help="Number of open, non-blocked tasks.",
         export_string_translation=False,
-    )
-    avg_lead_time = fields.Float(
-        "Avg Lead Time (hours)",
         compute="_compute_flow_metrics",
         store=True,
-        digits=(16, 1),
+    )
+    avg_lead_time = fields.Float(
+        string="Avg Lead Time (hours)",
         help="Average working hours from creation to closure (last 90 days). "
         "Includes queue wait time.",
         export_string_translation=False,
-    )
-    avg_cycle_time = fields.Float(
-        "Avg Cycle Time (hours)",
+        digits=(16, 1),
         compute="_compute_flow_metrics",
         store=True,
-        digits=(16, 1),
+    )
+    avg_cycle_time = fields.Float(
+        string="Avg Cycle Time (hours)",
         help="Average working hours from assignment to closure (last 90 days). "
         "Excludes queue wait time.",
         export_string_translation=False,
+        digits=(16, 1),
+        compute="_compute_flow_metrics",
+        store=True,
     )
     throughput_week = fields.Float(
-        "Throughput / Week",
-        compute="_compute_flow_metrics",
-        store=True,
-        digits=(16, 1),
+        string="Throughput / Week",
         help="Tasks closed per week (rolling 4-week average).",
         export_string_translation=False,
-    )
-    deadline_compliance_pct = fields.Float(
-        "Deadline Compliance %",
+        digits=(16, 1),
         compute="_compute_flow_metrics",
         store=True,
-        digits=(5, 1),
+    )
+    deadline_compliance_pct = fields.Float(
+        string="Deadline Compliance %",
         help="Percentage of closed tasks with deadlines that met their deadline.",
         export_string_translation=False,
+        digits=(5, 1),
+        compute="_compute_flow_metrics",
+        store=True,
     )
 
     is_template = fields.Boolean(
-        copy=False,
         export_string_translation=False,
+        copy=False,
     )
     show_ratings = fields.Boolean(
-        compute="_compute_show_ratings",
         export_string_translation=False,
+        compute="_compute_show_ratings",
     )
 
     _project_date_greater = models.Constraint(

@@ -52,61 +52,74 @@ class MailActivitySchedule(models.TransientModel):
         return res
 
     res_model_id: IrModel = fields.Many2one(
-        "ir.model",
+        comodel_name="ir.model",
         string="Applies to",
         compute="_compute_res_model_id",
-        compute_sudo=True,
-        ondelete="cascade",
         precompute=True,
+        compute_sudo=True,
+        store=True,
         readonly=False,
         required=False,
-        store=True,
+        ondelete="cascade",
     )
-    res_model = fields.Char("Model", readonly=False, required=False)
-    res_ids = fields.Text(
-        "Document IDs",
-        compute="_compute_res_ids",
+    res_model = fields.Char(
+        string="Model",
         readonly=False,
-        store=True,
-        precompute=True,
+        required=False,
     )
-    is_batch_mode = fields.Boolean("Use in batch", compute="_compute_is_batch_mode")
+    res_ids = fields.Text(
+        string="Document IDs",
+        compute="_compute_res_ids",
+        precompute=True,
+        store=True,
+        readonly=False,
+    )
+    is_batch_mode = fields.Boolean(
+        string="Use in batch",
+        compute="_compute_is_batch_mode",
+    )
     company_id: ResCompany = fields.Many2one(
-        "res.company", compute="_compute_company_id", required=False
+        comodel_name="res.company",
+        compute="_compute_company_id",
+        required=False,
     )
     error = fields.Html(compute="_compute_error_and_warning")
     has_error = fields.Boolean(compute="_compute_error_and_warning")
     warning = fields.Html(compute="_compute_error_and_warning")
     has_warning = fields.Boolean(compute="_compute_error_and_warning")
     plan_available_ids: MailActivityPlan = fields.Many2many(
-        "mail.activity.plan",
+        comodel_name="mail.activity.plan",
         compute="_compute_plan_available_ids",
-        store=True,
         compute_sudo=True,
+        store=True,
     )
     plan_id: MailActivityPlan = fields.Many2one(
-        "mail.activity.plan",
-        domain="[('id', 'in', plan_available_ids)]",
+        comodel_name="mail.activity.plan",
         compute="_compute_plan_id",
         store=True,
         readonly=False,
+        domain="[('id', 'in', plan_available_ids)]",
     )
     plan_has_user_on_demand = fields.Boolean(related="plan_id.has_user_on_demand")
     plan_schedule_line_ids: MailActivityScheduleSummary = fields.One2many(
-        "mail.activity.schedule.line",
-        "activity_schedule_id",
+        comodel_name="mail.activity.schedule.line",
+        inverse_name="activity_schedule_id",
         string="Schedule Lines",
         compute="_compute_plan_schedule_line_ids",
     )
     plan_on_demand_user_id: ResUsers = fields.Many2one(
-        "res.users",
-        "Assigned To",
+        comodel_name="res.users",
+        string="Assigned To",
         help="Choose assignation for activities with on demand assignation.",
         default=lambda self: self.env.user,
     )
-    plan_date = fields.Date(compute="_compute_plan_date", store=True, readonly=False)
+    plan_date = fields.Date(
+        compute="_compute_plan_date",
+        store=True,
+        readonly=False,
+    )
     activity_type_id: MailActivityType = fields.Many2one(
-        "mail.activity.type",
+        comodel_name="mail.activity.type",
         compute="_compute_activity_type_id",
         store=True,
         readonly=False,
@@ -114,24 +127,36 @@ class MailActivitySchedule(models.TransientModel):
         ondelete="set null",
     )
     activity_category = fields.Selection(
-        related="activity_type_id.category", readonly=True
+        related="activity_type_id.category",
+        readonly=True,
     )
     date_deadline = fields.Date(
-        "Due Date", compute="_compute_date_deadline", readonly=False, store=True
+        string="Due Date",
+        compute="_compute_date_deadline",
+        store=True,
+        readonly=False,
     )
-    summary = fields.Char(compute="_compute_summary", readonly=False, store=True)
+    summary = fields.Char(
+        compute="_compute_summary",
+        store=True,
+        readonly=False,
+    )
     note = fields.Html(
-        compute="_compute_note", readonly=False, store=True, sanitize_style=True
+        sanitize_style=True,
+        compute="_compute_note",
+        store=True,
+        readonly=False,
     )
     activity_user_id: ResUsers = fields.Many2one(
-        "res.users",
-        "Assigned to",
+        comodel_name="res.users",
+        string="Assigned to",
         compute="_compute_activity_user_id",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     chaining_type = fields.Selection(
-        related="activity_type_id.chaining_type", readonly=True
+        related="activity_type_id.chaining_type",
+        readonly=True,
     )
 
     @api.depends("res_model")

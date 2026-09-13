@@ -37,7 +37,10 @@ class EventEvent(models.Model):
         )
         return res
 
-    subtitle = fields.Char("Event Subtitle", translate=True)
+    subtitle = fields.Char(
+        string="Event Subtitle",
+        translate=True,
+    )
     is_participating = fields.Boolean(
         compute="_compute_is_participating",
         search="_search_is_participating",
@@ -48,93 +51,89 @@ class EventEvent(models.Model):
         search="_search_is_visible_on_website",
     )
     event_register_url = fields.Char(
-        "Event Registration Link",
+        string="Event Registration Link",
         compute="_compute_event_register_url",
     )
     website_visibility = fields.Selection(
-        [
+        selection=[
             ("public", "Public"),
             ("link", "Via a Link"),
             ("logged_users", "Logged Users"),
         ],
-        required=True,
-        default="public",
-        tracking=True,
         help="""Defines the Visibility of the Event on the Website and searches.\n
             Note that the EventEvent is however always available via its link.""",
+        default="public",
+        required=True,
+        tracking=True,
     )
     website_published = fields.Boolean(tracking=True)
     website_menu = fields.Boolean(
+        help="Allows to display and manage event-specific menus on website.",
         compute="_compute_website_menu",
         precompute=True,
-        readonly=False,
         store=True,
-        help="Allows to display and manage event-specific menus on website.",
+        readonly=False,
     )
     menu_id = fields.Many2one(
-        "website.menu",
-        "Event Menu",
+        comodel_name="website.menu",
+        string="Event Menu",
         copy=False,
     )
     introduction_menu = fields.Boolean(
         compute="_compute_website_menu_data",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     introduction_menu_ids = fields.One2many(
-        "website.event.menu",
-        "event_id",
+        comodel_name="website.event.menu",
+        inverse_name="event_id",
         string="Introduction Menus",
         domain=[("menu_type", "=", "introduction")],
     )
-    address_name = fields.Char(
-        related="address_id.name",
-    )
+    address_name = fields.Char(related="address_id.name")
     register_menu = fields.Boolean(
         compute="_compute_website_menu_data",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     register_menu_ids = fields.One2many(
-        "website.event.menu",
-        "event_id",
+        comodel_name="website.event.menu",
+        inverse_name="event_id",
         string="Register Menus",
         domain=[("menu_type", "=", "register")],
     )
     community_menu = fields.Boolean(
-        compute="_compute_community_menu",
-        readonly=False,
-        store=True,
         help="Display community tab on website",
+        compute="_compute_community_menu",
+        store=True,
+        readonly=False,
     )
     community_menu_ids = fields.One2many(
-        "website.event.menu",
-        "event_id",
+        comodel_name="website.event.menu",
+        inverse_name="event_id",
         string="Event Community Menus",
         domain=[("menu_type", "=", "community")],
     )
     other_menu_ids = fields.One2many(
-        "website.event.menu",
-        "event_id",
+        comodel_name="website.event.menu",
+        inverse_name="event_id",
         string="Other Menus",
         domain=[("menu_type", "=", "other")],
     )
     is_ongoing = fields.Boolean(
+        help="Whether event has begun",
         compute="_compute_time_data",
         search="_search_is_ongoing",
-        help="Whether event has begun",
     )
-    is_done = fields.Boolean(
-        compute="_compute_time_data",
-    )
+    is_done = fields.Boolean(compute="_compute_time_data")
     start_today = fields.Boolean(
-        compute="_compute_time_data",
         help="Whether event is going to start today if still not ongoing",
+        compute="_compute_time_data",
     )
     start_remaining = fields.Integer(
-        "Remaining before start",
-        compute="_compute_time_data",
+        string="Remaining before start",
         help="Remaining time before event starts (minutes)",
+        compute="_compute_time_data",
     )
 
     @api.depends("website_url")

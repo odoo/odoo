@@ -29,19 +29,28 @@ class MailingListMerge(models.TransientModel):
             res["dest_list_id"] = source_ids[0] if source_ids else False
         return res
 
-    src_list_ids = fields.Many2many("mailing.list", string="Mailing Lists")
-    dest_list_id = fields.Many2one("mailing.list", string="Destination Mailing List")
+    src_list_ids = fields.Many2many(
+        comodel_name="mailing.list",
+        string="Mailing Lists",
+    )
+    dest_list_id = fields.Many2one(
+        comodel_name="mailing.list",
+        string="Destination Mailing List",
+    )
     merge_options = fields.Selection(
-        [
+        selection=[
             ("new", "Merge into a new mailing list"),
             ("existing", "Merge into an existing mailing list"),
         ],
-        "Merge Option",
-        required=True,
+        string="Merge Option",
         default="new",
+        required=True,
     )
-    new_list_name = fields.Char("New Mailing List Name")
-    archive_src_lists = fields.Boolean("Archive source mailing lists", default=True)
+    new_list_name = fields.Char(string="New Mailing List Name")
+    archive_src_lists = fields.Boolean(
+        string="Archive source mailing lists",
+        default=True,
+    )
 
     def action_mailing_lists_merge(self):
         if self.merge_options == "new":

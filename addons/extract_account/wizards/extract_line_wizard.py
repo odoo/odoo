@@ -19,25 +19,31 @@ class ExtractLineProposal(models.TransientModel):
     _order = "sequence, id"
 
     wizard_id = fields.Many2one(
-        "account.move.extract.line.wizard", required=True, ondelete="cascade"
+        comodel_name="account.move.extract.line.wizard",
+        required=True,
+        ondelete="cascade",
     )
     sequence = fields.Integer(default=10)
     read_index = fields.Integer(
-        readonly=True,
         help="Position of this line in what the document said. Kept so a "
         "correction is attributed to the line it was made on even after the "
         "rows are reordered.",
+        readonly=True,
     )
     accepted = fields.Boolean(default=True)
     description = fields.Char(required=True)
     quantity = fields.Float(default=1.0)
     price_unit = fields.Monetary(currency_field="currency_id")
-    product_id = fields.Many2one("product.product")
+    product_id = fields.Many2one(comodel_name="product.product")
     read_by = fields.Char(readonly=True)
-    confidence = fields.Float(readonly=True, digits=(3, 2))
+    confidence = fields.Float(
+        digits=(3, 2),
+        readonly=True,
+    )
     currency_id = fields.Many2one(related="wizard_id.move_id.currency_id")
     subtotal = fields.Monetary(
-        compute="_compute_subtotal", currency_field="currency_id"
+        currency_field="currency_id",
+        compute="_compute_subtotal",
     )
 
     @api.depends("quantity", "price_unit")
@@ -50,13 +56,27 @@ class ExtractLineWizard(models.TransientModel):
     _name = "account.move.extract.line.wizard"
     _description = "Review Lines Read From a Document"
 
-    move_id = fields.Many2one("account.move", required=True, readonly=True)
-    line_ids = fields.One2many("account.move.extract.line.proposal", "wizard_id")
+    move_id = fields.Many2one(
+        comodel_name="account.move",
+        readonly=True,
+        required=True,
+    )
+    line_ids = fields.One2many(
+        comodel_name="account.move.extract.line.proposal",
+        inverse_name="wizard_id",
+    )
     currency_id = fields.Many2one(related="move_id.currency_id")
-    read_total = fields.Monetary(readonly=True, currency_field="currency_id")
-    read_untaxed_total = fields.Monetary(readonly=True, currency_field="currency_id")
+    read_total = fields.Monetary(
+        currency_field="currency_id",
+        readonly=True,
+    )
+    read_untaxed_total = fields.Monetary(
+        currency_field="currency_id",
+        readonly=True,
+    )
     proposed_total = fields.Monetary(
-        compute="_compute_proposed_total", currency_field="currency_id"
+        currency_field="currency_id",
+        compute="_compute_proposed_total",
     )
     totals_agree = fields.Boolean(compute="_compute_totals_agree")
 

@@ -34,15 +34,23 @@ class ResCompanyLdap(models.Model):
     _rec_name = "ldap_server"
 
     sequence = fields.Integer(default=10)
-    company = fields.Many2one("res.company", required=True, ondelete="cascade")
+    company = fields.Many2one(
+        comodel_name="res.company",
+        required=True,
+        ondelete="cascade",
+    )
     ldap_server = fields.Char(
-        string="LDAP Server address", required=True, default="127.0.0.1"
+        string="LDAP Server address",
+        default="127.0.0.1",
+        required=True,
     )
     ldap_server_port = fields.Integer(
-        string="LDAP Server port", required=True, default=389
+        string="LDAP Server port",
+        default=389,
+        required=True,
     )
     ldap_binddn = fields.Char(
-        "LDAP binddn",
+        string="LDAP binddn",
         help="The user account on the LDAP server that is used to query the directory. "
         "Leave empty to connect anonymously.",
     )
@@ -52,7 +60,6 @@ class ResCompanyLdap(models.Model):
     )
     ldap_filter = fields.Char(
         string="LDAP filter",
-        required=True,
         help="""\
     Filter used to look up user accounts in the LDAP database. It is an\
     arbitrary LDAP filter in string representation. Any `%s` placeholder\
@@ -70,18 +77,21 @@ class ResCompanyLdap(models.Model):
 
         (|(mail=%s)(uid=%s))
     """,
+        required=True,
     )
     ldap_base = fields.Char(
         string="LDAP base",
-        required=True,
         help="DN of the user search scope: all descendants of this base will be searched for users.",
+        required=True,
     )
     user = fields.Many2one(
-        "res.users", string="Template User", help="User to copy when creating new users"
+        comodel_name="res.users",
+        string="Template User",
+        help="User to copy when creating new users",
     )
     create_user = fields.Boolean(
-        default=True,
         help="Automatically create local user accounts for new users authenticating via LDAP",
+        default=True,
     )
     ldap_tls = fields.Boolean(
         string="Use TLS",

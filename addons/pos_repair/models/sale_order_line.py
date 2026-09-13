@@ -5,7 +5,8 @@ class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
     is_repair_line = fields.Boolean(
-        "Is linked to repair", compute="_compute_is_repair_line"
+        string="Is linked to repair",
+        compute="_compute_is_repair_line",
     )
 
     @api.depends("move_ids.repair_id")

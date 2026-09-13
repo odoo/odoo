@@ -8,14 +8,23 @@ class MrpBomByproduct(models.Model):
 
     _bom_child_field = "byproduct_ids"
 
-    product_id = fields.Many2one("product.product", "By-product")
-    bom_id = fields.Many2one("mrp.bom", "BoM")
-    operation_id = fields.Many2one("mrp.routing.workcenter", "Produced in Operation")
+    product_id = fields.Many2one(
+        comodel_name="product.product",
+        string="By-product",
+    )
+    bom_id = fields.Many2one(
+        comodel_name="mrp.bom",
+        string="BoM",
+    )
+    operation_id = fields.Many2one(
+        comodel_name="mrp.routing.workcenter",
+        string="Produced in Operation",
+    )
     cost_share = fields.Float(
-        "Cost Share (%)",
-        digits=(5, 2),
+        string="Cost Share (%)",
         help="The percentage of the final production cost for this by-product line (divided between the quantity produced)."
         "The total of all by-products' cost share must be less than or equal to 100.",
+        digits=(5, 2),
     )
 
     def _get_uom_mismatch_message(self):

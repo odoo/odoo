@@ -8,7 +8,8 @@ class PosOrder(models.Model):
     _inherit = "pos.order"
 
     l10n_sa_reason = fields.Selection(
-        string="ZATCA Reason", selection=ADJUSTMENT_REASONS
+        selection=ADJUSTMENT_REASONS,
+        string="ZATCA Reason",
     )
     l10n_sa_reason_value = fields.Char(compute="_compute_l10n_sa_reason_value")
 

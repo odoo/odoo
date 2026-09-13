@@ -21,75 +21,78 @@ class SaleOrder(models.Model):
         return res
 
     tasks_ids = fields.Many2many(
-        "project.task",
+        comodel_name="project.task",
+        string="Tasks associated with this sale",
+        export_string_translation=False,
         compute="_compute_tasks",
         search="_search_tasks_ids",
         groups="project.group_project_user",
-        string="Tasks associated with this sale",
-        export_string_translation=False,
     )
     tasks_count = fields.Integer(
         string="Tasks",
+        export_string_translation=False,
         compute="_compute_tasks",
         groups="project.group_project_user",
-        export_string_translation=False,
     )
 
     visible_project = fields.Boolean(
-        "Display project",
+        string="Display project",
+        export_string_translation=False,
         compute="_compute_visible_project",
         readonly=True,
-        export_string_translation=False,
     )
     project_ids = fields.Many2many(
-        "project.project",
-        compute="_compute_project_ids",
+        comodel_name="project.project",
         string="Projects",
+        export_string_translation=False,
+        compute="_compute_project_ids",
         copy=False,
         groups="project.group_project_user,project.group_project_milestone",
-        export_string_translation=False,
     )
     project_count = fields.Integer(
         string="Number of Projects",
+        export_string_translation=False,
         compute="_compute_project_ids",
         groups="project.group_project_user",
-        export_string_translation=False,
     )
     milestone_count = fields.Integer(
-        compute="_compute_milestone_count", export_string_translation=False
+        export_string_translation=False,
+        compute="_compute_milestone_count",
     )
     is_product_milestone = fields.Boolean(
-        compute="_compute_is_product_milestone", export_string_translation=False
+        export_string_translation=False,
+        compute="_compute_is_product_milestone",
     )
     show_create_project_button = fields.Boolean(
+        export_string_translation=False,
         compute="_compute_show_project_and_task_button",
         groups="project.group_project_user",
-        export_string_translation=False,
     )
     show_project_button = fields.Boolean(
+        export_string_translation=False,
         compute="_compute_show_project_and_task_button",
         groups="project.group_project_user",
-        export_string_translation=False,
     )
     closed_task_count = fields.Integer(
+        export_string_translation=False,
         compute="_compute_tasks",
         groups="project.group_project_user",
-        export_string_translation=False,
     )
     completed_task_percentage = fields.Float(
+        export_string_translation=False,
         compute="_compute_completed_task_percentage",
         groups="project.group_project_user",
-        export_string_translation=False,
     )
     project_id = fields.Many2one(
-        "project.project",
-        domain=[("allow_billable", "=", True), ("is_template", "=", False)],
-        copy=False,
-        index="btree_not_null",
+        comodel_name="project.project",
         help="A task will be created for the project upon sales order confirmation. The analytic distribution of this project will also serve as a reference for newly created sales order items.",
+        index="btree_not_null",
+        copy=False,
+        domain=[("allow_billable", "=", True), ("is_template", "=", False)],
     )
     project_account_id = fields.Many2one(
-        "account.analytic.account", related="project_id.account_id"
+        comodel_name="account.analytic.account",
+        related="project_id.account_id",
     )
 
     def _compute_milestone_count(self):

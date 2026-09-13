@@ -12,19 +12,25 @@ class L10n_Hu_EdiTax_Audit_Export(models.TransientModel):
     _description = "Tax audit export - Adóhatósági Ellenőrzési Adatszolgáltatás"
 
     selection_mode = fields.Selection(
-        string="Selection mode",
         selection=[
             ("date", "By date"),
             ("name", "By serial number"),
         ],
+        string="Selection mode",
         default="date",
     )
     date_from = fields.Date()
     date_to = fields.Date()
     name_from = fields.Char()
     name_to = fields.Char()
-    filename = fields.Char(string="File name", compute="_compute_filename")
-    export_file = fields.Binary(string="Generated File", readonly=True)
+    filename = fields.Char(
+        string="File name",
+        compute="_compute_filename",
+    )
+    export_file = fields.Binary(
+        string="Generated File",
+        readonly=True,
+    )
 
     @api.depends("selection_mode", "date_from", "date_to", "name_from", "name_to")
     def _compute_filename(self):

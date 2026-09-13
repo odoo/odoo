@@ -8,20 +8,21 @@ class StockMoveLine(models.Model):
     _inherit = "stock.move.line"
 
     expiration_date = fields.Datetime(
+        help="This is the date on which the goods with this Serial Number may"
+        " become dangerous and must not be consumed.",
         compute="_compute_expiration_date",
         store=True,
         readonly=False,
-        help="This is the date on which the goods with this Serial Number may"
-        " become dangerous and must not be consumed.",
     )
     removal_date = fields.Datetime(
         compute="_compute_removal_date",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     is_expired = fields.Boolean(related="lot_id.product_expiry_alert")
     use_expiration_date = fields.Boolean(
-        string="Use Expiration Date", related="product_id.use_expiration_date"
+        related="product_id.use_expiration_date",
+        string="Use Expiration Date",
     )
 
     def _auto_init(self):

@@ -13,10 +13,10 @@ class L10nTrNilveraTrailerPlate(models.Model):
 
     name = fields.Char(string="GİB Plate Number")
     plate_number_type = fields.Selection(
-        string="Plate Number",
         selection=[
             ("vehicle", "Vehicle"),
             ("trailer", "Plate"),
         ],
+        string="Plate Number",
         required=True,
     )

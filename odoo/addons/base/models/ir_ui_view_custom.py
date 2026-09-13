@@ -9,17 +9,20 @@ class IrUiViewCustom(models.Model):
     _allow_sudo_commands = False
 
     ref_id = fields.Many2one(
-        "ir.ui.view",
+        comodel_name="ir.ui.view",
         string="Original View",
         index=True,
         required=True,
         ondelete="cascade",
     )
     user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         required=True,
         ondelete="cascade",
     )
-    arch = fields.Text(string="View Architecture", required=True)
+    arch = fields.Text(
+        string="View Architecture",
+        required=True,
+    )
 
     _user_id_ref_id = models.Index("(user_id, ref_id)")

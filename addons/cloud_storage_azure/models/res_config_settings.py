@@ -17,24 +17,26 @@ class ResConfigSettings(models.TransientModel):
 
     cloud_storage_azure_account_name = fields.Char(
         string="Azure Account Name",
-        config_parameter="cloud_storage_azure_account_name",
         help="If changed and old container names are still in use, you "
         "should promise the current application registration has the "
         "permission to access all old containers.",
+        config_parameter="cloud_storage_azure_account_name",
     )
     cloud_storage_azure_container_name = fields.Char(
         string="Azure Container Name",
-        config_parameter="cloud_storage_azure_container_name",
         help="If changed and old container names are still in use, you "
         "should promise the current application registration has the "
         "permission to access all old containers.",
+        config_parameter="cloud_storage_azure_container_name",
     )
     # Application Registry Info
     cloud_storage_azure_tenant_id = fields.Char(
-        string="Azure Tenant ID", config_parameter="cloud_storage_azure_tenant_id"
+        string="Azure Tenant ID",
+        config_parameter="cloud_storage_azure_tenant_id",
     )
     cloud_storage_azure_client_id = fields.Char(
-        string="Azure Client ID", config_parameter="cloud_storage_azure_client_id"
+        string="Azure Client ID",
+        config_parameter="cloud_storage_azure_client_id",
     )
     cloud_storage_azure_client_secret = fields.Char(
         string="Azure Client Secret",

@@ -10,14 +10,14 @@ class MaintenanceRequest(models.Model):
     _reservation_sync_manual = True
 
     asset_id = fields.Many2one(
-        "resource.asset",
+        comodel_name="resource.asset",
         index="btree_not_null",
-        check_company=True,
         ondelete="restrict",
+        check_company=True,
     )
     block_asset = fields.Boolean(
-        default=True,
         help="While scheduled, the asset is unavailable time for planning, work orders and every other reader of its calendar.",
+        default=True,
     )
 
     @api.depends("asset_id.maintenance_team_id")

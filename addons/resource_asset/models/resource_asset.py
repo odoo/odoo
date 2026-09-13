@@ -15,15 +15,29 @@ class ResourceAsset(models.Model):
     _order = "name, id"
     _check_company_auto = True
 
-    name = fields.Char(related="resource_id.name", store=True, readonly=False)
-    active = fields.Boolean(related="resource_id.active", store=True, readonly=False)
-    color = fields.Integer(related="resource_id.color", readonly=False)
+    name = fields.Char(
+        related="resource_id.name",
+        store=True,
+        readonly=False,
+    )
+    active = fields.Boolean(
+        related="resource_id.active",
+        store=True,
+        readonly=False,
+    )
+    color = fields.Integer(
+        related="resource_id.color",
+        readonly=False,
+    )
     kind_id = fields.Many2one(
-        "resource.asset.kind", required=True, index=True, ondelete="restrict"
+        comodel_name="resource.asset.kind",
+        index=True,
+        required=True,
+        ondelete="restrict",
     )
     kind_code = fields.Char(related="kind_id.code")
     state = fields.Selection(
-        [
+        selection=[
             ("draft", "Draft"),
             ("in_service", "In Service"),
             ("maintenance", "Under Maintenance"),
@@ -31,9 +45,9 @@ class ResourceAsset(models.Model):
             ("disposed", "Disposed"),
         ],
         default="draft",
+        index=True,
         required=True,
         tracking=True,
-        index=True,
     )
     date_acquisition = fields.Date(tracking=True)
     date_disposal = fields.Date(tracking=True)
@@ -41,24 +55,37 @@ class ResourceAsset(models.Model):
     model_year = fields.Char()
     description = fields.Html()
 
-    identifier_ids = fields.One2many("resource.asset.identifier", "asset_id")
+    identifier_ids = fields.One2many(
+        comodel_name="resource.asset.identifier",
+        inverse_name="asset_id",
+    )
     missing_identifier_type_ids = fields.Many2many(
-        "resource.asset.identifier.type",
+        comodel_name="resource.asset.identifier.type",
         compute="_compute_missing_identifier_type_ids",
         search="_search_missing_identifier_type_ids",
     )
-    meter_ids = fields.One2many("resource.asset.meter", "asset_id")
+    meter_ids = fields.One2many(
+        comodel_name="resource.asset.meter",
+        inverse_name="asset_id",
+    )
     address_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Location",
         help="Where the asset normally is, when no inventory location tracks it.",
     )
     assignment_ids = fields.One2many(related="resource_id.assignment_ids")
     holder_id = fields.Many2one(related="resource_id.holder_id")
     parent_id = fields.Many2one(
-        "resource.asset", string="Part Of", index=True, ondelete="restrict"
+        comodel_name="resource.asset",
+        string="Part Of",
+        index=True,
+        ondelete="restrict",
     )
-    child_ids = fields.One2many("resource.asset", "parent_id", string="Components")
+    child_ids = fields.One2many(
+        comodel_name="resource.asset",
+        inverse_name="parent_id",
+        string="Components",
+    )
 
     _resource_uniq = models.Constraint(
         "UNIQUE(resource_id)", "A resource is one asset at most."

@@ -7,7 +7,10 @@ class ReportLayout(models.Model):
     _order = "sequence, id"
 
     view_id = fields.Many2one(
-        "ir.ui.view", "Document Template", required=True, ondelete="cascade"
+        comodel_name="ir.ui.view",
+        string="Document Template",
+        required=True,
+        ondelete="cascade",
     )
     image = fields.Char(string="Preview image src")
     pdf = fields.Char(string="Preview pdf src")

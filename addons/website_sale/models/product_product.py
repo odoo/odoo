@@ -8,24 +8,27 @@ class ProductProduct(models.Model):
     _mail_post_access = "read"
 
     variant_ribbon_id = fields.Many2one(comodel_name="product.ribbon")
-    website_id = fields.Many2one(related="product_tmpl_id.website_id", readonly=False)
+    website_id = fields.Many2one(
+        related="product_tmpl_id.website_id",
+        readonly=False,
+    )
 
     product_variant_image_ids = fields.One2many(
-        string="Extra Variant Images",
         comodel_name="product.image",
         inverse_name="product_variant_id",
+        string="Extra Variant Images",
     )
 
     base_unit_count = fields.Float(
         help="Display base unit price on your eCommerce pages. Set to 0 to hide it for this"
         " product.",
-        required=True,
         default=1,
+        required=True,
     )
     base_unit_id = fields.Many2one(
+        comodel_name="website.base.unit",
         string="Custom Unit of Measure",
         help="Define a custom unit to display in the price per unit of measure field.",
-        comodel_name="website.base.unit",
     )
     base_unit_price = fields.Monetary(
         string="Price Per Unit",

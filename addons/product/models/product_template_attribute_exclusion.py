@@ -9,15 +9,15 @@ class ProductTemplateAttributeExclusion(models.Model):
     product_template_attribute_value_id = fields.Many2one(
         comodel_name="product.template.attribute.value",
         string="Attribute Value",
-        ondelete="cascade",
         index=True,
+        ondelete="cascade",
     )
     product_tmpl_id = fields.Many2one(
         comodel_name="product.template",
         string="Product Template",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
     value_ids = fields.Many2many(
         comodel_name="product.template.attribute.value",

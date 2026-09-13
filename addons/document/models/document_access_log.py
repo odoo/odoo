@@ -9,25 +9,28 @@ class DocumentsAccessLog(models.Model):
     _log_access = False
 
     document_id = fields.Many2one(
-        "document.document",
-        required=True,
+        comodel_name="document.document",
         index=True,
-        ondelete="cascade",
         readonly=True,
+        required=True,
+        ondelete="cascade",
     )
     partner_id = fields.Many2one(
-        "res.partner",
-        required=True,
+        comodel_name="res.partner",
         index=True,
-        ondelete="cascade",
         readonly=True,
+        required=True,
+        ondelete="cascade",
     )
     action = fields.Selection(
-        [("view", "Viewed"), ("download", "Downloaded")],
-        required=True,
+        selection=[("view", "Viewed"), ("download", "Downloaded")],
         readonly=True,
+        required=True,
     )
-    access_date = fields.Datetime(required=True, readonly=True)
+    access_date = fields.Datetime(
+        readonly=True,
+        required=True,
+    )
 
     _document_date_idx = models.Index("(document_id, access_date DESC)")
 

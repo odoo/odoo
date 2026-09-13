@@ -7,19 +7,19 @@ class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
     available_product_document_ids = fields.Many2many(
-        string="Available Product Documents",
         comodel_name="document.document",
         relation="available_sale_order_line_product_document_rel",
+        string="Available Product Documents",
         compute="_compute_available_product_document_ids",
         compute_sudo=True,
     )
     product_document_ids = fields.Many2many(
-        string="Product Documents",
-        help="The product documents for this order line that will be merged in the PDF quote.",
         comodel_name="document.document",
         relation="sale_order_line_product_document_rel",
-        domain="[('id', 'in', available_product_document_ids)]",
+        string="Product Documents",
+        help="The product documents for this order line that will be merged in the PDF quote.",
         readonly=False,
+        domain="[('id', 'in', available_product_document_ids)]",
     )
 
     @api.onchange("product_id", "product_template_id")

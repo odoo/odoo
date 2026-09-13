@@ -5,7 +5,7 @@ class HrDepartureWizard(models.TransientModel):
     _inherit = "hr.departure.wizard"
 
     release_campany_car = fields.Boolean(
-        "Release Company Car",
+        string="Release Company Car",
         default=lambda self: self.env.user.has_group("fleet.fleet_group_user"),
     )
 

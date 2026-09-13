@@ -29,46 +29,53 @@ class ApprovalDecisionLog(models.Model):
 
     request_id = fields.Many2one(
         comodel_name="approval.request",
-        required=True,
         index=True,
-        ondelete="cascade",
         readonly=True,
+        required=True,
+        ondelete="cascade",
     )
-    company_id = fields.Many2one(related="request_id.company_id", store=True)
+    company_id = fields.Many2one(
+        related="request_id.company_id",
+        store=True,
+    )
     approver_id = fields.Many2one(
         comodel_name="approval.approver",
-        ondelete="set null",
         readonly=True,
+        ondelete="set null",
     )
     step_ids = fields.Many2many(
         comodel_name="approval.category.step",
         relation="approval_decision_log_step_rel",
         readonly=True,
     )
-    verdict = fields.Selection(VERDICTS, required=True, readonly=True)
+    verdict = fields.Selection(
+        selection=VERDICTS,
+        readonly=True,
+        required=True,
+    )
     state_after = fields.Char(readonly=True)
     user_id = fields.Many2one(
         comodel_name="res.users",
         string="Acted By",
-        required=True,
         readonly=True,
+        required=True,
         ondelete="restrict",
     )
     principal_id = fields.Many2one(
         comodel_name="res.users",
         string="On Behalf Of",
+        help="The approver whose row a delegate decided.",
         readonly=True,
         ondelete="restrict",
-        help="The approver whose row a delegate decided.",
     )
     elevation = fields.Selection(
-        [
+        selection=[
             ("none", "Own rights"),
             ("superuser", "Superuser"),
             ("self_elevated", "Elevated by sudo()"),
         ],
-        required=True,
         readonly=True,
+        required=True,
     )
     refusal_reason_id = fields.Many2one(
         comodel_name="approval.refusal.reason",
@@ -76,7 +83,11 @@ class ApprovalDecisionLog(models.Model):
         ondelete="set null",
     )
     note = fields.Text(readonly=True)
-    date = fields.Datetime(required=True, readonly=True, default=fields.Datetime.now)
+    date = fields.Datetime(
+        default=fields.Datetime.now,
+        readonly=True,
+        required=True,
+    )
 
     def write(self, vals):
         trace.REFUSAL.event("decision_log_rewritten", rows=self.ids)

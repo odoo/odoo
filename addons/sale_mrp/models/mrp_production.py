@@ -5,12 +5,14 @@ class MrpProduction(models.Model):
     _inherit = "mrp.production"
 
     sale_order_count = fields.Integer(
-        "Count of Source SO",
+        string="Count of Source SO",
         compute="_compute_sale_order_count",
         groups="sales_team.group_sale_salesman",
     )
     sale_line_id = fields.Many2one(
-        "sale.order.line", "Origin sale order line", copy=False
+        comodel_name="sale.order.line",
+        string="Origin sale order line",
+        copy=False,
     )
 
     @api.depends("reference_ids.sale_ids", "sale_line_id.order_id")

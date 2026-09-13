@@ -31,43 +31,46 @@ class AccountReportLine(models.Model):
     _description = "Accounting Report Line"
     _order = "sequence, id"
 
-    name = fields.Char(translate=True, required=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
     expression_ids = fields.One2many(
-        string="Expressions",
         comodel_name="account.report.expression",
         inverse_name="report_line_id",
+        string="Expressions",
     )
     report_id = fields.Many2one(
-        string="Parent Report",
         comodel_name="account.report",
+        string="Parent Report",
         compute="_compute_report_id",
+        precompute=True,
+        recursive=True,
         store=True,
+        index=True,
         readonly=False,
         required=True,
-        recursive=True,
-        precompute=True,
-        index=True,
         ondelete="cascade",
     )
     hierarchy_level = fields.Integer(
         string="Level",
         compute="_compute_hierarchy_level",
+        precompute=True,
+        recursive=True,
         store=True,
         readonly=False,
-        recursive=True,
         required=True,
-        precompute=True,
     )
     parent_id = fields.Many2one(
-        string="Parent Line",
         comodel_name="account.report.line",
-        ondelete="set null",
+        string="Parent Line",
         index="btree_not_null",
+        ondelete="set null",
     )
     children_ids = fields.One2many(
-        string="Child Lines",
         comodel_name="account.report.line",
         inverse_name="parent_id",
+        string="Child Lines",
     )
     groupby = fields.Char(
         string="Group By",
@@ -75,19 +78,19 @@ class AccountReportLine(models.Model):
     )
     user_groupby = fields.Char(
         string="User Group By",
+        help="Comma-separated list of fields from account.move.line (Journal Item). When set, this line will generate sublines grouped by those keys.",
         compute="_compute_user_groupby",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
-        help="Comma-separated list of fields from account.move.line (Journal Item). When set, this line will generate sublines grouped by those keys.",
     )
     sequence = fields.Integer()
     code = fields.Char(help="Unique identifier for this line.")
     foldable = fields.Boolean(
-        help="By default, we always unfold the lines that can be. If this is checked, the line won't be unfolded by default, and a folding button will be displayed.",
+        help="By default, we always unfold the lines that can be. If this is checked, the line won't be unfolded by default, and a folding button will be displayed."
     )
     print_on_new_page = fields.Boolean(
-        help="When checked this line and everything after it will be printed on a new page.",
+        help="When checked this line and everything after it will be printed on a new page."
     )
     action_id = fields.Many2one(
         comodel_name="ir.actions.actions",
@@ -128,9 +131,9 @@ class AccountReportLine(models.Model):
     horizontal_split_side = fields.Selection(
         selection=[("left", "Left"), ("right", "Right")],
         compute="_compute_horizontal_split_side",
-        readonly=False,
-        store=True,
         recursive=True,
+        store=True,
+        readonly=False,
     )
     tax_tags_formula = fields.Char(
         string="Tax Tags Formula Shortcut",

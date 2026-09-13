@@ -16,23 +16,25 @@ class MailMessageTranslation(models.Model):
     _description = "Message Translation"
 
     message_id: MailMessage = fields.Many2one(
-        "mail.message", required=True, ondelete="cascade"
+        comodel_name="mail.message",
+        required=True,
+        ondelete="cascade",
     )
     source_lang = fields.Char(
-        "Source Language",
-        required=True,
+        string="Source Language",
         help="Result of the language detection based on its content.",
+        required=True,
     )
     target_lang = fields.Char(
-        "Target Language",
-        required=True,
+        string="Target Language",
         help="Shortened language code used as the target for the translation request.",
+        required=True,
     )
     body = fields.Html(
-        "Translation Body",
-        required=True,
-        sanitize_style=True,
+        string="Translation Body",
         help="String received from the translation request.",
+        sanitize_style=True,
+        required=True,
     )
     create_date = fields.Datetime(index=True)
 

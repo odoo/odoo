@@ -7,14 +7,32 @@ class BankAccountAllocationLineWizard(models.TransientModel):
     _order = "sequence, id"
 
     wizard_id = fields.Many2one(
-        "hr.bank.account.allocation.wizard", required=True, ondelete="cascade"
+        comodel_name="hr.bank.account.allocation.wizard",
+        required=True,
+        ondelete="cascade",
     )
-    bank_account_id = fields.Many2one("res.partner.bank", required=True, readonly=True)
+    bank_account_id = fields.Many2one(
+        comodel_name="res.partner.bank",
+        readonly=True,
+        required=True,
+    )
 
-    acc_number = fields.Char(related="bank_account_id.acc_number", readonly=True)
-    amount = fields.Float(readonly=False, digits=(16, 2))
-    amount_type = fields.Selection(selection="_selection_amount_type", readonly=False)
-    symbol = fields.Char(compute="_compute_symbol", readonly=True)
+    acc_number = fields.Char(
+        related="bank_account_id.acc_number",
+        readonly=True,
+    )
+    amount = fields.Float(
+        digits=(16, 2),
+        readonly=False,
+    )
+    amount_type = fields.Selection(
+        selection="_selection_amount_type",
+        readonly=False,
+    )
+    symbol = fields.Char(
+        compute="_compute_symbol",
+        readonly=True,
+    )
     trusted = fields.Boolean()
     sequence = fields.Integer(default=10)
 

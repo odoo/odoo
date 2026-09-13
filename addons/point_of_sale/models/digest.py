@@ -7,7 +7,7 @@ from ..tools import debug_log as dbg
 class DigestDigest(models.Model):
     _inherit = "digest.digest"
 
-    kpi_pos_total = fields.Boolean("POS Sales")
+    kpi_pos_total = fields.Boolean(string="POS Sales")
     kpi_pos_total_value = fields.Monetary(compute="_compute_kpi_pos_total_value")
 
     @api.depends_context("uid")

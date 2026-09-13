@@ -24,7 +24,7 @@ class PerfCmpBase(models.Model):
     amount = fields.Float()
     flag = fields.Boolean(default=True)
     state = fields.Selection(
-        [
+        selection=[
             ("draft", "Draft"),
             ("open", "Open"),
             ("done", "Done"),
@@ -35,12 +35,21 @@ class PerfCmpBase(models.Model):
     a_date = fields.Date()
     a_datetime = fields.Datetime()
 
-    rel_id = fields.Many2one("perf.cmp.rel")
-    line_ids = fields.One2many("perf.cmp.line", "base_id")
-    tag_ids = fields.Many2many("perf.cmp.tag")
+    rel_id = fields.Many2one(comodel_name="perf.cmp.rel")
+    line_ids = fields.One2many(
+        comodel_name="perf.cmp.line",
+        inverse_name="base_id",
+    )
+    tag_ids = fields.Many2many(comodel_name="perf.cmp.tag")
 
-    value_pc = fields.Float(compute="_compute_value_pc", store=True)
-    total = fields.Integer(compute="_compute_total", store=True)
+    value_pc = fields.Float(
+        compute="_compute_value_pc",
+        store=True,
+    )
+    total = fields.Integer(
+        compute="_compute_total",
+        store=True,
+    )
 
     @api.depends("value")
     def _compute_value_pc(self):
@@ -57,5 +66,9 @@ class PerfCmpLine(models.Model):
     _name = "perf.cmp.line"
     _description = "Perf Compare Line"
 
-    base_id = fields.Many2one("perf.cmp.base", required=True, ondelete="cascade")
+    base_id = fields.Many2one(
+        comodel_name="perf.cmp.base",
+        required=True,
+        ondelete="cascade",
+    )
     value = fields.Integer()

@@ -7,32 +7,33 @@ class EventBooth(models.Model):
 
     # registrations
     event_booth_registration_ids = fields.One2many(
-        "event.booth.registration", "event_booth_id"
+        comodel_name="event.booth.registration",
+        inverse_name="event_booth_id",
     )
     # sale information
     sale_order_line_registration_ids = fields.Many2many(
-        "sale.order.line",
-        "event_booth_registration",
-        "event_booth_id",
-        "sale_order_line_id",
+        comodel_name="sale.order.line",
+        relation="event_booth_registration",
+        column1="event_booth_id",
+        column2="sale_order_line_id",
         string="SO Lines with reservations",
-        groups="sales_team.group_sale_salesman",
         copy=False,
+        groups="sales_team.group_sale_salesman",
     )
     sale_order_line_id = fields.Many2one(
-        "sale.order.line",
+        comodel_name="sale.order.line",
         string="Final Sale Order Line",
-        ondelete="set null",
-        readonly=False,
         index="btree_not_null",
-        groups="sales_team.group_sale_salesman",
         copy=False,
+        readonly=False,
+        ondelete="set null",
+        groups="sales_team.group_sale_salesman",
     )
     sale_order_id = fields.Many2one(
         related="sale_order_line_id.order_id",
         store="True",
-        readonly=True,
         index="btree_not_null",
+        readonly=True,
         groups="sales_team.group_sale_salesman",
     )
     is_paid = fields.Boolean(copy=False)

@@ -7,15 +7,15 @@ class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
 
     sale_order_count = fields.Integer(
-        "Number of Source Sale",
+        string="Number of Source Sale",
         compute="_compute_sale_orders",
         groups="sales_team.group_sale_salesman",
     )
     has_sale_order = fields.Boolean(
-        "Has Source Sale",
+        string="Has Source Sale",
+        help="Technical field: whether the purchase order has associated sale orders.",
         compute="_compute_sale_orders",
         groups="sales_team.group_sale_salesman",
-        help="Technical field: whether the purchase order has associated sale orders.",
     )
 
     @api.depends("line_ids.sale_order_id")
@@ -58,8 +58,12 @@ class PurchaseOrderLine(models.Model):
     _inherit = "purchase.order.line"
 
     sale_order_id = fields.Many2one(
-        related="sale_line_id.order_id", string="Sale Order"
+        related="sale_line_id.order_id",
+        string="Sale Order",
     )
     sale_line_id = fields.Many2one(
-        "sale.order.line", string="Origin Sale Item", index="btree_not_null", copy=False
+        comodel_name="sale.order.line",
+        string="Origin Sale Item",
+        index="btree_not_null",
+        copy=False,
     )

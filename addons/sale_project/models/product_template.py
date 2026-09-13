@@ -33,32 +33,32 @@ class ProductTemplate(models.Model):
         },
     )
     project_id = fields.Many2one(
-        "project.project",
-        company_dependent=True,
+        comodel_name="project.project",
         copy=True,
+        company_dependent=True,
         domain='[("is_template", "=", False)]',
     )
     project_template_id = fields.Many2one(
-        "project.project",
-        company_dependent=True,
+        comodel_name="project.project",
         copy=True,
+        company_dependent=True,
         domain='[("is_template", "=", True)]',
     )
     task_template_id = fields.Many2one(
-        "project.task",
-        domain="[('is_template', '=', True), ('project_id', '=', project_id)]",
-        company_dependent=True,
-        copy=True,
+        comodel_name="project.task",
         compute="_compute_task_template_id",
         store=True,
+        copy=True,
         readonly=False,
+        company_dependent=True,
+        domain="[('is_template', '=', True), ('project_id', '=', project_id)]",
     )
     service_policy = fields.Selection(
-        "_selection_service_policy",
+        selection="_selection_service_policy",
         string="Service Invoicing Policy",
-        compute_sudo=True,
         compute="_compute_service_policy",
         inverse="_inverse_service_policy",
+        compute_sudo=True,
         tracking=True,
     )
     service_type = fields.Selection(

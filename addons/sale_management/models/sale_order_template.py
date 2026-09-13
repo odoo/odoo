@@ -9,22 +9,29 @@ class SaleOrderTemplate(models.Model):
     _order = "sequence, id"
 
     active = fields.Boolean(
-        default=True,
         help="If unchecked, it will allow you to hide the quotation template without removing it.",
+        default=True,
     )
     company_id = fields.Many2one(
-        comodel_name="res.company", default=lambda self: self.env.company
+        comodel_name="res.company",
+        default=lambda self: self.env.company,
     )
 
-    name = fields.Char(string="Quotation Template", required=True)
-    note = fields.Html(string="Terms and conditions", translate=True)
+    name = fields.Char(
+        string="Quotation Template",
+        required=True,
+    )
+    note = fields.Html(
+        string="Terms and conditions",
+        translate=True,
+    )
     sequence = fields.Integer(default=10)
 
     mail_template_id = fields.Many2one(
         comodel_name="mail.template",
         string="Confirmation Mail",
-        domain=[("model", "=", "sale.order")],
         help="This e-mail template will be sent on confirmation. Leave empty to send nothing.",
+        domain=[("model", "=", "sale.order")],
     )
     number_of_days = fields.Integer(
         string="Quotation Duration",
@@ -33,24 +40,24 @@ class SaleOrderTemplate(models.Model):
 
     require_signature = fields.Boolean(
         string="Online Signature",
+        help="Request a online signature to the customer in order to confirm orders automatically.",
         compute="_compute_require_signature",
         store=True,
         readonly=False,
-        help="Request a online signature to the customer in order to confirm orders automatically.",
     )
     require_payment = fields.Boolean(
         string="Online Payment",
+        help="Request an online payment to the customer in order to confirm orders automatically.",
         compute="_compute_require_payment",
         store=True,
         readonly=False,
-        help="Request an online payment to the customer in order to confirm orders automatically.",
     )
     prepayment_percent = fields.Float(
         string="Prepayment percentage",
+        help="The percentage of the amount needed to be paid to confirm quotations.",
         compute="_compute_prepayment_percent",
         store=True,
         readonly=False,
-        help="The percentage of the amount needed to be paid to confirm quotations.",
     )
 
     sale_order_template_line_ids = fields.One2many(
@@ -60,13 +67,13 @@ class SaleOrderTemplate(models.Model):
         copy=True,
     )
     journal_id = fields.Many2one(
-        "account.journal",
+        comodel_name="account.journal",
         string="Invoicing Journal",
-        domain=[("type", "=", "sale")],
-        company_dependent=True,
-        check_company=True,
         help="If set, SO with this template will invoice in this journal; "
         "otherwise the sales journal with the lowest sequence is used.",
+        company_dependent=True,
+        domain=[("type", "=", "sale")],
+        check_company=True,
     )
 
     @api.depends("company_id")

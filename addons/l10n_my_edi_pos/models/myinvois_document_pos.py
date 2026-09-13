@@ -29,19 +29,19 @@ class MyInvoisDocumentPoS(models.Model):
     # ------------------
 
     pos_order_ids = fields.Many2many(
-        name="Orders",
         comodel_name="pos.order",
         relation="myinvois_document_pos_order_rel",
         column1="document_id",
         column2="order_id",
         check_company=True,
+        name="Orders",
     )
     pos_config_id = fields.Many2one(
-        string="PoS Config",
         comodel_name="pos.config",
+        string="PoS Config",
         readonly=True,
     )
-    linked_order_count = fields.Count("pos_order_ids")
+    linked_order_count = fields.Count(count_of="pos_order_ids")
     pos_order_date_range = fields.Char(
         string="Date Range",
         compute="_compute_pos_order_date_range",

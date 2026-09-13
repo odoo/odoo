@@ -14,46 +14,46 @@ class CalendarProviderConfig(models.TransientModel):
     _description = "Calendar Provider Configuration Wizard"
 
     external_calendar_provider = fields.Selection(
-        [("google", "Google"), ("microsoft", "Outlook")],
-        "Choose an external calendar to configure",
+        selection=[("google", "Google"), ("microsoft", "Outlook")],
+        string="Choose an external calendar to configure",
         default="google",
     )
 
     # Allow to sync with eventually existing ICP keys without creating them if respective module is not installed
     # Using same field names and strings as their respective res.config.settings
     cal_client_id = fields.Char(
-        "Google Client_id",
+        string="Google Client_id",
         default=lambda self: self.env["ir.config_parameter"].get_param(
             "google_calendar_client_id"
         ),
     )
     cal_client_secret = fields.Char(
-        "Google Client_key",
+        string="Google Client_key",
         default=lambda self: self.env["ir.config_parameter"].get_param(
             "google_calendar_client_secret"
         ),
     )
     cal_sync_paused = fields.Boolean(
-        "Google Synchronization Paused",
+        string="Google Synchronization Paused",
         default=lambda self: str2bool(
             self.env["ir.config_parameter"].get_param("google_calendar_sync_paused"),
             default=False,
         ),
     )
     microsoft_outlook_client_identifier = fields.Char(
-        "Outlook Client Id",
+        string="Outlook Client Id",
         default=lambda self: self.env["ir.config_parameter"].get_param(
             "microsoft_calendar_client_id"
         ),
     )
     microsoft_outlook_client_secret = fields.Char(
-        "Outlook Client Secret",
+        string="Outlook Client Secret",
         default=lambda self: self.env["ir.config_parameter"].get_param(
             "microsoft_calendar_client_secret"
         ),
     )
     microsoft_outlook_sync_paused = fields.Boolean(
-        "Outlook Synchronization Paused",
+        string="Outlook Synchronization Paused",
         default=lambda self: str2bool(
             self.env["ir.config_parameter"].get_param("microsoft_calendar_sync_paused"),
             default=False,

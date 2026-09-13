@@ -13,55 +13,66 @@ class HrJob(models.Model):
 
     active = fields.Boolean(default=True)
     name = fields.Char(
-        string="Job Position", required=True, index="trigram", translate=True
+        string="Job Position",
+        translate=True,
+        index="trigram",
+        required=True,
     )
     sequence = fields.Integer(default=10)
     expected_employees = fields.Integer(
-        compute="_compute_employee_counts",
         string="Total Forecasted Employees",
         help="Expected number of employees for this job position after new recruitment.",
+        compute="_compute_employee_counts",
         groups="hr.group_hr_user",
     )
     no_of_employee = fields.Integer(
-        compute="_compute_employee_counts",
         string="Current Number of Employees",
         help="Number of employees currently occupying this job position.",
+        compute="_compute_employee_counts",
         groups="hr.group_hr_user",
     )
     no_of_recruitment = fields.Integer(
         string="Target",
-        copy=False,
         help="Number of new employees you expect to recruit.",
         default=1,
+        copy=False,
     )
     employee_ids = fields.One2many(
-        "hr.employee", "job_id", string="Employees", groups="base.group_user"
+        comodel_name="hr.employee",
+        inverse_name="job_id",
+        string="Employees",
+        groups="base.group_user",
     )
-    description = fields.Html(string="Job Description", sanitize_attributes=False)
+    description = fields.Html(
+        string="Job Description",
+        sanitize_attributes=False,
+    )
     requirements = fields.Text(groups="hr.group_hr_user")
     user_id = fields.Many2one(
-        "res.users",
-        "Recruiter",
-        domain="[('share', '=', False), ('company_ids', '=?', company_id)]",
-        default=lambda self: self.env.user,
-        groups="hr.group_hr_user",
-        tracking=True,
+        comodel_name="res.users",
+        string="Recruiter",
         help="The Recruiter will be the default value for all Applicants in this job \
             position. The Recruiter is automatically added to all meetings with the Applicant.",
+        default=lambda self: self.env.user,
+        domain="[('share', '=', False), ('company_ids', '=?', company_id)]",
+        groups="hr.group_hr_user",
+        tracking=True,
     )
     department_id = fields.Many2one(
-        "hr.department",
+        comodel_name="hr.department",
+        index="btree_not_null",
         check_company=True,
         tracking=True,
-        index="btree_not_null",
     )
     company_id = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
         default=lambda self: self.env.company,
         tracking=True,
     )
     contract_type_id = fields.Many2one(
-        "hr.contract.type", string="Employment Type", tracking=True
+        comodel_name="hr.contract.type",
+        string="Employment Type",
+        tracking=True,
     )
 
     _name_src_uniq = name_uniq_index(

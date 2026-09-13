@@ -5,7 +5,9 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     partnership_label = fields.Char(
-        related="company_id.partnership_label", required=True, readonly=False
+        related="company_id.partnership_label",
+        readonly=False,
+        required=True,
     )
 
     @api.onchange("partnership_label")

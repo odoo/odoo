@@ -11,26 +11,25 @@ class AccountPayment(models.Model):
 
     check_amount_in_words = fields.Char(
         string="Amount in Words",
-        store=True,
         compute="_compute_check_amount_in_words",
+        store=True,
     )
     check_manual_sequencing = fields.Boolean(
         related="journal_id.check_manual_sequencing"
     )
     check_number = fields.Char(
-        store=True,
-        copy=False,
-        compute="_compute_check_number",
-        inverse="_inverse_check_number",
         help="The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers "
         "or if the current numbering is wrong, you can change it in the journal configuration page.",
+        compute="_compute_check_number",
+        inverse="_inverse_check_number",
+        store=True,
+        copy=False,
     )
     payment_channel_id = fields.Many2one(index=True)
     show_check_number = fields.Boolean(compute="_compute_show_check_number")
 
     check_layout_available = fields.Boolean(
         string="Has Check Layout",
-        store=False,
         default=lambda self: (
             len(
                 self.env["res.company"]
@@ -39,6 +38,7 @@ class AccountPayment(models.Model):
             )
             > 1
         ),
+        store=False,
     )
 
     @api.depends("payment_channel_id.code", "check_number")

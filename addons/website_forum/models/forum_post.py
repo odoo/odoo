@@ -25,15 +25,26 @@ class ForumPost(models.Model):
 
     _CUSTOMER_HEADERS_LIMIT_COUNT = 0
 
-    name = fields.Char("Title")
-    forum_id = fields.Many2one("forum.forum", required=True, index=True)
+    name = fields.Char(string="Title")
+    forum_id = fields.Many2one(
+        comodel_name="forum.forum",
+        index=True,
+        required=True,
+    )
     content = fields.Html(strip_style=True)
-    plain_content = fields.Text(compute="_compute_plain_content", store=True)
+    plain_content = fields.Text(
+        compute="_compute_plain_content",
+        store=True,
+    )
     tag_ids = fields.Many2many(
-        "forum.tag", "forum_tag_rel", "forum_post_id", "forum_tag_id", string="Tags"
+        comodel_name="forum.tag",
+        relation="forum_tag_rel",
+        column1="forum_post_id",
+        column2="forum_tag_id",
+        string="Tags",
     )
     state = fields.Selection(
-        [
+        selection=[
             ("active", "Active"),
             ("pending", "Waiting Validation"),
             ("close", "Closed"),
@@ -43,7 +54,11 @@ class ForumPost(models.Model):
         string="Status",
         default="active",
     )
-    views = fields.Integer(default=0, readonly=True, copy=False)
+    views = fields.Integer(
+        default=0,
+        copy=False,
+        readonly=True,
+    )
     active = fields.Boolean(default=True)
     website_message_ids = fields.One2many(
         domain=lambda self: [
@@ -51,139 +66,238 @@ class ForumPost(models.Model):
             ("message_type", "in", ["email", "comment", "email_outgoing"]),
         ]
     )
-    website_url = fields.Char("Website URL", compute="_compute_website_url")
-    website_id = fields.Many2one(related="forum_id.website_id", readonly=True)
-
-    create_date = fields.Datetime("Asked on", index=True, readonly=True)
-    create_uid = fields.Many2one(
-        "res.users", string="Created by", index=True, readonly=True
+    website_url = fields.Char(
+        string="Website URL",
+        compute="_compute_website_url",
     )
-    write_date = fields.Datetime("Updated on", index=True, readonly=True)
-    last_activity_date = fields.Datetime(
-        "Last activity on",
+    website_id = fields.Many2one(
+        related="forum_id.website_id",
         readonly=True,
-        required=True,
-        default=fields.Datetime.now,
+    )
+
+    create_date = fields.Datetime(
+        string="Asked on",
+        index=True,
+        readonly=True,
+    )
+    create_uid = fields.Many2one(
+        comodel_name="res.users",
+        string="Created by",
+        index=True,
+        readonly=True,
+    )
+    write_date = fields.Datetime(
+        string="Updated on",
+        index=True,
+        readonly=True,
+    )
+    last_activity_date = fields.Datetime(
+        string="Last activity on",
         help="Field to keep track of a post's last activity. Updated whenever it is replied to, "
         "or when a comment is added on the post or one of its replies.",
+        default=fields.Datetime.now,
+        readonly=True,
+        required=True,
     )
     write_uid = fields.Many2one(
-        "res.users", string="Updated by", index=True, readonly=True
+        comodel_name="res.users",
+        string="Updated by",
+        index=True,
+        readonly=True,
     )
-    relevancy = fields.Float("Relevance", compute="_compute_relevancy", store=True)
+    relevancy = fields.Float(
+        string="Relevance",
+        compute="_compute_relevancy",
+        store=True,
+    )
 
-    vote_ids = fields.One2many("forum.post.vote", "post_id", string="Votes")
-    user_vote = fields.Integer("My Vote", compute="_compute_user_vote")
+    vote_ids = fields.One2many(
+        comodel_name="forum.post.vote",
+        inverse_name="post_id",
+        string="Votes",
+    )
+    user_vote = fields.Integer(
+        string="My Vote",
+        compute="_compute_user_vote",
+    )
     vote_count = fields.Integer(
-        "Total Votes", compute="_compute_vote_count", store=True
+        string="Total Votes",
+        compute="_compute_vote_count",
+        store=True,
     )
 
-    favorite_count = fields.Count("favorite_user_ids", "Favorite", store=True)
+    favorite_count = fields.Count(
+        count_of="favorite_user_ids",
+        string="Favorite",
+        store=True,
+    )
 
-    is_correct = fields.Boolean("Correct", help="Correct answer or answer accepted")
+    is_correct = fields.Boolean(
+        string="Correct",
+        help="Correct answer or answer accepted",
+    )
     parent_id = fields.Many2one(
-        "forum.post", string="Question", ondelete="cascade", readonly=True, index=True
+        comodel_name="forum.post",
+        string="Question",
+        index=True,
+        readonly=True,
+        ondelete="cascade",
     )
     self_reply = fields.Boolean(
-        "Reply to own question", compute="_compute_self_reply", store=True
+        string="Reply to own question",
+        compute="_compute_self_reply",
+        store=True,
     )
     child_ids = fields.One2many(
-        "forum.post",
-        "parent_id",
+        comodel_name="forum.post",
+        inverse_name="parent_id",
         string="Post Answers",
         domain="[('forum_id', '=', forum_id)]",
     )
-    child_count = fields.Count("child_ids", "Answers", store=True)
+    child_count = fields.Count(
+        count_of="child_ids",
+        string="Answers",
+        store=True,
+    )
     uid_has_answered = fields.Boolean(
-        "Has Answered", compute="_compute_uid_has_answered"
+        string="Has Answered",
+        compute="_compute_uid_has_answered",
     )
     has_validated_answer = fields.Boolean(
-        "Is answered", compute="_compute_has_validated_answer", store=True
+        string="Is answered",
+        compute="_compute_has_validated_answer",
+        store=True,
     )
 
-    flag_user_id = fields.Many2one("res.users", string="Flagged by")
-    moderator_id = fields.Many2one("res.users", string="Reviewed by", readonly=True)
+    flag_user_id = fields.Many2one(
+        comodel_name="res.users",
+        string="Flagged by",
+    )
+    moderator_id = fields.Many2one(
+        comodel_name="res.users",
+        string="Reviewed by",
+        readonly=True,
+    )
 
-    closed_reason_id = fields.Many2one("forum.post.reason", string="Reason", copy=False)
+    closed_reason_id = fields.Many2one(
+        comodel_name="forum.post.reason",
+        string="Reason",
+        copy=False,
+    )
     closed_uid = fields.Many2one(
-        "res.users", string="Closed by", readonly=True, copy=False
+        comodel_name="res.users",
+        string="Closed by",
+        copy=False,
+        readonly=True,
     )
-    closed_date = fields.Datetime("Closed on", readonly=True, copy=False)
+    closed_date = fields.Datetime(
+        string="Closed on",
+        copy=False,
+        readonly=True,
+    )
 
     karma_accept = fields.Integer(
-        "Convert comment to answer",
+        string="Convert comment to answer",
         compute="_compute_post_karma_rights",
         compute_sudo=False,
     )
     karma_edit = fields.Integer(
-        "Karma to edit", compute="_compute_post_karma_rights", compute_sudo=False
+        string="Karma to edit",
+        compute="_compute_post_karma_rights",
+        compute_sudo=False,
     )
     karma_close = fields.Integer(
-        "Karma to close", compute="_compute_post_karma_rights", compute_sudo=False
+        string="Karma to close",
+        compute="_compute_post_karma_rights",
+        compute_sudo=False,
     )
     karma_unlink = fields.Integer(
-        "Karma to unlink", compute="_compute_post_karma_rights", compute_sudo=False
+        string="Karma to unlink",
+        compute="_compute_post_karma_rights",
+        compute_sudo=False,
     )
     karma_comment = fields.Integer(
-        "Karma to comment", compute="_compute_post_karma_rights", compute_sudo=False
+        string="Karma to comment",
+        compute="_compute_post_karma_rights",
+        compute_sudo=False,
     )
     karma_comment_convert = fields.Integer(
-        "Karma to convert comment to answer",
+        string="Karma to convert comment to answer",
         compute="_compute_post_karma_rights",
         compute_sudo=False,
     )
     karma_flag = fields.Integer(
-        "Flag a post as offensive",
+        string="Flag a post as offensive",
         compute="_compute_post_karma_rights",
         compute_sudo=False,
     )
-    can_ask = fields.Boolean(compute="_compute_post_karma_rights", compute_sudo=False)
+    can_ask = fields.Boolean(
+        compute="_compute_post_karma_rights",
+        compute_sudo=False,
+    )
     can_answer = fields.Boolean(
-        compute="_compute_post_karma_rights", compute_sudo=False
+        compute="_compute_post_karma_rights",
+        compute_sudo=False,
     )
     can_accept = fields.Boolean(
-        compute="_compute_post_karma_rights", compute_sudo=False
+        compute="_compute_post_karma_rights",
+        compute_sudo=False,
     )
-    can_edit = fields.Boolean(compute="_compute_post_karma_rights", compute_sudo=False)
-    can_close = fields.Boolean(compute="_compute_post_karma_rights", compute_sudo=False)
+    can_edit = fields.Boolean(
+        compute="_compute_post_karma_rights",
+        compute_sudo=False,
+    )
+    can_close = fields.Boolean(
+        compute="_compute_post_karma_rights",
+        compute_sudo=False,
+    )
     can_unlink = fields.Boolean(
-        compute="_compute_post_karma_rights", compute_sudo=False
+        compute="_compute_post_karma_rights",
+        compute_sudo=False,
     )
     can_upvote = fields.Boolean(
-        compute="_compute_post_karma_rights", compute_sudo=False
+        compute="_compute_post_karma_rights",
+        compute_sudo=False,
     )
     can_downvote = fields.Boolean(
-        compute="_compute_post_karma_rights", compute_sudo=False
+        compute="_compute_post_karma_rights",
+        compute_sudo=False,
     )
     can_comment = fields.Boolean(
-        compute="_compute_post_karma_rights", compute_sudo=False
+        compute="_compute_post_karma_rights",
+        compute_sudo=False,
     )
     can_comment_convert = fields.Boolean(
-        "Can Convert to Comment",
+        string="Can Convert to Comment",
         compute="_compute_post_karma_rights",
         compute_sudo=False,
     )
     can_view = fields.Boolean(
         compute="_compute_post_karma_rights",
-        compute_sudo=False,
         search="_search_can_view",
+        compute_sudo=False,
     )
     can_display_biography = fields.Boolean(
-        "Is the author's biography visible from his post",
+        string="Is the author's biography visible from his post",
         compute="_compute_post_karma_rights",
         compute_sudo=False,
     )
     can_post = fields.Boolean(
-        "Can Automatically be Validated",
+        string="Can Automatically be Validated",
         compute="_compute_post_karma_rights",
         compute_sudo=False,
     )
-    can_flag = fields.Boolean(compute="_compute_post_karma_rights", compute_sudo=False)
+    can_flag = fields.Boolean(
+        compute="_compute_post_karma_rights",
+        compute_sudo=False,
+    )
     can_moderate = fields.Boolean(
-        compute="_compute_post_karma_rights", compute_sudo=False
+        compute="_compute_post_karma_rights",
+        compute_sudo=False,
     )
     can_use_full_editor = fields.Boolean(
-        compute="_compute_post_karma_rights", compute_sudo=False
+        compute="_compute_post_karma_rights",
+        compute_sudo=False,
     )
 
     @api.constrains("parent_id")

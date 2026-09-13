@@ -5,7 +5,8 @@ class ProjectWorkflowStep(models.Model):
     _inherit = "project.workflow.step"
 
     show_rating_active = fields.Boolean(
-        compute="_compute_show_rating_active", export_string_translation=False
+        export_string_translation=False,
+        compute="_compute_show_rating_active",
     )
 
     @api.depends("project_ids.allow_billable")

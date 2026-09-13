@@ -34,23 +34,42 @@ class WebsitePage(models.Model):
 
     _NON_RENDERING_FIELDS = frozenset({"view_write_uid", "view_write_date"})
 
-    url = fields.Char("Page URL", required=True)
+    url = fields.Char(
+        string="Page URL",
+        required=True,
+    )
     view_id = fields.Many2one(
-        "ir.ui.view", required=True, index=True, ondelete="cascade"
+        comodel_name="ir.ui.view",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
 
     view_write_uid = fields.Many2one(
-        "res.users", "Last Content Update by", related="view_id.write_uid"
+        comodel_name="res.users",
+        related="view_id.write_uid",
+        string="Last Content Update by",
     )
     view_write_date = fields.Datetime(
-        "Last Content Update on", related="view_id.write_date"
+        related="view_id.write_date",
+        string="Last Content Update on",
     )
 
-    website_indexed = fields.Boolean("Is Indexed", default=True)
-    date_publish = fields.Datetime("Publishing Date")
-    menu_ids = fields.One2many("website.menu", "page_id", "Related Menus")
+    website_indexed = fields.Boolean(
+        string="Is Indexed",
+        default=True,
+    )
+    date_publish = fields.Datetime(string="Publishing Date")
+    menu_ids = fields.One2many(
+        comodel_name="website.menu",
+        inverse_name="page_id",
+        string="Related Menus",
+    )
     is_in_menu = fields.Boolean(compute="_compute_is_in_menu")
-    is_homepage = fields.Boolean(compute="_compute_is_homepage", string="Homepage")
+    is_homepage = fields.Boolean(
+        string="Homepage",
+        compute="_compute_is_homepage",
+    )
     is_visible = fields.Boolean(compute="_compute_is_visible")
     is_new_page_template = fields.Boolean(
         string="New Page Template",
@@ -58,10 +77,15 @@ class WebsitePage(models.Model):
     )
 
     website_id = fields.Many2one(
-        related="view_id.website_id", store=True, readonly=False, ondelete="cascade"
+        related="view_id.website_id",
+        store=True,
+        readonly=False,
+        ondelete="cascade",
     )
     arch = fields.Text(
-        related="view_id.arch", readonly=False, depends_context=("website_id",)
+        related="view_id.arch",
+        depends_context=("website_id",),
+        readonly=False,
     )
 
     @api.depends("url", "website_id")

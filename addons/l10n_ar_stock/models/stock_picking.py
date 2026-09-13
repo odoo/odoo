@@ -12,12 +12,15 @@ class StockPicking(models.Model):
         copy=False,
         readonly=True,
     )
-    l10n_ar_cai_data = fields.Json(string="CAI Data", copy=False)
+    l10n_ar_cai_data = fields.Json(
+        string="CAI Data",
+        copy=False,
+    )
     l10n_ar_allow_generate_delivery_guide = fields.Boolean(
-        compute="_compute_l10n_ar_delivery_guide_flags",
+        compute="_compute_l10n_ar_delivery_guide_flags"
     )
     l10n_ar_allow_send_delivery_guide = fields.Boolean(
-        compute="_compute_l10n_ar_delivery_guide_flags",
+        compute="_compute_l10n_ar_delivery_guide_flags"
     )
 
     # === COMPUTE METHODS === #

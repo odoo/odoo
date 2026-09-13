@@ -8,21 +8,21 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     project_ids = fields.One2many(
-        "project.project",
-        "partner_id",
+        comodel_name="project.project",
+        inverse_name="partner_id",
         string="Projects",
         export_string_translation=False,
     )
     task_ids = fields.One2many(
-        "project.task",
-        "partner_id",
+        comodel_name="project.task",
+        inverse_name="partner_id",
         string="Tasks",
         export_string_translation=False,
     )
     task_count = fields.Integer(
-        compute="_compute_task_count",
         string="# Tasks",
         export_string_translation=False,
+        compute="_compute_task_count",
     )
 
     @api.constrains("company_id", "project_ids")

@@ -9,15 +9,13 @@ class SaleReport(models.Model):
     # FIELDS
     # ------------------------------------------------------------
 
-    order_reference = fields.Reference(
-        selection_add=[("pos.order", "POS Order")],
-    )
+    order_reference = fields.Reference(selection_add=[("pos.order", "POS Order")])
     state = fields.Selection(
         selection_add=[
             ("paid", "Paid"),
             ("invoiced", "Invoiced"),
             ("done", "Posted"),
-        ],
+        ]
     )
 
     # ------------------------------------------------------------

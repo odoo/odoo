@@ -5,8 +5,8 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     channel_id = fields.Many2one(
-        "im_livechat.channel",
-        string="Website Live Channel",
+        comodel_name="im_livechat.channel",
         related="website_id.channel_id",
+        string="Website Live Channel",
         readonly=False,
     )

@@ -9,37 +9,45 @@ class UtmCampaign(models.Model):
     active = fields.Boolean(default=True)
     name = fields.Char(
         string="Campaign Identifier",
-        required=True,
+        translate=False,
         compute="_compute_name",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
-        translate=False,
+        required=True,
     )
-    title = fields.Char(string="Campaign Name", required=True, translate=True)
+    title = fields.Char(
+        string="Campaign Name",
+        translate=True,
+        required=True,
+    )
 
     user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Responsible",
-        required=True,
         default=lambda self: self.env.uid,
+        required=True,
     )
     stage_id = fields.Many2one(
-        "utm.stage",
-        ondelete="restrict",
-        required=True,
+        comodel_name="utm.stage",
         default=lambda self: self.env["utm.stage"].search([], limit=1),
         copy=False,
+        required=True,
         group_expand="_group_expand_stage_ids",
+        ondelete="restrict",
     )
     tag_ids = fields.Many2many(
-        "utm.tag", "utm_tag_rel", "tag_id", "campaign_id", string="Tags"
+        comodel_name="utm.tag",
+        relation="utm_tag_rel",
+        column1="tag_id",
+        column2="campaign_id",
+        string="Tags",
     )
 
     is_auto_campaign = fields.Boolean(
-        default=False,
         string="Automatically Generated Campaign",
         help="Allows us to filter relevant Campaigns",
+        default=False,
     )
     color = fields.Integer(string="Color Index")
 

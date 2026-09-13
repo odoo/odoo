@@ -6,8 +6,8 @@ class ProductTemplate(models.Model):
 
     l10n_id_product_code = fields.Many2one(
         comodel_name="l10n_id_efaktur_coretax.product.code",
-        compute="_compute_l10n_id_product_code",
         string="E-Faktur Product Code",
+        compute="_compute_l10n_id_product_code",
         store=True,
         readonly=False,
     )

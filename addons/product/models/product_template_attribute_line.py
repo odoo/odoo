@@ -16,15 +16,15 @@ class ProductTemplateAttributeLine(models.Model):
     product_tmpl_id = fields.Many2one(
         comodel_name="product.template",
         string="Product Template",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
     attribute_id = fields.Many2one(
         comodel_name="product.attribute",
+        index=True,
         required=True,
         ondelete="restrict",
-        index=True,
     )
     value_ids = fields.Many2many(
         comodel_name="product.attribute.value",

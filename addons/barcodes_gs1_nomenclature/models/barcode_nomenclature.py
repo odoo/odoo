@@ -19,9 +19,9 @@ class BarcodeNomenclature(models.Model):
     )
     gs1_separator_fnc1 = fields.Char(
         string="FNC1 Separator",
+        help="Alternative regex delimiter for the FNC1. The separator must not match the begin/end of any related rules pattern.",
         trim=False,
         default=r"(Alt029|#|\x1D)",
-        help="Alternative regex delimiter for the FNC1. The separator must not match the begin/end of any related rules pattern.",
     )
 
     @api.constrains("gs1_separator_fnc1")

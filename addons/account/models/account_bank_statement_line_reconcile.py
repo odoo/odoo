@@ -22,11 +22,11 @@ class AccountBankStatementLine(models.Model):
         inverse="_inverse_credit",
     )
     bank_statement_attachment_ids = fields.One2many(
-        "ir.attachment",
+        comodel_name="ir.attachment",
         compute="_compute_bank_statement_attachment_ids",
     )
     attachment_ids = fields.One2many(
-        "ir.attachment",
+        comodel_name="ir.attachment",
         related="move_id.attachment_ids",
     )
 

@@ -10,9 +10,9 @@ class StockRequestCount(models.TransientModel):
 
     inventory_date = fields.Date(
         string="Scheduled at",
-        required=True,
-        default=fields.Date.context_today,
         help="Choose a date to get the inventory at that date",
+        default=fields.Date.context_today,
+        required=True,
     )
     user_id = fields.Many2one(
         comodel_name="res.users",
@@ -23,9 +23,9 @@ class StockRequestCount(models.TransientModel):
     )
     quant_ids = fields.Many2many(comodel_name="stock.quant")
     show_expected_quantity = fields.Boolean(
+        help="If the user can see the expected quantity or not",
         compute="_compute_show_expected_quantity",
         inverse="_inverse_show_expected_quantity",
-        help="If the user can see the expected quantity or not",
     )
 
     def _compute_show_expected_quantity(self):

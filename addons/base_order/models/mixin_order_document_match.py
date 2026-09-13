@@ -31,12 +31,8 @@ class MixinOrderDocumentMatch(models.AbstractModel):
         comodel_name="res.partner",
         readonly=True,
     )
-    date = fields.Date(
-        readonly=True,
-    )
-    amount = fields.Float(
-        readonly=True,
-    )
+    date = fields.Date(readonly=True)
+    amount = fields.Float(readonly=True)
     name = fields.Char(
         string="Reference",
         readonly=True,

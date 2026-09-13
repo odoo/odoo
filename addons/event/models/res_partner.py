@@ -12,7 +12,7 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     event_count = fields.Integer(
-        "# Events",
+        string="# Events",
         compute="_compute_event_count",
         groups="event.group_event_registration_desk",
     )

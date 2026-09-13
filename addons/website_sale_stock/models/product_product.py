@@ -5,7 +5,7 @@ class ProductProduct(models.Model):
     _inherit = "product.product"
 
     stock_notification_partner_ids = fields.Many2many(
-        "res.partner",
+        comodel_name="res.partner",
         relation="stock_notification_product_partner_rel",
         string="Back in stock Notifications",
     )

@@ -26,12 +26,21 @@ class DocumentsLink_To_Record_Wizard(models.TransientModel):
         ]
 
     document_ids = fields.Many2many(
-        "document.document", string="Documents", readonly=True
+        comodel_name="document.document",
+        string="Documents",
+        readonly=True,
     )
-    model_id = fields.Many2one("ir.model", domain=_domain_model_id)
-    is_readonly_model = fields.Boolean("is_readonly_model", default=True)
+    model_id = fields.Many2one(
+        comodel_name="ir.model",
+        domain=_domain_model_id,
+    )
+    is_readonly_model = fields.Boolean(
+        string="is_readonly_model",
+        default=True,
+    )
     resource_ref = fields.Reference(
-        string="Record", selection="_selection_target_model"
+        selection="_selection_target_model",
+        string="Record",
     )
 
     def link_to(self) -> None:

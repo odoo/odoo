@@ -107,18 +107,19 @@ class SurveySurvey(models.Model):
         return result
 
     survey_type = fields.Selection(
-        [
+        selection=[
             ("survey", "Survey"),
             ("live_session", "Live session"),
             ("assessment", "Assessment"),
             ("custom", "Custom"),
         ],
-        required=True,
         default="custom",
+        required=True,
     )
     lang_ids = fields.Many2many(
-        "res.lang",
+        comodel_name="res.lang",
         string="Languages",
+        help="Leave the field empty to support all installed languages.",
         default=lambda self: self.env["res.lang"]._get_lang_cached(
             self.env.context.get("lang") or self.env["res.lang"].get_installed()[0][0]
         ),
@@ -134,89 +135,119 @@ class SurveySurvey(models.Model):
                 ],
             )
         ],
-        help="Leave the field empty to support all installed languages.",
     )
     allowed_survey_types = fields.Json(
-        string="Allowed survey types", compute="_compute_allowed_survey_types"
+        string="Allowed survey types",
+        compute="_compute_allowed_survey_types",
     )
-    title = fields.Char("Survey Title", required=True, translate=True)
-    color = fields.Integer("Color Index", default=0)
-    tag_ids = fields.Many2many("survey.tag", string="Tags")
+    title = fields.Char(
+        string="Survey Title",
+        translate=True,
+        required=True,
+    )
+    color = fields.Integer(
+        string="Color Index",
+        default=0,
+    )
+    tag_ids = fields.Many2many(
+        comodel_name="survey.tag",
+        string="Tags",
+    )
     category_id = fields.Many2one(
-        "survey.category",
+        comodel_name="survey.category",
         index="btree_not_null",
     )
     description = fields.Html(
+        help="The description will be displayed on the home page of the survey. You can use this to give the purpose and guidelines to your candidates before they start it.",
         translate=True,
         sanitize=True,
         sanitize_overridable=True,
-        help="The description will be displayed on the home page of the survey. You can use this to give the purpose and guidelines to your candidates before they start it.",
     )
     description_done = fields.Html(
-        "End Message",
-        translate=True,
+        string="End Message",
         help="This message will be displayed when survey is completed",
+        translate=True,
     )
     background_image = fields.Image()
     background_image_url = fields.Char(
-        "Background Url", compute="_compute_background_image_url"
+        string="Background Url",
+        compute="_compute_background_image_url",
     )
     active = fields.Boolean(default=True)
     user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Responsible",
+        default=lambda self: self.env.user,
         domain=[("share", "=", False)],
         tracking=1,
-        default=lambda self: self.env.user,
     )
     restrict_user_ids = fields.Many2many(
-        "res.users", string="Restricted to", domain=[("share", "=", False)], tracking=2
+        comodel_name="res.users",
+        string="Restricted to",
+        domain=[("share", "=", False)],
+        tracking=2,
     )
     question_and_page_ids = fields.One2many(
-        "survey.question", "survey_id", string="Sections and Questions", copy=True
+        comodel_name="survey.question",
+        inverse_name="survey_id",
+        string="Sections and Questions",
+        copy=True,
     )
     page_ids = fields.One2many(
-        "survey.question", string="Pages", compute="_compute_page_and_question_ids"
+        comodel_name="survey.question",
+        string="Pages",
+        compute="_compute_page_and_question_ids",
     )
     question_ids = fields.One2many(
-        "survey.question", string="Questions", compute="_compute_page_and_question_ids"
+        comodel_name="survey.question",
+        string="Questions",
+        compute="_compute_page_and_question_ids",
     )
-    question_count = fields.Count("question_ids", "# Questions")
+    question_count = fields.Count(
+        count_of="question_ids",
+        string="# Questions",
+    )
     questions_layout = fields.Selection(
-        [
+        selection=[
             ("page_per_question", "One page per question"),
             ("page_per_section", "One page per section"),
             ("one_page", "One page with all the questions"),
             ("conversational", "Conversational"),
         ],
         string="Pagination",
-        required=True,
         default="page_per_question",
+        required=True,
     )
     questions_selection = fields.Selection(
-        [("all", "All questions"), ("random", "Randomized per Section")],
+        selection=[("all", "All questions"), ("random", "Randomized per Section")],
         string="Question Selection",
-        required=True,
-        default="all",
         help="If randomized is selected, you can configure the number of random questions by section. This mode is ignored in live session.",
+        default="all",
+        required=True,
     )
     progression_mode = fields.Selection(
-        [("percent", "Percentage left"), ("number", "Number")],
+        selection=[("percent", "Percentage left"), ("number", "Number")],
         string="Display Progress as",
-        default="percent",
         help="If Number is selected, it will display the number of questions answered on the total number of question to answer.",
+        default="percent",
     )
     user_input_ids = fields.One2many(
-        "survey.user_input", "survey_id", string="User responses", readonly=True
+        comodel_name="survey.user_input",
+        inverse_name="survey_id",
+        string="User responses",
+        readonly=True,
     )
     quota_ids = fields.One2many(
-        "survey.quota",
-        "survey_id",
+        comodel_name="survey.quota",
+        inverse_name="survey_id",
         string="Quotas",
         help="Response quotas per answer option. When a quota is full, new respondents cannot select that answer.",
     )
     access_mode = fields.Selection(
-        [("public", "Anyone with the link"), ("token", "Invited people only")],
+        selection=[
+            ("public", "Anyone with the link"),
+            ("token", "Invited people only"),
+        ],
         default="public",
         required=True,
     )
@@ -225,80 +256,88 @@ class SurveySurvey(models.Model):
         copy=False,
     )
     users_login_required = fields.Boolean(
-        "Require Login",
+        string="Require Login",
         help="If checked, users have to login before answering even with a valid token.",
     )
     users_can_go_back = fields.Boolean(
-        "Users can go back", help="If checked, users can go back to previous pages."
+        string="Users can go back",
+        help="If checked, users can go back to previous pages.",
     )
     users_can_signup = fields.Boolean(
-        "Users can signup", compute="_compute_users_can_signup"
+        string="Users can signup",
+        compute="_compute_users_can_signup",
     )
     data_retention_days = fields.Integer(
-        "Data Retention (days)",
-        default=0,
+        string="Data Retention (days)",
         help="Automatically delete completed responses older than this many days. "
         "Set to 0 to keep responses indefinitely.",
+        default=0,
     )
     anonymize_ip = fields.Boolean(
-        "Anonymize IP Addresses",
+        string="Anonymize IP Addresses",
         help="If enabled, respondent IP addresses are not stored.",
     )
     webhook_url = fields.Char(
-        "Webhook URL",
+        string="Webhook URL",
         help="URL to POST survey event data to. The payload is a JSON object "
         "with event type, survey, respondent, and answer details.",
     )
     webhook_events = fields.Selection(
-        [
+        selection=[
             ("completed", "On completion only"),
             ("all", "On start, page submit, and completion"),
         ],
-        default="completed",
         help="Which events trigger the webhook. 'All' fires on survey_started, "
         "page_submitted, and survey_completed.",
+        default="completed",
     )
-    survey_url = fields.Char("Survey URL", compute="_compute_survey_urls")
-    survey_qr_url = fields.Char("QR Code URL", compute="_compute_survey_urls")
+    survey_url = fields.Char(
+        string="Survey URL",
+        compute="_compute_survey_urls",
+    )
+    survey_qr_url = fields.Char(
+        string="QR Code URL",
+        compute="_compute_survey_urls",
+    )
     survey_embed_code = fields.Text(
-        "Embed Code",
-        compute="_compute_survey_embed_code",
+        string="Embed Code",
         help="HTML iframe snippet for embedding this survey on an external website.",
+        compute="_compute_survey_embed_code",
     )
     followup_rule_ids = fields.One2many(
-        "survey.followup.rule",
-        "survey_id",
+        comodel_name="survey.followup.rule",
+        inverse_name="survey_id",
         string="Follow-up Rules",
         help="Automated emails sent after survey completion based on conditions.",
     )
     slug = fields.Char(
-        "Custom URL Slug",
+        string="Custom URL Slug",
         help="Vanity URL path for this survey (e.g. 'customer-feedback'). "
         "The survey will be accessible at /s/customer-feedback in addition to the token URL.",
     )
     date_open = fields.Datetime(
-        "Opens On",
+        string="Opens On",
         help="Survey automatically becomes active at this date and time. Leave empty for immediate.",
     )
     date_close = fields.Datetime(
-        "Closes On",
+        string="Closes On",
         help="Survey automatically becomes inactive at this date and time. Leave empty for no deadline.",
     )
     date_schedule_applied = fields.Datetime(
-        "Schedule Applied On",
-        readonly=True,
-        copy=False,
+        string="Schedule Applied On",
         help="When the Opens On schedule was last acted on — either the "
         "scheduler opened the survey, or someone archived it and overrode the "
         "schedule. Cleared when Opens On changes, which arms it again.",
+        copy=False,
+        readonly=True,
     )
     theme_color = fields.Char(
-        "Primary Color",
-        default="#714B67",
+        string="Primary Color",
         help="Primary color for buttons and accents (hex code, e.g. #714B67).",
+        default="#714B67",
     )
     theme_font = fields.Selection(
-        [
+        selection=[
             ("default", "Default (System)"),
             ("serif", "Serif"),
             ("sans-serif", "Sans-serif"),
@@ -308,66 +347,87 @@ class SurveySurvey(models.Model):
         default="default",
     )
     theme_custom_css = fields.Text(
-        "Custom CSS",
+        string="Custom CSS",
         help="Additional CSS applied to the survey frontend. Use with caution.",
     )
-    answer_count = fields.Integer("Registered", compute="_compute_survey_statistic")
-    answer_done_count = fields.Integer("Attempts", compute="_compute_survey_statistic")
+    answer_count = fields.Integer(
+        string="Registered",
+        compute="_compute_survey_statistic",
+    )
+    answer_done_count = fields.Integer(
+        string="Attempts",
+        compute="_compute_survey_statistic",
+    )
     answer_score_avg = fields.Float(
-        "Avg Score (%)", compute="_compute_survey_statistic"
+        string="Avg Score (%)",
+        compute="_compute_survey_statistic",
     )
     answer_duration_avg = fields.Float(
-        "Average Duration",
-        compute="_compute_answer_duration_avg",
+        string="Average Duration",
         help="Average duration of the survey (in hours)",
+        compute="_compute_answer_duration_avg",
     )
-    success_count = fields.Integer("Success", compute="_compute_survey_statistic")
+    success_count = fields.Integer(
+        string="Success",
+        compute="_compute_survey_statistic",
+    )
     success_ratio = fields.Integer(
-        "Success Ratio (%)", compute="_compute_survey_statistic"
+        string="Success Ratio (%)",
+        compute="_compute_survey_statistic",
     )
     scoring_type = fields.Selection(
-        [
+        selection=[
             ("no_scoring", "No scoring"),
             ("scoring_with_answers_after_page", "Scoring with answers after each page"),
             ("scoring_with_answers", "Scoring with answers at the end"),
             ("scoring_without_answers", "Scoring without answers"),
         ],
         string="Scoring",
-        required=True,
-        store=True,
-        readonly=False,
         compute="_compute_scoring_type",
         precompute=True,
+        store=True,
+        readonly=False,
+        required=True,
     )
-    scoring_success_min = fields.Float("Required Score (%)", default=80.0)
+    scoring_success_min = fields.Float(
+        string="Required Score (%)",
+        default=80.0,
+    )
     scoring_max_obtainable = fields.Float(
-        "Maximum obtainable score", compute="_compute_scoring_max_obtainable"
+        string="Maximum obtainable score",
+        compute="_compute_scoring_max_obtainable",
     )
     is_attempts_limited = fields.Boolean(
-        "Limited number of attempts",
+        string="Limited number of attempts",
         help="Check this option if you want to limit the number of attempts per user",
         compute="_compute_is_attempts_limited",
         store=True,
         readonly=False,
     )
-    attempts_limit = fields.Integer("Number of attempts", default=1)
-    is_time_limited = fields.Boolean("The survey is limited in time")
-    time_limit = fields.Float("Time limit (minutes)", default=10)
+    attempts_limit = fields.Integer(
+        string="Number of attempts",
+        default=1,
+    )
+    is_time_limited = fields.Boolean(string="The survey is limited in time")
+    time_limit = fields.Float(
+        string="Time limit (minutes)",
+        default=10,
+    )
     certification = fields.Boolean(
-        "Is a Certification",
+        string="Is a Certification",
         compute="_compute_certification",
-        readonly=False,
-        store=True,
         precompute=True,
+        store=True,
+        readonly=False,
     )
     certification_mail_template_id = fields.Many2one(
-        "mail.template",
-        "Certified Email Template",
-        domain="[('model', '=', 'survey.user_input')]",
+        comodel_name="mail.template",
+        string="Certified Email Template",
         help="Automated email sent to the user when they succeed the certification, containing their certification document.",
+        domain="[('model', '=', 'survey.user_input')]",
     )
     certification_report_layout = fields.Selection(
-        [
+        selection=[
             ("modern_purple", "Modern Purple"),
             ("modern_blue", "Modern Blue"),
             ("modern_gold", "Modern Gold"),
@@ -379,69 +439,80 @@ class SurveySurvey(models.Model):
         default="modern_purple",
     )
     certification_give_badge = fields.Boolean(
-        "Give Badge",
+        string="Give Badge",
         compute="_compute_certification_give_badge",
-        readonly=False,
         store=True,
         copy=False,
+        readonly=False,
     )
     certification_badge_id = fields.Many2one(
-        "gamification.badge", copy=False, index="btree_not_null"
+        comodel_name="gamification.badge",
+        index="btree_not_null",
+        copy=False,
     )
     certification_badge_id_dummy = fields.Many2one(
-        related="certification_badge_id", string="Certification Badge "
+        related="certification_badge_id",
+        string="Certification Badge ",
     )
     session_available = fields.Boolean(
-        "Live session available", compute="_compute_session_available"
+        string="Live session available",
+        compute="_compute_session_available",
     )
     session_state = fields.Selection(
-        [
+        selection=[
             ("ready", "Ready"),
             ("in_progress", "In Progress"),
         ],
         copy=False,
     )
     session_code = fields.Char(
-        copy=False,
+        help="This code will be used by your attendees to reach your session. Feel free to customize it however you like!",
         compute="_compute_session_code",
         precompute=True,
         store=True,
+        copy=False,
         readonly=False,
-        help="This code will be used by your attendees to reach your session. Feel free to customize it however you like!",
     )
     session_link = fields.Char(compute="_compute_session_link")
     session_question_id = fields.Many2one(
-        "survey.question",
+        comodel_name="survey.question",
         string="Current Question",
-        copy=False,
         help="The current question of the survey session.",
-    )
-    session_start_time = fields.Datetime("Current Session Start Time", copy=False)
-    session_question_start_time = fields.Datetime(
-        "Current Question Start Time",
         copy=False,
+    )
+    session_start_time = fields.Datetime(
+        string="Current Session Start Time",
+        copy=False,
+    )
+    session_question_start_time = fields.Datetime(
+        string="Current Question Start Time",
         help="The time at which the current question has started, used to handle the timer for attendees.",
+        copy=False,
     )
     session_answer_count = fields.Integer(
-        "Answers Count", compute="_compute_session_answer_count"
+        string="Answers Count",
+        compute="_compute_session_answer_count",
     )
     session_question_answer_count = fields.Integer(
-        "Question Answers Count", compute="_compute_session_question_answer_count"
+        string="Question Answers Count",
+        compute="_compute_session_question_answer_count",
     )
     session_show_leaderboard = fields.Boolean(
-        "Show Session Leaderboard",
-        compute="_compute_session_show_leaderboard",
+        string="Show Session Leaderboard",
         help="Whether or not we want to show the attendees leaderboard for this survey.",
+        compute="_compute_session_show_leaderboard",
     )
     session_speed_rating = fields.Boolean(
-        "Reward quick answers", help="Attendees get more points if they answer quickly"
+        string="Reward quick answers",
+        help="Attendees get more points if they answer quickly",
     )
     session_speed_rating_time_limit = fields.Integer(
-        "Time limit (seconds)",
+        string="Time limit (seconds)",
         help="Default time given to receive additional points for right answers",
     )
     has_conditional_questions = fields.Boolean(
-        "Contains conditional questions", compute="_compute_has_conditional_questions"
+        string="Contains conditional questions",
+        compute="_compute_has_conditional_questions",
     )
 
     _access_token_unique = models.Constraint(

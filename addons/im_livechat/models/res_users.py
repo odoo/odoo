@@ -8,37 +8,37 @@ class ResUsers(models.Model):
     _inherit = "res.users"
 
     livechat_channel_ids = fields.Many2many(
-        "im_livechat.channel",
-        "im_livechat_channel_im_user",
-        "user_id",
-        "channel_id",
+        comodel_name="im_livechat.channel",
+        relation="im_livechat_channel_im_user",
+        column1="user_id",
+        column2="channel_id",
         copy=False,
     )
     livechat_username = fields.Char(
-        groups="im_livechat.im_livechat_group_user,base.group_erp_manager",
         compute="_compute_livechat_username",
         inverse="_inverse_livechat_username",
         store=False,
+        groups="im_livechat.im_livechat_group_user,base.group_erp_manager",
     )
     livechat_lang_ids = fields.Many2many(
-        "res.lang",
+        comodel_name="res.lang",
         string="Livechat Languages",
-        groups="im_livechat.im_livechat_group_user,base.group_erp_manager",
         compute="_compute_livechat_lang_ids",
         inverse="_inverse_livechat_lang_ids",
         store=False,
+        groups="im_livechat.im_livechat_group_user,base.group_erp_manager",
     )
     livechat_expertise_ids = fields.Many2many(
-        "im_livechat.expertise",
+        comodel_name="im_livechat.expertise",
         string="Live Chat Expertise",
-        groups="im_livechat.im_livechat_group_user,base.group_erp_manager",
+        help="When forwarding live chat conversations, the chatbot will prioritize users with matching expertise.",
         compute="_compute_livechat_expertise_ids",
         inverse="_inverse_livechat_expertise_ids",
         store=False,
-        help="When forwarding live chat conversations, the chatbot will prioritize users with matching expertise.",
+        groups="im_livechat.im_livechat_group_user,base.group_erp_manager",
     )
     livechat_ongoing_session_count = fields.Integer(
-        "Number of Ongoing sessions",
+        string="Number of Ongoing sessions",
         compute="_compute_livechat_ongoing_session_count",
         groups="im_livechat.im_livechat_group_user",
     )
@@ -48,8 +48,8 @@ class ResUsers(models.Model):
         groups="im_livechat.im_livechat_group_user",
     )
     has_access_livechat = fields.Boolean(
-        compute="_compute_has_access_livechat",
         string="Has access to Livechat",
+        compute="_compute_has_access_livechat",
         store=False,
         readonly=True,
     )

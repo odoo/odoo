@@ -37,48 +37,57 @@ class AccountReturnType(models.Model):
     _inherit = ["mixin.mail.thread"]
     _description = "Accounting Return Type"
 
-    name = fields.Char(required=True, translate=True, tracking=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+        tracking=True,
+    )
     category = fields.Selection(
-        string="Type",
         selection=[
             ("account_return", "Tax Return"),
             ("audit", "Audit"),
         ],
+        string="Type",
         default="account_return",
         required=True,
         tracking=True,
     )
     report_id = fields.Many2one(
-        comodel_name="account.report", index="btree", tracking=True
+        comodel_name="account.report",
+        index="btree",
+        tracking=True,
     )
     is_tax_return_type = fields.Boolean(
-        string="Is a Tax Return Return Type", compute="_compute_report_return_type"
+        string="Is a Tax Return Return Type",
+        compute="_compute_report_return_type",
     )
     is_ec_sales_list_return_type = fields.Boolean(
-        string="Is an EC Sales List Return Type", compute="_compute_report_return_type"
+        string="Is an EC Sales List Return Type",
+        compute="_compute_report_return_type",
     )
 
     auto_generate = fields.Boolean(
         string="Auto Generated",
         compute="_compute_auto_generate",
+        store=True,
         copy=False,
         readonly=False,
-        store=True,
     )
     country_id = fields.Many2one(
         comodel_name="res.country",
-        tracking=True,
-        store=True,
         compute="_compute_country_id",
+        store=True,
         readonly=False,
+        tracking=True,
     )
     payment_partner_bank_id = fields.Many2one(
-        comodel_name="res.partner.bank", tracking=True
+        comodel_name="res.partner.bank",
+        tracking=True,
     )
     payment_partner_id = fields.Many2one(
         comodel_name="res.partner",
-        string="Payment Partner",
         related="payment_partner_bank_id.partner_id",
+        string="Payment Partner",
         compute_sudo=False,
         tracking=True,
     )
@@ -92,31 +101,32 @@ class AccountReturnType(models.Model):
         string="States",
         help="Determines the workflow of the return.",
         compute="_compute_states_workflow",
-        readonly=False,
         store=True,
+        readonly=False,
     )
 
     deadline_periodicity = fields.Selection(
         selection=PERIODS,
         string="Periodicity",
-        tracking=True,
         company_dependent=True,
+        tracking=True,
     )
     default_deadline_periodicity = fields.Selection(
-        selection=PERIODS, string="Default Periodicity"
+        selection=PERIODS,
+        string="Default Periodicity",
     )
     deadline_start_date = fields.Date(
         string="Start Date",
         help="Used to compute covered period based on the selected periodicity.",
-        tracking=True,
         company_dependent=True,
+        tracking=True,
     )
     default_deadline_start_date = fields.Date(string="Default Start Date")
     deadline_days_delay = fields.Integer(
         string="Deadline",
         help="By default, Odoo applies its own deadline for returns (shown as 0). Entering a value here will override it and be used as the new deadline.",
-        tracking=True,
         company_dependent=True,
+        tracking=True,
     )
     default_deadline_days_delay = fields.Integer(string="Default Deadline")
     is_master_data = fields.Boolean(compute="_compute_is_master_data")

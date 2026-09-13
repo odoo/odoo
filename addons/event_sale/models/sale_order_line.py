@@ -6,35 +6,37 @@ class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
     event_id = fields.Many2one(
-        "event.event",
-        compute="_compute_event_id",
-        store=True,
-        readonly=False,
-        precompute=True,
-        index="btree_not_null",
+        comodel_name="event.event",
         help="Choose an event and it will automatically create a registration for this event.",
+        compute="_compute_event_id",
+        precompute=True,
+        store=True,
+        index="btree_not_null",
+        readonly=False,
     )
     event_slot_id = fields.Many2one(
-        "event.slot",
+        comodel_name="event.slot",
         string="Slot",
+        help="Choose an event slot and it will automatically create a registration for this event slot.",
         compute="_compute_event_related",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
-        help="Choose an event slot and it will automatically create a registration for this event slot.",
     )
     event_ticket_id = fields.Many2one(
-        "event.event.ticket",
+        comodel_name="event.event.ticket",
         string="Ticket Type",
+        help="Choose an event ticket and it will automatically create a registration for this event ticket.",
         compute="_compute_event_related",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
-        help="Choose an event ticket and it will automatically create a registration for this event ticket.",
     )
     is_multi_slots = fields.Boolean(related="event_id.is_multi_slots")
     registration_ids = fields.One2many(
-        "event.registration", "sale_order_line_id", string="Registrations"
+        comodel_name="event.registration",
+        inverse_name="sale_order_line_id",
+        string="Registrations",
     )
 
     @api.constrains("event_id", "event_slot_id", "event_ticket_id", "product_id")

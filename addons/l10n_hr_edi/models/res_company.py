@@ -22,18 +22,21 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     l10n_hr_mer_username = fields.Char(
-        "MojEracun username", groups="account.group_account_manager"
+        string="MojEracun username",
+        groups="account.group_account_manager",
     )
     l10n_hr_mer_password = fields.Char(
-        "MojEracun password", groups="account.group_account_manager"
+        string="MojEracun password",
+        groups="account.group_account_manager",
     )
     l10n_hr_mer_company_ident = fields.Char(
-        "MojEracun CompanyId", groups="account.group_account_manager"
+        string="MojEracun CompanyId",
+        groups="account.group_account_manager",
     )
     l10n_hr_mer_software_ident = fields.Char(
-        "MojEracun SoftwareId",
-        default="Saodoo-001",
+        string="MojEracun SoftwareId",
         help="Default SoftwareID for Odoo is 'Saodoo-001'",
+        default="Saodoo-001",
     )
     l10n_hr_mer_connection_state = fields.Selection(
         selection=[
@@ -41,10 +44,10 @@ class ResCompany(models.Model):
             ("active", "Active"),
         ],
         string="MojEracun connection status",
-        required=True,
-        default="inactive",
         compute="_compute_l10n_hr_mojeracun_state",
+        default="inactive",
         store=True,
+        required=True,
     )
     l10n_hr_mer_connection_mode = fields.Selection(
         selection=[
@@ -58,10 +61,10 @@ class ResCompany(models.Model):
     l10n_hr_mer_purchase_journal_id = fields.Many2one(
         comodel_name="account.journal",
         string="eracun Purchase Journal",
-        domain=[("type", "=", "purchase")],
         compute="_compute_l10n_hr_mer_purchase_journal_id",
         store=True,
         readonly=False,
+        domain=[("type", "=", "purchase")],
     )
 
     # -------------------------------------------------------------------------

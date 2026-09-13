@@ -5,7 +5,7 @@ class NemhandelResponse(models.Model):
     _name = "nemhandel.response"
     _description = "Business Level Responses for Nemhandel"
 
-    nemhandel_message_uuid = fields.Char("Nemhandel UUID")
+    nemhandel_message_uuid = fields.Char(string="Nemhandel UUID")
     response_code = fields.Selection(
         selection=[
             ("BusinessAccept", "Approval"),
@@ -23,6 +23,8 @@ class NemhandelResponse(models.Model):
         string="Nemhandel status",
     )
     move_id = fields.Many2one(
-        "account.move", ondelete="cascade", index="btree_not_null"
+        comodel_name="account.move",
+        index="btree_not_null",
+        ondelete="cascade",
     )
     company_id = fields.Many2one(related="move_id.company_id")

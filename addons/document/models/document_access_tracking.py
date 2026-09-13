@@ -12,10 +12,16 @@ class DocumentsAccessTracking(models.Model):
     _description = "Document Access Tracking"
     _log_access = False
 
-    changes = fields.Json(string="Changes need to be tracked", required=True)
-    documents = fields.Json(string="Impacted Document Ids", required=True)
+    changes = fields.Json(
+        string="Changes need to be tracked",
+        required=True,
+    )
+    documents = fields.Json(
+        string="Impacted Document Ids",
+        required=True,
+    )
     user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         default=lambda self: self.env.user,
     )
 

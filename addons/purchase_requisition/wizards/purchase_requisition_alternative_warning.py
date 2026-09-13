@@ -6,11 +6,13 @@ class PurchaseRequisitionAlternativeWarning(models.TransientModel):
     _description = "Wizard in case PO still has open alternative requests for quotation"
 
     po_ids = fields.Many2many(
-        "purchase.order", "warning_purchase_order_rel", string="POs to Confirm"
+        comodel_name="purchase.order",
+        relation="warning_purchase_order_rel",
+        string="POs to Confirm",
     )
     alternative_po_ids = fields.Many2many(
-        "purchase.order",
-        "warning_purchase_order_alternative_rel",
+        comodel_name="purchase.order",
+        relation="warning_purchase_order_alternative_rel",
         string="Alternative POs",
     )
 

@@ -16,7 +16,10 @@ class ProductCombo(models.Model):
         compute="_compute_currency_id",
     )
     name = fields.Char(required=True)
-    sequence = fields.Integer(default=10, copy=False)
+    sequence = fields.Integer(
+        default=10,
+        copy=False,
+    )
     combo_item_ids = fields.One2many(
         comodel_name="product.combo.item",
         inverse_name="combo_id",
@@ -28,12 +31,12 @@ class ProductCombo(models.Model):
     )
     base_price = fields.Float(
         string="Combo Price",
-        min_display_digits="Product Price",
-        compute="_compute_base_price",
         help="The minimum price among the products in this combo. This value will be used to"
         " prorate the price of this combo with respect to the other combos in a combo product."
         " This heuristic ensures that whatever product the user chooses in a combo, it will"
         " always be the same price.",
+        min_display_digits="Product Price",
+        compute="_compute_base_price",
     )
 
     @api.constrains("combo_item_ids")

@@ -21,12 +21,17 @@ class CouponShare(models.TransientModel):
             websites = Website.search([])
             return (len(websites) == 1 and websites) or Website
 
-    website_id = fields.Many2one("website", required=True, default=_default_website_id)
+    website_id = fields.Many2one(
+        comodel_name="website",
+        default=_default_website_id,
+        required=True,
+    )
     coupon_id = fields.Many2one(
-        "loyalty.card", domain="[('program_id', '=', program_id)]"
+        comodel_name="loyalty.card",
+        domain="[('program_id', '=', program_id)]",
     )
     program_id = fields.Many2one(
-        "loyalty.program",
+        comodel_name="loyalty.program",
         required=True,
         domain=[
             "|",
@@ -41,12 +46,17 @@ class CouponShare(models.TransientModel):
         ],
     )
     program_website_id = fields.Many2one(
-        "website", string="Program Website", related="program_id.website_id"
+        comodel_name="website",
+        related="program_id.website_id",
+        string="Program Website",
     )
 
     promo_code = fields.Char(compute="_compute_promo_code")
     share_link = fields.Char(compute="_compute_share_link")
-    redirect = fields.Char(required=True, default="/shop")
+    redirect = fields.Char(
+        default="/shop",
+        required=True,
+    )
 
     @api.constrains("coupon_id", "program_id")
     def _check_program(self):

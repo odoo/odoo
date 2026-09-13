@@ -18,10 +18,10 @@ class ApprovalBinding(models.Model):
     )
     reset_automation_id = fields.Many2one(
         comodel_name="automation.rule",
-        readonly=True,
-        copy=False,
-        ondelete="set null",
         help="The automation rule this binding keeps in step with Reset When.",
+        copy=False,
+        readonly=True,
+        ondelete="set null",
     )
 
     @api.constrains("model_id", "reset_domain")

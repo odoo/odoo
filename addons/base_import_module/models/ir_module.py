@@ -55,7 +55,7 @@ class IrModuleModule(models.Model):
 
     imported = fields.Boolean(string="Imported Module")
     module_type = fields.Selection(
-        [
+        selection=[
             ("official", "Official Apps"),
             ("industries", "Industries"),
         ],

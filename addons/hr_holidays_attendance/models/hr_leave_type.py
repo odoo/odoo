@@ -6,9 +6,9 @@ class HrLeaveType(models.Model):
     _inherit = "hr.leave.type"
 
     overtime_deductible = fields.Boolean(
-        "Deduct Extra Hours",
-        default=False,
+        string="Deduct Extra Hours",
         help="Once a time off of this type is approved, extra hours in attendances will be deducted.",
+        default=False,
     )
 
     @api.depends("overtime_deductible", "requires_allocation")

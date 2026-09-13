@@ -4,7 +4,10 @@ from odoo import fields, models
 class StockQuant(models.Model):
     _inherit = "stock.quant"
 
-    is_subcontract = fields.Boolean(store=False, search="_search_is_subcontract")
+    is_subcontract = fields.Boolean(
+        search="_search_is_subcontract",
+        store=False,
+    )
 
     def _search_is_subcontract(self, operator, value):
         if operator != "in":

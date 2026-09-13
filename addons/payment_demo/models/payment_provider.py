@@ -8,7 +8,8 @@ class PaymentProvider(models.Model):
     _inherit = "payment.provider"
 
     code = fields.Selection(
-        selection_add=[("demo", "Demo")], ondelete={"demo": "set default"}
+        selection_add=[("demo", "Demo")],
+        ondelete={"demo": "set default"},
     )
 
     # === COMPUTE METHODS === #

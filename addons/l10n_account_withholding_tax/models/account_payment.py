@@ -13,14 +13,14 @@ class AccountPayment(models.Model):
         string="Withhold Tax Amounts",
         help="Withhold tax amounts from the payment amount.",
         compute="_compute_should_withhold_tax",
-        readonly=False,
         store=True,
         copy=False,
+        readonly=False,
     )
     withholding_line_ids = fields.One2many(
-        string="Withholding Lines",
         comodel_name="account.payment.withholding.line",
         inverse_name="payment_id",
+        string="Withholding Lines",
     )
     withholding_payment_account_id = fields.Many2one(
         related="payment_channel_id.payment_account_id"

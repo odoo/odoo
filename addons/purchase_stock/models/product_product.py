@@ -25,16 +25,12 @@ class ProductProduct(models.Model):
         inverse_name="product_id",
         string="PO Lines",
     )
-    monthly_demand = fields.Float(
-        compute="_compute_monthly_demand",
-    )
+    monthly_demand = fields.Float(compute="_compute_monthly_demand")
     suggested_qty = fields.Integer(
         compute="_compute_suggested_qty",
         search="_search_suggested_qty",
     )
-    suggest_estimated_price = fields.Float(
-        compute="_compute_suggest_estimated_price",
-    )
+    suggest_estimated_price = fields.Float(compute="_compute_suggest_estimated_price")
 
     @api.depends_context(
         "suggest_based_on",

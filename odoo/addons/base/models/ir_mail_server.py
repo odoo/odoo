@@ -215,9 +215,12 @@ class IrMail_Server(models.Model):
     NO_FOUND_SMTP_FROM = "no_found_smtp_from"
     NO_VALID_FROM = "no_valid_from"
 
-    name = fields.Char(required=True, index=True)
+    name = fields.Char(
+        index=True,
+        required=True,
+    )
     from_filter = fields.Char(
-        "FROM Filtering",
+        string="FROM Filtering",
         help="Comma-separated list of addresses or domains for which this server can be used.\n"
         'e.g.: "notification@odoo.com" or "odoo.com"',
     )
@@ -227,21 +230,21 @@ class IrMail_Server(models.Model):
     )
     smtp_port = fields.Integer(
         string="SMTP Port",
-        default=25,
         help="SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases.",
+        default=25,
     )
     smtp_authentication = fields.Selection(
-        [
+        selection=[
             ("login", "Username"),
             ("certificate", "SSL Certificate"),
             ("cli", "Command Line Interface"),
         ],
         string="Authenticate with",
-        required=True,
         default="login",
+        required=True,
     )
     smtp_authentication_info = fields.Text(
-        "Authentication Info",
+        string="Authentication Info",
         compute="_compute_smtp_authentication_info",
     )
     smtp_user = fields.Char(
@@ -255,7 +258,7 @@ class IrMail_Server(models.Model):
         groups="base.group_system",
     )
     smtp_encryption = fields.Selection(
-        [
+        selection=[
             ("none", "None"),
             ("starttls_strict", "TLS (STARTTLS), encryption and validation"),
             ("starttls", "TLS (STARTTLS), encryption only"),
@@ -263,8 +266,6 @@ class IrMail_Server(models.Model):
             ("ssl", "SSL/TLS, encryption only"),
         ],
         string="Connection Encryption",
-        required=True,
-        default="none",
         help="Choose the connection encryption scheme:\n"
         "- None: SMTP sessions are done in cleartext.\n"
         "- TLS (STARTTLS): TLS encryption is requested at start of SMTP session (Recommended)\n"
@@ -273,18 +274,20 @@ class IrMail_Server(models.Model):
         "Choose an additional variant for SSL or TLS:\n"
         "- encryption and validation: encrypt the data and authenticate the server using its SSL certificate (Recommended)\n"
         "- encryption only: encrypt the data but skip server authentication",
+        default="none",
+        required=True,
     )
     smtp_ssl_certificate = fields.Binary(
-        "SSL Certificate",
-        groups="base.group_system",
-        attachment=False,
+        string="SSL Certificate",
         help="SSL certificate used for authentication",
+        attachment=False,
+        groups="base.group_system",
     )
     smtp_ssl_private_key = fields.Binary(
-        "SSL Private Key",
-        groups="base.group_system",
-        attachment=False,
+        string="SSL Private Key",
         help="SSL private key used for authentication",
+        attachment=False,
+        groups="base.group_system",
     )
     smtp_debug = fields.Boolean(
         string="Debugging",
@@ -297,9 +300,9 @@ class IrMail_Server(models.Model):
     max_email_size = fields.Float()
     sequence = fields.Integer(
         string="Priority",
-        default=10,
         help="When no specific mail server is requested for a mail, the highest priority one "
         "is used. Default priority is 10 (smaller number = higher priority)",
+        default=10,
     )
     active = fields.Boolean(default=True)
 

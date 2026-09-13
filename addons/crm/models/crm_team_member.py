@@ -11,22 +11,26 @@ class CrmTeamMember(models.Model):
     assignment_enabled = fields.Boolean(related="crm_team_id.assignment_enabled")
     assignment_domain = fields.Char(tracking=True)
     assignment_domain_preferred = fields.Char(
-        "Preference assignment Domain", tracking=True
+        string="Preference assignment Domain",
+        tracking=True,
     )
-    assignment_optout = fields.Boolean("Pause assignment")
-    assignment_max = fields.Integer("Average Leads Capacity (on 30 days)", default=30)
+    assignment_optout = fields.Boolean(string="Pause assignment")
+    assignment_max = fields.Integer(
+        string="Average Leads Capacity (on 30 days)",
+        default=30,
+    )
     lead_day_count = fields.Integer(
-        "Leads (last 24h)",
-        compute="_compute_lead_day_count",
+        string="Leads (last 24h)",
         help="Number of leads assigned to this member in the last 24 hours, "
         "archived and lost ones included. This is what the daily assignment "
         "quota is spent against.",
+        compute="_compute_lead_day_count",
     )
     lead_month_count = fields.Integer(
-        "Leads (30 days)",
-        compute="_compute_lead_month_count",
+        string="Leads (30 days)",
         help="Number of leads assigned to this member in the last 30 days, "
         "archived and lost ones included",
+        compute="_compute_lead_month_count",
     )
 
     @api.depends("user_id", "crm_team_id")

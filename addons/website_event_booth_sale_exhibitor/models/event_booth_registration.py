@@ -7,10 +7,10 @@ class EventBoothRegistration(models.Model):
     sponsor_name = fields.Char()
     sponsor_email = fields.Char()
     sponsor_phone_ids = fields.Many2many(
-        "phone.number",
-        "event_booth_registration_sponsor_phone_number_rel",
-        "registration_id",
-        "phone_number_id",
+        comodel_name="phone.number",
+        relation="event_booth_registration_sponsor_phone_number_rel",
+        column1="registration_id",
+        column2="phone_number_id",
     )
     sponsor_subtitle = fields.Char(string="Sponsor Slogan")
     sponsor_website_description = fields.Html(

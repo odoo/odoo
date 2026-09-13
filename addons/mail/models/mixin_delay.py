@@ -6,16 +6,19 @@ class MixinDelay(models.AbstractModel):
     _name = "mixin.delay"
     _description = "Delay Mixin"
 
-    delay_count = fields.Integer("Delay", default=0)
+    delay_count = fields.Integer(
+        string="Delay",
+        default=0,
+    )
     delay_unit = fields.Selection(
-        [
+        selection=[
             (unit, label.lower())
             for unit, label in time_unit_selection("day", "week", "month")
         ],
         string="Delay units",
         help="Unit of delay",
-        required=True,
         default="day",
+        required=True,
     )
 
     def _get_delay_delta(self):

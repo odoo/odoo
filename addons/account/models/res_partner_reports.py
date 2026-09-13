@@ -8,7 +8,8 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     account_represented_company_ids = fields.One2many(
-        "res.company", "account_representative_id"
+        comodel_name="res.company",
+        inverse_name="account_representative_id",
     )
 
     def _get_followup_responsible(self, multiple_responsible=False):

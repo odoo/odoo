@@ -8,13 +8,13 @@ class MailActivityPlan(models.Model):
     _inherit = "mail.activity.plan"
 
     department_id = fields.Many2one(
-        "hr.department",
-        check_company=True,
-        index="btree_not_null",
+        comodel_name="hr.department",
         compute="_compute_department_id",
-        ondelete="set null",
-        readonly=False,
         store=True,
+        index="btree_not_null",
+        readonly=False,
+        ondelete="set null",
+        check_company=True,
     )
     department_assignable = fields.Boolean(compute="_compute_department_assignable")
 

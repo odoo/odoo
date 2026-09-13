@@ -19,12 +19,15 @@ class MailIceServer(models.Model):
     _rec_name = "uri"
 
     server_type = fields.Selection(
-        [("stun", "stun:"), ("turn", "turn:")],
+        selection=[("stun", "stun:"), ("turn", "turn:")],
         string="Type",
-        required=True,
         default="stun",
+        required=True,
     )
-    uri = fields.Char("URI", required=True)
+    uri = fields.Char(
+        string="URI",
+        required=True,
+    )
     username = fields.Char()
     credential = fields.Char()
 

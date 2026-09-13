@@ -16,24 +16,20 @@ class MixinTag(models.AbstractModel):
     _order = "name, id"
 
     name = fields.Char(string="Tag Name")
-    active = fields.Boolean(
-        help="Archive a tag to hide it without deleting it.",
-    )
+    active = fields.Boolean(help="Archive a tag to hide it without deleting it.")
     color = fields.Integer(
         default=lambda self: self._default_color(),
         aggregator=False,
     )
     code = fields.Char(
+        help="Stable identifier for imports, filters and data files. Unlike the "
+        "name it is never translated, so it means the same thing to every "
+        "reader.",
         compute="_compute_code",
         store=True,
-        readonly=False,
-        copy=False,
         index="btree",
-        help=(
-            "Stable identifier for imports, filters and data files. Unlike the "
-            "name it is never translated, so it means the same thing to every "
-            "reader."
-        ),
+        copy=False,
+        readonly=False,
     )
     _code_uniq = models.Constraint(
         "unique(code)",

@@ -4,8 +4,15 @@ from odoo import fields, models
 class HrResumeLine(models.Model):
     _inherit = "hr.resume.line"
 
-    department_id = fields.Many2one(related="employee_id.department_id", store=True)
-    survey_id = fields.Many2one("survey.survey", string="Certification", readonly=True)
+    department_id = fields.Many2one(
+        related="employee_id.department_id",
+        store=True,
+    )
+    survey_id = fields.Many2one(
+        comodel_name="survey.survey",
+        string="Certification",
+        readonly=True,
+    )
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)

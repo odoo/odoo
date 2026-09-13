@@ -12,13 +12,23 @@ class AccountReturnCheckTemplate(models.Model):
     _name = "account.return.check.template"
     _description = "Account Return Check Template"
 
-    name = fields.Char(string="Title", required=True, translate=True)
-    code = fields.Char(default=lambda r: f"_template_check_{uuid.uuid4()}", copy=False)
+    name = fields.Char(
+        string="Title",
+        translate=True,
+        required=True,
+    )
+    code = fields.Char(
+        default=lambda r: f"_template_check_{uuid.uuid4()}",
+        copy=False,
+    )
     return_type = fields.Many2one(
-        comodel_name="account.return.type", string="Tax Return/Audit", required=True
+        comodel_name="account.return.type",
+        string="Tax Return/Audit",
+        required=True,
     )
     country_ids = fields.Many2many(
-        comodel_name="res.country", string="Applicable Countries"
+        comodel_name="res.country",
+        string="Applicable Countries",
     )
     cycle = fields.Selection(
         selection=[
@@ -52,7 +62,8 @@ class AccountReturnCheckTemplate(models.Model):
     additional_action_context = fields.Char()
     additional_action_params = fields.Char()
     activity_type = fields.Many2one(
-        comodel_name="mail.activity.type", string="Activities"
+        comodel_name="mail.activity.type",
+        string="Activities",
     )
 
     description = fields.Text(translate=True)
@@ -62,7 +73,7 @@ class AccountReturnCheckTemplate(models.Model):
             ("account.move", "Journal Entry"),
             ("account.bank.statement.line", "Bank Statement Line"),
             ("account.payment", "Payments"),
-        ],
+        ]
     )
     domain = fields.Char()
 

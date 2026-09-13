@@ -9,10 +9,10 @@ class ProjectProject(models.Model):
     _inherit = "project.project"
 
     purchase_orders_count = fields.Integer(
-        "# Purchase Orders",
+        string="# Purchase Orders",
+        export_string_translation=False,
         compute="_compute_purchase_orders_count",
         groups="purchase.group_purchase_user",
-        export_string_translation=False,
     )
 
     def _compute_purchase_orders_count(self):

@@ -23,32 +23,44 @@ class IrFilters(models.Model):
     _description = "Filters"
     _order = "model_id, name, id desc"
 
-    name = fields.Char(string="Filter Name", required=True)
+    name = fields.Char(
+        string="Filter Name",
+        required=True,
+    )
     active = fields.Boolean(default=True)
     model_id = fields.Selection(
         selection="_selection_models",
         required=True,
     )
     user_ids = fields.Many2many(
-        "res.users",
+        comodel_name="res.users",
         string="Users",
-        ondelete="cascade",
         help="The users the filter is shared with. If empty, the filter is shared with all users.",
+        ondelete="cascade",
     )
-    domain = fields.Text(default="[]", required=True)
-    context = fields.Text(default="{}", required=True)
-    sort = fields.Char(default="[]", required=True)
+    domain = fields.Text(
+        default="[]",
+        required=True,
+    )
+    context = fields.Text(
+        default="{}",
+        required=True,
+    )
+    sort = fields.Char(
+        default="[]",
+        required=True,
+    )
     is_default = fields.Boolean(string="Default Filter")
     action_id = fields.Many2one(
-        "ir.actions.actions",
-        ondelete="cascade",
+        comodel_name="ir.actions.actions",
         help="The menu action this filter applies to. When left empty the filter applies to all menus for this model.",
+        ondelete="cascade",
     )
     embedded_action_id = fields.Many2one(
-        "ir.embedded.actions",
-        ondelete="cascade",
-        index="btree_not_null",
+        comodel_name="ir.embedded.actions",
         help="The embedded action this filter is applied to",
+        index="btree_not_null",
+        ondelete="cascade",
     )
     embedded_parent_res_id = fields.Integer(
         help="id of the record the filter should be applied to. Only used in combination with embedded actions"

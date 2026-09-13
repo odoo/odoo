@@ -5,7 +5,10 @@ class LoyaltyProgram(models.Model):
     _name = "loyalty.program"
     _inherit = ["loyalty.program", "mixin.website.multi"]
 
-    ecommerce_ok = fields.Boolean("Available on Website", default=True)
+    ecommerce_ok = fields.Boolean(
+        string="Available on Website",
+        default=True,
+    )
     show_non_published_product_warning = fields.Boolean(
         compute="_compute_show_non_published_product_warning"
     )

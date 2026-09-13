@@ -25,7 +25,10 @@ class StockLandedCost(models.Model):
         ].get_company_dependent_fallback(ProductCategory)
 
     name = fields.Char(
-        default=lambda self: _("New"), copy=False, readonly=True, tracking=True
+        default=lambda self: _("New"),
+        copy=False,
+        readonly=True,
+        tracking=True,
     )
     date = fields.Date(
         default=fields.Date.context_today,
@@ -34,54 +37,68 @@ class StockLandedCost(models.Model):
         tracking=True,
     )
     target_model = fields.Selection(
-        [("picking", "Transfers")],
+        selection=[("picking", "Transfers")],
         string="Apply On",
-        required=True,
         default="picking",
         copy=False,
+        required=True,
     )
-    picking_ids = fields.Many2many("stock.picking", string="Transfers", copy=False)
-    cost_lines = fields.One2many("stock.landed.cost.lines", "cost_id", copy=True)
+    picking_ids = fields.Many2many(
+        comodel_name="stock.picking",
+        string="Transfers",
+        copy=False,
+    )
+    cost_lines = fields.One2many(
+        comodel_name="stock.landed.cost.lines",
+        inverse_name="cost_id",
+        copy=True,
+    )
     valuation_adjustment_lines = fields.One2many(
-        "stock.valuation.adjustment.lines",
-        "cost_id",
-        "Valuation Adjustments",
+        comodel_name="stock.valuation.adjustment.lines",
+        inverse_name="cost_id",
+        string="Valuation Adjustments",
     )
-    description = fields.Text("Item Description")
+    description = fields.Text(string="Item Description")
     amount_total = fields.Monetary(
-        "Total", compute="_compute_amount_total", store=True, tracking=True
+        string="Total",
+        compute="_compute_amount_total",
+        store=True,
+        tracking=True,
     )
     state = fields.Selection(
-        [("draft", "Draft"), ("done", "Posted"), ("cancel", "Cancelled")],
+        selection=[("draft", "Draft"), ("done", "Posted"), ("cancel", "Cancelled")],
         default="draft",
         copy=False,
         readonly=True,
         tracking=True,
     )
     account_move_id = fields.Many2one(
-        "account.move",
-        "Journal Entry",
+        comodel_name="account.move",
+        string="Journal Entry",
         index="btree_not_null",
         copy=False,
         readonly=True,
     )
     account_journal_id = fields.Many2one(
-        "account.journal",
-        required=True,
+        comodel_name="account.journal",
         default=lambda self: self._default_account_journal_id(),
+        required=True,
     )
     company_id = fields.Many2one(
-        "res.company",
-        required=True,
+        comodel_name="res.company",
         default=lambda self: self.env.company,
+        required=True,
     )
     vendor_bill_id = fields.Many2one(
-        "account.move",
+        comodel_name="account.move",
+        index="btree_not_null",
         copy=False,
         domain=[("move_type", "=", "in_invoice")],
-        index="btree_not_null",
     )
-    currency_id = fields.Many2one("res.currency", related="company_id.currency_id")
+    currency_id = fields.Many2one(
+        comodel_name="res.currency",
+        related="company_id.currency_id",
+    )
 
     @api.depends("cost_lines.price_unit")
     def _compute_amount_total(self):
@@ -316,27 +333,36 @@ class StockLandedCostLines(models.Model):
     _name = "stock.landed.cost.lines"
     _description = "Stock Landed Cost Line"
 
-    name = fields.Char("Description")
+    name = fields.Char(string="Description")
     cost_id = fields.Many2one(
-        "stock.landed.cost",
-        "Landed Cost",
-        required=True,
+        comodel_name="stock.landed.cost",
+        string="Landed Cost",
         index=True,
+        required=True,
         ondelete="cascade",
     )
-    product_id = fields.Many2one("product.product", required=True)
-    price_unit = fields.Monetary("Cost", required=True)
-    split_method = fields.Selection(
-        SPLIT_METHOD,
+    product_id = fields.Many2one(
+        comodel_name="product.product",
         required=True,
+    )
+    price_unit = fields.Monetary(
+        string="Cost",
+        required=True,
+    )
+    split_method = fields.Selection(
+        selection=SPLIT_METHOD,
         help="Equal: Cost will be equally divided.\n"
         "By Quantity: Cost will be divided according to product's quantity.\n"
         "By Current cost: Cost will be divided according to product's current cost.\n"
         "By Weight: Cost will be divided depending on its weight.\n"
         "By Volume: Cost will be divided depending on its volume.",
+        required=True,
     )
-    account_id = fields.Many2one("account.account")
-    currency_id = fields.Many2one("res.currency", related="cost_id.currency_id")
+    account_id = fields.Many2one(comodel_name="account.account")
+    currency_id = fields.Many2one(
+        comodel_name="res.currency",
+        related="cost_id.currency_id",
+    )
 
     @api.onchange("product_id")
     def onchange_product_id(self):
@@ -355,25 +381,54 @@ class StockValuationAdjustmentLines(models.Model):
     _name = "stock.valuation.adjustment.lines"
     _description = "Valuation Adjustment Lines"
 
-    name = fields.Char("Description", compute="_compute_name", store=True)
-    cost_id = fields.Many2one(
-        "stock.landed.cost",
-        "Landed Cost",
-        ondelete="cascade",
-        required=True,
-        index=True,
+    name = fields.Char(
+        string="Description",
+        compute="_compute_name",
+        store=True,
     )
-    cost_line_id = fields.Many2one("stock.landed.cost.lines", readonly=True)
-    move_id = fields.Many2one("stock.move", "Stock Move", readonly=True)
-    product_id = fields.Many2one("product.product", required=True)
-    quantity = fields.Float(default=1.0, digits=0, required=True)
-    weight = fields.Float(default=1.0, digits="Stock Weight")
-    volume = fields.Float(default=1.0, digits="Volume")
-    former_cost = fields.Monetary("Original Value")
+    cost_id = fields.Many2one(
+        comodel_name="stock.landed.cost",
+        string="Landed Cost",
+        index=True,
+        required=True,
+        ondelete="cascade",
+    )
+    cost_line_id = fields.Many2one(
+        comodel_name="stock.landed.cost.lines",
+        readonly=True,
+    )
+    move_id = fields.Many2one(
+        comodel_name="stock.move",
+        string="Stock Move",
+        readonly=True,
+    )
+    product_id = fields.Many2one(
+        comodel_name="product.product",
+        required=True,
+    )
+    quantity = fields.Float(
+        digits=0,
+        default=1.0,
+        required=True,
+    )
+    weight = fields.Float(
+        digits="Stock Weight",
+        default=1.0,
+    )
+    volume = fields.Float(
+        digits="Volume",
+        default=1.0,
+    )
+    former_cost = fields.Monetary(string="Original Value")
     additional_landed_cost = fields.Monetary()
-    final_cost = fields.Monetary("New Value", compute="_compute_final_cost", store=True)
+    final_cost = fields.Monetary(
+        string="New Value",
+        compute="_compute_final_cost",
+        store=True,
+    )
     currency_id = fields.Many2one(
-        "res.currency", related="cost_id.company_id.currency_id"
+        comodel_name="res.currency",
+        related="cost_id.company_id.currency_id",
     )
 
     @api.depends("cost_line_id.name", "product_id.code", "product_id.name")

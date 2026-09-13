@@ -9,7 +9,10 @@ class GamificationGoalWizard(models.TransientModel):
     _name = "gamification.goal.wizard"
     _description = "Gamification Goal Wizard"
 
-    goal_id = fields.Many2one("gamification.goal", required=True)
+    goal_id = fields.Many2one(
+        comodel_name="gamification.goal",
+        required=True,
+    )
     current = fields.Float()
 
     def action_update_current(self) -> Literal[False]:

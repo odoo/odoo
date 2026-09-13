@@ -10,9 +10,12 @@ class IrDemo_Failure(models.TransientModel):
     _name = "ir.demo_failure"
     _description = "Demo failure"
 
-    module_id = fields.Many2one("ir.module.module", required=True)
+    module_id = fields.Many2one(
+        comodel_name="ir.module.module",
+        required=True,
+    )
     error = fields.Text()
-    wizard_id = fields.Many2one("ir.demo_failure.wizard")
+    wizard_id = fields.Many2one(comodel_name="ir.demo_failure.wizard")
 
 
 class IrDemo_FailureWizard(models.TransientModel):
@@ -20,12 +23,12 @@ class IrDemo_FailureWizard(models.TransientModel):
     _description = "Demo Failure wizard"
 
     failure_ids = fields.One2many(
-        "ir.demo_failure",
-        "wizard_id",
-        readonly=True,
+        comodel_name="ir.demo_failure",
+        inverse_name="wizard_id",
         string="Demo Installation Failures",
+        readonly=True,
     )
-    failures_count = fields.Count("failure_ids")
+    failures_count = fields.Count(count_of="failure_ids")
 
     def done(self) -> dict[str, Any]:
         _debug.lifecycle("demo_failures_acknowledged", failures=self.failures_count)

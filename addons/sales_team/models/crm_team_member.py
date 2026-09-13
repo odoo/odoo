@@ -10,45 +10,62 @@ class CrmTeamMember(models.Model):
     _order = "create_date ASC, id"
 
     crm_team_id = fields.Many2one(
-        "crm.team",
+        comodel_name="crm.team",
         string="Sales Team",
-        group_expand="_read_group_expand_full",
         default=False,
-        check_company=False,
         index=True,
-        ondelete="cascade",
         required=True,
+        group_expand="_read_group_expand_full",
+        ondelete="cascade",
+        check_company=False,
     )
     user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Salesperson",
         index=True,
-        ondelete="cascade",
         required=True,
         domain="""[
             ('share', '=', False),
             ('crm_team_member_ids', 'not any', [('active', '=', True), ('crm_team_id', '=', crm_team_id), ('id', '!=', id)]),
             ('company_ids', 'in', user_company_ids),
         ]""",
+        ondelete="cascade",
     )
     user_company_ids = fields.Many2many(
-        "res.company",
-        compute="_compute_user_company_ids",
+        comodel_name="res.company",
         help="UX: Limit to team company or all if no company",
+        compute="_compute_user_company_ids",
     )
     active = fields.Boolean(default=True)
     member_warning = fields.Text(compute="_compute_member_warning")
     image_1920 = fields.Image(
-        "Image", related="user_id.image_1920", max_width=1920, max_height=1920
+        related="user_id.image_1920",
+        string="Image",
+        max_width=1920,
+        max_height=1920,
     )
     image_128 = fields.Image(
-        "Image (128)", related="user_id.image_128", max_width=128, max_height=128
+        related="user_id.image_128",
+        string="Image (128)",
+        max_width=128,
+        max_height=128,
     )
-    name = fields.Char(string="Name", related="user_id.display_name")
-    email = fields.Char(string="Email", related="user_id.email")
-    phone_ids = fields.Many2many(string="Phone Numbers", related="user_id.phone_ids")
+    name = fields.Char(
+        related="user_id.display_name",
+        string="Name",
+    )
+    email = fields.Char(
+        related="user_id.email",
+        string="Email",
+    )
+    phone_ids = fields.Many2many(
+        related="user_id.phone_ids",
+        string="Phone Numbers",
+    )
     company_id = fields.Many2one(
-        "res.company", string="Company", related="user_id.company_id"
+        comodel_name="res.company",
+        related="user_id.company_id",
+        string="Company",
     )
 
     @api.constrains("crm_team_id", "user_id", "active")

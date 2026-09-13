@@ -7,8 +7,8 @@ class Website(models.Model):
     l10n_ar_website_sale_show_both_prices = fields.Boolean(
         string="Display Price without National Taxes",
         compute="_compute_l10n_ar_website_sale_show_both_prices",
-        readonly=False,
         store=True,
+        readonly=False,
     )
 
     @api.depends("company_id")

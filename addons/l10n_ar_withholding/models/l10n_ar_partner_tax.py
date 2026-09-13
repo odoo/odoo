@@ -18,18 +18,16 @@ class L10n_ArPartnerTax(models.Model):
     _check_company_domain = models.check_companies_domain_parent_of
 
     partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         required=True,
         ondelete="cascade",
         check_company=True,
     )
     tax_id = fields.Many2one(
-        "account.tax",
+        comodel_name="account.tax",
         required=True,
     )
-    company_ids = fields.Many2many(
-        related="tax_id.company_ids",
-    )
+    company_ids = fields.Many2many(related="tax_id.company_ids")
     from_date = fields.Date()
     to_date = fields.Date()
     ref = fields.Char(string="ref")

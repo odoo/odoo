@@ -4,11 +4,17 @@ from odoo import fields, models
 class SaleReport(models.Model):
     _inherit = "sale.report"
 
-    website_id = fields.Many2one("website", readonly=True)
-    is_abandoned_cart = fields.Boolean(string="Abandoned Cart", readonly=True)
+    website_id = fields.Many2one(
+        comodel_name="website",
+        readonly=True,
+    )
+    is_abandoned_cart = fields.Boolean(
+        string="Abandoned Cart",
+        readonly=True,
+    )
     public_categ_ids = fields.Many2many(
-        string="eCommerce Categories",
         related="product_tmpl_id.public_categ_ids",
+        string="eCommerce Categories",
     )
 
     def _get_fields_select(self):

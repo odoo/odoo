@@ -37,36 +37,22 @@ def group_by_journal(vals_list):
 class AccountJournal(models.Model):
     _inherit = "account.journal"
 
-    kanban_dashboard = fields.Text(
-        compute="_compute_kanban_dashboard",
-    )
-    kanban_dashboard_graph = fields.Text(
-        compute="_compute_kanban_dashboard_graph",
-    )
+    kanban_dashboard = fields.Text(compute="_compute_kanban_dashboard")
+    kanban_dashboard_graph = fields.Text(compute="_compute_kanban_dashboard_graph")
     show_on_dashboard = fields.Boolean(
         string="Show journal on dashboard",
         help="Whether this journal should be displayed on the dashboard or not",
         default=True,
     )
     color = fields.Integer(
-        "Color Index",
+        string="Color Index",
         default=0,
     )
-    current_statement_balance = fields.Monetary(
-        compute="_compute_bank_running_balance",
-    )
-    has_statement_lines = fields.Boolean(
-        compute="_compute_bank_running_balance",
-    )
-    has_posted_entries = fields.Boolean(
-        compute="_compute_entry_presence",
-    )
-    has_entries = fields.Boolean(
-        compute="_compute_entry_presence",
-    )
-    has_sequence_holes = fields.Boolean(
-        compute="_compute_has_sequence_holes",
-    )
+    current_statement_balance = fields.Monetary(compute="_compute_bank_running_balance")
+    has_statement_lines = fields.Boolean(compute="_compute_bank_running_balance")
+    has_posted_entries = fields.Boolean(compute="_compute_entry_presence")
+    has_entries = fields.Boolean(compute="_compute_entry_presence")
+    has_sequence_holes = fields.Boolean(compute="_compute_has_sequence_holes")
     has_unhashed_entries = fields.Boolean(
         string="Unhashed Entries",
         compute="_compute_has_unhashed_entries",

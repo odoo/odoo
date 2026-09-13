@@ -5,7 +5,9 @@ class MrpWorkorder(models.Model):
     _inherit = "mrp.workorder"
 
     wc_analytic_account_line_ids = fields.Many2many(
-        "account.analytic.line", "mrp_workorder_wc_analytic_rel", copy=False
+        comodel_name="account.analytic.line",
+        relation="mrp_workorder_wc_analytic_rel",
+        copy=False,
     )
 
     def _get_fields_analytic_line(self):

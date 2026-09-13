@@ -12,95 +12,99 @@ class ResConfigSettings(models.TransientModel):
 
     fiscalyear_last_day = fields.Integer(
         related="company_id.fiscalyear_last_day",
-        required=True,
         readonly=False,
+        required=True,
     )
     fiscalyear_last_month = fields.Selection(
         related="company_id.fiscalyear_last_month",
-        required=True,
         readonly=False,
+        required=True,
     )
     use_anglo_saxon = fields.Boolean(
-        string="Anglo-Saxon Accounting",
         related="company_id.anglo_saxon_accounting",
+        string="Anglo-Saxon Accounting",
         readonly=False,
     )
     invoicing_switch_threshold = fields.Date(
-        string="Invoicing Switch Threshold",
         related="company_id.invoicing_switch_threshold",
+        string="Invoicing Switch Threshold",
         readonly=False,
     )
     group_fiscal_year = fields.Boolean(
-        string="Fiscal Years", implied_group="account.group_fiscal_year"
+        string="Fiscal Years",
+        implied_group="account.group_fiscal_year",
     )
     predict_bill_product = fields.Boolean(
-        string="Predict Bill Product",
         related="company_id.predict_bill_product",
+        string="Predict Bill Product",
         readonly=False,
     )
 
     sign_invoice = fields.Boolean(
-        string="Authorized Signatory on invoice",
         related="company_id.sign_invoice",
+        string="Authorized Signatory on invoice",
         readonly=False,
     )
     signing_user = fields.Many2one(
         comodel_name="res.users",
-        string="Signature used to sign all the invoice",
-        readonly=False,
         related="company_id.signing_user",
+        string="Signature used to sign all the invoice",
         help="Select a user here to override every signature on invoice by this user's signature",
+        readonly=False,
     )
-    module_sign = fields.Boolean(string="Sign", compute="_compute_module_sign")
+    module_sign = fields.Boolean(
+        string="Sign",
+        compute="_compute_module_sign",
+    )
 
     deferred_expense_journal_id = fields.Many2one(
         comodel_name="account.journal",
+        related="company_id.deferred_expense_journal_id",
         help="Journal used for deferred entries",
         readonly=False,
-        related="company_id.deferred_expense_journal_id",
     )
     deferred_expense_account_id = fields.Many2one(
         comodel_name="account.account",
+        related="company_id.deferred_expense_account_id",
         help="Account used for deferred expenses",
         readonly=False,
-        related="company_id.deferred_expense_account_id",
     )
     generate_deferred_expense_entries_method = fields.Selection(
         related="company_id.generate_deferred_expense_entries_method",
+        help="Method used to generate deferred entries",
         readonly=False,
         required=True,
-        help="Method used to generate deferred entries",
     )
     deferred_expense_amount_computation_method = fields.Selection(
         related="company_id.deferred_expense_amount_computation_method",
+        help="Method used to compute the amount of deferred entries",
         readonly=False,
         required=True,
-        help="Method used to compute the amount of deferred entries",
     )
 
     deferred_revenue_journal_id = fields.Many2one(
         comodel_name="account.journal",
+        related="company_id.deferred_revenue_journal_id",
         help="Journal used for deferred entries",
         readonly=False,
-        related="company_id.deferred_revenue_journal_id",
     )
     deferred_revenue_account_id = fields.Many2one(
         comodel_name="account.account",
+        related="company_id.deferred_revenue_account_id",
         help="Account used for deferred revenues",
         readonly=False,
-        related="company_id.deferred_revenue_account_id",
     )
     generate_deferred_revenue_entries_method = fields.Selection(
         related="company_id.generate_deferred_revenue_entries_method",
+        help="Method used to generate deferred entries",
         readonly=False,
         required=True,
-        help="Method used to generate deferred entries",
     )
     deferred_revenue_amount_computation_method = fields.Selection(
         related="company_id.deferred_revenue_amount_computation_method",
+        help="Method used to compute the amount of deferred entries",
         readonly=False,
         required=True,
-        help="Method used to compute the amount of deferred entries",
     )
 
     module_account_auto_transfer = fields.Boolean(string="Enable Auto Transfer")

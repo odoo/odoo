@@ -9,15 +9,9 @@ class L10n_Vn_Edi_ViettelCancellation(models.TransientModel):
         comodel_name="account.move",
         string="Invoice to cancel",
     )
-    reason = fields.Char(
-        required=True,
-    )
-    agreement_document_name = fields.Char(
-        string="Agreement Name",
-    )
-    agreement_document_date = fields.Datetime(
-        string="Agreement Date",
-    )
+    reason = fields.Char(required=True)
+    agreement_document_name = fields.Char(string="Agreement Name")
+    agreement_document_date = fields.Datetime(string="Agreement Date")
 
     def button_request_cancel(self):
         self.invoice_id._l10n_vn_edi_cancel_invoice(

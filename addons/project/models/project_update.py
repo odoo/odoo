@@ -53,7 +53,11 @@ class ProjectUpdate(models.Model):
                 )
         return result
 
-    name = fields.Char("Title", required=True, tracking=True)
+    name = fields.Char(
+        string="Title",
+        required=True,
+        tracking=True,
+    )
     status = fields.Selection(
         selection=[
             ("on_track", "On Track"),
@@ -62,38 +66,52 @@ class ProjectUpdate(models.Model):
             ("on_hold", "On Hold"),
             ("done", "Complete"),
         ],
+        export_string_translation=False,
         required=True,
         tracking=True,
-        export_string_translation=False,
     )
-    color = fields.Integer(compute="_compute_color", export_string_translation=False)
+    color = fields.Integer(
+        export_string_translation=False,
+        compute="_compute_color",
+    )
     progress = fields.Integer(tracking=True)
     progress_percentage = fields.Float(
-        compute="_compute_progress_percentage", export_string_translation=False
+        export_string_translation=False,
+        compute="_compute_progress_percentage",
     )
     user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Author",
-        required=True,
         default=lambda self: self.env.user,
+        required=True,
     )
     description = fields.Html()
-    date = fields.Date(default=fields.Date.context_today, tracking=True)
+    date = fields.Date(
+        default=fields.Date.context_today,
+        tracking=True,
+    )
     project_id = fields.Many2one(
-        "project.project",
+        comodel_name="project.project",
+        export_string_translation=False,
+        index=True,
         required=True,
         domain=[("is_template", "=", False)],
-        index=True,
-        export_string_translation=False,
     )
     name_cropped = fields.Char(
-        compute="_compute_name_cropped", export_string_translation=False
-    )
-    task_count = fields.Integer(readonly=True, export_string_translation=False)
-    closed_task_count = fields.Integer(readonly=True, export_string_translation=False)
-    closed_task_percentage = fields.Integer(
-        compute="_compute_closed_task_percentage",
         export_string_translation=False,
+        compute="_compute_name_cropped",
+    )
+    task_count = fields.Integer(
+        export_string_translation=False,
+        readonly=True,
+    )
+    closed_task_count = fields.Integer(
+        export_string_translation=False,
+        readonly=True,
+    )
+    closed_task_percentage = fields.Integer(
+        export_string_translation=False,
+        compute="_compute_closed_task_percentage",
     )
     label_tasks = fields.Char(related="project_id.label_tasks")
 

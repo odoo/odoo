@@ -6,17 +6,21 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     l10n_in_ewaybill_ids = fields.One2many(
-        "l10n.in.ewaybill", "account_move_id", string="E-Waybill", readonly=True
+        comodel_name="l10n.in.ewaybill",
+        inverse_name="account_move_id",
+        string="E-Waybill",
+        readonly=True,
     )
     l10n_in_ewaybill_name = fields.Char(
-        "Indian Ewaybill Number", compute="_compute_l10n_in_ewaybill_details"
+        string="Indian Ewaybill Number",
+        compute="_compute_l10n_in_ewaybill_details",
     )
     l10n_in_ewaybill_expiry_date = fields.Datetime(
         compute="_compute_l10n_in_ewaybill_details"
     )
     l10n_in_ewaybill_feature_enabled = fields.Boolean(
-        string="E-Waybill Feature Enabled",
         related="company_id.l10n_in_ewaybill_feature",
+        string="E-Waybill Feature Enabled",
     )
 
     def _get_l10n_in_ewaybill_form_action(self):

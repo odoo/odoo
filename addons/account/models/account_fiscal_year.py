@@ -12,18 +12,18 @@ class AccountFiscalYear(models.Model):
     name = fields.Char(required=True)
     date_from = fields.Date(
         string="Start Date",
-        required=True,
         help="Start Date, included in the fiscal year.",
+        required=True,
     )
     date_to = fields.Date(
         string="End Date",
-        required=True,
         help="Ending Date, included in the fiscal year.",
+        required=True,
     )
     company_id = fields.Many2one(
-        "res.company",
-        required=True,
+        comodel_name="res.company",
         default=lambda self: self.env.company,
+        required=True,
     )
 
     @api.constrains("date_from", "date_to", "company_id")

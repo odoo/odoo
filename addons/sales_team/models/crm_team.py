@@ -13,57 +13,65 @@ class CrmTeam(models.Model):
     def _default_favorite_user_ids(self):
         return [(6, 0, [self.env.uid])]
 
-    name = fields.Char("Sales Team", required=True, translate=True)
+    name = fields.Char(
+        string="Sales Team",
+        translate=True,
+        required=True,
+    )
     sequence = fields.Integer(default=10)
     active = fields.Boolean(
-        default=True,
         help="If the active field is set to false, it will allow you to hide the Sales Team without removing it.",
+        default=True,
     )
-    company_id = fields.Many2one("res.company", index=True)
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        index=True,
+    )
     currency_id = fields.Many2one(
-        "res.currency",
-        string="Currency",
+        comodel_name="res.currency",
         related="company_id.currency_id",
+        string="Currency",
         readonly=True,
     )
     user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Team Leader",
-        check_company=True,
         domain=[("share", "!=", True)],
+        check_company=True,
     )
     is_membership_multi = fields.Boolean(
-        "Multiple Memberships Allowed",
-        compute="_compute_is_membership_multi",
+        string="Multiple Memberships Allowed",
         help="If True, users may belong to several sales teams. Otherwise membership is limited to a single sales team.",
+        compute="_compute_is_membership_multi",
     )
     member_ids = fields.Many2many(
-        "res.users",
+        comodel_name="res.users",
         string="Salespersons",
-        domain="['&', ('share', '=', False), ('company_ids', 'in', member_company_ids)]",
+        help="Users assigned to this team.",
         compute="_compute_member_ids",
         inverse="_inverse_member_ids",
         search="_search_member_ids",
-        help="Users assigned to this team.",
+        domain="['&', ('share', '=', False), ('company_ids', 'in', member_company_ids)]",
     )
     member_company_ids = fields.Many2many(
-        "res.company",
-        compute="_compute_member_company_ids",
+        comodel_name="res.company",
         help="UX: Limit to team company or all if no company",
+        compute="_compute_member_company_ids",
     )
     member_warning = fields.Text(
-        "Membership Issue Warning", compute="_compute_member_warning"
+        string="Membership Issue Warning",
+        compute="_compute_member_warning",
     )
     crm_team_member_ids = fields.One2many(
-        "crm.team.member",
-        "crm_team_id",
+        comodel_name="crm.team.member",
+        inverse_name="crm_team_id",
         string="Sales Team Members",
-        context={"active_test": True},
         help="Add members to automatically assign their documents to this sales team.",
+        context={"active_test": True},
     )
     crm_team_member_all_ids = fields.One2many(
-        "crm.team.member",
-        "crm_team_id",
+        comodel_name="crm.team.member",
+        inverse_name="crm_team_id",
         string="Sales Team Members (incl. inactive)",
         context={"active_test": False},
     )
@@ -81,7 +89,8 @@ class CrmTeam(models.Model):
         help="Favorite teams to display them in the dashboard and access them easily.",
     )
     dashboard_button_name = fields.Char(
-        string="Dashboard Button", compute="_compute_dashboard_button_name"
+        string="Dashboard Button",
+        compute="_compute_dashboard_button_name",
     )
 
     @api.constrains("company_id")

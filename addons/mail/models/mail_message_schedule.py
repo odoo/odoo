@@ -23,14 +23,18 @@ class MailMessageSchedule(models.Model):
     _rec_name = "mail_message_id"
 
     mail_message_id: MailMessage = fields.Many2one(
-        "mail.message", string="Message", ondelete="cascade", required=True, index=True
-    )
-    notification_parameters = fields.Text("Notification Parameter")
-    scheduled_datetime = fields.Datetime(
-        "Scheduled Send Date",
-        required=True,
+        comodel_name="mail.message",
+        string="Message",
         index=True,
+        required=True,
+        ondelete="cascade",
+    )
+    notification_parameters = fields.Text(string="Notification Parameter")
+    scheduled_datetime = fields.Datetime(
+        string="Scheduled Send Date",
         help="Datetime at which notification should be sent.",
+        index=True,
+        required=True,
     )
 
     @api.model_create_multi

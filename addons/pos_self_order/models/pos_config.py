@@ -32,30 +32,30 @@ class PosConfig(models.Model):
         return self.env["res.users"]
 
     status = fields.Selection(
-        [("inactive", "Inactive"), ("active", "Active")],
+        selection=[("inactive", "Inactive"), ("active", "Active")],
         compute="_compute_status",
         store=False,
     )
     self_ordering_url = fields.Char(compute="_compute_self_ordering_url")
     self_ordering_mode = fields.Selection(
-        [
+        selection=[
             ("nothing", "Disable"),
             ("consultation", "QR menu"),
             ("mobile", "QR menu + Ordering"),
             ("kiosk", "Kiosk"),
         ],
-        default="nothing",
         help="Choose the self ordering mode",
+        default="nothing",
         required=True,
     )
     self_ordering_service_mode = fields.Selection(
-        [("counter", "Pickup zone"), ("table", "Table")],
-        default="counter",
+        selection=[("counter", "Pickup zone"), ("table", "Table")],
         help="Choose the kiosk mode",
+        default="counter",
         required=True,
     )
     self_ordering_default_language_id = fields.Many2one(
-        "res.lang",
+        comodel_name="res.lang",
         string="Default Language",
         help="Default language for the kiosk mode",
         default=lambda self: self.env["res.lang"].search(
@@ -63,26 +63,26 @@ class PosConfig(models.Model):
         ),
     )
     self_ordering_available_language_ids = fields.Many2many(
-        "res.lang",
+        comodel_name="res.lang",
         string="Available Languages",
         help="Languages available for the kiosk mode",
         default=_self_order_kiosk_default_languages,
     )
     self_ordering_image_home_ids = fields.Many2many(
-        "ir.attachment",
+        comodel_name="ir.attachment",
         string="Add images",
         help="Image to display on the self order screen",
         bypass_search_access=True,
     )
     self_ordering_image_background_ids = fields.Many2many(
-        "ir.attachment",
+        comodel_name="ir.attachment",
+        relation="pos_self_order_background_rels",
         string="Set background image",
         help="Image to be displayed in the background",
-        relation="pos_self_order_background_rels",
         bypass_search_access=True,
     )
     self_ordering_default_user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Default User",
         help="Access rights of this user will be used when visiting self order website when no session is open.",
         default=_self_order_default_user,
@@ -90,8 +90,8 @@ class PosConfig(models.Model):
     self_ordering_pay_after = fields.Selection(
         selection=lambda self: self._selection_pay_after(),
         string="Pay After:",
-        default="meal",
         help="Choose when the customer will pay",
+        default="meal",
         required=True,
     )
     self_ordering_image_brand = fields.Image(
@@ -104,7 +104,10 @@ class PosConfig(models.Model):
         string="Self Order Kiosk Image Brand Name",
         help="Name of the image to display on the self order screen",
     )
-    has_paper = fields.Boolean("Has paper", default=True)
+    has_paper = fields.Boolean(
+        string="Has paper",
+        default=True,
+    )
 
     def _update_access_token(self):
         self.access_token = uuid.uuid4().hex[:16]

@@ -61,12 +61,17 @@ class IrModelFields(models.Model):
     _rec_name = "field_description"
     _allow_sudo_commands = False
 
-    name = fields.Char(string="Field Name", default="x_", required=True, index=True)
+    name = fields.Char(
+        string="Field Name",
+        default="x_",
+        index=True,
+        required=True,
+    )
     model = fields.Char(
         string="Model Name",
-        required=True,
-        index=True,
         help="The technical name of the model this field belongs to",
+        index=True,
+        required=True,
     )
     relation = fields.Char(
         string="Related Model",
@@ -76,25 +81,33 @@ class IrModelFields(models.Model):
         help="For one2many fields, the field on the target model that implement the opposite many2one relationship"
     )
     relation_field_id = fields.Many2one(
-        "ir.model.fields",
+        comodel_name="ir.model.fields",
+        string="Relation field",
         compute="_compute_relation_field_id",
         store=True,
         ondelete="cascade",
-        string="Relation field",
     )
     model_id = fields.Many2one(
-        "ir.model",
-        required=True,
-        index=True,
-        ondelete="cascade",
+        comodel_name="ir.model",
         help="The model this field belongs to",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     field_description = fields.Char(
-        string="Field Label", default="", required=True, translate=True
+        string="Field Label",
+        translate=True,
+        default="",
+        required=True,
     )
-    help = fields.Text(string="Field Help", translate=True)
+    help = fields.Text(
+        string="Field Help",
+        translate=True,
+    )
     ttype = fields.Selection(
-        selection=_selection_field_types, string="Field Type", required=True
+        selection=_selection_field_types,
+        string="Field Type",
+        required=True,
     )
     selection = fields.Char(
         string="Selection Options (Deprecated)",
@@ -102,23 +115,23 @@ class IrModelFields(models.Model):
         inverse="_inverse_selection",
     )
     selection_ids = fields.One2many(
-        "ir.model.fields.selection",
-        "field_id",
+        comodel_name="ir.model.fields.selection",
+        inverse_name="field_id",
         string="Selection Options",
         copy=True,
     )
     copied = fields.Boolean(
+        help="Whether the value is copied when duplicating a record.",
         compute="_compute_copied",
         store=True,
         readonly=False,
-        help="Whether the value is copied when duplicating a record.",
     )
     related = fields.Char(
         string="Related Field Definition",
         help="The corresponding related field, if any. This must be a dot-separated list of field names.",
     )
     related_field_id = fields.Many2one(
-        "ir.model.fields",
+        comodel_name="ir.model.fields",
         compute="_compute_related_field_id",
         store=True,
         ondelete="cascade",
@@ -127,7 +140,7 @@ class IrModelFields(models.Model):
     readonly = fields.Boolean()
     index = fields.Boolean(string="Indexed")
     translate = fields.Selection(
-        [
+        selection=[
             ("standard", "Translate as a whole"),
             ("html_translate", "Translate HTML terms"),
             ("xml_translate", "Translate XML terms"),
@@ -141,33 +154,33 @@ class IrModelFields(models.Model):
     )
     size = fields.Integer()
     state = fields.Selection(
-        [("manual", "Custom Field"), ("base", "Base Field")],
+        selection=[("manual", "Custom Field"), ("base", "Base Field")],
         string="Type",
         default="manual",
-        required=True,
-        readonly=True,
         index=True,
+        readonly=True,
+        required=True,
     )
     on_delete = fields.Selection(
-        [
+        selection=[
             ("cascade", "Cascade"),
             ("set null", "Set NULL"),
             ("restrict", "Restrict"),
         ],
-        default="set null",
         help="On delete property for many2one fields",
+        default="set null",
     )
     domain = fields.Char(
-        default="[]",
         help="The optional domain to restrict possible values for relationship fields, "
         "specified as a Python expression defining a list of triplets. "
         "For example: [('color','=','red')]",
+        default="[]",
     )
     groups = fields.Many2many(
-        "res.groups",
-        "ir_model_fields_group_rel",
-        "field_id",
-        "group_id",
+        comodel_name="res.groups",
+        relation="ir_model_fields_group_rel",
+        column1="field_id",
+        column2="group_id",
         string="Restricted to Groups",
         help="Groups allowed to read and write this field.  Only honoured for "
         "manual (custom) fields: a base field's restriction is declared in "
@@ -184,9 +197,9 @@ class IrModelFields(models.Model):
     )
     selectable = fields.Boolean(default=True)
     modules = fields.Char(
-        compute="_compute_modules",
         string="In Apps",
         help="List of modules in which the field is defined",
+        compute="_compute_modules",
     )
     relation_table = fields.Char(
         help="Used for custom many2many fields to define a custom relation table name"
@@ -212,25 +225,45 @@ class IrModelFields(models.Model):
     )
     store = fields.Boolean(
         string="Stored",
-        default=True,
         help="Whether the value is stored in the database.",
+        default=True,
     )
     currency_field = fields.Char(
         string="Currency field",
         help="Name of the Many2one field holding the res.currency",
     )
-    sanitize = fields.Boolean(string="Sanitize HTML", default=True)
+    sanitize = fields.Boolean(
+        string="Sanitize HTML",
+        default=True,
+    )
     sanitize_overridable = fields.Boolean(
-        string="Sanitize HTML overridable", default=False
+        string="Sanitize HTML overridable",
+        default=False,
     )
-    sanitize_tags = fields.Boolean(string="Sanitize HTML Tags", default=True)
+    sanitize_tags = fields.Boolean(
+        string="Sanitize HTML Tags",
+        default=True,
+    )
     sanitize_attributes = fields.Boolean(
-        string="Sanitize HTML Attributes", default=True
+        string="Sanitize HTML Attributes",
+        default=True,
     )
-    sanitize_style = fields.Boolean(string="Sanitize HTML Style", default=False)
-    sanitize_form = fields.Boolean(string="Sanitize HTML Form", default=True)
-    strip_style = fields.Boolean(string="Strip Style Attribute", default=False)
-    strip_classes = fields.Boolean(string="Strip Class Attribute", default=False)
+    sanitize_style = fields.Boolean(
+        string="Sanitize HTML Style",
+        default=False,
+    )
+    sanitize_form = fields.Boolean(
+        string="Sanitize HTML Form",
+        default=True,
+    )
+    strip_style = fields.Boolean(
+        string="Strip Style Attribute",
+        default=False,
+    )
+    strip_classes = fields.Boolean(
+        string="Strip Class Attribute",
+        default=False,
+    )
 
     @api.depends("state", "relation", "relation_field")
     def _compute_relation_field_id(self) -> None:

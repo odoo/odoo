@@ -5,7 +5,8 @@ class HrDepartment(models.Model):
     _inherit = "hr.department"
 
     expenses_to_approve_count = fields.Integer(
-        compute="_compute_expenses_to_approve_count", string="Expenses to Approve"
+        string="Expenses to Approve",
+        compute="_compute_expenses_to_approve_count",
     )
 
     def _compute_expenses_to_approve_count(self):

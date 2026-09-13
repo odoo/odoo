@@ -12,21 +12,33 @@ class ProjectSprint(models.Model):
     _order = "date_start desc, id desc"
     _inherit = ["mixin.mail.thread"]
 
-    name = fields.Char("Sprint Name", required=True, tracking=True)
+    name = fields.Char(
+        string="Sprint Name",
+        required=True,
+        tracking=True,
+    )
     project_id = fields.Many2one(
-        "project.project",
+        comodel_name="project.project",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
-    date_start = fields.Date("Start Date", required=True, tracking=True)
-    date_end = fields.Date("End Date", required=True, tracking=True)
+    date_start = fields.Date(
+        string="Start Date",
+        required=True,
+        tracking=True,
+    )
+    date_end = fields.Date(
+        string="End Date",
+        required=True,
+        tracking=True,
+    )
     goal = fields.Text(
-        "Sprint Goal",
+        string="Sprint Goal",
         help="One-sentence description of what this sprint aims to achieve.",
     )
     state = fields.Selection(
-        [
+        selection=[
             ("planning", "Planning"),
             ("active", "Active"),
             ("review", "Review"),
@@ -37,64 +49,64 @@ class ProjectSprint(models.Model):
         tracking=True,
     )
     capacity_hours = fields.Float(
-        "Team Capacity (hours)",
+        string="Team Capacity (hours)",
         help="Total team hours available for this sprint.",
     )
     task_ids = fields.One2many(
-        "project.task",
-        "sprint_id",
+        comodel_name="project.task",
+        inverse_name="sprint_id",
         string="Sprint Tasks",
     )
     task_count = fields.Integer(
-        "Tasks",
-        compute="_compute_task_metrics",
+        string="Tasks",
         export_string_translation=False,
+        compute="_compute_task_metrics",
     )
     completed_count = fields.Integer(
-        "Completed",
-        compute="_compute_task_metrics",
+        string="Completed",
         export_string_translation=False,
+        compute="_compute_task_metrics",
     )
     completion_pct = fields.Float(
-        "Completion %",
-        compute="_compute_task_metrics",
+        string="Completion %",
         export_string_translation=False,
+        compute="_compute_task_metrics",
     )
     committed_hours = fields.Float(
-        compute="_compute_task_metrics",
         help="Sum of planned_hours for all sprint tasks (PMI scope baseline).",
         export_string_translation=False,
+        compute="_compute_task_metrics",
     )
     velocity = fields.Float(
-        "Velocity (hours)",
-        compute="_compute_task_metrics",
+        string="Velocity (hours)",
         help="Sum of planned_hours for completed sprint tasks.",
         export_string_translation=False,
+        compute="_compute_task_metrics",
     )
     story_points_committed = fields.Float(
-        compute="_compute_task_metrics",
         export_string_translation=False,
+        compute="_compute_task_metrics",
     )
     story_points_completed = fields.Float(
-        compute="_compute_task_metrics",
         export_string_translation=False,
+        compute="_compute_task_metrics",
     )
     carried_over_count = fields.Integer(
-        "Carried Over",
-        readonly=True,
-        copy=False,
+        string="Carried Over",
         help="Tasks still unfinished when this sprint closed, returned to the "
         "backlog. Counted in the sprint's commitment, not in its velocity.",
+        copy=False,
+        readonly=True,
     )
     carried_over_hours = fields.Float(
-        readonly=True,
-        copy=False,
         export_string_translation=False,
+        copy=False,
+        readonly=True,
     )
     carried_over_story_points = fields.Float(
-        readonly=True,
-        copy=False,
         export_string_translation=False,
+        copy=False,
+        readonly=True,
     )
 
     _sprint_date_check = models.Constraint(

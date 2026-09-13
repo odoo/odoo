@@ -108,22 +108,38 @@ class IrModuleCategory(models.Model):
     _order = "sequence, name, id"
     _allow_sudo_commands = False
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
     parent_id = fields.Many2one(
-        "ir.module.category", string="Parent Application", index=True
+        comodel_name="ir.module.category",
+        string="Parent Application",
+        index=True,
     )
     child_ids = fields.One2many(
-        "ir.module.category", "parent_id", string="Child Applications"
+        comodel_name="ir.module.category",
+        inverse_name="parent_id",
+        string="Child Applications",
     )
-    module_ids = fields.One2many("ir.module.module", "category_id", string="Modules")
+    module_ids = fields.One2many(
+        comodel_name="ir.module.module",
+        inverse_name="category_id",
+        string="Modules",
+    )
     privilege_ids = fields.One2many(
-        "res.groups.privilege", "category_id", string="Privileges"
+        comodel_name="res.groups.privilege",
+        inverse_name="category_id",
+        string="Privileges",
     )
     description = fields.Text(translate=True)
     sequence = fields.Integer()
     visible = fields.Boolean(default=True)
     exclusive = fields.Boolean()
-    xml_id = fields.Char(string="External ID", compute="_compute_xml_id")
+    xml_id = fields.Char(
+        string="External ID",
+        compute="_compute_xml_id",
+    )
 
     def _compute_xml_id(self) -> None:
         xml_ids = defaultdict(list)
@@ -191,13 +207,32 @@ class IrModuleModule(models.Model):
     _order = "application desc,sequence,name"
     _allow_sudo_commands = False
 
-    name = fields.Char("Technical Name", readonly=True, required=True)
-    category_id = fields.Many2one("ir.module.category", readonly=True, index=True)
-    shortdesc = fields.Char("Module Name", readonly=True, translate=True)
-    summary = fields.Char(readonly=True, translate=True)
-    description = fields.Text(readonly=True, translate=True)
+    name = fields.Char(
+        string="Technical Name",
+        readonly=True,
+        required=True,
+    )
+    category_id = fields.Many2one(
+        comodel_name="ir.module.category",
+        index=True,
+        readonly=True,
+    )
+    shortdesc = fields.Char(
+        string="Module Name",
+        translate=True,
+        readonly=True,
+    )
+    summary = fields.Char(
+        translate=True,
+        readonly=True,
+    )
+    description = fields.Text(
+        translate=True,
+        readonly=True,
+    )
     description_html = fields.Html(
-        "Description HTML", compute="_compute_description_html"
+        string="Description HTML",
+        compute="_compute_description_html",
     )
     author = fields.Char(readonly=True)
     maintainer = fields.Char(readonly=True)
@@ -205,41 +240,54 @@ class IrModuleModule(models.Model):
     website = fields.Char(readonly=True)
 
     manifest_version = fields.Char(compute="_compute_manifest_version")
-    db_version = fields.Char("Installed Version", readonly=True)
+    db_version = fields.Char(
+        string="Installed Version",
+        readonly=True,
+    )
     published_version = fields.Char(readonly=True)
 
-    url = fields.Char("URL", readonly=True)
+    url = fields.Char(
+        string="URL",
+        readonly=True,
+    )
     sequence = fields.Integer(default=100)
     dependencies_id = fields.One2many(
-        "ir.module.module.dependency",
-        "module_id",
+        comodel_name="ir.module.module.dependency",
+        inverse_name="module_id",
         readonly=True,
     )
     country_ids = fields.Many2many(
-        "res.country", "module_country", "module_id", "country_id"
+        comodel_name="res.country",
+        relation="module_country",
+        column1="module_id",
+        column2="country_id",
     )
     exclusion_ids = fields.One2many(
-        "ir.module.module.exclusion",
-        "module_id",
+        comodel_name="ir.module.module.exclusion",
+        inverse_name="module_id",
         string="Exclusions",
         readonly=True,
     )
     auto_install = fields.Boolean(
-        "Automatic Installation",
+        string="Automatic Installation",
         help="An auto-installable module is installed by the system as soon as "
         "the dependencies it names as triggers are being installed, provided "
         "every one of its dependencies can be satisfied.",
     )
     state = fields.Selection(
-        STATES,
+        selection=STATES,
         string="Status",
         default="uninstallable",
-        readonly=True,
         index=True,
+        readonly=True,
     )
-    demo = fields.Boolean("Demo Data", default=False, readonly=True)
+    demo = fields.Boolean(
+        string="Demo Data",
+        default=False,
+        readonly=True,
+    )
     license = fields.Selection(
-        [
+        selection=[
             ("GPL-2", "GPL Version 2"),
             ("GPL-2 or any later version", "GPL-2 or later version"),
             ("GPL-3", "GPL Version 3"),
@@ -254,19 +302,41 @@ class IrModuleModule(models.Model):
         default="LGPL-3",
         readonly=True,
     )
-    menus_by_module = fields.Text(string="Menus", compute="_compute_records_by_module")
-    reports_by_module = fields.Text(
-        string="Reports", compute="_compute_records_by_module"
+    menus_by_module = fields.Text(
+        string="Menus",
+        compute="_compute_records_by_module",
     )
-    views_by_module = fields.Text(string="Views", compute="_compute_records_by_module")
+    reports_by_module = fields.Text(
+        string="Reports",
+        compute="_compute_records_by_module",
+    )
+    views_by_module = fields.Text(
+        string="Views",
+        compute="_compute_records_by_module",
+    )
     application = fields.Boolean(readonly=True)
-    icon = fields.Char("Icon URL")
-    icon_image = fields.Binary(string="Icon", compute="_compute_icon_display")
-    icon_flag = fields.Char(string="Flag", compute="_compute_icon_display")
-    to_buy = fields.Boolean("Odoo Enterprise Module", default=False)
+    icon = fields.Char(string="Icon URL")
+    icon_image = fields.Binary(
+        string="Icon",
+        compute="_compute_icon_display",
+    )
+    icon_flag = fields.Char(
+        string="Flag",
+        compute="_compute_icon_display",
+    )
+    to_buy = fields.Boolean(
+        string="Odoo Enterprise Module",
+        default=False,
+    )
     has_iap = fields.Boolean(compute="_compute_has_iap")
-    data_file_checksums = fields.Json(readonly=True, prefetch=False)
-    content_checksum = fields.Char(readonly=True, prefetch=False)
+    data_file_checksums = fields.Json(
+        readonly=True,
+        prefetch=False,
+    )
+    content_checksum = fields.Char(
+        readonly=True,
+        prefetch=False,
+    )
 
     _name_uniq = models.Constraint(
         "UNIQUE (name)",

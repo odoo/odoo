@@ -13,9 +13,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
         help="Only timesheets not yet invoiced (and validated, if applicable) from this period will be invoiced. If the period is not indicated, all timesheets not yet invoiced (and validated, if applicable) will be invoiced without distinction.",
     )
     invoicing_timesheet_enabled = fields.Boolean(
+        export_string_translation=False,
         compute="_compute_invoicing_timesheet_enabled",
         store=True,
-        export_string_translation=False,
     )
 
     @api.depends("sale_order_ids")

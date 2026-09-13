@@ -9,27 +9,30 @@ class MicrosoftCalendarAccountReset(models.TransientModel):
     _name = "microsoft.calendar.account.reset"
     _description = "Microsoft Calendar Account Reset"
 
-    user_id = fields.Many2one("res.users", required=True)
+    user_id = fields.Many2one(
+        comodel_name="res.users",
+        required=True,
+    )
     delete_policy = fields.Selection(
-        [
+        selection=[
             ("dont_delete", "Leave them untouched"),
             ("delete_microsoft", "Delete from the current Microsoft Calendar account"),
             ("delete_odoo", "Delete from Odoo"),
             ("delete_both", "Delete from both"),
         ],
         string="User's Existing Events",
-        required=True,
-        default="dont_delete",
         help="This will only affect events for which the user is the owner",
+        default="dont_delete",
+        required=True,
     )
     sync_policy = fields.Selection(
-        [
+        selection=[
             ("new", "Synchronize only new events"),
             ("all", "Synchronize all existing events"),
         ],
         string="Next Synchronization",
-        required=True,
         default="new",
+        required=True,
     )
 
     def reset_account(self):

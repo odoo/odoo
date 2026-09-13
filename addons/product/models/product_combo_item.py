@@ -11,13 +11,13 @@ class ProductComboItem(models.Model):
         comodel_name="product.product",
         string="Options",
         required=True,
-        check_company=True,
         domain=[("type", "!=", "combo")],
         ondelete="restrict",
+        check_company=True,
     )
     currency_id = fields.Many2one(
-        related="product_id.currency_id",
         comodel_name="res.currency",
+        related="product_id.currency_id",
     )
     lst_price = fields.Float(
         related="product_id.lst_price",
@@ -26,14 +26,14 @@ class ProductComboItem(models.Model):
     )
     combo_id = fields.Many2one(
         comodel_name="product.combo",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
     company_id = fields.Many2one(
         related="combo_id.company_id",
-        store=True,
         precompute=True,
+        store=True,
     )
     extra_price = fields.Float(
         min_display_digits="Product Price",

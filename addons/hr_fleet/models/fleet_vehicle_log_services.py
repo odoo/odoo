@@ -5,11 +5,11 @@ class FleetVehicleLogServices(models.Model):
     _inherit = "fleet.vehicle.log.services"
 
     purchaser_employee_id = fields.Many2one(
-        "hr.employee",
+        comodel_name="hr.employee",
         string="Driver (Employee)",
         compute="_compute_purchaser_employee_id",
-        readonly=False,
         store=True,
+        readonly=False,
     )
 
     @api.depends("vehicle_id", "purchaser_employee_id")

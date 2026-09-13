@@ -36,55 +36,65 @@ class ResUsers(models.Model):
     _inherit = "res.users"
 
     role_ids: ResRole = fields.Many2many(
-        "res.role",
+        comodel_name="res.role",
         relation="res_role_res_users_rel",
         string="User Roles",
         help="Users are notified whenever one of their roles is @-mentioned in a conversation.",
     )
     can_edit_role = fields.Boolean(compute="_compute_can_edit_role")
     notification_type = fields.Selection(
-        [("email", "By Emails"), ("inbox", "In Odoo")],
-        "Notification",
-        required=True,
-        compute="_compute_notification_type",
-        inverse="_inverse_notification_type",
-        store=True,
-        precompute=True,
+        selection=[("email", "By Emails"), ("inbox", "In Odoo")],
+        string="Notification",
         help="Policy on how to handle Chatter notifications:\n"
         "- By Emails: notifications are sent to your email address\n"
         "- In Odoo: notifications appear in your Odoo Inbox",
+        compute="_compute_notification_type",
+        inverse="_inverse_notification_type",
+        precompute=True,
+        store=True,
+        required=True,
     )
     presence_ids: MailPresence = fields.One2many(
-        "mail.presence", "user_id", groups="base.group_system"
+        comodel_name="mail.presence",
+        inverse_name="user_id",
+        groups="base.group_system",
     )
     out_of_office_from = fields.Datetime()
     out_of_office_to = fields.Datetime()
-    out_of_office_message = fields.Html("Vacation Responder")
+    out_of_office_message = fields.Html(string="Vacation Responder")
     is_out_of_office = fields.Boolean(
-        "Out of Office", compute="_compute_is_out_of_office"
+        string="Out of Office",
+        compute="_compute_is_out_of_office",
     )
     im_status = fields.Char(
-        "IM Status", compute="_compute_im_status", compute_sudo=True
+        string="IM Status",
+        compute="_compute_im_status",
+        compute_sudo=True,
     )
     manual_im_status = fields.Selection(
-        [("away", "Away"), ("busy", "Do Not Disturb"), ("offline", "Offline")],
+        selection=[
+            ("away", "Away"),
+            ("busy", "Do Not Disturb"),
+            ("offline", "Offline"),
+        ],
         string="IM status manually set by the user",
     )
 
     outgoing_mail_server_id: IrMail_Server = fields.Many2one(
-        "ir.mail_server",
+        comodel_name="ir.mail_server",
         compute="_compute_outgoing_mail_server",
         groups="base.group_user",
     )
     outgoing_mail_server_type = fields.Selection(
-        [("default", "Default")],
+        selection=[("default", "Default")],
         compute="_compute_outgoing_mail_server",
-        required=True,
         default="default",
+        required=True,
         groups="base.group_user",
     )
     has_external_mail_server = fields.Boolean(
-        compute="_compute_has_external_mail_server", groups="base.group_user"
+        compute="_compute_has_external_mail_server",
+        groups="base.group_user",
     )
 
     _notification_type = models.Constraint(

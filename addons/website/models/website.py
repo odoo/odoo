@@ -87,9 +87,15 @@ class Website(models.Model):
         def_lang_id = self.env["res.lang"]._get_data(code=lang_code).id
         return def_lang_id or self._get_active_lang_ids()[0]
 
-    name = fields.Char("Website Name", required=True)
+    name = fields.Char(
+        string="Website Name",
+        required=True,
+    )
     sequence = fields.Integer(default=10)
-    domain = fields.Char("Website Domain", help="E.g. https://www.mydomain.com")
+    domain = fields.Char(
+        string="Website Domain",
+        help="E.g. https://www.mydomain.com",
+    )
     domain_punycode = fields.Char(
         string="Punycode Domain",
         compute="_compute_domain_punycode",
@@ -97,30 +103,33 @@ class Website(models.Model):
         readonly=True,
     )
     company_id = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
         default=lambda self: self.env.company,
         required=True,
     )
     language_ids = fields.Many2many(
-        "res.lang",
-        "website_lang_rel",
-        "website_id",
-        "lang_id",
+        comodel_name="res.lang",
+        relation="website_lang_rel",
+        column1="website_id",
+        column2="lang_id",
         string="Languages",
         default=_default_language_ids,
         required=True,
     )
-    language_count = fields.Count("language_ids", "Number of languages")
+    language_count = fields.Count(
+        count_of="language_ids",
+        string="Number of languages",
+    )
     default_lang_id = fields.Many2one(
-        "res.lang",
+        comodel_name="res.lang",
         string="Default Language",
         default=_default_default_lang_id,
         required=True,
     )
     auto_redirect_lang = fields.Boolean(
-        "Autoredirect Language",
-        default=True,
+        string="Autoredirect Language",
         help="Should users be redirected to their browser's language",
+        default=True,
     )
     cookies_bar = fields.Boolean(
         help="Display a customizable cookies bar on your website."
@@ -129,17 +138,17 @@ class Website(models.Model):
         help="True if configurator has been completed or ignored"
     )
     block_third_party_domains = fields.Boolean(
-        "Block 3rd-party domains",
+        string="Block 3rd-party domains",
         help="Block 3rd-party domains that may track users (YouTube, Google Maps, etc.).",
         default=True,
     )
     custom_blocked_third_party_domains = fields.Text(
-        "User list of blocked 3rd-party domains",
-        groups="website.group_website_designer",
+        string="User list of blocked 3rd-party domains",
         translate=False,
+        groups="website.group_website_designer",
     )
     blocked_third_party_domains = fields.Text(
-        "List of blocked 3rd-party domains",
+        string="List of blocked 3rd-party domains",
         compute="_compute_blocked_third_party_domains",
     )
 
@@ -151,38 +160,49 @@ class Website(models.Model):
             return base64.b64encode(f.read())
 
     logo = fields.Binary(
-        "Website Logo", default=_default_logo, help="Display this logo on the website."
+        string="Website Logo",
+        help="Display this logo on the website.",
+        default=_default_logo,
     )
     social_twitter = fields.Char(
-        "X Account", default=lambda self: self._default_social("twitter")
+        string="X Account",
+        default=lambda self: self._default_social("twitter"),
     )
     social_facebook = fields.Char(
-        "Facebook Account", default=lambda self: self._default_social("facebook")
+        string="Facebook Account",
+        default=lambda self: self._default_social("facebook"),
     )
     social_github = fields.Char(
-        "GitHub Account", default=lambda self: self._default_social("github")
+        string="GitHub Account",
+        default=lambda self: self._default_social("github"),
     )
     social_linkedin = fields.Char(
-        "LinkedIn Account", default=lambda self: self._default_social("linkedin")
+        string="LinkedIn Account",
+        default=lambda self: self._default_social("linkedin"),
     )
     social_youtube = fields.Char(
-        "Youtube Account", default=lambda self: self._default_social("youtube")
+        string="Youtube Account",
+        default=lambda self: self._default_social("youtube"),
     )
     social_instagram = fields.Char(
-        "Instagram Account", default=lambda self: self._default_social("instagram")
+        string="Instagram Account",
+        default=lambda self: self._default_social("instagram"),
     )
     social_tiktok = fields.Char(
-        "TikTok Account", default=lambda self: self._default_social("tiktok")
+        string="TikTok Account",
+        default=lambda self: self._default_social("tiktok"),
     )
     social_discord = fields.Char(
-        "Discord Account", default=lambda self: self._default_social("discord")
+        string="Discord Account",
+        default=lambda self: self._default_social("discord"),
     )
     social_default_image = fields.Binary(
         string="Default Social Share Image",
         help="If set, replaces the website logo as the default social share image.",
     )
     has_social_default_image = fields.Boolean(
-        compute="_compute_has_social_default_image", store=True
+        compute="_compute_has_social_default_image",
+        store=True,
     )
 
     google_analytics_key = fields.Char()
@@ -190,34 +210,51 @@ class Website(models.Model):
         help="Google key, or Enable to access first reply"
     )
 
-    google_maps_api_key = fields.Char("Google Maps API Key")
+    google_maps_api_key = fields.Char(string="Google Maps API Key")
 
     plausible_shared_key = fields.Char()
     plausible_site = fields.Char()
 
-    user_id = fields.Many2one("res.users", string="Public User", required=True)
-    cdn_activated = fields.Boolean("Content Delivery Network (CDN)")
-    cdn_url = fields.Char("CDN Base URL", default="")
+    user_id = fields.Many2one(
+        comodel_name="res.users",
+        string="Public User",
+        required=True,
+    )
+    cdn_activated = fields.Boolean(string="Content Delivery Network (CDN)")
+    cdn_url = fields.Char(
+        string="CDN Base URL",
+        default="",
+    )
     cdn_filters = fields.Text(
-        "CDN Filters",
-        default=lambda s: "\n".join(DEFAULT_CDN_FILTERS),
+        string="CDN Filters",
         help="URL matching those filters will be rewritten using the CDN Base URL",
+        default=lambda s: "\n".join(DEFAULT_CDN_FILTERS),
     )
     partner_id = fields.Many2one(
-        related="user_id.partner_id", string="Public Partner", readonly=False
+        related="user_id.partner_id",
+        string="Public Partner",
+        readonly=False,
     )
     menu_id = fields.Many2one(
-        "website.menu", compute="_compute_menu_id", string="Main Menu"
+        comodel_name="website.menu",
+        string="Main Menu",
+        compute="_compute_menu_id",
     )
     homepage_url = fields.Char(help="E.g. /contactus or /shop")
-    custom_code_head = fields.Html("Custom <head> code", sanitize=False)
-    custom_code_footer = fields.Html("Custom end of <body> code", sanitize=False)
+    custom_code_head = fields.Html(
+        string="Custom <head> code",
+        sanitize=False,
+    )
+    custom_code_footer = fields.Html(
+        string="Custom end of <body> code",
+        sanitize=False,
+    )
 
     robots_txt = fields.Html(
-        "Robots.txt",
+        string="Robots.txt",
         translate=False,
-        groups="website.group_website_designer",
         sanitize=False,
+        groups="website.group_website_designer",
     )
 
     def _default_favicon(self):
@@ -229,13 +266,16 @@ class Website(models.Model):
         help="This field holds the image used to display a favicon on the website.",
         default=_default_favicon,
     )
-    theme_id = fields.Many2one("ir.module.module", help="Installed theme")
+    theme_id = fields.Many2one(
+        comodel_name="ir.module.module",
+        help="Installed theme",
+    )
 
     specific_user_account = fields.Boolean(
-        help="If True, new accounts will be associated to the current website",
+        help="If True, new accounts will be associated to the current website"
     )
     auth_signup_uninvited = fields.Selection(
-        [
+        selection=[
             ("b2b", "On invitation"),
             ("b2c", "Free sign up"),
         ],

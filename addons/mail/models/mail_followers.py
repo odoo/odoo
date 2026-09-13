@@ -168,25 +168,31 @@ class MailFollowers(models.Model):
     _log_access = False
     _description = "Document Followers"
 
-    res_model = fields.Char("Related Document Model Name", required=True)
-    res_id = fields.Many2oneReference(
-        "Related Document ID",
-        index=True,
-        help="Id of the followed resource",
-        model_field="res_model",
-    )
-    partner_id: ResPartner = fields.Many2one(
-        "res.partner",
-        string="Related Partner",
-        index=True,
-        ondelete="cascade",
+    res_model = fields.Char(
+        string="Related Document Model Name",
         required=True,
     )
+    res_id = fields.Many2oneReference(
+        model_field="res_model",
+        string="Related Document ID",
+        help="Id of the followed resource",
+        index=True,
+    )
+    partner_id: ResPartner = fields.Many2one(
+        comodel_name="res.partner",
+        string="Related Partner",
+        index=True,
+        required=True,
+        ondelete="cascade",
+    )
     subtype_ids: MailMessageSubtype = fields.Many2many(
-        "mail.message.subtype",
+        comodel_name="mail.message.subtype",
         help="Message subtypes followed, meaning subtypes that will be pushed onto the user's Wall.",
     )
-    is_active = fields.Boolean("Is Active", related="partner_id.active")
+    is_active = fields.Boolean(
+        related="partner_id.active",
+        string="Is Active",
+    )
 
     _mail_followers_res_partner_res_model_id_uniq = models.Constraint(
         "unique nulls not distinct (res_model,res_id,partner_id)",

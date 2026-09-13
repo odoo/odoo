@@ -5,15 +5,20 @@ class ProjectUpdate(models.Model):
     _inherit = "project.update"
 
     display_timesheet_stats = fields.Boolean(
-        compute="_compute_display_timesheet_stats", export_string_translation=False
+        export_string_translation=False,
+        compute="_compute_display_timesheet_stats",
     )
     allocated_time = fields.Integer(readonly=True)
     timesheet_time = fields.Integer(readonly=True)
     timesheet_percentage = fields.Integer(
-        compute="_compute_timesheet_percentage", export_string_translation=False
+        export_string_translation=False,
+        compute="_compute_timesheet_percentage",
     )
     uom_id = fields.Many2one(
-        "uom.uom", "Unit", readonly=True, export_string_translation=False
+        comodel_name="uom.uom",
+        string="Unit",
+        export_string_translation=False,
+        readonly=True,
     )
 
     def _compute_timesheet_percentage(self):

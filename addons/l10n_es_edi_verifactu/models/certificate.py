@@ -7,5 +7,5 @@ class Certificate(models.Model):
     scope = fields.Selection(
         selection_add=[
             ("verifactu", "Veri*Factu"),
-        ],
+        ]
     )

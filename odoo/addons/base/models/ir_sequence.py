@@ -165,45 +165,56 @@ class IrSequence(models.Model):
     name = fields.Char(required=True)
     code = fields.Char(string="Sequence Code")
     implementation = fields.Selection(
-        [("standard", "Standard"), ("no_gap", "No gap")],
-        required=True,
-        default="standard",
+        selection=[("standard", "Standard"), ("no_gap", "No gap")],
         help="While assigning a sequence number to a record, the 'no gap' sequence implementation ensures that each previous sequence number has been assigned already. "
         "While this sequence implementation will not skip any sequence number upon assignment, there can still be gaps in the sequence if records are deleted. "
         "The 'no gap' implementation is slower than the standard one.",
+        default="standard",
+        required=True,
     )
     active = fields.Boolean(default=True)
-    prefix = fields.Char(help="Prefix value of the record for the sequence", trim=False)
-    suffix = fields.Char(help="Suffix value of the record for the sequence", trim=False)
+    prefix = fields.Char(
+        help="Prefix value of the record for the sequence",
+        trim=False,
+    )
+    suffix = fields.Char(
+        help="Suffix value of the record for the sequence",
+        trim=False,
+    )
     number_next = fields.Integer(
         string="Next Number",
-        required=True,
-        default=1,
         help="Next number of this sequence",
+        default=1,
+        required=True,
     )
     number_next_actual = fields.Integer(
-        compute="_compute_number_next_actual",
-        inverse="_inverse_number_next_actual",
         string="Actual Next Number",
         help="Next number that will be used. This number can be incremented "
         "frequently so the displayed value might already be obsolete",
+        compute="_compute_number_next_actual",
+        inverse="_inverse_number_next_actual",
     )
     number_increment = fields.Integer(
         string="Step",
-        required=True,
-        default=1,
         help="The next number of the sequence will be incremented by this number",
+        default=1,
+        required=True,
     )
     padding = fields.Integer(
         string="Sequence Size",
-        required=True,
-        default=0,
         help="Odoo will automatically adds some '0' on the left of the 'Next Number' to get the required padding size.",
+        default=0,
+        required=True,
     )
-    company_id = fields.Many2one("res.company", default=lambda s: s.env.company)
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        default=lambda s: s.env.company,
+    )
     use_date_range = fields.Boolean(string="Use subsequences per date_range")
     date_range_ids = fields.One2many(
-        "ir.sequence.date_range", "sequence_id", string="Subsequences"
+        comodel_name="ir.sequence.date_range",
+        inverse_name="sequence_id",
+        string="Subsequences",
     )
 
     _positive_increment = models.Constraint(
@@ -708,23 +719,32 @@ class IrSequenceDate_Range(models.Model):
             val = seq.number_next_actual
             seq.write({"number_next": val if val is not None else 1})
 
-    date_from = fields.Date(string="From", required=True)
-    date_to = fields.Date(string="To", required=True)
+    date_from = fields.Date(
+        string="From",
+        required=True,
+    )
+    date_to = fields.Date(
+        string="To",
+        required=True,
+    )
     sequence_id = fields.Many2one(
-        "ir.sequence", string="Main Sequence", required=True, ondelete="cascade"
+        comodel_name="ir.sequence",
+        string="Main Sequence",
+        required=True,
+        ondelete="cascade",
     )
     number_next = fields.Integer(
         string="Next Number",
-        required=True,
-        default=1,
         help="Next number of this sequence",
+        default=1,
+        required=True,
     )
     number_next_actual = fields.Integer(
-        compute="_compute_number_next_actual",
-        inverse="_inverse_number_next_actual",
         string="Actual Next Number",
         help="Next number that will be used. This number can be incremented "
         "frequently so the displayed value might already be obsolete",
+        compute="_compute_number_next_actual",
+        inverse="_inverse_number_next_actual",
     )
 
     @api.constrains("sequence_id", "date_from", "date_to")

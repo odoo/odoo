@@ -10,25 +10,23 @@ class AccountMove(models.Model):
     # ------------------
 
     l10n_my_edi_document_ids = fields.Many2many(
-        name="MyInvois Documents",
         comodel_name="myinvois.document",
         relation="myinvois_document_invoice_rel",
         column1="invoice_id",
         column2="document_id",
         copy=False,
+        name="MyInvois Documents",
     )
     l10n_my_edi_display_tax_exemption_reason = fields.Boolean(
-        compute="_compute_l10n_my_edi_display_tax_exemption_reason",
         string="Display Tax Exemption Reason",
         export_string_translation=False,
+        compute="_compute_l10n_my_edi_display_tax_exemption_reason",
     )
     l10n_my_invoice_need_edi = fields.Boolean(
-        compute="_compute_l10n_my_invoice_need_edi",
         export_string_translation=False,
+        compute="_compute_l10n_my_invoice_need_edi",
     )
     l10n_my_edi_state = fields.Selection(
-        string="MyInvois State",
-        help="State of this document on the MyInvois portal.\nA document awaiting validation will be automatically updated once the validation status is available.",
         selection=[
             ("in_progress", "Validation In Progress"),
             ("valid", "Valid"),
@@ -36,10 +34,12 @@ class AccountMove(models.Model):
             ("invalid", "Invalid"),
             ("cancelled", "Cancelled"),
         ],
+        string="MyInvois State",
+        help="State of this document on the MyInvois portal.\nA document awaiting validation will be automatically updated once the validation status is available.",
+        export_string_translation=False,
         compute="_compute_l10n_my_edi_state",
         store=True,
         tracking=True,
-        export_string_translation=False,
     )
     # Fields required to be set on the document in some cases.
     l10n_my_edi_exemption_reason = fields.Char(

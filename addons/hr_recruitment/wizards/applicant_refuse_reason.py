@@ -15,20 +15,20 @@ class ApplicantGetRefuseReason(models.TransientModel):
         return self.env["hr.applicant.refuse.reason"].search([], limit=1)
 
     refuse_reason_id = fields.Many2one(
-        "hr.applicant.refuse.reason",
-        required=True,
+        comodel_name="hr.applicant.refuse.reason",
         default=_default_refuse_reason_id,
+        required=True,
     )
-    applicant_ids = fields.Many2many("hr.applicant")
+    applicant_ids = fields.Many2many(comodel_name="hr.applicant")
     send_mail = fields.Boolean(
-        "Send Email",
+        string="Send Email",
         compute="_compute_send_mail",
         precompute=True,
         store=True,
         readonly=False,
     )
     template_id = fields.Many2one(
-        "mail.template",
+        comodel_name="mail.template",
         string="Email Template",
         compute="_compute_template_id",
         precompute=True,
@@ -37,13 +37,13 @@ class ApplicantGetRefuseReason(models.TransientModel):
         domain="[('model', '=', 'hr.applicant')]",
     )
     applicant_without_email = fields.Text(
-        compute="_compute_applicant_without_email",
         string="Applicant(s) not having email",
+        compute="_compute_applicant_without_email",
     )
     duplicates = fields.Boolean(string="Refuse Duplicate Applications")
     duplicates_count = fields.Integer(compute="_compute_duplicate_applicant_ids_domain")
     duplicate_applicant_ids = fields.Many2many(
-        "hr.applicant",
+        comodel_name="hr.applicant",
         relation="applicant_get_refuse_reason_duplicate_applicants_rel",
         string="Duplicate Applications",
         compute="_compute_duplicate_applicant_ids",
@@ -54,18 +54,18 @@ class ApplicantGetRefuseReason(models.TransientModel):
         compute="_compute_duplicate_applicant_ids_domain"
     )
     attachment_ids = fields.Many2many(
-        "ir.attachment",
+        comodel_name="ir.attachment",
         string="Attachments",
         compute="_compute_from_template_id",
-        readonly=False,
         store=True,
+        readonly=False,
         bypass_search_access=True,
     )
     scheduled_date = fields.Char(
-        compute="_compute_from_template_id",
-        readonly=False,
-        store=True,
         help="send emails after that date. This date is considered as being in UTC timezone.",
+        compute="_compute_from_template_id",
+        store=True,
+        readonly=False,
     )
 
     @api.depends("refuse_reason_id", "applicant_without_email")

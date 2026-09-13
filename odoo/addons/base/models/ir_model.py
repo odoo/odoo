@@ -64,51 +64,61 @@ class IrModel(models.Model):
         translate=True,
         required=True,
     )
-    model = fields.Char(default="x_", required=True)
+    model = fields.Char(
+        default="x_",
+        required=True,
+    )
     order = fields.Char(
+        help='SQL expression for ordering records in the model; e.g. "x_sequence asc, id desc"',
         default="id",
         required=True,
-        help='SQL expression for ordering records in the model; e.g. "x_sequence asc, id desc"',
     )
     info = fields.Text(string="Information")
     field_id = fields.One2many(
-        "ir.model.fields",
-        "model_id",
+        comodel_name="ir.model.fields",
+        inverse_name="model_id",
         string="Fields",
-        required=True,
-        copy=True,
         default=_default_field_id,
+        copy=True,
+        required=True,
     )
     inherited_model_ids = fields.Many2many(
-        "ir.model",
+        comodel_name="ir.model",
         string="Inherited models",
-        compute="_compute_inherited_model_ids",
         help="The parent models this model delegates to (via _inherits).",
+        compute="_compute_inherited_model_ids",
     )
     state = fields.Selection(
-        [("manual", "Custom Object"), ("base", "Base Object")],
+        selection=[("manual", "Custom Object"), ("base", "Base Object")],
         string="Type",
         default="manual",
         readonly=True,
     )
-    access_ids = fields.One2many("ir.model.access", "model_id")
-    rule_ids = fields.One2many("ir.rule", "model_id", string="Record Rules")
+    access_ids = fields.One2many(
+        comodel_name="ir.model.access",
+        inverse_name="model_id",
+    )
+    rule_ids = fields.One2many(
+        comodel_name="ir.rule",
+        inverse_name="model_id",
+        string="Record Rules",
+    )
     abstract = fields.Boolean(string="Abstract Model")
     transient = fields.Boolean(string="Transient Model")
     modules = fields.Char(
-        compute="_compute_modules",
         string="In Apps",
         help="List of modules in which the object is defined or inherited",
+        compute="_compute_modules",
     )
     view_ids = fields.One2many(
-        "ir.ui.view",
+        comodel_name="ir.ui.view",
         string="Views",
         compute="_compute_view_ids",
     )
     count = fields.Integer(
-        compute="_compute_count",
         string="Count (Incl. Archived)",
         help="Total number of records in this model",
+        compute="_compute_count",
     )
     fold_name = fields.Char(
         string="Fold Field",
@@ -507,17 +517,17 @@ class IrModelInherit(models.Model):
     _log_access = False
 
     model_id = fields.Many2one(
-        "ir.model",
+        comodel_name="ir.model",
         required=True,
         ondelete="cascade",
     )
     parent_id = fields.Many2one(
-        "ir.model",
+        comodel_name="ir.model",
         required=True,
         ondelete="cascade",
     )
     parent_field_id = fields.Many2one(
-        "ir.model.fields",
+        comodel_name="ir.model.fields",
         ondelete="cascade",
     )
 

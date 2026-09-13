@@ -10,47 +10,54 @@ class AppointmentBookingLine(models.Model):
 
     active = fields.Boolean(related="calendar_event_id.active")
     appointment_resource_id = fields.Many2one(
-        "appointment.resource", ondelete="cascade"
+        comodel_name="appointment.resource",
+        ondelete="cascade",
     )
     appointment_user_id = fields.Many2one(
-        "res.users",
-        string="Appointment User",
+        comodel_name="res.users",
         related="calendar_event_id.user_id",
+        string="Appointment User",
         readonly=False,
     )
     appointment_type_id = fields.Many2one(
-        "appointment.type",
+        comodel_name="appointment.type",
         related="calendar_event_id.appointment_type_id",
         precompute=True,
         store=True,
+        index=True,
         readonly=True,
         ondelete="cascade",
-        index=True,
     )
     capacity_reserved = fields.Integer(
+        help="Capacity reserved by the user",
         default=1,
         required=True,
-        help="Capacity reserved by the user",
     )
     capacity_used = fields.Integer(
+        help="Capacity that will be used based on the capacity and user/resource selected",
         compute="_compute_capacity_used",
-        readonly=True,
         precompute=True,
         store=True,
-        help="Capacity that will be used based on the capacity and user/resource selected",
+        readonly=True,
     )
     calendar_event_id = fields.Many2one(
-        "calendar.event",
+        comodel_name="calendar.event",
         string="Booking",
-        ondelete="cascade",
-        required=True,
         index=True,
+        required=True,
+        ondelete="cascade",
     )
     event_start = fields.Datetime(
-        "Booking Start", related="calendar_event_id.start", readonly=True, store=True
+        related="calendar_event_id.start",
+        string="Booking Start",
+        store=True,
+        readonly=True,
     )
     event_stop = fields.Datetime(
-        "Booking End", related="calendar_event_id.stop", readonly=True, store=True
+        related="calendar_event_id.stop",
+        string="Booking End",
+        store=True,
+        readonly=True,
     )
 
     _check_capacity_reserved = models.Constraint(

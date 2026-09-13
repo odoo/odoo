@@ -7,8 +7,8 @@ class StockMove(models.Model):
 
     sale_line_id = fields.Many2one(
         comodel_name="sale.order.line",
-        ondelete="set null",
         index="btree_not_null",
+        ondelete="set null",
     )
     created_sale_line_ids = fields.Many2many(
         comodel_name="sale.order.line",

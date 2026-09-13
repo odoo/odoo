@@ -8,9 +8,20 @@ class FleetVehicleModelBrand(models.Model):
 
     name = fields.Char(required=True)
     active = fields.Boolean(default=True)
-    image_128 = fields.Image("Logo", max_width=128, max_height=128)
-    model_count = fields.Integer(compute="_compute_model_count", string="", store=True)
-    model_ids = fields.One2many("fleet.vehicle.model", "brand_id")
+    image_128 = fields.Image(
+        string="Logo",
+        max_width=128,
+        max_height=128,
+    )
+    model_count = fields.Integer(
+        string="",
+        compute="_compute_model_count",
+        store=True,
+    )
+    model_ids = fields.One2many(
+        comodel_name="fleet.vehicle.model",
+        inverse_name="brand_id",
+    )
 
     @api.depends("model_ids.active")
     def _compute_model_count(self):

@@ -20,9 +20,9 @@ class AccountMove(models.Model):
             ("done", "Done"),
             ("error", "Error"),
         ],
+        string="PEPPOL status",
         compute="_compute_peppol_move_state",
         store=True,
-        string="PEPPOL status",
         copy=False,
     )
 

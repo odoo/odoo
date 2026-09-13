@@ -20,8 +20,8 @@ class ResConfigSettings(models.TransientModel):
         default_model="product.template",
     )
     website_warehouse_id = fields.Many2one(
-        "stock.warehouse",
+        comodel_name="stock.warehouse",
         related="website_id.warehouse_id",
-        domain="[('company_id', '=', website_company_id)]",
         readonly=False,
+        domain="[('company_id', '=', website_company_id)]",
     )

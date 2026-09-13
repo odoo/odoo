@@ -20,14 +20,14 @@ class ResConfigSettings(models.TransientModel):
         )
 
     pos_config_id = fields.Many2one(
-        "pos.config",
+        comodel_name="pos.config",
         string="Point of Sale",
         default=lambda self: self._default_pos_config_id(),
     )
     sale_tax_id = fields.Many2one(
-        "account.tax",
-        string="Default Sale Tax",
+        comodel_name="account.tax",
         related="company_id.account_sale_tax_id",
+        string="Default Sale Tax",
         readonly=False,
         check_company=True,
     )
@@ -64,239 +64,298 @@ class ResConfigSettings(models.TransientModel):
         help="Display the price of your products through electronic price tags",
     )
     update_stock_quantities = fields.Selection(
-        related="company_id.point_of_sale_update_stock_quantities", readonly=False
+        related="company_id.point_of_sale_update_stock_quantities",
+        readonly=False,
     )
     account_default_pos_receivable_account_id = fields.Many2one(
-        string="Default Account Receivable (PoS)",
         related="company_id.account_default_pos_receivable_account_id",
+        string="Default Account Receivable (PoS)",
         readonly=False,
         check_company=True,
     )
     barcode_nomenclature_id = fields.Many2one(
-        "barcode.nomenclature", related="company_id.nomenclature_id", readonly=False
+        comodel_name="barcode.nomenclature",
+        related="company_id.nomenclature_id",
+        readonly=False,
     )
     is_kiosk_mode = fields.Boolean(default=False)
     pos_customer_display_bg_img = fields.Image(
-        related="pos_config_id.customer_display_bg_img", readonly=False
+        related="pos_config_id.customer_display_bg_img",
+        readonly=False,
     )
     pos_customer_display_bg_img_name = fields.Char(
-        related="pos_config_id.customer_display_bg_img_name", readonly=False
+        related="pos_config_id.customer_display_bg_img_name",
+        readonly=False,
     )
 
     pos_use_presets = fields.Boolean(
-        related="pos_config_id.use_presets", readonly=False
+        related="pos_config_id.use_presets",
+        readonly=False,
     )
     pos_default_preset_id = fields.Many2one(
-        "pos.preset", related="pos_config_id.default_preset_id", readonly=False
+        comodel_name="pos.preset",
+        related="pos_config_id.default_preset_id",
+        readonly=False,
     )
     pos_available_preset_ids = fields.Many2many(
-        "pos.preset", related="pos_config_id.available_preset_ids", readonly=False
+        comodel_name="pos.preset",
+        related="pos_config_id.available_preset_ids",
+        readonly=False,
     )
     pos_module_pos_discount = fields.Boolean(
-        related="pos_config_id.module_pos_discount", readonly=False
+        related="pos_config_id.module_pos_discount",
+        readonly=False,
     )
     pos_module_pos_hr = fields.Boolean(
-        related="pos_config_id.module_pos_hr", readonly=False
+        related="pos_config_id.module_pos_hr",
+        readonly=False,
     )
     pos_module_pos_restaurant = fields.Boolean(
-        related="pos_config_id.module_pos_restaurant", readonly=False
+        related="pos_config_id.module_pos_restaurant",
+        readonly=False,
     )
     pos_module_pos_appointment = fields.Boolean(
-        related="pos_config_id.module_pos_appointment", readonly=False
+        related="pos_config_id.module_pos_appointment",
+        readonly=False,
     )
     pos_module_pos_avatax = fields.Boolean(
-        related="pos_config_id.module_pos_avatax", readonly=False
+        related="pos_config_id.module_pos_avatax",
+        readonly=False,
     )
     pos_is_order_printer = fields.Boolean(
-        compute="_compute_pos_is_order_printer", store=True, readonly=False
+        compute="_compute_pos_is_order_printer",
+        store=True,
+        readonly=False,
     )
     pos_printer_ids = fields.Many2many(
-        related="pos_config_id.printer_ids", readonly=False
+        related="pos_config_id.printer_ids",
+        readonly=False,
     )
 
     pos_allowed_pricelist_ids = fields.Many2many(
-        "product.pricelist", compute="_compute_pos_allowed_pricelist_ids"
+        comodel_name="product.pricelist",
+        compute="_compute_pos_allowed_pricelist_ids",
     )
     pos_amount_authorized_diff = fields.Float(
-        related="pos_config_id.amount_authorized_diff", readonly=False
+        related="pos_config_id.amount_authorized_diff",
+        readonly=False,
     )
     pos_available_pricelist_ids = fields.Many2many(
-        "product.pricelist",
+        comodel_name="product.pricelist",
         string="Available Pricelists",
         compute="_compute_pos_pricelists",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     pos_cash_control = fields.Boolean(related="pos_config_id.cash_control")
     pos_cash_rounding = fields.Boolean(
         related="pos_config_id.cash_rounding",
-        readonly=False,
         string="Cash Rounding (PoS)",
+        readonly=False,
     )
     pos_company_has_template = fields.Boolean(
         related="pos_config_id.company_has_template"
     )
     pos_default_bill_ids = fields.Many2many(
-        related="pos_config_id.default_bill_ids", readonly=False
+        related="pos_config_id.default_bill_ids",
+        readonly=False,
     )
     pos_default_fiscal_position_id = fields.Many2one(
-        "account.fiscal.position",
+        comodel_name="account.fiscal.position",
         string="Default Fiscal Position",
         compute="_compute_pos_fiscal_positions",
-        readonly=False,
         store=True,
+        readonly=False,
         check_company=True,
     )
     pos_fiscal_position_ids = fields.Many2many(
-        "account.fiscal.position",
+        comodel_name="account.fiscal.position",
         string="Fiscal Positions",
         compute="_compute_pos_fiscal_positions",
-        readonly=False,
         store=True,
+        readonly=False,
         check_company=True,
     )
     pos_has_active_session = fields.Boolean(related="pos_config_id.has_active_session")
     pos_iface_available_categ_ids = fields.Many2many(
-        "pos.category",
+        comodel_name="pos.category",
         string="Available PoS Product Categories",
         compute="_compute_pos_iface_available_categ_ids",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     pos_iface_big_scrollbars = fields.Boolean(
-        related="pos_config_id.iface_big_scrollbars", readonly=False
+        related="pos_config_id.iface_big_scrollbars",
+        readonly=False,
     )
     pos_iface_group_by_categ = fields.Boolean(
-        related="pos_config_id.iface_group_by_categ", readonly=False
+        related="pos_config_id.iface_group_by_categ",
+        readonly=False,
     )
     pos_iface_cashdrawer = fields.Boolean(
         string="Cashdrawer",
         compute="_compute_pos_iface_cashdrawer",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     pos_iface_electronic_scale = fields.Boolean(
         string="Electronic Scale",
         compute="_compute_pos_iface_electronic_scale",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     pos_iface_print_auto = fields.Boolean(
-        related="pos_config_id.iface_print_auto", readonly=False
+        related="pos_config_id.iface_print_auto",
+        readonly=False,
     )
     pos_iface_print_skip_screen = fields.Boolean(
-        related="pos_config_id.iface_print_skip_screen", readonly=False
+        related="pos_config_id.iface_print_skip_screen",
+        readonly=False,
     )
     pos_iface_print_via_proxy = fields.Boolean(
         string="Print via Proxy",
         compute="_compute_pos_iface_print_via_proxy",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     pos_iface_scan_via_proxy = fields.Boolean(
         string="Scan via Proxy",
         compute="_compute_pos_iface_scan_via_proxy",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     pos_iface_tax_included = fields.Selection(
-        related="pos_config_id.iface_tax_included", readonly=False
+        related="pos_config_id.iface_tax_included",
+        readonly=False,
     )
     pos_iface_tipproduct = fields.Boolean(
-        related="pos_config_id.iface_tipproduct", readonly=False
+        related="pos_config_id.iface_tipproduct",
+        readonly=False,
     )
     pos_invoice_journal_id = fields.Many2one(
-        related="pos_config_id.invoice_journal_id", readonly=False
+        related="pos_config_id.invoice_journal_id",
+        readonly=False,
     )
     pos_is_header_or_footer = fields.Boolean(
-        related="pos_config_id.is_header_or_footer", readonly=False
+        related="pos_config_id.is_header_or_footer",
+        readonly=False,
     )
     pos_is_margins_costs_accessible_to_every_user = fields.Boolean(
         related="pos_config_id.is_margins_costs_accessible_to_every_user",
         readonly=False,
     )
-    pos_is_posbox = fields.Boolean(related="pos_config_id.is_posbox", readonly=False)
-    pos_journal_id = fields.Many2one(related="pos_config_id.journal_id", readonly=False)
+    pos_is_posbox = fields.Boolean(
+        related="pos_config_id.is_posbox",
+        readonly=False,
+    )
+    pos_journal_id = fields.Many2one(
+        related="pos_config_id.journal_id",
+        readonly=False,
+    )
     pos_limit_categories = fields.Boolean(
-        related="pos_config_id.limit_categories", readonly=False
+        related="pos_config_id.limit_categories",
+        readonly=False,
     )
     pos_manual_discount = fields.Boolean(
-        related="pos_config_id.manual_discount", readonly=False
+        related="pos_config_id.manual_discount",
+        readonly=False,
     )
     pos_only_round_cash_method = fields.Boolean(
-        related="pos_config_id.only_round_cash_method", readonly=False
+        related="pos_config_id.only_round_cash_method",
+        readonly=False,
     )
     pos_other_devices = fields.Boolean(
-        related="pos_config_id.other_devices", readonly=False
+        related="pos_config_id.other_devices",
+        readonly=False,
     )
     pos_payment_method_ids = fields.Many2many(
-        related="pos_config_id.payment_method_ids", readonly=False
+        related="pos_config_id.payment_method_ids",
+        readonly=False,
     )
     pos_picking_policy = fields.Selection(
-        related="pos_config_id.picking_policy", readonly=False
+        related="pos_config_id.picking_policy",
+        readonly=False,
     )
     pos_picking_type_id = fields.Many2one(
-        related="pos_config_id.picking_type_id", readonly=False
+        related="pos_config_id.picking_type_id",
+        readonly=False,
     )
     pos_pricelist_id = fields.Many2one(
-        "product.pricelist",
+        comodel_name="product.pricelist",
         string="Default Pricelist",
         compute="_compute_pos_pricelists",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     pos_proxy_ip = fields.Char(
-        string="IP Address", related="pos_config_id.proxy_ip", readonly=False
+        related="pos_config_id.proxy_ip",
+        string="IP Address",
+        readonly=False,
     )
     pos_receipt_footer = fields.Text(
         string="Receipt Footer",
         compute="_compute_pos_receipt_header_footer",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     pos_receipt_header = fields.Text(
         string="Receipt Header",
         compute="_compute_pos_receipt_header_footer",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     pos_restrict_price_control = fields.Boolean(
-        related="pos_config_id.restrict_price_control", readonly=False
+        related="pos_config_id.restrict_price_control",
+        readonly=False,
     )
     pos_rounding_method = fields.Many2one(
-        related="pos_config_id.rounding_method", readonly=False
+        related="pos_config_id.rounding_method",
+        readonly=False,
     )
-    pos_route_id = fields.Many2one(related="pos_config_id.route_id", readonly=False)
+    pos_route_id = fields.Many2one(
+        related="pos_config_id.route_id",
+        readonly=False,
+    )
     pos_selectable_categ_ids = fields.Many2many(
-        "pos.category", compute="_compute_pos_selectable_categ_ids"
+        comodel_name="pos.category",
+        compute="_compute_pos_selectable_categ_ids",
     )
     pos_set_maximum_difference = fields.Boolean(
-        related="pos_config_id.set_maximum_difference", readonly=False
+        related="pos_config_id.set_maximum_difference",
+        readonly=False,
     )
-    pos_ship_later = fields.Boolean(related="pos_config_id.ship_later", readonly=False)
+    pos_ship_later = fields.Boolean(
+        related="pos_config_id.ship_later",
+        readonly=False,
+    )
     pos_tax_regime_selection = fields.Boolean(
-        related="pos_config_id.tax_regime_selection", readonly=False
+        related="pos_config_id.tax_regime_selection",
+        readonly=False,
     )
     pos_tip_product_id = fields.Many2one(
-        "product.product",
+        comodel_name="product.product",
         string="Tip Product",
         compute="_compute_pos_tip_product_id",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     pos_use_pricelist = fields.Boolean(
-        related="pos_config_id.use_pricelist", readonly=False
+        related="pos_config_id.use_pricelist",
+        readonly=False,
     )
     pos_warehouse_id = fields.Many2one(
-        related="pos_config_id.warehouse_id", readonly=False, string="Warehouse (PoS)"
+        related="pos_config_id.warehouse_id",
+        string="Warehouse (PoS)",
+        readonly=False,
     )
     point_of_sale_use_ticket_qr_code = fields.Boolean(
-        related="company_id.point_of_sale_use_ticket_qr_code", readonly=False
+        related="company_id.point_of_sale_use_ticket_qr_code",
+        readonly=False,
     )
     pos_auto_validate_terminal_payment = fields.Boolean(
         related="pos_config_id.auto_validate_terminal_payment",
-        readonly=False,
         string="Automatically validates orders paid with a payment terminal.",
+        readonly=False,
     )
     pos_trusted_config_ids = fields.Many2many(
         related="pos_config_id.trusted_config_ids",
@@ -304,50 +363,63 @@ class ResConfigSettings(models.TransientModel):
         domain="[('id', '!=', pos_config_id), ('module_pos_restaurant', '=', False)]",
     )
     point_of_sale_ticket_unique_code = fields.Boolean(
-        related="company_id.point_of_sale_ticket_unique_code", readonly=False
+        related="company_id.point_of_sale_ticket_unique_code",
+        readonly=False,
     )
     pos_show_product_images = fields.Boolean(
-        related="pos_config_id.show_product_images", readonly=False
+        related="pos_config_id.show_product_images",
+        readonly=False,
     )
     pos_show_category_images = fields.Boolean(
-        related="pos_config_id.show_category_images", readonly=False
+        related="pos_config_id.show_category_images",
+        readonly=False,
     )
     point_of_sale_ticket_portal_url_display_mode = fields.Selection(
         related="company_id.point_of_sale_ticket_portal_url_display_mode",
         readonly=False,
         required=True,
     )
-    pos_note_ids = fields.Many2many(related="pos_config_id.note_ids", readonly=False)
+    pos_note_ids = fields.Many2many(
+        related="pos_config_id.note_ids",
+        readonly=False,
+    )
     pos_module_pos_sms = fields.Boolean(
-        related="pos_config_id.module_pos_sms", readonly=False
+        related="pos_config_id.module_pos_sms",
+        readonly=False,
     )
     pos_is_closing_entry_by_product = fields.Boolean(
-        related="pos_config_id.is_closing_entry_by_product", readonly=False
+        related="pos_config_id.is_closing_entry_by_product",
+        readonly=False,
     )
     pos_order_edit_tracking = fields.Boolean(
-        related="pos_config_id.order_edit_tracking", readonly=False
+        related="pos_config_id.order_edit_tracking",
+        readonly=False,
     )
     pos_basic_receipt = fields.Boolean(
-        related="pos_config_id.basic_receipt", readonly=False
+        related="pos_config_id.basic_receipt",
+        readonly=False,
     )
     pos_fallback_nomenclature_id = fields.Many2one(
         related="pos_config_id.fallback_nomenclature_id",
-        domain="[('id', '!=', barcode_nomenclature_id)]",
         readonly=False,
+        domain="[('id', '!=', barcode_nomenclature_id)]",
     )
     group_pos_preset = fields.Boolean(
         string="Presets",
-        implied_group="point_of_sale.group_pos_preset",
         help="Hide or show the Presets menu in the Point of Sale configuration.",
+        implied_group="point_of_sale.group_pos_preset",
     )
     pos_epson_printer_ip = fields.Char(
-        related="pos_config_id.epson_printer_ip", readonly=False
+        related="pos_config_id.epson_printer_ip",
+        readonly=False,
     )
     pos_use_fast_payment = fields.Boolean(
-        related="pos_config_id.use_fast_payment", readonly=False
+        related="pos_config_id.use_fast_payment",
+        readonly=False,
     )
     pos_fast_payment_method_ids = fields.Many2many(
-        related="pos_config_id.fast_payment_method_ids", readonly=False
+        related="pos_config_id.fast_payment_method_ids",
+        readonly=False,
     )
 
     def action_open_payment_method_form(self):

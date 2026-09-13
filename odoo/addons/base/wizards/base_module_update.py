@@ -10,13 +10,19 @@ class BaseModuleUpdate(models.TransientModel):
     _name = "base.module.update"
     _description = "Update Module"
 
-    updated = fields.Integer("Number of modules updated", readonly=True)
-    added = fields.Integer("Number of modules added", readonly=True)
-    state = fields.Selection(
-        [("init", "init"), ("done", "done")],
-        "Status",
+    updated = fields.Integer(
+        string="Number of modules updated",
         readonly=True,
+    )
+    added = fields.Integer(
+        string="Number of modules added",
+        readonly=True,
+    )
+    state = fields.Selection(
+        selection=[("init", "init"), ("done", "done")],
+        string="Status",
         default="init",
+        readonly=True,
     )
 
     def update_module(self) -> bool:

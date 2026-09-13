@@ -32,10 +32,10 @@ class SaleOrderLine(models.Model):
     )
     customer_lead = fields.Float(
         compute="_compute_customer_lead",
-        store=True,
-        precompute=True,
-        readonly=False,
         inverse="_inverse_customer_lead",
+        precompute=True,
+        store=True,
+        readonly=False,
     )
     route_ids = fields.Many2many(
         comodel_name="stock.route",
@@ -53,12 +53,8 @@ class SaleOrderLine(models.Model):
         inverse_name="sale_line_id",
         string="Stock Moves",
     )
-    date_planned = fields.Datetime(
-        compute="_compute_qty_at_date",
-    )
-    date_planned_forecast = fields.Datetime(
-        compute="_compute_qty_at_date",
-    )
+    date_planned = fields.Datetime(compute="_compute_qty_at_date")
+    date_planned_forecast = fields.Datetime(compute="_compute_qty_at_date")
     qty_available_today = fields.Float(
         digits="Product Unit",
         compute="_compute_qty_at_date",
@@ -75,9 +71,7 @@ class SaleOrderLine(models.Model):
         compute="_compute_display_qty_widget",
         compute_sudo=False,
     )
-    is_mto = fields.Boolean(
-        compute="_compute_is_mto",
-    )
+    is_mto = fields.Boolean(compute="_compute_is_mto")
 
     @api.model_create_multi
     def create(self, vals_list):

@@ -11,13 +11,16 @@ class HrDepartment(models.Model):
     _inherit = "hr.department"
 
     absence_of_today = fields.Integer(
-        compute="_compute_leave_count", string="Absence by Today"
+        string="Absence by Today",
+        compute="_compute_leave_count",
     )
     leave_to_approve_count = fields.Integer(
-        compute="_compute_leave_count", string="Time Off to Approve"
+        string="Time Off to Approve",
+        compute="_compute_leave_count",
     )
     allocation_to_approve_count = fields.Integer(
-        compute="_compute_leave_count", string="Allocation to Approve"
+        string="Allocation to Approve",
+        compute="_compute_leave_count",
     )
 
     def _compute_leave_count(self):

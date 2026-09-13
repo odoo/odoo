@@ -32,16 +32,23 @@ class ResUsersApikeys(models.Model):
     _auto = False
     _allow_sudo_commands = False
 
-    name = fields.Char("Description", required=True, readonly=True)
-    user_id = fields.Many2one(
-        "res.users",
-        index=True,
-        required=True,
+    name = fields.Char(
+        string="Description",
         readonly=True,
+        required=True,
+    )
+    user_id = fields.Many2one(
+        comodel_name="res.users",
+        index=True,
+        readonly=True,
+        required=True,
         ondelete="cascade",
     )
     scope = fields.Char(readonly=True)
-    create_date = fields.Datetime("Creation Date", readonly=True)
+    create_date = fields.Datetime(
+        string="Creation Date",
+        readonly=True,
+    )
     expiration_date = fields.Datetime(readonly=True)
 
     def init(self) -> None:
@@ -282,11 +289,14 @@ class ResUsersApikeysDescription(models.TransientModel):
             filter(lambda duration: int(duration[0]) <= max_duration, durations)
         ) + [custom_duration]
 
-    name = fields.Char("Description", required=True)
+    name = fields.Char(
+        string="Description",
+        required=True,
+    )
     duration = fields.Selection(
         selection="_selection_duration",
-        required=True,
         default=lambda self: self._selection_duration()[0][0],
+        required=True,
     )
     expiration_date = fields.Datetime(
         compute="_compute_expiration_date",

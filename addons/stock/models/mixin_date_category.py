@@ -27,9 +27,9 @@ class MixinDateCategory(models.AbstractModel):
 
     date_category = fields.Selection(
         selection="_selection_date_category",
+        search="_search_date_category",
         store=False,
         readonly=True,
-        search="_search_date_category",
     )
 
     def _search_date_category(self, operator, value):

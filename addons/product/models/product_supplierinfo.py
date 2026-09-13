@@ -12,8 +12,8 @@ class ProductSupplierinfo(models.Model):
         comodel_name="res.partner",
         string="Vendor",
         required=True,
-        check_company=True,
         ondelete="cascade",
+        check_company=True,
     )
     product_name = fields.Char(
         string="Vendor Product Name",
@@ -24,30 +24,30 @@ class ProductSupplierinfo(models.Model):
         help="This vendor's product code will be used when printing a request for quotation. Keep empty to use the internal one.",
     )
     sequence = fields.Integer(
-        default=1,
         help="Assigns the priority to the list of product vendor.",
+        default=1,
     )
     product_uom_id = fields.Many2one(
         comodel_name="uom.uom",
         string="Unit",
-        required=True,
         compute="_compute_product_uom_id",
-        store=True,
         precompute=True,
+        store=True,
         readonly=False,
+        required=True,
     )
     min_qty = fields.Float(
         string="Quantity",
-        digits="Product Unit",
-        required=True,
-        default=0.0,
         help="The quantity to purchase from this vendor to benefit from the unit price. If a vendor unit is set, quantity should be specified in this unit, otherwise it should be specified in the default unit of the product.",
+        digits="Product Unit",
+        default=0.0,
+        required=True,
     )
     price = fields.Float(
         string="Unit Price",
+        help="The price to purchase a product",
         min_display_digits="Product Price",
         default=0.0,
-        help="The price to purchase a product",
     )
     price_discounted = fields.Float(
         string="Discounted Price",
@@ -60,36 +60,39 @@ class ProductSupplierinfo(models.Model):
     )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
-        required=True,
         default=lambda self: self.env.company.currency_id.id,
+        required=True,
     )
     date_start = fields.Date(
         string="Start Date",
         help="Start date for this vendor price",
     )
-    date_end = fields.Date(string="End Date", help="End date for this vendor price")
+    date_end = fields.Date(
+        string="End Date",
+        help="End date for this vendor price",
+    )
     product_id = fields.Many2one(
         comodel_name="product.product",
         string="Product Variant",
-        compute="_compute_product_id",
-        store=True,
-        precompute=True,
-        readonly=False,
-        check_company=True,
-        domain="[('product_tmpl_id', '=', product_tmpl_id)] if product_tmpl_id else []",
         help="If not set, the vendor price will apply to all variants of this product.",
+        compute="_compute_product_id",
+        precompute=True,
+        store=True,
+        readonly=False,
+        domain="[('product_tmpl_id', '=', product_tmpl_id)] if product_tmpl_id else []",
+        check_company=True,
     )
     product_tmpl_id = fields.Many2one(
         comodel_name="product.template",
         string="Product Template",
-        required=True,
         compute="_compute_product_tmpl_id",
-        store=True,
         precompute=True,
-        readonly=False,
-        check_company=True,
-        ondelete="cascade",
+        store=True,
         index=True,
+        readonly=False,
+        required=True,
+        ondelete="cascade",
+        check_company=True,
     )
     product_variant_count = fields.Integer(
         related="product_tmpl_id.product_variant_count",
@@ -97,11 +100,15 @@ class ProductSupplierinfo(models.Model):
     )
     delay = fields.Integer(
         string="Lead Time",
-        required=True,
-        default=1,
         help="Lead time in days between the confirmation of the purchase order and the receipt of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning.",
+        default=1,
+        required=True,
     )
-    discount = fields.Float(string="Discount (%)", digits="Discount", readonly=False)
+    discount = fields.Float(
+        string="Discount (%)",
+        digits="Discount",
+        readonly=False,
+    )
 
     @api.depends("product_id", "product_tmpl_id")
     def _compute_product_uom_id(self):

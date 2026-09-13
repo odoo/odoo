@@ -7,29 +7,54 @@ class ResourceAssetMeter(models.Model):
     _order = "asset_id, sequence, id"
 
     asset_id = fields.Many2one(
-        "resource.asset", required=True, ondelete="cascade", index=True
+        comodel_name="resource.asset",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
-    company_id = fields.Many2one(related="asset_id.company_id", store=True)
-    name = fields.Char(required=True, translate=True)
+    company_id = fields.Many2one(
+        related="asset_id.company_id",
+        store=True,
+    )
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
     sequence = fields.Integer(default=10)
     kind = fields.Selection(
-        [("odometer", "Odometer"), ("hours", "Running Hours"), ("cycles", "Cycles")],
+        selection=[
+            ("odometer", "Odometer"),
+            ("hours", "Running Hours"),
+            ("cycles", "Cycles"),
+        ],
         default="odometer",
         required=True,
     )
-    uom_id = fields.Many2one("uom.uom", string="Unit")
-    monotonic = fields.Boolean(
-        default=True,
-        help="A reading below the previous one is rejected: an odometer only goes up.",
+    uom_id = fields.Many2one(
+        comodel_name="uom.uom",
+        string="Unit",
     )
-    reading_ids = fields.One2many("resource.asset.meter.reading", "meter_id")
+    monotonic = fields.Boolean(
+        help="A reading below the previous one is rejected: an odometer only goes up.",
+        default=True,
+    )
+    reading_ids = fields.One2many(
+        comodel_name="resource.asset.meter.reading",
+        inverse_name="meter_id",
+    )
     last_reading_id = fields.Many2one(
-        "resource.asset.meter.reading",
+        comodel_name="resource.asset.meter.reading",
         compute="_compute_last_reading_id",
         store=True,
     )
-    value = fields.Float(related="last_reading_id.value", string="Current Value")
-    date = fields.Datetime(related="last_reading_id.date", string="Read On")
+    value = fields.Float(
+        related="last_reading_id.value",
+        string="Current Value",
+    )
+    date = fields.Datetime(
+        related="last_reading_id.date",
+        string="Read On",
+    )
 
     _asset_kind_uniq = models.Constraint(
         "UNIQUE(asset_id, kind)", "An asset carries one meter of each kind."

@@ -6,22 +6,24 @@ class PosConfig(models.Model):
     _inherit = "pos.config"
 
     iface_splitbill = fields.Boolean(
-        string="Bill Splitting", help="Enables Bill Splitting in the Point of Sale."
+        string="Bill Splitting",
+        help="Enables Bill Splitting in the Point of Sale.",
     )
     iface_printbill = fields.Boolean(
-        string="Bill Printing", help="Allows to print the Bill before payment."
+        string="Bill Printing",
+        help="Allows to print the Bill before payment.",
     )
     floor_ids = fields.Many2many(
-        "restaurant.floor",
+        comodel_name="restaurant.floor",
         string="Restaurant Floors",
         help="The restaurant floors served by this point of sale.",
         copy=False,
     )
     set_tip_after_payment = fields.Boolean(
-        help="Adjust the amount authorized by payment terminals to add a tip after the customers left or at the end of the day.",
+        help="Adjust the amount authorized by payment terminals to add a tip after the customers left or at the end of the day."
     )
     default_screen = fields.Selection(
-        [("tables", "Tables"), ("register", "Register")],
+        selection=[("tables", "Tables"), ("register", "Register")],
         default="tables",
     )
 

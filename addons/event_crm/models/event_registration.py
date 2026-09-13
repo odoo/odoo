@@ -9,13 +9,17 @@ class EventRegistration(models.Model):
     _inherit = "event.registration"
 
     lead_ids = fields.Many2many(
-        "crm.lead",
+        comodel_name="crm.lead",
         string="Leads",
         copy=False,
         readonly=True,
         groups="sales_team.group_sale_salesman",
     )
-    lead_count = fields.Count("lead_ids", "# Leads", compute_sudo=True)
+    lead_count = fields.Count(
+        count_of="lead_ids",
+        string="# Leads",
+        compute_sudo=True,
+    )
 
     @api.model_create_multi
     def create(self, vals_list):

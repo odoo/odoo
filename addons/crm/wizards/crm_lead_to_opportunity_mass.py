@@ -8,17 +8,20 @@ class CrmLead2opportunityPartnerMass(models.TransientModel):
 
     lead_id = fields.Many2one(required=False)
     lead_tomerge_ids = fields.Many2many(
-        "crm.lead",
-        "crm_convert_lead_mass_lead_rel",
+        comodel_name="crm.lead",
+        relation="crm_convert_lead_mass_lead_rel",
         string="Active Leads",
-        context={"active_test": False},
         default=lambda self: self.env.context.get("active_ids", []),
+        context={"active_test": False},
     )
-    user_ids = fields.Many2many("res.users", string="Salespersons")
+    user_ids = fields.Many2many(
+        comodel_name="res.users",
+        string="Salespersons",
+    )
     deduplicate = fields.Boolean(
-        "Apply deduplication",
-        default=True,
+        string="Apply deduplication",
         help="Merge with existing leads/opportunities of each partner",
+        default=True,
     )
     action = fields.Selection(
         selection_add=[

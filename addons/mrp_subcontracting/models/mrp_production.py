@@ -10,21 +10,24 @@ class MrpProduction(models.Model):
     _rec_names_search = ["name", "incoming_picking.name"]
 
     move_line_raw_ids = fields.One2many(
-        "stock.move.line",
+        comodel_name="stock.move.line",
         string="Detail Component",
-        readonly=False,
-        inverse="_inverse_move_line_raw_ids",
         compute="_compute_move_line_raw_ids",
+        inverse="_inverse_move_line_raw_ids",
+        readonly=False,
     )
-    subcontracting_has_been_recorded = fields.Boolean("Has been recorded?", copy=False)
+    subcontracting_has_been_recorded = fields.Boolean(
+        string="Has been recorded?",
+        copy=False,
+    )
     subcontractor_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         help="Used to restrict access to the portal user through Record Rules",
     )
     bom_product_ids = fields.Many2many(
-        "product.product",
-        compute="_compute_bom_product_ids",
+        comodel_name="product.product",
         help="List of Products used in the BoM, used to filter the list of products in the subcontracting portal view",
+        compute="_compute_bom_product_ids",
     )
 
     incoming_picking = fields.Many2one(

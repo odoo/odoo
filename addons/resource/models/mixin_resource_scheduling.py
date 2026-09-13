@@ -9,16 +9,16 @@ class MixinResourceScheduling(models.AbstractModel):
     _reservation_sync_manual = False
 
     reservation_ids = fields.One2many(
-        "resource.reservation",
-        "res_id",
+        comodel_name="resource.reservation",
+        inverse_name="res_id",
         string="Reservations",
+        copy=False,
         domain=lambda self: [("res_model", "=", self._name)],
         bypass_search_access=True,
-        copy=False,
     )
 
     schedule_overlap_count = fields.Integer(
-        "Scheduling Conflicts",
+        string="Scheduling Conflicts",
         compute="_compute_schedule_overlap_count",
         search="_search_schedule_overlap_count",
     )

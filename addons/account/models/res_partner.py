@@ -55,20 +55,18 @@ class ResPartner(models.Model):
         return len(reports) > 1
 
     fiscal_country_group_codes = fields.Json(
-        compute="_compute_fiscal_country_group_codes",
+        compute="_compute_fiscal_country_group_codes"
     )
-    partner_vat_placeholder = fields.Char(
-        compute="_compute_partner_vat_placeholder",
-    )
+    partner_vat_placeholder = fields.Char(compute="_compute_partner_vat_placeholder")
     duplicate_bank_partner_ids = fields.Many2many(
         related="bank_ids.duplicate_bank_partner_ids"
     )
     name = fields.Char(tracking=True)
     credit = fields.Monetary(
-        compute="_compute_credit_debit",
-        search="_search_credit",
         string="Total Receivable",
         help="Total amount this customer owes you.",
+        compute="_compute_credit_debit",
+        search="_search_credit",
         groups="account.group_account_invoice,account.group_account_readonly",
     )
     credit_to_invoice = fields.Monetary(
@@ -77,17 +75,17 @@ class ResPartner(models.Model):
     )
     credit_limit = fields.Float(
         help="Credit limit specific to this partner.",
-        groups="account.group_account_invoice,account.group_account_readonly",
-        company_dependent=True,
         copy=False,
         readonly=False,
+        company_dependent=True,
+        groups="account.group_account_invoice,account.group_account_readonly",
     )
     use_partner_credit_limit = fields.Boolean(
         string="Partner Limit",
-        groups="account.group_account_invoice,account.group_account_readonly",
+        help="Set a value greater than 0.0 to activate a credit limit check",
         compute="_compute_use_partner_credit_limit",
         inverse="_inverse_use_partner_credit_limit",
-        help="Set a value greater than 0.0 to activate a credit limit check",
+        groups="account.group_account_invoice,account.group_account_readonly",
     )
     show_credit_limit = fields.Boolean(
         compute="_compute_show_credit_limit",
@@ -100,10 +98,10 @@ class ResPartner(models.Model):
         groups="account.group_account_invoice,account.group_account_readonly",
     )
     debit = fields.Monetary(
-        compute="_compute_credit_debit",
-        search="_search_debit",
         string="Total Payable",
         help="Total amount you have to pay to this vendor.",
+        compute="_compute_credit_debit",
+        search="_search_debit",
         groups="account.group_account_invoice,account.group_account_readonly",
     )
     total_invoiced = fields.Monetary(
@@ -111,87 +109,102 @@ class ResPartner(models.Model):
         groups="account.group_account_invoice,account.group_account_readonly",
     )
     currency_id = fields.Many2one(
-        "res.currency",
+        comodel_name="res.currency",
         compute="_compute_currency_id",
         readonly=True,
     )
     property_account_payable_id = fields.Many2one(
-        "account.account",
-        company_dependent=True,
-        check_company=True,
+        comodel_name="account.account",
         string="Account Payable",
+        company_dependent=True,
         domain="[('account_type', '=', 'liability_payable')]",
         ondelete="restrict",
+        check_company=True,
     )
     property_account_receivable_id = fields.Many2one(
-        "account.account",
-        company_dependent=True,
-        check_company=True,
+        comodel_name="account.account",
         string="Account Receivable",
+        company_dependent=True,
         domain="[('account_type', '=', 'asset_receivable')]",
         ondelete="restrict",
+        check_company=True,
     )
     property_account_position_id = fields.Many2one(
-        "account.fiscal.position",
-        company_dependent=True,
-        check_company=True,
+        comodel_name="account.fiscal.position",
         string="Fiscal Position",
         help="The fiscal position determines the taxes/accounts used for this contact.",
+        company_dependent=True,
+        check_company=True,
     )
     property_payment_term_id = fields.Many2one(
-        "account.payment.term",
-        company_dependent=True,
-        check_company=True,
+        comodel_name="account.payment.term",
         string="Customer Payment Terms",
+        company_dependent=True,
         ondelete="restrict",
+        check_company=True,
     )
     property_supplier_payment_term_id = fields.Many2one(
-        "account.payment.term",
+        comodel_name="account.payment.term",
+        string="Vendor Payment Terms",
         company_dependent=True,
         check_company=True,
-        string="Vendor Payment Terms",
     )
     ref_company_ids = fields.One2many(
-        "res.company", "partner_id", string="Companies that refers to partner"
+        comodel_name="res.company",
+        inverse_name="partner_id",
+        string="Companies that refers to partner",
     )
     supplier_invoice_count = fields.Integer(
-        compute="_compute_supplier_invoice_count", string="# Vendor Bills"
+        string="# Vendor Bills",
+        compute="_compute_supplier_invoice_count",
     )
     customer_invoice_count = fields.Integer(
-        compute="_compute_customer_invoice_count", string="# Customer Invoices"
+        string="# Customer Invoices",
+        compute="_compute_customer_invoice_count",
     )
     account_move_count = fields.Integer(
         compute="_compute_account_move_count",
         groups="account.group_account_invoice,account.group_account_readonly",
     )
     invoice_ids = fields.One2many(
-        "account.move", "partner_id", string="Invoices", readonly=True, copy=False
+        comodel_name="account.move",
+        inverse_name="partner_id",
+        string="Invoices",
+        copy=False,
+        readonly=True,
     )
     contract_ids = fields.One2many(
-        "account.analytic.account",
-        "partner_id",
+        comodel_name="account.analytic.account",
+        inverse_name="partner_id",
         string="Partner Contracts",
         readonly=True,
     )
-    bank_account_count = fields.Count("bank_ids", string="Bank")
+    bank_account_count = fields.Count(
+        count_of="bank_ids",
+        string="Bank",
+    )
     trust = fields.Selection(
-        [("good", "Good Debtor"), ("normal", "Normal Debtor"), ("bad", "Bad Debtor")],
+        selection=[
+            ("good", "Good Debtor"),
+            ("normal", "Normal Debtor"),
+            ("bad", "Bad Debtor"),
+        ],
         string="Degree of trust you have in this debtor",
         company_dependent=True,
     )
     ignore_abnormal_invoice_date = fields.Boolean(company_dependent=True)
     ignore_abnormal_invoice_amount = fields.Boolean(company_dependent=True)
     invoice_sending_method = fields.Selection(
-        string="Invoice sending",
         selection=[
             ("manual", "Manual"),
             ("email", "by Email"),
         ],
+        string="Invoice sending",
         company_dependent=True,
     )
     invoice_edi_format = fields.Selection(
-        string="eInvoice format",
         selection=[],
+        string="eInvoice format",
         compute="_compute_invoice_edi_format",
         inverse="_inverse_invoice_edi_format",
         compute_sudo=True,
@@ -202,21 +215,28 @@ class ResPartner(models.Model):
         store=False,
     )
     invoice_template_pdf_report_id = fields.Many2one(
-        string="Invoice report",
         comodel_name="ir.actions.report",
-        domain="[('id', 'in', available_invoice_template_pdf_report_ids)]",
-        readonly=False,
+        string="Invoice report",
         store=True,
+        readonly=False,
+        domain="[('id', 'in', available_invoice_template_pdf_report_ids)]",
     )
     available_invoice_template_pdf_report_ids = fields.One2many(
         comodel_name="ir.actions.report",
         compute="_compute_available_invoice_template_pdf_report_ids",
     )
     display_invoice_template_pdf_report_id = fields.Boolean(
-        default=_default_display_invoice_template_pdf_report_id, store=False
+        default=_default_display_invoice_template_pdf_report_id,
+        store=False,
     )
-    supplier_rank = fields.Integer(default=0, copy=False)
-    customer_rank = fields.Integer(default=0, copy=False)
+    supplier_rank = fields.Integer(
+        default=0,
+        copy=False,
+    )
+    customer_rank = fields.Integer(
+        default=0,
+        copy=False,
+    )
     autopost_bills = fields.Selection(
         selection=[
             ("always", "Always"),
@@ -231,24 +251,24 @@ class ResPartner(models.Model):
 
     property_outbound_payment_channel_id = fields.Many2one(
         comodel_name="account.payment.channel",
-        check_company=True,
         company_dependent=True,
         domain=lambda self: [
             ("journal_id.active", "=", True),
             ("payment_type", "=", "outbound"),
             ("company_id", "parent_of", self.env.company.id),
         ],
+        check_company=True,
     )
 
     property_inbound_payment_channel_id = fields.Many2one(
         comodel_name="account.payment.channel",
-        check_company=True,
         company_dependent=True,
         domain=lambda self: [
             ("journal_id.active", "=", True),
             ("payment_type", "=", "inbound"),
             ("company_id", "parent_of", self.env.company.id),
         ],
+        check_company=True,
     )
 
     @api.depends("company_id", "country_code")

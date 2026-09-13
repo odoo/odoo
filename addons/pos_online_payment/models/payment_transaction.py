@@ -6,7 +6,7 @@ class PaymentTransaction(models.Model):
     _inherit = "payment.transaction"
 
     pos_order_id = fields.Many2one(
-        "pos.order",
+        comodel_name="pos.order",
         string="POS Order",
         help="The Point of Sale order linked to the payment transaction",
         readonly=True,

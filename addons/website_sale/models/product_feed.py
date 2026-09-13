@@ -23,16 +23,19 @@ class ProductFeed(models.Model):
     _description = "Product Feed"
 
     name = fields.Char(required=True)
-    website_id = fields.Many2one("website", required=True)
+    website_id = fields.Many2one(
+        comodel_name="website",
+        required=True,
+    )
     pricelist_id = fields.Many2one(
-        "product.pricelist",
+        comodel_name="product.pricelist",
         help="Specify a pricelist to localize the feed with a specific currency."
         " If not set, the default website pricelist will be used."
         "\nNote that the pricelist must be selectable on the website.",
         domain="[('website_id', 'in', (False, website_id)), ('selectable', '=', True)]",
     )
     lang_id = fields.Many2one(
-        "res.lang",
+        comodel_name="res.lang",
         string="Language",
         help="Select the language to translate product names, descriptions,"
         " and other text in the feed.",
@@ -45,28 +48,35 @@ class ProductFeed(models.Model):
     )
     website_lang_ids = fields.Many2many(related="website_id.language_ids")
     product_category_ids = fields.Many2many(
-        "product.public.category", string="Categories"
+        comodel_name="product.public.category",
+        string="Categories",
     )
     target = fields.Selection(
         selection=[
             ("gmc", "Google Merchant Center"),
         ],
-        required=True,
         default="gmc",
+        required=True,
     )
     access_token = fields.Char(
-        readonly=True,
-        required=True,
         default=lambda _: uuid.uuid4().hex,
         copy=False,
+        readonly=True,
+        required=True,
     )
     url = fields.Char(compute="_compute_url")
 
     last_notification_date = fields.Date()
 
-    feed_cache = fields.Binary(compute="_compute_feed_cache", store=True, readonly=True)
+    feed_cache = fields.Binary(
+        compute="_compute_feed_cache",
+        store=True,
+        readonly=True,
+    )
     cache_expiry = fields.Datetime(
-        readonly=True, required=True, default=fields.Datetime.now
+        default=fields.Datetime.now,
+        readonly=True,
+        required=True,
     )
 
     @api.depends("target")

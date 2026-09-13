@@ -24,11 +24,11 @@ class CalendarEvent(models.Model):
     _inherit = "calendar.event"
 
     booking_capacity_enforced = fields.Boolean(
-        "Enforce Booking Ceiling",
+        string="Enforce Booking Ceiling",
+        help="Public bookings retain their resource capacity constraint when edited or rescheduled.",
         default=False,
         copy=False,
         readonly=True,
-        help="Public bookings retain their resource capacity constraint when edited or rescheduled.",
     )
 
     @api.model
@@ -120,31 +120,41 @@ class CalendarEvent(models.Model):
                 res["partner_ids"] = [Command.set(self.env.user.partner_id.ids)]
         return res
 
-    name = fields.Char(compute="_compute_name", store=True, readonly=False)
+    name = fields.Char(
+        compute="_compute_name",
+        store=True,
+        readonly=False,
+    )
     booking_access_token = fields.Char(
-        "Booking Management Token",
-        default=lambda self: str(uuid.uuid4()),
-        readonly=True,
-        copy=False,
-        index=True,
-        groups="base.group_system",
+        string="Booking Management Token",
         help="Authorize managing a booking. Conference URLs never contain this token.",
+        default=lambda self: str(uuid.uuid4()),
+        index=True,
+        copy=False,
+        readonly=True,
+        groups="base.group_system",
     )
     _booking_access_token_unique = models.Constraint(
         "UNIQUE(booking_access_token)", "Booking management credentials must be unique."
     )
     alarm_ids = fields.Many2many(
-        compute="_compute_alarm_ids", store=True, readonly=False
+        compute="_compute_alarm_ids",
+        store=True,
+        readonly=False,
     )
 
     appointment_response_ids = fields.One2many(
-        "survey.user_input", "calendar_event_id", copy=False
+        comodel_name="survey.user_input",
+        inverse_name="calendar_event_id",
+        copy=False,
     )
     appointment_answer_input_ids = fields.One2many(
-        "survey.user_input.line", "calendar_event_id", string="Appointment Answers"
+        comodel_name="survey.user_input.line",
+        inverse_name="calendar_event_id",
+        string="Appointment Answers",
     )
     appointment_status = fields.Selection(
-        [
+        selection=[
             ("request", "Request"),
             ("booked", "Booked"),
             ("attended", "Checked-In"),
@@ -157,7 +167,10 @@ class CalendarEvent(models.Model):
         tracking=True,
     )
     appointment_type_id = fields.Many2one(
-        "appointment.type", "Appointment", index="btree_not_null", tracking=True
+        comodel_name="appointment.type",
+        string="Appointment",
+        index="btree_not_null",
+        tracking=True,
     )
     appointment_type_schedule_based_on = fields.Selection(
         related="appointment_type_id.schedule_based_on"
@@ -166,60 +179,65 @@ class CalendarEvent(models.Model):
         related="appointment_type_id.manage_capacity"
     )
     appointment_invite_id = fields.Many2one(
-        "appointment.invite",
-        "Appointment Invitation",
-        readonly=True,
+        comodel_name="appointment.invite",
+        string="Appointment Invitation",
         index="btree_not_null",
+        readonly=True,
         ondelete="set null",
     )
     appointment_resource_ids = fields.Many2many(
-        "appointment.resource",
-        "appointment_booking_line",
-        "calendar_event_id",
-        "appointment_resource_id",
+        comodel_name="appointment.resource",
+        relation="appointment_booking_line",
+        column1="calendar_event_id",
+        column2="appointment_resource_id",
         string="Appointment Resources",
-        group_expand="_read_group_appointment_resource_ids",
         depends=["booking_line_ids"],
-        readonly=True,
         copy=False,
+        readonly=True,
+        group_expand="_read_group_appointment_resource_ids",
     )
     # This field is used in the form view to create/manage the booking lines based on the total_capacity_reserved
     # selected. This allows to have the appointment_resource_ids field linked to the appointment_booking_line model and
     # thus avoid the duplication of information.
     resource_ids = fields.Many2many(
-        "appointment.resource",
+        comodel_name="appointment.resource",
         string="Resources",
         compute="_compute_resource_ids",
         inverse="_inverse_resource_ids_or_capacity",
         search="_search_resource_ids",
-        group_expand="_read_group_appointment_resource_ids",
         copy=False,
+        group_expand="_read_group_appointment_resource_ids",
     )
     booking_line_ids = fields.One2many(
-        "appointment.booking.line",
-        "calendar_event_id",
+        comodel_name="appointment.booking.line",
+        inverse_name="calendar_event_id",
         string="Booking Lines",
         copy=True,
     )
     partner_ids = fields.Many2many(
-        "res.partner", group_expand="_read_group_partner_ids"
+        comodel_name="res.partner",
+        group_expand="_read_group_partner_ids",
     )
     total_capacity_reserved = fields.Integer(
         compute="_compute_total_capacity",
         inverse="_inverse_resource_ids_or_capacity",
     )
     total_capacity_used = fields.Integer(compute="_compute_total_capacity")
-    user_id = fields.Many2one("res.users", group_expand="_read_group_user_id")
+    user_id = fields.Many2one(
+        comodel_name="res.users",
+        group_expand="_read_group_user_id",
+    )
     videocall_redirection = fields.Char(
-        "Meeting redirection URL", compute="_compute_videocall_redirection"
+        string="Meeting redirection URL",
+        compute="_compute_videocall_redirection",
     )
     appointment_booker_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Person who is booking the appointment",
         index="btree_not_null",
     )
     unavailable_resource_ids = fields.Many2many(
-        "appointment.resource",
+        comodel_name="appointment.resource",
         string="Resources intersecting with leave time",
         compute="_compute_unavailable_resource_ids",
     )

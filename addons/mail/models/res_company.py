@@ -10,28 +10,24 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     alias_domain_id: MailAliasDomain = fields.Many2one(
-        "mail.alias.domain",
+        comodel_name="mail.alias.domain",
         string="Email Domain",
-        index="btree_not_null",
         default=lambda self: self._default_alias_domain_id(),
+        index="btree_not_null",
     )
-    bounce_email = fields.Char(
-        compute="_compute_bounce",
-    )
+    bounce_email = fields.Char(compute="_compute_bounce")
     bounce_formatted = fields.Char(
         string="Bounce",
         compute="_compute_bounce",
     )
-    catchall_email = fields.Char(
-        compute="_compute_catchall",
-    )
+    catchall_email = fields.Char(compute="_compute_catchall")
     catchall_formatted = fields.Char(
         string="Catchall",
         compute="_compute_catchall",
     )
     default_from_email = fields.Char(
-        string="Default From",
         related="alias_domain_id.default_from_email",
+        string="Default From",
         readonly=True,
     )
     email_formatted = fields.Char(
@@ -40,12 +36,12 @@ class ResCompany(models.Model):
         compute_sudo=True,
     )
     email_primary_color = fields.Char(
-        "Email Button Text",
+        string="Email Button Text",
         default="#FFFFFF",
         readonly=False,
     )
     email_secondary_color = fields.Char(
-        "Email Button Color",
+        string="Email Button Color",
         default="#875A7B",
         readonly=False,
     )

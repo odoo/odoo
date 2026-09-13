@@ -21,23 +21,23 @@ class StockReplenishmentInfo(models.TransientModel):
 
     orderpoint_id = fields.Many2one(comodel_name="stock.warehouse.orderpoint")
     product_id = fields.Many2one(
-        related="orderpoint_id.product_id",
         comodel_name="product.product",
+        related="orderpoint_id.product_id",
     )
     product_uom_name = fields.Char(related="orderpoint_id.product_uom_name")
     product_min_qty = fields.Float(
         related="orderpoint_id.product_min_qty",
         string="Min",
-        required=True,
-        readonly=False,
         related_sudo=False,
+        readonly=False,
+        required=True,
     )
     product_max_qty = fields.Float(
         related="orderpoint_id.product_max_qty",
         string="Max",
-        required=True,
-        readonly=False,
         related_sudo=False,
+        readonly=False,
+        required=True,
     )
     qty_to_order = fields.Float(related="orderpoint_id.qty_to_order")
     json_lead_days = fields.Char(compute="_compute_json_lead_days")
@@ -54,14 +54,17 @@ class StockReplenishmentInfo(models.TransientModel):
             ("last_year_quarter", "Last year quarter"),
         ],
         string="Based on",
-        required=True,
-        default="one_month",
         help="Estimate the sales volume for the period based on past period or order the forecasted quantity for that period.",
+        default="one_month",
+        required=True,
     )
-    percent_factor = fields.Integer(required=True, default=100)
+    percent_factor = fields.Integer(
+        default=100,
+        required=True,
+    )
 
     warehouseinfo_ids = fields.One2many(
-        related="orderpoint_id.warehouse_id.resupply_route_ids",
+        related="orderpoint_id.warehouse_id.resupply_route_ids"
     )
     wh_replenishment_option_ids = fields.One2many(
         comodel_name="stock.replenishment.option",
@@ -330,12 +333,12 @@ class StockReplenishmentOption(models.TransientModel):
     product_id = fields.Many2one(comodel_name="product.product")
     replenishment_info_id = fields.Many2one(comodel_name="stock.replenishment.info")
     location_id = fields.Many2one(
-        related="warehouse_id.lot_stock_id",
         comodel_name="stock.location",
+        related="warehouse_id.lot_stock_id",
     )
     warehouse_id = fields.Many2one(
-        related="route_id.supplier_wh_id",
         comodel_name="stock.warehouse",
+        related="route_id.supplier_wh_id",
     )
     uom = fields.Char(related="product_id.uom_name")
     qty_to_order = fields.Float(related="replenishment_info_id.qty_to_order")

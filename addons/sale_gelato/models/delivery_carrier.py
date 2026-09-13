@@ -8,12 +8,13 @@ class ProviderGelato(models.Model):
     _inherit = "delivery.carrier"
 
     delivery_type = fields.Selection(
-        selection_add=[("gelato", "Gelato")], ondelete={"gelato": "cascade"}
+        selection_add=[("gelato", "Gelato")],
+        ondelete={"gelato": "cascade"},
     )
     gelato_shipping_service_type = fields.Selection(
         selection=[("normal", "Standard Delivery"), ("express", "Express Delivery")],
-        required=True,
         default="normal",
+        required=True,
     )
 
     def _is_available_for_order(self, order):

@@ -7,9 +7,13 @@ class CrmTag(models.Model):
     _description = "CRM Tag"
 
     parent_id = fields.Many2one(
-        "crm.tag",
+        comodel_name="crm.tag",
         string="Parent Tag",
         index=True,
         ondelete="cascade",
     )
-    child_ids = fields.One2many("crm.tag", "parent_id", string="Child Tags")
+    child_ids = fields.One2many(
+        comodel_name="crm.tag",
+        inverse_name="parent_id",
+        string="Child Tags",
+    )

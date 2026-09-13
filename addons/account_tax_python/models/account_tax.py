@@ -20,12 +20,12 @@ class AccountTax(models.Model):
         },
     )
     formula = fields.Text(
-        default="price_unit * 0.10",
         help="Compute the amount of the tax.\n\n"
         ":param base: float, actual amount on which the tax is applied\n"
         ":param price_unit: float\n"
         ":param quantity: float\n"
         ":param product: A object representing the product\n",
+        default="price_unit * 0.10",
     )
     formula_decoded_info = fields.Json(compute="_compute_formula_decoded_info")
 

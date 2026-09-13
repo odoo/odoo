@@ -6,7 +6,10 @@ from odoo import _, fields, models
 class SurveyUser_Input(models.Model):
     _inherit = "survey.user_input"
 
-    lead_id = fields.Many2one("crm.lead", ondelete="set null")
+    lead_id = fields.Many2one(
+        comodel_name="crm.lead",
+        ondelete="set null",
+    )
 
     def _mark_done(self):
         super()._mark_done()

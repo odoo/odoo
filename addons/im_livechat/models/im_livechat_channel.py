@@ -29,53 +29,61 @@ class Im_LivechatChannel(models.Model):
     def _default_default_message(self):
         return _("How may I help you?")
 
-    name = fields.Char("Channel Name", required=True)
+    name = fields.Char(
+        string="Channel Name",
+        required=True,
+    )
     button_text = fields.Char(
-        "Text of the Button", default=_default_button_text, translate=True
+        string="Text of the Button",
+        translate=True,
+        default=_default_button_text,
     )
     default_message = fields.Char(
-        "Welcome Message",
-        default=_default_default_message,
+        string="Welcome Message",
         help="This is an automated 'welcome' message that your visitor will see when they initiate a new conversation.",
         translate=True,
+        default=_default_default_message,
     )
     header_background_color = fields.Char(
-        default="#875A7B",
         help="Default background color of the channel header once open",
+        default="#875A7B",
     )
     title_color = fields.Char(
-        default="#FFFFFF", help="Default title color of the channel once open"
+        help="Default title color of the channel once open",
+        default="#FFFFFF",
     )
     button_background_color = fields.Char(
-        default="#875A7B", help="Default background color of the Livechat button"
+        help="Default background color of the Livechat button",
+        default="#875A7B",
     )
     button_text_color = fields.Char(
-        default="#FFFFFF", help="Default text color of the Livechat button"
+        help="Default text color of the Livechat button",
+        default="#FFFFFF",
     )
     max_sessions_mode = fields.Selection(
-        [("unlimited", "Unlimited"), ("limited", "Limited")],
-        default="unlimited",
+        selection=[("unlimited", "Unlimited"), ("limited", "Limited")],
         string="Sessions per Operator",
         help="If limited, operators will only handle the selected number of sessions at a time.",
+        default="unlimited",
     )
     max_sessions = fields.Integer(
-        default=10,
         string="Maximum Sessions",
         help="Maximum number of concurrent sessions per operator.",
+        default=10,
     )
     block_assignment_during_call = fields.Boolean(
-        "No Chats During Call",
+        string="No Chats During Call",
         help="While on a call, agents will not receive new conversations.",
     )
     review_link = fields.Char(
-        help="Visitors who leave a positive review will be redirected to this optional link.",
+        help="Visitors who leave a positive review will be redirected to this optional link."
     )
 
     web_page = fields.Char(
+        help="URL to a static page where you client can discuss with the operator of the channel.",
         compute="_compute_web_page_link",
         store=False,
         readonly=True,
-        help="URL to a static page where you client can discuss with the operator of the channel.",
     )
     are_you_inside = fields.Boolean(
         string="Are you inside the matrix?",
@@ -84,37 +92,48 @@ class Im_LivechatChannel(models.Model):
         readonly=True,
     )
     available_operator_ids = fields.Many2many(
-        "res.users", compute="_compute_available_operator_ids"
+        comodel_name="res.users",
+        compute="_compute_available_operator_ids",
     )
     script_external = fields.Html(
-        "Script (external)",
+        string="Script (external)",
+        sanitize=False,
         compute="_compute_script_external",
         store=False,
         readonly=True,
-        sanitize=False,
     )
     nbr_channel = fields.Integer(
-        "Number of conversation",
+        string="Number of conversation",
         compute="_compute_nbr_channel",
         store=False,
         readonly=True,
     )
 
     user_ids = fields.Many2many(
-        "res.users",
-        "im_livechat_channel_im_user",
-        "channel_id",
-        "user_id",
+        comodel_name="res.users",
+        relation="im_livechat_channel_im_user",
+        column1="channel_id",
+        column2="user_id",
         string="Agents",
         default=_default_user_ids,
     )
-    channel_ids = fields.One2many("discuss.channel", "livechat_channel_id", "Sessions")
-    chatbot_script_count = fields.Integer(
-        string="Number of Chatbot", compute="_compute_chatbot_script_count"
+    channel_ids = fields.One2many(
+        comodel_name="discuss.channel",
+        inverse_name="livechat_channel_id",
+        string="Sessions",
     )
-    rule_ids = fields.One2many("im_livechat.channel.rule", "channel_id", "Rules")
+    chatbot_script_count = fields.Integer(
+        string="Number of Chatbot",
+        compute="_compute_chatbot_script_count",
+    )
+    rule_ids = fields.One2many(
+        comodel_name="im_livechat.channel.rule",
+        inverse_name="channel_id",
+        string="Rules",
+    )
     ongoing_session_count = fields.Integer(
-        "Number of Ongoing Sessions", compute="_compute_ongoing_sessions_count"
+        string="Number of Ongoing Sessions",
+        compute="_compute_ongoing_sessions_count",
     )
     remaining_session_capacity = fields.Integer(
         compute="_compute_remaining_session_capacity"
@@ -679,57 +698,60 @@ class Im_LivechatChannelRule(models.Model):
     _order = "sequence asc"
 
     regex_url = fields.Char(
-        "URL Regex",
+        string="URL Regex",
         help="Regular expression specifying the web pages this rule will be applied on.",
     )
     action = fields.Selection(
-        [
+        selection=[
             ("display_button", "Show"),
             ("display_button_and_text", "Show with notification"),
             ("auto_popup", "Open automatically"),
             ("hide_button", "Hide"),
         ],
         string="Live Chat Button",
-        required=True,
-        default="display_button",
         help="* 'Show' displays the chat button on the pages.\n"
         "* 'Show with notification' is 'Show' in addition to a floating text just next to the button.\n"
         "* 'Open automatically' displays the button and automatically opens the conversation pane.\n"
         "* 'Hide' hides the chat button on the pages.\n",
+        default="display_button",
+        required=True,
     )
     auto_popup_timer = fields.Integer(
-        "Time to Open",
-        default=0,
+        string="Time to Open",
         help="Delay (in seconds) to automatically open the conversation window. Note: the selected action must be 'Open automatically' otherwise this parameter will not be taken into account.",
+        default=0,
     )
-    chatbot_script_id = fields.Many2one("chatbot.script", string="Chatbot")
+    chatbot_script_id = fields.Many2one(
+        comodel_name="chatbot.script",
+        string="Chatbot",
+    )
     chatbot_enabled_condition = fields.Selection(
-        string="Enable ChatBot",
         selection=[
             ("always", "Always"),
             ("only_if_no_operator", "Only when no operator is available"),
             ("only_if_operator", "Only when an operator is available"),
         ],
-        required=True,
+        string="Enable ChatBot",
         default="always",
+        required=True,
     )
     channel_id = fields.Many2one(
-        "im_livechat.channel",
-        index="btree_not_null",
+        comodel_name="im_livechat.channel",
         help="The channel of the rule",
+        index="btree_not_null",
     )
     country_ids = fields.Many2many(
-        "res.country",
-        "im_livechat_channel_country_rel",
-        "channel_id",
-        "country_id",
-        "Countries",
+        comodel_name="res.country",
+        relation="im_livechat_channel_country_rel",
+        column1="channel_id",
+        column2="country_id",
+        string="Countries",
         help="The rule will only be applied for these countries. Example: if you select 'Belgium' and 'United States' and that you set the action to 'Hide', the chat button will be hidden on the specified URL from the visitors located in these 2 countries. This feature requires GeoIP installed on your server.",
     )
     sequence = fields.Integer(
-        "Matching order",
-        default=10,
+        string="Matching order",
         help="Given the order to find a matching rule. If 2 rules are matching for the given url/country, the one with the lowest sequence will be chosen.",
+        default=10,
     )
 
     def match_rule(self, channel_id, url, country_id=False):

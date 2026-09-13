@@ -15,13 +15,20 @@ class ProductLabelLayout(models.TransientModel):
             ("4x12xprice", "4 x 12 with price"),
         ],
         string="Format",
-        required=True,
         default="2x7xprice",
+        required=True,
     )
-    custom_quantity = fields.Integer(string="Copies", required=True, default=1)
+    custom_quantity = fields.Integer(
+        string="Copies",
+        default=1,
+        required=True,
+    )
     product_ids = fields.Many2many(comodel_name="product.product")
     product_tmpl_ids = fields.Many2many(comodel_name="product.template")
-    extra_html = fields.Html(string="Extra Content", default="")
+    extra_html = fields.Html(
+        string="Extra Content",
+        default="",
+    )
     rows = fields.Integer(compute="_compute_dimensions")
     columns = fields.Integer(compute="_compute_dimensions")
     pricelist_id = fields.Many2one(comodel_name="product.pricelist")

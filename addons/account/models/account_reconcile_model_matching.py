@@ -32,8 +32,14 @@ MATCH_FIELDS = frozenset(
 class AccountReconcileModel(models.Model):
     _inherit = "account.reconcile.model"
 
-    created_automatically = fields.Boolean(default=False, copy=False)
-    is_bank_fee_model = fields.Boolean(default=False, copy=False)
+    created_automatically = fields.Boolean(
+        default=False,
+        copy=False,
+    )
+    is_bank_fee_model = fields.Boolean(
+        default=False,
+        copy=False,
+    )
 
     @api.model
     def _get_match_text_sql(self, st_line="st_line"):

@@ -22,11 +22,11 @@ class DocumentsDocument(models.Model):
         ondelete={"inside": "set default"},
     )
     form_field_ids = fields.Many2many(
-        string="Form Fields Included",
         comodel_name="sale.pdf.form.field",
-        domain=[("document_type", "=", "product_document")],
+        string="Form Fields Included",
         compute="_compute_form_field_ids",
         store=True,
+        domain=[("document_type", "=", "product_document")],
     )
 
     @api.constrains("attached_on_sale", "datas", "type")

@@ -8,10 +8,12 @@ class MailingMailing(models.Model):
     _inherit = "mailing.mailing"
 
     sale_quotation_count = fields.Integer(
-        "Quotation Count", compute="_compute_sale_quotation_count"
+        string="Quotation Count",
+        compute="_compute_sale_quotation_count",
     )
     sale_invoiced_amount = fields.Integer(
-        "Invoiced Amount", compute="_compute_sale_invoiced_amount"
+        string="Invoiced Amount",
+        compute="_compute_sale_invoiced_amount",
     )
 
     @api.depends("mailing_domain")

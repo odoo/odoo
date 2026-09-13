@@ -11,7 +11,7 @@ class MailMessage(models.Model):
         ondelete={"sms": lambda recs: recs.write({"message_type": "comment"})},
     )
     has_sms_error = fields.Boolean(
-        "Has SMS error",
+        string="Has SMS error",
         compute="_compute_has_sms_error",
         search="_search_has_sms_error",
     )

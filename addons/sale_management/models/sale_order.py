@@ -12,11 +12,11 @@ class SaleOrder(models.Model):
         comodel_name="sale.order.template",
         string="Quotation Template",
         compute="_compute_sale_order_template_id",
+        precompute=True,
         store=True,
         readonly=False,
-        check_company=True,
-        precompute=True,
         domain="[('company_id', 'in', [False, company_id])]",
+        check_company=True,
     )
 
     def _compute_sale_order_template_id(self):

@@ -9,29 +9,34 @@ class ResUsersSettingsEmbeddedAction(models.Model):
     _description = "User Settings for Embedded Actions"
 
     user_setting_id = fields.Many2one(
-        "res.users.settings",
+        comodel_name="res.users.settings",
+        export_string_translation=False,
+        index="btree_not_null",
         required=True,
         ondelete="cascade",
-        index="btree_not_null",
-        export_string_translation=False,
     )
     action_id = fields.Many2one(
-        "ir.actions.act_window",
+        comodel_name="ir.actions.act_window",
+        export_string_translation=False,
         required=True,
         ondelete="cascade",
-        export_string_translation=False,
     )
-    res_model = fields.Char(required=True, export_string_translation=False)
+    res_model = fields.Char(
+        export_string_translation=False,
+        required=True,
+    )
     res_id = fields.Integer(export_string_translation=False)
     embedded_actions_order = fields.Char(
-        "List order of embedded action ids", export_string_translation=False
+        string="List order of embedded action ids",
+        export_string_translation=False,
     )
     embedded_actions_visibility = fields.Char(
-        "List visibility of embedded actions ids",
+        string="List visibility of embedded actions ids",
         export_string_translation=False,
     )
     embedded_visibility = fields.Boolean(
-        "Is top bar visible", export_string_translation=False
+        string="Is top bar visible",
+        export_string_translation=False,
     )
 
     _res_user_settings_embedded_action_unique = models.UniqueIndex(

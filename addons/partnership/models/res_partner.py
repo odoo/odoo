@@ -6,10 +6,10 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     grade_id = fields.Many2one(
-        "res.partner.grade",
-        "Partner Level",
-        tracking=True,
+        comodel_name="res.partner.grade",
+        string="Partner Level",
         group_expand="_read_group_expand_full",
+        tracking=True,
     )
 
     def write(self, vals):

@@ -51,34 +51,42 @@ class MixinRecurrenceAnchored(models.AbstractModel):
     _description = "Anchored Recurrence Mixin"
 
     repeat_unit = fields.Selection(
-        REPEAT_UNIT_SELECTION,
+        selection=REPEAT_UNIT_SELECTION,
         string="Every",
+        export_string_translation=False,
         default="month",
         required=True,
-        export_string_translation=False,
     )
     repeat_twice = fields.Boolean(
         string="Twice per Period",
         help="Two anchors in each month or year instead of one",
     )
     repeat_weekday = fields.Selection(
-        WEEKDAY_SELECTION, string="Weekday", default="MON"
+        selection=WEEKDAY_SELECTION,
+        string="Weekday",
+        default="MON",
     )
     repeat_day = fields.Selection(
-        ANCHOR_DAY_SELECTION,
+        selection=ANCHOR_DAY_SELECTION,
         compute="_compute_repeat_day",
+        default="1",
         store=True,
         readonly=False,
+    )
+    repeat_month = fields.Selection(
+        selection=MONTH_SELECTION,
         default="1",
     )
-    repeat_month = fields.Selection(MONTH_SELECTION, default="1")
     repeat_second_day = fields.Selection(
-        ANCHOR_DAY_SELECTION,
+        selection=ANCHOR_DAY_SELECTION,
         compute="_compute_repeat_second_day",
         store=True,
         readonly=False,
     )
-    repeat_second_month = fields.Selection(MONTH_SELECTION, default="7")
+    repeat_second_month = fields.Selection(
+        selection=MONTH_SELECTION,
+        default="7",
+    )
 
     @staticmethod
     def _clamp_day(day, month):

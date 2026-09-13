@@ -33,18 +33,22 @@ class PhoneNumber(models.Model):
         index=True,
         readonly=True,
     )
-    type = fields.Selection(PHONE_TYPES, required=True, default="mobile")
-    country_id = fields.Many2one("res.country")
+    type = fields.Selection(
+        selection=PHONE_TYPES,
+        default="mobile",
+        required=True,
+    )
+    country_id = fields.Many2one(comodel_name="res.country")
     primary = fields.Boolean(default=False)
     sequence = fields.Integer(default=10)
     label = fields.Char()
     note = fields.Text()
     active = fields.Boolean(default=True)
     partner_ids = fields.Many2many(
-        "res.partner",
-        "res_partner_phone_number_rel",
-        "phone_number_id",
-        "partner_id",
+        comodel_name="res.partner",
+        relation="res_partner_phone_number_rel",
+        column1="phone_number_id",
+        column2="partner_id",
         string="Contacts",
     )
 

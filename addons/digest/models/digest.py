@@ -84,35 +84,46 @@ class DigestDigest(models.Model):
     _order = "name, id"
 
     # Digest description
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
     user_ids = fields.Many2many(
-        "res.users", string="Recipients", domain="[('share', '=', False)]"
+        comodel_name="res.users",
+        string="Recipients",
+        domain="[('share', '=', False)]",
     )
     periodicity = fields.Selection(
-        PERIODICITY_SELECTION, default="daily", required=True
+        selection=PERIODICITY_SELECTION,
+        default="daily",
+        required=True,
     )
     next_run_date = fields.Date(string="Next Mailing Date")
     currency_id = fields.Many2one(
-        related="company_id.currency_id", string="Currency", readonly=False
+        related="company_id.currency_id",
+        string="Currency",
+        readonly=False,
     )
     company_id = fields.Many2one(
-        "res.company", default=lambda self: self.env.company.id
+        comodel_name="res.company",
+        default=lambda self: self.env.company.id,
     )
     is_subscribed = fields.Boolean(
-        "Is user subscribed", compute="_compute_is_subscribed"
+        string="Is user subscribed",
+        compute="_compute_is_subscribed",
     )
     state = fields.Selection(
-        [("activated", "Activated"), ("deactivated", "Deactivated")],
+        selection=[("activated", "Activated"), ("deactivated", "Deactivated")],
         string="Status",
-        readonly=True,
         default="activated",
+        readonly=True,
     )
     # First base-related KPIs
-    kpi_res_users_connected = fields.Boolean("Connected Users")
+    kpi_res_users_connected = fields.Boolean(string="Connected Users")
     kpi_res_users_connected_value = fields.Integer(
         compute="_compute_kpi_res_users_connected_value"
     )
-    kpi_mail_message_total = fields.Boolean("Messages Sent")
+    kpi_mail_message_total = fields.Boolean(string="Messages Sent")
     kpi_mail_message_total_value = fields.Integer(
         compute="_compute_kpi_mail_message_total_value"
     )

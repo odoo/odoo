@@ -11,11 +11,16 @@ class CardCard(models.Model):
 
     active = fields.Boolean(default=True)
     campaign_id = fields.Many2one(
-        "card.campaign", required=True, index=True, ondelete="cascade"
+        comodel_name="card.campaign",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     res_model = fields.Selection(related="campaign_id.res_model")
     res_id = fields.Many2oneReference(
-        "Record ID", model_field="res_model", required=True
+        model_field="res_model",
+        string="Record ID",
+        required=True,
     )
     image = fields.Image()
     requires_sync = fields.Boolean(
@@ -23,7 +28,7 @@ class CardCard(models.Model):
         default=True,
     )
     share_status = fields.Selection(
-        [
+        selection=[
             ("shared", "Shared"),
             ("visited", "Visited"),
         ]

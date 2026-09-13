@@ -30,19 +30,34 @@ class ReportStockQuantity(models.Model):
     }
 
     date = fields.Date(readonly=True)
-    product_tmpl_id = fields.Many2one("product.template", readonly=True)
-    product_id = fields.Many2one("product.product", readonly=True)
+    product_tmpl_id = fields.Many2one(
+        comodel_name="product.template",
+        readonly=True,
+    )
+    product_id = fields.Many2one(
+        comodel_name="product.product",
+        readonly=True,
+    )
     state = fields.Selection(
-        [
+        selection=[
             ("forecast", "Forecasted Stock"),
             ("in", "Forecasted Receipts"),
             ("out", "Forecasted Deliveries"),
         ],
         readonly=True,
     )
-    product_qty = fields.Float(string="Quantity", readonly=True)
-    company_id = fields.Many2one("res.company", readonly=True)
-    warehouse_id = fields.Many2one("stock.warehouse", readonly=True)
+    product_qty = fields.Float(
+        string="Quantity",
+        readonly=True,
+    )
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        readonly=True,
+    )
+    warehouse_id = fields.Many2one(
+        comodel_name="stock.warehouse",
+        readonly=True,
+    )
 
     def _get_product_qty_col(self):
         return "q.quantity"

@@ -12,19 +12,17 @@ class CredentialAccessLog(models.Model):
     service_name = fields.Char(
         related="credential_id.endpoint_id.name",
         string="Service",
-        store=False,
         help="Name of the API service (if credential is linked to one)",
+        store=False,
     )
     field_accessed = fields.Char(
-        help="Which credential field was accessed (api_key, bearer_token, etc.)",
+        help="Which credential field was accessed (api_key, bearer_token, etc.)"
     )
     success = fields.Boolean(
-        default=True,
         help="Whether the access was successful",
+        default=True,
     )
-    failure_reason = fields.Char(
-        help="Reason for access failure (if applicable)",
-    )
+    failure_reason = fields.Char(help="Reason for access failure (if applicable)")
 
     def action_view_related_logs(self) -> dict[str, Any]:
         self.check_singleton()

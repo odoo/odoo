@@ -11,8 +11,8 @@ class PurchaseReport(models.Model):
     _order = "date_order desc, price_total desc"
 
     order_reference = fields.Reference(
-        string="Order",
         selection=[("purchase.order", "Purchase Order")],
+        string="Order",
         aggregator="count_distinct",
     )
     currency_id = fields.Many2one(
@@ -66,9 +66,18 @@ class PurchaseReport(models.Model):
         string="Reference Unit of Measure",
         readonly=True,
     )
-    qty_transferred = fields.Float(string="Qty Received", readonly=True)
-    qty_invoiced = fields.Float(string="Qty Billed", readonly=True)
-    qty_to_invoice = fields.Float(string="Qty to be Billed", readonly=True)
+    qty_transferred = fields.Float(
+        string="Qty Received",
+        readonly=True,
+    )
+    qty_invoiced = fields.Float(
+        string="Qty Billed",
+        readonly=True,
+    )
+    qty_to_invoice = fields.Float(
+        string="Qty to be Billed",
+        readonly=True,
+    )
     price_average = fields.Monetary(
         string="Average Cost",
         readonly=True,
@@ -76,17 +85,17 @@ class PurchaseReport(models.Model):
     )
     delay = fields.Float(
         string="Days to Confirm",
+        help="Amount of time between purchase confirmation and order by date.",
         digits=(16, 2),
         readonly=True,
         aggregator="avg",
-        help="Amount of time between purchase confirmation and order by date.",
     )
     delay_pass = fields.Float(
         string="Days to Receive",
+        help="Amount of time between date planned and order by date for each purchase order line.",
         digits=(16, 2),
         readonly=True,
         aggregator="avg",
-        help="Amount of time between date planned and order by date for each purchase order line.",
     )
 
     def _get_fields_select(self) -> dict:

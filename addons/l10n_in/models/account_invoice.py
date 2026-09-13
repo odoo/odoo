@@ -41,33 +41,37 @@ class AccountMove(models.Model):
         ],
         string="GST Treatment",
         compute="_compute_l10n_in_gst_treatment",
-        store=True,
-        readonly=False,
-        copy=True,
         precompute=True,
+        store=True,
+        copy=True,
+        readonly=False,
     )
     l10n_in_state_id = fields.Many2one(
         comodel_name="res.country.state",
         string="Place of supply",
         compute="_compute_l10n_in_state_id",
+        precompute=True,
         store=True,
         copy=True,
         readonly=False,
-        precompute=True,
     )
     l10n_in_gstin = fields.Char(string="GSTIN")
     # For Export invoice this data is need in GSTR report
-    l10n_in_shipping_bill_number = fields.Char("Shipping bill number")
-    l10n_in_shipping_bill_date = fields.Date("Shipping bill date")
-    l10n_in_shipping_port_code_id = fields.Many2one("l10n_in.port.code", "Port code")
+    l10n_in_shipping_bill_number = fields.Char(string="Shipping bill number")
+    l10n_in_shipping_bill_date = fields.Date(string="Shipping bill date")
+    l10n_in_shipping_port_code_id = fields.Many2one(
+        comodel_name="l10n_in.port.code",
+        string="Port code",
+    )
     l10n_in_reseller_partner_id = fields.Many2one(
         comodel_name="res.partner",
         string="Reseller",
-        domain=[("vat", "!=", False)],
         help="Only Registered Reseller",
+        domain=[("vat", "!=", False)],
     )
     l10n_in_journal_type = fields.Selection(
-        string="Journal Type", related="journal_id.type"
+        related="journal_id.type",
+        string="Journal Type",
     )
     l10n_in_warning = fields.Json(compute="_compute_l10n_in_warning")
     l10n_in_is_gst_registered_enabled = fields.Boolean(
@@ -81,38 +85,40 @@ class AccountMove(models.Model):
     # withholding related fields
     l10n_in_is_withholding = fields.Boolean(
         string="Is Indian TDS Entry",
-        copy=False,
         help="Technical field to identify Indian withholding entry",
+        copy=False,
     )
     l10n_in_withholding_ref_move_id = fields.Many2one(
         comodel_name="account.move",
         string="Indian TDS Ref Move",
-        readonly=True,
+        help="Reference move for withholding entry",
         index="btree_not_null",
         copy=False,
-        help="Reference move for withholding entry",
+        readonly=True,
     )
     l10n_in_withholding_ref_payment_id = fields.Many2one(
         comodel_name="account.payment",
         string="Indian TDS Ref Payment",
-        index="btree_not_null",
-        readonly=True,
-        copy=False,
         help="Reference Payment for withholding entry",
+        index="btree_not_null",
+        copy=False,
+        readonly=True,
     )
     l10n_in_withhold_move_ids = fields.One2many(
-        "account.move", "l10n_in_withholding_ref_move_id", string="Indian TDS Entries"
+        comodel_name="account.move",
+        inverse_name="l10n_in_withholding_ref_move_id",
+        string="Indian TDS Entries",
     )
     l10n_in_withholding_line_ids = fields.One2many(
-        "account.move.line",
-        "move_id",
+        comodel_name="account.move.line",
+        inverse_name="move_id",
         string="Indian TDS Lines",
         compute="_compute_l10n_in_withholding_line_ids",
     )
     l10n_in_total_withholding_amount = fields.Monetary(
         string="Total Indian TDS Amount",
-        compute="_compute_l10n_in_total_withholding_amount",
         help="Total withholding amount for the move",
+        compute="_compute_l10n_in_total_withholding_amount",
     )
     l10n_in_display_higher_tcs_button = fields.Boolean(
         string="Display higher TCS button",

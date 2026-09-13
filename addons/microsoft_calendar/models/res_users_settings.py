@@ -6,15 +6,19 @@ class ResUsersSettings(models.Model):
 
     # Microsoft Calendar settings.
     microsoft_calendar_sync_token = fields.Char(
-        "Microsoft Next Sync Token", copy=False, groups="base.group_system"
+        string="Microsoft Next Sync Token",
+        copy=False,
+        groups="base.group_system",
     )
     microsoft_synchronization_stopped = fields.Boolean(
-        "Outlook Synchronization stopped", copy=False, groups="base.group_system"
+        string="Outlook Synchronization stopped",
+        copy=False,
+        groups="base.group_system",
     )
     microsoft_last_sync_date = fields.Datetime(
-        "Last Sync Date",
-        copy=False,
+        string="Last Sync Date",
         help="Last synchronization date with Outlook Calendar",
+        copy=False,
         groups="base.group_system",
     )
 

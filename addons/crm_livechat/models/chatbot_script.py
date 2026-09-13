@@ -5,7 +5,8 @@ class ChatbotScript(models.Model):
     _inherit = "chatbot.script"
 
     lead_count = fields.Integer(
-        string="Generated Lead Count", compute="_compute_lead_count"
+        string="Generated Lead Count",
+        compute="_compute_lead_count",
     )
 
     def _compute_lead_count(self):

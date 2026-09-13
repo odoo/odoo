@@ -43,7 +43,7 @@ class BarcodeRule(models.Model):
         related="barcode_nomenclature_id.is_gs1_nomenclature"
     )
     gs1_content_type = fields.Selection(
-        [
+        selection=[
             ("date", "Date"),
             ("measure", "Measure"),
             ("identifier", "Numeric Identifier"),
@@ -57,10 +57,10 @@ class BarcodeRule(models.Model):
         * Alpha-Numeric Name: variable length barcode.",
     )
     gs1_decimal_usage = fields.Boolean(
-        "Decimal",
+        string="Decimal",
         help="If True, use the last digit of AI to determine where the first decimal is",
     )
-    associated_uom_id = fields.Many2one("uom.uom")
+    associated_uom_id = fields.Many2one(comodel_name="uom.uom")
 
     @api.constrains("pattern")
     def _check_pattern(self):

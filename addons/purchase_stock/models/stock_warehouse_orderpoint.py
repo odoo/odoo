@@ -16,28 +16,26 @@ class StockWarehouseOrderpoint(models.Model):
         comodel_name="product.supplierinfo",
         string="Vendor Pricelist",
         inverse="_inverse_supplier_id",
-        check_company=True,
         domain="['|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]",
+        check_company=True,
     )
-    supplier_id_placeholder = fields.Char(
-        compute="_compute_supplier_id_placeholder",
-    )
+    supplier_id_placeholder = fields.Char(compute="_compute_supplier_id_placeholder")
     vendor_ids = fields.One2many(
-        string="Vendors",
         related="product_id.seller_ids",
+        string="Vendors",
     )
     effective_vendor_id = fields.Many2one(
         comodel_name="res.partner",
-        compute="_compute_effective_vendor_id",
-        store=False,
-        search="_search_effective_vendor_id",
         help="Either the vendor set directly or the one computed to be used by this replenishment",
+        compute="_compute_effective_vendor_id",
+        search="_search_effective_vendor_id",
+        store=False,
     )
     available_vendor = fields.Many2one(
         comodel_name="res.partner",
-        store=False,
-        search="_search_available_vendor",
         help="Any vendor on the product's pricelist",
+        search="_search_available_vendor",
+        store=False,
     )
 
     def _compute_days_to_order(self):

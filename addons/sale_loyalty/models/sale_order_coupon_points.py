@@ -8,10 +8,15 @@ class SaleOrderCouponPoints(models.Model):
     )
 
     order_id = fields.Many2one(
-        comodel_name="sale.order", ondelete="cascade", required=True, index=True
+        comodel_name="sale.order",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     coupon_id = fields.Many2one(
-        comodel_name="loyalty.card", ondelete="cascade", required=True
+        comodel_name="loyalty.card",
+        required=True,
+        ondelete="cascade",
     )
     points = fields.Float(required=True)
 

@@ -6,21 +6,21 @@ class MixinBomVariantLine(models.AbstractModel):
     _description = "BoM row that may be restricted to some variants"
 
     bom_id = fields.Many2one(
-        "mrp.bom",
-        "Parent BoM",
+        comodel_name="mrp.bom",
+        string="Parent BoM",
         index=True,
-        ondelete="cascade",
         required=True,
+        ondelete="cascade",
     )
     possible_bom_product_template_attribute_value_ids = fields.Many2many(
         related="bom_id.possible_product_template_attribute_value_ids"
     )
     bom_product_template_attribute_value_ids = fields.Many2many(
-        "product.template.attribute.value",
+        comodel_name="product.template.attribute.value",
         string="Apply on Variants",
-        ondelete="restrict",
-        domain="[('id', 'in', possible_bom_product_template_attribute_value_ids)]",
         help="BOM Product Variants needed to apply this line.",
+        domain="[('id', 'in', possible_bom_product_template_attribute_value_ids)]",
+        ondelete="restrict",
     )
 
     def _is_bom_line_skipped(self, product, never_attribute_values=False):

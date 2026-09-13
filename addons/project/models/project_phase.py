@@ -12,23 +12,30 @@ class ProjectPhase(models.Model):
     _inherit = ["mixin.project.pm"]
     _order = "sequence, id"
 
-    active = fields.Boolean(default=True, export_string_translation=False)
-    sequence = fields.Integer(default=50, export_string_translation=False)
-    name = fields.Char(required=True, translate=True)
+    active = fields.Boolean(
+        export_string_translation=False,
+        default=True,
+    )
+    sequence = fields.Integer(
+        export_string_translation=False,
+        default=50,
+    )
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
     mail_template_id = fields.Many2one(
-        "mail.template",
+        comodel_name="mail.template",
         string="Email Template",
-        domain=[("model", "=", "project.project")],
         help="Email sent automatically when a project enters this phase.",
+        domain=[("model", "=", "project.project")],
     )
     fold = fields.Boolean(
-        "Folded",
-        help=(
-            "Folded phases are shown collapsed in Kanban and List views. "
-            "Projects in a folded phase are considered closed."
-        ),
+        string="Folded",
+        help="Folded phases are shown collapsed in Kanban and List views. "
+        "Projects in a folded phase are considered closed.",
     )
-    company_id = fields.Many2one("res.company")
+    company_id = fields.Many2one(comodel_name="res.company")
     color = fields.Integer(export_string_translation=False)
 
     @api.constrains("mail_template_id")

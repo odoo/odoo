@@ -5,73 +5,83 @@ class StockWarehouse(models.Model):
     _inherit = "stock.warehouse"
 
     manufacture_to_resupply = fields.Boolean(
-        "Manufacture to Resupply",
+        string="Manufacture to Resupply",
+        help="When products are manufactured, they can be manufactured in this warehouse.",
         compute="_compute_manufacture_to_resupply",
         inverse="_inverse_manufacture_to_resupply",
         default=True,
-        help="When products are manufactured, they can be manufactured in this warehouse.",
     )
-    manufacture_pull_id = fields.Many2one("stock.rule", "Manufacture Rule", copy=False)
+    manufacture_pull_id = fields.Many2one(
+        comodel_name="stock.rule",
+        string="Manufacture Rule",
+        copy=False,
+    )
     manufacture_mto_pull_id = fields.Many2one(
-        "stock.rule", "Manufacture MTO Rule", copy=False
+        comodel_name="stock.rule",
+        string="Manufacture MTO Rule",
+        copy=False,
     )
     pbm_mto_pull_id = fields.Many2one(
-        "stock.rule", "Picking Before Manufacturing MTO Rule", copy=False
+        comodel_name="stock.rule",
+        string="Picking Before Manufacturing MTO Rule",
+        copy=False,
     )
     sam_rule_id = fields.Many2one(
-        "stock.rule", "Stock After Manufacturing Rule", copy=False
+        comodel_name="stock.rule",
+        string="Stock After Manufacturing Rule",
+        copy=False,
     )
     manu_type_id = fields.Many2one(
-        "stock.picking.type",
-        "Manufacturing Operation Type",
+        comodel_name="stock.picking.type",
+        string="Manufacturing Operation Type",
+        copy=False,
         domain="[('code', '=', 'mrp_operation'), ('company_id', '=', company_id)]",
         check_company=True,
-        copy=False,
     )
 
     pbm_type_id = fields.Many2one(
-        "stock.picking.type",
-        "Picking Before Manufacturing Operation Type",
-        check_company=True,
+        comodel_name="stock.picking.type",
+        string="Picking Before Manufacturing Operation Type",
         copy=False,
+        check_company=True,
     )
     sam_type_id = fields.Many2one(
-        "stock.picking.type",
-        "Stock After Manufacturing Operation Type",
-        check_company=True,
+        comodel_name="stock.picking.type",
+        string="Stock After Manufacturing Operation Type",
         copy=False,
+        check_company=True,
     )
 
     manufacture_steps = fields.Selection(
-        [
+        selection=[
             ("mrp_one_step", "Manufacture (1 step)"),
             ("pbm", "Pick components then manufacture (2 steps)"),
             ("pbm_sam", "Pick components, manufacture, then store products (3 steps)"),
         ],
-        "Manufacture",
-        default="mrp_one_step",
-        required=True,
+        string="Manufacture",
         help="1 Step: Consume components from stock and produce.\n\
               2 Steps: Pick components from stock and then produce.\n\
               3 Steps: Pick components from stock, produce, and then move final product(s) from production area to stock.",
+        default="mrp_one_step",
+        required=True,
     )
 
     pbm_route_id = fields.Many2one(
-        "stock.route",
-        "Picking Before Manufacturing Route",
-        ondelete="restrict",
+        comodel_name="stock.route",
+        string="Picking Before Manufacturing Route",
         copy=False,
+        ondelete="restrict",
     )
 
     pbm_loc_id = fields.Many2one(
-        "stock.location",
-        "Picking before Manufacturing Location",
+        comodel_name="stock.location",
+        string="Picking before Manufacturing Location",
         copy=False,
         check_company=True,
     )
     sam_loc_id = fields.Many2one(
-        "stock.location",
-        "Stock after Manufacturing Location",
+        comodel_name="stock.location",
+        string="Stock after Manufacturing Location",
         copy=False,
         check_company=True,
     )

@@ -14,7 +14,8 @@ class StockPickingBatch(models.Model):
 
     # Document fields
     l10n_ro_edi_stock_document_ids = fields.One2many(
-        comodel_name="l10n_ro_edi.document", inverse_name="batch_id"
+        comodel_name="l10n_ro_edi.document",
+        inverse_name="batch_id",
     )
 
     def _l10n_ro_edi_stock_is_shipped(self) -> bool:

@@ -4,20 +4,23 @@ from odoo import _, api, fields, models
 class FleetVehicle(models.Model):
     _inherit = "fleet.vehicle"
 
-    mobility_card = fields.Char(compute="_compute_mobility_card", store=True)
+    mobility_card = fields.Char(
+        compute="_compute_mobility_card",
+        store=True,
+    )
     driver_employee_id = fields.Many2one(
-        "hr.employee",
-        "Driver (Employee)",
+        comodel_name="hr.employee",
+        string="Driver (Employee)",
         compute="_compute_driver_employee_id",
         store=True,
+        index="btree_not_null",
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         tracking=True,
-        index="btree_not_null",
     )
     driver_employee_name = fields.Char(related="driver_employee_id.name")
     future_driver_employee_id = fields.Many2one(
-        "hr.employee",
-        "Future Driver (Employee)",
+        comodel_name="hr.employee",
+        string="Future Driver (Employee)",
         compute="_compute_future_driver_employee_id",
         store=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",

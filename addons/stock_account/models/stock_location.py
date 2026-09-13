@@ -6,8 +6,9 @@ class StockLocation(models.Model):
     _inherit = "stock.location"
 
     valuation_account_id = fields.Many2one(
-        "account.account",
-        "Stock Valuation Account",
+        comodel_name="account.account",
+        string="Stock Valuation Account",
+        help="Expense account used to re-qualify products removed from stock and sent to this location",
         domain=[
             (
                 "account_type",
@@ -20,10 +21,9 @@ class StockLocation(models.Model):
                 ),
             )
         ],
-        help="Expense account used to re-qualify products removed from stock and sent to this location",
     )
     is_valued_internal = fields.Boolean(
-        "Is valued inside the company",
+        string="Is valued inside the company",
         compute="_compute_is_valued_internal",
         search="_search_is_valued_internal",
     )

@@ -9,12 +9,12 @@ class MixinMailThread(models.AbstractModel):
     _inherit = "mixin.mail.thread"
 
     rating_ids = fields.One2many(
-        "rating.rating",
-        "res_id",
+        comodel_name="rating.rating",
+        inverse_name="res_id",
         string="Ratings",
-        groups="base.group_user",
         domain=lambda self: [("res_model", "=", self._name)],
         bypass_search_access=True,
+        groups="base.group_user",
     )
 
     # MAIL OVERRIDES

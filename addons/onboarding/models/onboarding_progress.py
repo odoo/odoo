@@ -13,22 +13,26 @@ class OnboardingProgress(models.Model):
     _rec_name = "onboarding_id"
 
     onboarding_state = fields.Selection(
-        ONBOARDING_PROGRESS_STATES,
+        selection=ONBOARDING_PROGRESS_STATES,
         string="Onboarding progress",
         compute="_compute_onboarding_state",
         store=True,
     )
-    is_onboarding_closed = fields.Boolean("Was panel closed?")
-    company_id = fields.Many2one("res.company", ondelete="cascade")
+    is_onboarding_closed = fields.Boolean(string="Was panel closed?")
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        ondelete="cascade",
+    )
     onboarding_id = fields.Many2one(
-        "onboarding.onboarding",
-        "Related onboarding tracked",
-        required=True,
+        comodel_name="onboarding.onboarding",
+        string="Related onboarding tracked",
         index=True,
+        required=True,
         ondelete="cascade",
     )
     progress_step_ids = fields.Many2many(
-        "onboarding.progress.step", string="Progress Steps Trackers"
+        comodel_name="onboarding.progress.step",
+        string="Progress Steps Trackers",
     )
 
     # Not a models.Constraint because COALESCE is not supported in a PostgreSQL UNIQUE constraint.

@@ -15,15 +15,18 @@ class AccountMulticurrencyRevaluationWizard(models.TransientModel):
     _name = "account.multicurrency.revaluation.wizard"
     _description = "Multicurrency Revaluation Wizard"
 
-    company_id = fields.Many2one("res.company", default=lambda self: self.env.company)
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        default=lambda self: self.env.company,
+    )
     journal_id = fields.Many2one(
         comodel_name="account.journal",
         compute="_compute_accounting_values",
         inverse="_inverse_journal_id",
         compute_sudo=True,
-        domain=[("type", "=", "general")],
-        required=True,
         readonly=False,
+        required=True,
+        domain=[("type", "=", "general")],
     )
     date = fields.Date(
         default=lambda self: self.env.context[
@@ -34,25 +37,26 @@ class AccountMulticurrencyRevaluationWizard(models.TransientModel):
     reversal_date = fields.Date(required=True)
     expense_provision_account_id = fields.Many2one(
         comodel_name="account.account",
+        string="Expense Account",
         compute="_compute_accounting_values",
         inverse="_inverse_expense_provision_account_id",
         compute_sudo=True,
-        string="Expense Account",
-        required=True,
         readonly=False,
+        required=True,
     )
     income_provision_account_id = fields.Many2one(
         comodel_name="account.account",
+        string="Income Account",
         compute="_compute_accounting_values",
         inverse="_inverse_income_provision_account_id",
         compute_sudo=True,
-        string="Income Account",
-        required=True,
         readonly=False,
+        required=True,
     )
     preview_data = fields.Text(compute="_compute_preview_data")
     show_warning_move_id = fields.Many2one(
-        "account.move", compute="_compute_show_warning_move_id"
+        comodel_name="account.move",
+        compute="_compute_show_warning_move_id",
     )
 
     @api.model

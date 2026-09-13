@@ -206,17 +206,17 @@ class ProjectTask(models.Model):
         )
 
     project_id = fields.Many2one(
-        "project.project",
-        domain="['|', ('company_id', '=', False), ('company_id', '=?',  company_id)]",
+        comodel_name="project.project",
         compute="_compute_project_id",
-        store=True,
         precompute=True,
         recursive=True,
-        readonly=False,
-        index=True,
-        tracking=True,
         change_default=True,
+        store=True,
+        index=True,
+        readonly=False,
         falsy_value_label=_lt("🔒 Private"),
+        domain="['|', ('company_id', '=', False), ('company_id', '=?',  company_id)]",
+        tracking=True,
     )
     project_privacy_visibility = fields.Selection(
         related="project_id.privacy_visibility",
@@ -224,88 +224,101 @@ class ProjectTask(models.Model):
         tracking=False,
     )
     display_in_project = fields.Boolean(
+        export_string_translation=False,
         compute="_compute_display_in_project",
         store=True,
-        export_string_translation=False,
     )
     task_properties = fields.Properties(
-        "Properties",
         definition="project_id.task_properties_definition",
+        string="Properties",
         copy=True,
     )
     company_id = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
         compute="_compute_company_id",
-        store=True,
-        readonly=False,
         recursive=True,
-        copy=True,
         default=_default_company_id,
+        store=True,
+        copy=True,
+        readonly=False,
     )
     partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Customer",
-        recursive=True,
-        tracking=True,
         compute="_compute_partner_id",
+        recursive=True,
         store=True,
-        readonly=False,
         index="btree_not_null",
+        readonly=False,
         domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]",
+        tracking=True,
     )
     phone_ids = fields.Many2many(
-        "phone.number",
-        "project_task_phone_number_rel",
-        "task_id",
-        "phone_number_id",
+        comodel_name="phone.number",
+        relation="project_task_phone_number_rel",
+        column1="task_id",
+        column2="phone_number_id",
+        string="Contact Numbers",
         compute="_compute_phone_ids",
         inverse="_inverse_phone_ids",
-        string="Contact Numbers",
-        readonly=False,
         store=True,
         copy=False,
+        readonly=False,
     )
     name = fields.Char(
         string="Title",
-        tracking=True,
-        required=True,
         index="trigram",
+        required=True,
+        tracking=True,
     )
-    active = fields.Boolean(default=True, export_string_translation=False)
-    sequence = fields.Integer(default=10, export_string_translation=False)
+    active = fields.Boolean(
+        export_string_translation=False,
+        default=True,
+    )
+    sequence = fields.Integer(
+        export_string_translation=False,
+        default=10,
+    )
     description = fields.Html(sanitize_attributes=False)
     color = fields.Integer(
         string="Color Index",
         export_string_translation=False,
     )
-    create_date = fields.Datetime("Created On", readonly=True, index=True)
-    write_date = fields.Datetime("Last Updated On", readonly=True)
+    create_date = fields.Datetime(
+        string="Created On",
+        index=True,
+        readonly=True,
+    )
+    write_date = fields.Datetime(
+        string="Last Updated On",
+        readonly=True,
+    )
     date_closed = fields.Datetime(
         string="Closed Date",
-        index=True,
-        copy=False,
-        compute="_compute_date_closed",
-        store=True,
-        readonly=False,
         help="When the task actually reached a closed state. Derived from "
         "``state``, the single closure signal every metric reads.",
+        compute="_compute_date_closed",
+        store=True,
+        index=True,
+        copy=False,
+        readonly=False,
     )
     date_assign = fields.Datetime(
         string="Assigning Date",
+        help="Date on which this task was last assigned (or unassigned). Based on this, you can get statistics on the time it usually takes to assign tasks.",
         copy=False,
         readonly=True,
-        help="Date on which this task was last assigned (or unassigned). Based on this, you can get statistics on the time it usually takes to assign tasks.",
     )
     date_start = fields.Datetime(
-        "Start date",
-        tracking=True,
+        string="Start date",
         copy=False,
+        tracking=True,
     )
     date_end = fields.Datetime(
         string="Deadline",
         index=True,
-        tracking=True,
         copy=False,
+        tracking=True,
     )
     _planned_dates_check = models.Constraint(
         "CHECK ((date_start <= date_end))",
@@ -317,18 +330,18 @@ class ProjectTask(models.Model):
         search="_search_date_start_effective",
     )
     planning_overlap = fields.Html(
+        export_string_translation=False,
         compute="_compute_planning_overlap",
         search="_search_planning_overlap",
-        export_string_translation=False,
     )
     dependency_warning = fields.Html(
+        export_string_translation=False,
         compute="_compute_dependency_warning",
         search="_search_dependency_warning",
-        export_string_translation=False,
     )
 
     priority = fields.Selection(
-        [
+        selection=[
             ("0", "Normal"),
             ("1", "Important"),
             ("2", "High"),
@@ -339,7 +352,7 @@ class ProjectTask(models.Model):
         tracking=True,
     )
     state = fields.Selection(
-        [
+        selection=[
             ("todo", "To Do"),
             ("in_progress", "In Progress"),
             ("changes_requested", "Changes Requested"),
@@ -347,42 +360,42 @@ class ProjectTask(models.Model):
             *CLOSED_STATES.items(),
             ("blocked", "Waiting"),
         ],
-        copy=False,
-        required=True,
         compute="_compute_state",
         inverse="_inverse_state",
-        readonly=False,
-        store=True,
         precompute=True,
-        index=True,
         recursive=True,
+        store=True,
+        index=True,
+        copy=False,
+        readonly=False,
+        required=True,
         tracking=True,
     )
     is_closed = fields.Boolean(
-        "Closed state",
+        string="Closed state",
         compute="_compute_is_closed",
         search="_search_is_closed",
     )
     lost_reason_id = fields.Many2one(
         comodel_name="project.task.lost.reason",
-        ondelete="restrict",
         index=True,
+        ondelete="restrict",
         tracking=True,
     )
 
     step_id = fields.Many2one(
-        "project.workflow.step",
+        comodel_name="project.workflow.step",
         string="Workflow Step",
         compute="_compute_step_id",
-        store=True,
         precompute=True,
-        readonly=False,
-        ondelete="restrict",
-        tracking=True,
-        index=True,
         default=_default_step_id,
+        store=True,
+        index=True,
+        readonly=False,
         group_expand="_read_group_step_ids",
         domain="[('project_ids', '=', project_id)]",
+        ondelete="restrict",
+        tracking=True,
     )
     step_color = fields.Integer(
         related="step_id.color",
@@ -395,78 +408,81 @@ class ProjectTask(models.Model):
     )
     date_last_status_change = fields.Datetime(
         string="Last Status Change",
+        help="Date on which the state of your task has last been modified.\n"
+        "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage/state to another.",
         index=True,
         copy=False,
         readonly=True,
-        help="Date on which the state of your task has last been modified.\n"
-        "Based on this information you can identify tasks that are stalling and get statistics on the time it usually takes to move tasks from one stage/state to another.",
     )
 
     role_ids = fields.Many2many(
-        "resource.role",
+        comodel_name="resource.role",
         string="Project Roles",
         help="When you create a project from a template, you can choose which employee takes each role. These employees will be added to the tasks, along with anyone already assigned.",
     )
     user_ids = fields.Many2many(
-        "res.users",
+        comodel_name="res.users",
         relation="project_task_user_rel",
         column1="task_id",
         column2="user_id",
         string="Assignees",
+        default=_default_user_ids,
+        falsy_value_label=_lt("👤 Unassigned"),
+        domain="[('share', '=', False), ('active', '=', True)]",
         context={"active_test": False},
         tracking=True,
-        default=_default_user_ids,
-        domain="[('share', '=', False), ('active', '=', True)]",
-        falsy_value_label=_lt("👤 Unassigned"),
     )
-    tag_ids = fields.Many2many("project.tags", string="Tags")
+    tag_ids = fields.Many2many(
+        comodel_name="project.tags",
+        string="Tags",
+    )
 
     scheduled_hours = fields.Float(
-        "Working Duration",
-        compute="_compute_scheduled_hours",
-        store=True,
+        string="Working Duration",
         help="Working hours within the task's date range, computed against "
         "the company calendar.  PMBOK: Activity Duration in working time "
         "units.  One person at 100%% allocation could cover this many hours.",
+        compute="_compute_scheduled_hours",
+        store=True,
     )
     planned_resources = fields.Integer(
-        default=1,
-        tracking=True,
         help="Number of parallel resources the PM expects to need to deliver "
         "this task in its scheduled window.  Multiplies scheduled_hours to "
         "derive total effort (planned_hours).  Example: 2-day window (16h) "
         "with planned_resources=2 -> 32h effort = work for two people in "
         "parallel.  PMBOK: planned resource units.",
+        default=1,
+        tracking=True,
     )
     _planned_resources_positive = models.Constraint(
         "CHECK (planned_resources > 0)",
         "Planned Resources must be greater than zero.",
     )
     planned_hours = fields.Float(
+        help="Estimated person-hours to complete the task.  Auto-derived as "
+        "scheduled_hours x planned_resources x (allocated_percentage / 100); "
+        "user can override.  PMBOK: Activity Effort / Work (scope baseline).",
         compute="_compute_planned_hours",
         inverse="_inverse_planned_hours",
         store=True,
         readonly=False,
-        help="Estimated person-hours to complete the task.  Auto-derived as "
-        "scheduled_hours x planned_resources x (allocated_percentage / 100); "
-        "user can override.  PMBOK: Activity Effort / Work (scope baseline).",
     )
     planned_hours_manual = fields.Boolean(
-        "Planned Hours Overridden",
-        copy=False,
-        export_string_translation=False,
+        string="Planned Hours Overridden",
         help="Set when a user writes a Planned Hours that contradicts the PMBOK "
         "formula, so the formula stops overwriting their estimate. Cleared by "
         "writing back the value the formula would produce.",
+        export_string_translation=False,
+        copy=False,
     )
     allocated_hours = fields.Float(
-        tracking=True,
         help="Working hours committed across all assigned employees "
         "(sum of reservation_ids.allocated_hours).  PMBOK: Resource "
         "Assignment Work / total person-hours.",
+        tracking=True,
     )
     allocation_state = fields.Selection(
-        [
+        selection=[
             ("unestimated", "Unestimated"),
             ("unallocated", "Unallocated"),
             ("under_allocated", "Under-Allocated"),
@@ -474,56 +490,56 @@ class ProjectTask(models.Model):
             ("over_allocated", "Over-Allocated"),
         ],
         string="Allocation Status",
-        compute="_compute_allocation_state",
-        store=True,
         help="Resource allocation health relative to plan.  Tracks whether "
         "the task has enough employees committed to cover its planned "
         "effort.  Operational signal for PMs.  Pattern analog to "
         "invoice_state on sale.order.",
+        compute="_compute_allocation_state",
+        store=True,
     )
     subtask_planned_hours = fields.Float(
-        "Sub-tasks Planned Hours",
-        compute="_compute_subtask_planned_hours",
-        export_string_translation=False,
+        string="Sub-tasks Planned Hours",
         help="Sum of the planned hours for all the sub-tasks (and their own sub-tasks) linked to this task. Usually less than or equal to the planned hours of this task.",
+        export_string_translation=False,
+        compute="_compute_subtask_planned_hours",
     )
     portal_user_names = fields.Char(
-        compute="_compute_portal_user_names",
-        compute_sudo=True,
-        search="_search_portal_user_names",
         export_string_translation=False,
+        compute="_compute_portal_user_names",
+        search="_search_portal_user_names",
+        compute_sudo=True,
     )
     triage_ids = fields.Many2many(
-        "project.triage",
-        "project_task_triage",
+        comodel_name="project.triage",
+        relation="project_task_triage",
         column1="task_id",
         column2="triage_id",
-        ondelete="restrict",
-        group_expand="_read_group_triage_ids",
-        copy=False,
-        readonly=True,
-        domain="[('user_id', '=', uid)]",
         string="Personal Triage Buckets",
         export_string_translation=False,
+        copy=False,
+        readonly=True,
+        group_expand="_read_group_triage_ids",
+        domain="[('user_id', '=', uid)]",
+        ondelete="restrict",
     )
     personal_triage_id = fields.Many2one(
-        "project.task.triage",
+        comodel_name="project.task.triage",
         string="Personal Stage State",
-        compute_sudo=False,
+        help="The current user's personal stage.",
         compute="_compute_personal_triage_id",
         search="_search_personal_triage_id",
+        compute_sudo=False,
         group_expand="_read_group_triage_ids",
-        help="The current user's personal stage.",
     )
     triage_id = fields.Many2one(
-        "project.triage",
-        string="Personal Triage",
+        comodel_name="project.triage",
         related="personal_triage_id.triage_id",
-        readonly=False,
-        store=False,
+        string="Personal Triage",
         help="The current user's personal triage bucket.",
-        domain="[('user_id', '=', uid)]",
+        store=False,
+        readonly=False,
         group_expand="_read_group_triage_ids",
+        domain="[('user_id', '=', uid)]",
     )
     email_from = fields.Char()
     email_cc = fields.Char(
@@ -531,16 +547,16 @@ class ProjectTask(models.Model):
     )
 
     attachment_ids = fields.One2many(
-        "ir.attachment",
-        compute="_compute_attachment_ids",
+        comodel_name="ir.attachment",
         string="Attachments",
-        export_string_translation=False,
         help="Attachments that don't come from a message",
+        export_string_translation=False,
+        compute="_compute_attachment_ids",
     )
     displayed_image_id = fields.Many2one(
-        "ir.attachment",
-        domain="[('res_model', '=', 'project.task'), ('res_id', '=', id), ('mimetype', 'ilike', 'image')]",
+        comodel_name="ir.attachment",
         string="Cover Image",
+        domain="[('res_model', '=', 'project.task'), ('res_id', '=', id), ('mimetype', 'ilike', 'image')]",
     )
 
     allow_dependencies = fields.Boolean(
@@ -548,7 +564,7 @@ class ProjectTask(models.Model):
         export_string_translation=False,
     )
     parent_id = fields.Many2one(
-        "project.task",
+        comodel_name="project.task",
         string="Parent Task",
         inverse="_inverse_parent_id",
         index=True,
@@ -556,35 +572,35 @@ class ProjectTask(models.Model):
         tracking=True,
     )
     child_ids = fields.One2many(
-        "project.task",
-        "parent_id",
+        comodel_name="project.task",
+        inverse_name="parent_id",
         string="Sub-tasks",
-        domain="[('recurring_task', '=', False)]",
         export_string_translation=False,
+        domain="[('recurring_task', '=', False)]",
     )
     subtask_count = fields.Integer(
-        "Sub-task Count",
-        compute="_compute_subtask_counts",
+        string="Sub-task Count",
         export_string_translation=False,
+        compute="_compute_subtask_counts",
     )
     closed_subtask_count = fields.Integer(
-        "Closed Sub-tasks Count",
-        compute="_compute_subtask_counts",
+        string="Closed Sub-tasks Count",
         export_string_translation=False,
+        compute="_compute_subtask_counts",
     )
     subtask_completion_percentage = fields.Float(
-        compute="_compute_subtask_completion_percentage",
         export_string_translation=False,
+        compute="_compute_subtask_completion_percentage",
     )
     predecessor_ids = fields.Many2many(
-        "project.task",
+        comodel_name="project.task",
         relation="project_task_dependency_rel",
         column1="task_id",
         column2="depends_on_id",
         string="Blocked By",
-        tracking=True,
         copy=False,
         domain="[('project_id', '!=', False), ('id', '!=', id)]",
+        tracking=True,
     )
     predecessor_count = fields.Integer(
         string="Depending on Tasks",
@@ -597,176 +613,168 @@ class ProjectTask(models.Model):
         compute_sudo=True,
     )
     successor_ids = fields.Many2many(
-        "project.task",
+        comodel_name="project.task",
         relation="project_task_dependency_rel",
         column1="depends_on_id",
         column2="task_id",
         string="Block",
+        export_string_translation=False,
         copy=False,
         domain="[('project_id', '!=', False), ('id', '!=', id)]",
-        export_string_translation=False,
     )
     successor_count = fields.Integer(
         string="Dependent Tasks",
-        compute="_compute_successor_count",
         export_string_translation=False,
+        compute="_compute_successor_count",
     )
     dependency_ids = fields.One2many(
-        "project.task.dependency",
-        "task_id",
+        comodel_name="project.task.dependency",
+        inverse_name="task_id",
         string="Dependency Details",
         help="Typed dependencies with FS/SS/FF/SF and lag.",
         export_string_translation=False,
     )
     dependent_on_me_ids = fields.One2many(
-        "project.task.dependency",
-        "depends_on_id",
+        comodel_name="project.task.dependency",
+        inverse_name="depends_on_id",
         string="Tasks Depending on Me",
         export_string_translation=False,
     )
 
     cpm_date_earliest_start = fields.Datetime(
-        "Earliest Start",
-        copy=False,
+        string="Earliest Start",
         help="Computed by critical path analysis (forward pass).",
         export_string_translation=False,
+        copy=False,
     )
     cpm_date_latest_start = fields.Datetime(
-        "Latest Start",
-        copy=False,
+        string="Latest Start",
         help="Computed by critical path analysis (backward pass).",
         export_string_translation=False,
+        copy=False,
     )
     total_float = fields.Float(
-        "Total Float (hours)",
-        copy=False,
+        string="Total Float (hours)",
         help="Latest Start - Earliest Start. Zero = critical path.",
         export_string_translation=False,
+        copy=False,
     )
     is_critical_path = fields.Boolean(
-        "On Critical Path",
-        copy=False,
+        string="On Critical Path",
         help="True when total_float is zero (no scheduling slack).",
         export_string_translation=False,
+        copy=False,
     )
     cpm_date_start = fields.Datetime(
-        "CPM Start",
-        copy=False,
+        string="CPM Start",
         help="Calendar-aware start date computed by critical path analysis. "
         "Distinct from date_start (the user-entered scheduled start).",
         export_string_translation=False,
+        copy=False,
     )
     cpm_date_end = fields.Datetime(
-        "CPM End",
-        copy=False,
+        string="CPM End",
         help="Calendar-aware end date computed by critical path analysis. "
         "Distinct from date_end (the user-entered deadline) and from "
         "date_closed (actual completion).",
         export_string_translation=False,
+        copy=False,
     )
 
     is_overallocated = fields.Boolean(
-        "Overallocated Assignee",
-        compute="_compute_is_overallocated",
-        help=(
-            "True when any of this task's reservations conflicts in time "
-            "with another reservation of the same resource summing more "
-            "than 100% allocation (PMBOK concurrent overcommit)."
-        ),
+        string="Overallocated Assignee",
+        help="True when any of this task's reservations conflicts in time "
+        "with another reservation of the same resource summing more "
+        "than 100% allocation (PMBOK concurrent overcommit).",
         export_string_translation=False,
+        compute="_compute_is_overallocated",
     )
 
     queue_time_hours = fields.Float(
-        "Queue Time (hours)",
-        compute="_compute_elapsed",
+        string="Queue Time (hours)",
+        help="Working hours from task creation to first assignment.",
         digits=(16, 2),
+        compute="_compute_elapsed",
         store=True,
         aggregator="avg",
-        help="Working hours from task creation to first assignment.",
     )
     queue_time_days = fields.Float(
-        "Queue Time (days)",
+        string="Queue Time (days)",
+        help="Working days from task creation to first assignment.",
         compute="_compute_elapsed",
         store=True,
         aggregator="avg",
-        help="Working days from task creation to first assignment.",
     )
     lead_time_hours = fields.Float(
-        "Lead Time (hours)",
-        compute="_compute_elapsed",
+        string="Lead Time (hours)",
+        help="Working hours from task creation to closure. Includes queue wait.",
         digits=(16, 2),
+        compute="_compute_elapsed",
         store=True,
         aggregator="avg",
-        help="Working hours from task creation to closure. Includes queue wait.",
     )
     lead_time_days = fields.Float(
-        "Lead Time (days)",
+        string="Lead Time (days)",
+        help="Working days from task creation to closure. Includes queue wait.",
         compute="_compute_elapsed",
         store=True,
         aggregator="avg",
-        help="Working days from task creation to closure. Includes queue wait.",
     )
     cycle_time_hours = fields.Float(
-        "Cycle Time (hours)",
-        compute="_compute_elapsed",
+        string="Cycle Time (hours)",
+        help="Working hours from first assignment to closure. Excludes queue wait.",
         digits=(16, 2),
+        compute="_compute_elapsed",
         store=True,
         aggregator="avg",
-        help="Working hours from first assignment to closure. Excludes queue wait.",
     )
     cycle_time_days = fields.Float(
-        "Cycle Time (days)",
+        string="Cycle Time (days)",
+        help="Working days from first assignment to closure. Excludes queue wait.",
         compute="_compute_elapsed",
         store=True,
         aggregator="avg",
-        help="Working days from first assignment to closure. Excludes queue wait.",
     )
 
     deadline_met = fields.Selection(
-        [("met", "Met"), ("missed", "Missed")],
-        "Deadline Result",
+        selection=[("met", "Met"), ("missed", "Missed")],
+        string="Deadline Result",
+        help="Whether this task was closed on or before its deadline. "
+        "Empty when the task has no deadline or is not yet closed — a "
+        "distinct case from 'missed', which a Boolean could not represent.",
+        export_string_translation=False,
         compute="_compute_deadline_met",
         store=True,
-        help=(
-            "Whether this task was closed on or before its deadline. "
-            "Empty when the task has no deadline or is not yet closed — a "
-            "distinct case from 'missed', which a Boolean could not represent."
-        ),
-        export_string_translation=False,
     )
 
     cost_of_delay = fields.Float(
-        "Cost of Delay",
+        string="Cost of Delay",
+        help="Estimated weekly cost of not completing this task (in currency). "
+        "Used to compute CD3 score for value-based prioritization.",
         tracking=True,
-        help=(
-            "Estimated weekly cost of not completing this task (in currency). "
-            "Used to compute CD3 score for value-based prioritization."
-        ),
     )
     cd3_score = fields.Float(
-        "CD3 Score",
+        string="CD3 Score",
+        help="Cost of Delay Divided by Duration (CD3). Higher = do first. "
+        "Computed as cost_of_delay / planned_hours when both are set.",
+        export_string_translation=False,
         compute="_compute_cd3_score",
         store=True,
-        help=(
-            "Cost of Delay Divided by Duration (CD3). Higher = do first. "
-            "Computed as cost_of_delay / planned_hours when both are set."
-        ),
-        export_string_translation=False,
     )
 
     sprint_id = fields.Many2one(
-        "project.sprint",
+        comodel_name="project.sprint",
         index="btree_not_null",
+        copy=False,
         domain="[('project_id', '=', project_id)]",
         tracking=True,
-        copy=False,
     )
     use_sprints = fields.Boolean(
         related="project_id.use_sprints",
         export_string_translation=False,
     )
     story_points = fields.Float(
-        help="Relative effort estimate. Used for sprint velocity tracking.",
+        help="Relative effort estimate. Used for sprint velocity tracking."
     )
 
     allow_recurring_tasks = fields.Boolean(
@@ -779,30 +787,30 @@ class ProjectTask(models.Model):
         compute="_compute_recurring_count",
     )
     recurrence_id = fields.Many2one(
-        "project.task.recurrence",
-        copy=False,
+        comodel_name="project.task.recurrence",
         index="btree_not_null",
+        copy=False,
     )
     repeat_interval = fields.Integer(
         string="Repeat Every",
-        default=1,
         compute="_compute_repeat",
         compute_sudo=True,
+        default=1,
         readonly=False,
     )
     repeat_unit = fields.Selection(
-        REPEAT_UNIT_SELECTION,
-        default="week",
+        selection=REPEAT_UNIT_SELECTION,
         compute="_compute_repeat",
         compute_sudo=True,
+        default="week",
         readonly=False,
     )
     repeat_type = fields.Selection(
-        REPEAT_TYPE_SELECTION,
-        default="forever",
+        selection=REPEAT_TYPE_SELECTION,
         string="Until",
         compute="_compute_repeat",
         compute_sudo=True,
+        default="forever",
         readonly=False,
     )
     repeat_until = fields.Date(
@@ -812,7 +820,7 @@ class ProjectTask(models.Model):
         readonly=False,
     )
     recurrence_update = fields.Selection(
-        [
+        selection=[
             ("this", "This task"),
             ("subsequent", "This and following tasks"),
             ("all", "All tasks"),
@@ -825,22 +833,23 @@ class ProjectTask(models.Model):
         export_string_translation=False,
     )
     milestone_id = fields.Many2one(
-        "project.milestone",
-        domain="[('project_id', '=', project_id)]",
-        compute="_compute_milestone_id",
-        readonly=False,
-        store=True,
-        tracking=True,
-        index="btree_not_null",
+        comodel_name="project.milestone",
         help="Deliver your services automatically when a milestone is reached by linking it to a sales order item.",
+        compute="_compute_milestone_id",
+        store=True,
+        index="btree_not_null",
+        readonly=False,
+        domain="[('project_id', '=', project_id)]",
+        tracking=True,
     )
     has_late_and_unreached_milestone = fields.Boolean(
+        export_string_translation=False,
         compute="_compute_has_late_and_unreached_milestone",
         search="_search_has_late_and_unreached_milestone",
-        export_string_translation=False,
     )
 
     website_message_ids = fields.One2many(
+        export_string_translation=False,
         domain=lambda self: [
             ("model", "=", self._name),
             (
@@ -849,7 +858,6 @@ class ProjectTask(models.Model):
                 ["email", "comment", "email_outgoing", "auto_comment"],
             ),
         ],
-        export_string_translation=False,
     )
 
     is_template = fields.Boolean(export_string_translation=False)
@@ -859,31 +867,30 @@ class ProjectTask(models.Model):
         export_string_translation=False,
     )
     has_template_ancestor = fields.Boolean(
+        export_string_translation=False,
         compute="_compute_has_template_ancestor",
         search="_search_has_template_ancestor",
         recursive=True,
-        export_string_translation=False,
         store=True,
     )
 
     display_parent_task_button = fields.Boolean(
+        export_string_translation=False,
         compute="_compute_display_parent_task_button",
         compute_sudo=True,
-        export_string_translation=False,
     )
     current_user_same_company_partner = fields.Boolean(
+        export_string_translation=False,
         compute="_compute_current_user_same_company_partner",
         compute_sudo=True,
-        export_string_translation=False,
     )
     display_follow_button = fields.Boolean(
+        export_string_translation=False,
         compute="_compute_display_follow_button",
         compute_sudo=True,
-        export_string_translation=False,
     )
 
     display_name = fields.Char(
-        inverse="_inverse_display_name",
         help="""Use these keywords in the title to set new tasks:\n
             #tags Set tags on the task
             @user Assign the task to a user
@@ -891,10 +898,11 @@ class ProjectTask(models.Model):
             !! Set the task a high priority
             !!! Set the task a urgent priority\n
             Make sure to use the right format and order e.g. Improve the configuration screen #feature #v16 @Mitchell !""",
+        inverse="_inverse_display_name",
     )
     link_preview_name = fields.Char(
-        compute="_compute_link_preview_name",
         export_string_translation=False,
+        compute="_compute_link_preview_name",
     )
 
     _recurring_task_has_no_parent = models.Constraint(

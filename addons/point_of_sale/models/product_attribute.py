@@ -15,10 +15,10 @@ class ProductAttributeCustomValue(models.Model):
     _inherit = ["product.attribute.custom.value", "mixin.pos.load"]
 
     pos_order_line_id = fields.Many2one(
-        "pos.order.line",
+        comodel_name="pos.order.line",
         string="PoS Order Line",
-        ondelete="cascade",
         index="btree_not_null",
+        ondelete="cascade",
     )
 
     @api.model

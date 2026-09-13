@@ -8,7 +8,7 @@ class DiscussChannel(models.Model):
     _inherit = "discuss.channel"
 
     subscription_department_ids = fields.Many2many(
-        "hr.department",
+        comodel_name="hr.department",
         string="HR Departments",
         help="Automatically subscribe members of those departments to the channel.",
     )

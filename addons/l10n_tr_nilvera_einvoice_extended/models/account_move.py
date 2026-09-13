@@ -9,22 +9,22 @@ class AccountMove(models.Model):
             ("TEMELFATURA", "Basic"),
             ("KAMU", "Public Sector"),
         ],
-        default="TEMELFATURA",
         string="Invoice Scenario",
         help="The scenario of the invoice to be sent to GİB.",
+        default="TEMELFATURA",
     )
     l10n_tr_gib_invoice_type = fields.Selection(
-        compute="_compute_l10n_tr_gib_invoice_type",
-        store=True,
-        readonly=False,
-        string="GIB Invoice Type",
         selection=[
             ("SATIS", "Sales"),
             ("TEVKIFAT", "Withholding"),
             ("IHRACKAYITLI", "Registered for Export"),
             ("ISTISNA", "Tax Exempt"),
         ],
+        string="GIB Invoice Type",
         help="The type of invoice to be sent to GİB.",
+        compute="_compute_l10n_tr_gib_invoice_type",
+        store=True,
+        readonly=False,
     )
     l10n_tr_is_export_invoice = fields.Boolean(string="Is GIB Export")
     l10n_tr_shipping_type = fields.Selection(
@@ -43,19 +43,19 @@ class AccountMove(models.Model):
         help="The type of shipping.",
     )
     l10n_tr_exemption_code_id = fields.Many2one(
-        "l10n_tr_nilvera_einvoice_extended.account.tax.code",
+        comodel_name="l10n_tr_nilvera_einvoice_extended.account.tax.code",
+        string="Exemption Reason",
+        help="The exception reason of the invoice.",
         compute="_compute_l10n_tr_exemption_code_id",
         store=True,
         readonly=False,
-        string="Exemption Reason",
-        help="The exception reason of the invoice.",
     )
     l10n_tr_exemption_code_domain_list = fields.Binary(
         compute="_compute_l10n_tr_exemption_code_domain_list"
     )
     l10n_tr_nilvera_customer_status = fields.Selection(
-        string="Partner Nilvera Status",
         related="partner_id.l10n_tr_nilvera_customer_status",
+        string="Partner Nilvera Status",
     )
 
     @api.depends(

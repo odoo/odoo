@@ -33,22 +33,37 @@ class CalendarAttendee(models.Model):
 
     # event
     event_id = fields.Many2one(
-        "calendar.event",
-        "Meeting linked",
-        required=True,
+        comodel_name="calendar.event",
+        string="Meeting linked",
         index=True,
+        required=True,
         ondelete="cascade",
     )
     recurrence_id = fields.Many2one(
-        "calendar.recurrence", related="event_id.recurrence_id"
+        comodel_name="calendar.recurrence",
+        related="event_id.recurrence_id",
     )
     # attendee
     partner_id = fields.Many2one(
-        "res.partner", "Attendee", required=True, readonly=True, ondelete="cascade"
+        comodel_name="res.partner",
+        string="Attendee",
+        readonly=True,
+        required=True,
+        ondelete="cascade",
     )
-    email = fields.Char("Email", related="partner_id.email")
-    phone_ids = fields.Many2many(string="Phone", related="partner_id.phone_ids")
-    common_name = fields.Char("Common name", compute="_compute_common_name", store=True)
+    email = fields.Char(
+        related="partner_id.email",
+        string="Email",
+    )
+    phone_ids = fields.Many2many(
+        related="partner_id.phone_ids",
+        string="Phone",
+    )
+    common_name = fields.Char(
+        string="Common name",
+        compute="_compute_common_name",
+        store=True,
+    )
     # `access_token` is the bearer credential of the `calendar` auth method:
     # holding one is enough to accept or decline an invitation from an
     # unauthenticated browser, and the controllers that do it sudo() without
@@ -63,15 +78,21 @@ class CalendarAttendee(models.Model):
     # checked at access time, keeps the cache honest, and sudo() bypasses it, so
     # the legitimate readers (mail templates, token controllers) still work.
     access_token = fields.Char(
-        "Invitation Token", default=_default_access_token, groups="base.group_system"
+        string="Invitation Token",
+        default=_default_access_token,
+        groups="base.group_system",
     )
     mail_tz = fields.Selection(
-        _selection_timezones,
-        compute="_compute_mail_tz",
+        selection=_selection_timezones,
         help="Timezone used for displaying time in the mail template",
+        compute="_compute_mail_tz",
     )
     # state
-    state = fields.Selection(STATE_SELECTION, string="Status", default="needsAction")
+    state = fields.Selection(
+        selection=STATE_SELECTION,
+        string="Status",
+        default="needsAction",
+    )
 
     _event_id_partner_id_unique = models.Constraint(
         "UNIQUE(event_id, partner_id)",

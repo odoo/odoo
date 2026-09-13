@@ -23,7 +23,7 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     l10n_pl_edi_status = fields.Selection(
-        [
+        selection=[
             ("sent", "Sent (In Progress)"),
             ("accepted", "Accepted"),
             ("rejected", "Rejected"),
@@ -32,25 +32,35 @@ class AccountMove(models.Model):
             ("fetch_failed", "Fetch Failed"),
         ],
         string="KSeF Status",
-        readonly=True,
         copy=False,
+        readonly=True,
     )
     l10n_pl_edi_ref = fields.Char(
-        string="KSeF Reference Number", readonly=True, copy=False
+        string="KSeF Reference Number",
+        copy=False,
+        readonly=True,
     )
     l10n_pl_edi_register = fields.Boolean(related="company_id.l10n_pl_edi_register")
     l10n_pl_edi_header = fields.Html(
         help="User description of the current state, with hints to make the flow progress",
-        readonly=True,
         copy=False,
+        readonly=True,
     )
     l10n_pl_edi_number = fields.Char(
-        string="KSeF Number", readonly=True, index=True, copy=False
+        string="KSeF Number",
+        index=True,
+        copy=False,
+        readonly=True,
     )
     l10n_pl_edi_session_id = fields.Char(
-        string="KSeF Session Number used for sending", copy=False, readonly=True
+        string="KSeF Session Number used for sending",
+        copy=False,
+        readonly=True,
     )
-    l10n_pl_edi_attachment_file = fields.Binary(copy=False, attachment=True)
+    l10n_pl_edi_attachment_file = fields.Binary(
+        attachment=True,
+        copy=False,
+    )
     l10n_pl_edi_attachment_id = fields.Many2one(
         comodel_name="ir.attachment",
         string="KSeF Attachment",
@@ -59,7 +69,10 @@ class AccountMove(models.Model):
         ),
         depends=["l10n_pl_edi_attachment_file"],
     )
-    l10n_pl_edi_upo_file = fields.Binary(copy=False, attachment=True)
+    l10n_pl_edi_upo_file = fields.Binary(
+        attachment=True,
+        copy=False,
+    )
     l10n_pl_edi_upo_id = fields.Many2one(
         comodel_name="ir.attachment",
         string="UPO Attachment",

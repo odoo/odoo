@@ -13,31 +13,51 @@ class ResConfigSettings(models.TransientModel):
         )
 
     website_id = fields.Many2one(
-        "website", string="website", default=_default_website_id, ondelete="cascade"
+        comodel_name="website",
+        string="website",
+        default=_default_website_id,
+        ondelete="cascade",
     )
     website_name = fields.Char(
-        "Website Name", related="website_id.name", readonly=False
+        related="website_id.name",
+        string="Website Name",
+        readonly=False,
     )
     website_domain = fields.Char(
-        "Website Domain", related="website_id.domain", readonly=False
+        related="website_id.domain",
+        string="Website Domain",
+        readonly=False,
     )
     website_homepage_url = fields.Char(
-        related="website_id.homepage_url", readonly=False
+        related="website_id.homepage_url",
+        readonly=False,
     )
     website_company_id = fields.Many2one(
-        related="website_id.company_id", string="Website Company", readonly=False
+        related="website_id.company_id",
+        string="Website Company",
+        readonly=False,
     )
-    website_logo = fields.Binary(related="website_id.logo", readonly=False)
-    language_ids = fields.Many2many(related="website_id.language_ids", readonly=False)
+    website_logo = fields.Binary(
+        related="website_id.logo",
+        readonly=False,
+    )
+    language_ids = fields.Many2many(
+        related="website_id.language_ids",
+        readonly=False,
+    )
     website_language_count = fields.Integer(
-        string="Number of languages", related="website_id.language_count", readonly=True
+        related="website_id.language_count",
+        string="Number of languages",
+        readonly=True,
     )
     website_default_lang_id = fields.Many2one(
-        string="Default language", related="website_id.default_lang_id", readonly=False
+        related="website_id.default_lang_id",
+        string="Default language",
+        readonly=False,
     )
     website_default_lang_code = fields.Char(
-        "Default language code",
         related="website_id.default_lang_id.code",
+        string="Default language code",
         readonly=False,
     )
     shared_user_account = fields.Boolean(
@@ -46,68 +66,85 @@ class ResConfigSettings(models.TransientModel):
         inverse="_inverse_shared_user_account",
     )
     website_cookies_bar = fields.Boolean(
-        related="website_id.cookies_bar", readonly=False
+        related="website_id.cookies_bar",
+        readonly=False,
     )
     website_block_third_party_domains = fields.Boolean(
-        "Block 3rd-party domains",
         related="website_id.block_third_party_domains",
+        string="Block 3rd-party domains",
         readonly=False,
     )
     google_analytics_key = fields.Char(
-        "Google Analytics Key",
         related="website_id.google_analytics_key",
+        string="Google Analytics Key",
         readonly=False,
     )
     google_search_console = fields.Char(
-        "Google Search Console Key",
         related="website_id.google_search_console",
+        string="Google Search Console Key",
         readonly=False,
     )
     plausible_shared_key = fields.Char(
-        "Plausible auth Key", related="website_id.plausible_shared_key", readonly=False
-    )
-    plausible_site = fields.Char(
-        "Plausible Site (e.g. domain.com)",
-        related="website_id.plausible_site",
+        related="website_id.plausible_shared_key",
+        string="Plausible auth Key",
         readonly=False,
     )
-    cdn_activated = fields.Boolean(related="website_id.cdn_activated", readonly=False)
-    cdn_url = fields.Char(related="website_id.cdn_url", readonly=False)
-    cdn_filters = fields.Text(related="website_id.cdn_filters", readonly=False)
+    plausible_site = fields.Char(
+        related="website_id.plausible_site",
+        string="Plausible Site (e.g. domain.com)",
+        readonly=False,
+    )
+    cdn_activated = fields.Boolean(
+        related="website_id.cdn_activated",
+        readonly=False,
+    )
+    cdn_url = fields.Char(
+        related="website_id.cdn_url",
+        readonly=False,
+    )
+    cdn_filters = fields.Text(
+        related="website_id.cdn_filters",
+        readonly=False,
+    )
     auth_signup_uninvited = fields.Selection(
         compute="_compute_auth_signup_uninvited",
         inverse="_inverse_auth_signup_uninvited",
-        config_parameter=False,
         default=None,
+        config_parameter=False,
     )
 
-    favicon = fields.Binary("Favicon", related="website_id.favicon", readonly=False)
+    favicon = fields.Binary(
+        related="website_id.favicon",
+        string="Favicon",
+        readonly=False,
+    )
     social_default_image = fields.Binary(
-        "Default Social Share Image",
         related="website_id.social_default_image",
+        string="Default Social Share Image",
         readonly=False,
     )
 
     group_multi_website = fields.Boolean(
-        "Multi-website", implied_group="website.group_multi_website"
+        string="Multi-website",
+        implied_group="website.group_multi_website",
     )
     has_google_analytics = fields.Boolean(
-        "Google Analytics",
+        string="Google Analytics",
         compute="_compute_has_google_analytics",
         inverse="_inverse_has_google_analytics",
     )
     has_google_search_console = fields.Boolean(
-        "Google Search Console",
+        string="Google Search Console",
         compute="_compute_has_google_search_console",
         inverse="_inverse_has_google_search_console",
     )
     has_default_share_image = fields.Boolean(
-        "Use a image by default for sharing",
+        string="Use a image by default for sharing",
         compute="_compute_has_default_share_image",
         inverse="_inverse_has_default_share_image",
     )
     has_plausible_shared_key = fields.Boolean(
-        "Plausible Analytics",
+        string="Plausible Analytics",
         compute="_compute_has_plausible_shared_key",
         inverse="_inverse_has_plausible_shared_key",
     )

@@ -28,13 +28,21 @@ class PosOrder(models.Model):
     _mailing_enabled = True
 
     name = fields.Char(
-        string="Order Ref", required=True, readonly=True, copy=False, default="/"
+        string="Order Ref",
+        default="/",
+        copy=False,
+        readonly=True,
+        required=True,
     )
     last_order_preparation_change = fields.Char(
-        string="Last preparation change", help="Last printed state of the order"
+        string="Last preparation change",
+        help="Last printed state of the order",
     )
     date_order = fields.Datetime(
-        string="Date", readonly=True, index=True, default=fields.Datetime.now
+        string="Date",
+        default=fields.Datetime.now,
+        index=True,
+        readonly=True,
     )
     user_id = fields.Many2one(
         comodel_name="res.users",
@@ -42,112 +50,158 @@ class PosOrder(models.Model):
         help="Employee who uses the cash register.",
         default=lambda self: self.env.uid,
     )
-    amount_difference = fields.Monetary(string="Difference", readonly=True)
-    amount_tax = fields.Monetary(string="Taxes", readonly=True, required=True)
-    amount_total = fields.Monetary(string="Total", readonly=True, required=True)
-    amount_paid = fields.Monetary(string="Paid", required=True)
-    amount_return = fields.Monetary(string="Returned", required=True, readonly=True)
-    margin = fields.Monetary(compute="_compute_margins", store=True)
+    amount_difference = fields.Monetary(
+        string="Difference",
+        readonly=True,
+    )
+    amount_tax = fields.Monetary(
+        string="Taxes",
+        readonly=True,
+        required=True,
+    )
+    amount_total = fields.Monetary(
+        string="Total",
+        readonly=True,
+        required=True,
+    )
+    amount_paid = fields.Monetary(
+        string="Paid",
+        required=True,
+    )
+    amount_return = fields.Monetary(
+        string="Returned",
+        readonly=True,
+        required=True,
+    )
+    margin = fields.Monetary(
+        compute="_compute_margins",
+        store=True,
+    )
     margin_percent = fields.Float(
-        string="Margin (%)", compute="_compute_margins", digits=(12, 4), store=True
+        string="Margin (%)",
+        digits=(12, 4),
+        compute="_compute_margins",
+        store=True,
     )
     is_total_cost_computed = fields.Boolean(
+        help="Allows to know if all the total cost of the order lines have already been computed",
         compute="_compute_is_total_cost_computed",
         store=True,
-        help="Allows to know if all the total cost of the order lines have already been computed",
     )
     lines = fields.One2many(
-        "pos.order.line", "order_id", string="Order Lines", copy=True
+        comodel_name="pos.order.line",
+        inverse_name="order_id",
+        string="Order Lines",
+        copy=True,
     )
     company_id = fields.Many2one(
-        "res.company", required=True, readonly=True, index=True
+        comodel_name="res.company",
+        index=True,
+        readonly=True,
+        required=True,
     )
     country_code = fields.Char(related="company_id.account_fiscal_country_id.code")
-    pricelist_id = fields.Many2one("product.pricelist")
+    pricelist_id = fields.Many2one(comodel_name="product.pricelist")
     partner_id = fields.Many2one(
-        "res.partner", string="Customer", change_default=True, index="btree_not_null"
+        comodel_name="res.partner",
+        string="Customer",
+        change_default=True,
+        index="btree_not_null",
     )
     sequence_number = fields.Integer(
-        copy=False,
         help="A session-unique sequence number for the order. Negative if generated from the client",
+        copy=False,
     )
     session_id = fields.Many2one(
-        "pos.session", index=True, domain="[('state', '=', 'opened')]"
+        comodel_name="pos.session",
+        index=True,
+        domain="[('state', '=', 'opened')]",
     )
     config_id = fields.Many2one(
-        "pos.config",
-        compute="_compute_config_id",
+        comodel_name="pos.config",
         string="Point of Sale",
-        readonly=False,
+        compute="_compute_config_id",
         store=True,
+        readonly=False,
     )
     currency_id = fields.Many2one(
-        "res.currency", related="config_id.currency_id", string="Currency"
+        comodel_name="res.currency",
+        related="config_id.currency_id",
+        string="Currency",
     )
     currency_rate = fields.Float(
+        help="The rate of the currency to the currency of rate applicable at the date of the order",
+        digits=0,
         compute="_compute_currency_rate",
         compute_sudo=True,
         store=True,
-        digits=0,
         readonly=True,
-        help="The rate of the currency to the currency of rate applicable at the date of the order",
     )
 
     is_refund = fields.Boolean(
-        readonly=True,
-        default=False,
         help="Provenance: this order was created by refunding another. It "
         "carries no amount's sign -- `price_subtotal`, `total_cost` and "
         "`amount_total` each carry their own.",
+        default=False,
+        readonly=True,
     )
     state = fields.Selection(
-        [
+        selection=[
             ("draft", "New"),
             ("cancel", "Cancelled"),
             ("paid", "Paid"),
             ("done", "Posted"),
         ],
-        "Status",
-        readonly=True,
-        copy=False,
+        string="Status",
         default="draft",
         index=True,
+        copy=False,
+        readonly=True,
     )
 
     account_move = fields.Many2one(
-        "account.move",
+        comodel_name="account.move",
         string="Invoice",
-        readonly=True,
-        copy=False,
         index="btree_not_null",
+        copy=False,
+        readonly=True,
     )
-    picking_ids = fields.One2many("stock.picking", "pos_order_id")
-    picking_count = fields.Count("picking_ids")
+    picking_ids = fields.One2many(
+        comodel_name="stock.picking",
+        inverse_name="pos_order_id",
+    )
+    picking_count = fields.Count(count_of="picking_ids")
     failed_pickings = fields.Boolean(compute="_compute_failed_pickings")
     picking_type_id = fields.Many2one(
-        "stock.picking.type",
+        comodel_name="stock.picking.type",
         related="session_id.config_id.picking_type_id",
         string="Operation Type",
         readonly=False,
     )
     reference_ids = fields.Many2many(
-        "stock.reference",
-        "stock_reference_pos_order_rel",
-        "pos_order_id",
-        "reference_id",
+        comodel_name="stock.reference",
+        relation="stock_reference_pos_order_rel",
+        column1="pos_order_id",
+        column2="reference_id",
     )
-    preset_id = fields.Many2one("pos.preset")
+    preset_id = fields.Many2one(comodel_name="pos.preset")
     floating_order_name = fields.Char(string="Order Name")
     general_customer_note = fields.Text()
     internal_note = fields.Text()
     nb_print = fields.Integer(
-        string="Number of Print", readonly=True, copy=False, default=0
+        string="Number of Print",
+        default=0,
+        copy=False,
+        readonly=True,
     )
     pos_reference = fields.Char(
-        string="Receipt Number", readonly=True, copy=False, index=True
+        string="Receipt Number",
+        index=True,
+        copy=False,
+        readonly=True,
     )
     sale_journal = fields.Many2one(
-        "account.journal",
+        comodel_name="account.journal",
         related="session_id.config_id.journal_id",
         string="Sales Journal",
         store=True,
@@ -158,62 +212,91 @@ class PosOrder(models.Model):
         comodel_name="account.fiscal.position",
         readonly=False,
     )
-    payment_ids = fields.One2many("pos.payment", "pos_order_id", string="Payments")
+    payment_ids = fields.One2many(
+        comodel_name="pos.payment",
+        inverse_name="pos_order_id",
+        string="Payments",
+    )
     session_move_id = fields.Many2one(
-        "account.move",
-        string="Session Journal Entry",
+        comodel_name="account.move",
         related="session_id.move_id",
+        string="Session Journal Entry",
+        copy=False,
         readonly=True,
+    )
+    to_invoice = fields.Boolean(
+        string="To invoice",
         copy=False,
     )
-    to_invoice = fields.Boolean("To invoice", copy=False)
     shipping_date = fields.Date()
-    preset_time = fields.Datetime(string="Hour", help="Hour of the day for the order")
+    preset_time = fields.Datetime(
+        string="Hour",
+        help="Hour of the day for the order",
+    )
     is_invoiced = fields.Boolean(compute="_compute_is_invoiced")
-    is_tipped = fields.Boolean("Is this already tipped?", readonly=True)
+    is_tipped = fields.Boolean(
+        string="Is this already tipped?",
+        readonly=True,
+    )
     tip_amount = fields.Monetary(readonly=True)
     refund_orders_count = fields.Integer(
-        "Number of Refund Orders",
-        compute="_compute_refund_related_fields",
+        string="Number of Refund Orders",
         help="Number of orders where items from this order were refunded",
+        compute="_compute_refund_related_fields",
     )
     refunded_order_id = fields.Many2one(
-        "pos.order",
-        compute="_compute_refund_related_fields",
+        comodel_name="pos.order",
         help="Order from which items were refunded in this order",
+        compute="_compute_refund_related_fields",
     )
     has_refundable_lines = fields.Boolean(compute="_compute_has_refundable_lines")
     ticket_code = fields.Char(
         help="5 digits alphanumeric code to be used by portal user to request an invoice"
     )
-    tracking_number = fields.Char(string="Order Number", readonly=True, copy=False)
-    uuid = fields.Char(readonly=True, default=lambda self: str(uuid4()), copy=False)
-    email = fields.Char(compute="_compute_contact_details", readonly=False, store=True)
+    tracking_number = fields.Char(
+        string="Order Number",
+        copy=False,
+        readonly=True,
+    )
+    uuid = fields.Char(
+        default=lambda self: str(uuid4()),
+        copy=False,
+        readonly=True,
+    )
+    email = fields.Char(
+        compute="_compute_contact_details",
+        store=True,
+        readonly=False,
+    )
     phone_ids = fields.Many2many(
-        "phone.number",
-        "pos_order_phone_number_rel",
-        "order_id",
-        "phone_number_id",
+        comodel_name="phone.number",
+        relation="pos_order_phone_number_rel",
+        column1="order_id",
+        column2="phone_number_id",
         string="Phone Numbers",
         compute="_compute_contact_details",
         inverse="_inverse_phone_ids",
-        readonly=False,
         store=True,
+        readonly=False,
     )
-    is_edited = fields.Boolean(string="Edited", compute="_compute_is_edited")
+    is_edited = fields.Boolean(
+        string="Edited",
+        compute="_compute_is_edited",
+    )
     has_deleted_line = fields.Boolean()
     order_edit_tracking = fields.Boolean(
-        related="config_id.order_edit_tracking", readonly=True
+        related="config_id.order_edit_tracking",
+        readonly=True,
     )
     available_payment_method_ids = fields.Many2many(
-        "pos.payment.method",
+        comodel_name="pos.payment.method",
         related="config_id.payment_method_ids",
         string="Available Payment Methods",
-        readonly=True,
         store=False,
+        readonly=True,
     )
     invoice_state = fields.Selection(
-        [
+        selection=[
             ("invoiced", "Fully Invoiced"),
             ("to_invoice", "To Invoice"),
         ],
@@ -221,13 +304,15 @@ class PosOrder(models.Model):
         compute="_compute_invoice_state",
     )
     reversed_move_ids = fields.One2many(
-        "account.move",
-        "reversed_pos_order_id",
+        comodel_name="account.move",
+        inverse_name="reversed_pos_order_id",
         string="Reversal Account Moves",
         help="List of account moves created when this POS order was reversed and invoiced after session close.",
     )
     source = fields.Selection(
-        string="Origin", selection=[("pos", "Point of Sale")], default="pos"
+        selection=[("pos", "Point of Sale")],
+        string="Origin",
+        default="pos",
     )
 
     _unique_uuid = models.Constraint(
@@ -2579,18 +2664,26 @@ class PosOrderLine(models.Model):
     _inherit = ["mixin.pos.load"]
 
     company_id = fields.Many2one(
-        "res.company", string="Company", related="order_id.company_id", store=True
+        comodel_name="res.company",
+        related="order_id.company_id",
+        string="Company",
+        store=True,
     )
-    name = fields.Char(string="Line No", required=True, copy=False)
+    name = fields.Char(
+        string="Line No",
+        copy=False,
+        required=True,
+    )
     notice = fields.Char(string="Discount Notice")
     product_id = fields.Many2one(
-        "product.product",
-        domain=[("sale_ok", "=", True)],
-        required=True,
+        comodel_name="product.product",
         change_default=True,
+        required=True,
+        domain=[("sale_ok", "=", True)],
     )
     attribute_value_ids = fields.Many2many(
-        "product.template.attribute.value", string="Selected Attributes"
+        comodel_name="product.template.attribute.value",
+        string="Selected Attributes",
     )
     custom_attribute_value_ids = fields.One2many(
         comodel_name="product.attribute.custom.value",
@@ -2599,91 +2692,137 @@ class PosOrderLine(models.Model):
         store=True,
         readonly=False,
     )
-    price_unit = fields.Float(string="Unit Price", digits=0)
-    qty = fields.Float("Quantity", digits="Product Unit", default=1)
+    price_unit = fields.Float(
+        string="Unit Price",
+        digits=0,
+    )
+    qty = fields.Float(
+        string="Quantity",
+        digits="Product Unit",
+        default=1,
+    )
     price_subtotal = fields.Monetary(
         string="Tax Excl.",
+        help="Signed like `qty`, as `total_cost` and `amount_total` are.",
         readonly=True,
         required=True,
-        help="Signed like `qty`, as `total_cost` and `amount_total` are.",
     )
     price_subtotal_incl = fields.Monetary(
         string="Tax Incl.",
+        help="Signed like `qty`, as `price_subtotal` is.",
         readonly=True,
         required=True,
-        help="Signed like `qty`, as `price_subtotal` is.",
     )
     price_extra = fields.Float(string="Price extra")
     price_type = fields.Selection(
-        [
+        selection=[
             ("original", "Original"),
             ("manual", "Manual"),
             ("automatic", "Automatic"),
         ],
         default="original",
     )
-    margin = fields.Monetary(compute="_compute_margins", store=True)
+    margin = fields.Monetary(
+        compute="_compute_margins",
+        store=True,
+    )
     margin_percent = fields.Float(
-        string="Margin (%)", compute="_compute_margins", digits=(12, 4), store=True
+        string="Margin (%)",
+        digits=(12, 4),
+        compute="_compute_margins",
+        store=True,
     )
     total_cost = fields.Float(
-        string="Total cost", min_display_digits="Product Price", readonly=True
+        string="Total cost",
+        min_display_digits="Product Price",
+        readonly=True,
     )
     price_cost = fields.Float(
         string="Cost",
-        readonly=True,
         help="Unit cost behind `total_cost`, which stores `qty * cost` converted "
         "to the line currency. Reporting needs the two separately.",
+        readonly=True,
     )
     is_total_cost_computed = fields.Boolean(
         help="Allows to know if the total cost has already been computed or not"
     )
-    discount = fields.Float(string="Discount (%)", digits=0, default=0.0)
-    order_id = fields.Many2one(
-        "pos.order", string="Order Ref", ondelete="cascade", required=True, index=True
+    discount = fields.Float(
+        string="Discount (%)",
+        digits=0,
+        default=0.0,
     )
-    tax_ids = fields.Many2many("account.tax", string="Taxes", readonly=True)
+    order_id = fields.Many2one(
+        comodel_name="pos.order",
+        string="Order Ref",
+        index=True,
+        required=True,
+        ondelete="cascade",
+    )
+    tax_ids = fields.Many2many(
+        comodel_name="account.tax",
+        string="Taxes",
+        readonly=True,
+    )
     tax_ids_after_fiscal_position = fields.Many2many(
-        "account.tax",
-        compute="_compute_tax_ids_after_fiscal_position",
+        comodel_name="account.tax",
         string="Taxes to Apply",
+        compute="_compute_tax_ids_after_fiscal_position",
     )
     pack_lot_ids = fields.One2many(
-        "pos.pack.operation.lot", "pos_order_line_id", string="Lot/serial Number"
+        comodel_name="pos.pack.operation.lot",
+        inverse_name="pos_order_line_id",
+        string="Lot/serial Number",
     )
     product_uom_id = fields.Many2one(
-        "uom.uom", string="Product Unit", related="product_id.uom_id"
+        comodel_name="uom.uom",
+        related="product_id.uom_id",
+        string="Product Unit",
     )
-    currency_id = fields.Many2one("res.currency", related="order_id.currency_id")
+    currency_id = fields.Many2one(
+        comodel_name="res.currency",
+        related="order_id.currency_id",
+    )
     full_product_name = fields.Char()
     customer_note = fields.Char()
     refund_orderline_ids = fields.One2many(
-        "pos.order.line",
-        "refunded_orderline_id",
-        "Refund Order Lines",
+        comodel_name="pos.order.line",
+        inverse_name="refunded_orderline_id",
+        string="Refund Order Lines",
         help="Orderlines in this field are the lines that refunded this orderline.",
     )
     refunded_orderline_id = fields.Many2one(
-        "pos.order.line",
-        "Refunded Order Line",
-        index="btree_not_null",
+        comodel_name="pos.order.line",
+        string="Refunded Order Line",
         help="If this orderline is a refund, then the refunded orderline is specified in this field.",
+        index="btree_not_null",
     )
     refunded_qty = fields.Float(
-        "Refunded Quantity",
-        compute="_compute_refunded_qty",
+        string="Refunded Quantity",
         help="Number of items refunded in this orderline.",
+        compute="_compute_refunded_qty",
     )
-    uuid = fields.Char(readonly=True, default=lambda self: str(uuid4()), copy=False)
-    note = fields.Char("Product Note")
+    uuid = fields.Char(
+        default=lambda self: str(uuid4()),
+        copy=False,
+        readonly=True,
+    )
+    note = fields.Char(string="Product Note")
 
-    combo_parent_id = fields.Many2one("pos.order.line", index="btree_not_null")
+    combo_parent_id = fields.Many2one(
+        comodel_name="pos.order.line",
+        index="btree_not_null",
+    )
     combo_line_ids = fields.One2many(
-        "pos.order.line", "combo_parent_id", string="Combo Lines"
+        comodel_name="pos.order.line",
+        inverse_name="combo_parent_id",
+        string="Combo Lines",
     )
 
-    combo_item_id = fields.Many2one("product.combo.item")
-    is_edited = fields.Boolean("Edited", default=False)
+    combo_item_id = fields.Many2one(comodel_name="product.combo.item")
+    is_edited = fields.Boolean(
+        string="Edited",
+        default=False,
+    )
     extra_tax_data = fields.Json()
 
     _unique_uuid = models.Constraint(
@@ -3201,13 +3340,20 @@ class PosPackOperationLot(models.Model):
     _rec_name = "lot_name"
     _inherit = ["mixin.pos.load"]
 
-    pos_order_line_id = fields.Many2one("pos.order.line", index="btree_not_null")
+    pos_order_line_id = fields.Many2one(
+        comodel_name="pos.order.line",
+        index="btree_not_null",
+    )
     order_id = fields.Many2one(
-        "pos.order", related="pos_order_line_id.order_id", readonly=False
+        comodel_name="pos.order",
+        related="pos_order_line_id.order_id",
+        readonly=False,
     )
     lot_name = fields.Char()
     product_id = fields.Many2one(
-        "product.product", related="pos_order_line_id.product_id", readonly=False
+        comodel_name="product.product",
+        related="pos_order_line_id.product_id",
+        readonly=False,
     )
 
     @api.model

@@ -12,11 +12,11 @@ class ResUsersSettings(models.Model):
     _rec_name = "user_id"
 
     user_id = fields.Many2one(
-        "res.users",
-        required=True,
+        comodel_name="res.users",
         index=False,
-        ondelete="cascade",
+        required=True,
         domain=[("res_users_settings_id", "=", False)],
+        ondelete="cascade",
     )
 
     _unique_user_id = models.Constraint(

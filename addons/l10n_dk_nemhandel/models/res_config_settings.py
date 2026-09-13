@@ -9,29 +9,36 @@ class ResConfigSettings(models.TransientModel):
 
     nemhandel_edi_user = fields.Many2one(related="company_id.nemhandel_edi_user")
     nemhandel_edi_mode = fields.Selection(
-        string="Nemhandel EDI operating mode", related="nemhandel_edi_user.edi_mode"
+        related="nemhandel_edi_user.edi_mode",
+        string="Nemhandel EDI operating mode",
     )
     nemhandel_contact_email = fields.Char(
-        related="company_id.nemhandel_contact_email", readonly=False
+        related="company_id.nemhandel_contact_email",
+        readonly=False,
     )
     nemhandel_identifier_type = fields.Selection(
-        related="company_id.nemhandel_identifier_type", readonly=False
+        related="company_id.nemhandel_identifier_type",
+        readonly=False,
     )
     nemhandel_identifier_value = fields.Char(
-        related="company_id.nemhandel_identifier_value", readonly=False
+        related="company_id.nemhandel_identifier_value",
+        readonly=False,
     )
     nemhandel_edi_identification = fields.Char(
-        string="Nemhandel identification",
         related="nemhandel_edi_user.edi_identification",
+        string="Nemhandel identification",
     )
     nemhandel_phone_number = fields.Char(
-        related="company_id.nemhandel_phone_number", readonly=False
+        related="company_id.nemhandel_phone_number",
+        readonly=False,
     )
     l10n_dk_nemhandel_proxy_state = fields.Selection(
-        related="company_id.l10n_dk_nemhandel_proxy_state", readonly=False
+        related="company_id.l10n_dk_nemhandel_proxy_state",
+        readonly=False,
     )
     nemhandel_purchase_journal_id = fields.Many2one(
-        related="company_id.nemhandel_purchase_journal_id", readonly=False
+        related="company_id.nemhandel_purchase_journal_id",
+        readonly=False,
     )
 
     # -------------------------------------------------------------------------

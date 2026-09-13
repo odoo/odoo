@@ -5,12 +5,12 @@ class StockLot(models.Model):
     _inherit = "stock.lot"
 
     asset_id = fields.Many2one(
-        "resource.asset",
+        comodel_name="resource.asset",
         compute="_compute_asset_id",
         store=True,
-        readonly=False,
         index="btree_not_null",
         copy=False,
+        readonly=False,
     )
 
     _asset_uniq = models.UniqueIndex(

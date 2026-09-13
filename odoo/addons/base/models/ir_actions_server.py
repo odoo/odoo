@@ -154,7 +154,7 @@ class IrActionsServerHistory(models.Model):
     _max_entries_per_action = 100
 
     action_id = fields.Many2one(
-        "ir.actions.server",
+        comodel_name="ir.actions.server",
         required=True,
         ondelete="cascade",
     )
@@ -240,14 +240,14 @@ class IrActionsServer(models.Model):
         store=True,
     )
     name_is_custom = fields.Boolean(
-        default=False,
-        copy=True,
         help="Set once the name has been typed rather than derived from the "
         "action's type, so that changing the type stops renaming it.",
+        default=False,
+        copy=True,
     )
     type = fields.Char(default="ir.actions.server")
     usage = fields.Selection(
-        [
+        selection=[
             ("ir_actions_server", "Server Action"),
             ("ir_cron", "Scheduled Action"),
         ],
@@ -255,7 +255,7 @@ class IrActionsServer(models.Model):
         required=True,
     )
     state = fields.Selection(
-        [
+        selection=[
             ("object_write", "Update Record"),
             ("object_create", "Create Record"),
             ("object_copy", "Duplicate Record"),
@@ -264,8 +264,6 @@ class IrActionsServer(models.Model):
             ("multi", "Multi Actions"),
         ],
         string="Type",
-        required=True,
-        copy=True,
         help="Type of server action. The following values are available:\n"
         "- 'Update Record': update the values of a record\n"
         "- 'Create Record': create a new record with new values\n"
@@ -274,25 +272,27 @@ class IrActionsServer(models.Model):
         "- 'Send Webhook Notification': send a POST request to an external system\n"
         "- 'Multi Actions': define an action that triggers several other server actions\n"
         "\nAdditional types may be added by other modules (e.g. Discuss, SMS).",
+        copy=True,
+        required=True,
     )
     allowed_states = fields.Json(
         string="Allowed states",
         compute="_compute_allowed_states",
     )
     sequence = fields.Integer(
-        default=5,
         help="When dealing with multiple actions, the execution order is "
         "based on the sequence. Low number means high priority.",
+        default=5,
     )
     model_id = fields.Many2one(
-        "ir.model",
+        comodel_name="ir.model",
+        help="Model on which the server action runs.",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
-        help="Model on which the server action runs.",
     )
     available_model_ids = fields.Many2many(
-        "ir.model",
+        comodel_name="ir.model",
         string="Available Models",
         compute="_compute_available_model_ids",
         store=False,
@@ -306,40 +306,40 @@ class IrActionsServer(models.Model):
         recursive=True,
     )
     ir_cron_ids = fields.One2many(
-        "ir.cron",
-        "ir_actions_server_id",
-        "Scheduled Action",
+        comodel_name="ir.cron",
+        inverse_name="ir_actions_server_id",
+        string="Scheduled Action",
         context={"active_test": False},
     )
     code = fields.Text(
         string="Python Code",
-        groups="base.group_system",
         help="Write Python code that the action will execute. Some variables are "
         "available for use; help about python expression is given in the help tab.",
+        groups="base.group_system",
     )
     show_code_history = fields.Boolean(compute="_compute_show_code_history")
     parent_id = fields.Many2one(
-        "ir.actions.server",
+        comodel_name="ir.actions.server",
         string="Parent Action",
         index=True,
         ondelete="cascade",
     )
     child_ids = fields.One2many(
-        "ir.actions.server",
-        "parent_id",
-        copy=True,
-        domain=lambda self: str(self._get_domain_children()),
+        comodel_name="ir.actions.server",
+        inverse_name="parent_id",
         string="Child Actions",
         help="Child server actions that will be executed. The global return value is the action returned by the last child that returns one; children that return nothing are skipped over.",
+        copy=True,
+        domain=lambda self: str(self._get_domain_children()),
     )
     crud_model_id = fields.Many2one(
-        "ir.model",
+        comodel_name="ir.model",
         string="Record to Create",
+        help="Kind of record to create or duplicate. Defaults to the action's own model; a value set here is kept.",
         compute="_compute_crud_relations",
         inverse="_inverse_crud_model_id",
-        readonly=False,
         store=True,
-        help="Kind of record to create or duplicate. Defaults to the action's own model; a value set here is kept.",
+        readonly=False,
     )
     crud_model_name = fields.Char(
         related="crud_model_id.model",
@@ -347,25 +347,25 @@ class IrActionsServer(models.Model):
         readonly=True,
     )
     link_field_id = fields.Many2one(
-        "ir.model.fields",
+        comodel_name="ir.model.fields",
         help="Specify a field used to link the newly created record on the record used by the server action.",
     )
     group_ids = fields.Many2many(
-        "res.groups",
-        "ir_act_server_group_rel",
-        "act_id",
-        "gid",
+        comodel_name="res.groups",
+        relation="ir_act_server_group_rel",
+        column1="act_id",
+        column2="gid",
         string="Allowed Groups",
         help="Groups that can execute the server action. Leave empty to allow everybody.",
     )
 
     update_field_id = fields.Many2one(
-        "ir.model.fields",
+        comodel_name="ir.model.fields",
         string="Field to Update",
-        ondelete="cascade",
         compute="_compute_crud_relations",
         store=True,
         readonly=False,
+        ondelete="cascade",
     )
     update_path = fields.Char(
         string="Field to Update Path",
@@ -373,17 +373,17 @@ class IrActionsServer(models.Model):
         default=lambda self: self._default_update_path(),
     )
     update_related_model_id = fields.Many2one(
-        "ir.model",
+        comodel_name="ir.model",
         compute="_compute_crud_relations",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     update_field_type = fields.Selection(
         related="update_field_id.ttype",
         readonly=True,
     )
     update_m2m_operation = fields.Selection(
-        [
+        selection=[
             ("add", "Adding"),
             ("remove", "Removing"),
             ("set", "Setting it to"),
@@ -393,7 +393,7 @@ class IrActionsServer(models.Model):
         default="add",
     )
     update_boolean_value = fields.Selection(
-        [("true", "Yes (True)"), ("false", "No (False)")],
+        selection=[("true", "Yes (True)"), ("false", "No (False)")],
         string="Boolean Value",
         default="true",
     )
@@ -408,32 +408,35 @@ class IrActionsServer(models.Model):
         "the record to create, taken literally."
     )
     evaluation_type = fields.Selection(
-        [
+        selection=[
             ("value", "Update"),
             ("sequence", "Sequence"),
             ("equation", "Compute"),
         ],
-        "Value Type",
+        string="Value Type",
         default="value",
         change_default=True,
     )
     html_value = fields.Html()
-    sequence_id = fields.Many2one("ir.sequence", string="Sequence to use")
+    sequence_id = fields.Many2one(
+        comodel_name="ir.sequence",
+        string="Sequence to use",
+    )
     resource_ref = fields.Reference(
-        string="Record",
         selection="_selection_target_model",
+        string="Record",
         inverse="_inverse_resource_ref",
     )
     selection_value = fields.Many2one(
-        "ir.model.fields.selection",
+        comodel_name="ir.model.fields.selection",
         string="Custom Value",
-        ondelete="cascade",
-        domain='[("field_id", "=", update_field_id)]',
         inverse="_inverse_selection_value",
+        domain='[("field_id", "=", update_field_id)]',
+        ondelete="cascade",
     )
 
     value_field_to_show = fields.Selection(
-        [
+        selection=[
             ("value", "value"),
             ("html_value", "html_value"),
             ("sequence_id", "sequence_id"),
@@ -461,7 +464,6 @@ class IrActionsServer(models.Model):
     )
     webhook_timeout = fields.Integer(
         string="Webhook Timeout (s)",
-        default=1,
         help="Seconds to wait for the receiver before giving up.\n\n"
         "The default of 1 second is deliberately short, and the cost of "
         "raising it is paid by a worker: the call is made after the "
@@ -472,12 +474,13 @@ class IrActionsServer(models.Model):
         "receiver may well have processed the payload. Raise it for a slow "
         "but trusted receiver; if delivery has to be certain, this action is "
         "the wrong tool (see Webhook URL).",
+        default=1,
     )
     webhook_field_ids = fields.Many2many(
-        "ir.model.fields",
-        "ir_act_server_webhook_field_rel",
-        "server_id",
-        "field_id",
+        comodel_name="ir.model.fields",
+        relation="ir_act_server_webhook_field_rel",
+        column1="server_id",
+        column2="field_id",
         string="Webhook Fields",
         help="Fields to send in the POST request.\n\n"
         "Four keys are always present, whatever is selected here: the record's "

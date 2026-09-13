@@ -8,30 +8,49 @@ class LoyaltyGenerateWizard(models.TransientModel):
     _description = "Generate Coupons"
 
     program_id = fields.Many2one(
-        "loyalty.program",
-        required=True,
+        comodel_name="loyalty.program",
         default=lambda self: (
             self.env.context.get("active_id", False)
             or self.env.context.get("default_program_id", False)
         ),
+        required=True,
     )
     program_type = fields.Selection(related="program_id.program_type")
 
     mode = fields.Selection(
-        [("anonymous", "Anonymous Customers"), ("selected", "Selected Customers")],
+        selection=[
+            ("anonymous", "Anonymous Customers"),
+            ("selected", "Selected Customers"),
+        ],
         string="For",
-        required=True,
         default="anonymous",
+        required=True,
     )
 
-    customer_ids = fields.Many2many("res.partner", string="Customers")
-    customer_tag_ids = fields.Many2many("res.partner.tag", string="Customer Tags")
+    customer_ids = fields.Many2many(
+        comodel_name="res.partner",
+        string="Customers",
+    )
+    customer_tag_ids = fields.Many2many(
+        comodel_name="res.partner.tag",
+        string="Customer Tags",
+    )
 
     coupon_qty = fields.Integer(
-        "Quantity", compute="_compute_coupon_qty", readonly=False, store=True
+        string="Quantity",
+        compute="_compute_coupon_qty",
+        store=True,
+        readonly=False,
     )
-    points_granted = fields.Float("Grant", required=True, default=1)
-    points_name = fields.Char(related="program_id.portal_point_name", readonly=True)
+    points_granted = fields.Float(
+        string="Grant",
+        default=1,
+        required=True,
+    )
+    points_name = fields.Char(
+        related="program_id.portal_point_name",
+        readonly=True,
+    )
     valid_until = fields.Date()
     will_send_mail = fields.Boolean(compute="_compute_will_send_mail")
     confirmation_message = fields.Char(compute="_compute_confirmation_message")

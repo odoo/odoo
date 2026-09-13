@@ -41,27 +41,27 @@ class MixinGoogleGmail(models.AbstractModel):
     # the views and in every caller.
     google_gmail_refresh_token = fields.Char(
         string="Refresh Token",
-        groups="base.group_system",
-        copy=False,
         compute="_compute_google_gmail_tokens",
         inverse="_inverse_google_gmail_refresh_token",
+        copy=False,
+        groups="base.group_system",
     )
     google_gmail_access_token = fields.Char(
         string="Access Token",
-        groups="base.group_system",
-        copy=False,
         compute="_compute_google_gmail_tokens",
         inverse="_inverse_google_gmail_access_token",
+        copy=False,
+        groups="base.group_system",
     )
     google_gmail_access_token_expiration = fields.Integer(
         string="Access Token Expiration Timestamp",
-        groups="base.group_system",
         copy=False,
+        groups="base.group_system",
     )
     google_gmail_uri = fields.Char(
-        compute="_compute_gmail_uri",
         string="URI",
         help="The URL to generate the authorization code from Google",
+        compute="_compute_gmail_uri",
         groups="base.group_system",
     )
 

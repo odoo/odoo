@@ -6,8 +6,8 @@ class AccountMoveLine(models.Model):
 
     cogs_origin_id = fields.Many2one(
         comodel_name="account.move.line",
-        copy=False,
         index="btree_not_null",
+        copy=False,
     )
 
     def _compute_account_id(self):

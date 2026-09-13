@@ -32,7 +32,7 @@ ENRICH_ALLOWED_FIELDS = {
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    iap_enrich_auto_done = fields.Boolean("Enrich Done")
+    iap_enrich_auto_done = fields.Boolean(string="Enrich Done")
 
     @api.model_create_multi
     def create(self, vals_list):

@@ -10,8 +10,8 @@ class WebsiteVisitor(models.Model):
         compute="_compute_product_statistics",
     )
     product_ids = fields.Many2many(
-        string="Visited Products",
         comodel_name="product.product",
+        string="Visited Products",
         compute="_compute_product_statistics",
     )
     product_count = fields.Integer(

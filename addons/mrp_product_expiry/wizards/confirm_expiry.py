@@ -4,7 +4,10 @@ from odoo import api, fields, models
 class ExpiryPickingConfirmation(models.TransientModel):
     _inherit = "expiry.picking.confirmation"
 
-    production_ids = fields.Many2many("mrp.production", readonly=True)
+    production_ids = fields.Many2many(
+        comodel_name="mrp.production",
+        readonly=True,
+    )
 
     @api.depends("lot_ids", "production_ids")
     def _compute_description(self):

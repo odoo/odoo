@@ -9,7 +9,7 @@ class StockLandedCost(models.Model):
         ondelete={"manufacturing": "set default"},
     )
     mrp_production_ids = fields.Many2many(
-        "mrp.production",
+        comodel_name="mrp.production",
         string="Manufacturing order",
         copy=False,
         groups="stock.group_stock_manager",

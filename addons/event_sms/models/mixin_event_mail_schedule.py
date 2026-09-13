@@ -8,7 +8,8 @@ class MixinEventMailSchedule(models.AbstractModel):
 
     notification_type = fields.Selection(selection_add=[("sms", "SMS")])
     template_ref = fields.Reference(
-        ondelete={"sms.template": "cascade"}, selection_add=[("sms.template", "SMS")]
+        selection_add=[("sms.template", "SMS")],
+        ondelete={"sms.template": "cascade"},
     )
 
     def _compute_notification_type(self):

@@ -11,31 +11,37 @@ class ProductTemplateAttributeValue(models.Model):
     _description = "Product Template Attribute Value"
     _order = "attribute_line_id, product_attribute_value_id, id"
 
-    ptav_active = fields.Boolean(string="Active", default=True)
-    name = fields.Char(related="product_attribute_value_id.name", string="Value")
+    ptav_active = fields.Boolean(
+        string="Active",
+        default=True,
+    )
+    name = fields.Char(
+        related="product_attribute_value_id.name",
+        string="Value",
+    )
 
     product_attribute_value_id = fields.Many2one(
         comodel_name="product.attribute.value",
         string="Attribute Value",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
     attribute_line_id = fields.Many2one(
         comodel_name="product.template.attribute.line",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
     price_extra = fields.Float(
         string="Extra Price",
-        min_display_digits="Product Price",
-        default=0.0,
         help="Extra price for the variant with this attribute value on sale price."
         " eg. 200 price extra, 1000 + 200 = 1200.",
+        min_display_digits="Product Price",
+        default=0.0,
     )
     currency_id = fields.Many2one(
-        related="attribute_line_id.product_tmpl_id.currency_id",
+        related="attribute_line_id.product_tmpl_id.currency_id"
     )
 
     exclude_for = fields.One2many(
@@ -68,9 +74,7 @@ class ProductTemplateAttributeValue(models.Model):
         string="HTML Color Index",
     )
     is_custom = fields.Boolean(related="product_attribute_value_id.is_custom")
-    display_type = fields.Selection(
-        related="product_attribute_value_id.display_type",
-    )
+    display_type = fields.Selection(related="product_attribute_value_id.display_type")
     color = fields.Integer(default=lambda self: self._default_color())
     image = fields.Image(related="product_attribute_value_id.image")
 

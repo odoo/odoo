@@ -61,84 +61,82 @@ class HrEmployee(models.Model):
     )
 
     company_id = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
         required=True,
         tracking=True,
     )
     company_country_id = fields.Many2one(
-        "res.country",
-        "Company Country",
+        comodel_name="res.country",
         related="company_id.country_id",
+        string="Company Country",
         readonly=True,
         groups="base.group_system,hr.group_hr_user",
     )
     company_country_code = fields.Char(
         related="company_country_id.code",
+        string="Company Country Code",
         depends=["company_country_id"],
         readonly=True,
         groups="base.group_system,hr.group_hr_user",
-        string="Company Country Code",
     )
     country_code = fields.Char(
         related="version_id.country_code",
         inherited=True,
     )
     currency_id = fields.Many2one(
-        "res.currency",
+        comodel_name="res.currency",
         related="company_id.currency_id",
         readonly=True,
         groups="hr.group_hr_user",
     )
     resource_id = fields.Many2one(
-        "resource.resource",
+        comodel_name="resource.resource",
         required=True,
     )
     name = fields.Char(
         related="partner_id.name",
-        inherited=True,
         string="Employee Name",
+        inherited=True,
         store=True,
+        copy=True,
         readonly=False,
         tracking=True,
-        copy=True,
     )
     active = fields.Boolean(
-        "Active",
         related="resource_id.active",
+        string="Active",
         default=True,
         store=True,
         readonly=False,
     )
     user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         related="resource_id.user_id",
         string="User",
-        store=True,
-        readonly=False,
-        copy=False,
-        check_company=True,
         precompute=True,
+        store=True,
         index="btree_not_null",
+        copy=False,
+        readonly=False,
         ondelete="restrict",
+        check_company=True,
     )
-    share = fields.Boolean(
-        related="user_id.share",
-    )
+    share = fields.Boolean(related="user_id.share")
 
     version_id = fields.Many2one(
-        "hr.version",
-        required=True,
+        comodel_name="hr.version",
         compute="_compute_version_id",
+        search="_search_version_id",
         compute_sudo=True,
         store=False,
-        search="_search_version_id",
+        required=True,
         ondelete="cascade",
     )
     resource_calendar_id = fields.Many2one(
         related="version_id.resource_calendar_id",
         inherited=True,
-        index=False,
         store=False,
+        index=False,
         check_company=True,
     )
     work_location_id = fields.Many2one(
@@ -148,7 +146,7 @@ class HrEmployee(models.Model):
         check_company=True,
     )
     current_version_id = fields.Many2one(
-        "hr.version",
+        comodel_name="hr.version",
         compute="_compute_current_version_id",
         compute_sudo=True,
         store=True,
@@ -160,8 +158,8 @@ class HrEmployee(models.Model):
         groups="hr.group_hr_user",
     )
     version_ids = fields.One2many(
-        "hr.version",
-        "employee_id",
+        comodel_name="hr.version",
+        inverse_name="employee_id",
         string="Employee Versions",
         groups="hr.group_hr_user",
     )
@@ -171,7 +169,7 @@ class HrEmployee(models.Model):
     )
 
     hr_presence_state = fields.Selection(
-        [
+        selection=[
             ("present", "Present"),
             ("absent", "Absent"),
             ("archive", "Archived"),
@@ -189,7 +187,7 @@ class HrEmployee(models.Model):
         compute_sudo=True,
     )
     hr_icon_display = fields.Selection(
-        [
+        selection=[
             ("presence_present", "Present"),
             ("presence_out_of_working_hour", "Off-Hours"),
             ("presence_absent", "Absent"),
@@ -211,19 +209,19 @@ class HrEmployee(models.Model):
 
     work_email = fields.Char(
         compute="_compute_work_email",
-        compute_sudo=True,
         inverse="_inverse_work_email",
         search="_search_work_email",
+        compute_sudo=True,
         readonly=False,
         tracking=True,
     )
     partner_id = fields.Many2one(
-        "res.partner",
-        "Contact",
+        comodel_name="res.partner",
+        string="Contact",
+        index=True,
+        copy=False,
         required=True,
         ondelete="restrict",
-        copy=False,
-        index=True,
     )
     legal_name = fields.Char(
         compute="_compute_legal_name",
@@ -237,206 +235,206 @@ class HrEmployee(models.Model):
         groups="hr.group_hr_user",
     )
     private_phone_ids = fields.Many2many(
-        string="Private Phone",
         related="private_address_id.phone_ids",
+        string="Private Phone",
         readonly=False,
         groups="hr.group_hr_user",
     )
     private_email = fields.Char(
-        string="Private Email",
         related="private_address_id.email",
+        string="Private Email",
         readonly=False,
         groups="hr.group_hr_user",
     )
     place_of_birth = fields.Char(
-        "Place of Birth",
         related="private_address_id.place_of_birth",
+        string="Place of Birth",
         readonly=False,
-        tracking=True,
         groups="hr.group_hr_user",
+        tracking=True,
     )
     country_id = fields.Many2one(
-        "res.country",
-        "Nationality (Country)",
+        comodel_name="res.country",
         related="private_address_id.nationality_id",
+        string="Nationality (Country)",
         readonly=False,
-        tracking=True,
         groups="hr.group_hr_user",
+        tracking=True,
     )
     country_of_birth = fields.Many2one(
-        "res.country",
-        string="Country of Birth",
+        comodel_name="res.country",
         related="private_address_id.country_of_birth",
+        string="Country of Birth",
         readonly=False,
-        tracking=True,
         groups="hr.group_hr_user",
+        tracking=True,
     )
     birthday = fields.Date(
-        "Birthday",
         related="private_address_id.birthdate",
-        readonly=False,
+        string="Birthday",
         store=True,
-        tracking=True,
+        readonly=False,
         groups="hr.group_hr_user",
+        tracking=True,
     )
     birthday_public_display = fields.Boolean(
-        "Show to all employees",
+        string="Show to all employees",
         default=False,
         groups="hr.group_hr_user",
     )
     birthday_public_display_string = fields.Char(
-        "Public Date of Birth",
+        string="Public Date of Birth",
         compute="_compute_birthday_public_display_string",
         compute_sudo=True,
     )
     identification_id = fields.Char(
         string="Identification No",
+        help="Enter the employee's National Identification Number issued by the government (e.g., Aadhaar, SIN, NIN). This is used for official records and statutory compliance.",
         compute="_compute_identifiers",
         inverse="_inverse_identifiers",
         search="_search_identification_id",
         compute_sudo=True,
-        tracking=True,
         groups="hr.group_hr_user",
-        help="Enter the employee's National Identification Number issued by the government (e.g., Aadhaar, SIN, NIN). This is used for official records and statutory compliance.",
+        tracking=True,
     )
     ssnid = fields.Char(
-        "SSN No",
+        string="SSN No",
+        help="Social Security Number",
         compute="_compute_identifiers",
         inverse="_inverse_identifiers",
         search="_search_ssnid",
         compute_sudo=True,
-        help="Social Security Number",
-        tracking=True,
         groups="hr.group_hr_user",
+        tracking=True,
     )
     passport_id = fields.Char(
-        "Passport No",
+        string="Passport No",
         compute="_compute_identifiers",
         inverse="_inverse_identifiers",
         search="_search_passport_id",
         compute_sudo=True,
-        tracking=True,
         groups="hr.group_hr_user",
+        tracking=True,
     )
     passport_expiration_date = fields.Date(
         compute="_compute_identifiers",
         inverse="_inverse_identifiers",
-        compute_sudo=True,
-        tracking=True,
-        groups="hr.group_hr_user",
         search="_search_passport_expiration_date",
+        compute_sudo=True,
+        groups="hr.group_hr_user",
+        tracking=True,
     )
     sex = fields.Selection(
-        string="Gender",
         related="private_address_id.gender",
-        readonly=False,
-        tracking=True,
-        groups="hr.group_hr_user",
+        string="Gender",
         help="This is the legal sex recognized by the state.",
+        readonly=False,
+        groups="hr.group_hr_user",
+        tracking=True,
     )
 
     private_address_id = fields.Many2one(
-        "res.partner",
-        compute="_compute_private_address_id",
-        store=True,
-        groups="hr.group_hr_user",
-        copy=False,
-        index="btree_not_null",
+        comodel_name="res.partner",
         help="The employee's home address, held as a private child of their "
         "work contact rather than as columns here.",
+        compute="_compute_private_address_id",
+        store=True,
+        index="btree_not_null",
+        copy=False,
+        groups="hr.group_hr_user",
     )
     private_street = fields.Char(
-        string="Private Street",
         related="private_address_id.street",
+        string="Private Street",
         readonly=False,
-        tracking=True,
         groups="hr.group_hr_user",
+        tracking=True,
     )
     private_street2 = fields.Char(
-        string="Private Street2",
         related="private_address_id.street2",
+        string="Private Street2",
         readonly=False,
-        tracking=True,
         groups="hr.group_hr_user",
+        tracking=True,
     )
     private_city = fields.Char(
-        string="Private City",
         related="private_address_id.city",
+        string="Private City",
         readonly=False,
-        tracking=True,
         groups="hr.group_hr_user",
+        tracking=True,
     )
     allowed_country_state_ids = fields.Many2many(
-        "res.country.state",
+        comodel_name="res.country.state",
         compute="_compute_allowed_country_state_ids",
         groups="hr.group_hr_user",
     )
     private_state_id = fields.Many2one(
-        "res.country.state",
-        string="Private State",
+        comodel_name="res.country.state",
         related="private_address_id.state_id",
+        string="Private State",
         readonly=False,
         domain="[('id', 'in', allowed_country_state_ids)]",
-        tracking=True,
         groups="hr.group_hr_user",
+        tracking=True,
     )
     private_zip = fields.Char(
-        string="Private Zip",
         related="private_address_id.zip",
+        string="Private Zip",
         readonly=False,
-        tracking=True,
         groups="hr.group_hr_user",
+        tracking=True,
     )
     private_country_id = fields.Many2one(
-        "res.country",
-        string="Private Country",
+        comodel_name="res.country",
         related="private_address_id.country_id",
+        string="Private Country",
         readonly=False,
-        tracking=True,
         groups="hr.group_hr_user",
+        tracking=True,
     )
     marital = fields.Selection(
-        string="Marital Status",
         related="private_address_id.marital",
+        string="Marital Status",
         readonly=False,
+        groups="hr.group_hr_user",
         # No default and not required here: the facet carries the value, it
         # exists only once the employee is saved, and a default on this side
         # would be written onto the facet after every create -- a second
         # employment of the same person would reset the first one's answer.
         # res.partner defaults it to single when the facet is created.
         tracking=True,
-        groups="hr.group_hr_user",
     )
     spouse_complete_name = fields.Char(
-        string="Spouse Legal Name",
         related="private_address_id.spouse_complete_name",
+        string="Spouse Legal Name",
         readonly=False,
-        tracking=True,
         groups="hr.group_hr_user",
+        tracking=True,
     )
     spouse_birthdate = fields.Date(
-        string="Spouse Birthdate",
         related="private_address_id.spouse_birthdate",
+        string="Spouse Birthdate",
         readonly=False,
-        tracking=True,
         groups="hr.group_hr_user",
+        tracking=True,
     )
     children = fields.Integer(
-        string="Dependent Children",
         related="private_address_id.dependent_children",
+        string="Dependent Children",
         readonly=False,
-        tracking=True,
         groups="hr.group_hr_user",
+        tracking=True,
     )
     emergency_contact = fields.Char(
         groups="hr.group_hr_user",
         tracking=True,
     )
     emergency_phone_ids = fields.Many2many(
-        "phone.number",
-        "hr_employee_emergency_phone_number_rel",
-        "employee_id",
-        "phone_number_id",
+        comodel_name="phone.number",
+        relation="hr_employee_emergency_phone_number_rel",
+        column1="employee_id",
+        column2="phone_number_id",
         groups="hr.group_hr_user",
     )
 
@@ -447,21 +445,21 @@ class HrEmployee(models.Model):
     )
     km_home_work = fields.Integer(
         string="Home-Work Distance in Km",
-        groups="hr.group_hr_user",
         compute="_compute_km_home_work",
         inverse="_inverse_km_home_work",
         store=True,
+        groups="hr.group_hr_user",
         tracking=True,
     )
     distance_home_work_unit = fields.Selection(
-        [
+        selection=[
             ("kilometers", "km"),
             ("miles", "mi"),
         ],
-        "Home-Work Distance unit",
-        groups="hr.group_hr_user",
-        required=True,
+        string="Home-Work Distance unit",
         default="kilometers",
+        required=True,
+        groups="hr.group_hr_user",
         tracking=True,
     )
     work_location_name = fields.Char(
@@ -469,29 +467,29 @@ class HrEmployee(models.Model):
         compute_sudo=True,
     )
     work_location_type = fields.Selection(
-        [("home", "Home"), ("office", "Office"), ("other", "Other")],
+        selection=[("home", "Home"), ("office", "Office"), ("other", "Other")],
         compute="_compute_work_location_type",
-        tracking=True,
         compute_sudo=True,
+        tracking=True,
     )
 
     bank_account_ids = fields.Many2many(
-        "res.partner.bank",
+        comodel_name="res.partner.bank",
         relation="employee_bank_account_rel",
         column1="employee_id",
         column2="bank_account_id",
-        domain="[('partner_id', '=', partner_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         string="Bank Accounts",
-        tracking=True,
-        groups="hr.group_hr_user",
         help="Employee bank accounts to pay salaries",
+        domain="[('partner_id', '=', partner_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        groups="hr.group_hr_user",
+        tracking=True,
     )
     is_trusted_bank_account = fields.Boolean(
         compute="_compute_is_trusted_bank_account",
         groups="hr.group_hr_user",
     )
     primary_bank_account_id = fields.Many2one(
-        "res.partner.bank",
+        comodel_name="res.partner.bank",
         compute="_compute_primary_bank_account_id",
         groups="hr.group_hr_user",
     )
@@ -511,12 +509,12 @@ class HrEmployee(models.Model):
         tracking=True,
     )
     visa_expire = fields.Date(
-        "Visa Expiration Date",
+        string="Visa Expiration Date",
         groups="hr.group_hr_user",
         tracking=True,
     )
     permit_no = fields.Char(
-        "Work Permit No",
+        string="Work Permit No",
         groups="hr.group_hr_user",
         tracking=True,
     )
@@ -529,93 +527,92 @@ class HrEmployee(models.Model):
         groups="hr.group_hr_user",
     )
     work_permit_name = fields.Char(
-        "work_permit_name",
+        string="work_permit_name",
         compute="_compute_work_permit_name",
         groups="hr.group_hr_user",
     )
 
     certificate = fields.Selection(
-        string="Certificate Level",
         related="private_address_id.education_certificate",
+        string="Certificate Level",
         readonly=False,
-        tracking=True,
         groups="hr.group_hr_user",
+        tracking=True,
     )
     study_field = fields.Char(
-        "Field of Study",
         related="private_address_id.study_field",
+        string="Field of Study",
         readonly=False,
-        tracking=True,
         groups="hr.group_hr_user",
+        tracking=True,
     )
     study_school = fields.Char(
-        "School",
         related="private_address_id.study_school",
+        string="School",
         readonly=False,
-        tracking=True,
         groups="hr.group_hr_user",
+        tracking=True,
     )
 
-    driving_license = fields.Binary(
-        groups="hr.group_hr_user",
-    )
+    driving_license = fields.Binary(groups="hr.group_hr_user")
     private_car_plate = fields.Char(
-        groups="hr.group_hr_user",
         help="If you have more than one car, just separate the plates by a space.",
+        groups="hr.group_hr_user",
     )
 
     parent_id = fields.Many2one(
-        "hr.employee",
-        "Manager",
+        comodel_name="hr.employee",
+        string="Manager",
         index=True,
         domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]",
         tracking=True,
     )
     child_ids = fields.One2many(
-        "hr.employee",
-        "parent_id",
+        comodel_name="hr.employee",
+        inverse_name="parent_id",
         string="Direct subordinates",
     )
     coach_id = fields.Many2one(
-        "hr.employee",
+        comodel_name="hr.employee",
+        help='Select the "Employee" who is the coach of this employee.\n'
+        'The "Coach" has no specific rights or responsibilities by default.',
         compute="_compute_coach_id",
         store=True,
         readonly=False,
         domain="['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]",
-        help='Select the "Employee" who is the coach of this employee.\n'
-        'The "Coach" has no specific rights or responsibilities by default.',
     )
 
     tag_ids = fields.Many2many(
-        "res.partner.tag",
-        "employee_tag_rel",
-        "employee_id",
-        "tag_id",
-        groups="hr.group_hr_user",
+        comodel_name="res.partner.tag",
+        relation="employee_tag_rel",
+        column1="employee_id",
+        column2="tag_id",
         string="Tags",
+        groups="hr.group_hr_user",
     )
     tz = fields.Selection(tracking=True)
-    color = fields.Integer("Color Index", default=0)
+    color = fields.Integer(
+        string="Color Index",
+        default=0,
+    )
     is_manager = fields.Boolean(compute="_compute_is_manager")
     is_user = fields.Boolean(compute="_compute_is_user")
     barcode = fields.Char(
         string="Badge ID",
+        help="ID used for employee identification.",
         compute="_compute_identifiers",
         inverse="_inverse_identifiers",
         search="_search_barcode",
         compute_sudo=True,
         groups="hr.group_hr_user",
-        help="ID used for employee identification.",
     )
     pin = fields.Char(
         string="PIN",
-        groups="hr.group_hr_user",
-        copy=False,
         help="PIN used to Check In/Out in the Kiosk Mode of the Attendance application (if enabled in Configuration) and to change the cashier in the Point of Sale application.",
-    )
-    message_main_attachment_id = fields.Many2one(
+        copy=False,
         groups="hr.group_hr_user",
     )
+    message_main_attachment_id = fields.Many2one(groups="hr.group_hr_user")
     id_card = fields.Binary(
         string="ID Card Copy",
         groups="hr.group_hr_user",
@@ -625,8 +622,8 @@ class HrEmployee(models.Model):
         groups="hr.group_hr_user",
     )
     employee_properties = fields.Properties(
-        "Properties",
         definition="company_id.employee_properties_definition",
+        string="Properties",
         precompute=False,
         groups="hr.group_hr_user",
     )

@@ -60,11 +60,22 @@ class MixinMicrosoftCalendarSync(models.AbstractModel):
     _name = "mixin.microsoft.calendar.sync"
     _description = "Synchronize a record with Microsoft Calendar"
 
-    microsoft_id = fields.Char("Organizer event Id", copy=False, index=True)
-    ms_universal_event_id = fields.Char("Universal event Id", copy=False, index=True)
+    microsoft_id = fields.Char(
+        string="Organizer event Id",
+        index=True,
+        copy=False,
+    )
+    ms_universal_event_id = fields.Char(
+        string="Universal event Id",
+        index=True,
+        copy=False,
+    )
 
     # This field helps to know when a microsoft event need to be resynced
-    need_sync_m = fields.Boolean(default=True, copy=False)
+    need_sync_m = fields.Boolean(
+        default=True,
+        copy=False,
+    )
     active = fields.Boolean(default=True)
 
     def write(self, vals):

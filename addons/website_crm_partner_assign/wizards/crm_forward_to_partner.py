@@ -135,33 +135,47 @@ class CrmLeadForwardToPartner(models.TransientModel):
         )
 
     forward_type = fields.Selection(
-        [
+        selection=[
             ("single", "a single partner: manual selection of partner"),
             (
                 "assigned",
                 "several partners: automatic assignment, using GPS coordinates and partner's grades",
             ),
         ],
-        "Forward selected leads to",
+        string="Forward selected leads to",
         default=lambda self: self.env.context.get("forward_type") or "single",
     )
-    partner_id = fields.Many2one("res.partner", "Forward Leads To")
-    assignation_lines = fields.One2many(
-        "crm.lead.assignation", "forward_id", "Partner Assignment"
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Forward Leads To",
     )
-    body = fields.Html("Contents", help="Automatically sanitized HTML contents")
+    assignation_lines = fields.One2many(
+        comodel_name="crm.lead.assignation",
+        inverse_name="forward_id",
+        string="Partner Assignment",
+    )
+    body = fields.Html(
+        string="Contents",
+        help="Automatically sanitized HTML contents",
+    )
 
 
 class CrmLeadAssignation(models.TransientModel):
     _name = "crm.lead.assignation"
     _description = "Lead Assignation"
 
-    forward_id = fields.Many2one("crm.lead.forward.to.partner", "Partner Assignment")
-    lead_id = fields.Many2one("crm.lead")
+    forward_id = fields.Many2one(
+        comodel_name="crm.lead.forward.to.partner",
+        string="Partner Assignment",
+    )
+    lead_id = fields.Many2one(comodel_name="crm.lead")
     lead_location = fields.Char()
-    partner_assigned_id = fields.Many2one("res.partner", "Assigned Partner")
+    partner_assigned_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Assigned Partner",
+    )
     partner_location = fields.Char()
-    lead_link = fields.Char("Link to Lead")
+    lead_link = fields.Char(string="Link to Lead")
 
     @api.onchange("lead_id")
     def _onchange_lead_id(self):

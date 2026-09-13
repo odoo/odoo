@@ -8,28 +8,28 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     timesheet_ids = fields.One2many(
-        "account.analytic.line",
-        "timesheet_invoice_id",
+        comodel_name="account.analytic.line",
+        inverse_name="timesheet_invoice_id",
         string="Timesheets",
-        readonly=True,
-        copy=False,
         export_string_translation=False,
+        copy=False,
+        readonly=True,
     )
     timesheet_count = fields.Integer(
-        "Number of timesheets",
+        string="Number of timesheets",
+        export_string_translation=False,
         compute="_compute_timesheet_count",
         compute_sudo=True,
-        export_string_translation=False,
     )
     timesheet_encode_uom_id = fields.Many2one(
-        "uom.uom",
+        comodel_name="uom.uom",
         related="company_id.timesheet_encode_uom_id",
         export_string_translation=False,
     )
     timesheet_total_duration = fields.Integer(
+        help="Total recorded duration, expressed in the encoding UoM, and rounded to the unit",
         compute="_compute_timesheet_total_duration",
         compute_sudo=True,
-        help="Total recorded duration, expressed in the encoding UoM, and rounded to the unit",
     )
 
     @api.depends("timesheet_ids", "company_id.timesheet_encode_uom_id")

@@ -4,9 +4,13 @@ from odoo import api, fields, models
 class CrmLead(models.Model):
     _inherit = "crm.lead"
 
-    visitor_ids = fields.Many2many("website.visitor", string="Web Visitors")
+    visitor_ids = fields.Many2many(
+        comodel_name="website.visitor",
+        string="Web Visitors",
+    )
     visitor_page_count = fields.Integer(
-        "# Page Views", compute="_compute_visitor_page_count"
+        string="# Page Views",
+        compute="_compute_visitor_page_count",
     )
 
     @api.depends("visitor_ids.page_ids")

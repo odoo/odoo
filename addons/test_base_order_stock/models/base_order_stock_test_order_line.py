@@ -11,7 +11,7 @@ class BaseOrderStockTestOrderLine(models.Model):
         default="draft",
     )
     display_type = fields.Selection(
-        selection=[("line_section", "Section"), ("line_note", "Note")],
+        selection=[("line_section", "Section"), ("line_note", "Note")]
     )
     product_qty = fields.Float()
     qty_transferred = fields.Float()

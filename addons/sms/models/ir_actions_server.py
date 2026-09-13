@@ -15,13 +15,13 @@ class IrActionsServer(models.Model):
     )
     # SMS
     sms_template_id = fields.Many2one(
-        "sms.template",
-        "SMS Template",
+        comodel_name="sms.template",
+        string="SMS Template",
         compute="_compute_sms_template_id",
-        ondelete="set null",
-        readonly=False,
         store=True,
+        readonly=False,
         domain="[('model_id', '=', model_id)]",
+        ondelete="set null",
     )
     sms_method = fields.Selection(
         selection=[
@@ -31,8 +31,8 @@ class IrActionsServer(models.Model):
         ],
         string="Send SMS As",
         compute="_compute_sms_method",
-        readonly=False,
         store=True,
+        readonly=False,
     )
 
     @api.model

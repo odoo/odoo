@@ -6,11 +6,15 @@ class FleetVehicleSendMail(models.TransientModel):
     _inherit = ["mixin.mail.composer"]
     _description = "Send mails to Drivers"
 
-    vehicle_ids = fields.Many2many("fleet.vehicle", string="Vehicles", required=True)
-    author_id = fields.Many2one(
-        "res.partner",
+    vehicle_ids = fields.Many2many(
+        comodel_name="fleet.vehicle",
+        string="Vehicles",
         required=True,
+    )
+    author_id = fields.Many2one(
+        comodel_name="res.partner",
         default=lambda self: self.env.user.partner_id.id,
+        required=True,
     )
     template_id = fields.Many2one(
         domain=lambda self: [
@@ -18,10 +22,10 @@ class FleetVehicleSendMail(models.TransientModel):
         ]
     )
     attachment_ids = fields.Many2many(
-        "ir.attachment",
-        "fleet_vehicle_mail_compose_message_ir_attachments_rel",
-        "wizard_id",
-        "attachment_id",
+        comodel_name="ir.attachment",
+        relation="fleet_vehicle_mail_compose_message_ir_attachments_rel",
+        column1="wizard_id",
+        column2="attachment_id",
         string="Attachments",
         bypass_search_access=True,
     )

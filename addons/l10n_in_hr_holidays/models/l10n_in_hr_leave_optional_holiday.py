@@ -19,7 +19,9 @@ class L10nInHrLeaveOptionalHoliday(models.Model):
     name = fields.Char(required=True)
     date = fields.Date(required=True)
     company_id = fields.Many2one(
-        "res.company", default=lambda self: self.env.company, required=True
+        comodel_name="res.company",
+        default=lambda self: self.env.company,
+        required=True,
     )
 
     @api.depends("name", "date")

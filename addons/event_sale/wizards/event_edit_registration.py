@@ -6,10 +6,15 @@ class RegistrationEditor(models.TransientModel):
     _description = "Edit Attendee Details on Sales Confirmation"
 
     sale_order_id = fields.Many2one(
-        "sale.order", "Sales Order", required=True, ondelete="cascade"
+        comodel_name="sale.order",
+        string="Sales Order",
+        required=True,
+        ondelete="cascade",
     )
     event_registration_ids = fields.One2many(
-        "registration.editor.line", "editor_id", string="Registrations to Edit"
+        comodel_name="registration.editor.line",
+        inverse_name="editor_id",
+        string="Registrations to Edit",
     )
 
     @api.model
@@ -116,15 +121,24 @@ class RegistrationEditorLine(models.TransientModel):
     _description = "Edit Attendee Line on Sales Confirmation"
     _order = "id desc"
 
-    editor_id = fields.Many2one("registration.editor")
-    sale_order_line_id = fields.Many2one("sale.order.line", string="Sales Order Line")
-    event_id = fields.Many2one("event.event", required=True)
+    editor_id = fields.Many2one(comodel_name="registration.editor")
+    sale_order_line_id = fields.Many2one(
+        comodel_name="sale.order.line",
+        string="Sales Order Line",
+    )
+    event_id = fields.Many2one(
+        comodel_name="event.event",
+        required=True,
+    )
     company_id = fields.Many2one(related="event_id.company_id")
-    registration_id = fields.Many2one("event.registration", "Original Registration")
-    event_slot_id = fields.Many2one("event.slot")
-    event_ticket_id = fields.Many2one("event.event.ticket")
+    registration_id = fields.Many2one(
+        comodel_name="event.registration",
+        string="Original Registration",
+    )
+    event_slot_id = fields.Many2one(comodel_name="event.slot")
+    event_ticket_id = fields.Many2one(comodel_name="event.event.ticket")
     email = fields.Char()
-    phone_ids = fields.Many2many("phone.number")
+    phone_ids = fields.Many2many(comodel_name="phone.number")
     name = fields.Char()
 
     def _prepare_registration_data(self, include_event_values=False):

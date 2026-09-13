@@ -9,24 +9,44 @@ class HrLeaveReport(models.Model):
     _auto = False
     _order = "date_from DESC, employee_id"
 
-    leave_id = fields.Many2one("hr.leave", string="Time Off Request", readonly=True)
-    allocation_id = fields.Many2one(
-        "hr.leave.allocation", string="Allocation Request", readonly=True
+    leave_id = fields.Many2one(
+        comodel_name="hr.leave",
+        string="Time Off Request",
+        readonly=True,
     )
-    name = fields.Char("Description", readonly=True)
-    number_of_days = fields.Float("Number of Days", readonly=True)
-    number_of_hours = fields.Float("Number of Hours", readonly=True)
+    allocation_id = fields.Many2one(
+        comodel_name="hr.leave.allocation",
+        string="Allocation Request",
+        readonly=True,
+    )
+    name = fields.Char(
+        string="Description",
+        readonly=True,
+    )
+    number_of_days = fields.Float(
+        string="Number of Days",
+        readonly=True,
+    )
+    number_of_hours = fields.Float(
+        string="Number of Hours",
+        readonly=True,
+    )
     leave_type = fields.Selection(
-        [("allocation", "Allocation"), ("request", "Time Off")],
+        selection=[("allocation", "Allocation"), ("request", "Time Off")],
         string="Request Type",
         readonly=True,
     )
-    department_id = fields.Many2one("hr.department", readonly=True)
+    department_id = fields.Many2one(
+        comodel_name="hr.department",
+        readonly=True,
+    )
     holiday_status_id = fields.Many2one(
-        "hr.leave.type", string="Time Off Type", readonly=True
+        comodel_name="hr.leave.type",
+        string="Time Off Type",
+        readonly=True,
     )
     state = fields.Selection(
-        [
+        selection=[
             ("cancel", "Cancelled"),
             ("confirm", "To Approve"),
             ("refuse", "Refused"),
@@ -36,9 +56,18 @@ class HrLeaveReport(models.Model):
         string="Status",
         readonly=True,
     )
-    date_from = fields.Datetime("Start Date", readonly=True)
-    date_to = fields.Datetime("End Date", readonly=True)
-    company_id = fields.Many2one("res.company", readonly=True)
+    date_from = fields.Datetime(
+        string="Start Date",
+        readonly=True,
+    )
+    date_to = fields.Datetime(
+        string="End Date",
+        readonly=True,
+    )
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        readonly=True,
+    )
 
     def init(self):
         drop_view_if_exists(self.env.cr, "hr_leave_report")

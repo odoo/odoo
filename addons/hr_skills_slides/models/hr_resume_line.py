@@ -5,17 +5,22 @@ class HrResumeLine(models.Model):
     _inherit = "hr.resume.line"
 
     channel_id = fields.Many2one(
-        "slide.channel",
+        comodel_name="slide.channel",
         string="eLearning Course",
         compute="_compute_channel_id",
         store=True,
-        readonly=True,
         index="btree_not_null",
+        readonly=True,
     )
     course_url = fields.Char(related="channel_id.website_absolute_url")
-    duration = fields.Integer(compute="_compute_duration", readonly=False, store=True)
+    duration = fields.Integer(
+        compute="_compute_duration",
+        store=True,
+        readonly=False,
+    )
     course_type = fields.Selection(
-        selection_add=[("elearning", "eLearning")], ondelete={"elearning": "cascade"}
+        selection_add=[("elearning", "eLearning")],
+        ondelete={"elearning": "cascade"},
     )
 
     @api.depends("channel_id")

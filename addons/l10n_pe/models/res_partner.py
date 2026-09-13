@@ -5,12 +5,13 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     l10n_pe_district = fields.Many2one(
-        "l10n_pe.res.city.district",
+        comodel_name="l10n_pe.res.city.district",
         string="District",
         help="Districts are part of a province or city.",
     )
     l10n_pe_district_name = fields.Char(
-        string="District name", related="l10n_pe_district.name"
+        related="l10n_pe_district.name",
+        string="District name",
     )
 
     @api.onchange("l10n_pe_district")

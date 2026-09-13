@@ -15,26 +15,38 @@ class IotBox(models.Model):
 
     name = fields.Char(required=True)
     identifier = fields.Char(readonly=True)
-    device_ids = fields.One2many("iot.device", "iot_id", string="Devices")
-    device_count = fields.Count("device_ids")
-    ip = fields.Char("Domain Address", readonly=True)
+    device_ids = fields.One2many(
+        comodel_name="iot.device",
+        inverse_name="iot_id",
+        string="Devices",
+    )
+    device_count = fields.Count(count_of="device_ids")
+    ip = fields.Char(
+        string="Domain Address",
+        readonly=True,
+    )
     drivers_auto_update = fields.Boolean(
-        "Automatic drivers update",
+        string="Automatic drivers update",
         help="Automatically update drivers when the IoT Box boots",
         default=True,
     )
-    version = fields.Char("Image Version", readonly=True)
-    version_commit_url = fields.Html(
-        readonly=True, compute="_compute_version_commit_url"
+    version = fields.Char(
+        string="Image Version",
+        readonly=True,
     )
-    company_id = fields.Many2one("res.company")
+    version_commit_url = fields.Html(
+        compute="_compute_version_commit_url",
+        readonly=True,
+    )
+    company_id = fields.Many2one(comodel_name="res.company")
     ssl_certificate_end_date = fields.Datetime(
-        "SSL Certificate End Date", readonly=True
+        string="SSL Certificate End Date",
+        readonly=True,
     )
     must_install_fdm_module = fields.Boolean(
-        "A fiscal data module is connected to this IoT Box",
-        readonly=True,
+        string="A fiscal data module is connected to this IoT Box",
         compute="_compute_must_install_fdm_module",
+        readonly=True,
     )
 
     def _default_token(self):
@@ -61,7 +73,10 @@ class IotBox(models.Model):
             icp_sudo.set_param("iot.iot_token", iot_token_value)
         return iot_token_value
 
-    token = fields.Char(default=lambda self: self._default_token(), readonly=True)
+    token = fields.Char(
+        default=lambda self: self._default_token(),
+        readonly=True,
+    )
 
     @api.ondelete(at_uninstall=True)
     def _unlink_iot_box(self):

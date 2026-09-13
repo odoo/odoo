@@ -29,18 +29,25 @@ class IrModelAccess(models.Model):
     _allow_sudo_commands = False
     _PERM_COLUMNS = access_mode_columns("a")
 
-    name = fields.Char(required=True, index=True)
+    name = fields.Char(
+        index=True,
+        required=True,
+    )
     active = fields.Boolean(
-        default=True,
         help="If you uncheck the active field, it will disable the ACL without deleting it (if you delete a native ACL, it will be re-created when you reload the module).",
+        default=True,
     )
     model_id = fields.Many2one(
-        "ir.model",
-        required=True,
+        comodel_name="ir.model",
         index=True,
+        required=True,
         ondelete="cascade",
     )
-    group_id = fields.Many2one("res.groups", ondelete="restrict", index=True)
+    group_id = fields.Many2one(
+        comodel_name="res.groups",
+        index=True,
+        ondelete="restrict",
+    )
     perm_read = fields.Boolean(string="Read Access")
     perm_write = fields.Boolean(string="Write Access")
     perm_create = fields.Boolean(string="Create Access")

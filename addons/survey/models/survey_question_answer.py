@@ -15,54 +15,64 @@ class SurveyQuestionAnswer(models.Model):
     MAX_ANSWER_NAME_LENGTH = 90
 
     question_id = fields.Many2one(
-        "survey.question",
-        ondelete="cascade",
+        comodel_name="survey.question",
         index="btree_not_null",
+        ondelete="cascade",
     )
     matrix_question_id = fields.Many2one(
-        "survey.question",
+        comodel_name="survey.question",
         string="Question (as matrix row)",
-        ondelete="cascade",
         index="btree_not_null",
+        ondelete="cascade",
     )
-    sequence = fields.Integer("Label Sequence order", default=10)
+    sequence = fields.Integer(
+        string="Label Sequence order",
+        default=10,
+    )
     question_type = fields.Selection(related="question_id.question_type")
     scoring_type = fields.Selection(related="question_id.scoring_type")
-    value = fields.Char("Suggested value", translate=True)
-    value_image = fields.Image("Image", max_width=1024, max_height=1024)
-    value_image_filename = fields.Char("Image Filename")
+    value = fields.Char(
+        string="Suggested value",
+        translate=True,
+    )
+    value_image = fields.Image(
+        string="Image",
+        max_width=1024,
+        max_height=1024,
+    )
+    value_image_filename = fields.Char(string="Image Filename")
     value_label = fields.Char(
-        compute="_compute_value_label",
         help="Answer label as either the value itself if not empty "
         "or a letter representing the index of the answer otherwise.",
+        compute="_compute_value_label",
     )
-    is_correct = fields.Boolean("Correct")
+    is_correct = fields.Boolean(string="Correct")
     answer_score = fields.Float(
-        "Score",
+        string="Score",
         help="A positive score indicates a correct choice; a negative or null score indicates a wrong answer",
     )
     comment = fields.Text(
-        translate=True,
         help="Feedback shown to the learner when this answer is selected.",
+        translate=True,
     )
     skip_action = fields.Selection(
-        [
+        selection=[
             ("next", "Continue normally"),
             ("skip_to", "Skip to question/page"),
             ("end_survey", "End survey"),
             ("redirect", "Redirect to URL"),
         ],
-        default="next",
         help="Action to perform when this answer is selected and the page is submitted.",
+        default="next",
     )
     skip_target_id = fields.Many2one(
-        "survey.question",
+        comodel_name="survey.question",
         string="Skip To",
-        ondelete="set null",
         help="Question or page to skip to when 'Skip to question/page' is selected.",
+        ondelete="set null",
     )
     skip_redirect_url = fields.Char(
-        "Redirect URL",
+        string="Redirect URL",
         help="External URL to redirect to when 'Redirect to URL' action is selected.",
     )
 

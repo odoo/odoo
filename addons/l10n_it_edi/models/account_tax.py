@@ -122,17 +122,17 @@ class AccountTax(models.Model):
     _inherit = "account.tax"
 
     l10n_it_withholding_type = fields.Selection(
-        WITHHOLDING_TYPE_SELECTION,
+        selection=WITHHOLDING_TYPE_SELECTION,
         string="Withholding tax type (Italy)",
         help="Withholding tax type. Only for Italian accounting EDI.",
     )
     l10n_it_withholding_reason = fields.Selection(
-        WITHHOLDING_REASON_SELECTION,
+        selection=WITHHOLDING_REASON_SELECTION,
         string="Withholding tax reason (Italy)",
         help="Withholding tax reason. Only for Italian accounting EDI.",
     )
     l10n_it_pension_fund_type = fields.Selection(
-        PENSION_FUND_TYPE_SELECTION,
+        selection=PENSION_FUND_TYPE_SELECTION,
         string="Pension fund type (Italy)",
         help="Pension Fund Type. Only for Italian accounting EDI.",
     )

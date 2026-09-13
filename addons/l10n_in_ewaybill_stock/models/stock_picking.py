@@ -6,10 +6,13 @@ class StockPicking(models.Model):
     _inherit = "stock.picking"
 
     l10n_in_ewaybill_ids = fields.One2many(
-        "l10n.in.ewaybill", "picking_id", string="Ewaybill"
+        comodel_name="l10n.in.ewaybill",
+        inverse_name="picking_id",
+        string="Ewaybill",
     )
     l10n_in_ewaybill_name = fields.Char(
-        "Indian Ewaybill Number", compute="_compute_l10n_in_ewaybill_details"
+        string="Indian Ewaybill Number",
+        compute="_compute_l10n_in_ewaybill_details",
     )
     l10n_in_ewaybill_feature_enabled = fields.Boolean(
         related="company_id.l10n_in_ewaybill_feature"

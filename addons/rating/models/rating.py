@@ -26,20 +26,28 @@ class RatingRating(models.Model):
 
     create_date = fields.Datetime(string="Submitted on")
     res_name = fields.Char(
-        string="Resource name", compute="_compute_res_name", store=True
+        string="Resource name",
+        compute="_compute_res_name",
+        store=True,
     )
     res_model_id = fields.Many2one(
-        "ir.model", "Related Document Model", index=True, ondelete="cascade"
+        comodel_name="ir.model",
+        string="Related Document Model",
+        index=True,
+        ondelete="cascade",
     )
     res_model = fields.Char(
-        string="Document Model",
         related="res_model_id.model",
+        string="Document Model",
         store=True,
         index=True,
         readonly=True,
     )
     res_id = fields.Many2oneReference(
-        string="Document", model_field="res_model", required=True, index=True
+        model_field="res_model",
+        string="Document",
+        index=True,
+        required=True,
     )
     resource_ref = fields.Reference(
         selection="_selection_target_model",
@@ -47,10 +55,15 @@ class RatingRating(models.Model):
         readonly=True,
     )
     parent_res_name = fields.Char(
-        "Parent Document Name", compute="_compute_parent_res_name", store=True
+        string="Parent Document Name",
+        compute="_compute_parent_res_name",
+        store=True,
     )
     parent_res_model_id = fields.Many2one(
-        "ir.model", "Parent Related Document Model", index=True, ondelete="cascade"
+        comodel_name="ir.model",
+        string="Parent Related Document Model",
+        index=True,
+        ondelete="cascade",
     )
     # readonly, like its `res_model` sibling above: writable would make it an
     # inversable related, and every write of it would then write `model` back
@@ -58,40 +71,65 @@ class RatingRating(models.Model):
     # be what the related read already returns, but one that costs write access
     # on `ir.model` and so fails for any non-administrator.
     parent_res_model = fields.Char(
-        "Parent Document Model",
-        store=True,
         related="parent_res_model_id.model",
+        string="Parent Document Model",
+        store=True,
         index=True,
     )
-    parent_res_id = fields.Integer("Parent Document", index=True)
+    parent_res_id = fields.Integer(
+        string="Parent Document",
+        index=True,
+    )
     parent_ref = fields.Reference(
         selection="_selection_target_model",
         compute="_compute_parent_ref",
         readonly=True,
     )
-    rated_partner_id = fields.Many2one("res.partner", string="Rated Operator")
+    rated_partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Rated Operator",
+    )
     rated_partner_name = fields.Char(related="rated_partner_id.name")
-    partner_id = fields.Many2one("res.partner", string="Customer")
-    rating = fields.Float(string="Rating Value", aggregator="avg", default=0)
-    rating_image = fields.Binary("Image", compute="_compute_rating_images")
-    rating_image_url = fields.Char("Image URL", compute="_compute_rating_images")
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Customer",
+    )
+    rating = fields.Float(
+        string="Rating Value",
+        default=0,
+        aggregator="avg",
+    )
+    rating_image = fields.Binary(
+        string="Image",
+        compute="_compute_rating_images",
+    )
+    rating_image_url = fields.Char(
+        string="Image URL",
+        compute="_compute_rating_images",
+    )
     rating_text = fields.Selection(
-        rating_data.RATING_TEXT,
+        selection=rating_data.RATING_TEXT,
         string="Rating",
-        store=True,
         compute="_compute_rating_text",
+        store=True,
         readonly=True,
     )
-    feedback = fields.Text("Comment")
-    message_id = fields.Many2one("mail.message", index=True, ondelete="cascade")
+    feedback = fields.Text(string="Comment")
+    message_id = fields.Many2one(
+        comodel_name="mail.message",
+        index=True,
+        ondelete="cascade",
+    )
     is_internal = fields.Boolean(
-        "Visible Internally Only",
-        readonly=False,
         related="message_id.is_internal",
+        string="Visible Internally Only",
         store=True,
+        readonly=False,
     )
     access_token = fields.Char(
-        "Security Token", default=_default_access_token, index=True
+        string="Security Token",
+        default=_default_access_token,
+        index=True,
     )
     consumed = fields.Boolean(string="Filled Rating")
     rated_on = fields.Datetime()

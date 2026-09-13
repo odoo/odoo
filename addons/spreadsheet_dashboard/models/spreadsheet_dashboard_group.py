@@ -7,11 +7,17 @@ class SpreadsheetDashboardGroup(models.Model):
     _description = "Group of dashboards"
     _order = "sequence"
 
-    name = fields.Char(required=True, translate=True)
-    dashboard_ids = fields.One2many("spreadsheet.dashboard", "dashboard_group_id")
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
+    dashboard_ids = fields.One2many(
+        comodel_name="spreadsheet.dashboard",
+        inverse_name="dashboard_group_id",
+    )
     published_dashboard_ids = fields.One2many(
-        "spreadsheet.dashboard",
-        "dashboard_group_id",
+        comodel_name="spreadsheet.dashboard",
+        inverse_name="dashboard_group_id",
         domain=[("is_published", "=", True)],
     )
     sequence = fields.Integer()

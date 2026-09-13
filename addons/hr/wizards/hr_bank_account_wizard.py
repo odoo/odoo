@@ -9,10 +9,13 @@ class BankAccountAllocationWizard(models.TransientModel):
     _name = "hr.bank.account.allocation.wizard"
     _description = "Bank Account Allocation Wizard"
 
-    employee_id = fields.Many2one("hr.employee", required=True)
+    employee_id = fields.Many2one(
+        comodel_name="hr.employee",
+        required=True,
+    )
     allocation_ids = fields.One2many(
-        "hr.bank.account.allocation.wizard.line",
-        "wizard_id",
+        comodel_name="hr.bank.account.allocation.wizard.line",
+        inverse_name="wizard_id",
         string="Allocations",
         readonly=False,
     )

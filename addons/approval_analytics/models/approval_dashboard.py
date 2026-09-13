@@ -24,122 +24,116 @@ class ApprovalDashboard(models.TransientModel):
     )
 
     pending_today = fields.Integer(
-        compute="_compute_today_stats",
         help="Requests currently pending (submitted today)",
-    )
-    approved_today = fields.Integer(
         compute="_compute_today_stats",
     )
-    refused_today = fields.Integer(
-        compute="_compute_today_stats",
-    )
-    submitted_today = fields.Integer(
-        compute="_compute_today_stats",
-    )
+    approved_today = fields.Integer(compute="_compute_today_stats")
+    refused_today = fields.Integer(compute="_compute_today_stats")
+    submitted_today = fields.Integer(compute="_compute_today_stats")
     avg_response_time_hours = fields.Float(
         string="Avg Response Time Today (hours)",
-        compute="_compute_today_stats",
         help="Average time from submission to decision for requests resolved today",
+        compute="_compute_today_stats",
     )
 
     trend_7days = fields.Float(
         string="7-Day Trend %",
-        compute="_compute_trends",
         help="Percentage change in submission volume vs last week",
+        compute="_compute_trends",
     )
     trend_15days = fields.Float(
         string="15-Day Trend %",
-        compute="_compute_trends",
         help="Percentage change in submission volume vs previous 15 days",
+        compute="_compute_trends",
     )
     trend_30days = fields.Float(
         string="30-Day Trend %",
-        compute="_compute_trends",
         help="Percentage change in submission volume vs last month",
+        compute="_compute_trends",
     )
     trend_7days_display = fields.Char(
         string="Week Trend",
-        compute="_compute_trends",
         help="Human-readable 7-day trend with arrow",
+        compute="_compute_trends",
     )
     trend_15days_display = fields.Char(
         string="15-Day Trend",
-        compute="_compute_trends",
         help="Human-readable 15-day trend with arrow",
+        compute="_compute_trends",
     )
     trend_30days_display = fields.Char(
         string="Month Trend",
-        compute="_compute_trends",
         help="Human-readable 30-day trend with arrow",
+        compute="_compute_trends",
     )
 
     slowest_category_id = fields.Many2one(
         comodel_name="approval.category",
-        compute="_compute_bottlenecks",
         help="Category with longest average approval time",
+        compute="_compute_bottlenecks",
     )
     slowest_category_hours = fields.Float(
         string="Slowest Category Time (hours)",
-        compute="_compute_bottlenecks",
         help="Average approval time for slowest category",
+        compute="_compute_bottlenecks",
     )
     slowest_approver_id = fields.Many2one(
         comodel_name="res.users",
-        compute="_compute_bottlenecks",
         help="Approver with longest average response time",
+        compute="_compute_bottlenecks",
     )
     slowest_approver_hours = fields.Float(
         string="Slowest Approver Time (hours)",
-        compute="_compute_bottlenecks",
         help="Average response time for slowest approver",
+        compute="_compute_bottlenecks",
     )
     most_pending_approver_id = fields.Many2one(
         comodel_name="res.users",
         string="Most Overloaded Approver",
-        compute="_compute_bottlenecks",
         help="Approver with most pending requests",
+        compute="_compute_bottlenecks",
     )
     most_pending_count = fields.Integer(
         string="Highest Pending Count",
-        compute="_compute_bottlenecks",
         help="Number of pending requests for most overloaded approver",
+        compute="_compute_bottlenecks",
     )
 
     total_requests_all_time = fields.Integer(
         string="Total Requests (All Time)",
-        compute="_compute_all_time_stats",
         help="Total approval requests submitted since system deployment",
+        compute="_compute_all_time_stats",
     )
     total_pending_all_time = fields.Integer(
         string="Total Pending (All Time)",
-        compute="_compute_all_time_stats",
         help="Total requests currently pending approval",
+        compute="_compute_all_time_stats",
     )
     overall_approval_rate = fields.Float(
         string="Overall Approval Rate %",
-        compute="_compute_all_time_stats",
         help="Percentage of all requests that were approved",
+        compute="_compute_all_time_stats",
     )
     avg_approval_time_all_time = fields.Float(
         string="Avg Approval Time (All Time, hours)",
-        compute="_compute_all_time_stats",
         help="Average time from submission to approval across all requests",
+        compute="_compute_all_time_stats",
     )
 
     my_pending_count = fields.Integer(
         string="My Pending Approvals",
-        compute="_compute_user_metrics",
         help="Number of requests awaiting my approval",
+        compute="_compute_user_metrics",
     )
     my_pending_urgent_count = fields.Integer(
         string="My Urgent Pending",
-        compute="_compute_user_metrics",
         help="Number of urgent requests awaiting my approval",
+        compute="_compute_user_metrics",
     )
     my_avg_response_hours = fields.Float(
         string="My Avg Response Time (hours)",
-        compute="_compute_user_metrics",
         help="My average time to approve/refuse requests",
+        compute="_compute_user_metrics",
     )
 
     requests_per_day_7d = fields.Float(
@@ -180,8 +174,8 @@ class ApprovalDashboard(models.TransientModel):
     )
     median_approval_hours = fields.Float(
         string="Median Approval Time (hours)",
-        compute="_compute_velocity_metrics",
         help="Median time from submission to approval (50th percentile, last 90 days)",
+        compute="_compute_velocity_metrics",
     )
 
     def _compute_last_refresh(self) -> None:

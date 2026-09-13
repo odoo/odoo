@@ -10,25 +10,26 @@ class ProjectWorkflowStepDeleteWizard(models.TransientModel):
     _description = "Workflow Step Delete Wizard"
 
     project_ids = fields.Many2many(
-        "project.project",
-        domain="['|', ('active', '=', False), ('active', '=', True)]",
+        comodel_name="project.project",
         string="Projects",
-        ondelete="cascade",
         export_string_translation=False,
+        domain="['|', ('active', '=', False), ('active', '=', True)]",
+        ondelete="cascade",
     )
     step_ids = fields.Many2many(
-        "project.workflow.step",
+        comodel_name="project.workflow.step",
         string="Steps To Delete",
-        ondelete="cascade",
         export_string_translation=False,
+        ondelete="cascade",
     )
     tasks_count = fields.Integer(
-        "Number of Tasks",
-        compute="_compute_tasks_count",
+        string="Number of Tasks",
         export_string_translation=False,
+        compute="_compute_tasks_count",
     )
     steps_active = fields.Boolean(
-        compute="_compute_steps_active", export_string_translation=False
+        export_string_translation=False,
+        compute="_compute_steps_active",
     )
 
     @api.depends("step_ids")

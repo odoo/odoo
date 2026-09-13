@@ -9,21 +9,31 @@ class EventRegistrationAnswer(models.Model):
     _rec_names_search = ["value_answer_id", "value_text_box"]
 
     question_id = fields.Many2one(
-        "event.question",
-        ondelete="restrict",
+        comodel_name="event.question",
         required=True,
         domain="[('event_ids', 'in', event_id)]",
+        ondelete="restrict",
     )
     registration_id = fields.Many2one(
-        "event.registration", required=True, index=True, ondelete="cascade"
+        comodel_name="event.registration",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
-    partner_id = fields.Many2one("res.partner", related="registration_id.partner_id")
-    event_id = fields.Many2one("event.event", related="registration_id.event_id")
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        related="registration_id.partner_id",
+    )
+    event_id = fields.Many2one(
+        comodel_name="event.event",
+        related="registration_id.event_id",
+    )
     question_type = fields.Selection(related="question_id.question_type")
     value_answer_id = fields.Many2one(
-        "event.question.answer", string="Suggested answer"
+        comodel_name="event.question.answer",
+        string="Suggested answer",
     )
-    value_text_box = fields.Text("Text answer")
+    value_text_box = fields.Text(string="Text answer")
 
     _value_check = models.Constraint(
         "CHECK(value_answer_id IS NOT NULL OR COALESCE(value_text_box, '') <> '')",

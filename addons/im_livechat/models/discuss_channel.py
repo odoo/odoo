@@ -24,93 +24,101 @@ class DiscussChannel(models.Model):
         ondelete={"livechat": "cascade"},
     )
     duration = fields.Float(
-        compute="_compute_duration", help="Duration of the session in hours"
+        help="Duration of the session in hours",
+        compute="_compute_duration",
     )
     livechat_lang_id = fields.Many2one(
-        "res.lang", string="Language", help="Lang of the visitor of the channel."
+        comodel_name="res.lang",
+        string="Language",
+        help="Lang of the visitor of the channel.",
     )
     livechat_end_dt = fields.Datetime(
-        "Session end date",
+        string="Session end date",
         help="Session is closed when either the visitor or the last agent leaves the conversation.",
     )
     livechat_channel_id = fields.Many2one(
-        "im_livechat.channel", "Channel", index="btree_not_null"
+        comodel_name="im_livechat.channel",
+        string="Channel",
+        index="btree_not_null",
     )
     livechat_operator_id = fields.Many2one(
-        "res.partner", string="Operator", index="btree_not_null"
+        comodel_name="res.partner",
+        string="Operator",
+        index="btree_not_null",
     )
     livechat_channel_member_history_ids = fields.One2many(
-        "im_livechat.channel.member.history", "channel_id"
+        comodel_name="im_livechat.channel.member.history",
+        inverse_name="channel_id",
     )
     livechat_expertise_ids = fields.Many2many(
-        "im_livechat.expertise",
-        "discuss_channel_im_livechat_expertise_rel",
-        "discuss_channel_id",
-        "im_livechat_expertise_id",
+        comodel_name="im_livechat.expertise",
+        relation="discuss_channel_im_livechat_expertise_rel",
+        column1="discuss_channel_id",
+        column2="im_livechat_expertise_id",
         store=True,
     )
     livechat_agent_history_ids = fields.One2many(
-        "im_livechat.channel.member.history",
+        comodel_name="im_livechat.channel.member.history",
         string="Agents (History)",
         compute="_compute_livechat_agent_history_ids",
         search="_search_livechat_agent_history_ids",
     )
     livechat_bot_history_ids = fields.One2many(
-        "im_livechat.channel.member.history",
+        comodel_name="im_livechat.channel.member.history",
         string="Bots (History)",
         compute="_compute_livechat_bot_history_ids",
         search="_search_livechat_bot_history_ids",
     )
     livechat_customer_history_ids = fields.One2many(
-        "im_livechat.channel.member.history",
+        comodel_name="im_livechat.channel.member.history",
         string="Customers (History)",
         compute="_compute_livechat_customer_history_ids",
         search="_search_livechat_customer_history_ids",
     )
     livechat_agent_partner_ids = fields.Many2many(
-        "res.partner",
-        "im_livechat_channel_member_history_discuss_channel_agent_rel",
+        comodel_name="res.partner",
+        relation="im_livechat_channel_member_history_discuss_channel_agent_rel",
         string="Agents",
         compute="_compute_livechat_agent_partner_ids",
         store=True,
     )
     livechat_bot_partner_ids = fields.Many2many(
-        "res.partner",
-        "im_livechat_channel_member_history_discuss_channel_bot_rel",
+        comodel_name="res.partner",
+        relation="im_livechat_channel_member_history_discuss_channel_bot_rel",
         string="Bots",
         compute="_compute_livechat_bot_partner_ids",
-        context={"active_test": False},
         store=True,
+        context={"active_test": False},
     )
     livechat_customer_partner_ids = fields.Many2many(
-        "res.partner",
-        "im_livechat_channel_member_history_discuss_channel_customer_rel",
+        comodel_name="res.partner",
+        relation="im_livechat_channel_member_history_discuss_channel_customer_rel",
         string="Customers (Partners)",
         compute="_compute_livechat_customer_partner_ids",
         store=True,
     )
     livechat_customer_guest_ids = fields.Many2many(
-        "mail.guest",
+        comodel_name="mail.guest",
         string="Customers (Guests)",
         compute="_compute_livechat_customer_guest_ids",
     )
     livechat_agent_requesting_help_history = fields.Many2one(
-        "im_livechat.channel.member.history",
+        comodel_name="im_livechat.channel.member.history",
         string="Help Requested (Agent)",
         compute="_compute_livechat_agent_requesting_help_history",
         store=True,
     )
     livechat_agent_providing_help_history = fields.Many2one(
-        "im_livechat.channel.member.history",
+        comodel_name="im_livechat.channel.member.history",
         string="Help Provided (Agent)",
         compute="_compute_livechat_agent_providing_help_history",
         store=True,
     )
     livechat_note = fields.Html(
-        "Live Chat Note",
+        string="Live Chat Note",
+        help="Note about the session, visible to all internal users having access to the session.",
         sanitize_style=True,
         groups="base.group_user",
-        help="Note about the session, visible to all internal users having access to the session.",
     )
     livechat_status = fields.Selection(
         selection=[
@@ -119,12 +127,12 @@ class DiscussChannel(models.Model):
             ("need_help", "Looking for help"),
         ],
         compute="_compute_livechat_status",
-        groups="base.group_user",
-        readonly=False,
         store=True,
+        readonly=False,
+        groups="base.group_user",
     )
     livechat_outcome = fields.Selection(
-        [
+        selection=[
             ("no_answer", "Never Answered"),
             ("no_agent", "No one Available"),
             ("no_failure", "Success"),
@@ -134,17 +142,19 @@ class DiscussChannel(models.Model):
         store=True,
     )
     livechat_conversation_tag_ids = fields.Many2many(
-        "im_livechat.conversation.tag",
-        "livechat_conversation_tag_rel",
-        groups="im_livechat.im_livechat_group_user",
+        comodel_name="im_livechat.conversation.tag",
+        relation="livechat_conversation_tag_rel",
         string="Live Chat Conversation Tags",
         help="Tags to qualify the conversation.",
+        groups="im_livechat.im_livechat_group_user",
     )
     livechat_start_hour = fields.Float(
-        "Session Start Hour", compute="_compute_livechat_start_hour", store=True
+        string="Session Start Hour",
+        compute="_compute_livechat_start_hour",
+        store=True,
     )
     livechat_week_day = fields.Selection(
-        [
+        selection=[
             ("0", "Monday"),
             ("1", "Tuesday"),
             ("2", "Wednesday"),
@@ -166,12 +176,15 @@ class DiscussChannel(models.Model):
         search="_search_livechat_matches_self_expertise",
     )
 
-    chatbot_current_step_id = fields.Many2one("chatbot.script.step")
+    chatbot_current_step_id = fields.Many2one(comodel_name="chatbot.script.step")
     chatbot_message_ids = fields.One2many(
-        "chatbot.message", "discuss_channel_id", string="Chatbot Messages"
+        comodel_name="chatbot.message",
+        inverse_name="discuss_channel_id",
+        string="Chatbot Messages",
     )
     country_id = fields.Many2one(
-        "res.country", help="Country of the visitor of the channel"
+        comodel_name="res.country",
+        help="Country of the visitor of the channel",
     )
     livechat_failure = fields.Selection(
         selection=[
@@ -182,7 +195,9 @@ class DiscussChannel(models.Model):
         string="Live Chat Session Failure",
     )
     livechat_is_escalated = fields.Boolean(
-        "Is session escalated", compute="_compute_livechat_is_escalated", store=True
+        string="Is session escalated",
+        compute="_compute_livechat_is_escalated",
+        store=True,
     )
     rating_last_text = fields.Selection(store=True)
 

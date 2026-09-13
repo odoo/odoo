@@ -10,39 +10,40 @@ class PaymentProvider(models.Model):
     _inherit = "payment.provider"
 
     code = fields.Selection(
-        selection_add=[("asiapay", "AsiaPay")], ondelete={"asiapay": "set default"}
+        selection_add=[("asiapay", "AsiaPay")],
+        ondelete={"asiapay": "set default"},
     )
     asiapay_brand = fields.Selection(
-        help="The brand associated to your AsiaPay account.",
         selection=[
             ("paydollar", "PayDollar"),
             ("pesopay", "PesoPay"),
             ("siampay", "SiamPay"),
             ("bimopay", "BimoPay"),
         ],
-        required_if_provider="asiapay",
+        help="The brand associated to your AsiaPay account.",
         default="paydollar",
         copy=False,
+        required_if_provider="asiapay",
     )
     asiapay_merchant_id = fields.Char(
         string="AsiaPay Merchant ID",
         help="The Merchant ID solely used to identify your AsiaPay account.",
-        required_if_provider="asiapay",
         copy=False,
+        required_if_provider="asiapay",
     )
     asiapay_secure_hash_secret = fields.Char(
         string="AsiaPay Secure Hash Secret",
-        required_if_provider="asiapay",
         copy=False,
         groups="base.group_system",
+        required_if_provider="asiapay",
     )
     asiapay_secure_hash_function = fields.Selection(
+        selection=[("sha1", "SHA1"), ("sha256", "SHA256"), ("sha512", "SHA512")],
         string="AsiaPay Secure Hash Function",
         help="The secure hash function associated to your AsiaPay account.",
-        selection=[("sha1", "SHA1"), ("sha256", "SHA256"), ("sha512", "SHA512")],
-        required_if_provider="asiapay",
         default="sha1",
         copy=False,
+        required_if_provider="asiapay",
     )
 
     # ==== CONSTRAINT METHODS ===#

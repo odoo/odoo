@@ -8,12 +8,15 @@ class ResConfigSettings(models.TransientModel):
 
     web_app_name = fields.Char(config_parameter="web.web_app_name")
     company_id = fields.Many2one(
-        "res.company",
-        required=True,
+        comodel_name="res.company",
         default=lambda self: self.env.company,
+        required=True,
     )
     is_root_company = fields.Boolean(compute="_compute_is_root_company")
-    company_name = fields.Char(related="company_id.display_name", string="Company Name")
+    company_name = fields.Char(
+        related="company_id.display_name",
+        string="Company Name",
+    )
     company_informations = fields.Text(compute="_compute_company_informations")
     company_country_code = fields.Char(
         related="company_id.country_id.code",
@@ -24,7 +27,7 @@ class ResConfigSettings(models.TransientModel):
         related="company_id.country_id.country_group_codes"
     )
     company_count = fields.Integer(
-        "Number of Companies",
+        string="Number of Companies",
         compute="_compute_company_count",
     )
     report_footer = fields.Html(
@@ -38,16 +41,16 @@ class ResConfigSettings(models.TransientModel):
     )
 
     active_user_count = fields.Integer(
-        "Number of Active Users",
+        string="Number of Active Users",
         compute="_compute_active_user_count",
     )
     language_count = fields.Integer(
-        "Number of Languages",
+        string="Number of Languages",
         compute="_compute_language_count",
     )
 
     module_base_import = fields.Boolean(
-        "Allow users to import data from CSV/XLS/XLSX/ODS files"
+        string="Allow users to import data from CSV/XLS/XLSX/ODS files"
     )
     module_google_calendar = fields.Boolean(
         string="Allow the users to synchronize their calendar with Google Calendar"
@@ -58,27 +61,31 @@ class ResConfigSettings(models.TransientModel):
     module_mail_plugin = fields.Boolean(
         string="Allow integration with the mail plugins"
     )
-    module_auth_oauth = fields.Boolean("Use external authentication providers (OAuth)")
-    module_auth_ldap = fields.Boolean("LDAP Authentication")
-    module_account_inter_company_rules = fields.Boolean("Manage Inter Company")
-    module_voip = fields.Boolean("Phone")
-    module_web_unsplash = fields.Boolean("Unsplash Image Library")
-    module_sms = fields.Boolean("SMS")
-    module_partner_autocomplete = fields.Boolean("Partner Autocomplete")
-    module_geocoding = fields.Boolean("Geocoding")
-    module_google_recaptcha = fields.Boolean("reCAPTCHA")
-    module_website_cf_turnstile = fields.Boolean("Cloudflare Turnstile")
-    module_google_address_autocomplete = fields.Boolean("Google Address Autocomplete")
+    module_auth_oauth = fields.Boolean(
+        string="Use external authentication providers (OAuth)"
+    )
+    module_auth_ldap = fields.Boolean(string="LDAP Authentication")
+    module_account_inter_company_rules = fields.Boolean(string="Manage Inter Company")
+    module_voip = fields.Boolean(string="Phone")
+    module_web_unsplash = fields.Boolean(string="Unsplash Image Library")
+    module_sms = fields.Boolean(string="SMS")
+    module_partner_autocomplete = fields.Boolean(string="Partner Autocomplete")
+    module_geocoding = fields.Boolean(string="Geocoding")
+    module_google_recaptcha = fields.Boolean(string="reCAPTCHA")
+    module_website_cf_turnstile = fields.Boolean(string="Cloudflare Turnstile")
+    module_google_address_autocomplete = fields.Boolean(
+        string="Google Address Autocomplete"
+    )
 
     group_multi_currency = fields.Boolean(
         string="Multi-Currencies",
-        implied_group="base.group_multi_currency",
         help="Allows to work in a multi currency environment",
+        implied_group="base.group_multi_currency",
     )
 
     show_effect = fields.Boolean(config_parameter="base.show_effect")
     profiling_enabled_until = fields.Datetime(
-        "Profiling enabled until",
+        string="Profiling enabled until",
         config_parameter="base.profiling_enabled_until",
     )
 

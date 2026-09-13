@@ -6,9 +6,9 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     website_id = fields.Many2one(
-        "website",
-        compute="_compute_website_id",
+        comodel_name="website",
         help="Website through which this invoice was created for eCommerce orders.",
+        compute="_compute_website_id",
         store=True,
         readonly=True,
         tracking=True,

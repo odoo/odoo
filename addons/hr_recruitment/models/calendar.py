@@ -39,7 +39,9 @@ class CalendarEvent(models.Model):
         return defaults
 
     applicant_id = fields.Many2one(
-        "hr.applicant", index="btree_not_null", ondelete="set null"
+        comodel_name="hr.applicant",
+        index="btree_not_null",
+        ondelete="set null",
     )
 
     @api.model_create_multi

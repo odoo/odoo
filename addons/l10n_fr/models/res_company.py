@@ -5,12 +5,14 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     l10n_fr_closing_sequence_id = fields.Many2one(
-        "ir.sequence", "Sequence to use to build sale closings", readonly=True
+        comodel_name="ir.sequence",
+        string="Sequence to use to build sale closings",
+        readonly=True,
     )
     ape = fields.Char(string="APE")
     is_france_country = fields.Boolean(
-        compute="_compute_is_france_country",
         string="Is Part of DOM-TOM",
+        compute="_compute_is_france_country",
     )
 
     @api.depends("country_code")

@@ -32,35 +32,41 @@ class HrJob(models.Model):
         """)
 
     description = fields.Html(
-        "Job Description",
+        string="Job Description",
         translate=html_translate,
-        prefetch=False,
         sanitize_overridable=True,
         sanitize_attributes=False,
         sanitize_form=False,
+        prefetch=False,
     )
     website_published = fields.Boolean(
         help="Set if the application is published on the website of the company.",
         tracking=True,
     )
     website_description = fields.Html(
-        "Website description",
+        string="Website description",
         translate=html_translate,
-        default=_default_website_description,
-        prefetch=False,
         sanitize_overridable=True,
         sanitize_attributes=False,
         sanitize_form=False,
+        default=_default_website_description,
+        prefetch=False,
     )
     job_details = fields.Html(
-        "Process Details",
-        translate=True,
+        string="Process Details",
         help="Complementary information that will appear on the job submission page",
+        translate=True,
         sanitize_attributes=False,
         default=_default_job_details,
     )
-    published_date = fields.Date(compute="_compute_published_date", store=True)
-    full_url = fields.Char("job URL", compute="_compute_full_url")
+    published_date = fields.Date(
+        compute="_compute_published_date",
+        store=True,
+    )
+    full_url = fields.Char(
+        string="job URL",
+        compute="_compute_full_url",
+    )
 
     @api.depends("website_url")
     def _compute_full_url(self):

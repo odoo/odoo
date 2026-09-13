@@ -23,11 +23,11 @@ class ApprovalCategoryApprover(models.Model):
     )
     company_id = fields.Many2one(
         related="category_id.company_id",
-        store=True,
-        readonly=True,
-        index=True,
         help="Mirrors the category's company; scopes the "
         "multi-company ir.rule on this model.",
+        store=True,
+        index=True,
+        readonly=True,
     )
     existing_user_ids = fields.Many2many(
         comodel_name="res.users",
@@ -35,10 +35,10 @@ class ApprovalCategoryApprover(models.Model):
     )
     user_id = fields.Many2one(
         comodel_name="res.users",
+        index=True,
         required=True,
         domain="[('id', 'not in', existing_user_ids)]",
         ondelete="cascade",
-        index=True,
     )
     sequence = fields.Integer(default=10)
     required = fields.Boolean(default=False)

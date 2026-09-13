@@ -31,95 +31,105 @@ class StockMove(models.Model):
         return defaults
 
     created_production_id = fields.Many2one(
-        "mrp.production",
-        "Created Production Order",
-        check_company=True,
+        comodel_name="mrp.production",
+        string="Created Production Order",
         index="btree_not_null",
+        check_company=True,
     )
     production_id = fields.Many2one(
-        "mrp.production",
-        "Production Order for finished products",
-        check_company=True,
+        comodel_name="mrp.production",
+        string="Production Order for finished products",
         index="btree_not_null",
         ondelete="cascade",
+        check_company=True,
     )
     raw_material_production_id = fields.Many2one(
-        "mrp.production",
-        "Production Order for components",
-        check_company=True,
+        comodel_name="mrp.production",
+        string="Production Order for components",
         index="btree_not_null",
         ondelete="cascade",
+        check_company=True,
     )
     production_group_id = fields.Many2one(
-        "mrp.production.group",
-        "Used for Productions",
+        comodel_name="mrp.production.group",
+        string="Used for Productions",
         index="btree_not_null",
     )
     unbuild_id = fields.Many2one(
-        "mrp.unbuild", "Disassembly Order", check_company=True, index="btree_not_null"
+        comodel_name="mrp.unbuild",
+        string="Disassembly Order",
+        index="btree_not_null",
+        check_company=True,
     )
     consume_unbuild_id = fields.Many2one(
-        "mrp.unbuild",
-        "Consumed Disassembly Order",
-        check_company=True,
+        comodel_name="mrp.unbuild",
+        string="Consumed Disassembly Order",
         index="btree_not_null",
+        check_company=True,
     )
     allowed_operation_ids = fields.One2many(
-        "mrp.routing.workcenter",
+        comodel_name="mrp.routing.workcenter",
         related="raw_material_production_id.bom_id.operation_ids",
     )
     operation_id = fields.Many2one(
-        "mrp.routing.workcenter",
-        "Operation To Consume",
-        check_company=True,
+        comodel_name="mrp.routing.workcenter",
+        string="Operation To Consume",
         domain="[('id', 'in', allowed_operation_ids)]",
+        check_company=True,
     )
     workorder_id = fields.Many2one(
-        "mrp.workorder",
-        "Work Order To Consume",
+        comodel_name="mrp.workorder",
+        string="Work Order To Consume",
+        index="btree_not_null",
         copy=False,
         check_company=True,
-        index="btree_not_null",
     )
-    bom_line_id = fields.Many2one("mrp.bom.line", "BoM Line", check_company=True)
-    byproduct_id = fields.Many2one(
-        "mrp.bom.byproduct",
-        "By-products",
+    bom_line_id = fields.Many2one(
+        comodel_name="mrp.bom.line",
+        string="BoM Line",
         check_company=True,
-        help="By-product line that generated the move in a manufacturing order",
     )
-    unit_factor = fields.Float(compute="_compute_unit_factor", store=True)
+    byproduct_id = fields.Many2one(
+        comodel_name="mrp.bom.byproduct",
+        string="By-products",
+        help="By-product line that generated the move in a manufacturing order",
+        check_company=True,
+    )
+    unit_factor = fields.Float(
+        compute="_compute_unit_factor",
+        store=True,
+    )
     order_finished_lot_ids = fields.Many2many(
-        "stock.lot",
-        string="Finished Lot/Serial Number",
+        comodel_name="stock.lot",
         related="raw_material_production_id.lot_producing_ids",
+        string="Finished Lot/Serial Number",
     )
     should_consume_qty = fields.Float(
-        "Quantity To Consume",
-        compute="_compute_should_consume_qty",
+        string="Quantity To Consume",
         digits="Product Unit",
+        compute="_compute_should_consume_qty",
     )
     cost_share = fields.Float(
-        "Cost Share (%)",
-        digits=0,
+        string="Cost Share (%)",
         help="The percentage of the final production cost for this by-product. The total of all by-products' cost share must be smaller or equal to 100.",
+        digits=0,
     )
     product_qty_available = fields.Float(
-        "Product On Hand Quantity",
         related="product_id.qty_available",
+        string="Product On Hand Quantity",
         depends=["product_id"],
     )
     product_virtual_available = fields.Float(
-        "Product Forecasted Quantity",
         related="product_id.qty_available_virtual",
+        string="Product Forecasted Quantity",
         depends=["product_id"],
     )
     manual_consumption = fields.Boolean(
+        help="When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
+        "If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also.",
         compute="_compute_manual_consumption",
         store=True,
         readonly=False,
-        help="When activated, then the registration of consumption for that component is recorded manually exclusively.\n"
-        "If not activated, and any of the components consumption is edited manually on the manufacturing order, Odoo assumes manual consumption also.",
     )
 
     _one_production = models.Constraint(

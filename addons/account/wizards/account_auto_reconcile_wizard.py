@@ -16,24 +16,28 @@ class AccountAutoReconcileWizard(models.TransientModel):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        required=True,
-        readonly=True,
         default=lambda self: self.env.company,
+        readonly=True,
+        required=True,
     )
     line_ids = fields.Many2many(comodel_name="account.move.line")
     from_date = fields.Date(string="From")
-    to_date = fields.Date(string="To", default=fields.Date.context_today, required=True)
+    to_date = fields.Date(
+        string="To",
+        default=fields.Date.context_today,
+        required=True,
+    )
     account_ids = fields.Many2many(
         comodel_name="account.account",
         string="Accounts",
-        check_company=True,
         domain="[('reconcile', '=', True), ('account_type', '!=', 'off_balance')]",
+        check_company=True,
     )
     partner_ids = fields.Many2many(
         comodel_name="res.partner",
         string="Partners",
-        check_company=True,
         domain="[('company_id', 'in', [False, company_id]), '|', ('parent_id', '=', False), ('is_company', '=', True)]",
+        check_company=True,
     )
     search_mode = fields.Selection(
         selection=[
@@ -41,9 +45,9 @@ class AccountAutoReconcileWizard(models.TransientModel):
             ("zero_balance", "Clear Account"),
         ],
         string="Reconcile",
-        required=True,
-        default="one_to_one",
         help="Reconcile journal items with opposite balance or clear accounts with a zero balance",
+        default="one_to_one",
+        required=True,
     )
 
     @api.model

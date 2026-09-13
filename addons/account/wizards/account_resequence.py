@@ -22,19 +22,22 @@ class AccountResequenceWizard(models.TransientModel):
         help="Date (inclusive) to which the numbers are resequenced. If not set, all Journal Entries up to the end of the period are resequenced."
     )
     first_name = fields.Char(
-        compute="_compute_first_name",
-        readonly=False,
-        store=True,
-        precompute=True,
-        required=True,
         string="First New Sequence",
+        compute="_compute_first_name",
+        precompute=True,
+        store=True,
+        readonly=False,
+        required=True,
     )
     ordering = fields.Selection(
-        [("keep", "Keep current order"), ("date", "Reorder by accounting date")],
-        required=True,
+        selection=[
+            ("keep", "Keep current order"),
+            ("date", "Reorder by accounting date"),
+        ],
         default="keep",
+        required=True,
     )
-    move_ids = fields.Many2many("account.move")
+    move_ids = fields.Many2many(comodel_name="account.move")
     new_values = fields.Text(compute="_compute_new_values")
     preview_moves = fields.Text(compute="_compute_preview_moves")
 

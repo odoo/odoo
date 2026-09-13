@@ -7,10 +7,15 @@ class ChangeProductionQty(models.TransientModel):
     _description = "Change Production Qty"
 
     mo_id = fields.Many2one(
-        "mrp.production", "Manufacturing Order", required=True, ondelete="cascade"
+        comodel_name="mrp.production",
+        string="Manufacturing Order",
+        required=True,
+        ondelete="cascade",
     )
     product_qty = fields.Float(
-        "Quantity To Produce", digits="Product Unit", required=True
+        string="Quantity To Produce",
+        digits="Product Unit",
+        required=True,
     )
 
     @api.model

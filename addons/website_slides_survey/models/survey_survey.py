@@ -6,15 +6,15 @@ class SurveySurvey(models.Model):
     _inherit = "survey.survey"
 
     slide_channel_ids = fields.One2many(
-        "slide.channel",
+        comodel_name="slide.channel",
         string="Certification Courses",
+        help="The courses this survey is linked to through the e-learning application",
         compute="_compute_slide_channel_data",
         groups="website_slides.group_website_slides_officer",
-        help="The courses this survey is linked to through the e-learning application",
     )
     slide_channel_count = fields.Count(
-        "slide_channel_ids",
-        "Courses Count",
+        count_of="slide_channel_ids",
+        string="Courses Count",
         groups="website_slides.group_website_slides_officer",
     )
 

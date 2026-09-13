@@ -7,35 +7,37 @@ class StockLot(models.Model):
     _inherit = "stock.lot"
 
     lot_valuated = fields.Boolean(
-        related="product_id.lot_valuated", readonly=True, store=False
+        related="product_id.lot_valuated",
+        store=False,
+        readonly=True,
     )
     avg_cost = fields.Monetary(
         string="Average Cost",
+        currency_field="company_currency_id",
         compute="_compute_value",
         compute_sudo=True,
         store=False,
         readonly=True,
-        currency_field="company_currency_id",
     )
     total_value = fields.Monetary(
+        currency_field="company_currency_id",
         compute="_compute_value",
         compute_sudo=True,
-        currency_field="company_currency_id",
     )
     company_currency_id = fields.Many2one(
-        "res.currency",
-        "Valuation Currency",
+        comodel_name="res.currency",
+        string="Valuation Currency",
         compute="_compute_value",
         compute_sudo=True,
     )
     standard_price = fields.Float(
-        "Cost",
-        company_dependent=True,
-        min_display_digits="Product Price",
-        groups="base.group_user",
+        string="Cost",
         help="""Value of the lot (automatically computed in AVCO).
         Used to value the product when the purchase cost is not known (e.g. inventory adjustment).
         Used to compute margins on sale orders.""",
+        min_display_digits="Product Price",
+        company_dependent=True,
+        groups="base.group_user",
     )
 
     @api.depends(

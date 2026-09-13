@@ -6,7 +6,11 @@ class StockReplenishmentInfo(models.TransientModel):
     _description = "Stock supplier replenishment information"
 
     bom_id = fields.Many2one(related="orderpoint_id.bom_id")
-    bom_ids = fields.Many2many("mrp.bom", compute="_compute_bom_ids", store=True)
+    bom_ids = fields.Many2many(
+        comodel_name="mrp.bom",
+        compute="_compute_bom_ids",
+        store=True,
+    )
     show_bom_tab = fields.Boolean(compute="_compute_show_bom_tab")
 
     @api.depends("orderpoint_id")

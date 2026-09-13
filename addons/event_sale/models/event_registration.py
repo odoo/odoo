@@ -7,38 +7,41 @@ class EventRegistration(models.Model):
 
     # TDE FIXME: maybe add an onchange on sale_order_id
     sale_order_id = fields.Many2one(
-        "sale.order", string="Sales Order", ondelete="cascade", copy=False
+        comodel_name="sale.order",
+        string="Sales Order",
+        copy=False,
+        ondelete="cascade",
     )
     sale_order_line_id = fields.Many2one(
-        "sale.order.line",
+        comodel_name="sale.order.line",
         string="Sales Order Line",
-        ondelete="cascade",
-        copy=False,
         index="btree_not_null",
+        copy=False,
+        ondelete="cascade",
     )
     state = fields.Selection(
-        default=None,
         compute="_compute_registration_status",
+        precompute=True,
+        default=None,
         store=True,
         readonly=False,
-        precompute=True,
     )
     utm_campaign_id = fields.Many2one(
         compute="_compute_utm_campaign_id",
-        readonly=False,
         store=True,
+        readonly=False,
         ondelete="set null",
     )
     utm_source_id = fields.Many2one(
         compute="_compute_utm_source_id",
-        readonly=False,
         store=True,
+        readonly=False,
         ondelete="set null",
     )
     utm_medium_id = fields.Many2one(
         compute="_compute_utm_medium_id",
-        readonly=False,
         store=True,
+        readonly=False,
         ondelete="set null",
     )
 

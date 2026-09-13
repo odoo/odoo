@@ -5,10 +5,11 @@ class MailNotification(models.Model):
     _inherit = "mail.notification"
 
     notification_type = fields.Selection(
-        selection_add=[("snail", "Snailmail")], ondelete={"snail": "cascade"}
+        selection_add=[("snail", "Snailmail")],
+        ondelete={"snail": "cascade"},
     )
     letter_id = fields.Many2one(
-        "snailmail.letter",
+        comodel_name="snailmail.letter",
         string="Snailmail Letter",
         index="btree_not_null",
         ondelete="cascade",

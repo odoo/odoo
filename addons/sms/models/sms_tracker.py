@@ -20,9 +20,14 @@ class SmsTracker(models.Model):
         "pending": "pending",
     }
 
-    sms_uuid = fields.Char("SMS uuid", required=True)
+    sms_uuid = fields.Char(
+        string="SMS uuid",
+        required=True,
+    )
     mail_notification_id = fields.Many2one(
-        "mail.notification", ondelete="cascade", index="btree_not_null"
+        comodel_name="mail.notification",
+        index="btree_not_null",
+        ondelete="cascade",
     )
 
     _sms_uuid_unique = models.Constraint(

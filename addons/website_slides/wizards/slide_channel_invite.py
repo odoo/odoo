@@ -15,22 +15,34 @@ class SlideChannelInvite(models.TransientModel):
     _description = "Channel Invitation Wizard"
 
     attachment_ids = fields.Many2many(
-        "ir.attachment", string="Attachments", bypass_search_access=True
+        comodel_name="ir.attachment",
+        string="Attachments",
+        bypass_search_access=True,
     )
     send_email = fields.Boolean(
-        compute="_compute_send_email", readonly=False, store=True
+        compute="_compute_send_email",
+        store=True,
+        readonly=False,
     )
-    partner_ids = fields.Many2many("res.partner", string="Recipients")
-    channel_id = fields.Many2one("slide.channel", string="Course", required=True)
+    partner_ids = fields.Many2many(
+        comodel_name="res.partner",
+        string="Recipients",
+    )
+    channel_id = fields.Many2one(
+        comodel_name="slide.channel",
+        string="Course",
+        required=True,
+    )
     channel_invite_url = fields.Char(
-        "Course Link", compute="_compute_channel_invite_url"
+        string="Course Link",
+        compute="_compute_channel_invite_url",
     )
     channel_visibility = fields.Selection(related="channel_id.visibility")
     channel_published = fields.Boolean(related="channel_id.is_published")
     enroll_mode = fields.Boolean(
-        "Enroll partners",
-        readonly=True,
+        string="Enroll partners",
         help="Whether invited partners will be added as enrolled. Otherwise, they will be added as invited.",
+        readonly=True,
     )
 
     @api.depends("channel_id")

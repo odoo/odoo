@@ -9,9 +9,12 @@ class L10n_Ph_2307Wizard(models.TransientModel):
     _name = "l10n_ph_2307.wizard"
     _description = "Exports 2307 data to an XLSX file."
 
-    moves_to_export = fields.Many2many("account.move", string="Joural To Include")
+    moves_to_export = fields.Many2many(
+        comodel_name="account.move",
+        string="Joural To Include",
+    )
     xls_file = fields.Binary(
-        "Generated file",
+        string="Generated file",
         help="Technical field used to temporarily hold the generated XLSX file before its downloaded.",
     )
 

@@ -11,7 +11,10 @@ class AccountReturnSubmissionWizard(models.TransientModel):
     _description = "Return submission wizard"
 
     instructions = fields.Html()
-    return_id = fields.Many2one(comodel_name="account.return", required=True)
+    return_id = fields.Many2one(
+        comodel_name="account.return",
+        required=True,
+    )
 
     @_debug.perf.timed
     def action_proceed_with_submission(self):

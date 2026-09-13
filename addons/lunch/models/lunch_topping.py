@@ -7,13 +7,24 @@ class LunchTopping(models.Model):
     _description = "Lunch Extras"
 
     name = fields.Char(required=True)
-    company_id = fields.Many2one("res.company", default=lambda self: self.env.company)
-    currency_id = fields.Many2one("res.currency", related="company_id.currency_id")
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        default=lambda self: self.env.company,
+    )
+    currency_id = fields.Many2one(
+        comodel_name="res.currency",
+        related="company_id.currency_id",
+    )
     price = fields.Monetary(required=True)
     supplier_id = fields.Many2one(
-        "lunch.supplier", ondelete="cascade", index="btree_not_null"
+        comodel_name="lunch.supplier",
+        index="btree_not_null",
+        ondelete="cascade",
     )
-    topping_category = fields.Integer(required=True, default=1)
+    topping_category = fields.Integer(
+        default=1,
+        required=True,
+    )
 
     @api.depends("price")
     @api.depends_context("company")

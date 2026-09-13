@@ -36,139 +36,170 @@ class HrApplicant(models.Model):
     _primary_email = "email_from"
     _track_duration_field = "stage_id"
 
-    sequence = fields.Integer(index=True, default=10)
+    sequence = fields.Integer(
+        default=10,
+        index=True,
+    )
     active = fields.Boolean(
-        default=True,
         help="If the active field is set to false, it will allow you to hide the case without removing it.",
+        default=True,
         index=True,
     )
 
     partner_id = fields.Many2one(
-        "res.partner", "Contact", copy=False, index="btree_not_null"
+        comodel_name="res.partner",
+        string="Contact",
+        index="btree_not_null",
+        copy=False,
     )
-    partner_name = fields.Char("Applicant's Name")
+    partner_name = fields.Char(string="Applicant's Name")
     email_from = fields.Char(
         string="Email",
         size=128,
         compute="_compute_partner_phone_email",
         inverse="_inverse_partner_email",
-        copy=True,
         store=True,
         index="trigram",
+        copy=True,
     )
     email_normalized = fields.Char(index="trigram")
     phone_sanitized = fields.Char(index="btree_not_null")
     phone_ids = fields.Many2many(
-        "phone.number",
-        "hr_applicant_phone_number_rel",
-        "applicant_id",
-        "phone_number_id",
+        comodel_name="phone.number",
+        relation="hr_applicant_phone_number_rel",
+        column1="applicant_id",
+        column2="phone_number_id",
         compute="_compute_partner_phone_email",
         inverse="_inverse_partner_email",
-        copy=True,
         store=True,
+        copy=True,
     )
-    linkedin_profile = fields.Char("LinkedIn Profile", index="btree_not_null")
-    degree_id = fields.Many2one("hr.recruitment.degree")
+    linkedin_profile = fields.Char(
+        string="LinkedIn Profile",
+        index="btree_not_null",
+    )
+    degree_id = fields.Many2one(comodel_name="hr.recruitment.degree")
     availability = fields.Date(
         help="The date at which the applicant will be available to start working",
         tracking=True,
     )
-    color = fields.Integer("Color Index", default=0)
+    color = fields.Integer(
+        string="Color Index",
+        default=0,
+    )
     employee_id = fields.Many2one(
-        "hr.employee",
+        comodel_name="hr.employee",
         help="Employee linked to the applicant.",
-        copy=False,
         index="btree_not_null",
+        copy=False,
     )
     emp_is_active = fields.Boolean(
-        string="Employee Active", related="employee_id.active"
+        related="employee_id.active",
+        string="Employee Active",
     )
-    employee_name = fields.Char(related="employee_id.name", string="Employee Name")
+    employee_name = fields.Char(
+        related="employee_id.name",
+        string="Employee Name",
+    )
 
-    create_date = fields.Datetime("Applied on", readonly=True)
+    create_date = fields.Datetime(
+        string="Applied on",
+        readonly=True,
+    )
     stage_id = fields.Many2one(
-        "hr.recruitment.stage",
-        ondelete="restrict",
-        tracking=True,
+        comodel_name="hr.recruitment.stage",
         compute="_compute_stage_id",
         store=True,
-        readonly=False,
-        domain="['|', ('job_ids', '=', False), ('job_ids', '=', job_id)]",
-        copy=False,
         index=True,
+        copy=False,
+        readonly=False,
         group_expand="_read_group_stage_ids",
+        domain="['|', ('job_ids', '=', False), ('job_ids', '=', job_id)]",
+        ondelete="restrict",
+        tracking=True,
     )
     last_stage_id = fields.Many2one(
-        "hr.recruitment.stage",
+        comodel_name="hr.recruitment.stage",
         help="Stage of the applicant before being in the current stage. Used for lost cases analysis.",
     )
-    categ_ids = fields.Many2many("hr.applicant.category", string="Tags")
+    categ_ids = fields.Many2many(
+        comodel_name="hr.applicant.category",
+        string="Tags",
+    )
     company_id = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
         compute="_compute_company_id",
         store=True,
         readonly=False,
         tracking=True,
     )
     user_id = fields.Many2one(
-        "res.users",
-        "Recruiter",
+        comodel_name="res.users",
+        string="Recruiter",
         compute="_compute_user_id",
+        store=True,
+        readonly=False,
         domain="[('share', '=', False), ('company_ids', 'in', company_id)]",
         tracking=True,
-        store=True,
-        readonly=False,
     )
     date_closed = fields.Datetime(
-        "Hire Date",
+        string="Hire Date",
         compute="_compute_date_closed",
         store=True,
+        copy=False,
         readonly=False,
         tracking=True,
-        copy=False,
     )
-    date_open = fields.Datetime("Assigned", readonly=True)
+    date_open = fields.Datetime(
+        string="Assigned",
+        readonly=True,
+    )
     date_last_stage_update = fields.Datetime(
-        "Last Stage Update", index=True, default=fields.Datetime.now
+        string="Last Stage Update",
+        default=fields.Datetime.now,
+        index=True,
     )
-    priority = fields.Selection(AVAILABLE_PRIORITIES, "Evaluation", default="0")
+    priority = fields.Selection(
+        selection=AVAILABLE_PRIORITIES,
+        string="Evaluation",
+        default="0",
+    )
     job_id = fields.Many2one(
-        "hr.job",
-        "Job Position",
-        domain="company_id and [('company_id', '=', company_id)] or []",
-        tracking=True,
+        comodel_name="hr.job",
+        string="Job Position",
         index=True,
         copy=False,
+        domain="company_id and [('company_id', '=', company_id)] or []",
+        tracking=True,
     )
     salary_proposed_extra = fields.Char(
-        "Proposed Salary Extra",
+        string="Proposed Salary Extra",
         help="Salary Proposed by the Organisation, extra advantages",
-        tracking=True,
         groups="hr_recruitment.group_hr_recruitment_user",
+        tracking=True,
     )
     salary_expected_extra = fields.Char(
-        "Expected Salary Extra",
+        string="Expected Salary Extra",
         help="Salary Expected by Applicant, extra advantages",
-        tracking=True,
         groups="hr_recruitment.group_hr_recruitment_user",
+        tracking=True,
     )
     salary_proposed = fields.Float(
-        "Proposed",
-        aggregator="avg",
+        string="Proposed",
         help="Salary Proposed by the Organisation",
-        tracking=True,
+        aggregator="avg",
         groups="hr_recruitment.group_hr_recruitment_user",
+        tracking=True,
     )
     salary_expected = fields.Float(
-        "Expected",
-        aggregator="avg",
+        string="Expected",
         help="Salary Expected by Applicant",
-        tracking=True,
+        aggregator="avg",
         groups="hr_recruitment.group_hr_recruitment_user",
+        tracking=True,
     )
     department_id = fields.Many2one(
-        "hr.department",
+        comodel_name="hr.department",
         compute="_compute_department_id",
         store=True,
         readonly=False,
@@ -176,67 +207,82 @@ class HrApplicant(models.Model):
         tracking=True,
     )
     delay_close = fields.Float(
-        compute="_compute_delay_close",
         string="Delay to Close",
+        help="Number of days to close",
+        compute="_compute_delay_close",
+        store=True,
         readonly=True,
         aggregator="avg",
-        help="Number of days to close",
-        store=True,
     )
     user_email = fields.Char(
-        related="user_id.email", string="User Email", readonly=True
+        related="user_id.email",
+        string="User Email",
+        readonly=True,
     )
     attachment_number = fields.Integer(
-        compute="_compute_attachment_number", string="Number of Attachments"
+        string="Number of Attachments",
+        compute="_compute_attachment_number",
     )
     attachment_ids = fields.One2many(
-        "ir.attachment",
-        "res_id",
-        domain=[("res_model", "=", "hr.applicant")],
+        comodel_name="ir.attachment",
+        inverse_name="res_id",
         string="Attachments",
+        domain=[("res_model", "=", "hr.applicant")],
     )
     kanban_state = fields.Selection(
-        [
+        selection=[
             ("normal", "In Progress"),
             ("done", "Ready for Next Stage"),
             ("waiting", "Waiting"),
             ("blocked", "Blocked"),
         ],
-        copy=False,
         default="normal",
+        copy=False,
         required=True,
     )
     legend_blocked = fields.Char(
-        related="stage_id.legend_blocked", string="Kanban Blocked"
+        related="stage_id.legend_blocked",
+        string="Kanban Blocked",
     )
-    legend_done = fields.Char(related="stage_id.legend_done", string="Kanban Valid")
+    legend_done = fields.Char(
+        related="stage_id.legend_done",
+        string="Kanban Valid",
+    )
     legend_waiting = fields.Char(
-        related="stage_id.legend_waiting", string="Kanban Waiting"
+        related="stage_id.legend_waiting",
+        string="Kanban Waiting",
     )
     legend_normal = fields.Char(
-        related="stage_id.legend_normal", string="Kanban Ongoing"
+        related="stage_id.legend_normal",
+        string="Kanban Ongoing",
     )
-    refuse_reason_id = fields.Many2one("hr.applicant.refuse.reason", tracking=True)
-    meeting_ids = fields.One2many("calendar.event", "applicant_id", "Meetings")
+    refuse_reason_id = fields.Many2one(
+        comodel_name="hr.applicant.refuse.reason",
+        tracking=True,
+    )
+    meeting_ids = fields.One2many(
+        comodel_name="calendar.event",
+        inverse_name="applicant_id",
+        string="Meetings",
+    )
     meeting_display_text = fields.Char(compute="_compute_meeting_display")
     meeting_display_date = fields.Date(compute="_compute_meeting_display")
     campaign_id = fields.Many2one(ondelete="set null")
     medium_id = fields.Many2one(
-        ondelete="set null",
         help="This displays how the applicant has reached out, e.g. via Email, LinkedIn, Website, etc.",
+        ondelete="set null",
     )
     source_id = fields.Many2one(ondelete="set null")
     interviewer_ids = fields.Many2many(
-        "res.users",
-        "hr_applicant_res_users_interviewers_rel",
+        comodel_name="res.users",
+        relation="hr_applicant_res_users_interviewers_rel",
         string="Interviewers",
-        index=True,
-        tracking=True,
         copy=False,
         domain="[('share', '=', False), ('company_ids', 'in', company_id)]",
+        tracking=True,
     )
     application_status = fields.Selection(
-        [
+        selection=[
             ("ongoing", "Ongoing"),
             ("hired", "Hired"),
             ("refused", "Refused"),
@@ -246,21 +292,28 @@ class HrApplicant(models.Model):
         search="_search_application_status",
     )
     application_count = fields.Integer(
-        compute="_compute_application_count",
         help="Applications with the same email or phone or mobile",
+        compute="_compute_application_count",
     )
     applicant_properties = fields.Properties(
-        "Properties", definition="job_id.applicant_properties_definition", copy=True
+        definition="job_id.applicant_properties_definition",
+        string="Properties",
+        copy=True,
     )
     applicant_notes = fields.Html()
     refuse_date = fields.Datetime()
     talent_pool_ids = fields.Many2many(
-        comodel_name="hr.talent.pool", string="Talent Pools"
+        comodel_name="hr.talent.pool",
+        string="Talent Pools",
     )
-    pool_applicant_id = fields.Many2one("hr.applicant", index="btree_not_null")
+    pool_applicant_id = fields.Many2one(
+        comodel_name="hr.applicant",
+        index="btree_not_null",
+    )
     is_pool_applicant = fields.Boolean(compute="_compute_is_pool_applicant")
     is_applicant_in_pool = fields.Boolean(
-        compute="_compute_talent_pool", search="_search_is_applicant_in_pool"
+        compute="_compute_talent_pool",
+        search="_search_is_applicant_in_pool",
     )
     talent_pool_count = fields.Integer(compute="_compute_talent_pool")
 

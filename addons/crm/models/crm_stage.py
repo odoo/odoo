@@ -14,25 +14,37 @@ class CrmStage(models.Model):
     _rec_name = "name"
     _order = "sequence, name, id"
 
-    name = fields.Char("Stage Name", required=True, translate=True)
-    sequence = fields.Integer(default=1, help="Used to order stages. Lower is better.")
-    is_won = fields.Boolean("Is Won Stage?")
+    name = fields.Char(
+        string="Stage Name",
+        translate=True,
+        required=True,
+    )
+    sequence = fields.Integer(
+        help="Used to order stages. Lower is better.",
+        default=1,
+    )
+    is_won = fields.Boolean(string="Is Won Stage?")
     rotting_threshold_days = fields.Integer(
-        "Days to rot",
-        default=0,
+        string="Days to rot",
         help="Highlight opportunities that haven't been updated for this many days. \
         Set to 0 to disable. Changing this parameter will not affect the rotting status/date of resources last updated before this change.",
+        default=0,
     )
     requirements = fields.Text(
-        help="Enter here the internal requirements for this stage (ex: Offer sent to customer). It will appear as a tooltip over the stage's name.",
+        help="Enter here the internal requirements for this stage (ex: Offer sent to customer). It will appear as a tooltip over the stage's name."
     )
-    team_ids = fields.Many2many("crm.team", string="Sales Teams", ondelete="restrict")
+    team_ids = fields.Many2many(
+        comodel_name="crm.team",
+        string="Sales Teams",
+        ondelete="restrict",
+    )
     fold = fields.Boolean(
-        "Folded in Pipeline",
+        string="Folded in Pipeline",
         help="This stage is folded in the kanban view when there are no records in that stage to display.",
     )
     crm_team_count = fields.Integer(
-        "Sales Teams in Database", compute="_compute_crm_team_count"
+        string="Sales Teams in Database",
+        compute="_compute_crm_team_count",
     )
     color = fields.Integer(export_string_translation=False)
 

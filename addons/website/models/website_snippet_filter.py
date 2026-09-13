@@ -18,19 +18,36 @@ class WebsiteSnippetFilter(models.Model):
     _description = "Website Snippet Filter"
     _order = "name ASC"
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
     action_server_id = fields.Many2one(
-        "ir.actions.server", "Server Action", ondelete="cascade"
+        comodel_name="ir.actions.server",
+        string="Server Action",
+        ondelete="cascade",
     )
     field_names = fields.Char(
-        help="A list of comma-separated field names", required=True, default=""
+        help="A list of comma-separated field names",
+        default="",
+        required=True,
     )
-    filter_id = fields.Many2one("ir.filters", ondelete="cascade")
+    filter_id = fields.Many2one(
+        comodel_name="ir.filters",
+        ondelete="cascade",
+    )
     limit = fields.Integer(
-        help="The limit is the maximum number of records retrieved", required=True
+        help="The limit is the maximum number of records retrieved",
+        required=True,
     )
-    website_id = fields.Many2one("website", ondelete="cascade")
-    model_name = fields.Char(string="Model name", compute="_compute_model_name")
+    website_id = fields.Many2one(
+        comodel_name="website",
+        ondelete="cascade",
+    )
+    model_name = fields.Char(
+        string="Model name",
+        compute="_compute_model_name",
+    )
     help = fields.Text(
         string="Description",
         help="Optional help text describing the filter usage and/or purpose.",

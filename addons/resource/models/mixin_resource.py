@@ -15,34 +15,34 @@ class MixinResource(models.AbstractModel):
     _description = "Resource Mixin"
 
     resource_id = fields.Many2one(
-        "resource.resource",
-        bypass_search_access=True,
+        comodel_name="resource.resource",
         index=True,
-        ondelete="restrict",
         required=True,
+        ondelete="restrict",
+        bypass_search_access=True,
     )
     tz = fields.Selection(
         related="resource_id.tz",
         string="Timezone",
-        readonly=False,
         help="This field is used in order to define in which timezone the resources will work.",
+        readonly=False,
     )
     company_id = fields.Many2one(
-        "res.company",
-        "Company",
-        default=lambda self: self.env.company,
-        index=True,
+        comodel_name="res.company",
         related="resource_id.company_id",
+        string="Company",
         precompute=True,
+        default=lambda self: self.env.company,
         store=True,
+        index=True,
         readonly=False,
     )
     resource_calendar_id = fields.Many2one(
-        "resource.calendar",
-        "Working Hours",
-        index=True,
+        comodel_name="resource.calendar",
         related="resource_id.calendar_id",
+        string="Working Hours",
         store=True,
+        index=True,
         readonly=False,
     )
 

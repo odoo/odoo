@@ -47,49 +47,52 @@ class AccountMoveLine(models.Model):
     move_id = fields.Many2one(
         comodel_name="account.move",
         string="Journal Entry",
-        required=True,
-        readonly=True,
         index=True,
-        bypass_search_access=True,
+        readonly=True,
+        required=True,
         ondelete="cascade",
         check_company=True,
+        bypass_search_access=True,
     )
     journal_id = fields.Many2one(
         related="move_id.journal_id",
-        store=True,
         precompute=True,
+        store=True,
         index=True,
         copy=False,
     )
 
     journal_group_id = fields.Many2one(
-        string="Ledger",
         comodel_name="account.journal.group",
-        store=False,
+        string="Ledger",
         search="_search_journal_group_id",
+        store=False,
     )
 
     company_id = fields.Many2one(
         related="move_id.company_id",
-        store=True,
-        readonly=True,
         precompute=True,
+        store=True,
         index=True,
+        readonly=True,
     )
     company_currency_id = fields.Many2one(
-        string="Company Currency",
         related="move_id.company_currency_id",
-        readonly=True,
-        store=True,
+        string="Company Currency",
         precompute=True,
+        store=True,
+        readonly=True,
     )
     move_name = fields.Char(
-        string="Number",
         related="move_id.name",
+        string="Number",
         store=True,
         index="btree",
     )
-    parent_state = fields.Selection(related="move_id.state", store=True)
+    parent_state = fields.Selection(
+        related="move_id.state",
+        store=True,
+    )
     date = fields.Date(
         related="move_id.date",
         store=True,
@@ -105,97 +108,105 @@ class AccountMoveLine(models.Model):
     ref = fields.Char(
         related="move_id.ref",
         store=True,
-        copy=False,
         index="trigram",
+        copy=False,
     )
     is_storno = fields.Boolean(
         string="Company Storno Accounting",
+        help="Utility field to express whether the journal item is subject to storno accounting",
         compute="_compute_is_storno",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
-        help="Utility field to express whether the journal item is subject to storno accounting",
     )
     sequence = fields.Integer(
-        compute="_compute_sequence", store=True, readonly=False, precompute=True
+        compute="_compute_sequence",
+        precompute=True,
+        store=True,
+        readonly=False,
     )
-    move_type = fields.Selection(related="move_id.move_type", store=True)
+    move_type = fields.Selection(
+        related="move_id.move_type",
+        store=True,
+    )
 
     account_id = fields.Many2one(
         comodel_name="account.account",
         compute="_compute_account_id",
-        store=True,
-        readonly=False,
-        precompute=True,
         inverse="_inverse_account_id",
+        precompute=True,
+        store=True,
         index=False,
-        bypass_search_access=True,
-        ondelete="restrict",
+        readonly=False,
         domain="[('account_type', '!=', 'off_balance')]",
+        ondelete="restrict",
         check_company=True,
+        bypass_search_access=True,
         tracking=True,
     )
     account_name = fields.Char(related="account_id.name")
     account_code = fields.Char(related="account_id.code")
     account_lookup_id = fields.Many2one(
-        "account.account", search="_search_account_lookup_id", store=False
+        comodel_name="account.account",
+        search="_search_account_lookup_id",
+        store=False,
     )
     name = fields.Char(
         string="Label",
         compute="_compute_name",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
         tracking=True,
     )
     translated_product_name = fields.Text(compute="_compute_translated_product_name")
     debit = fields.Monetary(
+        currency_field="company_currency_id",
         compute="_compute_debit_credit",
         inverse="_inverse_debit",
-        store=True,
         precompute=True,
-        currency_field="company_currency_id",
+        store=True,
     )
     credit = fields.Monetary(
+        currency_field="company_currency_id",
         compute="_compute_debit_credit",
         inverse="_inverse_credit",
-        store=True,
         precompute=True,
-        currency_field="company_currency_id",
+        store=True,
     )
     balance = fields.Monetary(
+        currency_field="company_currency_id",
         compute="_compute_balance",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
-        currency_field="company_currency_id",
         tracking=True,
     )
     cumulated_balance = fields.Monetary(
-        compute="_compute_cumulated_balance",
-        currency_field="company_currency_id",
-        exportable=False,
         help="Cumulated balance depending on the domain and the order chosen in the view.",
+        currency_field="company_currency_id",
+        compute="_compute_cumulated_balance",
+        exportable=False,
     )
     currency_rate = fields.Float(
-        compute="_compute_currency_rate",
         help="Currency rate from company currency to document currency.",
+        compute="_compute_currency_rate",
     )
     amount_currency = fields.Monetary(
         string="Amount in Currency",
+        help="The amount expressed in an optional other currency if it is a multi-currency entry.",
         compute="_compute_amount_currency",
         inverse="_inverse_amount_currency",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
-        help="The amount expressed in an optional other currency if it is a multi-currency entry.",
     )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
         compute="_compute_currency_id",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
         required=True,
     )
     is_same_currency = fields.Boolean(compute="_compute_is_same_currency")
@@ -203,9 +214,9 @@ class AccountMoveLine(models.Model):
         comodel_name="res.partner",
         compute="_compute_partner_id",
         inverse="_inverse_partner_id",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
         ondelete="restrict",
     )
     is_imported = fields.Boolean()
@@ -219,42 +230,42 @@ class AccountMoveLine(models.Model):
     )
     payment_id = fields.Many2one(
         comodel_name="account.payment",
-        string="Originator Payment",
         related="move_id.origin_payment_id",
-        store=True,
-        bypass_search_access=True,
-        index="btree_not_null",
+        string="Originator Payment",
         help="The payment that created this entry",
+        store=True,
+        index="btree_not_null",
+        bypass_search_access=True,
     )
     statement_line_id = fields.Many2one(
         comodel_name="account.bank.statement.line",
-        string="Originator Statement Line",
         related="move_id.statement_line_id",
-        store=True,
-        bypass_search_access=True,
-        index="btree_not_null",
+        string="Originator Statement Line",
         help="The statement line that created this entry",
+        store=True,
+        index="btree_not_null",
+        bypass_search_access=True,
     )
     statement_id = fields.Many2one(
         related="statement_line_id.statement_id",
+        help="The bank statement used for bank reconciliation",
         store=True,
-        bypass_search_access=True,
         index="btree_not_null",
         copy=False,
-        help="The bank statement used for bank reconciliation",
+        bypass_search_access=True,
     )
     commercial_partner_country = fields.Many2one(
-        string="Commercial Partner Country",
         related="move_id.commercial_partner_id.country_id",
+        string="Commercial Partner Country",
     )
 
     tax_ids = fields.Many2many(
         comodel_name="account.tax",
         string="Taxes",
         compute="_compute_tax_ids",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
         context={"active_test": False, "hide_original_tax_ids": True},
         check_company=True,
         tracking=True,
@@ -267,77 +278,80 @@ class AccountMoveLine(models.Model):
     )
     tax_line_id = fields.Many2one(
         comodel_name="account.tax",
-        string="Originator Tax",
         related="tax_repartition_line_id.tax_id",
-        store=True,
-        precompute=True,
-        ondelete="restrict",
+        string="Originator Tax",
         help="Indicates that this journal item is a tax line",
+        precompute=True,
+        store=True,
+        ondelete="restrict",
     )
     tax_group_id = fields.Many2one(
-        string="Originator tax group",
         related="tax_line_id.tax_group_id",
-        store=True,
+        string="Originator tax group",
         precompute=True,
+        store=True,
     )
     tax_base_amount = fields.Monetary(
         string="Base Amount",
-        readonly=True,
         currency_field="company_currency_id",
+        readonly=True,
     )
     tax_repartition_line_id = fields.Many2one(
         comodel_name="account.tax.repartition.line",
         string="Originator Tax Distribution Line",
-        ondelete="restrict",
-        readonly=True,
-        check_company=True,
         help="Tax distribution line that caused the creation of this move line, if any",
+        readonly=True,
+        ondelete="restrict",
+        check_company=True,
     )
     tax_tag_ids = fields.Many2many(
-        string="Tags",
         comodel_name="account.account.tag",
-        ondelete="restrict",
-        context={"active_test": False},
-        tracking=True,
+        string="Tags",
         help="Tags assigned to this line by the tax creating it, if any. It determines its impact on financial reports.",
+        context={"active_test": False},
+        ondelete="restrict",
+        tracking=True,
     )
     extra_tax_data = fields.Json()
 
     amount_residual = fields.Monetary(
         string="Residual Amount",
+        help="The residual amount on a journal item expressed in the company currency.",
+        currency_field="company_currency_id",
         compute="_compute_reconciliation",
         store=True,
-        currency_field="company_currency_id",
-        help="The residual amount on a journal item expressed in the company currency.",
     )
     amount_residual_currency = fields.Monetary(
         string="Residual Amount in Currency",
-        compute="_compute_reconciliation",
-        store=True,
         help="The residual amount on a journal item expressed in its currency (possibly not the "
         "company currency).",
+        compute="_compute_reconciliation",
+        store=True,
     )
-    reconciled = fields.Boolean(compute="_compute_reconciliation", store=True)
+    reconciled = fields.Boolean(
+        compute="_compute_reconciliation",
+        store=True,
+    )
     full_reconcile_id = fields.Many2one(
         comodel_name="account.full.reconcile",
         string="Matching",
-        copy=False,
         index="btree_not_null",
+        copy=False,
         readonly=True,
     )
     matched_debit_ids = fields.One2many(
         comodel_name="account.partial.reconcile",
         inverse_name="credit_move_id",
         string="Matched Debits",
-        readonly=True,
         help="Debit journal items that are matched with this journal item.",
+        readonly=True,
     )
     matched_credit_ids = fields.One2many(
         comodel_name="account.partial.reconcile",
         inverse_name="debit_move_id",
         string="Matched Credits",
-        readonly=True,
         help="Credit journal items that are matched with this journal item.",
+        readonly=True,
     )
     reconciled_lines_ids = fields.Many2many(
         comodel_name="account.move.line",
@@ -352,14 +366,14 @@ class AccountMoveLine(models.Model):
 
     matching_number = fields.Char(
         string="Matching #",
-        copy=False,
-        index="btree",
         help="Matching number for this line, 'P' if it is only partially reconcile, or the name of "
         "the full reconcile if it exists.",
+        index="btree",
+        copy=False,
     )
     is_account_reconcile = fields.Boolean(
-        string="Account Reconcile",
         related="account_id.reconcile",
+        string="Account Reconcile",
     )
 
     account_type = fields.Selection(
@@ -392,9 +406,9 @@ class AccountMoveLine(models.Model):
             ("balancing", "Automatic Balancing Line"),
         ],
         compute="_compute_display_type",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
         required=True,
     )
     collapse_composition = fields.Boolean(
@@ -406,7 +420,7 @@ class AccountMoveLine(models.Model):
         help="If checked, the prices of the lines below this section will not be displayed in reports and portal.",
     )
     parent_id = fields.Many2one(
-        "account.move.line",
+        comodel_name="account.move.line",
         string="Parent Section Line",
         compute="_compute_parent_id",
         compute_sudo=True,
@@ -414,57 +428,60 @@ class AccountMoveLine(models.Model):
     product_id = fields.Many2one(
         comodel_name="product.product",
         inverse="_inverse_product_id",
+        index=True,
         ondelete="restrict",
         check_company=True,
-        index=True,
     )
-    allowed_uom_ids = fields.Many2many("uom.uom", compute="_compute_allowed_uom_ids")
+    allowed_uom_ids = fields.Many2many(
+        comodel_name="uom.uom",
+        compute="_compute_allowed_uom_ids",
+    )
     product_uom_id = fields.Many2one(
         comodel_name="uom.uom",
         string="Unit",
-        domain="[('id', 'in', allowed_uom_ids)]",
         compute="_compute_product_uom_id",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
+        domain="[('id', 'in', allowed_uom_ids)]",
         ondelete="restrict",
     )
     quantity = fields.Float(
-        compute="_compute_quantity",
-        store=True,
-        readonly=False,
-        precompute=True,
-        digits="Product Unit",
         help="The optional quantity expressed by this line, eg: number of product sold. "
         "The quantity is not a legal requirement but is very useful for some reports.",
+        digits="Product Unit",
+        compute="_compute_quantity",
+        precompute=True,
+        store=True,
+        readonly=False,
     )
     date_maturity = fields.Date(
         string="Due Date",
-        index=True,
-        tracking=True,
         help="This field is used for payable and receivable journal entries. "
         "You can put the limit date for the payment of this line.",
+        index=True,
+        tracking=True,
     )
 
     price_unit = fields.Float(
         string="Unit Price",
+        min_display_digits="Product Price",
         compute="_compute_price_unit",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
-        min_display_digits="Product Price",
     )
     price_subtotal = fields.Monetary(
         string="Subtotal",
+        currency_field="currency_id",
         compute="_compute_totals",
         store=True,
-        currency_field="currency_id",
     )
     price_total = fields.Monetary(
         string="Total",
+        currency_field="currency_id",
         compute="_compute_totals",
         store=True,
-        currency_field="currency_id",
     )
     discount = fields.Float(
         string="Discount (%)",
@@ -476,20 +493,38 @@ class AccountMoveLine(models.Model):
         string="Tax calculation rounding method",
         readonly=True,
     )
-    deductible_amount = fields.Float("Deductibility", default=100)
+    deductible_amount = fields.Float(
+        string="Deductibility",
+        default=100,
+    )
 
-    term_key = fields.Binary(compute="_compute_term_key", exportable=False)
-    epd_key = fields.Binary(compute="_compute_epd_key", exportable=False)
-    epd_needed = fields.Binary(compute="_compute_epd", exportable=False)
-    epd_dirty = fields.Boolean(compute="_compute_epd", exportable=False)
+    term_key = fields.Binary(
+        compute="_compute_term_key",
+        exportable=False,
+    )
+    epd_key = fields.Binary(
+        compute="_compute_epd_key",
+        exportable=False,
+    )
+    epd_needed = fields.Binary(
+        compute="_compute_epd",
+        exportable=False,
+    )
+    epd_dirty = fields.Boolean(
+        compute="_compute_epd",
+        exportable=False,
+    )
     discount_allocation_key = fields.Binary(
-        compute="_compute_discount_allocation_key", exportable=False
+        compute="_compute_discount_allocation_key",
+        exportable=False,
     )
     discount_allocation_needed = fields.Binary(
-        compute="_compute_discount_allocation", exportable=False
+        compute="_compute_discount_allocation",
+        exportable=False,
     )
     discount_allocation_dirty = fields.Boolean(
-        compute="_compute_discount_allocation", exportable=False
+        compute="_compute_discount_allocation",
+        exportable=False,
     )
 
     analytic_line_ids = fields.One2many(
@@ -497,24 +532,22 @@ class AccountMoveLine(models.Model):
         inverse_name="move_line_id",
         string="Analytic lines",
     )
-    analytic_distribution = fields.Json(
-        inverse="_inverse_analytic_distribution",
-    )
+    analytic_distribution = fields.Json(inverse="_inverse_analytic_distribution")
     has_invalid_analytics = fields.Boolean(compute="_compute_has_invalid_analytics")
 
     discount_date = fields.Date(
-        store=True,
         help="Last date at which the discounted amount must be paid in order for the Early Payment Discount to be granted",
+        store=True,
         readonly=True,
     )
     discount_amount_currency = fields.Monetary(
         string="Discount amount in Currency",
-        store=True,
         currency_field="currency_id",
+        store=True,
     )
     discount_balance = fields.Monetary(
-        store=True,
         currency_field="company_currency_id",
+        store=True,
     )
 
     payment_date = fields.Date(
@@ -527,11 +560,11 @@ class AccountMoveLine(models.Model):
 
     no_followup = fields.Boolean(
         string="No Follow-Up",
+        help="Exclude this journal item from follow-up reports.",
         compute="_compute_no_followup",
         inverse="_inverse_no_followup",
         store=True,
         readonly=False,
-        help="Exclude this journal item from follow-up reports.",
     )
 
     _check_credit_debit = models.Constraint(

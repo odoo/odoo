@@ -5,10 +5,10 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     minlength = fields.Integer(
-        "Minimum Password Length",
-        config_parameter="auth_password_policy.minlength",
-        default=0,
+        string="Minimum Password Length",
         help="Minimum number of characters passwords must contain, set to 0 to disable.",
+        default=0,
+        config_parameter="auth_password_policy.minlength",
     )
 
     @api.onchange("minlength")

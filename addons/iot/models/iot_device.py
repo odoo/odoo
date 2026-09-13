@@ -6,12 +6,16 @@ class IotDevice(models.Model):
     _description = "IOT Device"
 
     iot_id = fields.Many2one(
-        "iot.box", string="IoT Box", required=True, index=True, ondelete="cascade"
+        comodel_name="iot.box",
+        string="IoT Box",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     name = fields.Char()
     identifier = fields.Char(readonly=True)
     type = fields.Selection(
-        [
+        selection=[
             ("printer", "Printer"),
             ("camera", "Camera"),
             ("keyboard", "Keyboard"),
@@ -23,59 +27,64 @@ class IotDevice(models.Model):
             ("fiscal_data_module", "Fiscal Data Module"),
             ("unsupported", "Unsupported"),
         ],
-        readonly=True,
-        default="device",
         help="Type of device.",
+        default="device",
+        readonly=True,
     )
     manufacturer = fields.Char(readonly=True)
     connection = fields.Selection(
-        [
+        selection=[
             ("network", "Network"),
             ("direct", "USB"),
             ("bluetooth", "Bluetooth"),
             ("serial", "Serial"),
             ("hdmi", "HDMI"),
         ],
-        readonly=True,
         help="Type of connection.",
+        readonly=True,
     )
-    report_ids = fields.Many2many("ir.actions.report", string="Reports")
+    report_ids = fields.Many2many(
+        comodel_name="ir.actions.report",
+        string="Reports",
+    )
     iot_ip = fields.Char(related="iot_id.ip")
-    company_id = fields.Many2one("res.company", "Company", related="iot_id.company_id")
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        related="iot_id.company_id",
+        string="Company",
+    )
     connected_status = fields.Selection(
-        [
+        selection=[
             ("disconnected", "Disconnected"),
             ("connected", "Connected"),
         ],
         default="disconnected",
         readonly=True,
     )
-    keyboard_layout = fields.Many2one("iot.keyboard.layout")
+    keyboard_layout = fields.Many2one(comodel_name="iot.keyboard.layout")
     display_url = fields.Char(
-        "Display URL",
-        help=(
-            "URL of the page that will be displayed by the device, "
-            "leave empty for the default page of whichever app claims it."
-        ),
+        string="Display URL",
+        help="URL of the page that will be displayed by the device, "
+        "leave empty for the default page of whichever app claims it.",
     )
     manual_measurement = fields.Boolean(
-        compute="_compute_manual_measurement",
         help="Manually read the measurement from the device",
+        compute="_compute_manual_measurement",
     )
     is_scanner = fields.Boolean(
+        help="Manually switch the device type between keyboard and scanner",
         compute="_compute_is_scanner",
         inverse="_inverse_is_scanner",
-        help="Manually switch the device type between keyboard and scanner",
     )
     subtype = fields.Selection(
-        [
+        selection=[
             ("receipt_printer", "Receipt Printer"),
             ("label_printer", "Label Printer"),
             ("office_printer", "Office Printer"),
             ("", ""),
         ],
-        default="",
         help="Subtype of device.",
+        default="",
     )
 
     @api.depends("name", "iot_id", "connection")

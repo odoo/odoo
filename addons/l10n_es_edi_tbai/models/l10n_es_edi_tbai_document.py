@@ -289,12 +289,12 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
     _description = "TicketBAI Document"
 
     name = fields.Char(
-        required=True,
         readonly=True,
+        required=True,
     )
     date = fields.Date(
-        required=True,
         readonly=True,
+        required=True,
     )
     xml_attachment_id = fields.Many2one(
         comodel_name="ir.attachment",
@@ -303,12 +303,12 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         readonly=True,
     )
     company_id = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
         required=True,
     )
 
     state = fields.Selection(
-        [
+        selection=[
             ("to_send", "To Send"),
             ("accepted", "Accepted"),
             ("rejected", "Rejected"),

@@ -9,14 +9,14 @@ class AccountAnalyticAccount(models.Model):
     _description = "Analytic Account"
 
     project_ids = fields.One2many(
-        "project.project",
-        "account_id",
+        comodel_name="project.project",
+        inverse_name="account_id",
         string="Projects",
         export_string_translation=False,
     )
     project_count = fields.Integer(
-        compute="_compute_project_count",
         export_string_translation=False,
+        compute="_compute_project_count",
     )
 
     @dbg.timed

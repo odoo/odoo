@@ -279,6 +279,26 @@ RULES: tuple[Rule, ...] = (
         "from a helper (coding_guidelines.rst 2.4.1)",
     ),
     Rule(
+        "field-positional-argument",
+        "E8525",
+        "spell every argument as its keyword: a positional label, comodel or "
+        "selection reads as a bare string and only the signature says which",
+    ),
+    Rule(
+        "field-attribute-order",
+        "E8526",
+        "keywords in FIELD_ATTRIBUTE_ORDER, one per line once there are two: "
+        "what the field is, what it says, its shape, how its value is produced, "
+        "how it is stored, what it points at, who sees it -- run "
+        "_sort_field_attributes.py",
+    ),
+    Rule(
+        "dead-field-attribute",
+        "E8527",
+        "drop the attribute: index= without a column, precompute= without "
+        "store=True and compute= beside related= are ignored at setup",
+    ),
+    Rule(
         "noqa-rationale",
         "",
         "write the reason after the codes: `# noqa: F401  re-exported by __init__`",
@@ -448,6 +468,9 @@ CHECKERS: tuple[Checker, ...] = (
                 "default-evaluated-at-import",
                 "selection-duplicate-key",
                 "field-hook-prefix",
+                "field-positional-argument",
+                "field-attribute-order",
+                "dead-field-attribute",
             }
         ),
     ),

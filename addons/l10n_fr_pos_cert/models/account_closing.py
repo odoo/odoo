@@ -21,8 +21,15 @@ class AccountSaleClosing(models.Model):
     _order = "date_closing_stop desc, sequence_number desc"
     _description = "Sale Closing"
 
-    name = fields.Char(help="Frequency and unique sequence number", required=True)
-    company_id = fields.Many2one("res.company", readonly=True, required=True)
+    name = fields.Char(
+        help="Frequency and unique sequence number",
+        required=True,
+    )
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        readonly=True,
+        required=True,
+    )
     date_closing_stop = fields.Datetime(
         string="Closing Date",
         help="Date to which the values are computed",
@@ -36,8 +43,8 @@ class AccountSaleClosing(models.Model):
         required=True,
     )
     frequency = fields.Selection(
-        string="Closing Type",
         selection=[("daily", "Daily"), ("monthly", "Monthly"), ("annually", "Annual")],
+        string="Closing Type",
         readonly=True,
         required=True,
     )
@@ -53,23 +60,28 @@ class AccountSaleClosing(models.Model):
         readonly=True,
         required=True,
     )
-    sequence_number = fields.Integer("Sequence #", readonly=True, required=True)
+    sequence_number = fields.Integer(
+        string="Sequence #",
+        readonly=True,
+        required=True,
+    )
     last_order_id = fields.Many2one(
-        "pos.order",
+        comodel_name="pos.order",
         string="Last Pos Order",
         help="Last Pos order included in the grand total",
         readonly=True,
     )
     last_order_hash = fields.Char(
-        string="Last Order entry's inalteralbility hash", readonly=True
+        string="Last Order entry's inalteralbility hash",
+        readonly=True,
     )
     currency_id = fields.Many2one(
-        "res.currency",
+        comodel_name="res.currency",
+        related="company_id.currency_id",
         string="Currency",
         help="The company's currency",
-        readonly=True,
-        related="company_id.currency_id",
         store=True,
+        readonly=True,
     )
 
     def _query_for_aml(self, company, first_move_sequence_number, date_start):

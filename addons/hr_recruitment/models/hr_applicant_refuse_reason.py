@@ -6,10 +6,17 @@ class HrApplicantRefuseReason(models.Model):
     _description = "Refuse Reason of Applicant"
     _order = "sequence"
 
-    sequence = fields.Integer(copy=False, default=10)
-    name = fields.Char("Description", required=True, translate=True)
+    sequence = fields.Integer(
+        default=10,
+        copy=False,
+    )
+    name = fields.Char(
+        string="Description",
+        translate=True,
+        required=True,
+    )
     template_id = fields.Many2one(
-        "mail.template",
+        comodel_name="mail.template",
         string="Email Template",
         domain="[('model', '=', 'hr.applicant')]",
     )

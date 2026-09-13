@@ -21,10 +21,13 @@ class ProductReplenish(models.TransientModel):
         required=True,
     )
     product_has_variants = fields.Boolean(
-        string="Has variants", required=True, default=False
+        string="Has variants",
+        default=False,
+        required=True,
     )
     allowed_uom_ids = fields.Many2many(
-        comodel_name="uom.uom", compute="_compute_allowed_uom_ids"
+        comodel_name="uom.uom",
+        compute="_compute_allowed_uom_ids",
     )
     product_uom_id = fields.Many2one(
         comodel_name="uom.uom",
@@ -33,15 +36,18 @@ class ProductReplenish(models.TransientModel):
         domain="[('id', 'in', allowed_uom_ids)]",
     )
     forecast_uom_id = fields.Many2one(related="product_id.uom_id")
-    quantity = fields.Float(required=True, default=1)
+    quantity = fields.Float(
+        default=1,
+        required=True,
+    )
     date_planned = fields.Datetime(
         string="Scheduled Date",
-        required=True,
-        compute="_compute_date_planned",
-        store=True,
-        precompute=True,
-        readonly=False,
         help="Date at which the replenishment should take place.",
+        compute="_compute_date_planned",
+        precompute=True,
+        store=True,
+        readonly=False,
+        required=True,
     )
     warehouse_id = fields.Many2one(
         comodel_name="stock.warehouse",
@@ -49,9 +55,7 @@ class ProductReplenish(models.TransientModel):
         check_company=True,
     )
     company_id = fields.Many2one(comodel_name="res.company")
-    forecasted_quantity = fields.Float(
-        compute="_compute_forecasted_quantity",
-    )
+    forecasted_quantity = fields.Float(compute="_compute_forecasted_quantity")
 
     @api.onchange("product_id", "warehouse_id")
     def _onchange_product_id(self):

@@ -7,7 +7,10 @@ class HrEmployeeSkill(models.Model):
     _description = "Skill level for employee"
 
     employee_id = fields.Many2one(
-        "hr.employee", required=True, index=True, ondelete="cascade"
+        comodel_name="hr.employee",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
 
     def _linked_field_name(self):

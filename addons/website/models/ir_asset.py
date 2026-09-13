@@ -6,7 +6,10 @@ class IrAsset(models.Model):
     _inherit = "ir.asset"
 
     key = fields.Char(copy=False)
-    website_id = fields.Many2one("website", ondelete="cascade")
+    website_id = fields.Many2one(
+        comodel_name="website",
+        ondelete="cascade",
+    )
 
     @api.model
     def _get_fields_invalidating_assets_cache(self):

@@ -15,35 +15,36 @@ class PaymentProvider(models.Model):
     _inherit = "payment.provider"
 
     code = fields.Selection(
-        selection_add=[("paymob", "Paymob")], ondelete={"paymob": "set default"}
+        selection_add=[("paymob", "Paymob")],
+        ondelete={"paymob": "set default"},
     )
     paymob_account_country_id = fields.Many2one(
+        comodel_name="res.country",
         help="The country of the Paymob account. The currency will be updated to match the country"
         " of the Paymob account.",
-        comodel_name="res.country",
         inverse="_inverse_paymob_account_country_id",
+        copy=False,
         domain=f'[("code", "in", {list(const.API_MAPPING.keys())})]',
         required_if_provider="paymob",
-        copy=False,
     )
     paymob_public_key = fields.Char(
-        required_if_provider="paymob",
         copy=False,
+        required_if_provider="paymob",
     )
     paymob_secret_key = fields.Char(
-        required_if_provider="paymob",
         copy=False,
         groups="base.group_system",
+        required_if_provider="paymob",
     )
     paymob_hmac_key = fields.Char(
         string="Paymob HMAC Key",
-        required_if_provider="paymob",
         copy=False,
+        required_if_provider="paymob",
     )
     paymob_api_key = fields.Char(
         string="Paymob API Key",
-        required_if_provider="paymob",
         copy=False,
+        required_if_provider="paymob",
     )
 
     # === CONSTRAINT METHODS === #

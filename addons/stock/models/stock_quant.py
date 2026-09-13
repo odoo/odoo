@@ -41,11 +41,11 @@ class StockQuant(models.Model):
 
     location_id = fields.Many2one(
         comodel_name="stock.location",
+        index=True,
         required=True,
-        bypass_search_access=True,
         domain=lambda self: self._domain_location_id(),
         ondelete="restrict",
-        index=True,
+        bypass_search_access=True,
     )
     company_id = fields.Many2one(
         related="location_id.company_id",
@@ -54,33 +54,29 @@ class StockQuant(models.Model):
         readonly=True,
     )
     warehouse_id = fields.Many2one(
-        related="location_id.warehouse_id",
         comodel_name="stock.warehouse",
+        related="location_id.warehouse_id",
     )
-    storage_category_id = fields.Many2one(
-        related="location_id.storage_category_id",
-    )
+    storage_category_id = fields.Many2one(related="location_id.storage_category_id")
     cyclic_inventory_frequency = fields.Integer(
         related="location_id.cyclic_inventory_frequency"
     )
     product_id = fields.Many2one(
         comodel_name="product.product",
         required=True,
-        check_company=True,
         domain=lambda self: self._domain_product_id(),
         ondelete="restrict",
+        check_company=True,
     )
     product_tmpl_id = fields.Many2one(
-        related="product_id.product_tmpl_id",
         comodel_name="product.template",
+        related="product_id.product_tmpl_id",
         string="Product Template",
     )
-    is_favorite = fields.Boolean(
-        related="product_tmpl_id.is_favorite",
-    )
+    is_favorite = fields.Boolean(related="product_tmpl_id.is_favorite")
     product_uom_id = fields.Many2one(
-        related="product_id.uom_id",
         comodel_name="uom.uom",
+        related="product_id.uom_id",
         string="Unit",
         readonly=True,
     )
@@ -88,16 +84,14 @@ class StockQuant(models.Model):
         related="product_id.tracking",
         readonly=True,
     )
-    product_categ_id = fields.Many2one(
-        related="product_tmpl_id.categ_id",
-    )
+    product_categ_id = fields.Many2one(related="product_tmpl_id.categ_id")
     lot_id = fields.Many2one(
         comodel_name="stock.lot",
         string="Lot/Serial Number",
-        check_company=True,
+        index=True,
         domain=lambda self: self._domain_lot_id(),
         ondelete="restrict",
-        index=True,
+        check_company=True,
     )
     lot_properties = fields.Properties(
         related="lot_id.lot_properties",
@@ -106,71 +100,71 @@ class StockQuant(models.Model):
     )
     sn_duplicated = fields.Boolean(
         string="Duplicated Serial Number",
-        compute="_compute_sn_duplicated",
         help="If the same SN is in another Quant",
+        compute="_compute_sn_duplicated",
     )
     package_id = fields.Many2one(
         comodel_name="stock.package",
-        check_company=True,
+        help="The package containing this quant",
+        index=True,
         domain="['|', ('location_id', '=', location_id), '&', ('location_id', '=', False), ('quant_ids', '=', False)]",
         ondelete="restrict",
-        index=True,
-        help="The package containing this quant",
+        check_company=True,
     )
     owner_id = fields.Many2one(
         comodel_name="res.partner",
-        check_company=True,
-        index="btree_not_null",
         help="This is the owner of the quant",
+        index="btree_not_null",
+        check_company=True,
     )
     quantity = fields.Float(
+        help="Quantity of products in this quant, in the default unit of measure of the product",
         min_display_digits="Product Unit",
-        required=True,
         default=0.0,
         readonly=True,
-        help="Quantity of products in this quant, in the default unit of measure of the product",
+        required=True,
     )
     reserved_quantity = fields.Float(
+        help="Quantity of reserved products in this quant, in the default unit of measure of the product",
         min_display_digits="Product Unit",
-        required=True,
         default=0.0,
         readonly=True,
-        help="Quantity of reserved products in this quant, in the default unit of measure of the product",
+        required=True,
     )
     available_quantity = fields.Float(
+        help="On hand quantity which hasn't been reserved on a transfer, in the default unit of measure of the product",
         min_display_digits="Product Unit",
         compute="_compute_available_quantity",
-        help="On hand quantity which hasn't been reserved on a transfer, in the default unit of measure of the product",
     )
     in_date = fields.Datetime(
         string="Incoming Date",
-        required=True,
         default=fields.Datetime.now,
         readonly=True,
+        required=True,
     )
     on_hand = fields.Boolean(
-        store=False,
         search="_search_on_hand",
+        store=False,
     )
     date_last_movement = fields.Datetime(
         string="Last Movement",
-        compute="_compute_last_movement",
         help="Date of the most recent done move line that took goods out of, or "
         "brought goods into, this quant. Inventory adjustments do not count: a "
         "cycle count is not a movement (see Last Count Date for those).",
+        compute="_compute_last_movement",
     )
     days_since_last_movement = fields.Integer(
         string="Days Static",
-        compute="_compute_last_movement",
-        search="_search_days_since_last_movement",
         help="Days the goods in this quant have sat untouched. Counted from the "
         "incoming date when no movement has ever matched the quant.",
+        compute="_compute_last_movement",
+        search="_search_days_since_last_movement",
     )
 
     inventory_quantity = fields.Float(
         string="Counted",
-        digits="Product Unit",
         help="The product's counted quantity.",
+        digits="Product Unit",
     )
     inventory_quantity_auto_apply = fields.Float(
         string="Inventoried Quantity",
@@ -181,22 +175,22 @@ class StockQuant(models.Model):
     )
     inventory_diff_quantity = fields.Float(
         string="Difference",
+        help="Indicates the gap between the product's theoretical quantity and its counted quantity.",
         digits="Product Unit",
         compute="_compute_inventory_diff_quantity",
         store=True,
         readonly=True,
-        help="Indicates the gap between the product's theoretical quantity and its counted quantity.",
     )
     inventory_date = fields.Date(
         string="Scheduled",
+        help="Next date the On Hand Quantity should be counted.",
         compute="_compute_inventory_date",
         store=True,
         readonly=False,
-        help="Next date the On Hand Quantity should be counted.",
     )
     last_count_date = fields.Date(
-        compute="_compute_last_count_date",
         help="Last time the Quantity was Updated",
+        compute="_compute_last_count_date",
     )
     inventory_quantity_set = fields.Boolean(
         compute="_compute_inventory_quantity_set",
@@ -211,10 +205,10 @@ class StockQuant(models.Model):
     user_id = fields.Many2one(
         comodel_name="res.users",
         string="Assigned To",
+        help="User assigned to do product count.",
         domain=lambda self: [
             ("all_group_ids", "in", self.env.ref("stock.group_stock_user").id)
         ],
-        help="User assigned to do product count.",
     )
 
     _quant_merge_idx = models.Index(

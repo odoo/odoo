@@ -89,6 +89,6 @@ class ProductTemplate(models.Model):
     # ------------------
 
     l10n_my_edi_classification_code = fields.Selection(
-        string="Malaysian classification code",
         selection=CLASSIFICATION_CODES_LIST,
+        string="Malaysian classification code",
     )

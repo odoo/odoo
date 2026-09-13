@@ -7,8 +7,8 @@ class SaleOrder(models.Model):
     _inherit = ["sale.order", "mixin.pos.load"]
 
     pos_order_line_ids = fields.One2many(
-        "pos.order.line",
-        "sale_order_origin_id",
+        comodel_name="pos.order.line",
+        inverse_name="sale_order_origin_id",
         string="Order lines Transferred to Point of Sale",
         readonly=True,
         groups="point_of_sale.group_pos_user",

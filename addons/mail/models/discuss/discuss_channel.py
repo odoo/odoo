@@ -116,16 +116,16 @@ class DiscussChannel(models.Model):
     name = fields.Char(required=True)
 
     active = fields.Boolean(
-        default=True,
         help="Set active to false to hide the channel without removing it.",
+        default=True,
     )
 
     channel_type = fields.Selection(
-        [("chat", "Chat"), ("channel", "Channel"), ("group", "Group")],
-        required=True,
+        selection=[("chat", "Chat"), ("channel", "Channel"), ("group", "Group")],
+        help="Chat is private and unique between 2 persons. Group is private among invited persons. Channel can be freely joined (depending on its configuration).",
         default="channel",
         readonly=True,
-        help="Chat is private and unique between 2 persons. Group is private among invited persons. Channel can be freely joined (depending on its configuration).",
+        required=True,
     )
 
     is_editable = fields.Boolean(compute="_compute_is_editable")
@@ -137,10 +137,14 @@ class DiscussChannel(models.Model):
 
     description = fields.Text()
 
-    image_128 = fields.Image("Image", max_width=128, max_height=128)
+    image_128 = fields.Image(
+        string="Image",
+        max_width=128,
+        max_height=128,
+    )
 
     avatar_128 = fields.Image(
-        "Avatar",
+        string="Avatar",
         max_width=128,
         max_height=128,
         compute="_compute_avatar_128",
@@ -149,7 +153,7 @@ class DiscussChannel(models.Model):
     avatar_cache_key = fields.Char(compute="_compute_avatar_cache_key")
 
     channel_partner_ids: ResPartner = fields.Many2many(
-        "res.partner",
+        comodel_name="res.partner",
         string="Partners",
         compute="_compute_channel_partner_ids",
         inverse="_inverse_channel_partner_ids",
@@ -157,40 +161,40 @@ class DiscussChannel(models.Model):
     )
 
     channel_member_ids: DiscussChannelMember = fields.One2many(
-        "discuss.channel.member",
-        "channel_id",
+        comodel_name="discuss.channel.member",
+        inverse_name="channel_id",
         string="Members",
     )
 
     parent_channel_id: DiscussChannel = fields.Many2one(
-        "discuss.channel",
+        comodel_name="discuss.channel",
         help="Parent channel",
-        ondelete="cascade",
         index=True,
-        bypass_search_access=True,
-        readonly=True,
         copy=False,
+        readonly=True,
+        ondelete="cascade",
+        bypass_search_access=True,
     )
 
     sub_channel_ids: DiscussChannel = fields.One2many(
-        "discuss.channel",
-        "parent_channel_id",
+        comodel_name="discuss.channel",
+        inverse_name="parent_channel_id",
         string="Sub Channels",
         readonly=True,
     )
 
     from_message_id: MailMessage = fields.Many2one(
-        "mail.message",
+        comodel_name="mail.message",
         help="The message the channel was created from.",
-        readonly=True,
         copy=False,
+        readonly=True,
     )
 
     pinned_message_ids: MailMessage = fields.One2many(
-        "mail.message",
-        "res_id",
-        domain=[("model", "=", "discuss.channel"), ("pinned_at", "!=", False)],
+        comodel_name="mail.message",
+        inverse_name="res_id",
         string="Pinned Messages",
+        domain=[("model", "=", "discuss.channel"), ("pinned_at", "!=", False)],
     )
 
     sfu_channel_uuid = fields.Char(groups="base.group_system")
@@ -198,11 +202,14 @@ class DiscussChannel(models.Model):
     sfu_server_url = fields.Char(groups="base.group_system")
 
     rtc_session_ids: DiscussChannelRtcSession = fields.One2many(
-        "discuss.channel.rtc.session", "channel_id", groups="base.group_system"
+        comodel_name="discuss.channel.rtc.session",
+        inverse_name="channel_id",
+        groups="base.group_system",
     )
 
     call_history_ids: DiscussCallHistory = fields.One2many(
-        "discuss.call.history", "channel_id"
+        comodel_name="discuss.call.history",
+        inverse_name="channel_id",
     )
 
     is_member = fields.Boolean(
@@ -212,13 +219,13 @@ class DiscussChannel(models.Model):
     )
 
     self_member_id: DiscussChannelMember = fields.Many2one(
-        "discuss.channel.member",
+        comodel_name="discuss.channel.member",
         compute="_compute_self_member_id",
         compute_sudo=True,
     )
 
     invited_member_ids: DiscussChannelMember = fields.One2many(
-        "discuss.channel.member",
+        comodel_name="discuss.channel.member",
         compute="_compute_invited_member_ids",
         compute_sudo=True,
     )
@@ -229,20 +236,20 @@ class DiscussChannel(models.Model):
     )
 
     message_count = fields.Integer(
-        "# Messages",
-        readonly=True,
+        string="# Messages",
         compute="_compute_message_count",
+        readonly=True,
     )
 
     last_interest_dt = fields.Datetime(
-        "Last Interest",
+        string="Last Interest",
+        help="Contains the date and time of the last interesting event that happened in this channel. This updates itself when new message posted.",
         default=lambda self: fields.Datetime.now() - timedelta(seconds=1),
         index=True,
-        help="Contains the date and time of the last interesting event that happened in this channel. This updates itself when new message posted.",
     )
 
     group_ids: ResGroups = fields.Many2many(
-        "res.groups",
+        comodel_name="res.groups",
         string="Auto Subscription",
         help="Members of those groups will automatically added as followers. "
         "Note that they will be able to manage their subscription manually "
@@ -250,24 +257,30 @@ class DiscussChannel(models.Model):
     )
 
     uuid = fields.Char(
-        "UUID", size=50, default=lambda self: self._default_uuid(), copy=False
+        string="UUID",
+        size=50,
+        default=lambda self: self._default_uuid(),
+        copy=False,
     )
 
     group_public_id: ResGroups = fields.Many2one(
-        "res.groups",
+        comodel_name="res.groups",
         string="Authorized Group",
         compute="_compute_group_public_id",
         recursive=True,
-        readonly=False,
         store=True,
+        readonly=False,
     )
 
-    invitation_url = fields.Char("Invitation URL", compute="_compute_invitation_url")
+    invitation_url = fields.Char(
+        string="Invitation URL",
+        compute="_compute_invitation_url",
+    )
 
     channel_name_member_ids: DiscussChannelMember = fields.One2many(
-        "discuss.channel.member",
-        compute="_compute_channel_name_member_ids",
+        comodel_name="discuss.channel.member",
         help="Members from which the channel name is computed when the name field is empty.",
+        compute="_compute_channel_name_member_ids",
     )
 
     _from_message_id_unique = models.Constraint(

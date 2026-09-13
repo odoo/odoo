@@ -8,7 +8,10 @@ class BaseDocumentLayout(models.TransientModel):
     _inherit = "base.document.layout"
 
     from_invoice = fields.Boolean()
-    qr_code = fields.Boolean(related="company_id.qr_code", readonly=False)
+    qr_code = fields.Boolean(
+        related="company_id.qr_code",
+        readonly=False,
+    )
     vat = fields.Char(
         related="company_id.vat",
         readonly=False,

@@ -14,20 +14,21 @@ class PaymentProvider(models.Model):
     _inherit = "payment.provider"
 
     code = fields.Selection(
-        selection_add=[("redsys", "Redsys")], ondelete={"redsys": "set default"}
+        selection_add=[("redsys", "Redsys")],
+        ondelete={"redsys": "set default"},
     )
     redsys_merchant_code = fields.Char(
-        required_if_provider="redsys",
         copy=False,
+        required_if_provider="redsys",
     )
     redsys_merchant_terminal = fields.Char(
-        required_if_provider="redsys",
         copy=False,
+        required_if_provider="redsys",
     )
     redsys_secret_key = fields.Char(
-        required_if_provider="redsys",
         copy=False,
         groups="base.group_system",
+        required_if_provider="redsys",
     )
 
     # === CRUD METHODS === #

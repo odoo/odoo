@@ -6,8 +6,15 @@ class FleetVehicleAssignationLog(models.Model):
     _description = "Drivers history on a vehicle"
     _order = "create_date desc, date_start desc"
 
-    vehicle_id = fields.Many2one("fleet.vehicle", required=True, index=True)
-    driver_id = fields.Many2one("res.partner", required=True)
+    vehicle_id = fields.Many2one(
+        comodel_name="fleet.vehicle",
+        index=True,
+        required=True,
+    )
+    driver_id = fields.Many2one(
+        comodel_name="res.partner",
+        required=True,
+    )
     date_start = fields.Date(string="Start Date")
     date_end = fields.Date(string="End Date")
 

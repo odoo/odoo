@@ -7,7 +7,8 @@ class Website(models.Model):
     _inherit = "website"
 
     channel_id = fields.Many2one(
-        "im_livechat.channel", string="Website Live Chat Channel"
+        comodel_name="im_livechat.channel",
+        string="Website Live Chat Channel",
     )
 
     @add_guest_to_context

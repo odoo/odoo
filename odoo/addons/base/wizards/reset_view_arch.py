@@ -14,17 +14,20 @@ class ResetViewArchWizard(models.TransientModel):
     _name = "reset.view.arch.wizard"
     _description = "Reset View Architecture Wizard"
 
-    view_id = fields.Many2one("ir.ui.view")
-    view_name = fields.Char(related="view_id.name", string="View Name")
+    view_id = fields.Many2one(comodel_name="ir.ui.view")
+    view_name = fields.Char(
+        related="view_id.name",
+        string="View Name",
+    )
     has_diff = fields.Boolean(compute="_compute_arch_comparison")
     arch_diff = fields.Html(
         string="Architecture Diff",
-        readonly=True,
-        compute="_compute_arch_comparison",
         sanitize_tags=False,
+        compute="_compute_arch_comparison",
+        readonly=True,
     )
     reset_mode = fields.Selection(
-        [
+        selection=[
             ("soft", "Restore previous version (soft reset)."),
             ("hard", "Reset to file version (hard reset)."),
             ("other_view", "Reset to another view."),
@@ -32,9 +35,13 @@ class ResetViewArchWizard(models.TransientModel):
         default="soft",
         required=True,
     )
-    compare_view_id = fields.Many2one("ir.ui.view", string="Compare To View")
+    compare_view_id = fields.Many2one(
+        comodel_name="ir.ui.view",
+        string="Compare To View",
+    )
     arch_to_compare = fields.Text(
-        "Arch To Compare To", compute="_compute_arch_comparison"
+        string="Arch To Compare To",
+        compute="_compute_arch_comparison",
     )
 
     @api.model

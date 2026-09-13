@@ -7,12 +7,17 @@ class LoyaltyHistory(models.Model):
     _order = "id desc"
 
     card_id = fields.Many2one(
-        comodel_name="loyalty.card", required=True, index=True, ondelete="cascade"
+        comodel_name="loyalty.card",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     # Stored: `loyalty_history_company_rule` filters on it, and a non-stored related
     # turns every evaluation of that rule into a LEFT JOIN on loyalty_card.
     company_id = fields.Many2one(
-        related="card_id.company_id", store=True, precompute=True
+        related="card_id.company_id",
+        precompute=True,
+        store=True,
     )
 
     description = fields.Text(required=True)
@@ -21,9 +26,13 @@ class LoyaltyHistory(models.Model):
     used = fields.Float()
 
     order_model = fields.Char(readonly=True)
-    order_id = fields.Many2oneReference(model_field="order_model", readonly=True)
+    order_id = fields.Many2oneReference(
+        model_field="order_model",
+        readonly=True,
+    )
     order_description = fields.Char(
-        string="Order", compute="_compute_order_description"
+        string="Order",
+        compute="_compute_order_description",
     )
     order_portal_url = fields.Char(compute="_compute_order_portal_url")
 

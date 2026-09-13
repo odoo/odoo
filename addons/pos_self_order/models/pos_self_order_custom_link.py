@@ -7,16 +7,23 @@ class Pos_Self_OrderCustom_Link(models.Model):
     _name = "pos_self_order.custom_link"
     _inherit = ["mixin.pos.load"]
     _description = "Custom links that the restaurant can configure to be displayed on the self order screen"
-    name = fields.Char(string="Label", required=True, translate=True)
-    url = fields.Char(string="URL", required=True)
+    name = fields.Char(
+        string="Label",
+        translate=True,
+        required=True,
+    )
+    url = fields.Char(
+        string="URL",
+        required=True,
+    )
     pos_config_ids = fields.Many2many(
-        "pos.config",
+        comodel_name="pos.config",
         string="Points of Sale",
-        domain="[('self_ordering_mode', '!=', 'nothing')]",
         help="Select for which points of sale you want to display this link. Leave empty to display it for all points of sale. You have to select among the points of sale that have the 'QR Code Menu' feature enabled.",
+        domain="[('self_ordering_mode', '!=', 'nothing')]",
     )
     style = fields.Selection(
-        [
+        selection=[
             ("primary", "Primary"),
             ("secondary", "Secondary"),
             ("success", "Success"),
@@ -30,7 +37,10 @@ class Pos_Self_OrderCustom_Link(models.Model):
         required=True,
     )
     link_html = fields.Html(
-        "Preview", compute="_compute_link_html", store=True, readonly=True
+        string="Preview",
+        compute="_compute_link_html",
+        store=True,
+        readonly=True,
     )
     sequence = fields.Integer(default=1)
 

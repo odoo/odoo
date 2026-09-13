@@ -38,20 +38,25 @@ class PosMakePayment(models.TransientModel):
         return False
 
     config_id = fields.Many2one(
-        "pos.config",
+        comodel_name="pos.config",
         string="Point of Sale Configuration",
-        required=True,
         default=_default_config_id,
-    )
-    amount = fields.Float(digits=0, required=True, default=_default_amount)
-    payment_method_id = fields.Many2one(
-        "pos.payment.method",
         required=True,
+    )
+    amount = fields.Float(
+        digits=0,
+        default=_default_amount,
+        required=True,
+    )
+    payment_method_id = fields.Many2one(
+        comodel_name="pos.payment.method",
         default=_default_payment_method_id,
+        required=True,
     )
     payment_name = fields.Char(string="Payment Reference")
     payment_date = fields.Datetime(
-        required=True, default=lambda self: fields.Datetime.now()
+        default=lambda self: fields.Datetime.now(),
+        required=True,
     )
 
     def action_make_payment(self):

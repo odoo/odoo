@@ -11,15 +11,15 @@ class ResPartnerAttributeValue(models.Model):
 
     attribute_id = fields.Many2one(
         comodel_name="res.partner.attribute",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
     score_value = fields.Float(
         string="Score Points",
-        default=0.0,
         help="Points this value contributes to the partner score, combined "
         "according to the attribute's aggregation mode.",
+        default=0.0,
     )
 
     _score_value_not_negative = models.Constraint(

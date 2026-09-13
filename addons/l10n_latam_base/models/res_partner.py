@@ -5,19 +5,20 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     l10n_latam_identification_type_id = fields.Many2one(
-        "l10n_latam.identification.type",
+        comodel_name="l10n_latam.identification.type",
         string="Identification Type",
-        index="btree_not_null",
-        bypass_search_access=True,
+        help="The type of identification",
+        inverse="_inverse_vat",  # To trigger the vat checking
         default=lambda self: self.env.ref(
             "l10n_latam_base.it_vat", raise_if_not_found=False
         ),
-        inverse="_inverse_vat",  # To trigger the vat checking
-        help="The type of identification",
+        index="btree_not_null",
+        bypass_search_access=True,
     )
     is_vat = fields.Boolean(related="l10n_latam_identification_type_id.is_vat")
     vat = fields.Char(
-        string="Identification Number", help="Identification Number for selected type"
+        string="Identification Number",
+        help="Identification Number for selected type",
     )
 
     @api.model

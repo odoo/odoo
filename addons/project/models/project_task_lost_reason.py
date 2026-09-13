@@ -8,9 +8,7 @@ class ProjectTaskLostReason(models.Model):
     _description = "Project Task Lost Reason"
     _inherit = ["mixin.catalog"]
 
-    name = fields.Char(
-        string="Description",
-    )
+    name = fields.Char(string="Description")
     task_count = fields.Integer(
         string="Tasks count",
         compute="_compute_task_count",

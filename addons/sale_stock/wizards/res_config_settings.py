@@ -20,8 +20,8 @@ class ResConfigSettings(models.TransientModel):
             ("one", "Ship all products at once"),
         ],
         string="Picking Policy",
-        required=True,
         default="direct",
+        required=True,
         default_model="sale.order",
     )
 

@@ -26,29 +26,32 @@ class ResPartnerBank(models.Model):
     _inherit = ["res.partner.bank", "mixin.mail.thread", "mixin.mail.activity"]
 
     journal_id = fields.One2many(
-        "account.journal",
-        "bank_account_id",
-        domain=[("type", "=", "bank")],
+        comodel_name="account.journal",
+        inverse_name="bank_account_id",
         string="Account Journal",
-        readonly=True,
-        check_company=True,
         help="The accounting journal corresponding to this bank account.",
+        readonly=True,
+        domain=[("type", "=", "bank")],
+        check_company=True,
     )
     has_iban_warning = fields.Boolean(
-        compute="_compute_display_account_warning",
         help="Technical field used to display a warning if the IBAN country is different than the holder country.",
+        compute="_compute_display_account_warning",
         store=True,
     )
     partner_country_name = fields.Char(related="partner_id.country_id.name")
     has_money_transfer_warning = fields.Boolean(
-        compute="_compute_display_account_warning",
         help="Technical field used to display a warning if the account is a transfer service account.",
+        compute="_compute_display_account_warning",
         store=True,
     )
     money_transfer_service = fields.Char(compute="_compute_money_transfer_service")
     partner_supplier_rank = fields.Integer(related="partner_id.supplier_rank")
     partner_customer_rank = fields.Integer(related="partner_id.customer_rank")
-    related_moves = fields.One2many("account.move", inverse_name="partner_bank_id")
+    related_moves = fields.One2many(
+        comodel_name="account.move",
+        inverse_name="partner_bank_id",
+    )
 
     bank_id = fields.Many2one(tracking=True)
     active = fields.Boolean(tracking=True)
@@ -60,15 +63,16 @@ class ResPartnerBank(models.Model):
         compute="_compute_user_has_group_validate_bank_account"
     )
     allow_out_payment = fields.Boolean(
-        tracking=True,
         help="Sending fake invoices with a fraudulent account number is a common phishing practice. "
         "To protect yourself, always verify new bank account numbers, preferably by calling the vendor, as phishing "
         "usually happens when their emails are compromised. Once verified, you can activate the ability to send money.",
+        tracking=True,
     )
     currency_id = fields.Many2one(tracking=True)
     lock_trust_fields = fields.Boolean(compute="_compute_lock_trust_fields")
     duplicate_bank_partner_ids = fields.Many2many(
-        "res.partner", compute="_compute_duplicate_bank_partner_ids"
+        comodel_name="res.partner",
+        compute="_compute_duplicate_bank_partner_ids",
     )
 
     @api.constrains("journal_id")

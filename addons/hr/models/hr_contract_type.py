@@ -8,11 +8,18 @@ class HrContractType(models.Model):
     _description = "Contract Type"
     _order = "sequence"
 
-    name = fields.Char(required=True, translate=True)
-    code = fields.Char(compute="_compute_code", store=True, readonly=False)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
+    code = fields.Char(
+        compute="_compute_code",
+        store=True,
+        readonly=False,
+    )
     sequence = fields.Integer()
     country_id = fields.Many2one(
-        "res.country",
+        comodel_name="res.country",
         domain=lambda self: [("id", "in", self.env.companies.country_id.ids)],
     )
 

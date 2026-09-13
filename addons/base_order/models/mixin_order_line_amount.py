@@ -11,84 +11,84 @@ class MixinOrderLineAmount(models.AbstractModel):
     _product_tax_field = ""
     _price_direction = 0
 
-    currency_id = fields.Many2one("res.currency")
+    currency_id = fields.Many2one(comodel_name="res.currency")
 
     product_qty = fields.Float(
         string="Quantity",
         digits="Product Unit",
         compute="_compute_product_qty",
-        store=True,
         precompute=True,
+        store=True,
         readonly=False,
     )
     product_uom_qty = fields.Float(
         string="Quantity (Reference UoM)",
         digits="Product Unit",
         compute="_compute_product_uom_qty",
-        store=True,
         precompute=True,
+        store=True,
     )
     price_unit = fields.Float(
         string="Unit Price",
         min_display_digits="Product Price",
         compute="_compute_price_and_discount",
-        store=True,
         precompute=True,
+        store=True,
         readonly=False,
         aggregator="avg",
     )
     price_unit_auto = fields.Float(
         string="Automatic Price",
-        min_display_digits="Product Price",
-        compute="_compute_price_and_discount",
-        store=True,
-        precompute=True,
-        copy=True,
         help="Price from the pricelist/seller. Compared with price_unit to "
         "detect manual overrides.",
+        min_display_digits="Product Price",
+        compute="_compute_price_and_discount",
+        precompute=True,
+        store=True,
+        copy=True,
     )
     discount = fields.Float(
         string="Discount (%)",
         digits="Discount",
         compute="_compute_price_and_discount",
-        store=True,
         precompute=True,
+        store=True,
         readonly=False,
     )
     discount_auto = fields.Float(
         string="Automatic Discount",
-        digits="Discount",
-        compute="_compute_price_and_discount",
-        store=True,
-        precompute=True,
-        copy=True,
         help="Discount from the pricelist/seller. Compared with discount to "
         "detect manual overrides.",
+        digits="Discount",
+        compute="_compute_price_and_discount",
+        precompute=True,
+        store=True,
+        copy=True,
     )
     tax_ids = fields.Many2many(
         comodel_name="account.tax",
         string="Taxes",
-        check_company=True,
         context={"active_test": False, "hide_original_tax_ids": True},
+        check_company=True,
     )
 
     price_subtotal = fields.Monetary(
         string="Subtotal",
         compute="_compute_amounts",
-        store=True,
         precompute=True,
+        store=True,
     )
     price_tax = fields.Monetary(
         string="Total Tax",
         compute="_compute_amounts",
-        store=True,
         precompute=True,
+        store=True,
     )
     price_total = fields.Monetary(
         string="Total",
         compute="_compute_amounts",
-        store=True,
         precompute=True,
+        store=True,
     )
 
     @api.depends("tax_ids", "product_qty", "price_unit", "discount")
@@ -338,24 +338,24 @@ class MixinOrderLineAmount(models.AbstractModel):
     )
     price_unit_product_uom = fields.Float(
         string="Unit Price Product UoM",
-        min_display_digits="Product Price",
-        compute="_compute_price_unit_product_uom",
-        store=True,
-        precompute=True,
         help="The price of one unit of the product's own unit of measure. "
         "Comparable across lines that were bought or sold in different units.",
+        min_display_digits="Product Price",
+        compute="_compute_price_unit_product_uom",
+        precompute=True,
+        store=True,
     )
     price_unit_discounted_taxexc_product_uom = fields.Float(
         string="Net Unit Price Product UoM",
-        min_display_digits="Product Price",
-        compute="_compute_price_unit_discounted_taxexc_product_uom",
-        store=True,
-        precompute=True,
         help="`price_unit_discounted_taxexc` expressed in the product's own "
         "unit of measure: the discount applied, taxes excluded, units "
         "normalized. The only per-line price that compares across both, which "
         "is why it is stored rather than computed -- price statistics read it "
         "with MIN/MAX in SQL instead of looping over a capped sample.",
+        min_display_digits="Product Price",
+        compute="_compute_price_unit_discounted_taxexc_product_uom",
+        precompute=True,
+        store=True,
     )
 
     def _get_price_discounted(self):

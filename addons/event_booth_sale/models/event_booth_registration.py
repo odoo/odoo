@@ -11,36 +11,41 @@ class EventBoothRegistration(models.Model):
     _description = "Event Booth Registration"
 
     sale_order_line_id = fields.Many2one(
-        "sale.order.line",
-        required=True,
+        comodel_name="sale.order.line",
         index=True,
+        required=True,
         ondelete="cascade",
     )
     event_booth_id = fields.Many2one(
-        "event.booth", string="Booth", required=True, index=True
+        comodel_name="event.booth",
+        string="Booth",
+        index=True,
+        required=True,
     )
     partner_id = fields.Many2one(
-        "res.partner", related="sale_order_line_id.partner_id", store=True
+        comodel_name="res.partner",
+        related="sale_order_line_id.partner_id",
+        store=True,
     )
     contact_name = fields.Char(
         compute="_compute_contact_name",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     contact_email = fields.Char(
         compute="_compute_contact_email",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     phone_ids = fields.Many2many(
-        "phone.number",
-        "event_booth_registration_phone_number_rel",
-        "registration_id",
-        "phone_number_id",
+        comodel_name="phone.number",
+        relation="event_booth_registration_phone_number_rel",
+        column1="registration_id",
+        column2="phone_number_id",
         string="Contact Phone",
         compute="_compute_phone_ids",
-        readonly=False,
         store=True,
+        readonly=False,
     )
 
     _unique_registration = models.Constraint(

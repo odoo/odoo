@@ -12,23 +12,22 @@ class ApprovalDelegateWizard(models.TransientModel):
     user_id = fields.Many2one(
         comodel_name="res.users",
         string="Approver",
-        required=True,
-        readonly=True,
-        default=lambda self: self.env.user,
         help="User whose approvals will be delegated",
+        default=lambda self: self.env.user,
+        readonly=True,
+        required=True,
     )
     delegate_id = fields.Many2one(
         comodel_name="res.users",
         string="Delegate To",
+        help="User who will approve on behalf of the approver",
         required=True,
         domain="[('id', '!=', user_id), ('share', '=', False),"
         " ('company_ids', 'in', allowed_company_ids)]",
-        help="User who will approve on behalf of the approver",
     )
     allowed_company_ids = fields.Many2many(
         comodel_name="res.company",
         string="Allowed Companies",
-        default=lambda self: self.env.companies,
         help="Companies the delegate must belong to — the wizard's own copy "
         "of the active company set, so the delegate_id domain can reference "
         "it. Approver rows carry check_company=True on delegate_id, so a "
@@ -36,35 +35,36 @@ class ApprovalDelegateWizard(models.TransientModel):
         "anyway; without this leaf the rejection surfaced as a raw "
         "check_company error from inside approvers.write() instead of "
         "simply not being offered in the dropdown.",
+        default=lambda self: self.env.companies,
     )
     start_date = fields.Date(
-        required=True,
-        default=fields.Date.today,
         help="First day of delegation period",
+        default=fields.Date.today,
+        required=True,
     )
     end_date = fields.Date(
-        required=True,
         help="Last day of delegation period",
+        required=True,
     )
     apply_to = fields.Selection(
         selection=[
             ("pending", "Pending Approvals Only"),
             ("all_future", "Pending and Waiting Approvals"),
         ],
-        required=True,
-        default="pending",
         help="Which approvals to delegate",
+        default="pending",
+        required=True,
     )
 
     pending_count = fields.Integer(
         string="Pending Approvals",
-        compute="_compute_preview",
         help="Number of pending approvals that will be delegated",
+        compute="_compute_preview",
     )
     waiting_count = fields.Integer(
         string="Waiting Approvals",
-        compute="_compute_preview",
         help="Number of waiting approvals that will be delegated",
+        compute="_compute_preview",
     )
 
     @api.constrains("start_date", "end_date")

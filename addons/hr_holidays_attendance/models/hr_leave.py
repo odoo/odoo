@@ -6,7 +6,8 @@ class HrLeave(models.Model):
     _inherit = "hr.leave"
 
     employee_overtime = fields.Float(
-        compute="_compute_employee_overtime", groups="base.group_user"
+        compute="_compute_employee_overtime",
+        groups="base.group_user",
     )
     overtime_deductible = fields.Boolean(compute="_compute_overtime_deductible")
 

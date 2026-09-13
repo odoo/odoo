@@ -6,14 +6,14 @@ class PaymentProvider(models.Model):
     _inherit = "payment.provider"
 
     journal_id = fields.Many2one(
+        comodel_name="account.journal",
         string="Payment Journal",
         help="The journal in which the successful transactions are posted.",
-        comodel_name="account.journal",
         compute="_compute_journal_id",
         inverse="_inverse_journal_id",
-        check_company=True,
-        domain='[("type", "=", "bank")]',
         copy=False,
+        domain='[("type", "=", "bank")]',
+        check_company=True,
     )
 
     # === COMPUTE METHODS ===#

@@ -4,7 +4,7 @@ from odoo import _, fields, models
 class PickingLabelType(models.TransientModel):
     _inherit = "picking.label.type"
 
-    production_ids = fields.Many2many("mrp.production")
+    production_ids = fields.Many2many(comodel_name="mrp.production")
 
     def process(self):
         if not self.production_ids:

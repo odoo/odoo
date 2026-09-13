@@ -12,11 +12,11 @@ class AccountMergeWizard(models.TransientModel):
     _name = "account.merge.wizard"
     _description = "Account merge wizard"
 
-    account_ids = fields.Many2many("account.account")
+    account_ids = fields.Many2many(comodel_name="account.account")
     is_group_by_name = fields.Boolean(
         string="Group by name?",
-        default=False,
         help="Tick this checkbox if you want accounts to be grouped by name for merging.",
+        default=False,
     )
     wizard_line_ids = fields.One2many(
         comodel_name="account.merge.wizard.line",
@@ -315,16 +315,16 @@ class AccountMergeWizardLine(models.TransientModel):
     is_selected = fields.Boolean()
     account_id = fields.Many2one(
         comodel_name="account.account",
-        ondelete="cascade",
         readonly=True,
+        ondelete="cascade",
     )
     company_ids = fields.Many2many(
-        string="Companies",
         related="account_id.company_ids",
+        string="Companies",
     )
     info = fields.Char(
-        compute="_compute_info",
         help="Contains either the section name or error message, depending on the line type.",
+        compute="_compute_info",
     )
     account_has_hashed_entries = fields.Boolean(
         compute="_compute_account_has_hashed_entries"

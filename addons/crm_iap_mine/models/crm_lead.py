@@ -5,7 +5,7 @@ class CrmLead(models.Model):
     _inherit = "crm.lead"
 
     lead_mining_request_id = fields.Many2one(
-        "crm.iap.lead.mining.request",
+        comodel_name="crm.iap.lead.mining.request",
         index="btree_not_null",
     )
 

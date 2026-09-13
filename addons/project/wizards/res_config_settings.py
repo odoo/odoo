@@ -8,7 +8,8 @@ class ResConfigSettings(models.TransientModel):
 
     module_hr_timesheet = fields.Boolean(string="Task Logs")
     group_project_stages = fields.Boolean(
-        "Project Stages", implied_group="project.group_project_stages"
+        string="Project Stages",
+        implied_group="project.group_project_stages",
     )
 
     def set_values(self) -> None:

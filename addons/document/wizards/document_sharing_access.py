@@ -8,18 +8,29 @@ class DocumentsShareAccess(models.TransientModel):
     _description = "Documents share access"
 
     documents_sharing_id = fields.Many2one(
-        "document.sharing", "Documents share", ondelete="cascade"
+        comodel_name="document.sharing",
+        string="Documents share",
+        ondelete="cascade",
     )
-    partner_id = fields.Many2one("res.partner", ondelete="cascade")
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        ondelete="cascade",
+    )
 
     # Rights edition
-    role = fields.Selection("_get_role_options", required=True)
-    expiration_date = fields.Datetime("Expiration")
-    original_expiration_date = fields.Datetime("Original Expiration")
+    role = fields.Selection(
+        selection="_selection_access_roles",
+        required=True,
+    )
+    expiration_date = fields.Datetime(string="Expiration")
+    original_expiration_date = fields.Datetime(string="Original Expiration")
     is_deleted = fields.Boolean()
 
     # Additional readonly fields for displaying information
-    partner_is_me = fields.Boolean(string="Is me", compute="_compute_partner_is_me")
+    partner_is_me = fields.Boolean(
+        string="Is me",
+        compute="_compute_partner_is_me",
+    )
 
     # Edition flags
     has_user = fields.Boolean(compute="_compute_has_user")
@@ -28,8 +39,8 @@ class DocumentsShareAccess(models.TransientModel):
     is_readonly = fields.Boolean(related="documents_sharing_id.is_readonly")
 
     @api.model
-    def _get_role_options(self) -> list:
-        return self.env["document.sharing"]._get_role_options()
+    def _selection_access_roles(self) -> list:
+        return self.env["document.sharing"]._selection_access_roles()
 
     @api.depends_context("uid")
     @api.depends("partner_id")

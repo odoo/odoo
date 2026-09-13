@@ -5,8 +5,8 @@ class AccountFiscalPosition(models.Model):
     _inherit = "account.fiscal.position"
 
     l10n_ar_afip_responsibility_type_ids = fields.Many2many(
-        "l10n_ar.afip.responsibility.type",
-        "l10n_ar_afip_reponsibility_type_fiscal_pos_rel",
+        comodel_name="l10n_ar.afip.responsibility.type",
+        relation="l10n_ar_afip_reponsibility_type_fiscal_pos_rel",
         string="ARCA Responsibility Types",
         help="List of ARCA responsibilities where this fiscal position "
         "should be auto-detected",

@@ -11,36 +11,34 @@ class SurveyQuota(models.Model):
     _order = "survey_id, question_id, id"
 
     survey_id = fields.Many2one(
-        "survey.survey",
+        comodel_name="survey.survey",
+        index="btree_not_null",
         required=True,
         ondelete="cascade",
-        index="btree_not_null",
     )
     question_id = fields.Many2one(
-        "survey.question",
+        comodel_name="survey.question",
         required=True,
-        ondelete="cascade",
         domain="[('survey_id', '=', survey_id), ('question_type', 'in', ['simple_choice', 'multiple_choice'])]",
+        ondelete="cascade",
     )
     answer_id = fields.Many2one(
-        "survey.question.answer",
+        comodel_name="survey.question.answer",
         required=True,
-        ondelete="cascade",
         domain="[('question_id', '=', question_id)]",
+        ondelete="cascade",
     )
     limit = fields.Integer(
-        "Quota Limit",
-        required=True,
-        default=100,
+        string="Quota Limit",
         help="Maximum number of responses that can select this answer. A response in "
         "progress reserves its place so the quota cannot be oversold, and releases it "
         "again if it is abandoned.",
+        default=100,
+        required=True,
     )
-    current_count = fields.Integer(
-        compute="_compute_quota_usage",
-    )
+    current_count = fields.Integer(compute="_compute_quota_usage")
     is_full = fields.Boolean(
-        "Quota Full",
+        string="Quota Full",
         compute="_compute_quota_usage",
     )
     active = fields.Boolean(default=True)

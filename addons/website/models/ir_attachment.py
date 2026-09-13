@@ -10,7 +10,7 @@ class IrAttachment(models.Model):
     _inherit = "ir.attachment"
 
     key = fields.Char()
-    website_id = fields.Many2one("website")
+    website_id = fields.Many2one(comodel_name="website")
 
     @api.model_create_multi
     def create(self, vals_list):

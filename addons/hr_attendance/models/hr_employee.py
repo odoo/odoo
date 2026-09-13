@@ -15,21 +15,21 @@ class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
     attendance_manager_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
+        string="Attendance Approver",
+        help="The user set in Attendance will access the attendance of the employee through the dedicated app and will be able to edit them.",
         store=True,
         readonly=False,
-        string="Attendance Approver",
         domain="[('share', '=', False), ('company_ids', 'in', company_id)]",
         groups="hr_attendance.group_hr_attendance_officer",
-        help="The user set in Attendance will access the attendance of the employee through the dedicated app and will be able to edit them.",
     )
     attendance_ids = fields.One2many(
-        "hr.attendance",
-        "employee_id",
+        comodel_name="hr.attendance",
+        inverse_name="employee_id",
         groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user",
     )
     last_attendance_id = fields.Many2one(
-        "hr.attendance",
+        comodel_name="hr.attendance",
         compute="_compute_last_attendance_id",
         store=True,
         groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user",
@@ -47,9 +47,9 @@ class HrEmployee(models.Model):
         tracking=False,
     )
     attendance_state = fields.Selection(
+        selection=[("checked_out", "Checked out"), ("checked_in", "Checked in")],
         string="Attendance Status",
         compute="_compute_attendance_state",
-        selection=[("checked_out", "Checked out"), ("checked_in", "Checked in")],
         groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user",
     )
     hours_this_month = fields.Float(compute="_compute_hours_this_month")
@@ -67,14 +67,18 @@ class HrEmployee(models.Model):
         groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user",
     )
     hours_this_month_display = fields.Char(
-        compute="_compute_hours_this_month", groups="hr.group_hr_user"
+        compute="_compute_hours_this_month",
+        groups="hr.group_hr_user",
     )
     overtime_ids = fields.One2many(
-        "hr.attendance.overtime.line",
-        "employee_id",
+        comodel_name="hr.attendance.overtime.line",
+        inverse_name="employee_id",
         groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user",
     )
-    total_overtime = fields.Float(compute="_compute_total_overtime", compute_sudo=True)
+    total_overtime = fields.Float(
+        compute="_compute_total_overtime",
+        compute_sudo=True,
+    )
     display_extra_hours = fields.Boolean(
         related="company_id.hr_attendance_display_overtime"
     )

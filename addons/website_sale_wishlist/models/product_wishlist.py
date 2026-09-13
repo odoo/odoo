@@ -12,18 +12,37 @@ class ProductWishlist(models.Model):
         "Duplicated wishlisted product for this partner.",
     )
 
-    partner_id = fields.Many2one("res.partner", string="Owner", index="btree_not_null")
-    product_id = fields.Many2one("product.product", required=True)
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Owner",
+        index="btree_not_null",
+    )
+    product_id = fields.Many2one(
+        comodel_name="product.product",
+        required=True,
+    )
     currency_id = fields.Many2one(
-        "res.currency", related="website_id.currency_id", readonly=True
+        comodel_name="res.currency",
+        related="website_id.currency_id",
+        readonly=True,
     )
-    pricelist_id = fields.Many2one("product.pricelist", help="Pricelist when added")
+    pricelist_id = fields.Many2one(
+        comodel_name="product.pricelist",
+        help="Pricelist when added",
+    )
     price = fields.Monetary(
-        currency_field="currency_id",
         help="Price of the product when it has been added in the wishlist",
+        currency_field="currency_id",
     )
-    website_id = fields.Many2one("website", ondelete="cascade", required=True)
-    active = fields.Boolean(default=True, required=True)
+    website_id = fields.Many2one(
+        comodel_name="website",
+        required=True,
+        ondelete="cascade",
+    )
+    active = fields.Boolean(
+        default=True,
+        required=True,
+    )
 
     @api.model
     def current(self):
@@ -101,8 +120,8 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     wishlist_ids = fields.One2many(
-        "product.wishlist",
-        "partner_id",
+        comodel_name="product.wishlist",
+        inverse_name="partner_id",
         domain=[("active", "=", True)],
     )
 

@@ -8,18 +8,38 @@ class EventMailSlot(models.Model):
     _order = "scheduled_date DESC, id ASC"
 
     event_slot_id = fields.Many2one(
-        "event.slot", "Slot", ondelete="cascade", required=True
+        comodel_name="event.slot",
+        string="Slot",
+        required=True,
+        ondelete="cascade",
     )
     scheduled_date = fields.Datetime(
-        "Schedule Date", compute="_compute_scheduled_date", store=True
+        string="Schedule Date",
+        compute="_compute_scheduled_date",
+        store=True,
     )
     scheduler_id = fields.Many2one(
-        "event.mail", "Mail Scheduler", ondelete="cascade", required=True, index=True
+        comodel_name="event.mail",
+        string="Mail Scheduler",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     # contact and status
-    last_registration_id = fields.Many2one("event.registration", "Last Attendee")
-    mail_count_done = fields.Integer("# Sent", copy=False, readonly=True)
-    mail_done = fields.Boolean("Sent", copy=False, readonly=True)
+    last_registration_id = fields.Many2one(
+        comodel_name="event.registration",
+        string="Last Attendee",
+    )
+    mail_count_done = fields.Integer(
+        string="# Sent",
+        copy=False,
+        readonly=True,
+    )
+    mail_done = fields.Boolean(
+        string="Sent",
+        copy=False,
+        readonly=True,
+    )
 
     @api.depends(
         "event_slot_id.start_datetime",

@@ -7,8 +7,8 @@ class EventType(models.Model):
     booth_menu = fields.Boolean(
         string="Booths on Website",
         compute="_compute_booth_menu",
-        readonly=False,
         store=True,
+        readonly=False,
     )
 
     @api.depends("website_menu")

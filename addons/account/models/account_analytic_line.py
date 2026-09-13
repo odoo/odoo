@@ -10,40 +10,38 @@ class AccountAnalyticLine(models.Model):
     _description = "Analytic Line"
 
     product_id = fields.Many2one(
-        "product.product",
-        check_company=True,
+        comodel_name="product.product",
         index="btree_not_null",
-    )
-    product_category = fields.Many2one(
-        related="product_id.categ_id",
-    )
-    general_account_id = fields.Many2one(
-        "account.account",
-        string="Financial Account",
-        ondelete="restrict",
         check_company=True,
+    )
+    product_category = fields.Many2one(related="product_id.categ_id")
+    general_account_id = fields.Many2one(
+        comodel_name="account.account",
+        string="Financial Account",
         compute="_compute_general_account_id",
         store=True,
         readonly=False,
+        ondelete="restrict",
+        check_company=True,
     )
     journal_id = fields.Many2one(
-        "account.journal",
-        string="Financial Journal",
-        check_company=True,
-        readonly=True,
+        comodel_name="account.journal",
         related="move_line_id.journal_id",
+        string="Financial Journal",
         store=True,
+        readonly=True,
+        check_company=True,
     )
     partner_id = fields.Many2one(
-        readonly=False,
         compute="_compute_partner_id",
         store=True,
+        readonly=False,
     )
     move_line_id = fields.Many2one(
-        "account.move.line",
+        comodel_name="account.move.line",
         string="Journal Item",
-        ondelete="cascade",
         index=True,
+        ondelete="cascade",
         check_company=True,
     )
     code = fields.Char(size=8)

@@ -20,9 +20,9 @@ class ApprovalRule(models.Model):
     sequence = fields.Integer(default=10)
     category_id = fields.Many2one(
         comodel_name="approval.category",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
 
     condition_type = fields.Selection(
@@ -31,8 +31,6 @@ class ApprovalRule(models.Model):
             ("domain", "Source document domain"),
             ("field_selection", "Source document field"),
         ],
-        required=True,
-        default="threshold",
         help="""What this rule tests:
 
         • Numeric threshold: a normalized figure on the request itself
@@ -48,22 +46,24 @@ class ApprovalRule(models.Model):
         Only 'Numeric threshold' can be range-checked. The other two read the
         source document, so a request with no source document, or one of
         another model, never matches them.""",
+        default="threshold",
+        required=True,
     )
     condition_field = fields.Selection(
         help="Request field to evaluate. Required for the 'Numeric threshold' "
-        "condition type and ignored by the others.",
+        "condition type and ignored by the others."
     )
     operator = fields.Selection(
         help="Required for the 'Numeric threshold' condition type and ignored "
-        "by the others.",
+        "by the others."
     )
     subject_model_id = fields.Many2one(
         comodel_name="ir.model",
         string="Source Model",
-        ondelete="cascade",
         help="Model whose records this rule reads. Required for every "
         "condition type except 'Numeric threshold', which reads the request. "
         "A request whose source document is another model never matches.",
+        ondelete="cascade",
     )
     subject_model_name = fields.Char(
         related="subject_model_id.model",
@@ -93,8 +93,6 @@ class ApprovalRule(models.Model):
             ("auto_refuse", "Auto-Refuse"),
             ("condition", "Step Condition"),
         ],
-        default="add_approver",
-        required=True,
         help="Action to take when condition matches:\n"
         "• Add Approver: inject additional approvers into the workflow\n"
         "• Replace Approvers: these approvers instead of the category's, and "
@@ -106,11 +104,13 @@ class ApprovalRule(models.Model):
         "• Auto-Refuse: automatically refuse the request\n"
         "• Step Condition: nothing by itself; a step of the category applies "
         "when it matches, or unless it does",
+        default="add_approver",
+        required=True,
     )
     approval_minimum = fields.Integer(
-        default=1,
         help="Only for 'Replace Approvers': the minimum number of approvals "
         "this band requires, overriding the category's.",
+        default=1,
     )
     approver_ids = fields.Many2many(
         comodel_name="res.users",
@@ -119,12 +119,12 @@ class ApprovalRule(models.Model):
         "Only used for 'Add Approver' action type.",
     )
     approver_required = fields.Boolean(
-        default=True,
         help="Whether the added approvers are mandatory",
+        default=True,
     )
     approver_sequence = fields.Integer(
-        default=5,
         help="Approval order for added approvers (lower = earlier)",
+        default=5,
     )
 
     _name_category_uniq = models.Constraint(

@@ -6,8 +6,15 @@ class CrmRecurringPlan(models.Model):
     _description = "CRM Recurring revenue plans"
     _order = "sequence"
 
-    name = fields.Char("Plan Name", required=True, translate=True)
-    number_of_months = fields.Integer("# Months", required=True)
+    name = fields.Char(
+        string="Plan Name",
+        translate=True,
+        required=True,
+    )
+    number_of_months = fields.Integer(
+        string="# Months",
+        required=True,
+    )
     active = fields.Boolean(default=True)
     sequence = fields.Integer(default=10)
 

@@ -11,17 +11,28 @@ class MailGroupMember(models.Model):
     _description = "Mailing List Member"
     _rec_name = "email"
 
-    email = fields.Char(compute="_compute_email", readonly=False, store=True)
+    email = fields.Char(
+        compute="_compute_email",
+        store=True,
+        readonly=False,
+    )
     email_normalized = fields.Char(
         string="Normalized Email",
         compute="_compute_email_normalized",
-        index=True,
         store=True,
+        index=True,
     )
     mail_group_id = fields.Many2one(
-        "mail.group", string="Group", required=True, index=True, ondelete="cascade"
+        comodel_name="mail.group",
+        string="Group",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
-    partner_id = fields.Many2one("res.partner", ondelete="cascade")
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        ondelete="cascade",
+    )
 
     _unique_partner = models.UniqueIndex(
         "(partner_id, mail_group_id) WHERE partner_id IS NOT NULL",

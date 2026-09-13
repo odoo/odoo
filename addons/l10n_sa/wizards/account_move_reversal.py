@@ -7,7 +7,8 @@ class AccountMoveReversal(models.TransientModel):
     _inherit = "account.move.reversal"
 
     l10n_sa_reason = fields.Selection(
-        string="ZATCA Reason", selection=ADJUSTMENT_REASONS
+        selection=ADJUSTMENT_REASONS,
+        string="ZATCA Reason",
     )
 
     def _prepare_default_reversal(self, move):

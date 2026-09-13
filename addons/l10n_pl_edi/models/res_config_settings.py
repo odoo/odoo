@@ -13,20 +13,20 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     l10n_pl_edi_certificate = fields.Many2one(
-        "certificate.certificate",
-        "KSeF Certificate",
+        comodel_name="certificate.certificate",
+        string="KSeF Certificate",
         compute="_compute_l10n_pl_edi_certificate",
         inverse="_inverse_l10n_pl_edi_certificate",
         readonly=False,
     )
     l10n_pl_edi_access_token = fields.Char(
-        "KSeF Access Token",
         related="company_id.l10n_pl_edi_access_token",
+        string="KSeF Access Token",
         readonly=True,
     )
     l10n_pl_edi_register = fields.Boolean(
-        "Allow KSeF integration",
         related="company_id.l10n_pl_edi_register",
+        string="Allow KSeF integration",
         readonly=False,
     )
 

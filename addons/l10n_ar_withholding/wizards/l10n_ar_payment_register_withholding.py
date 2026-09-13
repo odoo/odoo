@@ -15,25 +15,33 @@ class L10n_ArPaymentRegisterWithholding(models.TransientModel):
     _check_company_auto = True
 
     payment_register_id = fields.Many2one(
-        "account.payment.register", required=True, ondelete="cascade"
+        comodel_name="account.payment.register",
+        required=True,
+        ondelete="cascade",
     )
     company_id = fields.Many2one(related="payment_register_id.company_id")
     currency_id = fields.Many2one(related="payment_register_id.currency_id")
     name = fields.Char(string="Number")
     tax_id = fields.Many2one(
-        "account.tax",
-        check_company=True,
+        comodel_name="account.tax",
         required=True,
         domain="[('l10n_ar_withholding_payment_type', '=', parent.partner_type)]",
+        check_company=True,
     )
     withholding_sequence_id = fields.Many2one(
         related="tax_id.l10n_ar_withholding_sequence_id"
     )
     base_amount = fields.Monetary(
-        required=True, compute="_compute_base_amount", store=True, readonly=False
+        compute="_compute_base_amount",
+        store=True,
+        readonly=False,
+        required=True,
     )
     amount = fields.Monetary(
-        required=True, compute="_compute_amount", store=True, readonly=False
+        compute="_compute_amount",
+        store=True,
+        readonly=False,
+        required=True,
     )
 
     def _tax_compute_all_helper(self):

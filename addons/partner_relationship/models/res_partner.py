@@ -11,19 +11,23 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     relation_out_ids = fields.One2many(
-        "res.partner.relation", "partner_id", string="Relationships Declared"
+        comodel_name="res.partner.relation",
+        inverse_name="partner_id",
+        string="Relationships Declared",
     )
     relation_in_ids = fields.One2many(
-        "res.partner.relation", "other_partner_id", string="Relationships Received"
+        comodel_name="res.partner.relation",
+        inverse_name="other_partner_id",
+        string="Relationships Received",
     )
     relation_ids = fields.Many2many(
-        "res.partner.relation",
+        comodel_name="res.partner.relation",
         string="Relationships",
         compute="_compute_relation_ids",
     )
     count_relation = fields.Integer(compute="_compute_relation_ids")
     related_partner_ids = fields.Many2many(
-        "res.partner",
+        comodel_name="res.partner",
         string="Related Parties",
         compute="_compute_related_partner_ids",
     )

@@ -154,11 +154,11 @@ class MailMail(models.Model):
         ).default_get(fields)
 
     mail_message_id: MailMessage = fields.Many2one(
-        "mail.message",
-        "Message",
+        comodel_name="mail.message",
+        string="Message",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
         bypass_search_access=True,
     )
     mail_message_id_int = fields.Integer(
@@ -171,11 +171,11 @@ class MailMail(models.Model):
         default="email_outgoing",
     )
     body_html = fields.Text(
-        "Text Contents",
+        string="Text Contents",
         help="Rich-text/HTML message",
     )
     body_content = fields.Html(
-        "Rich-text Contents",
+        string="Rich-text Contents",
         sanitize=True,
         compute="_compute_body_content",
         search="_search_body_content",
@@ -185,62 +185,70 @@ class MailMail(models.Model):
         readonly=True,
     )
     headers = fields.Json(
-        copy=False,
         help="Extra SMTP headers to stamp on the outgoing message, as a mapping "
         "of header name to value.",
+        copy=False,
     )
     restricted_attachment_count = fields.Integer(
-        "Restricted attachments",
+        string="Restricted attachments",
         compute="_compute_restricted_attachments",
     )
     unrestricted_attachment_ids: IrAttachment = fields.Many2many(
-        "ir.attachment",
+        comodel_name="ir.attachment",
         string="Unrestricted Attachments",
         compute="_compute_restricted_attachments",
         inverse="_inverse_unrestricted_attachment_ids",
     )
     is_notification = fields.Boolean(
-        "Notification Email",
+        string="Notification Email",
         help="Mail has been created to notify people of an existing mail.message",
     )
-    email_to = fields.Text("To", help="Message recipients (emails)")
-    email_cc = fields.Char("Cc", help="Carbon copy message recipients")
+    email_to = fields.Text(
+        string="To",
+        help="Message recipients (emails)",
+    )
+    email_cc = fields.Char(
+        string="Cc",
+        help="Carbon copy message recipients",
+    )
     recipient_ids: ResPartner = fields.Many2many(
-        "res.partner", string="To (Partners)", context={"active_test": False}
+        comodel_name="res.partner",
+        string="To (Partners)",
+        context={"active_test": False},
     )
     state = fields.Selection(
-        [
+        selection=[
             ("outgoing", "Outgoing"),
             ("sent", "Sent"),
             ("exception", "Delivery Failed"),
             ("cancel", "Cancelled"),
         ],
-        "Status",
-        readonly=True,
-        copy=False,
+        string="Status",
         default="outgoing",
+        copy=False,
+        readonly=True,
     )
     failure_type = fields.Selection(
         selection=OUTGOING_FAILURE_TYPES,
         string="Failure type",
     )
     failure_reason = fields.Text(
-        readonly=True,
-        copy=False,
         help="Failure reason. This is usually the exception thrown by the email server, stored to ease the debugging of mailing issues.",
+        copy=False,
+        readonly=True,
     )
     auto_delete = fields.Boolean(
-        help="This option permanently removes any track of email after it's been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.",
+        help="This option permanently removes any track of email after it's been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database."
     )
     scheduled_date = fields.Datetime(
-        "Scheduled Send Date",
+        string="Scheduled Send Date",
         help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible. Unless a timezone is specified, it is considered as being in UTC timezone.",
     )
     fetchmail_server_id: FetchmailServer = fields.Many2one(
-        "fetchmail.server",
-        "Inbound Mail Server",
-        readonly=True,
+        comodel_name="fetchmail.server",
+        string="Inbound Mail Server",
         index="btree_not_null",
+        readonly=True,
     )
 
     @api.constrains("mail_message_id", "mail_server_id")

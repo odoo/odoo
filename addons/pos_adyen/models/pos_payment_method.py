@@ -37,14 +37,15 @@ class PosPaymentMethod(models.Model):
     )
 
     adyen_latest_response = fields.Char(
-        copy=False, groups="base.group_erp_manager"
+        copy=False,
+        groups="base.group_erp_manager",
     )  # used to buffer the latest asynchronous notification from Adyen.
     adyen_event_url = fields.Char(
         string="Event URL",
         help="This URL needs to be pasted on Adyen's portal terminal settings.",
-        readonly=True,
-        store=False,
         default=lambda self: f"{self.get_base_url()}/pos_adyen/notification",
+        store=False,
+        readonly=True,
     )
 
     @api.model

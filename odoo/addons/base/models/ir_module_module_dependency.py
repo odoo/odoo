@@ -13,8 +13,8 @@ class IrModuleModuleDependency(models.Model):
     linked_id = fields.Many2one(string="Dependency")
 
     auto_install_required = fields.Boolean(
-        default=True,
         help="Whether this dependency blocks automatic installation of the dependent",
+        default=True,
     )
 
     _module_dependency_uniq = models.UniqueIndex(

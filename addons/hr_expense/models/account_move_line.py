@@ -5,7 +5,11 @@ from odoo.tools import SQL
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
-    expense_id = fields.Many2one("hr.expense", copy=True, index="btree_not_null")
+    expense_id = fields.Many2one(
+        comodel_name="hr.expense",
+        index="btree_not_null",
+        copy=True,
+    )
 
     def _compute_partner_id(self):
         expense_lines = self.filtered("move_id.expense_ids")

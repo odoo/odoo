@@ -7,22 +7,28 @@ class AccountPayment(models.Model):
     _inherit = "account.payment"
 
     l10n_latam_new_check_ids = fields.One2many(
-        "l10n_latam.check", "payment_id", string="Checks"
+        comodel_name="l10n_latam.check",
+        inverse_name="payment_id",
+        string="Checks",
     )
     l10n_latam_move_check_ids = fields.Many2many(
         comodel_name="l10n_latam.check",
         relation="l10n_latam_check_account_payment_rel",
         column1="payment_id",
         column2="check_id",
-        required=True,
-        copy=False,
         string="Checks Operations",
+        copy=False,
+        required=True,
     )
     # Warning message in case of unlogical third party check operations
     l10n_latam_check_warning_msg = fields.Text(
         compute="_compute_l10n_latam_check_warning_msg"
     )
-    amount = fields.Monetary(compute="_compute_amount", readonly=False, store=True)
+    amount = fields.Monetary(
+        compute="_compute_amount",
+        store=True,
+        readonly=False,
+    )
 
     @api.constrains("state", "move_id")
     def _check_move_id(self):

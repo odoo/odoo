@@ -17,8 +17,8 @@ class SaleOrder(models.Model):
     warehouse_id = fields.Many2one(
         comodel_name="stock.warehouse",
         compute="_compute_warehouse_id",
-        store=True,
         precompute=True,
+        store=True,
         readonly=False,
         check_company=True,
     )
@@ -28,10 +28,10 @@ class SaleOrder(models.Model):
             ("one", "When all products are ready"),
         ],
         string="Shipping Policy",
-        required=True,
-        default="direct",
         help="If you deliver all products at once, the delivery order will be scheduled based on the greatest "
         "product lead time. Otherwise, it will be based on the shortest.",
+        default="direct",
+        required=True,
     )
     picking_ids = fields.One2many(
         comodel_name="stock.picking",
@@ -57,15 +57,15 @@ class SaleOrder(models.Model):
             Green: Fully transferred",
     )
     late_availability = fields.Boolean(
+        help="True if any related picking has late availability",
         compute="_compute_late_availability",
         search="_search_late_availability",
-        help="True if any related picking has late availability",
     )
     date_planned = fields.Datetime(
         help="Delivery date you can promise to the customer, computed from the minimum lead time of "
         "the order lines in case of Service products. In case of shipping, the shipping policy of "
         "the order will be taken into account to either use the minimum or maximum lead time of "
-        "the order lines.",
+        "the order lines."
     )
     date_effective = fields.Datetime(
         string="Effective Date",

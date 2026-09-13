@@ -26,14 +26,20 @@ class ServerActionHistoryWizard(models.TransientModel):
             limit=1,
         )
 
-    action_id = fields.Many2one("ir.actions.server")
-    code_diff = fields.Html(compute="_compute_code_diff", sanitize_tags=False)
-    current_code = fields.Text(related="action_id.code", readonly=True)
+    action_id = fields.Many2one(comodel_name="ir.actions.server")
+    code_diff = fields.Html(
+        sanitize_tags=False,
+        compute="_compute_code_diff",
+    )
+    current_code = fields.Text(
+        related="action_id.code",
+        readonly=True,
+    )
     revision = fields.Many2one(
-        "ir.actions.server.history",
-        domain="[('action_id', '=', action_id), ('code', '!=', current_code)]",
+        comodel_name="ir.actions.server.history",
         default=_default_revision,
         required=True,
+        domain="[('action_id', '=', action_id), ('code', '!=', current_code)]",
     )
 
     @api.depends("revision")

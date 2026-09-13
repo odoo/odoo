@@ -8,7 +8,10 @@ from odoo import api, fields, models
 class HrWorkEntry(models.Model):
     _inherit = "hr.work.entry"
 
-    leave_id = fields.Many2one("hr.leave", string="Time Off")
+    leave_id = fields.Many2one(
+        comodel_name="hr.leave",
+        string="Time Off",
+    )
     leave_state = fields.Selection(related="leave_id.state")
 
     def write(self, vals):
@@ -65,8 +68,8 @@ class HrWorkEntryType(models.Model):
     _description = "HR Work Entry Type"
 
     leave_type_ids = fields.One2many(
-        "hr.leave.type",
-        "work_entry_type_id",
+        comodel_name="hr.leave.type",
+        inverse_name="work_entry_type_id",
         string="Time Off Type",
         help="Work entry used in the payslip.",
     )

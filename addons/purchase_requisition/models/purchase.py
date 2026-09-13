@@ -7,7 +7,10 @@ class PurchaseOrderGroup(models.Model):
     _name = "purchase.order.group"
     _description = "Technical model to group PO for call to tenders"
 
-    order_ids = fields.One2many("purchase.order", "purchase_group_id")
+    order_ids = fields.One2many(
+        comodel_name="purchase.order",
+        inverse_name="purchase_group_id",
+    )
 
     def write(self, vals):
         res = super().write(vals)
@@ -19,19 +22,25 @@ class PurchaseOrder(models.Model):
     _inherit = "purchase.order"
 
     requisition_id = fields.Many2one(
-        "purchase.requisition", string="Agreement", copy=False, index="btree_not_null"
+        comodel_name="purchase.requisition",
+        string="Agreement",
+        index="btree_not_null",
+        copy=False,
     )
     requisition_type = fields.Selection(related="requisition_id.requisition_type")
 
-    purchase_group_id = fields.Many2one("purchase.order.group", index="btree_not_null")
+    purchase_group_id = fields.Many2one(
+        comodel_name="purchase.order.group",
+        index="btree_not_null",
+    )
     alternative_po_ids = fields.One2many(
-        "purchase.order",
+        comodel_name="purchase.order",
         related="purchase_group_id.order_ids",
+        string="Alternative POs",
+        help="Other potential purchase orders for purchasing products",
         readonly=False,
         domain="[('id', '!=', id), ('state', '=', 'draft')]",
-        string="Alternative POs",
         check_company=True,
-        help="Other potential purchase orders for purchasing products",
     )
 
     @api.onchange("requisition_id")
@@ -304,13 +313,14 @@ class PurchaseOrderLine(models.Model):
     _inherit = "purchase.order.line"
 
     price_total_cc = fields.Monetary(
-        compute="_compute_price_total_cc",
         string="Company Subtotal",
         currency_field="company_currency_id",
+        compute="_compute_price_total_cc",
         store=True,
     )
     company_currency_id = fields.Many2one(
-        related="company_id.currency_id", string="Company Currency"
+        related="company_id.currency_id",
+        string="Company Currency",
     )
 
     @api.depends("price_subtotal", "order_id.currency_rate")

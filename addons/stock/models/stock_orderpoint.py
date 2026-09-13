@@ -23,19 +23,19 @@ class StockWarehouseOrderpoint(models.Model):
     _PROCUREMENT_RETRIES = 5
 
     name = fields.Char(
-        required=True,
         default=lambda self: self.env["ir.sequence"].next_by_code("stock.orderpoint"),
-        readonly=True,
         copy=False,
+        readonly=True,
+        required=True,
     )
     trigger = fields.Selection(
         selection=[("auto", "Auto"), ("manual", "Manual")],
-        required=True,
         default="auto",
+        required=True,
     )
     active = fields.Boolean(
-        default=True,
         help="If the active field is set to False, it will allow you to hide the orderpoint without removing it.",
+        default=True,
     )
     snoozed_until = fields.Date(
         string="Snoozed",
@@ -43,50 +43,48 @@ class StockWarehouseOrderpoint(models.Model):
     )
     warehouse_id = fields.Many2one(
         comodel_name="stock.warehouse",
-        required=True,
         compute="_compute_warehouse_id",
-        store=True,
         precompute=True,
-        readonly=False,
-        check_company=True,
-        ondelete="cascade",
+        store=True,
         index=True,
+        readonly=False,
+        required=True,
+        ondelete="cascade",
+        check_company=True,
     )
     location_id = fields.Many2one(
         comodel_name="stock.location",
-        required=True,
         compute="_compute_location_id",
-        store=True,
         precompute=True,
-        readonly=False,
-        check_company=True,
-        ondelete="cascade",
+        store=True,
         index=True,
+        readonly=False,
+        required=True,
+        ondelete="cascade",
+        check_company=True,
     )
     product_tmpl_id = fields.Many2one(
-        related="product_id.product_tmpl_id",
         comodel_name="product.template",
+        related="product_id.product_tmpl_id",
     )
     product_id = fields.Many2one(
         comodel_name="product.product",
-        required=True,
-        check_company=True,
-        domain=(
-            "[('product_tmpl_id', '=', context.get('active_id', False))] if context.get('active_model') == 'product.template' else"
-            " [('id', '=', context.get('default_product_id', False))] if context.get('default_product_id') else"
-            " [('is_storable', '=', True)]"
-        ),
-        ondelete="cascade",
         index=True,
+        required=True,
+        domain="[('product_tmpl_id', '=', context.get('active_id', False))] if context.get('active_model') == 'product.template' else"
+        " [('id', '=', context.get('default_product_id', False))] if context.get('default_product_id') else"
+        " [('is_storable', '=', True)]",
+        ondelete="cascade",
+        check_company=True,
     )
     product_category_id = fields.Many2one(
-        related="product_id.categ_id",
         comodel_name="product.category",
+        related="product_id.categ_id",
         string="Product Category",
     )
     product_uom_id = fields.Many2one(
-        related="product_id.uom_id",
         comodel_name="uom.uom",
+        related="product_id.uom_id",
         string="Unit",
     )
     product_uom_name = fields.Char(
@@ -96,20 +94,20 @@ class StockWarehouseOrderpoint(models.Model):
     )
     product_min_qty = fields.Float(
         string="Min Quantity",
-        digits="Product Unit",
-        required=True,
-        default=0.0,
         help="The minimum Stock level that will trigger a replenishment.",
+        digits="Product Unit",
+        default=0.0,
+        required=True,
     )
     product_max_qty = fields.Float(
         string="Max Quantity",
-        digits="Product Unit",
-        required=True,
-        compute="_compute_product_max_qty",
-        store=True,
-        precompute=True,
-        readonly=False,
         help="Stock level to reach when replenishing.",
+        digits="Product Unit",
+        compute="_compute_product_max_qty",
+        precompute=True,
+        store=True,
+        readonly=False,
+        required=True,
     )
     allowed_replenishment_uom_ids = fields.Many2many(
         comodel_name="uom.uom",
@@ -118,17 +116,17 @@ class StockWarehouseOrderpoint(models.Model):
     replenishment_uom_id = fields.Many2one(
         comodel_name="uom.uom",
         string="Multiple",
-        domain="[('id', 'in', allowed_replenishment_uom_ids)]",
         help="The procurement quantity will be rounded up to a multiple of this unit/packaging. If it is not set, it is not rounded.",
+        domain="[('id', 'in', allowed_replenishment_uom_ids)]",
     )
     replenishment_uom_id_placeholder = fields.Char(
-        compute="_compute_replenishment_uom_id_placeholder",
+        compute="_compute_replenishment_uom_id_placeholder"
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
-        required=True,
         default=lambda self: self.env.company,
         index=True,
+        required=True,
     )
     allowed_location_ids = fields.Many2many(
         comodel_name="stock.location",
@@ -150,10 +148,10 @@ class StockWarehouseOrderpoint(models.Model):
     route_id_placeholder = fields.Char(compute="_compute_route_id_placeholder")
     effective_route_id = fields.Many2one(
         comodel_name="stock.route",
-        compute="_compute_effective_route_id",
-        store=False,
-        search="_search_effective_route_id",
         help="Either the route set directly or the one computed to be used by this replenishment",
+        compute="_compute_effective_route_id",
+        search="_search_effective_route_id",
+        store=False,
     )
     qty_on_hand = fields.Float(
         string="On Hand",
@@ -180,67 +178,68 @@ class StockWarehouseOrderpoint(models.Model):
         compute="_compute_qty_to_order_computed",
         store=True,
     )
-    qty_to_order_manual = fields.Float(string="To Order Manual", digits="Product Unit")
+    qty_to_order_manual = fields.Float(
+        string="To Order Manual",
+        digits="Product Unit",
+    )
     qty_to_order_manual_set = fields.Boolean(
         string="Quantity Overridden",
-        default=False,
         help="Technical: the user entered a quantity to order on this "
         "manually-triggered orderpoint that differs from the computed suggestion, "
         "and `qty_to_order_manual` holds it. A Float cannot tell an explicit 0 from "
         "no value at all, so whether an override exists is recorded separately from "
         "what it is -- which is why an override of 0 needs no special case.",
+        default=False,
     )
     is_autogenerated = fields.Boolean(
         string="Autogenerated",
-        default=False,
         help="Technical: set on orderpoints created automatically by the "
         "replenishment report for a projected shortage. Only these are "
         "auto-vacuumed once their shortage is resolved. Rows created before "
         "this field existed conservatively keep it unset and are therefore "
         "no longer auto-vacuumed.",
+        default=False,
     )
 
     days_to_order = fields.Float(
-        compute="_compute_days_to_order",
         help="Numbers of days  in advance that replenishments demands are created.",
+        compute="_compute_days_to_order",
     )
 
-    unwanted_replenish = fields.Boolean(
-        compute="_compute_unwanted_replenish",
-    )
+    unwanted_replenish = fields.Boolean(compute="_compute_unwanted_replenish")
     show_supply_warning = fields.Boolean(compute="_compute_show_supply_warning")
     deadline_date = fields.Date(
         string="Deadline",
-        compute="_compute_deadline_date",
-        store=True,
-        readonly=True,
         help="Date before which you should order to avoid falling below the minimum. If you "
         "have nothing to order while a deadline is found, it may be because a future "
         "arrival is expected after the minimum quantity is reached (potential stockout). "
         "Check the Forecast Report.",
+        compute="_compute_deadline_date",
+        store=True,
+        readonly=True,
     )
 
     actual_lead_time_avg = fields.Float(
         string="Avg Lead Time (days)",
+        help="Average actual procurement lead time in days, measured from "
+        "completed incoming transfers for this product and warehouse.",
         digits=(10, 2),
         compute="_compute_lead_time_stats",
         store=True,
-        help="Average actual procurement lead time in days, measured from "
-        "completed incoming transfers for this product and warehouse.",
     )
     actual_lead_time_stddev = fields.Float(
         string="Lead Time Std Dev (days)",
+        help="Standard deviation of actual procurement lead times. "
+        "Higher values indicate less predictable suppliers.",
         digits=(10, 2),
         compute="_compute_lead_time_stats",
         store=True,
-        help="Standard deviation of actual procurement lead times. "
-        "Higher values indicate less predictable suppliers.",
     )
     lead_time_sample_count = fields.Integer(
         string="Lead Time Samples",
+        help="Number of completed incoming transfers used to compute lead time statistics.",
         compute="_compute_lead_time_stats",
         store=True,
-        help="Number of completed incoming transfers used to compute lead time statistics.",
     )
 
     _product_location_check = models.Constraint(

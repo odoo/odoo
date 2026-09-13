@@ -50,52 +50,46 @@ class DocumentsDocument(models.Model):
     _systray_view = "activity"
 
     company_id = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
         index=True,
     )
     partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Contact",
-        tracking=True,
         index="btree_not_null",
+        tracking=True,
     )
     owner_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         default=lambda self: self.env.user.id if self.env.user.active else False,
-        copy=False,
         index=True,
+        copy=False,
         tracking=True,
     )
     attachment_id = fields.Many2one(
-        "ir.attachment",
+        comodel_name="ir.attachment",
+        copy=False,
         ondelete="cascade",
         bypass_search_access=True,
-        copy=False,
     )
     attachment_name = fields.Char(
-        "Attachment Name",
         related="attachment_id.name",
+        string="Attachment Name",
         readonly=False,
     )
     description = fields.Text(
-        "Attachment Description",
         related="attachment_id.description",
+        string="Attachment Description",
         readonly=False,
     )
     attachment_type = fields.Selection(
-        string="Attachment Type",
         related="attachment_id.type",
+        string="Attachment Type",
         readonly=False,
     )
-    checksum = fields.Char(
-        related="attachment_id.checksum",
-    )
-    mimetype = fields.Char(
-        related="attachment_id.mimetype",
-    )
-    index_content = fields.Text(
-        related="attachment_id.index_content",
-    )
+    checksum = fields.Char(related="attachment_id.checksum")
+    mimetype = fields.Char(related="attachment_id.mimetype")
+    index_content = fields.Text(related="attachment_id.index_content")
     raw = fields.Binary(
         related="attachment_id.raw",
         related_sudo=True,
@@ -110,79 +104,80 @@ class DocumentsDocument(models.Model):
     )
 
     shortcut_document_id = fields.Many2one(
-        "document.document",
-        "Source Document",
-        ondelete="cascade",
+        comodel_name="document.document",
+        string="Source Document",
         index="btree_not_null",
+        ondelete="cascade",
     )
     shortcut_document_owner_id = fields.Many2one(
-        "res.users",
-        "Source Document Owner",
+        comodel_name="res.users",
         related="shortcut_document_id.owner_id",
+        string="Source Document Owner",
         store=True,
     )
-    shortcut_ids = fields.One2many("document.document", "shortcut_document_id")
+    shortcut_ids = fields.One2many(
+        comodel_name="document.document",
+        inverse_name="shortcut_document_id",
+    )
 
     file_size = fields.Integer(
         compute="_compute_file_size",
         store=True,
     )
     res_model = fields.Char(
-        "Resource Model",
+        string="Resource Model",
         compute="_compute_res_record",
-        store=True,
         inverse="_inverse_res_record",
         recursive=True,
+        store=True,
     )
-    res_model_name = fields.Char(
-        compute="_compute_res_model_name",
-    )
+    res_model_name = fields.Char(compute="_compute_res_model_name")
     res_id = fields.Many2oneReference(
-        "Resource ID",
         model_field="res_model",
+        string="Resource ID",
         compute="_compute_res_record",
-        store=True,
         inverse="_inverse_res_record",
         recursive=True,
+        store=True,
     )
     res_name = fields.Char(
-        "Resource Name",
+        string="Resource Name",
         compute="_compute_res_name",
     )
 
     previous_attachment_ids = fields.Many2many(
-        "ir.attachment",
+        comodel_name="ir.attachment",
         string="History",
         bypass_search_access=True,
     )
 
     name = fields.Char(
-        copy=True,
-        compute="_compute_name_and_preview",
-        store=True,
-        readonly=False,
-        recursive=True,
         translate=True,
+        compute="_compute_name_and_preview",
+        recursive=True,
+        store=True,
+        copy=True,
+        readonly=False,
         tracking=True,
     )
     active = fields.Boolean(default=True)
     sequence = fields.Integer(default=10)
     type = fields.Selection(
-        [("url", "URL"), ("binary", "File"), ("folder", "Folder")],
+        selection=[("url", "URL"), ("binary", "File"), ("folder", "Folder")],
         default="binary",
-        required=True,
-        readonly=True,
         index=True,
+        readonly=True,
+        required=True,
     )
     thumbnail = fields.Binary(
         attachment=True,
         compute="_compute_thumbnail",
-        store=True,
         recursive=True,
+        store=True,
         readonly=False,
     )
     thumbnail_status = fields.Selection(
-        [
+        selection=[
             ("present", "Present"),
             ("error", "Error"),
             (
@@ -191,85 +186,96 @@ class DocumentsDocument(models.Model):
             ),
         ],
         compute="_compute_thumbnail",
-        store=True,
         recursive=True,
+        store=True,
         readonly=False,
     )
     url = fields.Char(
-        "Link URL",
+        string="Link URL",
         size=1024,
         index=True,
         tracking=True,
     )
     url_preview_image = fields.Char(
-        "URL Preview Image",
+        string="URL Preview Image",
         compute="_compute_name_and_preview",
+        recursive=True,
         store=True,
         readonly=False,
-        recursive=True,
     )
     url_preview_pending = fields.Boolean(
-        "URL preview to fetch",
-        default=False,
-        copy=False,
+        string="URL preview to fetch",
         help="Set when a URL document still needs its link preview fetched "
         "asynchronously (see _cron_update_url_preview).",
+        default=False,
+        copy=False,
     )
-    request_activity_id = fields.Many2one("mail.activity")
-    requestee_partner_id = fields.Many2one("res.partner")
-    tag_ids = fields.Many2many("document.tag", "document_tag_rel", string="Tags")
-    lock_uid = fields.Many2one("res.users", string="Locked by", tracking=True)
+    request_activity_id = fields.Many2one(comodel_name="mail.activity")
+    requestee_partner_id = fields.Many2one(comodel_name="res.partner")
+    tag_ids = fields.Many2many(
+        comodel_name="document.tag",
+        relation="document_tag_rel",
+        string="Tags",
+    )
+    lock_uid = fields.Many2one(
+        comodel_name="res.users",
+        string="Locked by",
+        tracking=True,
+    )
 
     document_token = fields.Char(
-        required=True,
         default=lambda __: (
             base64.urlsafe_b64encode(uuid.uuid4().bytes).decode().removesuffix("==")
         ),
         copy=False,
+        required=True,
     )
     access_token = fields.Char(compute="_compute_access_token")
 
-    access_url = fields.Char(string="Access url", compute="_compute_access_url")
+    access_url = fields.Char(
+        string="Access url",
+        compute="_compute_access_url",
+    )
     is_access_via_link_hidden = fields.Boolean(
-        "Link Access Hidden",
-        index=True,
+        string="Link Access Hidden",
         help='If "True", only people given direct access to this document will be able to view it. '
         'If "False", access with the link also given to all who can access the parent folder.',
-    )
-    access_via_link = fields.Selection(
-        [("view", "Viewer"), ("edit", "Editor"), ("none", "None")],
-        string="Link Access Rights",
-        required=True,
-        default="none",
         index=True,
     )
+    access_via_link = fields.Selection(
+        selection=[("view", "Viewer"), ("edit", "Editor"), ("none", "None")],
+        string="Link Access Rights",
+        default="none",
+        index=True,
+        required=True,
+    )
     is_download_blocked = fields.Boolean(
-        "Block Download",
-        default=False,
+        string="Block Download",
         help="If set, people who can only view this document cannot download "
         "it. Editors are unaffected: they can replace the content, so "
         "withholding it from them would mean nothing.",
+        default=False,
     )
     access_internal = fields.Selection(
-        [("view", "Viewer"), ("edit", "Editor"), ("none", "None")],
+        selection=[("view", "Viewer"), ("edit", "Editor"), ("none", "None")],
         string="Internal Users Rights",
-        required=True,
         default="none",
         index=True,
+        required=True,
     )
 
     access_ids = fields.One2many(
-        "document.access",
-        "document_id",
+        comodel_name="document.access",
+        inverse_name="document_id",
         string="Allowed Access",
     )
 
     user_permission = fields.Selection(
-        [("edit", "Editor"), ("view", "Viewer"), ("none", "None")],
+        selection=[("edit", "Editor"), ("view", "Viewer"), ("none", "None")],
         string="User permission",
         compute="_compute_user_permission",
-        compute_sudo=True,
         search="_search_user_permission",
+        compute_sudo=True,
     )
     user_can_move = fields.Boolean(
         string="Can move it",
@@ -278,12 +284,12 @@ class DocumentsDocument(models.Model):
 
     parent_path = fields.Char(index=True)
     folder_id = fields.Many2one(
-        "document.document",
-        required=False,
-        ondelete="set null",
-        domain="[('type', '=', 'folder'), ('shortcut_document_id', '=', False)]",
-        index=True,
+        comodel_name="document.document",
         search="_search_folder_id",
+        index=True,
+        required=False,
+        domain="[('type', '=', 'folder'), ('shortcut_document_id', '=', False)]",
+        ondelete="set null",
         tracking=True,
     )
     user_folder_id = fields.Char(
@@ -291,12 +297,15 @@ class DocumentsDocument(models.Model):
         compute="_compute_user_folder_id",
         search="_search_user_folder_id",
     )
-    children_ids = fields.One2many("document.document", "folder_id")
+    children_ids = fields.One2many(
+        comodel_name="document.document",
+        inverse_name="folder_id",
+    )
 
     deletion_delay = fields.Integer(
-        "Deletion delay",
-        compute="_compute_deletion_delay",
+        string="Deletion delay",
         help="Delay after permanent deletion of the document in the trash (days)",
+        compute="_compute_deletion_delay",
     )
 
     create_activity_option = fields.Boolean(
@@ -306,44 +315,42 @@ class DocumentsDocument(models.Model):
         readonly=False,
     )
     create_activity_type_id = fields.Many2one(
-        "mail.activity.type",
+        comodel_name="mail.activity.type",
         string="Activity type",
     )
-    create_activity_summary = fields.Char("Summary")
+    create_activity_summary = fields.Char(string="Summary")
     create_activity_date_deadline_range = fields.Integer(string="Due Date In")
     create_activity_date_deadline_range_type = fields.Selection(
-        time_unit_selection("day", "week", "month"),
+        selection=time_unit_selection("day", "week", "month"),
         string="Due type",
         default="day",
     )
     create_activity_note = fields.Html(string="Note")
     create_activity_user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Responsible",
     )
 
     available_embedded_actions_ids = fields.Many2many(
-        "ir.embedded.actions",
+        comodel_name="ir.embedded.actions",
         string="Available Actions",
         compute="_compute_available_embedded_actions_ids",
         groups="base.group_user",
     )
 
     alias_tag_ids = fields.Many2many(
-        "document.tag",
-        "document_alias_tag_rel",
+        comodel_name="document.tag",
+        relation="document_alias_tag_rel",
         string="Alias Tags",
     )
-    mail_alias_domain_count = fields.Integer(
-        compute="_compute_mail_alias_domain_count",
-    )
+    mail_alias_domain_count = fields.Integer(compute="_compute_mail_alias_domain_count")
 
     is_editable_attachment = fields.Boolean(
-        default=False,
         help="True if we can edit the link attachment.",
+        default=False,
     )
     is_multipage = fields.Boolean(
-        "Is considered multipage",
+        string="Is considered multipage",
         compute="_compute_is_multipage",
         store=True,
         readonly=False,
@@ -352,8 +359,8 @@ class DocumentsDocument(models.Model):
         compute="_compute_file_extension",
         inverse="_inverse_file_extension",
         store=True,
-        readonly=False,
         copy=True,
+        readonly=False,
     )
 
     last_access_date_group = fields.Selection(

@@ -915,19 +915,19 @@ rows under the dissolved module's name.
 
    class SaleOrder(models.Model):
        # Financial block
-       company_id = fields.Many2one("res.company")
-       currency_id = fields.Many2one("res.currency")
-       payment_term_id = fields.Many2one("account.payment.term")
+       company_id = fields.Many2one(comodel_name="res.company")
+       currency_id = fields.Many2one(comodel_name="res.currency")
+       payment_term_id = fields.Many2one(comodel_name="account.payment.term")
 
        # Partner block
-       partner_id = fields.Many2one("res.partner")
+       partner_id = fields.Many2one(comodel_name="res.partner")
 
        # Core identification
        name = fields.Char()
-       state = fields.Selection([...])
+       state = fields.Selection(selection=[...])
 
        # Order line block
-       line_ids = fields.One2many("sale.order.line", "order_id")
+       line_ids = fields.One2many(comodel_name="sale.order.line", inverse_name="order_id")
        amount_total = fields.Monetary(compute="_compute_amounts")
 
        # UI block
@@ -972,7 +972,47 @@ Defaults that must remain overridable use ``lambda self:``:
 
 .. code-block:: python
 
-   user_id = fields.Many2one("res.users", default=lambda self: self.env.user)
+   user_id = fields.Many2one(comodel_name="res.users", default=lambda self: self.env.user)
+
+**Every argument is a keyword, in one order, one per line** ``[test_lint E8525,
+E8526]``. A positional argument reads as a bare string and only the signature
+says whether it is the label, the comodel or the selection; ``comodel_name=``,
+``inverse_name=``, ``selection=``, ``string=`` say so. The keywords are read in
+the order of ``FIELD_ATTRIBUTE_ORDER`` in
+``odoo/addons/test_lint/tests/_checker_field_declaration.py``: what the field
+is (``comodel_name``, ``inverse_name``, ``relation``, ``selection``,
+``related``), what it says (``string``, ``help``), its shape (``size``,
+``digits``, ``currency_field``, ``translate``, ``sanitize``), how its value is
+produced (``compute``, ``inverse``, ``search``, ``depends``, ``precompute``,
+``default``), how it is stored and read (``store``, ``index``, ``copy``,
+``readonly``, ``required``, ``company_dependent``), what it points at and under
+which conditions (``domain``, ``context``, ``ondelete``, ``check_company``),
+who sees and tracks it (``groups``, ``tracking``); an attribute the table does
+not know sorts after them alphabetically. Two or more keywords go one per
+line, none on the line of the call -- ruff's magic-trailing-comma layout.
+``_sort_field_attributes.py`` in the same directory rewrites a tree to this
+form and refuses any rewrite that changes more than argument spelling and
+order; a comment inside the parentheses travels with the argument it trails or
+precedes.
+
+.. code-block:: python
+
+   partner_id = fields.Many2one(
+       comodel_name="res.partner",
+       string="Customer",
+       compute="_compute_partner_id",
+       store=True,
+       readonly=False,
+       domain="[('is_company', '=', True)]",
+       check_company=True,
+       tracking=True,
+   )
+
+**An attribute setup ignores is a dead attribute** ``[test_lint E8527]``:
+``index=`` on a One2many, a Many2many or a non-stored compute (no column to
+index), ``precompute=`` without ``store=True`` (dropped with a warning), and
+``compute=`` beside a truthy ``related=`` (replaced by the related path's own
+compute).
 
 2.4 Method naming
 -----------------

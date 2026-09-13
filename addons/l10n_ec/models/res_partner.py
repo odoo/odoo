@@ -53,8 +53,8 @@ class ResPartner(models.Model):
 
     l10n_ec_vat_validation = fields.Char(
         string="VAT Error message validation",
-        compute="_compute_l10n_ec_vat_validation",
         help="Error message when validating the Ecuadorian VAT",
+        compute="_compute_l10n_ec_vat_validation",
     )
 
     def _run_check_identification(self, validation="error"):

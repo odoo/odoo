@@ -11,9 +11,9 @@ class IrAttachment(models.Model):
 
     extract_document_type = fields.Selection(
         selection="_selection_extract_document_type",
-        copy=False,
         help="Which kind of document this is. Determines the fields an "
         "extraction is expected to produce.",
+        copy=False,
     )
 
     @api.model

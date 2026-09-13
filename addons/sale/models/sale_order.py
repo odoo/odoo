@@ -47,9 +47,7 @@ class SaleOrder(models.Model):
     _portal_url_prefix = "orders"
     _product_ok_field = "sale_ok"
 
-    terms_type = fields.Selection(
-        related="company_id.terms_type",
-    )
+    terms_type = fields.Selection(related="company_id.terms_type")
     country_code = fields.Char(
         related="company_id.account_fiscal_country_id.code",
         string="Country code",
@@ -58,50 +56,50 @@ class SaleOrder(models.Model):
     partner_invoice_id = fields.Many2one(
         comodel_name="res.partner",
         string="Invoice Address",
-        required=True,
         compute="_compute_partner_invoice_id",
-        store=True,
         precompute=True,
-        readonly=False,
-        check_company=True,
+        store=True,
         index="btree_not_null",
+        readonly=False,
+        required=True,
+        check_company=True,
     )
     partner_shipping_id = fields.Many2one(
         comodel_name="res.partner",
         string="Delivery Address",
-        required=True,
         compute="_compute_partner_shipping_id",
-        store=True,
         precompute=True,
-        readonly=False,
-        check_company=True,
+        store=True,
         index="btree_not_null",
+        readonly=False,
+        required=True,
+        check_company=True,
     )
     allow_external_delivery_address = fields.Boolean(
-        default=False,
-        tracking=True,
         help="Allow selecting a delivery address that does not belong to the "
         "customer's company (e.g. drop-shipping to a third party). When "
         "disabled, the delivery address is limited to the customer's own contacts.",
+        default=False,
+        tracking=True,
     )
     partner_invoice_domain = fields.Binary(
-        compute="_compute_partner_address_domains",
         help="Dynamic domain limiting invoice address selection.",
+        compute="_compute_partner_address_domains",
     )
     partner_shipping_domain = fields.Binary(
-        compute="_compute_partner_address_domains",
         help="Dynamic domain limiting delivery address selection.",
+        compute="_compute_partner_address_domains",
     )
     pricelist_id = fields.Many2one(
         comodel_name="product.pricelist",
-        compute="_compute_pricelist_id",
-        store=True,
-        precompute=True,
-        readonly=False,
-        check_company=True,
-        domain="[('company_id', 'in', [False, company_id])]",
-        tracking=1,
         help="If you change the pricelist, only newly added lines will be affected.",
+        compute="_compute_pricelist_id",
+        precompute=True,
+        store=True,
+        readonly=False,
+        domain="[('company_id', 'in', [False, company_id])]",
+        check_company=True,
+        tracking=1,
     )
     user_id = fields.Many2one(
         string="Salesperson",
@@ -118,21 +116,21 @@ class SaleOrder(models.Model):
     team_id = fields.Many2one(
         comodel_name="crm.team",
         string="Sales Team",
-        change_default=True,
         compute="_compute_team_id",
-        store=True,
         precompute=True,
+        change_default=True,
+        store=True,
+        index=True,
         readonly=False,
-        check_company=True,
         domain="[('company_id', 'in', [False, company_id])]",
         ondelete="set null",
-        index=True,
+        check_company=True,
         tracking=True,
     )
     journal_id = fields.Many2one(
-        domain=[("type", "=", "sale")],
         help="If set, the SO will invoice in this journal; "
         "otherwise the sales journal with the lowest sequence is used.",
+        domain=[("type", "=", "sale")],
     )
     state = fields.Selection(
         selection=const.ORDER_STATE,
@@ -140,15 +138,13 @@ class SaleOrder(models.Model):
     )
     create_date = fields.Datetime(
         string="Creation Date",
-        readonly=True,
         index=True,
+        readonly=True,
     )
     date_validity = fields.Date(
-        help="Validity of the order, after that you will not able to sign & pay the quotation.",
+        help="Validity of the order, after that you will not able to sign & pay the quotation."
     )
-    date_confirmed = fields.Datetime(
-        help="Date when the sales order was confirmed.",
-    )
+    date_confirmed = fields.Datetime(help="Date when the sales order was confirmed.")
     date_commitment = fields.Datetime(
         string="Delivery Date",
         help="This is the delivery date promised to the customer. "
@@ -157,18 +153,18 @@ class SaleOrder(models.Model):
     )
     date_planned = fields.Datetime(
         string="Expected Date",
+        help="Delivery date you can promise to the customer, computed from the minimum lead time of the order lines.",
         compute="_compute_date_planned",
         store=False,
-        help="Delivery date you can promise to the customer, computed from the minimum lead time of the order lines.",
     )
 
     require_signature = fields.Boolean(
         string="Online signature",
-        compute="_compute_require_signature",
-        store=True,
-        precompute=True,
-        readonly=False,
         help="Request a online signature from the customer to confirm the order.",
+        compute="_compute_require_signature",
+        precompute=True,
+        store=True,
+        readonly=False,
     )
     signature = fields.Image(
         attachment=True,
@@ -181,50 +177,44 @@ class SaleOrder(models.Model):
 
     require_payment = fields.Boolean(
         string="Online payment",
-        compute="_compute_require_payment",
-        store=True,
-        precompute=True,
-        readonly=False,
         help="Request a online payment from the customer to confirm the order.",
+        compute="_compute_require_payment",
+        precompute=True,
+        store=True,
+        readonly=False,
     )
     prepayment_percent = fields.Float(
         string="Prepayment percentage",
-        compute="_compute_prepayment_percent",
-        store=True,
-        precompute=True,
-        readonly=False,
         help="The percentage of the amount needed that must be paid by the customer to confirm the order.",
+        compute="_compute_prepayment_percent",
+        precompute=True,
+        store=True,
+        readonly=False,
     )
     preferred_payment_channel_id = fields.Many2one(
         comodel_name="account.payment.channel",
         string="Payment Method",
         compute="_compute_preferred_payment_channel_id",
-        store=True,
         precompute=True,
+        store=True,
         readonly=False,
-        check_company=True,
         domain="[('payment_type', '=', 'inbound'), ('company_id', '=', company_id)]",
+        check_company=True,
     )
 
     line_ids = fields.One2many(
         comodel_name="sale.order.line",
         bypass_search_access=True,
     )
-    amount_untaxed = fields.Monetary(
-        tracking=5,
-    )
-    amount_tax = fields.Monetary(
-        tracking=4,
-    )
-    amount_total = fields.Monetary(
-        tracking=4,
-    )
+    amount_untaxed = fields.Monetary(tracking=5)
+    amount_tax = fields.Monetary(tracking=4)
+    amount_total = fields.Monetary(tracking=4)
     has_upsell_opportunity = fields.Boolean(
         string="Has Upselling Opportunity",
-        compute="_compute_has_upsell_opportunity",
-        store=True,
         help="Set when a line invoiced on ordered quantities has delivered more than "
         "was ordered: the excess is not billable until the order is increased.",
+        compute="_compute_has_upsell_opportunity",
+        store=True,
     )
 
     transaction_ids = fields.Many2many(
@@ -233,8 +223,8 @@ class SaleOrder(models.Model):
         column1="sale_order_id",
         column2="transaction_id",
         string="Transactions",
-        readonly=True,
         copy=False,
+        readonly=True,
         groups="account.group_account_invoice",
     )
     authorized_transaction_ids = fields.Many2many(
@@ -252,10 +242,10 @@ class SaleOrder(models.Model):
     )
     amount_paid = fields.Float(
         string="Payment Transactions Amount",
-        compute="_compute_amount_paid",
-        compute_sudo=True,
         help="Sum of transactions made in through the online payment form that are in the state"
         " 'done' or 'authorized' and linked to this order.",
+        compute="_compute_amount_paid",
+        compute_sudo=True,
     )
 
     campaign_id = fields.Many2one(ondelete="set null")
@@ -263,32 +253,26 @@ class SaleOrder(models.Model):
     source_id = fields.Many2one(ondelete="set null")
 
     origin = fields.Char(
-        help="Reference of the document that generated this sales order request",
+        help="Reference of the document that generated this sales order request"
     )
     client_order_ref = fields.Char(
         string="Customer Reference",
         copy=False,
     )
-    partner_invoice_count = fields.Integer(
-        related="partner_id.customer_invoice_count",
-    )
+    partner_invoice_count = fields.Integer(related="partner_id.customer_invoice_count")
     reference = fields.Char(
         string="Payment Ref.",
-        copy=False,
         help="The payment communication of this sale order.",
+        copy=False,
     )
     notes = fields.Html(
         compute="_compute_notes",
-        store=True,
         precompute=True,
+        store=True,
         readonly=False,
     )
-    sent = fields.Boolean(
-        help="The quotation has been sent to the customer.",
-    )
-    printed_before = fields.Boolean(
-        help="The quotation has already been printed.",
-    )
+    sent = fields.Boolean(help="The quotation has been sent to the customer.")
+    printed_before = fields.Boolean(help="The quotation has already been printed.")
     pending_email_template_id = fields.Many2one(
         comodel_name="mail.template",
         readonly=True,
@@ -304,25 +288,23 @@ class SaleOrder(models.Model):
     duplicated_order_ids = fields.Many2many(comodel_name="sale.order")
     sale_warning_text = fields.Text(
         string="Sale Warning",
+        help="Internal warning for the partner or the products as set by the user.",
         compute="_compute_sale_warning_text",
         depends_context=("uid",),
-        help="Internal warning for the partner or the products as set by the user.",
     )
     acknowledged = fields.Boolean(
-        help="It indicates that the customer has acknowledged the receipt of the sales order.",
+        help="It indicates that the customer has acknowledged the receipt of the sales order."
     )
-    has_active_pricelist = fields.Boolean(
-        compute="_compute_has_active_pricelist",
-    )
+    has_active_pricelist = fields.Boolean(compute="_compute_has_active_pricelist")
     show_update_fpos = fields.Boolean(
         string="Has Fiscal Position Changed",
-        store=False,
         help="True if the fiscal position was changed",
+        store=False,
     )
     show_update_pricelist = fields.Boolean(
         string="Has Pricelist Changed",
-        store=False,
         help="True if the pricelist was changed",
+        store=False,
     )
 
     _date_order_id_idx = models.Index("(date_order desc, id desc)")

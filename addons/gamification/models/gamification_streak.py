@@ -30,25 +30,30 @@ class GamificationStreakType(models.Model):
     _description = "Gamification Streak Type"
     _order = "sequence, name"
 
-    name = fields.Char("Streak Name", required=True, translate=True)
+    name = fields.Char(
+        string="Streak Name",
+        translate=True,
+        required=True,
+    )
     description = fields.Text(translate=True)
     sequence = fields.Integer(default=10)
     active = fields.Boolean(default=True)
-    icon = fields.Image(max_width=128, max_height=128)
+    icon = fields.Image(
+        max_width=128,
+        max_height=128,
+    )
 
     # What counts as "activity" for this streak
     model_id = fields.Many2one(
-        "ir.model",
+        comodel_name="ir.model",
         string="Target Model",
+        help="The model where activity is tracked (e.g. crm.lead, account.move).",
         required=True,
         ondelete="cascade",
-        help="The model where activity is tracked (e.g. crm.lead, account.move).",
     )
     model_name = fields.Char(related="model_id.model")
     domain = fields.Char(
-        "Activity Domain",
-        required=True,
-        default="[]",
+        string="Activity Domain",
         help="Domain to filter records.  May reference 'user' (current user) "
         "and 'date_from' / 'date_to' (the day being checked).\n"
         "Every candidate user whose domain evaluates to the same text shares "
@@ -59,31 +64,38 @@ class GamificationStreakType(models.Model):
         "supported shape for a company-wide/shared streak (e.g. 'did "
         "anyone log a sale today'); it is a misconfiguration if a per-user "
         "streak was intended.",
+        default="[]",
+        required=True,
     )
     date_field_id = fields.Many2one(
-        "ir.model.fields",
+        comodel_name="ir.model.fields",
+        help="The date/datetime field used to check daily activity.",
         required=True,
         ondelete="cascade",
-        help="The date/datetime field used to check daily activity.",
     )
 
     # Rewards
     karma_bonus = fields.Integer(
-        "Daily Karma Bonus",
-        default=0,
+        string="Daily Karma Bonus",
         help="Karma granted each day the streak is maintained.  "
         "Milestone days (7, 30, 100, 365) multiply this value.",
+        default=0,
     )
     freeze_allowance = fields.Integer(
-        "Freeze Days per Month",
-        default=2,
+        string="Freeze Days per Month",
         help="Number of days per month a user can skip without breaking the streak.",
+        default=2,
     )
 
     streak_ids = fields.One2many(
-        "gamification.streak", "streak_type_id", string="User Streaks"
+        comodel_name="gamification.streak",
+        inverse_name="streak_type_id",
+        string="User Streaks",
     )
-    user_count = fields.Integer("# Active Streaks", compute="_compute_user_count")
+    user_count = fields.Integer(
+        string="# Active Streaks",
+        compute="_compute_user_count",
+    )
 
     @api.depends("streak_ids.state")
     def _compute_user_count(self) -> None:
@@ -204,41 +216,55 @@ class GamificationStreak(models.Model):
     _rec_name = "streak_type_id"
 
     user_id = fields.Many2one(
-        "res.users",
-        required=True,
-        index=True,
-        ondelete="cascade",
+        comodel_name="res.users",
         default=lambda self: self.env.uid,
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     streak_type_id = fields.Many2one(
-        "gamification.streak.type",
-        required=True,
+        comodel_name="gamification.streak.type",
         index=True,
+        required=True,
         ondelete="cascade",
     )
-    current_count = fields.Integer("Current Streak", default=0, readonly=True)
-    longest_count = fields.Integer("Longest Streak", default=0, readonly=True)
-    last_activity_date = fields.Date("Last Activity", readonly=True)
-    last_checked_date = fields.Date(
-        "Last Checked",
+    current_count = fields.Integer(
+        string="Current Streak",
+        default=0,
         readonly=True,
-        index=True,
+    )
+    longest_count = fields.Integer(
+        string="Longest Streak",
+        default=0,
+        readonly=True,
+    )
+    last_activity_date = fields.Date(
+        string="Last Activity",
+        readonly=True,
+    )
+    last_checked_date = fields.Date(
+        string="Last Checked",
         help="Day the streak cron last evaluated this streak, whatever the "
         "outcome. Used to make the cron idempotent.",
+        index=True,
+        readonly=True,
     )
     freeze_remaining = fields.Integer(
-        "Freeze Days Left",
-        default=0,
+        string="Freeze Days Left",
         help="Days remaining this month where the streak won't break.",
+        default=0,
     )
     state = fields.Selection(
-        [("active", "Active"), ("broken", "Broken")],
+        selection=[("active", "Active"), ("broken", "Broken")],
         default="active",
-        required=True,
-        readonly=True,
         index=True,
+        readonly=True,
+        required=True,
     )
-    total_karma_earned = fields.Integer(default=0, readonly=True)
+    total_karma_earned = fields.Integer(
+        default=0,
+        readonly=True,
+    )
 
     _user_streak_type_uniq = models.UniqueIndex(
         "(user_id, streak_type_id)",

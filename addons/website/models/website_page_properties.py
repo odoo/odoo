@@ -6,22 +6,31 @@ class WebsitePagePropertiesBase(models.TransientModel):
     _description = "Page Properties Base"
 
     target_model_id = fields.Reference(
-        selection="_selection_target_model_id", required=True
+        selection="_selection_target_model_id",
+        required=True,
     )
-    website_id = fields.Many2one("website", required=True)
-    menu_ids = fields.One2many("website.menu", compute="_compute_menu_ids")
+    website_id = fields.Many2one(
+        comodel_name="website",
+        required=True,
+    )
+    menu_ids = fields.One2many(
+        comodel_name="website.menu",
+        compute="_compute_menu_ids",
+    )
     is_in_menu = fields.Boolean(
-        compute="_compute_is_in_menu", inverse="_inverse_is_in_menu"
+        compute="_compute_is_in_menu",
+        inverse="_inverse_is_in_menu",
     )
     url = fields.Char(required=True)
     is_homepage = fields.Boolean(
+        string="Homepage",
         compute="_compute_is_homepage",
         inverse="_inverse_is_homepage",
-        string="Homepage",
     )
     can_publish = fields.Boolean(compute="_compute_can_publish")
     is_published = fields.Boolean(
-        compute="_compute_is_published", inverse="_inverse_is_published"
+        compute="_compute_is_published",
+        inverse="_inverse_is_published",
     )
 
     def _selection_target_model_id(self):
@@ -151,28 +160,47 @@ class WebsitePageProperties(models.TransientModel):
         "website.page.properties.base",
     ]
 
-    target_model_id = fields.Many2one("website.page")
-    name = fields.Char(related="target_model_id.name", readonly=False)
-    url = fields.Char(related="target_model_id.url", readonly=False)
+    target_model_id = fields.Many2one(comodel_name="website.page")
+    name = fields.Char(
+        related="target_model_id.name",
+        readonly=False,
+    )
+    url = fields.Char(
+        related="target_model_id.url",
+        readonly=False,
+    )
     date_publish = fields.Datetime(
-        related="target_model_id.date_publish", readonly=False
+        related="target_model_id.date_publish",
+        readonly=False,
     )
     website_indexed = fields.Boolean(
-        related="target_model_id.website_indexed", readonly=False
+        related="target_model_id.website_indexed",
+        readonly=False,
     )
-    visibility = fields.Selection(related="target_model_id.visibility", readonly=False)
+    visibility = fields.Selection(
+        related="target_model_id.visibility",
+        readonly=False,
+    )
     visibility_password_display = fields.Char(
-        related="target_model_id.visibility_password_display", readonly=False
+        related="target_model_id.visibility_password_display",
+        readonly=False,
     )
-    group_ids = fields.Many2many(related="target_model_id.group_ids", readonly=False)
+    group_ids = fields.Many2many(
+        related="target_model_id.group_ids",
+        readonly=False,
+    )
     is_new_page_template = fields.Boolean(
-        related="target_model_id.is_new_page_template", readonly=False
+        related="target_model_id.is_new_page_template",
+        readonly=False,
     )
 
     old_url = fields.Char()
-    redirect_old_url = fields.Boolean(default=False, store=False)
+    redirect_old_url = fields.Boolean(
+        default=False,
+        store=False,
+    )
     redirect_type = fields.Selection(
-        [
+        selection=[
             ("301", "301 Moved permanently"),
             ("302", "302 Moved temporarily"),
         ],

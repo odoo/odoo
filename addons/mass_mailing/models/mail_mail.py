@@ -11,9 +11,14 @@ class MailMail(models.Model):
 
     _inherit = "mail.mail"
 
-    mailing_id = fields.Many2one("mailing.mailing", string="Mass Mailing")
+    mailing_id = fields.Many2one(
+        comodel_name="mailing.mailing",
+        string="Mass Mailing",
+    )
     mailing_trace_ids = fields.One2many(
-        "mailing.trace", "mail_mail_id", string="Statistics"
+        comodel_name="mailing.trace",
+        inverse_name="mail_mail_id",
+        string="Statistics",
     )
 
     def _get_tracking_url(self):

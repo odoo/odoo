@@ -10,37 +10,40 @@ class ResourceAssignment(models.Model):
     _order = "date_start desc, id desc"
     _check_company_auto = True
 
-    name = fields.Char(compute="_compute_name", store=True)
+    name = fields.Char(
+        compute="_compute_name",
+        store=True,
+    )
     active = fields.Boolean(default=True)
     resource_id = fields.Many2one(
-        "resource.resource",
-        required=True,
+        comodel_name="resource.resource",
+        help="What is held: a vehicle, a machine, a room, a device.",
         index=True,
+        required=True,
         ondelete="restrict",
         check_company=True,
-        help="What is held: a vehicle, a machine, a room, a device.",
     )
     assignee_id = fields.Many2one(
-        "resource.resource",
-        required=True,
+        comodel_name="resource.resource",
+        help="Who holds it.",
         index=True,
+        required=True,
+        domain="[('resource_type', '=', 'user')]",
         ondelete="restrict",
         check_company=True,
-        domain="[('resource_type', '=', 'user')]",
-        help="Who holds it.",
     )
     assignee_partner_id = fields.Many2one(
         related="assignee_id.partner_id",
         store=True,
     )
     company_id = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
         related="resource_id.company_id",
         store=True,
         index=True,
     )
     role = fields.Selection(
-        [
+        selection=[
             ("custodian", "Custodian"),
             ("driver", "Driver"),
             ("operator", "Operator"),
@@ -50,10 +53,14 @@ class ResourceAssignment(models.Model):
         default="custodian",
         required=True,
     )
-    date_start = fields.Datetime(required=True, default=fields.Datetime.now, index=True)
+    date_start = fields.Datetime(
+        default=fields.Datetime.now,
+        index=True,
+        required=True,
+    )
     date_end = fields.Datetime(index=True)
     state = fields.Selection(
-        [("planned", "Planned"), ("active", "Active"), ("ended", "Ended")],
+        selection=[("planned", "Planned"), ("active", "Active"), ("ended", "Ended")],
         compute="_compute_state",
         search="_search_state",
     )

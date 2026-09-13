@@ -16,16 +16,16 @@ class SaleOrder(models.Model):
         )
 
     available_quotation_document_ids = fields.Many2many(
-        string="Available Quotation Documents",
         comodel_name="quotation.document",
+        string="Available Quotation Documents",
         compute="_compute_available_quotation_document_ids",
     )
     is_pdf_quote_builder_available = fields.Boolean(
-        compute="_compute_is_pdf_quote_builder_available",
+        compute="_compute_is_pdf_quote_builder_available"
     )
     quotation_document_ids = fields.Many2many(
-        string="Headers/Footers",
         comodel_name="quotation.document",
+        string="Headers/Footers",
         default=_default_quotation_document_ids,
         readonly=False,
         check_company=True,

@@ -22,14 +22,17 @@ class ResCompany(models.Model):
     l10n_ro_edi_access_expiry_date = fields.Date(string="Access Token Expiry Date")
     l10n_ro_edi_refresh_expiry_date = fields.Date(string="Refresh Token Expiry Date")
     l10n_ro_edi_callback_url = fields.Char(compute="_compute_l10n_ro_edi_callback_url")
-    l10n_ro_edi_test_env = fields.Boolean(string="Use Test Environment", default=True)
+    l10n_ro_edi_test_env = fields.Boolean(
+        string="Use Test Environment",
+        default=True,
+    )
     l10n_ro_edi_anaf_imported_inv_journal_id = fields.Many2one(
         comodel_name="account.journal",
         string="Select journal for SPV imported bills",
-        domain="[('type', '=', 'purchase')]",
         compute="_compute_l10n_ro_edi_anaf_imported_inv_journal_id",
         store=True,
         readonly=False,
+        domain="[('type', '=', 'purchase')]",
     )
 
     @api.depends("country_code")

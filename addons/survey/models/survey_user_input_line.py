@@ -15,10 +15,10 @@ class SurveyUser_InputLine(models.Model):
     _order = "question_sequence, id"
 
     user_input_id = fields.Many2one(
-        "survey.user_input",
-        ondelete="cascade",
-        required=True,
+        comodel_name="survey.user_input",
         index=True,
+        required=True,
+        ondelete="cascade",
     )
     survey_id = fields.Many2one(
         related="user_input_id.survey_id",
@@ -27,10 +27,10 @@ class SurveyUser_InputLine(models.Model):
         readonly=False,
     )
     question_id = fields.Many2one(
-        "survey.question",
-        ondelete="cascade",
-        required=True,
+        comodel_name="survey.question",
         index=True,
+        required=True,
+        ondelete="cascade",
     )
     page_id = fields.Many2one(
         related="question_id.page_id",
@@ -38,17 +38,17 @@ class SurveyUser_InputLine(models.Model):
         readonly=False,
     )
     question_sequence = fields.Integer(
-        "Sequence",
         related="question_id.sequence",
+        string="Sequence",
         store=True,
     )
     lang_id = fields.Many2one(
-        "res.lang",
+        comodel_name="res.lang",
         related="user_input_id.lang_id",
     )
     skipped = fields.Boolean()
     answer_type = fields.Selection(
-        [
+        selection=[
             ("text_box", "Free Text"),
             ("char_box", "Text"),
             ("numerical_box", "Number"),
@@ -56,32 +56,32 @@ class SurveyUser_InputLine(models.Model):
             ("date", "Date"),
             ("datetime", "Datetime"),
             ("suggestion", "Suggestion"),
-        ],
+        ]
     )
-    value_char_box = fields.Char("Text answer")
-    value_numerical_box = fields.Float("Numerical answer")
-    value_scale = fields.Integer("Scale value")
-    value_date = fields.Date("Date answer")
-    value_datetime = fields.Datetime("Datetime answer")
-    value_text_box = fields.Text("Free Text answer")
+    value_char_box = fields.Char(string="Text answer")
+    value_numerical_box = fields.Float(string="Numerical answer")
+    value_scale = fields.Integer(string="Scale value")
+    value_date = fields.Date(string="Date answer")
+    value_datetime = fields.Datetime(string="Datetime answer")
+    value_text_box = fields.Text(string="Free Text answer")
     suggested_answer_id = fields.Many2one(
-        "survey.question.answer",
+        comodel_name="survey.question.answer",
         string="Suggested answer",
         ondelete="cascade",
     )
     matrix_row_id = fields.Many2one(
-        "survey.question.answer",
+        comodel_name="survey.question.answer",
         string="Row answer",
         ondelete="cascade",
     )
     answer_score = fields.Float(
-        "Score",
+        string="Score",
         compute="_compute_answer_scoring",
         precompute=True,
         store=True,
     )
     answer_is_correct = fields.Boolean(
-        "Correct",
+        string="Correct",
         compute="_compute_answer_scoring",
         precompute=True,
         store=True,

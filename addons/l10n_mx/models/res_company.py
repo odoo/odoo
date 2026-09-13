@@ -9,5 +9,6 @@ class ResCompany(models.Model):
         string="Income account for returns and discounts",
     )
     l10n_mx_income_re_invoicing_account_id = fields.Many2one(
-        comodel_name="account.account", string="Income account for re-invoicing"
+        comodel_name="account.account",
+        string="Income account for re-invoicing",
     )

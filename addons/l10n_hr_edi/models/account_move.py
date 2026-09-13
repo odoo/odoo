@@ -26,7 +26,7 @@ class AccountMove(models.Model):
 
     # Fields required for correctly generating CIUS HR documents
     l10n_hr_process_type = fields.Selection(
-        [
+        selection=[
             (
                 "P1",
                 "P1: Issuing invoices for deliveries of goods and services according to purchase orders, based on contracts",
@@ -62,8 +62,8 @@ class AccountMove(models.Model):
         string="Business Process Type",
         compute="_compute_l10n_hr_process_type",
         store=True,
-        readonly=False,
         copy=False,
+        readonly=False,
     )
     l10n_hr_customer_defined_process_name = fields.Char(
         string="Custom Process Name",
@@ -76,10 +76,12 @@ class AccountMove(models.Model):
         domain=lambda self: self._get_domain_l10n_hr_fiscal_user_id(),
     )
     l10n_hr_operator_name = fields.Char(
-        string="Operator Label", related="l10n_hr_fiscal_user_id.name"
+        related="l10n_hr_fiscal_user_id.name",
+        string="Operator Label",
     )
     l10n_hr_operator_oib = fields.Char(
-        string="Operator OIB", related="l10n_hr_fiscal_user_id.l10n_hr_personal_oib"
+        related="l10n_hr_fiscal_user_id.l10n_hr_personal_oib",
+        string="Operator OIB",
     )
     # Additional fields
     l10n_hr_edi_addendum_id = fields.One2many(
@@ -123,7 +125,8 @@ class AccountMove(models.Model):
         search="_search_l10n_hr_payment_unreported",
     )
     l10n_hr_payment_method_type = fields.Selection(
-        related="l10n_hr_edi_addendum_id.payment_method_type", readonly=False
+        related="l10n_hr_edi_addendum_id.payment_method_type",
+        readonly=False,
     )
     # MojEracun integration fields
     l10n_hr_mer_document_eid = fields.Char(

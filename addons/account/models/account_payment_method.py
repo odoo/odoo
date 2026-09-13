@@ -9,10 +9,14 @@ class AccountPaymentMethod(models.Model):
     _name = "account.payment.method"
     _description = "Payment Method"
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
     code = fields.Char(required=True)
     payment_type = fields.Selection(
-        selection=[("inbound", "Inbound"), ("outbound", "Outbound")], required=True
+        selection=[("inbound", "Inbound"), ("outbound", "Outbound")],
+        required=True,
     )
 
     _name_code_unique = models.Constraint(

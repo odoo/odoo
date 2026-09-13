@@ -39,18 +39,24 @@ class SmsSms(models.Model):
     DELIVERY_ERRORS = {"sms_expired", "sms_not_delivered", *BOUNCE_DELIVERY_ERRORS}
 
     uuid = fields.Char(
-        "UUID",
+        string="UUID",
+        help="Alternate way to identify a SMS record, used for delivery reports",
+        default=lambda self: uuid4().hex,
         copy=False,
         readonly=True,
-        default=lambda self: uuid4().hex,
-        help="Alternate way to identify a SMS record, used for delivery reports",
     )
     number = fields.Char()
     body = fields.Text()
-    partner_id = fields.Many2one("res.partner", "Customer")
-    mail_message_id = fields.Many2one("mail.message", index=True)
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Customer",
+    )
+    mail_message_id = fields.Many2one(
+        comodel_name="mail.message",
+        index=True,
+    )
     state = fields.Selection(
-        [
+        selection=[
             ("outgoing", "In Queue"),
             ("process", "Processing"),
             ("pending", "Sent"),
@@ -58,14 +64,14 @@ class SmsSms(models.Model):
             ("error", "Error"),
             ("canceled", "Cancelled"),
         ],
-        "SMS Status",
-        readonly=True,
-        copy=False,
+        string="SMS Status",
         default="outgoing",
+        copy=False,
+        readonly=True,
         required=True,
     )
     failure_type = fields.Selection(
-        [
+        selection=[
             ("unknown", "Unknown error"),
             ("sms_number_missing", "Missing Number"),
             ("sms_number_format", "Wrong Number Format"),
@@ -82,12 +88,14 @@ class SmsSms(models.Model):
         copy=False,
     )
     sms_tracker_id = fields.Many2one(
-        "sms.tracker", string="SMS trackers", compute="_compute_sms_tracker_id"
+        comodel_name="sms.tracker",
+        string="SMS trackers",
+        compute="_compute_sms_tracker_id",
     )
     to_delete = fields.Boolean(
-        "Marked for deletion",
-        default=False,
+        string="Marked for deletion",
         help="Will automatically be deleted, while notifications will not be deleted in any case.",
+        default=False,
     )
 
     _uuid_unique = models.Constraint(

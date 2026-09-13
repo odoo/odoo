@@ -5,5 +5,8 @@ class AccountBankStatementLine(models.Model):
     _inherit = "account.bank.statement.line"
 
     pos_session_id = fields.Many2one(
-        "pos.session", string="Session", copy=False, index="btree_not_null"
+        comodel_name="pos.session",
+        string="Session",
+        index="btree_not_null",
+        copy=False,
     )

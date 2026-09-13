@@ -26,43 +26,44 @@ class PosPrinter(models.Model):
     _inherit = ["mixin.pos.load"]
 
     name = fields.Char(
-        "Printer Name",
-        required=True,
-        default="Printer",
+        string="Printer Name",
         help="An internal identification of the printer",
+        default="Printer",
+        required=True,
     )
     printer_type = fields.Selection(
-        default="iot",
         selection=[
             ("iot", "Use a printer connected to the IoT Box"),
             ("epson_epos", "Use an Epson printer"),
         ],
+        default="iot",
     )
     proxy_ip = fields.Char(
-        "Proxy IP Address",
+        string="Proxy IP Address",
         help="The IP Address or hostname of the Printer's hardware proxy",
     )
     product_categories_ids = fields.Many2many(
-        "pos.category",
-        "printer_category_rel",
-        "printer_id",
-        "category_id",
+        comodel_name="pos.category",
+        relation="printer_category_rel",
+        column1="printer_id",
+        column2="category_id",
         string="Printed Product Categories",
     )
     company_id = fields.Many2one(
-        "res.company",
-        required=True,
+        comodel_name="res.company",
         default=lambda self: self.env.company,
+        required=True,
     )
     pos_config_ids = fields.Many2many(
-        "pos.config", "pos_config_printer_rel", "printer_id", "config_id"
+        comodel_name="pos.config",
+        relation="pos_config_printer_rel",
+        column1="printer_id",
+        column2="config_id",
     )
     epson_printer_ip = fields.Char(
         string="Epson Printer IP Address",
-        help=(
-            "Local IP address of an Epson receipt printer, or its serial number if the "
-            "'Automatic Certificate Update' option is enabled in the printer settings."
-        ),
+        help="Local IP address of an Epson receipt printer, or its serial number if the "
+        "'Automatic Certificate Update' option is enabled in the printer settings.",
         default="0.0.0.0",
     )
 

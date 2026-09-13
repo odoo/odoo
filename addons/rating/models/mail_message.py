@@ -8,14 +8,19 @@ class MailMessage(models.Model):
     _inherit = "mail.message"
 
     rating_ids = fields.One2many(
-        "rating.rating", "message_id", string="Related ratings"
+        comodel_name="rating.rating",
+        inverse_name="message_id",
+        string="Related ratings",
     )
-    rating_id = fields.Many2one("rating.rating", compute="_compute_rating_id")
+    rating_id = fields.Many2one(
+        comodel_name="rating.rating",
+        compute="_compute_rating_id",
+    )
     rating_value = fields.Float(
         compute="_compute_rating_value",
+        search="_search_rating_value",
         compute_sudo=True,
         store=False,
-        search="_search_rating_value",
     )
 
     @api.depends("rating_ids.consumed")

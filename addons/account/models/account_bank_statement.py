@@ -22,8 +22,8 @@ class AccountBankStatement(models.Model):
         string="Reference",
         compute="_compute_name",
         store=True,
-        readonly=False,
         copy=False,
+        readonly=False,
     )
 
     reference = fields.Char(
@@ -99,12 +99,10 @@ class AccountBankStatement(models.Model):
     )
 
     journal_has_invalid_statements = fields.Boolean(
-        related="journal_id.has_invalid_statements",
+        related="journal_id.has_invalid_statements"
     )
 
-    problem_description = fields.Text(
-        compute="_compute_problem_description",
-    )
+    problem_description = fields.Text(compute="_compute_problem_description")
 
     attachment_ids = fields.Many2many(
         comodel_name="ir.attachment",

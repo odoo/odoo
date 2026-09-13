@@ -15,9 +15,7 @@ class AccountLock_Exception(models.Model):
     _name = "account.lock_exception"
     _description = "Account Lock Exception"
 
-    active = fields.Boolean(
-        default=True,
-    )
+    active = fields.Boolean(default=True)
     state = fields.Selection(
         selection=[
             ("active", "Active"),
@@ -28,19 +26,17 @@ class AccountLock_Exception(models.Model):
         search="_search_state",
     )
     company_id = fields.Many2one(
-        "res.company",
-        required=True,
-        readonly=True,
+        comodel_name="res.company",
         default=lambda self: self.env.company,
+        readonly=True,
+        required=True,
     )
     user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         default=lambda self: self.env.user,
     )
     reason = fields.Char()
-    end_datetime = fields.Datetime(
-        string="End Date",
-    )
+    end_datetime = fields.Datetime(string="End Date")
 
     lock_date_field = fields.Selection(
         selection=[
@@ -49,8 +45,8 @@ class AccountLock_Exception(models.Model):
             ("sale_lock_date", "Sales Lock Date"),
             ("purchase_lock_date", "Purchase Lock Date"),
         ],
-        required=True,
         help="Technical field identifying the changed lock date",
+        required=True,
     )
     lock_date = fields.Date(
         string="Changed Lock Date",
@@ -58,32 +54,32 @@ class AccountLock_Exception(models.Model):
     )
     company_lock_date = fields.Date(
         string="Original Lock Date",
-        copy=False,
         help="Technical field giving the date the company lock date at the time the exception was created.",
+        copy=False,
     )
 
     fiscalyear_lock_date = fields.Date(
         string="Global Lock Date",
+        help="The date the Global Lock Date is set to by this exception. If the lock date is not changed it is set to the maximal date.",
         compute="_compute_lock_dates",
         search="_search_fiscalyear_lock_date",
-        help="The date the Global Lock Date is set to by this exception. If the lock date is not changed it is set to the maximal date.",
     )
     tax_lock_date = fields.Date(
         string="Tax Return Lock Date",
+        help="The date the Tax Lock Date is set to by this exception. If the lock date is not changed it is set to the maximal date.",
         compute="_compute_lock_dates",
         search="_search_tax_lock_date",
-        help="The date the Tax Lock Date is set to by this exception. If the lock date is not changed it is set to the maximal date.",
     )
     sale_lock_date = fields.Date(
         string="Sales Lock Date",
+        help="The date the Sale Lock Date is set to by this exception. If the lock date is not changed it is set to the maximal date.",
         compute="_compute_lock_dates",
         search="_search_sale_lock_date",
-        help="The date the Sale Lock Date is set to by this exception. If the lock date is not changed it is set to the maximal date.",
     )
     purchase_lock_date = fields.Date(
+        help="The date the Purchase Lock Date is set to by this exception. If the lock date is not changed it is set to the maximal date.",
         compute="_compute_lock_dates",
         search="_search_purchase_lock_date",
-        help="The date the Purchase Lock Date is set to by this exception. If the lock date is not changed it is set to the maximal date.",
     )
 
     _company_id_end_datetime_idx = models.Index(

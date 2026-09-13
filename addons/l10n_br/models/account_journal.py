@@ -5,9 +5,9 @@ class AccountJournal(models.Model):
     _inherit = "account.journal"
 
     l10n_br_invoice_serial = fields.Char(
-        "Series",
-        copy=False,
+        string="Series",
         help="Brazil: Series number associated with this Journal. If more than one Series needs to be used, duplicate this Journal and assign the new Series to the duplicated Journal.",
+        copy=False,
     )
 
     @api.depends("l10n_br_invoice_serial")

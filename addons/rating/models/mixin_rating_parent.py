@@ -22,35 +22,37 @@ class MixinRatingParent(models.AbstractModel):
     # possible rather than merely unlikely; the mapping is mechanical, a leading
     # `rating_` becoming `rating_child_`.
     rating_child_ids = fields.One2many(
-        "rating.rating",
-        "parent_res_id",
+        comodel_name="rating.rating",
+        inverse_name="parent_res_id",
         string="Ratings",
+        domain=lambda self: [("parent_res_model", "=", self._name)],
         bypass_search_access=True,
         groups="base.group_user",
-        domain=lambda self: [("parent_res_model", "=", self._name)],
     )
     rating_child_percentage_satisfaction = fields.Integer(
-        "Rating Satisfaction",
+        string="Rating Satisfaction",
+        help="Percentage of happy ratings",
         compute="_compute_rating_child_stats",
         compute_sudo=True,
         store=False,
-        help="Percentage of happy ratings",
     )
     rating_child_count = fields.Integer(
-        string="# Ratings", compute="_compute_rating_child_stats", compute_sudo=True
-    )
-    rating_child_avg = fields.Float(
-        "Average Rating",
-        groups="base.group_user",
+        string="# Ratings",
         compute="_compute_rating_child_stats",
         compute_sudo=True,
+    )
+    rating_child_avg = fields.Float(
+        string="Average Rating",
+        compute="_compute_rating_child_stats",
         search="_search_rating_child_avg",
+        compute_sudo=True,
+        groups="base.group_user",
     )
     rating_child_avg_percentage = fields.Float(
-        "Average Rating (%)",
-        groups="base.group_user",
+        string="Average Rating (%)",
         compute="_compute_rating_child_avg_percentage",
         compute_sudo=True,
+        groups="base.group_user",
     )
 
     def write(self, vals):

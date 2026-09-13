@@ -20,20 +20,29 @@ class AppointmentResource(models.Model):
     _order = "sequence,id"
 
     name = fields.Char(
-        "Name", related="resource_id.name", store=True, required=True, readonly=False
+        related="resource_id.name",
+        string="Name",
+        store=True,
+        readonly=False,
+        required=True,
     )
     active = fields.Boolean(
-        "Active", related="resource_id.active", default=True, store=True, readonly=False
+        related="resource_id.active",
+        string="Active",
+        default=True,
+        store=True,
+        readonly=False,
     )
     sequence = fields.Integer(
-        default=1,
-        required=True,
         help="""The sequence dictates if the resource is going to be picked in higher priority against another resource
         (e.g. for 2 tables of 4, the lowest sequence will be picked first)""",
+        default=1,
+        required=True,
     )
     company_id = fields.Many2one(default=False)
     resource_id = fields.Many2one(copy=False)
     resource_calendar_id = fields.Many2one(
+        help="If kept empty, the working schedule of the company set on the resource will be used",
         default=lambda self: (
             self.env.ref(
                 "calendar.appointment_default_resource_calendar",
@@ -41,14 +50,13 @@ class AppointmentResource(models.Model):
             )
             or self.env.company.resource_calendar_id
         ),
-        help="If kept empty, the working schedule of the company set on the resource will be used",
     )
     capacity = fields.Integer(
-        "Capacity",
         related="resource_id.capacity",
+        string="Capacity",
+        default=1,
         store=True,
         readonly=False,
-        default=1,
         required=True,
     )
     enforce_booking_limit = fields.Boolean(
@@ -60,37 +68,40 @@ class AppointmentResource(models.Model):
         readonly=False,
     )
     shareable = fields.Boolean(
-        help="""This allows to share the resource with multiple attendee for a same time slot (e.g. a bar counter)""",
+        help="""This allows to share the resource with multiple attendee for a same time slot (e.g. a bar counter)"""
     )
     source_resource_ids = fields.Many2many(
-        "appointment.resource",
-        "appointment_resource_linked_appointment_resource",
-        "resource_id",
-        "linked_resource_id",
-        domain="[('id', '!=', id)]",
+        comodel_name="appointment.resource",
+        relation="appointment_resource_linked_appointment_resource",
+        column1="resource_id",
+        column2="linked_resource_id",
         string="Source combination",
+        domain="[('id', '!=', id)]",
     )
     destination_resource_ids = fields.Many2many(
-        "appointment.resource",
-        "appointment_resource_linked_appointment_resource",
-        "linked_resource_id",
-        "resource_id",
-        domain="[('id', '!=', id)]",
+        comodel_name="appointment.resource",
+        relation="appointment_resource_linked_appointment_resource",
+        column1="linked_resource_id",
+        column2="resource_id",
         string="Destination combination",
+        domain="[('id', '!=', id)]",
     )
     linked_resource_ids = fields.Many2many(
-        "appointment.resource",
+        comodel_name="appointment.resource",
+        help="""List of resources that can be combined to handle a bigger demand.""",
         compute="_compute_linked_resource_ids",
         inverse="_inverse_linked_resource_ids",
-        domain="[('id', '!=', id)]",
         store=False,
-        help="""List of resources that can be combined to handle a bigger demand.""",
+        domain="[('id', '!=', id)]",
     )
-    description = fields.Html(translate=html_translate, sanitize_attributes=False)
+    description = fields.Html(
+        translate=html_translate,
+        sanitize_attributes=False,
+    )
     appointment_type_ids = fields.Many2many(
-        "appointment.type",
-        string="Available in",
+        comodel_name="appointment.type",
         relation="appointment_type_appointment_resource_rel",
+        string="Available in",
         domain="[('schedule_based_on', '=', 'resources')]",
     )
 

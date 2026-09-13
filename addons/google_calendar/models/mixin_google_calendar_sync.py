@@ -58,8 +58,15 @@ class MixinGoogleCalendarSync(models.AbstractModel):
     _name = "mixin.google.calendar.sync"
     _description = "Synchronize a record with Google Calendar"
 
-    google_id = fields.Char("Google Calendar Id", index="btree_not_null", copy=False)
-    need_sync = fields.Boolean(default=True, copy=False)
+    google_id = fields.Char(
+        string="Google Calendar Id",
+        index="btree_not_null",
+        copy=False,
+    )
+    need_sync = fields.Boolean(
+        default=True,
+        copy=False,
+    )
     active = fields.Boolean(default=True)
 
     def write(self, vals):

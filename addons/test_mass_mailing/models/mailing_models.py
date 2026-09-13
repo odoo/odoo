@@ -11,8 +11,16 @@ class MailingTestCustomer(models.Model):
     _mail_partner_fields = ("customer_id",)
 
     name = fields.Char()
-    email_from = fields.Char(compute="_compute_email_from", readonly=False, store=True)
-    customer_id = fields.Many2one("res.partner", "Customer", tracking=True)
+    email_from = fields.Char(
+        compute="_compute_email_from",
+        store=True,
+        readonly=False,
+    )
+    customer_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Customer",
+        tracking=True,
+    )
 
     @api.depends("customer_id")
     def _compute_email_from(self):
@@ -58,8 +66,16 @@ class MailingTestBlacklist(models.Model):
 
     name = fields.Char()
     email_from = fields.Char()
-    customer_id = fields.Many2one("res.partner", "Customer", tracking=True)
-    user_id = fields.Many2one("res.users", "Responsible", tracking=True)
+    customer_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Customer",
+        tracking=True,
+    )
+    user_id = fields.Many2one(
+        comodel_name="res.users",
+        string="Responsible",
+        tracking=True,
+    )
 
 
 class MailingTestOptout(models.Model):
@@ -75,8 +91,16 @@ class MailingTestOptout(models.Model):
     name = fields.Char()
     email_from = fields.Char()
     opt_out = fields.Boolean()
-    customer_id = fields.Many2one("res.partner", "Customer", tracking=True)
-    user_id = fields.Many2one("res.users", "Responsible", tracking=True)
+    customer_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Customer",
+        tracking=True,
+    )
+    user_id = fields.Many2one(
+        comodel_name="res.users",
+        string="Responsible",
+        tracking=True,
+    )
 
     def _mailing_get_opt_out_list(self, mailing):
         res_ids = mailing._get_recipients()
@@ -95,7 +119,10 @@ class MailingTestPartner(models.Model):
 
     name = fields.Char()
     email_from = fields.Char()
-    partner_id = fields.Many2one("res.partner", "Customer")
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Customer",
+    )
 
 
 class MailingPerformance(models.Model):
@@ -120,7 +147,13 @@ class MailingPerformanceBlacklist(models.Model):
 
     name = fields.Char()
     email_from = fields.Char()
-    user_id = fields.Many2one("res.users", "Responsible", tracking=True)
+    user_id = fields.Many2one(
+        comodel_name="res.users",
+        string="Responsible",
+        tracking=True,
+    )
     container_id = fields.Many2one(
-        "mail.test.container", "Meta Container Record", tracking=True
+        comodel_name="mail.test.container",
+        string="Meta Container Record",
+        tracking=True,
     )

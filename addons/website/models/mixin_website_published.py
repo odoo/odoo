@@ -13,23 +13,25 @@ class MixinWebsitePublished(models.AbstractModel):
     _description = "Website Published Mixin"
 
     website_published = fields.Boolean(
-        "Visible on current website", related="is_published", readonly=False
+        related="is_published",
+        string="Visible on current website",
+        readonly=False,
     )
     is_published = fields.Boolean(
-        copy=False,
         default=lambda self: self._default_is_published(),
         index=True,
+        copy=False,
     )
     can_publish = fields.Boolean(compute="_compute_can_publish")
     website_url = fields.Char(
-        "Website URL",
-        compute="_compute_website_url",
+        string="Website URL",
         help="The full relative URL to access the document through the website.",
+        compute="_compute_website_url",
     )
     website_absolute_url = fields.Char(
-        "Website Absolute URL",
-        compute="_compute_website_absolute_url",
+        string="Website Absolute URL",
         help="The full absolute URL to access the document through the website.",
+        compute="_compute_website_absolute_url",
     )
 
     @api.depends_context("lang")

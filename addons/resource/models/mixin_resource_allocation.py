@@ -8,15 +8,15 @@ class MixinResourceAllocation(models.AbstractModel):
     _inherit = ["mixin.resource.scheduling"]
 
     allocated_percentage = fields.Float(
-        "Allocation %",
-        default=100.0,
+        string="Allocation %",
         help="Percentage of the resource's work capacity allocated to this record.",
+        default=100.0,
     )
     allocated_hours = fields.Float(
+        help="Working hours between scheduling start and end, respecting the resource calendar.",
         compute="_compute_allocated_hours",
         store=True,
         readonly=False,
-        help="Working hours between scheduling start and end, respecting the resource calendar.",
     )
 
     @api.constrains("allocated_percentage")

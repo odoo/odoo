@@ -10,8 +10,8 @@ class ResConfigSettings(models.TransientModel):
     totals_below_sections = fields.Boolean(
         related="company_id.totals_below_sections",
         string="Add totals below sections",
-        readonly=False,
         help="When ticked, totals and subtotals appear below the sections of the report.",
+        readonly=False,
     )
     account_return_periodicity = fields.Selection(
         related="company_id.account_return_periodicity",

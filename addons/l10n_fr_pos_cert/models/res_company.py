@@ -24,7 +24,7 @@ def ctx_tz(record, field):
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    l10n_fr_pos_cert_sequence_id = fields.Many2one("ir.sequence")
+    l10n_fr_pos_cert_sequence_id = fields.Many2one(comodel_name="ir.sequence")
 
     @api.model_create_multi
     def create(self, vals_list):

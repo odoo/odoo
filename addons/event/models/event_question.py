@@ -8,9 +8,12 @@ class EventQuestion(models.Model):
     _order = "sequence,id"
     _description = "Event Question"
 
-    title = fields.Char(required=True, translate=True)
+    title = fields.Char(
+        translate=True,
+        required=True,
+    )
     question_type = fields.Selection(
-        [
+        selection=[
             ("simple_choice", "Selection"),
             ("text_box", "Text Input"),
             ("name", "Name"),
@@ -22,27 +25,42 @@ class EventQuestion(models.Model):
         required=True,
     )
     active = fields.Boolean(default=True)
-    event_type_ids = fields.Many2many("event.type", string="Event Types", copy=False)
-    event_ids = fields.Many2many("event.event", string="Events", copy=False)
-    event_count = fields.Integer("# Events", compute="_compute_event_count")
+    event_type_ids = fields.Many2many(
+        comodel_name="event.type",
+        string="Event Types",
+        copy=False,
+    )
+    event_ids = fields.Many2many(
+        comodel_name="event.event",
+        string="Events",
+        copy=False,
+    )
+    event_count = fields.Integer(
+        string="# Events",
+        compute="_compute_event_count",
+    )
     is_default = fields.Boolean(
-        "Default question", help="Include by default in new events."
+        string="Default question",
+        help="Include by default in new events.",
     )
     is_reusable = fields.Boolean(
+        help="Allow this question to be selected and reused for any future event. Always true for default questions.",
         compute="_compute_is_reusable",
         default=True,
         store=True,
-        help="Allow this question to be selected and reused for any future event. Always true for default questions.",
     )
     answer_ids = fields.One2many(
-        "event.question.answer", "question_id", "Answers", copy=True
+        comodel_name="event.question.answer",
+        inverse_name="question_id",
+        string="Answers",
+        copy=True,
     )
     sequence = fields.Integer(default=10)
     once_per_order = fields.Boolean(
-        "Ask once per order",
+        string="Ask once per order",
         help="Check this for order-level questions (e.g., 'Company Name') where the answer is the same for everyone.",
     )
-    is_mandatory_answer = fields.Boolean("Mandatory Answer")
+    is_mandatory_answer = fields.Boolean(string="Mandatory Answer")
 
     _check_default_question_is_reusable = models.Constraint(
         "CHECK(is_default IS DISTINCT FROM TRUE OR is_reusable IS TRUE)",

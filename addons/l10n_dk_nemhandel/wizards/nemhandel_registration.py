@@ -20,8 +20,8 @@ class NemhandelRegistration(models.TransientModel):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        required=True,
         default=lambda self: self.env.company,
+        required=True,
     )
     contact_email = fields.Char(
         related="company_id.nemhandel_contact_email",
@@ -29,8 +29,8 @@ class NemhandelRegistration(models.TransientModel):
         required=True,
     )
     edi_mode = fields.Selection(
-        string="EDI mode",
         selection=[("demo", "Demo"), ("test", "Test"), ("prod", "Live")],
+        string="EDI mode",
         compute="_compute_edi_mode",
         inverse="_inverse_edi_mode",
         readonly=False,
@@ -42,20 +42,26 @@ class NemhandelRegistration(models.TransientModel):
     )
     phone_number = fields.Char(
         related="company_id.nemhandel_phone_number",
-        readonly=False,
         inverse="_inverse_phone_number",
+        readonly=False,
     )
     l10n_dk_nemhandel_proxy_state = fields.Selection(
-        related="company_id.l10n_dk_nemhandel_proxy_state", readonly=False
+        related="company_id.l10n_dk_nemhandel_proxy_state",
+        readonly=False,
     )
     verification_code = fields.Char(
-        related="edi_user_id.nemhandel_verification_code", readonly=False
+        related="edi_user_id.nemhandel_verification_code",
+        readonly=False,
     )
     identifier_type = fields.Selection(
-        related="company_id.nemhandel_identifier_type", readonly=False, required=True
+        related="company_id.nemhandel_identifier_type",
+        readonly=False,
+        required=True,
     )
     identifier_value = fields.Char(
-        related="company_id.nemhandel_identifier_value", readonly=False, required=True
+        related="company_id.nemhandel_identifier_value",
+        readonly=False,
+        required=True,
     )
 
     # -------------------------------------------------------------------------

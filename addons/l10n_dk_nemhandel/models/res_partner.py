@@ -18,7 +18,7 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     invoice_sending_method = fields.Selection(
-        selection_add=[("nemhandel", "By Nemhandel")],
+        selection_add=[("nemhandel", "By Nemhandel")]
     )
     invoice_edi_format = fields.Selection(selection_add=[("oioubl_21", "OIOUBL 2.1")])
     nemhandel_verification_state = fields.Selection(
@@ -32,18 +32,18 @@ class ResPartner(models.Model):
     )
 
     nemhandel_identifier_type = fields.Selection(
-        string="Nemhandel Endpoint Type",
-        help="Unique identifier used by OIOUBL and Nemhandel",
-        compute="_compute_nemhandel_identifier_type",
-        store=True,
-        readonly=False,
-        tracking=True,
         selection=[
             ("0088", "EAN/GLN"),
             ("0184", "CVR"),
             ("9918", "IBAN"),
             ("0198", "SE"),
         ],
+        string="Nemhandel Endpoint Type",
+        help="Unique identifier used by OIOUBL and Nemhandel",
+        compute="_compute_nemhandel_identifier_type",
+        store=True,
+        readonly=False,
+        tracking=True,
     )
     nemhandel_identifier_value = fields.Char(
         string="Nemhandel Endpoint",

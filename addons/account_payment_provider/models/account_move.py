@@ -36,24 +36,27 @@ class AccountMove(models.Model):
         self.invalidate_recordset(["state", "transaction_ids"])
 
     transaction_ids = fields.Many2many(
-        string="Transactions",
         comodel_name="payment.transaction",
         relation="account_invoice_transaction_rel",
         column1="invoice_id",
         column2="transaction_id",
-        readonly=True,
+        string="Transactions",
         copy=False,
+        readonly=True,
     )
     authorized_transaction_ids = fields.Many2many(
-        string="Authorized Transactions",
         comodel_name="payment.transaction",
+        string="Authorized Transactions",
         compute="_compute_authorized_transaction_ids",
-        readonly=True,
-        copy=False,
         compute_sudo=True,
+        copy=False,
+        readonly=True,
     )
-    transaction_count = fields.Count("transaction_ids")
-    amount_paid = fields.Monetary(string="Amount paid", compute="_compute_amount_paid")
+    transaction_count = fields.Count(count_of="transaction_ids")
+    amount_paid = fields.Monetary(
+        string="Amount paid",
+        compute="_compute_amount_paid",
+    )
 
     @api.depends("transaction_ids")
     def _compute_authorized_transaction_ids(self):

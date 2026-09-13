@@ -13,10 +13,13 @@ class MaintenanceStage(models.Model):
     _description = "Maintenance Stage"
     _order = "sequence, id"
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
     sequence = fields.Integer(default=20)
-    fold = fields.Boolean("Folded in Maintenance Pipe")
-    done = fields.Boolean("Request Done")
+    fold = fields.Boolean(string="Folded in Maintenance Pipe")
+    done = fields.Boolean(string="Request Done")
 
 
 class MaintenanceEquipmentCategory(models.Model):
@@ -31,25 +34,48 @@ class MaintenanceEquipmentCategory(models.Model):
         for category in self:
             category.fold = not category.equipment_count
 
-    name = fields.Char("Category Name", required=True, translate=True)
-    company_id = fields.Many2one("res.company", default=lambda self: self.env.company)
-    technician_user_id = fields.Many2one(
-        "res.users", "Responsible", default=lambda self: self.env.uid
+    name = fields.Char(
+        string="Category Name",
+        translate=True,
+        required=True,
     )
-    color = fields.Integer("Color Index")
-    note = fields.Html("Comments", translate=True)
-    equipment_ids = fields.One2many("maintenance.equipment", "category_id", copy=False)
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        default=lambda self: self.env.company,
+    )
+    technician_user_id = fields.Many2one(
+        comodel_name="res.users",
+        string="Responsible",
+        default=lambda self: self.env.uid,
+    )
+    color = fields.Integer(string="Color Index")
+    note = fields.Html(
+        string="Comments",
+        translate=True,
+    )
+    equipment_ids = fields.One2many(
+        comodel_name="maintenance.equipment",
+        inverse_name="category_id",
+        copy=False,
+    )
     equipment_count = fields.Integer(compute="_compute_equipment_count")
-    maintenance_ids = fields.One2many("maintenance.request", "category_id", copy=False)
+    maintenance_ids = fields.One2many(
+        comodel_name="maintenance.request",
+        inverse_name="category_id",
+        copy=False,
+    )
     maintenance_count = fields.Integer(compute="_compute_maintenance_counts")
     maintenance_open_count = fields.Integer(
-        string="Current Maintenance", compute="_compute_maintenance_counts"
+        string="Current Maintenance",
+        compute="_compute_maintenance_counts",
     )
     fold = fields.Boolean(
-        string="Folded in Maintenance Pipe", compute="_compute_fold", store=True
+        string="Folded in Maintenance Pipe",
+        compute="_compute_fold",
+        store=True,
     )
     equipment_properties_definition = fields.PropertiesDefinition(
-        "Equipment Properties"
+        string="Equipment Properties"
     )
 
     def _compute_equipment_count(self):
@@ -106,32 +132,52 @@ class MaintenanceEquipment(models.Model):
             else:
                 record.display_name = record.name
 
-    name = fields.Char("Equipment Name", required=True, translate=True)
+    name = fields.Char(
+        string="Equipment Name",
+        translate=True,
+        required=True,
+    )
     active = fields.Boolean(default=True)
     owner_user_id = fields.Many2one(
-        "res.users", string="Owner", tracking=True, index="btree_not_null"
+        comodel_name="res.users",
+        string="Owner",
+        index="btree_not_null",
+        tracking=True,
     )
     category_id = fields.Many2one(
-        "maintenance.equipment.category",
+        comodel_name="maintenance.equipment.category",
         string="Equipment Category",
-        tracking=True,
-        group_expand="_read_group_category_ids",
         index="btree_not_null",
+        group_expand="_read_group_category_ids",
+        tracking=True,
     )
-    partner_id = fields.Many2one("res.partner", string="Vendor", check_company=True)
-    partner_ref = fields.Char("Vendor Reference")
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Vendor",
+        check_company=True,
+    )
+    partner_ref = fields.Char(string="Vendor Reference")
     model = fields.Char()
-    serial_no = fields.Char("Serial Number", copy=False)
-    assign_date = fields.Date("Assigned Date", tracking=True)
+    serial_no = fields.Char(
+        string="Serial Number",
+        copy=False,
+    )
+    assign_date = fields.Date(
+        string="Assigned Date",
+        tracking=True,
+    )
     cost = fields.Float()
     note = fields.Html()
-    warranty_date = fields.Date("Warranty Expiration Date")
-    color = fields.Integer("Color Index")
+    warranty_date = fields.Date(string="Warranty Expiration Date")
+    color = fields.Integer(string="Color Index")
     scrap_date = fields.Date()
-    maintenance_ids = fields.One2many("maintenance.request", "equipment_id")
+    maintenance_ids = fields.One2many(
+        comodel_name="maintenance.request",
+        inverse_name="equipment_id",
+    )
     equipment_properties = fields.Properties(
-        "Properties",
         definition="category_id.equipment_properties_definition",
+        string="Properties",
         copy=True,
     )
 
@@ -202,37 +248,42 @@ class MaintenanceRequest(models.Model):
             team = MT.search([], limit=1)
         return team.id
 
-    name = fields.Char("Subjects", required=True)
-    company_id = fields.Many2one(
-        "res.company",
+    name = fields.Char(
+        string="Subjects",
         required=True,
+    )
+    company_id = fields.Many2one(
+        comodel_name="res.company",
         default=lambda self: self.env.company,
+        required=True,
     )
     description = fields.Html()
     request_date = fields.Date(
-        tracking=True,
-        default=fields.Date.context_today,
         help="Date requested for the maintenance to happen",
+        default=fields.Date.context_today,
+        tracking=True,
     )
     owner_user_id = fields.Many2one(
-        "res.users", string="Created by User", default=lambda s: s.env.uid
+        comodel_name="res.users",
+        string="Created by User",
+        default=lambda s: s.env.uid,
     )
     category_id = fields.Many2one(
-        "maintenance.equipment.category",
+        comodel_name="maintenance.equipment.category",
         related="equipment_id.category_id",
         string="Category",
         store=True,
-        readonly=True,
         index="btree_not_null",
+        readonly=True,
     )
     equipment_id = fields.Many2one(
-        "maintenance.equipment",
-        ondelete="restrict",
+        comodel_name="maintenance.equipment",
         index=True,
+        ondelete="restrict",
         check_company=True,
     )
     user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Technician",
         compute="_compute_user_id",
         store=True,
@@ -240,74 +291,76 @@ class MaintenanceRequest(models.Model):
         tracking=True,
     )
     stage_id = fields.Many2one(
-        "maintenance.stage",
-        ondelete="restrict",
-        tracking=True,
-        group_expand="_read_group_stage_ids",
+        comodel_name="maintenance.stage",
         default=_default_stage_id,
         copy=False,
+        group_expand="_read_group_stage_ids",
+        ondelete="restrict",
+        tracking=True,
     )
     priority = fields.Selection(
-        [("0", "Very Low"), ("1", "Low"), ("2", "Normal"), ("3", "High")],
+        selection=[("0", "Very Low"), ("1", "Low"), ("2", "Normal"), ("3", "High")]
     )
-    color = fields.Integer("Color Index")
+    color = fields.Integer(string="Color Index")
     close_date = fields.Date(help="Date the maintenance was finished. ")
     kanban_state = fields.Selection(
-        [
+        selection=[
             ("normal", "In Progress"),
             ("blocked", "Blocked"),
             ("done", "Ready for next stage"),
         ],
-        required=True,
         default="normal",
+        required=True,
         tracking=True,
     )
     # active = fields.Boolean(default=True, help="Set active to false to hide the maintenance request without deleting it.")
     archive = fields.Boolean(
-        default=False,
         help="Set archive to true to hide the maintenance request without deleting it.",
+        default=False,
     )
     maintenance_type = fields.Selection(
-        [("corrective", "Corrective"), ("preventive", "Preventive")],
+        selection=[("corrective", "Corrective"), ("preventive", "Preventive")],
         default="corrective",
     )
     schedule_date = fields.Datetime(
-        "Scheduled Date",
+        string="Scheduled Date",
         help="Date the maintenance team plans the maintenance.  It should not differ much from the Request Date. ",
     )
     schedule_end = fields.Datetime(
         string="Scheduled End",
-        compute="_compute_schedule_end",
         help="Expected completion date and time of the maintenance request.",
-        readonly=False,
+        compute="_compute_schedule_end",
         store=True,
+        readonly=False,
     )
     maintenance_team_id = fields.Many2one(
-        "maintenance.team",
+        comodel_name="maintenance.team",
         string="Team",
-        required=True,
-        index=True,
         compute="_compute_maintenance_team_id",
-        store=True,
-        readonly=False,
-        check_company=True,
         precompute=True,
+        store=True,
+        index=True,
+        readonly=False,
+        required=True,
+        check_company=True,
     )
     duration = fields.Float(
-        help="Duration in hours.", compute="_compute_duration", store=True
+        help="Duration in hours.",
+        compute="_compute_duration",
+        store=True,
     )
     done = fields.Boolean(related="stage_id.done")
     instruction_type = fields.Selection(
-        [("pdf", "PDF"), ("google_slide", "Google Slide"), ("text", "Text")],
+        selection=[("pdf", "PDF"), ("google_slide", "Google Slide"), ("text", "Text")],
         string="Instruction",
         default="text",
     )
-    instruction_pdf = fields.Binary("PDF")
+    instruction_pdf = fields.Binary(string="PDF")
     instruction_google_slide = fields.Char(
-        "Google Slide",
+        string="Google Slide",
         help="Paste the url of your Google Slide. Make sure the access to the document is public.",
     )
-    instruction_text = fields.Html("Text")
+    instruction_text = fields.Html(string="Text")
     recurring_maintenance = fields.Boolean(
         string="Recurrent",
         compute="_compute_recurring_maintenance",
@@ -517,44 +570,63 @@ class MaintenanceTeam(models.Model):
     _inherit = ["mixin.mail.alias", "mixin.mail.thread"]
     _description = "Maintenance Teams"
 
-    name = fields.Char("Team Name", required=True, translate=True)
+    name = fields.Char(
+        string="Team Name",
+        translate=True,
+        required=True,
+    )
     active = fields.Boolean(default=True)
-    company_id = fields.Many2one("res.company", default=lambda self: self.env.company)
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        default=lambda self: self.env.company,
+    )
     member_ids = fields.Many2many(
-        "res.users",
-        "maintenance_team_users_rel",
+        comodel_name="res.users",
+        relation="maintenance_team_users_rel",
         string="Team Members",
         domain="[('company_ids', 'in', company_id)]",
     )
-    color = fields.Integer("Color Index", default=0)
+    color = fields.Integer(
+        string="Color Index",
+        default=0,
+    )
     request_ids = fields.One2many(
-        "maintenance.request", "maintenance_team_id", copy=False
+        comodel_name="maintenance.request",
+        inverse_name="maintenance_team_id",
+        copy=False,
     )
     equipment_ids = fields.One2many(
-        "maintenance.equipment", "maintenance_team_id", copy=False
+        comodel_name="maintenance.equipment",
+        inverse_name="maintenance_team_id",
+        copy=False,
     )
 
     # For the dashboard only
     todo_request_ids = fields.One2many(
-        "maintenance.request",
+        comodel_name="maintenance.request",
         string="Requests",
-        copy=False,
         compute="_compute_todo_requests",
+        copy=False,
     )
     todo_request_count = fields.Integer(
-        string="Number of Requests", compute="_compute_todo_requests"
+        string="Number of Requests",
+        compute="_compute_todo_requests",
     )
     todo_request_count_date = fields.Integer(
-        string="Number of Requests Scheduled", compute="_compute_todo_requests"
+        string="Number of Requests Scheduled",
+        compute="_compute_todo_requests",
     )
     todo_request_count_high_priority = fields.Integer(
-        string="Number of Requests in High Priority", compute="_compute_todo_requests"
+        string="Number of Requests in High Priority",
+        compute="_compute_todo_requests",
     )
     todo_request_count_block = fields.Integer(
-        string="Number of Requests Blocked", compute="_compute_todo_requests"
+        string="Number of Requests Blocked",
+        compute="_compute_todo_requests",
     )
     todo_request_count_unscheduled = fields.Integer(
-        string="Number of Requests Unscheduled", compute="_compute_todo_requests"
+        string="Number of Requests Unscheduled",
+        compute="_compute_todo_requests",
     )
     alias_id = fields.Many2one(help="Email alias for this maintenance team.")
 

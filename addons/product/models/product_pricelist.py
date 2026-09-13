@@ -14,12 +14,12 @@ class ProductPricelist(models.Model):
 
     name = fields.Char(
         string="Pricelist Name",
-        required=True,
         translate=True,
+        required=True,
     )
     active = fields.Boolean(
-        default=True,
         help="If unchecked, it will allow you to hide the pricelist without removing it.",
+        default=True,
     )
     sequence = fields.Integer(default=16)
 
@@ -30,8 +30,8 @@ class ProductPricelist(models.Model):
     )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
-        required=True,
         default=lambda self: self._default_currency_id(),
+        required=True,
         tracking=1,
     )
     country_group_ids = fields.Many2many(
@@ -46,8 +46,8 @@ class ProductPricelist(models.Model):
         comodel_name="product.pricelist.item",
         inverse_name="pricelist_id",
         string="Pricelist Rules",
-        domain=lambda self: self._domain_item_ids(),
         copy=True,
+        domain=lambda self: self._domain_item_ids(),
     )
 
     def write(self, vals):

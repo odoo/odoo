@@ -16,7 +16,10 @@ class BaseOrderTestLine(models.Model):
     # Only ``comodel_name`` differs from ``mixin.order.line.fields``, which
     # also supplies the bridge fields (company_id, currency_id, state,
     # partner_id, locked, …) — as in the real sale/purchase lines.
-    order_id = fields.Many2one(comodel_name="base.order.test", string="Order")
+    order_id = fields.Many2one(
+        comodel_name="base.order.test",
+        string="Order",
+    )
 
     # Self-referential section link: the compute lives in the mixin, but the
     # comodel must point to this concrete line model (as in sale/purchase).

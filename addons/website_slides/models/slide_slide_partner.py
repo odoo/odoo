@@ -8,23 +8,33 @@ class SlideSlidePartner(models.Model):
     _rec_name = "partner_id"
 
     slide_id = fields.Many2one(
-        "slide.slide", string="Content", ondelete="cascade", index=True, required=True
+        comodel_name="slide.slide",
+        string="Content",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     slide_category = fields.Selection(related="slide_id.slide_category")
     channel_id = fields.Many2one(
-        "slide.channel",
-        string="Channel",
+        comodel_name="slide.channel",
         related="slide_id.channel_id",
+        string="Channel",
         store=True,
         index=True,
         ondelete="cascade",
     )
     partner_id = fields.Many2one(
-        "res.partner", index=True, required=True, ondelete="cascade"
+        comodel_name="res.partner",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     vote = fields.Integer(default=0)
     completed = fields.Boolean()
-    quiz_attempts_count = fields.Integer("Quiz attempts count", default=0)
+    quiz_attempts_count = fields.Integer(
+        string="Quiz attempts count",
+        default=0,
+    )
 
     _slide_partner_uniq = models.Constraint(
         "unique(slide_id, partner_id)",

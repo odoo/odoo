@@ -11,6 +11,6 @@ class ResPartner(models.Model):
         comodel_name="l10n_vn_edi_viettel.sinvoice.symbol",
         string="Default Symbol",
         help="If set, this symbol will be used as the default symbol for all invoices of this customer.",
-        company_dependent=True,
         copy=False,
+        company_dependent=True,
     )

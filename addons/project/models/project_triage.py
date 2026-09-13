@@ -12,18 +12,27 @@ class ProjectTriage(models.Model):
     _inherit = ["mixin.project.pm"]
     _order = "sequence, id"
 
-    active = fields.Boolean(default=True, export_string_translation=False)
-    name = fields.Char(required=True, translate=True)
+    active = fields.Boolean(
+        export_string_translation=False,
+        default=True,
+    )
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
     sequence = fields.Integer(default=1)
-    color = fields.Integer(string="Color Index", default=0)
+    color = fields.Integer(
+        string="Color Index",
+        default=0,
+    )
     fold = fields.Boolean(string="Folded")
     user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Triage Owner",
-        required=True,
-        index=True,
-        ondelete="cascade",
         default=lambda self: self.env.user,
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
 
     @dbg.timed

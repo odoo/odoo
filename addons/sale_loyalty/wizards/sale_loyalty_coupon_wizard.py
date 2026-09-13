@@ -7,7 +7,7 @@ class SaleLoyaltyCouponWizard(models.TransientModel):
     _description = "Sale Loyalty - Apply Coupon Wizard"
 
     order_id = fields.Many2one(
-        "sale.order",
+        comodel_name="sale.order",
         default=lambda self: self.env.context.get("active_id"),
         required=True,
     )

@@ -5,18 +5,21 @@ class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
     child_all_count = fields.Integer(
-        "Indirect Subordinates Count",
+        string="Indirect Subordinates Count",
         compute="_compute_subordinates",
+        compute_sudo=True,
         recursive=True,
         store=False,
-        compute_sudo=True,
     )
-    department_color = fields.Integer("Department Color", related="department_id.color")
+    department_color = fields.Integer(
+        related="department_id.color",
+        string="Department Color",
+    )
     child_count = fields.Integer(
-        "Direct Subordinates Count",
+        string="Direct Subordinates Count",
         compute="_compute_child_count",
-        recursive=True,
         compute_sudo=True,
+        recursive=True,
     )
 
     def _get_subordinates(self, parents=None):

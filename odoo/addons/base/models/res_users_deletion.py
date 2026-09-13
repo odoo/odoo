@@ -12,15 +12,22 @@ class ResUsersDeletion(models.Model):
     _description = "Users Deletion Request"
     _rec_name = "user_id"
 
-    user_id = fields.Many2one("res.users", ondelete="set null")
-    user_id_int = fields.Integer("User Id", compute="_compute_user_id_int", store=True)
+    user_id = fields.Many2one(
+        comodel_name="res.users",
+        ondelete="set null",
+    )
+    user_id_int = fields.Integer(
+        string="User Id",
+        compute="_compute_user_id_int",
+        store=True,
+    )
     state = fields.Selection(
-        [("todo", "To Do"), ("done", "Done"), ("fail", "Failed")],
-        required=True,
-        default="todo",
+        selection=[("todo", "To Do"), ("done", "Done"), ("fail", "Failed")],
         help="Deletion request lifecycle: 'todo' when queued, 'done' once the "
         "user is deleted, 'fail' if deletion was attempted but could not "
         "complete (the user is then archived instead).",
+        default="todo",
+        required=True,
     )
 
     @api.depends("user_id")

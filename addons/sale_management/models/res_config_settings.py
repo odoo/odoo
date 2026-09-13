@@ -5,7 +5,8 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     group_sale_order_template = fields.Boolean(
-        "Quotation Templates", implied_group="sale_management.group_sale_order_template"
+        string="Quotation Templates",
+        implied_group="sale_management.group_sale_order_template",
     )
     company_so_template_id = fields.Many2one(
         related="company_id.sale_order_template_id",

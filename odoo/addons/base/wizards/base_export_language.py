@@ -27,42 +27,55 @@ class BaseLanguageExport(models.TransientModel):
             )
         ] + langs
 
-    name = fields.Char("File Name", readonly=True)
+    name = fields.Char(
+        string="File Name",
+        readonly=True,
+    )
     lang = fields.Selection(
-        _selection_installed_langs,
+        selection=_selection_installed_langs,
         string="Language",
-        required=True,
         default=NEW_LANG_KEY,
+        required=True,
     )
     format = fields.Selection(
-        [("csv", "CSV File"), ("po", "PO File"), ("tgz", "TGZ Archive")],
+        selection=[("csv", "CSV File"), ("po", "PO File"), ("tgz", "TGZ Archive")],
         string="File Format",
-        required=True,
         default="po",
+        required=True,
     )
     export_type = fields.Selection(
-        [("module", "Module"), ("model", "Model")],
-        required=True,
+        selection=[("module", "Module"), ("model", "Model")],
         default="module",
+        required=True,
     )
     modules = fields.Many2many(
-        "ir.module.module",
-        "rel_modules_langexport",
-        "wiz_id",
-        "module_id",
+        comodel_name="ir.module.module",
+        relation="rel_modules_langexport",
+        column1="wiz_id",
+        column2="module_id",
         string="Apps To Export",
         domain=[("state", "=", "installed")],
     )
     model_id = fields.Many2one(
-        "ir.model",
+        comodel_name="ir.model",
         string="Model to Export",
         domain=[("transient", "=", False)],
     )
-    model_name = fields.Char(string="Model Name", related="model_id.model")
-    domain = fields.Char(string="Model Domain", default="[]")
-    data = fields.Binary("File", readonly=True, attachment=False)
+    model_name = fields.Char(
+        related="model_id.model",
+        string="Model Name",
+    )
+    domain = fields.Char(
+        string="Model Domain",
+        default="[]",
+    )
+    data = fields.Binary(
+        string="File",
+        attachment=False,
+        readonly=True,
+    )
     state = fields.Selection(
-        [
+        selection=[
             ("choose", "choose"),
             ("get", "get"),
         ],

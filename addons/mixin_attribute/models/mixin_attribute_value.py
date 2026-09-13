@@ -16,12 +16,8 @@ class MixinAttributeValue(models.AbstractModel):
     _description = "Attribute Value Mixin"
     _order = "sequence, name"
 
-    sequence = fields.Integer(
-        default=10,
-    )
-    color = fields.Integer(
-        default=lambda self: self._default_color(),
-    )
+    sequence = fields.Integer(default=10)
+    color = fields.Integer(default=lambda self: self._default_color())
 
     _name_src_uniq = name_uniq_index(
         "attribute_id",

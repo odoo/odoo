@@ -8,31 +8,31 @@ class ProjectShareCollaboratorWizard(models.TransientModel):
     _description = "Project Sharing Collaborator Wizard"
 
     parent_wizard_id = fields.Many2one(
-        "project.share.wizard",
+        comodel_name="project.share.wizard",
         export_string_translation=False,
     )
     partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Collaborator",
         required=True,
     )
     access_mode = fields.Selection(
-        [
+        selection=[
             ("read", "Read"),
             ("edit_limited", "Edit with limited access"),
             ("edit", "Edit"),
         ],
-        default="read",
-        required=True,
         help="Read: collaborators can view tasks but cannot edit them.\n"
         "Edit with limited access: collaborators can view and edit tasks they follow in the Kanban view.\n"
         "Edit: collaborators can view and edit all tasks in the Kanban view. Additionally, they can choose which tasks they want to follow.",
+        default="read",
+        required=True,
     )
     send_invitation = fields.Boolean(
         compute="_compute_send_invitation",
+        default=True,
         store=True,
         readonly=False,
-        default=True,
     )
 
     @api.depends("partner_id", "access_mode")

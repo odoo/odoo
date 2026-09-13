@@ -8,18 +8,30 @@ class MailingTraceReport(models.Model):
     _description = "Mass Mailing Statistics"
 
     # mailing
-    name = fields.Char(string="Mass Mail", readonly=True)
-    mailing_type = fields.Selection(
-        [("mail", "Mail")], string="Type", default="mail", required=True
+    name = fields.Char(
+        string="Mass Mail",
+        readonly=True,
     )
-    campaign = fields.Char(string="Mailing Campaign", readonly=True)
+    mailing_type = fields.Selection(
+        selection=[("mail", "Mail")],
+        string="Type",
+        default="mail",
+        required=True,
+    )
+    campaign = fields.Char(
+        string="Mailing Campaign",
+        readonly=True,
+    )
     scheduled_date = fields.Datetime(readonly=True)
     state = fields.Selection(
-        [("draft", "Draft"), ("test", "Tested"), ("done", "Sent")],
+        selection=[("draft", "Draft"), ("test", "Tested"), ("done", "Sent")],
         string="Status",
         readonly=True,
     )
-    email_from = fields.Char("From", readonly=True)
+    email_from = fields.Char(
+        string="From",
+        readonly=True,
+    )
     # traces
     scheduled = fields.Integer(readonly=True)
     processing = fields.Integer(readonly=True)

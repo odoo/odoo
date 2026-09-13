@@ -5,7 +5,10 @@ class ResUsers(models.Model):
     _inherit = "res.users"
 
     tour_enabled = fields.Boolean(
-        compute="_compute_tour_enabled", store=True, readonly=False, string="Onboarding"
+        string="Onboarding",
+        compute="_compute_tour_enabled",
+        store=True,
+        readonly=False,
     )
 
     @api.depends("create_date")

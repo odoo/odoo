@@ -13,11 +13,14 @@ class StockReturnPickingLine(models.TransientModel):
         comodel_name="product.product",
         required=True,
     )
-    move_quantity = fields.Float(related="move_id.quantity", string="Move Quantity")
+    move_quantity = fields.Float(
+        related="move_id.quantity",
+        string="Move Quantity",
+    )
     quantity = fields.Float(
         digits="Product Unit",
-        required=True,
         default=1,
+        required=True,
     )
     uom_id = fields.Many2one(
         comodel_name="uom.uom",
@@ -118,16 +121,17 @@ class StockReturnPicking(models.TransientModel):
 
     picking_id = fields.Many2one(comodel_name="stock.picking")
     picking_type_code = fields.Selection(
-        related="picking_id.picking_type_code", readonly=True
+        related="picking_id.picking_type_code",
+        readonly=True,
     )
     product_return_moves = fields.One2many(
         comodel_name="stock.return.picking.line",
         inverse_name="wizard_id",
         string="Moves",
         compute="_compute_product_return_moves",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
     )
     company_id = fields.Many2one(related="picking_id.company_id")
 

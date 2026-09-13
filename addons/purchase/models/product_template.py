@@ -12,12 +12,12 @@ class ProductTemplate(models.Model):
             ("transferred", "On received quantities"),
         ],
         string="Control Policy",
-        compute="_compute_bill_policy",
-        store=True,
-        precompute=True,
-        readonly=False,
         help="On ordered quantities: Control bills based on ordered quantities.\n"
         "On received quantities: Control bills based on received quantities.",
+        compute="_compute_bill_policy",
+        precompute=True,
+        store=True,
+        readonly=False,
     )
     purchase_line_warn_msg = fields.Text(string="Message for Purchase Order Line")
     purchased_product_qty = fields.Float(

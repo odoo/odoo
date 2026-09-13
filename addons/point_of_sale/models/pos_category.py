@@ -17,28 +17,49 @@ class PosCategory(models.Model):
 
     _color_default_indices = tuple(range(11))
 
-    name = fields.Char(string="Category Name", required=True, translate=True)
-    parent_id = fields.Many2one("pos.category", string="Parent Category", index=True)
+    name = fields.Char(
+        string="Category Name",
+        translate=True,
+        required=True,
+    )
+    parent_id = fields.Many2one(
+        comodel_name="pos.category",
+        string="Parent Category",
+        index=True,
+    )
     child_ids = fields.One2many(
-        "pos.category", "parent_id", string="Children Categories"
+        comodel_name="pos.category",
+        inverse_name="parent_id",
+        string="Children Categories",
     )
     sequence = fields.Integer(
         help="Gives the sequence order when displaying a list of product categories."
     )
-    image_512 = fields.Image("Image", max_width=512, max_height=512)
-    image_128 = fields.Image(
-        "Image 128", related="image_512", max_width=128, max_height=128, store=True
+    image_512 = fields.Image(
+        string="Image",
+        max_width=512,
+        max_height=512,
     )
-    color = fields.Integer(required=False, default=lambda self: self._default_color())
+    image_128 = fields.Image(
+        related="image_512",
+        string="Image 128",
+        max_width=128,
+        max_height=128,
+        store=True,
+    )
+    color = fields.Integer(
+        default=lambda self: self._default_color(),
+        required=False,
+    )
     hour_until = fields.Float(
         string="Availability Until",
-        default=24.0,
         help="The product will be available until this hour for online order and self order.",
+        default=24.0,
     )
     hour_after = fields.Float(
         string="Availability After",
-        default=0.0,
         help="The product will be available after this hour for online order and self order.",
+        default=0.0,
     )
 
     has_image = fields.Boolean(compute="_compute_has_image")

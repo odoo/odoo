@@ -12,20 +12,16 @@ class AIUseCaseTag(models.Model):
         help="Human-readable tag name (e.g., 'Vision Processing')",
     )
     code = fields.Char(
-        required=True,
-        index=True,
         help="Unique identifier used in code (e.g., 'vision', 'reasoning')",
+        index=True,
+        required=True,
     )
-    sequence = fields.Integer(
-        default=10,
-    )
+    sequence = fields.Integer(default=10)
     description = fields.Text(
-        translate=True,
         help="What this use case represents and when to use it",
+        translate=True,
     )
-    color = fields.Integer(
-        help="Color for UI display",
-    )
+    color = fields.Integer(help="Color for UI display")
     _code_uniq = models.Constraint(
         "unique(code)",
         "Use case tag code must be unique!",

@@ -15,38 +15,38 @@ class ResPartnerIdentifier(models.Model):
 
     partner_id = fields.Many2one(
         comodel_name="res.partner",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
     type_id = fields.Many2one(
         comodel_name="res.partner.identifier.type",
+        index=True,
         required=True,
         ondelete="restrict",
-        index=True,
     )
     value = fields.Char(
-        required=True,
         help="As it is written on the document. Comparison ignores case and "
         "punctuation.",
+        required=True,
     )
     normalized_value = fields.Char(
+        help="Punctuation and case removed, so two spellings of one identifier "
+        "compare and deduplicate as one.",
         compute="_compute_normalized_value",
         store=True,
         index=True,
-        help="Punctuation and case removed, so two spellings of one identifier "
-        "compare and deduplicate as one.",
     )
     valid_until = fields.Date(
-        index="btree_not_null",
         help="Date the document carrying this identifier expires. Leave empty "
         "for an identifier that does not expire.",
+        index="btree_not_null",
     )
     document_ids = fields.One2many(
         comodel_name="ir.attachment",
         inverse_name="res_id",
-        domain=[("res_model", "=", "res.partner.identifier")],
         string="Documents",
+        domain=[("res_model", "=", "res.partner.identifier")],
     )
     company_id = fields.Many2one(
         related="partner_id.company_id",

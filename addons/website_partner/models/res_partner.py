@@ -7,13 +7,14 @@ class ResPartner(models.Model):
     _inherit = ["res.partner", "mixin.website.seo.metadata"]
 
     website_description = fields.Html(
-        "Website Partner Full Description",
-        strip_style=True,
-        sanitize_overridable=True,
+        string="Website Partner Full Description",
         translate=html_translate,
+        sanitize_overridable=True,
+        strip_style=True,
     )
     website_short_description = fields.Text(
-        "Website Partner Short Description", translate=True
+        string="Website Partner Short Description",
+        translate=True,
     )
     is_published = fields.Boolean(tracking=True)
 

@@ -9,33 +9,88 @@ class CrmActivityReport(models.Model):
     _description = "CRM Activity Analysis"
     _rec_name = "id"
 
-    date = fields.Datetime("Completion Date", readonly=True)
-    lead_create_date = fields.Datetime("Creation Date", readonly=True)
-    date_conversion = fields.Datetime("Conversion Date", readonly=True)
-    date_deadline = fields.Date("Expected Closing", readonly=True)
-    date_closed = fields.Datetime("Closed Date", readonly=True)
-    author_id = fields.Many2one("res.partner", "Assigned To", readonly=True)
-    user_id = fields.Many2one("res.users", "Salesperson", readonly=True)
-    team_id = fields.Many2one("crm.team", "Sales Team", readonly=True)
-    lead_id = fields.Many2one("crm.lead", "Opportunity", readonly=True)
-    body = fields.Html("Activity Description", readonly=True)
-    subtype_id = fields.Many2one("mail.message.subtype", readonly=True)
-    mail_activity_type_id = fields.Many2one(
-        "mail.activity.type", "Activity Type", readonly=True
+    date = fields.Datetime(
+        string="Completion Date",
+        readonly=True,
     )
-    country_id = fields.Many2one("res.country", readonly=True)
-    company_id = fields.Many2one("res.company", readonly=True)
-    stage_id = fields.Many2one("crm.stage", readonly=True)
-    partner_id = fields.Many2one("res.partner", "Customer", readonly=True)
+    lead_create_date = fields.Datetime(
+        string="Creation Date",
+        readonly=True,
+    )
+    date_conversion = fields.Datetime(
+        string="Conversion Date",
+        readonly=True,
+    )
+    date_deadline = fields.Date(
+        string="Expected Closing",
+        readonly=True,
+    )
+    date_closed = fields.Datetime(
+        string="Closed Date",
+        readonly=True,
+    )
+    author_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Assigned To",
+        readonly=True,
+    )
+    user_id = fields.Many2one(
+        comodel_name="res.users",
+        string="Salesperson",
+        readonly=True,
+    )
+    team_id = fields.Many2one(
+        comodel_name="crm.team",
+        string="Sales Team",
+        readonly=True,
+    )
+    lead_id = fields.Many2one(
+        comodel_name="crm.lead",
+        string="Opportunity",
+        readonly=True,
+    )
+    body = fields.Html(
+        string="Activity Description",
+        readonly=True,
+    )
+    subtype_id = fields.Many2one(
+        comodel_name="mail.message.subtype",
+        readonly=True,
+    )
+    mail_activity_type_id = fields.Many2one(
+        comodel_name="mail.activity.type",
+        string="Activity Type",
+        readonly=True,
+    )
+    country_id = fields.Many2one(
+        comodel_name="res.country",
+        readonly=True,
+    )
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        readonly=True,
+    )
+    stage_id = fields.Many2one(
+        comodel_name="crm.stage",
+        readonly=True,
+    )
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Customer",
+        readonly=True,
+    )
     lead_type = fields.Selection(
-        string="Type",
         selection=[("lead", "Lead"), ("opportunity", "Opportunity")],
+        string="Type",
         help="Type is used to separate Leads and Opportunities",
     )
     active = fields.Boolean(readonly=True)
-    tag_ids = fields.Many2many(related="lead_id.tag_ids", readonly=True)
+    tag_ids = fields.Many2many(
+        related="lead_id.tag_ids",
+        readonly=True,
+    )
     won_status = fields.Selection(
-        [
+        selection=[
             ("won", "Won"),
             ("lost", "Lost"),
             ("pending", "Pending"),

@@ -18,30 +18,28 @@ class AccountFiscalPosition(models.Model):
 
     name = fields.Char(
         string="Fiscal Position",
-        required=True,
         translate=True,
+        required=True,
     )
     active = fields.Boolean(
-        default=True,
         help="By unchecking the active field, you may hide a fiscal position without deleting it.",
+        default=True,
     )
     sequence = fields.Integer()
     company_id = fields.Many2one(
         comodel_name="res.company",
-        required=True,
-        readonly=True,
-        index=True,
         default=lambda self: self.env.company,
+        index=True,
+        readonly=True,
+        required=True,
     )
     account_ids = fields.One2many(
-        "account.fiscal.position.account",
-        "position_id",
+        comodel_name="account.fiscal.position.account",
+        inverse_name="position_id",
         string="Account Mapping",
         copy=True,
     )
-    account_map = fields.Binary(
-        compute="_compute_account_map",
-    )
+    account_map = fields.Binary(compute="_compute_account_map")
     tax_ids = fields.Many2many(
         comodel_name="account.tax",
         relation="account_fiscal_position_account_tax_rel",
@@ -49,13 +47,11 @@ class AccountFiscalPosition(models.Model):
         column2="account_tax_id",
         string="Taxes",
     )
-    tax_map = fields.Binary(
-        compute="_compute_tax_map",
-    )
+    tax_map = fields.Binary(compute="_compute_tax_map")
     note = fields.Html(
-        "Notes",
-        translate=True,
+        string="Notes",
         help="Legal mentions that have to be printed on the invoices.",
+        translate=True,
     )
     auto_apply = fields.Boolean(
         string="Detect Automatically",
@@ -66,40 +62,38 @@ class AccountFiscalPosition(models.Model):
         help="Apply only if partner has a VAT number.",
     )
     company_country_id = fields.Many2one(
-        string="Company Country",
         related="company_id.account_fiscal_country_id",
+        string="Company Country",
     )
     fiscal_country_codes = fields.Char(
-        string="Company Fiscal Country Code",
         related="company_country_id.code",
+        string="Company Fiscal Country Code",
     )
     country_id = fields.Many2one(
-        "res.country",
-        inverse="_inverse_vat_territory",
+        comodel_name="res.country",
         help="Apply only if delivery country matches.",
+        inverse="_inverse_vat_territory",
     )
     is_domestic = fields.Boolean(
         compute="_compute_is_domestic",
         store=True,
     )
     country_group_id = fields.Many2one(
-        "res.country.group",
-        inverse="_inverse_vat_territory",
+        comodel_name="res.country.group",
         help="Apply only if delivery country matches the group.",
+        inverse="_inverse_vat_territory",
     )
     state_ids = fields.Many2many(
-        "res.country.state",
+        comodel_name="res.country.state",
         string="Federal States",
     )
     zip_from = fields.Char(string="Zip Range From")
     zip_to = fields.Char(string="Zip Range To")
-    states_count = fields.Integer(
-        compute="_compute_states_count",
-    )
+    states_count = fields.Integer(compute="_compute_states_count")
     foreign_vat = fields.Char(
         string="Foreign Tax ID",
-        inverse="_inverse_vat_territory",
         help="The tax ID of your company in the region mapped by this fiscal position.",
+        inverse="_inverse_vat_territory",
     )
 
     foreign_vat_header_mode = fields.Selection(

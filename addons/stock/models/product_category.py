@@ -10,7 +10,6 @@ class ProductCategory(models.Model):
     removal_strategy_id = fields.Many2one(
         comodel_name="product.removal",
         string="Force Removal Strategy",
-        tracking=True,
         help="Set a specific removal strategy that will be used regardless of the source location for this product category.\n\n"
         "FIFO: products/lots that were stocked first will be moved out first.\n"
         "LIFO: products/lots that were stocked last will be moved out first.\n"
@@ -18,6 +17,7 @@ class ProductCategory(models.Model):
         "FEFO: products/lots with the closest removal date will be moved out first "
         '(the availability of this method depends on the "Expiration Dates" setting).\n'
         "Least Packages: FIFO but with the least number of packages possible when there are several packages containing the same product.",
+        tracking=True,
     )
     route_ids = fields.Many2many(
         comodel_name="stock.route",
@@ -36,8 +36,8 @@ class ProductCategory(models.Model):
         comodel_name="stock.route",
         string="Total routes",
         compute="_compute_total_route_ids",
-        readonly=True,
         search="_search_total_route_ids",
+        readonly=True,
     )
     packaging_reserve_method = fields.Selection(
         selection=[
@@ -45,9 +45,9 @@ class ProductCategory(models.Model):
             ("partial", "Reserve Partial Packagings"),
         ],
         string="Reserve Packagings",
-        default="partial",
         help="Reserve Only Full Packagings: will not reserve partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then only 1000 will be reserved\n"
         "Reserve Partial Packagings: allow reserving partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then 1600 will be reserved",
+        default="partial",
     )
     putaway_rule_ids = fields.One2many(
         comodel_name="stock.putaway.rule",
@@ -56,8 +56,8 @@ class ProductCategory(models.Model):
     )
     filter_for_stock_putaway_rule = fields.Boolean(
         string="stock.putaway.rule",
-        store=False,
         search="_search_filter_for_stock_putaway_rule",
+        store=False,
     )
 
     @dbg.timed

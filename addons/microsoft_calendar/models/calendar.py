@@ -46,7 +46,9 @@ class CalendarEvent(models.Model):
     _name = "calendar.event"
     _inherit = ["calendar.event", "mixin.microsoft.calendar.sync"]
 
-    microsoft_recurrence_master_id = fields.Char("Microsoft Recurrence Master Id")
+    microsoft_recurrence_master_id = fields.Char(
+        string="Microsoft Recurrence Master Id"
+    )
 
     def _get_organizer(self):
         return self.user_id

@@ -30,13 +30,13 @@ class StockRule(models.Model):
 
     Procurement = Procurement
     name = fields.Char(
-        required=True,
-        translate=True,
         help="This field will fill the packing origin and the name of its moves",
+        translate=True,
+        required=True,
     )
     active = fields.Boolean(
-        default=True,
         help="If unchecked, it will allow you to hide the rule without removing it.",
+        default=True,
     )
     sequence = fields.Integer(default=20)
     action = fields.Selection(
@@ -45,40 +45,40 @@ class StockRule(models.Model):
             ("push", "Push To"),
             ("pull_push", "Pull & Push"),
         ],
-        required=True,
         default="pull",
         index=True,
+        required=True,
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
         default=lambda self: self.env.company,
-        domain="[('id', '=?', route_company_id)]",
         index=True,
+        domain="[('id', '=?', route_company_id)]",
     )
     location_dest_id = fields.Many2one(
         comodel_name="stock.location",
         string="Destination Location",
+        index=True,
         required=True,
         check_company=True,
-        index=True,
     )
     location_src_id = fields.Many2one(
         comodel_name="stock.location",
         string="Source Location",
-        check_company=True,
         index=True,
+        check_company=True,
     )
     location_dest_from_rule = fields.Boolean(
         string="Destination location origin from rule",
-        default=False,
         help="When set to True the destination location of the stock.move will be the rule."
         "Otherwise, it takes it from the picking type.",
+        default=False,
     )
     route_id = fields.Many2one(
         comodel_name="stock.route",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
     route_company_id = fields.Many2one(
         related="route_id.company_id",
@@ -91,12 +91,12 @@ class StockRule(models.Model):
             ("mts_else_mto", "Take From Stock, if unavailable, Trigger Another Rule"),
         ],
         string="Supply Method",
-        required=True,
-        default="make_to_stock",
         help="Take From Stock: the products will be taken from the available stock of the source location.\n"
         "Trigger Another Rule: the system will try to find a stock rule to bring the products in the source location. The available stock will be ignored.\n"
         "Take From Stock, if Unavailable, Trigger Another Rule: the products will be taken from the available stock of the source location."
         "If there is no stock available, the system will try to find a  rule to bring the products in the source location.",
+        default="make_to_stock",
+        required=True,
     )
     route_sequence = fields.Integer(
         related="route_id.sequence",
@@ -108,36 +108,34 @@ class StockRule(models.Model):
         comodel_name="stock.picking.type",
         string="Operation Type",
         required=True,
-        check_company=True,
         domain="[('code', 'in', picking_type_code_domain)] if picking_type_code_domain else []",
+        check_company=True,
     )
-    picking_type_code_domain = fields.Json(
-        compute="_compute_picking_type_code_domain",
-    )
+    picking_type_code_domain = fields.Json(compute="_compute_picking_type_code_domain")
     delay = fields.Integer(
         string="Lead Time",
-        default=0,
         help="The expected date of the created transfer will be computed based on this lead time.",
+        default=0,
     )
     partner_address_id = fields.Many2one(
         comodel_name="res.partner",
-        check_company=True,
         help="Address where goods should be delivered. Optional.",
+        check_company=True,
     )
     propagate_cancel = fields.Boolean(
         string="Cancel Next Move",
-        default=False,
         help="When ticked, if the move created by this rule is cancelled, the next move will be cancelled too.",
+        default=False,
     )
     propagate_carrier = fields.Boolean(
         string="Propagation of carrier",
-        default=False,
         help="When ticked, carrier of shipment will be propagated.",
+        default=False,
     )
     warehouse_id = fields.Many2one(
         comodel_name="stock.warehouse",
-        check_company=True,
         index=True,
+        check_company=True,
     )
     auto = fields.Selection(
         selection=[
@@ -145,10 +143,10 @@ class StockRule(models.Model):
             ("transparent", "Automatic No Step Added"),
         ],
         string="Automatic Move",
-        required=True,
-        default="manual",
         help="The 'Manual Operation' value will create a stock move after the current one. "
         "With 'Automatic No Step Added', the location is replaced in the original move.",
+        default="manual",
+        required=True,
     )
     rule_message = fields.Html(compute="_compute_rule_message")
     push_domain = fields.Char(string="Push Applicability")

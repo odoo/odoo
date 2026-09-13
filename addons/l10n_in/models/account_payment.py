@@ -6,8 +6,8 @@ class AccountPayment(models.Model):
 
     # withholding related fields
     l10n_in_withhold_move_ids = fields.One2many(
-        "account.move",
-        "l10n_in_withholding_ref_payment_id",
+        comodel_name="account.move",
+        inverse_name="l10n_in_withholding_ref_payment_id",
         string="Indian Payment TDS Entries",
     )
     l10n_in_total_withholding_amount = fields.Monetary(

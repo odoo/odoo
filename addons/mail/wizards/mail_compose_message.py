@@ -108,66 +108,72 @@ class MailComposeMessage(models.TransientModel):
 
         return {fname: result[fname] for fname in result if fname in fields}
 
-    subject = fields.Char(compute="_compute_subject", readonly=False, store=True)
+    subject = fields.Char(
+        compute="_compute_subject",
+        store=True,
+        readonly=False,
+    )
     body = fields.Html(
-        "Contents",
-        render_engine="qweb",
-        render_options={"post_process": True},
+        string="Contents",
         sanitize_style=True,
         compute="_compute_body",
-        readonly=False,
         store=True,
+        readonly=False,
+        render_engine="qweb",
+        render_options={"post_process": True},
     )
     parent_id: MailMessage = fields.Many2one(
-        "mail.message", "Parent Message", ondelete="set null"
+        comodel_name="mail.message",
+        string="Parent Message",
+        ondelete="set null",
     )
     template_id: MailTemplate = fields.Many2one(
-        "mail.template",
-        "Use template",
+        comodel_name="mail.template",
+        string="Use template",
         domain="[('model', '=', model), '|', ('user_id','=', False), ('user_id', '=', uid)]",
     )
     template_render_values = fields.Json(compute="_compute_template_render_values")
     lang = fields.Char(precompute=False)
     attachment_ids: IrAttachment = fields.Many2many(
-        "ir.attachment",
-        "mail_compose_message_ir_attachments_rel",
-        "wizard_id",
-        "attachment_id",
+        comodel_name="ir.attachment",
+        relation="mail_compose_message_ir_attachments_rel",
+        column1="wizard_id",
+        column2="attachment_id",
         string="Attachments",
         compute="_compute_attachment_ids",
-        readonly=False,
         store=True,
+        readonly=False,
         bypass_search_access=True,
     )
     email_layout_xmlid = fields.Char(
-        "Email Notification Layout",
+        string="Email Notification Layout",
         compute="_compute_email_layout_xmlid",
-        readonly=False,
+        compute_sudo=False,
         store=True,
         copy=False,
-        compute_sudo=False,
+        readonly=False,
     )
     email_add_signature = fields.Boolean(
-        "Add signature",
+        string="Add signature",
         compute="_compute_email_add_signature",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     email_from = fields.Char(
-        "From",
-        compute="_compute_authorship",
-        readonly=False,
-        store=True,
-        compute_sudo=False,
+        string="From",
         help="Email address of the sender. This field is set when no matching partner is found and replaces the author_id field in the chatter.",
+        compute="_compute_authorship",
+        compute_sudo=False,
+        store=True,
+        readonly=False,
     )
     author_id: ResPartner = fields.Many2one(
-        "res.partner",
-        compute="_compute_authorship",
-        readonly=False,
-        store=True,
-        compute_sudo=False,
+        comodel_name="res.partner",
         help="Author of the message. If not set, email_from may hold an email address that did not match any partner.",
+        compute="_compute_authorship",
+        compute_sudo=False,
+        store=True,
+        readonly=False,
     )
     composition_mode = fields.Selection(
         selection=[
@@ -178,155 +184,174 @@ class MailComposeMessage(models.TransientModel):
         default="comment",
     )
     composition_batch = fields.Boolean(
-        "Batch composition", compute="_compute_composition_batch"
+        string="Batch composition",
+        compute="_compute_composition_batch",
     )
     composition_comment_option = fields.Selection(
-        [("reply_all", "Reply-All"), ("forward", "Forward")], string="Comment Options"
+        selection=[("reply_all", "Reply-All"), ("forward", "Forward")],
+        string="Comment Options",
     )
     model = fields.Char(
-        "Related Document Model", compute="_compute_model", readonly=False, store=True
+        string="Related Document Model",
+        compute="_compute_model",
+        store=True,
+        readonly=False,
     )
     model_is_thread = fields.Boolean(
-        "Thread-Enabled", compute="_compute_model_is_thread"
+        string="Thread-Enabled",
+        compute="_compute_model_is_thread",
     )
     res_ids = fields.Text(
-        "Related Document IDs", compute="_compute_res_ids", readonly=False, store=True
+        string="Related Document IDs",
+        compute="_compute_res_ids",
+        store=True,
+        readonly=False,
     )
-    res_domain = fields.Text("Active domain")
+    res_domain = fields.Text(string="Active domain")
     res_domain_user_id: ResUsers = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Responsible",
         help="Used as context used to evaluate composer domain",
     )
     record_alias_domain_id: MailAliasDomain = fields.Many2one(
-        "mail.alias.domain",
-        "Alias Domain",
+        comodel_name="mail.alias.domain",
+        string="Alias Domain",
         compute="_compute_record_environment",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     record_company_id: ResCompany = fields.Many2one(
-        "res.company",
-        "Company",
+        comodel_name="res.company",
+        string="Company",
         compute="_compute_record_environment",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     message_type = fields.Selection(
-        [
+        selection=[
             ("auto_comment", "Automated Targeted Notification"),
             ("comment", "Comment"),
             ("notification", "System notification"),
         ],
-        "Type",
-        required=True,
-        default="comment",
+        string="Type",
         help="Message type: email for email message, notification for system "
         "message, comment for other messages such as user replies",
+        default="comment",
+        required=True,
     )
     subtype_id: MailMessageSubtype = fields.Many2one(
-        "mail.message.subtype",
-        ondelete="set null",
+        comodel_name="mail.message.subtype",
         compute="_compute_subtype_id",
-        readonly=False,
         store=True,
+        readonly=False,
+        ondelete="set null",
     )
-    subtype_is_log = fields.Boolean("Is a log", compute="_compute_subtype_is_log")
+    subtype_is_log = fields.Boolean(
+        string="Is a log",
+        compute="_compute_subtype_is_log",
+    )
     mail_activity_type_id: MailActivityType = fields.Many2one(
-        "mail.activity.type", ondelete="set null"
+        comodel_name="mail.activity.type",
+        ondelete="set null",
     )
     reply_to = fields.Char(
-        compute="_compute_reply_to",
-        readonly=False,
-        store=True,
-        compute_sudo=False,
         help="Reply email address. Setting the reply_to bypasses the automatic thread creation.",
+        compute="_compute_reply_to",
+        compute_sudo=False,
+        store=True,
+        readonly=False,
     )
     reply_to_force_new = fields.Boolean(
         string="Considers answers as new thread",
-        compute="_compute_reply_to_force_new",
-        readonly=False,
-        store=True,
         help="Manage answers as new incoming emails instead of replies going to the same thread.",
+        compute="_compute_reply_to_force_new",
+        store=True,
+        readonly=False,
     )
     reply_to_mode = fields.Selection(
-        [
+        selection=[
             ("update", "Store email and replies in the chatter of each record"),
             ("new", "Collect replies on a specific email address"),
         ],
         string="Replies",
+        help="Original Discussion: Answers go in the original document discussion thread. \n Another Email Address: Answers go to the email address mentioned in the tracking message-id instead of original document discussion thread. \n This has an impact on the generated message-id.",
         compute="_compute_reply_to_mode",
         inverse="_inverse_reply_to_mode",
-        help="Original Discussion: Answers go in the original document discussion thread. \n Another Email Address: Answers go to the email address mentioned in the tracking message-id instead of original document discussion thread. \n This has an impact on the generated message-id.",
     )
     partner_ids: ResPartner = fields.Many2many(
-        "res.partner",
-        "mail_compose_message_res_partner_rel",
-        "wizard_id",
-        "partner_id",
-        "Additional Contacts",
+        comodel_name="res.partner",
+        relation="mail_compose_message_res_partner_rel",
+        column1="wizard_id",
+        column2="partner_id",
+        string="Additional Contacts",
         compute="_compute_partner_ids",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     partner_ids_all_have_email = fields.Boolean(
         compute="_compute_partner_ids_all_have_email"
     )
     notified_bcc_contains_share = fields.Boolean(
-        "Is an external partner follower of the document?",
+        string="Is an external partner follower of the document?",
         compute="_compute_notified_bcc_contains_share",
     )
     auto_delete = fields.Boolean(
-        "Delete Emails",
-        compute="_compute_auto_delete",
-        readonly=False,
-        store=True,
-        compute_sudo=False,
+        string="Delete Emails",
         help="This option permanently removes any track of email after it's been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.",
+        compute="_compute_auto_delete",
+        compute_sudo=False,
+        store=True,
+        readonly=False,
     )
     auto_delete_keep_log = fields.Boolean(
-        "Keep Message Copy",
-        compute="_compute_auto_delete_keep_log",
-        readonly=False,
-        store=True,
+        string="Keep Message Copy",
         help="Keep a copy of the email content if emails are removed (mass mailing only)",
+        compute="_compute_auto_delete_keep_log",
+        store=True,
+        readonly=False,
     )
     force_send = fields.Boolean(
-        "Send mailing or notifications directly",
+        string="Send mailing or notifications directly",
         compute="_compute_force_send",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     mail_server_id: IrMail_Server = fields.Many2one(
-        "ir.mail_server",
+        comodel_name="ir.mail_server",
         string="Outgoing mail server",
         compute="_compute_mail_server_id",
-        readonly=False,
-        store=True,
         compute_sudo=False,
+        store=True,
+        readonly=False,
     )
     notify_author = fields.Boolean(
-        compute="_compute_notify_author", readonly=False, store=True
+        compute="_compute_notify_author",
+        store=True,
+        readonly=False,
     )
     notify_author_mention = fields.Boolean(
-        compute="_compute_notify_author_mention", readonly=False, store=True
+        compute="_compute_notify_author_mention",
+        store=True,
+        readonly=False,
     )
     notify_skip_followers = fields.Boolean(
-        compute="_compute_notify_skip_followers", readonly=False, store=True
+        compute="_compute_notify_skip_followers",
+        store=True,
+        readonly=False,
     )
     scheduled_date = fields.Char(
-        compute="_compute_scheduled_date",
-        readonly=False,
-        store=True,
-        compute_sudo=False,
         help="In comment mode: if set, postpone notifications sending. "
         "In mass mail mode: if sent, send emails after that date. "
         "This date is considered as being in UTC timezone.",
+        compute="_compute_scheduled_date",
+        compute_sudo=False,
+        store=True,
+        readonly=False,
     )
     use_exclusion_list = fields.Boolean(
+        help="Prevent sending messages to blacklisted contacts. Disable only when absolutely necessary.",
         default=True,
         copy=False,
-        help="Prevent sending messages to blacklisted contacts. Disable only when absolutely necessary.",
     )
     template_name = fields.Char()
 

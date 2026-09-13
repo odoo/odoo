@@ -9,24 +9,24 @@ class SaleOrderLine(models.Model):
         selection_add=[("milestones", "Milestones")]
     )
     project_id = fields.Many2one(
-        "project.project",
-        "Generated Project",
+        comodel_name="project.project",
+        string="Generated Project",
+        export_string_translation=False,
         index=True,
         copy=False,
-        export_string_translation=False,
     )
     task_id = fields.Many2one(
-        "project.task",
-        "Generated Task",
+        comodel_name="project.task",
+        string="Generated Task",
+        export_string_translation=False,
         index=True,
         copy=False,
-        export_string_translation=False,
     )
     reached_milestones_ids = fields.One2many(
-        "project.milestone",
-        "sale_line_id",
-        domain=[("is_reached", "=", True)],
+        comodel_name="project.milestone",
+        inverse_name="sale_line_id",
         export_string_translation=False,
+        domain=[("is_reached", "=", True)],
     )
 
     def _get_domain_product_from_sol_name(self, product_name):

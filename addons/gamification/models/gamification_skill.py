@@ -15,15 +15,32 @@ class GamificationSkillTree(models.Model):
     _description = "Gamification Skill Tree"
     _order = "sequence, name"
 
-    name = fields.Char("Tree Name", required=True, translate=True)
+    name = fields.Char(
+        string="Tree Name",
+        translate=True,
+        required=True,
+    )
     description = fields.Text(translate=True)
     sequence = fields.Integer(default=10)
     active = fields.Boolean(default=True)
-    icon = fields.Image(max_width=128, max_height=128)
-    color = fields.Integer("Color Index", default=0)
+    icon = fields.Image(
+        max_width=128,
+        max_height=128,
+    )
+    color = fields.Integer(
+        string="Color Index",
+        default=0,
+    )
 
-    node_ids = fields.One2many("gamification.skill.node", "tree_id", string="Nodes")
-    node_count = fields.Count("node_ids", "# Nodes")
+    node_ids = fields.One2many(
+        comodel_name="gamification.skill.node",
+        inverse_name="tree_id",
+        string="Nodes",
+    )
+    node_count = fields.Count(
+        count_of="node_ids",
+        string="# Nodes",
+    )
 
 
 # Nodes represent specific skills or competencies.  They can be
@@ -36,65 +53,77 @@ class GamificationSkillNode(models.Model):
     _description = "Skill Tree Node"
     _order = "tree_id, level, sequence"
 
-    name = fields.Char("Skill Name", required=True, translate=True)
+    name = fields.Char(
+        string="Skill Name",
+        translate=True,
+        required=True,
+    )
     description = fields.Text(translate=True)
     tree_id = fields.Many2one(
-        "gamification.skill.tree",
+        comodel_name="gamification.skill.tree",
         string="Skill Tree",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
     sequence = fields.Integer(default=10)
     level = fields.Integer(
-        "Tree Level",
-        default=1,
+        string="Tree Level",
         help="Vertical position in the tree (1 = root, higher = deeper).",
+        default=1,
     )
 
     # Prerequisites
     prerequisite_ids = fields.Many2many(
-        "gamification.skill.node",
-        "gamification_skill_node_prereq_rel",
-        "node_id",
-        "prereq_id",
+        comodel_name="gamification.skill.node",
+        relation="gamification_skill_node_prereq_rel",
+        column1="node_id",
+        column2="prereq_id",
         string="Prerequisites",
         domain="[('tree_id', '=', tree_id), ('id', '!=', id)]",
     )
     dependent_ids = fields.Many2many(
-        "gamification.skill.node",
-        "gamification_skill_node_prereq_rel",
-        "prereq_id",
-        "node_id",
+        comodel_name="gamification.skill.node",
+        relation="gamification_skill_node_prereq_rel",
+        column1="prereq_id",
+        column2="node_id",
         string="Unlocked By This",
         readonly=True,
     )
 
     # Unlock conditions
     karma_threshold = fields.Integer(
-        default=0,
         help="Minimum karma required to unlock (0 = no karma requirement).",
+        default=0,
     )
     quest_id = fields.Many2one(
-        "gamification.quest",
+        comodel_name="gamification.quest",
         string="Required Quest",
-        ondelete="set null",
         help="Quest that must be completed to unlock this node.",
+        ondelete="set null",
     )
 
     # Rewards
-    karma_reward = fields.Integer("Unlock Karma", default=0)
+    karma_reward = fields.Integer(
+        string="Unlock Karma",
+        default=0,
+    )
     badge_id = fields.Many2one(
-        "gamification.badge",
+        comodel_name="gamification.badge",
         string="Unlock Badge",
         ondelete="set null",
     )
 
     # Tracking
     unlock_ids = fields.One2many(
-        "gamification.skill.node.unlock", "node_id", string="Unlocks"
+        comodel_name="gamification.skill.node.unlock",
+        inverse_name="node_id",
+        string="Unlocks",
     )
-    unlock_count = fields.Count("unlock_ids", "# Unlocked")
+    unlock_count = fields.Count(
+        count_of="unlock_ids",
+        string="# Unlocked",
+    )
 
     def check_unlock_for_user(self, user):
         """Check if a user meets the conditions to unlock this node.
@@ -305,16 +334,16 @@ class GamificationSkillNodeUnlock(models.Model):
     _order = "unlock_date desc"
 
     node_id = fields.Many2one(
-        "gamification.skill.node",
+        comodel_name="gamification.skill.node",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
     user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
     unlock_date = fields.Datetime(
         default=fields.Datetime.now,

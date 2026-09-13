@@ -10,7 +10,7 @@ class MailNotification(models.Model):
             ("twilio_callback", "Incorrect callback URL"),
             ("twilio_from_missing", "Missing From Number"),
             ("twilio_from_to", "From / To identic"),
-        ],
+        ]
     )
 
     # CRUD

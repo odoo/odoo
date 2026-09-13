@@ -7,14 +7,17 @@ class ResCompany(models.Model):
 
     documents_product_settings = fields.Boolean()
     product_folder_id = fields.Many2one(
-        "document.document",
-        check_company=True,
+        comodel_name="document.document",
         compute="_compute_product_folder_id",
         store=True,
         readonly=False,
         domain=[("type", "=", "folder"), ("shortcut_document_id", "=", False)],
+        check_company=True,
     )
-    product_tag_ids = fields.Many2many("document.tag", "product_tags_table")
+    product_tag_ids = fields.Many2many(
+        comodel_name="document.tag",
+        relation="product_tags_table",
+    )
 
     @api.depends("documents_product_settings")
     def _compute_product_folder_id(self):

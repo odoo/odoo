@@ -28,37 +28,43 @@ class StockPicking(models.Model):
         readonly=True,
     )
     allowed_carrier_ids = fields.Many2many(
-        "delivery.carrier",
+        comodel_name="delivery.carrier",
         compute="_compute_allowed_carrier_ids",
     )
     carrier_id = fields.Many2one(
-        "delivery.carrier",
+        comodel_name="delivery.carrier",
         domain="[('id', 'in', allowed_carrier_ids)]",
         check_company=True,
     )
     weight = fields.Float(
-        compute="_compute_weight",
-        digits="Stock Weight",
-        store=True,
         help="Total weight of the products in the picking.",
+        digits="Stock Weight",
+        compute="_compute_weight",
         compute_sudo=True,
+        store=True,
     )
-    carrier_tracking_ref = fields.Char(string="Tracking Reference", copy=False)
+    carrier_tracking_ref = fields.Char(
+        string="Tracking Reference",
+        copy=False,
+    )
     carrier_tracking_url = fields.Char(
-        string="Tracking URL", compute="_compute_carrier_tracking_url"
+        string="Tracking URL",
+        compute="_compute_carrier_tracking_url",
     )
     weight_uom_name = fields.Char(
         string="Weight unit of measure label",
         compute="_compute_weight_uom_name",
-        readonly=True,
         default=_default_weight_uom_name,
+        readonly=True,
     )
     is_return_picking = fields.Boolean(compute="_compute_is_return_picking")
     return_label_ids = fields.One2many(
-        "ir.attachment", compute="_compute_return_label_ids"
+        comodel_name="ir.attachment",
+        compute="_compute_return_label_ids",
     )
     destination_country_code = fields.Char(
-        related="partner_id.country_id.code", string="Destination Country"
+        related="partner_id.country_id.code",
+        string="Destination Country",
     )
     integration_level = fields.Selection(related="carrier_id.integration_level")
 

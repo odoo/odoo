@@ -5,15 +5,18 @@ class RatingRating(models.Model):
     _inherit = "rating.rating"
 
     # Adding information for comment a rating message
-    publisher_comment = fields.Text("Publisher comment")
+    publisher_comment = fields.Text(string="Publisher comment")
     publisher_id = fields.Many2one(
-        "res.partner",
-        "Commented by",
-        ondelete="set null",
-        readonly=True,
+        comodel_name="res.partner",
+        string="Commented by",
         index="btree_not_null",
+        readonly=True,
+        ondelete="set null",
     )
-    publisher_datetime = fields.Datetime("Commented on", readonly=True)
+    publisher_datetime = fields.Datetime(
+        string="Commented on",
+        readonly=True,
+    )
 
     @api.model_create_multi
     def create(self, vals_list):

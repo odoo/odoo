@@ -6,6 +6,6 @@ class ProjectTask(models.Model):
     _inherit = "project.task"
 
     user_skill_ids = fields.One2many(
-        "hr.employee.skill",
+        comodel_name="hr.employee.skill",
         related="employee_ids.current_employee_skill_ids",
     )

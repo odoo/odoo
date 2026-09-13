@@ -24,7 +24,10 @@ class ProductMergeLine(models.TransientModel):
 
     wizard_id = fields.Many2one(comodel_name="product.merge.wizard")
     min_id = fields.Integer(string="MinID")
-    aggr_ids = fields.Char(string="Ids", required=True)
+    aggr_ids = fields.Char(
+        string="Ids",
+        required=True,
+    )
 
 
 class ProductMergeWizard(models.TransientModel):
@@ -87,16 +90,24 @@ class ProductMergeWizard(models.TransientModel):
             ("selection", "Selection"),
             ("finished", "Finished"),
         ],
+        default="option",
         readonly=True,
         required=True,
-        default="option",
     )
 
-    number_group = fields.Integer(string="Group of Products", readonly=True)
-    maximum_group = fields.Integer(string="Maximum of Group of Products", default=100)
+    number_group = fields.Integer(
+        string="Group of Products",
+        readonly=True,
+    )
+    maximum_group = fields.Integer(
+        string="Maximum of Group of Products",
+        default=100,
+    )
     current_line_id = fields.Many2one(comodel_name="product.merge.line")
     line_ids = fields.One2many(
-        comodel_name="product.merge.line", inverse_name="wizard_id", string="Lines"
+        comodel_name="product.merge.line",
+        inverse_name="wizard_id",
+        string="Lines",
     )
     product_tmpl_ids = fields.Many2many(
         comodel_name="product.template",
@@ -104,7 +115,8 @@ class ProductMergeWizard(models.TransientModel):
         context={"active_test": False},
     )
     dst_product_tmpl_id = fields.Many2one(
-        comodel_name="product.template", string="Destination Product"
+        comodel_name="product.template",
+        string="Destination Product",
     )
 
     exclude_journal_item = fields.Boolean(

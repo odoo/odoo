@@ -17,14 +17,21 @@ class MixinModuleLink(models.AbstractModel):
     _allow_sudo_commands = False
 
     name = fields.Char(index=True)
-    module_id = fields.Many2one("ir.module.module", ondelete="cascade")
+    module_id = fields.Many2one(
+        comodel_name="ir.module.module",
+        ondelete="cascade",
+    )
     linked_id = fields.Many2one(
-        "ir.module.module",
-        "Linked Module",
+        comodel_name="ir.module.module",
+        string="Linked Module",
         compute="_compute_linked_id",
         search="_search_linked_id",
     )
-    state = fields.Selection(LINK_STATES, string="Status", compute="_compute_state")
+    state = fields.Selection(
+        selection=LINK_STATES,
+        string="Status",
+        compute="_compute_state",
+    )
 
     @api.depends("name")
     def _compute_linked_id(self) -> None:

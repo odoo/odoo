@@ -47,23 +47,36 @@ class ResDeviceLog(models.Model):
     _description = "Device Log"
     _rec_names_search = ["platform", "browser"]
 
-    session_identifier = fields.Char(required=True, index="btree")
+    session_identifier = fields.Char(
+        index="btree",
+        required=True,
+    )
     platform = fields.Char()
     browser = fields.Char()
-    ip_address = fields.Char("IP Address")
+    ip_address = fields.Char(string="IP Address")
     country = fields.Char()
     city = fields.Char()
-    device_type = fields.Selection([("computer", "Computer"), ("mobile", "Mobile")])
-    user_id = fields.Many2one("res.users", index="btree", ondelete="cascade")
+    device_type = fields.Selection(
+        selection=[("computer", "Computer"), ("mobile", "Mobile")]
+    )
+    user_id = fields.Many2one(
+        comodel_name="res.users",
+        index="btree",
+        ondelete="cascade",
+    )
     first_activity = fields.Datetime()
     last_activity = fields.Datetime(index="btree")
     revoked = fields.Boolean(
         help="If True, the session file corresponding to this device"
-        " no longer exists on the filesystem.",
+        " no longer exists on the filesystem."
     )
-    is_current = fields.Boolean("Current Device", compute="_compute_is_current")
+    is_current = fields.Boolean(
+        string="Current Device",
+        compute="_compute_is_current",
+    )
     linked_ip_addresses = fields.Text(
-        "Linked IP address", compute="_compute_linked_ip_addresses"
+        string="Linked IP address",
+        compute="_compute_linked_ip_addresses",
     )
 
     _composite_idx = models.Index(

@@ -19,58 +19,64 @@ class ResGroups(models.Model):
     _allow_sudo_commands = False
     _order = "privilege_id, sequence, name, id"
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
     user_ids = fields.Many2many(
-        "res.users",
-        "res_groups_users_rel",
-        "gid",
-        "uid",
+        comodel_name="res.users",
+        relation="res_groups_users_rel",
+        column1="gid",
+        column2="uid",
         help="Users explicitly in this group",
     )
     all_user_ids = fields.Many2many(
-        "res.users",
+        comodel_name="res.users",
         string="Users and implied users",
         compute="_compute_all_user_ids",
-        search="_search_all_user_ids",
         inverse="_inverse_all_user_ids",
+        search="_search_all_user_ids",
     )
 
     all_users_count = fields.Integer(
-        "# Users",
+        string="# Users",
         help="Number of users having this group (implicitly or explicitly)",
         compute="_compute_all_users_count",
         compute_sudo=True,
     )
 
     model_access = fields.One2many(
-        "ir.model.access", "group_id", string="Access Controls", copy=True
+        comodel_name="ir.model.access",
+        inverse_name="group_id",
+        string="Access Controls",
+        copy=True,
     )
     rule_groups = fields.Many2many(
-        "ir.rule",
-        "rule_group_rel",
-        "group_id",
-        "rule_group_id",
+        comodel_name="ir.rule",
+        relation="rule_group_rel",
+        column1="group_id",
+        column2="rule_group_id",
         string="Rules",
         domain="[('global', '=', False)]",
     )
     menu_access = fields.Many2many(
-        "ir.ui.menu",
-        "ir_ui_menu_group_rel",
-        "gid",
-        "menu_id",
+        comodel_name="ir.ui.menu",
+        relation="ir_ui_menu_group_rel",
+        column1="gid",
+        column2="menu_id",
         string="Access Menu",
     )
     view_access = fields.Many2many(
-        "ir.ui.view",
-        "ir_ui_view_group_rel",
-        "group_id",
-        "view_id",
+        comodel_name="ir.ui.view",
+        relation="ir_ui_view_group_rel",
+        column1="group_id",
+        column2="view_id",
         string="Views",
     )
     comment = fields.Text(translate=True)
     full_name = fields.Char(
-        compute="_compute_full_name",
         string="Group Name",
+        compute="_compute_full_name",
         search="_search_full_name",
     )
     share = fields.Boolean(
@@ -83,7 +89,10 @@ class ResGroups(models.Model):
     )
 
     sequence = fields.Integer()
-    privilege_id = fields.Many2one("res.groups.privilege", index=True)
+    privilege_id = fields.Many2one(
+        comodel_name="res.groups.privilege",
+        index=True,
+    )
     view_group_hierarchy = fields.Json(
         string="Technical field for default group setting",
         compute="_compute_view_group_hierarchy",
@@ -100,40 +109,40 @@ class ResGroups(models.Model):
     )
 
     implied_ids = fields.Many2many(
-        "res.groups",
-        "res_groups_implied_rel",
-        "gid",
-        "hid",
+        comodel_name="res.groups",
+        relation="res_groups_implied_rel",
+        column1="gid",
+        column2="hid",
         string="Implied Groups",
         help="Users of this group are also implicitly part of those groups",
     )
     all_implied_ids = fields.Many2many(
-        "res.groups",
+        comodel_name="res.groups",
         string="Transitively Implied Groups",
-        recursive=True,
-        compute="_compute_all_implied_ids",
-        compute_sudo=True,
-        search="_search_all_implied_ids",
         help="The group itself with all its implied groups.",
+        compute="_compute_all_implied_ids",
+        search="_search_all_implied_ids",
+        compute_sudo=True,
+        recursive=True,
     )
     implied_by_ids = fields.Many2many(
-        "res.groups",
-        "res_groups_implied_rel",
-        "hid",
-        "gid",
+        comodel_name="res.groups",
+        relation="res_groups_implied_rel",
+        column1="hid",
+        column2="gid",
         string="Implying Groups",
         help="Users in those groups are implicitly part of this group.",
     )
     all_implied_by_ids = fields.Many2many(
-        "res.groups",
+        comodel_name="res.groups",
         string="Transitively Implying Groups",
-        recursive=True,
         compute="_compute_all_implied_by_ids",
-        compute_sudo=True,
         search="_search_all_implied_by_ids",
+        compute_sudo=True,
+        recursive=True,
     )
     disjoint_ids = fields.Many2many(
-        "res.groups",
+        comodel_name="res.groups",
         string="Disjoint Groups",
         help="A user may not belong to this group and one of those.  For instance, users may not be portal users and internal users.",
         compute="_compute_disjoint_ids",

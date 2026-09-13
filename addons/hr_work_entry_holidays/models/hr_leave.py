@@ -8,7 +8,10 @@ from odoo import api, fields, models
 class HrLeaveType(models.Model):
     _inherit = "hr.leave.type"
 
-    work_entry_type_id = fields.Many2one("hr.work.entry.type", index="btree_not_null")
+    work_entry_type_id = fields.Many2one(
+        comodel_name="hr.work.entry.type",
+        index="btree_not_null",
+    )
 
 
 class HrLeave(models.Model):

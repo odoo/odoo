@@ -82,9 +82,12 @@ class MixinRecurrenceRrule(models.AbstractModel):
     _description = "iCalendar Recurrence Rule Mixin"
     _inherit = ["mixin.recurrence.rule"]
 
-    name = fields.Char(compute="_compute_name", store=True)
+    name = fields.Char(
+        compute="_compute_name",
+        store=True,
+    )
     event_tz = fields.Selection(
-        _selection_timezones,
+        selection=_selection_timezones,
         string="Timezone",
         default=lambda self: self.env.context.get("tz") or self.env.user.tz,
     )
@@ -93,13 +96,11 @@ class MixinRecurrenceRrule(models.AbstractModel):
         inverse="_inverse_rrule",
         store=True,
     )
-    dtstart = fields.Datetime(
-        compute="_compute_dtstart",
-    )
+    dtstart = fields.Datetime(compute="_compute_dtstart")
     repeat_type = fields.Selection(
         selection_add=[REPEAT_TYPE_COUNT],
-        ondelete={REPEAT_TYPE_COUNT[0]: "set default"},
         default="count",
+        ondelete={REPEAT_TYPE_COUNT[0]: "set default"},
     )
     repeat_number = fields.Integer(
         string="Number of Repetitions",
@@ -112,10 +113,16 @@ class MixinRecurrenceRrule(models.AbstractModel):
     fri = fields.Boolean()
     sat = fields.Boolean()
     sun = fields.Boolean()
-    month_by = fields.Selection(MONTH_BY_SELECTION, default="date")
+    month_by = fields.Selection(
+        selection=MONTH_BY_SELECTION,
+        default="date",
+    )
     day = fields.Integer(default=1)
-    weekday = fields.Selection(WEEKDAY_SELECTION)
-    byday = fields.Selection(BYDAY_SELECTION, string="By day")
+    weekday = fields.Selection(selection=WEEKDAY_SELECTION)
+    byday = fields.Selection(
+        selection=BYDAY_SELECTION,
+        string="By day",
+    )
     repeat_until = fields.Date()
 
     _month_day = models.Constraint(

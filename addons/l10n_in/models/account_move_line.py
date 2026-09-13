@@ -11,8 +11,8 @@ class AccountMoveLine(models.Model):
         string="HSN/SAC Code",
         compute="_compute_l10n_in_hsn_code",
         store=True,
-        readonly=False,
         copy=False,
+        readonly=False,
     )
     l10n_in_gstr_section = fields.Selection(
         selection=[
@@ -59,7 +59,8 @@ class AccountMoveLine(models.Model):
 
     # withholding related fields
     l10n_in_withhold_tax_amount = fields.Monetary(
-        string="TDS Tax Amount", compute="_compute_l10n_in_withhold_tax_amount"
+        string="TDS Tax Amount",
+        compute="_compute_l10n_in_withhold_tax_amount",
     )
     l10n_in_tds_tcs_section_id = fields.Many2one(
         related="account_id.l10n_in_tds_tcs_section_id"

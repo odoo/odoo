@@ -27,31 +27,37 @@ class HrEmployeeChangeRequest(models.Model):
     )
 
     employee_id = fields.Many2one(
-        "hr.employee",
+        comodel_name="hr.employee",
+        default=lambda self: self.env.user.employee_id,
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
-        default=lambda self: self.env.user.employee_id,
     )
-    company_id = fields.Many2one(related="employee_id.company_id", store=True)
+    company_id = fields.Many2one(
+        related="employee_id.company_id",
+        store=True,
+    )
     requested_by_uid = fields.Many2one(
-        "res.users", default=lambda self: self.env.user, readonly=True
+        comodel_name="res.users",
+        default=lambda self: self.env.user,
+        readonly=True,
     )
 
     private_street = fields.Char()
     private_street2 = fields.Char()
     private_city = fields.Char()
-    private_state_id = fields.Many2one("res.country.state")
+    private_state_id = fields.Many2one(comodel_name="res.country.state")
     private_zip = fields.Char()
-    private_country_id = fields.Many2one("res.country")
+    private_country_id = fields.Many2one(comodel_name="res.country")
     private_email = fields.Char()
     private_phone_ids = fields.Many2many(
-        "phone.number", "hr_change_request_private_phone_rel"
+        comodel_name="phone.number",
+        relation="hr_change_request_private_phone_rel",
     )
     emergency_contact = fields.Char()
     emergency_phone_ids = fields.Many2many(
-        "phone.number",
-        "hr_change_request_emergency_phone_rel",
+        comodel_name="phone.number",
+        relation="hr_change_request_emergency_phone_rel",
     )
 
     # A partial unique index would say this in SQL, but EXCLUDE needs

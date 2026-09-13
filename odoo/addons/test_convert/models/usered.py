@@ -6,8 +6,11 @@ class Test_ConvertUsered(models.Model):
     _description = "z test model ignore"
 
     name = fields.Char()
-    user_id = fields.Many2one("res.users", default=lambda self: self.env.user)
-    test_id = fields.Many2one("test_convert.test_model")
+    user_id = fields.Many2one(
+        comodel_name="res.users",
+        default=lambda self: self.env.user,
+    )
+    test_id = fields.Many2one(comodel_name="test_convert.test_model")
     tz = fields.Char(
         default=lambda self: self.env.context.get("tz") or self.env.user.tz
     )

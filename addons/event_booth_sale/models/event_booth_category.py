@@ -17,33 +17,34 @@ class EventBoothCategory(models.Model):
         )
 
     product_id = fields.Many2one(
-        "product.product",
+        comodel_name="product.product",
+        default=_default_product_id,
         required=True,
         domain=[("service_tracking", "=", "event_booth")],
-        default=_default_product_id,
         groups="event.group_event_registration_desk",
     )
     price = fields.Float(
-        compute="_compute_price",
         min_display_digits="Product Price",
-        readonly=False,
+        compute="_compute_price",
         store=True,
+        readonly=False,
         groups="event.group_event_registration_desk",
     )
     price_incl = fields.Float(
         string="Price incl",
-        compute="_compute_price_incl",
         min_display_digits="Product Price",
+        compute="_compute_price_incl",
         readonly=False,
         groups="event.group_event_registration_desk",
     )
     currency_id = fields.Many2one(
-        related="product_id.currency_id", groups="event.group_event_registration_desk"
+        related="product_id.currency_id",
+        groups="event.group_event_registration_desk",
     )
     price_reduce = fields.Float(
+        min_display_digits="Product Price",
         compute="_compute_price_reduce",
         compute_sudo=True,
-        min_display_digits="Product Price",
         groups="event.group_event_registration_desk",
     )
     price_reduce_taxinc = fields.Float(
@@ -51,7 +52,11 @@ class EventBoothCategory(models.Model):
         compute="_compute_price_reduce_taxinc",
         compute_sudo=True,
     )
-    image_1920 = fields.Image(compute="_compute_image_1920", readonly=False, store=True)
+    image_1920 = fields.Image(
+        compute="_compute_image_1920",
+        store=True,
+        readonly=False,
+    )
 
     @api.constrains("product_id")
     def _check_service_tracking(self):

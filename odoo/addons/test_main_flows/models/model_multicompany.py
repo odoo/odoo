@@ -6,4 +6,4 @@ class TestModel_Multicompany(models.Model):
     _description = "test multicompany model"
 
     name = fields.Char()
-    company_id = fields.Many2one("res.company")
+    company_id = fields.Many2one(comodel_name="res.company")

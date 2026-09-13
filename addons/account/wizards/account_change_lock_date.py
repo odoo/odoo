@@ -20,18 +20,18 @@ class AccountChangeLockDate(models.TransientModel):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        required=True,
-        readonly=True,
         default=lambda self: self.env.company,
+        readonly=True,
+        required=True,
     )
 
     fiscalyear_lock_date = fields.Date(
         string="Lock Everything",
+        help="Any entry up to and including that date will be postponed to a later time, in accordance with its journal's sequence.",
         compute="_compute_lock_dates",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
-        help="Any entry up to and including that date will be postponed to a later time, in accordance with its journal's sequence.",
     )
     fiscalyear_lock_date_for_me = fields.Date(
         string="Lock Everything For Me",
@@ -52,12 +52,12 @@ class AccountChangeLockDate(models.TransientModel):
 
     tax_lock_date = fields.Date(
         string="Lock Tax Return",
-        compute="_compute_lock_dates",
-        store=True,
-        readonly=False,
-        precompute=True,
         help="Any entry with taxes up to and including that date will be postponed to a later time, in accordance with its journal's sequence. "
         "The tax lock date is automatically set when the tax closing entry is posted.",
+        compute="_compute_lock_dates",
+        precompute=True,
+        store=True,
+        readonly=False,
     )
     tax_lock_date_for_me = fields.Date(
         string="Lock Tax Return For Me",
@@ -78,11 +78,11 @@ class AccountChangeLockDate(models.TransientModel):
 
     sale_lock_date = fields.Date(
         string="Lock Sales",
+        help="Any sales entry prior to and including this date will be postponed to a later date, in accordance with its journal's sequence.",
         compute="_compute_lock_dates",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
-        help="Any sales entry prior to and including this date will be postponed to a later date, in accordance with its journal's sequence.",
     )
     sale_lock_date_for_me = fields.Date(
         string="Lock Sales For Me",
@@ -103,11 +103,11 @@ class AccountChangeLockDate(models.TransientModel):
 
     purchase_lock_date = fields.Date(
         string="Lock Purchases",
+        help="Any purchase entry prior to and including this date will be postponed to a later date, in accordance with its journal's sequence.",
         compute="_compute_lock_dates",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
-        help="Any purchase entry prior to and including this date will be postponed to a later date, in accordance with its journal's sequence.",
     )
     purchase_lock_date_for_me = fields.Date(
         string="Lock Purchases For Me",
@@ -128,28 +128,26 @@ class AccountChangeLockDate(models.TransientModel):
 
     hard_lock_date = fields.Date(
         string="Hard Lock",
-        compute="_compute_lock_dates",
-        store=True,
-        readonly=False,
-        precompute=True,
         help="Any entry up to and including that date will be postponed to a later time, in accordance with its journal sequence. "
         "This lock date is irreversible and does not allow any exception.",
+        compute="_compute_lock_dates",
+        precompute=True,
+        store=True,
+        readonly=False,
     )
     current_hard_lock_date = fields.Date(
-        string="Current Hard Lock",
         related="company_id.hard_lock_date",
+        string="Current Hard Lock",
         readonly=True,
     )
 
-    exception_needed_fields = fields.Char(
-        compute="_compute_exception_needed_fields",
-    )
+    exception_needed_fields = fields.Char(compute="_compute_exception_needed_fields")
     exception_applies_to = fields.Selection(
-        string="Exception applies",
         selection=[
             ("me", "for me"),
             ("everyone", "for everyone"),
         ],
+        string="Exception applies",
         default="me",
         required=True,
     )
@@ -167,7 +165,7 @@ class AccountChangeLockDate(models.TransientModel):
     exception_reason = fields.Char()
 
     show_draft_entries_warning = fields.Boolean(
-        compute="_compute_show_draft_entries_warning",
+        compute="_compute_show_draft_entries_warning"
     )
 
     show_posted_tax_closing_warning = fields.Boolean(

@@ -11,26 +11,29 @@ class AccountFinancialYearOp(models.TransientModel):
     _name = "account.financial.year.op"
     _description = "Opening Balance of Financial Year"
 
-    company_id = fields.Many2one(comodel_name="res.company", required=True)
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        required=True,
+    )
     opening_move_posted = fields.Boolean(compute="_compute_opening_move_posted")
     opening_date = fields.Date(
-        string="Opening Date",
-        required=True,
         related="company_id.account_opening_date",
+        string="Opening Date",
         help="Date from which the accounting is managed in Odoo. It is the date of the opening entry.",
         readonly=False,
+        required=True,
     )
     fiscalyear_last_day = fields.Integer(
         related="company_id.fiscalyear_last_day",
-        required=True,
-        readonly=False,
         help="The last day of the month will be used if the chosen day doesn't exist.",
+        readonly=False,
+        required=True,
     )
     fiscalyear_last_month = fields.Selection(
         related="company_id.fiscalyear_last_month",
+        help="The last day of the month will be used if the chosen day doesn't exist.",
         readonly=False,
         required=True,
-        help="The last day of the month will be used if the chosen day doesn't exist.",
     )
 
     @api.depends("company_id.account_opening_move_id")
@@ -131,22 +134,28 @@ class AccountSetupBankManualConfig(models.TransientModel):
     _check_company_auto = True
 
     res_partner_bank_id = fields.Many2one(
-        comodel_name="res.partner.bank", ondelete="cascade", required=True
+        comodel_name="res.partner.bank",
+        required=True,
+        ondelete="cascade",
     )
     new_journal_name = fields.Char(
-        default=lambda self: self.linked_journal_id.name,
-        inverse="_inverse_linked_journal",
-        required=True,
         help="Will be used to name the Journal related to this bank account",
+        inverse="_inverse_linked_journal",
+        default=lambda self: self.linked_journal_id.name,
+        required=True,
     )
     linked_journal_id = fields.Many2one(
-        string="Journal",
         comodel_name="account.journal",
-        inverse="_inverse_linked_journal",
+        string="Journal",
         compute="_compute_linked_journal_id",
+        inverse="_inverse_linked_journal",
         check_company=True,
     )
-    bank_bic = fields.Char(related="bank_id.bic", readonly=False, string="Bic")
+    bank_bic = fields.Char(
+        related="bank_id.bic",
+        string="Bic",
+        readonly=False,
+    )
     num_journals_without_account_bank = fields.Integer(
         default=lambda self: self._number_unlinked_journal("bank")
     )
@@ -154,7 +163,9 @@ class AccountSetupBankManualConfig(models.TransientModel):
         default=lambda self: self._number_unlinked_journal("credit")
     )
     company_id = fields.Many2one(
-        "res.company", required=True, compute="_compute_company_id"
+        comodel_name="res.company",
+        compute="_compute_company_id",
+        required=True,
     )
 
     def _number_unlinked_journal(self, journal_type):

@@ -13,45 +13,50 @@ class MrpUnbuild(models.Model):
     _order = "id desc"
 
     name = fields.Char(
-        "Reference", copy=False, readonly=True, default=lambda s: s.env._("New")
+        string="Reference",
+        default=lambda s: s.env._("New"),
+        copy=False,
+        readonly=True,
     )
     product_id = fields.Many2one(
-        "product.product",
-        check_company=True,
-        domain="[('type', '=', 'consu')]",
+        comodel_name="product.product",
         compute="_compute_product_id",
-        store=True,
         precompute=True,
+        store=True,
         readonly=False,
         required=True,
+        domain="[('type', '=', 'consu')]",
+        check_company=True,
     )
     company_id = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
         default=lambda s: s.env.company,
-        required=True,
         index=True,
+        required=True,
     )
     product_qty = fields.Float(
-        "Quantity",
+        string="Quantity",
         digits="Product Unit",
         compute="_compute_product_qty",
-        store=True,
         precompute=True,
+        store=True,
         readonly=False,
         required=True,
     )
     product_uom_id = fields.Many2one(
-        "uom.uom",
-        "Unit",
+        comodel_name="uom.uom",
+        string="Unit",
         compute="_compute_product_uom_id",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
         required=True,
     )
     bom_id = fields.Many2one(
-        "mrp.bom",
-        "Bill of Material",
+        comodel_name="mrp.bom",
+        string="Bill of Material",
+        compute="_compute_bom_id",
+        store=True,
         domain="""[
         '|',
             ('product_id', '=', product_id),
@@ -63,67 +68,75 @@ class MrpUnbuild(models.Model):
             ('company_id', '=', company_id),
             ('company_id', '=', False)
         ]""",
-        compute="_compute_bom_id",
-        store=True,
         check_company=True,
     )
     mo_id = fields.Many2one(
-        "mrp.production",
-        "Manufacturing Order",
+        comodel_name="mrp.production",
+        string="Manufacturing Order",
+        index="btree_not_null",
         domain="[('state', '=', 'done'), ('product_id', '=?', product_id), ('bom_id', '=?', bom_id)]",
         check_company=True,
-        index="btree_not_null",
     )
     mo_bom_id = fields.Many2one(
-        "mrp.bom",
-        "Bill of Material used on the Production Order",
+        comodel_name="mrp.bom",
         related="mo_id.bom_id",
+        string="Bill of Material used on the Production Order",
     )
     lot_producing_ids = fields.Many2many(
-        "stock.lot", string="Lot/Serial Numbers", related="mo_id.lot_producing_ids"
+        comodel_name="stock.lot",
+        related="mo_id.lot_producing_ids",
+        string="Lot/Serial Numbers",
     )
     lot_id = fields.Many2one(
-        "stock.lot",
-        "Lot/Serial Number",
+        comodel_name="stock.lot",
+        string="Lot/Serial Number",
         domain="[('product_id', '=', product_id),('id', 'in', lot_producing_ids)]",
         check_company=True,
     )
-    has_tracking = fields.Selection(related="product_id.tracking", readonly=True)
+    has_tracking = fields.Selection(
+        related="product_id.tracking",
+        readonly=True,
+    )
     location_id = fields.Many2one(
-        "stock.location",
-        "Source Location",
-        domain="[('usage','=','internal')]",
-        check_company=True,
+        comodel_name="stock.location",
+        string="Source Location",
+        help="Location where the product you want to unbuild is.",
         compute="_compute_locations",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
         required=True,
-        help="Location where the product you want to unbuild is.",
+        domain="[('usage','=','internal')]",
+        check_company=True,
     )
     location_dest_id = fields.Many2one(
-        "stock.location",
-        "Destination Location",
-        domain="[('usage','=','internal')]",
-        check_company=True,
+        comodel_name="stock.location",
+        string="Destination Location",
+        help="Location where you want to send the components resulting from the unbuild order.",
         compute="_compute_locations",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
         required=True,
-        help="Location where you want to send the components resulting from the unbuild order.",
+        domain="[('usage','=','internal')]",
+        check_company=True,
     )
     consume_line_ids = fields.One2many(
-        "stock.move",
-        "consume_unbuild_id",
-        readonly=True,
+        comodel_name="stock.move",
+        inverse_name="consume_unbuild_id",
         string="Consumed Disassembly Lines",
+        readonly=True,
     )
     produce_line_ids = fields.One2many(
-        "stock.move", "unbuild_id", readonly=True, string="Processed Disassembly Lines"
+        comodel_name="stock.move",
+        inverse_name="unbuild_id",
+        string="Processed Disassembly Lines",
+        readonly=True,
     )
     state = fields.Selection(
-        [("draft", "Draft"), ("done", "Done")], string="Status", default="draft"
+        selection=[("draft", "Draft"), ("done", "Done")],
+        string="Status",
+        default="draft",
     )
 
     _qty_positive = models.Constraint(

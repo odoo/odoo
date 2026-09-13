@@ -41,10 +41,14 @@ class GamificationChallenge(models.Model):
         return res
 
     # description
-    name = fields.Char("Challenge Name", required=True, translate=True)
+    name = fields.Char(
+        string="Challenge Name",
+        translate=True,
+        required=True,
+    )
     description = fields.Text(translate=True)
     state = fields.Selection(
-        [
+        selection=[
             ("draft", "Draft"),
             ("inprogress", "In Progress"),
             ("done", "Done"),
@@ -55,7 +59,9 @@ class GamificationChallenge(models.Model):
         tracking=True,
     )
     manager_id = fields.Many2one(
-        "res.users", default=lambda self: self.env.uid, string="Responsible"
+        comodel_name="res.users",
+        string="Responsible",
+        default=lambda self: self.env.uid,
     )
     # members
     # `user_ids` is the effective roster and is maintained by
@@ -66,99 +72,115 @@ class GamificationChallenge(models.Model):
     # someone the *previous* domain had matched, and retargeting a challenge
     # from one team to another silently ran it for both, for ever.
     user_ids = fields.Many2many(
-        "res.users",
-        "gamification_challenge_users_rel",
+        comodel_name="res.users",
+        relation="gamification_challenge_users_rel",
         string="Participants",
         compute="_compute_user_ids",
         store=True,
         readonly=True,
     )
     manual_user_ids = fields.Many2many(
-        "res.users",
-        "gamification_challenge_manual_users_rel",
+        comodel_name="res.users",
+        relation="gamification_challenge_manual_users_rel",
         string="Extra Participants",
         help="People taking part on top of whoever the domain selects. "
         "Changing the domain never removes them.",
     )
-    user_domain = fields.Char("User domain")  # Alternative to a list of users
-    user_count = fields.Integer("# Users", compute="_compute_user_count")
+    user_domain = fields.Char(string="User domain")  # Alternative to a list of users
+    user_count = fields.Integer(
+        string="# Users",
+        compute="_compute_user_count",
+    )
     # periodicity
     period = fields.Selection(
-        [
+        selection=[
             ("once", "Non recurring"),
             ("daily", "Daily"),
             ("weekly", "Weekly"),
             ("monthly", "Monthly"),
             ("yearly", "Yearly"),
         ],
-        default="once",
         string="Periodicity",
         help="Period of automatic goal assignment. If none is selected, should be launched manually.",
+        default="once",
         required=True,
     )
     start_date = fields.Date(
-        help="The day a new challenge will be automatically started. If no periodicity is set, will use this date as the goal start date.",
+        help="The day a new challenge will be automatically started. If no periodicity is set, will use this date as the goal start date."
     )
     end_date = fields.Date(
-        help="The day a new challenge will be automatically closed. If no periodicity is set, will use this date as the goal end date.",
+        help="The day a new challenge will be automatically closed. If no periodicity is set, will use this date as the goal end date."
     )
 
     invited_user_ids = fields.Many2many(
-        "res.users", "gamification_invited_user_ids_rel", string="Suggest to users"
+        comodel_name="res.users",
+        relation="gamification_invited_user_ids_rel",
+        string="Suggest to users",
     )
 
     line_ids = fields.One2many(
-        "gamification.challenge.line",
-        "challenge_id",
+        comodel_name="gamification.challenge.line",
+        inverse_name="challenge_id",
         string="Lines",
         help="List of goals that will be set",
-        required=True,
         copy=True,
+        required=True,
     )
 
     reward_id = fields.Many2one(
-        "gamification.badge", string="For Every Succeeding User", index="btree_not_null"
+        comodel_name="gamification.badge",
+        string="For Every Succeeding User",
+        index="btree_not_null",
     )
-    reward_first_id = fields.Many2one("gamification.badge", string="For 1st user")
-    reward_second_id = fields.Many2one("gamification.badge", string="For 2nd user")
-    reward_third_id = fields.Many2one("gamification.badge", string="For 3rd user")
-    reward_failure = fields.Boolean("Reward Bests if not Succeeded?")
+    reward_first_id = fields.Many2one(
+        comodel_name="gamification.badge",
+        string="For 1st user",
+    )
+    reward_second_id = fields.Many2one(
+        comodel_name="gamification.badge",
+        string="For 2nd user",
+    )
+    reward_third_id = fields.Many2one(
+        comodel_name="gamification.badge",
+        string="For 3rd user",
+    )
+    reward_failure = fields.Boolean(string="Reward Bests if not Succeeded?")
     reward_realtime = fields.Boolean(
-        "Reward as soon as every goal is reached",
-        default=True,
+        string="Reward as soon as every goal is reached",
         help="With this option enabled, a user can receive a badge only once. The top 3 badges are still rewarded only at the end of the challenge.",
+        default=True,
     )
 
     visibility_mode = fields.Selection(
-        [
+        selection=[
             ("personal", "Individual Goals"),
             ("ranking", "Leader Board (Group Ranking)"),
         ],
-        default="personal",
         string="Display Mode",
+        default="personal",
         required=True,
     )
 
     # Team mode
     challenge_mode = fields.Selection(
-        [
+        selection=[
             ("individual", "Individual"),
             ("team", "Team vs Team"),
         ],
+        string="Competition Mode",
         default="individual",
         required=True,
-        string="Competition Mode",
     )
     team_ids = fields.Many2many(
-        "gamification.team",
-        "gamification_challenge_team_rel",
+        comodel_name="gamification.team",
+        relation="gamification_challenge_team_rel",
         string="Competing Teams",
         help="Teams participating in this challenge. Each team's score is "
         "the average completeness of its members' goals.",
     )
 
     report_message_frequency = fields.Selection(
-        [
+        selection=[
             ("never", "Never"),
             ("onchange", "On change"),
             ("daily", "Daily"),
@@ -166,43 +188,46 @@ class GamificationChallenge(models.Model):
             ("monthly", "Monthly"),
             ("yearly", "Yearly"),
         ],
-        default="never",
         string="Report Frequency",
+        default="never",
         required=True,
     )
     report_message_group_id = fields.Many2one(
-        "discuss.channel",
+        comodel_name="discuss.channel",
         string="Send a copy to",
         help="Group that will receive a copy of the report in addition to the user",
     )
     report_template_id = fields.Many2one(
-        "mail.template",
+        comodel_name="mail.template",
         default=lambda self: self._default_report_template_id(),
         required=True,
     )
     remind_update_delay = fields.Integer(
-        "Non-updated manual goals will be reminded after",
+        string="Non-updated manual goals will be reminded after",
         help="Never reminded if no value or zero is specified.",
     )
     last_report_date = fields.Date(default=fields.Date.today)
-    next_report_date = fields.Date(compute="_compute_next_report_date", store=True)
+    next_report_date = fields.Date(
+        compute="_compute_next_report_date",
+        store=True,
+    )
 
     season_id = fields.Many2one(
-        "gamification.season",
+        comodel_name="gamification.season",
+        help="Season this challenge belongs to. Leave empty for permanent challenges.",
         index="btree_not_null",
         ondelete="set null",
-        help="Season this challenge belongs to. Leave empty for permanent challenges.",
     )
 
     challenge_category = fields.Selection(
-        [
+        selection=[
             ("hr", "Human Resources / Engagement"),
             ("other", "Settings / Gamification Tools"),
         ],
         string="Appears in",
-        required=True,
-        default="hr",
         help="Define the visibility of the challenge through menus",
+        default="hr",
+        required=True,
     )
 
     @api.depends("user_ids", "user_ids.active")

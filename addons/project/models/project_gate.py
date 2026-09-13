@@ -10,27 +10,34 @@ class ProjectGate(models.Model):
     _order = "sequence, id"
     _inherit = ["mixin.mail.thread"]
 
-    name = fields.Char("Gate Name", required=True, tracking=True)
+    name = fields.Char(
+        string="Gate Name",
+        required=True,
+        tracking=True,
+    )
     project_id = fields.Many2one(
-        "project.project",
+        comodel_name="project.project",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
-    sequence = fields.Integer("Gate Order", default=10)
+    sequence = fields.Integer(
+        string="Gate Order",
+        default=10,
+    )
     milestone_id = fields.Many2one(
-        "project.milestone",
+        comodel_name="project.milestone",
         string="Trigger Milestone",
-        domain="[('project_id', '=', project_id)]",
         help="Review is triggered when this milestone is reached.",
+        domain="[('project_id', '=', project_id)]",
     )
     criterion_ids = fields.One2many(
-        "project.gate.criterion",
-        "gate_id",
+        comodel_name="project.gate.criterion",
+        inverse_name="gate_id",
         string="Review Criteria",
     )
     state = fields.Selection(
-        [
+        selection=[
             ("pending", "Pending"),
             ("passed", "Passed"),
             ("failed", "Failed"),
@@ -40,23 +47,26 @@ class ProjectGate(models.Model):
         required=True,
         tracking=True,
     )
-    date_review = fields.Date("Review Date", tracking=True)
+    date_review = fields.Date(
+        string="Review Date",
+        tracking=True,
+    )
     reviewer_ids = fields.Many2many(
-        "res.users",
+        comodel_name="res.users",
         string="Reviewers",
     )
     decision_notes = fields.Html()
     kill_criteria = fields.Html(
-        help="Pre-defined conditions under which the project should be cancelled.",
+        help="Pre-defined conditions under which the project should be cancelled."
     )
     criteria_met_count = fields.Integer(
-        "Criteria Met",
-        compute="_compute_criteria_met_count",
+        string="Criteria Met",
         export_string_translation=False,
+        compute="_compute_criteria_met_count",
     )
     criteria_total_count = fields.Count(
-        "criterion_ids",
-        "Total Criteria",
+        count_of="criterion_ids",
+        string="Total Criteria",
         export_string_translation=False,
     )
 
@@ -92,12 +102,18 @@ class ProjectGateCriterion(models.Model):
     _order = "sequence, id"
 
     gate_id = fields.Many2one(
-        "project.gate",
+        comodel_name="project.gate",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
-    name = fields.Char("Criterion", required=True)
+    name = fields.Char(
+        string="Criterion",
+        required=True,
+    )
     sequence = fields.Integer(default=10)
-    is_met = fields.Boolean("Met", default=False)
+    is_met = fields.Boolean(
+        string="Met",
+        default=False,
+    )
     evidence = fields.Text()

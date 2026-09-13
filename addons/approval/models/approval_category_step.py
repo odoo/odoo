@@ -13,23 +13,26 @@ class ApprovalCategoryStep(models.Model):
 
     category_id = fields.Many2one(
         comodel_name="approval.category",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
     company_id = fields.Many2one(
         related="category_id.company_id",
         store=True,
-        readonly=True,
         index=True,
+        readonly=True,
     )
     sequence = fields.Integer(default=10)
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
     active = fields.Boolean(default=True)
     minimum = fields.Integer(
         string="Approvals Needed",
-        default=1,
         help="How many approvals from this step's pool complete it.",
+        default=1,
     )
     member_ids = fields.One2many(
         comodel_name="approval.category.step.member",
@@ -39,10 +42,10 @@ class ApprovalCategoryStep(models.Model):
     user_ids = fields.Many2many(
         comodel_name="res.users",
         string="Approvers",
-        compute="_compute_user_ids",
-        inverse="_inverse_user_ids",
         help="The step's current members, as an editable list. Delegated members are "
         "kept as they are when this list is edited.",
+        compute="_compute_user_ids",
+        inverse="_inverse_user_ids",
     )
     group_id = fields.Many2one(
         comodel_name="res.groups",
@@ -53,7 +56,7 @@ class ApprovalCategoryStep(models.Model):
     exclusive = fields.Boolean(
         help="An approval that counts toward this step counts toward no other step "
         "of the same request, and the other way round: a user who decided an "
-        "exclusive step decides nothing else on that request.",
+        "exclusive step decides nothing else on that request."
     )
     asks_group_members = fields.Boolean(
         string="Asks the Group's Members",
@@ -77,7 +80,7 @@ class ApprovalCategoryStep(models.Model):
     advisory = fields.Boolean(
         help="The step's approvers are asked and their decisions recorded, but the "
         "step decides nothing: the request is approved without it, and a refusal "
-        "given for it alone refuses nothing.",
+        "given for it alone refuses nothing."
     )
     notify_user_ids = fields.Many2many(
         comodel_name="res.users",
@@ -90,8 +93,8 @@ class ApprovalCategoryStep(models.Model):
     subject_model_id = fields.Many2one(
         comodel_name="ir.model",
         string="Source Model",
-        ondelete="cascade",
         help="Model the condition reads. Required when a condition is set.",
+        ondelete="cascade",
     )
     subject_model_name = fields.Char(
         related="subject_model_id.model",
@@ -131,9 +134,9 @@ class ApprovalCategoryStep(models.Model):
     )
     subject_user_sequence = fields.Integer(
         string="Place in Order",
-        default=10,
         help="On a step whose members decide in order, where the users the source "
         "field names stand among the members' sequences.",
+        default=10,
     )
     subject_user_required = fields.Boolean(
         string="Named Users Are Required",
@@ -573,28 +576,28 @@ class ApprovalCategoryStepMember(models.Model):
 
     step_id = fields.Many2one(
         comodel_name="approval.category.step",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
     company_id = fields.Many2one(
         related="step_id.company_id",
         store=True,
-        readonly=True,
         index=True,
+        readonly=True,
     )
     sequence = fields.Integer(
-        default=10,
         help="The member's place when the step's members decide in order.",
+        default=10,
     )
     required = fields.Boolean(
-        help="The step is not met without this member's approval, whatever its quorum.",
+        help="The step is not met without this member's approval, whatever its quorum."
     )
     user_id = fields.Many2one(
         comodel_name="res.users",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
     date_end = fields.Date(
         string="Valid Until",

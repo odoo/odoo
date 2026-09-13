@@ -23,33 +23,30 @@ class HrVersion(models.Model):
 
     date_generated_from = fields.Datetime(
         string="Generated From",
+        default=_default_date_generated,
+        copy=False,
         readonly=True,
         required=True,
-        copy=False,
-        default=_default_date_generated,
         groups="hr.group_hr_user",
         tracking=True,
     )
     date_generated_to = fields.Datetime(
         string="Generated To",
+        default=_default_date_generated,
+        copy=False,
         readonly=True,
         required=True,
-        copy=False,
-        default=_default_date_generated,
         groups="hr.group_hr_user",
         tracking=True,
     )
     last_generation_date = fields.Date(
-        readonly=True,
         copy=False,
+        readonly=True,
         groups="hr.group_hr_user",
         tracking=True,
     )
     work_entry_source = fields.Selection(
-        [("calendar", "Working Schedule")],
-        required=True,
-        default="calendar",
-        tracking=True,
+        selection=[("calendar", "Working Schedule")],
         help="""
         Defines the source for work entries generation
 
@@ -57,7 +54,10 @@ class HrVersion(models.Model):
         Attendances: Work entries will be generated from the employee's attendances. (requires Attendance app)
         Planning: Work entries will be generated from the employee's planning. (requires Planning app)
     """,
+        default="calendar",
+        required=True,
         groups="hr.group_hr_manager",
+        tracking=True,
     )
 
     @ormcache()

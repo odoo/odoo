@@ -18,19 +18,28 @@ class WebsiteControllerPage(models.Model):
     )
 
     view_id = fields.Many2one(
-        "ir.ui.view",
+        comodel_name="ir.ui.view",
         string="Listing view",
-        required=True,
         index=True,
+        required=True,
         ondelete="cascade",
     )
     record_view_id = fields.Many2one(
-        "ir.ui.view", string="Record view", ondelete="cascade"
+        comodel_name="ir.ui.view",
+        string="Record view",
+        ondelete="cascade",
     )
-    menu_ids = fields.One2many("website.menu", "controller_page_id", "Related Menus")
+    menu_ids = fields.One2many(
+        comodel_name="website.menu",
+        inverse_name="controller_page_id",
+        string="Related Menus",
+    )
 
     website_id = fields.Many2one(
-        related="view_id.website_id", store=True, readonly=False, ondelete="cascade"
+        related="view_id.website_id",
+        store=True,
+        readonly=False,
+        ondelete="cascade",
     )
 
     name = fields.Char(
@@ -38,21 +47,25 @@ class WebsiteControllerPage(models.Model):
         compute="_compute_name",
         inverse="_inverse_name",
         precompute=True,
-        required=True,
         store=True,
+        required=True,
     )
     name_slugified = fields.Char(
+        string="URL",
+        help="The name of the page usable in a URL",
         compute="_compute_name_slugified",
         inverse="_inverse_name_slugified",
         precompute=True,
         store=True,
-        string="URL",
-        help="The name of the page usable in a URL",
     )
-    url_demo = fields.Char(string="Demo URL", compute="_compute_url_demo")
+    url_demo = fields.Char(
+        string="Demo URL",
+        compute="_compute_url_demo",
+    )
 
     record_domain = fields.Char(
-        string="Domain", help="Domain to restrict records that can be viewed publicly"
+        string="Domain",
+        help="Domain to restrict records that can be viewed publicly",
     )
     default_layout = fields.Selection(
         selection=[

@@ -5,7 +5,8 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     l10n_eu_oss_eu_country = fields.Boolean(
-        "Is European country?", compute="_compute_l10n_eu_oss_european_country"
+        string="Is European country?",
+        compute="_compute_l10n_eu_oss_european_country",
     )
 
     @api.depends("company_id")

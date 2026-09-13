@@ -10,9 +10,12 @@ class IrActionsAct_Url(models.Model):
     _allow_sudo_commands = False
 
     type = fields.Char(default="ir.actions.act_url")
-    url = fields.Text(string="Action URL", required=True)
+    url = fields.Text(
+        string="Action URL",
+        required=True,
+    )
     target = fields.Selection(
-        [
+        selection=[
             ("new", "New Window"),
             ("self", "This Window"),
             ("download", "Download"),

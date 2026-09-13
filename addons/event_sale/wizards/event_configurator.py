@@ -6,23 +6,26 @@ class EventEventConfigurator(models.TransientModel):
     _name = "event.event.configurator"
     _description = "Event Configurator"
 
-    product_id = fields.Many2one("product.product", readonly=True)
-    event_id = fields.Many2one("event.event")
+    product_id = fields.Many2one(
+        comodel_name="product.product",
+        readonly=True,
+    )
+    event_id = fields.Many2one(comodel_name="event.event")
     event_slot_id = fields.Many2one(
-        "event.slot",
+        comodel_name="event.slot",
         string="Slot",
-        domain="[('event_id', '=', event_id)]",
         compute="_compute_event_slot_id",
-        readonly=False,
         store=True,
+        readonly=False,
+        domain="[('event_id', '=', event_id)]",
     )
     event_ticket_id = fields.Many2one(
-        "event.event.ticket",
+        comodel_name="event.event.ticket",
         string="Ticket Type",
-        domain="[('event_id', '=', event_id)]",
         compute="_compute_event_ticket_id",
-        readonly=False,
         store=True,
+        readonly=False,
+        domain="[('event_id', '=', event_id)]",
     )
     is_multi_slots = fields.Boolean(related="event_id.is_multi_slots")
     has_available_tickets = fields.Boolean(compute="_compute_has_available_tickets")

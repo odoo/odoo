@@ -11,4 +11,7 @@ class UomUom(models.Model):
             if xml_id != "product_uom_hour"
         ]
 
-    timesheet_widget = fields.Char("Widget", export_string_translation=False)
+    timesheet_widget = fields.Char(
+        string="Widget",
+        export_string_translation=False,
+    )

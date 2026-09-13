@@ -17,8 +17,8 @@ class MixinOrderLineStock(models.AbstractModel):
     transfer_state = fields.Selection(
         selection=TRANSFER_STATE,
         string="Transfer Status",
-        default="no",
         compute="_compute_transfer_state",
+        default="no",
         store=True,
     )
 

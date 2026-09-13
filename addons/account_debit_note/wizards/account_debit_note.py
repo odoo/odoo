@@ -14,24 +14,26 @@ class AccountDebitNote(models.TransientModel):
     _description = "Add Debit Note wizard"
 
     move_ids = fields.Many2many(
-        "account.move",
-        "account_move_debit_move",
-        "debit_id",
-        "move_id",
+        comodel_name="account.move",
+        relation="account_move_debit_move",
+        column1="debit_id",
+        column2="move_id",
         domain=[("state", "=", "posted")],
     )
     date = fields.Date(
-        string="Debit Note Date", default=fields.Date.context_today, required=True
+        string="Debit Note Date",
+        default=fields.Date.context_today,
+        required=True,
     )
     reason = fields.Char()
     journal_id = fields.Many2one(
-        "account.journal",
+        comodel_name="account.journal",
         string="Use Specific Journal",
         help="If empty, uses the journal of the journal entry to be debited.",
     )
     copy_lines = fields.Boolean(
         help="In case you need to do corrections for every line, it can be in handy to copy them.  "
-        "We won't copy them for debit notes from credit notes. ",
+        "We won't copy them for debit notes from credit notes. "
     )
     # computed fields
     move_type = fields.Char(compute="_compute_from_moves")

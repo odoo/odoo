@@ -24,55 +24,53 @@ class ProductTemplate(models.Model):
     _inherit = ["product.template", "mixin.fiscal.country.codes"]
 
     taxes_id = fields.Many2many(
-        "account.tax",
-        "product_taxes_rel",
-        "prod_id",
-        "tax_id",
+        comodel_name="account.tax",
+        relation="product_taxes_rel",
+        column1="prod_id",
+        column2="tax_id",
         string="Sales Taxes",
         help="Default taxes used when selling the product",
-        domain=[("type_tax_use", "=", "sale")],
         default=lambda self: (
             self.env.companies.account_sale_tax_id
             or self.env.companies.root_id.sudo().account_sale_tax_id
         ),
+        domain=[("type_tax_use", "=", "sale")],
     )
-    tax_string = fields.Char(
-        compute="_compute_tax_string",
-    )
+    tax_string = fields.Char(compute="_compute_tax_string")
     supplier_taxes_id = fields.Many2many(
-        "account.tax",
-        "product_supplier_taxes_rel",
-        "prod_id",
-        "tax_id",
+        comodel_name="account.tax",
+        relation="product_supplier_taxes_rel",
+        column1="prod_id",
+        column2="tax_id",
         string="Purchase Taxes",
         help="Default taxes used when buying the product",
-        domain=[("type_tax_use", "=", "purchase")],
         default=lambda self: (
             self.env.companies.account_purchase_tax_id
             or self.env.companies.root_id.sudo().account_purchase_tax_id
         ),
+        domain=[("type_tax_use", "=", "purchase")],
     )
     property_account_income_id = fields.Many2one(
-        "account.account",
-        company_dependent=True,
-        ondelete="restrict",
+        comodel_name="account.account",
         string="Income Account",
-        domain=ACCOUNT_DOMAIN,
         help="Keep this field empty to use the default value from the product category.",
+        company_dependent=True,
+        domain=ACCOUNT_DOMAIN,
+        ondelete="restrict",
     )
     property_account_expense_id = fields.Many2one(
-        "account.account",
-        company_dependent=True,
-        ondelete="restrict",
+        comodel_name="account.account",
         string="Expense Account",
-        domain=ACCOUNT_DOMAIN,
         help="Keep this field empty to use the default value from the product category. If anglo-saxon accounting with automated valuation method is configured, the expense account on the product category will be used.",
+        company_dependent=True,
+        domain=ACCOUNT_DOMAIN,
+        ondelete="restrict",
     )
     account_tag_ids = fields.Many2many(
-        string="Account Tags",
         comodel_name="account.account.tag",
-        domain="[('applicability', '=', 'products')]",
+        string="Account Tags",
         help="Tags to be set on the base and tax journal items created for this product.",
+        domain="[('applicability', '=', 'products')]",
     )
 
     def _get_product_accounts(self, fiscal_pos=None):

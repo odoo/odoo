@@ -7,8 +7,8 @@ class StockReference(models.Model):
 
     name = fields.Char(
         string="Reference",
-        required=True,
         readonly=True,
+        required=True,
     )
     move_ids = fields.Many2many(
         comodel_name="stock.move",

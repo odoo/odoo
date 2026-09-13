@@ -4,17 +4,24 @@ from odoo import api, fields, models
 class PosPreset(models.Model):
     _inherit = "pos.preset"
 
-    available_in_self = fields.Boolean(string="Available in self", default=False)
+    available_in_self = fields.Boolean(
+        string="Available in self",
+        default=False,
+    )
     service_at = fields.Selection(
-        [("counter", "Pickup zone"), ("table", "Table"), ("delivery", "Delivery")],
+        selection=[
+            ("counter", "Pickup zone"),
+            ("table", "Table"),
+            ("delivery", "Delivery"),
+        ],
         string="Service at",
         default="counter",
         required=True,
     )
 
     mail_template_id = fields.Many2one(
-        string="Email Confirmation",
         comodel_name="mail.template",
+        string="Email Confirmation",
         domain="[('model', '=', 'pos.order')]",
     )
 

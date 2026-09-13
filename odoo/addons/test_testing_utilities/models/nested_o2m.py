@@ -12,13 +12,19 @@ class TtuRoot(models.Model):
     _name = "ttu.root"
     _description = "ttu.root"
 
-    product_id = fields.Many2one("ttu.product")
+    product_id = fields.Many2one(comodel_name="ttu.product")
     product_qty = fields.Integer()
     qty_producing = fields.Integer()
     qty_produced = fields.Integer(compute="_compute_qty_produced")
 
-    move_raw_ids = fields.One2many("ttu.child", "root_raw_id")
-    move_finished_ids = fields.One2many("ttu.child", "root_id")
+    move_raw_ids = fields.One2many(
+        comodel_name="ttu.child",
+        inverse_name="root_raw_id",
+    )
+    move_finished_ids = fields.One2many(
+        comodel_name="ttu.child",
+        inverse_name="root_id",
+    )
 
     @api.depends("move_finished_ids.move_line_ids.qty_done")
     def _compute_qty_produced(self):
@@ -90,15 +96,22 @@ class TtuChild(models.Model):
     _name = "ttu.child"
     _description = "ttu.child"
 
-    product_id = fields.Many2one("ttu.product")
-    unit_factor = fields.Integer(default=1, required=True)
+    product_id = fields.Many2one(comodel_name="ttu.product")
+    unit_factor = fields.Integer(
+        default=1,
+        required=True,
+    )
     quantity_done = fields.Integer(
-        compute="_compute_quantity_done", inverse="_inverse_quantity_done"
+        compute="_compute_quantity_done",
+        inverse="_inverse_quantity_done",
     )
 
-    root_raw_id = fields.Many2one("ttu.root")
-    root_id = fields.Many2one("ttu.root")
-    move_line_ids = fields.One2many("ttu.grandchild", "move_id")
+    root_raw_id = fields.Many2one(comodel_name="ttu.root")
+    root_id = fields.Many2one(comodel_name="ttu.root")
+    move_line_ids = fields.One2many(
+        comodel_name="ttu.grandchild",
+        inverse_name="move_id",
+    )
 
     def _set_quantity_done_prepare_vals(self, qty):
         res = {"to_write": [], "to_create": []}
@@ -159,8 +172,8 @@ class TtuGrandchild(models.Model):
     _name = "ttu.grandchild"
     _description = "ttu.grandchild"
 
-    product_id = fields.Many2one("ttu.product")
+    product_id = fields.Many2one(comodel_name="ttu.product")
     product_uom_qty = fields.Integer()
     qty_done = fields.Integer()
 
-    move_id = fields.Many2one("ttu.child")
+    move_id = fields.Many2one(comodel_name="ttu.child")

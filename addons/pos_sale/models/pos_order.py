@@ -5,9 +5,16 @@ class PosOrder(models.Model):
     _inherit = "pos.order"
 
     currency_rate = fields.Float(
-        compute="_compute_currency_rate", store=True, digits=0, readonly=True
+        digits=0,
+        compute="_compute_currency_rate",
+        store=True,
+        readonly=True,
     )
-    crm_team_id = fields.Many2one("crm.team", string="Sales Team", ondelete="set null")
+    crm_team_id = fields.Many2one(
+        comodel_name="crm.team",
+        string="Sales Team",
+        ondelete="set null",
+    )
     sale_order_count = fields.Integer(
         compute="_compute_sale_order_count",
         readonly=True,
@@ -244,10 +251,14 @@ class PosOrderLine(models.Model):
     _inherit = "pos.order.line"
 
     sale_order_origin_id = fields.Many2one(
-        "sale.order", string="Linked Sale Order", index="btree_not_null"
+        comodel_name="sale.order",
+        string="Linked Sale Order",
+        index="btree_not_null",
     )
     sale_order_line_id = fields.Many2one(
-        "sale.order.line", string="Source Sale Order Line", index="btree_not_null"
+        comodel_name="sale.order.line",
+        string="Source Sale Order Line",
+        index="btree_not_null",
     )
     # JSON-encoded breakdown of the sale order lines a down-payment line
     # settles. Written here (and by pos_store.js's addDownPaymentProduct-
@@ -258,8 +269,8 @@ class PosOrderLine(models.Model):
         string="Delivery Quantity",
         compute="_compute_qty_transferred",
         store=True,
-        readonly=False,
         copy=False,
+        readonly=False,
     )
 
     @api.depends(

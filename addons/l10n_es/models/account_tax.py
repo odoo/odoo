@@ -32,7 +32,10 @@ class AccountTax(models.Model):
         string="Tax Type (Spain)",
         default="sujeto",
     )
-    l10n_es_bien_inversion = fields.Boolean("Bien de Inversion", default=False)
+    l10n_es_bien_inversion = fields.Boolean(
+        string="Bien de Inversion",
+        default=False,
+    )
 
     # -------------------------------------------------------------------------
     # EDI HELPERS

@@ -9,13 +9,13 @@ class AccountFullReconcile(models.Model):
     _description = "Full Reconcile"
 
     partial_reconcile_ids = fields.One2many(
-        "account.partial.reconcile",
-        "full_reconcile_id",
+        comodel_name="account.partial.reconcile",
+        inverse_name="full_reconcile_id",
         string="Reconciliation Parts",
     )
     reconciled_line_ids = fields.One2many(
-        "account.move.line",
-        "full_reconcile_id",
+        comodel_name="account.move.line",
+        inverse_name="full_reconcile_id",
         string="Matched Journal Items",
     )
 

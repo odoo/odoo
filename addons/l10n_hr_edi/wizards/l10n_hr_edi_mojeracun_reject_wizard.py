@@ -8,18 +8,22 @@ class L10nHrMojEracunRejectInvoice(models.TransientModel):
     _name = "l10n_hr_edi.mojeracun_reject_wizard"
     _description = "MojEracun Reject Invoice Wizard"
 
-    move_id = fields.Many2one(comodel_name="account.move", required=True)
+    move_id = fields.Many2one(
+        comodel_name="account.move",
+        required=True,
+    )
     rejection_type = fields.Selection(
-        string="Rejection reason type",
         selection=[
             ("N", "'N' - Data discrepancy that does not affect tax calculation"),
             ("U", "'U' - Data discrepancy that affects tax calculation"),
             ("O", "'O' - Other"),
         ],
+        string="Rejection reason type",
         required=True,
     )
     rejection_description = fields.Char(
-        string="Rejection reason description", required=True
+        string="Rejection reason description",
+        required=True,
     )
 
     @api.model

@@ -42,12 +42,12 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     l10n_it_codice_fiscale = fields.Char(
-        string="Codice Fiscale",
-        size=16,
         related="partner_id.l10n_it_codice_fiscale",
+        string="Codice Fiscale",
+        help="Fiscal code of your company",
+        size=16,
         store=True,
         readonly=False,
-        help="Fiscal code of your company",
     )
     l10n_it_tax_system = fields.Selection(
         selection=TAX_SYSTEM,
@@ -62,10 +62,10 @@ class ResCompany(models.Model):
     l10n_it_edi_purchase_journal_id = fields.Many2one(
         comodel_name="account.journal",
         string="Italian Default Purchase Journal",
-        domain=[("type", "=", "purchase")],
         compute="_compute_l10n_it_edi_purchase_journal_id",
         store=True,
         readonly=False,
+        domain=[("type", "=", "purchase")],
     )
 
     # Economic and Administrative Index
@@ -75,15 +75,15 @@ class ResCompany(models.Model):
         Civil Code)"
     )
     l10n_it_eco_index_office = fields.Many2one(
-        "res.country.state",
-        domain="[('country_id','=','IT')]",
+        comodel_name="res.country.state",
         string="Province of the register-of-companies office",
+        domain="[('country_id','=','IT')]",
     )
     l10n_it_eco_index_number = fields.Char(
         string="Number in register of companies",
-        size=20,
         help="This field must contain the number under which the\
         seller/provider is listed on the register of companies.",
+        size=20,
     )
     l10n_it_eco_index_share_capital = fields.Float(
         string="Share capital actually paid up",
@@ -93,7 +93,7 @@ class ResCompany(models.Model):
         financial statement",
     )
     l10n_it_eco_index_sole_shareholder = fields.Selection(
-        [
+        selection=[
             ("NO", "Not a limited liability company"),
             ("SU", "Socio unico"),
             ("SM", "Più soci"),
@@ -101,7 +101,7 @@ class ResCompany(models.Model):
         string="Shareholder",
     )
     l10n_it_eco_index_liquidation_state = fields.Selection(
-        [
+        selection=[
             ("LS", "The company is in a state of liquidation"),
             ("LN", "The company is not in a state of liquidation"),
         ],
@@ -116,7 +116,8 @@ class ResCompany(models.Model):
         Italy"
     )
     l10n_it_tax_representative_partner_id = fields.Many2one(
-        "res.partner", string="Tax representative partner"
+        comodel_name="res.partner",
+        string="Tax representative partner",
     )
 
     @api.constrains("l10n_it_edi_purchase_journal_id")

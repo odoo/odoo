@@ -10,21 +10,21 @@ class WebsiteEventMenu(models.Model):
     _rec_name = "menu_id"
 
     menu_id = fields.Many2one(
-        "website.menu",
+        comodel_name="website.menu",
         ondelete="cascade",
     )
     event_id = fields.Many2one(
-        "event.event",
+        comodel_name="event.event",
         index="btree_not_null",
         ondelete="cascade",
     )
     view_id = fields.Many2one(
-        "ir.ui.view",
-        ondelete="cascade",
+        comodel_name="ir.ui.view",
         help="Used when not being an url based menu",
+        ondelete="cascade",
     )
     menu_type = fields.Selection(
-        [
+        selection=[
             ("community", "Community Menu"),
             ("introduction", "Home"),
             ("register", "Practical"),

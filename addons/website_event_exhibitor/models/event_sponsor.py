@@ -24,22 +24,29 @@ class EventSponsor(models.Model):
             self.env["event.sponsor.type"].search([], order="sequence desc", limit=1).id
         )
 
-    event_id = fields.Many2one("event.event", required=True, index=True)
+    event_id = fields.Many2one(
+        comodel_name="event.event",
+        index=True,
+        required=True,
+    )
     sponsor_type_id = fields.Many2one(
-        "event.sponsor.type",
-        "Sponsorship Level",
+        comodel_name="event.sponsor.type",
+        string="Sponsorship Level",
         default=lambda self: self._default_sponsor_type_id(),
         required=True,
         bypass_search_access=True,
     )
     url = fields.Char(
-        "Sponsor Website", compute="_compute_url", readonly=False, store=True
+        string="Sponsor Website",
+        compute="_compute_url",
+        store=True,
+        readonly=False,
     )
     sequence = fields.Integer()
     active = fields.Boolean(default=True)
-    subtitle = fields.Char("Slogan")
+    subtitle = fields.Char(string="Slogan")
     exhibitor_type = fields.Selection(
-        [
+        selection=[
             ("sponsor", "Footer Logo Only"),
             ("exhibitor", "Exhibitor"),
             ("online", "Online Exhibitor"),
@@ -48,51 +55,79 @@ class EventSponsor(models.Model):
         default="sponsor",
     )
     website_description = fields.Html(
-        "Description",
-        compute="_compute_website_description",
+        string="Description",
+        translate=html_translate,
         sanitize_overridable=True,
         sanitize_attributes=False,
         sanitize_form=True,
-        translate=html_translate,
-        readonly=False,
+        compute="_compute_website_description",
         store=True,
+        readonly=False,
     )
-    show_on_ticket = fields.Boolean("Show on ticket", default=True)
+    show_on_ticket = fields.Boolean(
+        string="Show on ticket",
+        default=True,
+    )
     partner_id = fields.Many2one(
-        "res.partner", required=True, bypass_search_access=True
+        comodel_name="res.partner",
+        required=True,
+        bypass_search_access=True,
     )
-    partner_name = fields.Char("Name", related="partner_id.name")
-    partner_email = fields.Char("Email", related="partner_id.email")
-    partner_phone_ids = fields.Many2many(string="Phone", related="partner_id.phone_ids")
+    partner_name = fields.Char(
+        related="partner_id.name",
+        string="Name",
+    )
+    partner_email = fields.Char(
+        related="partner_id.email",
+        string="Email",
+    )
+    partner_phone_ids = fields.Many2many(
+        related="partner_id.phone_ids",
+        string="Phone",
+    )
     name = fields.Char(
-        "Sponsor Name", compute="_compute_name", readonly=False, store=True
+        string="Sponsor Name",
+        compute="_compute_name",
+        store=True,
+        readonly=False,
     )
     email = fields.Char(
-        "Sponsor Email", compute="_compute_email", readonly=False, store=True
+        string="Sponsor Email",
+        compute="_compute_email",
+        store=True,
+        readonly=False,
     )
     phone_ids = fields.Many2many(
-        "phone.number",
-        "event_sponsor_phone_number_rel",
-        "sponsor_id",
-        "phone_number_id",
+        comodel_name="phone.number",
+        relation="event_sponsor_phone_number_rel",
+        column1="sponsor_id",
+        column2="phone_number_id",
         string="Sponsor Phone",
         compute="_compute_phone_ids",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     image_512 = fields.Image(
         string="Logo",
         max_width=512,
         max_height=512,
         compute="_compute_image_512",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     image_256 = fields.Image(
-        "Image 256", related="image_512", max_width=256, max_height=256, store=False
+        related="image_512",
+        string="Image 256",
+        max_width=256,
+        max_height=256,
+        store=False,
     )
     image_128 = fields.Image(
-        "Image 128", related="image_512", max_width=128, max_height=128, store=False
+        related="image_512",
+        string="Image 128",
+        max_width=128,
+        max_height=128,
+        store=False,
     )
     website_image_url = fields.Char(
         string="Image URL",
@@ -100,19 +135,33 @@ class EventSponsor(models.Model):
         compute_sudo=True,
         store=False,
     )
-    hour_from = fields.Float("Opening hour", default=8.0)
-    hour_to = fields.Float("End hour", default=18.0)
+    hour_from = fields.Float(
+        string="Opening hour",
+        default=8.0,
+    )
+    hour_to = fields.Float(
+        string="End hour",
+        default=18.0,
+    )
     event_date_tz = fields.Selection(
-        string="Timezone", related="event_id.date_tz", readonly=True
+        related="event_id.date_tz",
+        string="Timezone",
+        readonly=True,
     )
     is_in_opening_hours = fields.Boolean(
-        "Within opening hours", compute="_compute_is_in_opening_hours"
+        string="Within opening hours",
+        compute="_compute_is_in_opening_hours",
     )
     country_id = fields.Many2one(
-        "res.country", string="Country", related="partner_id.country_id", readonly=True
+        comodel_name="res.country",
+        related="partner_id.country_id",
+        string="Country",
+        readonly=True,
     )
     country_flag_url = fields.Char(
-        string="Country Flag", compute="_compute_country_flag_url", compute_sudo=True
+        string="Country Flag",
+        compute="_compute_country_flag_url",
+        compute_sudo=True,
     )
 
     @api.depends("partner_id")

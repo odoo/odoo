@@ -5,7 +5,7 @@ class AccountTax(models.Model):
     _inherit = "account.tax"
 
     l10n_uy_tax_category = fields.Selection(
-        [
+        selection=[
             ("vat", "VAT"),
         ],
         string="Tax Category",

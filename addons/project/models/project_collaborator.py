@@ -11,27 +11,31 @@ class ProjectCollaborator(models.Model):
     _description = "Collaborators in project shared"
 
     project_id = fields.Many2one(
-        "project.project",
-        "Project Shared",
+        comodel_name="project.project",
+        string="Project Shared",
+        export_string_translation=False,
+        readonly=True,
+        required=True,
         domain=[
             ("privacy_visibility", "in", ["portal", "invited_users"]),
             ("is_template", "=", False),
         ],
-        required=True,
-        readonly=True,
-        export_string_translation=False,
     )
     partner_id = fields.Many2one(
-        "res.partner",
-        "Collaborator",
-        required=True,
-        readonly=True,
+        comodel_name="res.partner",
+        string="Collaborator",
         export_string_translation=False,
+        readonly=True,
+        required=True,
     )
     partner_email = fields.Char(
-        related="partner_id.email", export_string_translation=False
+        related="partner_id.email",
+        export_string_translation=False,
     )
-    limited_access = fields.Boolean(default=False, export_string_translation=False)
+    limited_access = fields.Boolean(
+        export_string_translation=False,
+        default=False,
+    )
 
     _unique_collaborator = models.Constraint(
         "UNIQUE(project_id, partner_id)",

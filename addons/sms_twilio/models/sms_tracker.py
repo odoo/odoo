@@ -15,7 +15,10 @@ TWILIO_CODE_TO_FAILURE_TYPE = {
 class SmsTracker(models.Model):
     _inherit = "sms.tracker"
 
-    sms_twilio_sid = fields.Char(string="Twilio SMS SID", readonly=True)
+    sms_twilio_sid = fields.Char(
+        string="Twilio SMS SID",
+        readonly=True,
+    )
 
     def _action_update_from_twilio_error(self, sms_status, error_code, error_message):
         """Update the SMS tracker with the Twilio Status and Error code/msg"""

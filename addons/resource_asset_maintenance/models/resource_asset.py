@@ -5,7 +5,10 @@ class ResourceAsset(models.Model):
     _name = "resource.asset"
     _inherit = ["resource.asset", "mixin.maintenance"]
 
-    maintenance_ids = fields.One2many("maintenance.request", "asset_id")
+    maintenance_ids = fields.One2many(
+        comodel_name="maintenance.request",
+        inverse_name="asset_id",
+    )
 
     def action_view_maintenance(self):
         self.check_singleton()

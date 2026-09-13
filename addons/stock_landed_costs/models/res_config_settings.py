@@ -5,8 +5,8 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     lc_journal_id = fields.Many2one(
-        "account.journal",
-        string="Default Journal",
+        comodel_name="account.journal",
         related="company_id.lc_journal_id",
+        string="Default Journal",
         readonly=False,
     )

@@ -122,7 +122,11 @@ class AccountJournalGroup(models.Model):
     _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of
 
-    name = fields.Char("Ledger group", required=True, translate=True)
+    name = fields.Char(
+        string="Ledger group",
+        translate=True,
+        required=True,
+    )
     company_id = fields.Many2one(
         comodel_name="res.company",
         help="Define which company can select the multi-ledger in report filters. If none is provided, available for all companies",
@@ -130,8 +134,8 @@ class AccountJournalGroup(models.Model):
     )
     excluded_journal_ids = fields.Many2many(
         comodel_name="account.journal",
-        domain='company_id and [("company_id", "parent_of", company_id)] or []',
         string="Excluded Journals",
+        domain='company_id and [("company_id", "parent_of", company_id)] or []',
         context={"active_test": False},
     )
     sequence = fields.Integer(default=10)
@@ -189,25 +193,29 @@ class AccountJournal(models.Model):
         )
         return f"[('account_type', 'in', {branches}{ANY_ACCOUNT_TYPES!r})]"
 
-    name = fields.Char(string="Journal Name", required=True, translate=True)
+    name = fields.Char(
+        string="Journal Name",
+        translate=True,
+        required=True,
+    )
     name_placeholder = fields.Char(compute="_compute_name_placeholder")
     code = fields.Char(
         string="Sequence Prefix",
-        size=5,
-        compute="_compute_code",
-        readonly=False,
-        store=True,
-        required=True,
-        precompute=True,
         help="Shorter name used for display. "
         "The journal entries of this journal will also be named using this prefix by default.",
+        size=5,
+        compute="_compute_code",
+        precompute=True,
+        store=True,
+        readonly=False,
+        required=True,
     )
     active = fields.Boolean(
-        default=True,
         help="Set active to false to hide the Journal without removing it.",
+        default=True,
     )
     type = fields.Selection(
-        [
+        selection=[
             ("sale", "Sales"),
             ("purchase", "Purchase"),
             ("cash", "Cash"),
@@ -215,13 +223,13 @@ class AccountJournal(models.Model):
             ("credit", "Credit Card"),
             ("general", "Miscellaneous"),
         ],
-        required=True,
         help="""
         Select 'Sale' for customer invoices journals.
         Select 'Purchase' for vendor bills journals.
         Select 'Cash', 'Bank' or 'Credit Card' for journals that are used in customer or vendor payments.
         Select 'General' for miscellaneous operations journals.
         """,
+        required=True,
     )
     is_self_billing = fields.Boolean(
         string="Self Billing",
@@ -230,70 +238,73 @@ class AccountJournal(models.Model):
     )
     default_account_id = fields.Many2one(
         comodel_name="account.account",
-        check_company=True,
         copy=False,
-        ondelete="restrict",
         domain=_domain_default_account_id,
+        ondelete="restrict",
+        check_company=True,
     )
     suspense_account_id = fields.Many2one(
         comodel_name="account.account",
-        check_company=True,
-        ondelete="restrict",
-        readonly=False,
-        store=True,
-        compute="_compute_suspense_account_id",
         help="Bank statements transactions will be posted on the suspense account until the final reconciliation "
         "allowing finding the right account.",
+        compute="_compute_suspense_account_id",
+        store=True,
+        readonly=False,
         domain="[('account_type', '=', 'asset_current')]",
+        ondelete="restrict",
+        check_company=True,
     )
     non_deductible_account_id = fields.Many2one(
         comodel_name="account.account",
-        check_company=True,
         string="Private Share Account",
-        readonly=False,
-        store=True,
         help="Account used to register the private part of mixed expenses.",
+        store=True,
+        readonly=False,
+        check_company=True,
     )
     restrict_mode_hash_table = fields.Boolean(
         string="Secure Posted Entries with Hash",
         help="If ticked, when an entry is posted, we retroactively hash all moves in the sequence from the entry back to the last hashed entry. The hash can also be performed on demand by the Secure Entries wizard.",
     )
     sequence = fields.Integer(
-        help="Used to order Journals in the dashboard view", default=10
+        help="Used to order Journals in the dashboard view",
+        default=10,
     )
 
     invoice_reference_type = fields.Selection(
-        string="Communication Type",
-        required=True,
         selection=[("partner", "Based on Customer"), ("invoice", "Based on Invoice")],
-        default="invoice",
+        string="Communication Type",
         help="You can set here the default communication that will appear on customer invoices, once validated, to help the customer to refer to that particular invoice when making the payment.",
+        default="invoice",
+        required=True,
     )
     invoice_reference_model = fields.Selection(
-        string="Communication Standard",
-        required=True,
         selection=[
             ("odoo", "Full Reference (INV/2024/00001)"),
             ("euro", "European (RF83INV202400001)"),
             ("number", "Numbers only (202400001)"),
         ],
-        default=_default_invoice_reference_model,
+        string="Communication Standard",
         help="You can choose different models for each type of reference. The default one is the Odoo reference.",
+        default=_default_invoice_reference_model,
+        required=True,
     )
 
     currency_id = fields.Many2one(
-        "res.currency", help="The currency used to enter statement"
+        comodel_name="res.currency",
+        help="The currency used to enter statement",
     )
     company_id = fields.Many2one(
-        "res.company",
-        required=True,
-        readonly=True,
-        index=True,
-        default=lambda self: self.env.company,
+        comodel_name="res.company",
         help="Company related to this journal",
+        default=lambda self: self.env.company,
+        index=True,
+        readonly=True,
+        required=True,
     )
     country_code = fields.Char(
-        related="company_id.account_fiscal_country_id.code", readonly=True
+        related="company_id.account_fiscal_country_id.code",
+        readonly=True,
     )
     account_fiscal_country_group_codes = fields.Json(
         related="company_id.account_fiscal_country_group_codes"
@@ -301,31 +312,32 @@ class AccountJournal(models.Model):
 
     refund_sequence = fields.Boolean(
         string="Dedicated Credit Note Sequence",
-        compute="_compute_refund_sequence",
-        readonly=False,
-        store=True,
         help="Check this box if you don't want to share the same sequence for invoices and credit notes made from this journal",
+        compute="_compute_refund_sequence",
+        store=True,
+        readonly=False,
     )
     payment_sequence = fields.Boolean(
         string="Dedicated Payment Sequence",
-        compute="_compute_payment_sequence",
-        readonly=False,
-        store=True,
-        precompute=True,
         help="Check this box if you don't want to share the same sequence on payments and bank transactions posted on this journal",
+        compute="_compute_payment_sequence",
+        precompute=True,
+        store=True,
+        readonly=False,
     )
     invoice_template_pdf_report_id = fields.Many2one(
-        string="Invoice report",
         comodel_name="ir.actions.report",
-        domain="[('id', 'in', available_invoice_template_pdf_report_ids)]",
+        string="Invoice report",
         readonly=False,
+        domain="[('id', 'in', available_invoice_template_pdf_report_ids)]",
     )
     available_invoice_template_pdf_report_ids = fields.One2many(
         comodel_name="ir.actions.report",
         compute="_compute_available_invoice_template_pdf_report_ids",
     )
     display_invoice_template_pdf_report_id = fields.Boolean(
-        default=_default_display_invoice_template_pdf_report_id, store=False
+        default=_default_display_invoice_template_pdf_report_id,
+        store=False,
     )
     sequence_override_regex = fields.Text(
         help="Technical field used to enforce complex sequence composition that the system would normally misunderstand.\n"
@@ -336,70 +348,75 @@ class AccountJournal(models.Model):
 
     inbound_payment_channel_ids = fields.One2many(
         comodel_name="account.payment.channel",
-        domain=[("payment_type", "=", "inbound")],
-        compute="_compute_inbound_payment_channel_ids",
-        store=True,
-        readonly=False,
-        string="Inbound Payment Methods",
         inverse_name="journal_id",
-        copy=False,
-        check_company=True,
+        string="Inbound Payment Methods",
         help="Manual: Get paid by any method outside of Odoo.\n"
         "Payment Providers: Each payment provider has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
         "Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
         "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n",
+        compute="_compute_inbound_payment_channel_ids",
+        store=True,
+        copy=False,
+        readonly=False,
+        domain=[("payment_type", "=", "inbound")],
+        check_company=True,
     )
     outbound_payment_channel_ids = fields.One2many(
         comodel_name="account.payment.channel",
-        domain=[("payment_type", "=", "outbound")],
-        compute="_compute_outbound_payment_channel_ids",
-        store=True,
-        readonly=False,
-        string="Outbound Payment Methods",
         inverse_name="journal_id",
-        copy=False,
-        check_company=True,
+        string="Outbound Payment Methods",
         help="Manual: Pay by any method outside of Odoo.\n"
         "Check: Pay bills by check and print it from Odoo.\n"
         "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n",
+        compute="_compute_outbound_payment_channel_ids",
+        store=True,
+        copy=False,
+        readonly=False,
+        domain=[("payment_type", "=", "outbound")],
+        check_company=True,
     )
     profit_account_id = fields.Many2one(
         comodel_name="account.account",
-        check_company=True,
         help="Used to register a profit when the ending balance of a cash register differs from what the system computes",
         domain="[('account_type', 'in', ('income', 'income_other'))]",
+        check_company=True,
     )
     loss_account_id = fields.Many2one(
         comodel_name="account.account",
-        check_company=True,
         help="Used to register a loss when the ending balance of a cash register differs from what the system computes",
         domain="[('account_type', '=', 'expense')]",
+        check_company=True,
     )
 
     company_partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         related="company_id.partner_id",
         string="Account Holder",
-        readonly=True,
         store=False,
+        readonly=True,
     )
     bank_account_id = fields.Many2one(
-        "res.partner.bank",
-        ondelete="restrict",
-        copy=False,
+        comodel_name="res.partner.bank",
         index="btree_not_null",
-        check_company=True,
+        copy=False,
         domain="[('partner_id','=', company_partner_id)]",
+        ondelete="restrict",
+        check_company=True,
     )
     bank_statements_source = fields.Selection(
         selection="_selection_bank_statements_source",
         string="Bank Feeds",
-        default="undefined",
         help="Defines how the bank statements will be registered",
+        default="undefined",
     )
-    bank_acc_number = fields.Char(related="bank_account_id.acc_number", readonly=False)
+    bank_acc_number = fields.Char(
+        related="bank_account_id.acc_number",
+        readonly=False,
+    )
     bank_id = fields.Many2one(
-        "res.bank", related="bank_account_id.bank_id", readonly=False
+        comodel_name="res.bank",
+        related="bank_account_id.bank_id",
+        readonly=False,
     )
 
     alias_name = fields.Char(
@@ -409,7 +426,9 @@ class AccountJournal(models.Model):
     )
 
     journal_group_ids = fields.Many2many(
-        "account.journal.group", check_company=True, string="Ledger Group"
+        comodel_name="account.journal.group",
+        string="Ledger Group",
+        check_company=True,
     )
 
     available_payment_method_ids = fields.Many2many(
@@ -418,12 +437,13 @@ class AccountJournal(models.Model):
     )
 
     selected_payment_method_codes = fields.Char(
-        compute="_compute_selected_payment_method_codes",
+        compute="_compute_selected_payment_method_codes"
     )
     accounting_date = fields.Date(compute="_compute_accounting_date")
     display_alias_fields = fields.Boolean(compute="_compute_display_alias_fields")
     bank_statement_ids = fields.One2many(
-        comodel_name="account.bank.statement", inverse_name="journal_id"
+        comodel_name="account.bank.statement",
+        inverse_name="journal_id",
     )
     has_invalid_statements = fields.Boolean(compute="_compute_has_invalid_statements")
 
@@ -447,19 +467,19 @@ class AccountJournal(models.Model):
         column1="journal_id",
         column2="account_id",
         string="Allowed Accounts",
-        check_company=True,
-        domain=[("account_type", "!=", "off_balance")],
         help="Accounts a journal item in this journal may use. Leave empty to allow "
         "any account. The journal's own accounts are always usable and need not be "
         "listed.",
+        domain=[("account_type", "!=", "off_balance")],
+        check_company=True,
     )
     structural_account_ids = fields.Many2many(
         comodel_name="account.account",
-        compute="_compute_structural_account_ids",
         string="Structural Accounts",
         help="Accounts this journal designates itself. A list of allowed accounts that "
         "omits them would make the journal unusable rather than controlled, so they "
         "are always permitted.",
+        compute="_compute_structural_account_ids",
     )
     allowed_user_ids = fields.Many2many(
         comodel_name="res.users",
@@ -467,10 +487,10 @@ class AccountJournal(models.Model):
         column1="journal_id",
         column2="user_id",
         string="Allowed Users",
-        copy=False,
         help="Users allowed to use this journal on a journal entry. Leave empty to "
         "let everyone use it. This does not hide existing entries -- reading them is "
         "governed by record rules.",
+        copy=False,
     )
 
     _code_company_uniq = models.Constraint(

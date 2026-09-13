@@ -47,85 +47,89 @@ class MailAlias(models.Model):
     _rec_names_search = ["alias_full_name"]
 
     alias_name = fields.Char(
-        copy=False,
         help="The name of the email alias, e.g. 'jobs' if you want to catch emails for <jobs@example.odoo.com>",
+        copy=False,
     )
     alias_full_name = fields.Char(
-        "Alias Email",
+        string="Alias Email",
         compute="_compute_alias_full_name",
         store=True,
         index="btree_not_null",
     )
     alias_domain_id: MailAliasDomain = fields.Many2one(
-        "mail.alias.domain",
-        ondelete="restrict",
+        comodel_name="mail.alias.domain",
         default=lambda self: self.env.company.alias_domain_id,
+        ondelete="restrict",
     )
-    alias_domain = fields.Char("Alias domain name", related="alias_domain_id.name")
+    alias_domain = fields.Char(
+        related="alias_domain_id.name",
+        string="Alias domain name",
+    )
     alias_model_id: IrModel = fields.Many2one(
-        "ir.model",
-        "Aliased Model",
-        required=True,
-        ondelete="cascade",
+        comodel_name="ir.model",
+        string="Aliased Model",
         help="The model (Odoo Document Kind) to which this alias "
         "corresponds. Any incoming email that does not reply to an "
         "existing record will cause the creation of a new record "
         "of this model (e.g. a Project Task)",
+        required=True,
         domain="[('field_id.name', '=', 'message_ids'), ('abstract', '=', False), ('transient', '=', False)]",
+        ondelete="cascade",
     )
     alias_defaults = fields.Text(
-        "Default Values",
-        required=True,
-        default="{}",
+        string="Default Values",
         help="A Python dictionary that will be evaluated to provide "
         "default values when creating new records for this alias.",
+        default="{}",
+        required=True,
     )
     alias_force_thread_id = fields.Integer(
-        "Record Thread ID",
+        string="Record Thread ID",
         help="Optional ID of a thread (record) to which all incoming messages will be attached, even "
         "if they did not reply to it. If set, this will disable the creation of new records completely.",
     )
     alias_parent_model_id: IrModel = fields.Many2one(
-        "ir.model",
-        "Parent Model",
+        comodel_name="ir.model",
+        string="Parent Model",
         help="Parent model holding the alias. The model holding the alias reference "
         "is not necessarily the model given by alias_model_id "
         "(example: project (parent_model) and task (model))",
     )
     alias_parent_thread_id = fields.Integer(
-        "Parent Record Thread ID",
+        string="Parent Record Thread ID",
         help="ID of the parent record holding the alias (example: project holding the task creation alias)",
     )
     alias_contact = fields.Selection(
-        [
+        selection=[
             ("everyone", "Everyone"),
             ("partners", "Authenticated Partners"),
             ("followers", "Followers only"),
         ],
-        default="everyone",
         string="Alias Contact Security",
-        required=True,
         help="Policy to post a message on the document using the mailgateway.\n"
         "- everyone: everyone can post\n"
         "- partners: only authenticated partners\n"
         "- followers: only followers of the related document or members of following channels\n",
+        default="everyone",
+        required=True,
     )
     alias_incoming_local = fields.Boolean(
-        "Local-part based incoming detection", default=False
+        string="Local-part based incoming detection",
+        default=False,
     )
     alias_bounced_content = fields.Html(
-        "Custom Bounced Message",
-        translate=True,
+        string="Custom Bounced Message",
         help="If set, this content will automatically be sent out to unauthorized users instead of the default message.",
+        translate=True,
     )
     alias_status = fields.Selection(
-        [
+        selection=[
             ("not_tested", "Not Tested"),
             ("valid", "Valid"),
             ("invalid", "Invalid"),
         ],
-        default="not_tested",
         help="Alias status assessed on the last message received.",
+        default="not_tested",
     )
 
     ALIAS_STATUS_NEUTRAL = frozenset(

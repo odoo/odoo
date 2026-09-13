@@ -11,14 +11,15 @@ class PaymentProvider(models.Model):
     _inherit = "payment.provider"
 
     code = fields.Selection(
-        selection_add=[("mollie", "Mollie")], ondelete={"mollie": "set default"}
+        selection_add=[("mollie", "Mollie")],
+        ondelete={"mollie": "set default"},
     )
     mollie_api_key = fields.Char(
         string="Mollie API Key",
         help="The Test or Live API Key depending on the configuration of the provider",
-        required_if_provider="mollie",
         copy=False,
         groups="base.group_system",
+        required_if_provider="mollie",
     )
 
     # === COMPUTE METHODS === #

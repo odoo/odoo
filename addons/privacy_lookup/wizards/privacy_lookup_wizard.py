@@ -13,11 +13,17 @@ class PrivacyLookupWizard(models.TransientModel):
 
     name = fields.Char(required=True)
     email = fields.Char(required=True)
-    line_ids = fields.One2many("privacy.lookup.wizard.line", "wizard_id")
-    execution_details = fields.Text(compute="_compute_execution_details", store=True)
-    log_id = fields.Many2one("privacy.log")
+    line_ids = fields.One2many(
+        comodel_name="privacy.lookup.wizard.line",
+        inverse_name="wizard_id",
+    )
+    execution_details = fields.Text(
+        compute="_compute_execution_details",
+        store=True,
+    )
+    log_id = fields.Many2one(comodel_name="privacy.log")
     records_description = fields.Text(compute="_compute_records_description")
-    line_count = fields.Count("line_ids")
+    line_count = fields.Count(count_of="line_ids")
 
     def _compute_display_name(self):
         self.display_name = _("Privacy Lookup")
@@ -255,24 +261,37 @@ class PrivacyLookupWizardLine(models.TransientModel):
             for model in self.env["ir.model"].sudo().search([])
         ]
 
-    wizard_id = fields.Many2one("privacy.lookup.wizard")
-    res_id = fields.Integer(string="Resource ID", required=True)
+    wizard_id = fields.Many2one(comodel_name="privacy.lookup.wizard")
+    res_id = fields.Integer(
+        string="Resource ID",
+        required=True,
+    )
     res_name = fields.Char(
-        string="Resource name", compute="_compute_res_name", store=True
+        string="Resource name",
+        compute="_compute_res_name",
+        store=True,
     )
     res_model_id = fields.Many2one(
-        "ir.model", "Related Document Model", ondelete="cascade"
+        comodel_name="ir.model",
+        string="Related Document Model",
+        ondelete="cascade",
     )
     res_model = fields.Char(
-        string="Document Model", related="res_model_id.model", store=True, readonly=True
+        related="res_model_id.model",
+        string="Document Model",
+        store=True,
+        readonly=True,
     )
     resource_ref = fields.Reference(
-        string="Record",
         selection="_selection_target_model",
+        string="Record",
         compute="_compute_resource_ref",
         inverse="_inverse_resource_ref",
     )
-    has_active = fields.Boolean(compute="_compute_has_active", store=True)
+    has_active = fields.Boolean(
+        compute="_compute_has_active",
+        store=True,
+    )
     is_active = fields.Boolean()
     is_unlinked = fields.Boolean()
     execution_details = fields.Char(default="")

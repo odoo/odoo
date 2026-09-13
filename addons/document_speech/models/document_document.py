@@ -7,10 +7,12 @@ class DocumentsDocument(models.Model):
     _inherit = "document.document"
 
     speech_state = fields.Selection(
-        related="attachment_id.speech_state", string="Transcription"
+        related="attachment_id.speech_state",
+        string="Transcription",
     )
     speech_transcript = fields.Text(
-        related="attachment_id.speech_transcript", string="Transcript"
+        related="attachment_id.speech_transcript",
+        string="Transcript",
     )
     can_transcribe = fields.Boolean(related="attachment_id.can_transcribe")
 

@@ -86,9 +86,9 @@ class ExportOne2manyChild(models.Model):
     # FIXME: orm.py:1161, fix to display_name on m2o field
     _rec_name = "value"
 
-    parent_id = fields.Many2one("export.one2many")
+    parent_id = fields.Many2one(comodel_name="export.one2many")
     str = fields.Char()
-    m2o = fields.Many2one("export.integer")
+    m2o = fields.Many2one(comodel_name="export.integer")
     value = fields.Integer()
 
     _compute_display_name = generic_compute_display_name
@@ -100,10 +100,16 @@ class ExportOne2manyMultiple(models.Model):
     _description = "Export One To Many Multiple"
     _rec_name = "parent_id"
 
-    parent_id = fields.Many2one("export.one2many.recursive")
+    parent_id = fields.Many2one(comodel_name="export.one2many.recursive")
     const = fields.Integer(default=36)
-    child1 = fields.One2many("export.one2many.child.1", "parent_id")
-    child2 = fields.One2many("export.one2many.child.2", "parent_id")
+    child1 = fields.One2many(
+        comodel_name="export.one2many.child.1",
+        inverse_name="parent_id",
+    )
+    child2 = fields.One2many(
+        comodel_name="export.one2many.child.2",
+        inverse_name="parent_id",
+    )
 
 
 class ExportOne2manyMultipleChild(models.Model):
@@ -112,7 +118,7 @@ class ExportOne2manyMultipleChild(models.Model):
     _name = "export.one2many.multiple.child"
     _description = "Export One To Many Multiple Child"
 
-    parent_id = fields.Many2one("export.one2many.multiple")
+    parent_id = fields.Many2one(comodel_name="export.one2many.multiple")
     str = fields.Char()
     value = fields.Integer()
 
@@ -151,7 +157,10 @@ class ExportSelectionWithdefault(models.Model):
     _description = "Export Selection With Default"
 
     const = fields.Integer(default=4)
-    value = fields.Selection([("1", "Foo"), ("2", "Bar")], default="2")
+    value = fields.Selection(
+        selection=[("1", "Foo"), ("2", "Bar")],
+        default="2",
+    )
 
 
 class ExportOne2manyRecursive(models.Model):
@@ -160,7 +169,10 @@ class ExportOne2manyRecursive(models.Model):
     _rec_name = "value"
 
     value = fields.Integer()
-    child = fields.One2many("export.one2many.multiple", "parent_id")
+    child = fields.One2many(
+        comodel_name="export.one2many.multiple",
+        inverse_name="parent_id",
+    )
 
 
 class ExportUnique(models.Model):
@@ -188,7 +200,9 @@ class ExportInheritsChild(models.Model):
     _inherits = {"export.inherits.parent": "parent_id"}
 
     parent_id = fields.Many2one(
-        "export.inherits.parent", required=True, ondelete="cascade"
+        comodel_name="export.inherits.parent",
+        required=True,
+        ondelete="cascade",
     )
     value = fields.Integer()
 
@@ -197,7 +211,7 @@ class ExportM2oStr(models.Model):
     _name = "export.m2o.str"
     _description = "export.m2o.str"
 
-    child_id = fields.Many2one("export.m2o.str.child")
+    child_id = fields.Many2one(comodel_name="export.m2o.str.child")
 
 
 class ExportM2oStrChild(models.Model):
@@ -219,7 +233,7 @@ class ExportMany2oneRequiredSubfield(models.Model):
     _name = "export.many2one.required.subfield"
     _description = "export.many2one.required.subfield"
 
-    name = fields.Many2one("export.with.required.field")
+    name = fields.Many2one(comodel_name="export.with.required.field")
 
 
 class WithNonDemoConstraint(models.Model):

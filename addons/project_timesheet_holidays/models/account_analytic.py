@@ -7,18 +7,18 @@ class AccountAnalyticLine(models.Model):
     _inherit = "account.analytic.line"
 
     holiday_id = fields.Many2one(
-        "hr.leave",
+        comodel_name="hr.leave",
         string="Time Off Request",
-        copy=False,
-        index="btree_not_null",
         export_string_translation=False,
+        index="btree_not_null",
+        copy=False,
     )
     global_leave_id = fields.Many2one(
-        "resource.calendar.leaves",
+        comodel_name="resource.calendar.leaves",
         string="Global Time Off",
+        export_string_translation=False,
         index="btree_not_null",
         ondelete="cascade",
-        export_string_translation=False,
     )
     task_id = fields.Many2one(
         domain="[('allow_timesheets', '=', True), ('project_id', '=?', project_id), ('has_template_ancestor', '=', False), ('is_timeoff_task', '=', False)]"

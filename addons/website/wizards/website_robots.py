@@ -6,7 +6,8 @@ class WebsiteRobots(models.TransientModel):
     _description = "Robots.txt Editor"
 
     website_id = fields.Many2one(
-        "website", default=lambda s: s.env["website"].get_current_website()
+        comodel_name="website",
+        default=lambda s: s.env["website"].get_current_website(),
     )
     content = fields.Text(
         default=lambda s: s.env["website"].get_current_website().robots_txt

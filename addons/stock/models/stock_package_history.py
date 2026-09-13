@@ -8,8 +8,8 @@ class StockPackageHistory(models.Model):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        required=True,
         default=lambda self: self.env.company,
+        required=True,
     )
     location_id = fields.Many2one(
         comodel_name="stock.location",
@@ -32,8 +32,8 @@ class StockPackageHistory(models.Model):
     )
     package_name = fields.Char(required=True)
     package_type_id = fields.Many2one(
-        related="package_id.package_type_id",
         comodel_name="stock.package.type",
+        related="package_id.package_type_id",
     )
     parent_orig_id = fields.Many2one(
         comodel_name="stock.package",

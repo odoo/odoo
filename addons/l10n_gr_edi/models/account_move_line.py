@@ -24,7 +24,8 @@ class AccountMoveLine(models.Model):
         compute="_compute_l10n_gr_edi_available_cls_type"
     )
     l10n_gr_edi_need_exemption_category = fields.Boolean(
-        compute="_compute_l10n_gr_edi_need_exemption_category", default=False
+        compute="_compute_l10n_gr_edi_need_exemption_category",
+        default=False,
     )
 
     l10n_gr_edi_detail_type = fields.Selection(

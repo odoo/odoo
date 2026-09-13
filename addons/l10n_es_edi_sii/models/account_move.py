@@ -5,9 +5,14 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     l10n_es_edi_is_required = fields.Boolean(
-        string="Is the Spanish EDI needed", compute="_compute_l10n_es_edi_is_required"
+        string="Is the Spanish EDI needed",
+        compute="_compute_l10n_es_edi_is_required",
     )
-    l10n_es_edi_csv = fields.Char(string="CSV return code", copy=False, tracking=True)
+    l10n_es_edi_csv = fields.Char(
+        string="CSV return code",
+        copy=False,
+        tracking=True,
+    )
     # Technical field to keep the date the invoice was sent the first time as
     # the date the invoice was registered into the system.
     l10n_es_registration_date = fields.Date(

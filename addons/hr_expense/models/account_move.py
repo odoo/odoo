@@ -7,10 +7,11 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     expense_ids = fields.One2many(
-        comodel_name="hr.expense", inverse_name="account_move_id"
+        comodel_name="hr.expense",
+        inverse_name="account_move_id",
     )
     nb_expenses = fields.Count(
-        "expense_ids",
+        count_of="expense_ids",
         string="Number of Expenses",
         compute_sudo=True,
     )

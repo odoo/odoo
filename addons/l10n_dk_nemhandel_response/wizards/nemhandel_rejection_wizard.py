@@ -9,7 +9,7 @@ class NemhandelRejectionWizard(models.TransientModel):
         comodel_name="account.move",
         required=True,
     )
-    note = fields.Text("Additional note")
+    note = fields.Text(string="Additional note")
 
     def button_send(self):
         moves_by_company = self.move_ids.grouped("company_id")

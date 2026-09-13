@@ -19,11 +19,14 @@ class ProductTemplate(models.Model):
         help="Check if the product should be weighted using the hardware scale integration.",
     )
     pos_categ_ids = fields.Many2many(
-        "pos.category",
+        comodel_name="pos.category",
         string="Point of Sale Category",
         help="Category used in the Point of Sale.",
     )
-    public_description = fields.Html(string="Product Description", translate=True)
+    public_description = fields.Html(
+        string="Product Description",
+        translate=True,
+    )
     pos_optional_product_ids = fields.Many2many(
         comodel_name="product.template",
         relation="pos_product_optional_rel",
@@ -33,7 +36,10 @@ class ProductTemplate(models.Model):
         help="Optional products are suggested when customers add items to their cart (e.g., adding a burger suggests cold drinks or fries).",
     )
     color = fields.Integer(
-        "Color Index", compute="_compute_color", store=True, readonly=False
+        string="Color Index",
+        compute="_compute_color",
+        store=True,
+        readonly=False,
     )
     pos_sequence = fields.Integer(
         string="POS Sequence",

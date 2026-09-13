@@ -19,81 +19,75 @@ class MixinOrderLineFields(models.AbstractModel):
     order_id = fields.Many2one(
         comodel_name="mixin.order",
         string="Order Reference",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
 
     company_id = fields.Many2one(
-        related="order_id.company_id",
         comodel_name="res.company",
+        related="order_id.company_id",
         string="Company",
-        store=True,
         precompute=True,
+        store=True,
         index=True,
     )
-    company_price_include = fields.Selection(
-        related="company_id.account_price_include",
-    )
+    company_price_include = fields.Selection(related="company_id.account_price_include")
     currency_id = fields.Many2one(
-        related="order_id.currency_id",
         comodel_name="res.currency",
+        related="order_id.currency_id",
         string="Currency",
-        store=True,
-        precompute=True,
         depends=["order_id.currency_id"],
+        precompute=True,
+        store=True,
     )
     partner_id = fields.Many2one(
-        related="order_id.partner_id",
         comodel_name="res.partner",
+        related="order_id.partner_id",
         string="Partner",
-        store=True,
         precompute=True,
+        store=True,
         index="btree_not_null",
     )
     user_id = fields.Many2one(
-        related="order_id.user_id",
         comodel_name="res.users",
+        related="order_id.user_id",
         string="Responsible",
-        store=True,
         precompute=True,
+        store=True,
         index="btree_not_null",
     )
     date_order = fields.Datetime(
         related="order_id.date_order",
         string="Order Date",
-        store=True,
         precompute=True,
+        store=True,
         index=True,
     )
     date_confirmed = fields.Datetime(
         related="order_id.date_confirmed",
         string="Confirmation Date",
-        store=True,
         precompute=True,
+        store=True,
         index=True,
     )
     state = fields.Selection(
         related="order_id.state",
         string="Order Status",
-        store=True,
         precompute=True,
+        store=True,
     )
     fiscal_position_id = fields.Many2one(
-        related="order_id.fiscal_position_id",
         comodel_name="account.fiscal.position",
+        related="order_id.fiscal_position_id",
     )
     tax_country_id = fields.Many2one(
-        related="order_id.tax_country_id",
         comodel_name="res.country",
+        related="order_id.tax_country_id",
     )
-    locked = fields.Boolean(
-        related="order_id.locked",
-    )
+    locked = fields.Boolean(related="order_id.locked")
 
-    product_categ_id = fields.Many2one(
-        related="product_id.categ_id",
-    )
+    product_categ_id = fields.Many2one(related="product_id.categ_id")
     product_type = fields.Selection(
         related="product_id.type",
         depends=["product_id"],
@@ -125,22 +119,18 @@ class MixinOrderLineFields(models.AbstractModel):
     product_id = fields.Many2one(
         comodel_name="product.product",
         change_default=True,
-        check_company=True,
+        index="btree_not_null",
         domain=lambda self: self._domain_product_id(),
         ondelete="restrict",
-        index="btree_not_null",
+        check_company=True,
     )
 
     product_template_attribute_value_ids = fields.Many2many(
         related="product_id.product_template_attribute_value_ids",
         depends=["product_id"],
     )
-    product_name_translated = fields.Text(
-        compute="_compute_product_name_translated",
-    )
-    product_is_archived = fields.Boolean(
-        compute="_compute_product_is_archived",
-    )
+    product_name_translated = fields.Text(compute="_compute_product_name_translated")
+    product_is_archived = fields.Boolean(compute="_compute_product_is_archived")
     allowed_uom_ids = fields.Many2many(
         comodel_name="uom.uom",
         compute="_compute_allowed_uom_ids",
@@ -149,8 +139,8 @@ class MixinOrderLineFields(models.AbstractModel):
         comodel_name="uom.uom",
         string="Unit",
         compute="_compute_product_uom_id",
-        store=True,
         precompute=True,
+        store=True,
         readonly=False,
         domain='[("id", "in", allowed_uom_ids)]',
         ondelete="restrict",
@@ -158,16 +148,14 @@ class MixinOrderLineFields(models.AbstractModel):
 
     name = fields.Text(
         string="Description",
-        required=True,
         compute="_compute_name",
-        store=True,
         precompute=True,
+        store=True,
         readonly=False,
+        required=True,
     )
 
-    is_downpayment = fields.Boolean(
-        string="Is a down payment",
-    )
+    is_downpayment = fields.Boolean(string="Is a down payment")
 
     is_expense = fields.Boolean(
         string="Is expense",
@@ -544,21 +532,21 @@ class MixinOrderLineFields(models.AbstractModel):
             ("stock_move", "Stock Moves"),
         ],
         string="Transferred Qty Method",
-        compute="_compute_qty_transferred_method",
-        store=True,
-        precompute=True,
         help="Method used to compute the transferred quantity:\n"
         "  - Manual: set manually on the line\n"
         "  - Analytic: sum of analytic line unit amounts\n"
         "  - Stock Moves: from confirmed pickings\n",
+        compute="_compute_qty_transferred_method",
+        precompute=True,
+        store=True,
     )
     qty_transferred = fields.Float(
         string="Transferred Qty",
         digits="Product Unit",
         compute="_compute_qty_transferred",
         store=True,
-        readonly=False,
         copy=False,
+        readonly=False,
     )
     qty_to_transfer = fields.Float(
         digits="Product Unit",

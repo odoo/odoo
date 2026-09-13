@@ -14,7 +14,9 @@ class L10n_LatamPaymentRegisterCheck(models.TransientModel):
     _check_company_auto = True
 
     payment_register_id = fields.Many2one(
-        "account.payment.register", required=True, ondelete="cascade"
+        comodel_name="account.payment.register",
+        required=True,
+        ondelete="cascade",
     )
     company_id = fields.Many2one(related="payment_register_id.company_id")
     currency_id = fields.Many2one(related="payment_register_id.currency_id")
@@ -30,7 +32,10 @@ class L10n_LatamPaymentRegisterCheck(models.TransientModel):
         store=True,
         readonly=False,
     )
-    payment_date = fields.Date(readonly=False, required=True)
+    payment_date = fields.Date(
+        readonly=False,
+        required=True,
+    )
     amount = fields.Monetary()
 
     @api.onchange("name")

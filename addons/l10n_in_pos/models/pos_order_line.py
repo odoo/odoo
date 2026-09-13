@@ -8,8 +8,8 @@ class PosOrderLine(models.Model):
         string="HSN/SAC Code",
         compute="_compute_l10n_in_hsn_code",
         store=True,
-        readonly=False,
         copy=False,
+        readonly=False,
     )
 
     @api.depends("product_id")

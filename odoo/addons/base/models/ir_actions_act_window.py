@@ -19,7 +19,7 @@ class IrActionsAct_Window(models.Model):
 
     type = fields.Char(default="ir.actions.act_window")
     view_id = fields.Many2one(
-        "ir.ui.view",
+        comodel_name="ir.ui.view",
         string="View Ref.",
         ondelete="set null",
     )
@@ -29,9 +29,9 @@ class IrActionsAct_Window(models.Model):
     )
     context = fields.Char(
         string="Context Value",
+        help="Context dictionary as Python expression, empty by default (Default: {})",
         default="{}",
         required=True,
-        help="Context dictionary as Python expression, empty by default (Default: {})",
     )
     res_id = fields.Integer(
         string="Record ID",
@@ -39,72 +39,72 @@ class IrActionsAct_Window(models.Model):
     )
     res_model = fields.Char(
         string="Destination Model",
-        required=True,
         help="Model name of the object to open in the view window",
+        required=True,
     )
     target = fields.Selection(
-        [
+        selection=[
             ("current", "Current Window"),
             ("new", "New Window"),
             ("fullscreen", "Full Screen"),
             ("main", "Main action of Current Window"),
         ],
-        default="current",
         string="Target Window",
+        default="current",
     )
     view_mode = fields.Char(
-        required=True,
-        default="list,form",
         help="Comma-separated list of allowed view modes, such as 'form', 'list', 'calendar', etc. (Default: list,form)",
+        default="list,form",
+        required=True,
     )
     mobile_view_mode = fields.Char(
-        default="kanban",
         help="First view mode in mobile and small screen environments (default='kanban'). If it can't be found among available view modes, the same mode as for wider screens is used)",
+        default="kanban",
     )
     usage = fields.Char(
         string="Action Usage",
         help="Used to filter menu and home actions from the user form.",
     )
     view_ids = fields.One2many(
-        "ir.actions.act_window.view",
-        "act_window_id",
+        comodel_name="ir.actions.act_window.view",
+        inverse_name="act_window_id",
         string="No of Views",
     )
     views = fields.Binary(
-        compute="_compute_views",
         help="This function field computes the ordered list of views that should be enabled "
         "when displaying the result of an action, federating view mode, views and "
         "reference view. The result is returned as an ordered list of pairs (view_id,view_mode).",
+        compute="_compute_views",
     )
     limit = fields.Integer(
-        default=80,
         help="Default limit for the list view",
+        default=80,
     )
     group_ids = fields.Many2many(
-        "res.groups",
-        "ir_act_window_group_rel",
-        "act_id",
-        "gid",
+        comodel_name="res.groups",
+        relation="ir_act_window_group_rel",
+        column1="act_id",
+        column2="gid",
         string="Groups",
     )
     search_view_id = fields.Many2one(
-        "ir.ui.view",
+        comodel_name="ir.ui.view",
         string="Search View Ref.",
         ondelete="set null",
     )
     all_embedded_action_ids = fields.One2many(
-        "ir.embedded.actions",
-        "parent_action_id",
+        comodel_name="ir.embedded.actions",
+        inverse_name="parent_action_id",
         string="All Embedded Actions",
     )
     embedded_action_ids = fields.One2many(
-        "ir.embedded.actions",
+        comodel_name="ir.embedded.actions",
         compute="_compute_embedded_action_ids",
     )
     cache = fields.Boolean(
         string="Data Caching",
-        default=True,
         help="If enabled, this action will cache the related data used in list, Kanban and form views with the aim to increase the loading speed",
+        default=True,
     )
 
     @api.constrains("res_model")

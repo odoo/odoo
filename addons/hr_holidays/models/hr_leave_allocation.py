@@ -50,116 +50,133 @@ class HrLeaveAllocation(models.Model):
     name = fields.Char(
         string="Description",
         compute="_compute_name",
+        compute_sudo=False,
         store=True,
         readonly=False,
-        compute_sudo=False,
     )
-    is_name_custom = fields.Boolean(readonly=True, store=False)
+    is_name_custom = fields.Boolean(
+        store=False,
+        readonly=True,
+    )
     name_validity = fields.Char(
-        "Description with validity", compute="_compute_name_validity"
+        string="Description with validity",
+        compute="_compute_name_validity",
     )
     state = fields.Selection(
-        [
+        selection=[
             ("confirm", "To Approve"),
             ("refuse", "Refused"),
             ("validate1", "Second Approval"),
             ("validate", "Approved"),
         ],
         string="Status",
-        default="confirm",
-        tracking=True,
-        copy=False,
-        readonly=True,
         help="The status is 'To Approve', when an allocation request is created."
         "\nThe status is 'Refused', when an allocation request is refused by manager."
         "\nThe status is 'Approved', when an allocation request is approved by manager.",
+        default="confirm",
+        copy=False,
+        readonly=True,
+        tracking=True,
     )
     date_from = fields.Date(
-        "Start Date",
+        string="Start Date",
+        default=fields.Date.context_today,
         index=True,
         copy=False,
-        default=fields.Date.context_today,
+        required=True,
         tracking=True,
-        required=True,
     )
-    date_to = fields.Date("End Date", copy=False, tracking=True)
+    date_to = fields.Date(
+        string="End Date",
+        copy=False,
+        tracking=True,
+    )
     holiday_status_id = fields.Many2one(
-        "hr.leave.type",
-        compute="_compute_holiday_status_id",
-        store=True,
+        comodel_name="hr.leave.type",
         string="Time Off Type",
-        required=True,
-        readonly=False,
-        domain=_domain_holiday_status_id,
+        compute="_compute_holiday_status_id",
         default=_default_holiday_status_id,
+        store=True,
+        readonly=False,
+        required=True,
+        domain=_domain_holiday_status_id,
     )
     employee_id = fields.Many2one(
-        "hr.employee",
+        comodel_name="hr.employee",
         default=lambda self: self.env.user.employee_id,
         index=True,
-        ondelete="restrict",
         required=True,
-        tracking=True,
         domain=_domain_employee_id,
+        ondelete="restrict",
+        tracking=True,
     )
     employee_company_id = fields.Many2one(
-        related="employee_id.company_id", readonly=True, store=True
+        related="employee_id.company_id",
+        store=True,
+        readonly=True,
     )
     active_employee = fields.Boolean(
-        "Active Employee", related="employee_id.active", readonly=True
+        related="employee_id.active",
+        string="Active Employee",
+        readonly=True,
     )
     manager_id = fields.Many2one(
-        "hr.employee", compute="_compute_manager_id", store=True
+        comodel_name="hr.employee",
+        compute="_compute_manager_id",
+        store=True,
     )
-    notes = fields.Text("Reasons", readonly=False)
+    notes = fields.Text(
+        string="Reasons",
+        readonly=False,
+    )
     number_of_days = fields.Float(
-        "Number of Days",
+        string="Number of Days",
+        help="Duration in days. Reference field to use when necessary.",
         compute="_compute_number_of_days",
+        default=1,
         store=True,
         readonly=False,
         tracking=True,
-        default=1,
-        help="Duration in days. Reference field to use when necessary.",
     )
     number_of_days_display = fields.Float(
-        "Duration (days)",
-        compute="_compute_number_of_days_display",
+        string="Duration (days)",
         help="For an Accrual Allocation, this field contains the theorical amount of time given to the employee, due to a previous start date, on the first run of the plan. This can be manually edited.",
+        compute="_compute_number_of_days_display",
     )
     number_of_hours_display = fields.Float(
-        "Duration (hours)",
-        default_export_compatible=True,
+        string="Duration (hours)",
+        help="For an Accrual Allocation, this field contains the theorical amount of time given to the employee, due to a previous start date, on the first run of the plan. This can be manually edited.",
         compute="_compute_number_of_hours_display",
         store=True,
-        help="For an Accrual Allocation, this field contains the theorical amount of time given to the employee, due to a previous start date, on the first run of the plan. This can be manually edited.",
+        default_export_compatible=True,
     )
     duration_display = fields.Char(
-        "Allocated (Days/Hours)",
-        compute="_compute_duration_display",
+        string="Allocated (Days/Hours)",
         help="Field allowing to see the allocation duration in days or hours depending on the type_request_unit",
+        compute="_compute_duration_display",
     )
     last_executed_carryover_date = fields.Date(export_string_translation=False)
     approver_id = fields.Many2one(
-        "hr.employee",
+        comodel_name="hr.employee",
         string="First Approval",
-        readonly=True,
-        copy=False,
         help="This area is automatically filled by the user who validates the allocation",
+        copy=False,
+        readonly=True,
     )
     second_approver_id = fields.Many2one(
-        "hr.employee",
+        comodel_name="hr.employee",
         string="Second Approval",
-        readonly=True,
-        copy=False,
         help="This area is automatically filled by the user who validates the allocation with second level (If time off type need second validation)",
+        copy=False,
+        readonly=True,
     )
     validation_type = fields.Selection(
-        string="Validation Type",
         related="holiday_status_id.allocation_validation_type",
+        string="Validation Type",
         readonly=True,
     )
     type_request_unit = fields.Selection(
-        [
+        selection=[
             ("hour", "Hours"),
             ("half_day", "Half-Day"),
             ("day", "Day"),
@@ -167,44 +184,58 @@ class HrLeaveAllocation(models.Model):
         compute="_compute_type_request_unit",
     )
     department_id = fields.Many2one(
-        "hr.department",
+        comodel_name="hr.department",
         compute="_compute_department_id",
         store=True,
         readonly=False,
     )
-    lastcall = fields.Date("Date of the last accrual allocation", readonly=True)
+    lastcall = fields.Date(
+        string="Date of the last accrual allocation",
+        readonly=True,
+    )
     actual_lastcall = fields.Date(export_string_translation=False)
     nextcall = fields.Date(
-        "Date of the next accrual allocation", readonly=True, default=False
+        string="Date of the next accrual allocation",
+        default=False,
+        readonly=True,
     )
     already_accrued = fields.Boolean()
     yearly_accrued_amount = fields.Float(export_string_translation=False)
     allocation_type = fields.Selection(
-        [("regular", "Regular Allocation"), ("accrual", "Accrual Allocation")],
+        selection=[
+            ("regular", "Regular Allocation"),
+            ("accrual", "Accrual Allocation"),
+        ],
         default="regular",
-        required=True,
         readonly=True,
+        required=True,
     )
     is_officer = fields.Boolean(compute="_compute_is_officer")
     accrual_plan_id = fields.Many2one(
-        "hr.leave.accrual.plan",
+        comodel_name="hr.leave.accrual.plan",
         compute="_compute_accrual_plan_id",
         inverse="_inverse_accrual_plan_id",
         store=True,
         index="btree_not_null",
         readonly=False,
-        tracking=True,
         domain="['|', ('time_off_type_id', '=', False), ('time_off_type_id', '=', holiday_status_id)]",
+        tracking=True,
     )
     max_leaves = fields.Float(compute="_compute_leaves")
-    leaves_taken = fields.Float(compute="_compute_leaves", string="Time off Taken")
+    leaves_taken = fields.Float(
+        string="Time off Taken",
+        compute="_compute_leaves",
+    )
     virtual_remaining_leaves = fields.Float(
-        compute="_compute_leaves", string="Available Time Off"
+        string="Available Time Off",
+        compute="_compute_leaves",
     )
     expiring_carryover_days = fields.Float(
-        "The number of carried over days that will expire on carried_over_days_expiration_date"
+        string="The number of carried over days that will expire on carried_over_days_expiration_date"
     )
-    carried_over_days_expiration_date = fields.Date("Carried over days expiration date")
+    carried_over_days_expiration_date = fields.Date(
+        string="Carried over days expiration date"
+    )
     _duration_check = models.Constraint(
         "CHECK( ( number_of_days > 0 AND allocation_type='regular') or (allocation_type != 'regular'))",
         "The duration must be greater than 0.",

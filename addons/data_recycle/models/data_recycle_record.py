@@ -25,9 +25,13 @@ class Data_RecycleRecord(models.Model):
     _description = "Recycling Record"
 
     active = fields.Boolean(default=True)
-    name = fields.Char("Record Name", compute="_compute_name", compute_sudo=True)
+    name = fields.Char(
+        string="Record Name",
+        compute="_compute_name",
+        compute_sudo=True,
+    )
     recycle_model_id = fields.Many2one(
-        "data_recycle.model",
+        comodel_name="data_recycle.model",
         index="btree_not_null",
         ondelete="cascade",
     )
@@ -36,12 +40,23 @@ class Data_RecycleRecord(models.Model):
     # 200k rows a `(recycle_model_id, res_id)` composite put in its place cost that
     # sort 0.03ms -> 17.5ms while the planner ignored it for every lookup -- the
     # partial index on `recycle_model_id` already serves those.
-    res_id = fields.Integer("Record ID", index=True)
-    res_model_id = fields.Many2one(related="recycle_model_id.res_model_id", store=True)
-    res_model_name = fields.Char(related="recycle_model_id.res_model_name", store=True)
+    res_id = fields.Integer(
+        string="Record ID",
+        index=True,
+    )
+    res_model_id = fields.Many2one(
+        related="recycle_model_id.res_model_id",
+        store=True,
+    )
+    res_model_name = fields.Char(
+        related="recycle_model_id.res_model_name",
+        store=True,
+    )
 
     company_id = fields.Many2one(
-        "res.company", compute="_compute_company_id", store=True
+        comodel_name="res.company",
+        compute="_compute_company_id",
+        store=True,
     )
 
     @api.model

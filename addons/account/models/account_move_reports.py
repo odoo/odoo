@@ -8,7 +8,9 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     closing_return_id = fields.Many2one(
-        comodel_name="account.return", index="btree_not_null", copy=False
+        comodel_name="account.return",
+        index="btree_not_null",
+        copy=False,
     )
 
     @_debug.perf.timed

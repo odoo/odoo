@@ -43,14 +43,14 @@ class ApprovalTestSyncedDocument(models.Model):
     )
     test_category_id = fields.Many2one(comodel_name="approval.category")
     policy_refusal = fields.Char(
-        help="When set, the document's own policy refuses every decision with it",
+        help="When set, the document's own policy refuses every decision with it"
     )
     applied_outcomes = fields.Char(
-        default="",
         help="Each outcome the request applied to this document, in order",
+        default="",
     )
     never_requests = fields.Boolean(
-        help="The adopter's own exclusion: this document never holds a request",
+        help="The adopter's own exclusion: this document never holds a request"
     )
     asking_activity_type_id = fields.Many2one(
         comodel_name="mail.activity.type",

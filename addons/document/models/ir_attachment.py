@@ -14,7 +14,9 @@ class IrAttachment(models.Model):
     _inherit = "ir.attachment"
 
     document_ids = fields.One2many(
-        "document.document", "attachment_id", export_string_translation=False
+        comodel_name="document.document",
+        inverse_name="attachment_id",
+        export_string_translation=False,
     )
 
     def get_documents_operation_add_destination(self) -> dict:

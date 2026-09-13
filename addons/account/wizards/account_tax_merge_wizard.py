@@ -13,7 +13,7 @@ class AccountTaxMergeWizard(models.TransientModel):
     _inherit = ["mixin.merge"]
     _description = "Tax merge wizard"
 
-    tax_ids = fields.Many2many("account.tax")
+    tax_ids = fields.Many2many(comodel_name="account.tax")
     wizard_line_ids = fields.One2many(
         comodel_name="account.tax.merge.wizard.line",
         inverse_name="wizard_id",
@@ -269,8 +269,8 @@ class AccountTaxMergeWizardLine(models.TransientModel):
     is_selected = fields.Boolean()
     tax_id = fields.Many2one(
         comodel_name="account.tax",
-        ondelete="cascade",
         readonly=True,
+        ondelete="cascade",
     )
     company_ids = fields.Many2many(related="tax_id.company_ids")
     info = fields.Char(compute="_compute_info")

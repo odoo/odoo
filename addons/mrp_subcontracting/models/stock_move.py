@@ -8,7 +8,7 @@ from odoo.tools.misc import OrderedSet
 class StockMove(models.Model):
     _inherit = "stock.move"
 
-    is_subcontract = fields.Boolean("The move is a subcontract receipt")
+    is_subcontract = fields.Boolean(string="The move is a subcontract receipt")
     show_subcontracting_details_visible = fields.Boolean(
         compute="_compute_show_subcontracting_details_visible"
     )

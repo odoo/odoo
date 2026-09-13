@@ -12,20 +12,22 @@ class BaseModuleUninstall(models.TransientModel):
 
     show_all = fields.Boolean()
     module_ids = fields.Many2many(
-        "ir.module.module",
+        comodel_name="ir.module.module",
         string="Module(s)",
+        readonly=True,
         required=True,
         domain=[("state", "in", ["installed", "to upgrade", "to install"])],
         ondelete="cascade",
-        readonly=True,
     )
     impacted_module_ids = fields.Many2many(
-        "ir.module.module",
+        comodel_name="ir.module.module",
         string="Impacted modules",
         compute="_compute_impacted_module_ids",
     )
     model_ids = fields.Many2many(
-        "ir.model", string="Impacted data models", compute="_compute_model_ids"
+        comodel_name="ir.model",
+        string="Impacted data models",
+        compute="_compute_model_ids",
     )
 
     def _get_modules(self) -> Self:

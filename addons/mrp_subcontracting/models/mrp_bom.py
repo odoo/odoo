@@ -13,8 +13,8 @@ class MrpBom(models.Model):
         },
     )
     subcontractor_ids = fields.Many2many(
-        "res.partner",
-        "mrp_bom_subcontractor",
+        comodel_name="res.partner",
+        relation="mrp_bom_subcontractor",
         string="Subcontractors",
         check_company=True,
     )

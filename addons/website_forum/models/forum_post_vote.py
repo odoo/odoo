@@ -8,32 +8,38 @@ class ForumPostVote(models.Model):
     _order = "create_date desc, id desc"
 
     post_id = fields.Many2one(
-        "forum.post", ondelete="cascade", required=True, index=True
+        comodel_name="forum.post",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     user_id = fields.Many2one(
-        "res.users",
-        required=True,
+        comodel_name="res.users",
         default=lambda self: self.env.uid,
+        required=True,
         ondelete="cascade",
     )
     vote = fields.Selection(
-        [("1", "1"), ("-1", "-1"), ("0", "0")],
-        required=True,
+        selection=[("1", "1"), ("-1", "-1"), ("0", "0")],
         default="1",
+        required=True,
     )
-    create_date = fields.Datetime(index=True, readonly=True)
+    create_date = fields.Datetime(
+        index=True,
+        readonly=True,
+    )
     forum_id = fields.Many2one(
-        "forum.forum",
-        string="Forum",
+        comodel_name="forum.forum",
         related="post_id.forum_id",
+        string="Forum",
         store=True,
-        readonly=False,
         index="btree_not_null",
+        readonly=False,
     )
     recipient_id = fields.Many2one(
-        "res.users",
-        string="To",
+        comodel_name="res.users",
         related="post_id.create_uid",
+        string="To",
         store=True,
         readonly=False,
     )

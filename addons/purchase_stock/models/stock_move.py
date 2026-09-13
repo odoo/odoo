@@ -11,8 +11,8 @@ class StockMove(models.Model):
     purchase_line_id = fields.Many2one(
         comodel_name="purchase.order.line",
         string="Purchase Order Line",
-        ondelete="set null",
         index="btree_not_null",
+        ondelete="set null",
     )
     created_purchase_line_ids = fields.Many2many(
         comodel_name="purchase.order.line",

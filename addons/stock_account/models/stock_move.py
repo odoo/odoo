@@ -16,41 +16,39 @@ class StockMove(models.Model):
     _inherit = "stock.move"
 
     to_refund = fields.Boolean(
-        "Update quantities on SO/PO",
-        copy=True,
-        default=True,
+        string="Update quantities on SO/PO",
         help="Trigger a decrease of the delivered/received quantity in the associated Sale Order/Purchase Order",
+        default=True,
+        copy=True,
     )
     company_currency_id = fields.Many2one(
-        "res.currency",
+        comodel_name="res.currency",
         related="company_id.currency_id",
         string="Company Currency",
         readonly=True,
     )
     value = fields.Monetary(
+        help="The current value of the move. It's zero if the move is not valued.",
         currency_field="company_currency_id",
         copy=False,
-        help="The current value of the move. It's zero if the move is not valued.",
     )
     value_justification = fields.Text(
-        "Value Description",
+        string="Value Description",
         compute="_compute_value_justifications",
     )
     value_computed_justification = fields.Text(
-        "Computed Value Description",
+        string="Computed Value Description",
         compute="_compute_value_justifications",
     )
     value_manual = fields.Monetary(
-        "Manual Value",
+        string="Manual Value",
         currency_field="company_currency_id",
         compute="_compute_value_manual",
         inverse="_inverse_value_manual",
     )
-    standard_price = fields.Float(
-        compute="_compute_standard_price",
-    )
+    standard_price = fields.Float(compute="_compute_standard_price")
 
-    price_unit = fields.Float("Price Unit")
+    price_unit = fields.Float(string="Price Unit")
     is_in = fields.Boolean(
         string="Is Incoming (valued)",
         compute="_compute_is_in",
@@ -65,16 +63,14 @@ class StockMove(models.Model):
         compute="_compute_is_dropship",
         store=True,
     )
-    is_valued = fields.Boolean(
-        compute="_compute_is_valued",
-    )
+    is_valued = fields.Boolean(compute="_compute_is_valued")
     valued_qty = fields.Float(
         string="Valued Quantity",
-        compute="_compute_valued_qty",
-        store=True,
-        min_display_digits="Product Unit",
         help="The quantity `value` was computed over, in the product's unit of"
         " measure: the picked, company-owned lines crossing a valuation boundary.",
+        min_display_digits="Product Unit",
+        compute="_compute_valued_qty",
+        store=True,
     )
 
     remaining_qty = fields.Float(
@@ -88,14 +84,14 @@ class StockMove(models.Model):
     )
 
     analytic_account_line_ids = fields.Many2many(
-        "account.analytic.line",
+        comodel_name="account.analytic.line",
         copy=False,
     )
     account_move_id = fields.Many2one(
-        "account.move",
-        "Valuation Entry",
-        copy=False,
+        comodel_name="account.move",
+        string="Valuation Entry",
         index="btree_not_null",
+        copy=False,
     )
 
     def _search_remaining_qty(self, operator, value):

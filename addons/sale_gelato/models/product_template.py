@@ -19,11 +19,11 @@ class ProductTemplate(models.Model):
         readonly=True,
     )
     gelato_image_ids = fields.One2many(
-        string="Gelato Print Images",
         comodel_name="document.document",
         inverse_name="res_id",
-        domain=[("is_gelato", "=", True)],
+        string="Gelato Print Images",
         readonly=True,
+        domain=[("is_gelato", "=", True)],
     )
     gelato_missing_images = fields.Boolean(
         string="Missing Print Images",

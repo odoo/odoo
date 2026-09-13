@@ -13,10 +13,10 @@ class MixinBomComponent(models.AbstractModel):
     _bom_child_field = None
 
     product_id = fields.Many2one(
-        "product.product",
+        comodel_name="product.product",
+        index=True,
         required=True,
         check_company=True,
-        index=True,
     )
     company_id = fields.Many2one(
         related="bom_id.company_id",
@@ -25,31 +25,29 @@ class MixinBomComponent(models.AbstractModel):
         readonly=True,
     )
     product_qty = fields.Float(
-        "Quantity",
-        default=1.0,
+        string="Quantity",
         digits="Product Unit",
+        default=1.0,
         required=True,
     )
     product_uom_id = fields.Many2one(
-        "uom.uom",
-        "Unit",
-        required=True,
+        comodel_name="uom.uom",
+        string="Unit",
         compute="_compute_product_uom_id",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
+        required=True,
     )
-    sequence = fields.Integer(
-        help="Gives the sequence order when displaying.",
-    )
+    sequence = fields.Integer(help="Gives the sequence order when displaying.")
     allowed_operation_ids = fields.One2many(
-        "mrp.routing.workcenter",
+        comodel_name="mrp.routing.workcenter",
         related="bom_id.operation_ids",
     )
     operation_id = fields.Many2one(
-        "mrp.routing.workcenter",
-        check_company=True,
+        comodel_name="mrp.routing.workcenter",
         domain="[('id', 'in', allowed_operation_ids)]",
+        check_company=True,
     )
 
     _qty_not_negative = models.Constraint(

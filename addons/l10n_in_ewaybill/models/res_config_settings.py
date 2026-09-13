@@ -9,17 +9,18 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     l10n_in_ewaybill_username = fields.Char(
-        "Indian Ewaybill username",
         related="company_id.l10n_in_ewaybill_username",
+        string="Indian Ewaybill username",
         readonly=False,
     )
     l10n_in_ewaybill_password = fields.Char(
-        "Indian Ewaybill password",
         related="company_id.l10n_in_ewaybill_password",
+        string="Indian Ewaybill password",
         readonly=False,
     )
     l10n_in_ewaybill_feature = fields.Boolean(
-        related="company_id.l10n_in_ewaybill_feature", readonly=False
+        related="company_id.l10n_in_ewaybill_feature",
+        readonly=False,
     )
 
     def l10n_in_ewaybill_test(self):

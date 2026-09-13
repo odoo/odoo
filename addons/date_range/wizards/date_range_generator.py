@@ -28,15 +28,13 @@ class DateRangeGenerator(models.TransientModel):
     # generate without them.
     name_expr = fields.Text(
         string="Range name expression",
+        help="Evaluated expression. E.g. "
+        "\"'FY%s' % date_start.strftime('%Y%m%d')\"\nYou can "
+        "use the Date types 'date_end' and 'date_start', as well as "
+        "the 'index' variable.",
         compute="_compute_name_expr",
         store=True,
         readonly=False,
-        help=(
-            "Evaluated expression. E.g. "
-            "\"'FY%s' % date_start.strftime('%Y%m%d')\"\nYou can "
-            "use the Date types 'date_end' and 'date_start', as well as "
-            "the 'index' variable."
-        ),
     )
     name_prefix = fields.Char(
         string="Range name prefix",

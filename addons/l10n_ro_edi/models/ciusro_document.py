@@ -7,7 +7,9 @@ class L10n_Ro_EdiDocument(models.Model):
     _order = "datetime DESC, id DESC"
 
     invoice_id = fields.Many2one(
-        comodel_name="account.move", required=True, readonly=True
+        comodel_name="account.move",
+        readonly=True,
+        required=True,
     )
     state = fields.Selection(
         selection=[
@@ -16,15 +18,17 @@ class L10n_Ro_EdiDocument(models.Model):
             ("invoice_validated", "Validated"),
         ],
         string="E-Factura Status",
-        readonly=True,
-        required=True,
         help="""Sent -> Successfully sent to the SPV, waiting for validation.
                 Validated -> Sent & validated by the SPV.
                 Refused -> Sent & refused by the SPV.
         """,
+        readonly=True,
+        required=True,
     )
     datetime = fields.Datetime(
-        default=fields.Datetime.now, required=True, readonly=True
+        default=fields.Datetime.now,
+        readonly=True,
+        required=True,
     )
     message = fields.Char(readonly=True)
     key_signature = fields.Char(
@@ -33,7 +37,10 @@ class L10n_Ro_EdiDocument(models.Model):
     key_certificate = fields.Char(
         readonly=True
     )  # Received from a successful response: to be saved for government purposes
-    key_download = fields.Char(string="Document download key", readonly=True)
+    key_download = fields.Char(
+        string="Document download key",
+        readonly=True,
+    )
     attachment = fields.Binary(readonly=True)
 
     # Technical fields

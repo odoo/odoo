@@ -16,21 +16,27 @@ class AccountReconcileModelLine(models.Model):
     _check_company_auto = True
 
     model_id = fields.Many2one(
-        "account.reconcile.model",
-        required=True,
-        readonly=True,
+        comodel_name="account.reconcile.model",
         index="btree_not_null",
+        readonly=True,
+        required=True,
         ondelete="cascade",
     )
-    company_id = fields.Many2one(related="model_id.company_id", store=True)
-    sequence = fields.Integer(required=True, default=10)
+    company_id = fields.Many2one(
+        related="model_id.company_id",
+        store=True,
+    )
+    sequence = fields.Integer(
+        default=10,
+        required=True,
+    )
     account_id = fields.Many2one(
-        "account.account",
-        ondelete="cascade",
+        comodel_name="account.account",
         domain="[('account_type', '!=', 'off_balance')]",
+        ondelete="cascade",
         check_company=True,
     )
-    partner_id = fields.Many2one("res.partner")
+    partner_id = fields.Many2one(comodel_name="res.partner")
     label = fields.Char(translate=True)
     amount_type = fields.Selection(
         selection=[
@@ -39,14 +45,15 @@ class AccountReconcileModelLine(models.Model):
             ("percentage_st_line", "Percentage of statement line"),
             ("regex", "From label"),
         ],
-        required=True,
         default="percentage",
+        required=True,
     )
-    amount = fields.Float(string="Float Amount", compute="_compute_amount")
+    amount = fields.Float(
+        string="Float Amount",
+        compute="_compute_amount",
+    )
     amount_string = fields.Char(
         string="Amount",
-        default="100",
-        required=True,
         help="""Value for the amount of the writeoff line
     * Percentage: Percentage of the balance. Either separator convention is accepted, so 12,5 and 12.5 both read as 12.5.
     * Fixed: The fixed value of the writeoff. The amount will count as a debit if it is negative, as a credit if it is positive.
@@ -58,6 +65,8 @@ class AccountReconcileModelLine(models.Model):
     • the first group captures the integer part
     • the second group captures the decimal part (last two digits)
     """,
+        default="100",
+        required=True,
     )
     tax_ids = fields.Many2many(
         comodel_name="account.tax",
@@ -146,25 +155,36 @@ class AccountReconcileModel(models.Model):
     _order = "sequence, id"
     _check_company_auto = True
 
-    active = fields.Boolean(default=True, tracking=True)
-    name = fields.Char(required=True, translate=True, tracking=True)
-    sequence = fields.Integer(required=True, default=10)
+    active = fields.Boolean(
+        default=True,
+        tracking=True,
+    )
+    name = fields.Char(
+        translate=True,
+        required=True,
+        tracking=True,
+    )
+    sequence = fields.Integer(
+        default=10,
+        required=True,
+    )
     company_id = fields.Many2one(
         comodel_name="res.company",
-        required=True,
-        readonly=True,
         default=lambda self: self.env.company,
+        readonly=True,
+        required=True,
     )
 
     trigger = fields.Selection(
-        [("manual", "Manual"), ("auto_reconcile", "Automated")],
+        selection=[("manual", "Manual"), ("auto_reconcile", "Automated")],
+        help="Validate the statement line automatically (reconciliation based on your rule).",
         default="manual",
         required=True,
         tracking=True,
-        help="Validate the statement line automatically (reconciliation based on your rule).",
     )
     next_activity_type_id = fields.Many2one(
-        comodel_name="mail.activity.type", string="Next Activity"
+        comodel_name="mail.activity.type",
+        string="Next Activity",
     )
 
     can_be_proposed = fields.Boolean(
@@ -179,12 +199,12 @@ class AccountReconcileModel(models.Model):
         copy=False,
     )
     match_journal_ids = fields.Many2many(
-        "account.journal",
+        comodel_name="account.journal",
         string="Journals",
+        help="The reconciliation model will only be available from the selected journals.",
         domain="[('type', 'in', ('bank', 'cash', 'credit'))]",
         check_company=True,
         tracking=True,
-        help="The reconciliation model will only be available from the selected journals.",
     )
     match_amount = fields.Selection(
         selection=[
@@ -193,11 +213,17 @@ class AccountReconcileModel(models.Model):
             ("between", "Is between"),
         ],
         string="Amount",
-        tracking=True,
         help="The reconciliation model will only be applied when the amount being lower than, greater than or between specified amount(s).",
+        tracking=True,
     )
-    match_amount_min = fields.Float(string="Amount Min Parameter", tracking=True)
-    match_amount_max = fields.Float(string="Amount Max Parameter", tracking=True)
+    match_amount_min = fields.Float(
+        string="Amount Min Parameter",
+        tracking=True,
+    )
+    match_amount_max = fields.Float(
+        string="Amount Max Parameter",
+        tracking=True,
+    )
     match_label = fields.Selection(
         selection=[
             ("contains", "Contains"),
@@ -205,22 +231,28 @@ class AccountReconcileModel(models.Model):
             ("match_regex", "Match Regex"),
         ],
         string="Label",
-        tracking=True,
         help="""The reconciliation model will only be applied when either the statement line label, the transaction details or the note matches the following:
         * Contains: The statement line must contains this string (case insensitive). It is matched literally, so % and _ carry no special meaning.
         * Not Contains: Negation of "Contains".
         * Match Regex: Define your own regular expression.""",
-    )
-    match_label_param = fields.Char(string="Label Parameter", tracking=True)
-    match_partner_ids = fields.Many2many(
-        "res.partner",
-        string="Partners",
         tracking=True,
+    )
+    match_label_param = fields.Char(
+        string="Label Parameter",
+        tracking=True,
+    )
+    match_partner_ids = fields.Many2many(
+        comodel_name="res.partner",
+        string="Partners",
         help="The reconciliation model will only be applied to the selected customers/vendors.",
+        tracking=True,
     )
 
     line_ids = fields.One2many(
-        "account.reconcile.model.line", "model_id", copy=True, tracking=True
+        comodel_name="account.reconcile.model.line",
+        inverse_name="model_id",
+        copy=True,
+        tracking=True,
     )
 
     @api.constrains("match_label", "match_label_param")

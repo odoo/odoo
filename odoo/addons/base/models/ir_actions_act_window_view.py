@@ -15,17 +15,17 @@ class IrActionsAct_WindowView(models.Model):
     _allow_sudo_commands = False
 
     sequence = fields.Integer()
-    view_id = fields.Many2one("ir.ui.view")
+    view_id = fields.Many2one(comodel_name="ir.ui.view")
     view_mode = fields.Selection(
         selection="_selection_view_mode",
         string="View Type",
         required=True,
     )
     act_window_id = fields.Many2one(
-        "ir.actions.act_window",
+        comodel_name="ir.actions.act_window",
         string="Action",
-        ondelete="cascade",
         index="btree_not_null",
+        ondelete="cascade",
     )
     multi = fields.Boolean(
         string="On Multiple Doc.",

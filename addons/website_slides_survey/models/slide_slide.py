@@ -6,12 +6,12 @@ class SlideSlidePartner(models.Model):
     _inherit = "slide.slide.partner"
 
     user_input_ids = fields.One2many(
-        "survey.user_input",
-        "slide_partner_id",
-        "Certification attempts",
+        comodel_name="survey.user_input",
+        inverse_name="slide_partner_id",
+        string="Certification attempts",
     )
     survey_scoring_success = fields.Boolean(
-        "Certification Succeeded",
+        string="Certification Succeeded",
         compute="_compute_survey_scoring_success",
         store=True,
     )
@@ -55,9 +55,15 @@ class SlideSlidePartner(models.Model):
 class SlideSlide(models.Model):
     _inherit = "slide.slide"
 
-    name = fields.Char(compute="_compute_name", readonly=False, store=True)
+    name = fields.Char(
+        compute="_compute_name",
+        store=True,
+        readonly=False,
+    )
     is_preview = fields.Boolean(
-        compute="_compute_is_preview", readonly=False, store=True
+        compute="_compute_is_preview",
+        store=True,
+        readonly=False,
     )
 
     @api.depends("survey_id")

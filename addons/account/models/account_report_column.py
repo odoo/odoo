@@ -10,13 +10,16 @@ class AccountReportColumn(models.Model):
     _description = "Accounting Report Column"
     _order = "sequence, id"
 
-    name = fields.Char(translate=True, required=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
     expression_label = fields.Char(required=True)
     sequence = fields.Integer()
     report_id = fields.Many2one(
         comodel_name="account.report",
-        required=True,
         index="btree_not_null",
+        required=True,
         ondelete="cascade",
     )
     sortable = fields.Boolean()

@@ -7,7 +7,10 @@ from odoo.addons.account.tools.import_file_type import CUSTOMIZATION_ID, findtex
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    nemhandel_message_uuid = fields.Char(string="Nemhandel message ID", copy=False)
+    nemhandel_message_uuid = fields.Char(
+        string="Nemhandel message ID",
+        copy=False,
+    )
     nemhandel_move_state = fields.Selection(
         selection=[
             ("ready", "Ready to send"),
@@ -16,9 +19,9 @@ class AccountMove(models.Model):
             ("done", "Done"),
             ("error", "Error"),
         ],
+        string="Nemhandel status",
         compute="_compute_nemhandel_move_state",
         store=True,
-        string="Nemhandel status",
         copy=False,
     )
 

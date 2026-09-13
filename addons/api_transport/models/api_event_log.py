@@ -24,62 +24,62 @@ class ApiEventLog(models.Model):
             ("inbound", "Inbound"),
             ("outbound", "Outbound"),
         ],
-        required=True,
-        index=True,
         help="Direction of communication: inbound (receiving) or outbound (sending)",
+        index=True,
+        required=True,
     )
     channel_id = fields.Reference(
         selection="_selection_channel_models",
-        required=True,
-        index=True,
         help="Reference to the channel (endpoint or service) for this event",
+        index=True,
+        required=True,
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
-        compute="_compute_company_id",
-        store=True,
-        readonly=False,
-        index=True,
         help="Company that owns this log entry. Defaults to the channel "
         "(endpoint) company, but the caller can override at create time "
         "with the effective request company (e.g. the credential's "
         "company in multi-tenant outbound calls).",
+        compute="_compute_company_id",
+        store=True,
+        index=True,
+        readonly=False,
     )
     user_id = fields.Many2one(
         comodel_name="res.users",
-        index=True,
         help="User who initiated the request (outbound) or processed the event (inbound)",
+        index=True,
     )
     credential_id = fields.Many2one(
         comodel_name="credential.credential",
-        ondelete="set null",
-        index=True,
         help="Credential used for this communication",
+        index=True,
+        ondelete="set null",
     )
     display_name = fields.Char(
         compute="_compute_display_name",
         store=True,
     )
     channel_name = fields.Char(
+        help="Cached channel name for faster searches",
         compute="_compute_channel_name",
         store=True,
         index=True,
-        help="Cached channel name for faster searches",
     )
 
     timestamp = fields.Datetime(
-        default=fields.Datetime.now,
-        required=True,
-        index=True,
         help="When the event was received (inbound) or request was initiated (outbound)",
+        default=fields.Datetime.now,
+        index=True,
+        required=True,
     )
     date_completed = fields.Datetime(
-        readonly=True,
         help="Timestamp when processing completed",
+        readonly=True,
     )
     duration_ms = fields.Float(
-        digits=(10, 2),
         help="Processing time in milliseconds",
+        digits=(10, 2),
     )
     performance_rating = fields.Selection(
         selection=[
@@ -94,13 +94,13 @@ class ApiEventLog(models.Model):
     )
 
     request_payload = fields.Text(
-        help="Request body (inbound: received payload, outbound: sent body)",
+        help="Request body (inbound: received payload, outbound: sent body)"
     )
     request_payload_hash = fields.Char(
+        help="SHA256 hash for duplicate detection",
         compute="_compute_payload_hash",
         store=True,
         index=True,
-        help="SHA256 hash for duplicate detection",
     )
     request_payload_hash_override = fields.Char(
         help="The hash of the body as received, set when the body itself was "
@@ -108,11 +108,11 @@ class ApiEventLog(models.Model):
         "Duplicate detection compares this column against a hash the caller "
         "computed from the request. Deriving it from a stored body that was "
         "truncated would answer a different question and silently stop "
-        "detecting anything.",
+        "detecting anything."
     )
     request_payload_omitted_bytes = fields.Integer(
         help="Size of the body that was not stored, so the recorded size still "
-        "describes the request rather than the placeholder standing in for it.",
+        "describes the request rather than the placeholder standing in for it."
     )
     request_payload_size = fields.Integer(
         compute="_compute_payload_sizes",
@@ -131,9 +131,7 @@ class ApiEventLog(models.Model):
         ],
         index=True,
     )
-    request_url = fields.Char(
-        index=True,
-    )
+    request_url = fields.Char(index=True)
     request_endpoint = fields.Char(
         compute="_compute_request_endpoint",
         store=True,
@@ -142,7 +140,7 @@ class ApiEventLog(models.Model):
     request_headers = fields.Json()
 
     response_payload = fields.Text(
-        help="Response body (inbound: our response, outbound: received response)",
+        help="Response body (inbound: our response, outbound: received response)"
     )
     response_payload_size = fields.Integer(
         compute="_compute_payload_sizes",
@@ -150,9 +148,7 @@ class ApiEventLog(models.Model):
     )
     response_headers = fields.Json()
 
-    status_code = fields.Integer(
-        index=True,
-    )
+    status_code = fields.Integer(index=True)
     status_category = fields.Selection(
         selection=[
             ("success", "2xx Success"),
@@ -167,31 +163,27 @@ class ApiEventLog(models.Model):
     )
 
     source_ip = fields.Char(
-        index=True,
         help="IP address of the client that sent the event",
+        index=True,
     )
 
     event_type = fields.Char(
-        index=True,
         help="Type of event (e.g., 'payment.success', 'push'). Used for inbound webhooks.",
+        index=True,
     )
     event_id_external = fields.Char(
-        index=True,
         help="Unique event ID from external service for deduplication",
+        index=True,
     )
     signature_verified = fields.Boolean(
-        default=False,
         help="Whether the inbound request signature was successfully verified",
+        default=False,
     )
-    user_agent = fields.Char(
-        help="HTTP User-Agent header from the inbound request",
-    )
+    user_agent = fields.Char(help="HTTP User-Agent header from the inbound request")
     processing_result = fields.Text(
-        help="Return value or result from handler execution",
+        help="Return value or result from handler execution"
     )
-    stack_trace = fields.Text(
-        help="Full stack trace for debugging failed events",
-    )
+    stack_trace = fields.Text(help="Full stack trace for debugging failed events")
 
     state = fields.Selection(
         selection=[
@@ -202,10 +194,10 @@ class ApiEventLog(models.Model):
             ("duplicate", "Duplicate"),
             ("retry", "Retry Scheduled"),
         ],
-        required=True,
+        help="Current processing state",
         default="pending",
         index=True,
-        help="Current processing state",
+        required=True,
     )
     is_success = fields.Boolean(
         compute="_compute_is_success",
@@ -213,9 +205,7 @@ class ApiEventLog(models.Model):
         index=True,
     )
 
-    error_message = fields.Text(
-        readonly=True,
-    )
+    error_message = fields.Text(readonly=True)
     error_type = fields.Selection(
         selection=[
             ("network", "Network Error"),
@@ -226,7 +216,7 @@ class ApiEventLog(models.Model):
             ("server", "Server Error"),
             ("duplicate", "Duplicate Event"),
             ("other", "Other"),
-        ],
+        ]
     )
 
     retry_count = fields.Integer(
@@ -234,29 +224,23 @@ class ApiEventLog(models.Model):
         readonly=True,
     )
     date_next_retry = fields.Datetime(
-        readonly=True,
         index=True,
+        readonly=True,
     )
 
     cache_hit = fields.Boolean(
         default=False,
         index=True,
     )
-    cache_key = fields.Char(
-        index=True,
-    )
+    cache_key = fields.Char(index=True)
 
     trace_id = fields.Char(
-        index=True,
         help="Unique ID for correlating related events",
+        index=True,
     )
-    origin_model = fields.Char(
-        help="Odoo model that triggered this communication",
-    )
+    origin_model = fields.Char(help="Odoo model that triggered this communication")
     origin_record_id = fields.Integer()
-    tags = fields.Char(
-        help="Comma-separated tags for categorization",
-    )
+    tags = fields.Char(help="Comma-separated tags for categorization")
 
     _duplicate_detection_idx = models.Index(
         "(channel_id, request_payload_hash, timestamp)",

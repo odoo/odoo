@@ -15,10 +15,10 @@ class MixinWebsitePublishedMulti(MixinWebsitePublished):
     _description = "Multi Website Published Mixin"
 
     website_published = fields.Boolean(
+        related=False,
         compute="_compute_website_published",
         inverse="_inverse_website_published",
         search="_search_website_published",
-        related=False,
         readonly=False,
     )
 

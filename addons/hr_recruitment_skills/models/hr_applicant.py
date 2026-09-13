@@ -5,7 +5,10 @@ class HrApplicant(models.Model):
     _inherit = ["mixin.hr.individual.skill.owner", "hr.applicant"]
 
     applicant_skill_ids = fields.One2many(
-        "hr.applicant.skill", "applicant_id", string="Skills", copy=True
+        comodel_name="hr.applicant.skill",
+        inverse_name="applicant_id",
+        string="Skills",
+        copy=True,
     )
     current_applicant_skill_ids = fields.One2many(
         comodel_name="hr.applicant.skill",
@@ -13,7 +16,11 @@ class HrApplicant(models.Model):
         compute="_compute_current_applicant_skill_ids",
         readonly=False,
     )
-    skill_ids = fields.Many2many("hr.skill", compute="_compute_skill_ids", store=True)
+    skill_ids = fields.Many2many(
+        comodel_name="hr.skill",
+        compute="_compute_skill_ids",
+        store=True,
+    )
     matching_skill_ids = fields.Many2many(
         comodel_name="hr.skill",
         string="Matching Skills",

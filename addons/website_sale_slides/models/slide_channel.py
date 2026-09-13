@@ -15,10 +15,10 @@ class SlideChannel(models.Model):
         ondelete={"payment": lambda recs: recs.write({"enroll": "invite"})},
     )
     product_id = fields.Many2one(
-        "product.product",
-        domain=[("service_tracking", "=", "course")],
-        index="btree_not_null",
+        comodel_name="product.product",
         default=_default_product_id,
+        index="btree_not_null",
+        domain=[("service_tracking", "=", "course")],
     )
     product_sale_revenues = fields.Monetary(
         string="Total revenues",

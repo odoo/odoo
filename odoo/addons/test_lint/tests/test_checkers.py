@@ -1973,13 +1973,14 @@ class TestCredentialStorageLint(BaseCase):
 
 @no_retry
 class TestFieldDeclarationLint(BaseCase):
-    def _check(self, source):
+    def _check(self, source, rule=None):
         tree = ast.parse(dedent(source))
         return [
             (v.rule, v.lineno)
             for v in _checker_field_declaration.check(
                 tree, _rules.walk_with_parents(tree)
             )
+            if rule is None or v.rule == rule
         ]
 
     def test_a_field_declared_twice_is_flagged_at_the_second(self):
@@ -2044,7 +2045,8 @@ class TestFieldDeclarationLint(BaseCase):
         )
 
     def test_a_repeated_selection_key_is_flagged(self):
-        found = self._check("""
+        found = self._check(
+            """
         class Move(models.Model):
             kind = fields.Selection(
                 [("23", "Credit note"), ("30", "Debit note"), ("23", "Inactive")],
@@ -2052,27 +2054,127 @@ class TestFieldDeclarationLint(BaseCase):
             other = fields.Selection(selection=[("a", "A"), ("a", "B")])
             clean = fields.Selection([("a", "A"), ("b", "B")])
             dynamic = fields.Selection(selection="_selection_dynamic")
-        """)
+        """,
+            rule="selection-duplicate-key",
+        )
         self.assertEqual(
             found,
             [("selection-duplicate-key", 4), ("selection-duplicate-key", 6)],
         )
 
     def test_a_hook_outside_its_family_is_flagged(self):
-        found = self._check("""
+        found = self._check(
+            """
         class Users(models.Model):
             totp_enabled = fields.Boolean(compute="_compute_totp_enabled", search="_totp_enable_search")
             cert = fields.Binary(compute="_compute_cert", inverse="_set_cert")
             kind = fields.Selection(selection="_get_kinds")
             fine = fields.Char(compute="_compute_fine", inverse="_inverse_fine", search="_search_fine")
             shared = fields.Float(compute="_compute_amounts")
-        """)
+        """,
+            rule="field-hook-prefix",
+        )
         self.assertEqual(
             found,
             [
                 ("field-hook-prefix", 3),
                 ("field-hook-prefix", 4),
                 ("field-hook-prefix", 5),
+            ],
+        )
+
+    def test_a_positional_argument_is_named_after_its_parameter(self):
+        found = [
+            (v.rule, v.message)
+            for v in _checker_field_declaration.check(
+                ast.parse(
+                    dedent("""
+                    class M(models.Model):
+                        line_ids = fields.One2many("m.line", "m_id", "Lines")
+                        tag_ids = fields.Many2many("m.tag", "rel", "a", "b")
+                    """)
+                )
+            )
+            if v.rule == "field-positional-argument"
+        ]
+        self.assertEqual(len(found), 2)
+        self.assertIn("comodel_name=, inverse_name=, string=", found[0][1])
+        self.assertIn("comodel_name=, relation=, column1=, column2=", found[1][1])
+
+    def test_keywords_out_of_order_or_sharing_a_line_are_flagged(self):
+        found = self._check(
+            """
+        class M(models.Model):
+            a = fields.Char(required=True, string="A")
+            b = fields.Char(string="B", required=True)
+            c = fields.Char(
+                string="C",
+                required=True,
+            )
+            d = fields.Char(string="D")
+            e = fields.Char(string="E",
+                            required=True)
+        """,
+            rule="field-attribute-order",
+        )
+        self.assertEqual(
+            found,
+            [
+                ("field-attribute-order", 3),
+                ("field-attribute-order", 4),
+                ("field-attribute-order", 10),
+            ],
+        )
+
+    def test_the_canonical_order_reads_what_it_is_before_how_it_is_stored(self):
+        self.assertEqual(
+            _checker_field_declaration.canonical_order(
+                ["store", "string", "compute", "comodel_name", "zzz_custom", "help"]
+            ),
+            ["comodel_name", "string", "help", "compute", "store", "zzz_custom"],
+        )
+
+    def test_an_attribute_setup_ignores_is_flagged(self):
+        found = self._check(
+            """
+        class M(models.Model):
+            tag_ids = fields.Many2many(
+                comodel_name="m.tag",
+                index=True,
+            )
+            total = fields.Float(
+                compute="_compute_total",
+                index=True,
+            )
+            kind = fields.Selection(
+                selection=[("a", "A")],
+                compute="_compute_kind",
+                precompute=True,
+            )
+            partner_name = fields.Char(
+                related="partner_id.name",
+                compute="_compute_partner_name",
+            )
+            stored = fields.Float(
+                compute="_compute_stored",
+                precompute=True,
+                store=True,
+                index=True,
+            )
+            unrelated = fields.Char(
+                related=False,
+                compute="_compute_unrelated",
+            )
+        """,
+            rule="dead-field-attribute",
+        )
+        self.assertEqual(
+            found,
+            [
+                ("dead-field-attribute", 3),
+                ("dead-field-attribute", 7),
+                ("dead-field-attribute", 11),
+                ("dead-field-attribute", 16),
             ],
         )
 

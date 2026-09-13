@@ -8,7 +8,7 @@ _debug = DebugLog(__name__)
 class DigestDigest(models.Model):
     _inherit = "digest.digest"
 
-    kpi_account_bank_cash = fields.Boolean("Bank & Cash Moves")
+    kpi_account_bank_cash = fields.Boolean(string="Bank & Cash Moves")
     kpi_account_bank_cash_value = fields.Monetary(
         compute="_compute_kpi_account_bank_cash_value"
     )

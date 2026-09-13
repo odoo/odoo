@@ -5,7 +5,8 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     l10n_tr_tax_office_id = fields.Many2one(
-        "l10n_tr_nilvera_einvoice_extended.tax.office", string="Turkish Tax Office"
+        comodel_name="l10n_tr_nilvera_einvoice_extended.tax.office",
+        string="Turkish Tax Office",
     )
 
     @api.depends("l10n_tr_tax_office_id")

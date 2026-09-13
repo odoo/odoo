@@ -14,26 +14,29 @@ class L10n_FrFecExportWizard(models.TransientModel):
 
     date_from = fields.Date(
         string="Start Date",
-        required=True,
         default=lambda self: self.env.context.get("report_dates", {}).get("date_from"),
+        required=True,
     )
     date_to = fields.Date(
         string="End Date",
-        required=True,
         default=lambda self: self.env.context.get("report_dates", {}).get("date_to"),
+        required=True,
     )
-    filename = fields.Char(size=256, readonly=True)
+    filename = fields.Char(
+        size=256,
+        readonly=True,
+    )
     test_file = fields.Boolean()
     export_type = fields.Selection(
-        [
+        selection=[
             ("official", "Official FEC report (posted entries only)"),
             ("nonofficial", "Non-official FEC report (posted and unposted entries)"),
         ],
-        required=True,
         default="official",
+        required=True,
     )
     excluded_journal_ids = fields.Many2many(
-        "account.journal",
+        comodel_name="account.journal",
         string="Excluded Journals",
         domain="[('company_id', 'parent_of', current_company_id)]",
     )

@@ -6,7 +6,9 @@ class ProductProduct(models.Model):
     _inherit = "product.product"
 
     l10n_tr_ctsp_number = fields.Char(
-        string="CTSP Number", copy=False, index="btree_not_null"
+        string="CTSP Number",
+        index="btree_not_null",
+        copy=False,
     )
 
     @api.constrains("l10n_tr_ctsp_number")

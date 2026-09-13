@@ -11,9 +11,13 @@ class L10nInPanEntity(models.Model):
     _inherit = ["mixin.mail.thread", "mixin.mail.activity"]
     _description = "Indian PAN Entity"
 
-    name = fields.Char(string="PAN", tracking=1, required=True)
+    name = fields.Char(
+        string="PAN",
+        required=True,
+        tracking=1,
+    )
     type = fields.Selection(
-        [
+        selection=[
             ("a", "Association of Persons"),
             ("b", "Body of Individuals"),
             ("c", "Company"),
@@ -27,8 +31,8 @@ class L10nInPanEntity(models.Model):
             ("k", "Krish (Trust Krish)"),
         ],
         compute="_compute_type",
-        readonly=True,
         store=True,
+        readonly=True,
     )
     partner_ids = fields.One2many(
         comodel_name="res.partner",
@@ -37,7 +41,7 @@ class L10nInPanEntity(models.Model):
         domain="[('l10n_in_pan_entity_id', '=', False), '|', ('vat', '=', False), ('vat', 'like', name)]",
     )
     tds_deduction = fields.Selection(
-        [
+        selection=[
             ("normal", "Normal"),
             ("lower", "Lower"),
             ("higher", "Higher"),
@@ -47,18 +51,25 @@ class L10nInPanEntity(models.Model):
         default="normal",
         tracking=2,
     )
-    tds_certificate = fields.Binary(string="TDS Certificate", copy=False)
+    tds_certificate = fields.Binary(
+        string="TDS Certificate",
+        copy=False,
+    )
     tds_certificate_filename = fields.Char(
-        string="TDS Certificate Filename", copy=False
+        string="TDS Certificate Filename",
+        copy=False,
     )
 
     # MSME/Udyam Registration details
     msme_type = fields.Selection(
-        [("micro", "Micro"), ("small", "Small"), ("medium", "Medium")],
+        selection=[("micro", "Micro"), ("small", "Small"), ("medium", "Medium")],
         string="MSME/Udyam Registration Type",
         copy=False,
     )
-    msme_number = fields.Char(string="MSME/Udyam Registration Number", copy=False)
+    msme_number = fields.Char(
+        string="MSME/Udyam Registration Number",
+        copy=False,
+    )
 
     _name_uniq = models.Constraint(
         "unique (name)",

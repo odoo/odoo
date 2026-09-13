@@ -8,10 +8,10 @@ class AccountAutopostBillsWizard(models.TransientModel):
     _name = "account.autopost.bills.wizard"
     _description = "Autopost Bills Wizard"
 
-    partner_id = fields.Many2one("res.partner")
+    partner_id = fields.Many2one(comodel_name="res.partner")
     partner_name = fields.Char(related="partner_id.name")
     nb_unmodified_bills = fields.Integer(
-        "Number of bills previously unmodified from this partner"
+        string="Number of bills previously unmodified from this partner"
     )
 
     @_debug.perf.timed

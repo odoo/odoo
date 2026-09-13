@@ -7,7 +7,10 @@ from odoo.exceptions import ValidationError
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    report_grids = fields.Boolean(string="Print Variant Grids", default=True)
+    report_grids = fields.Boolean(
+        string="Print Variant Grids",
+        default=True,
+    )
 
     """ Matrix loading and update: fields and methods :
 
@@ -19,14 +22,20 @@ class SaleOrder(models.Model):
         To force the loading, a 'hack' of the js framework would have been needed...
     """
 
-    grid_product_tmpl_id = fields.Many2one("product.template", store=False)
-    grid_update = fields.Boolean(default=False, store=False)
-    grid = fields.Char(
-        "Matrix local storage",
+    grid_product_tmpl_id = fields.Many2one(
+        comodel_name="product.template",
         store=False,
+    )
+    grid_update = fields.Boolean(
+        default=False,
+        store=False,
+    )
+    grid = fields.Char(
+        string="Matrix local storage",
         help="Technical local storage of grid. "
         "\nIf grid_update, will be loaded on the SO."
         "\nIf not, represents the matrix to open.",
+        store=False,
     )
 
     @api.onchange("grid_product_tmpl_id")

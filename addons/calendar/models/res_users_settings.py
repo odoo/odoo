@@ -6,16 +6,16 @@ class ResUsersSettings(models.Model):
 
     # Calendar module settings.
     calendar_default_privacy = fields.Selection(
-        [
+        selection=[
             ("public", "Public"),
             ("private", "Private"),
             ("confidential", "Only internal users"),
         ],
+        help="Default privacy setting for whom the calendar events will be visible.",
         default="public",
-        required=True,
         store=True,
         readonly=False,
-        help="Default privacy setting for whom the calendar events will be visible.",
+        required=True,
     )
 
     @api.model

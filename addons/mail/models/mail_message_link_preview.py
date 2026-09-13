@@ -20,10 +20,16 @@ class MessageMailLinkPreview(models.Model):
     _order = "sequence, id"
 
     message_id: MailMessage = fields.Many2one(
-        "mail.message", required=True, index=True, ondelete="cascade"
+        comodel_name="mail.message",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     link_preview_id: MailLinkPreview = fields.Many2one(
-        "mail.link.preview", index=True, required=True, ondelete="cascade"
+        comodel_name="mail.link.preview",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     sequence = fields.Integer()
     is_hidden = fields.Boolean()

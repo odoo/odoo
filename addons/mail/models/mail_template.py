@@ -209,13 +209,13 @@ class MailTemplate(models.Model):
 
     name = fields.Char(translate=True)
     description = fields.Text(
-        "Template Description",
-        translate=True,
+        string="Template Description",
         help="This field is used for internal description of the template's usage.",
+        translate=True,
     )
     active = fields.Boolean(default=True)
     template_category = fields.Selection(
-        [
+        selection=[
             ("base_template", "Base Template"),
             ("hidden_template", "Hidden Template"),
             ("custom_template", "Custom Template"),
@@ -224,103 +224,110 @@ class MailTemplate(models.Model):
         search="_search_template_category",
     )
     model_id: IrModel = fields.Many2one(
-        "ir.model",
-        "Applies to",
-        ondelete="cascade",
+        comodel_name="ir.model",
+        string="Applies to",
         domain=[("abstract", "=", False)],
+        ondelete="cascade",
     )
     model = fields.Char(
-        "Related Document Model",
         related="model_id.model",
-        index=True,
+        string="Related Document Model",
         store=True,
+        index=True,
         readonly=True,
     )
     subject = fields.Char(
+        help="Subject (placeholders may be used here)",
         translate=True,
         prefetch=True,
-        help="Subject (placeholders may be used here)",
     )
     email_from = fields.Char(
-        "Send From",
+        string="Send From",
         help="Sender address (placeholders may be used here). If not set, the default "
         "value will be the author's email alias if configured, or email address.",
     )
     user_id: ResUsers = fields.Many2one(
-        "res.users", string="Owner", domain="[('share', '=', False)]"
+        comodel_name="res.users",
+        string="Owner",
+        domain="[('share', '=', False)]",
     )
     use_default_to = fields.Boolean(
-        "Default Recipients",
-        default=True,
+        string="Default Recipients",
         help="Default recipients of the record:\n"
         "- partner (using id on a partner or the partner_id field) OR\n"
         "- email (using email_from or email field)",
+        default=True,
     )
     email_to = fields.Char(
-        "To (Emails)",
+        string="To (Emails)",
         help="Comma-separated recipient addresses (placeholders may be used here)",
     )
     partner_to = fields.Char(
-        "To (Partners)",
+        string="To (Partners)",
         help="Comma-separated ids of recipient partners (placeholders may be used here)",
     )
     email_cc = fields.Char(
-        "Cc", help="Carbon copy recipients (placeholders may be used here)"
+        string="Cc",
+        help="Carbon copy recipients (placeholders may be used here)",
     )
     reply_to = fields.Char(
-        help="Email address to which replies will be redirected when sending emails in mass; only used when the reply is not logged in the original discussion thread.",
+        help="Email address to which replies will be redirected when sending emails in mass; only used when the reply is not logged in the original discussion thread."
     )
     body_html = fields.Html(
-        "Body",
-        render_engine="qweb",
-        render_options={"post_process": True},
-        prefetch=True,
+        string="Body",
         translate=True,
         sanitize="email_outgoing",
+        prefetch=True,
+        render_engine="qweb",
+        render_options={"post_process": True},
     )
     attachment_ids: IrAttachment = fields.Many2many(
-        "ir.attachment",
-        "email_template_attachment_rel",
-        "email_template_id",
-        "attachment_id",
+        comodel_name="ir.attachment",
+        relation="email_template_attachment_rel",
+        column1="email_template_id",
+        column2="attachment_id",
         string="Attachments",
         bypass_search_access=True,
     )
     report_template_ids: IrActionsReport = fields.Many2many(
-        "ir.actions.report",
+        comodel_name="ir.actions.report",
         relation="mail_template_ir_actions_report_rel",
         column1="mail_template_id",
         column2="ir_actions_report_id",
         string="Dynamic Reports",
         domain="[('model', '=', model)]",
     )
-    email_layout_xmlid = fields.Char("Email Notification Layout", copy=False)
+    email_layout_xmlid = fields.Char(
+        string="Email Notification Layout",
+        copy=False,
+    )
     mail_server_id: IrMail_Server = fields.Many2one(
-        "ir.mail_server",
-        "Outgoing Mail Server",
-        readonly=False,
-        index="btree_not_null",
+        comodel_name="ir.mail_server",
+        string="Outgoing Mail Server",
         help="Optional preferred server for outgoing mails. If not set, the highest "
         "priority one will be used.",
+        index="btree_not_null",
+        readonly=False,
     )
     scheduled_date = fields.Char(
-        help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible. You can use dynamic expression.",
+        help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible. You can use dynamic expression."
     )
     auto_delete = fields.Boolean(
-        default=True,
         help="This option permanently removes any track of email after it's been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.",
+        default=True,
     )
     ref_ir_act_window: IrActionsAct_Window = fields.Many2one(
-        "ir.actions.act_window",
-        "Sidebar action",
-        readonly=True,
-        copy=False,
+        comodel_name="ir.actions.act_window",
+        string="Sidebar action",
         help="Sidebar action to make this template available on records "
         "of the related document model",
+        copy=False,
+        readonly=True,
     )
 
     can_write = fields.Boolean(
-        compute="_compute_can_write", help="The current user can edit the template."
+        help="The current user can edit the template.",
+        compute="_compute_can_write",
     )
     is_template_editor = fields.Boolean(compute="_compute_is_template_editor")
 

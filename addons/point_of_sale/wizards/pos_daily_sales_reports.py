@@ -7,7 +7,10 @@ class PosDailySalesReportsWizard(models.TransientModel):
     _name = "pos.daily.sales.reports.wizard"
     _description = "Point of Sale Daily Report"
 
-    pos_session_id = fields.Many2one("pos.session", required=True)
+    pos_session_id = fields.Many2one(
+        comodel_name="pos.session",
+        required=True,
+    )
 
     def _get_report_data(self):
         return {

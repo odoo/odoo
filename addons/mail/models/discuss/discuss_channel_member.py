@@ -50,33 +50,33 @@ class DiscussChannelMember(models.Model):
     _bypass_create_check = {}
 
     partner_id: ResPartner = fields.Many2one(
-        "res.partner",
-        ondelete="cascade",
+        comodel_name="res.partner",
         index=True,
+        ondelete="cascade",
     )
     guest_id: MailGuest = fields.Many2one(
-        "mail.guest",
-        ondelete="cascade",
+        comodel_name="mail.guest",
         index=True,
+        ondelete="cascade",
     )
     is_self = fields.Boolean(
         compute="_compute_is_self",
         search="_search_is_self",
     )
     channel_id: DiscussChannel = fields.Many2one(
-        "discuss.channel",
-        ondelete="cascade",
+        comodel_name="discuss.channel",
         required=True,
+        ondelete="cascade",
         bypass_search_access=True,
     )
-    custom_channel_name = fields.Char("Custom channel name")
+    custom_channel_name = fields.Char(string="Custom channel name")
     fetched_message_id: MailMessage = fields.Many2one(
-        "mail.message",
+        comodel_name="mail.message",
         string="Last Fetched",
         index="btree_not_null",
     )
     seen_message_id: MailMessage = fields.Many2one(
-        "mail.message",
+        comodel_name="mail.message",
         string="Last Seen",
         index="btree_not_null",
     )
@@ -86,47 +86,47 @@ class DiscussChannelMember(models.Model):
         required=True,
     )
     message_unread_counter = fields.Integer(
-        "Unread Messages Counter",
+        string="Unread Messages Counter",
         compute="_compute_message_unread_counter",
         compute_sudo=True,
     )
     custom_notifications = fields.Selection(
-        [
+        selection=[
             ("all", "All Messages"),
             ("mentions", "Mentions Only"),
             ("no_notif", "Nothing"),
         ],
-        "Customized Notifications",
+        string="Customized Notifications",
         help="Use default from user settings if not specified. This setting will only be applied to channels.",
     )
     mute_until_dt = fields.Datetime(
-        "Mute notifications until",
+        string="Mute notifications until",
         help="If set, the member will not receive notifications from the channel until this date.",
     )
     is_pinned = fields.Boolean(
-        "Is pinned on the interface",
+        string="Is pinned on the interface",
         compute="_compute_is_pinned",
         search="_search_is_pinned",
     )
     unpin_dt = fields.Datetime(
-        "Unpin date",
-        index=True,
+        string="Unpin date",
         help="Contains the date and time when the channel was unpinned by the user.",
+        index=True,
     )
     last_interest_dt = fields.Datetime(
-        "Last Interest",
+        string="Last Interest",
+        help="Contains the date and time of the last interesting event that happened in this channel for this user. This includes: creating, joining, pinning",
         default=lambda self: fields.Datetime.now() - timedelta(seconds=1),
         index=True,
-        help="Contains the date and time of the last interesting event that happened in this channel for this user. This includes: creating, joining, pinning",
     )
-    last_seen_dt = fields.Datetime("Last seen date")
+    last_seen_dt = fields.Datetime(string="Last seen date")
     rtc_session_ids: DiscussChannelRtcSession = fields.One2many(
-        string="RTC Sessions",
         comodel_name="discuss.channel.rtc.session",
         inverse_name="channel_member_id",
+        string="RTC Sessions",
     )
     rtc_inviting_session_id: DiscussChannelRtcSession = fields.Many2one(
-        "discuss.channel.rtc.session",
+        comodel_name="discuss.channel.rtc.session",
         string="Ringing session",
     )
 

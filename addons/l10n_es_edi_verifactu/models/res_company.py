@@ -5,9 +5,9 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     l10n_es_edi_verifactu_certificate_ids = fields.One2many(
-        string="Veri*Factu Certificates",
         comodel_name="certificate.certificate",
         inverse_name="company_id",
+        string="Veri*Factu Certificates",
     )
     l10n_es_edi_verifactu_required = fields.Boolean(
         string="Enable Veri*Factu",
@@ -21,17 +21,16 @@ class ResCompany(models.Model):
     l10n_es_edi_verifactu_chain_sequence_id = fields.Many2one(
         comodel_name="ir.sequence",
         string="Veri*Factu Document Chain Sequence",
-        readonly=True,
         copy=False,
+        readonly=True,
     )
     l10n_es_edi_verifactu_next_batch_time = fields.Datetime(
         string="Veri*Factu Next Batch Time",
-        readonly=True,
-        copy=False,
         help="The Datetime at which the next submission to the AEAT can be made.",
+        copy=False,
+        readonly=True,
     )
     l10n_es_edi_verifactu_special_vat_regime = fields.Selection(
-        string="Veri*Factu VAT Regime",
         selection=[
             ("simplified", "Simplified Regime"),
             (
@@ -40,6 +39,7 @@ class ResCompany(models.Model):
             ),
             ("recargo", "Recargo de Equivalencia"),
         ],
+        string="Veri*Factu VAT Regime",
         help="Leave empty for the normal regimen.",
     )
 

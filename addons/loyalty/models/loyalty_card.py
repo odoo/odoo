@@ -27,26 +27,37 @@ class LoyaltyCard(models.Model):
 
     program_id = fields.Many2one(
         comodel_name="loyalty.program",
+        default=lambda self: self.env.context.get("active_id", None),
+        index="btree_not_null",
         # Required: a card with no program has no company, no currency and no point
         # name, and its display name read "False: 044f-d2de-4011".
         required=True,
         ondelete="restrict",
-        index="btree_not_null",
-        default=lambda self: self.env.context.get("active_id", None),
     )
     program_type = fields.Selection(related="program_id.program_type")
     # TODO probably isn't useful to store this company_id anymore
     company_id = fields.Many2one(
-        related="program_id.company_id", store=True, precompute=True
+        related="program_id.company_id",
+        precompute=True,
+        store=True,
     )
     currency_id = fields.Many2one(related="program_id.currency_id")
     # Reserved for this partner if non-empty
-    partner_id = fields.Many2one(comodel_name="res.partner", index=True)
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        index=True,
+    )
     points = fields.Float(tracking=True)
-    point_name = fields.Char(related="program_id.portal_point_name", readonly=True)
+    point_name = fields.Char(
+        related="program_id.portal_point_name",
+        readonly=True,
+    )
     points_display = fields.Char(compute="_compute_points_display")
 
-    code = fields.Char(required=True, default=lambda self: self._default_code())
+    code = fields.Char(
+        default=lambda self: self._default_code(),
+        required=True,
+    )
     expiration_date = fields.Date()
 
     use_count = fields.Integer(compute="_compute_use_count")

@@ -42,21 +42,24 @@ class HrExpense(models.Model):
         compute="_compute_name",
         precompute=True,
         store=True,
+        copy=True,
         readonly=False,
         required=True,
-        copy=True,
     )
-    date = fields.Date(string="Expense Date", default=fields.Date.context_today)
+    date = fields.Date(
+        string="Expense Date",
+        default=fields.Date.context_today,
+    )
     employee_id = fields.Many2one(
         comodel_name="hr.employee",
         compute="_compute_employee_id",
         precompute=True,
         store=True,
+        index=True,
         readonly=False,
         required=True,
-        index=True,
-        check_company=True,
         domain=[("filter_for_expense", "=", True)],
+        check_company=True,
         tracking=True,
     )
     department_id = fields.Many2one(
@@ -69,6 +72,7 @@ class HrExpense(models.Model):
         comodel_name="res.users",
         compute="_compute_from_employee_id",
         store=True,
+        copy=False,
         domain=lambda self: [
             ("share", "=", False),
             "|",
@@ -79,22 +83,21 @@ class HrExpense(models.Model):
                 self.env.ref("hr_expense.group_hr_expense_team_approver").ids,
             ),
         ],
-        copy=False,
         tracking=True,
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
-        required=True,
-        readonly=True,
         default=lambda self: self.env.company,
+        readonly=True,
+        required=True,
     )
     product_id = fields.Many2one(
         comodel_name="product.product",
         string="Category",
-        tracking=True,
-        check_company=True,
         domain=[("can_be_expensed", "=", True)],
         ondelete="restrict",
+        check_company=True,
+        tracking=True,
     )
     product_description = fields.Html(compute="_compute_product_description")
     product_uom_id = fields.Many2one(
@@ -110,19 +113,24 @@ class HrExpense(models.Model):
         string="Whether tax is defined on a selected product",
         compute="_compute_from_product",
     )
-    quantity = fields.Float(required=True, digits="Product Unit", default=1)
+    quantity = fields.Float(
+        digits="Product Unit",
+        default=1,
+        required=True,
+    )
     description = fields.Text(string="Internal Notes")
     message_main_attachment_checksum = fields.Char(
         related="message_main_attachment_id.checksum"
     )
     nb_attachment = fields.Integer(
-        string="Number of Attachments", compute="_compute_nb_attachment"
+        string="Number of Attachments",
+        compute="_compute_nb_attachment",
     )
     attachment_ids = fields.One2many(
         comodel_name="ir.attachment",
         inverse_name="res_id",
-        domain=[("res_model", "=", "hr.expense")],
         string="Attachments",
+        domain=[("res_model", "=", "hr.expense")],
     )
     state = fields.Selection(
         selection=[
@@ -136,11 +144,11 @@ class HrExpense(models.Model):
         ],
         string="Status",
         compute="_compute_state",
+        default="draft",
         store=True,
-        readonly=True,
         index=True,
         copy=False,
-        default="draft",
+        readonly=True,
         tracking=True,
     )
     review_state = fields.Selection(
@@ -151,10 +159,12 @@ class HrExpense(models.Model):
     )
     approval_date = fields.Datetime(readonly=True)
     duplicate_expense_ids = fields.Many2many(
-        comodel_name="hr.expense", compute="_compute_duplicate_expense_ids"
+        comodel_name="hr.expense",
+        compute="_compute_duplicate_expense_ids",
     )
     same_receipt_expense_ids = fields.Many2many(
-        comodel_name="hr.expense", compute="_compute_same_receipt_expense_ids"
+        comodel_name="hr.expense",
+        compute="_compute_same_receipt_expense_ids",
     )
 
     split_expense_origin_id = fields.Many2one(
@@ -164,19 +174,19 @@ class HrExpense(models.Model):
     )
     tax_amount_currency = fields.Monetary(
         string="Tax amount in Currency",
+        help="Tax amount in currency",
         currency_field="currency_id",
         compute="_compute_tax_amount_currency",
         precompute=True,
         store=True,
-        help="Tax amount in currency",
     )
     tax_amount = fields.Monetary(
         string="Tax amount",
+        help="Tax amount in company currency",
         currency_field="company_currency_id",
         compute="_compute_tax_amount",
         precompute=True,
         store=True,
-        help="Tax amount in company currency",
     )
     total_amount_currency = fields.Monetary(
         string="Total In Currency",
@@ -212,29 +222,29 @@ class HrExpense(models.Model):
         store=True,
     )
     amount_residual = fields.Monetary(
+        related="account_move_id.amount_residual",
         string="Amount Due",
         currency_field="company_currency_id",
-        related="account_move_id.amount_residual",
         readonly=True,
     )
     price_unit = fields.Float(
         string="Unit Price",
+        min_display_digits="Product Price",
         compute="_compute_price_unit",
         precompute=True,
         store=True,
-        required=True,
-        readonly=True,
         copy=True,
-        min_display_digits="Product Price",
+        readonly=True,
+        required=True,
     )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
         compute="_compute_currency_id",
         precompute=True,
+        default=lambda self: self.env.company.currency_id,
         store=True,
         readonly=False,
         required=True,
-        default=lambda self: self.env.company.currency_id,
     )
     company_currency_id = fields.Many2one(
         comodel_name="res.currency",
@@ -247,9 +257,15 @@ class HrExpense(models.Model):
         compute="_compute_is_multiple_currency",
     )
     currency_rate = fields.Float(
-        compute="_compute_currency_rate", digits=(16, 9), readonly=True, tracking=True
+        digits=(16, 9),
+        compute="_compute_currency_rate",
+        readonly=True,
+        tracking=True,
     )
-    label_currency_rate = fields.Char(compute="_compute_currency_rate", readonly=True)
+    label_currency_rate = fields.Char(
+        compute="_compute_currency_rate",
+        readonly=True,
+    )
 
     journal_id = fields.Many2one(
         comodel_name="account.journal",
@@ -264,18 +280,18 @@ class HrExpense(models.Model):
     payment_channel_id = fields.Many2one(
         comodel_name="account.payment.channel",
         string="Payment Method",
+        help="The payment method used when the expense is paid by the company.",
         compute="_compute_payment_channel_id",
         store=True,
         readonly=False,
         domain="[('id', 'in', selectable_payment_channel_ids)]",
-        help="The payment method used when the expense is paid by the company.",
     )
     account_move_id = fields.Many2one(
-        string="Journal Entry",
         comodel_name="account.move",
-        readonly=True,
-        copy=False,
+        string="Journal Entry",
         index="btree_not_null",
+        copy=False,
+        readonly=True,
     )
     payment_mode = fields.Selection(
         selection=[
@@ -290,13 +306,13 @@ class HrExpense(models.Model):
     vendor_id = fields.Many2one(comodel_name="res.partner")
     account_id = fields.Many2one(
         comodel_name="account.account",
+        help="An expense account is expected",
         compute="_compute_account_id",
         precompute=True,
         store=True,
         readonly=False,
-        check_company=True,
         domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card'))]",
-        help="An expense account is expected",
+        check_company=True,
     )
     tax_ids = fields.Many2many(
         comodel_name="account.tax",
@@ -304,13 +320,13 @@ class HrExpense(models.Model):
         column1="expense_id",
         column2="tax_id",
         string="Included taxes",
+        help="Both price-included and price-excluded taxes will behave as price-included taxes for expenses.",
         compute="_compute_tax_ids",
         precompute=True,
         store=True,
         readonly=False,
         domain="[('type_tax_use', '=', 'purchase')]",
         check_company=True,
-        help="Both price-included and price-excluded taxes will behave as price-included taxes for expenses.",
     )
 
     is_editable = fields.Boolean(
@@ -318,8 +334,14 @@ class HrExpense(models.Model):
         compute="_compute_is_editable",
         readonly=True,
     )
-    can_reset = fields.Boolean(compute="_compute_can_reset", readonly=True)
-    can_approve = fields.Boolean(compute="_compute_can_approve", readonly=True)
+    can_reset = fields.Boolean(
+        compute="_compute_can_reset",
+        readonly=True,
+    )
+    can_approve = fields.Boolean(
+        compute="_compute_can_approve",
+        readonly=True,
+    )
 
     former_sheet_id = fields.Integer(string="Former Report")
 

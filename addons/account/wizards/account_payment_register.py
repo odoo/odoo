@@ -18,46 +18,53 @@ class AccountPaymentRegister(models.TransientModel):
     _description = "Pay"
     _check_company_auto = True
 
-    payment_date = fields.Date(required=True, default=fields.Date.context_today)
+    payment_date = fields.Date(
+        default=fields.Date.context_today,
+        required=True,
+    )
     amount = fields.Monetary(
         currency_field="currency_id",
+        compute="_compute_amount",
         store=True,
         readonly=False,
-        compute="_compute_amount",
     )
     hide_writeoff_section = fields.Boolean(compute="_compute_hide_writeoff_section")
     communication = fields.Char(
-        string="Memo", store=True, readonly=False, compute="_compute_communication"
+        string="Memo",
+        compute="_compute_communication",
+        store=True,
+        readonly=False,
     )
     group_payment = fields.Boolean(
         string="Group Payments",
+        help="Only one payment will be created by partner (bank), instead of one per bill.",
+        compute="_compute_group_payment",
         store=True,
         readonly=False,
-        compute="_compute_group_payment",
-        help="Only one payment will be created by partner (bank), instead of one per bill.",
     )
     early_payment_discount_mode = fields.Boolean(
         compute="_compute_early_payment_discount_mode"
     )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
+        help="The payment's currency.",
         compute="_compute_currency_id",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
-        help="The payment's currency.",
     )
     journal_id = fields.Many2one(
         comodel_name="account.journal",
         compute="_compute_journal_id",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
-        check_company=True,
         domain="[('id', 'in', available_journal_ids)]",
+        check_company=True,
     )
     available_journal_ids = fields.Many2many(
-        comodel_name="account.journal", compute="_compute_available_journal_ids"
+        comodel_name="account.journal",
+        compute="_compute_available_journal_ids",
     )
     available_partner_bank_ids = fields.Many2many(
         comodel_name="res.partner.bank",
@@ -66,22 +73,28 @@ class AccountPaymentRegister(models.TransientModel):
     partner_bank_id = fields.Many2one(
         comodel_name="res.partner.bank",
         string="Recipient Bank Account",
-        readonly=False,
-        store=True,
         compute="_compute_partner_bank_id",
+        store=True,
+        readonly=False,
         domain="[('id', 'in', available_partner_bank_ids)]",
     )
     company_currency_id = fields.Many2one(
-        "res.currency", string="Company Currency", related="company_id.currency_id"
+        comodel_name="res.currency",
+        related="company_id.currency_id",
+        string="Company Currency",
     )
     qr_code = fields.Html(
         string="QR Code URL",
         compute="_compute_qr_code",
     )
 
-    batches = fields.Binary(compute="_compute_batches", export_string_translation=False)
+    batches = fields.Binary(
+        export_string_translation=False,
+        compute="_compute_batches",
+    )
     total_amounts_to_pay = fields.Binary(
-        compute="_compute_total_amounts_to_pay", export_string_translation=False
+        export_string_translation=False,
+        compute="_compute_total_amounts_to_pay",
     )
     installments_mode = fields.Selection(
         selection=[
@@ -90,102 +103,109 @@ class AccountPaymentRegister(models.TransientModel):
             ("before_date", "Before Next Payment Date"),
             ("full", "Full Amount"),
         ],
-        compute="_compute_installments_mode",
-        readonly=False,
-        store=True,
         export_string_translation=False,
+        compute="_compute_installments_mode",
+        store=True,
+        readonly=False,
     )
     installments_switch_html = fields.Html(
-        compute="_compute_installments_switch_values",
+        compute="_compute_installments_switch_values"
     )
     installments_switch_amount = fields.Monetary(
-        compute="_compute_installments_switch_values",
         currency_field="currency_id",
+        compute="_compute_installments_switch_values",
     )
     custom_user_amount = fields.Monetary(currency_field="currency_id")
     custom_user_currency_id = fields.Many2one(comodel_name="res.currency")
 
     line_ids = fields.Many2many(
-        "account.move.line",
-        "account_payment_register_move_line_rel",
-        "wizard_id",
-        "line_id",
+        comodel_name="account.move.line",
+        relation="account_payment_register_move_line_rel",
+        column1="wizard_id",
+        column2="line_id",
         string="Journal items",
-        readonly=True,
         copy=False,
+        readonly=True,
     )
     payment_type = fields.Selection(
-        [
+        selection=[
             ("outbound", "Send Money"),
             ("inbound", "Receive Money"),
         ],
+        compute="_compute_from_lines",
         store=True,
         copy=False,
-        compute="_compute_from_lines",
     )
     partner_type = fields.Selection(
-        [
+        selection=[
             ("customer", "Customer"),
             ("supplier", "Vendor"),
         ],
+        compute="_compute_from_lines",
         store=True,
         copy=False,
-        compute="_compute_from_lines",
     )
     source_amount = fields.Monetary(
         string="Amount to Pay (company currency)",
-        store=True,
-        copy=False,
         currency_field="company_currency_id",
         compute="_compute_from_lines",
+        store=True,
+        copy=False,
     )
     source_amount_currency = fields.Monetary(
         string="Amount to Pay (foreign currency)",
-        store=True,
-        copy=False,
         currency_field="source_currency_id",
         compute="_compute_from_lines",
-    )
-    source_currency_id = fields.Many2one(
-        "res.currency",
         store=True,
         copy=False,
+    )
+    source_currency_id = fields.Many2one(
+        comodel_name="res.currency",
         compute="_compute_from_lines",
+        store=True,
+        copy=False,
     )
     can_edit_wizard = fields.Boolean(
-        store=True, copy=False, compute="_compute_from_lines"
+        compute="_compute_from_lines",
+        store=True,
+        copy=False,
     )
     can_group_payments = fields.Boolean(
-        store=True, copy=False, compute="_compute_can_group_payments"
+        compute="_compute_can_group_payments",
+        store=True,
+        copy=False,
     )
     company_id = fields.Many2one(
-        "res.company", store=True, copy=False, compute="_compute_from_lines"
+        comodel_name="res.company",
+        compute="_compute_from_lines",
+        store=True,
+        copy=False,
     )
     partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Customer/Vendor",
+        compute="_compute_from_lines",
         store=True,
         copy=False,
         ondelete="restrict",
-        compute="_compute_from_lines",
     )
 
     payment_channel_id = fields.Many2one(
-        "account.payment.channel",
+        comodel_name="account.payment.channel",
         string="Payment Method",
-        readonly=False,
-        store=True,
-        compute="_compute_payment_channel_id",
-        domain="[('id', 'in', available_payment_channel_ids)]",
         help="Manual: Pay or Get paid by any method outside of Odoo.\n"
         "Payment Providers: Each payment provider has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
         "Check: Pay bills by check and print it from Odoo.\n"
         "Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
         "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
         "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n",
+        compute="_compute_payment_channel_id",
+        store=True,
+        readonly=False,
+        domain="[('id', 'in', available_payment_channel_ids)]",
     )
     available_payment_channel_ids = fields.Many2many(
-        "account.payment.channel",
+        comodel_name="account.payment.channel",
         compute="_compute_available_payment_channel_ids",
     )
     payment_method_code = fields.Char(related="payment_channel_id.code")
@@ -205,11 +225,11 @@ class AccountPaymentRegister(models.TransientModel):
     )
     writeoff_label = fields.Char(
         string="Journal Item Label",
-        default="Write-Off",
         help="Change label of the counterpart that will hold the payment difference",
+        default="Write-Off",
     )
     writeoff_is_exchange_account = fields.Boolean(
-        compute="_compute_writeoff_is_exchange_account",
+        compute="_compute_writeoff_is_exchange_account"
     )
     show_payment_difference = fields.Boolean(compute="_compute_show_payment_difference")
 
@@ -220,10 +240,12 @@ class AccountPaymentRegister(models.TransientModel):
         compute="_compute_show_require_partner_bank"
     )
     country_code = fields.Char(
-        related="company_id.account_fiscal_country_id.code", readonly=True
+        related="company_id.account_fiscal_country_id.code",
+        readonly=True,
     )
     duplicate_payment_ids = fields.Many2many(
-        comodel_name="account.payment", compute="_compute_duplicate_payment_ids"
+        comodel_name="account.payment",
+        compute="_compute_duplicate_payment_ids",
     )
     is_register_payment_on_draft = fields.Boolean(
         compute="_compute_is_register_payment_on_draft"
@@ -231,12 +253,14 @@ class AccountPaymentRegister(models.TransientModel):
     actionable_errors = fields.Json(compute="_compute_actionable_errors")
 
     untrusted_bank_ids = fields.Many2many(
-        "res.partner.bank", compute="_compute_trust_values"
+        comodel_name="res.partner.bank",
+        compute="_compute_trust_values",
     )
     total_payments_amount = fields.Integer(compute="_compute_trust_values")
     untrusted_payments_count = fields.Integer(compute="_compute_trust_values")
     missing_account_partners = fields.Many2many(
-        "res.partner", compute="_compute_trust_values"
+        comodel_name="res.partner",
+        compute="_compute_trust_values",
     )
 
     @api.model

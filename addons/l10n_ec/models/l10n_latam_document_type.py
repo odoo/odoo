@@ -15,7 +15,8 @@ class L10n_LatamDocumentType(models.Model):
     )
 
     l10n_ec_check_format = fields.Boolean(
-        string="Check Number Format EC", default=False
+        string="Check Number Format EC",
+        default=False,
     )
 
     def _format_document_number(self, document_number):

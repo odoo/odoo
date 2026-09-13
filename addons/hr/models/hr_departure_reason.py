@@ -10,9 +10,13 @@ class HrDepartureReason(models.Model):
     _order = "sequence"
 
     sequence = fields.Integer(default=10)
-    name = fields.Char(string="Reason", required=True, translate=True)
+    name = fields.Char(
+        string="Reason",
+        translate=True,
+        required=True,
+    )
     country_id = fields.Many2one(
-        "res.country",
+        comodel_name="res.country",
         default=lambda self: self.env.company.country_id,
     )
     country_code = fields.Char(related="country_id.code")

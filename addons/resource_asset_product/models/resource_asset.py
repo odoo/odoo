@@ -5,14 +5,21 @@ class ResourceAsset(models.Model):
     _inherit = "resource.asset"
 
     product_id = fields.Many2one(
-        "product.product",
+        comodel_name="product.product",
         string="Model",
-        domain="[('asset_kind_id', '!=', False)]",
-        index="btree_not_null",
         help="The model this unit is an instance of. Its template carries the spec sheet.",
+        index="btree_not_null",
+        domain="[('asset_kind_id', '!=', False)]",
     )
-    product_tmpl_id = fields.Many2one(related="product_id.product_tmpl_id", store=True)
-    kind_id = fields.Many2one(compute="_compute_kind_id", store=True, readonly=False)
+    product_tmpl_id = fields.Many2one(
+        related="product_id.product_tmpl_id",
+        store=True,
+    )
+    kind_id = fields.Many2one(
+        compute="_compute_kind_id",
+        store=True,
+        readonly=False,
+    )
 
     @api.depends("product_id.asset_kind_id")
     def _compute_kind_id(self):

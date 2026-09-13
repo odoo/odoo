@@ -5,10 +5,8 @@ class IrUiView(models.Model):
     _inherit = "ir.ui.view"
 
     customize_show = fields.Boolean(
-        "Show As Optional Inherit",
+        string="Show As Optional Inherit",
+        help="When set, the website editor surfaces this view as a user-togglable "
+        "inherited variant of its parent (used by the Customize panel).",
         default=False,
-        help=(
-            "When set, the website editor surfaces this view as a user-togglable "
-            "inherited variant of its parent (used by the Customize panel)."
-        ),
     )

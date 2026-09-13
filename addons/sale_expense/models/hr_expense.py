@@ -5,26 +5,27 @@ class HrExpense(models.Model):
     _inherit = "hr.expense"
 
     sale_order_id = fields.Many2one(
-        "sale.order",
+        comodel_name="sale.order",
         string="Customer to Reinvoice",
+        help="If the category has an expense policy, it will be reinvoiced on this sales order",
         compute="_compute_sale_order",
         store=True,
-        readonly=False,
         index="btree_not_null",
-        tracking=True,
+        readonly=False,
         domain="[('state', '=', 'done')]",
         check_company=True,
-        help="If the category has an expense policy, it will be reinvoiced on this sales order",
+        tracking=True,
     )
     sale_order_line_id = fields.Many2one(
         comodel_name="sale.order.line",
         compute="_compute_sale_order",
         store=True,
-        readonly=True,
         index="btree_not_null",
+        readonly=True,
     )
     can_be_reinvoiced = fields.Boolean(
-        "Can be reinvoiced", compute="_compute_can_be_reinvoiced"
+        string="Can be reinvoiced",
+        compute="_compute_can_be_reinvoiced",
     )
 
     @api.depends("product_id.expense_policy")

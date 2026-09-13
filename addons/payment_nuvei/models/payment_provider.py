@@ -12,23 +12,24 @@ class PaymentProvider(models.Model):
     _inherit = "payment.provider"
 
     code = fields.Selection(
-        selection_add=[("nuvei", "Nuvei")], ondelete={"nuvei": "set default"}
+        selection_add=[("nuvei", "Nuvei")],
+        ondelete={"nuvei": "set default"},
     )
     nuvei_merchant_identifier = fields.Char(
         help="The code of the merchant account to use with this provider.",
-        required_if_provider="nuvei",
         copy=False,
+        required_if_provider="nuvei",
     )
     nuvei_site_identifier = fields.Char(
         help="The site identifier code associated with the merchant account.",
-        required_if_provider="nuvei",
         copy=False,
         groups="base.group_system",
+        required_if_provider="nuvei",
     )
     nuvei_secret_key = fields.Char(
-        required_if_provider="nuvei",
         copy=False,
         groups="base.group_system",
+        required_if_provider="nuvei",
     )
 
     # === COMPUTE METHODS === #

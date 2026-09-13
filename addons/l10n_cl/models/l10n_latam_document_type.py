@@ -12,10 +12,10 @@ class L10n_LatamDocumentType(models.Model):
             ("credit_note", "Credit Notes"),
             ("receipt_invoice", "Receipt Invoice"),
             ("stock_picking", "Stock Delivery"),
-        ],
+        ]
     )
     l10n_cl_active = fields.Boolean(
-        "Active in localization",
+        string="Active in localization",
         help="This boolean enables document to be included on invoicing",
     )
 

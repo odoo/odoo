@@ -6,7 +6,8 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     assigned_grade_id = fields.Many2one(
-        "res.partner.grade", compute="_compute_assigned_grade_id"
+        comodel_name="res.partner.grade",
+        compute="_compute_assigned_grade_id",
     )
 
     @api.constrains("line_ids")

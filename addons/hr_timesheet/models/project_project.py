@@ -11,11 +11,11 @@ class ProjectProject(models.Model):
     _inherit = "project.project"
 
     allow_timesheets = fields.Boolean(
-        "Timesheets",
+        string="Timesheets",
         compute="_compute_allow_timesheets",
+        default=True,
         store=True,
         readonly=False,
-        default=True,
     )
     account_id = fields.Many2one(
         domain="""[
@@ -24,47 +24,57 @@ class ProjectProject(models.Model):
         ]"""
     )
     analytic_account_active = fields.Boolean(
-        "Active Account", related="account_id.active", export_string_translation=False
+        related="account_id.active",
+        string="Active Account",
+        export_string_translation=False,
     )
 
     timesheet_ids = fields.One2many(
-        "account.analytic.line",
-        "project_id",
-        "Associated Timesheets",
+        comodel_name="account.analytic.line",
+        inverse_name="project_id",
+        string="Associated Timesheets",
         export_string_translation=False,
     )
     timesheet_encode_uom_id = fields.Many2one(
-        "uom.uom",
-        compute="_compute_timesheet_encode_uom_id",
+        comodel_name="uom.uom",
         export_string_translation=False,
+        compute="_compute_timesheet_encode_uom_id",
     )
     total_timesheet_time = fields.Float(
-        compute="_compute_total_timesheet_time",
-        groups="hr_timesheet.group_hr_timesheet_user",
         string="Total amount of time (in the proper unit) recorded in the project, rounded to the unit.",
         export_string_translation=False,
+        compute="_compute_total_timesheet_time",
+        groups="hr_timesheet.group_hr_timesheet_user",
     )
     encode_uom_in_days = fields.Boolean(
-        compute="_compute_encode_uom_in_days", export_string_translation=False
+        export_string_translation=False,
+        compute="_compute_encode_uom_in_days",
     )
     is_internal_project = fields.Boolean(
+        export_string_translation=False,
         compute="_compute_is_internal_project",
         search="_search_is_internal_project",
-        export_string_translation=False,
     )
     remaining_hours = fields.Float(
-        compute="_compute_remaining_hours", string="Time Remaining", compute_sudo=True
+        string="Time Remaining",
+        compute="_compute_remaining_hours",
+        compute_sudo=True,
     )
     is_project_overtime = fields.Boolean(
-        "Project in Overtime",
+        string="Project in Overtime",
+        export_string_translation=False,
         compute="_compute_remaining_hours",
         search="_search_is_project_overtime",
         compute_sudo=True,
-        export_string_translation=False,
     )
-    allocated_hours = fields.Float(string="Allocated Time", tracking=True)
+    allocated_hours = fields.Float(
+        string="Allocated Time",
+        tracking=True,
+    )
     effective_hours = fields.Float(
-        string="Time Spent", compute="_compute_remaining_hours", compute_sudo=True
+        string="Time Spent",
+        compute="_compute_remaining_hours",
+        compute_sudo=True,
     )
 
     def _compute_encode_uom_in_days(self):

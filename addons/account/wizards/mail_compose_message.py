@@ -11,7 +11,7 @@ class MailComposeMessage(models.TransientModel):
 
     # Field to annotate the date for account reports.
     # This is set by passing a default in the context when opening the wizard from a message.
-    account_reports_annotation_date = fields.Date("Annotated For")
+    account_reports_annotation_date = fields.Date(string="Annotated For")
 
     # Set only via a `default_account_reports_finalize_payment` context key, passed by
     # account.return's "send payment instructions" flow (action_send_email_instructions).

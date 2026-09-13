@@ -9,9 +9,9 @@ class ComplianceLetter(models.TransientModel):
     _description = "Compliance Letter for EXO Number"
 
     company_id = fields.Many2one(
-        "res.company",
-        required=True,
+        comodel_name="res.company",
         default=lambda self: self.env.company,
+        required=True,
     )
 
     def generate_letter(self):

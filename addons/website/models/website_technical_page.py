@@ -9,8 +9,8 @@ class WebsiteTechnicalPage(models.Model):
     _description = "Website Technical Page"
     _auto = False
 
-    name = fields.Char("Page Name")
-    website_url = fields.Char("Website Page URL")
+    name = fields.Char(string="Page Name")
+    website_url = fields.Char(string="Website Page URL")
 
     def open_website_url(self):
         return self.env["website"].get_client_action(self.website_url)

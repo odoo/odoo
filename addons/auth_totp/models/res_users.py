@@ -27,19 +27,24 @@ class ResUsers(models.Model):
     _inherit = "res.users"
 
     totp_secret = fields.Char(
-        copy=False,
-        groups=fields.NO_ACCESS,
         compute="_compute_totp_secret",
         inverse="_inverse_totp_secret",
+        copy=False,
+        groups=fields.NO_ACCESS,
     )
-    totp_last_counter = fields.Integer(copy=False, groups=fields.NO_ACCESS)
+    totp_last_counter = fields.Integer(
+        copy=False,
+        groups=fields.NO_ACCESS,
+    )
     totp_enabled = fields.Boolean(
         string="Two-factor authentication",
         compute="_compute_totp_enabled",
         search="_search_totp_enabled",
     )
     totp_trusted_device_ids = fields.One2many(
-        "auth_totp.device", "user_id", string="Trusted Devices"
+        comodel_name="auth_totp.device",
+        inverse_name="user_id",
+        string="Trusted Devices",
     )
 
     def init(self):

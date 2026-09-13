@@ -17,13 +17,13 @@ class IrActionsTodo(models.Model):
     name = fields.Char()
     sequence = fields.Integer(default=10)
     action_id = fields.Many2one(
-        "ir.actions.actions",
-        required=True,
+        comodel_name="ir.actions.actions",
         index=True,
+        required=True,
         ondelete="cascade",
     )
     state = fields.Selection(
-        [("open", "To Do"), ("done", "Done")],
+        selection=[("open", "To Do"), ("done", "Done")],
         string="Status",
         default="open",
         required=True,

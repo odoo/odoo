@@ -44,22 +44,20 @@ class HrAttendanceOvertimeRule(models.Model):
     name = fields.Char(required=True)
     description = fields.Html()
     base_off = fields.Selection(
-        [
+        selection=[
             ("quantity", "Quantity"),
             ("timing", "Timing"),
         ],
         string="Based Off",
-        required=True,
+        help="Base for overtime calculation.\n"
+        "Use 'Quantity' when overtime hours are those in excess of a certain amount per day/week.\n"
+        "Use 'Timing' when overtime hours happen on specific days or at specific times",
         default="quantity",
-        help=(
-            "Base for overtime calculation.\n"
-            "Use 'Quantity' when overtime hours are those in excess of a certain amount per day/week.\n"
-            "Use 'Timing' when overtime hours happen on specific days or at specific times"
-        ),
+        required=True,
     )
 
     timing_type = fields.Selection(
-        [
+        selection=[
             ("work_days", "On any working day"),
             ("non_work_days", "On any non-working day"),
             ("leave", "When employee is off"),
@@ -67,40 +65,52 @@ class HrAttendanceOvertimeRule(models.Model):
         ],
         default="work_days",
     )
-    timing_start = fields.Float("From", default=0)
-    timing_stop = fields.Float("To", default=24)
+    timing_start = fields.Float(
+        string="From",
+        default=0,
+    )
+    timing_stop = fields.Float(
+        string="To",
+        default=24,
+    )
     expected_hours_from_contract = fields.Boolean(
-        "Hours from employee schedule",
-        default=True,
+        string="Hours from employee schedule",
         help="When enabled, expected hours are derived from the employee's contract/schedule instead of the fixed 'Expected Hours' value. With Absence Management enabled, this also allows the attendance to go into negative extra hours to represent hours missing compared to what is expected.",
+        default=True,
     )
 
     resource_calendar_id = fields.Many2one(
-        "resource.calendar",
+        comodel_name="resource.calendar",
         string="Schedule",
         domain=[("flexible_hours", "=", False)],
     )
 
     expected_hours = fields.Float(string="Usual work hours")
     quantity_period = fields.Selection(
-        [("day", "Day"), ("week", "Week")],
+        selection=[("day", "Day"), ("week", "Week")],
         default="day",
     )
     sequence = fields.Integer(default=10)
 
     ruleset_id = fields.Many2one(
-        "hr.attendance.overtime.ruleset", required=True, index=True
+        comodel_name="hr.attendance.overtime.ruleset",
+        index=True,
+        required=True,
     )
     company_id = fields.Many2one(related="ruleset_id.company_id")
 
-    paid = fields.Boolean("Pay Extra Hours")
-    amount_rate = fields.Float("Rate", default=1.0)
+    paid = fields.Boolean(string="Pay Extra Hours")
+    amount_rate = fields.Float(
+        string="Rate",
+        default=1.0,
+    )
 
     employee_tolerance = fields.Float()
     employer_tolerance = fields.Float()
 
     information_display = fields.Char(
-        "Information", compute="_compute_information_display"
+        string="Information",
+        compute="_compute_information_display",
     )
 
     _timing_start_is_hour = models.Constraint(

@@ -13,12 +13,21 @@ class DiscussCallHistory(models.Model):
     _description = "Keep the call history"
 
     channel_id: DiscussChannel = fields.Many2one(
-        "discuss.channel", index=True, required=True, ondelete="cascade"
+        comodel_name="discuss.channel",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     duration_hour = fields.Float(compute="_compute_duration_hour")
-    start_dt = fields.Datetime(index=True, required=True)
+    start_dt = fields.Datetime(
+        index=True,
+        required=True,
+    )
     end_dt = fields.Datetime()
-    start_call_message_id: MailMessage = fields.Many2one("mail.message", index=True)
+    start_call_message_id: MailMessage = fields.Many2one(
+        comodel_name="mail.message",
+        index=True,
+    )
 
     _channel_id_not_null_constraint = models.Constraint(
         "CHECK (channel_id IS NOT NULL)", "Call history must have a channel"

@@ -34,15 +34,24 @@ class AuthPasskeyKey(models.Model):
     _order = "id desc"
 
     name = fields.Char(required=True)
-    credential_identifier = fields.Char(required=True, groups="base.group_system")
-    public_key = fields.Char(
+    credential_identifier = fields.Char(
         required=True,
         groups="base.group_system",
+    )
+    public_key = fields.Char(
         compute="_compute_public_key",
         inverse="_inverse_public_key",
+        required=True,
+        groups="base.group_system",
     )
-    sign_count = fields.Integer(default=0, groups="base.group_system")
-    create_uid = fields.Many2one("res.users", index=True)
+    sign_count = fields.Integer(
+        default=0,
+        groups="base.group_system",
+    )
+    create_uid = fields.Many2one(
+        comodel_name="res.users",
+        index=True,
+    )
 
     _unique_identifier = models.Constraint(
         "UNIQUE(credential_identifier)",

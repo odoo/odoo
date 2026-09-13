@@ -6,10 +6,18 @@ class IapAccount(models.Model):
     _inherit = ["iap.account", "mixin.mail.thread"]
 
     # Add tracking to the base fields
-    company_ids = fields.Many2many("res.company", tracking=True)
-    warning_threshold = fields.Float("Email Alert Threshold", tracking=True)
+    company_ids = fields.Many2many(
+        comodel_name="res.company",
+        tracking=True,
+    )
+    warning_threshold = fields.Float(
+        string="Email Alert Threshold",
+        tracking=True,
+    )
     warning_user_ids = fields.Many2many(
-        "res.users", string="Email Alert Recipients", tracking=True
+        comodel_name="res.users",
+        string="Email Alert Recipients",
+        tracking=True,
     )
 
     @api.model

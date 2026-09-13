@@ -5,7 +5,10 @@ class HrExpenseApproveDuplicate(models.TransientModel):
     _name = "hr.expense.approve.duplicate"
     _description = "Expense Approve Duplicate"
 
-    expense_ids = fields.Many2many("hr.expense", readonly=True)
+    expense_ids = fields.Many2many(
+        comodel_name="hr.expense",
+        readonly=True,
+    )
 
     @api.model
     def default_get(self, fields):

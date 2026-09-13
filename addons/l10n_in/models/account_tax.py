@@ -8,7 +8,7 @@ class AccountTax(models.Model):
     _inherit = "account.tax"
 
     l10n_in_reverse_charge = fields.Boolean(
-        "Reverse charge",
+        string="Reverse charge",
         help="Tick this if this tax is reverse charge. Only for Indian accounting",
     )
     l10n_in_gst_tax_type = fields.Selection(
@@ -38,7 +38,10 @@ class AccountTax(models.Model):
     )
 
     # withholding related fields
-    l10n_in_section_id = fields.Many2one("l10n_in.section.alert", string="Section")
+    l10n_in_section_id = fields.Many2one(
+        comodel_name="l10n_in.section.alert",
+        string="Section",
+    )
     l10n_in_tds_feature_enabled = fields.Boolean(
         compute="_compute_l10n_in_tds_feature_enabled"
     )

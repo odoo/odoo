@@ -5,7 +5,9 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     document_ids = fields.One2many(
-        "document.document", "partner_id", string="Documents"
+        comodel_name="document.document",
+        inverse_name="partner_id",
+        string="Documents",
     )
     document_count = fields.Integer(compute="_compute_document_count")
 

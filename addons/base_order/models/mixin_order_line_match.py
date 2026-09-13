@@ -33,8 +33,8 @@ class MixinOrderLineMatch(models.AbstractModel):
         readonly=True,
     )
     product_uom_id = fields.Many2one(
-        related="product_id.uom_id",
         comodel_name="uom.uom",
+        related="product_id.uom_id",
     )
 
     order_line_id = fields.Many2one(
@@ -54,41 +54,31 @@ class MixinOrderLineMatch(models.AbstractModel):
         readonly=True,
     )
 
-    state = fields.Char(
-        readonly=True,
-    )
-    reference = fields.Char(
-        compute="_compute_reference",
-    )
+    state = fields.Char(readonly=True)
+    reference = fields.Char(compute="_compute_reference")
 
     line_uom_id = fields.Many2one(
         comodel_name="uom.uom",
         readonly=True,
     )
-    line_qty = fields.Float(
-        readonly=True,
-    )
-    qty_invoiced = fields.Float(
-        readonly=True,
-    )
+    line_qty = fields.Float(readonly=True)
+    qty_invoiced = fields.Float(readonly=True)
     qty_to_invoice = fields.Float(
         string="Qty to invoice",
         readonly=True,
     )
     product_uom_qty = fields.Float(
         compute="_compute_product_uom_qty",
-        readonly=False,
         inverse="_inverse_product_uom_qty",
+        readonly=False,
     )
 
     product_uom_price = fields.Float(
         compute="_compute_product_uom_price",
-        readonly=False,
         inverse="_inverse_product_uom_price",
+        readonly=False,
     )
-    line_amount_taxexc = fields.Monetary(
-        readonly=True,
-    )
+    line_amount_taxexc = fields.Monetary(readonly=True)
     invoiced_amount_taxexc = fields.Monetary(
         currency_field="currency_id",
         compute="_compute_amount_untaxed_fields",

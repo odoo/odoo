@@ -8,9 +8,9 @@ class MixinApiChannel(models.AbstractModel):
     _description = "Communication Channel Mixin"
 
     name = fields.Char(
-        required=True,
-        translate=True,
         help="Human-readable name for this channel",
+        translate=True,
+        required=True,
     )
     active = fields.Boolean(
         default=True,
@@ -18,36 +18,34 @@ class MixinApiChannel(models.AbstractModel):
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
+        help="Company that owns this channel (for multi-tenancy isolation)",
         default=lambda self: self.env.company,
         index=True,
-        help="Company that owns this channel (for multi-tenancy isolation)",
     )
-    sequence = fields.Integer(
-        default=10,
-    )
+    sequence = fields.Integer(default=10)
     code = fields.Char(
-        index=True,
         help="Unique identifier code for programmatic access",
+        index=True,
     )
     description = fields.Text(
-        translate=True,
         help="Description of what this channel does",
+        translate=True,
     )
 
     retry_enabled = fields.Boolean(
         string="Enable Retry",
-        default=True,
         help="Automatically retry failed operations with exponential backoff",
+        default=True,
     )
     retry_max_attempts = fields.Integer(
         string="Max Retry Attempts",
-        default=3,
         help="Maximum number of retry attempts before marking as failed",
+        default=3,
     )
     retry_initial_delay = fields.Integer(
         string="Initial Retry Delay (seconds)",
-        default=60,
         help="Initial delay before first retry. Increases exponentially.",
+        default=60,
     )
     retry_backoff_type = fields.Selection(
         selection=[
@@ -55,14 +53,14 @@ class MixinApiChannel(models.AbstractModel):
             ("linear", "Linear Backoff"),
             ("exponential", "Exponential Backoff"),
         ],
-        default="exponential",
         help="Strategy for increasing delay between retries",
+        default="exponential",
     )
 
     date_last_activity = fields.Datetime(
         string="Last Activity",
-        readonly=True,
         help="Timestamp of most recent activity (request received or sent)",
+        readonly=True,
     )
 
     @api.constrains("rate_limit_requests", "rate_limit_enabled")

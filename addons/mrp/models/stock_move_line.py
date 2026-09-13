@@ -6,10 +6,15 @@ class StockMoveLine(models.Model):
     _inherit = "stock.move.line"
 
     workorder_id = fields.Many2one(
-        "mrp.workorder", "Work Order", check_company=True, index="btree_not_null"
+        comodel_name="mrp.workorder",
+        string="Work Order",
+        index="btree_not_null",
+        check_company=True,
     )
     production_id = fields.Many2one(
-        "mrp.production", "Production Order", check_company=True
+        comodel_name="mrp.production",
+        string="Production Order",
+        check_company=True,
     )
 
     @api.depends("production_id.picking_type_id")

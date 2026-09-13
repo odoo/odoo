@@ -11,42 +11,45 @@ class AccountCashRounding(models.Model):
     _description = "Account Cash Rounding"
     _check_company_auto = True
 
-    name = fields.Char(translate=True, required=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
     rounding = fields.Float(
         string="Rounding Precision",
-        required=True,
-        default=0.01,
         help="Represent the non-zero value smallest coinage (for example, 0.05).",
+        default=0.01,
+        required=True,
     )
     strategy = fields.Selection(
-        [
+        selection=[
             ("biggest_tax", "Modify tax amount"),
             ("add_invoice_line", "Add a rounding line"),
         ],
         string="Rounding Strategy",
+        help="Specify which way will be used to round the invoice amount to the rounding precision",
         default="add_invoice_line",
         required=True,
-        help="Specify which way will be used to round the invoice amount to the rounding precision",
     )
     profit_account_id = fields.Many2one(
-        "account.account",
+        comodel_name="account.account",
         company_dependent=True,
-        check_company=True,
         domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable'))]",
         ondelete="restrict",
+        check_company=True,
     )
     loss_account_id = fields.Many2one(
-        "account.account",
+        comodel_name="account.account",
         company_dependent=True,
-        check_company=True,
         domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable'))]",
         ondelete="restrict",
+        check_company=True,
     )
     rounding_method = fields.Selection(
-        required=True,
         selection=[("UP", "Up"), ("DOWN", "Down"), ("HALF-UP", "Nearest")],
-        default="HALF-UP",
         help="The tie-breaking rule used for float rounding operations",
+        default="HALF-UP",
+        required=True,
     )
 
     @api.constrains("rounding")

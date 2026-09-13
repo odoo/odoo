@@ -10,42 +10,54 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     group_l10n_in_reseller = fields.Boolean(
-        implied_group="l10n_in.group_l10n_in_reseller",
         string="Manage Reseller(E-Commerce)",
+        implied_group="l10n_in.group_l10n_in_reseller",
     )
     l10n_in_edi_production_env = fields.Boolean(
-        string="Indian Production Environment",
         related="company_id.l10n_in_edi_production_env",
+        string="Indian Production Environment",
         readonly=False,
     )
     l10n_in_hsn_code_digit = fields.Selection(
-        related="company_id.l10n_in_hsn_code_digit", readonly=False
+        related="company_id.l10n_in_hsn_code_digit",
+        readonly=False,
     )
 
     # TDS/TCS settings
     l10n_in_tds_feature = fields.Boolean(
-        related="company_id.l10n_in_tds_feature", readonly=False
+        related="company_id.l10n_in_tds_feature",
+        readonly=False,
     )
     l10n_in_tcs_feature = fields.Boolean(
-        related="company_id.l10n_in_tcs_feature", readonly=False
+        related="company_id.l10n_in_tcs_feature",
+        readonly=False,
     )
     l10n_in_withholding_account_id = fields.Many2one(
-        related="company_id.l10n_in_withholding_account_id", readonly=False
+        related="company_id.l10n_in_withholding_account_id",
+        readonly=False,
     )
     l10n_in_withholding_journal_id = fields.Many2one(
-        related="company_id.l10n_in_withholding_journal_id", readonly=False
+        related="company_id.l10n_in_withholding_journal_id",
+        readonly=False,
     )
-    l10n_in_tan = fields.Char(related="company_id.l10n_in_tan", readonly=False)
+    l10n_in_tan = fields.Char(
+        related="company_id.l10n_in_tan",
+        readonly=False,
+    )
 
     # GST settings
     l10n_in_is_gst_registered = fields.Boolean(
-        related="company_id.l10n_in_is_gst_registered", readonly=False
+        related="company_id.l10n_in_is_gst_registered",
+        readonly=False,
     )
     l10n_in_gstin = fields.Char(
-        string="GST Number", related="company_id.vat", readonly=False
+        related="company_id.vat",
+        string="GST Number",
+        readonly=False,
     )
     l10n_in_gstin_status_feature = fields.Boolean(
-        related="company_id.l10n_in_gstin_status_feature", readonly=False
+        related="company_id.l10n_in_gstin_status_feature",
+        readonly=False,
     )
     l10n_in_gst_efiling_feature = fields.Boolean(
         string="GST E-Filing & Matching Feature"
@@ -57,9 +69,9 @@ class ResConfigSettings(models.TransientModel):
         string="ENet Vendor Batch Payment"
     )
 
-    module_l10n_in_reports = fields.Boolean("GST E-Filing & Matching")
-    module_l10n_in_edi = fields.Boolean("Indian Electronic Invoicing")
-    module_l10n_in_ewaybill = fields.Boolean("Indian Electronic Waybill")
+    module_l10n_in_reports = fields.Boolean(string="GST E-Filing & Matching")
+    module_l10n_in_edi = fields.Boolean(string="Indian Electronic Invoicing")
+    module_l10n_in_ewaybill = fields.Boolean(string="Indian Electronic Waybill")
 
     def set_values(self):
         super().set_values()

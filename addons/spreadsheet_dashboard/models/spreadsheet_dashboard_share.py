@@ -13,11 +13,19 @@ class SpreadsheetDashboardShare(models.Model):
     _description = "Copy of a shared dashboard"
 
     dashboard_id = fields.Many2one(
-        "spreadsheet.dashboard", required=True, ondelete="cascade"
+        comodel_name="spreadsheet.dashboard",
+        required=True,
+        ondelete="cascade",
     )
     excel_export = fields.Binary()
-    access_token = fields.Char(required=True, default=lambda _x: str(uuid.uuid4()))
-    full_url = fields.Char(string="URL", compute="_compute_full_url")
+    access_token = fields.Char(
+        default=lambda _x: str(uuid.uuid4()),
+        required=True,
+    )
+    full_url = fields.Char(
+        string="URL",
+        compute="_compute_full_url",
+    )
     name = fields.Char(related="dashboard_id.name")
 
     @api.depends("access_token")

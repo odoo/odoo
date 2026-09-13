@@ -13,18 +13,18 @@ class MixinUserFavorite(models.AbstractModel):
     _description = "User Favorite Mixin"
 
     favorite_user_ids = fields.Many2many(
-        "res.users",
+        comodel_name="res.users",
         string="Favorite of",
-        copy=False,
         export_string_translation=False,
+        copy=False,
     )
     is_user_favorite = fields.Boolean(
         string="Favorite",
+        export_string_translation=False,
         compute="_compute_is_user_favorite",
         inverse="_inverse_is_user_favorite",
         search="_search_is_user_favorite",
         compute_sudo=True,
-        export_string_translation=False,
     )
 
     @api.depends("favorite_user_ids")

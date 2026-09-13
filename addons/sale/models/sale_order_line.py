@@ -38,10 +38,10 @@ class SaleOrderLine(models.Model):
 
     is_downpayment = fields.Boolean(
         help="Down payments are made when creating invoices from a sales order."
-        " They are not copied when duplicating a sales order.",
+        " They are not copied when duplicating a sales order."
     )
     is_expense = fields.Boolean(
-        help="Is true if the sales order line comes from an expense or a vendor bills",
+        help="Is true if the sales order line comes from an expense or a vendor bills"
     )
 
     parent_id = fields.Many2one(
@@ -49,22 +49,22 @@ class SaleOrderLine(models.Model):
         help="The section or subsection this line belongs to.",
     )
     collapse_prices = fields.Boolean(
+        help="Whether this section's lines' prices will be hidden in reports and in the portal.",
         default=False,
         copy=True,
-        help="Whether this section's lines' prices will be hidden in reports and in the portal.",
     )
     collapse_composition = fields.Boolean(
+        help="Whether this section's lines will be hidden in reports and in the portal.",
         default=False,
         copy=True,
-        help="Whether this section's lines will be hidden in reports and in the portal.",
     )
     linked_line_id = fields.Many2one(
         comodel_name="sale.order.line",
         string="Linked Order Line",
+        index=True,
+        copy=False,
         domain="[('order_id', '=', order_id)]",
         ondelete="cascade",
-        copy=False,
-        index=True,
     )
     linked_line_ids = fields.One2many(
         comodel_name="sale.order.line",
@@ -83,8 +83,8 @@ class SaleOrderLine(models.Model):
     product_template_id = fields.Many2one(
         comodel_name="product.template",
         compute="_compute_product_template_id",
-        readonly=False,
         search="_search_product_template_id",
+        readonly=False,
         domain=lambda self: self._fields["product_id"]._description_domain(self.env),
     )
     is_configurable_product = fields.Boolean(
@@ -97,24 +97,24 @@ class SaleOrderLine(models.Model):
         inverse_name="sale_order_line_id",
         string="Custom Values",
         compute="_compute_custom_attribute_values",
-        store=True,
         precompute=True,
-        readonly=False,
+        store=True,
         copy=True,
+        readonly=False,
     )
     product_no_variant_attribute_value_ids = fields.Many2many(
         comodel_name="product.template.attribute.value",
         string="Extra Values",
         compute="_compute_custom_attribute_values",
-        store=True,
         precompute=True,
+        store=True,
         readonly=False,
         ondelete="restrict",
     )
     tax_ids = fields.Many2many(
         compute="_compute_tax_ids",
-        store=True,
         precompute=True,
+        store=True,
         readonly=False,
         domain="[('type_tax_use', '=', 'sale'), ('country_id', '=', tax_country_id)]",
     )
@@ -124,40 +124,36 @@ class SaleOrderLine(models.Model):
     )
     price_unit_auto = fields.Float(
         string="Automatic Price",
+        help="Price from pricelist. Compared with price_unit to detect manual overrides. "
+        "When price_unit != price_unit_auto, the price is considered manually set.",
         min_display_digits="Product Price",
         compute="_compute_price_and_discount",
         precompute=True,
         store=True,
         copy=True,
-        help="Price from pricelist. Compared with price_unit to detect manual overrides. "
-        "When price_unit != price_unit_auto, the price is considered manually set.",
     )
-    discount = fields.Float(
-        recursive=True,
-    )
+    discount = fields.Float(recursive=True)
     customer_lead = fields.Float(
         string="Lead Time",
-        compute="_compute_customer_lead",
-        store=True,
-        precompute=True,
-        readonly=False,
         help="Number of days between the order confirmation and the shipping of the products to the customer",
+        compute="_compute_customer_lead",
+        precompute=True,
+        store=True,
+        readonly=False,
     )
     virtual_id = fields.Char(
         help="Uniquely identifies this sale order line before "
-        "the record is saved in the DB, i.e. before the record has an `id`.",
+        "the record is saved in the DB, i.e. before the record has an `id`."
     )
     linked_virtual_id = fields.Char(
-        help="Links this sale order line to another sale order line, via its `virtual_id`",
+        help="Links this sale order line to another sale order line, via its `virtual_id`"
     )
 
     selected_combo_items = fields.Char(
-        store=False,
         help="Local storage of this sale order line's selected combo items, iff this is a combo product line.",
+        store=False,
     )
-    combo_item_id = fields.Many2one(
-        comodel_name="product.combo.item",
-    )
+    combo_item_id = fields.Many2one(comodel_name="product.combo.item")
 
     analytic_line_ids = fields.One2many(
         comodel_name="account.analytic.line",
@@ -186,14 +182,12 @@ class SaleOrderLine(models.Model):
 
     product_readonly = fields.Boolean(
         string="Product is readonly",
-        compute="_compute_product_readonly",
         help="Indicates whether the product field should be readonly based on order state, "
         "invoiced/delivered quantities, and locked status. "
         "Used in views for readonly attribute to match product_uom_readonly pattern.",
+        compute="_compute_product_readonly",
     )
-    product_uom_readonly = fields.Boolean(
-        compute="_compute_product_uom_readonly",
-    )
+    product_uom_readonly = fields.Boolean(compute="_compute_product_uom_readonly")
 
     @api.constrains("combo_item_id")
     def _check_combo_item_id(self):

@@ -110,34 +110,43 @@ class MailingMailing(models.Model):
         except ValueError:
             return False
 
-    active = fields.Boolean(default=True, tracking=True)
-    subject = fields.Char(required=True, translate=False)
-    preview = fields.Char(
+    active = fields.Boolean(
+        default=True,
+        tracking=True,
+    )
+    subject = fields.Char(
         translate=False,
-        render_engine="inline_template",
-        render_options={"post_process": True},
+        required=True,
+    )
+    preview = fields.Char(
         help="Catchy preview sentence that encourages recipients to open this email.\n"
         "In most inboxes, this is displayed next to the subject.\n"
         "Keep it empty if you prefer the first characters of your email content to appear instead.",
+        translate=False,
+        render_engine="inline_template",
+        render_options={"post_process": True},
     )
     email_from = fields.Char(
         string="Send From",
         compute="_compute_email_from",
-        readonly=False,
-        store=True,
         precompute=True,
+        store=True,
+        readonly=False,
     )
-    is_favorite = fields.Boolean(copy=False, tracking=True)
+    is_favorite = fields.Boolean(
+        copy=False,
+        tracking=True,
+    )
     date_favorite = fields.Datetime(
-        "Favorite Date",
+        string="Favorite Date",
+        help="When this mailing was added in the favorites",
         compute="_compute_date_favorite",
         store=True,
         copy=False,
-        help="When this mailing was added in the favorites",
     )
     sent_date = fields.Datetime(copy=False)
     schedule_type = fields.Selection(
-        [("now", "Send now"), ("scheduled", "Send on")],
+        selection=[("now", "Send now"), ("scheduled", "Send on")],
         string="Schedule",
         default="now",
         readonly=False,
@@ -146,16 +155,16 @@ class MailingMailing(models.Model):
     schedule_date = fields.Datetime(
         string="Scheduled for",
         compute="_compute_schedule_date",
-        readonly=False,
         store=True,
         copy=True,
+        readonly=False,
         tracking=True,
     )
     calendar_date = fields.Datetime(
+        help="Date at which the mailing was or will be sent.",
         compute="_compute_calendar_date",
         store=True,
         copy=False,
-        help="Date at which the mailing was or will be sent.",
     )
     # don't translate 'body_arch', the translations are only on 'body_html'
     body_arch = fields.Html(
@@ -172,27 +181,30 @@ class MailingMailing(models.Model):
     )
     is_body_empty = fields.Boolean(compute="_compute_is_body_empty")
     attachment_ids = fields.Many2many(
-        "ir.attachment",
-        "mass_mailing_ir_attachments_rel",
-        "mass_mailing_id",
-        "attachment_id",
+        comodel_name="ir.attachment",
+        relation="mass_mailing_ir_attachments_rel",
+        column1="mass_mailing_id",
+        column2="attachment_id",
         string="Attachments",
         bypass_search_access=True,
     )
     keep_archives = fields.Boolean()
     campaign_id = fields.Many2one(
-        "utm.campaign", string="UTM Campaign", index=True, ondelete="set null"
+        comodel_name="utm.campaign",
+        string="UTM Campaign",
+        index=True,
+        ondelete="set null",
     )
     medium_id = fields.Many2one(
-        "utm.medium",
-        compute="_compute_medium_id",
-        readonly=False,
-        store=True,
-        ondelete="restrict",
+        comodel_name="utm.medium",
         help="UTM Medium: delivery method (email, sms, ...)",
+        compute="_compute_medium_id",
+        store=True,
+        readonly=False,
+        ondelete="restrict",
     )
     state = fields.Selection(
-        [
+        selection=[
             ("draft", "Draft"),
             ("in_queue", "In Queue"),
             ("sending", "Sending"),
@@ -200,135 +212,155 @@ class MailingMailing(models.Model):
         ],
         string="Status",
         default="draft",
-        required=True,
         copy=False,
-        tracking=True,
+        required=True,
         group_expand=True,
+        tracking=True,
     )
     color = fields.Integer(string="Color Index")
     user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Responsible",
-        tracking=True,
         default=lambda self: self.env.user,
+        tracking=True,
     )
     # mailing options
-    mailing_type = fields.Selection([("mail", "Email")], default="mail", required=True)
+    mailing_type = fields.Selection(
+        selection=[("mail", "Email")],
+        default="mail",
+        required=True,
+    )
     mailing_type_description = fields.Char(compute="_compute_mailing_type_description")
     reply_to_mode = fields.Selection(
-        [("update", "Recipient Followers"), ("new", "Specified Email Address")],
+        selection=[
+            ("update", "Recipient Followers"),
+            ("new", "Specified Email Address"),
+        ],
         string="Reply-To Mode",
-        compute="_compute_reply_to_mode",
-        readonly=False,
-        store=True,
         help="Thread: replies go to target document. Email: replies are routed to a given email.",
+        compute="_compute_reply_to_mode",
+        store=True,
+        readonly=False,
     )
     reply_to = fields.Char(
-        compute="_compute_reply_to",
-        readonly=False,
-        store=True,
         help="Preferred Reply-To Address",
+        compute="_compute_reply_to",
+        store=True,
+        readonly=False,
     )
     # recipients
     mailing_model_real = fields.Char(
-        string="Recipients Real Model", compute="_compute_mailing_model_real"
+        string="Recipients Real Model",
+        compute="_compute_mailing_model_real",
     )
     mailing_model_id = fields.Many2one(
-        "ir.model",
+        comodel_name="ir.model",
         string="Recipients Model",
-        ondelete="cascade",
+        default=lambda self: self.env.ref("mass_mailing.model_mailing_list").id,
         required=True,
         domain=[("is_mailing_enabled", "=", True)],
-        default=lambda self: self.env.ref("mass_mailing.model_mailing_list").id,
+        ondelete="cascade",
     )
     mailing_model_name = fields.Char(
-        string="Recipients Model Name",
         related="mailing_model_id.model",
-        readonly=True,
+        string="Recipients Model Name",
         related_sudo=True,
+        readonly=True,
     )
     mailing_on_mailing_list = fields.Boolean(
-        string="Based on Mailing Lists", compute="_compute_mailing_on_mailing_list"
+        string="Based on Mailing Lists",
+        compute="_compute_mailing_on_mailing_list",
     )
     mailing_domain = fields.Char(
         string="Domain",
         compute="_compute_mailing_domain",
-        readonly=False,
-        store=True,
         compute_sudo=False,
+        store=True,
+        readonly=False,
     )
     mail_server_available = fields.Boolean(
-        compute="_compute_mail_server_available",
         help="Technical field used to know if the user has activated the outgoing mail server option in the settings",
+        compute="_compute_mail_server_available",
     )
     mail_server_id = fields.Many2one(
-        "ir.mail_server",
-        index="btree_not_null",
-        default=_default_mail_server_id,
+        comodel_name="ir.mail_server",
         help="Use a specific mail server in priority. Otherwise Odoo relies on the first outgoing mail server available (based on their sequencing) as it does for normal mails.",
+        default=_default_mail_server_id,
+        index="btree_not_null",
     )
     contact_list_ids = fields.Many2many(
-        "mailing.list", "mail_mass_mailing_list_rel", string="Mailing Lists"
+        comodel_name="mailing.list",
+        relation="mail_mass_mailing_list_rel",
+        string="Mailing Lists",
     )
     use_exclusion_list = fields.Boolean(
+        help="Prevent sending messages to blacklisted contacts. Disable only when absolutely necessary.",
         default=True,
         copy=False,
-        help="Prevent sending messages to blacklisted contacts. Disable only when absolutely necessary.",
     )
     # Mailing Filter
     mailing_filter_id = fields.Many2one(
-        "mailing.filter",
+        comodel_name="mailing.filter",
         string="Favorite Filter",
         compute="_compute_mailing_filter_id",
-        readonly=False,
         store=True,
+        readonly=False,
         domain="[('mailing_model_name', '=', mailing_model_name)]",
     )
     mailing_filter_domain = fields.Char(
-        "Favorite filter domain", related="mailing_filter_id.mailing_domain"
+        related="mailing_filter_id.mailing_domain",
+        string="Favorite filter domain",
     )
     mailing_filter_count = fields.Integer(
-        "# Favorite Filters", compute="_compute_mailing_filter_count"
+        string="# Favorite Filters",
+        compute="_compute_mailing_filter_count",
     )
     # A/B Testing
     ab_testing_completed = fields.Boolean(related="campaign_id.ab_testing_completed")
     ab_testing_description = fields.Html(
-        "A/B Testing Description", compute="_compute_ab_testing_description"
+        string="A/B Testing Description",
+        compute="_compute_ab_testing_description",
     )
     ab_testing_enabled = fields.Boolean(
         string="Allow A/B Testing",
-        default=False,
         help="If checked, recipients will be mailed only once for the whole campaign. "
         "This lets you send different mailings to randomly selected recipients and test "
         "the effectiveness of the mailings, without causing duplicate messages.",
+        default=False,
     )
     ab_testing_is_winner_mailing = fields.Boolean(
-        "Is the Winner of its Campaign", compute="_compute_ab_testing_is_winner_mailing"
+        string="Is the Winner of its Campaign",
+        compute="_compute_ab_testing_is_winner_mailing",
     )
     ab_testing_mailings_count = fields.Integer(
         related="campaign_id.ab_testing_mailings_count"
     )
     ab_testing_pc = fields.Integer(
         string="A/B Testing percentage",
-        default=10,
         help="Percentage of the contacts that will be mailed. Recipients will be chosen randomly.",
+        default=10,
     )
     ab_testing_schedule_datetime = fields.Datetime(
         related="campaign_id.ab_testing_schedule_datetime",
-        readonly=False,
         default=lambda self: fields.Datetime.now() + relativedelta(days=1),
+        readonly=False,
     )
     ab_testing_winner_selection = fields.Selection(
         related="campaign_id.ab_testing_winner_selection",
-        readonly=False,
         default="opened_ratio",
         copy=True,
+        readonly=False,
     )
     is_ab_test_sent = fields.Boolean(compute="_compute_is_ab_test_sent")
-    kpi_mail_required = fields.Boolean("KPI mail required", copy=False)
+    kpi_mail_required = fields.Boolean(
+        string="KPI mail required",
+        copy=False,
+    )
     # statistics data
     mailing_trace_ids = fields.One2many(
-        "mailing.trace", "mass_mailing_id", string="Emails Statistics"
+        comodel_name="mailing.trace",
+        inverse_name="mass_mailing_id",
+        string="Emails Statistics",
     )
     total = fields.Integer(compute="_compute_total")
     scheduled = fields.Integer(compute="_compute_statistics")
@@ -350,17 +382,19 @@ class MailingMailing(models.Model):
     replied_ratio = fields.Float(compute="_compute_statistics")
     bounced_ratio = fields.Float(compute="_compute_statistics")
     clicks_ratio = fields.Float(
-        compute="_compute_clicks_ratio", string="Number of Clicks"
+        string="Number of Clicks",
+        compute="_compute_clicks_ratio",
     )
     link_trackers_count = fields.Integer(compute="_compute_link_trackers_count")
     next_departure = fields.Datetime(
-        compute="_compute_next_departure", string="Scheduled date"
+        string="Scheduled date",
+        compute="_compute_next_departure",
     )
     # UX
     next_departure_is_past = fields.Boolean(compute="_compute_next_departure")
     warning_message = fields.Char(
-        compute="_compute_warning_message",
         help="Warning message displayed in the mailing form view",
+        compute="_compute_warning_message",
     )
 
     _percentage_valid = models.Constraint(

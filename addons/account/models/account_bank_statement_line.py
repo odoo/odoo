@@ -45,32 +45,32 @@ class AccountBankStatementLine(models.Model):
 
     move_id = fields.Many2one(
         comodel_name="account.move",
-        bypass_search_access=True,
         string="Journal Entry",
-        required=True,
-        readonly=True,
-        ondelete="cascade",
         index=True,
+        readonly=True,
+        required=True,
+        ondelete="cascade",
         check_company=True,
+        bypass_search_access=True,
     )
     journal_id = fields.Many2one(
         comodel_name="account.journal",
-        inherited=True,
         related="move_id.journal_id",
-        store=True,
-        readonly=False,
         precompute=True,
+        inherited=True,
+        store=True,
         index=False,
+        readonly=False,
         required=True,
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
-        inherited=True,
         related="move_id.company_id",
-        store=True,
-        readonly=False,
         precompute=True,
+        inherited=True,
+        store=True,
         index=False,
+        readonly=False,
         required=True,
     )
     statement_id = fields.Many2one(
@@ -87,8 +87,8 @@ class AccountBankStatementLine(models.Model):
     sequence = fields.Integer(default=1)
     partner_id = fields.Many2one(
         comodel_name="res.partner",
-        ondelete="restrict",
         domain="['|', ('parent_id','=', False), ('is_company','=',True)]",
+        ondelete="restrict",
         check_company=True,
     )
 
@@ -97,7 +97,10 @@ class AccountBankStatementLine(models.Model):
     partner_name = fields.Char(index="btree_not_null")
 
     transaction_type = fields.Char()
-    payment_ref = fields.Char(string="Label", index="trigram")
+    payment_ref = fields.Char(
+        string="Label",
+        index="trigram",
+    )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
         string="Journal Currency",
@@ -112,12 +115,12 @@ class AccountBankStatementLine(models.Model):
         help="The optional other currency if it is a multi-currency entry.",
     )
     amount_currency = fields.Monetary(
+        string="Amount in Currency",
+        help="The amount expressed in an optional other currency if it is a multi-currency entry.",
+        currency_field="foreign_currency_id",
         compute="_compute_amount_currency",
         store=True,
         readonly=False,
-        string="Amount in Currency",
-        currency_field="foreign_currency_id",
-        help="The amount expressed in an optional other currency if it is a multi-currency entry.",
     )
 
     amount_residual = fields.Float(
@@ -137,18 +140,14 @@ class AccountBankStatementLine(models.Model):
         compute="_compute_reconciliation",
         store=True,
     )
-    statement_complete = fields.Boolean(
-        related="statement_id.is_complete",
-    )
-    statement_valid = fields.Boolean(
-        related="statement_id.is_valid",
-    )
+    statement_complete = fields.Boolean(related="statement_id.is_complete")
+    statement_valid = fields.Boolean(related="statement_id.is_valid")
     statement_balance_end_real = fields.Monetary(
-        related="statement_id.balance_end_real",
+        related="statement_id.balance_end_real"
     )
     statement_name = fields.Char(
-        string="Statement Name",
         related="statement_id.name",
+        string="Statement Name",
     )
 
     transaction_details = fields.Json(readonly=True)
@@ -1082,5 +1081,7 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     statement_line_ids = fields.One2many(
-        "account.bank.statement.line", "move_id", string="Statements"
+        comodel_name="account.bank.statement.line",
+        inverse_name="move_id",
+        string="Statements",
     )

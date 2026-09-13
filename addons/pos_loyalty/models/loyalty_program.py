@@ -9,25 +9,29 @@ class LoyaltyProgram(models.Model):
     # NOTE: `pos_config_ids` satisfies an excpeptional use case: when no PoS is specified, the loyalty program is
     # applied to every PoS. You can access the loyalty programs of a PoS using _get_program_ids() of pos.config
     pos_config_ids = fields.Many2many(
-        "pos.config",
+        comodel_name="pos.config",
+        string="Point of Sales",
+        help="Restrict publishing to those shops. Note: A program will only be used in the shops using the same currency as the program.",
         compute="_compute_pos_config_ids",
         store=True,
         readonly=False,
-        string="Point of Sales",
-        help="Restrict publishing to those shops. Note: A program will only be used in the shops using the same currency as the program.",
     )
     pos_order_count = fields.Integer(
-        "PoS Order Count", compute="_compute_pos_order_count"
+        string="PoS Order Count",
+        compute="_compute_pos_order_count",
     )
-    pos_ok = fields.Boolean("Point of Sale", default=True)
+    pos_ok = fields.Boolean(
+        string="Point of Sale",
+        default=True,
+    )
     pos_report_print_id = fields.Many2one(
-        "ir.actions.report",
+        comodel_name="ir.actions.report",
         string="Print Report",
-        domain=[("model", "=", "loyalty.card")],
+        help="This is used to print the generated gift cards from PoS.",
         compute="_compute_pos_report_print_id",
         inverse="_inverse_pos_report_print_id",
         readonly=False,
-        help="This is used to print the generated gift cards from PoS.",
+        domain=[("model", "=", "loyalty.card")],
     )
 
     @api.model

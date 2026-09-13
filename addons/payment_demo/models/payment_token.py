@@ -5,14 +5,14 @@ class PaymentToken(models.Model):
     _inherit = "payment.token"
 
     demo_simulated_state = fields.Selection(
-        string="Simulated State",
-        help="The state in which transactions created from this token should be set.",
         selection=[
             ("pending", "Pending"),
             ("done", "Confirmed"),
             ("cancel", "Canceled"),
             ("error", "Error"),
         ],
+        string="Simulated State",
+        help="The state in which transactions created from this token should be set.",
     )
 
     def _prepare_display_name(self, *args, should_pad=True, **kwargs):

@@ -4,7 +4,11 @@ from odoo import _, fields, models
 class ProductProduct(models.Model):
     _inherit = "product.product"
 
-    channel_ids = fields.One2many("slide.channel", "product_id", string="Courses")
+    channel_ids = fields.One2many(
+        comodel_name="slide.channel",
+        inverse_name="product_id",
+        string="Courses",
+    )
 
     def _is_add_to_cart_allowed(self):
         self.check_singleton()

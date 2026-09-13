@@ -13,24 +13,24 @@ class ResUsersSettingsVolumes(models.Model):
     _description = "User Settings Volumes"
 
     user_setting_id: ResUsersSettings = fields.Many2one(
-        "res.users.settings",
+        comodel_name="res.users.settings",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
     partner_id: ResPartner = fields.Many2one(
-        "res.partner",
-        ondelete="cascade",
+        comodel_name="res.partner",
         index=True,
+        ondelete="cascade",
     )
     guest_id: MailGuest = fields.Many2one(
-        "mail.guest",
-        ondelete="cascade",
+        comodel_name="mail.guest",
         index=True,
+        ondelete="cascade",
     )
     volume = fields.Float(
-        default=0.5,
         help="Ranges between 0.0 and 1.0, scale depends on the browser implementation",
+        default=0.5,
     )
 
     _partner_unique = models.UniqueIndex(

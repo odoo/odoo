@@ -8,7 +8,10 @@ class FleetVehicleState(models.Model):
     _order = "sequence asc"
     _description = "Vehicle Status"
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
     sequence = fields.Integer()
     fold = fields.Boolean(string="Folded in Kanban")
 

@@ -5,7 +5,7 @@ class StockPickingBatch(models.Model):
     _inherit = "stock.picking.batch"
 
     wave_carrier_id = fields.Many2one(
-        "delivery.carrier",
+        comodel_name="delivery.carrier",
         compute="_compute_wave_grouping",
         store=True,
         readonly=False,

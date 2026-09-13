@@ -18,42 +18,36 @@ class ResponseCache(models.Model):
     _rec_name = "cache_key"
 
     cache_key = fields.Char(
-        required=True,
         index=True,
+        required=True,
     )
     endpoint_id = fields.Many2one(
         comodel_name="api.endpoint.outbound",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
-        required=True,
         index=True,
+        required=True,
     )
 
-    request_url = fields.Char(
-        required=True,
-    )
+    request_url = fields.Char(required=True)
     request_params_hash = fields.Char()
 
-    response_body = fields.Json(
-        required=True,
-    )
+    response_body = fields.Json(required=True)
     response_headers = fields.Json()
-    status_code = fields.Integer(
-        default=200,
-    )
+    status_code = fields.Integer(default=200)
 
     date_created = fields.Datetime(
-        required=True,
         default=fields.Datetime.now,
         index=True,
+        required=True,
     )
     date_expiration = fields.Datetime(
-        required=True,
         index=True,
+        required=True,
     )
     is_expired = fields.Boolean(
         compute="_compute_is_expired",
@@ -61,12 +55,8 @@ class ResponseCache(models.Model):
     )
     ttl_seconds = fields.Integer()
 
-    hit_count = fields.Integer(
-        default=0,
-    )
-    last_accessed = fields.Datetime(
-        default=fields.Datetime.now,
-    )
+    hit_count = fields.Integer(default=0)
+    last_accessed = fields.Datetime(default=fields.Datetime.now)
 
     _cache_lookup_idx = models.Index(
         "(cache_key, company_id, date_expiration)",

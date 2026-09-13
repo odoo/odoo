@@ -5,7 +5,7 @@ class StockPicking(models.Model):
     _inherit = "stock.picking"
 
     l10n_it_transport_reason = fields.Selection(
-        [
+        selection=[
             ("sale", "Sale"),
             ("outsourcing", "Outsourcing"),
             ("evaluation", "Evaluation"),
@@ -16,22 +16,28 @@ class StockPicking(models.Model):
             ("loaned_use", "Loaned for Use"),
             ("repair", "Repair"),
         ],
+        string="Transport Reason",
         default="sale",
         tracking=True,
-        string="Transport Reason",
     )
     l10n_it_transport_method = fields.Selection(
-        [
+        selection=[
             ("sender", "Sender"),
             ("recipient", "Recipient"),
             ("courier", "Courier service"),
         ],
-        default="sender",
         string="Transport Method",
+        default="sender",
     )
-    l10n_it_transport_method_details = fields.Char("Transport Note")
-    l10n_it_parcels = fields.Integer(string="Parcels", default=1)
-    l10n_it_ddt_number = fields.Char("DDT Number", readonly=True)
+    l10n_it_transport_method_details = fields.Char(string="Transport Note")
+    l10n_it_parcels = fields.Integer(
+        string="Parcels",
+        default=1,
+    )
+    l10n_it_ddt_number = fields.Char(
+        string="DDT Number",
+        readonly=True,
+    )
     l10n_it_show_print_ddt_button = fields.Boolean(
         compute="_compute_l10n_it_show_print_ddt_button"
     )
@@ -77,7 +83,7 @@ class StockPicking(models.Model):
 class StockPickingType(models.Model):
     _inherit = "stock.picking.type"
 
-    l10n_it_ddt_sequence_id = fields.Many2one("ir.sequence")
+    l10n_it_ddt_sequence_id = fields.Many2one(comodel_name="ir.sequence")
 
     def _get_dtt_ir_seq_vals(self, warehouse_id, sequence_code):
         if warehouse_id:

@@ -8,30 +8,32 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     l10n_sa_private_key_id = fields.Many2one(
-        string="ZATCA Private key",
         comodel_name="certificate.key",
+        string="ZATCA Private key",
+        help="The private key used to generate the CSR and obtain certificates",
         copy=False,
         domain=[("public", "=", False)],
-        help="The private key used to generate the CSR and obtain certificates",
     )
 
     l10n_sa_api_mode = fields.Selection(
-        [
+        selection=[
             ("sandbox", "Sandbox"),
             ("preprod", "Simulation (Pre-Production)"),
             ("prod", "Production"),
         ],
         help="Specifies which API the system should use",
-        required=True,
         default="sandbox",
         copy=False,
+        required=True,
     )
 
     l10n_sa_edi_building_number = fields.Char(
-        related="partner_id.l10n_sa_edi_building_number", readonly=False
+        related="partner_id.l10n_sa_edi_building_number",
+        readonly=False,
     )
     l10n_sa_edi_plot_identification = fields.Char(
-        related="partner_id.l10n_sa_edi_plot_identification", readonly=False
+        related="partner_id.l10n_sa_edi_plot_identification",
+        readonly=False,
     )
 
     l10n_sa_edi_additional_identification_scheme = fields.Selection(
@@ -43,7 +45,10 @@ class ResCompany(models.Model):
         readonly=False,
     )
 
-    l10n_sa_edi_is_production = fields.Boolean(string="Is Production", copy=False)
+    l10n_sa_edi_is_production = fields.Boolean(
+        string="Is Production",
+        copy=False,
+    )
 
     def write(self, vals):
         for company in self:

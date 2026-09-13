@@ -12,7 +12,10 @@ _debug = DebugLog(__name__)
 class ResUsers(models.Model):
     _inherit = "res.users"
 
-    is_in_call = fields.Boolean("Is in call", related="partner_id.is_in_call")
+    is_in_call = fields.Boolean(
+        related="partner_id.is_in_call",
+        string="Is in call",
+    )
 
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:

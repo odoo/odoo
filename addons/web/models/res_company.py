@@ -24,7 +24,7 @@ class ResCompany(models.Model):
         "customise their own: the same shape as the user's setting.",
     )
     report_theme_id = fields.Many2one(
-        "report.theme",
+        comodel_name="report.theme",
         default=lambda self: self.env.ref(
             "web.report_theme_modern", raise_if_not_found=False
         ),

@@ -13,34 +13,44 @@ class HrWorkEntryRegenerationWizard(models.TransientModel):
     _description = "Regenerate Employee Work Entries"
 
     earliest_available_date = fields.Date(
-        "Earliest date", compute="_compute_available_dates"
+        string="Earliest date",
+        compute="_compute_available_dates",
     )
     earliest_available_date_message = fields.Char(
-        readonly=True, store=False, default=""
+        default="",
+        store=False,
+        readonly=True,
     )
     latest_available_date = fields.Date(
-        "Latest date", compute="_compute_available_dates"
+        string="Latest date",
+        compute="_compute_available_dates",
     )
-    latest_available_date_message = fields.Char(readonly=True, store=False, default="")
+    latest_available_date_message = fields.Char(
+        default="",
+        store=False,
+        readonly=True,
+    )
     date_from = fields.Date(
-        "From", required=True, default=lambda self: self.env.context.get("date_start")
+        string="From",
+        default=lambda self: self.env.context.get("date_start"),
+        required=True,
     )
     date_to = fields.Date(
-        "To",
-        required=True,
+        string="To",
         compute="_compute_date_to",
+        default=lambda self: self.env.context.get("date_end"),
         store=True,
         readonly=False,
-        default=lambda self: self.env.context.get("date_end"),
-    )
-    employee_ids = fields.Many2many(
-        "hr.employee",
-        string="Employees",
-        domain=lambda self: [("company_id", "in", self.env.companies.ids)],
         required=True,
     )
+    employee_ids = fields.Many2many(
+        comodel_name="hr.employee",
+        string="Employees",
+        required=True,
+        domain=lambda self: [("company_id", "in", self.env.companies.ids)],
+    )
     validated_work_entry_employee_ids = fields.Many2many(
-        "hr.employee",
+        comodel_name="hr.employee",
         export_string_translation=False,
         compute="_compute_validated_work_entry_employee_ids",
     )

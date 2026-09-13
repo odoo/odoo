@@ -21,19 +21,19 @@ class MailCannedResponse(models.Model):
     _rec_name = "source"
 
     source = fields.Char(
-        "Shortcut",
-        required=True,
-        index="trigram",
+        string="Shortcut",
         help="Canned response that will automatically be substituted with longer content in your messages."
         " Type '::' followed by the name of your shortcut (e.g. ::hello) to use in your messages.",
+        index="trigram",
+        required=True,
     )
     substitution = fields.Text(
-        required=True,
         help="Content that will automatically replace the shortcut of your choosing. This content can still be adapted before sending your message.",
+        required=True,
     )
     last_used = fields.Datetime(help="Last time this canned_response was used")
     group_ids: ResGroups = fields.Many2many(
-        "res.groups",
+        comodel_name="res.groups",
         string="Authorized Groups",
         domain=lambda self: [("id", "in", self.env.user.all_group_ids.ids)],
     )

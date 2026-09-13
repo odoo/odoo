@@ -7,7 +7,8 @@ class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
     has_timesheet = fields.Boolean(
-        compute="_compute_has_timesheet", export_string_translation=False
+        export_string_translation=False,
+        compute="_compute_has_timesheet",
     )
 
     def _compute_has_timesheet(self):

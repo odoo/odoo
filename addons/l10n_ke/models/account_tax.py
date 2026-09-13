@@ -5,7 +5,7 @@ class AccountTax(models.Model):
     _inherit = "account.tax"
 
     l10n_ke_item_code_id = fields.Many2one(
-        "l10n_ke.item.code",
+        comodel_name="l10n_ke.item.code",
         string="KRA Item Code",
         help="KRA code that describes a tax rate or exemption on specific products or services.",
     )

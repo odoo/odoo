@@ -16,28 +16,36 @@ class HrLeaveAccrualPlan(models.Model):
     active = fields.Boolean(default=True)
     name = fields.Char(required=True)
     time_off_type_id = fields.Many2one(
-        "hr.leave.type",
-        check_company=True,
-        index="btree_not_null",
+        comodel_name="hr.leave.type",
         help="""Specify if this accrual plan can only be used with this Time Off Type.
                 Leave empty if this accrual plan can be used with any Time Off Type.""",
+        index="btree_not_null",
+        check_company=True,
     )
-    employees_count = fields.Integer("Employees", compute="_compute_employees_count")
+    employees_count = fields.Integer(
+        string="Employees",
+        compute="_compute_employees_count",
+    )
     level_ids = fields.One2many(
-        "hr.leave.accrual.level", "accrual_plan_id", copy=True, string="Milestones"
+        comodel_name="hr.leave.accrual.level",
+        inverse_name="accrual_plan_id",
+        string="Milestones",
+        copy=True,
     )
     allocation_ids = fields.One2many(
-        "hr.leave.allocation", "accrual_plan_id", export_string_translation=False
+        comodel_name="hr.leave.allocation",
+        inverse_name="accrual_plan_id",
+        export_string_translation=False,
     )
     company_id = fields.Many2one(
-        "res.company",
-        domain=lambda self: [("id", "in", self.env.companies.ids)],
+        comodel_name="res.company",
         compute="_compute_company_id",
         store="True",
         readonly=False,
+        domain=lambda self: [("id", "in", self.env.companies.ids)],
     )
     transition_mode = fields.Selection(
-        [
+        selection=[
             ("immediately", "Immediately"),
             ("end_of_accrual", "After this accrual's period"),
         ],
@@ -46,17 +54,18 @@ class HrLeaveAccrualPlan(models.Model):
         required=True,
     )
     show_transition_mode = fields.Boolean(
-        compute="_compute_show_transition_mode", export_string_translation=False
+        export_string_translation=False,
+        compute="_compute_show_transition_mode",
     )
     is_based_on_worked_time = fields.Boolean(
+        help="Only excludes requests where the time off type is set as unpaid kind of.",
+        export_string_translation=False,
         compute="_compute_is_based_on_worked_time",
         store=True,
         readonly=False,
-        export_string_translation=False,
-        help="Only excludes requests where the time off type is set as unpaid kind of.",
     )
     accrued_gain_time = fields.Selection(
-        [
+        selection=[
             ("start", "At the start of the accrual period"),
             ("end", "At the end of the accrual period"),
         ],
@@ -66,31 +75,31 @@ class HrLeaveAccrualPlan(models.Model):
     )
     can_be_carryover = fields.Boolean(export_string_translation=False)
     carryover_date = fields.Selection(
-        [
+        selection=[
             ("year_start", "At the start of the year"),
             ("allocation", "At the allocation date"),
             ("other", "Custom date"),
         ],
+        string="Carry-Over Time",
         export_string_translation=False,
         default="year_start",
         required=True,
-        string="Carry-Over Time",
     )
     carryover_day = fields.Selection(
-        DAY_SELECTION,
-        compute="_compute_carryover_day",
+        selection=DAY_SELECTION,
         export_string_translation=False,
+        compute="_compute_carryover_day",
+        default="1",
         store=True,
         readonly=False,
-        default="1",
     )
     carryover_month = fields.Selection(
-        MONTH_SELECTION,
+        selection=MONTH_SELECTION,
         export_string_translation=False,
         default=lambda self: str((fields.Date.today()).month),
     )
     added_value_type = fields.Selection(
-        [("day", "Days"), ("hour", "Hours")],
+        selection=[("day", "Days"), ("hour", "Hours")],
         export_string_translation=False,
         default="day",
         store=True,
@@ -101,7 +110,10 @@ class HrLeaveAccrualPlan(models.Model):
         for plan in self:
             plan.show_transition_mode = len(plan.level_ids) > 1
 
-    level_count = fields.Integer("Levels", compute="_compute_level_count")
+    level_count = fields.Integer(
+        string="Levels",
+        compute="_compute_level_count",
+    )
 
     @api.depends("level_ids")
     def _compute_level_count(self):

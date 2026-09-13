@@ -13,102 +13,130 @@ class MrpRoutingWorkcenter(models.Model):
     _order = "bom_id, sequence, id"
     _check_company_auto = True
 
-    name = fields.Char("Operation", required=True)
+    name = fields.Char(
+        string="Operation",
+        required=True,
+    )
     active = fields.Boolean(default=True)
     workcenter_id = fields.Many2one(
-        "mrp.workcenter",
-        "Work Center",
+        comodel_name="mrp.workcenter",
+        string="Work Center",
+        index=True,
         required=True,
         check_company=True,
         tracking=True,
-        index=True,
     )
     sequence = fields.Integer(
-        default=100,
         help="Gives the sequence order when displaying a list of routing Work Centers.",
+        default=100,
     )
-    bom_id = fields.Many2one("mrp.bom", "Bill of Material", check_company=True)
-    company_id = fields.Many2one("res.company", "Company", related="bom_id.company_id")
+    bom_id = fields.Many2one(
+        comodel_name="mrp.bom",
+        string="Bill of Material",
+        check_company=True,
+    )
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        related="bom_id.company_id",
+        string="Company",
+    )
     archived_with_bom = fields.Boolean(
         help="Technical: this operation was archived because its BoM was, so "
         "unarchiving the BoM brings it back. An operation retired on its own "
-        "does not carry the flag and stays retired.",
+        "does not carry the flag and stays retired."
     )
     archived_bom_line_ids = fields.Many2many(
-        "mrp.bom.line",
+        comodel_name="mrp.bom.line",
         relation="mrp_routing_workcenter_archived_bom_line_rel",
-        copy=False,
         help="Technical: bom lines that pointed to this operation before it "
         "was archived, so unarchiving can restore the link.",
+        copy=False,
     )
     archived_byproduct_ids = fields.Many2many(
-        "mrp.bom.byproduct",
+        comodel_name="mrp.bom.byproduct",
         relation="mrp_routing_workcenter_archived_byproduct_rel",
-        copy=False,
         help="Technical: byproduct lines that pointed to this operation before "
         "it was archived, so unarchiving can restore the link.",
+        copy=False,
     )
     time_mode = fields.Selection(
-        [("manual", "Fixed"), ("auto", "Computed")],
+        selection=[("manual", "Fixed"), ("auto", "Computed")],
         string="Duration Computation",
         default="manual",
         tracking=True,
     )
-    time_mode_batch = fields.Integer("Based on", default=10)
+    time_mode_batch = fields.Integer(
+        string="Based on",
+        default=10,
+    )
     time_computed_on = fields.Char(
-        "Computed on last", compute="_compute_time_computed_on"
+        string="Computed on last",
+        compute="_compute_time_computed_on",
     )
     time_cycle_manual = fields.Float(
-        "Manual Duration",
-        default=60,
-        tracking=True,
+        string="Manual Duration",
         help="Time in minutes:"
         "- In fixed mode, time used"
         "- In computed mode, supposed first time when there aren't any work orders yet",
+        default=60,
+        tracking=True,
     )
-    time_cycle = fields.Float("Cycles", compute="_compute_operation_times")
+    time_cycle = fields.Float(
+        string="Cycles",
+        compute="_compute_operation_times",
+    )
     workorder_count = fields.Integer(
-        "# Work Orders", compute="_compute_workorder_count"
+        string="# Work Orders",
+        compute="_compute_workorder_count",
     )
     workorder_ids = fields.One2many(
-        "mrp.workorder", "operation_id", string="Work Orders"
+        comodel_name="mrp.workorder",
+        inverse_name="operation_id",
+        string="Work Orders",
     )
     allow_operation_dependencies = fields.Boolean(
         related="bom_id.allow_operation_dependencies"
     )
     blocked_by_operation_ids = fields.Many2many(
-        "mrp.routing.workcenter",
+        comodel_name="mrp.routing.workcenter",
         relation="mrp_routing_workcenter_dependencies_rel",
         column1="operation_id",
         column2="blocked_by_id",
         string="Blocked By",
         help="Operations that need to be completed before this operation can start.",
-        domain="[('allow_operation_dependencies', '=', True), ('id', '!=', id), ('bom_id', '=', bom_id)]",
         copy=False,
+        domain="[('allow_operation_dependencies', '=', True), ('id', '!=', id), ('bom_id', '=', bom_id)]",
     )
     needed_by_operation_ids = fields.Many2many(
-        "mrp.routing.workcenter",
+        comodel_name="mrp.routing.workcenter",
         relation="mrp_routing_workcenter_dependencies_rel",
         column1="blocked_by_id",
         column2="operation_id",
         string="Blocks",
         help="Operations that cannot start before this operation is completed.",
-        domain="[('allow_operation_dependencies', '=', True), ('id', '!=', id), ('bom_id', '=', bom_id)]",
         copy=False,
+        domain="[('allow_operation_dependencies', '=', True), ('id', '!=', id), ('bom_id', '=', bom_id)]",
     )
-    cycle_number = fields.Integer("Repetitions", compute="_compute_operation_times")
-    time_total = fields.Float("Total Duration", compute="_compute_operation_times")
+    cycle_number = fields.Integer(
+        string="Repetitions",
+        compute="_compute_operation_times",
+    )
+    time_total = fields.Float(
+        string="Total Duration",
+        compute="_compute_operation_times",
+    )
     show_time_total = fields.Boolean(
-        "Show Total Duration?", compute="_compute_operation_times"
+        string="Show Total Duration?",
+        compute="_compute_operation_times",
     )
     cost_mode = fields.Selection(
-        [("actual", "Actual time"), ("estimated", "Theorical time")],
+        selection=[("actual", "Actual time"), ("estimated", "Theorical time")],
         string="Cost based on",
-        default="actual",
-        tracking=True,
         help="Determines the way Odoo calculates the cost of the operation:\n"
         "- Based on Actual time: the cost will be calculated based on tracked time and real employee costs.\n"
         "- Based on Estimated time: the cost will be calculated based on estimated time and costs.",
+        default="actual",
+        tracking=True,
     )
     cost = fields.Float(compute="_compute_cost")
 

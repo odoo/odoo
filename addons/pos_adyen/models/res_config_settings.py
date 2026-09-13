@@ -6,7 +6,9 @@ class ResConfigSettings(models.TransientModel):
 
     # pos.config fields
     pos_adyen_ask_customer_for_tip = fields.Boolean(
-        compute="_compute_pos_adyen_ask_customer_for_tip", store=True, readonly=False
+        compute="_compute_pos_adyen_ask_customer_for_tip",
+        store=True,
+        readonly=False,
     )
 
     @api.depends("pos_iface_tipproduct", "pos_config_id")

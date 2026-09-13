@@ -15,7 +15,8 @@ class ResPartner(models.Model):
         return super()._commercial_fields() + ["nrc"]
 
     nrc = fields.Char(
-        string="NRC", help="Registration number at the Registry of Commerce"
+        string="NRC",
+        help="Registration number at the Registry of Commerce",
     )
 
     @api.depends("vat", "country_id")

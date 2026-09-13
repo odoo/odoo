@@ -5,13 +5,13 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     l10n_es_edi_facturae_residence_type = fields.Char(
-        string="Facturae EDI Residency Type Code",
         related="partner_id.l10n_es_edi_facturae_residence_type",
+        string="Facturae EDI Residency Type Code",
     )
     l10n_es_edi_facturae_certificate_ids = fields.One2many(
-        string="Facturae EDI signing certificate",
         comodel_name="certificate.certificate",
         inverse_name="company_id",
+        string="Facturae EDI signing certificate",
         domain=[("scope", "=", "facturae")],
     )
 

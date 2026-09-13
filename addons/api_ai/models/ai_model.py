@@ -12,15 +12,15 @@ class AIModel(models.Model):
 
     provider_id = fields.Many2one(
         comodel_name="ai.provider",
-        required=True,
-        index=True,
-        ondelete="cascade",
         help="Vendor endpoint this model is reached through",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     code = fields.Char(
-        required=True,
-        index=True,
         help="Identifier sent as the 'model' parameter on the wire",
+        index=True,
+        required=True,
     )
     kind = fields.Selection(
         selection=[
@@ -29,53 +29,49 @@ class AIModel(models.Model):
             ("audio", "Audio"),
             ("embedding", "Embedding"),
         ],
-        required=True,
-        default="chat",
         help="What this model is called for",
+        default="chat",
+        required=True,
     )
-    sequence = fields.Integer(
-        default=10,
-    )
+    sequence = fields.Integer(default=10)
 
     has_vision = fields.Boolean(
-        default=False,
         help="Can read images sent alongside the prompt",
+        default=False,
     )
     has_timestamps = fields.Boolean(
-        default=False,
         help="Says when each passage of a recording was spoken, which subtitles "
         "and a player need; a transcription model without it returns text alone",
+        default=False,
     )
     supports_streaming = fields.Boolean(
-        default=True,
         help="Supports streaming responses",
+        default=True,
     )
     supports_function_calling = fields.Boolean(
-        default=False,
         help="Supports function/tool calling",
+        default=False,
     )
-    max_context_window = fields.Integer(
-        help="Maximum context window size in tokens",
-    )
+    max_context_window = fields.Integer(help="Maximum context window size in tokens")
     max_output_tokens = fields.Integer(
-        help="Maximum number of output tokens per request",
+        help="Maximum number of output tokens per request"
     )
 
     cost_per_1m_input = fields.Float(
-        digits=(12, 6),
         help="Cost per 1 million input tokens in USD",
+        digits=(12, 6),
     )
     cost_per_1m_output = fields.Float(
-        digits=(12, 6),
         help="Cost per 1 million output tokens in USD",
+        digits=(12, 6),
     )
     cost_per_1m_image = fields.Float(
-        digits=(12, 6),
         help="Cost per 1 million pixels for image processing",
+        digits=(12, 6),
     )
     cost_per_audio_minute = fields.Float(
-        digits=(12, 6),
         help="Cost per minute of audio processing",
+        digits=(12, 6),
     )
 
     accuracy_rating = fields.Selection(
@@ -86,8 +82,8 @@ class AIModel(models.Model):
             ("4", "Medium-High"),
             ("5", "High"),
         ],
-        default="3",
         help="Subjective accuracy rating (1-5 scale)",
+        default="3",
     )
     speed_rating = fields.Selection(
         selection=[
@@ -97,8 +93,8 @@ class AIModel(models.Model):
             ("4", "Medium-Fast"),
             ("5", "Fast"),
         ],
-        default="3",
         help="Response speed rating (1-5 scale)",
+        default="3",
     )
 
     fallback_ids = fields.One2many(
@@ -111,9 +107,9 @@ class AIModel(models.Model):
     )
     fallback_model_ids = fields.Many2many(
         comodel_name="ai.model",
+        help="The fallback hops' models, in chain order",
         compute="_compute_fallback_model_ids",
         inverse="_inverse_fallback_model_ids",
-        help="The fallback hops' models, in chain order",
     )
 
     _code_uniq = models.Constraint(

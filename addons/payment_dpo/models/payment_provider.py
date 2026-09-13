@@ -12,16 +12,19 @@ class PaymentProvider(models.Model):
     _inherit = "payment.provider"
 
     code = fields.Selection(
-        selection_add=[("dpo", "DPO")], ondelete={"dpo": "set default"}
+        selection_add=[("dpo", "DPO")],
+        ondelete={"dpo": "set default"},
     )
     dpo_service_ref = fields.Char(
-        string="DPO Service ID", required_if_provider="dpo", copy=False
+        string="DPO Service ID",
+        copy=False,
+        required_if_provider="dpo",
     )
     dpo_company_token = fields.Char(
         string="DPO Company Token",
-        required_if_provider="dpo",
         copy=False,
         groups="base.group_system",
+        required_if_provider="dpo",
     )
 
     # === CRUD METHODS === #

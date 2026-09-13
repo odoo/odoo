@@ -24,31 +24,37 @@ class HrWorkEntry(models.Model):
     name = fields.Char()
     active = fields.Boolean(default=True)
     employee_id = fields.Many2one(
-        "hr.employee",
+        comodel_name="hr.employee",
+        index=True,
         required=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        index=True,
     )
     version_id = fields.Many2one(
-        "hr.version", string="Employee Record", required=True, index=True
+        comodel_name="hr.version",
+        string="Employee Record",
+        index=True,
+        required=True,
     )
     work_entry_source = fields.Selection(related="version_id.work_entry_source")
     date = fields.Date(required=True)
     duration = fields.Float(default=8)
     work_entry_type_id = fields.Many2one(
-        "hr.work.entry.type",
-        index=True,
+        comodel_name="hr.work.entry.type",
         default=lambda self: self.env.ref(
             "hr_work_entry.work_entry_type_attendance", raise_if_not_found=False
         ),
+        index=True,
         domain=lambda self: self._get_domain_work_entry_type(),
     )
     display_code = fields.Char(related="work_entry_type_id.display_code")
     code = fields.Char(related="work_entry_type_id.code")
     external_code = fields.Char(related="work_entry_type_id.external_code")
-    color = fields.Integer(related="work_entry_type_id.color", readonly=True)
+    color = fields.Integer(
+        related="work_entry_type_id.color",
+        readonly=True,
+    )
     state = fields.Selection(
-        [
+        selection=[
             ("draft", "New"),
             ("conflict", "In Conflict"),
             ("validated", "In Payslip"),
@@ -57,19 +63,25 @@ class HrWorkEntry(models.Model):
         default="draft",
     )
     company_id = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
+        default=lambda self: self.env.company,
         readonly=True,
         required=True,
-        default=lambda self: self.env.company,
     )
     department_id = fields.Many2one(
-        "hr.department", related="employee_id.department_id", store=True
+        comodel_name="hr.department",
+        related="employee_id.department_id",
+        store=True,
     )
     amount_rate = fields.Float(
-        string="Pay rate", compute="_compute_amount_rate", store=True, readonly=False
+        string="Pay rate",
+        compute="_compute_amount_rate",
+        store=True,
+        readonly=False,
     )
     country_id = fields.Many2one(
-        "res.country", related="employee_id.company_id.country_id"
+        comodel_name="res.country",
+        related="employee_id.company_id.country_id",
     )
 
     _contract_date_start_stop_idx = models.Index(

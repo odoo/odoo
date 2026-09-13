@@ -17,30 +17,31 @@ class AccountAccount(models.Model):
     _inherit = "account.account"
 
     exclude_provision_currency_ids = fields.Many2many(
-        "res.currency",
+        comodel_name="res.currency",
         relation="account_account_exclude_res_currency_provision",
         help="Whether or not we have to make provisions for the selected foreign currencies.",
     )
     budget_item_ids = fields.One2many(
-        comodel_name="account.report.budget.item", inverse_name="account_id"
+        comodel_name="account.report.budget.item",
+        inverse_name="account_id",
     )  # To use it in the domain when adding accounts from the report
 
     audit_debit = fields.Monetary(
         string="Debit",
-        compute="_compute_audit_period",
         currency_field="company_currency_id",
+        compute="_compute_audit_period",
         search="_search_audit_debit",
     )
     audit_credit = fields.Monetary(
         string="Credit",
-        compute="_compute_audit_period",
         currency_field="company_currency_id",
+        compute="_compute_audit_period",
         search="_search_audit_credit",
     )
     audit_balance = fields.Monetary(
         string="Balance",
-        compute="_compute_audit_period",
         currency_field="company_currency_id",
+        compute="_compute_audit_period",
         search="_search_audit_balance",
     )
     audit_balance_show_warning = fields.Boolean(
@@ -48,8 +49,8 @@ class AccountAccount(models.Model):
     )
     audit_previous_balance = fields.Monetary(
         string="Balance N-1",
-        compute="_compute_audit_period",
         currency_field="company_currency_id",
+        compute="_compute_audit_period",
         search="_search_audit_previous_balance",
     )
     audit_previous_balance_show_warning = fields.Boolean(
@@ -57,8 +58,8 @@ class AccountAccount(models.Model):
     )
     audit_var_n_1 = fields.Monetary(
         string="Var N-1",
-        compute="_compute_audit_variation",
         currency_field="company_currency_id",
+        compute="_compute_audit_variation",
         search="_search_audit_var_n_1",
     )
     audit_var_percentage = fields.Float(

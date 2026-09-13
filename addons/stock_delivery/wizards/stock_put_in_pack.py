@@ -10,9 +10,10 @@ class StockPutInPack(models.TransientModel):
         readonly=False,
     )
     weight_uom_name = fields.Char(
-        string="Weight unit of measure label", compute="_compute_weight_uom_name"
+        string="Weight unit of measure label",
+        compute="_compute_weight_uom_name",
     )
-    package_carrier_type = fields.Char("Carrier Type")
+    package_carrier_type = fields.Char(string="Carrier Type")
 
     def _compute_weight_uom_name(self):
         self.weight_uom_name = (

@@ -17,7 +17,8 @@ class CrmLead(models.Model):
         help="Whether IAP service for lead enrichment based on email has been performed on this lead.",
     )
     show_enrich_button = fields.Boolean(
-        string="Allow manual enrich", compute="_compute_show_enrich_button"
+        string="Allow manual enrich",
+        compute="_compute_show_enrich_button",
     )
 
     @api.depends("email_from", "probability", "iap_enrich_done", "reveal_id")

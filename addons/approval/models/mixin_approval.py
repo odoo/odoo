@@ -22,31 +22,31 @@ class MixinApproval(models.AbstractModel):
 
     approval_request_id = fields.Many2one(
         comodel_name="approval.request",
+        help="Link to the approval request for this document. Automatically created when approval is requested.",
+        index=True,
         copy=False,
         readonly=True,
-        index=True,
         tracking=True,
-        help="Link to the approval request for this document. Automatically created when approval is requested.",
     )
     approval_state = fields.Selection(
         related="approval_request_id.state",
         string="Approval Status",
-        store=True,
         help="""Current approval status:
         • new: Approval created but not submitted
         • pending: Waiting for approvers
         • approved: All required approvals obtained
         • refused: Approval was refused (terminal)
         • cancelled: Approval was retracted or expired (terminal)""",
+        store=True,
     )
     date_approval_granted = fields.Datetime(
         related="approval_request_id.date_approval_granted",
         string="Approval Granted Date",
-        store=True,
-        readonly=True,
-        copy=False,
-        tracking=True,
         help="Date and time when final approval was granted",
+        store=True,
+        copy=False,
+        readonly=True,
+        tracking=True,
     )
     approval_progress = fields.Float(
         related="approval_request_id.approval_progress",
@@ -60,11 +60,11 @@ class MixinApproval(models.AbstractModel):
     date_approval_requested = fields.Datetime(
         related="approval_request_id.date_confirmed",
         string="Approval Requested Date",
-        store=True,
-        readonly=True,
-        copy=False,
-        tracking=True,
         help="Date and time when approval was requested for this document",
+        store=True,
+        copy=False,
+        readonly=True,
+        tracking=True,
     )
     approval_user_ids = fields.Many2many(
         related="approval_request_id.user_ids",
@@ -72,13 +72,13 @@ class MixinApproval(models.AbstractModel):
         help="Users who need to approve this document",
     )
     approval_required = fields.Boolean(
+        help="Whether this document requires approval based on current rules",
         compute="_compute_approval_required",
         store=False,
-        help="Whether this document requires approval based on current rules",
     )
     can_request_approval = fields.Boolean(
-        compute="_compute_can_request_approval",
         help="Whether approval can be requested (all required fields filled)",
+        compute="_compute_can_request_approval",
     )
 
     @api.depends_context("uid", "company")

@@ -63,7 +63,7 @@ database, and `test_checkers.py` does exactly that.
 | `_checker_egress.py` | `raw-egress`, `secret-in-environ` |
 | `_checker_credential_storage.py` | `credential-storage` |
 | `_checker_row_counter.py` | `row-counter-in-test` |
-| `_checker_field_declaration.py` | `field-redeclared`, `default-evaluated-at-import`, `selection-duplicate-key`, `field-hook-prefix` |
+| `_checker_field_declaration.py` | `field-redeclared`, `default-evaluated-at-import`, `selection-duplicate-key`, `field-hook-prefix`, `field-positional-argument`, `field-attribute-order`, `dead-field-attribute` |
 
 `tax-company-singular` (E8514) catches `.tax_ids.filtered(lambda t: t.company_id)`
 and the five other tax field names. `account.tax` carries `company_ids`, a
@@ -131,6 +131,19 @@ the second marked inactive and never shown). `field-hook-prefix` (E8524) is
 family §2.4.1 of `doc/coding_guidelines.rst` reserves for it, so a reader --
 and the naming gates -- can tell a hook from a helper; the hook exists, the
 name does not say so.
+
+The same file is the vocabulary for how a declaration is *written*:
+`POSITIONAL_PARAMETERS` names each field class's positional parameters and
+`FIELD_ATTRIBUTE_ORDER` the order its keywords are read in (what the field is,
+what it says, its shape, how its value is produced, how it is stored, what it
+points at, who sees it). `field-positional-argument` (E8525) is any positional
+argument -- a bare string that only the signature can tell is a label, a
+comodel or a selection; `field-attribute-order` (E8526) is keywords out of
+that order, or two or more sharing a line; `dead-field-attribute` (E8527) is
+an attribute setup ignores: `index=` where there is no column, `precompute=`
+without `store=True`, `compute=` beside `related=`. The fixer is
+`_sort_field_attributes.py`, in the table below. `doc/coding_guidelines.rst` §2.3
+states the rule.
 
 **What the AST cannot see, `test_field_declarations.py` reads off the
 registry** (post-install): whether the method a hook names exists at all
@@ -217,6 +230,7 @@ model with `_inherits` also declares `<xmlid>_<parent_model>`, every manifest
 | `_sort_manifests.py` | `normalize` then a round-trip: the rendered dict must equal `normalize(data)` | value-**normalising**: see below |
 | `_modernize_output_directives.py` | `is_rename_only`: the two documents, walked in parallel, differ in nothing but the renamed attribute keys | value-**renaming**: `t-esc` becomes `t-out` in place, which is what `ir.qweb` and Owl both compile it to. `t-raw` is not renamed -- it skips escaping, so `t-out` could change output -- and an element carrying both is left for a human. Swept 2026-09-12: 115 files, `deprecated-output-directive` 500 -> 0; one inheritance locator (`sale_timesheet`, `td[t[@t-esc=...]]`) followed the rename by hand. |
 | `_relocate_menus.py` | a fresh install before and after produces the same `ir.ui.menu` rows (xmlid, name, parent, action, sequence, groups) -- checked by installing every changed module from two worktrees and diffing the dump, not by the script | structure-**moving**: every top-level `<menuitem>` of a module, with its subtree and the comments before it, goes to the module's `views/` menus file, named after the module with a `_menus` suffix, in manifest load order (an existing menu file's own menus interleaved by their original position). The file is listed after every file that defines an action a menu names and before the first staying file that needs a menu -- a `ref()` to it, an `ir.ui.menu` record redefining it by `id` -- which is the end of `data` when nothing does. Refuses a module when no such position exists, when a menuitem sits under `noupdate`, or when the module's Python names a menu (`--python-refs-verified <module>` once you have read that none runs while data loads). A source file left with no element is deleted with its manifest line. Swept 2026-09-12: 98 modules; `event`'s six `ir.ui.menu` action patches became the menuitems' own `action=`, `point_of_sale` and `website` carry their menu-bound client actions in the menus file, `hr` swapped two manifest lines; `menuitem-placement` 333 -> 0. |
+| `_sort_field_attributes.py` | the module's AST with every field call normalised -- positionals mapped to their keywords, keywords sorted by name -- is identical before and after, checked per file before it is written | spelling-**normalising**: every positional argument becomes the keyword `POSITIONAL_PARAMETERS` names, keywords take `FIELD_ATTRIBUTE_ORDER`, two or more go one per line with a trailing comma and `ruff format` lays the file out. A comment trailing an argument travels with it, one on a line of its own with the argument that follows; a `*args`, a `**kwargs` or a comment after the last argument is declined and reported. Swept 2026-09-13: 12,060 declarations in 2,024 core files, none declined; `field-positional-argument` 5,948 -> 0, `field-attribute-order` 7,525 -> 0. |
 | `_drop_field_labels.py` | the registry's `field.string` for every installed field, before and after, is identical -- the fixer removes only what `get_attrs` would have derived anyway, and the check is a fresh registry over the rewritten source | value-**dropping**: `string=` (or the positional label) whose value equals the auto label and whose every lower MRO definition says nothing else, located through the built registry (`-d <db>`), so it is exact rather than syntactic; touched files are re-run through `ruff format`. Swept 2026-09-13 on a 645-module community install: `lint_field_string_restates_label` 4,205 -> 0. |
 | `_modernize_commands.py` | `is_equivalent`: both the original and the rewrite are mapped to `(code, id, values)` tuples and compared as `ast.dump` | value-**rewriting**: `(6, 0, ids)` becomes `Command.set(ids)` inside an `eval` list, and the sub-commands inside a `create`/`update` dict with it. No evaluation, so it runs without odoo-bin; a refusal is a rewrite the round-trip would not reproduce. Swept 2026-09-12: 312 files, `legacy-x2many-command` 1,408 -> 0. |
 

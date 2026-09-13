@@ -6,18 +6,39 @@ from .hr_homeworking import DAYS
 class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
-    monday_location_id = fields.Many2one("hr.work.location", string="Monday")
-    tuesday_location_id = fields.Many2one("hr.work.location", string="Tuesday")
-    wednesday_location_id = fields.Many2one("hr.work.location", string="Wednesday")
-    thursday_location_id = fields.Many2one("hr.work.location", string="Thursday")
-    friday_location_id = fields.Many2one("hr.work.location", string="Friday")
-    saturday_location_id = fields.Many2one("hr.work.location", string="Saturday")
-    sunday_location_id = fields.Many2one("hr.work.location", string="Sunday")
+    monday_location_id = fields.Many2one(
+        comodel_name="hr.work.location",
+        string="Monday",
+    )
+    tuesday_location_id = fields.Many2one(
+        comodel_name="hr.work.location",
+        string="Tuesday",
+    )
+    wednesday_location_id = fields.Many2one(
+        comodel_name="hr.work.location",
+        string="Wednesday",
+    )
+    thursday_location_id = fields.Many2one(
+        comodel_name="hr.work.location",
+        string="Thursday",
+    )
+    friday_location_id = fields.Many2one(
+        comodel_name="hr.work.location",
+        string="Friday",
+    )
+    saturday_location_id = fields.Many2one(
+        comodel_name="hr.work.location",
+        string="Saturday",
+    )
+    sunday_location_id = fields.Many2one(
+        comodel_name="hr.work.location",
+        string="Sunday",
+    )
     exceptional_location_id = fields.Many2one(
-        "hr.work.location",
+        comodel_name="hr.work.location",
         string="Current",
-        compute="_compute_exceptional_location_id",
         help="This is the exceptional, non-weekly, location set for today.",
+        compute="_compute_exceptional_location_id",
         groups="hr.group_hr_user",
     )
     hr_icon_display = fields.Selection(

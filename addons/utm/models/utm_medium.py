@@ -9,7 +9,11 @@ class UtmMedium(models.Model):
     _description = "UTM Medium"
     _order = "name"
 
-    name = fields.Char(string="Medium Name", required=True, translate=False)
+    name = fields.Char(
+        string="Medium Name",
+        translate=False,
+        required=True,
+    )
     active = fields.Boolean(default=True)
 
     _unique_name = models.Constraint(

@@ -5,8 +5,8 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     ldaps = fields.One2many(
-        "res.company.ldap",
-        "company",
+        comodel_name="res.company.ldap",
+        inverse_name="company",
         string="LDAP Parameters",
         copy=True,
         groups="base.group_system",

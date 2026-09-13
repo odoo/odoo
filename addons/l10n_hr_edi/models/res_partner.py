@@ -8,11 +8,14 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     invoice_sending_method = fields.Selection(
-        selection_add=[("mojeracun", "by MojEracun")],
+        selection_add=[("mojeracun", "by MojEracun")]
     )
     invoice_edi_format = fields.Selection(selection_add=[("ubl_hr", "CIUS HR")])
     l10n_hr_personal_oib = fields.Char(string="Personal OIB")
-    l10n_hr_business_unit_code = fields.Char("Business Unit Code", default=None)
+    l10n_hr_business_unit_code = fields.Char(
+        string="Business Unit Code",
+        default=None,
+    )
 
     # -------------------------------------------------------------------------
     # CONSTRAINT

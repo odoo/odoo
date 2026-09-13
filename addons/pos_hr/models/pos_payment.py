@@ -5,9 +5,9 @@ class PosPayment(models.Model):
     _inherit = "pos.payment"
 
     employee_id = fields.Many2one(
-        "hr.employee",
-        string="Cashier",
+        comodel_name="hr.employee",
         related="pos_order_id.employee_id",
+        string="Cashier",
         store=True,
         index=True,
     )

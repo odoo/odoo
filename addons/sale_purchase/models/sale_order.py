@@ -7,7 +7,7 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     purchase_order_count = fields.Integer(
-        "Number of Purchase Order Generated",
+        string="Number of Purchase Order Generated",
         compute="_compute_purchase_order_count",
         groups="purchase.group_purchase_user",
     )

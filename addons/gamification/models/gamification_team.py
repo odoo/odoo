@@ -16,21 +16,33 @@ class GamificationTeam(models.Model):
     _inherit = ["mixin.mail.thread"]
     _order = "name"
 
-    name = fields.Char("Team Name", required=True, translate=True, tracking=True)
+    name = fields.Char(
+        string="Team Name",
+        translate=True,
+        required=True,
+        tracking=True,
+    )
     description = fields.Text(translate=True)
     active = fields.Boolean(default=True)
-    image_128 = fields.Image("Avatar", max_width=128, max_height=128)
+    image_128 = fields.Image(
+        string="Avatar",
+        max_width=128,
+        max_height=128,
+    )
 
     member_ids = fields.Many2many(
-        "res.users",
-        "gamification_team_members_rel",
+        comodel_name="res.users",
+        relation="gamification_team_members_rel",
         string="Members",
     )
     captain_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         help="Team leader who receives challenge reports.",
     )
-    member_count = fields.Count("member_ids", "# Members")
+    member_count = fields.Count(
+        count_of="member_ids",
+        string="# Members",
+    )
 
     # Display aggregates, deliberately NOT stored.
     #
@@ -42,17 +54,17 @@ class GamificationTeam(models.Model):
     # team list, the kanban card and the form, where computing them costs the two
     # aggregate queries below for the whole recordset at once.
     team_karma = fields.Integer(
-        compute="_compute_team_stats",
         help="Sum of all members' karma.",
+        compute="_compute_team_stats",
     )
     team_badges = fields.Integer(
-        compute="_compute_team_stats",
         help="Total badges earned by all team members.",
+        compute="_compute_team_stats",
     )
 
     challenge_ids = fields.Many2many(
-        "gamification.challenge",
-        "gamification_challenge_team_rel",
+        comodel_name="gamification.challenge",
+        relation="gamification_challenge_team_rel",
         string="Active Challenges",
     )
 

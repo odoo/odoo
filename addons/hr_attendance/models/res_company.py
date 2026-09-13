@@ -14,14 +14,16 @@ class ResCompany(models.Model):
         return uuid.uuid4().hex
 
     overtime_company_threshold = fields.Integer(
-        string="Tolerance Time In Favor Of Company", default=0
+        string="Tolerance Time In Favor Of Company",
+        default=0,
     )
     overtime_employee_threshold = fields.Integer(
-        string="Tolerance Time In Favor Of Employee", default=0
+        string="Tolerance Time In Favor Of Employee",
+        default=0,
     )
     hr_attendance_display_overtime = fields.Boolean(string="Display Extra Hours")
     attendance_kiosk_mode = fields.Selection(
-        [
+        selection=[
             ("barcode", "Barcode / RFID"),
             ("barcode_manual", "Barcode / RFID and Manual Selection"),
             ("manual", "Manual Selection"),
@@ -30,7 +32,7 @@ class ResCompany(models.Model):
         default="barcode_manual",
     )
     attendance_barcode_source = fields.Selection(
-        [
+        selection=[
             ("scanner", "Scanner"),
             ("front", "Front Camera"),
             ("back", "Back Camera"),
@@ -48,18 +50,25 @@ class ResCompany(models.Model):
     attendance_kiosk_use_pin = fields.Boolean(string="Employee PIN Identification")
     attendance_from_systray = fields.Boolean(default=False)
     attendance_overtime_validation = fields.Selection(
-        [
+        selection=[
             ("no_validation", "Automatically Approved"),
             ("by_manager", "Approved by Manager"),
         ],
         string="Extra Hours Validation",
         default="no_validation",
     )
-    auto_check_out = fields.Boolean(string="Automatic Check Out", default=False)
-    auto_check_out_tolerance = fields.Float(default=2, export_string_translation=False)
+    auto_check_out = fields.Boolean(
+        string="Automatic Check Out",
+        default=False,
+    )
+    auto_check_out_tolerance = fields.Float(
+        export_string_translation=False,
+        default=2,
+    )
     absence_management = fields.Boolean(default=False)
     attendance_device_tracking = fields.Boolean(
-        string="Device & Location Tracking", default=False
+        string="Device & Location Tracking",
+        default=False,
     )
 
     @api.depends("attendance_kiosk_key")

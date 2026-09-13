@@ -18,23 +18,43 @@ class IrLogging(models.Model):
     _order = "id DESC"
     _allow_sudo_commands = False
 
-    create_uid = fields.Integer(string="Created by", readonly=True)
-    create_date = fields.Datetime(string="Created on", readonly=True)
-    write_uid = fields.Integer(string="Last Updated by", readonly=True)
-    write_date = fields.Datetime(string="Last Updated on", readonly=True)
+    create_uid = fields.Integer(
+        string="Created by",
+        readonly=True,
+    )
+    create_date = fields.Datetime(
+        string="Created on",
+        readonly=True,
+    )
+    write_uid = fields.Integer(
+        string="Last Updated by",
+        readonly=True,
+    )
+    write_date = fields.Datetime(
+        string="Last Updated on",
+        readonly=True,
+    )
 
     name = fields.Char(required=True)
     type = fields.Selection(
-        [("client", "Client"), ("server", "Server")], required=True, index=True
+        selection=[("client", "Client"), ("server", "Server")],
+        index=True,
+        required=True,
     )
-    dbname = fields.Char(string="Database Name", index=True)
+    dbname = fields.Char(
+        string="Database Name",
+        index=True,
+    )
     level = fields.Char(index=True)
     message = fields.Text(required=True)
     path = fields.Char(required=True)
-    func = fields.Char(string="Function", required=True)
-    line = fields.Char(
+    func = fields.Char(
+        string="Function",
         required=True,
+    )
+    line = fields.Char(
         help="Source line. Text rather than integer because client/minified line references may be non-numeric.",
+        required=True,
     )
 
     def init(self) -> None:

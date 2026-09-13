@@ -189,13 +189,34 @@ class FleetVehicleCostReport(models.Model):
     _auto = False
     _order = "date_start desc"
 
-    company_id = fields.Many2one("res.company", readonly=True)
-    vehicle_id = fields.Many2one("fleet.vehicle", readonly=True)
-    name = fields.Char("Vehicle Name", readonly=True)
-    driver_id = fields.Many2one("res.partner", readonly=True)
-    fuel_type = fields.Char("Fuel", readonly=True)
-    date_start = fields.Date("Date", readonly=True)
-    vehicle_type = fields.Selection([("car", "Car"), ("bike", "Bike")], readonly=True)
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        readonly=True,
+    )
+    vehicle_id = fields.Many2one(
+        comodel_name="fleet.vehicle",
+        readonly=True,
+    )
+    name = fields.Char(
+        string="Vehicle Name",
+        readonly=True,
+    )
+    driver_id = fields.Many2one(
+        comodel_name="res.partner",
+        readonly=True,
+    )
+    fuel_type = fields.Char(
+        string="Fuel",
+        readonly=True,
+    )
+    date_start = fields.Date(
+        string="Date",
+        readonly=True,
+    )
+    vehicle_type = fields.Selection(
+        selection=[("car", "Car"), ("bike", "Bike")],
+        readonly=True,
+    )
 
     cost = fields.Float(readonly=True)
     cost_type = fields.Selection(

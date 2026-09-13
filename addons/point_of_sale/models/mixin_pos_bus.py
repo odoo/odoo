@@ -14,7 +14,9 @@ class MixinPosBus(models.AbstractModel):
     _description = "Bus Mixin"
 
     access_token = fields.Char(
-        "Security Token", copy=False, default=lambda self: _new_access_token()
+        string="Security Token",
+        default=lambda self: _new_access_token(),
+        copy=False,
     )
 
     def _get_access_token(self):

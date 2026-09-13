@@ -12,7 +12,8 @@ class StockMove(models.Model):
     _inherit = "stock.move"
 
     use_expiration_date = fields.Boolean(
-        string="Use Expiration Date", related="product_id.use_expiration_date"
+        related="product_id.use_expiration_date",
+        string="Use Expiration Date",
     )
 
     @api.model

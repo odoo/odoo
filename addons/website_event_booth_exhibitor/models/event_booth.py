@@ -6,20 +6,33 @@ class EventBooth(models.Model):
 
     use_sponsor = fields.Boolean(related="booth_category_id.use_sponsor")
     sponsor_type_id = fields.Many2one(related="booth_category_id.sponsor_type_id")
-    sponsor_id = fields.Many2one("event.sponsor", copy=False)
-    sponsor_name = fields.Char(string="Sponsor Name", related="sponsor_id.name")
-    sponsor_email = fields.Char(string="Sponsor Email", related="sponsor_id.email")
+    sponsor_id = fields.Many2one(
+        comodel_name="event.sponsor",
+        copy=False,
+    )
+    sponsor_name = fields.Char(
+        related="sponsor_id.name",
+        string="Sponsor Name",
+    )
+    sponsor_email = fields.Char(
+        related="sponsor_id.email",
+        string="Sponsor Email",
+    )
     sponsor_phone_ids = fields.Many2many(
-        string="Sponsor Phone", related="sponsor_id.phone_ids"
+        related="sponsor_id.phone_ids",
+        string="Sponsor Phone",
     )
     sponsor_subtitle = fields.Char(
-        string="Sponsor Slogan", related="sponsor_id.subtitle"
+        related="sponsor_id.subtitle",
+        string="Sponsor Slogan",
     )
     sponsor_website_description = fields.Html(
-        string="Sponsor Description", related="sponsor_id.website_description"
+        related="sponsor_id.website_description",
+        string="Sponsor Description",
     )
     sponsor_image_512 = fields.Image(
-        string="Sponsor Logo", related="sponsor_id.image_512"
+        related="sponsor_id.image_512",
+        string="Sponsor Logo",
     )
 
     def action_view_sponsor(self):

@@ -11,11 +11,18 @@ class DocumentsRequest_Wizard(models.TransientModel):
     _description = "Document Request"
 
     name = fields.Char(required=True)
-    requestee_id = fields.Many2one("res.partner", required=True, string="Owner")
-    partner_id = fields.Many2one("res.partner", string="Contact")
+    requestee_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Owner",
+        required=True,
+    )
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Contact",
+    )
 
     activity_type_id = fields.Many2one(
-        "mail.activity.type",
+        comodel_name="mail.activity.type",
         string="Activity type",
         default=lambda self: self.env.ref(
             "mail.mail_activity_data_upload_document", raise_if_not_found=False
@@ -24,19 +31,25 @@ class DocumentsRequest_Wizard(models.TransientModel):
         domain="[('category', '=', 'upload_file')]",
     )
 
-    tag_ids = fields.Many2many("document.tag", string="Tags")
+    tag_ids = fields.Many2many(
+        comodel_name="document.tag",
+        string="Tags",
+    )
     folder_id = fields.Many2one(
-        "document.document",
+        comodel_name="document.document",
         domain="[('type', '=', 'folder'), ('shortcut_document_id', '=', False)]",
     )
 
-    res_model = fields.Char("Resource Model")
-    res_id = fields.Integer("Resource ID")
+    res_model = fields.Char(string="Resource Model")
+    res_id = fields.Integer(string="Resource ID")
 
     activity_note = fields.Html(string="Message")
-    activity_date_deadline_range = fields.Integer(string="Due Date In", default=30)
+    activity_date_deadline_range = fields.Integer(
+        string="Due Date In",
+        default=30,
+    )
     activity_date_deadline_range_type = fields.Selection(
-        time_unit_selection("day", "week", "month"),
+        selection=time_unit_selection("day", "week", "month"),
         string="Due type",
         default="day",
     )

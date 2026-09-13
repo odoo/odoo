@@ -13,45 +13,49 @@ class MailMessageSubtype(models.Model):
     _order = "sequence, id"
 
     name = fields.Char(
-        "Message Type",
-        required=True,
-        translate=True,
+        string="Message Type",
         help="Precise message type, mostly for system notifications (e.g. New, "
         "Stage change). Lets users fine-tune which notifications they receive.",
+        translate=True,
+        required=True,
     )
     description = fields.Text(
-        translate=True,
-        prefetch=True,
         help="Description that will be added in the message posted for this "
         "subtype. If void, the name will be added instead.",
+        translate=True,
+        prefetch=True,
     )
     internal = fields.Boolean(
-        "Internal Only",
+        string="Internal Only",
         help="Messages with internal subtypes will be visible only by employees, aka members of base_user group",
     )
     parent_id: MailMessageSubtype = fields.Many2one(
-        "mail.message.subtype",
-        ondelete="set null",
+        comodel_name="mail.message.subtype",
         help="Parent subtype, used for automatic subscription (e.g. a project "
         "subtype's parent_id points to the related task subtype).",
+        ondelete="set null",
     )
     relation_field = fields.Char(
-        "Relation field",
+        string="Relation field",
         help="Field used to link the related model to the subtype model when "
         "using automatic subscription on a related document. The field "
         "is used to compute getattr(related_document.relation_field).",
     )
     res_model = fields.Char(
-        "Model",
+        string="Model",
         help="Model the subtype applies to. If False, this subtype applies to all models.",
     )
     default = fields.Boolean(
-        default=True, help="Activated by default when subscribing."
+        help="Activated by default when subscribing.",
+        default=True,
     )
-    sequence = fields.Integer(default=1, help="Used to order subtypes.")
+    sequence = fields.Integer(
+        help="Used to order subtypes.",
+        default=1,
+    )
     hidden = fields.Boolean(help="Hide the subtype in the follower options")
     track_recipients = fields.Boolean(
-        help="Whether to display all the recipients or only the important ones.",
+        help="Whether to display all the recipients or only the important ones."
     )
 
     @api.model_create_multi

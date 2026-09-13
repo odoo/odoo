@@ -14,13 +14,15 @@ class BaseImportModule(models.TransientModel):
     _description = "Import Module"
 
     module_file = fields.Binary(
-        string="Module .ZIP file", required=True, attachment=False
+        string="Module .ZIP file",
+        attachment=False,
+        required=True,
     )
     state = fields.Selection(
-        [("init", "init"), ("done", "done")],
+        selection=[("init", "init"), ("done", "done")],
         string="Status",
-        readonly=True,
         default="init",
+        readonly=True,
     )
     import_message = fields.Text()
     force = fields.Boolean(

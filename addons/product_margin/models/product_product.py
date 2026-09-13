@@ -9,82 +9,84 @@ class ProductProduct(models.Model):
     _inherit = "product.product"
 
     date_from = fields.Date(
-        compute="_compute_product_margin_fields_values", string="Margin Date From"
+        string="Margin Date From",
+        compute="_compute_product_margin_fields_values",
     )
     date_to = fields.Date(
-        compute="_compute_product_margin_fields_values", string="Margin Date To"
+        string="Margin Date To",
+        compute="_compute_product_margin_fields_values",
     )
     invoice_state = fields.Selection(
-        compute="_compute_product_margin_fields_values",
         selection=[
             ("paid", "Paid"),
             ("open_paid", "Open and Paid"),
             ("draft_open_paid", "Draft, Open and Paid"),
         ],
+        compute="_compute_product_margin_fields_values",
         readonly=True,
     )
     sale_avg_price = fields.Float(
-        compute="_compute_product_margin_fields_values",
         string="Avg. Sale Unit Price",
         help="Avg. Price in Customer Invoices.",
+        compute="_compute_product_margin_fields_values",
     )
     purchase_avg_price = fields.Float(
-        compute="_compute_product_margin_fields_values",
         string="Avg. Purchase Unit Price",
         help="Avg. Price in Vendor Bills",
+        compute="_compute_product_margin_fields_values",
     )
     sale_num_invoiced = fields.Float(
-        compute="_compute_product_margin_fields_values",
         string="# Invoiced in Sale",
         help="Sum of Quantity in Customer Invoices",
+        compute="_compute_product_margin_fields_values",
     )
     purchase_num_invoiced = fields.Float(
-        compute="_compute_product_margin_fields_values",
         string="# Invoiced in Purchase",
         help="Sum of Quantity in Vendor Bills",
+        compute="_compute_product_margin_fields_values",
     )
     sales_gap = fields.Float(
-        compute="_compute_product_margin_fields_values",
         help="Expected Sale - Turn Over",
+        compute="_compute_product_margin_fields_values",
     )
     purchase_gap = fields.Float(
-        compute="_compute_product_margin_fields_values",
         help="Normal Cost - Total Cost",
+        compute="_compute_product_margin_fields_values",
     )
     turnover = fields.Float(
-        compute="_compute_product_margin_fields_values",
         help="Sum of Multiplication of Invoice price and quantity of Customer Invoices",
+        compute="_compute_product_margin_fields_values",
     )
     total_cost = fields.Float(
-        compute="_compute_product_margin_fields_values",
         help="Sum of Multiplication of Invoice price and quantity of Vendor Bills ",
+        compute="_compute_product_margin_fields_values",
     )
     sale_expected = fields.Float(
-        compute="_compute_product_margin_fields_values",
         string="Expected Sale",
         help="Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices",
+        compute="_compute_product_margin_fields_values",
     )
     normal_cost = fields.Float(
-        compute="_compute_product_margin_fields_values",
         help="Sum of Multiplication of Cost price and quantity of Vendor Bills",
+        compute="_compute_product_margin_fields_values",
     )
     total_margin = fields.Float(
-        compute="_compute_product_margin_fields_values",
         help="Turnover - Total cost",
+        compute="_compute_product_margin_fields_values",
     )
     expected_margin = fields.Float(
-        compute="_compute_product_margin_fields_values",
         help="Expected Sale - Normal Cost",
+        compute="_compute_product_margin_fields_values",
     )
     total_margin_rate = fields.Float(
-        compute="_compute_product_margin_fields_values",
         string="Total Margin Rate(%)",
         help="Total margin * 100 / Turnover",
+        compute="_compute_product_margin_fields_values",
     )
     expected_margin_rate = fields.Float(
-        compute="_compute_product_margin_fields_values",
         string="Expected Margin (%)",
         help="Expected margin * 100 / Expected Sale",
+        compute="_compute_product_margin_fields_values",
     )
 
     _SPECIAL_SUM_AGGREGATES = {

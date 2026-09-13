@@ -4,18 +4,28 @@ from odoo import api, fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
-    pos_floor_ids = fields.Many2many(related="pos_config_id.floor_ids", readonly=False)
+    pos_floor_ids = fields.Many2many(
+        related="pos_config_id.floor_ids",
+        readonly=False,
+    )
     pos_iface_printbill = fields.Boolean(
-        compute="_compute_pos_module_pos_restaurant", store=True, readonly=False
+        compute="_compute_pos_module_pos_restaurant",
+        store=True,
+        readonly=False,
     )
     pos_iface_splitbill = fields.Boolean(
-        compute="_compute_pos_module_pos_restaurant", store=True, readonly=False
+        compute="_compute_pos_module_pos_restaurant",
+        store=True,
+        readonly=False,
     )
     pos_set_tip_after_payment = fields.Boolean(
-        compute="_compute_pos_set_tip_after_payment", store=True, readonly=False
+        compute="_compute_pos_set_tip_after_payment",
+        store=True,
+        readonly=False,
     )
     pos_default_screen = fields.Selection(
-        related="pos_config_id.default_screen", readonly=False
+        related="pos_config_id.default_screen",
+        readonly=False,
     )
 
     @api.depends("pos_module_pos_restaurant", "pos_config_id")

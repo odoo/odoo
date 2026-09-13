@@ -33,14 +33,14 @@ class BankAccountVerification(models.Model):
                 "An error occurred during check with Government API",
             ),  # API called -> error
         ],
-        readonly=True,
-        required=True,
         help="Flag the payment verification status with one of the following:\n"
         "- Valid: The partner VAT is linked to the bank account used for this payment.\n"
         "- Invalid: The partner VAT is not linked to the bank account used for this payment.\n"
         "- Incomplete partner: The partner has no VAT or no bank account.\n"
         "- Partner not found: Partner VAT not found in Government files.\n"
         "- Error: An error occurred during check with Government API.\n",
+        readonly=True,
+        required=True,
     )
     # Timestamp received in PL tz by the API, stored in UTC
     verification_timestamp = fields.Datetime(readonly=True)
@@ -50,24 +50,32 @@ class BankAccountVerification(models.Model):
         store=True,
         index=False,
     )
-    verification_request_id = fields.Char("Correlation ID", readonly=True)
+    verification_request_id = fields.Char(
+        string="Correlation ID",
+        readonly=True,
+    )
     partner_bank_id = fields.Many2one(
-        "res.partner.bank", readonly=True, string="Bank Account"
+        comodel_name="res.partner.bank",
+        string="Bank Account",
+        readonly=True,
     )
     # We need to store the bank account number itself to prevent changes on the res.partner.bank record
     partner_bank_account_number = fields.Char(
         compute="_compute_partner_bank_account_number",
-        readonly=True,
         store=True,
         index=False,
+        readonly=True,
     )
-    partner_id = fields.Many2one("res.partner", readonly=True)
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        readonly=True,
+    )
     # We need to store the partner VAT itself to prevent changes on the res.partner record
     partner_vat = fields.Char(
         compute="_compute_partner_vat",
-        readonly=True,
         store=True,
         index=False,
+        readonly=True,
     )
 
     def _auto_init(self):

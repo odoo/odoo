@@ -15,18 +15,18 @@ class ResCompany(models.Model):
 
     totals_below_sections = fields.Boolean(
         string="Add totals below sections",
+        help="When ticked, totals and subtotals appear below the sections of the report.",
         compute="_compute_totals_below_sections",
         store=True,
         readonly=False,
-        help="When ticked, totals and subtotals appear below the sections of the report.",
     )
 
     account_return_periodicity = fields.Selection(
         selection=PERIODS,
         string="Delay units",
-        required=True,
-        default="monthly",
         help="Periodicity",
+        default="monthly",
+        required=True,
     )
     account_return_reminder_day = fields.Integer(
         string="Start from",
@@ -36,21 +36,21 @@ class ResCompany(models.Model):
     account_tax_return_journal_id = fields.Many2one(
         comodel_name="account.journal",
         string="Journal",
-        check_company=True,
         domain=[("type", "=", "general")],
+        check_company=True,
     )
     account_revaluation_journal_id = fields.Many2one(
-        "account.journal",
+        comodel_name="account.journal",
         domain=[("type", "=", "general")],
         check_company=True,
     )
     account_revaluation_expense_provision_account_id = fields.Many2one(
-        "account.account",
+        comodel_name="account.account",
         string="Expense Provision Account",
         check_company=True,
     )
     account_revaluation_income_provision_account_id = fields.Many2one(
-        "account.account",
+        comodel_name="account.account",
         string="Income Provision Account",
         check_company=True,
     )
@@ -60,10 +60,10 @@ class ResCompany(models.Model):
         help="The tax units this company belongs to.",
     )
     account_representative_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Accounting Firm",
-        index="btree_not_null",
         help="Specify an Accounting Firm that will act as a representative when exporting reports.",
+        index="btree_not_null",
     )
     account_display_representative_field = fields.Boolean(
         compute="_compute_account_display_representative_field"

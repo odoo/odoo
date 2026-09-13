@@ -7,20 +7,22 @@ class AccountMoveReversal(models.TransientModel):
 
     l10n_latam_use_documents = fields.Boolean(compute="_compute_documents_info")
     l10n_latam_document_type_id = fields.Many2one(
-        "l10n_latam.document.type",
-        "Document Type",
-        ondelete="cascade",
-        domain="[('id', 'in', l10n_latam_available_document_type_ids)]",
+        comodel_name="l10n_latam.document.type",
+        string="Document Type",
         compute="_compute_document_type",
-        readonly=False,
         store=True,
+        readonly=False,
+        domain="[('id', 'in', l10n_latam_available_document_type_ids)]",
+        ondelete="cascade",
     )
     l10n_latam_available_document_type_ids = fields.Many2many(
-        "l10n_latam.document.type", compute="_compute_documents_info"
+        comodel_name="l10n_latam.document.type",
+        compute="_compute_documents_info",
     )
     l10n_latam_document_number = fields.Char(string="Document Number")
     l10n_latam_manual_document_number = fields.Boolean(
-        compute="_compute_l10n_latam_manual_document_number", string="Manual Number"
+        string="Manual Number",
+        compute="_compute_l10n_latam_manual_document_number",
     )
 
     @api.depends("l10n_latam_document_type_id", "journal_id")

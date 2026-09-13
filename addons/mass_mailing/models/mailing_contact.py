@@ -34,29 +34,37 @@ class MailingContact(models.Model):
         return res
 
     name = fields.Char(
-        compute="_compute_name", readonly=False, store=True, tracking=True
+        compute="_compute_name",
+        store=True,
+        readonly=False,
+        tracking=True,
     )
     first_name = fields.Char()
     last_name = fields.Char()
     company_name = fields.Char()
     email = fields.Char()
     list_ids = fields.Many2many(
-        "mailing.list",
-        "mailing_subscription",
-        "contact_id",
-        "list_id",
+        comodel_name="mailing.list",
+        relation="mailing_subscription",
+        column1="contact_id",
+        column2="list_id",
         string="Mailing Lists",
     )
     subscription_ids = fields.One2many(
-        "mailing.subscription", "contact_id", string="Subscription Information"
+        comodel_name="mailing.subscription",
+        inverse_name="contact_id",
+        string="Subscription Information",
     )
-    country_id = fields.Many2one("res.country")
-    tag_ids = fields.Many2many("res.partner.tag", string="Tags")
+    country_id = fields.Many2one(comodel_name="res.country")
+    tag_ids = fields.Many2many(
+        comodel_name="res.partner.tag",
+        string="Tags",
+    )
     opt_out = fields.Boolean(
-        compute="_compute_opt_out",
-        search="_search_opt_out",
         help="Opt out flag for a specific mailing list. "
         "This field should not be used in a view without a unique and active mailing list context.",
+        compute="_compute_opt_out",
+        search="_search_opt_out",
     )
 
     @api.model

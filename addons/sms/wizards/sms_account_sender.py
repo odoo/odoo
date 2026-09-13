@@ -10,7 +10,10 @@ class SmsAccountSender(models.TransientModel):
     _name = "sms.account.sender"
     _description = "SMS Account Sender Name Wizard"
 
-    account_id = fields.Many2one("iap.account", required=True)
+    account_id = fields.Many2one(
+        comodel_name="iap.account",
+        required=True,
+    )
     sender_name = fields.Char()
 
     @api.constrains("sender_name")

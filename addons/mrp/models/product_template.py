@@ -11,8 +11,16 @@ class ProductTemplate(models.Model):
     _mrp_product_field = "product_tmpl_id"
     _mrp_bom_field = "bom_ids"
 
-    bom_line_ids = fields.One2many("mrp.bom.line", "product_tmpl_id", "BoM Components")
-    bom_ids = fields.One2many("mrp.bom", "product_tmpl_id", "Bill of Materials")
+    bom_line_ids = fields.One2many(
+        comodel_name="mrp.bom.line",
+        inverse_name="product_tmpl_id",
+        string="BoM Components",
+    )
+    bom_ids = fields.One2many(
+        comodel_name="mrp.bom",
+        inverse_name="product_tmpl_id",
+        string="Bill of Materials",
+    )
 
     def _get_mrp_variants(self):
         return self.product_variant_ids

@@ -36,16 +36,16 @@ class ResCompany(models.Model):
     _display_name_search_default = True
 
     partner_id = fields.Many2one(
-        "res.partner",
-        required=True,
+        comodel_name="res.partner",
         index=True,
+        required=True,
     )
     name = fields.Char(
         related="partner_id.name",
         string="Company Name",
-        required=True,
         store=True,
         readonly=False,
+        required=True,
     )
     email = fields.Char(
         related="partner_id.email",
@@ -99,17 +99,17 @@ class ResCompany(models.Model):
         readonly=False,
     )
     state_id = fields.Many2one(
-        "res.country.state",
+        comodel_name="res.country.state",
         related="partner_id.state_id",
-        readonly=False,
         string="Fed. State",
+        readonly=False,
         domain="[('country_id', '=?', country_id)]",
     )
     country_id = fields.Many2one(
-        "res.country",
+        comodel_name="res.country",
         related="partner_id.country_id",
-        readonly=False,
         string="Country",
+        readonly=False,
     )
     country_code = fields.Char(
         related="country_id.code",
@@ -118,12 +118,10 @@ class ResCompany(models.Model):
 
     code = fields.Char(
         string="Short Code",
+        help="Short, untranslated handle for the company, shown wherever the "
+        "company is referenced instead of its full legal name. Companies "
+        "without one are referenced by name.",
         size=6,
-        help=(
-            "Short, untranslated handle for the company, shown wherever the "
-            "company is referenced instead of its full legal name. Companies "
-            "without one are referenced by name."
-        ),
     )
     complete_name = fields.Char(
         compute="_compute_complete_name",
@@ -131,53 +129,53 @@ class ResCompany(models.Model):
     )
     active = fields.Boolean(default=True)
     sequence = fields.Integer(
-        default=10,
         help="Used to order Companies in the company switcher",
+        default=10,
     )
 
     parent_id = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
         string="Parent Company",
         index=True,
         ondelete="restrict",
     )
     child_ids = fields.One2many(
-        "res.company",
-        "parent_id",
+        comodel_name="res.company",
+        inverse_name="parent_id",
         string="Branches",
     )
     all_child_ids = fields.One2many(
-        "res.company",
-        "parent_id",
+        comodel_name="res.company",
+        inverse_name="parent_id",
         context={"active_test": False},
     )
     parent_ids = fields.Many2many(
-        "res.company",
+        comodel_name="res.company",
         compute="_compute_hierarchy",
         compute_sudo=True,
     )
     root_id = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
         compute="_compute_hierarchy",
         compute_sudo=True,
     )
 
     currency_id = fields.Many2one(
-        "res.currency",
-        required=True,
+        comodel_name="res.currency",
         default=lambda self: self._default_currency_id(),
+        required=True,
     )
     user_ids = fields.Many2many(
-        "res.users",
-        "res_company_users_rel",
-        "cid",
-        "user_id",
+        comodel_name="res.users",
+        relation="res_company_users_rel",
+        column1="cid",
+        column2="user_id",
         string="Accepted Users",
     )
     logo_web = fields.Binary(
+        attachment=False,
         compute="_compute_logo_web",
         store=True,
-        attachment=False,
     )
     uses_default_logo = fields.Boolean(
         compute="_compute_uses_default_logo",
@@ -185,34 +183,34 @@ class ResCompany(models.Model):
     )
     report_header = fields.Html(
         string="Company Tagline",
-        translate=True,
         help="Company tagline, which is included in a printed document's header or footer (depending on the selected layout).",
+        translate=True,
     )
     report_footer = fields.Html(
-        translate=True,
         help="Footer text displayed at the bottom of all reports.",
+        translate=True,
     )
     company_details = fields.Html(
-        translate=True,
         help="Header text displayed at the top of all reports.",
+        translate=True,
     )
     is_company_details_empty = fields.Boolean(
-        compute="_compute_is_company_details_empty",
+        compute="_compute_is_company_details_empty"
     )
     paperformat_id = fields.Many2one(
-        "report.paperformat",
-        "Paper format",
+        comodel_name="report.paperformat",
+        string="Paper format",
         default=lambda self: self.env.ref(
             "base.paperformat_euro",
             raise_if_not_found=False,
         ),
     )
     external_report_layout_id = fields.Many2one(
-        "ir.ui.view",
-        "Document Template",
+        comodel_name="ir.ui.view",
+        string="Document Template",
     )
     font = fields.Selection(
-        [
+        selection=[
             ("Lato", "Lato"),
             ("Roboto", "Roboto"),
             ("Open_Sans", "Open Sans"),
@@ -232,7 +230,7 @@ class ResCompany(models.Model):
         recursive=True,
     )
     layout_background = fields.Selection(
-        [
+        selection=[
             ("Blank", "Blank"),
             ("Demo logo", "Demo logo"),
             ("Custom", "Custom"),
@@ -240,9 +238,9 @@ class ResCompany(models.Model):
         default="Blank",
         required=True,
     )
-    layout_background_image = fields.Binary("Background Image")
+    layout_background_image = fields.Binary(string="Background Image")
     uninstalled_l10n_module_ids = fields.Many2many(
-        "ir.module.module",
+        comodel_name="ir.module.module",
         compute="_compute_uninstalled_l10n_module_ids",
     )
 

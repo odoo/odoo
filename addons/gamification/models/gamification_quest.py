@@ -14,44 +14,58 @@ class GamificationQuest(models.Model):
     _inherit = ["mixin.mail.thread"]
     _order = "sequence, name"
 
-    name = fields.Char("Quest Name", required=True, translate=True, tracking=True)
+    name = fields.Char(
+        string="Quest Name",
+        translate=True,
+        required=True,
+        tracking=True,
+    )
     description = fields.Html(
-        "Story",
+        string="Story",
+        help="Narrative framing for the quest (e.g., 'The Data Quality Crusade').",
         translate=True,
         sanitize_attributes=False,
-        help="Narrative framing for the quest (e.g., 'The Data Quality Crusade').",
     )
     sequence = fields.Integer(default=10)
     active = fields.Boolean(default=True)
-    icon = fields.Image(max_width=128, max_height=128)
+    icon = fields.Image(
+        max_width=128,
+        max_height=128,
+    )
 
     # Steps
     step_ids = fields.One2many(
-        "gamification.quest.step", "quest_id", string="Steps", copy=True
+        comodel_name="gamification.quest.step",
+        inverse_name="quest_id",
+        string="Steps",
+        copy=True,
     )
-    step_count = fields.Count("step_ids", "# Steps")
+    step_count = fields.Count(
+        count_of="step_ids",
+        string="# Steps",
+    )
 
     # Rewards for completing the entire quest
     reward_badge_id = fields.Many2one(
-        "gamification.badge",
+        comodel_name="gamification.badge",
         string="Completion Badge",
         help="Badge granted when all steps are completed.",
     )
     reward_karma = fields.Integer(
-        "Completion Karma",
-        default=0,
+        string="Completion Karma",
         help="Bonus karma granted on quest completion (on top of step rewards).",
+        default=0,
     )
 
     # Targeting
     quest_mode = fields.Selection(
-        [("solo", "Solo"), ("team", "Team")],
+        selection=[("solo", "Solo"), ("team", "Team")],
+        string="Mode",
         default="solo",
         required=True,
-        string="Mode",
     )
     difficulty = fields.Selection(
-        [
+        selection=[
             ("beginner", "Beginner"),
             ("intermediate", "Intermediate"),
             ("advanced", "Advanced"),
@@ -63,11 +77,17 @@ class GamificationQuest(models.Model):
 
     # Enrollment tracking
     enrollment_ids = fields.One2many(
-        "gamification.quest.enrollment", "quest_id", string="Enrollments"
+        comodel_name="gamification.quest.enrollment",
+        inverse_name="quest_id",
+        string="Enrollments",
     )
-    enrollment_count = fields.Count("enrollment_ids", "# Enrolled")
+    enrollment_count = fields.Count(
+        count_of="enrollment_ids",
+        string="# Enrolled",
+    )
     completion_count = fields.Integer(
-        "# Completed", compute="_compute_completion_count"
+        string="# Completed",
+        compute="_compute_completion_count",
     )
 
     @api.depends("enrollment_ids.state")
@@ -100,55 +120,62 @@ class GamificationQuestStep(models.Model):
     _order = "sequence, id"
 
     quest_id = fields.Many2one(
-        "gamification.quest",
+        comodel_name="gamification.quest",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
-    name = fields.Char("Step Name", required=True, translate=True)
-    description = fields.Text(
+    name = fields.Char(
+        string="Step Name",
         translate=True,
+        required=True,
+    )
+    description = fields.Text(
         help="What the user needs to do for this step.",
+        translate=True,
     )
     sequence = fields.Integer(default=10)
 
     # What to accomplish
     definition_id = fields.Many2one(
-        "gamification.goal.definition",
+        comodel_name="gamification.goal.definition",
         string="Goal Definition",
         help="The goal definition this step evaluates. "
         "Leave empty for manually-verified steps.",
     )
     target_goal = fields.Float(
-        "Target",
-        default=1,
+        string="Target",
         help="Target value for the goal (e.g., 10 leads, 5 invoices).",
+        default=1,
     )
 
     # Prerequisites (other steps in the same quest)
     prerequisite_ids = fields.Many2many(
-        "gamification.quest.step",
-        "gamification_quest_step_prereq_rel",
-        "step_id",
-        "prereq_id",
+        comodel_name="gamification.quest.step",
+        relation="gamification_quest_step_prereq_rel",
+        column1="step_id",
+        column2="prereq_id",
         string="Prerequisites",
-        domain="[('quest_id', '=', quest_id), ('id', '!=', id)]",
         help="Steps that must be completed before this one unlocks.",
+        domain="[('quest_id', '=', quest_id), ('id', '!=', id)]",
     )
 
     # Rewards per step
-    karma_reward = fields.Integer("Step Karma", default=0)
+    karma_reward = fields.Integer(
+        string="Step Karma",
+        default=0,
+    )
     badge_id = fields.Many2one(
-        "gamification.badge",
+        comodel_name="gamification.badge",
         string="Step Badge",
         help="Optional badge for completing this step.",
     )
 
     # Skill tree link
     skill_node_id = fields.Many2one(
-        "gamification.skill.node",
-        ondelete="set null",
+        comodel_name="gamification.skill.node",
         help="Skill tree node this step contributes to.",
+        ondelete="set null",
     )
 
     @api.constrains("prerequisite_ids")
@@ -172,36 +199,38 @@ class GamificationQuestEnrollment(models.Model):
     _rec_name = "quest_id"
 
     quest_id = fields.Many2one(
-        "gamification.quest",
-        required=True,
+        comodel_name="gamification.quest",
         index=True,
+        required=True,
         ondelete="cascade",
     )
     user_id = fields.Many2one(
-        "res.users",
-        required=True,
-        index=True,
-        ondelete="cascade",
+        comodel_name="res.users",
         default=lambda self: self.env.uid,
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     state = fields.Selection(
-        [
+        selection=[
             ("in_progress", "In Progress"),
             ("completed", "Completed"),
             ("abandoned", "Abandoned"),
         ],
         default="in_progress",
-        required=True,
         index=True,
+        required=True,
     )
     progress_percent = fields.Float(
-        "Progress %", compute="_compute_progress_percent", store=True
+        string="Progress %",
+        compute="_compute_progress_percent",
+        store=True,
     )
 
     # Step completions
     completion_ids = fields.One2many(
-        "gamification.quest.step.completion",
-        "enrollment_id",
+        comodel_name="gamification.quest.step.completion",
+        inverse_name="enrollment_id",
         string="Step Completions",
     )
 
@@ -380,13 +409,13 @@ class GamificationQuestStepCompletion(models.Model):
     _order = "completion_date desc"
 
     enrollment_id = fields.Many2one(
-        "gamification.quest.enrollment",
+        comodel_name="gamification.quest.enrollment",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
     step_id = fields.Many2one(
-        "gamification.quest.step",
+        comodel_name="gamification.quest.step",
         required=True,
         ondelete="cascade",
     )

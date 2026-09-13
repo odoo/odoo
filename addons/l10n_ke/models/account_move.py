@@ -9,6 +9,4 @@ class AccountMove(models.Model):
         help="Customer withholding certificate number",
     )
 
-    l10n_ke_wh_certificate_date = fields.Date(
-        string="Date of Certificate",
-    )
+    l10n_ke_wh_certificate_date = fields.Date(string="Date of Certificate")

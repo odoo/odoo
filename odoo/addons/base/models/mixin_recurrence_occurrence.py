@@ -12,7 +12,7 @@ class MixinRecurrenceOccurrence(models.AbstractModel):
     _description = "Recurrence Occurrence Mixin"
 
     recurrence_update = fields.Selection(
-        RECURRENCE_UPDATE_SELECTION,
+        selection=RECURRENCE_UPDATE_SELECTION,
         default="this",
         store=False,
         copy=False,

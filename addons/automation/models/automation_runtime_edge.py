@@ -16,43 +16,46 @@ class AutomationRuntimeEdge(models.Model):
 
     runtime_id = fields.Many2one(
         comodel_name="automation.runtime",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
     source_line_id = fields.Many2one(
         comodel_name="automation.runtime.line",
         string="Source Step",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
     target_line_id = fields.Many2one(
         comodel_name="automation.runtime.line",
         string="Target Step",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
     condition = fields.Selection(
         selection=CONDITION_SELECTION,
         default="on_success",
-        required=True,
         readonly=True,
+        required=True,
     )
     condition_expr = fields.Char(readonly=True)
     event_code = fields.Char(readonly=True)
     delay = fields.Integer(readonly=True)
-    delay_unit = fields.Selection(selection=EDGE_DELAY_UNITS, readonly=True)
+    delay_unit = fields.Selection(
+        selection=EDGE_DELAY_UNITS,
+        readonly=True,
+    )
     date_event = fields.Datetime(
         string="Event Received",
-        readonly=True,
         copy=False,
+        readonly=True,
     )
     revoked = fields.Boolean(
-        readonly=True,
-        copy=False,
         help="An exclusive event on the source closed this edge",
+        copy=False,
+        readonly=True,
     )
 
     def _verdict(self, now):

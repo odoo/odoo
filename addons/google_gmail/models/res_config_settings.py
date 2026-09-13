@@ -5,10 +5,11 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     google_gmail_client_identifier = fields.Char(
-        "Gmail Client Id", config_parameter="google_gmail_client_id"
+        string="Gmail Client Id",
+        config_parameter="google_gmail_client_id",
     )
     google_gmail_client_secret = fields.Char(
-        "Gmail Client Secret",
+        string="Gmail Client Secret",
         compute="_compute_google_gmail_client_secret",
         inverse="_inverse_google_gmail_client_secret",
     )

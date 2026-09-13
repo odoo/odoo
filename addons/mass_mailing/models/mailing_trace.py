@@ -57,11 +57,18 @@ class MailingTrace(models.Model):
     _order = "create_date DESC"
 
     trace_type = fields.Selection(
-        [("mail", "Email")], string="Type", default="mail", required=True
+        selection=[("mail", "Email")],
+        string="Type",
+        default="mail",
+        required=True,
     )
-    is_test_trace = fields.Boolean("Generated for testing")
+    is_test_trace = fields.Boolean(string="Generated for testing")
     # mail data
-    mail_mail_id = fields.Many2one("mail.mail", string="Mail", index="btree_not_null")
+    mail_mail_id = fields.Many2one(
+        comodel_name="mail.mail",
+        string="Mail",
+        index="btree_not_null",
+    )
     mail_mail_id_int = fields.Integer(
         string="Mail ID (tech)",
         help="ID of the related mail_mail. This field is an integer field because "
@@ -74,23 +81,32 @@ class MailingTrace(models.Model):
     medium_id = fields.Many2one(related="mass_mailing_id.medium_id")
     source_id = fields.Many2one(related="mass_mailing_id.source_id")
     # document
-    model = fields.Char(string="Document model", required=True)
-    res_id = fields.Many2oneReference(string="Document ID", model_field="model")
+    model = fields.Char(
+        string="Document model",
+        required=True,
+    )
+    res_id = fields.Many2oneReference(
+        model_field="model",
+        string="Document ID",
+    )
     # campaign data
     mass_mailing_id = fields.Many2one(
-        "mailing.mailing", string="Mailing", index=True, ondelete="cascade"
+        comodel_name="mailing.mailing",
+        string="Mailing",
+        index=True,
+        ondelete="cascade",
     )
     campaign_id = fields.Many2one(
         related="mass_mailing_id.campaign_id",
         string="Campaign",
         store=True,
-        readonly=True,
         index="btree_not_null",
+        readonly=True,
     )
     # Status
-    sent_datetime = fields.Datetime("Sent On")
-    open_datetime = fields.Datetime("Opened On")
-    reply_datetime = fields.Datetime("Replied On")
+    sent_datetime = fields.Datetime(string="Sent On")
+    open_datetime = fields.Datetime(string="Opened On")
+    reply_datetime = fields.Datetime(string="Replied On")
     trace_status = fields.Selection(
         selection=[
             ("outgoing", "Outgoing"),
@@ -110,13 +126,20 @@ class MailingTrace(models.Model):
         selection=DELIVERY_FAILURE_TYPES,
         string="Failure type",
     )
-    failure_reason = fields.Text("Failure reason", copy=False, readonly=True)
+    failure_reason = fields.Text(
+        string="Failure reason",
+        copy=False,
+        readonly=True,
+    )
     # Link tracking
     links_click_ids = fields.One2many(
-        "link.tracker.click", "mailing_trace_id", string="Links click"
+        comodel_name="link.tracker.click",
+        inverse_name="mailing_trace_id",
+        string="Links click",
     )
     links_click_datetime = fields.Datetime(
-        "Clicked On", help="Stores last click datetime in case of multi clicks."
+        string="Clicked On",
+        help="Stores last click datetime in case of multi clicks.",
     )
 
     _check_res_id_is_set = models.Constraint(

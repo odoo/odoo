@@ -29,10 +29,10 @@ class ProductProduct(models.Model):
     product_tmpl_id = fields.Many2one(
         comodel_name="product.template",
         string="Product Template",
-        required=True,
-        bypass_search_access=True,
-        ondelete="cascade",
         index=True,
+        required=True,
+        ondelete="cascade",
+        bypass_search_access=True,
     )
     is_favorite = fields.Boolean(
         related="product_tmpl_id.is_favorite",
@@ -46,12 +46,10 @@ class ProductProduct(models.Model):
         readonly=False,
     )
     active = fields.Boolean(
-        default=True,
         help="If unchecked, it will allow you to hide the product without removing it.",
+        default=True,
     )
-    is_product_variant = fields.Boolean(
-        compute="_compute_is_product_variant",
-    )
+    is_product_variant = fields.Boolean(compute="_compute_is_product_variant")
     default_code = fields.Char(
         string="Internal Reference",
         index=True,
@@ -61,9 +59,9 @@ class ProductProduct(models.Model):
         compute="_compute_code",
     )
     barcode = fields.Char(
-        copy=False,
-        index="btree_not_null",
         help="International Article Number used for product identification.",
+        index="btree_not_null",
+        copy=False,
     )
     partner_ref = fields.Char(
         string="Customer Ref",
@@ -87,33 +85,29 @@ class ProductProduct(models.Model):
 
     price_extra = fields.Float(
         string="Variant Price Extra",
+        help="This is the sum of the extra price of all attributes",
         min_display_digits="Product Price",
         compute="_compute_price_extra",
-        help="This is the sum of the extra price of all attributes",
     )
     lst_price = fields.Float(
         string="Public Price",
+        help="The sale price is managed from the product template. Click on the 'Configure Variants' button to set the extra attribute prices.",
         min_display_digits="Product Price",
         compute="_compute_lst_price",
         inverse="_inverse_lst_price",
-        help="The sale price is managed from the product template. Click on the 'Configure Variants' button to set the extra attribute prices.",
     )
 
     standard_price = fields.Float(
         string="Cost",
-        min_display_digits="Product Price",
-        company_dependent=True,
-        groups="base.group_user",
         help="""Value of the product (automatically computed in AVCO).
         Used to value the product when the purchase cost is not known (e.g. inventory adjustment).
         Used to compute margins on sale orders.""",
+        min_display_digits="Product Price",
+        company_dependent=True,
+        groups="base.group_user",
     )
-    volume = fields.Float(
-        digits="Volume",
-    )
-    weight = fields.Float(
-        digits="Stock Weight",
-    )
+    volume = fields.Float(digits="Volume")
+    weight = fields.Float(digits="Stock Weight")
 
     product_template_attribute_value_ids = fields.Many2many(
         comodel_name="product.template.attribute.value",
@@ -125,9 +119,9 @@ class ProductProduct(models.Model):
         comodel_name="product.template.attribute.value",
         relation="product_variant_combination",
         string="Variant Values",
+        readonly=True,
         domain=[("attribute_line_id.value_count", ">", 1)],
         ondelete="restrict",
-        readonly=True,
     )
     import_attribute_values = fields.Char(
         string="Product Values",
@@ -168,7 +162,7 @@ class ProductProduct(models.Model):
     )
 
     is_in_selected_section_of_order = fields.Boolean(
-        search="_search_is_in_selected_section_of_order",
+        search="_search_is_in_selected_section_of_order"
     )
 
     image_variant_1920 = fields.Image(

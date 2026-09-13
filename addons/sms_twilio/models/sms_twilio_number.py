@@ -7,16 +7,25 @@ class SmsTwilioNumber(models.Model):
     _order = "sequence, id"
 
     company_id = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
+        default=lambda self: self.env.company,
+        index="btree",
         required=True,
         ondelete="cascade",
-        index="btree",
-        default=lambda self: self.env.company,
     )
     sequence = fields.Integer(default=1)
-    number = fields.Char(string="Twilio Number", required=True)
-    country_id = fields.Many2one("res.country", required=True)
-    country_code = fields.Char(related="country_id.code", string="Country Code")
+    number = fields.Char(
+        string="Twilio Number",
+        required=True,
+    )
+    country_id = fields.Many2one(
+        comodel_name="res.country",
+        required=True,
+    )
+    country_code = fields.Char(
+        related="country_id.code",
+        string="Country Code",
+    )
 
     def _compute_display_name(self):
         for record in self:

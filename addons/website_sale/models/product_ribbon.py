@@ -7,24 +7,34 @@ class ProductRibbon(models.Model):
     _description = "Product ribbon"
     _order = "sequence ASC, id"
 
-    name = fields.Char(string="Ribbon Name", required=True, translate=True, size=20)
+    name = fields.Char(
+        string="Ribbon Name",
+        size=20,
+        translate=True,
+        required=True,
+    )
     sequence = fields.Integer(default=10)
-    bg_color = fields.Char(string="Background Color", required=True, default="#000000")
-    text_color = fields.Char(required=True, default="#FFFFFF")
+    bg_color = fields.Char(
+        string="Background Color",
+        default="#000000",
+        required=True,
+    )
+    text_color = fields.Char(
+        default="#FFFFFF",
+        required=True,
+    )
     position = fields.Selection(
         selection=[("left", "Left"), ("right", "Right")],
-        required=True,
         default="left",
+        required=True,
     )
     style = fields.Selection(
         selection=[("ribbon", "Ribbon"), ("tag", "Badge")],
-        required=True,
+        help="Defines the display style:\n"
+        "- Ribbon: Shows a ribbon banner on the product image.\n"
+        "- Badge: Shows a small badge label on the product image.",
         default="ribbon",
-        help=(
-            "Defines the display style:\n"
-            "- Ribbon: Shows a ribbon banner on the product image.\n"
-            "- Badge: Shows a small badge label on the product image."
-        ),
+        required=True,
     )
     assign = fields.Selection(
         selection=[
@@ -32,14 +42,12 @@ class ProductRibbon(models.Model):
             ("sale", "On Sale"),
             ("new", "When New"),
         ],
-        required=True,
+        help="Defines how this ribbon is assigned to products:\n"
+        "- Manually: You assign the ribbon manually to products.\n"
+        "- Sale: Applied when the product is visibly on sale.\n"
+        "- New: Applied based on the New period you will define.\n",
         default="manual",
-        help=(
-            "Defines how this ribbon is assigned to products:\n"
-            "- Manually: You assign the ribbon manually to products.\n"
-            "- Sale: Applied when the product is visibly on sale.\n"
-            "- New: Applied based on the New period you will define.\n"
-        ),
+        required=True,
     )
     new_period = fields.Integer(default=30)
 

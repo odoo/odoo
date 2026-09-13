@@ -19,26 +19,30 @@ class ProjectWorkflowStep(models.Model):
         default_project_id = self.env.context.get("default_project_id")
         return [default_project_id] if default_project_id else None
 
-    active = fields.Boolean(default=True, export_string_translation=False)
-    name = fields.Char(required=True, translate=True)
+    active = fields.Boolean(
+        export_string_translation=False,
+        default=True,
+    )
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
     sequence = fields.Integer(default=1)
     project_ids = fields.Many2many(
-        "project.project",
-        "project_workflow_step_project_rel",
-        "step_id",
-        "project_id",
+        comodel_name="project.project",
+        relation="project_workflow_step_project_rel",
+        column1="step_id",
+        column2="project_id",
         string="Projects",
+        help="Projects that use this workflow step. Steps can be shared across "
+        "projects with similar processes to consolidate reporting.",
         default=lambda self: self._default_project_ids(),
-        help=(
-            "Projects that use this workflow step. Steps can be shared across "
-            "projects with similar processes to consolidate reporting."
-        ),
     )
     mail_template_id = fields.Many2one(
-        "mail.template",
+        comodel_name="mail.template",
         string="Email Template",
-        domain=[("model", "=", "project.task")],
         help="Email sent automatically when a task enters this step.",
+        domain=[("model", "=", "project.task")],
     )
     color = fields.Integer(export_string_translation=False)
     fold = fields.Boolean(string="Folded")
@@ -48,65 +52,52 @@ class ProjectWorkflowStep(models.Model):
         "value. Leave empty to keep the task's state untouched.",
     )
     rating_template_id = fields.Many2one(
-        "mail.template",
+        comodel_name="mail.template",
         string="Rating Email Template",
+        help="Rating request sent automatically when a task enters this step, "
+        "or at a regular interval while the task remains here.",
         domain=[("model", "=", "project.task")],
-        help=(
-            "Rating request sent automatically when a task enters this step, "
-            "or at a regular interval while the task remains here."
-        ),
     )
     auto_update_state = fields.Boolean(
-        "Auto-update State on Rating",
+        string="Auto-update State on Rating",
+        help="Automatically update the task state based on customer rating replies:\n"
+        " * Good feedback → Approved (green bullet).\n"
+        " * Neutral or bad feedback → Changes Requested (orange bullet).",
         default=False,
-        help=(
-            "Automatically update the task state based on customer rating replies:\n"
-            " * Good feedback → Approved (green bullet).\n"
-            " * Neutral or bad feedback → Changes Requested (orange bullet)."
-        ),
     )
     wip_limit = fields.Integer(
-        "WIP Limit",
+        string="WIP Limit",
+        help="Maximum number of tasks allowed in this step per project. "
+        "0 = no limit. When exceeded, the step header shows a warning.",
         default=0,
-        help=(
-            "Maximum number of tasks allowed in this step per project. "
-            "0 = no limit. When exceeded, the step header shows a warning."
-        ),
     )
     rotting_threshold_days = fields.Integer(
-        "Days to Rot",
+        string="Days to Rot",
+        help="Number of days of inactivity before tasks in this step are marked "
+        "as stale. Set to 0 to disable.",
         default=0,
-        help=(
-            "Number of days of inactivity before tasks in this step are marked "
-            "as stale. Set to 0 to disable."
-        ),
     )
     date_rating_request = fields.Datetime(
+        help="Next scheduled periodic rating request. Seeded when periodic "
+        "rating is enabled and advanced after each send — deliberately a "
+        "plain field, not a now()-based compute that would reset on every "
+        "module upgrade or unrelated recompute.",
         export_string_translation=False,
-        help=(
-            "Next scheduled periodic rating request. Seeded when periodic "
-            "rating is enabled and advanced after each send — deliberately a "
-            "plain field, not a now()-based compute that would reset on every "
-            "module upgrade or unrelated recompute."
-        ),
     )
-    rating_active = fields.Boolean("Send a Customer Rating Request")
+    rating_active = fields.Boolean(string="Send a Customer Rating Request")
     rating_status = fields.Selection(
-        string="Customer Ratings Status",
         selection=[
             ("stage", "When reaching this step"),
             ("periodic", "On a periodic basis"),
         ],
+        string="Customer Ratings Status",
+        help="When to send the rating request:\n"
+        " * When reaching this step: sent once on step entry.\n"
+        " * On a periodic basis: sent at the configured interval.",
         default="stage",
         required=True,
-        help=(
-            "When to send the rating request:\n"
-            " * When reaching this step: sent once on step entry.\n"
-            " * On a periodic basis: sent at the configured interval."
-        ),
     )
     rating_status_period = fields.Selection(
-        string="Rating Frequency",
         selection=[
             ("daily", "Daily"),
             ("weekly", "Weekly"),
@@ -115,6 +106,7 @@ class ProjectWorkflowStep(models.Model):
             ("quarterly", "Quarterly"),
             ("yearly", "Yearly"),
         ],
+        string="Rating Frequency",
         default="monthly",
         required=True,
     )

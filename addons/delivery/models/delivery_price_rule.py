@@ -55,32 +55,46 @@ class DeliveryPriceRule(models.Model):
             rule.name = name
 
     name = fields.Char(compute="_compute_name")
-    sequence = fields.Integer(required=True, default=10)
+    sequence = fields.Integer(
+        default=10,
+        required=True,
+    )
     carrier_id = fields.Many2one(
-        "delivery.carrier", required=True, index=True, ondelete="cascade"
+        comodel_name="delivery.carrier",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     currency_id = fields.Many2one(related="carrier_id.currency_id")
 
     variable = fields.Selection(
-        selection=VARIABLE_SELECTION, required=True, default="quantity"
+        selection=VARIABLE_SELECTION,
+        default="quantity",
+        required=True,
     )
     operator = fields.Selection(
-        [("==", "="), ("<=", "<="), ("<", "<"), (">=", ">="), (">", ">")],
-        required=True,
+        selection=[("==", "="), ("<=", "<="), ("<", "<"), (">=", ">="), (">", ">")],
         default="<=",
+        required=True,
     )
-    max_value = fields.Float("Maximum Value", required=True)
+    max_value = fields.Float(
+        string="Maximum Value",
+        required=True,
+    )
     list_base_price = fields.Float(
         string="Sale Base Price",
         min_display_digits="Product Price",
-        required=True,
         default=0.0,
+        required=True,
     )
     list_price = fields.Float(
-        "Sale Price", min_display_digits="Product Price", required=True, default=0.0
+        string="Sale Price",
+        min_display_digits="Product Price",
+        default=0.0,
+        required=True,
     )
     variable_factor = fields.Selection(
         selection=VARIABLE_SELECTION,
-        required=True,
         default="weight",
+        required=True,
     )

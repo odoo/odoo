@@ -9,12 +9,12 @@ class MixinMailPresence(models.AbstractModel):
     _description = "Presence of a partner or a guest, served with an access token"
 
     im_status = fields.Char(
-        "IM Status",
+        string="IM Status",
         compute="_compute_presence",
         compute_sudo=True,
     )
     offline_since = fields.Datetime(
-        "Offline since",
+        string="Offline since",
         compute="_compute_presence",
         compute_sudo=True,
     )

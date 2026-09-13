@@ -5,15 +5,15 @@ class SurveyUser_Input(models.Model):
     _inherit = "survey.user_input"
 
     slide_id = fields.Many2one(
-        "slide.slide",
-        "Related course slide",
+        comodel_name="slide.slide",
+        string="Related course slide",
         help="The related course slide when there is no membership information",
     )
     slide_partner_id = fields.Many2one(
-        "slide.slide.partner",
-        "Subscriber information",
-        index="btree_not_null",
+        comodel_name="slide.slide.partner",
+        string="Subscriber information",
         help="Slide membership information for the logged in user",
+        index="btree_not_null",
     )
 
     @api.model_create_multi

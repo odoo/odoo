@@ -8,9 +8,7 @@ class MixinStockReplenish(models.AbstractModel):
         comodel_name="product.supplierinfo",
         string="Vendor",
     )
-    show_vendor = fields.Boolean(
-        compute="_compute_show_vendor",
-    )
+    show_vendor = fields.Boolean(compute="_compute_show_vendor")
 
     @api.depends("route_id")
     def _compute_show_vendor(self):

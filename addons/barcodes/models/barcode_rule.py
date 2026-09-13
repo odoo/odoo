@@ -65,18 +65,17 @@ class BarcodeRule(models.Model):
 
     name = fields.Char(
         string="Rule Name",
-        required=True,
         help="An internal identification for this barcode nomenclature rule",
+        required=True,
     )
     barcode_nomenclature_id = fields.Many2one(
-        "barcode.nomenclature", index="btree_not_null"
+        comodel_name="barcode.nomenclature",
+        index="btree_not_null",
     )
     sequence = fields.Integer(
-        help="Used to order rules such that rules with a smaller sequence match first",
+        help="Used to order rules such that rules with a smaller sequence match first"
     )
     encoding = fields.Selection(
-        required=True,
-        default="any",
         selection=[
             ("any", "Any"),
             ("ean13", "EAN-13"),
@@ -84,24 +83,24 @@ class BarcodeRule(models.Model):
             ("upca", "UPC-A"),
         ],
         help="This rule will apply only if the barcode is encoded with the specified encoding",
+        default="any",
+        required=True,
     )
     type = fields.Selection(
-        required=True,
         selection=[
             ("alias", "Alias"),
             ("product", "Unit Product"),
         ],
         default="product",
+        required=True,
     )
     pattern = fields.Char(
         string="Barcode Pattern",
         help="The barcode matching pattern",
-        required=True,
         default=".*",
+        required=True,
     )
-    alias = fields.Char(
-        help="The matched pattern will alias to this barcode",
-    )
+    alias = fields.Char(help="The matched pattern will alias to this barcode")
 
     @api.constrains("type", "alias")
     def _check_alias(self):

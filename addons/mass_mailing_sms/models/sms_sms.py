@@ -7,12 +7,17 @@ from odoo.tools.mail import TEXT_URL_REGEX
 class SmsSms(models.Model):
     _inherit = "sms.sms"
 
-    mailing_id = fields.Many2one("mailing.mailing", string="Mass Mailing")
+    mailing_id = fields.Many2one(
+        comodel_name="mailing.mailing",
+        string="Mass Mailing",
+    )
     # Linking to another field than the comodel id allows to use the ORM to create
     # "linked" records (see _prepare_sms_values) without adding a foreign key.
     # See commit message for why this is useful.
     mailing_trace_ids = fields.One2many(
-        "mailing.trace", "sms_id_int", string="Statistics"
+        comodel_name="mailing.trace",
+        inverse_name="sms_id_int",
+        string="Statistics",
     )
 
     def _update_body_short_links(self):

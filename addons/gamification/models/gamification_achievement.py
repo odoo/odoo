@@ -17,31 +17,36 @@ class GamificationAchievement(models.Model):
     _description = "Gamification Achievement"
     _order = "sequence, name"
 
-    name = fields.Char("Achievement", required=True, translate=True)
-    description = fields.Text(
+    name = fields.Char(
+        string="Achievement",
         translate=True,
+        required=True,
+    )
+    description = fields.Text(
         help="Shown after the achievement is unlocked.",
+        translate=True,
     )
     hint = fields.Text(
-        translate=True,
         help="Optional hint shown before unlock. Leave empty for full mystery.",
+        translate=True,
     )
     sequence = fields.Integer(default=10)
     active = fields.Boolean(default=True)
-    icon = fields.Image(max_width=128, max_height=128)
+    icon = fields.Image(
+        max_width=128,
+        max_height=128,
+    )
 
     # Trigger configuration
     model_id = fields.Many2one(
-        "ir.model",
+        comodel_name="ir.model",
         string="Trigger Model",
+        help="The model to evaluate for this achievement.",
         required=True,
         ondelete="cascade",
-        help="The model to evaluate for this achievement.",
     )
     model_name = fields.Char(related="model_id.model")
     trigger_domain = fields.Char(
-        required=True,
-        default="[]",
         help="Domain evaluated per user. May reference 'user'. "
         "Achievement unlocks when at least one record matches.\n"
         "Every candidate user whose domain evaluates to the same text "
@@ -52,26 +57,28 @@ class GamificationAchievement(models.Model):
         "supported shape for a company-wide achievement (e.g. 'anyone "
         "closed a deal'); it is a misconfiguration if a per-user "
         "achievement was intended.",
+        default="[]",
+        required=True,
     )
     trigger_count = fields.Integer(
-        "Required Count",
-        default=1,
+        string="Required Count",
         help="Number of records that must match the domain to unlock. "
         "Use 1 for simple presence checks, higher for cumulative achievements.",
+        default=1,
     )
 
     # Rewards
     badge_id = fields.Many2one(
-        "gamification.badge",
+        comodel_name="gamification.badge",
         string="Reward Badge",
         help="Badge automatically granted when the achievement is unlocked.",
     )
     karma_reward = fields.Integer(
-        default=0,
         help="Karma points granted on unlock.",
+        default=0,
     )
     rarity = fields.Selection(
-        [
+        selection=[
             ("common", "Common"),
             ("rare", "Rare"),
             ("epic", "Epic"),
@@ -81,19 +88,22 @@ class GamificationAchievement(models.Model):
         required=True,
     )
     hidden = fields.Boolean(
-        "Mystery Achievement",
-        default=True,
+        string="Mystery Achievement",
         help="If checked, the achievement name and description are hidden "
         "until unlocked. Only the hint (if any) is visible.",
+        default=True,
     )
 
     # Tracking
     unlock_ids = fields.One2many(
-        "gamification.achievement.unlock",
-        "achievement_id",
+        comodel_name="gamification.achievement.unlock",
+        inverse_name="achievement_id",
         string="Unlocks",
     )
-    unlock_count = fields.Count("unlock_ids", "# Unlocked")
+    unlock_count = fields.Count(
+        count_of="unlock_ids",
+        string="# Unlocked",
+    )
 
     def _check_achievement_for_users(
         self,
@@ -206,29 +216,33 @@ class GamificationAchievementUnlock(models.Model):
     _rec_name = "achievement_id"
 
     achievement_id = fields.Many2one(
-        "gamification.achievement",
-        required=True,
+        comodel_name="gamification.achievement",
         index=True,
+        required=True,
         ondelete="cascade",
     )
     user_id = fields.Many2one(
-        "res.users",
-        required=True,
+        comodel_name="res.users",
         index=True,
+        required=True,
         ondelete="cascade",
     )
     unlock_date = fields.Datetime(
-        "Unlocked On",
+        string="Unlocked On",
         default=fields.Datetime.now,
         readonly=True,
     )
 
     # Denormalized for display
     rarity = fields.Selection(
-        related="achievement_id.rarity", store=True, readonly=True
+        related="achievement_id.rarity",
+        store=True,
+        readonly=True,
     )
     achievement_name = fields.Char(
-        string="Achievement Name", related="achievement_id.name", readonly=True
+        related="achievement_id.name",
+        string="Achievement Name",
+        readonly=True,
     )
 
     _user_achievement_uniq = models.UniqueIndex(

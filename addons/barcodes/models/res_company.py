@@ -10,6 +10,6 @@ class ResCompany(models.Model):
         )
 
     nomenclature_id = fields.Many2one(
-        "barcode.nomenclature",
+        comodel_name="barcode.nomenclature",
         default=_default_nomenclature_id,
     )

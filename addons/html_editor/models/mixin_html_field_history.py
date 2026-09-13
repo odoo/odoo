@@ -14,10 +14,15 @@ class MixinHtmlFieldHistory(models.AbstractModel):
     _description = "Field html History"
     _html_field_history_size_limit = 300
 
-    html_field_history = fields.Json("History data", prefetch=False, readonly=True)
+    html_field_history = fields.Json(
+        string="History data",
+        readonly=True,
+        prefetch=False,
+    )
 
     html_field_history_metadata = fields.Json(
-        "History metadata", compute="_compute_metadata"
+        string="History metadata",
+        compute="_compute_metadata",
     )
 
     @api.model

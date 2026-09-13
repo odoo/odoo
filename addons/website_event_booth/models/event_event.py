@@ -4,16 +4,19 @@ from odoo import _, api, fields, models
 class EventEvent(models.Model):
     _inherit = "event.event"
 
-    exhibition_map = fields.Image(max_width=1024, max_height=1024)
+    exhibition_map = fields.Image(
+        max_width=1024,
+        max_height=1024,
+    )
     booth_menu = fields.Boolean(
         string="Booth Register",
         compute="_compute_booth_menu",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     booth_menu_ids = fields.One2many(
-        "website.event.menu",
-        "event_id",
+        comodel_name="website.event.menu",
+        inverse_name="event_id",
         string="Event Booths Menus",
         domain=[("menu_type", "=", "booth")],
     )

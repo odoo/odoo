@@ -7,7 +7,7 @@ class PosOrder(models.Model):
     _inherit = "pos.order"
 
     employee_id = fields.Many2one(
-        "hr.employee",
+        comodel_name="hr.employee",
         string="Cashier",
         help="The employee who uses the cash register.",
     )

@@ -6,36 +6,45 @@ from odoo.addons.sale_timesheet.models.hr_timesheet import TIMESHEET_INVOICE_TYP
 class TimesheetsAnalysisReport(models.Model):
     _inherit = "timesheets.analysis.report"
 
-    order_id = fields.Many2one("sale.order", string="Sales Order", readonly=True)
+    order_id = fields.Many2one(
+        comodel_name="sale.order",
+        string="Sales Order",
+        readonly=True,
+    )
     so_line = fields.Many2one(
-        "sale.order.line", string="Sales Order Item", readonly=True
+        comodel_name="sale.order.line",
+        string="Sales Order Item",
+        readonly=True,
     )
     timesheet_invoice_type = fields.Selection(
-        TIMESHEET_INVOICE_TYPES, string="Billable Type", readonly=True
+        selection=TIMESHEET_INVOICE_TYPES,
+        string="Billable Type",
+        readonly=True,
     )
     timesheet_invoice_id = fields.Many2one(
-        "account.move",
+        comodel_name="account.move",
         string="Invoice",
-        readonly=True,
         help="Invoice created from the timesheet",
+        readonly=True,
     )
     timesheet_revenues = fields.Monetary(
+        help="Number of hours spent multiplied by the unit price per hour/day.",
         currency_field="currency_id",
         readonly=True,
-        help="Number of hours spent multiplied by the unit price per hour/day.",
     )
     margin = fields.Monetary(
+        help="Timesheets revenues minus the costs",
         currency_field="currency_id",
         readonly=True,
-        help="Timesheets revenues minus the costs",
     )
     billable_time = fields.Float(
-        readonly=True, help="Number of hours/days linked to a SOL."
+        help="Number of hours/days linked to a SOL.",
+        readonly=True,
     )
     non_billable_time = fields.Float(
-        "Non-billable Time",
-        readonly=True,
+        string="Non-billable Time",
         help="Number of hours/days not linked to a SOL.",
+        readonly=True,
     )
 
     @property

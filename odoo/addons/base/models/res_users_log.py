@@ -13,10 +13,10 @@ class ResUsersLog(models.Model):
     _description = "Users Log"
 
     create_uid = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Created by",
-        readonly=True,
         index=True,
+        readonly=True,
         ondelete="cascade",
     )
 

@@ -202,52 +202,59 @@ class IrCron(models.Model):
     _inherits = {"ir.actions.server": "ir_actions_server_id"}
 
     ir_actions_server_id = fields.Many2one(
-        "ir.actions.server",
-        "Server action",
-        index=True,
+        comodel_name="ir.actions.server",
         delegate=True,
-        ondelete="restrict",
+        string="Server action",
+        index=True,
         required=True,
+        ondelete="restrict",
     )
-    cron_name = fields.Char("Name", compute="_compute_cron_name", store=True)
+    cron_name = fields.Char(
+        string="Name",
+        compute="_compute_cron_name",
+        store=True,
+    )
     user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Scheduler User",
         default=lambda self: self.env.user,
         required=True,
     )
     active = fields.Boolean(default=True)
     repeat_interval = fields.Integer(
-        string="Execute Every", help="Repeat every x.", required=True, aggregator="avg"
+        string="Execute Every",
+        help="Repeat every x.",
+        required=True,
+        aggregator="avg",
     )
     repeat_unit = fields.Selection(
         selection_add=[("minute", "Minutes"), ("hour", "Hours"), ("day",)],
-        ondelete={"minute": "set default", "hour": "set default"},
         string="Interval Unit",
         default="month",
         required=True,
+        ondelete={"minute": "set default", "hour": "set default"},
     )
     nextcall = fields.Datetime(
         string="Next Execution Date",
-        required=True,
-        default=fields.Datetime.now,
         help="Next planned execution date for this job.",
+        default=fields.Datetime.now,
+        required=True,
     )
     lastcall = fields.Datetime(
         string="Last Execution Date",
         help="Previous time the cron ran to completion (whether it finished or failed), provided to the job through the context on the `lastcall` key",
     )
     priority = fields.Integer(
+        help="The priority of the job, as an integer: 0 means higher priority, 10 means lower priority.",
         default=5,
         aggregator=None,
-        help="The priority of the job, as an integer: 0 means higher priority, 10 means lower priority.",
     )
     failure_count = fields.Integer(
-        default=0,
         help="The number of consecutive failures of this job. It is automatically reset on success.",
+        default=0,
     )
     first_failure_date = fields.Datetime(
-        help="The first time the cron failed. It is automatically reset on success.",
+        help="The first time the cron failed. It is automatically reset on success."
     )
 
     _check_strictly_positive_interval = models.Constraint(
@@ -1131,8 +1138,15 @@ class IrCronTrigger(models.Model):
     _rec_name = "cron_id"
     _allow_sudo_commands = False
 
-    cron_id = fields.Many2one("ir.cron", required=True, ondelete="cascade")
-    call_at = fields.Datetime(index=True, required=True)
+    cron_id = fields.Many2one(
+        comodel_name="ir.cron",
+        required=True,
+        ondelete="cascade",
+    )
+    call_at = fields.Datetime(
+        index=True,
+        required=True,
+    )
 
     _cron_id_call_at_idx = models.Index("(cron_id, call_at)")
 
@@ -1154,7 +1168,12 @@ class IrCronProgress(models.Model):
     _rec_name = "cron_id"
     _allow_sudo_commands = False
 
-    cron_id = fields.Many2one("ir.cron", required=True, index=True, ondelete="cascade")
+    cron_id = fields.Many2one(
+        comodel_name="ir.cron",
+        index=True,
+        required=True,
+        ondelete="cascade",
+    )
     remaining = fields.Integer(default=0)
     done = fields.Integer(default=0)
     deactivate = fields.Boolean()

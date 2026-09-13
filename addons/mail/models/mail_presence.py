@@ -28,13 +28,20 @@ class MailPresence(models.Model):
     _description = "User/Guest Presence"
     _log_access = False
 
-    user_id: ResUsers = fields.Many2one("res.users", "Users", ondelete="cascade")
-    guest_id: MailGuest = fields.Many2one("mail.guest", ondelete="cascade")
+    user_id: ResUsers = fields.Many2one(
+        comodel_name="res.users",
+        string="Users",
+        ondelete="cascade",
+    )
+    guest_id: MailGuest = fields.Many2one(
+        comodel_name="mail.guest",
+        ondelete="cascade",
+    )
     last_poll = fields.Datetime(default=lambda self: fields.Datetime.now())
     last_presence = fields.Datetime(default=lambda self: fields.Datetime.now())
     status = fields.Selection(
-        [("online", "Online"), ("away", "Away"), ("offline", "Offline")],
-        "IM Status",
+        selection=[("online", "Online"), ("away", "Away"), ("offline", "Offline")],
+        string="IM Status",
         default="offline",
     )
 

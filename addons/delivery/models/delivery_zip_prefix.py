@@ -8,7 +8,10 @@ class DeliveryZipPrefix(models.Model):
     _description = "Delivery Zip Prefix"
     _order = "name, id"
 
-    name = fields.Char("Prefix", required=True)
+    name = fields.Char(
+        string="Prefix",
+        required=True,
+    )
 
     @api.model_create_multi
     def create(self, vals_list):

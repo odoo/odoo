@@ -6,7 +6,9 @@ class AccountInvoiceReport(models.Model):
     _inherit = "account.invoice.report"
 
     l10n_latam_document_type_id = fields.Many2one(
-        "l10n_latam.document.type", "Document Type", index=True
+        comodel_name="l10n_latam.document.type",
+        string="Document Type",
+        index=True,
     )
     _depends = {
         "account.move": ["l10n_latam_document_type_id"],

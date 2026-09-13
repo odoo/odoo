@@ -15,10 +15,10 @@ class ResConfigSettings(models.TransientModel):
     l10n_vn_edi_default_symbol = fields.Many2one(
         comodel_name="l10n_vn_edi_viettel.sinvoice.symbol",
         string="Default Symbol",
-        groups="base.group_system",
         help="This is the symbol that will be used on partners that do not have a specific symbol on them.",
         compute="_compute_l10n_vn_edi_default_symbol",
         inverse="_inverse_l10n_vn_edi_default_symbol",
+        groups="base.group_system",
     )
 
     @api.depends("company_id")

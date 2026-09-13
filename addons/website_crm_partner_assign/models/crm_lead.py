@@ -9,29 +9,35 @@ from odoo.exceptions import AccessDenied, AccessError, UserError
 class CrmLead(models.Model):
     _inherit = "crm.lead"
 
-    partner_latitude = fields.Float("Geo Latitude", digits=(10, 7))
-    partner_longitude = fields.Float("Geo Longitude", digits=(10, 7))
+    partner_latitude = fields.Float(
+        string="Geo Latitude",
+        digits=(10, 7),
+    )
+    partner_longitude = fields.Float(
+        string="Geo Longitude",
+        digits=(10, 7),
+    )
     partner_assigned_id = fields.Many2one(
-        "res.partner",
-        "Assigned Partner",
-        tracking=True,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        comodel_name="res.partner",
+        string="Assigned Partner",
         index="btree_not_null",
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        tracking=True,
     )
     partner_declined_ids = fields.Many2many(
-        "res.partner",
-        "crm_lead_declined_partner",
-        "lead_id",
-        "partner_id",
+        comodel_name="res.partner",
+        relation="crm_lead_declined_partner",
+        column1="lead_id",
+        column2="partner_id",
         string="Partner not interested",
     )
     date_partner_assign = fields.Date(
-        "Partner Assignment Date",
+        string="Partner Assignment Date",
+        help="Last date this case was forwarded/assigned to a partner",
         compute="_compute_date_partner_assign",
+        store=True,
         copy=True,
         readonly=False,
-        store=True,
-        help="Last date this case was forwarded/assigned to a partner",
     )
 
     @api.depends("partner_assigned_id")

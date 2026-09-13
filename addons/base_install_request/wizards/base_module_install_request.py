@@ -10,24 +10,24 @@ class BaseModuleInstallRequest(models.Model):
     _order = "create_date desc, id desc"
 
     module_id = fields.Many2one(
-        "ir.module.module",
+        comodel_name="ir.module.module",
+        readonly=True,
         required=True,
         domain=[("state", "=", "uninstalled")],
         ondelete="cascade",
-        readonly=True,
     )
     user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         default=lambda self: self.env.user,
-        required=True,
         readonly=True,
+        required=True,
     )
     user_ids = fields.Many2many(
-        "res.users",
+        comodel_name="res.users",
         string="Send to:",
         compute="_compute_user_ids",
     )
-    body_html = fields.Html("Body")
+    body_html = fields.Html(string="Body")
 
     @api.depends("module_id")
     def _compute_user_ids(self):
@@ -71,20 +71,18 @@ class BaseModuleInstallReview(models.TransientModel):
     _rec_name = "module_id"
 
     module_id = fields.Many2one(
-        "ir.module.module",
+        comodel_name="ir.module.module",
+        readonly=True,
         required=True,
         domain=[("state", "=", "uninstalled")],
         ondelete="cascade",
-        readonly=True,
     )
     module_ids = fields.Many2many(
-        "ir.module.module",
+        comodel_name="ir.module.module",
         string="Depending Apps",
         compute="_compute_module_ids",
     )
-    modules_description = fields.Html(
-        compute="_compute_modules_description",
-    )
+    modules_description = fields.Html(compute="_compute_modules_description")
 
     @api.depends("module_id")
     def _compute_module_ids(self):

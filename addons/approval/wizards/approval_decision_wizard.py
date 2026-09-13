@@ -10,30 +10,30 @@ class ApprovalDecisionWizard(models.TransientModel):
 
     approver_id = fields.Many2one(
         comodel_name="approval.approver",
-        readonly=True,
         help="The approver record making this decision. Empty in batch mode, "
         "where request_ids carries the targets and each request resolves "
         "its own pending row for the current user.",
+        readonly=True,
     )
     request_ids = fields.Many2many(
         comodel_name="approval.request",
         string="Requests",
-        readonly=True,
         help="Batch mode: every request refused with the reason below.",
+        readonly=True,
     )
     request_id = fields.Many2one(
         comodel_name="approval.request",
         string="Approval Request",
+        help="The approval request being decided. Auto-populated from ``approver_id``.",
         compute="_compute_request_id",
         precompute=True,
         store=True,
         readonly=True,
-        help="The approval request being decided. Auto-populated from ``approver_id``.",
     )
     user_id = fields.Many2one(
         comodel_name="res.users",
-        string="User",
         related="approver_id.user_id",
+        string="User",
         readonly=True,
     )
     decision_type = fields.Selection(
@@ -42,9 +42,9 @@ class ApprovalDecisionWizard(models.TransientModel):
             ("change", "Request Change"),
         ],
         string="Decision",
-        required=True,
-        readonly=True,
         help="Type of decision being made",
+        readonly=True,
+        required=True,
     )
 
     refusal_reason_id = fields.Many2one(
@@ -53,11 +53,11 @@ class ApprovalDecisionWizard(models.TransientModel):
     )
     refusal_reason_description = fields.Text(
         related="refusal_reason_id.description",
-        readonly=True,
         help="Internal guidance shown to the approver to clarify when "
         "this reason applies. Rendered as a read-only info banner in "
         "the wizard; never persisted on the request or sent to the "
         "requester.",
+        readonly=True,
     )
     change_field = fields.Selection(
         selection=[
@@ -73,23 +73,23 @@ class ApprovalDecisionWizard(models.TransientModel):
 
     note = fields.Text(
         help="Free-text message to the requester. Required when "
-        "requesting a change; optional when refusing.",
+        "requesting a change; optional when refusing."
     )
     request_name = fields.Char(
-        string="Request",
         related="request_id.name",
+        string="Request",
         readonly=True,
     )
     request_owner_id = fields.Many2one(
         comodel_name="res.users",
-        string="Request Owner",
         related="request_id.request_owner_id",
+        string="Request Owner",
         readonly=True,
     )
     category_id = fields.Many2one(
         comodel_name="approval.category",
-        string="Category",
         related="request_id.category_id",
+        string="Category",
         readonly=True,
     )
 

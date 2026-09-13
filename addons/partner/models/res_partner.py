@@ -8,9 +8,7 @@ from odoo.fields import Domain
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    birthdate = fields.Date(
-        index="btree_not_null",
-    )
+    birthdate = fields.Date(index="btree_not_null")
     age = fields.Integer(
         compute="_compute_age",
         search="_search_age",
@@ -21,7 +19,7 @@ class ResPartner(models.Model):
         aggregator=None,
     )
     age_range_id = fields.Many2one(
-        "res.partner.age.range",
+        comodel_name="res.partner.age.range",
         compute="_compute_age_range_id",
         store=True,
         index="btree_not_null",

@@ -6,54 +6,58 @@ class HrRecruitmentStage(models.Model):
     _description = "Recruitment Stages"
     _order = "sequence"
 
-    name = fields.Char("Stage Name", required=True, translate=True)
+    name = fields.Char(
+        string="Stage Name",
+        translate=True,
+        required=True,
+    )
     sequence = fields.Integer(default=10)
     job_ids = fields.Many2many(
-        "hr.job",
+        comodel_name="hr.job",
         string="Job Specific",
         help="Specific jobs that use this stage. Other jobs will not use this stage.",
     )
     requirements = fields.Text()
     template_id = fields.Many2one(
-        "mail.template",
-        "Email Template",
+        comodel_name="mail.template",
+        string="Email Template",
         help="If set, a message is posted on the applicant using the template when the applicant is set to the stage.",
     )
     fold = fields.Boolean(
-        "Folded in Kanban",
+        string="Folded in Kanban",
         help="This stage is folded in the kanban view when there are no records in that stage to display.",
     )
     hired_stage = fields.Boolean(
-        help="If checked, this stage is used to determine the hire date of an applicant",
+        help="If checked, this stage is used to determine the hire date of an applicant"
     )
     rotting_threshold_days = fields.Integer(
-        "Days to rot",
-        default=0,
+        string="Days to rot",
         help="Day count before applicants in this stage become stale. \
         Set to 0 to disable.  Changing this parameter will not affect the rotting status/date of resources last updated before this change.",
+        default=0,
     )
     legend_blocked = fields.Char(
-        "Red Kanban Label",
-        default=lambda self: _("Blocked"),
+        string="Red Kanban Label",
         translate=True,
+        default=lambda self: _("Blocked"),
         required=True,
     )
     legend_waiting = fields.Char(
-        "Orange Kanban Label",
-        default=lambda self: _("Waiting"),
+        string="Orange Kanban Label",
         translate=True,
+        default=lambda self: _("Waiting"),
         required=True,
     )
     legend_done = fields.Char(
-        "Green Kanban Label",
-        default=lambda self: _("Ready for Next Stage"),
+        string="Green Kanban Label",
         translate=True,
+        default=lambda self: _("Ready for Next Stage"),
         required=True,
     )
     legend_normal = fields.Char(
-        "Grey Kanban Label",
-        default=lambda self: _("In Progress"),
+        string="Grey Kanban Label",
         translate=True,
+        default=lambda self: _("In Progress"),
         required=True,
     )
     is_warning_visible = fields.Boolean(compute="_compute_is_warning_visible")

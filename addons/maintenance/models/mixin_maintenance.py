@@ -8,53 +8,59 @@ class MixinMaintenance(models.AbstractModel):
     _check_company_auto = True
     _description = "Maintenance Maintained Item"
 
-    company_id = fields.Many2one("res.company", default=lambda self: self.env.company)
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        default=lambda self: self.env.company,
+    )
     date_effective = fields.Date(
-        "Effective Date",
+        string="Effective Date",
+        help="This date will be used to compute the Mean Time Between Failure.",
         default=fields.Date.context_today,
         required=True,
-        help="This date will be used to compute the Mean Time Between Failure.",
     )
     maintenance_team_id = fields.Many2one(
-        "maintenance.team",
+        comodel_name="maintenance.team",
         compute="_compute_maintenance_team_id",
         store=True,
+        index="btree_not_null",
         readonly=False,
         check_company=True,
-        index="btree_not_null",
     )
     technician_user_id = fields.Many2one(
-        "res.users", string="Technician", tracking=True
+        comodel_name="res.users",
+        string="Technician",
+        tracking=True,
     )
     maintenance_ids = fields.One2many(
-        "maintenance.request"
+        comodel_name="maintenance.request"
     )  # needs to be extended in order to specify inverse_name !
     maintenance_count = fields.Count(
-        "maintenance_ids",
+        count_of="maintenance_ids",
         store=True,
     )
     maintenance_open_count = fields.Integer(
-        compute="_compute_maintenance_open_count",
         string="Current Maintenance",
+        compute="_compute_maintenance_open_count",
         store=True,
     )
     expected_mtbf = fields.Integer(
-        string="Expected MTBF", help="Expected Mean Time Between Failure"
+        string="Expected MTBF",
+        help="Expected Mean Time Between Failure",
     )
     mtbf = fields.Integer(
-        compute="_compute_maintenance_request",
         string="MTBF",
         help="Mean Time Between Failure, computed based on done corrective maintenances.",
+        compute="_compute_maintenance_request",
     )
     mttr = fields.Integer(
-        compute="_compute_maintenance_request",
         string="MTTR",
         help="Mean Time To Repair",
+        compute="_compute_maintenance_request",
     )
     estimated_next_failure = fields.Date(
-        compute="_compute_maintenance_request",
         string="Estimated time before next failure (in days)",
         help="Computed as Latest Failure Date + MTBF",
+        compute="_compute_maintenance_request",
     )
     latest_failure_date = fields.Date(compute="_compute_maintenance_request")
 

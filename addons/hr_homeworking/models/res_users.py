@@ -7,46 +7,46 @@ class ResUsers(models.Model):
     _inherit = "res.users"
 
     monday_location_id = fields.Many2one(
-        "hr.work.location",
+        comodel_name="hr.work.location",
         related="employee_id.monday_location_id",
-        readonly=False,
         string="Mondays",
+        readonly=False,
     )
     tuesday_location_id = fields.Many2one(
-        "hr.work.location",
+        comodel_name="hr.work.location",
         related="employee_id.tuesday_location_id",
-        readonly=False,
         string="Tuesdays",
+        readonly=False,
     )
     wednesday_location_id = fields.Many2one(
-        "hr.work.location",
+        comodel_name="hr.work.location",
         related="employee_id.wednesday_location_id",
-        readonly=False,
         string="Wednesdays",
+        readonly=False,
     )
     thursday_location_id = fields.Many2one(
-        "hr.work.location",
+        comodel_name="hr.work.location",
         related="employee_id.thursday_location_id",
-        readonly=False,
         string="Thursdays",
+        readonly=False,
     )
     friday_location_id = fields.Many2one(
-        "hr.work.location",
+        comodel_name="hr.work.location",
         related="employee_id.friday_location_id",
-        readonly=False,
         string="Fridays",
+        readonly=False,
     )
     saturday_location_id = fields.Many2one(
-        "hr.work.location",
+        comodel_name="hr.work.location",
         related="employee_id.saturday_location_id",
-        readonly=False,
         string="Saturdays",
+        readonly=False,
     )
     sunday_location_id = fields.Many2one(
-        "hr.work.location",
+        comodel_name="hr.work.location",
         related="employee_id.sunday_location_id",
-        readonly=False,
         string="Sundays",
+        readonly=False,
     )
 
     @property

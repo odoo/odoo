@@ -29,8 +29,8 @@ class AccountMove(models.Model):
         depends=["ubl_cii_xml_file"],
     )
     ubl_cii_xml_file = fields.Binary(
-        attachment=True,
         string="UBL/CII File",
+        attachment=True,
         copy=False,
     )
     ubl_cii_xml_filename = fields.Char(

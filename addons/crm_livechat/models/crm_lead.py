@@ -8,10 +8,10 @@ class CrmLead(models.Model):
     _inherit = "crm.lead"
 
     origin_channel_id = fields.Many2one(
-        "discuss.channel",
-        "Live chat from which the lead was created",
-        readonly=True,
+        comodel_name="discuss.channel",
+        string="Live chat from which the lead was created",
         index="btree_not_null",
+        readonly=True,
     )
 
     @api.model_create_multi

@@ -23,33 +23,46 @@ class IrUiMenu(models.Model):
     _order = "sequence,id"
     _allow_sudo_commands = False
 
-    name = fields.Char(string="Menu", required=True, translate=True)
+    name = fields.Char(
+        string="Menu",
+        translate=True,
+        required=True,
+    )
     active = fields.Boolean(default=True)
     sequence = fields.Integer(default=10)
     parent_id = fields.Many2one(
-        "ir.ui.menu", string="Parent Menu", index=True, ondelete="restrict"
+        comodel_name="ir.ui.menu",
+        string="Parent Menu",
+        index=True,
+        ondelete="restrict",
     )
-    child_id = fields.One2many("ir.ui.menu", "parent_id", string="Child IDs")
+    child_id = fields.One2many(
+        comodel_name="ir.ui.menu",
+        inverse_name="parent_id",
+        string="Child IDs",
+    )
     group_ids = fields.Many2many(
-        "res.groups",
-        "ir_ui_menu_group_rel",
-        "menu_id",
-        "gid",
+        comodel_name="res.groups",
+        relation="ir_ui_menu_group_rel",
+        column1="menu_id",
+        column2="gid",
         string="Groups",
         help="If you have groups, the visibility of this menu will be based on these groups. "
         "If this field is empty, Odoo will compute visibility based on the related object's read access.",
     )
     complete_name = fields.Char(
-        string="Full Path", compute="_compute_complete_name", recursive=True
+        string="Full Path",
+        compute="_compute_complete_name",
+        recursive=True,
     )
     display_name = fields.Char(recursive=True)
     web_icon = fields.Char(string="Web Icon File")
     web_keywords = fields.Char(
         string="Search Keywords",
-        translate=True,
         help="Comma-separated words the app launcher matches this menu on, "
         "beyond its name: the vocabulary users type but the menu is not called, "
         'such as "invoice, bill" for Accounting.',
+        translate=True,
     )
     action = fields.Reference(
         selection=[
@@ -61,7 +74,10 @@ class IrUiMenu(models.Model):
         ]
     )
 
-    web_icon_data = fields.Binary(string="Web Icon Image", attachment=True)
+    web_icon_data = fields.Binary(
+        string="Web Icon Image",
+        attachment=True,
+    )
 
     @api.depends("name", "parent_id.complete_name")
     def _compute_complete_name(self) -> None:

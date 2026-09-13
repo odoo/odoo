@@ -20,13 +20,19 @@ class AppointmentManageLeaves(models.TransientModel):
         return user_time.astimezone(UTC).replace(tzinfo=None)
 
     appointment_resource_ids = fields.Many2many(
-        "appointment.resource", string="Resources", required=True
+        comodel_name="appointment.resource",
+        string="Resources",
+        required=True,
     )
     leave_start_dt = fields.Datetime(
-        "Start Date", required=True, default=lambda self: self._default_time(0, 0)
+        string="Start Date",
+        default=lambda self: self._default_time(0, 0),
+        required=True,
     )
     leave_end_dt = fields.Datetime(
-        "End Date", required=True, default=lambda self: self._default_time(23, 59)
+        string="End Date",
+        default=lambda self: self._default_time(23, 59),
+        required=True,
     )
     reason = fields.Char()
 

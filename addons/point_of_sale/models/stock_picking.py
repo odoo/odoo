@@ -12,8 +12,14 @@ _logger = logging.getLogger(__name__)
 class StockPicking(models.Model):
     _inherit = "stock.picking"
 
-    pos_session_id = fields.Many2one("pos.session", index="btree_not_null")
-    pos_order_id = fields.Many2one("pos.order", index="btree_not_null")
+    pos_session_id = fields.Many2one(
+        comodel_name="pos.session",
+        index="btree_not_null",
+    )
+    pos_order_id = fields.Many2one(
+        comodel_name="pos.order",
+        index="btree_not_null",
+    )
 
     def _prepare_picking_vals(
         self, partner, picking_type, location_id, location_dest_id

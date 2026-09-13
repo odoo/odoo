@@ -5,7 +5,7 @@ class MixinOrderAmount(models.AbstractModel):
     _name = "mixin.order.amount"
     _description = "Order Amount Computation"
 
-    currency_id = fields.Many2one("res.currency")
+    currency_id = fields.Many2one(comodel_name="res.currency")
 
     amount_untaxed = fields.Monetary(
         string="Untaxed Amount",
@@ -47,9 +47,7 @@ class MixinOrderAmount(models.AbstractModel):
         compute="_compute_amounts_invoice",
     )
 
-    partner_credit_warning = fields.Text(
-        compute="_compute_partner_credit_warning",
-    )
+    partner_credit_warning = fields.Text(compute="_compute_partner_credit_warning")
 
     def _prepare_tax_totals_data(self):
         self.check_singleton()

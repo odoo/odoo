@@ -16,16 +16,19 @@ class PaymentProvider(models.Model):
     _inherit = "payment.provider"
 
     code = fields.Selection(
-        selection_add=[("iyzico", "Iyzico")], ondelete={"iyzico": "set default"}
+        selection_add=[("iyzico", "Iyzico")],
+        ondelete={"iyzico": "set default"},
     )
     iyzico_key_id = fields.Char(
-        string="Iyzico API Key", required_if_provider="iyzico", copy=False
+        string="Iyzico API Key",
+        copy=False,
+        required_if_provider="iyzico",
     )
     iyzico_key_secret = fields.Char(
         string="Iyzico Secret Key",
-        required_if_provider="iyzico",
         copy=False,
         groups="base.group_system",
+        required_if_provider="iyzico",
     )
 
     # === COMPUTE METHODS === #

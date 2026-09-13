@@ -55,70 +55,89 @@ class SlideChannel(models.Model):
     def _default_enroll_msg(self):
         return _("Contact Responsible")
 
-    name = fields.Char(translate=True, required=True)
-    active = fields.Boolean(default=True, tracking=100)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
+    active = fields.Boolean(
+        default=True,
+        tracking=100,
+    )
     description = fields.Html(
+        help="The description that is displayed on top of the course page, just below the title",
         translate=True,
         sanitize_attributes=False,
         sanitize_form=False,
-        help="The description that is displayed on top of the course page, just below the title",
     )
     description_short = fields.Html(
-        "Short Description",
+        string="Short Description",
+        help="The description that is displayed on the course card",
         translate=True,
         sanitize_attributes=False,
         sanitize_form=False,
-        help="The description that is displayed on the course card",
     )
     description_html = fields.Html(
-        "Detailed Description",
+        string="Detailed Description",
         translate=tools.html_translate,
         sanitize_attributes=False,
         sanitize_form=False,
     )
     channel_type = fields.Selection(
-        [("training", "Training"), ("documentation", "Documentation")],
+        selection=[("training", "Training"), ("documentation", "Documentation")],
         string="Course type",
+        help='Defines the course type (e.g., "Training" for interactive learning, or "Documentation" for resources and guides).',
         default="training",
         required=True,
-        help='Defines the course type (e.g., "Training" for interactive learning, or "Documentation" for resources and guides).',
     )
     sequence = fields.Integer(default=10)
     user_id = fields.Many2one(
-        "res.users", string="Responsible", default=lambda self: self.env.uid
+        comodel_name="res.users",
+        string="Responsible",
+        default=lambda self: self.env.uid,
     )
     color = fields.Integer(
-        "Color Index", default=0, help="Used to decorate kanban view"
+        string="Color Index",
+        help="Used to decorate kanban view",
+        default=0,
     )
     tag_ids = fields.Many2many(
-        "slide.channel.tag",
-        "slide_channel_tag_rel",
-        "channel_id",
-        "tag_id",
+        comodel_name="slide.channel.tag",
+        relation="slide_channel_tag_rel",
+        column1="channel_id",
+        column2="tag_id",
         string="Tags",
         help="Used to categorize and filter displayed channels/courses",
     )
     slide_ids = fields.One2many(
-        "slide.slide", "channel_id", string="Slides and categories", copy=True
+        comodel_name="slide.slide",
+        inverse_name="channel_id",
+        string="Slides and categories",
+        copy=True,
     )
     slide_content_ids = fields.One2many(
-        "slide.slide", string="Content", compute="_compute_category_and_slide_ids"
+        comodel_name="slide.slide",
+        string="Content",
+        compute="_compute_category_and_slide_ids",
     )
     slide_category_ids = fields.One2many(
-        "slide.slide", string="Categories", compute="_compute_category_and_slide_ids"
+        comodel_name="slide.slide",
+        string="Categories",
+        compute="_compute_category_and_slide_ids",
     )
     slide_last_update = fields.Date(
-        "Last Update", compute="_compute_slide_last_update", store=True
+        string="Last Update",
+        compute="_compute_slide_last_update",
+        store=True,
     )
     slide_partner_ids = fields.One2many(
-        "slide.slide.partner",
-        "channel_id",
+        comodel_name="slide.slide.partner",
+        inverse_name="channel_id",
         string="Slide User Data",
         copy=False,
         groups="website_slides.group_website_slides_officer",
     )
     promote_strategy = fields.Selection(
-        [
+        selection=[
             ("latest", "Latest Created"),
             ("most_voted", "Most Voted"),
             ("most_viewed", "Most Viewed"),
@@ -126,61 +145,87 @@ class SlideChannel(models.Model):
             ("none", "None"),
         ],
         string="Featured Content",
-        default="latest",
-        required=False,
         help="Defines the content that will be promoted on the course home page",
+        default="latest",
+        copy=False,
+        required=False,
+    )
+    promoted_slide_id = fields.Many2one(
+        comodel_name="slide.slide",
         copy=False,
     )
-    promoted_slide_id = fields.Many2one("slide.slide", copy=False)
     access_token = fields.Char(
-        "Security Token", copy=False, default=_default_access_token
+        string="Security Token",
+        default=_default_access_token,
+        copy=False,
     )
     nbr_document = fields.Integer(
-        "Documents", compute="_compute_slides_statistics", store=True
+        string="Documents",
+        compute="_compute_slides_statistics",
+        store=True,
     )
     nbr_video = fields.Integer(
-        "Videos", compute="_compute_slides_statistics", store=True
+        string="Videos",
+        compute="_compute_slides_statistics",
+        store=True,
     )
     nbr_infographic = fields.Integer(
-        "Infographics", compute="_compute_slides_statistics", store=True
+        string="Infographics",
+        compute="_compute_slides_statistics",
+        store=True,
     )
     nbr_article = fields.Integer(
-        "Articles", compute="_compute_slides_statistics", store=True
+        string="Articles",
+        compute="_compute_slides_statistics",
+        store=True,
     )
     nbr_quiz = fields.Integer(
-        "Number of Quizs", compute="_compute_slides_statistics", store=True
+        string="Number of Quizs",
+        compute="_compute_slides_statistics",
+        store=True,
     )
     nbr_certification = fields.Integer(
-        "Number of Certifications", compute="_compute_slides_statistics", store=True
+        string="Number of Certifications",
+        compute="_compute_slides_statistics",
+        store=True,
     )
     total_slides = fields.Integer(
-        "Number of Contents", compute="_compute_slides_statistics", store=True
+        string="Number of Contents",
+        compute="_compute_slides_statistics",
+        store=True,
     )
     total_views = fields.Integer(
-        "Visits", compute="_compute_slides_statistics", store=True
+        string="Visits",
+        compute="_compute_slides_statistics",
+        store=True,
     )
     total_votes = fields.Integer(
-        "Votes", compute="_compute_slides_statistics", store=True
+        string="Votes",
+        compute="_compute_slides_statistics",
+        store=True,
     )
     total_time = fields.Float(
-        "Duration", compute="_compute_slides_statistics", digits=(10, 2), store=True
+        string="Duration",
+        digits=(10, 2),
+        compute="_compute_slides_statistics",
+        store=True,
     )
     rating_avg_stars = fields.Float(
-        "Rating Average (Stars)",
-        compute="_compute_rating_stats",
+        string="Rating Average (Stars)",
         digits=(16, 1),
+        compute="_compute_rating_stats",
         compute_sudo=True,
     )
     allow_comment = fields.Boolean(
-        "Allow rating on Course",
+        string="Allow rating on Course",
+        help="Allow Attendees to like and comment your content and to submit reviews on your course.",
         compute="_compute_allow_comment",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
-        help="Allow Attendees to like and comment your content and to submit reviews on your course.",
     )
     publish_template_id = fields.Many2one(
-        "mail.template",
+        comodel_name="mail.template",
         string="New Content Notification",
         help="Defines the email your Attendees will receive each time you upload new content.",
         default=lambda self: self.env["ir.model.data"]._xmlid_to_res_id(
@@ -189,7 +234,7 @@ class SlideChannel(models.Model):
         domain=[("model", "=", "slide.slide")],
     )
     share_channel_template_id = fields.Many2one(
-        "mail.template",
+        comodel_name="mail.template",
         string="Channel Share Template",
         help="Email template used when sharing a channel",
         default=lambda self: self.env["ir.model.data"]._xmlid_to_res_id(
@@ -197,7 +242,7 @@ class SlideChannel(models.Model):
         ),
     )
     share_slide_template_id = fields.Many2one(
-        "mail.template",
+        comodel_name="mail.template",
         string="Share Template",
         help="Email template used when sharing a slide",
         default=lambda self: self.env["ir.model.data"]._xmlid_to_res_id(
@@ -205,7 +250,7 @@ class SlideChannel(models.Model):
         ),
     )
     completed_template_id = fields.Many2one(
-        "mail.template",
+        comodel_name="mail.template",
         string="Completion Notification",
         help="Defines the email your Attendees will receive once they reach the end of your course.",
         default=lambda self: self.env["ir.model.data"]._xmlid_to_res_id(
@@ -214,96 +259,109 @@ class SlideChannel(models.Model):
         domain=[("model", "=", "slide.channel.partner")],
     )
     enroll = fields.Selection(
-        [("public", "Open"), ("invite", "On Invitation")],
-        compute="_compute_enroll",
-        store=True,
-        readonly=False,
-        precompute=True,
+        selection=[("public", "Open"), ("invite", "On Invitation")],
         string="Enroll Policy",
-        required=True,
         help="Defines how people can enroll to your Course.",
+        compute="_compute_enroll",
+        precompute=True,
+        store=True,
         copy=False,
+        readonly=False,
+        required=True,
     )
     enroll_msg = fields.Html(
-        "Enroll Message",
+        string="Enroll Message",
         help="Message explaining the enroll process",
-        default=_default_enroll_msg,
         translate=tools.html_translate,
         sanitize_attributes=False,
+        default=_default_enroll_msg,
     )
     enroll_group_ids = fields.Many2many(
-        "res.groups",
+        comodel_name="res.groups",
         string="Auto Enroll Groups",
         help="Members of those groups are automatically added as members of the channel.",
     )
     visibility = fields.Selection(
-        [
+        selection=[
             ("public", "Everyone"),
             ("connected", "Signed In"),
             ("members", "Course Attendees"),
             ("link", "Anyone with the link"),
         ],
-        default="public",
         string="Show Course To",
-        required=True,
         help="Defines who can access your courses and their content.",
+        default="public",
+        required=True,
     )
     upload_group_ids = fields.Many2many(
-        "res.groups",
-        "rel_upload_groups",
-        "channel_id",
-        "group_id",
+        comodel_name="res.groups",
+        relation="rel_upload_groups",
+        column1="channel_id",
+        column2="group_id",
         string="Upload Groups",
-        groups="base.group_user",
         help="Groups whose members may add contents to this course. It grants "
         "uploading, not publishing: only the responsible and eLearning managers "
         "can publish. Leave empty to restrict uploading to those two.",
+        groups="base.group_user",
     )
     website_default_background_image_url = fields.Char(
-        "Background image URL", compute="_compute_website_default_background_image_url"
+        string="Background image URL",
+        compute="_compute_website_default_background_image_url",
     )
     channel_partner_ids = fields.One2many(
-        "slide.channel.partner",
-        "channel_id",
+        comodel_name="slide.channel.partner",
+        inverse_name="channel_id",
         string="Enrolled Attendees Information",
-        groups="website_slides.group_website_slides_officer",
         domain=[("member_status", "!=", "invited")],
+        groups="website_slides.group_website_slides_officer",
     )
     channel_partner_all_ids = fields.One2many(
-        "slide.channel.partner",
-        "channel_id",
+        comodel_name="slide.channel.partner",
+        inverse_name="channel_id",
         string="All Attendees Information",
         groups="website_slides.group_website_slides_officer",
     )
     members_count = fields.Integer(
-        "# Enrolled Attendees", compute="_compute_members_counts"
+        string="# Enrolled Attendees",
+        compute="_compute_members_counts",
     )
     members_all_count = fields.Integer(
-        "# Enrolled or Invited Attendees", compute="_compute_members_counts"
+        string="# Enrolled or Invited Attendees",
+        compute="_compute_members_counts",
     )
     members_engaged_count = fields.Integer(
-        "# Active Attendees",
+        string="# Active Attendees",
         help="Active attendees include both 'joined' and 'ongoing' attendees.",
         compute="_compute_members_counts",
     )
     members_completed_count = fields.Integer(
-        "# Completed Attendees", compute="_compute_members_counts"
+        string="# Completed Attendees",
+        compute="_compute_members_counts",
     )
     members_invited_count = fields.Integer(
-        "# Invited Attendees", compute="_compute_members_counts"
+        string="# Invited Attendees",
+        compute="_compute_members_counts",
     )
     partner_ids = fields.Many2many(
-        "res.partner",
+        comodel_name="res.partner",
         string="Attendees",
         help="Enrolled partners in the course",
         compute="_compute_partners",
         search="_search_partner_ids",
     )
     completed = fields.Boolean(
-        "Done", compute="_compute_user_statistics", compute_sudo=False
+        string="Done",
+        compute="_compute_user_statistics",
+        compute_sudo=False,
     )
-    completion = fields.Integer(compute="_compute_user_statistics", compute_sudo=False)
-    can_upload = fields.Boolean(compute="_compute_can_upload", compute_sudo=False)
+    completion = fields.Integer(
+        compute="_compute_user_statistics",
+        compute_sudo=False,
+    )
+    can_upload = fields.Boolean(
+        compute="_compute_can_upload",
+        compute_sudo=False,
+    )
     has_requested_access = fields.Boolean(
         string="Access Requested",
         compute="_compute_has_requested_access",
@@ -327,43 +385,64 @@ class SlideChannel(models.Model):
         search="_search_is_visible",
     )
     partner_has_new_content = fields.Boolean(
-        compute="_compute_partner_has_new_content", compute_sudo=False
+        compute="_compute_partner_has_new_content",
+        compute_sudo=False,
     )
-    karma_gen_channel_rank = fields.Integer(string="Course ranked", default=5)
-    karma_gen_channel_finish = fields.Integer(string="Course finished", default=10)
+    karma_gen_channel_rank = fields.Integer(
+        string="Course ranked",
+        default=5,
+    )
+    karma_gen_channel_finish = fields.Integer(
+        string="Course finished",
+        default=10,
+    )
     karma_review = fields.Integer(
-        "Add Review", default=10, help="Karma needed to add a review on the course"
+        string="Add Review",
+        help="Karma needed to add a review on the course",
+        default=10,
     )
     karma_slide_comment = fields.Integer(
-        "Add Comment",
-        default=3,
+        string="Add Comment",
         help="Karma needed to add a comment on a slide of this course",
+        default=3,
     )
     karma_slide_vote = fields.Integer(
-        "Vote", default=3, help="Karma needed to like/dislike a slide of this course."
+        string="Vote",
+        help="Karma needed to like/dislike a slide of this course.",
+        default=3,
     )
-    can_review = fields.Boolean(compute="_compute_action_rights", compute_sudo=False)
-    can_comment = fields.Boolean(compute="_compute_action_rights", compute_sudo=False)
-    can_vote = fields.Boolean(compute="_compute_action_rights", compute_sudo=False)
+    can_review = fields.Boolean(
+        compute="_compute_action_rights",
+        compute_sudo=False,
+    )
+    can_comment = fields.Boolean(
+        compute="_compute_action_rights",
+        compute_sudo=False,
+    )
+    can_vote = fields.Boolean(
+        compute="_compute_action_rights",
+        compute_sudo=False,
+    )
     prerequisite_channel_ids = fields.Many2many(
-        "slide.channel",
-        "slide_channel_prerequisite_slide_channel_rel",
-        "channel_id",
-        "prerequisite_channel_id",
+        comodel_name="slide.channel",
+        relation="slide_channel_prerequisite_slide_channel_rel",
+        column1="channel_id",
+        column2="prerequisite_channel_id",
         string="Prerequisites",
         help="Prerequisite courses to complete before accessing this one.",
         domain="[('id', '!=', id), ('visibility', '=', visibility), ('website_published', '=', website_published)]",
     )
     prerequisite_of_channel_ids = fields.Many2many(
-        "slide.channel",
-        "slide_channel_prerequisite_slide_channel_rel",
-        "prerequisite_channel_id",
-        "channel_id",
+        comodel_name="slide.channel",
+        relation="slide_channel_prerequisite_slide_channel_rel",
+        column1="prerequisite_channel_id",
+        column2="channel_id",
         string="Prerequisite Of",
         help="Courses that have this course as prerequisite.",
     )
     prerequisite_user_has_completed = fields.Boolean(
-        "Has Completed Prerequisite", compute="_compute_prerequisite_user_has_completed"
+        string="Has Completed Prerequisite",
+        compute="_compute_prerequisite_user_has_completed",
     )
 
     _check_enroll = models.Constraint(

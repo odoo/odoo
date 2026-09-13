@@ -17,12 +17,13 @@ class MailTestAccess(models.Model):
 
     name = fields.Char()
     email_from = fields.Char()
-    phone_ids = fields.Many2many(
-        "phone.number",
+    phone_ids = fields.Many2many(comodel_name="phone.number")
+    customer_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Customer",
     )
-    customer_id = fields.Many2one("res.partner", "Customer")
     access = fields.Selection(
-        [
+        selection=[
             ("public", "public"),
             ("logged", "Logged"),
             ("logged_ro", "Logged readonly for portal"),
@@ -31,8 +32,8 @@ class MailTestAccess(models.Model):
             ("internal_ro", "Internal readonly"),
             ("admin", "Admin"),
         ],
-        name="Access",
         default="public",
+        name="Access",
     )
 
 
@@ -50,10 +51,11 @@ class MailTestAccessCusto(models.Model):
 
     name = fields.Char()
     email_from = fields.Char()
-    phone_ids = fields.Many2many(
-        "phone.number",
+    phone_ids = fields.Many2many(comodel_name="phone.number")
+    customer_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Customer",
     )
-    customer_id = fields.Many2one("res.partner", "Customer")
     is_locked = fields.Boolean()
     is_readonly = fields.Boolean()
 
@@ -76,12 +78,13 @@ class MailTestAccessPublic(models.Model):
     _inherit = ["mixin.mail.thread"]
     _mail_partner_fields = ("customer_id",)
 
-    name = fields.Char("Name")
-    customer_id = fields.Many2one("res.partner", "Customer")
-    email = fields.Char("Email")
-    phone_ids = fields.Many2many(
-        "phone.number",
+    name = fields.Char(string="Name")
+    customer_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Customer",
     )
+    email = fields.Char(string="Email")
+    phone_ids = fields.Many2many(comodel_name="phone.number")
     is_locked = fields.Boolean()
 
     def _mail_get_customer_information(self):

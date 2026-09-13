@@ -38,9 +38,9 @@ class AccountMove(models.Model):
 
     l10n_tr_nilvera_uuid = fields.Char(
         string="Nilvera Document UUID",
+        help="Universally unique identifier of the Invoice",
         copy=False,
         readonly=True,
-        help="Universally unique identifier of the Invoice",
     )
 
     l10n_tr_nilvera_send_status = fields.Selection(
@@ -53,9 +53,9 @@ class AccountMove(models.Model):
             ("unknown", "Unknown"),
         ],
         string="Nilvera Status",
-        readonly=True,
-        copy=False,
         default="not_sent",
+        copy=False,
+        readonly=True,
     )
 
     def _import_file_type_rules(self):

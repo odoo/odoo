@@ -14,15 +14,27 @@ class MailTestTicket(models.Model):
 
     name = fields.Char()
     email_from = fields.Char(tracking=True)
-    phone_ids = fields.Many2many(
-        "phone.number",
-    )
+    phone_ids = fields.Many2many(comodel_name="phone.number")
     count = fields.Integer(default=1)
     datetime = fields.Datetime(default=fields.Datetime.now)
-    mail_template = fields.Many2one("mail.template", "Template")
-    customer_id = fields.Many2one("res.partner", "Customer", tracking=2)
-    user_id = fields.Many2one("res.users", "Responsible", tracking=1)
-    container_id = fields.Many2one("mail.test.container", tracking=True)
+    mail_template = fields.Many2one(
+        comodel_name="mail.template",
+        string="Template",
+    )
+    customer_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Customer",
+        tracking=2,
+    )
+    user_id = fields.Many2one(
+        comodel_name="res.users",
+        string="Responsible",
+        tracking=1,
+    )
+    container_id = fields.Many2one(
+        comodel_name="mail.test.container",
+        tracking=True,
+    )
 
     def _message_compute_subject(self):
         self.check_singleton()
@@ -108,7 +120,10 @@ class MailTestTicketEl(models.Model):
     _primary_email = "email_from"
 
     email_from = fields.Char(
-        "Email", compute="_compute_email_from", readonly=False, store=True
+        string="Email",
+        compute="_compute_email_from",
+        store=True,
+        readonly=False,
     )
 
     @api.depends("customer_id")
@@ -128,9 +143,14 @@ class MailTestTicketMc(models.Model):
     _primary_email = "email_from"
 
     company_id = fields.Many2one(
-        "res.company", "Company", default=lambda self: self.env.company
+        comodel_name="res.company",
+        string="Company",
+        default=lambda self: self.env.company,
     )
-    container_id = fields.Many2one("mail.test.container.mc", tracking=True)
+    container_id = fields.Many2one(
+        comodel_name="mail.test.container.mc",
+        tracking=True,
+    )
 
     def _mail_get_customer_information(self):
         email_keys_to_values = super()._mail_get_customer_information()
@@ -188,7 +208,7 @@ class MailTestTicketPartner(models.Model):
 
     # fields to mimic stage-based tracing
     state = fields.Selection(
-        [
+        selection=[
             ("new", "New"),
             ("open", "Open"),
             ("close", "Close"),
@@ -196,7 +216,7 @@ class MailTestTicketPartner(models.Model):
         default="open",
         tracking=10,
     )
-    state_template_id = fields.Many2one("mail.template")
+    state_template_id = fields.Many2one(comodel_name="mail.template")
 
     def _message_post_after_hook(self, message, msg_vals):
         if self.email_from and not self.customer_id:
@@ -264,7 +284,10 @@ class MailTestContainer(models.Model):
 
     name = fields.Char()
     description = fields.Text()
-    customer_id = fields.Many2one("res.partner", "Customer")
+    customer_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Customer",
+    )
 
     def _notify_get_recipients_groups(self, message, model_description, msg_vals=False):
         # Activate more groups to test query counters notably (and be backward compatible for tests)
@@ -298,7 +321,9 @@ class MailTestContainerMc(models.Model):
     _inherit = ["mail.test.container"]
 
     company_id = fields.Many2one(
-        "res.company", "Company", default=lambda self: self.env.company
+        comodel_name="res.company",
+        string="Company",
+        default=lambda self: self.env.company,
     )
 
     def _alias_get_creation_values(self):

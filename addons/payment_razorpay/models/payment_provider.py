@@ -19,7 +19,8 @@ class PaymentProvider(models.Model):
     _inherit = "payment.provider"
 
     code = fields.Selection(
-        selection_add=[("razorpay", "Razorpay")], ondelete={"razorpay": "set default"}
+        selection_add=[("razorpay", "Razorpay")],
+        ondelete={"razorpay": "set default"},
     )
     razorpay_key_id = fields.Char(
         string="Razorpay Key Id",

@@ -12,13 +12,23 @@ class EventMailRegistration(models.Model):
     _order = "scheduled_date DESC, id ASC"
 
     scheduler_id = fields.Many2one(
-        "event.mail", "Mail Scheduler", required=True, index=True, ondelete="cascade"
+        comodel_name="event.mail",
+        string="Mail Scheduler",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     registration_id = fields.Many2one(
-        "event.registration", "Attendee", required=True, index=True, ondelete="cascade"
+        comodel_name="event.registration",
+        string="Attendee",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     scheduled_date = fields.Datetime(
-        "Scheduled Time", compute="_compute_scheduled_date", store=True
+        string="Scheduled Time",
+        compute="_compute_scheduled_date",
+        store=True,
     )
     mail_sent = fields.Boolean()
 

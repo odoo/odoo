@@ -6,9 +6,9 @@ class SurveyQuestion(models.Model):
 
     survey_type = fields.Selection(related="survey_id.survey_type")
     generate_lead = fields.Boolean(
-        "Lead Generating",
-        compute="_compute_generate_lead",
+        string="Lead Generating",
         help="At least one of the question answers can generate leads.",
+        compute="_compute_generate_lead",
     )
 
     @api.depends("question_type", "suggested_answer_ids")

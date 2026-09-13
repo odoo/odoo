@@ -28,24 +28,29 @@ class MailLinkPreview(models.Model):
     _description = "Store link preview data"
     _rec_name = "source_url"
 
-    source_url = fields.Char("URL", required=True)
+    source_url = fields.Char(
+        string="URL",
+        required=True,
+    )
     source_url_netloc = fields.Char(
-        "URL host",
+        string="URL host",
+        help="Parsed host of source_url, used for per-host throttling.",
         compute="_compute_source_url_netloc",
         store=True,
         index=True,
-        help="Parsed host of source_url, used for per-host throttling.",
     )
-    og_type = fields.Char("Type")
-    og_title = fields.Char("Title")
-    og_site_name = fields.Char("Site name")
-    og_image = fields.Char("Image")
-    og_description = fields.Text("Description")
-    og_mimetype = fields.Char("MIME type")
-    image_mimetype = fields.Char("Image MIME type")
+    og_type = fields.Char(string="Type")
+    og_title = fields.Char(string="Title")
+    og_site_name = fields.Char(string="Site name")
+    og_image = fields.Char(string="Image")
+    og_description = fields.Text(string="Description")
+    og_mimetype = fields.Char(string="MIME type")
+    image_mimetype = fields.Char(string="Image MIME type")
     create_date = fields.Datetime(index=True)
     message_link_preview_ids: MessageMailLinkPreview = fields.One2many(
-        "mail.message.link.preview", "link_preview_id", groups="base.group_erp_manager"
+        comodel_name="mail.message.link.preview",
+        inverse_name="link_preview_id",
+        groups="base.group_erp_manager",
     )
 
     _unique_source_url = models.UniqueIndex("(source_url)")

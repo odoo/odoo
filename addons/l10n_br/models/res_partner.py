@@ -5,13 +5,16 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     l10n_br_ie_code = fields.Char(
-        string="IE", help="State Tax Identification Number. Should contain 9-14 digits."
+        string="IE",
+        help="State Tax Identification Number. Should contain 9-14 digits.",
     )
     l10n_br_im_code = fields.Char(
-        string="IM", help="Municipal Tax Identification Number"
+        string="IM",
+        help="Municipal Tax Identification Number",
     )
     l10n_br_isuf_code = fields.Char(
-        string="SUFRAMA code", help="SUFRAMA registration number."
+        string="SUFRAMA code",
+        help="SUFRAMA registration number.",
     )
 
     def _get_fields_frontend_writable(self):

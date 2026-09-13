@@ -21,23 +21,23 @@ class MixinMailThreadBlacklist(models.AbstractModel):
 
     email_normalized = fields.Char(
         string="Normalized Email",
+        help="This field is used to search on email address as the primary email field can contain more than strictly an email address.",
         compute="_compute_email_normalized",
         compute_sudo=True,
         store=True,
         index="btree_not_null",
-        help="This field is used to search on email address as the primary email field can contain more than strictly an email address.",
     )
     is_blacklisted = fields.Boolean(
         string="Blacklist",
+        help="If the email address is on the blacklist, the contact won't receive mass mailing anymore, from any list",
         compute="_compute_is_blacklisted",
+        search="_search_is_blacklisted",
         compute_sudo=True,
         store=False,
-        search="_search_is_blacklisted",
         groups="base.group_user",
-        help="If the email address is on the blacklist, the contact won't receive mass mailing anymore, from any list",
     )
     message_bounce = fields.Integer(
-        "Bounce",
+        string="Bounce",
         help="Counter of the number of bounced emails for this contact",
         default=0,
     )

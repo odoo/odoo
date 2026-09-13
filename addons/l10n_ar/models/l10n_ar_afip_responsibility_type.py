@@ -7,9 +7,15 @@ class L10n_ArAfipResponsibilityType(models.Model):
     _description = "ARCA Responsibility Type"
     _order = "sequence"
 
-    name = fields.Char(required=True, index="trigram")
+    name = fields.Char(
+        index="trigram",
+        required=True,
+    )
     sequence = fields.Integer()
-    code = fields.Char(required=True, index=True)
+    code = fields.Char(
+        index=True,
+        required=True,
+    )
     active = fields.Boolean(default=True)
 
     _name_uniq = models.Constraint("unique(name)", "Name must be unique!")

@@ -6,19 +6,24 @@ class CalendarFilters(models.Model):
     _description = "Calendar Filters"
 
     user_id = fields.Many2one(
-        "res.users",
-        "Me",
-        required=True,
+        comodel_name="res.users",
+        string="Me",
         default=lambda self: self.env.user,
         index=True,
+        required=True,
         ondelete="cascade",
     )
     partner_id = fields.Many2one(
-        "res.partner", "Employee", required=True, index=True, ondelete="cascade"
+        comodel_name="res.partner",
+        string="Employee",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     active = fields.Boolean(default=True)
     partner_checked = fields.Boolean(
-        "Checked", default=True
+        string="Checked",
+        default=True,
     )  # used to know if the partner is checked in the filter of the calendar view for the user_id.
 
     _user_id_partner_id_unique = models.Constraint(

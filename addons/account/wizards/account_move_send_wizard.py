@@ -13,9 +13,13 @@ class AccountMoveSendWizard(models.TransientModel):
     _inherit = ["mixin.account.move.send", "mixin.mail.composer"]
     _description = "Account Move Send Wizard"
 
-    move_id = fields.Many2one(comodel_name="account.move", required=True)
+    move_id = fields.Many2one(
+        comodel_name="account.move",
+        required=True,
+    )
     company_id = fields.Many2one(
-        comodel_name="res.company", related="move_id.company_id"
+        comodel_name="res.company",
+        related="move_id.company_id",
     )
     alerts = fields.Json(compute="_compute_alerts")
     sending_methods = fields.Json(
@@ -25,11 +29,11 @@ class AccountMoveSendWizard(models.TransientModel):
     sending_method_checkboxes = fields.Json(
         compute="_compute_sending_method_checkboxes",
         precompute=True,
-        readonly=False,
         store=True,
+        readonly=False,
     )
     display_attachments_widget = fields.Boolean(
-        compute="_compute_display_attachments_widget",
+        compute="_compute_display_attachments_widget"
     )
     extra_edis = fields.Json(
         compute="_compute_extra_edis",
@@ -38,8 +42,8 @@ class AccountMoveSendWizard(models.TransientModel):
     extra_edi_checkboxes = fields.Json(
         compute="_compute_extra_edi_checkboxes",
         precompute=True,
-        readonly=False,
         store=True,
+        readonly=False,
     )
     invoice_edi_format = fields.Selection(
         selection=lambda self: (
@@ -50,10 +54,10 @@ class AccountMoveSendWizard(models.TransientModel):
     pdf_report_id = fields.Many2one(
         comodel_name="ir.actions.report",
         string="Invoice report",
-        domain="[('id', 'in', available_pdf_report_ids)]",
         compute="_compute_pdf_report_id",
-        readonly=False,
         store=True,
+        readonly=False,
+        domain="[('id', 'in', available_pdf_report_ids)]",
     )
     available_pdf_report_ids = fields.One2many(
         comodel_name="ir.actions.report",
@@ -63,13 +67,17 @@ class AccountMoveSendWizard(models.TransientModel):
     display_pdf_report_id = fields.Boolean(compute="_compute_display_pdf_report_id")
 
     template_id = fields.Many2one(
-        domain="[('model', '=', 'account.move')]",
         compute="_compute_template_id",
         compute_sudo=True,
-        readonly=False,
         store=True,
+        readonly=False,
+        domain="[('model', '=', 'account.move')]",
     )
-    lang = fields.Char(compute="_compute_lang", precompute=False, compute_sudo=True)
+    lang = fields.Char(
+        compute="_compute_lang",
+        precompute=False,
+        compute_sudo=True,
+    )
     mail_partner_ids = fields.Many2many(
         comodel_name="res.partner",
         string="To",
@@ -87,10 +95,16 @@ class AccountMoveSendWizard(models.TransientModel):
     )
 
     model = fields.Char(
-        "Related Document Model", compute="_compute_model", readonly=False, store=True
+        string="Related Document Model",
+        compute="_compute_model",
+        store=True,
+        readonly=False,
     )
     res_ids = fields.Text(
-        "Related Document IDs", compute="_compute_res_ids", readonly=False, store=True
+        string="Related Document IDs",
+        compute="_compute_res_ids",
+        store=True,
+        readonly=False,
     )
     template_name = fields.Char()
 

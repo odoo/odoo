@@ -4,7 +4,10 @@ from odoo import api, fields, models
 class BaseLanguageInstall(models.TransientModel):
     _inherit = "base.language.install"
 
-    website_ids = fields.Many2many("website", string="Websites to translate")
+    website_ids = fields.Many2many(
+        comodel_name="website",
+        string="Websites to translate",
+    )
 
     @api.model
     def default_get(self, fields):

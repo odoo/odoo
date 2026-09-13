@@ -7,10 +7,13 @@ class PosCloseSessionWizard(models.TransientModel):
     _name = "pos.close.session.wizard"
     _description = "Close Session Wizard"
 
-    amount_to_balance = fields.Float("Amount to balance")
-    account_id = fields.Many2one("account.account", "Destination account")
-    account_readonly = fields.Boolean("Destination account is readonly")
-    message = fields.Text("Information message")
+    amount_to_balance = fields.Float(string="Amount to balance")
+    account_id = fields.Many2one(
+        comodel_name="account.account",
+        string="Destination account",
+    )
+    account_readonly = fields.Boolean(string="Destination account is readonly")
+    message = fields.Text(string="Information message")
 
     def action_close_session(self):
         session = self.env["pos.session"].browse(self.env.context["active_ids"])

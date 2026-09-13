@@ -7,15 +7,33 @@ class HrTimesheetAttendanceReport(models.Model):
     _auto = False
     _description = "Timesheet Attendance Report"
 
-    employee_id = fields.Many2one("hr.employee", readonly=True)
+    employee_id = fields.Many2one(
+        comodel_name="hr.employee",
+        readonly=True,
+    )
     date = fields.Date(readonly=True)
-    total_timesheet = fields.Float("Timesheets Time", readonly=True)
-    total_attendance = fields.Float("Attendance Time", readonly=True)
-    total_difference = fields.Float("Time Difference", readonly=True)
-    timesheets_cost = fields.Float("Timesheet Cost", readonly=True)
+    total_timesheet = fields.Float(
+        string="Timesheets Time",
+        readonly=True,
+    )
+    total_attendance = fields.Float(
+        string="Attendance Time",
+        readonly=True,
+    )
+    total_difference = fields.Float(
+        string="Time Difference",
+        readonly=True,
+    )
+    timesheets_cost = fields.Float(
+        string="Timesheet Cost",
+        readonly=True,
+    )
     attendance_cost = fields.Float(readonly=True)
     cost_difference = fields.Float(readonly=True)
-    company_id = fields.Many2one("res.company", readonly=True)
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        readonly=True,
+    )
 
     def init(self):
         drop_view_if_exists(self.env.cr, self._table)

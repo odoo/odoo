@@ -13,12 +13,15 @@ class PhoneBlacklist(models.Model):
 
     number = fields.Char(
         string="Phone Number",
+        help="Number should be E164 formatted",
+        search="_search_number",
         required=True,
         tracking=True,
-        search="_search_number",
-        help="Number should be E164 formatted",
     )
-    active = fields.Boolean(default=True, tracking=True)
+    active = fields.Boolean(
+        default=True,
+        tracking=True,
+    )
 
     _unique_number = models.Constraint(
         "unique (number)",

@@ -5,15 +5,15 @@ class LoyaltyCard(models.Model):
     _inherit = "loyalty.card"
 
     order_id = fields.Many2one(
+        comodel_name="sale.order",
         string="Order Reference",
         help="The sales order from which coupon is generated",
-        comodel_name="sale.order",
         readonly=True,
     )
     order_id_partner_id = fields.Many2one(
-        string="Sale Order Customer",
         comodel_name="res.partner",
         related="order_id.partner_id",
+        string="Sale Order Customer",
     )
 
     def _get_default_template(self):

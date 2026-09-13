@@ -10,7 +10,8 @@ class PaymentToken(models.Model):
     _inherit = "payment.token"
 
     stripe_payment_method = fields.Char(
-        string="Stripe Payment Method ID", readonly=True
+        string="Stripe Payment Method ID",
+        readonly=True,
     )
     stripe_mandate = fields.Char(readonly=True)
 

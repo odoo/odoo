@@ -5,7 +5,7 @@ class ReportProjectTaskUser(models.Model):
     _inherit = "report.project.task.user"
 
     remaining_hours_so = fields.Float(
-        "Time Remaining on SO",
+        string="Time Remaining on SO",
         readonly=True,
         groups="hr_timesheet.group_hr_timesheet_user",
     )

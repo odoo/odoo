@@ -83,15 +83,9 @@ class ReportPosOrder(models.Model):
         string="Subtotal w/o Discount",
         readonly=True,
     )
-    discount_amount = fields.Monetary(
-        readonly=True,
-    )
-    margin = fields.Monetary(
-        readonly=True,
-    )
-    delay_validation = fields.Integer(
-        readonly=True,
-    )
+    discount_amount = fields.Monetary(readonly=True)
+    margin = fields.Monetary(readonly=True)
+    delay_validation = fields.Integer(readonly=True)
     invoiced = fields.Boolean(readonly=True)
 
     def action_view_order(self):

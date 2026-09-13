@@ -11,12 +11,10 @@ class L10n_LatamIdentificationType(models.Model):
         translate=True,
         required=True,
     )
-    description = fields.Char(
-        translate=True,
-    )
+    description = fields.Char(translate=True)
     active = fields.Boolean(default=True)
     is_vat = fields.Boolean()
-    country_id = fields.Many2one("res.country")
+    country_id = fields.Many2one(comodel_name="res.country")
 
     @api.depends("country_id")
     def _compute_display_name(self):

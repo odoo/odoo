@@ -19,7 +19,7 @@ class MixinPropertiesBaseDefinition(models.AbstractModel):
         copy=True,
     )
     properties_base_definition_id = fields.Many2one(
-        "properties.base.definition",
+        comodel_name="properties.base.definition",
         compute="_compute_properties_base_definition_id",
         search="_search_properties_base_definition_id",
     )

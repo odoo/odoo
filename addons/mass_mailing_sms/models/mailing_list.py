@@ -5,7 +5,8 @@ class MailingList(models.Model):
     _inherit = "mailing.list"
 
     contact_count_sms = fields.Integer(
-        compute="_compute_mailing_list_statistics", string="SMS Contacts"
+        string="SMS Contacts",
+        compute="_compute_mailing_list_statistics",
     )
 
     def action_view_mailings(self):

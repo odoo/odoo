@@ -5,14 +5,14 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     mrp_production_count = fields.Count(
-        "mrp_production_ids",
-        "Count of MO generated",
+        count_of="mrp_production_ids",
+        string="Count of MO generated",
         groups="mrp.group_mrp_user",
     )
     mrp_production_ids = fields.Many2many(
-        "mrp.production",
-        compute="_compute_mrp_production_ids",
+        comodel_name="mrp.production",
         string="Manufacturing Orders",
+        compute="_compute_mrp_production_ids",
         groups="mrp.group_mrp_user",
     )
 

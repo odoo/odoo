@@ -7,23 +7,29 @@ class Partner(models.Model):
     _inherit = "res.partner"
 
     l10n_id_tku = fields.Char(
-        string="TKU", help="Branch Number of your company, leave empty for headquarters"
+        string="TKU",
+        help="Branch Number of your company, leave empty for headquarters",
     )
 
     # document selection
     l10n_id_buyer_document_type = fields.Selection(
-        [("TIN", "TIN"), ("NIK", "NIK"), ("Passport", "Passport"), ("Other", "Others")],
-        default="TIN",
+        selection=[
+            ("TIN", "TIN"),
+            ("NIK", "NIK"),
+            ("Passport", "Passport"),
+            ("Other", "Others"),
+        ],
         string="Document Type",
+        default="TIN",
     )
     l10n_id_buyer_document_number = fields.Char(string="Document Number")
     l10n_id_nik = fields.Char(string="NIK")
     l10n_id_pkp = fields.Boolean(
         string="Is PKP",
+        help="Denoting whether the following partner is taxable",
         compute="_compute_l10n_id_pkp",
         store=True,
         readonly=False,
-        help="Denoting whether the following partner is taxable",
     )
     l10n_id_kode_transaksi = fields.Selection(
         selection=TAX_TRANSACTION_CODE,

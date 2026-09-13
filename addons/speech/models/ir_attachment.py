@@ -33,17 +33,30 @@ class IrAttachment(models.Model):
     _inherit = "ir.attachment"
 
     speech_state = fields.Selection(
-        STATES, default="none", readonly=True, copy=False, index="btree_not_null"
+        selection=STATES,
+        default="none",
+        index="btree_not_null",
+        copy=False,
+        readonly=True,
     )
     speech_cues = fields.Json(
-        readonly=True,
-        copy=False,
         help="What is said in this recording, with the moment each phrase "
         "starts and ends.",
+        copy=False,
+        readonly=True,
     )
-    speech_language = fields.Char(readonly=True, copy=False)
-    speech_engine = fields.Char(readonly=True, copy=False)
-    speech_error = fields.Text(readonly=True, copy=False)
+    speech_language = fields.Char(
+        copy=False,
+        readonly=True,
+    )
+    speech_engine = fields.Char(
+        copy=False,
+        readonly=True,
+    )
+    speech_error = fields.Text(
+        copy=False,
+        readonly=True,
+    )
     speech_transcript = fields.Text(compute="_compute_speech_transcript")
     can_transcribe = fields.Boolean(compute="_compute_can_transcribe")
 

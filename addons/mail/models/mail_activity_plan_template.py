@@ -23,27 +23,27 @@ class MailActivityPlanTemplate(models.Model):
     _rec_name = "summary"
 
     plan_id: MailActivityPlan = fields.Many2one(
-        "mail.activity.plan",
-        ondelete="cascade",
-        required=True,
+        comodel_name="mail.activity.plan",
         index=True,
+        required=True,
+        ondelete="cascade",
     )
     res_model = fields.Selection(related="plan_id.res_model")
     company_id: ResCompany = fields.Many2one(related="plan_id.company_id")
     sequence = fields.Integer(default=10)
     activity_type_id: MailActivityType = fields.Many2one(
-        "mail.activity.type",
+        comodel_name="mail.activity.type",
         default=lambda self: self.env.ref("mail.mail_activity_data_todo"),
+        required=True,
         domain="['|', ('res_model', '=', False), '&', ('res_model', '!=', False), ('res_model', '=', parent.res_model)]",
         ondelete="restrict",
-        required=True,
     )
     delay_count = fields.Integer(
-        "Interval",
+        string="Interval",
         help="Number of days/week/month before executing the action after or before the scheduled plan date.",
     )
     delay_from = fields.Selection(
-        [
+        selection=[
             ("before_plan_date", "Before Plan Date"),
             ("after_plan_date", "After Plan Date"),
         ],
@@ -52,8 +52,8 @@ class MailActivityPlanTemplate(models.Model):
         required=True,
     )
     icon = fields.Char(
-        "Icon",
         related="activity_type_id.icon",
+        string="Icon",
         readonly=True,
     )
     summary = fields.Char(
@@ -62,24 +62,24 @@ class MailActivityPlanTemplate(models.Model):
         readonly=False,
     )
     responsible_type = fields.Selection(
-        [
+        selection=[
             ("on_demand", "Ask at launch"),
             ("other", "Default user"),
         ],
         string="Assignment",
-        required=True,
         compute="_compute_responsible_type",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
+        required=True,
     )
     responsible_id: ResUsers = fields.Many2one(
-        "res.users",
-        "Assigned to",
-        check_company=True,
+        comodel_name="res.users",
+        string="Assigned to",
         compute="_compute_responsible_id",
         store=True,
         readonly=False,
+        check_company=True,
     )
     note = fields.Html(
         compute="_compute_note",
@@ -87,11 +87,11 @@ class MailActivityPlanTemplate(models.Model):
         readonly=False,
     )
     next_activity_ids: MailActivityType = fields.Many2many(
-        "mail.activity.type",
+        comodel_name="mail.activity.type",
         string="Next Activities",
         compute="_compute_next_activity_ids",
-        readonly=False,
         store=True,
+        readonly=False,
     )
 
     @api.constrains("activity_type_id", "plan_id")

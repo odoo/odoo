@@ -9,10 +9,14 @@ class AuthTotpRateLimitLog(models.TransientModel):
         "(user_id, limit_type, create_date)"
     )
 
-    user_id = fields.Many2one("res.users", required=True, readonly=True)
+    user_id = fields.Many2one(
+        comodel_name="res.users",
+        readonly=True,
+        required=True,
+    )
     ip = fields.Char(readonly=True)
     limit_type = fields.Selection(
-        [
+        selection=[
             ("send_email", "Send Email"),
             ("code_check", "Code Checking"),
         ],

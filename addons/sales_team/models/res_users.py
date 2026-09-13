@@ -6,26 +6,26 @@ class ResUsers(models.Model):
     _inherit = "res.users"
 
     crm_team_ids = fields.Many2many(
-        "crm.team",
+        comodel_name="crm.team",
         string="Sales Teams",
-        copy=False,
-        readonly=True,
         compute="_compute_crm_team_ids",
         search="_search_crm_team_ids",
         compute_sudo=True,
+        copy=False,
+        readonly=True,
     )
     crm_team_member_ids = fields.One2many(
-        "crm.team.member",
-        "user_id",
+        comodel_name="crm.team.member",
+        inverse_name="user_id",
         string="Sales Team Members",
     )
     sale_team_id = fields.Many2one(
-        "crm.team",
+        comodel_name="crm.team",
         string="User Sales Team",
-        compute="_compute_sale_team_id",
-        readonly=True,
-        store=True,
         help="Main user sales team. Used notably for pipeline, or to set sales team in invoicing or subscription.",
+        compute="_compute_sale_team_id",
+        store=True,
+        readonly=True,
     )
 
     @api.depends("crm_team_member_ids.active", "crm_team_member_ids.crm_team_id")

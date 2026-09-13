@@ -33,27 +33,34 @@ class CrmIapLeadMiningRequest(models.Model):
 
     name = fields.Char(
         string="Request Number",
-        required=True,
-        readonly=True,
         default=lambda self: _("New"),
         copy=False,
+        readonly=True,
+        required=True,
     )
     state = fields.Selection(
-        [("draft", "Draft"), ("error", "Error"), ("done", "Done")],
+        selection=[("draft", "Draft"), ("error", "Error"), ("done", "Done")],
         string="Status",
-        required=True,
         default="draft",
+        required=True,
     )
 
-    lead_number = fields.Integer(string="Number of Leads", required=True, default=3)
-    search_type = fields.Selection(
-        [("companies", "Companies"), ("people", "Companies and their Contacts")],
-        string="Target",
+    lead_number = fields.Integer(
+        string="Number of Leads",
+        default=3,
         required=True,
+    )
+    search_type = fields.Selection(
+        selection=[
+            ("companies", "Companies"),
+            ("people", "Companies and their Contacts"),
+        ],
+        string="Target",
         default="companies",
+        required=True,
     )
     error_type = fields.Selection(
-        [
+        selection=[
             ("credits", "Insufficient Credits"),
             ("no_result", "No Result"),
         ],
@@ -62,56 +69,94 @@ class CrmIapLeadMiningRequest(models.Model):
     )
 
     lead_type = fields.Selection(
-        [("lead", "Leads"), ("opportunity", "Opportunities")],
+        selection=[("lead", "Leads"), ("opportunity", "Opportunities")],
         string="Type",
-        required=True,
         default=_default_lead_type,
+        required=True,
     )
     team_id = fields.Many2one(
-        "crm.team",
+        comodel_name="crm.team",
         string="Sales Team",
-        ondelete="set null",
-        domain="[('use_opportunities', '=', True)]",
-        readonly=False,
         compute="_compute_team_id",
         store=True,
+        readonly=False,
+        domain="[('use_opportunities', '=', True)]",
+        ondelete="set null",
     )
     user_id = fields.Many2one(
-        "res.users", string="Salesperson", default=lambda self: self.env.user
+        comodel_name="res.users",
+        string="Salesperson",
+        default=lambda self: self.env.user,
     )
-    tag_ids = fields.Many2many("crm.tag", string="Tags")
+    tag_ids = fields.Many2many(
+        comodel_name="crm.tag",
+        string="Tags",
+    )
     lead_ids = fields.One2many(
-        "crm.lead", "lead_mining_request_id", string="Generated Lead / Opportunity"
+        comodel_name="crm.lead",
+        inverse_name="lead_mining_request_id",
+        string="Generated Lead / Opportunity",
     )
     lead_count = fields.Integer(
-        compute="_compute_lead_count", string="Number of Generated Leads"
+        string="Number of Generated Leads",
+        compute="_compute_lead_count",
     )
 
-    filter_on_size = fields.Boolean(string="Filter on Size", default=False)
-    company_size_min = fields.Integer(string="Size", default=1)
+    filter_on_size = fields.Boolean(
+        string="Filter on Size",
+        default=False,
+    )
+    company_size_min = fields.Integer(
+        string="Size",
+        default=1,
+    )
     company_size_max = fields.Integer(default=1000)
     country_ids = fields.Many2many(
-        "res.country", string="Countries", default=_default_country_ids
+        comodel_name="res.country",
+        string="Countries",
+        default=_default_country_ids,
     )
-    state_ids = fields.Many2many("res.country.state", string="States")
+    state_ids = fields.Many2many(
+        comodel_name="res.country.state",
+        string="States",
+    )
     available_state_ids = fields.One2many(
-        "res.country.state", compute="_compute_available_state_ids"
+        comodel_name="res.country.state",
+        compute="_compute_available_state_ids",
     )
-    industry_ids = fields.Many2many("crm.iap.lead.industry", string="Industries")
+    industry_ids = fields.Many2many(
+        comodel_name="crm.iap.lead.industry",
+        string="Industries",
+    )
 
-    contact_number = fields.Integer(string="Number of Contacts", default=10)
+    contact_number = fields.Integer(
+        string="Number of Contacts",
+        default=10,
+    )
     contact_filter_type = fields.Selection(
-        [("role", "Role"), ("seniority", "Seniority")],
+        selection=[("role", "Role"), ("seniority", "Seniority")],
         string="Filter on",
         default="role",
     )
-    preferred_role_id = fields.Many2one("crm.iap.lead.role")
-    role_ids = fields.Many2many("crm.iap.lead.role", string="Other Roles")
-    seniority_id = fields.Many2one("crm.iap.lead.seniority")
+    preferred_role_id = fields.Many2one(comodel_name="crm.iap.lead.role")
+    role_ids = fields.Many2many(
+        comodel_name="crm.iap.lead.role",
+        string="Other Roles",
+    )
+    seniority_id = fields.Many2one(comodel_name="crm.iap.lead.seniority")
 
-    lead_credits = fields.Char(compute="_compute_tooltip", readonly=True)
-    lead_contacts_credits = fields.Char(compute="_compute_tooltip", readonly=True)
-    lead_total_credits = fields.Char(compute="_compute_tooltip", readonly=True)
+    lead_credits = fields.Char(
+        compute="_compute_tooltip",
+        readonly=True,
+    )
+    lead_contacts_credits = fields.Char(
+        compute="_compute_tooltip",
+        readonly=True,
+    )
+    lead_total_credits = fields.Char(
+        compute="_compute_tooltip",
+        readonly=True,
+    )
 
     @api.onchange("lead_number", "contact_number")
     def _compute_tooltip(self):

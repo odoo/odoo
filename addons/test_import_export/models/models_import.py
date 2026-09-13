@@ -41,7 +41,7 @@ class ImportM2o(models.Model):
     _name = "import.m2o"
     _description = "Tests: Base Import Model, Many to One"
 
-    value = fields.Many2one("import.m2o.related")
+    value = fields.Many2one(comodel_name="import.m2o.related")
 
 
 class ImportM2oRelated(models.Model):
@@ -55,7 +55,10 @@ class ImportM2oRequired(models.Model):
     _name = "import.m2o.required"
     _description = "Tests: Base Import Model, Many to One required"
 
-    value = fields.Many2one("import.m2o.required.related", required=True)
+    value = fields.Many2one(
+        comodel_name="import.m2o.required.related",
+        required=True,
+    )
 
 
 class ImportM2oRequiredRelated(models.Model):
@@ -70,7 +73,10 @@ class ImportO2m(models.Model):
     _description = "Tests: Base Import Model, One to Many"
 
     name = fields.Char()
-    value = fields.One2many("import.o2m.child", "parent_id")
+    value = fields.One2many(
+        comodel_name="import.o2m.child",
+        inverse_name="parent_id",
+    )
 
 
 class ImportO2mChild(models.Model):
@@ -78,7 +84,7 @@ class ImportO2mChild(models.Model):
     _description = "Tests: Base Import Model, One to Many child"
 
     name = fields.Char()
-    parent_id = fields.Many2one("import.o2m")
+    parent_id = fields.Many2one(comodel_name="import.o2m")
     value = fields.Integer()
 
 
@@ -86,8 +92,11 @@ class ImportPreview(models.Model):
     _name = "import.preview"
     _description = "Tests: Base Import Model Preview"
 
-    name = fields.Char("Name")
-    somevalue = fields.Integer(string="Some Value", required=True)
+    name = fields.Char(string="Name")
+    somevalue = fields.Integer(
+        string="Some Value",
+        required=True,
+    )
     othervalue = fields.Integer(string="Other Variable")
     date = fields.Date(string="Date")
     datetime = fields.Datetime(string="Datetime")
@@ -99,7 +108,7 @@ class ImportFloat(models.Model):
 
     value = fields.Float()
     value2 = fields.Monetary()
-    currency_id = fields.Many2one("res.currency")
+    currency_id = fields.Many2one(comodel_name="res.currency")
 
 
 class ImportComplex(models.Model):
@@ -109,10 +118,10 @@ class ImportComplex(models.Model):
     f = fields.Float()
     m = fields.Monetary()
     c = fields.Char()
-    currency_id = fields.Many2one("res.currency")
+    currency_id = fields.Many2one(comodel_name="res.currency")
     d = fields.Date()
     dt = fields.Datetime()
-    parent_id = fields.Many2one("import.complex")
+    parent_id = fields.Many2one(comodel_name="import.complex")
     html = fields.Html()
 
 
@@ -122,9 +131,13 @@ class ImportPropertiesDefinition(models.Model):
     _rec_name = "id"
 
     properties_definition = fields.PropertiesDefinition()
-    record_properties_ids = fields.One2many("import.properties", "record_definition_id")
+    record_properties_ids = fields.One2many(
+        comodel_name="import.properties",
+        inverse_name="record_definition_id",
+    )
     main_properties_record_id = fields.Many2one(
-        "import.properties", "record_definition_id"
+        comodel_name="import.properties",
+        string="record_definition_id",
     )
 
 
@@ -135,23 +148,28 @@ class ImportProperties(models.Model):
     properties = fields.Properties(
         definition="record_definition_id.properties_definition"
     )
-    record_definition_id = fields.Many2one("import.properties.definition")
+    record_definition_id = fields.Many2one(comodel_name="import.properties.definition")
 
 
 class PropertyInherits(models.Model):
     _name = _description = "import.properties.inherits"
     _inherits = {"import.properties": "parent_id"}
 
-    parent_id = fields.Many2one("import.properties", required=True, ondelete="cascade")
+    parent_id = fields.Many2one(
+        comodel_name="import.properties",
+        required=True,
+        ondelete="cascade",
+    )
 
 
 class PathToProperty(models.Model):
     _name = _description = "import.path.properties"
 
-    properties_id = fields.Many2one("import.properties")
-    another_properties_id = fields.Many2one("import.properties")
+    properties_id = fields.Many2one(comodel_name="import.properties")
+    another_properties_id = fields.Many2one(comodel_name="import.properties")
     all_properties_ids = fields.Many2many(
-        "import.properties", compute="_compute_all_import_properties"
+        comodel_name="import.properties",
+        compute="_compute_all_import_properties",
     )
 
     @api.depends("properties_id", "another_properties_id")

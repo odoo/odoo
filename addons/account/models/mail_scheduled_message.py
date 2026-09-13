@@ -4,7 +4,7 @@ from odoo import fields, models
 class MailScheduledMessage(models.Model):
     _inherit = "mail.scheduled.message"
 
-    account_reports_annotation_date = fields.Date("Annotated For")
+    account_reports_annotation_date = fields.Date(string="Annotated For")
 
     def _message_created_hook(self, message):
         """Hook called when a message is created from the scheduled message.

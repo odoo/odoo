@@ -23,19 +23,23 @@ class CrmRevealRule(models.Model):
     _description = "CRM Lead Generation Rules"
     _order = "sequence"
 
-    name = fields.Char(string="Rule Name", required=True)
+    name = fields.Char(
+        string="Rule Name",
+        required=True,
+    )
     active = fields.Boolean(default=True)
 
     country_ids = fields.Many2many(
-        "res.country",
+        comodel_name="res.country",
         string="Countries",
         help="Only visitors of following countries will be converted into leads/opportunities (using GeoIP).",
     )
     website_id = fields.Many2one(
-        "website", help="Restrict Lead generation to this website."
+        comodel_name="website",
+        help="Restrict Lead generation to this website.",
     )
     state_ids = fields.Many2many(
-        "res.country.state",
+        comodel_name="res.country.state",
         string="States",
         help="Only visitors of following states will be converted into leads/opportunities.",
     )
@@ -49,27 +53,33 @@ class CrmRevealRule(models.Model):
     )
 
     industry_tag_ids = fields.Many2many(
-        "crm.iap.lead.industry",
+        comodel_name="crm.iap.lead.industry",
         string="Industries",
         help="Leave empty to always match. Odoo will not create lead if no match",
     )
     filter_on_size = fields.Boolean(
         string="Filter on Size",
-        default=True,
         help="Filter companies based on their size.",
+        default=True,
     )
-    company_size_min = fields.Integer(string="Company Size", default=0)
+    company_size_min = fields.Integer(
+        string="Company Size",
+        default=0,
+    )
     company_size_max = fields.Integer(default=1000)
 
     contact_filter_type = fields.Selection(
-        [("role", "Role"), ("seniority", "Seniority")],
+        selection=[("role", "Role"), ("seniority", "Seniority")],
         string="Filter On",
-        required=True,
         default="role",
+        required=True,
     )
-    preferred_role_id = fields.Many2one("crm.iap.lead.role")
-    other_role_ids = fields.Many2many("crm.iap.lead.role", string="Other Roles")
-    seniority_id = fields.Many2one("crm.iap.lead.seniority")
+    preferred_role_id = fields.Many2one(comodel_name="crm.iap.lead.role")
+    other_role_ids = fields.Many2many(
+        comodel_name="crm.iap.lead.role",
+        string="Other Roles",
+    )
+    seniority_id = fields.Many2one(comodel_name="crm.iap.lead.seniority")
     extra_contacts = fields.Integer(
         string="Number of Contacts",
         help="This is the number of contacts to track if their role/seniority match your criteria. Their details will show up in the history thread of generated leads/opportunities. One credit is consumed per tracked contact.",
@@ -77,33 +87,50 @@ class CrmRevealRule(models.Model):
     )
 
     lead_for = fields.Selection(
-        [("companies", "Companies"), ("people", "Companies and their Contacts")],
+        selection=[
+            ("companies", "Companies"),
+            ("people", "Companies and their Contacts"),
+        ],
         string="Data Tracking",
-        required=True,
-        default="companies",
         help="Choose whether to track companies only or companies and their contacts",
+        default="companies",
+        required=True,
     )
     lead_type = fields.Selection(
-        [("lead", "Lead"), ("opportunity", "Opportunity")],
+        selection=[("lead", "Lead"), ("opportunity", "Opportunity")],
         string="Type",
-        required=True,
         default="opportunity",
+        required=True,
     )
     suffix = fields.Char(
-        help="This will be appended in name of generated lead so you can identify lead/opportunity is generated with this rule",
+        help="This will be appended in name of generated lead so you can identify lead/opportunity is generated with this rule"
     )
-    team_id = fields.Many2one("crm.team", string="Sales Team", ondelete="set null")
-    tag_ids = fields.Many2many("crm.tag", string="Tags")
-    user_id = fields.Many2one("res.users", string="Salesperson")
-    priority = fields.Selection(crm_stage.AVAILABLE_PRIORITIES)
+    team_id = fields.Many2one(
+        comodel_name="crm.team",
+        string="Sales Team",
+        ondelete="set null",
+    )
+    tag_ids = fields.Many2many(
+        comodel_name="crm.tag",
+        string="Tags",
+    )
+    user_id = fields.Many2one(
+        comodel_name="res.users",
+        string="Salesperson",
+    )
+    priority = fields.Selection(selection=crm_stage.AVAILABLE_PRIORITIES)
     lead_ids = fields.One2many(
-        "crm.lead", "reveal_rule_id", string="Generated Lead / Opportunity"
+        comodel_name="crm.lead",
+        inverse_name="reveal_rule_id",
+        string="Generated Lead / Opportunity",
     )
     lead_count = fields.Integer(
-        compute="_compute_lead_count", string="Number of Generated Leads"
+        string="Number of Generated Leads",
+        compute="_compute_lead_count",
     )
     opportunity_count = fields.Integer(
-        compute="_compute_lead_count", string="Number of Generated Opportunity"
+        string="Number of Generated Opportunity",
+        compute="_compute_lead_count",
     )
 
     _limit_extra_contacts = models.Constraint(

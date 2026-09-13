@@ -5,9 +5,9 @@ class ProductSupplierinfo(models.Model):
     _inherit = "product.supplierinfo"
 
     is_subcontractor = fields.Boolean(
-        "Subcontracted",
-        compute="_compute_is_subcontractor",
+        string="Subcontracted",
         help="Choose a vendor of type subcontractor if you want to subcontract the product",
+        compute="_compute_is_subcontractor",
     )
 
     @api.depends("partner_id", "product_id", "product_tmpl_id")

@@ -42,51 +42,47 @@ class MyInvoisDocument(models.Model):
     name = fields.Char(
         compute="_compute_name",
         store=True,
-        copy=False,
         index="trigram",
+        copy=False,
     )
-    active = fields.Boolean(
-        default=True,
-    )
+    active = fields.Boolean(default=True)
     company_id = fields.Many2one(
         comodel_name="res.company",
-        required=True,
-        readonly=True,
         default=lambda self: self.env.company,
+        readonly=True,
+        required=True,
     )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
         required=True,
     )
     company_currency_id = fields.Many2one(
-        string="Company Currency",
         related="company_id.currency_id",
+        string="Company Currency",
     )
     myinvois_issuance_date = fields.Date(
         string="Issuance Date",
-        readonly=True,
         copy=False,
+        readonly=True,
     )
     # File fields
     myinvois_file_id = fields.Many2one(
         comodel_name="ir.attachment",
+        export_string_translation=False,
         compute=lambda self: self._compute_linked_attachment_id(
             "myinvois_file_id", "myinvois_file"
         ),
         depends=["myinvois_file"],
         copy=False,
-        export_string_translation=False,
     )
     myinvois_file = fields.Binary(
         string="MyInvois XML File",
+        export_string_translation=False,
         copy=False,
         readonly=True,
-        export_string_translation=False,
     )
     # Odoo Implementation fields
     myinvois_state = fields.Selection(
-        string="MyInvois State",
-        help="State of this document on the MyInvois portal.\nA document awaiting validation will be automatically updated once the validation status is available.",
         selection=[
             ("in_progress", "Validation In Progress"),
             ("valid", "Valid"),
@@ -97,21 +93,23 @@ class MyInvoisDocument(models.Model):
             ("invalid", "Invalid"),
             ("cancelled", "Cancelled"),
         ],
+        string="MyInvois State",
+        help="State of this document on the MyInvois portal.\nA document awaiting validation will be automatically updated once the validation status is available.",
         copy=False,
         readonly=True,
         tracking=True,
     )
     myinvois_error_document_hash = fields.Char(
         string="Document Hash",
+        export_string_translation=False,
         copy=False,
         readonly=True,
-        export_string_translation=False,
     )
     myinvois_retry_at = fields.Char(
         string="Document Retry At",
+        export_string_translation=False,
         copy=False,
         readonly=True,
-        export_string_translation=False,
     )
     myinvois_exemption_reason = fields.Char(
         string="Tax Exemption Reason",
@@ -132,8 +130,8 @@ class MyInvoisDocument(models.Model):
     myinvois_external_uuid = fields.Char(
         string="MyInvois ID",
         help="Unique ID assigned to a specific document when sent to MyInvois.",
-        copy=False,
         index=True,
+        copy=False,
         readonly=True,
     )
     myinvois_validation_time = fields.Datetime(
@@ -148,12 +146,12 @@ class MyInvoisDocument(models.Model):
     )
     # Note: the field is present but unused for now.
     invoice_ids = fields.Many2many(
-        name="Invoices",
         comodel_name="account.move",
         relation="myinvois_document_invoice_rel",
         column1="document_id",
         column2="invoice_id",
         check_company=True,
+        name="Invoices",
     )
 
     # --------------------------------

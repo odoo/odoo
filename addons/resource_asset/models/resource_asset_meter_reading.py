@@ -8,10 +8,10 @@ class ResourceAssetMeterReading(models.Model):
     _order = "date desc, id desc"
 
     meter_id = fields.Many2one(
-        "resource.asset.meter",
+        comodel_name="resource.asset.meter",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
     asset_id = fields.Many2one(
         related="meter_id.asset_id",
@@ -23,13 +23,17 @@ class ResourceAssetMeterReading(models.Model):
         store=True,
     )
     date = fields.Datetime(
-        required=True,
         default=fields.Datetime.now,
         index=True,
+        required=True,
     )
     value = fields.Float(required=True)
     source = fields.Selection(
-        [("manual", "Manual"), ("telemetry", "Telemetry"), ("service", "Service")],
+        selection=[
+            ("manual", "Manual"),
+            ("telemetry", "Telemetry"),
+            ("service", "Service"),
+        ],
         default="manual",
         required=True,
     )

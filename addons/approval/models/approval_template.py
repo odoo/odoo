@@ -23,15 +23,15 @@ class ApprovalTemplate(models.Model):
     )
     sequence = fields.Integer(default=10)
     description = fields.Text(
-        translate=True,
         help="Description shown to users when selecting this template",
+        translate=True,
     )
     category_id = fields.Many2one(
         comodel_name="approval.category",
+        help="Category this template creates requests for",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
-        help="Category this template creates requests for",
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
@@ -41,8 +41,8 @@ class ApprovalTemplate(models.Model):
 
     default_reason = fields.Html(
         string="Default Description",
-        translate=True,
         help="Pre-filled reason/description for the request",
+        translate=True,
     )
     default_amount = fields.Float()
     default_quantity = fields.Float()
@@ -70,8 +70,8 @@ class ApprovalTemplate(models.Model):
 
     usage_count = fields.Integer(
         string="Times Used",
-        compute="_compute_usage_count",
         help="Number of requests created from this template",
+        compute="_compute_usage_count",
     )
 
     def _compute_usage_count(self) -> None:

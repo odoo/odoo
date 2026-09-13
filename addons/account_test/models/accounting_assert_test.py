@@ -14,10 +14,19 @@ class AccountingAssertTest(models.Model):
     _description = "Accounting Assert Test"
     _order = "sequence"
 
-    name = fields.Char(string="Test Name", required=True, translate=True)
-    desc = fields.Text(string="Test Description", translate=True)
+    name = fields.Char(
+        string="Test Name",
+        translate=True,
+        required=True,
+    )
+    desc = fields.Text(
+        string="Test Description",
+        translate=True,
+    )
     code_exec = fields.Text(
-        string="Python code", required=True, default=CODE_EXEC_DEFAULT
+        string="Python code",
+        default=CODE_EXEC_DEFAULT,
+        required=True,
     )
     active = fields.Boolean(default=True)
     sequence = fields.Integer(default=10)

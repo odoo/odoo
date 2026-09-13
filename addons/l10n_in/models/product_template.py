@@ -11,7 +11,8 @@ class ProductTemplate(models.Model):
         help="Harmonized System Nomenclature/Services Accounting Code",
     )
     l10n_in_hsn_warning = fields.Text(
-        string="HSC/SAC warning", compute="_compute_l10n_in_hsn_warning"
+        string="HSC/SAC warning",
+        compute="_compute_l10n_in_hsn_warning",
     )
     l10n_in_is_gst_registered_enabled = fields.Boolean(
         compute="_compute_l10n_in_is_gst_registered_enabled"

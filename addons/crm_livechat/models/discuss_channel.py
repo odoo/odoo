@@ -10,13 +10,16 @@ class DiscussChannel(models.Model):
     _inherit = "discuss.channel"
 
     lead_ids = fields.One2many(
-        "crm.lead",
-        "origin_channel_id",
+        comodel_name="crm.lead",
+        inverse_name="origin_channel_id",
         string="Leads",
-        groups="sales_team.group_sale_salesman",
         help="The channel becomes accessible to sales users when leads are set.",
+        groups="sales_team.group_sale_salesman",
     )
-    has_crm_lead = fields.Boolean(compute="_compute_has_crm_lead", store=True)
+    has_crm_lead = fields.Boolean(
+        compute="_compute_has_crm_lead",
+        store=True,
+    )
     _has_crm_lead_index = models.Index("(has_crm_lead) WHERE has_crm_lead IS TRUE")
 
     @api.depends("lead_ids")

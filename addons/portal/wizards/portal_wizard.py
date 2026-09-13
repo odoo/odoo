@@ -24,18 +24,20 @@ class PortalWizard(models.TransientModel):
         return [Command.link(contact_id) for contact_id in contact_ids]
 
     partner_ids = fields.Many2many(
-        "res.partner", string="Partners", default=_default_partner_ids
+        comodel_name="res.partner",
+        string="Partners",
+        default=_default_partner_ids,
     )
     user_ids = fields.One2many(
-        "portal.wizard.user",
-        "wizard_id",
+        comodel_name="portal.wizard.user",
+        inverse_name="wizard_id",
         string="Users",
         compute="_compute_user_ids",
         store=True,
         readonly=False,
     )
     welcome_message = fields.Text(
-        "Invitation Message",
+        string="Invitation Message",
         help="This text is included in the email sent to new users of the portal.",
     )
 
@@ -72,26 +74,33 @@ class PortalWizardUser(models.TransientModel):
     _name = "portal.wizard.user"
     _description = "Portal User Config"
 
-    wizard_id = fields.Many2one("portal.wizard", required=True, ondelete="cascade")
-    partner_id = fields.Many2one(
-        "res.partner",
-        string="Contact",
+    wizard_id = fields.Many2one(
+        comodel_name="portal.wizard",
         required=True,
+        ondelete="cascade",
+    )
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Contact",
         readonly=True,
+        required=True,
         ondelete="cascade",
     )
     email = fields.Char()
 
     user_id = fields.Many2one(
-        "res.users", compute="_compute_user_id", compute_sudo=True
+        comodel_name="res.users",
+        compute="_compute_user_id",
+        compute_sudo=True,
     )
     login_date = fields.Datetime(
-        related="user_id.login_date", string="Latest Authentication"
+        related="user_id.login_date",
+        string="Latest Authentication",
     )
     is_portal = fields.Boolean(compute="_compute_group_details")
     is_internal = fields.Boolean(compute="_compute_group_details")
     email_state = fields.Selection(
-        [("ok", "Valid"), ("ko", "Invalid"), ("exist", "Already Registered")],
+        selection=[("ok", "Valid"), ("ko", "Invalid"), ("exist", "Already Registered")],
         string="Status",
         compute="_compute_email_state",
     )

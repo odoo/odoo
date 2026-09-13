@@ -5,10 +5,12 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     margin = fields.Monetary(
-        compute="_compute_margins", store=True, groups="base.group_user"
+        compute="_compute_margins",
+        store=True,
+        groups="base.group_user",
     )
     margin_percent = fields.Float(
-        "Margin (%)",
+        string="Margin (%)",
         compute="_compute_margins",
         store=True,
         aggregator="avg",

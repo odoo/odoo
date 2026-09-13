@@ -8,7 +8,11 @@ class SurveySurvey(models.Model):
         selection_add=[("recruitment", "Recruitment")],
         ondelete={"recruitment": "set default"},
     )
-    hr_job_ids = fields.One2many("hr.job", "survey_id", string="Job Position")
+    hr_job_ids = fields.One2many(
+        comodel_name="hr.job",
+        inverse_name="survey_id",
+        string="Job Position",
+    )
 
     @api.depends_context("uid")
     def _compute_allowed_survey_types(self):

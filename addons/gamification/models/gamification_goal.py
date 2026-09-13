@@ -21,38 +21,50 @@ class GamificationGoal(models.Model):
     _mail_partner_fields = ("user_partner_id",)
 
     definition_id = fields.Many2one(
-        "gamification.goal.definition",
+        comodel_name="gamification.goal.definition",
         string="Goal Definition",
         required=True,
         ondelete="cascade",
     )
     user_id = fields.Many2one(
-        "res.users",
-        required=True,
-        bypass_search_access=True,
+        comodel_name="res.users",
         index=True,
+        required=True,
         ondelete="cascade",
+        bypass_search_access=True,
     )
-    user_partner_id = fields.Many2one("res.partner", related="user_id.partner_id")
+    user_partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        related="user_id.partner_id",
+    )
     line_id = fields.Many2one(
-        "gamification.challenge.line", string="Challenge Line", ondelete="cascade"
+        comodel_name="gamification.challenge.line",
+        string="Challenge Line",
+        ondelete="cascade",
     )
     challenge_id = fields.Many2one(
         related="line_id.challenge_id",
-        store=True,
-        readonly=True,
-        index=True,
         help="Challenge that generated the goal, assign challenge to users "
         "to generate goals with a value in this field.",
+        store=True,
+        index=True,
+        readonly=True,
     )
     start_date = fields.Date(default=fields.Date.today)
     end_date = fields.Date()  # no start and end = always active
-    target_goal = fields.Float("To Reach", required=True)
+    target_goal = fields.Float(
+        string="To Reach",
+        required=True,
+    )
     # no goal = global index
-    current = fields.Float("Current Value", required=True, default=0)
+    current = fields.Float(
+        string="Current Value",
+        default=0,
+        required=True,
+    )
     completeness = fields.Float(compute="_compute_completeness")
     state = fields.Selection(
-        [
+        selection=[
             ("draft", "Draft"),
             ("inprogress", "In progress"),
             ("reached", "Reached"),
@@ -60,16 +72,22 @@ class GamificationGoal(models.Model):
             ("canceled", "Cancelled"),
         ],
         default="draft",
+        index=True,
         required=True,
+    )
+    to_update = fields.Boolean(string="To update")
+    closed = fields.Boolean(
+        string="Closed goal",
         index=True,
     )
-    to_update = fields.Boolean("To update")
-    closed = fields.Boolean("Closed goal", index=True)
 
     computation_mode = fields.Selection(related="definition_id.computation_mode")
-    color = fields.Integer("Color Index", compute="_compute_color")
+    color = fields.Integer(
+        string="Color Index",
+        compute="_compute_color",
+    )
     remind_update_delay = fields.Integer(
-        "Remind delay",
+        string="Remind delay",
         help="The number of days after which the user "
         "assigned to a manual goal will be reminded. "
         "Never reminded if no value is specified.",
@@ -77,20 +95,28 @@ class GamificationGoal(models.Model):
     last_update = fields.Date(
         help="In case of manual goal, reminders are sent if the goal as not "
         "been updated for a while (defined in challenge). Ignored in "
-        "case of non-manual goal or goal not linked to a challenge.",
+        "case of non-manual goal or goal not linked to a challenge."
     )
 
     definition_description = fields.Text(
-        "Definition Description", related="definition_id.description", readonly=True
+        related="definition_id.description",
+        string="Definition Description",
+        readonly=True,
     )
     definition_condition = fields.Selection(
-        string="Definition Condition", related="definition_id.condition", readonly=True
+        related="definition_id.condition",
+        string="Definition Condition",
+        readonly=True,
     )
     definition_suffix = fields.Char(
-        "Suffix", related="definition_id.full_suffix", readonly=True
+        related="definition_id.full_suffix",
+        string="Suffix",
+        readonly=True,
     )
     definition_display = fields.Selection(
-        string="Display Mode", related="definition_id.display_mode", readonly=True
+        related="definition_id.display_mode",
+        string="Display Mode",
+        readonly=True,
     )
 
     #: Fields that decide whether a goal counts as reached, and therefore whether

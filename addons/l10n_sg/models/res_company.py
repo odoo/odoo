@@ -7,7 +7,9 @@ class ResCompany(models.Model):
     _inherit = ["res.company"]
 
     l10n_sg_unique_entity_number = fields.Char(
-        string="UEN", related="partner_id.l10n_sg_unique_entity_number", readonly=False
+        related="partner_id.l10n_sg_unique_entity_number",
+        string="UEN",
+        readonly=False,
     )
 
     def _get_view(self, view_id=None, view_type="form", **options):

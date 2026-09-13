@@ -33,36 +33,36 @@ class ResourceResource(models.Model):
     name = fields.Char(
         compute="_compute_name",
         inverse="_inverse_name",
-        store=True,
         precompute=True,
+        store=True,
         readonly=False,
         required=True,
     )
     partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Party",
+        help="The person this resource is. A material resource has none.",
         index="btree_not_null",
         ondelete="restrict",
-        help="The person this resource is. A material resource has none.",
     )
     active = fields.Boolean(
-        default=True,
         help="If the active field is set to False, it will allow you to hide the resource record without removing it.",
+        default=True,
     )
     company_id = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
         default=lambda self: self.env.company,
     )
     resource_type = fields.Selection(
-        [("user", "Human"), ("material", "Material")],
+        selection=[("user", "Human"), ("material", "Material")],
         string="Type",
         default="user",
         required=True,
     )
     user_id = fields.Many2one(
-        "res.users",
-        index="btree_not_null",
+        comodel_name="res.users",
         help="Related user name for the resource to manage its access.",
+        index="btree_not_null",
     )
     avatar_128 = fields.Image(compute="_compute_avatar_128")
     share = fields.Boolean(related="user_id.share")
@@ -70,73 +70,73 @@ class ResourceResource(models.Model):
     phone_ids = fields.Many2many(related="partner_id.phone_ids")
 
     calendar_id = fields.Many2one(
-        "resource.calendar",
+        comodel_name="resource.calendar",
         string="Working Time",
-        default=lambda self: self.env.company.resource_calendar_id,
-        domain="[('company_id', 'in', [company_id, False])]",
-        index="btree_not_null",
         help="Define the working schedule of the resource. If not set, the resource will have fully flexible working hours.",
+        default=lambda self: self.env.company.resource_calendar_id,
+        index="btree_not_null",
+        domain="[('company_id', 'in', [company_id, False])]",
     )
     tz = fields.Selection(
-        _selection_timezones,
+        selection=_selection_timezones,
         string="Timezone",
         compute="_compute_tz",
         inverse="_inverse_tz",
-        store=True,
         precompute=True,
+        default=lambda self: self.env.context.get("tz") or self.env.user.tz or "UTC",
+        store=True,
         readonly=False,
         required=True,
-        default=lambda self: self.env.context.get("tz") or self.env.user.tz or "UTC",
     )
     color = fields.Integer(default=lambda self: self._default_color())
     time_efficiency = fields.Float(
-        "Efficiency Factor",
+        string="Efficiency Factor",
+        help="This field is used to calculate the expected duration of a work order at this work center. For example, if a work order takes one hour and the efficiency factor is 100%, then the expected duration will be one hour. If the efficiency factor is 200%, however the expected duration will be 30 minutes.",
         default=100,
         required=True,
-        help="This field is used to calculate the expected duration of a work order at this work center. For example, if a work order takes one hour and the efficiency factor is 100%, then the expected duration will be one hour. If the efficiency factor is 200%, however the expected duration will be 30 minutes.",
     )
 
     assignment_ids = fields.One2many(
-        "resource.assignment",
-        "resource_id",
+        comodel_name="resource.assignment",
+        inverse_name="resource_id",
         string="Assignments",
     )
     holder_id = fields.Many2one(
-        "resource.resource",
+        comodel_name="resource.resource",
+        string="Current Holder",
         compute="_compute_holder_id",
         search="_search_holder_id",
-        string="Current Holder",
     )
     capacity = fields.Integer(
+        help="How many claims the resource can hold at once: seats at a table, concurrent users of a machine. A reservation's allocated percentage is a share of this.",
         default=1,
         required=True,
-        help="How many claims the resource can hold at once: seats at a table, concurrent users of a machine. A reservation's allocated percentage is a share of this.",
     )
 
     role_ids = fields.Many2many(
-        "resource.role",
-        "resource_resource_role_rel",
-        "resource_resource_id",
-        "role_id",
-        "Roles",
+        comodel_name="resource.role",
+        relation="resource_resource_role_rel",
+        column1="resource_resource_id",
+        column2="role_id",
+        string="Roles",
     )
     default_role_id = fields.Many2one(
-        "resource.role",
+        comodel_name="resource.role",
+        help="Preferred role when assigning this resource. The default is always included in its roles.",
         compute="_compute_default_role_id",
         inverse="_inverse_default_role_id",
         store=True,
         readonly=False,
-        help="Preferred role when assigning this resource. The default is always included in its roles.",
     )
 
     booking_limit_percentage = fields.Float(
-        "Booking Ceiling %",
+        string="Booking Ceiling %",
+        help="Maximum simultaneous allocation for enforced bookings. 100% permits full booking; 120% permits 20% overbooking. Warning-only reservations can exceed this ceiling when resource enforcement is disabled.",
         default=100.0,
         required=True,
-        help="Maximum simultaneous allocation for enforced bookings. 100% permits full booking; 120% permits 20% overbooking. Warning-only reservations can exceed this ceiling when resource enforcement is disabled.",
     )
     enforce_booking_limit = fields.Boolean(
-        "Enforce Booking Ceiling",
+        string="Enforce Booking Ceiling",
         help="Reject any reservation that exceeds this resource's booking ceiling, including manual meetings and shifts. Individual bookings may enforce the ceiling even when this option is disabled.",
     )
     _check_booking_limit = models.Constraint(

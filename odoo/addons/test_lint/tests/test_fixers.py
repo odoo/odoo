@@ -11,10 +11,12 @@ from odoo.modules import Manifest
 from odoo.tests.common import BaseCase, no_retry, tagged
 
 from . import (
+    _checker_field_declaration,
     _modernize_commands,
     _modernize_output_directives,
     _pretty_xml,
     _relocate_menus,
+    _sort_field_attributes,
     _sort_manifests,
     _sort_xml_records,
     _xml_identity,
@@ -858,6 +860,136 @@ class TestFieldOrderVocabulary(LintCase):
         for model, names in _sort_xml_records.FIELD_ORDER.items():
             with self.subTest(model=model):
                 self.assertEqual(sorted(set(names)), sorted(names))
+
+
+@no_retry
+class TestSortFieldAttributes(BaseCase):
+    def _rewrite(self, source: str) -> tuple[str, int, list[str]]:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "m.py"
+            path.write_text(textwrap.dedent(source), encoding="utf-8")
+            _before, after, count, declined = _sort_field_attributes.rewrite(path)
+        return after.decode(), count, declined
+
+    def test_positionals_become_keywords_in_the_canonical_order_one_per_line(self):
+        after, count, declined = self._rewrite("""
+        class M(models.Model):
+            line_ids = fields.One2many("m.line", "m_id", "Lines", copy=True)
+            partner_id = fields.Many2one("res.partner", required=True, string="P")
+        """)
+        self.assertEqual((count, declined), (2, []))
+        self.assertEqual(
+            after,
+            textwrap.dedent("""
+            class M(models.Model):
+                line_ids = fields.One2many(
+                    comodel_name="m.line",
+                    inverse_name="m_id",
+                    string="Lines",
+                    copy=True,
+                )
+                partner_id = fields.Many2one(
+                    comodel_name="res.partner",
+                    string="P",
+                    required=True,
+                )
+            """),
+        )
+
+    def test_a_single_argument_stays_on_one_line(self):
+        after, count, _declined = self._rewrite("""
+        class M(models.Model):
+            name = fields.Char("Name")
+            kind = fields.Selection([("a", "A")])
+        """)
+        self.assertEqual(count, 2)
+        self.assertIn('name = fields.Char(string="Name")\n', after)
+        self.assertIn('kind = fields.Selection(selection=[("a", "A")])\n', after)
+
+    def test_comments_travel_with_their_argument(self):
+        after, count, declined = self._rewrite("""
+        class M(models.Model):
+            f = fields.Char(
+                # why it is required
+                required=True,
+                string="F",  # the label
+                help="h",
+            )
+        """)
+        self.assertEqual((count, declined), (1, []))
+        self.assertEqual(
+            after,
+            textwrap.dedent("""
+            class M(models.Model):
+                f = fields.Char(
+                    string="F",  # the label
+                    help="h",
+                    # why it is required
+                    required=True,
+                )
+            """),
+        )
+
+    def test_a_comment_inside_a_value_is_part_of_the_value(self):
+        after, count, _declined = self._rewrite("""
+        class M(models.Model):
+            kind = fields.Selection(
+                [
+                    ("a", "A"),  # first
+                ],
+                required=True,
+            )
+        """)
+        self.assertEqual(count, 1)
+        self.assertIn('("a", "A"),  # first', after)
+        self.assertLess(after.index("selection=["), after.index("required=True"))
+
+    def test_what_the_fixer_cannot_carry_is_declined_not_broken(self):
+        after, count, declined = self._rewrite("""
+        class M(models.Model):
+            a = fields.Char(
+                string="A",
+                required=True,
+                # nothing follows this
+            )
+            b = fields.Char(**COMMON)
+            c = fields.Char(*ARGS, required=True)
+        """)
+        self.assertEqual(count, 0)
+        self.assertEqual(len(declined), 3)
+        self.assertEqual(
+            after,
+            textwrap.dedent("""
+        class M(models.Model):
+            a = fields.Char(
+                string="A",
+                required=True,
+                # nothing follows this
+            )
+            b = fields.Char(**COMMON)
+            c = fields.Char(*ARGS, required=True)
+        """),
+        )
+
+    def test_a_canonical_declaration_is_left_alone(self):
+        source = """
+        class M(models.Model):
+            a = fields.Char(
+                string="A",
+                required=True,
+            )
+        """
+        after, count, _declined = self._rewrite(source)
+        self.assertEqual(count, 0)
+        self.assertEqual(after, textwrap.dedent(source))
+
+    def test_the_vocabulary_lists_every_attribute_once(self):
+        order = _checker_field_declaration.FIELD_ATTRIBUTE_ORDER
+        self.assertEqual(sorted(set(order)), sorted(order))
+        self.assertLess(order.index("comodel_name"), order.index("string"))
+        self.assertLess(order.index("compute"), order.index("store"))
+        self.assertLess(order.index("store"), order.index("domain"))
+        self.assertLess(order.index("domain"), order.index("groups"))
 
 
 @no_retry

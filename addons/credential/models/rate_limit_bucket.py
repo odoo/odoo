@@ -18,44 +18,44 @@ class RateLimitBucket(models.Model):
     _rec_name = "bucket_key"
 
     bucket_key = fields.Char(
-        required=True,
-        index=True,
         help="Unique key format: model:record_id:company_id or model:record_id:global",
+        index=True,
+        required=True,
     )
     endpoint_model = fields.Char(
-        required=True,
-        index=True,
         help="Model name of the rate-limited endpoint (e.g., 'webhook.subscription')",
+        index=True,
+        required=True,
     )
     endpoint_id = fields.Integer(
         string="Endpoint Record ID",
-        required=True,
-        index=True,
         help="Database ID of the rate-limited endpoint record",
+        index=True,
+        required=True,
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
-        index=True,
         help="Company for per-company rate limiting. Empty = endpoint-wide limit.",
+        index=True,
     )
     tokens = fields.Float(
         string="Available Tokens",
-        default=0.0,
         help="Current number of available tokens in bucket",
+        default=0.0,
     )
     last_refill = fields.Datetime(
         string="Last Refill Time",
-        default=fields.Datetime.now,
         help="Timestamp of last token refill",
+        default=fields.Datetime.now,
     )
     last_request_at = fields.Datetime(
         string="Last Request",
         help="Timestamp of last request using this bucket",
     )
     can_reset = fields.Boolean(
-        compute="_compute_can_reset",
         help="Whether the endpoint this bucket belongs to can still be "
         "resolved, so a manual reset can look up its capacity.",
+        compute="_compute_can_reset",
     )
 
     _bucket_key_uniq = models.Constraint(

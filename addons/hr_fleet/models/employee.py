@@ -7,13 +7,13 @@ class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
     employee_cars_count = fields.Integer(
-        compute="_compute_employee_cars_count",
         string="Cars",
+        compute="_compute_employee_cars_count",
         groups="fleet.fleet_group_manager",
     )
     car_ids = fields.One2many(
-        "fleet.vehicle",
-        "driver_employee_id",
+        comodel_name="fleet.vehicle",
+        inverse_name="driver_employee_id",
         string="Vehicles (private)",
         groups="fleet.fleet_group_manager,hr.group_hr_user",
     )

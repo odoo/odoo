@@ -6,11 +6,9 @@ from odoo import api, fields, models
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    certifications_count = fields.Integer(
-        compute="_compute_certifications_count",
-    )
+    certifications_count = fields.Integer(compute="_compute_certifications_count")
     certifications_company_count = fields.Integer(
-        "Company Certifications Count",
+        string="Company Certifications Count",
         compute="_compute_certifications_company_count",
     )
 

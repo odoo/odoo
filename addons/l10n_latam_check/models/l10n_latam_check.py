@@ -17,7 +17,7 @@ class L10n_LatamCheck(models.Model):
     _inherit = ["mixin.mail.thread", "mixin.mail.activity"]
 
     payment_id = fields.Many2one(
-        "account.payment",
+        comodel_name="account.payment",
         required=True,
         ondelete="cascade",
     )
@@ -46,10 +46,15 @@ class L10n_LatamCheck(models.Model):
         store=True,
         readonly=False,
     )
-    payment_date = fields.Date(readonly=False, required=True)
+    payment_date = fields.Date(
+        readonly=False,
+        required=True,
+    )
     amount = fields.Monetary()
     outstanding_line_id = fields.Many2one(
-        "account.move.line", readonly=True, check_company=True
+        comodel_name="account.move.line",
+        readonly=True,
+        check_company=True,
     )
     issue_state = fields.Selection(
         selection=[("handed", "Handed"), ("debited", "Debited"), ("voided", "Voided")],
@@ -60,7 +65,10 @@ class L10n_LatamCheck(models.Model):
     payment_method_code = fields.Char(related="payment_id.payment_method_code")
     partner_id = fields.Many2one(related="payment_id.partner_id")
     original_journal_id = fields.Many2one(related="payment_id.journal_id")
-    company_id = fields.Many2one(related="payment_id.company_id", store=True)
+    company_id = fields.Many2one(
+        related="payment_id.company_id",
+        store=True,
+    )
     currency_id = fields.Many2one(related="payment_id.currency_id")
     payment_channel_id = fields.Many2one(
         related="payment_id.payment_channel_id",

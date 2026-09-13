@@ -19,18 +19,26 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     account_stock_journal_id = fields.Many2one(
-        "account.journal", string="Stock Journal", check_company=True
+        comodel_name="account.journal",
+        string="Stock Journal",
+        check_company=True,
     )
 
     account_stock_valuation_id = fields.Many2one(
-        "account.account", string="Stock Valuation Account", check_company=True
+        comodel_name="account.account",
+        string="Stock Valuation Account",
+        check_company=True,
     )
 
     account_production_wip_account_id = fields.Many2one(
-        "account.account", string="Production WIP Account", check_company=True
+        comodel_name="account.account",
+        string="Production WIP Account",
+        check_company=True,
     )
     account_production_wip_overhead_account_id = fields.Many2one(
-        "account.account", string="Production WIP Overhead Account", check_company=True
+        comodel_name="account.account",
+        string="Production WIP Overhead Account",
+        check_company=True,
     )
 
     inventory_period = fields.Selection(
@@ -44,8 +52,8 @@ class ResCompany(models.Model):
     )
 
     inventory_valuation = fields.Selection(
-        string="Valuation",
         selection=VALUATION_SELECTION,
+        string="Valuation",
         default="periodic",
     )
 

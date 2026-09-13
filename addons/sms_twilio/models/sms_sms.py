@@ -7,16 +7,21 @@ class SmsSms(models.Model):
     _inherit = "sms.sms"
 
     sms_twilio_sid = fields.Char(
-        related="sms_tracker_id.sms_twilio_sid", depends=["sms_tracker_id"]
+        related="sms_tracker_id.sms_twilio_sid",
+        depends=["sms_tracker_id"],
     )
-    record_company_id = fields.Many2one("res.company", "Company", ondelete="set null")
+    record_company_id = fields.Many2one(
+        comodel_name="res.company",
+        string="Company",
+        ondelete="set null",
+    )
     failure_type = fields.Selection(
         selection_add=[
             ("twilio_authentication", 'Authentication Error"'),
             ("twilio_callback", "Incorrect callback URL"),
             ("twilio_from_missing", "Missing From Number"),
             ("twilio_from_to", "From / To identic"),
-        ],
+        ]
     )
 
     # CRUD

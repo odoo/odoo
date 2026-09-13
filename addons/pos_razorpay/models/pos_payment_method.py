@@ -8,7 +8,8 @@ class PosPaymentMethod(models.Model):
     _inherit = "pos.payment.method"
 
     razorpay_tid = fields.Char(
-        string="Razorpay Device Serial No", help="Device Serial No \n ex: 7000012300"
+        string="Razorpay Device Serial No",
+        help="Device Serial No \n ex: 7000012300",
     )
     razorpay_allowed_payment_modes = fields.Selection(
         selection=[
@@ -17,8 +18,8 @@ class PosPaymentMethod(models.Model):
             ("upi", "UPI"),
             ("bharatqr", "BHARATQR"),
         ],
-        default="all",
         help="Choose allow payment mode: \n All/Card/UPI or QR",
+        default="all",
     )
     razorpay_username = fields.Char(help="Username(Device Login) \n ex: 1234500121")
     razorpay_api_key = fields.Char(
@@ -27,7 +28,8 @@ class PosPaymentMethod(models.Model):
         groups="point_of_sale.group_pos_manager",
     )
     razorpay_test_mode = fields.Boolean(
-        default=False, help="Turn it on when in Test Mode"
+        help="Turn it on when in Test Mode",
+        default=False,
     )
 
     def _selection_payment_terminals(self):

@@ -8,9 +8,10 @@ APPLICATION_RESPONSE_CUSTOMISATION_ID = "busdox-docid-qns::urn:oasis:names:speci
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    nemhandel_supported_documents = fields.Json("Supported Nemhandel Documents")
+    nemhandel_supported_documents = fields.Json(string="Supported Nemhandel Documents")
     nemhandel_response_support = fields.Boolean(
-        "Nemhandel Response Service", compute="_compute_nemhandel_response_support"
+        string="Nemhandel Response Service",
+        compute="_compute_nemhandel_response_support",
     )
 
     @api.depends("nemhandel_supported_documents", "nemhandel_verification_state")

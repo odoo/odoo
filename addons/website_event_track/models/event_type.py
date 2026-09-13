@@ -7,14 +7,14 @@ class EventType(models.Model):
     website_track = fields.Boolean(
         string="Tracks on Website",
         compute="_compute_website_track_menu_data",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     website_track_proposal = fields.Boolean(
         string="Tracks Proposals on Website",
         compute="_compute_website_track_menu_data",
-        readonly=False,
         store=True,
+        readonly=False,
     )
 
     @api.depends("website_menu")

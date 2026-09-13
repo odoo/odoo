@@ -13,15 +13,18 @@ class MixinDataCleaningNotification(models.AbstractModel):
     _cleaning_mode_field = None
 
     notify_user_ids = fields.Many2many(
-        "res.users",
+        comodel_name="res.users",
         string="Notify Users",
-        domain=lambda self: self._domain_notify_user_ids(),
-        default=lambda self: self.env.user,
         help="List of users to notify when there are new records to review",
+        default=lambda self: self.env.user,
+        domain=lambda self: self._domain_notify_user_ids(),
     )
-    notify_interval = fields.Integer(string="Notify", default=1)
+    notify_interval = fields.Integer(
+        string="Notify",
+        default=1,
+    )
     notify_unit = fields.Selection(
-        time_unit_selection("day", "week", "month"),
+        selection=time_unit_selection("day", "week", "month"),
         string="Notify Frequency Period",
         default="week",
     )

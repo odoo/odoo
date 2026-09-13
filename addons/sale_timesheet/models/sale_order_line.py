@@ -11,23 +11,25 @@ class SaleOrderLine(models.Model):
     )
     analytic_line_ids = fields.One2many(domain=[("project_id", "=", False)])
     remaining_hours_available = fields.Boolean(
-        compute="_compute_remaining_hours_available", compute_sudo=True
+        compute="_compute_remaining_hours_available",
+        compute_sudo=True,
     )
     remaining_hours = fields.Float(
-        "Time Remaining on SO",
+        string="Time Remaining on SO",
         compute="_compute_remaining_hours",
         compute_sudo=True,
         store=True,
     )
     has_displayed_warning_upsell = fields.Boolean(
-        copy=False, export_string_translation=False
+        export_string_translation=False,
+        copy=False,
     )
     timesheet_ids = fields.One2many(
-        "account.analytic.line",
-        "so_line",
-        domain=[("project_id", "!=", False)],
+        comodel_name="account.analytic.line",
+        inverse_name="so_line",
         string="Timesheets",
         export_string_translation=False,
+        domain=[("project_id", "!=", False)],
     )
 
     @api.depends("remaining_hours_available", "remaining_hours")

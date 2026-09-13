@@ -5,5 +5,6 @@ class Uom(models.Model):
     _inherit = "uom.uom"
 
     l10n_id_uom_code = fields.Many2one(
-        "l10n_id_efaktur_coretax.uom.code", string="E-Faktur UoM code"
+        comodel_name="l10n_id_efaktur_coretax.uom.code",
+        string="E-Faktur UoM code",
     )

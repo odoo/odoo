@@ -10,31 +10,35 @@ class L10n_LatamDocumentType(models.Model):
 
     active = fields.Boolean(default=True)
     sequence = fields.Integer(
-        default=10,
-        required=True,
         help="To set in which order show the documents type taking into account the most"
         " commonly used first",
+        default=10,
+        required=True,
     )
     country_id = fields.Many2one(
-        "res.country",
-        required=True,
-        index=True,
+        comodel_name="res.country",
         help="Country in which this type of document is valid",
+        index=True,
+        required=True,
     )
-    name = fields.Char(required=True, help="The document name", translate=True)
+    name = fields.Char(
+        help="The document name",
+        translate=True,
+        required=True,
+    )
     doc_code_prefix = fields.Char(
-        "Document Code Prefix",
+        string="Document Code Prefix",
         help="Prefix for Documents Codes on Invoices and Account Moves. For eg. 'FA ' will"
         " build 'FA 0001-0000001' Document Number",
     )
     code = fields.Char(help="Code used by different localizations")
     report_name = fields.Char(
-        "Name on Reports",
+        string="Name on Reports",
         help='Name that will be printed in reports, for example "CREDIT NOTE"',
         translate=True,
     )
     internal_type = fields.Selection(
-        [
+        selection=[
             ("invoice", "Invoices"),
             ("debit_note", "Debit Notes"),
             ("credit_note", "Credit Notes"),

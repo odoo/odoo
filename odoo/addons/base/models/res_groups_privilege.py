@@ -12,15 +12,25 @@ class ResGroupsPrivilege(models.Model):
     _description = "Privileges"
     _order = "sequence, name, id"
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
     description = fields.Text()
     placeholder = fields.Char(
-        default="No",
         help="Label shown for the empty option in the privilege selection field of the user form (e.g. 'No' access).",
+        default="No",
     )
     sequence = fields.Integer(default=100)
-    category_id = fields.Many2one("ir.module.category", index=True)
-    group_ids = fields.One2many("res.groups", "privilege_id", string="Groups")
+    category_id = fields.Many2one(
+        comodel_name="ir.module.category",
+        index=True,
+    )
+    group_ids = fields.One2many(
+        comodel_name="res.groups",
+        inverse_name="privilege_id",
+        string="Groups",
+    )
 
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:

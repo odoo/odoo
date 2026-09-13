@@ -4,10 +4,12 @@ from odoo import Command, api, fields, models
 class ProjectTemplateCreateWizard(models.TransientModel):
     _inherit = "project.template.create.wizard"
 
-    partner_id = fields.Many2one("res.partner")
+    partner_id = fields.Many2one(comodel_name="res.partner")
     allow_billable = fields.Boolean(related="template_id.allow_billable")
     role_to_users_ids = fields.One2many(
-        compute="_compute_role_to_users_ids", readonly=False, store=True
+        compute="_compute_role_to_users_ids",
+        store=True,
+        readonly=False,
     )
 
     @api.depends("template_id")

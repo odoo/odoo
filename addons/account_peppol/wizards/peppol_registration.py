@@ -23,14 +23,15 @@ class PeppolRegistration(models.TransientModel):
     # 'company_id' is the current active company, always set.
     company_id = fields.Many2one(
         comodel_name="res.company",
-        required=True,
         default=lambda self: self.env.company,
+        required=True,
     )
 
     # 'parent_company_id' is the potential parent company of the current branch or the branch itself
     # if no fallback on the parent branch is possible.
     parent_company_id = fields.Many2one(
-        comodel_name="res.company", compute="_compute_parent_company_id"
+        comodel_name="res.company",
+        compute="_compute_parent_company_id",
     )
     parent_company_name = fields.Char(related="parent_company_id.name")
 
@@ -43,7 +44,7 @@ class PeppolRegistration(models.TransientModel):
 
     # Choice between the current company or the parent one.
     display_use_parent_connection_selection = fields.Boolean(
-        compute="_compute_display_use_parent_connection_selection",
+        compute="_compute_display_use_parent_connection_selection"
     )
     use_parent_connection_selection = fields.Selection(
         selection=[
@@ -59,20 +60,22 @@ class PeppolRegistration(models.TransientModel):
     # TODO: remove in master
     is_branch_company = fields.Boolean(store=False)
     active_parent_company = fields.Many2one(
-        string="Active Parent Company", related="parent_company_id"
+        related="parent_company_id",
+        string="Active Parent Company",
     )
     active_parent_company_name = fields.Char(
-        string="Active Parent Company Name", related="parent_company_name"
+        related="parent_company_name",
+        string="Active Parent Company Name",
     )
     can_use_parent_connection = fields.Boolean(
-        string="Can Use Parent Connection",
         related="display_use_parent_connection_selection",
+        string="Can Use Parent Connection",
     )
     # TODO END: remove in master
 
     edi_mode = fields.Selection(
-        string="EDI mode",
         selection=[("demo", "Demo"), ("test", "Test"), ("prod", "Live")],
+        string="EDI mode",
         compute="_compute_edi_mode",
     )
     edi_user_id = fields.Many2one(
@@ -93,15 +96,21 @@ class PeppolRegistration(models.TransientModel):
         required=True,
     )
     phone_number = fields.Char(
-        related="selected_company_id.account_peppol_phone_number", readonly=False
+        related="selected_company_id.account_peppol_phone_number",
+        readonly=False,
     )
     peppol_eas = fields.Selection(
-        related="selected_company_id.peppol_eas", readonly=False, required=True
+        related="selected_company_id.peppol_eas",
+        readonly=False,
+        required=True,
     )
     peppol_endpoint = fields.Char(
-        related="selected_company_id.peppol_endpoint", readonly=False, required=True
+        related="selected_company_id.peppol_endpoint",
+        readonly=False,
+        required=True,
     )
-    smp_registration = fields.Boolean(  # you're registering to SMP when you register as a sender+receiver
+    smp_registration = fields.Boolean(
+        # you're registering to SMP when you register as a sender+receiver
         string="Register as a receiver",
         compute="_compute_smp_registration_external_provider",
     )

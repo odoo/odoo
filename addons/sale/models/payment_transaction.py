@@ -18,10 +18,13 @@ class PaymentTransaction(models.Model):
         column1="transaction_id",
         column2="sale_order_id",
         string="Sales Orders",
-        readonly=True,
         copy=False,
+        readonly=True,
     )
-    sale_order_ids_nbr = fields.Count("sale_order_ids", string="# of Sales Orders")
+    sale_order_ids_nbr = fields.Count(
+        count_of="sale_order_ids",
+        string="# of Sales Orders",
+    )
 
     @api.model
     def _compute_reference_prefix(self, separator, **values):

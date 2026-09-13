@@ -5,9 +5,12 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     # pos.config fields
-    pos_discount_pc = fields.Float(related="pos_config_id.discount_pc", readonly=False)
+    pos_discount_pc = fields.Float(
+        related="pos_config_id.discount_pc",
+        readonly=False,
+    )
     pos_discount_product_id = fields.Many2one(
-        "product.product",
+        comodel_name="product.product",
         compute="_compute_pos_discount_product_id",
         store=True,
         readonly=False,

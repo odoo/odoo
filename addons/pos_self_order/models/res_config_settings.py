@@ -20,31 +20,42 @@ class ResConfigSettings(models.TransientModel):
         required=True,
     )
     pos_self_ordering_mode = fields.Selection(
-        related="pos_config_id.self_ordering_mode", readonly=False, required=True
+        related="pos_config_id.self_ordering_mode",
+        readonly=False,
+        required=True,
     )
     pos_self_ordering_default_language_id = fields.Many2one(
-        related="pos_config_id.self_ordering_default_language_id", readonly=False
+        related="pos_config_id.self_ordering_default_language_id",
+        readonly=False,
     )
     pos_self_ordering_available_language_ids = fields.Many2many(
-        related="pos_config_id.self_ordering_available_language_ids", readonly=False
+        related="pos_config_id.self_ordering_available_language_ids",
+        readonly=False,
     )
     pos_self_ordering_image_home_ids = fields.Many2many(
-        related="pos_config_id.self_ordering_image_home_ids", readonly=False
+        related="pos_config_id.self_ordering_image_home_ids",
+        readonly=False,
     )
     pos_self_ordering_image_background_ids = fields.Many2many(
-        related="pos_config_id.self_ordering_image_background_ids", readonly=False
+        related="pos_config_id.self_ordering_image_background_ids",
+        readonly=False,
     )
     pos_self_ordering_image_brand = fields.Image(
-        related="pos_config_id.self_ordering_image_brand", readonly=False
+        related="pos_config_id.self_ordering_image_brand",
+        readonly=False,
     )
     pos_self_ordering_image_brand_name = fields.Char(
-        related="pos_config_id.self_ordering_image_brand_name", readonly=False
+        related="pos_config_id.self_ordering_image_brand_name",
+        readonly=False,
     )
     pos_self_ordering_pay_after = fields.Selection(
-        related="pos_config_id.self_ordering_pay_after", readonly=False, required=True
+        related="pos_config_id.self_ordering_pay_after",
+        readonly=False,
+        required=True,
     )
     pos_self_ordering_default_user_id = fields.Many2one(
-        related="pos_config_id.self_ordering_default_user_id", readonly=False
+        related="pos_config_id.self_ordering_default_user_id",
+        readonly=False,
     )
 
     @api.onchange("pos_self_ordering_default_user_id")

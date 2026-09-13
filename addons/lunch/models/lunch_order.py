@@ -11,79 +11,113 @@ class LunchOrder(models.Model):
     _order = "id desc"
     _display_name = "product_id"
 
-    name = fields.Char(related="product_id.name", string="Product Name", readonly=True)
+    name = fields.Char(
+        related="product_id.name",
+        string="Product Name",
+        readonly=True,
+    )
     topping_ids_1 = fields.Many2many(
-        "lunch.topping",
-        "lunch_order_topping",
-        "order_id",
-        "topping_id",
+        comodel_name="lunch.topping",
+        relation="lunch_order_topping",
+        column1="order_id",
+        column2="topping_id",
         string="Extras 1",
         domain=[("topping_category", "=", 1)],
     )
     topping_ids_2 = fields.Many2many(
-        "lunch.topping",
-        "lunch_order_topping",
-        "order_id",
-        "topping_id",
+        comodel_name="lunch.topping",
+        relation="lunch_order_topping",
+        column1="order_id",
+        column2="topping_id",
         string="Extras 2",
         domain=[("topping_category", "=", 2)],
     )
     topping_ids_3 = fields.Many2many(
-        "lunch.topping",
-        "lunch_order_topping",
-        "order_id",
-        "topping_id",
+        comodel_name="lunch.topping",
+        relation="lunch_order_topping",
+        column1="order_id",
+        column2="topping_id",
         string="Extras 3",
         domain=[("topping_category", "=", 3)],
     )
-    product_id = fields.Many2one("lunch.product", required=True)
+    product_id = fields.Many2one(
+        comodel_name="lunch.product",
+        required=True,
+    )
     category_id = fields.Many2one(
-        string="Product Category", related="product_id.category_id", store=True
+        related="product_id.category_id",
+        string="Product Category",
+        store=True,
     )
     date = fields.Date(
-        "Order Date", required=True, readonly=False, default=fields.Date.context_today
+        string="Order Date",
+        default=fields.Date.context_today,
+        readonly=False,
+        required=True,
     )
     supplier_id = fields.Many2one(
-        string="Vendor", related="product_id.supplier_id", store=True, index=True
+        related="product_id.supplier_id",
+        string="Vendor",
+        store=True,
+        index=True,
     )
     available_today = fields.Boolean(related="supplier_id.available_today")
 
     available_on_date = fields.Boolean(compute="_compute_available_on_date")
     order_deadline_passed = fields.Boolean(compute="_compute_order_deadline_passed")
-    user_id = fields.Many2one("res.users", default=lambda self: self.env.uid)
-    lunch_location_id = fields.Many2one(
-        "lunch.location", default=lambda self: self.env.user.last_lunch_location_id
+    user_id = fields.Many2one(
+        comodel_name="res.users",
+        default=lambda self: self.env.uid,
     )
-    note = fields.Text("Notes")
+    lunch_location_id = fields.Many2one(
+        comodel_name="lunch.location",
+        default=lambda self: self.env.user.last_lunch_location_id,
+    )
+    note = fields.Text(string="Notes")
     price = fields.Monetary(
-        "Total Price", compute="_compute_price", readonly=True, store=True
+        string="Total Price",
+        compute="_compute_price",
+        store=True,
+        readonly=True,
     )
     active = fields.Boolean(default=True)
     state = fields.Selection(
-        [
+        selection=[
             ("new", "To Order"),
             ("ordered", "Ordered"),  # "Internally" ordered
             ("sent", "Sent"),  # Order sent to the supplier
             ("confirmed", "Received"),  # Order received
             ("cancelled", "Cancelled"),
         ],
-        "Status",
-        readonly=True,
-        index=True,
+        string="Status",
         default="new",
+        index=True,
+        readonly=True,
     )
     notified = fields.Boolean(default=False)
     company_id = fields.Many2one(
-        "res.company", default=lambda self: self.env.company.id
+        comodel_name="res.company",
+        default=lambda self: self.env.company.id,
     )
-    currency_id = fields.Many2one(related="company_id.currency_id", store=True)
-    quantity = fields.Float(required=True, default=1)
+    currency_id = fields.Many2one(
+        related="company_id.currency_id",
+        store=True,
+    )
+    quantity = fields.Float(
+        default=1,
+        required=True,
+    )
 
     display_toppings = fields.Text(
-        "Extras", compute="_compute_display_toppings", store=True
+        string="Extras",
+        compute="_compute_display_toppings",
+        store=True,
     )
 
-    product_description = fields.Html("Description", related="product_id.description")
+    product_description = fields.Html(
+        related="product_id.description",
+        string="Description",
+    )
     topping_label_1 = fields.Char(related="product_id.supplier_id.topping_label_1")
     topping_label_2 = fields.Char(related="product_id.supplier_id.topping_label_2")
     topping_label_3 = fields.Char(related="product_id.supplier_id.topping_label_3")

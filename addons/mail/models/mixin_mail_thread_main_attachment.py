@@ -18,10 +18,10 @@ class MixinMailThreadMainAttachment(models.AbstractModel):
     _description = "Mail Main Attachment management"
 
     message_main_attachment_id: IrAttachment = fields.Many2one(
-        string="Main Attachment",
         comodel_name="ir.attachment",
-        copy=False,
+        string="Main Attachment",
         index="btree_not_null",
+        copy=False,
     )
 
     def _message_post_after_hook(self, message: MailMessage, msg_values: dict) -> None:

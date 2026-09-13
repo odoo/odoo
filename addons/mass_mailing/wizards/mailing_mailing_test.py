@@ -31,12 +31,15 @@ class MailingMailingTest(models.TransientModel):
 
     email_to = fields.Text(
         string="Recipients",
-        required=True,
         help="Carriage-return-separated list of email addresses.",
         default=_default_email_to,
+        required=True,
     )
     mass_mailing_id = fields.Many2one(
-        "mailing.mailing", string="Mailing", required=True, ondelete="cascade"
+        comodel_name="mailing.mailing",
+        string="Mailing",
+        required=True,
+        ondelete="cascade",
     )
 
     def send_mail_test(self):

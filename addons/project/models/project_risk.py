@@ -10,22 +10,26 @@ class ProjectRisk(models.Model):
     _order = "risk_score desc, id desc"
     _inherit = ["mixin.mail.thread"]
 
-    name = fields.Char("Risk", required=True, tracking=True)
+    name = fields.Char(
+        string="Risk",
+        required=True,
+        tracking=True,
+    )
     description = fields.Html()
     project_id = fields.Many2one(
-        "project.project",
+        comodel_name="project.project",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
     task_id = fields.Many2one(
-        "project.task",
+        comodel_name="project.task",
         string="Related Task",
-        index="btree_not_null",
         help="Optional link to a specific task affected by this risk.",
+        index="btree_not_null",
     )
     category = fields.Selection(
-        [
+        selection=[
             ("technical", "Technical"),
             ("organizational", "Organizational"),
             ("external", "External"),
@@ -37,7 +41,7 @@ class ProjectRisk(models.Model):
         tracking=True,
     )
     probability = fields.Selection(
-        [
+        selection=[
             ("1", "Rare"),
             ("2", "Unlikely"),
             ("3", "Possible"),
@@ -49,7 +53,7 @@ class ProjectRisk(models.Model):
         tracking=True,
     )
     impact = fields.Selection(
-        [
+        selection=[
             ("1", "Negligible"),
             ("2", "Minor"),
             ("3", "Moderate"),
@@ -61,12 +65,12 @@ class ProjectRisk(models.Model):
         tracking=True,
     )
     risk_score = fields.Integer(
+        help="Probability × Impact (1–25).",
         compute="_compute_risk_score_and_level",
         store=True,
-        help="Probability × Impact (1–25).",
     )
     risk_level = fields.Selection(
-        [
+        selection=[
             ("low", "Low"),
             ("medium", "Medium"),
             ("high", "High"),
@@ -76,7 +80,7 @@ class ProjectRisk(models.Model):
         store=True,
     )
     response_strategy = fields.Selection(
-        [
+        selection=[
             ("mitigate", "Mitigate"),
             ("transfer", "Transfer"),
             ("accept", "Accept"),
@@ -87,13 +91,13 @@ class ProjectRisk(models.Model):
     )
     response_plan = fields.Html()
     owner_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Risk Owner",
-        tracking=True,
         help="Person responsible for monitoring and responding to this risk.",
+        tracking=True,
     )
     state = fields.Selection(
-        [
+        selection=[
             ("identified", "Identified"),
             ("assessed", "Assessed"),
             ("mitigated", "Mitigated"),

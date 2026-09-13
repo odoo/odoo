@@ -66,7 +66,7 @@ class AccountTax(models.Model):
     _inherit = "account.tax"
 
     l10n_hu_tax_type = fields.Selection(
-        _SELECTION_TAX_TYPE,
+        selection=_SELECTION_TAX_TYPE,
         string="NAV VAT Tax Type",
         help="Precise identification of the VAT tax for the Hungarian authority.",
     )

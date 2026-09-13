@@ -12,10 +12,10 @@ class MixinAnalyticPlanFields(models.AbstractModel):
     _description = "Analytic Plan Fields"
 
     account_id = fields.Many2one(
-        "account.analytic.account",
-        "Project Account",
-        ondelete="restrict",
+        comodel_name="account.analytic.account",
+        string="Project Account",
         index=True,
+        ondelete="restrict",
         check_company=True,
     )
     # Magic column that represents all the plans at the same time, except for the compute

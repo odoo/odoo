@@ -10,30 +10,28 @@ class PartnerProfile(models.Model):
 
     name = fields.Char(
         string="Profile Name",
-        required=True,
         help="Name of the customer profile",
+        required=True,
     )
     active = fields.Boolean(
-        default=True,
         help="If unchecked, the profile will not appear in default views",
+        default=True,
     )
     sequence = fields.Integer(
-        default=10,
         help="Used to order profiles. Lower values have higher precedence.",
+        default=10,
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
-        help=(
-            "Leave empty for a scale every partner is measured against. "
-            "Setting it narrows the scale to that company's partners -- and to "
-            "*only* those: a partner with no company of its own resolves "
-            "against company-less bands, so a scale that is scoped by accident "
-            "classifies nobody."
-        ),
+        help="Leave empty for a scale every partner is measured against. "
+        "Setting it narrows the scale to that company's partners -- and to "
+        "*only* those: a partner with no company of its own resolves "
+        "against company-less bands, so a scale that is scoped by accident "
+        "classifies nobody.",
     )
     factor = fields.Float(
-        default=1.0,
         help="Multiplicative percentage factor (e.g., 1.2 for 120%)",
+        default=1.0,
     )
     min_value = fields.Float(
         string="Minimum Score (%)",

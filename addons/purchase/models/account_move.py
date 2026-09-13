@@ -20,32 +20,28 @@ class AccountMove(models.Model):
     purchase_vendor_bill_id = fields.Many2one(
         comodel_name="purchase.bill.match",
         string="Auto-complete",
+        help="Auto-complete from a previous bill, refund, or purchase order.",
         store=False,
         readonly=False,
-        help="Auto-complete from a previous bill, refund, or purchase order.",
     )
     purchase_id = fields.Many2one(
         comodel_name="purchase.order",
         string="Purchase Order",
+        help="Auto-complete from a past purchase order.",
         store=False,
         readonly=False,
-        help="Auto-complete from a past purchase order.",
     )
-    purchase_order_count = fields.Integer(
-        compute="_compute_purchase_order_count",
-    )
-    purchase_order_name = fields.Char(
-        compute="_compute_purchase_order_name",
-    )
+    purchase_order_count = fields.Integer(compute="_compute_purchase_order_count")
+    purchase_order_name = fields.Char(compute="_compute_purchase_order_name")
     is_purchase_matched = fields.Boolean(
-        compute="_compute_is_purchase_matched",
         help="0: PO not required or partially linked. 1: All lines linked",
+        compute="_compute_is_purchase_matched",
     )
     purchase_warning_text = fields.Text(
         string="Purchase Warning",
+        help="Internal warning for the partner or the products as set by the user.",
         compute="_compute_purchase_warning_text",
         depends_context=("uid",),
-        help="Internal warning for the partner or the products as set by the user.",
     )
 
     @api.model_create_multi

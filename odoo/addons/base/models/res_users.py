@@ -318,18 +318,18 @@ class ResUsers(models.Model):
         return self.env["res.groups"]._get_view_group_hierarchy()
 
     partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Related Partner",
+        help="Partner-related data of the user",
+        index=True,
         required=True,
         ondelete="restrict",
         bypass_search_access=True,
-        index=True,
-        help="Partner-related data of the user",
     )
     active_partner = fields.Boolean(
         related="partner_id.active",
-        readonly=True,
         string="Partner is Active",
+        readonly=True,
     )
     name = fields.Char(
         related="partner_id.name",
@@ -346,51 +346,49 @@ class ResUsers(models.Model):
         inherited=True,
         readonly=False,
     )
-    email_domain_placeholder = fields.Char(
-        compute="_compute_email_domain_placeholder",
-    )
+    email_domain_placeholder = fields.Char(compute="_compute_email_domain_placeholder")
 
     active = fields.Boolean(default=True)
 
     login = fields.Char(
-        required=True,
         help="Used to log into the system",
+        required=True,
     )
     password = fields.Char(
+        help="Keep empty if you don't want the user to be able to connect on the system.",
         compute="_compute_passwords",
         inverse="_inverse_password",
         copy=False,
-        help="Keep empty if you don't want the user to be able to connect on the system.",
     )
     new_password = fields.Char(
         string="Set Password",
-        compute="_compute_passwords",
-        inverse="_inverse_new_password",
         help="Specify a value only when creating a user or if you're "
         "changing the user's password, otherwise leave empty. After "
         "a change of password, the user has to login again.",
+        compute="_compute_passwords",
+        inverse="_inverse_new_password",
     )
     api_key_ids = fields.One2many(
-        "res.users.apikeys",
-        "user_id",
+        comodel_name="res.users.apikeys",
+        inverse_name="user_id",
         string="API Keys",
     )
     signature = fields.Html(
         string="Email Signature",
         compute="_compute_signature",
-        readonly=False,
         store=True,
+        readonly=False,
     )
 
     action_id = fields.Many2one(
-        "ir.actions.actions",
+        comodel_name="ir.actions.actions",
         string="Home Action",
         help="If specified, this action will be opened at log on for this user, in addition to the standard menu.",
     )
 
     log_ids = fields.One2many(
-        "res.users.log",
-        "create_uid",
+        comodel_name="res.users.log",
+        inverse_name="create_uid",
         string="User log entries",
     )
     login_date = fields.Datetime(
@@ -399,94 +397,94 @@ class ResUsers(models.Model):
     )
 
     device_ids = fields.One2many(
-        "res.device",
-        "user_id",
+        comodel_name="res.device",
+        inverse_name="user_id",
         string="User devices",
     )
 
     res_users_settings_ids = fields.One2many(
-        "res.users.settings",
-        "user_id",
+        comodel_name="res.users.settings",
+        inverse_name="user_id",
     )
     res_users_settings_id = fields.Many2one(
-        "res.users.settings",
+        comodel_name="res.users.settings",
         string="Settings",
         compute="_compute_res_users_settings_id",
         search="_search_res_users_settings_id",
     )
 
     company_id = fields.Many2one(
-        "res.company",
-        required=True,
-        default=lambda self: self.env.company.id,
+        comodel_name="res.company",
         help="The default company for this user.",
+        default=lambda self: self.env.company.id,
+        required=True,
         context={"user_preference": True},
     )
     company_ids = fields.Many2many(
-        "res.company",
-        "res_company_users_rel",
-        "user_id",
-        "cid",
+        comodel_name="res.company",
+        relation="res_company_users_rel",
+        column1="user_id",
+        column2="cid",
         string="Companies",
         default=lambda self: self.env.company.ids,
     )
     companies_count = fields.Integer(
-        compute="_compute_companies_count",
         string="Number of Companies",
+        compute="_compute_companies_count",
     )
 
     group_ids = fields.Many2many(
-        "res.groups",
-        "res_groups_users_rel",
-        "uid",
-        "gid",
+        comodel_name="res.groups",
+        relation="res_groups_users_rel",
+        column1="uid",
+        column2="gid",
         string="Groups",
-        default=lambda s: s._default_group_ids(),
         help="Groups explicitly assigned to the user",
+        default=lambda s: s._default_group_ids(),
     )
     all_group_ids = fields.Many2many(
-        "res.groups",
+        comodel_name="res.groups",
         string="Groups and implied groups",
         compute="_compute_all_group_ids",
-        compute_sudo=True,
         search="_search_all_group_ids",
+        compute_sudo=True,
     )
     share = fields.Boolean(
-        compute="_compute_share",
-        compute_sudo=True,
         string="Share User",
-        store=True,
-        precompute=True,
         help="External user with limited access, created only for the purpose of sharing data.",
+        compute="_compute_share",
+        precompute=True,
+        compute_sudo=True,
+        store=True,
     )
 
     accesses_count = fields.Integer(
-        "# Access Rights",
+        string="# Access Rights",
+        help="Number of access rights that apply to the current user",
         compute="_compute_access_counts",
         compute_sudo=True,
-        help="Number of access rights that apply to the current user",
     )
     rules_count = fields.Integer(
-        "# Record Rules",
+        string="# Record Rules",
+        help="Number of record rules that apply to the current user",
         compute="_compute_access_counts",
         compute_sudo=True,
-        help="Number of record rules that apply to the current user",
     )
     groups_count = fields.Integer(
-        "# Groups",
+        string="# Groups",
+        help="Number of groups that apply to the current user",
         compute="_compute_access_counts",
         compute_sudo=True,
-        help="Number of groups that apply to the current user",
     )
 
     view_group_hierarchy = fields.Json(
         string="Technical field for user group setting",
+        default=_default_view_group_hierarchy,
         store=False,
         copy=False,
-        default=_default_view_group_hierarchy,
     )
     role = fields.Selection(
-        [("group_user", "User"), ("group_system", "Administrator")],
+        selection=[("group_user", "User"), ("group_system", "Administrator")],
         compute="_compute_role",
         inverse="_inverse_role",
         readonly=False,

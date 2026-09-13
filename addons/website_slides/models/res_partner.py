@@ -6,32 +6,32 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     slide_channel_partner_ids = fields.One2many(
-        "slide.channel.partner",
-        "partner_id",
+        comodel_name="slide.channel.partner",
+        inverse_name="partner_id",
         string="eLearning Memberships",
         groups="website_slides.group_website_slides_officer",
     )
     slide_channel_ids = fields.Many2many(
-        "slide.channel",
+        comodel_name="slide.channel",
         string="eLearning Courses",
         compute="_compute_slide_channel_values",
         search="_search_slide_channel_ids",
         groups="website_slides.group_website_slides_officer",
     )
     slide_channel_completed_ids = fields.One2many(
-        "slide.channel",
+        comodel_name="slide.channel",
         string="Completed Courses",
         compute="_compute_slide_channel_values",
         search="_search_slide_channel_completed_ids",
         groups="website_slides.group_website_slides_officer",
     )
     slide_channel_count = fields.Integer(
-        "Course Count",
+        string="Course Count",
         compute="_compute_slide_channel_values",
         groups="website_slides.group_website_slides_officer",
     )
     slide_channel_company_count = fields.Integer(
-        "Company Course Count",
+        string="Company Course Count",
         compute="_compute_slide_channel_company_count",
         groups="website_slides.group_website_slides_officer",
     )

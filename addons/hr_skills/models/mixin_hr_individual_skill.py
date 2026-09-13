@@ -30,25 +30,25 @@ class MixinHrIndividualSkill(models.AbstractModel):
         return self.env["hr.skill.type"].search([], limit=1)
 
     skill_id = fields.Many2one(
-        "hr.skill",
+        comodel_name="hr.skill",
         compute="_compute_skill_id",
         store=True,
-        domain="[('skill_type_id', '=', skill_type_id)]",
         readonly=False,
         required=True,
+        domain="[('skill_type_id', '=', skill_type_id)]",
         ondelete="cascade",
     )
     skill_level_id = fields.Many2one(
-        "hr.skill.level",
+        comodel_name="hr.skill.level",
         compute="_compute_skill_level_id",
-        domain="[('skill_type_id', '=', skill_type_id)]",
         store=True,
         readonly=False,
         required=True,
+        domain="[('skill_type_id', '=', skill_type_id)]",
         ondelete="cascade",
     )
     skill_type_id = fields.Many2one(
-        "hr.skill.type",
+        comodel_name="hr.skill.type",
         default=_default_skill_type_id,
         required=True,
         ondelete="cascade",
@@ -56,19 +56,23 @@ class MixinHrIndividualSkill(models.AbstractModel):
     level_progress = fields.Integer(related="skill_level_id.level_progress")
     color = fields.Integer(related="skill_type_id.color")
     valid_from = fields.Date(
-        string="Validity Start", default=fields.Date.today, required=True
+        string="Validity Start",
+        default=fields.Date.today,
+        required=True,
     )
     valid_to = fields.Date(string="Validity Stop")
     levels_count = fields.Integer(related="skill_type_id.levels_count")
     certification_skill_type_count = fields.Integer(
-        compute="_compute_certification_skill_type_count",
         export_string_translation=False,
+        compute="_compute_certification_skill_type_count",
     )
     is_certification = fields.Boolean(
-        related="skill_type_id.is_certification", export_string_translation=False
+        related="skill_type_id.is_certification",
+        export_string_translation=False,
     )
     display_warning_message = fields.Boolean(
-        compute="_compute_display_warning_message", export_string_translation=False
+        export_string_translation=False,
+        compute="_compute_display_warning_message",
     )
 
     @staticmethod

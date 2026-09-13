@@ -11,67 +11,67 @@ class AccountAnalyticLine(models.Model):
     _check_company_auto = True
 
     name = fields.Char(
-        "Description",
+        string="Description",
         required=True,
     )
     date = fields.Date(
-        required=True,
-        index=True,
         default=fields.Date.context_today,
+        index=True,
+        required=True,
     )
     amount = fields.Monetary(
-        required=True,
         default=0.0,
+        required=True,
     )
     unit_amount = fields.Float(
-        "Quantity",
+        string="Quantity",
         default=0.0,
     )
     product_uom_id = fields.Many2one(
-        "uom.uom",
+        comodel_name="uom.uom",
         string="Unit",
     )
     partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         check_company=True,
     )
     user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         default=lambda self: self.env.context.get("user_id", self.env.user.id),
         index=True,
     )
     company_id = fields.Many2one(
-        "res.company",
-        required=True,
-        readonly=True,
+        comodel_name="res.company",
         default=lambda self: self.env.company,
+        readonly=True,
+        required=True,
     )
     currency_id = fields.Many2one(
         related="company_id.currency_id",
         string="Currency",
-        readonly=True,
-        store=True,
         compute_sudo=True,
+        store=True,
+        readonly=True,
     )
     category = fields.Selection(
-        [("other", "Other")],
+        selection=[("other", "Other")],
         default="other",
     )
     from_last_fiscal_year = fields.Boolean(
+        export_string_translation=False,
         search="_search_from_last_fiscal_year",
         store=False,
         exportable=False,
-        export_string_translation=False,
     )
     analytic_distribution = fields.Json(
         compute="_compute_analytic_distribution",
         inverse="_inverse_analytic_distribution",
     )
     analytic_precision = fields.Integer(
-        store=False,
         default=lambda self: self.env["decimal.precision"].get_precision(
             "Percentage Analytic"
         ),
+        store=False,
     )
 
     def _compute_analytic_distribution(self):

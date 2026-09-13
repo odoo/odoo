@@ -279,30 +279,41 @@ class MixinStockConsignment(models.AbstractModel):
     _inherit = "mixin.stock.consignment"
 
     l10n_ro_edi_stock_document_uit = fields.Char(
-        compute="_compute_l10n_ro_edi_stock_current_document_uit",
         string="eTransport UIT",
+        compute="_compute_l10n_ro_edi_stock_current_document_uit",
     )
     l10n_ro_edi_stock_state = fields.Selection(
         selection=DOCUMENT_STATES,
-        compute="_compute_l10n_ro_edi_stock_current_document_state",
         string="eTransport Status",
+        compute="_compute_l10n_ro_edi_stock_current_document_state",
         store=True,
     )
 
     # Data fields
     l10n_ro_edi_stock_operation_type = fields.Selection(
-        selection=OPERATION_TYPES, string="eTransport Operation Type"
+        selection=OPERATION_TYPES,
+        string="eTransport Operation Type",
     )
     l10n_ro_edi_stock_available_operation_scopes = fields.Char(
         compute="_compute_l10n_ro_edi_stock_available_operation_scopes"
     )
     l10n_ro_edi_stock_operation_scope = fields.Selection(
-        selection=OPERATION_SCOPES, string="Operation Scope"
+        selection=OPERATION_SCOPES,
+        string="Operation Scope",
     )
 
-    l10n_ro_edi_stock_vehicle_number = fields.Char(string="Vehicle Number", size=20)
-    l10n_ro_edi_stock_trailer_1_number = fields.Char(string="Trailer 1 Number", size=20)
-    l10n_ro_edi_stock_trailer_2_number = fields.Char(string="Trailer 2 Number", size=20)
+    l10n_ro_edi_stock_vehicle_number = fields.Char(
+        string="Vehicle Number",
+        size=20,
+    )
+    l10n_ro_edi_stock_trailer_1_number = fields.Char(
+        string="Trailer 1 Number",
+        size=20,
+    )
+    l10n_ro_edi_stock_trailer_2_number = fields.Char(
+        string="Trailer 2 Number",
+        size=20,
+    )
 
     l10n_ro_edi_stock_available_start_loc_types = fields.Char(
         compute="_compute_l10n_ro_edi_stock_available_location_types"
@@ -327,16 +338,20 @@ class MixinStockConsignment(models.AbstractModel):
     )
 
     l10n_ro_edi_stock_start_bcp = fields.Selection(
-        selection=BORDER_CROSSING_POINTS, string="Start Border Crossing Point"
+        selection=BORDER_CROSSING_POINTS,
+        string="Start Border Crossing Point",
     )
     l10n_ro_edi_stock_start_customs_office = fields.Selection(
-        selection=CUSTOMS_OFFICES, string="Start Customs Office"
+        selection=CUSTOMS_OFFICES,
+        string="Start Customs Office",
     )
     l10n_ro_edi_stock_end_bcp = fields.Selection(
-        selection=BORDER_CROSSING_POINTS, string="End Border Crossing Point"
+        selection=BORDER_CROSSING_POINTS,
+        string="End Border Crossing Point",
     )
     l10n_ro_edi_stock_end_customs_office = fields.Selection(
-        selection=CUSTOMS_OFFICES, string="End Customs Office"
+        selection=CUSTOMS_OFFICES,
+        string="End Customs Office",
     )
 
     l10n_ro_edi_stock_remarks = fields.Text(string="Remarks")

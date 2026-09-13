@@ -85,63 +85,82 @@ class AccountAnalyticLine(models.Model):
         return domain
 
     task_id = fields.Many2one(
-        "project.task",
-        index="btree_not_null",
+        comodel_name="project.task",
         compute="_compute_task_id",
         store=True,
+        index="btree_not_null",
         readonly=False,
         domain="[('allow_timesheets', '=', True), ('project_id', '=?', project_id), ('has_template_ancestor', '=', False)]",
     )
     parent_task_id = fields.Many2one(
-        "project.task", related="task_id.parent_id", store=True, index="btree_not_null"
+        comodel_name="project.task",
+        related="task_id.parent_id",
+        store=True,
+        index="btree_not_null",
     )
     project_id = fields.Many2one(
-        "project.project",
-        domain=_domain_project_id,
-        index=True,
+        comodel_name="project.project",
         compute="_compute_project_id",
+        store=True,
+        index=True,
+        readonly=False,
+        domain=_domain_project_id,
+    )
+    user_id = fields.Many2one(
+        compute="_compute_user_id",
         store=True,
         readonly=False,
     )
-    user_id = fields.Many2one(compute="_compute_user_id", store=True, readonly=False)
     employee_id = fields.Many2one(
-        "hr.employee",
+        comodel_name="hr.employee",
+        help="Define an 'hourly cost' on the employee to track the cost of their time.",
+        index=True,
         domain=_domain_employee_id,
         context={"active_test": False},
-        index=True,
-        help="Define an 'hourly cost' on the employee to track the cost of their time.",
     )
     job_title = fields.Char(
-        related="employee_id.job_title", export_string_translation=False
-    )
-    department_id = fields.Many2one(
-        "hr.department",
-        compute="_compute_department_id",
-        store=True,
-        compute_sudo=True,
-    )
-    manager_id = fields.Many2one(
-        "hr.employee", "Manager", related="employee_id.parent_id", store=True
-    )
-    encoding_uom_id = fields.Many2one(
-        "uom.uom", compute="_compute_encoding_uom_id", export_string_translation=False
-    )
-    partner_id = fields.Many2one(
-        compute="_compute_partner_id", store=True, readonly=False
-    )
-    readonly_timesheet = fields.Boolean(
-        compute="_compute_readonly_timesheet",
-        compute_sudo=True,
+        related="employee_id.job_title",
         export_string_translation=False,
     )
-    milestone_id = fields.Many2one("project.milestone", related="task_id.milestone_id")
+    department_id = fields.Many2one(
+        comodel_name="hr.department",
+        compute="_compute_department_id",
+        compute_sudo=True,
+        store=True,
+    )
+    manager_id = fields.Many2one(
+        comodel_name="hr.employee",
+        related="employee_id.parent_id",
+        string="Manager",
+        store=True,
+    )
+    encoding_uom_id = fields.Many2one(
+        comodel_name="uom.uom",
+        export_string_translation=False,
+        compute="_compute_encoding_uom_id",
+    )
+    partner_id = fields.Many2one(
+        compute="_compute_partner_id",
+        store=True,
+        readonly=False,
+    )
+    readonly_timesheet = fields.Boolean(
+        export_string_translation=False,
+        compute="_compute_readonly_timesheet",
+        compute_sudo=True,
+    )
+    milestone_id = fields.Many2one(
+        comodel_name="project.milestone",
+        related="task_id.milestone_id",
+    )
     message_partner_ids = fields.Many2many(
-        "res.partner",
+        comodel_name="res.partner",
         compute="_compute_message_partner_ids",
         search="_search_message_partner_ids",
     )
     calendar_display_name = fields.Char(
-        compute="_compute_calendar_display_name", export_string_translation=False
+        export_string_translation=False,
+        compute="_compute_calendar_display_name",
     )
 
     def _search_message_partner_ids(self, operator, value):

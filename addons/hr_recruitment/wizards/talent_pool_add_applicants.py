@@ -5,7 +5,7 @@ class TalentPoolAddApplicants(models.TransientModel):
     _name = "talent.pool.add.applicants"
     _description = "Add applicants to talent pool"
     applicant_ids = fields.Many2many(
-        "hr.applicant",
+        comodel_name="hr.applicant",
         string="Applicants",
         required=True,
         domain=[
@@ -14,9 +14,9 @@ class TalentPoolAddApplicants(models.TransientModel):
             ("is_applicant_in_pool", "=", False),
         ],
     )
-    talent_pool_ids = fields.Many2many("hr.talent.pool")
+    talent_pool_ids = fields.Many2many(comodel_name="hr.talent.pool")
     categ_ids = fields.Many2many(
-        "hr.applicant.category",
+        comodel_name="hr.applicant.category",
         string="Tags",
     )
 

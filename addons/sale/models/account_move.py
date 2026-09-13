@@ -28,30 +28,28 @@ class AccountMove(models.Model):
     )
     sale_warning_text = fields.Text(
         string="Sale Warning",
+        help="Internal warning for the partner or the products as set by the user.",
         compute="_compute_sale_warning_text",
         depends_context=("uid",),
-        help="Internal warning for the partner or the products as set by the user.",
     )
     sale_customer_invoice_id = fields.Many2one(
         comodel_name="sale.invoice.match",
         string="Sales Auto-complete",
+        help="Auto-complete from a previous invoice, credit note, or sales order.",
         store=False,
         readonly=False,
-        help="Auto-complete from a previous invoice, credit note, or sales order.",
     )
     sale_id = fields.Many2one(
         comodel_name="sale.order",
         string="Sales Order",
+        help="Auto-complete from a past sales order.",
         store=False,
         readonly=False,
-        help="Auto-complete from a past sales order.",
     )
-    sale_order_name = fields.Char(
-        compute="_compute_sale_order_name",
-    )
+    sale_order_name = fields.Char(compute="_compute_sale_order_name")
     is_sale_matched = fields.Boolean(
-        compute="_compute_is_sale_matched",
         help="0: SO not required or partially linked. 1: All lines linked",
+        compute="_compute_is_sale_matched",
     )
 
     def unlink(self):

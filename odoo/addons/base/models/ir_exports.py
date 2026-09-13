@@ -9,7 +9,10 @@ class IrExports(models.Model):
     name = fields.Char(string="Export Name")
     resource = fields.Char(index=True)
     export_fields = fields.One2many(
-        "ir.exports.line", "export_id", string="Fields to Export", copy=True
+        comodel_name="ir.exports.line",
+        inverse_name="export_id",
+        string="Fields to Export",
+        copy=True,
     )
 
 
@@ -19,4 +22,8 @@ class IrExportsLine(models.Model):
     _order = "id"
 
     name = fields.Char(string="Field Name")
-    export_id = fields.Many2one("ir.exports", index=True, ondelete="cascade")
+    export_id = fields.Many2one(
+        comodel_name="ir.exports",
+        index=True,
+        ondelete="cascade",
+    )

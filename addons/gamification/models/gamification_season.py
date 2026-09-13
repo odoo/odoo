@@ -18,53 +18,71 @@ class GamificationSeason(models.Model):
     _inherit = ["mixin.mail.thread"]
     _order = "start_date desc"
 
-    name = fields.Char("Season Name", required=True, translate=True, tracking=True)
+    name = fields.Char(
+        string="Season Name",
+        translate=True,
+        required=True,
+        tracking=True,
+    )
     description = fields.Html(
         translate=True,
         sanitize_attributes=False,
     )
     theme = fields.Char(
-        translate=True,
         help="Visual theme or motto (e.g., 'The Quality Quarter', 'Innovation Sprint').",
+        translate=True,
     )
-    icon = fields.Image(max_width=128, max_height=128)
+    icon = fields.Image(
+        max_width=128,
+        max_height=128,
+    )
     state = fields.Selection(
-        [
+        selection=[
             ("draft", "Draft"),
             ("active", "Active"),
             ("ended", "Ended"),
             ("archived", "Archived"),
         ],
         default="draft",
+        index=True,
         required=True,
         tracking=True,
-        index=True,
     )
-    start_date = fields.Date(required=True, tracking=True)
-    end_date = fields.Date(required=True, tracking=True)
+    start_date = fields.Date(
+        required=True,
+        tracking=True,
+    )
+    end_date = fields.Date(
+        required=True,
+        tracking=True,
+    )
 
     # Exclusive content
     challenge_ids = fields.One2many(
-        "gamification.challenge",
-        "season_id",
+        comodel_name="gamification.challenge",
+        inverse_name="season_id",
         string="Season Challenges",
     )
     badge_ids = fields.Many2many(
-        "gamification.badge",
-        "gamification_season_badge_rel",
+        comodel_name="gamification.badge",
+        relation="gamification_season_badge_rel",
         string="Exclusive Badges",
         help="Badges only available during this season.",
     )
     quest_ids = fields.Many2many(
-        "gamification.quest",
-        "gamification_season_quest_rel",
+        comodel_name="gamification.quest",
+        relation="gamification_season_quest_rel",
         string="Season Quests",
     )
 
     # Stats
-    challenge_count = fields.Count("challenge_ids", "# Challenges")
+    challenge_count = fields.Count(
+        count_of="challenge_ids",
+        string="# Challenges",
+    )
     participant_count = fields.Integer(
-        "# Participants", compute="_compute_participant_count"
+        string="# Participants",
+        compute="_compute_participant_count",
     )
 
     @api.depends("challenge_ids", "challenge_ids.user_ids")

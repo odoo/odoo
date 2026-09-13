@@ -4,16 +4,21 @@ from odoo import api, fields, models
 class LinkTracker(models.Model):
     _inherit = "link.tracker"
 
-    mass_mailing_id = fields.Many2one("mailing.mailing")
+    mass_mailing_id = fields.Many2one(comodel_name="mailing.mailing")
 
 
 class LinkTrackerClick(models.Model):
     _inherit = "link.tracker.click"
 
     mailing_trace_id = fields.Many2one(
-        "mailing.trace", string="Mail Statistics", index="btree_not_null"
+        comodel_name="mailing.trace",
+        string="Mail Statistics",
+        index="btree_not_null",
     )
-    mass_mailing_id = fields.Many2one("mailing.mailing", index="btree_not_null")
+    mass_mailing_id = fields.Many2one(
+        comodel_name="mailing.mailing",
+        index="btree_not_null",
+    )
 
     def _prepare_click_values_from_route(self, **route_values):
         click_values = super()._prepare_click_values_from_route(**route_values)

@@ -12,9 +12,9 @@ class AccountTax(models.Model):
             ("supplier", "Vendor Payment Withholding"),
             ("customer", "Customer Payment Withholding"),
         ],
+        string="Argentina Tax Type",
         compute="_compute_l10n_ar_type_tax_use",
         inverse="_inverse_l10n_ar_type_tax_use",
-        string="Argentina Tax Type",
     )
     l10n_ar_withholding_payment_type = fields.Selection(
         selection=[("supplier", "Vendor Payment"), ("customer", "Customer Payment")],
@@ -22,36 +22,36 @@ class AccountTax(models.Model):
         help="Withholding tax for supplier or customer payments.",
     )
     l10n_ar_tax_type = fields.Selection(
-        string="WTH Tax",
         selection=[
             ("earnings", "Earnings"),
             ("earnings_scale", "Earnings Scale"),
             ("iibb_untaxed", "IIBB Untaxed"),
             ("iibb_total", "IIBB Total Amount"),
         ],
+        string="WTH Tax",
     )
     l10n_ar_withholding_sequence_id = fields.Many2one(
-        "ir.sequence",
+        comodel_name="ir.sequence",
         string="WTH Sequence",
+        help="If no sequence provided then it will be required for you to enter withholding number when registering one.",
         copy=False,
         check_company=True,
-        help="If no sequence provided then it will be required for you to enter withholding number when registering one.",
     )
-    l10n_ar_code = fields.Char("ARCA Code")
+    l10n_ar_code = fields.Char(string="ARCA Code")
     l10n_ar_non_taxable_amount = fields.Float(
         string="Non Taxable Amount",
-        digits="Account",
         help="Until this base amount, the tax is not applied.",
+        digits="Account",
     )
     l10n_ar_minimum_threshold = fields.Float(
         string="Minimum Treshold",
         help="If the calculated withholding tax amount is lower than minimum withholding threshold then it is 0.0.",
     )
     l10n_ar_state_id = fields.Many2one(
-        "res.country.state",
+        comodel_name="res.country.state",
         string="Jurisdiction",
-        ondelete="restrict",
         domain="[('country_id', '=?', country_id)]",
+        ondelete="restrict",
     )
     l10n_ar_scale_id = fields.Many2one(
         comodel_name="l10n_ar.earnings.scale",

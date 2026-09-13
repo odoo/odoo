@@ -7,23 +7,27 @@ class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
     event_booth_category_id = fields.Many2one(
-        "event.booth.category", string="Booths Category", ondelete="set null"
+        comodel_name="event.booth.category",
+        string="Booths Category",
+        ondelete="set null",
     )
     event_booth_pending_ids = fields.Many2many(
-        "event.booth",
+        comodel_name="event.booth",
         string="Pending Booths",
-        search="_search_event_booth_pending_ids",
+        help="Used to create registration when providing the desired event booth.",
         compute="_compute_event_booth_pending_ids",
         inverse="_inverse_event_booth_pending_ids",
-        help="Used to create registration when providing the desired event booth.",
+        search="_search_event_booth_pending_ids",
     )
     event_booth_registration_ids = fields.One2many(
-        "event.booth.registration",
-        "sale_order_line_id",
+        comodel_name="event.booth.registration",
+        inverse_name="sale_order_line_id",
         string="Confirmed Registration",
     )
     event_booth_ids = fields.One2many(
-        "event.booth", "sale_order_line_id", string="Confirmed Booths"
+        comodel_name="event.booth",
+        inverse_name="sale_order_line_id",
+        string="Confirmed Booths",
     )
 
     @api.depends("event_booth_registration_ids")

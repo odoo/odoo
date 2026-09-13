@@ -11,16 +11,18 @@ class ResPartnerTag(models.Model):
     _name_src_uniq = no_name_uniq_index()
 
     parent_id: ResPartnerTag = fields.Many2one(
-        "res.partner.tag",
+        comodel_name="res.partner.tag",
         string="Parent Tag",
         index=True,
         ondelete="cascade",
     )
     child_ids: ResPartnerTag = fields.One2many(
-        "res.partner.tag", "parent_id", string="Child Tags"
+        comodel_name="res.partner.tag",
+        inverse_name="parent_id",
+        string="Child Tags",
     )
     partner_ids = fields.Many2many(
-        "res.partner",
+        comodel_name="res.partner",
         column1="tag_id",
         column2="partner_id",
         string="Partners",

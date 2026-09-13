@@ -21,8 +21,8 @@ class MixinTemplateReset(models.AbstractModel):
 
     template_fs = fields.Char(
         string="Template Filename",
-        copy=False,
         help="""File from where the template originates. Used to reset broken template.""",
+        copy=False,
     )
 
     @api.model_create_multi

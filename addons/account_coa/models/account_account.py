@@ -25,27 +25,27 @@ class AccountAccount(models.Model):
 
     name = fields.Char(
         string="Account Name",
-        required=True,
-        index="trigram",
         translate=True,
+        index="trigram",
+        required=True,
     )
     description = fields.Text(translate=True)
     currency_id = fields.Many2one(
-        "res.currency",
+        comodel_name="res.currency",
         string="Account Currency",
         help="Forces all journal items in this account to have a specific "
         "currency (i.e. bank journals). If no currency is set, entries "
         "can use any currency.",
     )
     company_currency_id = fields.Many2one(
-        "res.currency",
+        comodel_name="res.currency",
         compute="_compute_company_currency_id",
     )
     code = fields.Char(
         size=64,
         compute="_compute_code",
-        search="_search_code",
         inverse="_inverse_code",
+        search="_search_code",
     )
     code_store = fields.Char(company_dependent=True)
     placeholder_code = fields.Char(
@@ -77,15 +77,15 @@ class AccountAccount(models.Model):
             ("off_balance", "Off-Balance Sheet"),
         ],
         string="Type",
-        required=True,
-        compute="_compute_account_type_and_tags",
-        store=True,
-        readonly=False,
-        precompute=True,
-        index=True,
         help="Account Type is used for information purpose, to generate "
         "country-specific legal reports, and set the rules to close a "
         "fiscal year and generate opening entries.",
+        compute="_compute_account_type_and_tags",
+        precompute=True,
+        store=True,
+        index=True,
+        readonly=False,
+        required=True,
     )
     include_initial_balance = fields.Boolean(
         string="Bring Accounts Balance Forward",
@@ -111,21 +111,21 @@ class AccountAccount(models.Model):
     )
     reconcile = fields.Boolean(
         string="Allow Reconciliation",
-        compute="_compute_reconcile",
-        store=True,
-        readonly=False,
-        precompute=True,
         help="Check this box if this account allows invoices & payments "
         "matching of journal items.",
-    )
-    note = fields.Text("Internal Notes")
-    company_ids = fields.Many2many(
-        "res.company",
-        string="Companies",
-        required=True,
+        compute="_compute_reconcile",
+        precompute=True,
+        store=True,
         readonly=False,
+    )
+    note = fields.Text(string="Internal Notes")
+    company_ids = fields.Many2many(
+        comodel_name="res.company",
+        string="Companies",
         depends_context=("uid",),
         default=lambda self: self.env.company,
+        readonly=False,
+        required=True,
     )
     code_mapping_ids = fields.One2many(
         comodel_name="account.code.mapping",
@@ -137,25 +137,25 @@ class AccountAccount(models.Model):
     tag_ids = fields.Many2many(
         comodel_name="account.account.tag",
         relation="account_account_account_tag",
-        compute="_compute_account_type_and_tags",
-        readonly=False,
-        store=True,
-        precompute=True,
         string="Tags",
         help="Optional tags you may want to assign for custom reporting",
+        compute="_compute_account_type_and_tags",
+        precompute=True,
+        store=True,
+        readonly=False,
         ondelete="restrict",
     )
     root_id = fields.Many2one(
-        "account.root",
+        comodel_name="account.root",
         compute="_compute_account_root",
         search="_search_account_root",
     )
     non_trade = fields.Boolean(
-        default=False,
         help="If set, this account will belong to Non Trade "
         "Receivable/Payable in reports and filters.\n"
         "If not, this account will belong to Trade "
         "Receivable/Payable in reports and filters.",
+        default=False,
     )
     display_mapping_tab = fields.Boolean(
         default=lambda self: len(self.env.user.company_ids) > 1,

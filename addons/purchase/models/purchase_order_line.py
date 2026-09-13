@@ -38,7 +38,7 @@ class PurchaseOrderLine(models.Model):
     user_id = fields.Many2one(string="Buyer")
 
     is_expense = fields.Boolean(
-        help="Is true if the sales order line comes from an expense or a vendor bills",
+        help="Is true if the sales order line comes from an expense or a vendor bills"
     )
 
     parent_id = fields.Many2one(comodel_name="purchase.order.line")
@@ -54,40 +54,38 @@ class PurchaseOrderLine(models.Model):
     )
     tax_ids = fields.Many2many(
         compute="_compute_tax_ids",
-        store=True,
         precompute=True,
+        store=True,
         readonly=False,
         domain="[('type_tax_use', '=', 'purchase'), ('country_id', '=', tax_country_id)]",
     )
     selected_seller_id = fields.Many2one(
         comodel_name="product.supplierinfo",
-        compute="_compute_selected_seller_id",
-        store=True,
-        precompute=True,
         help="The vendor pricelist entry that applies to this line based on "
         "partner, product, quantity, UoM, and date.",
+        compute="_compute_selected_seller_id",
+        precompute=True,
+        store=True,
     )
     price_unit_auto = fields.Float(
         help="Price from vendor/product. Compared with price_unit to detect manual overrides. "
-        "When price_unit != price_unit_auto, the price is considered manually set.",
+        "When price_unit != price_unit_auto, the price is considered manually set."
     )
-    discount = fields.Float(
-        aggregator="avg",
-    )
+    discount = fields.Float(aggregator="avg")
     date_commitment = fields.Datetime(
         string="Expected Arrival",
-        compute="_compute_date_commitment",
-        store=True,
-        precompute=True,
-        readonly=False,
-        index=True,
         help="Delivery date expected from vendor. This date respectively defaults to vendor pricelist lead time then today's date.",
+        compute="_compute_date_commitment",
+        precompute=True,
+        store=True,
+        index=True,
+        readonly=False,
     )
     date_is_manual = fields.Boolean(
         string="Date Manually Set",
-        default=False,
         help="If checked, the expected arrival date was manually set and won't be "
         "automatically updated when the seller or order date changes.",
+        default=False,
     )
     qty_transferred_method = fields.Selection(
         string="Received Qty Method",

@@ -128,13 +128,15 @@ class MixinMailRender(models.AbstractModel):
     _dynamic_field_names = None
 
     lang = fields.Char(
-        "Language",
+        string="Language",
         help="Optional translation language (ISO code) to select when sending out an email. "
         "If not set, the main partner's language will be used. This should usually be a placeholder expression "
         "that provides the appropriate language, e.g. {{ object.partner_id.lang }}.",
     )
     render_model = fields.Char(
-        "Rendering Model", compute="_compute_render_model", store=False
+        string="Rendering Model",
+        compute="_compute_render_model",
+        store=False,
     )
 
     def _compute_render_model(self) -> None:

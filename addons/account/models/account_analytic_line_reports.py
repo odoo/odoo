@@ -8,9 +8,7 @@ _debug = DebugLog(__name__)
 class AccountAnalyticLine(models.Model):
     _inherit = "account.analytic.line"
 
-    analytic_coverage = fields.Float(
-        compute="_compute_analytic_coverage",
-    )
+    analytic_coverage = fields.Float(compute="_compute_analytic_coverage")
 
     @_debug.perf.timed
     def _field_to_sql(

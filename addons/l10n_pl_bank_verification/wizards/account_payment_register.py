@@ -13,15 +13,18 @@ class L10nPlAccountPaymentRegister(models.TransientModel):
     )
     # partners for whose we cannot find link between vat and bank account calling gov api
     l10n_pl_bank_verification_invalid_bank_account_ids = fields.Many2many(
-        comodel_name="res.partner.bank", compute="_compute_l10n_pl_bank_verification"
+        comodel_name="res.partner.bank",
+        compute="_compute_l10n_pl_bank_verification",
     )
     # partners whose vat cannot be found in gov api
     l10n_pl_not_found_partner_ids = fields.Many2many(
-        comodel_name="res.partner", compute="_compute_l10n_pl_bank_verification"
+        comodel_name="res.partner",
+        compute="_compute_l10n_pl_bank_verification",
     )
     # partners who do not have a VAT number or bank account (-> internal, no api call)
     l10n_pl_incomplete_data_partner_ids = fields.Many2many(
-        comodel_name="res.partner", compute="_compute_l10n_pl_bank_verification"
+        comodel_name="res.partner",
+        compute="_compute_l10n_pl_bank_verification",
     )
 
     @api.depends("line_ids", "partner_bank_id")

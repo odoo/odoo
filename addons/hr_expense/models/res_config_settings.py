@@ -5,7 +5,7 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     hr_expense_alias_prefix = fields.Char(
-        "Default Alias Name for Expenses",
+        string="Default Alias Name for Expenses",
         compute="_compute_hr_expense_alias_prefix",
         store=True,
         readonly=False,
@@ -26,17 +26,17 @@ class ResConfigSettings(models.TransientModel):
         string="Link your stripe issuing account to manage company credit cards for your employees through Odoo"
     )
     expense_journal_id = fields.Many2one(
-        "account.journal",
+        comodel_name="account.journal",
         related="company_id.expense_journal_id",
         readonly=False,
-        check_company=True,
         domain="[('type', '=', 'purchase')]",
+        check_company=True,
     )
     company_expense_allowed_payment_channel_ids = fields.Many2many(
         comodel_name="account.payment.channel",
-        check_company=True,
         related="company_id.company_expense_allowed_payment_channel_ids",
         readonly=False,
+        check_company=True,
     )
 
     @api.model

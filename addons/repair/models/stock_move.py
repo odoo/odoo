@@ -18,15 +18,15 @@ class StockMove(models.Model):
     _inherit = "stock.move"
 
     repair_id = fields.Many2one(
-        "repair.order",
-        check_company=True,
+        comodel_name="repair.order",
         index="btree_not_null",
         copy=False,
         ondelete="cascade",
+        check_company=True,
     )
     repair_line_type = fields.Selection(
-        [("add", "Add"), ("remove", "Remove"), ("recycle", "Recycle")],
-        "Type",
+        selection=[("add", "Add"), ("remove", "Remove"), ("recycle", "Recycle")],
+        string="Type",
         store=True,
         index=True,
     )

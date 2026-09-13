@@ -7,20 +7,20 @@ class AccountPayment(models.Model):
 
     # == Business fields ==
     transaction_id = fields.Many2one(
-        string="Payment Transaction",
         comodel_name="payment.transaction",
+        string="Payment Transaction",
         readonly=True,
         # No `index=`: `_transaction_id_uniq` below is already a partial btree
         # over the same column, and a second one would only cost writes.
         bypass_search_access=True,  # Safe: access to payments means access to txs too
     )
     payment_token_id = fields.Many2one(
-        string="Saved Payment Token",
         comodel_name="payment.token",
+        string="Saved Payment Token",
+        help="Note that only tokens from providers allowing to capture the amount are available.",
         domain="""[
             ('id', 'in', suitable_payment_token_ids),
         ]""",
-        help="Note that only tokens from providers allowing to capture the amount are available.",
     )
     amount_available_for_refund = fields.Monetary(
         compute="_compute_amount_available_for_refund"
@@ -34,7 +34,7 @@ class AccountPayment(models.Model):
     )
     # Technical field used to hide or show the payment_token_id if needed
     use_electronic_payment_method = fields.Boolean(
-        compute="_compute_use_electronic_payment_method",
+        compute="_compute_use_electronic_payment_method"
     )
 
     # == Fields used for traceability ==
@@ -42,9 +42,9 @@ class AccountPayment(models.Model):
         comodel_name="account.payment",
         help="The source payment of related refund payments",
         compute="_compute_source_payment_id",
-        readonly=True,
         store=True,  # Stored for the group by in `_compute_refunds_count`
         index="btree_not_null",
+        readonly=True,
     )
     refunds_count = fields.Integer(compute="_compute_refunds_count")
 

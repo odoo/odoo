@@ -80,8 +80,8 @@ class L10n_Vn_Edi_ViettelSinvoiceSymbol(models.Model):
     )
     invoice_template_id = fields.Many2one(
         comodel_name="l10n_vn_edi_viettel.sinvoice.template",
-        required=True,
         index=True,
+        required=True,
     )
 
     _name_template_uniq = models.Constraint(

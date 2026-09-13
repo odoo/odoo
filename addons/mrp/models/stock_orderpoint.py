@@ -9,22 +9,25 @@ from odoo.fields import Domain
 class StockWarehouseOrderpoint(models.Model):
     _inherit = "stock.warehouse.orderpoint"
 
-    show_bom = fields.Boolean("Show BoM column", compute="_compute_show_bom")
+    show_bom = fields.Boolean(
+        string="Show BoM column",
+        compute="_compute_show_bom",
+    )
     bom_id = fields.Many2one(
-        "mrp.bom",
+        comodel_name="mrp.bom",
         string="Bill of Materials",
-        check_company=True,
-        domain="[('type', '=', 'normal'), '&', '|', ('company_id', '=', company_id), ('company_id', '=', False), '|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]",
         inverse="_inverse_bom_id",
+        domain="[('type', '=', 'normal'), '&', '|', ('company_id', '=', company_id), ('company_id', '=', False), '|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]",
+        check_company=True,
     )
     bom_id_placeholder = fields.Char(compute="_compute_bom_id_placeholder")
     effective_bom_id = fields.Many2one(
-        "mrp.bom",
+        comodel_name="mrp.bom",
         string="Effective Bill of Materials",
-        search="_search_effective_bom_id",
-        compute="_compute_effective_bom_id",
-        store=False,
         help="Either the Bill of Materials set directly or the one computed to be used by this replenishment",
+        compute="_compute_effective_bom_id",
+        search="_search_effective_bom_id",
+        store=False,
     )
 
     def _inverse_route_id(self):

@@ -9,9 +9,8 @@ class ProjectProject(models.Model):
     _inherit = ["mixin.hr", "project.project"]
 
     employee_id = fields.Many2one(
-        "hr.employee",
+        comodel_name="hr.employee",
         string="Project Manager",
-        tracking=True,
         default=lambda self: self.env["hr.employee"].search(
             [
                 ("user_id", "=", self.env.uid),
@@ -20,16 +19,17 @@ class ProjectProject(models.Model):
             limit=1,
         ),
         falsy_value_label=_lt("👤 No Manager"),
+        tracking=True,
     )
 
     user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
+        string="Project Manager (User)",
         compute="_compute_user_id",
+        default=None,
         store=True,
         readonly=True,
-        string="Project Manager (User)",
         tracking=False,
-        default=None,
     )
 
     @api.depends("employee_id.user_id")

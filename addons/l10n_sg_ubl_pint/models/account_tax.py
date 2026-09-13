@@ -46,5 +46,5 @@ class AccountTax(models.Model):
             ("OS", "SG - Supplies outside the scope of the GST Act"),
             ("NG", "SG - Supplies from a company which is not registered for GST"),
             ("NA", "SG - Taxable supplies where GST need not be charged"),
-        ],
+        ]
     )

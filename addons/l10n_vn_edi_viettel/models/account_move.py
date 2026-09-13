@@ -49,7 +49,6 @@ class AccountMove(models.Model):
 
     # EDI values
     l10n_vn_edi_invoice_state = fields.Selection(
-        string="Sinvoice Status",
         selection=[
             ("ready_to_send", "Ready to send"),
             ("sent", "Sent"),
@@ -59,9 +58,10 @@ class AccountMove(models.Model):
             ("adjusted", "Adjusted"),
             ("replaced", "Replaced"),
         ],
-        copy=False,
+        string="Sinvoice Status",
         compute="_compute_l10n_vn_edi_invoice_state",
         store=True,
+        copy=False,
         readonly=False,
     )
     # This id is important when sending by batches in order to recognize individual invoices.
@@ -72,11 +72,11 @@ class AccountMove(models.Model):
         copy=False,
     )
     l10n_vn_edi_invoice_symbol = fields.Many2one(
-        string="Invoice Symbol",
         comodel_name="l10n_vn_edi_viettel.sinvoice.symbol",
+        string="Invoice Symbol",
         compute="_compute_l10n_vn_edi_invoice_symbol",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     l10n_vn_edi_invoice_number = fields.Char(
         string="SInvoice Number",
@@ -98,51 +98,51 @@ class AccountMove(models.Model):
     )
     l10n_vn_edi_sinvoice_file_id = fields.Many2one(
         comodel_name="ir.attachment",
+        export_string_translation=False,
         compute=lambda self: self._compute_linked_attachment_id(
             "l10n_vn_edi_sinvoice_file_id", "l10n_vn_edi_sinvoice_file"
         ),
         depends=["l10n_vn_edi_sinvoice_file"],
         copy=False,
         readonly=True,
-        export_string_translation=False,
     )
     l10n_vn_edi_sinvoice_file = fields.Binary(
         string="SInvoice json File",
+        export_string_translation=False,
         copy=False,
         readonly=True,
-        export_string_translation=False,
     )
     l10n_vn_edi_sinvoice_xml_file_id = fields.Many2one(
         comodel_name="ir.attachment",
+        export_string_translation=False,
         compute=lambda self: self._compute_linked_attachment_id(
             "l10n_vn_edi_sinvoice_xml_file_id", "l10n_vn_edi_sinvoice_xml_file"
         ),
         depends=["l10n_vn_edi_sinvoice_xml_file"],
         copy=False,
         readonly=True,
-        export_string_translation=False,
     )
     l10n_vn_edi_sinvoice_xml_file = fields.Binary(
         string="SInvoice xml File",
+        export_string_translation=False,
         copy=False,
         readonly=True,
-        export_string_translation=False,
     )
     l10n_vn_edi_sinvoice_pdf_file_id = fields.Many2one(
         comodel_name="ir.attachment",
+        export_string_translation=False,
         compute=lambda self: self._compute_linked_attachment_id(
             "l10n_vn_edi_sinvoice_pdf_file_id", "l10n_vn_edi_sinvoice_pdf_file"
         ),
         depends=["l10n_vn_edi_sinvoice_pdf_file"],
         copy=False,
         readonly=True,
-        export_string_translation=False,
     )
     l10n_vn_edi_sinvoice_pdf_file = fields.Binary(
         string="SInvoice pdf File",
+        export_string_translation=False,
         copy=False,
         readonly=True,
-        export_string_translation=False,
     )
     # Replacement/Adjustment fields
     l10n_vn_edi_agreement_document_name = fields.Char(
@@ -154,25 +154,25 @@ class AccountMove(models.Model):
         copy=False,
     )
     l10n_vn_edi_adjustment_type = fields.Selection(
-        string="Adjustment type",
         selection=[
             ("1", "Money adjustment"),
             ("2", "Information adjustment"),
         ],
+        string="Adjustment type",
         copy=False,
     )
     # Only used in case of replacement invoice.
     l10n_vn_edi_replacement_origin_id = fields.Many2one(
         comodel_name="account.move",
         string="Replacement of",
+        export_string_translation=False,
         copy=False,
         readonly=True,
         check_company=True,
-        export_string_translation=False,
     )
     l10n_vn_edi_reversed_entry_invoice_number = fields.Char(
-        string="Revered Entry SInvoice Number",  # Need string here to avoid same label warning
         related="reversed_entry_id.l10n_vn_edi_invoice_number",
+        string="Revered Entry SInvoice Number",  # Need string here to avoid same label warning
         export_string_translation=False,
     )
 

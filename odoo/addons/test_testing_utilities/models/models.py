@@ -30,7 +30,10 @@ class Test_Testing_UtilitiesReadonly(models.Model):
     _name = "test_testing_utilities.readonly"
     _description = "Testing Utilities Readonly"
 
-    f1 = fields.Integer(default=1, readonly=True)
+    f1 = fields.Integer(
+        default=1,
+        readonly=True,
+    )
     f2 = fields.Integer(compute="_compute_f2")
 
     @api.depends("f1")
@@ -43,8 +46,11 @@ class Test_Testing_UtilitiesC(models.Model):
     _name = "test_testing_utilities.c"
     _description = "Testing Utilities C"
 
-    name = fields.Char("name", required=True)
-    f2 = fields.Many2one("test_testing_utilities.m2o")
+    name = fields.Char(
+        string="name",
+        required=True,
+    )
+    f2 = fields.Many2one(comodel_name="test_testing_utilities.m2o")
 
     @api.onchange("f2")
     def _on_change_f2(self):
@@ -63,9 +69,9 @@ class Test_Testing_UtilitiesD(models.Model):
     _description = "Testing Utilities D"
 
     f = fields.Many2one(
-        "test_testing_utilities.m2o",
-        required=True,
+        comodel_name="test_testing_utilities.m2o",
         default=lambda self: self.env["test_testing_utilities.m2o"].search([], limit=1),
+        required=True,
     )
     f2 = fields.Char()
 
@@ -87,8 +93,11 @@ class Test_Testing_UtilitiesE(models.Model):
     _name = "test_testing_utilities.e"
     _description = "Testing Utilities E"
 
-    m2m = fields.Many2many("test_testing_utilities.sub2")
-    count = fields.Count("m2m", inverse="_inverse_count")
+    m2m = fields.Many2many(comodel_name="test_testing_utilities.sub2")
+    count = fields.Count(
+        count_of="m2m",
+        inverse="_inverse_count",
+    )
 
     def _inverse_count(self):
         for r in self:
@@ -109,7 +118,7 @@ class Test_Testing_UtilitiesSub2(models.Model):
     _description = "Testing Utilities Subtraction 2"
 
     name = fields.Char()
-    m2o_ids = fields.Many2many("test_testing_utilities.m2o")
+    m2o_ids = fields.Many2many(comodel_name="test_testing_utilities.m2o")
 
 
 class Test_Testing_UtilitiesF(models.Model):
@@ -120,10 +129,10 @@ class Test_Testing_UtilitiesF(models.Model):
         return self.env["test_testing_utilities.sub2"].search([], limit=2)
 
     m2m = fields.Many2many(
-        "test_testing_utilities.sub2",
+        comodel_name="test_testing_utilities.sub2",
         default=_default_m2m,
     )
-    m2o = fields.Many2one("test_testing_utilities.sub2")
+    m2o = fields.Many2one(comodel_name="test_testing_utilities.sub2")
 
     @api.onchange("m2o")
     def _on_change_m2o(self):
@@ -134,7 +143,10 @@ class Test_Testing_UtilitiesG(models.Model):
     _name = "test_testing_utilities.g"
     _description = "Testing Utilities G"
 
-    m2m = fields.Many2many("test_testing_utilities.sub3", readonly=True)
+    m2m = fields.Many2many(
+        comodel_name="test_testing_utilities.sub3",
+        readonly=True,
+    )
 
 
 class Test_Testing_UtilitiesDaterange(models.Model):
@@ -152,7 +164,10 @@ class Test_Testing_UtilitiesParent(models.Model):
 
     value = fields.Integer(default=1)
     v = fields.Integer()
-    subs = fields.One2many("test_testing_utilities.sub", "parent_id")
+    subs = fields.One2many(
+        comodel_name="test_testing_utilities.sub",
+        inverse_name="parent_id",
+    )
 
     @api.onchange("value", "subs")
     def _onchange_values(self):
@@ -166,7 +181,7 @@ class Test_Testing_UtilitiesSub(models.Model):
     name = fields.Char(compute="_compute_name")
     value = fields.Integer(default=2)
     v = fields.Integer()
-    parent_id = fields.Many2one("test_testing_utilities.parent")
+    parent_id = fields.Many2one(comodel_name="test_testing_utilities.parent")
     has_parent = fields.Boolean()
 
     @api.onchange("value")
@@ -189,7 +204,10 @@ class Test_Testing_UtilitiesRef(models.Model):
     _description = "Testing Utilities ref"
 
     value = fields.Integer(default=1)
-    subs = fields.One2many("test_testing_utilities.ref.sub", "parent_id")
+    subs = fields.One2many(
+        comodel_name="test_testing_utilities.ref.sub",
+        inverse_name="parent_id",
+    )
     x = fields.Integer()
 
 
@@ -201,7 +219,7 @@ class Test_Testing_UtilitiesRefSub(models.Model):
     b = fields.Integer()
     c = fields.Integer()
     z = fields.Integer()
-    parent_id = fields.Many2one("test_testing_utilities.ref")
+    parent_id = fields.Many2one(comodel_name="test_testing_utilities.ref")
 
 
 class Test_Testing_UtilitiesDefault(models.Model):
@@ -211,8 +229,8 @@ class Test_Testing_UtilitiesDefault(models.Model):
     value = fields.Integer(default=1)
     v = fields.Integer()
     subs = fields.One2many(
-        "test_testing_utilities.sub3",
-        "parent_id",
+        comodel_name="test_testing_utilities.sub3",
+        inverse_name="parent_id",
         default=lambda self: self._default_subs(),
     )
 
@@ -232,7 +250,7 @@ class Test_Testing_UtilitiesSub3(models.Model):
     name = fields.Char(compute="_compute_name")
     value = fields.Integer(default=2)
     v = fields.Integer(default=6)
-    parent_id = fields.Many2one("test_testing_utilities.default")
+    parent_id = fields.Many2one(comodel_name="test_testing_utilities.default")
 
     @api.onchange("value")
     def _onchange_value(self):
@@ -248,9 +266,14 @@ class Test_Testing_UtilitiesRecursive(models.Model):
     _name = "test_testing_utilities.recursive"
     _description = "test_testing_utilities.recursive"
 
-    one_to_many_id = fields.Many2one("test_testing_utilities.recursive", readonly=True)
+    one_to_many_id = fields.Many2one(
+        comodel_name="test_testing_utilities.recursive",
+        readonly=True,
+    )
     many_to_one_ids = fields.One2many(
-        "test_testing_utilities.recursive", "one_to_many_id", readonly=True
+        comodel_name="test_testing_utilities.recursive",
+        inverse_name="one_to_many_id",
+        readonly=True,
     )
 
 
@@ -258,7 +281,10 @@ class Test_Testing_UtilitiesOnchange_Parent(models.Model):
     _name = "test_testing_utilities.onchange_parent"
     _description = "Testing Utilities Onchange Parent"
 
-    line_ids = fields.One2many("test_testing_utilities.onchange_line", "parent")
+    line_ids = fields.One2many(
+        comodel_name="test_testing_utilities.onchange_line",
+        inverse_name="parent",
+    )
 
     @api.onchange("line_ids")
     def _onchange_line_ids(self):
@@ -270,7 +296,7 @@ class Test_Testing_UtilitiesOnchange_Line(models.Model):
     _name = "test_testing_utilities.onchange_line"
     _description = "Testing Utilities Onchange Line"
 
-    parent = fields.Many2one("test_testing_utilities.onchange_parent")
+    parent = fields.Many2one(comodel_name="test_testing_utilities.onchange_parent")
     dummy = fields.Float()
     flag = fields.Boolean(store=False)
 
@@ -284,7 +310,10 @@ class Test_Testing_UtilitiesOnchange_Count(models.Model):
     _description = "Test_Testing_UtilitiesOnchange_Count"
 
     count = fields.Integer()
-    line_ids = fields.One2many("test_testing_utilities.onchange_count_sub", "parent")
+    line_ids = fields.One2many(
+        comodel_name="test_testing_utilities.onchange_count_sub",
+        inverse_name="parent",
+    )
 
     @api.onchange("count")
     def _onchange_count(self):
@@ -299,7 +328,7 @@ class Test_Testing_UtilitiesOnchange_Count_Sub(models.Model):
     _name = "test_testing_utilities.onchange_count_sub"
     _description = "Test_Testing_UtilitiesOnchange_Count_Sub"
 
-    parent = fields.Many2one("test_testing_utilities.onchange_count")
+    parent = fields.Many2one(comodel_name="test_testing_utilities.onchange_count")
     name = fields.Char()
 
 
@@ -307,7 +336,10 @@ class O2m_Readonly_Subfield_Parent(models.Model):
     _name = "o2m_readonly_subfield_parent"
     _description = "O2m_Readonly_Subfield_Parent"
 
-    line_ids = fields.One2many("o2m_readonly_subfield_child", "parent_id")
+    line_ids = fields.One2many(
+        comodel_name="o2m_readonly_subfield_child",
+        inverse_name="parent_id",
+    )
 
 
 class O2m_Readonly_Subfield_Child(models.Model):
@@ -315,8 +347,12 @@ class O2m_Readonly_Subfield_Child(models.Model):
     _description = "o2m_readonly_subfield_child"
 
     name = fields.Char()
-    parent_id = fields.Many2one("o2m_readonly_subfield_parent")
-    f = fields.Integer(compute="_compute_f", inverse="_inverse_f", readonly=True)
+    parent_id = fields.Many2one(comodel_name="o2m_readonly_subfield_parent")
+    f = fields.Integer(
+        compute="_compute_f",
+        inverse="_inverse_f",
+        readonly=True,
+    )
 
     @api.depends("name")
     def _compute_f(self):
@@ -339,7 +375,10 @@ class O2m_Changes_Parent(models.Model):
     _description = "o2m_changes_parent"
 
     name = fields.Char()
-    line_ids = fields.One2many("o2m_changes_children", "parent_id")
+    line_ids = fields.One2many(
+        comodel_name="o2m_changes_children",
+        inverse_name="parent_id",
+    )
 
     @api.onchange("name")
     def _onchange_name(self):
@@ -355,8 +394,11 @@ class O2m_Changes_Children(models.Model):
 
     name = fields.Char()
     v = fields.Integer()
-    line_ids = fields.One2many("o2m_changes_children.lines", "parent_id")
-    parent_id = fields.Many2one("o2m_changes_parent")
+    line_ids = fields.One2many(
+        comodel_name="o2m_changes_children.lines",
+        inverse_name="parent_id",
+    )
+    parent_id = fields.Many2one(comodel_name="o2m_changes_parent")
 
     @api.onchange("v")
     def _onchange_v(self):
@@ -369,7 +411,7 @@ class O2m_Changes_ChildrenLines(models.Model):
     _name = "o2m_changes_children.lines"
     _description = "o2m_changes_children.lines"
 
-    parent_id = fields.Many2one("o2m_changes_children")
+    parent_id = fields.Many2one(comodel_name="o2m_changes_children")
     v = fields.Integer()
     vv = fields.Integer()
 
@@ -382,29 +424,32 @@ class ResConfigTest(models.Model):
 
     param1 = fields.Integer(
         string="Test parameter 1",
-        config_parameter="resConfigTest.parameter1",
         default=1000,
+        config_parameter="resConfigTest.parameter1",
     )
 
-    param2 = fields.Many2one("res.config", config_parameter="resConfigTest.parameter2")
+    param2 = fields.Many2one(
+        comodel_name="res.config",
+        config_parameter="resConfigTest.parameter2",
+    )
 
     param3 = fields.Boolean(
         string="Test parameter 3",
-        config_parameter="resConfigTest.parameter3",
         default=True,
+        config_parameter="resConfigTest.parameter3",
     )
 
     group_test_checkbox = fields.Boolean(
         string="Test group checkbox",
-        group="base.group_user",
         implied_group="base.group_multi_currency",
+        group="base.group_user",
     )
 
     group_test_selection = fields.Selection(
-        [("0", "No"), ("1", "Yes")],
+        selection=[("0", "No"), ("1", "Yes")],
         string="Test group selection",
-        group="base.group_user",
         implied_group="base.group_multi_company",
+        group="base.group_user",
     )
 
 

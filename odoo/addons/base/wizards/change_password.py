@@ -26,8 +26,8 @@ class ChangePasswordWizard(models.TransientModel):
         ]
 
     user_ids = fields.One2many(
-        "change.password.user",
-        "wizard_id",
+        comodel_name="change.password.user",
+        inverse_name="wizard_id",
         string="Users",
         default=_default_user_ids,
     )
@@ -44,13 +44,20 @@ class ChangePasswordUser(models.TransientModel):
     _name = "change.password.user"
     _description = "User, Change Password Wizard"
     wizard_id = fields.Many2one(
-        "change.password.wizard",
+        comodel_name="change.password.wizard",
         required=True,
         ondelete="cascade",
     )
-    user_id = fields.Many2one("res.users", required=True, ondelete="cascade")
+    user_id = fields.Many2one(
+        comodel_name="res.users",
+        required=True,
+        ondelete="cascade",
+    )
     user_login = fields.Char(readonly=True)
-    new_passwd = fields.Char(string="New Password", default="")
+    new_passwd = fields.Char(
+        string="New Password",
+        default="",
+    )
 
     def change_password_button(self) -> None:
         _debug.lifecycle(

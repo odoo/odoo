@@ -23,71 +23,76 @@ class ProjectProject(models.Model):
             ]
         )
 
-    allow_billable = fields.Boolean("Billable")
+    allow_billable = fields.Boolean(string="Billable")
     sale_line_id = fields.Many2one(
-        "sale.order.line",
-        "Sales Order Item",
-        copy=False,
-        compute="_compute_sale_line_id",
-        store=True,
-        readonly=False,
-        index="btree_not_null",
-        domain=lambda self: str(self._domain_sale_line_id()),
+        comodel_name="sale.order.line",
+        string="Sales Order Item",
         help="Sales order item that will be selected by default on the tasks and timesheets of this project,"
         " except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
         "It can be modified on each task and timesheet entry individually if necessary.",
+        compute="_compute_sale_line_id",
+        store=True,
+        index="btree_not_null",
+        copy=False,
+        readonly=False,
+        domain=lambda self: str(self._domain_sale_line_id()),
     )
     sale_order_id = fields.Many2one(
-        related="sale_line_id.order_id", export_string_translation=False
+        related="sale_line_id.order_id",
+        export_string_translation=False,
     )
     has_any_so_to_invoice = fields.Boolean(
-        "Has SO to Invoice",
-        compute="_compute_has_any_so_to_invoice",
+        string="Has SO to Invoice",
         export_string_translation=False,
+        compute="_compute_has_any_so_to_invoice",
     )
     sale_order_line_count = fields.Integer(
+        export_string_translation=False,
         compute="_compute_sale_order_count",
         groups="sales_team.group_sale_salesman",
-        export_string_translation=False,
     )
     sale_order_count = fields.Integer(
+        export_string_translation=False,
         compute="_compute_sale_order_count",
         groups="sales_team.group_sale_salesman",
-        export_string_translation=False,
     )
     has_any_so_with_nothing_to_invoice = fields.Boolean(
-        "Has a SO with an invoice status of No",
-        compute="_compute_has_any_so_with_nothing_to_invoice",
+        string="Has a SO with an invoice status of No",
         export_string_translation=False,
+        compute="_compute_has_any_so_with_nothing_to_invoice",
     )
     invoice_count = fields.Integer(
+        export_string_translation=False,
         compute="_compute_invoice_count",
         groups="account.group_account_readonly",
-        export_string_translation=False,
     )
     vendor_bill_count = fields.Integer(
         related="account_id.vendor_bill_count",
-        groups="account.group_account_readonly",
-        compute_sudo=False,
         export_string_translation=False,
+        compute_sudo=False,
+        groups="account.group_account_readonly",
     )
     partner_id = fields.Many2one(
-        compute="_compute_partner_id", store=True, readonly=False
+        compute="_compute_partner_id",
+        store=True,
+        readonly=False,
     )
     display_sales_stat_buttons = fields.Boolean(
-        compute="_compute_display_sales_stat_buttons", export_string_translation=False
+        export_string_translation=False,
+        compute="_compute_display_sales_stat_buttons",
     )
     sale_order_state = fields.Selection(
-        related="sale_order_id.state", export_string_translation=False
+        related="sale_order_id.state",
+        export_string_translation=False,
     )
     reinvoiced_sale_order_id = fields.Many2one(
-        "sale.order",
+        comodel_name="sale.order",
         string="Sales Order",
-        groups="sales_team.group_sale_salesman",
+        help="Products added to stock pickings, whose operation type is configured to generate analytic costs, will be re-invoiced in this sales order if they are set up for it.",
+        index="btree_not_null",
         copy=False,
         domain="[('partner_id', '=', partner_id)]",
-        index="btree_not_null",
-        help="Products added to stock pickings, whose operation type is configured to generate analytic costs, will be re-invoiced in this sales order if they are set up for it.",
+        groups="sales_team.group_sale_salesman",
     )
 
     @api.model

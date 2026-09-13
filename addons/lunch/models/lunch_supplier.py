@@ -34,47 +34,90 @@ class LunchSupplier(models.Model):
     _description = "Lunch Supplier"
     _inherit = ["mixin.mail.thread", "mixin.mail.activity"]
 
-    partner_id = fields.Many2one("res.partner", string="Vendor", required=True)
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Vendor",
+        required=True,
+    )
 
-    name = fields.Char("Name", related="partner_id.name", readonly=False)
+    name = fields.Char(
+        related="partner_id.name",
+        string="Name",
+        readonly=False,
+    )
 
-    email = fields.Char(related="partner_id.email", readonly=False)
-    email_formatted = fields.Char(related="partner_id.email_formatted", readonly=True)
-    phone_ids = fields.Many2many(related="partner_id.phone_ids", readonly=False)
-    street = fields.Char(related="partner_id.street", readonly=False)
-    street2 = fields.Char(related="partner_id.street2", readonly=False)
-    zip_code = fields.Char(related="partner_id.zip", readonly=False)
-    city = fields.Char(related="partner_id.city", readonly=False)
+    email = fields.Char(
+        related="partner_id.email",
+        readonly=False,
+    )
+    email_formatted = fields.Char(
+        related="partner_id.email_formatted",
+        readonly=True,
+    )
+    phone_ids = fields.Many2many(
+        related="partner_id.phone_ids",
+        readonly=False,
+    )
+    street = fields.Char(
+        related="partner_id.street",
+        readonly=False,
+    )
+    street2 = fields.Char(
+        related="partner_id.street2",
+        readonly=False,
+    )
+    zip_code = fields.Char(
+        related="partner_id.zip",
+        readonly=False,
+    )
+    city = fields.Char(
+        related="partner_id.city",
+        readonly=False,
+    )
     state_id = fields.Many2one(
-        "res.country.state", related="partner_id.state_id", readonly=False
+        comodel_name="res.country.state",
+        related="partner_id.state_id",
+        readonly=False,
     )
     country_id = fields.Many2one(
-        "res.country", related="partner_id.country_id", readonly=False
+        comodel_name="res.country",
+        related="partner_id.country_id",
+        readonly=False,
     )
     company_id = fields.Many2one(
-        "res.company", related="partner_id.company_id", readonly=False, store=True
+        comodel_name="res.company",
+        related="partner_id.company_id",
+        store=True,
+        readonly=False,
     )
 
     responsible_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
+        help="The responsible is the person that will order lunch for everyone. It will be used as the 'from' when sending the automatic email.",
+        default=lambda self: self.env.user,
         domain=lambda self: [
             ("all_group_ids", "in", self.env.ref("lunch.group_lunch_manager").id)
         ],
-        default=lambda self: self.env.user,
-        help="The responsible is the person that will order lunch for everyone. It will be used as the 'from' when sending the automatic email.",
     )
 
     send_by = fields.Selection(
-        [
+        selection=[
             ("phone", "Phone"),
             ("mail", "Email"),
         ],
-        "Send Order By",
+        string="Send Order By",
         default="phone",
     )
-    automatic_email_time = fields.Float("Order Time", default=12.0, required=True)
+    automatic_email_time = fields.Float(
+        string="Order Time",
+        default=12.0,
+        required=True,
+    )
     cron_id = fields.Many2one(
-        "ir.cron", ondelete="cascade", required=True, readonly=True
+        comodel_name="ir.cron",
+        readonly=True,
+        required=True,
+        ondelete="cascade",
     )
 
     mon = fields.Boolean(default=True)
@@ -85,27 +128,33 @@ class LunchSupplier(models.Model):
     sat = fields.Boolean()
     sun = fields.Boolean()
 
-    recurrency_end_date = fields.Date("Until", help="This field is used in order to ")
+    recurrency_end_date = fields.Date(
+        string="Until",
+        help="This field is used in order to ",
+    )
 
-    available_location_ids = fields.Many2many("lunch.location", string="Location")
+    available_location_ids = fields.Many2many(
+        comodel_name="lunch.location",
+        string="Location",
+    )
     available_today = fields.Boolean(
-        "This is True when if the supplier is available today",
+        string="This is True when if the supplier is available today",
         compute="_compute_available_today",
         search="_search_available_today",
     )
     order_deadline_passed = fields.Boolean(compute="_compute_order_deadline_passed")
 
     tz = fields.Selection(
-        _selection_timezones,
+        selection=_selection_timezones,
         string="Timezone",
-        required=True,
         default=lambda self: self.env.user.tz or "UTC",
+        required=True,
     )
 
     active = fields.Boolean(default=True)
 
     moment = fields.Selection(
-        [
+        selection=[
             ("am", "AM"),
             ("pm", "PM"),
         ],
@@ -114,39 +163,67 @@ class LunchSupplier(models.Model):
     )
 
     delivery = fields.Selection(
-        [("delivery", "Delivery"), ("no_delivery", "No Delivery")],
+        selection=[("delivery", "Delivery"), ("no_delivery", "No Delivery")],
         default="no_delivery",
     )
 
-    topping_label_1 = fields.Char("Extra 1 Label", required=True, default="Extras")
-    topping_label_2 = fields.Char("Extra 2 Label", required=True, default="Beverages")
+    topping_label_1 = fields.Char(
+        string="Extra 1 Label",
+        default="Extras",
+        required=True,
+    )
+    topping_label_2 = fields.Char(
+        string="Extra 2 Label",
+        default="Beverages",
+        required=True,
+    )
     topping_label_3 = fields.Char(
-        "Extra 3 Label", required=True, default="Extra Label 3"
+        string="Extra 3 Label",
+        default="Extra Label 3",
+        required=True,
     )
     topping_ids_1 = fields.One2many(
-        "lunch.topping", "supplier_id", domain=[("topping_category", "=", 1)]
+        comodel_name="lunch.topping",
+        inverse_name="supplier_id",
+        domain=[("topping_category", "=", 1)],
     )
     topping_ids_2 = fields.One2many(
-        "lunch.topping", "supplier_id", domain=[("topping_category", "=", 2)]
+        comodel_name="lunch.topping",
+        inverse_name="supplier_id",
+        domain=[("topping_category", "=", 2)],
     )
     topping_ids_3 = fields.One2many(
-        "lunch.topping", "supplier_id", domain=[("topping_category", "=", 3)]
+        comodel_name="lunch.topping",
+        inverse_name="supplier_id",
+        domain=[("topping_category", "=", 3)],
     )
     topping_quantity_1 = fields.Selection(
-        [("0_more", "None or More"), ("1_more", "One or More"), ("1", "Only One")],
-        "Extra 1 Quantity",
+        selection=[
+            ("0_more", "None or More"),
+            ("1_more", "One or More"),
+            ("1", "Only One"),
+        ],
+        string="Extra 1 Quantity",
         default="0_more",
         required=True,
     )
     topping_quantity_2 = fields.Selection(
-        [("0_more", "None or More"), ("1_more", "One or More"), ("1", "Only One")],
-        "Extra 2 Quantity",
+        selection=[
+            ("0_more", "None or More"),
+            ("1_more", "One or More"),
+            ("1", "Only One"),
+        ],
+        string="Extra 2 Quantity",
         default="0_more",
         required=True,
     )
     topping_quantity_3 = fields.Selection(
-        [("0_more", "None or More"), ("1_more", "One or More"), ("1", "Only One")],
-        "Extra 3 Quantity",
+        selection=[
+            ("0_more", "None or More"),
+            ("1_more", "One or More"),
+            ("1", "Only One"),
+        ],
+        string="Extra 3 Quantity",
         default="0_more",
         required=True,
     )

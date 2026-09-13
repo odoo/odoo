@@ -5,10 +5,10 @@ class HrJob(models.Model):
     _inherit = "hr.job"
 
     survey_id = fields.Many2one(
-        "survey.survey",
-        "Interview Form",
-        index="btree_not_null",
+        comodel_name="survey.survey",
+        string="Interview Form",
         help="Choose an interview form for this job position and you will be able to print/answer this interview from all applicants who apply for this job",
+        index="btree_not_null",
     )
 
     def action_test_survey(self):

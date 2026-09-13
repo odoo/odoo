@@ -4,7 +4,10 @@ from odoo import _, api, fields, models
 class Website(models.Model):
     _inherit = "website"
 
-    forum_count = fields.Integer(readonly=True, default=0)
+    forum_count = fields.Integer(
+        default=0,
+        readonly=True,
+    )
 
     @api.model_create_multi
     def create(self, vals_list):

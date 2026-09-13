@@ -5,7 +5,7 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     partner_autocomplete_insufficient_credit = fields.Boolean(
-        "Insufficient credit",
+        string="Insufficient credit",
         compute="_compute_partner_autocomplete_insufficient_credit",
     )
 

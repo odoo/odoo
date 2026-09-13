@@ -11,26 +11,43 @@ class Test_HttpStargate(models.Model):
     _inherit = ["mixin.mail.thread", "mixin.mail.activity"]
 
     name = fields.Char(
-        required=True, store=True, compute="_compute_name", readonly=False
+        compute="_compute_name",
+        store=True,
+        readonly=False,
+        required=True,
     )
     address = fields.Char(required=True)
-    sgc_designation = fields.Char(store=True, compute="_compute_sgc_designation")
-    galaxy_id = fields.Many2one("test_http.galaxy", required=True)
+    sgc_designation = fields.Char(
+        compute="_compute_sgc_designation",
+        store=True,
+    )
+    galaxy_id = fields.Many2one(
+        comodel_name="test_http.galaxy",
+        required=True,
+    )
     has_galaxy_crystal = fields.Boolean(
-        store=True, compute="_compute_has_galaxy_crystal", readonly=False
+        compute="_compute_has_galaxy_crystal",
+        store=True,
+        readonly=False,
     )
     glyph_attach = fields.Image(attachment=True)
     glyph_inline = fields.Image(attachment=False)
     glyph_related = fields.Image(
-        "Glyph 128",
         related="glyph_attach",
+        string="Glyph 128",
         max_width=128,
         max_height=128,
         store=True,
     )
     glyph_compute = fields.Image(compute="_compute_glyph_compute")
-    galaxy_picture = fields.Image(related="galaxy_id.picture", store=False)
-    availability = fields.Float(default=0.99, aggregator="avg")
+    galaxy_picture = fields.Image(
+        related="galaxy_id.picture",
+        store=False,
+    )
+    availability = fields.Float(
+        default=0.99,
+        aggregator="avg",
+    )
     last_use_date = fields.Date()
 
     _address_length = models.Constraint(
@@ -75,11 +92,19 @@ class Test_HttpGalaxy(models.Model):
     _name = "test_http.galaxy"
     _description = "Galaxy"
 
-    name = fields.Char(required=True, help="The galaxy common name.")
+    name = fields.Char(
+        help="The galaxy common name.",
+        required=True,
+    )
     translated_name = fields.Char(translate=True)
-    picture = fields.Image(attachment=True, groups="base.group_user")
+    picture = fields.Image(
+        attachment=True,
+        groups="base.group_user",
+    )
     stargate_ids = fields.One2many(
-        "test_http.stargate", "galaxy_id", string="stargates"
+        comodel_name="test_http.stargate",
+        inverse_name="galaxy_id",
+        string="stargates",
     )
 
     @api.model

@@ -5,11 +5,11 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     l10n_es_sii_certificate_id = fields.Many2one(
+        comodel_name="certificate.certificate",
         string="Certificate (SII)",
+        compute="_compute_l10n_es_sii_certificate_id",
         store=True,
         readonly=False,
-        comodel_name="certificate.certificate",
-        compute="_compute_l10n_es_sii_certificate_id",
     )
     l10n_es_sii_certificate_ids = fields.One2many(
         comodel_name="certificate.certificate",
@@ -17,12 +17,12 @@ class ResCompany(models.Model):
         domain=[("scope", "=", "sii")],
     )
     l10n_es_sii_tax_agency = fields.Selection(
-        string="Tax Agency for SII",
         selection=[
             ("aeat", "Agencia Tributaria española"),
             ("gipuzkoa", "Hacienda Foral de Gipuzkoa"),
             ("bizkaia", "Hacienda Foral de Bizkaia"),
         ],
+        string="Tax Agency for SII",
         default=False,
     )
     l10n_es_sii_test_env = fields.Boolean(

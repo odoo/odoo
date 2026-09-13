@@ -11,7 +11,10 @@ class MailGatewayAllowed(models.Model):
     _name = "mail.gateway.allowed"
     _description = "Mail Gateway Allowed"
 
-    email = fields.Char("Email Address", required=True)
+    email = fields.Char(
+        string="Email Address",
+        required=True,
+    )
     email_normalized = fields.Char(
         string="Normalized Email",
         compute="_compute_email_normalized",

@@ -17,151 +17,150 @@ class StockPickingBatch(models.Model):
         string="Batch Transfer",
         default="New",
         copy=False,
-        required=True,
         readonly=True,
+        required=True,
     )
     description = fields.Char()
     user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Responsible",
-        tracking=True,
         check_company=True,
+        tracking=True,
     )
     company_id = fields.Many2one(
-        "res.company",
-        required=True,
-        readonly=True,
-        index=True,
+        comodel_name="res.company",
         default=lambda self: self.env.company,
+        index=True,
+        readonly=True,
+        required=True,
     )
     picking_ids = fields.One2many(
-        "stock.picking",
-        "batch_id",
+        comodel_name="stock.picking",
+        inverse_name="batch_id",
         string="Transfers",
+        help="List of transfers associated to this batch",
         domain="[('id', 'in', allowed_picking_ids)]",
         check_company=True,
-        help="List of transfers associated to this batch",
     )
-    show_check_availability = fields.Boolean(
-        compute="_compute_show_check_availability",
-    )
+    show_check_availability = fields.Boolean(compute="_compute_show_check_availability")
     show_allocation = fields.Boolean(
         string="Show Allocation Button",
         compute="_compute_show_allocation",
     )
     allowed_picking_ids = fields.One2many(
-        "stock.picking",
+        comodel_name="stock.picking",
         compute="_compute_allowed_picking_ids",
     )
     move_ids = fields.One2many(
-        "stock.move",
+        comodel_name="stock.move",
         string="Stock moves",
         compute="_compute_move_ids",
     )
     move_line_ids = fields.One2many(
-        "stock.move.line",
+        comodel_name="stock.move.line",
         string="Stock move lines",
         compute="_compute_move_line_ids",
         inverse="_inverse_move_line_ids",
         search="_search_move_line_ids",
     )
     state = fields.Selection(
-        [
+        selection=[
             ("draft", "Draft"),
             ("in_progress", "In progress"),
             ("done", "Done"),
             ("cancel", "Cancelled"),
         ],
+        compute="_compute_state",
         default="draft",
         store=True,
-        compute="_compute_state",
-        copy=False,
-        tracking=True,
-        required=True,
-        readonly=True,
         index=True,
+        copy=False,
+        readonly=True,
+        required=True,
+        tracking=True,
     )
     picking_type_id = fields.Many2one(
-        "stock.picking.type",
-        "Operation Type",
-        check_company=True,
-        copy=False,
+        comodel_name="stock.picking.type",
+        string="Operation Type",
         index=True,
+        copy=False,
+        check_company=True,
     )
     warehouse_id = fields.Many2one(
-        "stock.warehouse", related="picking_type_id.warehouse_id"
+        comodel_name="stock.warehouse",
+        related="picking_type_id.warehouse_id",
     )
     picking_type_code = fields.Selection(related="picking_type_id.code")
     date_planned = fields.Datetime(
-        "Scheduled Date",
-        copy=False,
-        store=True,
-        readonly=False,
-        compute="_compute_date_planned",
+        string="Scheduled Date",
         help="""Scheduled date for the transfers to be processed.
               - If manually set then scheduled date for all transfers in batch will automatically update to this date.
               - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date
                 but this scheduled date will not be set for all transfers in batch.""",
+        compute="_compute_date_planned",
+        store=True,
+        copy=False,
+        readonly=False,
     )
-    is_wave = fields.Boolean("This batch is a wave")
+    is_wave = fields.Boolean(string="This batch is a wave")
     wave_product_id = fields.Many2one(
-        "product.product",
+        comodel_name="product.product",
         compute="_compute_wave_grouping",
         store=True,
         readonly=False,
     )
     wave_category_id = fields.Many2one(
-        "product.category",
-        "Wave Product Category",
+        comodel_name="product.category",
+        string="Wave Product Category",
         compute="_compute_wave_grouping",
         store=True,
         readonly=False,
     )
     wave_partner_id = fields.Many2one(
-        "res.partner",
-        "Wave Contact",
+        comodel_name="res.partner",
+        string="Wave Contact",
         compute="_compute_wave_grouping",
         store=True,
         readonly=False,
     )
     wave_country_id = fields.Many2one(
-        "res.country",
-        "Wave Destination Country",
+        comodel_name="res.country",
+        string="Wave Destination Country",
         compute="_compute_wave_grouping",
         store=True,
         readonly=False,
     )
     wave_source_location_id = fields.Many2one(
-        "stock.location",
+        comodel_name="stock.location",
         compute="_compute_wave_grouping",
         store=True,
         readonly=False,
     )
     wave_dest_location_id = fields.Many2one(
-        "stock.location",
-        "Wave Destination Location",
+        comodel_name="stock.location",
+        string="Wave Destination Location",
         compute="_compute_wave_grouping",
         store=True,
         readonly=False,
     )
     wave_location_id = fields.Many2one(
-        "stock.location",
+        comodel_name="stock.location",
+        help="One of the operation type's wave locations. An empty wave declaring "
+        "its grouping values here is filled by automatic waving; once it holds "
+        "lines, the values are read from them.",
         compute="_compute_wave_grouping",
         store=True,
         readonly=False,
         domain="[('id', 'in', picking_type_id.wave_location_ids)]",
-        help="One of the operation type's wave locations. An empty wave declaring "
-        "its grouping values here is filled by automatic waving; once it holds "
-        "lines, the values are read from them.",
     )
     show_lots_text = fields.Boolean(compute="_compute_show_lots_text")
     estimated_shipping_weight = fields.Float(
-        compute="_compute_estimated_shipping_capacity",
         digits="Product Unit",
+        compute="_compute_estimated_shipping_capacity",
     )
     estimated_shipping_volume = fields.Float(
-        compute="_compute_estimated_shipping_capacity",
         digits="Product Unit",
+        compute="_compute_estimated_shipping_capacity",
     )
     properties = fields.Properties(
         definition="picking_type_id.batch_properties_definition",

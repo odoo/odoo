@@ -11,10 +11,10 @@ class ResUsers(models.Model):
     _inherit = "res.users"
 
     website_id = fields.Many2one(
-        "website",
+        comodel_name="website",
         related="partner_id.website_id",
-        store=True,
         related_sudo=False,
+        store=True,
         readonly=False,
     )
 

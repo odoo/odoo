@@ -79,22 +79,32 @@ LINE_FIELDS = [
 class PosOrder(models.Model):
     _inherit = "pos.order"
 
-    l10n_fr_hash = fields.Char(string="Inalteralbility Hash", readonly=True, copy=False)
+    l10n_fr_hash = fields.Char(
+        string="Inalteralbility Hash",
+        copy=False,
+        readonly=True,
+    )
     l10n_fr_secure_sequence_number = fields.Integer(
-        string="Inalteralbility No Gap Sequence #", readonly=True, copy=False
+        string="Inalteralbility No Gap Sequence #",
+        copy=False,
+        readonly=True,
     )
     l10n_fr_string_to_hash = fields.Char(
-        compute="_compute_string_to_hash", readonly=True, store=False
+        compute="_compute_string_to_hash",
+        store=False,
+        readonly=True,
     )
     previous_order_id = fields.Many2one(
-        "pos.order",
-        readonly=True,
+        comodel_name="pos.order",
         compute="_compute_previous_order_id",
         store=True,
         copy=False,
+        readonly=True,
     )
     pos_version = fields.Char(
-        help="Version of Odoo that created the order", readonly=True, copy=False
+        help="Version of Odoo that created the order",
+        copy=False,
+        readonly=True,
     )
 
     @api.depends("l10n_fr_secure_sequence_number")

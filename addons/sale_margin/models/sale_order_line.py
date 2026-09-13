@@ -5,26 +5,26 @@ class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
     margin = fields.Float(
-        compute="_compute_margins",
         min_display_digits="Product Price",
+        compute="_compute_margins",
         store=True,
         groups="base.group_user",
     )
     margin_percent = fields.Float(
-        "Margin (%)",
+        string="Margin (%)",
         compute="_compute_margins",
         store=True,
-        groups="base.group_user",
         aggregator="avg",
+        groups="base.group_user",
     )
     purchase_price = fields.Float(
         string="Cost",
-        compute="_compute_purchase_price",
         min_display_digits="Product Price",
-        store=True,
-        readonly=False,
-        copy=False,
+        compute="_compute_purchase_price",
         precompute=True,
+        store=True,
+        copy=False,
+        readonly=False,
         groups="base.group_user",
     )
 

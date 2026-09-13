@@ -9,7 +9,7 @@ class MixinOrderReport(models.AbstractModel):
     _auto = False
     _rec_name = "date_order"
 
-    currency_id = fields.Many2one("res.currency")
+    currency_id = fields.Many2one(comodel_name="res.currency")
 
     company_id = fields.Many2one(
         comodel_name="res.company",
@@ -27,11 +27,27 @@ class MixinOrderReport(models.AbstractModel):
         comodel_name="product.category",
         readonly=True,
     )
-    product_uom_qty = fields.Float(string="Qty Ordered", readonly=True)
-    price_unit = fields.Float(string="Unit Price", aggregator="avg", readonly=True)
-    price_subtotal = fields.Monetary(string="Untaxed Total", readonly=True)
-    price_total = fields.Monetary(string="Total", readonly=True)
-    weight = fields.Float(string="Gross Weight", readonly=True)
+    product_uom_qty = fields.Float(
+        string="Qty Ordered",
+        readonly=True,
+    )
+    price_unit = fields.Float(
+        string="Unit Price",
+        readonly=True,
+        aggregator="avg",
+    )
+    price_subtotal = fields.Monetary(
+        string="Untaxed Total",
+        readonly=True,
+    )
+    price_total = fields.Monetary(
+        string="Total",
+        readonly=True,
+    )
+    weight = fields.Float(
+        string="Gross Weight",
+        readonly=True,
+    )
     volume = fields.Float(readonly=True)
 
     @api.readonly

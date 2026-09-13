@@ -20,24 +20,24 @@ class BaseLanguageInstall(models.TransientModel):
         return False
 
     lang_ids = fields.Many2many(
-        "res.lang",
-        "res_lang_install_rel",
-        "language_wizard_id",
-        "lang_id",
-        "Languages",
+        comodel_name="res.lang",
+        relation="res_lang_install_rel",
+        column1="language_wizard_id",
+        column2="lang_id",
+        string="Languages",
         default=_default_lang_ids,
-        context={"active_test": False},
         required=True,
+        context={"active_test": False},
     )
     overwrite = fields.Boolean(
-        "Overwrite Existing Terms",
-        default=True,
+        string="Overwrite Existing Terms",
         help="If you check this box, your customized translations will be overwritten and replaced by the official ones.",
+        default=True,
     )
     first_lang_id = fields.Many2one(
-        "res.lang",
-        compute="_compute_first_lang_id",
+        comodel_name="res.lang",
         help="Used when the user only selects one language and is given the option to switch to it",
+        compute="_compute_first_lang_id",
     )
 
     @api.depends("lang_ids")

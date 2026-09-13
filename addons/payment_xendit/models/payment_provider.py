@@ -10,22 +10,23 @@ class PaymentProvider(models.Model):
     _inherit = "payment.provider"
 
     code = fields.Selection(
-        selection_add=[("xendit", "Xendit")], ondelete={"xendit": "set default"}
+        selection_add=[("xendit", "Xendit")],
+        ondelete={"xendit": "set default"},
     )
     xendit_public_key = fields.Char(
-        required_if_provider="xendit",
         copy=False,
         groups="base.group_system",
+        required_if_provider="xendit",
     )
     xendit_secret_key = fields.Char(
-        required_if_provider="xendit",
         copy=False,
         groups="base.group_system",
+        required_if_provider="xendit",
     )
     xendit_webhook_token = fields.Char(
-        required_if_provider="xendit",
         copy=False,
         groups="base.group_system",
+        required_if_provider="xendit",
     )
 
     # === COMPUTE METHODS === #

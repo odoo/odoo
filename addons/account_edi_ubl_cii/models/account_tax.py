@@ -5,8 +5,6 @@ class AccountTax(models.Model):
     _inherit = "account.tax"
 
     ubl_cii_tax_category_code = fields.Selection(
-        help="The VAT category code used for electronic invoicing purposes.",
-        string="Tax Category Code",
         selection=[
             ("AE", "AE - Vat Reverse Charge"),
             ("E", "E - Exempt from Tax"),
@@ -25,10 +23,10 @@ class AccountTax(models.Model):
             ),
             ("B", "B - Transferred (VAT), In Italy"),
         ],
+        string="Tax Category Code",
+        help="The VAT category code used for electronic invoicing purposes.",
     )
     ubl_cii_tax_exemption_reason_code = fields.Selection(
-        help="The reason why the amount is exempted from VAT or why no VAT is being charged, used for electronic invoicing purposes.",
-        string="Tax Exemption Reason Code",
         selection=[
             (
                 "VATEX-EU-79-C",
@@ -364,6 +362,8 @@ class AccountTax(models.Model):
                 "VATEX-FR-AE - Exempt based on 2 of article 283 of the Code Général des Impôts (CGI ; General tax code)",
             ),
         ],
+        string="Tax Exemption Reason Code",
+        help="The reason why the amount is exempted from VAT or why no VAT is being charged, used for electronic invoicing purposes.",
     )
     ubl_cii_requires_exemption_reason = fields.Boolean(
         compute="_compute_ubl_cii_requires_exemption_reason"

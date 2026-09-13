@@ -4,17 +4,19 @@ from odoo import fields, models
 class DigestDigest(models.Model):
     _inherit = "digest.digest"
 
-    kpi_livechat_rating = fields.Boolean("% of Happiness")
+    kpi_livechat_rating = fields.Boolean(string="% of Happiness")
     kpi_livechat_rating_value = fields.Float(
-        digits=(16, 2), compute="_compute_kpi_livechat_rating_value"
+        digits=(16, 2),
+        compute="_compute_kpi_livechat_rating_value",
     )
-    kpi_livechat_conversations = fields.Boolean("Conversations handled")
+    kpi_livechat_conversations = fields.Boolean(string="Conversations handled")
     kpi_livechat_conversations_value = fields.Integer(
         compute="_compute_kpi_livechat_conversations_value"
     )
-    kpi_livechat_response = fields.Boolean("Time to answer (sec)")
+    kpi_livechat_response = fields.Boolean(string="Time to answer (sec)")
     kpi_livechat_response_value = fields.Float(
-        digits=(16, 2), compute="_compute_kpi_livechat_response_value"
+        digits=(16, 2),
+        compute="_compute_kpi_livechat_response_value",
     )
 
     def _compute_kpi_livechat_rating_value(self):

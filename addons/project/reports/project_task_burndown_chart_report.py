@@ -16,11 +16,20 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
 
     planned_hours = fields.Float(readonly=True)
     date = fields.Datetime(readonly=True)
-    date_assign = fields.Datetime(string="Assignment Date", readonly=True)
-    date_end = fields.Date(string="Deadline", readonly=True)
-    date_last_status_change = fields.Date(string="Last Status Change", readonly=True)
+    date_assign = fields.Datetime(
+        string="Assignment Date",
+        readonly=True,
+    )
+    date_end = fields.Date(
+        string="Deadline",
+        readonly=True,
+    )
+    date_last_status_change = fields.Date(
+        string="Last Status Change",
+        readonly=True,
+    )
     state = fields.Selection(
-        [
+        selection=[
             ("todo", "To Do"),
             ("in_progress", "In Progress"),
             ("changes_requested", "Changes Requested"),
@@ -32,16 +41,29 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
         readonly=True,
     )
     is_closed = fields.Selection(
-        [("closed", "Closed tasks"), ("open", "Open tasks")],
+        selection=[("closed", "Closed tasks"), ("open", "Open tasks")],
         string="Closing State",
         readonly=True,
     )
-    milestone_id = fields.Many2one("project.milestone", readonly=True)
-    partner_id = fields.Many2one("res.partner", string="Customer", readonly=True)
-    project_id = fields.Many2one("project.project", readonly=True)
-    step_id = fields.Many2one("project.workflow.step", readonly=True)
+    milestone_id = fields.Many2one(
+        comodel_name="project.milestone",
+        readonly=True,
+    )
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Customer",
+        readonly=True,
+    )
+    project_id = fields.Many2one(
+        comodel_name="project.project",
+        readonly=True,
+    )
+    step_id = fields.Many2one(
+        comodel_name="project.workflow.step",
+        readonly=True,
+    )
     tag_ids = fields.Many2many(
-        "project.tags",
+        comodel_name="project.tags",
         relation="project_tags_project_task_rel",
         column1="project_task_id",
         column2="project_tags_id",
@@ -49,7 +71,7 @@ class ProjectTaskBurndownChartReport(models.AbstractModel):
         readonly=True,
     )
     user_ids = fields.Many2many(
-        "res.users",
+        comodel_name="res.users",
         relation="project_task_user_rel",
         column1="task_id",
         column2="user_id",

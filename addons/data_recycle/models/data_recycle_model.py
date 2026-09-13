@@ -27,23 +27,36 @@ class Data_RecycleModel(models.Model):
     # Core identification
     active = fields.Boolean(default=True)
     name = fields.Char(
-        compute="_compute_name", readonly=False, store=True, required=True, copy=True
+        compute="_compute_name",
+        store=True,
+        copy=True,
+        readonly=False,
+        required=True,
     )
 
     # Target block
     res_model_id = fields.Many2one(
-        "ir.model", string="Model", required=True, ondelete="cascade"
+        comodel_name="ir.model",
+        string="Model",
+        required=True,
+        ondelete="cascade",
     )
     res_model_name = fields.Char(
-        related="res_model_id.model", string="Model Name", store=True
+        related="res_model_id.model",
+        string="Model Name",
+        store=True,
     )
-    recycle_record_ids = fields.One2many("data_recycle.record", "recycle_model_id")
+    recycle_record_ids = fields.One2many(
+        comodel_name="data_recycle.record",
+        inverse_name="recycle_model_id",
+    )
     records_to_recycle_count = fields.Integer(
-        "Records To Recycle", compute="_compute_records_to_recycle_count"
+        string="Records To Recycle",
+        compute="_compute_records_to_recycle_count",
     )
 
     recycle_mode = fields.Selection(
-        [
+        selection=[
             ("manual", "Manual"),
             ("automatic", "Automatic"),
         ],
@@ -51,7 +64,7 @@ class Data_RecycleModel(models.Model):
         required=True,
     )
     recycle_action = fields.Selection(
-        [
+        selection=[
             ("archive", "Archive"),
             ("unlink", "Delete"),
         ],
@@ -67,7 +80,10 @@ class Data_RecycleModel(models.Model):
     # `time_field_delta_unit` triple this replaces was a second, weaker spelling
     # of a domain the widget already writes. Migration: 1.4.
     domain = fields.Char(
-        string="Filter", compute="_compute_domain", readonly=False, store=True
+        string="Filter",
+        compute="_compute_domain",
+        store=True,
+        readonly=False,
     )
     include_archived = fields.Boolean(
         help="Propose archived records for deletion as well. Ignored when the action is Archive, "

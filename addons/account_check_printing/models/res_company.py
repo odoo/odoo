@@ -7,19 +7,19 @@ class ResCompany(models.Model):
     # This field needs to be overridden with `selection_add` in the modules which intends to add report layouts.
     # The xmlID of all the report actions which are actually Check Layouts has to be kept as key of the selection.
     account_check_printing_layout = fields.Selection(
-        string="Check Layout",
         selection=[
             ("disabled", "None"),
         ],
-        default="disabled",
+        string="Check Layout",
         help="Select the format corresponding to the check paper you will be printing your checks on.\n"
         "In order to disable the printing feature, select 'None'.",
+        default="disabled",
     )
     account_check_printing_date_label = fields.Boolean(
         string="Print Date Label",
-        default=True,
         help="This option allows you to print the date label on the check as per CPA.\n"
         "Disable this if your pre-printed check includes the date label.",
+        default=True,
     )
     account_check_printing_multi_stub = fields.Boolean(
         string="Multi-Pages Check Stub",
@@ -27,16 +27,16 @@ class ResCompany(models.Model):
     )
     account_check_printing_margin_top = fields.Float(
         string="Check Top Margin",
-        default=0.25,
         help="Adjust the margins of generated checks to make it fit your printer's settings.",
+        default=0.25,
     )
     account_check_printing_margin_left = fields.Float(
         string="Check Left Margin",
-        default=0.25,
         help="Adjust the margins of generated checks to make it fit your printer's settings.",
+        default=0.25,
     )
     account_check_printing_margin_right = fields.Float(
         string="Right Margin",
-        default=0.25,
         help="Adjust the margins of generated checks to make it fit your printer's settings.",
+        default=0.25,
     )

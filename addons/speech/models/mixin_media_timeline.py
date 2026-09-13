@@ -16,16 +16,16 @@ class MixinMediaTimeline(models.AbstractModel):
     _description = "Media Timeline"
 
     segment_ids: MediaSegment = fields.One2many(
-        "media.segment",
-        "res_id",
-        domain=lambda self: [("res_model", "=", self._name)],
+        comodel_name="media.segment",
+        inverse_name="res_id",
         string="Media",
+        domain=lambda self: [("res_model", "=", self._name)],
     )
     media_duration_ms = fields.Integer(compute="_compute_media_duration_ms")
     has_media = fields.Boolean(compute="_compute_has_media")
     media_transcript = fields.Text(compute="_compute_media_transcript")
     transcription_state = fields.Selection(
-        [
+        selection=[
             ("none", "Not transcribed"),
             ("queued", "Queued"),
             ("running", "Transcribing"),

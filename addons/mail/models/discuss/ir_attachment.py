@@ -15,8 +15,8 @@ class IrAttachment(models.Model):
     _inherit = "ir.attachment"
 
     voice_ids: DiscussVoiceMetadata = fields.One2many(
-        "discuss.voice.metadata",
-        "attachment_id",
+        comodel_name="discuss.voice.metadata",
+        inverse_name="attachment_id",
     )
 
     def _bus_channel(self) -> models.Model:

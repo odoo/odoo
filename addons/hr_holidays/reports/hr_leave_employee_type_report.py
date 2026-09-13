@@ -8,21 +8,39 @@ class HrLeaveEmployeeTypeReport(models.Model):
     _auto = False
     _order = "date_from DESC, employee_id"
 
-    employee_id = fields.Many2one("hr.employee", readonly=True)
+    employee_id = fields.Many2one(
+        comodel_name="hr.employee",
+        readonly=True,
+    )
     active_employee = fields.Boolean(readonly=True)
-    number_of_days = fields.Float("Number of Days", readonly=True, aggregator="sum")
-    number_of_hours = fields.Float("Number of Hours", readonly=True, aggregator="sum")
-    department_id = fields.Many2one("hr.department", readonly=True)
-    leave_type = fields.Many2one("hr.leave.type", string="Time Off Type", readonly=True)
+    number_of_days = fields.Float(
+        string="Number of Days",
+        readonly=True,
+        aggregator="sum",
+    )
+    number_of_hours = fields.Float(
+        string="Number of Hours",
+        readonly=True,
+        aggregator="sum",
+    )
+    department_id = fields.Many2one(
+        comodel_name="hr.department",
+        readonly=True,
+    )
+    leave_type = fields.Many2one(
+        comodel_name="hr.leave.type",
+        string="Time Off Type",
+        readonly=True,
+    )
     holiday_status = fields.Selection(
-        [
+        selection=[
             ("taken", "Taken"),
             ("left", "Left"),
             ("planned", "Planned"),
         ]
     )
     state = fields.Selection(
-        [
+        selection=[
             ("cancel", "Cancelled"),
             ("confirm", "To Approve"),
             ("refuse", "Refused"),
@@ -32,9 +50,18 @@ class HrLeaveEmployeeTypeReport(models.Model):
         string="Status",
         readonly=True,
     )
-    date_from = fields.Datetime("Start Date", readonly=True)
-    date_to = fields.Datetime("End Date", readonly=True)
-    company_id = fields.Many2one("res.company", readonly=True)
+    date_from = fields.Datetime(
+        string="Start Date",
+        readonly=True,
+    )
+    date_to = fields.Datetime(
+        string="End Date",
+        readonly=True,
+    )
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        readonly=True,
+    )
 
     def init(self):
         drop_view_if_exists(self.env.cr, "hr_leave_employee_type_report")

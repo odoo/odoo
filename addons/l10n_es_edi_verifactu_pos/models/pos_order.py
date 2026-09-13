@@ -6,8 +6,8 @@ class PosOrder(models.Model):
     _inherit = "pos.order"
 
     l10n_es_edi_verifactu_required = fields.Boolean(
-        string="Veri*Factu Required",
         related="company_id.l10n_es_edi_verifactu_required",
+        string="Veri*Factu Required",
     )
     l10n_es_edi_verifactu_document_ids = fields.One2many(
         comodel_name="l10n_es_edi_verifactu.document",
@@ -15,19 +15,19 @@ class PosOrder(models.Model):
         string="Veri*Factu Documents",
     )
     l10n_es_edi_verifactu_state = fields.Selection(
-        string="Veri*Factu Status",
         selection=[
             ("rejected", "Rejected"),
             ("registered_with_errors", "Registered with Errors"),
             ("accepted", "Accepted"),
             ("cancelled", "Cancelled"),
         ],
-        compute="_compute_l10n_es_edi_verifactu_state",
-        store=True,
+        string="Veri*Factu Status",
         help="""- Rejected: Successfully sent to the AEAT, but it was rejected during validation
                 - Registered with Errors: Registered at the AEAT, but the AEAT has some issues with the sent document
                 - Accepted: Registered by the AEAT without errors
                 - Cancelled: Registered by the AEAT as cancelled""",
+        compute="_compute_l10n_es_edi_verifactu_state",
+        store=True,
     )
     l10n_es_edi_verifactu_warning_level = fields.Char(
         string="Veri*Factu Warning Level",

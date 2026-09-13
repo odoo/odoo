@@ -11,20 +11,26 @@ class PaymentMethod(models.Model):
     _description = "Provider Payment Method"
     _order = "active desc, sequence, name"
 
-    name = fields.Char(required=True, translate=True)
-    code = fields.Char(help="The technical code of this payment method.", required=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
+    code = fields.Char(
+        help="The technical code of this payment method.",
+        required=True,
+    )
     sequence = fields.Integer(default=1)
     primary_payment_method_id = fields.Many2one(
+        comodel_name="payment.method",
         help="The primary payment method of the current payment method, if the latter is a brand."
         '\nFor example, "Card" is the primary payment method of the card brand "VISA".',
-        comodel_name="payment.method",
         index="btree_not_null",
     )
     brand_ids = fields.One2many(
-        string="Brands",
-        help="The brands of the payment methods that will be displayed on the payment form.",
         comodel_name="payment.method",
         inverse_name="primary_payment_method_id",
+        string="Brands",
+        help="The brands of the payment methods that will be displayed on the payment form.",
     )
     is_primary = fields.Boolean(
         string="Is Primary Payment Method",
@@ -32,9 +38,9 @@ class PaymentMethod(models.Model):
         search="_search_is_primary",
     )
     provider_ids = fields.Many2many(
+        comodel_name="payment.provider",
         string="Providers",
         help="The list of providers supporting this payment method.",
-        comodel_name="payment.provider",
     )
     active = fields.Boolean(default=True)
     image = fields.Image(
@@ -44,11 +50,11 @@ class PaymentMethod(models.Model):
         required=True,
     )
     image_payment_form = fields.Image(
-        string="The resized image displayed on the payment form.",
         related="image",
-        store=True,
+        string="The resized image displayed on the payment form.",
         max_width=45,
         max_height=30,
+        store=True,
     )
 
     # Feature support fields.
@@ -64,36 +70,36 @@ class PaymentMethod(models.Model):
         " checkout process.",
     )
     support_manual_capture = fields.Selection(
+        selection=[
+            ("none", "Unsupported"),
+            ("full_only", "Full Only"),
+            ("partial", "Full & Partial"),
+        ],
         string="Manual Capture",
         help="The payment is authorized and captured in two steps instead of one.",
-        selection=[
-            ("none", "Unsupported"),
-            ("full_only", "Full Only"),
-            ("partial", "Full & Partial"),
-        ],
-        required=True,
         default="none",
+        required=True,
     )
     support_refund = fields.Selection(
-        string="Refund",
-        help="Refund is a feature allowing to refund customers directly from the payment in Odoo.",
         selection=[
             ("none", "Unsupported"),
             ("full_only", "Full Only"),
             ("partial", "Full & Partial"),
         ],
-        required=True,
+        string="Refund",
+        help="Refund is a feature allowing to refund customers directly from the payment in Odoo.",
         default="none",
+        required=True,
     )
     supported_country_ids = fields.Many2many(
-        string="Countries",
         comodel_name="res.country",
+        string="Countries",
         help="The list of countries in which this payment method can be used (if the provider"
         " allows it). In other countries, this payment method is not available to customers.",
     )
     supported_currency_ids = fields.Many2many(
-        string="Currencies",
         comodel_name="res.currency",
+        string="Currencies",
         help="The list of currencies for that are supported by this payment method (if the provider"
         " allows it). When paying with another currency, this payment method is not available "
         "to customers.",

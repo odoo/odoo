@@ -5,8 +5,8 @@ class ProjectTask(models.Model):
     _inherit = "project.task"
 
     partner_name = fields.Char(
-        string="Customer Name",
         related="partner_id.name",
+        string="Customer Name",
         store=True,
         readonly=False,
         tracking=False,

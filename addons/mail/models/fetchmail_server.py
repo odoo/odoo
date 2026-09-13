@@ -131,34 +131,35 @@ class FetchmailServer(models.Model):
     name = fields.Char(required=True)
     active = fields.Boolean(default=True)
     state = fields.Selection(
-        [
+        selection=[
             ("draft", "Not Confirmed"),
             ("done", "Confirmed"),
         ],
         string="Status",
-        index=True,
-        readonly=True,
-        copy=False,
         default="draft",
+        index=True,
+        copy=False,
+        readonly=True,
     )
-    server = fields.Char(string="Server Name", help="Hostname or IP of the mail server")
+    server = fields.Char(
+        string="Server Name",
+        help="Hostname or IP of the mail server",
+    )
     port = fields.Integer()
     server_type = fields.Selection(
-        [
+        selection=[
             ("imap", "IMAP Server"),
             ("pop", "POP Server"),
             ("local", "Local Server"),
         ],
+        default="imap",
         index=True,
         required=True,
-        default="imap",
     )
     server_type_info = fields.Text(compute="_compute_server_type_info")
     encryption = fields.Selection(
-        ENCRYPTION_SELECTION,
+        selection=ENCRYPTION_SELECTION,
         string="Connection Encryption",
-        required=True,
-        default="ssl_strict",
         help="Choose the connection encryption scheme:\n"
         "- None: the session, including your password, is sent in cleartext.\n"
         "- TLS (STARTTLS): encryption is negotiated on the standard port (IMAP=143, POP3=110)\n"
@@ -170,39 +171,44 @@ class FetchmailServer(models.Model):
         "certificate (Recommended)\n"
         "- encryption only: encrypt but accept any certificate, which cannot detect "
         "an impostor server",
+        default="ssl_strict",
+        required=True,
     )
     attach = fields.Boolean(
-        "Keep Attachments",
+        string="Keep Attachments",
         help="Whether attachments should be downloaded. "
         "If not enabled, incoming emails will be stripped of any attachments before being processed",
         default=True,
     )
     original = fields.Boolean(
-        "Keep Original",
+        string="Keep Original",
         help="Whether a full original copy of each email should be kept for reference "
         "and attached to each processed message. This will usually double the size of your message database.",
     )
     date = fields.Datetime(
         string="Last Fetch Attempt",
-        readonly=True,
         help="When this server was last polled, whether or not the poll succeeded.",
+        readonly=True,
     )
     error_since = fields.Datetime(
         string="Failing Since",
-        readonly=True,
         help="Start of the current run of failures, cleared by the first successful "
         "fetch. A server that keeps failing for longer than five days is "
         "unconfirmed automatically.",
+        readonly=True,
     )
     error_message = fields.Text(
         string="Last Error Message",
-        readonly=True,
         help="The most recent failure, cleared by the first successful fetch.",
+        readonly=True,
     )
-    user = fields.Char(string="Username", groups="base.group_system")
+    user = fields.Char(
+        string="Username",
+        groups="base.group_system",
+    )
     password = fields.Char(groups="base.group_system")
     object_id: IrModel = fields.Many2one(
-        "ir.model",
+        comodel_name="ir.model",
         string="Create a New Record",
         help="Process each incoming mail as part of a conversation "
         "corresponding to this document type. This will create "
@@ -220,14 +226,20 @@ class FetchmailServer(models.Model):
         default=5,
     )
     message_ids: MailMail = fields.One2many(
-        "mail.mail",
-        "fetchmail_server_id",
+        comodel_name="mail.mail",
+        inverse_name="fetchmail_server_id",
         string="Outgoing Mails",
-        readonly=True,
         help="Mails sent while processing what this server delivered.",
+        readonly=True,
     )
-    configuration = fields.Text(compute="_compute_configuration", readonly=True)
-    script = fields.Char(readonly=True, default="/mail/static/scripts/odoo-mailgate.py")
+    configuration = fields.Text(
+        compute="_compute_configuration",
+        readonly=True,
+    )
+    script = fields.Char(
+        default="/mail/static/scripts/odoo-mailgate.py",
+        readonly=True,
+    )
 
     @api.depends("server_type")
     def _compute_server_type_info(self) -> None:

@@ -7,12 +7,21 @@ class WebsiteCheckoutStep(models.Model):
     _description = "Website Checkout Step"
     _inherit = ["mixin.website.published.multi"]
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
     sequence = fields.Integer()
-    step_href = fields.Char(string="Href", required=True)
+    step_href = fields.Char(
+        string="Href",
+        required=True,
+    )
     main_button_label = fields.Char(translate=True)
     back_button_label = fields.Char(translate=True)
-    website_id = fields.Many2one("website", ondelete="cascade")
+    website_id = fields.Many2one(
+        comodel_name="website",
+        ondelete="cascade",
+    )
 
     def _get_next_checkout_step(self, allowed_steps_domain):
 

@@ -8,15 +8,23 @@ class StockPutInPack(models.TransientModel):
     _description = "Put In Pack Wizard"
 
     location_dest_id = fields.Many2one(
-        comodel_name="stock.location", string="Destination"
+        comodel_name="stock.location",
+        string="Destination",
     )
     move_line_ids = fields.Many2many(
-        comodel_name="stock.move.line", string="Move lines"
+        comodel_name="stock.move.line",
+        string="Move lines",
     )
-    package_ids = fields.Many2many(comodel_name="stock.package", string="Packages")
+    package_ids = fields.Many2many(
+        comodel_name="stock.package",
+        string="Packages",
+    )
     package_type_id = fields.Many2one(comodel_name="stock.package.type")
     package_type_sequence_id = fields.Many2one(related="package_type_id.sequence_id")
-    result_package_id = fields.Many2one(comodel_name="stock.package", string="Package")
+    result_package_id = fields.Many2one(
+        comodel_name="stock.package",
+        string="Package",
+    )
     origin_package_ids = fields.Many2many(
         comodel_name="stock.package",
         compute="_compute_origin_package_ids",

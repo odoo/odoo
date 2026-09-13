@@ -14,7 +14,6 @@ class PoSOrder(models.Model):
     l10n_tw_edi_is_print = fields.Boolean(string="Print")
     l10n_tw_edi_love_code = fields.Char(string="Love Code")
     l10n_tw_edi_carrier_type = fields.Selection(
-        string="Carrier Type",
         selection=[
             ("1", "ECpay e-invoice carrier"),
             ("2", "Citizen Digital Certificate"),
@@ -22,11 +21,13 @@ class PoSOrder(models.Model):
             ("4", "EasyCard"),
             ("5", "iPass"),
         ],
+        string="Carrier Type",
     )
     l10n_tw_edi_carrier_number = fields.Char(string="Carrier Number")
     l10n_tw_edi_carrier_number_2 = fields.Char(string="Carrier Number 2")
     l10n_tw_edi_is_b2b = fields.Boolean(
-        string="Is B2B", compute="_compute_l10n_tw_edi_is_b2b"
+        string="Is B2B",
+        compute="_compute_l10n_tw_edi_is_b2b",
     )
 
     @api.depends("partner_id")

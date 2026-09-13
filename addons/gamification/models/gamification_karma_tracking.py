@@ -35,32 +35,49 @@ class GamificationKarmaTracking(models.Model):
         ]
 
     user_id = fields.Many2one(
-        "res.users", index=True, required=True, ondelete="cascade"
+        comodel_name="res.users",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
-    old_value = fields.Integer("Old Karma Value", readonly=True)
-    new_value = fields.Integer("New Karma Value", required=True)
-    gain = fields.Integer(compute="_compute_gain", readonly=False)
+    old_value = fields.Integer(
+        string="Old Karma Value",
+        readonly=True,
+    )
+    new_value = fields.Integer(
+        string="New Karma Value",
+        required=True,
+    )
+    gain = fields.Integer(
+        compute="_compute_gain",
+        readonly=False,
+    )
     consolidated = fields.Boolean()
 
     tracking_date = fields.Datetime(
-        default=fields.Datetime.now, readonly=True, index=True
+        default=fields.Datetime.now,
+        index=True,
+        readonly=True,
     )
-    reason = fields.Text(default=lambda self: _("Add Manually"), string="Description")
+    reason = fields.Text(
+        string="Description",
+        default=lambda self: _("Add Manually"),
+    )
     origin_ref = fields.Reference(
-        string="Source",
         selection=lambda self: self._selection_origin_models(),
+        string="Source",
         default=lambda self: f"res.users,{self.env.user.id}",
     )
     origin_ref_model_name = fields.Selection(
-        string="Source Type",
         selection=lambda self: self._selection_origin_models(),
+        string="Source Type",
         compute="_compute_origin_ref_model_name",
-        store=True,
         # Derivable from origin_ref before the row exists, so compute it into
         # the INSERT.  Without this every batch of tracking rows paid a second
         # statement -- an UPDATE settling this one column -- right after its own
         # INSERT.
         precompute=True,
+        store=True,
     )
 
     # The monthly consolidation cron scans, three times over,

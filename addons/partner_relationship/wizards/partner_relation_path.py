@@ -7,12 +7,12 @@ class PartnerRelationPath(models.TransientModel):
     _description = "Relationship Path Between Two Contacts"
 
     partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="From",
         required=True,
     )
     other_partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="To",
         required=True,
     )
@@ -21,7 +21,7 @@ class PartnerRelationPath(models.TransientModel):
         default=lambda self: self.env["res.partner"]._get_max_relation_degree(),
     )
     relation_ids = fields.Many2many(
-        "res.partner.relation",
+        comodel_name="res.partner.relation",
         string="Path",
         compute="_compute_path",
     )

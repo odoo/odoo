@@ -52,7 +52,10 @@ class L10n_InWithholdWizard(models.TransientModel):
         return result
 
     reference = fields.Char()
-    type_name = fields.Char(string="Type", compute="_compute_type_name")
+    type_name = fields.Char(
+        string="Type",
+        compute="_compute_type_name",
+    )
     related_move_id = fields.Many2one(
         comodel_name="account.move",
         string="Invoice/Bill",
@@ -74,7 +77,8 @@ class L10n_InWithholdWizard(models.TransientModel):
         compute="_compute_tds_deduction",
     )
     company_id = fields.Many2one(
-        comodel_name="res.company", compute="_compute_company_id"
+        comodel_name="res.company",
+        compute="_compute_company_id",
     )
     currency_id = fields.Many2one(
         related="company_id.currency_id",
@@ -84,30 +88,33 @@ class L10n_InWithholdWizard(models.TransientModel):
         comodel_name="account.journal",
         compute="_compute_journal_id",
         precompute=True,
-        readonly=False,
         store=True,
+        readonly=False,
         required=True,
         check_company=True,
     )
-    date = fields.Date(
-        default=fields.Date.context_today,
-    )
+    date = fields.Date(default=fields.Date.context_today)
     l10n_in_tds_tax_type = fields.Char(
-        string="Indian Tax Type", compute="_compute_l10n_in_tds_tax_type"
+        string="Indian Tax Type",
+        compute="_compute_l10n_in_tds_tax_type",
     )
     l10n_in_withholding_warning = fields.Json(
-        string="Withholding warning", compute="_compute_l10n_in_withholding_warning"
+        string="Withholding warning",
+        compute="_compute_l10n_in_withholding_warning",
     )
     base = fields.Monetary(
-        string="Base Amount", compute="_compute_base", store=True, readonly=False
+        string="Base Amount",
+        compute="_compute_base",
+        store=True,
+        readonly=False,
     )
     tax_id = fields.Many2one(
         comodel_name="account.tax",
         string="TDS Section",
-        required=True,
         compute="_compute_tax_id",
         store=True,
         readonly=False,
+        required=True,
     )
     amount = fields.Monetary(
         string="TDS Amount",

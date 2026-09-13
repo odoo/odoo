@@ -35,15 +35,19 @@ class AccountMove(models.Model):
             ("invoice_validated", "Validated"),
         ],
         string="E-Factura Status",
-        compute="_compute_l10n_ro_edi_state",
-        store=True,
         help="""- Not indexed: Invoice index was not received on time due to a server timeout
                 - Sent: Successfully sent to the SPV, waiting for validation
                 - Validated: Sent & validated by the SPV
                 - Refused: Validation error from the SPV
         """,
+        compute="_compute_l10n_ro_edi_state",
+        store=True,
     )
-    l10n_ro_edi_index = fields.Char(string="E-Factura Index", readonly=True, copy=False)
+    l10n_ro_edi_index = fields.Char(
+        string="E-Factura Index",
+        copy=False,
+        readonly=True,
+    )
 
     ################################################################################
     # Compute Methods

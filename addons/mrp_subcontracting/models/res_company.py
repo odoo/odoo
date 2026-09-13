@@ -4,7 +4,7 @@ from odoo import _, api, fields, models
 class ResCompany(models.Model):
     _inherit = "res.company"
 
-    subcontracting_location_id = fields.Many2one("stock.location")
+    subcontracting_location_id = fields.Many2one(comodel_name="stock.location")
 
     @api.model
     def _create_missing_subcontracting_location(self):

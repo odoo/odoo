@@ -7,22 +7,31 @@ class HrEmployeeCvWizard(models.TransientModel):
     _name = "hr.employee.cv.wizard"
     _description = "Print Resume"
 
-    employee_ids = fields.Many2many("hr.employee")
+    employee_ids = fields.Many2many(comodel_name="hr.employee")
 
     color_primary = fields.Char(
-        "Primary Color",
+        string="Primary Color",
         default=lambda self: self.env.company.primary_color or "#666666",
         required=True,
     )
     color_secondary = fields.Char(
-        "Secondary Color",
+        string="Secondary Color",
         default=lambda self: self.env.company.secondary_color or "#666666",
         required=True,
     )
 
-    show_skills = fields.Boolean(string="Skills", default=True)
-    show_contact = fields.Boolean(string="Contact Information", default=True)
-    show_others = fields.Boolean(string="Others", default=True)
+    show_skills = fields.Boolean(
+        string="Skills",
+        default=True,
+    )
+    show_contact = fields.Boolean(
+        string="Contact Information",
+        default=True,
+    )
+    show_others = fields.Boolean(
+        string="Others",
+        default=True,
+    )
 
     can_show_others = fields.Boolean(compute="_compute_printable_sections")
     can_show_skills = fields.Boolean(compute="_compute_printable_sections")

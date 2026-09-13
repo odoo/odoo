@@ -69,23 +69,23 @@ class MixinOrder(models.AbstractModel):
     )
 
     show_comparison = fields.Boolean(
-        compute="_compute_show_comparison",
         help="Whether any product on this order was also bought or sold on "
         "another confirmed order, so a price comparison has something to show.",
+        compute="_compute_show_comparison",
     )
     product_id = fields.Many2one(
-        related="line_ids.product_id",
         comodel_name="product.product",
+        related="line_ids.product_id",
         string="Product",
     )
 
     name = fields.Char(
         string="Order Reference",
-        required=True,
         default=lambda self: _("New"),
-        readonly=False,
-        copy=False,
         index="trigram",
+        copy=False,
+        readonly=False,
+        required=True,
     )
     state = fields.Selection(
         selection=[
@@ -95,9 +95,9 @@ class MixinOrder(models.AbstractModel):
         ],
         string="Status",
         default="draft",
-        readonly=True,
-        copy=False,
         index=True,
+        copy=False,
+        readonly=True,
         tracking=True,
     )
     priority = fields.Selection(
@@ -111,68 +111,66 @@ class MixinOrder(models.AbstractModel):
 
     date_order = fields.Datetime(
         string="Order Date",
-        required=True,
-        default=fields.Datetime.now,
-        copy=False,
-        index=True,
         help="Creation date of draft/sent orders,\nConfirmation date of confirmed orders.",
+        default=fields.Datetime.now,
+        index=True,
+        copy=False,
+        required=True,
     )
     date_confirmed = fields.Datetime(
         string="Confirmation Date",
-        readonly=True,
-        copy=False,
-        index=True,
         help="Date when the order was confirmed.",
+        index=True,
+        copy=False,
+        readonly=True,
     )
     date_commitment = fields.Datetime(
         string="Commitment Date",
-        copy=False,
         help="The date somebody committed to: the delivery date promised to "
         "the customer on a sale, the arrival date promised by the vendor on a "
         "purchase.",
+        copy=False,
     )
     date_validity = fields.Date(
         string="Expiration",
-        compute="_compute_date_validity",
-        store=True,
-        precompute=True,
-        readonly=False,
-        copy=False,
         help="Validity of the quotation, after which it expires.",
+        compute="_compute_date_validity",
+        precompute=True,
+        store=True,
+        copy=False,
+        readonly=False,
     )
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        required=True,
         default=lambda self: self.env.company,
         index=True,
+        required=True,
     )
-    company_price_include = fields.Selection(
-        related="company_id.account_price_include",
-    )
+    company_price_include = fields.Selection(related="company_id.account_price_include")
     currency_id = fields.Many2one(
         comodel_name="res.currency",
-        required=True,
         compute="_compute_currency_id",
-        store=True,
         precompute=True,
+        store=True,
         readonly=False,
+        required=True,
         ondelete="restrict",
     )
     currency_rate = fields.Float(
         digits=0,
         compute="_compute_currency_rate",
-        store=True,
         precompute=True,
+        store=True,
     )
 
     partner_id = fields.Many2one(
         comodel_name="res.partner",
-        required=True,
         change_default=True,
-        check_company=True,
-        domain=lambda self: self._domain_partner_id(),
         index=True,
+        required=True,
+        domain=lambda self: self._domain_partner_id(),
+        check_company=True,
         tracking=True,
     )
     commercial_partner_id = fields.Many2one(
@@ -185,34 +183,34 @@ class MixinOrder(models.AbstractModel):
         comodel_name="res.users",
         string="Responsible",
         compute="_compute_user_id",
-        store=True,
         precompute=True,
-        readonly=False,
+        store=True,
         index=True,
-        tracking=True,
+        readonly=False,
         domain="[('share', '=', False), ('company_ids', '=', company_id)]",
+        tracking=True,
     )
 
     payment_term_id = fields.Many2one(
         comodel_name="account.payment.term",
         string="Payment Terms",
         compute="_compute_payment_term_id",
-        store=True,
         precompute=True,
+        store=True,
         readonly=False,
-        check_company=True,
         domain="[('company_id', 'in', [False, company_id])]",
+        check_company=True,
     )
     fiscal_position_id = fields.Many2one(
         comodel_name="account.fiscal.position",
-        compute="_compute_fiscal_position_id",
-        store=True,
-        precompute=True,
-        readonly=False,
-        check_company=True,
-        domain="[('company_id', 'in', [False, company_id])]",
         help="Fiscal positions are used to adapt taxes and accounts for particular "
         "partners or orders/invoices. The default value comes from the partner.",
+        compute="_compute_fiscal_position_id",
+        precompute=True,
+        store=True,
+        readonly=False,
+        domain="[('company_id', 'in', [False, company_id])]",
+        check_company=True,
     )
     tax_country_id = fields.Many2one(
         comodel_name="res.country",
@@ -222,32 +220,32 @@ class MixinOrder(models.AbstractModel):
     )
     journal_id = fields.Many2one(
         comodel_name="account.journal",
-        compute="_compute_journal_id",
-        store=True,
-        precompute=True,
-        readonly=False,
-        check_company=True,
         help="If set, the order will invoice in this journal; otherwise the "
         "journal with the lowest sequence is used.",
+        compute="_compute_journal_id",
+        precompute=True,
+        store=True,
+        readonly=False,
+        check_company=True,
     )
 
     locked = fields.Boolean(
+        help="Locked orders cannot be modified.",
         default=False,
         copy=False,
         tracking=True,
-        help="Locked orders cannot be modified.",
     )
     acknowledged = fields.Boolean(
+        help="It indicates that the partner has acknowledged the receipt of the order.",
         copy=False,
         tracking=True,
-        help="It indicates that the partner has acknowledged the receipt of the order.",
     )
 
     sent = fields.Boolean(
+        help="The order has been sent to the partner.",
         default=False,
         copy=False,
         tracking=True,
-        help="The order has been sent to the partner.",
     )
     count_sent = fields.Integer(
         string="Sent Count",
@@ -255,10 +253,10 @@ class MixinOrder(models.AbstractModel):
         copy=False,
     )
     printed_before = fields.Boolean(
+        help="The order has already been printed.",
         default=False,
         copy=False,
         tracking=True,
-        help="The order has already been printed.",
     )
     count_print = fields.Integer(
         string="Print Count",
@@ -268,8 +266,8 @@ class MixinOrder(models.AbstractModel):
 
     origin = fields.Char(
         string="Source Document",
-        copy=False,
         help="Reference of the document that generated this order request.",
+        copy=False,
     )
     partner_ref = fields.Char(
         string="Partner Reference",
@@ -283,20 +281,14 @@ class MixinOrder(models.AbstractModel):
         compute="_compute_duplicated_order_ids",
     )
 
-    is_expired = fields.Boolean(
-        compute="_compute_is_expired",
-    )
+    is_expired = fields.Boolean(compute="_compute_is_expired")
     is_late = fields.Boolean(
+        help="True when the order is confirmed and its planned date has passed.",
         compute="_compute_is_late",
         search="_search_is_late",
-        help="True when the order is confirmed and its planned date has passed.",
     )
-    type_name = fields.Char(
-        compute="_compute_type_name",
-    )
-    has_archived_products = fields.Boolean(
-        compute="_compute_has_archived_products",
-    )
+    type_name = fields.Char(compute="_compute_type_name")
+    has_archived_products = fields.Boolean(compute="_compute_has_archived_products")
 
     @api.depends("company_id", "line_ids", "line_ids.product_id")
     def _compute_show_comparison(self):

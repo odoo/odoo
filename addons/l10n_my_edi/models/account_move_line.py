@@ -11,12 +11,12 @@ class AccountMoveLine(models.Model):
     # ------------------
 
     l10n_my_edi_classification_code = fields.Selection(
-        string="Malaysian classification code",
         selection=CLASSIFICATION_CODES_LIST,
+        string="Malaysian classification code",
         compute="_compute_l10n_my_edi_classification_code",
         store=True,
-        readonly=False,
         copy=False,
+        readonly=False,
     )
 
     # --------------------------------

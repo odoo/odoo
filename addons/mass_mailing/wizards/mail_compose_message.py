@@ -7,14 +7,19 @@ from odoo.tools.misc import file_open
 class MailComposeMessage(models.TransientModel):
     _inherit = "mail.compose.message"
 
-    mass_mailing_id = fields.Many2one("mailing.mailing", ondelete="cascade")
+    mass_mailing_id = fields.Many2one(
+        comodel_name="mailing.mailing",
+        ondelete="cascade",
+    )
     campaign_id = fields.Many2one(
-        "utm.campaign", string="Mass Mailing Campaign", ondelete="set null"
+        comodel_name="utm.campaign",
+        string="Mass Mailing Campaign",
+        ondelete="set null",
     )
     mass_mailing_name = fields.Char(
-        help="If set, a mass mailing will be created so that you can track its results in the Email Marketing app.",
+        help="If set, a mass mailing will be created so that you can track its results in the Email Marketing app."
     )
-    mailing_list_ids = fields.Many2many("mailing.list")
+    mailing_list_ids = fields.Many2many(comodel_name="mailing.list")
 
     def _get_render_error_label(self):
         """Name the mailing, not the transient composer that renders for it.

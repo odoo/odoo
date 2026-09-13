@@ -5,16 +5,17 @@ class CalendarAlarm(models.Model):
     _inherit = "calendar.alarm"
 
     alarm_type = fields.Selection(
-        selection_add=[("sms", "SMS Text Message")], ondelete={"sms": "set default"}
+        selection_add=[("sms", "SMS Text Message")],
+        ondelete={"sms": "set default"},
     )
     sms_template_id = fields.Many2one(
-        "sms.template",
+        comodel_name="sms.template",
         string="SMS Template",
-        domain=[("model", "in", ["calendar.event"])],
-        compute="_compute_sms_template_id",
-        readonly=False,
-        store=True,
         help="Template used to render SMS reminder content.",
+        compute="_compute_sms_template_id",
+        store=True,
+        readonly=False,
+        domain=[("model", "in", ["calendar.event"])],
     )
 
     @api.model

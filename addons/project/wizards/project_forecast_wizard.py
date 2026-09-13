@@ -16,30 +16,45 @@ class ProjectForecastWizard(models.TransientModel):
     SIMULATION_WEEK_CAP = 200
 
     project_id = fields.Many2one(
-        "project.project",
-        required=True,
+        comodel_name="project.project",
         default=lambda self: self.env.context.get("active_id"),
+        required=True,
     )
     remaining_items = fields.Integer(
-        compute="_compute_remaining_items",
-        readonly=False,
-        store=True,
         help="Number of tasks to complete. Defaults to open task count.",
+        compute="_compute_remaining_items",
+        store=True,
+        readonly=False,
     )
     simulation_count = fields.Integer(
-        "Simulations",
-        default=1000,
+        string="Simulations",
         help="Number of Monte Carlo iterations (more = more accurate).",
+        default=1000,
     )
     weeks_of_history = fields.Integer(
-        "Weeks of History",
-        default=12,
+        string="Weeks of History",
         help="How many weeks of throughput data to sample from.",
+        default=12,
     )
-    p50_weeks = fields.Float("50th Percentile (weeks)", readonly=True, digits=(5, 1))
-    p85_weeks = fields.Float("85th Percentile (weeks)", readonly=True, digits=(5, 1))
-    p95_weeks = fields.Float("95th Percentile (weeks)", readonly=True, digits=(5, 1))
-    result_text = fields.Text("Forecast Summary", readonly=True)
+    p50_weeks = fields.Float(
+        string="50th Percentile (weeks)",
+        digits=(5, 1),
+        readonly=True,
+    )
+    p85_weeks = fields.Float(
+        string="85th Percentile (weeks)",
+        digits=(5, 1),
+        readonly=True,
+    )
+    p95_weeks = fields.Float(
+        string="95th Percentile (weeks)",
+        digits=(5, 1),
+        readonly=True,
+    )
+    result_text = fields.Text(
+        string="Forecast Summary",
+        readonly=True,
+    )
 
     @api.depends("project_id")
     def _compute_remaining_items(self) -> None:

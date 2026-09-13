@@ -12,24 +12,32 @@ class PosPreset(models.Model):
     _inherit = ["mixin.pos.load"]
     _description = "Easily load a set of configuration options"
 
-    name = fields.Char(string="Label", required=True, translate=True)
-    pricelist_id = fields.Many2one("product.pricelist")
-    fiscal_position_id = fields.Many2one("account.fiscal.position")
+    name = fields.Char(
+        string="Label",
+        translate=True,
+        required=True,
+    )
+    pricelist_id = fields.Many2one(comodel_name="product.pricelist")
+    fiscal_position_id = fields.Many2one(comodel_name="account.fiscal.position")
     identification = fields.Selection(
-        [("none", "Not required"), ("address", "Address"), ("name", "Name")],
+        selection=[("none", "Not required"), ("address", "Address"), ("name", "Name")],
         default="none",
         required=True,
     )
     is_return = fields.Boolean(
         string="Return mode",
-        default=False,
         help="All quantity in the cart will be in negative. Ideal for return managment.",
+        default=False,
     )
     color = fields.Integer(default=0)
-    image_512 = fields.Image(string="Image", max_width=512, max_height=512)
+    image_512 = fields.Image(
+        string="Image",
+        max_width=512,
+        max_height=512,
+    )
     image_128 = fields.Image(
-        string="Image 128",
         related="image_512",
+        string="Image 128",
         max_width=128,
         max_height=128,
         store=True,
@@ -38,15 +46,27 @@ class PosPreset(models.Model):
     count_linked_orders = fields.Integer(compute="_compute_count_linked_orders")
     count_linked_config = fields.Integer(compute="_compute_count_linked_config")
 
-    use_timing = fields.Boolean(string="Manage orders by time", default=False)
-    resource_calendar_id = fields.Many2one("resource.calendar", "Resource")
+    use_timing = fields.Boolean(
+        string="Manage orders by time",
+        default=False,
+    )
+    resource_calendar_id = fields.Many2one(
+        comodel_name="resource.calendar",
+        string="Resource",
+    )
     attendance_ids = fields.One2many(
         related="resource_calendar_id.attendance_ids",
         string="Attendances",
         readonly=False,
     )
-    slots_per_interval = fields.Integer(string="Capacity", default=5)
-    interval_time = fields.Integer(string="Interval time (in min)", default=20)
+    slots_per_interval = fields.Integer(
+        string="Capacity",
+        default=5,
+    )
+    interval_time = fields.Integer(
+        string="Interval time (in min)",
+        default=20,
+    )
 
     @api.constrains("attendance_ids")
     def _check_slots(self):

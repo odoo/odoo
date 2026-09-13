@@ -10,14 +10,14 @@ class UtmCampaign(models.Model):
     _inherit = "utm.campaign"
 
     mailing_mail_ids = fields.One2many(
-        "mailing.mailing",
-        "campaign_id",
-        domain=[("mailing_type", "=", "mail")],
+        comodel_name="mailing.mailing",
+        inverse_name="campaign_id",
         string="Mass Mailings",
+        domain=[("mailing_type", "=", "mail")],
         groups="mass_mailing.group_mass_mailing_user",
     )
     mailing_mail_count = fields.Integer(
-        "Number of Mass Mailing",
+        string="Number of Mass Mailing",
         compute="_compute_mailing_mail_count",
         groups="mass_mailing.group_mass_mailing_user",
     )
@@ -27,33 +27,36 @@ class UtmCampaign(models.Model):
 
     # A/B Testing
     ab_testing_mailings_count = fields.Integer(
-        "A/B Test Mailings #", compute="_compute_mailing_mail_count"
+        string="A/B Test Mailings #",
+        compute="_compute_mailing_mail_count",
     )
     ab_testing_completed = fields.Boolean(
-        "A/B Testing Campaign Finished",
+        string="A/B Testing Campaign Finished",
         compute="_compute_ab_testing_completed",
+        store=True,
         copy=False,
         readonly=True,
-        store=True,
     )
     ab_testing_winner_mailing_id = fields.Many2one(
-        "mailing.mailing", "A/B Campaign Winner Mailing", copy=False
+        comodel_name="mailing.mailing",
+        string="A/B Campaign Winner Mailing",
+        copy=False,
     )
     ab_testing_schedule_datetime = fields.Datetime(
-        "Send Final On",
-        default=lambda self: fields.Datetime.now() + relativedelta(days=1),
+        string="Send Final On",
         help="Date that will be used to know when to determine and send the winner mailing",
+        default=lambda self: fields.Datetime.now() + relativedelta(days=1),
     )
     ab_testing_winner_selection = fields.Selection(
-        [
+        selection=[
             ("manual", "Manual"),
             ("opened_ratio", "Highest Open Rate"),
             ("clicks_ratio", "Highest Click Rate"),
             ("replied_ratio", "Highest Reply Rate"),
         ],
         string="Winner Selection",
-        default="opened_ratio",
         help="Selection to determine the winner mailing that will be sent.",
+        default="opened_ratio",
     )
 
     # stat fields

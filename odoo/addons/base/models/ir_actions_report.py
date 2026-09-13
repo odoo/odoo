@@ -1092,42 +1092,45 @@ class IrActionsReport(models.Model):
 
     type = fields.Char(default="ir.actions.report")
     binding_type = fields.Selection(default="report")
-    model = fields.Char(required=True, string="Model Name")
+    model = fields.Char(
+        string="Model Name",
+        required=True,
+    )
     model_id = fields.Many2one(
-        "ir.model",
+        comodel_name="ir.model",
         compute="_compute_model_id",
         search="_search_model_id",
     )
 
     report_type = fields.Selection(
-        [
+        selection=[
             ("qweb-html", "HTML"),
             ("qweb-pdf", "PDF"),
             ("qweb-text", "Text"),
         ],
-        required=True,
-        default="qweb-pdf",
         help="The type of the report that will be rendered, each one having its own"
         " rendering method. HTML means the report will be opened directly in your"
         " browser. PDF means the report will be rendered using WeasyPrint and"
         " downloaded by the user.",
+        default="qweb-pdf",
+        required=True,
     )
     report_name = fields.Char(
         string="Template Name",
-        required=True,
         index=True,
+        required=True,
     )
     report_file = fields.Char(
-        required=False,
-        readonly=False,
-        store=True,
         help="The path to the main report file (depending on Report Type) or empty if the content is in another field",
+        store=True,
+        readonly=False,
+        required=False,
     )
     group_ids = fields.Many2many(
-        "res.groups",
-        "res_groups_report_rel",
-        "uid",
-        "gid",
+        comodel_name="res.groups",
+        relation="res_groups_report_rel",
+        column1="uid",
+        column2="gid",
         string="Groups",
         help="Users outside these groups do not see the report in menus and "
         "print toolbars. Printing itself is bounded by read access to the "
@@ -1139,14 +1142,14 @@ class IrActionsReport(models.Model):
     )
 
     paperformat_id = fields.Many2one(
-        "report.paperformat",
-        "Paper Format",
+        comodel_name="report.paperformat",
+        string="Paper Format",
         index="btree_not_null",
     )
     print_report_name = fields.Char(
-        "Printed Report Name",
-        translate=True,
+        string="Printed Report Name",
         help="This is the filename of the report going to download. Keep empty to not change the report filename. You can use a python expression with the 'object' and 'time' variables.",
+        translate=True,
     )
     attachment_use = fields.Boolean(
         string="Reload from Attachment",

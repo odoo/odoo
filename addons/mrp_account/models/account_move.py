@@ -7,17 +7,17 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     wip_production_ids = fields.Many2many(
-        "mrp.production",
-        "wip_move_production_rel",
-        "move_id",
-        "production_id",
+        comodel_name="mrp.production",
+        relation="wip_move_production_rel",
+        column1="move_id",
+        column2="production_id",
         string="Relevant WIP MOs",
-        copy=False,
         help="The MOs that this WIP entry was based on. Expected to be set at time of WIP entry creation.",
+        copy=False,
     )
     wip_production_count = fields.Count(
-        "wip_production_ids",
-        "Manufacturing Orders Count",
+        count_of="wip_production_ids",
+        string="Manufacturing Orders Count",
     )
 
     def copy(self, default=None):

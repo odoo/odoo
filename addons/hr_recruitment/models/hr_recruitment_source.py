@@ -6,17 +6,29 @@ class HrRecruitmentSource(models.Model):
     _description = "Source of Applicants"
     _inherit = ["mixin.utm.source"]
 
-    email = fields.Char(related="alias_id.display_name", string="Email", readonly=True)
+    email = fields.Char(
+        related="alias_id.display_name",
+        string="Email",
+        readonly=True,
+    )
     has_domain = fields.Char(compute="_compute_has_domain")
-    job_id = fields.Many2one("hr.job", index=True, ondelete="cascade")
-    alias_id = fields.Many2one("mail.alias", "Alias ID", ondelete="restrict")
+    job_id = fields.Many2one(
+        comodel_name="hr.job",
+        index=True,
+        ondelete="cascade",
+    )
+    alias_id = fields.Many2one(
+        comodel_name="mail.alias",
+        string="Alias ID",
+        ondelete="restrict",
+    )
     medium_id = fields.Many2one(
-        "utm.medium",
+        comodel_name="utm.medium",
         default=lambda self: self.env["utm.medium"]._get_or_create_utm_medium(
             "website"
         ),
     )
-    campaign_id = fields.Many2one("utm.campaign")
+    campaign_id = fields.Many2one(comodel_name="utm.campaign")
 
     def _compute_has_domain(self):
         for source in self:

@@ -9,11 +9,14 @@ class MixinRecurrenceInterval(models.AbstractModel):
     _name = "mixin.recurrence.interval"
     _description = "Recurrence Interval Mixin"
 
-    repeat_interval = fields.Integer(string="Repeat Every", default=1)
+    repeat_interval = fields.Integer(
+        string="Repeat Every",
+        default=1,
+    )
     repeat_unit = fields.Selection(
-        REPEAT_UNIT_SELECTION,
-        default="week",
+        selection=REPEAT_UNIT_SELECTION,
         export_string_translation=False,
+        default="week",
     )
 
     @api.constrains("repeat_interval")

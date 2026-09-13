@@ -11,18 +11,18 @@ class DeliveryCarrier(models.Model):
 
     invoice_policy = fields.Selection(
         selection_add=[("real", "Real cost")],
-        ondelete={"real": "set default"},
         help="Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\n"
         "Real Cost: the customer will be invoiced the real cost of the shipping, the cost of the"
         "shipping will be updated on the SO after the delivery.",
+        ondelete={"real": "set default"},
     )
 
     route_ids = fields.Many2many(
-        "stock.route",
-        "stock_route_shipping",
-        "shipping_id",
-        "route_id",
-        "Routes",
+        comodel_name="stock.route",
+        relation="stock_route_shipping",
+        column1="shipping_id",
+        column2="route_id",
+        string="Routes",
         domain=[("shipping_selectable", "=", True)],
     )
 

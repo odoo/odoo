@@ -6,7 +6,7 @@ from odoo.exceptions import UserError
 class StockRoute(models.Model):
     _inherit = "stock.route"
 
-    shipping_selectable = fields.Boolean("Applicable on Shipping Methods")
+    shipping_selectable = fields.Boolean(string="Applicable on Shipping Methods")
 
 
 class StockMove(models.Model):
@@ -25,7 +25,10 @@ class StockMove(models.Model):
         return super()._auto_init()
 
     weight = fields.Float(
-        compute="_compute_weight", digits="Stock Weight", store=True, compute_sudo=True
+        digits="Stock Weight",
+        compute="_compute_weight",
+        compute_sudo=True,
+        store=True,
     )
 
     @api.depends("product_id", "product_uom_qty", "product_uom_id")

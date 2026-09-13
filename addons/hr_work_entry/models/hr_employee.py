@@ -6,7 +6,8 @@ class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
     has_work_entries = fields.Boolean(
-        compute="_compute_has_work_entries", groups="base.group_system,hr.group_hr_user"
+        compute="_compute_has_work_entries",
+        groups="base.group_system,hr.group_hr_user",
     )
 
     def _compute_has_work_entries(self):

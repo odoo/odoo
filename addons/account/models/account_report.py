@@ -79,76 +79,79 @@ class AccountReport(models.Model):
     _description = "Accounting Report"
     _order = "sequence, id"
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
     sequence = fields.Integer()
     active = fields.Boolean(default=True)
     line_ids = fields.One2many(
-        string="Lines",
         comodel_name="account.report.line",
         inverse_name="report_id",
+        string="Lines",
     )
     column_ids = fields.One2many(
-        string="Columns",
         comodel_name="account.report.column",
         inverse_name="report_id",
+        string="Columns",
     )
     root_report_id = fields.Many2one(
         comodel_name="account.report",
-        index="btree_not_null",
         help="The report this report is a variant of.",
+        index="btree_not_null",
     )
     variant_report_ids = fields.One2many(
-        string="Variants",
         comodel_name="account.report",
         inverse_name="root_report_id",
+        string="Variants",
     )
     section_report_ids = fields.Many2many(
-        string="Sections",
         comodel_name="account.report",
         relation="account_report_section_rel",
         column1="main_report_id",
         column2="sub_report_id",
+        string="Sections",
     )
     section_main_report_ids = fields.Many2many(
-        string="Section Of",
         comodel_name="account.report",
         relation="account_report_section_rel",
         column1="sub_report_id",
         column2="main_report_id",
+        string="Section Of",
     )
     use_sections = fields.Boolean(
         string="Composite Report",
+        help="Create a structured report with multiple sections for convenient navigation and simultaneous printing.",
         compute="_compute_use_sections",
         store=True,
         readonly=False,
-        help="Create a structured report with multiple sections for convenient navigation and simultaneous printing.",
     )
     chart_template = fields.Selection(
-        string="Chart of Accounts",
         selection=lambda self: self.env[
             "account.chart.template"
         ]._select_chart_template(),
+        string="Chart of Accounts",
     )
     country_id = fields.Many2one(comodel_name="res.country")
     only_tax_exigible = report_option_filter_field(
         fields.Boolean, "only_tax_exigible", "Only Tax Exigible Lines"
     )
     availability_condition = fields.Selection(
-        string="Availability",
         selection=[
             ("country", "Country Matches"),
             ("coa", "Chart of Accounts Matches"),
             ("always", "Always"),
         ],
+        string="Availability",
         compute="_compute_availability_condition",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     load_more_limit = fields.Integer()
     search_bar = fields.Boolean()
     prefix_groups_threshold = fields.Integer(default=4000)
     integer_rounding = fields.Selection(
-        selection=[("HALF-UP", "Nearest"), ("UP", "Up"), ("DOWN", "Down")],
+        selection=[("HALF-UP", "Nearest"), ("UP", "Up"), ("DOWN", "Down")]
     )
     allow_foreign_vat = report_option_filter_field(
         fields.Boolean, "allow_foreign_vat", "Allow Foreign VAT"

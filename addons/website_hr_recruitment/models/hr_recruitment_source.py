@@ -7,7 +7,10 @@ from odoo.libs.web import urls
 class HrRecruitmentSource(models.Model):
     _inherit = "hr.recruitment.source"
 
-    url = fields.Char(compute="_compute_url", string="Tracker URL")
+    url = fields.Char(
+        string="Tracker URL",
+        compute="_compute_url",
+    )
 
     @api.depends("source_id", "source_id.name", "job_id", "job_id.company_id")
     def _compute_url(self):

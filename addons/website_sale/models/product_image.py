@@ -19,21 +19,24 @@ class ProductImage(models.Model):
     image_1920 = fields.Image()
 
     product_tmpl_id = fields.Many2one(
-        string="Product Template",
         comodel_name="product.template",
-        ondelete="cascade",
+        string="Product Template",
         index=True,
+        ondelete="cascade",
     )
     product_variant_id = fields.Many2one(
         comodel_name="product.product",
-        ondelete="cascade",
         index=True,
+        ondelete="cascade",
     )
     video_url = fields.Char(
         string="Video URL",
         help="URL of a video for showcasing your product.",
     )
-    embed_code = fields.Html(compute="_compute_embed_code", sanitize=False)
+    embed_code = fields.Html(
+        sanitize=False,
+        compute="_compute_embed_code",
+    )
 
     can_image_1024_be_zoomed = fields.Boolean(
         string="Can Image 1024 be zoomed",

@@ -21,15 +21,30 @@ class PaymentLinkWizard(models.TransientModel):
             )
         return res
 
-    res_model = fields.Char("Related Document Model", required=True)
-    res_id = fields.Integer("Related Document ID", required=True)
-    amount = fields.Monetary(currency_field="currency_id", required=True)
+    res_model = fields.Char(
+        string="Related Document Model",
+        required=True,
+    )
+    res_id = fields.Integer(
+        string="Related Document ID",
+        required=True,
+    )
+    amount = fields.Monetary(
+        currency_field="currency_id",
+        required=True,
+    )
     amount_max = fields.Monetary(currency_field="currency_id")
-    currency_id = fields.Many2one("res.currency")
-    partner_id = fields.Many2one("res.partner")
+    currency_id = fields.Many2one(comodel_name="res.currency")
+    partner_id = fields.Many2one(comodel_name="res.partner")
     partner_email = fields.Char(related="partner_id.email")
-    link = fields.Char(string="Payment Link", compute="_compute_link")
-    company_id = fields.Many2one("res.company", compute="_compute_company_id")
+    link = fields.Char(
+        string="Payment Link",
+        compute="_compute_link",
+    )
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        compute="_compute_company_id",
+    )
     warning_message = fields.Char(compute="_compute_warning_message")
 
     @api.depends("amount", "amount_max")

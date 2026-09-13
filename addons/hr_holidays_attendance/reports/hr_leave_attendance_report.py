@@ -15,28 +15,39 @@ class HrLeaveAttendanceReport(models.Model):
             rec.display_name = f"{rec.employee_id.display_name}, {rec.date}"
 
     date = fields.Date()
-    employee_id = fields.Many2one("hr.employee")
+    employee_id = fields.Many2one(comodel_name="hr.employee")
     active = fields.Boolean(related="employee_id.active")
     department_id = fields.Many2one(
-        related="employee_id.department_id", string="Department"
+        related="employee_id.department_id",
+        string="Department",
     )
-    job_id = fields.Many2one(related="employee_id.job_id", string="Job Position")
-    schedule_id = fields.Many2one("resource.calendar", string="Working Schedule")
+    job_id = fields.Many2one(
+        related="employee_id.job_id",
+        string="Job Position",
+    )
+    schedule_id = fields.Many2one(
+        comodel_name="resource.calendar",
+        string="Working Schedule",
+    )
     expected_hours = fields.Float()
     worked_hours = fields.Float()
-    leave_hours = fields.Float("Approved Time Off")
+    leave_hours = fields.Float(string="Approved Time Off")
     difference_hours = fields.Float(
-        "Difference", help="Worked Hours - Expected Hours + Approved Time Off"
+        string="Difference",
+        help="Worked Hours - Expected Hours + Approved Time Off",
     )
 
     leave_type_names = fields.Char(
-        "Time Off Types", compute="_compute_leave_attendance_fields"
+        string="Time Off Types",
+        compute="_compute_leave_attendance_fields",
     )
     leave_ids = fields.Many2many(
-        "hr.leave", string="Time Offs", compute="_compute_leave_attendance_fields"
+        comodel_name="hr.leave",
+        string="Time Offs",
+        compute="_compute_leave_attendance_fields",
     )
     attendance_ids = fields.Many2many(
-        "hr.attendance",
+        comodel_name="hr.attendance",
         string="Attendances",
         compute="_compute_leave_attendance_fields",
     )

@@ -23,13 +23,13 @@ class MixinApprovalSubjects(models.AbstractModel):
     approval_request_ids = fields.One2many(
         comodel_name="approval.request",
         inverse_name="res_id",
+        string="Approval Requests",
+        copy=False,
+        readonly=True,
         domain=lambda self: [
             ("res_model", "=", self._name),
             ("subject_key", "!=", False),
         ],
-        readonly=True,
-        copy=False,
-        string="Approval Requests",
     )
 
     def _get_approval_subject_category(self, subject_key: str):

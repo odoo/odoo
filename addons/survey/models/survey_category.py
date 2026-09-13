@@ -7,10 +7,10 @@ class SurveyCategory(models.Model):
     _inherit = ["mixin.tag"]
     _order = "sequence, name"
 
-    name = fields.Char("Category Name")
+    name = fields.Char(string="Category Name")
     sequence = fields.Integer(default=10)
     survey_count = fields.Integer(
-        "Surveys",
+        string="Surveys",
         compute="_compute_survey_count",
     )
 

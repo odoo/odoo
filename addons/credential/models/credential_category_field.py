@@ -15,34 +15,34 @@ class CredentialCategoryField(models.Model):
 
     category_id = fields.Many2one(
         comodel_name="credential.category",
-        required=True,
         index=True,
+        required=True,
         ondelete="cascade",
     )
     code = fields.Char(
-        required=True,
         help="Key this value is stored under inside the encrypted payload.",
+        required=True,
     )
     name = fields.Char(
-        required=True,
         help="Label shown on the credential form.",
+        required=True,
     )
     sequence = fields.Integer(default=10)
     placeholder = fields.Char()
     help_text = fields.Char()
     required = fields.Boolean(
-        default=True,
         help="A credential of this category cannot be saved without a value.",
+        default=True,
     )
     requirement_group = fields.Char(
         help="Fields sharing a group satisfy the requirement between them, so any "
-        "one of them is enough. Leave empty to require this field on its own.",
+        "one of them is enough. Leave empty to require this field on its own."
     )
     is_blob_key = fields.Boolean(
-        compute="_compute_is_blob_key",
-        store=True,
         help="Stored inside the encrypted JSON payload rather than as the whole "
         "payload of the simple storage mode.",
+        compute="_compute_is_blob_key",
+        store=True,
     )
 
     _code_uniq = models.Constraint(

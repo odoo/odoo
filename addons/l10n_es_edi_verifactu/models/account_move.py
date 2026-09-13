@@ -5,8 +5,8 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     l10n_es_edi_verifactu_required = fields.Boolean(
-        string="Veri*Factu Required",
         related="company_id.l10n_es_edi_verifactu_required",
+        string="Veri*Factu Required",
     )
     l10n_es_edi_verifactu_document_ids = fields.One2many(
         comodel_name="l10n_es_edi_verifactu.document",
@@ -14,19 +14,19 @@ class AccountMove(models.Model):
         string="Veri*Factu Documents",
     )
     l10n_es_edi_verifactu_state = fields.Selection(
-        string="Veri*Factu Status",
         selection=[
             ("rejected", "Rejected"),
             ("registered_with_errors", "Registered with Errors"),
             ("accepted", "Accepted"),
             ("cancelled", "Cancelled"),
         ],
-        compute="_compute_l10n_es_edi_verifactu_state",
-        store=True,
+        string="Veri*Factu Status",
         help="""- Rejected: Successfully sent to the AEAT, but it was rejected during validation
                 - Registered with Errors: Registered at the AEAT, but the AEAT has some issues with the sent document
                 - Accepted: Registered by the AEAT without errors
                 - Cancelled: Registered by the AEAT as cancelled""",
+        compute="_compute_l10n_es_edi_verifactu_state",
+        store=True,
     )
     l10n_es_edi_verifactu_warning_level = fields.Char(
         string="Veri*Factu Warning Level",
@@ -46,12 +46,12 @@ class AccountMove(models.Model):
     )
     l10n_es_edi_verifactu_available_clave_regimens = fields.Char(
         string="Available Veri*Factu Regime Key",
-        compute="_compute_l10n_es_edi_verifactu_available_clave_regimens",
         help='Technical field to enable a dynamic selection of the field "Veri*Factu Regime Key"',
+        compute="_compute_l10n_es_edi_verifactu_available_clave_regimens",
     )
     l10n_es_edi_verifactu_clave_regimen = fields.Selection(
-        string="Veri*Factu Regime Key",
         selection="_selection_l10n_es_edi_verifactu_clave_regimen",
+        string="Veri*Factu Regime Key",
         compute="_compute_l10n_es_edi_verifactu_clave_regimen",
         store=True,
         readonly=False,
@@ -60,14 +60,14 @@ class AccountMove(models.Model):
         comodel_name="account.move",
         string="Substitution of",
         index="btree_not_null",
-        readonly=True,
         copy=False,
+        readonly=True,
         check_company=True,
     )
     l10n_es_edi_verifactu_substitution_move_ids = fields.One2many(
-        string="Substituted by",
         comodel_name="account.move",
         inverse_name="l10n_es_edi_verifactu_substituted_entry_id",
+        string="Substituted by",
     )
     l10n_es_edi_verifactu_refund_reason = fields.Selection(
         selection=[

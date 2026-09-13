@@ -24,7 +24,8 @@ class MixinSpreadsheet(models.AbstractModel):
         default=lambda self: self._empty_spreadsheet_data_base64(),
     )
     spreadsheet_data = fields.Text(
-        compute="_compute_spreadsheet_data", inverse="_inverse_spreadsheet_data"
+        compute="_compute_spreadsheet_data",
+        inverse="_inverse_spreadsheet_data",
     )
     spreadsheet_file_name = fields.Char(compute="_compute_spreadsheet_file_name")
     thumbnail = fields.Binary()

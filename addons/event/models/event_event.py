@@ -81,8 +81,16 @@ class EventEvent(models.Model):
     def _default_question_ids(self):
         return self.env["event.type"]._default_question_ids()
 
-    name = fields.Char(string="Event", translate=True, required=True)
-    note = fields.Html(store=True, compute="_compute_note", readonly=False)
+    name = fields.Char(
+        string="Event",
+        translate=True,
+        required=True,
+    )
+    note = fields.Html(
+        compute="_compute_note",
+        store=True,
+        readonly=False,
+    )
     description = fields.Html(
         translate=html_translate,
         sanitize_attributes=False,
@@ -91,194 +99,211 @@ class EventEvent(models.Model):
     )
     active = fields.Boolean(default=True)
     user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Responsible",
-        tracking=True,
         default=lambda self: self.env.user,
+        tracking=True,
     )
     use_barcode = fields.Boolean(compute="_compute_use_barcode")
     company_id = fields.Many2one(
-        "res.company",
-        change_default=True,
+        comodel_name="res.company",
         default=lambda self: self.env.company,
+        change_default=True,
         required=False,
     )
     organizer_id = fields.Many2one(
-        "res.partner",
-        tracking=True,
+        comodel_name="res.partner",
         default=lambda self: self.env.company.partner_id,
         check_company=True,
+        tracking=True,
     )
     event_type_id = fields.Many2one(
-        "event.type",
+        comodel_name="event.type",
         string="Template",
-        ondelete="set null",
         help="Choose a template to auto-fill tickets, communications, descriptions and other fields.",
+        ondelete="set null",
     )
     event_mail_ids = fields.One2many(
-        "event.mail",
-        "event_id",
+        comodel_name="event.mail",
+        inverse_name="event_id",
         string="Mail Schedule",
-        copy=True,
         compute="_compute_event_mail_ids",
-        readonly=False,
         store=True,
+        copy=True,
+        readonly=False,
     )
     tag_ids = fields.Many2many(
-        "event.tag",
+        comodel_name="event.tag",
         string="Tags",
-        readonly=False,
-        store=True,
         compute="_compute_tag_ids",
+        store=True,
+        readonly=False,
     )
     # properties
     registration_properties_definition = fields.PropertiesDefinition(
-        "Registration Properties"
+        string="Registration Properties"
     )
     # Kanban fields
     kanban_state = fields.Selection(
-        [
+        selection=[
             ("normal", "In Progress"),
             ("done", "Ready for Next Stage"),
             ("blocked", "Blocked"),
             ("cancel", "Cancelled"),
         ],
-        default="normal",
-        copy=False,
         compute="_compute_kanban_state",
-        readonly=False,
+        default="normal",
         store=True,
+        copy=False,
+        readonly=False,
         tracking=True,
     )
     stage_id = fields.Many2one(
-        "event.stage",
-        ondelete="restrict",
+        comodel_name="event.stage",
         default=_default_stage_id,
-        group_expand="_read_group_expand_full",
-        tracking=True,
         copy=False,
+        group_expand="_read_group_expand_full",
+        ondelete="restrict",
+        tracking=True,
     )
     # Seats and computation
     seats_max = fields.Integer(
         string="Maximum Attendees",
-        compute="_compute_seats_max",
-        readonly=False,
-        store=True,
         help="For each event you can define a maximum registration of seats(number of attendees), above this number the registrations are not accepted. "
         "If the event has multiple slots, this maximum number is applied per slot.",
+        compute="_compute_seats_max",
+        store=True,
+        readonly=False,
     )
     seats_limited = fields.Boolean(
-        "Limit Attendees",
-        required=True,
+        string="Limit Attendees",
         compute="_compute_seats_limited",
         precompute=True,
-        readonly=False,
         store=True,
+        readonly=False,
+        required=True,
     )
     seats_reserved = fields.Integer(
         string="Number of Registrations",
+        compute="_compute_seats",
         store=False,
         readonly=True,
-        compute="_compute_seats",
     )
     seats_available = fields.Integer(
-        string="Available Seats", store=False, readonly=True, compute="_compute_seats"
+        string="Available Seats",
+        compute="_compute_seats",
+        store=False,
+        readonly=True,
     )
     seats_used = fields.Integer(
         string="Number of Attendees",
+        compute="_compute_seats",
         store=False,
         readonly=True,
-        compute="_compute_seats",
     )
     seats_taken = fields.Integer(
         string="Number of Taken Seats",
+        compute="_compute_seats",
         store=False,
         readonly=True,
-        compute="_compute_seats",
     )
     # Registration fields
     registration_ids = fields.One2many(
-        "event.registration", "event_id", string="Attendees"
+        comodel_name="event.registration",
+        inverse_name="event_id",
+        string="Attendees",
     )
     is_multi_slots = fields.Boolean(
-        copy=True,
         help="Allow multiple time slots. "
         "The communications, the maximum number of attendees and the maximum number of tickets registrations "
         "are defined for each time slot instead of the whole event.",
+        copy=True,
     )
-    event_slot_ids = fields.One2many("event.slot", "event_id", "Slots", copy=True)
+    event_slot_ids = fields.One2many(
+        comodel_name="event.slot",
+        inverse_name="event_id",
+        string="Slots",
+        copy=True,
+    )
     event_slot_count = fields.Integer(
-        "Slots Count", compute="_compute_event_slot_count"
+        string="Slots Count",
+        compute="_compute_event_slot_count",
     )
     event_ticket_ids = fields.One2many(
-        "event.event.ticket",
-        "event_id",
-        copy=True,
+        comodel_name="event.event.ticket",
+        inverse_name="event_id",
         compute="_compute_event_ticket_ids",
-        readonly=False,
-        store=True,
         precompute=True,
+        store=True,
+        copy=True,
+        readonly=False,
     )
     event_registrations_started = fields.Boolean(
-        "Registrations started",
-        compute="_compute_event_registrations_started",
+        string="Registrations started",
         help="registrations have started if the current datetime is after the earliest starting date of tickets.",
+        compute="_compute_event_registrations_started",
     )
     event_registrations_open = fields.Boolean(
-        "Registration open",
-        compute="_compute_event_registrations_open",
-        compute_sudo=True,
+        string="Registration open",
         help="Registrations are open if:\n"
         "- the event is not ended or not cancelled\n"
         "- there are seats available on event\n"
         "- the tickets are sellable (if ticketing is used)",
+        compute="_compute_event_registrations_open",
+        compute_sudo=True,
     )
     event_registrations_sold_out = fields.Boolean(
-        "Sold Out",
+        string="Sold Out",
+        help="The event is sold out if no more seats are available on event. If ticketing is used and all tickets are sold out, the event will be sold out.",
         compute="_compute_event_registrations_sold_out",
         compute_sudo=True,
-        help="The event is sold out if no more seats are available on event. If ticketing is used and all tickets are sold out, the event will be sold out.",
     )
     start_sale_datetime = fields.Datetime(
-        "Start sale date",
-        compute="_compute_start_sale_datetime",
+        string="Start sale date",
         help="If ticketing is used, contains the earliest starting sale date of tickets.",
+        compute="_compute_start_sale_datetime",
     )
     # Date fields
     date_tz = fields.Selection(
-        _selection_timezones,
+        selection=_selection_timezones,
         string="Display Timezone",
-        required=True,
+        help="Indicates the timezone in which the event dates/times will be displayed on the website.",
         compute="_compute_date_tz",
         precompute=True,
-        readonly=False,
         store=True,
-        help="Indicates the timezone in which the event dates/times will be displayed on the website.",
+        readonly=False,
+        required=True,
     )
     date_begin = fields.Datetime(
         string="Start Date",
+        help="When the event is scheduled to take place (expressed in your local timezone on the form view).",
         required=True,
         tracking=True,
-        help="When the event is scheduled to take place (expressed in your local timezone on the form view).",
     )
-    date_end = fields.Datetime(string="End Date", required=True, tracking=True)
+    date_end = fields.Datetime(
+        string="End Date",
+        required=True,
+        tracking=True,
+    )
     is_ongoing = fields.Boolean(
-        compute="_compute_is_ongoing", search="_search_is_ongoing"
+        compute="_compute_is_ongoing",
+        search="_search_is_ongoing",
     )
     is_one_day = fields.Boolean(compute="_compute_is_one_day")
     is_finished = fields.Boolean(
-        compute="_compute_is_finished", search="_search_is_finished"
+        compute="_compute_is_finished",
+        search="_search_is_finished",
     )
     # Location and communication
     address_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Venue",
         default=lambda self: self.env.company.partner_id.id,
         check_company=True,
         tracking=True,
     )
     address_search = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Address",
         compute="_compute_address_search",
         search="_search_address_search",
@@ -289,65 +314,70 @@ class EventEvent(models.Model):
         compute_sudo=True,
     )
     country_id = fields.Many2one(
-        "res.country",
-        "Country",
+        comodel_name="res.country",
         related="address_id.country_id",
-        readonly=False,
+        string="Country",
         store=True,
+        readonly=False,
     )
     event_url = fields.Char(
         string="Online Event URL",
-        compute="_compute_event_url",
-        readonly=False,
-        store=True,
         help="Link where the online event will take place.",
+        compute="_compute_event_url",
+        store=True,
+        readonly=False,
     )
     event_share_url = fields.Char(
-        string="Event Share URL", compute="_compute_event_share_url"
+        string="Event Share URL",
+        compute="_compute_event_share_url",
     )
     lang = fields.Selection(
-        _selection_installed_langs,
+        selection=_selection_installed_langs,
         string="Language",
         help="All the communication emails sent to attendees will be translated in this language.",
     )
     # ticket reports
     badge_format = fields.Selection(
-        string="Badge Dimension",
         selection=[
             ("A4_french_fold", "A4 foldable"),
             ("A6", "A6"),
             ("four_per_sheet", "4 per sheet"),
         ],
+        string="Badge Dimension",
         default="A6",
         required=True,
     )
-    badge_image = fields.Image("Badge Background", max_width=1024, max_height=1024)
+    badge_image = fields.Image(
+        string="Badge Background",
+        max_width=1024,
+        max_height=1024,
+    )
     ticket_instructions = fields.Html(
+        help="This information will be printed on your tickets.",
         translate=True,
         compute="_compute_ticket_instructions",
         store=True,
         readonly=False,
-        help="This information will be printed on your tickets.",
     )
     # questions
     question_ids = fields.Many2many(
-        "event.question",
-        "event_event_event_question_rel",
+        comodel_name="event.question",
+        relation="event_event_event_question_rel",
         string="Questions",
         compute="_compute_question_ids",
-        readonly=False,
-        store=True,
         precompute=True,
+        store=True,
+        readonly=False,
     )
     general_question_ids = fields.Many2many(
-        "event.question",
-        "event_event_event_question_rel",
+        comodel_name="event.question",
+        relation="event_event_event_question_rel",
         string="General Questions",
         domain=[("once_per_order", "=", True)],
     )
     specific_question_ids = fields.Many2many(
-        "event.question",
-        "event_event_event_question_rel",
+        comodel_name="event.question",
+        relation="event_event_event_question_rel",
         string="Specific Questions",
         domain=[("once_per_order", "=", False)],
     )

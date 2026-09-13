@@ -11,15 +11,11 @@ class AccountMoveReversal(models.TransientModel):
             ("2", "Information adjustment"),
         ],
         string="Adjustment type",
-        required=True,
         default="1",
+        required=True,
     )
-    l10n_vn_edi_agreement_document_name = fields.Char(
-        string="Agreement Name",
-    )
-    l10n_vn_edi_agreement_document_date = fields.Datetime(
-        string="Agreement Date",
-    )
+    l10n_vn_edi_agreement_document_name = fields.Char(string="Agreement Name")
+    l10n_vn_edi_agreement_document_date = fields.Datetime(string="Agreement Date")
 
     def _prepare_default_reversal(self, move):
         # EXTEND 'account'

@@ -69,80 +69,101 @@ class EventRegistration(models.Model):
         return str(int.from_bytes(os.urandom(8), "little"))
 
     # event
-    event_id = fields.Many2one("event.event", required=True, tracking=True, index=True)
+    event_id = fields.Many2one(
+        comodel_name="event.event",
+        index=True,
+        required=True,
+        tracking=True,
+    )
     is_multi_slots = fields.Boolean(
-        string="Is Event Multi Slots", related="event_id.is_multi_slots"
+        related="event_id.is_multi_slots",
+        string="Is Event Multi Slots",
     )
     event_slot_id = fields.Many2one(
-        "event.slot",
+        comodel_name="event.slot",
         string="Slot",
-        ondelete="restrict",
-        tracking=True,
         index="btree_not_null",
         domain="[('event_id', '=', event_id)]",
-    )
-    event_ticket_id = fields.Many2one(
-        "event.event.ticket",
-        string="Ticket Type",
         ondelete="restrict",
         tracking=True,
+    )
+    event_ticket_id = fields.Many2one(
+        comodel_name="event.event.ticket",
+        string="Ticket Type",
         index="btree_not_null",
+        ondelete="restrict",
+        tracking=True,
     )
     active = fields.Boolean(default=True)
     barcode = fields.Char(
         default=lambda self: self._default_barcode(),
-        readonly=True,
         copy=False,
+        readonly=True,
     )
     # utm informations
     utm_campaign_id = fields.Many2one(
-        "utm.campaign", "Campaign", index=True, ondelete="set null"
+        comodel_name="utm.campaign",
+        string="Campaign",
+        index=True,
+        ondelete="set null",
     )
     utm_source_id = fields.Many2one(
-        "utm.source", "Source", index=True, ondelete="set null"
+        comodel_name="utm.source",
+        string="Source",
+        index=True,
+        ondelete="set null",
     )
     utm_medium_id = fields.Many2one(
-        "utm.medium", "Medium", index=True, ondelete="set null"
+        comodel_name="utm.medium",
+        string="Medium",
+        index=True,
+        ondelete="set null",
     )
     # attendee
     partner_id = fields.Many2one(
-        "res.partner", string="Booked by", tracking=1, index="btree_not_null"
+        comodel_name="res.partner",
+        string="Booked by",
+        index="btree_not_null",
+        tracking=1,
     )
     name = fields.Char(
         string="Attendee Name",
-        index="trigram",
         compute="_compute_name",
-        readonly=False,
         store=True,
+        index="trigram",
+        readonly=False,
         tracking=2,
     )
     email = fields.Char(
-        compute="_compute_email", readonly=False, store=True, tracking=3
+        compute="_compute_email",
+        store=True,
+        readonly=False,
+        tracking=3,
     )
     phone_ids = fields.Many2many(
-        "phone.number",
-        "event_registration_phone_number_rel",
-        "registration_id",
-        "phone_number_id",
+        comodel_name="phone.number",
+        relation="event_registration_phone_number_rel",
+        column1="registration_id",
+        column2="phone_number_id",
         compute="_compute_phone_ids",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     company_name = fields.Char(
         compute="_compute_company_name",
-        readonly=False,
         store=True,
+        readonly=False,
         tracking=5,
     )
     # organization
     date_closed = fields.Datetime(
         string="Attended Date",
         compute="_compute_date_closed",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     event_begin_date = fields.Datetime(
-        "Event Start Date",
+        string="Event Start Date",
         compute="_compute_event_begin_date",
         search="_search_event_begin_date",
     )
@@ -150,58 +171,67 @@ class EventRegistration(models.Model):
         compute="_compute_event_end_date",
         search="_search_event_end_date",
     )
-    event_date_range = fields.Char("Date Range", compute="_compute_event_date_range")
+    event_date_range = fields.Char(
+        string="Date Range",
+        compute="_compute_event_date_range",
+    )
     event_organizer_id = fields.Many2one(
-        string="Event Organizer", related="event_id.organizer_id", readonly=True
+        related="event_id.organizer_id",
+        string="Event Organizer",
+        readonly=True,
     )
     event_user_id = fields.Many2one(
-        string="Event Responsible", related="event_id.user_id", readonly=True
+        related="event_id.user_id",
+        string="Event Responsible",
+        readonly=True,
     )
     company_id = fields.Many2one(
-        "res.company",
-        string="Company",
+        comodel_name="res.company",
         related="event_id.company_id",
+        string="Company",
         store=True,
         readonly=False,
     )
     state = fields.Selection(
-        [
+        selection=[
             ("draft", "Unconfirmed"),
             ("open", "Registered"),
             ("done", "Attended"),
             ("cancel", "Cancelled"),
         ],
         string="Status",
-        default="open",
-        readonly=True,
-        copy=False,
-        tracking=6,
         help="Unconfirmed: registrations in a pending state waiting for an action (specific case, notably with sale status)\n"
         "Registered: registrations considered taken by a client\n"
         "Attended: registrations for which the attendee attended the event\n"
         "Cancelled: registrations cancelled manually",
+        default="open",
+        copy=False,
+        readonly=True,
+        tracking=6,
     )
     # questions
     registration_answer_ids = fields.One2many(
-        "event.registration.answer", "registration_id", string="Attendee Answers"
+        comodel_name="event.registration.answer",
+        inverse_name="registration_id",
+        string="Attendee Answers",
     )
     registration_answer_choice_ids = fields.One2many(
-        "event.registration.answer",
-        "registration_id",
+        comodel_name="event.registration.answer",
+        inverse_name="registration_id",
         string="Attendee Selection Answers",
         domain=[("question_type", "=", "simple_choice")],
     )
     # scheduled mails
     mail_registration_ids = fields.One2many(
-        "event.mail.registration",
-        "registration_id",
+        comodel_name="event.mail.registration",
+        inverse_name="registration_id",
         string="Scheduler Emails",
         readonly=True,
     )
     # properties
     registration_properties = fields.Properties(
-        "Properties",
         definition="event_id.registration_properties_definition",
+        string="Properties",
         copy=True,
     )
 

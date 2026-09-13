@@ -65,22 +65,20 @@ class ResUsers(models.Model):
         ]
 
     employee_ids = fields.One2many(
-        "hr.employee",
-        "user_id",
+        comodel_name="hr.employee",
+        inverse_name="user_id",
         string="Related employee",
         domain=_domain_employee_ids,
     )
     employee_id = fields.Many2one(
-        "hr.employee",
+        comodel_name="hr.employee",
         string="Company employee",
         compute="_compute_employee_id",
-        store=False,
         search="_search_employee_id",
+        store=False,
     )
 
-    job_title = fields.Char(
-        related="employee_id.job_title",
-    )
+    job_title = fields.Char(related="employee_id.job_title")
     work_email = fields.Char(
         related="employee_id.work_email",
         related_sudo=False,
@@ -88,8 +86,8 @@ class ResUsers(models.Model):
     )
     tag_ids = fields.Many2many(
         related="employee_id.tag_ids",
-        related_sudo=False,
         string="Employee Tags",
+        related_sudo=False,
         readonly=False,
     )
     work_location_id = fields.Many2one(
@@ -97,47 +95,43 @@ class ResUsers(models.Model):
         related_sudo=False,
         readonly=False,
     )
-    work_location_name = fields.Char(
-        related="employee_id.work_location_name",
-    )
-    work_location_type = fields.Selection(
-        related="employee_id.work_location_type",
-    )
+    work_location_name = fields.Char(related="employee_id.work_location_name")
+    work_location_type = fields.Selection(related="employee_id.work_location_type")
     private_street = fields.Char(
         related="employee_id.private_street",
-        related_sudo=False,
         string="Private Street",
+        related_sudo=False,
         readonly=False,
     )
     private_street2 = fields.Char(
         related="employee_id.private_street2",
-        related_sudo=False,
         string="Private Street2",
+        related_sudo=False,
         readonly=False,
     )
     private_city = fields.Char(
         related="employee_id.private_city",
-        related_sudo=False,
         string="Private City",
+        related_sudo=False,
         readonly=False,
     )
     private_state_id = fields.Many2one(
         related="employee_id.private_state_id",
-        related_sudo=False,
         string="Private State",
+        related_sudo=False,
         readonly=False,
         domain="[('country_id', '=?', private_country_id)]",
     )
     private_zip = fields.Char(
         related="employee_id.private_zip",
+        string="Private Zip",
         related_sudo=False,
         readonly=False,
-        string="Private Zip",
     )
     private_country_id = fields.Many2one(
         related="employee_id.private_country_id",
-        related_sudo=False,
         string="Private Country",
+        related_sudo=False,
         readonly=False,
     )
     private_phone_ids = fields.Many2many(
@@ -147,14 +141,14 @@ class ResUsers(models.Model):
     )
     private_email = fields.Char(
         related="employee_id.private_email",
-        related_sudo=False,
         string="Private Email",
+        related_sudo=False,
         readonly=False,
     )
     km_home_work = fields.Integer(
         related="employee_id.km_home_work",
-        readonly=False,
         related_sudo=False,
+        readonly=False,
     )
     emergency_contact = fields.Char(
         related="employee_id.emergency_contact",
@@ -168,23 +162,23 @@ class ResUsers(models.Model):
     )
     visa_expire = fields.Date(
         related="employee_id.visa_expire",
-        readonly=False,
         related_sudo=False,
+        readonly=False,
     )
     additional_note = fields.Text(
         related="employee_id.additional_note",
-        readonly=False,
         related_sudo=False,
+        readonly=False,
     )
     barcode = fields.Char(
         related="employee_id.barcode",
-        readonly=False,
         related_sudo=False,
+        readonly=False,
     )
     pin = fields.Char(
         related="employee_id.pin",
-        readonly=False,
         related_sudo=False,
+        readonly=False,
     )
     employee_count = fields.Integer(compute="_compute_employee_count")
     employee_resource_calendar_id = fields.Many2one(
@@ -192,9 +186,7 @@ class ResUsers(models.Model):
         string="Employee's Working Hours",
         readonly=True,
     )
-    bank_account_ids = fields.Many2many(
-        related="employee_id.bank_account_ids",
-    )
+    bank_account_ids = fields.Many2many(related="employee_id.bank_account_ids")
 
     create_employee = fields.Boolean(
         string="Technical field, whether to create an employee",
@@ -203,7 +195,7 @@ class ResUsers(models.Model):
         copy=False,
     )
     create_employee_id = fields.Many2one(
-        "hr.employee",
+        comodel_name="hr.employee",
         string="Technical field, bind user to this employee on create",
         store=False,
         copy=False,

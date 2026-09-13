@@ -11,14 +11,17 @@ class ResPartner(models.Model):
         selection_add=[("it_edi_xml", "Italy (Factura PA)")]
     )
     l10n_it_pec_email = fields.Char(string="PEC e-mail")
-    l10n_it_codice_fiscale = fields.Char(string="Codice Fiscale", size=16)
+    l10n_it_codice_fiscale = fields.Char(
+        string="Codice Fiscale",
+        size=16,
+    )
     l10n_it_pa_index = fields.Char(
         string="Destination Code (SDI)",
-        size=7,
         help="Must contain the 6-character (or 7) code, present in the PA Index "
         "in the information relative to the electronic invoicing service, "
         "associated with the office which, within the addressee administration, deals "
         "with receiving (and processing) the invoice.",
+        size=7,
     )
 
     _l10n_it_codice_fiscale = models.Constraint(

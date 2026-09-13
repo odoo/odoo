@@ -10,7 +10,8 @@ class MailMessage(models.Model):
         search="_search_snailmail_error",
     )
     letter_ids = fields.One2many(
-        comodel_name="snailmail.letter", inverse_name="message_id"
+        comodel_name="snailmail.letter",
+        inverse_name="message_id",
     )
     message_type = fields.Selection(
         selection_add=[("snailmail", "Snailmail")],

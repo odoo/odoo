@@ -23,16 +23,16 @@ class ProjectMilestone(models.Model):
     name = fields.Char(required=True)
     sequence = fields.Integer(default=10)
     project_id = fields.Many2one(
-        "project.project",
-        required=True,
+        comodel_name="project.project",
         default=_default_project_id,
-        domain=[("is_template", "=", False)],
         index=True,
+        required=True,
+        domain=[("is_template", "=", False)],
         ondelete="cascade",
     )
     date_deadline = fields.Date(
-        tracking=True,
         copy=False,
+        tracking=True,
     )
     is_reached = fields.Boolean(
         string="Reached",
@@ -40,46 +40,46 @@ class ProjectMilestone(models.Model):
         copy=False,
     )
     date_reached = fields.Date(
+        export_string_translation=False,
         compute="_compute_date_reached",
         store=True,
-        export_string_translation=False,
     )
     task_ids = fields.One2many(
-        "project.task",
-        "milestone_id",
-        "Tasks",
+        comodel_name="project.task",
+        inverse_name="milestone_id",
+        string="Tasks",
         export_string_translation=False,
     )
     project_allow_milestones = fields.Boolean(
+        export_string_translation=False,
         compute="_compute_project_allow_milestones",
         search="_search_project_allow_milestones",
         compute_sudo=True,
-        export_string_translation=False,
     )
 
     is_deadline_exceeded = fields.Boolean(
-        compute="_compute_is_deadline_exceeded",
         export_string_translation=False,
+        compute="_compute_is_deadline_exceeded",
     )
     is_deadline_future = fields.Boolean(
-        compute="_compute_is_deadline_future",
         export_string_translation=False,
+        compute="_compute_is_deadline_future",
     )
     task_count = fields.Integer(
-        "# of Tasks",
+        string="# of Tasks",
+        export_string_translation=False,
         compute="_compute_task_counts",
         groups="project.group_project_milestone",
-        export_string_translation=False,
     )
     done_task_count = fields.Integer(
-        "# of Done Tasks",
+        string="# of Done Tasks",
+        export_string_translation=False,
         compute="_compute_task_counts",
         groups="project.group_project_milestone",
-        export_string_translation=False,
     )
     can_be_marked_as_done = fields.Boolean(
-        compute="_compute_can_be_marked_as_done",
         export_string_translation=False,
+        compute="_compute_can_be_marked_as_done",
     )
 
     @api.depends("is_reached")

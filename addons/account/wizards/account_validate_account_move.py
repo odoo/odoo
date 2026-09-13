@@ -9,7 +9,7 @@ class ValidateAccountMove(models.TransientModel):
     _name = "validate.account.move"
     _description = "Validate Account Move"
 
-    move_ids = fields.Many2many("account.move")
+    move_ids = fields.Many2many(comodel_name="account.move")
     force_post = fields.Boolean(
         string="Force",
         help="Entries in the future are set to be auto-posted by default. Check this checkbox to post them now.",
@@ -19,11 +19,13 @@ class ValidateAccountMove(models.TransientModel):
     display_force_hash = fields.Boolean(compute="_compute_display_force_hash")
     is_entries = fields.Boolean(compute="_compute_is_entries")
     abnormal_date_partner_ids = fields.One2many(
-        "res.partner", compute="_compute_abnormal_date_partner_ids"
+        comodel_name="res.partner",
+        compute="_compute_abnormal_date_partner_ids",
     )
     ignore_abnormal_date = fields.Boolean()
     abnormal_amount_partner_ids = fields.One2many(
-        "res.partner", compute="_compute_abnormal_amount_partner_ids"
+        comodel_name="res.partner",
+        compute="_compute_abnormal_amount_partner_ids",
     )
     ignore_abnormal_amount = fields.Boolean()
 

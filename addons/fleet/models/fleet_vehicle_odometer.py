@@ -7,11 +7,17 @@ class FleetVehicleOdometer(models.Model):
     _description = "Odometer log for a vehicle"
     _order = "date desc"
 
-    name = fields.Char(compute="_compute_name", store=True)
+    name = fields.Char(
+        compute="_compute_name",
+        store=True,
+    )
     date = fields.Date(default=fields.Date.context_today)
-    value = fields.Float("Odometer Value", aggregator="max")
+    value = fields.Float(
+        string="Odometer Value",
+        aggregator="max",
+    )
     vehicle_id = fields.Many2one(
-        "fleet.vehicle",
+        comodel_name="fleet.vehicle",
         required=True,
     )
     unit = fields.Selection(
@@ -20,10 +26,10 @@ class FleetVehicleOdometer(models.Model):
         readonly=True,
     )
     driver_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         compute="_compute_driver_id",
-        readonly=False,
         store=True,
+        readonly=False,
     )
 
     @api.depends("vehicle_id")

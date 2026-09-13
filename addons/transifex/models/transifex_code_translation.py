@@ -13,12 +13,14 @@ class TransifexCodeTranslation(models.Model):
     value = fields.Text(string="Translation Value")
     module = fields.Char(help="Module this term belongs to")
     lang = fields.Selection(
-        selection="_selection_installed_langs", string="Language", validate=False
+        selection="_selection_installed_langs",
+        string="Language",
+        validate=False,
     )
     transifex_url = fields.Char(
-        "Transifex URL",
-        compute="_compute_transifex_url",
+        string="Transifex URL",
         help="Propose a modification in the official version of Odoo",
+        compute="_compute_transifex_url",
     )
 
     def _selection_installed_langs(self):

@@ -14,7 +14,10 @@ class AccountRoot(models.Model):
     _table_query = "0"
 
     name = fields.Char(compute="_compute_root")
-    parent_id = fields.Many2one("account.root", compute="_compute_root")
+    parent_id = fields.Many2one(
+        comodel_name="account.root",
+        compute="_compute_root",
+    )
 
     @api.private
     def browse(self, ids=()):

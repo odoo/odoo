@@ -11,12 +11,10 @@ class AccountAccountTag(models.Model):
     _inherit = "account.account.tag"
 
     report_expression_id = fields.Many2one(
-        "account.report.expression",
+        comodel_name="account.report.expression",
         compute="_compute_report_expression",
     )
-    balance_negate = fields.Boolean(
-        compute="_compute_report_expression",
-    )
+    balance_negate = fields.Boolean(compute="_compute_report_expression")
 
     @api.model_create_multi
     @_debug.perf.timed

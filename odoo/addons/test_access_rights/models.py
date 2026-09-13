@@ -7,11 +7,12 @@ class Test_Access_RightSome_Obj(models.Model):
     _description = "Object For Test Access Right"
 
     val = fields.Integer()
-    categ_id = fields.Many2one("test_access_right.obj_categ")
-    parent_id = fields.Many2one("test_access_right.some_obj")
-    company_id = fields.Many2one("res.company")
+    categ_id = fields.Many2one(comodel_name="test_access_right.obj_categ")
+    parent_id = fields.Many2one(comodel_name="test_access_right.some_obj")
+    company_id = fields.Many2one(comodel_name="res.company")
     forbidden = fields.Integer(
-        groups="test_access_rights.test_group,base.group_portal", default=5
+        default=5,
+        groups="test_access_rights.test_group,base.group_portal",
     )
     forbidden2 = fields.Integer(groups="test_access_rights.test_group")
     forbidden3 = fields.Integer(groups=fields.NO_ACCESS)
@@ -26,7 +27,7 @@ class Test_Access_RightSome_Obj(models.Model):
         write_groups=lambda records: (
             not records.ids
             or records.env.user.has_group("test_access_rights.test_group")
-        ),
+        )
     )
     read_and_write_gated = fields.Integer(
         groups="test_access_rights.test_group",
@@ -46,10 +47,10 @@ class Test_Access_RightContainer(models.Model):
     _description = "Test Access Right Container"
 
     some_ids = fields.Many2many(
-        "test_access_right.some_obj",
-        "test_access_right_rel",
-        "container_id",
-        "some_id",
+        comodel_name="test_access_right.some_obj",
+        relation="test_access_right_rel",
+        column1="container_id",
+        column2="some_id",
     )
 
 
@@ -60,7 +61,9 @@ class Test_Access_RightInherits(models.Model):
     _inherits = {"test_access_right.some_obj": "some_id"}
 
     some_id = fields.Many2one(
-        "test_access_right.some_obj", required=True, ondelete="restrict"
+        comodel_name="test_access_right.some_obj",
+        required=True,
+        ondelete="restrict",
     )
 
 
@@ -68,7 +71,7 @@ class Test_Access_RightChild(models.Model):
     _name = "test_access_right.child"
     _description = "Object for testing company ir rule"
 
-    parent_id = fields.Many2one("test_access_right.some_obj")
+    parent_id = fields.Many2one(comodel_name="test_access_right.some_obj")
 
 
 class Test_Access_RightObj_Categ(models.Model):
@@ -96,7 +99,9 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     currency_id = fields.Many2one(
-        "res.currency", compute="_compute_currency_id", readonly=True
+        comodel_name="res.currency",
+        compute="_compute_currency_id",
+        readonly=True,
     )
     monetary = fields.Monetary()
 

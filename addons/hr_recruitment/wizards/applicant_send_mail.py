@@ -7,21 +7,21 @@ class ApplicantSendMail(models.TransientModel):
     _description = "Send mails to applicants"
 
     applicant_ids = fields.Many2many(
-        "hr.applicant",
+        comodel_name="hr.applicant",
         string="Applications",
         required=True,
         context={"active_test": False},
     )
     author_id = fields.Many2one(
-        "res.partner",
-        required=True,
+        comodel_name="res.partner",
         default=lambda self: self.env.user.partner_id.id,
+        required=True,
     )
     attachment_ids = fields.Many2many(
-        "ir.attachment",
+        comodel_name="ir.attachment",
         string="Attachments",
-        readonly=False,
         store=True,
+        readonly=False,
         bypass_search_access=True,
     )
 

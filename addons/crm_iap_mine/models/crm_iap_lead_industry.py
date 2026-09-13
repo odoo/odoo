@@ -8,7 +8,11 @@ class CrmIapLeadIndustry(models.Model):
     _description = "CRM IAP Lead Industry"
     _order = "sequence,id"
 
-    name = fields.Char(string="Industry", required=True, translate=True)
+    name = fields.Char(
+        string="Industry",
+        translate=True,
+        required=True,
+    )
     reveal_ids = fields.Char(required=True)
     color = fields.Integer(string="Color Index")
     sequence = fields.Integer()

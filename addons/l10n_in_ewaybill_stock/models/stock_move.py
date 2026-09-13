@@ -14,8 +14,8 @@ class StockMove(models.Model):
 
     # Need to store values because we send it to the ewaybill and we need to keep the same value
     ewaybill_price_unit = fields.Monetary(
-        compute="_compute_l10n_in_ewaybill_price_unit",
         currency_field="company_currency_id",
+        compute="_compute_l10n_in_ewaybill_price_unit",
         store=True,
         readonly=False,
     )

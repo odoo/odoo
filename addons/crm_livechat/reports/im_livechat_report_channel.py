@@ -5,7 +5,11 @@ from odoo.tools import SQL
 class Im_LivechatReportChannel(models.Model):
     _inherit = "im_livechat.report.channel"
 
-    leads_created = fields.Integer("Leads created", aggregator="sum", readonly=True)
+    leads_created = fields.Integer(
+        string="Leads created",
+        readonly=True,
+        aggregator="sum",
+    )
 
     def _select(self) -> SQL:
         return SQL(

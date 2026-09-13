@@ -19,24 +19,24 @@ class WebsiteTrack(models.Model):
     _log_access = False
 
     visitor_id = fields.Many2one(
-        "website.visitor",
-        ondelete="cascade",
+        comodel_name="website.visitor",
         index=True,
-        required=True,
         readonly=True,
+        required=True,
+        ondelete="cascade",
     )
     page_id = fields.Many2one(
-        "website.page",
+        comodel_name="website.page",
         index=True,
-        ondelete="cascade",
         readonly=True,
+        ondelete="cascade",
     )
     url = fields.Text(index=True)
     visit_datetime = fields.Datetime(
-        "Visit Date",
+        string="Visit Date",
         default=fields.Datetime.now,
-        required=True,
         readonly=True,
+        required=True,
     )
 
     _visitor_id_visit_datetime_idx = models.Index("(visitor_id, visit_datetime)")
@@ -66,11 +66,21 @@ class WebsiteVisitor(models.Model):
         ).encode("utf-8")
         return hashlib.sha1(msg).hexdigest()[:32]
 
-    name = fields.Char("Name", related="partner_id.name")
-    access_token = fields.Char(required=True, default=_default_access_token, copy=False)
-    website_id = fields.Many2one("website", readonly=True)
+    name = fields.Char(
+        related="partner_id.name",
+        string="Name",
+    )
+    access_token = fields.Char(
+        default=_default_access_token,
+        copy=False,
+        required=True,
+    )
+    website_id = fields.Many2one(
+        comodel_name="website",
+        readonly=True,
+    )
     partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Contact",
         help="Partner of the last logged in user.",
         compute="_compute_partner_id",
@@ -79,64 +89,82 @@ class WebsiteVisitor(models.Model):
     )
     partner_image = fields.Binary(related="partner_id.image_1920")
 
-    country_id = fields.Many2one("res.country", readonly=True)
-    country_flag = fields.Char(related="country_id.image_url", string="Country Flag")
+    country_id = fields.Many2one(
+        comodel_name="res.country",
+        readonly=True,
+    )
+    country_flag = fields.Char(
+        related="country_id.image_url",
+        string="Country Flag",
+    )
     lang_id = fields.Many2one(
-        "res.lang",
+        comodel_name="res.lang",
         string="Language",
         help="Language from the website when visitor has been created",
     )
-    timezone = fields.Selection(_selection_timezones)
-    email = fields.Char(compute="_compute_email_phone", compute_sudo=True)
-    mobile = fields.Char(compute="_compute_email_phone", compute_sudo=True)
+    timezone = fields.Selection(selection=_selection_timezones)
+    email = fields.Char(
+        compute="_compute_email_phone",
+        compute_sudo=True,
+    )
+    mobile = fields.Char(
+        compute="_compute_email_phone",
+        compute_sudo=True,
+    )
 
     visit_count = fields.Integer(
-        "# Visits",
+        string="# Visits",
+        help="A new visit is considered if last connection was more than 8 hours ago.",
         default=1,
         readonly=True,
-        help="A new visit is considered if last connection was more than 8 hours ago.",
     )
     website_track_ids = fields.One2many(
-        "website.track", "visitor_id", string="Visited Pages History", readonly=True
+        comodel_name="website.track",
+        inverse_name="visitor_id",
+        string="Visited Pages History",
+        readonly=True,
     )
     visitor_page_count = fields.Integer(
-        "Page Views",
-        compute="_compute_page_statistics",
+        string="Page Views",
         help="Total number of visits on tracked pages",
+        compute="_compute_page_statistics",
     )
     page_ids = fields.Many2many(
-        "website.page",
+        comodel_name="website.page",
         string="Visited Pages",
         compute="_compute_page_statistics",
-        groups="website.group_website_designer",
         search="_search_page_ids",
+        groups="website.group_website_designer",
     )
     page_count = fields.Integer(
-        "# Visited Pages",
-        compute="_compute_page_statistics",
+        string="# Visited Pages",
         help="Total number of tracked page visited",
+        compute="_compute_page_statistics",
     )
     last_visited_page_id = fields.Many2one(
-        "website.page",
+        comodel_name="website.page",
         compute="_compute_last_visited_page_id",
     )
 
-    create_date = fields.Datetime("First Connection", readonly=True)
+    create_date = fields.Datetime(
+        string="First Connection",
+        readonly=True,
+    )
     last_connection_datetime = fields.Datetime(
-        "Last Connection",
-        default=fields.Datetime.now,
+        string="Last Connection",
         help="Last page view date",
+        default=fields.Datetime.now,
         readonly=True,
     )
     time_since_last_action = fields.Char(
-        "Last action",
-        compute="_compute_time_statistics",
+        string="Last action",
         help="Time since last page view. E.g.: 2 minutes ago",
+        compute="_compute_time_statistics",
     )
     is_connected = fields.Boolean(
-        "Is connected?",
-        compute="_compute_time_statistics",
+        string="Is connected?",
         help="A visitor is considered as connected if his last page view was within the last 5 minutes.",
+        compute="_compute_time_statistics",
     )
 
     _access_token_unique = models.Constraint(

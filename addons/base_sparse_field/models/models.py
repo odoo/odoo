@@ -20,12 +20,12 @@ class IrModelFields(models.Model):
     # Declaring it again raised "selection_add=... on non-list selection" at
     # registry build and made this module impossible to install.
     serialization_field_id = fields.Many2one(
-        "ir.model.fields",
-        ondelete="cascade",
-        domain="[('ttype','=','serialized'), ('model_id', '=', model_id)]",
+        comodel_name="ir.model.fields",
         help="If set, this field will be stored in the sparse structure of the "
         "serialization field, instead of having its own database column. "
         "This cannot be changed after creation.",
+        domain="[('ttype','=','serialized'), ('model_id', '=', model_id)]",
+        ondelete="cascade",
     )
 
     def write(self, vals):
@@ -119,5 +119,11 @@ class Sparse_FieldsTest(models.TransientModel):
     integer = fields.Integer(sparse="data")
     float = fields.Float(sparse="data")
     char = fields.Char(sparse="data")
-    selection = fields.Selection([("one", "One"), ("two", "Two")], sparse="data")
-    partner = fields.Many2one("res.partner", sparse="data")
+    selection = fields.Selection(
+        selection=[("one", "One"), ("two", "Two")],
+        sparse="data",
+    )
+    partner = fields.Many2one(
+        comodel_name="res.partner",
+        sparse="data",
+    )

@@ -35,7 +35,7 @@ class ResPartner(models.Model):
             ("nlcius", "Netherlands (NLCIUS)"),
             ("ubl_a_nz", "Australia (BIS Billing 3.0 A-NZ)"),
             ("ubl_sg", "Singapore (BIS Billing 3.0 SG)"),
-        ],
+        ]
     )
     is_ubl_format = fields.Boolean(compute="_compute_is_ubl_format")
     is_peppol_edi_format = fields.Boolean(
@@ -49,13 +49,6 @@ class ResPartner(models.Model):
         tracking=True,
     )
     peppol_eas = fields.Selection(
-        string="Peppol e-address (EAS)",
-        help="""Code used to identify the Endpoint for BIS Billing 3.0 and its derivatives.
-             List available at https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/""",
-        compute="_compute_peppol_eas",
-        store=True,
-        readonly=False,
-        tracking=True,
         selection=[
             ("9923", "Albania VAT"),
             ("9922", "Andorra VAT"),
@@ -145,6 +138,13 @@ class ResPartner(models.Model):
             ("AU", "File Transfer Protocol"),
             ("EM", "Electronic mail"),
         ],
+        string="Peppol e-address (EAS)",
+        help="""Code used to identify the Endpoint for BIS Billing 3.0 and its derivatives.
+             List available at https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/""",
+        compute="_compute_peppol_eas",
+        store=True,
+        readonly=False,
+        tracking=True,
     )
     available_peppol_eas = fields.Json(compute="_compute_available_peppol_eas")
 

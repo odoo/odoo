@@ -5,31 +5,41 @@ class MaintenanceEquipment(models.Model):
     _inherit = "maintenance.equipment"
 
     employee_id = fields.Many2one(
-        "hr.employee",
+        comodel_name="hr.employee",
+        string="Assigned Employee",
         compute="_compute_equipment_assign",
         store=True,
-        readonly=False,
-        string="Assigned Employee",
-        tracking=True,
         index="btree_not_null",
+        readonly=False,
+        tracking=True,
     )
     department_id = fields.Many2one(
-        "hr.department",
+        comodel_name="hr.department",
+        string="Assigned Department",
         compute="_compute_equipment_assign",
         store=True,
         readonly=False,
-        string="Assigned Department",
         tracking=True,
     )
     equipment_assign_to = fields.Selection(
-        [("department", "Department"), ("employee", "Employee"), ("other", "Other")],
+        selection=[
+            ("department", "Department"),
+            ("employee", "Employee"),
+            ("other", "Other"),
+        ],
         string="Used By",
-        required=True,
         default="employee",
+        required=True,
     )
-    owner_user_id = fields.Many2one(compute="_compute_owner_user_id", store=True)
+    owner_user_id = fields.Many2one(
+        compute="_compute_owner_user_id",
+        store=True,
+    )
     assign_date = fields.Date(
-        compute="_compute_equipment_assign", store=True, readonly=False, copy=True
+        compute="_compute_equipment_assign",
+        store=True,
+        copy=True,
+        readonly=False,
     )
 
     @api.depends("employee_id", "department_id", "equipment_assign_to")
@@ -103,8 +113,14 @@ class MaintenanceRequest(models.Model):
     def _default_employee_id(self):
         return self.env.user.employee_id
 
-    employee_id = fields.Many2one("hr.employee", default=_default_employee_id)
-    owner_user_id = fields.Many2one(compute="_compute_owner_user_id", store=True)
+    employee_id = fields.Many2one(
+        comodel_name="hr.employee",
+        default=_default_employee_id,
+    )
+    owner_user_id = fields.Many2one(
+        compute="_compute_owner_user_id",
+        store=True,
+    )
     equipment_id = fields.Many2one(
         domain="['|', ('employee_id', '=', employee_id), ('employee_id', '=', False)]"
     )

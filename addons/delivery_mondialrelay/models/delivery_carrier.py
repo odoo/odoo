@@ -6,11 +6,16 @@ class DeliveryCarrier(models.Model):
     _inherit = "delivery.carrier"
 
     is_mondialrelay = fields.Boolean(
-        compute="_compute_is_mondialrelay", search="_search_is_mondialrelay"
+        compute="_compute_is_mondialrelay",
+        search="_search_is_mondialrelay",
     )
-    mondialrelay_brand = fields.Char(string="Brand Code", default="BDTEST  ")
+    mondialrelay_brand = fields.Char(
+        string="Brand Code",
+        default="BDTEST  ",
+    )
     mondialrelay_packagetype = fields.Char(
-        default="24R", groups="base.group_system"
+        default="24R",
+        groups="base.group_system",
     )  # Advanced
 
     @api.depends("product_id.default_code")

@@ -27,47 +27,43 @@ class AccountAccount(models.Model):
     tag_ids = fields.Many2many(tracking=True)
 
     company_fiscal_country_code = fields.Char(
-        compute="_compute_company_fiscal_country_code",
+        compute="_compute_company_fiscal_country_code"
     )
     tax_ids = fields.Many2many(
-        "account.tax",
-        "account_account_tax_default_rel",
-        "account_id",
-        "tax_id",
+        comodel_name="account.tax",
+        relation="account_account_tax_default_rel",
+        column1="account_id",
+        column2="tax_id",
         string="Default Taxes",
-        check_company=True,
         context={"append_fields": ["type_tax_use", "company_ids"]},
+        check_company=True,
     )
     group_id = fields.Many2one(
-        "account.group",
-        compute="_compute_group_id",
+        comodel_name="account.group",
         help="Account prefixes can determine account groups.",
+        compute="_compute_group_id",
     )
     used = fields.Boolean(
         compute="_compute_used",
         search="_search_used",
     )
     opening_debit = fields.Monetary(
+        currency_field="company_currency_id",
         compute="_compute_opening_debit_credit",
         inverse="_inverse_opening_debit",
-        currency_field="company_currency_id",
     )
     opening_credit = fields.Monetary(
+        currency_field="company_currency_id",
         compute="_compute_opening_debit_credit",
         inverse="_inverse_opening_credit",
-        currency_field="company_currency_id",
     )
     opening_balance = fields.Monetary(
+        currency_field="company_currency_id",
         compute="_compute_opening_debit_credit",
         inverse="_inverse_opening_balance",
-        currency_field="company_currency_id",
     )
-    current_balance = fields.Float(
-        compute="_compute_current_balance",
-    )
-    related_taxes_amount = fields.Integer(
-        compute="_compute_related_taxes_amount",
-    )
+    current_balance = fields.Float(compute="_compute_current_balance")
+    related_taxes_amount = fields.Integer(compute="_compute_related_taxes_amount")
 
     @api.constrains("reconcile", "account_type", "tax_ids")
     def _constrains_reconcile(self):

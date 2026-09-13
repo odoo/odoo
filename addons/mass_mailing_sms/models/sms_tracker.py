@@ -14,7 +14,9 @@ class SmsTracker(models.Model):
     }
 
     mailing_trace_id = fields.Many2one(
-        "mailing.trace", ondelete="cascade", index="btree_not_null"
+        comodel_name="mailing.trace",
+        index="btree_not_null",
+        ondelete="cascade",
     )
 
     def _action_update_from_provider_error(self, provider_error):

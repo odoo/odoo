@@ -8,9 +8,7 @@ from odoo import fields, models
 class CertificateCertificate(models.Model):
     _inherit = "certificate.certificate"
 
-    scope = fields.Selection(
-        selection_add=[("facturae", "Facturae")],
-    )
+    scope = fields.Selection(selection_add=[("facturae", "Facturae")])
 
     def _l10n_es_edi_facturae_get_issuer(self):
         self.check_singleton()

@@ -6,7 +6,7 @@ class ResCompany(models.Model):
 
     lunch_minimum_threshold = fields.Float()
     lunch_notify_message = fields.Html(
+        translate=True,
         default="""Your lunch has been delivered.
 Enjoy your meal!""",
-        translate=True,
     )

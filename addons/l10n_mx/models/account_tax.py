@@ -11,8 +11,8 @@ class AccountTax(models.Model):
             ("Exento", "Exento"),
         ],
         string="Factor Type",
-        default="Tasa",
         help="Mexico: 'TipoFactor' is an attribute for CFDI 4.0. This indicates the factor type that is applied to the base of the tax.",
+        default="Tasa",
     )
     l10n_mx_tax_type = fields.Selection(
         selection=[

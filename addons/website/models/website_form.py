@@ -25,17 +25,17 @@ class IrModel(models.Model):
     _inherit = ["ir.model"]
 
     website_form_access = fields.Boolean(
-        "Allowed to use in forms",
+        string="Allowed to use in forms",
         help="Enable the form builder feature for this model.",
     )
     website_form_default_field_id = fields.Many2one(
-        "ir.model.fields",
-        "Field for custom form data",
-        domain="[('model', '=', model), ('ttype', '=', 'text')]",
+        comodel_name="ir.model.fields",
+        string="Field for custom form data",
         help="Specify the field which will contain meta and custom form fields datas.",
+        domain="[('model', '=', model), ('ttype', '=', 'text')]",
     )
     website_form_label = fields.Char(
-        "Label for form action",
+        string="Label for form action",
         help="Form action label. Ex: crm.lead could be 'Send an e-mail' and project.issue could be 'Create an Issue'.",
         translate=True,
     )
@@ -251,8 +251,8 @@ class IrModelFields(models.Model):
         return True
 
     website_form_blacklisted = fields.Boolean(
-        "Blacklisted in web forms",
+        string="Blacklisted in web forms",
+        help="Blacklist this field for web forms",
         default=True,
         index=True,
-        help="Blacklist this field for web forms",
     )

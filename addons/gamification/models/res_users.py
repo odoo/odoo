@@ -9,64 +9,77 @@ from odoo.tools import SQL
 class ResUsers(models.Model):
     _inherit = "res.users"
 
-    karma = fields.Integer(compute="_compute_karma", store=True, readonly=False)
+    karma = fields.Integer(
+        compute="_compute_karma",
+        store=True,
+        readonly=False,
+    )
     karma_tracking_ids = fields.One2many(
-        "gamification.karma.tracking",
-        "user_id",
+        comodel_name="gamification.karma.tracking",
+        inverse_name="user_id",
         string="Karma Changes",
         groups="base.group_system",
     )
     badge_ids = fields.One2many(
-        "gamification.badge.user", "user_id", string="Badges", copy=False
+        comodel_name="gamification.badge.user",
+        inverse_name="user_id",
+        string="Badges",
+        copy=False,
     )
     gold_badge = fields.Integer(
-        "Gold badges count", compute="_compute_badge_level_counts"
+        string="Gold badges count",
+        compute="_compute_badge_level_counts",
     )
     silver_badge = fields.Integer(
-        "Silver badges count", compute="_compute_badge_level_counts"
+        string="Silver badges count",
+        compute="_compute_badge_level_counts",
     )
     bronze_badge = fields.Integer(
-        "Bronze badges count", compute="_compute_badge_level_counts"
+        string="Bronze badges count",
+        compute="_compute_badge_level_counts",
     )
-    rank_id = fields.Many2one("gamification.karma.rank", index="btree_not_null")
-    next_rank_id = fields.Many2one("gamification.karma.rank")
+    rank_id = fields.Many2one(
+        comodel_name="gamification.karma.rank",
+        index="btree_not_null",
+    )
+    next_rank_id = fields.Many2one(comodel_name="gamification.karma.rank")
 
     # XP progress fields for UI display
     xp_to_next_rank = fields.Integer(
-        "XP to Next Rank",
+        string="XP to Next Rank",
         compute="_compute_xp_progress",
     )
     xp_progress_percent = fields.Float(
-        "XP Progress %",
+        string="XP Progress %",
         compute="_compute_xp_progress",
     )
     streak_ids = fields.One2many(
-        "gamification.streak",
-        "user_id",
+        comodel_name="gamification.streak",
+        inverse_name="user_id",
         string="Streaks",
     )
 
     # Profile enhancements
     featured_badge_ids = fields.Many2many(
-        "gamification.badge.user",
-        "gamification_featured_badge_rel",
+        comodel_name="gamification.badge.user",
+        relation="gamification_featured_badge_rel",
         string="Featured Badges",
         help="Up to 3 badges showcased on the user's gamification profile.",
     )
     gamification_visibility = fields.Selection(
-        [
+        selection=[
             ("private", "Private"),
             ("team", "Team Only"),
             ("public", "Public"),
         ],
         string="Profile Visibility",
-        default="public",
         help="Keeps you out of the leaderboards, the activity feed, the mentor "
         "suggestions and other people's badge and achievement lists. It does "
         "not hide your karma or rank from someone who opens your user record.",
+        default="public",
     )
     last_gamification_nudge_date = fields.Date(
-        "Last Nudge Date",
+        string="Last Nudge Date",
         help="Last date a gamification nudge was sent to this user.  "
         "Used to rate-limit nudges to at most once per week.",
     )

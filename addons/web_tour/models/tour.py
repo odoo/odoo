@@ -10,16 +10,25 @@ class Web_TourTour(models.Model):
     _order = "sequence, name, id"
 
     name = fields.Char(required=True)
-    step_ids = fields.One2many("web_tour.tour.step", "tour_id")
-    url = fields.Char(string="Starting URL", default="/odoo")
-    sharing_url = fields.Char(compute="_compute_sharing_url", string="Sharing URL")
+    step_ids = fields.One2many(
+        comodel_name="web_tour.tour.step",
+        inverse_name="tour_id",
+    )
+    url = fields.Char(
+        string="Starting URL",
+        default="/odoo",
+    )
+    sharing_url = fields.Char(
+        string="Sharing URL",
+        compute="_compute_sharing_url",
+    )
     rainbow_man_message = fields.Html(
-        default="<b>Good job!</b> You went through all steps of this tour.",
         translate=True,
+        default="<b>Good job!</b> You went through all steps of this tour.",
     )
     sequence = fields.Integer(default=1000)
     custom = fields.Boolean()
-    user_consumed_ids = fields.Many2many("res.users")
+    user_consumed_ids = fields.Many2many(comodel_name="res.users")
 
     _uniq_name = models.Constraint(
         "unique(name)",
@@ -109,7 +118,10 @@ class Web_TourTourStep(models.Model):
         default="bottom",
     )
     tour_id = fields.Many2one(
-        "web_tour.tour", required=True, index=True, ondelete="cascade"
+        comodel_name="web_tour.tour",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     run = fields.Char()
     sequence = fields.Integer()

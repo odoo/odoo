@@ -6,12 +6,19 @@ class ProductAttributeCategory(models.Model):
     _description = "Product Attribute Category"
     _order = "sequence, id"
 
-    name = fields.Char("Category Name", required=True, translate=True)
-    sequence = fields.Integer(default=10, index=True)
+    name = fields.Char(
+        string="Category Name",
+        translate=True,
+        required=True,
+    )
+    sequence = fields.Integer(
+        default=10,
+        index=True,
+    )
 
     attribute_ids = fields.One2many(
-        "product.attribute",
-        "category_id",
+        comodel_name="product.attribute",
+        inverse_name="category_id",
         string="Related Attributes",
         domain="[('category_id', '=', False)]",
     )

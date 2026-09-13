@@ -43,31 +43,50 @@ class EventTrack(models.Model):
     def _default_stage_id(self):
         return self.env["event.track.stage"].search([], limit=1).id
 
-    name = fields.Char("Title", required=True, translate=True)
-    event_id = fields.Many2one("event.event", required=True, index=True)
+    name = fields.Char(
+        string="Title",
+        translate=True,
+        required=True,
+    )
+    event_id = fields.Many2one(
+        comodel_name="event.event",
+        index=True,
+        required=True,
+    )
     active = fields.Boolean(default=True)
     user_id = fields.Many2one(
-        "res.users", "Responsible", tracking=True, default=lambda self: self.env.user
+        comodel_name="res.users",
+        string="Responsible",
+        default=lambda self: self.env.user,
+        tracking=True,
     )
-    company_id = fields.Many2one("res.company", related="event_id.company_id")
-    tag_ids = fields.Many2many("event.track.tag", string="Tags")
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        related="event_id.company_id",
+    )
+    tag_ids = fields.Many2many(
+        comodel_name="event.track.tag",
+        string="Tags",
+    )
     description = fields.Html(
-        translate=html_translate, sanitize_attributes=False, sanitize_form=False
+        translate=html_translate,
+        sanitize_attributes=False,
+        sanitize_form=False,
     )
-    color = fields.Integer("Agenda Color")
+    color = fields.Integer(string="Agenda Color")
     priority = fields.Selection(
-        [("0", "Low"), ("1", "Medium"), ("2", "High"), ("3", "Highest")],
-        required=True,
+        selection=[("0", "Low"), ("1", "Medium"), ("2", "High"), ("3", "Highest")],
         default="1",
+        required=True,
     )
     stage_id = fields.Many2one(
-        "event.track.stage",
-        ondelete="restrict",
+        comodel_name="event.track.stage",
+        default=_default_stage_id,
         index=True,
         copy=False,
-        default=_default_stage_id,
-        group_expand="_read_group_expand_full",
         required=True,
+        group_expand="_read_group_expand_full",
+        ondelete="restrict",
         tracking=True,
     )
     legend_blocked = fields.Char(
@@ -76,7 +95,9 @@ class EventTrack(models.Model):
         readonly=True,
     )
     legend_done = fields.Char(
-        related="stage_id.legend_done", string="Kanban Valid Explanation", readonly=True
+        related="stage_id.legend_done",
+        string="Kanban Valid Explanation",
+        readonly=True,
     )
     legend_normal = fields.Char(
         related="stage_id.legend_normal",
@@ -84,94 +105,103 @@ class EventTrack(models.Model):
         readonly=True,
     )
     kanban_state = fields.Selection(
-        [("normal", "Grey"), ("done", "Green"), ("blocked", "Red")],
-        copy=False,
-        default="normal",
-        required=True,
+        selection=[("normal", "Grey"), ("done", "Green"), ("blocked", "Red")],
         help="A track's kanban state indicates special situations affecting it:\n"
         " * Grey is the default situation\n"
         " * Red indicates something is preventing the progress of this track\n"
         " * Green indicates the track is ready to be pulled to the next stage",
+        default="normal",
+        copy=False,
+        required=True,
     )
     kanban_state_label = fields.Char(
         compute="_compute_kanban_state_label",
         store=True,
         tracking=True,
     )
-    partner_id = fields.Many2one("res.partner", "Contact")
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Contact",
+    )
     partner_name = fields.Char(
         string="Name",
         compute="_compute_partner_name",
-        readonly=False,
         store=True,
+        readonly=False,
         tracking=10,
     )
     partner_email = fields.Char(
         string="Email",
         compute="_compute_partner_email",
-        readonly=False,
         store=True,
+        readonly=False,
         tracking=20,
     )
     phone_ids = fields.Many2many(
-        "phone.number",
-        "event_track_phone_number_rel",
-        "track_id",
-        "phone_number_id",
+        comodel_name="phone.number",
+        relation="event_track_phone_number_rel",
+        column1="track_id",
+        column2="phone_number_id",
         compute="_compute_phone_ids",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     partner_biography = fields.Html(
         string="Biography",
-        compute="_compute_partner_biography",
         sanitize_attributes=False,
-        readonly=False,
+        compute="_compute_partner_biography",
         store=True,
+        readonly=False,
     )
     partner_function = fields.Char(
-        "Job Position", compute="_compute_partner_function", store=True, readonly=False
+        string="Job Position",
+        compute="_compute_partner_function",
+        store=True,
+        readonly=False,
     )
     partner_company_name = fields.Char(
-        "Company Name",
+        string="Company Name",
         compute="_compute_partner_company_name",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     partner_tag_line = fields.Char(
-        "Tag Line",
-        compute="_compute_partner_tag_line",
+        string="Tag Line",
         help="Description of the partner (name, function and company name)",
+        compute="_compute_partner_tag_line",
     )
     image = fields.Image(
         string="Speaker Photo",
-        compute="_compute_partner_image",
-        readonly=False,
-        store=True,
         max_width=256,
         max_height=256,
+        compute="_compute_partner_image",
+        store=True,
+        readonly=False,
     )
     contact_email = fields.Char(
         compute="_compute_contact_email",
-        readonly=False,
         store=True,
+        readonly=False,
         tracking=20,
     )
     contact_phone_ids = fields.Many2many(
-        "phone.number",
-        "event_track_contact_phone_number_rel",
-        "track_id",
-        "phone_number_id",
+        comodel_name="phone.number",
+        relation="event_track_contact_phone_number_rel",
+        column1="track_id",
+        column2="phone_number_id",
         compute="_compute_contact_phone_ids",
+        store=True,
         readonly=False,
+    )
+    location_id = fields.Many2one(comodel_name="event.track.location")
+    date = fields.Datetime(
+        string="Track Date",
+        compute="_compute_date",
+        inverse="_inverse_date",
         store=True,
     )
-    location_id = fields.Many2one("event.track.location")
-    date = fields.Datetime(
-        "Track Date", compute="_compute_date", inverse="_inverse_date", store=True
-    )
     date_end = fields.Datetime(
-        "Track End Date",
+        string="Track End Date",
         compute="_compute_end_date",
         inverse="_inverse_date_end",
         store=True,
@@ -184,37 +214,46 @@ class EventTrack(models.Model):
     is_track_done = fields.Boolean(compute="_compute_track_time_data")
     is_one_day = fields.Boolean(compute="_compute_is_one_day")
     track_start_remaining = fields.Integer(
-        "Minutes before track starts",
-        compute="_compute_track_time_data",
+        string="Minutes before track starts",
         help="Remaining time before track starts (seconds)",
+        compute="_compute_track_time_data",
     )
     track_start_relative = fields.Integer(
-        "Minutes compare to track start",
-        compute="_compute_track_time_data",
+        string="Minutes compare to track start",
         help="Relative time compared to track start (seconds)",
+        compute="_compute_track_time_data",
     )
-    website_image = fields.Image(max_width=1024, max_height=1024)
+    website_image = fields.Image(
+        max_width=1024,
+        max_height=1024,
+    )
     website_image_url = fields.Char(
         string="Image URL",
         compute="_compute_website_image_url",
         compute_sudo=True,
         store=False,
     )
-    header_visible = fields.Boolean(related="event_id.header_visible", readonly=False)
-    footer_visible = fields.Boolean(related="event_id.footer_visible", readonly=False)
+    header_visible = fields.Boolean(
+        related="event_id.header_visible",
+        readonly=False,
+    )
+    footer_visible = fields.Boolean(
+        related="event_id.footer_visible",
+        readonly=False,
+    )
     event_track_visitor_ids = fields.One2many(
-        "event.track.visitor",
-        "track_id",
+        comodel_name="event.track.visitor",
+        inverse_name="track_id",
         string="Track Visitors",
         groups="event.group_event_user",
     )
     is_reminder_on = fields.Boolean(compute="_compute_is_reminder_on")
     wishlist_visitor_ids = fields.Many2many(
-        "website.visitor",
+        comodel_name="website.visitor",
         string="Visitor Wishlist",
         compute="_compute_wishlist_visitor_ids",
-        compute_sudo=True,
         search="_search_wishlist_visitor_ids",
+        compute_sudo=True,
         groups="event.group_event_user",
     )
     wishlist_visitor_count = fields.Integer(
@@ -228,19 +267,21 @@ class EventTrack(models.Model):
         help="""If set, the talk will be set as favorite for each attendee registered to the event.""",
     )
     website_cta = fields.Boolean(
-        "Magic Button",
+        string="Magic Button",
         help="Display a Call to Action button to your Attendees while they watch your Track.",
     )
-    website_cta_title = fields.Char("Button Title")
-    website_cta_url = fields.Char("Button Target URL")
-    website_cta_delay = fields.Integer("Show Button")
+    website_cta_title = fields.Char(string="Button Title")
+    website_cta_url = fields.Char(string="Button Target URL")
+    website_cta_delay = fields.Integer(string="Show Button")
     is_website_cta_live = fields.Boolean(
-        "Is CTA Live", compute="_compute_cta_time_data", help="CTA button is available"
+        string="Is CTA Live",
+        help="CTA button is available",
+        compute="_compute_cta_time_data",
     )
     website_cta_start_remaining = fields.Integer(
-        "Minutes before CTA starts",
-        compute="_compute_cta_time_data",
+        string="Minutes before CTA starts",
         help="Remaining time before CTA starts (seconds)",
+        compute="_compute_cta_time_data",
     )
 
     @api.depends("name")

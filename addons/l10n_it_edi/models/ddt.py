@@ -6,12 +6,21 @@ class L10n_ItDdt(models.Model):
     _description = "Transport Document"
 
     invoice_id = fields.One2many(
-        "account.move", "l10n_it_ddt_id", string="Invoice Reference"
+        comodel_name="account.move",
+        inverse_name="l10n_it_ddt_id",
+        string="Invoice Reference",
     )
     name = fields.Char(
-        string="Numero DDT", size=20, help="Transport document number", required=True
+        string="Numero DDT",
+        help="Transport document number",
+        size=20,
+        required=True,
     )
-    date = fields.Date(string="Data DDT", help="Transport document date", required=True)
+    date = fields.Date(
+        string="Data DDT",
+        help="Transport document date",
+        required=True,
+    )
 
     @api.depends("date")
     def _compute_display_name(self):

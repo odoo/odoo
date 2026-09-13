@@ -25,27 +25,27 @@ class MixinCredentialStore(models.AbstractModel):
 
     credential_value_encrypted = fields.Binary(
         string="Credential Value (Encrypted)",
-        copy=False,
-        attachment=False,
-        groups="base.group_system",
         help="Encrypted storage for credential value (API key, token, secret, etc.)",
+        attachment=False,
+        copy=False,
+        groups="base.group_system",
     )
 
     is_provisioned = fields.Boolean(
-        compute="_compute_is_provisioned",
-        store=True,
         help="Whether the vault holds a secret for this record. A credential "
         "created by a data or demo file, or one whose secret has not been "
         "entered yet, exists unprovisioned until a secret is stored.",
+        compute="_compute_is_provisioned",
+        store=True,
     )
 
     cached_plaintext = fields.Char(
+        help="Internal: single-decrypt memo for credential_value_encrypted. "
+        "Do NOT depend on this field outside this model.",
         compute="_compute_cached_plaintext",
         store=False,
         copy=False,
         groups="base.group_system",
-        help="Internal: single-decrypt memo for credential_value_encrypted. "
-        "Do NOT depend on this field outside this model.",
     )
 
     storage_method = fields.Selection(
@@ -54,13 +54,13 @@ class MixinCredentialStore(models.AbstractModel):
             ("simple", "Simple Value"),
             ("json", "JSON Data"),
         ],
-        default="none",
-        store=True,
-        readonly=True,
-        copy=False,
         help="Storage mode for credential_value_encrypted. Write-once: set "
         "by the first payload write and sealed thereafter. Mixing simple "
         "and JSON storage on the same record is not permitted.",
+        default="none",
+        store=True,
+        copy=False,
+        readonly=True,
     )
 
     @api.depends("credential_value_encrypted")
@@ -71,32 +71,32 @@ class MixinCredentialStore(models.AbstractModel):
             )
 
     credential_value = fields.Char(
-        compute="_compute_credential_value",
-        store=False,
-        inverse="_inverse_credential_value",
-        readonly=False,
-        copy=False,
-        groups="base.group_system",
         help="Credential value (encrypted at rest) - API key, bearer token, etc.",
+        compute="_compute_credential_value",
+        inverse="_inverse_credential_value",
+        store=False,
+        copy=False,
+        readonly=False,
+        groups="base.group_system",
     )
 
     credential_data = fields.Text(
         string="Credential Data (JSON)",
-        compute="_compute_credential_data",
-        store=False,
-        inverse="_inverse_credential_data",
-        readonly=False,
-        copy=False,
-        groups="base.group_system",
         help="JSON storage for complex multi-value credentials (e.g., OAuth2). "
         "Example: {'access_token': '...', 'refresh_token': '...'}",
+        compute="_compute_credential_data",
+        inverse="_inverse_credential_data",
+        store=False,
+        copy=False,
+        readonly=False,
+        groups="base.group_system",
     )
 
     credential_hash = fields.Char(
+        help="Hash of encrypted credentials for cache key generation and integrity",
         compute="_compute_credential_hash",
         store=True,
         readonly=True,
-        help="Hash of encrypted credentials for cache key generation and integrity",
     )
 
     _INTERNAL_STORAGE_UPDATE_KEY = "_credential_internal_storage_update"

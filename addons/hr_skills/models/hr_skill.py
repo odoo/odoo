@@ -6,10 +6,16 @@ class HrSkill(models.Model):
     _description = "Skill"
     _order = "sequence, name, id"
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
     sequence = fields.Integer(default=10)
     skill_type_id = fields.Many2one(
-        "hr.skill.type", required=True, index=True, ondelete="cascade"
+        comodel_name="hr.skill.type",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     color = fields.Integer(related="skill_type_id.color")
 

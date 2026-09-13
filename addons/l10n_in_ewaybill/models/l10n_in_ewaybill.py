@@ -20,38 +20,56 @@ class L10nInEwaybill(models.Model):
     _check_company_auto = True
 
     # Ewaybill details generated from the API
-    name = fields.Char("e-Waybill Number", copy=False, readonly=True, tracking=True)
+    name = fields.Char(
+        string="e-Waybill Number",
+        copy=False,
+        readonly=True,
+        tracking=True,
+    )
     ewaybill_date = fields.Date(
-        "e-Waybill Date", copy=False, readonly=True, tracking=True
+        string="e-Waybill Date",
+        copy=False,
+        readonly=True,
+        tracking=True,
     )
     ewaybill_expiry_date = fields.Date(
-        "e-Waybill Valid Upto", copy=False, readonly=True, tracking=True
+        string="e-Waybill Valid Upto",
+        copy=False,
+        readonly=True,
+        tracking=True,
     )
 
     state = fields.Selection(
-        string="Status",
         selection=[
             ("pending", "Pending"),
             ("generated", "Generated"),
             ("cancel", "Cancelled"),
         ],
-        required=True,
-        readonly=True,
-        copy=False,
-        tracking=True,
+        string="Status",
         default="pending",
+        copy=False,
+        readonly=True,
+        required=True,
+        tracking=True,
     )
 
     # Account Move details
-    account_move_id = fields.Many2one("account.move", copy=False, readonly=True)
+    account_move_id = fields.Many2one(
+        comodel_name="account.move",
+        copy=False,
+        readonly=True,
+    )
 
     # Document details
     document_date = fields.Datetime(compute="_compute_ewaybill_document_details")
     document_number = fields.Char(
-        "Document", compute="_compute_ewaybill_document_details"
+        string="Document",
+        compute="_compute_ewaybill_document_details",
     )
     company_id = fields.Many2one(
-        "res.company", compute="_compute_ewaybill_company", store=True
+        comodel_name="res.company",
+        compute="_compute_ewaybill_company",
+        store=True,
     )
     company_currency_id = fields.Many2one(related="company_id.currency_id")
     supply_type = fields.Selection(
@@ -59,36 +77,36 @@ class L10nInEwaybill(models.Model):
         compute="_compute_supply_type",
     )
     partner_bill_from_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Bill From",
         compute="_compute_document_partners_details",
-        check_company=True,
         store=True,
         readonly=False,
+        check_company=True,
     )
     partner_bill_to_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Bill To",
         compute="_compute_document_partners_details",
-        check_company=True,
         store=True,
         readonly=False,
+        check_company=True,
     )
     partner_ship_from_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Dispatch From",
         compute="_compute_document_partners_details",
-        check_company=True,
         store=True,
         readonly=False,
+        check_company=True,
     )
     partner_ship_to_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         string="Ship To",
         compute="_compute_document_partners_details",
-        check_company=True,
         store=True,
         readonly=False,
+        check_company=True,
     )
 
     # Fields to determine which partner details are editable
@@ -98,52 +116,71 @@ class L10nInEwaybill(models.Model):
     is_ship_from_editable = fields.Boolean(compute="_compute_is_editable")
 
     # E-waybill Document Type
-    type_id = fields.Many2one("l10n.in.ewaybill.type", "Document Type", tracking=True)
+    type_id = fields.Many2one(
+        comodel_name="l10n.in.ewaybill.type",
+        string="Document Type",
+        tracking=True,
+    )
     sub_type_code = fields.Char(related="type_id.sub_type_code")
 
     # Transportation details
     distance = fields.Integer(tracking=True)
     mode = fields.Selection(
-        [
+        selection=[
             ("1", "By Road"),
             ("2", "Rail"),
             ("3", "Air"),
             ("4", "Ship or Ship Cum Road/Rail"),
         ],
         string="Transportation Mode",
+        default="1",
         copy=False,
         tracking=True,
-        default="1",
     )
 
     # Vehicle Number and Type required when transportation mode is By Road.
-    vehicle_no = fields.Char("Vehicle Number", copy=False, tracking=True)
+    vehicle_no = fields.Char(
+        string="Vehicle Number",
+        copy=False,
+        tracking=True,
+    )
     vehicle_type = fields.Selection(
-        [("R", "Regular"), ("O", "Over Dimensional Cargo")],
+        selection=[("R", "Regular"), ("O", "Over Dimensional Cargo")],
         compute="_compute_vehicle_type",
         store=True,
         copy=False,
-        tracking=True,
         readonly=False,
+        tracking=True,
     )
 
     # Document number and date required in case of transportation mode is Rail, Air or Ship.
     transportation_doc_no = fields.Char(
-        string="Transporter Doc No", copy=False, tracking=True
+        string="Transporter Doc No",
+        copy=False,
+        tracking=True,
     )
     transportation_doc_date = fields.Date(
-        string="Transporter Doc Date", copy=False, tracking=True
+        string="Transporter Doc Date",
+        copy=False,
+        tracking=True,
     )
 
-    transporter_id = fields.Many2one("res.partner", copy=False, tracking=True)
+    transporter_id = fields.Many2one(
+        comodel_name="res.partner",
+        copy=False,
+        tracking=True,
+    )
 
     error_message = fields.Html(readonly=True)
     blocking_level = fields.Selection(
-        [("warning", "Warning"), ("error", "Error")],
+        selection=[("warning", "Warning"), ("error", "Error")],
         readonly=True,
     )
 
-    content = fields.Binary(compute="_compute_content", compute_sudo=True)
+    content = fields.Binary(
+        compute="_compute_content",
+        compute_sudo=True,
+    )
     cancel_reason = fields.Selection(
         selection=[
             ("1", "Duplicate"),
@@ -155,17 +192,24 @@ class L10nInEwaybill(models.Model):
         copy=False,
         tracking=True,
     )
-    cancel_remarks = fields.Char("Cancel remarks", copy=False, tracking=True)
+    cancel_remarks = fields.Char(
+        string="Cancel remarks",
+        copy=False,
+        tracking=True,
+    )
 
     # Attachment
     attachment_id = fields.Many2one(
-        "ir.attachment",
+        comodel_name="ir.attachment",
         compute=lambda self: self._compute_linked_attachment_id(
             "attachment_id", "attachment_file"
         ),
         depends=["attachment_file"],
     )
-    attachment_file = fields.Binary(copy=False, attachment=True)
+    attachment_file = fields.Binary(
+        attachment=True,
+        copy=False,
+    )
 
     # ------------Generic compute methods to be overriden in l10n_in_ewaybill_stock module---------------
 

@@ -5,11 +5,11 @@ class MrpProduction(models.Model):
     _inherit = "mrp.production"
 
     project_id = fields.Many2one(
-        "project.project",
+        comodel_name="project.project",
         compute="_compute_project_id",
-        domain=[("is_template", "=", False)],
-        readonly=False,
         store=True,
+        readonly=False,
+        domain=[("is_template", "=", False)],
     )
 
     @api.depends("bom_id")

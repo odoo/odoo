@@ -52,7 +52,8 @@ class IrModuleModule(models.Model):
     _inherit = "ir.module.module"
 
     account_templates = fields.Binary(
-        compute="_compute_account_templates", exportable=False
+        compute="_compute_account_templates",
+        exportable=False,
     )
 
     @api.depends("state", "category_id")

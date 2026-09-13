@@ -98,20 +98,20 @@ class AccountPayment(models.Model):
     journal_id = fields.Many2one(
         comodel_name="account.journal",
         compute="_compute_journal_id",
-        store=True,
-        readonly=False,
         precompute=True,
-        check_company=True,
+        store=True,
         index=False,
+        readonly=False,
         required=True,
+        check_company=True,
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
         compute="_compute_company_id",
-        store=True,
-        readonly=False,
         precompute=True,
+        store=True,
         index=False,
+        readonly=False,
         required=True,
     )
     state = fields.Selection(
@@ -122,63 +122,58 @@ class AccountPayment(models.Model):
             ("canceled", "Canceled"),
             ("rejected", "Rejected"),
         ],
-        required=True,
-        default="draft",
         compute="_compute_state",
+        default="draft",
         store=True,
-        readonly=False,
-        tracking=True,
         copy=False,
+        readonly=False,
+        required=True,
+        tracking=True,
     )
     is_invoice_reconciled = fields.Boolean(
         string="Is Reconciled",
-        store=True,
         compute="_compute_reconciliation_status",
+        store=True,
     )
     is_bank_matched = fields.Boolean(
         string="Is Matched With a Bank Statement",
-        store=True,
         compute="_compute_reconciliation_status",
+        store=True,
     )
     is_sent = fields.Boolean(
-        readonly=True,
         copy=False,
+        readonly=True,
     )
     available_partner_bank_ids = fields.Many2many(
         comodel_name="res.partner.bank",
         compute="_compute_available_partner_bank_ids",
     )
     partner_bank_id = fields.Many2one(
-        "res.partner.bank",
+        comodel_name="res.partner.bank",
         string="Recipient Bank Account",
-        readonly=False,
-        store=True,
-        tracking=True,
         compute="_compute_partner_bank_id",
+        store=True,
+        readonly=False,
         domain="[('id', 'in', available_partner_bank_ids)]",
-        check_company=True,
         ondelete="restrict",
+        check_company=True,
+        tracking=True,
     )
     qr_code = fields.Html(
         string="QR Code URL",
         compute="_compute_qr_code",
     )
     paired_internal_transfer_payment_id = fields.Many2one(
-        "account.payment",
-        index="btree_not_null",
-        copy=False,
+        comodel_name="account.payment",
         help="When an internal transfer is posted, a paired payment is created. "
         "They are cross referenced through this field",
+        index="btree_not_null",
+        copy=False,
     )
 
     payment_channel_id = fields.Many2one(
-        "account.payment.channel",
+        comodel_name="account.payment.channel",
         string="Payment Method",
-        readonly=False,
-        store=True,
-        copy=False,
-        compute="_compute_payment_channel_id",
-        domain="[('id', 'in', available_payment_channel_ids)]",
         help="Manual: Pay or Get paid by any method outside of Odoo.\n"
         "Payment Providers: Each payment provider has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
         "Check: Pay bills by check and print it from Odoo.\n"
@@ -186,16 +181,21 @@ class AccountPayment(models.Model):
         "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_iso20022 is necessary.\n"
         "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_iso20022 is necessary.\n"
         "U.S. ISO20022: Pay in the US by submitting an ISO20022 file to your bank. Module account_iso20022 is necessary.\n",
+        compute="_compute_payment_channel_id",
+        store=True,
+        copy=False,
+        readonly=False,
+        domain="[('id', 'in', available_payment_channel_ids)]",
     )
     available_payment_channel_ids = fields.Many2many(
-        "account.payment.channel",
+        comodel_name="account.payment.channel",
         compute="_compute_available_payment_channel_ids",
     )
     payment_method_id = fields.Many2one(
         related="payment_channel_id.payment_method_id",
         string="Method",
-        tracking=True,
         store=True,
+        tracking=True,
     )
     available_journal_ids = fields.Many2many(
         comodel_name="account.journal",
@@ -204,7 +204,7 @@ class AccountPayment(models.Model):
 
     amount = fields.Monetary(currency_field="currency_id")
     payment_type = fields.Selection(
-        [
+        selection=[
             ("outbound", "Send"),
             ("inbound", "Receive"),
         ],
@@ -213,129 +213,121 @@ class AccountPayment(models.Model):
         tracking=True,
     )
     partner_type = fields.Selection(
-        [
+        selection=[
             ("customer", "Customer"),
             ("supplier", "Vendor"),
         ],
         default="customer",
-        tracking=True,
         required=True,
+        tracking=True,
     )
     memo = fields.Char(
-        tracking=True,
         inverse="_inverse_memo",
+        tracking=True,
     )
     payment_reference = fields.Char(
+        help="Reference of the document used to issue this payment. Eg. check number, file name, etc.",
         copy=False,
         tracking=True,
-        help="Reference of the document used to issue this payment. Eg. check number, file name, etc.",
     )
     currency_id = fields.Many2one(
         comodel_name="res.currency",
+        help="The payment's currency.",
         compute="_compute_currency_id",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
-        help="The payment's currency.",
     )
     company_currency_id = fields.Many2one(
-        string="Company Currency",
         related="company_id.currency_id",
+        string="Company Currency",
     )
     partner_id = fields.Many2one(
         comodel_name="res.partner",
         string="Customer/Vendor",
-        ondelete="restrict",
         domain="['|', ('parent_id','=', False), ('is_company','=', True)]",
-        tracking=True,
+        ondelete="restrict",
         check_company=True,
+        tracking=True,
     )
     outstanding_account_id = fields.Many2one(
         comodel_name="account.account",
+        compute="_compute_outstanding_account_id",
         store=True,
         index="btree_not_null",
-        compute="_compute_outstanding_account_id",
         check_company=True,
     )
     destination_account_id = fields.Many2one(
         comodel_name="account.account",
+        compute="_compute_destination_account_id",
         store=True,
         readonly=False,
-        compute="_compute_destination_account_id",
         domain="[('account_type', 'in', ('asset_receivable', 'liability_payable'))]",
         check_company=True,
     )
 
     invoice_ids = fields.Many2many(
-        string="Invoices",
         comodel_name="account.move",
         relation="account_move__account_payment",
         column1="payment_id",
         column2="invoice_id",
+        string="Invoices",
         copy=False,
     )
     reconciled_invoice_ids = fields.Many2many(
-        "account.move",
+        comodel_name="account.move",
         string="Reconciled Invoices",
+        help="Invoices whose journal items have been reconciled with these payments.",
         compute="_compute_stat_buttons_from_reconciliation",
         search="_search_reconciled_invoice_ids",
-        help="Invoices whose journal items have been reconciled with these payments.",
     )
     reconciled_invoices_count = fields.Count(
-        "reconciled_invoice_ids",
+        count_of="reconciled_invoice_ids",
         string="# Reconciled Invoices",
     )
 
     reconciled_invoices_type = fields.Selection(
-        [("credit_note", "Credit Note"), ("invoice", "Invoice")],
+        selection=[("credit_note", "Credit Note"), ("invoice", "Invoice")],
         compute="_compute_stat_buttons_from_reconciliation",
     )
     reconciled_bill_ids = fields.Many2many(
-        "account.move",
+        comodel_name="account.move",
         string="Reconciled Bills",
+        help="Bills whose journal items have been reconciled with these payments.",
         compute="_compute_stat_buttons_from_reconciliation",
         search="_search_reconciled_bill_ids",
-        help="Bills whose journal items have been reconciled with these payments.",
     )
     reconciled_bills_count = fields.Count(
-        "reconciled_bill_ids",
+        count_of="reconciled_bill_ids",
         string="# Reconciled Bills",
     )
     reconciled_statement_line_ids = fields.Many2many(
         comodel_name="account.bank.statement.line",
         string="Reconciled Statement Lines",
-        compute="_compute_stat_buttons_from_reconciliation",
         help="Statements lines matched to this payment",
+        compute="_compute_stat_buttons_from_reconciliation",
     )
     reconciled_statement_lines_count = fields.Count(
-        "reconciled_statement_line_ids",
+        count_of="reconciled_statement_line_ids",
         string="# Reconciled Statement Lines",
     )
 
-    payment_method_code = fields.Char(
-        related="payment_channel_id.code",
-    )
-    payment_receipt_title = fields.Char(
-        compute="_compute_payment_receipt_title",
-    )
+    payment_method_code = fields.Char(related="payment_channel_id.code")
+    payment_receipt_title = fields.Char(compute="_compute_payment_receipt_title")
 
-    need_cancel_request = fields.Boolean(
-        related="move_id.need_cancel_request",
-    )
+    need_cancel_request = fields.Boolean(related="move_id.need_cancel_request")
     show_partner_bank_account = fields.Boolean(
         compute="_compute_show_require_partner_bank"
     )
     require_partner_bank_account = fields.Boolean(
         compute="_compute_show_require_partner_bank"
     )
-    country_code = fields.Char(
-        related="company_id.account_fiscal_country_id.code",
-    )
+    country_code = fields.Char(related="company_id.account_fiscal_country_id.code")
     amount_signed = fields.Monetary(
+        help="Negative value of amount field if payment_type is outbound",
         currency_field="currency_id",
         compute="_compute_amount_signed",
         tracking=True,
-        help="Negative value of amount field if payment_type is outbound",
     )
     amount_company_currency_signed = fields.Monetary(
         currency_field="company_currency_id",
@@ -347,8 +339,8 @@ class AccountPayment(models.Model):
         compute="_compute_duplicate_payment_ids",
     )
     attachment_ids = fields.One2many(
-        "ir.attachment",
-        "res_id",
+        comodel_name="ir.attachment",
+        inverse_name="res_id",
         string="Attachments",
     )
 
@@ -1633,4 +1625,8 @@ class AccountPayment(models.Model):
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    payment_ids = fields.One2many("account.payment", "move_id", string="Payments")
+    payment_ids = fields.One2many(
+        comodel_name="account.payment",
+        inverse_name="move_id",
+        string="Payments",
+    )

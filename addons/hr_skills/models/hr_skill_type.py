@@ -10,19 +10,30 @@ class HrSkillType(models.Model):
 
     active = fields.Boolean(default=True)
     sequence = fields.Integer()
-    name = fields.Char(required=True, translate=True)
-    skill_ids = fields.One2many("hr.skill", "skill_type_id", string="Skills")
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
+    skill_ids = fields.One2many(
+        comodel_name="hr.skill",
+        inverse_name="skill_type_id",
+        string="Skills",
+    )
     skill_level_ids = fields.One2many(
-        "hr.skill.level", "skill_type_id", string="Levels", copy=True
+        comodel_name="hr.skill.level",
+        inverse_name="skill_type_id",
+        string="Levels",
+        copy=True,
     )
     color = fields.Integer(default=lambda self: self._default_color())
     levels_count = fields.Integer(
+        help="Number of levels linked to this skill type",
         compute="_compute_levels_count",
         store=True,
-        help="Number of levels linked to this skill type",
     )
     is_certification = fields.Boolean(
-        "Certification", help="if checked the skill type become a certification type"
+        string="Certification",
+        help="if checked the skill type become a certification type",
     )
 
     @api.model

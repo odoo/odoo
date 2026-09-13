@@ -6,7 +6,10 @@ class L10nHrEdiAddendum(models.Model):
     _description = "EDI and fiscalization information for Croatian electronic invoicing"
 
     move_id = fields.Many2one(
-        "account.move", required=True, ondelete="cascade", index=True
+        comodel_name="account.move",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
 
     # EDI and fiscalization-specific fields
@@ -27,9 +30,7 @@ class L10nHrEdiAddendum(models.Model):
         string="Document rejection reason",
         default="None",
     )
-    fiscalization_number = fields.Char(
-        string="Invoice fiscalization number",
-    )
+    fiscalization_number = fields.Char(string="Invoice fiscalization number")
     fiscalization_status = fields.Selection(
         selection=[
             ("0", "Successful"),
@@ -42,9 +43,7 @@ class L10nHrEdiAddendum(models.Model):
         string="Error reported for fiscalization",
         default="None",
     )
-    fiscalization_request = fields.Char(
-        string="Fiscalization request ID",
-    )
+    fiscalization_request = fields.Char(string="Fiscalization request ID")
     fiscalization_channel_type = fields.Selection(
         selection=[
             ("0", "Delivered via EDI"),

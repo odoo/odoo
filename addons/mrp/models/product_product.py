@@ -15,14 +15,14 @@ class ProductProduct(models.Model):
     _mrp_bom_field = "variant_bom_ids"
 
     variant_bom_ids = fields.One2many(
-        "mrp.bom",
-        "product_id",
-        "BOM Product Variants",
+        comodel_name="mrp.bom",
+        inverse_name="product_id",
+        string="BOM Product Variants",
     )
     bom_line_ids = fields.One2many(
-        "mrp.bom.line",
-        "product_id",
-        "BoM Components",
+        comodel_name="mrp.bom.line",
+        inverse_name="product_id",
+        string="BoM Components",
     )
 
     product_catalog_product_is_in_bom = fields.Boolean(

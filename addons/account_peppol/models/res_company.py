@@ -58,21 +58,22 @@ class ResCompany(models.Model):
 
     account_peppol_contact_email = fields.Char(
         string="Primary contact email",
+        help="Primary contact email for Peppol connection related communications and notifications.\n"
+        "In particular, this email is used by Odoo to reconnect your Peppol account in case of database change.",
         compute="_compute_account_peppol_contact_email",
         store=True,
         readonly=False,
-        help="Primary contact email for Peppol connection related communications and notifications.\n"
-        "In particular, this email is used by Odoo to reconnect your Peppol account in case of database change.",
     )
     account_peppol_migration_key = fields.Char(
-        string="Migration Key", groups="base.group_system"
+        string="Migration Key",
+        groups="base.group_system",
     )
     account_peppol_phone_number = fields.Char(
         string="Mobile number",
+        help="This number is used for identification purposes only.",
         compute="_compute_account_peppol_phone_number",
         store=True,
         readonly=False,
-        help="This number is used for identification purposes only.",
     )
     account_peppol_proxy_state = fields.Selection(
         selection=[
@@ -83,27 +84,34 @@ class ResCompany(models.Model):
             ("rejected", "Rejected"),
         ],
         string="PEPPOL status",
-        required=True,
         default="not_registered",
+        required=True,
     )
     account_peppol_edi_user = fields.Many2one(
         comodel_name="account_edi_proxy_client.user",
         compute="_compute_account_peppol_edi_user",
     )
-    peppol_eas = fields.Selection(related="partner_id.peppol_eas", readonly=False)
-    peppol_endpoint = fields.Char(related="partner_id.peppol_endpoint", readonly=False)
+    peppol_eas = fields.Selection(
+        related="partner_id.peppol_eas",
+        readonly=False,
+    )
+    peppol_endpoint = fields.Char(
+        related="partner_id.peppol_endpoint",
+        readonly=False,
+    )
     peppol_purchase_journal_id = fields.Many2one(
         comodel_name="account.journal",
-        domain=[("type", "=", "purchase")],
         compute="_compute_peppol_purchase_journal_id",
+        inverse="_inverse_peppol_purchase_journal_id",
         store=True,
         readonly=False,
-        inverse="_inverse_peppol_purchase_journal_id",
+        domain=[("type", "=", "purchase")],
     )
     peppol_external_provider = fields.Char(tracking=True)
     peppol_can_send = fields.Boolean(compute="_compute_peppol_can_send")
     peppol_parent_company_id = fields.Many2one(
-        comodel_name="res.company", compute="_compute_peppol_parent_company_id"
+        comodel_name="res.company",
+        compute="_compute_peppol_parent_company_id",
     )
     # IAP-driven metadata with additive keys
     peppol_metadata = fields.Json()
@@ -119,11 +127,11 @@ class ResCompany(models.Model):
         comodel_name="account.journal",
         string="Self-Billing reception journal",
         help="Any self-billed invoices / credit notes received via Peppol will be created in draft in this journal. Defaults to the first sale journal.",
-        domain=[("type", "=", "sale")],
         compute="_compute_peppol_self_billing_reception_journal_id",
+        inverse="_inverse_peppol_self_billing_reception_journal_id",
         store=True,
         readonly=False,
-        inverse="_inverse_peppol_self_billing_reception_journal_id",
+        domain=[("type", "=", "sale")],
     )
 
     # -------------------------------------------------------------------------

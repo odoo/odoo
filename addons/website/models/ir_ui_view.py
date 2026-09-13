@@ -16,21 +16,30 @@ class IrUiView(models.Model):
 
     _inherit = ["ir.ui.view", "mixin.website.seo.metadata"]
 
-    website_id = fields.Many2one("website", ondelete="cascade")
-    page_ids = fields.One2many("website.page", "view_id")
-    controller_page_ids = fields.One2many("website.controller.page", "view_id")
+    website_id = fields.Many2one(
+        comodel_name="website",
+        ondelete="cascade",
+    )
+    page_ids = fields.One2many(
+        comodel_name="website.page",
+        inverse_name="view_id",
+    )
+    controller_page_ids = fields.One2many(
+        comodel_name="website.controller.page",
+        inverse_name="view_id",
+    )
     first_page_id = fields.Many2one(
-        "website.page",
+        comodel_name="website.page",
         string="Website Page",
         help="First page linked to this view",
         compute="_compute_first_page_id",
     )
     track = fields.Boolean(
-        default=False,
         help="Allow to specify for one page of the website to be trackable or not",
+        default=False,
     )
     visibility = fields.Selection(
-        [
+        selection=[
             ("", "Public"),
             ("connected", "Signed In"),
             ("restricted_group", "Restricted Group"),
@@ -38,7 +47,10 @@ class IrUiView(models.Model):
         ],
         default="",
     )
-    visibility_password = fields.Char(groups="base.group_system", copy=False)
+    visibility_password = fields.Char(
+        copy=False,
+        groups="base.group_system",
+    )
     visibility_password_display = fields.Char(
         compute="_compute_visibility_password_display",
         inverse="_inverse_visibility_password_display",

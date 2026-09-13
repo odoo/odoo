@@ -8,16 +8,32 @@ class Im_LivechatReportChannel(models.Model):
     _order = "start_date, livechat_channel_id, channel_id"
     _auto = False
 
-    uuid = fields.Char("UUID", readonly=True)
-    channel_id = fields.Many2one("discuss.channel", "Conversation", readonly=True)
+    uuid = fields.Char(
+        string="UUID",
+        readonly=True,
+    )
+    channel_id = fields.Many2one(
+        comodel_name="discuss.channel",
+        string="Conversation",
+        readonly=True,
+    )
     channel_name = fields.Char(readonly=True)
     livechat_channel_id = fields.Many2one(
-        "im_livechat.channel", "Channel", readonly=True
+        comodel_name="im_livechat.channel",
+        string="Channel",
+        readonly=True,
     )
-    start_date = fields.Datetime("Start Date of session", readonly=True)
-    start_hour = fields.Char("Start Hour of session", readonly=True)
+    start_date = fields.Datetime(
+        string="Start Date of session",
+        readonly=True,
+    )
+    start_hour = fields.Char(
+        string="Start Hour of session",
+        readonly=True,
+    )
     start_date_minutes = fields.Char(
-        "Start Date of session, truncated to minutes", readonly=True
+        string="Start Date of session, truncated to minutes",
+        readonly=True,
     )
     day_number = fields.Selection(
         selection=[
@@ -33,52 +49,89 @@ class Im_LivechatReportChannel(models.Model):
         readonly=True,
     )
     time_to_answer = fields.Float(
-        "Response Time",
+        string="Response Time",
+        help="Average time in hours to give the first answer to the visitor",
         digits=(16, 6),
         readonly=True,
         aggregator="avg",
-        help="Average time in hours to give the first answer to the visitor",
     )
-    start_date_hour = fields.Char("Hour of start Date of session", readonly=True)
+    start_date_hour = fields.Char(
+        string="Hour of start Date of session",
+        readonly=True,
+    )
     duration = fields.Float(
-        "Duration (min)",
+        string="Duration (min)",
+        help="Duration of the conversation (in minutes)",
         digits=(16, 2),
         readonly=True,
         aggregator="avg",
-        help="Duration of the conversation (in minutes)",
     )
     nbr_message = fields.Integer(
-        "Messages per Session",
+        string="Messages per Session",
+        help="Number of message in the conversation",
         readonly=True,
         aggregator="avg",
-        help="Number of message in the conversation",
     )
-    country_id = fields.Many2one("res.country", "Country of the visitor", readonly=True)
+    country_id = fields.Many2one(
+        comodel_name="res.country",
+        string="Country of the visitor",
+        readonly=True,
+    )
     lang_id = fields.Many2one(
-        "res.lang",
+        comodel_name="res.lang",
         related="channel_id.livechat_lang_id",
         string="Language",
         readonly=True,
     )
-    rating = fields.Integer(aggregator="avg", readonly=True)
-    rating_text = fields.Char("Satisfaction Rate", readonly=True)
-    partner_id = fields.Many2one("res.partner", "Agent", readonly=True)
-    handled_by_bot = fields.Integer("Handled by Bot", readonly=True, aggregator="sum")
+    rating = fields.Integer(
+        readonly=True,
+        aggregator="avg",
+    )
+    rating_text = fields.Char(
+        string="Satisfaction Rate",
+        readonly=True,
+    )
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Agent",
+        readonly=True,
+    )
+    handled_by_bot = fields.Integer(
+        string="Handled by Bot",
+        readonly=True,
+        aggregator="sum",
+    )
     handled_by_agent = fields.Integer(
-        "Handled by Agent", readonly=True, aggregator="sum"
+        string="Handled by Agent",
+        readonly=True,
+        aggregator="sum",
     )
     visitor_partner_id = fields.Many2one(
-        "res.partner", string="Customer", readonly=True
+        comodel_name="res.partner",
+        string="Customer",
+        readonly=True,
     )
     call_duration_hour = fields.Float(
-        "Call Duration", digits=(16, 2), readonly=True, aggregator="avg"
+        string="Call Duration",
+        digits=(16, 2),
+        readonly=True,
+        aggregator="avg",
     )
-    has_call = fields.Float("Whether the session had a call", readonly=True)
+    has_call = fields.Float(
+        string="Whether the session had a call",
+        readonly=True,
+    )
     number_of_calls = fields.Float(
-        "# of Sessions with calls", readonly=True, related="has_call", aggregator="sum"
+        related="has_call",
+        string="# of Sessions with calls",
+        readonly=True,
+        aggregator="sum",
     )
     percentage_of_calls = fields.Float(
-        "Session with Calls (%)", readonly=True, related="has_call", aggregator="avg"
+        related="has_call",
+        string="Session with Calls (%)",
+        readonly=True,
+        aggregator="avg",
     )
     session_outcome = fields.Selection(
         selection=[
@@ -89,31 +142,42 @@ class Im_LivechatReportChannel(models.Model):
         ],
         readonly=True,
     )
-    chatbot_script_id = fields.Many2one("chatbot.script", "Chatbot", readonly=True)
-    chatbot_answers_path = fields.Char("Chatbot Answers", readonly=True)
-    chatbot_answers_path_str = fields.Char("Chatbot Answers (String)", readonly=True)
+    chatbot_script_id = fields.Many2one(
+        comodel_name="chatbot.script",
+        string="Chatbot",
+        readonly=True,
+    )
+    chatbot_answers_path = fields.Char(
+        string="Chatbot Answers",
+        readonly=True,
+    )
+    chatbot_answers_path_str = fields.Char(
+        string="Chatbot Answers (String)",
+        readonly=True,
+    )
     session_expertises = fields.Char(
-        "Expertises used in this session (String)", readonly=True
+        string="Expertises used in this session (String)",
+        readonly=True,
     )
     session_expertise_ids = fields.Many2many(
-        "im_livechat.expertise",
-        readonly=True,
+        comodel_name="im_livechat.expertise",
         related="channel_id.livechat_expertise_ids",
         string="Expertises used in this session",
+        readonly=True,
     )
     conversation_tag_ids = fields.Many2many(
-        "im_livechat.conversation.tag",
-        readonly=True,
+        comodel_name="im_livechat.conversation.tag",
         related="channel_id.livechat_conversation_tag_ids",
         string="Tags used in this conversation",
+        readonly=True,
     )
     agent_requesting_help_history = fields.Many2one(
-        "im_livechat.channel.member.history",
+        comodel_name="im_livechat.channel.member.history",
         related="channel_id.livechat_agent_requesting_help_history",
         readonly=True,
     )
     agent_providing_help_history = fields.Many2one(
-        "im_livechat.channel.member.history",
+        comodel_name="im_livechat.channel.member.history",
         related="channel_id.livechat_agent_providing_help_history",
         readonly=True,
     )

@@ -12,18 +12,16 @@ class MixinBand(models.AbstractModel):
     _description = "Numeric Band Mixin"
 
     min_value = fields.Float(
-        default=0.0,
         help="Lower bound of the band, inclusive.",
+        default=0.0,
     )
     max_value = fields.Float(
-        default=0.0,
         help="Upper bound of the band, exclusive -- it is the lower bound of "
         "the next band. 0 means no upper limit, which the highest band of a "
         "scale should use so nothing falls off the top.",
+        default=0.0,
     )
-    active = fields.Boolean(
-        default=True,
-    )
+    active = fields.Boolean(default=True)
 
     def _is_band(self):
         return True

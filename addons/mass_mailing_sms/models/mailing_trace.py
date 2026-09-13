@@ -12,22 +12,28 @@ class MailingTrace(models.Model):
     CODE_SIZE = 3
 
     trace_type = fields.Selection(
-        selection_add=[("sms", "SMS")], ondelete={"sms": "set default"}
+        selection_add=[("sms", "SMS")],
+        ondelete={"sms": "set default"},
     )
     sms_id = fields.Many2one(
-        "sms.sms", string="SMS", store=False, compute="_compute_sms_id"
+        comodel_name="sms.sms",
+        string="SMS",
+        compute="_compute_sms_id",
+        store=False,
     )
+    # Integer because the related sms.sms can be deleted separately from its statistics.
+    # However, the ID is needed for several action and controllers.
     sms_id_int = fields.Integer(
         string="SMS ID",
         index="btree_not_null",
-        # Integer because the related sms.sms can be deleted separately from its statistics.
-        # However, the ID is needed for several action and controllers.
     )
     sms_tracker_ids = fields.One2many(
-        "sms.tracker", "mailing_trace_id", string="SMS Trackers"
+        comodel_name="sms.tracker",
+        inverse_name="mailing_trace_id",
+        string="SMS Trackers",
     )
-    sms_number = fields.Char("Number")
-    sms_code = fields.Char("Code")
+    sms_number = fields.Char(string="Number")
+    sms_code = fields.Char(string="Code")
     failure_type = fields.Selection(
         selection_add=[
             ("sms_number_missing", "Missing Number"),

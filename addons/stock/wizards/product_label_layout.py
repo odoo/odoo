@@ -19,8 +19,8 @@ class ProductLabelLayout(models.TransientModel):
     move_quantity = fields.Selection(
         selection=[("move", "Operation Quantities"), ("custom", "Custom")],
         string="Quantity to print",
-        required=True,
         default="custom",
+        required=True,
     )
     print_format = fields.Selection(
         selection_add=[("zpl", "ZPL Labels"), ("zplxprice", "ZPL Labels with price")],
@@ -34,8 +34,8 @@ class ProductLabelLayout(models.TransientModel):
             ("jewelry", 'Jewelry (2.20" x 0.50")'),
         ],
         string="ZPL Template",
-        required=True,
         default="normal",
+        required=True,
     )
     zpl_preview = fields.Image(
         string="ZPL Preview",

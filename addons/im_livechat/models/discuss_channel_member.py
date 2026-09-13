@@ -10,25 +10,26 @@ class DiscussChannelMember(models.Model):
     _inherit = "discuss.channel.member"
 
     livechat_member_history_ids = fields.One2many(
-        "im_livechat.channel.member.history", "member_id"
+        comodel_name="im_livechat.channel.member.history",
+        inverse_name="member_id",
     )
     livechat_member_type = fields.Selection(
-        [("agent", "Agent"), ("visitor", "Visitor"), ("bot", "Chatbot")],
+        selection=[("agent", "Agent"), ("visitor", "Visitor"), ("bot", "Chatbot")],
         compute="_compute_livechat_member_type",
-        compute_sudo=True,
         inverse="_inverse_livechat_member_type",
+        compute_sudo=True,
     )
     chatbot_script_id = fields.Many2one(
-        "chatbot.script",
+        comodel_name="chatbot.script",
         compute="_compute_chatbot_script_id",
         inverse="_inverse_chatbot_script_id",
         compute_sudo=True,
     )
     agent_expertise_ids = fields.Many2many(
-        "im_livechat.expertise",
+        comodel_name="im_livechat.expertise",
         compute="_compute_agent_expertise_ids",
-        compute_sudo=True,
         inverse="_inverse_agent_expertise_ids",
+        compute_sudo=True,
     )
 
     @api.model_create_multi

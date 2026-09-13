@@ -17,13 +17,13 @@ class MixinOrderStock(models.AbstractModel):
     transfer_state = fields.Selection(
         selection=TRANSFER_STATE,
         string="Transfer Status",
-        default="no",
         compute="_compute_transfer_state",
+        default="no",
         store=True,
     )
     force_fully_delivered = fields.Boolean(
-        copy=False,
         help="Report this order as fully transferred regardless of its lines.",
+        copy=False,
     )
 
     date_effective = fields.Datetime(

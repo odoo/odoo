@@ -9,42 +9,42 @@ class PosConfigStock(models.Model):
 
     show_stock_in_pos = fields.Boolean(
         string="Show Stock Quantities",
-        default=True,
         help="Display product stock quantities on POS product cards",
+        default=True,
     )
     stock_display_location = fields.Selection(
-        [
+        selection=[
             ("top_left", "Top Left"),
             ("top_right", "Top Right"),
             ("bottom_left", "Bottom Left"),
             ("bottom_right", "Bottom Right"),
         ],
         string="Stock Display Position",
+        help="Position where stock quantity will be displayed on product cards",
         default="top_left",
         required=True,
-        help="Position where stock quantity will be displayed on product cards",
     )
     low_stock_threshold = fields.Float(
-        default=10.0,
         help="Products with stock below this threshold will be highlighted as low stock",
+        default=10.0,
     )
     stock_warehouse_id = fields.Many2one(
-        "stock.warehouse",
-        check_company=True,
+        comodel_name="stock.warehouse",
         help="Select specific warehouse for stock display. Leave empty to show total from all warehouses.",
+        check_company=True,
     )
     stock_warehouse_view_location_id = fields.Many2one(
         related="stock_warehouse_id.view_location_id",
         string="Warehouse View Location",
     )
     stock_location_ids = fields.Many2many(
-        "stock.location",
-        "pos_config_stock_location_rel",
-        "config_id",
-        "location_id",
+        comodel_name="stock.location",
+        relation="pos_config_stock_location_rel",
+        column1="config_id",
+        column2="location_id",
         string="Stock Locations",
-        domain="[('usage', '=', 'internal')]",
         help="Select specific locations to count stock from. Leave empty to use all locations from the warehouse.",
+        domain="[('usage', '=', 'internal')]",
     )
 
     @api.onchange("stock_warehouse_id")

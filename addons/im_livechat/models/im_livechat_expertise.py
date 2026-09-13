@@ -10,9 +10,12 @@ class Im_LivechatExpertise(models.Model):
     _description = "Live Chat Expertise"
     _order = "name"
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
     user_ids = fields.Many2many(
-        "res.users",
+        comodel_name="res.users",
         string="Operators",
         compute="_compute_user_ids",
         inverse="_inverse_user_ids",

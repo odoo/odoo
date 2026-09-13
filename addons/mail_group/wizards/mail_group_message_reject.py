@@ -5,15 +5,30 @@ class MailGroupMessageReject(models.TransientModel):
     _name = "mail.group.message.reject"
     _description = "Reject Group Message"
 
-    subject = fields.Char(store=True, readonly=False, compute="_compute_subject")
-    body = fields.Html("Contents", default="", sanitize_style=True)
+    subject = fields.Char(
+        compute="_compute_subject",
+        store=True,
+        readonly=False,
+    )
+    body = fields.Html(
+        string="Contents",
+        sanitize_style=True,
+        default="",
+    )
     email_from_normalized = fields.Char(
-        "Email From", related="mail_group_message_id.email_from_normalized"
+        related="mail_group_message_id.email_from_normalized",
+        string="Email From",
     )
     mail_group_message_id = fields.Many2one(
-        "mail.group.message", string="Message", required=True, readonly=True
+        comodel_name="mail.group.message",
+        string="Message",
+        readonly=True,
+        required=True,
     )
-    action = fields.Selection([("reject", "Reject"), ("ban", "Ban")], required=True)
+    action = fields.Selection(
+        selection=[("reject", "Reject"), ("ban", "Ban")],
+        required=True,
+    )
 
     send_email = fields.Boolean(
         help="Send an email to the author of the message",

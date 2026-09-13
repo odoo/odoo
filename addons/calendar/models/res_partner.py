@@ -9,18 +9,21 @@ from odoo.tools import SQL
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    meeting_count = fields.Integer("# Meetings", compute="_compute_meeting_count")
+    meeting_count = fields.Integer(
+        string="# Meetings",
+        compute="_compute_meeting_count",
+    )
     meeting_ids = fields.Many2many(
-        "calendar.event",
-        "calendar_event_res_partner_rel",
-        "res_partner_id",
-        "calendar_event_id",
+        comodel_name="calendar.event",
+        relation="calendar_event_res_partner_rel",
+        column1="res_partner_id",
+        column2="calendar_event_id",
         string="Meetings",
         copy=False,
     )
 
     calendar_last_notif_ack = fields.Datetime(
-        "Last notification marked as read from base Calendar",
+        string="Last notification marked as read from base Calendar",
         default=fields.Datetime.now,
     )
 
@@ -277,7 +280,7 @@ class ResPartner(models.Model):
         return True
 
     upcoming_appointment_ids = fields.Many2many(
-        "calendar.event",
+        comodel_name="calendar.event",
         string="Upcoming Appointments",
         compute="_compute_upcoming_appointment_ids",
     )

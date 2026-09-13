@@ -9,8 +9,8 @@ class StockPicking(models.Model):
         comodel_name="sale.order",
         string="Sales Order",
         compute="_compute_sale_id",
-        store=True,
         inverse="_inverse_sale_id",
+        store=True,
         index="btree_not_null",
     )
 

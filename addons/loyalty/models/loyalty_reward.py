@@ -53,11 +53,17 @@ class LoyaltyReward(models.Model):
 
     active = fields.Boolean(default=True)
     program_id = fields.Many2one(
-        comodel_name="loyalty.program", ondelete="cascade", required=True, index=True
+        comodel_name="loyalty.program",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     program_type = fields.Selection(related="program_id.program_type")
     # Stored for security rules
-    company_id = fields.Many2one(related="program_id.company_id", store=True)
+    company_id = fields.Many2one(
+        related="program_id.company_id",
+        store=True,
+    )
     currency_id = fields.Many2one(related="program_id.currency_id")
 
     description = fields.Char(
@@ -74,15 +80,17 @@ class LoyaltyReward(models.Model):
             ("product", "Free Product"),
             ("discount", "Discount"),
         ],
-        required=True,
         default="discount",
+        required=True,
     )
     user_has_debug = fields.Boolean(compute="_compute_user_has_debug")
 
     # Discount rewards
     discount = fields.Float(default=10)
     discount_mode = fields.Selection(
-        selection=_selection_discount_modes, required=True, default="percent"
+        selection=_selection_discount_modes,
+        default="percent",
+        required=True,
     )
     discount_applicability = fields.Selection(
         selection=[
@@ -94,57 +102,70 @@ class LoyaltyReward(models.Model):
     )
     discount_product_domain = fields.Char(default="[]")
     discount_product_ids = fields.Many2many(
-        string="Discounted Products", comodel_name="product.product"
+        comodel_name="product.product",
+        string="Discounted Products",
     )
     discount_product_category_id = fields.Many2one(
-        string="Discounted Prod. Categories", comodel_name="product.category"
+        comodel_name="product.category",
+        string="Discounted Prod. Categories",
     )
     discount_product_tag_id = fields.Many2one(
-        string="Discounted Prod. Tag", comodel_name="product.tag"
+        comodel_name="product.tag",
+        string="Discounted Prod. Tag",
     )
     all_discount_product_ids = fields.Many2many(
-        comodel_name="product.product", compute="_compute_all_discount_product_ids"
+        comodel_name="product.product",
+        compute="_compute_all_discount_product_ids",
     )
     reward_product_domain = fields.Char(
-        compute="_compute_reward_product_domain", store=False
+        compute="_compute_reward_product_domain",
+        store=False,
     )
     discount_max_amount = fields.Monetary(
         string="Max Discount",
         help="This is the max amount this reward may discount, leave to 0 for no limit.",
     )
     discount_line_product_id = fields.Many2one(
+        comodel_name="product.product",
         help="Product used in the sales order to apply the discount. Each reward has its own"
         " product for reporting purpose",
-        comodel_name="product.product",
-        ondelete="restrict",
         copy=False,
+        ondelete="restrict",
     )
     is_global_discount = fields.Boolean(compute="_compute_is_global_discount")
 
     # Product rewards
     reward_product_id = fields.Many2one(
-        string="Product",
         comodel_name="product.product",
+        string="Product",
         domain=[("type", "!=", "combo")],
     )
     reward_product_tag_id = fields.Many2one(
-        string="Product Tag", comodel_name="product.tag"
+        comodel_name="product.tag",
+        string="Product Tag",
     )
     multi_product = fields.Boolean(compute="_compute_reward_products")
     reward_product_ids = fields.Many2many(
+        comodel_name="product.product",
         string="Reward Products",
         help="These are the products that can be claimed with this rule.",
-        comodel_name="product.product",
         compute="_compute_reward_products",
         search="_search_reward_product_ids",
     )
     reward_product_qty = fields.Integer(default=1)
     reward_product_uom_id = fields.Many2one(
-        comodel_name="uom.uom", compute="_compute_reward_product_uom_id"
+        comodel_name="uom.uom",
+        compute="_compute_reward_product_uom_id",
     )
 
-    required_points = fields.Float(string="Points needed", default=1)
-    point_name = fields.Char(related="program_id.portal_point_name", readonly=True)
+    required_points = fields.Float(
+        string="Points needed",
+        default=1,
+    )
+    point_name = fields.Char(
+        related="program_id.portal_point_name",
+        readonly=True,
+    )
     clear_wallet = fields.Boolean(default=False)
 
     _required_points_positive = models.Constraint(

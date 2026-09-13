@@ -7,7 +7,10 @@ class AccountJournal(models.Model):
     account_peppol_proxy_state = fields.Selection(
         related="company_id.account_peppol_proxy_state"
     )
-    is_peppol_journal = fields.Boolean(string="Account used for Peppol", default=False)
+    is_peppol_journal = fields.Boolean(
+        string="Account used for Peppol",
+        default=False,
+    )
 
     @api.depends("account_peppol_proxy_state")
     def _compute_show_refresh_out_einvoices_status_button(self):

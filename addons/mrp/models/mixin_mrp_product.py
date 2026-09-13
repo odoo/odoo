@@ -9,17 +9,17 @@ class MixinMrpProduct(models.AbstractModel):
     _mrp_bom_field = None
 
     bom_count = fields.Integer(
-        "# Bill of Material",
+        string="# Bill of Material",
         compute="_compute_bom_count",
         compute_sudo=False,
     )
     used_in_bom_count = fields.Integer(
-        "# BoM Where Used",
+        string="# BoM Where Used",
         compute="_compute_used_in_bom_count",
         compute_sudo=False,
     )
     mrp_product_qty = fields.Float(
-        "Manufactured",
+        string="Manufactured",
         digits="Product Unit",
         compute="_compute_mrp_product_qty",
         compute_sudo=False,

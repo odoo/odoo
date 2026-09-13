@@ -18,13 +18,13 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     applied_coupon_ids = fields.Many2many(
-        string="Manually Applied Coupons",
         comodel_name="loyalty.card",
+        string="Manually Applied Coupons",
         copy=False,
     )
     code_enabled_rule_ids = fields.Many2many(
-        string="Manually Triggered Rules",
         comodel_name="loyalty.rule",
+        string="Manually Triggered Rules",
         copy=False,
     )
     coupon_point_ids = fields.One2many(
@@ -32,16 +32,10 @@ class SaleOrder(models.Model):
         inverse_name="order_id",
         copy=False,
     )
-    reward_amount = fields.Float(
-        compute="_compute_reward_amount",
-    )
+    reward_amount = fields.Float(compute="_compute_reward_amount")
 
-    gift_card_count = fields.Integer(
-        compute="_compute_gift_card_count",
-    )
-    loyalty_data = fields.Json(
-        compute="_compute_loyalty_data",
-    )
+    gift_card_count = fields.Integer(compute="_compute_gift_card_count")
+    loyalty_data = fields.Json(compute="_compute_loyalty_data")
 
     @api.depends("line_ids")
     def _compute_reward_amount(self):

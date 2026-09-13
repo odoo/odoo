@@ -10,15 +10,31 @@ class HrEmployeeCertificationReport(models.BaseModel):
     _description = "Employee Certification Report"
     _order = "employee_id, level_progress desc"
 
-    company_id = fields.Many2one("res.company", readonly=True)
-    department_id = fields.Many2one("hr.department", readonly=True)
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        readonly=True,
+    )
+    department_id = fields.Many2one(
+        comodel_name="hr.department",
+        readonly=True,
+    )
 
-    skill_id = fields.Many2one("hr.skill", readonly=True)
-    skill_type_id = fields.Many2one("hr.skill.type", readonly=True)
+    skill_id = fields.Many2one(
+        comodel_name="hr.skill",
+        readonly=True,
+    )
+    skill_type_id = fields.Many2one(
+        comodel_name="hr.skill.type",
+        readonly=True,
+    )
     skill_level = fields.Char(readonly=True)
-    level_progress = fields.Float(readonly=True, aggregator="avg")
+    level_progress = fields.Float(
+        readonly=True,
+        aggregator="avg",
+    )
     active = fields.Boolean(
-        readonly=True, help="A certification is active while it is valid today."
+        help="A certification is active while it is valid today.",
+        readonly=True,
     )
 
     def init(self):

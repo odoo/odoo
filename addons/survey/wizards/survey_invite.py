@@ -24,10 +24,10 @@ class SurveyInvite(models.TransientModel):
         return self.env.user.partner_id
 
     attachment_ids = fields.Many2many(
-        "ir.attachment",
-        "survey_mail_compose_message_ir_attachments_rel",
-        "wizard_id",
-        "attachment_id",
+        comodel_name="ir.attachment",
+        relation="survey_mail_compose_message_ir_attachments_rel",
+        column1="wizard_id",
+        column2="attachment_id",
         string="Attachments",
         compute="_compute_attachment_ids",
         store=True,
@@ -35,16 +35,16 @@ class SurveyInvite(models.TransientModel):
         bypass_search_access=True,
     )
     author_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
+        default=_default_author_id,
         index=True,
         ondelete="set null",
-        default=_default_author_id,
     )
     partner_ids = fields.Many2many(
-        "res.partner",
-        "survey_invite_partner_ids",
-        "invite_id",
-        "partner_id",
+        comodel_name="res.partner",
+        relation="survey_invite_partner_ids",
+        column1="invite_id",
+        column2="partner_id",
         string="Recipients",
         domain="[ \
             '|', (survey_users_can_signup, '=', 1), \
@@ -53,38 +53,53 @@ class SurveyInvite(models.TransientModel):
         ]",
     )
     existing_partner_ids = fields.Many2many(
-        "res.partner",
+        comodel_name="res.partner",
         compute="_compute_existing_partner_ids",
-        readonly=True,
         store=False,
+        readonly=True,
     )
     emails = fields.Text(string="Additional emails")
     existing_emails = fields.Text(
-        "Existing emails",
+        string="Existing emails",
         compute="_compute_existing_emails",
-        readonly=True,
         store=False,
+        readonly=True,
     )
     existing_mode = fields.Selection(
-        [("new", "New invite"), ("resend", "Resend invite")],
+        selection=[("new", "New invite"), ("resend", "Resend invite")],
         string="Handle existing",
         default="resend",
         required=True,
     )
-    existing_text = fields.Text("Resend Comment", compute="_compute_existing_text")
-    mail_server_id = fields.Many2one("ir.mail_server", "Outgoing mail server")
-    survey_id = fields.Many2one("survey.survey", required=True)
-    survey_start_url = fields.Char("Survey URL", compute="_compute_survey_start_url")
+    existing_text = fields.Text(
+        string="Resend Comment",
+        compute="_compute_existing_text",
+    )
+    mail_server_id = fields.Many2one(
+        comodel_name="ir.mail_server",
+        string="Outgoing mail server",
+    )
+    survey_id = fields.Many2one(
+        comodel_name="survey.survey",
+        required=True,
+    )
+    survey_start_url = fields.Char(
+        string="Survey URL",
+        compute="_compute_survey_start_url",
+    )
     survey_access_mode = fields.Selection(
-        related="survey_id.access_mode", readonly=True
+        related="survey_id.access_mode",
+        readonly=True,
     )
     survey_users_login_required = fields.Boolean(
-        related="survey_id.users_login_required", readonly=True
+        related="survey_id.users_login_required",
+        readonly=True,
     )
     survey_users_can_signup = fields.Boolean(related="survey_id.users_can_signup")
     deadline = fields.Datetime(string="Answer deadline")
     send_email = fields.Boolean(
-        compute="_compute_send_email", inverse="_inverse_send_email"
+        compute="_compute_send_email",
+        inverse="_inverse_send_email",
     )
 
     @api.depends("survey_access_mode")

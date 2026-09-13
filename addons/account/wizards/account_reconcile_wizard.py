@@ -56,9 +56,9 @@ class AccountReconcileWizard(models.TransientModel):
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        required=True,
-        readonly=True,
         compute="_compute_company_id",
+        readonly=True,
+        required=True,
     )
     move_line_ids = fields.Many2many(
         comodel_name="account.move.line",
@@ -77,8 +77,8 @@ class AccountReconcileWizard(models.TransientModel):
     )
     company_currency_id = fields.Many2one(
         comodel_name="res.currency",
-        string="Company currency",
         related="company_id.currency_id",
+        string="Company currency",
     )
     amount_currency = fields.Monetary(
         string="Amount",
@@ -105,9 +105,7 @@ class AccountReconcileWizard(models.TransientModel):
         comodel_name="res.currency",
         compute="_compute_edit_mode_reco_currency_id",
     )
-    edit_mode = fields.Boolean(
-        compute="_compute_edit_mode",
-    )
+    edit_mode = fields.Boolean(compute="_compute_edit_mode")
     single_currency_mode = fields.Boolean(compute="_compute_single_currency_mode")
     allow_partials = fields.Boolean(
         string="Allow partials",
@@ -117,45 +115,52 @@ class AccountReconcileWizard(models.TransientModel):
     )
     force_partials = fields.Boolean(compute="_compute_reco_wizard_data")
     display_allow_partials = fields.Boolean(compute="_compute_display_allow_partials")
-    date = fields.Date(compute="_compute_date", store=True, readonly=False)
+    date = fields.Date(
+        compute="_compute_date",
+        store=True,
+        readonly=False,
+    )
     journal_id = fields.Many2one(
         comodel_name="account.journal",
-        check_company=True,
-        domain="[('type', '=', 'general')]",
         compute="_compute_journal_id",
+        precompute=True,
         store=True,
         readonly=False,
         required=True,
-        precompute=True,
+        domain="[('type', '=', 'general')]",
+        check_company=True,
     )
     account_id = fields.Many2one(
         comodel_name="account.account",
-        check_company=True,
         domain="[('account_type', '!=', 'off_balance')]",
+        check_company=True,
     )
     is_rec_pay_account = fields.Boolean(compute="_compute_is_rec_pay_account")
     to_partner_id = fields.Many2one(
         comodel_name="res.partner",
         string="Partner",
-        check_company=True,
         compute="_compute_to_partner_id",
         store=True,
         readonly=False,
+        check_company=True,
     )
     label = fields.Char(default="Write-Off")
     tax_id = fields.Many2one(
-        comodel_name="account.tax", default=False, check_company=True
+        comodel_name="account.tax",
+        default=False,
+        check_company=True,
     )
     to_check = fields.Boolean(
-        default=False,
         help="Check if you are not certain of all the information of the counterpart.",
+        default=False,
     )
     is_write_off_required = fields.Boolean(
         string="Is a write-off move required to reconcile",
         compute="_compute_is_write_off_required",
     )
     is_transfer_required = fields.Boolean(
-        string="Is an account transfer required", compute="_compute_reco_wizard_data"
+        string="Is an account transfer required",
+        compute="_compute_reco_wizard_data",
     )
     transfer_warning_message = fields.Char(
         string="Is an account transfer required to reconcile",

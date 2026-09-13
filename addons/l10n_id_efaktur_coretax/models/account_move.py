@@ -273,7 +273,7 @@ class AccountMove(models.Model):
 
     # Extra selection after choosing l10n_id_kode_transaksi 07
     l10n_id_coretax_add_info_07 = fields.Selection(
-        [
+        selection=[
             (
                 "TD.00501",
                 "1 - Pajak Pertambahan Nilai Tidak Dipungut berdasarkan PP Nomor 10 Tahun 2012",
@@ -339,11 +339,11 @@ class AccountMove(models.Model):
             ),
         ],
         compute="_compute_l10n_id_coretax_add_info",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     l10n_id_coretax_facility_info_07 = fields.Selection(
-        [
+        selection=[
             ("TD.01101", "1 - untuk Kawasan Bebas"),
             ("TD.01102", "2 - untuk Tempat Penimbunan Berikat"),
             ("TD.01103", "3 - untuk Hibah dan Bantuan Luar Negeri"),
@@ -415,13 +415,13 @@ class AccountMove(models.Model):
             ("TD.01127", "27 - Penyerahan kendaraan listrik berbasis baterai"),
         ],
         compute="_compute_l10n_id_coretax_facility_info",
-        readonly=False,
         store=True,
+        readonly=False,
     )
 
     # Extra selection after choosing l10n_id_kode_transaksi 08
     l10n_id_coretax_add_info_08 = fields.Selection(
-        [
+        selection=[
             (
                 "TD.00501",
                 "1 - PPN Dibebaskan Sesuai PP Nomor 146 Tahun 2000 Sebagaimana Telah Diubah Dengan PP Nomor 38 Tahun 2003",
@@ -446,11 +446,11 @@ class AccountMove(models.Model):
             ("TD.00510", "10 - PPN Dibebaskan berdasarkan PP Nomor 49 Tahun 2022"),
         ],
         compute="_compute_l10n_id_coretax_add_info",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     l10n_id_coretax_facility_info_08 = fields.Selection(
-        [
+        selection=[
             (
                 "TD.01101",
                 "1 - PPN Dibebaskan Sesuai PP Nomor 146 Tahun 2000 Sebagaimana Telah Diubah Dengan PP Nomor 38 Tahun 2003",
@@ -475,18 +475,18 @@ class AccountMove(models.Model):
             ("TD.01110", "10 - PPN Dibebaskan berdasarkan PP Nomor 49 Tahun 2022"),
         ],
         compute="_compute_l10n_id_coretax_facility_info",
-        readonly=False,
         store=True,
+        readonly=False,
     )
 
     l10n_id_coretax_efaktur_available = fields.Boolean(
         compute="_compute_l10n_id_coretax_efaktur_available"
     )
     l10n_id_coretax_document = fields.Many2one(
-        "l10n_id_efaktur_coretax.document",
-        readonly=True,
-        copy=False,
+        comodel_name="l10n_id_efaktur_coretax.document",
         string="e-Faktur Document (Coretax)",
+        copy=False,
+        readonly=True,
     )
     l10n_id_coretax_custom_doc = fields.Char(
         help="Additional documentation when choosing kode 07 or 08"
@@ -498,10 +498,10 @@ class AccountMove(models.Model):
         selection=TAX_TRANSACTION_CODE,
         string="Kode Transaksi",
         help="The first 2 digits of tax code",
-        readonly=False,
-        copy=False,
         compute="_compute_kode_transaksi",
         store=True,
+        copy=False,
+        readonly=False,
     )
 
     @api.depends("partner_id")

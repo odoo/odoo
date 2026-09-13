@@ -15,7 +15,7 @@ class WebsiteRoute(models.Model):
     _description = "All Website Route"
     _order = "path"
 
-    path = fields.Char("Route")
+    path = fields.Char(string="Route")
 
     @api.model
     def _search_display_name(self, operator, value):
@@ -64,26 +64,33 @@ class WebsiteRewrite(models.Model):
     _description = "Website rewrite"
 
     name = fields.Char(required=True)
-    website_id = fields.Many2one("website", ondelete="cascade", index=True)
+    website_id = fields.Many2one(
+        comodel_name="website",
+        index=True,
+        ondelete="cascade",
+    )
     active = fields.Boolean(default=True)
-    url_from = fields.Char("URL from", index=True)
-    route_id = fields.Many2one("website.route")
-    url_to = fields.Char("URL to")
+    url_from = fields.Char(
+        string="URL from",
+        index=True,
+    )
+    route_id = fields.Many2one(comodel_name="website.route")
+    url_to = fields.Char(string="URL to")
     redirect_type = fields.Selection(
-        [
+        selection=[
             ("404", "404 Not Found"),
             ("301", "301 Moved permanently"),
             ("302", "302 Moved temporarily"),
             ("308", "308 Redirect / Rewrite"),
         ],
         string="Action",
-        default="302",
         help="""Type of redirect/Rewrite:\n
         301 Moved permanently: The browser will keep in cache the new url.
         302 Moved temporarily: The browser will not keep in cache the new url and ask again the next time the new url.
         404 Not Found: If you want remove a specific page/controller (e.g. Ecommerce is installed, but you don't want /shop on a specific website)
         308 Redirect / Rewrite: If you want rename a controller with a new url. (Eg: /shop -> /garden - Both url will be accessible but /shop will automatically be redirected to /garden)
     """,
+        default="302",
     )
 
     sequence = fields.Integer()

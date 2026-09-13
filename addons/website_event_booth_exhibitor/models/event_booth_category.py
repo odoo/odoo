@@ -12,8 +12,14 @@ class EventBoothCategory(models.Model):
         string="Create Sponsor",
         help="If set, when booking a booth a sponsor will be created for the user",
     )
-    sponsor_type_id = fields.Many2one("event.sponsor.type", string="Sponsor Level")
-    exhibitor_type = fields.Selection(_get_exhibitor_type, string="Sponsor Type")
+    sponsor_type_id = fields.Many2one(
+        comodel_name="event.sponsor.type",
+        string="Sponsor Level",
+    )
+    exhibitor_type = fields.Selection(
+        selection=_get_exhibitor_type,
+        string="Sponsor Type",
+    )
 
     @api.onchange("use_sponsor")
     def _onchange_use_sponsor(self):

@@ -15,15 +15,15 @@ class QuotationDocument(models.Model):
     _check_company_auto = True
 
     ir_attachment_id = fields.Many2one(
-        string="Related attachment",
         comodel_name="ir.attachment",
-        ondelete="cascade",
+        string="Related attachment",
         required=True,
+        ondelete="cascade",
     )
     document_type = fields.Selection(
         selection=[("header", "Header"), ("footer", "Footer")],
-        required=True,
         default="header",
+        required=True,
     )
     active = fields.Boolean(
         help="If unchecked, it will allow you to hide the header or footer without removing it.",
@@ -31,18 +31,18 @@ class QuotationDocument(models.Model):
     )
     sequence = fields.Integer(default=10)
     quotation_template_ids = fields.Many2many(
-        string="Quotation Templates",
         comodel_name="sale.order.template",
         relation="header_footer_quotation_template_rel",
-        groups="sales_team.group_sale_salesman",
+        string="Quotation Templates",
         check_company=True,
+        groups="sales_team.group_sale_salesman",
     )
     form_field_ids = fields.Many2many(
-        string="Form Fields Included",
         comodel_name="sale.pdf.form.field",
-        domain=[("document_type", "=", "quotation_document")],
+        string="Form Fields Included",
         compute="_compute_form_field_ids",
         store=True,
+        domain=[("document_type", "=", "quotation_document")],
     )
     add_by_default = fields.Boolean(
         help="If checked, this header or footer will be added by default on new quotes.",

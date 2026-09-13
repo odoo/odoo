@@ -16,28 +16,35 @@ class ResConfigSettings(models.TransientModel):
     )
 
     account_peppol_eas = fields.Selection(
-        related="company_id.peppol_eas", readonly=False
+        related="company_id.peppol_eas",
+        readonly=False,
     )
     account_peppol_edi_identification = fields.Char(
         related="account_peppol_edi_user.edi_identification"
     )
     account_peppol_endpoint = fields.Char(
-        related="company_id.peppol_endpoint", readonly=False
+        related="company_id.peppol_endpoint",
+        readonly=False,
     )
     account_peppol_migration_key = fields.Char(
-        related="company_id.account_peppol_migration_key", readonly=False
+        related="company_id.account_peppol_migration_key",
+        readonly=False,
     )
     account_peppol_phone_number = fields.Char(
-        related="company_id.account_peppol_phone_number", readonly=False
+        related="company_id.account_peppol_phone_number",
+        readonly=False,
     )
     account_peppol_proxy_state = fields.Selection(
-        related="company_id.account_peppol_proxy_state", readonly=False
+        related="company_id.account_peppol_proxy_state",
+        readonly=False,
     )
     account_peppol_purchase_journal_id = fields.Many2one(
-        related="company_id.peppol_purchase_journal_id", readonly=False
+        related="company_id.peppol_purchase_journal_id",
+        readonly=False,
     )
     peppol_external_provider = fields.Char(
-        related="company_id.peppol_external_provider", readonly=False
+        related="company_id.peppol_external_provider",
+        readonly=False,
     )
     peppol_use_parent_company = fields.Boolean(
         compute="_compute_peppol_use_parent_company"
@@ -46,7 +53,8 @@ class ResConfigSettings(models.TransientModel):
         compute="_compute_peppol_use_parent_company"
     )
     account_is_token_out_of_sync = fields.Boolean(
-        related="account_peppol_edi_user.is_token_out_of_sync", readonly=False
+        related="account_peppol_edi_user.is_token_out_of_sync",
+        readonly=False,
     )
     peppol_participation_role = fields.Selection(
         selection=[

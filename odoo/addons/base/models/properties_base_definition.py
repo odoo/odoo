@@ -14,7 +14,7 @@ class PropertiesBaseDefinition(models.Model):
     _description = "Properties Base Definition"
 
     properties_field_id = fields.Many2one(
-        "ir.model.fields",
+        comodel_name="ir.model.fields",
         required=True,
         ondelete="cascade",
     )

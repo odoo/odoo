@@ -5,5 +5,7 @@ class ResCurrency(models.Model):
     _inherit = "res.currency"
 
     l10n_ar_afip_code = fields.Char(
-        "ARCA Code", size=4, help="This code will be used on electronic invoice"
+        string="ARCA Code",
+        help="This code will be used on electronic invoice",
+        size=4,
     )

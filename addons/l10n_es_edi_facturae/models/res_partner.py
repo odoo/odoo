@@ -8,7 +8,10 @@ class L10n_Es_Edi_FacturaeAc_Role_Type(models.Model):
     _description = "Administrative Center Role Type"
 
     code = fields.Char(required=True)
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
 
 
 class ResPartner(models.Model):
@@ -19,11 +22,13 @@ class ResPartner(models.Model):
     )
     type = fields.Selection(selection_add=[("facturae_ac", "FACe Center"), ("other",)])
     l10n_es_edi_facturae_ac_center_code = fields.Char(
-        string="Code", size=10, help="Code of the issuing department."
+        string="Code",
+        help="Code of the issuing department.",
+        size=10,
     )
     l10n_es_edi_facturae_ac_role_type_ids = fields.Many2many(
-        string="Roles",
         comodel_name="l10n_es_edi_facturae.ac_role_type",
+        string="Roles",
         help="It indicates the role played by the Operational Point defined as a Workplace/Department.\n"
         "These functions are:\n"
         "- Receiver: Workplace associated to the recipient's tax identification number where the invoice will be received.\n"
@@ -36,17 +41,17 @@ class ResPartner(models.Model):
     )
     l10n_es_edi_facturae_ac_physical_gln = fields.Char(
         string="Physical GLN",
-        size=14,
         help="Identification of the connection point to the VAN EDI (Global Location Number). Barcode of 13 standard positions. "
         "Codes are registered in Spain by AECOC. The code is made up of the country code (2 positions) Spain is '84' "
         "+ Company code (5 positions) + the remaining positions. The last one is the product + check digit.",
+        size=14,
     )
     l10n_es_edi_facturae_ac_logical_operational_point = fields.Char(
         string="Logical Operational Point",
-        size=14,
         help="Code identifying the company. Barcode of 13 standard positions. Codes are registered in Spain by AECOC. "
         "The code is made up of the country code (2 positions) Spain is '84' + Company code (5 positions) + the remaining positions. "
         "The last one is the product + check digit.",
+        size=14,
     )
     l10n_es_edi_facturae_residence_type = fields.Char(
         string="Facturae EDI Residency Type Code",

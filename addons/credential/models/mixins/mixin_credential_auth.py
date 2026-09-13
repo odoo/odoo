@@ -15,29 +15,29 @@ class MixinCredentialAuth(models.AbstractModel):
 
     rate_limit_enabled = fields.Boolean(
         string="Enable Rate Limiting",
-        default=True,
         help="Enable rate limiting using token bucket algorithm",
+        default=True,
     )
     rate_limit_requests = fields.Integer(
         string="Max Requests",
-        default=100,
         help="Maximum number of requests allowed per time period",
+        default=100,
     )
     rate_limit_strict = fields.Boolean(
         string="Strict Rate Limiting",
-        default=False,
         help="Deny the request when the rate-limit bucket cannot be read "
         "(lock contention, timeout, internal error) instead of allowing it. "
         "Enable wherever the limit is a security control rather than a "
         "best-effort cap.",
+        default=False,
     )
 
     credential_id = fields.Many2one(
         comodel_name="credential.credential",
         string="Active Credential",
-        ondelete="restrict",
-        index=True,
         help="Encrypted credential for authentication. Managed by credential.",
+        index=True,
+        ondelete="restrict",
     )
     auth_type = fields.Selection(
         selection=[
@@ -49,19 +49,19 @@ class MixinCredentialAuth(models.AbstractModel):
             ("custom", "Custom"),
         ],
         string="Authentication Type",
+        help="Method used for authentication",
         default="bearer",
         required=True,
-        help="Method used for authentication",
     )
     credential_fingerprint = fields.Char(
-        compute="_compute_credential_fingerprint",
-        store=True,
-        index=True,
-        compute_sudo=True,
-        copy=False,
-        groups="base.group_system",
         help="SHA-256 of the credential's secret. Lets a presented token be "
         "verified, and its channel found, without decrypting anything.",
+        compute="_compute_credential_fingerprint",
+        compute_sudo=True,
+        store=True,
+        index=True,
+        copy=False,
+        groups="base.group_system",
     )
 
     @api.depends("credential_id", "credential_id.credential_value_encrypted")

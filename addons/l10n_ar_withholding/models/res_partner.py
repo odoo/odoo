@@ -5,7 +5,7 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     l10n_ar_partner_tax_ids = fields.One2many(
-        "l10n_ar.partner.tax",
-        "partner_id",
-        "Argentinean Withholding Taxes",
+        comodel_name="l10n_ar.partner.tax",
+        inverse_name="partner_id",
+        string="Argentinean Withholding Taxes",
     )

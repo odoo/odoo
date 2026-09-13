@@ -15,22 +15,22 @@ class StockScrap(models.Model):
 
     name = fields.Char(
         string="Reference",
-        required=True,
         default=lambda self: _("New"),
-        readonly=True,
         copy=False,
+        readonly=True,
+        required=True,
     )
     company_id = fields.Many2one(
         comodel_name="res.company",
-        required=True,
         default=lambda self: self.env.company,
+        required=True,
     )
     origin = fields.Char(string="Source Document")
     product_id = fields.Many2one(
         comodel_name="product.product",
         required=True,
-        check_company=True,
         domain="[('type', '=', 'consu')]",
+        check_company=True,
     )
     allowed_uom_ids = fields.Many2many(
         comodel_name="uom.uom",
@@ -39,11 +39,11 @@ class StockScrap(models.Model):
     product_uom_id = fields.Many2one(
         comodel_name="uom.uom",
         string="Unit",
-        required=True,
         compute="_compute_product_uom_id",
-        store=True,
         precompute=True,
+        store=True,
         readonly=False,
+        required=True,
         domain="[('id', 'in', allowed_uom_ids)]",
     )
     tracking = fields.Selection(
@@ -54,8 +54,8 @@ class StockScrap(models.Model):
     lot_id = fields.Many2one(
         comodel_name="stock.lot",
         string="Lot/Serial",
-        check_company=True,
         domain="[('product_id', '=', product_id)]",
+        check_company=True,
     )
     package_id = fields.Many2one(
         comodel_name="stock.package",
@@ -65,7 +65,10 @@ class StockScrap(models.Model):
         comodel_name="res.partner",
         check_company=True,
     )
-    move_ids = fields.One2many(comodel_name="stock.move", inverse_name="scrap_id")
+    move_ids = fields.One2many(
+        comodel_name="stock.move",
+        inverse_name="scrap_id",
+    )
     picking_id = fields.Many2one(
         comodel_name="stock.picking",
         check_company=True,
@@ -73,36 +76,36 @@ class StockScrap(models.Model):
     location_id = fields.Many2one(
         comodel_name="stock.location",
         string="Source Location",
-        required=True,
         compute="_compute_location_id",
-        store=True,
         precompute=True,
+        store=True,
         readonly=False,
-        check_company=True,
+        required=True,
         domain="[('usage', '=', 'internal')]",
+        check_company=True,
     )
     scrap_location_id = fields.Many2one(
         comodel_name="stock.location",
-        required=True,
-        compute="_compute_scrap_location_id",
-        store=True,
-        precompute=True,
-        readonly=False,
-        check_company=True,
-        domain="[('usage', '=', 'inventory')]",
         help="Inventory-loss location the scrapped goods are moved to. Any"
         " inventory-loss location qualifies; a company can designate its"
         " dedicated scrap location by tagging it with the external id"
         " 'stock.stock_location_scrap_company_<company_id>'.",
+        compute="_compute_scrap_location_id",
+        precompute=True,
+        store=True,
+        readonly=False,
+        required=True,
+        domain="[('usage', '=', 'inventory')]",
+        check_company=True,
     )
     scrap_qty = fields.Float(
         string="Quantity",
         digits="Product Unit",
-        required=True,
-        default=1.0,
         compute="_compute_scrap_qty",
+        default=1.0,
         store=True,
         readonly=False,
+        required=True,
     )
     state = fields.Selection(
         selection=[("draft", "Draft"), ("done", "Done")],
@@ -111,7 +114,10 @@ class StockScrap(models.Model):
         readonly=True,
         tracking=True,
     )
-    date_done = fields.Datetime(string="Date", readonly=True)
+    date_done = fields.Datetime(
+        string="Date",
+        readonly=True,
+    )
     should_replenish = fields.Boolean(
         string="Replenish Quantities",
         help="Trigger replenishment for scrapped products",
@@ -429,7 +435,10 @@ class StockScrapReasonTag(models.Model):
     _description = "Scrap Reason Tag"
     _order = "sequence, id"
 
-    name = fields.Char(required=True, translate=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
     sequence = fields.Integer(default=10)
     color = fields.Char(default="#3C3C3C")
 

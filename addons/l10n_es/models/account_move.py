@@ -5,10 +5,10 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     l10n_es_is_simplified = fields.Boolean(
-        "Is Simplified",
+        string="Is Simplified",
         compute="_compute_l10n_es_is_simplified",
-        readonly=False,
         store=True,
+        readonly=False,
     )
 
     # Note: We depend on 'line_ids.balance' instead of 'amount_total_signed' directly.

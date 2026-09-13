@@ -5,7 +5,8 @@ class PosConfig(models.Model):
     _inherit = "pos.config"
 
     is_spanish = fields.Boolean(
-        string="Company located in Spain", compute="_compute_is_spanish"
+        string="Company located in Spain",
+        compute="_compute_is_spanish",
     )
     l10n_es_simplified_invoice_journal_id = fields.Many2one(
         comodel_name="account.journal",

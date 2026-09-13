@@ -13,53 +13,57 @@ class ProjectBenefit(models.Model):
     _order = "sequence, id"
     _inherit = ["mixin.mail.thread", "mixin.mail.activity"]
 
-    name = fields.Char("Benefit", required=True, tracking=True)
+    name = fields.Char(
+        string="Benefit",
+        required=True,
+        tracking=True,
+    )
     sequence = fields.Integer(default=10)
     project_id = fields.Many2one(
-        "project.project",
+        comodel_name="project.project",
+        index=True,
         required=True,
         ondelete="cascade",
-        index=True,
     )
     description = fields.Html(
-        "How This Benefit Will Be Realized",
+        string="How This Benefit Will Be Realized",
         help="Describe the mechanism by which this benefit is expected to materialize.",
     )
     measurement_method = fields.Text(
-        help="Specific, quantified method for measuring this benefit.",
+        help="Specific, quantified method for measuring this benefit."
     )
     target_value = fields.Float()
     target_unit = fields.Char(
-        "Unit",
+        string="Unit",
         help="Unit of measurement (e.g. %, $, hours, NPS score).",
     )
     actual_value = fields.Float()
     achievement_pct = fields.Float(
-        "Achievement %",
-        compute="_compute_achievement_pct",
-        store=True,
+        string="Achievement %",
         help="Actual / Target as a percentage.",
         export_string_translation=False,
+        compute="_compute_achievement_pct",
+        store=True,
     )
     accountable_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Accountable Owner",
-        tracking=True,
         help="Business owner responsible for realizing and measuring this benefit.",
+        tracking=True,
     )
     date_review = fields.Date(
-        "Next Review Date",
+        string="Next Review Date",
         help="When this benefit should next be reviewed for progress.",
     )
     date_review_reminder = fields.Date(
-        "Reminder Scheduled For",
-        copy=False,
+        string="Reminder Scheduled For",
         help="Internal: the date_review for which a reminder activity was last "
         "scheduled by the cron. Prevents re-nagging every day once a reminder "
         "has been raised; a new reminder is only scheduled when date_review moves.",
+        copy=False,
     )
     state = fields.Selection(
-        [
+        selection=[
             ("expected", "Expected"),
             ("tracking", "Tracking"),
             ("achieved", "Achieved"),
@@ -70,7 +74,7 @@ class ProjectBenefit(models.Model):
         required=True,
         tracking=True,
     )
-    notes = fields.Html("Review Notes")
+    notes = fields.Html(string="Review Notes")
 
     @dbg.timed
     @api.model

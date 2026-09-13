@@ -10,22 +10,26 @@ class WebsiteVisitor(models.Model):
     _inherit = "website.visitor"
 
     livechat_operator_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
+        string="Speaking with",
         compute="_compute_livechat_operator_id",
         store=True,
-        string="Speaking with",
         index="btree_not_null",
     )
     livechat_operator_name = fields.Char(
-        "Operator Name", related="livechat_operator_id.name"
+        related="livechat_operator_id.name",
+        string="Operator Name",
     )
     discuss_channel_ids = fields.One2many(
-        "discuss.channel",
-        "livechat_visitor_id",
+        comodel_name="discuss.channel",
+        inverse_name="livechat_visitor_id",
         string="Visitor's livechat channels",
         readonly=True,
     )
-    session_count = fields.Integer("# Sessions", compute="_compute_session_count")
+    session_count = fields.Integer(
+        string="# Sessions",
+        compute="_compute_session_count",
+    )
 
     def _auto_init(self):
         if not column_exists(self.env.cr, "website_visitor", "livechat_operator_id"):

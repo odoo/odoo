@@ -30,7 +30,7 @@ class CrmQuotationPartner(models.TransientModel):
         return result
 
     action = fields.Selection(
-        [
+        selection=[
             ("create", "Create a new customer"),
             ("exist", "Link to an existing customer"),
             ("nothing", "Do not link to a customer"),
@@ -38,8 +38,15 @@ class CrmQuotationPartner(models.TransientModel):
         string="Quotation Customer",
         required=True,
     )
-    lead_id = fields.Many2one("crm.lead", "Associated Lead", required=True)
-    partner_id = fields.Many2one("res.partner", "Customer")
+    lead_id = fields.Many2one(
+        comodel_name="crm.lead",
+        string="Associated Lead",
+        required=True,
+    )
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Customer",
+    )
 
     def action_apply(self):
         self.check_singleton()

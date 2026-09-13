@@ -16,27 +16,36 @@ class ApprovalBindingObservation(models.Model):
 
     binding_id = fields.Many2one(
         comodel_name="approval.binding",
+        index=True,
         required=True,
         ondelete="cascade",
+    )
+    res_id = fields.Integer(
+        string="Record ID",
         index=True,
     )
-    res_id = fields.Integer(string="Record ID", index=True)
-    user_id = fields.Many2one(comodel_name="res.users", index=True)
+    user_id = fields.Many2one(
+        comodel_name="res.users",
+        index=True,
+    )
     elevation = fields.Selection(
         selection=[
             ("none", "Not elevated"),
             ("superuser", "Superuser"),
             ("self_elevated", "Elevated by sudo()"),
         ],
-        required=True,
-        index=True,
         help="`sudo()` keeps `uid`, so a caller elevated by sudo() is "
         "distinguishable from the real superuser. The two are different "
         "risks and the point of observing is to count them separately.",
+        index=True,
+        required=True,
     )
     would_block = fields.Boolean(
         help="Whether this call would have been refused had the binding been "
         "in Block mode. This is the number that decides whether switching it "
-        "on is a small correction or a large one.",
+        "on is a small correction or a large one."
     )
-    date = fields.Datetime(default=fields.Datetime.now, index=True)
+    date = fields.Datetime(
+        default=fields.Datetime.now,
+        index=True,
+    )

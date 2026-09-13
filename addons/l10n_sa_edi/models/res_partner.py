@@ -4,11 +4,11 @@ from odoo import api, fields, models
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    l10n_sa_edi_building_number = fields.Char("Building Number")
-    l10n_sa_edi_plot_identification = fields.Char("Plot Identification")
+    l10n_sa_edi_building_number = fields.Char(string="Building Number")
+    l10n_sa_edi_plot_identification = fields.Char(string="Plot Identification")
 
     l10n_sa_edi_additional_identification_scheme = fields.Selection(
-        [
+        selection=[
             ("TIN", "Tax Identification Number"),
             ("CRN", "Commercial Registration Number"),
             ("MOM", "Momra License"),
@@ -21,13 +21,13 @@ class ResPartner(models.Model):
             ("PAS", "Passport ID"),
             ("OTH", "Other ID"),
         ],
-        default="OTH",
         string="Identification Scheme",
         help="Additional Identification Scheme for the Seller/Buyer",
+        default="OTH",
     )
 
     l10n_sa_edi_additional_identification_number = fields.Char(
-        "Identification Number (SA)",
+        string="Identification Number (SA)",
         help="Additional Identification Number for the Seller/Buyer",
     )
 

@@ -6,12 +6,17 @@ class MailingMailing(models.Model):
     _inherit = "mailing.mailing"
 
     mailing_model_id = fields.Many2one(
-        compute="_compute_mailing_model_id", store=True, readonly=False
+        compute="_compute_mailing_model_id",
+        store=True,
+        readonly=False,
     )
     card_requires_sync_count = fields.Integer(
         compute="_compute_card_requires_sync_count"
     )
-    card_campaign_id = fields.Many2one("card.campaign", index="btree_not_null")
+    card_campaign_id = fields.Many2one(
+        comodel_name="card.campaign",
+        index="btree_not_null",
+    )
 
     @api.model_create_multi
     def create(self, vals_list):

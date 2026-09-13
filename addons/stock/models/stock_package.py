@@ -18,21 +18,21 @@ class StockPackage(models.Model):
 
     name = fields.Char(
         string="Package Reference",
-        required=True,
-        copy=False,
         index="trigram",
+        copy=False,
+        required=True,
     )
     complete_name = fields.Char(
         string="Full Package Name",
         compute="_compute_complete_name",
-        store=True,
         recursive=True,
+        store=True,
     )
     dest_complete_name = fields.Char(
         string="Package Name At Destination",
         compute="_compute_dest_complete_name",
-        store=True,
         recursive=True,
+        store=True,
     )
     quant_ids = fields.One2many(
         comodel_name="stock.quant",
@@ -47,7 +47,8 @@ class StockPackage(models.Model):
         search="_search_contained_quant_ids",
     )
     content_description = fields.Char(
-        string="Contents", compute="_compute_content_description"
+        string="Contents",
+        compute="_compute_content_description",
     )
     package_type_id = fields.Many2one(
         comodel_name="stock.package.type",
@@ -56,10 +57,10 @@ class StockPackage(models.Model):
     location_id = fields.Many2one(
         comodel_name="stock.location",
         compute="_compute_package_info",
-        store=True,
         recursive=True,
-        readonly=False,
+        store=True,
         index=True,
+        readonly=False,
     )
     location_dest_id = fields.Many2one(
         comodel_name="stock.location",
@@ -70,17 +71,17 @@ class StockPackage(models.Model):
     company_id = fields.Many2one(
         comodel_name="res.company",
         compute="_compute_package_info",
-        store=True,
         recursive=True,
-        readonly=True,
+        store=True,
         index=True,
+        readonly=True,
     )
     owner_id = fields.Many2one(
         comodel_name="res.partner",
         compute="_compute_owner_id",
+        search="_search_owner_id",
         compute_sudo=True,
         readonly=True,
-        search="_search_owner_id",
     )
     parent_package_id = fields.Many2one(
         comodel_name="stock.package",
@@ -106,8 +107,8 @@ class StockPackage(models.Model):
         comodel_name="stock.package",
         string="Outermost Destination Container",
         compute="_compute_outermost_package_id",
-        store=True,
         recursive=True,
+        store=True,
         index="btree_not_null",
     )
     child_package_dest_ids = fields.One2many(
@@ -129,13 +130,13 @@ class StockPackage(models.Model):
     picking_ids = fields.Many2many(
         comodel_name="stock.picking",
         string="Transfers",
+        help="Transfers in which the Package is set as Destination Package",
         compute="_compute_picking_ids",
         search="_search_picking_ids",
-        help="Transfers in which the Package is set as Destination Package",
     )
     shipping_weight = fields.Float(
-        digits="Stock Weight",
         help="Total weight of the package.",
+        digits="Stock Weight",
     )
     valid_sscc = fields.Boolean(
         string="Package name is valid SSCC",

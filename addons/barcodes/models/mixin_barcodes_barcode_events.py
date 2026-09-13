@@ -12,7 +12,9 @@ class MixinBarcodesBarcode_Events_(models.AbstractModel):
     _description = "Barcode Event Mixin"
 
     _barcode_scanned = fields.Char(
-        "Barcode Scanned", help="Value of the last barcode scanned.", store=False
+        string="Barcode Scanned",
+        help="Value of the last barcode scanned.",
+        store=False,
     )
 
     @api.onchange("_barcode_scanned")

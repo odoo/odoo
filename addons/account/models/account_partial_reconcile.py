@@ -31,8 +31,8 @@ class AccountPartialReconcile(models.Model):
     )
     full_reconcile_id = fields.Many2one(
         comodel_name="account.full.reconcile",
-        copy=False,
         index="btree_not_null",
+        copy=False,
     )
     exchange_move_id = fields.Many2one(
         comodel_name="account.move",
@@ -45,52 +45,52 @@ class AccountPartialReconcile(models.Model):
 
     company_currency_id = fields.Many2one(
         comodel_name="res.currency",
-        string="Company Currency",
         related="company_id.currency_id",
+        string="Company Currency",
         help="Utility field to express amount currency",
     )
     debit_currency_id = fields.Many2one(
         comodel_name="res.currency",
-        store=True,
         related="debit_move_id.currency_id",
-        precompute=True,
         string="Currency of the debit journal item.",
+        precompute=True,
+        store=True,
     )
     credit_currency_id = fields.Many2one(
         comodel_name="res.currency",
-        store=True,
         related="credit_move_id.currency_id",
-        precompute=True,
         string="Currency of the credit journal item.",
+        precompute=True,
+        store=True,
     )
 
     amount = fields.Monetary(
+        help="Non-negative amount concerned by this matching expressed in the company currency.",
         currency_field="company_currency_id",
         required=True,
-        help="Non-negative amount concerned by this matching expressed in the company currency.",
     )
     debit_amount_currency = fields.Monetary(
+        help="Non-negative amount concerned by this matching expressed in the debit line foreign currency.",
         currency_field="debit_currency_id",
         required=True,
-        help="Non-negative amount concerned by this matching expressed in the debit line foreign currency.",
     )
     credit_amount_currency = fields.Monetary(
+        help="Non-negative amount concerned by this matching expressed in the credit line foreign currency.",
         currency_field="credit_currency_id",
         required=True,
-        help="Non-negative amount concerned by this matching expressed in the credit line foreign currency.",
     )
 
     company_id = fields.Many2one(
         comodel_name="res.company",
-        store=True,
-        precompute=True,
         compute="_compute_company_id",
+        precompute=True,
+        store=True,
     )
     max_date = fields.Date(
         string="Max Date of Matched Lines",
-        store=True,
-        precompute=True,
         compute="_compute_max_date",
+        precompute=True,
+        store=True,
     )
 
     _check_distinct_move_lines = models.Constraint(

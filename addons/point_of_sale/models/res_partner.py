@@ -9,21 +9,29 @@ class ResPartner(models.Model):
     _inherit = ["res.partner", "mixin.pos.load"]
 
     pos_order_count = fields.Integer(
-        compute="_compute_pos_order_count",
         help="The number of point of sales orders related to this customer",
+        compute="_compute_pos_order_count",
         groups="point_of_sale.group_pos_user",
     )
-    pos_order_ids = fields.One2many("pos.order", "partner_id", readonly=True)
-    pos_contact_address = fields.Char(
-        "PoS Address", compute="_compute_pos_contact_address"
+    pos_order_ids = fields.One2many(
+        comodel_name="pos.order",
+        inverse_name="partner_id",
+        readonly=True,
     )
-    invoice_emails = fields.Char(compute="_compute_invoice_emails", readonly=True)
+    pos_contact_address = fields.Char(
+        string="PoS Address",
+        compute="_compute_pos_contact_address",
+    )
+    invoice_emails = fields.Char(
+        compute="_compute_invoice_emails",
+        readonly=True,
+    )
     fiscal_position_id = fields.Many2one(
-        "account.fiscal.position",
+        comodel_name="account.fiscal.position",
         string="Automatic Fiscal Position",
-        compute="_compute_fiscal_position_id",
         help="Fiscal positions are used to adapt taxes and accounts for particular "
         "customers or sales orders/invoices. The default value comes from the customer.",
+        compute="_compute_fiscal_position_id",
     )
 
     @api.depends(lambda self: self._display_address_depends())

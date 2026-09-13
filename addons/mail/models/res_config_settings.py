@@ -12,53 +12,53 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     external_email_server_default = fields.Boolean(
-        "Use Custom Email Servers",
+        string="Use Custom Email Servers",
         config_parameter="base_setup.default_external_email_server",
     )
     fail_counter = fields.Integer(
-        "Fail Mail",
+        string="Fail Mail",
         compute="_compute_fail_counter",
     )
     alias_domain_id: MailAliasDomain = fields.Many2one(
-        "mail.alias.domain",
-        "Alias Domain",
-        readonly=False,
+        comodel_name="mail.alias.domain",
         related="company_id.alias_domain_id",
+        string="Alias Domain",
         help="If you have setup a catch-all email domain redirected to the Odoo server, enter the domain name here.",
+        readonly=False,
     )
-    module_google_gmail = fields.Boolean("Support Gmail Authentication")
-    module_microsoft_outlook = fields.Boolean("Support Outlook Authentication")
+    module_google_gmail = fields.Boolean(string="Support Gmail Authentication")
+    module_microsoft_outlook = fields.Boolean(string="Support Outlook Authentication")
     restrict_template_rendering = fields.Boolean(
-        config_parameter="mail.restrict.template.rendering",
         help="Users will still be able to render templates.\n"
         "However only Mail Template Editors will be able to create new dynamic templates or modify existing ones.",
+        config_parameter="mail.restrict.template.rendering",
     )
     use_twilio_rtc_servers = fields.Boolean(
-        "Use Twilio ICE servers",
+        string="Use Twilio ICE servers",
         help="If you want to use twilio as TURN/STUN server provider",
         config_parameter="mail.use_twilio_rtc_servers",
     )
     twilio_account_sid = fields.Char(
-        "Account SID",
+        string="Account SID",
         config_parameter="mail.twilio_account_sid",
     )
     twilio_account_token = fields.Char(
-        "Account Auth Token",
+        string="Account Auth Token",
         config_parameter="mail.twilio_account_token",
     )
     use_sfu_server = fields.Boolean(
-        "Use SFU server",
+        string="Use SFU server",
         help="If you want to setup SFU server for large group calls.",
         config_parameter="mail.use_sfu_server",
     )
     sfu_server_url = fields.Char(
-        "SFU Server URL",
+        string="SFU Server URL",
         config_parameter="mail.sfu_server_url",
     )
     sfu_server_key = fields.Char(
-        "SFU Server key",
-        config_parameter="mail.sfu_server_key",
+        string="SFU Server key",
         help="Base64 encoded key",
+        config_parameter="mail.sfu_server_key",
     )
     email_primary_color = fields.Char(
         related="company_id.email_primary_color",
@@ -70,13 +70,13 @@ class ResConfigSettings(models.TransientModel):
     )
 
     tenor_api_key = fields.Char(
-        "Klipy API key",
-        config_parameter="discuss.klipy_api_key",
+        string="Klipy API key",
         help="Add a Klipy GIF API key to enable GIFs support. https://docs.klipy.com/getting-started\n"
         "If you were using a Tenor GIF API key (service shutdown on June 30, 2026), please replace it here with a Klipy GIF API key",
+        config_parameter="discuss.klipy_api_key",
     )
     google_translate_api_key = fields.Char(
-        "Message Translation API Key",
+        string="Message Translation API Key",
         help="A valid Google API key is required to enable message translation. https://cloud.google.com/translate/docs/setup",
         config_parameter="mail.google_translate_api_key",
     )

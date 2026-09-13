@@ -11,8 +11,8 @@ class SaleReport(models.Model):
     _order = "date_order desc"
 
     order_reference = fields.Reference(
-        string="Order",
         selection=[("sale.order", "Sales Order")],
+        string="Order",
         aggregator="count_distinct",
     )
     currency_id = fields.Many2one(
@@ -83,9 +83,7 @@ class SaleReport(models.Model):
         string="Status",
         readonly=True,
     )
-    sent = fields.Boolean(
-        readonly=True,
-    )
+    sent = fields.Boolean(readonly=True)
     invoice_state = fields.Selection(
         selection=const.INVOICE_STATE,
         string="Order Invoice Status",
@@ -111,17 +109,27 @@ class SaleReport(models.Model):
         string="Unit",
         readonly=True,
     )
-    qty_transferred = fields.Float(string="Qty Delivered", readonly=True)
-    qty_to_transfer = fields.Float(string="Qty To Deliver", readonly=True)
+    qty_transferred = fields.Float(
+        string="Qty Delivered",
+        readonly=True,
+    )
+    qty_to_transfer = fields.Float(
+        string="Qty To Deliver",
+        readonly=True,
+    )
     qty_invoiced = fields.Float(readonly=True)
     qty_to_invoice = fields.Float(readonly=True)
     price_average = fields.Monetary(
         string="Average Price",
+        help="Quantity-weighted average sale price (not a cost).",
         readonly=True,
         aggregator="avg",
-        help="Quantity-weighted average sale price (not a cost).",
     )
-    discount = fields.Float(string="Discount %", readonly=True, aggregator="avg")
+    discount = fields.Float(
+        string="Discount %",
+        readonly=True,
+        aggregator="avg",
+    )
     discount_amount = fields.Monetary(readonly=True)
     amount_taxexc_invoiced = fields.Monetary(
         string="Untaxed Amount Invoiced",

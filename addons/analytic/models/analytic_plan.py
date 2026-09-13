@@ -23,32 +23,32 @@ class AccountAnalyticPlan(models.Model):
     _order = "sequence asc, id"
 
     name = fields.Char(
-        required=True,
         translate=True,
         inverse="_inverse_name",
+        required=True,
     )
     description = fields.Text()
     parent_id = fields.Many2one(
-        "account.analytic.plan",
+        comodel_name="account.analytic.plan",
         inverse="_inverse_parent_id",
         index="btree_not_null",
-        ondelete="cascade",
         domain="['!', ('id', 'child_of', id)]",
+        ondelete="cascade",
     )
     parent_path = fields.Char(index="btree")
     root_id = fields.Many2one(
-        "account.analytic.plan",
+        comodel_name="account.analytic.plan",
         compute="_compute_root_id",
         search="_search_root_id",
     )
     children_ids = fields.One2many(
-        "account.analytic.plan",
-        "parent_id",
+        comodel_name="account.analytic.plan",
+        inverse_name="parent_id",
         string="Childrens",
     )
     children_count = fields.Count(
-        "children_ids",
-        "Children Plans Count",
+        count_of="children_ids",
+        string="Children Plans Count",
     )
     complete_name = fields.Char(
         compute="_compute_complete_name",
@@ -56,21 +56,19 @@ class AccountAnalyticPlan(models.Model):
         store=True,
     )
     account_ids = fields.One2many(
-        "account.analytic.account",
-        "plan_id",
+        comodel_name="account.analytic.account",
+        inverse_name="plan_id",
         string="Accounts",
     )
     account_count = fields.Count(
-        "account_ids",
-        "Analytic Accounts Count",
+        count_of="account_ids",
+        string="Analytic Accounts Count",
     )
     all_account_count = fields.Integer(
-        "All Analytic Accounts Count",
+        string="All Analytic Accounts Count",
         compute="_compute_all_account_count",
     )
-    color = fields.Integer(
-        default=lambda self: self._default_color(),
-    )
+    color = fields.Integer(default=lambda self: self._default_color())
     sequence = fields.Integer(default=10)
 
     default_applicability = fields.Selection(
@@ -83,8 +81,8 @@ class AccountAnalyticPlan(models.Model):
         company_dependent=True,
     )
     applicability_ids = fields.One2many(
-        "account.analytic.applicability",
-        "analytic_plan_id",
+        comodel_name="account.analytic.applicability",
+        inverse_name="analytic_plan_id",
         domain="[('company_id', '=', current_company_id)]",
     )
 
@@ -525,16 +523,19 @@ class AccountAnalyticApplicability(models.Model):
     _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of
 
-    analytic_plan_id = fields.Many2one("account.analytic.plan", index="btree_not_null")
+    analytic_plan_id = fields.Many2one(
+        comodel_name="account.analytic.plan",
+        index="btree_not_null",
+    )
     business_domain = fields.Selection(
         selection=[
             ("general", "Miscellaneous"),
         ],
-        required=True,
         string="Domain",
+        required=True,
     )
     applicability = fields.Selection(
-        [
+        selection=[
             ("optional", "Optional"),
             ("mandatory", "Mandatory"),
             ("unavailable", "Unavailable"),
@@ -542,7 +543,7 @@ class AccountAnalyticApplicability(models.Model):
         required=True,
     )
     company_id = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
         default=lambda self: self.env.company,
     )
 

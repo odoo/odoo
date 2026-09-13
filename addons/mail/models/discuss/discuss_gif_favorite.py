@@ -5,7 +5,10 @@ class DiscussGifFavorite(models.Model):
     _name = "discuss.gif.favorite"
     _description = "Save favorite GIF from Tenor API"
 
-    tenor_gif_id = fields.Char("GIF id from Tenor", required=True)
+    tenor_gif_id = fields.Char(
+        string="GIF id from Tenor",
+        required=True,
+    )
 
     _user_gif_favorite = models.Constraint(
         "unique(create_uid,tenor_gif_id)",

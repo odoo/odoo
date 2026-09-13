@@ -19,23 +19,36 @@ class FleetVehicleLogContract(models.Model):
         return fields.Date.to_string(start_date + oneyear)
 
     vehicle_id = fields.Many2one(
-        "fleet.vehicle",
+        comodel_name="fleet.vehicle",
+        index=True,
         required=True,
         check_company=True,
         tracking=True,
-        index=True,
     )
     cost_subtype_id = fields.Many2one(
-        "fleet.service.type",
-        "Type",
+        comodel_name="fleet.service.type",
+        string="Type",
         help="Cost type purchased with this cost",
         domain=[("category", "=", "contract")],
     )
-    amount = fields.Monetary("Cost", tracking=True)
+    amount = fields.Monetary(
+        string="Cost",
+        tracking=True,
+    )
     date = fields.Date(help="Date when the cost has been executed")
-    company_id = fields.Many2one("res.company", default=lambda self: self.env.company)
-    currency_id = fields.Many2one("res.currency", related="company_id.currency_id")
-    name = fields.Char(compute="_compute_name", store=True, readonly=False)
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        default=lambda self: self.env.company,
+    )
+    currency_id = fields.Many2one(
+        comodel_name="res.currency",
+        related="company_id.currency_id",
+    )
+    name = fields.Char(
+        compute="_compute_name",
+        store=True,
+        readonly=False,
+    )
     active = fields.Boolean(default=True)
     user_id = fields.Many2one(
         comodel_name="res.users",
@@ -48,40 +61,59 @@ class FleetVehicleLogContract(models.Model):
         index=True,
     )
     start_date = fields.Date(
-        "Contract Start Date",
+        string="Contract Start Date",
+        help="Date when the coverage of the contract begins",
         default=fields.Date.context_today,
         tracking=True,
-        help="Date when the coverage of the contract begins",
     )
     expiration_date = fields.Date(
-        "Contract Expiration Date",
+        string="Contract Expiration Date",
+        help="Date when the coverage of the contract expirates (by default, one year after begin date)",
         default=lambda self: self.compute_next_year_date(
             fields.Date.context_today(self)
         ),
         tracking=True,
-        help="Date when the coverage of the contract expirates (by default, one year after begin date)",
     )
-    days_left = fields.Integer(compute="_compute_expiration", string="Warning Date")
+    days_left = fields.Integer(
+        string="Warning Date",
+        compute="_compute_expiration",
+    )
     expires_today = fields.Boolean(compute="_compute_expiration")
     has_open_contract = fields.Boolean(compute="_compute_has_open_contract")
-    insurer_id = fields.Many2one("res.partner", "Vendor")
-    purchaser_id = fields.Many2one(related="vehicle_id.driver_id", string="Driver")
-    ins_ref = fields.Char("Reference", size=64, copy=False)
+    insurer_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Vendor",
+    )
+    purchaser_id = fields.Many2one(
+        related="vehicle_id.driver_id",
+        string="Driver",
+    )
+    ins_ref = fields.Char(
+        string="Reference",
+        size=64,
+        copy=False,
+    )
     state = fields.Selection(
-        [
+        selection=[
             ("futur", "New"),
             ("open", "Running"),
             ("expired", "Expired"),
             ("closed", "Cancelled"),
         ],
-        "Status",
-        default="open",
+        string="Status",
         help="Choose whether the contract is still valid or not",
+        default="open",
+        copy=False,
         tracking=True,
+    )
+    notes = fields.Html(
+        string="Terms and Conditions",
         copy=False,
     )
-    notes = fields.Html("Terms and Conditions", copy=False)
-    cost_generated = fields.Monetary("Recurring Cost", tracking=True)
+    cost_generated = fields.Monetary(
+        string="Recurring Cost",
+        tracking=True,
+    )
     # "Every N units" from `mixin.recurrence.interval`, rather than the five
     # adverbs this used to offer. The adverbs could not say "every two weeks",
     # and each reader spelled its own conversion to a comparable figure by hand
@@ -93,16 +125,19 @@ class FleetVehicleLogContract(models.Model):
     # sit inside a required Selection, which made every reader carry a special
     # case for a value that means "this field does not apply".
     repeat_interval = fields.Integer(
-        "Recurring Cost Every",
+        string="Recurring Cost Every",
         required=True,
     )
     repeat_unit = fields.Selection(
         string="Recurring Cost Frequency",
+        help="Leave empty for a contract that generates no recurring cost.",
         default="month",
         tracking=True,
-        help="Leave empty for a contract that generates no recurring cost.",
     )
-    service_ids = fields.Many2many("fleet.service.type", string="Included Services")
+    service_ids = fields.Many2many(
+        comodel_name="fleet.service.type",
+        string="Included Services",
+    )
 
     @api.depends("vehicle_id.name", "cost_subtype_id")
     def _compute_name(self):

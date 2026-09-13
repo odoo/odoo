@@ -16,10 +16,10 @@ class IrActionsPath(models.Model):
 
     path = fields.Char(required=True)
     action_id = fields.Many2one(
-        "ir.actions.actions",
+        comodel_name="ir.actions.actions",
+        index="btree_not_null",
         required=True,
         ondelete="cascade",
-        index="btree_not_null",
     )
 
     _path_unique = models.Constraint(

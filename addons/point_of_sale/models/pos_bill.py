@@ -11,8 +11,14 @@ class PosBill(models.Model):
     _inherit = ["mixin.pos.load"]
 
     name = fields.Char()
-    value = fields.Float(required=True, digits=(16, 4))
-    pos_config_ids = fields.Many2many("pos.config", string="Point of Sales")
+    value = fields.Float(
+        digits=(16, 4),
+        required=True,
+    )
+    pos_config_ids = fields.Many2many(
+        comodel_name="pos.config",
+        string="Point of Sales",
+    )
 
     @api.model
     def name_create(self, name):

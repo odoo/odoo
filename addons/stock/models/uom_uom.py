@@ -7,9 +7,7 @@ from ..tools import debug_log as dbg
 class UomUom(models.Model):
     _inherit = "uom.uom"
 
-    package_type_id = fields.Many2one(
-        comodel_name="stock.package.type",
-    )
+    package_type_id = fields.Many2one(comodel_name="stock.package.type")
     route_ids = fields.Many2many(
         related="package_type_id.route_ids",
         string="Routes",

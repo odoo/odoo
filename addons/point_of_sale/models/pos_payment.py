@@ -13,45 +13,64 @@ class PosPayment(models.Model):
     _order = "id desc"
     _inherit = ["mixin.pos.load"]
 
-    name = fields.Char(string="Label", readonly=True)
+    name = fields.Char(
+        string="Label",
+        readonly=True,
+    )
     pos_order_id = fields.Many2one(
-        "pos.order", string="Order", required=True, index=True, ondelete="cascade"
+        comodel_name="pos.order",
+        string="Order",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     amount = fields.Monetary(
-        required=True,
-        currency_field="currency_id",
         help="Total amount of the payment.",
+        currency_field="currency_id",
+        required=True,
     )
-    payment_method_id = fields.Many2one("pos.payment.method", required=True)
+    payment_method_id = fields.Many2one(
+        comodel_name="pos.payment.method",
+        required=True,
+    )
     payment_date = fields.Datetime(
         string="Date",
-        required=True,
-        readonly=True,
         default=lambda self: fields.Datetime.now(),
+        readonly=True,
+        required=True,
     )
     currency_id = fields.Many2one(
-        "res.currency", string="Currency", related="pos_order_id.currency_id"
+        comodel_name="res.currency",
+        related="pos_order_id.currency_id",
+        string="Currency",
     )
     currency_rate = fields.Float(
-        string="Conversion Rate",
         related="pos_order_id.currency_rate",
+        string="Conversion Rate",
         help="Conversion rate from company currency to order currency.",
     )
     partner_id = fields.Many2one(
-        "res.partner", string="Customer", related="pos_order_id.partner_id"
+        comodel_name="res.partner",
+        related="pos_order_id.partner_id",
+        string="Customer",
     )
     session_id = fields.Many2one(
-        "pos.session",
-        string="Session",
+        comodel_name="pos.session",
         related="pos_order_id.session_id",
+        string="Session",
         store=True,
         index=True,
     )
     user_id = fields.Many2one(
-        "res.users", string="Employee", related="session_id.user_id"
+        comodel_name="res.users",
+        related="session_id.user_id",
+        string="Employee",
     )
     company_id = fields.Many2one(
-        "res.company", string="Company", related="pos_order_id.company_id", store=True
+        comodel_name="res.company",
+        related="pos_order_id.company_id",
+        string="Company",
+        store=True,
     )
     card_type = fields.Char(
         string="Type of card used",
@@ -73,9 +92,19 @@ class PosPayment(models.Model):
     transaction_id = fields.Char(string="Payment Transaction ID")
     payment_status = fields.Char()
     ticket = fields.Char(string="Payment Receipt Info")
-    is_change = fields.Boolean(string="Is this payment change?", default=False)
-    account_move_id = fields.Many2one("account.move", index="btree_not_null")
-    uuid = fields.Char(readonly=True, default=lambda self: str(uuid4()), copy=False)
+    is_change = fields.Boolean(
+        string="Is this payment change?",
+        default=False,
+    )
+    account_move_id = fields.Many2one(
+        comodel_name="account.move",
+        index="btree_not_null",
+    )
+    uuid = fields.Char(
+        default=lambda self: str(uuid4()),
+        copy=False,
+        readonly=True,
+    )
 
     _unique_uuid = models.Constraint(
         "unique (uuid)", "A payment with this uuid already exists"

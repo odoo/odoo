@@ -12,71 +12,85 @@ class WebJsError(models.Model):
     _log_access = False
 
     recorded_at = fields.Datetime(
-        required=True,
         default=fields.Datetime.now,
         index=True,
         readonly=True,
+        required=True,
     )
     user_id = fields.Many2one(
-        "res.users",
-        index="btree_not_null",
-        ondelete="set null",
-        readonly=True,
+        comodel_name="res.users",
         help="User whose session emitted the beacon; null for anonymous "
         "frontend traffic.",
+        index="btree_not_null",
+        readonly=True,
+        ondelete="set null",
     )
     phase = fields.Selection(
-        [
+        selection=[
             ("pre_boot", "Pre-boot"),
             ("post_boot", "Post-boot"),
             ("unknown", "Unknown"),
         ],
         string="Boot Phase",
-        readonly=True,
         help="Whether the module system had finished booting. A pre_boot "
         "failure means the loader itself did not come up, so nothing else in "
         "the client is trustworthy at that point.",
+        readonly=True,
     )
     kind = fields.Selection(
-        [
+        selection=[
             ("error", "Uncaught Error"),
             ("unhandledrejection", "Unhandled Rejection"),
             ("service_start", "Service Failed to Start"),
             ("asset_load_error", "Bundle Asset Failed to Load"),
             ("module_rebind", "Module Rebind"),
         ],
-        readonly=True,
         index="btree",
+        readonly=True,
     )
     message = fields.Char(
-        required=True,
-        size=4096,
-        readonly=True,
         help="Capped at 4096 chars at the DB level so a writer bypassing the "
         "controller cannot bloat the row.",
+        size=4096,
+        readonly=True,
+        required=True,
     )
     cause = fields.Text(
         string="Cause Chain",
-        readonly=True,
         help="Flattened ``error.cause`` chain, one 'Caused by:' segment per "
         "level. This is the field an OWL lifecycle error points at: its own "
         "message says to read `cause`, and without it the report names a "
         "failure without saying why it happened.",
+        readonly=True,
     )
     stack = fields.Text(readonly=True)
-    filename = fields.Char(string="File", size=500, readonly=True)
-    line = fields.Integer(readonly=True)
-    col = fields.Integer(string="Column", readonly=True)
-    url = fields.Char(string="URL", size=500, readonly=True)
-    user_agent = fields.Char(size=500, readonly=True)
-    reloaded = fields.Selection(
-        [("reloaded", "Reloaded"), ("suppressed", "Suppressed")],
-        string="Self-heal",
+    filename = fields.Char(
+        string="File",
+        size=500,
         readonly=True,
+    )
+    line = fields.Integer(readonly=True)
+    col = fields.Integer(
+        string="Column",
+        readonly=True,
+    )
+    url = fields.Char(
+        string="URL",
+        size=500,
+        readonly=True,
+    )
+    user_agent = fields.Char(
+        size=500,
+        readonly=True,
+    )
+    reloaded = fields.Selection(
+        selection=[("reloaded", "Reloaded"), ("suppressed", "Suppressed")],
+        string="Self-heal",
         help="Only set for asset_load_error: whether the loader's one-per-minute "
         "self-heal reload fired, or the guard suppressed it. Null everywhere "
         "else — an absent value must not read as 'suppressed', which would "
         "claim a reload was withheld when none was ever attempted.",
+        readonly=True,
     )
 
     _check_cause_len = models.Constraint(

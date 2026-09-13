@@ -114,51 +114,74 @@ class IrAttachment(models.Model):
     name = fields.Char(required=True)
     description = fields.Text()
     res_name = fields.Char(
-        "Resource Name",
+        string="Resource Name",
         compute="_compute_res_name",
     )
-    res_model = fields.Char("Resource Model")
-    res_field = fields.Char("Resource Field")
+    res_model = fields.Char(string="Resource Model")
+    res_field = fields.Char(string="Resource Field")
     res_id = fields.Many2oneReference(
-        "Resource ID",
         model_field="res_model",
+        string="Resource ID",
     )
     company_id = fields.Many2one(
-        "res.company",
-        change_default=True,
+        comodel_name="res.company",
         default=lambda self: self.env.company,
+        change_default=True,
     )
     type = fields.Selection(
-        [("url", "URL"), ("binary", "File")],
-        required=True,
+        selection=[("url", "URL"), ("binary", "File")],
+        help="You can either upload a file from your computer or copy/paste an internet link to your file.",
         default="binary",
         change_default=True,
-        help="You can either upload a file from your computer or copy/paste an internet link to your file.",
+        required=True,
     )
-    url = fields.Char(index="btree_not_null", size=1024)
-    public = fields.Boolean("Is public document")
+    url = fields.Char(
+        size=1024,
+        index="btree_not_null",
+    )
+    public = fields.Boolean(string="Is public document")
     access_token = fields.Char(groups="base.group_user")
 
-    db_datas = fields.Binary("Database Data", attachment=False)
-    store_fname = fields.Char("Stored Filename", index=True, copy=False)
-    file_size = fields.Integer(readonly=True, copy=False)
-    checksum = fields.Char(size=CONTENT_DIGEST_MAX_LEN, readonly=True, copy=False)
-    mimetype = fields.Char("Mime Type", readonly=True)
+    db_datas = fields.Binary(
+        string="Database Data",
+        attachment=False,
+    )
+    store_fname = fields.Char(
+        string="Stored Filename",
+        index=True,
+        copy=False,
+    )
+    file_size = fields.Integer(
+        copy=False,
+        readonly=True,
+    )
+    checksum = fields.Char(
+        size=CONTENT_DIGEST_MAX_LEN,
+        copy=False,
+        readonly=True,
+    )
+    mimetype = fields.Char(
+        string="Mime Type",
+        readonly=True,
+    )
     index_content = fields.Text(
-        "Indexed Content", readonly=True, prefetch=False, copy=False
+        string="Indexed Content",
+        copy=False,
+        readonly=True,
+        prefetch=False,
     )
 
     raw = fields.Binary(
         string="File Content (raw)",
+        bin_size_field="file_size",
         compute="_compute_raw",
         inverse="_inverse_raw",
-        bin_size_field="file_size",
     )
     datas = fields.Binary(
         string="File Content (base64)",
+        bin_size_field="file_size",
         compute="_compute_datas",
         inverse="_inverse_datas",
-        bin_size_field="file_size",
     )
 
     _res_field_idx = models.Index("(res_model, res_field, res_id)")

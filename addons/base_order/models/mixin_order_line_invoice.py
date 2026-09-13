@@ -15,7 +15,7 @@ class MixinOrderLineInvoice(models.AbstractModel):
     _invoice_move_direction = ""
     _invoice_policy_field = ""
 
-    currency_id = fields.Many2one("res.currency")
+    currency_id = fields.Many2one(comodel_name="res.currency")
 
     invoice_line_ids = fields.Many2many(
         comodel_name="account.move.line",
@@ -69,8 +69,8 @@ class MixinOrderLineInvoice(models.AbstractModel):
     invoice_state = fields.Selection(
         selection=INVOICE_STATE,
         string="Invoice Status",
-        default="no",
         compute="_compute_invoice_state",
+        default="no",
         store=True,
     )
 

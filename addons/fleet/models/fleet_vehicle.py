@@ -47,112 +47,125 @@ class FleetVehicle(models.Model):
         current_year = datetime.now().year
         return [(str(i), i) for i in range(1970, current_year + 1)]
 
-    name = fields.Char(compute="_compute_name", store=True)
-    description = fields.Html("Vehicle Description")
-    active = fields.Boolean(default=True, tracking=True)
+    name = fields.Char(
+        compute="_compute_name",
+        store=True,
+    )
+    description = fields.Html(string="Vehicle Description")
+    active = fields.Boolean(
+        default=True,
+        tracking=True,
+    )
     manager_id = fields.Many2one(
-        "res.users",
-        "Fleet Manager",
+        comodel_name="res.users",
+        string="Fleet Manager",
         domain=lambda self: (
             f"[('share', '=', False), ('company_id', '=', company_id), ('all_group_ids', 'in', {self.env.ref('fleet.fleet_group_user').id})]"
         ),
     )
     company_id = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
         default=lambda self: self.env.company,
     )
-    currency_id = fields.Many2one("res.currency", related="company_id.currency_id")
-    country_id = fields.Many2one("res.country", related="company_id.country_id")
-    country_code = fields.Char(related="country_id.code", depends=["country_id"])
+    currency_id = fields.Many2one(
+        comodel_name="res.currency",
+        related="company_id.currency_id",
+    )
+    country_id = fields.Many2one(
+        comodel_name="res.country",
+        related="company_id.country_id",
+    )
+    country_code = fields.Char(
+        related="country_id.code",
+        depends=["country_id"],
+    )
     license_plate = fields.Char(
-        tracking=True,
         help="License plate number of the vehicle (i = plate number for a car)",
+        tracking=True,
     )
     vin_sn = fields.Char(
-        "Chassis Number",
+        string="Chassis Number",
         help="Unique number written on the vehicle motor (VIN/SN number)",
-        tracking=True,
         copy=False,
+        tracking=True,
     )
     trailer_hook = fields.Boolean(
         string="Trailer Hitch",
+        help="A trailer hitch is a device attached to a vehicle's chassis for towing purposes, \
+            such as pulling trailers, boats, or other vehicles.",
         compute="_compute_trailer_hook",
         store=True,
         readonly=False,
-        help="A trailer hitch is a device attached to a vehicle's chassis for towing purposes, \
-            such as pulling trailers, boats, or other vehicles.",
     )
     driver_id = fields.Many2one(
-        "res.partner",
-        tracking=True,
+        comodel_name="res.partner",
         help="Driver address of the vehicle",
         copy=False,
+        tracking=True,
     )
     future_driver_id = fields.Many2one(
-        "res.partner",
-        tracking=True,
+        comodel_name="res.partner",
         help="Next Driver Address of the vehicle",
         copy=False,
         check_company=True,
+        tracking=True,
     )
     model_id = fields.Many2one(
-        "fleet.vehicle.model",
-        tracking=True,
+        comodel_name="fleet.vehicle.model",
         required=True,
+        tracking=True,
     )
     brand_id = fields.Many2one(
-        "fleet.vehicle.model.brand",
-        "Brand",
+        comodel_name="fleet.vehicle.model.brand",
         related="model_id.brand_id",
+        string="Brand",
         store=True,
         readonly=False,
     )
     log_drivers = fields.One2many(
-        "fleet.vehicle.assignation.log",
-        "vehicle_id",
+        comodel_name="fleet.vehicle.assignation.log",
+        inverse_name="vehicle_id",
         string="Assignment Logs",
     )
     log_services = fields.One2many(
-        "fleet.vehicle.log.services",
-        "vehicle_id",
-        "Services Logs",
+        comodel_name="fleet.vehicle.log.services",
+        inverse_name="vehicle_id",
+        string="Services Logs",
     )
     log_contracts = fields.One2many(
-        "fleet.vehicle.log.contract",
-        "vehicle_id",
-        "Contracts",
+        comodel_name="fleet.vehicle.log.contract",
+        inverse_name="vehicle_id",
+        string="Contracts",
     )
-    contract_count = fields.Integer(
-        compute="_compute_count_all",
-    )
+    contract_count = fields.Integer(compute="_compute_count_all")
     service_count = fields.Integer(
-        compute="_compute_count_all",
         string="Services",
+        compute="_compute_count_all",
     )
     odometer_count = fields.Integer(
-        compute="_compute_count_all",
         string="Odometer",
+        compute="_compute_count_all",
     )
     history_count = fields.Integer(
-        compute="_compute_count_all",
         string="Drivers History Count",
+        compute="_compute_count_all",
     )
     next_assignation_date = fields.Date(
-        "Assignment Date",
+        string="Assignment Date",
         help="This is the date at which the car will be available, if not set it means available instantly",
     )
     order_date = fields.Date()
     acquisition_date = fields.Date(
-        "Registration Date",
-        required=False,
-        default=fields.Date.today,
-        tracking=True,
+        string="Registration Date",
         help="Date of vehicle registration",
+        default=fields.Date.today,
+        required=False,
+        tracking=True,
     )
     write_off_date = fields.Date(
-        "Cancellation Date",
-        tracking=True,
+        string="Cancellation Date",
         help="Date when the vehicle's license plate has been cancelled/removed.",
+        tracking=True,
     )
     contract_date_start = fields.Date(
         string="First Contract Date",
@@ -166,16 +179,16 @@ class FleetVehicle(models.Model):
         readonly=False,
     )
     state_id = fields.Many2one(
-        "fleet.vehicle.state",
+        comodel_name="fleet.vehicle.state",
+        help="Current state of the vehicle",
         default=_default_state_id,
         group_expand="_read_group_expand_full",
-        tracking=True,
-        help="Current state of the vehicle",
         ondelete="set null",
+        tracking=True,
     )
     location = fields.Char(help="Location of the vehicle (garage, ...)")
     seats = fields.Integer(
-        "Seating Capacity",
+        string="Seating Capacity",
         help="Number of seats of the vehicle",
         compute="_compute_seats",
         store=True,
@@ -189,51 +202,55 @@ class FleetVehicle(models.Model):
         readonly=False,
     )
     doors = fields.Integer(
-        "Number of Doors",
+        string="Number of Doors",
         help="Number of doors of the vehicle",
         compute="_compute_doors",
         store=True,
         readonly=False,
     )
     tag_ids = fields.Many2many(
-        "fleet.vehicle.tag",
-        "fleet_vehicle_vehicle_tag_rel",
-        "vehicle_tag_id",
-        "tag_id",
-        "Tags",
+        comodel_name="fleet.vehicle.tag",
+        relation="fleet_vehicle_vehicle_tag_rel",
+        column1="vehicle_tag_id",
+        column2="tag_id",
+        string="Tags",
         copy=False,
     )
     odometer = fields.Float(
-        compute="_compute_odometer",
-        inverse="_inverse_odometer",
         string="Last Odometer",
         help="Odometer measure of the vehicle at the moment of this log",
+        compute="_compute_odometer",
+        inverse="_inverse_odometer",
     )
     odometer_unit = fields.Selection(
-        [("kilometers", "km"), ("miles", "mi")],
+        selection=[("kilometers", "km"), ("miles", "mi")],
         default="kilometers",
         required=True,
     )
     transmission = fields.Selection(
-        [("manual", "Manual"), ("automatic", "Automatic")],
+        selection=[("manual", "Manual"), ("automatic", "Automatic")],
         compute="_compute_transmission",
         store=True,
         readonly=False,
     )
     fuel_type = fields.Selection(
-        FUEL_TYPES,
+        selection=FUEL_TYPES,
         compute="_compute_fuel_type",
         store=True,
         readonly=False,
     )
     power_unit = fields.Selection(
-        [("power", "kW"), ("horsepower", "Horsepower")],
+        selection=[("power", "kW"), ("horsepower", "Horsepower")],
         default="power",
         required=True,
     )
-    horsepower = fields.Float(compute="_compute_horsepower", store=True, readonly=False)
+    horsepower = fields.Float(
+        compute="_compute_horsepower",
+        store=True,
+        readonly=False,
+    )
     horsepower_tax = fields.Float(
-        "Horsepower Taxation",
+        string="Horsepower Taxation",
         compute="_compute_horsepower_tax",
         store=True,
         readonly=False,
@@ -245,48 +262,51 @@ class FleetVehicle(models.Model):
         readonly=False,
     )
     co2 = fields.Float(
-        "CO₂ Emissions",
+        string="CO₂ Emissions",
         help="CO2 emissions of the vehicle",
         compute="_compute_co2",
         store=True,
         readonly=False,
-        tracking=True,
         aggregator=None,
+        tracking=True,
     )
     co2_emission_unit = fields.Selection(
-        [("g/km", "g/km"), ("g/mi", "g/mi")],
+        selection=[("g/km", "g/km"), ("g/mi", "g/mi")],
         compute="_compute_co2_emission_unit",
-        store=True,
         default="g/km",
+        store=True,
         required=True,
     )
     co2_standard = fields.Char(
-        "Emission Standard",
+        string="Emission Standard",
+        help="Emission Standard specifies the regulatory test procedure \
+            or guideline under which a vehicle's emissions are measured.",
         compute="_compute_co2_standard",
         store=True,
         readonly=False,
-        help="Emission Standard specifies the regulatory test procedure \
-            or guideline under which a vehicle's emissions are measured.",
     )
     category_id = fields.Many2one(
-        "fleet.vehicle.model.category",
+        comodel_name="fleet.vehicle.model.category",
         compute="_compute_category_id",
         store=True,
         readonly=False,
     )
-    image_128 = fields.Image(related="model_id.image_128", readonly=True)
+    image_128 = fields.Image(
+        related="model_id.image_128",
+        readonly=True,
+    )
     contract_renewal_due_soon = fields.Boolean(
+        string="Has Contracts to renew",
         compute="_compute_contract_reminder",
         search="_search_contract_renewal_due_soon",
-        string="Has Contracts to renew",
     )
     contract_renewal_overdue = fields.Boolean(
+        string="Has Contracts Overdue",
         compute="_compute_contract_reminder",
         search="_search_contract_renewal_overdue",
-        string="Has Contracts Overdue",
     )
     contract_state = fields.Selection(
-        [
+        selection=[
             ("futur", "Incoming"),
             ("open", "In Progress"),
             ("expired", "Expired"),
@@ -296,22 +316,27 @@ class FleetVehicle(models.Model):
         compute="_compute_contract_reminder",
         required=False,
     )
-    car_value = fields.Float(string="Catalog Value (VAT Incl.)", tracking=True)
+    car_value = fields.Float(
+        string="Catalog Value (VAT Incl.)",
+        tracking=True,
+    )
     net_car_value = fields.Float(string="Purchase Value")
     residual_value = fields.Float()
     plan_to_change_car = fields.Boolean(tracking=True)
     plan_to_change_bike = fields.Boolean(tracking=True)
     vehicle_type = fields.Selection(related="model_id.vehicle_type")
     frame_type = fields.Selection(
-        [("diamant", "Diamant"), ("trapez", "Trapez"), ("wave", "Wave")],
+        selection=[("diamant", "Diamant"), ("trapez", "Trapez"), ("wave", "Wave")],
         string="Bike Frame Type",
     )
     electric_assistance = fields.Boolean(
-        compute="_compute_electric_assistance", store=True, readonly=False
+        compute="_compute_electric_assistance",
+        store=True,
+        readonly=False,
     )
     frame_size = fields.Float()
     service_activity = fields.Selection(
-        [
+        selection=[
             ("none", "None"),
             ("overdue", "Overdue"),
             ("today", "Today"),
@@ -319,15 +344,17 @@ class FleetVehicle(models.Model):
         compute="_compute_service_activity",
     )
     vehicle_properties = fields.Properties(
-        "Properties", definition="model_id.vehicle_properties_definition", copy=True
+        definition="model_id.vehicle_properties_definition",
+        string="Properties",
+        copy=True,
     )
     vehicle_range = fields.Integer(string="Range")
     range_unit = fields.Selection(
-        [("km", "km"), ("mi", "mi")],
+        selection=[("km", "km"), ("mi", "mi")],
         compute="_compute_range_unit",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
         required=True,
     )
 

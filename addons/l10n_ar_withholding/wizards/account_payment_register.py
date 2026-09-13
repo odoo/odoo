@@ -11,17 +11,17 @@ class AccountPaymentRegister(models.TransientModel):
     _inherit = "account.payment.register"
 
     l10n_ar_withholding_ids = fields.One2many(
-        "l10n_ar.payment.register.withholding",
-        "payment_register_id",
+        comodel_name="l10n_ar.payment.register.withholding",
+        inverse_name="payment_register_id",
         string="Withholdings",
         compute="_compute_l10n_ar_withholding_ids",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     l10n_ar_net_amount = fields.Monetary(
+        help="Net amount after withholdings",
         compute="_compute_l10n_ar_net_amount",
         readonly=True,
-        help="Net amount after withholdings",
     )
     l10n_ar_adjustment_warning = fields.Boolean(
         compute="_compute_l10n_ar_adjustment_warning"

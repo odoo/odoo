@@ -13,18 +13,19 @@ class StockPickingType(models.Model):
         ]._get_weight_uom_name_from_ir_config_parameter()
 
     batch_group_by_carrier = fields.Boolean(
-        "Carrier", help="Automatically group batches by carriers"
+        string="Carrier",
+        help="Automatically group batches by carriers",
     )
     batch_max_weight = fields.Integer(
-        "Maximum weight",
+        string="Maximum weight",
         help="A transfer will not be automatically added to batches that will exceed this weight if the transfer is added to it.\n"
         "Leave this value as '0' if no weight limit.",
     )
     weight_uom_name = fields.Char(
         string="Weight unit of measure label",
         compute="_compute_weight_uom_name",
-        readonly=True,
         default=_default_weight_uom_name,
+        readonly=True,
     )
 
     def _compute_weight_uom_name(self):

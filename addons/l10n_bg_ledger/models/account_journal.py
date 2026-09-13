@@ -5,18 +5,18 @@ class AccountJournal(models.Model):
     _inherit = "account.journal"
 
     l10n_bg_customer_invoice = fields.Selection(
-        string="Customer Invoices",
         selection="_selection_l10n_bg_document_types",
+        string="Customer Invoices",
         default="01",
     )
     l10n_bg_credit_notes = fields.Selection(
-        string="Credit Notes",
         selection="_selection_l10n_bg_document_types",
+        string="Credit Notes",
         default="03",
     )
     l10n_bg_debit_notes = fields.Selection(
-        string="Debit Notes",
         selection="_selection_l10n_bg_document_types",
+        string="Debit Notes",
         default="02",
     )
 

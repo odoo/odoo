@@ -7,7 +7,10 @@ class HrSkillLevel(models.Model):
     _order = "level_progress, id"
 
     skill_type_id = fields.Many2one(
-        "hr.skill.type", required=True, index=True, ondelete="cascade"
+        comodel_name="hr.skill.type",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     name = fields.Char(required=True)
     level_progress = fields.Integer(
@@ -19,7 +22,8 @@ class HrSkillLevel(models.Model):
     )
 
     technical_is_new_default = fields.Boolean(
-        compute="_compute_technical_is_new_default", readonly=False
+        compute="_compute_technical_is_new_default",
+        readonly=False,
     )
 
     _check_level_progress = models.Constraint(

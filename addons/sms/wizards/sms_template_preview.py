@@ -28,12 +28,23 @@ class SmsTemplatePreview(models.TransientModel):
             result["resource_ref"] = "%s,%s" % (sms_template.model_id.model, res.id)
         return result
 
-    sms_template_id = fields.Many2one("sms.template", required=True, ondelete="cascade")
-    lang = fields.Selection(_selection_languages, string="Template Preview Language")
-    model_id = fields.Many2one("ir.model", related="sms_template_id.model_id")
+    sms_template_id = fields.Many2one(
+        comodel_name="sms.template",
+        required=True,
+        ondelete="cascade",
+    )
+    lang = fields.Selection(
+        selection=_selection_languages,
+        string="Template Preview Language",
+    )
+    model_id = fields.Many2one(
+        comodel_name="ir.model",
+        related="sms_template_id.model_id",
+    )
     body = fields.Char(compute="_compute_sms_template_fields")
     resource_ref = fields.Reference(
-        string="Record reference", selection="_selection_target_model"
+        selection="_selection_target_model",
+        string="Record reference",
     )
     no_record = fields.Boolean(compute="_compute_no_record")
 

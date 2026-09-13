@@ -7,50 +7,60 @@ class EventBooth(models.Model):
     _inherit = ["event.type.booth", "mixin.mail.thread", "mixin.mail.activity"]
 
     # owner
-    event_type_id = fields.Many2one(ondelete="set null", required=False)
+    event_type_id = fields.Many2one(
+        required=False,
+        ondelete="set null",
+    )
     event_id = fields.Many2one(
-        "event.event", ondelete="cascade", required=True, index=True
+        comodel_name="event.event",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     # customer
     partner_id = fields.Many2one(
-        "res.partner", string="Renter", tracking=True, copy=False
+        comodel_name="res.partner",
+        string="Renter",
+        copy=False,
+        tracking=True,
     )
     contact_name = fields.Char(
-        "Renter Name",
+        string="Renter Name",
         compute="_compute_contact_name",
-        readonly=False,
         store=True,
         copy=False,
+        readonly=False,
     )
     contact_email = fields.Char(
-        "Renter Email",
+        string="Renter Email",
         compute="_compute_contact_email",
-        readonly=False,
         store=True,
         copy=False,
+        readonly=False,
     )
     phone_ids = fields.Many2many(
-        "phone.number",
-        "event_booth_phone_number_rel",
-        "booth_id",
-        "phone_number_id",
+        comodel_name="phone.number",
+        relation="event_booth_phone_number_rel",
+        column1="booth_id",
+        column2="phone_number_id",
         string="Renter Phone",
         compute="_compute_phone_ids",
-        readonly=False,
         store=True,
         copy=False,
+        readonly=False,
     )
     # state
     state = fields.Selection(
-        [("available", "Available"), ("unavailable", "Unavailable")],
+        selection=[("available", "Available"), ("unavailable", "Unavailable")],
         string="Status",
-        group_expand=True,
         default="available",
         required=True,
+        group_expand=True,
         tracking=True,
     )
     is_available = fields.Boolean(
-        compute="_compute_is_available", search="_search_is_available"
+        compute="_compute_is_available",
+        search="_search_is_available",
     )
 
     @api.depends("partner_id")

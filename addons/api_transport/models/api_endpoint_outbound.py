@@ -27,8 +27,8 @@ class ApiEndpointOutbound(models.Model):
             ("hour", "Per Hour"),
             ("day", "Per Day"),
         ],
-        default="minute",
         help="Time period for rate limiting",
+        default="minute",
     )
 
     category = fields.Selection(
@@ -45,12 +45,10 @@ class ApiEndpointOutbound(models.Model):
             ("analytics", "Analytics"),
             ("other", "Other"),
         ],
-        required=True,
         default="other",
+        required=True,
     )
-    provider = fields.Char(
-        help="Company providing the service",
-    )
+    provider = fields.Char(help="Company providing the service")
     website = fields.Char()
     documentation_url = fields.Char()
     environment = fields.Selection(
@@ -60,23 +58,21 @@ class ApiEndpointOutbound(models.Model):
             ("production", "Production"),
         ],
         default="test",
-        required=True,
         index=True,
+        required=True,
     )
 
     endpoint_url = fields.Char(
-        required=True,
         help="Base URL for production environment",
+        required=True,
     )
-    endpoint_url_test = fields.Char(
-        help="Base URL for test environment",
-    )
+    endpoint_url_test = fields.Char(help="Base URL for test environment")
     allowed_hosts = fields.Char(
         help="Hosts, besides those of the endpoint URLs, that may receive this "
         "endpoint's credential, separated by commas. 'private' admits any "
         "private-network host, for an endpoint that reaches devices at their own "
         "addresses. A call to any other host that would carry the credential is "
-        "refused.",
+        "refused."
     )
 
     def _is_credential_host_allowed(self, host):
@@ -103,11 +99,11 @@ class ApiEndpointOutbound(models.Model):
     api_version = fields.Char()
     send_version_headers = fields.Boolean(
         string="Send Generic Version Headers",
-        default=True,
         help="Send API-Version and X-API-Version built from the API Version "
         "field. Turn this off for a vendor that carries its version its own "
         "way — in the URL path, or in a header of its own name — where the "
         "generic pair is at best ignored and at worst rejected.",
+        default=True,
     )
     auth_type = fields.Selection(
         selection_add=[
@@ -123,11 +119,11 @@ class ApiEndpointOutbound(models.Model):
     )
     allow_user_credentials = fields.Boolean(
         string="Allow Personal Credentials",
-        default=False,
         help="Let a user hold their own credential for this endpoint, so calls "
         "they trigger are attributed to them rather than to the company. When "
         "a user has no personal credential the company one is used, so turning "
         "this on changes nothing until someone creates one.",
+        default=False,
     )
     api_key_header = fields.Char(
         string="API Key Header",
@@ -163,14 +159,12 @@ class ApiEndpointOutbound(models.Model):
 
     verify_tls = fields.Boolean(
         string="Verify TLS certificate",
+        help="Uncheck only for an endpoint presenting a certificate this server "
+        "cannot validate — typically a device on the local network with a "
+        "self-signed certificate. Unchecking makes the connection "
+        "interceptable; it is not a way to silence a certificate warning "
+        "from a public endpoint.",
         default=True,
-        help=(
-            "Uncheck only for an endpoint presenting a certificate this server "
-            "cannot validate — typically a device on the local network with a "
-            "self-signed certificate. Unchecking makes the connection "
-            "interceptable; it is not a way to silence a certificate warning "
-            "from a public endpoint."
-        ),
     )
 
     @api.constrains("verify_tls", "endpoint_url")
@@ -194,24 +188,14 @@ class ApiEndpointOutbound(models.Model):
     oauth_client_id = fields.Char()
     oauth_auth_endpoint = fields.Char()
     oauth_token_endpoint = fields.Char()
-    oauth_scope = fields.Char(
-        default="read write",
-    )
+    oauth_scope = fields.Char(default="read write")
 
-    timeout_connect = fields.Integer(
-        default=10,
-    )
-    timeout_read = fields.Integer(
-        default=30,
-    )
+    timeout_connect = fields.Integer(default=10)
+    timeout_read = fields.Integer(default=30)
 
-    health_check_enabled = fields.Boolean(
-        default=True,
-    )
+    health_check_enabled = fields.Boolean(default=True)
     health_check_endpoint = fields.Char()
-    health_check_interval = fields.Integer(
-        default=15,
-    )
+    health_check_interval = fields.Integer(default=15)
     health_check_environment = fields.Selection(
         selection=[
             ("production", "Production"),
@@ -221,30 +205,20 @@ class ApiEndpointOutbound(models.Model):
         ],
         default="production",
     )
-    last_health_check = fields.Datetime(
-        readonly=True,
-    )
+    last_health_check = fields.Datetime(readonly=True)
     is_healthy = fields.Boolean(
         default=True,
         readonly=True,
     )
-    health_message = fields.Char(
-        readonly=True,
-    )
+    health_message = fields.Char(readonly=True)
 
-    cache_enabled = fields.Boolean(
-        default=False,
-    )
-    cache_ttl = fields.Integer(
-        default=300,
-    )
+    cache_enabled = fields.Boolean(default=False)
+    cache_ttl = fields.Integer(default=300)
     cache_error_count = fields.Integer(
         default=0,
         readonly=True,
     )
-    cache_last_error = fields.Datetime(
-        readonly=True,
-    )
+    cache_last_error = fields.Datetime(readonly=True)
     cache_health = fields.Selection(
         selection=[
             ("healthy", "Healthy"),
@@ -256,12 +230,11 @@ class ApiEndpointOutbound(models.Model):
     )
 
     log_retention_days = fields.Integer(
-        default=0,
         help="Delete this endpoint's event logs older than this many days. 0 uses "
         "the retention set in API Transport settings.",
+        default=0,
     )
     log_request_payload = fields.Boolean(
-        default=True,
         help="Store the request body on each api.event.log row.\n\n"
         "Turn this off for a service whose payload is secret by construction "
         "rather than by field name — signing and cancellation calls that carry "
@@ -269,11 +242,12 @@ class ApiEndpointOutbound(models.Model):
         "protect a payload whose names it does not know, and these rows are "
         "readable by everyone with API Transport access. The exchange is still "
         "recorded: URL, status, timing, error and trace id are unaffected.",
+        default=True,
     )
     allow_multiple_credentials = fields.Boolean(
-        default=False,
         help="Allow multiple active credentials per company/environment. "
         "Useful for services like Telegram that support multiple bots.",
+        default=False,
     )
 
     credential_ids = fields.One2many(
@@ -293,15 +267,9 @@ class ApiEndpointOutbound(models.Model):
         compute="_compute_credential_count",
         store=True,
     )
-    total_requests = fields.Integer(
-        compute="_compute_statistics",
-    )
-    success_rate = fields.Float(
-        compute="_compute_statistics",
-    )
-    avg_response_time = fields.Float(
-        compute="_compute_statistics",
-    )
+    total_requests = fields.Integer(compute="_compute_statistics")
+    success_rate = fields.Float(compute="_compute_statistics")
+    avg_response_time = fields.Float(compute="_compute_statistics")
 
     _code_unique = models.Constraint(
         "UNIQUE(code)",

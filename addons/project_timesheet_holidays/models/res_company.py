@@ -5,7 +5,7 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     leave_timesheet_task_id = fields.Many2one(
-        "project.task",
+        comodel_name="project.task",
         string="Time Off Task",
         domain="[('project_id', '=', internal_project_id)]",
     )

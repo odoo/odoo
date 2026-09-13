@@ -9,12 +9,27 @@ class HrEmployeeSkillHistoryReport(models.BaseModel):
     _description = "Employee Skills History Report"
     _order = "date desc, employee_id"
 
-    employee_id = fields.Many2one("hr.employee", readonly=True)
-    company_id = fields.Many2one("res.company", readonly=True)
-    department_id = fields.Many2one("hr.department", readonly=True)
+    employee_id = fields.Many2one(
+        comodel_name="hr.employee",
+        readonly=True,
+    )
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        readonly=True,
+    )
+    department_id = fields.Many2one(
+        comodel_name="hr.department",
+        readonly=True,
+    )
     date = fields.Date()
-    skill_id = fields.Many2one("hr.skill", readonly=True)
-    skill_type_id = fields.Many2one("hr.skill.type", readonly=True)
+    skill_id = fields.Many2one(
+        comodel_name="hr.skill",
+        readonly=True,
+    )
+    skill_type_id = fields.Many2one(
+        comodel_name="hr.skill.type",
+        readonly=True,
+    )
     level_progress = fields.Float(readonly=True)
 
     def init(self):

@@ -26,8 +26,6 @@ class IrAttachment(models.Model):
     approval_requirement_id = fields.Many2one(
         comodel_name="approval.document.requirement",
         string="Satisfies Requirement",
-        ondelete="set null",
-        index="btree_not_null",
         help="Which of the category's required documents this file IS. The "
         "requester says so; nothing infers it. Before this column the "
         "confirm-time check ran a bipartite matching over file NAMES, "
@@ -35,6 +33,8 @@ class IrAttachment(models.Model):
         "file called 'holiday-photo-not-an-invoice.png' satisfied a "
         "requirement named 'Invoice', and a genuine invoice scanned to "
         "'scan001.pdf' did not.",
+        index="btree_not_null",
+        ondelete="set null",
     )
 
     @api.constrains("approval_requirement_id", "res_model", "res_id")

@@ -5,20 +5,24 @@ class HrExpenseSplitWizard(models.TransientModel):
     _name = "hr.expense.split.wizard"
     _description = "Expense Split Wizard"
 
-    expense_id = fields.Many2one(comodel_name="hr.expense", required=True)
+    expense_id = fields.Many2one(
+        comodel_name="hr.expense",
+        required=True,
+    )
     expense_split_line_ids = fields.One2many(
-        comodel_name="hr.expense.split", inverse_name="wizard_id"
+        comodel_name="hr.expense.split",
+        inverse_name="wizard_id",
     )
     total_amount_currency = fields.Monetary(
         string="Total Amount",
-        compute="_compute_total_amount_currency",
         currency_field="currency_id",
+        compute="_compute_total_amount_currency",
     )
     total_amount_currency_original = fields.Monetary(
-        string="Total amount original",
         related="expense_id.total_amount_currency",
-        currency_field="currency_id",
+        string="Total amount original",
         help="Total amount of the original Expense that we are splitting",
+        currency_field="currency_id",
     )
     tax_amount_currency = fields.Monetary(
         string="Taxes",
@@ -30,7 +34,8 @@ class HrExpenseSplitWizard(models.TransientModel):
         compute="_compute_split_possible",
     )
     currency_id = fields.Many2one(
-        comodel_name="res.currency", related="expense_id.currency_id"
+        comodel_name="res.currency",
+        related="expense_id.currency_id",
     )
 
     @api.depends("expense_split_line_ids.total_amount_currency")

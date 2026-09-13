@@ -29,50 +29,65 @@ class AccountAccruedOrdersWizard(models.TransientModel):
         )
 
     res_model = fields.Char(
-        compute="_compute_selection", store=True, precompute=True, readonly=True
+        compute="_compute_selection",
+        precompute=True,
+        store=True,
+        readonly=True,
     )
     res_ids = fields.Json(
-        compute="_compute_selection", store=True, precompute=True, readonly=True
+        compute="_compute_selection",
+        precompute=True,
+        store=True,
+        readonly=True,
     )
-    is_purchase = fields.Boolean(compute="_compute_is_purchase", store=True)
+    is_purchase = fields.Boolean(
+        compute="_compute_is_purchase",
+        store=True,
+    )
     company_id = fields.Many2one(
-        "res.company", compute="_compute_company_id", store=True, precompute=True
+        comodel_name="res.company",
+        compute="_compute_company_id",
+        precompute=True,
+        store=True,
     )
     journal_id = fields.Many2one(
         comodel_name="account.journal",
         compute="_compute_journal_id",
+        precompute=True,
         store=True,
         readonly=False,
-        precompute=True,
-        domain="[('type', '=', 'general')]",
         required=True,
+        domain="[('type', '=', 'general')]",
         check_company=True,
     )
-    date = fields.Date(default=_default_date, required=True)
+    date = fields.Date(
+        default=_default_date,
+        required=True,
+    )
     reversal_date = fields.Date(
         compute="_compute_reversal_date",
-        required=True,
-        readonly=False,
-        store=True,
         precompute=True,
+        store=True,
+        readonly=False,
+        required=True,
     )
     amount = fields.Monetary(
         help="Specify an arbitrary value that will be accrued on a \
-        default account for the entire order, regardless of the products on the different lines.",
+        default account for the entire order, regardless of the products on the different lines."
     )
     currency_id = fields.Many2one(
         related="company_id.currency_id",
         string="Company Currency",
-        readonly=True,
-        store=True,
         help="Utility field to express amount currency",
+        store=True,
+        readonly=True,
     )
     account_id = fields.Many2one(
         comodel_name="account.account",
-        required=True,
         string="Accrual Account",
-        check_company=True,
+        required=True,
         domain="[('account_type', '=', 'liability_current' if is_purchase else 'asset_current')]",
+        check_company=True,
     )
     preview_data = fields.Text(compute="_compute_preview_data")
     display_amount = fields.Boolean(compute="_compute_display_amount")

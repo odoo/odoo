@@ -31,14 +31,17 @@ class IrModelFieldsSelection(models.Model):
     _allow_sudo_commands = False
 
     field_id = fields.Many2one(
-        "ir.model.fields",
-        required=True,
-        ondelete="cascade",
+        comodel_name="ir.model.fields",
         index=True,
+        required=True,
         domain=[("ttype", "in", ["selection", "reference"])],
+        ondelete="cascade",
     )
     value = fields.Char(required=True)
-    name = fields.Char(translate=True, required=True)
+    name = fields.Char(
+        translate=True,
+        required=True,
+    )
     sequence = fields.Integer(default=1000)
 
     _selection_field_uniq = models.Constraint(

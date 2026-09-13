@@ -5,7 +5,10 @@ class ConfirmStockSms(models.TransientModel):
     _name = "confirm.stock.sms"
     _description = "Confirm Stock SMS"
 
-    pick_ids = fields.Many2many("stock.picking", "stock_picking_sms_rel")
+    pick_ids = fields.Many2many(
+        comodel_name="stock.picking",
+        relation="stock_picking_sms_rel",
+    )
 
     def send_sms(self):
         self.check_singleton()

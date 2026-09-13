@@ -8,54 +8,59 @@ from odoo.tools.date_utils import get_timedelta, time_unit_selection
 class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
-    group_use_lead = fields.Boolean(string="Leads", implied_group="crm.group_use_lead")
-    group_use_recurring_revenues = fields.Boolean(
-        string="Recurring Revenues", implied_group="crm.group_use_recurring_revenues"
+    group_use_lead = fields.Boolean(
+        string="Leads",
+        implied_group="crm.group_use_lead",
     )
-    module_partnership = fields.Boolean("Membership / Partnership")
+    group_use_recurring_revenues = fields.Boolean(
+        string="Recurring Revenues",
+        implied_group="crm.group_use_recurring_revenues",
+    )
+    module_partnership = fields.Boolean(string="Membership / Partnership")
     crm_use_auto_assignment = fields.Boolean(
-        string="Rule-Based Assignment", config_parameter="crm.lead.auto.assignment"
+        string="Rule-Based Assignment",
+        config_parameter="crm.lead.auto.assignment",
     )
     crm_auto_assignment_action = fields.Selection(
-        [("manual", "Manually"), ("auto", "Repeatedly")],
+        selection=[("manual", "Manually"), ("auto", "Repeatedly")],
         string="Auto Assignment Action",
-        compute="_compute_crm_auto_assignment_data",
-        readonly=False,
-        store=True,
         help="Manual assign allow to trigger assignment from team form view using an action button. Automatic configures a cron running repeatedly assignment in all teams.",
+        compute="_compute_crm_auto_assignment_data",
+        store=True,
+        readonly=False,
     )
     crm_auto_assignment_repeat_unit = fields.Selection(
-        time_unit_selection("minute", "hour", "day", "week"),
+        selection=time_unit_selection("minute", "hour", "day", "week"),
         string="Auto Assignment Interval Unit",
-        compute="_compute_crm_auto_assignment_data",
-        readonly=False,
-        store=True,
         help="Interval type between each cron run (e.g. each 2 days or each 2 hours)",
+        compute="_compute_crm_auto_assignment_data",
+        store=True,
+        readonly=False,
     )
     crm_auto_assignment_repeat_interval = fields.Integer(
         string="Repeat every",
-        compute="_compute_crm_auto_assignment_data",
-        readonly=False,
-        store=True,
         help="Number of interval type between each cron run (e.g. each 2 days or each 4 days)",
+        compute="_compute_crm_auto_assignment_data",
+        store=True,
+        readonly=False,
     )
     crm_auto_assignment_run_datetime = fields.Datetime(
         string="Auto Assignment Next Execution Date",
         compute="_compute_crm_auto_assignment_data",
-        readonly=False,
         store=True,
+        readonly=False,
     )
     module_crm_iap_mine = fields.Boolean(
-        "Generate new leads based on their country, industries, size, etc."
+        string="Generate new leads based on their country, industries, size, etc."
     )
     module_crm_iap_enrich = fields.Boolean(
-        "Enrich your leads automatically with company data based on their email address."
+        string="Enrich your leads automatically with company data based on their email address."
     )
     module_website_crm_iap_reveal = fields.Boolean(
-        "Create Leads/Opportunities from your website's traffic"
+        string="Create Leads/Opportunities from your website's traffic"
     )
     lead_enrich_auto = fields.Selection(
-        [
+        selection=[
             ("manual", "Enrich leads on demand only"),
             ("auto", "Enrich all leads automatically"),
         ],
@@ -64,7 +69,7 @@ class ResConfigSettings(models.TransientModel):
         config_parameter="crm.iap.lead.enrich.setting",
     )
     lead_mining_in_pipeline = fields.Boolean(
-        "Create a lead mining request directly from the opportunity pipeline.",
+        string="Create a lead mining request directly from the opportunity pipeline.",
         config_parameter="crm.lead_mining_in_pipeline",
     )
     predictive_lead_scoring_start_date = fields.Date(
@@ -77,7 +82,7 @@ class ResConfigSettings(models.TransientModel):
         config_parameter="crm.pls_start_date",
     )
     predictive_lead_scoring_fields = fields.Many2many(
-        "crm.lead.scoring.frequency.field",
+        comodel_name="crm.lead.scoring.frequency.field",
         string="Lead Scoring Frequency Fields",
         compute="_compute_pls_fields",
         inverse="_inverse_predictive_lead_scoring_fields",

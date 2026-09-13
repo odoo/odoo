@@ -7,11 +7,11 @@ class ApprovalCategory(models.Model):
     _inherit = "approval.category"
 
     has_automation = fields.Selection(
-        CATEGORY_SELECTION,
-        required=True,
-        default="no",
-        tracking=True,
+        selection=CATEGORY_SELECTION,
         help="Automation flows that should be specified on the request.",
+        default="no",
+        required=True,
+        tracking=True,
     )
     automation_id = fields.Many2one(
         comodel_name="automation.rule",

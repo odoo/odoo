@@ -4,11 +4,18 @@ from odoo import api, fields, models
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    branch_code = fields.Char(default="000", compute="_compute_branch_code", store=True)
+    branch_code = fields.Char(
+        compute="_compute_branch_code",
+        default="000",
+        store=True,
+    )
     first_name = fields.Char()
     middle_name = fields.Char()
     last_name = fields.Char()
-    l10n_ph_rdo = fields.Char("RDO", help="Revenue District Office")
+    l10n_ph_rdo = fields.Char(
+        string="RDO",
+        help="Revenue District Office",
+    )
 
     @api.model
     def _commercial_fields(self):

@@ -6,9 +6,18 @@ class ResUsersLoginCooldown(models.Model):
     _description = "Login Failure Cooldown"
     _log_access = False
 
-    source = fields.Char(required=True, index="btree")
-    failures = fields.Integer(required=True, default=0)
-    last_failure = fields.Datetime(required=True, index="btree")
+    source = fields.Char(
+        index="btree",
+        required=True,
+    )
+    failures = fields.Integer(
+        default=0,
+        required=True,
+    )
+    last_failure = fields.Datetime(
+        index="btree",
+        required=True,
+    )
 
     _source_uniq = models.Constraint(
         "unique (source)",

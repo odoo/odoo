@@ -4,9 +4,11 @@ from odoo import api, fields, models
 class StockPackageType(models.Model):
     _inherit = "stock.package.type"
 
-    shipper_package_code = fields.Char("Carrier Code")
+    shipper_package_code = fields.Char(string="Carrier Code")
     package_carrier_type = fields.Selection(
-        [("none", "No carrier integration")], string="Carrier", default="none"
+        selection=[("none", "No carrier integration")],
+        string="Carrier",
+        default="none",
     )
 
     @api.onchange("package_carrier_type")

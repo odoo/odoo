@@ -6,7 +6,8 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     edi_document_ids = fields.One2many(
-        comodel_name="account.edi.document", inverse_name="move_id"
+        comodel_name="account.edi.document",
+        inverse_name="move_id",
     )
     edi_state = fields.Selection(
         selection=[
@@ -16,13 +17,13 @@ class AccountMove(models.Model):
             ("cancelled", "Cancelled"),
         ],
         string="Electronic invoicing",
-        store=True,
-        compute="_compute_edi_state",
         help="The aggregated state of all the EDIs with web-service of this move",
+        compute="_compute_edi_state",
+        store=True,
     )
     edi_error_count = fields.Integer(
-        compute="_compute_edi_error_count",
         help="How many EDIs are in error for this move?",
+        compute="_compute_edi_error_count",
     )
     edi_blocking_level = fields.Selection(
         selection=[("info", "Info"), ("warning", "Warning"), ("error", "Error")],

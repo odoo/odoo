@@ -13,23 +13,23 @@ class ProductCategory(models.Model):
     _check_company_domain = models.check_company_domain_parent_of
 
     name = fields.Char(
-        required=True,
         index="trigram",
+        required=True,
     )
     active = fields.Boolean(
-        default=True,
         help="If unchecked, it will allow you to hide the category without removing it.",
+        default=True,
     )
     parent_id = fields.Many2one(
         comodel_name="product.category",
         string="Parent Category",
-        ondelete="restrict",
         index=True,
+        ondelete="restrict",
     )
     complete_name = fields.Char(
         compute="_compute_complete_name",
-        store=True,
         recursive=True,
+        store=True,
     )
     child_id = fields.One2many(
         comodel_name="product.category",
@@ -43,15 +43,17 @@ class ProductCategory(models.Model):
     )
     product_count = fields.Integer(
         string="# Products",
+        help="The number of products under this category and its children.",
         compute="_compute_product_count",
         recursive=True,
-        help="The number of products under this category and its children.",
     )
-    product_properties_definition = fields.PropertiesDefinition("Product Properties")
+    product_properties_definition = fields.PropertiesDefinition(
+        string="Product Properties"
+    )
     company_id = fields.Many2one(
         comodel_name="res.company",
-        tracking=True,
         help="Keep empty to share this category with every company.",
+        tracking=True,
     )
 
     _hierarchy_cycle_message = _lt("You cannot create recursive categories.")

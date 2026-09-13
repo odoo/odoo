@@ -18,52 +18,80 @@ class MailGroupMessage(models.Model):
     _primary_email = "email_from"
 
     attachment_ids = fields.Many2many(
-        related="mail_message_id.attachment_ids", readonly=False
+        related="mail_message_id.attachment_ids",
+        readonly=False,
     )
-    author_id = fields.Many2one(related="mail_message_id.author_id", readonly=False)
-    email_from = fields.Char(related="mail_message_id.email_from", readonly=False)
+    author_id = fields.Many2one(
+        related="mail_message_id.author_id",
+        readonly=False,
+    )
+    email_from = fields.Char(
+        related="mail_message_id.email_from",
+        readonly=False,
+    )
     email_from_normalized = fields.Char(
-        "Normalized From", compute="_compute_email_from_normalized", store=True
+        string="Normalized From",
+        compute="_compute_email_from_normalized",
+        store=True,
     )
-    body = fields.Html(related="mail_message_id.body", readonly=False)
-    subject = fields.Char(related="mail_message_id.subject", readonly=False)
+    body = fields.Html(
+        related="mail_message_id.body",
+        readonly=False,
+    )
+    subject = fields.Char(
+        related="mail_message_id.subject",
+        readonly=False,
+    )
     mail_group_id = fields.Many2one(
-        "mail.group", string="Group", required=True, index=True, ondelete="cascade"
-    )
-    mail_message_id = fields.Many2one(
-        "mail.message",
+        comodel_name="mail.group",
+        string="Group",
+        index=True,
         required=True,
         ondelete="cascade",
+    )
+    mail_message_id = fields.Many2one(
+        comodel_name="mail.message",
         index=True,
         copy=False,
+        required=True,
+        ondelete="cascade",
     )
     group_message_parent_id = fields.Many2one(
-        "mail.group.message", string="Parent", store=True, index=True
+        comodel_name="mail.group.message",
+        string="Parent",
+        store=True,
+        index=True,
     )
     group_message_child_ids = fields.One2many(
-        "mail.group.message", "group_message_parent_id", string="Children"
+        comodel_name="mail.group.message",
+        inverse_name="group_message_parent_id",
+        string="Children",
     )
     author_moderation = fields.Selection(
-        [("ban", "Banned"), ("allow", "Whitelisted")],
+        selection=[("ban", "Banned"), ("allow", "Whitelisted")],
         string="Author Moderation Status",
         compute="_compute_author_moderation",
     )
     is_group_moderated = fields.Boolean(
-        "Is Group Moderated", related="mail_group_id.moderation"
+        related="mail_group_id.moderation",
+        string="Is Group Moderated",
     )
     moderation_status = fields.Selection(
-        [
+        selection=[
             ("pending_moderation", "Pending Moderation"),
             ("accepted", "Accepted"),
             ("rejected", "Rejected"),
         ],
         string="Status",
+        default="pending_moderation",
         index=True,
         copy=False,
         required=True,
-        default="pending_moderation",
     )
-    moderator_id = fields.Many2one("res.users", string="Moderated By")
+    moderator_id = fields.Many2one(
+        comodel_name="res.users",
+        string="Moderated By",
+    )
     create_date = fields.Datetime(string="Posted")
 
     @api.depends("email_from")

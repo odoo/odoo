@@ -23,13 +23,16 @@ class MixinHrLeaveApproval(models.AbstractModel):
     _description = "Time Off Approval Workflow"
 
     can_approve = fields.Boolean(
-        compute="_compute_approval_rights", export_string_translation=False
+        export_string_translation=False,
+        compute="_compute_approval_rights",
     )
     can_validate = fields.Boolean(
-        compute="_compute_approval_rights", export_string_translation=False
+        export_string_translation=False,
+        compute="_compute_approval_rights",
     )
     can_refuse = fields.Boolean(
-        compute="_compute_approval_rights", export_string_translation=False
+        export_string_translation=False,
+        compute="_compute_approval_rights",
     )
 
     @api.depends("state", "employee_id.leave_manager_id", "validation_type")

@@ -21,36 +21,39 @@ class MixinMailComposer(models.AbstractModel):
 
     subject = fields.Char(
         compute="_compute_subject",
-        readonly=False,
-        store=True,
         compute_sudo=False,
+        store=True,
+        readonly=False,
     )
     body = fields.Html(
-        "Contents",
+        string="Contents",
+        sanitize="email_outgoing",
         compute="_compute_body",
-        readonly=False,
-        store=True,
         compute_sudo=False,
+        store=True,
+        readonly=False,
         render_engine="qweb",
         render_options={"post_process": True},
-        sanitize="email_outgoing",
     )
     body_has_template_value = fields.Boolean(
-        "Body content is the same as the template",
+        string="Body content is the same as the template",
         compute="_compute_body_has_template_value",
     )
     template_id: MailTemplate = fields.Many2one(
-        "mail.template", "Mail Template", domain="[('model', '=', render_model)]"
+        comodel_name="mail.template",
+        string="Mail Template",
+        domain="[('model', '=', render_model)]",
     )
     lang = fields.Char(
         compute="_compute_lang",
         precompute=True,
-        readonly=False,
-        store=True,
         compute_sudo=False,
+        store=True,
+        readonly=False,
     )
     is_mail_template_editor = fields.Boolean(
-        "Is Editor", compute="_compute_is_mail_template_editor"
+        string="Is Editor",
+        compute="_compute_is_mail_template_editor",
     )
     can_edit_body = fields.Boolean(compute="_compute_can_edit_body")
 

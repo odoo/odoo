@@ -5,9 +5,15 @@ class ReportProjectTaskUser(models.Model):
     _inherit = "report.project.task.user"
 
     sale_line_id = fields.Many2one(
-        "sale.order.line", string="Sales Order Item", readonly=True
+        comodel_name="sale.order.line",
+        string="Sales Order Item",
+        readonly=True,
     )
-    sale_order_id = fields.Many2one("sale.order", string="Sales Order", readonly=True)
+    sale_order_id = fields.Many2one(
+        comodel_name="sale.order",
+        string="Sales Order",
+        readonly=True,
+    )
 
     def _select(self):
         return super()._select() + ", t.sale_line_id as sale_line_id, t.sale_order_id"

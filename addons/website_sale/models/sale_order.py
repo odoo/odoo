@@ -20,8 +20,8 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     website_id = fields.Many2one(
-        help="Website through which this order was placed for eCommerce orders.",
         comodel_name="website",
+        help="Website through which this order was placed for eCommerce orders.",
         readonly=True,
     )
 
@@ -29,14 +29,14 @@ class SaleOrder(models.Model):
     shop_warning = fields.Char(string="Warning")
 
     website_order_line = fields.One2many(
-        string="Order Lines displayed on Website",
         comodel_name="sale.order.line",
+        string="Order Lines displayed on Website",
         compute="_compute_website_order_line",
     )
     amount_delivery = fields.Monetary(
         string="Delivery Amount",
-        compute="_compute_amount_delivery",
         help="Tax included or excluded depending on the website configuration.",
+        compute="_compute_amount_delivery",
     )
     cart_quantity = fields.Integer(compute="_compute_cart_info")
     only_services = fields.Boolean(compute="_compute_cart_info")

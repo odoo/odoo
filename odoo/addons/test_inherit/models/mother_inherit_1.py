@@ -5,10 +5,16 @@ class TestInheritMother(models.Model):
     _inherit = "test.inherit.mother"
 
     field_in_mother = fields.Char()
-    partner_id = fields.Many2one("res.partner")
-    state = fields.Selection([("a", "A"), ("b", "B")], default="a")
+    partner_id = fields.Many2one(comodel_name="res.partner")
+    state = fields.Selection(
+        selection=[("a", "A"), ("b", "B")],
+        default="a",
+    )
 
-    name = fields.Char(required=True, default="Bar")
+    name = fields.Char(
+        default="Bar",
+        required=True,
+    )
 
     def bar(self):
         return 42

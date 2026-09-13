@@ -24,20 +24,18 @@ class MixinOrderInvoice(models.AbstractModel):
         compute="_compute_invoices",
         search="_search_invoice_ids",
     )
-    invoice_count = fields.Integer(
-        compute="_compute_invoices",
-    )
+    invoice_count = fields.Integer(compute="_compute_invoices")
     invoice_state = fields.Selection(
         selection=INVOICE_STATE,
         string="Invoice Status",
-        default="no",
         compute="_compute_invoice_state",
+        default="no",
         store=True,
         copy=False,
     )
     force_fully_invoiced = fields.Boolean(
-        copy=False,
         help="Report this order as fully invoiced regardless of its lines.",
+        copy=False,
     )
 
     def _get_invoice_move_types(self):

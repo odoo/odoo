@@ -19,23 +19,26 @@ class MailMessageReaction(models.Model):
 
     message_id: MailMessage = fields.Many2one(
         comodel_name="mail.message",
-        ondelete="cascade",
-        required=True,
-        readonly=True,
         index=True,
-    )
-    content = fields.Char(required=True, readonly=True)
-    partner_id: ResPartner = fields.Many2one(
-        string="Reacting Partner",
-        comodel_name="res.partner",
-        ondelete="cascade",
         readonly=True,
+        required=True,
+        ondelete="cascade",
+    )
+    content = fields.Char(
+        readonly=True,
+        required=True,
+    )
+    partner_id: ResPartner = fields.Many2one(
+        comodel_name="res.partner",
+        string="Reacting Partner",
+        readonly=True,
+        ondelete="cascade",
     )
     guest_id: MailGuest = fields.Many2one(
-        string="Reacting Guest",
         comodel_name="mail.guest",
-        ondelete="cascade",
+        string="Reacting Guest",
         readonly=True,
+        ondelete="cascade",
     )
 
     _partner_unique = models.UniqueIndex(

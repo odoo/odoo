@@ -12,37 +12,60 @@ class SlideChannelPartner(models.Model):
 
     active = fields.Boolean(default=True)
     channel_id = fields.Many2one(
-        "slide.channel", string="Course", index=True, required=True, ondelete="cascade"
+        comodel_name="slide.channel",
+        string="Course",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
     member_status = fields.Selection(
-        [
+        selection=[
             ("invited", "Invite Sent"),
             ("joined", "Joined"),
             ("ongoing", "Ongoing"),
             ("completed", "Finished"),
         ],
         string="Attendee Status",
+        default="joined",
         readonly=True,
         required=True,
-        default="joined",
     )
-    completion = fields.Integer("% Completed Contents", default=0, aggregator="avg")
-    completed_slides_count = fields.Integer("# Completed Contents", default=0)
+    completion = fields.Integer(
+        string="% Completed Contents",
+        default=0,
+        aggregator="avg",
+    )
+    completed_slides_count = fields.Integer(
+        string="# Completed Contents",
+        default=0,
+    )
     partner_id = fields.Many2one(
-        "res.partner", index=True, required=True, ondelete="cascade"
+        comodel_name="res.partner",
+        index=True,
+        required=True,
+        ondelete="cascade",
     )
-    partner_email = fields.Char(related="partner_id.email", readonly=True)
+    partner_email = fields.Char(
+        related="partner_id.email",
+        readonly=True,
+    )
     channel_user_id = fields.Many2one(
-        "res.users", string="Responsible", related="channel_id.user_id"
+        comodel_name="res.users",
+        related="channel_id.user_id",
+        string="Responsible",
     )
     channel_type = fields.Selection(related="channel_id.channel_type")
     channel_visibility = fields.Selection(related="channel_id.visibility")
     channel_enroll = fields.Selection(related="channel_id.enroll")
     channel_website_id = fields.Many2one(
-        "website", string="Website", related="channel_id.website_id"
+        comodel_name="website",
+        related="channel_id.website_id",
+        string="Website",
     )
     next_slide_id = fields.Many2one(
-        "slide.slide", string="Next Lesson", compute="_compute_next_slide_id"
+        comodel_name="slide.slide",
+        string="Next Lesson",
+        compute="_compute_next_slide_id",
     )
 
     invitation_link = fields.Char(compute="_compute_invitation_link")

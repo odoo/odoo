@@ -18,17 +18,17 @@ class HrEmployee(models.Model):
     expense_manager_id = fields.Many2one(
         comodel_name="res.users",
         string="Expense Approver",
+        help='Select the user responsible for approving "Expenses" of this employee.\n'
+        "If empty, the approval is done by an Administrator or Approver (determined in settings/users).",
         compute="_compute_expense_manager_id",
         store=True,
         readonly=False,
         domain=_group_hr_expense_user_domain,
-        help='Select the user responsible for approving "Expenses" of this employee.\n'
-        "If empty, the approval is done by an Administrator or Approver (determined in settings/users).",
     )
 
     filter_for_expense = fields.Boolean(
-        store=False,
         search="_search_filter_for_expense",
+        store=False,
         groups="hr.group_hr_user,hr_expense.group_hr_expense_manager",
     )
 

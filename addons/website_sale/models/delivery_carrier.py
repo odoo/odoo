@@ -6,7 +6,7 @@ class DeliveryCarrier(models.Model):
     _inherit = ["delivery.carrier", "mixin.website.published.multi"]
 
     website_description = fields.Text(
-        string="Description for Online Quotations",
         related="product_id.description_sale",
+        string="Description for Online Quotations",
         readonly=False,
     )

@@ -16,37 +16,37 @@ class MailActivityPlan(models.Model):
 
     name = fields.Char(required=True)
     company_id: ResCompany = fields.Many2one(
-        "res.company",
+        comodel_name="res.company",
         default=lambda self: self.env.company,
     )
     template_ids: MailActivityPlanTemplate = fields.One2many(
-        "mail.activity.plan.template",
-        "plan_id",
+        comodel_name="mail.activity.plan.template",
+        inverse_name="plan_id",
         string="Activities",
         copy=True,
     )
     active = fields.Boolean(default=True)
     res_model_id: IrModel = fields.Many2one(
-        "ir.model",
+        comodel_name="ir.model",
         string="Applies to",
         compute="_compute_res_model_id",
-        compute_sudo=True,
-        ondelete="cascade",
         precompute=True,
+        compute_sudo=True,
+        store=True,
         readonly=False,
         required=True,
-        store=True,
+        ondelete="cascade",
     )
     res_model = fields.Selection(
         selection=lambda self: self.env["mail.activity"]._selection_activity_models(),
         string="Model",
-        required=True,
         help="Specify a model if the activity should be specific to a model"
         " and not available when managing activities for other models.",
+        required=True,
     )
-    steps_count = fields.Count("template_ids")
+    steps_count = fields.Count(count_of="template_ids")
     has_user_on_demand = fields.Boolean(
-        "Has on demand responsible",
+        string="Has on demand responsible",
         compute="_compute_has_user_on_demand",
     )
 
