@@ -3,7 +3,6 @@ import typing
 from typing import Self
 from urllib.parse import urlparse
 
-import requests
 from dateutil.relativedelta import relativedelta
 from lxml import html
 from psycopg import IntegrityError
@@ -13,7 +12,10 @@ from odoo.libs.debug_log import DebugLog
 from odoo.tools.misc import OrderedSet
 
 from odoo.addons.mail.tools.discuss import Store, StoreFieldsInput
-from odoo.addons.mail.tools.link_preview import get_link_preview_from_url
+from odoo.addons.mail.tools.link_preview import (
+    get_link_preview_from_url,
+    get_link_preview_session,
+)
 
 if typing.TYPE_CHECKING:
     from .mail_message import MailMessage
@@ -69,7 +71,7 @@ class MailLinkPreview(models.Model):
                     f"{re.escape(request_url)}(odoo|web|chat)(/|$|#|\\?)"
                 )
                 urls = list(filter(lambda url: not ignore_pattern.match(url), urls))
-        requests_session = requests.Session()
+        requests_session = get_link_preview_session(self.env)
         message_link_previews_ok = self.env["mail.message.link.preview"]
         link_previews_values = []
         message_link_previews_values = []
@@ -200,7 +202,9 @@ class MailLinkPreview(models.Model):
         if not preview:
             if self._is_domain_throttled(url):
                 return self.env["mail.link.preview"]
-            preview_values = get_link_preview_from_url(url)
+            preview_values = get_link_preview_from_url(
+                url, get_link_preview_session(self.env)
+            )
             if not preview_values:
                 return self.env["mail.link.preview"]
             preview = self._create_from_values_race_safe([preview_values])

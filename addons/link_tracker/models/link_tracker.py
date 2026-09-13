@@ -311,7 +311,9 @@ class LinkTracker(models.Model):
 
     @api.model
     def _get_title_from_url(self, url):
-        preview = link_preview.get_link_preview_from_url(url)
+        preview = link_preview.get_link_preview_from_url(
+            url, link_preview.get_link_preview_session(self.env)
+        )
         if preview and preview.get("og_title"):
             return preview["og_title"]
         return url

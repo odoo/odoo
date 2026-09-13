@@ -1,11 +1,7 @@
-import enum
-import ipaddress
 import logging
 import re
-import socket
 import time
 from typing import Any, Literal
-from urllib.parse import urljoin, urlsplit
 
 import chardet
 import requests
@@ -13,6 +9,7 @@ from lxml import html
 from urllib3.exceptions import LocationParseError
 
 from odoo.libs.debug_log import DebugLog
+from odoo.libs.guarded_http import GuardedAdapter, RefusedDestination
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
@@ -23,93 +20,19 @@ MAX_FETCH_SECONDS = 10
 HEAD_SCAN_CHUNK_SIZE = 8192
 
 
-class UrlSafety(enum.Enum):
-    SAFE = "safe"
-    BLOCKED = "blocked"
-    UNRESOLVABLE = "unresolvable"
-
-
-def _classify_url_safety(
-    url: str, cache: dict[tuple[str, int], UrlSafety] | None = None
-) -> UrlSafety:
-    split = urlsplit(url)
-    if split.scheme not in ("http", "https"):
-        return UrlSafety.UNRESOLVABLE
-    try:
-        host = split.hostname
-        port = split.port or (443 if split.scheme == "https" else 80)
-    except ValueError:
-        return UrlSafety.UNRESOLVABLE
-    if not host:
-        return UrlSafety.UNRESOLVABLE
-    if cache is not None and (host, port) in cache:
-        return cache[host, port]
-    safety = _classify_host_safety(host, port)
-    _debug.logic("host_classified", host=host, port=port, safety=safety.value)
-    if cache is not None:
-        cache[host, port] = safety
-    return safety
-
-
-def _classify_host_safety(host: str, port: int) -> UrlSafety:
-    try:
-        addrinfos = socket.getaddrinfo(host, port, proto=socket.IPPROTO_TCP)
-    except socket.gaierror, UnicodeError, ValueError:
-        return UrlSafety.UNRESOLVABLE
-    if not addrinfos:
-        return UrlSafety.UNRESOLVABLE
-    for *_, sockaddr in addrinfos:
-        try:
-            ip = ipaddress.ip_address(sockaddr[0])
-        except ValueError:
-            return UrlSafety.UNRESOLVABLE
-        if not ip.is_global:
-            return UrlSafety.BLOCKED
-    return UrlSafety.SAFE
-
-
-def _url_is_safe(url: str) -> bool:
-    return _classify_url_safety(url) is UrlSafety.SAFE
-
-
-def _get_link_preview_response(
-    url: str,
-    request_session: requests.Session | None,
-    headers: dict[str, str],
-    deadline: float | None = None,
-) -> requests.Response | None:
-    getter = request_session or requests
-    current = url
-    for hop in range(MAX_REDIRECTS + 1):
-        if deadline is not None and time.monotonic() > deadline:
-            _debug.logic("preview_aborted", reason="deadline", hops=hop)
-            _logger.info("Link preview timed out (redirect chain) for: %s", url)
-            return None
-        if not _url_is_safe(current):
-            _debug.logic("preview_aborted", reason="unsafe_url", hops=hop)
-            _logger.info("Link preview blocked for non-public URL: %s", current)
-            return None
-        with _debug.perf("preview_fetched", hop=hop) as span:
-            response = getter.get(
-                current, timeout=3, headers=headers, allow_redirects=False, stream=True
-            )
-            span.set(
-                status=getattr(response, "status_code", None),
-                redirect=getattr(response, "is_redirect", None),
-            )
-        if response.is_redirect:
-            location = response.headers.get("location")
-            response.close()
-            if not location:
-                return None
-            current = urljoin(current, location)
-            continue
-        return response
-    return None
+def get_link_preview_session(env: Any) -> requests.Session:
+    # No byte cap: the head scan stops on its own, and a cap would refuse a large
+    # page on its announced length before its head could be read.
+    return env["ir.egress"].session(
+        purpose="link_preview",
+        max_bytes=None,
+        max_seconds=MAX_FETCH_SECONDS,
+        max_redirects=MAX_REDIRECTS,
+    )
 
 
 def get_link_preview_from_url(
-    url: str, request_session: requests.Session | None = None
+    url: str, request_session: requests.Session
 ) -> dict[str, Any] | Literal[False]:
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101 Firefox/91.0",
@@ -117,14 +40,26 @@ def get_link_preview_from_url(
     }
     deadline = time.monotonic() + MAX_FETCH_SECONDS
     try:
-        response = _get_link_preview_response(url, request_session, headers, deadline)
+        adapter = request_session.get_adapter(url)
+    except requests.exceptions.InvalidSchema:
+        _debug.logic("preview_failed", error="InvalidSchema")
+        return False
+    if not isinstance(adapter, GuardedAdapter):
+        msg = "a link preview fetches through ir.egress: use get_link_preview_session"
+        raise TypeError(msg)
+    try:
+        with _debug.perf("preview_fetched") as span:
+            response = request_session.get(url, timeout=3, headers=headers, stream=True)
+            span.set(status=getattr(response, "status_code", None))
+    except RefusedDestination as refusal:
+        _debug.logic("preview_aborted", reason="refused_destination")
+        _logger.info("Link preview blocked for %s: %s", url, refusal)
+        return False
     except requests.exceptions.RequestException as error:
         _debug.logic("preview_failed", error=type(error).__name__)
         return False
     except LocationParseError:
         _debug.logic("preview_failed", error="LocationParseError")
-        return False
-    if response is None:
         return False
     with response:
         if not response.ok or not response.headers.get("Content-Type"):

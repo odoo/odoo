@@ -4,12 +4,16 @@ from datetime import datetime, timedelta
 from types import SimpleNamespace
 from unittest.mock import patch
 
+import requests
 from markupsafe import Markup
+from requests.adapters import HTTPAdapter
 
 import odoo
 from odoo.exceptions import UserError
+from odoo.libs.guarded_http import GuardedAdapter
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
+from odoo.tests.transaction_case import _super_send
 from odoo.tools.misc import mute_logger
 
 from odoo.addons.mail.models.mail_push import (
@@ -392,19 +396,6 @@ class TestWebPushNotification(SMSCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        # push_to_end_point's SSRF guard (_classify_url_safety) does real DNS on
-        # the dummy test.odoo.com endpoints these tests use; force SAFE so the
-        # suite exercises encryption/delivery without depending on live DNS.
-        # Tests that need a specific classification patch it themselves.
-        from odoo.addons.mail.tools import web_push
-        from odoo.addons.mail.tools.link_preview import UrlSafety
-
-        _safety_patcher = patch.object(
-            web_push, "_classify_url_safety", return_value=UrlSafety.SAFE
-        )
-        _safety_patcher.start()
-        cls.addClassCleanup(_safety_patcher.stop)
-
         cls.user_email = cls.user_employee
         cls.user_email.notification_type = "email"
 
@@ -1067,7 +1058,7 @@ class TestWebPushNotification(SMSCommon):
             patch.object(
                 odoo.addons.mail.models.mixin_mail_thread, "MAX_DIRECT_PUSH", 1
             ),
-            patch.object(odoo.addons.mail.models.mail_push.Session, "post") as post,
+            patch.object(requests.Session, "post") as post,
             self.mock_mail_gateway(),
         ):
             self.record_simple.with_user(self.user_email).message_notify(
@@ -1087,7 +1078,7 @@ class TestWebPushNotification(SMSCommon):
         self._assert_notification_count_for_cron(0)
 
     @patch.object(
-        odoo.addons.mail.models.mixin_mail_thread.Session,
+        requests.Session,
         "post",
         return_value=SimpleNamespace(status_code=404, text="Device Unreachable"),
     )
@@ -1108,7 +1099,7 @@ class TestWebPushNotification(SMSCommon):
         self.assertEqual(notification_count, 0)
 
     @patch.object(
-        odoo.addons.mail.models.mixin_mail_thread.Session,
+        requests.Session,
         "post",
         return_value=SimpleNamespace(status_code=201, text="Ok"),
     )
@@ -1136,7 +1127,7 @@ class TestWebPushNotification(SMSCommon):
         self.assertIn("timeout", post.call_args.kwargs)
 
     @patch.object(
-        odoo.addons.mail.models.mixin_mail_thread.Session,
+        requests.Session,
         "post",
         return_value=SimpleNamespace(status_code=201, text="Ok"),
     )
@@ -1177,7 +1168,7 @@ class TestWebPushNotification(SMSCommon):
         self.assertEqual(device_count, 0)
 
     @patch.object(
-        odoo.addons.mail.models.mixin_mail_thread.Session,
+        requests.Session,
         "post",
         side_effect=ConnectionError("Oops, network error"),
     )
@@ -1335,7 +1326,7 @@ class TestWebPushNotification(SMSCommon):
         self.assertFalse(Device.sudo().search([("endpoint", "=", bad_endpoint)]))
 
     @patch.object(
-        odoo.addons.mail.models.mixin_mail_thread.Session,
+        requests.Session,
         "post",
         return_value=SimpleNamespace(status_code=201, text="Ok"),
     )
@@ -1397,7 +1388,7 @@ class TestWebPushNotification(SMSCommon):
             with (
                 self.subTest(status_code=status_code, headers=headers),
                 patch.object(
-                    odoo.addons.mail.models.mixin_mail_thread.Session,
+                    requests.Session,
                     "post",
                     return_value=SimpleNamespace(
                         status_code=status_code, text="later", headers=headers
@@ -1417,59 +1408,31 @@ class TestWebPushNotification(SMSCommon):
                     delta=timedelta(seconds=10),
                 )
 
-        with patch.object(
-            odoo.addons.mail.models.mixin_mail_thread.Session, "post"
-        ) as post:
+        with patch.object(requests.Session, "post") as post:
             self._trigger_cron_job()
         post.assert_not_called()
 
-    @patch.object(
-        odoo.addons.mail.models.mixin_mail_thread.Session,
-        "post",
-        return_value=SimpleNamespace(status_code=201, text="Ok"),
-    )
-    def test_cron_classifies_an_endpoint_host_once_per_batch(self, post):
-        from odoo.addons.mail.tools import link_preview, web_push
-        from odoo.addons.mail.tools.link_preview import UrlSafety
+    def test_cron_posts_through_the_guarded_session(self):
+        sessions = []
 
-        devices = (
-            self.env["mail.push.device"]
-            .sudo()
-            .create(
-                [
-                    {
-                        "endpoint": f"https://{host}/webpush/{index}",
-                        "keys": json.dumps(self._valid_browser_keys()),
-                        "partner_id": self.user_inbox.partner_id.id,
-                    }
-                    for host in ("one.test.odoo.com", "two.test.odoo.com")
-                    for index in range(3)
-                ]
-            )
-        )
+        def post(session, url, **kwargs):
+            sessions.append(session.get_adapter(url))
+            return SimpleNamespace(status_code=201, text="Ok")
+
         self.env["mail.push"].sudo().create(
-            [
-                {
-                    "mail_push_device_id": device.id,
-                    "payload": json.dumps({"title": "t"}),
-                }
-                for device in devices
-            ]
+            {
+                "mail_push_device_id": self.env["mail.push.device"]
+                .sudo()
+                .search([], limit=1)
+                .id,
+                "payload": json.dumps({"title": "t"}),
+            }
         )
-        with (
-            patch.object(
-                web_push, "_classify_url_safety", link_preview._classify_url_safety
-            ),
-            patch.object(
-                link_preview, "_classify_host_safety", return_value=UrlSafety.SAFE
-            ) as resolve,
-        ):
+        with patch.object(requests.Session, "post", autospec=True, side_effect=post):
             self._trigger_cron_job()
-        self.assertEqual(post.call_count, 6)
-        self.assertEqual(
-            sorted(call.args[0] for call in resolve.call_args_list),
-            ["one.test.odoo.com", "two.test.odoo.com"],
-        )
+        self.assertTrue(sessions)
+        for adapter in sessions:
+            self.assertIsInstance(adapter, GuardedAdapter)
 
     @staticmethod
     def _valid_browser_keys():
@@ -1478,76 +1441,45 @@ class TestWebPushNotification(SMSCommon):
             "auth": "DJFdtAgZwrT6yYkUMgUqow",
         }
 
-    def test_classify_url_safety(self):
-        """A non-global address is BLOCKED (permanently bad); a resolution
-        failure is UNRESOLVABLE (transient) — never conflate the two."""
-        from odoo.addons.mail.tools import link_preview
-        from odoo.addons.mail.tools.link_preview import UrlSafety
-
-        with patch.object(
-            link_preview.socket,
-            "getaddrinfo",
-            return_value=[(2, 1, 6, "", ("10.0.0.1", 443))],
-        ):
-            self.assertEqual(
-                link_preview._classify_url_safety("https://x.test/"), UrlSafety.BLOCKED
-            )
-        with patch.object(
-            link_preview.socket,
-            "getaddrinfo",
-            return_value=[(2, 1, 6, "", ("93.184.216.34", 443))],
-        ):
-            self.assertEqual(
-                link_preview._classify_url_safety("https://x.test/"), UrlSafety.SAFE
-            )
-        with patch.object(
-            link_preview.socket, "getaddrinfo", side_effect=socket.gaierror
-        ):
-            self.assertEqual(
-                link_preview._classify_url_safety("https://x.test/"),
-                UrlSafety.UNRESOLVABLE,
-            )
-
-    def test_web_push_transient_failure_keeps_device(self):
-        """A transient endpoint-resolution failure must NOT delete the push
-        device (regression: it used to wipe every device in the batch on a DNS
-        blip); only a permanently-invalid (non-global) endpoint is deleted.
-        Patches the safety classifier so the real push_to_end_point exception
-        mapping and the caller's unlink decision are exercised together."""
-        from odoo.addons.mail.tools import web_push
-        from odoo.addons.mail.tools.link_preview import UrlSafety
-
+    def _push_resolving(self, getaddrinfo):
         device = (
             self.env["mail.push.device"]
             .sudo()
             .search([("partner_id", "=", self.user_email.partner_id.id)], limit=1)
         )
-        self.assertTrue(device)
-
-        # endpoint host cannot be resolved right now -> keep the device
-        with patch.object(
-            web_push, "_classify_url_safety", return_value=UrlSafety.UNRESOLVABLE
+        private_key = (
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("mail.web_push_vapid_private_key")
+        )
+        with (
+            patch("socket.getaddrinfo", **getaddrinfo),
+            patch.object(requests.Session, "send", _super_send),
+            patch.object(HTTPAdapter, "send") as send,
+            mute_logger("odoo.addons.mail.models.mixin_mail_thread"),
         ):
             self.record_simple._web_push_send_notification(
-                device, "priv", "pub", payload={"title": "t"}
+                device, private_key, self.vapid_public_key, payload={"title": "t"}
             )
+        send.assert_not_called()
+        return device
+
+    def test_web_push_transient_failure_keeps_device(self):
+        """A resolution failure is transient and keeps the device; an endpoint
+        resolving to a non-public address is a bogus subscription and is deleted."""
+        device = self._push_resolving({"side_effect": socket.gaierror})
         self.assertTrue(
             device.exists(), "transient resolution failure must keep the device"
         )
-
-        # endpoint resolves to a non-global address -> bogus subscription, delete
-        with patch.object(
-            web_push, "_classify_url_safety", return_value=UrlSafety.BLOCKED
-        ):
-            self.record_simple._web_push_send_notification(
-                device, "priv", "pub", payload={"title": "t"}
-            )
+        device = self._push_resolving(
+            {"return_value": [(2, 1, 6, "", ("10.0.0.1", 443))]}
+        )
         self.assertFalse(
-            device.exists(), "endpoint resolving to a non-global address is deleted"
+            device.exists(), "endpoint resolving to a non-public address is deleted"
         )
 
     @patch.object(
-        odoo.addons.mail.models.mixin_mail_thread.Session,
+        requests.Session,
         "post",
         return_value=SimpleNamespace(status_code=201, text="Ok"),
     )
@@ -1658,7 +1590,7 @@ class TestWebPushNotification(SMSCommon):
                 )
 
     @patch.object(
-        odoo.addons.mail.models.mixin_mail_thread.Session,
+        requests.Session,
         "post",
         return_value=SimpleNamespace(status_code=201, text="Ok"),
     )

@@ -3,9 +3,11 @@ from unittest.mock import patch
 
 import requests
 from markupsafe import Markup
+from requests.adapters import HTTPAdapter
 from requests.utils import get_encoding_from_headers
 
 from odoo.tests.common import tagged
+from odoo.tests.transaction_case import _super_send
 
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.mail.tools import link_preview
@@ -17,9 +19,6 @@ class TestLinkPreview(MailCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.maxDiff = None
-        _ssrf_patcher = patch.object(link_preview, "_url_is_safe", return_value=True)
-        _ssrf_patcher.start()
-        cls.addClassCleanup(_ssrf_patcher.stop)
         cls.test_partner = cls.env["res.partner"].create({"name": "a partner"})
         cls.existing_message = cls.test_partner.message_post(body="Test")
         cls.title = "Test title"
@@ -111,30 +110,49 @@ class TestLinkPreview(MailCommon):
             "ISO-8859-1",
             "precondition: requests defaults header-less text/html to latin-1",
         )
-        session = requests.Session()
+        session = link_preview.get_link_preview_session(self.env)
         with patch.object(
             requests.Session, "get", self._patch_utf8_without_charset_header
         ):
             preview = link_preview.get_link_preview_from_url(self.source_url, session)
         self.assertEqual(preview["og_title"], "Café ☕ déjà vu à Genève")
 
-    def test_link_preview_redirect_budget(self):
+    def _through_the_adapter(self, respond):
         hops = []
 
-        def _get(_self, url, **kwargs):
-            hops.append(url)
-            response = requests.Response()
-            response.status_code = 302
-            response.headers["location"] = "https://redir.nothing/%d" % len(hops)
-            response.url = url
-            response.raw = io.BytesIO(b"")
+        def send(adapter, request, **kwargs):
+            hops.append((request.url, request.netguard_address))
+            response = respond(request.url)
+            response.request = request
+            response.url = request.url
             return response
 
-        session = requests.Session()
-        with patch.object(requests.Session, "get", _get):
+        def getaddrinfo(host, port, *args, **kwargs):
+            return [(2, 1, 6, "", ("93.184.216.34", port))]
+
+        session = link_preview.get_link_preview_session(self.env)
+        with (
+            patch("socket.getaddrinfo", side_effect=getaddrinfo),
+            patch.object(requests.Session, "send", _super_send),
+            patch.object(HTTPAdapter, "send", autospec=True, side_effect=send),
+        ):
             preview = link_preview.get_link_preview_from_url(self.source_url, session)
+        return preview, hops
+
+    @staticmethod
+    def _redirect(location):
+        response = requests.Response()
+        response.status_code = 302
+        response.headers["location"] = location
+        response.raw = io.BytesIO(b"")
+        return response
+
+    def test_link_preview_redirect_budget(self):
+        preview, hops = self._through_the_adapter(
+            lambda url: self._redirect(f"https://redir.nothing/{url.count('/')}")
+        )
         self.assertFalse(preview)
-        self.assertLessEqual(
+        self.assertEqual(
             len(hops),
             link_preview.MAX_REDIRECTS + 1,
             "must stop after the redirect budget, not follow indefinitely",
@@ -143,21 +161,37 @@ class TestLinkPreview(MailCommon):
     def test_link_preview_relative_redirect(self):
         final_url = "https://thisdomainedoentexist.nothing/final"
 
-        def _get(_self, url, **kwargs):
-            if url == self.source_url:
-                response = requests.Response()
-                response.status_code = 302
-                response.headers["location"] = "/final"
-                response.url = url
-                response.raw = io.BytesIO(b"")
-                return response
-            self.assertEqual(url, final_url, "relative Location must be urljoin'd")
-            return self._patch_without_og_properties()
+        def respond(url):
+            if url == final_url:
+                return self._patch_without_og_properties()
+            return self._redirect("/final")
 
-        session = requests.Session()
-        with patch.object(requests.Session, "get", _get):
-            preview = link_preview.get_link_preview_from_url(self.source_url, session)
+        preview, hops = self._through_the_adapter(respond)
         self.assertEqual(preview["og_title"], self.title)
+        self.assertEqual(
+            hops,
+            [(f"{self.source_url}/", "93.184.216.34"), (final_url, "93.184.216.34")],
+            "relative Location must be urljoin'd, and every hop pinned",
+        )
+
+    def test_link_preview_refuses_a_non_public_destination(self):
+        def getaddrinfo(host, port, *args, **kwargs):
+            return [(2, 1, 6, "", ("169.254.169.254", port))]
+
+        session = link_preview.get_link_preview_session(self.env)
+        with (
+            patch("socket.getaddrinfo", side_effect=getaddrinfo),
+            patch.object(requests.Session, "send", _super_send),
+            patch.object(HTTPAdapter, "send") as send,
+        ):
+            self.assertFalse(
+                link_preview.get_link_preview_from_url(self.source_url, session)
+            )
+        send.assert_not_called()
+
+    def test_link_preview_refuses_an_unguarded_session(self):
+        with self.assertRaises(TypeError):
+            link_preview.get_link_preview_from_url(self.source_url, requests.Session())
 
     def test_get_link_preview_from_url(self):
         test_cases = [
@@ -200,7 +234,7 @@ class TestLinkPreview(MailCommon):
                 "source_url": self.source_url,
             },
         ]
-        session = requests.Session()
+        session = link_preview.get_link_preview_session(self.env)
         for (get_patch, url), expected in zip(
             test_cases, expected_values, strict=False
         ):
@@ -342,7 +376,7 @@ class TestLinkPreview(MailCommon):
             requests.Session, "request", self._patch_with_no_content_type
         ):
             url = self.source_url
-            session = requests.Session()
+            session = link_preview.get_link_preview_session(self.env)
             link_preview.get_link_preview_from_url(url, session)
 
     def test_link_preview_ignore_internal_link(self):

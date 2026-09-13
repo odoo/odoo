@@ -15,7 +15,6 @@ from urllib.parse import urlencode
 
 from lxml import etree, html
 from markupsafe import Markup, escape
-from requests import Session
 
 from odoo import _, api, exceptions, fields, models, tools
 from odoo.api import ValuesType
@@ -54,6 +53,7 @@ from odoo.addons.mail.tools.web_push import (
     MAX_PAYLOAD_SIZE,
     DeviceUnreachableError,
     PushEndpointUnresolvableError,
+    get_push_session,
     push_to_end_point,
 )
 
@@ -4029,7 +4029,7 @@ class MixinMailThread(models.AbstractModel):
         payload: dict | None = None,
     ) -> None:
         if len(devices) < MAX_DIRECT_PUSH:
-            session = Session()
+            session = get_push_session(self.env)
             devices_to_unlink = set()
             for device in devices:
                 try:

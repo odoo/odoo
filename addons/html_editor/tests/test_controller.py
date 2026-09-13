@@ -182,7 +182,7 @@ class TestController(HttpCase):
         def _get_full_url(pathname):
             return f"{self.base_url()}{pathname}"
 
-        def _patched_get_link_preview_from_url(url):
+        def _patched_get_link_preview_from_url(url, session):
             if url == _get_full_url("/page-with-description"):
                 return {
                     "og_description": "Mocked page description",

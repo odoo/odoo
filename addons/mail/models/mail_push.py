@@ -2,8 +2,6 @@ import logging
 import typing
 from datetime import timedelta
 
-from requests import Session
-
 from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
@@ -11,6 +9,7 @@ from odoo.libs.debug_log import DebugLog
 from odoo.addons.mail.tools.web_push import (
     DeviceUnreachableError,
     PushEndpointUnresolvableError,
+    get_push_session,
     push_to_end_point,
 )
 
@@ -66,8 +65,7 @@ class MailPush(models.Model):
             _debug.logic("push_cron_skipped", reason="no_vapid_keys")
             return
 
-        session = Session()
-        safety_cache = {}
+        session = get_push_session(self.env)
         devices_to_unlink = set()
         retry_delay_by_notif_id = {}
 
@@ -89,7 +87,6 @@ class MailPush(models.Model):
                     vapid_private_key=vapid_private_key,
                     vapid_public_key=vapid_public_key,
                     session=session,
-                    safety_cache=safety_cache,
                 )
             except DeviceUnreachableError:
                 devices_to_unlink.add(device.id)

@@ -15,6 +15,7 @@ from odoo import SUPERUSER_ID, _, http, tools
 from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.http import request
 from odoo.libs.filesystem import guess_mimetype
+from odoo.libs.guarded_http import RefusedDestination
 from odoo.tools.image import (
     binary_to_image,
     get_webp_size,
@@ -29,6 +30,7 @@ from odoo.addons.iap.tools import iap_tools
 from odoo.addons.mail.tools import link_preview
 
 DEFAULT_LIBRARY_ENDPOINT = "https://media-api.odoo.com"
+LIBRARY_MEDIA_MAX_BYTES = 32 * 1024 * 1024
 DEFAULT_OLG_ENDPOINT = "https://olg.api.odoo.com"
 
 
@@ -252,10 +254,17 @@ class HTML_Editor(http.Controller):
                     "url": url,
                 }
             )
-            if not link_preview._url_is_safe(url):
-                raise UserError(_("The provided URL cannot be fetched."))
             try:
-                response = requests.head(url, timeout=10)
+                response = request.env["ir.egress"].request(
+                    "HEAD", url, purpose="media_url", timeout=10, allow_redirects=False
+                )
+            except (
+                RefusedDestination,
+                requests.exceptions.InvalidSchema,
+                requests.exceptions.MissingSchema,
+                requests.exceptions.InvalidURL,
+            ):
+                raise UserError(_("The provided URL cannot be fetched.")) from None
             except requests.RequestException:
                 response = None
             if response is not None and response.status_code == 200:
@@ -537,7 +546,10 @@ class HTML_Editor(http.Controller):
             "dbuuid": ICP.get_param("database.uuid"),
             "media_ids": media_ids,
         }
-        response = requests.post(
+        session = request.env["ir.egress"].session(
+            purpose="media_library", max_bytes=LIBRARY_MEDIA_MAX_BYTES
+        )
+        response = session.post(
             f"{library_endpoint}/media-library/1/download_urls", data=params, timeout=15
         )
         if response.status_code != requests.codes.ok:
@@ -545,9 +557,12 @@ class HTML_Editor(http.Controller):
 
         slug = request.env["ir.http"]._slug
         for media_id, url in response.json().items():
-            if media_id not in media or not link_preview._url_is_safe(url):
+            if media_id not in media:
                 continue
-            req = requests.get(url, timeout=15)
+            try:
+                req = session.get(url, timeout=15)
+            except RefusedDestination:
+                continue
             name = "_".join([media[media_id]["query"], url.split("/")[-1]])
             IrAttachment = request.env["ir.attachment"]
             attachment_data = {
@@ -779,7 +794,9 @@ class HTML_Editor(http.Controller):
         methods=["POST"],
     )
     def link_preview_metadata(self, preview_url):
-        link_preview_data = link_preview.get_link_preview_from_url(preview_url)
+        link_preview_data = link_preview.get_link_preview_from_url(
+            preview_url, link_preview.get_link_preview_session(request.env)
+        )
         if link_preview_data and link_preview_data.get("og_description"):
             link_preview_data["og_description"] = html.fromstring(
                 link_preview_data["og_description"]
@@ -877,8 +894,12 @@ class HTML_Editor(http.Controller):
             "html_editor.media_library_endpoint", DEFAULT_LIBRARY_ENDPOINT
         )
         params["dbuuid"] = ICP.get_param("database.uuid")
-        response = requests.post(
-            f"{endpoint}/media-library/1/search", data=params, timeout=5
+        response = request.env["ir.egress"].request(
+            "POST",
+            f"{endpoint}/media-library/1/search",
+            purpose="media_library",
+            data=params,
+            timeout=5,
         )
         if (
             response.status_code == requests.codes.ok

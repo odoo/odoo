@@ -1,10 +1,13 @@
+import socket
 from unittest.mock import patch
 
-import odoo.tests
-from odoo.tests.common import HttpCase, new_test_user
-from odoo.tools.json import scriptsafe as json_safe
+import requests
 
-from odoo.addons.mail.tools import link_preview
+import odoo.tests
+from odoo.libs.guarded_http import GuardedAdapter
+from odoo.tests.common import HttpCase, new_test_user
+from odoo.tests.transaction_case import _super_send
+from odoo.tools.json import scriptsafe as json_safe
 
 
 @odoo.tests.tagged("-at_install", "post_install")
@@ -22,25 +25,37 @@ class TestAttachmentAddUrlHardening(HttpCase):
             data=json_safe.dumps({"params": {"url": url, "res_model": "ir.ui.view"}}),
         ).json()
 
+    def _resolving_publicly(self):
+        real_getaddrinfo = socket.getaddrinfo
+
+        # The test's own HTTP client resolves through the same function.
+        def getaddrinfo(host, port, *args, **kwargs):
+            if host != "example.com":
+                return real_getaddrinfo(host, port, *args, **kwargs)
+            return [(2, 1, 6, "", ("93.184.216.34", port))]
+
+        return patch("socket.getaddrinfo", side_effect=getaddrinfo)
+
     def test_internal_url_is_refused_without_any_request(self):
         self.authenticate("admin", "admin")
-        with patch("requests.head") as mocked_head:
+        with patch.object(GuardedAdapter, "_send_pinned") as send:
             response = self._add_url("http://127.0.0.1:9/internal")
-        mocked_head.assert_not_called()
+        send.assert_not_called()
         self.assertIn("error", response)
 
     def test_link_local_metadata_address_is_refused(self):
         self.authenticate("admin", "admin")
-        with patch("requests.head") as mocked_head:
-            self._add_url("http://169.254.169.254/latest/meta-data/")
-        mocked_head.assert_not_called()
+        with patch.object(GuardedAdapter, "_send_pinned") as send:
+            response = self._add_url("http://169.254.169.254/latest/meta-data/")
+        send.assert_not_called()
+        self.assertIn("error", response)
 
     def test_non_http_schemes_are_refused(self):
         self.authenticate("admin", "admin")
         for url in ("file:///etc/passwd", "gopher://127.0.0.1:70/x", "not-a-url"):
-            with patch("requests.head") as mocked_head:
+            with patch.object(GuardedAdapter, "_send_pinned") as send:
                 response = self._add_url(url)
-            mocked_head.assert_not_called()
+            send.assert_not_called()
             self.assertIn("error", response, url)
 
     def test_portal_user_cannot_distinguish_open_from_closed_ports(self):
@@ -55,24 +70,40 @@ class TestAttachmentAddUrlHardening(HttpCase):
 
     def test_public_url_still_reaches_the_head_request(self):
         self.authenticate("admin", "admin")
+        sent = []
+
+        def send(adapter, request, addresses, options):
+            sent.append((request.method, str(addresses[0])))
+            response = requests.Response()
+            response.status_code = 200
+            response.headers["content-type"] = "image/png"
+            response.request = request
+            response.url = request.url
+            response._content = b""
+            return response
+
         with (
-            patch.object(link_preview, "_url_is_safe", return_value=True),
-            patch("requests.head") as mocked_head,
+            self._resolving_publicly(),
+            patch.object(requests.Session, "send", _super_send),
+            patch.object(
+                GuardedAdapter, "_send_pinned", autospec=True, side_effect=send
+            ),
         ):
-            mocked_head.return_value.status_code = 200
-            mocked_head.return_value.headers = {"content-type": "image/png"}
             response = self._add_url("https://example.com/image.png")
-        mocked_head.assert_called_once()
+        self.assertEqual(sent, [("HEAD", "93.184.216.34")])
         self.assertNotIn("error", response)
         self.assertEqual(response["result"]["mimetype"], "image/png")
 
     def test_upstream_request_failure_does_not_escape(self):
         self.authenticate("admin", "admin")
-        import requests
-
         with (
-            patch.object(link_preview, "_url_is_safe", return_value=True),
-            patch("requests.head", side_effect=requests.ConnectionError("boom")),
+            self._resolving_publicly(),
+            patch.object(requests.Session, "send", _super_send),
+            patch.object(
+                GuardedAdapter,
+                "_send_pinned",
+                side_effect=requests.ConnectionError("boom"),
+            ),
         ):
             response = self._add_url("https://example.com/unreachable-media")
         self.assertNotIn("error", response)

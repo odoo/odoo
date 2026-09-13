@@ -10,7 +10,6 @@ from typing import Any
 from urllib.parse import quote
 from urllib.parse import urlencode as url_encode
 
-import requests
 from dateutil.relativedelta import relativedelta
 
 import odoo
@@ -1224,7 +1223,7 @@ class DocumentsDocument(models.Model):
         )
         if not documents:
             return
-        session = requests.Session()
+        session = link_preview.get_link_preview_session(self.env)
         for document in documents:
             vals = {"url_preview_pending": False}
             preview = (

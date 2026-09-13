@@ -8,7 +8,6 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
 import babel
-import requests
 from lxml import etree, html
 from markupsafe import Markup, escape_silent
 from PIL import Image as I
@@ -23,6 +22,7 @@ from odoo.tools.misc import babel_locale_parse, file_open, get_lang
 from odoo.addons.base.models.ir_qweb import indent_code
 
 REMOTE_CONNECTION_TIMEOUT = 2.5
+REMOTE_IMAGE_MAX_BYTES = 20 * 1024 * 1024
 
 _logger = logging.getLogger(__name__)
 
@@ -556,7 +556,13 @@ class IrQwebFieldImage(models.AbstractModel):
             _logger.debug("Cannot load binary data url %r", url)
             return None
         try:
-            req = requests.get(url, timeout=REMOTE_CONNECTION_TIMEOUT)
+            req = self.env["ir.egress"].request(
+                "GET",
+                url,
+                purpose="remote_image",
+                timeout=REMOTE_CONNECTION_TIMEOUT,
+                max_bytes=REMOTE_IMAGE_MAX_BYTES,
+            )
             image = I.open(io.BytesIO(req.content))
             image.load()
         except Exception:

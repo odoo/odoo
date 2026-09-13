@@ -16,11 +16,13 @@ from cryptography.hazmat.primitives.kdf.hkdf import HKDF
 from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
 
 from odoo.libs.debug_log import DebugLog
+from odoo.libs.guarded_http import RefusedDestination
 
 from . import jwt
-from .link_preview import UrlSafety, _classify_url_safety
 
 MAX_PAYLOAD_SIZE = 4096
+
+PUSH_RESPONSE_MAX_BYTES = 64 * 1024
 
 ENCRYPTION_HEADER_SIZE = 16 + 4 + 1 + (1 + 32 + 32)
 
@@ -157,6 +159,12 @@ def _encrypt_payload(
     return header + body
 
 
+def get_push_session(env: Any) -> requests.Session:
+    return env["ir.egress"].session(
+        purpose="web_push", max_bytes=PUSH_RESPONSE_MAX_BYTES
+    )
+
+
 def push_to_end_point(
     base_url: str,
     device: dict[str, Any],
@@ -164,20 +172,12 @@ def push_to_end_point(
     vapid_private_key: str,
     vapid_public_key: str,
     session: requests.Session,
-    safety_cache: dict[tuple[str, int], UrlSafety] | None = None,
 ) -> None:
     endpoint = device["endpoint"]
     url = urlsplit(endpoint)
     if (url.hostname or "").endswith(".invalid"):
         _debug.logic("push_refused", device=device.get("id"), reason="invalid_host")
         raise DeviceUnreachableError("Device Unreachable")
-    safety = _classify_url_safety(endpoint, cache=safety_cache)
-    if safety is UrlSafety.BLOCKED:
-        _debug.logic("push_refused", device=device.get("id"), reason="blocked_host")
-        raise DeviceUnreachableError("Device Unreachable")
-    if safety is UrlSafety.UNRESOLVABLE:
-        _debug.logic("push_refused", device=device.get("id"), reason="unresolvable")
-        raise PushEndpointUnresolvableError(endpoint)
     jwt_claims = {
         "aud": f"{url.scheme}://{url.netloc}",
         "sub": base_url,
@@ -203,13 +203,20 @@ def push_to_end_point(
         payload=len(body_payload),
         encrypted=len(encrypted_payload),
     ) as span:
-        response = session.post(
-            endpoint,
-            headers=headers,
-            data=encrypted_payload,
-            timeout=5,
-            allow_redirects=False,
-        )
+        try:
+            response = session.post(
+                endpoint,
+                headers=headers,
+                data=encrypted_payload,
+                timeout=5,
+                allow_redirects=False,
+            )
+        except RefusedDestination as refusal:
+            reason = "unresolvable" if refusal.unresolvable else "blocked_host"
+            _debug.logic("push_refused", device=device.get("id"), reason=reason)
+            if refusal.unresolvable:
+                raise PushEndpointUnresolvableError(endpoint) from None
+            raise DeviceUnreachableError("Device Unreachable") from None
         span.set(status=getattr(response, "status_code", None))
     if response.status_code == 201:
         _logger.debug("Sent push notification %s", endpoint)
