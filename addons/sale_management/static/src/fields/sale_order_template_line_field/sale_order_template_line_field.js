@@ -7,6 +7,7 @@ import {
 import { makeContext } from '@web/core/context';
 import { x2ManyCommands } from '@web/core/orm_service';
 import { registry } from '@web/core/registry';
+import { useBus } from "@web/core/utils/hooks";
 
 export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRenderer {
     static recordRowTemplate = 'sale_management.ListRenderer.RecordRow';
@@ -14,6 +15,11 @@ export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRendere
     setup() {
         super.setup();
         this.copyFields.push('is_optional');
+        this.sortDropProm = Promise.resolve();
+        // Ensure save waits for any pending sortDrop operation to complete.
+        useBus(this.props.list.model.bus, "NEED_LOCAL_CHANGES", ({ detail }) => {
+            detail.proms.push(this.sortDropProm);
+        });
     }
 
     get disableOptionalButton() {
@@ -112,14 +118,22 @@ export class SaleOrderTemplateLineListRenderer extends SectionAndNoteListRendere
      */
     async sortDrop(dataRowId, dataGroupId, { element, previous }) {
         const record = this.props.list.records.find(r => r.id === dataRowId);
-        // Prevent the record from being abandoned when leaveEditMode or sortDrop is called
-        record.dirty = true;
-        await this.props.list.leaveEditMode();
-        const recordMap = this._getRecordsToRecompute(record, previous ? previous.dataset.id : null);
 
-        await super.sortDrop(dataRowId, dataGroupId, { element, previous });
-
-        await this._handleQuantityAdjustment(recordMap);
+        // Keep the promise on the component so save() can wait for it to resolve.
+        // Otherwise, the record could be saved before the quantity adjustment is applied,
+        // resulting in inconsistent record values.
+        this.sortDropProm = (async () => {
+            // Prevent the record from being abandoned when leaveEditMode or sortDrop is called
+            record.dirty = true;
+            await this.props.list.leaveEditMode();
+            const recordMap = this._getRecordsToRecompute(
+                record,
+                previous ? previous.dataset.id : null
+            );
+            await super.sortDrop(dataRowId, dataGroupId, { element, previous });
+            await this._handleQuantityAdjustment(recordMap);
+        })();
+        await this.sortDropProm;
     }
 
     /**
