@@ -37,8 +37,8 @@ window.odoo = {csrf_token: "<t t-out="request.csrf_token(None)" />",debug: "<t t
             <t t-call-assets="web.assets_frontend" t-js="false" />
         </xpath>
         <!-- the public app flips it to "true" once its interactions run; until
-             then a page whose DOM is parsed but whose scripts have not run must
-             not read as ready to a tour or to the website preview -->
+            then a page whose DOM is parsed but whose scripts have not run must
+            not read as ready to a tour or to the website preview -->
         <xpath expr="//body" position="attributes">
             <attribute name="is-ready">false</attribute>
         </xpath>
