@@ -78,6 +78,7 @@ declare module "models" {
         has_mail_thread: boolean | undefined;
         hasMemberList: Readonly<boolean>;
         isMultiMemberChannel: Readonly<boolean>;
+        isMuted: Readonly<boolean>;
         hasOtherMembersTyping: boolean;
         hasSeenFeature: boolean;
         hasSelfAsMember: Readonly<boolean>;

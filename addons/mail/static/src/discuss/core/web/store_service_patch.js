@@ -24,11 +24,7 @@ const StorePatch = {
         let channelsContribution = channelsFetched ? 0 : this.initChannelsUnreadCounter;
         let channelsNeedactionCounter = 0;
         for (const thread of this.counterChannels) {
-            if (
-                channelsFetched &&
-                thread.displayToSelf &&
-                !thread.self_member_id?.mute_until_dt
-            ) {
+            if (channelsFetched && thread.displayToSelf && !thread.isMuted) {
                 channelsContribution++;
             }
             channelsNeedactionCounter += thread.message_needaction_counter;

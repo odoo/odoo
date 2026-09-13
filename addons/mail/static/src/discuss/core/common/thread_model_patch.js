@@ -359,6 +359,9 @@ const threadPatch = {
     get isChatChannel() {
         return ["chat", "group"].includes(this.channel_type);
     },
+    get isMuted() {
+        return Boolean(this.self_member_id?.mute_until_dt);
+    },
     get isMultiMemberChannel() {
         return this.channel_type === "channel" || this.channel_type === "group";
     },
@@ -787,10 +790,7 @@ const threadPatch = {
             if (this.store.settings.channel_notifications === "no_notif") {
                 return 0;
             }
-            if (
-                this.store.settings.channel_notifications === "all" &&
-                !this.self_member_id?.mute_until_dt
-            ) {
+            if (this.store.settings.channel_notifications === "all" && !this.isMuted) {
                 return this.self_member_id?.message_unread_counter_ui;
             }
         }

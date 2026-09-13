@@ -59,9 +59,7 @@ registerThreadAction("notification-settings", {
     close: ({ action }) => action.popover?.close(),
     /** @param {ActionParams} params */
     icon: ({ thread }) =>
-        thread.self_member_id?.mute_until_dt
-            ? "fa-solid fa-bell-slash text-danger"
-            : "fa-solid fa-bell",
+        thread.isMuted ? "fa-solid fa-bell-slash text-danger" : "fa-solid fa-bell",
     name: _t("Notification Settings"),
     panelOuterClass: "bg-100 border border-secondary",
     sequence: 10,
@@ -136,7 +134,7 @@ registerThreadAction("mark-read", {
     condition: ({ owner, thread }) =>
         thread?.self_member_id &&
         thread.self_member_id.message_unread_counter > 0 &&
-        !thread.self_member_id.mute_until_dt &&
+        !thread.isMuted &&
         owner.isDiscussSidebarChannelActions,
     /** @param {ActionParams} params */
     open: ({ owner }) => owner.thread.markAsRead(),

@@ -16,7 +16,7 @@ const modelPatch = {
             this.self_member_id?.custom_notifications ||
             this.store.settings.channel_notifications;
         if (
-            !this.self_member_id?.mute_until_dt &&
+            !this.isMuted &&
             !this.store.self.im_status?.includes("busy") &&
             (this.channel_type !== "channel" ||
                 (this.channel_type === "channel" &&
