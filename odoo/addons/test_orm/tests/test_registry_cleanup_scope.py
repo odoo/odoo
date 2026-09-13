@@ -7,7 +7,7 @@ class TestRegistryCleanupScopeUntouched(common.TransactionCase):
         # is judged by its own changes, so it starts with none
         self.assertFalse(self.registry.registry_invalidated)
         self.assertEqual(self.registry.invalidated_model_names, set())
-        self.assertEqual(self._registry_models_touched, set())
+        self.assertEqual(self._registry_guard.models_touched, set())
 
 
 class TestRegistryCleanupScopeNamed(common.TransactionCase):

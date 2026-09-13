@@ -1505,12 +1505,100 @@ class BaseCase(TestCase):
         return found
 
 
+_muted_registry_logger = mute_logger(odoo.orm.runtime.registry._logger.name)
+
+
+class _RegistryGuard:
+    __slots__ = (
+        "cache_sequences",
+        "label",
+        "models_touched",
+        "registry",
+        "start_invalidated",
+        "start_sequence",
+    )
+
+    def __init__(self, registry: Registry, label: str) -> None:
+        self.registry = registry
+        self.label = label
+        self.start_invalidated = registry.registry_invalidated
+        self.start_sequence = registry.registry_sequence
+        self.cache_sequences = dict(registry.cache_sequences)
+        registry.registry_invalidated = False
+        self.models_touched: set[str] | None = set()
+        _debug.lifecycle(
+            "test.registry.bound",
+            cls=label,
+            db=registry.db_name,
+            sequence=self.start_sequence,
+            invalidated=self.start_invalidated,
+            ready=registry.ready,
+            loaded=registry.loaded,
+        )
+
+    def note_touched_models(self) -> None:
+        registry = self.registry
+        if registry.registry_invalidated:
+            touched = self.models_touched
+            now = registry.invalidated_model_names
+            self.models_touched = (
+                None if touched is None or now is None else touched | now
+            )
+
+    def signal_changes(self) -> None:
+        registry = self.registry
+        if not registry.ready:
+            _debug.logic("test.registry.signal_changes", ready=False)
+            _logger.info("Skipping signal changes during tests")
+            return
+        if registry.registry_invalidated or registry.cache_invalidated:
+            _logger.info("Simulating signal changes during tests")
+        _debug.logic(
+            "test.registry.signal_changes",
+            ready=True,
+            registry_invalidated=registry.registry_invalidated,
+            caches=sorted(registry.cache_invalidated or ()),
+        )
+        if registry.registry_invalidated:
+            self.note_touched_models()
+            registry.registry_sequence += 1
+        for cache_name in registry.cache_invalidated or ():
+            registry.cache_sequences[cache_name] += 1
+        registry.registry_invalidated = False
+        registry.cache_invalidated.clear()
+
+    def reset_changes(self) -> None:
+        registry = self.registry
+        rebuild = (
+            self.start_sequence != registry.registry_sequence
+        ) or registry.registry_invalidated
+        self.note_touched_models()
+        touched = self.models_touched
+        with _debug.perf(
+            "test.registry.reset_changes",
+            cls=self.label,
+            rebuild=rebuild,
+            scope="all" if touched is None else len(touched),
+            sequence=registry.registry_sequence,
+            started_at=self.start_sequence,
+        ):
+            if rebuild:
+                with registry.cursor() as cr:
+                    if touched is None:
+                        registry.setup_models(cr)
+                    else:
+                        registry.setup_models(cr, touched)
+            registry.registry_invalidated = self.start_invalidated
+            registry.registry_sequence = self.start_sequence
+            with _muted_registry_logger:
+                registry.clear_all_caches()
+            registry.cache_invalidated.clear()
+            registry.cache_sequences = self.cache_sequences
+
+
 class TransactionCase(BaseCase):
-    muted_registry_logger = mute_logger(odoo.orm.runtime.registry._logger.name)
-    registry_start_invalidated: ClassVar[bool]
-    registry_start_sequence: ClassVar[int]
-    registry_cache_sequences: ClassVar[dict]
-    _registry_models_touched: ClassVar[set[str] | None]
+    muted_registry_logger = _muted_registry_logger
+    _registry_guard: ClassVar[_RegistryGuard]
     _signal_changes_patcher: ClassVar[Any]
     commit_patcher: ClassVar[Any]
     rollback_patcher: ClassVar[Any]
@@ -1522,81 +1610,11 @@ class TransactionCase(BaseCase):
     def setUpClass(cls) -> None:
         super().setUpClass()
         cls.registry = Registry(get_db_name())
-        cls.registry_start_invalidated = cls.registry.registry_invalidated
-        cls.registry_start_sequence = cls.registry.registry_sequence
-        cls.registry_cache_sequences = dict(cls.registry.cache_sequences)
-        cls.registry.registry_invalidated = False
-        cls._registry_models_touched = set()
-        _debug.lifecycle(
-            "test.registry.bound",
-            cls=cls.__qualname__,
-            db=cls.registry.db_name,
-            sequence=cls.registry_start_sequence,
-            invalidated=cls.registry_start_invalidated,
-            ready=cls.registry.ready,
-            loaded=cls.registry.loaded,
-        )
-
-        def note_touched_models():
-            if cls.registry.registry_invalidated:
-                touched = cls._registry_models_touched
-                now = cls.registry.invalidated_model_names
-                cls._registry_models_touched = (
-                    None if touched is None or now is None else touched | now
-                )
-
-        def reset_changes():
-            rebuild = (
-                cls.registry_start_sequence != cls.registry.registry_sequence
-            ) or cls.registry.registry_invalidated
-            note_touched_models()
-            touched = cls._registry_models_touched
-            with _debug.perf(
-                "test.registry.reset_changes",
-                cls=cls.__qualname__,
-                rebuild=rebuild,
-                scope="all" if touched is None else len(touched),
-                sequence=cls.registry.registry_sequence,
-                started_at=cls.registry_start_sequence,
-            ):
-                if rebuild:
-                    with cls.registry.cursor() as cr:
-                        if touched is None:
-                            cls.registry.setup_models(cr)
-                        else:
-                            cls.registry.setup_models(cr, touched)
-                cls.registry.registry_invalidated = cls.registry_start_invalidated
-                cls.registry.registry_sequence = cls.registry_start_sequence
-                with cls.muted_registry_logger:
-                    cls.registry.clear_all_caches()
-                cls.registry.cache_invalidated.clear()
-                cls.registry.cache_sequences = cls.registry_cache_sequences
-
-        cls.addClassCleanup(reset_changes)
-
-        def signal_changes():
-            if not cls.registry.ready:
-                _debug.logic("test.registry.signal_changes", ready=False)
-                _logger.info("Skipping signal changes during tests")
-                return
-            if cls.registry.registry_invalidated or cls.registry.cache_invalidated:
-                _logger.info("Simulating signal changes during tests")
-            _debug.logic(
-                "test.registry.signal_changes",
-                ready=True,
-                registry_invalidated=cls.registry.registry_invalidated,
-                caches=sorted(cls.registry.cache_invalidated or ()),
-            )
-            if cls.registry.registry_invalidated:
-                note_touched_models()
-                cls.registry.registry_sequence += 1
-            for cache_name in cls.registry.cache_invalidated or ():
-                cls.registry.cache_sequences[cache_name] += 1
-            cls.registry.registry_invalidated = False
-            cls.registry.cache_invalidated.clear()
+        cls._registry_guard = guard = _RegistryGuard(cls.registry, cls.__qualname__)
+        cls.addClassCleanup(guard.reset_changes)
 
         cls._signal_changes_patcher = patch.object(
-            cls.registry, "signal_changes", signal_changes
+            cls.registry, "signal_changes", guard.signal_changes
         )
         cls.startClassPatcher(cls._signal_changes_patcher)
 
@@ -1728,6 +1746,8 @@ class TransactionCase(BaseCase):
 
 
 class SingleTransactionCase(BaseCase):
+    _registry_guard: ClassVar[_RegistryGuard]
+    _signal_changes_patcher: ClassVar[Any]
     _starts_freeze_time_itself = True
 
     @classmethod
@@ -1744,8 +1764,12 @@ class SingleTransactionCase(BaseCase):
     def setUpClass(cls) -> None:
         super().setUpClass()
         cls.registry = Registry(get_db_name())
-        cls.addClassCleanup(cls.registry.reset_changes)
-        cls.addClassCleanup(cls.registry.clear_all_caches)
+        cls._registry_guard = guard = _RegistryGuard(cls.registry, cls.__qualname__)
+        cls.addClassCleanup(guard.reset_changes)
+        cls._signal_changes_patcher = patch.object(
+            cls.registry, "signal_changes", guard.signal_changes
+        )
+        cls.startClassPatcher(cls._signal_changes_patcher)
 
         cls._open_class_cursor()
 
