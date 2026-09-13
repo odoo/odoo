@@ -10,13 +10,13 @@ import { setContent } from "@html_editor/../tests/_helpers/selection";
 import { insertText } from "@html_editor/../tests/_helpers/user_actions";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
 import { Plugin } from "@html_editor/plugin";
-import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { after, click, queryAll, queryFirst } from "@odoo/hoot";
 import { advanceTime, animationFrame, queryOne, tick, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { Component, onMounted, proxy, signal, t, useProps, xml } from "@odoo/owl";
 import {
     contains,
     defineModels,
+    defineWebModels,
     models,
     mountWithCleanup,
     onRpc,
@@ -232,7 +232,7 @@ export async function setupHTMLBuilder(
         builderProps,
     } = {}
 ) {
-    defineMailModels();
+    defineWebModels();
     defineModels([IrUiView]);
 
     if (patchImages) {

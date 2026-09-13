@@ -8,9 +8,7 @@
 
     'author': 'Odoo S.A.',
 
-    # so stupid that we need to use the stupid defineMailModel helper, so we need
-    # to depend on mail
-    'depends': ['base', 'html_editor', 'mail'],
+    'depends': ['html_editor'],
 
     'assets': {
         'web._assets_primary_variables': [
