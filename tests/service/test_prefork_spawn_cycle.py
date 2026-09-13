@@ -7,7 +7,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from odoo.service import _prefork
+from odoo.service import _census, _prefork
 from odoo.service import settings as server_settings
 
 
@@ -33,7 +33,7 @@ class TestTheWorkerCensusCrossesTheFork:
         obj.workers_http = dict.fromkeys((1, 2, 3), MagicMock())
         obj.workers_cron = dict.fromkeys((4,), MagicMock())
         obj.workers_job = dict.fromkeys((5, 6), MagicMock())
-        obj._census_written_at = float("-inf")
+        obj._census.written_at = float("-inf")
         with server_settings.override(data_dir=str(tmp_path)):
             yield obj
 
@@ -46,7 +46,7 @@ class TestTheWorkerCensusCrossesTheFork:
 
     def test_a_child_reads_the_counts_only_the_master_knows(self, master):
         master._publish_census()
-        got = self._child_of(master)._read_census()
+        got = self._child_of(master)._census.read()
 
         assert got == {
             "workers": {"http": 3, "cron": 1, "job": 2},
@@ -71,25 +71,23 @@ class TestTheWorkerCensusCrossesTheFork:
         self, master
     ):
         master._publish_census()
-        first = json.loads((master._get_census_path()).read_text())
+        first = json.loads((master._census.path).read_text())
 
         master.population = 99
         master._publish_census()
-        assert json.loads(master._get_census_path().read_text()) == first
+        assert json.loads(master._census.path.read_text()) == first
 
-        master._census_written_at = float("-inf")
+        master._census.written_at = float("-inf")
         master._publish_census()
-        assert (
-            json.loads(master._get_census_path().read_text())["worker_population"] == 99
-        )
+        assert json.loads(master._census.path.read_text())["worker_population"] == 99
 
     def test_a_stale_census_answers_nothing_rather_than_phantom_workers(self, master):
         master._publish_census()
-        path = master._get_census_path()
-        old = time.time() - _prefork.CENSUS_MAX_AGE_S - 1
+        path = master._census.path
+        old = time.time() - _census.CENSUS_MAX_AGE_S - 1
         os.utime(path, (old, old))
 
-        assert self._child_of(master)._read_census() == {}, (
+        assert self._child_of(master)._census.read() == {}, (
             "the file outlives a master that was killed rather than stopped; "
             "reporting its last counts would show a full complement of workers "
             "for a server that is gone"
@@ -97,22 +95,22 @@ class TestTheWorkerCensusCrossesTheFork:
 
     def test_a_missing_or_corrupt_census_is_absent_not_an_error(self, master):
         child = self._child_of(master)
-        assert child._read_census() == {}
+        assert child._census.read() == {}
 
-        master._get_census_path().write_text("{ this is not json")
-        assert child._read_census() == {}
+        master._census.path.write_text("{ this is not json")
+        assert child._census.read() == {}
 
-        master._get_census_path().write_text('"a string, not an object"')
-        assert child._read_census() == {}
+        master._census.path.write_text('"a string, not an object"')
+        assert child._census.read() == {}
 
     def test_publishing_never_raises_even_on_a_half_built_server(self):
         """`run()`'s catch-all turns any raise here into `stop(False)`; return -1.
 
         This is not hypothetical: the first version of `_publish_census` read
-        `self._census_written_at` OUTSIDE its try, and four `TestRun` cases
-        went red because the server they build never sets it -- an
-        AttributeError in the loop took the whole master down. The throttle
-        bookkeeping is as much a part of "best effort" as the write is.
+        the throttle stamp OUTSIDE its try, and four `TestRun` cases went red
+        because the server they build never sets it -- an AttributeError in
+        the loop took the whole master down. A server with no census object at
+        all is the same shape of failure.
         """
         bare = object.__new__(_prefork.PreforkServer)
         bare.logger = MagicMock()
@@ -130,34 +128,35 @@ class TestTheWorkerCensusCrossesTheFork:
         existed: the metrics are absent.
         """
         with server_settings.override(data_dir="/proc/nonexistent-dir"):
-            master._census_written_at = float("-inf")
+            master._census.written_at = float("-inf")
             master._publish_census()
 
         with server_settings.override(data_dir=""):
-            master._census_written_at = float("-inf")
+            master._census.written_at = float("-inf")
             master._publish_census()
-            assert master._get_census_path() is None
-            assert master._read_census() == {}
+            assert master._census.path is None
+            assert master._census.read() == {}
+            assert master._census.publish(master._get_census) is False
 
     def test_stopping_removes_the_file(self, master):
         master._publish_census()
-        path = master._get_census_path()
+        path = master._census.path
         assert path.exists()
-        master._discard_census()
+        master._census.discard()
         assert not path.exists()
-        master._discard_census()
+        master._census.discard()
 
     def test_both_sides_derive_the_same_path_from_the_masters_pid(self, master):
-        assert master._get_census_path() == self._child_of(master)._get_census_path(), (
+        assert master._census.path == self._child_of(master)._census.path, (
             "the child names the file without being told where it is, because "
             "it inherited the master's pid in self.pid across the fork"
         )
 
     def test_startup_collects_what_a_killed_master_left_behind(self, master):
-        data_dir = master._get_census_path().parent
+        data_dir = master._census.path.parent
         dead = data_dir / "prefork-census-999999.json"
         dead.write_text("{}")
-        old = time.time() - _prefork.CENSUS_MAX_AGE_S - 1
+        old = time.time() - _census.CENSUS_MAX_AGE_S - 1
         os.utime(dead, (old, old))
 
         live = data_dir / "prefork-census-999998.json"
@@ -167,7 +166,7 @@ class TestTheWorkerCensusCrossesTheFork:
         unrelated.write_text("{}")
         os.utime(unrelated, (old, old))
 
-        master._remove_stale_censuses()
+        master._census.remove_stale()
 
         assert not dead.exists(), (
             "_discard_census only runs on a clean stop, so without this sweep "
@@ -178,11 +177,11 @@ class TestTheWorkerCensusCrossesTheFork:
 
     def test_the_sweep_never_takes_our_own_file(self, master):
         master._publish_census()
-        path = master._get_census_path()
-        old = time.time() - _prefork.CENSUS_MAX_AGE_S - 1
+        path = master._census.path
+        old = time.time() - _census.CENSUS_MAX_AGE_S - 1
         os.utime(path, (old, old))
 
-        master._remove_stale_censuses()
+        master._census.remove_stale()
 
         assert path.exists(), (
             "the sweep runs at start() before we have written anything, but it "
@@ -204,7 +203,7 @@ def prefork():
     obj._respawn_not_before = 0.0
     obj.queue = []
     obj._selector = None
-    obj._census_written_at = float("-inf")
+    obj._census = _census.WorkerCensus(obj.pid)
     obj.pipe = os.pipe2(os.O_NONBLOCK | os.O_CLOEXEC)
     yield obj
     obj._close_watchdog_selector()

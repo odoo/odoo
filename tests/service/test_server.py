@@ -2169,7 +2169,7 @@ class TestTheStartupLineNamesTheSocketItActuallyGot:
         server.logger = MagicMock()
         server.interface, server.port, server.population = "127.0.0.1", 0, 1
         server.open_pipe = MagicMock(return_value=(0, 0))
-        server._remove_stale_censuses = MagicMock()
+        server._census = MagicMock()
         with (
             server_settings.override(
                 http_enable=True, http_socket_activation=socket_activation

@@ -76,6 +76,7 @@ class TestServiceMetrics:
     @staticmethod
     def _prefork(pid):
         """A real PreforkServer, since it is the one that answers now."""
+        from odoo.service._census import WorkerCensus
         from odoo.service._prefork import PreforkServer
 
         server = object.__new__(PreforkServer)
@@ -87,6 +88,7 @@ class TestServiceMetrics:
         server.generation = 17
         server.long_polling_pid = 999
         server.pid = pid
+        server._census = WorkerCensus(pid)
         return server
 
     def test_prefork_reports_worker_counts(self, mod):

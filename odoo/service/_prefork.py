@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import contextlib
 import errno
-import json
 import logging
 import os
 import selectors
@@ -29,6 +28,7 @@ from odoo.tools.misc import dumpstacks, stripped_sys_argv
 
 from . import _process_state
 from ._base_server import CommonServer
+from ._census import WorkerCensus
 from ._env import _IS_POSIX, get_env_float
 from ._limits import empty_pipe, get_cron_real_time_budget, get_job_real_time_budget
 from ._worker import Worker, WorkerCron, WorkerHTTP, WorkerJob
@@ -59,21 +59,13 @@ SUPERVISION_BEAT_S = 4.0
 """How long the master sleeps between supervision passes; `stop_workers_gracefully`
 shortens it while draining and `reload` restores it."""
 
-CENSUS_WRITE_INTERVAL_S = SUPERVISION_BEAT_S
-"""How often the master rewrites its census.  Matches the default beat."""
-
-CENSUS_MAX_AGE_S = 60.0
-"""Older than this and the census is not answered from; see `_read_census`."""
-
 
 class PreforkServer(CommonServer):
     flavor = "prefork"
 
-    _census_written_at: float
-
     def get_metrics(self) -> dict[str, Any]:
         if os.getpid() != self.pid:
-            return self._read_census()
+            return self._census.read()
         return self._get_census()
 
     def _get_census(self) -> dict[str, Any]:
@@ -88,72 +80,14 @@ class PreforkServer(CommonServer):
             "long_polling_alive": self.long_polling_pid is not None,
         }
 
-    def _get_census_path(self) -> Path | None:
-        data_dir = self.settings.data_dir
-        if not data_dir:
-            return None
-        return Path(data_dir) / f"prefork-census-{self.pid}.json"
-
     def _publish_census(self) -> None:
+        # Runs inside run()'s loop, where a raise takes the master down: the
+        # metrics are best effort, the supervision is not.
         try:
-            now = time.monotonic()
-            if now - self._census_written_at < CENSUS_WRITE_INTERVAL_S:
-                return
-            self._census_written_at = now
-            path = self._get_census_path()
-            if path is None:
-                return
-            tmp = path.with_name(f"{path.name}.{os.getpid()}.tmp")
-            try:
-                tmp.write_text(json.dumps(self._get_census()))
-                tmp.replace(path)
-            except Exception:
-                with contextlib.suppress(OSError):
-                    tmp.unlink()
-                raise
-            _debug.pipeline(
-                "prefork.census_published",
-                workers=len(self.workers),
-                generation=self.generation,
-            )
+            self._census.publish(self._get_census)
         except Exception:
             self.logger.debug("Could not publish the worker census", exc_info=True)
             _debug.logic("prefork.census_unpublishable")
-
-    def _read_census(self) -> dict[str, Any]:
-        path = self._get_census_path()
-        if path is None:
-            return {}
-        try:
-            if time.time() - path.stat().st_mtime > CENSUS_MAX_AGE_S:
-                _debug.logic("prefork.census_stale", max_age_s=CENSUS_MAX_AGE_S)
-                return {}
-            payload = json.loads(path.read_text())
-        except Exception:
-            _debug.logic("prefork.census_unreadable", path=str(path))
-            return {}
-        return payload if isinstance(payload, dict) else {}
-
-    def _discard_census(self) -> None:
-        path = self._get_census_path()
-        if path is not None:
-            with contextlib.suppress(OSError):
-                path.unlink()
-            _debug.lifecycle("prefork.census_discarded", path=str(path))
-
-    def _remove_stale_censuses(self) -> None:
-        path = self._get_census_path()
-        if path is None:
-            return
-        cutoff = time.time() - CENSUS_MAX_AGE_S
-        try:
-            for stale in path.parent.glob("prefork-census-*.json"):
-                if stale != path and stale.stat().st_mtime < cutoff:
-                    with contextlib.suppress(OSError):
-                        stale.unlink()
-                        _debug.lifecycle("prefork.census_removed", path=str(stale))
-        except Exception:
-            self.logger.debug("Could not remove stale censuses", exc_info=True)
 
     def __init__(self, app: Any) -> None:
         super().__init__(app)
@@ -182,7 +116,7 @@ class PreforkServer(CommonServer):
         self._respawn_not_before = 0.0
         self._selector: selectors.BaseSelector | None = None
         self._watched: dict[int, Worker] = {}
-        self._census_written_at = float("-inf")
+        self._census = WorkerCensus(self.pid)
         self._replacement: subprocess.Popen | None = None
         self._candidate: subprocess.Popen | None = None
         self._reload_reader: tuple[int, selectors.BaseSelector] | None = None
@@ -721,7 +655,7 @@ class PreforkServer(CommonServer):
 
     def start(self) -> None:
         self.pipe = self.open_pipe()
-        self._remove_stale_censuses()
+        self._census.remove_stale()
         _debug.lifecycle(
             "prefork.start",
             pid=self.pid,
@@ -1085,7 +1019,7 @@ class PreforkServer(CommonServer):
         for pid in list(self.workers):
             self.kill_worker(pid, signal.SIGTERM)
         self._close_watchdog_selector()
-        self._discard_census()
+        self._census.discard()
         pipe, self.pipe = self.pipe, None
         for fd in pipe or ():
             with contextlib.suppress(OSError):

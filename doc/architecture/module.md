@@ -48,7 +48,8 @@ odoo/
 │                   geoip
 ├── service/        Process lifecycle + the servers
 │   ├── server, _base_server, _threaded (ThreadedServer + EventServer),
-│   │   _prefork, _worker, _watcher, httpd, _cron, lifecycle,
+│   │   _prefork, _census (the master's worker counts, a file its
+│   │   children read for /web/metrics), _worker, _watcher, httpd, _cron, lifecycle,
 │   │   _factory (picks and runs a server), _process_state (its two globals),
 │   │   settings (ServerSettings: the frozen snapshot start() builds once)
 │   ├── db/         Database management, the /web/database/manager service
