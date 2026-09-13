@@ -128,9 +128,9 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 | `test_import_files.py` | `post_install`, `-at_install` | 4 | 90 | TransactionCase |
 | `test_ir_actions.py` | `post_install`, `-at_install` | 7 | 104 | TestServerActionsBase, TransactionCase, TestCommonCustomFields |
 | `test_ir_actions_audit.py` | `post_install`, `-at_install` | 47 | 140 | TransactionCase |
-| `test_ir_actions_report_audit.py` | `post_install`, `-at_install` | 26 | 70 | TransactionCase, MultiArticleReportCase |
+| `test_ir_actions_report_audit.py` | `post_install`, `-at_install` | 26 | 69 | TransactionCase, MultiArticleReportCase |
 | `test_ir_actions_server_audit.py` | `post_install`, `-at_install` | 3 | 8 | TransactionCase |
-| `test_ir_actions_server_regressions.py` | `post_install`, `-at_install` | 14 | 43 | ServerActionCase |
+| `test_ir_actions_server_regressions.py` | `post_install`, `-at_install` | 14 | 42 | ServerActionCase |
 | `test_ir_actions_webhook.py` | `post_install`, `-at_install` | 4 | 20 | WebhookCase, TransactionCase |
 | `test_ir_asset.py` | `-at_install`, `post_install` | 1 | 1 | TransactionCase |
 | `test_ir_asset_audit.py` | `post_install`, `-at_install` | 20 | 67 | TransactionCase |

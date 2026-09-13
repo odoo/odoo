@@ -3,11 +3,11 @@ import logging
 from odoo import _, api, fields, models
 from odoo.api import Environment
 from odoo.exceptions import ValidationError
+from odoo.libs import netguard
 from odoo.modules.registry import Registry
 
 from ..tools.api_client import get_api_client
 from ..tools.exceptions import CommError
-from odoo.addons.base.models.ir_actions_server import _get_webhook_blocked_reason
 
 _logger = logging.getLogger(__name__)
 
@@ -67,6 +67,7 @@ class IrActionsServer(models.Model):
             timeout=timeout,
             action_label=action_label,
             target=target,
+            policy=self.env["ir.egress"]._get_policy("public"),
         )
 
 
@@ -81,6 +82,7 @@ class _EndpointDelivery:
         timeout,
         action_label,
         target,
+        policy,
     ):
         self.dbname = dbname
         self.endpoint_code = endpoint_code
@@ -90,6 +92,7 @@ class _EndpointDelivery:
         self.timeout = timeout
         self.action_label = action_label
         self.target = target
+        self.policy = policy
 
     def __call__(self, json_values):
         _logger.debug(
@@ -98,7 +101,9 @@ class _EndpointDelivery:
             self.target,
             self.endpoint_code,
         )
-        if blocked := _get_webhook_blocked_reason(self.url):
+        try:
+            netguard.check_url(self.url, policy=self.policy)
+        except netguard.DestinationRefused as refusal:
             _logger.error(
                 "Webhook %s to %s was NOT sent through endpoint %s: %s. The "
                 "address was allowed when the action ran and is not any more -- "
@@ -106,7 +111,7 @@ class _EndpointDelivery:
                 self.action_label,
                 self.target,
                 self.endpoint_code,
-                blocked,
+                refusal,
             )
             return
         try:

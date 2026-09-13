@@ -1,8 +1,6 @@
 import base64
 import contextlib
-import ipaddress
 import logging
-import socket
 from collections.abc import Callable
 from functools import partial
 from typing import Any, Literal, Self
@@ -17,19 +15,22 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.libs.datetime import utc
 from odoo.libs.debug_log import DebugLog
+from odoo.libs.guarded_http import RefusedDestination
 from odoo.libs.json import OPT_INDENT_2, OPT_SORT_KEYS
 from odoo.libs.json import dumps as json_dumps
+from odoo.libs.netguard import DestinationRefused
 from odoo.tools import _, get_lang
 from odoo.tools.misc import unquote
 from odoo.tools.safe_eval import safe_eval, test_python_expr
-
-IPAddress = ipaddress.IPv4Address | ipaddress.IPv6Address
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
 _server_action_logger = logging.getLogger(
     "odoo.addons.base.models.ir_actions.server_action_safe_eval"
 )
+
+
+_WEBHOOK_RESPONSE_MAX_BYTES = 1024 * 1024
 
 
 def _webhook_json_default(value: Any) -> str:
@@ -39,55 +40,6 @@ def _webhook_json_default(value: Any) -> str:
         except UnicodeDecodeError:
             return base64.b64encode(value).decode()
     return str(value)
-
-
-def _resolve_webhook_candidates(
-    url: str,
-) -> tuple[str | None, list[IPAddress], str | None]:
-    try:
-        parsed = urlparse(url)
-    except ValueError:
-        return None, [], "malformed URL"
-    if parsed.scheme not in ("http", "https"):
-        return None, [], f"unsupported scheme {parsed.scheme!r}"
-    hostname = parsed.hostname
-    if not hostname:
-        return None, [], "missing host"
-
-    candidates: list[IPAddress] = []
-    try:
-        candidates.append(ipaddress.ip_address(hostname.strip("[]")))
-    except ValueError:
-        try:
-            candidates.extend(
-                ipaddress.ip_address(info[4][0])
-                for info in socket.getaddrinfo(
-                    hostname, parsed.port or None, proto=socket.IPPROTO_TCP
-                )
-            )
-        except OSError, ValueError:
-            return hostname, [], f"host {hostname!r} could not be resolved"
-
-    if not candidates:
-        return hostname, [], f"host {hostname!r} resolved to no address"
-    return hostname, candidates, None
-
-
-# The one address policy. The action checks it before it queues the request and
-# the delivery checks it again against the addresses it is about to pin, so a
-# name that resolves elsewhere by then is caught -- and a test, or a deployment,
-# that relaxes the policy relaxes it at both points instead of only the first.
-def _get_webhook_blocked_reason(
-    url: str, candidates: list[IPAddress] | None = None
-) -> str | None:
-    if candidates is None:
-        _hostname, candidates, error = _resolve_webhook_candidates(url)
-        if error:
-            return error
-    for ip in candidates:
-        if not ip.is_global or ip.is_reserved or ip.is_multicast:
-            return f"blocked address {ip} (not a globally routable range)"
-    return None
 
 
 def _get_webhook_log_target(url: str) -> str:
@@ -107,31 +59,6 @@ def _scrub_webhook_url(message: str, url: str, target: str) -> str:
     for needle in needles:
         message = message.replace(needle, f"<{target} webhook URL>")
     return message
-
-
-class _PinnedIPAdapter(requests.adapters.HTTPAdapter):
-    def __init__(self, pinned_ip: str, **kwargs: Any) -> None:
-        self._pinned_ip = pinned_ip
-        super().__init__(**kwargs)
-
-    def get_connection_with_tls_context(
-        self,
-        request: Any,
-        verify: Any,
-        proxies: dict[str, str] | None = None,
-        cert: Any = None,
-    ) -> Any:
-        host_params, pool_kwargs = self.build_connection_pool_key_attributes(
-            request, verify, cert
-        )
-        original_host = host_params["host"]
-        host_params["host"] = self._pinned_ip
-        if host_params.get("scheme") == "https":
-            pool_kwargs["assert_hostname"] = original_host
-            pool_kwargs["server_hostname"] = original_host
-        return self.poolmanager.connection_from_host(
-            **host_params, pool_kwargs=pool_kwargs
-        )
 
 
 class LoggerProxy:
@@ -1156,7 +1083,11 @@ class IrActionsServer(models.Model):
                     name=self.name,
                 )
             )
-        blocked = _get_webhook_blocked_reason(url)
+        try:
+            self.env["ir.egress"].check_url(url)
+            blocked = None
+        except DestinationRefused as refusal:
+            blocked = str(refusal)
         _debug.logic(
             "webhook_guard",
             phase="action",
@@ -1206,6 +1137,9 @@ class IrActionsServer(models.Model):
     def _prepare_webhook_delivery(self, url, timeout, action_label, target):
         return partial(
             self._deliver_webhook_unauthenticated,
+            self.env["ir.egress"].session(
+                purpose="webhook", max_bytes=_WEBHOOK_RESPONSE_MAX_BYTES
+            ),
             url,
             timeout,
             action_label,
@@ -1214,36 +1148,11 @@ class IrActionsServer(models.Model):
 
     @staticmethod
     def _deliver_webhook_unauthenticated(
-        url, timeout, action_label, target, json_values
+        session, url, timeout, action_label, target, json_values
     ):
         _logger.debug("Webhook %s to %s - start", action_label, target)
-
-        _hostname, candidates, blocked = _resolve_webhook_candidates(url)
-        blocked = blocked or _get_webhook_blocked_reason(url, candidates)
-        _debug.logic(
-            "webhook_guard",
-            phase="delivery",
-            target=target,
-            candidates=len(candidates),
-            blocked=blocked,
-        )
-        if blocked:
-            _logger.error(
-                "Webhook %s to %s was NOT sent: %s. The address was allowed when "
-                "the action ran and is not any more -- the name resolved "
-                "differently between the check and the send.",
-                action_label,
-                target,
-                blocked,
-            )
-            return
-
         try:
-            with requests.Session() as session:
-                session.mount(
-                    f"{urlparse(url).scheme}://",
-                    _PinnedIPAdapter(str(candidates[0])),
-                )
+            with session:
                 response = session.post(
                     url,
                     data=json_values,
@@ -1255,6 +1164,18 @@ class IrActionsServer(models.Model):
             _logger.info("Webhook %s to %s - succeeded", action_label, target)
             _debug.pipeline(
                 "webhook_delivered", target=target, status=response.status_code
+            )
+        except RefusedDestination as refusal:
+            _debug.logic(
+                "webhook_guard", phase="delivery", target=target, blocked=str(refusal)
+            )
+            _logger.error(
+                "Webhook %s to %s was NOT sent: %s. The address was allowed when "
+                "the action ran and is not any more -- the name resolved "
+                "differently between the check and the send.",
+                action_label,
+                target,
+                refusal,
             )
         except requests.exceptions.ReadTimeout:
             _logger.warning(

@@ -91,6 +91,7 @@ odoo/addons/base/
 │   ├── ir_attachment_storage.py     #   Storage backends (DB, filestore, registry of schemes)
 │   ├── ir_autovacuum.py             #   Garbage collection framework (@api.autovacuum)
 │   ├── ir_binary.py                 #   File streaming helpers (images, downloads)
+│   ├── ir_egress.py                 #   Outbound HTTP: address policy, pinned sessions, caps
 │   ├── ir_config_parameter.py       #   System parameters (key-value config store)
 │   ├── ir_cron.py                   #   Scheduled jobs + triggers + progress tracking
 │   ├── ir_default.py                #   Default field values (per-user, per-company)

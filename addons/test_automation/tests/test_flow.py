@@ -2281,14 +2281,13 @@ class TestHttp(common.HttpCase):
             },
         )
 
-        with patch(
-            "odoo.addons.base.models.ir_actions_server._get_webhook_blocked_reason",
-            return_value=None,
-        ):
-            obj.name = "new_name"
-            self.cr.flush()
-            with self.allow_requests(all_requests=True):
-                self.cr.postcommit.run()  # webhooks run in postcommit
+        self.env["ir.config_parameter"].set_param(
+            "base.egress_allowed_networks", "127.0.0.0/8, ::1/128"
+        )
+        obj.name = "new_name"
+        self.cr.flush()
+        with self.allow_requests(all_requests=True):
+            self.cr.postcommit.run()  # webhooks run in postcommit
         self.cr.clear()
         self._wait_remaining_requests()
         self.assertEqual(
@@ -2321,7 +2320,7 @@ class TestHttp(common.HttpCase):
                 active_id=obj.id,
                 active_ids=obj.ids,
             ).run()
-        self.assertIn("not a globally routable range", str(caught.exception))
+        self.assertIn("127.0.0.1 is a loopback address", str(caught.exception))
 
     def test_on_change_get_views_cache(self):
         model_name = "automation.lead.test"

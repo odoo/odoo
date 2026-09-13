@@ -1,25 +1,27 @@
 import base64
 import io
 import logging
+import socket
 from unittest.mock import MagicMock, patch
 from urllib.parse import urlparse
 
 import pymupdf
 import requests
 from PIL import Image
+from requests.adapters import HTTPAdapter
 from weasyprint.urls import URLFetcher
 
 from odoo.exceptions import AccessError, RedirectWarning, UserError
 from odoo.libs.json import loads as json_loads
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
+from odoo.tests.transaction_case import _super_send
 from odoo.tools import mute_logger
 from odoo.tools.safe_eval import safe_eval
 
 from odoo.addons.base.models.ir_actions_report import (
     PDF_OPTIONS_DATA_KEY,
     OdooURLFetcher,
-    _is_host_blocked,
     _weasy_state,
 )
 
@@ -91,55 +93,79 @@ class TestReportUrlFetcher(TransactionCase):
         with self.assertRaises(ValueError):
             self.fetcher._parse_image_url("/web/image", "model=res.partner")
 
-    def test_blocked_fetch_host_classification(self):
+    def _resolving(self, *addresses, error=None):
+        def getaddrinfo(host, port, *args, **kwargs):
+            if error:
+                raise error
+            return [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, "", (a, port))
+                for a in addresses
+            ]
+
+        return patch("socket.getaddrinfo", side_effect=getaddrinfo)
+
+    @mute_logger("odoo.addons.base.models.ir_actions_report")
+    def test_fetch_refuses_every_non_public_literal(self):
         for host in (
             "169.254.169.254",
             "127.0.0.2",
             "10.1.2.3",
             "192.168.0.5",
             "172.16.9.9",
-            "0.0.0.0",
-            "::1",
-            "fe80::1",
+            "100.64.0.1",
+            "100.127.255.254",
+            "[::1]",
+            "[fe80::1]",
+            "[64:ff9b::7f00:1]",
         ):
-            with self.subTest(host=host):
-                self.assertTrue(_is_host_blocked(host))
-        for host in ("8.8.8.8", "93.184.216.34", "cdn.example.com", None, ""):
-            with self.subTest(host=host):
-                self.assertFalse(_is_host_blocked(host))
+            with self.subTest(host=host), self.assertRaises(ValueError):
+                self.fetcher.fetch(f"http://{host}/font.woff")
 
-    def test_carrier_grade_nat_and_other_non_global_literals_are_blocked(self):
-        for host in ("100.64.0.1", "100.127.255.254"):
-            with self.subTest(host=host):
-                self.assertTrue(_is_host_blocked(host))
-        self.assertFalse(
-            _is_host_blocked("8.8.8.8"), "a real public address must still resolve"
-        )
+    @mute_logger("odoo.addons.base.models.ir_actions_report")
+    def test_fetch_refuses_loopback_names_whatever_they_resolve_to(self):
+        for host in ("localhost", "LOCALHOST", "db.localhost", "db.localhost."):
+            with (
+                self.subTest(host=host),
+                self._resolving("93.184.216.34"),
+                self.assertRaises(ValueError),
+            ):
+                self.fetcher.fetch(f"http://{host}:1/font.woff")
 
-    def test_loopback_names_are_blocked_without_resolving(self):
-        for host in (
-            "localhost",
-            "LOCALHOST",
-            "ip6-localhost",
-            "ip6-loopback",
-            "db.localhost",
-            "localhost.",
-            "db.localhost.",
+    @mute_logger("odoo.addons.base.models.ir_actions_report")
+    def test_fetch_refuses_a_name_resolving_to_a_private_address(self):
+        with self._resolving("127.0.0.1"), self.assertRaises(ValueError):
+            self.fetcher.fetch("http://localtest.me/font.woff")
+
+    @mute_logger("odoo.addons.base.models.ir_actions_report")
+    def test_fetch_refuses_a_name_that_does_not_resolve(self):
+        error = socket.gaierror(socket.EAI_NONAME, "no such host")
+        with self._resolving(error=error), self.assertRaises(ValueError):
+            self.fetcher.fetch("http://internal.corp.example.com/font.woff")
+
+    def test_fetch_connects_to_the_checked_address_under_the_hostname(self):
+        sent = []
+
+        def send(adapter, request, **kwargs):
+            sent.append((request.netguard_address, request.headers.get("Host")))
+            response = requests.Response()
+            response.status_code = 200
+            response.request = request
+            response.url = request.url
+            response.headers["Content-Type"] = "text/css"
+            response.headers["Content-Encoding"] = "gzip"
+            response._content = b"body{}"
+            return response
+
+        with (
+            self._resolving("93.184.216.34"),
+            patch.object(requests.Session, "send", _super_send),
+            patch.object(HTTPAdapter, "send", autospec=True, side_effect=send),
         ):
-            with self.subTest(host=host):
-                self.assertTrue(_is_host_blocked(host))
-
-    def test_hostname_resolving_to_a_blocked_address_is_blocked(self):
-        self.assertTrue(
-            _is_host_blocked("localtest.me"),
-            "localtest.me resolves to 127.0.0.1 by design",
-        )
-
-    def test_an_unresolvable_hostname_is_not_blocked_here(self):
-        self.assertFalse(_is_host_blocked("internal.corp.example.com"))
-
-    def test_a_publicly_resolving_hostname_stays_unblocked(self):
-        self.assertFalse(_is_host_blocked("example.com"))
+            resource = self.fetcher.fetch("https://cdn.example.com/site.css")
+        self.assertEqual(sent, [("93.184.216.34", "cdn.example.com")])
+        self.assertEqual(resource.read(), b"body{}")
+        self.assertEqual(resource.headers["Content-Type"], "text/css")
+        self.assertNotIn("Content-Encoding", resource.headers)
 
     @mute_logger("odoo.addons.base.models.ir_actions_report")
     def test_fetch_refuses_private_ip(self):
@@ -664,10 +690,12 @@ class TestReportFetcherOrigin(TransactionCase):
 
         fetcher._get_http_response = fake_http_response
         with patch.object(
-            URLFetcher, "fetch", lambda self, u, headers=None: MagicMock()
+            OdooURLFetcher,
+            "_fetch_external",
+            lambda self, u, hostname, headers=None: MagicMock(),
         ):
             fetcher.fetch(url)
-        return ("local", seen["local"]) if "local" in seen else ("parent", None)
+        return ("local", seen["local"]) if "local" in seen else ("external", None)
 
     def test_cookie_only_reaches_the_exact_origin(self):
         fetcher = self._fetcher("https://erp.example.com")
@@ -683,7 +711,7 @@ class TestReportFetcherOrigin(TransactionCase):
         ):
             self.assertEqual(
                 self._route(fetcher, foreign),
-                ("parent", None),
+                ("external", None),
                 f"{foreign} was treated as this database's own origin",
             )
         fetcher.cleanup()
@@ -697,7 +725,7 @@ class TestReportFetcherOrigin(TransactionCase):
             "http://db.localhost/web/content/1",
         ):
             with self.subTest(target=target), self.assertRaises(ValueError):
-                self._route(fetcher, target)
+                fetcher.fetch(target)
         fetcher.cleanup()
 
     def test_tls_verification_is_waived_only_for_loopback(self):
@@ -714,7 +742,7 @@ class TestReportFetcherOrigin(TransactionCase):
             self.assertRaises(ValueError),
             mute_logger("odoo.addons.base.models.ir_actions_report"),
         ):
-            self._route(fetcher, "http://169.254.169.254/latest/meta-data/")
+            fetcher.fetch("http://169.254.169.254/latest/meta-data/")
         fetcher.cleanup()
 
 

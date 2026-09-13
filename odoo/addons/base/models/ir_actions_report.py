@@ -1,10 +1,8 @@
 import base64
 import io
-import ipaddress
 import logging
 import mimetypes
 import re
-import socket
 import threading
 from ast import literal_eval
 from collections import deque
@@ -44,6 +42,7 @@ from odoo.libs.barcode import (
 )
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.json import loads as json_loads
+from odoo.libs.netguard import DestinationRefused
 from odoo.service import security
 from odoo.tools import is_html_empty
 from odoo.tools.pdf import BrandedFileWriter, PdfReader, PdfReadError
@@ -62,9 +61,16 @@ _LOOPBACK_HOSTS = frozenset(
     }
 )
 
-_LOOPBACK_SUFFIX = ".localhost"
-
 _DEFAULT_PORTS = {"http": 80, "https": 443}
+
+_EXTERNAL_RESOURCE_TIMEOUT = (5.0, 10.0)
+_EXTERNAL_RESOURCE_MAX_SECONDS = 30.0
+_EXTERNAL_RESOURCE_MAX_BYTES = 16 * 1024 * 1024
+# requests has already decoded the body, so the encoding and length it arrived
+# with no longer describe what WeasyPrint reads.
+_DECODED_RESPONSE_HEADERS = frozenset(
+    {"content-encoding", "content-length", "transfer-encoding"}
+)
 
 
 def _get_port_effective(parsed: Any) -> int:
@@ -73,38 +79,6 @@ def _get_port_effective(parsed: Any) -> int:
 
 def _is_tls_verification_required(url: str) -> bool:
     return urlparse(url).hostname not in _LOOPBACK_HOSTS
-
-
-def _is_ip_blocked(ip: ipaddress.IPv4Address | ipaddress.IPv6Address) -> bool:
-    return (
-        not ip.is_global
-        or ip.is_private
-        or ip.is_loopback
-        or ip.is_link_local
-        or ip.is_reserved
-        or ip.is_multicast
-        or ip.is_unspecified
-    )
-
-
-def _is_host_blocked(hostname: str | None) -> bool:
-    if not hostname:
-        return False
-    host = hostname.strip("[]").lower().rstrip(".")
-    if host in _LOOPBACK_HOSTS or host.endswith(_LOOPBACK_SUFFIX):
-        return True
-    try:
-        return _is_ip_blocked(ipaddress.ip_address(host))
-    except ValueError:
-        pass
-    try:
-        resolved = {
-            ipaddress.ip_address(info[4][0])
-            for info in socket.getaddrinfo(host, None, proto=socket.IPPROTO_TCP)
-        }
-    except OSError:
-        return False
-    return not resolved or any(_is_ip_blocked(ip) for ip in resolved)
 
 
 def _coerce_bool(value: Any, default: bool) -> bool:
@@ -444,16 +418,7 @@ class OdooURLFetcher(URLFetcher):
 
         is_local = not parsed.hostname or self._is_same_origin(parsed)
         if not is_local:
-            if _is_host_blocked(parsed.hostname):
-                _logger.warning(
-                    "WeasyPrint refused a report resource pointing at a "
-                    "private/reserved host (possible SSRF): %s",
-                    url,
-                )
-                _debug.logic("fetch_blocked", host=parsed.hostname)
-                raise ValueError(f"Blocked fetch to private address: {url}")
-            _debug.logic("fetch_external", host=parsed.hostname)
-            return super().fetch(url, headers)
+            return self._fetch_external(url, parsed.hostname, headers)
 
         path = parsed.path or ""
 
@@ -479,6 +444,40 @@ class OdooURLFetcher(URLFetcher):
 
         _debug.logic("fetch_via_http", path=path[:120])
         return self._get_via_http(url, path)
+
+    def _fetch_external(
+        self, url: str, hostname: str | None, headers: dict[str, str] | None
+    ) -> URLFetcherResponse:
+        try:
+            response = self._env["ir.egress"].request(
+                "GET",
+                url,
+                purpose="report_resource",
+                headers=headers,
+                timeout=_EXTERNAL_RESOURCE_TIMEOUT,
+                max_bytes=_EXTERNAL_RESOURCE_MAX_BYTES,
+                max_seconds=_EXTERNAL_RESOURCE_MAX_SECONDS,
+            )
+        except DestinationRefused as refusal:
+            _logger.warning(
+                "WeasyPrint refused a report resource (possible SSRF): %s: %s",
+                url,
+                refusal,
+            )
+            _debug.logic("fetch_blocked", host=hostname)
+            raise
+        _debug.logic("fetch_external", host=hostname, status=response.status_code)
+        response.raise_for_status()
+        return URLFetcherResponse(
+            response.url,
+            body=response.content,
+            headers={
+                name: value
+                for name, value in response.headers.items()
+                if name.lower() not in _DECODED_RESPONSE_HEADERS
+            },
+            status=response.status_code,
+        )
 
     def _get_asset_attachment(self, path: str) -> Any:
         if path not in self._asset_attachments:

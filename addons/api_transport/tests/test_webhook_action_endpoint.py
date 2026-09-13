@@ -1,5 +1,6 @@
 from unittest.mock import patch
 
+from odoo.libs import netguard
 from odoo.tests import TransactionCase, tagged
 from odoo.tools import mute_logger
 
@@ -63,7 +64,7 @@ class TestWebhookActionEndpoint(EncryptionKeyCase, TransactionCase):
             with self.subTest(attribute=name):
                 self.assertIsInstance(
                     value,
-                    (str, int, type(None)),
+                    (str, int, type(None), netguard.Policy),
                     f"{name} is a {type(value).__name__}; only plain values may "
                     f"cross into the postcommit hook",
                 )
@@ -159,7 +160,10 @@ class TestWebhookActionEndpoint(EncryptionKeyCase, TransactionCase):
 
         with (
             patch(f"{_MODULE}.Registry") as registry,
-            patch(f"{_MODULE}._get_webhook_blocked_reason", return_value="moved"),
+            patch(
+                "socket.getaddrinfo",
+                return_value=[(2, 1, 6, "", ("127.0.0.1", 443))],
+            ),
             mute_logger(_MODULE),
         ):
             deliver('{"a": 1}')

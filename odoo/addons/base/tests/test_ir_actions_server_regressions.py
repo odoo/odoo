@@ -1,18 +1,18 @@
 import inspect
-import ipaddress
-from unittest.mock import MagicMock, patch
+import socket
+from unittest.mock import patch
 
 import requests
 from lxml import etree
+from requests.adapters import HTTPAdapter
 
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
+from odoo.libs.netguard import DestinationRefused
 from odoo.tests.common import TransactionCase, tagged
+from odoo.tests.transaction_case import _super_send
 from odoo.tools import mute_logger
 from odoo.tools.safe_eval import safe_eval
-
-from odoo.addons.base.models import ir_actions_server
-from odoo.addons.base.models.ir_actions_server import _get_webhook_blocked_reason
 
 _MODULE = "odoo.addons.base.models.ir_actions_server"
 
@@ -319,30 +319,57 @@ class TestWebhookGuardHoldsAtSendTime(ServerActionCase):
             state="webhook", webhook_url="https://example.com/hook", **vals
         )
 
+    def _resolving(self, *answers):
+        remaining = iter(answers)
+
+        def getaddrinfo(host, port, *args, **kwargs):
+            return [
+                (socket.AF_INET, socket.SOCK_STREAM, socket.IPPROTO_TCP, "", (a, port))
+                for a in next(remaining)
+            ]
+
+        return patch("socket.getaddrinfo", side_effect=getaddrinfo)
+
+    def _sending(self):
+        sent = []
+
+        def send(adapter, request, **kwargs):
+            sent.append((request.netguard_address, request.headers.get("Host")))
+            response = requests.Response()
+            response.status_code = 200
+            response.request = request
+            response.url = request.url
+            response._content = b""
+            return response
+
+        return sent, patch.object(HTTPAdapter, "send", autospec=True, side_effect=send)
+
     def test_an_unresolvable_host_is_blocked_not_allowed(self):
-        self.assertIsNotNone(
-            _get_webhook_blocked_reason("http://nx.invalid/hook"),
-            "an address the guard cannot judge is not one it may allow",
-        )
+        with self.assertRaises(
+            DestinationRefused,
+            msg="an address the guard cannot judge is not one it may allow",
+        ):
+            self.env["ir.egress"].check_url("http://nx.invalid/hook")
 
     def test_a_public_host_is_still_allowed(self):
-        self.assertIsNone(_get_webhook_blocked_reason("https://1.1.1.1/hook"))
+        self.env["ir.egress"].check_url("https://1.1.1.1/hook")
 
     def test_multicast_and_reserved_are_still_blocked(self):
-        for host in ("224.0.0.1", "[ff02::1]", "[64:ff9b::1.2.3.4]"):
-            with self.subTest(host=host):
-                self.assertIsNotNone(_get_webhook_blocked_reason(f"http://{host}/h"))
+        for host in ("224.0.0.1", "[ff02::1]", "[64:ff9b::7f00:1]"):
+            with self.subTest(host=host), self.assertRaises(DestinationRefused):
+                self.env["ir.egress"].check_url(f"http://{host}/h")
 
     def test_one_policy_decides_at_the_action_and_at_delivery(self):
+        self.env["ir.config_parameter"].set_param(
+            "base.egress_allowed_networks", "127.0.0.0/8"
+        )
         action = self._webhook()
         action.webhook_url = "http://127.0.0.1:8069/hook"
-        with (
-            patch(f"{_MODULE}._get_webhook_blocked_reason", return_value=None),
-            patch.object(requests.Session, "post") as post,
-        ):
+        sent, sending = self._sending()
+        with sending:
             action.with_context(**self._ctx(self._partners(1))).run()
             self.env.cr.postcommit.run()
-        post.assert_called_once()
+        self.assertEqual(sent, [("127.0.0.1", "127.0.0.1:8069")])
 
     def test_the_request_does_not_follow_redirects(self):
         action = self._webhook()
@@ -351,77 +378,31 @@ class TestWebhookGuardHoldsAtSendTime(ServerActionCase):
             self.env.cr.postcommit.run()
         self.assertIs(post.call_args.kwargs["allow_redirects"], False)
 
-    @mute_logger(_MODULE)
     def test_the_guard_runs_again_at_delivery(self):
         action = self._webhook()
+        sent, sending = self._sending()
         with (
-            patch.object(requests.Session, "post") as post,
-            patch(
-                f"{_MODULE}._resolve_webhook_candidates",
-                side_effect=[
-                    ("example.com", [], None),
-                    ("example.com", [], "moved"),
-                ],
-            ),
+            self._resolving(["93.184.216.34"], ["127.0.0.1"]),
+            patch.object(requests.Session, "send", _super_send),
+            sending,
+            self.assertLogs(_MODULE, "ERROR") as logs,
         ):
             action.with_context(**self._ctx(self._partners(1))).run()
             self.env.cr.postcommit.run()
-        post.assert_not_called()
+        self.assertEqual(sent, [])
+        self.assertIn("was NOT sent", logs.output[0])
 
-    def test_delivery_uses_a_session_mounted_with_the_pinned_ip(self):
+    def test_delivery_connects_to_the_checked_address_under_the_hostname(self):
         action = self._webhook()
-        mounted_adapters = {}
-
-        real_mount = requests.Session.mount
-
-        def spying_mount(self, prefix, adapter):
-            mounted_adapters[prefix] = adapter
-            return real_mount(self, prefix, adapter)
-
+        sent, sending = self._sending()
         with (
-            patch(
-                f"{_MODULE}._resolve_webhook_candidates",
-                return_value=(
-                    "example.com",
-                    [ipaddress.ip_address("93.184.216.34")],
-                    None,
-                ),
-            ),
-            patch.object(requests.Session, "mount", spying_mount),
-            patch.object(requests.Session, "post", return_value=MagicMock()),
+            self._resolving(["93.184.216.34"], ["93.184.216.34"]),
+            patch.object(requests.Session, "send", _super_send),
+            sending,
         ):
             action.with_context(**self._ctx(self._partners(1))).run()
             self.env.cr.postcommit.run()
-
-        adapter = mounted_adapters.get("https://")
-        self.assertIsInstance(adapter, ir_actions_server._PinnedIPAdapter)
-        self.assertEqual(adapter._pinned_ip, "93.184.216.34")
-
-    def test_pinned_adapter_targets_the_ip_not_the_hostname(self):
-        adapter = ir_actions_server._PinnedIPAdapter("203.0.113.10")
-        request = requests.Request(
-            "POST", "https://example.com/hook", data=b"{}"
-        ).prepare()
-        captured = {}
-
-        def fake_connection_from_host(host, port=None, scheme="http", pool_kwargs=None):
-            captured["host"] = host
-            captured["pool_kwargs"] = pool_kwargs or {}
-            raise requests.exceptions.ConnectionError("stop before a real connection")
-
-        with patch.object(
-            adapter.poolmanager, "connection_from_host", fake_connection_from_host
-        ):
-            with self.assertRaises(requests.exceptions.ConnectionError):
-                adapter.get_connection_with_tls_context(request, verify=True)
-
-        self.assertEqual(
-            captured["host"],
-            "203.0.113.10",
-            "the connection must target the validated IP, not the hostname",
-        )
-        self.assertEqual(captured["pool_kwargs"].get("server_hostname"), "example.com")
-        self.assertEqual(captured["pool_kwargs"].get("assert_hostname"), "example.com")
+        self.assertEqual(sent, [("93.184.216.34", "example.com")])
 
     def test_the_timeout_is_re_checked_when_the_state_becomes_webhook(self):
         action = self._action(state="code", code="pass", webhook_timeout=0)

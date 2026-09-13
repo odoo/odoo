@@ -827,6 +827,25 @@ File streaming helpers for download/image endpoints.
 
 ---
 
+### models/ir_egress.py
+
+#### IrEgress — `ir.egress` (AbstractModel)
+
+The one outbound HTTP pipeline. Every address a request reaches is classified by
+`odoo/libs/netguard.py` and checked against a policy (`public` or `private`,
+widened by the `base.egress_allowed_networks` system parameter); the connection is
+pinned to the checked address, every redirect hop is checked again, and responses
+are capped in bytes and seconds by `odoo/libs/guarded_http.py`.
+
+**Key Methods:**
+- `check_url(url, policy)` — Resolve and check a URL, raising `DestinationRefused`
+- `session(purpose, policy, timeout, max_bytes, max_seconds, max_redirects)` — A guarded `requests.Session`
+- `request(method, url, purpose, policy, ...)` — One request through a guarded session
+- `_prepare_session(session, purpose, policy)` — Extension hook for addons that add logging, credentials or rate limits
+- `_get_policy(policy)` — The policy with the configured extra networks
+
+---
+
 ## Sequences
 
 ### models/ir_sequence.py
@@ -1984,6 +2003,7 @@ Quick lookup — file → model → primary role:
 | `ir_attachment_storage.py` | AttachmentStorage, DbStorage, FileStorage (non-ORM) | Storage backends |
 | `ir_autovacuum.py` | ir.autovacuum | GC framework (@api.autovacuum) |
 | `ir_binary.py` | ir.binary | File/image streaming helpers |
+| `ir_egress.py` | ir.egress | Outbound HTTP pipeline (address policy, pinning, caps) |
 | `ir_config_parameter.py` | ir.config_parameter | System key-value parameters |
 | `ir_cron.py` | ir.cron, .cron.trigger, .cron.progress | Scheduled jobs + triggers |
 | `ir_default.py` | ir.default | Field default values |
