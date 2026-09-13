@@ -381,11 +381,12 @@ class MailActivitySchedule(models.TransientModel):
     @api.model
     def _get_log_default_record(self, model_name, domain):
         """ The record the wizard offers by default for a model, when logging a call: the
-        first one its list offers (see `mail.activity.mixin.name_search`), so that what a
-        user reads in the field is what they would have picked at the top of its dropdown.
+        first one its list offers (see `mail.activity.mixin.name_search`), skipping those
+        about the user logging the call, who knows they were in it.
 
         :return: a recordset of ``model_name``, void when it offers nothing at all"""
         model = self.env[model_name]
+        domain = Domain(domain or Domain.TRUE) & ~model._get_call_log_partner_domain(self.env.user.partner_id)
         offered = model.name_search('', domain, limit=1)
         return model.browse(offered[0][0]) if offered else model
 

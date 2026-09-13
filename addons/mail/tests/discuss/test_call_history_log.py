@@ -3,7 +3,7 @@
 from odoo import fields
 from odoo.tests import Form, tagged
 
-from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 
 
 @tagged("post_install", "-at_install")
@@ -59,6 +59,18 @@ class TestCallHistoryLog(MailCommon):
         context = self.call_history.action_log_meeting()["context"]
 
         self.assertEqual(context["log_channel_partner_ids"], attendee.ids)
+
+    def test_log_meeting_never_defaults_to_the_contact_of_the_user_logging_it(self):
+        """The wizard never fills its contact in with the user logging the call, even
+        when no record is closer to it."""
+        user = mail_new_test_user(self.env, login="test_call_logger", name="AAAA Myself")
+        someone_else = self.env["res.partner"].create({"name": "AAAB Someone Else"})
+        self.channel._add_members(users=user)
+        env = self.env(user=user)
+
+        form = Form.from_action(env, self.call_history.with_env(env).action_log_meeting())
+
+        self.assertEqual(form.contact_id, someone_else)
 
     def test_log_meeting_offers_the_contacts_of_the_call_first(self):
         """Whoever was in the call is who the document being logged on is expected to be

@@ -161,18 +161,28 @@ class TestCallHistoryAutoLog(TransactionCase):
         )
 
     def test_log_contact_defaults_to_the_organizer(self):
+        attendee = new_test_user(self.env, "test_meeting_attendee", tz="UTC")
+        meeting = self._create_meeting(datetime(2026, 8, 14, 11, 0))
+        call_history = self._start_call(meeting.videocall_channel_id, datetime(2026, 8, 14, 11, 5))
+
+        action = call_history.with_user(attendee).action_log_meeting()
+
+        self.assertEqual(action["context"]["log_contact_id"], self.organizer.partner_id.id)
+
+    def test_log_contact_is_never_the_user_logging_the_call(self):
+        """An organizer logging their own meeting knows they were in it: the call is
+        about who they met, not about themselves."""
         meeting = self._create_meeting(datetime(2026, 8, 14, 11, 0))
         call_history = self._start_call(meeting.videocall_channel_id, datetime(2026, 8, 14, 11, 5))
 
         action = call_history.action_log_meeting()
 
-        self.assertEqual(action["context"]["log_contact_id"], self.organizer.partner_id.id)
+        self.assertFalse(action["context"]["log_contact_id"])
 
     def test_log_meeting_offers_more_than_the_records_of_its_contact(self):
-        """The contact a meeting call is logged for is its organizer, i.e. whoever logs it
-        more often than not: restricting the wizard to the records about that contact
-        would leave it with nothing to offer. Its lists rank the records of the attendees
-        first instead (see `mail.activity.mixin.name_search`), dropping none."""
+        """A meeting call is logged for its organizer, whose own records would be a poor
+        list: rank the attendees' first instead (see `mail.activity.mixin.name_search`),
+        dropping none."""
         meeting = self._create_meeting(datetime(2026, 8, 14, 11, 0))
         call_history = self._start_call(meeting.videocall_channel_id, datetime(2026, 8, 14, 11, 5))
 

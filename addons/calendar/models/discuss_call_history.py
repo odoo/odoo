@@ -25,9 +25,10 @@ class DiscussCallHistory(models.Model):
         return meeting._create_meeting_activity()
 
     def _get_log_contact(self):
+        # an organizer logging their own meeting is not who it was held with
         if contact := super()._get_log_contact():
             return contact
-        return self._get_meeting().user_id.partner_id
+        return self._get_meeting().user_id.partner_id - self.env.user.partner_id
 
     def _get_meeting(self):
         """ Return the meeting this call took place in. A recurrence shares a single
