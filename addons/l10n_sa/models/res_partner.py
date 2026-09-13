@@ -15,7 +15,10 @@ class ResPartner(models.Model):
         for partner in self:
             metadata = partner.available_additional_identifiers_metadata
             if partner.country_code == 'SA' and metadata:
-                sa_identifier_in_use = [k for k in (partner.additional_identifiers or {}) if 'SA' in (metadata[k].get('countries') or [])]
+                sa_identifier_in_use = [
+                    k for k in (partner.additional_identifiers or {})
+                    if 'SA' in (metadata.get(k, {}).get('countries') or [])
+                ]
                 if not sa_identifier_in_use:
                     continue
                 partner.available_additional_identifiers_metadata = {
