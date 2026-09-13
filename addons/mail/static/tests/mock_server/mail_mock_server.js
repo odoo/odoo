@@ -995,6 +995,7 @@ function processRequest(fetchParams) {
                 .filter(Boolean)
                 .map((message) => message.id);
             store.add(MailMessage.browse(lastMessageIds), "_store_message_fields");
+            store.add(DiscussChannel.browse(channelIds), { last_message_fetched: true });
         }
         if (store.add_channels_last_needaction) {
             const lastNeedactionMessageIds = channelIds

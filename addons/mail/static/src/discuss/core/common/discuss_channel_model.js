@@ -344,6 +344,7 @@ export class DiscussChannel extends Record {
         return Boolean(this.self_member_id);
     }
     last_interest_dt = fields.Datetime();
+    last_message_fetched = false;
     meeting_start_dt = fields.Datetime();
     meeting_stop_dt = fields.Datetime();
     lastInterestDt = this.computed(() =>
