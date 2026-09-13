@@ -12,6 +12,7 @@ import {
     onWillUnmount,
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { scrollTo } from "@web/core/utils/scrolling";
 import { cleanZWChars, deduceURLfromText } from "./utils";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { isAbsoluteURLInCurrentDomain } from "@html_editor/utils/url";
@@ -55,6 +56,7 @@ export const linkPopoverProps = {
     allowStripDomain: t.boolean().optional(),
     publicAttachments: t.boolean().optional(),
     advancedAttributeOptions: t.array().optional(),
+    close: t.function().optional(),
 };
 
 function useContentChange(el, callback) {
@@ -203,6 +205,7 @@ export class LinkPopover extends Component {
     discard() {
         this.props.onDiscard();
         this.cancelUpload?.();
+        this.props.close?.();
     }
 
     onChange() {
@@ -216,6 +219,7 @@ export class LinkPopover extends Component {
         this.applyDeducedUrl();
         const params = this.prepareLinkParams();
         this.props.onApply(params);
+        this.props.close?.();
     }
     applyDeducedUrl() {
         if (this.state.label === "") {
@@ -240,6 +244,12 @@ export class LinkPopover extends Component {
         this.state.editing = true;
         this.props.onEdit();
         this.updateUrlAndLabel();
+        setTimeout(() => {
+            // Once rendered, make bottom sheet fully visible:
+            if (this.editingWrapper.el) {
+                scrollTo(this.editingWrapper.el);
+            }
+        });
     }
     updateUrlAndLabel() {
         this.state.url = this.props.linkElement.getAttribute("href");
@@ -309,6 +319,18 @@ export class LinkPopover extends Component {
     onSelectedLinkType(type) {
         this.state.type = type;
         this.onChange();
+    }
+
+    /**
+     * Called when the preview image is loaded.
+     *
+     * @param {Event} ev
+     */
+    onImageLoaded(ev) {
+        // On mobile, we want to scroll the bottom sheet up to display the whole preview.
+        if (ev.target.closest(".o_bottom_sheet")) {
+            scrollTo(ev.target, { behavior: "smooth" });
+        }
     }
 
     /**
