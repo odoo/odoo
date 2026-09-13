@@ -23,7 +23,7 @@ test(`switch calendar_type of a used calendar`, async () => {
     await animationFrame();
     await click(".modal-footer .btn:contains('Discard')");
     await animationFrame();
-    expect(calendar_type_radio.props.record.data.calendar_type).toBe("variable");
+    expect(calendar_type_radio.props.record.data.calendar_type).toBe("flexible");
     await click("input[data-value='fixed']");
     await animationFrame();
     await click(".modal-footer .btn:contains('Continue')");
