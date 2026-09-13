@@ -91,6 +91,7 @@ class ApprovalRule(models.Model):
             ("set_approvers", "Replace Approvers"),
             ("auto_approve", "Auto-Approve"),
             ("auto_refuse", "Auto-Refuse"),
+            ("condition", "Step Condition"),
         ],
         default="add_approver",
         required=True,
@@ -102,7 +103,9 @@ class ApprovalRule(models.Model):
         "takes its approvers from a security group, which is where this "
         "differs from Add Approver\n"
         "• Auto-Approve: skip approval entirely (logged in audit trail)\n"
-        "• Auto-Refuse: automatically refuse the request",
+        "• Auto-Refuse: automatically refuse the request\n"
+        "• Step Condition: nothing by itself; a step of the category applies "
+        "when it matches, or unless it does",
     )
     approval_minimum = fields.Integer(
         default=1,
@@ -130,6 +133,42 @@ class ApprovalRule(models.Model):
     )
 
     _APPROVER_ACTIONS = ("add_approver", "set_approvers")
+
+    def _get_reading_steps(self):
+        return (
+            self.env["approval.category.step"]
+            .with_context(active_test=False)
+            .search(
+                [
+                    "|",
+                    ("when_rule_ids", "in", self.ids),
+                    ("unless_rule_ids", "in", self.ids),
+                ]
+            )
+        )
+
+    def write(self, vals):
+        if ("active" in vals and not vals["active"]) or (
+            "action_type" in vals and vals["action_type"] != "condition"
+        ):
+            self._check_no_step_reads_it()
+        return super().write(vals)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_read_by_a_step(self) -> None:
+        self._check_no_step_reads_it()
+
+    def _check_no_step_reads_it(self) -> None:
+        steps = self._get_reading_steps()
+        if steps:
+            trace.REFUSAL.event("rule_read_by_steps", rules=self.ids, steps=steps.ids)
+            raise ValidationError(
+                self.env._(
+                    "Steps %(steps)s apply by these rules, so the rules must stay "
+                    "active step conditions: change the steps first.",
+                    steps=", ".join(steps.mapped("name")),
+                )
+            )
 
     @api.depends("category_id.company_id")
     def _compute_company_id(self) -> None:

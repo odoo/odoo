@@ -133,6 +133,11 @@ SCRIPTS = {
         (None, "pending", {"c", "d"}, {"c", "d"}),
         (("approve", "c"), "approved", set(), set()),
     ],
+    "band_with_a_rule_approver": [
+        (None, "pending", {"b", "c"}, {"b", "c"}),
+        (("approve", "b"), "pending", {"c"}, {"c"}),
+        (("approve", "c"), "approved", set(), set()),
+    ],
     "upper_band": [
         (None, "pending", {"c"}, {"c"}),
         (("approve", "c"), "approved", set(), set()),
@@ -570,6 +575,164 @@ class TestFlatRoutingOutcomes(RoutingOutcomesCase):
             request_vals={"amount": 10},
         )
 
+    def _figures_category(self, **vals):
+        return self._flat(
+            [("a", False, 10)],
+            approval_minimum=1,
+            has_amount="required",
+            has_quantity="required",
+            **vals,
+        )
+
+    def _rule(self, category, action_type, users, **vals):
+        return self.env["approval.rule"].create(
+            {
+                "name": f"Routing rule {self._next_sequence_code()}",
+                "category_id": category.id,
+                "condition_type": "threshold",
+                "operator": "gte",
+                "action_type": action_type,
+                "approver_ids": [(6, 0, [self.people[key].id for key in users])],
+                **vals,
+            }
+        )
+
+    def _rules_on_two_figures_category(self):
+        category = self._figures_category()
+        self._rule(
+            category, "add_approver", ["c"], condition_field="amount", threshold=1000
+        )
+        self._rule(
+            category, "add_approver", ["d"], condition_field="quantity", threshold=5
+        )
+        return category
+
+    def test_rules_on_two_figures_both_match(self):
+        self._run(
+            self._rules_on_two_figures_category(),
+            "tiers_above_both",
+            request_vals={"amount": 5000, "quantity": 10},
+        )
+
+    def test_rules_on_two_figures_one_matches(self):
+        self._run(
+            self._rules_on_two_figures_category(),
+            "rule_adds_a_required_approver",
+            request_vals={"amount": 5000, "quantity": 1},
+        )
+
+    def test_rules_on_two_figures_neither_matches(self):
+        self._run(
+            self._rules_on_two_figures_category(),
+            "rule_below_its_threshold",
+            request_vals={"amount": 10, "quantity": 1},
+        )
+
+    def _band_and_rule_category(self):
+        category = self._figures_category()
+        self._rule(
+            category,
+            "set_approvers",
+            ["b"],
+            condition_field="amount",
+            threshold=1000,
+            approval_minimum=1,
+        )
+        self._rule(
+            category, "add_approver", ["c"], condition_field="quantity", threshold=5
+        )
+        return category
+
+    def test_a_band_beside_a_rule_both_match(self):
+        self._run(
+            self._band_and_rule_category(),
+            "band_with_a_rule_approver",
+            request_vals={"amount": 5000, "quantity": 10},
+        )
+
+    def test_a_band_beside_a_rule_only_the_rule_matches(self):
+        self._run(
+            self._band_and_rule_category(),
+            "rule_adds_a_required_approver",
+            request_vals={"amount": 10, "quantity": 10},
+        )
+
+    def test_a_band_beside_a_rule_only_the_band_matches(self):
+        self._run(
+            self._band_and_rule_category(),
+            "band_replaces_the_approvers",
+            request_vals={"amount": 5000, "quantity": 1},
+        )
+
+    def _bands_on_two_figures_category(self):
+        category = self._figures_category()
+        self._rule(
+            category,
+            "set_approvers",
+            ["b"],
+            condition_field="amount",
+            threshold=1000,
+            approval_minimum=1,
+            sequence=10,
+        )
+        self._rule(
+            category,
+            "set_approvers",
+            ["c"],
+            condition_field="quantity",
+            threshold=5,
+            approval_minimum=1,
+            sequence=20,
+        )
+        return category
+
+    def test_bands_on_two_figures_the_first_wins(self):
+        self._run(
+            self._bands_on_two_figures_category(),
+            "band_replaces_the_approvers",
+            request_vals={"amount": 5000, "quantity": 10},
+        )
+
+    def test_bands_on_two_figures_the_second_alone(self):
+        self._run(
+            self._bands_on_two_figures_category(),
+            "upper_band",
+            request_vals={"amount": 10, "quantity": 10},
+        )
+
+    def test_a_rule_on_a_figure_a_request_may_lack(self):
+        category = self._flat(
+            [("a", False, 10)], approval_minimum=1, has_date_range="optional"
+        )
+        self._rule(
+            category,
+            "add_approver",
+            ["c"],
+            condition_field="date_range_days",
+            threshold=2,
+        )
+        self._run(category, "rule_below_its_threshold")
+
+    def test_a_rule_on_a_figure_a_request_has(self):
+        category = self._flat(
+            [("a", False, 10)], approval_minimum=1, has_date_range="optional"
+        )
+        self._rule(
+            category,
+            "add_approver",
+            ["c"],
+            condition_field="date_range_days",
+            threshold=2,
+        )
+        self._run(
+            category,
+            "rule_adds_a_required_approver",
+            request_vals={
+                "date_start": "2026-01-01 08:00:00",
+                "date_end": "2026-01-06 08:00:00",
+            },
+        )
+
     def _two_bands_category(self):
         category = self._amount_category(
             "set_approvers",
@@ -865,21 +1028,21 @@ class TestConvertedRoutingOutcomes(TestFlatRoutingOutcomes):
             approval_minimum=1,
             has_amount="required",
         )
-        for index in range(2):
+        for index in range(6):
             self.env["approval.rule"].create(
                 {
                     "name": f"Adds {index}",
                     "category_id": category.id,
                     "condition_type": "threshold",
                     "condition_field": "amount",
-                    "operator": "gte" if index else "lte",
+                    "operator": "gte" if index % 2 else "lte",
                     "threshold": 1000 * (index + 1),
                     "action_type": "add_approver",
                     "approver_ids": [(6, 0, [self.people["c"].id])],
                 }
             )
-        self.assertIn("they are not tiers", category.steps_conversion_blockers)
-        with self.assertRaisesRegex(UserError, "they are not tiers"):
+        self.assertIn("64 cases", category.steps_conversion_blockers)
+        with self.assertRaisesRegex(UserError, "64 cases"):
             category.action_convert_routing_to_steps()
         self.assertFalse(category.step_ids)
 
@@ -943,6 +1106,56 @@ class TestConvertingEveryCategory(RoutingOutcomesCase):
         self.assertEqual(request.state, "pending")
         request.with_user(self.people["b"]).action_approve()
         self.assertEqual(request.state, "approved")
+
+    def test_a_request_confirmed_on_the_list_keeps_its_rule_approvers(self):
+        category = self._flat_category(has_amount="required")
+        self.env["approval.rule"].create(
+            {
+                "name": "Routing rule before the conversion",
+                "category_id": category.id,
+                "condition_type": "threshold",
+                "condition_field": "amount",
+                "operator": "gte",
+                "threshold": 1000,
+                "action_type": "add_approver",
+                "approver_ids": [(6, 0, [self.people["c"].id])],
+            }
+        )
+        request = self._prepare_request(category, amount=5000)
+        self.assertIn(self.people["c"], request.approver_ids.user_id)
+        category.action_convert_routing_to_steps()
+        request.priority = "1"
+        request.invalidate_recordset()
+        self.assertIn(self.people["c"], request.approver_ids.user_id)
+        request.with_user(self.people["a"]).action_approve()
+        self.assertEqual(request.state, "pending")
+        request.with_user(self.people["c"]).action_approve()
+        self.assertEqual(request.state, "approved")
+
+    def test_the_rules_steps_apply_by_stay_conditions(self):
+        category = self._flat_category(has_amount="required", has_quantity="required")
+        rules = self.env["approval.rule"]
+        for field, threshold, user in (("amount", 1000, "c"), ("quantity", 5, "d")):
+            rules |= self.env["approval.rule"].create(
+                {
+                    "name": f"Rule on {field}",
+                    "category_id": category.id,
+                    "condition_type": "threshold",
+                    "condition_field": field,
+                    "operator": "gte",
+                    "threshold": threshold,
+                    "action_type": "add_approver",
+                    "approver_ids": [(6, 0, [self.people[user].id])],
+                }
+            )
+        category.action_convert_routing_to_steps()
+        self.assertEqual(len(category.step_ids), 4)
+        self.assertEqual(set(rules.mapped("action_type")), {"condition"})
+        self.assertTrue(all(rules.mapped("active")))
+        with self.assertRaisesRegex(ValidationError, "apply by these rules"):
+            rules[0].active = False
+        with self.assertRaisesRegex(ValidationError, "apply by these rules"):
+            rules[1].unlink()
 
     def test_a_draft_raised_before_the_conversion_routes_by_the_steps(self):
         category = self._flat_category()

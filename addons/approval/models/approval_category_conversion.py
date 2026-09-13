@@ -1,3 +1,5 @@
+import itertools
+
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command
@@ -5,6 +7,8 @@ from odoo.fields import Command
 from . import approval_trace as trace
 
 _BASE_SEQUENCE = 10
+_MAX_COMBINATIONS = 32
+_ALWAYS_MEASURED = ("amount", "quantity", "priority")
 
 _COMPLEMENT = {
     "gt": "lte",
@@ -60,52 +64,9 @@ class ApprovalCategoryConversion(models.Model):
     def _get_steps_conversion_blockers(self) -> list[str]:
         self.check_singleton()
         blockers = []
-        rules = self._get_routing_rules()
-        added = rules.filtered(lambda rule: rule.action_type == "add_approver")
-        bands = rules.filtered(
-            lambda rule: (
-                rule.action_type == "set_approvers"
-                and self.group_approval != "exclusive"
-            )
-        )
+        added, bands = self._get_routing_rules_by_action()
         if self.step_ids:
             blockers.append(self.env._("The category already routes by steps."))
-        if any(rules.mapped("company_id")) and any(
-            rule.company_id != self.company_id for rule in rules
-        ):
-            blockers.append(
-                self.env._(
-                    "A routing rule is scoped to another company than the category; "
-                    "steps take the category's company."
-                )
-            )
-        if rules.filtered(lambda rule: rule.condition_type != "threshold"):
-            blockers.append(
-                self.env._(
-                    "A routing rule reads the source document; its complement cannot "
-                    "be expressed for requests that have none."
-                )
-            )
-        if len(added) > 1 and not self._are_rules_tiers(added):
-            blockers.append(
-                self.env._(
-                    "Several rules add approvers, and they are not tiers: rules that "
-                    "all compare the same figure, in the same currency, with "
-                    "'greater than or equal'."
-                )
-            )
-        if len(bands) > 1 and not self._are_rules_ranges(bands):
-            blockers.append(
-                self.env._(
-                    "Several bands replace the approvers, and they are not ranges of "
-                    "one figure: bands that compare the same figure, in the same "
-                    "currency, with 'between', 'greater than or equal' or 'less than'."
-                )
-            )
-        if added and bands:
-            blockers.append(
-                self.env._("A category both adds and replaces approvers by rule.")
-            )
         if self.approve_sequentially and bands:
             blockers.append(
                 self.env._(
@@ -115,6 +76,19 @@ class ApprovalCategoryConversion(models.Model):
             )
         if self.group_approval == "exclusive" and self.approve_sequentially:
             blockers.append(self.env._("A security group has no order."))
+        combinations = (len(bands) + 1) * 2 ** len(added)
+        if (
+            not self._routes_by_figures(added, bands)
+            and combinations > _MAX_COMBINATIONS
+        ):
+            blockers.append(
+                self.env._(
+                    "Its routing rules combine into %(count)s cases, each a step of "
+                    "its own; at most %(maximum)s are converted.",
+                    count=combinations,
+                    maximum=_MAX_COMBINATIONS,
+                )
+            )
         return blockers
 
     def _get_routing_rules(self):
@@ -125,28 +99,44 @@ class ApprovalCategoryConversion(models.Model):
             )
         )
 
+    def _get_routing_rules_by_action(self) -> tuple:
+        rules = self._get_routing_rules()
+        added = rules.filtered(lambda rule: rule.action_type == "add_approver")
+        bands = rules.filtered(lambda rule: rule.action_type == "set_approvers")
+        if self.group_approval == "exclusive":
+            bands = bands.browse()
+        return added, bands
+
+    def _routes_by_figures(self, added, bands) -> bool:
+        rules = added | bands
+        if any(
+            rule.condition_type != "threshold"
+            or rule.condition_field not in _ALWAYS_MEASURED
+            or (rule.company_id and rule.company_id != self.company_id)
+            for rule in rules
+        ):
+            return False
+        if added and bands:
+            return False
+        if bands:
+            return self._are_rules_ranges(bands)
+        if len(added) > 1:
+            return self._are_rules_tiers(added)
+        return not added or added.operator in _COMPLEMENT
+
     def _prepare_steps_from_flat_routing(self) -> list[dict]:
         self.check_singleton()
         listed = [
             (approver.user_id, approver.required, approver.sequence)
             for approver in self.approver_ids.sorted(lambda a: (a.sequence, a.id))
         ]
-        rules = self._get_routing_rules()
-        band = rules.filtered(lambda rule: rule.action_type == "set_approvers")
-        added = rules.filtered(lambda rule: rule.action_type == "add_approver")
+        added, bands = self._get_routing_rules_by_action()
         if self.group_approval == "exclusive":
             listed = []
-            band = band.browse()
-        if band and self._are_rules_ranges(band):
-            return self._prepare_ranged_band_steps(listed, band)
-        if band:
-            return self._prepare_pooled_steps(
-                listed, self.approval_minimum, self._complement_condition(band)
-            ) + self._prepare_pooled_steps(
-                self._get_rule_approvers(band),
-                band.approval_minimum,
-                self._rule_condition(band),
-            )
+        if not self._routes_by_figures(added, bands):
+            return self._prepare_rule_combination_steps(listed, added, bands)
+        if bands:
+            return self._prepare_ranged_band_steps(listed, bands)
         if len(added) > 1:
             return self._prepare_tiered_steps(listed, added)
         if added:
@@ -157,6 +147,37 @@ class ApprovalCategoryConversion(models.Model):
                 with_rule, self.approval_minimum, self._rule_condition(added)
             )
         return self._prepare_pooled_steps(listed, self.approval_minimum, {})
+
+    def _prepare_rule_combination_steps(self, listed, added, bands) -> list[dict]:
+        rules = self.env["approval.rule"]
+        ordered_bands = bands.sorted(lambda rule: (rule.sequence, rule.id))
+        cases = [(rules, listed, self.approval_minimum, ordered_bands)] + [
+            (
+                band,
+                self._get_rule_approvers(band),
+                band.approval_minimum,
+                ordered_bands[:index],
+            )
+            for index, band in enumerate(ordered_bands)
+        ]
+        steps = []
+        for band, base, minimum, unless_bands in cases:
+            for size in range(len(added) + 1):
+                for matched in itertools.combinations(added, size):
+                    matched = rules.union(*matched)
+                    approvers = base + [
+                        approver
+                        for rule in matched
+                        for approver in self._get_rule_approvers(rule)
+                    ]
+                    condition = {
+                        "when_rule_ids": [Command.set((band | matched).ids)],
+                        "unless_rule_ids": [
+                            Command.set((unless_bands | (added - matched)).ids)
+                        ],
+                    }
+                    steps += self._prepare_pooled_steps(approvers, minimum, condition)
+        return steps
 
     @staticmethod
     def _are_rules_tiers(rules) -> bool:
@@ -262,8 +283,6 @@ class ApprovalCategoryConversion(models.Model):
         return steps
 
     def _get_conversion_group_vals(self) -> dict:
-        """A security group category decides by its group, whatever the approver
-        list says, and replacement bands do not apply to it."""
         if self.group_approval != "exclusive":
             return {}
         return {
@@ -444,14 +463,16 @@ class ApprovalCategoryConversion(models.Model):
                 "converted_from_flat",
                 category=category.id,
                 steps=len(steps),
-                archived_rules=rules.ids,
+                routing_rules=rules.ids,
                 sequential=category.approve_sequentially,
                 group=category.group_approval == "exclusive",
             )
-            rules.write({"active": False})
             category.write(
                 {
                     "approve_sequentially": False,
                     "step_ids": [Command.create(vals) for vals in steps],
                 }
             )
+            read = category.step_ids.when_rule_ids | category.step_ids.unless_rule_ids
+            read.write({"action_type": "condition"})
+            (rules - read).write({"active": False})

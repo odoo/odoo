@@ -47,7 +47,16 @@
                                 name="currency_id"
                                 groups="base.group_multi_currency"
                                 invisible="condition_field != 'amount'" />
+                            <field
+                                name="when_rule_ids"
+                                widget="many2many_tags"
+                                domain="[('category_id', '=', category_id)]" />
+                            <field
+                                name="unless_rule_ids"
+                                widget="many2many_tags"
+                                domain="[('category_id', '=', category_id)]" />
                             <field name="active" invisible="1" />
+                            <field name="category_id" invisible="1" />
                         </group>
                     </group>
                     <notebook>

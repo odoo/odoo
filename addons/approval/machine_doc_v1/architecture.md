@@ -623,6 +623,7 @@ Rules evaluate conditions and take actions:
 | `add_approver` | Injects additional approvers (during `_sync_approvers`) |
 | `auto_approve` | Bypasses normal workflow, sets all approvers to approved |
 | `auto_refuse` | Bypasses normal workflow, sets all approvers to refused AND stamps `refusal_reason_auto_rule` + note on the request |
+| `condition` | Nothing by itself: a step applies when it matches (`when_rule_ids`) or unless it does (`unless_rule_ids`) |
 
 **Rule evaluation** (`_evaluate`):
 - Gets field value from request (amount, quantity, date_range_days, priority);

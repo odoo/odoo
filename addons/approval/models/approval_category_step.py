@@ -105,6 +105,25 @@ class ApprovalCategoryStep(models.Model):
         "requests whose source document matches; empty means every request.",
     )
 
+    when_rule_ids = fields.Many2many(
+        comodel_name="approval.rule",
+        relation="approval_step_when_rule_rel",
+        column1="step_id",
+        column2="rule_id",
+        string="When Rules Match",
+        help="The step applies only when every one of these rules matches the "
+        "request, as the rule itself evaluates it: a figure, the source document, "
+        "and the rule's company.",
+    )
+    unless_rule_ids = fields.Many2many(
+        comodel_name="approval.rule",
+        relation="approval_step_unless_rule_rel",
+        column1="step_id",
+        column2="rule_id",
+        string="Unless Rules Match",
+        help="The step does not apply when any of these rules matches the request.",
+    )
+
     activity_type_id = fields.Many2one(
         comodel_name="mail.activity.type",
         string="Activity Type",
@@ -461,11 +480,35 @@ class ApprovalCategoryStep(models.Model):
         self.check_singleton()
         if self.condition_field and not self._matches_request_figure(request):
             return False
+        if not self._matches_request_rules(request):
+            return False
         if not self.subject_domain:
             return True
         return self._is_applicable_to_document(
             self._get_subject(request.get_source_document(), request)
         )
+
+    def _matches_request_rules(self, request) -> bool:
+        self.check_singleton()
+        if not self.when_rule_ids and not self.unless_rule_ids:
+            return True
+        rules = (self.when_rule_ids | self.unless_rule_ids).sudo()
+        matched = rules.filtered(
+            lambda rule: (
+                request._rule_applies_to_company(rule) and rule._evaluate(request)
+            )
+        )
+        matches = self.when_rule_ids <= matched and not (self.unless_rule_ids & matched)
+        trace.STEPS.event(
+            "rule_conditions",
+            step=self.id,
+            request=request.id,
+            when=self.when_rule_ids.ids,
+            unless=self.unless_rule_ids.ids,
+            matched=matched.ids,
+            matches=matches,
+        )
+        return matches
 
     def _matches_request_figure(self, request) -> bool:
         """The step's numeric condition on the request itself: its amount, quantity,
