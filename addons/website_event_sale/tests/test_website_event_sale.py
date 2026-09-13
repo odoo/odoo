@@ -167,3 +167,38 @@ class TestWebsiteEventSale(HttpCaseWithUserPortal, TestWebsiteEventSaleCommon):
         last_so = self.env['sale.order'].search([], order='id desc', limit=1)
         self.assertEqual(len(self.event.registration_ids), event_registration_count + 2)
         self.assertTrue(last_so.state == 'draft', "The status of unpaid events should be draft")
+
+    def test_website_event_ticket_limit_cart(self):
+        """ Test that the ticket limit includes tickets already in the cart """
+        self.authenticate(None, None)
+
+        self.ticket.write({'limit_max_per_order': 1})
+
+        event_questions = self.event.question_ids
+        name_question = event_questions.filtered(lambda q: q.question_type == 'name')
+        email_question = event_questions.filtered(lambda q: q.question_type == 'email')
+        phone_question = event_questions.filtered(lambda q: q.question_type == 'phone')
+
+        # Add 1 ticket to the cart
+        self.url_open(f'/event/{self.event.id}/registration/confirm', data={
+            f'1-name-{name_question.id}': 'Bob',
+            f'1-email-{email_question.id}': 'bob@test.lan',
+            f'1-phone-{phone_question.id}': '8989898989',
+            '1-event_ticket_id': self.ticket.id,
+            'csrf_token': http.Request.csrf_token(self),
+        })
+
+        last_so = self.env['sale.order'].search([], order='id desc', limit=1)
+        self.assertEqual(len(last_so), 1, "Sale order should be created for the paid ticket")
+        self.assertEqual(sum(last_so.order_line.mapped('product_uom_qty')), 1)
+
+        # Attempt to open the registration modal for 1 MORE ticket
+        response_html = self.make_jsonrpc_request(f'/event/{self.event.id}/registration/new', {
+            f'nb_register-{self.ticket.id}': '1',
+        })
+
+        self.assertIn(
+            'You cannot order more than available seats',
+            response_html,
+            "The registration modal should be blocked because the cart already contains the max limit.",
+        )
