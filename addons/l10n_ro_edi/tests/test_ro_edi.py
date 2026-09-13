@@ -1,4 +1,3 @@
-import base64
 from unittest.mock import patch
 
 from odoo.addons.l10n_ro_edi.tests.common import TestROEdiCommon
@@ -77,6 +76,41 @@ class TestRoEdi(TestROEdiCommon):
         self.assertEqual(len(invoice.l10n_ro_edi_document_ids), 1)
         self.assertEqual(invoice.l10n_ro_edi_document_ids.state, "invoice_validated")
 
+    def test_fetch_status_stores_raw_signature_attachment(self):
+        """The semnatura file returned by the SPV is plain XML bytes, not base64 (see
+        _request_ciusro_download_answer). Regression test for a bug where the code wrongly ran
+        base64.b64decode() on that already-decoded content, which crashes with a
+        binascii.Error: Incorrect padding as soon as the XML doesn't happen to contain a number
+        of base64-alphabet
+        """
+        invoice = self.create_invoice()
+        self.send_invoice_with_mock(invoice, {"key_loading": "AA"})
+
+        signature_xml = (
+            b'<?xml version="1.0" encoding="UTF-8"?>\n'
+            b'<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">\n'
+            b'  <ds:SignatureValue>MIIFYzCCBEugAwIBAgIQA==</ds:SignatureValue>\n'
+            b'</ds:Signature>\n'
+        )
+        with patch(
+            'odoo.addons.l10n_ro_edi.models.account_move._request_ciusro_fetch_status',
+            return_value={"key_download": "DL_AA", "state_status": "ok"},
+        ), patch(
+            'odoo.addons.l10n_ro_edi.models.account_move._request_ciusro_download_answer',
+            return_value={
+                "signature": {
+                    "attachment_raw": signature_xml,
+                    "key_signature": "KEY_SIG_AA",
+                    "key_certificate": "KEY_CERT_AA",
+                },
+                "invoice": {"name": invoice.name},
+            },
+        ):
+            invoice._l10n_ro_edi_fetch_invoice_sent_documents()
+
+        self.assertEqual(invoice.l10n_ro_edi_state, "invoice_validated")
+        self.assertEqual(bytes(invoice.l10n_ro_edi_document_ids.attachment), signature_xml)
+
     def test_resend_after_refusal_synchronize_skips_old_refusal(self):
         """Test that when an invoice is refused and resent without receiving an index (server timeout),
         the subsequent synchronize correctly validates it via name matching and skips the old refusal message.
@@ -141,7 +175,7 @@ class TestRoEdi(TestROEdiCommon):
                     "id": "MSG_BB",
                     "answer": {
                         "signature": {
-                            "attachment_raw": base64.b64encode(b"<xml>signature_bb</xml>"),
+                            "attachment_raw": b"<xml>signature_bb</xml>",
                             "key_signature": "KEY_SIG_BB",
                             "key_certificate": "KEY_CERT_BB",
                         },
@@ -155,7 +189,7 @@ class TestRoEdi(TestROEdiCommon):
                     "id": "MSG_AA",
                     "answer": {
                         "signature": {
-                            "attachment_raw": base64.b64encode(b"<xml>sig_aa</xml>"),
+                            "attachment_raw": b"<xml>sig_aa</xml>",
                             "key_signature": "KEY_SIG_AA",
                             "key_certificate": "KEY_CERT_AA",
                         },
