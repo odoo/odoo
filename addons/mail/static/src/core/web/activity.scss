@@ -19,3 +19,16 @@
 .o-mail-Activity-avatar {
     --Avatar-size: #{$o-mail-Avatar-size};
 }
+
+.o-mail-Activity-copy {
+    opacity: 0;
+
+    > span:last-child {
+        @include visually-hidden();
+    }
+}
+
+.o-mail-Activity-phoneNumber:hover .o-mail-Activity-copy,
+.o-mail-Activity-phoneNumber:focus-within .o-mail-Activity-copy {
+    opacity: 1;
+}

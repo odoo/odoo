@@ -156,6 +156,11 @@
                             <i class="oi" data-icon="label" title="Summary"/>
                             <field name="summary" nolabel="1" class="w-100" placeholder="Summary"/>
                         </div>
+                        <div class="o_outlined d-flex align-items-baseline mb-2 gap-2"
+                             invisible="activity_category != 'phonecall'">
+                            <i class="oi oi-filled" data-icon="phone" title="Phone number"/>
+                            <field name="phone" nolabel="1" class="w-100" placeholder="Phone number"/>
+                        </div>
                         <div class="o_outlined d-flex align-items-baseline mb-2 gap-2">
                             <i class="oi oi-filled" data-icon="calendar_today" title="Due date"/>
                             <field name="date_deadline" nolabel="1" class="w-100" placeholder="Due on"/>

@@ -132,6 +132,52 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
         self.assertEqual(self.env['mail.activity'].search_count([]), before_count + 1)
         self.assertEqual(self.env['mail.activity'].search_count([('summary', '=', 'TestNew')]), 1)
 
+    def test_call_activity_scheduling_updates_empty_partner_phone(self):
+        """Manual and automated Call scheduling fill an empty partner phone."""
+        cases = [
+            {
+                'name': 'server action',
+                'input_activity_phone': '+1 202 555 0183',
+                'expected_partner_phone': '+1 202 555 0183',
+            }, {
+                'name': 'wizard override',
+                'input_activity_phone': '+1 202 555 0184',
+                'expected_partner_phone': '+1 202 555 0184',
+            },
+        ]
+        for case in cases:
+            with self.subTest(case=case['name']):
+                partner = self.env['res.partner'].create({'name': f"Partner for {case['name']}"})
+                lead = self.env['mail.test.lead'].create({
+                    'name': f"Lead for {case['name']}",
+                    'partner_id': partner.id,
+                    'phone': '+1 202 555 0183',
+                })
+                if case['name'] == 'server action':
+                    action = self.env['ir.actions.server'].create({
+                        'name': 'Schedule automated call',
+                        'model_id': self.env['ir.model']._get_id(lead._name),
+                        'state': 'next_activity',
+                        'activity_type_id': self.env.ref('mail.mail_activity_data_call').id,
+                        'activity_user_type': 'specific',
+                        'activity_user_id': self.env.user.id,
+                    })
+                    action.with_context(active_model=lead._name, active_id=lead.id).run()
+                else:
+                    with Form(self.env['mail.activity.schedule'].with_context(
+                        active_model=lead._name,
+                        active_id=lead.id,
+                        active_ids=lead.ids,
+                    )) as form:
+                        form.activity_type_id = self.env.ref('mail.mail_activity_data_call')
+                    wizard = form.save()
+                    self.assertEqual(wizard.phone, lead.phone)
+                    wizard.phone = case['input_activity_phone']
+                    wizard.action_schedule_activities()
+
+                self.assertEqual(lead.activity_ids.phone, case['input_activity_phone'])
+                self.assertEqual(partner.phone, case['expected_partner_phone'])
+
     def test_action_next_activity_warning(self):
         self.action.write({
             'state': 'next_activity',

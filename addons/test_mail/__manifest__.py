@@ -10,6 +10,7 @@ tests independently to functional aspects of other models. """,
     'depends': [
         'mail',
         'test_base',
+        'phone_validation',
         'mail_tracking',
     ],
     'data': [

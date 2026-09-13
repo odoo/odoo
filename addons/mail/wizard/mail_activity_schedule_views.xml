@@ -10,6 +10,7 @@
                     <field name="company_id" invisible="1"/>
                     <field name="has_error" invisible="1"/>
                     <field name="has_warning" invisible="1"/>
+                    <field name="is_batch_mode" invisible="1"/>
                     <field name="plan_has_user_on_demand" invisible="1"/>
                     <field name="res_ids" invisible="1"/>
                     <field name="plan_available_ids" invisible="1"/>
@@ -90,6 +91,11 @@
                             <div class="o_outlined d-flex align-items-baseline mb-2 gap-2">
                                 <i class="oi" data-icon="label" title="Summary"/>
                                 <field name="summary" nolabel="1" class="w-100" placeholder="Summary"/>
+                            </div>
+                            <div class="o_outlined d-flex align-items-baseline mb-2 gap-2"
+                                 invisible="activity_category != 'phonecall' or is_batch_mode or not res_model">
+                                <i class="oi oi-filled" data-icon="phone" title="Phone number"/>
+                                <field name="phone" nolabel="1" class="w-100" placeholder="Phone number"/>
                             </div>
                             <div class="o_outlined d-flex align-items-baseline mb-2 gap-2">
                                 <i class="oi oi-filled" data-icon="calendar_today" title="Due date"/>
