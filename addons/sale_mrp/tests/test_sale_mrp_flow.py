@@ -2699,6 +2699,78 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         self.assertEqual(len(so.picking_ids), 1)
         self.assertEqual(so.picking_ids.move_ids.product_qty, 20)
 
+    def test_two_independent_mos_share_one_delivery_through_push_route(self):
+        """
+        Two independent MOs triggering a customer push route should create
+        only one delivery picking.
+        Explicity testing if MO are marked as done individually or by batch.
+        """
+        warehouse = self.company_data['default_warehouse']
+        stock_location = warehouse.lot_stock_id
+        customer_location = self.env.ref('stock.stock_location_customers')
+
+        shelf_1 = self.env['stock.location'].create({
+            'name': 'Shelf 1',
+            'location_id': stock_location.id,
+        })
+        warehouse.manu_type_id.default_location_dest_id = shelf_1
+
+        custom_route = self.env['stock.route'].create({
+            'name': 'Manufacture then relay to customer',
+            'product_selectable': True,
+            'rule_ids': [
+                Command.create({
+                    'name': 'Manufacture',
+                    'action': 'manufacture',
+                    'picking_type_id': warehouse.manu_type_id.id,
+                    'location_src_id': stock_location.id,
+                    'location_dest_id': customer_location.id,
+                }),
+                Command.create({
+                    'name': 'Deliver to customer',
+                    'action': 'push',
+                    'auto': 'manual',
+                    'picking_type_id': warehouse.out_type_id.id,
+                    'location_src_id': shelf_1.id,
+                    'location_dest_id': customer_location.id,
+                }),
+            ],
+        })
+
+        product_1 = self._cls_create_product('Product 1', self.uom_unit, routes=[custom_route])
+        product_2 = self._cls_create_product('Product 2', self.uom_unit, routes=[custom_route])
+
+        so1, so2 = sos = self.env['sale.order'].create([
+            {
+                'partner_id': self.partner.id,
+                'order_line': [
+                    Command.create({'product_id': product_1.id, 'product_uom_qty': 1}),
+                    Command.create({'product_id': product_2.id, 'product_uom_qty': 1}),
+                ],
+            }
+            for _i in range(2)
+        ])
+        sos.action_confirm()
+
+        mo1_1, mo1_2 = mos_1 = so1.mrp_production_ids
+        mo2_1, mo2_2 = mos_2 = so2.mrp_production_ids
+        self.assertEqual(len(mos_1), 2)
+        self.assertNotEqual(mo1_1.production_group_id, mo1_2.production_group_id)
+        self.assertEqual(len(mos_2), 2)
+        self.assertNotEqual(mo2_1.production_group_id, mo2_2.production_group_id)
+
+        # Mark as done individually
+        mos_1.action_confirm()
+        mo1_1.button_mark_done()
+        self.assertEqual(len(so1.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.out_type_id)), 1)
+        mo1_2.button_mark_done()
+        self.assertEqual(len(so1.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.out_type_id)), 1)
+
+        # Mark as done in batch
+        mos_2.action_confirm()
+        mos_2.button_mark_done()
+        self.assertEqual(len(so2.picking_ids.filtered(lambda p: p.picking_type_id == warehouse.out_type_id)), 1)
+
     def test_separate_child_mo_for_shared_component(self):
         """Ensure that when confirming a Sale Order with multiple MTO products
         sharing the same component (which has its own BOM), each parent
