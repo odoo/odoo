@@ -443,18 +443,18 @@ class AccountMove(models.Model):
         return super()._get_starting_sequence()
 
     def _get_domain_last_sequence(self, relaxed=False):
-        where_string, param = super()._get_domain_last_sequence(relaxed)
+        domain = super()._get_domain_last_sequence(relaxed)
         if (
             self.company_id.account_fiscal_country_id.code == "AR"
             and self.l10n_latam_use_documents
         ):
-            where_string += (
-                " AND l10n_latam_document_type_id = %(l10n_latam_document_type_id)s"
+            document_type = self.l10n_latam_document_type_id
+            domain &= (
+                Domain("l10n_latam_document_type_id", "=", document_type.id)
+                if document_type
+                else Domain.FALSE
             )
-            param["l10n_latam_document_type_id"] = (
-                self.l10n_latam_document_type_id.id or 0
-            )
-        return where_string, param
+        return domain
 
     def _l10n_ar_get_amounts(self, company_currency=False):
         """Method used to prepare data to present amounts and taxes related amounts when creating an

@@ -212,63 +212,50 @@ class MyInvoisDocument(models.Model):
         return "MYINV/%04d/00000" % self.myinvois_issuance_date.year
 
     def _get_domain_last_sequence(self, relaxed=False):
-        """Returns the SQL WHERE statement to use when fetching the latest record with the same sequence, and its params."""
         self.check_singleton()
         if not self.myinvois_issuance_date:
-            return "WHERE FALSE", {}
-        where_string = "WHERE name != '/'"
-        param = {}
+            return Domain.FALSE
+        domain = Domain("name", "not in", ("/", "", False))
+        if relaxed:
+            return domain
 
-        if not relaxed:
-            domain = [
-                ("id", "!=", self.id or self._origin.id),
-                ("name", "not in", ("/", "", False)),
-            ]
+        reference_domain = [
+            ("id", "!=", self.id or self._origin.id),
+            ("name", "not in", ("/", "", False)),
+        ]
+        reference_name = (
+            self.sudo()
+            .search(
+                reference_domain
+                + [("myinvois_issuance_date", "<=", self.myinvois_issuance_date)],
+                limit=1,
+            )
+            .name
+        )
+        if not reference_name:
             reference_name = (
                 self.sudo()
-                .search(
-                    domain
-                    + [("myinvois_issuance_date", "<=", self.myinvois_issuance_date)],
-                    limit=1,
-                )
+                .search(reference_domain, order="myinvois_issuance_date asc", limit=1)
                 .name
             )
-            if not reference_name:
-                reference_name = (
-                    self.sudo()
-                    .search(domain, order="myinvois_issuance_date asc", limit=1)
-                    .name
-                )
-            sequence_number_reset = self._deduce_sequence_number_reset(reference_name)
-            date_start, date_end, *_ = self._get_sequence_date_range(
-                sequence_number_reset
+        sequence_number_reset = self._deduce_sequence_number_reset(reference_name)
+        date_start, date_end, *_ = self._get_sequence_date_range(sequence_number_reset)
+        domain &= Domain("myinvois_issuance_date", ">=", date_start) & Domain(
+            "myinvois_issuance_date", "<=", date_end
+        )
+        if sequence_number_reset in ("year", "year_range"):
+            anti_regex = self._sequence_monthly_regex
+        elif sequence_number_reset == "never":
+            anti_regex = self._sequence_yearly_regex
+        else:
+            anti_regex = None
+        if anti_regex:
+            domain &= Domain(
+                "sequence_prefix",
+                "not =~",
+                re.sub(r"\?P<\w+>", "?:", anti_regex.split("(?P<seq>")[0]) + "$",
             )
-            where_string += """ AND myinvois_issuance_date BETWEEN %(date_start)s AND %(date_end)s"""
-            param["date_start"] = date_start
-            param["date_end"] = date_end
-            if sequence_number_reset in ("year", "year_range"):
-                param["anti_regex"] = (
-                    re.sub(
-                        r"\?P<\w+>",
-                        "?:",
-                        self._sequence_monthly_regex.split("(?P<seq>")[0],
-                    )
-                    + "$"
-                )
-            elif sequence_number_reset == "never":
-                param["anti_regex"] = (
-                    re.sub(
-                        r"\?P<\w+>",
-                        "?:",
-                        self._sequence_yearly_regex.split("(?P<seq>")[0],
-                    )
-                    + "$"
-                )
-
-            if param.get("anti_regex"):
-                where_string += " AND sequence_prefix !~ %(anti_regex)s "
-
-        return where_string, param
+        return domain
 
     def _get_sequence_date_range(self, reset):
         """Make sure that the sequence date range follows the company's fiscal year"""

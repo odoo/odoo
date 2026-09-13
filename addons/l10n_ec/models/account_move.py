@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.fields import Domain
 
 from odoo.addons.l10n_ec.models.res_partner import PartnerIdTypeEc
 
@@ -177,7 +178,7 @@ class AccountMove(models.Model):
         return super()._get_starting_sequence()
 
     def _get_domain_last_sequence(self, relaxed=False):
-        where_string, param = super()._get_domain_last_sequence(relaxed)
+        domain = super()._get_domain_last_sequence(relaxed)
         if self.country_code == "EC" and self.l10n_latam_use_documents:
             internal_type = self.l10n_latam_document_type_id.internal_type
             document_types = self.env["l10n_latam.document.type"].search(
@@ -187,15 +188,10 @@ class AccountMove(models.Model):
                 ]
             )
             if document_types:
-                # = ANY over a list, not IN over a tuple: psycopg3 binds
-                # server-side, so the placeholder becomes $N and `IN $N` is not
-                # valid SQL for any value. The tuple adaptation this relied on
-                # was psycopg2's.
-                where_string += """
-                AND l10n_latam_document_type_id = ANY(%(l10n_latam_document_type_id)s)
-                """
-                param["l10n_latam_document_type_id"] = document_types.ids
-        return where_string, param
+                domain &= Domain(
+                    "l10n_latam_document_type_id", "in", document_types.ids
+                )
+        return domain
 
     def _skip_format_document_number(self):
         """

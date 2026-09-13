@@ -7,6 +7,7 @@ from psycopg import errors as pgerrors
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, date_utils, frozendict
 from odoo.tools.misc import format_date
@@ -294,7 +295,7 @@ class MixinSequence(models.AbstractModel):
         self.check_singleton()
         raise NotImplementedError(
             "Models inheriting 'mixin.sequence' must override "
-            "'_get_domain_last_sequence' and return a 'WHERE ...' clause."
+            "'_get_domain_last_sequence' and return a Domain."
         )
 
     def _get_starting_sequence(self):
@@ -313,21 +314,11 @@ class MixinSequence(models.AbstractModel):
                 field=self._sequence_field,
             )
             raise ValidationError(_("%s is not a stored field", self._sequence_field))
-        where_string, param = self._get_domain_last_sequence(relaxed)
+        domain = Domain(self._get_domain_last_sequence(relaxed))
         if self._origin.id:
-            where_string += " AND id != %(id)s "
-            param["id"] = self._origin.id
+            domain &= Domain("id", "!=", self._origin.id)
         if with_prefix is not None:
-            where_string += " AND sequence_prefix = %(with_prefix)s "
-            param["with_prefix"] = with_prefix or ""
-
-        query = f"""
-                SELECT {self._sequence_field} FROM {self._table}
-                {where_string}
-                AND sequence_prefix = (SELECT sequence_prefix FROM {self._table} {where_string} ORDER BY id DESC LIMIT 1)
-                ORDER BY sequence_number DESC
-                LIMIT 1
-        """
+            domain &= Domain("sequence_prefix", "=", with_prefix or "")
 
         _debug.pipeline(
             "last_sequence_query_built",
@@ -337,8 +328,16 @@ class MixinSequence(models.AbstractModel):
             with_prefix=with_prefix,
         )
         self.flush_model([self._sequence_field, "sequence_number", "sequence_prefix"])
-        self.env.cr.execute(query, param)
-        return (self.env.cr.fetchone() or [None])[0]
+        candidates = self.sudo().with_context(active_test=False)
+        latest = candidates.search(domain, order="id DESC", limit=1)
+        if not latest:
+            return None
+        last = candidates.search(
+            domain & Domain("sequence_prefix", "=", latest.sequence_prefix or ""),
+            order="sequence_number DESC",
+            limit=1,
+        )
+        return last[self._sequence_field] or None
 
     @_debug.perf.timed
     def _get_sequence_format_param(self, previous):

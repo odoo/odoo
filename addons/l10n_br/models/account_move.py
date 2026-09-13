@@ -1,4 +1,5 @@
 from odoo import models
+from odoo.fields import Domain
 
 
 class AccountMove(models.Model):
@@ -25,13 +26,12 @@ class AccountMove(models.Model):
         )._compute_l10n_latam_document_type_id()
 
     def _get_domain_last_sequence(self, relaxed=False):
-        """Override to give sequence names in the same journal their own, independent numbering."""
-        where_string, param = super()._get_domain_last_sequence(relaxed)
+        domain = super()._get_domain_last_sequence(relaxed)
         if self.country_code == "BR" and self.l10n_latam_use_documents:
-            where_string += (
-                " AND l10n_latam_document_type_id = %(l10n_latam_document_type_id)s "
+            document_type = self.l10n_latam_document_type_id
+            domain &= (
+                Domain("l10n_latam_document_type_id", "=", document_type.id)
+                if document_type
+                else Domain.FALSE
             )
-            param["l10n_latam_document_type_id"] = (
-                self.l10n_latam_document_type_id.id or 0
-            )
-        return where_string, param
+        return domain

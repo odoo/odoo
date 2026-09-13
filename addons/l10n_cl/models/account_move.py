@@ -1,5 +1,6 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
 from odoo.libs.numbers import float_repr, float_round
 from odoo.tools.misc import formatLang
 
@@ -202,34 +203,36 @@ class AccountMove(models.Model):
                 return self._l10n_cl_get_formatted_sequence()
         return super()._get_starting_sequence()
 
-    def _get_domain_last_sequence(self, relaxed=False):
-        where_string, param = super()._get_domain_last_sequence(relaxed)
-        if (
+    def _uses_cl_documents(self):
+        return (
             self.company_id.account_fiscal_country_id.code == "CL"
             and self.l10n_latam_use_documents
-        ):
-            where_string = where_string.replace("journal_id = %(journal_id)s AND", "")
-            # ``= ANY`` over a list, not ``IN`` over a tuple: this clause is
-            # appended to a plain string that mixin.sequence hands straight to
-            # cr.execute, where nothing expands the placeholder. psycopg 3 binds
-            # it server-side as `IN $5`, which is not valid SQL, so every posting
-            # that reached here raised `syntax error at or near "$5"`. Only
-            # ``SQL()`` expands a tuple into `IN (%s, %s)`; a raw query never has.
-            where_string += (
-                " AND l10n_latam_document_type_id = %(l10n_latam_document_type_id)s AND "
-                "company_id = %(company_id)s AND move_type = ANY(%(move_type)s)"
-            )
+        )
 
-            param["company_id"] = self.company_id.id or False
-            param["l10n_latam_document_type_id"] = (
-                self.l10n_latam_document_type_id.id or 0
-            )
-            param["move_type"] = (
+    def _get_last_sequence_journal_domain(self):
+        if self._uses_cl_documents():
+            return Domain.TRUE
+        return super()._get_last_sequence_journal_domain()
+
+    def _get_domain_last_sequence(self, relaxed=False):
+        domain = super()._get_domain_last_sequence(relaxed)
+        if self._uses_cl_documents():
+            document_type = self.l10n_latam_document_type_id
+            move_types = (
                 ["in_invoice", "in_refund"]
-                if self.l10n_latam_document_type_id._is_doc_type_vendor()
+                if document_type._is_doc_type_vendor()
                 else ["out_invoice", "out_refund"]
             )
-        return where_string, param
+            domain &= (
+                (
+                    Domain("l10n_latam_document_type_id", "=", document_type.id)
+                    if document_type
+                    else Domain.FALSE
+                )
+                & Domain("company_id", "=", self.company_id.id)
+                & Domain("move_type", "in", move_types)
+            )
+        return domain
 
     def _get_name_invoice_report(self):
         self.check_singleton()

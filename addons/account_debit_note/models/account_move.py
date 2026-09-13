@@ -1,4 +1,5 @@
 from odoo import _, api, fields, models
+from odoo.fields import Domain
 
 
 class AccountMove(models.Model):
@@ -47,12 +48,12 @@ class AccountMove(models.Model):
         return action
 
     def _get_domain_last_sequence(self, relaxed=False):
-        where_string, param = super()._get_domain_last_sequence(relaxed)
+        domain = super()._get_domain_last_sequence(relaxed)
         if self.journal_id.debit_sequence:
-            where_string += " AND debit_origin_id IS " + (
-                "NOT NULL" if self.debit_origin_id else "NULL"
+            domain &= Domain(
+                "debit_origin_id", "!=" if self.debit_origin_id else "=", False
             )
-        return where_string, param
+        return domain
 
     def _get_starting_sequence(self):
         starting_sequence = super()._get_starting_sequence()

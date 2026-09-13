@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import _, fields, models
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import date_utils
 
@@ -74,7 +75,7 @@ class AccountMove(models.Model):
             )
         return None
 
-    def _update_strict_last_sequence_clause(self, where_string, param, is_payment):
+    def _get_strict_last_sequence_domain(self, is_payment):
         domain = self._get_domain_reference_move(is_payment)
         reference_move_name = (
             self.sudo()
@@ -92,20 +93,15 @@ class AccountMove(models.Model):
             )
         sequence_number_reset = self._deduce_sequence_number_reset(reference_move_name)
         date_start, date_end, *_ = self._get_sequence_date_range(sequence_number_reset)
-        where_string += """ AND date BETWEEN %(date_start)s AND %(date_end)s"""
-        param["date_start"] = date_start
-        param["date_end"] = date_end
+        strict = Domain("date", ">=", date_start) & Domain("date", "<=", date_end)
 
         anti_regex = self._get_sequence_anti_regex(sequence_number_reset)
-        if anti_regex:
-            param["anti_regex"] = anti_regex
-
         if (
-            param.get("anti_regex")
+            anti_regex
             and not self.journal_id.sequence_override_regex
             and not self.env.context.get("no_anti_regex")
         ):
-            where_string += " AND sequence_prefix !~ %(anti_regex)s "
+            strict &= Domain("sequence_prefix", "not =~", anti_regex)
         _debug.logic(
             "strict_sequence_clause_built",
             move=self,
@@ -114,11 +110,13 @@ class AccountMove(models.Model):
             date_end=date_end,
             anti_regex=bool(anti_regex),
         )
-        return where_string
+        return strict
+
+    def _get_last_sequence_journal_domain(self):
+        return Domain("journal_id", "=", self.journal_id.id)
 
     @_debug.perf.timed
     def _get_domain_last_sequence(self, relaxed=False):
-        # pylint: disable=sql-injection
         self.check_singleton()
         if not self.date or not self.journal_id:
             _debug.logic(
@@ -127,34 +125,36 @@ class AccountMove(models.Model):
                 seq_id=self,
                 has_date=bool(self.date),
             )
-            return "WHERE FALSE", {}
-        where_string = "WHERE journal_id = %(journal_id)s AND name != '/'"
-        param = {"journal_id": self.journal_id.id}
+            return Domain.FALSE
+        # a NULL or empty name is not a number in the sequence; SQL's `!= '/'` dropped
+        # NULL by itself, a Domain's `!=` keeps it
+        domain = self._get_last_sequence_journal_domain() & Domain(
+            "name", "not in", ("/", "", False)
+        )
         is_payment = self.origin_payment_id or self.env.context.get("is_payment")
 
         if not relaxed:
-            where_string = self._update_strict_last_sequence_clause(
-                where_string, param, is_payment
-            )
+            domain &= self._get_strict_last_sequence_domain(is_payment)
 
         if self.journal_id.refund_sequence:
-            if self.move_type in ("out_refund", "in_refund"):
-                where_string += " AND move_type IN ('out_refund', 'in_refund') "
-            else:
-                where_string += " AND move_type NOT IN ('out_refund', 'in_refund') "
-        elif self.journal_id.payment_sequence:
-            exists = (
-                "EXISTS (SELECT 1 FROM account_payment p"
-                " WHERE p.move_id = account_move.id)"
+            refund_types = ("out_refund", "in_refund")
+            domain &= Domain(
+                "move_type",
+                "in" if self.move_type in refund_types else "not in",
+                refund_types,
             )
-            where_string += f" AND {'' if is_payment else 'NOT '}{exists} "
+        elif self.journal_id.payment_sequence:
+            domain &= Domain("payment_ids", "!=" if is_payment else "=", False)
 
         if self.journal_id.is_self_billing:
             if self.partner_id:
-                where_string += " AND commercial_partner_id = %(partner_id)s "
-                param["partner_id"] = self.partner_id.commercial_partner_id.id
+                domain &= Domain(
+                    "commercial_partner_id",
+                    "=",
+                    self.partner_id.commercial_partner_id.id,
+                )
             else:
-                where_string += " AND false "
+                domain = Domain.FALSE
         _debug.logic(
             "last_sequence_domain_built",
             seq_model=self._name,
@@ -163,9 +163,8 @@ class AccountMove(models.Model):
             is_payment=bool(is_payment),
             refund_sequence=self.journal_id.refund_sequence,
             self_billing=self.journal_id.is_self_billing,
-            params=len(param),
         )
-        return where_string, param
+        return domain
 
     @_debug.perf.timed
     def _get_starting_sequence(self):
