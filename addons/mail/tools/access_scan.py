@@ -72,7 +72,7 @@ def get_accessible_ids(
     tiebreak: str = "id ASC",
     **kwargs,
 ) -> list[int]:
-    scan_order = stable_order(order, tiebreak)
+    scan_order = stable_order(order or model._order, tiebreak)
 
     if limit is None or limit is False:
         target = None
