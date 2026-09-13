@@ -107,9 +107,15 @@ class IrHttp(models.AbstractModel):
             if IrConfigSudo.get_bool('base.session_check_device') and session_uid
             else False
         )
+        has_high_db_privileges = bool(
+            not config['test_enable']
+            and self.env.user._is_system()
+            and self.env.cr.connection.has_high_db_privileges
+        )
 
         session_info = {
             "uid": session_uid,
+            "has_high_db_privileges": has_high_db_privileges,
             "device_salt": device_salt,
             "is_system": user._is_system() if session_uid else False,
             "is_admin": user._is_admin() if session_uid else False,
