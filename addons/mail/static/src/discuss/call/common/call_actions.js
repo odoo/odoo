@@ -304,7 +304,7 @@ export const acceptWithCamera = {
     /** @param {ActionParams} params */
     condition: ({ thread }) =>
         thread?.self_member_id?.rtc_inviting_session_id?.is_camera_on &&
-        typeof thread?.useCameraByDefault !== "boolean",
+        !thread?.hasCameraDefault,
     /** @param {ActionParams} params */
     disabledCondition: ({ store }) => store.rtc?.state.hasPendingRequest,
     name: _t("Accept with camera"),
@@ -324,8 +324,7 @@ registerCallAction("join-back", {
             "mx-1": !owner.env.inCallInvitation,
         }),
     /** @param {ActionParams} params */
-    condition: ({ thread }) =>
-        !thread?.isSelfInCall && typeof thread?.useCameraByDefault === "boolean",
+    condition: ({ thread }) => !thread?.isSelfInCall && thread?.hasCameraDefault,
     /** @param {ActionParams} params */
     disabledCondition: ({ store }) => store.rtc?.state.hasPendingRequest,
     /** @param {ActionParams} params */
@@ -349,7 +348,7 @@ registerCallAction("join-with-camera", {
     condition: ({ thread }) =>
         !thread?.isSelfInCall &&
         !thread?.self_member_id?.rtc_inviting_session_id &&
-        typeof thread?.useCameraByDefault !== "boolean",
+        !thread?.hasCameraDefault,
     /** @param {ActionParams} params */
     disabledCondition: ({ store }) => store.rtc?.state.hasPendingRequest,
     name: _t("Join Video Call"),
@@ -367,8 +366,7 @@ registerCallAction("join-with-camera", {
 });
 export const joinAction = {
     /** @param {ActionParams} params */
-    condition: ({ thread }) =>
-        !thread?.isSelfInCall && typeof thread?.useCameraByDefault !== "boolean",
+    condition: ({ thread }) => !thread?.isSelfInCall && !thread?.hasCameraDefault,
     /** @param {ActionParams} params */
     disabledCondition: ({ store }) => store.rtc?.state.hasPendingRequest,
     name: _t("Join Call"),
@@ -387,10 +385,8 @@ export const rejectAction = {
     /** @param {ActionParams} params */
     btnClass: ({ owner, thread }) =>
         attClassObjectToString({
-            "pe-2 rounded-pill": typeof thread?.useCameraByDefault === "boolean",
-            "mx-1":
-                !owner.env.inCallInvitation &&
-                typeof thread?.useCameraByDefault === "boolean",
+            "pe-2 rounded-pill": thread?.hasCameraDefault,
+            "mx-1": !owner.env.inCallInvitation && thread?.hasCameraDefault,
         }),
     /** @param {ActionParams} params */
     condition: ({ thread }) => thread?.self_member_id?.rtc_inviting_session_id,
@@ -399,7 +395,7 @@ export const rejectAction = {
     icon: "oi oi-close",
     /** @param {ActionParams} params */
     inlineName: ({ owner, thread }) =>
-        !owner.env.inCallInvitation && typeof thread?.useCameraByDefault === "boolean"
+        !owner.env.inCallInvitation && thread?.hasCameraDefault
             ? _t("Reject")
             : undefined,
     name: _t("Reject"),

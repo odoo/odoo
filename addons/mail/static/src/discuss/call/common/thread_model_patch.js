@@ -96,6 +96,9 @@ const ThreadPatch = {
             },
         });
     },
+    get hasCameraDefault() {
+        return typeof this.useCameraByDefault === "boolean";
+    },
     get cameraDefaultStorageKey() {
         return `discuss_channel_camera_default_${this.id}`;
     },
