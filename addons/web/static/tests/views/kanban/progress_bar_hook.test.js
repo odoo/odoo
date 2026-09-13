@@ -1,12 +1,28 @@
 // @ts-check
 
-import { describe, expect, test } from "@odoo/hoot";
+import { after, before, describe, expect, test } from "@odoo/hoot";
 import { Deferred, runAllTimers, tick } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import {
+    disableLogging,
+    enableLogging,
+    getStatus,
+    makeLogger,
+} from "@web/core/debug/debug_logger";
 import { useProgressBar } from "@web/views/kanban/progress_bar_hook";
 
 describe.current.tags("desktop");
+const log = makeLogger("web.kanban.progress.lifecycle");
+before(() => {
+    const previous = getStatus().spec;
+    enableLogging("web.kanban.progress.lifecycle", { persist: false });
+    after(() =>
+        previous
+            ? enableLogging(previous, { persist: false })
+            : disableLogging({ persist: false }),
+    );
+});
 
 const COLORS = { done: "success", blocked: "danger" };
 
@@ -57,7 +73,9 @@ function makeModel({ groups = [makeGroup()], readProgressBar } = {}) {
         },
         subscribeLifecycle(/** @type {any} */ name, /** @type {any} */ cb) {
             (hooks[name] ||= []).push(cb);
-            return () => {};
+            return () => {
+                hooks[name].splice(hooks[name].indexOf(cb), 1);
+            };
         },
         async fire(/** @type {any} */ name, /** @type {any[]} */ ...args) {
             for (const cb of hooks[name] || []) {
@@ -87,8 +105,8 @@ async function mountProgressBar({
             );
         }
     }
-    await mountWithCleanup(Host);
-    return { state, model };
+    const host = await mountWithCleanup(Host);
+    return { state, model, destroy: () => host.__owl__.app.destroy() };
 }
 
 async function load(/** @type {any} */ model) {
@@ -100,6 +118,162 @@ async function load(/** @type {any} */ model) {
     });
     await model.fire("onRootLoaded");
 }
+
+describe("destruction while requests are pending", () => {
+    test("a settled request cannot publish while its continuation is queued at destruction", async () => {
+        const response = Promise.withResolvers();
+        const model = makeModel({ readProgressBar: () => response.promise });
+        const { state, destroy } = await mountProgressBar({ model });
+        const pending = state.loadProgressBar(model.root);
+        response.resolve({ a: { done: 99 } });
+        await Promise.resolve();
+        log.logic("settled before destruction", () => ({
+            guardPending: state._pbLoads._rejectPending !== null,
+            counts: state._pbCounts,
+        }));
+        destroy();
+        await pending;
+        expect(state._pbCounts).toBe(null);
+    });
+
+    test("destruction releases all pending guards and consumes late failures", async () => {
+        let aborts = 0;
+        let completed = 0;
+        const requests = Array.from({ length: 3 }, () =>
+            Object.assign(new Deferred(), {
+                abort: () => aborts++,
+            }),
+        );
+        const model = makeModel({ readProgressBar: () => requests[0] });
+        const { state, destroy } = await mountProgressBar({ model });
+        let aggregateRequest = 1;
+        model.orm.formattedReadGroup = () => requests[aggregateRequest++];
+        const pending = [
+            state.loadProgressBar(model.root),
+            state._updateAggregates(),
+            state._updateAggregateGroup(model.root.groups[0], [], { value: "done" }),
+        ].map((promise) => promise.then(() => completed++));
+        destroy();
+        await tick();
+        log.logic("pending work cancelled", () => ({ aborts, completed }));
+        expect(aborts).toBe(3);
+        expect(completed).toBe(3);
+        for (const request of requests) {
+            request.reject(new Error("late transport failure"));
+        }
+        await Promise.all(pending);
+        await tick();
+        expect(state._pbCounts).toBe(null);
+    });
+
+    test("a late counts response cannot schedule another request", async () => {
+        const model = makeModel();
+        const { state, destroy } = await mountProgressBar({ model });
+        await load(model);
+        const before = state._pbCounts;
+        const late = new Deferred();
+        model.orm.call = () => {
+            model.calls.push("late counts");
+            return late;
+        };
+        const pending = state._updateProgressBar();
+        model.root.groups.push(makeGroup({ id: "g2", value: "b" }));
+        destroy();
+        const callsAtDestroy = model.calls.length;
+        late.resolve({ a: { done: 99 } });
+        await pending;
+        await runAllTimers();
+        log.logic("counts after destroy", () => ({
+            callsAtDestroy,
+            calls: model.calls.length,
+        }));
+        expect(model.calls.length).toBe(callsAtDestroy);
+        expect(state._pbCounts).toBe(before);
+    });
+
+    test("an awaiting root callback cannot deselect a bar after destruction", async () => {
+        const late = new Deferred();
+        const model = makeModel({ readProgressBar: () => late });
+        const group = model.root.groups[0];
+        let filters = 0;
+        Object.assign(group, {
+            applyFilter: async () => filters++,
+            model: { notify() {} },
+        });
+        const { state, destroy } = await mountProgressBar({
+            model,
+            activeBars: { '"a"': { value: "done", count: 2 } },
+        });
+        // A root reload may still have counts from the previous root.
+        state._pbCounts = { a: { done: 0 } };
+        const previousCounts = state._pbCounts;
+        const pending = load(model);
+        await tick();
+        destroy();
+        late.resolve({ a: { done: 0 } });
+        await pending;
+        await tick();
+        log.logic("root continuation after destroy", () => ({ filters }));
+        expect(filters).toBe(0);
+        expect(state._pbCounts).toBe(previousCounts);
+    });
+
+    for (const value of ["done", null]) {
+        test(`a pending bar selection (${value}) cannot refresh or notify after destruction`, async () => {
+            const model = makeModel({
+                readProgressBar: () => Promise.resolve({ a: { done: 2, blocked: 1 } }),
+            });
+            const late = new Deferred();
+            let notifications = 0;
+            Object.assign(model.root.groups[0], {
+                applyFilter: () => late,
+                model: { notify: () => notifications++ },
+            });
+            const activeBars = { '"a"': { value: "blocked", count: 1 } };
+            const { state, destroy } = await mountProgressBar({ model, activeBars });
+            await load(model);
+            const previous = { ...state.activeBars };
+            const pending = state.selectBar("g1", { value });
+            destroy();
+            const callsAtDestroy = model.calls.length;
+            late.resolve();
+            await pending;
+            await tick();
+            log.logic("selection after destroy", () => ({
+                notifications,
+                calls: model.calls.length,
+                callsAtDestroy,
+            }));
+            expect(model.calls.length).toBe(callsAtDestroy);
+            expect(notifications).toBe(0);
+            expect(state.activeBars).toEqual(previous);
+        });
+    }
+
+    test("pending aggregate responses cannot mutate retained state after destruction", async () => {
+        const model = makeModel();
+        Object.assign(model.root.fields, {
+            stage: { type: "char" },
+            amount: { type: "float", aggregator: "sum" },
+        });
+        const { state, destroy } = await mountProgressBar({ model });
+        await load(model);
+        const late = new Deferred();
+        model.orm.formattedReadGroup = () => late;
+        const previous = state._aggregatesByKey;
+        const activeBar = { value: "done", aggregates: { amount: 7 } };
+        const all = state._updateAggregates();
+        const one = state._updateAggregateGroup(model.root.groups[0], [], activeBar);
+        destroy();
+        late.resolve([{ stage: "a", amount: 99, __count: 3 }]);
+        await Promise.all([all, one]);
+        log.logic("aggregate responses after destroy", () => ({
+            retained: state._aggregatesByKey === previous,
+        }));
+        expect(state._aggregatesByKey).toBe(previous);
+        expect(activeBar.aggregates).toEqual({ amount: 7 });
+    });
+});
 
 describe("seeding a group from the fetched counts", () => {
     test("bars come from the colors, plus an Other bar that absorbs the remainder", async () => {

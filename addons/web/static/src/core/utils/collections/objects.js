@@ -94,7 +94,12 @@ function _deepEqualInner(a, b, seen) {
         if (!aIsArray || !Array.isArray(b) || a.length !== b.length) {
             return false;
         }
-        return a.every((v, i) => _deepEqual(v, b[i], seen));
+        for (let i = 0; i < a.length; i++) {
+            if (!_deepEqual(a[i], b[i], seen)) {
+                return false;
+            }
+        }
+        return true;
     }
     if (a instanceof Map || b instanceof Map) {
         if (!(a instanceof Map) || !(b instanceof Map) || a.size !== b.size) {

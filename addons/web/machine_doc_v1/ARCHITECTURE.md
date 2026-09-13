@@ -80,7 +80,7 @@ Top-level layout of `addons/web/` (detailed maps are separate docs):
 | `models/` | 25 `.py` — ORM extensions (24 model classes: web_read, web_read_group, ir_http, …) | `MODEL_MAP.md` |
 | `static/src/` | 866 JavaScript/OWL source files across 248 directories (FSD layers) | `DIRECTORY_MAP.md` |
 | `static/lib/` | 18 directories (17 vendored libraries + generated `popper_compat/`) — DO NOT MODIFY | `static/lib/versions.json` |
-| `static/tests/` | 794 `.js` (incl. 730 `*.test.js` Hoot suites), mirroring the `static/src/` tree | `TEST_TAGS.md` |
+| `static/tests/` | 796 `.js` (incl. 732 `*.test.js` Hoot suites), mirroring the `static/src/` tree | `TEST_TAGS.md` |
 | `tests/` | 62 Python test files (`test_*.py`) | `TEST_TAGS.md` |
 | `machine_doc_v1/` | This directory: `COMPONENT_DIAGRAM.md` (18 audit areas) · `FLOW_DIAGRAM.md` (14 sequence diagrams) · `LAZY_VIEW_LOADING.md` · `VIEW_TEARDOWN_COST.md` (both decision records: investigated, not pursued) · `LIST_EDIT_RENDER_COST.md` (decision record: row-level waste fixed, renderer-level amplification measured and not pursued) · the maps below · `factcheck.sh` | — |
 | `views/` · `data/` · `security/` · `i18n/` | XML templates, data fixtures, `ir.model.access.csv`, translations | — |
@@ -257,6 +257,18 @@ Promise.
 **Context merging rule** (`orm_service.js`): `fullContext = {...user.context, ...(kwargs.context||{})}`. Spread order means **caller keys win on collision** — `user.context` values can be overridden, though the keys themselves cannot be deleted (omit from caller context to inherit, set to a new value to override).
 
 **rpc.js settings whitelist** (`rpc.js`): `cache, silent, headers, timeout, retry, dedup`. Any other key throws. `cache` + `retry` compose: cache wraps retry so warm hits skip the retry layer entirely. `timeout` (milliseconds) installs an `AbortSignal.timeout()` that combines with the caller-controlled abort signal via `AbortSignal.any()`. No `credentials`.
+
+Cached responses with custom headers are isolated by canonical header values in
+RAM, even when disk caching is requested. The transport's forced JSON Content-Type
+does not create a variant. Opaque, never-reused scope IDs keep header values out
+of stored cache keys; the bounded scope index can evict an identity without
+assigning its old cached response to another identity. Header-free requests retain
+disk caching. Synchronous fallback failures follow the normal rejection cleanup,
+so corrected requests can retry and a failed background refresh preserves warm data.
+
+Response envelopes must contain exactly one of `result` or a structured `error`.
+Falsy results are valid. Malformed successful responses are non-retryable
+`InvalidResponseError`s; malformed 5xx responses retain server-overload retry behavior.
 
 **Error class hierarchy** (`rpc.js`):
 - `NetworkError` (base) — all network/RPC failures
@@ -457,7 +469,7 @@ an in-tree fork; only `hoot` and `hoot-dom` are internal, versioned with the for
 | Python (models) | 25 (24 model files + `__init__.py`) |
 | Python (tests) | 62 (`test_*.py`; 63 files incl. `__init__.py`) |
 | JavaScript (src) | 866 (864 carry `@ts-check`; `module_loader.js` + `service_worker.js` are the two exclusions) |
-| JavaScript (tests) | 794 (incl. 730 `*.test.js` Hoot suites) |
+| JavaScript (tests) | 796 (incl. 732 `*.test.js` Hoot suites) |
 | JavaScript (vendored libs) | 94 |
 | SCSS/CSS | 213 (34 in `static/src/scss/` shared base; remaining 179 co-located with JS components) |
 | XML (views/ + data/ + static/src OWL templates) | 293 (14 views + 5 data + 274 OWL templates) |

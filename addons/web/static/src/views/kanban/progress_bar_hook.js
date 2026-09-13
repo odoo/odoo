@@ -110,6 +110,16 @@ class ProgressBarState {
         this._groupAggLoads = new KeepLastByKey({ rejectSuperseded: true });
         this._pendingBarDeselections = new Set();
         this._recordMoves = new Map();
+        this._isDestroyed = false;
+    }
+
+    _destroy() {
+        this._isDestroyed = true;
+        this._pbLoads.cancel();
+        this._aggLoads.cancel();
+        this._groupAggLoads.cancel();
+        this._moveReconcileDebounced?.cancel();
+        this._membershipRetryDebounced?.cancel();
     }
 
     /**
@@ -268,6 +278,9 @@ class ProgressBarState {
      * @param {{ value: * }} bar
      */
     async selectBar(groupId, bar) {
+        if (this._isDestroyed) {
+            return;
+        }
         const group = this.model.root.groups.find(
             (/** @type {any} */ group) => group.id === groupId,
         );
@@ -278,6 +291,9 @@ class ProgressBarState {
             nextActiveBar.value = bar.value;
         } else {
             await group.applyFilter(undefined);
+            if (this._isDestroyed) {
+                return;
+            }
             delete this.activeBars[key];
             this._syncActiveBar(group);
             group.model.notify();
@@ -292,6 +308,9 @@ class ProgressBarState {
         const proms = [];
         proms.push(
             group.applyFilter(filterDomain).then(() => {
+                if (this._isDestroyed) {
+                    return;
+                }
                 const groupInfo = this.getGroupInfo(group);
                 nextActiveBar.count =
                     groupInfo.bars.find((x) => x.value === nextActiveBar.value)
@@ -302,6 +321,9 @@ class ProgressBarState {
             proms.push(this._updateAggregateGroup(group, bars, nextActiveBar));
         }
         await Promise.all(proms);
+        if (this._isDestroyed) {
+            return;
+        }
         this.activeBars[key] = nextActiveBar;
         this._syncActiveBar(group);
         this.updateCounts(group);
@@ -338,7 +360,7 @@ class ProgressBarState {
                 ),
             ),
         );
-        if (!groups) {
+        if (!groups || this._isDestroyed) {
             return;
         }
         if (groups.length) {
@@ -352,6 +374,9 @@ class ProgressBarState {
      * @param {Object} [record]
      */
     updateCounts(group, record) {
+        if (this._isDestroyed) {
+            return;
+        }
         const move = record && this._recordMoves.get(record.id);
         if (move) {
             this._recordMoves.delete(record.id);
@@ -496,7 +521,7 @@ class ProgressBarState {
                 ),
             ),
         );
-        if (!groups) {
+        if (!groups || this._isDestroyed) {
             return;
         }
         const aggregatesByKey = _groupsToAggregatesByKey(groups, groupBy, fields);
@@ -553,7 +578,7 @@ class ProgressBarState {
                 ),
             ),
         );
-        if (!groups) {
+        if (!groups || this._isDestroyed) {
             return;
         }
         this._aggregatesByKey = _groupsToAggregatesByKey(groups, groupBy, fields);
@@ -589,7 +614,7 @@ class ProgressBarState {
                     }),
                 ),
             );
-            if (!res) {
+            if (!res || this._isDestroyed) {
                 return;
             }
             const currentIds = this.model.root.groups.map(
@@ -652,7 +677,7 @@ class ProgressBarState {
                     }),
                 ),
             );
-            if (!res) {
+            if (!res || this._isDestroyed) {
                 return;
             }
             this._pbCounts = res;
@@ -721,7 +746,12 @@ export function useProgressBar(progressAttributes, model, aggregateFields, activ
             try {
                 await prom;
             } catch (error) {
-                reportUncaught(error);
+                if (!progressBarState._isDestroyed) {
+                    reportUncaught(error);
+                }
+                return;
+            }
+            if (progressBarState._isDestroyed) {
                 return;
             }
             progressBarState._initAllGroups();
@@ -733,9 +763,8 @@ export function useProgressBar(progressAttributes, model, aggregateFields, activ
         }),
     ];
     onWillDestroy(() => {
+        progressBarState._destroy();
         unsubscribe.forEach((stop) => stop());
-        progressBarState._moveReconcileDebounced?.cancel();
-        progressBarState._membershipRetryDebounced?.cancel();
     });
 
     return progressBarState;

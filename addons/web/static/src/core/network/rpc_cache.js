@@ -536,7 +536,11 @@ export class RPCCache {
                 fromCache.resolve();
             }
 
-            fallback(request).then(onFulfilled, onRejected);
+            try {
+                fallback(request).then(onFulfilled, onRejected);
+            } catch (error) {
+                onRejected(error);
+            }
         });
     }
 

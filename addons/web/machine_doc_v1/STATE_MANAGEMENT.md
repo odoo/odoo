@@ -63,6 +63,23 @@ export; there is no `Reactive` alias, so
 with a native "no such export" error.  25 production class declarations fork-wide
 use ``extends SignalStore``.
 
+## Keyed asynchronous work
+
+`KeepLastByKey` in `static/src/core/utils/concurrency.js` retains guards only
+while their latest task is pending. Settlement releases the key; cancellation
+releases it immediately, even when the default superseded promise stays pending.
+Cleanup checks both guard identity and generation so an older task cannot remove
+a replacement. Cancellation detaches guards before invoking abort handlers, which
+may synchronously register new work. `forget(key)` is equivalent to `cancel(key)`.
+These contracts are exercised by `static/tests/core/utils/concurrency_keyed.test.js`.
+
+The kanban progress-bar hook owns its count, aggregate and per-group request
+guards. Destruction cancels all three alongside its timers and subscriptions.
+Pending filter and root-load continuations check destruction before changing
+bar state, notifying the model or initiating follow-up work. Checks after request
+settlement also cover results delivered just before teardown. Regression coverage
+lives in `static/tests/views/kanban/progress_bar_hook.test.js`.
+
 ## Decision Tree
 
 ```

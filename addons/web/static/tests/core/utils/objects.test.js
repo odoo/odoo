@@ -65,6 +65,33 @@ describe("shallowEqual", () => {
     });
 });
 
+test("deepEqual compares every array index symmetrically, treating holes as undefined", () => {
+    const middleHole = [1, 2, 3];
+    delete middleHole[1];
+    /** @type {[unknown, unknown, boolean][]} */
+    const cases = [
+        [Array(1), [42], false],
+        [Array(1), [undefined], true],
+        [Array(1), [null], false],
+        [Array(2), Array(1), false],
+        [middleHole, [1, 2, 3], false],
+        [middleHole, [1, undefined, 3], true],
+        [{ values: Array(1) }, { values: [42] }, false],
+    ];
+    for (const [a, b, equal] of cases) {
+        expect(deepEqual(a, b)).toBe(equal);
+        expect(deepEqual(b, a)).toBe(equal);
+    }
+    /** @type {any[]} */
+    const cyclic = [];
+    cyclic[1] = cyclic;
+    /** @type {any[]} */
+    const dense = [undefined];
+    dense[1] = dense;
+    expect(deepEqual(cyclic, dense)).toBe(true);
+    expect(deepEqual(dense, cyclic)).toBe(true);
+});
+
 test("deepEqual", () => {
     const obj1 = {
         a: ["a", "b", "c"],

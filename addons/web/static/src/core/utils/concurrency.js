@@ -179,22 +179,36 @@ export class KeepLastByKey {
      * @returns {Promise<T>}
      */
     add(key, promise, options) {
-        return this._for(key).add(promise, options);
+        const keepLast = this._for(key);
+        const result = keepLast.add(promise, options);
+        const generation = keepLast.generation;
+        return result.finally(() => {
+            // Supersession and key reuse can both precede this settlement.
+            if (
+                this._byKey.get(key) === keepLast &&
+                keepLast.generation === generation
+            ) {
+                this._byKey.delete(key);
+            }
+        });
     }
     /** @param {string} [key] */
     cancel(key) {
         if (key === undefined) {
-            for (const keepLast of this._byKey.values()) {
+            const pending = [...this._byKey.values()];
+            this._byKey.clear();
+            for (const keepLast of pending) {
                 keepLast.cancel();
             }
             return;
         }
-        this._byKey.get(key)?.cancel();
+        const keepLast = this._byKey.get(key);
+        this._byKey.delete(key);
+        keepLast?.cancel();
     }
     /** @param {string} key */
     forget(key) {
-        this._byKey.get(key)?.cancel();
-        this._byKey.delete(key);
+        this.cancel(key);
     }
 }
 

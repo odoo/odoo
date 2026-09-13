@@ -9,6 +9,7 @@ import { getKey, stableStringify } from "@web/core/network/rpc_dedup";
 import { rpcLog } from "@web/core/utils/asset_log";
 import { isObject, omit } from "@web/core/utils/collections/objects";
 import { globalSingleton } from "@web/core/utils/global_singleton";
+import { LruCache } from "@web/core/utils/lru_cache";
 
 /** @import { RPCCache } from "@web/core/network/rpc_cache" */
 
@@ -75,6 +76,8 @@ import { globalSingleton } from "@web/core/utils/global_singleton";
  * busListenersAttached: boolean,
  * rpcId: number,
  * dedupCallbackSeq: number,
+ * headerCacheScopes: LruCache<number>,
+ * headerCacheSeq: number,
  * }} RpcState
  */
 
@@ -92,6 +95,8 @@ const _rpcState = globalSingleton(
             busListenersAttached: false,
             rpcId: 0,
             dedupCallbackSeq: 0,
+            headerCacheScopes: new LruCache(128),
+            headerCacheSeq: 0,
         }),
 );
 
@@ -449,7 +454,7 @@ function dedupSettingsFingerprint(settings) {
         }
         let value = settings[key];
         if (key === "headers") {
-            value = [...new Headers(/** @type {any} */ (value)).entries()].sort();
+            value = [...makeRequestHeaders(value).entries()];
         }
         parts.push(`${key}=${stableStringify(value)}`);
     }
@@ -458,6 +463,33 @@ function dedupSettingsFingerprint(settings) {
         parts.push(`cb=${_rpcState.dedupCallbackSeq++}`);
     }
     return parts.join("&");
+}
+
+/** @param {HeadersInit} [headers] @returns {Headers} */
+function makeRequestHeaders(headers) {
+    const result = new Headers(headers || {});
+    result.set("Content-Type", "application/json");
+    return result;
+}
+
+/** @param {HeadersInit} [headers] @returns {number | undefined} */
+function headerCacheScope(headers) {
+    if (!headers) {
+        return;
+    }
+    const effective = makeRequestHeaders(headers);
+    effective.delete("Content-Type"); // The transport always overrides this header.
+    const entries = [...effective.entries()];
+    if (!entries.length) {
+        return;
+    }
+    const key = JSON.stringify(entries);
+    let scope = _rpcState.headerCacheScopes.get(key);
+    if (scope === undefined) {
+        scope = ++_rpcState.headerCacheSeq;
+        _rpcState.headerCacheScopes.set(key, scope);
+    }
+    return scope;
 }
 
 /**
@@ -541,6 +573,13 @@ function _rpcDeduped(url, params, settings) {
 function _rpcCached(url, params, settings, rpcCache) {
     const cacheSettings =
         typeof settings.cache === "boolean" ? {} : { ...settings.cache };
+    const headerScope = headerCacheScope(settings.headers);
+    if (headerScope !== undefined && cacheSettings.type === "disk") {
+        // Header values can contain credentials. Keep these variants in RAM and
+        // use opaque, never-reused scopes so neither disk keys nor cache logs
+        // carry the headers. Evicting a scope merely makes its old entries cold.
+        cacheSettings.type = "ram";
+    }
     if (params?.model && cacheSettings.model === undefined) {
         cacheSettings.model = params.model;
     }
@@ -576,7 +615,9 @@ function _rpcCached(url, params, settings, rpcCache) {
         issuedOwnRequest = true;
     };
     const cacheTable = params?.method || url;
-    const cacheKey = getKey(url, params);
+    const cacheKey =
+        getKey(url, params) +
+        (headerScope === undefined ? "" : `|headers:${headerScope}`);
     const requestKey = `${cacheTable}/${cacheKey}`;
     const cacheProm = rpcCache.read(cacheTable, cacheKey, fallback, cacheSettings);
     log.logic("cache", () => ({ requestKey, issuedOwnRequest }));
@@ -633,14 +674,12 @@ function _rpcCached(url, params, settings, rpcCache) {
 }
 
 /**
- * @param {string} url
  * @param {object} data
  * @param {{[key: string]: any}} settings
  * @returns {{ controller: AbortController, timeoutSignal: AbortSignal | null, init: RequestInit }}
  */
-function makeFetchRequest(url, data, settings) {
-    const headers = new Headers(settings.headers || {});
-    headers.set("Content-Type", "application/json");
+function makeFetchRequest(data, settings) {
+    const headers = makeRequestHeaders(settings.headers);
     const controller = new AbortController();
     /** @type {AbortSignal | null} */
     const timeoutSignal = settings.timeout
@@ -658,6 +697,24 @@ function makeFetchRequest(url, data, settings) {
         timeoutSignal,
         init: { method: "POST", headers, body: JSON.stringify(data), signal },
     };
+}
+
+/** @param {any} parsed @returns {boolean} */
+function isValidRpcResponse(parsed) {
+    if (!isObject(parsed)) {
+        return false;
+    }
+    const hasResult = Object.hasOwn(parsed, "result");
+    const hasError = Object.hasOwn(parsed, "error");
+    if (hasResult === hasError) {
+        return false;
+    }
+    return (
+        hasResult ||
+        (isObject(parsed.error) &&
+            Number.isInteger(parsed.error.code) &&
+            typeof parsed.error.message === "string")
+    );
 }
 
 /**
@@ -690,7 +747,7 @@ function _rpcOnce(url, params, settings) {
         method: "call",
         params,
     };
-    const { controller, timeoutSignal, init } = makeFetchRequest(url, data, settings);
+    const { controller, timeoutSignal, init } = makeFetchRequest(data, settings);
     let aborted = false;
     const busSettings = settings.signal ? omit(settings, "signal") : settings;
     const { promise, resolve, reject } = Promise.withResolvers();
@@ -762,6 +819,9 @@ function _rpcOnce(url, params, settings) {
             }
             if (aborted) {
                 return;
+            }
+            if (!isValidRpcResponse(parsed)) {
+                return fail(responseError(response));
             }
             if (!parsed.error && !response.ok) {
                 return fail(responseError(response));
