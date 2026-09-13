@@ -14,9 +14,9 @@
                     <i class="oi oi-filled" data-icon="filter_alt" role="img"/>
                 </button>
                 <t t-set-slot="content">
-                    <t t-foreach="this.searchFilters" t-as="searchFilter" t-key="searchFilter.label">
+                    <t t-foreach="this.MESSAGE_SEARCH_FILTERS" t-as="searchFilter" t-key="searchFilter.id ?? 'all'">
                         <DropdownItem onSelected="() => this.onChangeSearchFilter(searchFilter)">
-                            <input type="radio" class="form-check-input ms-0 me-2" t-att-checked="searchFilter.is_notification === this.props.messageSearch.is_notification" value="searchFilter.label"/>
+                            <input type="radio" class="form-check-input ms-0 me-2" t-att-checked="searchFilter.id === this.props.messageSearch.search_filter" t-att-value="searchFilter.id"/>
                             <t t-out="searchFilter.name"/>
                         </DropdownItem>
                     </t>

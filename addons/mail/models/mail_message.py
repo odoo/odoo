@@ -34,6 +34,10 @@ SHARE_DOMAIN = (
     & Domain("is_internal", "=", False)
     & Domain("subtype_id.internal", "=", False)
 )
+# Supported `search_filter` values for `_message_fetch`.
+# Keep in sync with `MESSAGE_SEARCH_FILTERS` in
+# `addons/mail/static/src/core/common/search_message_input.js`.
+MESSAGE_SEARCH_FILTERS = ("messages", "notes", "activities", "changes")
 
 
 def exists_in_cache(records, *, hint_field=''):
@@ -976,7 +980,7 @@ class MailMessage(models.Model):
         ).add(notifications.mail_message_id, "_store_message_fields")
 
     @api.model
-    def _message_fetch(self, domain, *, thread=None, search_term=None, is_notification=None, before=None, after=None, around=None, limit=30):
+    def _message_fetch(self, domain, *, thread=None, search_term=None, search_filter=None, before=None, after=None, around=None, limit=30):
         res = {}
         domain = Domain(True if domain is None else domain)
         if thread:
@@ -985,10 +989,24 @@ class MailMessage(models.Model):
                 & Domain("model", "=", thread._name)
                 & Domain("message_type", "!=", "user_notification")
             )
-        if is_notification is True:
-            domain &= Domain("message_type", "=", "notification")
-        elif is_notification is False:
-            domain &= Domain("message_type", "!=", "notification")
+        is_filtered = search_filter in MESSAGE_SEARCH_FILTERS
+        if is_filtered:
+            def subtype_domain(xmlid):
+                return Domain("subtype_id", "=", self.env["ir.model.data"]._xmlid_to_res_id(xmlid))
+            if search_filter == "messages":
+                domain &= (
+                    subtype_domain("mail.mt_comment")
+                    & Domain("message_type", "in", ("comment", "email"))
+                )
+            elif search_filter == "notes":
+                domain &= (
+                    subtype_domain("mail.mt_note")
+                    & Domain("message_type", "=", "comment")
+                )
+            elif search_filter == "activities":
+                domain &= subtype_domain("mail.mt_activities")
+            else:  # changes
+                domain &= Domain("message_type", "=", "tracking")
         if search_term:
             # we replace every space by a % to avoid hard spacing matching
             search_term = search_term.replace(" ", "%")
@@ -1004,7 +1022,7 @@ class MailMessage(models.Model):
                 [("subtype_id.description", "ilike", search_term)],
             ])
             domain &= message_domain
-        if search_term or is_notification is not None:
+        if search_term or is_filtered:
             res["count"] = self.search_count(domain)
         if around is not None:
             messages_before = self.search(domain & Domain('id', '<=', around), limit=limit // 2, order="id DESC")
