@@ -163,7 +163,7 @@ class HrEmployee(models.Model):
                 .astimezone(UTC)
                 .replace(tzinfo=None)
             )
-            grouped = self.env["hr.attendance"]._read_group(
+            grouped = self.env["hr.attendance"]._read_group(  # noqa: E8507 - one query per timezone; employees sharing one were merged above
                 domain=[
                     ("employee_id", "in", employees.ids),
                     ("check_in", ">=", start_naive),

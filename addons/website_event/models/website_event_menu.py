@@ -43,7 +43,7 @@ class WebsiteEventMenu(models.Model):
             if not old_menu.view_id:
                 continue
             view = (
-                self.env["ir.ui.view"]
+                self.env["ir.ui.view"]  # noqa: E8507 - one lookup per copied menu, on that menu's own view key
                 .sudo()
                 .search(
                     [
@@ -81,7 +81,7 @@ class WebsiteEventMenu(models.Model):
         for child_view in children_views:
             view_info = child_view.key.split(".")
             view = (
-                self.env["ir.ui.view"]
+                self.env["ir.ui.view"]  # noqa: E8507 - one lookup per child view, on that view's own key
                 .sudo()
                 .search(
                     [("key", "=", child_view.key), ("website_id", "=?", website_id)],

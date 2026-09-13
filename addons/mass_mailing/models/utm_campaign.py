@@ -163,14 +163,14 @@ class UtmCampaign(models.Model):
         # Every id is assigned in the loop below, so no seeded default is
         # needed. It used to be dict.fromkeys(self.ids, {}), which both shared
         # one dict across all keys and seeded a dict where a set is stored.
-        res = {}
-        for campaign in self:
-            domain = [("campaign_id", "=", campaign.id)]
-            if model:
-                domain += [("model", "=", model)]
-            res[campaign.id] = set(
-                self.env["mailing.trace"].search(domain).mapped("res_id")
-            )
+        domain = [("campaign_id", "in", self.ids)]
+        if model:
+            domain += [("model", "=", model)]
+        res = {campaign.id: set() for campaign in self}
+        for campaign, res_ids in self.env["mailing.trace"]._read_group(
+            domain, ["campaign_id"], ["res_id:array_agg"]
+        ):
+            res[campaign.id] = set(res_ids)
         return res
 
     @api.model

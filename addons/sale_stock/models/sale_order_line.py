@@ -149,7 +149,7 @@ class SaleOrderLine(models.Model):
             ] |= line
 
         for (route_ids, destination_id), lines in by_key.items():
-            rules = self.env["stock.rule"].search(
+            rules = self.env["stock.rule"].search(  # noqa: E8507 - one query per distinct (routes, destination); lines sharing one were merged above
                 domain=Domain.AND(
                     [
                         [("route_id", "in", list(route_ids))],

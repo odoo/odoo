@@ -31,7 +31,7 @@ class OrderPortalMixin:
         can_read = Order.has_access("read")
         for counter_key, domain in counter_specs:
             if counter_key in counters:
-                values[counter_key] = Order.search_count(domain) if can_read else 0
+                values[counter_key] = Order.search_count(domain) if can_read else 0  # noqa: E8507 - one count per portal counter
         return values
 
     def _order_portal_rendering_values(

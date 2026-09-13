@@ -270,7 +270,7 @@ class ResPartner(models.Model):
                 all_companies = (
                     self.env["res.company"]
                     .sudo()
-                    .search(
+                    .search(  # noqa: E8507 - computed once, on first need
                         [
                             ("account_peppol_proxy_state", "in", can_send),
                         ]

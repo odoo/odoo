@@ -233,7 +233,7 @@ class AccountReconcileWizard(models.TransientModel):
     @api.depends("company_id")
     def _compute_journal_id(self):
         for wizard in self:
-            wizard.journal_id = self.env["account.journal"].search(
+            wizard.journal_id = self.env["account.journal"].search(  # noqa: E8507 - a transient wizard opened on one company
                 [
                     *self.env["account.journal"]._check_company_domain(
                         wizard.company_id

@@ -127,7 +127,7 @@ class AccountReturnCreationWizard(models.TransientModel):
             # For the foreign fiscal positions, takes only the VAT return types
             foreign_vat_fpos_countries = (
                 self.env["account.fiscal.position"]
-                .search(
+                .search(  # noqa: E8507 - a transient wizard opened on one company
                     [
                         *self.env["account.fiscal.position"]._check_company_domain(
                             wizard.company_id

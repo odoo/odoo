@@ -209,7 +209,7 @@ class BaseDocumentLayout(models.TransientModel):
             wizard.font = wizard.company_id.font
             wizard.primary_color = wizard.company_id.primary_color
             wizard.secondary_color = wizard.company_id.secondary_color
-            wizard_layout = wizard.env["report.layout"].search(
+            wizard_layout = wizard.env["report.layout"].search(  # noqa: E8507 - a transient wizard: one record
                 [
                     (
                         "view_id.key",

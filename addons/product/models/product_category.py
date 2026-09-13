@@ -72,7 +72,7 @@ class ProductCategory(models.Model):
             domain = Domain("categ_id", "in", categories.ids) & ~Domain(
                 "company_id", "child_of", company.id
             )
-            if not self.env["product.template"].sudo().search_count(domain, limit=1):
+            if not self.env["product.template"].sudo().search_count(domain, limit=1):  # noqa: E8507 - one probe per company; categories sharing one were merged above
                 continue
             raise ValidationError(
                 self.env._(

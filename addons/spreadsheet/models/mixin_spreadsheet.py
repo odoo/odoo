@@ -136,7 +136,7 @@ class MixinSpreadsheet(models.AbstractModel):
             Model = self.env.get(model)
             if Model is None:
                 continue
-            records = Model.with_context(active_test=False).search([("id", "in", ids)])
+            records = Model.with_context(active_test=False).search([("id", "in", ids)])  # noqa: E8507 - one query per model
             for record in records:
                 display_names[model][record.id] = record.display_name
 

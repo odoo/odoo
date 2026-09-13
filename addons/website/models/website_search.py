@@ -241,7 +241,7 @@ class Website(models.Model):
             self.env.cr.execute(query)
             ids = {row[0] for row in self.env.cr.fetchall()}
             domain = Domain.AND([domain, Domain([("id", "in", list(ids))])])
-            records = model.search_read(domain, direct_fields, limit=limit)
+            records = model.search_read(domain, direct_fields, limit=limit)  # noqa: E8507 - one query per searched model
             for record in records:
                 for value in record.values():
                     if isinstance(value, str):
@@ -278,7 +278,7 @@ class Website(models.Model):
             )
             domain &= fields_domain
             perf_limit = 1000
-            records = model.search_read(domain, direct_fields, limit=perf_limit)
+            records = model.search_read(domain, direct_fields, limit=perf_limit)  # noqa: E8507 - one query per searched model
             if len(records) == perf_limit:
                 exact_records, _count = model._search_fetch(
                     search_detail, search, 1, None

@@ -366,7 +366,7 @@ class ForumForum(models.Model):
         ):
             if tag_id_or_new_name.startswith("_"):
                 tag_name = tag_id_or_new_name[1:]
-                tag_ids = Tag.search(
+                tag_ids = Tag.search(  # noqa: E8507 - one lookup per submitted tag name; the tag may have been created by an earlier pass
                     [("name", "=", tag_name), ("forum_id", "=", self.id)], limit=1
                 )
                 if tag_ids:

@@ -65,10 +65,10 @@ class SmsTwilioAccountManage(models.TransientModel):
             country_code = phone_validation.phone_get_country_code_for_number(
                 twilio_number.get("phone_number")
             )
-            country_id = self.env["res.country"].search(
+            country_id = self.env["res.country"].search(  # noqa: E8507 - one lookup per number reported by Twilio
                 [("code", "=", country_code)], limit=1
             )
-            if not self.env["sms.twilio.number"].search_count(
+            if not self.env["sms.twilio.number"].search_count(  # noqa: E8507 - one lookup per number reported by Twilio
                 [
                     ("company_id", "=", self.company_id.id),
                     ("number", "=", twilio_number.get("phone_number")),

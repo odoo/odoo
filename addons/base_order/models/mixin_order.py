@@ -317,7 +317,7 @@ class MixinOrder(models.AbstractModel):
         for company in self.company_id:
             order_by_product_by_company[company] = {
                 product: set(order_ids)
-                for product, order_ids in Line._read_group(
+                for product, order_ids in Line._read_group(  # noqa: E8507 - one query per company; orders sharing one were merged above
                     [
                         ("product_id", "in", self.line_ids.product_id.ids),
                         ("state", "=", "done"),

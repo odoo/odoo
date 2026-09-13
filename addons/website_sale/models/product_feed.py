@@ -95,7 +95,7 @@ class ProductFeed(models.Model):
     @api.constrains("product_category_ids", "website_id")
     def _check_product_limit(self):
         for feed in self:
-            product_count = feed.env["product.product"].search_count(
+            product_count = feed.env["product.product"].search_count(  # noqa: E8507 - one probe per feed, on the feed's own website and categories
                 feed._get_domain_feed_product(), limit=const.PRODUCT_FEED_SOFT_LIMIT + 1
             )
             if product_count > const.PRODUCT_FEED_SOFT_LIMIT:

@@ -494,7 +494,7 @@ class PosOrder(models.Model):
             pos_order.write(order)
 
         for model_name, mapping in record_uuid_mapping.items():
-            owner_records = self.env[model_name].search(
+            owner_records = self.env[model_name].search(  # noqa: E8507 - one query per related model, over every owner uuid at once
                 [("uuid", "in", mapping.keys())]
             )
             dbg.logic.debug(
@@ -504,23 +504,39 @@ class PosOrder(models.Model):
                 len(mapping),
                 dbg.rec(owner_records),
             )
+
+            def as_list(uuids):
+                return list(uuids) if isinstance(uuids, (list, tuple, set)) else [uuids]
+
+            uuids_by_field = defaultdict(set)
+            for field_names in mapping.values():
+                for name, uuids in field_names.items():
+                    uuids_by_field[name].update(as_list(uuids))
+            related_by_field = {}
+            for name, uuids in uuids_by_field.items():
+                comodel = self.env[self.env[model_name]._fields[name].comodel_name]
+                related_by_field[name] = {
+                    record.uuid: record
+                    for record in comodel.search([("uuid", "in", list(uuids))])  # noqa: E8507 - one query per relational field, over every uuid at once
+                }
             for uuid, field_names in mapping.items():
+                owner = owner_records.filtered(lambda r, uuid=uuid: r.uuid == uuid)
                 for name, uuids in field_names.items():
                     params = self.env[model_name]._fields[name]
+                    related = related_by_field[name]
                     if params.type in ["one2many", "many2many"]:
-                        records = self.env[params.comodel_name].search(
-                            [("uuid", "in", uuids)]
+                        owner.write(
+                            {
+                                name: [
+                                    Command.link(related[value].id)
+                                    for value in as_list(uuids)
+                                    if value in related
+                                ]
+                            }
                         )
-                        owner_records.filtered(
-                            lambda r, uuid=uuid: r.uuid == uuid
-                        ).write({name: [Command.link(r.id) for r in records]})
                     else:
-                        record = self.env[params.comodel_name].search(
-                            [("uuid", "=", uuids)]
-                        )
-                        owner_records.filtered(
-                            lambda r, uuid=uuid: r.uuid == uuid
-                        ).write({name: record.id})
+                        record = related.get(uuids)
+                        owner.write({name: record.id if record else False})
 
         pos_order = pos_order.with_company(pos_order.company_id)
         self._process_payment_lines(order, pos_order, draft)

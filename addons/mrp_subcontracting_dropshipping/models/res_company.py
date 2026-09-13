@@ -24,7 +24,7 @@ class ResCompany(models.Model):
     def _create_subcontracting_dropshipping_picking_type(self):
         pick_type_vals = []
         for company in self:
-            sequence = self.env["ir.sequence"].search(
+            sequence = self.env["ir.sequence"].search(  # noqa: E8507 - company setup: one lookup per company
                 [
                     ("code", "=", "mrp.subcontracting.dropshipping"),
                     ("company_id", "=", company.id),
@@ -56,7 +56,7 @@ class ResCompany(models.Model):
         vals = []
         for company in self:
             subcontracting_location = company.subcontracting_location_id
-            dropship_picking_type = self.env["stock.picking.type"].search(
+            dropship_picking_type = self.env["stock.picking.type"].search(  # noqa: E8507 - company setup: one lookup per company
                 [
                     ("company_id", "=", company.id),
                     ("default_location_src_id.usage", "=", "supplier"),

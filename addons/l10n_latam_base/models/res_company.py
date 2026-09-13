@@ -11,7 +11,7 @@ class ResCompany(models.Model):
         for company in companies:
             if not company.country_id:
                 continue
-            country_vat_type = self.env["l10n_latam.identification.type"].search(
+            country_vat_type = self.env["l10n_latam.identification.type"].search(  # noqa: E8507 - company setup: one lookup per company
                 [("is_vat", "=", True), ("country_id", "=", company.country_id.id)],
                 limit=1,
             )

@@ -801,7 +801,7 @@ Versions:
                     leave.employee_id.sudo().is_flexible
                     and leave.request_date_to == leave.request_date_from
                 ):
-                    public_holidays = self.env["resource.calendar.leaves"].search(
+                    public_holidays = self.env["resource.calendar.leaves"].search(  # noqa: E8507 - one lookup per flexible one-day leave, on its own calendar and date
                         [
                             ("resource_id", "=", False),
                             ("date_from", "<", leave.date_to),

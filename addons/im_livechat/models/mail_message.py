@@ -24,7 +24,7 @@ class MailMessage(models.Model):
             chatbot = channel.chatbot_current_step_id.sudo().chatbot_script_id.operator_partner_id
             if channel.chatbot_current_step_id and message.author_id == chatbot:
                 chatbot_message = (
-                    self.env["chatbot.message"]
+                    self.env["chatbot.message"]  # noqa: E8507 - one lookup per chatbot message, on its own step
                     .sudo()
                     .search([("mail_message_id", "=", message.id)], limit=1)
                 )
@@ -48,7 +48,7 @@ class MailMessage(models.Model):
                         "question_phone",
                     ]:
                         user_answer_message = (
-                            self.env["chatbot.message"]
+                            self.env["chatbot.message"]  # noqa: E8507 - one lookup per chatbot message, on its own step
                             .sudo()
                             .search(
                                 [

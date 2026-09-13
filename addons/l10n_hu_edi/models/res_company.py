@@ -160,7 +160,7 @@ class ResCompany(models.Model):
                 recovery_start_time = recovery_end_time - timedelta(hours=24)
 
             # Old invoices are already up-to-date - no need to re-check them.
-            invoices_to_check = self.env["account.move"].search(
+            invoices_to_check = self.env["account.move"].search(  # noqa: E8507 - one query per company
                 [
                     ("company_id", "=", company.id),
                     ("l10n_hu_edi_send_time", ">=", recovery_start_time),

@@ -660,7 +660,7 @@ class ForumPost(models.Model):
 
                 karma = post.forum_id.karma_gen_answer_flagged
                 if post.closed_reason_id == reason_spam:
-                    count_post = post.search_count(
+                    count_post = post.search_count(  # noqa: E8507 - one count per flagged post, on its author
                         [
                             ("parent_id", "=", False),
                             ("forum_id", "=", post.forum_id.id),
@@ -690,7 +690,7 @@ class ForumPost(models.Model):
                 )
                 karma = post.forum_id.karma_gen_answer_flagged
                 if reason_id == reason_spam:
-                    count_post = post.search_count(
+                    count_post = post.search_count(  # noqa: E8507 - one count per flagged post, on its author
                         [
                             ("parent_id", "=", False),
                             ("forum_id", "=", post.forum_id.id),

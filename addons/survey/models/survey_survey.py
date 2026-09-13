@@ -632,17 +632,23 @@ class SurveySurvey(models.Model):
 
     @api.depends("session_start_time", "user_input_ids")
     def _compute_session_answer_count(self) -> None:
+        count_by_survey = {}
+        if self:
+            count_by_survey = dict(
+                self.env["survey.user_input"]._read_group(
+                    Domain("is_session_answer", "=", True)
+                    & Domain("state", "!=", "done")
+                    & Domain.OR(
+                        Domain("survey_id", "=", survey.id)
+                        & Domain("create_date", ">=", survey.session_start_time)
+                        for survey in self
+                    ),
+                    ["survey_id"],
+                    ["create_uid:count"],
+                )
+            )
         for survey in self:
-            [answer_count] = self.env["survey.user_input"]._read_group(
-                [
-                    ("survey_id", "=", survey.id),
-                    ("is_session_answer", "=", True),
-                    ("state", "!=", "done"),
-                    ("create_date", ">=", survey.session_start_time),
-                ],
-                aggregates=["create_uid:count"],
-            )[0]
-            survey.session_answer_count = answer_count
+            survey.session_answer_count = count_by_survey.get(survey, 0)
 
     @api.depends(
         "session_question_id",
@@ -650,16 +656,22 @@ class SurveySurvey(models.Model):
         "user_input_ids.user_input_line_ids",
     )
     def _compute_session_question_answer_count(self) -> None:
+        count_by_survey = {}
+        if self:
+            count_by_survey = dict(
+                self.env["survey.user_input.line"]._read_group(
+                    Domain.OR(
+                        Domain("question_id", "=", survey.session_question_id.id)
+                        & Domain("survey_id", "=", survey.id)
+                        & Domain("create_date", ">=", survey.session_start_time)
+                        for survey in self
+                    ),
+                    ["survey_id"],
+                    ["user_input_id:count_distinct"],
+                )
+            )
         for survey in self:
-            [answer_count] = self.env["survey.user_input.line"]._read_group(
-                [
-                    ("question_id", "=", survey.session_question_id.id),
-                    ("survey_id", "=", survey.id),
-                    ("create_date", ">=", survey.session_start_time),
-                ],
-                aggregates=["user_input_id:count_distinct"],
-            )[0]
-            survey.session_question_answer_count = answer_count
+            survey.session_question_answer_count = count_by_survey.get(survey, 0)
 
     @api.depends("access_token")
     def _compute_session_code(self) -> None:

@@ -76,7 +76,7 @@ class PaymentProvider(models.Model):
                     self.paymob_account_country_id.code
                 )
                 currency = (
-                    self.env["res.currency"]
+                    self.env["res.currency"]  # noqa: E8507 - one lookup per provider, on its own account country
                     .with_context(
                         active_test=False,
                     )
@@ -208,7 +208,7 @@ class PaymentProvider(models.Model):
                 gateway_data["gateway_type"]
             ]
             if payment_method_code == "card" and gateway_data.get("installments"):
-                installment_payment_method = self.env["payment.method"].search(
+                installment_payment_method = self.env["payment.method"].search(  # noqa: E8507 - one lookup per gateway of the response
                     [("code", "=", "installments_eg")], limit=1
                 )
                 if not installment_payment_method:

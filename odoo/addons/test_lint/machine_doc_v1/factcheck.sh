@@ -65,6 +65,12 @@ assert_doc_cites "preserves_content" "the order-insensitive invariant"
 
 assert_file "$MOD/tests/floors.json" "the lint floors"
 
+# Every gate still floored above zero is named in the doc, so a reader knows
+# which readings are debt and which are hard zeros.
+for gate in $(python3 -c "import json; print(' '.join(k for k, v in json.load(open('$MOD/tests/floors.json')).items() if v))"); do
+    assert_doc_cites "$gate" "floored gate $gate"
+done
+
 # No floor may live in Python any more: assert_ratchet must refuse an integer.
 if grep -q "raise TypeError" "$MOD/tests/lint_case.py"; then
     ok

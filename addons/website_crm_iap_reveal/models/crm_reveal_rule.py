@@ -341,11 +341,11 @@ class CrmRevealRule(models.Model):
             done_ips.append(res["ip"])
             if not res.get("not_found"):
                 self._create_lead_from_response(res)
-                self.env["crm.reveal.view"].search(
+                self.env["crm.reveal.view"].search(  # noqa: E8507 - one lookup per revealed ip of the response
                     [("reveal_ip", "=", res["ip"])]
                 ).unlink()
             else:
-                views = self.env["crm.reveal.view"].search(
+                views = self.env["crm.reveal.view"].search(  # noqa: E8507 - one lookup per revealed ip of the response
                     [("reveal_ip", "=", res["ip"])]
                 )
                 views.write({"reveal_state": "not_found"})

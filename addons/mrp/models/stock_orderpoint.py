@@ -125,15 +125,23 @@ class StockWarehouseOrderpoint(models.Model):
             orderpoint.show_bom = orderpoint.effective_route_id.id in manufacture_route
 
     def _inverse_bom_id(self):
-        for orderpoint in self:
-            if orderpoint.route_id or not orderpoint.bom_id:
-                continue
-            manufacture_rule = self.env["stock.rule"].search(
-                [
-                    ("action", "=", "manufacture"),
-                    ("company_id", "in", [orderpoint.company_id.id, False]),
-                ],
-                limit=1,
+        orderpoints = self.filtered(lambda op: op.bom_id and not op.route_id)
+        if not orderpoints:
+            return
+        manufacture_rules = self.env["stock.rule"].search(
+            [
+                ("action", "=", "manufacture"),
+                ("company_id", "in", [*orderpoints.company_id.ids, False]),
+            ]
+        )
+        for orderpoint in orderpoints:
+            manufacture_rule = next(
+                (
+                    rule
+                    for rule in manufacture_rules
+                    if not rule.company_id or rule.company_id == orderpoint.company_id
+                ),
+                None,
             )
             if manufacture_rule:
                 orderpoint.route_id = manufacture_rule.route_id

@@ -58,12 +58,18 @@ class StockWarehouse(models.Model):
 
     def _create_missing_locations(self, vals):
         super()._create_missing_locations(vals)
-        for company_id in self.company_id:
-            location = self.env["stock.location"].search(
-                [("usage", "=", "production"), ("company_id", "=", company_id.id)],
-                limit=1,
+        companies_with_production_location = {
+            company
+            for [company] in self.env["stock.location"]._read_group(
+                [
+                    ("usage", "=", "production"),
+                    ("company_id", "in", self.company_id.ids),
+                ],
+                ["company_id"],
             )
-            if not location:
+        }
+        for company_id in self.company_id:
+            if company_id not in companies_with_production_location:
                 company_id._create_production_location()
 
     def _get_fields_route_trigger(self):

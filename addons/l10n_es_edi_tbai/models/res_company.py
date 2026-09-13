@@ -97,7 +97,7 @@ class ResCompany(models.Model):
     def _compute_l10n_es_tbai_certificate_id(self):
         for company in self:
             if company.country_code == "ES":
-                company.l10n_es_tbai_certificate_id = self.env[
+                company.l10n_es_tbai_certificate_id = self.env[  # noqa: E8507 - one lookup per company, on its own certificates
                     "certificate.certificate"
                 ].search(
                     [

@@ -177,7 +177,7 @@ class CrmIapLeadMiningRequest(models.Model):
                     country.code in iap_tools._STATES_FILTER_COUNTRIES_WHITELIST
                 )
             )
-            lead_mining_request.available_state_ids = self.env[
+            lead_mining_request.available_state_ids = self.env[  # noqa: E8507 - one query per request, on its own countries
                 "res.country.state"
             ].search([("country_id", "in", countries.ids)])
 
@@ -325,7 +325,7 @@ class CrmIapLeadMiningRequest(models.Model):
         lead_vals_list = []
         messages_to_post = {}
         for data in result:
-            country = self.env["res.country"].search(
+            country = self.env["res.country"].search(  # noqa: E8507 - one lookup per row of the mining response
                 [("code", "=", data["country_code"])]
             )
             lead_vals_list.append(self._lead_vals_from_response(data))

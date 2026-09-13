@@ -374,7 +374,7 @@ class SurveyInvite(models.TransientModel):
                 domain = [("email_normalized", "=", email_normalized)]
                 if invite.survey_users_login_required:
                     domain.append(("user_ids", "!=", False))
-                partner = Partner.search(domain, limit=1)
+                partner = Partner.search(domain, limit=1)  # noqa: E8507 - one lookup per email of the invite
             if partner:
                 valid_partners |= partner
             else:

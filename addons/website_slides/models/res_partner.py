@@ -90,12 +90,15 @@ class ResPartner(models.Model):
 
     @api.depends("is_company", "child_ids.slide_channel_count")
     def _compute_slide_channel_company_count(self):
+        companies = self.filtered("is_company")
+        channels = self.env["slide.channel"].sudo()
+        if companies:
+            channels = channels.search([("partner_ids", "in", companies.child_ids.ids)])
         for partner in self:
             if partner.is_company:
-                partner.slide_channel_company_count = (
-                    self.env["slide.channel"]
-                    .sudo()
-                    .search_count([("partner_ids", "in", partner.child_ids.ids)])
+                children = set(partner.child_ids.ids)
+                partner.slide_channel_company_count = sum(
+                    1 for channel in channels if children & set(channel.partner_ids.ids)
                 )
             else:
                 partner.slide_channel_company_count = 0

@@ -48,7 +48,7 @@ class ResCompany(models.Model):
         for company in self:
             company.l10n_ro_edi_anaf_imported_inv_journal_id = False
             if company.country_code == "RO":
-                company.l10n_ro_edi_anaf_imported_inv_journal_id = self.env[
+                company.l10n_ro_edi_anaf_imported_inv_journal_id = self.env[  # noqa: E8507 - one lookup per company, on its own journals
                     "account.journal"
                 ].search(
                     [

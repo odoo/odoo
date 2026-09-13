@@ -681,26 +681,45 @@ class HrVersion(models.Model):
         return self._merge_work_entry_vals(vals_list)
 
     def _remove_work_entries(self):
-        all_we_to_unlink = self.env["hr.work.entry"]
+        before_start = {}
+        after_end = {}
         for version in self:
             date_start = fields.Datetime.to_datetime(version.date_start)
             if version.date_generated_from < date_start:
-                we_to_remove = self.env["hr.work.entry"].search(
-                    [("date", "<", version.date_start), ("version_id", "=", version.id)]
-                )
-                if we_to_remove:
-                    version.date_generated_from = date_start
-                    all_we_to_unlink |= we_to_remove
+                before_start[version] = date_start
             if not version.date_end:
                 continue
             date_end = datetime.combine(version.date_end, time.max)
             if version.date_generated_to > date_end:
-                we_to_remove = self.env["hr.work.entry"].search(
-                    [("date", ">", version.date_end), ("version_id", "=", version.id)]
-                )
-                if we_to_remove:
-                    version.date_generated_to = date_end
-                    all_we_to_unlink |= we_to_remove
+                after_end[version] = date_end
+        domains = [
+            *(
+                Domain("date", "<", version.date_start)
+                & Domain("version_id", "=", version.id)
+                for version in before_start
+            ),
+            *(
+                Domain("date", ">", version.date_end)
+                & Domain("version_id", "=", version.id)
+                for version in after_end
+            ),
+        ]
+        all_we_to_unlink = self.env["hr.work.entry"]
+        if domains:
+            all_we_to_unlink = self.env["hr.work.entry"].search(Domain.OR(domains))
+        entries_by_version = all_we_to_unlink.grouped("version_id")
+        for version, date_start in before_start.items():
+            if any(
+                entry.date < date_start for entry in entries_by_version.get(version, ())
+            ):
+                version.date_generated_from = date_start
+        for version, date_end in after_end.items():
+            end_of_day_start = fields.Datetime.to_datetime(version.date_end)
+            if any(
+                entry.date > end_of_day_start
+                for entry in entries_by_version.get(version, ())
+            ):
+                version.date_generated_to = date_end
         all_we_to_unlink.unlink()
 
     def _unlink_work_entries(self):

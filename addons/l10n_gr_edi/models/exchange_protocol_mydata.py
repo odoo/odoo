@@ -145,7 +145,7 @@ class ExchangeProtocolMydata(models.AbstractModel):
         pending = []
         for document in documents:
             mark = _find(document.tree, "mark")
-            if not mark or moves.search_count(
+            if not mark or moves.search_count(  # noqa: E8507 - one probe per document of the myDATA response
                 [
                     ("l10n_gr_edi_mark", "=", mark),
                     ("company_id", "=", company.id),
@@ -186,7 +186,7 @@ class ExchangeProtocolMydata(models.AbstractModel):
                     {
                         "price_unit": float(_find(detail, "netValue")) / quantity,
                         "quantity": quantity,
-                        "tax_ids": self.env["account.tax"].search(
+                        "tax_ids": self.env["account.tax"].search(  # noqa: E8507 - one lookup per line of the fetched document
                             [
                                 ("amount", "=", tax_amount),
                                 ("company_ids", "in", [company.id]),

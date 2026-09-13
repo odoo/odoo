@@ -68,7 +68,7 @@ class LoyaltyRule(models.Model):
                         rules[:1]._get_domain_valid_product(),
                     ]
                 )
-                rules.valid_product_ids = self.env["product.product"].search(
+                rules.valid_product_ids = self.env["product.product"].search(  # noqa: E8507 - one query per distinct product domain; rules sharing one were merged above
                     domain, order="id"
                 )
                 rules.any_product = False

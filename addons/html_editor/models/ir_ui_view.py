@@ -124,7 +124,7 @@ class IrUiView(models.Model):
 
         for custom_snippet_el in tree.xpath('//*[hasclass("s_custom_snippet")]'):
             custom_snippet_name = custom_snippet_el.get("data-name")
-            custom_snippet_view = self.search(
+            custom_snippet_view = self.search(  # noqa: E8507 - one lookup per custom snippet in the arch
                 [("name", "=", custom_snippet_name)], limit=1
             )
             if custom_snippet_view:

@@ -90,7 +90,7 @@ class ProjectTask(models.Model):
                 task.last_sol_of_customer = False
                 continue
             if domain not in sol_per_domain:
-                sol_per_domain[domain] = self.env["sale.order.line"].search(
+                sol_per_domain[domain] = self.env["sale.order.line"].search(  # noqa: E8507 - one query per distinct domain, cached across tasks
                     domain, limit=1
                 )
             task.last_sol_of_customer = sol_per_domain[domain]

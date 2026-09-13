@@ -8,10 +8,15 @@ class ResCompany(models.Model):
     website_id = fields.Many2one("website", compute="_compute_website_id", store=True)
 
     def _compute_website_id(self):
+        websites_by_company = (
+            self.env["website"]
+            .search([("company_id", "in", self.ids)])
+            .grouped("company_id")
+        )
         for company in self:
-            company.website_id = self.env["website"].search(
-                [("company_id", "=", company.id)], limit=1
-            )
+            company.website_id = websites_by_company.get(company, self.env["website"])[
+                :1
+            ]
 
     @api.model
     def action_view_website_theme_selector(self):

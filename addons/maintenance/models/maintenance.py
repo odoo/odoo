@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
@@ -575,23 +577,28 @@ class MaintenanceTeam(models.Model):
 
     @api.depends("request_ids.stage_id.done")
     def _compute_todo_requests(self):
+        todo_domain = [
+            ("maintenance_team_id", "in", self.ids),
+            ("stage_id.done", "=", False),
+            ("archive", "=", False),
+        ]
+        requests_by_team = (
+            self.env["maintenance.request"]
+            .search(todo_domain)
+            .grouped("maintenance_team_id")
+        )
+        data_by_team = defaultdict(list)
+        for team, *row in self.env["maintenance.request"]._read_group(
+            todo_domain,
+            ["maintenance_team_id", "schedule_date:year", "priority", "kanban_state"],
+            ["__count"],
+        ):
+            data_by_team[team].append(row)
         for team in self:
-            team.todo_request_ids = self.env["maintenance.request"].search(
-                [
-                    ("maintenance_team_id", "=", team.id),
-                    ("stage_id.done", "=", False),
-                    ("archive", "=", False),
-                ]
+            team.todo_request_ids = requests_by_team.get(
+                team, self.env["maintenance.request"]
             )
-            data = self.env["maintenance.request"]._read_group(
-                [
-                    ("maintenance_team_id", "=", team.id),
-                    ("stage_id.done", "=", False),
-                    ("archive", "=", False),
-                ],
-                ["schedule_date:year", "priority", "kanban_state"],
-                ["__count"],
-            )
+            data = data_by_team[team]
             team.todo_request_count = sum(count for (_, _, _, count) in data)
             team.todo_request_count_date = sum(
                 count for (schedule_date, _, _, count) in data if schedule_date

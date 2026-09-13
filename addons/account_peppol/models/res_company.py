@@ -285,66 +285,77 @@ class ResCompany(models.Model):
                     company.peppol_parent_company_id = parent_company
                     break
 
+    def _first_journal_per_company(self, journal_type):
+        journals = self.env["account.journal"].search(
+            [
+                *self.env["account.journal"]._check_company_domain(self),
+                ("type", "=", journal_type),
+            ]
+        )
+        return {
+            company: next(
+                (
+                    journal
+                    for journal in journals
+                    if not journal.company_id or journal.company_id == company
+                ),
+                self.env["account.journal"],
+            )
+            for company in self
+        }
+
     @api.depends("account_peppol_proxy_state")
     def _compute_peppol_purchase_journal_id(self):
-        for company in self:
-            if not company.peppol_purchase_journal_id and company.peppol_can_send:
-                company.peppol_purchase_journal_id = self.env["account.journal"].search(
-                    [
-                        *self.env["account.journal"]._check_company_domain(company),
-                        ("type", "=", "purchase"),
-                    ],
-                    limit=1,
-                )
-                company.peppol_purchase_journal_id.is_peppol_journal = True
+        missing = self.filtered(
+            lambda company: (
+                not company.peppol_purchase_journal_id and company.peppol_can_send
+            )
+        )
+        journal_by_company = missing._first_journal_per_company("purchase")
+        for company in missing:
+            company.peppol_purchase_journal_id = journal_by_company[company]
+            company.peppol_purchase_journal_id.is_peppol_journal = True
 
     def _inverse_peppol_purchase_journal_id(self):
-        for company in self:
-            # This avoid having 2 or more purchase journals from the same company with
-            # `is_peppol_journal` set to True (which could occur after changes).
-            journals_to_reset = self.env["account.journal"].search(
-                [
-                    ("company_id", "=", company.id),
-                    ("type", "=", "purchase"),
-                    ("is_peppol_journal", "=", True),
-                ]
-            )
-            journals_to_reset.is_peppol_journal = False
-            company.peppol_purchase_journal_id.is_peppol_journal = True
+        # This avoid having 2 or more purchase journals from the same company with
+        # `is_peppol_journal` set to True (which could occur after changes).
+        journals_to_reset = self.env["account.journal"].search(
+            [
+                ("company_id", "in", self.ids),
+                ("type", "=", "purchase"),
+                ("is_peppol_journal", "=", True),
+            ]
+        )
+        journals_to_reset.is_peppol_journal = False
+        self.peppol_purchase_journal_id.is_peppol_journal = True
 
     @api.depends("account_peppol_proxy_state")
     def _compute_peppol_self_billing_reception_journal_id(self):
-        for company in self:
-            if (
+        missing = self.filtered(
+            lambda company: (
                 not company.peppol_self_billing_reception_journal_id
                 and company.peppol_can_send
-            ):
-                company.peppol_self_billing_reception_journal_id = self.env[
-                    "account.journal"
-                ].search(
-                    [
-                        *self.env["account.journal"]._check_company_domain(company),
-                        ("type", "=", "sale"),
-                    ],
-                    limit=1,
-                )
-                company.peppol_self_billing_reception_journal_id.is_peppol_journal = (
-                    True
-                )
+            )
+        )
+        journal_by_company = missing._first_journal_per_company("sale")
+        for company in missing:
+            company.peppol_self_billing_reception_journal_id = journal_by_company[
+                company
+            ]
+            company.peppol_self_billing_reception_journal_id.is_peppol_journal = True
 
     def _inverse_peppol_self_billing_reception_journal_id(self):
-        for company in self:
-            # This avoid having 2 or more sale journals from the same company with
-            # `is_peppol_journal` set to True (which could occur after changes).
-            journals_to_reset = self.env["account.journal"].search(
-                [
-                    ("company_id", "=", company.id),
-                    ("type", "=", "sale"),
-                    ("is_peppol_journal", "=", True),
-                ]
-            )
-            journals_to_reset.is_peppol_journal = False
-            company.peppol_self_billing_reception_journal_id.is_peppol_journal = True
+        # This avoid having 2 or more sale journals from the same company with
+        # `is_peppol_journal` set to True (which could occur after changes).
+        journals_to_reset = self.env["account.journal"].search(
+            [
+                ("company_id", "in", self.ids),
+                ("type", "=", "sale"),
+                ("is_peppol_journal", "=", True),
+            ]
+        )
+        journals_to_reset.is_peppol_journal = False
+        self.peppol_self_billing_reception_journal_id.is_peppol_journal = True
 
     @api.depends("email")
     def _compute_account_peppol_contact_email(self):

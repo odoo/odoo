@@ -322,6 +322,6 @@ class ResConfigSettings(models.TransientModel):
                         [("currency_id", "=", currency_id)],
                     ]
                 )
-                res_config.pos_available_pricelist_ids = self.env[
+                res_config.pos_available_pricelist_ids = self.env[  # noqa: E8507 - a transient settings wizard: one record
                     "product.pricelist"
                 ].search(domain)

@@ -395,7 +395,7 @@ class EventMail(models.Model):
     def _refresh_mail_count_done(self, mail_slot=False):
         for scheduler in self:
             if scheduler.interval_type == "after_sub":
-                total_sent = self.env["event.mail.registration"].search_count(
+                total_sent = self.env["event.mail.registration"].search_count(  # noqa: E8507 - one count per scheduler, on its own registrations
                     [
                         ("scheduler_id", "=", scheduler.id),
                         ("mail_sent", "=", True),
@@ -403,7 +403,7 @@ class EventMail(models.Model):
                 )
                 scheduler.mail_count_done = total_sent
             elif mail_slot and mail_slot.last_registration_id:
-                total_sent = self.env["event.registration"].search_count(
+                total_sent = self.env["event.registration"].search_count(  # noqa: E8507 - one count per scheduler, on its own registrations
                     [
                         ("id", "<=", mail_slot.last_registration_id.id),
                         ("event_id", "=", scheduler.event_id.id),
@@ -420,7 +420,7 @@ class EventMail(models.Model):
                     scheduler.mail_count_done >= scheduler.event_id.seats_taken
                 )
             elif scheduler.last_registration_id:
-                total_sent = self.env["event.registration"].search_count(
+                total_sent = self.env["event.registration"].search_count(  # noqa: E8507 - one count per scheduler, on its own registrations
                     [
                         ("id", "<=", scheduler.last_registration_id.id),
                         ("event_id", "=", scheduler.event_id.id),

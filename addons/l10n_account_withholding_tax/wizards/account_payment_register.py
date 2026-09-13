@@ -85,7 +85,7 @@ class AccountPaymentRegister(models.TransientModel):
                 continue
             if wizard.withholding_payment_account_id:
                 continue
-            latest_payment = self.env["account.payment"].search_read(
+            latest_payment = self.env["account.payment"].search_read(  # noqa: E8507 - a transient wizard: one record
                 domain=[
                     ("payment_channel_id", "=", wizard.payment_channel_id.id),
                     ("payment_channel_id.payment_account_id", "=", False),
@@ -112,7 +112,7 @@ class AccountPaymentRegister(models.TransientModel):
                 wizards.display_withholding = False
                 continue
 
-            withholding_taxes = self.env["account.tax"].search(
+            withholding_taxes = self.env["account.tax"].search(  # noqa: E8507 - one query per company; wizards sharing one were merged above
                 [
                     *self.env["account.tax"]._check_company_domain(company),
                     ("is_withholding_tax_on_payment", "=", True),

@@ -117,7 +117,7 @@ class HrEmployee(models.Model):
                 new_contact_id = employee.partner_id.id
                 if new_contact_id != old_work_contact_id_mapping[employee.id]:
                     car_ids = (
-                        self.env["fleet.vehicle"]
+                        self.env["fleet.vehicle"]  # noqa: E8507 - one lookup per employee whose work contact changed
                         .sudo()
                         .search(
                             [

@@ -138,12 +138,12 @@ class ResConfigSettings(models.TransientModel):
         for setting in self:
             if setting.predictive_lead_scoring_fields_str:
                 names = setting.predictive_lead_scoring_fields_str.split(",")
-                fields = self.env["ir.model.fields"].search(
+                fields = self.env["ir.model.fields"].search(  # noqa: E8507 - a transient settings wizard: one record
                     [("name", "in", names), ("model", "=", "crm.lead")]
                 )
                 setting.predictive_lead_scoring_fields = self.env[
                     "crm.lead.scoring.frequency.field"
-                ].search([("field_id", "in", fields.ids)])
+                ].search([("field_id", "in", fields.ids)])  # noqa: E8507 - a transient settings wizard: one record
             else:
                 setting.predictive_lead_scoring_fields = None
 

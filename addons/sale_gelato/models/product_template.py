@@ -90,7 +90,7 @@ class ProductTemplate(models.Model):
             for variant_data in template_info["variants"]:
                 current_variant_pavs = self.env["product.attribute.value"]
                 for attribute_data in variant_data["variantOptions"]:
-                    attribute = self.env["product.attribute"].search(
+                    attribute = self.env["product.attribute"].search(  # noqa: E8507 - one lookup per Gelato attribute; the record may have been created by an earlier pass
                         [
                             ("name", "=", attribute_data["name"]),
                             ("create_variant", "=", "always"),
@@ -102,7 +102,7 @@ class ProductTemplate(models.Model):
                             {"name": attribute_data["name"]}
                         )
 
-                    attribute_value = self.env["product.attribute.value"].search(
+                    attribute_value = self.env["product.attribute.value"].search(  # noqa: E8507 - one lookup per Gelato attribute; the record may have been created by an earlier pass
                         [
                             ("name", "=", attribute_data["value"]),
                             ("attribute_id", "=", attribute.id),
@@ -118,7 +118,7 @@ class ProductTemplate(models.Model):
                         )
                     current_variant_pavs += attribute_value
 
-                    ptal = self.env["product.template.attribute.line"].search(
+                    ptal = self.env["product.template.attribute.line"].search(  # noqa: E8507 - one lookup per Gelato attribute; the record may have been created by an earlier pass
                         [
                             ("product_tmpl_id", "=", self.id),
                             ("attribute_id", "=", attribute.id),
@@ -154,7 +154,7 @@ class ProductTemplate(models.Model):
                 print_image_data["printArea"] = "default"
 
             print_image_found = bool(
-                self.env["document.document"].search_count(
+                self.env["document.document"].search_count(  # noqa: E8507 - one lookup per Gelato attribute; the record may have been created by an earlier pass
                     [
                         ("name", "ilike", print_image_data["printArea"]),
                         ("res_id", "=", self.id),

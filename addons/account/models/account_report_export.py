@@ -1507,7 +1507,7 @@ class AccountReportExport(models.Model):
 
                     return Domain(*operand)
 
-                reported_accounts += AccountAccount.search(
+                reported_accounts += AccountAccount.search(  # noqa: E8507 - a coverage audit: one query per expression, each with its own domain
                     Domain(domain).map_conditions(rewrite_condition)
                 )
             elif expr.engine == "account_codes":
@@ -1539,7 +1539,7 @@ class AccountReportExport(models.Model):
                         get_domain_account(exclude_code)
                         for exclude_code in account_code["exclude"]
                     ]
-                    reported_accounts += AccountAccount.search(
+                    reported_accounts += AccountAccount.search(  # noqa: E8507 - a coverage audit: one query per account code, each with its own prefix and exclusions
                         [
                             *common_account_domain,
                             get_domain_account(account_code["prefix"]),
@@ -1557,7 +1557,7 @@ class AccountReportExport(models.Model):
                     ]
                     for prefix_to_check in prefixes_to_check:
                         account_domain = get_domain_account(prefix_to_check)
-                        if not AccountAccount.search_count(
+                        if not AccountAccount.search_count(  # noqa: E8507 - a coverage audit: one existence probe per prefix
                             [
                                 *common_account_domain,
                                 account_domain,

@@ -27,7 +27,7 @@ class PosPaymentMethod(models.Model):
         for payment_method in self:
             if not payment_method.stripe_serial_number:
                 continue
-            existing_payment_method = self.search(
+            existing_payment_method = self.search(  # noqa: E8507 - one probe per method, on its own serial number
                 [
                     ("id", "!=", payment_method.id),
                     ("stripe_serial_number", "=", payment_method.stripe_serial_number),

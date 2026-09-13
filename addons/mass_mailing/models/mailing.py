@@ -441,7 +441,7 @@ class MailingMailing(models.Model):
 
     def _compute_total(self):
         for mass_mailing in self:
-            total = self.env[mass_mailing.mailing_model_real].search_count(
+            total = self.env[mass_mailing.mailing_model_real].search_count(  # noqa: E8507 - one count per mailing, on the mailing's own model and domain
                 mass_mailing._get_domain_recipients()
             )
             if (
@@ -1637,6 +1637,11 @@ class MailingMailing(models.Model):
         self.kpi_mail_required = False
 
         mails_sudo = self.env["mail.mail"].sudo()
+        link_trackers_by_mailing = (
+            self.env["link.tracker"]
+            .search([("mass_mailing_id", "in", self.ids)])
+            .grouped("mass_mailing_id")
+        )
         for mailing in self:
             if mailing.user_id:
                 mailing = mailing.with_user(mailing.user_id).with_context(
@@ -1646,11 +1651,9 @@ class MailingMailing(models.Model):
             mail_user = mailing.user_id or self.env.user
             mail_company = mail_user.company_id
 
-            link_trackers = (
-                self.env["link.tracker"]
-                .search([("mass_mailing_id", "=", mailing.id)])
-                .sorted("count", reverse=True)
-            )
+            link_trackers = link_trackers_by_mailing.get(
+                mailing, self.env["link.tracker"]
+            ).sorted("count", reverse=True)
             link_trackers_body = self.env["ir.qweb"]._render(
                 "mass_mailing.mass_mailing_kpi_link_trackers",
                 {

@@ -293,7 +293,7 @@ class AccountTax(models.Model):
                 for tax in taxes
                 if tax.type_tax_use != "none"
             ]
-            if duplicates := self.sudo().search(Domain.OR(domains)):
+            if duplicates := self.sudo().search(Domain.OR(domains)):  # noqa: E8507 - one query per company; taxes sharing one were merged above
                 raise ValidationError(
                     self.env._(
                         "Tax names must be unique!\n%(taxes)s",
@@ -491,13 +491,13 @@ class AccountTax(models.Model):
             ):
                 by_country[tax.country_id] += tax
         for country, taxes in by_country.items():
-            taxes.tax_group_id = self.env["account.tax.group"].search(
+            taxes.tax_group_id = self.env["account.tax.group"].search(  # noqa: E8507 - one lookup per country of the batch
                 [
                     *self.env["account.tax.group"]._check_company_domain(company),
                     ("country_id", "=", country.id),
                 ],
                 limit=1,
-            ) or self.env["account.tax.group"].search(
+            ) or self.env["account.tax.group"].search(  # noqa: E8507 - one lookup per country of the batch
                 [
                     *self.env["account.tax.group"]._check_company_domain(company),
                     ("country_id", "=", False),

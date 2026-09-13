@@ -405,7 +405,7 @@ class RepairOrder(models.Model):
             domain = Domain("product_id", "=", repair.product_id.id)
             if repair.picking_id:
                 domain &= Domain("id", "in", repair.picking_id.move_ids.lot_ids.ids)
-            repair.allowed_lot_ids = self.env["stock.lot"].search(domain)
+            repair.allowed_lot_ids = self.env["stock.lot"].search(domain)  # noqa: E8507 - one query per repair: the lots are scoped to its own product and picking
 
     @api.depends("product_id", "product_id.uom_id")
     def _compute_product_uom_id(self):

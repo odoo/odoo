@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
@@ -122,34 +124,17 @@ class LunchOrder(models.Model):
 
     @api.depends("category_id")
     def _compute_available_toppings(self):
+        categories_by_supplier = defaultdict(set)
+        for supplier, category in self.env["lunch.topping"]._read_group(
+            [("supplier_id", "in", self.supplier_id.ids)],
+            ["supplier_id", "topping_category"],
+        ):
+            categories_by_supplier[supplier].add(category)
         for order in self:
-            order.available_toppings_1 = bool(
-                order.env["lunch.topping"].search_count(
-                    [
-                        ("supplier_id", "=", order.supplier_id.id),
-                        ("topping_category", "=", 1),
-                    ],
-                    limit=1,
-                )
-            )
-            order.available_toppings_2 = bool(
-                order.env["lunch.topping"].search_count(
-                    [
-                        ("supplier_id", "=", order.supplier_id.id),
-                        ("topping_category", "=", 2),
-                    ],
-                    limit=1,
-                )
-            )
-            order.available_toppings_3 = bool(
-                order.env["lunch.topping"].search_count(
-                    [
-                        ("supplier_id", "=", order.supplier_id.id),
-                        ("topping_category", "=", 3),
-                    ],
-                    limit=1,
-                )
-            )
+            categories = categories_by_supplier.get(order.supplier_id, set())
+            order.available_toppings_1 = 1 in categories
+            order.available_toppings_2 = 2 in categories
+            order.available_toppings_3 = 3 in categories
 
     @api.depends("name")
     def _compute_display_add_button(self):

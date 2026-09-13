@@ -65,7 +65,7 @@ class WebsiteMenu(models.Model):
             while parent.parent_id:
                 parent = parent.parent_id
 
-            if parent_event_menu := self.env["website.event.menu"].search(
+            if parent_event_menu := self.env["website.event.menu"].search(  # noqa: E8507 - one probe per created menu, on that menu's own root
                 [("menu_id.parent_id", "=", parent.id)], limit=1
             ):
                 event_url = parent_event_menu.event_id.website_url.rstrip("/")

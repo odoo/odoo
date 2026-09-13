@@ -29,7 +29,7 @@ class ResConfigSettings(models.TransientModel):
     def _compute_active_provider_id(self):
         for config in self:
             active_providers_domain = config._get_domain_active_providers()
-            if active_providers := self.env["payment.provider"].search(
+            if active_providers := self.env["payment.provider"].search(  # noqa: E8507 - a transient settings wizard: one record
                 active_providers_domain, limit=1
             ):
                 config.active_provider_id = active_providers[0]
@@ -43,7 +43,7 @@ class ResConfigSettings(models.TransientModel):
                 enabled_only=True
             )
             config.has_enabled_provider = bool(
-                self.env["payment.provider"].search(enabled_providers_domain, limit=1)
+                self.env["payment.provider"].search(enabled_providers_domain, limit=1)  # noqa: E8507 - a transient settings wizard: one record
             )
 
     def _get_domain_active_providers(self, enabled_only=False):

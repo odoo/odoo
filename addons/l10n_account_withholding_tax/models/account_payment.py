@@ -43,7 +43,7 @@ class AccountPayment(models.Model):
                 payments.display_withholding = False
                 continue
 
-            withholding_taxes = self.env["account.tax"].search(
+            withholding_taxes = self.env["account.tax"].search(  # noqa: E8507 - one query per company; payments sharing one were merged above
                 [
                     *self.env["account.tax"]._check_company_domain(company),
                     ("is_withholding_tax_on_payment", "=", True),

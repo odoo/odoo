@@ -10,14 +10,16 @@ class ResCountry(models.Model):
 
     @api.depends_context("company")
     def _compute_has_foreign_fiscal_position(self):
-        for country in self:
-            country.has_foreign_fiscal_position = self.env[
-                "account.fiscal.position"
-            ].search(
+        countries_with_foreign_vat = {
+            country
+            for [country] in self.env["account.fiscal.position"]._read_group(
                 [
                     *self._check_company_domain(self.env.company),
                     ("foreign_vat", "!=", False),
-                    ("country_id", "=", country.id),
+                    ("country_id", "in", self.ids),
                 ],
-                limit=1,
+                ["country_id"],
             )
+        }
+        for country in self:
+            country.has_foreign_fiscal_position = country in countries_with_foreign_vat

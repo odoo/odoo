@@ -48,18 +48,20 @@ class ProductRibbon(models.Model):
 
     @api.constrains("assign")
     def _check_assign(self):
-        for ribbon in self:
-            if ribbon.assign != "manual":
-                existing_ribbons = self.search(
-                    [("id", "!=", ribbon.id), ("assign", "=", ribbon.assign)], limit=1
-                )
-                if existing_ribbons:
-                    raise ValidationError(
-                        _(
-                            "Only one ribbon with the assign %s is allowed.",
-                            dict(self._fields["assign"].selection).get(ribbon.assign),
-                        )
+        automatic = self.filtered(lambda ribbon: ribbon.assign != "manual")
+        ribbons_by_assign = {}
+        if automatic:
+            ribbons_by_assign = self.search(
+                [("assign", "in", automatic.mapped("assign"))]
+            ).grouped("assign")
+        for ribbon in automatic:
+            if ribbons_by_assign.get(ribbon.assign, self.browse()) - ribbon:
+                raise ValidationError(
+                    _(
+                        "Only one ribbon with the assign %s is allowed.",
+                        dict(self._fields["assign"].selection).get(ribbon.assign),
                     )
+                )
 
     def _get_css_classes(self):
         css_classes = ""

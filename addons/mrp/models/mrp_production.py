@@ -627,7 +627,7 @@ class MrpProduction(models.Model):
             if companies_with_warehouse is None:
                 companies_with_warehouse = {
                     company.id
-                    for [company] in self.env["stock.warehouse"]._read_group(
+                    for [company] in self.env["stock.warehouse"]._read_group(  # noqa: E8507 - computed once, on first need, over every company of the batch
                         [("company_id", "in", self.company_id.ids)], ["company_id"]
                     )
                 }
@@ -1387,12 +1387,12 @@ class MrpProduction(models.Model):
                 ("product_id", "in", batch_lines.product_id.ids),
             ]
             unchained_owners = defaultdict(set)
-            for product, raw_production in Move._read_group(
+            for product, raw_production in Move._read_group(  # noqa: E8507 - one query per batch of orders
                 [*scope, ("move_orig_ids", "=", False)],
                 ["product_id", "raw_material_production_id"],
             ):
                 unchained_owners[product].add(raw_production.id)
-            chained = Move.search([*scope, ("move_orig_ids", "in", batch_lines.ids)])
+            chained = Move.search([*scope, ("move_orig_ids", "in", batch_lines.ids)])  # noqa: E8507 - one query per batch of orders
 
             for order in orders:
                 lines = lines_by_order[order.id]

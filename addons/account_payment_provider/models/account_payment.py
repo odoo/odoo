@@ -111,7 +111,7 @@ class AccountPayment(models.Model):
                 tokens_per_group[group_key] = (
                     self.env["payment.token"]
                     .sudo()
-                    .search(
+                    .search(  # noqa: E8507 - one query per distinct (company, partner, provider); payments sharing one reuse it
                         [
                             *self.env["payment.token"]._check_company_domain(
                                 payment.company_id

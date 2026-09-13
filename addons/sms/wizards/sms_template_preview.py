@@ -41,7 +41,7 @@ class SmsTemplatePreview(models.TransientModel):
     def _compute_no_record(self):
         for preview in self:
             preview.no_record = (
-                (self.env[preview.model_id.model].search_count([], limit=1) == 0)
+                (self.env[preview.model_id.model].search_count([], limit=1) == 0)  # noqa: E8507 - a transient wizard: one record
                 if preview.model_id
                 else True
             )

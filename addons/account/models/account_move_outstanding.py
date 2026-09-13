@@ -125,7 +125,7 @@ class AccountMove(models.Model):
 
         lines_by_move = {}
         for moves in moves_by_scope.values():
-            lines = self.env["account.move.line"].search(
+            lines = self.env["account.move.line"].search(  # noqa: E8507 - one query per (partner, company, direction) scope; moves sharing one were merged above
                 moves[0]._get_domain_outstanding_bank_statement_lines()
             )
             for move in moves:

@@ -164,7 +164,7 @@ class PosConfig(models.Model):
 
     def _create_missing_self_order_custom_btn(self):
         for record in self:
-            exists = record.env["pos_self_order.custom_link"].search_count(
+            exists = record.env["pos_self_order.custom_link"].search_count(  # noqa: E8507 - one probe per config, on its own links
                 [
                     ("pos_config_ids", "in", record.id),
                     ("url", "=", f"/pos-self/{record.id}/products"),

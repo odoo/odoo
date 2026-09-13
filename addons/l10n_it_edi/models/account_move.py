@@ -308,11 +308,11 @@ class AccountMove(models.Model):
         But when reversing the move, the document type of the original move is copied and so it isn't recomputed.
         """
         # EXTENDS account
-        default_values_list = default_values_list or [{}] * len(self)
-        for default_values in default_values_list:
-            default_values.update({"l10n_it_document_type": False})
-        reverse_moves = super()._reverse_moves(default_values_list, cancel)
-        return reverse_moves
+        default_values_list = [
+            {**default_values, "l10n_it_document_type": False}
+            for default_values in (default_values_list or [{}] * len(self))
+        ]
+        return super()._reverse_moves(default_values_list, cancel)
 
     @api.depends("l10n_it_edi_transaction")
     def _compute_show_reset_to_draft_button(self):
@@ -1439,7 +1439,7 @@ class AccountMove(models.Model):
         ):
             proxy_user = proxy_user.with_company(proxy_user.company_id)
             if proxy_user.edi_mode != "demo":
-                moves_to_check = self.search(
+                moves_to_check = self.search(  # noqa: E8507 - one query per proxy user, in that user's company
                     [
                         ("company_id", "=", proxy_user.company_id.id),
                         ("l10n_it_edi_transaction", "!=", False),
@@ -1626,7 +1626,7 @@ class AccountMove(models.Model):
             email and ["|", ("email", "=", email), ("l10n_it_pec_email", "=", email)],
         ]:
             if domain and (
-                partner := self.env["res.partner"].search(domain + base_domain, limit=1)
+                partner := self.env["res.partner"].search(domain + base_domain, limit=1)  # noqa: E8507 - the candidate domains are tried in priority order and the first hit wins
             ):
                 return partner
         return self.env["res.partner"]
@@ -2184,14 +2184,14 @@ class AccountMove(models.Model):
             for element_code in elements_code:
                 type_code = element_code.xpath(".//CodiceTipo")[0]
                 code = element_code.xpath(".//CodiceValore")[0]
-                product = self.env["product.product"].search(
+                product = self.env["product.product"].search(  # noqa: E8507 - one probe per article code of the imported line, in the document's order; the first hit wins
                     [("barcode", "=", code.text)]
                 )
                 if product and type_code.text == "EAN":
                     move_line.product_id = product
                     break
                 if partner:
-                    product_supplier = self.env["product.supplierinfo"].search(
+                    product_supplier = self.env["product.supplierinfo"].search(  # noqa: E8507 - one probe per article code of the imported line, in the document's order; the first hit wins
                         [
                             ("partner_id", "=", partner.id),
                             ("product_code", "=", code.text),
@@ -2208,7 +2208,7 @@ class AccountMove(models.Model):
             if not move_line.product_id:
                 for element_code in elements_code:
                     code = element_code.xpath(".//CodiceValore")[0]
-                    product = self.env["product.product"].search(
+                    product = self.env["product.product"].search(  # noqa: E8507 - one probe per article code of the imported line, in the document's order; the first hit wins
                         [("default_code", "=", code.text)], limit=2
                     )
                     if product and len(product) == 1:

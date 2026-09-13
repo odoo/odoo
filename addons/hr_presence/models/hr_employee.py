@@ -1,4 +1,5 @@
 import logging
+from collections import defaultdict
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
@@ -44,28 +45,29 @@ class HrEmployee(models.Model):
             ip_list = company.hr_presence_control_ip_list
             ip_list = ip_list.split(",") if ip_list else []
             ip_employees = self.env["hr.employee"]
-            for employee in employees:
-                employee_ips = (
-                    self.env["res.users.log"]
-                    .sudo()
-                    .search(
-                        [
-                            ("create_uid", "=", employee.user_id.id),
-                            ("ip", "!=", False),
-                            (
-                                "create_date",
-                                ">=",
-                                Datetime.to_string(
-                                    Datetime.now().replace(
-                                        hour=0, minute=0, second=0, microsecond=0
-                                    )
-                                ),
+            ips_by_user = defaultdict(set)
+            for log in (
+                self.env["res.users.log"]
+                .sudo()
+                .search(
+                    [
+                        ("create_uid", "in", employees.user_id.ids),
+                        ("ip", "!=", False),
+                        (
+                            "create_date",
+                            ">=",
+                            Datetime.to_string(
+                                Datetime.now().replace(
+                                    hour=0, minute=0, second=0, microsecond=0
+                                )
                             ),
-                        ]
-                    )
-                    .mapped("ip")
+                        ),
+                    ]
                 )
-                if any(ip in ip_list for ip in employee_ips):
+            ):
+                ips_by_user[log.create_uid].add(log.ip)
+            for employee in employees:
+                if any(ip in ip_list for ip in ips_by_user.get(employee.user_id, ())):
                     ip_employees |= employee
             ip_employees.write({"ip_connected": True})
             employees -= ip_employees
@@ -73,10 +75,10 @@ class HrEmployee(models.Model):
         if company.hr_presence_control_email:
             email_employees = self.env["hr.employee"]
             threshold = company.hr_presence_control_email_amount
-            for employee in employees:
-                sent_emails = self.env["mail.message"].search_count(
+            sent_emails_by_author = dict(
+                self.env["mail.message"]._read_group(
                     [
-                        ("author_id", "=", employee.user_id.partner_id.id),
+                        ("author_id", "in", employees.user_id.partner_id.ids),
                         (
                             "date",
                             ">=",
@@ -87,8 +89,13 @@ class HrEmployee(models.Model):
                             ),
                         ),
                         ("date", "<=", Datetime.to_string(Datetime.now())),
-                    ]
+                    ],
+                    ["author_id"],
+                    ["__count"],
                 )
+            )
+            for employee in employees:
+                sent_emails = sent_emails_by_author.get(employee.user_id.partner_id, 0)
                 if sent_emails >= threshold:
                     email_employees |= employee
             email_employees.write({"email_sent": True})

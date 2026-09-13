@@ -299,7 +299,7 @@ class ResPartner(models.Model):
                 continue
 
             if all_companies is None:
-                all_companies = self.env["res.company"].sudo().search([])
+                all_companies = self.env["res.company"].sudo().search([])  # noqa: E8507 - computed once, on first need
 
             for company in all_companies:
                 partner.button_nemhandel_check_partner_endpoint(company=company)

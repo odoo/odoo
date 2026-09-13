@@ -494,7 +494,7 @@ class PosConfig(models.Model):
             browsed = self.env[model].browse(ids)
             existing = browsed.exists()
 
-            dynamic_records[model] = self.env[model].search(dom)
+            dynamic_records[model] = self.env[model].search(dom)  # noqa: E8507 - one query per model
             delete_record_ids[model] = (browsed - existing).ids
             if model == "pos.order":
                 delete_record_ids[model] += existing.filtered(
@@ -883,12 +883,9 @@ class PosConfig(models.Model):
     @api.constrains("company_id", "payment_method_ids")
     def _check_company_payment(self):
         for config in self:
-            if self.env["pos.payment.method"].search_count(
-                [
-                    ("id", "in", config.payment_method_ids.ids),
-                    ("company_id", "!=", config.company_id.id),
-                ],
-                limit=1,
+            if any(
+                method.company_id != config.company_id
+                for method in config.payment_method_ids
             ):
                 raise ValidationError(
                     _(
@@ -1006,13 +1003,7 @@ class PosConfig(models.Model):
             for cash_method in config.payment_method_ids.filtered(
                 lambda m: m.journal_id.type == "cash"
             ):
-                if self.env["pos.config"].search_count(
-                    [
-                        ("id", "!=", config.id),
-                        ("payment_method_ids", "in", cash_method.ids),
-                    ],
-                    limit=1,
-                ):
+                if cash_method.config_ids - config:
                     raise ValidationError(
                         _(
                             "This cash payment method is already used in another Point of Sale.\n"

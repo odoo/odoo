@@ -84,19 +84,25 @@ class StockWarehouse(models.Model):
             )
 
     def _inverse_manufacture_to_resupply(self):
+        without_pull = self.filtered(lambda wh: not wh.manufacture_pull_id.route_id)
+        rules_by_warehouse = {}
+        if without_pull:
+            rules_by_warehouse = (
+                self.env["stock.rule"]
+                .search(
+                    [
+                        ("action", "=", "manufacture"),
+                        ("warehouse_id", "in", without_pull.ids),
+                    ]
+                )
+                .grouped("warehouse_id")
+            )
         for warehouse in self:
             manufacture_route = warehouse.manufacture_pull_id.route_id
             if not manufacture_route:
-                manufacture_route = (
-                    self.env["stock.rule"]
-                    .search(
-                        [
-                            ("action", "=", "manufacture"),
-                            ("warehouse_id", "=", warehouse.id),
-                        ]
-                    )
-                    .route_id
-                )
+                manufacture_route = rules_by_warehouse.get(
+                    warehouse, self.env["stock.rule"]
+                ).route_id
             if not manufacture_route:
                 continue
             if warehouse.manufacture_to_resupply:
@@ -387,12 +393,18 @@ class StockWarehouse(models.Model):
 
     def _create_missing_locations(self, vals):
         super()._create_missing_locations(vals)
-        for company_id in self.company_id:
-            location = self.env["stock.location"].search(
-                [("usage", "=", "production"), ("company_id", "=", company_id.id)],
-                limit=1,
+        companies_with_production_location = {
+            company
+            for [company] in self.env["stock.location"]._read_group(
+                [
+                    ("usage", "=", "production"),
+                    ("company_id", "in", self.company_id.ids),
+                ],
+                ["company_id"],
             )
-            if not location:
+        }
+        for company_id in self.company_id:
+            if company_id not in companies_with_production_location:
                 company_id._create_production_location()
 
     def write(self, vals):

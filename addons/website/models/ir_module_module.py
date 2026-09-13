@@ -99,16 +99,13 @@ class IrModuleModule(models.Model):
         IrModelData = self_sudo.env["ir.model.data"]
         records = self_sudo.env[theme_model_name]
 
-        for module in self_sudo:
-            imd_ids = IrModelData.search(
-                [("module", "=", module.name), ("model", "=", theme_model_name)]
-            ).mapped("res_id")
-            records |= (
-                self_sudo.env[theme_model_name]
-                .with_context(active_test=False)
-                .browse(imd_ids)
-            )
-        return records
+        imd_ids = IrModelData.search(
+            [
+                ("module", "in", self_sudo.mapped("name")),
+                ("model", "=", theme_model_name),
+            ]
+        ).mapped("res_id")
+        return records.with_context(active_test=False).browse(imd_ids)
 
     def _update_records(self, model_name, website):
         self.check_singleton()
@@ -142,7 +139,7 @@ class IrModuleModule(models.Model):
                     )
 
                 if find:
-                    imd = self.env["ir.model.data"].search(
+                    imd = self.env["ir.model.data"].search(  # noqa: E8507 - the copy is resolved one record at a time; it may have been created by an earlier pass of this loop
                         [("model", "=", find._name), ("res_id", "=", find.id)]
                     )
                     if imd and imd.noupdate:

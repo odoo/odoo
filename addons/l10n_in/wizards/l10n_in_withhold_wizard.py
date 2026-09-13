@@ -184,7 +184,7 @@ class L10n_InWithholdWizard(models.TransientModel):
         for wizard in self:
             wizard.journal_id = (
                 wizard.company_id.parent_ids.l10n_in_withholding_journal_id[-1:]
-                or wizard.env["account.journal"].search(
+                or wizard.env["account.journal"].search(  # noqa: E8507 - a transient wizard: one record
                     [
                         *self.env["account.journal"]._check_company_domain(
                             wizard.company_id
@@ -245,7 +245,7 @@ class L10n_InWithholdWizard(models.TransientModel):
                 tax = self.env["account.tax"]
                 for section, account in accounts_by_section.items():
                     # Search for the last withhold move line that matches the pan entity and account and section
-                    withhold_move_line = self.env["account.move.line"].search(
+                    withhold_move_line = self.env["account.move.line"].search(  # noqa: E8507 - a transient wizard: one record
                         [
                             (
                                 "move_id.l10n_in_withholding_ref_move_id.commercial_partner_id.l10n_in_pan_entity_id",

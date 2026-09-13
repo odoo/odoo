@@ -779,34 +779,40 @@ class AccountReport(models.Model):
         for report, report_default_expressions in default_expr_by_report.items():
             options = options_dict[report]
 
-            expressions_to_compute = {}
+            target_by_default_expression = {}
             for default_expression in report_default_expressions:
                 # The default expression needs to have the same label as the target external expression, e.g. '_default_balance'
                 target_label = default_expression.label[len("_default_") :]
-                target_external_expression = (
+                target_by_default_expression[default_expression] = (
                     default_expression.report_line_id.expression_ids.filtered(
                         lambda x, target_label=target_label: x.label == target_label
                     )
                 )
-                # If the value has been created before/modified manually, we shouldn't create anything
-                # and we won't recompute expression totals for them
-                external_value = self.env["account.report.external.value"].search(
+            # If the value has been created before/modified manually, we shouldn't create anything
+            # and we won't recompute expression totals for them
+            targets_with_value = {
+                value.target_report_expression_id.id
+                for value in self.env["account.report.external.value"].search(  # noqa: E8507 - one query per report, over every default expression at once
                     [
                         ("company_id", "=", company.id),
                         ("date", ">=", date_from),
                         ("date", "<=", date_to),
                         (
                             "target_report_expression_id",
-                            "=",
-                            target_external_expression.id,
+                            "in",
+                            [
+                                target.id
+                                for target in target_by_default_expression.values()
+                            ],
                         ),
                     ]
                 )
-
-                if not external_value:
-                    expressions_to_compute[default_expression] = (
-                        target_external_expression.id
-                    )
+            }
+            expressions_to_compute = {
+                default_expression: target_external_expression.id
+                for default_expression, target_external_expression in target_by_default_expression.items()
+                if target_external_expression.id not in targets_with_value
+            }
             _debug.logic(
                 "default_values_to_compute",
                 report=report,

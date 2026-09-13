@@ -63,18 +63,25 @@ class ResPartner(models.Model):
 
     @api.depends("vat", "state_id", "country_id", "fiscal_country_codes")
     def _compute_l10n_in_gst_state_warning(self):
+        gst_partners = self.filtered(
+            lambda partner: (
+                "IN" in partner.fiscal_country_codes
+                and partner.check_vat_in(partner.vat)
+            )
+        )
+        first_state_by_tin = {}
+        for state in self.env["res.country.state"].search(
+            [("l10n_in_tin", "in", [partner.vat[:2] for partner in gst_partners])]
+        ):
+            first_state_by_tin.setdefault(state.l10n_in_tin, state)
         for partner in self:
-            if "IN" in partner.fiscal_country_codes and partner.check_vat_in(
-                partner.vat
-            ):
+            if partner in gst_partners:
                 if partner.vat[:2] == "99":
                     partner.l10n_in_gst_state_warning = _(
                         "As per GSTN the country should be other than India, so it's recommended to"
                     )
                 else:
-                    state_id = self.env["res.country.state"].search(
-                        [("l10n_in_tin", "=", partner.vat[:2])], limit=1
-                    )
+                    state_id = first_state_by_tin.get(partner.vat[:2])
                     if state_id and state_id != partner.state_id:
                         partner.l10n_in_gst_state_warning = _(
                             "As per GSTN the state should be %s, so it's recommended to",

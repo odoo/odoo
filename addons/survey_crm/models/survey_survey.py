@@ -31,18 +31,17 @@ class SurveySurvey(models.Model):
 
     @api.depends("lead_ids")
     def _compute_lead_count(self):
-        for survey in self:
-            if self.ids and self.env["crm.lead"].has_access("read"):
-                leads = self.env["crm.lead"]._read_group(
-                    [("origin_survey_id", "in", self.ids)],
-                    ["origin_survey_id"],
-                    ["__count"],
-                )
-                leads_count_by_survey = {survey.id: count for survey, count in leads}
-                for survey in self:
-                    survey.lead_count = leads_count_by_survey.get(survey.id, 0)
-            else:
-                self.lead_count = 0
+        if self.ids and self.env["crm.lead"].has_access("read"):
+            leads = self.env["crm.lead"]._read_group(
+                [("origin_survey_id", "in", self.ids)],
+                ["origin_survey_id"],
+                ["__count"],
+            )
+            leads_count_by_survey = {survey.id: count for survey, count in leads}
+            for survey in self:
+                survey.lead_count = leads_count_by_survey.get(survey.id, 0)
+        else:
+            self.lead_count = 0
 
     def action_end_session(self):
         super().action_end_session()

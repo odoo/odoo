@@ -19,7 +19,7 @@ class PosOrderLine(models.Model):
                     [
                         (
                             "combo_parent_id",
-                            self.search(
+                            self.search(  # noqa: E8507 - one lookup per created combo line, on its parent uuid
                                 [("uuid", "=", vals.get("combo_parent_uuid"))]
                             ).id,
                         )

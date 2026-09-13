@@ -109,17 +109,19 @@ class SaleOrder(models.Model):
         default_pt = self.env.ref(
             "account.account_payment_term_immediate", raise_if_not_found=False
         )
+        first_term_by_company = {}
+        for term in self.env["account.payment.term"].search(
+            [("company_id", "in", website_orders.company_id.ids)]
+        ):
+            first_term_by_company.setdefault(term.company_id, term)
         for order in website_orders:
             if default_pt and (
                 order.company_id == default_pt.company_id or not default_pt.company_id
             ):
                 order.payment_term_id = default_pt
             else:
-                order.payment_term_id = order.env["account.payment.term"].search(
-                    [
-                        ("company_id", "=", order.company_id.id),
-                    ],
-                    limit=1,
+                order.payment_term_id = first_term_by_company.get(
+                    order.company_id, self.env["account.payment.term"]
                 )
 
     def _compute_pricelist_id(self):

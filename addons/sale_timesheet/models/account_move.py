@@ -116,7 +116,7 @@ class AccountMove(models.Model):
                     domain &= Domain("date", ">=", start_date)
                 if end_date:
                     domain &= Domain("date", "<=", end_date)
-                timesheets = self.env["account.analytic.line"].sudo().search(domain)
+                timesheets = self.env["account.analytic.line"].sudo().search(domain)  # noqa: E8507 - one query per invoiced line, on its own timesheet domain
                 timesheets.write({"timesheet_invoice_id": line.move_id.id})
 
     def _get_range_dates(self, order):

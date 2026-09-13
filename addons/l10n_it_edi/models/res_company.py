@@ -216,20 +216,30 @@ class ResCompany(models.Model):
 
     @api.depends("country_code")
     def _compute_l10n_it_edi_purchase_journal_id(self):
-        for company in self:
-            if (
+        missing = self.filtered(
+            lambda company: (
                 not company.l10n_it_edi_purchase_journal_id
                 and company.country_code == "IT"
-            ):
-                company.l10n_it_edi_purchase_journal_id = self.env[
-                    "account.journal"
-                ].search(
-                    [
-                        *self.env["account.journal"]._check_company_domain(company),
-                        ("type", "=", "purchase"),
-                        ("default_account_id", "!=", False),
-                    ],
-                    limit=1,
+            )
+        )
+        purchase_journals = self.env["account.journal"]
+        if missing:
+            purchase_journals = purchase_journals.search(
+                [
+                    *self.env["account.journal"]._check_company_domain(missing),
+                    ("type", "=", "purchase"),
+                    ("default_account_id", "!=", False),
+                ]
+            )
+        for company in self:
+            if company in missing:
+                company.l10n_it_edi_purchase_journal_id = next(
+                    (
+                        journal
+                        for journal in purchase_journals
+                        if not journal.company_id or journal.company_id == company
+                    ),
+                    self.env["account.journal"],
                 )
             else:
                 company.l10n_it_edi_purchase_journal_id = (

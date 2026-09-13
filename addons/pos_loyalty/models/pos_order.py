@@ -240,7 +240,7 @@ class PosOrder(models.Model):
             program_id = self.env["loyalty.program"].browse(coupon_vals["program_id"])
             if program_id.program_type == "gift_card":
                 updated = False
-                gift_card = self.env["loyalty.card"].search(
+                gift_card = self.env["loyalty.card"].search(  # noqa: E8507 - one probe per coupon of the order
                     [
                         ("|"),
                         ("code", "=", coupon_vals.get("code", "")),
@@ -320,7 +320,7 @@ class PosOrder(models.Model):
         for coupon_id, coupon_vals in coupon_data.items():
             partner_id = coupon_vals.get("partner_id", False)
             if partner_id:
-                existing_coupon_for_program = self.env["loyalty.card"].search(
+                existing_coupon_for_program = self.env["loyalty.card"].search(  # noqa: E8507 - one probe per coupon of the order
                     [
                         ("partner_id", "=", partner_id),
                         ("program_type", "in", ["loyalty", "ewallet"]),
@@ -339,7 +339,7 @@ class PosOrder(models.Model):
         # to prevent duplicates, it is necessary to check if the history line already exists
         items_to_remove = []
         for coupon_id, coupon_vals in coupon_data.items():
-            existing_history = self.env["loyalty.history"].search_count(
+            existing_history = self.env["loyalty.history"].search_count(  # noqa: E8507 - one probe per coupon of the order
                 [
                     ("card_id.program_id", "=", coupon_vals["program_id"]),
                     ("order_model", "=", self._name),

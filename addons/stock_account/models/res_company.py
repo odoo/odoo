@@ -431,7 +431,7 @@ class ResCompany(models.Model):
             )
             if at_date:
                 current_balance_domain &= Domain([("date", "<=", at_date)])
-            [(existing_balance,)] = self.env["account.move.line"]._read_group(
+            [(existing_balance,)] = self.env["account.move.line"]._read_group(  # noqa: E8507 - one aggregate per company, on its own accounts
                 current_balance_domain, aggregates=["balance:sum"]
             )
             balance_over_period += existing_balance

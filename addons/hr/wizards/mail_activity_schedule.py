@@ -25,7 +25,7 @@ class MailActivitySchedule(models.TransientModel):
                 domain &= Domain("department_id", "=", False) | Domain(
                     "department_id", "=", scheduler.department_id.id
                 )
-            scheduler.plan_available_ids = self.env["mail.activity.plan"].search(domain)
+            scheduler.plan_available_ids = self.env["mail.activity.plan"].search(domain)  # noqa: E8507 - a transient wizard: one record
             dbg.logic.debug(
                 "[schedule:%s] department %s -> %d plan(s) available",
                 scheduler.id,

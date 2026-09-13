@@ -79,7 +79,7 @@ class PaymentProvider(models.Model):
                 self.mercado_pago_account_country_id.code
             )
             currency = (
-                self.env["res.currency"]
+                self.env["res.currency"]  # noqa: E8507 - one lookup per provider, on its own account country
                 .with_context(
                     active_test=False,
                 )

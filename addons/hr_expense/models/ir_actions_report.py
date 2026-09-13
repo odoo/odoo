@@ -14,12 +14,17 @@ class IrActionsReport(models.Model):
             return res
         report = self._get_report(report_ref)
         if report.report_name == "hr_expense.report_expense":
+            attachments_by_res_id = (
+                self.env["ir.attachment"]
+                .search([("res_id", "in", res_ids), ("res_model", "=", "hr.expense")])
+                .grouped("res_id")
+            )
             for expense in self.env["hr.expense"].browse(res_ids):
                 stream_list = []
                 stream = res[expense.id]["stream"]
                 stream_list.append(stream)
-                attachments = self.env["ir.attachment"].search(
-                    [("res_id", "in", expense.ids), ("res_model", "=", "hr.expense")]
+                attachments = attachments_by_res_id.get(
+                    expense.id, self.env["ir.attachment"]
                 )
                 expense_report = OdooPdfFileReader(stream, strict=False)
                 output_pdf = OdooPdfFileWriter()

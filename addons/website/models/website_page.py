@@ -196,13 +196,13 @@ class WebsitePage(models.Model):
                         self.env["website"]._update_vals_homepage_url(
                             old_url_normalized
                         )
-                        websites = self.env["website"].search(
+                        websites = self.env["website"].search(  # noqa: E8507 - url renames are sequential: each page's unique path and homepage rewrite depend on the previous page's write
                             [("homepage_url", "=", old_url_normalized["homepage_url"])]
                         )
                         if page.website_id:
                             websites &= page.website_id
                         else:
-                            websites -= self.search(
+                            websites -= self.search(  # noqa: E8507 - url renames are sequential: each page's unique path and homepage rewrite depend on the previous page's write
                                 [("url", "=", old_url), ("website_id", "!=", False)]
                             ).website_id
                         websites.homepage_url = url

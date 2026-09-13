@@ -141,7 +141,7 @@ class ResCompany(models.Model):
             if not tax_group:
                 continue
             taxes = (
-                self.env["account.tax"]
+                self.env["account.tax"]  # noqa: E8507 - chart setup: one query per tax group of the company
                 .with_company(company)
                 .with_context(active_test=False)
                 .search(

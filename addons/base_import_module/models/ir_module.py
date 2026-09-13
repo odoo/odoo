@@ -90,7 +90,7 @@ class IrModuleModule(models.Model):
             for lang in langs:
                 for lang_ in get_base_langs(lang):
                     # Translations for imported data modules only works with imported po files
-                    attachment = IrAttachment.sudo().search(
+                    attachment = IrAttachment.sudo().search(  # noqa: E8507 - one lookup per (module, language) pair
                         [
                             ("name", "=", f"{module}_{lang_}.po"),
                             ("url", "=", f"/{module}/i18n/{lang_}.po"),
@@ -131,7 +131,7 @@ class IrModuleModule(models.Model):
         super()._compute_icon_display()
         IrAttachment = self.env["ir.attachment"]
         for module in self.filtered("imported"):
-            attachment = IrAttachment.sudo().search(
+            attachment = IrAttachment.sudo().search(  # noqa: E8507 - one lookup per imported module, on its own icon attachment
                 [
                     ("url", "=", module.icon),
                     ("type", "=", "binary"),
@@ -1009,7 +1009,7 @@ class IrModuleModule(models.Model):
 
         translations = {}
         for lang_ in get_base_langs(lang):
-            attachment = IrAttachment.sudo().search(
+            attachment = IrAttachment.sudo().search(  # noqa: E8507 - one lookup per base language of the requested one
                 [
                     ("name", "=", f"{module}_{lang_}.po"),
                     ("url", "=", f"/{module}/i18n/{lang_}.po"),

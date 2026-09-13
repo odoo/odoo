@@ -79,7 +79,7 @@ class MrpBomLine(models.Model):
                 continue
             counts.update(
                 dict(
-                    self.env["document.document"]._read_group(
+                    self.env["document.document"]._read_group(  # noqa: E8507 - one query per attachment model (product, template)
                         [
                             ("attached_on_mrp", "=", "bom"),
                             ("active", "=", True),

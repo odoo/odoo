@@ -170,7 +170,7 @@ class WebsiteRewrite(models.Model):
                     _("This redirect creates a cycle with another active redirect.")
                 )
             seen.add(current_url)
-            next_rewrite = self.search(
+            next_rewrite = self.search(  # noqa: E8507 - walks the redirect chain one hop at a time
                 [
                     ("id", "!=", self.id),
                     ("active", "=", True),

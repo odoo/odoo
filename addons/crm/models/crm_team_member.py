@@ -71,7 +71,7 @@ class CrmTeamMember(models.Model):
             try:
                 domain = literal_eval(member.assignment_domain or "[]")
                 if domain:
-                    self.env["crm.lead"].search(domain, limit=1)
+                    self.env["crm.lead"].search(domain, limit=1)  # noqa: E8507 - validates each member's own domain
             except Exception:
                 raise exceptions.ValidationError(
                     _(
@@ -87,7 +87,7 @@ class CrmTeamMember(models.Model):
             try:
                 domain = literal_eval(member.assignment_domain_preferred or "[]")
                 if domain:
-                    self.env["crm.lead"].search(domain, limit=1)
+                    self.env["crm.lead"].search(domain, limit=1)  # noqa: E8507 - validates each member's own domain
             except Exception:
                 raise exceptions.ValidationError(
                     _(

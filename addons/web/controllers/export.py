@@ -73,7 +73,7 @@ class Export(http.Controller):
                     ("id", "in", self_subquery.subselect(field_to_get))
                 )
 
-            definition_records = target_model.search_fetch(
+            definition_records = target_model.search_fetch(  # noqa: E8507 - one query per properties field of the export
                 domain_definition,
                 [definition_record_field, "display_name"],
                 order="id",

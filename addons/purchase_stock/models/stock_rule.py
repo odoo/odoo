@@ -375,7 +375,7 @@ class StockRule(models.Model):
         for domain, procurements_rules in procurements_by_po_domain.items():
             procurements, rules = zip(*procurements_rules, strict=False)
             origins = {p.origin for p in procurements if p.origin}
-            po = self.env["purchase.order"].sudo().search(list(domain), limit=1)
+            po = self.env["purchase.order"].sudo().search(list(domain), limit=1)  # noqa: E8507 - one probe per distinct purchase-order domain; procurements sharing one were merged above
             company_id = rules[0].company_id or procurements[0].company_id
             if not po:
                 positive_values = [
@@ -487,7 +487,7 @@ class StockRule(models.Model):
             if routes and routes._has_buy_rule():
                 company = procurement.company_id
                 if company not in wh_by_comp:
-                    wh_by_comp[company] = self.env["stock.warehouse"].search(
+                    wh_by_comp[company] = self.env["stock.warehouse"].search(  # noqa: E8507 - one lookup per company, cached across procurements
                         [("company_id", "=", company.id)],
                     )
                 wh = wh_by_comp[company]

@@ -237,7 +237,7 @@ class CalendarRecurrence(models.Model):
             )
             # If we convert a single event into a recurrency on Google, we should reuse this event on Odoo
             # Google reuse the event google_id to identify the recurrence in that case
-            base_event = self.env["calendar.event"].search(
+            base_event = self.env["calendar.event"].search(  # noqa: E8507 - one lookup per synced recurrence, on its google id
                 [("google_id", "=", vals["google_id"])]
             )
             if not base_event:

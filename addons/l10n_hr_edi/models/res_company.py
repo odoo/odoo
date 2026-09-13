@@ -92,7 +92,7 @@ class ResCompany(models.Model):
                 not company.l10n_hr_mer_purchase_journal_id
                 and company.l10n_hr_mer_connection_state == "active"
             ):
-                company.l10n_hr_mer_purchase_journal_id = self.env[
+                company.l10n_hr_mer_purchase_journal_id = self.env[  # noqa: E8507 - one lookup per company, on its own journals
                     "account.journal"
                 ].search(
                     [
@@ -269,7 +269,7 @@ class ResCompany(models.Model):
             need_retrigger = need_retrigger or len(documents) > job_count
             documents = documents[:job_count]
 
-            existing_documents = self.env["l10n_hr_edi.addendum"].search(
+            existing_documents = self.env["l10n_hr_edi.addendum"].search(  # noqa: E8507 - one query per company of the cron, over the fetched documents
                 [
                     (
                         "mer_document_eid",
@@ -465,7 +465,7 @@ class ResCompany(models.Model):
                                 ),
                             }
                         )
-                addendums = self.env["l10n_hr_edi.addendum"].search(
+                addendums = self.env["l10n_hr_edi.addendum"].search(  # noqa: E8507 - one query per company of the cron, over the fetched documents
                     [
                         ("mer_document_eid", "in", list(documents.keys())),
                         ("move_id.company_id", "=", company.id),

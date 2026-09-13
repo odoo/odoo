@@ -129,7 +129,7 @@ class ResCompany(models.Model):
                 and company.l10n_dk_nemhandel_proxy_state
                 not in {"not_registered", "rejected"}
             ):
-                company.nemhandel_purchase_journal_id = self.env[
+                company.nemhandel_purchase_journal_id = self.env[  # noqa: E8507 - one lookup per company, on its own journals
                     "account.journal"
                 ].search(
                     [

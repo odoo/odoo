@@ -132,7 +132,7 @@ class StockRule(models.Model):
             mo = self.env["mrp.production"]
             if procurement.origin != "MPS":
                 domain = rule._get_domain_mo_for_procurement(procurement, bom)
-                mo = self.env["mrp.production"].sudo().search(domain, limit=1)
+                mo = self.env["mrp.production"].sudo().search(domain, limit=1)  # noqa: E8507 - one probe per procurement: the domain is the procurement's own product, company and values
             is_batch_size = bom and bom.enable_batch_size
             if not mo or is_batch_size:
                 if not bom:

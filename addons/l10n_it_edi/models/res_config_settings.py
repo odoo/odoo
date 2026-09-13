@@ -27,7 +27,7 @@ class ResConfigSettings(models.TransientModel):
     def _compute_l10n_it_edi_show_purchase_journal_id(self):
         for config in self:
             # Only show the setting when there exists more than 1 purchase journal.
-            purchase_journal_count = self.env["account.journal"].search_count(
+            purchase_journal_count = self.env["account.journal"].search_count(  # noqa: E8507 - a transient settings wizard: one record
                 [
                     *self.env["account.journal"]._check_company_domain(
                         config.company_id._l10n_it_get_edi_company()
@@ -51,7 +51,7 @@ class ResConfigSettings(models.TransientModel):
             proxy_user = (
                 self.env["account_edi_proxy_client.user"]
                 .sudo()
-                .search(
+                .search(  # noqa: E8507 - a transient settings wizard: one record
                     [
                         ("company_id", "=", company.id),
                         ("proxy_type", "=", "l10n_it_edi"),
@@ -80,7 +80,7 @@ class ResConfigSettings(models.TransientModel):
 
             if proxy_user:
                 # Delete any previously created demo proxy user
-                self.env["account_edi_proxy_client.user"].sudo().search(
+                self.env["account_edi_proxy_client.user"].sudo().search(  # noqa: E8507 - a transient settings wizard: one record
                     [
                         ("company_id", "=", company.id),
                         ("proxy_type", "=", "l10n_it_edi"),

@@ -38,7 +38,7 @@ class ResCompany(models.Model):
             invoice_repartition_lines, refund_repartition_lines = (
                 company._get_repartition_lines_oss()
             )
-            taxes = self.env["account.tax"].search(
+            taxes = self.env["account.tax"].search(  # noqa: E8507 - OSS setup runs once per company; every probe is keyed by the company
                 [
                     *self.env["account.tax"]._check_company_domain(company),
                     ("type_tax_use", "=", "sale"),
@@ -49,7 +49,7 @@ class ResCompany(models.Model):
 
             multi_tax_reports_countries_fpos = self.env[
                 "account.fiscal.position"
-            ].search(
+            ].search(  # noqa: E8507 - OSS setup runs once per company; every probe is keyed by the company
                 [
                     ("foreign_vat", "!=", False),
                 ]
@@ -59,7 +59,7 @@ class ResCompany(models.Model):
                 - company.account_fiscal_country_id
                 - multi_tax_reports_countries_fpos.country_id
             )
-            tg = self.env["account.tax.group"].search(
+            tg = self.env["account.tax.group"].search(  # noqa: E8507 - OSS setup runs once per company; every probe is keyed by the company
                 [
                     *self.env["account.tax.group"]._check_company_domain(company),
                     ("tax_payable_account_id", "!=", False),
@@ -73,7 +73,7 @@ class ResCompany(models.Model):
                         "To properly configure OSS tax mapping, the domestic tax group you are using must have the necessary accounts defined."
                     ),
                     self.env["account.tax.group"]
-                    .search(
+                    .search(  # noqa: E8507 - OSS setup runs once per company; every probe is keyed by the company
                         self.env["account.tax.group"]._check_company_domain(company)
                     )
                     ._get_records_action(name=self.env._("Tax Groups")),
@@ -82,7 +82,7 @@ class ResCompany(models.Model):
             default_oss_payable_account = self.env["account.account"]
 
             eu_vat_country_group_id = self.env.ref("account.europe_vat").id
-            eu_b2c_fp = self.env["account.fiscal.position"].search(
+            eu_b2c_fp = self.env["account.fiscal.position"].search(  # noqa: E8507 - OSS setup runs once per company; every probe is keyed by the company
                 [
                     ("company_id", "=", company.id),
                     ("country_group_id", "=", eu_vat_country_group_id),
@@ -95,14 +95,14 @@ class ResCompany(models.Model):
             if eu_b2c_fp:
                 # oss fp must come before eu b2c fp
                 oss_fp_sequence = eu_b2c_fp.sequence
-                to_bump = eu_b2c_fp | self.env["account.fiscal.position"].search(
+                to_bump = eu_b2c_fp | self.env["account.fiscal.position"].search(  # noqa: E8507 - OSS setup runs once per company; every probe is keyed by the company
                     [
                         ("company_id", "=", company.id),
                         ("sequence", ">", oss_fp_sequence),
                     ]
                 )
             else:
-                eu_b2b_fp = self.env["account.fiscal.position"].search(
+                eu_b2b_fp = self.env["account.fiscal.position"].search(  # noqa: E8507 - OSS setup runs once per company; every probe is keyed by the company
                     [
                         ("company_id", "=", company.id),
                         ("country_group_id", "=", eu_vat_country_group_id),
@@ -115,7 +115,7 @@ class ResCompany(models.Model):
                     # oss fp must come after eu b2b fp
                     oss_fp_sequence = eu_b2b_fp.sequence + 1
                     offset = 2
-                    to_bump = self.env["account.fiscal.position"].search(
+                    to_bump = self.env["account.fiscal.position"].search(  # noqa: E8507 - OSS setup runs once per company; every probe is keyed by the company
                         [
                             ("company_id", "=", company.id),
                             ("sequence", ">", eu_b2b_fp.sequence),
@@ -124,7 +124,7 @@ class ResCompany(models.Model):
                 else:
                     oss_fp_sequence = (
                         self.env["account.fiscal.position"]
-                        .search(
+                        .search(  # noqa: E8507 - OSS setup runs once per company; every probe is keyed by the company
                             [("company_id", "=", company.id)],
                             limit=1,
                             order="sequence desc",
@@ -136,18 +136,19 @@ class ResCompany(models.Model):
             for fp in to_bump:
                 fp.sequence += offset
 
+            first_fpos_by_country = {}
+            for candidate in self.env["account.fiscal.position"].search(  # noqa: E8507 - OSS setup runs once per company; every probe is keyed by the company
+                [
+                    ("company_id", "=", company.id),
+                    ("country_id", "in", oss_countries.ids),
+                    ("auto_apply", "=", True),
+                    ("vat_required", "=", False),
+                    ("foreign_vat", "=", False),
+                ]
+            ):
+                first_fpos_by_country.setdefault(candidate.country_id, candidate)
             for destination_country in oss_countries:
-                mapping = []
-                fpos = self.env["account.fiscal.position"].search(
-                    [
-                        ("company_id", "=", company.id),
-                        ("country_id", "=", destination_country.id),
-                        ("auto_apply", "=", True),
-                        ("vat_required", "=", False),
-                        ("foreign_vat", "=", False),
-                    ],
-                    limit=1,
-                )
+                fpos = first_fpos_by_country.get(destination_country)
                 if not fpos:
                     fpos = self.env["account.fiscal.position"].create(
                         {
@@ -249,7 +250,7 @@ class ResCompany(models.Model):
                                     }
                                 )
                             foreign_tax_name = f"{tax_amount}% {destination_country.code} {destination_country.vat_label}"
-                            existing_foreign_tax = self.env["account.tax"].search(
+                            existing_foreign_tax = self.env["account.tax"].search(  # noqa: E8507 - one probe per (destination country, rate); the tax it finds may have been created by an earlier pass of this loop
                                 [
                                     ("company_ids", "child_of", company.root_id.id),
                                     ("name", "like", foreign_tax_name),

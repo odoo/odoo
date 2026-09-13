@@ -24,7 +24,7 @@ class AccountAnalyticAccount(models.Model):
     def _compute_purchase_order_count(self):
         for account in self:
             account.purchase_order_count = (
-                self.env["purchase.order"].search_count(
+                self.env["purchase.order"].search_count(  # noqa: E8507 - one count per account, on the account's own domain
                     account._get_domain_purchase_order(),
                 )
                 if account.plan_id

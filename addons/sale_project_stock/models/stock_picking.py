@@ -49,7 +49,7 @@ class StockPicking(models.Model):
                     )
                 )
             sale_line_values_to_create = []
-            last_so_line = self.env["sale.order.line"].search_read(
+            last_so_line = self.env["sale.order.line"].search_read(  # noqa: E8507 - one lookup per sale order of the picking
                 [("order_id", "=", sale_order.id)],
                 ["sequence"],
                 order="sequence desc",

@@ -63,7 +63,7 @@ class DeliveryCarrier(models.Model):
                         .company_id.id
                         or self.env.company.id
                     )
-                warehouses = self.env["stock.warehouse"].search(
+                warehouses = self.env["stock.warehouse"].search(  # noqa: E8507 - one lookup per created carrier, on its own company
                     [("company_id", "in", company_id)]
                 )
                 vals.update(

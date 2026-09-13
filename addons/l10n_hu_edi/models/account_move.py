@@ -587,7 +587,7 @@ class AccountMove(models.Model):
             # before it was cancelled.
             # In that case, we want to keep it as a regular invoice attachment, for future reference.
             if invoice.l10n_hu_edi_state == "cancelled":
-                self.env["ir.attachment"].search(
+                self.env["ir.attachment"].search(  # noqa: E8507 - invoices are sent one at a time, in id order
                     [
                         ("res_model", "=", self._name),
                         ("res_id", "=", invoice.id),
@@ -609,7 +609,7 @@ class AccountMove(models.Model):
             )
 
             # Set name & mimetype on newly-created attachment.
-            attachment = self.env["ir.attachment"].search(
+            attachment = self.env["ir.attachment"].search(  # noqa: E8507 - invoices are sent one at a time, in id order
                 [
                     ("res_model", "=", self._name),
                     ("res_id", "=", invoice.id),
@@ -1286,7 +1286,7 @@ class AccountMove(models.Model):
                 )
 
             elif line.display_type == "rounding":
-                atk_tax = self.env["account.tax"].search(
+                atk_tax = self.env["account.tax"].search(  # noqa: E8507 - one lookup for the rounding line
                     [
                         ("type_tax_use", "=", "sale"),
                         ("l10n_hu_tax_type", "=", "ATK"),

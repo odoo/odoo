@@ -110,17 +110,26 @@ class ResPartner(models.Model):
         return [("id", "in", subcontractor_ids)]
 
     def _compute_is_subcontractor(self):
+        candidates = self.filtered(
+            lambda partner: any(user._is_portal() for user in partner.user_ids)
+        )
+        subcontractor_ids = set()
+        if candidates:
+            subcontractor_ids = {
+                subcontractor.id
+                for [subcontractor] in self.env["mrp.bom"]._read_group(
+                    [
+                        ("type", "=", "subcontract"),
+                        (
+                            "subcontractor_ids",
+                            "in",
+                            (candidates | candidates.commercial_partner_id).ids,
+                        ),
+                    ],
+                    ["subcontractor_ids"],
+                )
+            }
         for partner in self:
-            partner.is_subcontractor = any(
-                user._is_portal() for user in partner.user_ids
-            ) and partner.env["mrp.bom"].search_count(
-                [
-                    ("type", "=", "subcontract"),
-                    (
-                        "subcontractor_ids",
-                        "in",
-                        (partner | partner.commercial_partner_id).ids,
-                    ),
-                ],
-                limit=1,
+            partner.is_subcontractor = partner in candidates and bool(
+                subcontractor_ids & set((partner | partner.commercial_partner_id).ids)
             )

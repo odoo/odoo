@@ -5,6 +5,7 @@ from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 
 
 class StockPicking(models.Model):
@@ -107,18 +108,29 @@ class StockPicking(models.Model):
                 picking.is_return_picking = False
 
     def _compute_return_label_ids(self):
-        for picking in self:
-            if picking.carrier_id:
-                picking.return_label_ids = self.env["ir.attachment"].search(
-                    [
-                        ("res_model", "=", "stock.picking"),
-                        ("res_id", "=", picking.id),
-                        (
+        with_carrier = self.filtered("carrier_id")
+        labels_by_picking = {}
+        if with_carrier:
+            labels_by_picking = (
+                self.env["ir.attachment"]
+                .search(
+                    Domain("res_model", "=", "stock.picking")
+                    & Domain.OR(
+                        Domain("res_id", "=", picking.id)
+                        & Domain(
                             "name",
                             "=like",
                             "%s%%" % picking.carrier_id.get_return_label_prefix(),
-                        ),
-                    ]
+                        )
+                        for picking in with_carrier
+                    )
+                )
+                .grouped("res_id")
+            )
+        for picking in self:
+            if picking.carrier_id:
+                picking.return_label_ids = labels_by_picking.get(
+                    picking.id, self.env["ir.attachment"]
                 )
             else:
                 picking.return_label_ids = False

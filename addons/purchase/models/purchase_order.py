@@ -841,7 +841,7 @@ class PurchaseOrder(models.Model):
             _update(
                 key,
                 result,
-                self._read_group(
+                self._read_group(  # noqa: E8507 - one aggregate per literal count domain
                     domain, ["priority", "user_id"], ["id:count_distinct"]
                 ),
             )

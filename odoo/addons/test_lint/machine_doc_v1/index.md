@@ -27,6 +27,15 @@ it fails until the floor is lowered in the same change.
 This module was edited as a shared ledger: 24 of its last 40 commits changed
 nothing in it but an integer and the comment above it.
 
+Two gates are floored above zero: `lint_docstring` (a one-sided ratchet that
+reads 32 only on a fuller install) and `bundle_double_eval` (ESM bundles that
+evaluate twice). Everything else -- every AST rule, every XML rule, the
+manifest and record-order gates -- is a hard zero. `n-plus-one-query` reached
+zero on 2026-09-12 by reading each of its 295 sites: a loop over the records
+is hoisted, a loop that runs one query per distinct key (company, model,
+timezone, merged domain, a single-record wizard) carries `# noqa: E8507 -
+<why>` naming the key.
+
 ## The checkers
 
 Pure AST, stdlib only, no odoo import — so they are unit-testable without a

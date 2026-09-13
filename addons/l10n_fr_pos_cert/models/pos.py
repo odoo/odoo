@@ -112,7 +112,7 @@ class PosOrder(models.Model):
                 for o in orders
                 if o.l10n_fr_secure_sequence_number > 1
             ]
-            prev_orders = self.search(
+            prev_orders = self.search(  # noqa: E8507 - one query per company; orders sharing one were merged above
                 [
                     ("state", "in", ["paid", "done"]),
                     ("company_id", "=", company_id),
@@ -190,7 +190,7 @@ class PosOrder(models.Model):
                 if ids:
                     # Use search() to get IDs sorted by _order the same way Odoo ORM does for relational fields
                     sorted_relational_ids[model_name] = (
-                        self.env[model_name].search([("id", "in", list(ids))]).ids
+                        self.env[model_name].search([("id", "in", list(ids))]).ids  # noqa: E8507 - one query per relational model, to sort the ids
                     )
 
             return sorted_relational_ids

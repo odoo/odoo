@@ -34,7 +34,7 @@ class EventLeadRequest(models.Model):
         generate_requests = self.env["event.lead.request"].search([], limit=job_limit)
         fulfilled_requests = self.env["event.lead.request"]
         for generate_request in generate_requests:
-            registrations_to_process = self.env["event.registration"].search(
+            registrations_to_process = self.env["event.registration"].search(  # noqa: E8507 - one batch of registrations per request
                 [
                     ("event_id", "=", generate_request.event_id.id),
                     ("state", "not in", ["draft", "cancel"]),

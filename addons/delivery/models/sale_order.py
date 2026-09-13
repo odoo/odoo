@@ -227,9 +227,9 @@ class SaleOrder(models.Model):
             city = order_location["city"]
             zip_code = order_location["zip_code"]
             country_code = order_location["country_code"]
-            country = order.env["res.country"].search([("code", "=", country_code)]).id
+            country = order.env["res.country"].search([("code", "=", country_code)]).id  # noqa: E8507 - the pickup location is the order's own; country, state and partner are looked up for it
             state = (
-                order.env["res.country.state"]
+                order.env["res.country.state"]  # noqa: E8507 - the pickup location is the order's own; country, state and partner are looked up for it
                 .search(
                     [
                         ("code", "=", order_location["state"]),
@@ -245,7 +245,7 @@ class SaleOrder(models.Model):
             phone = order.partner_shipping_id.phone_ids._primary()
 
             # Check if the current partner has a partner of type 'delivery' with the same address.
-            existing_partner = order.env["res.partner"].search(
+            existing_partner = order.env["res.partner"].search(  # noqa: E8507 - the pickup location is the order's own; country, state and partner are looked up for it
                 [
                     ("street", "=", street),
                     ("city", "=", city),

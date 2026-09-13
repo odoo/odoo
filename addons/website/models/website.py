@@ -388,12 +388,19 @@ class Website(models.Model):
             (original_company | self.company_id)._compute_website_id()
 
         if "cookies_bar" in values:
-            for website in self:
-                existing_policy_page = self.env["website.page"].search(
+            policy_pages_by_website = (
+                self.env["website.page"]
+                .search(
                     [
-                        ("website_id", "=", website.id),
+                        ("website_id", "in", self.ids),
                         ("url", "=", "/cookie-policy"),
                     ]
+                )
+                .grouped("website_id")
+            )
+            for website in self:
+                existing_policy_page = policy_pages_by_website.get(
+                    website, self.env["website.page"]
                 )
                 if not values["cookies_bar"]:
                     existing_policy_page.unlink()
@@ -797,7 +804,7 @@ class Website(models.Model):
                     )
                 )
 
-            dependency_records = Model.search(Domain.OR(domains))
+            dependency_records = Model.search(Domain.OR(domains))  # noqa: E8507 - one query per dependent model, over every url at once
             if model_name == "ir.ui.view":
                 dependency_records = _handle_views_and_pages(dependency_records)
             if dependency_records:

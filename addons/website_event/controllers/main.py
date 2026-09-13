@@ -101,7 +101,7 @@ class WebsiteEventController(http.Controller):
         dates = event_details["dates"]
         for date in dates:
             if date[0] not in ["all", "old"]:
-                date[3] = Event.search_count(
+                date[3] = Event.search_count(  # noqa: E8507 - one count per date filter of a fixed list
                     no_date_domain & domain_search & Domain(date[2])
                 )
 

@@ -332,13 +332,9 @@ class StockMove(models.Model):
                             lambda raw: raw.id in already_covered
                         )._run_procurement(already_covered)
             else:
-                qty_by_lot = dict(
-                    move.move_line_ids._read_group(
-                        [("move_id", "=", move.id)],
-                        ["lot_id"],
-                        ["quantity_product_uom:sum"],
-                    )
-                )
+                qty_by_lot = defaultdict(float)
+                for move_line in move.move_line_ids:
+                    qty_by_lot[move_line.lot_id] += move_line.quantity_product_uom
                 mos_to_assign = self.env["mrp.production"]
 
                 mos_to_create = {}

@@ -133,7 +133,7 @@ class AccountMove(models.Model):
                 if move.partner_id.is_company or move.partner_id.parent_id
                 else "cash"
             )
-            journal = self.env["account.journal"].search(
+            journal = self.env["account.journal"].search(  # noqa: E8507 - one lookup per move, on its own company and partner type
                 [
                     ("type", "=", expected_type),
                     ("company_id", "=", move.company_id.id),

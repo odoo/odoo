@@ -140,6 +140,12 @@ class WebsiteMenu(models.Model):
     def create(self, vals_list):
         self.env.registry.clear_cache("templates")
         menus = self.env["website.menu"]
+        websites = self.env["website"]
+        if not self.env.context.get("website_id") and any(
+            "website_id" not in vals and vals.get("url") != "/default-main-menu"
+            for vals in vals_list
+        ):
+            websites = websites.search([])
         for vals in vals_list:
             if vals.get("url") == "/default-main-menu":
                 menus |= super().create(vals)
@@ -153,7 +159,7 @@ class WebsiteMenu(models.Model):
                 continue
             default_menu = self.env.ref("website.main_menu", raise_if_not_found=False)
             w_vals = []
-            for website in self.env["website"].search([]):
+            for website in websites:
                 parent_id = vals.get("parent_id")
                 if not parent_id or (default_menu and parent_id == default_menu.id):
                     parent_id = website.menu_id.id
@@ -184,8 +190,7 @@ class WebsiteMenu(models.Model):
     def unlink(self):
         self.env.registry.clear_cache("templates")
         default_menu = self.env.ref("website.main_menu", raise_if_not_found=False)
-        menus_to_remove = self
-        for menu in self.filtered(
+        generic_menus = self.filtered(
             lambda m: (
                 default_menu
                 and not m.website_id
@@ -193,12 +198,13 @@ class WebsiteMenu(models.Model):
                 and m.url
                 and m.url != "#"
             )
-        ):
+        )
+        menus_to_remove = self
+        if generic_menus:
             menus_to_remove |= self.env["website.menu"].search(
                 [
-                    ("url", "=", menu.url),
+                    ("url", "in", generic_menus.mapped("url")),
                     ("website_id", "!=", False),
-                    ("id", "!=", menu.id),
                 ]
             )
         return super(WebsiteMenu, menus_to_remove).unlink()
@@ -341,7 +347,7 @@ class WebsiteMenu(models.Model):
                     Domain("url", "=", menu["url"])
                     | Domain("url", "=", "/" + menu["url"])
                 )
-                page = self.env["website.page"].search(domain, limit=1)
+                page = self.env["website.page"].search(domain, limit=1)  # noqa: E8507 - one probe per submitted menu url; the limit=1 pick follows the website-specific ordering
                 if page:
                     menu["page_id"] = page.id
                     menu["url"] = page.url

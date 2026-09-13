@@ -442,7 +442,7 @@ class HrAttendance(models.Model):
         closed = {}
         for employee, (first, last) in windows.items():
             while True:
-                candidates = Attendance.search(
+                candidates = Attendance.search(  # noqa: E8507 - walks each employee's window in pages
                     [
                         ("employee_id", "=", employee.id),
                         ("check_out", "!=", False),

@@ -206,14 +206,14 @@ class CrmLead(models.Model):
                     )
                 ]
             if not lead.country_id and iap_data.get("country_code"):
-                country = self.env["res.country"].search(
+                country = self.env["res.country"].search(  # noqa: E8507 - one lookup per enriched lead, on its response's country and state
                     [("code", "=", iap_data["country_code"].upper())]
                 )
                 values["country_id"] = country.id
             else:
                 country = lead.country_id
             if not lead.state_id and country and iap_data.get("state_code"):
-                state = self.env["res.country.state"].search(
+                state = self.env["res.country.state"].search(  # noqa: E8507 - one lookup per enriched lead, on its response's country and state
                     [
                         ("code", "=", iap_data["state_code"]),
                         ("country_id", "=", country.id),

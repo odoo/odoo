@@ -88,7 +88,7 @@ class CouponShare(models.TransientModel):
             )
 
             if record.env.context.get("use_short_link"):
-                tracker = self.env["link.tracker"].search(
+                tracker = self.env["link.tracker"].search(  # noqa: E8507 - a transient wizard: one record
                     [("url", "=", target_url)], limit=1
                 )
                 if not tracker:

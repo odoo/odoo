@@ -4,7 +4,7 @@
 AgroMarin Coding Guidelines
 ===========================
 
-:Version: 6.44
+:Version: 6.45
 :Date: 2026-09-12
 :Base: `Odoo 19.0 Coding Guidelines <https://www.odoo.com/documentation/19.0/contributing/development/coding_guidelines.html>`_
        + `OCA CONTRIBUTING.rst <https://github.com/OCA/odoo-community.org/blob/master/website/Contribution/CONTRIBUTING.rst>`_
@@ -7418,9 +7418,14 @@ Every new model ships explicit access rules ``[review]``. A model with no
 ----------------
 
 A ``search()``, ``search_count()``, ``search_fetch()`` or ``_read_group()`` call
-inside a ``for`` loop over a recordset is a violation ``[test_lint E8507]``. Like
-every ``test_lint`` rule it is an exact ratchet, so a new one fails the build and
-a fix that is not banked fails it too.
+inside a ``for`` loop over a recordset is a violation ``[test_lint E8507]``. The
+rule is a hard zero: the 295 sites it reported on 2026-09-12 were each read, 40
+were hoisted and the rest carry ``# noqa: E8507 - <why>``. The rule is
+syntactic -- it sees the loop, not what the loop is over -- so a loop that runs
+one query per *distinct key* is not an N+1 and is waived with the key named:
+one query per company, per model, per timezone, per merged domain (records
+sharing a domain were grouped before the loop), or a transient wizard that is
+a single record. A loop over the records themselves is hoisted, never waived.
 
 Aggregate outside the loop and index the result:
 
@@ -8123,6 +8128,11 @@ One row per change, one clause. The argument lives in the section it moved.
    * - Version
      - Date
      - Summary
+   * - 6.45
+     - 2026-09-12
+     - §11.1: ``E8507`` is a hard zero; a loop that runs one query per
+       distinct key is waived with the key named, a loop over the records is
+       hoisted.
    * - 6.44
      - 2026-09-12
      - §3.1: the XML declaration is part of the canonical format the

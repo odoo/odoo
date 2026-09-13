@@ -307,7 +307,7 @@ class AppointmentInvite(models.Model):
                 else False
             )
             invite.short_code_unique_warning = not invite.identical_config_id and bool(
-                self.env["appointment.invite"].search_count(
+                self.env["appointment.invite"].search_count(  # noqa: E8507 - one probe per invite, on its own short code
                     [
                         ("id", "!=", invite._origin.id),
                         ("short_code", "=", invite.short_code),

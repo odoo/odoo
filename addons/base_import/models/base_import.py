@@ -579,7 +579,7 @@ class Base_ImportImport(models.TransientModel):
 
             # Do not take into account the definition of archived parents,
             # we do not import archived records most of the time.
-            definition_records = target_model.search_fetch(
+            definition_records = target_model.search_fetch(  # noqa: E8507 - one query per properties field of the import
                 [(definition_record_field, "!=", False)],
                 [definition_record_field, "display_name"],
                 order="id",  # Avoid complex order

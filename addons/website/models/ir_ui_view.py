@@ -217,14 +217,25 @@ class IrUiView(models.Model):
 
         preserved_view_ids = set()
         if current_website_id and not self.env.context.get("no_cow"):
-            for view in self.filtered(lambda view: not view.website_id):
-                for w in self.env["website"].search([("id", "!=", current_website_id)]):
+            generic_views = self.filtered(lambda view: not view.website_id)
+            other_websites = self.env["website"].search(
+                [("id", "!=", current_website_id)]
+            )
+            for view in generic_views:
+                for w in other_websites:
                     view.with_context(website_id=w.id).write({"name": view.name})
-                    preserved = self.search(
-                        [("key", "=", view.key), ("website_id", "=", w.id)], limit=1
+            if generic_views and other_websites:
+                first_per_website_key = {}
+                for preserved in self.search(
+                    [
+                        ("key", "in", generic_views.mapped("key")),
+                        ("website_id", "in", other_websites.ids),
+                    ]
+                ):
+                    first_per_website_key.setdefault(
+                        (preserved.key, preserved.website_id.id), preserved.id
                     )
-                    if preserved:
-                        preserved_view_ids.add(preserved.id)
+                preserved_view_ids = set(first_per_website_key.values())
 
         specific_views = self.env["ir.ui.view"]
         if self and not self.pool.ready:

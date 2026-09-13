@@ -28,7 +28,7 @@ class Website(models.Model):
                 "website_id": self.id,
             }
             if idx == 0:
-                blog_menu = self.env["website.menu"].search(
+                blog_menu = self.env["website.menu"].search(  # noqa: E8507 - one lookup, for the first blog of the list
                     [("url", "=", "/blog"), ("website_id", "=", self.id)]
                 )
                 blog_menu.write(blog_menu_values)

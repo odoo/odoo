@@ -92,7 +92,7 @@ class PaymentRefundWizard(models.TransientModel):
     @api.depends("payment_id")  # To always trigger the compute
     def _compute_has_pending_refund(self):
         for wizard in self:
-            pending_refunds_count = self.env["payment.transaction"].search_count(
+            pending_refunds_count = self.env["payment.transaction"].search_count(  # noqa: E8507 - a transient wizard: one record
                 [
                     ("source_transaction_id", "=", wizard.payment_id.transaction_id.id),
                     ("operation", "=", "refund"),

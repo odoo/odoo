@@ -62,10 +62,10 @@ class MailingMailing(models.Model):
             lambda mailing: mailing.card_campaign_id and mailing.state == "draft"
         )
         for mailing in card_mailings:
-            recipients = self.env[mailing.mailing_model_real].search(
+            recipients = self.env[mailing.mailing_model_real].search(  # noqa: E8507 - one query per mailing, on the mailing's own model and domain
                 self._parse_mailing_domain()
             )
-            out_of_date_count = self.env["card.card"].search_count(
+            out_of_date_count = self.env["card.card"].search_count(  # noqa: E8507 - one query per mailing, on the mailing's own model and domain
                 [
                     ("campaign_id", "=", mailing.card_campaign_id.id),
                     ("res_id", "in", recipients.ids),

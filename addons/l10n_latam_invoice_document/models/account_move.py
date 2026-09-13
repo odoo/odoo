@@ -316,7 +316,7 @@ class AccountMove(models.Model):
             lambda x: x.journal_id and x.l10n_latam_use_documents and x.partner_id
         ):
             rec.l10n_latam_available_document_type_ids = (
-                self.env["l10n_latam.document.type"]
+                self.env["l10n_latam.document.type"]  # noqa: E8507 - one query per move: the document types depend on its journal and partner
                 .with_context(active_test=True)
                 .search(rec._get_domain_l10n_latam_documents())
             )

@@ -98,7 +98,7 @@ class ExchangeChannel(models.Model):
     @api.constrains("protocol", "company_id", "endpoint_id", "active")
     def _check_protocol_is_unique_per_company(self):
         for channel in self.filtered("active"):
-            duplicate = self.search(
+            duplicate = self.search(  # noqa: E8507 - one probe per channel, on its own protocol and company
                 [
                     ("id", "!=", channel.id),
                     ("protocol", "=", channel.protocol),

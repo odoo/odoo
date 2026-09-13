@@ -921,7 +921,7 @@ class Website(Home):
                 group["is_custom"] = True
                 result.append(group)
                 continue
-            for template in View.search(
+            for template in View.search(  # noqa: E8507 - one query per template group; the groups are a fixed list rendered from a template
                 [
                     ("mode", "=", "primary"),
                     "|",

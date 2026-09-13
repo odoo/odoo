@@ -51,7 +51,7 @@ class ProjectProject(models.Model):
             if not subset:
                 continue
             ProjectTask = self.env["project.task"].with_context(active_test=active_test)
-            for project, state, count in ProjectTask._read_group(
+            for project, state, count in ProjectTask._read_group(  # noqa: E8507 - two queries: active and archived tasks
                 Domain("project_id", "in", subset.ids)
                 & Domain("is_template", "=", False),
                 ["project_id", "state"],

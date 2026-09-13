@@ -1214,7 +1214,7 @@ class AccountEdiCommon(models.AbstractModel):
                 domain = base_domain + [("price_include", "=", price_include)]
                 if name:
                     domain.append(("name", "=", name))
-                tax = self.env["account.tax"].search(domain, limit=1)
+                tax = self.env["account.tax"].search(domain, limit=1)  # noqa: E8507 - tax candidates are tried in priority order; the first hit wins
                 if tax:
                     return tax
         return self.env["account.tax"]
@@ -1259,7 +1259,7 @@ class AccountEdiCommon(models.AbstractModel):
                 ):
                     if tax:
                         break
-                    tax = self.env["account.tax"].search(
+                    tax = self.env["account.tax"].search(  # noqa: E8507 - tax candidates are tried in priority order; the first hit wins
                         domain
                         + extra
                         + [
@@ -1284,7 +1284,7 @@ class AccountEdiCommon(models.AbstractModel):
             ):
                 if tax:
                     break
-                tax = self.env["account.tax"].search(
+                tax = self.env["account.tax"].search(  # noqa: E8507 - tax candidates are tried in priority order; the first hit wins
                     domain + extra + [("price_include", "=", price_include)], limit=1
                 )
 

@@ -184,20 +184,23 @@ class IrModelFields(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_used_in_website_form(self):
-        for field in self:
-            for model_name, field_name in self.env["website"]._get_fields_html():
-                domain = [(field_name, "ilike", f'data-model_name="{field.model}"')]
-                records = (
-                    self.env[model_name].with_context(active_test=False).search(domain)
-                )
-                for record in records:
-                    content = record[field_name]
-                    if not content:
-                        continue
-                    try:
-                        arch_parsed = html.fromstring(content)
-                    except etree.ParserError, etree.XMLSyntaxError, ValueError:
-                        continue
+        for model_name, field_name in self.env["website"]._get_fields_html():
+            domain = Domain.OR(
+                Domain(field_name, "ilike", f'data-model_name="{model}"')
+                for model in set(self.mapped("model"))
+            )
+            records = (
+                self.env[model_name].with_context(active_test=False).search(domain)
+            )  # noqa: E8507 - one query per (model, html field) pair, over every field at once
+            for record in records:
+                content = record[field_name]
+                if not content:
+                    continue
+                try:
+                    arch_parsed = html.fromstring(content)
+                except etree.ParserError, etree.XMLSyntaxError, ValueError:
+                    continue
+                for field in self:
                     xpath_selector = f'//form[@data-model_name="{field.model}"]//*[@name="{field.name}"]'
                     if arch_parsed.xpath(xpath_selector):
                         raise ValidationError(

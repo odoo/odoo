@@ -380,7 +380,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         need_retrigger = False
         for edi_user in self:
             edi_user = edi_user.with_company(edi_user.company_id)
-            edi_user_moves = self.env["account.move"].search(
+            edi_user_moves = self.env["account.move"].search(  # noqa: E8507 - one query per EDI user, in that user's company
                 [
                     ("peppol_move_state", "=", "processing"),
                     ("company_id", "=", edi_user.company_id.id),

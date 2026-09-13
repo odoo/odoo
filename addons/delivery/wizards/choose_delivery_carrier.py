@@ -78,7 +78,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
     @api.depends("partner_id")
     def _compute_available_carrier_ids(self):
         for rec in self:
-            carriers = self.env["delivery.carrier"].search(
+            carriers = self.env["delivery.carrier"].search(  # noqa: E8507 - a transient wizard: one record
                 self.env["delivery.carrier"]._check_company_domain(
                     rec.order_id.company_id
                 )

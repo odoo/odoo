@@ -1850,7 +1850,7 @@ class ProjectTask(models.Model):
         users_to_keep = []
         user_ids = []
         for user in users:
-            matched_users = self.env["res.users"].name_search(user)
+            matched_users = self.env["res.users"].name_search(user)  # noqa: E8507 - one lookup per @mention in the title
             if len(matched_users) == 1:
                 user_ids.append(Command.link(matched_users[0][0]))
             else:

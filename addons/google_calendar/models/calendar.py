@@ -342,7 +342,7 @@ class CalendarEvent(models.Model):
             )
 
             minutes = reminder.get("minutes", 0)
-            alarm = self.env["calendar.alarm"].search(
+            alarm = self.env["calendar.alarm"].search(  # noqa: E8507 - one lookup per reminder of the synced event
                 [("alarm_type", "=", alarm_type), ("duration_minutes", "=", minutes)],
                 limit=1,
             )

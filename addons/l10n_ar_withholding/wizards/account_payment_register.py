@@ -204,7 +204,7 @@ class AccountPaymentRegister(models.TransientModel):
     def _compute_l10n_ar_withholding_ids(self):
         for wizard in self:
             date = wizard.payment_date or fields.Date.context_today(self)
-            partner_taxes = self.env["l10n_ar.partner.tax"].search(
+            partner_taxes = self.env["l10n_ar.partner.tax"].search(  # noqa: E8507 - a transient wizard: one record
                 [
                     *self.env["l10n_ar.partner.tax"]._check_company_domain(
                         wizard.company_id

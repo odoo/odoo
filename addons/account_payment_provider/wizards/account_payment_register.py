@@ -43,7 +43,7 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard.suitable_payment_token_ids = (
                     self.env["payment.token"]
                     .sudo()
-                    .search(
+                    .search(  # noqa: E8507 - a transient wizard: one record
                         [
                             *self.env["payment.token"]._check_company_domain(
                                 wizard.company_id

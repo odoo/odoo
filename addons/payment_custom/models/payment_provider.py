@@ -56,7 +56,7 @@ class PaymentProvider(models.Model):
             for provider in self.filtered(lambda p: p.custom_mode == "wire_transfer"):
                 company_id = provider.company_id.id
                 accounts = (
-                    self.env["account.journal"]
+                    self.env["account.journal"]  # noqa: E8507 - one lookup per provider, on its own company
                     .search(
                         [
                             *self.env["account.journal"]._check_company_domain(

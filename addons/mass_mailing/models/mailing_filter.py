@@ -36,7 +36,7 @@ class MailingFilter(models.Model):
         for mailing_filter in self:
             if mailing_filter.mailing_domain != "[]":
                 try:
-                    self.env[mailing_filter.mailing_model_id.model].search_count(
+                    self.env[mailing_filter.mailing_model_id.model].search_count(  # noqa: E8507 - validates each filter's own domain on its own model
                         literal_eval(mailing_filter.mailing_domain)
                     )
                 except Exception as err:

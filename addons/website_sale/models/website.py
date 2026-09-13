@@ -289,7 +289,7 @@ class Website(models.Model):
         for website in self:
             website = website.with_company(website.company_id)
             ProductPricelist = website.env["product.pricelist"]
-            website.pricelist_ids = ProductPricelist.sudo().search_fetch(
+            website.pricelist_ids = ProductPricelist.sudo().search_fetch(  # noqa: E8507 - one query per website, in that website's company
                 ProductPricelist._get_domain_website_pricelists(website)
             )
 
@@ -425,7 +425,7 @@ class Website(models.Model):
                     else:
                         ecommerce_categories = self.env[
                             "product.public.category"
-                        ].search([], limit=6)
+                        ].search([], limit=6)  # noqa: E8507 - runs for the one ecommerce footer of the list
                         footer_updated = True
                         ecommerce_categories_node[0].attrib["t-value"] = json.dumps(
                             [
@@ -909,7 +909,7 @@ class Website(models.Model):
         for website in self.search([]):
             if not website.send_abandoned_cart_email:
                 continue
-            all_abandoned_carts = self.env["sale.order"].search(
+            all_abandoned_carts = self.env["sale.order"].search(  # noqa: E8507 - one query per website
                 [
                     ("is_abandoned_cart", "=", True),
                     ("cart_recovery_email_sent", "=", False),

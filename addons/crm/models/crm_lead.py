@@ -918,7 +918,7 @@ class CrmLead(models.Model):
                     + [("email_domain_criterion", "=", lead.email_domain_criterion)],
                 )
             if lead.partner_id and lead.partner_id.commercial_partner_id:
-                duplicate_lead_ids |= lead.with_context(active_test=False).search(
+                duplicate_lead_ids |= lead.with_context(active_test=False).search(  # noqa: E8507 - one probe per lead, on the lead's own commercial partner
                     common_lead_domain
                     + [
                         (

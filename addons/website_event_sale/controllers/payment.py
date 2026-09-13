@@ -18,7 +18,7 @@ class PaymentPortalOnsite(PaymentPortal):
         )
         for event, registrations in registrations_per_event:
             count_per_slot_ticket = (
-                request.env["event.registration"]
+                request.env["event.registration"]  # noqa: E8507 - one aggregate per event of the cart
                 .sudo()
                 ._read_group(
                     [("id", "in", registrations.ids)],

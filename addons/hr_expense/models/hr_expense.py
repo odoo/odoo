@@ -737,20 +737,18 @@ class HrExpense(models.Model):
 
     @api.depends("company_id")
     def _compute_selectable_payment_channel_ids(self):
-        for expense in self:
+        for company, expenses in self.grouped("company_id").items():
             allowed_method_line_ids = (
-                expense.company_id.company_expense_allowed_payment_channel_ids
+                company.company_expense_allowed_payment_channel_ids
             )
             if allowed_method_line_ids:
-                expense.selectable_payment_channel_ids = allowed_method_line_ids
+                expenses.selectable_payment_channel_ids = allowed_method_line_ids
             else:
-                expense.selectable_payment_channel_ids = self.env[
+                expenses.selectable_payment_channel_ids = self.env[
                     "account.payment.channel"
-                ].search(
+                ].search(  # noqa: E8507 - one query per company; expenses sharing one were merged above
                     [
-                        *self.env["account.journal"]._check_company_domain(
-                            expense.company_id
-                        ),
+                        *self.env["account.journal"]._check_company_domain(company),
                         ("payment_type", "=", "outbound"),
                         ("journal_id.active", "=", True),
                     ]
@@ -1904,7 +1902,7 @@ class HrExpense(models.Model):
         for company, expenses in employee_expenses.grouped("company_id").items():
             expenses = expenses.with_company(company)
             company_domain = self.env["account.journal"]._check_company_domain(company)
-            journal = company.expense_journal_id or expenses.env[
+            journal = company.expense_journal_id or expenses.env[  # noqa: E8507 - one lookup per company; expenses sharing one were merged above
                 "account.journal"
             ].search([*company_domain, ("type", "=", "purchase")], limit=1)
             expense_receipt_vals_list = [

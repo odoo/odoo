@@ -36,10 +36,15 @@ class AccountJournal(models.Model):
 
     @api.constrains("l10n_latam_use_documents")
     def check_use_document(self):
+        journals_with_posted_moves = {
+            journal
+            for [journal] in self.env["account.move"]._read_group(
+                [("journal_id", "in", self.ids), ("posted_before", "=", True)],
+                ["journal_id"],
+            )
+        }
         for rec in self:
-            if rec.env["account.move"].search_count(
-                [("journal_id", "=", rec.id), ("posted_before", "=", True)], limit=1
-            ):
+            if rec in journals_with_posted_moves:
                 raise ValidationError(
                     _(
                         'You can not modify the field "Use Documents?" if there are validated invoices in this journal!'

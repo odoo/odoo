@@ -104,24 +104,28 @@ class PaymentProvider(models.Model):
 
     @api.depends("code", "state", "company_id")
     def _compute_journal_id(self):
+        first_channel_by_provider = {}
+        for channel in self.env["account.payment.channel"].search(
+            [
+                ("payment_provider_id", "in", self._origin.ids),
+                ("journal_id", "!=", False),
+            ]
+        ):
+            first_channel_by_provider.setdefault(channel.payment_provider_id, channel)
+        first_bank_journal_by_company = {}
+        for journal in self.env["account.journal"].search(
+            [("company_id", "in", self.company_id.ids), ("type", "=", "bank")]
+        ):
+            first_bank_journal_by_company.setdefault(journal.company_id, journal)
+
         for provider in self:
-            pay_method_line = self.env["account.payment.channel"].search(
-                [
-                    ("payment_provider_id", "=", provider._origin.id),
-                    ("journal_id", "!=", False),
-                ],
-                limit=1,
-            )
+            pay_method_line = first_channel_by_provider.get(provider._origin)
 
             if pay_method_line:
                 provider.journal_id = pay_method_line.journal_id
             elif provider.state in ("enabled", "test"):
-                provider.journal_id = self.env["account.journal"].search(
-                    [
-                        ("company_id", "=", provider.company_id.id),
-                        ("type", "=", "bank"),
-                    ],
-                    limit=1,
+                provider.journal_id = first_bank_journal_by_company.get(
+                    provider.company_id, self.env["account.journal"]
                 )
                 if provider.id:
                     provider._sync_payment_channel()

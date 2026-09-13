@@ -201,7 +201,7 @@ class HTML_Editor(http.Controller):
 
         for attachment in Attachment.browse(ids):
             url = tools.html_escape(attachment.local_url)
-            views = Views.search(
+            views = Views.search(  # noqa: E8507 - one probe per attachment, on its own url
                 ["|", ("arch_db", "like", f'"{url}"'), ("arch_db", "like", f"'{url}'")]
             )
 

@@ -357,12 +357,8 @@ class PosPaymentMethod(models.Model):
     @api.constrains("config_ids")
     def _check_company_config(self):
         for payment in self:
-            if self.env["pos.config"].search_count(
-                [
-                    ("id", "in", payment.config_ids.ids),
-                    ("company_id", "!=", payment.company_id.id),
-                ],
-                limit=1,
+            if any(
+                config.company_id != payment.company_id for config in payment.config_ids
             ):
                 raise ValidationError(
                     _(

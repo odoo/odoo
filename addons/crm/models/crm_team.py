@@ -118,7 +118,7 @@ class CrmTeam(models.Model):
             try:
                 domain = literal_eval(team.assignment_domain or "[]")
                 if domain:
-                    self.env["crm.lead"].search(domain, limit=1)
+                    self.env["crm.lead"].search(domain, limit=1)  # noqa: E8507 - validates each team's own domain
             except Exception:
                 raise exceptions.ValidationError(
                     _(
@@ -431,7 +431,7 @@ class CrmTeam(models.Model):
                     self.env.cr.now() - datetime.timedelta(days=creation_delta_days),
                 )
 
-            leads = self.env["crm.lead"].search(lead_domain)
+            leads = self.env["crm.lead"].search(lead_domain)  # noqa: E8507 - one query per team, on the team's own assignment domain
             missing = leads.filtered(lambda lead: lead not in duplicates_lead_cache)
             if missing:
                 duplicates_lead_cache.update(

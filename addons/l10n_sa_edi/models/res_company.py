@@ -59,7 +59,7 @@ class ResCompany(models.Model):
                                 "ZATCA API Mode cannot be changed after an invoice has been successfully submitted under the Production Mode."
                             )
                         )
-                journals = self.env["account.journal"].search(
+                journals = self.env["account.journal"].search(  # noqa: E8507 - one query per company, on its own journals
                     self.env["account.journal"]._check_company_domain(company)
                 )
                 journals._l10n_sa_reset_certificates()

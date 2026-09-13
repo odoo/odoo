@@ -65,7 +65,7 @@ class AutoCompleteController(http.Controller):
                 ):  # if a value is already assigned, do not overwrite it.
                     continue
                 if field_standard == "country":
-                    country = request.env["res.country"].search(
+                    country = request.env["res.country"].search(  # noqa: E8507 - one lookup per field of the autocomplete response
                         [("code", "=", google_field["short_name"].upper())], limit=1
                     )
                     standard_data[field_standard] = [country.id, country.name]
@@ -76,7 +76,7 @@ class AutoCompleteController(http.Controller):
                             pformat(google_fields),
                         )
                         continue
-                    state = request.env["res.country.state"].search(
+                    state = request.env["res.country.state"].search(  # noqa: E8507 - one lookup per field of the autocomplete response
                         [
                             ("code", "=", google_field["short_name"].upper()),
                             ("country_id", "=", standard_data["country"][0]),
