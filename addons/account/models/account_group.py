@@ -2,7 +2,6 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import SQL
 
 _debug = DebugLog(__name__)
 
@@ -183,44 +182,40 @@ class AccountGroup(models.Model):
         if not company_ids:
             return
 
-        self.flush_model()
-        query = SQL(
-            """
-            WITH relation AS (
-                SELECT DISTINCT ON (child.id)
-                       child.id AS child_id,
-                       parent.id AS parent_id
-                  FROM account_group parent
-            RIGHT JOIN account_group child
-                    ON char_length(parent.code_prefix_start)
-                       < char_length(child.code_prefix_start)
-                   AND parent.code_prefix_start
-                       <= LEFT(child.code_prefix_start,
-                               char_length(parent.code_prefix_start))
-                   AND parent.code_prefix_end
-                       >= LEFT(child.code_prefix_end,
-                               char_length(parent.code_prefix_end))
-                   AND parent.id != child.id
-                   AND parent.company_id = child.company_id
-                 WHERE child.company_id = ANY(%s)
-              ORDER BY child.id,
-                       char_length(parent.code_prefix_start) DESC
-            )
-            UPDATE account_group child
-               SET parent_id = relation.parent_id
-              FROM relation
-             WHERE child.id = relation.child_id
-               AND child.parent_id IS DISTINCT FROM relation.parent_id
-         RETURNING child.id
-            """,
-            list(company_ids),
-        )
-        self.env.cr.execute(query)
-
-        updated_rows = self.env.cr.fetchall()
-        _debug.perf.count("group_parents_relinked", rows=len(updated_rows))
-        if updated_rows:
-            self.invalidate_model(["parent_id"])
+        # a group's parent is the group with the longest code prefix that still
+        # encloses its own, within the same company; a company's groups number in
+        # the hundreds, so the match is made in Python rather than a self-join
+        updated = 0
+        Group = self.env["account.group"].sudo().with_context(active_test=False)
+        for company_id in company_ids:
+            groups = Group.search([("company_id", "=", company_id)])
+            candidates = [
+                group
+                for group in groups
+                if group.code_prefix_start and group.code_prefix_end
+            ]
+            for child in groups:
+                start, end = child.code_prefix_start, child.code_prefix_end
+                enclosing = [
+                    parent
+                    for parent in candidates
+                    if parent != child
+                    and start
+                    and end
+                    and len(parent.code_prefix_start) < len(start)
+                    and parent.code_prefix_start
+                    <= start[: len(parent.code_prefix_start)]
+                    and parent.code_prefix_end >= end[: len(parent.code_prefix_end)]
+                ]
+                parent = (
+                    max(enclosing, key=lambda p: (len(p.code_prefix_start), -p.id))
+                    if enclosing
+                    else Group.browse()
+                )
+                if child.parent_id != parent:
+                    child.parent_id = parent
+                    updated += 1
+        _debug.perf.count("group_parents_relinked", rows=updated)
 
     def _sanitize_vals(self, vals):
         vals = dict(vals)
