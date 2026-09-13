@@ -175,7 +175,7 @@
 
             'web/static/src/core/colorlist/colorlist.scss',
             'web/static/src/webclient/webclient_layout.scss',
-
+            'web/static/src/webclient/errors/offline_fail_to_fetch_error_handler.js',
             'web/static/src/webclient/icons.scss',
 
             # scss variables and utilities
