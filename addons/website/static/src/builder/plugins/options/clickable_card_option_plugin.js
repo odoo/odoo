@@ -16,6 +16,18 @@ export class ClickableCardOptionPlugin extends Plugin {
                 return true;
             }
         },
+        can_have_hover_effect_predicates: (el) => {
+            // Block hover effects rely on pointer events reaching the hovered
+            // element. A clickable card's stretched link covers its contents,
+            // so non-image descendants cannot reliably receive hover. Images
+            // keep their hover effects as their interaction handles this case.
+            if (
+                el.parentElement.closest(".s_card:has(> .stretched-link)") &&
+                el.tagName !== "IMG"
+            ) {
+                return false;
+            }
+        },
     };
 }
 
