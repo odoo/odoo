@@ -132,14 +132,7 @@ export class ImageSelector extends FileSelector {
         const domain = super.attachmentsDomain;
         domain.push(["mimetype", "in", IMAGE_MIMETYPES]);
         if (!this.props.useMediaLibrary) {
-            domain.push(
-                "|",
-                ["url", "=", false],
-                "!",
-                "|",
-                ["url", "=ilike", "/html_editor/shape/%"],
-                ["url", "=ilike", "/web_editor/shape/%"]
-            );
+            domain.push("|", ["url", "=", false], "!", ["url", "=ilike", "/html_editor/shape/%"]);
         }
         domain.push("!", ["name", "=like", "%.crop"]);
         domain.push("|", ["type", "=", "binary"], "!", ["url", "=like", "/%/static/%"]);
@@ -260,10 +253,7 @@ export class ImageSelector extends FileSelector {
             if (attachment.image_src.startsWith("/")) {
                 const newURL = new URL(attachment.image_src, window.location.origin);
                 // Set the main colors of dynamic SVGs to o-color-1~5
-                if (
-                    attachment.image_src.startsWith("/html_editor/shape/") ||
-                    attachment.image_src.startsWith("/web_editor/shape/")
-                ) {
+                if (attachment.image_src.startsWith("/html_editor/shape/")) {
                     newURL.searchParams.forEach((value, key) => {
                         const match = key.match(/^c([1-5])$/);
                         if (match) {
@@ -411,8 +401,7 @@ export class ImageSelector extends FileSelector {
                 // Color-customize dynamic SVGs with the theme colors
                 if (
                     attachment.image_src &&
-                    (attachment.image_src.startsWith("/html_editor/shape/") ||
-                        attachment.image_src.startsWith("/web_editor/shape/"))
+                    attachment.image_src.startsWith("/html_editor/shape/")
                 ) {
                     const colorCustomizedURL = new URL(
                         attachment.image_src,
