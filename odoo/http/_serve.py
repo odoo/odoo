@@ -14,11 +14,12 @@ from werkzeug.exceptions import (
 )
 
 import odoo.api
-from odoo.db import PoolError
+from odoo.db import PoolError, close_db
 from odoo.exceptions import AccessDenied
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.worker_thread import current_worker_thread
 from odoo.modules.registry import Registry
+from odoo.service.db import list_dbs
 from odoo.service.transaction import retrying
 
 from ._protocols import RequestState, get_ir_http
@@ -36,10 +37,21 @@ _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
 
 _PROMOTE = object()
-"""What `_serve_readonly` answers when the handler must be replayed read/write."""
+"""What `_serve_transaction` answers when the handler must be replayed read/write."""
 
 
 class _RequestServeMixin(RequestState):
+    def _require_env(self) -> odoo.api.Environment:
+        env = self.env
+        if env is None:
+            raise RuntimeError("a database-bound request has an environment")
+        return env
+
+    @property
+    def _debug_cr(self) -> Any:
+        env = self.env
+        return None if env is None else env.cr
+
     def _update_dispatcher(self, rule: Any) -> None:
         routing = rule.endpoint.routing
         dispatcher_cls = _dispatchers[routing["type"]]
@@ -206,9 +218,6 @@ class _RequestServeMixin(RequestState):
         ) as e:
             db_absent = None
             try:
-                from odoo.db import close_db
-                from odoo.service.db import list_dbs
-
                 db_absent = db not in list_dbs(force=True)
                 if db_absent:
                     Registry.clear_database_state(db)
@@ -222,9 +231,11 @@ class _RequestServeMixin(RequestState):
             finally:
                 if cr is not None:
                     cr.close()
-            err = RegistryError(f"Cannot get registry {db}")
-            err.db_absent = db_absent
-            err.transient = not isinstance(e, psycopg.ProgrammingError)
+            err = RegistryError(
+                f"Cannot get registry {db}",
+                db_absent=db_absent,
+                transient=not isinstance(e, psycopg.ProgrammingError),
+            )
             _debug.logic(
                 "http.registry.unavailable",
                 db=db,
@@ -264,50 +275,15 @@ class _RequestServeMixin(RequestState):
         )
         return functools.partial(self._serve_ir_http, rule, args), bool(readonly)
 
-    def _serve_readwrite(
-        self, serve_func: Any, participant: RequestRetryParticipant
-    ) -> Response:
-        env = self.env
-        if env is None:
-            raise RuntimeError("a database-bound request has an environment")
-        self._bind_session_transaction(env.cr)
-        commits_before = env.cr.commit_count
-        try:
-            response = retrying(
-                functools.partial(self._serve_transaction_target, serve_func),
-                env=env,
-                participant=participant,
-            )
-            _debug.pipeline(
-                "http.serve.transaction",
-                mode="rw",
-                commits=env.cr.commit_count - commits_before,
-                cursor_closed=env.cr.closed,
-                status=getattr(response, "status_code", None),
-            )
-            if not env.cr.closed:
-                self._flush_session()
-            return response
-        except Exception as exc:
-            _debug.logic(
-                "http.serve.transaction_failed",
-                mode="rw",
-                error=type(exc).__name__,
-                committed=env.cr.commit_count != commits_before,
-                cursor_closed=env.cr.closed,
-            )
-            if not env.cr.closed and env.cr.commit_count == commits_before:
-                env.cr.rollback()
-            self._update_served_exception(exc)
-            raise
-
-    def _serve_readonly(
-        self, serve_func: Any, participant: RequestRetryParticipant
+    def _serve_transaction(
+        self,
+        serve_func: Any,
+        participant: RequestRetryParticipant,
+        *,
+        readonly: bool,
     ) -> Any:
-        current_worker_thread().cursor_mode = "ro"
-        env = self.env
-        if env is None:
-            raise RuntimeError("a database-bound request has an environment")
+        mode = "ro" if readonly else "rw"
+        env = self._require_env()
         self._bind_session_transaction(env.cr)
         commits_before = env.cr.commit_count
         try:
@@ -316,59 +292,58 @@ class _RequestServeMixin(RequestState):
                 env=env,
                 participant=participant,
             )
-            _debug.pipeline(
-                "http.serve.transaction",
-                mode="ro",
-                commits=env.cr.commit_count - commits_before,
-                cursor_closed=env.cr.closed,
-                status=getattr(response, "status_code", None),
-            )
-            if not env.cr.closed:
-                self._flush_session()
-            return response
-        except psycopg.errors.ReadOnlySqlTransaction as exc:
-            if env.cr.closed or env.cr.commit_count != commits_before:
-                # Postcommit failures cannot be retried: the first execution
-                # has already published its database and session effects.
-                _debug.logic(
-                    "http.serve.ro_write_after_commit",
-                    method=getattr(self.httprequest, "method", None),
-                    path=getattr(self.httprequest, "path", None),
-                    cursor_closed=env.cr.closed,
-                )
-                self._update_served_exception(exc)
-                raise
-            _logger.warning(
-                "%s, retrying with a read/write cursor — readonly route "
-                "%s %s attempted a write, so its handler runs a second "
-                "time; keep non-transactional side effects (emails, "
-                "outbound calls, token burns) out until the first write",
-                exc.args[0].rstrip(),
-                self.httprequest.method,
-                self.httprequest.path,
-                exc_info=True,
-            )
-            current_worker_thread().cursor_mode = "ro->rw"
-            participant.on_rollback(exc)
-            rewind_uploaded_files(self.httprequest, cause=exc)
-            _debug.logic(
-                "http.serve.promoted_to_rw",
-                method=self.httprequest.method,
-                path=self.httprequest.path,
-            )
-            return _PROMOTE
         except Exception as exc:
+            settled = env.cr.closed or env.cr.commit_count != commits_before
+            if (
+                readonly
+                and not settled
+                and isinstance(exc, psycopg.errors.ReadOnlySqlTransaction)
+            ):
+                self._prepare_promotion(participant, exc)
+                return _PROMOTE
             _debug.logic(
                 "http.serve.transaction_failed",
-                mode="ro",
+                mode=mode,
                 error=type(exc).__name__,
                 committed=env.cr.commit_count != commits_before,
                 cursor_closed=env.cr.closed,
             )
-            if not env.cr.closed and env.cr.commit_count == commits_before:
+            if not settled:
                 env.cr.rollback()
             self._update_served_exception(exc)
             raise
+        _debug.pipeline(
+            "http.serve.transaction",
+            mode=mode,
+            commits=env.cr.commit_count - commits_before,
+            cursor_closed=env.cr.closed,
+            status=getattr(response, "status_code", None),
+        )
+        if not env.cr.closed:
+            self._flush_session()
+        return response
+
+    def _prepare_promotion(
+        self, participant: RequestRetryParticipant, exc: BaseException
+    ) -> None:
+        _logger.warning(
+            "%s, retrying with a read/write cursor — readonly route "
+            "%s %s attempted a write, so its handler runs a second "
+            "time; keep non-transactional side effects (emails, "
+            "outbound calls, token burns) out until the first write",
+            exc.args[0].rstrip(),
+            self.httprequest.method,
+            self.httprequest.path,
+            exc_info=exc,
+        )
+        current_worker_thread().cursor_mode = "ro->rw"
+        participant.on_rollback(exc)
+        rewind_uploaded_files(self.httprequest, cause=exc)
+        _debug.logic(
+            "http.serve.promoted_to_rw",
+            method=self.httprequest.method,
+            path=self.httprequest.path,
+        )
 
     def _serve_transaction_target(self, serve_func: Any) -> Response:
         try:
@@ -381,9 +356,7 @@ class _RequestServeMixin(RequestState):
             return self._serve_aborted(exc)
 
     def _open_read_write_cursor(self, cr: Any) -> Any:
-        env = self.env
-        if env is None:
-            raise RuntimeError("a database-bound request has an environment")
+        env = self._require_env()
         with _debug.perf("http.serve.cursor_ready", replaced=cr.readonly):
             if cr.readonly:
                 _debug.lifecycle("http.serve.cursor_replaced", db=env.registry.db_name)
@@ -426,16 +399,15 @@ class _RequestServeMixin(RequestState):
                 readonly_cursor=getattr(cr, "readonly", None),
             )
             if readonly and cr.readonly:
-                served = self._serve_readonly(serve_func, participant)
+                current_worker_thread().cursor_mode = "ro"
+                served = self._serve_transaction(serve_func, participant, readonly=True)
                 if served is not _PROMOTE:
                     return served
                 promoted = True
             else:
                 current_worker_thread().cursor_mode = "rw"
 
-            env = self.env
-            if env is None:
-                raise RuntimeError("a database-bound request has an environment")
+            env = self._require_env()
             cr = self._open_read_write_cursor(cr)
             if promoted:
                 _debug.pipeline(
@@ -447,7 +419,7 @@ class _RequestServeMixin(RequestState):
                 self._reset_for_replay(cr)
             else:
                 self.env = env(cr=cr)
-            return self._serve_readwrite(serve_func, participant)
+            return self._serve_transaction(serve_func, participant, readonly=False)
         except HTTPException as exc:
             if exc.code is not None:
                 raise
@@ -512,13 +484,13 @@ class _RequestServeMixin(RequestState):
         self._params_source = self.get_http_params
         with _debug.perf(
             "http.serve.authenticate",
-            cr=getattr(getattr(self, "env", None), "cr", None),
+            cr=self._debug_cr,
             auth="public",
         ):
             get_ir_http(registry)._authenticate_explicit("public")
         with _debug.perf(
             "http.serve.fallback_lookup",
-            cr=getattr(getattr(self, "env", None), "cr", None),
+            cr=self._debug_cr,
             path=getattr(self.httprequest, "path", None),
         ) as span:
             response = get_ir_http(registry)._serve_fallback()
@@ -532,7 +504,7 @@ class _RequestServeMixin(RequestState):
         if response:
             with _debug.perf(
                 "http.serve.post_dispatch",
-                cr=getattr(getattr(self, "env", None), "cr", None),
+                cr=self._debug_cr,
             ):
                 get_ir_http(registry)._post_dispatch(response)
             return response
@@ -548,7 +520,7 @@ class _RequestServeMixin(RequestState):
         registry = self._get_bound_registry()
         with _debug.perf(
             "http.serve.authenticate",
-            cr=getattr(getattr(self, "env", None), "cr", None),
+            cr=self._debug_cr,
             auth=rule.endpoint.routing.get("auth"),
         ):
             get_ir_http(registry)._authenticate(rule.endpoint)
@@ -559,13 +531,13 @@ class _RequestServeMixin(RequestState):
         )
         with _debug.perf(
             "http.serve.pre_dispatch",
-            cr=getattr(getattr(self, "env", None), "cr", None),
+            cr=self._debug_cr,
             endpoint=getattr(rule.endpoint, "__qualname__", None),
         ):
             get_ir_http(registry)._pre_dispatch(rule, args)
         with _debug.perf(
             "http.serve.handler",
-            cr=getattr(getattr(self, "env", None), "cr", None),
+            cr=self._debug_cr,
             db=registry.db_name,
             endpoint=getattr(rule.endpoint, "__qualname__", None),
         ) as span:
@@ -578,7 +550,7 @@ class _RequestServeMixin(RequestState):
         )
         with _debug.perf(
             "http.serve.post_dispatch",
-            cr=getattr(getattr(self, "env", None), "cr", None),
+            cr=self._debug_cr,
             status=getattr(response, "status_code", None),
         ):
             get_ir_http(registry)._post_dispatch(response)

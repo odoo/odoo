@@ -61,9 +61,7 @@ def _request(path="/whatever", args=None):
 )
 def test_only_a_durable_failure_may_persist_the_logout(db_absent, transient, durable):
     this, httprequest = _request()
-    exc = RegistryError("boom")
-    exc.db_absent = db_absent
-    exc.transient = transient
+    exc = RegistryError("boom", db_absent=db_absent, transient=transient)
 
     assert _recover(this, httprequest, exc) == "nodb"
     assert this.db is None
@@ -84,8 +82,7 @@ def test_a_select_db_path_is_rerouted_without_its_db_argument(select_db_path):
     this, httprequest = _request(
         "/probe/ensure-db", {"db": "gone", "keep": "1", "also": "2"}
     )
-    exc = RegistryError("boom")
-    exc.db_absent = True
+    exc = RegistryError("boom", db_absent=True)
 
     _recover(this, httprequest, exc)
 
@@ -97,8 +94,7 @@ def test_a_select_db_path_is_rerouted_without_its_db_argument(select_db_path):
 
 def test_an_ordinary_path_is_not_rerouted():
     this, httprequest = _request("/probe/plain", {"db": "gone"})
-    exc = RegistryError("boom")
-    exc.db_absent = True
+    exc = RegistryError("boom", db_absent=True)
 
     _recover(this, httprequest, exc)
 

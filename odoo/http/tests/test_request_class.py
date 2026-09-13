@@ -142,11 +142,12 @@ def test_a_listener_that_raises_does_not_break_the_mutation():
         listing._catalog_listeners.remove(boom)
 
 
+def _httprequest(**attrs: Any) -> Any:
+    return types.SimpleNamespace(remote_addr=None, **attrs)
+
+
 def _params_request():
-    request = Request.__new__(Request)
-    request._params = {}
-    request._params_source = None
-    return request
+    return Request(_httprequest(), app=None)
 
 
 def test_params_is_an_ordinary_dict_until_a_source_is_deferred():
@@ -191,9 +192,8 @@ def _json_request(body: bytes):
         reads.append(1)
         return body
 
-    request = Request.__new__(Request)
-    request.httprequest = types.SimpleNamespace(
-        get_data=get_data, content_length=len(body)
+    request = Request(
+        _httprequest(get_data=get_data, content_length=len(body)), app=None
     )
     return request, reads
 
@@ -232,8 +232,6 @@ def test_an_invalid_body_is_not_memoized():
 def test_the_fallback_defers_the_body_instead_of_decoding_it():
     from werkzeug.exceptions import NotFound
 
-    from odoo.http import _serve
-
     decoded: list[int] = []
 
     def _decode():
@@ -253,18 +251,14 @@ def test_the_fallback_defers_the_body_instead_of_decoding_it():
         def _handle_error(self, exc):
             return "error-response"
 
-    this: Any = types.SimpleNamespace(
-        registry={"ir.http": _IrHttp()},
-        _params={},
-        _params_source=None,
-        httprequest=types.SimpleNamespace(max_content_length=None, content_length=1000),
-        get_http_params=_decode,
+    this: Any = Request(
+        _httprequest(max_content_length=None, content_length=1000), app=None
     )
-    this._get_bound_registry = lambda: this.registry
-    this._check_body_size = lambda: _serve._RequestServeMixin._check_body_size(this)
+    this.registry = {"ir.http": _IrHttp()}
+    this.get_http_params = _decode
 
     with pytest.raises(NotFound):
-        _serve._RequestServeMixin._serve_ir_http_fallback(this, NotFound())
+        this._serve_ir_http_fallback(NotFound())
 
     assert decoded == [], "a fallback that ignores params must not decode the body"
     assert this._params_source is not None, "but it stays available to one that does"

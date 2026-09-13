@@ -12,7 +12,6 @@ from typing import TYPE_CHECKING, Any, cast
 import werkzeug.routing
 
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import unique
 from odoo.tools.misc import submap
 
 from ._params import ParamSpec, get_param_specs
@@ -388,7 +387,7 @@ def _merge_routing(ctrl: Controller, method_name: str) -> dict[str, Any] | None:
         if cls is not Controller and cls is not object
     ]
     defining_cls = None
-    for cls in unique(ancestors):
+    for cls in ancestors:
         if method_name not in cls.__dict__:
             continue
         submethod = getattr(cls, method_name)
@@ -427,8 +426,6 @@ def _merge_routing(ctrl: Controller, method_name: str) -> dict[str, Any] | None:
 
     _check_cors_credentials(f"{type(ctrl).__name__}.{method_name}", merged_routing)
     merged_routing.setdefault("save_session", merged_routing["auth"] != "bearer")
-    if isinstance(merged_routing.get("methods"), list):
-        merged_routing["methods"] = tuple(merged_routing["methods"])
     return merged_routing
 
 

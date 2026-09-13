@@ -33,7 +33,7 @@ from .constants import (
     prepare_allow_header,
 )
 from .exceptions import SessionExpiredException
-from .helpers import serialize_exception
+from .helpers import is_cors_preflight, serialize_exception
 from .wrappers import Response, prepare_no_content_response
 
 if TYPE_CHECKING:
@@ -115,9 +115,7 @@ class Dispatcher(ABC):
         routing = rule.endpoint.routing
         self.request.session.can_save &= routing.get("save_session", True)
 
-        is_preflight = (
-            bool(routing.get("cors")) and self.request.httprequest.method == "OPTIONS"
-        )
+        is_preflight = is_cors_preflight(self.request, rule.endpoint)
         vary = self._stage_cors_headers(routing)
         if is_preflight:
             vary += self._stage_preflight_headers(routing)
@@ -322,50 +320,39 @@ class HttpDispatcher(Dispatcher):
                         "http.dispatch.list_param", param=name, values=len(values)
                     )
 
-        if (
-            _debug.logic.enabled
-            and self.request.httprequest.method not in SAFE_HTTP_METHODS
-            and not endpoint.routing.get("csrf", True)
-        ):
-            _debug.logic(
-                "http.csrf.skipped",
-                reason="route_exempt",
-                method=self.request.httprequest.method,
-                path=getattr(self.request.httprequest, "path", None),
-            )
-        if (
-            self.request.httprequest.method not in SAFE_HTTP_METHODS
-            and endpoint.routing.get("csrf", True)
-        ):
-            if not self.request.db:
+        if self.request.httprequest.method not in SAFE_HTTP_METHODS:
+            if not endpoint.routing.get("csrf", True):
+                _debug.logic(
+                    "http.csrf.skipped",
+                    reason="route_exempt",
+                    method=self.request.httprequest.method,
+                    path=getattr(self.request.httprequest, "path", None),
+                )
+            elif not self.request.db:
                 _debug.logic(
                     "http.csrf.redirect_nodb",
                     path=getattr(self.request.httprequest, "path", None),
                 )
                 return self.request.redirect("/web/database/selector")
-
-            token = self.request.params.pop("csrf_token", None)
-            if not self.request.is_valid_csrf(token):
-                _debug.logic(
-                    "http.csrf.rejected",
-                    path=getattr(self.request.httprequest, "path", None),
-                    token_present=token is not None,
-                )
-                if token is not None:
-                    _logger.warning(
-                        "CSRF validation failed on path '%s'",
-                        self.request.httprequest.path,
-                    )
-                else:
-                    _logger.warning(MISSING_CSRF_WARNING, self.request.httprequest.path)
-                msg = "Session expired (invalid CSRF token)"
-                raise werkzeug.exceptions.BadRequest(msg)
-            _debug.logic(
-                "http.csrf.accepted",
-                path=getattr(self.request.httprequest, "path", None),
-            )
+            else:
+                self._check_csrf_token()
 
         return self._call_endpoint(endpoint)
+
+    def _check_csrf_token(self) -> None:
+        path = self.request.httprequest.path
+        token = self.request.params.pop("csrf_token", None)
+        if not self.request.is_valid_csrf(token):
+            _debug.logic(
+                "http.csrf.rejected", path=path, token_present=token is not None
+            )
+            if token is not None:
+                _logger.warning("CSRF validation failed on path '%s'", path)
+            else:
+                _logger.warning(MISSING_CSRF_WARNING, path)
+            msg = "Session expired (invalid CSRF token)"
+            raise werkzeug.exceptions.BadRequest(msg)
+        _debug.logic("http.csrf.accepted", path=path)
 
     def prepare_error_response(self, exc: Exception) -> Response | HTTPException:
         if isinstance(exc, SessionExpiredException):
@@ -438,8 +425,9 @@ class JsonRPCDispatcher(Dispatcher):
         params = self.jsonrequest.get("params", {})
         if not isinstance(params, dict):
             _debug.logic("http.jsonrpc.invalid", reason="params_not_object")
-            e = f"JSON-RPC params must be an object (got {type(params).__name__!r})."
-            raise werkzeug.exceptions.BadRequest(e)
+            raise self._prepare_bad_request_error(
+                f"JSON-RPC params must be an object (got {type(params).__name__!r})"
+            )
         self.request.params = params | args
         _debug.pipeline(
             "http.jsonrpc.request",

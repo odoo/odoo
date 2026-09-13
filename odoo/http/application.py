@@ -187,56 +187,37 @@ class Application:
         _debug.logic("http.routing_map.selected", db=db, source="ir.http")
         return get_ir_http(router_env).routing_map()
 
-    @_locked_cached_property
-    def geoip_city_db(self):
+    def _open_geoip_reader(self, kind: str, path: str) -> Any:
         if geoip2 is None:
-            _debug.logic("http.geoip.db_unavailable", db="city", reason="no_geoip2")
+            _debug.logic("http.geoip.db_unavailable", db=kind, reason="no_geoip2")
             return None
         try:
-            reader = geoip2.database.Reader(current_settings().geoip_city_db)
+            reader = geoip2.database.Reader(path)
         except (OSError, maxminddb.InvalidDatabaseError) as exc:
             _logger.debug(
-                "Couldn't load Geoip City file at %s (%s). IP Resolver disabled.",
-                current_settings().geoip_city_db,
+                "Couldn't load the GeoIP %s file at %s (%s); lookups against it "
+                "answer nothing.",
+                kind,
+                path,
                 exc,
             )
             _debug.logic(
                 "http.geoip.db_unavailable",
-                db="city",
+                db=kind,
                 reason=type(exc).__name__,
-                path=current_settings().geoip_city_db,
+                path=path,
             )
             return None
-        _debug.lifecycle(
-            "http.geoip.db_opened", db="city", path=current_settings().geoip_city_db
-        )
+        _debug.lifecycle("http.geoip.db_opened", db=kind, path=path)
         return reader
 
     @_locked_cached_property
+    def geoip_city_db(self):
+        return self._open_geoip_reader("city", current_settings().geoip_city_db)
+
+    @_locked_cached_property
     def geoip_country_db(self):
-        if geoip2 is None:
-            _debug.logic("http.geoip.db_unavailable", db="country", reason="no_geoip2")
-            return None
-        try:
-            reader = geoip2.database.Reader(current_settings().geoip_country_db)
-        except (OSError, maxminddb.InvalidDatabaseError) as exc:
-            _logger.debug(
-                "Couldn't load Geoip Country file (%s); caller will fall back to Geoip City if available.",
-                exc,
-            )
-            _debug.logic(
-                "http.geoip.db_unavailable",
-                db="country",
-                reason=type(exc).__name__,
-                path=current_settings().geoip_country_db,
-            )
-            return None
-        _debug.lifecycle(
-            "http.geoip.db_opened",
-            db="country",
-            path=current_settings().geoip_country_db,
-        )
-        return reader
+        return self._open_geoip_reader("country", current_settings().geoip_country_db)
 
     def update_security_headers(self, response: WerkzeugResponse | Response) -> None:
         headers = response.headers
@@ -258,12 +239,9 @@ class Application:
         current_thread.query_time = 0
         current_thread.perf_t0 = real_time()
         current_thread.cursor_mode = None
-        if hasattr(current_thread, "dbname"):
-            del current_thread.dbname
-        if hasattr(current_thread, "uid"):
-            del current_thread.uid
-        if hasattr(current_thread, "url"):
-            del current_thread.url
+        for attr in ("dbname", "uid", "url"):
+            if hasattr(current_thread, attr):
+                delattr(current_thread, attr)
         current_thread.rpc_model_method = ""
 
     def _apply_proxy_fix(self, environ: dict[str, object]) -> None:
@@ -433,17 +411,7 @@ class Application:
                 request = Request(httprequest, app=self)
                 _request_stack.push(request)
                 pushed = True
-
-                request._post_init()
                 current_worker_thread().url = httprequest.url
-                _debug.pipeline(
-                    "http.request.begin",
-                    method=httprequest.method,
-                    path=httprequest.path,
-                    db=request.db,
-                    uid=request.session.uid,
-                    session_new=request.session.is_new,
-                )
 
                 if httprequest.method in REJECTED_HTTP_METHODS:
                     _debug.logic(
@@ -456,6 +424,16 @@ class Application:
                 if "\x00" in httprequest.path:
                     _debug.logic("http.request.path_rejected", reason="nul_byte")
                     raise NotFound
+
+                request._post_init()
+                _debug.pipeline(
+                    "http.request.begin",
+                    method=httprequest.method,
+                    path=httprequest.path,
+                    db=request.db,
+                    uid=request.session.uid,
+                    session_new=request.session.is_new,
+                )
 
                 static_file = self.get_static_file_path(httprequest.path)
                 with _debug.perf(

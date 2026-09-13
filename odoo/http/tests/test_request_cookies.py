@@ -21,13 +21,10 @@ class _Registry(dict):
 
 
 def _request(**cookies) -> Any:
-    request: Any = object.__new__(Request)
-    request.registry = None
-    request._cookies_memo = None
-    request.httprequest = types.SimpleNamespace(
-        cookies=werkzeug.datastructures.MultiDict(cookies)
+    httprequest: Any = types.SimpleNamespace(
+        remote_addr=None, cookies=werkzeug.datastructures.MultiDict(cookies)
     )
-    return request
+    return Request(httprequest, app=None)
 
 
 def test_without_a_registry_every_cookie_is_visible():

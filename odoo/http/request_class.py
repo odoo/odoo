@@ -117,10 +117,12 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
             session.should_rotate = True
 
         dbname = None
+        source = "none"  # debuglog
         host = self.httprequest.environ.get("HTTP_HOST", "")
         header_dbname = self.httprequest.headers.get("X-Odoo-Database")
         if session.db and http.filter_dbs_served([session.db], host=host):
             dbname = session.db
+            source = "session"  # debuglog
             if header_dbname and header_dbname != dbname:
                 _debug.logic(
                     "http.session.db_conflict",
@@ -137,12 +139,14 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
             session.can_save = False
             if http.filter_dbs_served([header_dbname], host=host):
                 dbname = header_dbname
+                source = "header"  # debuglog
             else:
                 _debug.logic("http.session.header_db_rejected", header_db=header_dbname)
         else:
             all_dbs = http.get_dbs_served(force=True, host=host)
             if len(all_dbs) == 1:
                 dbname = all_dbs[0]
+                source = "single"  # debuglog
             _debug.logic("http.session.db_inferred", candidates=len(all_dbs))
 
         if session.db != dbname:
@@ -161,11 +165,7 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
         _debug.logic(
             "http.session.selected",
             db=dbname,
-            source="session"
-            if session.db and not header_dbname
-            else "header"
-            if header_dbname
-            else "single",
+            source=source,
             session_new=session.is_new,
             uid=session.uid,
             rotate=session.should_rotate,
@@ -265,7 +265,7 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
         }
 
     def get_json_data(self) -> Any:
-        memo = getattr(self, "_json_memo", None)
+        memo = self._json_memo
         if memo is not None and memo[0] is self.httprequest:
             _debug.perf.count("http.json.body", cached=True)
             return memo[1]
@@ -335,7 +335,7 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
             self._bind_session_transaction(cr)
 
     def _bind_session_transaction(self, cr: Any) -> None:
-        if getattr(self, "_session_transaction_cursor", None) is cr:
+        if self._session_transaction_cursor is cr:
             return
         self._session_transaction_cursor = cr
         self._session_uses_transactions = True
@@ -378,18 +378,22 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
         if self._session_response is not None:
             self._update_response_from_future(self._session_response)
 
-    def _stage_session_save(self, env: odoo.api.Environment) -> None:
+    def _is_periodic_rotation_due(self) -> bool:
         session = self.session
-        self._session_save_pending = True
-        periodic_rotation = (
+        return bool(
             session.uid
             and time.time() >= session["create_time"] + SESSION_ROTATION_INTERVAL
             and self.httprequest.path not in SESSION_ROTATION_EXCLUDED_PATHS
         )
+
+    def _stage_session_save(self, env: odoo.api.Environment) -> None:
+        session = self.session
+        self._session_save_pending = True
+        periodic_rotation = self._is_periodic_rotation_due()
         _debug.lifecycle(
             "http.session.save_staged",
             rotate=session.should_rotate,
-            periodic=bool(periodic_rotation),
+            periodic=periodic_rotation,
         )
         if session.should_rotate or periodic_rotation:
             self.app.session_store.stage_rotation(
@@ -445,7 +449,7 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
             env is not None
             and self.env is not None
             and env.cr is self.env.cr
-            and getattr(self, "_session_uses_transactions", False)
+            and self._session_uses_transactions
             and not self._session_flush_active
             and not env.cr.closed
         ):
@@ -470,16 +474,11 @@ class Request(_RequestServeMixin, _RequestResponseMixin, _RequestCsrfMixin):
                 root.session_store.save(sess)
                 written = True
                 strategy = "rotate_pending"  # debuglog
-            elif (
-                can_rotate
-                and sess.uid
-                and time.time() >= sess["create_time"] + SESSION_ROTATION_INTERVAL
-                and self.httprequest.path not in SESSION_ROTATION_EXCLUDED_PATHS
-            ):
+            elif can_rotate and self._is_periodic_rotation_due():
                 root.session_store.rotate(sess, env, True)
                 written = True
                 strategy = "periodic_rotate"  # debuglog
-            elif content_changed:
+            elif content_changed or (sess.is_dirty and sess.is_new):
                 root.session_store.save(sess)
                 written = True
                 strategy = "save"  # debuglog

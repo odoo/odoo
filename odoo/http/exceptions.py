@@ -36,8 +36,16 @@ _debug = DebugLog(__name__)
 class RegistryError(RuntimeError):
     __module__ = "odoo.http"
 
-    db_absent: bool | None = None
-    transient: bool = False
+    def __init__(
+        self,
+        message: str,
+        *,
+        db_absent: bool | None = None,
+        transient: bool = False,
+    ) -> None:
+        super().__init__(message)
+        self.db_absent = db_absent
+        self.transient = transient
 
 
 class SessionExpiredException(Exception):

@@ -71,14 +71,16 @@ def _save(session, *, store=None, env="open", cookie_sid=None, path="/x"):
     elif env == "closed":
         env = types.SimpleNamespace(cr=types.SimpleNamespace(closed=True))
     future = _Cookies()
-    this: Any = types.SimpleNamespace(
-        app=types.SimpleNamespace(session_store=store),
-        session=session,
-        env=env,
-        future_response=future,
-        httprequest=types.SimpleNamespace(session_id=cookie_sid, path=path),
+    httprequest: Any = types.SimpleNamespace(
+        remote_addr=None, session_id=cookie_sid, path=path
     )
-    request_class.Request._save_session(this)
+    this: Any = request_class.Request(
+        httprequest, app=types.SimpleNamespace(session_store=store)
+    )
+    this.session = session
+    this.env = env
+    this.future_response = future
+    this._save_session()
     return store, future
 
 
@@ -141,6 +143,15 @@ def test_a_dirty_but_unchanged_session_is_only_touched():
     s.is_dirty = True
     store, _ = _save(s)
     assert store.calls == ["keep_alive"]
+
+
+def test_a_new_dirty_session_is_written_not_touched():
+    s = _Session()
+    s.is_new = True
+    s.is_dirty = True
+    store, future = _save(s)
+    assert store.calls == ["save"], "a file that does not exist yet cannot be touched"
+    assert "session_id" in future.set
 
 
 def test_an_untouched_session_costs_nothing_and_sets_no_cookie():

@@ -126,6 +126,7 @@ def test_trace_is_refused_before_anything_else_runs():
     assert out["status"].startswith("405")
     assert req.calls == []
     static.assert_not_called()
+    assert not req._post_init_done, "a refused method loads no session"
 
 
 def test_a_nul_in_the_path_is_a_404_and_never_reaches_the_resolver():
@@ -135,6 +136,7 @@ def test_a_nul_in_the_path_is_a_404_and_never_reaches_the_resolver():
         out = _run(app, _environ("/web/static/\x00.js"), req)
     assert out["status"].startswith("404")
     static.assert_not_called(), "get_static_file_path must not be handed a NUL path"
+    assert not req._post_init_done, "a refused path loads no session"
 
 
 def test_a_registry_error_falls_back_to_serving_without_a_database():
