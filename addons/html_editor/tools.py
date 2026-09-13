@@ -9,6 +9,7 @@ from markupsafe import Markup
 from odoo import _
 from odoo.exceptions import ValidationError
 from odoo.http import request
+from odoo.libs import guarded_http, netguard
 from odoo.tools.image import image_process
 
 _logger = logging.getLogger(__name__)
@@ -22,6 +23,8 @@ player_regexes = {
     "instagram": r"(?:(.*)instagram.com|instagr\.am)/p/(.[a-zA-Z0-9-_\.]*)",
     "facebook": r"^(?:(?:https?:)?//)?(?:www\.)?facebook\.com(?:/(?:[^/]+/)?videos/|/watch/?\?v=|/reel/|/plugins/video\.php\?[^ ]*?href=.*?(?:videos|reel)%2[Ff])(?P<id>\d+)",
 }
+
+VIDEO_THUMBNAIL_MAX_BYTES = 10 * 1024 * 1024
 
 
 def get_video_source_data(video_url):
@@ -195,24 +198,31 @@ def get_video_thumbnail(video_url):
 
     response = None
     platform, video_id = source[:2]
-    with contextlib.suppress(requests.exceptions.RequestException):
+    # The thumbnail URL Vimeo returns is the vendor's answer, not a constant, so the
+    # fetches share the public-only session; no environment is at hand for ir.egress.
+    session = guarded_http.guarded_session(
+        netguard.PUBLIC_ONLY, max_bytes=VIDEO_THUMBNAIL_MAX_BYTES
+    )
+    with session, contextlib.suppress(requests.exceptions.RequestException):
         if platform == "youtube":
-            response = requests.get(
+            response = session.get(
                 f"https://img.youtube.com/vi/{video_id}/0.jpg", timeout=10
             )
         elif platform == "vimeo":
-            res = requests.get(
-                f"https://vimeo.com/api/oembed.json?url={video_url}", timeout=10
+            res = session.get(
+                "https://vimeo.com/api/oembed.json",
+                params={"url": video_url},
+                timeout=10,
             )
             if res.ok:
                 data = res.json()
-                response = requests.get(data["thumbnail_url"], timeout=10)
+                response = session.get(data["thumbnail_url"], timeout=10)
         elif platform == "dailymotion":
-            response = requests.get(
+            response = session.get(
                 f"https://www.dailymotion.com/thumbnail/video/{video_id}", timeout=10
             )
         elif platform == "instagram":
-            response = requests.get(
+            response = session.get(
                 f"https://www.instagram.com/p/{video_id}/media/?size=t", timeout=10
             )
 

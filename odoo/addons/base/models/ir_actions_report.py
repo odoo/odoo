@@ -35,6 +35,7 @@ from odoo.exceptions import (
 )
 from odoo.fields import Domain
 from odoo.http import request, root
+from odoo.libs import guarded_http, netguard
 from odoo.libs.barcode import (
     createBarcodeDrawing,
     get_barcode_font,
@@ -79,6 +80,16 @@ def _get_port_effective(parsed: Any) -> int:
 
 def _is_tls_verification_required(url: str) -> bool:
     return urlparse(url).hostname not in _LOOPBACK_HOSTS
+
+
+# The report URL is this server's own, configured by an administrator and often on
+# a private address, so it is fetched under the private-allowed policy without the
+# ir.egress environment a static fetcher does not have.
+def _get_own_origin(
+    url: str, cookies: dict[str, str], verify: bool
+) -> requests.Response:
+    with guarded_http.guarded_session(netguard.PRIVATE_ALLOWED) as session:
+        return session.get(url, cookies=cookies, timeout=10, verify=verify)
 
 
 def _coerce_bool(value: Any, default: bool) -> bool:
@@ -720,7 +731,7 @@ class OdooURLFetcher(URLFetcher):
     ) -> requests.Response:
         current_test = modules.module.current_test
         if not current_test:
-            return requests.get(url, cookies=cookies, timeout=10, verify=verify)
+            return _get_own_origin(url, cookies, verify)
 
         from odoo.tests.common import TEST_CURSOR_COOKIE_NAME, release_test_lock
 
@@ -732,7 +743,7 @@ class OdooURLFetcher(URLFetcher):
         current_test.http_request_key = key
         try:
             with release_test_lock():
-                return requests.get(url, cookies=cookies, timeout=10, verify=verify)
+                return _get_own_origin(url, cookies, verify)
         finally:
             current_test.http_request_key = saved_key
 

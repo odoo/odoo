@@ -1871,7 +1871,7 @@ class TestRawEgressLint(BaseCase):
             [],
         )
 
-    def test_the_transport_module_itself_is_out_of_scope(self):
+    def test_the_transport_module_has_no_exemption(self):
         unit = _rules.Unit(
             "/w/odoo/addons/api_transport/tools/api_client.py",
             "",
@@ -1880,7 +1880,7 @@ class TestRawEgressLint(BaseCase):
             True,
         )
         applies = next(c for c in _rules.CHECKERS if "raw-egress" in c.rules).applies_to
-        self.assertFalse(applies(unit))
+        self.assertTrue(applies(unit))
 
 
 @no_retry

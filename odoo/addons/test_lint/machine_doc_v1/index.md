@@ -31,7 +31,7 @@ Four gates are floored above zero: `lint_docstring` (a one-sided ratchet that
 reads 32 only on a fuller install), `bundle_double_eval` (ESM bundles that
 evaluate twice), and the two migration ledgers `lint_raw_egress` and
 `lint_credential_storage`, whose floors are the calls and columns still to move
-onto `api_transport` and into the vault. Everything else -- every AST rule,
+onto `ir.egress` and into the vault. Everything else -- every AST rule,
 every XML rule, the manifest and record-order gates -- is a hard zero. `n-plus-one-query` reached
 zero on 2026-09-12 by reading each of its 295 sites: a loop over the records
 is hoisted, a loop that runs one query per distinct key (company, model,
@@ -82,11 +82,13 @@ the test body. Stores are skipped, so a fake cursor defining the attribute is no
 finding, and the five tests that assert the counter itself carry
 `# noqa: E8516`.
 
-`raw-egress` (E8518) counts every call that leaves Odoo without
-`api_transport`: `requests` verbs and sessions, `httpx`, `urllib.request.urlopen`,
-zeep's `Transport` and `boto3` clients, with import aliases followed. It skips tests
-and the transport module itself. Its floor is a migration ledger: moving a call onto
-`get_api_client` lowers it, a new raw call fails it. `secret-in-environ` (E8519) is
+`raw-egress` (E8518) counts every call that leaves Odoo without `ir.egress`, base's
+one outbound pipeline: `requests` verbs and sessions, `httpx`,
+`urllib.request.urlopen`, zeep's `Transport` and `boto3` clients, with import aliases
+followed. It skips tests and nothing else: `api_transport` builds its sessions on
+`ir.egress` like any other addon, and the pipeline's own transport lives in
+`odoo/libs/guarded_http.py`, outside every addon. Its floor is a migration ledger:
+moving a call onto `ir.egress` lowers it, a new raw call fails it. `secret-in-environ` (E8519) is
 held at zero: a secret-named key written into `os.environ`, which every later
 subprocess of the worker inherits, instead of into the child's own `env=`.
 

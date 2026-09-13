@@ -232,9 +232,10 @@ RULES: tuple[Rule, ...] = (
     Rule(
         "raw-egress",
         "E8518",
-        "send the call through api_transport's `get_api_client(env, code)`, so it "
-        "gets the endpoint's host policy, credential, retry, rate limit and "
-        "exchange log; a vendor SDK that cannot be routed takes "
+        "send the call through `env['ir.egress']` (a configured vendor through "
+        "api_transport's `get_api_client(env, code)`, which builds on it), so the "
+        "address is checked, the connection pinned, every redirect checked again "
+        "and the response capped; a vendor SDK that cannot take the session takes "
         "`# noqa: E8518  <why it cannot>`",
     ),
     Rule(
@@ -376,14 +377,6 @@ def _secret_in_environ(unit: Unit) -> Iterable[object]:
     return _checker_egress.check_secret_in_environ(unit.tree, unit.nodes)
 
 
-def _in_an_addon_outside_tests_and_the_transport(unit: Unit) -> bool:
-    return (
-        unit.in_module
-        and not unit.is_test
-        and "/addons/api_transport/" not in unit.path
-    )
-
-
 def _field_declaration(unit: Unit) -> Iterable[object]:
     return _checker_field_declaration.check(unit.tree, unit.nodes)
 
@@ -450,7 +443,7 @@ CHECKERS: tuple[Checker, ...] = (
     Checker(_row_counter, _in_tests, frozenset({"row-counter-in-test"})),
     Checker(
         _raw_egress,
-        _in_an_addon_outside_tests_and_the_transport,
+        _in_an_addon_outside_tests,
         frozenset({"raw-egress"}),
     ),
     Checker(_secret_in_environ, _outside_tests, frozenset({"secret-in-environ"})),

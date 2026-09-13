@@ -76,7 +76,7 @@ def check_raw_egress(tree: ast.Module, nodes=None) -> Iterator[Violation]:
                 yield Violation(
                     node.lineno,
                     node.col_offset,
-                    f"{target}() leaves Odoo outside api_transport",
+                    f"{target}() leaves Odoo outside ir.egress",
                 )
 
 

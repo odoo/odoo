@@ -353,15 +353,18 @@ class OAuthController(http.Controller):
             token_data["client_secret"] = credential.oauth_client_secret
 
         try:
-            response = requests.post(
-                service.oauth_token_endpoint,
-                data=token_data,
-                headers={
-                    "Accept": "application/json",
-                    "Content-Type": "application/x-www-form-urlencoded",
-                },
-                timeout=30,
-            )
+            with credential.env["ir.egress"].session(
+                purpose="oauth_token", policy="private"
+            ) as session:
+                response = session.post(
+                    service.oauth_token_endpoint,
+                    data=token_data,
+                    headers={
+                        "Accept": "application/json",
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    timeout=30,
+                )
 
             response.raise_for_status()
 

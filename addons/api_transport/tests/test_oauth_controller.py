@@ -1,5 +1,7 @@
 from unittest.mock import MagicMock, patch
 
+import requests
+
 from odoo.tests.common import TransactionCase
 
 from odoo.addons.api_transport.controllers.oauth import OAuthController
@@ -48,10 +50,7 @@ class TestOAuthTokenExchange(EncryptionKeyCase, TransactionCase):
                 "_get_redirect_uri",
                 return_value="https://odoo.test/api_gateway/oauth/callback",
             ),
-            patch(
-                "odoo.addons.api_transport.controllers.oauth.requests.post",
-                return_value=response,
-            ) as mock_post,
+            patch.object(requests.Session, "post", return_value=response) as mock_post,
         ):
             tokens = self.controller._exchange_code_for_tokens(credential, "auth-code")
         return tokens, mock_post

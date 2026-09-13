@@ -10,7 +10,6 @@ from collections import defaultdict
 from urllib.parse import urlencode
 
 import lxml
-import requests
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 from PIL import Image, UnidentifiedImageError
@@ -1833,7 +1832,10 @@ class MailingMailing(models.Model):
         did_modify_body = False
 
         conversion_info = []  # list of tuples (image: base64 image, node: lxml node, old_url: string or None, original_id))
-        with requests.Session() as session:
+        with self.env["ir.egress"].session(
+            purpose="mailing_image",
+            max_bytes=tools.config.get("import_file_maxbytes"),
+        ) as session:
             for node in root.iter(lxml.etree.Element, lxml.etree.Comment):
                 if node.tag == "img":
                     # Convert base64 images in img tags to attachments.
