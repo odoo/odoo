@@ -689,7 +689,7 @@ class CreateMixin(_ModelStubs):
             xmlids=len(entries),
             noupdate=noupdate,
         )
-        self.env["ir.model.data"]._update_xmlids(entries)
+        self.env.registry.xmlids.update(self.env, entries)
 
     def _update_parent_path_on_create(self) -> None:
         if not self._parent_store:

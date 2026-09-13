@@ -597,10 +597,12 @@ class LoadMixin(_ModelStubs):
     def _load_records(self, data_list: list[dict], update: bool = False) -> Self:
         original_self = self.browse()
 
-        imd = self.env["ir.model.data"].sudo()
+        xmlids = self.env.registry.xmlids
 
         xml_ids = [data["xml_id"] for data in data_list if data.get("xml_id")]
-        existing = {f"{row[1]}.{row[2]}": row for row in imd._get_xmlids(xml_ids, self)}
+        existing = {
+            f"{row[1]}.{row[2]}": row for row in xmlids.resolve(self.env, xml_ids, self)
+        }
 
         to_create = []
         to_update = []
@@ -644,7 +646,7 @@ class LoadMixin(_ModelStubs):
                 if not (update and d_noupdate):
                     to_update.append(data)
             else:
-                imd.browse(d_id).unlink()
+                xmlids.remove(self.env, [d_id])
                 to_create.append(data)
 
         _debug.pipeline(
@@ -672,7 +674,7 @@ class LoadMixin(_ModelStubs):
             xmlids=len(imd_data_list),
             update=update,
         )
-        imd._update_xmlids(imd_data_list, update)
+        xmlids.update(self.env, imd_data_list, update)
 
         return original_self.concat(*(data["record"] for data in data_list))
 

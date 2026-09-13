@@ -61,10 +61,9 @@ class UnlinkMixin(_ModelStubs):
         prof.mark("flush")
 
         cr = self.env.cr
-        Data = self.env["ir.model.data"].sudo().with_context({})
         Defaults = self.env["ir.default"].sudo()
         Attachment = self.env["ir.attachment"].sudo()
-        ir_model_data_unlink = Data
+        ir_model_data_unlink = self.env.registry.xmlids.records_of(self)
         ir_attachment_unlink = Attachment
 
         with self.env.protecting(self._fields.values(), self):
@@ -75,14 +74,9 @@ class UnlinkMixin(_ModelStubs):
 
         deleted_ids: list[int] = self.ids
         for sub_ids in batched(deleted_ids, cr.BATCH_SIZE, strict=False):
-            data, attachments = self._unlink_process_batch(
-                sub_ids,
-                Data,
-                Defaults,
-                Attachment,
+            ir_attachment_unlink |= self._unlink_process_batch(
+                sub_ids, Defaults, Attachment
             )
-            ir_model_data_unlink |= data
-            ir_attachment_unlink |= attachments
         prof.mark("sql")
 
         if self.env.context.get(MODULE_UNINSTALL_FLAG):
@@ -200,20 +194,13 @@ class UnlinkMixin(_ModelStubs):
         )
 
     def _unlink_process_batch(
-        self,
-        sub_ids: tuple[int, ...],
-        Data: typing.Any,
-        Defaults: typing.Any,
-        Attachment: typing.Any,
-    ) -> tuple[Self, Self]:
-        data, attachments = self.env.backend.unlink_rows(
-            self, sub_ids, Data, Defaults, Attachment
-        )
+        self, sub_ids: tuple[int, ...], Defaults: typing.Any, Attachment: typing.Any
+    ) -> Self:
+        attachments = self.env.backend.unlink_rows(self, sub_ids, Defaults, Attachment)
         _debug.perf.count(
             "unlink.batch",
             model=self._name,
             records=len(sub_ids),
-            xmlids=len(data),
             attachments=len(attachments),
         )
-        return data, attachments
+        return attachments

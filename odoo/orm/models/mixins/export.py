@@ -1,13 +1,12 @@
 import collections
 import logging
 import typing
-import uuid
 from collections import defaultdict
 from typing import Self
 
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import SQL, groupby, unique
+from odoo.tools import groupby, unique
 from odoo.tools.translate import _
 
 from ..._recordset import is_recordset
@@ -44,69 +43,14 @@ class ExportMixin(_ModelStubs):
                 )
             )
 
-        modname = "__export__"
-
-        cr = self.env.cr
-        cr.execute(
-            SQL(
-                """
-            SELECT res_id, module, name
-            FROM ir_model_data
-            WHERE model = %s AND res_id = ANY(%s)
-            ORDER BY id
-        """,
-                self._name,
-                list(self.ids),
-            )
-        )
-        xids: dict[int, tuple[str, str]] = {}
-        for res_id, module, name in cr.fetchall():
-            xids.setdefault(res_id, (module, name))
-
-        def to_xid(record_id):
-            module, name = xids[record_id]
-            return f"{module}.{name}" if module else name
-
-        missing = self.filtered(lambda r: r.id not in xids)
+        xids = self.env.registry.xmlids.ensure(self, "__export__")
         _debug.pipeline(
             "export.xmlids_resolved",
             model=self._name,
             records=len(self),
-            existing=len(xids),
-            missing=len(missing),
+            xmlids=len(xids),
         )
-        if not missing:
-            return ((record, to_xid(record.id)) for record in self)
-
-        xids.update(
-            (
-                r.id,
-                (
-                    modname,
-                    f"{r._table}_{r.id}_{uuid.uuid4().hex[:8]}",
-                ),
-            )
-            for r in missing
-        )
-        fields = ["module", "model", "name", "res_id"]
-
-        cr.copy_from(
-            "ir_model_data",
-            fields,
-            [
-                (modname, record._name, xids[record.id][1], record.id)
-                for record in missing
-            ],
-        )
-        self.env["ir.model.data"].invalidate_model(fields)
-        _debug.lifecycle(
-            "export.xmlids_created",
-            model=self._name,
-            records=len(missing),
-            module=modname,
-        )
-
-        return ((record, to_xid(record.id)) for record in self)
+        return ((record, xids[record.id]) for record in self)
 
     def _export_get_cell_value(self, record, name, cache_properties):
         if "." in name:

@@ -466,10 +466,9 @@ class StorageBackend(typing.Protocol):
         self,
         model: BaseModel,
         sub_ids: tuple[int, ...],
-        Data: BaseModel,
         Defaults: typing.Any,
         Attachment: BaseModel,
-    ) -> tuple[BaseModel, BaseModel]: ...
+    ) -> BaseModel: ...
 
     def read_m2m_pairs(
         self,
@@ -1048,10 +1047,9 @@ class PostgresBackend:
         self,
         model: BaseModel,
         sub_ids: tuple[int, ...],
-        Data: BaseModel,
         Defaults: typing.Any,
         Attachment: BaseModel,
-    ) -> tuple[BaseModel, BaseModel]:
+    ) -> BaseModel:
         env = model.env
         cr = env.cr
         records = model.browse(sub_ids)
@@ -1063,8 +1061,6 @@ class PostgresBackend:
                 list(sub_ids),
             )
         )
-
-        data = Data.search([("model", "=", model._name), ("res_id", "in", sub_ids)])
 
         cr.execute(
             SQL(
@@ -1081,7 +1077,6 @@ class PostgresBackend:
             "backend.unlink_rows",
             model=model._name,
             rows=len(sub_ids),
-            xmlids=len(data),
             attachments=len(attachments),
             company_dependent_referrers=len(many2one_fields),
             uninstalling=bool(uninstalling),
@@ -1104,7 +1099,7 @@ class PostgresBackend:
 
         Defaults.discard_records(records)
 
-        return data, attachments
+        return attachments
 
     @staticmethod
     def _unlink_default_guard(
@@ -1756,12 +1751,11 @@ class InMemoryBackend:
         self,
         model: BaseModel,
         sub_ids: tuple[int, ...],
-        Data: BaseModel,
         Defaults: typing.Any,
         Attachment: BaseModel,
-    ) -> tuple[BaseModel, BaseModel]:
+    ) -> BaseModel:
         self.storage.remove_rows(model._table, list(sub_ids))
-        return Data.browse(), Attachment.browse()
+        return Attachment.browse()
 
     def _iter_m2m_rows(self, relation: str):
         for row_id in self.storage.get_table_ids(relation):

@@ -35,15 +35,13 @@ DISPATCH_SITES: dict[tuple[str, str], str] = {
         "guarded by backend.supports_parent_store"
     ),
     ("models/mixins/unlink.py", "_unlink_process_batch"): (
-        "LOSSY: PostgresBackend.unlink_rows collects ir.model.data + ir.attachment "
-        "rows and runs the many2one_company_dependents ir.default cleanup; "
-        "InMemoryBackend.unlink_rows() returns two EMPTY recordsets and does "
-        "neither. It IS now passed the Defaults recordset -- extracting "
+        "LOSSY: PostgresBackend.unlink_rows collects ir.attachment rows and runs "
+        "the many2one_company_dependents ir.default cleanup; "
+        "InMemoryBackend.unlink_rows() returns an EMPTY attachment recordset and "
+        "does neither. It IS passed the Defaults recordset -- extracting "
         "PostgresBackend showed the port's signature was missing an argument "
-        "the operation needs, which nobody had noticed because the SQL path "
-        "never went through the port. Half the gap is therefore closed: the "
-        "in-memory side is handed what it would need, and what remains is that "
-        "it does not use it"
+        "the operation needs. The ir.model.data rows left the port: the unlink "
+        "mixin asks registry.xmlids for them, so both tiers collect them alike."
     ),
     ("models/mixins/search.py", "lock_for_update"): "equivalent",
     ("models/mixins/search.py", "try_lock_for_update"): "equivalent",
@@ -158,10 +156,10 @@ def test_in_memory_unlink_rows_is_declared_lossy():
     import inspect
 
     source = inspect.getsource(InMemoryBackend.unlink_rows)
-    assert "Data.browse(), Attachment.browse()" in source, (
-        "InMemoryBackend.unlink_rows no longer returns two empty recordsets. If it "
-        "now really collects ir.model.data / ir.attachment rows, drop this test "
-        "and the LOSSY note on unlink in DISPATCH_SITES."
+    assert "return Attachment.browse()" in source, (
+        "InMemoryBackend.unlink_rows no longer returns an empty recordset. If it "
+        "now really collects ir.attachment rows, drop this test and the LOSSY "
+        "note on unlink in DISPATCH_SITES."
     )
     params = list(inspect.signature(InMemoryBackend.unlink_rows).parameters)
     assert "Defaults" in params, (

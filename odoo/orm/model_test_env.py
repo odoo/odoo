@@ -27,6 +27,7 @@ from .runtime.access_policy import ACCESS_POLICY
 from .runtime.metaschema import META_SCHEMA
 from .runtime.registry import CACHES_BY_KEY
 from .runtime.transaction import Transaction
+from .runtime.xmlids import XMLIDS
 
 if TYPE_CHECKING:
     from .models.base import BaseModel
@@ -270,6 +271,7 @@ class ModelRegistry(_RegistryFieldsMixin, Mapping):
     _lock: threading.RLock = threading.RLock()
     metaschema = META_SCHEMA
     access_policy = ACCESS_POLICY
+    xmlids = XMLIDS
 
     def __init__(
         self,

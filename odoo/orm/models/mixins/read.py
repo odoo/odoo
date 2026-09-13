@@ -1,6 +1,6 @@
 import logging
 import typing
-from collections import defaultdict, deque
+from collections import deque
 from typing import Self
 
 from odoo.exceptions import MissingError
@@ -494,25 +494,18 @@ class ReadMixin(_ModelStubs):
 
     def get_metadata(self) -> list[ValuesType]:
 
-        IrModelData = self.env["ir.model.data"].sudo()
         if self._log_access:
             res = self.read(LOG_ACCESS_COLUMNS)
         else:
             res = [{"id": x} for x in self.ids]
 
-        xml_data = defaultdict(list)
-        imds = IrModelData.search_read(
-            [("model", "=", self._name), ("res_id", "in", self.ids)],
-            ["res_id", "noupdate", "module", "name"],
-            order="id DESC",
-        )
-        for imd in imds:
-            xml_data[imd["res_id"]].append(
-                {
-                    "xmlid": f"{imd['module']}.{imd['name']}",
-                    "noupdate": imd["noupdate"],
-                }
-            )
+        xml_data = {
+            res_id: [
+                {"xmlid": xmlid, "noupdate": noupdate}
+                for xmlid, noupdate in reversed(xmlids)
+            ]
+            for res_id, xmlids in self.env.registry.xmlids.of_records(self).items()
+        }
 
         for r in res:
             main = xml_data.get(r["id"], [{}])[-1]
@@ -523,7 +516,7 @@ class ReadMixin(_ModelStubs):
             "read.metadata",
             model=self._name,
             records=len(res),
-            xmlids=len(imds),
+            xmlids=sum(len(x) for x in xml_data.values()),
             log_access=self._log_access,
         )
         return res

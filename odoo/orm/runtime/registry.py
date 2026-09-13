@@ -34,6 +34,7 @@ from ._registry_schema import _RegistrySchemaMixin
 from ._registry_signaling import _RegistrySignalingMixin
 from .access_policy import ACCESS_POLICY, AccessPolicy
 from .metaschema import META_SCHEMA, MetaSchema
+from .xmlids import XMLIDS, Xmlids
 
 if typing.TYPE_CHECKING:
     from odoo.db import BaseCursor, Cursor
@@ -85,6 +86,7 @@ class Registry(
     loaded: bool
     metaschema: MetaSchema = META_SCHEMA
     access_policy: AccessPolicy = ACCESS_POLICY
+    xmlids: Xmlids = XMLIDS
 
     @classmethod
     def _new_finalize(cls, db_name: str, update_module: bool, t0: float) -> Registry:

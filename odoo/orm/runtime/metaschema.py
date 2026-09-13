@@ -54,14 +54,6 @@ class MetaSchema:
             model, name, kind, definition, module
         )
 
-    def finish_load(self, env: Environment, updated_modules: typing.Any) -> None:
-        with _debug.perf(
-            "metaschema.finish_load",
-            cr=getattr(env, "cr", None),
-            modules=len(updated_modules) if updated_modules else 0,
-        ):
-            env["ir.model.data"]._process_end(updated_modules)
-
     # -- manual models and fields
 
     def manual_class_attrs(self, env: Environment, model_data: dict) -> dict:

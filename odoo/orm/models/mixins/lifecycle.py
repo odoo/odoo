@@ -1,15 +1,11 @@
 import typing
-from collections import defaultdict
 
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.translate import _
 
 from ... import decorators as api
-from ..._typing import (
-    DomainType,
-    IdType,
-)
+from ..._typing import IdType
 from ._model_stubs import _ModelStubs
 
 if typing.TYPE_CHECKING:
@@ -24,24 +20,17 @@ class LifecycleMixin(_ModelStubs):
     __slots__ = ()
 
     def _get_external_ids(self) -> dict[IdType, list[str]]:
-        result = defaultdict(list)
-        domain: DomainType = [
-            ("model", "=", self._name),
-            ("res_id", "in", self.ids),
-        ]
-        for data in (
-            self.env["ir.model.data"]
-            .sudo()
-            .search_read(domain, ["module", "name", "res_id"], order="id")
-        ):
-            result[data["res_id"]].append(f"{data['module']}.{data['name']}")
+        result = {
+            res_id: [xmlid for xmlid, _noupdate in xmlids]
+            for res_id, xmlids in self.env.registry.xmlids.of_records(self).items()
+        }
         _debug.perf.count(
             "lifecycle.external_ids",
             model=self._name,
             records=len(self),
             with_xmlid=len(result),
         )
-        return {record.id: result[record._origin.id] for record in self}
+        return {record.id: result.get(record._origin.id, []) for record in self}
 
     def get_external_id(self) -> dict[IdType, str]:
         results = self._get_external_ids()

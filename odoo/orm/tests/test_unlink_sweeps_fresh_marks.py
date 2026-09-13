@@ -29,6 +29,10 @@ class _IrModelData(models.Model):
     _description = "ir.model.data stub for the unlink flow"
 
     name = fields.Char()
+    module = fields.Char()
+    model = fields.Char()
+    res_id = fields.Integer()
+    noupdate = fields.Boolean()
 
 
 class _IrAttachment(models.Model):

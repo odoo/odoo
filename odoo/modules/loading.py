@@ -1612,7 +1612,7 @@ class _ModuleLoader:
             modules=len(self.registry.updated_modules),
             xmlids_written=len(self.registry.loading.xmlids_written),
         ):
-            self.registry.metaschema.finish_load(env, self.registry.updated_modules)
+            self.registry.xmlids.finish_load(env, self.registry.updated_modules)
         self.registry.loading.xmlids_written.clear()
         vacuum_cron = typing.cast(
             "IrCronProtocol | None",
