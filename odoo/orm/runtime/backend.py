@@ -599,6 +599,10 @@ def _single_table_where(model: BaseModel, domain: Domain) -> SQL | None:
 
 
 def _fetch_term(model: BaseModel, field: Field, query: Query) -> SQL:
+    # the memo is keyed by field alone: a _field_to_sql override that answers
+    # the bare identifier under one environment and an expression under
+    # another would be served the identifier from the second call on, so an
+    # override customises a column in every environment or in none
     if field.translate:
         return _fetch_translated_term(model, field, query)
     term = field._fetch_term
