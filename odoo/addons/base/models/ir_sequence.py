@@ -9,7 +9,6 @@ from odoo.api import ValuesType
 from odoo.db import get_or_create_row
 from odoo.exceptions import UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import SQL
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
@@ -48,23 +47,9 @@ def _select_nextvals(env: Any, seq_name: str, count: int) -> list[int]:
 
 def _update_nogap(self: Any, number_increment: int) -> int:
     self.flush_recordset(["number_next"])
-    table = SQL.identifier(self._table)
-    self.env.cr.execute(
-        SQL(
-            "WITH locked AS ("
-            "SELECT number_next FROM %s WHERE id=%s FOR UPDATE NOWAIT"
-            ") "
-            "UPDATE %s t SET number_next = t.number_next + %s "
-            "FROM locked WHERE t.id = %s "
-            "RETURNING locked.number_next",
-            table,
-            self.id,
-            table,
-            number_increment,
-            self.id,
-        )
+    number_next = self.env.backend.columns.fetch_and_add(
+        self, "number_next", self.id, number_increment
     )
-    [number_next] = self.env.cr.fetchone()
     self.invalidate_recordset(["number_next"])
     return number_next
 
@@ -329,13 +314,10 @@ class IrSequence(models.Model):
             number_next=predicted.get(self._get_pg_sequence_name(), self.number_next),
         )
         self.flush_recordset(["number_next"])
-        self.env.cr.execute(
-            SQL(
-                "UPDATE %s SET number_next=%s WHERE id=%s",
-                SQL.identifier(self._table),
-                predicted.get(self._get_pg_sequence_name(), self.number_next),
-                self.id,
-            )
+        self.env.backend.columns.write(
+            self,
+            "number_next",
+            [(self.id, predicted.get(self._get_pg_sequence_name(), self.number_next))],
         )
         self.invalidate_recordset(["number_next", "number_next_actual"])
 
@@ -351,19 +333,16 @@ class IrSequence(models.Model):
             "pg_range_counters_carried_over", sequence=self.id, ranges=len(sub_seqs)
         )
         sub_seqs.flush_recordset(["number_next"])
-        self.env.cr.execute(
-            SQL(
-                "UPDATE %s t SET number_next = v.number_next"
-                " FROM unnest(%s::int[], %s::int[])"
-                " AS v(id, number_next)"
-                " WHERE t.id = v.id",
-                SQL.identifier(sub_seqs._table),
-                sub_seqs.ids,
-                [
-                    predicted.get(sub_seq._get_pg_sequence_name(), sub_seq.number_next)
-                    for sub_seq in sub_seqs
-                ],
-            )
+        self.env.backend.columns.write(
+            sub_seqs,
+            "number_next",
+            [
+                (
+                    sub_seq.id,
+                    predicted.get(sub_seq._get_pg_sequence_name(), sub_seq.number_next),
+                )
+                for sub_seq in sub_seqs
+            ],
         )
         sub_seqs.invalidate_recordset(["number_next", "number_next_actual"])
 

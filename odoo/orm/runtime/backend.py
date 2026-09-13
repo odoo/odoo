@@ -310,6 +310,10 @@ class ColumnStore(typing.Protocol):
         rows: typing.Collection[tuple[int, typing.Any]],
     ) -> None: ...
 
+    def fetch_and_add(
+        self, model: BaseModel, column: str, record_id: int, delta: int
+    ) -> int: ...
+
 
 class PostgresColumnStore:
     __slots__ = ()
@@ -344,6 +348,30 @@ class PostgresColumnStore:
             [(value, id_) for id_, value in rows],
         )
 
+    def fetch_and_add(
+        self, model: BaseModel, column: str, record_id: int, delta: int
+    ) -> int:
+        # the row is locked for the statement, so two callers never take the same
+        # value: NOWAIT surfaces the contention instead of queueing behind it
+        table = SQL.identifier(model._table)
+        column_sql = SQL.identifier(column)
+        [value] = model.env.execute_query(
+            SQL(
+                "WITH locked AS (SELECT %s AS value FROM %s WHERE id = %s FOR UPDATE NOWAIT) "
+                "UPDATE %s t SET %s = t.%s + %s FROM locked WHERE t.id = %s "
+                "RETURNING locked.value",
+                column_sql,
+                table,
+                record_id,
+                table,
+                column_sql,
+                column_sql,
+                delta,
+                record_id,
+            )
+        )[0]
+        return value
+
 
 class InMemoryColumnStore:
     __slots__ = ("storage",)
@@ -366,6 +394,14 @@ class InMemoryColumnStore:
         self.storage.update_rows(
             model._table, [(id_, {column: value}) for id_, value in rows]
         )
+
+    def fetch_and_add(
+        self, model: BaseModel, column: str, record_id: int, delta: int
+    ) -> int:
+        row = self.storage.get_row(model._table, record_id) or {}
+        value = row.get(column) or 0
+        self.storage.update_rows(model._table, [(record_id, {column: value + delta})])
+        return value
 
 
 @typing.runtime_checkable

@@ -51,30 +51,19 @@ class IrModelAccess(models.Model):
     @api.model
     def group_names_with_access(self, model_name: str, access_mode: str) -> list[str]:
         self._check_access_mode(access_mode)
-        lang = self.env.lang or "en_US"
-        perm_column = SQL.identifier(f"perm_{access_mode}")
-        self.env.cr.execute(
-            SQL(
-                """
-            SELECT COALESCE(c.name->>(%s::text), c.name->>'en_US'), COALESCE(g.name->>(%s::text), g.name->>'en_US')
-              FROM ir_model_access a
-              JOIN ir_model m ON (a.model_id = m.id)
-              JOIN res_groups g ON (a.group_id = g.id)
-         LEFT JOIN res_groups_privilege c ON (c.id = g.privilege_id)
-             WHERE m.model = %s
-               AND a.active = TRUE
-               AND %s = TRUE
-          ORDER BY COALESCE(c.name->>(%s::text), c.name->>'en_US') NULLS LAST, COALESCE(g.name->>(%s::text), g.name->>'en_US')
-            """,
-                lang,
-                lang,
-                model_name,
-                perm_column,
-                lang,
-                lang,
-            )
+        accesses = self.sudo().search(
+            [("model_id.model", "=", model_name), (f"perm_{access_mode}", "=", True)]
         )
-        return [f"{x[0]}/{x[1]}" if x[0] else x[1] for x in self.env.cr.fetchall()]
+        names = sorted(
+            (
+                (group.privilege_id.name or None, group.name)
+                for group in accesses.group_id
+            ),
+            key=lambda pair: (pair[0] is None, pair[0] or "", pair[1]),
+        )
+        return [
+            f"{privilege}/{group}" if privilege else group for privilege, group in names
+        ]
 
     @api.model
     @tools.ormcache("model_name", "access_mode", cache="stable")

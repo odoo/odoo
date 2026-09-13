@@ -181,38 +181,6 @@ UNSATISFIABLE_DEPENDENCY_STATES = frozenset(("uninstallable", "unknown"))
 
 LINK_STATES = [*STATES, ("unknown", "Unknown")]
 
-_DOWNSTREAM_CLOSURE_QUERY = """
-    WITH RECURSIVE closure(id, name) AS (
-        SELECT m.id, m.name
-        FROM ir_module_module m
-        WHERE m.id = ANY(%(seed_ids)s)
-    UNION
-        SELECT m.id, m.name
-        FROM closure c
-        JOIN ir_module_module_dependency d ON d.name = c.name
-        JOIN ir_module_module m ON m.id = d.module_id
-        WHERE m.state != ALL(%(exclude_states)s)
-          AND m.id != ALL(%(blocked_ids)s)
-    )
-    SELECT id FROM closure WHERE id != ALL(%(seed_ids)s)
-"""
-
-_UPSTREAM_CLOSURE_QUERY = """
-    WITH RECURSIVE closure(id, name) AS (
-        SELECT m.id, m.name
-        FROM ir_module_module m
-        WHERE m.id = ANY(%(seed_ids)s)
-    UNION
-        SELECT m.id, m.name
-        FROM closure c
-        JOIN ir_module_module_dependency d ON d.module_id = c.id
-        JOIN ir_module_module m ON m.name = d.name
-        WHERE m.state != ALL(%(exclude_states)s)
-          AND m.id != ALL(%(blocked_ids)s)
-    )
-    SELECT id FROM closure WHERE id != ALL(%(seed_ids)s)
-"""
-
 
 class IrModuleModule(models.Model):
     _name = "ir.module.module"
@@ -719,24 +687,45 @@ class IrModuleModule(models.Model):
 
     def _get_dependency_closure(
         self,
-        query: str,
+        direction: str,
         known_deps: Self | None,
         exclude_states: tuple[str, ...],
     ) -> Self:
         if not self:
             return self
-        self.flush_model(["name", "state"])
-        self.env["ir.module.module.dependency"].flush_model(["module_id", "name"])
         known_deps = known_deps or self.browse()
-        self.env.cr.execute(  # noqa: E8501  _DOWNSTREAM_/_UPSTREAM_CLOSURE_QUERY only
-            query,
-            {
-                "seed_ids": list(self.ids),
-                "exclude_states": list(exclude_states),
-                "blocked_ids": list(known_deps.ids),
-            },
-        )
-        return known_deps | self.browse([row[0] for row in self.env.cr.fetchall()])
+        Module = self.sudo().with_context(active_test=False)
+        Dependency = self.env["ir.module.module.dependency"].sudo()
+        blocked = set(known_deps.ids) | set(self.ids)
+        closure: set[int] = set()
+        frontier = Module.browse(self.ids)
+        while frontier:
+            if direction == "downstream":
+                step = Dependency.search(
+                    [("name", "in", frontier.mapped("name"))]
+                ).module_id
+            else:
+                step = Module.search(
+                    [
+                        (
+                            "name",
+                            "in",
+                            Dependency.search(
+                                [("module_id", "in", frontier.ids)]
+                            ).mapped("name"),
+                        )
+                    ]
+                )
+            step = step.filtered(
+                lambda module: (
+                    module.state not in exclude_states
+                    and module.id not in blocked
+                    and module.id not in closure
+                )
+            )
+            closure.update(step.ids)
+            frontier = step
+        return known_deps | self.browse(sorted(closure))
 
     def downstream_dependencies(
         self,
@@ -747,9 +736,7 @@ class IrModuleModule(models.Model):
             "to remove",
         ),
     ) -> Self:
-        return self._get_dependency_closure(
-            _DOWNSTREAM_CLOSURE_QUERY, known_deps, exclude_states
-        )
+        return self._get_dependency_closure("downstream", known_deps, exclude_states)
 
     def upstream_dependencies(
         self,
@@ -760,9 +747,7 @@ class IrModuleModule(models.Model):
             "to remove",
         ),
     ) -> Self:
-        return self._get_dependency_closure(
-            _UPSTREAM_CLOSURE_QUERY, known_deps, exclude_states
-        )
+        return self._get_dependency_closure("upstream", known_deps, exclude_states)
 
     def _next_todo_action(self) -> dict[str, Any]:
         Todos = self.env["ir.actions.todo"]

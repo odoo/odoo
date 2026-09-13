@@ -522,27 +522,22 @@ class IrActionsActions(models.Model):
 
     @tools.ormcache("model_name", "self.env.lang", cache="actions")
     def _get_bindings(self, model_name: str) -> frozendict:
-        cr = self.env.cr
         result = defaultdict(list)
 
-        for name in self._get_model_names_in_tree():
-            self.env[name].flush_model()
-        self.env["ir.model"].flush_model()
-        cr.execute(
-            SQL(
-                "SELECT a.id, %s FROM %s a JOIN %s m ON a.%s = m.id"
-                " WHERE m.model = %s ORDER BY a.id",
-                SQL(", ").join(
-                    SQL("a.%s", SQL.identifier(name))
-                    for name in self._BINDING_SQL_SELECTED
-                ),
-                SQL.identifier(self.env.registry["ir.actions.actions"]._table),
-                SQL.identifier(self.env["ir.model"]._table),
-                SQL.identifier(self._BINDING_SQL_JOINED),
-                model_name,
+        bound = (
+            self.env["ir.actions.actions"]
+            .sudo()
+            .with_context(active_test=False)
+            .search_fetch(
+                [(f"{self._BINDING_SQL_JOINED}.model", "=", model_name)],
+                list(self._BINDING_SQL_SELECTED),
+                order="id",
             )
         )
-        rows = cr.fetchall()
+        rows = [
+            (action.id, *(action[name] for name in self._BINDING_SQL_SELECTED))
+            for action in bound
+        ]
         _debug.perf.count("bindings_computed", model=model_name, rows=len(rows))
         if not rows:
             return frozendict(result)

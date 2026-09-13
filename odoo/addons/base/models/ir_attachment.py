@@ -1090,11 +1090,12 @@ class IrAttachment(models.Model):
     @ormcache()
     def _get_model_names_attached(self) -> tuple[list[str], bool]:
         limit = self._SEARCH_MODEL_DISCOVERY_LIMIT + 1
-        self.env.cr.execute(
-            "SELECT res_model FROM ir_attachment GROUP BY res_model LIMIT %s",
-            [limit],
+        groups = (
+            self.sudo()
+            .with_context(skip_res_field_check=True)
+            ._read_group([], ["res_model"], limit=limit)
         )
-        rows = [row[0] for row in self.env.cr.fetchall()]
+        rows = [res_model for (res_model,) in groups]
         return sorted(name for name in rows if name), len(rows) >= limit
 
     @api.model
