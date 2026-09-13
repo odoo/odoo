@@ -19,7 +19,7 @@ export class OrdersHistoryPage extends Component {
     }
 
     get lines() {
-        return this.order.lines;
+        return this.order.getOrderlines();
     }
 
     getPrice(line) {
