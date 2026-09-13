@@ -254,7 +254,7 @@ export class SelectMenu extends Component {
         if (this.props.multiSelect) {
             return this.selectedValues.length > 0;
         }
-        return Boolean(this.props.value);
+        return this.selectedChoice !== undefined;
     }
 
     get displayValue() {
@@ -278,13 +278,7 @@ export class SelectMenu extends Component {
     }
 
     get canDeselect() {
-        if (this.props.required) {
-            return false;
-        }
-        if (this.props.multiSelect) {
-            return this.hasSelection;
-        }
-        return this.selectedChoice !== undefined;
+        return !this.props.required && this.hasSelection;
     }
 
     get multiSelectChoices() {
@@ -477,6 +471,11 @@ export class SelectMenu extends Component {
             visit(choice.label);
             visit(choice.value);
         };
+        visit(this.props.autoSort);
+        for (const section of this.props.sections) {
+            visit(section.name);
+            visit(section.label);
+        }
         for (const choice of this.props.choices) {
             visitChoice(choice);
         }

@@ -28,6 +28,7 @@
     <t t-name="web.SelectMenu">
         <div t-att-class="`o_select_menu w-auto position-relative ${props.multiSelect ? 'o_select_menu_multi_select' : ''} ${displayInputInToggler ? 'o_input_dropdown' : ''} ${props.class || ''}`" t-att-data-id="selectMenuId">
             <Dropdown
+                disabled="props.disabled"
                 menuClass="this.menuClass"
                 menuRef="this.menuRef"
                 position="'bottom-fit'"

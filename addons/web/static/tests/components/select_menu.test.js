@@ -23,6 +23,42 @@ import { DropdownPopover } from "@web/components/dropdown/_behaviours/dropdown_p
 import { SelectMenu } from "@web/components/select_menu/select_menu";
 import { MainComponentsContainer } from "@web/ui/main_components_container";
 
+test("an open menu follows sorting and section changes", async () => {
+    class Host extends Component {
+        static props = ["*"];
+        static components = { SelectMenu };
+        static template = xml`<SelectMenu t-props="state"/>`;
+        setup() {
+            this.state = useState({
+                autoSort: true,
+                groups: [
+                    {
+                        section: "a",
+                        choices: [
+                            { value: 2, label: "Zulu" },
+                            { value: 1, label: "Alpha" },
+                        ],
+                    },
+                    { section: "b", choices: [{ value: 3, label: "Beta" }] },
+                ],
+                sections: [
+                    { name: "a", label: "First" },
+                    { name: "b", label: "Second" },
+                ],
+            });
+        }
+    }
+    const host = await mountWithCleanup(Host);
+    await open();
+    expect(queryAllTexts(".o_select_menu_item")).toEqual(["Alpha", "Zulu", "Beta"]);
+    host.state.autoSort = false;
+    await animationFrame();
+    expect(queryAllTexts(".o_select_menu_item")).toEqual(["Zulu", "Alpha", "Beta"]);
+    host.state.sections.reverse();
+    await animationFrame();
+    expect(queryAllTexts(".o_select_menu_item")).toEqual(["Beta", "Zulu", "Alpha"]);
+});
+
 async function mountSingleApp(
     /** @type {any} */ ComponentClass,
     /** @type {any} */ props = undefined,
@@ -2306,4 +2342,23 @@ test("typing into an open menu renders neither the menu nor its options until th
     await animationFrame();
     expect(menuRenders).toBe(1);
     expect(".o_select_menu_item").toHaveCount(12);
+});
+
+test("a disabled select menu cannot be opened through its caret", async () => {
+    await mountWithCleanup(SelectMenu, {
+        props: { choices: [{ value: 1, label: "One" }], disabled: true },
+    });
+    queryOne(".o_select_menu_caret").click();
+    await animationFrame();
+    expect(".o_select_menu_menu").toHaveCount(0);
+});
+
+test("a zero-valued selection displays its custom toggler instead of the placeholder", async () => {
+    class Parent extends Component {
+        static components = { SelectMenu };
+        static props = ["*"];
+        static template = xml`<SelectMenu choices="[{value: 0, label: 'Zero'}]" value="0" placeholder="'Choose'">Selected zero</SelectMenu>`;
+    }
+    await mountWithCleanup(Parent);
+    expect(".o_select_menu_toggler_slot").toHaveText("Selected zero");
 });
