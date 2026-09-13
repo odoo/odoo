@@ -445,6 +445,7 @@ test("widget many2one_avatar in kanban view", async () => {
 test("widget many2one_avatar in kanban view without access rights", async () => {
     expect.assertions(2);
     await mountView({
+        noMainContainer: true,
         type: "kanban",
         resModel: "partner",
         arch: `
@@ -469,6 +470,7 @@ test("widget many2one_avatar in kanban view without access rights", async () => 
 test(`decoration-muted works on avatars`, async () => {
     Partner._records.forEach((rec) => (rec.int_field = 9));
     await mountView({
+        noMainContainer: true,
         resModel: "partner",
         type: "form",
         arch: `

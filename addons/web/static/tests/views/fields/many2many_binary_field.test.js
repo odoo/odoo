@@ -82,6 +82,7 @@ test("widget many2many_binary", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "turtle",
         arch: `
@@ -213,6 +214,7 @@ test("widget many2many_binary image MIME type preview", async () => {
     IrAttachment._views.list = '<list string="Pictures"><field name="name"/></list>';
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "turtle",
         arch: `

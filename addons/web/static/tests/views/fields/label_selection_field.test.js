@@ -31,6 +31,7 @@ defineModels([Partner]);
 
 test("LabelSelectionField in form view", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -63,6 +64,7 @@ test("LabelSelectionField in editable list view", async () => {
     onRpc("has_group", () => true);
 
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "partner",
         arch: /* xml */ `

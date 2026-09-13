@@ -87,6 +87,7 @@ test("ImageField is correctly rendered", async () => {
         );
     });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -138,6 +139,7 @@ test("ImageField is correctly rendered", async () => {
 
 test("ImageField with img_class option", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -152,6 +154,7 @@ test("ImageField with img_class option", async () => {
 
 test("ImageField with alt attribute", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -171,6 +174,7 @@ test("ImageField on a many2one", async () => {
     Partner._records[1].parent_id = 1;
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 2,
@@ -249,6 +253,7 @@ test("url should use the checksum when the field is related on the same model", 
     Partner._records[0].document = PRODUCT_IMAGE;
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -267,6 +272,7 @@ test("ImageField is correctly replaced when given an incorrect value", async () 
     Partner._records[0].document = "incorrect_base64_value";
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -494,6 +500,7 @@ test("save record with image field modified by onchange", async () => {
 
 test("ImageField: option accepted_file_extensions", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -547,6 +554,7 @@ test("ImageField: camera hint mimetype on Chromium for Android", async () => {
 
 test("ImageField: set 0 width/height in the size option", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -594,6 +602,7 @@ test("ImageField: zoom and zoom_delay options (readonly)", async () => {
     Partner._records[0].document = MY_IMAGE;
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -619,6 +628,7 @@ test("ImageField: zoom and zoom_delay options (edit)", async () => {
     Partner._records[0].write_date = "2022-08-05 08:37:00";
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -644,6 +654,7 @@ test("ImageField displays the right images with zoom and preview_image options (
     Partner._records[0].write_date = "2022-08-05 08:37:00";
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -718,6 +729,7 @@ test("ImageField in x2many list is loaded correctly", async () => {
     Partner._records[0].timmy = [12];
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -746,6 +758,7 @@ test("ImageField with required attribute", async () => {
         throw new Error("Should not do a create RPC with unset required image field");
     });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -924,6 +937,7 @@ test("convert image to webp", async () => {
 
     const imageData = Uint8Array.from([...atob(MY_IMAGE)].map((c) => c.charCodeAt(0)));
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -1003,6 +1017,7 @@ test("ImageField with width attribute in list", async () => {
     defineModels([ResCompany, ResPartner, ResUsers]);
 
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "partner",
         arch: /* xml */ `

@@ -27,6 +27,7 @@ test("PercentageField in form view", async () => {
     });
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `<form><field name="float_field" widget="percentage"/></form>`,
@@ -49,6 +50,7 @@ test("PercentageField in form view", async () => {
 
 test("PercentageField in form view without rounding error", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `<form><field name="float_field" widget="percentage"/></form>`,
@@ -62,6 +64,7 @@ test("PercentageField in form view without rounding error", async () => {
 
 test("PercentageField with no_symbol option", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `<form><field name="float_field" widget="percentage" options="{'no_symbol': true}"/></form>`,
@@ -76,6 +79,7 @@ test("PercentageField with no_symbol option", async () => {
 
 test("PercentageField without no_symbol option shows percentage symbol", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `<form><field name="float_field" widget="percentage"/></form>`,

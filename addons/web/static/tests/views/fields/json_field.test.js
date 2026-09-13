@@ -11,6 +11,7 @@ defineModels([Product]);
 
 test("basic rendering", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "product",
         resId: 1,

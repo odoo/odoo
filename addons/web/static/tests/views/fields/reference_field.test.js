@@ -553,6 +553,7 @@ test("default_get a reference field in a x2m", async () => {
     `;
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: /* xml */ `
@@ -697,6 +698,7 @@ test("ReferenceField with model_field option (model_field not synchronized with 
     Partner._records[0].name = "John Smith";
 
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -887,6 +889,7 @@ test("model selector is displayed only when it should be", async () => {
     //The model selector should be only displayed if
     //there is no hide_model=True options AND no model_field specified
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -964,6 +967,7 @@ test("do not ask for display_name if field is invisible", async () => {
         });
     });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,

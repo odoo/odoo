@@ -21,6 +21,7 @@ onRpc("res.users", "has_group", () => true);
 
 test("PasswordField: readonly in form view", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -39,6 +40,7 @@ test("PasswordField: edition in form view", async () => {
         expect.step(args[1].name);
     });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -61,6 +63,7 @@ test("PasswordField: edition in form view", async () => {
 
 test("PasswordField in non-editable list view", async () => {
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "partner",
         arch: `<list><field name="name" widget="password"/></list>`,
@@ -78,6 +81,7 @@ test("PasswordField: edition in editable list view", async () => {
         expect.step(args[1].name);
     });
     await mountView({
+        noMainContainer: true,
         type: "list",
         resModel: "partner",
         arch: `<list editable="bottom"><field name="name" widget="password"/></list>`,
@@ -95,6 +99,7 @@ test("PasswordField: edition in editable list view", async () => {
 
 test("PasswordField: placeholder attribute", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         arch: `<form><field name="name" widget="password" placeholder="Enter password"/></form>`,
@@ -104,6 +109,7 @@ test("PasswordField: placeholder attribute", async () => {
 
 test("PasswordField on readonly text field in form view", async () => {
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
@@ -122,6 +128,7 @@ test("PasswordField on text field: edition in form view", async () => {
         expect.step(args[1].bio);
     });
     await mountView({
+        noMainContainer: true,
         type: "form",
         resModel: "partner",
         resId: 1,
