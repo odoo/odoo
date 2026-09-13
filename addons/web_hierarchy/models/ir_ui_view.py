@@ -6,6 +6,8 @@ from lxml import etree
 
 from odoo import _, fields, models
 
+from odoo.addons.base.models.ir_ui_view_arch import ElementHandler, register
+
 if typing.TYPE_CHECKING:
     from typing import Any
 
@@ -37,46 +39,6 @@ class IrUiView(models.Model):
 
     def _is_qweb_based_view(self, view_type):
         return super()._is_qweb_based_view(view_type) or view_type == "hierarchy"
-
-    def _check_view_tag_hierarchy(
-        self,
-        node: _Element,
-        name_manager,
-        node_info: dict[str, Any],
-    ) -> None:
-        if not node_info["validate"]:
-            return
-
-        seen_templates = False
-        for child in node.iterchildren(tag=etree.Element):
-            if child.tag == "templates":
-                if seen_templates:
-                    msg = _("Hierarchy view can contain only one templates tag")
-                    raise self._prepare_view_error(msg, child)
-                seen_templates = True
-            elif child.tag != "field":
-                msg = _(
-                    "Hierarchy child can only be field or template, got %s", child.tag
-                )
-                raise self._prepare_view_error(msg, child)
-
-        remaining = set(node.attrib) - HIERARCHY_VALID_ATTRIBUTES
-        if remaining:
-            msg = _(
-                "Invalid attributes (%(invalid_attributes)s) in hierarchy view. Attributes must be in (%(valid_attributes)s)",
-                invalid_attributes=remaining,
-                valid_attributes=HIERARCHY_VALID_ATTRIBUTES,
-            )
-            raise self._prepare_view_error(msg, node)
-
-        if not node.xpath(f".//*[@t-name='{CARD_TEMPLATE_NAME}']"):
-            msg = _(
-                "Hierarchy view must define a 'hierarchy-box' template to render its cards"
-            )
-            raise self._prepare_view_error(msg, node)
-
-        if name_manager is not None:
-            self._check_hierarchy_relation_fields(node, name_manager.model)
 
     def _check_hierarchy_relation_fields(self, node: _Element, model) -> None:
         for attribute, expected_type in (
@@ -118,3 +80,49 @@ class IrUiView(models.Model):
         return {
             "hierarchy": {"icon": "fa-solid fa-share-alt fa-rotate-90"}
         } | super()._get_view_info()
+
+
+@register("hierarchy")
+class HierarchyHandler(ElementHandler):
+    __slots__ = ()
+
+    def check(
+        self,
+        view,
+        node: _Element,
+        name_manager,
+        node_info: dict[str, Any],
+    ) -> None:
+        if not node_info["validate"]:
+            return
+
+        seen_templates = False
+        for child in node.iterchildren(tag=etree.Element):
+            if child.tag == "templates":
+                if seen_templates:
+                    msg = _("Hierarchy view can contain only one templates tag")
+                    raise view._prepare_view_error(msg, child)
+                seen_templates = True
+            elif child.tag != "field":
+                msg = _(
+                    "Hierarchy child can only be field or template, got %s", child.tag
+                )
+                raise view._prepare_view_error(msg, child)
+
+        remaining = set(node.attrib) - HIERARCHY_VALID_ATTRIBUTES
+        if remaining:
+            msg = _(
+                "Invalid attributes (%(invalid_attributes)s) in hierarchy view. Attributes must be in (%(valid_attributes)s)",
+                invalid_attributes=remaining,
+                valid_attributes=HIERARCHY_VALID_ATTRIBUTES,
+            )
+            raise view._prepare_view_error(msg, node)
+
+        if not node.xpath(f".//*[@t-name='{CARD_TEMPLATE_NAME}']"):
+            msg = _(
+                "Hierarchy view must define a 'hierarchy-box' template to render its cards"
+            )
+            raise view._prepare_view_error(msg, node)
+
+        if name_manager is not None:
+            view._check_hierarchy_relation_fields(node, name_manager.model)

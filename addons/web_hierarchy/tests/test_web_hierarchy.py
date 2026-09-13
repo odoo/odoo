@@ -4,6 +4,8 @@ from lxml import etree
 
 from odoo.tests import TransactionCase, tagged
 
+from odoo.addons.base.models.ir_ui_view_arch import ELEMENT_HANDLERS
+
 CARD = "<templates><t t-name='hierarchy-box'><field name='name'/></t></templates>"
 
 
@@ -16,8 +18,8 @@ class TestWebHierarchyView(TransactionCase):
 
     def _validate(self, xml, model="res.partner"):
         name_manager = SimpleNamespace(model=self.env[model]) if model else None
-        self.View._check_view_tag_hierarchy(
-            etree.fromstring(xml), name_manager, {"validate": True}
+        ELEMENT_HANDLERS["hierarchy"].check(
+            self.View, etree.fromstring(xml), name_manager, {"validate": True}
         )
 
     def test_hierarchy_is_qweb_based(self):
@@ -72,7 +74,8 @@ class TestWebHierarchyView(TransactionCase):
         )
 
     def test_validate_skipped_when_not_validating(self):
-        self.View._check_view_tag_hierarchy(
+        ELEMENT_HANDLERS["hierarchy"].check(
+            self.View,
             etree.fromstring("<hierarchy><group/></hierarchy>"),
             None,
             {"validate": False},

@@ -1,9 +1,6 @@
-import annotationlib
-import ast
 import collections
 import copy
 import functools
-import inspect
 import logging
 import pprint
 import re
@@ -37,9 +34,7 @@ from odoo.tools.misc import ConstantMapping, file_path
 from odoo.tools.template_inheritance import apply_inheritance_specs, locate_node
 from odoo.tools.translate import TRANSLATED_ATTRS, xml_translate
 from odoo.tools.view_validation import (
-    att_names,
     get_class_accessibility_warnings,
-    get_dict_asts,
     get_domain_value_names,
     get_dropdown_menu_warnings,
     get_expression_field_names,
@@ -48,6 +43,7 @@ from odoo.tools.view_validation import (
     valid_view,
 )
 
+from .ir_ui_view_arch import ELEMENT_HANDLERS, attribute_check_for
 from .ir_ui_view_name_manager import NameManager
 
 if TYPE_CHECKING:
@@ -71,7 +67,6 @@ VIEW_MODIFIERS = ("column_invisible", "invisible", "readonly", "required")
 
 CALENDAR_DATE_ATTRS = ("date_start", "date_delay", "date_stop", "color", "all_day")
 
-_NESTED_VIEW_TAGS = frozenset({"form", "list", "graph", "kanban", "calendar"})
 
 _TEMPLATE_CACHE_FIELDS = frozenset(
     {
@@ -105,7 +100,6 @@ _CTE_EXCLUDED_FIELDS = frozenset(
     }
 )
 
-COMP_REGEX = re.compile(r"(^|[^\w])\s*__comp__\s*([^\w]|$)")
 
 ref_re = re.compile(
     r"""
@@ -227,21 +221,6 @@ _XML_ENCODING_DECL_RE = re.compile(r"<\?xml[^>]*encoding=.*?\?>", re.IGNORECASE)
 
 _ARCH_FS_REF_RE = re.compile(r"(?<!%)%\((?P<xmlid>.*?)\)[ds]")
 
-_TOOLTIP_ATTR_RE = re.compile(r"^(t-att-|t-attf-)?data-tooltip(-template|-info)?$")
-
-_DEFAULT_PERIOD_RE = re.compile(r"(year|month)((-|\+)[1-9]\d*)?")
-
-_ATTRIBUTE_CHECKERS = {
-    "class": "_check_attr_class",
-    "t-att-class": "_check_attr_class",
-    "t-attf-class": "_check_attr_class",
-    "context": "_check_attr_context",
-    "col": "_check_attr_integer",
-    "colspan": "_check_attr_integer",
-    "data-bs-toggle": "_check_attr_data_bs_toggle",
-    "role": "_check_attr_role",
-    "group": "_check_attr_group",
-}
 
 _QWEB_DIRECTIVES_ALLOWED = re.compile(r"t-translation")
 _QWEB_DIRECTIVES_ALLOWED_TEMPLATE = re.compile(
@@ -1894,10 +1873,18 @@ class IrUiView(models.Model):
         self._postprocess_debug_to_cache(root)
 
         for elem, elem_info in self._iter_arch_nodes(root, get_node_info):
-            postprocessor = getattr(self, f"_postprocess_tag_{elem.tag}", None)
-            if postprocessor is not None:
+            handler = ELEMENT_HANDLERS.get(elem.tag)
+            legacy = (
+                getattr(self, f"_postprocess_tag_{elem.tag}", None)
+                if handler is None
+                else None
+            )
+            if handler is not None or legacy is not None:
                 had_parent = elem.getparent() is not None
-                postprocessor(elem, name_manager, elem_info)
+                if handler is not None:
+                    handler.postprocess(self, elem, name_manager, elem_info)
+                else:
+                    legacy(elem, name_manager, elem_info)
                 if had_parent and elem.getparent() is None:
                     continue
 
@@ -2057,175 +2044,32 @@ class IrUiView(models.Model):
         for name in self._get_calendar_field_names(node):
             name_manager.add_available_field(node, name, node_info)
 
-    def _postprocess_tag_calendar(
-        self,
-        node: _Element,
-        name_manager: NameManager,
-        node_info: dict[str, Any],
-    ) -> None:
-        self._add_available_calendar_fields(node, name_manager, node_info)
-
-    def _postprocess_tag_field(
-        self,
-        node: _Element,
-        name_manager: NameManager,
-        node_info: dict[str, Any],
-    ) -> None:
-        name = node.get("name")
-        if not name:
-            return
-
-        attrs = {"id": node.get("id")}
-        field = name_manager.model._fields.get(name)
-
-        if field:
-            self._narrow_model_groups(node_info, field)
-            if (
-                node_info.get("view_type") == "form"
-                and field.type in ("one2many", "many2many")
-                and not node.get("widget")
-                and node.get("invisible") not in ("1", "True")
-                and not name_manager.parent
-            ):
-                for arch in self._get_x2many_missing_view_archs(field, node, node_info):
-                    node.append(arch)
-
-            if field.relational:
-                domain = node.get("domain") or (
-                    node_info["editable"] and field._description_domain(self.env)
-                )
-                if isinstance(domain, str):
-                    vnames = get_expression_field_names(domain)
-                    name_manager.add_used_fields(
-                        node, vnames, node_info, ("domain", domain)
-                    )
-            if field.type == "properties":
-                name_manager.add_used_fields(
-                    node,
-                    [field.definition_record],
-                    node_info,
-                    ("fieldname", field.name),
-                )
-            context = node.get("context")
-            if context:
-                vnames = get_expression_field_names(context)
-                name_manager.add_used_fields(
-                    node, vnames, node_info, ("context", context)
-                )
-            if field.type == "binary" and (field_filename := node.get("filename")):
-                name_manager.add_used_fields(
-                    node,
-                    [field_filename],
-                    node_info,
-                    ("filename", field_filename),
-                )
-
-            for child in node:
-                if child.tag in _NESTED_VIEW_TAGS:
-                    node_info["children"] = []
-                    self._postprocess_view(
-                        child,
-                        field.comodel_name,
-                        editable=node_info["editable"],
-                        node_info=node_info,
-                    )
-
-            if node_info["editable"] and field.type in (
-                "many2one",
-                "many2many",
-            ):
-                node.set("model_access_rights", field.comodel_name)
-
-        name_manager.add_available_field(node, name, node_info, attrs)
-
-    def _postprocess_tag_groupby(
-        self,
-        node: _Element,
-        name_manager: NameManager,
-        node_info: dict[str, Any],
-    ) -> None:
-        name = node.get("name")
-        if not name:
-            return
-        field = name_manager.model._fields.get(name)
-        if not field or not field.comodel_name:
-            return
-        node_info["children"] = []
-        scope = E.groupby(*node)
-        self._postprocess_view(
-            scope, field.comodel_name, editable=False, node_info=node_info
-        )
-        node.attrib.update(scope.attrib)
-        node.extend(scope)
-        name_manager.add_available_field(node, name, node_info)
-
-    def _postprocess_tag_label(
-        self,
-        node: _Element,
-        name_manager: NameManager,
-        node_info: dict[str, Any],
-    ) -> None:
-        if not node.get("for"):
-            return
-        field = name_manager.model._fields.get(node.get("for"))
-        if field:
-            self._narrow_model_groups(node_info, field)
-
-    def _postprocess_tag_search(
-        self,
-        node: _Element,
-        name_manager: NameManager,
-        node_info: dict[str, Any],
-    ) -> None:
-        searchpanel = [child for child in node if child.tag == "searchpanel"]
-        if searchpanel:
-            self._postprocess_view(
-                searchpanel[0],
-                name_manager.model._name,
-                editable=False,
-                node_info=node_info,
-            )
-            node_info["children"] = [
-                child for child in node if child.tag != "searchpanel"
-            ]
-
     @api.model
     @tools.ormcache()
     def _get_view_type_tags(self) -> frozenset[str]:
         return frozenset(value for value, _label in self._fields["type"].selection)
 
     def _editable_node(self, node: _Element, name_manager: NameManager) -> bool:
+        handler = ELEMENT_HANDLERS.get(node.tag)
+        if handler is not None:
+            answer = handler.editable(self, node, name_manager)
+            if answer is not None:
+                return answer
         func = getattr(self, f"_editable_tag_{node.tag}", None)
         if func is not None:
             return func(node, name_manager)
         return node.tag not in self._get_view_type_tags()
 
-    def _editable_tag_form(self, node: _Element, name_manager: NameManager) -> bool:
-        return True
-
-    def _editable_tag_list(self, node: _Element, name_manager: NameManager) -> bool:
-        return bool(node.get("editable") or node.get("multi_edit"))
-
-    def _editable_tag_field(self, node: _Element, name_manager: NameManager) -> bool:
-        field = name_manager.model._fields.get(node.get("name"))
-        return field is None or (
-            field.is_editable() and node.get("readonly") not in ("1", "True")
-        )
-
     def _can_onchange_view(self, node: _Element) -> bool | None:
+        handler = ELEMENT_HANDLERS.get(node.tag)
+        if handler is not None:
+            answer = handler.can_onchange(self, node)
+            if answer is not None:
+                return answer
         func = getattr(self, f"_can_onchange_view_{node.tag}", None)
         if func is not None:
             return func(node)
         return None
-
-    def _can_onchange_view_form(self, node: _Element) -> bool:
-        return True
-
-    def _can_onchange_view_list(self, node: _Element) -> bool:
-        return True
-
-    def _can_onchange_view_kanban(self, node: _Element) -> bool:
-        return True
 
     def _check_view(
         self,
@@ -2284,9 +2128,13 @@ class IrUiView(models.Model):
         )
 
         for elem, elem_info in self._iter_arch_nodes(node, get_node_info):
-            validator = getattr(self, f"_check_view_tag_{elem.tag}", None)
-            if validator is not None:
-                validator(elem, name_manager, elem_info)
+            handler = ELEMENT_HANDLERS.get(elem.tag)
+            if handler is not None:
+                handler.check(self, elem, name_manager, elem_info)
+            elif (
+                legacy := getattr(self, f"_check_view_tag_{elem.tag}", None)
+            ) is not None:
+                legacy(elem, name_manager, elem_info)
 
             if elem_info["validate"]:
                 self._check_attributes(elem, name_manager, elem_info)
@@ -2295,161 +2143,6 @@ class IrUiView(models.Model):
 
         return name_manager
 
-    def _check_view_tag_list(
-        self,
-        node: _Element,
-        name_manager: NameManager,
-        node_info: dict[str, Any],
-    ) -> None:
-        if not node_info["validate"]:
-            return
-        editable_attr = node.get("editable")
-        if editable_attr and editable_attr not in ["top", "bottom"]:
-            msg = _(
-                'The "editable" attribute of list views must be "top" or "bottom", received %(value)s',
-                value=editable_attr,
-            )
-            raise self._prepare_view_error(msg, node)
-        allowed_tags = (
-            "field",
-            "button",
-            "control",
-            "groupby",
-            "widget",
-            "header",
-        )
-        for child in node.iterchildren(tag=etree.Element):
-            if child.tag not in allowed_tags:
-                msg = _(
-                    "List child can only have one of %(tags)s tag (not %(wrong_tag)s)",
-                    tags=", ".join(allowed_tags),
-                    wrong_tag=child.tag,
-                )
-                raise self._prepare_view_error(msg, child)
-
-    def _check_view_tag_graph(
-        self,
-        node: _Element,
-        name_manager: NameManager,
-        node_info: dict[str, Any],
-    ) -> None:
-        if not node_info["validate"]:
-            return
-        for child in node.iterchildren(tag=etree.Element):
-            if child.tag != "field":
-                msg = _(
-                    "A <graph> can only contains <field> nodes, found a <%s>",
-                    child.tag,
-                )
-                raise self._prepare_view_error(msg, child)
-
-    def _check_view_tag_calendar(
-        self,
-        node: _Element,
-        name_manager: NameManager,
-        node_info: dict[str, Any],
-    ) -> None:
-        self._add_available_calendar_fields(node, name_manager, node_info)
-
-    def _check_view_tag_search(
-        self,
-        node: _Element,
-        name_manager: NameManager,
-        node_info: dict[str, Any],
-    ) -> None:
-        searchpanels = [child for child in node if child.tag == "searchpanel"]
-        if searchpanels:
-            if len(searchpanels) > 1:
-                raise self._prepare_view_error(
-                    _("Search tag can only contain one search panel"), node
-                )
-            node_info["children"] = [
-                child for child in node if child.tag != "searchpanel"
-            ]
-            self._check_view(
-                searchpanels[0],
-                name_manager.model._name,
-                view_type="searchpanel",
-                node_info=node_info,
-                editable=False,
-            )
-
-    def _check_view_tag_field(
-        self,
-        node: _Element,
-        name_manager: NameManager,
-        node_info: dict[str, Any],
-    ) -> None:
-        validate = node_info["validate"]
-
-        name = node.get("name")
-        if not name:
-            raise self._prepare_view_error(
-                _('Field tag must have a "name" attribute defined'), node
-            )
-
-        field = name_manager.model._fields.get(name)
-        if field:
-            self._narrow_model_groups(node_info, field)
-
-            if validate and field.relational:
-                domain = node.get("domain") or (
-                    node_info["editable"] and field._description_domain(self.env)
-                )
-                if isinstance(domain, str):
-                    desc = (
-                        f'domain of <field name="{name}">'
-                        if node.get("domain")
-                        else f"domain of python field {name!r}"
-                    )
-                    self._check_domain_identifiers(
-                        node,
-                        name_manager,
-                        domain,
-                        desc,
-                        field.comodel_name,
-                        node_info,
-                    )
-
-            elif validate and node.get("domain"):
-                msg = _(
-                    'Domain on non-relational field "%(name)s" makes no sense (domain:%(domain)s)',
-                    name=name,
-                    domain=node.get("domain"),
-                )
-                raise self._prepare_view_error(msg, node)
-
-            if field.type == "properties" and node_info["view_type"] != "search":
-                name_manager.add_used_fields(
-                    node,
-                    {field._description_definition_record},
-                    node_info,
-                    use=("fieldname", field.name),
-                )
-
-            for child in list(node):
-                if child.tag not in _NESTED_VIEW_TAGS:
-                    continue
-                node.remove(child)
-                self._check_view(
-                    child,
-                    field.comodel_name,
-                    view_type=child.tag,
-                    editable=node_info["editable"],
-                    node_info=node_info,
-                )
-                self._check_subview_schema(child, field.comodel_name)
-
-        elif validate and name not in name_manager.field_info:
-            msg = _(
-                'Field "%(field_name)s" does not exist in model "%(model_name)s"',
-                field_name=name,
-                model_name=name_manager.model._name,
-            )
-            raise self._prepare_view_error(msg, node)
-
-        name_manager.add_available_field(node, name, node_info, {"id": node.get("id")})
-
     def _check_subview_schema(self, subview: _Element, model_name: str) -> None:
         for elem in subview.iter(etree.Element):
             elem.attrib.pop("__validate__", None)
@@ -2457,47 +2150,6 @@ class IrUiView(models.Model):
             raise self._prepare_view_error(
                 _("Invalid <%(tag)s> subview definition", tag=subview.tag), subview
             )
-
-    def _check_view_tag_filter(
-        self,
-        node: _Element,
-        name_manager: NameManager,
-        node_info: dict[str, Any],
-    ) -> None:
-        if not node_info["validate"]:
-            return
-        domain = node.get("domain")
-        if domain:
-            name = node.get("name")
-            desc = f'domain of <filter name="{name}">' if name else "domain of <filter>"
-            self._check_domain_identifiers(
-                node,
-                name_manager,
-                domain,
-                desc,
-                name_manager.model._name,
-                node_info,
-            )
-        if node.get("date") and (default_periods := node.get("default_period")):
-            custom_options = {
-                f"custom_{child_name}"
-                for child in node.iterchildren(tag=etree.Element)
-                if (child_name := child.get("name"))
-            }
-            for default_period in default_periods.split(","):
-                if not _DEFAULT_PERIOD_RE.fullmatch(
-                    default_period
-                ) and default_period not in custom_options | {
-                    "first_quarter",
-                    "second_quarter",
-                    "third_quarter",
-                    "fourth_quarter",
-                }:
-                    msg = _(
-                        "Invalid default period %(default_period)s for date filter",
-                        default_period=default_period,
-                    )
-                    raise self._prepare_view_error(msg, node)
 
     def _get_client_button_types(self, view_type: str) -> set[str]:
         types = set()
@@ -2508,200 +2160,6 @@ class IrUiView(models.Model):
         if view_type in ("list", "groupby"):
             types.add("edit")
         return types
-
-    def _check_view_tag_button(
-        self,
-        node: _Element,
-        name_manager: NameManager,
-        node_info: dict[str, Any],
-    ) -> None:
-        if not node_info["validate"]:
-            return
-        name = node.get("name")
-        special = node.get("special")
-        type_ = node.get("type")
-        if special:
-            if special not in ("cancel", "save", "add"):
-                raise self._prepare_view_error(
-                    _("Invalid special '%(value)s' in button", value=special),
-                    node,
-                )
-        elif type_ == "object":
-            if name:
-                func = getattr(name_manager.model, name, None)
-                if not callable(func):
-                    msg = _(
-                        "%(action_name)s is not a valid action on %(model_name)s",
-                        action_name=name,
-                        model_name=name_manager.model._name,
-                    )
-                    raise self._prepare_view_error(msg, node)
-                if name.startswith("_") or getattr(func, "_api_private", False):
-                    msg = _(
-                        "%(method)s on %(model)s is private and cannot be called from a button",
-                        method=name,
-                        model=name_manager.model._name,
-                    )
-                    raise self._prepare_view_error(msg, node)
-                try:
-                    inspect.signature(
-                        func, annotation_format=annotationlib.Format.FORWARDREF
-                    ).bind()
-                except TypeError:
-                    msg = "%s on %s has parameters and cannot be called from a button"
-                    self._log_view_warning(msg % (name, name_manager.model._name), node)
-                name_manager.add_available_action(name)
-        elif type_ == "action":
-            if name:
-                name_manager.add_required_action(name, node)
-                name_manager.add_available_action(name)
-        elif type_ and type_ not in self._get_client_button_types(
-            node_info["view_type"]
-        ):
-            self._log_view_warning(f"Unknown button type {type_!r}", node)
-
-        if node.get("icon"):
-            description = f"A button with icon attribute ({node.get('icon')})"
-            self._check_fa_class_accessibility(node, description)
-
-    def _check_view_tag_groupby(
-        self,
-        node: _Element,
-        name_manager: NameManager,
-        node_info: dict[str, Any],
-    ) -> None:
-        name = node.get("name")
-        if not name:
-            return
-        field = name_manager.model._fields.get(name)
-        if field:
-            if node_info["validate"]:
-                if field.type != "many2one":
-                    msg = _(
-                        "Field '%(name)s' found in 'groupby' node can only be of type many2one, found %(type)s",
-                        name=field.name,
-                        type=field.type,
-                    )
-                    raise self._prepare_view_error(msg, node)
-                domain = node_info["editable"] and field._description_domain(self.env)
-                if isinstance(domain, str):
-                    desc = f"domain of python field '{name}'"
-                    self._check_domain_identifiers(
-                        node,
-                        name_manager,
-                        domain,
-                        desc,
-                        field.comodel_name,
-                        node_info,
-                    )
-
-            groupby_node = E.groupby(*node)
-            node_info["children"] = []
-            try:
-                self._check_view(
-                    groupby_node,
-                    field.comodel_name,
-                    view_type="groupby",
-                    editable=False,
-                    node_info=node_info,
-                )
-            finally:
-                node.extend(groupby_node)
-            name_manager.add_available_field(node, name, node_info)
-
-        elif node_info["validate"]:
-            msg = _(
-                "Field '%(field)s' found in 'groupby' node does not exist in model %(model)s",
-                field=name,
-                model=name_manager.model._name,
-            )
-            raise self._prepare_view_error(msg, node)
-
-    def _check_view_tag_searchpanel(
-        self,
-        node: _Element,
-        name_manager: NameManager,
-        node_info: dict[str, Any],
-    ) -> None:
-        if not node_info["validate"]:
-            return
-        for child in node.iterchildren(tag=etree.Element):
-            if child.get("domain") and child.get("select") != "multi":
-                msg = _(
-                    "Searchpanel items with a domain attribute must have select='multi'."
-                )
-                raise self._prepare_view_error(msg, child)
-
-    def _check_view_tag_label(
-        self,
-        node: _Element,
-        name_manager: NameManager,
-        node_info: dict[str, Any],
-    ) -> None:
-        if not node_info["validate"]:
-            return
-        for_ = node.get("for")
-        if not for_:
-            msg = _(
-                'Label tag must contain a "for". To match label style '
-                "without corresponding field or button, use 'class=\"o_form_label\"'."
-            )
-            raise self._prepare_view_error(msg, node)
-        name_manager.add_used_name(for_, '<label for="...">')
-
-    def _check_view_tag_page(
-        self,
-        node: _Element,
-        name_manager: NameManager,
-        node_info: dict[str, Any],
-    ) -> None:
-        if not node_info["validate"]:
-            return
-        if node.getparent() is None or node.getparent().tag != "notebook":
-            raise self._prepare_view_error(
-                _("Page direct ancestor must be notebook"), node
-            )
-
-    def _check_view_tag_img(
-        self,
-        node: _Element,
-        name_manager: NameManager,
-        node_info: dict[str, Any],
-    ) -> None:
-        if node_info["validate"] and not any(node.get(alt) for alt in att_names("alt")):
-            self._log_view_warning("<img> tag must contain an alt attribute", node)
-
-    def _check_view_tag_a(
-        self,
-        node: _Element,
-        name_manager: NameManager,
-        node_info: dict[str, Any],
-    ) -> None:
-        if node_info["validate"] and any(
-            "btn" in node.get(cl, "") for cl in att_names("class")
-        ):
-            if node.get("role") != "button":
-                msg = '"<a>" tag with "btn" class must have "button" role'
-                self._log_view_warning(msg, node)
-
-    def _check_view_tag_ul(
-        self,
-        node: _Element,
-        name_manager: NameManager,
-        node_info: dict[str, Any],
-    ) -> None:
-        if node_info["validate"]:
-            self._check_dropdown_menu(node)
-
-    def _check_view_tag_div(
-        self,
-        node: _Element,
-        name_manager: NameManager,
-        node_info: dict[str, Any],
-    ) -> None:
-        if node_info["validate"]:
-            self._check_dropdown_menu(node)
-            self._check_progress_bar(node)
 
     def _check_dropdown_menu(self, node: _Element) -> None:
         for msg in get_dropdown_menu_warnings(node):
@@ -2732,177 +2190,9 @@ class IrUiView(models.Model):
                 )
 
         for attr, expr in node.items():
-            checker = _ATTRIBUTE_CHECKERS.get(attr) or self._get_attr_checker_name(attr)
+            checker = attribute_check_for(attr)
             if checker is not None:
-                getattr(self, checker)(node, name_manager, attr, expr, node_info)
-
-    @staticmethod
-    def _get_attr_checker_name(attr: str) -> str | None:
-        if attr.startswith("decoration-"):
-            return "_check_attr_decoration"
-        if _TOOLTIP_ATTR_RE.match(attr):
-            return "_check_attr_tooltip"
-        if attr.startswith("t-"):
-            return "_check_attr_qweb"
-        return None
-
-    def _check_attr_class(
-        self,
-        node: _Element,
-        name_manager: NameManager,
-        attr: str,
-        expr: str,
-        node_info: dict[str, Any],
-    ) -> None:
-        self._check_classes(node, expr)
-
-    def _check_attr_context(
-        self,
-        node: _Element,
-        name_manager: NameManager,
-        attr: str,
-        expr: str,
-        node_info: dict[str, Any],
-    ) -> None:
-        try:
-            vnames = get_expression_field_names(expr)
-        except SyntaxError as e:
-            message = _(
-                "Invalid context: \u201c%(expr)s\u201d is not a valid Python expression \n\n %(error)s",
-                expr=expr,
-                error=e,
-            )
-            raise self._prepare_view_error(message, node) from e
-        if vnames:
-            name_manager.add_used_fields(node, vnames, node_info, ("context", expr))
-        for key, val_ast in get_dict_asts(expr).items():
-            if key != "group_by":
-                continue
-            if not isinstance(val_ast, ast.Constant) or not isinstance(
-                val_ast.value, str
-            ):
-                msg = _(
-                    '"group_by" value must be a string %(attribute)s=\u201c%(value)s\u201d',
-                    attribute=attr,
-                    value=expr,
-                )
-                raise self._prepare_view_error(msg, node)
-            fname = val_ast.value.split(":")[0]
-            if fname not in name_manager.model._fields:
-                msg = _(
-                    'Unknown field \u201c%(field)s\u201d in "group_by" value in %(attribute)s=\u201c%(value)s\u201d',
-                    field=fname,
-                    attribute=attr,
-                    value=expr,
-                )
-                raise self._prepare_view_error(msg, node)
-
-    def _check_attr_integer(
-        self,
-        node: _Element,
-        name_manager: NameManager,
-        attr: str,
-        expr: str,
-        node_info: dict[str, Any],
-    ) -> None:
-        if not expr.isdigit():
-            raise self._prepare_view_error(
-                _(
-                    "\u201c%(attribute)s\u201d value must be an integer (%(value)s)",
-                    attribute=attr,
-                    value=expr,
-                ),
-                node,
-            )
-
-    def _check_attr_decoration(
-        self,
-        node: _Element,
-        name_manager: NameManager,
-        attr: str,
-        expr: str,
-        node_info: dict[str, Any],
-    ) -> None:
-        vnames = get_expression_field_names(expr)
-        if vnames:
-            name_manager.add_used_fields(node, vnames, node_info, (attr, expr))
-
-    def _check_attr_data_bs_toggle(
-        self,
-        node: _Element,
-        name_manager: NameManager,
-        attr: str,
-        expr: str,
-        node_info: dict[str, Any],
-    ) -> None:
-        if expr != "tab":
-            return
-        if node.get("role") != "tab":
-            self._log_view_warning(
-                'tab link (data-bs-toggle="tab") must have "tab" role', node
-            )
-        aria_control = node.get("aria-controls") or node.get("t-att-aria-controls")
-        if not aria_control and not node.get("t-attf-aria-controls"):
-            self._log_view_warning(
-                'tab link (data-bs-toggle="tab") must have "aria_control" defined',
-                node,
-            )
-        if aria_control and "#" in aria_control:
-            self._log_view_warning('aria-controls in tablink cannot contains "#"', node)
-
-    def _check_attr_role(
-        self,
-        node: _Element,
-        name_manager: NameManager,
-        attr: str,
-        expr: str,
-        node_info: dict[str, Any],
-    ) -> None:
-        if expr in ("presentation", "none"):
-            self._log_view_warning(
-                "A role cannot be `none` or `presentation`. "
-                "All your elements must be accessible with screen readers, "
-                "describe it.",
-                node,
-            )
-
-    def _check_attr_group(
-        self,
-        node: _Element,
-        name_manager: NameManager,
-        attr: str,
-        expr: str,
-        node_info: dict[str, Any],
-    ) -> None:
-        self._log_view_warning(
-            "attribute 'group' is not valid.  Did you mean 'groups'?", node
-        )
-
-    def _check_attr_tooltip(
-        self,
-        node: _Element,
-        name_manager: NameManager,
-        attr: str,
-        expr: str,
-        node_info: dict[str, Any],
-    ) -> None:
-        raise self._prepare_view_error(
-            _("Forbidden attribute used in arch (%s).", attr), node
-        )
-
-    def _check_attr_qweb(
-        self,
-        node: _Element,
-        name_manager: NameManager,
-        attr: str,
-        expr: str,
-        node_info: dict[str, Any],
-    ) -> None:
-        self._check_qweb_directive(node, attr, node_info["view_type"])
-        if COMP_REGEX.search(expr):
-            raise self._prepare_view_error(
-                _("Forbidden use of `__comp__` in arch."), node
-            )
+                checker.check(self, node, name_manager, attr, expr, node_info)
 
     def _check_classes(self, node: _Element, expr: str) -> None:
         for msg in get_class_accessibility_warnings(node, expr):

@@ -22,6 +22,7 @@ from odoo.tests.common import get_cache_key_counter
 from odoo.tools import mute_logger, safe_eval, view_validation
 
 from odoo.addons.base.models import ir_ui_view
+from odoo.addons.base.models.ir_ui_view_arch import ELEMENT_HANDLERS
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 
 _logger = logging.getLogger(__name__)
@@ -8448,18 +8449,15 @@ class TestSteeringDoesNotHideASubtreeFromTheSchema(ViewCase):
             "</search>",
         )
         seen = []
-        View = type(self.View)
-        original = View._check_view_tag_searchpanel
+        handler = type(ELEMENT_HANDLERS["searchpanel"])
+        original = handler.check
 
-        def counted(v, node, name_manager, node_info):
+        def counted(h, v, node, name_manager, node_info):
             seen.append(node)
-            return original(v, node, name_manager, node_info)
+            return original(h, v, node, name_manager, node_info)
 
-        View._check_view_tag_searchpanel = counted
-        try:
+        with patch.object(handler, "check", counted):
             view._check_view(etree.fromstring(view.arch), "res.partner")
-        finally:
-            View._check_view_tag_searchpanel = original
         self.assertEqual(len(seen), 1, "the searchpanel was validated twice")
 
 
