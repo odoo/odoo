@@ -12,6 +12,8 @@ from ._registry_stubs import _RegistryStubs
 if typing.TYPE_CHECKING:
     from odoo.models import BaseModel
 
+    from ..fields import Field
+
 _debug = DebugLog(__name__)
 
 
@@ -72,6 +74,23 @@ class _RegistryModelsMixin(_RegistryStubs):
     @functools.cached_property
     def model_names_by_inheritance_root(self) -> dict[str, tuple[str, ...]]:
         return index_model_names_by_inheritance_root(self.models)
+
+    @functools.cached_property
+    def _prefetch_fields_by_model(self) -> dict[str, tuple[tuple[Field, ...], bool]]:
+        return {}
+
+    def prefetch_fields(self, model_name: str) -> tuple[tuple[Field, ...], bool]:
+        try:
+            return self._prefetch_fields_by_model[model_name]
+        except KeyError:
+            fields = tuple(
+                field
+                for field in self.models[model_name]._fields.values()
+                if field.prefetch is True
+            )
+            entry = (fields, any(field.groups for field in fields))
+            self._prefetch_fields_by_model[model_name] = entry
+            return entry
 
     def _get_ancestors(self, model_cls: type[BaseModel]) -> set[str]:
         seen: set[str] = set()

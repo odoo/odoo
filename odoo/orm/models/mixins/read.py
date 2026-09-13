@@ -411,10 +411,13 @@ class ReadMixin(_ModelStubs):
         ignore_when_in_cache: bool = False,
     ) -> list[Field]:
         if field_names is None:
+            fields, guarded = self.pool.prefetch_fields(self._name)
+            if not guarded or self.env.su:
+                return list(fields)
             return [
                 field
-                for field in self._fields.values()
-                if field.prefetch is True and self._has_field_access(field, "read")
+                for field in fields
+                if not field.groups or self._has_field_access(field, "read")
             ]
 
         if not field_names:

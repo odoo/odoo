@@ -23,7 +23,10 @@ from .fields import Boolean, Char, Many2one
 from .models import AbstractModel, Model
 from .primitives import SUPERUSER_ID
 from .runtime._registry_fields import _RegistryFieldsMixin
-from .runtime._registry_models import index_model_names_by_inheritance_root
+from .runtime._registry_models import (
+    _RegistryModelsMixin,
+    index_model_names_by_inheritance_root,
+)
 from .runtime.access_policy import ACCESS_POLICY
 from .runtime.filestore import FILE_STORE
 from .runtime.locale import LOCALE
@@ -34,6 +37,7 @@ from .runtime.transaction import Transaction
 from .runtime.xmlids import XMLIDS
 
 if TYPE_CHECKING:
+    from .fields import Field
     from .models.base import BaseModel
     from .runtime.environment import Environment
     from .runtime.registry import Registry
@@ -379,6 +383,12 @@ class ModelRegistry(_RegistryFieldsMixin, Mapping):
     @cached_property
     def model_names_by_inheritance_root(self) -> dict[str, tuple[str, ...]]:
         return index_model_names_by_inheritance_root(self.models)
+
+    @cached_property
+    def _prefetch_fields_by_model(self) -> dict[str, tuple[tuple[Field, ...], bool]]:
+        return {}
+
+    prefetch_fields = _RegistryModelsMixin.prefetch_fields
 
     def is_an_ordinary_table(self, model) -> bool:
         return True
