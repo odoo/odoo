@@ -4,6 +4,7 @@ from odoo import Command
 import odoo.tests
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
+from odoo.tools.safe_eval import expr_eval
 from odoo.exceptions import UserError
 
 
@@ -2227,3 +2228,37 @@ class TestPackagePropagation(TestPackingCommon):
         self.assertFalse(pack2.quant_ids)
         self.assertEqual(pack2.location_id, self.stock_location)
         self.assertEqual(pack2.company_id, self.stock_location.company_id)
+
+    def test_put_in_pack_destination_package(self):
+        """Test that a package created through 'Put in Pack' can be selected again as a destination package."""
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1)
+        self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 1)
+        delivery = self.env['stock.picking'].create({
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': self.productA.id,
+                    'product_uom_qty': 1.0,
+                }),
+                Command.create({
+                    'product_id': self.productB.id,
+                    'product_uom_qty': 1.0,
+                }),
+            ],
+        })
+        delivery.action_confirm()
+        package = delivery.move_line_ids[0].with_context(delivery.action_detailed_operations()['context']).action_put_in_pack()
+        self.assertFalse(package.location_id, 'location_id should not be set')
+        domain = expr_eval(
+            self.env['stock.move.line']._fields['result_package_id'].domain
+            .replace('location_dest_id)', f'{delivery.move_line_ids.location_dest_id.id})')
+            .replace('package_id)', f'{delivery.move_line_ids.package_id.id})'),
+        )
+        self.assertIn(package, self.env['stock.package'].search(domain))
+        delivery.move_line_ids[1].result_package_id = package
+        self.assertRecordValues(delivery.move_line_ids, [
+            {'result_package_id': package.id},
+            {'result_package_id': package.id},
+        ])
