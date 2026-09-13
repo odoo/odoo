@@ -3132,6 +3132,30 @@ test("quick create record: click Add to create, with delayed onchange", async ()
 });
 
 test.tags("desktop");
+test("quick create stays open in its column when the groups reload", async () => {
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban on_create="quick_create">
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        groupBy: ["bar"],
+    });
+
+    await createKanbanRecord();
+    expect(".o_kanban_group:first-child .o_kanban_quick_create").toHaveCount(1);
+
+    await validateSearch();
+
+    expect(".o_kanban_group:first-child .o_kanban_quick_create").toHaveCount(1);
+    expect(".o_kanban_quick_create").toHaveCount(1);
+});
+
 test("quick create when first column is folded", async () => {
     await mountView({
         type: "kanban",

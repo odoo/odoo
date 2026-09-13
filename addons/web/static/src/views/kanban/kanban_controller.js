@@ -119,7 +119,20 @@ export class KanbanController extends MultiRecordController {
         this.quickCreateState = reactive(
             /** @type {any} */ ({
                 get groupId() {
-                    return this._groupId || false;
+                    if (!this._groupId) {
+                        return false;
+                    }
+                    const groups = self.model.root.groups || [];
+                    if (groups.some((group) => group.id === this._groupId)) {
+                        return this._groupId;
+                    }
+                    const groupBy = self.model.root.groupBy;
+                    const regrouped = groups.find(
+                        (group) =>
+                            JSON.stringify([groupBy, group.serverValue]) ===
+                            this._groupKey,
+                    );
+                    return regrouped ? regrouped.id : false;
                 },
                 // eslint-disable-next-line no-restricted-syntax -- must clear sample data synchronously with this mutation; see STATE_MANAGEMENT.md "Pattern 4"
                 set groupId(groupId) {
@@ -128,6 +141,12 @@ export class KanbanController extends MultiRecordController {
                         self.model.useSampleModel = false;
                     }
                     this._groupId = groupId;
+                    const group = (self.model.root.groups || []).find(
+                        (candidate) => candidate.id === groupId,
+                    );
+                    this._groupKey = group
+                        ? JSON.stringify([self.model.root.groupBy, group.serverValue])
+                        : undefined;
                 },
                 view: this.archInfo.quickCreateView,
             }),
