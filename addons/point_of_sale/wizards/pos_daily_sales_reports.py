@@ -13,6 +13,7 @@ class PosDailySalesReportsWizard(models.TransientModel):
     )
 
     def _get_report_data(self):
+        self.check_singleton()
         return {
             "date_start": False,
             "date_stop": False,
@@ -21,6 +22,7 @@ class PosDailySalesReportsWizard(models.TransientModel):
         }
 
     def action_print_report(self):
+        self.check_singleton()
         dbg.lifecycle.debug(
             "[wizard:daily.report] print for %s", dbg.rec(self.pos_session_id)
         )

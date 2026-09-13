@@ -1,6 +1,7 @@
 from datetime import timedelta
 
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 from ..tools import debug_log as dbg
 
@@ -18,8 +19,9 @@ class PosDetailsWizard(models.TransientModel):
             groupby=["config_id"],
             aggregates=["start_at:max"],
         )
-        mapping = dict(values)
-        return (mapping and min(mapping.values())) or self.env.cr.now()
+        return min(
+            (start_at for _config, start_at in values), default=self.env.cr.now()
+        )
 
     start_date = fields.Datetime(
         default=_default_start_date,
@@ -46,6 +48,9 @@ class PosDetailsWizard(models.TransientModel):
             self.start_date = self.end_date
 
     def action_print_report(self):
+        self.check_singleton()
+        if self.end_date < self.start_date:
+            raise UserError(self.env._("The end date must not precede the start date."))
         data = {
             "date_start": self.start_date,
             "date_stop": self.end_date,

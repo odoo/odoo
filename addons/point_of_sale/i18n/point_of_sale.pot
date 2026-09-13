@@ -2589,6 +2589,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__partner_id
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__partner_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_filter
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_confirmation_wizard__partner_id
 msgid "Customer"
 msgstr ""
 
@@ -2652,6 +2653,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/static/src/app/utils/order_payment_validation.js:0
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
+#: code:addons/point_of_sale/wizards/pos_payment.py:0
 msgid "Customer is required for %s payment method."
 msgstr ""
 
@@ -4305,6 +4307,7 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/wizard/pos_confirmation_wizard.py:0
+#: code:addons/point_of_sale/wizards/pos_confirmation_wizard.py:0
 msgid ""
 "It seems that the POS order(s) %(order_ref)s do not have a customer.\n"
 "\n"
@@ -4350,6 +4353,7 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
+#: code:addons/point_of_sale/wizards/pos_make_invoice.py:0
 msgid "Kindly ensure that each order contains a customer."
 msgstr ""
 
@@ -5224,6 +5228,7 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
+#: code:addons/point_of_sale/wizards/pos_make_invoice.py:0
 msgid "No valid orders were selected. No new invoices could be generated"
 msgstr ""
 
@@ -5724,6 +5729,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_confirmation_wizard__order_ids
 msgid "Orders"
 msgstr ""
 
@@ -5738,6 +5744,11 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/components/popups/closing_popup/closing_popup.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/opening_control_popup/opening_control_popup.xml:0
 msgid "Orders status"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_confirmation_wizard__unassigned_order_ids
+msgid "Orders without a Customer"
 msgstr ""
 
 #. module: point_of_sale
@@ -5930,6 +5941,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_payment
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
+#: code:addons/point_of_sale/wizards/pos_payment.py:0
 msgid "Payment"
 msgstr ""
 
@@ -7780,6 +7792,12 @@ msgid "Select a payment method to validate the order."
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/wizards/pos_payment.py:0
+msgid "Select a point of sale order to register a payment."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/preset_slots_popup/preset_slots_popup.xml:0
 msgid "Select a preset"
@@ -7789,6 +7807,25 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/ticket_screen.xml:0
 msgid "Select an order or scan QR code"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/wizards/pos_payment.py:0
+msgid "Select an order to register a payment."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/wizards/pos_close_session_wizard.py:0
+msgid "Select exactly one session to close."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/wizards/pos_confirmation_wizard.py:0
+msgid ""
+"Select orders from one point of sale with exactly one customer to assign."
 msgstr ""
 
 #. module: point_of_sale
@@ -8646,6 +8683,13 @@ msgid "The company must have a fiscal country set."
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/wizards/pos_confirmation_wizard.py:0
+msgid ""
+"The customer has changed. Close this dialog and select the orders again."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
 msgid "The cutter has a foreign matter, please check the cutter mechanism"
@@ -8681,6 +8725,12 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/wizards/pos_details.py:0
+msgid "The end date must not precede the start date."
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/services/pos_store.js:0
 msgid ""
@@ -8713,6 +8763,7 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
+#: code:addons/point_of_sale/wizards/pos_make_invoice.py:0
 msgid ""
 "The following refund orders can't be part of a consolidated invoice because they refunded invoiced orders. Each refund order should be handled separately.\n"
 "\n"
@@ -8827,6 +8878,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/test_epos/test_epos.js:0
 msgid "The paper is empty, please load paper into the printer"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/wizards/pos_payment.py:0
+msgid "The payment configuration must match the order's point of sale."
 msgstr ""
 
 #. module: point_of_sale
@@ -9847,6 +9904,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/wizard/pos_make_invoice.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_confirm_action_wizard
+#: code:addons/point_of_sale/wizards/pos_make_invoice.py:0
 msgid "Warning"
 msgstr ""
 
@@ -10104,6 +10162,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_payment.py:0
 msgid "You cannot edit a payment for a posted order."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/wizards/pos_payment.py:0
+msgid "You cannot register a payment for a cancelled order."
 msgstr ""
 
 #. module: point_of_sale

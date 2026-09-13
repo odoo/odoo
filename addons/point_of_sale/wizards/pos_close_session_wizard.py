@@ -1,4 +1,5 @@
 from odoo import fields, models
+from odoo.exceptions import UserError
 
 from ..tools import debug_log as dbg
 
@@ -16,7 +17,13 @@ class PosCloseSessionWizard(models.TransientModel):
     message = fields.Text(string="Information message")
 
     def action_close_session(self):
-        session = self.env["pos.session"].browse(self.env.context["active_ids"])
+        self.check_singleton()
+        active_model = self.env.context.get("active_model")
+        if active_model and active_model != "pos.session":
+            raise UserError(self.env._("Select exactly one session to close."))
+        session = self.env["pos.session"].browse(self.env.context.get("active_ids"))
+        if len(session) != 1 or not session.exists():
+            raise UserError(self.env._("Select exactly one session to close."))
         dbg.lifecycle.debug(
             "[wizard:close.session][session:%s] force close: balance %s on %s",
             dbg.names(session, "name"),
