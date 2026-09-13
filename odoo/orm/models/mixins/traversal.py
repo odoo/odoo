@@ -339,7 +339,7 @@ class TraversalMixin(_ModelStubs):
         if len(self) < 2:
             return self
         if key is None or isinstance(key, str):
-            order = key or self._order
+            order = self._order if key is None else key
             self._sorted_load_fields(order)
             ids = self._sorted_by_ids(order, reverse)
             if ids is not None:

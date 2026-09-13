@@ -1,3 +1,4 @@
+import threading
 import typing
 from contextlib import closing
 from dataclasses import dataclass
@@ -38,6 +39,9 @@ class _TextTransforms:
 
 class _TextTables:
     by_db: dict[str, _TextTransforms] = {}
+    # one build per process and database: a cold process whose threads all
+    # meet their first ilike at once must not each scan the code points
+    build_lock = threading.Lock()
 
 
 def _get_text_transforms(
@@ -46,6 +50,16 @@ def _get_text_transforms(
     cached = _TextTables.by_db.get(db_name)
     if cached is not None and cached.unaccent_enabled == unaccent_enabled:
         return cached
+    with _TextTables.build_lock:
+        cached = _TextTables.by_db.get(db_name)
+        if cached is not None and cached.unaccent_enabled == unaccent_enabled:
+            return cached
+        return _build_text_transforms(cr, db_name, unaccent_enabled)
+
+
+def _build_text_transforms(
+    cr: BaseCursor, db_name: str, unaccent_enabled: bool
+) -> _TextTransforms:
     with _debug.perf(
         "registry.text_transforms.built", cr=cr, db=db_name, unaccent=unaccent_enabled
     ) as span:

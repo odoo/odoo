@@ -137,3 +137,26 @@ def test_probe_adopts_tables_this_process_already_built_for_the_database():
     assert instance._text_transforms is built
     assert instance.unaccent_python("Æ") == "AE"
     probe.execute.assert_not_called()
+
+
+def test_concurrent_cold_callers_build_the_tables_once():
+    import threading
+
+    cursor = Mock(spec=["execute", "fetchone", "dictfetchall"])
+    cursor.fetchone.return_value = ("c",)
+    cursor.dictfetchall.return_value = []
+    gate = threading.Barrier(8)
+    results = []
+
+    def build():
+        gate.wait()
+        results.append(capabilities._get_text_transforms(cursor, DB, True))
+
+    threads = [threading.Thread(target=build) for _ in range(8)]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+    assert len(results) == 8
+    assert all(result is results[0] for result in results)
+    assert cursor.execute.call_count == 2
