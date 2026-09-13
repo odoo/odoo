@@ -1,6 +1,6 @@
-from datetime import date, timedelta
+from datetime import timedelta
 
-from odoo.fields import Command
+from odoo.fields import Command, Date
 from odoo.tests.common import TransactionCase, new_test_user
 
 
@@ -93,7 +93,7 @@ class TestDatetimeEqualsDate(TransactionCase):
         record = self.env["test_orm.mixed"].create({})
         self.env.flush_all()
         Model = self.env["test_orm.mixed"]
-        today = date.today()
+        today = Date.context_today(record, record.create_date)
         whole_day = Model.search_count(
             [
                 "&",
