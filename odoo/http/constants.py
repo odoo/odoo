@@ -63,6 +63,10 @@ def prepare_default_session() -> dict[str, object]:
 
 DEFAULT_MAX_CONTENT_LENGTH = 128 * 1024 * 1024
 
+DEFAULT_MAX_FORM_MEMORY_SIZE = 10 * 1024 * 1024
+
+DEFAULT_MAX_FORM_PARTS = 10_000
+
 WILDCARD_CORS_CREDENTIALS_WARNING = """\
 Refusing to send credentials to the wildcard origin for path %r
 

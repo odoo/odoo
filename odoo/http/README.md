@@ -177,7 +177,9 @@ bypasses the normal dispatch flow, so the entrypoint runs
 server. Without that step an error response would carry none of what
 post-dispatch contributes — CORS headers, the `session_id` cookie and the session
 save behind it, CSP — which is why the error path is the *only* place that calls
-post_dispatch out of band.
+post_dispatch out of band. A request refused before its session was read (a
+rejected method, a NUL in the path, a failing `_post_init`) has no session to
+save and no dispatcher state to publish; it gets the security headers alone.
 
 ## Module map
 

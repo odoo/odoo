@@ -5,7 +5,7 @@ from datetime import datetime
 from io import BytesIO
 from pathlib import Path
 from stat import S_ISDIR, S_ISREG
-from typing import Any
+from typing import Any, ClassVar
 from zlib import adler32
 
 from werkzeug.utils import send_file as _send_file
@@ -22,6 +22,8 @@ _debug = DebugLog(__name__)
 
 
 class Stream:
+    _ALLOWED_KWARGS: ClassVar[frozenset[str]]
+
     type: str = ""
     data: bytes | None = None
     path: str | None = None
@@ -37,25 +39,6 @@ class Stream:
     immutable: bool = False
     size: int | None = None
     public: bool = False
-
-    _ALLOWED_KWARGS: frozenset[str] = frozenset(
-        {
-            "type",
-            "data",
-            "path",
-            "url",
-            "mimetype",
-            "as_attachment",
-            "download_name",
-            "conditional",
-            "etag",
-            "last_modified",
-            "max_age",
-            "immutable",
-            "size",
-            "public",
-        }
-    )
 
     def __init__(self, **kwargs: Any) -> None:
         unknown = kwargs.keys() - self._ALLOWED_KWARGS
@@ -260,3 +243,8 @@ class Stream:
             cache_control["immutable"] = None
 
         return Response(res)
+
+
+Stream._ALLOWED_KWARGS = frozenset(
+    name for name in Stream.__annotations__ if not name.startswith("_")
+)

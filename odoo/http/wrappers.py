@@ -13,7 +13,11 @@ from odoo.libs.debug_log import DebugLog
 from odoo.libs.facade import Proxy, ProxyAttr, ProxyFunc
 
 from ._protocols import get_ir_http
-from .constants import DEFAULT_MAX_CONTENT_LENGTH
+from .constants import (
+    DEFAULT_MAX_CONTENT_LENGTH,
+    DEFAULT_MAX_FORM_MEMORY_SIZE,
+    DEFAULT_MAX_FORM_PARTS,
+)
 from .core import request
 
 _logger = logging.getLogger(__name__)
@@ -147,8 +151,8 @@ class HTTPRequest(_HTTPRequestProxied):
         httprequest.user_agent_class = UserAgent
         httprequest.parameter_storage_class = werkzeug.datastructures.ImmutableMultiDict
         httprequest.max_content_length = DEFAULT_MAX_CONTENT_LENGTH
-        httprequest.max_form_memory_size = 10 * 1024 * 1024
-        httprequest.max_form_parts = 10_000
+        httprequest.max_form_memory_size = DEFAULT_MAX_FORM_MEMORY_SIZE
+        httprequest.max_form_parts = DEFAULT_MAX_FORM_PARTS
 
         self.__wrapped = httprequest
         self.__environ = httprequest.environ

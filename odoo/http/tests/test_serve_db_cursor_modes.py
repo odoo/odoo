@@ -7,6 +7,7 @@ import pytest
 import werkzeug.datastructures
 
 from odoo.http import _serve
+from odoo.http.request_class import Request
 from odoo.libs.worker_thread import current_worker_thread
 
 
@@ -36,7 +37,7 @@ class _Env:
 
 
 def _serve_db(this):
-    return _serve._RequestServeMixin._serve_db(this)
+    return this._serve_db()
 
 
 def _make(readonly_route=True, replica=True):
@@ -66,34 +67,23 @@ def _make(readonly_route=True, replica=True):
     registry = _Registry()
     env = _Env(first, registry)
 
-    this: Any = types.SimpleNamespace(
-        db="db",
-        registry=registry,
-        env=None,
-        session=types.SimpleNamespace(uid=1, context={}),
-        httprequest=types.SimpleNamespace(
-            method="GET",
-            path="/x",
-            files=werkzeug.datastructures.MultiDict(),
-        ),
-        dispatcher=None,
-        _acquire_registry_cursor=lambda: first,
-        _update_dispatcher=lambda r: None,
-        _serve_ir_http=lambda r, a: "served",
-        _update_served_exception=lambda exc: None,
-        _bind_session_transaction=lambda cr: None,
-        _flush_session=lambda: None,
-        _reset_for_replay=lambda cr=None: calls["reset_for_replay"].append(cr),
+    httprequest: Any = types.SimpleNamespace(
+        remote_addr=None,
+        method="GET",
+        path="/x",
+        files=werkzeug.datastructures.MultiDict(),
     )
-    for helper in (
-        "_select_serve_target_and_mode",
-        "_require_env",
-        "_serve_transaction",
-        "_prepare_promotion",
-        "_serve_transaction_target",
-        "_open_read_write_cursor",
-    ):
-        setattr(this, helper, getattr(_serve._RequestServeMixin, helper).__get__(this))
+    this: Any = Request(httprequest, app=None)
+    this.db = "db"
+    this.registry = registry
+    this.session = types.SimpleNamespace(uid=1, context={})
+    this._acquire_registry_cursor = lambda: first
+    this._update_dispatcher = lambda r: None
+    this._serve_ir_http = lambda r, a: "served"
+    this._update_served_exception = lambda exc: None
+    this._bind_session_transaction = lambda cr: None
+    this._flush_session = lambda: None
+    this._reset_for_replay = lambda cr=None: calls["reset_for_replay"].append(cr)
 
     this.calls = calls
     this.first_cursor = first
