@@ -1074,6 +1074,12 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertTrue(self.cr.rowcount)
         self.assertEqual(record.number, 1.1)
 
+    def test_fields_get_refuses_a_bare_field_name(self):
+        Mixed = self.env["test_orm.mixed"]
+        self.assertEqual(list(Mixed.fields_get(["number2"])), ["number2"])
+        with self.assertRaises(TypeError):
+            Mixed.fields_get("number2")
+
     def test_21_float_digits(self):
         precision = self.env.ref("test_orm.decimal_orm_number")
         description = self.env["test_orm.mixed"].fields_get()["number2"]

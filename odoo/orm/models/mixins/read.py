@@ -36,6 +36,11 @@ class ReadMixin(_ModelStubs):
         allfields: Collection[str] | None = None,
         attributes: Collection[str] | None = None,
     ) -> dict[str, ValuesType]:
+        if isinstance(allfields, str):
+            raise TypeError(
+                f"fields_get() takes a collection of field names, got the string "
+                f"{allfields!r}; pass [{allfields!r}]"
+            )
         res = {}
         wanted = set(allfields) if allfields else None
         for fname, field in self._fields.items():
