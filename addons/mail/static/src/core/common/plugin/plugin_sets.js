@@ -2,6 +2,7 @@ import { ChatGPTTranslatePlugin } from "@html_editor/main/chatgpt/chatgpt_transl
 import { ColorPlugin } from "@html_editor/main/font/color_plugin";
 import { CORE_PLUGINS } from "@html_editor/plugin_sets";
 import { FeffPlugin } from "@html_editor/main/feff_plugin";
+import { FontPlugin } from "@html_editor/main/font/font_plugin";
 import { HintPlugin } from "@html_editor/main/hint_plugin";
 import { InlineCodePlugin } from "@html_editor/main/inline_code";
 import { LinkPastePlugin } from "@html_editor/main/link/link_paste_plugin";
@@ -19,6 +20,7 @@ export const MAIL_CORE_PLUGINS = [
     ChatGPTTranslatePlugin,
     ColorPlugin,
     FeffPlugin,
+    FontPlugin,
     HintPlugin,
     InlineCodePlugin,
     LinkPastePlugin,
