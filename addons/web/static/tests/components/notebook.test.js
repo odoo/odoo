@@ -2,10 +2,80 @@
 
 import { expect, test } from "@odoo/hoot";
 import { click, queryFirst } from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
-import { Component, xml } from "@odoo/owl";
+import { animationFrame, Deferred } from "@odoo/hoot-mock";
+import { Component, useState, xml } from "@odoo/owl";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { Notebook } from "@web/components/notebook/notebook";
+
+for (const change of ["hidden", "disabled"]) {
+    test(`pending page activation does not select a ${change} page`, async () => {
+        const gate = new Deferred();
+        class Host extends Component {
+            static props = ["*"];
+            static components = { Notebook };
+            static template = xml`
+                <Notebook onWillActivatePage="() => this.beforeActivate()">
+                    <t t-set-slot="a" title="'A'" isVisible="true"><div class="page-a"/></t>
+                    <t t-set-slot="b" title="'B'"
+                       isVisible="!state.hidden" isDisabled="state.disabled"><div class="page-b"/></t>
+                </Notebook>`;
+            setup() {
+                this.state = useState({ hidden: false, disabled: false });
+            }
+            beforeActivate() {
+                expect.step("activation requested");
+                return gate;
+            }
+        }
+        const host = await mountWithCleanup(Host);
+        await click(".nav-item:nth-child(2) .nav-link");
+        expect.verifySteps(["activation requested"]);
+        host.state[change] = true;
+        await animationFrame();
+        gate.resolve();
+        await animationFrame();
+        expect(".nav-link.active").toHaveText("A");
+        expect(".page-a").toHaveCount(1);
+        expect(".page-b").toHaveCount(0);
+    });
+}
+
+test("pending page activation does not select a removed page", async () => {
+    const gate = new Deferred();
+    class Page extends Component {
+        static props = ["*"];
+        static template = xml`<div class="page-body" t-esc="props.title"/>`;
+    }
+    class Host extends Component {
+        static props = ["*"];
+        static components = { Notebook };
+        static template = xml`<Notebook pages="state.pages" onWillActivatePage="() => this.beforeActivate()"/>`;
+        setup() {
+            this.state = useState({
+                pages: ["A", "B"].map((title) => ({
+                    id: title,
+                    title,
+                    Component: Page,
+                    props: { title },
+                })),
+            });
+        }
+        beforeActivate() {
+            expect.step("activation requested");
+            return gate;
+        }
+    }
+    const host = await mountWithCleanup(Host);
+    await click(".nav-item:nth-child(2) .nav-link");
+    expect.verifySteps(["activation requested"]);
+    host.state.pages.pop();
+    await animationFrame();
+    expect(".nav-link").toHaveCount(1);
+    gate.resolve();
+    await animationFrame();
+    expect(".nav-link.active").toHaveText("A");
+    expect(".page-body").toHaveText("A");
+});
 
 test("not rendered if empty slots", async () => {
     await mountWithCleanup(Notebook);
@@ -471,3 +541,41 @@ test("both class spellings reach the root, because both callers exist", async ()
     expect("div.o_notebook").toHaveClass("from-template");
     expect("div.o_notebook").toHaveClass("from-compiler");
 });
+
+for (const intent of ["current page", "new default", "ordinary render"]) {
+    test(`a pending tab activation respects ${intent}`, async () => {
+        const pending = new Deferred();
+        class Parent extends Component {
+            static components = { Notebook };
+            static props = {};
+            static template = xml`
+                <Notebook defaultPage="state.defaultPage" className="state.className"
+                    onWillActivatePage="() => pending">
+                    <t t-set-slot="a" title="'A'" isVisible="true"><div class="page-a"/></t>
+                    <t t-set-slot="b" title="'B'" isVisible="true"><div class="page-b"/></t>
+                    <t t-set-slot="c" title="'C'" isVisible="true"><div class="page-c"/></t>
+                </Notebook>`;
+            setup() {
+                this.pending = pending;
+                this.state = useState({ defaultPage: "a", className: "before" });
+            }
+        }
+        const parent = await mountWithCleanup(Parent);
+        await click(".nav-item:nth-child(2) .nav-link");
+        await animationFrame();
+        expect(".page-a").toHaveCount(1);
+        if (intent === "current page") {
+            await click(".nav-item:first-child .nav-link");
+        } else if (intent === "new default") {
+            parent.state.defaultPage = "c";
+        } else {
+            parent.state.className = "after";
+        }
+        await animationFrame();
+        pending.resolve();
+        await animationFrame();
+        const expectedPage =
+            intent === "current page" ? "a" : intent === "new default" ? "c" : "b";
+        expect(`.page-${expectedPage}`).toHaveCount(1);
+    });
+}

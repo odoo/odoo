@@ -56,11 +56,11 @@ export class AccountMoveFormNotebook extends Notebook {
         onBeforeTabSwitch: { type: Function, optional: true },
     };
 
-    async changeTabTo(page_id) {
-        if (this.props.onBeforeTabSwitch) {
-            await this.props.onBeforeTabSwitch(page_id);
+    async beforePageActivation(pageId) {
+        if ((await super.beforePageActivation(pageId)) === false) {
+            return false;
         }
-        this.state.currentPage = page_id;
+        return this.props.onBeforeTabSwitch?.(pageId);
     }
 }
 
@@ -81,10 +81,11 @@ export class AccountMoveFormRenderer extends FormRenderer {
         }
         const contentEl = this.rootRef.el?.closest(".o_content");
         const scrollPos = contentEl?.scrollTop;
-        await this.props.record.save();
+        const saved = await this.props.record.save();
         if (scrollPos) {
             contentEl.scrollTop = scrollPos;
         }
+        return saved;
     }
 }
 

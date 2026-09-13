@@ -1,3 +1,4 @@
+import { AccountMoveFormNotebook } from "@account/components/account_move_form/account_move_form";
 import {
     click,
     insertText,
@@ -7,12 +8,15 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { expect, test } from "@odoo/hoot";
+import { animationFrame, Deferred } from "@odoo/hoot-mock";
+import { Component, useState, xml } from "@odoo/owl";
 import {
     asyncStep,
     contains,
     defineModels,
     fields,
     models,
+    mountWithCleanup,
     onRpc,
     waitForSteps,
 } from "@web/../tests/web_test_helpers";
@@ -137,3 +141,61 @@ test("Update description on product line", async () => {
     const line = pyEnv["account.move.line"].browse([1])[0];
     expect(line.name).toBe("testProduct\ntestDescription");
 });
+
+test("account tab activation flushes inputs and discards a hidden page after saving", async () => {
+    const saved = new Deferred();
+    class Parent extends Component {
+        static props = ["*"];
+        static components = { AccountMoveFormNotebook };
+        static template = xml`
+            <AccountMoveFormNotebook onWillActivatePage="() => this.flush()" onBeforeTabSwitch="() => this.save()">
+                <t t-set-slot="a" title="'A'" isVisible="true"><div class="page-a"/></t>
+                <t t-set-slot="b" title="'B'" isVisible="!state.hidden"><div class="page-b"/></t>
+            </AccountMoveFormNotebook>`;
+        setup() {
+            this.state = useState({ hidden: false });
+        }
+        flush() {
+            expect.step("flush");
+        }
+        save() {
+            expect.step("save");
+            return saved;
+        }
+    }
+    const parent = await mountWithCleanup(Parent);
+    await click(".nav-item:nth-child(2) .nav-link");
+    expect.verifySteps(["flush", "save"]);
+    parent.state.hidden = true;
+    await animationFrame();
+    saved.resolve();
+    await animationFrame();
+    expect(".nav-link.active").toHaveText("A");
+    expect(".page-b").toHaveCount(0);
+});
+
+for (const blockedAt of ["flush", "save"]) {
+    test(`account tab activation can be refused by ${blockedAt}`, async () => {
+        class Parent extends Component {
+            static props = ["*"];
+            static components = { AccountMoveFormNotebook };
+            static template = xml`
+                <AccountMoveFormNotebook onWillActivatePage="() => this.flush()" onBeforeTabSwitch="() => this.save()">
+                    <t t-set-slot="a" title="'A'" isVisible="true">A</t>
+                    <t t-set-slot="b" title="'B'" isVisible="true">B</t>
+                </AccountMoveFormNotebook>`;
+            flush() {
+                expect.step("flush");
+                return blockedAt !== "flush";
+            }
+            save() {
+                expect.step("save");
+                return false;
+            }
+        }
+        await mountWithCleanup(Parent);
+        await click(".nav-item:nth-child(2) .nav-link");
+        expect.verifySteps(blockedAt === "flush" ? ["flush"] : ["flush", "save"]);
+        expect(".nav-link.active").toHaveText("A");
+    });
+}

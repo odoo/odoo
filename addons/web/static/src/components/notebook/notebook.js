@@ -3,6 +3,7 @@
 
 import {
     Component,
+    onWillDestroy,
     onWillRender,
     onWillUpdateProps,
     useEffect,
@@ -61,6 +62,7 @@ export class Notebook extends Component {
         this.state = useState({ currentPage: null });
         this.selectActivePage(this.props.defaultPage, true);
         this.keepLastPageTransition = new KeepLast({ rejectSuperseded: true });
+        onWillDestroy(() => this.keepLastPageTransition.cancel());
         useEffect(
             () => {
                 this.props.onPageUpdate(this.state.currentPage);
@@ -77,11 +79,21 @@ export class Notebook extends Component {
             this.computeInvalidPages();
         });
         onWillUpdateProps((nextProps) => {
+            const currentPage = this.state.currentPage;
             const activateDefault =
                 this.props.defaultPage !== nextProps.defaultPage ||
                 !this.defaultVisible;
             this.readPages(nextProps);
             this.selectActivePage(nextProps.defaultPage, activateDefault);
+            if (
+                currentPage !== this.state.currentPage ||
+                (activateDefault && nextProps.defaultPage && this.defaultVisible)
+            ) {
+                log.logic("cancel activation after page selection", () => ({
+                    currentPage: this.state.currentPage,
+                }));
+                this.keepLastPageTransition.cancel();
+            }
         });
     }
 
@@ -102,15 +114,15 @@ export class Notebook extends Component {
 
     /** @param {string} pageId */
     async activatePage(pageId) {
-        const exists = this.pages.some(([id]) => id === pageId);
-        if (
-            !exists ||
-            this.disabledPages.includes(pageId) ||
-            this.state.currentPage === pageId
-        ) {
+        if (!this.canActivatePage(pageId)) {
             return;
         }
-        const prom = (async () => this.props.onWillActivatePage(pageId))();
+        if (this.state.currentPage === pageId) {
+            log.logic("cancel activation on current page", () => ({ pageId }));
+            this.keepLastPageTransition.cancel();
+            return;
+        }
+        const prom = (async () => this.beforePageActivation(pageId))();
         let canProceed;
         try {
             canProceed = await this.keepLastPageTransition.add(prom);
@@ -121,9 +133,22 @@ export class Notebook extends Component {
             throw error;
         }
         log.logic("activatePage", () => ({ pageId, canProceed }));
-        if (canProceed !== false) {
+        if (canProceed !== false && this.canActivatePage(pageId)) {
             this.state.currentPage = pageId;
         }
+    }
+
+    /** @param {string} pageId */
+    beforePageActivation(pageId) {
+        return this.props.onWillActivatePage(pageId);
+    }
+
+    /** @param {string} pageId */
+    canActivatePage(pageId) {
+        return (
+            this.pages.some(([id, page]) => id === pageId && page.isVisible) &&
+            !this.disabledPages.includes(pageId)
+        );
     }
 
     /** @param {Object} props */

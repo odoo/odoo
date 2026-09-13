@@ -98,7 +98,7 @@ export class Pager extends Component {
         } else if (minimum < 0 && this.props.limit > 1) {
             minimum = total - (total % this.props.limit || this.props.limit);
         }
-        this.update(minimum, this.props.limit, true);
+        return this.update(minimum, this.props.limit, true);
     }
     /**
      * @param {string} value
