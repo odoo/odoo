@@ -269,8 +269,12 @@ class StockWarehouseOrderpoint(models.Model):
 
     def _get_lead_days_values(self):
         values = super()._get_lead_days_values()
-        if self.supplier_id:
-            values['supplierinfo'] = self.supplier_id
+        product_qty = self.qty_to_order_manual or self.product_max_qty
+        supplier = self.supplier_id or self.env['stock.rule']._get_matching_supplier(
+            self.product_id, product_qty, self.product_uom, self.company_id, values
+        )
+        if supplier:
+            values['supplierinfo'] = supplier
         return values
 
     def _get_replenishment_order_notification(self):
