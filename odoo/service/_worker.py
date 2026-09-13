@@ -42,11 +42,7 @@ from ._cron import (
     drain_swept_database,
 )
 from ._env import get_env_int
-from ._limits import (
-    empty_pipe,
-    get_job_max_age,
-    get_memory_over_soft_limit,
-)
+from ._limits import empty_pipe, get_memory_over_soft_limit
 from .httpd import (
     ServerIdentity,
     TransportLimits,
@@ -580,7 +576,7 @@ class WorkerJob(WorkerCron):
         self.watchdog_timeout = multi.job_timeout
 
     def get_max_age(self) -> int:
-        return get_job_max_age()
+        return current().job_max_age
 
     def _run_jobs_for_database(self, db_name: str) -> None:
         from odoo.addons.base.models.ir_job import IrJob

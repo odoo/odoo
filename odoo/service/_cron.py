@@ -6,7 +6,7 @@ import re
 import selectors
 import time
 import typing
-from collections.abc import Iterable, Iterator
+from collections.abc import Iterable, Iterator, Sized
 
 from odoo import db
 from odoo.db import is_maintenance_db
@@ -184,10 +184,6 @@ def drain_swept_database(db_name: str) -> None:
     db.drain_db(db_name)
 
 
-def _get_databases_to_sweep() -> list[str]:
-    return get_cron_databases()
-
-
 def close_cron_cursor(cursor: BaseCursor) -> None:
     with contextlib.suppress(Exception):
         cursor.close()
@@ -354,7 +350,7 @@ class CronSchedule:
         refresh_interval: float = CRON_POLL_INTERVAL_S,
         clock: typing.Callable[[], float] | None = None,
     ) -> None:
-        self._list_databases = list_databases or _get_databases_to_sweep
+        self._list_databases = list_databases
         self._refresh_interval = refresh_interval
         self._clock = clock or time.monotonic
         self._known: OrderedSet[str] = OrderedSet()
@@ -374,7 +370,9 @@ class CronSchedule:
 
     def reset_known_databases(self) -> OrderedSet[str]:
         previous = self._known
-        self._known = OrderedSet(self._list_databases())
+        # Late-bound so a patch on `get_cron_databases` scopes every sweep.
+        list_databases = self._list_databases or get_cron_databases
+        self._known = OrderedSet(list_databases())
         self._listed_at = self._clock()
         _debug.logic(
             "cron.schedule.databases_listed",
@@ -385,6 +383,8 @@ class CronSchedule:
         return self._known
 
     def get_due_databases(self, notified: Iterable[str]) -> list[str]:
+        if not isinstance(notified, Sized):
+            notified = list(notified)
         stale = self._is_stale()
         if stale:
             due = order_notified_first(notified, self.reset_known_databases())
@@ -393,7 +393,7 @@ class CronSchedule:
         _debug.pipeline(
             "cron.schedule.due",
             due=len(due),
-            notified=len(list(notified)),
+            notified=len(notified),
             known=len(self._known),
             swept_all=stale,
         )

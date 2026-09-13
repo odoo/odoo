@@ -99,11 +99,11 @@ class TestInheritFromCron:
             limit_time_real_cron=300,
             limit_time_real=120,
         ):
-            assert _limits.get_job_max_age() == 900
+            assert server_settings.current().job_max_age == 900
             assert _limits.get_job_real_time_budget() == 300
 
     def test_zero_disables_rather_than_inherits(self):
         with server_settings.override(
             limit_time_worker_job=0, limit_time_worker_cron=900
         ):
-            assert _limits.get_job_max_age() == 0
+            assert server_settings.current().job_max_age == 0

@@ -120,7 +120,10 @@ class TestListDbsGate:
         cfg["db_name"] = ["only_this"]
         cfg["dbfilter"] = ".*"
         with patch.object(odoo.db, "db_connect") as connect:
-            connect.return_value.cursor.return_value.fetchall.return_value = [("x",)]
+            connect.return_value.cursor.return_value.fetchone.return_value = (
+                False,
+                ["x"],
+            )
             assert listing.list_dbs() == ["x"], (
                 "with a dbfilter the configured db_name is a default, not the "
                 "whole answer, so the catalogue has to be read"

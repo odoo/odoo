@@ -71,10 +71,7 @@ class TestGetPublicMethod:
     def fake_model(self, mod):
         instance = _FakeModel()
         with patch.object(mod, "BaseModel", _FakeBaseModel):
-            try:
-                yield instance
-            finally:
-                mod._PUBLIC_METHOD_CACHE.pop(_FakeModel, None)
+            yield instance
 
     def test_underscore_prefix_blocked(self, mod, fake_model) -> None:
         from odoo.exceptions import AccessError
@@ -126,23 +123,18 @@ class TestGetPublicMethod:
             pass
 
         leaf_instance = Leaf()
-        try:
-            with patch.object(mod, "BaseModel", _FakeBaseModel):
-                with pytest.raises(AccessError):
-                    mod.get_public_method(leaf_instance, "deep_private")
-        finally:
-            for cls in (Leaf, Mid, Base):
-                mod._PUBLIC_METHOD_CACHE.pop(cls, None)
+        with patch.object(mod, "BaseModel", _FakeBaseModel):
+            with pytest.raises(AccessError):
+                mod.get_public_method(leaf_instance, "deep_private")
 
 
 class TestTheNameIsVettedBeforeTheClassIsTouched:
     """A rejected name must not reach `getattr(cls, name)`.
 
     The name is chosen by the RPC caller and `getattr` on a class runs the
-    descriptor protocol, the metaclass included.  Upstream keeps the private/
-    unsafe guard as the first statement for exactly that reason; the cache
-    added here moved it behind the lookup, which put an attacker-chosen name
-    in front of the boundary that exists to reject it.
+    descriptor protocol, the metaclass included.  The private/unsafe guard is
+    the first statement for exactly that reason, and the `_api_private` walk
+    reads `__dict__` so a name it rejects never runs a descriptor either.
     """
 
     @staticmethod
@@ -175,77 +167,55 @@ class TestTheNameIsVettedBeforeTheClassIsTouched:
         from odoo.exceptions import AccessError
 
         Model, seen = self._model_whose_metaclass_watches()
-        try:
-            with patch.object(mod, "BaseModel", _FakeBaseModel):
-                with pytest.raises(AccessError):
-                    mod.get_public_method(Model(), name)
-            assert seen == [], (
-                f"the metaclass descriptor for {name!r} ran before the guard "
-                f"rejected it"
-            )
-        finally:
-            mod._PUBLIC_METHOD_CACHE.pop(Model, None)
+        with patch.object(mod, "BaseModel", _FakeBaseModel):
+            with pytest.raises(AccessError):
+                mod.get_public_method(Model(), name)
+        assert seen == [], (
+            f"the metaclass descriptor for {name!r} ran before the guard rejected it"
+        )
+
+    def test_an_api_private_name_never_reaches_the_class_either(self, mod) -> None:
+        """`_api_private` is read off `__dict__`; a metaclass data descriptor
+        of the same name, which `getattr(cls, name)` would prefer, never runs."""
+        from odoo.exceptions import AccessError
+
+        seen = []
+
+        class Watching(type):
+            @property
+            def hidden(cls):
+                seen.append("hidden")
+                return lambda self: "reached"
+
+        class Model(_FakeBaseModel, metaclass=Watching):
+            _name = "watched.model"
+
+            def hidden(self) -> str:
+                return "declared"
+
+        Model.__dict__["hidden"]._api_private = True
+        with patch.object(mod, "BaseModel", _FakeBaseModel):
+            with pytest.raises(AccessError):
+                mod.get_public_method(Model(), "hidden")
+        assert seen == [], "the _api_private walk ran a descriptor"
 
     def test_an_accepted_name_still_reaches_the_class(self, mod) -> None:
         Model, seen = self._model_whose_metaclass_watches()
-        try:
-            with patch.object(mod, "BaseModel", _FakeBaseModel):
-                mod.get_public_method(Model(), "evil")
-            assert seen == ["evil"], "the guard now rejects a public name too"
-        finally:
-            mod._PUBLIC_METHOD_CACHE.pop(Model, None)
+        with patch.object(mod, "BaseModel", _FakeBaseModel):
+            mod.get_public_method(Model(), "evil")
+        assert seen == ["evil"], "the guard now rejects a public name too"
 
 
-class TestGetPublicMethodCache:
-    @pytest.fixture
-    def cache(self, mod):
-        mod._PUBLIC_METHOD_CACHE.pop(_FakeModel, None)
-        yield mod._PUBLIC_METHOD_CACHE
-        mod._PUBLIC_METHOD_CACHE.pop(_FakeModel, None)
-
-    def test_success_is_cached_and_stable(self, mod, cache) -> None:
+class TestGetPublicMethodResolvesLive:
+    def test_the_class_attribute_is_returned_as_is(self, mod) -> None:
         with patch.object(mod, "BaseModel", _FakeBaseModel):
             first = mod.get_public_method(_FakeModel(), "public_method")
             second = mod.get_public_method(_FakeModel(), "public_method")
-        assert first is second
-        assert cache[_FakeModel]["public_method"][0] is first
+        assert first is second is _FakeModel.__dict__["public_method"]
 
-    def test_rejections_are_not_cached(self, mod, cache) -> None:
-        from odoo.exceptions import AccessError
-
-        rejects = [
-            ("_underscore", AccessError),
-            ("api_private_method", AccessError),
-            ("not_callable", AttributeError),
-            ("missing_xyz", AttributeError),
-        ]
-        with patch.object(mod, "BaseModel", _FakeBaseModel):
-            for name, exc in rejects:
-                with pytest.raises(exc):
-                    mod.get_public_method(_FakeModel(), name)
-        assert cache.get(_FakeModel, {}) == {}
-
-    def test_distinct_classes_do_not_collide(self, mod, cache) -> None:
-        class Other(_FakeBaseModel):
-            _name = "other.model"
-
-            def public_method(self) -> str:
-                return "other"
-
-        with patch.object(mod, "BaseModel", _FakeBaseModel):
-            a = mod.get_public_method(_FakeModel(), "public_method")
-            b = mod.get_public_method(Other(), "public_method")
-        try:
-            assert a is not b
-            assert cache[_FakeModel]["public_method"][0] is a
-            assert cache[Other]["public_method"][0] is b
-        finally:
-            cache.pop(Other, None)
-
-    def test_rebinding_the_method_invalidates_the_entry(self, mod, cache) -> None:
+    def test_rebinding_the_method_is_seen_at_once(self, mod) -> None:
         with patch.object(mod, "BaseModel", _FakeBaseModel):
             original = mod.get_public_method(_FakeModel(), "public_method")
-            assert cache[_FakeModel]["public_method"][0] is original
 
             def replacement(self) -> str:
                 return "replaced"
@@ -256,7 +226,7 @@ class TestGetPublicMethodCache:
 
             assert mod.get_public_method(_FakeModel(), "public_method") is original
 
-    def test_rebound_method_is_still_access_checked(self, mod, cache) -> None:
+    def test_a_rebound_method_is_still_access_checked(self, mod) -> None:
         from odoo.exceptions import AccessError
 
         with patch.object(mod, "BaseModel", _FakeBaseModel):
@@ -1517,18 +1487,6 @@ class TestABadMethodNameIsAClientErrorNotAServerFault:
     `builtins.AttributeError` -- and `loglevel` is the seam that method checks
     before anything else.
     """
-
-    @pytest.fixture(autouse=True)
-    def _own_the_cache(self, mod):
-        """`get_public_method` records the class before it validates the name.
-
-        A rejected name therefore still leaves an (empty) entry keyed by the
-        class, which `conftest`'s leak guard fails the test for -- correctly:
-        the cache is keyed by class object and never evicted.
-        """
-        mod._PUBLIC_METHOD_CACHE.pop(_FakeModel, None)
-        yield
-        mod._PUBLIC_METHOD_CACHE.pop(_FakeModel, None)
 
     def test_the_missing_method_error_carries_a_client_level(self, mod) -> None:
         import logging as _logging

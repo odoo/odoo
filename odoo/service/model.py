@@ -10,7 +10,6 @@ from collections.abc import (
 )
 from collections.abc import Set as AbstractSet
 from contextlib import suppress
-from weakref import WeakKeyDictionary
 
 import psycopg
 
@@ -54,11 +53,6 @@ class Params:
         return ", ".join(params)
 
 
-_PUBLIC_METHOD_CACHE: WeakKeyDictionary[type, dict[str, tuple[Callable, object]]] = (
-    WeakKeyDictionary()
-)
-
-
 def get_public_method(model: BaseModel, name: str) -> Callable:
     assert isinstance(model, BaseModel)
     if not isinstance(name, str):
@@ -75,18 +69,11 @@ def get_public_method(model: BaseModel, name: str) -> Callable:
         )
 
     cls = type(model)
-
-    method: Callable | None = getattr(cls, name, None)
-    descriptor: object = None
-    # Visibility is live metadata, including inherited methods. Cache only
-    # descriptor validation, never an authorization decision.
+    # Once private, private in every override: an override that drops
+    # @api.private must not reopen the method, so the whole MRO is read, and
+    # through __dict__ so the caller's name runs no descriptor before that.
     for mro_cls in cls.__mro__:
-        if name not in mro_cls.__dict__:
-            continue
-        cla_method = mro_cls.__dict__[name]
-        if descriptor is None:
-            descriptor = cla_method
-        if getattr(cla_method, "_api_private", False):
+        if getattr(mro_cls.__dict__.get(name), "_api_private", False):
             _debug.logic(
                 "rpc.method_refused",
                 model=model._name,
@@ -99,17 +86,7 @@ def get_public_method(model: BaseModel, name: str) -> Callable:
                 f"cannot be called remotely."
             )
 
-    per_class = _PUBLIC_METHOD_CACHE.get(cls)
-    if per_class is None:
-        per_class = _PUBLIC_METHOD_CACHE[cls] = {}
-    else:
-        cached = per_class.get(name)
-        if cached is not None and cached[0] is method and cached[1] is descriptor:
-            _debug.perf.count(
-                "rpc.public_method_cached", model=model._name, method=name
-            )
-            return cached[0]
-
+    method = getattr(cls, name, None)
     if not callable(method):
         _debug.logic("rpc.method_missing", model=model._name, method=name)
         error = AttributeError(f"The method '{model._name}.{name}' does not exist")
@@ -124,8 +101,7 @@ def get_public_method(model: BaseModel, name: str) -> Callable:
             f"The method '{model._name}.{name}' cannot be called remotely."
         )
 
-    per_class[name] = (method, descriptor)
-    _debug.perf.count("rpc.public_method_validated", model=model._name, method=name)
+    _debug.perf.count("rpc.public_method_resolved", model=model._name, method=name)
     return method
 
 
@@ -325,7 +301,7 @@ def execute_cr(
 
 
 def _force_lazy_values(result: typing.Any) -> typing.Any:
-    memo = {}
+    memo: _LazyMemo = {}
     try:
         with _debug.perf("rpc.lazy_values_forced") as span:
             forced = _force_lazy_in_value(result, memo, set())

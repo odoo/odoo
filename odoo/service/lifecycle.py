@@ -9,6 +9,7 @@ import sys
 import threading
 import time
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from odoo import api, db
 from odoo.libs import gc
@@ -24,6 +25,9 @@ from odoo.tools.misc import stripped_sys_argv
 from . import _process_state
 from ._env import _IS_POSIX, _IS_WINDOWS, get_env_float, get_env_int
 from .settings import current
+
+if TYPE_CHECKING:
+    from odoo.tests.result import OdooTestResult
 
 _logger = logging.getLogger("odoo.service.server")
 _debug = DebugLog(__name__)
@@ -55,7 +59,7 @@ def _load_server_wide_modules() -> None:
 
 def _reexec_server(updated_modules: list[str] | None = None) -> None:
     if osutil.is_running_as_nt_service(nt_service_name):
-        rc = subprocess.call(  # noqa: S602  see comment above
+        rc = subprocess.call(  # noqa: S602  fixed literal, no user input
             f"net stop {nt_service_name} && net start {nt_service_name}",
             shell=True,
         )
@@ -81,6 +85,18 @@ def _reexec_server(updated_modules: list[str] | None = None) -> None:
         updated_modules=len(updated_modules or ()),
     )
     os.execve(sys.executable, args, os.environ)  # noqa: S606  re-exec of ourselves IS the restart
+
+
+def _get_assertion_report(dbname: str) -> OdooTestResult:
+    from odoo.tests.result import assertion_report
+
+    report = assertion_report(dbname)
+    if report is None:
+        raise RuntimeError(
+            f"no assertion report for {dbname!r}: test_enable is off in the "
+            f"live config while the service settings say tests run"
+        )
+    return report
 
 
 def _run_post_install_tests(registry: Registry, update_module: bool) -> int:
@@ -109,10 +125,9 @@ def _run_post_install_tests(registry: Registry, update_module: bool) -> int:
     module_names = (
         registry.updated_modules if update_module else sorted(registry.loaded_modules)
     )
-    from odoo.tests.result import assertion_report
 
     _logger.info("Starting post tests")
-    report = assertion_report(registry.db_name)
+    report = _get_assertion_report(registry.db_name)
     tests_before = report.testsRun
     post_install_suite = loader.prepare_suite(module_names, "post_install")
     prepared = post_install_suite.countTestCases()
@@ -149,6 +164,39 @@ def _run_post_install_tests(registry: Registry, update_module: bool) -> int:
     if _debug.logic.enabled and prepared and not result.testsRun:
         _debug.logic("service.post_install_tests.none_ran", prepared=prepared)
     return prepared if prepared and not result.testsRun else 0
+
+
+def _get_test_run_rc(dbname: str, report: OdooTestResult, unrun: int) -> int:
+    _debug.pipeline(
+        "service.preload_reported",
+        db=dbname,
+        tests_run=report.testsRun,
+        unrun=unrun,
+        successful=report.wasSuccessful(),
+    )
+    if not report.wasSuccessful():
+        _debug.logic("service.preload_rc", db=dbname, reason="tests_failed")
+        return 1
+    if unrun:
+        _debug.logic("service.preload_rc", db=dbname, reason="unrun", unrun=unrun)
+        _logger.error(
+            "post_install prepared %d tests for database %r and ran none of "
+            "them: every class was skipped before its first test started "
+            "(--no-http against HttpCase-only classes?), yet the run would "
+            "otherwise have reported success.",
+            unrun,
+            dbname,
+        )
+        return 1
+    if not report.testsRun and (spec := _get_narrowing_test_spec()):
+        _debug.logic("service.preload_rc", db=dbname, reason="no_test_matched")
+        _logger.error(
+            "--test-tags %r matched no test at all: nothing ran, yet the run "
+            "would otherwise have reported success.",
+            spec,
+        )
+        return 1
+    return 0
 
 
 def _get_narrowing_test_spec() -> str:
@@ -197,33 +245,33 @@ def _limit_resident_registries(dbnames: list[str]) -> None:
     )
 
 
+def _get_preload_profiler(dbname: str) -> contextlib.AbstractContextManager:
+    if not os.environ.get("ODOO_PROFILE_PRELOAD"):
+        return contextlib.nullcontext()
+    interval = get_env_float("ODOO_PROFILE_PRELOAD_INTERVAL", 0.1, logger=_logger)
+    collectors: list[str | profiler.Collector] = [
+        profiler.PeriodicCollector(interval=interval)
+    ]
+    if os.environ.get("ODOO_PROFILE_PRELOAD_SQL"):
+        collectors.append("sql")
+    _debug.logic(
+        "service.preload_profiled",
+        db=dbname,
+        interval=interval,
+        collectors=len(collectors),
+    )
+    return profiler.Profiler(db=dbname, collectors=collectors)
+
+
 def preload_registries(dbnames: list[str] | None) -> int:
     dbnames = dbnames or []
     rc = 0
 
-    preload_profiler: contextlib.AbstractContextManager = contextlib.nullcontext()
-
     _limit_resident_registries(dbnames)
 
     for dbname in dbnames:
-        if os.environ.get("ODOO_PROFILE_PRELOAD"):
-            interval = get_env_float(
-                "ODOO_PROFILE_PRELOAD_INTERVAL", 0.1, logger=_logger
-            )
-            collectors: list[str | profiler.Collector] = [
-                profiler.PeriodicCollector(interval=interval)
-            ]
-            if os.environ.get("ODOO_PROFILE_PRELOAD_SQL"):
-                collectors.append("sql")
-            preload_profiler = profiler.Profiler(db=dbname, collectors=collectors)
-            _debug.logic(
-                "service.preload_profiled",
-                db=dbname,
-                interval=interval,
-                collectors=len(collectors),
-            )
         try:
-            with preload_profiler:
+            with _get_preload_profiler(dbname):
                 current_worker_thread().dbname = dbname
                 settings = current()
                 update_module = settings.update_module
@@ -244,53 +292,11 @@ def preload_registries(dbnames: list[str] | None) -> int:
                             reinit_modules=settings.reinit,
                         )
 
-                unrun = 0
                 if settings.test_enable:
                     with _debug.perf("service.post_install_tests", db=dbname) as span:
                         unrun = _run_post_install_tests(registry, update_module)
                         span.set(unrun=unrun)
-                report = None
-                if settings.test_enable:
-                    from odoo.tests.result import assertion_report
-
-                    report = assertion_report(dbname)
-                _debug.pipeline(
-                    "service.preload_reported",
-                    db=dbname,
-                    tests_run=getattr(report, "testsRun", None),
-                    unrun=unrun,
-                    successful=report is None or report.wasSuccessful(),
-                )
-                if report and not report.wasSuccessful():
-                    _debug.logic("service.preload_rc", db=dbname, reason="tests_failed")
-                    rc += 1
-                elif unrun:
-                    _debug.logic(
-                        "service.preload_rc", db=dbname, reason="unrun", unrun=unrun
-                    )
-                    _logger.error(
-                        "post_install prepared %d tests for database %r and ran "
-                        "none of them: every class was skipped before its first "
-                        "test started (--no-http against HttpCase-only classes?), "
-                        "yet the run would otherwise have reported success.",
-                        unrun,
-                        dbname,
-                    )
-                    rc += 1
-                elif (
-                    report
-                    and not report.testsRun
-                    and (spec := _get_narrowing_test_spec())
-                ):
-                    _debug.logic(
-                        "service.preload_rc", db=dbname, reason="no_test_matched"
-                    )
-                    _logger.error(
-                        "--test-tags %r matched no test at all: nothing ran, "
-                        "yet the run would otherwise have reported success.",
-                        spec,
-                    )
-                    rc += 1
+                    rc += _get_test_run_rc(dbname, _get_assertion_report(dbname), unrun)
         except Exception:
             _logger.critical(
                 "Failed to initialize database `%s`.", dbname, exc_info=True

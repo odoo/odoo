@@ -32,10 +32,6 @@ base, and `base=2` is what reproduces this curve exactly.
 """
 
 
-def get_job_max_age() -> int:
-    return current().job_max_age
-
-
 def get_cron_real_time_budget() -> float:
     return current().cron_real_time_budget
 
@@ -75,7 +71,6 @@ __all__ = (
     "INHERIT_FROM_CRON",
     "empty_pipe",
     "get_cron_real_time_budget",
-    "get_job_max_age",
     "get_job_real_time_budget",
     "get_memory_over_soft_limit",
     "get_memory_rss",

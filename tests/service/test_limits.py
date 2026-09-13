@@ -71,24 +71,27 @@ class TestJobLimitsAreSeparableFromCron:
         return patch.dict(config.options, {**self.CRON, **overrides})
 
     def test_the_default_follows_cron(self):
-        from odoo.service._limits import get_job_max_age, get_job_real_time_budget
+        from odoo.service._limits import get_job_real_time_budget
+        from odoo.service.settings import current
 
         with self._with(limit_time_worker_job=-1, limit_time_real_job=-1):
-            assert get_job_max_age() == 300
+            assert current().job_max_age == 300
             assert get_job_real_time_budget() == 120
 
     def test_an_explicit_job_limit_wins(self):
-        from odoo.service._limits import get_job_max_age, get_job_real_time_budget
+        from odoo.service._limits import get_job_real_time_budget
+        from odoo.service.settings import current
 
         with self._with(limit_time_worker_job=900, limit_time_real_job=3600):
-            assert get_job_max_age() == 900
+            assert current().job_max_age == 900
             assert get_job_real_time_budget() == 3600
 
     def test_zero_disables_for_jobs_without_disabling_cron(self):
-        from odoo.service._limits import get_job_max_age, get_job_real_time_budget
+        from odoo.service._limits import get_job_real_time_budget
+        from odoo.service.settings import current
 
         with self._with(limit_time_worker_job=0, limit_time_real_job=0):
-            assert get_job_max_age() == 0
+            assert current().job_max_age == 0
             assert get_job_real_time_budget() == 0
         from odoo.tools import config
 
@@ -200,7 +203,7 @@ def _legacy_inherits(limit):
 @pytest.mark.parametrize("worker_cron", SENTINELS)
 def test_job_max_age_still_walks_the_two_level_chain(worker_job, worker_cron):
     """`_get_inherited_budget` must be a rewrite, not a behaviour change."""
-    from odoo.service._limits import get_job_max_age
+    from odoo.service.settings import current
     from odoo.tools import config
 
     expected = worker_cron if _legacy_inherits(worker_job) else worker_job
@@ -211,7 +214,7 @@ def test_job_max_age_still_walks_the_two_level_chain(worker_job, worker_cron):
             "limit_time_worker_cron": worker_cron,
         },
     ):
-        assert get_job_max_age() == expected
+        assert current().job_max_age == expected
 
 
 @pytest.mark.parametrize("real_job", SENTINELS)

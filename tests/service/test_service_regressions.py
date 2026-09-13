@@ -474,7 +474,7 @@ def test_scanner_accepts_quoted_data_and_explicit_enable(sql):
     assert _dump_scanner._get_disallowed_psql_meta_command(sql) is None
 
 
-def test_private_metadata_is_rechecked_on_an_inherited_cached_method(monkeypatch):
+def test_private_metadata_is_rechecked_on_an_inherited_method(monkeypatch):
     class Parent:
         _name = "probe"
 
@@ -486,16 +486,13 @@ def test_private_metadata_is_rechecked_on_an_inherited_cached_method(monkeypatch
 
     monkeypatch.setattr(model, "BaseModel", Parent)
     obj = Child()
-    try:
+    model.get_public_method(obj, "method")
+    monkeypatch.setattr(Parent.method, "_api_private", True, raising=False)
+    with pytest.raises(AccessError):
         model.get_public_method(obj, "method")
-        monkeypatch.setattr(Parent.method, "_api_private", True, raising=False)
-        with pytest.raises(AccessError):
-            model.get_public_method(obj, "method")
-    finally:
-        model._PUBLIC_METHOD_CACHE.pop(Child, None)
 
 
-def test_cached_method_rejects_a_rebound_static_descriptor(monkeypatch):
+def test_a_rebound_static_descriptor_is_rejected(monkeypatch):
     class Model:
         _name = "probe"
 
@@ -504,14 +501,11 @@ def test_cached_method_rejects_a_rebound_static_descriptor(monkeypatch):
 
     monkeypatch.setattr(model, "BaseModel", Model)
     obj = Model()
-    try:
-        function = model.get_public_method(obj, "method")
-        monkeypatch.setattr(Model, "method", staticmethod(function))
-        assert Model.method is function  # The resolved function alone did not change.
-        with pytest.raises(AccessError):
-            model.get_public_method(obj, "method")
-    finally:
-        model._PUBLIC_METHOD_CACHE.pop(Model, None)
+    function = model.get_public_method(obj, "method")
+    monkeypatch.setattr(Model, "method", staticmethod(function))
+    assert Model.method is function  # The resolved function alone did not change.
+    with pytest.raises(AccessError):
+        model.get_public_method(obj, "method")
 
 
 def test_deferred_work_finishes_before_the_retry_boundary_commits(monkeypatch):

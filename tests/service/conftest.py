@@ -56,22 +56,11 @@ def _no_global_state_leak():
         }
 
     before = snapshot()
-    from odoo.service import model as _model_mod
-
-    classes_before = set(_model_mod._PUBLIC_METHOD_CACHE)
 
     yield
 
     after = snapshot()
     problems = []
-    strays = set(_model_mod._PUBLIC_METHOD_CACHE) - classes_before
-    if strays:
-        problems.append(
-            "left classes in odoo.service.model._PUBLIC_METHOD_CACHE, which is "
-            "keyed by class object and never evicted:\n"
-            + "\n".join(f"  {c!r}" for c in strays)
-            + "\nPop them in a fixture teardown, as TestGetPublicMethodCache does."
-        )
     leaked = {
         k: (before[k], after[k])
         for k in before

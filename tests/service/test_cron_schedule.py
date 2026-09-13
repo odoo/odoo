@@ -152,10 +152,12 @@ class TestBothLoopsUseIt:
         assert calls, "the schedule bound the function instead of the module"
 
     def test_neither_loop_carries_its_own_wrapper_any_more(self):
-        from odoo.service import _cron, _threaded, _worker
+        from odoo.service import _threaded, _worker
 
         for mod in (_threaded, _worker):
             assert not hasattr(mod, "_get_databases_to_sweep"), (
                 f"{mod.__name__} grew its own copy back; the seam splits again"
             )
-        assert hasattr(_cron, "_get_databases_to_sweep")
+            assert not hasattr(mod, "get_cron_databases"), (
+                f"{mod.__name__} imports the lister; patch it on _cron only"
+            )

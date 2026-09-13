@@ -32,11 +32,7 @@ from ._cron import (
     drain_swept_database,
 )
 from ._env import _IS_POSIX, _IS_WINDOWS
-from ._limits import (
-    get_cron_real_time_budget,
-    get_job_max_age,
-    get_job_real_time_budget,
-)
+from ._limits import get_cron_real_time_budget, get_job_real_time_budget
 from .httpd import ThreadedHTTPServer
 from .lifecycle import preload_registries, restart
 
@@ -308,10 +304,9 @@ class ThreadedServer(CommonServer):
         process_jobs: Any,
         label: str,
     ) -> None:
+        settings = self.settings
         max_age = (
-            get_job_max_age()
-            if label == "job"
-            else self.settings.limit_time_worker_cron
+            settings.job_max_age if label == "job" else settings.limit_time_worker_cron
         )
 
         cron_logger = self.logger.getChild(f"{label}{number}")
@@ -496,9 +491,8 @@ class ThreadedServer(CommonServer):
                 and thread not in self.limits_reached_threads
             ):
                 while thread.is_alive() and (time.monotonic() - stop_time) < 1:
-                    self.logger.debug("join and sleep")
+                    self.logger.debug("join")
                     thread.join(0.05)
-                    time.sleep(0.05)
                 _debug.lifecycle(
                     "server.threaded.thread_joined",
                     thread=thread.name,
@@ -540,28 +534,7 @@ class ThreadedServer(CommonServer):
 
             if stop:
                 if self.settings.test_enable:
-                    from odoo.tests.result import _logger as logger
-                    from odoo.tests.result import assertion_report
-
-                    with Registry.registries._lock:
-                        for db_name in Registry.registries:
-                            report = assertion_report(db_name)
-                            log = (
-                                logger.error
-                                if not report.wasSuccessful()
-                                else (
-                                    logger.warning
-                                    if not report.testsRun
-                                    else logger.info
-                                )
-                            )
-                            log("%s when loading database %r", report, db_name)
-                            _debug.pipeline(
-                                "server.threaded.test_report",
-                                db=db_name,
-                                tests_run=getattr(report, "testsRun", None),
-                                successful=report.wasSuccessful(),
-                            )
+                    self._log_test_reports()
                 return rc
 
             if rc:
@@ -618,6 +591,29 @@ class ThreadedServer(CommonServer):
             )
             self.stop()
         return rc if stop else None
+
+    def _log_test_reports(self) -> None:
+        from odoo.tests.result import _logger as logger
+        from odoo.tests.result import assertion_report
+
+        with Registry.registries._lock:
+            for db_name in Registry.registries:
+                report = assertion_report(db_name)
+                if report is None:
+                    continue
+                if not report.wasSuccessful():
+                    log = logger.error
+                elif not report.testsRun:
+                    log = logger.warning
+                else:
+                    log = logger.info
+                log("%s when loading database %r", report, db_name)
+                _debug.pipeline(
+                    "server.threaded.test_report",
+                    db=db_name,
+                    tests_run=report.testsRun,
+                    successful=report.wasSuccessful(),
+                )
 
     def _has_other_http_requests(self) -> bool:
         return any(

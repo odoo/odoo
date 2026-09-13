@@ -55,7 +55,11 @@ WORKER_RESPAWN_BACKOFF_CAP_S = 30.0
 
 EVENTED_STOP_TIMEOUT_S = 5.0
 
-CENSUS_WRITE_INTERVAL_S = 4.0
+SUPERVISION_BEAT_S = 4.0
+"""How long the master sleeps between supervision passes; `stop_workers_gracefully`
+shortens it while draining and `reload` restores it."""
+
+CENSUS_WRITE_INTERVAL_S = SUPERVISION_BEAT_S
 """How often the master rewrites its census.  Matches the default beat."""
 
 CENSUS_MAX_AGE_S = 60.0
@@ -85,13 +89,10 @@ class PreforkServer(CommonServer):
         }
 
     def _get_census_path(self) -> Path | None:
-        try:
-            data_dir = self.settings.data_dir
-            if not data_dir:
-                return None
-            return Path(data_dir) / f"prefork-census-{self.pid}.json"
-        except Exception:
+        data_dir = self.settings.data_dir
+        if not data_dir:
             return None
+        return Path(data_dir) / f"prefork-census-{self.pid}.json"
 
     def _publish_census(self) -> None:
         try:
@@ -163,7 +164,8 @@ class PreforkServer(CommonServer):
         self.limit_request = self.settings.limit_request
         self.cron_timeout = get_cron_real_time_budget() or None
         self.job_timeout = get_job_real_time_budget() or None
-        self.beat: float = 4
+        self.beat: float = SUPERVISION_BEAT_S
+        self.pipe: tuple[int, int] | None = None
         self.socket: socket.socket | None = None
         self.workers_http: dict[int, WorkerHTTP] = {}
         self.workers_cron: dict[int, WorkerCron] = {}
@@ -216,13 +218,11 @@ class PreforkServer(CommonServer):
                 raise
 
     def signal_handler(self, sig: int, frame: Any) -> None:
-        if sig in (signal.SIGCHLD, signal.SIGHUP):
-            if sig not in self.queue:
-                self.queue.append(sig)
-                self.ping_pipe(self.pipe)
+        if sig in (signal.SIGCHLD, signal.SIGHUP) and sig in self.queue:
             return
         self.queue.append(sig)
-        self.ping_pipe(self.pipe)
+        if self.pipe is not None:
+            self.ping_pipe(self.pipe)
 
     def _close_inherited_pipe_fds_in_child(self, new_worker: Worker) -> None:
         keep = {
@@ -241,7 +241,7 @@ class PreforkServer(CommonServer):
                 if fd not in keep:
                     with contextlib.suppress(OSError):
                         os.close(fd)
-        for fd in self.pipe:
+        for fd in self.pipe or ():
             if fd not in keep:
                 with contextlib.suppress(OSError):
                     os.close(fd)
@@ -282,7 +282,6 @@ class PreforkServer(CommonServer):
         )
 
     def spawn_worker(self, klass: type, workers_registry: dict) -> Worker | None:
-        self.generation += 1
         worker = None
         try:
             worker = klass(self)
@@ -304,6 +303,7 @@ class PreforkServer(CommonServer):
             self._record_spawn_failure()
             return None
         if pid != 0:
+            self.generation += 1
             worker.pid = pid
             worker.spawn_time = time.monotonic()
             self.workers[pid] = worker
@@ -692,7 +692,7 @@ class PreforkServer(CommonServer):
                 sel.register(fd, selectors.EVENT_READ)
                 watched[fd] = owner
                 registered += 1  # debuglog
-        if self.pipe[0] not in sel.get_map():
+        if self.pipe is not None and self.pipe[0] not in sel.get_map():
             with contextlib.suppress(KeyError, ValueError, OSError):
                 sel.register(self.pipe[0], selectors.EVENT_READ)
         if _debug.lifecycle.enabled and (registered or unregistered):
@@ -875,7 +875,7 @@ class PreforkServer(CommonServer):
                 self._stop_generation(self._replacement)
             else:
                 self.stop_workers_gracefully()
-                self.beat = 4
+                self.beat = SUPERVISION_BEAT_S
             self._replacement = self._candidate
             self._candidate = None
             return True
@@ -1082,11 +1082,10 @@ class PreforkServer(CommonServer):
             self.kill_worker(pid, signal.SIGTERM)
         self._close_watchdog_selector()
         self._discard_census()
-        for fd in getattr(self, "pipe", ()):
+        pipe, self.pipe = self.pipe, None
+        for fd in pipe or ():
             with contextlib.suppress(OSError):
                 os.close(fd)
-        if hasattr(self, "pipe"):
-            del self.pipe
         _debug.lifecycle(
             "prefork.stopped",
             graceful=graceful,

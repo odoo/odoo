@@ -65,7 +65,7 @@ class TestEachListenerIsWiredToItsOwnQueue:
         """`_run_listener_thread` branches on `label == "job"` and nothing else.
 
         So the label is not cosmetic: it decides whether the thread recycles on
-        `get_job_max_age()` or on `limit_time_worker_cron`.
+        `job_max_age` or on `limit_time_worker_cron`.
         """
         import inspect
 

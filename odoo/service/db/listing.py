@@ -154,6 +154,25 @@ def _invalidate_catalog_cache() -> None:
         _catalog_generation += 1
 
 
+_CATALOG_SQL = """
+    SELECT pg_is_in_recovery(),
+           ARRAY(SELECT datname
+                   FROM pg_database
+                  WHERE datdba = (SELECT usesysid FROM pg_user
+                                   WHERE usename = current_user)
+                    AND NOT datistemplate
+                    AND datallowconn
+                    AND datname != ALL(%s)
+                  ORDER BY datname)
+"""
+
+
+def _query_catalog(cr: Any) -> tuple[bool, list[str]]:
+    cr.execute(_CATALOG_SQL, (list({"postgres", odoo.tools.config["db_template"]}),))
+    in_recovery, names = cr.fetchone()
+    return bool(in_recovery), list(names)
+
+
 def _get_catalog_on_cursor(cr: Any) -> list[str] | None:
     # The caller already holds a connection: pg_database is a shared catalog,
     # so scanning through it avoids borrowing a second one, which is what let
@@ -161,53 +180,24 @@ def _get_catalog_on_cursor(cr: Any) -> list[str] | None:
     # database this process just created, so its answer is not used.
     if cr is None or getattr(cr, "closed", True):
         return None
-    templates_list = list({"postgres", odoo.tools.config["db_template"]})
     try:
         with cr.savepoint(flush=False):
-            cr.execute(
-                """
-                SELECT pg_is_in_recovery(),
-                       ARRAY(SELECT datname
-                               FROM pg_database
-                              WHERE datdba = (SELECT usesysid FROM pg_user
-                                               WHERE usename = current_user)
-                                AND NOT datistemplate
-                                AND datallowconn
-                                AND datname != ALL(%s)
-                              ORDER BY datname)
-                """,
-                (templates_list,),
-            )
-            in_recovery, names = cr.fetchone()
+            in_recovery, names = _query_catalog(cr)
     except Exception:
         _debug.logic("database.catalog_on_cursor_failed")
         return None
     if in_recovery:
         _debug.logic("database.catalog_on_cursor_skipped", reason="standby")
         return None
-    return list(names)
+    return names
 
 
 def _get_catalog_uncached() -> list[str] | None:
-    chosen_template = odoo.tools.config["db_template"]
-    templates_list = tuple({"postgres", chosen_template})
     db = odoo.db.db_connect("postgres")
     with closing(db.cursor()) as cr:
         try:
-            cr.execute(
-                """
-                SELECT datname
-                  FROM pg_database
-                 WHERE datdba = (SELECT usesysid FROM pg_user
-                                  WHERE usename = current_user)
-                   AND NOT datistemplate
-                   AND datallowconn
-                   AND datname != ALL(%s)
-                 ORDER BY datname
-                """,
-                (list(templates_list),),
-            )
-            return [name for (name,) in cr.fetchall()]
+            _, names = _query_catalog(cr)
+            return names
         except Exception:
             _logger.exception("Listing databases failed:")
             _debug.logic("database.catalog_query_failed")

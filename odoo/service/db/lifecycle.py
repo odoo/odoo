@@ -422,22 +422,20 @@ def _retry_terminate_then_ddl(
     )
 
 
-def _drop_database(db_name: str) -> bool:
+def _database_exists(db_name: str) -> bool:
     try:
-        probe = odoo.db.db_connect("postgres")
-        with closing(probe.cursor()) as cr:
-            cr.connection.autocommit = True
-            cr.execute(
-                "SELECT 1 FROM pg_database WHERE datname = %s",
-                (db_name,),
-            )
-            owner_row = cr.fetchone()
+        with closing(odoo.db.db_connect("postgres").cursor()) as cr:
+            cr.execute("SELECT 1 FROM pg_database WHERE datname = %s", (db_name,))
+            return cr.fetchone() is not None
     except Exception:
+        # Unknown is treated as present: the DROP below reports the truth.
         _logger.debug("DROP DB %r: existence probe failed", db_name, exc_info=True)
         _debug.logic("database.drop.probe_failed", db=db_name)
-        owner_row = ()
+        return True
 
-    if owner_row is None:
+
+def _drop_database(db_name: str) -> bool:
+    if not _database_exists(db_name):
         _debug.logic("database.drop.absent", db=db_name)
         return False
     odoo.modules.registry.Registry.clear_database_state(db_name)

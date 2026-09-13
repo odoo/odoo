@@ -68,6 +68,10 @@ class RetryParticipant(typing.Protocol):
     def is_uncommitted_warning_suppressed(self) -> bool: ...
 
 
+def _describe(func: Callable[..., object]) -> str:
+    return getattr(func, "__qualname__", type(func).__name__)
+
+
 def _reset_env_state(env: Environment) -> None:
     if env.cr.closed:
         _debug.logic("retrying.env_reset_skipped", reason="cursor_closed")
@@ -87,7 +91,7 @@ def _warn_cursor_closed_before_commit(
     )
     _debug.logic(
         "retrying.cursor_closed_before_commit",
-        func=getattr(func, "__qualname__", type(func).__name__),
+        func=_describe(func),
         warning_suppressed=suppressed,
     )
     if suppressed:
@@ -96,7 +100,7 @@ def _warn_cursor_closed_before_commit(
         "retrying(): the cursor was closed before commit; %s's work was "
         "NOT committed and no registry signal was sent. The handler closed "
         "its own cursor, or something else did.",
-        getattr(func, "__qualname__", func),
+        _describe(func),
     )
 
 
@@ -165,9 +169,10 @@ def retrying[T](
     participant: RetryParticipant | None = None,
 ) -> T:
     commits_before = env.cr.commit_count
+    name = _describe(func)
     _debug.pipeline(
         "retrying.start",
-        func=getattr(func, "__qualname__", type(func).__name__),
+        func=name,
         participant=participant is not None,
         max_tries=MAX_TRIES_ON_CONCURRENCY_FAILURE,
     )
@@ -176,10 +181,7 @@ def retrying[T](
             tryleft = MAX_TRIES_ON_CONCURRENCY_FAILURE - tryno
             try:
                 with _debug.perf(
-                    "retrying.attempt",
-                    cr=env.cr,
-                    func=getattr(func, "__qualname__", type(func).__name__),
-                    attempt=tryno,
+                    "retrying.attempt", cr=env.cr, func=name, attempt=tryno
                 ):
                     result = func()
                 if env.cr.closed:
@@ -187,11 +189,7 @@ def retrying[T](
                     break
                 env.cr.flush()
                 _commit_and_signal_changes(env)
-                _debug.pipeline(
-                    "retrying.committed",
-                    func=getattr(func, "__qualname__", type(func).__name__),
-                    attempt=tryno,
-                )
+                _debug.pipeline("retrying.committed", func=name, attempt=tryno)
                 break
             except _RECOVERY_EXCEPTIONS as exc:
                 if env.cr.closed or env.cr.commit_count > commits_before:
@@ -206,8 +204,6 @@ def retrying[T](
                     )
                     participant.on_rollback(exc)
                 if isinstance(exc, IntegrityError):
-                    if env.cr.closed:
-                        raise
                     translated = None
                     with suppress(Exception):
                         translated = _integrity_error_to_validation_error(env, exc)
@@ -258,7 +254,7 @@ def retrying[T](
     except Exception as exc:
         _debug.logic(
             "retrying.failed",
-            func=getattr(func, "__qualname__", type(func).__name__),
+            func=name,
             error=type(exc).__name__,
             committed=env.cr.commit_count > commits_before,
         )
