@@ -675,7 +675,6 @@ CALL_TRACES: dict[str, dict[str, str]] = {
     "ir.attachment": {
         "_approval_terminal_parent_ids": "attachment",
         "_unlink_approved_approval_request": "attachment",
-        "_check_approval_requirement_belongs_to_the_request": "attachment",
     },
     "mail.activity": {
         "_get_answering_approvers": "activity",
