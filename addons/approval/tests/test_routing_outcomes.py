@@ -1157,6 +1157,59 @@ class TestConvertingEveryCategory(RoutingOutcomesCase):
         with self.assertRaisesRegex(ValidationError, "apply by these rules"):
             rules[1].unlink()
 
+    def test_a_rule_adding_approvers_is_refused_on_a_category_routed_by_steps(self):
+        category = self._flat_category()
+        category.action_convert_routing_to_steps()
+        with self.assertRaisesRegex(ValidationError, "which read no rule"):
+            self.env["approval.rule"].create(
+                {
+                    "name": "Late routing rule",
+                    "category_id": category.id,
+                    "condition_type": "threshold",
+                    "condition_field": "amount",
+                    "operator": "gte",
+                    "threshold": 1000,
+                    "action_type": "add_approver",
+                    "approver_ids": [(6, 0, [self.people["c"].id])],
+                }
+            )
+
+    def test_a_rule_left_beside_steps_becomes_a_step_of_its_approvers(self):
+        category = self._flat_category(has_amount="required")
+        rule = self.env["approval.rule"].create(
+            {
+                "name": "Rule beside steps",
+                "category_id": category.id,
+                "condition_type": "threshold",
+                "condition_field": "amount",
+                "operator": "gte",
+                "threshold": 1000,
+                "action_type": "add_approver",
+                "approver_ids": [(6, 0, [self.people["c"].id])],
+            }
+        )
+        self.env["approval.category.step"].create(
+            {
+                "category_id": category.id,
+                "name": "Pool",
+                "minimum": 1,
+                "user_ids": [(6, 0, [self.people["a"].id, self.people["b"].id])],
+            }
+        )
+        result = self.env[
+            "approval.category"
+        ]._route_rules_of_step_categories_by_steps()
+        self.assertEqual(result["added"], rule)
+        self.assertEqual(rule.action_type, "condition")
+        above = self._prepare_request(category, amount=5000)
+        above.with_user(self.people["a"]).action_approve()
+        self.assertEqual(above.state, "pending")
+        above.with_user(self.people["c"]).action_approve()
+        self.assertEqual(above.state, "approved")
+        below = self._prepare_request(category, amount=10)
+        below.with_user(self.people["a"]).action_approve()
+        self.assertEqual(below.state, "approved")
+
     def test_a_draft_raised_before_the_conversion_routes_by_the_steps(self):
         category = self._flat_category()
         request = self._prepare_request(category, confirm=False)

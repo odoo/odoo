@@ -22,6 +22,12 @@
                                 name="subject_user_path"
                                 placeholder="e.g. employee_id.leave_manager_id"
                                 invisible="not subject_model_id" />
+                            <field
+                                name="subject_user_sequence"
+                                invisible="not subject_user_path or not in_order" />
+                            <field
+                                name="subject_user_required"
+                                invisible="not subject_user_path" />
                         </group>
                         <group string="When">
                             <field name="sequence" />

@@ -130,6 +130,17 @@ class ApprovalCategoryStep(models.Model):
         help="The activity this step's approvers are asked with. Empty uses the "
         "approval activity.",
     )
+    subject_user_sequence = fields.Integer(
+        string="Place in Order",
+        default=10,
+        help="On a step whose members decide in order, where the users the source "
+        "field names stand among the members' sequences.",
+    )
+    subject_user_required = fields.Boolean(
+        string="Named Users Are Required",
+        help="The step waits for every user the source field names, whatever its "
+        "quorum.",
+    )
     subject_user_path = fields.Char(
         string="Approvers From",
         help="Field path on the source document naming users who approve this step, "
@@ -154,21 +165,20 @@ class ApprovalCategoryStep(models.Model):
                     )
                 )
 
-    @api.constrains("in_order", "group_id", "subject_user_path")
+    @api.constrains("in_order", "group_id")
     def _check_in_order_pool(self) -> None:
         for step in self.filtered("in_order"):
-            if step.group_id or step.subject_user_path:
+            if step.group_id:
                 trace.REFUSAL.event(
                     "step_in_order_unordered_pool",
                     step=step.id,
                     group=step.group_id.id,
-                    path=step.subject_user_path,
                 )
                 raise ValidationError(
                     self.env._(
-                        "Step '%(step)s' lets its members decide in order, so its "
-                        "approvers must be listed members: a group's users or the "
-                        "users a document names have no place in that order.",
+                        "Step '%(step)s' lets its members decide in order, so a "
+                        "group's users, who have no place in that order, cannot "
+                        "decide it.",
                         step=step.name,
                     )
                 )

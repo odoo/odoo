@@ -789,7 +789,13 @@ class ApprovalRequestRouting(models.Model):
 
         approver_staging: dict[int, dict] = {}
 
-        matched_rules = self._matched_add_approver_rules()
+        steps = self._get_applicable_steps()
+        if steps:
+            matched_rules = self.env["approval.rule"]
+            additional = []
+        else:
+            matched_rules = self._matched_add_approver_rules()
+            additional = self._get_additional_approvers()
 
         for rule in matched_rules:
             for user_id, required, sequence in rule._get_approver_tuples():
@@ -797,16 +803,17 @@ class ApprovalRequestRouting(models.Model):
                     approver_staging, user_id, required, sequence
                 )
 
-        additional = self._get_additional_approvers()
         trace.ROUTING.event(
-            "additional_approvers", request=self.id, added=len(additional)
+            "additional_approvers",
+            request=self.id,
+            added=len(additional),
+            routed_by_steps=bool(steps),
         )
         for user_id, required, sequence in additional:
             self._merge_approver_to_staging(
                 approver_staging, user_id, required, sequence
             )
 
-        steps = self._get_applicable_steps()
         step_ids_by_user: dict[int, set[int]] = {}
         replacement = False
         if steps:

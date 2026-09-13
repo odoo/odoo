@@ -337,6 +337,7 @@ class ApprovalCategoryConversion(models.Model):
                     in_order=True,
                     counts_added_approvers=True,
                     **condition,
+                    **self._get_conversion_pool_source(),
                 )
             )
         elif minimum > 0 or has_required or pool_source.get("group_id"):
@@ -439,6 +440,45 @@ class ApprovalCategoryConversion(models.Model):
             blocked=[category.id for category in blocked],
         )
         return {"converted": converted, "blocked": blocked}
+
+    @api.model
+    def _route_rules_of_step_categories_by_steps(self):
+        rules = self.env["approval.rule"].search(
+            [
+                ("action_type", "in", ("add_approver", "set_approvers")),
+                ("category_id.step_ids", "!=", False),
+            ]
+        )
+        added = rules.filtered(lambda rule: rule.action_type == "add_approver")
+        for rule in added:
+            self.env["approval.category.step"].create(
+                {
+                    "category_id": rule.category_id.id,
+                    "name": rule.name,
+                    "sequence": _BASE_SEQUENCE,
+                    "minimum": 1,
+                    "advisory": not rule.approver_required,
+                    "when_rule_ids": [Command.set(rule.ids)],
+                    "member_ids": [
+                        Command.create(
+                            {
+                                "user_id": user.id,
+                                "sequence": rule.approver_sequence,
+                                "required": rule.approver_required,
+                            }
+                        )
+                        for user in rule.approver_ids
+                    ],
+                }
+            )
+        trace.STEPS.note(
+            "step_category_rules_routed",
+            added=added.ids,
+            archived_bands=(rules - added).ids,
+        )
+        added.write({"action_type": "condition"})
+        (rules - added).write({"active": False})
+        return {"added": added, "archived": rules - added}
 
     def action_convert_routing_to_steps(self) -> None:
         for category in self:

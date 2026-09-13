@@ -1038,6 +1038,10 @@ class ApprovalRequest(models.Model):
         """The rows of a step's required members that have not approved it yet."""
         self.check_singleton()
         required = set(step.member_ids.filtered("required").user_id.ids)
+        if step.subject_user_required:
+            required |= step.sudo()._get_source_user_ids(
+                self.get_source_document(), self
+            )
         if not required:
             return self.env["approval.approver"]
         return self.approver_ids.filtered(
@@ -1057,9 +1061,11 @@ class ApprovalRequest(models.Model):
         """On a step whose members decide in order, the row whose turn it is: the first
         member, in the members' order, whose row has not approved the step yet."""
         self.check_singleton()
-        member_sequence = {
-            member.user_id.id: member.sequence for member in step.member_ids
-        }
+        named = step.sudo()._get_source_user_ids(self.get_source_document(), self)
+        member_sequence = dict.fromkeys(named, step.subject_user_sequence)
+        member_sequence.update(
+            {member.user_id.id: member.sequence for member in step.member_ids}
+        )
         # A member takes its member sequence; an approver added to the request takes
         # its own row sequence, which is how the approver list ordered them.
         rows = self.approver_ids.filtered(lambda row: step in row.step_ids).sorted(

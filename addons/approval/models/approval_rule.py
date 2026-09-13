@@ -134,6 +134,31 @@ class ApprovalRule(models.Model):
 
     _APPROVER_ACTIONS = ("add_approver", "set_approvers")
 
+    @api.constrains("action_type", "active", "category_id")
+    def _check_category_routes_by_its_rules(self) -> None:
+        for rule in self:
+            if (
+                rule.active
+                and rule.action_type in self._APPROVER_ACTIONS
+                and rule.category_id.step_ids
+            ):
+                trace.REFUSAL.event(
+                    "routing_rule_on_steps",
+                    rule=rule.id,
+                    category=rule.category_id.id,
+                    action=rule.action_type,
+                )
+                raise ValidationError(
+                    self.env._(
+                        "'%(category)s' routes its requests by steps, which read no "
+                        "rule that adds or replaces approvers: give a step the "
+                        "approvers, and make '%(rule)s' a step condition it applies "
+                        "by.",
+                        category=rule.category_id.name,
+                        rule=rule.name,
+                    )
+                )
+
     def _get_reading_steps(self):
         return (
             self.env["approval.category.step"]
