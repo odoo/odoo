@@ -120,6 +120,33 @@ class AccountMove(models.Model):
         readonly=True,
         copy=False,
     )
+    l10n_fr_pdp_is_commercial_credit_note = fields.Boolean(
+        string="Standalone Commercial Credit Note",
+        compute='_compute_l10n_fr_pdp_is_commercial_credit_note',
+        store=False,
+        help="UNTDID 1001 code 262 (global-discount credit note, BR-FR-CO-03). "
+             "Set when a customer credit note has no original invoice. "
+             "Uses the customer reference as BT-12 and the invoice dates as BG-14.",
+    )
+    l10n_fr_pdp_contract_reference = fields.Char(
+        string="Contract Reference (BT-12)",
+        related='ref',
+        readonly=False,
+        store=False,
+        help="UBL cac:ContractDocumentReference/cbc:ID. Mapped to the existing customer reference.",
+    )
+    l10n_fr_pdp_invoicing_period_start = fields.Date(
+        string="Invoicing Period Start (BT-73)",
+        compute='_compute_l10n_fr_pdp_invoicing_period',
+        store=False,
+        help="UBL cac:InvoicePeriod/cbc:StartDate (BG-14). Uses the invoice date.",
+    )
+    l10n_fr_pdp_invoicing_period_end = fields.Date(
+        string="Invoicing Period End (BT-74)",
+        compute='_compute_l10n_fr_pdp_invoicing_period',
+        store=False,
+        help="UBL cac:InvoicePeriod/cbc:EndDate (BG-14). Uses the due date or the invoice date.",
+    )
 
     # TODO: remove in master
     @api.model
@@ -623,8 +650,55 @@ class AccountMove(models.Model):
             return [error] if error else []
         return list(check())
 
+    @api.depends('move_type', 'reversed_entry_id')
+    def _compute_l10n_fr_pdp_is_commercial_credit_note(self):
+        for move in self:
+            move.l10n_fr_pdp_is_commercial_credit_note = move._l10n_fr_pdp_is_document_type_262()
+
+    @api.depends('invoice_date', 'invoice_date_due')
+    def _compute_l10n_fr_pdp_invoicing_period(self):
+        for move in self:
+            start, end = move._l10n_fr_pdp_get_invoicing_period()
+            move.l10n_fr_pdp_invoicing_period_start = start
+            move.l10n_fr_pdp_invoicing_period_end = end
+
+    def _l10n_fr_pdp_is_document_type_262(self):
+        self.ensure_one()
+        return bool(
+            self.move_type == 'out_refund'
+            and not self.reversed_entry_id
+            and not self._is_downpayment()
+        )
+
+    def _l10n_fr_pdp_get_contract_reference(self):
+        """BT-12: Studio Peppol field, enterprise contract_reference, else customer ref."""
+        self.ensure_one()
+        studio_field = 'x_studio_peppol_contract_document_reference_id'
+        if studio_field in self._fields:
+            studio_ref = (self[studio_field] or '').strip()
+            if studio_ref:
+                return studio_ref
+        if 'contract_reference' in self._fields and self.contract_reference:
+            return self.contract_reference
+        return (self.ref or '').strip()
+
+    def _l10n_fr_pdp_get_invoicing_period(self):
+        """BG-14: Studio Peppol dates if set, else invoice date / due date."""
+        self.ensure_one()
+        start_field = 'x_studio_peppol_invoice_period_start_date'
+        end_field = 'x_studio_peppol_invoice_period_end_date'
+        if start_field in self._fields and end_field in self._fields:
+            start, end = self[start_field], self[end_field]
+            if start and end:
+                return start, end
+        start = self.invoice_date
+        end = self.invoice_date_due or self.invoice_date
+        return start, end
+
     def _l10n_fr_pdp_get_referenced_documents(self):
         self.ensure_one()
+        if self._l10n_fr_pdp_is_document_type_262():
+            return self.env['account.move']
         referenced = self.reversed_entry_id
         if 'debit_origin_id' in self._fields:
             referenced += self.debit_origin_id
