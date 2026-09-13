@@ -912,8 +912,8 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
         })
         sale_order.action_confirm()
         payment_params = {
-            "advance_payment_method": "percentage",
-            "amount": 30,
+            "advance_payment_method": "downpayment",
+            "percentage": 0.30,
             "sale_order_ids": [Command.set(sale_order.ids)],
         }
         downpayment = self.env["sale.advance.payment.inv"].create(payment_params)
@@ -931,7 +931,7 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
             price_unit=1000.0, product_id=product, tax_ids=tax_15, product_uom_qty=0
         )
         so.order_line.write({"qty_delivered": 15.0})
-        invoice = self._create_down_payment_invoice(so, "percent", 50)
+        invoice = self._create_down_payment_invoice(so, "fixed", 8625.0)
 
         self.assertRecordValues(
             invoice, [{"amount_untaxed": 7500.0, "amount_tax": 1125.0, "amount_total": 8625.0}]
@@ -984,8 +984,8 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
 
         # Down payment invoice (50% of the order)
         invoicing_wizard = self.env["sale.advance.payment.inv"].create({
-            "advance_payment_method": "fixed",
-            "fixed_amount": sale_order.amount_total / 2.0,
+            "advance_payment_method": "downpayment",
+            "amount": sale_order.amount_total / 2.0,
             "sale_order_ids": [Command.link(sale_order.id)],
         })
         action = invoicing_wizard.create_invoices()
