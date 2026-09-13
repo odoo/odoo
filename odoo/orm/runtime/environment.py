@@ -280,15 +280,18 @@ class Environment(Mapping[str, "BaseModel"]):
         cr = self.cr if cr is None else cr
         uid = self.uid if user is None else int(user)
         if context is None:
-            context = (
-                clean_context(self.context) if su and not self.su else self.context
-            )
-            if _debug.logic.enabled and su and not self.su:
-                _debug.logic(
-                    "environment.sudo_context_cleaned",
-                    uid=uid,
-                    keys=len(self.context) - len(context),
-                )
+            context = self.context
+            # keep the frozendict itself when there is nothing to strip: the
+            # transaction then matches the last environment by identity and
+            # reuses its cached hash instead of copying and rehashing
+            if su and not self.su and any(k.startswith("default_") for k in context):
+                context = clean_context(context)
+                if _debug.logic.enabled:
+                    _debug.logic(
+                        "environment.sudo_context_cleaned",
+                        uid=uid,
+                        keys=len(self.context) - len(context),
+                    )
         su = (user is None and self.su) if su is None else su
         return Environment(cr, uid, context, su)
 

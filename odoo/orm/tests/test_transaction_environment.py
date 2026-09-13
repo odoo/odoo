@@ -1,5 +1,6 @@
 import inspect
 import logging
+import weakref
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -8,7 +9,7 @@ from odoo import fields, models
 from odoo.orm.components.unit_of_work import UnitOfWork
 from odoo.orm.model_test_env import model_test_env
 from odoo.orm.runtime.environment import Environment
-from odoo.orm.runtime.transaction import Transaction
+from odoo.orm.runtime.transaction import RECENT_ENVIRONMENTS, Transaction
 
 _MOD = "test_orm_transaction_environment"
 
@@ -55,6 +56,36 @@ def test_the_last_environment_is_the_fast_path():
         other = tx.environment(cr, 7, {"k": 2})
         assert other is not first
         assert tx._last_env() is other
+
+
+def test_a_transient_environment_survives_between_calls():
+    with model_test_env(Gadget) as env:
+        cr, tx = env.cr, env.transaction
+        first = weakref.ref(tx.environment(cr, 7, {"k": "transient"}))
+        assert first() is not None
+        assert tx.environment(cr, 7, {"k": "transient"}) is first()
+        for n in range(RECENT_ENVIRONMENTS):
+            tx.environment(cr, 7, {"k": n})
+        assert first() is None
+
+
+def test_clear_forgets_the_recent_environments():
+    with model_test_env(Gadget) as env:
+        cr, tx = env.cr, env.transaction
+        tx.environment(cr, 7, {"k": "gone"})
+        assert tx._recent_envs
+        tx.clear()
+        assert not tx._recent_envs
+        assert tx._last_env is None
+
+
+def test_sudo_without_default_keys_keeps_the_context_object():
+    with model_test_env(Gadget) as env:
+        user_env = env(user=7, context={"lang": "fr_FR"})
+        assert user_env(su=True).context is user_env.context
+        with_default = env(user=7, context={"lang": "fr_FR", "default_name": "x"})
+        assert with_default(su=True).context == {"lang": "fr_FR"}
+        assert with_default(su=True).context is not with_default.context
 
 
 def test_superuser_is_normalised_to_su_by_the_transaction():

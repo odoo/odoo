@@ -1,5 +1,6 @@
 import logging
 import typing
+from collections import deque
 from contextlib import suppress
 from weakref import WeakSet, WeakValueDictionary
 from weakref import ref as weakref_ref
@@ -28,6 +29,7 @@ _orm_cache = logging.getLogger("odoo.orm.cache")
 _debug = DebugLog(__name__)
 
 MAX_FIXPOINT_ITERATIONS = 1000
+RECENT_ENVIRONMENTS = 8
 
 
 def _is_new_id(record_id: object) -> bool:
@@ -80,6 +82,7 @@ class Transaction:
         "_cache_store",
         "_compute_engine",
         "_last_env",
+        "_recent_envs",
         "_ref_cache",
         "backend",
         "cache",
@@ -99,6 +102,11 @@ class Transaction:
         self.envs: _EnvironmentSet = _EnvironmentSet()
         self.default_env: Environment | None = None
         self._last_env: weakref_ref[Environment] | None = None
+        # the index and the last-env fast path hold environments weakly, so a
+        # transient one (record.sudo().field, in a loop) died with its
+        # recordset and was rebuilt on the next call; a short strong ring
+        # keeps the recent ones alive between those calls
+        self._recent_envs: deque[Environment] = deque(maxlen=RECENT_ENVIRONMENTS)
 
         self._cache_store: FieldCache[Field] = FieldCache(
             dirty_factory=OrderedSet, on_detach=self._drop_field_cache_memos
@@ -164,6 +172,10 @@ class Transaction:
                     keys=",".join(sorted(frozen_context)),
                 )
         self._last_env = weakref_ref(env)
+        recent = self._recent_envs
+        if env in recent:
+            recent.remove(env)
+        recent.append(env)
         return env
 
     def _adopt_default_env(self, env: Environment) -> None:
@@ -276,6 +288,7 @@ class Transaction:
         self._compute_engine.clear()
         self._ref_cache.clear()
         self._last_env = None
+        self._recent_envs.clear()
         if env := next(iter(self.envs), None):
             env.cr.cache.clear()
 

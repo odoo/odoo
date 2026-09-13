@@ -8,7 +8,7 @@ from odoo.api import ValuesType
 from odoo.exceptions import UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.locale import format_number
-from odoo.tools import OrderedSet
+from odoo.tools import OrderedSet, reset_cached_properties
 from odoo.tools.misc import ReadonlyDict
 
 _logger = logging.getLogger(__name__)
@@ -456,7 +456,16 @@ class ResLang(models.Model):
 
         self.env.flush_all()
         self.env.registry.clear_cache("stable")
+        if "active" in vals:
+            self._reset_environment_languages()
         return res
+
+    def _reset_environment_languages(self) -> None:
+        # Environment.lang caches whether its context language is installed;
+        # the transaction keeps recent environments alive, so a toggled
+        # language must not be answered from that cache
+        for env in list(self.env.transaction.envs):
+            reset_cached_properties(env)
 
     @api.ondelete(at_uninstall=True)
     def _unlink_except_default_lang(self) -> None:
@@ -482,6 +491,7 @@ class ResLang(models.Model):
     def unlink(self) -> bool:
         _debug.lifecycle("unlink", codes=self.mapped("code"))
         self.env.registry.clear_cache("stable")
+        self._reset_environment_languages()
         return super().unlink()
 
     def copy_data(self, default: ValuesType | None = None) -> list[ValuesType]:
