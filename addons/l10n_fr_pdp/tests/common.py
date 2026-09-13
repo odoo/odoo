@@ -180,7 +180,7 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
             'pdp_identifier': '968515759_96851575905899'  # Should set company_id, routing_scheme and routing_endpoint
         })
         cls.env['res.partner.bank'].create({
-            'account_number': 'FR5000400440116243',
+            'formatted_account_number': 'FR5000400440116243',
             'partner_id': cls.company_data['company'].partner_id.id,
             'allow_out_payment': True,
         })

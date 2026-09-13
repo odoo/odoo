@@ -10,7 +10,7 @@ class TestStandardFlows(L10nInTestInvoicingCommon):
     def test_open_payment_register_with_upi_qr_method(self):
         self.env.company.l10n_in_upi_id = 12345
         self.env['res.partner.bank'].create({
-            'account_number': '0144748555',
+            'formatted_account_number': '0144748555',
             'partner_id': self.partner_a.id,
             'allow_out_payment': True,
         })
