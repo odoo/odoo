@@ -44,11 +44,17 @@ const addSection = function (sectionName, backend = false) {
     ];
 };
 
-const addContentToSection = (prefix, sectionName) => ({
-    content: `eLearning: click on add content for section ${sectionName}`,
-    trigger: `${prefix} div.o_wslides_slide_list_category_header:contains(${sectionName}) a:contains(Add Content)`,
-    run: "click",
-});
+const addContentToSection = (prefix, sectionName) => [
+    {
+        content: `eLearning: wait for the course page's interactions before adding content to ${sectionName}`,
+        trigger: `${prefix}body[is-ready=true]:has(div.o_wslides_slide_list_category_header:contains(${sectionName}))`,
+    },
+    {
+        content: `eLearning: click on add content for section ${sectionName}`,
+        trigger: `${prefix} div.o_wslides_slide_list_category_header:contains(${sectionName}) a:contains(Add Content)`,
+        run: "click",
+    },
+];
 
 const clickOnAddTagDropdown = (prefix) => [
     {
@@ -70,7 +76,7 @@ const clickOnAddTagDropdown = (prefix) => [
 const addVideoToSection = function (sectionName, saveAsDraft, backend = false) {
     const prefix = backend ? ":iframe " : "";
     let base_steps = [
-        addContentToSection(prefix, sectionName),
+        ...addContentToSection(prefix, sectionName),
         {
             content: "eLearning: click on video",
             trigger: prefix + "a[data-slide-category=video]",
@@ -121,7 +127,7 @@ const addVideoToSection = function (sectionName, saveAsDraft, backend = false) {
 const addArticleToSection = function (sectionName, pageName, backend) {
     const prefix = backend ? ":iframe " : "";
     return [
-        addContentToSection(prefix, sectionName),
+        ...addContentToSection(prefix, sectionName),
         {
             content: "eLearning: click on article",
             trigger: prefix + "a[data-slide-category=article]",
@@ -177,7 +183,7 @@ const compareBase64Content = async (url, name, type, expectedContent) => {
 const addImageToSection = (sectionName, pageName, backend) => {
     const prefix = backend ? ":iframe " : "";
     return [
-        addContentToSection(prefix, sectionName),
+        ...addContentToSection(prefix, sectionName),
         {
             content: "eLearning: click on image",
             trigger: `${prefix}a[data-slide-category=infographic]`,
@@ -260,7 +266,7 @@ const addImageToSection = (sectionName, pageName, backend) => {
 const addPdfToSection = function (sectionName, pageName, backend) {
     const prefix = backend ? ":iframe " : "";
     return [
-        addContentToSection(prefix, sectionName),
+        ...addContentToSection(prefix, sectionName),
         {
             content: "eLearning: click on document",
             trigger: `${prefix}a[data-slide-category=document]`,
