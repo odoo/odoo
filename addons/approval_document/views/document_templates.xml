@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="document_request_access">
+        <t t-call="document.public_page_layout">
+            <h1 class="o_documents_portal_central_message text-center mt160 mb-3">You cannot open this document yet.</h1>
+            <t t-if="requested_role">
+                <h4 class="o_documents_portal_central_message text-center">
+                    <t t-if="requested_role == 'edit'">Your request to edit it is waiting for a decision.</t>
+                    <t t-else="">Your request to view it is waiting for a decision.</t>
+                </h4>
+            </t>
+            <t t-else="">
+                <h4 class="o_documents_portal_central_message text-center">Ask its owner for access.</h4>
+                <p t-if="error" class="text-center text-danger" t-out="error" />
+                <form
+                    method="post"
+                    class="d-flex justify-content-center gap-2 mt-3"
+                    t-attf-action="/documents/request_access/#{access_token}">
+                    <input
+                        type="hidden"
+                        name="csrf_token"
+                        t-att-value="request.csrf_token()" />
+                    <button type="submit" name="role" value="view" class="btn btn-primary">Request to view</button>
+                    <button type="submit" name="role" value="edit" class="btn btn-secondary">Request to edit</button>
+                </form>
+            </t>
+        </t>
+    </template>
+
+</odoo>

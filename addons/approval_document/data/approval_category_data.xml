@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="approval_category_document_access" model="approval.category">
+        <field name="name">Document Access</field>
+        <field name="sequence_code">DOCACCESS</field>
+        <field name="company_id" eval="False" />
+        <field name="approval_minimum">1</field>
+        <field name="activity_target">document</field>
+    </record>
+
+    <record
+        id="approval_category_document_access_step_owner"
+        model="approval.category.step">
+        <field name="category_id" ref="approval_category_document_access" />
+        <field name="activity_type_id" ref="mail.mail_activity_data_todo" />
+        <field name="name">Document Owner</field>
+        <field name="sequence">10</field>
+        <field name="minimum">1</field>
+        <field name="subject_model_id" ref="document.model_document_document" />
+        <field name="subject_user_path">owner_id</field>
+        <field name="group_id" ref="document.group_documents_manager" />
+    </record>
+
+</odoo>
