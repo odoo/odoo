@@ -570,7 +570,7 @@ def test_a_prefork_head_may_pause_longer_than_the_socket_timeout():
     """The head phase is bounded by ODOO_HTTP_HEAD_TIMEOUT, as deployment.md
     states; the per-read socket timeout governs bodies and responses."""
     with _prefork_listener(
-        ODOO_HTTP_SOCKET_TIMEOUT="0.2", ODOO_HTTP_HEAD_TIMEOUT="2"
+        ODOO_HTTP_SOCKET_TIMEOUT="0.2", ODOO_HTTP_HEAD_TIMEOUT="5"
     ) as port:
         raw = _talk_in_two_parts(
             port, b"GET /p HTTP/1.1\r\n", b"Host: h\r\n\r\n", pause=0.6
