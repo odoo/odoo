@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING, Any, Protocol, Self
 
 import psycopg.errors
 
+from odoo.exceptions import ConcurrencyError
 from odoo.libs.debug_log import DebugLog
 
 if TYPE_CHECKING:
@@ -134,8 +135,6 @@ def get_or_create_row[T](
     conflict: str,
     flush: bool = True,
 ) -> tuple[T, bool]:
-    from odoo.exceptions import ConcurrencyError
-
     try:
         with cr.savepoint(flush=flush):
             inserted = insert()

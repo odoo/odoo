@@ -1,5 +1,4 @@
 import atexit
-import logging
 
 from odoo.libs.debug_log import DebugLog
 
@@ -43,7 +42,6 @@ __all__ = [
     "sql_counter",  # noqa: F822  served by the module-level __getattr__ below
 ]
 
-_logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
 
 registry = EndpointRegistry()

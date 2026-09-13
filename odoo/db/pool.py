@@ -819,19 +819,19 @@ class ConnectionPool:
         with self._lock:
             n_pools = len(self._pools)
             direct_out = self._direct_out
+        backends = sum(s.get("pool_size", 0) for s in per_database.values())
+        backends += direct_out
         _debug.perf.count(
             "pool.health",
             readonly=self._readonly,
             databases=n_pools,
-            backends=sum(s.get("pool_size", 0) for s in per_database.values())
-            + direct_out,
+            backends=backends,
             checked_out=len(self._checkouts),
         )
         return {
             "mode": "read-only" if self._readonly else "read/write",
             "databases": n_pools,
-            "backends": sum(s.get("pool_size", 0) for s in per_database.values())
-            + direct_out,
+            "backends": backends,
             "pool": self.stats.get_snapshot(
                 budget=self._budget,
                 direct_out=direct_out,

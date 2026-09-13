@@ -542,6 +542,14 @@ class TestPipelineAccountsForTheSyncCost(unittest.TestCase):
                 )
                 self.assertEqual(cr.rowcount, 2)
                 self.assertEqual(cr.rowcount, 2)
+                cr.executemany(
+                    "INSERT INTO t_pipeline_rowcount VALUES (%s) RETURNING id",
+                    [(10,), (11,)],
+                    returning=True,
+                )
+                self.assertEqual(cr.fetchone(), (10,))
+                self.assertTrue(cr.nextset(), "nextset syncs like a fetch does")
+                self.assertEqual(cr.fetchone(), (11,))
             cr.rollback()
 
 

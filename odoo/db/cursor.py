@@ -445,6 +445,8 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
         return self._obj.rowcount
 
     def nextset(self) -> bool | None:
+        if self._pipeline_entered:
+            self._sync_pipeline_results()
         return self._obj.nextset()
 
     @contextmanager

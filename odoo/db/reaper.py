@@ -63,12 +63,13 @@ class IdlePoolReaper:
                 continue
             if now - getattr(pool, _LAST_BORROW_ATTR, now) <= self.ttl:
                 continue
-            if get_checked_out_count(pool) > 0:
+            checked_out = get_checked_out_count(pool)
+            if checked_out > 0:
                 _debug.logic(
                     "pool.reap_deferred",
                     reason="checked_out",
                     idle_s=now - getattr(pool, _LAST_BORROW_ATTR, now),
-                    checked_out=get_checked_out_count(pool),
+                    checked_out=checked_out,
                 )
                 continue
             reapable.append(key)
