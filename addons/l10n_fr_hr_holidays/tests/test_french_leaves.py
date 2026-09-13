@@ -489,10 +489,15 @@ class TestFrenchLeaves(TransactionCase):
 
     def test_leave_flexible_employee(self):
         self.company.resource_calendar_id = self.base_calendar
-        self.employee.write({
-            'resource_calendar_id': False,
+        flexible_calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible',
+            'company_id': self.company.id,
+            'calendar_type': 'undefined',
             'hours_per_week': 40,
             'hours_per_day': 8,
+        })
+        self.employee.write({
+            'resource_calendar_id': flexible_calendar.id,
         })
         self.time_off_type.requires_allocation = True
         self.env['hr.leave.allocation'].with_company(self.company).create({

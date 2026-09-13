@@ -307,8 +307,6 @@ class HrEmployee(models.Model):
         'employee_id', 'category_id', groups="hr.group_hr_user",
         string='Tags')
     tz = fields.Selection(readonly=False, related="version_id.tz", inherited=True, tracking=True)
-    hours_per_week = fields.Float(readonly=False, related="version_id.hours_per_week", inherited=True)
-    hours_per_day = fields.Float(readonly=False, related="version_id.hours_per_day", inherited=True)
     # misc
     color = fields.Integer('Color Index', default=0)
     barcode = fields.Char(string="Badge ID", help="ID used for employee identification.", groups="hr.group_hr_user", copy=False)
@@ -906,6 +904,12 @@ class HrEmployee(models.Model):
 
     def _is_in_contract(self, date):
         return self._get_contract_dates(date) != (False, False)
+
+    def _is_flexible(self, date=fields.Date.today()):
+        return self._get_version(date).resource_calendar_id._is_flexible()
+
+    def _is_fully_flexible(self, date=fields.Date.today()):
+        return self._get_version(date).resource_calendar_id._is_fully_flexible()
 
     def _get_contracts(self, date_start=None, date_end=None, use_latest_version=True, domain=None):
         """
@@ -1799,6 +1803,12 @@ class HrEmployee(models.Model):
             new_employees = super(HrEmployee, self.with_company(company)).create(vals_list)
             index_per_employee.update(dict(zip(new_employees, idxs)))
             employees |= new_employees
+        # version_id.resource_calendar_id's own inverse (_inverse_resource_calendar_id) runs
+        # while the version's employee_id back-link isn't set yet, so it can't sync the resource's
+        # calendar at that point; do it explicitly now that every link is in place
+        for employee in employees:
+            if employee.resource_id.calendar_id != employee.version_id.resource_calendar_id:
+                employee.resource_id.calendar_id = employee.version_id.resource_calendar_id
         # As we do a custom batch by company, we must reorder the records to respect the original order.
         employees = employees.sorted(key=lambda employee: index_per_employee[employee])
         # Sudo in case HR officer doesn't have the Contact Creation group
@@ -1901,19 +1911,12 @@ class HrEmployee(models.Model):
             self.env['discuss.channel'].sudo().search([
                 ('subscription_department_ids', 'in', department_id)
             ])._subscribe_users_automatically()
-        if res and ('resource_calendar_id' in vals or 'hours_per_week' in vals or 'hours_per_day' in vals):
+        if res and 'resource_calendar_id' in vals:
             resources = self.env['resource.resource']
             for employee in self:
                 if employee.version_id == employee.current_version_id:
                     resources |= employee.resource_id
-            resource_vals = {}
-            if 'resource_calendar_id' in vals:
-                resource_vals['calendar_id'] = vals.get('resource_calendar_id')
-            if 'hours_per_week' in vals:
-                resource_vals['hours_per_week'] = vals.get('hours_per_week')
-            if 'hours_per_day' in vals:
-                resource_vals['hours_per_day'] = vals.get('hours_per_day')
-            resources.write(resource_vals)
+            resources.write({'calendar_id': vals.get('resource_calendar_id')})
         return res
 
     def unlink(self):
@@ -2032,7 +2035,7 @@ class HrEmployee(models.Model):
         )
         for employee, versions in versions_by_employee:
             if versions:
-                res[employee.id] = versions[0].hours_per_week
+                res[employee.id] = versions[0].resource_calendar_id.hours_per_week
         return res
 
     def _get_hours_per_day_batch(self, date_from=None):
@@ -2055,7 +2058,7 @@ class HrEmployee(models.Model):
         )
         for employee, versions in versions_by_employee:
             if versions:
-                res[employee.id] = versions[0].hours_per_day
+                res[employee.id] = versions[0].resource_calendar_id.hours_per_day
         return res
 
     def _get_version_periods(self, start, stop, field=None, check_contract=False):
@@ -2113,10 +2116,6 @@ class HrEmployee(models.Model):
     def _adjust_leaves(self, leave_intervals):
         return leave_intervals
 
-    def _get_flexible_reference_calendar(self, date=fields.Date.today()):
-        self.ensure_one()
-        return self.company_id.resource_calendar_id
-
     def _get_employee_unavailable_intervals(self, start, stop):
         """ returns a dict {employee_id: [{start, stop}]} for the unavailability intervals of each employee which is used for _gantt_unavailability """
 
@@ -2136,14 +2135,13 @@ class HrEmployee(models.Model):
         leave_resources_per_calendar = defaultdict(lambda: self.env['resource.resource'])
         for employee, calendar_periods in calendar_tz_periods_per_employee.items():
             for period_start, period_stop, (calendar, tz) in calendar_periods:
-                if calendar:
-                    if any(calendar.attendance_ids.mapped('duration_based')):
-                        attendance_resources_per_calendar[calendar, tz] += employee.resource_id
-                        leave_resources_per_calendar[calendar, tz] += employee.resource_id
-                    else:
-                        work_resources_per_calendar[calendar, tz] += employee.resource_id
+                if calendar._is_flexible():
+                    leave_resources_per_calendar[calendar, tz] += employee.resource_id
+                elif any(calendar.attendance_ids.mapped('duration_based')):
+                    attendance_resources_per_calendar[calendar, tz] += employee.resource_id
+                    leave_resources_per_calendar[calendar, tz] += employee.resource_id
                 else:
-                    leave_resources_per_calendar[employee._get_flexible_reference_calendar(period_start), tz] += employee.resource_id
+                    work_resources_per_calendar[calendar, tz] += employee.resource_id
 
         work_intervals_per_calendar = defaultdict()
         attendance_intervals_per_calendar = defaultdict()
@@ -2177,14 +2175,13 @@ class HrEmployee(models.Model):
                 period_stop_dt = datetime.combine(period_stop + timedelta(days=1), time.min).replace(tzinfo=ZoneInfo(tz))
                 period_interval = Intervals([(period_start_dt, period_stop_dt, calendar)])
                 current_work_intervals = Intervals([])
-                if calendar:
-                    if any(calendar.attendance_ids.mapped('duration_based')):
-                        current_work_intervals = period_interval & attendance_intervals_per_calendar[calendar, tz][employee.resource_id.id] \
-                                              - employee._adjust_leaves(leave_intervals_per_calendar[calendar, tz][employee.resource_id.id])
-                    else:
-                        current_work_intervals = period_interval & work_intervals_per_calendar[calendar, tz][employee.resource_id.id]
+                if calendar._is_flexible():
+                    current_work_intervals = period_interval - leave_intervals_per_calendar[calendar, tz][employee.resource_id.id]
+                elif any(calendar.attendance_ids.mapped('duration_based')):
+                    current_work_intervals = period_interval & attendance_intervals_per_calendar[calendar, tz][employee.resource_id.id] \
+                                          - employee._adjust_leaves(leave_intervals_per_calendar[calendar, tz][employee.resource_id.id])
                 else:
-                    current_work_intervals = period_interval - leave_intervals_per_calendar[employee._get_flexible_reference_calendar(calendar), tz][employee.resource_id.id]
+                    current_work_intervals = period_interval & work_intervals_per_calendar[calendar, tz][employee.resource_id.id]
                 for interval_start, interval_stop, interval_calendar in current_work_intervals:
                     employee_work_intervals += Intervals([(
                         interval_start.astimezone(ZoneInfo(tz)).replace(tzinfo=self.env.tz),
@@ -2260,7 +2257,7 @@ class HrEmployee(models.Model):
         valid_versions = self.sudo()._get_versions_with_contract_overlap_with_period(date_from.date(), date_to.date())
         employee_tz = ZoneInfo(self.tz) if self.tz else None
         if not valid_versions:
-            calendar = self.resource_calendar_id or self.company_id.resource_calendar_id
+            calendar = self.resource_calendar_id
             resources_per_tz = self._get_resources_per_tz(date_from)
             calendar_intervals = calendar._work_intervals_batch(
                 date_from,
@@ -2275,7 +2272,7 @@ class HrEmployee(models.Model):
             version_start = datetime.combine(version.date_start, time.min, employee_tz)
             contract_start = datetime.combine(version.contract_date_start, time.min, employee_tz)
             version_end = datetime.combine(version.date_end or date.max, time.max, employee_tz)
-            calendar = version.resource_calendar_id or version.company_id.resource_calendar_id
+            calendar = version.resource_calendar_id
             start_date = version_start if version_prev < version_start else contract_start
             resources_per_tz = version._get_resources_per_tz()
             version_intervals = calendar._work_intervals_batch(
@@ -2292,7 +2289,7 @@ class HrEmployee(models.Model):
         valid_versions = self.sudo()._get_versions_with_contract_overlap_with_period(date_from.date(), date_to.date())
         employee_tz = ZoneInfo(self.tz) if self.tz else None
         if not valid_versions:
-            calendar = self.resource_calendar_id or self.company_id.resource_calendar_id
+            calendar = self.resource_calendar_id
             return calendar.get_work_duration_data(
                 date_from,
                 date_to,
@@ -2301,7 +2298,7 @@ class HrEmployee(models.Model):
         for version in valid_versions:
             version_start = datetime.combine(version.date_start, time.min, employee_tz)
             version_end = datetime.combine(version.date_end or date.max, time.max, employee_tz)
-            calendar = version.resource_calendar_id or version.company_id.resource_calendar_id
+            calendar = version.resource_calendar_id
             version_duration_data = calendar\
                 .get_work_duration_data(
                     max(date_from, version_start),

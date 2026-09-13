@@ -10,7 +10,7 @@ from dateutil.relativedelta import relativedelta
 from dateutil.rrule import DAILY, rrule
 
 from odoo import api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import float_compare
 from odoo.tools.date_utils import float_to_time, localized, to_timezone
@@ -77,8 +77,14 @@ class ResourceCalendar(models.Model):
         help='Work time rate versus full time working schedule, should be between 0 and 100 %.')
     calendar_type = fields.Selection([
         ('fixed', 'Fixed'),
-        ('variable', 'Variable')],
-        string='Calendar Type', default='fixed', required=True)
+        ('variable', 'Variable'),
+        ('undefined', 'Undefined')],
+        string='Calendar Type', default='fixed', required=True,
+        help="""
+    - Fixed: a weekly attendance pattern that repeats identically every week.
+    - Variable: attendances set on specific dates rather than a repeating weekly pattern, such as a one-off schedule or a multi-week rotation.
+    - Undefined: no predefined slots at all. The resource can work whenever it wants, optionally up to an hours target.
+        """)
     reference_calendar_id = fields.Many2one(
         'resource.calendar',
         string="Reference Calendar",
@@ -87,10 +93,27 @@ class ResourceCalendar(models.Model):
         check_company=True,
         help="Reference working hours used to compute the full-time equivalent.")
 
+    def _is_flexible(self):
+        self.ensure_one()
+        return self.calendar_type == 'undefined'
+
+    def _is_fully_flexible(self):
+        """ Return whether this calendar is flexible with no hours target either. """
+        self.ensure_one()
+        return self._is_flexible() and not self.hours_per_week and not self.hours_per_day
+
     def _get_attendances_to_unlink(self, next_calendar_type=None):
-        """ To retrieve attendances with date, to unlink when the calendar will be/is fixed
-            Or attendance without date, to unlink when the calendar will be/is variable"""
-        return self.attendance_ids.filtered(lambda a: a.date if (next_calendar_type or a.calendar_id.calendar_type) == "fixed" else not a.date)
+        """ Which attendances to drop when the calendar's `calendar_type` is/becomes:
+            - 'fixed': attendances with a date (fixed calendars use plain recurring, undated lines)
+            - 'undefined': every attendance (undefined calendars have no predefined slots at all)
+            - 'variable': attendances without a date (variable calendars use ad-hoc dated lines)
+        """
+        def to_unlink(attendance):
+            calendar_type = next_calendar_type or attendance.calendar_id.calendar_type
+            if calendar_type == 'undefined':
+                return True
+            return bool(attendance.date) if calendar_type == 'fixed' else not attendance.date
+        return self.attendance_ids.filtered(to_unlink)
 
     def _convert_single_occurrence_recurrencies(self):
         """Convert recurrent attendances with only one visible occurrence into ad-hoc attendances."""
@@ -173,7 +196,9 @@ class ResourceCalendar(models.Model):
     @api.depends('attendance_ids.dayofweek', 'calendar_type')
     def _compute_days_per_week(self):
         for calendar in self:
-            if calendar.calendar_type == 'variable':
+            # variable/undefined calendars don't have a reliable attendance pattern to derive
+            # this from (undefined calendars have none at all); the user sets it directly instead.
+            if calendar.calendar_type != 'fixed':
                 continue
             attendances = calendar.attendance_ids.filtered(lambda a: a._is_work_period())
             calendar.days_per_week = len(set(attendances.mapped('dayofweek')))
@@ -187,7 +212,8 @@ class ResourceCalendar(models.Model):
     def _compute_hours_per_week(self):
         """ Compute the average hours per week """
         for calendar in self:
-            if calendar.calendar_type == 'variable':
+            # see _compute_days_per_week: variable/undefined calendars are set directly by the user
+            if calendar.calendar_type != 'fixed':
                 continue
             attendances = calendar.attendance_ids.filtered(lambda a: a._is_work_period())
             calendar.hours_per_week = sum(attendances.mapped('duration_hours'))
@@ -199,6 +225,17 @@ class ResourceCalendar(models.Model):
             aggregates=['__count']))
         for calendar in self:
             calendar.work_resources_count = resources_per_calendar.get(calendar, 0)
+
+    @api.constrains('hours_per_week', 'hours_per_day')
+    def _verify_hours(self):
+        for calendar in self:
+            # fixed calendars derive these from their attendance lines, always valid by construction
+            if calendar.calendar_type == 'fixed':
+                continue
+            if calendar.hours_per_week < 0 or calendar.hours_per_week > 168:
+                raise ValidationError(self.env._("Hours per week must be between 0 and 168."))
+            if calendar.hours_per_day < 0 or calendar.hours_per_day > 24:
+                raise ValidationError(self.env._("Average hours per day must be between 0 and 24."))
 
     @api.depends('hours_per_week', 'full_time_required_hours')
     def _compute_is_fulltime(self):
@@ -325,13 +362,19 @@ class ResourceCalendar(models.Model):
             end_datetime = end_dt.astimezone(tz)
 
             for resource in chain(tz_resources, (self.env['resource.resource'],) if self else ()):
-                calendar_data = calendar_data_by_resource.get(resource, {})
-                calendar = calendar_data.get('resource_calendar_id')
+                if resource:
+                    calendar_data = calendar_data_by_resource.get(resource, {})
+                else:
+                    calendar_data = {'resource_calendar_id': self, 'hours_per_week': self.hours_per_week, 'hours_per_day': self.hours_per_day}
+                # resource_calendar_id is always set: it's required on both resource.resource and
+                # hr.version nowadays, and the fake/falsy resource above is given self's own calendar.
+                calendar = calendar_data.get('resource_calendar_id', self.env['resource.calendar'])
                 hours_per_week = calendar_data.get('hours_per_week')
                 hours_per_day = calendar_data.get('hours_per_day')
-                is_fully_flexible = not calendar and not hours_per_week and not hours_per_day
-                is_flexible = not calendar and (hours_per_week or hours_per_day)
-                if not domain and resource and is_fully_flexible:
+                calendar_is_flexible = calendar._is_flexible()
+                is_fully_flexible = calendar_is_flexible and not hours_per_week and not hours_per_day
+                is_flexible = calendar_is_flexible and not is_fully_flexible
+                if not domain and is_fully_flexible:
                     # A domain is only provided in extensions of `_work_intervals_batch` so when a domain is present,
                     # we should use the standard attendance intervals rather than the flexible employee special handling.
                     # This prevents a scenario where `_work_intervals_batch` calls this method twice and returns the same
@@ -343,7 +386,7 @@ class ResourceCalendar(models.Model):
                         'duration_hours': hours,
                     })
                     result_per_resource_id[resource.id] = Intervals([(start_datetime, end_datetime, dummy_attendance)], keep_distinct=True)
-                elif not domain and resource and is_flexible:
+                elif not domain and is_flexible:
                     # For flexible Calendars, we create intervals to fill in the weekly intervals with the average daily hours
                     # until the full time required hours are met. This gives us the most correct approximation when looking at a daily
                     # and weekly range for time offs and overtime calculations and work entry generation
@@ -554,8 +597,14 @@ class ResourceCalendar(models.Model):
         for start, stop, _ in attendance_intervals:
             # If the interval covers only a part of the original attendance, we
             # take durations in days proportionally to what is left of the interval.
-            interval_hours = (stop - start).total_seconds() / 3600
-            day_hours[start.date()] += interval_hours
+            # an interval synthesized for a fully flexible calendar can span several
+            # calendar days at once: split it so
+            # each day gets its own bucket
+            day_start = start
+            while day_start.date() <= stop.date():
+                day_end = min(stop, datetime.combine(day_start.date(), time.max, tzinfo=day_start.tzinfo))
+                day_hours[day_start.date()] += (day_end - day_start).total_seconds() / 3600
+                day_start = datetime.combine(day_start.date() + timedelta(days=1), time.min, tzinfo=day_start.tzinfo)
 
         duration_based_attendances = self.attendance_ids.filtered('duration_based')
         for day, hours in day_hours.items():
@@ -803,6 +852,9 @@ class ResourceCalendar(models.Model):
         return revert(day_dt)
 
     def _works_on_date(self, date):
+        # a flexible calendar has no predefined slots to check a specific date against
+        if self._is_flexible():
+            return True
         return bool(self.attendance_ids._filter_by_date(date, lambda a: a._is_work_period()))
 
     def _get_attendances_by_date(self, date_from, date_to, domain=None):
