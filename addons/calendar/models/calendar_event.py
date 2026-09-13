@@ -1305,6 +1305,12 @@ class CalendarEvent(models.Model):
         self.videocall_channel_id = self._create_videocall_channel_id(
             self.name, self.partner_ids.user_ids,
         )
+        # attendees without a user account (e.g. a customer) cannot be added as channel
+        # members through their user like above, but are still expected to show up as
+        # invited to the meeting: add them to the channel directly, by partner.
+        attendees_without_user = self.partner_ids - self.partner_ids.user_ids.partner_id
+        if attendees_without_user:
+            self.videocall_channel_id._add_members(partners=attendees_without_user)
         self.videocall_channel_id.channel_change_description(self._get_videocall_channel_description())
 
     def _create_videocall_channel_id(self, name, users):
@@ -1483,6 +1489,39 @@ class CalendarEvent(models.Model):
                     activity_values['user_id'] = event.user_id.id
                 if activity_values.keys():
                     event.meeting_activity_ids.with_context(calendar_event_meeting_update=True).write(activity_values)
+
+    def _create_meeting_activity(self):
+        """ Create the activity a meeting linked to a document carries in the chatter of
+        that document, when it has none: only a meeting created from a document gets one
+        right away (see `create`), not one linked to it afterwards.
+
+        :return: a ``mail.activity`` recordset, void when the meeting is linked to no
+            document able to hold one"""
+        self.ensure_one()
+        if not self.res_model or not self.res_id:
+            return self.env['mail.activity']
+        if self.res_model in self._get_activity_excluded_models():
+            return self.env['mail.activity']
+        if not self.env['ir.model']._get(self.res_model).sudo().is_mail_activity:
+            return self.env['mail.activity']
+        record = self.env[self.res_model].browse(self.res_id).exists()
+        if not record:
+            return self.env['mail.activity']
+        activity_types = self.env['mail.activity.type'].search([('category', '=', 'meeting')])
+        activity_type = activity_types.filtered(
+            lambda act_type: act_type.res_model in (False, self.res_model)
+        )[:1]
+        if not activity_type:
+            return self.env['mail.activity']
+        return record.activity_schedule(
+            activity_type_id=activity_type.id,
+            automated=False,
+            calendar_event_id=self.id,
+            date_deadline=self._get_activity_deadline_from_start(self.start, self.allday),
+            note=self.description,
+            summary=self.name,
+            user_id=self.user_id.id,
+        )
 
     @api.model
     def _get_activity_deadline_from_start(self, start, allday):
@@ -2046,3 +2085,4 @@ class CalendarEvent(models.Model):
     def _store_calendar_event_fields(self, res: Store.FieldList):
         res.extend(["name", "start", "stop", "location", "videocall_location"])
         res.many("partner_ids", ["name"])
+        res.one("videocall_channel_id", [])
