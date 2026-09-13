@@ -4,6 +4,7 @@ from unittest.mock import patch
 from odoo.exceptions import UserError
 from odoo.orm.domain import Domain
 from odoo.tests.common import TransactionCase
+from odoo.tools import mute_logger
 
 
 class TestDomainEvaluatorParity(TransactionCase):
@@ -70,10 +71,11 @@ class TestDomainEvaluatorParity(TransactionCase):
             for operator in (">", ">=", "<", "<="):
                 with self.subTest(value=value, operator=operator):
                     domain = [("parent_id", operator, value)]
-                    with self.assertRaises(TypeError):
-                        self.Partner.search(domain)
-                    with self.assertRaises(TypeError):
-                        self.records.filtered_domain(domain)
+                    with mute_logger("odoo.domains"):
+                        with self.assertRaises(TypeError):
+                            self.Partner.search(domain)
+                        with self.assertRaises(TypeError):
+                            self.records.filtered_domain(domain)
 
     def test_inequality_on_relational_field_accepts_numbers(self):
         pivot = self.records[1].id
@@ -416,7 +418,10 @@ class TestDomainComparandTypeParity(TransactionCase):
 
     def test_cyclic_rec_names_search_stays_searchable(self):
         model_cls = type(self.env["res.partner"])
-        with patch.object(model_cls, "_rec_names_search", ["name", "parent_id"]):
+        with (
+            patch.object(model_cls, "_rec_names_search", ["name", "parent_id"]),
+            self.assertLogs("odoo.models", level="WARNING") as logs,
+        ):
             self.assertEqual(
                 set(
                     self.Partner.search(
@@ -437,6 +442,10 @@ class TestDomainComparandTypeParity(TransactionCase):
             ):
                 with self.subTest(operator=operator, value=value):
                     self.Partner.search([("display_name", operator, value)])
+        self.assertTrue(
+            all("Dropping cyclic _rec_names_search" in line for line in logs.output),
+            logs.output,
+        )
 
     def test_display_name_ordering_uses_the_primary_name(self):
         for operator in ("<", "<=", ">", ">="):

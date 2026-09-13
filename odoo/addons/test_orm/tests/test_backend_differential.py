@@ -16,6 +16,7 @@ from odoo.orm.model_test_env import (
 )
 from odoo.orm.models.metaclass import MetaModel
 from odoo.tests import TransactionCase, tagged
+from odoo.tools import mute_logger
 
 from odoo.addons.test_orm.models.test_orm import (
     CalendarTest,
@@ -161,7 +162,11 @@ class TestBackendDifferential(TransactionCase):
 
     def test_jsonb_rejects_nul_in_public_writes(self):
         values = {"name": "JSON NUL", "history": {"nested": ["\0"]}}
-        with self.assertRaises(UntranslatableCharacter), self.cr.savepoint():
+        with (
+            self.assertRaises(UntranslatableCharacter),
+            mute_logger("odoo.db.cursor"),
+            self.cr.savepoint(),
+        ):
             self.env["test_orm.discussion"].create(values)
         with model_test_env(registry=_isolated_registry(_StubJsonDiscussion)) as env:
             with self.assertRaises(UntranslatableCharacter):

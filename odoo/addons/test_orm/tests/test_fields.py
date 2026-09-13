@@ -254,7 +254,11 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             SET compute = 'pass', depends = 'x_stuff_id.x_custom_1'
             WHERE model = 'x_test_10_compute_store_x_name' AND name = 'x_name'
         """)
-        self.registry.setup_models(self.cr, ["x_test_10_compute_store_x_name"])
+        with self.assertLogs("odoo.registry", level="WARNING") as logs:
+            self.registry.setup_models(self.cr, ["x_test_10_compute_store_x_name"])
+        self.assertEqual(len(logs.output), 1, logs.output)
+        self.assertIn("Skipping manual field", logs.output[0])
+        self.assertIn("x_stuff_id", logs.output[0])
 
     def test_10_context_dependent_related(self):
         self.env["res.lang"]._activate_lang("fr_FR")
@@ -5134,8 +5138,13 @@ class TestSelectionOndelete(TransactionCase):
         rec = self.env[self.MODEL_WRITE_OVERRIDE].create({"my_selection": "divinity"})
         self.assertEqual(rec.my_selection, "divinity")
 
-        self._unlink_option(self.MODEL_WRITE_OVERRIDE, "divinity")
+        with self.assertLogs(
+            "odoo.addons.base.models.ir_model_fields_selection", level="WARNING"
+        ) as logs:
+            self._unlink_option(self.MODEL_WRITE_OVERRIDE, "divinity")
         self.assertEqual(rec.my_selection, "foo")
+        self.assertEqual(len(logs.output), 1, logs.output)
+        self.assertIn("attempting ORM bypass", logs.output[0])
 
 
 @tagged("selection_ondelete_advanced")
