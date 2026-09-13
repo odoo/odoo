@@ -7,6 +7,7 @@ from odoo.fields import Command
 from . import approval_trace as trace
 
 _BASE_SEQUENCE = 10
+ROUTES_BY_STEPS_CONTEXT = "approval_category_routes_by_steps"
 _MAX_COMBINATIONS = 32
 _ALWAYS_MEASURED = ("amount", "quantity", "priority")
 
@@ -38,6 +39,27 @@ class ApprovalCategoryConversion(models.Model):
         help="What keeps this category's approvers and routing rules from being "
         "rewritten as steps that route every request the same. Empty when it can.",
     )
+
+    @api.model
+    def default_get(self, fields):
+        defaults = super().default_get(fields)
+        if (
+            "step_ids" in fields
+            and "step_ids" not in defaults
+            and self.env.context.get(ROUTES_BY_STEPS_CONTEXT)
+        ):
+            defaults["step_ids"] = [
+                Command.create(
+                    {
+                        "name": self.env._("Approvers"),
+                        "sequence": _BASE_SEQUENCE,
+                        "minimum": 1,
+                        "counts_added_approvers": True,
+                    }
+                )
+            ]
+            trace.STEPS.event("category_born_with_steps", fields=len(fields))
+        return defaults
 
     @api.depends_context("lang")
     @api.depends(

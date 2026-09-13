@@ -1,6 +1,6 @@
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 
 from .common import ApprovalCommon
 
@@ -1209,6 +1209,32 @@ class TestConvertingEveryCategory(RoutingOutcomesCase):
         below = self._prepare_request(category, amount=10)
         below.with_user(self.people["a"]).action_approve()
         self.assertEqual(below.state, "approved")
+
+    def test_a_category_created_from_the_configuration_routes_by_steps(self):
+        categories = self.env["approval.category"].with_context(
+            approval_category_routes_by_steps=True
+        )
+        with Form(categories) as form:
+            form.name = f"Born with steps {self._next_sequence_code()}"
+            form.sequence_code = self._next_sequence_code()
+        category = form.record
+        self.assertEqual(category.step_ids.mapped("counts_added_approvers"), [True])
+        category.write(
+            {
+                name: "optional"
+                for name, field in category._fields.items()
+                if name.startswith("has_") and field.type == "selection"
+            }
+        )
+        request = self._prepare_request(category, confirm=False)
+        self.env["approval.approver"].create(
+            {"request_id": request.id, "user_id": self.people["c"].id}
+        )
+        request.action_confirm()
+        self.assertTrue(request.approver_ids.step_ids)
+        request.with_user(self.people["c"]).action_approve()
+        self.assertEqual(request.state, "approved")
+        self.assertFalse(self._flat_category().step_ids)
 
     def test_a_draft_raised_before_the_conversion_routes_by_the_steps(self):
         category = self._flat_category()
