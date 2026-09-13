@@ -42,6 +42,13 @@ from odoo.tools.translate import _
 
 logger = logging.getLogger(__name__)
 
+lcp_preload_link = Markup('<link rel="preload" as="image" fetchpriority="high" href="%s" media="%s"/>')
+lcp_head_close = Markup('</head>')
+lcp_preload_media = (
+    ('website_lcp_image_mobile', '(max-width: 991.98px)'),
+    ('website_lcp_image_desktop', '(min-width: 992px)'),
+)
+
 
 DEFAULT_CDN_FILTERS = [
     "^/[^/]+/static/",
@@ -1696,7 +1703,27 @@ class Website(models.CachedModel):
                 # will add the branding on fields (into values)
                 context['inherit_branding_auto'] = True
 
-        return self.env['ir.qweb'].with_context(**context)._render(view.id, values)
+        rendered = self.env['ir.qweb'].with_context(**context)._render(view.id, values)
+        record = values.get('seo_object') or values.get('main_object')
+        if isinstance(record, models.BaseModel) and 'website_lcp_image_desktop' in record._fields:
+            rendered = self._apply_lcp_image(rendered, record)
+        return rendered
+
+    def _apply_lcp_image(self, rendered, record):
+        if lcp_head_close not in rendered:
+            return rendered
+
+        record = record[:1]
+        for field_name, media in lcp_preload_media:
+            url = record[field_name]
+            if not url:
+                continue
+            if self.cdn_activated:
+                url = self.get_cdn_url(url)
+            preload_link = lcp_preload_link % (url, media)
+            rendered = rendered.replace(lcp_head_close, preload_link + lcp_head_close, 1)
+
+        return rendered
 
     @api.model
     def is_view_active(self, key):

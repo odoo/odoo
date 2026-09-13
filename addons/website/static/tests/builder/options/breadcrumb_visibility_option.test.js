@@ -106,7 +106,7 @@ describe("save breadcrumb visibility", () => {
         });
         await contains(".o-overlay-container [data-action-value='overTheContent']").click();
         await contains(".o-snippets-top-actions button:contains(Save)").click();
-        expect(".o-website-builder_sidebar").not.toHaveClass("o_builder_sidebar_open");
+        await waitFor(".o-website-builder_sidebar:not(.o_builder_sidebar_open)");
         expect.verifySteps(["save breadcrumbs visibility"]);
     });
 

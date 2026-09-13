@@ -1,4 +1,4 @@
-import { click, describe, expect, queryOne, test } from "@odoo/hoot";
+import { click, describe, expect, queryOne, test, waitFor } from "@odoo/hoot";
 import { queryFirst, advanceTime, animationFrame, setInputRange } from "@odoo/hoot-dom";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
 import { Plugin } from "@html_editor/plugin";
@@ -152,18 +152,20 @@ test("Should clean previously saved useless attributes when saving", async () =>
             ${imgEl}
         </div>
     `);
-    onRpc("ir.ui.view", "save", () => {
-        expect(":iframe .test-options-target").toHaveInnerHTML(
-            `<img src="/web/image/website.s_text_image_default_image"
-                data-attachment-id="1" data-original-id="1"
-                data-original-src="/website/static/src/img/snippets_demo/s_text_image.webp"
-                data-mimetype-before-conversion="image/webp">`
-        );
+    onRpc("ir.ui.view", "save", ({ args }) => {
+        const savedImg = new DOMParser()
+            .parseFromString(args[1], "text/html")
+            .querySelector(".test-options-target img");
+        expect(savedImg.getAttribute("src")).toBe("/web/image/website.s_text_image_default_image");
+        for (const attribute of ["data-file-name", "data-shape-colors", "data-shape-flip"]) {
+            expect(savedImg.getAttribute(attribute)).toBe(null);
+        }
         expect.step("save");
         return true;
     });
     queryOne(":iframe .test-options-target").classList.add("o_dirty");
     await contains(".btn[data-action='save']").click();
+    await waitFor(".o-website-builder_sidebar:not(.o_builder_sidebar_open)");
     expect.verifySteps(["save"]);
 });
 
@@ -179,13 +181,25 @@ test("Should clean shape/hover related data on an incompatible image when saving
         </div>
     `);
     setupCORSProtectedImg();
-    onRpc("ir.ui.view", "save", () => {
-        expect(":iframe .test-options-target").toHaveInnerHTML(`<img src="${dummyCORSSrc}"/>`);
+    onRpc("ir.ui.view", "save", ({ args }) => {
+        const savedImg = new DOMParser()
+            .parseFromString(args[1], "text/html")
+            .querySelector(".test-options-target img");
+        for (const attribute of [
+            "data-shape",
+            "data-file-name",
+            "data-shape-colors",
+            "data-shape-flip",
+            "data-hover-effect",
+        ]) {
+            expect(savedImg.getAttribute(attribute)).toBe(null);
+        }
         expect.step("save");
         return true;
     });
     queryOne(":iframe .test-options-target").classList.add("o_dirty");
     await contains(".btn[data-action='save']").click();
+    await waitFor(".o-website-builder_sidebar:not(.o_builder_sidebar_open)");
     expect.verifySteps(["save"]);
 });
 

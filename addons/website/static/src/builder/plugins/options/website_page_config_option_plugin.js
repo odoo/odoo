@@ -12,6 +12,9 @@ import { BuilderAction } from "@html_builder/core/builder_action";
  * @property { WebsitePageConfigOptionPlugin['doesPageOptionExist'] } doesPageOptionExist
  */
 
+export const DEVICE_HIDDEN_APPLIED_SELECTOR =
+    ".o_snippet_mobile_invisible[data-invisible], .o_snippet_desktop_invisible[data-invisible]";
+
 export class WebsitePageConfigOptionPlugin extends Plugin {
     static id = "websitePageConfigOptionPlugin";
     static dependencies = ["history", "visibility", "builderActions"];
