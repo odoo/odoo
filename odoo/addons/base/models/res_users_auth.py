@@ -51,12 +51,12 @@ class PasswordStore:
         hashed = self.stored_hash(users, uid)
         if hashed is None:
             return False, None
-        return self.crypt_context().match_and_update(password, hashed or "")
+        return users._get_crypt_context().match_and_update(password, hashed or "")
 
     def store(self, users, hashed: typing.Collection[tuple[int, str]]) -> None:
         if not hashed:
             return
-        ctx = self.crypt_context()
+        ctx = users._get_crypt_context()
         if any(ctx.identify(pw) == "plaintext" for _uid, pw in hashed):
             msg = "Refusing to store a plaintext password -- encrypt first."
             raise ValueError(msg)
