@@ -93,6 +93,36 @@ class TestName(TransactionCase):
         self.assertIn(variant_1.id, res_variants_ids)
         self.assertIn(variant_2.id, res_variants_ids)
 
+    def test_product_name_search_results(self):
+        """ Doing a name search should return :
+        - Only the default_code or bacode exact maches if any
+        - Both default_code and name partial matches otherwise
+        """
+        product_1, product_2 = self.env['product.product'].create([
+            {
+                'name': 'Desk',
+                'default_code': 'ABC',
+            },
+            {
+                'name': 'Table',
+                'default_code': 'DEF',
+            },
+        ])
+        res = self.env['product.product'].name_search(name='a')
+        res_ids = [r[0] for r in res]
+        self.assertIn(product_1.id, res_ids)
+        self.assertIn(product_2.id, res_ids)
+
+        product_3 = self.env['product.product'].create({
+            'name': 'Computer',
+            'default_code': 'A',
+        })
+        res = self.env['product.product'].name_search(name='a')
+        res_ids = [r[0] for r in res]
+        self.assertNotIn(product_1.id, res_ids)
+        self.assertNotIn(product_2.id, res_ids)
+        self.assertIn(product_3.id, res_ids)
+
     def test_product_product_name_search(self):
         attribute = self.env['product.attribute'].create({
             'name': 'Attribute',
