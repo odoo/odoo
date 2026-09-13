@@ -51,7 +51,7 @@ odoo/
 │   │   _prefork, _census (the master's worker counts, a file its
 │   │   children read for /web/metrics), _worker, _watcher, httpd, _cron, lifecycle,
 │   │   _factory (picks and runs a server), _process_state (its two globals),
-│   │   settings (ServerSettings: the frozen snapshot start() builds once)
+│   │   settings (ServerSettings: derived from the live config on each current() read; a change is logged when the lifecycle channel is on)
 │   ├── db/         Database management, the /web/database/manager service
 │   │               (seven modules in one-way order). Reads downward:
 │   │               rpc -> {restore -> {lifecycle, listing, _dump_scanner},

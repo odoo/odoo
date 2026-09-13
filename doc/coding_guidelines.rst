@@ -2097,7 +2097,7 @@ running the other way.
   half that costs a reader something. ``cli/db.py``'s ``Db.drop``, ``duplicate``
   and ``rename`` each wrap a ``service.db`` function of the very name the rule
   would give them, so ``self._drop_database(args)`` would sit four lines from
-  ``_drop_database(target)`` meaning something else -- §2.4.4's unsubstitutable
+  ``drop_database(target)`` meaning something else -- §2.4.4's unsubstitutable
   name, manufactured on purpose. ``Db.list`` is the same test with the sign
   flipped: there the *existing* name was the shadow, of a builtin the class
   annotates with, so it moved to ``list_databases``. **Ask which spelling
