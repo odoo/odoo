@@ -1,6 +1,6 @@
 """Drop `string=` arguments that restate the label the ORM derives from the name.
 
-    python _drop_field_labels.py -d <db> [--addons-path a,b] [--dry-run] [--json out]
+    python _drop_field_labels.py -d <db> [-c conf] [--addons-path a,b] [--dry-run]
 
 Exact, not syntactic: the redundant set is read off the built registry, so a
 string that overrides a lower definition's different label is kept.
@@ -155,6 +155,7 @@ def rewrite(path: str, wanted: set[tuple[str, str]]) -> tuple[bytes, bytes, int]
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--database", required=True)
+    parser.add_argument("-c", "--config")
     parser.add_argument("--addons-path")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--json")
@@ -163,6 +164,8 @@ def main() -> int:
     args = parser.parse_args()
 
     argv = ["-d", args.database]
+    if args.config:
+        argv += ["-c", args.config]
     if args.addons_path:
         argv += ["--addons-path", args.addons_path]
     tools.config.parse_config(argv)
