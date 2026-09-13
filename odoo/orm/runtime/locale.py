@@ -10,6 +10,8 @@ class Locale:
     __slots__ = ()
 
     def installed_langs(self, env: Environment) -> list[str]:
+        if "res.lang" not in env.registry:
+            return ["en_US"]
         return [code for code, _name in env["res.lang"].get_installed()]
 
     def is_lang_installed(self, env: Environment, code: str) -> bool:
