@@ -11,7 +11,7 @@ import { isBarcodeScannerSupported } from "@web/core/barcode/barcode_video_scann
 import { barcodeService } from "@barcodes/barcode_service";
 import { OrderTabs } from "@point_of_sale/app/components/order_tabs/order_tabs";
 import { _t } from "@web/core/l10n/translation";
-import { isPrivateIp } from "@point_of_sale/utils";
+import { isPrivateIp } from "@point_of_sale/app/utils/lna";
 import { QrCodeCustomerDisplay } from "@point_of_sale/app/customer_display/customer_display_qr_code_popup";
 import { useAsyncLockedMethod } from "@point_of_sale/app/hooks/hooks";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";

@@ -6,7 +6,7 @@ import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 import { useService } from "@web/core/utils/hooks";
 import { downloadFile } from "@web/core/network/download";
 import { Logger } from "@bus/workers/bus_worker_utils";
-import { initLNA } from "@point_of_sale/app/utils/init_lna";
+import { initLNA } from "@point_of_sale/app/utils/lna";
 import { useLayoutEffect } from "@web/owl2/utils";
 
 export class CashdroAdminButtons extends Component {
