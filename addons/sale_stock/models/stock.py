@@ -206,21 +206,24 @@ class StockPicking(models.Model):
                     picking.move_type = "one"
 
     def _set_sale_id(self):
-        if self.reference_ids:
-            if self.sale_id:
-                self.reference_ids.sale_ids = [Command.link(self.sale_id.id)]
-            else:
-                sale_order = self.move_ids.sale_line_id.order_id
-                if len(sale_order) == 1:
-                    self.reference_ids.sale_ids = [Command.unlink(sale_order.id)]
-        else:
-            if self.sale_id:
+        for picking in self:
+            if picking.reference_ids:
+                for reference in picking.reference_ids:
+                    related_sales = reference.picking_ids.sale_id
+                    commands = [
+                        Command.unlink(sale.id)
+                        for sale in reference.sale_ids - related_sales
+                    ]
+                    if picking.sale_id:
+                        commands.append(Command.link(picking.sale_id.id))
+                    reference.sale_ids = commands
+            elif picking.sale_id:
                 reference = self.env['stock.reference'].create({
-                    'sale_ids': [Command.link(self.sale_id.id)],
-                    'name': self.sale_id.name,
+                    'sale_ids': [Command.link(picking.sale_id.id)],
+                    'name': picking.sale_id.name,
                 })
-                self._add_reference(reference)
-        self.move_ids._reassign_sale_lines(self.sale_id)
+                picking._add_reference(reference)
+            picking.move_ids._reassign_sale_lines(picking.sale_id)
 
     def _auto_init(self):
         """
