@@ -38,6 +38,7 @@ from odoo.tools import (
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Generator
+from .res_users_login_cooldown import LoginCooldown
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
@@ -1549,51 +1550,24 @@ class ResUsers(models.Model):
     def get_company_currency_id(self) -> int:
         return self.env.company.currency_id.id
 
+    def _login_cooldown(self) -> LoginCooldown:
+        return LoginCooldown(self.pool)
+
     def _get_login_failure_state(self, source: str) -> tuple[int, datetime.datetime]:
-        with self.pool.cursor() as cr:
-            cr.execute(
-                "SELECT failures, last_failure FROM res_users_login_cooldown "
-                "WHERE source = %s",
-                [source],
-            )
-            row = cr.fetchone()
-        if not row:
-            return 0, datetime.datetime.min.replace(tzinfo=datetime.UTC)
-        failures, last_failure = row
+        failures, last_failure = self._login_cooldown().state(source)
         _debug.logic("login_failure_state", source=source, failures=failures)
-        return failures, last_failure.replace(tzinfo=datetime.UTC)
+        return failures, last_failure
 
     def _record_login_failure(self, source: str) -> None:
-        now = datetime.datetime.now(datetime.UTC)
         delay = int(
             self.env["ir.config_parameter"]
             .sudo()
             .get_param("base.login_cooldown_duration", 60)
         )
-        cutoff = now - datetime.timedelta(seconds=delay)
-        now_naive = now.replace(tzinfo=None)
-        cutoff_naive = cutoff.replace(tzinfo=None)
-        with self.pool.cursor() as cr:
-            cr.execute(
-                """
-                INSERT INTO res_users_login_cooldown (source, failures, last_failure)
-                VALUES (%s, 1, %s)
-                ON CONFLICT (source) DO UPDATE
-                SET failures = res_users_login_cooldown.failures + 1,
-                    last_failure = EXCLUDED.last_failure
-                """,
-                [source, now_naive],
-            )
-            cr.execute(
-                "DELETE FROM res_users_login_cooldown WHERE last_failure < %s",
-                [cutoff_naive],
-            )
+        self._login_cooldown().record_failure(source, datetime.timedelta(seconds=delay))
 
     def _clear_login_failures(self, source: str) -> None:
-        with self.pool.cursor() as cr:
-            cr.execute(
-                "DELETE FROM res_users_login_cooldown WHERE source = %s", [source]
-            )
+        self._login_cooldown().clear(source)
 
     @contextlib.contextmanager
     def _assert_can_auth(self, user: int | str | None = None) -> Generator[None]:
