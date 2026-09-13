@@ -155,6 +155,15 @@ registerThreadAction("attachments", {
     name: _t("Attachments"),
     sequence: 10,
     sequenceGroup: 10,
+    setup() {
+        useSubEnv({
+            closeAttachmentPanel: () => {
+                if (this.isActive) {
+                    this.actionPanelClose();
+                }
+            },
+        });
+    },
 });
 registerThreadAction("invite-people", {
     actionPanelComponent: ChannelInvitation,

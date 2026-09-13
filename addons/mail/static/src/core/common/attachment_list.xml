@@ -130,6 +130,13 @@
                                     <i class="oi" data-icon="download" role="img"
                                         aria-label="Download" />
                                 </button>
+                                <button t-if="this.canShowInConversation(attachment) and group.duplicates.length === 1"
+                                    class="btn btn-secondary"
+                                    t-on-click.stop="() => this.onClickShowInConversation(attachment)"
+                                    title="Show in Conversation">
+                                    <i class="oi oi-filled" data-icon="visibility" role="img"
+                                        aria-label="Show in Conversation" />
+                                </button>
                                 <button t-if="this.showDelete(attachment)"
                                     class="o-mail-Attachment-unlink btn btn-secondary"
                                     t-att-class="{ 'o-inComposer': this.env.inComposer }"
@@ -163,13 +170,22 @@
                                             class="flex-shrink-0 smaller text-muted">– <t
                                                 t-out="this.formatDateTime(duplicate.create_date)" /></span>
                                     </div>
-                                    <button t-if="this.showDelete(duplicate)"
-                                        class="o-mail-Attachment-duplicateUnlink btn btn-secondary btn-sm py-0"
-                                        t-on-click.stop="() => this.onClickUnlink(duplicate)"
-                                        title="Remove">
-                                        <i class="oi oi-filled" data-icon="delete" role="img"
-                                            aria-label="Remove" />
-                                    </button>
+                                    <div class="btn-group">
+                                        <button t-if="this.canShowInConversation(duplicate)"
+                                            class="btn btn-secondary btn-sm py-0"
+                                            t-on-click.stop="() => this.onClickShowInConversation(duplicate)"
+                                            title="Show in Conversation">
+                                            <i class="oi oi-filled" data-icon="visibility" role="img"
+                                                aria-label="Show in Conversation" />
+                                        </button>
+                                        <button t-if="this.showDelete(duplicate)"
+                                            class="o-mail-Attachment-duplicateUnlink btn btn-secondary btn-sm py-0"
+                                            t-on-click.stop="() => this.onClickUnlink(duplicate)"
+                                            title="Remove">
+                                            <i class="oi oi-filled" data-icon="delete" role="img"
+                                                aria-label="Remove" />
+                                        </button>
+                                    </div>
                                 </div>
                             </t>
                         </Dropdown>

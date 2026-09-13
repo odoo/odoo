@@ -158,6 +158,31 @@ export class AttachmentList extends Component {
     /**
      * @param {import("models").Attachment} attachment
      */
+    canShowInConversation(attachment) {
+        return (
+            !this.env.message && attachment.message_ids.some((m) => m.thread?.eq(attachment.thread))
+        );
+    }
+
+    /**
+     * @param {import("models").Attachment} attachment
+     */
+    async onClickShowInConversation(attachment) {
+        if (this.ui.isSmall || this.env.inChatWindow || this.env.inMeetingView) {
+            this.env.closeAttachmentPanel?.();
+            this.env.inMeetingView?.openChat();
+        }
+        // Give the time for menus to close before scrolling to the message.
+        await new Promise((resolve) => setTimeout(() => requestAnimationFrame(resolve)));
+        const message = attachment.message_ids.find((m) => m.thread?.eq(attachment.thread));
+        if (message) {
+            await this.env.messageHighlight?.highlightMessage(message);
+        }
+    }
+
+    /**
+     * @param {import("models").Attachment} attachment
+     */
     onClickAttachment(attachment) {
         if (this.props.isSelecting) {
             this.props.onToggleSelected?.(attachment);
@@ -211,6 +236,13 @@ export class AttachmentList extends Component {
                 label: _t("Download"),
                 icon: "download",
                 onSelect: () => this.onClickDownload(attachment),
+            });
+        }
+        if (this.canShowInConversation(attachment)) {
+            res.push({
+                label: _t("Show in Conversation"),
+                icon: "visibility",
+                onSelect: () => this.onClickShowInConversation(attachment),
             });
         }
         return res;

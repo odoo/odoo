@@ -49,7 +49,7 @@ export class Attachment extends FileModelMixin(Record) {
     res_model;
     /** @type {string} */
     thumbnail_access_token;
-    message = fields.One("mail.message", { inverse: "attachment_ids" });
+    message_ids = fields.Many("mail.message", { inverse: "attachment_ids" });
     /** @type {string} */
     ownership_token;
     create_date = fields.Datetime();
@@ -121,8 +121,8 @@ export class Attachment extends FileModelMixin(Record) {
     }
 
     get isDeletable() {
-        if (this.message && this.store.self_user?.share !== false) {
-            return this.message.editable;
+        if (this.message_ids.length && this.store.self_user?.share !== false) {
+            return this.message_ids.some((m) => m.editable);
         }
         return true;
     }
