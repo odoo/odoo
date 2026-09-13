@@ -550,7 +550,7 @@ export class Message extends Component {
         }
         const roots = [];
         for (const el of embeddedElements) {
-            if (el.dataset.embeddedMounted === "1") {
+            if (el.dataset.embeddedMounted === "1" || this.shadowBody.el) {
                 continue;
             }
             // getProps(el) for readonly syntax highlighting reads the current host content
