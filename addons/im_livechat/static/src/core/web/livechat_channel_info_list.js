@@ -4,7 +4,7 @@ import { ExpertiseTagsAutocomplete } from "@im_livechat/core/web/expertise_tags_
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { prettifyMessageContent } from "@mail/utils/common/format";
 
-import { Component, useEffect } from "@odoo/owl";
+import { Component, t, useEffect, useProps } from "@odoo/owl";
 
 import { startUrl } from "@web/core/browser/router";
 import { rpc } from "@web/core/network/rpc";
@@ -14,7 +14,10 @@ import { url } from "@web/core/utils/urls";
 export class LivechatChannelInfoList extends Component {
     static components = { ActionPanel, ExpertiseTagsAutocomplete, TranscriptSender };
     static template = "im_livechat.LivechatChannelInfoList";
-    static props = ["close?", "thread"];
+    props = useProps({
+        close: t.function().optional(),
+        thread: t.object(),
+    });
 
     setup() {
         super.setup();

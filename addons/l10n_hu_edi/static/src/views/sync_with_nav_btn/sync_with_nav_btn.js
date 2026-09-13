@@ -7,7 +7,6 @@ import { useService } from "@web/core/utils/hooks";
 
 export class SyncWithNavBtn extends Component {
     static template = "l10n_hu_edi.SyncWithNavBtn";
-    static props = {};
 
     setup() {
         this.action = useService("action");
