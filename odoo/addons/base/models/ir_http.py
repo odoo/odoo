@@ -333,8 +333,7 @@ class IrHttp(models.AbstractModel):
             )
 
         if token := get_http_authorization_bearer_token():
-            # 'rpc' scope does not really exist, we basically require a global key (scope NULL)
-            uid = request.env['res.users.apikeys']._check_credentials(scope=routing['bearer_scope'], key=token)
+            uid = cls._check_bearer_credentials(scope=routing['bearer_scope'], token=token)
             if not uid:
                 e = "Invalid apikey"
                 raise Unauthorized(e, www_authenticate=WWWAuthenticate('bearer'))
@@ -350,6 +349,11 @@ class IrHttp(models.AbstractModel):
             e = 'Missing "Authorization" or Sec-headers for interactive usage.'
             raise werkzeug.exceptions.Unauthorized(e, www_authenticate=WWWAuthenticate('bearer'))
         cls._authenticate_explicit(dict(routing, auth='user'))
+
+    @classmethod
+    def _check_bearer_credentials(cls, scope, token):
+        # 'rpc' scope does not really exist, we basically require a global key (scope NULL)
+        return request.env['res.users.apikeys']._check_credentials(scope=scope, key=token)
 
     @classmethod
     def _auth_method_user(cls, routing: dict):
