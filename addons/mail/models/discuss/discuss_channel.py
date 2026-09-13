@@ -1265,6 +1265,7 @@ class DiscussChannel(models.Model):
                     'lang': lang,
                     'name': name,
                     'notif': "email" if partner_share else "inbox",
+                    'push_allowed': False,
                     'share': partner_share,
                     'type': 'user' if not partner_share else 'customer',
                     'uid': uid,
@@ -1306,6 +1307,9 @@ class DiscussChannel(models.Model):
         # sudo: discuss.channel.member - read to get the members of the channel and res.users.settings of the partners
         members = self.env["discuss.channel.member"].sudo().search(domain)
         for member in members:
+            member_push_preferences = self._get_push_notification_preferences(
+                member.partner_id.main_user_id.res_users_settings_id,
+            )
             recipients_data.append({
                 "active": True,
                 "id": member.partner_id.id,
@@ -1314,6 +1318,7 @@ class DiscussChannel(models.Model):
                 "groups": [],
                 "lang": member.partner_id.lang,
                 "notif": "web_push",
+                "push_allowed": member_push_preferences.get(self.channel_type, True),
                 "share": member.partner_id.partner_share,
                 "type": "customer",
                 "uid": False,
@@ -1334,6 +1339,12 @@ class DiscussChannel(models.Model):
 
     def _get_notify_valid_parameters(self):
         return super()._get_notify_valid_parameters() | {"silent"}
+
+    def _get_push_notification_preferences(self, user_setting):
+        return {
+            "chat": user_setting.chat_push,
+            "channel": user_setting.channel_push,
+        }
 
     def _notify_thread(self, message, **kwargs):
         # link message to channel
