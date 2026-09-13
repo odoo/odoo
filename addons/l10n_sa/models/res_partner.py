@@ -59,7 +59,7 @@ class ResPartner(models.Model):
     @api.model
     def _l10n_sa_get_tin_from_vat(self, vat):
         # For Saudi TIN is always the first 10 digits of VAT
-        return normalize_identifier(vat)[:10]
+        return normalize_identifier(vat)[:10] if vat else None
 
     @api.onchange('vat', 'additional_identifiers')
     def _onchange_populate_sa_tin_from_vat(self):
