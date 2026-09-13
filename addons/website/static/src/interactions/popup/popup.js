@@ -38,8 +38,6 @@ export class Popup extends Interaction {
         /** @type {import("bootstrap").Modal} */
         this.bsModal = Modal.getOrCreateInstance(this.modalEl);
         this.registerCleanup(() => {
-            // Bootstrap cannot cancel a queued show/hide transition, and its callback
-            // reads `_config`, which dispose() nulls; settle it before disposing.
             for (const el of [this.bsModal._dialog, this.bsModal._element]) {
                 el?.dispatchEvent(new Event("transitionend"));
             }

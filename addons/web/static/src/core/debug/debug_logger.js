@@ -72,9 +72,6 @@ odooLog.status()           odooLog.table()      odooLog.reset()      odooLog.log
 const _globals = /** @type {Record<string, any>} */ (globalThis);
 
 const STATE_KEY = "__odooLogState";
-// A bundle built with esbuild (web.assets_frontend_minimal) inlines its own copy of this
-// module; keeping the state on the window lets every copy share one spec, one stats table
-// and the console API instead of splitting them between bundles.
 const isFirstCopy = !_globals[STATE_KEY];
 /**
  * @type {{
