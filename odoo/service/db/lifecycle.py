@@ -330,7 +330,7 @@ def _duplicate_database(
             registry = odoo.modules.registry.Registry.new(db_name, run_tests=False)
         with registry.cursor() as cr:
             env = odoo.api.Environment(cr, odoo.api.SUPERUSER_ID, {})
-            env["ir.config_parameter"].init(force=True)  # type: ignore[call-arg]
+            env["ir.config_parameter"].init(force=True)
             if neutralize_database:
                 with _debug.perf("database.duplicate.neutralized", cr=cr, db=db_name):
                     odoo.modules.neutralize.neutralize_database(cr)

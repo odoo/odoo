@@ -91,24 +91,6 @@ class ServerSettings:
     @classmethod
     def from_config(cls, config: OptionSource) -> Self:
         socket_activation = _is_socket_activated(config)
-        if _debug.lifecycle.enabled:
-            _debug.lifecycle(
-                "settings.loaded",
-                workers=config["workers"],
-                http_enable=config["http_enable"],
-                http_port=config["http_port"],
-                max_cron_threads=config["max_cron_threads"],
-                job_workers=config["job_workers"],
-                limit_time_real=config["limit_time_real"],
-                limit_memory_soft=config["limit_memory_soft"],
-                db_maxconn=config["db_maxconn"],
-                dev_mode=len(config["dev_mode"] or ()),
-                test_enable=config["test_enable"],
-                db_name=len(config["db_name"] or ()),
-                init=len(config["init"] or ()),
-                update=len(config["update"] or ()),
-                socket_activation=socket_activation,
-            )
         return cls(
             workers=int(config["workers"] or 0),
             http_enable=bool(config["http_enable"]),
@@ -171,10 +153,38 @@ class ServerSettings:
         return bool(self.init or self.update or self.reinit)
 
 
+_last_seen: ServerSettings | None = None
+
+
 def _get_settings_from_live_config() -> ServerSettings:
+    global _last_seen
+
     import odoo.tools
 
-    return ServerSettings.from_config(odoo.tools.config)
+    settings = ServerSettings.from_config(odoo.tools.config)
+    # Derived on every read, so a per-read event would only say "read"; the
+    # event is the change, and it names the fields that moved.
+    if not _debug.lifecycle.enabled:
+        return settings
+    previous, _last_seen = _last_seen, settings
+    if settings != previous:
+        _debug.lifecycle(
+            "settings.changed",
+            first=previous is None,
+            changed=sorted(
+                name
+                for name in ServerSettings.__dataclass_fields__
+                if previous is None
+                or getattr(previous, name) != getattr(settings, name)
+            ),
+            workers=settings.workers,
+            http_port=settings.http_port,
+            max_cron_threads=settings.max_cron_threads,
+            job_workers=settings.job_workers,
+            db_maxconn=settings.db_maxconn,
+            test_enable=settings.test_enable,
+        )
+    return settings
 
 
 slot: SettingsSlot[ServerSettings] = SettingsSlot(

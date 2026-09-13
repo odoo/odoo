@@ -238,7 +238,7 @@ def _finalize_restored_db(
     with registry.cursor() as cr:
         env = odoo.api.Environment(cr, odoo.api.SUPERUSER_ID, {})
         if copy:
-            env["ir.config_parameter"].init(force=True)  # type: ignore[call-arg]
+            env["ir.config_parameter"].init(force=True)
         if neutralize_database:
             odoo.modules.neutralize.neutralize_database(cr)
         _debug.pipeline(
