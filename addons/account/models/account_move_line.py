@@ -1050,25 +1050,17 @@ class AccountMoveLine(models.Model):
             amounts_map = {}
             # one row per (line, side); the currency amount is rounded to the side's
             # currency, which every partial of a line shares with the line itself
-            for side, move_field, amount_field, currency_field in (
-                (
-                    "debit",
-                    "debit_move_id",
-                    "debit_amount_currency",
-                    "debit_currency_id",
-                ),
-                (
-                    "credit",
-                    "credit_move_id",
-                    "credit_amount_currency",
-                    "credit_currency_id",
-                ),
-            ):
-                groups = Partial._read_group(
-                    [(move_field, "in", stored_lines.ids)],
-                    [move_field, currency_field],
-                    ["amount:sum", f"{amount_field}:sum"],
-                )
+            debit_groups = Partial._read_group(
+                [("debit_move_id", "in", stored_lines.ids)],
+                ["debit_move_id", "debit_currency_id"],
+                ["amount:sum", "debit_amount_currency:sum"],
+            )
+            credit_groups = Partial._read_group(
+                [("credit_move_id", "in", stored_lines.ids)],
+                ["credit_move_id", "credit_currency_id"],
+                ["amount:sum", "credit_amount_currency:sum"],
+            )
+            for side, groups in (("debit", debit_groups), ("credit", credit_groups)):
                 for line, currency, amount, amount_currency in groups:
                     amount_currency = amount_currency or 0.0
                     amounts_map[line.id, side] = (
