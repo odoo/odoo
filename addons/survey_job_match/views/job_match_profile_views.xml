@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Job Match Profile -->
+    <record id="job_match_profile_view_list" model="ir.ui.view">
+        <field name="name">job.match.profile.list</field>
+        <field name="model">job.match.profile</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="posting_url" widget="url"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="job_match_profile_view_form" model="ir.ui.view">
+        <field name="name">job.match.profile.form</field>
+        <field name="model">job.match.profile</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="image_1920" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Developer"/></h1>
+                    </div>
+                    <group>
+                        <field name="posting_url" widget="url"
+                            placeholder="https://www.odoo.com/jobs/..."/>
+                    </group>
+                    <field name="description"
+                        placeholder="Short blurb shown on the result page..."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_job_match_profile" model="ir.actions.act_window">
+        <field name="name">Job Profiles</field>
+        <field name="res_model">job.match.profile</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a job profile
+            </p>
+            <p>
+                Profiles are the possible outcomes of a job-matching survey.
+                Answers grant points to profiles, and the best match is shown
+                to the participant at the end.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_job_match_profile"
+        name="Job Profiles"
+        parent="survey.menu_surveys"
+        action="action_job_match_profile"
+        sequence="25"/>
+
+    <!-- Job Match Answer Weights -->
+    <record id="job_match_weight_view_list" model="ir.ui.view">
+        <field name="name">job.match.answer.weight.list</field>
+        <field name="model">job.match.answer.weight</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="answer_id"/>
+                <field name="profile_id"/>
+                <field name="is_eliminating"/>
+                <field name="points" readonly="is_eliminating"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="job_match_weight_view_search" model="ir.ui.view">
+        <field name="name">job.match.answer.weight.search</field>
+        <field name="model">job.match.answer.weight</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="answer_id"/>
+                <field name="profile_id"/>
+                <group>
+                    <filter name="group_question" string="Question" domain="[]"
+                        context="{'group_by': 'question_id'}"/>
+                    <filter name="group_profile" string="Job Profile" domain="[]"
+                        context="{'group_by': 'profile_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_job_match_weights" model="ir.actions.act_window">
+        <field name="name">Match Weights</field>
+        <field name="res_model">job.match.answer.weight</field>
+        <field name="view_mode">list</field>
+        <field name="domain">[('survey_id', '=', active_id)]</field>
+        <field name="context">{'search_default_group_question': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a match weight
+            </p>
+            <p>
+                Pick an answer of this survey and a job profile, then set how many
+                points the answer grants to that profile.
+            </p>
+        </field>
+    </record>
+
+</odoo>
