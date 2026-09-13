@@ -491,12 +491,7 @@ export class Message extends Record {
     }
 
     get canToggleStar() {
-        return Boolean(
-            !this.is_transient &&
-            !this.isPending &&
-            this.store.selfIsInternalUser &&
-            this.persistent,
-        );
+        return this.persistent && this.store.selfIsInternalUser;
     }
 
     get hasOnlyAttachments() {
@@ -549,8 +544,7 @@ export class Message extends Record {
 
     canAddReaction() {
         return Boolean(
-            !this.is_transient &&
-            !this.isPending &&
+            this.persistent &&
             this.thread?.can_react &&
             !this.thread.isTransient &&
             this.thread.has_mail_thread,
