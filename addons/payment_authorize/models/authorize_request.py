@@ -3,8 +3,6 @@ import logging
 import pprint
 from uuid import uuid4
 
-import requests
-
 from odoo.addons.payment import utils as payment_utils
 
 _logger = logging.getLogger(__name__)
@@ -32,6 +30,7 @@ class AuthorizeAPI:
         else:
             self.url = "https://apitest.authorize.net/xml/v1/request.api"
 
+        self.env = provider.env
         self.state = provider.state
         self.name = provider.authorize_login
         self.transaction_key = provider.authorize_transaction_key
@@ -51,7 +50,13 @@ class AuthorizeAPI:
         _logger.info(
             "sending request to %s:\n%s", self.url, pprint.pformat(logged_request)
         )
-        response = requests.post(self.url, json.dumps(request), timeout=60)
+        response = self.env["ir.egress"].request(
+            "POST",
+            self.url,
+            purpose="payment_authorize",
+            data=json.dumps(request),
+            timeout=60,
+        )
         response.raise_for_status()
         response = json.loads(response.content)
         _logger.info("response received:\n%s", pprint.pformat(response))

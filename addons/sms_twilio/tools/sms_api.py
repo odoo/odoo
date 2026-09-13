@@ -52,8 +52,7 @@ class SmsApiTwilio(SmsApiBase):
         See params and returns in original method sms/tools/sms_api.py
         In addition to the uuid and state, we add the sms_twilio_sid to the returns (one per sms)
         """
-        # Use a session as we have to sequentially call twilio, might save time
-        session = requests.Session()
+        session = self.env["ir.egress"].session(purpose="sms_twilio")
 
         res = []
         for message in messages:

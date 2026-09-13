@@ -2,6 +2,8 @@ import logging
 
 import requests
 
+from odoo.libs import guarded_http, netguard
+
 _logger = logging.getLogger(__name__)
 
 
@@ -30,9 +32,14 @@ class MercadoPagoPosRequest:
             "X-platform-id": "dev_cdf1cfac242111ef9fdebe8d845d0987",
         }
         try:
-            response = requests.request(
-                method, endpoint, headers=header, json=payload, timeout=REQUEST_TIMEOUT
-            )
+            with guarded_http.guarded_session(netguard.PUBLIC_ONLY) as session:
+                response = session.request(
+                    method,
+                    endpoint,
+                    headers=header,
+                    json=payload,
+                    timeout=REQUEST_TIMEOUT,
+                )
             return response.json()
         except requests.exceptions.RequestException as error:
             _logger.warning("Cannot connect with Mercado Pago POS. Error: %s", error)

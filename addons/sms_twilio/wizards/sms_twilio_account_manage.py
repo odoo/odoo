@@ -43,8 +43,10 @@ class SmsTwilioAccountManage(models.TransientModel):
         """Fetch the available numbers from Twilio account"""
         self.company_id._assert_twilio_sid()
         try:
-            response = requests.get(
+            response = self.env["ir.egress"].request(
+                "GET",
                 f"https://api.twilio.com/2010-04-01/Accounts/{self.company_id.sms_twilio_account_sid}/IncomingPhoneNumbers.json",
+                purpose="sms_twilio",
                 auth=(
                     self.company_id.sms_twilio_account_sid,
                     self.company_id.sms_twilio_auth_token,

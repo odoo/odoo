@@ -4,6 +4,7 @@ import requests
 
 from odoo import _
 from odoo.exceptions import UserError
+from odoo.libs import guarded_http, netguard
 
 _logger = logging.getLogger(__name__)
 
@@ -11,21 +12,10 @@ _logger = logging.getLogger(__name__)
 def send_request(api_key, subdomain, version, endpoint, payload=None, method="POST"):
     url = f"https://{subdomain}.gelatoapis.com/{version}/{endpoint}"
     headers = {"X-API-KEY": api_key or None}
+    body = {"params": payload} if method in ("GET", "DELETE") else {"json": payload}
     try:
-        if method == "GET":
-            response = requests.get(
-                url=url, params=payload, headers=headers, timeout=10
-            )
-        elif method == "PATCH":
-            response = requests.patch(
-                url=url, json=payload, headers=headers, timeout=10
-            )
-        elif method == "DELETE":
-            response = requests.delete(
-                url=url, params=payload, headers=headers, timeout=10
-            )
-        else:
-            response = requests.post(url=url, json=payload, headers=headers, timeout=10)
+        with guarded_http.guarded_session(netguard.PUBLIC_ONLY) as session:
+            response = session.request(method, url, headers=headers, timeout=10, **body)
         response_content = response.json()
         try:
             response.raise_for_status()

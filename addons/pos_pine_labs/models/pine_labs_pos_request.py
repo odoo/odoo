@@ -37,7 +37,9 @@ def call_pine_labs(payment_method: object, endpoint: str, payload: dict) -> dict
     pine_labs_url = _get_pine_labs_url(payment_method=payment_method)
     url = pine_labs_url + endpoint
     try:
-        response = requests.post(url, json=payload, timeout=REQUEST_TIMEOUT)
+        response = payment_method.env["ir.egress"].request(
+            "POST", url, purpose="pos_pine_labs", json=payload, timeout=REQUEST_TIMEOUT
+        )
         response.raise_for_status()
         return response.json()
     except requests.exceptions.ConnectionError as error:

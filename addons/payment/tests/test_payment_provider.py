@@ -5,6 +5,7 @@ import requests
 
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
+from odoo.libs.guarded_http import GuardedSession
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
@@ -480,7 +481,7 @@ class TestPaymentProvider(PaymentCommon):
         response.status_code = 502
         response._content = b"<html><body>Cloudflare Error</body></html>"
         with (
-            patch("requests.request", return_value=response),
+            patch.object(GuardedSession, "request", return_value=response),
             patch(
                 "odoo.addons.payment.models.payment_provider.PaymentProvider._parse_response_error",
                 new=lambda _self, _response: _response.json(),

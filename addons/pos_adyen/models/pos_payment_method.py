@@ -3,8 +3,6 @@ import logging
 import pprint
 from urllib.parse import parse_qs
 
-import requests
-
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessDenied, UserError, ValidationError
 from odoo.tools import hmac
@@ -340,7 +338,14 @@ class PosPaymentMethod(models.Model):
         headers = {
             "x-api-key": self.sudo().adyen_api_key,
         }
-        req = requests.post(endpoint, json=data, headers=headers, timeout=TIMEOUT)
+        req = self.env["ir.egress"].request(
+            "POST",
+            endpoint,
+            purpose="pos_adyen",
+            json=data,
+            headers=headers,
+            timeout=TIMEOUT,
+        )
 
         # Authentication error doesn't return JSON
         if req.status_code == 401:

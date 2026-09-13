@@ -19,7 +19,7 @@ class RazorpayPosRequest:
             payment_method.razorpay_allowed_payment_modes
         )
         self.payment_method = payment_method
-        self.session = requests.Session()
+        self.session = payment_method.env["ir.egress"].session(purpose="pos_razorpay")
 
     def _razorpay_get_endpoint(self, endpoint):
         if endpoint in ["unified/refund", "void"]:

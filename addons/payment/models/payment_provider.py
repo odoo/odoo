@@ -896,9 +896,10 @@ class PaymentProvider(models.Model):
 
         # Send the request.
         try:
-            response = requests.request(
+            response = self.env["ir.egress"].request(
                 method,
                 url,
+                purpose="payment_provider",
                 params=params,
                 data=data,
                 json=json,
@@ -906,7 +907,11 @@ class PaymentProvider(models.Model):
                 auth=auth,
                 timeout=timeout,
             )
-        except requests.exceptions.ConnectionError, requests.exceptions.Timeout:
+        except (
+            requests.exceptions.ConnectionError,
+            requests.exceptions.Timeout,
+            requests.exceptions.InvalidURL,
+        ):
             raise ValidationError(
                 _("Could not establish the connection to the payment provider.")
             ) from None

@@ -95,7 +95,9 @@ class PosPaymentMethod(models.Model):
         url = f"{self._get_dpopay_base_url(is_token=True)}/tokenkc/generate"
 
         _logger.info("Sending request to %s to generate new token", url)
-        response = requests.get(url, auth=auth, timeout=DPOPAY_DEFAULT_TIMEOUT)
+        response = self.env["ir.egress"].request(
+            "GET", url, purpose="pos_dpopay", auth=auth, timeout=DPOPAY_DEFAULT_TIMEOUT
+        )
         response_json = response.json()
         response.raise_for_status()
         access_token = response_json.get("access_token")
@@ -134,8 +136,13 @@ class PosPaymentMethod(models.Model):
                     mode,
                     list(headers.keys()),
                 )
-                response = requests.post(
-                    url, json=payload, headers=headers, timeout=DPOPAY_DEFAULT_TIMEOUT
+                response = self.env["ir.egress"].request(
+                    "POST",
+                    url,
+                    purpose="pos_dpopay",
+                    json=payload,
+                    headers=headers,
+                    timeout=DPOPAY_DEFAULT_TIMEOUT,
                 )
                 response_json = response.json()
                 return response, response_json

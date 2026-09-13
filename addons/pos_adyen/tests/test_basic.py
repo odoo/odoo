@@ -2,6 +2,7 @@ from unittest.mock import patch
 
 from requests import Response
 
+from odoo.libs.guarded_http import GuardedSession
 from odoo.tests.common import tagged
 
 from odoo.addons.point_of_sale.tests.test_frontend import TestPointOfSaleHttpCommon
@@ -32,7 +33,7 @@ class TestAdyenPoS(TestPointOfSaleHttpCommon):
         )
         self.main_pos_config.with_user(self.pos_user).open_ui()
 
-        def post(url, **kwargs):
+        def post(session, method, url, **kwargs):
             # TODO: check that the data passed by pos to adyen is correct
             response = Response()
             response.status_code = 200
@@ -40,9 +41,7 @@ class TestAdyenPoS(TestPointOfSaleHttpCommon):
             return response
 
         with (
-            patch(
-                "odoo.addons.pos_adyen.models.pos_payment_method.requests.post", post
-            ),
+            patch.object(GuardedSession, "request", post),
             patch("odoo.addons.pos_adyen.controllers.main.consteq", lambda a, b: True),
         ):
             self.start_pos_tour("PosAdyenTour")

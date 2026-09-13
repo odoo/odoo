@@ -4,6 +4,7 @@ import requests
 
 from odoo import _, api, fields, models, modules
 from odoo.exceptions import AccessError, UserError
+from odoo.libs import guarded_http, netguard
 
 _logger = logging.getLogger(__name__)
 TIMEOUT = 10
@@ -301,19 +302,16 @@ class PosPaymentMethod(models.Model):
 
 
 def get_viva_com_session(should_retry=True):
-    session = requests.Session()
-    if should_retry:
-        session.mount(
-            "https://",
-            requests.adapters.HTTPAdapter(
-                max_retries=requests.adapters.Retry(
-                    total=5,
-                    backoff_factor=2,
-                    status_forcelist=[202, 500, 502, 503, 504],
-                )
-            ),
-        )
-    return session
+    if not should_retry:
+        return guarded_http.guarded_session(netguard.PUBLIC_ONLY)
+    return guarded_http.guarded_session(
+        netguard.PUBLIC_ONLY,
+        max_retries=requests.adapters.Retry(
+            total=5,
+            backoff_factor=2,
+            status_forcelist=[202, 500, 502, 503, 504],
+        ),
+    )
 
 
 def get_verification_key(endpoint, viva_com_merchant_id, viva_com_api_key):
@@ -330,11 +328,12 @@ def get_verification_key(endpoint, viva_com_merchant_id, viva_com_api_key):
         return "viva_com_test"
 
     try:
-        response = requests.get(
-            f"{endpoint}/api/messages/config/token",
-            auth=(viva_com_merchant_id, viva_com_api_key),
-            timeout=TIMEOUT,
-        )
+        with guarded_http.guarded_session(netguard.PUBLIC_ONLY) as session:
+            response = session.get(
+                f"{endpoint}/api/messages/config/token",
+                auth=(viva_com_merchant_id, viva_com_api_key),
+                timeout=TIMEOUT,
+            )
         response.raise_for_status()
         return response.json().get("Key")
     except requests.exceptions.RequestException:
