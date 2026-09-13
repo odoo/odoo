@@ -408,8 +408,9 @@ class ReadMixin(_ModelStubs):
                 forbidden=len(forbidden),
             )
             if forbidden:
-                msg = "read"
-                raise self.env["ir.rule"]._prepare_access_error(msg, forbidden)
+                raise self.env.registry.access_policy.record_denied_error(
+                    self.env, "read", forbidden
+                )
 
     def _get_fields_to_fetch(
         self,

@@ -32,6 +32,7 @@ from ._registry_loading_phase import _RegistryLoadingPhaseMixin
 from ._registry_models import _RegistryModelsMixin
 from ._registry_schema import _RegistrySchemaMixin
 from ._registry_signaling import _RegistrySignalingMixin
+from .access_policy import ACCESS_POLICY, AccessPolicy
 from .metaschema import META_SCHEMA, MetaSchema
 
 if typing.TYPE_CHECKING:
@@ -83,6 +84,7 @@ class Registry(
     ready: bool
     loaded: bool
     metaschema: MetaSchema = META_SCHEMA
+    access_policy: AccessPolicy = ACCESS_POLICY
 
     @classmethod
     def _new_finalize(cls, db_name: str, update_module: bool, t0: float) -> Registry:

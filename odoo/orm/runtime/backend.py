@@ -518,8 +518,8 @@ def _prepare_postgres_search_query(
 
     if check_access:
         model_sudo = model.sudo().with_context(active_test=False)
-        sec_domain = model.env["ir.rule"]._get_domain_accessible_records(
-            model._name, "read"
+        sec_domain = model.env.registry.access_policy.record_domain(
+            model.env, model._name, "read"
         )
         sec_domain = sec_domain.optimize_full(model_sudo)
         if sec_domain.is_false():

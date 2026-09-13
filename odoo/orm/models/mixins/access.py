@@ -191,8 +191,8 @@ class AccessMixin(_ModelStubs):
         return self.browse(id_ for id_ in self._ids if id_ in allowed_ids)
 
     def _check_access(self, operation: str) -> tuple[Self, Callable] | None:
-        Access = self.env["ir.model.access"]
-        if not Access.check(self._name, operation, raise_exception=False):
+        policy = self.env.registry.access_policy
+        if not policy.model_allowed(self.env, self._name, operation):
             _debug.logic(
                 "access.denied_by_acl",
                 model=self._name,
@@ -201,13 +201,12 @@ class AccessMixin(_ModelStubs):
                 records=len(self),
             )
             return self, functools.partial(
-                Access._prepare_access_error, self._name, operation
+                policy.model_denied_error, self.env, self._name, operation
             )
 
         real_self = self.browse(id_ for id_ in self._ids if id_)
         if real_self:
-            Rule = self.env["ir.rule"]
-            domain = Rule._get_domain_accessible_records(self._name, operation)
+            domain = policy.record_domain(self.env, self._name, operation)
             if domain and (
                 forbidden := real_self
                 - real_self.sudo()
@@ -223,7 +222,7 @@ class AccessMixin(_ModelStubs):
                     forbidden=len(forbidden),
                 )
                 return forbidden, functools.partial(
-                    Rule._prepare_access_error, operation, forbidden
+                    policy.record_denied_error, self.env, operation, forbidden
                 )
 
         return None
