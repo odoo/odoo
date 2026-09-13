@@ -2633,6 +2633,66 @@ class TestExecuteValuesPageSize(BaseCase):
                 cr.execute_values("INSERT INTO t VALUES %s", [], fetch=True), []
             )
 
+    def test_a_page_wider_than_the_bind_ceiling_is_clamped(self):
+        # PostgreSQL counts bind parameters in a uint16; a page_size that would
+        # put 65 536 of them in one statement is split rather than refused.
+        with registry().cursor() as cr:
+            cr.execute("CREATE TEMP TABLE _ev_ceiling (a int, b int)")
+            rows = [(i, -i) for i in range(40000)]
+            cr.execute_values(
+                "INSERT INTO _ev_ceiling VALUES %s", rows, page_size=100000
+            )
+            cr.execute("SELECT count(*), sum(a + b) FROM _ev_ceiling")
+            self.assertEqual(cr.fetchone(), (40000, 0))
+            cr.execute("SELECT count(*) FROM _ev_ceiling WHERE a = 39999")
+            self.assertEqual(cr.fetchone(), (1,))
+
+
+class TestFaketimeSearchPathIsAStartupOption(BaseCase):
+    def test_a_configured_database_sees_the_path_on_every_cursor(self):
+        db_name = common.get_db_name()
+        with (
+            patch.dict(os.environ, {"ODOO_FAKETIME_TEST_MODE": "1"}),
+            pool_settings.override(db_names=(db_name,)) as settings,
+        ):
+            pool = ConnectionPool(maxconn=1, settings=settings)
+            try:
+                _, info = get_connection_info_for_database(db_name)
+                connection = Connection(pool, db_name, info)
+                for attempt in ("fresh", "after a return"):
+                    with self.subTest(attempt=attempt):
+                        cr = connection.cursor()
+                        try:
+                            # public resolves before pg_catalog, so a public.now()
+                            # shadows the builtin: that is what faketime needs
+                            cr.execute("SELECT current_schemas(true)")
+                            self.assertEqual(cr.fetchone(), (["public", "pg_catalog"],))
+                            self.assertEqual(
+                                cr.sql_statement_count,
+                                1,
+                                "the pin costs no statement of its own",
+                            )
+                        finally:
+                            cr.close()
+                    time.sleep(0.2)
+            finally:
+                pool.close_all()
+
+    def test_an_unconfigured_database_keeps_the_default_path(self):
+        db_name = common.get_db_name()
+        with (
+            patch.dict(os.environ, {"ODOO_FAKETIME_TEST_MODE": "1"}),
+            pool_settings.override(db_names=("some_other_db",)) as settings,
+        ):
+            pool = ConnectionPool(maxconn=1, settings=settings)
+            try:
+                _, info = get_connection_info_for_database(db_name)
+                with Connection(pool, db_name, info).cursor() as cr:
+                    cr.execute("SELECT current_schemas(true)")
+                    self.assertEqual(cr.fetchone(), (["pg_catalog", "public"],))
+            finally:
+                pool.close_all()
+
 
 class TestResetConnectionRestoresPrepare(BaseCase):
     def test_reset_restores_prepare_threshold(self):

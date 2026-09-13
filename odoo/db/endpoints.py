@@ -62,9 +62,9 @@ class EndpointRegistry:
     ) -> int:
         settings = _get_settings(settings)
         base = settings.maxconn
-        if endpoint != self.get_endpoint_for_readonly(
-            False, settings
-        ) and endpoint == self.get_endpoint_for_readonly(True, settings):
+        primary = self.get_endpoint_for_readonly(False, settings)
+        replica = self.get_endpoint_for_readonly(True, settings)
+        if endpoint != primary and endpoint == replica:
             _debug.logic(
                 "endpoints.replica_maxconn",
                 endpoint=endpoint,
@@ -73,14 +73,6 @@ class EndpointRegistry:
             )
             return settings.maxconn_replica or base
         return base
-
-    def get_maxconn_for_readonly(
-        self, readonly: bool, settings: PoolSettings | None = None
-    ) -> int:
-        settings = _get_settings(settings)
-        return self.get_maxconn_at_endpoint(
-            self.get_endpoint_for_readonly(readonly, settings), settings
-        )
 
     def get_budget_at_endpoint(
         self, endpoint: tuple, settings: PoolSettings | None = None

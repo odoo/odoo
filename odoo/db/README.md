@@ -452,7 +452,20 @@ library.
   jit=on'` arrived as `work_mem=16MB`/`jit=off`, with nothing in any log.
   `idle_session_timeout` is still applied unconditionally: it is derived from
   `db_conn_max_idle` and is what keeps the server from reaping a connection the
-  pool still considers warm.
+  pool still considers warm. A comma starts the next entry only when a `name=`
+  follows it, so a list-valued GUC (`search_path=public,pg_catalog`) is one entry;
+  `db_session_gucs` used to be split on every comma and could not carry one.
+
+  **`ODOO_FAKETIME_TEST_MODE` pins `search_path=public,pg_catalog` the same way,
+  as a startup `-c` after the operator's options** (`_get_forced_gucs`), for the
+  databases `-d` names. `Cursor.__init__` used to issue `SET search_path` and a
+  `COMMIT` on every cursor — two round trips per cursor in that mode, and a
+  statement in the constructor's window where a failure has no owner. As a
+  startup option it costs nothing per cursor and survives the `RESET ALL` on
+  every return, which a `SET` would not have (it is re-issued only because the
+  constructor runs again). Pinned live in
+  `TestFaketimeSearchPathIsAStartupOption`: `current_schemas(true)` answers
+  `[public, pg_catalog]` on a fresh cursor and after a return, at one statement.
   **Maintenance connections are exempt from `db_session_gucs`, deliberately**,
   and both borrow paths now render options through one `_prepare_connection_options`
   where `_borrow_directly` passes `session_gucs=None`. They used to build the
@@ -604,6 +617,13 @@ library.
   both negotiate protocol 30000, so it bought nothing and made the whole layer
   refuse to connect through any wheel built on libpq 17. The youngest keyword
   left is `tcp_user_timeout` (libpq 12); `tests/test_utils.py` pins the set.
+- **`execute_values` never asks the server for more than 65 535 bind parameters.**
+  The extended protocol counts them in a uint16, and PostgreSQL refuses the
+  statement outright (`number of parameters must be between 0 and 65535`) —
+  measured on the raw cursor with one column and 65 536 rows. A `page_size`
+  whose page would exceed that for the widest row is clamped to
+  `65535 // width` and the rest of the batches follow; the caller's page size
+  is a hint about round trips, not a contract about statements.
 - **A savepoint is never opened inside a pipeline**: a savepoint exists to make
   the next failure recoverable, and in pipeline mode it cannot. PostgreSQL
   discards every queued command after an error until the next sync, and the

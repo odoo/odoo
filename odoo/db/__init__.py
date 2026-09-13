@@ -3,6 +3,7 @@ import logging
 
 from odoo.libs.debug_log import DebugLog
 
+from . import metrics as _metrics
 from . import settings as pool_settings
 from .budget import ConnectionBudget
 from .cursor import BaseCursor, Cursor, Savepoint
@@ -97,7 +98,5 @@ atexit.register(close_all)
 
 def __getattr__(name: str) -> int:
     if name == "sql_counter":
-        from . import metrics
-
-        return metrics.sql_counter
+        return _metrics.sql_counter
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

@@ -75,12 +75,17 @@ def _get_base_connection_options(conninfo: str, kwargs: dict) -> str:
 
 
 _GUC_NAME_RE = re.compile(r"-c\s*([A-Za-z_][A-Za-z0-9_.]*)\s*=")
+# A comma starts the next entry only when a `name=` follows it, so a list-valued
+# GUC (`search_path=public,pg_catalog`) stays one entry.
+_GUC_SEPARATOR_RE = re.compile(r",(?=\s*[A-Za-z_][A-Za-z0-9_.]*\s*=)")
+
+_FAKETIME_GUCS: tuple[str, ...] = ("search_path=public,pg_catalog",)
 
 
 def _prepare_session_gucs(base_options: str, configured: str) -> str:
     already_set = set(_GUC_NAME_RE.findall(base_options))
     gucs = []
-    for entry in configured.split(","):
+    for entry in _GUC_SEPARATOR_RE.split(configured):
         name, _, value = entry.partition("=")
         name, value = name.strip(), value.strip()
         if name and value and name not in already_set:
@@ -95,15 +100,28 @@ def _prepare_session_gucs(base_options: str, configured: str) -> str:
 
 
 def _prepare_connection_options(
-    conninfo: str, kwargs: dict, idle_session_ms: int, *, session_gucs: str | None
+    conninfo: str,
+    kwargs: dict,
+    idle_session_ms: int,
+    *,
+    session_gucs: str | None,
+    forced_gucs: tuple[str, ...] = (),
 ) -> str:
     base = _get_base_connection_options(conninfo, kwargs)
     parts = [
         base,
         _prepare_session_gucs(base, session_gucs) if session_gucs else "",
         f"-c idle_session_timeout={idle_session_ms}",
+        *(f"-c {guc}" for guc in forced_gucs),
     ]
     return " ".join(p for p in parts if p)
+
+
+def _get_forced_gucs(dbname: str, settings: PoolSettings) -> tuple[str, ...]:
+    if os.getenv("ODOO_FAKETIME_TEST_MODE") and dbname in settings.db_names:
+        _debug.logic("pool.search_path_pinned", db=dbname)
+        return _FAKETIME_GUCS
+    return ()
 
 
 def _get_borrow_caller() -> str | None:
@@ -224,8 +242,13 @@ class ConnectionPool:
         kwargs["autocommit"] = False
 
         idle_session_ms = max(900, int(self._max_idle * 1.5)) * 1000
+        dbname = kwargs.get("dbname") or dict(key).get("database", "")
         kwargs["options"] = _prepare_connection_options(
-            conninfo, kwargs, idle_session_ms, session_gucs=self._settings.session_gucs
+            conninfo,
+            kwargs,
+            idle_session_ms,
+            session_gucs=self._settings.session_gucs,
+            forced_gucs=_get_forced_gucs(dbname, self._settings),
         )
 
         self._probe.check_connectable(key, conninfo, kwargs, deadline)

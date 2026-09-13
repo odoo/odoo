@@ -1,4 +1,5 @@
 import contextlib
+import inspect
 import os
 import threading
 import typing
@@ -420,6 +421,60 @@ class TestOneConnectionOptionsAssembler(unittest.TestCase):
                 pool._prepare_connection_options("", {}, 5, session_gucs=None),
                 "-c idle_session_timeout=5",
             )
+
+
+class TestAListValuedGucIsOneEntry(unittest.TestCase):
+    def test_a_comma_inside_a_value_does_not_split_the_entry(self):
+        rendered = pool._prepare_session_gucs(
+            "", "search_path=public,pg_catalog,work_mem=16MB,jit=off"
+        )
+        self.assertEqual(
+            rendered,
+            "-c search_path=public,pg_catalog -c work_mem=16MB -c jit=off",
+        )
+
+    def test_the_default_list_still_renders_two_entries(self):
+        self.assertEqual(
+            pool._prepare_session_gucs("", "jit=off,work_mem=16MB"),
+            "-c jit=off -c work_mem=16MB",
+        )
+
+
+class TestFaketimePinsTheSearchPathAtStartup(unittest.TestCase):
+    def test_a_forced_guc_is_appended_after_the_operator_options(self):
+        rendered = pool._prepare_connection_options(
+            "",
+            {"options": "-c search_path=mine"},
+            5,
+            session_gucs=None,
+            forced_gucs=("search_path=public,pg_catalog",),
+        )
+        self.assertEqual(
+            rendered,
+            "-c search_path=mine -c idle_session_timeout=5 "
+            "-c search_path=public,pg_catalog",
+            "libpq lets the last -c win, so a forced GUC comes last",
+        )
+
+    def test_only_a_configured_database_in_faketime_mode_is_pinned(self):
+        from odoo.db.settings import PoolSettings
+
+        settings = PoolSettings(db_names=("mine",))
+        with mock.patch.dict("os.environ", {"ODOO_FAKETIME_TEST_MODE": "1"}):
+            self.assertEqual(
+                pool._get_forced_gucs("mine", settings), pool._FAKETIME_GUCS
+            )
+            self.assertEqual(pool._get_forced_gucs("other", settings), ())
+        with mock.patch.dict("os.environ", {}, clear=True):
+            self.assertEqual(pool._get_forced_gucs("mine", settings), ())
+
+    def test_the_cursor_constructor_issues_no_search_path_statement(self):
+        self.assertNotIn(
+            "search_path",
+            inspect.getsource(cursor.Cursor.__init__),
+            "the pin is a startup option, so it costs no round trip per cursor "
+            "and survives the RESET ALL on every return",
+        )
 
 
 class TestBudgetBelongsToAServer(unittest.TestCase):

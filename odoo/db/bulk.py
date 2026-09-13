@@ -36,6 +36,10 @@ def _dump_json_verbatim(value: str) -> str:
 
 _BINARY_NUMERIC_MAX_FRACTION = 0.25
 
+# The extended protocol counts bind parameters in a uint16; PostgreSQL refuses
+# a statement carrying more ("number of parameters must be between 0 and 65535").
+_MAX_BIND_PARAMS = 65535
+
 
 def _get_table_identifier(table: str) -> _sql.Identifier:
     return _sql.Identifier(*table.split("."))
@@ -276,6 +280,19 @@ class _BulkAccessMixin:
             return [] if fetch else None
         self._before_statement()
         results = []
+        width = max(
+            (len(row) if isinstance(row, (list, tuple)) else 1 for row in argslist),
+            default=1,
+        )
+        if page_size * width > _MAX_BIND_PARAMS:
+            clamped = max(1, _MAX_BIND_PARAMS // width)
+            _debug.logic(
+                "bulk.execute_values_page_clamped",
+                page_size=page_size,
+                width=width,
+                clamped=clamped,
+            )
+            page_size = clamped
         batches = range(0, len(argslist), page_size)
         prefix, suffix = query[:marker_pos], query[marker_pos + 2 :]
         use_pipeline = len(argslist) > page_size and not fetch

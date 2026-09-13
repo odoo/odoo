@@ -313,7 +313,7 @@ class TestBudgetBelongsToAServer(unittest.TestCase):
     def test_the_replica_ceiling_is_gated_on_the_endpoint_differing(self):
         self.assertIn(
             "get_endpoint_for_readonly",
-            _callees(endpoints.EndpointRegistry.get_maxconn_for_readonly),
+            _callees(endpoints.EndpointRegistry.get_maxconn_at_endpoint),
         )
 
 

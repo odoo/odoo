@@ -1,5 +1,4 @@
 import logging
-import os
 import threading
 from collections.abc import Callable, Collection, Generator, Iterable
 from contextlib import AbstractContextManager, ExitStack, contextmanager, suppress
@@ -36,7 +35,6 @@ from .metrics import _MetricsMixin, classify_query
 from .pool import ConnectionPool, _get_borrow_caller
 from .savepoint import Savepoint, _FlushingSavepoint
 from .schema_cache import TransactionSchemaCache
-from .settings import current as current_pool_settings
 
 if TYPE_CHECKING:
     from odoo.orm.runtime import Transaction
@@ -333,14 +331,6 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
             self._cnx.isolation_level = IsolationLevel.REPEATABLE_READ
             self._cnx.read_only = pool.readonly
             self._readonly = bool(pool.readonly)
-
-            if (
-                os.getenv("ODOO_FAKETIME_TEST_MODE")
-                and self.dbname in current_pool_settings().db_names
-            ):
-                _debug.logic("cursor.search_path_pinned", db=dbname)
-                self.execute("SET search_path = public, pg_catalog;")
-                self._cnx.commit()
 
             self._closed = False
             if _debug.lifecycle.enabled:
