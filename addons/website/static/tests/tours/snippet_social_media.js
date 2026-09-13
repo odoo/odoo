@@ -33,7 +33,7 @@ const replaceIconByImage = function (url) {
     return [
         {
             content: "Replace the icon by an image",
-            trigger: `:iframe .s_social_media a[href='${url}'] i.fa`,
+            trigger: `:iframe .s_social_media a[href='${url}'] i[class*="fa-"]`,
             run: "dblclick",
         },
         {

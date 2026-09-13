@@ -277,7 +277,7 @@
                             <div class="d-flex align-items-center gap-2">
                                 <t
                                     t-set="connections"
-                                    t-value="{'network': 'fa-solid fa-wifi', 'direct': 'fa-solid fa-usb', 'bluetooth': 'fa-brands fa-bluetooth-b', 'serial': 'fa-solid fa-usb', 'hdmi': 'fa-solid fa-usb'}" />
+                                    t-value="{'network': 'fa-solid fa-wifi', 'direct': 'fa-brands fa-usb', 'bluetooth': 'fa-brands fa-bluetooth-b', 'serial': 'fa-brands fa-usb', 'hdmi': 'fa-brands fa-usb'}" />
                                 <i
                                     t-attf-class="#{connections[record.connection.raw_value]} fa-fw"
                                     title="connection_type" />

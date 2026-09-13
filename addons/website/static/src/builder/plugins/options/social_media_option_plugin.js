@@ -6,7 +6,7 @@ import {
     TITLE_LAYOUT_SIZE,
 } from "@html_builder/utils/option_sequence";
 import { Plugin } from "@html_editor/plugin";
-import { ICON_SELECTOR } from "@html_editor/utils/dom_info";
+import { ICON_SELECTOR, iconClasses } from "@html_editor/utils/dom_info";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { fonts } from "@html_editor/utils/fonts";
 import { withSequence } from "@html_editor/utils/resource";
@@ -28,6 +28,7 @@ const log = makeLogger("website.builder.plugin.social_media_option_plugin");
  * @property { SocialMediaOptionPlugin['getAssociatedSocialMedia'] } getAssociatedSocialMedia
  * @property { SocialMediaOptionPlugin['removeSocialMediaClasses'] } removeSocialMediaClasses
  * @property { SocialMediaOptionPlugin['removeIconClasses'] } removeIconClasses
+ * @property { SocialMediaOptionPlugin['setIconClass'] } setIconClass
  * @property { SocialMediaOptionPlugin['getRecordedSocialMediaNames'] } getRecordedSocialMediaNames
  * @property { SocialMediaOptionPlugin['reorderSocialMediaLink'] } reorderSocialMediaLink
  */
@@ -143,6 +144,7 @@ class SocialMediaOptionPlugin extends Plugin {
         "getAssociatedSocialMedia",
         "removeSocialMediaClasses",
         "removeIconClasses",
+        "setIconClass",
         "getRecordedSocialMediaNames",
         "reorderSocialMediaLink",
     ];
@@ -326,8 +328,11 @@ class SocialMediaOptionPlugin extends Plugin {
             renderToFragment("website.example_social_media_link").children[0];
         this.removeSocialMediaClasses(el);
         this.removeIconClasses(el);
-        el.querySelector(ICON_SELECTOR)?.classList.add(
-            socialMediaInfo.get(socialMediaName)?.iconClass || "fa-pencil",
+        const media = socialMediaInfo.get(socialMediaName);
+        this.setIconClass(
+            el,
+            media?.iconClass || "fa-pencil",
+            media ? "fa-brands" : "fa-solid",
         );
         if (socialMediaName) {
             el.href = `/website/social/${encodeURIComponent(socialMediaName)}`;
@@ -359,12 +364,28 @@ class SocialMediaOptionPlugin extends Plugin {
     removeIconClasses(el) {
         const iconEl = el.querySelector(ICON_SELECTOR);
         if (iconEl) {
-            for (const c of iconEl.classList) {
-                if (/^fa-[^0-9]/.test(c)) {
-                    iconEl.classList.remove(c);
-                }
-            }
+            // a copy, not the live list: removing while iterating skips the
+            // class that slides into the removed slot. The face class
+            // (fa-solid, fa-brands, ...) stays: it is what ICON_SELECTOR
+            // matches, and setIconClass replaces it with the right one.
+            const glyphs = [...iconEl.classList].filter(
+                (c) => /^fa-[^0-9]/.test(c) && !iconClasses.includes(c),
+            );
+            iconEl.classList.remove(...glyphs);
         }
+    }
+    /**
+     * @param { HTMLElement } el
+     * @param { String } iconClass
+     * @param { String } [face] the FA7 face the glyph lives in
+     */
+    setIconClass(el, iconClass, face = "fa-brands") {
+        const iconEl = el.querySelector(ICON_SELECTOR);
+        if (!iconEl) {
+            return;
+        }
+        iconEl.classList.remove(...iconClasses);
+        iconEl.classList.add(face, iconClass);
     }
 
     /**
@@ -512,7 +533,11 @@ export class EditSocialMediaLinkAction extends BuilderAction {
 
         if (iconClass) {
             this.dependencies.socialMediaOptionPlugin.removeIconClasses(editingElement);
-            editingElement.querySelector(ICON_SELECTOR)?.classList.add(iconClass);
+            this.dependencies.socialMediaOptionPlugin.setIconClass(
+                editingElement,
+                iconClass,
+                info.media ? "fa-brands" : "fa-solid",
+            );
         }
     }
 }
