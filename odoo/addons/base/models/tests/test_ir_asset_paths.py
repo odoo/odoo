@@ -512,9 +512,9 @@ class TestGlobTargets:
 
 
 class TestPositioningIsNotMoving:
-    def _run(self, directive, target, source, caplog):
+    def _run(self, directive, target, source, caplog, *directives):
         walk = make_walk(
-            {"b1": [(directive, target, source)]},
+            {"b1": [*directives, (directive, target, source)]},
             seed=["/a", "/b", "/c"],
             seed_bundle="b1",
         )
@@ -522,13 +522,41 @@ class TestPositioningIsNotMoving:
         return paths_of(walk.paths), " ".join(r.getMessage() for r in caplog.records)
 
     @pytest.mark.parametrize(
-        ("directive", "target"), [("after", "/a"), ("before", "/b"), ("prepend", None)]
+        ("directive", "target", "source"),
+        [("after", "/c", "/a"), ("before", "/a", "/c")],
     )
-    def test_a_present_source_warns_and_does_not_move(self, directive, target, caplog):
-        paths, log = self._run(directive, target, "/c", caplog)
+    def test_a_stranded_source_warns_and_does_not_move(
+        self, directive, target, source, caplog
+    ):
+        """The source sits on the wrong side of its target and stays there."""
+        paths, log = self._run(directive, target, source, caplog)
         assert paths == ["/a", "/b", "/c"]
         assert "already present" in log
         assert f"{directive} only places new files" in log
+
+    def test_a_prepend_of_a_file_this_frame_placed_past_its_anchor_warns(self, caplog):
+        paths, log = self._run(
+            "prepend",
+            None,
+            "/y",
+            caplog,
+            ("append", None, "/x"),
+            ("append", None, "/y"),
+        )
+        assert paths == ["/a", "/b", "/c", "/x", "/y"]
+        assert "already present" in log
+        assert "prepend only places new files" in log
+
+    @pytest.mark.parametrize(
+        ("directive", "target", "source"),
+        [("after", "/a", "/c"), ("before", "/c", "/a"), ("prepend", None, "/c")],
+    )
+    def test_a_source_already_where_the_directive_wants_it_is_silent(
+        self, directive, target, source, caplog
+    ):
+        paths, log = self._run(directive, target, source, caplog)
+        assert paths == ["/a", "/b", "/c"]
+        assert not log
 
     def test_a_new_source_is_silent(self, caplog):
         paths, log = self._run("prepend", None, "/new", caplog)
