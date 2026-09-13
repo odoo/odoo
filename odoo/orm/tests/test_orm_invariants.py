@@ -95,6 +95,7 @@ def test_inverse_operator_is_exact_negation_map() -> None:
         "not ilike": "ilike",
         "not =like": "=like",
         "not =ilike": "=ilike",
+        "not =~": "=~",
         "!=": "=",
         "<>": "=",
         "any": "not any",
@@ -104,6 +105,7 @@ def test_inverse_operator_is_exact_negation_map() -> None:
         "ilike": "not ilike",
         "=like": "not =like",
         "=ilike": "not =ilike",
+        "=~": "not =~",
         "=": "!=",
     }
     assert expected == INVERSE_OPERATOR

@@ -2455,3 +2455,38 @@ class TestReadGroupNoGroupby(TransactionCase):
         self.assertEqual(len(base), 1)
         self.assertEqual(model._read_group([], [], ["__count"], offset=1), base)
         self.assertEqual(model._read_group([], [], ["__count"], limit=0), base)
+
+
+class TestRegexOperator(TransactionCase):
+    def test_regex_matches_and_its_negation_keeps_nulls(self):
+        Foo = self.env["test_orm.foo"]
+        yearly = Foo.create({"name": "INV/2026/00001"})
+        monthly = Foo.create({"name": "INV/2026/02/00007"})
+        unnamed = Foo.create({"name": False})
+        ids = (yearly + monthly + unnamed).ids
+
+        with self.assertQueries(
+            [
+                """
+            SELECT "test_orm_foo"."id"
+            FROM "test_orm_foo"
+            WHERE ("test_orm_foo"."id" IN (%s, %s, %s) AND "test_orm_foo"."name" ~ %s)
+            ORDER BY "test_orm_foo"."id"
+        """
+            ]
+        ):
+            found = Foo.search(
+                [("id", "in", ids), ("name", "=~", r"^INV/\d{4}/\d{5}$")]
+            )
+        self.assertEqual(found, yearly)
+
+        found = Foo.search(
+            [("id", "in", ids), ("name", "not =~", r"^INV/\d{4}/\d{5}$")]
+        )
+        self.assertEqual(found, monthly + unnamed)
+
+        domain = [("name", "=~", r"/\d{2}/")]
+        self.assertEqual(
+            (yearly + monthly + unnamed).filtered_domain(domain),
+            Foo.search([("id", "in", ids)] + domain),
+        )

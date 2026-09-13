@@ -246,7 +246,7 @@ def _get_nary_sort_key(
             order = "1any"
         elif positive_op == "any!":
             order = "2any"
-        elif positive_op.endswith("like"):
+        elif positive_op.endswith("like") or positive_op == "=~":
             order = "like"
         else:
             order = positive_op

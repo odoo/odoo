@@ -32,6 +32,7 @@ from .constants import (
     INVERSE_OPERATOR,
     LIKE_CONDITION_OPERATORS,
     NEGATIVE_CONDITION_OPERATORS,
+    REGEX_CONDITION_OPERATORS,
 )
 
 if typing.TYPE_CHECKING:
@@ -612,6 +613,22 @@ def _optimize_boolean_in_all(condition, model):
         )
         return Domain(condition.operator == "in")
     return condition
+
+
+@operator_optimization(REGEX_CONDITION_OPERATORS)
+def _optimize_regex_str(condition, model):
+    value = condition.value
+    if isinstance(value, str) and value:
+        if condition._get_field(model).relational:
+            raise TypeError(
+                f"A regular expression cannot match a relational field: "
+                f"{condition.field_expr!r} {condition.operator} {value!r}"
+            )
+        return condition
+    raise TypeError(
+        f"Operator {condition.operator!r} expects a non-empty regular expression, "
+        f"got {value!r}"
+    )
 
 
 @operator_optimization([">", "<", ">=", "<="])

@@ -16,6 +16,7 @@ from odoo.tools import (
 from odoo.tools.misc import PENDING, SENTINEL
 
 from ..domain import Domain
+from ..domain.constants import REGEX_CONDITION_OPERATORS
 from ..primitives import COLLECTION_TYPES, SQL_OPERATORS
 from ._field_stubs import _FieldStubs
 
@@ -243,6 +244,15 @@ class _FieldSqlMixin(_FieldStubs):
             sql = SQL("(%s OR %s IS NULL)", sql, sql_field)
         return sql
 
+    def _condition_regex_to_sql(
+        self, sql_field: SQL, operator: str, value, can_be_null: bool
+    ) -> SQL:
+        sql_left = sql_field if self.is_text else SQL("%s::text", sql_field)
+        sql = SQL("%s%s%s", sql_left, SQL_OPERATORS[operator], str(value))
+        if operator in Domain.NEGATIVE_OPERATORS and can_be_null:
+            sql = SQL("(%s OR %s IS NULL)", sql, sql_field)
+        return sql
+
     def _condition_inequality_to_sql(
         self,
         sql_field: SQL,
@@ -321,6 +331,9 @@ class _FieldSqlMixin(_FieldStubs):
             return self._condition_like_to_sql(
                 sql_field, operator, value, model, can_be_null
             )
+
+        if operator in REGEX_CONDITION_OPERATORS:
+            return self._condition_regex_to_sql(sql_field, operator, value, can_be_null)
 
         if operator in (">", "<", ">=", "<="):
             return self._condition_inequality_to_sql(
@@ -431,6 +444,11 @@ class _FieldSqlMixin(_FieldStubs):
         render = self._get_pattern_getter(records, field_expr, getter)
         return lambda rec: like_regex.match(unaccent(render(rec)))
 
+    def _filter_regex(self, records: M, field_expr: str, getter, value) -> Callable:
+        regex = re.compile(str(value))
+        render = self._get_pattern_getter(records, field_expr, getter)
+        return lambda rec: regex.search(render(rec)) is not None
+
     def _filter_inequality(self, records: M, getter, pyop, value) -> Callable:
         can_be_null = False
         if (null_value := self.falsy_value) is not None:
@@ -461,6 +479,9 @@ class _FieldSqlMixin(_FieldStubs):
 
         if operator.endswith("like"):
             return self._filter_like(records, field_expr, getter, operator, value)
+
+        if operator == "=~":
+            return self._filter_regex(records, field_expr, getter, value)
 
         if pyop := PYTHON_INEQUALITY_OPERATOR.get(operator):
             return self._filter_inequality(records, getter, pyop, value)

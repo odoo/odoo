@@ -21,6 +21,8 @@ STANDARD_CONDITION_OPERATORS: Final[frozenset[str]] = frozenset(
         "not =like",
         "=ilike",
         "not =ilike",
+        "=~",
+        "not =~",
     ]
 )
 
@@ -58,6 +60,10 @@ LIKE_CONDITION_OPERATORS: Final[frozenset[str]] = frozenset(
     op for op in STANDARD_CONDITION_OPERATORS if op.endswith("like")
 )
 
+# a POSIX regular expression the column must match (`~`), like `=like`
+# without wildcard wrapping and without unaccent
+REGEX_CONDITION_OPERATORS: Final[frozenset[str]] = frozenset(("=~", "not =~"))
+
 INTERNAL_CONDITION_OPERATORS: Final[frozenset[str]] = frozenset(("any!", "not any!"))
 
 SUBDOMAIN_OPERATORS: Final[frozenset[str]] = frozenset(
@@ -76,6 +82,7 @@ NEGATIVE_CONDITION_OPERATORS: Final[dict[str, str]] = {
     "not ilike": "ilike",
     "not =like": "=like",
     "not =ilike": "=ilike",
+    "not =~": "=~",
     "!=": "=",
     "<>": "=",
 }
@@ -108,6 +115,7 @@ __all__ = [
     "INVERSE_OPERATOR",
     "LIKE_CONDITION_OPERATORS",
     "NEGATIVE_CONDITION_OPERATORS",
+    "REGEX_CONDITION_OPERATORS",
     "STANDARD_CONDITION_OPERATORS",
     "SUBDOMAIN_OPERATORS",
     "SUBDOMAIN_OR_IN_OPERATORS",
