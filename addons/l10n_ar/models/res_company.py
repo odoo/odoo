@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import fields, models, api, _
-from odoo.exceptions import UserError
+from odoo import fields, models, api
 
 
 class ResCompany(models.Model):
@@ -35,12 +34,8 @@ class ResCompany(models.Model):
         self.ensure_one()
         return self.chart_template in {'ar_base', 'ar_ex', 'ar_ri'} or self.account_fiscal_country_id.code == "AR" or super()._localization_use_documents()
 
+    # TODO: remove in master (function moved to res.partner)
     def write(self, vals):
-        if 'l10n_ar_afip_responsibility_type_id' in vals:
-            for company in self:
-                if vals['l10n_ar_afip_responsibility_type_id'] != company.l10n_ar_afip_responsibility_type_id.id and company.sudo()._existing_accounting():
-                    raise UserError(_('Could not change the ARCA Responsibility of this company because there are already accounting entries.'))
-
         return super().write(vals)
 
     def _is_latam(self):
