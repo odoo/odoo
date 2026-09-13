@@ -1,4 +1,4 @@
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class ProductValue(models.Model):
@@ -14,11 +14,18 @@ class ProductValue(models.Model):
     _name = 'product.value'
     _description = 'Product Value'
 
-    product_id = fields.Many2one('product.product', string='Product', index=True)
+    product_id = fields.Many2one('product.product', string='Product', index=True, ondelete='cascade')
+    product_tracking = fields.Selection(related='product_id.tracking')
     lot_id = fields.Many2one('stock.lot', string='Lot')
     move_id = fields.Many2one('stock.move', string='Move', index='btree_not_null')
 
-    value = fields.Monetary(string='Value', currency_field='currency_id', required=True)
+    quantity = fields.Float('Quantity', digits='Product Unit')
+    old_cost = fields.Float('Old Unit Cost', min_display_digits='Product Price')
+    cost = fields.Float('New Unit Cost', min_display_digits='Product Price')
+    old_value = fields.Monetary(string='Old Value', currency_field='currency_id', default=0.0)
+    value = fields.Monetary(string='New Value', currency_field='currency_id', required=True)
+    adjustment = fields.Monetary(string='Adjustment', currency_field='currency_id', compute="_compute_adjustment")
+
     company_id = fields.Many2one(
         'res.company', string='Company', compute='_compute_company_id',
         store=True, required=True, index=True, precompute=True, readonly=False)
@@ -35,6 +42,8 @@ class ProductValue(models.Model):
     current_value_details = fields.Char(string='Current Value Details', compute="_compute_current_value_details")
     current_value_description = fields.Text(string='Current Value Description', compute="_compute_value_description")
     computed_value_description = fields.Text(string='Computed Value Description', compute="_compute_value_description")
+
+    account_move_id = fields.Many2one('account.move', string='Account Move', copy=False, index="btree_not_null")
 
     @api.depends('move_id', 'lot_id', 'product_id')
     def _compute_company_id(self):
@@ -57,7 +66,7 @@ class ProductValue(models.Model):
             quantity = move.quantity
             uom = move.uom_id.name
             price_unit = move.value / move.quantity
-            product_value.current_value_details = _("For %(quantity)s %(uom)s (%(price_unit)s per %(uom)s)",
+            product_value.current_value_details = self.env._("For %(quantity)s %(uom)s (%(price_unit)s per %(uom)s)",
                 quantity=quantity, uom=uom, price_unit=price_unit)
 
     def _compute_value_description(self):
@@ -69,29 +78,53 @@ class ProductValue(models.Model):
             product_value.current_value_description = product_value.move_id.value_justification
             product_value.computed_value_description = product_value.move_id.value_computed_justification
 
+    @api.depends('value')
+    def _compute_adjustment(self):
+        for product_value in self:
+            if product_value.move_id:
+                product_value.adjustment = product_value.value - product_value.old_value
+            else:
+                product_value.adjustment = (product_value.value - product_value.old_value) * product_value.quantity
+
     @api.model_create_multi
     def create(self, vals_list):
-        lot_ids = set()
-        product_ids = set()
-        move_ids = set()
-
+        now = fields.Datetime.now()
         for vals in vals_list:
             if vals.get('move_id'):
-                move_ids.add(vals['move_id'])
-            elif vals.get('lot_id'):
-                lot_ids.add(vals['lot_id'])
-            else:
-                product_ids.add(vals['product_id'])
-        if lot_ids:
-            move_ids.update(self.env['stock.move.line'].search([('lot_id', 'in', lot_ids)]).move_id.ids)
-        products = self.env['product.product'].browse(product_ids)
-        if products:
-            moves_by_product = products._get_remaining_moves()
-            for qty_by_move in moves_by_product.values():
-                move_ids.update(self.env['stock.move'].concat(qty_by_move.keys()).ids)
+                move = self.env['stock.move'].browse(vals['move_id'])
+                vals['product_id'] = move.product_id.id
+                vals['old_value'] = move.value
+                vals['quantity'] = move.remaining_qty
+                if move.quantity:
+                    vals['old_cost'] = vals['old_value'] / move.quantity
+                    vals['cost'] = vals['value'] / move.quantity
+                vals['date'] = now
+                vals['description'] = self.env._('%(move)s cost update from %(old_value)s to %(new_value)s for %(quantity)s by %(user)s',
+                    move=move.reference, old_value=vals['old_value'], new_value=vals['value'], quantity=vals['quantity'], user=self.env.user.name)
 
-        res = super().create(vals_list)
+        product_values = super().create(vals_list)
+
+        move_ids = set()
+
+        for pv in product_values:
+            if pv.move_id:
+                move_ids.add(pv.move_id.id)
+            else:
+                moves, _first_move_remaining_qty = pv.product_id._get_fifo_stack(pv.lot_id, pv.date)
+                if moves:
+                    move_ids.update(self.env['stock.move'].concat(moves).ids)
+
         if move_ids:
             moves = self.env['stock.move'].browse(move_ids)
             moves._set_value(recompute_date=min(moves.mapped('date')))
-        return res
+        return product_values
+
+    def action_open_account_move(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env._('Journal Entry'),
+            'res_model': 'account.move',
+            'res_id': self.account_move_id.id,
+            'view_mode': 'form',
+        }
