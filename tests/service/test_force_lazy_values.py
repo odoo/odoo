@@ -159,3 +159,34 @@ class TestTheWalkDoesNotDisturbOrdinaryResults:
 
     def test_a_lazy_iterator_keeps_its_materialized_result(self):
         assert _force_lazy_values(lazy(lambda: _gen(1, 2))) == [1, 2]
+
+
+class TestTheWalkCopiesOnlyWhatItReplaces:
+    def test_an_untouched_tree_keeps_every_identity(self):
+        import datetime
+        import decimal
+
+        row = {
+            "id": 1,
+            "when": datetime.datetime(2026, 1, 1, 12),
+            "day": datetime.date(2026, 1, 1),
+            "amount": decimal.Decimal("1.50"),
+            "m2o": (3, "Partner"),
+            "ids": [1, 2],
+        }
+        result = {"length": 1, "records": [row]}
+        out = _force_lazy_values(result)
+        assert out is result
+        assert out["records"] is result["records"]
+        assert out["records"][0] is row
+        assert out["records"][0]["m2o"] is row["m2o"]
+
+    def test_only_the_container_holding_a_replaced_value_is_copied(self):
+        untouched = {"a": (1, 2)}
+        replaced = {"rows": _gen(1, 2)}
+        result = (untouched, replaced)
+        out = _force_lazy_values(result)
+        assert out is not result
+        assert out[0] is untouched
+        assert out[1] is not replaced
+        assert out[1]["rows"] == [1, 2]

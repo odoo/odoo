@@ -1,3 +1,5 @@
+import datetime
+import decimal
 import logging
 import typing
 from collections.abc import (
@@ -312,7 +314,21 @@ def _force_lazy_values(result: typing.Any) -> typing.Any:
         raise ValueError("RPC result is cyclic or nested too deeply") from exc
 
 
-_SCALAR_LEAF_TYPES = frozenset({int, float, bool, str, bytes, type(None)})
+_SCALAR_LEAF_TYPES = frozenset(
+    {
+        int,
+        float,
+        bool,
+        str,
+        bytes,
+        type(None),
+        datetime.date,
+        datetime.datetime,
+        datetime.time,
+        datetime.timedelta,
+        decimal.Decimal,
+    }
+)
 _LazyMemo = dict[int, tuple[object, typing.Any]]
 
 
@@ -322,18 +338,22 @@ def _is_bare_iterator(val: typing.Any) -> bool:
 
 def _force_lazy_in_mapping(val: Mapping, memo: _LazyMemo, active: set[int]) -> Mapping:
     # Mapping ABCs do not establish writability: frozendict inherits dict but
-    # rejects assignment. Keep replacement values in a wire-compatible copy.
-    items = {key: val[key] for key in val}
-    changed = False
-    for key, value in items.items():
-        forced = (
-            value
-            if value.__class__ in _SCALAR_LEAF_TYPES
-            else _force_lazy_in_value(value, memo, active)
-        )
-        items[key] = forced
-        changed |= forced is not value
-    return items if changed else val
+    # rejects assignment. Replacements go in a wire-compatible copy, made only
+    # once a value has actually been replaced. The keys are snapshotted because
+    # a lazy may write back into its own container when it is warmed, and a
+    # registered Mapping need not offer items().
+    items: dict | None = None
+    keys = list(val)
+    for key in keys:
+        value = val[key]
+        if value.__class__ in _SCALAR_LEAF_TYPES:
+            continue
+        forced = _force_lazy_in_value(value, memo, active)
+        if forced is not value:
+            if items is None:
+                items = {k: val[k] for k in keys}
+            items[key] = forced
+    return val if items is None else items
 
 
 def _force_lazy_in_sequence(
@@ -346,15 +366,18 @@ def _force_lazy_in_sequence(
                 if forced is not item:
                     val[index] = forced
         return val
-    items = [
-        item
-        if item.__class__ in _SCALAR_LEAF_TYPES
-        else _force_lazy_in_value(item, memo, active)
-        for item in val
-    ]
-    if any(new is not old for new, old in zip(items, val, strict=True)):
-        return tuple(items) if type(val) is tuple else type(val)(items)  # type: ignore[call-arg]
-    return val
+    items: list | None = None
+    for index, item in enumerate(val):
+        if item.__class__ in _SCALAR_LEAF_TYPES:
+            continue
+        forced = _force_lazy_in_value(item, memo, active)
+        if forced is not item:
+            if items is None:
+                items = list(val)
+            items[index] = forced
+    if items is None:
+        return val
+    return tuple(items) if type(val) is tuple else type(val)(items)  # type: ignore[call-arg]
 
 
 def _force_lazy_in_place(val: Iterable, memo: _LazyMemo, active: set[int]) -> None:
@@ -366,7 +389,8 @@ def _force_lazy_in_place(val: Iterable, memo: _LazyMemo, active: set[int]) -> No
 def _force_lazy_in_value(
     val: typing.Any, memo: _LazyMemo, active: set[int]
 ) -> typing.Any:
-    if val.__class__ in _SCALAR_LEAF_TYPES:
+    cls = val.__class__
+    if cls in _SCALAR_LEAF_TYPES:
         return val
     marker = id(val)
     cached = memo.get(marker)
@@ -378,7 +402,13 @@ def _force_lazy_in_value(
     active.add(marker)
     try:
         result = val
-        if isinstance(val, lazy):
+        # Exact types first: the ABC checks below cost a metaclass call each,
+        # and a search_read result is dicts of lists of tuples all the way down.
+        if cls is dict:
+            result = _force_lazy_in_mapping(val, memo, active)
+        elif cls is list or cls is tuple:
+            result = _force_lazy_in_sequence(val, memo, active)
+        elif isinstance(val, lazy):
             value = val._value
             forced = _force_lazy_in_value(value, memo, active)
             result = val if forced is value else forced
