@@ -12,3 +12,4 @@ from . import hr_job_skill
 from . import hr_skill_level
 from . import hr_skill_type
 from . import resource_resource
+from . import res_users

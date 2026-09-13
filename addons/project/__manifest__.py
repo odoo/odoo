@@ -35,6 +35,7 @@
         'views/project_role_views.xml',
         'views/project_tags_views.xml',
         'views/project_milestone_views.xml',
+        'views/res_users_views.xml',
         'views/res_partner_views.xml',
         'views/res_config_settings_views.xml',
         'views/mail_activity_plan_views.xml',
