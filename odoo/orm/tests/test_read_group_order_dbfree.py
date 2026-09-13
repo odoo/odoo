@@ -76,3 +76,26 @@ def test_an_aggregate_term_orders_with_explicit_nulls(env):
 def test_a_term_that_is_neither_groupby_nor_aggregate_is_refused(env):
     with pytest.raises(ValueError, match="not a valid aggregate nor valid groupby"):
         env["rg.score"]._read_group([], ["team_id"], ["__count"], order="points")
+
+
+def test_having_filters_groups_on_aggregates_and_groupby_values(env):
+    Score = env["rg.score"]
+    rows = Score._read_group(
+        [], ["team_id"], ["points:sum"], having=[("points:sum", ">", 3)]
+    )
+    assert sorted(row[1] for row in rows) == [6, 9]
+    rows = Score._read_group(
+        [],
+        ["team_id"],
+        ["points:sum", "__count"],
+        having=["|", ("__count", "=", 2), ("points:sum", "in", [9])],
+    )
+    assert sorted(row[1] for row in rows) == [6, 9]
+    rows = Score._read_group(
+        [], ["team_id"], ["points:sum"], having=["!", ("points:sum", "<", 6)]
+    )
+    assert sorted(row[1] for row in rows) == [6, 9]
+    # a NULL group value compares to nothing, as it does in SQL
+    # the SQL path admits aggregates only in HAVING; the ORM refuses the rest first
+    with pytest.raises(ValueError, match="Aggregate method is mandatory"):
+        Score._read_group([], ["team_id"], ["__count"], having=[("points", ">", 1)])

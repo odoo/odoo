@@ -1552,8 +1552,6 @@ class _InMemoryReadGroup:
         return readers[func]
 
     def rows(self, having, order, limit, offset) -> list[tuple]:
-        if having:
-            self._unsupported("having")
         groups: dict[tuple, list] = {}
         for record in self.records:
             key = tuple(read(record) for read in self.groupby)
@@ -1570,12 +1568,102 @@ class _InMemoryReadGroup:
             )
             for key, members in groups.items()
         ]
+        if having:
+            keep = self._having_predicate(having)
+            rows = [row for row in rows if keep(row) is True]
         self._sort(rows, order)
         if self.groupby:
             rows = rows[offset:]
             if limit is not None:
                 rows = rows[:limit]
         return rows
+
+    def _having_predicate(self, having: list):
+        # the SQL path's polish-notation walk, with three-valued comparisons:
+        # a NULL on either side answers None and the row is not kept
+        import operator as pyoperator
+
+        specs = [*self.groupby_specs, *self.aggregate_specs]
+        compare = {
+            "=": pyoperator.eq,
+            "!=": pyoperator.ne,
+            "<": pyoperator.lt,
+            "<=": pyoperator.le,
+            ">": pyoperator.gt,
+            ">=": pyoperator.ge,
+        }
+
+        def condition(item):
+            left, op, right = item
+            if left not in specs:
+                raise ValueError(
+                    f"Invalid having clause {item!r}: {left!r} is neither an "
+                    "aggregate nor a groupby of this read_group"
+                )
+            index = specs.index(left)
+            if op in ("in", "not in"):
+                values = (
+                    tuple(right) if isinstance(right, (list, set, frozenset)) else right
+                )
+                if isinstance(values, tuple) and not values:
+                    return lambda row: op == "not in"
+                return lambda row: (
+                    None
+                    if row[index] is None
+                    else (row[index] in values) == (op == "in")
+                )
+            if op not in compare:
+                raise ValueError(
+                    f"Invalid having clause {item!r}: supported comparators are "
+                    "('in', 'not in', '<', '>', '<=', '>=', '=', '!=')"
+                )
+            test = compare[op]
+            return lambda row: (
+                None if row[index] is None or right is None else test(row[index], right)
+            )
+
+        def negate(pred):
+            return lambda row: None if (v := pred(row)) is None else not v
+
+        def both(a, b):
+            def pred(row):
+                x, y = a(row), b(row)
+                if x is False or y is False:
+                    return False
+                return None if x is None or y is None else True
+
+            return pred
+
+        def either(a, b):
+            def pred(row):
+                x, y = a(row), b(row)
+                if x is True or y is True:
+                    return True
+                return None if x is None or y is None else False
+
+            return pred
+
+        stack: list = []
+        try:
+            for item in reversed(having):
+                if item == "!":
+                    stack.append(negate(stack.pop()))
+                elif item == "&":
+                    stack.append(both(stack.pop(), stack.pop()))
+                elif item == "|":
+                    stack.append(either(stack.pop(), stack.pop()))
+                elif isinstance(item, (list, tuple)) and len(item) == 3:
+                    stack.append(condition(item))
+                else:
+                    raise ValueError(
+                        f"Invalid having clause {item!r}: it should be a domain-like clause"
+                    )
+            while len(stack) > 1:
+                stack.append(both(stack.pop(), stack.pop()))
+            [predicate] = stack
+        except IndexError:
+            raise ValueError(f"Invalid having clause {having!r}") from None
+        return predicate
 
     def _sort(self, rows: list[tuple], order: str | None) -> None:
         # one stable pass per term, last term first, so the first term wins;
