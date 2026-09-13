@@ -377,10 +377,11 @@ class PaymentTransaction(models.Model):
                 self._set_error(str(e))
                 return
 
-        reference = entity_data.get("description") or entity_data["notes"]["reference"]
-        if self.reference != reference:
-            _logger.warning("Received payment data with incorrect reference")
-            raise Forbidden()
+        if entity_data.get("is_redirect"):
+            reference = entity_data.get("description")
+            if self.reference != reference:
+                _logger.warning("Received payment data with incorrect reference")
+                raise Forbidden()
 
         # Update the provider reference.
         entity_id = entity_data.get('id')
