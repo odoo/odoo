@@ -1,13 +1,14 @@
 id,name,model_id,group_id/id,operation,domain
 project_project_manager_rule,Project: project manager: see all,project.project,project.group_project_manager,crud,
-project_public_members_rule,Project: employees: following required for follower-only projects,project.project,base.group_user,r,"['|',
-                                        ('privacy_visibility', 'in', ['employees', 'portal']),
-                                        ('message_partner_ids', 'in', [user.partner_id.id])
-                                    ]"
-project_project_rule_portal,Project: portal users: portal and following,project.project,base.group_portal,r,"[
+project_public_members_rule,Project: employees: public project or team member,project.project,base.group_user,r,"[
+            '|',
+                ('privacy_visibility', 'in', ['employees', 'portal']),
+                ('allowed_internal_user_ids', 'in', user.id)
+        ]"
+project_project_rule_portal,Project: portal users: portal and collaborator,project.project,base.group_portal,r,"[
             '&',
                 ('privacy_visibility', 'in', ['invited_users', 'portal']),
-                ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
+                ('collaborator_ids.partner_id', 'in', [user.partner_id.id]),
         ]"
 project_comp_rule,Project: multi-company,project.project,,crud,"[('company_id', 'in', company_ids + [False])]"
 access_project_project_stage,project.project_stage,project.project.stage,base.group_user,r,
@@ -48,16 +49,13 @@ task_visibility_rule,Project/Task: employees: follow required for follower-only 
                     # to subscribe check access to the record, follower is not enough at creation
                     ('user_ids', 'in', user.id)
         ]"
-project_task_rule_portal,Project/Task: portal users: can only see a task if he's a collaborator of the project and a follower of the task,project.task,base.group_portal,r,"[
+project_task_rule_portal,Project/Task: portal users: can see a task if they are a project collaborator OR a task follower,project.task,base.group_portal,r,"[
             ('project_id.privacy_visibility', 'in', ['invited_users', 'portal']),
             ('has_template_ancestor', '=', False),
             ('active', '=', True),
             '|',
                 ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
-                ('project_id.collaborator_ids', 'any', [
-                    ('partner_id', '=', user.partner_id.id),
-                    ('limited_access', '=', False),
-                ]),
+                ('project_id.collaborator_ids.partner_id', 'in', [user.partner_id.id]),
         ]"
 task_comp_rule,Project/Task: multi-company,project.task,,crud,"[('company_id', 'in', company_ids + [False])]"
 report_project_task_manager_rule,Tasks Analysis: project visibility Manager,report.project.task.user,project.group_project_manager,r,
@@ -82,45 +80,45 @@ burndown_chart_project_user_rule,Burndown chart: project visibility User,project
         '|',
             ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
             '|',
-                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                ('project_id.allowed_internal_user_ids', 'in', user.id),
                 ('user_ids', 'in', user.id),
         ]"
-update_visibility_rule,Project/Update: employees: follow required for follower-only projects,project.update,base.group_user,r,"[
+update_visibility_rule,Project/Update: employees: team members only for private projects,project.update,base.group_user,r,"[
         '|',
             ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
             '|',
-                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                ('project_id.allowed_internal_user_ids', 'in', user.id),
                 '|',
                     ('user_id', '=', user.id),
                     ('project_id.user_id', '=', user.id)
         ]"
-update_visibility_rule_1,Project/Update: employees: follow required for follower-only projects,project.update,project.group_project_user,crud,"[
+update_visibility_rule_1,Project/Update: employees: team members only for private projects,project.update,project.group_project_user,crud,"[
         '|',
             ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
             '|',
-                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                ('project_id.allowed_internal_user_ids', 'in', user.id),
                 '|',
                     ('user_id', '=', user.id),
                     ('project_id.user_id', '=', user.id)
         ]"
 update_visibility_project_admin,Project updates : Project user can see all project updates,project.update,project.group_project_manager,crud,
 update_comp_rule,Project/Updates: multi-company,project.update,,crud,"['|', ('project_id.company_id', 'in', company_ids), ('project_id.company_id', '=', False)]"
-milestone_visibility_rule,Project/Milestone: employees: follow required for follower-only projects,project.milestone,base.group_user,r,"[
+milestone_visibility_rule,Project/Milestone: employees: team members only for private projects,project.milestone,base.group_user,r,"[
         '|',
             ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
             '|',
-                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                ('project_id.allowed_internal_user_ids', 'in', user.id),
                 ('project_id.user_id', '=', user.id),
         ]"
 project_milestone_rule_portal_project_sharing,Project/milestone portal users: portal user can read with project sharing feature,project.milestone,base.group_portal,r,"[
             ('project_id.privacy_visibility', 'in', ['invited_users', 'portal']),
             ('project_id.collaborator_ids.partner_id', 'in', [user.partner_id.id]),
         ]"
-milestone_visibility_rule_1,Project/Milestone: employees: follow required for follower-only projects,project.milestone,project.group_project_user,crud,"[
+milestone_visibility_rule_1,Project/Milestone: employees: team members only for private projects,project.milestone,project.group_project_user,crud,"[
         '|',
             ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
             '|',
-                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                ('project_id.allowed_internal_user_ids', 'in', user.id),
                 ('project_id.user_id', '=', user.id),
         ]"
 milestone_visibility_project_admin,Project/Milestone: Project manager can see all project milestones,project.milestone,project.group_project_manager,crud,
