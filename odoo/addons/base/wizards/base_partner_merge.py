@@ -14,7 +14,7 @@ from odoo.tools import SQL
 _logger = logging.getLogger("odoo.addons.base.partner.merge")
 _debug = DebugLog(__name__)
 
-SIMILAR_NAME_PAIRS_PER_GROUP = 200
+SIMILAR_NAME_PAIR_BATCH = 5000
 
 
 class BasePartnerMergeLine(models.TransientModel):
@@ -406,7 +406,9 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
     def _get_similar_name_threshold(self) -> float:
         return self.env["res.partner"]._get_similar_name_threshold()
 
-    def _get_similar_name_pairs(self, limit: int) -> list[tuple[int, int]]:
+    def _get_similar_name_pairs(
+        self, limit: int, after: tuple[int, int] = (0, 0)
+    ) -> list[tuple[int, int]]:
         registry = self.env.registry
         if not registry.has_trigram:
             raise UserError(
@@ -439,10 +441,14 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
                AND right_partner.active
                AND left_partner.complete_name IS NOT NULL
                AND right_partner.complete_name IS NOT NULL
+               AND (left_partner.id, right_partner.id) > (%s, %s)
+             ORDER BY left_partner.id, right_partner.id
              LIMIT %s
             """,
             left,
             right,
+            after[0],
+            after[1],
             limit,
         )
         with _debug.perf("similar_name_pairs", cr=self.env.cr, limit=limit) as span:
@@ -457,17 +463,8 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
     def _get_similar_name_groups(
         self, maximum_group: int = 100
     ) -> list[tuple[int, list[int]]]:
-        limit = (maximum_group or 100) * SIMILAR_NAME_PAIRS_PER_GROUP
-        pairs = self._get_similar_name_pairs(limit)
-        if not pairs:
-            return []
-
         threshold = self._get_similar_name_threshold()
-        involved = {pid for pair in pairs for pid in pair}
-        partners = self.env["res.partner"].browse(involved)
-        partners.fetch(["complete_name"])
-        names = {p.id: (p.complete_name or "").lower() for p in partners}
-
+        names: dict[int, str] = {}
         root: dict[int, int] = {}
 
         def find(node: int) -> int:
@@ -476,36 +473,65 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
                 node = root[node]
             return node
 
-        for left_id, right_id in pairs:
-            left_name, right_name = names.get(left_id), names.get(right_id)
-            if not left_name or not right_name:
-                continue
-            shortest, longest = name_length_band(len(left_name), threshold)
-            if not shortest <= len(right_name) <= longest:
-                continue
-            if similarity_ratio(left_name, right_name) < threshold:
-                continue
-            left_root, right_root = find(left_id), find(right_id)
-            if left_root != right_root:
-                root[max(left_root, right_root)] = min(left_root, right_root)
+        def clusters() -> dict[int, list[int]]:
+            members: dict[int, list[int]] = {}
+            for node in root:
+                members.setdefault(find(node), []).append(node)
+            return members
 
-        clusters: dict[int, list[int]] = {}
-        for node in root:
-            clusters.setdefault(find(node), []).append(node)
+        after = (0, 0)
+        boundary: int | None = None
+        pair_count = 0
+        while True:
+            pairs = self._get_similar_name_pairs(SIMILAR_NAME_PAIR_BATCH, after)
+            pair_count += len(pairs)
+            unnamed = {pid for pair in pairs for pid in pair} - names.keys()
+            if unnamed:
+                partners = self.env["res.partner"].browse(unnamed)
+                partners.fetch(["complete_name"])
+                names.update((p.id, (p.complete_name or "").lower()) for p in partners)
+            for left_id, right_id in pairs:
+                left_name, right_name = names.get(left_id), names.get(right_id)
+                if not left_name or not right_name:
+                    continue
+                shortest, longest = name_length_band(len(left_name), threshold)
+                if not shortest <= len(right_name) <= longest:
+                    continue
+                if similarity_ratio(left_name, right_name) < threshold:
+                    continue
+                left_root, right_root = find(left_id), find(right_id)
+                if left_root != right_root:
+                    root[max(left_root, right_root)] = min(left_root, right_root)
+            if len(pairs) < SIMILAR_NAME_PAIR_BATCH:
+                boundary = None
+                break
+            after = pairs[-1]
+            boundary = after[0]
+            if (
+                maximum_group
+                and sum(
+                    1
+                    for members in clusters().values()
+                    if len(members) >= 2 and max(members) < boundary
+                )
+                >= maximum_group
+            ):
+                break
 
         groups = [
             (min(members), sorted(members))
-            for members in clusters.values()
-            if len(members) >= 2
+            for members in clusters().values()
+            if len(members) >= 2 and (boundary is None or max(members) < boundary)
         ]
         groups.sort()
         _debug.pipeline(
             "similar_name_groups",
-            pairs=len(pairs),
-            partners=len(involved),
+            pairs=pair_count,
+            partners=len(names),
             threshold=threshold,
             groups=len(groups),
             maximum_group=maximum_group,
+            exhausted=boundary is None,
         )
         return groups[:maximum_group] if maximum_group else groups
 

@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 
 from odoo import Command
 from odoo.exceptions import AccessError, UserError
@@ -590,7 +591,7 @@ class TestMergePartnerSimilarNames(TransactionCase):
     def test_a_near_miss_the_exact_criteria_cannot_see_is_grouped(self):
         keep = self.Partner.create({"name": "Acme Corporation"})
         dupe = self.Partner.create({"name": "Acme Corporatlon"})
-        groups = self._wizard()._get_similar_name_groups()
+        groups = self._wizard()._get_similar_name_groups(maximum_group=0)
         grouped = {pid for _min_id, ids in groups for pid in ids}
         self.assertLessEqual({keep.id, dupe.id}, grouped)
 
@@ -604,23 +605,29 @@ class TestMergePartnerSimilarNames(TransactionCase):
     def test_unrelated_names_are_not_grouped(self):
         left = self.Partner.create({"name": "Zenith Manufacturing"})
         right = self.Partner.create({"name": "Bakery Delights"})
-        groups = self._wizard()._get_similar_name_groups()
+        groups = self._wizard()._get_similar_name_groups(maximum_group=0)
         for _min_id, ids in groups:
             self.assertFalse(
                 {left.id, right.id} <= set(ids), "unrelated names were merged"
             )
 
     def test_a_higher_threshold_rejects_what_a_lower_one_accepts(self):
-        self.Partner.create({"name": "Northwind Traders"})
-        self.Partner.create({"name": "Northwind Trading"})
+        pair = {
+            self.Partner.create({"name": "Northwind Traders"}).id,
+            self.Partner.create({"name": "Northwind Trading"}).id,
+        }
         wizard = self._wizard()
         param = self.env["ir.config_parameter"].sudo()
 
+        def grouped_together():
+            groups = wizard._get_similar_name_groups(maximum_group=0)
+            return any(pair <= set(ids) for _min_id, ids in groups)
+
         param.set_param("base.partner_name_similarity_threshold", "0.7")
-        self.assertTrue(wizard._get_similar_name_groups())
+        self.assertTrue(grouped_together())
 
         param.set_param("base.partner_name_similarity_threshold", "0.999")
-        self.assertFalse(wizard._get_similar_name_groups())
+        self.assertFalse(grouped_together())
 
     def test_an_unusable_threshold_falls_back_to_the_default(self):
         wizard = self._wizard()
@@ -632,7 +639,7 @@ class TestMergePartnerSimilarNames(TransactionCase):
     def test_three_mutually_similar_names_form_one_group_not_three(self):
         names = ["Globex Industries", "Globex Industrles", "Globex Industriez"]
         created = {self.Partner.create({"name": n}).id for n in names}
-        groups = self._wizard()._get_similar_name_groups()
+        groups = self._wizard()._get_similar_name_groups(maximum_group=0)
         holding = [ids for _min_id, ids in groups if created & set(ids)]
         self.assertEqual(len(holding), 1, "a cluster must not be split into pairs")
         self.assertLessEqual(created, set(holding[0]))
@@ -644,6 +651,36 @@ class TestMergePartnerSimilarNames(TransactionCase):
         wizard.action_start_manual_process()
         self.assertEqual(wizard.state, "selection")
         self.assertGreaterEqual(wizard.number_group, 1)
+
+    def test_paging_the_pairs_neither_loses_nor_splits_a_group(self):
+        partners = self.Partner
+        for stem in ("Initech Systems", "Hooli Networks", "Vandelay Imports"):
+            partners |= self.Partner.create(
+                [{"name": stem}, {"name": stem + "s"}, {"name": stem + " SA"}]
+            )
+        ids = partners.ids
+        pairs = sorted(
+            (left, right)
+            for left in ids
+            for right in ids
+            if right > left
+            and partners.browse(left).name[:6] == partners.browse(right).name[:6]
+        )
+        wizard = self._wizard()
+
+        def page(self, limit, after=(0, 0)):
+            return [pair for pair in pairs if pair > tuple(after)][:limit]
+
+        with patch.object(type(wizard), "_get_similar_name_pairs", page):
+            whole = wizard._get_similar_name_groups(maximum_group=0)
+            with patch(
+                "odoo.addons.base.wizards.base_partner_merge.SIMILAR_NAME_PAIR_BATCH", 2
+            ):
+                paged = wizard._get_similar_name_groups(maximum_group=0)
+                first = wizard._get_similar_name_groups(maximum_group=1)
+        self.assertEqual(len(whole), 3)
+        self.assertEqual(paged, whole)
+        self.assertEqual(first, whole[:1])
 
     def test_neither_exact_nor_similar_is_still_refused(self):
         with self.assertRaises(UserError):
