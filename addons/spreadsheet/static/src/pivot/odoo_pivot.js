@@ -71,6 +71,9 @@ export class OdooPivot {
         /** @type {OdooFields | undefined} @protected */
         this._fields = undefined;
 
+        this._startTime = undefined;
+        this._loadingTime = undefined;
+
         /** @protected @type {OdooDataProvider}*/
         this.odooDataProvider = services.odooDataProvider;
 
@@ -224,6 +227,7 @@ export class OdooPivot {
         const { model, definition } = await this.createModelAndDefinition();
         this.model = model;
         this.runtimeDefinition = definition;
+        this._startTime = performance.now();
         await this.model.load({ context: this.context, domain: this.getDomainWithGlobalFilters() });
     }
 
@@ -479,6 +483,10 @@ export class OdooPivot {
 
     get lastUpdate() {
         return this.loader.lastUpdate;
+    }
+
+    get loadingTime() {
+        return this.loader.endTime - this._startTime;
     }
 
     isModelValid() {

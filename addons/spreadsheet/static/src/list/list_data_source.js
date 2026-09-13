@@ -143,6 +143,7 @@ export class ListDataSource extends OdooViewsDataSource {
             this.data = [];
             return;
         }
+        this._startTime = performance.now();
         const { records } = await this._orm.webSearchRead(this._metaData.resModel, domain, {
             specification,
             order: orderByToString(orderBy),

@@ -30,6 +30,7 @@ export class OdooPivotLoader {
          * Last time that this dataSource has been updated
          */
         this.lastUpdate = undefined;
+        this.endTime = undefined;
 
         /** @protected */
         this.concurrency = new KeepLast();
@@ -84,6 +85,7 @@ export class OdooPivotLoader {
                 })
                 .finally(() => {
                     this.lastUpdate = Date.now();
+                    this.endTime = performance.now();
                     this.isFullyLoaded = true;
                 });
             await this.odooDataProvider.notifyWhenPromiseResolves(this.loadPromise);
