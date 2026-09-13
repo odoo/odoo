@@ -9,7 +9,6 @@ from markupsafe import Markup
 from odoo import _, api, fields, models, modules
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools.func import deprecated
 from odoo.tools.misc import clean_context
 
 from .mail_message import MAX_SEARCH_LIMIT, _find_allowed_doc_ids
@@ -242,15 +241,6 @@ class MailScheduledMessage(models.Model):
     # ------------------------------------------------------
     # Business Methods
     # ------------------------------------------------------
-
-    @api.model
-    @deprecated("Since 20.0, use check_access() directly")
-    def _check(self, values=None):
-        """ Restrict the access to a scheduled message.
-            Access is based on the record on which the scheduled message will be posted to.
-            :param values: dict with model and res_id on which to perform the check
-        """
-        self.check_access('write')
 
     @api.model
     def _notification_parameters_whitelist(self):

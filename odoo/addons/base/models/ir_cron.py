@@ -21,7 +21,6 @@ from odoo.http.dispatcher import serialize_exception
 from odoo.modules import Manifest
 from odoo.tools import SQL, config
 from odoo.tools.constants import GC_UNLINK_LIMIT
-from odoo.tools.func import deprecated
 
 if typing.TYPE_CHECKING:
     from collections.abc import Iterable
@@ -845,28 +844,6 @@ class IrCron(models.Model):
             'timed_out_counter': 0 if timed_out_counter is None else timed_out_counter + 1,
         }])
         return self.with_context(ir_cron_progress_id=progress.id), progress
-
-    @deprecated("Since 19.0, use _commit_progress")
-    def _notify_progress(self, *, done: int, remaining: int, deactivate: bool = False):
-        """
-        Log the progress of the cron job.
-        Use ``_commit_progress()`` instead.
-
-        :param int done: the number of tasks already processed
-        :param int remaining: the number of tasks left to process
-        :param bool deactivate: whether the cron will be deactivated
-        """
-        if not (progress_id := self.env.context.get('ir_cron_progress_id')):
-            return
-        if done < 0 or remaining < 0:
-            raise ValueError("`done` and `remaining` must be positive integers.")
-        progress = self.env['ir.cron.progress'].sudo().browse(progress_id)
-        assert progress.cron_id.id == self.env.context.get('cron_id'), "Progress on the wrong cron_id"
-        progress.write({
-            'remaining': remaining,
-            'done': done,
-            'deactivate': deactivate,
-        })
 
     @api.model
     def _commit_progress(

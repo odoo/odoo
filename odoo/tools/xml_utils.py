@@ -204,7 +204,7 @@ def cleanup_xml_node(xml_node_or_string, remove_blank_text=True, remove_blank_no
     return xml_node
 
 
-def load_xsd_files_from_url(env, url, file_name=None, force_reload=False,
+def load_xsd_files_from_url(env, url, file_name=None,
                             request_max_timeout=10, xsd_name_prefix='', xsd_names_filter=None, modify_xsd_content=None):
     """Load XSD file or ZIP archive. Save XSD files as ir.attachment.
 
@@ -222,7 +222,6 @@ def load_xsd_files_from_url(env, url, file_name=None, force_reload=False,
     :param odoo.api.Environment env: environment of calling module
     :param str url: URL of XSD file/ZIP archive
     :param str file_name: used as attachment name if the URL leads to a single XSD, otherwise ignored
-    :param bool force_reload: Deprecated.
     :param int request_max_timeout: maximum time (in seconds) before the request times out
     :param str xsd_name_prefix: if provided, will be added as a prefix to every XSD file name
     :param list | str xsd_names_filter: if provided, will only save the XSD files with these names
@@ -312,14 +311,13 @@ def load_xsd_files_from_url(env, url, file_name=None, force_reload=False,
     return saved_attachments
 
 
-def validate_xml_from_attachment(env, xml_content, xsd_name, reload_files_function=None, prefix=None):
+def validate_xml_from_attachment(env, xml_content, xsd_name, prefix=None):
     """Try and validate the XML content with an XSD attachment.
     If the XSD attachment cannot be found in database, skip validation without raising.
 
     :param odoo.api.Environment env: environment of calling module
     :param xml_content: the XML content to validate
     :param xsd_name: the XSD file name in database
-    :param reload_files_function: Deprecated.
     :return: the result of the function :func:`odoo.tools.xml_utils._check_with_xsd`
     """
 

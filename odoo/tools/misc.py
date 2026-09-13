@@ -59,7 +59,6 @@ __all__ = [
     'DotDict',
     'LastOrderedSet',
     'OrderedSet',
-    'Reverse',
     'babel_locale_parse',
     'clean_context',
     'consteq',
@@ -1201,25 +1200,6 @@ def submap[K, T](mapping: Mapping[K, T], keys: Iterable[K]) -> Mapping[K, T]:
     return {key: mapping[key] for key in mapping if key in keys}
 
 
-class Reverse(object):
-    """ Wraps a value and reverses its ordering, useful in key functions when
-    mixing ascending and descending sort on non-numeric data as the
-    ``reverse`` parameter can not do piecemeal reordering.
-    """
-    __slots__ = ['val']
-
-    def __init__(self, val):
-        warnings.warn("Deprecated since 20.0, unused")
-        self.val = val
-
-    def __eq__(self, other): return self.val == other.val
-    def __ne__(self, other): return self.val != other.val
-
-    def __ge__(self, other): return self.val <= other.val
-    def __gt__(self, other): return self.val < other.val
-    def __le__(self, other): return self.val >= other.val
-    def __lt__(self, other): return self.val > other.val
-
 class replace_exceptions(ContextDecorator):
     """
     Hide some exceptions behind another error. Can be used as a function
@@ -1659,15 +1639,6 @@ class frozendict[K, V]:
 
     def __subclasscheck__(self, subclass):
         assert False, "cannot subclass frozendict"  # not a real class
-
-
-def ReadonlyDict(mapping=(), /, **kw) -> MappingProxyType:
-    warnings.warn(
-        "ReadonlyDict is deprecated starting Odoo 20, use frozendict",
-        category=DeprecationWarning,
-        stacklevel=2,
-    )
-    return frozendict(mapping, **kw)
 
 
 class DotDict[T](dict[str, T]):
