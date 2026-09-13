@@ -221,9 +221,17 @@ class AutoCompleteController(http.Controller):
         return standard_address
 
     def _call_google_route(self, route, params):
-        return requests.get(
-            f"{GOOGLE_PLACES_ENDPOINT}{route}", params=params, timeout=TIMEOUT
-        ).json()
+        return (
+            request.env["ir.egress"]
+            .request(
+                "GET",
+                f"{GOOGLE_PLACES_ENDPOINT}{route}",
+                purpose="google_places",
+                params=params,
+                timeout=TIMEOUT,
+            )
+            .json()
+        )
 
     def _get_api_key(self, use_employees_key):
         if not request.env.user._is_internal():

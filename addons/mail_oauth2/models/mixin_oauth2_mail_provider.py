@@ -184,11 +184,14 @@ class MixinOauth2MailProvider(models.AbstractModel):
         )
 
         try:
-            response = requests.get(
+            response = self.env["ir.egress"].request(
+                "GET",
                 url_join(
                     self._oauth2_iap_endpoint(provider),
                     f"/api/mail_oauth/1/{provider.iap_service}",
                 ),
+                purpose="mail_oauth2",
+                policy="private",
                 params={"db_uuid": db_uuid, "callback_url": callback_url},
                 timeout=OAUTH2_TOKEN_REQUEST_TIMEOUT,
             )
@@ -227,8 +230,11 @@ class MixinOauth2MailProvider(models.AbstractModel):
         if provider.token_sends_scope:
             data["scope"] = provider.resolve(provider.scope, self)
 
-        response = requests.post(
+        response = self.env["ir.egress"].request(
+            "POST",
             provider.resolve(provider.token_url, self),
+            purpose="mail_oauth2",
+            policy="private",
             data=data,
             timeout=OAUTH2_TOKEN_REQUEST_TIMEOUT,
         )
@@ -250,11 +256,14 @@ class MixinOauth2MailProvider(models.AbstractModel):
     def _oauth2_get_access_token_iap(self, provider, refresh_token):
         db_uuid = self.env["ir.config_parameter"].sudo().get_param("database.uuid")
 
-        response = requests.get(
+        response = self.env["ir.egress"].request(
+            "GET",
             url_join(
                 self._oauth2_iap_endpoint(provider),
                 f"/api/mail_oauth/1/{provider.iap_service}_access_token",
             ),
+            purpose="mail_oauth2",
+            policy="private",
             params={"refresh_token": refresh_token, "db_uuid": db_uuid},
             timeout=OAUTH2_TOKEN_REQUEST_TIMEOUT,
         )

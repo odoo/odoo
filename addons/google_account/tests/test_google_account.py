@@ -3,6 +3,7 @@ from unittest.mock import MagicMock, patch
 import requests
 
 from odoo.exceptions import UserError
+from odoo.libs.guarded_http import GuardedSession
 from odoo.tests import TransactionCase, tagged
 
 from odoo.addons.google_account.models.google_service import (
@@ -61,7 +62,7 @@ class TestGoogleService(EncryptionKeyCase, TransactionCase):
         """A POST request returns the HTTP status and decoded JSON body."""
         res = MagicMock(status_code=200, headers={})
         res.json.return_value = {"access_token": "AT"}
-        with patch(f"{MODULE}.requests.request", return_value=res) as req:
+        with patch.object(GuardedSession, "request", return_value=res) as req:
             status, response, _dummy = self.service._do_request(
                 GOOGLE_TOKEN_ENDPOINT, params={"a": 1}, method="POST", preuri=""
             )

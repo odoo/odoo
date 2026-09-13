@@ -5,6 +5,7 @@ from unittest.mock import MagicMock, patch
 import requests as requests_lib
 
 from odoo import exceptions
+from odoo.libs.guarded_http import GuardedSession
 from odoo.tests import TransactionCase, tagged
 
 from odoo.addons.iap.tools.iap_tools import (
@@ -57,8 +58,9 @@ class TestIapJsonrpcContract(TransactionCase):
         mock_response.elapsed.total_seconds.return_value = 0.0
         with (
             patch(f"{TOOLS}.modules.module.current_test", False),
-            patch(
-                f"{TOOLS}.requests.post",
+            patch.object(
+                GuardedSession,
+                "request",
                 return_value=mock_response,
                 side_effect=side_effect,
             ),

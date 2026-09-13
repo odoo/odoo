@@ -1,6 +1,5 @@
 import json
 
-import requests
 from werkzeug import datastructures, http
 
 if hasattr(datastructures.WWWAuthenticate, "from_header"):
@@ -68,14 +67,22 @@ class ResUsers(models.Model):
             .sudo()
             .get_param("auth_oauth.authorization_header")
         ):
-            response = requests.get(
+            response = self.env["ir.egress"].request(
+                "GET",
                 endpoint,
+                purpose="auth_oauth",
+                policy="private",
                 headers={"Authorization": "Bearer %s" % access_token},
                 timeout=10,
             )
         else:
-            response = requests.get(
-                endpoint, params={"access_token": access_token}, timeout=10
+            response = self.env["ir.egress"].request(
+                "GET",
+                endpoint,
+                purpose="auth_oauth",
+                policy="private",
+                params={"access_token": access_token},
+                timeout=10,
             )
 
         if response.ok:  # nb: could be a successful failure

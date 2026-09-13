@@ -4,6 +4,7 @@ import time
 from unittest.mock import MagicMock, patch
 
 from odoo.exceptions import UserError
+from odoo.libs.guarded_http import GuardedSession
 from odoo.tests import TransactionCase, tagged
 
 from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
@@ -35,8 +36,9 @@ class TestOutlookTokenFlow(EncryptionKeyCase, TransactionCase):
     def test_fetch_token_returns_payload(self):
         """A successful token request returns the endpoint's JSON payload."""
         payload = {"access_token": "AT", "expires_in": 3600}
-        with patch(
-            f"{MIXIN_MODULE}.requests.post",
+        with patch.object(
+            GuardedSession,
+            "request",
             return_value=self._response(payload=payload),
         ) as post:
             result = self.Mixin._get_outlook_token("refresh_token", refresh_token="RT")
@@ -48,8 +50,8 @@ class TestOutlookTokenFlow(EncryptionKeyCase, TransactionCase):
     def test_fetch_token_http_error_rejected(self):
         """A non-2xx token response surfaces as a UserError (negative)."""
         with (
-            patch(
-                f"{MIXIN_MODULE}.requests.post", return_value=self._response(ok=False)
+            patch.object(
+                GuardedSession, "request", return_value=self._response(ok=False)
             ),
             self.assertRaises(UserError),
         ):
@@ -59,8 +61,9 @@ class TestOutlookTokenFlow(EncryptionKeyCase, TransactionCase):
         """The authorization-code exchange maps to (refresh, access, expiry)."""
         payload = {"refresh_token": "RT", "access_token": "AT", "expires_in": 1000}
         before = int(time.time())
-        with patch(
-            f"{MIXIN_MODULE}.requests.post",
+        with patch.object(
+            GuardedSession,
+            "request",
             return_value=self._response(payload=payload),
         ):
             refresh, access, expiration = self.Mixin._get_outlook_refresh_token("CODE")
@@ -79,8 +82,9 @@ class TestOutlookTokenFlow(EncryptionKeyCase, TransactionCase):
             "id_token": "IDT",
             "expires_in": 500,
         }
-        with patch(
-            f"{MIXIN_MODULE}.requests.post",
+        with patch.object(
+            GuardedSession,
+            "request",
             return_value=self._response(payload=payload),
         ) as post:
             refresh, access, id_token, _expiration = (
@@ -92,8 +96,8 @@ class TestOutlookTokenFlow(EncryptionKeyCase, TransactionCase):
     def test_iap_http_error_rejected(self):
         """An IAP transport failure surfaces as a UserError (negative)."""
         with (
-            patch(
-                f"{MIXIN_MODULE}.requests.get", return_value=self._response(ok=False)
+            patch.object(
+                GuardedSession, "request", return_value=self._response(ok=False)
             ),
             self.assertRaises(UserError),
         ):
@@ -102,8 +106,9 @@ class TestOutlookTokenFlow(EncryptionKeyCase, TransactionCase):
     def test_iap_payload_error_rejected(self):
         """An IAP error payload is converted into a UserError (negative)."""
         with (
-            patch(
-                f"{MIXIN_MODULE}.requests.get",
+            patch.object(
+                GuardedSession,
+                "request",
                 return_value=self._response(payload={"error": "no_subscription"}),
             ),
             self.assertRaises(UserError),

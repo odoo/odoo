@@ -91,9 +91,11 @@ class IrHttp(models.AbstractModel):
             .get_param_float("recaptcha_min_score", 0.7)
         )
         try:
-            r = requests.post(
+            r = self.env["ir.egress"].request(
+                "POST",
                 "https://www.recaptcha.net/recaptcha/api/siteverify",
-                {
+                purpose="recaptcha",
+                data={
                     "secret": private_key,
                     "response": token,
                     "remoteip": ip_addr,

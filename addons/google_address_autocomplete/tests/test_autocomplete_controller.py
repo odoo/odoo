@@ -12,6 +12,7 @@ from unittest.mock import patch
 
 import requests
 
+from odoo.libs.guarded_http import GuardedSession
 from odoo.tests import TransactionCase, tagged
 
 from odoo.addons.google_address_autocomplete.controllers.google_address_autocomplete import (
@@ -187,8 +188,9 @@ class TestAutocompleteControllerParsing(TransactionCase):
         """
         with (
             self._mock_request(),
-            patch(
-                f"{CONTROLLER_MODULE}.requests.get",
+            patch.object(
+                GuardedSession,
+                "request",
                 side_effect=requests.exceptions.ReadTimeout("google is down"),
             ),
         ):

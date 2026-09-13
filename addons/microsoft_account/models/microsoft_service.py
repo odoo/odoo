@@ -196,17 +196,19 @@ class MicrosoftService(models.AbstractModel):
         ask_time = fields.Datetime.now()
         try:
             if method.upper() in ("GET", "DELETE"):
-                res = requests.request(
+                res = self.env["ir.egress"].request(
                     method.lower(),
                     preuri + uri,
+                    purpose="microsoft_api",
                     headers=headers,
                     params=params,
                     timeout=timeout,
                 )
             elif method.upper() in ("POST", "PATCH", "PUT"):
-                res = requests.request(
+                res = self.env["ir.egress"].request(
                     method.lower(),
                     preuri + uri,
+                    purpose="microsoft_api",
                     data=params,
                     headers=headers,
                     timeout=timeout,

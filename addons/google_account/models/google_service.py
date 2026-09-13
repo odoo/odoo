@@ -179,13 +179,18 @@ class GoogleService(models.AbstractModel):
         ask_time = fields.Datetime.now()
         try:
             if method.upper() in ("GET", "DELETE"):
-                res = requests.request(
-                    method.lower(), preuri + uri, params=params, timeout=timeout
-                )
-            elif method.upper() in ("POST", "PATCH", "PUT"):
-                res = requests.request(
+                res = self.env["ir.egress"].request(
                     method.lower(),
                     preuri + uri,
+                    purpose="google_api",
+                    params=params,
+                    timeout=timeout,
+                )
+            elif method.upper() in ("POST", "PATCH", "PUT"):
+                res = self.env["ir.egress"].request(
+                    method.lower(),
+                    preuri + uri,
+                    purpose="google_api",
                     data=params,
                     headers=headers,
                     timeout=timeout,

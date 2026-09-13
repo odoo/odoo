@@ -54,9 +54,11 @@ class IrHttp(models.AbstractModel):
         if not private_key:
             return "no_secret"
         try:
-            r = requests.post(
+            r = self.env["ir.egress"].request(
+                "POST",
                 "https://challenges.cloudflare.com/turnstile/v0/siteverify",
-                {
+                purpose="turnstile",
+                data={
                     "secret": private_key,
                     "response": token,
                     "remoteip": ip_addr,

@@ -1,7 +1,6 @@
 import json
 import logging
 
-import requests
 from werkzeug.exceptions import Forbidden
 
 from odoo import _, http
@@ -110,8 +109,10 @@ class GoogleGmailController(http.Controller):
             record.owner_user_id or not request.env.user.has_group("base.group_system")
         ):
             # https://developers.google.com/identity/protocols/oauth2/scopes
-            response = requests.get(
+            response = request.env["ir.egress"].request(
+                "GET",
                 "https://www.googleapis.com/oauth2/v2/userinfo",
+                purpose="gmail_userinfo",
                 params={"access_token": access_token},
                 timeout=GMAIL_TOKEN_REQUEST_TIMEOUT,
             )

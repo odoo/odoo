@@ -834,10 +834,10 @@ class IrModuleModule(models.Model):
     @ormcache("payload")
     def _call_apps(self, payload):
         headers = {"Content-type": "application/json", "Accept": "text/plain"}
-        import requests
-
-        return requests.post(
+        return self.env["ir.egress"].request(
+            "POST",
             f"{APPS_URL}/loempia/listdatamodules",
+            purpose="apps_store",
             data=payload,
             headers=headers,
             timeout=5.0,
@@ -846,11 +846,11 @@ class IrModuleModule(models.Model):
     @api.model
     @ormcache()
     def _get_industry_categories_from_apps(self):
-        import requests
-
         try:
-            resp = requests.post(
+            resp = self.env["ir.egress"].request(
+                "POST",
                 f"{APPS_URL}/loempia/listindustrycategory/{major_version}",
+                purpose="apps_store",
                 json={"params": {}},
                 timeout=5.0,
             )
@@ -873,11 +873,11 @@ class IrModuleModule(models.Model):
         if not self.env.is_admin():
             raise AccessDenied
         module_name = self.env.context.get("module_name")
-        import requests
-
         try:
-            resp = requests.get(
+            resp = self.env["ir.egress"].request(
+                "GET",
                 f"{APPS_URL}/loempia/download/data_app/{module_name}/{major_version}",
+                purpose="apps_store",
                 timeout=5.0,
             )
             resp.raise_for_status()

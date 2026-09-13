@@ -4,6 +4,7 @@ import uuid
 import requests
 
 from odoo import _, exceptions, modules
+from odoo.libs import guarded_http, netguard
 from odoo.tools import email_normalize
 
 _logger = logging.getLogger(__name__)
@@ -325,7 +326,8 @@ def iap_jsonrpc(url, method="call", params=None, timeout=15):
 
     _logger.info("iap jsonrpc %s", url)
     try:
-        req = requests.post(url, json=payload, timeout=timeout)
+        with guarded_http.guarded_session(netguard.PRIVATE_ALLOWED) as session:
+            req = session.post(url, json=payload, timeout=timeout)
         req.raise_for_status()
         response = req.json()
         _logger.info(

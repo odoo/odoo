@@ -4,6 +4,7 @@ from unittest.mock import MagicMock, patch
 import requests
 
 from odoo.exceptions import UserError, ValidationError
+from odoo.libs.guarded_http import GuardedSession
 from odoo.tests import TransactionCase, tagged
 
 MODULE = "odoo.addons.google_recaptcha.models.ir_http"
@@ -18,14 +19,14 @@ class TestGoogleRecaptcha(TransactionCase):
 
     @contextmanager
     def _mocked_verify(self, *, json_result=None, post_side_effect=None):
-        """Run the verify helpers with a stubbed request and requests.post."""
+        """Run the verify helpers with a stubbed request and HTTP layer."""
         req = MagicMock()
         req.env = self.env
         req.httprequest.remote_addr = "10.0.0.1"
         req.params = {"recaptcha_token_response": "a-token"}
         with (
             patch(f"{MODULE}.request", req),
-            patch(f"{MODULE}.requests.post") as post,
+            patch.object(GuardedSession, "request") as post,
         ):
             if post_side_effect is not None:
                 post.side_effect = post_side_effect
