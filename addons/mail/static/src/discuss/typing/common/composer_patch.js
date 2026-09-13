@@ -35,7 +35,7 @@ patch(Composer.prototype, {
     },
     /** @param {boolean} [is_typing=true] */
     notifyIsTyping(is_typing = true) {
-        if (this.thread?.isChannelKind && Number(this.thread.id) > 0) {
+        if (this.thread?.isChannelKind && !this.thread.isTransient) {
             log.logic("notifyIsTyping", () => ({
                 thread: this.thread.localId,
                 is_typing,

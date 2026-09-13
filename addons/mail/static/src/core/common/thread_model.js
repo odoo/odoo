@@ -471,7 +471,7 @@ export class Thread extends Record {
     get newestPersistentMessage() {
         return this.messages.findLast(
             /** @returns {msg is import("models").Message & {id: number}} */ (msg) =>
-                Number.isInteger(msg.id),
+                msg.persistent,
         );
     }
 
@@ -480,10 +480,7 @@ export class Thread extends Record {
         compute() {
             let newest;
             for (const message of this.allMessages) {
-                if (
-                    Number.isInteger(message.id) &&
-                    (!newest || message.id > newest.id)
-                ) {
+                if (message.persistent && (!newest || message.id > newest.id)) {
                     newest = message;
                 }
             }
@@ -494,7 +491,7 @@ export class Thread extends Record {
     get oldestPersistentMessage() {
         return this.messages.find(
             /** @returns {msg is import("models").Message & {id: number}} */ (msg) =>
-                Number.isInteger(msg.id),
+                msg.persistent,
         );
     }
 

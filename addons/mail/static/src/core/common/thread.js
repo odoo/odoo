@@ -236,7 +236,7 @@ export class Thread extends Component {
                 let jumpMessage;
                 for (const message of this.props.thread.messages) {
                     if (
-                        Number.isInteger(message.id) &&
+                        message.persistent &&
                         Number(message.id) < separatorId &&
                         (!jumpMessage || message.id > jumpMessage.id)
                     ) {
