@@ -1,4 +1,5 @@
 import contextlib
+import datetime
 import importlib
 import logging
 import unittest
@@ -8,6 +9,8 @@ from typing import TYPE_CHECKING, Any
 from unittest.mock import patch
 
 import freezegun
+from cryptography import x509
+from cryptography.hazmat.primitives.asymmetric import ed25519
 
 import odoo.cli
 from odoo import api
@@ -349,6 +352,25 @@ def tagged(*tags: str) -> Callable:
         return obj
 
     return tags_decorator
+
+
+def _bind_cryptography_to_the_real_datetime() -> None:
+    key = ed25519.Ed25519PrivateKey.generate()
+    name = x509.Name([])
+    epoch = datetime.datetime(2000, 1, 1, tzinfo=datetime.UTC)
+    (
+        x509.CertificateBuilder()
+        .subject_name(name)
+        .issuer_name(name)
+        .public_key(key.public_key())
+        .serial_number(1)
+        .not_valid_before(epoch)
+        .not_valid_after(epoch)
+        .sign(key, None)
+    )
+
+
+_bind_cryptography_to_the_real_datetime()
 
 
 class freeze_time:
