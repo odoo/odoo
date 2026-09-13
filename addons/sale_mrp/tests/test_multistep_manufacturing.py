@@ -291,3 +291,12 @@ class TestMultistepManufacturing(TestMrpCommon):
         self.assertEqual(mo.sale_order_count, 1)
         duplicate_mo = mo.copy()
         self.assertEqual(duplicate_mo.sale_order_count, 0)
+
+    def test_component_picking_origin_is_mo_in_mto_flow(self):
+        """
+        Test that component picking transfers use the manufacturing order as
+        their origin in MTO two-step manufacturing flow.
+        """
+        self.warehouse.manufacture_steps = 'pbm'
+        self.sale_order.action_confirm()
+        self.assertIn(self.sale_order.mrp_production_ids.name, self.sale_order.mrp_production_ids.picking_ids.origin)
