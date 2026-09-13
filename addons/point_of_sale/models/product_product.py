@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import _, api, models
+from odoo.fields import Domain
 
 
 class ProductProduct(models.Model):
@@ -25,7 +26,11 @@ class ProductProduct(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data):
-        return [('product_tmpl_id', 'in', data['product.template'].ids)]
+        domain = Domain('product_tmpl_id', 'in', data['product.template'].ids)
+        order_line_product_ids = data['pos.order.line'].product_id.ids if 'pos.order.line' in data else []
+        if order_line_product_ids:
+            domain &= Domain('active', '=', True) | Domain('id', 'in', order_line_product_ids)
+        return domain
 
     @api.model
     def _load_pos_data_dependencies(self):
