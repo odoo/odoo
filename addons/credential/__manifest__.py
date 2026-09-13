@@ -1,6 +1,6 @@
 {
     "name": "Credential Vault",
-    "version": "19.0.1.15.0",
+    "version": "19.0.1.16.0",
     "category": "Hidden",
     "sequence": 5,
     "summary": "Foundation module for secure credential management across all external integrations",
@@ -48,11 +48,9 @@ Other modules build on this module in two ways:
 * Reference ``credential.credential`` records (or extend the model via
   ``_inherit``) to store their secrets encrypted — see ``api_transport``, which
   absorbed both ``api_communication`` and ``api_gateway``.
-* Import the signature-verification and JSON-depth helpers from ``tools/``
-  — see ``automation`` webhooks and ``remote``.
-
-Rate limiters live in ``rate_limit``, the outbound session cache in
-``api_transport`` and the device connection manager in ``remote``.
+Rate limiters live in ``rate_limit``. The inbound gate, its access log and
+the signature-verification helpers live in ``api_transport``, as do the
+outbound session cache; the device connection manager lives in ``remote``.
 
 Requires the ``ODOO_API_ENCRYPTION_KEY`` environment variable (a Fernet key);
 old keys stay readable through ``ODOO_API_ENCRYPTION_KEY_V<n>`` during
@@ -76,7 +74,6 @@ rotation.
         "views/credential_credential_views.xml",
         "views/credential_category_views.xml",
         "views/credential_access_log_views.xml",
-        "views/inbound_access_log_views.xml",
         "views/credential_menu.xml",
     ],
     "assets": {

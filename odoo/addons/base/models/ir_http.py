@@ -135,6 +135,12 @@ class IrHttp(models.AbstractModel):
         except ValueError:
             return None, None
 
+    @api.model
+    def _get_request_remote_addr(self) -> str | None:
+        if not request or not hasattr(request, "httprequest"):
+            return None
+        return request.httprequest.remote_addr
+
     @classmethod
     def _get_converters(cls) -> dict[str, type]:
         return {

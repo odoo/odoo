@@ -6,7 +6,7 @@ from odoo.tools import mute_logger
 
 from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
-_GATE = "odoo.addons.credential.models.mixins.mixin_inbound_gate"
+_GATE = "odoo.addons.api_transport.models.mixin_inbound_gate"
 
 
 @tagged("post_install", "-at_install")

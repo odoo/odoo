@@ -2,7 +2,6 @@ from . import test_credential_credential
 from . import test_credential_health_validation
 from . import test_hardening_fixes
 from . import test_credential_category_display
-from . import test_authentication_tools
 from . import test_access_log_immutability
 from . import test_security_topology
 from . import test_credential_unlink
@@ -17,3 +16,4 @@ from . import test_expiry_is_current
 from . import test_secret_use_and_reveal
 from . import test_category_defaults_on_create
 from . import test_system_secret
+from . import test_request_source_ip

@@ -2,10 +2,13 @@ import hashlib
 import hmac
 import time
 from datetime import UTC, datetime
+from unittest.mock import patch
 
 from odoo.tests import TransactionCase, tagged
+from odoo.tools import mute_logger
 
-from odoo.addons.credential.tools.authentication import (
+from odoo.addons.api_transport.tools.authentication import (
+    _is_custom_verification_valid,
     is_bearer_token_valid,
     is_hmac_signature_valid,
     is_signature_valid,
@@ -126,3 +129,39 @@ class TestAuthenticationTools(TransactionCase):
 
     def test_timestamp_rejects_invalid_type(self):
         self.assertFalse(is_timestamp_valid(None))
+
+
+class TestVerifyCustomPrefixGate(TransactionCase):
+    @mute_logger("odoo.addons.api_transport.tools.authentication")
+    def test_non_verify_method_rejected(self):
+        result = _is_custom_verification_valid(
+            "res.partner.search_count", {}, "{}", env=self.env
+        )
+        self.assertFalse(result)
+
+    @mute_logger("odoo.addons.api_transport.tools.authentication")
+    def test_private_non_verify_method_rejected(self):
+        result = _is_custom_verification_valid(
+            "res.partner._compute_display_name", {}, "{}", env=self.env
+        )
+        self.assertFalse(result)
+
+    def test_verify_method_invoked(self):
+        calls = []
+
+        def fake_verify(model_self, headers, body):
+            calls.append((headers, body))
+            return True
+
+        partner_cls = type(self.env["res.partner"])
+        with patch.object(
+            partner_cls, "verify_test_webhook", create=True, new=fake_verify
+        ):
+            result = _is_custom_verification_valid(
+                "res.partner.verify_test_webhook",
+                {"X-Test": "1"},
+                "body",
+                env=self.env,
+            )
+        self.assertTrue(result)
+        self.assertEqual(calls, [({"X-Test": "1"}, "body")])

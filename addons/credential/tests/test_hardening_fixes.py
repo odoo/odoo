@@ -7,8 +7,6 @@ from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger
 
-from odoo.addons.credential.tools.authentication import _is_custom_verification_valid
-
 
 class TestHardeningFixesBase(TransactionCase):
     @classmethod
@@ -420,39 +418,3 @@ class TestRateLimitBucketLockTimeoutScope(TestHardeningFixesBase):
             "lock_timeout must be reset immediately after the locked query, "
             "not leak into the rest of the transaction",
         )
-
-
-class TestVerifyCustomPrefixGate(TransactionCase):
-    @mute_logger("odoo.addons.credential.tools.authentication")
-    def test_non_verify_method_rejected(self):
-        result = _is_custom_verification_valid(
-            "res.partner.search_count", {}, "{}", env=self.env
-        )
-        self.assertFalse(result)
-
-    @mute_logger("odoo.addons.credential.tools.authentication")
-    def test_private_non_verify_method_rejected(self):
-        result = _is_custom_verification_valid(
-            "res.partner._compute_display_name", {}, "{}", env=self.env
-        )
-        self.assertFalse(result)
-
-    def test_verify_method_invoked(self):
-        calls = []
-
-        def fake_verify(model_self, headers, body):
-            calls.append((headers, body))
-            return True
-
-        partner_cls = type(self.env["res.partner"])
-        with patch.object(
-            partner_cls, "verify_test_webhook", create=True, new=fake_verify
-        ):
-            result = _is_custom_verification_valid(
-                "res.partner.verify_test_webhook",
-                {"X-Test": "1"},
-                "body",
-                env=self.env,
-            )
-        self.assertTrue(result)
-        self.assertEqual(calls, [({"X-Test": "1"}, "body")])

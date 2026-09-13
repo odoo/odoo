@@ -1,5 +1,7 @@
 import logging
 
+from .tools.ingress_adoption import adopt_ingress_from_credential
+
 _logger = logging.getLogger(__name__)
 
 _OLD = "api_communication"
@@ -158,6 +160,7 @@ def _adopt_gateway_endpoints(env) -> int:
 
 
 def pre_init_hook(env):
+    adopt_ingress_from_credential(env.cr)
     if _takeover_module_row(env):
         _retag_model_data(env)
         _rename_config_parameters(env)

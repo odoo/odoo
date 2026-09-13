@@ -9,7 +9,6 @@ from cryptography.fernet import Fernet, InvalidToken
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
-from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -1266,22 +1265,15 @@ class CredentialCredential(models.Model):
 
     @api.model
     def _get_request_source_ip(self) -> str | bool:
+        raw_ip = self.env["ir.http"]._get_request_remote_addr()
+        if not raw_ip:
+            return False
         try:
-            if request and hasattr(request, "httprequest"):
-                raw_ip = request.httprequest.remote_addr
-                if raw_ip:
-                    try:
-                        ipaddress.ip_address(raw_ip)
-                        return raw_ip
-                    except ValueError:
-                        _logger.warning(
-                            "Invalid IP address format in request: %s",
-                            raw_ip[:50],
-                        )
-                        return "invalid"
-        except Exception:
-            _logger.debug("No HTTP request context for access log", exc_info=True)
-        return False
+            ipaddress.ip_address(raw_ip)
+        except ValueError:
+            _logger.warning("Invalid IP address format in request: %s", raw_ip[:50])
+            return "invalid"
+        return raw_ip
 
     def _access_log_extras(self, operation: str) -> dict:
         self.check_singleton()

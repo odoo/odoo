@@ -4,7 +4,7 @@ from typing import Any
 from odoo import fields, models
 from odoo.exceptions import ValidationError
 
-from ...tools.authentication import (
+from ..tools.authentication import (
     CaseInsensitiveHeaders,
     ip_in_allowlist,
     is_signature_valid,

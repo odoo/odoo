@@ -15,7 +15,7 @@ from odoo.addons.api_transport.tools import (
     inspect_payload_size,
     sanitize_error_message,
 )
-from odoo.addons.credential.tools import (
+from odoo.addons.api_transport.tools.authentication import (
     is_bearer_token_valid,
     is_hmac_signature_valid,
     is_timestamp_valid,
@@ -31,26 +31,26 @@ class TestVerifyBearerToken(TransactionCase):
         headers = {"Authorization": "Bearer wrong_token"}
         self.assertFalse(is_bearer_token_valid(headers, "my_secret_token"))
 
-    @mute_logger("odoo.addons.credential.tools.authentication")
+    @mute_logger("odoo.addons.api_transport.tools.authentication")
     def test_missing_authorization_header(self):
         self.assertFalse(is_bearer_token_valid({}, "my_secret_token"))
 
-    @mute_logger("odoo.addons.credential.tools.authentication")
+    @mute_logger("odoo.addons.api_transport.tools.authentication")
     def test_malformed_authorization_header(self):
         headers = {"Authorization": "Basic abc123"}
         self.assertFalse(is_bearer_token_valid(headers, "my_secret_token"))
 
-    @mute_logger("odoo.addons.credential.tools.authentication")
+    @mute_logger("odoo.addons.api_transport.tools.authentication")
     def test_empty_bearer_token(self):
         headers = {"Authorization": "Bearer "}
         self.assertFalse(is_bearer_token_valid(headers, "my_secret_token"))
 
-    @mute_logger("odoo.addons.credential.tools.authentication")
+    @mute_logger("odoo.addons.api_transport.tools.authentication")
     def test_no_expected_token(self):
         headers = {"Authorization": "Bearer some_token"}
         self.assertFalse(is_bearer_token_valid(headers, ""))
 
-    @mute_logger("odoo.addons.credential.tools.authentication")
+    @mute_logger("odoo.addons.api_transport.tools.authentication")
     def test_non_dict_headers_rejected(self):
         self.assertFalse(is_bearer_token_valid("not a dict", "token"))
 
@@ -97,16 +97,16 @@ class TestVerifyHmacSignature(TransactionCase):
             )
         )
 
-    @mute_logger("odoo.addons.credential.tools.authentication")
+    @mute_logger("odoo.addons.api_transport.tools.authentication")
     def test_missing_signature_header(self):
         self.assertFalse(is_hmac_signature_valid({}, "body", "secret", hashlib.sha256))
 
-    @mute_logger("odoo.addons.credential.tools.authentication")
+    @mute_logger("odoo.addons.api_transport.tools.authentication")
     def test_no_secret_provided(self):
         headers = {"X-Hub-Signature-256": "sha256=abc"}
         self.assertFalse(is_hmac_signature_valid(headers, "body", "", hashlib.sha256))
 
-    @mute_logger("odoo.addons.credential.tools.authentication")
+    @mute_logger("odoo.addons.api_transport.tools.authentication")
     def test_non_hex_signature_rejected(self):
         headers = {"X-Hub-Signature-256": "sha256=not_hex_zzzz"}
         self.assertFalse(
@@ -126,12 +126,12 @@ class TestVerifyTimestamp(TransactionCase):
     def test_current_unix_timestamp_valid(self):
         self.assertTrue(is_timestamp_valid(time.time(), max_age_seconds=300))
 
-    @mute_logger("odoo.addons.credential.tools.authentication")
+    @mute_logger("odoo.addons.api_transport.tools.authentication")
     def test_old_unix_timestamp_rejected(self):
         old_ts = time.time() - 600
         self.assertFalse(is_timestamp_valid(old_ts, max_age_seconds=300))
 
-    @mute_logger("odoo.addons.credential.tools.authentication")
+    @mute_logger("odoo.addons.api_transport.tools.authentication")
     def test_future_timestamp_rejected(self):
         future_ts = time.time() + 3600
         self.assertFalse(
@@ -148,11 +148,11 @@ class TestVerifyTimestamp(TransactionCase):
         now_iso = datetime.now(tz=UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
         self.assertTrue(is_timestamp_valid(now_iso, max_age_seconds=300))
 
-    @mute_logger("odoo.addons.credential.tools.authentication")
+    @mute_logger("odoo.addons.api_transport.tools.authentication")
     def test_negative_timestamp_rejected(self):
         self.assertFalse(is_timestamp_valid(-1))
 
-    @mute_logger("odoo.addons.credential.tools.authentication")
+    @mute_logger("odoo.addons.api_transport.tools.authentication")
     def test_invalid_type_rejected(self):
         self.assertFalse(is_timestamp_valid([123]))
 

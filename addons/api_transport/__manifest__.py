@@ -1,6 +1,6 @@
 {
     "name": "API Transport",
-    "version": "19.0.1.23.0",
+    "version": "19.0.1.24.0",
     "category": "Hidden",
     "sequence": 5,
     "summary": "Inbound and outbound API transport with auth, rate limiting, retry and logging",
@@ -65,6 +65,7 @@ model by company.
         "data/ir_cron_data.xml",
         "data/api_service_data.xml",
         "views/api_event_log_views.xml",
+        "views/inbound_access_log_views.xml",
         "views/api_endpoint_outbound.xml",
         "views/ir_actions_server_views.xml",
         "views/response_cache_views.xml",
