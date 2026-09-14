@@ -14,13 +14,13 @@ export class ProductLabelSectionAndNoteListRender extends SectionAndNoteListRend
         this.productColumns = ["product_id", "product_template_id"];
     }
 
-    isCellReadonly(column, record) {
+    isFieldReadonly(column, record) {
         if (![...this.productColumns, "name"].includes(column.name)) {
-            return super.isCellReadonly(column, record);
+            return super.isFieldReadonly(column, record);
         }
-        // The isCellReadonly method from the ListRenderer is used to determine the classes to apply to the cell.
+        // The isFieldReadonly method from the ListRenderer is used to determine the classes to apply to the cell.
         // We need this override to make sure some readonly classes are not applied to the cell if it is still editable.
-        const isReadonly = super.isCellReadonly(column, record);
+        const isReadonly = super.isFieldReadonly(column, record);
         return (
             isReadonly
             && (["cancel", "posted"].includes(record.evalContext.parent.state)
