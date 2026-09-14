@@ -34,6 +34,7 @@ class MaintenanceEquipment(models.Model):
     owner_user_id = fields.Many2one(
         compute="_compute_owner_user_id",
         store=True,
+        readonly=False,
     )
     assign_date = fields.Date(
         compute="_compute_equipment_assign",
@@ -45,11 +46,12 @@ class MaintenanceEquipment(models.Model):
     @api.depends("employee_id", "department_id", "equipment_assign_to")
     def _compute_owner_user_id(self):
         for equipment in self:
-            equipment.owner_user_id = self.env.user.id
             if equipment.equipment_assign_to == "employee":
-                equipment.owner_user_id = equipment.employee_id.user_id.id
+                equipment.owner_user_id = equipment.employee_id.user_id
             elif equipment.equipment_assign_to == "department":
-                equipment.owner_user_id = equipment.department_id.manager_id.user_id.id
+                equipment.owner_user_id = equipment.department_id.manager_id.user_id
+            else:
+                equipment.owner_user_id = equipment.owner_user_id or self.env.user
 
     @api.depends("equipment_assign_to")
     def _compute_equipment_assign(self):
@@ -119,19 +121,24 @@ class MaintenanceRequest(models.Model):
     )
     owner_user_id = fields.Many2one(
         compute="_compute_owner_user_id",
+        default=None,
         store=True,
+        readonly=False,
     )
     equipment_id = fields.Many2one(
         domain="['|', ('employee_id', '=', employee_id), ('employee_id', '=', False)]"
     )
 
-    @api.depends("employee_id")
+    @api.depends("employee_id", "equipment_id.equipment_assign_to")
     def _compute_owner_user_id(self):
-        for r in self:
-            if r.equipment_id.equipment_assign_to == "employee":
-                r.owner_user_id = r.employee_id.user_id.id
+        for request in self:
+            if (
+                request.equipment_id.equipment_assign_to == "employee"
+                and request.employee_id.user_id
+            ):
+                request.owner_user_id = request.employee_id.user_id
             else:
-                r.owner_user_id = False
+                request.owner_user_id = request.owner_user_id or self.env.user
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -160,8 +167,6 @@ class MaintenanceRequest(models.Model):
             if email
             else self.env["res.users"]
         )
-        if user:
-            employee = self.env.user.employee_id
-            if employee:
-                custom_values["employee_id"] = employee and employee[0].id
+        if user.employee_id:
+            custom_values["employee_id"] = user.employee_id.id
         return super().message_new(msg_dict, custom_values=custom_values)
