@@ -262,6 +262,26 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
         )
         self.assertEqual(p3, p)
 
+    def test_09_hierarchy_without_parent_store_is_one_query(self):
+        Partner = self.env["res.partner"]
+        root = Partner.create({"name": "root"})
+        kids = Partner.create(
+            [{"name": f"kid {i}", "parent_id": root.id} for i in range(3)]
+        )
+        grandkid = Partner.create({"name": "grandkid", "parent_id": kids[0].id})
+        Partner.create({"name": "other"})
+        self.env.flush_all()
+        self.assertFalse(Partner._parent_store)
+        # the closure is a subquery of the search, not a query of its own
+        with self.assertQueryCount(1):
+            found = Partner.search([("id", "child_of", root.id)])
+        self.assertEqual(found, root + kids + grandkid)
+        with self.assertQueryCount(1):
+            found = Partner.search(
+                [("parent_id", "child_of", root.id), ("name", "like", "kid")]
+            )
+        self.assertEqual(found, kids + grandkid)
+
     def test_10_hierarchy_in_m2m(self):
         Partner = self.env["res.partner"]
         Category = self.env["res.partner.tag"]

@@ -489,26 +489,26 @@ class TestSubqueries(TransactionCase):
         nodes = Node.create([{"parent_id": parent_node.id} for _ in range(3)])
         Head.create({"node_id": parent_node.id})
 
-        # the closure is one recursive statement on the port, not one query per level
+        # the closure is one recursive statement on the port, and it stays a
+        # subquery of the search that asked for it
         with self.assertQueries(
             [
                 """
-            SELECT "test_orm_hierarchy_node"."id"
-            FROM "test_orm_hierarchy_node"
-            WHERE "test_orm_hierarchy_node"."id" IN (WITH RECURSIVE closure AS (
-                SELECT "test_orm_hierarchy_node"."id" FROM "test_orm_hierarchy_node"
-                WHERE "test_orm_hierarchy_node"."id" = ANY(%s)
-            UNION
-                SELECT "test_orm_hierarchy_node"."id" FROM "test_orm_hierarchy_node"
-                JOIN closure parent ON parent.id = "test_orm_hierarchy_node"."parent_id"
-                WHERE TRUE
-            )
-            SELECT id FROM closure)
-        """,
-                """
             SELECT "test_orm_hierarchy_head"."id"
             FROM "test_orm_hierarchy_head"
-            WHERE "test_orm_hierarchy_head"."node_id" IN (%s, %s, %s, %s)
+            WHERE "test_orm_hierarchy_head"."node_id" IN (
+                SELECT "test_orm_hierarchy_node"."id"
+                FROM "test_orm_hierarchy_node"
+                WHERE "test_orm_hierarchy_node"."id" IN (WITH RECURSIVE closure AS (
+                    SELECT "test_orm_hierarchy_node"."id" FROM "test_orm_hierarchy_node"
+                    WHERE "test_orm_hierarchy_node"."id" = ANY(%s)
+                UNION
+                    SELECT "test_orm_hierarchy_node"."id" FROM "test_orm_hierarchy_node"
+                    JOIN closure parent ON parent.id = "test_orm_hierarchy_node"."parent_id"
+                    WHERE TRUE
+                )
+                SELECT id FROM closure)
+            )
             ORDER BY "test_orm_hierarchy_head"."id"
         """,
             ]

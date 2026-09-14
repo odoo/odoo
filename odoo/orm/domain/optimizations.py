@@ -9,7 +9,7 @@ from collections.abc import Set as AbstractSet
 from odoo.exceptions import MissingError
 from odoo.libs.collections import FrozenOrderedSet
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import SQL, OrderedSet, partition, str2bool
+from odoo.tools import SQL, OrderedSet, Query, partition, str2bool
 
 from ..primitives import COLLECTION_TYPES
 from .ast import (
@@ -733,15 +733,22 @@ def _optimize_hierarchy(condition, model):
         )
         return _FALSE_DOMAIN
     result = hierarchy(comodel_sudo.browse(coids), parent)
-    _debug.logic(
-        "domain.hierarchy.resolved",
-        model=model._name,
-        field=field.name,
-        operator=condition.operator,
-        roots=len(coids),
-        via="parent_path" if isinstance(result, Domain) else "walk",
-        matched=None if isinstance(result, Domain) else len(result),
-    )
+    if _debug.logic.enabled:
+        _debug.logic(
+            "domain.hierarchy.resolved",
+            model=model._name,
+            field=field.name,
+            operator=condition.operator,
+            roots=len(coids),
+            via=(
+                "parent_path"
+                if isinstance(result, Domain)
+                else "subquery"
+                if isinstance(result, Query)
+                else "walk"
+            ),
+            matched=len(result) if isinstance(result, OrderedSet) else None,
+        )
     if isinstance(result, Domain):
         if field.name == "id":
             return result
@@ -749,7 +756,9 @@ def _optimize_hierarchy(condition, model):
     return DomainCondition(field.name, "in", result)
 
 
-def _get_domain_child_of(comodel: BaseModel, parent: str) -> Domain | OrderedSet:
+def _get_domain_child_of(
+    comodel: BaseModel, parent: str
+) -> Domain | Query | OrderedSet:
     if comodel._parent_store and parent == comodel._parent_name:
         try:
             paths = comodel.mapped("parent_path")
@@ -761,14 +770,15 @@ def _get_domain_child_of(comodel: BaseModel, parent: str) -> Domain | OrderedSet
     else:
         parent_field = comodel._fields[parent]
         if parent_field.is_many2one and parent_field.store:
-            query = comodel.env.backend.descendants(
+            # the closure stays a subquery of the search that asked for it:
+            # one round trip instead of the closure and then the search
+            return comodel.env.backend.descendants(
                 comodel,
                 parent,
                 comodel.ids,
                 domain=Domain.TRUE,
                 step_domain=Domain.TRUE,
             )
-            return OrderedSet(query.get_result_ids())
         # a many2many or non-stored parent has no column to recurse over
         child_ids: OrderedSet[int] = OrderedSet()
         while comodel:
