@@ -1,4 +1,5 @@
 import base64
+import logging
 import re
 
 import psycopg
@@ -17,6 +18,7 @@ from odoo.tools.translate import LazyTranslate, _
 from ..tools import website_form_signature_payload
 
 _lt = LazyTranslate(__name__)
+_logger = logging.getLogger(__name__)
 
 
 class WebsiteForm(http.Controller):
@@ -75,6 +77,21 @@ class WebsiteForm(http.Controller):
                 {"error": _("The form's specified model does not exist")}
             )
 
+        if model_name == "mail.mail":
+            signature = kwargs.get("website_form_signature", "")
+            extra_recipients = {
+                name: kwargs.get(name) or ""
+                for name in ("email_cc", "email_bcc")
+                if name in kwargs
+            }
+            value = website_form_signature_payload(
+                kwargs.get("email_to"), extra_recipients
+            )
+            hash_value = hmac(model_record.env, "website_form_signature", value)
+            if not consteq(signature, hash_value):
+                _logger.debug("Rejected website mail form before record creation")
+                raise AccessDenied(self.env._("invalid website_form_signature"))
+
         try:
             data = self.extract_data(model_record, kwargs)
         except ValidationError as e:
@@ -91,18 +108,6 @@ class WebsiteForm(http.Controller):
             self.create_attachments(model_record, id_record, data["attachments"])
 
             if model_name == "mail.mail":
-                signature = kwargs.get("website_form_signature", "")
-                extra_recipients = {
-                    name: kwargs.get(name) or ""
-                    for name in ("email_cc", "email_bcc")
-                    if name in kwargs
-                }
-                value = website_form_signature_payload(
-                    kwargs.get("email_to"), extra_recipients
-                )
-                hash_value = hmac(model_record.env, "website_form_signature", value)
-                if not consteq(signature, hash_value):
-                    raise AccessDenied(self.env._("invalid website_form_signature"))
                 request.env[model_name].sudo().browse(id_record).send()
 
         request.session["form_builder_model_model"] = model_record.model

@@ -136,7 +136,7 @@ Top-level layout (detailed maps are separate docs):
 | `wizards/` | 4 `.py` + XML — transient wizards (robots, blocked domains, language install, portal) | `MODEL_MAP.md` |
 | `static/src/` | 347 JS across 142 directories (two runtimes) | `DIRECTORY_MAP.md` |
 | `static/tests/` | 219 `.js` (HOOT suites + 86 tours) | `TEST_TAGS.md` |
-| `tests/` | 49 Python test files | `TEST_TAGS.md` |
+| `tests/` | 50 Python test files | `TEST_TAGS.md` |
 | `views/` · `data/` · `security/` · `i18n/` | QWeb templates, ~66 `s_*` snippet templates, fixtures, ACLs, translations | — |
 | `doc/` | `website.snippet.rst` (snippet authoring guide) | — |
 
@@ -210,7 +210,7 @@ recolor the whole UI:
 | Python (controllers) | 7 files (8 Controller classes; `__init__.py` has no routes) |
 | Python (models) | 45 files (63 model classes) |
 | Python (wizard) | 4 `.py` + XML |
-| Python (tests) | 49 |
+| Python (tests) | 50 |
 | JavaScript (src) | 347 across 142 directories |
 | JavaScript (`.edit.js` variants) | 32 |
 | JavaScript (tests) | 217 (incl. 86 tours) |

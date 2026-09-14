@@ -7,6 +7,7 @@ from . import test_base_url
 from . import test_client_action
 from . import test_configurator
 from . import test_controllers
+from . import test_controller_integrity
 from . import test_converter
 from . import test_crawl
 from . import test_custom_snippets

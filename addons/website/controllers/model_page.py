@@ -1,9 +1,13 @@
 import ast
+import logging
 
 import werkzeug
 
+from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.http import Controller, request, route
+
+_logger = logging.getLogger(__name__)
 
 
 class ModelPageController(Controller):
@@ -63,10 +67,10 @@ class ModelPageController(Controller):
 
         if record_slug:
             _, res_id = request.env["ir.http"]._unslug(record_slug)
-            record = Model.browse(res_id).filtered_domain(Domain.AND(domains))
-            if not record.exists() or record_slug != request.env["ir.http"]._slug(
-                record
-            ):
+            record = Model.search(
+                Domain("id", "=", res_id) & Domain.AND(domains), limit=1
+            )
+            if not record or record_slug != request.env["ir.http"]._slug(record):
                 raise werkzeug.exceptions.NotFound
 
             render_context = {
@@ -83,19 +87,7 @@ class ModelPageController(Controller):
             layout_mode = page.default_layout
 
         searches.setdefault("search", "")
-        default_order = "create_date desc"
-        sortable_fields = {
-            name
-            for name, field in Model._fields.items()
-            if field.store and field.column_type
-        }
-        order = searches.get("order") or default_order
-        if not all(
-            term.strip().split(" ")[0] in sortable_fields
-            for term in order.split(",")
-            if term.strip()
-        ):
-            order = default_order
+        order = self._get_model_order(Model, searches.get("order"))
         searches["order"] = order
 
         def record_to_url(record):
@@ -120,7 +112,8 @@ class ModelPageController(Controller):
                 )
                 domains.append(name_domain)
 
-        search_count = Model.search_count(Domain.AND(domains))
+        search_domain = Domain.AND(domains)
+        search_count = Model.search_count(search_domain)
         pager = website.pager(
             url=f"/model/{page.name_slugified}",
             url_args=searches,
@@ -129,14 +122,17 @@ class ModelPageController(Controller):
             step=self.pager_step,
             scope=5,
         )
-        if search_count <= self.pager_step * (page_number - 1) > 0:
+        if str(page_number).isdecimal() and int(page_number) > pager["page_count"]:
             return request.redirect(pager["page_last"]["url"])
 
+        query_order = order
+        if not any(term.split()[0] == "id" for term in order.split(",")):
+            query_order = f"{order}, id desc"
         records = Model.search(
-            Domain.AND(domains),
+            search_domain,
             limit=self.pager_step,
-            offset=self.pager_step * (page_number - 1),
-            order=searches["order"],
+            offset=pager["offset"],
+            order=query_order,
         )
 
         render_context = {
@@ -151,3 +147,20 @@ class ModelPageController(Controller):
             "main_object": page.sudo(),
         }
         return request.render(view.key, render_context)
+
+    def _get_model_order(self, model, order):
+        default_order = (
+            "create_date desc" if "create_date" in model._fields else model._order
+        )
+        if not order:
+            return default_order
+        try:
+            model._check_qorder(order)
+        except UserError:
+            _logger.debug("Invalid model page order; using default for %s", model._name)
+            return default_order
+        for term in order.split(","):
+            field = model._fields.get(term.split()[0])
+            if not field or not field.store or not field.column_type:
+                return default_order
+        return order

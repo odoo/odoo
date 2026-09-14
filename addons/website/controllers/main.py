@@ -1,9 +1,11 @@
 import base64
+import binascii
 import datetime
 import logging
 import re
 import urllib.parse
 import zipfile
+import zlib
 from hashlib import md5, sha256
 from io import BytesIO
 from itertools import islice
@@ -37,10 +39,12 @@ from odoo.addons.website.tools import get_base_hostname
 _lt = LazyTranslate(__name__)
 logger = logging.getLogger(__name__)
 
-MAX_IMAGE_WIDTH, MAX_IMAGE_HEIGHT = IMAGE_LIMITS = (1024, 768)
 LOC_PER_SITEMAP = 45000
 SITEMAP_CACHE_TIME = datetime.timedelta(hours=12)
 MAX_FONT_FILE_SIZE = 10 * 1024 * 1024
+MAX_FONT_UPLOAD_SIZE = 100 * 1024 * 1024
+MAX_FONT_ARCHIVE_SIZE = 100 * 1024 * 1024
+MAX_FONT_ARCHIVE_ENTRIES = 1000
 SUPPORTED_FONT_EXTENSIONS = ["ttf", "woff", "woff2", "otf"]
 MAX_PAGE_SEARCH_RESULTS = 500
 
@@ -459,8 +463,8 @@ class Website(Home):
             order="write_date desc", limit=5
         )
         for url, name in last_modified_pages.mapped(lambda p: (p.url, p.name)):
-            if needle.lower() in name.lower() or (
-                needle.lower() in url.lower() and url not in matching_urls
+            if url not in matching_urls and (
+                needle.lower() in name.lower() or needle.lower() in url.lower()
             ):
                 matching_last_modified.append(
                     {
@@ -635,7 +639,7 @@ class Website(Home):
         options=None,
     ):
         limit = min(max(int(limit or 0), 0), MAX_PAGE_SEARCH_RESULTS)
-        options = options or {}
+        options = self._get_page_search_options() | (options or {})
         try:
             results_count, search_results, fuzzy_term = (
                 request.website._search_with_fuzzy(
@@ -655,6 +659,12 @@ class Website(Home):
                 "parts": {},
             }
         term = fuzzy_term or term
+        highlight_terms = "|".join(map(re.escape, (term or "").split()))
+        highlight_pattern = (
+            re.compile(f"({highlight_terms})", re.IGNORECASE)
+            if highlight_terms
+            else None
+        )
         search_results = request.website._search_render_results(search_results, limit)
 
         mappings = []
@@ -681,22 +691,20 @@ class Website(Home):
                     continue
                 field_type = field_meta.get("type")
                 if field_type == "text":
-                    if value and field_meta.get("truncate", True):
+                    if field_meta.get("truncate", True):
                         value = shorten(value, max_nb_chars, placeholder="...")
-                    if field_meta.get("match") and value and term:
-                        pattern = "|".join(map(re.escape, term.split()))
-                        if pattern:
-                            parts = re.split(f"({pattern})", value, flags=re.IGNORECASE)
-                            if len(parts) > 1:
-                                value = (
-                                    request.env["ir.ui.view"]
-                                    .sudo()
-                                    ._render_template(
-                                        "website.search_text_with_highlight",
-                                        {"parts": parts},
-                                    )
+                    if field_meta.get("match") and highlight_pattern:
+                        parts = highlight_pattern.split(value)
+                        if len(parts) > 1:
+                            value = (
+                                request.env["ir.ui.view"]
+                                .sudo()
+                                ._render_template(
+                                    "website.search_text_with_highlight",
+                                    {"parts": parts},
                                 )
-                                field_type = "html"
+                            )
+                            field_type = "html"
 
                 if (
                     field_type not in ("image", "binary")
@@ -757,7 +765,7 @@ class Website(Home):
             step=step,
         )
 
-        pages = pages[(page - 1) * step : page * step]
+        pages = pages[pager["offset"] : pager["offset"] + step]
 
         values = {
             "pager": pager,
@@ -818,7 +826,7 @@ class Website(Home):
             step=step,
         )
 
-        results = results[(page - 1) * step : page * step]
+        results = results[pager["offset"] : pager["offset"] + step]
 
         values = {
             "pager": pager,
@@ -1052,11 +1060,13 @@ class Website(Home):
             raise werkzeug.exceptions.Forbidden
         result = []
         for model in models:
-            record = request.env[model["model"]].browse(model["id"])
+            record = self._get_html_record(model["model"], model["id"])
             if not record.has_access("read"):
                 continue
-            model["field"] = "arch_db" if model["field"] == "arch" else model["field"]
-            tree = html.fromstring(str(record[model["field"]]))
+            field_name = "arch_db" if model["field"] == "arch" else model["field"]
+            tree = self._get_html_tree(record, field_name)
+            if tree is None:
+                continue
             for index, el in enumerate(tree.xpath("//img[@src]")):
                 role = el.get("role")
                 decorative = role == "presentation"
@@ -1071,7 +1081,7 @@ class Website(Home):
                             "res_model": model["model"],
                             "res_id": model["id"],
                             "id": f"{model['model']}-{model['id']}-{index}",
-                            "field": model.get("field"),
+                            "field": field_name,
                         }
                     )
         return json.dumps(result)
@@ -1082,31 +1092,47 @@ class Website(Home):
     def update_alt_images(self, imgs):
         if not request.env.user.has_group("website.group_website_restricted_editor"):
             raise werkzeug.exceptions.Forbidden
-        for img in imgs:
-            record = request.env[img["res_model"]].browse(img["res_id"])
-            if not record.has_access("write"):
-                continue
-            img["field"] = "arch_db" if img["field"] == "arch" else img["field"]
-            field = record._fields.get(img["field"])
-            if not field or field.type not in ("html", "text") or not field.store:
-                continue
-            tree = html.fromstring(str(record[img["field"]]))
-            modified = False
-            for index, element in enumerate(tree.xpath("//img")):
-                imgId = f"{img['res_model']}-{img['res_id']}-{index!s}"
-                if imgId == img["id"]:
-                    if img["decorative"]:
-                        element.set("alt", "")
-                        element.set("role", "presentation")
-                    else:
-                        element.set("alt", img["alt"])
-                        element.attrib.pop("role", None)
-                    modified = True
-            if modified:
-                new_html_content = html.tostring(
-                    tree, encoding="unicode", method="html"
+        self._update_html_fields(imgs, self._update_image_attributes)
+
+    def _update_image_attributes(self, tree, imgs):
+        images_by_id = {img["id"]: img for img in imgs}
+        prefix = f"{imgs[0]['res_model']}-{imgs[0]['res_id']}-"
+        modified = False
+        elements = tree.xpath("//img[@src]") if tree is not None else ()
+        for index, element in enumerate(elements):
+            if img := images_by_id.pop(f"{prefix}{index}", None):
+                if "src" in img and img["src"] != element.get("src"):
+                    logger.debug("Stale website image target id=%s", img["id"])
+                    raise UserError(
+                        _(
+                            "The page images have changed. Refresh the page before saving image descriptions."
+                        )
+                    )
+                if img["decorative"]:
+                    if (
+                        element.get("alt") == ""
+                        and element.get("role") == "presentation"
+                    ):
+                        continue
+                    element.set("alt", "")
+                    element.set("role", "presentation")
+                else:
+                    if (
+                        element.get("alt") == img["alt"]
+                        and "role" not in element.attrib
+                    ):
+                        continue
+                    element.set("alt", img["alt"])
+                    element.attrib.pop("role", None)
+                modified = True
+        if any("src" in img for img in images_by_id.values()):
+            logger.debug("Missing website image targets count=%d", len(images_by_id))
+            raise UserError(
+                _(
+                    "The page images have changed. Refresh the page before saving image descriptions."
                 )
-                record.write({img["field"]: new_html_content})
+            )
+        return modified
 
     @http.route(
         ["/website/update_broken_links"], type="jsonrpc", auth="user", website=True
@@ -1114,29 +1140,93 @@ class Website(Home):
     def update_broken_links(self, links):
         if not request.env.user.has_group("website.group_website_restricted_editor"):
             raise werkzeug.exceptions.Forbidden
+        self._update_html_fields(links, self._update_link_urls)
+
+    def _update_link_urls(self, tree, links):
+        if tree is None:
+            return False
+        modified = False
         for link in links:
-            record = request.env[link["res_model"]].browse(link["res_id"])
-            if not record.has_access("write"):
-                continue
-            link["field"] = "arch_db" if link["field"] == "arch" else link["field"]
-            field = record._fields.get(link["field"])
-            if not field or field.type not in ("html", "text") or not field.store:
-                continue
-            tree = html.fromstring(str(record[link["field"]]))
-            modified = False
             for element in tree.xpath("//a"):
                 href = element.get("href")
                 if href and (link["oldLink"] == href or link["oldLink"] == href + "/"):
                     if link["remove"]:
                         element.drop_tag()
-                    else:
+                    elif href != link["newLink"]:
                         element.set("href", link["newLink"])
+                    else:
+                        continue
                     modified = True
+        return modified
+
+    def _update_html_fields(self, updates, update_tree):
+        updates_by_field = {}
+        for update in updates:
+            field_name = "arch_db" if update["field"] == "arch" else update["field"]
+            key = (update["res_model"], update["res_id"], field_name)
+            updates_by_field.setdefault(key, []).append(update)
+        for (
+            model_name,
+            record_id,
+            field_name,
+        ), field_updates in updates_by_field.items():
+            record = self._get_html_record(model_name, record_id)
+            if not record.has_access("write"):
+                continue
+            field = record._fields.get(field_name)
+            if not field or field.type not in ("html", "text") or not field.store:
+                continue
+            tree = self._get_html_tree(record, field_name)
+            modified = update_tree(tree, field_updates)
+            logger.debug(
+                "Website HTML update model=%s record=%s field=%s updates=%d modified=%s",
+                model_name,
+                record_id,
+                field_name,
+                len(field_updates),
+                modified,
+            )
             if modified:
                 new_html_content = html.tostring(
                     tree, encoding="unicode", method="html"
                 )
-                record.write({link["field"]: new_html_content})
+                record.write({field_name: new_html_content})
+
+    def _get_html_tree(self, record, field_name):
+        content = record[field_name]
+        if not content or not str(content).strip():
+            logger.debug(
+                "Empty website HTML model=%s record=%s field=%s",
+                record._name,
+                record.id,
+                field_name,
+            )
+            return None
+        return html.fromstring(str(content))
+
+    def _get_html_record(self, model_name, record_id):
+        record = request.env[model_name].browse(record_id)
+        website_id = request.env.context.get("website_id")
+        if (
+            model_name == "ir.ui.view"
+            and website_id
+            and not request.env.context.get("no_cow")
+            and record.has_access("read")
+        ):
+            if not record.website_id and record.key:
+                specific = record.with_context(active_test=False).search(
+                    [("key", "=", record.key), ("website_id", "=", website_id)],
+                    limit=1,
+                )
+                if specific:
+                    logger.debug(
+                        "Website HTML view resolved generic=%s specific=%s website=%s",
+                        record.id,
+                        specific.id,
+                        website_id,
+                    )
+                    record = specific
+        return record
 
     @http.route(
         ["/website/get_seo_data"],
@@ -1425,11 +1515,34 @@ class Website(Home):
             return font
 
         result = []
-        binary_data = base64.b64decode(data, validate=True)
+        if len(data) > 4 * ((MAX_FONT_UPLOAD_SIZE + 2) // 3):
+            raise UserError(_("Font upload exceeds maximum allowed file size"))
+        try:
+            binary_data = base64.b64decode(data, validate=True)
+        except binascii.Error, ValueError:
+            raise UserError(_("Font upload is not valid base64 data")) from None
+        if len(binary_data) > MAX_FONT_UPLOAD_SIZE:
+            raise UserError(_("Font upload exceeds maximum allowed file size"))
         readable_data = BytesIO(binary_data)
         if zipfile.is_zipfile(readable_data):
             with zipfile.ZipFile(readable_data, "r") as zip_file:
-                for entry in zip_file.infolist():
+                entries = zip_file.infolist()
+                expanded_size = sum(entry.file_size for entry in entries)
+                logger.debug(
+                    "Font archive entries=%d expanded_bytes=%d",
+                    len(entries),
+                    expanded_size,
+                )
+                if (
+                    len(entries) > MAX_FONT_ARCHIVE_ENTRIES
+                    or expanded_size > MAX_FONT_ARCHIVE_SIZE
+                ):
+                    raise UserError(
+                        _(
+                            "Font archive exceeds maximum allowed size or number of files"
+                        )
+                    )
+                for entry in entries:
                     if entry.file_size > MAX_FONT_FILE_SIZE:
                         raise UserError(
                             _(
@@ -1437,6 +1550,7 @@ class Website(Home):
                                 entry.filename,
                             )
                         )
+                for entry in entries:
                     if (
                         entry.filename.rsplit(".", 1)[-1].lower()
                         not in SUPPORTED_FONT_EXTENSIONS
@@ -1446,7 +1560,14 @@ class Website(Home):
                         continue
                     try:
                         data = zip_file.read(entry)
-                    except zipfile.BadZipFile, EOFError, OSError:
+                    except (
+                        zipfile.BadZipFile,
+                        EOFError,
+                        OSError,
+                        RuntimeError,
+                        NotImplementedError,
+                        zlib.error,
+                    ):
                         raise UserError(
                             _("File '%s' is corrupted", entry.filename)
                         ) from None
@@ -1460,6 +1581,9 @@ class Website(Home):
                             data,
                         )
                     )
+        elif len(binary_data) > MAX_FONT_FILE_SIZE:
+            logger.debug("Oversized standalone font bytes=%d", len(binary_data))
+            raise UserError(_("File '%s' exceeds maximum allowed file size", name))
         elif name.rsplit(".", 1)[
             -1
         ].lower() in SUPPORTED_FONT_EXTENSIONS and check_content(name, binary_data):
@@ -1576,6 +1700,9 @@ class Website(Home):
         excluded_url_matcher = re.compile(r"^(.+/lib/.+)|(.+import_bootstrap.+\.scss)$")
 
         url_infos = {}
+        seen_bundles = set()
+        seen_urls = set()
+        restricted_bundles = set(bundles_restriction)
         for v in views:
             for asset_call_node in etree.fromstring(v["arch"]).xpath(
                 "//t[@t-call-assets]"
@@ -1584,6 +1711,11 @@ class Website(Home):
                 if attr and not json.loads(attr.lower()):
                     continue
                 asset_name = asset_call_node.get("t-call-assets")
+                if asset_name in seen_bundles or (
+                    restricted_bundles and asset_name not in restricted_bundles
+                ):
+                    continue
+                seen_bundles.add(asset_name)
 
                 files_data = []
                 for file_info in request.env["ir.qweb"]._get_asset_content(asset_name)[
@@ -1593,7 +1725,7 @@ class Website(Home):
                         continue
                     url = file_info["url"]
 
-                    if excluded_url_matcher.match(url):
+                    if url in seen_urls or excluded_url_matcher.match(url):
                         continue
 
                     file_data = AssetsUtils._get_data_from_url(url)
@@ -1608,39 +1740,10 @@ class Website(Home):
                         or (file_type == "scss" and not only_user_custom_files)
                     ):
                         files_data.append(url)
+                        seen_urls.add(url)
 
                 if files_data:
                     files_data_by_bundle.append([asset_name, files_data])
-
-        for i in range(len(files_data_by_bundle)):
-            bundle_1 = files_data_by_bundle[i]
-            for j in range(len(files_data_by_bundle)):
-                if i == j:
-                    continue
-                bundle_2 = files_data_by_bundle[j]
-                if (
-                    bundle_1[0] not in bundles_restriction
-                    and bundle_2[0] in bundles_restriction
-                ):
-                    bundle_1[1] = [
-                        item_1 for item_1 in bundle_1[1] if item_1 in bundle_2[1]
-                    ]
-        for i in range(len(files_data_by_bundle)):
-            bundle_1 = files_data_by_bundle[i]
-            for j in range(i + 1, len(files_data_by_bundle)):
-                bundle_2 = files_data_by_bundle[j]
-                bundle_2[1] = [
-                    item_2 for item_2 in bundle_2[1] if item_2 not in bundle_1[1]
-                ]
-
-        files_data_by_bundle = [
-            data
-            for data in files_data_by_bundle
-            if (
-                len(data[1]) > 0
-                and (not bundles_restriction or data[0] in bundles_restriction)
-            )
-        ]
 
         urls = []
         for bundle_data in files_data_by_bundle:
