@@ -270,3 +270,111 @@ class TestMaintenanceEquipmentAndDashboards(TransactionCase):
             with self.subTest(filter=name):
                 self.assertIn(f"search_default_{name}", dashboard_arch)
                 self.assertIn(f'name="{name}"', search_arch)
+
+
+class TestMaintenanceSchedule(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.equipment = cls.env["maintenance.equipment"].create(
+            {"name": "Schedule probe equipment"}
+        )
+
+    def _request(self, **vals):
+        return self.env["maintenance.request"].create(
+            {
+                "name": "Schedule probe",
+                "equipment_id": self.equipment.id,
+                "schedule_date": datetime(2026, 9, 20, 10),
+                "schedule_end": datetime(2026, 9, 20, 14),
+                **vals,
+            }
+        )
+
+    def test_moving_the_start_keeps_the_planned_duration(self):
+        request = self._request()
+        self.assertEqual(request.duration, 4)
+        request.schedule_date = datetime(2026, 9, 21, 10)
+        self.assertEqual(request.schedule_end, datetime(2026, 9, 21, 14))
+        with Form(request) as form:
+            form.schedule_date = datetime(2026, 9, 22, 8)
+            self.assertEqual(form.schedule_end, datetime(2026, 9, 22, 12))
+        self.assertEqual(request.duration, 4)
+
+    def test_moving_the_end_changes_the_duration(self):
+        request = self._request()
+        request.schedule_end = datetime(2026, 9, 20, 11, 30)
+        self.assertEqual(request.duration, 1.5)
+        request.write(
+            {
+                "schedule_date": datetime(2026, 9, 25, 9),
+                "schedule_end": datetime(2026, 9, 25, 17),
+            }
+        )
+        self.assertEqual(request.duration, 8)
+
+    def test_a_start_alone_plans_one_hour(self):
+        request = self.env["maintenance.request"].create(
+            {"name": "One hour", "schedule_date": datetime(2026, 9, 20, 10)}
+        )
+        self.assertEqual(request.schedule_end, datetime(2026, 9, 20, 11))
+        self.assertEqual(request.duration, 1)
+
+    def test_the_next_occurrence_keeps_the_duration(self):
+        request = self._request(
+            maintenance_type="preventive",
+            recurring_maintenance=True,
+            repeat_interval=1,
+            repeat_unit="day",
+        )
+        request.stage_id = self.env.ref("maintenance.stage_3")
+        successor = self.env["maintenance.request"].search(
+            [("name", "=", request.name), ("id", "!=", request.id)]
+        )
+        self.assertRecordValues(
+            successor,
+            [
+                {
+                    "schedule_date": datetime(2026, 9, 21, 10),
+                    "schedule_end": datetime(2026, 9, 21, 14),
+                    "duration": 4,
+                }
+            ],
+        )
+
+
+class TestMaintenanceReliabilityFigures(TransactionCase):
+    def _equipment_with_failures(self, date_effective, failures):
+        equipment = self.env["maintenance.equipment"].create(
+            {"name": "Reliability probe", "date_effective": date_effective}
+        )
+        repaired = self.env.ref("maintenance.stage_3")
+        for request_date, close_date in failures:
+            self.env["maintenance.request"].create(
+                {
+                    "name": "Failure",
+                    "equipment_id": equipment.id,
+                    "maintenance_type": "corrective",
+                    "request_date": request_date,
+                    "stage_id": repaired.id,
+                    "close_date": close_date,
+                }
+            )
+        return equipment
+
+    def test_failures_before_the_effective_date_give_no_negative_mtbf(self):
+        equipment = self._equipment_with_failures(
+            date(2026, 9, 10), [(date(2026, 9, 1), date(2026, 9, 3))]
+        )
+        self.assertEqual(equipment.mtbf, 0)
+        self.assertFalse(equipment.estimated_next_failure)
+
+    def test_mttr_averages_only_the_repairs_with_both_dates(self):
+        equipment = self._equipment_with_failures(
+            date(2026, 1, 1),
+            [(date(2026, 3, 1), date(2026, 3, 5)), (date(2026, 4, 1), False)],
+        )
+        self.assertEqual(equipment.mttr, 4)
+        self.assertEqual(
+            equipment.mtbf, (date(2026, 4, 1) - date(2026, 1, 1)).days // 2
+        )

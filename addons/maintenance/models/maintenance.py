@@ -1,7 +1,5 @@
 from collections import defaultdict
-from datetime import UTC
-
-from dateutil.relativedelta import relativedelta
+from datetime import UTC, timedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -338,7 +336,10 @@ class MaintenanceRequest(models.Model):
     schedule_end = fields.Datetime(
         string="Scheduled End",
         compute="_compute_schedule_end",
+        inverse="_inverse_schedule_end",
+        precompute=True,
         store=True,
+        copy=False,
         readonly=False,
         help="Expected completion date and time of the maintenance request.",
     )
@@ -354,8 +355,7 @@ class MaintenanceRequest(models.Model):
         check_company=True,
     )
     duration = fields.Float(
-        compute="_compute_duration",
-        store=True,
+        default=1.0,
         help="Duration in hours.",
     )
     done = fields.Boolean(related="stage_id.done")
@@ -423,23 +423,19 @@ class MaintenanceRequest(models.Model):
             elif not request.close_date:
                 request.close_date = today
 
-    @api.depends("schedule_date")
+    @api.depends("schedule_date", "duration")
     def _compute_schedule_end(self):
         for request in self:
-            request.schedule_end = (
-                request.schedule_date and request.schedule_date + relativedelta(hours=1)
+            request.schedule_end = request.schedule_date and (
+                request.schedule_date + timedelta(hours=request.duration or 1)
             )
 
-    @api.depends("schedule_date", "schedule_end")
-    def _compute_duration(self):
+    def _inverse_schedule_end(self):
         for request in self:
             if request.schedule_date and request.schedule_end:
-                duration = (
+                request.duration = (
                     request.schedule_end - request.schedule_date
                 ).total_seconds() / 3600
-                request.duration = round(duration, 2)
-            else:
-                request.duration = 0
 
     @api.depends("company_id", "equipment_id")
     def _compute_maintenance_team_id(self):
@@ -549,7 +545,6 @@ class MaintenanceRequest(models.Model):
             return {}
         return {
             "schedule_date": schedule_date,
-            "schedule_end": schedule_date + relativedelta(hours=self.duration or 1),
             "stage_id": self._default_stage_id().id,
         }
 
