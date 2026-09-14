@@ -34,5 +34,8 @@ email or SMS, log a note, or record the absence as time off.
         "web.assets_backend": [
             "hr_presence/static/src/**/*",
         ],
+        "web.assets_unit_tests": [
+            "hr_presence/static/tests/**/*",
+        ],
     },
 }
