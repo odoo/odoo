@@ -1,7 +1,7 @@
 from collections import defaultdict
 from datetime import datetime, time, timedelta
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.libs.datetime import timezone, to_timezone
 from odoo.libs.debug_log import DebugLog
@@ -218,7 +218,7 @@ class HrEmployee(models.Model):
         if not self.env.user.has_group("hr.group_hr_manager"):
             _debug.logic("presence_action_refused", user=self.env.uid)
             raise UserError(
-                _(
+                self.env._(
                     "You don't have the right to do this. Please contact an Administrator."
                 )
             )
@@ -256,7 +256,7 @@ class HrEmployee(models.Model):
                 "default_employee_ids": self.ids,
                 "default_date_from": fields.Date.today(),
                 "default_date_to": fields.Date.today(),
-                "default_name": _("Unplanned Absence"),
+                "default_name": self.env._("Unplanned Absence"),
             }
 
         return {
@@ -284,7 +284,7 @@ class HrEmployee(models.Model):
         if template:
             context["default_template_id"] = template.id
         else:
-            context["default_body"] = _(
+            context["default_body"] = self.env._(
                 "Hi, we noticed you're not at work and no time-off was submitted. "
                 "If this is an oversight from us, we apologize. Please contact "
                 "your manager or HR ASAP. Thanks"
@@ -294,7 +294,7 @@ class HrEmployee(models.Model):
             "res_model": "sms.composer",
             "view_mode": "form",
             "context": context,
-            "name": _("Send SMS"),
+            "name": self.env._("Send SMS"),
             "target": "new",
         }
 
@@ -316,7 +316,7 @@ class HrEmployee(models.Model):
             "res_model": "mail.compose.message",
             "view_mode": "form",
             "context": context,
-            "name": _("Send Email"),
+            "name": self.env._("Send Email"),
             "target": "new",
         }
 
@@ -327,7 +327,7 @@ class HrEmployee(models.Model):
         )
         for employee in self:
             employee.message_post(
-                body=_(
+                body=self.env._(
                     "%(name)s has been noted as %(state)s today",
                     name=employee.name,
                     state=labels.get(
