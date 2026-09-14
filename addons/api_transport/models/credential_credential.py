@@ -370,16 +370,9 @@ class CredentialCredential(models.Model):
                 continue
 
             endpoint_code = record.endpoint_id.code
-            credential_hash = record.credential_hash
 
-            def is_invalidation_required(key, _sc=endpoint_code, _ch=credential_hash):
-                parts = key.split(":")
-                if len(parts) != 3:
-                    return False
-                key_service, _key_company, key_hash = parts
-                if _sc and key_service != _sc:
-                    return False
-                return not (_ch and key_hash != _ch)
+            def is_invalidation_required(key, _sc=endpoint_code):
+                return key.split(":", 1)[0] == _sc
 
             count = cache.invalidate_matching(is_invalidation_required)
 

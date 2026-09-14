@@ -818,3 +818,41 @@ class TestRequestHeadersReachTheRow(ClientLoggingCommon):
         _sent, row = self._send(client=client, headers={"Accept-Language": "es-MX"})
 
         self.assertEqual(row["request_headers"]["Accept-Language"], "es-MX")
+
+
+@tagged("post_install", "-at_install")
+class TestCredentialChangesDropCachedSessions(EncryptionKeyCase, TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.service = cls.env["api.endpoint.outbound"].create(
+            {
+                "name": "Session probe",
+                "code": "session_probe",
+                "endpoint_url": "https://example.invalid/live",
+                "auth_type": "api_key",
+                "environment": "production",
+            }
+        )
+        cls.credential = cls.env["credential.credential"].create(
+            {
+                "name": "Session probe key",
+                "category_id": cls.env.ref("credential.credential_category_api_key").id,
+                "api_key": "first-key",
+                "endpoint_id": cls.service.id,
+            }
+        )
+
+    def _cached_keys(self):
+        from odoo.addons.api_transport.tools.session_cache import get_session_cache
+
+        cached = get_session_cache(self.env).keys()
+        return [key for key in cached if key.startswith(f"{self.service.code}:")]
+
+    def test_rotating_the_secret_drops_the_services_cached_sessions(self):
+        self.service._get_api_client()._get_or_create_session()
+        self.assertTrue(self._cached_keys(), "precondition: a session is cached")
+
+        self.credential.api_key = "rotated-key"
+
+        self.assertEqual(self._cached_keys(), [])
