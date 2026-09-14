@@ -26,6 +26,7 @@ from ..primitives import COLLECTION_TYPES, SQL_OPERATORS
 from ..validation import regex_alphanumeric
 from ._field_sql import PYTHON_INEQUALITY_OPERATOR
 from .base import Field, _logger
+from .reference import REFERENCE_VERIFIED_CACHE_KEY
 from .temporal import _value_to_date, _value_to_datetime
 
 _debug = DebugLog(__name__)
@@ -328,7 +329,7 @@ class Properties(Field):
             else:
                 result.append([])
 
-        res_ids_per_model = self._get_res_ids_per_model(records.env, result)
+        res_ids_per_model = self._get_res_ids_per_model(records.env, result, records)
 
         for value in result:
             self._parse_json_types(value, records.env, res_ids_per_model)
@@ -359,9 +360,13 @@ class Properties(Field):
         return value or ""
 
     def _get_res_ids_per_model(
-        self, env: typing.Any, values_list: list[typing.Any]
+        self,
+        env: typing.Any,
+        values_list: list[typing.Any],
+        records: ModelLike | None = None,
     ) -> dict[str, set[int]]:
         ids_per_model: defaultdict[str, OrderedSet] = defaultdict(OrderedSet)
+        relational: dict[str, str] = {}
 
         for record_values in values_list:
             for property_definition in record_values:
@@ -372,6 +377,7 @@ class Properties(Field):
 
                 if type_ not in RELATIONAL_PROPERTY_TYPES or comodel not in env:
                     continue
+                relational[property_definition["name"]] = comodel
 
                 if type_ == "many2one":
                     default = [default] if default else []
@@ -384,19 +390,54 @@ class Properties(Field):
                 ids_per_model[comodel].update(default)
                 ids_per_model[comodel].update(property_value)
 
+        if not ids_per_model:
+            return {}
+        # the pairs a cursor has already seen exist stay verified until an
+        # unlink discards their model (the unlink mixin does, by cache key)
+        verified = env.cr.cache.setdefault(REFERENCE_VERIFIED_CACHE_KEY, {}).setdefault(
+            (self.model_name, self.name), set()
+        )
+        unverified = any(
+            (model, id_) not in verified
+            for model, ids in ids_per_model.items()
+            for id_ in ids
+        )
+        # one record asked and a statement is due: its prefetch siblings'
+        # cached values name the records the next reads will ask about, so
+        # they are verified in the same statement instead of one per record
+        if unverified and records is not None and len(records) == 1:
+            cached = self._get_cache(env)
+            for sibling_id in records._prefetch_ids:
+                raw = cached.get(sibling_id)
+                if not isinstance(raw, dict):
+                    continue
+                for name, comodel in relational.items():
+                    value = raw.get(name)
+                    if value.__class__ is int:
+                        ids_per_model[comodel].add(value)
+                    elif isinstance(value, list):
+                        ids_per_model[comodel].update(
+                            v for v in value if v.__class__ is int
+                        )
+
         res_ids_per_model = {}
         for model, ids in ids_per_model.items():
-            recs = env[model].browse(ids).exists()
-            res_ids_per_model[model] = set(recs.ids)
+            unknown = [id_ for id_ in ids if (model, id_) not in verified]
+            existing = env[model].browse(unknown).exists() if unknown else None
+            if existing is not None:
+                verified.update((model, id_) for id_ in existing._ids)
+            res_ids = {id_ for id_ in ids if (model, id_) in verified}
+            res_ids_per_model[model] = res_ids
             _debug.perf.count(
                 "field.properties.res_ids_verified",
                 field=self.name,
                 comodel=model,
                 requested=len(ids),
-                existing=len(recs),
+                queried=len(unknown),
+                existing=len(res_ids),
             )
 
-            for record in recs:
+            for record in env[model].browse(sorted(res_ids)):
                 with contextlib.suppress(AccessError):
                     record.display_name  # noqa: B018  the read IS the access check suppress() catches
 

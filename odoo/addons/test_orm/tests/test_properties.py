@@ -598,7 +598,13 @@ class PropertiesCase(TestPropertiesMixin):
         ]
 
         self.env.invalidate_all()
-        with self.assertQueryCount(5), self.assertQueries(expected_queries):
+        # the first read above verified the partner: the cursor remembers the
+        # pair, so the existence statement does not run again
+        exists_query = expected_queries[3]
+        with (
+            self.assertQueryCount(4),
+            self.assertQueries([q for q in expected_queries if q is not exists_query]),
+        ):
             self.message_1.read(["attributes"])
 
         discussions = [self.discussion_1, self.discussion_2]
@@ -632,8 +638,51 @@ class PropertiesCase(TestPropertiesMixin):
 
         partners[:20].unlink()
         self.env.invalidate_all()
+        # the unlink discards the verified pairs of its model: verified again
         with self.assertQueryCount(5):
             values = messages.read(["attributes"])
+        self.assertEqual(
+            sorted(value["attributes"][0]["value"] for value in values[:20]),
+            [False] * 20,
+        )
+
+    def test_a_property_read_record_by_record_verifies_the_siblings_at_once(self):
+        partners = self.env["test_orm.partner"].create(
+            [{"name": f"Batch {i}"} for i in range(30)]
+        )
+        messages = self.env["test_orm.message"].create(
+            [
+                {
+                    "name": f"Batch message {i}",
+                    "discussion": self.discussion_1.id,
+                    "author": self.user.id,
+                    "attributes": [
+                        {
+                            "name": "partner_id",
+                            "type": "many2one",
+                            "comodel": "test_orm.partner",
+                            "value": partner.id,
+                            "definition_changed": True,
+                        },
+                        {"name": "size", "type": "integer", "value": i},
+                    ],
+                }
+                for i, partner in enumerate(partners)
+            ]
+        )
+        self.env.invalidate_all()
+        # the column, the messages, the discussion, one existence check over
+        # the prefetch set, the partners' names: not one statement per record
+        with self.assertQueryCount(5):
+            sizes = [message.attributes["size"] for message in messages]
+            peers = [message.attributes["partner_id"] for message in messages]
+        self.assertEqual(sizes, list(range(30)))
+        self.assertEqual(peers, list(partners))
+        partners[:5].unlink()
+        self.env.invalidate_all()
+        peers = [message.attributes["partner_id"] for message in messages]
+        self.assertEqual(peers[:5], [self.env["test_orm.partner"]] * 5)
+        self.assertEqual(peers[5:], list(partners[5:]))
 
     @mute_logger("odoo.fields")
     def test_properties_field_delete(self):

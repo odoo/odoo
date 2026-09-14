@@ -143,3 +143,18 @@ def test_a_domain_on_a_property_keeps_zero_and_unset_apart(env):
     assert Card_.search([("props.tag", "like", "a")]).mapped("name") == []
     assert Card_.search([("props.tag", "not like", "x")]).mapped("name") == ["b", "c"]
     assert Card_.search([("props.tag", ">=", "")]).mapped("name") == ["a"]
+
+
+def test_a_relational_property_forgets_a_verified_record_its_unlink_removed(env):
+    Card_ = env["prp.card"]
+    board = env["prp.board"].search([], limit=1)
+    card = Card_.search([("name", "=", "a")])
+    assert card.props["ref"] == board
+    # the cursor remembers the pair as verified; the unlink discards it
+    other = env["prp.board"].create({"name": "other"})
+    card.props = {"ref": other.id}
+    env.flush_all()
+    assert card.props["ref"] == other
+    other.unlink()
+    env.invalidate_all()
+    assert card.props["ref"] == env["prp.board"]
