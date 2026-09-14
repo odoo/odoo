@@ -671,8 +671,8 @@ class ConnectionPool:
         """
         # find a connection, free idle and dead connections
         now = time.time()
-        check_all = self._check_free_at < now
-        self._check_free_at = now + MAX_IDLE_TIMEOUT / 10
+        if (check_all := self._check_free_at < now):
+            self._check_free_at = now + MAX_IDLE_TIMEOUT / 10
         close_used_before = now - MAX_IDLE_TIMEOUT
         selected_cnx = None
         for i, cnx in tools.reverse_enumerate(self._free_connections):
