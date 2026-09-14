@@ -1113,8 +1113,14 @@ class TestRecruitment(TransactionCase):
         self.assertEqual(
             applicant.email_from,
             "Ada <ada.work@example.com>",
-            "the address the applicant wrote from, not the contact's other one",
+            "the address the applicant wrote from",
         )
+        # This pins behaviour and does NOT discriminate the change it accompanies:
+        # driven against the pre-audit code, which called
+        # `_compute_partner_phone_email()` by hand here, it passes unchanged. That
+        # compute does assign `email_from` from the contact, but the inverse has
+        # already synced the contact to the applicant by then, so the assignment
+        # is a no-op. Replacing the call was a clarity change, not a fix.
 
     def test_job_documents_span_the_job_and_its_unhired_applications(self):
         job, other_job = self.env["hr.job"].create([{"name": "A"}, {"name": "B"}])

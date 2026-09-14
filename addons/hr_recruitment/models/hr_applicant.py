@@ -398,16 +398,17 @@ class HrApplicant(models.Model):
                 for fname in self._DUPLICATE_KEY_FIELDS
                 if applicant[fname] and (fname, applicant[fname]) in pool_ids_by_key
             ]
+            # The keys can match different talents, hence different pools: the
+            # count is the union, not whichever key happened to be checked first.
+            pools = set().union(*matches) if matches else ()
             _debug.logic(
                 "talent_pool_match",
                 applicant=applicant,
                 keys_matched=len(matches),
-                pools=len(set().union(*matches)) if matches else 0,
+                pools=len(pools),
             )
             applicant.is_applicant_in_pool = bool(matches)
-            # The keys can match different talents, hence different pools: the
-            # count is the union, not whichever key happened to be checked first.
-            applicant.talent_pool_count = len(set().union(*matches)) if matches else 0
+            applicant.talent_pool_count = len(pools)
 
     @api.depends(lambda self: self._phone_get_sanitize_triggers())
     def _compute_phone_sanitized(self):
