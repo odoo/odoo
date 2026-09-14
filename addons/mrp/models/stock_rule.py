@@ -109,7 +109,7 @@ class StockRule(models.Model):
         return super().run(procurements_without_kit, raise_user_error=raise_user_error)
 
     def _is_route_usable_for(self, product, route):
-        if any(rule.action == "manufacture" for rule in route.rule_ids):
+        if route._has_manufacture_rule():
             return any(
                 bom.type == "normal" for bom in product.bom_ids
             ) and super()._is_route_usable_for(product, route)
@@ -414,7 +414,10 @@ class StockRule(models.Model):
 class StockRoute(models.Model):
     _inherit = "stock.route"
 
+    def _has_manufacture_rule(self):
+        return self._has_rule_with_action("manufacture")
+
     def _is_valid_resupply_route_for_product(self, product):
-        if any(rule.action == "manufacture" for rule in self.rule_ids):
+        if self._has_manufacture_rule():
             return any(bom.type == "normal" for bom in product.bom_ids)
         return super()._is_valid_resupply_route_for_product(product)

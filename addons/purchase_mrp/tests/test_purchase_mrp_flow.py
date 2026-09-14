@@ -600,8 +600,8 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         manu_route = self.warehouse.manufacture_pull_id.route_id
         buy_route = self.warehouse.buy_pull_id.route_id
 
-        self.env["stock.rule"].search([]).sequence = 1
-        buy_route.rule_ids.sequence = 2
+        self.env["stock.rule"].sudo().search([]).sequence = 1
+        buy_route.sudo().rule_ids.sequence = 2
 
         vendor = self.env["res.partner"].create({"name": "super vendor"})
 

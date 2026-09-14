@@ -3,6 +3,8 @@ from odoo.exceptions import ValidationError
 
 from ..tools import debug_log as dbg
 
+ROUTE_RULE_ACTIONS_CACHE_KEY = "stock.route.rule_actions"
+
 
 class StockRoute(models.Model):
     _name = "stock.route"
@@ -88,6 +90,21 @@ class StockRoute(models.Model):
         copy=False,
         domain="[('id', 'in', warehouse_domain_ids)]",
     )
+
+    def _has_rule_with_action(self, action):
+        memo = self.env.cr.cache.setdefault(ROUTE_RULE_ACTIONS_CACHE_KEY, {})
+        missing = [route_id for route_id in self.ids if route_id not in memo]
+        if missing:
+            memo.update(dict.fromkeys(missing, frozenset()))
+            for route, actions in (
+                self.env["stock.rule"]
+                .sudo()
+                ._read_group(
+                    [("route_id", "in", missing)], ["route_id"], ["action:array_agg"]
+                )
+            ):
+                memo[route.id] = frozenset(actions)
+        return any(action in memo[route_id] for route_id in self.ids)
 
     @api.constrains("company_id")
     def _check_company_consistency(self):

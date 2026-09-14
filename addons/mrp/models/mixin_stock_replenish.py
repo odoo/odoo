@@ -16,4 +16,4 @@ class MixinStockReplenish(models.AbstractModel):
             rec.show_bom = rec._is_bom_shown(rec.route_id)
 
     def _is_bom_shown(self, route):
-        return any(r.action == "manufacture" for r in route.rule_ids)
+        return route._has_manufacture_rule()
