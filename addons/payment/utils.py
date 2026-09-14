@@ -1,5 +1,7 @@
 from hashlib import sha1
 
+from werkzeug.exceptions import Forbidden
+
 from odoo import api, fields
 from odoo.http import request
 from odoo.tools import consteq, float_round
@@ -258,3 +260,27 @@ def generate_idempotency_key(tx, scope=None):
     """
     database_uuid = tx.env["ir.config_parameter"].sudo().get_param("database.uuid")
     return sha1(f"{database_uuid}{tx.reference}{scope or ''}".encode()).hexdigest()
+
+
+# Notifications
+
+
+def admit_notification(provider_sudo, check, event_type=None):
+    """Run a provider notification through the provider's receiver, or refuse it.
+
+    :param recordset provider_sudo: the provider the notification is for
+    :param callable check: raises Forbidden when the notification's signature is wrong
+    :raise Forbidden: when the receiver refuses the notification
+    """
+    receiver = provider_sudo.env["integration.receiver"]._for_record(
+        provider_sudo,
+        provider_sudo.env._("%(provider)s notifications", provider=provider_sudo.name),
+    )
+    if not receiver._admit_checked_request(
+        check, event_type=event_type or provider_sudo.code
+    ):
+        raise Forbidden
+
+
+def verified_by_vendor_api():
+    """Signature check for notifications whose data is re-fetched from the provider's API."""

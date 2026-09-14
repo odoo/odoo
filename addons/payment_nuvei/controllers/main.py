@@ -38,7 +38,12 @@ class NuveiController(http.Controller):
             ._search_by_reference("nuvei", tx_data)
         )
         if tx_sudo:
-            self._check_signature(tx_sudo, data, error_access_token=error_access_token)
+            payment_utils.admit_notification(
+                tx_sudo.provider_id,
+                lambda: self._check_signature(
+                    tx_sudo, data, error_access_token=error_access_token
+                ),
+            )
             tx_sudo._process("nuvei", data)
         return request.redirect("/payment/status")
 
@@ -61,7 +66,9 @@ class NuveiController(http.Controller):
             ._search_by_reference("nuvei", data)
         )
         if tx_sudo:
-            self._check_signature(tx_sudo, data)
+            payment_utils.admit_notification(
+                tx_sudo.provider_id, lambda: self._check_signature(tx_sudo, data)
+            )
             tx_sudo._process("nuvei", data)
 
         return "OK"  # Acknowledge the notification.

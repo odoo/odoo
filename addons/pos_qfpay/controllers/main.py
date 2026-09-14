@@ -2,6 +2,8 @@ import hashlib
 import json
 import logging
 
+from werkzeug.exceptions import Forbidden
+
 from odoo.http import Controller, Response, request, route
 from odoo.tools import consteq
 
@@ -33,10 +35,20 @@ class QFPayNotificationController(Controller):
             _logger.warning("QFPay payment method does not have a notification key set")
             return None
 
-        sign_str = raw_body + qfpay_pm_sudo.qfpay_notification_key.encode()
-        computed_sign = hashlib.md5(sign_str).hexdigest().upper()
+        def check_signature():
+            sign_str = raw_body + qfpay_pm_sudo.qfpay_notification_key.encode()
+            computed_sign = hashlib.md5(sign_str).hexdigest().upper()
+            if not consteq(
+                computed_sign, request.httprequest.headers.get("X-QF-SIGN") or ""
+            ):
+                raise Forbidden
 
-        if not consteq(computed_sign, request.httprequest.headers.get("X-QF-SIGN")):
+        receiver = request.env["integration.receiver"]._for_record(
+            qfpay_pm_sudo, f"{qfpay_pm_sudo.name} notifications"
+        )
+        if not receiver._admit_checked_request(
+            check_signature, event_type="qfpay_terminal"
+        ):
             _logger.warning("QFPay notification signature mismatch")
             return None
 

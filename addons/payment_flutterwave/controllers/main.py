@@ -8,6 +8,7 @@ from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 
 _logger = get_payment_logger(__name__)
@@ -67,7 +68,10 @@ class FlutterwaveController(http.Controller):
             )
             if tx_sudo:
                 signature = request.httprequest.headers.get("verif-hash")
-                self._check_signature(signature, tx_sudo)
+                payment_utils.admit_notification(
+                    tx_sudo.provider_id,
+                    lambda: self._check_signature(signature, tx_sudo),
+                )
             tx_sudo._process("flutterwave", payment_data)
         return request.prepare_json_response("")
 

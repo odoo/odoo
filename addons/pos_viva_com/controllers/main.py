@@ -1,5 +1,7 @@
 import logging
 
+from werkzeug.exceptions import Forbidden
+
 from odoo import _, http
 from odoo.http import request
 from odoo.tools import consteq
@@ -38,6 +40,20 @@ class PosVivaComController(http.Controller):
         )
 
         if payment_method_sudo:
+
+            def check_token():
+                if not consteq(
+                    payment_method_sudo.viva_com_webhook_verification_key, token
+                ):
+                    raise Forbidden
+
+            receiver = request.env["integration.receiver"]._for_record(
+                payment_method_sudo, f"{payment_method_sudo.name} notifications"
+            )
+            if not receiver._admit_checked_request(
+                check_token, event_type="viva_com_terminal"
+            ):
+                return None
             if request.httprequest.data:
                 data = request.get_json_data()
                 terminal_id = data.get("EventData", {}).get("TerminalId", "")
@@ -69,3 +85,10 @@ class PosVivaComController(http.Controller):
             _logger.error(
                 _("received a message for a pos payment provider not registered.")
             )
+            request.env["inbound.access.log"]._record_unknown_caller(
+                "pos.payment.method",
+                f"viva.com company {company_id}",
+                request.httprequest.remote_addr,
+                user_agent=request.httprequest.headers.get("User-Agent"),
+            )
+            return None

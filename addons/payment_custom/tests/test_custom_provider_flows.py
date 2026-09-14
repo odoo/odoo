@@ -95,7 +95,10 @@ class TestCustomProviderFlows(PaymentCustomCommon):
 
         # Without account_payment_provider the delegated recompute is a no-op, so the
         # observable contract here is "selected and delegated without error".
-        self.assertFalse(self.provider.pending_msg)
+        if "account_payment_provider" in self.env.registry.loaded_modules:
+            self.assertTrue(self.provider.pending_msg)
+        else:
+            self.assertFalse(self.provider.pending_msg)
 
     def test_qr_code_degrades_without_account(self):
         """QR-code generation no-ops instead of crashing when `account` isn't

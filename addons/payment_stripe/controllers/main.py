@@ -124,7 +124,9 @@ class StripeController(http.Controller):
                 if not tx_sudo:
                     return request.prepare_json_response("")
 
-                self._check_signature(tx_sudo)
+                payment_utils.admit_notification(
+                    tx_sudo.provider_id, lambda: self._check_signature(tx_sudo)
+                )
 
                 if event["type"].startswith("payment_intent"):  # Payment operation.
                     if tx_sudo.tokenize:
@@ -245,8 +247,11 @@ class StripeController(http.Controller):
         """
         webhook_secret = stripe_utils.get_webhook_secret(tx_sudo.provider_id)
         if not webhook_secret:
-            _logger.warning("ignored webhook event due to undefined webhook secret")
-            return
+            _logger.warning(
+                "refused a webhook event: provider %s has no webhook secret to check it",
+                tx_sudo.provider_id.name,
+            )
+            raise Forbidden()
 
         notification_payload = request.httprequest.data.decode("utf-8")
         signature_entries = request.httprequest.headers["Stripe-Signature"].split(",")
@@ -285,7 +290,7 @@ class StripeController(http.Controller):
             raise Forbidden()
 
     @http.route(
-        _apple_pay_domain_association_url, type="http", auth="public", csrf=False
+        _apple_pay_domain_association_url, type="http", methods=["GET"], auth="public"
     )
     def stripe_apple_pay_get_domain_association_file(self):
         """Get the domain association file for Stripe's Apple Pay.

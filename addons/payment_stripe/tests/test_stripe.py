@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import patch
 from urllib.parse import urlencode as url_encode
 
+from odoo.http import request
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 from odoo.tools.urls import urljoin as url_join
@@ -93,6 +94,55 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         ):
             self._make_json_request(url, data=self.payment_data)
         self.assertEqual(tx.state, "done")
+
+    @mute_logger("odoo.addons.payment_stripe.controllers.main")
+    def test_an_admitted_webhook_is_recorded_on_the_providers_receiver(self):
+        self._create_transaction("redirect")
+        url = self._build_url(StripeController._webhook_url)
+        with patch(
+            "odoo.addons.payment_stripe.controllers.main.StripeController._check_signature"
+        ):
+            self._make_json_request(url, data=self.payment_data)
+        receiver = self.env["integration.receiver"].search(
+            [("res_model", "=", "payment.provider"), ("res_id", "=", self.stripe.id)]
+        )
+        self.assertEqual(receiver.auth_type, "caller_check")
+        exchange = self.env["integration.exchange"].search(
+            [("channel_id", "=", f"integration.receiver,{receiver.id}")]
+        )
+        self.assertEqual(len(exchange), 1)
+        self.assertEqual(exchange.direction, "inbound")
+
+    @mute_logger(
+        "odoo.addons.payment_stripe.controllers.main",
+        "odoo.addons.integration.models.integration_receiver",
+        "odoo.addons.integration.models.mixin_inbound_gate",
+        "odoo.http",
+    )
+    def test_a_webhook_with_a_bad_signature_is_refused_and_logged(self):
+        tx = self._create_transaction("redirect")
+        url = self._build_url(StripeController._webhook_url)
+        Receiver = type(self.env["integration.receiver"])
+        store_verdict = Receiver._store_inbound_verdict
+        verdicts = []
+
+        def spy(receiver, outcome, *args, **kwargs):
+            verdicts.append(
+                (receiver.res_id, outcome, receiver.env.cr is not request.env.cr)
+            )
+            return store_verdict(receiver, outcome, *args, **kwargs)
+
+        with patch.object(Receiver, "_store_inbound_verdict", spy):
+            response = self._make_json_request(url, data=self.payment_data)
+
+        self.assertEqual(response.status_code, 403)
+        self.assertNotEqual(tx.state, "done")
+        self.assertEqual(
+            verdicts,
+            [(self.stripe.id, "unauthenticated", True)],
+            "the refusal is stored on its own cursor, which the request's "
+            "rollback does not discard",
+        )
 
     def test_validate_amount_succeeds_for_special_currencies(self):
         for currency_code in const.CURRENCY_DECIMALS:

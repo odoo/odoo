@@ -3,6 +3,8 @@ import hmac
 import logging
 import re
 
+from werkzeug.exceptions import Forbidden
+
 from odoo import http
 from odoo.http import request
 
@@ -85,13 +87,21 @@ class PosMercadoPagoWebhook(http.Controller):
             # This error is not related with Mercado Pago, simply acknowledge Mercado Pago message
             return http.Response("OK", status=200)
 
-        # We have to check if this comes from Mercado Pago with the secret key
-        secret_key = payment_method_sudo.mp_webhook_secret_key
-        signed_template = f"id:{data['id']};request-id:{x_request_id};ts:{ts};"
-        cyphed_signature = hmac.new(
-            secret_key.encode(), signed_template.encode(), hashlib.sha256
-        ).hexdigest()
-        if not hmac.compare_digest(cyphed_signature, v1):
+        def check_signature():
+            secret_key = payment_method_sudo.mp_webhook_secret_key
+            signed_template = f"id:{data['id']};request-id:{x_request_id};ts:{ts};"
+            cyphed_signature = hmac.new(
+                secret_key.encode(), signed_template.encode(), hashlib.sha256
+            ).hexdigest()
+            if not hmac.compare_digest(cyphed_signature, v1):
+                raise Forbidden
+
+        receiver = request.env["integration.receiver"]._for_record(
+            payment_method_sudo, f"{payment_method_sudo.name} notifications"
+        )
+        if not receiver._admit_checked_request(
+            check_signature, event_type="mercado_pago_terminal"
+        ):
             _logger.error("Webhook authenticating failure, ts: %s, v1: %s", ts, v1)
             return http.Response(status=401)
 

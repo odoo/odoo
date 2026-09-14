@@ -22,6 +22,7 @@
     <template id="redirect_form">
         <form t-att-action="api_url" method="post">
             <input type="hidden" name="reference" t-att-value="reference" />
+            <input type="hidden" name="access_token" t-att-value="access_token" />
         </form>
     </template>
 

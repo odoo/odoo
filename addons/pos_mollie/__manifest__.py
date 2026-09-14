@@ -9,6 +9,7 @@
     "depends": [
         "point_of_sale",
         "payment_mollie",
+        "integration",
     ],
     "data": [
         "views/pos_payment_method_views.xml",

@@ -12,6 +12,8 @@ GATE_CALLS = frozenset(
         "_check_webhook_request",
         "_admit_mini_app_call",
         "admit",
+        "_admit_checked_request",
+        "admit_notification",
     }
 )
 

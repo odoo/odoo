@@ -9,6 +9,7 @@ from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 
 _logger = get_payment_logger(__name__)
@@ -74,7 +75,12 @@ class WorldlineController(http.Controller):
         if tx_sudo:
             received_signature = request.httprequest.headers.get("X-GCS-Signature")
             request_data = request.httprequest.data
-            self._check_signature(request_data, received_signature, tx_sudo)
+            payment_utils.admit_notification(
+                tx_sudo.provider_id,
+                lambda: self._check_signature(
+                    request_data, received_signature, tx_sudo
+                ),
+            )
             tx_sudo._process("worldline", data)
         return request.prepare_json_response("")  # Acknowledge the notification.
 

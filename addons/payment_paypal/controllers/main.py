@@ -72,7 +72,10 @@ class PaypalController(http.Controller):
                 ._search_by_reference("paypal", normalized_data)
             )
             if tx_sudo:
-                self._check_notification_origin(data, tx_sudo)
+                payment_utils.admit_notification(
+                    tx_sudo.provider_id,
+                    lambda: self._check_notification_origin(data, tx_sudo),
+                )
                 tx_sudo._process("paypal", normalized_data)
         return request.prepare_json_response("")
 

@@ -1,5 +1,6 @@
 from odoo import _, models
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_custom.controllers.main import CustomController
 
@@ -24,6 +25,9 @@ class PaymentTransaction(models.Model):
         return {
             "api_url": CustomController._process_url,
             "reference": self.reference,
+            "access_token": payment_utils.generate_access_token(
+                self.reference, self.amount, env=self.env
+            ),
         }
 
     def _get_communication(self):

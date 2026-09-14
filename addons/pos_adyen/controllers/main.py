@@ -3,6 +3,8 @@ import logging
 import pprint
 from urllib.parse import parse_qs
 
+from werkzeug.exceptions import Forbidden
+
 from odoo import http
 from odoo.http import request
 from odoo.tools import consteq
@@ -53,45 +55,47 @@ class PosAdyenController(http.Controller):
             )
             return None
 
-        try:
-            adyen_additional_response = data["SaleToPOIResponse"]["PaymentResponse"][
-                "Response"
-            ]["AdditionalResponse"]
+        def check_hmac():
             pos_hmac = PosAdyenController._get_additional_data_from_unparsed(
-                adyen_additional_response, "metadata.pos_hmac"
+                data["SaleToPOIResponse"]["PaymentResponse"]["Response"][
+                    "AdditionalResponse"
+                ],
+                "metadata.pos_hmac",
             )
+            expected = adyen_pm_sudo._get_hmac(
+                msg_header["SaleID"],
+                msg_header["ServiceID"],
+                msg_header["POIID"],
+                data["SaleToPOIResponse"]["PaymentResponse"]["SaleData"][
+                    "SaleTransactionID"
+                ]["TransactionID"],
+            )
+            if not pos_hmac or not consteq(pos_hmac, expected):
+                raise Forbidden
 
-            if not pos_hmac or not consteq(
-                pos_hmac,
-                adyen_pm_sudo._get_hmac(
-                    msg_header["SaleID"],
-                    msg_header["ServiceID"],
-                    msg_header["POIID"],
-                    data["SaleToPOIResponse"]["PaymentResponse"]["SaleData"][
-                        "SaleTransactionID"
-                    ]["TransactionID"],
-                ),
-            ):
-                _logger.warning(
-                    "Received an invalid Adyen event notification (invalid hmac): \n%s",
-                    pprint.pformat(data),
-                )
-                return None
-
-            # The HMAC is removed to prevent anyone from using it in place of Adyen.
-            pos_hmac_metadata_raw = "metadata.pos_hmac=" + pos_hmac
-            safe_additional_response = adyen_additional_response.replace(
-                "&" + pos_hmac_metadata_raw, ""
-            ).replace(pos_hmac_metadata_raw, "")
-            data["SaleToPOIResponse"]["PaymentResponse"]["Response"][
-                "AdditionalResponse"
-            ] = safe_additional_response
-        except KeyError, AttributeError:
+        receiver = request.env["integration.receiver"]._for_record(
+            adyen_pm_sudo, f"{adyen_pm_sudo.name} notifications"
+        )
+        if not receiver._admit_checked_request(check_hmac, event_type="adyen_terminal"):
             _logger.warning(
-                "Received an invalid Adyen event notification: \n%s",
+                "Received an invalid Adyen event notification (invalid hmac): \n%s",
                 pprint.pformat(data),
             )
             return None
+
+        # The HMAC is removed to prevent anyone from using it in place of Adyen.
+        adyen_additional_response = data["SaleToPOIResponse"]["PaymentResponse"][
+            "Response"
+        ]["AdditionalResponse"]
+        pos_hmac = PosAdyenController._get_additional_data_from_unparsed(
+            adyen_additional_response, "metadata.pos_hmac"
+        )
+        pos_hmac_metadata_raw = "metadata.pos_hmac=" + pos_hmac
+        data["SaleToPOIResponse"]["PaymentResponse"]["Response"][
+            "AdditionalResponse"
+        ] = adyen_additional_response.replace("&" + pos_hmac_metadata_raw, "").replace(
+            pos_hmac_metadata_raw, ""
+        )
 
         return self._process_payment_response(data, adyen_pm_sudo)
 

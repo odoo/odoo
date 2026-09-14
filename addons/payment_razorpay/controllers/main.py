@@ -6,6 +6,7 @@ from werkzeug.exceptions import Forbidden
 from odoo import http
 from odoo.http import request
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_razorpay.const import HANDLED_WEBHOOK_EVENTS
 
@@ -50,7 +51,12 @@ class RazorpayController(http.Controller):
                 .sudo()
                 ._search_by_reference("razorpay", {"description": reference})
             )  # Use the same key as for webhook notifications' data.
-            self._check_signature(data, data.get("razorpay_signature"), tx_sudo)
+            payment_utils.admit_notification(
+                tx_sudo.provider_id,
+                lambda: self._check_signature(
+                    data, data.get("razorpay_signature"), tx_sudo
+                ),
+            )
             tx_sudo._process("razorpay", data)
         else:  # The customer cancelled the payment or the payment failed.
             pass  # Don't try to process this case because the payment id was not provided.
@@ -82,11 +88,14 @@ class RazorpayController(http.Controller):
                 ._search_by_reference("razorpay", entity_data)
             )
             if tx_sudo:
-                self._check_signature(
-                    request.httprequest.data,
-                    received_signature,
-                    tx_sudo,
-                    is_redirect=False,
+                payment_utils.admit_notification(
+                    tx_sudo.provider_id,
+                    lambda: self._check_signature(
+                        request.httprequest.data,
+                        received_signature,
+                        tx_sudo,
+                        is_redirect=False,
+                    ),
                 )
                 tx_sudo._process("razorpay", entity_data)
 

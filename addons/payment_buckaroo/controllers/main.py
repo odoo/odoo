@@ -6,6 +6,7 @@ from werkzeug.exceptions import Forbidden
 from odoo import http
 from odoo.http import request
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 
 _logger = get_payment_logger(__name__)
@@ -49,7 +50,10 @@ class BuckarooController(http.Controller):
             ._search_by_reference("buckaroo", data)
         )
         if tx_sudo:
-            self._check_signature(raw_data, received_signature, tx_sudo)
+            payment_utils.admit_notification(
+                tx_sudo.provider_id,
+                lambda: self._check_signature(raw_data, received_signature, tx_sudo),
+            )
             tx_sudo._process("buckaroo", data)
         return request.redirect("/payment/status")
 
@@ -76,7 +80,10 @@ class BuckarooController(http.Controller):
         )
         if tx_sudo:
             # Check the integrity of the payment data
-            self._check_signature(raw_data, received_signature, tx_sudo)
+            payment_utils.admit_notification(
+                tx_sudo.provider_id,
+                lambda: self._check_signature(raw_data, received_signature, tx_sudo),
+            )
             tx_sudo._process("buckaroo", data)
         return ""
 

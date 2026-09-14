@@ -127,6 +127,9 @@ class MercadoPagoPaymentController(http.Controller):
         )
         if not tx_sudo:
             return
+        payment_utils.admit_notification(
+            tx_sudo.provider_id, payment_utils.verified_by_vendor_api
+        )
 
         try:
             verified_data = tx_sudo._send_api_request(

@@ -4,6 +4,7 @@ from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_iyzico import const
 
@@ -81,6 +82,9 @@ class IyzicoController(http.Controller):
         )
         if not tx_sudo:
             return
+        payment_utils.admit_notification(
+            tx_sudo.provider_id, payment_utils.verified_by_vendor_api
+        )
         try:
             verified_payment_data = tx_sudo._send_api_request(
                 "POST",

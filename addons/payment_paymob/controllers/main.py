@@ -8,6 +8,7 @@ from werkzeug.exceptions import Forbidden
 from odoo import http
 from odoo.http import request
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_paymob import const
 
@@ -33,7 +34,9 @@ class PaymobController(http.Controller):
             ._search_by_reference("paymob", data)
         )
         if tx_sudo:
-            self._check_signature(data, tx_sudo)
+            payment_utils.admit_notification(
+                tx_sudo.provider_id, lambda: self._check_signature(data, tx_sudo)
+            )
             tx_sudo._process("paymob", data)
         return request.redirect("/payment/status")
 
@@ -57,7 +60,9 @@ class PaymobController(http.Controller):
             ._search_by_reference("paymob", normalized_data)
         )
         if tx_sudo:
-            self._check_signature(data, tx_sudo)
+            payment_utils.admit_notification(
+                tx_sudo.provider_id, lambda: self._check_signature(data, tx_sudo)
+            )
             tx_sudo._process("paymob", normalized_data)
         return ""  # Acknowledge the notification
 

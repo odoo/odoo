@@ -8,6 +8,7 @@
     "license": "LGPL-3",
     "depends": [
         "point_of_sale",
+        "integration",
     ],
     "data": [
         "views/res_config_settings_views.xml",
