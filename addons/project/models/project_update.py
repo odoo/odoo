@@ -134,6 +134,7 @@ class ProjectUpdate(models.Model):
                 else update.name
             )
 
+    @api.depends("closed_task_count", "task_count")
     def _compute_closed_task_percentage(self) -> None:
         for update in self:
             update.closed_task_percentage = update.task_count and round(

@@ -54,10 +54,11 @@ class MixinMailTrackingDuration(models.AbstractModel):
 
     def _get_rotting_depends_fields(self) -> list[str]:
         if not self._is_rotting_feature_enabled():
-            return []
+            return ["create_date"]
         return [
             self._track_duration_last_update_field,
             f"{self._track_duration_field}.rotting_threshold_days",
+            "create_date",
         ]
 
     def _get_domain_rotting_records(self) -> Domain:

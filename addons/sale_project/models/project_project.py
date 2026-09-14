@@ -195,6 +195,7 @@ class ProjectProject(models.Model):
                 sale_order_lines.sudo().order_id or project.reinvoiced_sale_order_id
             )
 
+    @api.depends("account_id")
     def _compute_invoice_count(self):
         data = self.env["account.move.line"]._read_group(
             [

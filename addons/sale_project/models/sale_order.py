@@ -95,6 +95,7 @@ class SaleOrder(models.Model):
         related="project_id.account_id",
     )
 
+    @api.depends("line_ids")
     def _compute_milestone_count(self):
         read_group = self.env["project.milestone"]._read_group(
             [("sale_line_id", "in", self.line_ids.ids)],
@@ -107,12 +108,14 @@ class SaleOrder(models.Model):
                 line_data.get(line.id, 0) for line in order.line_ids
             )
 
+    @api.depends("line_ids.product_id.service_policy")
     def _compute_is_product_milestone(self):
         for order in self:
             order.is_product_milestone = order.line_ids.product_id.filtered(
                 lambda p: p.service_policy == "delivered_milestones"
             )
 
+    @api.depends("line_ids", "state", "project_count")
     def _compute_show_project_and_task_button(self):
         is_project_manager = self.env.user.has_group("project.group_project_manager")
         show_button_ids = self.env["sale.order.line"]._read_group(
@@ -414,6 +417,7 @@ class SaleOrder(models.Model):
             ).sale_line_id = False
         return res
 
+    @api.depends("closed_task_count", "tasks_count")
     def _compute_completed_task_percentage(self):
         for so in self:
             so.completed_task_percentage = (

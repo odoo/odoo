@@ -1923,6 +1923,7 @@ class ProjectTask(models.Model):
             )
             task.name = title.strip()
 
+    @api.depends("display_name", "project_id.name")
     def _compute_link_preview_name(self) -> None:
         for task in self:
             link_preview_name = task.display_name
