@@ -1190,6 +1190,8 @@
         },
         "field": {
           "attrs": {
+            "granularity": "str",
+            "operator": "str",
             "section": "ident",
             "type": [
               "row",
@@ -1205,12 +1207,16 @@
         },
         "grid": {
           "attrs": {
+            "action": "ident",
             "barchart_total": "bool",
             "create_inline": "bool",
             "display_empty": "bool",
             "editable": "str",
             "form_view_id": "xmlid",
-            "js_class": "str"
+            "hide_column_total": "str",
+            "hide_line_total": "str",
+            "js_class": "str",
+            "type": "str"
           },
           "children": [
             "button",
@@ -1240,7 +1246,12 @@
           "attrs": {
             "allow_resequence": "bool",
             "default_order": "str",
+            "hide_address": "bool",
+            "hide_name": "bool",
+            "hide_title": "bool",
             "js_class": "str",
+            "limit": "int",
+            "panel_title": "str",
             "res_partner": "ident",
             "routing": "bool"
           },
@@ -1257,16 +1268,21 @@
           "attrs": {
             "date_start": "ident",
             "date_stop": "ident",
+            "disable_linking": "bool",
             "interval": "str",
+            "measure": "str",
             "mode": "str",
-            "sample": "bool"
+            "sample": "bool",
+            "timeline": "str"
           },
           "children": [
             "field"
           ]
         },
         "field": {
-          "attrs": {}
+          "attrs": {
+            "widget": "str"
+          }
         }
       }
     },
@@ -1291,8 +1307,11 @@
         "hierarchy": {
           "attrs": {
             "child_field": "ident",
+            "default_order": "str",
             "draggable": "bool",
-            "js_class": "str"
+            "icon": "str",
+            "js_class": "str",
+            "parent_field": "ident"
           },
           "children": [
             "field",

@@ -13858,6 +13858,14 @@
           "type": "string",
           "x-odoo-type": "str"
          },
+         "granularity": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "operator": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
          "section": {
           "type": "string",
           "x-odoo-type": "ident"
@@ -13964,6 +13972,10 @@
           "type": "string",
           "x-odoo-type": "str"
          },
+         "action": {
+          "type": "string",
+          "x-odoo-type": "ident"
+         },
          "barchart_total": {
           "enum": [
            "1",
@@ -14002,7 +14014,19 @@
           "type": "string",
           "x-odoo-type": "xmlid"
          },
+         "hide_column_total": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "hide_line_total": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
          "js_class": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "type": {
           "type": "string",
           "x-odoo-type": "str"
          }
@@ -14876,7 +14900,45 @@
           "type": "string",
           "x-odoo-type": "str"
          },
+         "hide_address": {
+          "enum": [
+           "1",
+           "0",
+           "True",
+           "False",
+           "true",
+           "false"
+          ]
+         },
+         "hide_name": {
+          "enum": [
+           "1",
+           "0",
+           "True",
+           "False",
+           "true",
+           "false"
+          ]
+         },
+         "hide_title": {
+          "enum": [
+           "1",
+           "0",
+           "True",
+           "False",
+           "true",
+           "false"
+          ]
+         },
          "js_class": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "limit": {
+          "type": "string",
+          "pattern": "^-?[0-9]+$"
+         },
+         "panel_title": {
           "type": "string",
           "x-odoo-type": "str"
          },
@@ -15560,7 +15622,21 @@
           "type": "string",
           "x-odoo-type": "ident"
          },
+         "disable_linking": {
+          "enum": [
+           "1",
+           "0",
+           "True",
+           "False",
+           "true",
+           "false"
+          ]
+         },
          "interval": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "measure": {
           "type": "string",
           "x-odoo-type": "str"
          },
@@ -15577,6 +15653,10 @@
            "true",
            "false"
           ]
+         },
+         "timeline": {
+          "type": "string",
+          "x-odoo-type": "str"
          }
         },
         "additionalProperties": false,
@@ -15666,6 +15746,10 @@
           "x-odoo-type": "str"
          },
          "role": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "widget": {
           "type": "string",
           "x-odoo-type": "str"
          }
@@ -16532,6 +16616,10 @@
           "type": "string",
           "x-odoo-type": "ident"
          },
+         "default_order": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
          "draggable": {
           "enum": [
            "1",
@@ -16542,9 +16630,17 @@
            "false"
           ]
          },
+         "icon": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
          "js_class": {
           "type": "string",
           "x-odoo-type": "str"
+         },
+         "parent_field": {
+          "type": "string",
+          "x-odoo-type": "ident"
          }
         },
         "additionalProperties": false,

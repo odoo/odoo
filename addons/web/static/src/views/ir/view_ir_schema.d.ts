@@ -1970,11 +1970,13 @@ export interface GridButtonAttrs {
 export interface GridFieldAttrs {
     class?: string;
     colspan?: string;
+    granularity?: string;
     groups?: string;
     help?: string;
     id?: string;
     invisible?: string;
     name?: string;
+    operator?: string;
     position?: "after" | "before" | "inside" | "replace" | "attributes" | "move";
     role?: string;
     section?: string;
@@ -1989,6 +1991,7 @@ export interface GridFieldAttrs {
     [key: `t-${string}`]: string;
 }
 export interface GridGridAttrs {
+    action?: string;
     barchart_total?: string;
     class?: string;
     colspan?: string;
@@ -1998,6 +2001,8 @@ export interface GridGridAttrs {
     form_view_id?: string;
     groups?: string;
     help?: string;
+    hide_column_total?: string;
+    hide_line_total?: string;
     id?: string;
     invisible?: string;
     js_class?: string;
@@ -2007,6 +2012,7 @@ export interface GridGridAttrs {
     string?: string;
     style?: string;
     title?: string;
+    type?: string;
     version?: string;
     [key: `aria-${string}`]: string;
     [key: `data-${string}`]: string;
@@ -2073,10 +2079,15 @@ export interface MapMapAttrs {
     default_order?: string;
     groups?: string;
     help?: string;
+    hide_address?: string;
+    hide_name?: string;
+    hide_title?: string;
     id?: string;
     invisible?: string;
     js_class?: string;
+    limit?: string;
     name?: string;
+    panel_title?: string;
     position?: "after" | "before" | "inside" | "replace" | "attributes" | "move";
     res_partner?: string;
     role?: string;
@@ -2104,11 +2115,13 @@ export interface CohortCohortAttrs {
     colspan?: string;
     date_start?: string;
     date_stop?: string;
+    disable_linking?: string;
     groups?: string;
     help?: string;
     id?: string;
     interval?: string;
     invisible?: string;
+    measure?: string;
     mode?: string;
     name?: string;
     position?: "after" | "before" | "inside" | "replace" | "attributes" | "move";
@@ -2116,6 +2129,7 @@ export interface CohortCohortAttrs {
     sample?: string;
     string?: string;
     style?: string;
+    timeline?: string;
     title?: string;
     version?: string;
     [key: `aria-${string}`]: string;
@@ -2136,6 +2150,7 @@ export interface CohortFieldAttrs {
     style?: string;
     title?: string;
     version?: string;
+    widget?: string;
     [key: `aria-${string}`]: string;
     [key: `data-${string}`]: string;
     [key: `t-${string}`]: string;
@@ -2194,13 +2209,16 @@ export interface HierarchyHierarchyAttrs {
     child_field?: string;
     class?: string;
     colspan?: string;
+    default_order?: string;
     draggable?: string;
     groups?: string;
     help?: string;
+    icon?: string;
     id?: string;
     invisible?: string;
     js_class?: string;
     name?: string;
+    parent_field?: string;
     position?: "after" | "before" | "inside" | "replace" | "attributes" | "move";
     role?: string;
     string?: string;
