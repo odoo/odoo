@@ -6,7 +6,12 @@ from collections import defaultdict
 from collections.abc import Iterable, Mapping
 from typing import TYPE_CHECKING
 
-from odoo.db.schema import column_exists, get_tables_existing, rename_column
+from odoo.db.schema import (
+    column_exists,
+    get_tables_existing,
+    rename_column,
+    table_exists,
+)
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.sql import SQL
 
@@ -486,3 +491,294 @@ def rename_field(
             )
         )
     _logger.info("renamed %s.%s to %s", model, old, new)
+
+
+MODEL_NAME_COLUMNS = (
+    "model",
+    "res_model",
+    "model_name",
+    "src_model",
+    "parent_res_model",
+    "relation",
+    "res_model_name",
+    "alias_model",
+    "resource",
+)
+_MODEL_EXPRESSION_COLUMNS = (
+    ("ir_act_window", ("domain", "context")),
+    ("ir_act_server", ("code",)),
+    ("ir_filters", ("domain", "context", "sort")),
+    ("ir_ui_view", ("arch_db",)),
+    ("ir_embedded_actions", ("domain", "context")),
+)
+
+
+def rename_model(cr: BaseCursor, old: str, new: str) -> dict[str, str]:
+    # Exact names only, never LIKE '%old%': `crm_team` is a prefix of
+    # `crm_team_member`, and a substring rewrite renames both.
+    old_table, new_table = old.replace(".", "_"), new.replace(".", "_")
+    relations = _rename_model_relations(cr, old, old_table, new_table)
+    _rename_table_with_dependents(cr, old_table, new_table)
+    _rewrite_model_registry(cr, old, new, old_table, new_table)
+    _repoint_model_name_columns(cr, old, new)
+    _rewrite_reference_values(cr, old, new)
+    _rewrite_quoted_model_names(cr, old, new)
+    _debug.lifecycle(
+        "module_data.rename_model", old=old, new=new, relations=len(relations)
+    )
+    _logger.info(
+        "renamed model %s to %s, with %d join table(s)%s",
+        old,
+        new,
+        len(relations),
+        "".join(f", {a} -> {b}" for a, b in relations.items()),
+    )
+    return relations
+
+
+def _rename_table_with_dependents(cr: BaseCursor, old: str, new: str) -> bool:
+    if not table_exists(cr, old) or table_exists(cr, new):
+        return False
+    cr.execute(
+        SQL("ALTER TABLE %s RENAME TO %s", SQL.identifier(old), SQL.identifier(new))
+    )
+    cr.execute(
+        SQL(
+            "SELECT conname FROM pg_constraint "
+            "WHERE conrelid = %s::regclass AND conname LIKE %s",
+            new,
+            old.replace("_", "\\_") + "\\_%",
+        )
+    )
+    for (name,) in cr.fetchall():
+        cr.execute(
+            SQL(
+                "ALTER TABLE %s RENAME CONSTRAINT %s TO %s",
+                SQL.identifier(new),
+                SQL.identifier(name),
+                SQL.identifier(new + name[len(old) :]),
+            )
+        )
+    cr.execute(
+        SQL(
+            "SELECT indexname FROM pg_indexes WHERE schemaname = current_schema() "
+            "AND tablename = %s AND indexname LIKE %s",
+            new,
+            old.replace("_", "\\_") + "\\_%",
+        )
+    )
+    for (name,) in cr.fetchall():
+        cr.execute(
+            SQL(
+                "ALTER INDEX %s RENAME TO %s",
+                SQL.identifier(name),
+                SQL.identifier(new + name[len(old) :]),
+            )
+        )
+    cr.execute(
+        SQL(
+            "SELECT 1 FROM pg_sequences WHERE schemaname = current_schema() "
+            "AND sequencename = %s",
+            old + "_id_seq",
+        )
+    )
+    if cr.fetchone():
+        cr.execute(
+            SQL(
+                "ALTER SEQUENCE %s RENAME TO %s",
+                SQL.identifier(old + "_id_seq"),
+                SQL.identifier(new + "_id_seq"),
+            )
+        )
+    return True
+
+
+def _rename_model_relations(
+    cr: BaseCursor, old: str, old_table: str, new_table: str
+) -> dict[str, str]:
+    cr.execute(
+        SQL(
+            "SELECT DISTINCT model, relation, relation_table, column1, column2 "
+            "FROM ir_model_fields WHERE ttype = 'many2many' "
+            "AND relation_table IS NOT NULL AND (model = %s OR relation = %s)",
+            old,
+            old,
+        )
+    )
+    old_column, new_column = f"{old_table}_id", f"{new_table}_id"
+    renamed: dict[str, str] = {}
+    for model, relation, relation_table, column1, column2 in cr.fetchall():
+        tables = [model.replace(".", "_"), relation.replace(".", "_")]
+        target = relation_table
+        if relation_table == "_".join(sorted(tables)) + "_rel":
+            moved = [new_table if t == old_table else t for t in tables]
+            target = "_".join(sorted(moved)) + "_rel"
+        if target != relation_table and table_exists(cr, relation_table):
+            if table_exists(cr, target):
+                raise ValueError(
+                    f"both {relation_table} and {target} exist; refusing to guess "
+                    "which one holds the links"
+                )
+            _rename_table_with_dependents(cr, relation_table, target)
+            renamed[relation_table] = target
+        if table_exists(cr, target):
+            for column in (column1, column2):
+                if column == old_column and not column_exists(cr, target, new_column):
+                    rename_column(cr, target, old_column, new_column)
+        cr.execute(
+            SQL(
+                "UPDATE ir_model_fields SET relation_table = %s, "
+                "column1 = CASE WHEN column1 = %s THEN %s ELSE column1 END, "
+                "column2 = CASE WHEN column2 = %s THEN %s ELSE column2 END "
+                "WHERE ttype = 'many2many' AND relation_table = %s",
+                target,
+                old_column,
+                new_column,
+                old_column,
+                new_column,
+                relation_table,
+            )
+        )
+        if target != relation_table:
+            cr.execute(
+                SQL(
+                    "UPDATE ir_model_relation SET name = %s WHERE name = %s",
+                    target,
+                    relation_table,
+                )
+            )
+    return renamed
+
+
+def _rewrite_model_registry(
+    cr: BaseCursor, old: str, new: str, old_table: str, new_table: str
+) -> None:
+    for statement in (
+        "UPDATE ir_model SET model = %s WHERE model = %s",
+        "UPDATE ir_model_fields SET model = %s WHERE model = %s",
+        "UPDATE ir_model_fields SET relation = %s WHERE relation = %s",
+    ):
+        cr.execute(SQL(statement, new, old))
+    owned = SQL("(SELECT id FROM ir_model WHERE model = %s)", new)
+    cr.execute(
+        SQL(
+            "UPDATE ir_model_constraint SET name = %s || substring(name from %s) "
+            "WHERE model = %s AND name LIKE %s",
+            new_table + "_",
+            len(old_table) + 2,
+            owned,
+            old_table.replace("_", "\\_") + "\\_%",
+        )
+    )
+    cr.execute(
+        SQL(
+            "UPDATE ir_model_data SET name = %s WHERE model = 'ir.model' AND name = %s",
+            f"model_{new_table}",
+            f"model_{old_table}",
+        )
+    )
+    for prefix, xmlid_model, source, scope in (
+        ("field_{}__", "ir.model.fields", "ir_model_fields", "model_id"),
+        ("selection__{}__", "ir.model.fields.selection", None, None),
+        ("model_inherit__{}__", "ir.model.inherit", "ir_model_inherit", "model_id"),
+        ("constraint_{}_", "ir.model.constraint", "ir_model_constraint", "model"),
+    ):
+        old_prefix, new_prefix = prefix.format(old_table), prefix.format(new_table)
+        restrict = (
+            SQL(
+                " AND res_id IN (SELECT id FROM %s WHERE %s = %s)",
+                SQL.identifier(source),
+                SQL.identifier(scope),
+                owned,
+            )
+            if source
+            else SQL()
+        )
+        cr.execute(
+            SQL(
+                "UPDATE ir_model_data SET name = %s || substring(name from %s) "
+                "WHERE model = %s AND name LIKE %s%s",
+                new_prefix,
+                len(old_prefix) + 1,
+                xmlid_model,
+                old_prefix.replace("_", "\\_") + "%",
+                restrict,
+            )
+        )
+
+
+def _repoint_model_name_columns(cr: BaseCursor, old: str, new: str) -> None:
+    cr.execute(
+        SQL(
+            "SELECT c.table_name, c.column_name FROM information_schema.columns c "
+            "JOIN information_schema.tables t ON t.table_schema = c.table_schema "
+            "AND t.table_name = c.table_name "
+            "WHERE c.table_schema = current_schema() AND t.table_type = 'BASE TABLE' "
+            "AND c.data_type IN ('character varying', 'text') "
+            "AND c.column_name = ANY(%s)",
+            list(MODEL_NAME_COLUMNS),
+        )
+    )
+    for table, column in cr.fetchall():
+        cr.execute(
+            SQL(
+                "UPDATE %s SET %s = %s WHERE %s = %s",
+                SQL.identifier(table),
+                SQL.identifier(column),
+                new,
+                SQL.identifier(column),
+                old,
+            )
+        )
+
+
+def _rewrite_reference_values(cr: BaseCursor, old: str, new: str) -> None:
+    cr.execute(
+        "SELECT model, name FROM ir_model_fields WHERE ttype = 'reference' AND store"
+    )
+    for model, field in cr.fetchall():
+        table = model.replace(".", "_")
+        if not column_exists(cr, table, field):
+            continue
+        cr.execute(
+            SQL(
+                "UPDATE %s SET %s = %s || substring(%s from %s) WHERE %s LIKE %s",
+                SQL.identifier(table),
+                SQL.identifier(field),
+                new + ",",
+                SQL.identifier(field),
+                len(old) + 2,
+                SQL.identifier(field),
+                old.replace("_", "\\_") + ",%",
+            )
+        )
+
+
+def _rewrite_quoted_model_names(cr: BaseCursor, old: str, new: str) -> None:
+    existing = set(get_tables_existing(cr, [t for t, _ in _MODEL_EXPRESSION_COLUMNS]))
+    for table, columns in _MODEL_EXPRESSION_COLUMNS:
+        if table not in existing:
+            continue
+        for column in columns:
+            if not column_exists(cr, table, column):
+                continue
+            for quote in ("'", '"'):
+                needle, replacement = f"{quote}{old}{quote}", f"{quote}{new}{quote}"
+                rewritten = SQL(
+                    "replace(%s::text, %s, %s)",
+                    SQL.identifier(column),
+                    needle,
+                    replacement,
+                )
+                cr.execute(
+                    SQL(
+                        "UPDATE %s SET %s = %s WHERE position(%s in %s::text) > 0",
+                        SQL.identifier(table),
+                        SQL.identifier(column),
+                        SQL("%s::jsonb", rewritten)
+                        if column == "arch_db"
+                        else rewritten,
+                        needle,
+                        SQL.identifier(column),
+                    )
+                )

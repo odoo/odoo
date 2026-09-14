@@ -74,6 +74,7 @@ from . import test_menu
 from . import test_misc
 from . import test_mixin_profiler
 from . import test_module
+from . import test_module_data_rename_model
 from . import test_orm
 from . import test_ormcache
 from . import test_properties_base_definition
