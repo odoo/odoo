@@ -1,6 +1,6 @@
 {
     "name": "Remote Work",
-    "version": "2.1",
+    "version": "2.2",
     "category": "Human Resources/Remote Work",
     "author": "Odoo S.A.",
     "license": "LGPL-3",

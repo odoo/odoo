@@ -155,10 +155,11 @@ class TestOutOfOfficePerformance(TestHrHolidaysCommon, TransactionCaseWithUserDe
     @warmup
     def test_leave_im_status_performance_partner_offline(self):
         self.user_employee.employee_id
-        # One query over the budget hr_holidays alone needs: hr_homeworking
-        # resolves today's exceptional work location, one index-served SELECT per
-        # compute batch, so that a located chat status honours it.
-        with self.assertQueryCount(__system__=5, demo=5):
+        # Two queries over the budget hr_holidays alone needs, both hr_homeworking
+        # and both one SELECT per compute batch rather than per user: today's
+        # exceptional work location, and the employee's own timezone through
+        # resource_id, because the server's date is nobody's.
+        with self.assertQueryCount(__system__=6, demo=6):
             self.assertEqual(self.employer_partner.im_status, "offline")
 
     @users("__system__", "demo")
@@ -167,10 +168,11 @@ class TestOutOfOfficePerformance(TestHrHolidaysCommon, TransactionCaseWithUserDe
         self.leave.write({"state": "validate"})
         self.hr_user.manual_im_status
         self.hr_user.employee_id
-        # One query over the budget hr_holidays alone needs: hr_homeworking
-        # resolves today's exceptional work location, one index-served SELECT per
-        # compute batch, so that a located chat status honours it.
-        with self.assertQueryCount(__system__=3, demo=3):
+        # Two queries over the budget hr_holidays alone needs, both hr_homeworking
+        # and both one SELECT per compute batch rather than per user: today's
+        # exceptional work location, and the employee's own timezone through
+        # resource_id, because the server's date is nobody's.
+        with self.assertQueryCount(__system__=4, demo=4):
             self.assertEqual(self.hr_user.im_status, "leave_offline")
 
     @users("__system__", "demo")
@@ -178,10 +180,11 @@ class TestOutOfOfficePerformance(TestHrHolidaysCommon, TransactionCaseWithUserDe
     def test_leave_im_status_performance_partner_leave_offline(self):
         self.leave.write({"state": "validate"})
         self.hr_user.employee_id
-        # One query over the budget hr_holidays alone needs: hr_homeworking
-        # resolves today's exceptional work location, one index-served SELECT per
-        # compute batch, so that a located chat status honours it.
-        with self.assertQueryCount(__system__=5, demo=5):
+        # Two queries over the budget hr_holidays alone needs, both hr_homeworking
+        # and both one SELECT per compute batch rather than per user: today's
+        # exceptional work location, and the employee's own timezone through
+        # resource_id, because the server's date is nobody's.
+        with self.assertQueryCount(__system__=6, demo=6):
             self.assertEqual(self.hr_partner.im_status, "leave_offline")
 
     def test_search_absent_employee(self):

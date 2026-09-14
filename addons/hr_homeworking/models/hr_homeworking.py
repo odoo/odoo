@@ -21,6 +21,7 @@ class MixinWorkLocationAssignment(models.AbstractModel):
         comodel_name="hr.work.location",
         string="Location",
         required=True,
+        check_company=True,
     )
     work_location_name = fields.Char(
         related="work_location_id.name",
@@ -52,6 +53,12 @@ class HrEmployeeLocation(models.Model):
     _order = "date desc, employee_id"
     _rec_name = "work_location_name"
 
+    company_id = fields.Many2one(
+        comodel_name="res.company",
+        related="employee_id.company_id",
+        store=True,
+        index=True,
+    )
     date = fields.Date(required=True)
 
     _uniq_exceptional_per_day = models.UniqueIndex(
