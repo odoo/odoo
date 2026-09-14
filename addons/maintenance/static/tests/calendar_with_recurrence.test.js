@@ -23,6 +23,7 @@ class MaintenanceRequest extends models.Model {
         selection: [
             ["day", "Days"],
             ["week", "Weeks"],
+            ["month", "Months"],
         ],
     });
     repeat_type = fields.Selection({
@@ -32,6 +33,7 @@ class MaintenanceRequest extends models.Model {
         ],
     });
     repeat_until = fields.Date();
+    date_recurrence_origin = fields.Datetime();
     done = fields.Boolean();
     archive = fields.Boolean();
 
@@ -72,6 +74,7 @@ const arch = `
         <field name="repeat_unit" invisible="1"/>
         <field name="repeat_type" invisible="1"/>
         <field name="repeat_until" invisible="1"/>
+        <field name="date_recurrence_origin" invisible="1"/>
         <field name="done" invisible="1"/>
         <field name="archive" invisible="1"/>
         <field name="duration" invisible="1"/>
@@ -88,6 +91,45 @@ test("an until recurrence still shows its occurrence on the end date west of UTC
         "daily check (+2)",
         "daily check (+3)",
     ]);
+});
+
+test.tags("desktop");
+test("a monthly series from the 31st shows its occurrence on the month end", async () => {
+    MaintenanceRequest._records = [
+        {
+            id: 3,
+            name: "month end",
+            schedule_date: "2026-01-31 16:00:00",
+            schedule_end: "2026-01-31 17:00:00",
+            duration: 1,
+            recurring_maintenance: true,
+            repeat_interval: 1,
+            repeat_unit: "month",
+            repeat_type: "forever",
+        },
+        {
+            id: 4,
+            name: "rescheduled",
+            schedule_date: "2026-03-03 16:00:00",
+            schedule_end: "2026-03-03 17:00:00",
+            date_recurrence_origin: "2026-01-31 16:00:00",
+            duration: 1,
+            recurring_maintenance: true,
+            repeat_interval: 1,
+            repeat_unit: "month",
+            repeat_type: "forever",
+        },
+    ];
+    mockDate("2026-03-15T08:00:00", -6);
+    await mountView({
+        resModel: "maintenance.request",
+        type: "calendar",
+        arch: arch.replace('mode="week"', 'mode="month"'),
+    });
+    expect(
+        queryAllTexts(".fc-daygrid-day[data-date='2026-03-31'] .o_event_title"),
+    ).toEqual(["month end (+2)", "rescheduled (+1)"]);
+    expect(".fc-daygrid-day[data-date='2026-03-28'] .fc-event").toHaveCount(0);
 });
 
 test.tags("desktop");

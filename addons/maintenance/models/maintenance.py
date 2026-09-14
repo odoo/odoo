@@ -378,6 +378,7 @@ class MaintenanceRequest(models.Model):
         readonly=False,
     )
     repeat_until = fields.Date(string="End Date")
+    date_recurrence_origin = fields.Datetime(copy=False)
 
     def archive_equipment_request(self):
         self.write({"archive": True, "recurring_maintenance": False})
@@ -503,6 +504,12 @@ class MaintenanceRequest(models.Model):
     def write(self, vals):
         if "stage_id" in vals and "kanban_state" not in vals:
             vals = {**vals, "kanban_state": "normal"}
+        if "date_recurrence_origin" not in vals and vals.keys() & {
+            "recurring_maintenance",
+            "repeat_interval",
+            "repeat_unit",
+        }:
+            vals = {**vals, "date_recurrence_origin": False}
         closing = self.browse()
         if (
             "stage_id" in vals
@@ -537,17 +544,27 @@ class MaintenanceRequest(models.Model):
         self.check_singleton()
         if self.maintenance_type != "preventive" or not self.recurring_maintenance:
             return {}
-        schedule_date = (
-            self.schedule_date or fields.Datetime.now()
-        ) + self._get_recurrence_delta()
-        if self.repeat_type == "until" and not (
-            self.repeat_until and schedule_date.date() <= self.repeat_until
-        ):
+        after = self.schedule_date or fields.Datetime.now()
+        schedule_date = self._resolve_next_occurrence_date(after)
+        if not schedule_date:
             return {}
         return {
             "schedule_date": schedule_date,
+            "date_recurrence_origin": self.date_recurrence_origin or after,
             "stage_id": self._default_stage_id().id,
         }
+
+    def _resolve_next_occurrence_date(self, after):
+        self.check_singleton()
+        origin = self.date_recurrence_origin or self.schedule_date or after
+        occurrence = self._get_next_recurrence_after(origin, after, self.env.tz)
+        if self.repeat_type == "until" and not (
+            self.repeat_until
+            and fields.Datetime.context_timestamp(self, occurrence).date()
+            <= self.repeat_until
+        ):
+            return None
+        return occurrence
 
     def _is_new_activity_required(self, vals):
         return vals.get("equipment_id")

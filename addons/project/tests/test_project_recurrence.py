@@ -661,6 +661,82 @@ class TestRecurrenceDefaults(TestProjectCommon):
         )
 
 
+class TestRecurrenceSeriesDates(TestProjectCommon):
+    def setUp(self) -> None:
+        super().setUp()
+        self.env = self.env(context=dict(self.env.context, tz="UTC"))
+        self.Recurrence = self.env["project.task.recurrence"]
+        step = self.env["project.workflow.step"].create(
+            {"name": "S", "project_ids": [Command.link(self.project_pigs.id)]}
+        )
+        self.recurrence = self.Recurrence.create(
+            {"repeat_interval": 1, "repeat_unit": "month", "repeat_type": "forever"}
+        )
+        self.task = self.env["project.task"].create(
+            {
+                "name": "Month end",
+                "project_id": self.project_pigs.id,
+                "step_id": step.id,
+                "recurrence_id": self.recurrence.id,
+                "recurring_task": True,
+                "date_start": datetime(2030, 1, 30, 10, 0),
+                "date_end": datetime(2030, 1, 31, 10, 0),
+            }
+        )
+
+    def test_a_month_end_series_returns_to_the_month_end(self) -> None:
+        february = self.Recurrence._create_next_occurrences(self.task)
+        self.assertRecordValues(
+            february,
+            [
+                {
+                    "date_start": datetime(2030, 2, 27, 10, 0),
+                    "date_end": datetime(2030, 2, 28, 10, 0),
+                }
+            ],
+        )
+        march = self.Recurrence._create_next_occurrences(february)
+        self.assertRecordValues(
+            march,
+            [
+                {
+                    "date_start": datetime(2030, 3, 30, 10, 0),
+                    "date_end": datetime(2030, 3, 31, 10, 0),
+                }
+            ],
+        )
+
+    def test_rescheduling_one_occurrence_keeps_the_series_on_its_dates(self) -> None:
+        february = self.Recurrence._create_next_occurrences(self.task)
+        february.write(
+            {
+                "date_start": datetime(2030, 3, 2, 10, 0),
+                "date_end": datetime(2030, 3, 3, 10, 0),
+            }
+        )
+        march = self.Recurrence._create_next_occurrences(february)
+        self.assertEqual(march.date_end, datetime(2030, 3, 31, 10, 0))
+
+    def test_changing_the_rule_starts_the_series_again_from_that_occurrence(
+        self,
+    ) -> None:
+        february = self.Recurrence._create_next_occurrences(self.task)
+        february.write({"repeat_interval": 2, "recurrence_update": "all"})
+        april = self.Recurrence._create_next_occurrences(february)
+        self.assertEqual(april.date_end, datetime(2030, 4, 28, 10, 0))
+
+    def test_shifting_the_series_moves_its_dates(self) -> None:
+        february = self.Recurrence._create_next_occurrences(self.task)
+        february.write(
+            {
+                "date_end": datetime(2030, 3, 2, 10, 0),
+                "recurrence_update": "subsequent",
+            }
+        )
+        march = self.Recurrence._create_next_occurrences(february)
+        self.assertEqual(march.date_end, datetime(2030, 4, 2, 10, 0))
+
+
 class TestRecurrenceUpdateScope(TestProjectCommon):
     @classmethod
     def setUpClass(cls) -> None:

@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from typing import Self
 
 from odoo import Command, _, api, fields, models
@@ -18,6 +19,7 @@ class ProjectTaskRecurrence(models.Model):
     )
 
     repeat_until = fields.Date(string="End Date")
+    date_recurrence_origin = fields.Datetime(copy=False)
 
     @api.constrains("repeat_type", "repeat_until")
     def _check_repeat_until_date(self) -> None:
@@ -31,6 +33,14 @@ class ProjectTaskRecurrence(models.Model):
         ):
             raise ValidationError(_("The end date should be in the future"))
 
+    def write(self, vals) -> bool:
+        if "date_recurrence_origin" not in vals and vals.keys() & {
+            "repeat_interval",
+            "repeat_unit",
+        }:
+            vals = {**vals, "date_recurrence_origin": False}
+        return super().write(vals)
+
     @api.model
     def _get_recurring_fields_to_copy(self) -> list[str]:
         return [
@@ -43,6 +53,24 @@ class ProjectTaskRecurrence(models.Model):
             "date_end",
             "date_start",
         ]
+
+    def _get_occurrence_anchor(self, task) -> datetime | None:
+        return next(
+            (
+                task[field]
+                for field in self._get_recurring_fields_to_postpone()
+                if task[field]
+            ),
+            None,
+        )
+
+    def _get_next_occurrence_shift(self, task) -> timedelta | None:
+        self.check_singleton()
+        anchor = self._get_occurrence_anchor(task)
+        if not anchor:
+            return None
+        origin = self.date_recurrence_origin or anchor
+        return self._get_next_recurrence_after(origin, anchor, self.env.tz) - anchor
 
     def _get_last_task_id_per_recurrence_id(self) -> dict[int, int]:
         return (
@@ -74,7 +102,7 @@ class ProjectTaskRecurrence(models.Model):
                 or (
                     rec.repeat_until
                     and fields.Datetime.context_timestamp(
-                        rec, task.date_end + rec._get_recurrence_delta()
+                        rec, task.date_end + rec._get_next_occurrence_shift(task)
                     ).date()
                     <= rec.repeat_until
                 )
@@ -98,6 +126,10 @@ class ProjectTaskRecurrence(models.Model):
                 .create(self._prepare_next_occurrence_vals_list(recurrence_by_task))
                 .sudo(False)
             )
+            for task, recurrence in recurrence_by_task.items():
+                anchor = recurrence._get_occurrence_anchor(task)
+                if anchor and not recurrence.date_recurrence_origin:
+                    recurrence.date_recurrence_origin = anchor
             dbg.lifecycle.debug(
                 "recurrence._create_next_occurrences: %s -> %s",
                 dbg.rec(occurrences_from),
@@ -114,8 +146,9 @@ class ProjectTaskRecurrence(models.Model):
 
     @api.model
     def _prepare_next_occurrence_vals_list(
-        self, recurrence_by_task: dict
+        self, recurrence_by_task: dict, shift_by_task: dict | None = None
     ) -> list[dict]:
+        shift_by_task = shift_by_task or {}
         tasks = self.env["project.task"].concat(*recurrence_by_task.keys())
         list_create_values = []
         list_copy_data = (
@@ -136,6 +169,13 @@ class ProjectTaskRecurrence(models.Model):
             strict=True,
         ):
             recurrence = recurrence_by_task[task]
+            shift = (
+                shift_by_task[task]
+                if task in shift_by_task
+                else recurrence._get_next_occurrence_shift(task)
+            )
+            if shift is None:
+                shift = recurrence._get_recurrence_delta()
             fields_to_copy.pop("id", None)
             fields_to_postpone.pop("id", None)
             create_values = {
@@ -148,7 +188,8 @@ class ProjectTaskRecurrence(models.Model):
                 "child_ids": [
                     Command.create(vals)
                     for vals in self._prepare_next_occurrence_vals_list(
-                        dict.fromkeys(task.child_ids, recurrence)
+                        dict.fromkeys(task.child_ids, recurrence),
+                        dict.fromkeys(task.child_ids, shift),
                     )
                 ],
             }
@@ -160,7 +201,7 @@ class ProjectTaskRecurrence(models.Model):
             )
             create_values.update(
                 {
-                    field: value and value + recurrence._get_recurrence_delta()
+                    field: value and value + shift
                     for field, value in fields_to_postpone.items()
                 }
             )

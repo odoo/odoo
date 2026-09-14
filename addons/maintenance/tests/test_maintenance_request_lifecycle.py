@@ -82,6 +82,54 @@ class TestMaintenanceRequestLifecycle(TransactionCase):
         with self.assertRaises(ValidationError):
             self._recurring(repeat_type="until")
 
+    def _close(self, request):
+        before = self._successors(request)
+        request.stage_id = self.stage_repaired
+        return (self._successors(request) - before).with_env(request.env)
+
+    def test_a_month_end_series_returns_to_the_month_end(self):
+        request = self._recurring(
+            repeat_unit="month", schedule_date=datetime(2026, 1, 31, 10)
+        ).with_context(tz="UTC")
+        february = self._close(request)
+        self.assertEqual(february.schedule_date, datetime(2026, 2, 28, 10))
+        march = self._close(february)
+        self.assertEqual(march.schedule_date, datetime(2026, 3, 31, 10))
+
+    def test_rescheduling_one_occurrence_keeps_the_series_on_its_dates(self):
+        request = self._recurring(
+            repeat_unit="month", schedule_date=datetime(2026, 1, 31, 10)
+        ).with_context(tz="UTC")
+        february = self._close(request)
+        february.schedule_date = datetime(2026, 3, 3, 10)
+        march = self._close(february)
+        self.assertEqual(march.schedule_date, datetime(2026, 3, 31, 10))
+
+    def test_changing_the_rule_starts_the_series_again_from_that_occurrence(self):
+        request = self._recurring(
+            repeat_unit="month", schedule_date=datetime(2026, 1, 31, 10)
+        ).with_context(tz="UTC")
+        february = self._close(request)
+        february.repeat_interval = 2
+        april = self._close(february)
+        self.assertEqual(april.schedule_date, datetime(2026, 4, 28, 10))
+
+    def test_a_series_keeps_its_local_hour_across_daylight_saving(self):
+        request = self._recurring(
+            repeat_unit="month", schedule_date=datetime(2026, 3, 15, 10)
+        ).with_context(tz="Europe/Brussels")
+        april = self._close(request)
+        self.assertEqual(april.schedule_date, datetime(2026, 4, 15, 9))
+
+    def test_the_until_date_is_the_local_day(self):
+        request = self._recurring(
+            schedule_date=datetime(2026, 9, 1, 3),
+            repeat_type="until",
+            repeat_until=date(2026, 9, 7),
+        ).with_context(tz="America/Mexico_City")
+        successor = self._close(request)
+        self.assertEqual(successor.schedule_date, datetime(2026, 9, 8, 3))
+
     def test_the_close_date_follows_the_stage_and_keeps_an_explicit_value(self):
         request = self.Request.create({"name": "Close date probe"})
         self.assertFalse(request.close_date)

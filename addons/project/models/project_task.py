@@ -2913,8 +2913,6 @@ class ProjectTask(models.Model):
             self.recurrence_id.id,
             dbg.rec(siblings),
         )
-        if not siblings:
-            return None
         postponed = set(self.recurrence_id._get_recurring_fields_to_postpone())
         return {
             "targets": siblings,
@@ -2926,11 +2924,13 @@ class ProjectTask(models.Model):
     ) -> None:
         if not scope:
             return
+        shifted = scope["shift_from"]
+        if shifted:
+            self.recurrence_id.sudo().date_recurrence_origin = False
         targets = scope["targets"].exists()
         if not targets:
             return
 
-        shifted = scope["shift_from"]
         plain = {
             fname: value
             for fname, value in vals.items()

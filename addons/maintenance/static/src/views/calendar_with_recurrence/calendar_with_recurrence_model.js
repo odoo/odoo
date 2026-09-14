@@ -36,8 +36,15 @@ export class CalendarWithRecurrenceModel extends CalendarModel {
                     rawRecord.repeat_unit + "s",
                     rawRecord.repeat_interval,
                 ];
-                let date = deserializeDateTime(rawRecord.schedule_date);
-                date = this._getNextDate(date, unit, interval);
+                const scheduleDate = deserializeDateTime(rawRecord.schedule_date);
+                const origin = rawRecord.date_recurrence_origin
+                    ? deserializeDateTime(rawRecord.date_recurrence_origin)
+                    : scheduleDate;
+                let step = 1;
+                let date = this._getOccurrenceDate(origin, unit, interval, step);
+                while (date <= scheduleDate) {
+                    date = this._getOccurrenceDate(origin, unit, interval, ++step);
+                }
                 let counter = 1;
                 while (date <= end) {
                     if (date > start) {
@@ -54,15 +61,15 @@ export class CalendarWithRecurrenceModel extends CalendarModel {
                         };
                         recordsCounter++;
                     }
-                    date = this._getNextDate(date, unit, interval);
+                    date = this._getOccurrenceDate(origin, unit, interval, ++step);
                     counter++;
                 }
             }
         }
         return records;
     }
-    _getNextDate(date, unit, interval) {
-        return date.plus({ [unit]: interval });
+    _getOccurrenceDate(origin, unit, interval, step) {
+        return origin.plus({ [unit]: interval * step });
     }
     computeRangeDomain(data) {
         // A recurring request shows occurrences long after its own end, so it stays in
