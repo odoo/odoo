@@ -153,3 +153,26 @@ class TestWorkorder(TestMrpCommon):
 
         mo.workorder_ids.sorted('date_start')[0].button_start()
         self.assertTrue(mo.is_planned, "Starting a work order must not unplan the MO")
+
+    def test_duplicate_mo_workorder_name_not_suffixed(self):
+        """
+        Duplicating a manufacturing order should keep its workorders' names
+        as-is: the generic "(copy)" suffix applied by default to 'name'
+        fields on copy should not apply to workorders.
+        """
+        self.bom_1.write({
+            'operation_ids': [
+                Command.create({'name': 'Cutting Machine', 'workcenter_id': self.workcenter_1.id, 'sequence': 1}),
+                Command.create({'name': 'Weld Machine', 'workcenter_id': self.workcenter_1.id, 'sequence': 2}),
+            ],
+        })
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_1
+        mo_form.product_qty = 10
+        mo = mo_form.save()
+        mo.action_confirm()
+        original_names = mo.workorder_ids.mapped('name')
+        self.assertEqual(original_names, ['Cutting Machine', 'Weld Machine'])
+
+        mo_copy = mo.copy()
+        self.assertEqual(mo_copy.workorder_ids.mapped('name'), original_names)
