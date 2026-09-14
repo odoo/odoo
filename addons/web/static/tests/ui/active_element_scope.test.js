@@ -107,7 +107,7 @@ test("useCommand binds to the active element owning the component, not to the ne
     expect(commandNamesFor(modal)).toEqual(["inside"]);
 });
 
-test("a component rendering a dialog is outside it until it says otherwise", async () => {
+test("a component rendering a dialog is scoped to that dialog", async () => {
     await makeMockEnv();
     await mountWithCleanup(MainComponentsContainer);
 
@@ -130,8 +130,19 @@ test("a component rendering a dialog is outside it until it says otherwise", asy
 
     const modal = /** @type {HTMLElement} */ (document.querySelector(".modal"));
     expect(getService("ui").activeElement).toBe(modal);
-    expect(/** @type {any} */ (ambient)()).toBe(document);
+    expect(/** @type {any} */ (ambient)()).toBe(modal);
     expect(/** @type {any} */ (declared)()).toBe(modal);
+
+    // a dialog it opens takes the active element away from it
+    class Sub extends Component {
+        static template = xml`<Dialog><div class="sub"/></Dialog>`;
+        static components = { Dialog };
+        static props = ["*"];
+    }
+    getService("dialog").add(Sub, {});
+    await animationFrame();
+    expect(getService("ui").activeElement).not.toBe(modal);
+    expect(/** @type {any} */ (ambient)()).toBe(modal);
 });
 
 test("a component beside an open dialog is scoped to the document, not to the dialog", async () => {

@@ -327,7 +327,7 @@ class IrQweb(models.AbstractModel):
         consumer_names = {child.name for child in consumers}
 
         def add_consumer(name: str) -> None:
-            if name in consumer_names or name.partition(".")[0] not in installed:
+            if name in consumer_names or registry.bundle_addon(name) not in installed:
                 return
             consumer_names.add(name)
             consumers.append(
@@ -356,9 +356,9 @@ class IrQweb(models.AbstractModel):
             registry.dynamic_children,
         ):
             for parent, children in mapping.items():
-                if parent.partition(".")[0] not in installed:
+                if registry.bundle_addon(parent) not in installed:
                     continue
-                if not any(c.partition(".")[0] in installed for c in children):
+                if not any(registry.bundle_addon(c) in installed for c in children):
                     continue
                 if parent != bundle:
                     parent_specs = set(
@@ -426,14 +426,14 @@ class IrQweb(models.AbstractModel):
                 *(
                     name
                     for name in registry.import_map_includes.get(parent, ())
-                    if name.partition(".")[0] in installed
+                    if registry.bundle_addon(name) in installed
                 ),
             ]
             if with_test_satellites:
                 owners.extend(
                     name
                     for name in registry.secondary_import_map_includes.get(parent, ())
-                    if name.partition(".")[0] in installed
+                    if registry.bundle_addon(name) in installed
                 )
             specs: set[str] = set()
             for owner in owners:

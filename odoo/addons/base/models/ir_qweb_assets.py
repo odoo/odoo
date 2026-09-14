@@ -520,7 +520,7 @@ class IrQweb(models.AbstractModel):
             sorted(
                 parent
                 for parent, children in registry.dynamic_children.items()
-                if bundle in children and parent.partition(".")[0] in installed
+                if bundle in children and registry.bundle_addon(parent) in installed
             )
         )
         if not page or not declared:
@@ -598,7 +598,7 @@ class IrQweb(models.AbstractModel):
         installed = self.env["ir.asset"]._get_addons_installed()
         children = {}
         for name in sorted(registry.runtime_bundle_names):
-            if name.partition(".")[0] not in installed:
+            if registry.bundle_addon(name) not in installed:
                 continue
             if not self._is_runtime_child_compiled(name):
                 continue
@@ -1876,8 +1876,9 @@ class IrQweb(models.AbstractModel):
         installed = self.env["ir.asset"]._get_addons_installed()
         assets_params = self.env["ir.asset"]._prepare_assets_params()
         satellites = self._has_esm_test_satellites("")
-        for parent in sorted(esm_registry().dynamic_children):
-            if parent.partition(".")[0] not in installed:
+        registry = esm_registry()
+        for parent in sorted(registry.dynamic_children):
+            if registry.bundle_addon(parent) not in installed:
                 continue
             urls = self._get_runtime_group_urls_cached(
                 (parent,), assets_params, satellites
@@ -1893,7 +1894,8 @@ class IrQweb(models.AbstractModel):
         return links
 
     def _pregenerate_secondary_page_scopes(self, bundle: str) -> None:
-        parents = esm_registry().secondary_parents.get(bundle)
+        registry = esm_registry()
+        parents = registry.secondary_parents.get(bundle)
         if not parents or not self._can_compile_with_esbuild(bundle):
             return
         installed = self.env["ir.asset"]._get_addons_installed()
@@ -1901,7 +1903,7 @@ class IrQweb(models.AbstractModel):
         satellites = self._has_esm_test_satellites("")
         _debug.pipeline("pregenerate_page_scopes", bundle=bundle, parents=len(parents))
         for parent in parents:
-            if parent.partition(".")[0] not in installed:
+            if registry.bundle_addon(parent) not in installed:
                 continue
             try:
                 self._get_native_module_nodes_cached(

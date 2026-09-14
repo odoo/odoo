@@ -57,8 +57,9 @@ class UiService {
             configurable: true,
             get: () => this.isSmall,
         });
-        this.withdrawScopeResolver = publishEnclosingScopeResolver((node) =>
-            this.getScopeOf(node),
+        this.withdrawScopeResolver = publishEnclosingScopeResolver(
+            (node) => this.getScopeOf(node),
+            () => this.activeElement,
         );
     }
 

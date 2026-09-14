@@ -161,7 +161,8 @@ class IrQweb(models.AbstractModel):
         assets_params: dict[str, Any] | None,
         page_scope: tuple[str, ...],
     ) -> set[str]:
-        providers = page_scope or esm_registry().secondary_parents.get(bundle) or ()
+        registry = esm_registry()
+        providers = page_scope or registry.secondary_parents.get(bundle) or ()
         installed = self.env["ir.asset"]._get_addons_installed()
         spec_sets = []
         for provider in providers:
@@ -174,7 +175,7 @@ class IrQweb(models.AbstractModel):
                     assets_params=assets_params,
                 ).get_native_module_data(with_bridges=False)["import_map"]
             )
-            if specs or provider.partition(".")[0] in installed:
+            if specs or registry.bundle_addon(provider) in installed:
                 spec_sets.append(specs)
         if not spec_sets:
             _debug.logic(

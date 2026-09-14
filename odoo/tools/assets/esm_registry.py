@@ -48,6 +48,13 @@ class EsmRegistry(NamedTuple):
     external_libs: Mapping = MappingProxyType({})
     runtime_bundle_names: frozenset = frozenset()
     exports: frozenset = frozenset()
+    bundle_owners: Mapping = MappingProxyType({})
+
+    # a bundle is named after the module that declared it, except when that
+    # module was folded into another and the bundle kept its name
+    # (`pos_preparation_display.assets`, declared by `pos_enterprise`)
+    def bundle_addon(self, bundle: str) -> str:
+        return self.bundle_owners.get(bundle) or bundle.partition(".")[0]
 
 
 _lock = threading.Lock()
@@ -169,6 +176,7 @@ def _freeze_registry(
     runtime_bundles: set,
     external_libs: dict,
     exports: set | None = None,
+    bundle_owners: dict | None = None,
 ) -> EsmRegistry:
     return EsmRegistry(
         bundles=frozenset(bundles),
@@ -209,6 +217,7 @@ def _freeze_registry(
             child for children in dynamic_children.values() for child in children
         ),
         exports=frozenset(exports or ()),
+        bundle_owners=MappingProxyType(dict(bundle_owners or {})),
     )
 
 
@@ -227,6 +236,7 @@ def _prepare_esm_registry() -> EsmRegistry:
     # sources can discover. Declared by the module that owns them.
     exports: set = set()
     external_lib_owner: dict = {}
+    bundle_owners: dict = {}
     declaring_modules = 0
     for manifest in Manifest.get_all_addon_manifests():
         esm = _validated_esm_section(manifest)
@@ -238,6 +248,10 @@ def _prepare_esm_registry() -> EsmRegistry:
             module=manifest.name,
             keys=sorted(esm),
         )
+        for key in ("bundles", "standalone_bundles", "runtime_bundles"):
+            for name in _bundle_name_list(esm, key, manifest.name):
+                if name.partition(".")[0] != manifest.name:
+                    bundle_owners.setdefault(name, manifest.name)
         bundles.update(_bundle_name_list(esm, "bundles", manifest.name))
         standalone_bundles.update(
             _bundle_name_list(esm, "standalone_bundles", manifest.name)
@@ -282,6 +296,7 @@ def _prepare_esm_registry() -> EsmRegistry:
         runtime_bundles,
         external_libs,
         exports,
+        bundle_owners,
     )
     log_event(
         _registry_log,

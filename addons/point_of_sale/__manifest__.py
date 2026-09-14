@@ -300,9 +300,6 @@
             "point_of_sale.base_tests",
         ],
         "secondary_import_map_includes": {
-            "web.assets_tests": [
-                "point_of_sale.assets_prod",
-            ],
             "point_of_sale.assets_prod": [
                 "web.assets_tests",
                 "point_of_sale.assets_debug",

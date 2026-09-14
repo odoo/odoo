@@ -2084,9 +2084,13 @@ class TestImportMapMergeHelpers(TransactionCase):
             secondary_import_map_includes={},
             runtime_bundle_names=set(),
             exports=frozenset(),
+            bundle_owners={},
         )
         for key, value in overrides.items():
             setattr(reg, key, value)
+        reg.bundle_addon = lambda name: (
+            reg.bundle_owners.get(name) or name.partition(".")[0]
+        )
         children = {child for kids in reg.dynamic_children.values() for child in kids}
         reg.dynamic_bundle_names = set(reg.dynamic_bundle_names) | children
         reg.runtime_bundle_names = set(reg.runtime_bundle_names) | children
