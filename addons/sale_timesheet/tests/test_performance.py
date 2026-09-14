@@ -15,7 +15,12 @@ class TestPerformanceTimesheet(TestSaleTimesheet):
         )
         self.assertFalse(project.task_ids.sale_line_id)
         self.env.invalidate_all()
-        with self.assertQueryCount(28):
+        # 28 on a sale_timesheet-only database, 29 on a 153-module one: the
+        # absolute count moves with the install, so these are the wider reading.
+        # A narrower install logs `Query count less than expected` and passes.
+        # The install-independent guard is
+        # `test_making_a_project_billable_does_not_cost_a_query_per_task` below.
+        with self.assertQueryCount(29):
             project.write(
                 {
                     "allow_billable": True,
@@ -36,7 +41,7 @@ class TestPerformanceTimesheet(TestSaleTimesheet):
             ]
         )
         self.env.invalidate_all()
-        with self.assertQueryCount(29):
+        with self.assertQueryCount(30):
             project.write(
                 {
                     "allow_billable": True,
@@ -44,6 +49,36 @@ class TestPerformanceTimesheet(TestSaleTimesheet):
                 }
             )
         self.assertTrue(project.task_ids.sale_line_id)
+
+
+@tagged("post_install", "-at_install")
+class TestBillableProjectScaling(TestSaleTimesheet):
+    def _cost_of_making_billable(self, task_count):
+        project = self.env["project.project"].create(
+            {
+                "name": f"Scaling {task_count}",
+                "task_ids": [
+                    Command.create({"name": f"Task {index}"})
+                    for index in range(task_count)
+                ],
+            }
+        )
+        self.env.flush_all()
+        self.env.invalidate_all()
+        before = self.env.cr.sql_statement_count
+        project.write({"allow_billable": True, "partner_id": self.partner_b.id})
+        self.env.flush_all()
+        return self.env.cr.sql_statement_count - before
+
+    def test_making_a_project_billable_does_not_cost_a_query_per_task(self):
+        few = self._cost_of_making_billable(20)
+        many = self._cost_of_making_billable(200)
+        self.assertLessEqual(
+            many,
+            few + 5,
+            f"200 tasks cost {many} statements against {few} for 20; making a "
+            "project billable is querying per task again",
+        )
 
 
 @tagged("post_install", "-at_install")
