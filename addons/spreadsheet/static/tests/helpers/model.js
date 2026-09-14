@@ -1,3 +1,4 @@
+import { after } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Model, stores } from "@odoo/o-spreadsheet";
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
@@ -14,6 +15,8 @@ import { setCellContent } from "./commands";
 import { addRecordsFromServerData, addViewsFromServerData } from "./data";
 import { markRaw } from "@odoo/owl";
 
+const { DependencyContainer, ModelStore, globalStores, proxifyStoreMutation } = stores;
+
 /**
  * @typedef {import("@spreadsheet/../tests/helpers/data").ServerData} ServerData
  * @typedef {import("@spreadsheet/helpers/model").OdooSpreadsheetModel} OdooSpreadsheetModel
@@ -24,6 +27,27 @@ export function setupDataSourceEvaluation(model) {
         const sheetId = model.getters.getActiveSheetId();
         model.dispatch("EVALUATE_CELLS", { sheetId });
     });
+}
+
+export function makeSpreadsheetActionTestEnv(model) {
+    const container = new DependencyContainer();
+    after(() => {
+        container.dispose();
+    });
+
+    container.inject(ModelStore, model);
+
+    for (const store of globalStores.getAll()) {
+        container.get(store);
+    }
+    return {
+        model,
+        getStore(Store) {
+            const store = container.get(Store);
+            return proxifyStoreMutation(store, () => container.trigger("store-updated"));
+        },
+        __spreadsheet_stores__: container,
+    };
 }
 
 /**
@@ -50,10 +74,8 @@ export async function createModelWithDataSource(params = {}) {
         },
     });
     markRaw(model);
-    env.model = model;
-    // if (params.serverData) {
-    //     await addRecordsFromServerData(params.serverData);
-    // }
+    Object.assign(env, makeSpreadsheetActionTestEnv(model));
+
     setupDataSourceEvaluation(model);
     await animationFrame(); // initial async formulas loading
     return { model, env };

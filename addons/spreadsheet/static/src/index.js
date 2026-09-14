@@ -40,6 +40,9 @@ import { OdooChartFeaturePlugin } from "./chart/plugins/odoo_chart_feature_plugi
 import { LoggingUIPlugin } from "@spreadsheet/logging/logging_ui_plugin";
 import { PivotOdooCoreViewPlugin } from "./pivot/plugins/pivot_odoo_core_view_plugin";
 
+const { stores } = spreadsheet;
+const { SidePanelStore } = stores;
+
 globalFieldMatchingRegistry.add("pivot", {
     getIds: (getters) =>
         getters
@@ -68,7 +71,8 @@ globalFieldMatchingRegistry.add("pivot", {
     getActionXmlId: (getters, pivotId) => getters.getPivotCoreDefinition(pivotId).actionXmlId,
     getDomain: (getters, pivotId) => getters.getPivot(pivotId).getDomainWithGlobalFilters(),
     getContext: (getters, pivotId) => getters.getPivotCoreDefinition(pivotId).context,
-    openSidePanel: (env, pivotId) => env.openSidePanel("PivotSidePanel", { pivotId }),
+    openSidePanel: (env, pivotId) =>
+        env.getStore(SidePanelStore).open("PivotSidePanel", { pivotId }),
 });
 
 globalFieldMatchingRegistry.add("list", {
@@ -83,7 +87,8 @@ globalFieldMatchingRegistry.add("list", {
     getActionXmlId: (getters, listId) => getters.getListDefinition(listId).actionXmlId,
     getDomain: (getters, listId) => getters.getListComputedDomain(listId),
     getContext: (getters, listId) => getters.getListDefinition(listId).context,
-    openSidePanel: (env, listId) => env.openSidePanel("LIST_PROPERTIES_PANEL", { listId }),
+    openSidePanel: (env, listId) =>
+        env.getStore(SidePanelStore).open("LIST_PROPERTIES_PANEL", { listId }),
 });
 
 globalFieldMatchingRegistry.add("chart", {
@@ -109,7 +114,7 @@ globalFieldMatchingRegistry.add("chart", {
     openSidePanel: (env, chartId) => {
         const figureId = env.model.getters.getFigureIdFromChartId(chartId);
         env.model.dispatch("SELECT_FIGURE", { figureId });
-        env.openSidePanel("ChartPanel", { chartId });
+        env.getStore(SidePanelStore).open("ChartPanel", { chartId });
     },
 });
 
