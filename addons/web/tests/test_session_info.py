@@ -99,11 +99,27 @@ class TestSessionInfo(common.HttpCase):
             result["groups"]["base.group_allow_export"],
             self.user.has_group("base.group_allow_export"),
         )
+        # user_companies is an extension point too (hr_timesheet adds two keys per
+        # company); web owns the keys declared above, not the whole dict
+        user_companies = result["user_companies"]
         self.assertEqual(
-            result["user_companies"],
-            expected_user_companies,
-            "The session_info['user_companies'] does not have the expected structure",
+            user_companies["current_company"],
+            expected_user_companies["current_company"],
         )
+        for key in ("allowed_companies", "disallowed_ancestor_companies"):
+            self.assertEqual(
+                {
+                    company_id: {
+                        field: value
+                        for field, value in company.items()
+                        if field in expected_user_companies[key][company_id]
+                    }
+                    for company_id, company in user_companies[key].items()
+                },
+                expected_user_companies[key],
+                f"The session_info['user_companies']['{key}'] does not have the "
+                "expected structure",
+            )
 
     def test_session_modules(self):
         self.authenticate(self.user.login, self.user_password)
