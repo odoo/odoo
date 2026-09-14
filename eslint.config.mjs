@@ -220,6 +220,10 @@ const COMMUNITY_IGNORES = [
     // valid JS but invalid JSON and breaks that test. Mirrored in
     // .prettierignore.
     "addons/mail/static/tests/mock_server/contract/store_shapes.js",
+    // Same shape: the frozen view IR fixture's body is parsed by json.loads
+    // in odoo/tools/tests/test_view_ir_fixture.py. Mirrored in
+    // .prettierignore.
+    "addons/web/static/tests/views/view_ir_fixture.js",
 
     // Legacy code (only top-level adapters are linted)
     "addons/web/static/src/legacy/**",
