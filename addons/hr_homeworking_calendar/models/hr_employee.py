@@ -1,9 +1,12 @@
 from collections import defaultdict
 
 from odoo import models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
 from odoo.addons.hr_homeworking.models.hr_homeworking import DAYS
+
+_debug = DebugLog(__name__)
 
 
 class HrEmployee(models.Model):
@@ -43,6 +46,13 @@ class HrEmployee(models.Model):
             ],
         )
 
+        _debug.perf.count(
+            "worklocation_exceptions",
+            employees=self,
+            exceptions=len(exceptions_for_period),
+            start=str(start_date),
+            end=str(end_date),
+        )
         for exception in exceptions_for_period:
             date = exception["date"].strftime(DEFAULT_SERVER_DATE_FORMAT)
             exception_value = {
