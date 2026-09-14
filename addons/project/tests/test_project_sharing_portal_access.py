@@ -24,7 +24,7 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
             'res_model': 'project.project',
             'res_id': cls.project_portal.id,
             'collaborator_ids': [
-                Command.create({'partner_id': cls.partner_portal.id, 'access_mode': 'edit'}),
+                Command.create({'partner_id': cls.partner_portal.id, 'access_mode': 'advanced_edit'}),
             ],
         })
 
@@ -79,11 +79,8 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
         self.project_portal.collaborator_ids.filtered(
             lambda rec: rec.partner_id == self.user_portal.partner_id
         ).unlink()
-        self.assertEqual(
-            {},
-            self.task_portal.with_user(self.user_portal).get_mention_suggestions(search=""),
-            "Non collaborator portal user should not have access to mention suggestions",
-        )
+        with self.assertRaises(AccessError, msg="Non collaborator portal user should not have access to mention suggestions"):
+            self.task_portal.with_user(self.user_portal).get_mention_suggestions(search="")
 
     def test_readonly_fields(self):
         """ The fields are not writeable should not be editable by the portal user. """
@@ -164,7 +161,7 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
             'res_model': 'project.project',
             'res_id': self.project_portal.id,
             'collaborator_ids': [
-                Command.create({'partner_id': partner_portal_no_user.id, 'access_mode': 'edit'}),
+                Command.create({'partner_id': partner_portal_no_user.id, 'access_mode': 'advanced_edit'}),
             ],
         })
         self.env["res.config.settings"].create({"auth_signup_uninvited": 'b2b'}).execute()
@@ -183,6 +180,9 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
         """Tests that the auto-subscription system properly add the followers of
         the parent project when a portal user creates a task
         """
+        self.project_portal.collaborator_ids.filtered(
+            lambda c: c.partner_id == self.user_portal.partner_id
+        ).write({'access_mode': 'advanced_edit'})
         self.project_portal.message_subscribe(self.user_projectmanager.partner_id.ids)
         task = self.env["project.task"].with_user(self.user_portal).with_context(default_project_id=self.project_portal.id).create({'name': 'Task created by portal_user'})
         self.assertIn(self.user_portal.partner_id, task.sudo().message_partner_ids)

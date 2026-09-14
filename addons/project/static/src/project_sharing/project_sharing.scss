@@ -2,3 +2,14 @@
     // to be able to vertically center the content of the control panel since there is no menu header displayed in project sharing
     padding-top: 16px !important;
 }
+.o_card_record {
+    &.o_kanban_record_colored::after {
+            @include o-position-absolute(0, auto, 0, 0);
+            width: 6px;
+            border-right: 4px solid transparent;
+            border-radius: inherit;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+            content: "";
+    }
+}
