@@ -169,17 +169,18 @@ class TraversalMixin(_ModelStubs):
             return self
         if not self:
             return self
+        narrow = self._narrow
         if callable(func):
             pass
         elif isinstance(func, str):
             if "." in func:
-                return self.browse(
+                return narrow(
                     rec_id
                     for rec_id, rec in zip(self._ids, self, strict=True)
                     if any(rec.mapped(func))
                 )
             if func == "id":
-                return self.browse([id_ for id_ in self._ids if id_])
+                return narrow(id_ for id_ in self._ids if id_)
             field = self._fields[func]
             if not can_scan_truthy(field):
                 _debug.logic(
@@ -189,7 +190,7 @@ class TraversalMixin(_ModelStubs):
                     records=len(self),
                 )
                 _field_get = field.__get__
-                return self.browse(rec._ids[0] for rec in self if _field_get(rec))
+                return narrow(rec._ids[0] for rec in self if _field_get(rec))
             field.check_read_access(self)
             field.recompute_pending(self)
             field_cache = field._get_cache(self.env)
@@ -210,18 +211,16 @@ class TraversalMixin(_ModelStubs):
                         records=len(self),
                         misses=len(miss_indices),
                     )
-                    return self.browse(
-                        rec._ids[0] for rec in rec_list if _field_get(rec)
-                    )
+                    return narrow(rec._ids[0] for rec in rec_list if _field_get(rec))
                 all_passing = set(passing_ids)
                 passing_ids = [id_ for id_ in self._ids if id_ in all_passing]
-            return self.browse(passing_ids)
+            return narrow(passing_ids)
         elif isinstance(func, Domain):
             return self.filtered_domain(func)
         else:
             raise TypeError(f"Invalid function {func!r} to filter on {self._name}")
         predicate = typing.cast("Callable[[typing.Any], bool]", func)
-        return self.browse(
+        return narrow(
             rec_id
             for rec_id, rec in zip(self._ids, self, strict=True)
             if predicate(rec)
@@ -324,7 +323,7 @@ class TraversalMixin(_ModelStubs):
             return self
         records = typing.cast("BaseModel", self)
         predicate = Domain(domain)._as_predicate(records)
-        return self.browse(
+        return self._narrow(
             rec_id
             for rec_id, rec in zip(self._ids, records, strict=True)
             if predicate(rec)

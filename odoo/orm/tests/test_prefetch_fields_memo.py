@@ -84,3 +84,24 @@ def test_exists_keeps_the_prefetch_ids_of_the_batch():
         items[0].unlink()
         assert set(items.exists()._prefetch_ids) == set(items.ids)
         assert items.exists().ids == items.ids[1:]
+
+
+def test_a_subset_of_a_batch_keeps_the_batch_as_its_prefetch():
+    with model_test_env(Item) as env:
+        items = env["memo.item"].create(
+            [{"name": str(i), "note": "n" if i % 2 else ""} for i in range(6)]
+        )
+        batch = set(items.ids)
+        assert set(items.filtered("note")._prefetch_ids) == batch
+        assert set(items.filtered(lambda item: item.name > "2")._prefetch_ids) == batch
+        assert (
+            set(items.filtered_domain([("name", "in", ["1"])])._prefetch_ids) == batch
+        )
+        assert set((items - items[:2])._prefetch_ids) == batch
+        assert set((items & items[1:3])._prefetch_ids) == batch
+        # a union and a slice are new batches of their own
+        assert set((items[:2] | items[4:])._prefetch_ids) == {
+            *items[:2].ids,
+            *items[4:].ids,
+        }
+        assert set(items[1:3]._prefetch_ids) == set(items[1:3].ids)

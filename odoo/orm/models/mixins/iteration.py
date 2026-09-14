@@ -66,6 +66,9 @@ class IterationMixin(_ModelStubs):
             return list(self._ids)
         return list(_origin_ids(self._ids))
 
+    def _narrow(self, ids: typing.Iterable[IdType]) -> Self:
+        return self._spawn(self.env, tuple(ids), self._prefetch_ids)
+
     @property
     def _new_records(self) -> Self:
         return self.browse([id_ for id_ in self._ids if not id_])
@@ -223,7 +226,7 @@ class IterationMixin(_ModelStubs):
             if not other._ids or not self._ids:
                 return self
             other_ids = set(other._ids)
-            return self.browse(id_ for id_ in self._ids if id_ not in other_ids)
+            return self._narrow(id_ for id_ in self._ids if id_ not in other_ids)
         except AttributeError:
             raise TypeError(
                 f"unsupported operand types in: {self} - {other!r}"
@@ -236,7 +239,9 @@ class IterationMixin(_ModelStubs):
             if not self._ids or not other._ids:
                 return self.browse()
             other_ids = set(other._ids)
-            return self.browse(OrderedSet(id_ for id_ in self._ids if id_ in other_ids))
+            return self._narrow(
+                OrderedSet(id_ for id_ in self._ids if id_ in other_ids)
+            )
         except AttributeError:
             raise TypeError(
                 f"unsupported operand types in: {self} & {other!r}"
