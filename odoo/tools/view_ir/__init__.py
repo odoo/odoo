@@ -11,6 +11,7 @@ from .identity import identify
 from .node import Node
 from .patch import Applied, AttrChange, Conflict, Move, Patch, PatchError
 from .patch import apply as apply_patches
+from .resolve import translate_specs
 from .schema import SCHEMA_PATH, NodeSpec, Schema, ViewTypeSpec, schema
 from .validate import Issue, validate
 
@@ -37,5 +38,6 @@ __all__ = [
     "to_arch",
     "to_json",
     "to_string",
+    "translate_specs",
     "validate",
 ]

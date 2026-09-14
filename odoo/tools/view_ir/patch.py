@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 from typing import Literal
@@ -41,6 +42,9 @@ class Patch:
     content: tuple[Node | Move, ...] = ()
     attributes: tuple[AttrChange, ...] = ()
     origin: str | None = None
+    # text inserted at the insertion point ahead of the content — the leading
+    # text of an XML spec ("Do you confirm … <strong>…</strong>")
+    text: str | None = None
 
 
 @dataclass(slots=True)
@@ -108,9 +112,10 @@ def apply(root: Node, patches: Iterable[Patch]) -> Applied:
         else:
             content = _materialise(result.root, ids, patch, target)
             if patch.op == "inside":
-                target.children.extend(content)
+                _insert(target, len(target.children), content, patch.text)
             elif patch.op == "replace_inner":
-                target.children = list(content)
+                target.children = []
+                _insert(target, 0, content, patch.text)
             elif target is result.root:
                 if patch.op != "replace":
                     raise PatchError("only `replace` applies to the root")
@@ -120,13 +125,28 @@ def apply(root: Node, patches: Iterable[Patch]) -> Applied:
             else:
                 parent, index = _parent_of(result.root, target)
                 if patch.op == "replace":
-                    parent.children[index : index + 1] = content
+                    del parent.children[index]
+                    _insert(parent, index, content, None)
                 elif patch.op == "before":
-                    parent.children[index:index] = content
+                    _insert(parent, index, content, patch.text)
                 else:
-                    parent.children[index + 1 : index + 1] = content
+                    _insert(parent, index + 1, content, patch.text)
         ids = identify(result.root)
     return result
+
+
+def _insert(parent: Node, index: int, content: list[Node], text: str | None) -> None:
+    """Place ``content`` at ``index`` under ``parent``, ``text`` ahead of it —
+    on the tail of the node before the insertion point, or the parent's text."""
+    if text:
+        # as the XML combine does: the text before the point loses its
+        # trailing whitespace, the spec's text carries its own
+        if index:
+            previous = parent.children[index - 1]
+            previous.tail = (previous.tail or "").rstrip() + text
+        else:
+            parent.text = (parent.text or "").rstrip() + text
+    parent.children[index:index] = content
 
 
 def _materialise(
@@ -153,11 +173,13 @@ def _materialise(
 
 
 def _place_target(node: Node, patch: Patch, target: Node) -> Node:
-    """`$0` anywhere in the content stands for the replaced node itself."""
+    """`$0` anywhere in the content stands for a copy of the replaced node,
+    as the `$0` text of an XML spec does — a copy, so two placeholders do not
+    share one node."""
     if node.kind == "$0":
         if patch.op != "replace":
             raise PatchError("`$0` stands for the replaced node only")
-        return target
+        return copy.deepcopy(target)
     node.children = [_place_target(child, patch, target) for child in node.children]
     return node
 
