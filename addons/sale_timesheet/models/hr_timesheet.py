@@ -267,15 +267,9 @@ class AccountAnalyticLine(models.Model):
 
     def _get_employee_mapping_entry(self):
         self.check_singleton()
-        return self.env["project.sale.line.employee.map"].search(
-            [
-                ("project_id", "=", self.project_id.id),
-                (
-                    "employee_id",
-                    "=",
-                    self.employee_id.id or self.env.user.employee_id.id,
-                ),
-            ]
+        employee = self.employee_id or self.env.user.employee_id
+        return self.project_id.sale_line_employee_ids.filtered(
+            lambda map_entry: map_entry.employee_id == employee
         )
 
     def _hourly_cost(self):
