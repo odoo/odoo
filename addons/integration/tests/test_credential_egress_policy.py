@@ -139,7 +139,7 @@ class TestExplicitCredentialBinding(APITransportTestCase):
         self.assertIsNone(kwargs.get("auth"))
 
     @patch("requests.Session.request")
-    def test_unbound_credential_still_authenticates_http_auth(self, mock_request):
+    def test_unbound_credential_contributes_no_http_auth(self, mock_request):
         mock_request.return_value = self.create_mock_response(json_data={})
         unbound = self.env["credential.credential"].create(
             {
@@ -157,6 +157,4 @@ class TestExplicitCredentialBinding(APITransportTestCase):
         client = get_api_client(self.env, "test_basic_auth", credential_id=unbound.id)
         client.get("/resource")
 
-        self.assertEqual(
-            mock_request.call_args[1].get("auth"), ("device", "device-pass")
-        )
+        self.assertIsNone(mock_request.call_args[1].get("auth"))

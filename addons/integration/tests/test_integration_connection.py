@@ -1,13 +1,28 @@
 from itertools import count
+from unittest.mock import MagicMock, patch
+
+from requests.auth import HTTPDigestAuth
 
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
+from odoo.addons.integration.tools import CommError, get_api_client
 from odoo.addons.integration.tools.connection_migration import (
     connect_bound_credentials,
 )
 from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
+
+
+def _ok_response():
+    response = MagicMock()
+    response.status_code = 200
+    response.ok = True
+    response.headers = {"Content-Type": "application/json"}
+    response.content = b"{}"
+    response.text = "{}"
+    response.json.return_value = {}
+    return response
 
 
 @tagged("post_install", "-at_install", "integration")
@@ -156,16 +171,10 @@ class TestIntegrationConnection(EncryptionKeyCase, TransactionCase):
         connection.base_url = "https://device.example.com"
         self.assertEqual(connection._base_url(), "https://device.example.com")
 
-    def test_a_credential_bound_nowhere_gets_a_transient_connection(self):
+    def test_a_credential_bound_nowhere_gets_no_connection(self):
         credential = self._credential()
 
-        connection = self.Connection._for_credential(self.service, credential)
-
-        self.assertEqual(connection.credential_id, credential)
-        self.assertFalse(connection.id)
-        self.assertEqual(
-            connection._get_auth_headers(), {"Authorization": "Bearer token"}
-        )
+        self.assertFalse(self.Connection._for_credential(self.service, credential))
 
     def test_a_credential_bound_to_another_service_gets_no_connection(self):
         credential = self._credential(endpoint_id=self.other_service.id)
@@ -195,3 +204,95 @@ class TestIntegrationConnection(EncryptionKeyCase, TransactionCase):
 
         self.assertIn(self.service.code, report["unresolved"])
         self.assertEqual(self.service.environment, "production")
+
+
+@tagged("post_install", "-at_install", "integration")
+class TestPerRecordConnections(EncryptionKeyCase, TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.Connection = cls.env["integration.connection"]
+        cls.service = cls.env["integration.service"].create(
+            {
+                "name": "Panel probe",
+                "code": "panel_probe",
+                "auth_type": "digest",
+                "environment": "production",
+                "per_record_connections": True,
+                "verify_tls": False,
+                "allowed_hosts": "private",
+            }
+        )
+        cls.login = cls.env["credential.credential"].create(
+            {
+                "name": "Panel probe login",
+                "category_id": cls.env.ref(
+                    "credential.credential_category_basic_auth"
+                ).id,
+                "username": "admin",
+                "password": "panel-pass",
+            }
+        )
+
+    def _panel(self, address, name="Door"):
+        return self.Connection.create(
+            {
+                "name": name,
+                "service_id": self.service.id,
+                "credential_id": self.login.id,
+                "company_id": self.env.company.id,
+                "environment": "production",
+                "base_url": f"https://{address}",
+            }
+        )
+
+    def test_a_service_without_a_url_needs_per_record_connections(self):
+        with self.assertRaises(ValidationError):
+            self.service.per_record_connections = False
+
+    def test_every_record_may_have_its_own_active_connection(self):
+        first = self._panel("192.168.1.50", "Front door")
+        second = self._panel("192.168.1.51", "Back door")
+
+        self.assertTrue(first.active and second.active)
+        self.assertEqual(first.display_name, "Panel probe · Front door")
+
+    def test_no_connection_is_picked_by_company(self):
+        self._panel("192.168.1.50")
+
+        self.assertFalse(self.Connection._resolve(self.service))
+
+    def test_a_call_on_a_connection_reaches_its_own_address_with_its_login(self):
+        panel = self._panel("192.168.1.50")
+
+        with patch("requests.Session.request") as request:
+            request.return_value = _ok_response()
+            panel._get_api_client().get("/ISAPI/System/deviceInfo")
+
+        self.assertEqual(
+            request.call_args.kwargs["url"],
+            "https://192.168.1.50/ISAPI/System/deviceInfo",
+        )
+        self.assertIsInstance(request.call_args.kwargs["auth"], HTTPDigestAuth)
+
+    def test_a_call_that_names_no_connection_is_refused(self):
+        with self.assertRaises(CommError):
+            get_api_client(self.env, "panel_probe")
+
+    def test_a_connection_of_another_service_is_refused(self):
+        other = self.env["integration.service"].create(
+            {
+                "name": "Other panel probe",
+                "code": "other_panel_probe",
+                "endpoint_url": "https://other.example.com",
+            }
+        )
+
+        with self.assertRaises(CommError):
+            get_api_client(
+                self.env, other.code, connection_id=self._panel("192.168.1.50").id
+            )
+
+    def test_a_connection_may_not_leave_the_private_network_without_tls(self):
+        with self.assertRaises(ValidationError):
+            self._panel("8.8.8.8")

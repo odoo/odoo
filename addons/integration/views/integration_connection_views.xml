@@ -8,6 +8,7 @@
             <list decoration-muted="environment != service_environment">
                 <field name="sequence" widget="handle" />
                 <field name="service_id" />
+                <field name="name" optional="show" />
                 <field name="company_id" groups="base.group_multi_company" />
                 <field name="environment" />
                 <field name="user_id" optional="hide" />
@@ -36,6 +37,7 @@
                     <group>
                         <group>
                             <field name="service_id" />
+                            <field name="name" />
                             <field name="credential_id" />
                             <field name="environment" />
                             <field
@@ -62,6 +64,7 @@
         <field name="model">integration.connection</field>
         <field name="arch" type="xml">
             <search>
+                <field name="name" />
                 <field name="service_id" />
                 <field name="credential_id" />
                 <field name="company_id" />

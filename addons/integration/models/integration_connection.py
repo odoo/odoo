@@ -1,9 +1,12 @@
 import json
 import logging
 from typing import Any, Self
+from urllib.parse import urlparse
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+
+from ..tools.api_client import is_private_host
 
 _logger = logging.getLogger(__name__)
 
@@ -20,6 +23,10 @@ class IntegrationConnection(models.Model):
     _description = "Integration Connection"
     _order = "service_id, sequence, id"
 
+    name = fields.Char(
+        help="What this connection reaches, for a service whose connections each "
+        "belong to one record: the device or the account.",
+    )
     service_id = fields.Many2one(
         comodel_name="integration.service",
         string="Service",
@@ -77,9 +84,14 @@ class IntegrationConnection(models.Model):
         "environment and priority, for code that still binds credentials that way.",
     )
 
-    @api.depends("service_id", "company_id", "environment", "user_id")
+    @api.depends("name", "service_id", "company_id", "environment", "user_id")
     def _compute_display_name(self):
         for connection in self:
+            if connection.name:
+                connection.display_name = (
+                    f"{connection.service_id.name} · {connection.name}"
+                )
+                continue
             parts = [
                 connection.service_id.name or "",
                 connection.company_id.name or self.env._("All companies"),
@@ -99,6 +111,7 @@ class IntegrationConnection(models.Model):
             lambda connection: (
                 connection.active
                 and not connection.service_id.allow_multiple_credentials
+                and not connection.service_id.per_record_connections
             )
         )
         if not constrained:
@@ -150,8 +163,28 @@ class IntegrationConnection(models.Model):
                     )
                 )
 
+    @api.constrains("service_id", "base_url")
+    def _check_tls_disabled_only_off_public_internet(self) -> None:
+        for connection in self:
+            if connection.service_id.verify_tls or not connection.base_url:
+                continue
+            host = urlparse(connection.base_url).hostname or ""
+            if not host or is_private_host(host):
+                continue
+            raise ValidationError(
+                self.env._(
+                    "Service %(service)s calls without verifying TLS, so its "
+                    "connections must stay on a private network. '%(host)s' is not "
+                    "on one.",
+                    service=connection.service_id.display_name,
+                    host=host,
+                )
+            )
+
     @api.model
     def _resolve(self, service, company=None, user=None, environment=None) -> Self:
+        if service.per_record_connections:
+            return self.sudo().browse()
         company_id = getattr(company, "id", company) or self.env.company.id
         environment = environment or service.environment
         base = [
@@ -193,20 +226,27 @@ class IntegrationConnection(models.Model):
         in_environment = connections.filtered(
             lambda connection: connection.environment == service.environment
         )
-        if connections:
-            return (in_environment or connections)[:1]
-        if (
-            self.sudo()
-            .with_context(active_test=False)
-            .search_count([("credential_id", "=", credential.id)], limit=1)
-        ):
-            return connections
-        return self.sudo().new(
-            {
-                "service_id": service.id,
-                "credential_id": credential.id,
-                "environment": service.environment,
-            }
+        return (in_environment or connections)[:1]
+
+    def _is_credential_host_allowed(self, host: str) -> bool:
+        self.check_singleton()
+        own = (urlparse(self.base_url or "").hostname or "").lower()
+        if own and (host or "").strip("[]").lower() == own:
+            return True
+        return self.service_id._is_credential_host_allowed(host)
+
+    def _get_api_client(self, egress_policy: str = "private"):
+        self.check_singleton()
+        from odoo.addons.integration.tools import (  # pylint: disable=import-outside-toplevel
+            get_api_client,
+        )
+
+        return get_api_client(
+            self.env,
+            self.service_id.code,
+            company_id=self.company_id.id or None,
+            connection_id=self.id,
+            egress_policy=egress_policy,
         )
 
     def _base_url(self) -> str:

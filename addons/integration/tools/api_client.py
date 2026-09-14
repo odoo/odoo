@@ -169,6 +169,7 @@ class OutboundAPIClient:
         company_id=None,
         credential_id=None,
         egress_policy="private",
+        connection_id=None,
     ):
         self.env = env
         self.egress_policy = egress_policy
@@ -196,7 +197,25 @@ class OutboundAPIClient:
             )
 
         connections = env["integration.connection"]
-        if credential_id:
+        if connection_id:
+            self.connection = connections.sudo().browse(connection_id)
+            if (
+                not self.connection.exists()
+                or not self.connection.active
+                or self.connection.service_id != self.service
+            ):
+                raise CommError(
+                    _(
+                        "Connection %(connection)s is not an active connection of "
+                        "service '%(service)s'",
+                        connection=connection_id,
+                        service=endpoint_code,
+                    )
+                )
+            self.credential = self.connection.credential_id
+            if self.credential and not self.credential.active:
+                raise CommError(_("Invalid or inactive credential"))
+        elif credential_id:
             self.credential = env["credential.credential"].sudo().browse(credential_id)
             if not self.credential.exists() or not self.credential.active:
                 raise CommError(_("Invalid or inactive credential"))
@@ -208,6 +227,14 @@ class OutboundAPIClient:
             self.credential = self.connection.credential_id
 
         if not self.credential and self.service.auth_type != "none":
+            if self.service.per_record_connections and not self.connection:
+                raise CommError(
+                    _(
+                        "Service '%s' connects each record on its own connection; "
+                        "the call must name one",
+                        endpoint_code,
+                    ),
+                )
             raise CommError(
                 _(
                     "No active credentials for service '%(service)s' and company ID "
@@ -238,14 +265,14 @@ class OutboundAPIClient:
 
         if self.connection:
             self.environment = self.connection.environment
-            self.base_url = self.connection._base_url()
+            self.base_url = self.connection._base_url() or ""
         else:
             self.environment = self.service.environment
             if self.environment == "production":
-                self.base_url = self.service.endpoint_url
+                self.base_url = self.service.endpoint_url or ""
             else:
                 self.base_url = (
-                    self.service.endpoint_url_test or self.service.endpoint_url
+                    self.service.endpoint_url_test or self.service.endpoint_url or ""
                 )
 
         _logger.info(
@@ -681,7 +708,12 @@ class OutboundAPIClient:
         if not (self._credential_header_names or self._credential_auth_applied):
             return
         host = urlparse(url).hostname or ""
-        if self.service._is_credential_host_allowed(host):
+        allowed = (
+            self.connection._is_credential_host_allowed(host)
+            if self.connection
+            else self.service._is_credential_host_allowed(host)
+        )
+        if allowed:
             return
         _logger.error(
             "Refused to send the credential of service '%s' to '%s': the host is "
@@ -1057,7 +1089,12 @@ class OutboundAPIClient:
 
 
 def get_api_client(
-    env, endpoint_code, company_id=None, credential_id=None, egress_policy="private"
+    env,
+    endpoint_code,
+    company_id=None,
+    credential_id=None,
+    egress_policy="private",
+    connection_id=None,
 ):
     service = (
         env["integration.service"]
@@ -1075,5 +1112,10 @@ def get_api_client(
         raise UserError(_("API service '%s' not found or inactive") % endpoint_code)
 
     return OutboundAPIClient(
-        env, endpoint_code, company_id, credential_id, egress_policy=egress_policy
+        env,
+        endpoint_code,
+        company_id,
+        credential_id,
+        egress_policy=egress_policy,
+        connection_id=connection_id,
     )

@@ -121,6 +121,7 @@
                             <field name="environment" />
                             <field name="auth_type" />
                             <field name="allow_multiple_credentials" />
+                            <field name="per_record_connections" />
                             <field
                                 name="allow_user_credentials"
                                 invisible="auth_type == 'none'" />
@@ -133,7 +134,9 @@
                         <page name="api_config" string="API Configuration">
                             <group>
                                 <group string="Endpoints">
-                                    <field name="endpoint_url" />
+                                    <field
+                                        name="endpoint_url"
+                                        required="not per_record_connections" />
                                     <field name="endpoint_url_test" />
                                     <field name="allowed_hosts" />
                                     <field name="api_version" />

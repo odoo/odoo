@@ -63,7 +63,6 @@ class IntegrationService(models.Model):
     )
 
     endpoint_url = fields.Char(
-        required=True,
         help="Base URL for production environment",
     )
     endpoint_url_test = fields.Char(help="Base URL for test environment")
@@ -167,6 +166,18 @@ class IntegrationService(models.Model):
         "from a public endpoint.",
     )
 
+    @api.constrains("endpoint_url", "per_record_connections")
+    def _check_endpoint_url_is_set(self):
+        for service in self:
+            if not service.endpoint_url and not service.per_record_connections:
+                raise ValidationError(
+                    self.env._(
+                        "Service %s needs a URL, unless each of its connections "
+                        "carries its own.",
+                        service.display_name,
+                    )
+                )
+
     @api.constrains("verify_tls", "endpoint_url")
     def _check_tls_disabled_only_off_public_internet(self):
         for endpoint in self:
@@ -248,6 +259,12 @@ class IntegrationService(models.Model):
         default=False,
         help="Allow multiple active credentials per company/environment. "
         "Useful for services like Telegram that support multiple bots.",
+    )
+    per_record_connections = fields.Boolean(
+        string="Connections per Record",
+        help="Each connection belongs to one record, such as a device, and carries "
+        "its own address. Calls name the connection they use; none is picked by "
+        "company, and the service needs no URL of its own.",
     )
 
     credential_ids = fields.One2many(
