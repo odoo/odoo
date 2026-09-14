@@ -408,6 +408,7 @@ class HrEmployee(models.Model):
 
         1. a manager's override -- an explicit human decision, over everything;
         2. this module's own evidence, a company-IP connection or emails sent;
+        2b. abstention, where this module has no instrument to point at all;
         3. `observed`, whatever the chain below concluded before this ran: a
            kiosk check-in, an online session. This module may INFER, but it may
            not overwrite an observation with a conclusion drawn from that
@@ -426,6 +427,14 @@ class HrEmployee(models.Model):
             return "present"
         if observed == "present":
             return "present"
+        if not self.user_id:
+            # Neither instrument this module has can reach an employee with no
+            # login: the websocket finds employees by user_id, and the message
+            # count needs their partner. Concluding an absence from evidence
+            # that could never have been produced is not a verdict, it is the
+            # instrument having been pointed somewhere else. Abstain, leaving
+            # whatever the rest of the chain made of them.
+            return observed or "out_of_working_hour"
         if self.id not in working_now or self.is_absent:
             return "out_of_working_hour"
         if self.resource_id.sudo()._is_flexible():

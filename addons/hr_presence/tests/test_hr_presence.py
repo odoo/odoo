@@ -389,6 +389,76 @@ class TestComputeDeclaresWhatItReads(HrPresenceCase):
 
 
 @tagged("post_install", "-at_install")
+class TestAbstainsWhereItHasNoInstrument(HrPresenceCase):
+    """An employee with no user account can produce neither kind of evidence --
+    the websocket finds employees by user_id and the message count needs their
+    partner -- so concluding an absence from its absence is the instrument
+    having been pointed somewhere else."""
+
+    def _employee_without_a_login(self, name, company=None, calendar=None):
+        company = company or self.company
+        return self.env["hr.employee"].create(
+            {
+                "name": name,
+                "company_id": company.id,
+                "resource_calendar_id": (calendar or self.calendar).id,
+                "tz": "UTC",
+            }
+        )
+
+    def _verdict_with(self, employee, observed):
+        today = self._today_for(employee)
+        working_now = frozenset(employee._get_employee_ids_working_now())
+        return employee._hr_presence_verdict(today, working_now, observed)
+
+    def test_neither_instrument_can_reach_an_employee_with_no_login(self):
+        employee = self._employee_without_a_login("shop_floor")
+        self.assertFalse(employee.user_id, "fixture: no login")
+        self.assertIn(
+            employee.id,
+            employee._get_employee_ids_working_now(),
+            "fixture: inside working hours, so absence is what would be inferred",
+        )
+        self.env["hr.employee"]._check_presence()
+        self.assertFalse(
+            employee.hr_presence_email_date,
+            "the sweep cannot count messages without a partner",
+        )
+        self.assertFalse(
+            employee.hr_presence_ip_date,
+            "the websocket cannot find them, it searches by user_id",
+        )
+
+    def test_this_module_abstains_rather_than_inferring(self):
+        employee = self._employee_without_a_login("abstained")
+        self.assertEqual(
+            self._verdict_with(employee, "out_of_working_hour"),
+            "out_of_working_hour",
+            "whatever the chain concluded is left standing",
+        )
+        self.assertEqual(self._verdict_with(employee, "absent"), "absent")
+
+    def test_a_colleague_with_a_login_is_still_judged(self):
+        """The abstention must be about the instrument, not about working hours:
+        the same fixture with a user attached still reads absent."""
+        employee = self._make_employee("has_login")
+        self.assertTrue(employee.user_id)
+        self.assertEqual(self._verdict_with(employee, "out_of_working_hour"), "absent")
+
+    def test_a_manager_can_still_decide_for_them(self):
+        """Abstaining from an inference is not abstaining from an instruction."""
+        employee = self._employee_without_a_login("overridden_anyway")
+        employee.with_user(self.manager).action_set_present()
+        self.assertEqual(employee.hr_presence_state, "present")
+        employee.with_user(self.manager).action_set_absent()
+        self.assertEqual(employee.hr_presence_state, "absent")
+
+    def test_an_observation_still_reaches_them(self):
+        employee = self._employee_without_a_login("observed_anyway")
+        self.assertEqual(self._verdict_with(employee, "present"), "present")
+
+
+@tagged("post_install", "-at_install")
 class TestObservationOutranksInference(HrPresenceCase):
     """This module may infer an absence; it may not overwrite somebody else's
     observation with a conclusion drawn from that observation's absence.
