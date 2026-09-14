@@ -389,6 +389,13 @@ class HrAttendance(models.Model):
             return Intervals([])
         calendar = self._get_employee_calendar()
         if not calendar:
+            # Not a second guard on the same case: removing it fails no test,
+            # and no construction reached it -- `_is_flexible()` above fires
+            # first every time, because emptying the version's calendar empties
+            # the resource's with it. It is here because
+            # `_attendance_intervals_batch` raises ValueError on an empty
+            # calendar rather than returning nothing, so should the two ever
+            # diverge this answers instead of crashing.
             return Intervals([])
         return calendar._attendance_intervals_batch(
             start_dt_tz,
@@ -887,10 +894,27 @@ class HrAttendance(models.Model):
         tz = self._schedule_tz()
         # Without a resource, for the same reason as `_lunch_intervals`: keyed
         # by a flexible resource the batch answers with the whole day.
+        #
+        # Bounded by the NEXT local midnight rather than by `time.max`, so the
+        # window tiles the day by construction. A local day is not always 24
+        # hours: where the clocks go back at midnight it has 25, its last hour
+        # repeats, and `time.max` resolves to the first of the two. Measured
+        # over twelve zones and every day of 2026, the closed form leaves
+        # 3600s uncovered on America/Santiago 2026-04-04 and Asia/Beirut
+        # 2026-10-24; the half-open form leaves nothing anywhere.
+        #
+        # It changes no figure TODAY: `_attendance_intervals_batch` walks
+        # `rrule(DAILY, ...)` and materialises each calendar line once per
+        # calendar day, so it does not model the repeated hour either way --
+        # measured 0.983h from both windows for a 23:00-23:59 shift on that
+        # Santiago day. The bound is here so that a consumer which does model
+        # it is not handed a window an hour short.
         return get_intervals_hours(
             calendar._attendance_intervals_batch(
                 datetime.combine(local_day, time.min).replace(tzinfo=tz),
-                datetime.combine(local_day, time.max).replace(tzinfo=tz),
+                datetime.combine(local_day + timedelta(days=1), time.min).replace(
+                    tzinfo=tz
+                ),
                 tz=tz,
             )[False]
         )

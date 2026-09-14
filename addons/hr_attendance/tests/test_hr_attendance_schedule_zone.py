@@ -336,3 +336,71 @@ class TestFlexibleResourceKeepsItsHours(ScheduleZoneCase):
             "the control: without it these three pass against a break that is "
             "never deducted for anybody",
         )
+
+
+@tagged("post_install", "-at_install")
+class TestADayIsNotAlwaysTwentyFourHours(ScheduleZoneCase):
+    """The day window `_scheduled_hours_on` asks about reaches the next local
+    midnight, so it tiles a day that is not 24 hours long.
+
+    Where the clocks go back at midnight the local day has 25 hours and its
+    last hour repeats; `datetime.combine(day, time.max)` resolves to the first
+    of the two. Measured over twelve zones and every day of 2026, a window
+    ending there leaves 3600s of America/Santiago 2026-04-04 and of
+    Asia/Beirut 2026-10-24 outside it, and a window ending at the next local
+    midnight leaves nothing anywhere.
+
+    The assertion is on the WINDOW and not on the hours returned, because the
+    hours do not move: `_attendance_intervals_batch` materialises each calendar
+    line once per calendar day and does not model the repeated hour from either
+    window. Asserting the hours would be asserting a difference that does not
+    exist -- 0.983h comes back from both.
+    """
+
+    LONG_DAY = date(2026, 4, 4)  # America/Santiago: 23:00 happens twice
+    ZONE = "America/Santiago"
+
+    def _window_asked_for(self, local_day):
+        seen = []
+        batch = type(self.env["resource.calendar"])._attendance_intervals_batch
+
+        def spy(calendar, start, stop, *args, **kwargs):
+            seen.append((start, stop))
+            return batch(calendar, start, stop, *args, **kwargs)
+
+        employee = self._employee(self._calendar(self.ZONE, with_lunch=False))
+        attendance = self.env["hr.attendance"].create(
+            {
+                "employee_id": employee.id,
+                "check_in": self._utc(self.ZONE, datetime(2026, 4, 4, 9, 0)),
+            }
+        )
+        with patch.object(
+            type(self.env["resource.calendar"]),
+            "_attendance_intervals_batch",
+            spy,
+        ):
+            attendance._scheduled_hours_on(local_day)
+        self.assertTrue(seen, "the schedule must actually be asked about the day")
+        start, stop = seen[0]
+        return (
+            stop.astimezone(pytz.UTC) - start.astimezone(pytz.UTC)
+        ).total_seconds() / 3600
+
+    def test_the_window_covers_a_twenty_five_hour_day(self):
+        self.assertAlmostEqual(
+            self._window_asked_for(self.LONG_DAY),
+            25.0,
+            3,
+            "2026-04-04 in Santiago is 25 hours long; a window ending at "
+            "`time.max` spans 24 of them and leaves the repeated hour out",
+        )
+
+    def test_the_window_covers_an_ordinary_day(self):
+        self.assertAlmostEqual(
+            self._window_asked_for(date(2026, 4, 6)),
+            24.0,
+            3,
+            "the control: without it, a window that always overshot by an "
+            "hour would satisfy the test above",
+        )
