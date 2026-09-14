@@ -74,6 +74,7 @@ import { useSpecialData } from "@web/fields/relational/special_data";
 import { X2ManyField, x2ManyField } from "@web/fields/relational/x2many/x2many_field";
 import { standardFieldProps } from "@web/fields/standard_field_props";
 import { DateTimeField } from "@web/fields/temporal/datetime/datetime_field";
+import { COG_GROUP } from "@web/search/cog_menu/cog_menu_group";
 import { SIZES } from "@web/ui/viewport";
 import { FormController } from "@web/views/form/form_controller";
 import { AttachDocumentWidget } from "@web/views/widgets/attach_document/attach_document";
@@ -4218,8 +4219,8 @@ test(`add custom static action menu`, async () => {
 
     await toggleActionMenu();
     expect(queryAllTexts`.o-dropdown--menu .dropdown-item`).toEqual([
-        "Custom Default Available",
         "Duplicate",
+        "Custom Default Available",
         "Custom Available",
         "Delete",
     ]);
@@ -8164,8 +8165,8 @@ test(`display toolbar`, async () => {
     expect(`.o-dropdown--menu .dropdown-item`).toHaveCount(3);
     expect(queryAllTexts`.o-dropdown--menu .dropdown-item`).toEqual([
         "Duplicate",
-        "Delete",
         "Action partner",
+        "Delete",
     ]);
 
     await toggleMenuItem("Action partner");
@@ -12999,6 +13000,7 @@ test("CogMenu receives the model in env", async () => {
     }
     registry.category("cogMenu").add("test-cog", {
         Component: CogItem,
+        groupNumber: COG_GROUP.APP,
         isDisplayed: (env) => {
             expect.step([
                 `cog displayed`,

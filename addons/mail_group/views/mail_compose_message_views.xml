@@ -2,7 +2,7 @@
 <odoo>
 
     <record id="mail_compose_message_action_mail_group" model="ir.actions.act_window">
-        <field name="name">Send email</field>
+        <field name="name">Send Email…</field>
         <field name="res_model">mail.compose.message</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
@@ -14,6 +14,7 @@
         }</field>
         <field name="binding_model_id" ref="model_mail_group_member" />
         <field name="binding_view_types">list</field>
+        <field name="binding_icon">fa-solid fa-envelope</field>
     </record>
 
 </odoo>

@@ -2,9 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.ExportAll">
-        <DropdownItem class="'o_export_all_menu'" onSelected.bind="onDirectExportData">
-            <i class="fa-solid fa-upload me-1"/>Export All
-        </DropdownItem>
+        <CogMenuItem class="'o_export_all_menu'" icon="'fa-solid fa-upload'" description.translate="Export All" onSelected.bind="onDirectExportData"/>
     </t>
 
 </templates>

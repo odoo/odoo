@@ -6484,12 +6484,12 @@ msgstr "Operatsioonitüüp"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_picking_type_label
-msgid "Operation type (PDF)"
+msgid "Operation Type (PDF)"
 msgstr "Operatsioonitüüp (PDF)"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_picking_type
-msgid "Operation type (ZPL)"
+msgid "Operation Type (ZPL)"
 msgstr "Operatsioonitüüp (ZPL)"
 
 #. module: stock
@@ -8424,6 +8424,7 @@ msgstr "Tagasta laolehe rida"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+#: model:ir.actions.report,name:stock.return_label_report
 msgid "Return Slip"
 msgstr "Tagastusleht"
 
@@ -8442,11 +8443,6 @@ msgstr "Tagastamine"
 #: code:addons/stock/wizard/stock_picking_return.py:0
 msgid "Return of %(picking_name)s"
 msgstr "%(picking_name)s tagastus"
-
-#. module: stock
-#: model:ir.actions.report,name:stock.return_label_report
-msgid "Return slip"
-msgstr "Tagastusleht"
 
 #. module: stock
 #. odoo-python
@@ -8719,7 +8715,6 @@ msgstr ""
 "kehtestab selle kõigi laoliikumiste eeldatavaks kuupäevaks."
 
 #. module: stock
-#: model:ir.actions.server,name:stock.action_scrap
 #: model:ir.model,name:stock.model_stock_scrap
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__scrap_id
 #: model:ir.ui.menu,name:stock.menu_stock_scrap
@@ -8728,6 +8723,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view2
 msgid "Scrap"
 msgstr "Praak"
+
+#. module: stock
+#: model:ir.actions.server,name:stock.action_scrap
+msgid "Scrap…"
+msgstr "Praak…"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__scrap_location_id
@@ -8862,8 +8862,8 @@ msgstr "Saada automaatne kinnitamise e-kiri kui tarnetellimused on tehtud"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_lead_mass_mail
-msgid "Send email"
-msgstr "Saada e-kiri"
+msgid "Send Email…"
+msgstr "Saada e-kiri…"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_sendcloud
@@ -9028,7 +9028,7 @@ msgstr "Määra nulliks"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_view_set_quants_tree
-msgid "Set to quantity on hand"
+msgid "Set to Quantity on Hand"
 msgstr "Määra laos olevaks koguseks"
 
 #. module: stock

@@ -885,13 +885,14 @@
     </record>
 
     <record id="action_lead_mass_mail" model="ir.actions.act_window">
-        <field name="name">Send email</field>
+        <field name="name">Send Email…</field>
         <field name="res_model">mail.compose.message</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
         <field name="context">{'default_composition_mode': 'mass_mail'}</field>
         <field name="binding_model_id" ref="stock.model_stock_picking" />
         <field name="binding_view_types">list,kanban</field>
+        <field name="binding_icon">fa-solid fa-envelope</field>
     </record>
 
     <record id="stock_picking_action_picking_type" model="ir.actions.act_window">
@@ -993,6 +994,7 @@
         <field name="model_id" ref="stock.model_stock_picking" />
         <field name="binding_model_id" ref="stock.model_stock_picking" />
         <field name="binding_view_types">list,kanban</field>
+        <field name="binding_icon">fa-solid fa-check</field>
         <field name="state">code</field>
         <field
             name="code">if records:
@@ -1029,6 +1031,7 @@
         <field name="model_id" ref="stock.model_stock_picking" />
         <field name="binding_model_id" ref="stock.model_stock_picking" />
         <field name="binding_view_types">form</field>
+        <field name="binding_icon">fa-solid fa-lock</field>
         <field
             name="group_ids"
             eval="[Command.link(ref('stock.group_stock_manager'))]" />
@@ -1039,10 +1042,11 @@
     </record>
 
     <record id="action_scrap" model="ir.actions.server">
-        <field name="name">Scrap</field>
+        <field name="name">Scrap…</field>
         <field name="model_id" ref="stock.model_stock_picking" />
         <field name="binding_model_id" ref="stock.model_stock_picking" />
         <field name="binding_view_types">form</field>
+        <field name="binding_icon">fa-solid fa-recycle</field>
         <field name="state">code</field>
         <field
             name="code">if records:
@@ -1091,6 +1095,7 @@
         <field name="model_id" ref="stock.model_stock_picking" />
         <field name="binding_model_id" ref="stock.model_stock_picking" />
         <field name="binding_view_types">form</field>
+        <field name="binding_icon">fa-solid fa-code-branch</field>
         <field name="state">code</field>
         <field name="code">action = records.action_split_transfer()</field>
     </record>

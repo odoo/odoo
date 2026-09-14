@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="l10n_ro_edi.FetchInvoices" owl="1">
-        <DropdownItem class="'o_cog_menu'" onSelected.bind="fetchInvoices">
-            Synchronize with ANAF
-        </DropdownItem>
+        <CogMenuItem class="'o_l10n_ro_edi_fetch_invoices'" icon="'fa-solid fa-arrows-rotate'" description.translate="Synchronize with ANAF" onSelected.bind="fetchInvoices"/>
     </t>
 </templates>

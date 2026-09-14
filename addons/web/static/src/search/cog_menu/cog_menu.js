@@ -7,13 +7,20 @@ import { registry } from "@web/core/registry";
 import { _t } from "@web/core/translation";
 import { ActionMenus } from "@web/search/action_menus/action_menus";
 import {
-    getDisplayedRegistryItems,
-    MENU_REGISTRY_VALIDATION,
-} from "@web/search/utils/misc";
+    COG_GROUP,
+    COG_MENU_REGISTRY_VALIDATION,
+} from "@web/search/cog_menu/cog_menu_group";
+import { getDisplayedRegistryItems } from "@web/search/utils/misc";
 
 const cogMenuRegistry = registry.category("cogMenu");
 
-cogMenuRegistry.addValidation(MENU_REGISTRY_VALIDATION);
+cogMenuRegistry.addValidation(COG_MENU_REGISTRY_VALIDATION);
+
+const PRINT_ITEM = Object.freeze({
+    key: "print",
+    groupNumber: COG_GROUP.PRINT,
+    isPrint: true,
+});
 
 // @ts-expect-error - static props/defaultProps shapes differ from parent (OWL pattern)
 export class CogMenu extends ActionMenus {
@@ -50,7 +57,7 @@ export class CogMenu extends ActionMenus {
 
     /** @returns {boolean} */
     get hasItems() {
-        return Boolean(this.cogItems.length || this.props.items.print?.length);
+        return Boolean(this.cogItems.length || this.props.slots?.default);
     }
 
     /** @returns {Promise<Array<{Component: import("@odoo/owl").ComponentConstructor, groupNumber: number, key: string}>>} */
@@ -65,10 +72,15 @@ export class CogMenu extends ActionMenus {
      * @returns {Array<
      * | {Component: import("@odoo/owl").ComponentConstructor, groupNumber: number, key: string}
      * | {key: string, groupNumber: number, description?: string, action?: any, callback?: Function}
+     * | {key: string, groupNumber: number, isPrint: true}
      * >}
      */
     get cogItems() {
-        return [...this.registryItems, ...(this.actionItems ?? [])].toSorted(
+        return [
+            ...this.registryItems,
+            ...(this.actionItems ?? []),
+            ...(this.props.items.print?.length ? [PRINT_ITEM] : []),
+        ].toSorted(
             (item1, item2) => (item1.groupNumber || 0) - (item2.groupNumber || 0),
         );
     }

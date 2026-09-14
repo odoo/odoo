@@ -32,7 +32,7 @@ export class DocumentsAction extends Component {
                     const selectionActions = this.selectionActions.provider();
                     this.state.topbarActions = Object.values(
                         selectionActions.getTopbarActions(),
-                    ).sort((a, b) => b.groupNumber - a.groupNumber);
+                    ).sort((a, b) => a.groupNumber - b.groupNumber);
                     if (this.props.isPreview) {
                         const actionMenuProps = selectionActions.getMenuProps();
                         actionMenuProps.items.action =

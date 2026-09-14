@@ -1643,7 +1643,7 @@ class TestActionsBindings(common.TransactionCase):
                 "code": "pass",
                 "binding_model_id": self._partner_model_id(),
                 "binding_type": binding_type,
-                "sequence": sequence,
+                "binding_sequence": sequence,
             }
         )
 
@@ -1681,7 +1681,8 @@ class TestActionsBindings(common.TransactionCase):
             "binding_view_types",
             "res_model",
             "group_ids",
-            "sequence",
+            "binding_sequence",
+            "binding_icon",
             "domain",
         }
         invalidating = self.env[

@@ -7,7 +7,9 @@
             onUploadComplete.bind="onUploadComplete"
         >
             <t t-set-slot="toggler">
-                <span class="mx-3 cursor-pointer">Upload Request For Quotation</span>
+                <span class="o-dropdown-item dropdown-item o-navigable o_menu_item o_upload_rfq_menu" role="menuitem" tabindex="0">
+                    <i class="o_cog_menu_item_icon fa-solid fa-file-arrow-up me-1" aria-hidden="true"/>Upload Request for Quotation…
+                </span>
             </t>
         </FileUploader>
     </t>

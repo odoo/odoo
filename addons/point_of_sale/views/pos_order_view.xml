@@ -703,6 +703,7 @@
         <field name="model_id" ref="point_of_sale.model_pos_order" />
         <field name="binding_model_id" ref="point_of_sale.model_pos_order" />
         <field name="binding_view_types">list,kanban,form</field>
+        <field name="binding_icon">fa-solid fa-ban</field>
         <field
             name="group_ids"
             eval="[Command.link(ref('point_of_sale.group_pos_user'))]" />
@@ -713,10 +714,11 @@
     </record>
 
     <record id="model_pos_order_send_mail" model="ir.actions.server">
-        <field name="name">Send Email</field>
+        <field name="name">Send Email…</field>
         <field name="model_id" ref="point_of_sale.model_pos_order" />
         <field name="binding_model_id" ref="point_of_sale.model_pos_order" />
         <field name="binding_view_types">list,kanban</field>
+        <field name="binding_icon">fa-solid fa-envelope</field>
         <field name="state">code</field>
         <field
             name="code">if records:

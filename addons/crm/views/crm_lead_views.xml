@@ -1100,7 +1100,7 @@
         MASS MAILING
     -->
     <record id="action_lead_mail_compose" model="ir.actions.act_window">
-        <field name="name">Send email</field>
+        <field name="name">Send Email…</field>
         <field name="res_model">mail.compose.message</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
@@ -1110,10 +1110,11 @@
                 }</field>
         <field name="binding_model_id" ref="model_crm_lead" />
         <field name="binding_view_types">form</field>
+        <field name="binding_icon">fa-solid fa-envelope</field>
     </record>
 
     <record id="action_lead_mass_mail" model="ir.actions.act_window">
-        <field name="name">Send email</field>
+        <field name="name">Send Email…</field>
         <field name="res_model">mail.compose.message</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
@@ -1123,6 +1124,7 @@
                 }</field>
         <field name="binding_model_id" ref="model_crm_lead" />
         <field name="binding_view_types">list,kanban</field>
+        <field name="binding_icon">fa-solid fa-envelope</field>
     </record>
 
     <!--
@@ -1921,7 +1923,7 @@
     </record>
 
     <record id="mail_followers_edit_action_from_lead" model="ir.actions.act_window">
-        <field name="name">Add/Remove Followers</field>
+        <field name="name">Add/Remove Followers…</field>
         <field name="res_model">mail.followers.edit</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
@@ -1929,6 +1931,7 @@
             name="context">{'default_res_model': 'crm.lead', 'default_res_ids': active_ids}</field>
         <field name="binding_model_id" ref="model_crm_lead" />
         <field name="binding_view_types">list,kanban</field>
+        <field name="binding_icon">fa-solid fa-user-plus</field>
     </record>
 
 </odoo>

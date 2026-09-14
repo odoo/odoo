@@ -1,6 +1,6 @@
 /** @odoo-module native */
 import { documentActionRules } from "@document/views/document_action_rules";
-import { STATIC_COG_GROUP_ACTION_BASIC } from "./document_cog_menu_group.js";
+import { COG_GROUP } from "@web/search/cog_menu/cog_menu_group";
 import { DocumentsCogMenuItem } from "./document_cog_menu_item.js";
 import { _t } from "@web/core/translation";
 
@@ -21,7 +21,7 @@ export class DocumentsCogMenuItemDownload extends DocumentsCogMenuItem {
 
 export const documentsCogMenuItemDownload = {
     Component: DocumentsCogMenuItemDownload,
-    groupNumber: STATIC_COG_GROUP_ACTION_BASIC,
+    groupNumber: COG_GROUP.DATA,
     isDisplayed: (env) =>
         DocumentsCogMenuItem.isVisible(env, ({ folder, documentService }) =>
             documentActionRules.download(documentService, folder),

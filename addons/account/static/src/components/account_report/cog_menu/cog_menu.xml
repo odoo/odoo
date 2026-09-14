@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="account.AccountReportCogMenu">
-        <t t-if="cogButtons.length">
-            <Dropdown>
-                <button class="btn p-0 ms-1 border-0">
-                    <i class="fa-solid fa-cog"/>
-                </button>
+        <div t-if="cogButtons.length" class="o_account_report_cog_menu d-flex align-items-center ms-1 lh-1">
+            <Dropdown menuClass="'lh-base'">
+                <t t-call="web.CogMenuToggler"/>
                 <t t-set-slot="content">
+                    <t t-set="currentGroup" t-value="null"/>
                     <t t-foreach="cogButtons" t-as="cogButton" t-key="cogButton_index">
-                        <DropdownItem onSelected="cogButton.onClick">
-                            <t t-out="cogButton.name"/>
-                        </DropdownItem>
+                        <div t-if="currentGroup !== null and currentGroup !== cogButton.groupNumber" role="separator" class="dropdown-divider"/>
+                        <CogMenuItem description="cogButton.name" icon="cogButton.icon" onSelected="cogButton.onClick"/>
+                        <t t-set="currentGroup" t-value="cogButton.groupNumber"/>
                     </t>
                 </t>
             </Dropdown>
-        </t>
+        </div>
     </t>
 </templates>

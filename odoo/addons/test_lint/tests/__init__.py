@@ -21,6 +21,7 @@ from . import test_manifests
 from . import test_xml_records
 from . import test_xml_lint
 from . import test_button_targets
+from . import test_contextual_menu
 from . import test_view_hygiene
 from . import test_pretty_xml
 from . import test_fixers

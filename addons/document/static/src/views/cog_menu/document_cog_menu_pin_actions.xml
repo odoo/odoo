@@ -2,24 +2,25 @@
 <templates id="template" xml:space="preserve">
     <t t-name="document.DocumentCogMenuPinAction">
         <Dropdown>
-            <button class="opacity-trigger-hover">
-                <i class="fa-solid fa-gear" aria-hidden="true"/>Actions on Select
+            <button class="o_cog_submenu_toggler opacity-trigger-hover">
+                <i class="o_cog_menu_item_icon fa-solid fa-thumbtack me-1" aria-hidden="true"/>Actions on Select
             </button>
             <t t-set-slot="content">
                 <span t-if="this.documentsState.isLoading" class="o-dropdown-item dropdown-item">
-                    <i class='fa-solid fa-spinner fa-spin'/>
+                    <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"/>
                 </span>
-                <span t-else="" t-foreach="this.documentsState.actions" t-as="action" t-key="action.id"
-                    t-on-click.stop.prevent="() => this.onEnableAction(action.id)"
-                    class="o-dropdown-item dropdown-item"
-                    t-att-class="{'selected': action.is_embedded}">
+                <DropdownItem t-else="" t-foreach="this.documentsState.actions" t-as="action" t-key="action.id"
+                    closingMode="'none'"
+                    class="{ 'selected': action.is_embedded }"
+                    attrs="{ 'aria-checked': action.is_embedded ? 'true' : 'false' }"
+                    role="'menuitemcheckbox'"
+                    onSelected="() => this.onEnableAction(action.id)">
                     <t t-out="action.name"/>
-                </span>
-                <hr class="dropdown-divider"/>
-                <span class="o-dropdown-item dropdown-item"
-                    t-on-click.stop.prevent="() => this.documentService.goToServerActionsView()">
+                </DropdownItem>
+                <div role="separator" class="dropdown-divider"/>
+                <DropdownItem onSelected="() => this.documentService.goToServerActionsView()">
                     Add Custom Action
-                </span>
+                </DropdownItem>
             </t>
         </Dropdown>
     </t>

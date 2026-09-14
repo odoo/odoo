@@ -1,6 +1,7 @@
 // @ts-check
 
 import { describe, expect, test } from "@odoo/hoot";
+import { COG_GROUP } from "@web/search/cog_menu/cog_menu_group";
 import { computeAggregatedValue } from "@web/views/view_measurements";
 import {
     archiveConfirmationProps,
@@ -167,8 +168,8 @@ describe("prepareStaticActionMenuItems", () => {
         expect(items.archive.icon).toBe("oi oi-archive");
         expect(items.archive.isAvailable()).toBe(true);
         expect(items.archive.callback()).toBe("archived");
-        expect(items.delete.class).toBe("text-danger");
-        expect(items.delete.sequence).toBe(50);
+        expect(items.delete.danger).toBe(true);
+        expect(items.delete.groupNumber).toBe(COG_GROUP.DANGER);
     });
 
     test("the caller may override presentation, and an unknown key throws", () => {

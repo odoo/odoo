@@ -12063,8 +12063,8 @@ msgstr "Partnerite ühendamise viisard"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_merge_wizard_action
-msgid "Merge accounts"
-msgstr "Ühenda kontod"
+msgid "Merge Accounts…"
+msgstr "Ühenda kontod…"
 
 #. module: account
 #: model:ir.model,name:account.model_mail_message
@@ -13488,7 +13488,7 @@ msgstr "PDF-fail"
 
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices_without_payment
-msgid "PDF without Payment"
+msgid "PDF Without Payment"
 msgstr "PDF makseta"
 
 #. module: account
@@ -13705,7 +13705,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
-#: model:ir.actions.server,name:account.action_move_force_register_payment
 #: model:ir.model,name:account.model_account_payment_register
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -13719,6 +13718,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_reports.return_generic_payment_wizard_form
 msgid "Pay"
 msgstr "Maksa"
+
+#. module: account
+#: model:ir.actions.server,name:account.action_move_force_register_payment
+msgid "Pay…"
+msgstr "Maksa…"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15137,8 +15141,8 @@ msgstr "Res partnerpank"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_resequence
-msgid "Resequence"
-msgstr "Järjekorra seadistamine"
+msgid "Resequence…"
+msgstr "Järjekorra seadistamine…"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -15148,6 +15152,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
+#: model:ir.actions.server,name:account.model_account_statement_line_button_draft
 msgid "Reset to Draft"
 msgstr "Lähtesta mustandiks"
 
@@ -15287,10 +15292,14 @@ msgid "Reversal of: %s"
 msgstr "Tühistamine: %s"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_view_account_move_reversal
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse"
 msgstr "Loo kreedit"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_view_account_move_reversal
+msgid "Reverse…"
+msgstr "Loo kreedit…"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -15932,13 +15941,13 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
-msgid "Send receipt by email"
-msgstr "Saada arve e-kirjaga"
+msgid "Send Receipt by Email…"
+msgstr "Saada arve e-kirjaga…"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
-msgid "Send receipts by email"
-msgstr "Saada arved e-kirjaga"
+msgid "Send Receipts by Email…"
+msgstr "Saada arved e-kirjaga…"
 
 #. module: account
 #. odoo-javascript
@@ -16211,8 +16220,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.server,name:account.model_account_move_action_share
-msgid "Share"
-msgstr "Jaga"
+msgid "Share…"
+msgstr "Jaga…"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__code
@@ -16735,7 +16744,7 @@ msgstr "Vahekonto"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_move_type
-msgid "Switch into invoice/credit note"
+msgid "Switch into Invoice/Credit Note"
 msgstr "Muuda arveks/kreeditarveks"
 
 #. module: account
@@ -19378,7 +19387,7 @@ msgstr "Ühenda lahti"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_unmerge_accounts
-msgid "Unmerge account"
+msgid "Unmerge Account"
 msgstr "Ühenda konto lahti"
 
 #. module: account
@@ -22642,11 +22651,6 @@ msgstr "Seotud ostud"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form_inherit
 msgid "Related Sale(s)"
 msgstr "Seotud müügid"
-
-#. module: account_accountant
-#: model:ir.actions.server,name:account.model_account_statement_line_button_draft
-msgid "Reset to draft"
-msgstr "Lähtesta mustandiks"
 
 #. module: account_accountant
 #. odoo-javascript

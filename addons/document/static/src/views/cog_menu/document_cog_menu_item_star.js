@@ -1,12 +1,12 @@
 /** @odoo-module native */
-import { STATIC_COG_GROUP_ACTION_ADVANCED } from "./document_cog_menu_group.js";
+import { COG_GROUP } from "@web/search/cog_menu/cog_menu_group";
 import { DocumentsCogMenuItem } from "./document_cog_menu_item.js";
 import { _t } from "@web/core/translation";
 
 export class DocumentsCogMenuItemStar extends DocumentsCogMenuItem {
     setup(isAdd) {
         this.icon = isAdd ? "fa-regular fa-star" : "fa-solid fa-star";
-        this.label = isAdd ? _t("Add star") : _t("Remove star");
+        this.label = isAdd ? _t("Add Star") : _t("Remove Star");
         super.setup();
     }
 
@@ -30,7 +30,7 @@ export class DocumentsCogMenuItemStarRemove extends DocumentsCogMenuItemStar {
 
 export const documentsCogMenuItemStarAdd = {
     Component: DocumentsCogMenuItemStarAdd,
-    groupNumber: STATIC_COG_GROUP_ACTION_ADVANCED,
+    groupNumber: COG_GROUP.RECORD,
     isDisplayed: (env) =>
         DocumentsCogMenuItem.isVisible(
             env,
@@ -41,7 +41,7 @@ export const documentsCogMenuItemStarAdd = {
 
 export const documentsCogMenuItemStarRemove = {
     Component: DocumentsCogMenuItemStarRemove,
-    groupNumber: STATIC_COG_GROUP_ACTION_ADVANCED,
+    groupNumber: COG_GROUP.RECORD,
     isDisplayed: (env) =>
         DocumentsCogMenuItem.isVisible(
             env,

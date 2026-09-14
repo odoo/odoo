@@ -3,6 +3,7 @@ import { useFocusTitle } from "@project/utils/project_utils";
 import { _t } from "@web/core/translation";
 import { useService } from "@web/core/utils/hooks";
 import { FormControllerWithHTMLExpander } from "@web/views/form_with_html_expander/form_controller_with_html_expander";
+import { prepareStaticActionMenuItems } from "@web/views/view_utils";
 
 import { ProjectTaskTemplateDropdown } from "../components/project_task_template_dropdown.js";
 import { openDescriptionHistoryDialog } from "./description_history.js";
@@ -46,12 +47,9 @@ export class ProjectTaskFormController extends FormControllerWithHTMLExpander {
     getStaticActionMenuItems() {
         return {
             ...super.getStaticActionMenuItems(),
-            openHistoryDialog: {
-                sequence: 15,
-                icon: "fa-solid fa-history",
-                description: _t("Version History"),
-                callback: () => this.openHistoryDialog(),
-            },
+            ...prepareStaticActionMenuItems({
+                versionHistory: { callback: () => this.openHistoryDialog() },
+            }),
         };
     }
 

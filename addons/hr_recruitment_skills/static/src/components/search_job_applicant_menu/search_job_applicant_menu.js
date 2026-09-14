@@ -2,8 +2,8 @@
 import { Component, markup } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { DropdownItem } from "@web/components/dropdown";
-import { STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
+import { COG_GROUP } from "@web/search/cog_menu/cog_menu_group";
+import { CogMenuItem } from "@web/search/cog_menu/cog_menu_item";
 
 const cogMenuRegistry = registry.category("cogMenu");
 
@@ -12,7 +12,7 @@ const cogMenuRegistry = registry.category("cogMenu");
  */
 export class SearchJobApplicant extends Component {
     static template = "hr_recruitment_skills.SearchJobApplicant";
-    static components = { DropdownItem };
+    static components = { CogMenuItem };
     static props = {};
 
     setup() {
@@ -33,7 +33,7 @@ export class SearchJobApplicant extends Component {
 
 export const searchJobApplicant = {
     Component: SearchJobApplicant,
-    groupNumber: STATIC_ACTIONS_GROUP_NUMBER,
+    groupNumber: COG_GROUP.APP,
     isDisplayed: ({ config, searchModel }) => {
         return (
             searchModel.resModel === "hr.applicant" &&

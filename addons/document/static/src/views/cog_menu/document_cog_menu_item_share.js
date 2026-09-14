@@ -1,13 +1,13 @@
 /** @odoo-module native */
 import { documentActionRules } from "@document/views/document_action_rules";
-import { STATIC_COG_GROUP_ACTION_ADVANCED } from "./document_cog_menu_group.js";
+import { COG_GROUP } from "@web/search/cog_menu/cog_menu_group";
 import { DocumentsCogMenuItem } from "./document_cog_menu_item.js";
 import { _t } from "@web/core/translation";
 
 export class DocumentsCogMenuItemShare extends DocumentsCogMenuItem {
     setup() {
         this.icon = "fa-solid fa-share-nodes";
-        this.label = _t("Share");
+        this.label = _t("Share…");
         super.setup();
     }
 
@@ -18,7 +18,7 @@ export class DocumentsCogMenuItemShare extends DocumentsCogMenuItem {
 
 export const documentsCogMenuItemShare = {
     Component: DocumentsCogMenuItemShare,
-    groupNumber: STATIC_COG_GROUP_ACTION_ADVANCED,
+    groupNumber: COG_GROUP.RECORD,
     isDisplayed: (env) =>
         DocumentsCogMenuItem.isVisible(
             env,

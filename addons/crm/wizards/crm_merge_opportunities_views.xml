@@ -52,12 +52,13 @@
     </record>
 
     <record id="action_merge_opportunities" model="ir.actions.act_window">
-        <field name="name">Merge</field>
+        <field name="name">Merge…</field>
         <field name="res_model">crm.merge.opportunity</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
         <field name="binding_model_id" ref="model_crm_lead" />
         <field name="binding_view_types">list,kanban</field>
+        <field name="binding_icon">fa-solid fa-code-merge</field>
     </record>
 
 </odoo>

@@ -1051,13 +1051,14 @@
     </record>
 
     <record id="action_applicant_send_mail" model="ir.actions.server">
-        <field name="name">Send Email</field>
+        <field name="name">Send Email…</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant" />
         <field name="binding_model_id" ref="hr_recruitment.model_hr_applicant" />
         <field name="binding_view_types">list,kanban</field>
+        <field name="binding_sequence">1</field>
+        <field name="binding_icon">fa-solid fa-envelope</field>
         <field name="state">code</field>
         <field name="code">action = records.action_send_email()</field>
-        <field name="sequence">1</field>
     </record>
 
     <record id="hr_applicant_filter_recruiter" model="ir.filters">
@@ -1088,7 +1089,7 @@
     <record
         id="mail_followers_edit_action_from_hr_recruitment"
         model="ir.actions.act_window">
-        <field name="name">Add/Remove Followers</field>
+        <field name="name">Add/Remove Followers…</field>
         <field name="res_model">mail.followers.edit</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
@@ -1096,6 +1097,7 @@
             name="context">{'default_res_model': 'hr.applicant', 'default_res_ids': active_ids}</field>
         <field name="binding_model_id" ref="hr_recruitment.model_hr_applicant" />
         <field name="binding_view_types">list,kanban</field>
+        <field name="binding_icon">fa-solid fa-user-plus</field>
     </record>
 
 </odoo>

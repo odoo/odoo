@@ -11,7 +11,7 @@ import { _t } from "@web/core/translation";
 import { omit } from "@web/core/utils/collections/objects";
 import { exprToBoolean } from "@web/core/utils/format/strings";
 import { useService } from "@web/core/utils/hooks";
-import { STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
+import { COG_GROUP } from "@web/search/cog_menu/cog_menu_group";
 import { session } from "@web/session";
 import { ConfirmationDialog } from "@web/ui/dialog/confirmation_dialog";
 
@@ -380,39 +380,57 @@ export function computeArchiveEnabled(fields, { presentIn = fields } = {}) {
 }
 
 /**
- * @type {Record<string, { sequence: number, icon: string, description: any, class?: string }>}
+ * @type {Record<string, { groupNumber: number, sequence: number, icon: string, description: any, danger?: boolean }>}
  */
 const STATIC_ACTION_MENU_DESCRIPTORS = {
-    addPropertyFieldValue: {
-        sequence: 10,
-        icon: "fa-solid fa-cogs",
-        description: _t("Edit Properties"),
-    },
     export: {
-        sequence: 10,
+        groupNumber: COG_GROUP.DATA,
+        sequence: 20,
         icon: "fa-solid fa-upload",
-        description: _t("Export"),
+        description: _t("Export…"),
+    },
+    addPropertyFieldValue: {
+        groupNumber: COG_GROUP.RECORD,
+        sequence: 10,
+        icon: "fa-solid fa-gears",
+        description: _t("Edit Properties…"),
     },
     duplicate: {
+        groupNumber: COG_GROUP.RECORD,
         sequence: 30,
         icon: "fa-regular fa-clone",
         description: _t("Duplicate"),
     },
     archive: {
+        groupNumber: COG_GROUP.RECORD,
         sequence: 40,
         icon: "oi oi-archive",
         description: _t("Archive"),
     },
     unarchive: {
+        groupNumber: COG_GROUP.RECORD,
         sequence: 45,
         icon: "oi oi-unarchive",
         description: _t("Unarchive"),
     },
-    delete: {
+    versionHistory: {
+        groupNumber: COG_GROUP.RECORD,
         sequence: 50,
+        icon: "fa-solid fa-clock-rotate-left",
+        description: _t("Version History…"),
+    },
+    insertInSpreadsheet: {
+        groupNumber: COG_GROUP.INTEGRATE,
+        sequence: 10,
+        icon: "oi oi-view-list",
+        description: _t("Insert in Spreadsheet…"),
+    },
+    delete: {
+        groupNumber: COG_GROUP.DANGER,
+        sequence: 10,
         icon: "fa-regular fa-trash-can",
         description: _t("Delete"),
-        class: "text-danger",
+        danger: true,
     },
 };
 
@@ -483,7 +501,12 @@ export function getActionMenuItems(staticItems, actionMenus) {
         .sort(([, item1], [, item2]) => (item1.sequence || 0) - (item2.sequence || 0))
         .map(([key, item]) =>
             Object.assign(
-                { key, groupNumber: STATIC_ACTIONS_GROUP_NUMBER },
+                {
+                    key,
+                    groupNumber:
+                        STATIC_ACTION_MENU_DESCRIPTORS[key]?.groupNumber ??
+                        COG_GROUP.APP,
+                },
                 omit(item, "isAvailable", "sequence"),
             ),
         );

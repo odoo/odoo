@@ -2,6 +2,7 @@
 import { DocumentFileUploader } from "@account/components/document_file_uploader/document_file_uploader";
 import { registry } from "@web/core/registry";
 import { exprToBoolean } from "@web/core/utils/format/strings";
+import { COG_GROUP, isActWindowView } from "@web/search/cog_menu/cog_menu_group";
 
 const cogMenuRegistry = registry.category("cogMenu");
 
@@ -15,11 +16,13 @@ export class QuotationRequestUploader extends DocumentFileUploader {
 
 export const quotationUploaderMenuItem = {
     Component: QuotationRequestUploader,
-    groupNumber: 0,
-    isDisplayed: ({ config, searchModel }) =>
-        searchModel.resModel === "sale.order" &&
-        ["list", "kanban"].includes(config.viewType) &&
-        exprToBoolean(config.viewArch.getAttribute("create"), true),
+    groupNumber: COG_GROUP.DATA,
+    isDisplayed: (env) =>
+        env.searchModel.resModel === "sale.order" &&
+        isActWindowView(env, ["list", "kanban"]) &&
+        exprToBoolean(env.config.viewArch.getAttribute("create"), true),
 };
 
-cogMenuRegistry.add("quotation-upload-menu", quotationUploaderMenuItem);
+cogMenuRegistry.add("quotation-upload-menu", quotationUploaderMenuItem, {
+    sequence: 30,
+});

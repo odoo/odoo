@@ -118,6 +118,10 @@
                     <notebook>
                         <page name="security" string="Visibility">
                             <field name="group_ids" />
+                            <group invisible="not binding_model_id">
+                                <field name="binding_sequence" />
+                                <field name="binding_icon" />
+                            </group>
                         </page>
                         <page name="advanced" string="Advanced Properties">
                             <group>
@@ -285,6 +289,10 @@
                         </page>
                         <page name="security" string="Visibility">
                             <field name="group_ids" />
+                            <group invisible="not binding_model_id">
+                                <field name="binding_sequence" />
+                                <field name="binding_icon" />
+                            </group>
                         </page>
                     </notebook>
                 </sheet>
@@ -463,6 +471,12 @@
                         </group>
                         <group groups="base.group_no_one">
                             <field name="group_ids" widget="many2many_tags" />
+                            <field
+                                name="binding_sequence"
+                                invisible="not binding_model_id" />
+                            <field
+                                name="binding_icon"
+                                invisible="not binding_model_id" />
                         </group>
                     </group>
                     <t name="action_content" invisible="not model_id">

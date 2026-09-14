@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <templates id="template" xml:space="preserve">
     <t t-name="account.RefreshAccountReturns">
-        <DropdownItem class="'o_import_menu'" onSelected.bind="refresh_all_account_returns">
-            <i class="fa-solid fa-arrows-rotate me-1"/>
-            Refresh
-        </DropdownItem>
+        <CogMenuItem class="'o_refresh_account_returns_menu'" icon="'fa-solid fa-arrows-rotate'" description.translate="Refresh Returns" onSelected.bind="refresh_all_account_returns"/>
     </t>
 </templates>

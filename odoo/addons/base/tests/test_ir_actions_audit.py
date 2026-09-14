@@ -1018,7 +1018,6 @@ class TestIrActionsBindingOrder(TransactionCase):
                 "state": "code",
                 "code": "pass",
                 "binding_model_id": model_id,
-                "sequence": 0,
             }
         )
         window = self.env["ir.actions.act_window"].create(
@@ -1033,7 +1032,7 @@ class TestIrActionsBindingOrder(TransactionCase):
         self.assertLess(server.id, window.id)
         self.assertLess(ids.index(server.id), ids.index(window.id))
 
-    def test_sequence_still_wins_over_id(self):
+    def test_binding_sequence_wins_over_id_across_action_types(self):
         model_id = self.env["ir.model"]._get_id("res.currency")
         Actions = self.env["ir.actions.actions"]
         common = {
@@ -1043,15 +1042,72 @@ class TestIrActionsBindingOrder(TransactionCase):
             "binding_model_id": model_id,
         }
         first = self.env["ir.actions.server"].create(
-            {**common, "name": "audit-seq-late", "sequence": 90}
+            {**common, "name": "audit-seq-late", "binding_sequence": 90}
         )
-        second = self.env["ir.actions.server"].create(
-            {**common, "name": "audit-seq-early", "sequence": 10}
+        second = self.env["ir.actions.act_window"].create(
+            {
+                "name": "audit-seq-early",
+                "res_model": "res.currency",
+                "binding_model_id": model_id,
+                "binding_sequence": 1,
+            }
         )
         self.env.registry.clear_cache()
         ids = [vals["id"] for vals in Actions._get_bindings("res.currency")["action"]]
         self.assertLess(first.id, second.id)
         self.assertLess(ids.index(second.id), ids.index(first.id))
+
+    def test_server_sequence_does_not_order_bindings(self):
+        model_id = self.env["ir.model"]._get_id("res.currency")
+        Actions = self.env["ir.actions.actions"]
+        common = {
+            "model_id": model_id,
+            "state": "code",
+            "code": "pass",
+            "binding_model_id": model_id,
+        }
+        first = self.env["ir.actions.server"].create(
+            {**common, "name": "audit-server-seq-high", "sequence": 90}
+        )
+        second = self.env["ir.actions.server"].create(
+            {**common, "name": "audit-server-seq-low", "sequence": 1}
+        )
+        self.env.registry.clear_cache()
+        ids = [vals["id"] for vals in Actions._get_bindings("res.currency")["action"]]
+        self.assertLess(ids.index(first.id), ids.index(second.id))
+
+    def test_binding_icon_is_served_with_the_binding(self):
+        model_id = self.env["ir.model"]._get_id("res.currency")
+        action = self.env["ir.actions.act_window"].create(
+            {
+                "name": "audit-icon",
+                "res_model": "res.currency",
+                "binding_model_id": model_id,
+                "binding_icon": "fa-solid fa-envelope",
+            }
+        )
+        self.env.registry.clear_cache()
+        bound = {
+            vals["id"]: vals
+            for vals in self.env["ir.actions.actions"]._get_bindings("res.currency")[
+                "action"
+            ]
+        }
+        self.assertEqual(bound[action.id]["binding_icon"], "fa-solid fa-envelope")
+
+    def test_binding_view_types_are_stored_in_canonical_order(self):
+        model_id = self.env["ir.model"]._get_id("res.currency")
+        action = self.env["ir.actions.act_window"].create(
+            {
+                "name": "audit-view-types",
+                "res_model": "res.currency",
+                "binding_model_id": model_id,
+                "binding_view_types": "form,list,kanban",
+            }
+        )
+        self.assertEqual(action.binding_view_types, "list,kanban,form")
+        action.write({"binding_view_types": "form, list,form"})
+        self.assertEqual(action.binding_view_types, "list,form")
 
 
 @tagged("post_install", "-at_install")

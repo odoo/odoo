@@ -679,6 +679,7 @@
         <field name="model_id" ref="model_approval_request" />
         <field name="binding_model_id" ref="model_approval_request" />
         <field name="binding_view_types">list</field>
+        <field name="binding_icon">fa-solid fa-check</field>
         <field name="group_ids" eval="[Command.link(ref('group_approval_approver'))]" />
         <field name="state">code</field>
         <field
@@ -691,6 +692,7 @@
         <field name="model_id" ref="model_approval_request" />
         <field name="binding_model_id" ref="model_approval_request" />
         <field name="binding_view_types">list</field>
+        <field name="binding_icon">fa-solid fa-xmark</field>
         <field name="group_ids" eval="[Command.link(ref('group_approval_approver'))]" />
         <field name="state">code</field>
         <field name="code">if records:

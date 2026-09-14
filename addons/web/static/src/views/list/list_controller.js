@@ -10,6 +10,7 @@ import { useModelWithSampleData } from "@web/model/model";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model";
 import { DynamicRecordList } from "@web/model/relational_model/dynamic_record_list";
 import { ActionMenus } from "@web/search/action_menus/action_menus";
+import { MultiRecordCogMenu } from "@web/views/multi_record_cog_menu";
 import { MultiRecordController } from "@web/views/multi_record_controller";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_button";
@@ -24,7 +25,6 @@ import {
     handleBeforeUnload,
 } from "@web/views/view_utils";
 
-import { ListCogMenu } from "./list_cog_menu.js";
 import { ListConfirmationDialog } from "./list_confirmation_dialog.js";
 
 const log = makeLogger("web.view.list");
@@ -36,7 +36,7 @@ export class ListController extends MultiRecordController {
         ViewLayout,
         ViewButton,
         MultiRecordViewButton,
-        CogMenu: ListCogMenu,
+        CogMenu: MultiRecordCogMenu,
         DropdownItem,
         SelectionBox,
     };

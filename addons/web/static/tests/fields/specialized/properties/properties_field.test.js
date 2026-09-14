@@ -315,7 +315,7 @@ test("properties: no access to parent", async () => {
     expect(".o-dropdown--menu span:contains(Edit Properties)").toHaveCount(1, {
         message: "The 'Edit Properties' btn should be in the cog menu",
     });
-    await toggleMenuItem("Edit Properties");
+    await toggleMenuItem("Edit Properties…");
     expect(
         ".o_field_properties:first-child .o_field_property_open_popover",
     ).toHaveCount(0, {
@@ -354,7 +354,7 @@ test("properties: access to parent", async () => {
     expect(".o-dropdown--menu span:contains(Edit Properties)").toHaveCount(1, {
         message: "Show 'Edit Properties' btn in cog menu",
     });
-    await toggleMenuItem("Edit Properties");
+    await toggleMenuItem("Edit Properties…");
 
     expect(
         ".o_field_properties:first-child .o_field_property_open_popover",
@@ -441,7 +441,7 @@ test("properties: add a new property", async () => {
     expect(".o-dropdown--menu span:contains(Edit Properties)").toHaveCount(1, {
         message: "The 'Edit Properties' btn should be in the cog menu",
     });
-    await toggleMenuItem("Edit Properties");
+    await toggleMenuItem("Edit Properties…");
 
     await click(".o_field_property_add button");
     await waitFor(".o_property_field_popover");
@@ -492,7 +492,7 @@ test("properties: selection", async () => {
     expect(".o_property_field:nth-child(2) select").toHaveValue("b");
 
     await toggleActionMenu();
-    await toggleMenuItem("Edit Properties");
+    await toggleMenuItem("Edit Properties…");
     await click(".o_property_field:nth-child(2) .o_field_property_open_popover");
     await animationFrame();
 
@@ -622,7 +622,7 @@ test("properties: float and integer", async () => {
     expect(".o_field_properties").toHaveCount(1);
 
     await toggleActionMenu();
-    await toggleMenuItem("Edit Properties");
+    await toggleMenuItem("Edit Properties…");
 
     await click(".o_property_field:nth-child(2) .o_field_property_open_popover");
     await animationFrame();
@@ -781,7 +781,7 @@ test("properties: move properties", async () => {
     });
 
     await toggleActionMenu();
-    await toggleMenuItem("Edit Properties");
+    await toggleMenuItem("Edit Properties…");
 
     await click(".o_property_field:nth-child(2) .o_field_property_open_popover");
     await waitFor(".o_property_field_popover");
@@ -866,7 +866,7 @@ test("properties: tags", async () => {
     };
 
     await toggleActionMenu();
-    await toggleMenuItem("Edit Properties");
+    await toggleMenuItem("Edit Properties…");
 
     await click(".o_property_field:nth-child(2) .o_field_property_open_popover");
     await animationFrame();
@@ -997,7 +997,7 @@ test("properties: many2one", async () => {
     });
 
     await toggleActionMenu();
-    await toggleMenuItem("Edit Properties");
+    await toggleMenuItem("Edit Properties…");
 
     await click(".o_property_field:nth-child(2) .o_field_property_open_popover");
     await waitFor(".o_property_field_popover");
@@ -1087,7 +1087,7 @@ test("properties: many2many", async () => {
         queryAllTexts(".o_property_field_value .o_tag_badge_text");
 
     await toggleActionMenu();
-    await toggleMenuItem("Edit Properties");
+    await toggleMenuItem("Edit Properties…");
 
     await click(".o_property_field:nth-child(2) .o_field_property_open_popover");
     await animationFrame();
@@ -1231,7 +1231,7 @@ test("properties: many2one 'Search more...' +  internal link save keeps data", a
     });
 
     await toggleActionMenu();
-    await toggleMenuItem("Edit Properties");
+    await toggleMenuItem("Edit Properties…");
 
     await click('[property-name="many_2_one"] .o_field_property_open_popover');
     await animationFrame();
@@ -1392,7 +1392,7 @@ test("properties: name reset", async () => {
     expect('.o_property_field[property-name="property_2"]').toHaveCount(1);
 
     await toggleActionMenu();
-    await toggleMenuItem("Edit Properties");
+    await toggleMenuItem("Edit Properties…");
 
     await click(".o_property_field:nth-child(2) .o_field_property_open_popover");
     await animationFrame();
@@ -1857,7 +1857,7 @@ test("properties: default value", async () => {
     expect(".o_field_properties").toHaveCount(1);
 
     await toggleActionMenu();
-    await toggleMenuItem("Edit Properties");
+    await toggleMenuItem("Edit Properties…");
 
     await click(".o_field_property_add button");
     await waitFor(".o_property_field_popover");
@@ -1923,7 +1923,7 @@ test("properties: default value date", async () => {
     });
 
     await toggleActionMenu();
-    await toggleMenuItem("Edit Properties");
+    await toggleMenuItem("Edit Properties…");
 
     await click(".o_field_property_add button");
     await waitFor(".o_property_field_popover");
@@ -1971,7 +1971,7 @@ test("properties: suffix", async () => {
     expect(".o_field_properties").toHaveCount(1);
 
     await toggleActionMenu();
-    await toggleMenuItem("Edit Properties");
+    await toggleMenuItem("Edit Properties…");
 
     await click(".o_field_property_add button");
     await waitFor(".o_property_field_popover");
@@ -2006,7 +2006,7 @@ test("properties: close property popover once clicked on delete icon", async () 
     });
 
     await toggleActionMenu();
-    await toggleMenuItem("Edit Properties");
+    await toggleMenuItem("Edit Properties…");
 
     await click(".o_property_field:first-child .o_field_property_open_popover");
     await animationFrame();
@@ -2042,7 +2042,7 @@ test("properties: form view and falsy domain, properties are not empty", async (
     });
 
     await toggleActionMenu();
-    await toggleMenuItem("Edit Properties");
+    await toggleMenuItem("Edit Properties…");
 
     expect(".o_test_properties_not_empty").toHaveCount(1);
 
@@ -2097,7 +2097,7 @@ test("properties: form view and falsy domain, properties are empty", async () =>
     expect(".o_test_properties_not_empty").toHaveCount(0);
 
     await toggleActionMenu();
-    await click(".o-dropdown--menu span .fa-cogs");
+    await click(".o-dropdown--menu span .fa-gears");
     await animationFrame();
     expect(".o_test_properties_not_empty").toHaveCount(1);
 });
@@ -2125,7 +2125,7 @@ test.tags("desktop");
 test("properties: separators layout", async () => {
     await makePropertiesGroupView([false, false, false, false]);
     await toggleActionMenu();
-    await toggleMenuItem("Edit Properties");
+    await toggleMenuItem("Edit Properties…");
     await toggleSeparator("property_1", true);
     expect(getGroups()).toEqual([
         [
@@ -2371,7 +2371,7 @@ test("properties: separators move properties", async () => {
     ]);
 
     await toggleActionMenu();
-    await toggleMenuItem("Edit Properties");
+    await toggleMenuItem("Edit Properties…");
 
     await click("[property-name='property_1'] .o_field_property_open_popover");
     await animationFrame();
@@ -2509,7 +2509,7 @@ test("properties: separators drag and drop", async () => {
         queryFirst(`*[property-name='${propertyName}'] .oi-draggable`);
 
     await toggleActionMenu();
-    await toggleMenuItem("Edit Properties");
+    await toggleMenuItem("Edit Properties…");
 
     await contains(getPropertyHandleElement("property_1")).dragAndDrop(
         getPropertyHandleElement("property_3"),
@@ -2779,7 +2779,7 @@ test("new property, change record, change property type", async () => {
     });
 
     await toggleActionMenu();
-    await toggleMenuItem("Edit Properties");
+    await toggleMenuItem("Edit Properties…");
 
     await contains(".o_property_field .o_property_field_value input").edit("aze");
     await contains(".o_pager_next").click();
@@ -2846,7 +2846,7 @@ test("property many2one, change property type from many2one to integer", async (
     });
 
     await toggleActionMenu();
-    await toggleMenuItem("Edit Properties");
+    await toggleMenuItem("Edit Properties…");
 
     await contains(".o_property_field .o_field_property_open_popover").click();
     await changeType("integer");
@@ -2858,7 +2858,7 @@ test.tags("desktop");
 test("properties: moving single property to 2nd group in auto split mode", async () => {
     await makePropertiesGroupView([false]);
     await toggleActionMenu();
-    await toggleMenuItem("Edit Properties");
+    await toggleMenuItem("Edit Properties…");
     const { moveTo, drop } = await contains(
         getPropertyHandleElement("property_1"),
     ).drag();
@@ -2878,7 +2878,7 @@ test.tags("desktop");
 test("properties: moving single property to 1st group", async () => {
     await makePropertiesGroupView([true, true, false]);
     await toggleActionMenu();
-    await toggleMenuItem("Edit Properties");
+    await toggleMenuItem("Edit Properties…");
     await contains(getPropertyHandleElement("property_3")).dragAndDrop(
         getPropertyHandleElement("property_1"),
     );
@@ -2895,7 +2895,7 @@ test.tags("desktop");
 test("properties: split, moving property from 2nd group to 1st", async () => {
     await makePropertiesGroupView([true, false, false]);
     await toggleActionMenu();
-    await toggleMenuItem("Edit Properties");
+    await toggleMenuItem("Edit Properties…");
     await contains(getPropertyHandleElement("property_3")).dragAndDrop(
         getPropertyHandleElement("property_2"),
         { position: "top" },
@@ -2914,7 +2914,7 @@ test.tags("desktop");
 test("properties: split, moving property from 1st group to 2nd", async () => {
     await makePropertiesGroupView([true, false, false, false, false, false]);
     await toggleActionMenu();
-    await toggleMenuItem("Edit Properties");
+    await toggleMenuItem("Edit Properties…");
     await contains(getPropertyHandleElement("property_3")).dragAndDrop(
         getPropertyHandleElement("property_6"),
         { position: "top" },
@@ -3012,7 +3012,7 @@ test("properties: monetary without currency_field", async () => {
     expect(".o_field_properties").toHaveCount(1);
 
     await toggleActionMenu();
-    await toggleMenuItem("Edit Properties");
+    await toggleMenuItem("Edit Properties…");
 
     await click(".o_property_field:nth-child(2) .o_field_property_open_popover");
     await animationFrame();
@@ -3054,7 +3054,7 @@ test("properties: monetary with currency_id", async () => {
     expect(".o_field_properties").toHaveCount(1);
 
     await toggleActionMenu();
-    await toggleMenuItem("Edit Properties");
+    await toggleMenuItem("Edit Properties…");
 
     await click(".o_property_field:nth-child(2) .o_field_property_open_popover");
     await animationFrame();
@@ -3117,7 +3117,7 @@ test("properties: monetary with multiple currency field", async () => {
     expect(".o_field_properties").toHaveCount(1);
 
     await toggleActionMenu();
-    await toggleMenuItem("Edit Properties");
+    await toggleMenuItem("Edit Properties…");
 
     await click(".o_property_field:nth-child(2) .o_field_property_open_popover");
     await animationFrame();
@@ -3186,7 +3186,7 @@ test("properties: pending deletion survives a later value edit", async () => {
     });
 
     await toggleActionMenu();
-    await toggleMenuItem("Edit Properties");
+    await toggleMenuItem("Edit Properties…");
 
     await click(".o_property_field:first-child .o_field_property_open_popover");
     await animationFrame();
@@ -3271,7 +3271,7 @@ test("properties: the 'Show in Kanban Cards' toggle keeps the state it was click
     });
 
     await toggleActionMenu();
-    await toggleMenuItem("Edit Properties");
+    await toggleMenuItem("Edit Properties…");
     await click(
         ".o_field_properties:first-child .o_property_field:first-child .o_field_property_open_popover",
     );
@@ -3311,7 +3311,7 @@ test("properties: an entry that parses to the stored value still reformats", asy
     });
 
     await toggleActionMenu();
-    await toggleMenuItem("Edit Properties");
+    await toggleMenuItem("Edit Properties…");
     await click(".o_property_field:nth-child(2) .o_field_property_open_popover");
     await animationFrame();
     await changeType("float");

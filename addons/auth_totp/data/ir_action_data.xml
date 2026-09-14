@@ -3,7 +3,7 @@
 
     <!-- Action called from the contextual menu -->
     <record id="action_disable_totp" model="ir.actions.server">
-        <field name="name">Disable two-factor authentication</field>
+        <field name="name">Disable Two-Factor Authentication</field>
         <field name="model_id" ref="base.model_res_users" />
         <field name="binding_model_id" ref="base.model_res_users" />
         <field name="group_ids" eval="[Command.link(ref('base.group_erp_manager'))]" />

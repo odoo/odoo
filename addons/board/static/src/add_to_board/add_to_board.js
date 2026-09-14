@@ -5,6 +5,7 @@ import { rpc } from "@web/core/network";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/translation";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { COG_GROUP, isActWindowView } from "@web/search/cog_menu/cog_menu_group";
 
 const cogMenuRegistry = registry.category("cogMenu");
 
@@ -94,13 +95,11 @@ export class AddToBoard extends Component {
 
 export const addToBoardItem = {
     Component: AddToBoard,
-    groupNumber: 20,
-    isDisplayed: ({ config }) => {
-        const { actionType, actionId, viewType } = config;
-        return (
-            actionType === "ir.actions.act_window" && actionId && viewType !== "form"
-        );
-    },
+    groupNumber: COG_GROUP.INTEGRATE,
+    isDisplayed: (env) =>
+        isActWindowView(env) &&
+        Boolean(env.config.actionId) &&
+        env.config.viewType !== "form",
 };
 
 cogMenuRegistry.add("add-to-board", addToBoardItem, { sequence: 10 });

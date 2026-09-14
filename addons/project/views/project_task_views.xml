@@ -521,7 +521,7 @@
     </record>
 
     <record id="action_send_mail_project_task" model="ir.actions.act_window">
-        <field name="name">Send Email</field>
+        <field name="name">Send Email…</field>
         <field name="res_model">mail.compose.message</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
@@ -531,6 +531,7 @@
             }</field>
         <field name="binding_model_id" ref="project.model_project_task" />
         <field name="binding_view_types">list,kanban</field>
+        <field name="binding_icon">fa-solid fa-envelope</field>
         <field
             name="group_ids"
             eval="[Command.link(ref('project.group_project_manager'))]" />
@@ -1190,13 +1191,14 @@
     </record>
 
     <record id="portal_share_action" model="ir.actions.act_window">
-        <field name="name">Share Task</field>
+        <field name="name">Share Task…</field>
         <field name="res_model">task.share.wizard</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
         <field name="context">{'dialog_size': 'medium'}</field>
         <field name="binding_model_id" ref="model_project_task" />
         <field name="binding_view_types">form</field>
+        <field name="binding_icon">fa-solid fa-share-nodes</field>
     </record>
 
     <record id="quick_create_task_form" model="ir.ui.view">
@@ -2137,7 +2139,7 @@
     </record>
 
     <record id="mail_followers_edit_action_from_task" model="ir.actions.act_window">
-        <field name="name">Add/Remove Followers</field>
+        <field name="name">Add/Remove Followers…</field>
         <field name="res_model">mail.followers.edit</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
@@ -2145,6 +2147,7 @@
             name="context">{'default_res_model': 'project.task', 'default_res_ids': active_ids}</field>
         <field name="binding_model_id" ref="project.model_project_task" />
         <field name="binding_view_types">list,kanban</field>
+        <field name="binding_icon">fa-solid fa-user-plus</field>
     </record>
 
     <record id="project_milestone_action_view_tasks" model="ir.actions.act_window">

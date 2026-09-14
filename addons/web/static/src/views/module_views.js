@@ -2,17 +2,18 @@
 /** @odoo-module native */
 
 import { Component } from "@odoo/owl";
-import { DropdownItem } from "@web/components/dropdown/dropdown_item";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
+import { COG_GROUP } from "@web/search/cog_menu/cog_menu_group";
+import { CogMenuItem } from "@web/search/cog_menu/cog_menu_item";
 const cogMenuRegistry = registry.category("cogMenu");
 
 const moduleUpdateCache = new WeakMap();
 
 export class ResetModuleStateCogMenu extends Component {
     static template = "web.ResetModuleStateCogMenu";
-    static components = { DropdownItem };
+    static components = { CogMenuItem };
     static props = {};
 
     /** @type {import("services").ServiceFactories["orm"]} */
@@ -32,6 +33,7 @@ cogMenuRegistry.add(
     "reset-module-state-cog-menu",
     /** @type {any} */ ({
         Component: ResetModuleStateCogMenu,
+        groupNumber: COG_GROUP.APP,
         /** @param {{ config: any, searchModel: any, services: any }} param0 */
         isDisplayed: async ({ config, searchModel, services }) => {
             if (

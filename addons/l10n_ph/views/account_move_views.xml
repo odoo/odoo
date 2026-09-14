@@ -2,10 +2,11 @@
 <odoo>
 
     <record id="action_account_move_bir_2307" model="ir.actions.server">
-        <field name="name">Download BIR 2307 XLS</field>
+        <field name="name">Download BIR 2307 XLS…</field>
         <field name="model_id" ref="account.model_account_move" />
         <field name="binding_model_id" ref="account.model_account_move" />
         <field name="binding_view_types">list,kanban,form</field>
+        <field name="binding_icon">fa-solid fa-download</field>
         <field
             name="group_ids"
             eval="[Command.link(ref('account.group_account_invoice'))]" />

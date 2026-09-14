@@ -1,12 +1,12 @@
 /** @odoo-module native */
-import { STATIC_COG_GROUP_ACTION_CLEANUP } from "./document_cog_menu_group.js";
+import { COG_GROUP } from "@web/search/cog_menu/cog_menu_group";
 import { DocumentsCogMenuItem } from "./document_cog_menu_item.js";
 import { _t } from "@web/core/translation";
 
 export class DocumentsCogMenuItemArchive extends DocumentsCogMenuItem {
     setup() {
-        this.icon = "fa-solid fa-trash";
-        this.label = _t("Move to trash");
+        this.icon = "fa-regular fa-trash-can";
+        this.label = _t("Move to Trash");
         super.setup();
     }
 
@@ -18,7 +18,7 @@ export class DocumentsCogMenuItemArchive extends DocumentsCogMenuItem {
 
 export const documentsCogMenuItemArchive = {
     Component: DocumentsCogMenuItemArchive,
-    groupNumber: STATIC_COG_GROUP_ACTION_CLEANUP,
+    groupNumber: COG_GROUP.RECORD,
     isDisplayed: (env) =>
         DocumentsCogMenuItem.isVisible(
             env,

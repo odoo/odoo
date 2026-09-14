@@ -2,14 +2,14 @@
 import { Component, status, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { useDebounced } from "@web/core/utils/timing";
-import { STATIC_COG_GROUP_ACTION_PIN } from "./document_cog_menu_group.js";
-import { Dropdown } from "@web/components/dropdown";
+import { Dropdown, DropdownItem } from "@web/components/dropdown";
+import { COG_GROUP } from "@web/search/cog_menu/cog_menu_group";
 import { _t } from "@web/core/translation";
 import { isDocumentsCogMenuItemVisible } from "./document_cog_menu_item.js";
 
 export class DocumentCogMenuPinAction extends Component {
     static template = "document.DocumentCogMenuPinAction";
-    static components = { Dropdown };
+    static components = { Dropdown, DropdownItem };
     static props = {};
 
     static isVisible = isDocumentsCogMenuItemVisible;
@@ -59,7 +59,7 @@ export class DocumentCogMenuPinAction extends Component {
 
 export const documentCogMenuPinAction = {
     Component: DocumentCogMenuPinAction,
-    groupNumber: STATIC_COG_GROUP_ACTION_PIN,
+    groupNumber: COG_GROUP.APP,
     isDisplayed: (env) =>
         env.model.documentService.userIsDocumentUser &&
         DocumentCogMenuPinAction.isVisible(env, ({ folder, documentService }) =>

@@ -165,10 +165,11 @@
             </field>
         </record>
         <record id="action_production_order_split" model="ir.actions.server">
-            <field name="name">Split</field>
+            <field name="name">Split…</field>
             <field name="model_id" ref="mrp.model_mrp_production" />
             <field name="binding_model_id" ref="mrp.model_mrp_production" />
             <field name="binding_view_types">list,kanban,form</field>
+            <field name="binding_icon">fa-solid fa-code-branch</field>
             <field name="state">code</field>
             <field name="code">action = records.action_split()</field>
         </record>
@@ -178,6 +179,7 @@
             <field name="binding_model_id" ref="mrp.model_mrp_production" />
             <field name="binding_type">report</field>
             <field name="binding_view_types">list,kanban,form</field>
+            <field name="binding_icon">fa-solid fa-tag</field>
             <field name="state">code</field>
             <field
                 name="code">if records:
@@ -188,33 +190,25 @@
             <field name="model_id" ref="mrp.model_mrp_production" />
             <field name="binding_model_id" ref="mrp.model_mrp_production" />
             <field name="binding_view_types">form</field>
+            <field name="binding_icon">fa-solid fa-lock</field>
             <field name="state">code</field>
             <field
                 name="code">if records:
                 records.action_toggle_is_locked()</field>
         </record>
         <record id="action_production_order_scrap" model="ir.actions.server">
-            <field name="name">Scrap</field>
+            <field name="name">Scrap…</field>
             <field name="model_id" ref="mrp.model_mrp_production" />
             <field name="binding_model_id" ref="mrp.model_mrp_production" />
             <field name="binding_view_types">form</field>
+            <field name="binding_icon">fa-solid fa-recycle</field>
             <field name="state">code</field>
             <field
                 name="code">if records:
                 action = records.button_scrap()</field>
         </record>
-        <record id="action_print_labels" model="ir.actions.server">
-            <field name="name">Print Labels</field>
-            <field name="model_id" ref="mrp.model_mrp_production" />
-            <field name="binding_model_id" ref="mrp.model_mrp_production" />
-            <field name="binding_view_types">form</field>
-            <field name="state">code</field>
-            <field
-                name="code">if records:
-                action = records.action_view_label_type()</field>
-        </record>
         <record id="action_plan_with_components_availability" model="ir.actions.server">
-            <field name="name">Plan based on Components Availability</field>
+            <field name="name">Plan Based on Components Availability</field>
             <field name="model_id" ref="mrp.model_mrp_production" />
             <field name="binding_model_id" ref="mrp.model_mrp_production" />
             <field name="binding_view_types">list,kanban,form</field>
@@ -227,6 +221,7 @@
             <field name="model_id" ref="mrp.model_mrp_production" />
             <field name="binding_model_id" ref="mrp.model_mrp_production" />
             <field name="binding_view_types">list,kanban</field>
+            <field name="binding_icon">fa-solid fa-code-merge</field>
             <field name="state">code</field>
             <field name="code">action = records.action_merge()</field>
         </record>
@@ -235,6 +230,7 @@
             <field name="model_id" ref="mrp.model_mrp_production" />
             <field name="binding_model_id" ref="mrp.model_mrp_production" />
             <field name="binding_view_types">list,kanban</field>
+            <field name="binding_icon">fa-solid fa-check</field>
             <field name="state">code</field>
             <field
                 name="code">if records:

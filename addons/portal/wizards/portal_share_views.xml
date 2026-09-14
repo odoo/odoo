@@ -44,12 +44,13 @@
     </record>
 
     <record id="portal_share_action" model="ir.actions.act_window">
-        <field name="name">Share Document</field>
+        <field name="name">Share Document…</field>
         <field name="res_model">portal.share</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
         <field name="context">{'dialog_size': 'medium'}</field>
         <field name="binding_model_id" ref="model_portal_share" />
+        <field name="binding_icon">fa-solid fa-share-nodes</field>
         <!--
             Match the portal.share ACL (group_partner_manager) so the "Share"
             contextual action is hidden from users who would only hit an

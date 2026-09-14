@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <templates id="template" xml:space="preserve">
     <t t-name="document.DocumentCogMenuItem">
-        <DropdownItem onSelected.bind="onItemSelected">
-            <i t-attf-class="#{icon} fa-fw me-1" aria-hidden="true"></i><t t-out="label"/>
-        </DropdownItem>
+        <CogMenuItem icon="icon" description="label" onSelected.bind="onItemSelected"/>
     </t>
 </templates>

@@ -1,13 +1,14 @@
 /** @odoo-module native */
 import { Component } from "@odoo/owl";
-import { DropdownItem } from "@web/components/dropdown";
 import { registry } from "@web/core/registry";
+import { COG_GROUP, isActWindowView } from "@web/search/cog_menu/cog_menu_group";
+import { CogMenuItem } from "@web/search/cog_menu/cog_menu_item";
 
 const cogMenuRegistry = registry.category("cogMenu");
 
 export class RefreshAccountReturns extends Component {
     static template = "account.RefreshAccountReturns";
-    static components = { DropdownItem };
+    static components = { CogMenuItem };
     static props = {};
 
     async refresh_all_account_returns() {
@@ -21,11 +22,10 @@ export class RefreshAccountReturns extends Component {
 
 export const refreshAccountReturns = {
     Component: RefreshAccountReturns,
-    groupNumber: 5,
-    isDisplayed: ({ config }) =>
-        config.actionType === "ir.actions.act_window" &&
-        ["kanban"].includes(config.viewType) &&
-        ["account_return_kanban"].includes(config.viewSubType),
+    groupNumber: COG_GROUP.APP,
+    isDisplayed: (env) =>
+        isActWindowView(env, ["kanban"]) &&
+        env.config.viewSubType === "account_return_kanban",
 };
 
 cogMenuRegistry.add("refresh-account-returns-menu", refreshAccountReturns, {

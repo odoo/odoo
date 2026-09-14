@@ -1,12 +1,12 @@
 /** @odoo-module native */
-import { STATIC_COG_GROUP_ACTION_ADVANCED } from "./document_cog_menu_group.js";
+import { COG_GROUP } from "@web/search/cog_menu/cog_menu_group";
 import { DocumentsCogMenuItem } from "./document_cog_menu_item.js";
 import { _t } from "@web/core/translation";
 
 export class DocumentsCogMenuItemShortcut extends DocumentsCogMenuItem {
     setup() {
         this.icon = "fa-solid fa-up-right-from-square";
-        this.label = _t("Add shortcut");
+        this.label = _t("Add Shortcut…");
         super.setup();
     }
 
@@ -22,7 +22,7 @@ export class DocumentsCogMenuItemShortcut extends DocumentsCogMenuItem {
 
 export const documentsCogMenuItemShortcut = {
     Component: DocumentsCogMenuItemShortcut,
-    groupNumber: STATIC_COG_GROUP_ACTION_ADVANCED,
+    groupNumber: COG_GROUP.RECORD,
     isDisplayed: (env) =>
         DocumentsCogMenuItem.isVisible(
             env,

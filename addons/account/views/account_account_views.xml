@@ -82,10 +82,11 @@
     </record>
 
     <record id="action_unmerge_accounts" model="ir.actions.server">
-        <field name="name">Unmerge account</field>
+        <field name="name">Unmerge Account</field>
         <field name="model_id" ref="account_coa.model_account_account" />
         <field name="binding_model_id" ref="account_coa.model_account_account" />
         <field name="binding_view_types">form,list,kanban</field>
+        <field name="binding_icon">fa-solid fa-code-fork</field>
         <field
             name="group_ids"
             eval="[Command.link(ref('account.group_account_manager'))]" />

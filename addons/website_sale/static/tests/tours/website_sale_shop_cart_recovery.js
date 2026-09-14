@@ -55,8 +55,8 @@ registry.category("web_tour.tours").add("shop_cart_recovery", {
             run: "click",
         },
         {
-            content: "click Send an Email",
-            trigger: "span:text(Send an email)",
+            content: "click Send Email",
+            trigger: "span:text(Send Email…)",
             run: "click",
         },
         {

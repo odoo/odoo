@@ -1,6 +1,8 @@
 /** @odoo-module native */
-import { CogMenu } from "@web/search/cog_menu/cog_menu";
 import { registry } from "@web/core/registry";
+import { CogMenu } from "@web/search/cog_menu/cog_menu";
+import { COG_MENU_REGISTRY_VALIDATION } from "@web/search/cog_menu/cog_menu_group";
+import { getDisplayedRegistryItems } from "@web/search/utils/misc";
 import { documentsCogMenuItemArchive } from "./document_cog_menu_item_archive.js";
 import { documentCogMenuPinAction } from "./document_cog_menu_pin_actions.js";
 import { documentsCogMenuItemDetails } from "./document_cog_menu_item_details.js";
@@ -16,33 +18,35 @@ import { documentsCogMenuItemAutomations } from "./document_cog_menu_item_automa
 
 export const documentsCogMenuRegistry = registry.category("documents_cog_menu");
 
-for (const item of [
-    documentsCogMenuItemDownload,
-    documentsCogMenuItemRename,
-    documentsCogMenuItemShare,
-    documentsCogMenuItemShortcut,
-    documentsCogMenuItemStarAdd,
-    documentsCogMenuItemStarRemove,
-    documentsCogMenuItemDetails,
-    documentsCogMenuItemArchive,
-    documentCogMenuPinAction,
-    documentsCogMenuItemAutomations,
+documentsCogMenuRegistry.addValidation(COG_MENU_REGISTRY_VALIDATION);
+
+for (const [key, item] of [
+    ["download", documentsCogMenuItemDownload],
+    ["rename", documentsCogMenuItemRename],
+    ["share", documentsCogMenuItemShare],
+    ["shortcut", documentsCogMenuItemShortcut],
+    ["star-add", documentsCogMenuItemStarAdd],
+    ["star-remove", documentsCogMenuItemStarRemove],
+    ["details", documentsCogMenuItemDetails],
+    ["trash", documentsCogMenuItemArchive],
+    ["pin-actions", documentCogMenuPinAction],
+    ["automations", documentsCogMenuItemAutomations],
 ]) {
-    documentsCogMenuRegistry.add(item.Component.name, item);
+    documentsCogMenuRegistry.add(key, item);
 }
 
 export class DocumentsCogMenu extends CogMenu {
     async _registryItems() {
-        const items = documentsCogMenuRegistry.getEntries();
-        const displayed = await Promise.all(
-            items.map(([, item]) => item.isDisplayed(this.env)),
-        );
-        return items
-            .filter((_item, index) => displayed[index])
-            .map(([key, item]) => ({
-                Component: item.Component,
-                groupNumber: item.groupNumber,
-                key,
-            }));
+        const [globalItems, documentsItems] = await Promise.all([
+            super._registryItems(),
+            getDisplayedRegistryItems(documentsCogMenuRegistry, this.env),
+        ]);
+        return [
+            ...globalItems,
+            ...documentsItems.map((item) => ({
+                ...item,
+                key: `documents-${item.key}`,
+            })),
+        ];
     }
 }

@@ -6,10 +6,12 @@ import {
     useDocumentView,
 } from "@document/views/hooks";
 import { makeActiveField } from "@web/model/relational_model";
+import { COG_GROUP } from "@web/search/cog_menu/cog_menu_group";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 import { _t } from "@web/core/translation";
 import { useService } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/collections/objects";
+import { prepareStaticActionMenuItems } from "@web/views/view_utils";
 import { onWillDestroy, onWillRender, useRef, useState, useSubEnv } from "@odoo/owl";
 
 export const DocumentsControllerMixin = (component) =>
@@ -164,7 +166,7 @@ export const DocumentsControllerMixin = (component) =>
                     {
                         description: e.name,
                         callback: () => this.model.onDoAction(e.id),
-                        groupNumber: 0,
+                        groupNumber: COG_GROUP.ACTIONS,
                     },
                 ]),
             );
@@ -177,19 +179,19 @@ export const DocumentsControllerMixin = (component) =>
                 ...embeddedActions,
                 download: {
                     isAvailable: () => this.targetRecords.some((r) => !r.isRequest()),
-                    sequence: 50,
+                    sequence: 10,
                     description: _t("Download"),
                     icon: "fa-solid fa-download",
                     callback: () => this.model.onDownload(),
-                    groupNumber: 1,
+                    groupNumber: COG_GROUP.DATA,
                 },
                 share: {
                     isAvailable: () => userIsInternal && this.targetRecords.length > 0,
-                    sequence: 51,
-                    description: _t("Share"),
-                    icon: "fa-solid fa-share",
+                    sequence: 10,
+                    description: _t("Share…"),
+                    icon: "fa-solid fa-share-nodes",
                     callback: () => this.model.onShare(),
-                    groupNumber: 1,
+                    groupNumber: COG_GROUP.RECORD,
                 },
             };
         }
@@ -212,81 +214,83 @@ export const DocumentsControllerMixin = (component) =>
             return {
                 ...omit(menuItems, "archive", "delete", "duplicate", "unarchive"),
                 ...topBarActions,
-                duplicate: {
-                    isAvailable: () => this.model.canDuplicateRecords,
-                    sequence: 50,
-                    description: _t("Duplicate"),
-                    icon: "fa-solid fa-copy",
-                    callback: () => this.model.onDuplicate(),
-                    groupNumber: 1,
-                },
-                trash: {
-                    isAvailable: () =>
-                        userIsInternal && editMode && someActive && someUnlocked,
-                    sequence: 55,
-                    description: _t("Move to Trash"),
-                    icon: "fa-solid fa-trash-can",
-                    callback: () => this.model.onArchive(),
-                    groupNumber: 1,
-                },
-                restore: {
-                    isAvailable: () => someArchived,
-                    sequence: 60,
-                    description: _t("Restore"),
-                    icon: "fa-solid fa-history",
-                    callback: () => this.model.onRestore(),
-                    groupNumber: 1,
-                },
-                delete: {
-                    isAvailable: () => this.model.canDeleteRecords,
-                    sequence: 65,
-                    description: _t("Delete"),
-                    icon: "fa-solid fa-trash-can",
-                    callback: () => this.model.onDelete(),
-                    groupNumber: 1,
+                ...prepareStaticActionMenuItems({
+                    duplicate: {
+                        isAvailable: () => this.model.canDuplicateRecords,
+                        callback: () => this.model.onDuplicate(),
+                    },
+                    delete: {
+                        isAvailable: () => this.model.canDeleteRecords,
+                        callback: () => this.model.onDelete(),
+                    },
+                }),
+                copy: {
+                    isAvailable: () => selectionCount && !isInTrash,
+                    sequence: 30,
+                    description: _t("Copy Links"),
+                    icon: "fa-solid fa-link",
+                    callback: () => this.model.onCopyLinks(),
+                    groupNumber: COG_GROUP.DATA,
                 },
                 rename: {
                     isAvailable: () =>
                         editMode && singleSelection && someUnlocked && !isInTrash,
-                    sequence: 70,
-                    description: _t("Rename"),
+                    sequence: 20,
+                    description: _t("Rename…"),
                     icon: "fa-regular fa-pen-to-square",
                     callback: () => this.model.onRename(),
-                    groupNumber: 2,
+                    groupNumber: COG_GROUP.RECORD,
+                },
+                move: {
+                    isAvailable: () => this.model.canMoveRecords,
+                    sequence: 25,
+                    description: _t("Move…"),
+                    icon: "fa-solid fa-right-to-bracket",
+                    callback: () => this.model.onMove(),
+                    groupNumber: COG_GROUP.RECORD,
+                },
+                shortcut: {
+                    isAvailable: () => userIsInternal && !isInTrash,
+                    sequence: 35,
+                    description: _t("Add Shortcut…"),
+                    icon: "fa-solid fa-up-right-from-square",
+                    callback: () => this.model.onCreateShortcut(),
+                    groupNumber: COG_GROUP.RECORD,
                 },
                 details: {
                     isAvailable: () =>
                         userIsInternal &&
                         !this.env.searchModel.context.documents_view_secondary,
-                    sequence: 75,
-                    description: _t("Info & tags"),
+                    sequence: 50,
+                    description: _t("Info & Tags"),
                     icon: "fa-solid fa-circle-info",
                     callback: () => this.model.onToggleRightPanel(),
-                    groupNumber: 2,
-                },
-                move: {
-                    isAvailable: () => this.model.canMoveRecords,
-                    sequence: 78,
-                    description: _t("Move"),
-                    icon: "fa-solid fa-right-to-bracket",
-                    callback: () => this.model.onMove(),
-                    groupNumber: 2,
-                },
-                shortcut: {
-                    isAvailable: () => userIsInternal && !isInTrash,
-                    sequence: 80,
-                    description: _t("Create Shortcut"),
-                    icon: "fa-solid fa-square-up-right",
-                    callback: () => this.model.onCreateShortcut(),
-                    groupNumber: 2,
+                    groupNumber: COG_GROUP.RECORD,
                 },
                 version: {
                     isAvailable: () => this.model.canManageVersions,
-                    sequence: 85,
-                    description: _t("Manage Versions"),
-                    icon: "fa-solid fa-history",
+                    sequence: 55,
+                    description: _t("Manage Versions…"),
+                    icon: "fa-solid fa-clock-rotate-left",
                     callback: () => this.model.onManageVersions(),
-                    groupNumber: 2,
+                    groupNumber: COG_GROUP.RECORD,
+                },
+                trash: {
+                    isAvailable: () =>
+                        userIsInternal && editMode && someActive && someUnlocked,
+                    sequence: 80,
+                    description: _t("Move to Trash"),
+                    icon: "fa-regular fa-trash-can",
+                    callback: () => this.model.onArchive(),
+                    groupNumber: COG_GROUP.RECORD,
+                },
+                restore: {
+                    isAvailable: () => someArchived,
+                    sequence: 85,
+                    description: _t("Restore"),
+                    icon: "fa-solid fa-trash-arrow-up",
+                    callback: () => this.model.onRestore(),
+                    groupNumber: COG_GROUP.RECORD,
                 },
                 lock: {
                     isAvailable: () =>
@@ -295,21 +299,15 @@ export const DocumentsControllerMixin = (component) =>
                         singleSelection.data.type !== "folder" &&
                         !isInTrash &&
                         editMode,
-                    sequence: 90,
+                    sequence: 45,
                     description: singleSelection?.data?.lock_uid
                         ? _t("Unlock")
                         : _t("Lock"),
-                    icon: "fa-solid fa-lock",
+                    icon: singleSelection?.data?.lock_uid
+                        ? "fa-solid fa-lock-open"
+                        : "fa-solid fa-lock",
                     callback: () => this.model.onToggleLock(),
-                    groupNumber: 2,
-                },
-                copy: {
-                    isAvailable: () => selectionCount && !isInTrash,
-                    sequence: 95,
-                    description: _t("Copy Links"),
-                    icon: "fa-solid fa-link",
-                    callback: () => this.model.onCopyLinks(),
-                    groupNumber: 2,
+                    groupNumber: COG_GROUP.RECORD,
                 },
                 pdf: {
                     isAvailable: () =>
@@ -320,11 +318,11 @@ export const DocumentsControllerMixin = (component) =>
                             (record) => record.isPdf() && !record.data.lock_uid,
                         ) &&
                         !isInTrash,
-                    sequence: 100,
-                    description: singleSelection ? _t("Split PDF") : _t("Merge PDFs"),
+                    sequence: 10,
+                    description: singleSelection ? _t("Split PDF…") : _t("Merge PDFs…"),
                     icon: "fa-solid fa-scissors",
                     callback: () => this.model.onSplitPDF(),
-                    groupNumber: 2,
+                    groupNumber: COG_GROUP.APP,
                 },
             };
         }

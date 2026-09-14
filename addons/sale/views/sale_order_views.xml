@@ -1402,7 +1402,7 @@
     </record>
 
     <record id="action_mail_followers_edit" model="ir.actions.act_window">
-        <field name="name">Add/Remove Followers</field>
+        <field name="name">Add/Remove Followers…</field>
         <field name="res_model">mail.followers.edit</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
@@ -1410,13 +1410,15 @@
             name="context">{'default_res_model': 'sale.order', 'default_res_ids': active_ids}</field>
         <field name="binding_model_id" ref="sale.model_sale_order" />
         <field name="binding_view_types">list,kanban</field>
+        <field name="binding_icon">fa-solid fa-user-plus</field>
     </record>
 
     <record id="action_share" model="ir.actions.server">
-        <field name="name">Share</field>
+        <field name="name">Share…</field>
         <field name="model_id" ref="sale.model_sale_order" />
         <field name="binding_model_id" ref="sale.model_sale_order" />
         <field name="binding_view_types">form</field>
+        <field name="binding_icon">fa-solid fa-share-nodes</field>
         <field name="state">code</field>
         <field name="code">action = records.action_share()</field>
     </record>
@@ -1431,15 +1433,16 @@
     </record>
 
     <record id="action_send_mail" model="ir.actions.server">
-        <field name="name">Send an email</field>
+        <field name="name">Send Email…</field>
         <field name="model_id" ref="sale.model_sale_order" />
         <field name="binding_model_id" ref="sale.model_sale_order" />
         <field name="binding_view_types">list,kanban,form</field>
+        <field name="binding_sequence">1</field>
+        <field name="binding_icon">fa-solid fa-envelope</field>
         <field name="state">code</field>
         <field
             name="code">if records:
     action = records.with_context(hide_default_template=True).action_send_quotation()</field>
-        <field name="sequence">1</field>
     </record>
 
     <record id="action_merger" model="ir.actions.server">
@@ -1447,10 +1450,11 @@
         <field name="model_id" ref="sale.model_sale_order" />
         <field name="binding_model_id" ref="sale.model_sale_order" />
         <field name="binding_view_types">list</field>
+        <field name="binding_sequence">1</field>
+        <field name="binding_icon">fa-solid fa-code-merge</field>
         <field name="state">code</field>
         <field name="code">if records:
     action = records.action_merge()</field>
-        <field name="sequence">1</field>
     </record>
 
 </odoo>

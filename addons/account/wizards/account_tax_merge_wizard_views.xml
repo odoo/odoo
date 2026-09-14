@@ -52,7 +52,7 @@
     </record>
 
     <record id="account_tax_merge_wizard_action" model="ir.actions.act_window">
-        <field name="name">Merge taxes</field>
+        <field name="name">Merge Taxes…</field>
         <field name="res_model">account.tax.merge.wizard</field>
         <field name="view_mode">form</field>
         <field name="view_id" eval="ref('account.account_tax_merge_wizard_form')" />
@@ -60,16 +60,18 @@
         <field name="binding_model_id" ref="account_tax.model_account_tax" />
         <field name="binding_type">action</field>
         <field name="binding_view_types">list</field>
+        <field name="binding_icon">fa-solid fa-code-merge</field>
         <field
             name="group_ids"
             eval="[Command.set([ref('account.group_account_manager')])]" />
     </record>
 
     <record id="action_unmerge_taxes" model="ir.actions.server">
-        <field name="name">Unmerge tax</field>
+        <field name="name">Unmerge Tax</field>
         <field name="model_id" ref="account_tax.model_account_tax" />
         <field name="binding_model_id" ref="account_tax.model_account_tax" />
         <field name="binding_view_types">form,list</field>
+        <field name="binding_icon">fa-solid fa-code-fork</field>
         <field
             name="group_ids"
             eval="[Command.link(ref('account.group_account_manager'))]" />

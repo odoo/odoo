@@ -6263,6 +6263,35 @@ menus file too (or, for the patch, becomes the menuitem's own ``action=``):
                parent="menu_sale_root" action="action_sale_order" sequence="1"/>
    </odoo>
 
+**Contextual (gear) menus.** The gear menu and the selection *Actions* dropdown
+render one grammar, sections in this order, a divider between non-empty ones.
+Each section is a ``COG_GROUP`` constant from ``@web/search/cog_menu/cog_menu_group``;
+a bare number is rejected by the ``cogMenu`` registry validation.
+
+======================  ==============================================================
+``COG_GROUP.DATA``      import and export: Import Records, Export All, Export…
+``COG_GROUP.RECORD``    the record at hand: Edit Properties…, Duplicate, Archive
+``COG_GROUP.APP``       the current app's own features
+``COG_GROUP.PRINT``     reports
+``COG_GROUP.ACTIONS``   server-bound actions (``binding_model_id``)
+``COG_GROUP.INTEGRATE`` send the view elsewhere: Knowledge, Dashboard, Spreadsheet
+``COG_GROUP.DANGER``    irreversible, alone and last: Delete
+======================  ==============================================================
+
+- Render items with ``CogMenuItem`` (``icon``, ``description``, ``danger``); a shared
+  verb (``duplicate``, ``delete``, ``versionHistory``, ``insertInSpreadsheet`` …) is
+  declared through ``prepareStaticActionMenuItems``, never restated as a raw object.
+- Labels are Title Case and end with ``…`` when the item opens a dialog, wizard or
+  file picker before acting ``[gate contextual_menu_title_case]``
+  ``[gate contextual_menu_dialog_ellipsis]``. No "Print" prefix inside Print.
+- Order bound actions with ``binding_sequence`` and give recurring verbs a
+  ``binding_icon``; ``sequence`` on a server action orders child actions only.
+- ``isDisplayed`` runs cheap synchronous checks first (``isActWindowView``), awaited
+  group or RPC checks last; mobile exclusion goes through ``env.isSmall`` there, not
+  in the template.
+- ``u`` belongs to the gear; a view button never claims it
+  ``[gate contextual_menu_hotkey_u]``.
+
 3.8 Settings views
 ------------------
 

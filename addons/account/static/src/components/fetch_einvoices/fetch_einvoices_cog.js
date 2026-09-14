@@ -1,17 +1,17 @@
 /** @odoo-module native */
 import { Component } from "@odoo/owl";
-import { DropdownItem } from "@web/components/dropdown";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/translation";
 import { useService } from "@web/core/utils/hooks";
-import { ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
+import { COG_GROUP, isActWindowView } from "@web/search/cog_menu/cog_menu_group";
+import { CogMenuItem } from "@web/search/cog_menu/cog_menu_item";
 
 const cogMenuRegistry = registry.category("cogMenu");
 
 export class FetchEInvoices extends Component {
     static template = "account.FetchEInvoices";
     static props = {};
-    static components = { DropdownItem };
+    static components = { CogMenuItem };
 
     setup() {
         super.setup();
@@ -48,13 +48,19 @@ export class FetchEInvoices extends Component {
 
 export const fetchEInvoicesActionMenu = {
     Component: FetchEInvoices,
-    groupNumber: ACTIONS_GROUP_NUMBER,
-    isDisplayed: ({ config, searchModel }) =>
-        searchModel.resModel === "account.move" &&
-        (searchModel.globalContext.default_journal_id || false) &&
-        (searchModel.globalContext.show_fetch_in_einvoices_button ||
-            searchModel.globalContext.show_refresh_out_einvoices_status_button ||
-            false),
+    groupNumber: COG_GROUP.APP,
+    isDisplayed: (env) => {
+        const { globalContext, resModel } = env.searchModel;
+        return (
+            resModel === "account.move" &&
+            isActWindowView(env, ["kanban", "list"]) &&
+            Boolean(globalContext.default_journal_id) &&
+            Boolean(
+                globalContext.show_fetch_in_einvoices_button ||
+                globalContext.show_refresh_out_einvoices_status_button,
+            )
+        );
+    },
 };
 
 cogMenuRegistry.add("account-fetch-e-invoices", fetchEInvoicesActionMenu, {

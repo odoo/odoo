@@ -6398,12 +6398,12 @@ msgstr "작업 유형"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_picking_type_label
-msgid "Operation type (PDF)"
+msgid "Operation Type (PDF)"
 msgstr "작업 유형 (PDF)"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_picking_type
-msgid "Operation type (ZPL)"
+msgid "Operation Type (ZPL)"
 msgstr "작업 유형 (ZPL)"
 
 #. module: stock
@@ -8328,6 +8328,7 @@ msgstr "반품 선별 내역"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
+#: model:ir.actions.report,name:stock.return_label_report
 msgid "Return Slip"
 msgstr "반품 명세서"
 
@@ -8346,11 +8347,6 @@ msgstr "반품"
 #: code:addons/stock/wizard/stock_picking_return.py:0
 msgid "Return of %(picking_name)s"
 msgstr "%(picking_name)s 반품"
-
-#. module: stock
-#: model:ir.actions.report,name:stock.return_label_report
-msgid "Return slip"
-msgstr "반품 명세서"
 
 #. module: stock
 #. odoo-python
@@ -8618,7 +8614,6 @@ msgstr ""
 "든 재고 이동에 대한 예상 날짜로 설정됩니다."
 
 #. module: stock
-#: model:ir.actions.server,name:stock.action_scrap
 #: model:ir.model,name:stock.model_stock_scrap
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__scrap_id
 #: model:ir.ui.menu,name:stock.menu_stock_scrap
@@ -8627,6 +8622,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_form_view2
 msgid "Scrap"
 msgstr "폐기"
+
+#. module: stock
+#: model:ir.actions.server,name:stock.action_scrap
+msgid "Scrap…"
+msgstr "폐기…"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__scrap_location_id
@@ -8761,8 +8761,8 @@ msgstr "배송 주문이 완료되면 자동으로 확인 이메일을 전송합
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_lead_mass_mail
-msgid "Send email"
-msgstr "이메일 전송"
+msgid "Send Email…"
+msgstr "이메일 전송…"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_sendcloud
@@ -8925,7 +8925,7 @@ msgstr "0으로 설정"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_view_set_quants_tree
-msgid "Set to quantity on hand"
+msgid "Set to Quantity on Hand"
 msgstr "보유 수량을 설정"
 
 #. module: stock

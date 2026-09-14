@@ -12215,8 +12215,8 @@ msgstr "合并合作伙伴向导"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_merge_wizard_action
-msgid "Merge accounts"
-msgstr "合并账户"
+msgid "Merge Accounts…"
+msgstr "合并账户…"
 
 #. module: account
 #: model:ir.model,name:account.model_mail_message
@@ -13628,7 +13628,7 @@ msgstr "PDF文件"
 
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices_without_payment
-msgid "PDF without Payment"
+msgid "PDF Without Payment"
 msgstr "未付款的PDF"
 
 #. module: account
@@ -13845,7 +13845,6 @@ msgstr "具有相同银行账户的合作伙伴"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
-#: model:ir.actions.server,name:account.action_move_force_register_payment
 #: model:ir.model,name:account.model_account_payment_register
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -13859,6 +13858,11 @@ msgstr "具有相同银行账户的合作伙伴"
 #: model_terms:ir.ui.view,arch_db:account_reports.return_generic_payment_wizard_form
 msgid "Pay"
 msgstr "支付"
+
+#. module: account
+#: model:ir.actions.server,name:account.action_move_force_register_payment
+msgid "Pay…"
+msgstr "支付…"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15268,8 +15272,8 @@ msgstr "合作伙伴的银行"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_resequence
-msgid "Resequence"
-msgstr "重新排序"
+msgid "Resequence…"
+msgstr "重新排序…"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -15279,6 +15283,7 @@ msgstr "根据发票日期将汇率重置为默认值"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
+#: model:ir.actions.server,name:account.model_account_statement_line_button_draft
 msgid "Reset to Draft"
 msgstr "重置为草稿"
 
@@ -15418,10 +15423,14 @@ msgid "Reversal of: %s"
 msgstr "撤销：%s"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_view_account_move_reversal
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse"
 msgstr "退款"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_view_account_move_reversal
+msgid "Reverse…"
+msgstr "退款…"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16058,13 +16067,13 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
-msgid "Send receipt by email"
-msgstr "通过电子邮件发送收据"
+msgid "Send Receipt by Email…"
+msgstr "通过电子邮件发送收据…"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
-msgid "Send receipts by email"
-msgstr "通过电子邮件发送收据"
+msgid "Send Receipts by Email…"
+msgstr "通过电子邮件发送收据…"
 
 #. module: account
 #. odoo-javascript
@@ -16332,8 +16341,8 @@ msgstr "设置信用卡账户"
 
 #. module: account
 #: model:ir.actions.server,name:account.model_account_move_action_share
-msgid "Share"
-msgstr "分享"
+msgid "Share…"
+msgstr "分享…"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__code
@@ -16851,7 +16860,7 @@ msgstr "暂记科目"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_move_type
-msgid "Switch into invoice/credit note"
+msgid "Switch into Invoice/Credit Note"
 msgstr "切换至发票/退款"
 
 #. module: account
@@ -19437,7 +19446,7 @@ msgstr "取消合并"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_unmerge_accounts
-msgid "Unmerge account"
+msgid "Unmerge Account"
 msgstr "取消合并账户"
 
 #. module: account
@@ -22937,11 +22946,6 @@ msgstr "相关采购"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form_inherit
 msgid "Related Sale(s)"
 msgstr "相关销售"
-
-#. module: account_accountant
-#: model:ir.actions.server,name:account.model_account_statement_line_button_draft
-msgid "Reset to draft"
-msgstr "重置为草稿"
 
 #. module: account_accountant
 #. odoo-javascript

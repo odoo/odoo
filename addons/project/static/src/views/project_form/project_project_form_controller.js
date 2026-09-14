@@ -44,11 +44,10 @@ export class ProjectProjectFormController extends FormControllerWithHTMLExpander
 
     getStaticActionMenuItems() {
         const actionMenuItems = super.getStaticActionMenuItems(...arguments);
-        const archive = actionMenuItems.archive;
-        if (archive) {
-            const base = archive.isAvailable;
-            archive.isAvailable = () =>
-                (typeof base === "function" ? base() : base) && this.isProjectManager;
+        if (!this.isProjectManager) {
+            ["duplicate", "archive", "unarchive"].forEach(
+                (item) => delete actionMenuItems[item],
+            );
         }
         return actionMenuItems;
     }

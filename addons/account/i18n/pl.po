@@ -12680,8 +12680,8 @@ msgstr "Kreator łączenia partnerów"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_merge_wizard_action
-msgid "Merge accounts"
-msgstr "Scal konta"
+msgid "Merge Accounts…"
+msgstr "Scal konta…"
 
 #. module: account
 #: model:ir.model,name:account.model_mail_message
@@ -14130,7 +14130,7 @@ msgstr "Plik PDF"
 
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices_without_payment
-msgid "PDF without Payment"
+msgid "PDF Without Payment"
 msgstr "PDF bez płatności"
 
 #. module: account
@@ -14347,7 +14347,6 @@ msgstr "Partnerzy z tym samym bankiem"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
-#: model:ir.actions.server,name:account.action_move_force_register_payment
 #: model:ir.model,name:account.model_account_payment_register
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -14361,6 +14360,11 @@ msgstr "Partnerzy z tym samym bankiem"
 #: model_terms:ir.ui.view,arch_db:account_reports.return_generic_payment_wizard_form
 msgid "Pay"
 msgstr "Zapłać"
+
+#. module: account
+#: model:ir.actions.server,name:account.action_move_force_register_payment
+msgid "Pay…"
+msgstr "Zapłać…"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15810,8 +15814,8 @@ msgstr "Bank partnerski"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_resequence
-msgid "Resequence"
-msgstr "Resekwencja"
+msgid "Resequence…"
+msgstr "Resekwencja…"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -15821,6 +15825,7 @@ msgstr "Zresetuj kurs waluty do wartości domyślnej zgodnie z datą faktury."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
+#: model:ir.actions.server,name:account.model_account_statement_line_button_draft
 msgid "Reset to Draft"
 msgstr "Przywróć do wersji roboczej"
 
@@ -15960,10 +15965,14 @@ msgid "Reversal of: %s"
 msgstr "Odwrócenie: %s"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_view_account_move_reversal
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse"
 msgstr "Korekta"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_view_account_move_reversal
+msgid "Reverse…"
+msgstr "Korekta…"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16615,13 +16624,13 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
-msgid "Send receipt by email"
-msgstr "Wyślij potwierdzenie przez e-mail"
+msgid "Send Receipt by Email…"
+msgstr "Wyślij potwierdzenie przez e-mail…"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
-msgid "Send receipts by email"
-msgstr "Wyślij potwierdzenia przez e-mail"
+msgid "Send Receipts by Email…"
+msgstr "Wyślij potwierdzenia przez e-mail…"
 
 #. module: account
 #. odoo-javascript
@@ -16907,8 +16916,8 @@ msgstr "Ustaw konto karty kredytowej"
 
 #. module: account
 #: model:ir.actions.server,name:account.model_account_move_action_share
-msgid "Share"
-msgstr "Udostępnij"
+msgid "Share…"
+msgstr "Udostępnij…"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__code
@@ -17437,7 +17446,7 @@ msgstr "Rachunek przejściowy"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_move_type
-msgid "Switch into invoice/credit note"
+msgid "Switch into Invoice/Credit Note"
 msgstr "Przełączenie na fakturę/notę kredytową"
 
 #. module: account
@@ -20225,7 +20234,7 @@ msgstr "Cofnij scalenie"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_unmerge_accounts
-msgid "Unmerge account"
+msgid "Unmerge Account"
 msgstr "Cofnij scalenie konta"
 
 #. module: account
@@ -23948,11 +23957,6 @@ msgstr "Powiązane zakupy"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form_inherit
 msgid "Related Sale(s)"
 msgstr "Powiązane sprzedaże"
-
-#. module: account_accountant
-#: model:ir.actions.server,name:account.model_account_statement_line_button_draft
-msgid "Reset to draft"
-msgstr "Przywróć do wersji roboczej"
 
 #. module: account_accountant
 #. odoo-javascript

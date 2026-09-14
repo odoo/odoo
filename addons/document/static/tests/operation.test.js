@@ -70,7 +70,7 @@ test("Duplicate a document in a Newly made folder", async function () {
         ".o_kanban_record:contains('Duplicate Test Doc') .o_record_selector",
     ).click();
     await contains(".o_dropdown_title").click();
-    await contains(".o-dropdown-item .fa-copy").click();
+    await contains(".o-dropdown-item .fa-clone").click();
     await animationFrame();
 
     expect(".btn-primary:contains('Duplicate in My Drive')").toHaveCount(1);

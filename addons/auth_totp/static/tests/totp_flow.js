@@ -465,7 +465,7 @@ registry.category("web_tour.tours").add("totp_admin_disables", {
         },
         {
             content: "Select totp remover",
-            trigger: "span.dropdown-item:contains(Disable two-factor authentication)",
+            trigger: "span.dropdown-item:contains(Disable Two-Factor Authentication)",
             run: "click",
         },
         {

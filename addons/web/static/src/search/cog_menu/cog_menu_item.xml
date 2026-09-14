@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CogMenuItem">
+        <DropdownItem class="itemClass" onSelected="props.onSelected" closingMode="props.closingMode" attrs="props.attrs">
+            <i class="o_cog_menu_item_icon me-1" t-att-class="props.icon" aria-hidden="true"/>
+            <t t-out="props.description"/>
+            <t t-slot="default"/>
+        </DropdownItem>
+    </t>
+
+</templates>

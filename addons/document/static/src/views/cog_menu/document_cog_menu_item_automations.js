@@ -1,12 +1,12 @@
 /** @odoo-module native */
-import { STATIC_COG_GROUP_ACTION_PIN } from "./document_cog_menu_group.js";
+import { COG_GROUP } from "@web/search/cog_menu/cog_menu_group";
 import { DocumentsCogMenuItem } from "./document_cog_menu_item.js";
 import { _t } from "@web/core/translation";
 
 export class DocumentsCogMenuItemAutomations extends DocumentsCogMenuItem {
     setup() {
-        this.icon = "fa-solid fa-gear";
-        this.label = _t("Automations");
+        this.icon = "fa-solid fa-robot";
+        this.label = _t("Automations…");
         super.setup();
     }
 
@@ -20,7 +20,7 @@ export class DocumentsCogMenuItemAutomations extends DocumentsCogMenuItem {
 
 export const documentsCogMenuItemAutomations = {
     Component: DocumentsCogMenuItemAutomations,
-    groupNumber: STATIC_COG_GROUP_ACTION_PIN,
+    groupNumber: COG_GROUP.APP,
     isDisplayed: (env) =>
         env.model.documentService.userIsDocumentUser &&
         DocumentsCogMenuItem.isVisible(env, ({ folder, documentService }) =>

@@ -2,9 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="base_import.ImportRecords">
-        <DropdownItem class="'o_import_menu'" onSelected.bind="importRecords">
-            <i class="fa-solid fa-download me-1"/>Import records
-        </DropdownItem>
+        <CogMenuItem class="'o_import_menu'" icon="'fa-solid fa-download'" description.translate="Import Records" onSelected.bind="importRecords"/>
     </t>
 
 </templates>

@@ -12529,8 +12529,8 @@ msgstr "Tính năng gộp đối tác"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_merge_wizard_action
-msgid "Merge accounts"
-msgstr "Hợp nhất tài khoản"
+msgid "Merge Accounts…"
+msgstr "Hợp nhất tài khoản…"
 
 #. module: account
 #: model:ir.model,name:account.model_mail_message
@@ -13975,7 +13975,7 @@ msgstr "Tệp PDF"
 
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices_without_payment
-msgid "PDF without Payment"
+msgid "PDF Without Payment"
 msgstr "PDF không có thanh toán"
 
 #. module: account
@@ -14192,7 +14192,6 @@ msgstr "Đối tác có cùng ngân hàng"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
-#: model:ir.actions.server,name:account.action_move_force_register_payment
 #: model:ir.model,name:account.model_account_payment_register
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -14206,6 +14205,11 @@ msgstr "Đối tác có cùng ngân hàng"
 #: model_terms:ir.ui.view,arch_db:account_reports.return_generic_payment_wizard_form
 msgid "Pay"
 msgstr "Thanh toán"
+
+#. module: account
+#: model:ir.actions.server,name:account.action_move_force_register_payment
+msgid "Pay…"
+msgstr "Thanh toán…"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15655,8 +15659,8 @@ msgstr "Ngân hàng đối tác"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_resequence
-msgid "Resequence"
-msgstr "Đánh số thứ tự lại"
+msgid "Resequence…"
+msgstr "Đánh số thứ tự lại…"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -15666,6 +15670,7 @@ msgstr "Đặt lại tỷ giá hối đoái về giá trị mặc định theo n
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
+#: model:ir.actions.server,name:account.model_account_statement_line_button_draft
 msgid "Reset to Draft"
 msgstr "Đặt lại thành nháp"
 
@@ -15805,10 +15810,14 @@ msgid "Reversal of: %s"
 msgstr "Đảo ngược của: %s"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_view_account_move_reversal
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse"
 msgstr "Đảo"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_view_account_move_reversal
+msgid "Reverse…"
+msgstr "Đảo…"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16462,13 +16471,13 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
-msgid "Send receipt by email"
-msgstr "Gửi biên lai qua email"
+msgid "Send Receipt by Email…"
+msgstr "Gửi biên lai qua email…"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
-msgid "Send receipts by email"
-msgstr "Gửi biên lai qua email"
+msgid "Send Receipts by Email…"
+msgstr "Gửi biên lai qua email…"
 
 #. module: account
 #. odoo-javascript
@@ -16750,8 +16759,8 @@ msgstr "Thiết lập tài khoản thẻ tín dụng"
 
 #. module: account
 #: model:ir.actions.server,name:account.model_account_move_action_share
-msgid "Share"
-msgstr "Chia sẻ"
+msgid "Share…"
+msgstr "Chia sẻ…"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__code
@@ -17280,7 +17289,7 @@ msgstr "Tài khoản tạm thời"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_move_type
-msgid "Switch into invoice/credit note"
+msgid "Switch into Invoice/Credit Note"
 msgstr "Chuyển đổi thành hoá đơn/giấy báo có"
 
 #. module: account
@@ -20048,7 +20057,7 @@ msgstr "Huỷ hợp nhất"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_unmerge_accounts
-msgid "Unmerge account"
+msgid "Unmerge Account"
 msgstr "Huỷ hợp nhất tài khoản"
 
 #. module: account
@@ -23628,11 +23637,6 @@ msgstr "(Các) đơn mua hàng liên quan"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form_inherit
 msgid "Related Sale(s)"
 msgstr "(Các) đơn bán hàng liên quan"
-
-#. module: account_accountant
-#: model:ir.actions.server,name:account.model_account_statement_line_button_draft
-msgid "Reset to draft"
-msgstr "Đặt lại thành nháp"
 
 #. module: account_accountant
 #. odoo-javascript

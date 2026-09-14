@@ -10,14 +10,14 @@ import { makeContext } from "@web/core/context";
 import { _t } from "@web/core/translation";
 import { KeepLast, SupersededError } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
+import { COG_GROUP } from "@web/search/cog_menu/cog_menu_group";
+import { CogMenuItem } from "@web/search/cog_menu/cog_menu_item";
 import { session } from "@web/session";
-
-export const STATIC_ACTIONS_GROUP_NUMBER = 1;
-export const ACTIONS_GROUP_NUMBER = 100;
 
 export class ActionMenus extends Component {
     static template = "web.ActionMenus";
     static components = {
+        CogMenuItem,
         Dropdown,
         DropdownItem,
     };
@@ -64,24 +64,30 @@ export class ActionMenus extends Component {
      * @returns {Promise<Array<{key: string, groupNumber: number, description?: string, action?: Record<string, any>, callback?: Function}>>}
      */
     async getActionItems(props) {
-        return (props.items.action || []).map((/** @type {any} */ action) => {
-            if (action.callback) {
-                return Object.assign(
-                    {
-                        key: `action-${action.description}`,
-                        groupNumber: ACTIONS_GROUP_NUMBER,
-                    },
-                    action,
-                );
-            } else {
-                return {
-                    action,
-                    description: action.name,
-                    key: action.id,
-                    groupNumber: action.groupNumber || ACTIONS_GROUP_NUMBER,
-                };
-            }
-        });
+        return (props.items.action || [])
+            .map((/** @type {any} */ action) => {
+                if (action.callback) {
+                    return Object.assign(
+                        {
+                            key: `action-${action.description}`,
+                            groupNumber: COG_GROUP.ACTIONS,
+                        },
+                        action,
+                    );
+                } else {
+                    return {
+                        action,
+                        description: action.name,
+                        icon: action.binding_icon || undefined,
+                        key: action.id,
+                        groupNumber: action.groupNumber || COG_GROUP.ACTIONS,
+                    };
+                }
+            })
+            .toSorted(
+                (/** @type {any} */ item1, /** @type {any} */ item2) =>
+                    item1.groupNumber - item2.groupNumber,
+            );
     }
 
     /**

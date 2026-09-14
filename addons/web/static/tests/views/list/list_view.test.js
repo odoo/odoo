@@ -670,7 +670,7 @@ test(`list with delete="0"`, async () => {
     await clickRecordSelector();
     await toggleActionMenu();
     expect(`.o-dropdown-item`).toHaveCount(2);
-    expect(queryAllTexts(`.o-dropdown-item`)).toEqual(["Export", "Duplicate"]);
+    expect(queryAllTexts(`.o-dropdown-item`)).toEqual(["Export…", "Duplicate"]);
 });
 
 test.tags("desktop");
@@ -886,7 +886,7 @@ test(`list with export button`, async () => {
 
     await toggleActionMenu();
     expect(queryAllTexts(`.o-dropdown--menu .o_menu_item`)).toEqual(
-        ["Export", "Duplicate", "Delete"],
+        ["Export…", "Duplicate", "Delete"],
         { message: "action menu should have Export button" },
     );
 });
@@ -1239,7 +1239,7 @@ test(`list view: action button in controlPanel basic rendering on mobile`, async
     await contains(".o_control_panel_breadcrumbs .o_cp_action_menus .fa-cog").click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual([
         "plaf",
-        "Export",
+        "Export…",
         "Duplicate",
         "Delete",
     ]);
@@ -1322,7 +1322,7 @@ test(`list view: action button in controlPanel with display='always' on mobile`,
     await clickRecordSelector();
     await contains(".o_control_panel_breadcrumbs .o_cp_action_menus .fa-cog").click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual(
-        ["default-selection", "Export", "Duplicate", "Delete"],
+        ["default-selection", "Export…", "Duplicate", "Delete"],
         { message: "an always-displayed button leaves no empty item in the cog menu" },
     );
 
@@ -4352,7 +4352,7 @@ test("selection box is properly displayed (multi pages) on mobile", async () => 
 
     await toggleActionMenu();
 
-    expect(getMenuItemTexts()).toEqual(["Export", "Duplicate", "Delete"]);
+    expect(getMenuItemTexts()).toEqual(["Export…", "Duplicate", "Delete"]);
     await contains(".o_data_row:nth-child(2)").drag();
     await contains(".o_data_row:nth-child(3)").drag();
     await animationFrame();
@@ -6372,9 +6372,9 @@ test(`add custom static action menu`, async () => {
 
     await toggleActionMenu();
     expect(queryAllTexts(`.o-dropdown--menu .dropdown-item`)).toEqual([
-        "Custom Default Available",
-        "Export",
+        "Export…",
         "Duplicate",
+        "Custom Default Available",
         "Custom Available",
         "Delete",
     ]);
@@ -9514,10 +9514,10 @@ test(`display toolbar`, async () => {
     await clickRecordSelector();
     await toggleActionMenu();
     expect(queryAllTexts(`.o-dropdown--menu .dropdown-item`)).toEqual([
-        "Export",
+        "Export…",
         "Duplicate",
-        "Delete",
         "Action event",
+        "Delete",
     ]);
 });
 
@@ -19131,7 +19131,7 @@ test("selection is properly displayed (single page) on mobile", async () => {
     expect("div.o_control_panel .o_cp_action_menus").toHaveCount(1);
 
     await toggleActionMenu();
-    expect(getMenuItemTexts()).toEqual(["Export", "Duplicate", "Delete"]);
+    expect(getMenuItemTexts()).toEqual(["Export…", "Duplicate", "Delete"]);
 
     await unselectAllRecords();
     expect(".o_selection_box").toHaveCount(0);

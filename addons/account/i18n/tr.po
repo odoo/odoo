@@ -12524,8 +12524,8 @@ msgstr "İş Ortağı Birleştirme Sihirbazı"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_merge_wizard_action
-msgid "Merge accounts"
-msgstr "Hesapları birleştir"
+msgid "Merge Accounts…"
+msgstr "Hesapları birleştir…"
 
 #. module: account
 #: model:ir.model,name:account.model_mail_message
@@ -13970,7 +13970,7 @@ msgstr "PDF dosyası"
 
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices_without_payment
-msgid "PDF without Payment"
+msgid "PDF Without Payment"
 msgstr "Ödemesiz PDF Çıktısı"
 
 #. module: account
@@ -14187,7 +14187,6 @@ msgstr "Aynı bankaya sahip partnerler"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
-#: model:ir.actions.server,name:account.action_move_force_register_payment
 #: model:ir.model,name:account.model_account_payment_register
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -14201,6 +14200,11 @@ msgstr "Aynı bankaya sahip partnerler"
 #: model_terms:ir.ui.view,arch_db:account_reports.return_generic_payment_wizard_form
 msgid "Pay"
 msgstr "Ödeme"
+
+#. module: account
+#: model:ir.actions.server,name:account.action_move_force_register_payment
+msgid "Pay…"
+msgstr "Ödeme…"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15639,8 +15643,8 @@ msgstr "İş Ortağı Banka Tablosu"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_resequence
-msgid "Resequence"
-msgstr "Yeniden sıralama"
+msgid "Resequence…"
+msgstr "Yeniden sıralama…"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -15650,6 +15654,7 @@ msgstr "Fatura tarihine göre para birimi kurunu varsayılana sıfırlayın"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
+#: model:ir.actions.server,name:account.model_account_statement_line_button_draft
 msgid "Reset to Draft"
 msgstr "Taslağa Ayarla"
 
@@ -15789,10 +15794,14 @@ msgid "Reversal of: %s"
 msgstr "Ters Kaydı: %s"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_view_account_move_reversal
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse"
 msgstr "Tersine çevir"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_view_account_move_reversal
+msgid "Reverse…"
+msgstr "Tersine çevir…"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16446,13 +16455,13 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
-msgid "Send receipt by email"
-msgstr "Makbuzu E-posta ile Gönder"
+msgid "Send Receipt by Email…"
+msgstr "Makbuzu E-posta ile Gönder…"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
-msgid "Send receipts by email"
-msgstr "Makbuzları e-posta ile gönderin"
+msgid "Send Receipts by Email…"
+msgstr "Makbuzları e-posta ile gönderin…"
 
 #. module: account
 #. odoo-javascript
@@ -16737,8 +16746,8 @@ msgstr "Kredi Alacak Hesabı Kurun"
 
 #. module: account
 #: model:ir.actions.server,name:account.model_account_move_action_share
-msgid "Share"
-msgstr "Paylaş"
+msgid "Share…"
+msgstr "Paylaş…"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__code
@@ -17268,7 +17277,7 @@ msgstr "Geçici Hesap"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_move_type
-msgid "Switch into invoice/credit note"
+msgid "Switch into Invoice/Credit Note"
 msgstr "İade/Fiyat Farkı Faturasına Geç"
 
 #. module: account
@@ -20029,7 +20038,7 @@ msgstr "Birleştirilmemiş"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_unmerge_accounts
-msgid "Unmerge account"
+msgid "Unmerge Account"
 msgstr "Birleştirilmemiş hesap"
 
 #. module: account
@@ -23665,11 +23674,6 @@ msgstr "İlgili Satın Alma(lar)"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form_inherit
 msgid "Related Sale(s)"
 msgstr "İlgili Satış(lar)"
-
-#. module: account_accountant
-#: model:ir.actions.server,name:account.model_account_statement_line_button_draft
-msgid "Reset to draft"
-msgstr "Taslağa Ayarla"
 
 #. module: account_accountant
 #. odoo-javascript

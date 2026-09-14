@@ -213,11 +213,12 @@
     </record>
 
     <record id="action_email_compose_message_wizard" model="ir.actions.act_window">
-        <field name="name">Compose Email</field>
+        <field name="name">Compose Email…</field>
         <field name="res_model">mail.compose.message</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
         <field name="binding_model_id" ref="mail.model_mail_compose_message" />
+        <field name="binding_icon">fa-solid fa-envelope</field>
     </record>
 
 </odoo>

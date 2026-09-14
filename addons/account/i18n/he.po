@@ -12168,8 +12168,8 @@ msgstr "אשף מיזוג לקוחות"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_merge_wizard_action
-msgid "Merge accounts"
-msgstr "מזג חשבונות"
+msgid "Merge Accounts…"
+msgstr "מזג חשבונות…"
 
 #. module: account
 #: model:ir.model,name:account.model_mail_message
@@ -13590,7 +13590,7 @@ msgstr "קובץ PDF"
 
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices_without_payment
-msgid "PDF without Payment"
+msgid "PDF Without Payment"
 msgstr "PDF ללא תשלום"
 
 #. module: account
@@ -13807,7 +13807,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
-#: model:ir.actions.server,name:account.action_move_force_register_payment
 #: model:ir.model,name:account.model_account_payment_register
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -13821,6 +13820,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_reports.return_generic_payment_wizard_form
 msgid "Pay"
 msgstr "שלם"
+
+#. module: account
+#: model:ir.actions.server,name:account.action_move_force_register_payment
+msgid "Pay…"
+msgstr "שלם…"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15236,8 +15240,8 @@ msgstr "מילוי שותף בנק"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_resequence
-msgid "Resequence"
-msgstr "סדר מחדש"
+msgid "Resequence…"
+msgstr "סדר מחדש…"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -15247,6 +15251,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
+#: model:ir.actions.server,name:account.model_account_statement_line_button_draft
 msgid "Reset to Draft"
 msgstr "החזר לטיוטה"
 
@@ -15386,10 +15391,14 @@ msgid "Reversal of: %s"
 msgstr "היפוך של: %s"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_view_account_move_reversal
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse"
 msgstr "צור זיכוי"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_view_account_move_reversal
+msgid "Reverse…"
+msgstr "צור זיכוי…"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16028,13 +16037,13 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
-msgid "Send receipt by email"
-msgstr "שלח קבלה בדוא\"ל"
+msgid "Send Receipt by Email…"
+msgstr "שלח קבלה בדוא\"ל…"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
-msgid "Send receipts by email"
-msgstr "שלח קבלות במייל"
+msgid "Send Receipts by Email…"
+msgstr "שלח קבלות במייל…"
 
 #. module: account
 #. odoo-javascript
@@ -16301,8 +16310,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.server,name:account.model_account_move_action_share
-msgid "Share"
-msgstr "שתף"
+msgid "Share…"
+msgstr "שתף…"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__code
@@ -16825,7 +16834,7 @@ msgstr "צפייה בחשבון"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_move_type
-msgid "Switch into invoice/credit note"
+msgid "Switch into Invoice/Credit Note"
 msgstr "החלף לחשבונית / זיכוי"
 
 #. module: account
@@ -19453,7 +19462,7 @@ msgstr "בטל מיזוג"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_unmerge_accounts
-msgid "Unmerge account"
+msgid "Unmerge Account"
 msgstr "בטל מיזוג חשבון"
 
 #. module: account
@@ -22456,11 +22465,6 @@ msgstr "הזמנות רכש קשורות"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form_inherit
 msgid "Related Sale(s)"
 msgstr "מכירה מקושרת"
-
-#. module: account_accountant
-#: model:ir.actions.server,name:account.model_account_statement_line_button_draft
-msgid "Reset to draft"
-msgstr "אפס לטיוטה"
 
 #. module: account_accountant
 #. odoo-javascript

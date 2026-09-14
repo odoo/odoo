@@ -34,10 +34,7 @@
  <div role="separator" class="dropdown-divider"/>
  </t>
  <t t-if="item.Component" t-component="item.Component" t-props="item.props" />
- <DropdownItem t-else="" class="item.class ? item.class + ' o_menu_item' : 'o_menu_item'" onSelected="() => this.onItemSelected(item)">
- <i t-if="item.icon" t-att-class="item.icon + ' me-1 oi-fw'"/>
- <t t-esc="item.description"/>
- </DropdownItem>
+ <CogMenuItem t-else="" description="item.description" icon="item.icon" class="item.class" danger="item.danger" onSelected="() => this.onItemSelected(item)"/>
  <t t-set="currentGroup" t-value="item.groupNumber"/>
  </t>
  </t>

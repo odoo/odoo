@@ -5,7 +5,9 @@ import { openDescriptionHistoryDialog } from "@project/views/project_task_form/d
 import { _t } from "@web/core/translation";
 import { user } from "@web/core/user";
 import { useBus, useService } from "@web/core/utils/hooks";
+import { COG_GROUP } from "@web/search/cog_menu/cog_menu_group";
 import { FormControllerWithHTMLExpander } from "@web/views/form_with_html_expander/form_controller_with_html_expander";
+import { prepareStaticActionMenuItems } from "@web/views/view_utils";
 import { TodoFormCogMenu } from "./todo_form_cog_menu.js";
 
 export class TodoFormController extends FormControllerWithHTMLExpander {
@@ -29,12 +31,9 @@ export class TodoFormController extends FormControllerWithHTMLExpander {
     getStaticActionMenuItems() {
         return {
             ...super.getStaticActionMenuItems(),
-            openHistoryDialog: {
-                sequence: 50,
-                icon: "fa-solid fa-history",
-                description: _t("Version History"),
-                callback: () => this.openHistoryDialog(),
-            },
+            ...prepareStaticActionMenuItems({
+                versionHistory: { callback: () => this.openHistoryDialog() },
+            }),
         };
     }
 
@@ -44,7 +43,7 @@ export class TodoFormController extends FormControllerWithHTMLExpander {
             "unarchive",
             "duplicate",
             "delete",
-            "openHistoryDialog",
+            "versionHistory",
         ];
         const menuItems = super.actionMenuItems;
         const filteredActions =
@@ -53,7 +52,10 @@ export class TodoFormController extends FormControllerWithHTMLExpander {
 
         if (this.projectAccess && !this.model.root.data.project_id) {
             filteredActions.push({
-                description: _t("Convert to Task"),
+                key: "convertToTask",
+                groupNumber: COG_GROUP.APP,
+                icon: "fa-solid fa-list-check",
+                description: _t("Convert to Task…"),
                 callback: () => {
                     this.actionService.doAction(
                         "project_todo.project_task_action_convert_todo_to_task",
@@ -66,7 +68,9 @@ export class TodoFormController extends FormControllerWithHTMLExpander {
                 },
             });
         }
-        menuItems.action = filteredActions;
+        menuItems.action = filteredActions.toSorted(
+            (item1, item2) => item1.groupNumber - item2.groupNumber,
+        );
         menuItems.print = [];
         return menuItems;
     }

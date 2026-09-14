@@ -1,32 +1,14 @@
 /** @odoo-module native */
 import { FormCogMenu } from "@web/views/form";
-import { onWillStart } from "@odoo/owl";
-import { getActionRecords, getPresenceActionItems } from "../../views/hooks.js";
+import { groupPresenceActionItems } from "../../views/presence_action_items.js";
 
-/** @extends CogMenu */
 export class HrPresenceCogMenu extends FormCogMenu {
-    static template = "hr_presence.cogmenu";
-
-    setup() {
-        super.setup();
-
-        this.presenceActionItems = [];
-
-        onWillStart(async () => {
-            await super.onWillStart;
-            this.records = await getActionRecords(this.orm);
-        });
-    }
-
     /** @override */
-    get cogItems() {
-        var result = super.cogItems;
-        result = getPresenceActionItems(result, this.records);
-        this.presenceActionItems = result[1];
-        return result[0];
-    }
-
-    get PresenceActionItems() {
-        return this.presenceActionItems;
+    async getActionItems(props) {
+        return groupPresenceActionItems(
+            this.orm,
+            await super.getActionItems(props),
+            (item) => this.onItemSelected(item),
+        );
     }
 }

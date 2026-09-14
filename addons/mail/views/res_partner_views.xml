@@ -123,7 +123,7 @@
     </record>
 
     <record id="action_partner_mass_mail" model="ir.actions.act_window">
-        <field name="name">Send email</field>
+        <field name="name">Send Email…</field>
         <field name="res_model">mail.compose.message</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
@@ -135,6 +135,7 @@
             }</field>
         <field name="binding_model_id" ref="base.model_res_partner" />
         <field name="binding_view_types">list,kanban</field>
+        <field name="binding_icon">fa-solid fa-envelope</field>
     </record>
 
 </odoo>

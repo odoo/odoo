@@ -60,7 +60,7 @@ test("Check that project_task_action_convert_todo_to_task appears in the menu ac
     });
 
     await contains(`.o_cp_action_menus .dropdown-toggle`).click();
-    expect(queryAllTexts(".o-dropdown--menu span")).toInclude("Convert to Task", {
+    expect(queryAllTexts(".o-dropdown--menu span")).toInclude("Convert to Task…", {
         message:
             "project_task_action_convert_todo_to_task action should appear in the menu actions",
     });
@@ -77,7 +77,7 @@ test("Check that project_task_action_convert_todo_to_task does not appear in the
     });
 
     await contains(`.o_cp_action_menus .dropdown-toggle`).click();
-    expect(queryAllTexts(".o-dropdown--menu span")).not.toInclude("Convert to Task", {
+    expect(queryAllTexts(".o-dropdown--menu span")).not.toInclude("Convert to Task…", {
         message:
             "project_task_action_convert_todo_to_task action should appear in the menu actions",
     });

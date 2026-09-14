@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="hr_presence.SubMenu">
+        <Dropdown>
+            <button class="o_cog_submenu_toggler">
+                <i class="o_cog_menu_item_icon fa-regular fa-clock me-1" aria-hidden="true"/>Presence Control
+            </button>
+            <t t-set-slot="content">
+                <t t-set="currentGroup" t-value="null"/>
+                <t t-foreach="props.items" t-as="item" t-key="item.key">
+                    <div t-if="currentGroup !== null and currentGroup !== item.groupNumber" role="separator" class="dropdown-divider"/>
+                    <CogMenuItem description="item.description" icon="item.icon" onSelected="() => props.onItemSelected(item)"/>
+                    <t t-set="currentGroup" t-value="item.groupNumber"/>
+                </t>
+            </t>
+        </Dropdown>
+    </t>
+
+</templates>

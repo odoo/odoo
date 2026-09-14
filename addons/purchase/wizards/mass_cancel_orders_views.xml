@@ -32,13 +32,14 @@
     </record>
 
     <record id="action_mass_cancel_orders" model="ir.actions.act_window">
-        <field name="name">Cancel</field>
+        <field name="name">Cancel…</field>
         <field name="res_model">purchase.mass.cancel.orders</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="mass_cancel_orders_view_form" />
         <field name="target">new</field>
         <field name="binding_model_id" ref="model_purchase_order" />
         <field name="binding_view_types">list,kanban</field>
+        <field name="binding_icon">fa-solid fa-ban</field>
     </record>
 
 </odoo>

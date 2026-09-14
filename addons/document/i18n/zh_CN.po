@@ -1570,13 +1570,14 @@ msgstr "添加人员或电子邮件地址"
 #. module: document
 #. odoo-javascript
 #: code:addons/document/static/src/views/cog_menu/document_cog_menu_item_shortcut.js:0
-msgid "Add shortcut"
-msgstr "添加快捷方式"
+#: code:addons/document/static/src/views/document_controller_mixin.js:0
+msgid "Add Shortcut…"
+msgstr "添加快捷方式…"
 
 #. module: document
 #. odoo-javascript
 #: code:addons/document/static/src/views/cog_menu/document_cog_menu_item_star.js:0
-msgid "Add star"
+msgid "Add Star"
 msgstr "加入星号"
 
 #. module: document
@@ -1792,8 +1793,8 @@ msgstr "附件类型"
 #. module: document
 #. odoo-javascript
 #: code:addons/document/static/src/views/cog_menu/document_cog_menu_item_automations.js:0
-msgid "Automations"
-msgstr "自动化"
+msgid "Automations…"
+msgstr "自动化…"
 
 #. module: document
 #: model:ir.model.fields,field_description:document.field_document_document__available_embedded_actions_ids
@@ -2054,12 +2055,6 @@ msgstr "合同"
 #: model_terms:ir.ui.view,arch_db:document.documents_sharing_view_form
 msgid "Copy Links"
 msgstr "复制链接"
-
-#. module: document
-#. odoo-javascript
-#: code:addons/document/static/src/views/document_controller_mixin.js:0
-msgid "Create Shortcut"
-msgstr "创建快捷方式"
 
 #. module: document
 #: model:ir.model,website_form_label:document.model_res_partner
@@ -3081,12 +3076,12 @@ msgstr "已索引的内容"
 #. module: document
 #. odoo-javascript
 #: code:addons/document/static/src/views/cog_menu/document_cog_menu_item_details.js:0
+#: code:addons/document/static/src/views/document_controller_mixin.js:0
 msgid "Info & Tags"
 msgstr "信息和标签"
 
 #. module: document
 #. odoo-javascript
-#: code:addons/document/static/src/views/document_controller_mixin.js:0
 #: code:addons/document/static/src/views/search/document_control_panel.xml:0
 msgid "Info & tags"
 msgstr "信息和标签"
@@ -3441,8 +3436,8 @@ msgstr "邮件收件箱.pdf"
 #. module: document
 #. odoo-javascript
 #: code:addons/document/static/src/views/document_controller_mixin.js:0
-msgid "Manage Versions"
-msgstr "管理版本"
+msgid "Manage Versions…"
+msgstr "管理版本…"
 
 #. module: document
 #. odoo-javascript
@@ -3464,8 +3459,8 @@ msgstr ""
 #. module: document
 #. odoo-javascript
 #: code:addons/document/static/src/views/document_controller_mixin.js:0
-msgid "Merge PDFs"
-msgstr "合并PDF"
+msgid "Merge PDFs…"
+msgstr "合并PDF…"
 
 #. module: document
 #: model:ir.model.fields,field_description:document.field_document_request_wizard__activity_note
@@ -3541,10 +3536,15 @@ msgstr "更多"
 #. module: document
 #. odoo-javascript
 #: code:addons/document/static/src/owl/components/access_update_confirmation_dialog/access_update_confirmation_dialog.xml:0
-#: code:addons/document/static/src/views/document_controller_mixin.js:0
 #: model:ir.model.fields.selection,name:document.selection__documents_operation__operation__move
 msgid "Move"
 msgstr "分录"
+
+#. module: document
+#. odoo-javascript
+#: code:addons/document/static/src/views/document_controller_mixin.js:0
+msgid "Move…"
+msgstr "分录…"
 
 #. module: document
 #. odoo-javascript
@@ -3561,6 +3561,7 @@ msgstr "移动至%(folder_name)s"
 #. module: document
 #. odoo-javascript
 #: code:addons/document/static/src/views/document_controller_mixin.js:0
+#: code:addons/document/static/src/views/cog_menu/document_cog_menu_item_archive.js:0
 msgid "Move to Trash"
 msgstr "移至回收站"
 
@@ -3568,7 +3569,6 @@ msgstr "移至回收站"
 #. odoo-javascript
 #: code:addons/document/static/src/core/document_service.js:0
 #: code:addons/document/static/src/owl/components/pdf_manager/pdf_manager.xml:0
-#: code:addons/document/static/src/views/cog_menu/document_cog_menu_item_archive.js:0
 #: code:addons/document/static/src/views/document_renderer_mixin.js:0
 #: code:addons/document/static/src/views/form/folder_form_controller.js:0
 #: model_terms:ir.ui.view,arch_db:document.folder_deletion_form
@@ -4124,18 +4124,23 @@ msgstr "移除成员"
 #. module: document
 #. odoo-javascript
 #: code:addons/document/static/src/views/cog_menu/document_cog_menu_item_star.js:0
-msgid "Remove star"
+msgid "Remove Star"
 msgstr "删除星标"
 
 #. module: document
 #. odoo-javascript
 #: code:addons/document/static/src/core/document_service.js:0
-#: code:addons/document/static/src/views/cog_menu/document_cog_menu_item_rename.js:0
-#: code:addons/document/static/src/views/document_controller_mixin.js:0
 #: code:addons/document/static/src/views/list/action_widget/document_list_action_item_rename.js:0
 #: model_terms:ir.ui.view,arch_db:document.document_view_form_rename
 msgid "Rename"
 msgstr "重命名"
+
+#. module: document
+#. odoo-javascript
+#: code:addons/document/static/src/views/cog_menu/document_cog_menu_item_rename.js:0
+#: code:addons/document/static/src/views/document_controller_mixin.js:0
+msgid "Rename…"
+msgstr "重命名…"
 
 #. module: document
 #. odoo-javascript
@@ -4403,14 +4408,19 @@ msgstr "设置"
 
 #. module: document
 #. odoo-javascript
-#: code:addons/document/static/src/views/cog_menu/document_cog_menu_item_share.js:0
-#: code:addons/document/static/src/views/document_controller_mixin.js:0
 #: code:addons/document/static/src/views/list/action_widget/document_list_action_item_share.js:0
 #: code:addons/document/static/src/views/search/document_search_panel.xml:0
 #: code:addons/document/static/src/web/error_dialog/error_dialog_patch.xml:0
 #: model_terms:ir.ui.view,arch_db:document.documents_sharing_view_form
 msgid "Share"
 msgstr "分享"
+
+#. module: document
+#. odoo-javascript
+#: code:addons/document/static/src/views/cog_menu/document_cog_menu_item_share.js:0
+#: code:addons/document/static/src/views/document_controller_mixin.js:0
+msgid "Share…"
+msgstr "分享…"
 
 #. module: document
 #: model:ir.model.fields,field_description:document.field_document_sharing__share_access_ids
@@ -4537,9 +4547,14 @@ msgstr "拆分"
 #. module: document
 #. odoo-javascript
 #: code:addons/document/static/src/js/tours/document.js:0
-#: code:addons/document/static/src/views/document_controller_mixin.js:0
 msgid "Split PDF"
 msgstr "拆分PDF"
+
+#. module: document
+#. odoo-javascript
+#: code:addons/document/static/src/views/document_controller_mixin.js:0
+msgid "Split PDF…"
+msgstr "拆分PDF…"
 
 #. module: document
 #. odoo-javascript

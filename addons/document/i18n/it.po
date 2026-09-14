@@ -1598,13 +1598,14 @@ msgstr "Aggiungi persone o indirizzi e-mail"
 #. module: document
 #. odoo-javascript
 #: code:addons/document/static/src/views/cog_menu/document_cog_menu_item_shortcut.js:0
-msgid "Add shortcut"
-msgstr "Aggiungi scorciatoia"
+#: code:addons/document/static/src/views/document_controller_mixin.js:0
+msgid "Add Shortcut…"
+msgstr "Aggiungi scorciatoia…"
 
 #. module: document
 #. odoo-javascript
 #: code:addons/document/static/src/views/cog_menu/document_cog_menu_item_star.js:0
-msgid "Add star"
+msgid "Add Star"
 msgstr "Aggiungi stella"
 
 #. module: document
@@ -1834,8 +1835,8 @@ msgstr "Tipo allegato"
 #. module: document
 #. odoo-javascript
 #: code:addons/document/static/src/views/cog_menu/document_cog_menu_item_automations.js:0
-msgid "Automations"
-msgstr "Automazioni"
+msgid "Automations…"
+msgstr "Automazioni…"
 
 #. module: document
 #: model:ir.model.fields,field_description:document.field_document_document__available_embedded_actions_ids
@@ -2104,12 +2105,6 @@ msgstr "Contratti"
 #: model_terms:ir.ui.view,arch_db:document.documents_sharing_view_form
 msgid "Copy Links"
 msgstr "Copia link"
-
-#. module: document
-#. odoo-javascript
-#: code:addons/document/static/src/views/document_controller_mixin.js:0
-msgid "Create Shortcut"
-msgstr "Crea scorciatoia"
 
 #. module: document
 #: model:ir.model,website_form_label:document.model_res_partner
@@ -3141,12 +3136,12 @@ msgstr "Contenuto indicizzato"
 #. module: document
 #. odoo-javascript
 #: code:addons/document/static/src/views/cog_menu/document_cog_menu_item_details.js:0
+#: code:addons/document/static/src/views/document_controller_mixin.js:0
 msgid "Info & Tags"
 msgstr "Info e tag"
 
 #. module: document
 #. odoo-javascript
-#: code:addons/document/static/src/views/document_controller_mixin.js:0
 #: code:addons/document/static/src/views/search/document_control_panel.xml:0
 msgid "Info & tags"
 msgstr "Info e tag"
@@ -3504,8 +3499,8 @@ msgstr "e-mail_inarrivo.pdf"
 #. module: document
 #. odoo-javascript
 #: code:addons/document/static/src/views/document_controller_mixin.js:0
-msgid "Manage Versions"
-msgstr "Gestisci versioni"
+msgid "Manage Versions…"
+msgstr "Gestisci versioni…"
 
 #. module: document
 #. odoo-javascript
@@ -3527,8 +3522,8 @@ msgstr "Membro aggiunto."
 #. module: document
 #. odoo-javascript
 #: code:addons/document/static/src/views/document_controller_mixin.js:0
-msgid "Merge PDFs"
-msgstr "Unisci PDF"
+msgid "Merge PDFs…"
+msgstr "Unisci PDF…"
 
 #. module: document
 #: model:ir.model.fields,field_description:document.field_document_request_wizard__activity_note
@@ -3604,10 +3599,15 @@ msgstr "Altro"
 #. module: document
 #. odoo-javascript
 #: code:addons/document/static/src/owl/components/access_update_confirmation_dialog/access_update_confirmation_dialog.xml:0
-#: code:addons/document/static/src/views/document_controller_mixin.js:0
 #: model:ir.model.fields.selection,name:document.selection__documents_operation__operation__move
 msgid "Move"
 msgstr "Movimento"
+
+#. module: document
+#. odoo-javascript
+#: code:addons/document/static/src/views/document_controller_mixin.js:0
+msgid "Move…"
+msgstr "Movimento…"
 
 #. module: document
 #. odoo-javascript
@@ -3624,6 +3624,7 @@ msgstr "Sposta in %(folder_name)s"
 #. module: document
 #. odoo-javascript
 #: code:addons/document/static/src/views/document_controller_mixin.js:0
+#: code:addons/document/static/src/views/cog_menu/document_cog_menu_item_archive.js:0
 msgid "Move to Trash"
 msgstr "Sposta nel cestino"
 
@@ -3631,7 +3632,6 @@ msgstr "Sposta nel cestino"
 #. odoo-javascript
 #: code:addons/document/static/src/core/document_service.js:0
 #: code:addons/document/static/src/owl/components/pdf_manager/pdf_manager.xml:0
-#: code:addons/document/static/src/views/cog_menu/document_cog_menu_item_archive.js:0
 #: code:addons/document/static/src/views/document_renderer_mixin.js:0
 #: code:addons/document/static/src/views/form/folder_form_controller.js:0
 #: model_terms:ir.ui.view,arch_db:document.folder_deletion_form
@@ -4197,18 +4197,23 @@ msgstr "Rimuovi membro"
 #. module: document
 #. odoo-javascript
 #: code:addons/document/static/src/views/cog_menu/document_cog_menu_item_star.js:0
-msgid "Remove star"
+msgid "Remove Star"
 msgstr "Rimuovi stella"
 
 #. module: document
 #. odoo-javascript
 #: code:addons/document/static/src/core/document_service.js:0
-#: code:addons/document/static/src/views/cog_menu/document_cog_menu_item_rename.js:0
-#: code:addons/document/static/src/views/document_controller_mixin.js:0
 #: code:addons/document/static/src/views/list/action_widget/document_list_action_item_rename.js:0
 #: model_terms:ir.ui.view,arch_db:document.document_view_form_rename
 msgid "Rename"
 msgstr "Rinomina"
+
+#. module: document
+#. odoo-javascript
+#: code:addons/document/static/src/views/cog_menu/document_cog_menu_item_rename.js:0
+#: code:addons/document/static/src/views/document_controller_mixin.js:0
+msgid "Rename…"
+msgstr "Rinomina…"
 
 #. module: document
 #. odoo-javascript
@@ -4478,14 +4483,19 @@ msgstr "Impostazioni"
 
 #. module: document
 #. odoo-javascript
-#: code:addons/document/static/src/views/cog_menu/document_cog_menu_item_share.js:0
-#: code:addons/document/static/src/views/document_controller_mixin.js:0
 #: code:addons/document/static/src/views/list/action_widget/document_list_action_item_share.js:0
 #: code:addons/document/static/src/views/search/document_search_panel.xml:0
 #: code:addons/document/static/src/web/error_dialog/error_dialog_patch.xml:0
 #: model_terms:ir.ui.view,arch_db:document.documents_sharing_view_form
 msgid "Share"
 msgstr "Condividi"
+
+#. module: document
+#. odoo-javascript
+#: code:addons/document/static/src/views/cog_menu/document_cog_menu_item_share.js:0
+#: code:addons/document/static/src/views/document_controller_mixin.js:0
+msgid "Share…"
+msgstr "Condividi…"
 
 #. module: document
 #: model:ir.model.fields,field_description:document.field_document_sharing__share_access_ids
@@ -4613,9 +4623,14 @@ msgstr "Suddividi"
 #. module: document
 #. odoo-javascript
 #: code:addons/document/static/src/js/tours/document.js:0
-#: code:addons/document/static/src/views/document_controller_mixin.js:0
 msgid "Split PDF"
 msgstr "Suddividi PDF"
+
+#. module: document
+#. odoo-javascript
+#: code:addons/document/static/src/views/document_controller_mixin.js:0
+msgid "Split PDF…"
+msgstr "Suddividi PDF…"
 
 #. module: document
 #. odoo-javascript

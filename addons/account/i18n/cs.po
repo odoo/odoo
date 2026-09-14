@@ -12237,8 +12237,8 @@ msgstr "Průvodce sloučením partnerů"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_merge_wizard_action
-msgid "Merge accounts"
-msgstr "Sloučit účty"
+msgid "Merge Accounts…"
+msgstr "Sloučit účty…"
 
 #. module: account
 #: model:ir.model,name:account.model_mail_message
@@ -13675,7 +13675,7 @@ msgstr "PDF soubor"
 
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices_without_payment
-msgid "PDF without Payment"
+msgid "PDF Without Payment"
 msgstr "PDF bez platby"
 
 #. module: account
@@ -13893,7 +13893,6 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
-#: model:ir.actions.server,name:account.action_move_force_register_payment
 #: model:ir.model,name:account.model_account_payment_register
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -13907,6 +13906,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account_reports.return_generic_payment_wizard_form
 msgid "Pay"
 msgstr "Zaplatit"
+
+#. module: account
+#: model:ir.actions.server,name:account.action_move_force_register_payment
+msgid "Pay…"
+msgstr "Zaplatit…"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15331,8 +15335,8 @@ msgstr "Banka partnera"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_resequence
-msgid "Resequence"
-msgstr "Přečíslování"
+msgid "Resequence…"
+msgstr "Přečíslování…"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -15342,6 +15346,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
+#: model:ir.actions.server,name:account.model_account_statement_line_button_draft
 msgid "Reset to Draft"
 msgstr "Resetovat na návrh"
 
@@ -15481,10 +15486,14 @@ msgid "Reversal of: %s"
 msgstr "Oprava záznamu: %s"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_view_account_move_reversal
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse"
 msgstr "Vytvořit opravný doklad"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_view_account_move_reversal
+msgid "Reverse…"
+msgstr "Vytvořit opravný doklad…"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16130,13 +16139,13 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
-msgid "Send receipt by email"
-msgstr "Poslat potvrzení o platbě emailem"
+msgid "Send Receipt by Email…"
+msgstr "Poslat potvrzení o platbě emailem…"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
-msgid "Send receipts by email"
-msgstr "Poslat potvrzení o platbách emailem"
+msgid "Send Receipts by Email…"
+msgstr "Poslat potvrzení o platbách emailem…"
 
 #. module: account
 #. odoo-javascript
@@ -16415,8 +16424,8 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.server,name:account.model_account_move_action_share
-msgid "Share"
-msgstr "Sdílet"
+msgid "Share…"
+msgstr "Sdílet…"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__code
@@ -16942,7 +16951,7 @@ msgstr "Přechodný účet"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_move_type
-msgid "Switch into invoice/credit note"
+msgid "Switch into Invoice/Credit Note"
 msgstr "Změnit na fakturu/opravný daňový doklad"
 
 #. module: account
@@ -19648,7 +19657,7 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.server,name:account.action_unmerge_accounts
-msgid "Unmerge account"
+msgid "Unmerge Account"
 msgstr ""
 
 #. module: account
@@ -23289,11 +23298,6 @@ msgstr "Související nákup(y)"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form_inherit
 msgid "Related Sale(s)"
 msgstr "Související prodej(e)"
-
-#. module: account_accountant
-#: model:ir.actions.server,name:account.model_account_statement_line_button_draft
-msgid "Reset to draft"
-msgstr "Resetovat na návrh"
 
 #. module: account_accountant
 #. odoo-javascript

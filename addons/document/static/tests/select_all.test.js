@@ -98,7 +98,7 @@ test("Selected all records from current page are copied correctly", async functi
     await commonSelectAllSteps();
 
     await contains(actionSelector).click();
-    await contains(".o_menu_item.dropdown-item .fa-copy").click();
+    await contains(".o_menu_item.dropdown-item .fa-clone").click();
     await contains(
         `.modal-content > .modal-body .o_search_panel_label[data-tooltip="Folder 1"] div`,
     ).click();
@@ -189,6 +189,6 @@ test("Selected all records from current page are archived/restore correctly", as
     await contains(".o_select_domain").click();
     expect(`.o_selection_box`).toHaveText("All 3 selected");
     await contains(actionSelector).click();
-    await contains(".o_menu_item.dropdown-item .fa-history").click();
+    await contains(".o_menu_item.dropdown-item .fa-trash-arrow-up").click();
     expect.verifySteps(["Document restored"]);
 });

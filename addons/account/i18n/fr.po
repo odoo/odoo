@@ -12635,8 +12635,8 @@ msgstr "Assistant de fusion des partenaires"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_merge_wizard_action
-msgid "Merge accounts"
-msgstr "Fusionner les comptes"
+msgid "Merge Accounts…"
+msgstr "Fusionner les comptes…"
 
 #. module: account
 #: model:ir.model,name:account.model_mail_message
@@ -14098,7 +14098,7 @@ msgstr "Fichier PDF"
 
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices_without_payment
-msgid "PDF without Payment"
+msgid "PDF Without Payment"
 msgstr "PDF sans paiement"
 
 #. module: account
@@ -14317,7 +14317,6 @@ msgstr "Partenaires ayant la même banque"
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
-#: model:ir.actions.server,name:account.action_move_force_register_payment
 #: model:ir.model,name:account.model_account_payment_register
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -14331,6 +14330,11 @@ msgstr "Partenaires ayant la même banque"
 #: model_terms:ir.ui.view,arch_db:account_reports.return_generic_payment_wizard_form
 msgid "Pay"
 msgstr "Payer"
+
+#. module: account
+#: model:ir.actions.server,name:account.action_move_force_register_payment
+msgid "Pay…"
+msgstr "Payer…"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -15781,8 +15785,8 @@ msgstr "Res banque partenaire"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_resequence
-msgid "Resequence"
-msgstr "Reséquencer"
+msgid "Resequence…"
+msgstr "Reséquencer…"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -15794,6 +15798,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
+#: model:ir.actions.server,name:account.model_account_statement_line_button_draft
 msgid "Reset to Draft"
 msgstr "Remettre en brouillon"
 
@@ -15933,10 +15938,14 @@ msgid "Reversal of: %s"
 msgstr "Extourne de : %s"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_view_account_move_reversal
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse"
 msgstr "Extourner"
+
+#. module: account
+#: model:ir.actions.act_window,name:account.action_view_account_move_reversal
+msgid "Reverse…"
+msgstr "Extourner…"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -16596,13 +16605,13 @@ msgstr ""
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
-msgid "Send receipt by email"
-msgstr "Envoyez le reçu par e-mail"
+msgid "Send Receipt by Email…"
+msgstr "Envoyez le reçu par e-mail…"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action_multi
-msgid "Send receipts by email"
-msgstr "Envoyer des reçus par e-mail"
+msgid "Send Receipts by Email…"
+msgstr "Envoyer des reçus par e-mail…"
 
 #. module: account
 #. odoo-javascript
@@ -16893,8 +16902,8 @@ msgstr "Configurer un compte de carte de crédit"
 
 #. module: account
 #: model:ir.actions.server,name:account.model_account_move_action_share
-msgid "Share"
-msgstr "Partager"
+msgid "Share…"
+msgstr "Partager…"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__code
@@ -17426,7 +17435,7 @@ msgstr "Compte d'attente"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_move_type
-msgid "Switch into invoice/credit note"
+msgid "Switch into Invoice/Credit Note"
 msgstr "Transformer en facture/avoir"
 
 #. module: account
@@ -20252,7 +20261,7 @@ msgstr "Dissocier"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_unmerge_accounts
-msgid "Unmerge account"
+msgid "Unmerge Account"
 msgstr "Dissocier le compte"
 
 #. module: account
@@ -24011,11 +24020,6 @@ msgstr "Achat(s) associé(s)"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form_inherit
 msgid "Related Sale(s)"
 msgstr "Vente(s) associée(s)"
-
-#. module: account_accountant
-#: model:ir.actions.server,name:account.model_account_statement_line_button_draft
-msgid "Reset to draft"
-msgstr "Remettre en brouillon"
 
 #. module: account_accountant
 #. odoo-javascript

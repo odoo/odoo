@@ -2,8 +2,6 @@
 
 <templates>
     <t t-name="web.ResetModuleStateCogMenu">
-        <DropdownItem onSelected.bind="resetModuleState">
-            Reset Updating States
-        </DropdownItem>
+        <CogMenuItem icon="'fa-solid fa-rotate-left'" description.translate="Reset Updating States" onSelected.bind="resetModuleState"/>
     </t>
 </templates>

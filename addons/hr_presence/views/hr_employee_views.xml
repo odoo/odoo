@@ -47,7 +47,7 @@
     </record>
 
     <record id="action_hr_employee_presence_log" model="ir.actions.server">
-        <field name="name">Add a log note</field>
+        <field name="name">Add a Log Note</field>
         <field name="model_id" ref="hr.model_hr_employee" />
         <field name="binding_model_id" ref="hr.model_hr_employee" />
         <field name="binding_view_types">form,list,kanban</field>
@@ -57,10 +57,11 @@
     </record>
 
     <record id="action_hr_employee_presence_sms" model="ir.actions.server">
-        <field name="name">Send a SMS</field>
+        <field name="name">Send SMS…</field>
         <field name="model_id" ref="hr.model_hr_employee" />
         <field name="binding_model_id" ref="hr.model_hr_employee" />
         <field name="binding_view_types">form,list,kanban</field>
+        <field name="binding_icon">fa-solid fa-comment-sms</field>
         <field name="state">code</field>
         <field name="value">presence_group_2</field>
         <field name="code">action = records.action_send_sms()</field>

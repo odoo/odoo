@@ -103,14 +103,37 @@ class IrActionsActions(models.Model):
         required=True,
     )
     binding_view_types = fields.Char(default="list,form")
+    binding_sequence = fields.Integer(
+        default=10,
+        help="Order of this action among the contextual actions of its model.",
+    )
+    binding_icon = fields.Char(
+        help="Icon classes shown next to this action in the contextual menu, "
+        "e.g. 'fa-solid fa-envelope'.",
+    )
 
     _RESERVED_PATH_PREFIXES = ("m-", "action-")
     _RESERVED_PATHS = ("new",)
 
     _BINDING_SQL_SELECTED = ("type", "binding_type")
     _BINDING_SQL_JOINED = "binding_model_id"
-    _BINDING_READ_FIELDS = ("name", "binding_view_types")
-    _BINDING_OPTIONAL_FIELDS = ("group_ids", "res_model", "sequence", "domain")
+    _BINDING_READ_FIELDS = (
+        "name",
+        "binding_view_types",
+        "binding_sequence",
+        "binding_icon",
+    )
+    _BINDING_OPTIONAL_FIELDS = ("group_ids", "res_model", "domain")
+    _BINDING_VIEW_TYPE_ORDER = (
+        "list",
+        "kanban",
+        "form",
+        "calendar",
+        "pivot",
+        "graph",
+        "hierarchy",
+        "activity",
+    )
 
     @api.constrains("type")
     def _check_type(self) -> None:
@@ -159,8 +182,25 @@ class IrActionsActions(models.Model):
     def _check_binding_view_types(self) -> None:
         self._check_view_type_vocabulary("binding_view_types")
 
+    @api.model
+    def _normalize_binding_view_types(self, view_types: str | bool) -> str | bool:
+        if not view_types:
+            return view_types
+        order = {
+            mode: index for index, mode in enumerate(self._BINDING_VIEW_TYPE_ORDER)
+        }
+        modes = dict.fromkeys(
+            mode.strip() for mode in view_types.split(",") if mode.strip()
+        )
+        return ",".join(sorted(modes, key=lambda mode: order.get(mode, len(order))))
+
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
+        for vals in vals_list:
+            if "binding_view_types" in vals:
+                vals["binding_view_types"] = self._normalize_binding_view_types(
+                    vals["binding_view_types"]
+                )
         res = super().create(vals_list)
         if any(action.path for action in res):
             res._sync_path_reservations()
@@ -173,6 +213,13 @@ class IrActionsActions(models.Model):
         return res
 
     def write(self, vals: dict[str, Any]) -> bool:
+        if "binding_view_types" in vals:
+            vals = {
+                **vals,
+                "binding_view_types": self._normalize_binding_view_types(
+                    vals["binding_view_types"]
+                ),
+            }
         groups = self._get_cache_groups_invalidated_by(vals) if self else ()
         _debug.lifecycle(
             "write",
@@ -584,7 +631,7 @@ class IrActionsActions(models.Model):
         return frozendict(
             {
                 key: tuple(
-                    sorted(val, key=lambda vals: (vals.get("sequence", 0), vals["id"]))
+                    sorted(val, key=lambda vals: (vals["binding_sequence"], vals["id"]))
                 )
                 for key, val in result.items()
             }

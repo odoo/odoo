@@ -1,10 +1,10 @@
 /** @odoo-module native */
 import { Component } from "@odoo/owl";
-import { DropdownItem } from "@web/components/dropdown";
 import { registry } from "@web/core/registry";
 import { exprToBoolean } from "@web/core/utils/format/strings";
 import { useService } from "@web/core/utils/hooks";
-import { STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
+import { COG_GROUP, isActWindowView } from "@web/search/cog_menu/cog_menu_group";
+import { CogMenuItem } from "@web/search/cog_menu/cog_menu_item";
 
 const cogMenuRegistry = registry.category("cogMenu");
 
@@ -16,7 +16,7 @@ const cogMenuRegistry = registry.category("cogMenu");
  */
 export class ImportRecords extends Component {
     static template = "base_import.ImportRecords";
-    static components = { DropdownItem };
+    static components = { CogMenuItem };
     static props = {};
 
     setup() {
@@ -39,13 +39,12 @@ export class ImportRecords extends Component {
 
 export const importRecordsItem = {
     Component: ImportRecords,
-    groupNumber: STATIC_ACTIONS_GROUP_NUMBER,
-    isDisplayed: ({ config, isSmall }) =>
-        !isSmall &&
-        config.actionType === "ir.actions.act_window" &&
-        ["kanban", "list"].includes(config.viewType) &&
-        exprToBoolean(config.viewArch.getAttribute("import"), true) &&
-        exprToBoolean(config.viewArch.getAttribute("create"), true),
+    groupNumber: COG_GROUP.DATA,
+    isDisplayed: (env) =>
+        !env.isSmall &&
+        isActWindowView(env, ["kanban", "list"]) &&
+        exprToBoolean(env.config.viewArch.getAttribute("import"), true) &&
+        exprToBoolean(env.config.viewArch.getAttribute("create"), true),
 };
 
-cogMenuRegistry.add("import-menu", importRecordsItem, { sequence: 1 });
+cogMenuRegistry.add("import-menu", importRecordsItem, { sequence: 10 });

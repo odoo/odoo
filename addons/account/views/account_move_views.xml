@@ -2235,7 +2235,7 @@
     </record>
 
     <record id="action_move_switch_move_type" model="ir.actions.server">
-        <field name="name">Switch into invoice/credit note</field>
+        <field name="name">Switch into Invoice/Credit Note</field>
         <field name="model_id" ref="account.model_account_move" />
         <field name="binding_model_id" ref="account.model_account_move" />
         <field name="binding_view_types">form</field>
@@ -2249,10 +2249,11 @@
     </record>
 
     <record id="action_move_force_register_payment" model="ir.actions.server">
-        <field name="name">Pay</field>
+        <field name="name">Pay…</field>
         <field name="model_id" ref="account.model_account_move" />
         <field name="binding_model_id" ref="account.model_account_move" />
         <field name="binding_view_types">form</field>
+        <field name="binding_icon">fa-solid fa-money-bill</field>
         <field
             name="group_ids"
             eval="[Command.link(ref('account.group_account_invoice'))]" />

@@ -4,6 +4,7 @@ import { useLifecycleLog } from "@web/core/debug/logger_hooks";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/translation";
 import { useService } from "@web/core/utils/hooks";
+import { COG_GROUP } from "@web/search/cog_menu/cog_menu_group";
 import { ConfirmationDialog } from "@web/ui/dialog";
 import { listView } from "@web/views/list";
 import {
@@ -54,7 +55,8 @@ export class PageListController extends listView.Controller {
         const menuItems = super.getStaticActionMenuItems();
         if (Object.prototype.hasOwnProperty.call(this.props.fields, "is_published")) {
             menuItems.publish = {
-                sequence: 15,
+                groupNumber: COG_GROUP.RECORD,
+                sequence: 35,
                 icon: "fa-solid fa-earth-americas",
                 description: _t("Publish"),
                 callback: async () => {
@@ -72,7 +74,8 @@ export class PageListController extends listView.Controller {
                 },
             };
             menuItems.unpublish = {
-                sequence: 16,
+                groupNumber: COG_GROUP.RECORD,
+                sequence: 36,
                 icon: "fa-solid fa-link-slash",
                 description: _t("Unpublish"),
                 callback: async () => this.togglePublished(false),
