@@ -219,7 +219,7 @@ set. A change is only verified once both have run.
 | `web_properties` | test_res_partner_properties | Properties base definition |
 | `web_qweb` | test_ir_qweb | QWeb image field rendering |
 | `web_redirect` | test_web_redirect | URL redirect handling |
-| `web_report` | test_reports | PDF report session/cookies |
+| `web_report` | test_reports, test_ir_actions_report_audit, test_report_rendering, test_report_introspection, test_report_layout_audit, test_report_modernization | PDF report session/cookies; the WeasyPrint engine, fetcher, layouts, attachments and the two technical reports (from `base` at web 2.3) |
 | `web_router` | test_router | Action routing/resolution |
 | `web_search` | test_web_search_read | web_search_read, web_name_search |
 | `web_metrics` | test_health | `/web/metrics` Prometheus exposition + bearer-token gating |

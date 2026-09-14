@@ -1,6 +1,6 @@
 {
     "name": "Web",
-    "version": "2.2",
+    "version": "2.3",
     "category": "Hidden",
     "description": """
 Odoo Web core module.
@@ -18,6 +18,10 @@ This module provides the core of the Odoo Web Client.
         "security/web_security.xml",
         "views/webclient_templates.xml",
         "views/report_templates.xml",
+        "reports/ir_model_report.xml",
+        "reports/ir_model_templates.xml",
+        "reports/ir_module_reports.xml",
+        "reports/ir_module_report_templates.xml",
         "views/base_document_layout_views.xml",
         "views/partner_view.xml",
         "views/speedscope_template.xml",

@@ -536,18 +536,18 @@ class TestReportConverters(HttpCase):
     def test_unknown_converter_is_a_client_error(self):
         self.authenticate("admin", "admin")
         with mute_logger("odoo.http"):
-            resp = self.url_open("/report/docx/base.report_irmodulereference/1")
+            resp = self.url_open("/report/docx/web.report_irmodulereference/1")
         self.assertEqual(resp.status_code, HTTPStatus.BAD_REQUEST)
 
     def test_describing_a_mixin_on_the_read_only_route_writes_nothing(self):
         self.authenticate("admin", "admin")
         module = self.env.ref("base.module_base")
         with self.assertNoLogs(
-            "odoo.addons.base.reports.report_base_report_irmodulereference",
+            "odoo.addons.web.reports.report_web_report_irmodulereference",
             level="WARNING",
         ):
             resp = self.url_open(
-                f"/report/html/base.report_irmodulereference/{module.id}"
+                f"/report/html/web.report_irmodulereference/{module.id}"
             )
         self.assertEqual(resp.status_code, HTTPStatus.OK)
 

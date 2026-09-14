@@ -7,7 +7,7 @@ from odoo import Command, _, api, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
 
-from odoo.addons.base.models.ir_actions_report import PDF_OPTIONS_DATA_KEY
+from odoo.addons.web.models.ir_actions_report import PDF_OPTIONS_DATA_KEY
 
 _logger = logging.getLogger(__name__)
 

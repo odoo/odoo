@@ -50,8 +50,8 @@ setup(
         "blake3",
         "cbor2",
         "cryptography",
-        # Both arrive with weasyprint, but base/ir_actions_report.py imports
-        # them directly — cssselect2 unguarded at module scope. Declared for the
+        # Both arrive with weasyprint, but web/models/ir_actions_report.py
+        # imports them directly — cssselect2 unguarded at module scope. Declared for the
         # reason recorded in requirements.txt: a transitive dependency is not a
         # contract.
         "cssselect2",

@@ -70,7 +70,7 @@ access control, and ORM extensions that those controllers depend on.
 odoo/addons/base/
 ├── __manifest__.py              # Module metadata + asset/data file declarations
 ├── __init__.py                  # Imports models, report, wizard + post_init hook
-├── models/                      # 104 Python model files (core ORM infrastructure)
+├── models/                      # 103 Python model files (core ORM infrastructure)
 │   ├── assetsbundle/            #   Asset compilation package (bundle, JS/CSS/XML pipelines, store)
 │   ├── decimal_precision.py         #   Configurable decimal precision
 │   ├── ir_actions_act_url.py        #   URL action
@@ -81,7 +81,7 @@ odoo/addons/base/
 │   ├── ir_actions_client.py         #   Client-side (JS component) action
 │   ├── ir_actions_embedded.py       #   Actions embedded inside views
 │   ├── ir_actions_path.py           #   Side table keeping an action path unique
-│   ├── ir_actions_report.py         #   Report actions (WeasyPrint PDF/HTML/image rendering)
+│   ├── ir_actions_report.py         #   Report actions (action type, HTML/text render; PDF is web's inherit)
 │   ├── ir_actions_server.py         #   Server actions (code, CRUD, webhook) + history
 │   ├── ir_actions_todo.py           #   Configuration wizard queue
 │   ├── ir_asset.py                  #   Asset bundle management (directives, paths, sorting)
@@ -151,7 +151,6 @@ odoo/addons/base/
 │   ├── mixin_user_favorite.py       #   Per-user favourite flag
 │   ├── phone_number.py              #   Shared phone number records
 │   ├── properties_base_definition.py #   Properties field definitions
-│   ├── report_layout.py             #   Report layout templates
 │   ├── report_paperformat.py        #   Paper format configuration
 │   ├── res_bank.py                  #   Banks + partner bank accounts
 │   ├── res_company.py               #   Company hierarchy (parent_store)
@@ -188,12 +187,11 @@ odoo/addons/base/
 │   ├── reset_view_arch.py           #   Reset view to original arch (soft/hard)
 │   ├── server_action_history.py     #   Server-action run history (diff + restore)
 │   └── wizard_ir_model_menu_create.py #   Create menu item for custom model
-├── tests/                       # 138 Python test files + test assets
+├── tests/                       # 135 Python test files + test assets
 │   ├── common.py                #   Base test classes (demo user, portal user)
 │   └── test_*.py                #   Test modules -- counts in TEST_TAGS.md, derived by factcheck.sh
 ├── views/                       # 37 XML view definition files
 ├── data/                        # 20 data files (XML, CSV, SQL, JSON)
-├── reports/                      # Report templates + the module-reference report model
 ├── security/                    # ir.model.access.csv + groups and record-rule XML
 ├── rng/                         # RelaxNG schemas (view validation)
 ├── static/                      # CSS, JS, images, test assets
@@ -259,7 +257,6 @@ every Odoo module depends on.
 | properties.base.definition | Properties field definition storage |
 | mixin.properties.base.definition | Properties support for models |
 | decimal.precision | Configurable decimal precision per usage |
-| report.layout | Report layout template registry |
 | report.paperformat | Paper format configuration (A4, Letter, etc.) |
 
 ### Non-ORM Classes
@@ -277,12 +274,12 @@ Derived by `factcheck.sh`, which re-measures every row against the tree.
 
 | Category | Count |
 |----------|-------|
-| Python (models) | 104 |
+| Python (models) | 103 |
 | Python (wizards) | 11 |
-| Python (tests) | 138 |
+| Python (tests) | 135 |
 | XML (views) | 37 |
 | Data files | 20 |
-| XML (reports) | 4 |
+| XML (reports) | 0 |
 | XML (wizard views) | 8 |
 | Security files | 3 |
 | RNG (schemas) | 7 |

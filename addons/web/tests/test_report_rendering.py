@@ -27,7 +27,7 @@ class StubAssetFetcher:
         return self.checksum
 
 
-@odoo.tests.tagged("post_install", "-at_install", "post_install_l10n")
+@odoo.tests.tagged("post_install", "-at_install", "post_install_l10n", "web_report")
 class TestReports(odoo.tests.TransactionCase):
     def test_get_report_rejects_bool_reference(self):
         Report = self.env["ir.actions.report"]
@@ -65,7 +65,7 @@ class TestReports(odoo.tests.TransactionCase):
         self.assertIn("/a/keep.css", html2)
 
     def test_asset_css_parsed_once_per_process(self):
-        from odoo.addons.base.models import ir_actions_report as iar
+        from odoo.addons.web.models import ir_actions_report as iar
 
         engine = self.env["ir.actions.report"]._prepare_weasyprint_engine()
         self.addCleanup(iar._weasy_state.clear_for_tests)
@@ -108,7 +108,7 @@ class TestReports(odoo.tests.TransactionCase):
         self.assertEqual(data, {"foo": "bar"}, "caller data dict must be unchanged")
 
     def test_tolerant_font_renders_are_not_serialized(self):
-        from odoo.addons.base.models import ir_actions_report as mod
+        from odoo.addons.web.models import ir_actions_report as mod
 
         mod._weasy_state.setup_process()
         concurrency = 5
@@ -160,7 +160,7 @@ class TestReports(odoo.tests.TransactionCase):
     def test_tolerant_font_guard_only_sanitizes_the_thread_that_asked(self):
         from fontTools.ttLib.tables.O_S_2f_2 import table_O_S_2f_2
 
-        from odoo.addons.base.models import ir_actions_report as mod
+        from odoo.addons.web.models import ir_actions_report as mod
 
         mod._weasy_state.setup_process()
         invalid = {5, mod._OS2_MAX_UNICODE_RANGE_BIT + 90}
@@ -188,7 +188,7 @@ class TestReports(odoo.tests.TransactionCase):
             patch.object(mod.weasyprint, "HTML", _FakeHTML),
             patch.object(mod, "FontConfiguration", lambda *a, **k: None),
             patch.object(mod, "CounterStyle", lambda *a, **k: None),
-            mute_logger("odoo.addons.base.models.ir_actions_report"),
+            mute_logger("odoo.addons.web.models.ir_actions_report"),
         ):
             mod._write_pdf_tolerant_fonts("<html/>", None, None)
 
@@ -571,7 +571,7 @@ class TestReportsRenderingCommon(odoo.tests.HttpCase):
             )
 
 
-@odoo.tests.tagged("post_install", "-at_install", "pdf_rendering")
+@odoo.tests.tagged("post_install", "-at_install", "pdf_rendering", "web_report")
 class TestReportsRendering(TestReportsRenderingCommon):
     def test_format_A4(self):
         self.report.paperformat_id = self.env.ref("base.paperformat_euro")
@@ -1017,7 +1017,7 @@ class TestReportsRenderingLimitations(TestReportsRenderingCommon):
         )
 
 
-@odoo.tests.tagged("post_install", "-at_install")
+@odoo.tests.tagged("post_install", "-at_install", "web_report")
 class TestAggregatePdfReports(odoo.tests.HttpCase):
     @classmethod
     def setUpClass(cls):

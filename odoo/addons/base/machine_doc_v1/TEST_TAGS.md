@@ -5,7 +5,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 ## Quick Reference
 
 ```bash
-# All base tests (3901 methods, 802 classes, 138 files)
+# All base tests (3795 methods, 770 classes, 135 files)
 --test-tags '/base' -u base
 
 # Only post_install tests
@@ -102,7 +102,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 
 ## Test File Reference
 
-### Tagged Files (78 files, 472 classes)
+### Tagged Files (75 files, 441 classes)
 
 | File | Tags | Classes | Tests | Base Class |
 |------|------|---------|-------|------------|
@@ -127,7 +127,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 | `test_import_files.py` | `post_install`, `-at_install` | 4 | 90 | TransactionCase |
 | `test_ir_actions.py` | `post_install`, `-at_install` | 7 | 104 | TestServerActionsBase, TransactionCase, TestCommonCustomFields |
 | `test_ir_actions_audit.py` | `post_install`, `-at_install` | 47 | 144 | TransactionCase |
-| `test_ir_actions_report_audit.py` | `post_install`, `-at_install` | 26 | 69 | TransactionCase, MultiArticleReportCase |
+| `test_ir_actions_report_audit.py` | `post_install`, `-at_install` | 6 | 15 | TransactionCase |
 | `test_ir_actions_server_audit.py` | `post_install`, `-at_install` | 3 | 8 | TransactionCase |
 | `test_ir_actions_server_regressions.py` | `post_install`, `-at_install` | 14 | 42 | ServerActionCase |
 | `test_ir_actions_webhook.py` | `post_install`, `-at_install` | 4 | 20 | WebhookCase, TransactionCase |
@@ -157,11 +157,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 | `test_partner_private_address_access.py` | `post_install`, `-at_install` | 1 | 11 | TransactionCase |
 | `test_profiler.py` | `post_install`, `-at_install`, `profiling`, `-standard`, `profiling_performance`, `profiling_memory` | 7 | 39 | TransactionCase, BaseCase, HttpCase |
 | `test_qweb.py` | `post_install`, `-at_install` | 24 | 197 | TransactionCase, TransactionCaseWithUserDemo |
-| `test_report_introspection.py` | `post_install`, `-at_install` | 2 | 10 | TransactionCase, PdfGeometryCase |
-| `test_report_layout_audit.py` | `post_install`, `-at_install` | 2 | 3 | TransactionCase |
-| `test_report_modernization.py` | `post_install`, `-at_install` | 4 | 13 | TransactionCase |
 | `test_report_paperformat_audit.py` | `post_install`, `-at_install` | 1 | 10 | TransactionCase |
-| `test_reports.py` | `post_install`, `-at_install`, `post_install_l10n`, `pdf_rendering`, `-standard` | 4 | 26 | TransactionCase, TestReportsRenderingCommon, HttpCase |
 | `test_res_company.py` | `post_install`, `-at_install` | 3 | 21 | TransactionCase |
 | `test_res_config.py` | `post_install`, `-at_install` | 3 | 12 | TransactionCase |
 | `test_res_config_install.py` | `post_install`, `-at_install` | 1 | 2 | TransactionCase |
@@ -184,6 +180,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 | `test_view_payload.py` | `post_install`, `-at_install` | 1 | 3 | TransactionCase |
 | `test_view_provenance.py` | `post_install`, `-at_install` | 1 | 3 | TransactionCase |
 | `test_views.py` | `post_install`, `-at_install`, `-standard`, `migration`, `render_all_views`, `post_install_l10n`, `at_install`, `modifiers` | 51 | 289 | TransactionCase, ViewCase, BaseCase, TransactionCaseWithUserDemo |
+| `test_x2many_cache_scope.py` | `post_install`, `-at_install` | 1 | 4 | TransactionCase |
 
 ### Untagged Files (60 files)
 
@@ -254,13 +251,13 @@ These run in **both** at_install and post_install phases by default.
 
 | Metric | Value |
 |--------|-------|
-| Total test files | 138 |
-| Total test classes | 802 |
-| Total test methods | 3901 |
-| Files with @tagged | 78 (57%) |
-| Files without @tagged | 60 (43%) |
-| Classes using post_install | 271 |
-| Unique tags | 29 |
+| Total test files | 135 |
+| Total test classes | 770 |
+| Total test methods | 3795 |
+| Files with @tagged | 75 (56%) |
+| Files without @tagged | 60 (44%) |
+| Classes using post_install | 240 |
+| Unique tags | 28 |
 | Largest test file | test_db_cursor.py (115 classes, 385 tests) |
 
 Counted as unittest collects them: a method whose name starts with `test`, not

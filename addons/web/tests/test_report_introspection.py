@@ -12,12 +12,12 @@ from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
 
-@tagged("post_install", "-at_install")
+@tagged("post_install", "-at_install", "web_report")
 class TestModuleReferenceValues(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.report_model = cls.env["report.base.report_irmodulereference"]
+        cls.report_model = cls.env["report.web.report_irmodulereference"]
         cls.base_module = cls.env["ir.module.module"].search([("name", "=", "base")])
 
     def test_attribution_follows_the_record_not_the_external_id(self):
@@ -150,11 +150,11 @@ class PdfGeometryCase(TransactionCase):
                     yield width, obj, obj.get_text().strip()
 
 
-@tagged("post_install", "-at_install")
+@tagged("post_install", "-at_install", "web_report")
 class TestIntrospectionReportGeometry(PdfGeometryCase):
     def test_model_overview_stays_inside_the_page(self):
         model = self.env["ir.model"].search([("model", "=", "res.partner")])
-        pdf = self._render_pdf("base.report_ir_model_overview", model.ids)
+        pdf = self._render_pdf("web.report_ir_model_overview", model.ids)
 
         overflowing = [
             (round(obj.x1 - width, 1), text)
@@ -168,7 +168,7 @@ class TestIntrospectionReportGeometry(PdfGeometryCase):
 
     def test_model_overview_prints_every_column_it_declares(self):
         model = self.env["ir.model"].search([("model", "=", "res.partner")])
-        pdf = self._render_pdf("base.report_ir_model_overview", model.ids)
+        pdf = self._render_pdf("web.report_ir_model_overview", model.ids)
         rendered = "\n".join(text for _width, _obj, text in self._text_boxes(pdf))
 
         for heading in ("Flags", "Details", "External ID", "Rights"):
@@ -178,7 +178,7 @@ class TestIntrospectionReportGeometry(PdfGeometryCase):
 
     def test_module_reference_stays_inside_the_page(self):
         module = self.env["ir.module.module"].search([("name", "=", "base")])
-        pdf = self._render_pdf("base.ir_module_reference_print", module.ids)
+        pdf = self._render_pdf("web.ir_module_reference_print", module.ids)
 
         overflowing = [
             (round(obj.x1 - width, 1), text)

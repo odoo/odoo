@@ -215,6 +215,18 @@ Per-user embedded action configuration storage.
 
 ## Document Layout and Branding
 
+### models/ir_actions_report.py — IrActionsReport (`_inherit = 'ir.actions.report'`)
+
+The PDF half of the report action. `base` declares the action type, its bindings and the HTML and text renders; this inherit adds everything that needs `web`'s layouts or WeasyPrint: `_get_layout()` (`web.minimal_layout`), the paperformat `@page` CSS, `OdooURLFetcher` (serves `/web/assets`, `/static`, `/web/image` and `/report/barcode` URLs in-process, refuses the rest through `ir.egress`), `WeasyPrintEngine` (per-database font and parsed-CSS cache, incremental merge above `report.weasyprint_native_merge_max`, tolerant-font retry, PDF/A and XMP through `data["__pdf_options__"]`), the article split with saved-attachment reuse, `_render_qweb_pdf` / `_render_html_to_pdf` / `_render_html_to_image`, and the `report_action` override that sends an admin with no company layout to `web.action_base_document_layout_configurator`. Moved here from `base` at web 2.3; `base` alone renders no PDF and never could, since the shell it poured every body into is `web.minimal_layout`.
+
+**Module-level:** `PDF_OPTIONS_DATA_KEY`, `OdooURLFetcher`, `WeasyPrintEngine`, `_weasy_state` (process-wide shared state; `clear_for_tests()`).
+
+### models/report_layout.py — ReportLayout (`_name = 'report.layout'`)
+
+The catalogue of external layouts the document-layout wizard offers: one row per `web.external_layout_*` view with its preview image and PDF. Records in `data/report_layout.xml`. Moved here from `base` at web 2.3.
+
+**Fields:** `view_id` (Many2one `ir.ui.view`, required, cascade), `image` / `pdf` (Char — preview asset URLs), `sequence` (Integer, default 50), `name` (Char).
+
 ### models/base_document_layout.py — BaseDocumentLayout (`_name`, TransientModel)
 
 Transient wizard for live-preview report customization (colors, fonts, logos).
@@ -241,10 +253,10 @@ Transient wizard for live-preview report customization (colors, fonts, logos).
 
 Auto-regenerate report stylesheet on style changes, and hold the company's default home menu layout.
 
-**Fields:** `report_theme_id` (Many2one `report.theme`, defaults to `web.report_theme_modern`); `homemenu_default_config` (Json): the home menu layout a user of the company sees until they save one of their own, the same `{version, order, pinned, hidden}` shape as `res.users.settings.homemenu_config`. Surfaced in `session_info` and written from the home menu's edit mode by an admin ("Set as company default"); a user's own layout replaces it whole, never merges with it.
+**Fields:** `external_report_layout_id` (Many2one `ir.ui.view` — the `report.layout` view poured around every external report), `font` (Selection), `primary_color` / `secondary_color` (Char), `layout_background` (Selection) and `layout_background_image` (Binary) — the document-layout block, moved here from `base` at web 2.3 because nothing in `base` reads it; `report_theme_id` (Many2one `report.theme`, defaults to `web.report_theme_modern`); `homemenu_default_config` (Json): the home menu layout a user of the company sees until they save one of their own, the same `{version, order, pinned, hidden}` shape as `res.users.settings.homemenu_config`. Surfaced in `session_info` and written from the home menu's edit mode by an admin ("Set as company default"); a user's own layout replaces it whole, never merges with it.
 
 **Key Methods:**
-- `create(vals_list)` / `write(vals)` — Triggers `_update_asset_style()` if style fields change (font, colors, layout). `create` uses `@api.model_create_multi` (takes list of dicts).
+- `create(vals_list)` / `write(vals)` — Triggers `_update_asset_style()` if style fields change (font, colors, layout); `write` also clears the registry's `assets` cache, which used to be `base`'s job when it held the fields. `create` uses `@api.model_create_multi` (takes list of dicts).
 - `_get_asset_style_b64()` — Renders `web.styles_company_report` QWeb template, returns base64 CSS.
 - `_update_asset_style()` — Updates `web.asset_styles_company_report` attachment if content changed.
 
@@ -440,6 +452,8 @@ Quick lookup — file → model → primary role:
 | `home_menu_badge.py` | home.menu.badge | App launcher tile counts (abstract; addons extend `_get_badges`) |
 | `res_users_settings.py` | res.users.settings | UI density, embedded actions |
 | `res_users_settings_embedded_action.py` | res.users.settings.embedded.action | Per-user action config storage |
+| `ir_actions_report.py` | ir.actions.report | PDF engine, layouts, attachments (the action type is base's) |
+| `report_layout.py` | report.layout | External layout catalogue |
 | `base_document_layout.py` | base.document.layout | Report layout wizard |
 | `res_company.py` | res.company | Report style auto-regeneration |
 | `report_theme.py` | report.theme | Report layout theme records |

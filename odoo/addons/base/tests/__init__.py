@@ -63,9 +63,6 @@ from . import test_depends_audit
 from . import test_depends_completeness
 from . import test_inverse_cache_alignment
 from . import test_field_description_audit
-from . import test_report_introspection
-from . import test_report_layout_audit
-from . import test_report_modernization
 from . import test_report_paperformat_audit
 from . import test_menu
 from . import test_misc
@@ -108,7 +105,6 @@ from . import test_res_users_apikeys
 from . import test_res_users_identitycheck
 from . import test_res_users_log
 from . import test_res_users_settings
-from . import test_reports
 from . import test_test_retry
 from . import test_seeded_users
 from . import test_test_suite

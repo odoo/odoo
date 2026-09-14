@@ -126,7 +126,7 @@ class TestReports(odoo.tests.HttpCase):
             "the caller may not make",
         )
 
-    @mute_logger("odoo.addons.base.models.ir_actions_report")
+    @mute_logger("odoo.addons.web.models.ir_actions_report")
     def test_report_error_cleanup(self):
         admin = self.env.ref("base.user_admin")
         self.env["ir.ui.view"].create(

@@ -5,10 +5,10 @@
         <field name="name">Technical Guide</field>
         <field name="model">ir.module.module</field>
         <field name="report_type">qweb-pdf</field>
-        <field name="report_name">base.report_irmodulereference</field>
-        <field name="report_file">base.report_irmodulereference</field>
+        <field name="report_name">web.report_irmodulereference</field>
+        <field name="report_file">web.report_irmodulereference</field>
         <field name="print_report_name">'Technical guide - %s' % object.name</field>
-        <field name="binding_model_id" ref="model_ir_module_module" />
+        <field name="binding_model_id" ref="base.model_ir_module_module" />
         <field name="binding_type">report</field>
     </record>
 

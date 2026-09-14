@@ -205,40 +205,11 @@ class ResCompany(models.Model):
             raise_if_not_found=False,
         ),
     )
-    external_report_layout_id = fields.Many2one(
-        comodel_name="ir.ui.view",
-        string="Document Template",
-    )
-    font = fields.Selection(
-        selection=[
-            ("Lato", "Lato"),
-            ("Roboto", "Roboto"),
-            ("Open_Sans", "Open Sans"),
-            ("Montserrat", "Montserrat"),
-            ("Oswald", "Oswald"),
-            ("Raleway", "Raleway"),
-            ("Tajawal", "Tajawal"),
-            ("Fira_Mono", "Fira Mono"),
-        ],
-        default="Lato",
-    )
-    primary_color = fields.Char()
-    secondary_color = fields.Char()
     color = fields.Integer(
         compute="_compute_color",
         inverse="_inverse_color",
         recursive=True,
     )
-    layout_background = fields.Selection(
-        selection=[
-            ("Blank", "Blank"),
-            ("Demo logo", "Demo logo"),
-            ("Custom", "Custom"),
-        ],
-        default="Blank",
-        required=True,
-    )
-    layout_background_image = fields.Binary(string="Background Image")
     uninstalled_l10n_module_ids = fields.Many2many(
         comodel_name="ir.module.module",
         compute="_compute_uninstalled_l10n_module_ids",
@@ -420,17 +391,8 @@ class ResCompany(models.Model):
         _debug.lifecycle("write", count=len(self), fields=list(vals))
         res = super().write(vals)
         invalidation_fields = self._get_cache_invalidation_fields()
-        asset_invalidation_fields = {
-            "font",
-            "primary_color",
-            "secondary_color",
-            "external_report_layout_id",
-        }
         if not invalidation_fields.isdisjoint(vals):
             self.env.registry.clear_cache()
-
-        if not asset_invalidation_fields.isdisjoint(vals):
-            self.env.registry.clear_cache("assets")
 
         if vals.get("active") is False:
             self.child_ids.active = False

@@ -14,9 +14,9 @@ _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
 
 
-class ReportBaseReport_Irmodulereference(models.AbstractModel):
-    _name = "report.base.report_irmodulereference"
-    _description = "Module Reference Report (base)"
+class ReportWebReport_Irmodulereference(models.AbstractModel):
+    _name = "report.web.report_irmodulereference"
+    _description = "Module Reference Report"
 
     def _get_models_by_module(self, modules: IrModuleModule) -> dict[str, IrModel]:
         data = (

@@ -2,7 +2,7 @@ from odoo.exceptions import AccessError
 from odoo.tests.common import TransactionCase, new_test_user, tagged
 
 
-@tagged("post_install", "-at_install")
+@tagged("post_install", "-at_install", "web_report")
 class TestReportLayoutAccess(TransactionCase):
     def test_internal_user_cannot_modify_report_layout(self):
         user = new_test_user(self.env, login="rl_plain_user")
@@ -36,7 +36,7 @@ class TestReportLayoutAccess(TransactionCase):
         layout.unlink()
 
 
-@tagged("post_install", "-at_install")
+@tagged("post_install", "-at_install", "web_report")
 class TestReportLayoutCascade(TransactionCase):
     def test_view_unlink_cascades_to_layout(self):
         view = (

@@ -133,7 +133,9 @@ Client-side action — triggers a JS component.
 
 #### IrActionsReport — `ir.actions.report` (`_name`, inherits actions)
 
-Report actions — renders QWeb templates to PDF/HTML/text via WeasyPrint.
+Report actions — the action type, its bindings, and the QWeb HTML and text
+renders. The PDF path (WeasyPrint engine, layouts, attachments) is `web`'s
+`_inherit` of this model; `base` alone renders no PDF.
 
 **Fields:**
 - `model` (Char, required) — Target model name
@@ -147,13 +149,14 @@ Report actions — renders QWeb templates to PDF/HTML/text via WeasyPrint.
 - `attachment` (Char) — Save prefix expression
 
 **Key Methods:**
-- `_get_attachment(record)` — Get cached report attachment
+- `_get_attachments(records, filenames)` — Cached report attachments per record
 - `get_paperformat()` — Get paper format (self or company default)
-- `_render_html_to_pdf(bodies, report_ref, landscape, ...)` — WeasyPrint PDF rendering
-- `_render_html_to_image(bodies, width, height, ...)` — WeasyPrint PNG rendering
-- `_render_qweb_html(docids, data)` — Render QWeb to HTML
-- `_render_qweb_pdf(docids, data)` — Render QWeb to PDF
-- `_render_qweb_text(docids, data)` — Render QWeb to text
+- `_get_report(report_ref)` — Resolve id, name or record to the sudo report
+- `_render_qweb_html(report_ref, docids, data)` — Render QWeb to HTML
+- `_render_qweb_text(report_ref, docids, data)` — Render QWeb to text
+- `_render(report_ref, res_ids, data)` — Dispatch on `report_type` (`_render_qweb_pdf` arrives with `web`)
+- `prepare_barcode(barcode_type, value, **kwargs)` — Barcode PNG, also the QWeb barcode field's backend
+- `_merge_pdfs(streams)` — pypdf merge with a per-stream error policy
 - `report_action(docids, data, config)` — Return action dict for webclient
 
 ---
@@ -1411,7 +1414,6 @@ Company hierarchy with branch support.
 - `currency_id` (Many2one → res.currency, required)
 - `user_ids` (Many2many → res.users)
 - Address fields (computed from partner with inverses)
-- Report styling: `font`, `primary_color`, `secondary_color`, `layout_background`
 - `paperformat_id` (Many2one → report.paperformat)
 
 **Key Methods:**
@@ -1646,11 +1648,7 @@ the `phone` and `mobile` columns on partners, users and companies.
 `primary`, `label`, `partner_ids`
 **Key Methods:** `_sanitize_number(number, country)`, `_get_phone_country()`
 
-### models/report_layout.py / report_paperformat.py
-
-#### ReportLayout — `report.layout` (`_name`)
-
-**Fields:** `view_id` (Many2one → ir.ui.view, required), `image`, `pdf` (Char), `sequence` (Integer)
+### models/report_paperformat.py
 
 #### ReportPaperformat — `report.paperformat` (`_name`)
 
@@ -1914,34 +1912,12 @@ Create menu item for custom model.
 
 ---
 
-## Reports
-
-### reports/report_base_report_irmodulereference.py
-
-#### ReportBaseReport_Irmodulereference — `report.base.report_irmodulereference` (AbstractModel)
-
-Backs the Module Reference report: for each selected `ir.module.module`, the
-models and fields that module owns, resolved through `ir.model.data`.
-
-**Key Methods:**
-- `_get_models_by_module(modules)` — `ir.model` records per module, via `ir.model.data`
-- `_get_field_names_by_model(modules)` — module → model → field names, same route
-- `_get_field_descriptions(model_name, field_names)` — `fields_get` for those fields
-- `_get_report_values(docids, data)` — the report entry point
-
-**Gotcha:** every lookup goes through `ir.model.data` and then `.exists()`, because
-a module may own an `ir.model.data` row whose target was dropped by a later
-migration. `_get_field_descriptions` also swallows a failing `fields_get` and logs
-it, so one unresolvable model degrades that model's field list instead of failing
-the whole report.
-
 ## Model Index
 
 Quick lookup — file → model → primary role:
 
 | File | Model(s) | Role |
 |------|----------|------|
-| `report_base_report_irmodulereference.py` | report.base.report_irmodulereference | Module Reference report values |
 | `ir_actions_actions.py` | ir.actions.actions | Base action model, bindings, path |
 | `ir_actions_path.py` | ir.actions.path | Side table making an action path unique |
 | `ir_actions_act_window.py` | ir.actions.act_window | Window action (opens views on a model) |
@@ -2011,7 +1987,6 @@ Quick lookup — file → model → primary role:
 | `properties_base_definition.py` | properties.base.definition | Properties definitions |
 | `mixin_properties_base_definition.py` | mixin.properties.base.definition | Properties mixin |
 | `phone_number.py` | phone.number | Shared phone numbers |
-| `report_layout.py` | report.layout | Report templates |
 | `report_paperformat.py` | report.paperformat | Paper format config |
 | `res_bank.py` | res.bank, res.partner.bank | Banks + accounts |
 | `res_company.py` | res.company | Company hierarchy |

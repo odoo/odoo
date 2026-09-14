@@ -4,8 +4,8 @@
 AgroMarin Coding Guidelines
 ===========================
 
-:Version: 6.45
-:Date: 2026-09-12
+:Version: 6.46
+:Date: 2026-09-14
 :Base: `Odoo 19.0 Coding Guidelines <https://www.odoo.com/documentation/19.0/contributing/development/coding_guidelines.html>`_
        + `OCA CONTRIBUTING.rst <https://github.com/OCA/odoo-community.org/blob/master/website/Contribution/CONTRIBUTING.rst>`_
 
@@ -6164,7 +6164,11 @@ order-significant and is most often ``list,kanban``. Use ``t-lang=`` at the
 
 This fork renders ``qweb-pdf`` with **WeasyPrint** and real CSS Paged Media;
 wkhtmltopdf is gone, and so is its folklore. The engine is ``WeasyPrintEngine`` in
-``odoo/addons/base/models/ir_actions_report.py``; the paged-media CSS is
+``addons/web/models/ir_actions_report.py``, an ``_inherit`` of the action type
+``base`` declares: ``base`` owns the record, the bindings and the HTML and text
+renders, ``web`` owns every PDF path, ``report.layout``, the company's
+document-layout fields and the templates the PDF is poured into
+(``web.minimal_layout``, ``web.external_layout``). The paged-media CSS is
 ``addons/web/static/src/webclient/actions/reports/report_paged_media.css`` and
 ``report_pdf_layout.css``.
 
@@ -6222,7 +6226,7 @@ running elements in the page margin boxes.
 
 In test mode ``_render_qweb_pdf`` returns raw HTML unless
 ``force_report_rendering`` is set. Render-path tests are in
-``odoo/addons/base/tests/test_reports.py``.
+``addons/web/tests/test_report_rendering.py``.
 
 3.7 Actions and menus
 ---------------------
@@ -8202,6 +8206,11 @@ One row per change, one clause. The argument lives in the section it moved.
    * - Version
      - Date
      - Summary
+   * - 6.46
+     - 2026-09-14
+     - §3.6.1: the PDF engine, ``report.layout``, the company document-layout
+       fields and the two technical reports live in ``web``; ``base`` keeps the
+       action type and the HTML and text renders.
    * - 6.45
      - 2026-09-12
      - §11.1: ``E8507`` is a hard zero; a loop that runs one query per

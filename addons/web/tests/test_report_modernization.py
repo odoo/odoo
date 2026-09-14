@@ -3,7 +3,7 @@ import threading
 
 import odoo.tests
 
-from odoo.addons.base.models.ir_actions_report import (
+from odoo.addons.web.models.ir_actions_report import (
     _WEASY_WARNING_KEEP,
     PDF_OPTIONS_DATA_KEY,
     _capture_weasy_warnings,
@@ -19,7 +19,7 @@ ARCH = """
 """
 
 
-@odoo.tests.tagged("post_install", "-at_install")
+@odoo.tests.tagged("post_install", "-at_install", "web_report")
 class TestPdfDocumentMetadata(odoo.tests.TransactionCase):
     @classmethod
     def setUpClass(cls):
@@ -85,7 +85,7 @@ class TestPdfDocumentMetadata(odoo.tests.TransactionCase):
             self.assertIn("CONFIDENTIAL", doc[0].get_text())
 
 
-@odoo.tests.tagged("post_install", "-at_install")
+@odoo.tests.tagged("post_install", "-at_install", "web_report")
 class TestWatermarkCss(odoo.tests.TransactionCase):
     def test_watermark_css_escapes_hostile_text(self):
         css = _prepare_watermark_css('a"b\\c\nd')
@@ -97,7 +97,7 @@ class TestWatermarkCss(odoo.tests.TransactionCase):
         self.assertIn('content: "DRAFT";', css)
 
 
-@odoo.tests.tagged("post_install", "-at_install")
+@odoo.tests.tagged("post_install", "-at_install", "web_report")
 class TestPdfImageOptions(odoo.tests.TransactionCase):
     def test_build_pdf_options_image_knobs(self):
         Report = self.env["ir.actions.report"]
@@ -141,7 +141,7 @@ class TestPdfImageOptions(odoo.tests.TransactionCase):
         self.assertEqual(captured.get("jpeg_quality"), 70)
 
 
-@odoo.tests.tagged("post_install", "-at_install")
+@odoo.tests.tagged("post_install", "-at_install", "web_report")
 class TestWeasyWarningCapture(odoo.tests.TransactionCase):
     def setUp(self):
         super().setUp()

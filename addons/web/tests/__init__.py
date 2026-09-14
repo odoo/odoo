@@ -18,6 +18,7 @@ from . import test_fontawesome
 from . import test_health
 from . import test_image
 from . import test_ir_asset_scope
+from . import test_ir_actions_report_audit
 from . import test_ir_exports
 from . import test_ir_model
 from . import test_ir_qweb
@@ -37,6 +38,10 @@ from . import test_pivot_export
 from . import test_profiler
 from . import test_promote_studio
 from . import test_report_theme
+from . import test_report_introspection
+from . import test_report_layout_audit
+from . import test_report_modernization
+from . import test_report_rendering
 from . import test_reports
 from . import test_res_partner_properties
 from . import test_res_users

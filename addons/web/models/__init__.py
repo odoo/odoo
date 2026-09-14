@@ -1,5 +1,6 @@
 from . import base_document_layout
 from . import home_menu_badge
+from . import ir_actions_report
 from . import ir_asset
 from . import ir_exports
 from . import ir_http
@@ -9,6 +10,7 @@ from . import ir_ui_menu
 from . import ir_ui_view
 from . import properties_base_definition
 from . import record_snapshot
+from . import report_layout
 from . import report_theme
 from . import res_company
 from . import res_config_settings
