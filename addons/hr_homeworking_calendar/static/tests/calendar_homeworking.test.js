@@ -406,3 +406,24 @@ test(`test exceptions are correctly rendered in multicalendar`, async () => {
         ["hr_homeworking_calendar.set_location_wizard_action", "2020-12-11"],
     ]);
 });
+
+test("every partner is asked for once, and as a number", async () => {
+    // `Object.keys(partnerColorMap)` yields STRINGS, so the guard against adding
+    // the current user twice compares a string array to a numeric partner id and
+    // never matches: the id goes out twice, and the payload mixes strings with
+    // numbers for a domain that is compared against integer columns.
+    let sent;
+    onRpc("get_worklocation", ({ args }) => {
+        sent = args[0];
+        return EMPLOYEE_WORK_LOCATIONS;
+    });
+    await mountHomeWorkingView();
+    expect(sent).toBeInstanceOf(Array);
+    expect(sent.filter((id) => typeof id !== "number")).toEqual([], {
+        message: "every partner id is a number",
+    });
+    expect(sent.length).toBe(new Set(sent).size, {
+        message: "no partner is asked for twice",
+    });
+    expect(sent).toInclude(serverState.partnerId);
+});

@@ -17,7 +17,9 @@ patch(AttendeeCalendarModel.prototype, {
             filters[filters.length - 1].type === "all" &&
             filters[filters.length - 1].active
         ) {
-            attendeeIds = Object.keys(this.partnerColorMap);
+            // Object keys are strings; every other producer of an attendee id
+            // here yields a number, and the guard below compares against one.
+            attendeeIds = Object.keys(this.partnerColorMap).map(Number);
         } else {
             attendeeIds = (filters || [])
                 .filter(
