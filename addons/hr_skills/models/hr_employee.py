@@ -6,7 +6,10 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models
 from odoo.exceptions import AccessError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import convert
+
+_debug = DebugLog(__name__)
 
 
 class HrEmployee(models.Model):
@@ -94,6 +97,7 @@ class HrEmployee(models.Model):
 
         requirements_by_job = self._get_required_certifications_by_job()
         if not requirements_by_job:
+            _debug.logic("certification_cron", by="no_requirements")
             return activities
 
         employees = self.env["hr.employee"].search(
@@ -105,6 +109,7 @@ class HrEmployee(models.Model):
             )
         )
         if not employees:
+            _debug.logic("certification_cron", by="no_employees_in_jobs")
             return activities
 
         certifications = (
@@ -182,6 +187,13 @@ class HrEmployee(models.Model):
                 ] |= employee
 
         note = self.env._("Certification missing or expiring soon")
+        _debug.pipeline(
+            "certification_cron",
+            employees=employees,
+            jobs=len(requirements_by_job),
+            existing=len(existing_activity_keys),
+            groups=len(to_schedule),
+        )
         for (skill, level, deadline, responsible), group in to_schedule.items():
             activities += group.activity_schedule(
                 act_type_xmlid="hr_skills.mail_activity_data_upload_certification",
@@ -192,6 +204,7 @@ class HrEmployee(models.Model):
                 certification_skill_id=skill.id,
                 certification_skill_level_id=level.id,
             )
+        _debug.lifecycle("certification_activities", activities=activities)
         return activities
 
     @api.model
@@ -205,9 +218,12 @@ class HrEmployee(models.Model):
         user = self.env.user
         employees = self.browse(employee_ids).exists()
         if not user._is_internal() or len(employees) != len(set(employee_ids)):
+            _debug.logic("cv_print_denied", by="not_internal_or_missing", user=user)
             return self.browse()
         if user.has_group("hr.group_hr_user"):
+            _debug.logic("cv_print", by="hr_user", user=user, employees=employees)
             return employees if employees.has_access("read") else self.browse()
+        _debug.logic("cv_print", by="self_only", user=user, employees=employees)
         return employees if employees == user.employee_id else self.browse()
 
     def _load_scenario(self):

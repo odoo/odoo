@@ -3,6 +3,9 @@ from datetime import date, datetime, time
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class HrLeaveType(models.Model):
@@ -47,6 +50,11 @@ class HrLeave(models.Model):
         new_leave_work_entries = self.env["hr.work.entry"].create(
             work_entries_vals_list
         )
+        _debug.pipeline(
+            "leave_work_entries_generated",
+            leaves=self,
+            entries=new_leave_work_entries,
+        )
 
         if new_leave_work_entries:
             start = min(self.mapped("date_from"), default=False)
@@ -89,6 +97,12 @@ class HrLeave(models.Model):
                     lambda l: l.state in ("confirm", "validate", "validate1")
                 )
                 - self
+            )
+            _debug.lifecycle(
+                "conflicting_entries_archived",
+                archived=included,
+                unlinked_from_leave=overlappping,
+                stale_leaves=stale_leaves,
             )
             included.write({"active": False})
             stale_leaves.action_refuse()
@@ -177,6 +191,7 @@ class HrLeave(models.Model):
             self.env["hr.work.entry"].sudo().search([("leave_id", "in", self.ids)])
         )
 
+        _debug.pipeline("regen_work_entries", leaves=self, entries=work_entries)
         work_entries.write({"active": False})
         vals_list = []
         for work_entry in work_entries:
@@ -203,5 +218,10 @@ class HrLeave(models.Model):
         )
         leave_ids = work_entries.mapped("leave_id").ids
 
+        _debug.logic(
+            "can_cancel_blocked_by_validated",
+            candidates=cancellable_leaves,
+            blocked=len(leave_ids),
+        )
         for leave in cancellable_leaves:
             leave.can_cancel = leave.id not in leave_ids

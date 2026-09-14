@@ -1,5 +1,8 @@
 from odoo import http
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class HrOrgChartController(http.Controller):
@@ -16,6 +19,7 @@ class HrOrgChartController(http.Controller):
 
         Employee = request.env["hr.employee"].with_context(allowed_company_ids=cids)
         employee = Employee.browse(employee_id)
+        _debug.logic("org_chart_employee", requested=employee_id, companies=len(cids))
         return employee if employee.has_access("read") else Employee.browse()
 
     def _prepare_employee_data(self, employee):
@@ -81,6 +85,13 @@ class HrOrgChartController(http.Controller):
                 if child != employee
             ],
         }
+        _debug.pipeline(
+            "org_chart",
+            employee=employee,
+            ancestors=ancestors,
+            children=len(values["children"]),
+            max_level=max_level,
+        )
         values["managers"].reverse()
         return values
 
@@ -104,4 +115,10 @@ class HrOrgChartController(http.Controller):
         else:
             res = employee.subordinate_ids.ids
 
+        _debug.logic(
+            "subordinates",
+            employee=employee,
+            kind=subordinates_type or "all",
+            count=len(res),
+        )
         return res

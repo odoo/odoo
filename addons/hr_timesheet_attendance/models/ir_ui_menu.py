@@ -1,4 +1,7 @@
 from odoo import models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class IrUiMenu(models.Model):
@@ -12,5 +15,8 @@ class IrUiMenu(models.Model):
                 raise_if_not_found=False,
             )
         ):
+            _debug.logic(
+                "attendance_report_menu_hidden", user=self.env.user, menu=att_menu
+            )
             res.append(att_menu.id)
         return res

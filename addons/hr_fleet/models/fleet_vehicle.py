@@ -1,4 +1,7 @@
 from odoo import _, api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class FleetVehicle(models.Model):
@@ -73,6 +76,9 @@ class FleetVehicle(models.Model):
                     employee = employee.search(
                         [("user_id.partner_id", "=", vehicle.driver_id.id)], limit=1
                     )
+            _debug.logic(
+                "mobility_card_from_employee", vehicle=vehicle, employee=employee
+            )
             vehicle.mobility_card = employee.mobility_card
 
     def _update_create_write_vals(self, vals):
@@ -94,6 +100,12 @@ class FleetVehicle(models.Model):
                 )
                 if len(employee_ids) == 1:
                     employee = employee_ids[0].id
+                _debug.logic(
+                    "driver_employee_from_partner",
+                    partner=vals["driver_id"],
+                    matches=len(employee_ids),
+                    resolved=employee,
+                )
             vals["driver_employee_id"] = employee
 
         if "future_driver_employee_id" in vals:
@@ -116,6 +128,12 @@ class FleetVehicle(models.Model):
                 )
                 if len(employee_ids) == 1:
                     employee = employee_ids[0].id
+                _debug.logic(
+                    "future_driver_employee_from_partner",
+                    partner=vals["future_driver_id"],
+                    matches=len(employee_ids),
+                    resolved=employee,
+                )
             vals["future_driver_employee_id"] = employee
 
     @api.model_create_multi
@@ -136,6 +154,11 @@ class FleetVehicle(models.Model):
                     employee = vehicle.driver_employee_id
                     if employee and employee.user_id.partner_id:
                         partners_to_unsubscribe.append(employee.user_id.partner_id.id)
+                    _debug.lifecycle(
+                        "driver_changed_unsubscribe",
+                        vehicle=vehicle,
+                        partners=len(partners_to_unsubscribe),
+                    )
                     vehicle.message_unsubscribe(partner_ids=partners_to_unsubscribe)
         return super().write(vals)
 

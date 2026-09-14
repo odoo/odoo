@@ -2,6 +2,9 @@ from urllib.parse import urlencode
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class HrEmployeeCvWizard(models.TransientModel):
@@ -57,6 +60,12 @@ class HrEmployeeCvWizard(models.TransientModel):
             self.employee_ids.ids
         )
         if not self.employee_ids or printable != self.employee_ids:
+            _debug.logic(
+                "cv_wizard_refused",
+                requested=self.employee_ids,
+                printable=printable,
+                user=self.env.user,
+            )
             raise UserError(
                 self.env._("You can only print the resume of employees you can access.")
                 if self.env.user.has_group("hr.group_hr_user")
@@ -70,6 +79,7 @@ class HrEmployeeCvWizard(models.TransientModel):
         for section in ("show_skills", "show_contact", "show_others"):
             if self[section]:
                 query[section] = 1
+        _debug.pipeline("cv_wizard_url", employees=self.employee_ids)
         return {
             "name": self.env._("Print Resume"),
             "type": "ir.actions.act_url",

@@ -1,5 +1,8 @@
 from odoo import Command, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class HrSkillType(models.Model):
@@ -47,6 +50,7 @@ class HrSkillType(models.Model):
             if not skill_type.skill_ids or not skill_type.skill_level_ids:
                 incorrect_skill_type |= skill_type
         if incorrect_skill_type:
+            _debug.logic("skill_type_incomplete", types=incorrect_skill_type)
             raise ValidationError(
                 self.env._(
                     "The following skills type must contain at least one skill and one level: %s",
@@ -78,6 +82,7 @@ class HrSkillType(models.Model):
     def copy_data(self, default=None):
         default = default or {}
         vals_list = super().copy_data(default=default)
+        _debug.lifecycle("skill_type_copied", types=self, overrides=list(default))
         for skill_type, vals in zip(self, vals_list, strict=True):
             if "name" not in default:
                 vals["name"] = self.env._(

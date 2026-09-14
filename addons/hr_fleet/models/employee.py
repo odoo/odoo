@@ -1,6 +1,9 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class HrEmployee(models.Model):
@@ -88,6 +91,7 @@ class HrEmployee(models.Model):
             ["__count"],
         )
         cars_count = {driver_employee.id: count for driver_employee, count in rg}
+        _debug.perf.count("employee_cars_counted", employees=self, rows=len(cars_count))
         for employee in self:
             employee.employee_cars_count = cars_count.get(employee.id, 0)
 
@@ -104,6 +108,11 @@ class HrEmployee(models.Model):
             )
         )
         if car_ids:
+            _debug.logic(
+                "work_contact_removal_refused",
+                employees=no_address,
+                vehicles=car_ids,
+            )
             raise ValidationError(
                 _("Cannot remove address from employees with linked cars.")
             )
@@ -112,6 +121,7 @@ class HrEmployee(models.Model):
         old_work_contact_id_mapping = {e.id: e.partner_id.id for e in self}
         res = super().write(vals)
 
+        _debug.lifecycle("employee_write", employees=self, fields=list(vals))
         if "partner_id" in vals or "user_id" in vals:
             for employee in self:
                 new_contact_id = employee.partner_id.id
@@ -128,6 +138,12 @@ class HrEmployee(models.Model):
                         )
                     )
                     if car_ids:
+                        _debug.pipeline(
+                            "driver_contact_followed",
+                            employee=employee,
+                            vehicles=car_ids,
+                            contact=new_contact_id,
+                        )
                         car_ids.filtered(
                             lambda c, employee=employee: (
                                 c.driver_employee_id.id == employee.id
@@ -148,6 +164,9 @@ class HrEmployee(models.Model):
                         ("driver_employee_id", "in", self.ids),
                     ]
                 )
+            )
+            _debug.pipeline(
+                "mobility_card_propagated", employees=self, vehicles=car_ids
             )
             car_ids._compute_mobility_card()
         return res

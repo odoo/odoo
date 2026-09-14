@@ -1,5 +1,8 @@
 from odoo import api, fields, models
 from odoo.db.schema import drop_view_if_exists
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class HrTimesheetAttendanceReport(models.Model):
@@ -40,6 +43,7 @@ class HrTimesheetAttendanceReport(models.Model):
     )
 
     def init(self):
+        _debug.lifecycle("attendance_report_view_rebuilt", table=self._table)
         drop_view_if_exists(self.env.cr, self._table)
         self.env.cr.execute(
             """CREATE OR REPLACE VIEW %s AS (
@@ -116,6 +120,7 @@ class HrTimesheetAttendanceReport(models.Model):
             order = ", ".join(
                 f"{spec} DESC" if spec.startswith("date:") else spec for spec in groupby
             )
+            _debug.logic("report_order_defaulted", order=order)
         return super().formatted_read_group(
             domain,
             groupby,

@@ -4,7 +4,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, models
 from odoo.libs.intervals import Intervals
-from odoo.tools.date_utils import localized, get_intervals_hours
+from odoo.tools.date_utils import get_intervals_hours, localized
 
 
 class CalendarEvent(models.Model):

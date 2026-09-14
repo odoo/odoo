@@ -3,6 +3,9 @@ from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class HrWorkEntry(models.Model):
@@ -16,6 +19,9 @@ class HrWorkEntry(models.Model):
 
     def write(self, vals):
         if "state" in vals and vals["state"] == "cancelled":
+            _debug.pipeline(
+                "cancel_refuses_leave", entries=self, leaves=self.mapped("leave_id")
+            )
             self.mapped("leave_id").filtered(
                 lambda l: l.state != "refuse"
             ).action_refuse()
@@ -26,6 +32,7 @@ class HrWorkEntry(models.Model):
         attendances = self.filtered(
             lambda w: w.work_entry_type_id and not w.work_entry_type_id.is_leave
         )
+        _debug.lifecycle("leave_link_cleared", entries=attendances)
         attendances.write({"leave_id": False})
 
     def action_approve_leave(self):
@@ -58,6 +65,12 @@ class HrWorkEntry(models.Model):
             entries_by_leave_type[work_entry.leave_id.holiday_status_id] |= work_entry
 
         durations_by_leave_type = {}
+        _debug.perf.count(
+            "leave_durations",
+            employee=employee_id,
+            entries=leaves_work_entries,
+            types=len(entries_by_leave_type),
+        )
         for leave_type, work_entries in entries_by_leave_type.items():
             durations_by_leave_type[leave_type] = sum(work_entries.mapped("duration"))
         return durations_by_leave_type

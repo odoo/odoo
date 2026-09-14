@@ -1,15 +1,19 @@
 import re
 
 from odoo.http import Controller, prepare_content_disposition_header, request, route
+from odoo.libs.debug_log import DebugLog
 
 EMPLOYEE_IDS_RE = re.compile(r"^[0-9]+(,[0-9]+)*$")
 COLOR_RE = re.compile(r"^#[0-9a-fA-F]{6}$")
 DEFAULT_COLOR = "#666666"
 
+_debug = DebugLog(__name__)
+
 
 class HrEmployeeCV(Controller):
     def _printable_employees(self, employee_ids):
         if not (isinstance(employee_ids, str) and EMPLOYEE_IDS_RE.match(employee_ids)):
+            _debug.logic("cv_ids_rejected", raw=isinstance(employee_ids, str))
             return request.env["hr.employee"]
         return request.env["hr.employee"]._get_cv_printable_employees(
             [int(employee_id) for employee_id in employee_ids.split(",")]
@@ -31,6 +35,7 @@ class HrEmployeeCV(Controller):
     ):
         employees = self._printable_employees(employee_ids)
         if not employees:
+            _debug.logic("cv_print_not_found", user=request.env.user)
             return request.prepare_not_found_error()
 
         resume_type_education = request.env.ref(
@@ -60,6 +65,9 @@ class HrEmployeeCV(Controller):
             )
         )
 
+        _debug.perf.count(
+            "cv_pdf_rendered", employees=employees, bytes=len(pdf_content)
+        )
         if len(employees) == 1:
             report_name = request.env._("Resume %s", employees.name)
         else:

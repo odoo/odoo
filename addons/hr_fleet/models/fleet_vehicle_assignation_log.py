@@ -1,4 +1,7 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class FleetVehicleAssignationLog(models.Model):
@@ -27,6 +30,11 @@ class FleetVehicleAssignationLog(models.Model):
             (partner, company): employee
             for partner, company, employee in employees_by_partner_id_and_company_id
         }
+        _debug.perf.count(
+            "driver_employee_resolved",
+            logs=self,
+            groups=len(employees_by_partner_id_and_company_id),
+        )
         for log in self:
             employees = employees_by_partner_id_and_company_id.get(
                 (log.driver_id, log.vehicle_id.company_id)

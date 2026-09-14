@@ -2,6 +2,9 @@ from datetime import UTC
 
 from odoo import api, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class HrVersion(models.Model):
@@ -53,12 +56,17 @@ class HrVersion(models.Model):
         else:
             bypassing_rc_leave = []
 
+        by = "none"  # debuglog
         if bypassing_rc_leave:
             rc_leave = bypassing_rc_leave[0]
+            by = "bypassing"  # debuglog
         elif including_global_rcleaves:
             rc_leave = including_global_rcleaves[0]
+            by = "global"  # debuglog
         elif including_holiday_rcleaves:
             rc_leave = including_holiday_rcleaves[0]
+            by = "holiday"  # debuglog
+        _debug.logic("leave_work_entry_type", by=by, version=self)
         if rc_leave:
             return self._get_leave_work_entry_type_dates(
                 rc_leave, interval_start, interval_stop, self.employee_id

@@ -1,4 +1,7 @@
 from odoo import fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class HrEmployee(models.Model):
@@ -21,6 +24,12 @@ class HrEmployee(models.Model):
     def write(self, vals):
         converted = self._get_hourly_costs_in_new_company_currency(vals)
         result = super().write(vals)
+        if _debug.lifecycle.enabled and converted:
+            _debug.lifecycle(
+                "hourly_cost_reconverted",
+                employees=len(converted),
+                company=vals.get("company_id"),
+            )
         for employee, hourly_cost in converted.items():
             employee.write({"hourly_cost": hourly_cost})
         return result
@@ -30,6 +39,7 @@ class HrEmployee(models.Model):
             return {}
         company = self.env["res.company"].browse(vals["company_id"])
         if not company.currency_id:
+            _debug.logic("hourly_cost_conversion_skipped", company=company)
             return {}
         date = fields.Date.context_today(self)
         return {

@@ -1,7 +1,10 @@
 from urllib.parse import urlsplit
 
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.mail import normalize_url
+
+_debug = DebugLog(__name__)
 
 
 class HrResumeLine(models.Model):
@@ -62,10 +65,12 @@ class HrResumeLine(models.Model):
     def create(self, vals_list):
         for vals in vals_list:
             self._normalize_external_url(vals)
+        _debug.lifecycle("resume_lines_created", count=len(vals_list))
         return super().create(vals_list)
 
     def write(self, vals):
         self._normalize_external_url(vals)
+        _debug.lifecycle("resume_line_write", lines=self, fields=list(vals))
         return super().write(vals)
 
     @staticmethod

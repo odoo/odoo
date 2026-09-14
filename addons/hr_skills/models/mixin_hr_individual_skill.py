@@ -242,6 +242,9 @@ class MixinHrIndividualSkill(models.AbstractModel):
             )
             for existing_ind_skill, new_ind_skills in overlapping_dict.items()
         ]
+        _debug.logic(
+            "overlap_refused", model=self._name, colliding=len(overlapping_dict)
+        )
         raise ValidationError(
             self.env._(
                 "The following skills can't be created as they overlap or exactly match existing skills:\n%(collisions)s",
@@ -330,6 +333,7 @@ class MixinHrIndividualSkill(models.AbstractModel):
             if ind_skill.valid_to and ind_skill.valid_from > ind_skill.valid_to
         ]
         if errors:
+            _debug.logic("date_order_refused", skills=self, bad=len(errors))
             raise ValidationError(
                 self.env._(
                     "The following skills have their valid stop date prior to "
@@ -342,6 +346,12 @@ class MixinHrIndividualSkill(models.AbstractModel):
     def _check_skill_type(self):
         for record in self:
             if record.skill_id.skill_type_id != record.skill_type_id:
+                _debug.logic(
+                    "skill_type_mismatch",
+                    record=record,
+                    skill_type=record.skill_id.skill_type_id,
+                    declared=record.skill_type_id,
+                )
                 raise ValidationError(
                     self.env._(
                         "The skill %(name)s and skill type %(type)s don't match",
@@ -354,6 +364,12 @@ class MixinHrIndividualSkill(models.AbstractModel):
     def _check_skill_level(self):
         for record in self:
             if record.skill_level_id.skill_type_id != record.skill_type_id:
+                _debug.logic(
+                    "skill_level_mismatch",
+                    record=record,
+                    level=record.skill_level_id,
+                    declared=record.skill_type_id,
+                )
                 raise ValidationError(
                     self.env._(
                         "The skill level %(level)s is not valid for skill type: %(type)s",
@@ -424,6 +440,7 @@ class MixinHrIndividualSkill(models.AbstractModel):
                 continue
             by_valid_to = rows.grouped("valid_to")
             kept_ids.update(by_valid_to[max(by_valid_to)].ids)
+        _debug.logic("current_skills", model=self._name, rows=self, kept=len(kept_ids))
         return self.filtered(lambda row: row.id in kept_ids)
 
     def _expire_individual_skills(self):
@@ -449,6 +466,13 @@ class MixinHrIndividualSkill(models.AbstractModel):
             )
             to_archive -= changed_to_remove
             to_remove += changed_to_remove
+        _debug.pipeline(
+            "expire",
+            model=self._name,
+            deleted=to_remove,
+            archived=to_archive,
+            until=str(yesterday),
+        )
         return [Command.delete(skill.id) for skill in to_remove] + [
             Command.update(skill.id, {"valid_to": yesterday}) for skill in to_archive
         ]
@@ -566,6 +590,7 @@ class MixinHrIndividualSkill(models.AbstractModel):
         for row in self:
             vals = vals_by_id[row.id]
             if vals.get(linked_field, row[linked_field].id) != row[linked_field].id:
+                _debug.logic("skill_reparent_refused", skill=row)
                 raise ValidationError(
                     self.env._(
                         "The skill %(skill)s cannot be moved to another record.",
@@ -597,6 +622,13 @@ class MixinHrIndividualSkill(models.AbstractModel):
                 "valid_to", row.valid_to if is_certification else False
             )
             successor_vals.append(new_vals)
+        _debug.pipeline(
+            "updates_prepared",
+            model=self._name,
+            plain=len(plain_updates),
+            superseded=superseded,
+            successors=len(successor_vals),
+        )
         return plain_updates, superseded, successor_vals
 
     @staticmethod
@@ -610,6 +642,7 @@ class MixinHrIndividualSkill(models.AbstractModel):
         return referenced
 
     def _raise_foreign_rows(self):
+        _debug.logic("foreign_rows_refused", skills=self)
         raise ValidationError(
             self.env._(
                 "These skills belong to another record: %(skills)s",
@@ -709,6 +742,7 @@ class MixinHrIndividualSkill(models.AbstractModel):
 
     def _apply_individual_skill_commands(self, commands):
         skill_model = self.env[self._name]
+        _debug.pipeline("commands_applied", model=self._name, commands=len(commands))
         skill_model.browse(
             [command[1] for command in commands if command[0] == Command.DELETE]
         ).unlink()
@@ -735,6 +769,12 @@ class MixinHrIndividualSkill(models.AbstractModel):
         if foreign:
             foreign._raise_foreign_rows()
         routed = {}
+        _debug.logic(
+            "commands_routed",
+            model=self._name,
+            individuals=individuals,
+            referenced=referenced,
+        )
         for individual in individuals:
             result = []
             for command in commands:
