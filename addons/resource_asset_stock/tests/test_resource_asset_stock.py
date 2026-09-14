@@ -46,6 +46,27 @@ class TestResourceAssetStock(TransactionCase):
         self.assertEqual(asset.name, "Pickup PK-001")
         self.assertEqual(asset.resource_id.resource_type, "material")
 
+    def test_typing_a_product_gives_its_existing_serials_an_asset(self):
+        mower = self.env["product.product"].create(
+            {"name": "Mower", "is_storable": True, "tracking": "serial"}
+        )
+        received = self.env["stock.lot"].create(
+            {"name": "M-1", "product_id": mower.id, "company_id": self.env.company.id}
+        )
+        self.assertFalse(received.asset_id)
+        mower.product_tmpl_id.asset_kind_id = self.vehicle
+        self.assertTrue(received.asset_id)
+        self.assertEqual(received.asset_id.lot_id, received)
+        self.assertEqual(received.asset_id.kind_id, self.vehicle)
+        asset = received.asset_id
+        mower.product_tmpl_id.asset_kind_id = self.env.ref(
+            "resource_asset.kind_machinery"
+        )
+        self.assertEqual(received.asset_id, asset)
+        self.assertEqual(
+            self.env["resource.asset"].search_count([("lot_id", "=", received.id)]), 1
+        )
+
     def test_a_plain_serial_is_not_an_asset(self):
         plain = self.env["product.product"].create(
             {"name": "Bolt box", "is_storable": True, "tracking": "serial"}

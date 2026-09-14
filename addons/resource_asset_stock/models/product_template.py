@@ -19,3 +19,28 @@ class ProductTemplate(models.Model):
                         name=template.name,
                     )
                 )
+
+    def write(self, vals):
+        untyped = (
+            self.filtered(lambda template: not template.asset_kind_id)
+            if "asset_kind_id" in vals
+            else self.browse()
+        )
+        res = super().write(vals)
+        untyped.filtered("asset_kind_id")._create_missing_assets()
+        return res
+
+    def _create_missing_assets(self):
+        if not self:
+            return self.env["resource.asset"]
+        lots = (
+            self.env["stock.lot"]
+            .sudo()
+            .search(
+                [
+                    ("product_id.product_tmpl_id", "in", self.ids),
+                    ("asset_id", "=", False),
+                ]
+            )
+        )
+        return lots._create_asset().with_env(self.env)
