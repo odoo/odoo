@@ -713,8 +713,17 @@ def _optimize_hierarchy(condition, model):
     coids, other_values = partition(lambda v: isinstance(v, int), value)
     search_domain: Domain = _FALSE_DOMAIN
     if field.is_many2many:
-        search_domain |= DomainCondition("id", "in", coids)
-        coids = []
+        # the roots of a many2many hierarchy pass through the comodel's
+        # search, which keeps the active ones the user may read; as the
+        # superuser that is the active flag alone, answered from the cache
+        # when the rows are known (a multi-company rule asks for the
+        # user's companies on every access check)
+        active_roots = _active_roots_without_search(comodel, coids)
+        if active_roots is None:
+            search_domain |= DomainCondition("id", "in", coids)
+            coids = []
+        else:
+            coids = active_roots
     if other_values:
         search_domain |= Domain.OR(
             Domain("display_name", "ilike", v) for v in other_values
@@ -754,6 +763,25 @@ def _optimize_hierarchy(condition, model):
             return result
         return DomainCondition(field.name, "any!", result)
     return DomainCondition(field.name, "in", result)
+
+
+def _active_roots_without_search(comodel: BaseModel, coids: list) -> list | None:
+    if not comodel.env.su or not coids:
+        return None
+    roots = comodel.browse(coids)
+    active_name = comodel._active_name
+    if not active_name or not comodel.env.context.get("active_test", True):
+        active_name = None
+    # a stored column read proves the rows exist (a missing one raises), and
+    # answers from the cache when the rows are known
+    probe = active_name or comodel._rec_name
+    if not probe or probe not in comodel._fields or not comodel._fields[probe].store:
+        return None
+    try:
+        roots.mapped(probe)
+    except MissingError:
+        return None
+    return roots.filtered(active_name).ids if active_name else roots.ids
 
 
 def _get_domain_child_of(

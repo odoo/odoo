@@ -282,6 +282,39 @@ class TestExpression(SavepointCaseWithUserDemo, TransactionExpressionCase):
             )
         self.assertEqual(found, kids + grandkid)
 
+    def test_10_hierarchy_in_m2m_roots_answered_from_the_cache(self):
+        Partner = self.env["res.partner"].sudo()
+        Category = self.env["res.partner.tag"].sudo()
+        root = Category.create({"name": "root tag"})
+        child = Category.create({"name": "child tag", "parent_id": root.id})
+        partner = Partner.create({"name": "tagged", "tag_ids": [(6, 0, child.ids)]})
+        other = Partner.create({"name": "untagged"})
+        self.env.flush_all()
+        self.env.invalidate_all()
+        (root + child).mapped("name")
+        (root + child).mapped("parent_path")
+        (partner + other).mapped("tag_ids")
+        # the roots of a many2many hierarchy are known rows: no search
+        # confirms them, and the search itself is the only statement
+        with self.assertQueryCount(1):
+            found = Partner.search(
+                [("tag_ids", "child_of", root.id), ("id", "in", (partner + other).ids)]
+            )
+        self.assertEqual(found, partner)
+        with self.assertQueryCount(0):
+            self.assertEqual(
+                (partner + other).filtered_domain([("tag_ids", "child_of", root.id)]),
+                partner,
+            )
+        root.active = False
+        self.env.flush_all()
+        with self.assertQueryCount(1):
+            self.assertFalse(
+                Partner.search(
+                    [("tag_ids", "child_of", root.id), ("id", "in", partner.ids)]
+                )
+            )
+
     def test_10_hierarchy_in_m2m(self):
         Partner = self.env["res.partner"]
         Category = self.env["res.partner.tag"]
