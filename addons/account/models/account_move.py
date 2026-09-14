@@ -1258,10 +1258,29 @@ class AccountMove(models.Model):
 
     @api.depends("move_type", "origin_payment_id", "statement_line_id")
     def _compute_journal_id(self):
+        # the default journal is one search per move; the moves of a batch
+        # that share a company, a kind and a currency share the answer
+        defaults = {}
         for move in self.filtered(
             lambda r: r.journal_id.type not in r._get_valid_journal_types()
         ):
-            move.journal_id = move._search_default_journal()
+            key = move._get_default_journal_key()
+            if key not in defaults:
+                defaults[key] = move._search_default_journal()
+            move.journal_id = defaults[key]
+
+    def _get_default_journal_key(self):
+        currency_id = None
+        if self.env.cache.contains(self, self._fields["currency_id"]):
+            currency_id = self.currency_id.id or self.env.context.get(
+                "default_currency_id"
+            )
+        return (
+            self.statement_line_ids.statement_id.journal_id.id,
+            self.company_id.id,
+            tuple(self._get_valid_journal_types()),
+            currency_id,
+        )
 
     def _get_valid_journal_types(self):
         if self.is_sale_document(include_receipts=True):
