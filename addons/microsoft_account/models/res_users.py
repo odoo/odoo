@@ -39,8 +39,13 @@ class ResUsers(models.Model):
     def _compute_microsoft_calendar_tokens(self):
         for user in self:
             credential = user.microsoft_calendar_credential_id.sudo()
-            user.microsoft_calendar_token = credential.oauth_access_token or False
-            user.microsoft_calendar_rtoken = credential.oauth_refresh_token or False
+            tokens = (
+                credential._use_secret_payload("microsoft_account:calendar_tokens")
+                if credential
+                else {}
+            )
+            user.microsoft_calendar_token = tokens.get("oauth_access_token") or False
+            user.microsoft_calendar_rtoken = tokens.get("oauth_refresh_token") or False
 
     def _inverse_microsoft_calendar_token(self):
         for user in self:

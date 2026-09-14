@@ -349,8 +349,11 @@ class OAuthController(http.Controller):
             "redirect_uri": redirect_uri,
         }
 
-        if credential.oauth_client_secret:
-            token_data["client_secret"] = credential.oauth_client_secret
+        client_secret = credential._use_secret_payload(
+            "api_transport:oauth_exchange"
+        ).get("oauth_client_secret")
+        if client_secret:
+            token_data["client_secret"] = client_secret
 
         try:
             with credential.env["ir.egress"].session(

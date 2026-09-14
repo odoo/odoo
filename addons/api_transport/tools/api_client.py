@@ -721,7 +721,7 @@ class OutboundAPIClient:
             return None
         if not self._credential_usable:
             return None
-        pair = self.credential._use_basic_auth()
+        pair = self.credential._use_basic_auth("api_transport:basic_auth")
         if self.service.auth_type == "digest":
             return HTTPDigestAuth(*pair) if pair else None
         return pair

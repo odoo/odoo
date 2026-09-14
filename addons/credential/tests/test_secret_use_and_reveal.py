@@ -30,7 +30,7 @@ class TestSecretUseAndReveal(EncryptionKeyCase, TransactionCase):
 
         for _ in range(3):
             self.env.invalidate_all()
-            self.assertEqual(credential._use_secret(prefer="api_key"), "K")
+            self.assertEqual(credential._use_secret("test:use", prefer="api_key"), "K")
 
         self.assertEqual(self._read_rows(credential), 0)
 
@@ -50,7 +50,7 @@ class TestSecretUseAndReveal(EncryptionKeyCase, TransactionCase):
 
         for _ in range(3):
             self.env.invalidate_all()
-            self.assertEqual(credential._use_basic_auth(), ("u", "p"))
+            self.assertEqual(credential._use_basic_auth("test:use"), ("u", "p"))
 
     def test_a_rolled_back_reveal_is_still_audited(self):
         credential = self._credential(api_key="K")

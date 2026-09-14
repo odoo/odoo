@@ -1,6 +1,6 @@
 {
     "name": "Credential Vault",
-    "version": "19.0.1.16.0",
+    "version": "19.0.1.17.0",
     "category": "Hidden",
     "sequence": 5,
     "summary": "Foundation module for secure credential management across all external integrations",
@@ -74,6 +74,7 @@ rotation.
         "views/credential_credential_views.xml",
         "views/credential_category_views.xml",
         "views/credential_access_log_views.xml",
+        "views/credential_use_views.xml",
         "views/credential_menu.xml",
     ],
     "assets": {

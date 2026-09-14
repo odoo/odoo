@@ -69,7 +69,9 @@ class MixinCredentialAuth(models.AbstractModel):
         for record in self:
             credential = record.credential_id
             value = (
-                credential._get_secret(prefer=record._secret_slot_for_auth_type())
+                credential._use_secret(
+                    "fingerprint", prefer=record._secret_slot_for_auth_type()
+                )
                 if credential
                 else False
             )

@@ -29,12 +29,12 @@ class TestVerificationSecret(EncryptionKeyCase, TransactionCase):
         credential = self._create(
             "verif simple", self.api_key_category, credential_value="PLAIN"
         )
-        self.assertEqual(credential._use_secret(), "PLAIN")
+        self.assertEqual(credential._use_secret("test:use"), "PLAIN")
         self.assertEqual(credential._get_secret(), "PLAIN")
 
     def test_agrees_with_get_secret_on_json_storage(self):
         credential = self._create("verif json", self.api_key_category, api_key="KEYED")
-        self.assertEqual(credential._use_secret(), "KEYED")
+        self.assertEqual(credential._use_secret("test:use"), "KEYED")
         self.assertEqual(credential._get_secret(), "KEYED")
 
     def test_prefer_disambiguates(self):
@@ -44,15 +44,19 @@ class TestVerificationSecret(EncryptionKeyCase, TransactionCase):
             bearer_token="BEARER",
             api_secret="SECRET",
         )
-        self.assertEqual(credential._use_secret(prefer="bearer_token"), "BEARER")
-        self.assertEqual(credential._use_secret(prefer="api_secret"), "SECRET")
+        self.assertEqual(
+            credential._use_secret("test:use", prefer="bearer_token"), "BEARER"
+        )
+        self.assertEqual(
+            credential._use_secret("test:use", prefer="api_secret"), "SECRET"
+        )
 
     def test_empty_credential(self):
         credential = self._create(
             "verif empty",
             self.env.ref("credential.credential_category_custom"),
         )
-        self.assertFalse(credential._use_secret())
+        self.assertFalse(credential._use_secret("test:use"))
 
     def test_writes_no_audit_row(self):
         credential = self._create(
@@ -63,7 +67,7 @@ class TestVerificationSecret(EncryptionKeyCase, TransactionCase):
 
         for _ in range(10):
             credential.invalidate_recordset(["cached_plaintext"])
-            self.assertEqual(credential._use_secret(), "PLAIN")
+            self.assertEqual(credential._use_secret("test:use"), "PLAIN")
         self.env.flush_all()
 
         self.assertEqual(
@@ -85,7 +89,7 @@ class TestVerificationSecret(EncryptionKeyCase, TransactionCase):
         for attempt in range(20):
             credential.invalidate_recordset(["cached_plaintext"])
             self.assertEqual(
-                credential._use_secret(),
+                credential._use_secret("test:use"),
                 "PLAIN",
                 f"denied at attempt {attempt + 1}; the gate must not be "
                 f"rate-limited against its own callers",

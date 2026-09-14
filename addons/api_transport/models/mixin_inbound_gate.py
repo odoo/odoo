@@ -219,7 +219,7 @@ class MixinInboundGate(models.AbstractModel):
 
         secret = None
         if self.auth_type in ("hmac_sha256", "hmac_sha512"):
-            secret = self.credential_id._use_secret()
+            secret = self.credential_id._use_secret("inbound_gate:verify")
 
         return is_signature_valid(
             signature_type=self.auth_type,

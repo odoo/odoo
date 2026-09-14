@@ -829,7 +829,9 @@ class DeliveryCarrier(models.Model):
         # Read through the vault's use path: rating runs per checkout under the
         # shared website user, so the per-user reveal allowance would cap every
         # shopper's quote together.
-        return credential._use_secret_payload().get(field_name) or False
+        return (
+            credential._use_secret_payload("delivery:carrier").get(field_name) or False
+        )
 
     def _carrier_store_secret(self, field_name, value):
         """Write one secret into this carrier's credential.
@@ -874,25 +876,24 @@ class DeliveryCarrier(models.Model):
         if native:
             credential[field_name] = value or False
         else:
-            try:
-                data = json.loads(credential.credential_data or "{}")
-            except ValueError:
-                data = {}
+            data = (
+                {
+                    key: value
+                    for key, value in credential._use_secret_payload(
+                        "delivery:store"
+                    ).items()
+                    if key not in credential._JSON_ACCESSOR_FIELDS
+                }
+                if credential.storage_method == "json"
+                else {}
+            )
             if value:
                 data[field_name] = value
             else:
                 data.pop(field_name, None)
             credential.credential_data = json.dumps(data)
 
-        if not any(
-            (
-                credential.api_key,
-                credential.api_secret,
-                credential.username,
-                credential.password,
-                json.loads(credential.credential_data or "{}"),
-            )
-        ):
+        if not any(credential._use_secret_payload("delivery:store").values()):
             # Nothing left: a carrier holding no secrets holds no credential.
             self.carrier_credential_id = False
             credential.unlink()

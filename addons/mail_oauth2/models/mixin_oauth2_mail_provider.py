@@ -40,9 +40,12 @@ class MixinOauth2MailProvider(models.AbstractModel):
     def _oauth2_stored_tokens(self):
         self.check_singleton()
         credential = self.oauth2_credential_id.sudo()
+        tokens = (
+            credential._use_secret_payload("mail_oauth2:tokens") if credential else {}
+        )
         return (
-            credential.oauth_access_token or False,
-            credential.oauth_refresh_token or False,
+            tokens.get("oauth_access_token") or False,
+            tokens.get("oauth_refresh_token") or False,
         )
 
     def _oauth2_store_tokens(self, access_token=_UNSET, refresh_token=_UNSET):

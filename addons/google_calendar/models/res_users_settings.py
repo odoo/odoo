@@ -79,8 +79,13 @@ class ResUsersSettings(models.Model):
     def _compute_google_calendar_tokens(self):
         for settings in self:
             credential = settings.google_calendar_credential_id.sudo()
-            settings.google_calendar_token = credential.oauth_access_token or False
-            settings.google_calendar_rtoken = credential.oauth_refresh_token or False
+            tokens = (
+                credential._use_secret_payload("google_calendar:tokens")
+                if credential
+                else {}
+            )
+            settings.google_calendar_token = tokens.get("oauth_access_token") or False
+            settings.google_calendar_rtoken = tokens.get("oauth_refresh_token") or False
 
     def _inverse_google_calendar_token(self):
         for settings in self:

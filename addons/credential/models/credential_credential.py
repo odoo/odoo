@@ -10,6 +10,8 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.libs import redact
 
+from .credential_use import check_purpose
+
 _logger = logging.getLogger(__name__)
 
 DAYS_NO_EXPIRY = 999
@@ -1145,8 +1147,11 @@ class CredentialCredential(models.Model):
     # audit row, both of which exist to stop a person harvesting secrets and which
     # made the hundred-and-first outbound call of an hour fail. It is private so no
     # RPC call reaches it; transport exchanges are recorded in their own log.
-    def _use_secret_payload(self) -> dict:
+    def _use_secret_payload(self, purpose: str) -> dict:
         self.check_singleton()
+        check_purpose(purpose)
+        if self.id:
+            self.env["credential.use"]._queue(self.id, purpose)
         encrypted = self.with_context(bin_size=False).credential_value_encrypted
         if not encrypted:
             return {}
@@ -1166,8 +1171,8 @@ class CredentialCredential(models.Model):
             return {}
         return data if isinstance(data, dict) else {}
 
-    def _use_secret(self, prefer: str | None = None) -> str | bool:
-        payload = self._use_secret_payload()
+    def _use_secret(self, purpose: str, prefer: str | None = None) -> str | bool:
+        payload = self._use_secret_payload(purpose)
         candidates = self._SECRET_ACCESSOR_PRIORITY
         if prefer:
             candidates = (prefer, *(f for f in candidates if f != prefer))
@@ -1176,8 +1181,8 @@ class CredentialCredential(models.Model):
                 return payload[key]
         return payload.get("credential_value") or False
 
-    def _use_basic_auth(self) -> tuple[str, str] | None:
-        payload = self._use_secret_payload()
+    def _use_basic_auth(self, purpose: str) -> tuple[str, str] | None:
+        payload = self._use_secret_payload(purpose)
         if payload.get("username") and payload.get("password"):
             return (payload["username"], payload["password"])
         return None
@@ -1206,7 +1211,7 @@ class CredentialCredential(models.Model):
         credential = self._get_system_secret_credential(key)
         if not credential:
             return False
-        return credential._use_secret_payload().get("value") or False
+        return credential._use_secret_payload("system_secret").get("value") or False
 
     @api.model
     def _set_system_secret(self, key: str, value: str | bool) -> None:
