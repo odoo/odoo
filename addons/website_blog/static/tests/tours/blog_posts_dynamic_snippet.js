@@ -42,7 +42,7 @@ registerWebsitePreviewTour(
         ...changeOptionInPopover(
             "Dynamic Snippet",
             "Fetched Elements",
-            `div[data-action-param*='1']`,
+            `[data-action-param='1']`,
         ),
         {
             content: "Check That the `Model` option is visible",
