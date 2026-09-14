@@ -873,6 +873,57 @@ class TestBackendDifferential(TransactionCase):
             script,
         )
 
+    def test_export_data_agrees_across_tiers(self):
+        def script(env):
+            tag = env["test_orm.multi.tag"].create({"name": "t"})
+            moves = env["test_orm.move"].create(
+                [
+                    {
+                        "tag_id": tag.id,
+                        "tag_repeat": 2,
+                        "line_ids": [
+                            Command.create({"quantity": 3}),
+                            Command.create({"quantity": 4, "visible": False}),
+                        ],
+                    },
+                    {"tag_repeat": 0},
+                ]
+            )
+            env["test_orm.payment"].create({"move_id": moves[0].id, "amount": 5})
+            C = env["test_orm.category"]
+            root = C.create({"name": "root", "color": 1})
+            child = C.create({"name": "child", "parent": root.id, "color": 2})
+            env.flush_all()
+            env.invalidate_all()
+            return {
+                "moves": moves.export_data(
+                    [
+                        "tag_id",
+                        "tag_id/name",
+                        "tag_repeat",
+                        "tag_string",
+                        "quantity",
+                        "line_ids/quantity",
+                        "line_ids/visible",
+                        "payment_ids/amount",
+                    ]
+                )["datas"],
+                "categories": (root + child).export_data(
+                    ["name", "color", "parent/name", "display_name"]
+                )["datas"],
+            }
+
+        self._diff(
+            (
+                TestOrmMove,
+                TestOrmMove_Line,
+                TestOrmPayment,
+                TestOrmMultiTag,
+                TestOrmCategory,
+            ),
+            script,
+        )
+
     def test_translations_agree_across_tiers(self):
         def script(env):
             M = env["test_orm.related_translation_1"]
