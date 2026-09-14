@@ -1222,9 +1222,6 @@ class PurchaseOrder(models.Model):
     def _get_catalog_currency(self):
         return self.currency_id or super()._get_catalog_currency()
 
-    def _get_product_catalog_domain(self):
-        return super()._get_product_catalog_domain() & Domain('purchase_ok', '=', True)
-
     def _is_readonly(self) -> bool:
         """ Return whether the purchase order is read-only or not based on the state.
         A purchase order is considered read-only if its state is 'cancel'.

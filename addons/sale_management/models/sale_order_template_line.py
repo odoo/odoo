@@ -44,7 +44,7 @@ class SaleOrderTemplateLine(models.Model):
     product_id = fields.Many2one(
         comodel_name="product.product",
         check_company=True,
-        domain=lambda self: self._product_id_domain(),
+        domain=[("sale_ok", "=", True), ("type", "!=", "combo")],
     )
     product_template_id = fields.Many2one(
         string="Product Template",
@@ -52,8 +52,8 @@ class SaleOrderTemplateLine(models.Model):
         compute="_compute_product_template_id",
         readonly=False,
         search="_search_product_template_id",
-        # magic way to make sure the domain integrates the check_company _domain_product_id logics
-        # despite not being a check_company=True field
+        # magic way to make sure the domain integrates the product domain, including the
+        # check_company logic despite not being a check_company=True field
         domain=lambda self: self._fields["product_id"]._description_domain(self.env),
     )
 
@@ -346,11 +346,6 @@ class SaleOrderTemplateLine(models.Model):
         return super().write(vals)
 
     # === BUSINESS METHODS ===#
-
-    @api.model
-    def _product_id_domain(self):
-        """Return the domain of the products that can be added to the template."""
-        return [("sale_ok", "=", True), ("type", "!=", "combo")]
 
     def _prepare_order_line_values(self, fiscal_position, currency):
         """Prepare values to create a sale order line from a template line.

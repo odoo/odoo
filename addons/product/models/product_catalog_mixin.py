@@ -27,7 +27,7 @@ class ProductCatalogMixin(models.AbstractModel):
             "res_model": "product.product",
             "views": [(kanban_view_id, "kanban"), (False, "form")],
             "search_view_id": [search_view_id, "search"],
-            "domain": self._get_product_catalog_domain(),
+            "domain": self.with_context(**additional_context)._get_product_catalog_domain(),
             "context": context,
         }
 
@@ -51,9 +51,17 @@ class ProductCatalogMixin(models.AbstractModel):
 
     def _get_product_catalog_domain(self) -> Domain:
         """Determine the domain to search for products in the catalog."""
+        Comodel = self.env[self._fields[self.env.context["child_field"]].comodel_name]
         return (
-            Domain("company_id", "=", False) | Domain("company_id", "parent_of", self.company_id.id)
-        ) & Domain("type", "!=", "combo")
+            (
+                Domain("company_id", "=", False)
+                | Domain("company_id", "parent_of", self.company_id.id)
+            )
+            & Domain("type", "!=", "combo")
+            # When possible, rely on the comodel product field domain.
+            # Note that this will only work with callable/array domains, not string ones.
+            & Comodel._fields["product_id"].get_comodel_domain(Comodel)
+        )
 
     def _get_product_catalog_order_line_info(self, product_ids: list, **kwargs) -> dict:
         """Return products information to be shown in the catalog.

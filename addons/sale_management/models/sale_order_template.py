@@ -394,11 +394,6 @@ class SaleOrderTemplate(models.Model):
         self.ensure_one()
         return self.currency_id or self.company_id.currency_id or self.env.company.currency_id
 
-    def _get_product_catalog_domain(self):
-        return super()._get_product_catalog_domain() & Domain(
-            self.env["sale.order.template.line"]._product_id_domain()
-        )
-
     def _show_prices(self) -> bool:
         return False
 
