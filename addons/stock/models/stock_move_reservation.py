@@ -769,13 +769,26 @@ class StockMoveReservation(models.Model):
             res.append(Command.create(vals))
 
     def _update_quantity_done(self, qty):
-        existing_smls = self.move_line_ids
-        self.move_line_ids = self._prepare_quantity_done_vals(qty)
-        new_lines = self.move_line_ids - existing_smls
+        self._apply_quantity_done_vals({self: self._prepare_quantity_done_vals(qty)})
+
+    def _apply_quantity_done_vals(self, commands_by_move):
+        # the updates and deletions go through each move's lines; the new
+        # lines of every move are created together, so reservation, linking
+        # and the state recomputation run once over the batch
+        new_line_vals = []
+        for move, commands in commands_by_move.items():
+            move.move_line_ids = [
+                command for command in commands if command[0] != Command.CREATE
+            ]
+            new_line_vals.extend(
+                dict(command[2], move_id=move.id)
+                for command in commands
+                if command[0] == Command.CREATE
+            )
+        new_lines = self.env["stock.move.line"].create(new_line_vals)
         dbg.logic.debug(
-            "[move:%s] _update_quantity_done(%s): new lines %s",
-            self.id,
-            qty,
+            "_apply_quantity_done_vals on %s: new lines %s",
+            dbg.rec(self.browse(move.id for move in commands_by_move)),
             dbg.rec(new_lines),
         )
         new_lines._apply_putaway_strategy()

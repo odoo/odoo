@@ -1019,6 +1019,9 @@ class StockMove(models.Model):
                 )
             self.env["stock.move.line"].browse(mls_to_unlink).unlink()
 
+        # the lines the increases add are created in one batch: a create per
+        # move reserves, links and recomputes states one move at a time
+        commands_by_move = {}
         for move in self:
             delta_qty = move.quantity - move._get_move_line_quantity()
             dbg.logic.debug(
@@ -1028,9 +1031,11 @@ class StockMove(models.Model):
                 delta_qty,
             )
             if move.product_uom_id.compare(delta_qty, 0) > 0:
-                move._update_quantity_done(move.quantity)
+                commands_by_move[move] = move._prepare_quantity_done_vals(move.quantity)
             elif move.product_uom_id.compare(delta_qty, 0) < 0:
                 decrease_move_line_quantities(move, abs(delta_qty))
+        if commands_by_move:
+            self._apply_quantity_done_vals(commands_by_move)
 
     def _inverse_product_qty(self):
         raise UserError(
