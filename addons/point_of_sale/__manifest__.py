@@ -102,6 +102,10 @@
             ),
             "web/static/src/components/errors/error_handlers.js",
             "web/static/src/ui/dialog/dialog.scss",
+            "point_of_sale/static/src/backend/pos_kanban_view/*",
+            "point_of_sale/static/src/backend/pos_payment_provider_cards/*",
+            "point_of_sale/static/src/backend/many2many_placeholder_list_view/*",
+            "point_of_sale/static/src/backend/test_epos/*",
         ],
         "web.assets_unit_tests": [
             "point_of_sale/static/tests/unit/**/*",

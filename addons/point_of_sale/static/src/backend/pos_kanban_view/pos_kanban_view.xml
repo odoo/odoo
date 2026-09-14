@@ -9,21 +9,21 @@
     <t t-name="point_of_sale.PosKanbanRenderer">
         <div class="d-flex flex-column">
             <t t-call="web.KanbanRenderer" />
-            <div class="position-relative container" t-att-class="{ 'border-top mt-2': showTopBorder() }" t-if="this.posState.show_predefined_scenarios">
-                <div class="flex-grow-1 text-center" t-att-class="{ 'disable-buttons': !posState.has_chart_template || loadScenario.status === 'loading' }">
+            <div class="position-relative container" t-att-class="{ 'border-top mt-2': showTopBorder() }" t-if="showPredefinedScenarios">
+                <div class="flex-grow-1 text-center">
                     <p class="h1 text-primary mt-4" t-if="!posState.has_pos_config">Choose your store</p>
                     <p t-if="!posState.has_chart_template" class="h2 m-3">
-                        Please <a href="#" class="btn-link o_form_uri" role="button" t-on-click="() => action.doAction('account.action_account_config')">install a chart of accounts</a> to activate the buttons.
+                        Please <a href="#" class="btn-link o_form_uri" role="button" t-on-click.prevent="() => action.doAction('account.action_account_config')">install a chart of accounts</a> to activate the buttons.
                     </p>
                     <br />
                     <div t-attf-class="d-flex {{posState.is_restaurant_installed ? 'flex-column' : 'flex-column-reverse'}}">
                         <div class="shop-scenarios row p-3">
-                            <t t-foreach="shopScenarios" t-as="item" t-key="item_index">
+                            <t t-foreach="shopScenarios" t-as="item" t-key="item.functionName">
                                 <t t-call="point_of_sale.ScenarioCard" />
                             </t>
                         </div>
                         <div class="restaurant-scenarios row p-3 justify-content-center">
-                            <t t-foreach="restaurantScenarios" t-as="item" t-key="item_index">
+                            <t t-foreach="restaurantScenarios" t-as="item" t-key="item.functionName">
                                 <t t-call="point_of_sale.ScenarioCard" />
                             </t>
                             <t t-set="item" t-value="retailScenario" />
@@ -37,12 +37,13 @@
 
     <t t-name="point_of_sale.ScenarioCard">
         <div class="col-lg-4">
-            <div class="card mb-3 rounded-3 pos-scenario-card" style="max-width: 540px;"
+            <button type="button" class="card mb-3 rounded-3 pos-scenario-card w-100" style="max-width: 540px;"
+                t-att-disabled="isScenarioDisabled"
                 t-on-click="() => this.clickLoadScenario(item)">
                 <div class="row g-0">
                     <div class="col-lg-4">
                         <div class="img-container m-2 d-flex align-items-center justify-content-center">
-                            <img t-attf-src="/point_of_sale/static/img/{{item.iconFile}}" class="scenario-img" />
+                            <img alt="" t-attf-src="/point_of_sale/static/img/{{item.iconFile}}" class="scenario-img" />
                         </div>
                     </div>
                     <div class="col-lg-8">
@@ -52,7 +53,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </button>
         </div>
     </t>
 </odoo>

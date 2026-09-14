@@ -1,5 +1,5 @@
 /** @odoo-module native */
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillDestroy, onWillStart, useState } from "@odoo/owl";
 import { getLNATargetAddressSpace, initLNA } from "@point_of_sale/app/utils/init_lna";
 import { makeLogger } from "@web/core/debug/debug_logger";
 import { registry } from "@web/core/registry";
@@ -36,9 +36,11 @@ export class TestEPos extends Component {
     };
 
     setup() {
-        super.setup();
         this.notification = useService("notification");
         this.orm = useService("orm");
+        this.state = useState({ printing: false });
+        this.lifetime = new AbortController();
+        onWillDestroy(() => this.lifetime.abort());
         onWillStart(async () => {
             odoo.use_lna = (
                 await this.orm.call("pos.printer", "use_local_network_access")
@@ -61,13 +63,20 @@ export class TestEPos extends Component {
     }
 
     async onClick() {
+        if (this.state.printing) {
+            log.logic("test print: already pending");
+            return;
+        }
+        this.state.printing = true;
+        let address;
+        let endPrint;
         try {
             const data = this.props.record.data;
-            const printer_ip =
+            const printerIp =
                 data.epson_printer_ip !== undefined
                     ? data.epson_printer_ip
                     : data.pos_epson_printer_ip;
-            if (!printer_ip) {
+            if (!printerIp) {
                 this.notification.add(
                     _t(
                         "Please configure a valid ePoS url in order to test the printer",
@@ -77,47 +86,48 @@ export class TestEPos extends Component {
                 return;
             }
             const protocol = odoo.use_lna ? "http:" : window.location.protocol;
-            const url = protocol + "//" + printer_ip;
-            this.address = url + "/cgi-bin/epos/service.cgi?devid=local_printer";
+            const url = protocol + "//" + printerIp;
+            address = url + "/cgi-bin/epos/service.cgi?devid=local_printer";
             log.pipeline("test print", () => ({ url, lna: Boolean(odoo.use_lna) }));
             const params = {
                 method: "POST",
                 body: this._getReceipt(),
-                signal: AbortSignal.timeout(15000),
             };
             if (odoo.use_lna) {
-                params.targetAddressSpace = getLNATargetAddressSpace(this.address);
+                params.targetAddressSpace = getLNATargetAddressSpace(address);
                 let lnaStatus = "pending";
-                await initLNA(this.notification, (status) => {
-                    lnaStatus = status;
-                });
+                await initLNA(
+                    this.notification,
+                    (status) => {
+                        lnaStatus = status;
+                    },
+                    { signal: this.lifetime.signal, watch: false },
+                );
                 log.logic("test print: lna status", () => ({ lnaStatus }));
                 if (lnaStatus === "danger") {
                     return;
                 }
             }
-            const endPrint = log.perf("test print fetch");
-            const result = await fetch(this.address, params);
-            const body = await result.text();
-            const parser = new DOMParser();
-            const parsedBody = parser.parseFromString(body, "application/xml");
-            const response = parsedBody.querySelector("response");
-            const success = response.getAttribute("success") === "true";
-            const errorCode = response.getAttribute("code");
-            endPrint({ http: result.status, success, errorCode });
-            if (!success || errorCode !== "") {
-                const errorMessage =
-                    EPSON_ERRORS[errorCode] ||
-                    _t("Failed to print a test receipt. Check your printer.");
-                this.notification.add(errorMessage, { type: "warning" });
-            } else {
-                this.notification.add(_t("Succesfully printed a test receipt"), {
-                    type: "info",
-                });
+            if (this.lifetime.signal.aborted) {
+                return;
             }
+            params.signal = AbortSignal.any([
+                this.lifetime.signal,
+                AbortSignal.timeout(15000),
+            ]);
+            endPrint = log.perf("test print fetch");
+            const result = await fetch(address, params);
+            const body = await result.text();
+            if (this.lifetime.signal.aborted) {
+                return;
+            }
+            this.notifyPrintResult(result, body);
         } catch (error) {
+            if (this.lifetime.signal.aborted) {
+                return;
+            }
             log.logic("test print: unreachable", () => ({
-                url: this.address,
+                url: address,
                 error: error?.name,
             }));
             this.notification.add(
@@ -126,6 +136,35 @@ export class TestEPos extends Component {
                 ),
                 { type: "danger" },
             );
+        } finally {
+            endPrint?.();
+            this.state.printing = false;
+        }
+    }
+
+    notifyPrintResult(result, body) {
+        const parser = new DOMParser();
+        const parsedBody = parser.parseFromString(body, "application/xml");
+        const response = parsedBody.querySelector("response");
+        const success =
+            result.ok &&
+            !parsedBody.querySelector("parsererror") &&
+            ["true", "1"].includes(response?.getAttribute("success"));
+        const errorCode = response?.getAttribute("code") || "";
+        log.logic("test print: response", () => ({
+            http: result.status,
+            success,
+            errorCode,
+        }));
+        if (!success || errorCode) {
+            const errorMessage =
+                (Object.hasOwn(EPSON_ERRORS, errorCode) && EPSON_ERRORS[errorCode]) ||
+                _t("Failed to print a test receipt. Check your printer.");
+            this.notification.add(errorMessage, { type: "warning" });
+        } else {
+            this.notification.add(_t("Succesfully printed a test receipt"), {
+                type: "info",
+            });
         }
     }
 }

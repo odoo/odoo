@@ -14,6 +14,10 @@ class PointOfSaleSuite(web_test_js.HOOTCommon):
     def test_point_of_sale_unit(self):
         self._run_hoot("@point_of_sale/unit", preset="desktop", timeout=900)
 
+    @odoo.tests.no_retry
+    def test_point_of_sale_backend_mobile(self):
+        self._run_hoot("@point_of_sale/unit/backend", preset="mobile")
+
     def test_suite_filters_cover_every_test_file(self):
         tests_root = Path(file_path("point_of_sale/static/tests"))
         uncovered = []

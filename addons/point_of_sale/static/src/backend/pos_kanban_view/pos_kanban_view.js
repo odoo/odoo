@@ -1,5 +1,5 @@
 /** @odoo-module native */
-import { onWillRender, onWillStart, useState } from "@odoo/owl";
+import { onWillStart, useState } from "@odoo/owl";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
 import { colorScheme } from "@web/core/color_scheme";
 import { makeLogger } from "@web/core/debug/debug_logger";
@@ -11,10 +11,29 @@ import { AlertDialog } from "@web/ui/dialog";
 import { KanbanController, KanbanRenderer, kanbanView } from "@web/views/kanban";
 const log = makeLogger("pos.backend.kanban");
 async function updatePosKanbanViewState(orm, stateObj) {
-    const endState = log.perf("get_pos_kanban_view_state");
-    const result = await orm.call("pos.config", "get_pos_kanban_view_state");
+    const result = await log.measure("get_pos_kanban_view_state", () =>
+        orm.call("pos.config", "get_pos_kanban_view_state"),
+    );
     Object.assign(stateObj, result);
-    endState(result);
+    log.logic("pos kanban state", () => result);
+}
+
+export class PosKanbanModel extends kanbanView.Model {
+    setup(...args) {
+        super.setup(...args);
+        this.pendingLoads = 0;
+    }
+
+    async load(params) {
+        this.pendingLoads++;
+        this.notify();
+        try {
+            return await super.load(params);
+        } finally {
+            this.pendingLoads--;
+            this.notify();
+        }
+    }
 }
 
 export class PosKanbanController extends KanbanController {
@@ -22,12 +41,10 @@ export class PosKanbanController extends KanbanController {
     setup() {
         super.setup();
         this.orm = useService("orm");
-        this.action = useService("action");
         this.initialPosState = {
             has_pos_config: true,
             has_chart_template: true,
             is_restaurant_installed: true,
-            show_predefined_scenarios: true,
             is_main_company: true,
         };
         onWillStart(() => updatePosKanbanViewState(this.orm, this.initialPosState));
@@ -43,56 +60,58 @@ export class PosKanbanRenderer extends KanbanRenderer {
         this.orm = useService("orm");
         this.action = useService("action");
         this.posState = useState(this.props.initialPosState);
-        this.loadScenario = useTrackedAsync(
-            async ({ functionName, isRestaurant }) =>
-                await this.callWithViewUpdate(async () => {
-                    let isInstalledWithDemo = false;
-                    log.pipeline("loadScenario", () => ({
-                        functionName,
-                        isRestaurant,
-                        restaurantInstalled: this.posState.is_restaurant_installed,
-                        mainCompany: this.posState.is_main_company,
-                    }));
-                    if (isRestaurant && !this.posState.is_restaurant_installed) {
-                        const endInstall = log.perf("install_pos_restaurant");
-                        const result = await this.orm.call(
-                            "pos.config",
-                            "install_pos_restaurant",
-                        );
-                        isInstalledWithDemo = result.installed_with_demo;
-                        endInstall({ installedWithDemo: isInstalledWithDemo });
-                    }
-                    const runScenario =
-                        !isInstalledWithDemo ||
-                        (isInstalledWithDemo && !this.posState.is_main_company);
-                    log.logic("loadScenario: run", () => ({
-                        functionName,
-                        isInstalledWithDemo,
-                        runScenario,
-                    }));
-                    if (runScenario) {
-                        const endScenario = log.perf(functionName);
-                        const result = await this.orm.call("pos.config", functionName, [
-                            false,
-                        ]);
-                        endScenario();
-                        return result;
-                    }
-                }),
+        this.loadScenario = useTrackedAsync(async ({ functionName, isRestaurant }) =>
+            this.callWithViewUpdate(async () => {
+                let isInstalledWithDemo = false;
+                log.pipeline("loadScenario", () => ({
+                    functionName,
+                    isRestaurant,
+                    restaurantInstalled: this.posState.is_restaurant_installed,
+                    mainCompany: this.posState.is_main_company,
+                }));
+                if (isRestaurant && !this.posState.is_restaurant_installed) {
+                    const result = await log.measure("install_pos_restaurant", () =>
+                        this.orm.call("pos.config", "install_pos_restaurant"),
+                    );
+                    isInstalledWithDemo = result.installed_with_demo;
+                }
+                const runScenario =
+                    !isInstalledWithDemo || !this.posState.is_main_company;
+                log.logic("loadScenario: run", () => ({
+                    functionName,
+                    isInstalledWithDemo,
+                    runScenario,
+                }));
+                if (runScenario) {
+                    return log.measure(functionName, () =>
+                        this.orm.call("pos.config", functionName, [false]),
+                    );
+                }
+            }),
         );
-
-        onWillRender(() => this.checkDisplayedResult());
     }
 
     async clickLoadScenario(item) {
+        if (this.isScenarioDisabled) {
+            log.logic("loadScenario: disabled");
+            return;
+        }
         await this.loadScenario.call(item);
         if (this.loadScenario.status === "error") {
             throw this.loadScenario.result;
         }
     }
 
-    checkDisplayedResult() {
-        this.posState.show_predefined_scenarios = this.props.list.count === 0;
+    get isScenarioDisabled() {
+        return (
+            !this.posState.has_chart_template ||
+            this.loadScenario.status === "loading" ||
+            this.props.list.model.pendingLoads > 0
+        );
+    }
+
+    get showPredefinedScenarios() {
+        return this.props.list.count === 0;
     }
 
     get isDarkTheme() {
@@ -100,28 +119,43 @@ export class PosKanbanRenderer extends KanbanRenderer {
     }
 
     async callWithViewUpdate(func) {
-        try {
-            const [isPosManager, isAdmin] = await Promise.all([
-                user.hasGroup("point_of_sale.group_pos_manager"),
-                user.hasGroup("base.group_system"),
-            ]);
+        const [isPosManager, isAdmin] = await Promise.all([
+            user.hasGroup("point_of_sale.group_pos_manager"),
+            user.hasGroup("base.group_system"),
+        ]);
 
-            log.logic("callWithViewUpdate: rights", () => ({ isPosManager, isAdmin }));
-            if (!(isPosManager && isAdmin)) {
-                this.dialog.add(AlertDialog, {
-                    title: _t("Access Denied"),
-                    body: _t(
-                        "It seems like you don't have enough rights to create point of sale configurations.",
-                    ),
-                });
-                return;
-            }
-            const result = await func();
-            await updatePosKanbanViewState(this.orm, this.posState);
-            return result;
-        } finally {
-            this.env.searchModel.clearQuery();
+        log.logic("callWithViewUpdate: rights", () => ({ isPosManager, isAdmin }));
+        if (!(isPosManager && isAdmin)) {
+            this.dialog.add(AlertDialog, {
+                title: _t("Access Denied"),
+                body: _t(
+                    "It seems like you don't have enough rights to create point of sale configurations.",
+                ),
+            });
+            return;
         }
+        let result;
+        const errors = [];
+        try {
+            result = await func();
+            await updatePosKanbanViewState(this.orm, this.posState);
+        } catch (error) {
+            errors.push(error);
+        }
+        try {
+            await this.env.searchModel.clearQuery();
+        } catch (error) {
+            errors.push(error);
+        }
+        if (errors.length) {
+            if (errors.length > 1) {
+                log.logic("search refresh also failed after onboarding error", () => ({
+                    error: errors[1],
+                }));
+            }
+            throw errors[0];
+        }
+        return result;
     }
 
     get shopScenarios() {
@@ -198,6 +232,7 @@ export class PosKanbanRenderer extends KanbanRenderer {
 
 export const PosKanbanView = {
     ...kanbanView,
+    Model: PosKanbanModel,
     Renderer: PosKanbanRenderer,
     Controller: PosKanbanController,
 };

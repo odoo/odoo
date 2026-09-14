@@ -1,5 +1,6 @@
 /** @odoo-module native */
 import { Component, onWillStart, useState } from "@odoo/owl";
+import { browser } from "@web/core/browser/browser";
 import { makeLogger } from "@web/core/debug/debug_logger";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -7,68 +8,65 @@ import { standardWidgetProps } from "@web/views/widgets";
 const log = makeLogger("pos.backend.payment_providers");
 export class PosPaymentProviderCards extends Component {
     static template = "point_of_sale.PosPaymentProviderCards";
-    static components = {};
     static props = {
         ...standardWidgetProps,
     };
 
     setup() {
-        super.setup();
         this.orm = useService("orm");
-        this.action = useService("action");
         this.state = useState({
             providers: [],
             disabled: false,
         });
 
         onWillStart(async () => {
-            const endStatus = log.perf("get_provider_status");
-            const res = await this.orm.call(
-                "pos.payment.method",
-                "get_provider_status",
-                [providers.map((p) => p[1])],
+            const res = await log.measure("get_provider_status", () =>
+                this.orm.call("pos.payment.method", "get_provider_status", [
+                    providers.map((p) => p[1]),
+                ]),
             );
-            endStatus({ asked: providers.length, known: res.state.length });
+            log.logic("provider status", () => ({
+                asked: providers.length,
+                known: res.state.length,
+            }));
 
-            this.state.providers = providers
-                .filter((prov) =>
-                    res.state.some((moduleState) => moduleState.name === prov[1]),
-                )
-                .map((prov) => {
-                    const status = res.state.find((p) => p.name === prov[1]);
-                    return Object.assign(
-                        {
-                            selection: prov[0],
-                            provider: prov[2],
-                        },
-                        status,
-                    );
-                });
+            const statusByModule = new Map(
+                res.state.map((status) => [status.name, status]),
+            );
+            this.state.providers = providers.flatMap(
+                ([selection, moduleName, provider]) => {
+                    const status = statusByModule.get(moduleName);
+                    return status ? [{ ...status, selection, provider }] : [];
+                },
+            );
         });
     }
 
-    get config_ids() {
-        return this.props.record.evalContext.context.config_ids;
-    }
-
     async installModule(moduleId) {
-        const recordSave = await this.props.record.save();
-        log.pipeline("installModule", () => ({ moduleId, recordSave }));
-        if (!recordSave) {
+        if (this.state.disabled) {
+            log.logic("installModule: already pending", () => ({ moduleId }));
             return;
         }
         this.state.disabled = true;
-        await this.orm
-            .call("ir.module.module", "button_immediate_install", [moduleId])
-            .then((result) => {
-                this.state.disabled = false;
-                if (result) {
-                    window.location.reload();
-                }
-            })
-            .finally(() => {
-                this.state.disabled = false;
-            });
+        let reloading = false;
+        try {
+            const recordSave = await this.props.record.save();
+            log.pipeline("installModule", () => ({ moduleId, recordSave }));
+            if (!recordSave) {
+                return;
+            }
+            const result = await this.orm.call(
+                "ir.module.module",
+                "button_immediate_install",
+                [moduleId],
+            );
+            if (result) {
+                browser.location.reload();
+                reloading = true;
+            }
+        } finally {
+            this.state.disabled = reloading;
+        }
     }
 
     async setupProvider(moduleId) {
@@ -77,8 +75,8 @@ export class PosPaymentProviderCards extends Component {
             moduleId,
             selection: provider?.selection,
         }));
-        if (provider) {
-            this.props.record.update({
+        if (provider?.state === "installed" && !this.state.disabled) {
+            await this.props.record.update({
                 payment_method_type: "terminal",
                 use_payment_terminal: provider.selection,
                 name: provider.provider,
