@@ -179,20 +179,55 @@ def distribute_reservation(candidates, quantity, precision_digits, whole_units=F
 
 
 class QuantsCache:
-    __slots__ = ("_data", "_empty", "_location_paths", "_lot_scope", "_product_ids")
+    __slots__ = (
+        "_by_product",
+        "_data",
+        "_empty",
+        "_location_paths",
+        "_lot_scope",
+        "_paths_by_location",
+        "_product_ids",
+    )
 
     def __init__(self, empty, product_ids=(), location_paths=(), lot_scope=None):
         self._data = {}
+        self._by_product = defaultdict(list)
         self._empty = empty
         self._product_ids = frozenset(product_ids)
         self._location_paths = tuple(p for p in location_paths if p)
         self._lot_scope = None if lot_scope is None else frozenset(lot_scope)
+        self._paths_by_location = {}
 
     def __getitem__(self, key):
         return self._data.get(key, self._empty)
 
     def __setitem__(self, key, value):
         self._data[key] = value
+        self._by_product[key[0]].append(key)
+
+    def set_location_path(self, location_id, parent_path):
+        self._paths_by_location[location_id] = parent_path or ""
+
+    def under(
+        self, product_id, location_path, lot_id=None, package_id=None, owner_id=None
+    ):
+        # the quants a non-strict gather selects: every location under the
+        # path, the lot or none when a lot is asked, any package or owner
+        # unless one is asked
+        paths = self._paths_by_location
+        result = self._empty
+        for key in self._by_product.get(product_id, ()):
+            _product, location, lot, package, owner = key
+            if not paths.get(location, "").startswith(location_path):
+                continue
+            if lot_id and lot not in (lot_id, False):
+                continue
+            if package_id and package != package_id:
+                continue
+            if owner_id and owner != owner_id:
+                continue
+            result |= self._data[key]
+        return result
 
     def is_covering(self, product_id, location_id, lot_id=None):
         if product_id.id not in self._product_ids:

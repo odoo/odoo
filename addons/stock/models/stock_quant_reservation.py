@@ -206,6 +206,20 @@ class StockQuantReservation(models.Model):
     def _filtered_not_expired(self):
         return self
 
+    def _filter_not_blocked(self, quants):
+        # the gather domain's block exclusion, read from the gathering
+        # environment and applied to quants the cache holds under its own
+        excluded = self._get_block_types_excluded()
+        if excluded is None:
+            excluded = self.env[
+                "stock.location"
+            ]._get_block_types_excluded_from_gathering()
+        if not excluded:
+            return quants
+        return quants.filtered(
+            lambda quant: quant.location_id.effective_block_type not in excluded
+        )
+
     def _gather(
         self,
         product_id,
@@ -238,7 +252,6 @@ class StockQuantReservation(models.Model):
 
         from_cache = (
             quants_cache is not None
-            and strict
             and not strategy.narrows_to_packages
             and cache_sort is not None
             and quants_cache.is_covering(product_id, location_id, lot_id)
@@ -258,15 +271,27 @@ class StockQuantReservation(models.Model):
         if from_cache:
             package_key = package_id.id if package_id else False
             owner_key = owner_id.id if owner_id else False
-            res = self.env["stock.quant"]
-            if lot_id:
+            if strict:
+                res = self.env["stock.quant"]
+                if lot_id:
+                    res |= quants_cache[
+                        product_id.id, location_id.id, lot_id.id, package_key, owner_key
+                    ]
                 res |= quants_cache[
-                    product_id.id, location_id.id, lot_id.id, package_key, owner_key
+                    product_id.id, location_id.id, False, package_key, owner_key
                 ]
-            res |= quants_cache[
-                product_id.id, location_id.id, False, package_key, owner_key
-            ]
-            res = res._filtered_not_expired()
+            else:
+                # the cache holds every quant under the loaded locations: a
+                # non-strict gather reads its subtree from it as the strict
+                # one reads its exact key
+                res = quants_cache.under(
+                    product_id.id,
+                    location_id.parent_path or "",
+                    lot_id.id if lot_id else False,
+                    package_key,
+                    owner_key,
+                )
+            res = self._filter_not_blocked(res._filtered_not_expired())
             sort_key, sort_reverse = cache_sort
             res = res.sorted(sort_key, reverse=sort_reverse)
         else:
@@ -327,6 +352,7 @@ class StockQuantReservation(models.Model):
             quant_ids = []
             for product, loc, lot, package, owner, quants in needed_quants:
                 res[product.id, loc.id, lot.id, package.id, owner.id] = quants
+                res.set_location_path(loc.id, loc.parent_path)
                 quant_ids.extend(quants.ids)
             dbg.performance.debug(
                 "quants cache: %d products, %d locations -> %d groups, %d quants",
