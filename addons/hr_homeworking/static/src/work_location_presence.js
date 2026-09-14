@@ -38,3 +38,13 @@ export function workLocationPresence(imStatus) {
         title: `${location.label} - ${presence.label}`,
     };
 }
+
+// The presence words a located status can carry and still count as reachable.
+// mail's `onlineMemberStatuses` is a membership test against literal strings, so
+// a located status is absent from it and its member falls into Discuss's Offline
+// section while the person is at their desk.
+const REACHABLE = ["online", "away", "busy"];
+
+export const REACHABLE_WORK_LOCATION_STATUSES = Object.keys(LOCATIONS).flatMap(
+    (locationType) => REACHABLE.map((status) => `${locationType}_${status}`),
+);
