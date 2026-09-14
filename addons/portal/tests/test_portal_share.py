@@ -1,9 +1,75 @@
+import logging
+
 from odoo.exceptions import UserError
-from odoo.tests import TransactionCase, tagged
+from odoo.tests import HttpCase, TransactionCase, new_test_user, tagged
+
+_logger = logging.getLogger(__name__)
+
+
+@tagged("-at_install", "post_install")
+class TestPortalShareRedirects(HttpCase):
+    def test_invalid_targets_fall_back_for_visitors_and_portal_users(self):
+        user = new_test_user(
+            self.env, "share_redirect_reader", groups="base.group_portal"
+        )
+        for login in (None, user.login):
+            self.authenticate(login, login)
+            for model in (
+                "mixin.portal",
+                "mixin.mail.thread",
+                "no.such.model",
+                "res.partner",
+            ):
+                with self.subTest(login=login, model=model):
+                    response = self.url_open(
+                        "/mail/view",
+                        params={"model": model, "res_id": 99999999},
+                        allow_redirects=False,
+                    )
+                    _logger.debug(
+                        "Share target fallback model=%s login=%s status=%s",
+                        model,
+                        login,
+                        response.status_code,
+                    )
+                    self.assertEqual(response.status_code, 303)
+                    if login:
+                        self.assertEqual(response.headers["Location"], "/my")
 
 
 @tagged("-at_install", "post_install")
 class TestPortalShareTarget(TransactionCase):
+    def test_abstract_portal_model_is_not_a_share_target(self):
+        wizard = self._wizard_on("mixin.portal", 1)
+        self.assertFalse(wizard._get_portal_record())
+        self.assertFalse(wizard.resource_ref)
+        with self.assertRaisesRegex(UserError, "no portal page"):
+            wizard.action_send_mail()
+
+    def test_default_get_only_returns_requested_fields(self):
+        defaults = (
+            self.env["portal.share"]
+            .with_context(
+                active_model="res.partner", active_id=self.non_portal_record.id
+            )
+            .default_get(["note"])
+        )
+        self.assertNotIn("res_model", defaults)
+        self.assertNotIn("res_id", defaults)
+
+    def test_explicit_defaults_take_priority_over_active_record(self):
+        defaults = (
+            self.env["portal.share"]
+            .with_context(
+                active_model="res.partner",
+                active_id=self.non_portal_record.id,
+                default_res_model="explicit.model",
+                default_res_id=42,
+            )
+            .default_get(["res_model", "res_id"])
+        )
+        self.assertEqual(defaults, {"res_model": "explicit.model", "res_id": 42})
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

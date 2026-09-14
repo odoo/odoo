@@ -149,7 +149,12 @@ class MailController(http.Controller):
             **kwargs,
         )
 
-        if not model or not res_id or model not in request.env:
+        if (
+            not model
+            or not res_id
+            or model not in request.env
+            or request.env[model]._abstract
+        ):
             return fallback()
 
         RecordModel = request.env[model]

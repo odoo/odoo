@@ -1,7 +1,17 @@
+import logging
+
+from werkzeug.exceptions import NotFound
+
 from odoo.http import request
 
 from odoo.addons.mail.controllers.thread import ThreadController
-from odoo.addons.portal.utils import get_portal_partner, resolve_message_thread
+from odoo.addons.portal.utils import (
+    get_portal_partner,
+    is_thread_hash_pid_valid,
+    resolve_message_thread,
+)
+
+_logger = logging.getLogger(__name__)
 
 
 class PortalThreadController(ThreadController):
@@ -17,6 +27,18 @@ class PortalThreadController(ThreadController):
                 kwargs.get("token"),
             ):
                 post_data["author_id"] = partner.id
+            elif is_thread_hash_pid_valid(
+                thread, kwargs.get("hash"), kwargs.get("pid")
+            ):
+                # A signed recipient that no longer exists must not silently
+                # become the public user (or a guest) through mail's fallback.
+                _logger.debug(
+                    "Rejecting portal post for missing signed recipient: model=%s id=%s pid=%s",
+                    thread._name,
+                    thread.id,
+                    kwargs.get("pid"),
+                )
+                raise NotFound
         return post_data
 
     @classmethod

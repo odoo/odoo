@@ -62,8 +62,8 @@ class TestReportContentType(TransactionCase):
 
 @tagged("-at_install", "post_install")
 class TestPasswordFieldCoercion(TransactionCase):
-    def test_text_is_stripped(self):
-        self.assertEqual(_as_password_field("  hunter2  "), "hunter2")
+    def test_text_is_preserved(self):
+        self.assertEqual(_as_password_field("  hunter2  "), "  hunter2  ")
 
     def test_non_text_reads_as_absent(self):
         class FakeUpload:

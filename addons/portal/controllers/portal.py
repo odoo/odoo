@@ -1,6 +1,6 @@
 import math
 import re
-from urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
+from urllib.parse import quote, urlencode
 
 from werkzeug.exceptions import Forbidden, NotFound
 
@@ -16,6 +16,7 @@ from odoo.http import Controller, prepare_content_disposition_header, request, r
 from odoo.tools import clean_context, consteq, single_email_re, str2bool
 from odoo.tools.translate import LazyTranslate
 
+from odoo.addons.portal.utils import get_url_with_params as _get_url_with_params
 from odoo.addons.web.controllers.utils import _is_local_url
 
 _lt = LazyTranslate(__name__)
@@ -121,25 +122,13 @@ def _parse_callback_url(raw_callback, default):
 
 
 def _as_password_field(raw_value):
-    return raw_value.strip() if isinstance(raw_value, str) else ""
+    return raw_value if isinstance(raw_value, str) else ""
 
 
 def _parse_counter_names(raw_counters):
     if not isinstance(raw_counters, (list, tuple, set, frozenset)):
         return []
     return [name for name in raw_counters if isinstance(name, str)]
-
-
-def _get_url_with_params(url_string, query_params, remove_duplicates=True):
-    url = urlsplit(url_string)
-    if remove_duplicates:
-        url_params = dict(parse_qsl(url.query, keep_blank_values=True))
-        url_params.update(query_params)
-    else:
-        url_params = parse_qsl(url.query, keep_blank_values=True) + list(
-            query_params.items()
-        )
-    return urlunsplit(url._replace(query=urlencode(url_params)))
 
 
 class CustomerPortal(Controller):
@@ -480,6 +469,13 @@ class CustomerPortal(Controller):
 
         address_values, extra_form_data = self._parse_form_data(form_data)
 
+        current_partner = request.env["res.partner"]._get_current_partner(
+            **extra_form_data
+        )
+        if current_partner and partner_sudo != current_partner:
+            # Company name is editable only on the main address, including at checkout.
+            extra_form_data.pop("company_name", None)
+
         if verify_address_values:
             invalid_fields, missing_fields, error_messages = self._get_address_errors(
                 address_values,
@@ -717,9 +713,6 @@ class CustomerPortal(Controller):
                     )
             else:
                 address_values.pop(commercial_field_name, None)
-
-        if partner_sudo != request.env["res.partner"]._get_current_partner(**kwargs):
-            address_values.pop("company_name", None)
 
     def _add_address_email_format_errors(
         self, address_values, invalid_fields, error_messages

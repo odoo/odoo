@@ -2,6 +2,8 @@ from odoo import models
 from odoo.http import request
 from odoo.tools import format_datetime, groupby
 
+from odoo.addons.portal.utils import get_url_with_params
+
 
 class MailMessage(models.Model):
     _inherit = "mail.message"
@@ -56,10 +58,13 @@ class MailMessage(models.Model):
 
     def _portal_format_avatar_url(self, message, options):
         size = self._PORTAL_AVATAR_SIZE
+        url = f"/mail/avatar/mail.message/{message.id}/author_avatar/{size}"
         if options and options.get("token"):
-            return f"/mail/avatar/mail.message/{message.id}/author_avatar/{size}?access_token={options['token']}"
+            return get_url_with_params(url, {"access_token": options["token"]})
         if options and options.get("hash") and options.get("pid"):
-            return f"/mail/avatar/mail.message/{message.id}/author_avatar/{size}?_hash={options['hash']}&pid={options['pid']}"
+            return get_url_with_params(
+                url, {"_hash": options["hash"], "pid": options["pid"]}
+            )
         return f"/web/image/mail.message/{message.id}/author_avatar/{size}"
 
     def _portal_message_format(self, properties_names, options=None):
@@ -100,7 +105,11 @@ class MailMessage(models.Model):
         }
         vals_list = self._read_format(fnames)
 
-        note_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_note")
+        note_id = (
+            self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_note")
+            if "is_message_subtype_note" in properties_names
+            else None
+        )
         for message, values in zip(self, vals_list, strict=True):
             if "body" in values:
                 values["body"] = ["markup", values["body"]]
@@ -111,15 +120,10 @@ class MailMessage(models.Model):
                     message, options
                 )
             if "is_message_subtype_note" in properties_names:
-                subtype = values.get("subtype_id")
-                values["is_message_subtype_note"] = (
-                    bool(subtype) and subtype[0] == note_id
-                )
+                values["is_message_subtype_note"] = message.subtype_id.id == note_id
             if "published_date_str" in properties_names:
                 values["published_date_str"] = (
-                    format_datetime(self.env, values["date"])
-                    if values.get("date")
-                    else ""
+                    format_datetime(self.env, message.date) if message.date else ""
                 )
             reaction_groups = []
             for content, reactions_iter in groupby(
@@ -177,6 +181,8 @@ class MailMessage(models.Model):
 
     def _portal_message_format_attachments(self, attachment_values):
         self.check_singleton()
+        # The bulk read is shared across messages; ownership belongs to this message.
+        attachment_values = dict(attachment_values)
         safari = (
             request
             and request.httprequest.user_agent

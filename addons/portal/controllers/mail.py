@@ -1,11 +1,10 @@
-from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
-
 from odoo import http
 from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.tools import consteq
 
 from odoo.addons.mail.controllers import mail
+from odoo.addons.portal.utils import get_url_with_params
 
 
 class MailController(mail.MailController):
@@ -19,7 +18,12 @@ class MailController(mail.MailController):
 
     @classmethod
     def _redirect_to_record(cls, model, res_id, access_token=None, **kwargs):
-        if not model or not res_id or model not in request.env:
+        if (
+            not model
+            or not res_id
+            or model not in request.env
+            or request.env[model]._abstract
+        ):
             return super()._redirect_to_record(
                 model, res_id, access_token=access_token, **kwargs
             )
@@ -41,15 +45,8 @@ class MailController(mail.MailController):
                         hash_param = kwargs.get("hash")
                         url = record_action["url"]
                         if pid and hash_param:
-                            parsed = urlsplit(url)
-                            url_params = parse_qsl(
-                                parsed.query, keep_blank_values=True
-                            ) + [
-                                ("pid", pid),
-                                ("hash", hash_param),
-                            ]
-                            url = urlunsplit(
-                                parsed._replace(query=urlencode(sorted(url_params)))
+                            url = get_url_with_params(
+                                url, {"pid": pid, "hash": hash_param}
                             )
                         return request.redirect(url)
         return super()._redirect_to_record(

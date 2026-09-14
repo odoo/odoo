@@ -1,8 +1,10 @@
 import uuid
-from urllib.parse import urlencode
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 from odoo import api, fields, models
 from odoo.exceptions import AccessError
+
+from odoo.addons.portal.utils import get_url_with_params
 
 
 class MixinPortal(models.AbstractModel):
@@ -53,8 +55,7 @@ class MixinPortal(models.AbstractModel):
             params.update(self.partner_id.signup_get_auth_param()[self.partner_id.id])
 
         url_base = "/mail/view" if redirect else self.access_url
-        qs = urlencode(params)
-        return f"{url_base}?{qs}" if qs else url_base
+        return get_url_with_params(url_base, params)
 
     def _get_access_action(self, access_uid=None, force_website=False):
         self.check_singleton()
@@ -117,8 +118,16 @@ class MixinPortal(models.AbstractModel):
             params["report_type"] = report_type
         if download:
             params["download"] = "true"
-        qs = urlencode(params)
+        url = urlsplit(self.access_url)
+        query = parse_qsl(url.query, keep_blank_values=True)
         if query_string:
-            qs = f"{qs}{query_string}"
-        fragment = f"#{anchor}" if anchor else ""
-        return f"{self.access_url}{suffix or ''}?{qs}{fragment}"
+            query.extend(parse_qsl(query_string.lstrip("?&"), keep_blank_values=True))
+        url = urlunsplit(
+            url._replace(
+                path=url.path + (suffix or ""),
+                query=urlencode(query),
+                fragment=anchor if anchor is not None else url.fragment,
+            )
+        )
+        # Credentials and explicit options take priority over query-string values.
+        return get_url_with_params(url, params)

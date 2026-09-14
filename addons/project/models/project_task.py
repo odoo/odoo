@@ -2443,7 +2443,7 @@ class ProjectTask(models.Model):
                 if self_ctx._has_field_access(self_ctx._fields[field_name], "write"):
                     vals[field_name] = computed_vals.pop(field_name)
         dbg.pipeline.debug(
-            "[task:create] vals prepared -> super().create (%d with sudo-only vals)",
+            "[task:create] vals prepared -> super().create (%s with sudo-only vals)",
             dbg.lazy(
                 lambda: sum(
                     1 for computed_vals in additional_vals_list if computed_vals

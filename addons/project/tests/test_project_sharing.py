@@ -1,9 +1,14 @@
+import logging
+from urllib.parse import parse_qs, urlsplit
+
 from odoo.exceptions import AccessError
 from odoo.fields import Command, Domain
 from odoo.tests import Form, tagged
 from odoo.tools import mute_logger
 
 from .test_project_base import TestProjectCommon
+
+_logger = logging.getLogger(__name__)
 
 
 class TestProjectSharingCommon(TestProjectCommon):
@@ -144,6 +149,80 @@ class TestProjectSharingCommon(TestProjectCommon):
 
 @tagged("project_sharing")
 class TestProjectSharing(TestProjectSharingCommon):
+    def test_portal_rating_batches_statistics_for_a_real_thread(self):
+        task = self.env["project.task"].create(
+            {
+                "name": "Rating statistics challenge",
+                "project_id": self.project_portal.id,
+            }
+        )
+        messages = self.env["mail.message"].create(
+            [
+                {
+                    "body": f"Rated comment {index}",
+                    "model": task._name,
+                    "res_id": task.id,
+                }
+                for index in range(30)
+            ]
+        )
+        self.env["rating.rating"].create(
+            [
+                {
+                    "message_id": message.id,
+                    "res_model_id": self.env["ir.model"]._get(task._name).id,
+                    "res_id": task.id,
+                    "rating": 5,
+                    "consumed": True,
+                }
+                for message in messages
+            ]
+        )
+        messages.portal_message_format(options={"rating_include": True})
+        costs = []
+        for batch in (messages[:3], messages):
+            self.env.flush_all()
+            self.env.invalidate_all()
+            before = self.env.cr.sql_statement_count
+            values = batch.portal_message_format(options={"rating_include": True})
+            costs.append(self.env.cr.sql_statement_count - before)
+            self.assertEqual(len(values), len(batch))
+            for value in values:
+                self.assertEqual(value["rating_stats"]["total"], 30)
+                self.assertEqual(value["rating_stats"]["avg"], 5)
+        _logger.debug(
+            "Portal rating metadata and thread-statistics SQL for 3/30 comments: %s",
+            costs,
+        )
+        self.assertLessEqual(costs[1], costs[0] + 2)
+
+    def test_cross_project_subtask_link_has_a_separate_sharing_parameter(self):
+        projects = self.env["project.project"].create(
+            [
+                {"name": "Shared parent", "privacy_visibility": "portal"},
+                {"name": "Shared child", "privacy_visibility": "portal"},
+            ]
+        )
+        parent = self.env["project.task"].create(
+            {
+                "name": "Parent",
+                "project_id": projects[0].id,
+            }
+        )
+        child = self.env["project.task"].create(
+            {
+                "name": "Child",
+                "project_id": projects[1].id,
+                "parent_id": parent.id,
+            }
+        )
+        action = parent.action_project_sharing_open_subtasks()
+        self.assertEqual(action["type"], "ir.actions.act_url")
+        query = parse_qs(urlsplit(action["url"]).query)
+        _logger.debug("Cross-project subtask link query keys=%s", sorted(query))
+        self.assertEqual(query["access_token"], [child.access_token])
+        self.assertEqual(query["project_sharing"], ["1"])
+
     def test_project_share_wizard(self) -> None:
         self.project_portal.message_unsubscribe(
             partner_ids=self.user_portal.partner_id.ids

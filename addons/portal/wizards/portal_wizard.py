@@ -158,6 +158,7 @@ class PortalWizardUser(models.TransientModel):
 
     def action_grant_access(self):
         self.check_singleton()
+        self._invalidate_user_state()
         self._assert_user_email_uniqueness()
 
         if self.is_portal or self.is_internal:
@@ -178,6 +179,8 @@ class PortalWizardUser(models.TransientModel):
             company = self.partner_id.company_id or self.env.company
             user_sudo = self.sudo().with_company(company.id)._create_user()
 
+        self.user_id = user_sudo
+
         user_sudo.write(
             {
                 "active": True,
@@ -195,6 +198,7 @@ class PortalWizardUser(models.TransientModel):
 
     def action_revoke_access(self):
         self.check_singleton()
+        self._invalidate_user_state()
         if not self.is_portal:
             raise UserError(
                 _(
@@ -216,6 +220,7 @@ class PortalWizardUser(models.TransientModel):
 
     def action_invite_again(self):
         self.check_singleton()
+        self._invalidate_user_state()
         self._assert_user_email_uniqueness()
 
         if not self.is_portal:
@@ -232,7 +237,15 @@ class PortalWizardUser(models.TransientModel):
         return self.action_refresh_modal()
 
     def action_refresh_modal(self):
+        self._invalidate_user_state()
         return self.wizard_id._action_view_modal()
+
+    def _invalidate_user_state(self):
+        # Transient-model dependencies stop at persistent models. Re-read account
+        # state before authorizing an action and after changing the account.
+        self.invalidate_recordset(
+            ["user_id", "login_date", "email_state", "is_portal", "is_internal"]
+        )
 
     def _create_user(self):
         return (

@@ -1,11 +1,56 @@
+import logging
+
 from odoo import Command
 from odoo.tests import tagged
 
 from .test_project_base import TestProjectCommon
 
+_logger = logging.getLogger(__name__)
+
 
 @tagged("post_install", "-at_install")
 class TestShareWizardAppliesOnConfirm(TestProjectCommon):
+    def test_partial_defaults_preserve_the_requested_field_contract(self):
+        project = self.env["project.project"].create({"name": "Default target"})
+        project.message_subscribe(partner_ids=self.user_portal.partner_id.ids)
+        model = self.env["project.share.wizard"].with_context(
+            active_model=project._name,
+            active_id=project.id,
+        )
+        defaults = model.default_get(["note"])
+        _logger.debug("Project share note defaults: %s", defaults)
+        self.assertLessEqual(defaults.keys(), {"note"})
+        defaults = model.default_get(["collaborator_ids"])
+        _logger.debug("Project share collaborator defaults: %s", defaults)
+        self.assertEqual(defaults.keys(), {"collaborator_ids"})
+        self.assertIn(
+            self.user_portal.partner_id.id,
+            [command[2]["partner_id"] for command in defaults["collaborator_ids"]],
+        )
+
+    def test_explicit_collaborator_defaults_are_preserved(self):
+        project = self.env["project.project"].create({"name": "Explicit defaults"})
+        project.message_subscribe(partner_ids=self.user_portal.partner_id.ids)
+        defaults = (
+            self.env["project.share.wizard"]
+            .with_context(
+                active_model=project._name,
+                active_id=project.id,
+                default_collaborator_ids=[],
+            )
+            .default_get(["collaborator_ids"])
+        )
+        _logger.debug("Explicit project share collaborator defaults: %s", defaults)
+        self.assertEqual(defaults.keys(), {"collaborator_ids"})
+        wizard = self.env["project.share.wizard"].create(
+            {
+                "res_model": project._name,
+                "res_id": project.id,
+                **defaults,
+            }
+        )
+        self.assertFalse(wizard.collaborator_ids)
+
     def _wizard(self, project, partner, access_mode="edit"):
         return self.env["project.share.wizard"].create(
             {

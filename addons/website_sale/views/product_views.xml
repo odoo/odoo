@@ -131,13 +131,13 @@
                     for="compare_list_price"
                     groups="website_sale.group_product_price_comparison" />
                 <div class="o_row" groups="website_sale.group_product_price_comparison">
-                    <del class="oe_read_only">
+                    <span class="oe_read_only text-decoration-line-through">
                         <field
                             name="compare_list_price"
                             widget="monetary"
                             nolabel="1"
                             options="{'currency_field': 'currency_id', 'field_digits': True}" />
-                    </del>
+                    </span>
                     <field
                         name="compare_list_price"
                         widget="monetary"

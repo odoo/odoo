@@ -1231,8 +1231,7 @@ class ResUsers(models.Model):
         return True
 
     def _change_password(self, new_passwd: str) -> None:
-        new_passwd = new_passwd.strip()
-        if not new_passwd:
+        if not new_passwd.strip():
             raise UserError(
                 _("Setting empty passwords is not allowed for security reasons!")
             )

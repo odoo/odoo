@@ -12,18 +12,26 @@ class ProjectShareWizard(models.TransientModel):
     _description = "Project Sharing"
 
     @api.model
-    def default_get(self, fields: list[str]) -> dict[str, Any]:
+    def default_get(self, fields_list: list[str]) -> dict[str, Any]:
         active_model = self.env.context.get("active_model", "")
         active_id = self.env.context.get("active_id", False)
         if active_model == "project.collaborator":
             active_model = "project.project"
             active_id = self.env.context.get("default_project_id", False)
+        default_fields = fields_list
+        if "collaborator_ids" in fields_list:
+            default_fields = list(dict.fromkeys([*fields_list, "res_model", "res_id"]))
         result = super(
             ProjectShareWizard,
             self.with_context(active_model=active_model, active_id=active_id),
-        ).default_get(fields)
-        if result["res_model"] and result["res_id"]:
-            project = self.env[result["res_model"]].browse(result["res_id"])
+        ).default_get(default_fields)
+        if (
+            "collaborator_ids" in fields_list
+            and "collaborator_ids" not in result
+            and result.get("res_model") == "project.project"
+            and result.get("res_id")
+        ):
+            project = self.env["project.project"].browse(result["res_id"]).exists()
             collaborator_vals_list = []
             collaborator_ids = []
             for collaborator in project.collaborator_ids:
@@ -65,7 +73,7 @@ class ProjectShareWizard(models.TransientModel):
                     )
                     for collaborator in collaborator_vals_list
                 ]
-        return result
+        return {name: value for name, value in result.items() if name in fields_list}
 
     @api.model
     def _selection_target_model(self) -> list[tuple[str, str]]:

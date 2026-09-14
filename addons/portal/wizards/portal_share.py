@@ -7,10 +7,14 @@ class PortalShare(models.TransientModel):
     _description = "Portal Sharing"
 
     @api.model
-    def default_get(self, fields):
-        result = super().default_get(fields)
-        result["res_model"] = self.env.context.get("active_model", False)
-        result["res_id"] = self.env.context.get("active_id", False)
+    def default_get(self, fields_list):
+        result = super().default_get(fields_list)
+        for name, context_key in (
+            ("res_model", "active_model"),
+            ("res_id", "active_id"),
+        ):
+            if name in fields_list:
+                result.setdefault(name, self.env.context.get(context_key, False))
         return result
 
     @api.model
@@ -69,8 +73,12 @@ class PortalShare(models.TransientModel):
         if not self.res_model or self.res_model not in self.env:
             return empty
         res_model = self.env[self.res_model]
-        if isinstance(res_model, self.pool["mixin.portal"]) and self.res_id:
-            return res_model.browse(self.res_id)
+        if (
+            not res_model._abstract
+            and isinstance(res_model, self.pool["mixin.portal"])
+            and self.res_id
+        ):
+            return res_model.browse(self.res_id).exists()
         return empty
 
     @api.depends("res_model", "res_id")
@@ -94,22 +102,26 @@ class PortalShare(models.TransientModel):
         record = self._get_portal_record()
         if not record:
             raise UserError(_("This document cannot be shared: it has no portal page."))
+        record.check_access("read")
         return record
 
-    def _post_share_email(self, partner, share_link):
-        record = self._get_shared_record()
-        record.with_context(lang=partner.lang).message_post_with_source(
+    def _post_share_email(self, partner, share_link, *, record=None):
+        """Render in the recipient's language, reusing a validated batch target."""
+        if record is None:
+            record = self._get_shared_record()
+        record = record.with_context(lang=partner.lang or self.env.lang)
+        record.message_post_with_source(
             "portal.portal_share_template",
             render_values={
                 "partner": partner,
                 "note": self.note,
                 "record": record,
                 "share_link": share_link,
-                "model_description": self.env["ir.model"]
+                "model_description": record.env["ir.model"]
                 ._get(record._name)
                 .display_name.lower(),
             },
-            subject=_("Invitation to access %s", record.display_name),
+            subject=record.env._("Invitation to access %s", record.display_name),
             subtype_xmlid="mail.mt_note",
             email_layout_xmlid="mail.mail_notification_light",
             partner_ids=partner.ids,
@@ -123,17 +135,20 @@ class PortalShare(models.TransientModel):
             share_link = record.get_base_url() + record._get_share_url(
                 redirect=True, pid=partner.id
             )
-            self._post_share_email(partner, share_link)
+            self._post_share_email(partner, share_link, record=record)
 
     def _send_signup_link(self, partners=None):
         if partners is None:
             partners = self.partner_ids.filtered(lambda partner: not partner.user_ids)
+        if not partners:
+            return
+        record = self._get_shared_record()
         for partner in partners:
             partner.signup_get_auth_param()
             share_link = partner._get_signup_url_for_action(
                 action="/mail/view", res_id=self.res_id, model=self.res_model
             )[partner.id]
-            self._post_share_email(partner, share_link)
+            self._post_share_email(partner, share_link, record=record)
 
     def _get_public_link_partners(self):
         self.check_singleton()

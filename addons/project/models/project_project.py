@@ -649,10 +649,10 @@ class ProjectProject(models.Model):
         )
         duration = {t.id: t._get_cpm_duration_hours() for t in tasks}
         dbg.pipeline.debug(
-            "[project:%s] critical path: %d edges, total duration %.2f h",
+            "[project:%s] critical path: %s edges, total duration %s h",
             self.id,
             dbg.lazy(lambda: sum(len(preds) for preds in deps_on.values())),
-            dbg.lazy(lambda: sum(duration.values())),
+            dbg.lazy(lambda: f"{sum(duration.values()):.2f}"),
         )
         self._check_no_cyclic_dependencies(task_set, deps_on)
         topo = self._get_cpm_topological_order(task_set, deps_on, successors_of)

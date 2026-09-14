@@ -1,6 +1,10 @@
+import logging
+
 from odoo import Command
 from odoo.http import Request
 from odoo.tests import HttpCase, tagged
+
+_logger = logging.getLogger(__name__)
 
 
 @tagged("-at_install", "post_install")
@@ -169,6 +173,55 @@ class TestAddressTrustBoundary(HttpCase):
                 feedback = self._submit(**valid_address, callback=hostile_url)
 
                 self.assertEqual(feedback.get("redirectUrl"), "/my/addresses")
+
+    def test_valid_sub_address_cannot_rename_company(self):
+        self._assert_sub_address_cannot_rename_company(str(self.sibling_address.id))
+        self.sibling_address.invalidate_recordset()
+        self.assertEqual(self.sibling_address.name, "Billing address")
+
+    def test_new_sub_address_cannot_rename_company(self):
+        before = self.company_partner.child_ids
+        self._assert_sub_address_cannot_rename_company("")
+        self.company_partner.invalidate_recordset()
+        created = self.company_partner.child_ids - before
+        self.assertEqual(len(created), 1)
+        self.assertEqual(created.name, "Billing address")
+
+    def _assert_sub_address_cannot_rename_company(self, partner_id):
+        feedback = self._submit(
+            partner_id=partner_id,
+            name="Billing address",
+            email="billing@example.com",
+            phone="+32 456 00 00 01",
+            street="Rue du Test 2",
+            city="Bruxelles",
+            zip="1000",
+            country_id=str(self.country.id),
+            company_name="Unauthorized company rename",
+        )
+        self.assertIn("redirectUrl", feedback)
+        self.company_partner.invalidate_recordset()
+        _logger.debug(
+            "Address %s submission left company name %r",
+            partner_id,
+            self.company_partner.name,
+        )
+        self.assertEqual(self.company_partner.name, "Trust Boundary Co")
+
+    def test_main_address_can_update_company_name(self):
+        feedback = self._submit(
+            name=self.partner.name,
+            email=self.partner.email,
+            phone="+32 456 00 00 00",
+            street=self.partner.street,
+            city=self.partner.city,
+            zip=self.partner.zip,
+            country_id=str(self.country.id),
+            company_name="Updated company name",
+        )
+        self.assertIn("redirectUrl", feedback)
+        self.company_partner.invalidate_recordset()
+        self.assertEqual(self.company_partner.name, "Updated company name")
 
     def test_callback_keeps_local_paths(self):
         feedback = self._submit(

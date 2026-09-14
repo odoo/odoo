@@ -1,5 +1,25 @@
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
+
 from odoo.models import BaseModel
 from odoo.tools import consteq
+
+
+def get_url_with_params(url_string, query_params, remove_duplicates=True):
+    """Merge query parameters while preserving the URL path and fragment.
+
+    Replace only supplied keys by default; repeated unrelated keys and blank
+    values retain their meaning. Set ``remove_duplicates=False`` to append.
+    """
+    if not query_params:
+        return url_string
+    url = urlsplit(url_string)
+    url_params = parse_qsl(url.query, keep_blank_values=True)
+    if remove_duplicates:
+        url_params = [
+            (key, value) for key, value in url_params if key not in query_params
+        ]
+    url_params.extend(query_params.items())
+    return urlunsplit(url._replace(query=urlencode(url_params)))
 
 
 def resolve_message_thread(message: BaseModel) -> BaseModel:
@@ -51,7 +71,7 @@ def get_portal_partner(
     if not thread:
         return thread.env["res.partner"]
     if is_thread_hash_pid_valid(thread, _hash, pid):
-        return thread.env["res.partner"].sudo().browse(int(pid))
+        return thread.env["res.partner"].sudo().browse(int(pid)).exists()
     if is_thread_token_valid(thread, token):
         if partner := thread._mail_get_partners()[thread.id][:1]:
             return partner

@@ -11,7 +11,9 @@ class MailMessage(models.Model):
         :param dict options: supports 'rating_include' option allowing to
           conditionally include rating information;
         """
-        properties_names = super()._portal_get_default_format_properties_names()
+        properties_names = super()._portal_get_default_format_properties_names(
+            options=options
+        )
         if options and options.get("rating_include"):
             properties_names |= {
                 "rating",
@@ -28,19 +30,15 @@ class MailMessage(models.Model):
         if "rating" not in properties_names:
             return vals_list
 
-        related_rating = (
-            self.env["rating.rating"]
-            .sudo()
-            .search_read(
-                [("message_id", "in", self.ids)],
-                [
-                    "id",
-                    "publisher_comment",
-                    "publisher_id",
-                    "publisher_datetime",
-                    "message_id",
-                ],
-            )
+        # Use the same latest consumed rating as mail.message.rating_value.
+        related_rating = self.sudo().rating_id.read(
+            [
+                "id",
+                "publisher_comment",
+                "publisher_id",
+                "publisher_datetime",
+                "message_id",
+            ]
         )
         message_to_rating = {
             rating["message_id"][0]: self._portal_message_format_rating(rating)
@@ -48,12 +46,17 @@ class MailMessage(models.Model):
         }
 
         stats_by_record = {}
-        for message, values in zip(self, vals_list, strict=True):
+        messages_by_id = {message.id: message for message in self}
+        for values in vals_list:
+            # Portal also appends reference rows for linked messages. Those are
+            # not part of the rating request and need no rating metadata.
+            message = messages_by_id.get(values["id"])
+            if message is None:
+                continue
             values["rating_id"] = message_to_rating.get(message.id, {})
 
-            if not message.model:
-                # A message not linked to any document (model=False) has no
-                # rating-enabled record to report stats for.
+            if message.model not in self.env or not message.res_id:
+                # Messages can outlive their document's module.
                 continue
             record_key = (message.model, message.res_id)
             if record_key not in stats_by_record:

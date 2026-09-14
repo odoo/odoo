@@ -1,11 +1,15 @@
+import logging
+
 from odoo import Command
-from odoo.http import root
+from odoo.http import Request, root
 from odoo.tests import HttpCase, tagged
 from odoo.tests.common import JsonRpcException
 from odoo.tools import mute_logger
 
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
+
+_logger = logging.getLogger(__name__)
 
 
 @tagged("post_install", "-at_install")
@@ -138,3 +142,150 @@ class TestShopAddressReservedParams(HttpCase, WebsiteSaleCommon):
 
     def test_order_sudo_is_in_the_reserved_set(self):
         self.assertIn("order_sudo", WebsiteSale()._get_reserved_address_form_keys())
+
+
+@tagged("post_install", "-at_install")
+class TestShopCompanyNameBoundary(HttpCase, WebsiteSaleCommon):
+    def test_public_token_chatter_ownership_and_invalid_token(self):
+        attachment = self.env["ir.attachment"].create(
+            {
+                "name": "shared.txt",
+                "raw": b"Public token attachment",
+                "res_model": "sale.order",
+                "res_id": self.cart.id,
+            }
+        )
+        own_message, internal_message = self.env["mail.message"].create(
+            [
+                {
+                    "model": "sale.order",
+                    "res_id": self.cart.id,
+                    "body": "Token chatter test",
+                    "message_type": "comment",
+                    "subtype_id": self.env.ref("mail.mt_comment").id,
+                    "author_id": author.id,
+                    "attachment_ids": [Command.link(attachment.id)],
+                }
+                for author in (self.customer, self.env.user.partner_id)
+            ]
+        )
+        params = {
+            "thread_model": "sale.order",
+            "thread_id": self.cart.id,
+            "token": self.cart._portal_ensure_token(),
+        }
+
+        result = self.call_jsonrpc("/mail/chatter_fetch", params)
+
+        attachments = {
+            message["id"]: message["attachment_ids"][0]
+            for message in result["data"]["mail.message"]
+            if message["id"] in (own_message | internal_message).ids
+        }
+        _logger.debug(
+            "Public token ownership flags: %s",
+            {key: "ownership_token" in value for key, value in attachments.items()},
+        )
+        self.assertIn("ownership_token", attachments[own_message.id])
+        self.assertNotIn("ownership_token", attachments[internal_message.id])
+        response = self.url_open(
+            "/mail/chatter_fetch", json={"params": {**params, "token": "invalid"}}
+        ).json()
+        self.assertEqual(response["error"]["code"], 404)
+
+    def setUp(self):
+        super().setUp()
+        self.customer_company = self.env["res.partner"].create(
+            {"name": "Checkout shared company", "is_company": True}
+        )
+        self.customer = self.env["res.partner"].create(
+            {"name": "Checkout customer", "parent_id": self.customer_company.id}
+        )
+        self.shipping = self.env["res.partner"].create(
+            {
+                "name": "Checkout shipping",
+                "parent_id": self.customer_company.id,
+                "type": "delivery",
+            }
+        )
+        self.cart.write(
+            {
+                "partner_id": self.customer.id,
+                "partner_invoice_id": self.customer.id,
+                "partner_shipping_id": self.shipping.id,
+            }
+        )
+        session = self.authenticate(None, None)
+        session["sale_order_id"] = self.cart.id
+        root.session_store.save(session)
+
+    def _submit_company_name(self, partner_id="", address_type="billing"):
+        response = self.url_open(
+            "/shop/address/submit",
+            data={
+                "partner_id": partner_id,
+                "address_type": address_type,
+                "name": "Submitted checkout customer",
+                "email": "checkout.company@example.com",
+                "phone": "+32 2 000 00 00",
+                "street": "1 Test Street",
+                "city": "Brussels",
+                "zip": "1000",
+                "country_id": self.country_be.id,
+                "company_name": "Submitted checkout company",
+                "csrf_token": Request.csrf_token(self),
+            },
+        )
+        self.assertEqual(response.status_code, 200)
+        result = response.json()
+        _logger.debug(
+            "Checkout company submission target=%s type=%s result=%s",
+            partner_id,
+            address_type,
+            result,
+        )
+        self.assertIn("redirectUrl", result)
+        self.cart.invalidate_recordset()
+        self.customer_company.invalidate_recordset()
+
+    def test_anonymous_first_address_can_create_company(self):
+        self.cart.write(
+            {
+                "partner_id": self.public_partner.id,
+                "partner_invoice_id": self.public_partner.id,
+                "partner_shipping_id": self.public_partner.id,
+            }
+        )
+        public_name = self.public_partner.name
+
+        self._submit_company_name()
+
+        self.assertNotEqual(self.cart.partner_id, self.public_partner)
+        self.assertEqual(self.cart.partner_id.name, "Submitted checkout customer")
+        self.assertEqual(
+            self.cart.partner_id.commercial_partner_id.name,
+            "Submitted checkout company",
+        )
+        self.public_partner.invalidate_recordset()
+        self.assertEqual(self.public_partner.name, public_name)
+
+    def test_existing_shipping_cannot_rename_company(self):
+        self._submit_company_name(self.shipping.id, "delivery")
+
+        self.assertEqual(self.customer_company.name, "Checkout shared company")
+        self.shipping.invalidate_recordset()
+        self.assertEqual(self.shipping.name, "Submitted checkout customer")
+
+    def test_new_shipping_cannot_rename_company(self):
+        self._submit_company_name(address_type="delivery")
+
+        self.assertEqual(self.customer_company.name, "Checkout shared company")
+        self.assertNotEqual(self.cart.partner_shipping_id, self.shipping)
+        self.assertEqual(
+            self.cart.partner_shipping_id.name, "Submitted checkout customer"
+        )
+
+    def test_main_address_can_rename_company(self):
+        self._submit_company_name(self.customer.id)
+
+        self.assertEqual(self.customer_company.name, "Submitted checkout company")

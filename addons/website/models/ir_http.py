@@ -16,7 +16,7 @@ from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.safe_eval import safe_eval
 
 from odoo.addons.http_routing.models import ir_http
-from odoo.addons.portal.controllers.portal import _get_url_with_params
+from odoo.addons.portal.utils import get_url_with_params
 
 logger = logging.getLogger(__name__)
 
@@ -374,7 +374,7 @@ class IrHttp(models.AbstractModel):
         redirect = cls._serve_redirect()
         if redirect:
             return request.redirect(
-                _get_url_with_params(redirect.url_to, request.params),
+                get_url_with_params(redirect.url_to, request.params),
                 code=redirect.redirect_type,
                 local=False,
             )

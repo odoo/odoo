@@ -705,6 +705,24 @@ class TestUsers2(UsersCommonCase):
 
 
 class TestEmptyPassword(TransactionCase):
+    def test_password_change_preserves_spaces_and_rejects_blank_passwords(self):
+        user = new_test_user(self.env, "password_spaces", password="Original!Pwd123")
+        password = "  New!Secret456  "
+
+        user._change_password(password)
+
+        self.assertEqual(
+            self._check_credentials(user, password)["auth_method"], "password"
+        )
+        with self.assertRaises(AccessDenied):
+            self._check_credentials(user, password.strip())
+        for blank in ("", " \t "):
+            with self.subTest(blank=repr(blank)), self.assertRaises(UserError):
+                user._change_password(blank)
+        self.assertEqual(
+            self._check_credentials(user, password)["auth_method"], "password"
+        )
+
     def _stored_password(self, user):
         self.env.cr.execute("SELECT password FROM res_users WHERE id=%s", (user.id,))
         return self.env.cr.fetchone()[0]
