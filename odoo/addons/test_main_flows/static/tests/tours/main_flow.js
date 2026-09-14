@@ -1072,11 +1072,22 @@ registry.category("web_tour.tours").add("main_flow_tour", {
             _t("Confirm quotation"),
             ".o_statusbar_status .dropdown-toggle:contains('RFQ')",
         ),
-        ...stepUtils.statusbarButtonsSteps(
-            "Receive",
-            _t("Receive Product"),
-            ".o_statusbar_status .dropdown-toggle:contains('Purchase Order')",
-        ),
+        {
+            isActive: ["auto", "mobile"],
+            trigger: ".o_statusbar_status .dropdown-toggle:contains('Purchase Order')",
+        },
+        {
+            isActive: ["auto", "desktop"],
+            trigger:
+                ".o_statusbar_status button.o_arrow_button_current:contains('Purchase Order')",
+        },
+        stepUtils.autoExpandMoreButtons(),
+        {
+            trigger: 'button[name="action_view_picking"].oe_stat_button',
+            content: _t("Receive Product"),
+            tooltipPosition: "bottom",
+            run: "click",
+        },
         ...stepUtils.statusbarButtonsSteps(
             "Validate",
             _t("Validate"),

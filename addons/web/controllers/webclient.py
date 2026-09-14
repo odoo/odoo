@@ -240,6 +240,7 @@ class WebClient(http.Controller):
                 "import_map": import_map,
                 "files": data,
                 "template_url": tpl_url,
+                "carried": payload.get("carried", False),
             }
             _n_data_uri = sum(1 for v in import_map.values() if v.startswith("data:"))
             _n_real_url = len(import_map) - _n_data_uri
@@ -249,6 +250,7 @@ class WebClient(http.Controller):
                 "served_esm",
                 bundle=bundle_name,
                 compiled=bool(esm_url),
+                carried=payload.get("carried", False),
                 specs=len(specifiers),
                 imports=len(import_map),
                 url=_n_real_url,

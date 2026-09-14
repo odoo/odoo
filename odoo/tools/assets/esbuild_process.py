@@ -13,9 +13,53 @@ from pathlib import Path
 import odoo
 from odoo.libs.asset_log import get_asset_logger, log_event
 from odoo.libs.debug_log import DebugLog
+from odoo.libs.hashing import cache_hash
 
 _esbuild_log = get_asset_logger("esbuild")
 _debug = DebugLog(__name__)
+
+_CHUNK_NAME = re.compile(r"chunk-[A-Z0-9]{8}\.esm\.js")
+
+
+def canonicalize_chunk_names(files: dict[str, str]) -> dict[str, str]:
+    chunks = {name for name in files if _CHUNK_NAME.fullmatch(name)}
+    if not chunks:
+        return {}
+    imports = {
+        name: {dep for dep in _CHUNK_NAME.findall(files[name]) if dep in chunks}
+        - {name}
+        for name in chunks
+    }
+    renamed: dict[str, str] = {}
+    pending = set(chunks)
+    while pending:
+        ready = sorted(name for name in pending if imports[name] <= set(renamed))
+        if not ready:
+            break
+        for name in ready:
+            content = files[name]
+            for old, new in renamed.items():
+                content = content.replace(old, new)
+            fresh = f"chunk-{cache_hash(content.encode('utf-8'))[:8].upper()}.esm.js"
+            renamed[name] = fresh
+            files[fresh] = content
+            if fresh != name:
+                del files[name]
+            pending.discard(name)
+    for name in list(files):
+        if name in renamed.values():
+            continue
+        content = files[name]
+        for old, new in renamed.items():
+            content = content.replace(old, new)
+        files[name] = content
+    _debug.logic(
+        "esbuild.chunks_canonicalized",
+        chunks=len(chunks),
+        renamed=sum(old != new for old, new in renamed.items()),
+        cycle=len(pending),
+    )
+    return renamed
 
 
 def log_invoke(
@@ -214,10 +258,14 @@ def get_group_output(
         for path in sorted(out_dir.iterdir())
         if path.is_file()
     }
+    renamed = canonicalize_chunk_names(files)
     try:
         metafile = Path(metafile_path).read_text(encoding="utf-8")
     except OSError:
         metafile = None
+    for old, new in renamed.items():
+        if metafile and old != new:
+            metafile = metafile.replace(old, new)
     log_event(
         _esbuild_log,
         logging.INFO,

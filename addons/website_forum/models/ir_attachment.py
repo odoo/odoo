@@ -5,7 +5,7 @@ class IrAttachment(models.Model):
     _inherit = "ir.attachment"
 
     def _can_bypass_rights_on_media_dialog(self, **attachment_data):
-        res_model = attachment_data["res_model"]
+        res_model = attachment_data.get("res_model")
         res_id = attachment_data.get("res_id")
         if (
             res_model == "forum.post"

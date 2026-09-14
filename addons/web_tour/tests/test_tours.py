@@ -109,6 +109,19 @@ class WebTourHttp(HttpCase):
         tour_auto_bundle = IrAsset._get_asset_paths("web_tour.automatic", {})
         self.assertTrue(len(tour_auto_bundle) > 0)
 
+        IrAsset.create(
+            [
+                {
+                    "name": file[0],
+                    "path": file[0],
+                    "bundle": "web.assets_tests",
+                    "directive": "remove",
+                }
+                for file in tour_auto_bundle
+            ]
+        )
+        self.env.registry.clear_cache("assets")
+
         ready = "document.readyState === 'complete'"
 
         code = """

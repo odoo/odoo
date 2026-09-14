@@ -1,6 +1,6 @@
 // @ts-check
 
-import { afterEach, beforeEach, describe, expect, test } from "@odoo/hoot";
+import { after, afterEach, beforeEach, describe, expect, test } from "@odoo/hoot";
 import { animationFrame, manuallyDispatchProgrammaticEvent } from "@odoo/hoot-dom";
 import { mockFetch } from "@odoo/hoot-mock";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
@@ -8,6 +8,7 @@ import {
     assetCacheByDocument,
     assets,
     AssetsLoadingError,
+    esmBundleCache,
     globalBundleCache,
     loadBundle,
     loadCSS,
@@ -54,6 +55,7 @@ const bundles = {
 
 beforeEach(() => {
     globalBundleCache.clear();
+    esmBundleCache.clear();
     assetCacheByDocument.delete(document);
 });
 
@@ -466,6 +468,49 @@ test("loadESMBundle: same-document imports specifiers and registers them on odoo
 
     expect(registered.length).toBe(1);
     expect(registered[0][spec].answer).toBe(42);
+});
+
+test("loadESMBundle: a specifier list the page already walked is not walked again", async () => {
+    const registered = [];
+    patchWithCleanup(odoo.loader, {
+        registerNativeModules: (modules) => registered.push(modules),
+    });
+    const marker = `__esm_specifier_${Date.now()}`;
+    const spec = `data:text/javascript,globalThis.${marker} = (globalThis.${marker} || 0) + 1;`;
+
+    await assets.loadESMBundle([spec]);
+    const second = assets.loadESMBundle([spec]);
+    expect(registered.length).toBe(1);
+    await second;
+    expect(registered.length).toBe(1);
+    expect(globalThis[marker]).toBe(1);
+    delete globalThis[marker];
+});
+
+test("loadESMBundle: a specifier the loader already holds is that module, not a second import", async () => {
+    const registered = [];
+    const held = { answer: 42 };
+    const spec = "@web/../tests/assets_test_already_held";
+    odoo.loader.modules.set(spec, held);
+    after(() => odoo.loader.modules.delete(spec));
+    patchWithCleanup(odoo.loader, {
+        registerNativeModules: (modules) => registered.push(modules),
+    });
+
+    await assets.loadESMBundle([spec], {
+        importMap: { [spec]: "data:text/javascript,export const answer = 'other';" },
+    });
+
+    expect(registered.length).toBe(1);
+    expect(registered[0][spec]).toBe(held);
+});
+
+test("loadESMBundle: a failed specifier walk is retried on the next load", async () => {
+    patchWithCleanup(odoo.loader, { registerNativeModules: () => {} });
+    const spec = "data:text/javascript,throw new Error('boom');";
+
+    await expect(assets.loadESMBundle([spec])).rejects.toThrow();
+    expect(esmBundleCache.has(JSON.stringify([spec]))).toBe(false);
 });
 
 test("loadBundle: a compiled runtime bundle is one import(), not a specifier walk", async () => {

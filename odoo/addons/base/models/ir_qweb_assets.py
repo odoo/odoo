@@ -451,15 +451,23 @@ class IrQweb(models.AbstractModel):
     ) -> dict:
         if assets_params is None:
             assets_params = self.env["ir.asset"]._prepare_assets_params()
-        if debug_assets:
-            return self._get_esm_bundle_payload_uncached(bundle, assets_params)
         if with_test_satellites is None:
             with_test_satellites = self._has_esm_test_satellites("")
+        carried = bool(page) and self._page_carries_bundle(
+            page, bundle, assets_params, with_test_satellites
+        )
+        if debug_assets:
+            return self._get_esm_bundle_payload_uncached(
+                bundle, assets_params, carried=carried
+            )
         return self._get_esm_bundle_payload_cached(
             bundle,
             assets_params,
-            self._get_runtime_group_parents(bundle, page, assets_params),
+            self._get_runtime_group_parents(
+                bundle, page, assets_params, with_test_satellites
+            ),
             with_test_satellites,
+            carried,
         )
 
     @tools.conditional(
@@ -469,6 +477,7 @@ class IrQweb(models.AbstractModel):
             "tuple(sorted(assets_params.items()))",
             "parents",
             "with_test_satellites",
+            "carried",
             cache="assets",
         ),
     )
@@ -478,6 +487,7 @@ class IrQweb(models.AbstractModel):
         assets_params: dict[str, Any] | None = None,
         parents: tuple[str, ...] = (),
         with_test_satellites: bool = False,
+        carried: bool = False,
     ) -> dict:
         return self._get_esm_bundle_payload_uncached(
             bundle,
@@ -485,6 +495,7 @@ class IrQweb(models.AbstractModel):
             compiled=True,
             parents=parents,
             with_test_satellites=with_test_satellites,
+            carried=carried,
         )
 
     @staticmethod
@@ -501,6 +512,7 @@ class IrQweb(models.AbstractModel):
         bundle: str,
         page: str | None = None,
         assets_params: dict[str, Any] | None = None,
+        with_test_satellites: bool = False,
     ) -> tuple[str, ...]:
         registry = esm_registry()
         installed = self.env["ir.asset"]._get_addons_installed()
@@ -513,13 +525,49 @@ class IrQweb(models.AbstractModel):
         )
         if not page or not declared:
             return declared
-        if page in declared:
+        if page in declared or self._page_carries_bundle(
+            page, bundle, assets_params, with_test_satellites
+        ):
             return (page,)
         contributors = set(self._get_dynamic_parent_bundles(page, assets_params))
         matches = [parent for parent in declared if parent in contributors]
         if len(matches) == 1:
             return (matches[0],)
         return declared
+
+    @tools.conditional(
+        _ASSET_CACHE_ENABLED,
+        tools.ormcache(
+            "page",
+            "bundle",
+            "tuple(sorted((assets_params or {}).items()))",
+            "with_test_satellites",
+            cache="assets",
+        ),
+    )
+    def _page_carries_bundle(
+        self,
+        page: str,
+        bundle: str,
+        assets_params: dict[str, Any] | None,
+        with_test_satellites: bool = False,
+    ) -> bool:
+        own = {
+            asset.module_path
+            for asset in self._get_asset_bundle(
+                bundle,
+                js=True,
+                css=False,
+                debug_assets=False,
+                assets_params=assets_params,
+            ).native_modules
+        }
+        if not own:
+            return False
+        carried = self._get_runtime_parent_specs(
+            (page,), assets_params, with_test_satellites
+        )
+        return own <= carried
 
     @tools.conditional(
         _ASSET_CACHE_ENABLED,
@@ -580,9 +628,30 @@ class IrQweb(models.AbstractModel):
         group = (
             "runtime:" + "+".join(parents) + (":tests" if with_test_satellites else "")
         )
-        result = self._compile_runtime_group(
-            group, parents, children, assets_params, with_test_satellites
+        entries, stubs, parent_specs = self._prepare_runtime_group(
+            parents, children, assets_params, with_test_satellites
         )
+        templates = {
+            name: child.generate_esm_template_bundle(use_import=False)
+            for name, child in children.items()
+        }
+        source_key = self._get_runtime_group_source_key(
+            group, entries, templates, parent_specs, stubs
+        )
+        # a process that has not compiled yet serves what another one did
+        reused = esm_index.resolve_group_index(
+            self._read_generated_asset, group, source_key
+        )
+        if reused is not None:
+            log_event(
+                _fallback_log,
+                logging.DEBUG,
+                "group_reuse_by_source",
+                bundle=group,
+                children=len(reused),
+            )
+            return reused
+        result = self._compile_runtime_group(group, children, entries, stubs)
         if not result.files:
             log_event(
                 _fallback_log, logging.INFO, "runtime_group_per_file", bundle=group
@@ -592,14 +661,16 @@ class IrQweb(models.AbstractModel):
         for filename, code in result.files.items():
             name = filename.removesuffix(".esm.js")
             if name in children:
-                code = self._combine_bundle_with_templates(
-                    code, children[name].generate_esm_template_bundle(use_import=False)
-                )
+                code = self._combine_bundle_with_templates(code, templates[name])
             files[filename] = code.encode("utf-8")
         if result.metafile:
             files["group.meta.json"] = result.metafile.encode("utf-8")
         try:
-            return self._save_esm_group(group, files, set(children))
+            urls = self._save_esm_group(group, files, set(children))
+            self._save_esm_attachment_rows(
+                [esm_index.group_index_row(group, source_key, urls)], bundle=group
+            )
+            return urls
         except ReadOnlySqlTransaction:
             raise
         except Exception as exc:
@@ -654,7 +725,12 @@ class IrQweb(models.AbstractModel):
             new=len(vals_list),
             bytes=sum(len(content) for content in files.values()),
         )
-        return {name: f"{prefix}{name}.esm.js" for name in children}
+        # a child whose modules the page already carries compiles to no file
+        return {
+            name: f"{prefix}{name}.esm.js"
+            for name in children
+            if f"{name}.esm.js" in files
+        }
 
     def _get_compiled_runtime_payload(
         self,
@@ -668,8 +744,7 @@ class IrQweb(models.AbstractModel):
         urls = self._get_runtime_group_urls_cached(
             parents, assets_params or {}, with_test_satellites
         )
-        url = urls.get(bundle)
-        if not url:
+        if not urls:
             log_event(
                 _fallback_log, logging.INFO, "runtime_child_per_file", bundle=bundle
             )
@@ -681,12 +756,36 @@ class IrQweb(models.AbstractModel):
             debug_assets=False,
             assets_params=assets_params,
         )
-        return {
-            "esm_url": url,
+        payload = {
             "specifiers": sorted(a.module_path for a in asset_bundle.native_modules),
             "import_map": self._get_external_libs_served(debug_assets=False),
             "template_url": None,
         }
+        url = urls.get(bundle)
+        if url:
+            payload["esm_url"] = url
+            return payload
+        return self._get_carried_bundle_payload(bundle, asset_bundle)
+
+    def _get_carried_bundle_payload(
+        self, bundle: str, asset_bundle: AssetsBundle
+    ) -> dict:
+        # the page carries every module of this bundle: the browser imports
+        # the specifiers it already maps, and no per-file import map may
+        # offer it a second copy of them
+        log_event(_esm_log, logging.DEBUG, "bundle_carried", bundle=bundle)
+        payload = {
+            "specifiers": sorted(a.module_path for a in asset_bundle.native_modules),
+            "import_map": self._get_external_libs_served(debug_assets=False),
+            "template_url": None,
+            "carried": True,
+        }
+        esm_tpl = asset_bundle.generate_esm_template_bundle(use_import=False)
+        if esm_tpl:
+            payload["template_url"] = self._save_esm_attachment(
+                f"{bundle}.templates", esm_tpl
+            )
+        return payload
 
     def _get_esm_bundle_payload_uncached(
         self,
@@ -695,7 +794,19 @@ class IrQweb(models.AbstractModel):
         compiled: bool = False,
         parents: tuple[str, ...] = (),
         with_test_satellites: bool = False,
+        carried: bool = False,
     ) -> dict:
+        if carried:
+            return self._get_carried_bundle_payload(
+                bundle,
+                self._get_asset_bundle(
+                    bundle,
+                    js=True,
+                    css=False,
+                    debug_assets=False,
+                    assets_params=assets_params,
+                ),
+            )
         if compiled and self._is_runtime_child_compiled(bundle):
             payload = self._get_compiled_runtime_payload(
                 bundle, assets_params, parents, with_test_satellites
@@ -1074,6 +1185,13 @@ class IrQweb(models.AbstractModel):
         source_key: str | None = None,
     ) -> AssetNode:
         url = None
+        # a failed statement (a serialization failure on a row another
+        # connection touched) aborts the caller's transaction; the savepoint
+        # keeps the inline fallback a fallback. It is released, not rolled
+        # back, on a decline raised before any statement failed: rolling back
+        # would drop the transaction's ORM caches, and with them the memo of
+        # that decline
+        savepoint = self.env.cr.savepoint()
         try:
             url = self._save_esm_attachment(
                 name,
@@ -1083,6 +1201,7 @@ class IrQweb(models.AbstractModel):
                 source_key=source_key,
             )
         except Exception as exc:
+            savepoint.close(rollback=self.env.cr.in_failed_transaction())
             log_event(
                 _attach_log,
                 logging.WARNING,
@@ -1102,6 +1221,8 @@ class IrQweb(models.AbstractModel):
                 if isinstance(exc, ReadOnlySqlTransaction) and self.env.cr.readonly:
                     raise _EsmReadonlyDeclined from None
                 raise _EsmFallbackError from None
+        else:
+            savepoint.close(rollback=False)
         node: dict[str, str] = {"type": "module"}
         node["src" if url else "text"] = url or code
         node.update(attrs)

@@ -44,6 +44,7 @@ _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
 
 _TX_IDLE = _TxStatus.IDLE
+_TX_INERROR = _TxStatus.INERROR
 
 
 def _get_statement_text(query: Any) -> str:
@@ -981,6 +982,12 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
     def _is_connection_clean(self) -> bool:
         try:
             return self._cnx.info.transaction_status == _TX_IDLE
+        except Exception:
+            return False
+
+    def in_failed_transaction(self) -> bool:
+        try:
+            return self._cnx.info.transaction_status == _TX_INERROR
         except Exception:
             return False
 

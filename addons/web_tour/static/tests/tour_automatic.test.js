@@ -1,6 +1,6 @@
 /** @odoo-module native */
 
-import { afterEach, beforeEach, describe, expect, test } from "@odoo/hoot";
+import { after, afterEach, beforeEach, describe, expect, test } from "@odoo/hoot";
 import { advanceTime, animationFrame, queryFirst } from "@odoo/hoot-dom";
 import { Component, xml } from "@odoo/owl";
 import {
@@ -199,6 +199,98 @@ test("a step that only observes is neither delayed by in-flight requests nor by 
     queryFirst(".o_blockUI").remove();
     await waitForMacro();
     expect.verifySteps(["action step acted"]);
+});
+
+test("a step that acts waits for the document to be ready; a step that observes does not", async () => {
+    class Root extends Component {
+        static components = {};
+        static template = xml`
+            <t>
+                <button class="button0">Button 0</button>
+                <button class="button1">Button 1</button>
+            </t>
+        `;
+        static props = ["*"];
+    }
+    await mountWithCleanup(Root);
+    document.body.setAttribute("is-ready", "false");
+    after(() => document.body.removeAttribute("is-ready"));
+
+    tourRegistry.add("tour_act_when_ready", {
+        steps: () => [
+            {
+                trigger: ".button0",
+            },
+            {
+                trigger: ".button1",
+                run() {
+                    expect.step("action step acted");
+                },
+            },
+        ],
+    });
+
+    await odoo.startTour("tour_act_when_ready", { mode: "auto" });
+    await animationFrame();
+    await animationFrame();
+    expect(tourState.getCurrentIndex()).toBe(1);
+    for (let i = 0; i < 5; i++) {
+        await animationFrame();
+        await advanceTime(265);
+    }
+    expect.verifySteps([]);
+
+    document.body.setAttribute("is-ready", "true");
+    await waitForMacro();
+    expect.verifySteps(["action step acted"]);
+});
+
+test("a tour succeeds only once the client is idle", async () => {
+    class Root extends Component {
+        static components = {};
+        static template = xml`
+            <t>
+                <button class="button0">Button 0</button>
+                <button class="button1">Button 1</button>
+            </t>
+        `;
+        static props = ["*"];
+    }
+    await mountWithCleanup(Root);
+    patchWithCleanup(browser.console, {
+        log: (message) => {
+            if (message === "tour succeeded") {
+                expect.step(message);
+            }
+        },
+    });
+
+    const pending = { data: { id: 778 }, url: "/web/dataset/call_kw/x/web_save" };
+    tourRegistry.add("tour_end_settles", {
+        steps: () => [
+            {
+                trigger: ".button0",
+                run() {
+                    rpcBus.trigger(RpcEvent.REQUEST, pending);
+                },
+            },
+            {
+                trigger: ".button1",
+            },
+        ],
+    });
+
+    await odoo.startTour("tour_end_settles", { mode: "auto" });
+    for (let i = 0; i < 5; i++) {
+        await animationFrame();
+        await advanceTime(265);
+    }
+    expect(tourState.getCurrentIndex()).toBe(2);
+    expect.verifySteps([]);
+
+    rpcBus.trigger(RpcEvent.RESPONSE, pending);
+    await waitForMacro();
+    expect.verifySteps(["tour succeeded"]);
 });
 
 test("a step that expects the page to unload does not wait for the client to settle", async () => {

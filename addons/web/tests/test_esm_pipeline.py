@@ -1630,6 +1630,18 @@ class TestEsbuildLockCursor(TransactionCase):
 
 
 @tagged("web_unit", "web_assets")
+class TestRuntimeGroupUrls(TransactionCase):
+    def test_a_child_with_no_file_of_its_own_gets_no_url(self):
+        urls = self.env["ir.qweb"]._save_esm_group(
+            "runtime:g5.parent",
+            {"g5.child.esm.js": b"export const x = 1;"},
+            ["g5.child", "g5.carried"],
+        )
+        self.assertEqual(set(urls), {"g5.child"})
+        self.assertTrue(urls["g5.child"].endswith("/g5.child.esm.js"))
+
+
+@tagged("web_unit", "web_assets")
 class TestEsmRowsOutliveTheTest(TransactionCase):
     URL = "/web/assets/esm/test-outlives/web.assets_test_outlives.esm.js"
 
@@ -1821,6 +1833,43 @@ class TestProdNodesDeclineNotCached(TransactionCase):
                     raise_on_decline=True,
                 )
         self.assertIn("declined=True", caught.output[0])
+
+    def test_a_failed_save_statement_leaves_the_transaction_usable(self):
+        # the touch of a row another connection updated is a serialization
+        # failure inside the caller's transaction; served inline, the caller
+        # must still be able to run the next statement
+        ir_qweb = self._qweb
+
+        def failing_touch(cr, touch_ids):
+            cr.execute("SELECT 1 / 0")
+
+        with (
+            patch.object(
+                type(ir_qweb),
+                "_plan_esm_row",
+                lambda self, rows, touch_ids, *a: touch_ids.append(1) or False,
+            ),
+            patch.object(
+                type(ir_qweb), "_touch_esm_attachment_rows", staticmethod(failing_touch)
+            ),
+            self.assertLogs(f"{ASSET_ROOT}.attach", level=logging.WARNING) as caught,
+        ):
+            _pre, post = ir_qweb._get_esm_nodes_prod(
+                self.BUNDLE,
+                self._fake_bundle(),
+                EsbuildResult("CODE;", None, None),
+                None,
+                [],
+            )
+        self.assertIn("err=DivisionByZero", caught.output[0])
+        module_nodes = [
+            attrs
+            for tag, attrs in post
+            if tag == "script" and attrs.get("type") == "module"
+        ]
+        self.assertEqual(module_nodes[0].get("text"), "CODE;")
+        self.env.cr.execute("SELECT 1")
+        self.assertEqual(self.env.cr.fetchone(), (1,))
 
     def test_uncached_rerun_still_inlines(self):
         ir_qweb = self._qweb
@@ -2947,7 +2996,32 @@ class TestDynamicBundleIntegrity(TransactionCase):
             ).native_modules
         ]
         self.assertTrue(names, "no installed runtime bundle carries a module")
+        # under a test the page carries web_tour.automatic (web.assets_tests):
+        # such a child compiles to nothing and is served as bare specifiers
+        names = [
+            name
+            for name in names
+            if not IrQweb._get_esm_bundle_payload(name, debug_assets=False).get(
+                "carried"
+            )
+        ]
+        self.assertTrue(names, "every runtime bundle is carried by the test page")
         return names
+
+    def test_a_child_the_test_page_carries_is_served_as_bare_specifiers(self):
+        IrQweb = self.env["ir.qweb"]
+        payload = IrQweb._get_esm_bundle_payload(
+            "web_tour.automatic", debug_assets=False, page="web.assets_web"
+        )
+        self.assertTrue(payload.get("carried"))
+        self.assertNotIn("esm_url", payload)
+        self.assertIn(
+            "@web_tour/js/tour_automatic/tour_automatic", payload["specifiers"]
+        )
+        self.assertFalse(
+            [spec for spec in payload["import_map"] if spec.startswith("@web_tour/")],
+            "a carried child maps none of its modules: the page's map serves them",
+        )
 
     def _metafile_inputs(self, url):
         meta_url = url.removesuffix(".esm.js") + ".meta.json"
@@ -3449,7 +3523,7 @@ class TestBundleDescriptorFormat(HttpCase):
         ).unlink()
         self.env.registry.clear_cache("assets")
         response = self.url_open(
-            "/web/bundle/web_tour.automatic?debug=tests&page=web.assets_frontend"
+            "/web/bundle/web_tour.interactive?debug=tests&page=web.assets_frontend"
         )
         self.assertEqual(response.status_code, 200)
         asset_url = response.json()["esm_url"]
@@ -3493,7 +3567,11 @@ class TestBundleDescriptorFormat(HttpCase):
             if not IrQweb._is_runtime_child_compiled(name):
                 continue
             payload = self._descriptor(name)
-            if isinstance(payload, list) or not payload.get("specifiers"):
+            if (
+                isinstance(payload, list)
+                or not payload.get("specifiers")
+                or payload.get("carried")
+            ):
                 continue
             members = IrQweb._get_asset_bundle(
                 name, js=True, css=False, debug_assets=True

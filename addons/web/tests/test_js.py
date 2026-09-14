@@ -1,4 +1,5 @@
 import ast
+import os
 import re
 from contextlib import suppress
 from pathlib import Path
@@ -277,8 +278,10 @@ class HOOTCommon(odoo.tests.HttpCase):
             id_filters = "".join(f"&id={self._generate_hash(n)}" for n in suite_names)
             scope_param = self._get_module_scope_param(suite_names)
         tag_param = f"&tag={tag}" if tag else ""
+        # the browser's makeLogger namespaces, relayed by --log-handler <this module>:DEBUG
+        log_param = f"&log={spec}" if (spec := os.environ.get("ODOO_HOOT_LOG")) else ""
         self.browser_js(
-            f"/web/tests?headless&loglevel=2&preset={preset}&timeout=15000{id_filters}{tag_param}{scope_param}{extra}",
+            f"/web/tests?headless&loglevel=2&preset={preset}&timeout=15000{id_filters}{tag_param}{scope_param}{log_param}{extra}",
             "",
             "",
             login="admin",

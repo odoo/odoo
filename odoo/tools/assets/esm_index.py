@@ -111,3 +111,83 @@ def resolve_index(
         sourcemap=parts["sourcemap"] is not None,
     )
     return url, code.decode("utf-8"), parts["metafile"], parts["sourcemap"]
+
+
+def group_source_key(
+    group: str,
+    entries: dict[str, Iterable[Any]],
+    templates: dict[str, str],
+    parent_specs: Iterable[str],
+    secondary_stubs: dict[str, str],
+    target: str,
+    source_maps: str,
+) -> str:
+    digest = hashlib.sha256()
+    for part in (
+        _SOURCE_KEY_VERSION,
+        group,
+        target,
+        source_maps,
+        ",".join(sorted(parent_specs)),
+    ):
+        digest.update(part.encode())
+        digest.update(b"\0")
+    for name in sorted(templates):
+        digest.update(name.encode())
+        digest.update(b"\0")
+        digest.update(templates[name].encode())
+        digest.update(b"\0")
+    for spec in sorted(secondary_stubs):
+        digest.update(spec.encode())
+        digest.update(secondary_stubs[spec].encode())
+        digest.update(b"\0")
+    for name in sorted(entries):
+        digest.update(name.encode())
+        digest.update(b"\0")
+        for asset in entries[name]:
+            digest.update((asset.module_path or asset.url or "").encode())
+            digest.update(b"\0")
+            raw = asset.raw_content
+            digest.update(raw.encode() if isinstance(raw, str) else raw)
+            digest.update(b"\0")
+    return digest.hexdigest()[:16]
+
+
+def group_index_url(group: str, key: str) -> str:
+    slug = group.replace(":", "_").replace("+", "_")
+    return f"/web/assets/esm/by-source/{key}/{slug}.group.json"
+
+
+def group_index_row(group: str, key: str, urls: dict[str, str]) -> dict:
+    return {
+        "name": f"{group}.by-source.json",
+        "mimetype": "application/json",
+        "res_model": "ir.ui.view",
+        "res_id": False,
+        "type": "binary",
+        "public": True,
+        "raw": json.dumps({"urls": urls}).encode("utf-8"),
+        "url": group_index_url(group, key),
+    }
+
+
+def resolve_group_index(
+    read: Callable[[str], bytes | None], group: str, key: str
+) -> dict[str, str] | None:
+    pointer_raw = read(group_index_url(group, key))
+    if pointer_raw is None:
+        _debug.logic("esm_index.group_miss", group=group, key=key, missing="pointer")
+        return None
+    try:
+        urls = json.loads(pointer_raw.decode("utf-8"))["urls"]
+        if not isinstance(urls, dict):
+            raise TypeError(type(urls).__name__)
+    except ValueError, KeyError, TypeError, AttributeError:
+        _debug.logic("esm_index.group_miss", group=group, key=key, missing="malformed")
+        return None
+    for name, url in urls.items():
+        if read(url) is None:
+            _debug.logic("esm_index.group_miss", group=group, key=key, missing=name)
+            return None
+    _debug.logic("esm_index.group_hit", group=group, key=key, children=len(urls))
+    return urls

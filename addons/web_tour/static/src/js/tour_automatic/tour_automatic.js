@@ -208,7 +208,11 @@ export class TourAutomatic {
                 }
                 end();
             },
-            onComplete: () => {
+            onComplete: async () => {
+                // a tour is over when the client is idle: the last steps
+                // only observed, and what they observed may still be saving,
+                // which the harness would then report as a dirty form
+                await this.whenClientSettles();
                 browser.console.log("tour succeeded");
                 const succeeded = `║ TOUR ${this.name} SUCCEEDED ║`;
                 const msg = [succeeded];

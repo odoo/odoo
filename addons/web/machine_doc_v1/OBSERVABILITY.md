@@ -193,7 +193,7 @@ module has.**
 
 | Key | Call sites | So a count of N means |
 |---|---|---|
-| `asset` js | 18 | N events across 19 kinds — cache hits, bundle fetches, import-map injections. **Not bundles.** |
+| `asset` js | 19 | N events across 20 kinds — cache hits, bundle fetches, import-map injections. **Not bundles.** |
 | `asset` boot | 6 | N boot phases reached, of 6 possible |
 | `asset` env | 5 | N env/service-wave milestones |
 | `asset` templates | 2 | N compile-or-register events; roughly per template, but the two are summed |

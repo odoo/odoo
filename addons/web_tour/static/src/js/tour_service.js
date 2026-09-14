@@ -17,6 +17,15 @@ import { callWithUnloadCheck } from "@web_tour/js/utils/tour_utils";
 
 import DOMPurify from "dompurify";
 
+const AUTOMATIC_ENTRY = "@web_tour/js/tour_automatic/tour_automatic";
+
+function loadAutomaticRuntime() {
+    if (odoo.loader?.modules?.has(AUTOMATIC_ENTRY)) {
+        return Promise.resolve();
+    }
+    return loadBundle("web_tour.automatic", { css: false });
+}
+
 class OnboardingItem extends Component {
     static components = { DropdownItem };
     static template = "web_tour.OnboardingItem";
@@ -233,7 +242,7 @@ export const tourService = {
             tour.steps.forEach((step) => validateStep(step));
 
             if (tourConfig.mode === "auto") {
-                await loadBundle("web_tour.automatic", { css: false });
+                await loadAutomaticRuntime();
                 const { TourAutomatic } =
                     await import("@web_tour/js/tour_automatic/tour_automatic");
                 new TourAutomatic(tour).start();
@@ -348,7 +357,7 @@ export const tourService = {
             return Promise.all([
                 translationIsReady,
                 tour.wait_for || Promise.resolve(),
-                loadBundle("web_tour.automatic", { css: false }),
+                loadAutomaticRuntime(),
             ]).then(() => true);
         };
 

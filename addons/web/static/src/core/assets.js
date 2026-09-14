@@ -34,6 +34,7 @@ const __odoo_assets_state__ = globalSingleton("assets", () => ({
     globalBundleCache: new Map(),
     assetCacheByDocument: new WeakMap(),
     crossDocESMBundleCache: new WeakMap(),
+    esmBundleCache: new Map(),
     injectedImportMapKeys: new Map(),
     crossDocImportMapKeys: new WeakMap(),
     crossDocLoadSeq: 0,
@@ -42,6 +43,7 @@ const __odoo_assets_state__ = globalSingleton("assets", () => ({
 export const globalBundleCache = __odoo_assets_state__.globalBundleCache;
 export const assetCacheByDocument = __odoo_assets_state__.assetCacheByDocument;
 const crossDocESMBundleCache = __odoo_assets_state__.crossDocESMBundleCache;
+export const esmBundleCache = __odoo_assets_state__.esmBundleCache;
 const injectedImportMapKeys = __odoo_assets_state__.injectedImportMapKeys;
 const crossDocImportMapKeys = __odoo_assets_state__.crossDocImportMapKeys;
 
@@ -306,7 +308,29 @@ export class AssetsLoadingError extends Error {}
  * @param {Record<string, string> | null} importMap
  * @returns {Promise<void>}
  */
-async function loadESMBundleHere(specifiers, importMap) {
+function loadESMBundleHere(specifiers, importMap) {
+    // a bundle the page already carries lists every module as a specifier; a
+    // second load re-imported them all (~25 ms for the website builder), which
+    // is a frame a caller like LazyComponent does not expect to lose
+    const cacheKey = JSON.stringify(specifiers);
+    if (!esmBundleCache.has(cacheKey)) {
+        const promise = importESMBundleHere(specifiers, importMap).catch((reason) => {
+            evictIfCurrent(esmBundleCache, cacheKey, () => promise);
+            throw reason;
+        });
+        esmBundleCache.set(cacheKey, promise);
+    } else {
+        log("loadESMBundle:cache-hit", "specs=", specifiers.length);
+    }
+    return esmBundleCache.get(cacheKey);
+}
+
+/**
+ * @param {string[]} specifiers
+ * @param {Record<string, string> | null} importMap
+ * @returns {Promise<void>}
+ */
+async function importESMBundleHere(specifiers, importMap) {
     if (importMap) {
         addInjectedImportMapKeys(document);
         const { fresh, dup, conflicts } = addFreshImportMapEntries(
@@ -335,6 +359,18 @@ async function loadESMBundleHere(specifiers, importMap) {
     const results = await runInBundleTransaction(() =>
         Promise.all(
             specifiers.map(async (specifier) => {
+                // a module the page already registered is that module: importing
+                // it again through a bridge would hand the loader a second
+                // namespace object for the same singleton
+                const registered = /** @type {any} */ (
+                    globalThis
+                ).odoo?.loader?.modules?.get(specifier);
+                if (
+                    registered !== undefined &&
+                    typeof registered.__setImplUrl !== "function"
+                ) {
+                    return [specifier, registered];
+                }
                 const { target } = resolveSpecifierTarget(
                     specifier,
                     importMap,

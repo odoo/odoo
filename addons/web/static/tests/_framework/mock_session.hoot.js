@@ -2,6 +2,8 @@
 
 import { onServerStateChange, serverState } from "./mock_server_state.hoot.js";
 
+const moduleScope = new URLSearchParams(location.search).get("module_scope");
+
 /**
  * Mirror of `ir.http.session_info()["groups"]`: `web` seeds
  * `base.group_allow_export`; an addon whose `ir.http` override adds a group
@@ -18,6 +20,21 @@ export function registerSessionGroups(groups) {
     for (const [group, value] of Object.entries(groups)) {
         sessionGroups.set(group, value);
     }
+}
+
+/**
+ * Mirror of an addon's `ir.http.session_info()` override for the keys it
+ * owns: registered from the addon's test helpers at load, merged last into
+ * every mock session, so the session a suite boots with says what the
+ * server says on a database where that addon is installed.
+ *
+ * @type {Record<string, unknown>}
+ */
+const sessionExtensions = {};
+
+/** @param {Record<string, unknown>} extension */
+export function registerSessionInfo(extension) {
+    Object.assign(sessionExtensions, extension);
 }
 
 /** @param {typeof serverState} serverState */
@@ -38,6 +55,7 @@ export const makeSession = ({
     bundle_params: {
         debug: new URLSearchParams(location.search).get("debug"),
         lang,
+        ...(moduleScope ? { module_scope: moduleScope } : {}),
     },
     can_insert_in_spreadsheet: false,
     db,
@@ -78,6 +96,7 @@ export const makeSession = ({
     username: "admin",
     ["web.base.url"]: "http://localhost:8069",
     view_info,
+    ...sessionExtensions,
 });
 
 export function mockSessionFactory() {

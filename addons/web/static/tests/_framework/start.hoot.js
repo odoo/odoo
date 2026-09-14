@@ -8,6 +8,7 @@ import {
     describe,
     isHootReady,
     start,
+    test,
 } from "@odoo/hoot";
 import { bindCleanupHook } from "@web/../tests/helpers/cleanup";
 
@@ -181,6 +182,13 @@ async function _importInFileSuite(specifier) {
     _runner.suiteStack.push(fileSuite);
     try {
         return await import(specifier);
+    } catch (reason) {
+        // a file that does not import registers no test, and a run that only
+        // counts registered tests would report it green: it fails as one
+        test("module imports", () => {
+            throw reason;
+        });
+        throw reason;
     } finally {
         _runner.suiteStack.pop();
     }

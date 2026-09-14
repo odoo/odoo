@@ -421,7 +421,14 @@ class IrQweb(models.AbstractModel):
         installed = self.env["ir.asset"]._get_addons_installed()
         spec_sets = []
         for parent in parents:
-            owners = [parent]
+            owners = [
+                parent,
+                *(
+                    name
+                    for name in registry.import_map_includes.get(parent, ())
+                    if name.partition(".")[0] in installed
+                ),
+            ]
             if with_test_satellites:
                 owners.extend(
                     name
@@ -494,13 +501,59 @@ class IrQweb(models.AbstractModel):
         )
         return own_modules, own_specs, reached & parent_specs
 
-    def _compile_runtime_group(
+    def _prepare_runtime_group(
         self,
-        group: str,
         parents: tuple[str, ...],
         children: dict[str, AssetsBundle],
         assets_params: dict[str, Any] | None,
         with_test_satellites: bool = False,
+    ) -> tuple[dict[str, list], dict[str, str], frozenset[str]]:
+        parent_specs = self._get_runtime_parent_specs(
+            parents, assets_params, with_test_satellites
+        )
+        entries: dict[str, list] = {}
+        stubbed: set[str] = set()
+        for name, child in children.items():
+            own_modules, _own_specs, child_stubs = self._get_runtime_child_own_modules(
+                name, child, parent_specs
+            )
+            entries[name] = own_modules
+            stubbed |= child_stubs
+        reference = next(iter(children.values()))
+        stubs = reference._bridges.prepare_shim_sources(stubbed, strict=True)
+        return entries, stubs, parent_specs
+
+    def _get_runtime_group_source_key(
+        self,
+        group: str,
+        entries: dict[str, list],
+        templates: dict[str, str],
+        parent_specs: frozenset[str],
+        stubs: dict[str, str],
+    ) -> str:
+        config = self._get_esbuild_config()
+        return esm_index.group_source_key(
+            group,
+            entries,
+            templates,
+            parent_specs,
+            stubs,
+            str(
+                config.get_param("web.esbuild.target")
+                or EsbuildCompiler._ESBUILD_TARGET
+            ),
+            str(
+                config.get_param("web.esbuild.source_maps")
+                or EsbuildCompiler._ESBUILD_SOURCE_MAPS
+            ),
+        )
+
+    def _compile_runtime_group(
+        self,
+        group: str,
+        children: dict[str, AssetsBundle],
+        entries: dict[str, list],
+        stubs: dict[str, str],
     ) -> EsbuildGroupResult:
         empty = EsbuildGroupResult({}, None)
         if not self._can_compile_with_esbuild(group):
@@ -510,19 +563,7 @@ class IrQweb(models.AbstractModel):
                 log_event(_fallback_log, logging.INFO, "lock_unavailable", bundle=group)
                 return empty
             self._acquire_esbuild_lock(group, cr=lock_cr)
-            parent_specs = self._get_runtime_parent_specs(
-                parents, assets_params, with_test_satellites
-            )
-            entries: dict[str, list] = {}
-            stubbed: set[str] = set()
-            for name, child in children.items():
-                own_modules, _own_specs, child_stubs = (
-                    self._get_runtime_child_own_modules(name, child, parent_specs)
-                )
-                entries[name] = own_modules
-                stubbed |= child_stubs
             reference = next(iter(children.values()))
-            stubs = reference._bridges.prepare_shim_sources(stubbed, strict=True)
             compiler = EsbuildCompiler(
                 group,
                 [module for modules in entries.values() for module in modules],
