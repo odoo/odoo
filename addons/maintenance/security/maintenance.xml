@@ -63,11 +63,34 @@
             <field
                 name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
         </record>
-        <record id="maintenance_team_comp_rule" model="ir.rule">
-            <field name="name">Maintenance Team Multi-company rule</field>
-            <field name="model_id" ref="model_maintenance_team" />
+        <record id="team_team_rule_maintenance_manager" model="ir.rule">
+            <field name="name">Maintenance teams: Maintenance Administrators</field>
+            <field name="model_id" ref="team.model_team_team" />
+            <field name="domain_force">[('use_maintenance', '=', True)]</field>
             <field
-                name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+                name="groups"
+                eval="[Command.link(ref('group_equipment_manager'))]" />
+            <field name="perm_read" eval="False" />
+        </record>
+        <record id="team_member_rule_maintenance_manager" model="ir.rule">
+            <field
+                name="name">Maintenance team members: Maintenance Administrators</field>
+            <field name="model_id" ref="team.model_team_member" />
+            <field name="domain_force">[('team_id.use_maintenance', '=', True)]</field>
+            <field
+                name="groups"
+                eval="[Command.link(ref('group_equipment_manager'))]" />
+            <field name="perm_read" eval="False" />
+        </record>
+        <record id="team_alias_rule_maintenance_manager" model="ir.rule">
+            <field
+                name="name">Maintenance team aliases: Maintenance Administrators</field>
+            <field name="model_id" ref="team.model_team_alias" />
+            <field name="domain_force">[('team_id.use_maintenance', '=', True)]</field>
+            <field
+                name="groups"
+                eval="[Command.link(ref('group_equipment_manager'))]" />
+            <field name="perm_read" eval="False" />
         </record>
         <record id="maintenance_equipment_category_comp_rule" model="ir.rule">
             <field name="name">Maintenance Equipment Category Multi-company rule</field>

@@ -98,12 +98,13 @@ class CrmLead2opportunityPartner(models.TransientModel):
         readonly=False,
     )
     team_id = fields.Many2one(
-        comodel_name="crm.team",
+        comodel_name="team.team",
         string="Sales Team",
         compute="_compute_team_id",
         compute_sudo=False,
         store=True,
         readonly=False,
+        domain=[("use_sale", "=", True)],
     )
     force_assignment = fields.Boolean(
         string="Force assignment",
@@ -173,7 +174,7 @@ class CrmLead2opportunityPartner(models.TransientModel):
 
     @api.depends("user_id")
     def _compute_team_id(self):
-        Team = self.env["crm.team"]
+        Team = self.env["team.team"]
         for convert in self:
             if not convert.user_id:
                 continue

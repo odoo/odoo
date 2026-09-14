@@ -6,7 +6,7 @@ class AccountInvoiceReport(models.Model):
     _inherit = "account.invoice.report"
 
     team_id = fields.Many2one(
-        comodel_name="crm.team",
+        comodel_name="team.team",
         string="Sales Team",
     )
 

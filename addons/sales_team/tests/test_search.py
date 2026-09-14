@@ -7,9 +7,9 @@ from odoo.addons.sales_team.tests.common import TestSalesCommon
 
 def _salesperson_domain(env, team_id, record_id):
     return safe_eval(
-        env["crm.team.member"]._fields["user_id"].domain,
+        env["team.member"]._fields["user_id"].domain,
         {
-            "crm_team_id": team_id,
+            "team_id": team_id,
             "id": record_id,
             "user_company_ids": env["res.company"].search([]).ids,
         },
@@ -23,22 +23,26 @@ class TestSearchCrmTeamIds(TestSalesCommon):
         cls.env["ir.config_parameter"].sudo().set_param(
             "sales_team.membership_multi", True
         )
-        cls.team_a = cls.env["crm.team"].create({"name": "SA", "company_id": False})
-        cls.team_b = cls.env["crm.team"].create({"name": "SB", "company_id": False})
+        cls.team_a = cls.env["team.team"].create(
+            {"use_sale": True, "name": "SA", "company_id": False}
+        )
+        cls.team_b = cls.env["team.team"].create(
+            {"use_sale": True, "name": "SB", "company_id": False}
+        )
         cls.user_ab = mail_new_test_user(
             cls.env, login="search_ab", name="Search AB", groups="base.group_user"
         )
         cls.user_none = mail_new_test_user(
             cls.env, login="search_none", name="Search None", groups="base.group_user"
         )
-        cls.env["crm.team.member"].create(
+        cls.env["team.member"].create(
             [
-                {"user_id": cls.user_ab.id, "crm_team_id": cls.team_a.id},
-                {"user_id": cls.user_ab.id, "crm_team_id": cls.team_b.id},
+                {"user_id": cls.user_ab.id, "team_id": cls.team_a.id},
+                {"user_id": cls.user_ab.id, "team_id": cls.team_b.id},
             ]
         )
-        cls.env["crm.team.member"].create(
-            {"user_id": cls.user_none.id, "crm_team_id": cls.team_a.id}
+        cls.env["team.member"].create(
+            {"user_id": cls.user_none.id, "team_id": cls.team_a.id}
         ).action_archive()
         cls.env.flush_all()
 
@@ -46,7 +50,7 @@ class TestSearchCrmTeamIds(TestSalesCommon):
         return self.env["res.users"].search(
             [
                 ("id", "in", (self.user_ab | self.user_none).ids),
-                ("crm_team_ids", operator, value),
+                ("sale_team_ids", operator, value),
             ]
         )
 
@@ -106,7 +110,7 @@ class TestSearchCrmTeamIds(TestSalesCommon):
             self.assertEqual(
                 set(self._search(operator, team_value)),
                 {user for user, partner in pairs.items() if partner in reference},
-                f"crm_team_ids {operator} {team_value!r} disagrees with a stored m2m",
+                f"sale_team_ids {operator} {team_value!r} disagrees with a stored m2m",
             )
 
 
@@ -117,15 +121,17 @@ class TestSearchCrmTeamIdsMixedFalse(TestSalesCommon):
         cls.env["ir.config_parameter"].sudo().set_param(
             "sales_team.membership_multi", True
         )
-        cls.team = cls.env["crm.team"].create({"name": "MF", "company_id": False})
+        cls.team = cls.env["team.team"].create(
+            {"use_sale": True, "name": "MF", "company_id": False}
+        )
         cls.on_team = mail_new_test_user(
             cls.env, login="mf_on", name="MF On", groups="base.group_user"
         )
         cls.teamless = mail_new_test_user(
             cls.env, login="mf_off", name="MF Off", groups="base.group_user"
         )
-        cls.env["crm.team.member"].create(
-            {"user_id": cls.on_team.id, "crm_team_id": cls.team.id}
+        cls.env["team.member"].create(
+            {"user_id": cls.on_team.id, "team_id": cls.team.id}
         )
         cls.env.flush_all()
 
@@ -133,7 +139,7 @@ class TestSearchCrmTeamIdsMixedFalse(TestSalesCommon):
         found = self.env["res.users"].search(
             [
                 ("id", "in", (self.on_team | self.teamless).ids),
-                ("crm_team_ids", "in", [False] + self.team.ids),
+                ("sale_team_ids", "in", [False] + self.team.ids),
             ]
         )
         self.assertEqual(
@@ -150,10 +156,14 @@ class TestSearchMemberIds(TestSalesCommon):
         cls.env["ir.config_parameter"].sudo().set_param(
             "sales_team.membership_multi", True
         )
-        cls.team_a = cls.env["crm.team"].create({"name": "MA", "company_id": False})
-        cls.team_b = cls.env["crm.team"].create({"name": "MB", "company_id": False})
-        cls.team_empty = cls.env["crm.team"].create(
-            {"name": "MEmpty", "company_id": False}
+        cls.team_a = cls.env["team.team"].create(
+            {"use_sale": True, "name": "MA", "company_id": False}
+        )
+        cls.team_b = cls.env["team.team"].create(
+            {"use_sale": True, "name": "MB", "company_id": False}
+        )
+        cls.team_empty = cls.env["team.team"].create(
+            {"use_sale": True, "name": "MEmpty", "company_id": False}
         )
         cls.member_a = mail_new_test_user(
             cls.env, login="mi_a", name="Mi A", groups="base.group_user"
@@ -161,20 +171,20 @@ class TestSearchMemberIds(TestSalesCommon):
         cls.member_b = mail_new_test_user(
             cls.env, login="mi_b", name="Mi B", groups="base.group_user"
         )
-        cls.env["crm.team.member"].create(
+        cls.env["team.member"].create(
             [
-                {"user_id": cls.member_a.id, "crm_team_id": cls.team_a.id},
-                {"user_id": cls.member_b.id, "crm_team_id": cls.team_b.id},
+                {"user_id": cls.member_a.id, "team_id": cls.team_a.id},
+                {"user_id": cls.member_b.id, "team_id": cls.team_b.id},
             ]
         )
-        cls.env["crm.team.member"].create(
-            {"user_id": cls.member_b.id, "crm_team_id": cls.team_a.id}
+        cls.env["team.member"].create(
+            {"user_id": cls.member_b.id, "team_id": cls.team_a.id}
         ).action_archive()
         cls.teams = cls.team_a | cls.team_b | cls.team_empty
         cls.env.flush_all()
 
     def _search(self, operator, value):
-        return self.env["crm.team"].search(
+        return self.env["team.team"].search(
             [("id", "in", self.teams.ids), ("member_ids", operator, value)]
         )
 
@@ -250,8 +260,12 @@ class TestSalespersonDomain(TestSalesCommon):
         cls.env["ir.config_parameter"].sudo().set_param(
             "sales_team.membership_multi", True
         )
-        cls.team_a = cls.env["crm.team"].create({"name": "DA", "company_id": False})
-        cls.team_b = cls.env["crm.team"].create({"name": "DB", "company_id": False})
+        cls.team_a = cls.env["team.team"].create(
+            {"use_sale": True, "name": "DA", "company_id": False}
+        )
+        cls.team_b = cls.env["team.team"].create(
+            {"use_sale": True, "name": "DB", "company_id": False}
+        )
         cls.in_a = mail_new_test_user(
             cls.env, login="dom_in_a", name="Dom In A", groups="base.group_user"
         )
@@ -264,14 +278,14 @@ class TestSalespersonDomain(TestSalesCommon):
         cls.former = mail_new_test_user(
             cls.env, login="dom_former", name="Dom Former", groups="base.group_user"
         )
-        cls.env["crm.team.member"].create(
+        cls.env["team.member"].create(
             [
-                {"user_id": cls.in_a.id, "crm_team_id": cls.team_a.id},
-                {"user_id": cls.in_b.id, "crm_team_id": cls.team_b.id},
+                {"user_id": cls.in_a.id, "team_id": cls.team_a.id},
+                {"user_id": cls.in_b.id, "team_id": cls.team_b.id},
             ]
         )
-        cls.env["crm.team.member"].create(
-            {"user_id": cls.former.id, "crm_team_id": cls.team_a.id}
+        cls.env["team.member"].create(
+            {"user_id": cls.former.id, "team_id": cls.team_a.id}
         ).action_archive()
         cls.env.flush_all()
 
@@ -318,15 +332,15 @@ class TestSalespersonDomain(TestSalesCommon):
             "mono mode must offer a salesperson from another team",
         )
 
-        moved = self.env["crm.team.member"].create(
-            {"crm_team_id": self.team_b.id, "user_id": self.in_a.id}
+        moved = self.env["team.member"].create(
+            {"team_id": self.team_b.id, "user_id": self.in_a.id}
         )
         self.env.flush_all()
         self.env.invalidate_all()
 
         self.assertTrue(moved.active)
         self.assertEqual(
-            self.in_a.crm_team_ids,
+            self.in_a.sale_team_ids,
             self.team_b,
             "the salesperson ends on exactly one team",
         )
@@ -335,13 +349,13 @@ class TestSalespersonDomain(TestSalesCommon):
     def test_agrees_with_the_constraint_it_anticipates(self):
         for user in self._selectable(self.team_a.id):
             with self.env.cr.savepoint():
-                self.env["crm.team.member"].create(
-                    {"crm_team_id": self.team_a.id, "user_id": user.id}
+                self.env["team.member"].create(
+                    {"team_id": self.team_a.id, "user_id": user.id}
                 )
                 self.env.flush_all()
         with self.assertRaises(exceptions.ValidationError), self.env.cr.savepoint():
-            self.env["crm.team.member"].create(
-                {"crm_team_id": self.team_a.id, "user_id": self.in_a.id}
+            self.env["team.member"].create(
+                {"team_id": self.team_a.id, "user_id": self.in_a.id}
             )
             self.env.flush_all()
 
@@ -350,15 +364,17 @@ class TestSalespersonDomainSelfExclusion(TestSalesCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.team = cls.env["crm.team"].create({"name": "Excl", "company_id": False})
+        cls.team = cls.env["team.team"].create(
+            {"use_sale": True, "name": "Excl", "company_id": False}
+        )
         cls.member_user = mail_new_test_user(
             cls.env,
             login="excl_user",
             name="Excl User",
             groups="sales_team.group_sale_salesman",
         )
-        cls.membership = cls.env["crm.team.member"].create(
-            {"crm_team_id": cls.team.id, "user_id": cls.member_user.id}
+        cls.membership = cls.env["team.member"].create(
+            {"team_id": cls.team.id, "user_id": cls.member_user.id}
         )
         cls.env.flush_all()
 
@@ -374,10 +390,10 @@ class TestSalespersonDomainSelfExclusion(TestSalesCommon):
         self.assertNotIn(self.member_user, self._offered(False))
 
     def test_another_membership_still_excludes_them(self):
-        other = self.env["crm.team.member"].create(
+        other = self.env["team.member"].create(
             {
-                "crm_team_id": self.env["crm.team"]
-                .create({"name": "Excl2", "company_id": False})
+                "team_id": self.env["team.team"]
+                .create({"use_sale": True, "name": "Excl2", "company_id": False})
                 .id,
                 "user_id": mail_new_test_user(
                     self.env, login="excl_other", name="Excl Other"

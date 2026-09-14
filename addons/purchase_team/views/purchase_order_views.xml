@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_purchase_order_search_team" model="ir.ui.view">
+        <field name="name">purchase.order.search.team</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.view_purchase_order_search" />
+        <field name="arch" type="xml">
+            <field name="user_id" position="after">
+                <field name="team_id" />
+            </field>
+            <filter name="my_purchases_filter" position="after">
+                <filter
+                    name="my_team_purchases_filter"
+                    string="My Teams' Orders"
+                    domain="[('team_id.member_ids', 'in', uid)]" />
+            </filter>
+        </field>
+    </record>
+
+    <record id="view_purchase_order_form_team" model="ir.ui.view">
+        <field name="name">purchase.order.form.team</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.view_purchase_order_form" />
+        <field name="arch" type="xml">
+            <field name="user_id" position="after">
+                <field name="team_id" options="{'no_create': True}" />
+            </field>
+        </field>
+    </record>
+
+    <record id="view_purchase_order_list_team" model="ir.ui.view">
+        <field name="name">purchase.order.list.team</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.view_purchase_order_list" />
+        <field name="arch" type="xml">
+            <field name="user_id" position="after">
+                <field name="team_id" optional="hide" />
+            </field>
+        </field>
+    </record>
+
+</odoo>

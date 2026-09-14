@@ -275,10 +275,12 @@ class NewLeadNotification(TestCrmCommon):
                 self.assertEqual(create_values["is_company"], False)
 
     def test_new_lead_notification(self):
-        sales_team_1 = self.env["crm.team"].create(
+        sales_team_1 = self.env["team.team"].create(
             {
+                "use_sale": True,
+                "use_sale": True,
                 "name": "Test Sales Team",
-                "alias_name": "test_sales_team",
+                "lead_alias_name": "test_sales_team",
             }
         )
 
@@ -325,47 +327,37 @@ class NewLeadNotification(TestCrmCommon):
             }
         )
 
-        crm_team_model_id = self.env["ir.model"]._get_id("crm.team")
-        crm_lead_model_id = self.env["ir.model"]._get_id("crm.lead")
-
-        crm_team0 = self.env["crm.team"].create(
+        crm_team0 = self.env["team.team"].create(
             {
+                "use_sale": True,
+                "use_sale": True,
                 "name": "crm team 0",
                 "company_id": company0.id,
             }
         )
-        crm_team1 = self.env["crm.team"].create(
+        crm_team1 = self.env["team.team"].create(
             {
+                "use_sale": True,
+                "use_sale": True,
                 "name": "crm team 1",
                 "company_id": company1.id,
             }
         )
 
-        mail_alias0 = self.env["mail.alias"].create(
+        crm_team0.write(
             {
-                "alias_domain_id": company0.alias_domain_id.id,
-                "alias_name": "sale_team_0",
-                "alias_model_id": crm_lead_model_id,
-                "alias_parent_model_id": crm_team_model_id,
-                "alias_parent_thread_id": crm_team0.id,
-                "alias_defaults": "{'type': 'opportunity', 'team_id': %s}"
-                % crm_team0.id,
+                "lead_alias_name": "sale_team_0",
+                "lead_alias_domain_id": company0.alias_domain_id.id,
             }
         )
-        mail_alias1 = self.env["mail.alias"].create(
+        crm_team1.write(
             {
-                "alias_domain_id": company1.alias_domain_id.id,
-                "alias_name": "sale_team_1",
-                "alias_model_id": crm_lead_model_id,
-                "alias_parent_model_id": crm_team_model_id,
-                "alias_parent_thread_id": crm_team1.id,
-                "alias_defaults": "{'type': 'opportunity', 'team_id': %s}"
-                % crm_team1.id,
+                "lead_alias_name": "sale_team_1",
+                "lead_alias_domain_id": company1.alias_domain_id.id,
             }
         )
-
-        crm_team0.write({"alias_id": mail_alias0.id})
-        crm_team1.write({"alias_id": mail_alias1.id})
+        mail_alias0 = crm_team0.lead_alias_id.alias_id
+        mail_alias1 = crm_team1.lead_alias_id.alias_id
 
         new_message0 = f"""MIME-Version: 1.0
 Date: Thu, 27 Dec 2018 16:27:45 +0100
@@ -429,10 +421,12 @@ Content-Transfer-Encoding: quoted-printable
         leader_team_2 = (
             self.env["res.users"].sudo().create({"name": "bob", "login": "bob"})
         )
-        team_2 = self.env["crm.team"].create(
+        team_2 = self.env["team.team"].create(
             {
+                "use_sale": True,
+                "use_sale": True,
                 "name": "team_2",
-                "alias_name": "team.2",
+                "lead_alias_name": "team.2",
                 "user_id": leader_team_2.id,
             }
         )
@@ -441,14 +435,14 @@ Content-Transfer-Encoding: quoted-printable
             self.format_and_process(
                 INCOMING_EMAIL,
                 f"source.email@customerOfTeam1{x}.be",
-                self.sales_team_1.alias_email,
+                self.sales_team_1.lead_alias_email,
                 subject=f"OpportunityTeam1{x}",
                 target_model="crm.lead",
             )
             self.format_and_process(
                 INCOMING_EMAIL,
                 f"source.email@customerOfTeam2{x}.be",
-                team_2.alias_email,
+                team_2.lead_alias_email,
                 subject=f"OpportunityTeam2{x}",
                 target_model="crm.lead",
             )

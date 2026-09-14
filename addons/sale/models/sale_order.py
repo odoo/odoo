@@ -114,7 +114,7 @@ class SaleOrder(models.Model):
         ),
     )
     team_id = fields.Many2one(
-        comodel_name="crm.team",
+        comodel_name="team.team",
         string="Sales Team",
         compute="_compute_team_id",
         precompute=True,
@@ -122,7 +122,7 @@ class SaleOrder(models.Model):
         store=True,
         index=True,
         readonly=False,
-        domain="[('company_id', 'in', [False, company_id])]",
+        domain="[('use_sale', '=', True), ('company_id', 'in', [False, company_id])]",
         ondelete="set null",
         check_company=True,
         tracking=True,
@@ -469,14 +469,15 @@ class SaleOrder(models.Model):
             key = (default_team_id, user_id, company_id)
             if key not in cached_teams:
                 cached_teams[key] = (
-                    self.env["crm.team"]
+                    self.env["team.team"]
                     .with_context(
                         default_team_id=default_team_id,
                         allowed_company_ids=[company_id],
                     )
-                    ._get_default_team_id(
+                    ._get_default_team(
+                        "sale",
                         user_id=user_id,
-                        domain=self.env["crm.team"]._check_company_domain(company_id),
+                        domain=self.env["team.team"]._check_company_domain(company_id),
                     )
                 )
             order.team_id = cached_teams[key]

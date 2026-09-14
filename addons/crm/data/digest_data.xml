@@ -17,11 +17,11 @@
                 <div>
                     <t
                         t-set="record"
-                        t-value="object.env['crm.team'].search([('alias_name', '!=', False), ('alias_domain_id', '!=', False)], limit=1)" />
+                        t-value="object.env['team.team'].search([('lead_alias_name', '!=', False), ('lead_alias_domain_id', '!=', False)], limit=1)" />
                     <p class="tip_title">Tip: Convert incoming emails into opportunities</p>
-                    <t t-if="record.alias_email">
-                        <p class="tip_content">Did you know emails sent to <t t-out="record.alias_email" /> generate opportunities in your pipeline?<br />
-                        <a t-attf-href="mailto:{{record.alias_email}}" target="_blank">Try sending an email</a> to your CRM. This email address is configurable by sales team members.</p>
+                    <t t-if="record.lead_alias_email">
+                        <p class="tip_content">Did you know emails sent to <t t-out="record.lead_alias_email" /> generate opportunities in your pipeline?<br />
+                        <a t-attf-href="mailto:{{record.lead_alias_email}}" target="_blank">Try sending an email</a> to your CRM. This email address is configurable by sales team members.</p>
                     </t>
                     <t t-else="">
                         <p class="tip_content">Did you know emails sent to a Sales Team alias generate opportunities in your pipeline?</p>

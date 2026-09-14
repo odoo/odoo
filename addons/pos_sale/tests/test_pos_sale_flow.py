@@ -1286,15 +1286,17 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
                 "taxes_id": False,
             }
         )
-        sale_team = self.env["crm.team"].create({"name": "Test team"})
-        self.main_pos_config.write({"crm_team_id": sale_team})
+        sale_team = self.env["team.team"].create(
+            {"use_sale": True, "name": "Test team"}
+        )
+        self.main_pos_config.write({"team_id": sale_team})
         self.main_pos_config.open_ui()
         self.start_tour(
             "/pos/ui/%d" % self.main_pos_config.id, "PosSaleTeam", login="accountman"
         )
         order = self.env["pos.order"].search([])
         self.assertEqual(len(order), 1)
-        self.assertEqual(order.crm_team_id, sale_team)
+        self.assertEqual(order.team_id, sale_team)
 
     def test_show_orders_for_pos_currency_only(self):
         currency = self.env["res.currency"].create(

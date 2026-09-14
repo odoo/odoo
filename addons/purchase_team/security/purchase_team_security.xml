@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+        <!--
+            The rung between own and all documents. Like purchase's own rung it
+            does not imply Read-only: record rules OR across a user's groups, so
+            a read-all rule reached through Read-only would widen it to every
+            order.
+        -->
+        <record id="group_purchase_user_team" model="res.groups">
+            <field name="name">User: Team Documents</field>
+            <field name="sequence">12</field>
+            <field name="privilege_id" ref="purchase.res_groups_privilege_purchase" />
+            <field
+                name="comment">The user will have access to the records of their purchase teams.</field>
+            <field
+                name="implied_ids"
+                eval="[Command.link(ref('purchase.group_purchase_user'))]" />
+        </record>
+        <record id="purchase.group_purchase_user_all" model="res.groups">
+            <field
+                name="implied_ids"
+                eval="[Command.link(ref('group_purchase_user_team'))]" />
+        </record>
+    </data>
+
+    <data noupdate="1">
+        <record id="team_team_rule_purchase_manager" model="ir.rule">
+            <field name="name">Purchase teams: Purchase Administrators</field>
+            <field name="model_id" ref="team.model_team_team" />
+            <field name="domain_force">[('use_purchase', '=', True)]</field>
+            <field
+                name="groups"
+                eval="[Command.link(ref('purchase.group_purchase_manager'))]" />
+            <field name="perm_read" eval="False" />
+        </record>
+        <record id="team_member_rule_purchase_manager" model="ir.rule">
+            <field name="name">Purchase team members: Purchase Administrators</field>
+            <field name="model_id" ref="team.model_team_member" />
+            <field name="domain_force">[('team_id.use_purchase', '=', True)]</field>
+            <field
+                name="groups"
+                eval="[Command.link(ref('purchase.group_purchase_manager'))]" />
+            <field name="perm_read" eval="False" />
+        </record>
+        <record id="team_alias_rule_purchase_manager" model="ir.rule">
+            <field name="name">Purchase team aliases: Purchase Administrators</field>
+            <field name="model_id" ref="team.model_team_alias" />
+            <field name="domain_force">[('team_id.use_purchase', '=', True)]</field>
+            <field
+                name="groups"
+                eval="[Command.link(ref('purchase.group_purchase_manager'))]" />
+            <field name="perm_read" eval="False" />
+        </record>
+        <!--
+            A team member sees the documents of every buyer who shares one of
+            their purchase teams, the documents filed under one of those teams,
+            and the documents nobody owns yet.
+        -->
+        <record id="purchase_order_team_rule" model="ir.rule">
+            <field name="name">Purchase Orders: Team Documents</field>
+            <field name="model_id" ref="purchase.model_purchase_order" />
+            <field
+                name="domain_force">['|', '|', ('user_id', '=', False), ('user_id.purchase_team_ids', 'in', user.purchase_team_ids.ids), ('team_id', 'in', user.purchase_team_ids.ids)]</field>
+            <field
+                name="groups"
+                eval="[Command.link(ref('group_purchase_user_team'))]" />
+        </record>
+        <record id="purchase_order_line_team_rule" model="ir.rule">
+            <field name="name">Purchase Order Lines: Team Documents</field>
+            <field name="model_id" ref="purchase.model_purchase_order_line" />
+            <field
+                name="domain_force">['|', '|', ('order_id.user_id', '=', False), ('order_id.user_id.purchase_team_ids', 'in', user.purchase_team_ids.ids), ('order_id.team_id', 'in', user.purchase_team_ids.ids)]</field>
+            <field
+                name="groups"
+                eval="[Command.link(ref('group_purchase_user_team'))]" />
+        </record>
+        <record id="purchase_report_team_rule" model="ir.rule">
+            <field name="name">Orders Analysis: Team Documents</field>
+            <field name="model_id" ref="purchase.model_purchase_report" />
+            <field
+                name="domain_force">['|', '|', ('user_id', '=', False), ('user_id.purchase_team_ids', 'in', user.purchase_team_ids.ids), ('team_id', 'in', user.purchase_team_ids.ids)]</field>
+            <field
+                name="groups"
+                eval="[Command.link(ref('group_purchase_user_team'))]" />
+        </record>
+        <record id="account_move_purchase_team_rule" model="ir.rule">
+            <field name="name">Vendor Bills: Team Documents</field>
+            <field name="model_id" ref="account.model_account_move" />
+            <field
+                name="domain_force">[('move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt')), '|', ('invoice_user_id', '=', False), ('invoice_user_id.purchase_team_ids', 'in', user.purchase_team_ids.ids)]</field>
+            <field
+                name="groups"
+                eval="[Command.link(ref('group_purchase_user_team'))]" />
+        </record>
+        <record id="account_move_line_purchase_team_rule" model="ir.rule">
+            <field name="name">Vendor Bill Lines: Team Documents</field>
+            <field name="model_id" ref="account.model_account_move_line" />
+            <field
+                name="domain_force">[('move_id.move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt')), '|', ('move_id.invoice_user_id', '=', False), ('move_id.invoice_user_id.purchase_team_ids', 'in', user.purchase_team_ids.ids)]</field>
+            <field
+                name="groups"
+                eval="[Command.link(ref('group_purchase_user_team'))]" />
+        </record>
+        <record id="account_invoice_report_purchase_team_rule" model="ir.rule">
+            <field name="name">Vendor Bills Analysis: Team Documents</field>
+            <field name="model_id" ref="account.model_account_invoice_report" />
+            <field
+                name="domain_force">[('move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt')), '|', ('invoice_user_id', '=', False), ('invoice_user_id.purchase_team_ids', 'in', user.purchase_team_ids.ids)]</field>
+            <field
+                name="groups"
+                eval="[Command.link(ref('group_purchase_user_team'))]" />
+        </record>
+    </data>
+
+</odoo>

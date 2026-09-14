@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="team_view_search_purchase" model="ir.ui.view">
+        <field name="name">team.team.view.search.purchase</field>
+        <field name="model">team.team</field>
+        <field name="inherit_id" ref="team.team_view_search" />
+        <field name="arch" type="xml">
+            <xpath expr="//separator[@name='usages']" position="before">
+                <filter
+                    name="use_purchase"
+                    string="Purchase"
+                    domain="[('use_purchase', '=', True)]" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="team_view_form_purchase" model="ir.ui.view">
+        <field name="name">team.team.view.form.purchase</field>
+        <field name="model">team.team</field>
+        <field name="inherit_id" ref="team.team_view_form" />
+        <field name="arch" type="xml">
+            <div name="usages" position="inside">
+                <span class="d-inline-flex">
+                    <field name="use_purchase" />
+                    <label for="use_purchase" />
+                </span>
+            </div>
+        </field>
+    </record>
+
+    <record id="team_action_purchase" model="ir.actions.act_window">
+        <field name="name">Purchase Teams</field>
+        <field name="res_model">team.team</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('use_purchase', '=', True)]</field>
+        <field name="context">{'default_use_purchase': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a purchase team
+            </p><p>
+                Buyers of one team see each other's orders and bills.
+            </p>
+        </field>
+    </record>
+
+</odoo>

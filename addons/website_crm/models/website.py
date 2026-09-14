@@ -6,13 +6,15 @@ class Website(models.Model):
 
     def _get_domain_crm_default_team(self):
         if not self.env.user.has_group("crm.group_use_lead"):
-            return [("use_opportunities", "=", True)]
-        return [("use_leads", "=", True)]
+            return [("use_sale", "=", True), ("use_opportunities", "=", True)]
+        return [("use_sale", "=", True), ("use_leads", "=", True)]
 
     crm_default_team_id = fields.Many2one(
-        comodel_name="crm.team",
+        comodel_name="team.team",
         string="Default Sales Teams",
-        default=lambda self: self.env["crm.team"].search([], limit=1),
+        default=lambda self: self.env["team.team"].search(
+            [("use_sale", "=", True)], limit=1
+        ),
         domain=lambda self: self._get_domain_crm_default_team(),
         help="Default Sales Team for new leads created through the Contact Us form.",
     )

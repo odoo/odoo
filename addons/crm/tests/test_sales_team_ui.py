@@ -16,6 +16,6 @@ class TestUi(HttpCase, SalesTeamCommon):
 
         self.start_tour("/", "create_crm_team_tour", login="salesmanager")
 
-        created_team = self.env["crm.team"].search([("name", "=", "My CRM Team")])
+        created_team = self.env["team.team"].search([("name", "=", "My CRM Team")])
         self.assertTrue(bool(created_team))
         self.assertEqual(created_team.member_ids, self.sale_user | self.sale_manager)

@@ -12,7 +12,7 @@ class TestResourceAssetMaintenance(TransactionCase):
         cls.press = cls.env["resource.asset"].create(
             {"name": "Press 1", "kind_id": cls.machinery.id}
         )
-        cls.team = cls.env["maintenance.team"].create({"name": "Mechanics"})
+        cls.team = cls.env["team.team"].create({"use_maintenance": True, "name": "Mechanics"})
         cls.stage_done = cls.env["maintenance.stage"].search(
             [("done", "=", True)], limit=1
         )
@@ -146,7 +146,7 @@ class TestResourceAssetMaintenance(TransactionCase):
     def test_the_asset_outranks_the_equipment_for_team_and_technician(self):
         """The bridge used to set the asset's team, then let the base compute
         overwrite it with the equipment's."""
-        other_team = self.env["maintenance.team"].create({"name": "Electricians"})
+        other_team = self.env["team.team"].create({"use_maintenance": True, "name": "Electricians"})
         technician = self.env["res.users"].create(
             {"name": "Asset tech", "login": "asset_tech"}
         )
@@ -179,7 +179,7 @@ class TestResourceAssetMaintenance(TransactionCase):
         Request = self.env["maintenance.request"]
         if "workcenter_id" not in Request._fields:
             self.skipTest("mrp_maintenance is not installed")
-        workcenter_team = self.env["maintenance.team"].create({"name": "Line crew"})
+        workcenter_team = self.env["team.team"].create({"use_maintenance": True, "name": "Line crew"})
         workcenter = self.env["mrp.workcenter"].create(
             {"name": "Press line", "maintenance_team_id": workcenter_team.id}
         )

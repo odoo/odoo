@@ -19,11 +19,12 @@ class MixinMaintenance(models.AbstractModel):
         help="This date will be used to compute the Mean Time Between Failure.",
     )
     maintenance_team_id = fields.Many2one(
-        comodel_name="maintenance.team",
+        comodel_name="team.team",
         compute="_compute_maintenance_team_id",
         store=True,
         index="btree_not_null",
         readonly=False,
+        domain=[("use_maintenance", "=", True)],
         check_company=True,
     )
     technician_user_id = fields.Many2one(

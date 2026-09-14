@@ -140,7 +140,7 @@ class SaleReport(models.Model):
             "partner_zip": "partner.zip",
             "industry_id": "partner.primary_industry_id",
             "pricelist_id": "pos.pricelist_id",
-            "team_id": "pos.crm_team_id",
+            "team_id": "pos.team_id",
             "user_id": "pos.user_id",
             "campaign_id": "NULL",  # POS doesn't have UTM fields
             "medium_id": "NULL",
@@ -309,7 +309,7 @@ class SaleReport(models.Model):
             "partner.state_id",
             "partner.zip",
             "u.factor",
-            "pos.crm_team_id",
+            "pos.team_id",
             "account_currency_table.rate",
             "picking.warehouse_id",
         ]

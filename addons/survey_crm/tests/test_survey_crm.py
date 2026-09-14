@@ -93,8 +93,8 @@ class TestSurveyCrm(common.TestSurveyCommon, HttpCase):
         self, answers=[], login=None, sales_team=False, survey_type="survey"
     ):
         if sales_team:
-            sales_team = self.env["crm.team"].create(
-                {"name": "Odoo Survey Team", "use_leads": True}
+            sales_team = self.env["team.team"].create(
+                {"use_sale": True, "name": "Odoo Survey Team", "use_leads": True}
             )
             sales_team.member_ids = [(4, self.survey_manager.id)]
             self.survey_crm.update({"team_id": sales_team.id})

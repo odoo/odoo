@@ -106,8 +106,9 @@ class CrmRevealRule(models.Model):
         help="This will be appended in name of generated lead so you can identify lead/opportunity is generated with this rule"
     )
     team_id = fields.Many2one(
-        comodel_name="crm.team",
+        comodel_name="team.team",
         string="Sales Team",
+        domain=[("use_sale", "=", True)],
         ondelete="set null",
     )
     tag_ids = fields.Many2many(

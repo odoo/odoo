@@ -11,19 +11,19 @@ class CrmChatbotCase(MailCommon, ChatbotCase):
         cls._create_portal_user()
         teams_data = [
             {
+                "use_sale": True,
                 "company_id": cls.company_admin.id,
-                "crm_team_member_ids": [
-                    Command.create({"user_id": cls.user_employee.id})
-                ],
+                "team_member_ids": [Command.create({"user_id": cls.user_employee.id})],
                 "name": "Test Sale Team 1",
             },
             {
+                "use_sale": True,
                 "company_id": cls.company_admin.id,
                 "name": "Test Sale Team 2",
                 "use_leads": True,
             },
         ]
-        cls.sale_team, cls.sale_team_with_lead = cls.env["crm.team"].create(teams_data)
+        cls.sale_team, cls.sale_team_with_lead = cls.env["team.team"].create(teams_data)
         cls.step_dispatch_create_lead = (
             cls.env["chatbot.script.answer"]
             .sudo()
@@ -68,7 +68,7 @@ class CrmChatbotCase(MailCommon, ChatbotCase):
                         "triggering_answer_ids": [
                             (4, cls.step_dispatch_create_lead.id)
                         ],
-                        "crm_team_id": cls.sale_team.id,
+                        "team_id": cls.sale_team.id,
                         "chatbot_script_id": cls.chatbot_script.id,
                     },
                 ]

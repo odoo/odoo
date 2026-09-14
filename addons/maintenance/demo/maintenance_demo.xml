@@ -3,10 +3,12 @@
 
     <data noupdate="1">
         <!--  Maintenance teams -->
-        <record id="equipment_team_metrology" model="maintenance.team">
+        <record id="equipment_team_metrology" model="team.team">
+            <field name="use_maintenance" eval="True" />
             <field name="name">Metrology</field>
         </record>
-        <record id="equipment_team_subcontractor" model="maintenance.team">
+        <record id="equipment_team_subcontractor" model="team.team">
+            <field name="use_maintenance" eval="True" />
             <field name="name">Subcontractor</field>
         </record>
         <!-- Equipment categories -->

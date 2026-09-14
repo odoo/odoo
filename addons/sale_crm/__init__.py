@@ -3,5 +3,7 @@ from . import wizards
 
 
 def uninstall_hook(env):
-    teams = env["crm.team"].search([("use_opportunities", "=", False)])
+    teams = env["team.team"].search(
+        [("use_sale", "=", True), ("use_opportunities", "=", False)]
+    )
     teams.write({"use_opportunities": True})

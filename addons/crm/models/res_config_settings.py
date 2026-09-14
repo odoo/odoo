@@ -207,10 +207,9 @@ class ResConfigSettings(models.TransientModel):
         super().set_values()
         has_group_lead_after = group_use_lead_id in self.env.user.all_group_ids.ids
         if has_group_lead_before != has_group_lead_after:
-            teams = self.env["crm.team"].search([])
+            teams = self.env["team.team"].search([("use_sale", "=", True)])
             teams.filtered("use_opportunities").use_leads = has_group_lead_after
-            for team in teams:
-                team.alias_id.write(team._alias_get_creation_values())
+            teams._refresh_usage_aliases(["sale"])
         assign_cron = self.sudo().env.ref(
             "crm.ir_cron_crm_lead_assign", raise_if_not_found=False
         )
@@ -243,7 +242,7 @@ class ResConfigSettings(models.TransientModel):
     def action_crm_assign_leads(self):
         self.check_singleton()
         return (
-            self.env["crm.team"]
-            .search([("assignment_optout", "=", False)])
+            self.env["team.team"]
+            .search([("use_sale", "=", True), ("lead_assignment_optout", "=", False)])
             .action_assign_leads()
         )

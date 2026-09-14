@@ -37,7 +37,8 @@
             <field name="parent_id" ref="mt_mat_assign" />
             <field name="default" eval="True" />
         </record>
-        <record id="equipment_team_maintenance" model="maintenance.team">
+        <record id="equipment_team_maintenance" model="team.team">
+            <field name="use_maintenance" eval="True" />
             <field name="name">Internal Maintenance</field>
         </record>
     </data>

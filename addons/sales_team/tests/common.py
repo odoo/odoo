@@ -34,12 +34,14 @@ class SalesTeamCommon(BaseCommon):
                 "group_ids": [(6, 0, cls.group_sale_manager.ids)],
             }
         )
-        cls.sale_team = cls.env["crm.team"].create(
+        cls.sale_team = cls.env["team.team"].create(
             {
+                "use_sale": True,
+                "use_sale": True,
                 "name": "Test Sales Team",
             }
         )
-        cls.env["crm.team"].search(
+        cls.env["team.team"].search(
             [
                 ("id", "!=", cls.sale_team.id),
             ]
@@ -87,25 +89,27 @@ class TestSalesCommon(TransactionCase):
             groups="sales_team.group_sale_salesman",
         )
 
-        cls.env["crm.team"].search([]).write({"sequence": 9999})
-        cls.sales_team_1 = cls.env["crm.team"].create(
+        cls.env["team.team"].search([]).write({"sequence": 9999})
+        cls.sales_team_1 = cls.env["team.team"].create(
             {
+                "use_sale": True,
+                "use_sale": True,
                 "name": "Test Sales Team",
                 "sequence": 5,
                 "company_id": False,
                 "user_id": cls.user_sales_manager.id,
             }
         )
-        cls.sales_team_1_m1 = cls.env["crm.team.member"].create(
+        cls.sales_team_1_m1 = cls.env["team.member"].create(
             {
                 "user_id": cls.user_sales_leads.id,
-                "crm_team_id": cls.sales_team_1.id,
+                "team_id": cls.sales_team_1.id,
             }
         )
-        cls.sales_team_1_m2 = cls.env["crm.team.member"].create(
+        cls.sales_team_1_m2 = cls.env["team.member"].create(
             {
                 "user_id": cls.user_admin.id,
-                "crm_team_id": cls.sales_team_1.id,
+                "team_id": cls.sales_team_1.id,
             }
         )
 
@@ -121,16 +125,20 @@ class TestSalesMC(TestSalesCommon):
                 "country_id": cls.env.ref("base.fr").id,
             }
         )
-        cls.team_c2 = cls.env["crm.team"].create(
+        cls.team_c2 = cls.env["team.team"].create(
             {
+                "use_sale": True,
+                "use_sale": True,
                 "name": "C2 Team1",
                 "sequence": 1,
                 "user_id": False,
                 "company_id": cls.company_2.id,
             }
         )
-        cls.team_mc = cls.env["crm.team"].create(
+        cls.team_mc = cls.env["team.team"].create(
             {
+                "use_sale": True,
+                "use_sale": True,
                 "name": "MainCompany Team",
                 "user_id": cls.user_admin.id,
                 "sequence": 3,

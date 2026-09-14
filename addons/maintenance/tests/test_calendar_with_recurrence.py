@@ -9,8 +9,9 @@ from odoo.tests import HttpCase, tagged
 class TestCalendarWithRecurrence(HttpCase):
     def test_dblclick_event_from_calendar(self):
         """Make sure double clicking on an event and its recurrences lead to the correct record"""
-        self.env["maintenance.team"].create(
+        self.env["team.team"].create(
             {
+                "use_maintenance": True,
                 "name": "the boys",
             }
         )
@@ -58,8 +59,9 @@ class TestCalendarWithRecurrence(HttpCase):
         Make sure dragging and dropping an event changes the correct record
         Occurences should be locked, drag and drop should have no effect
         """
-        self.env["maintenance.team"].create(
+        self.env["team.team"].create(
             {
+                "use_maintenance": True,
                 "name": "the boys",
             }
         )

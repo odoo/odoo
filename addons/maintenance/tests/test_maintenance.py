@@ -11,7 +11,7 @@ class TestEquipmentCommon(TransactionCase):
         self.equipment = self.env["maintenance.equipment"]
         self.maintenance_request = self.env["maintenance.request"]
         self.res_users = self.env["res.users"]
-        self.maintenance_team = self.env["maintenance.team"]
+        self.maintenance_team = self.env["team.team"]
         self.main_company = self.env.ref("base.main_company")
         res_user = self.env.ref("base.group_user")
         res_manager = self.env.ref("maintenance.group_equipment_manager")

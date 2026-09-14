@@ -237,8 +237,8 @@ class TestPartnerLeadPortal(TestCrmCommon, HttpCase):
             )
         )
         opportunity = self.env["crm.lead"].browse(data["id"])
-        salesmanteam = self.env["crm.team"]._get_default_team_id(
-            user_id=self.user_portal.user_id.id
+        salesmanteam = self.env["team.team"]._get_default_team(
+            "sale", user_id=self.user_portal.user_id.id
         )
 
         self.assertEqual(

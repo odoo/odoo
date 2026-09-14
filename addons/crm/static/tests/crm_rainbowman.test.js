@@ -25,7 +25,7 @@ class Users extends models.Model {
 }
 
 class Team extends models.Model {
-    _name = "crm.team";
+    _name = "team.team";
 
     name = fields.Char();
     member_ids = fields.Many2many({ string: "Members", relation: "users" });
@@ -57,7 +57,7 @@ class Lead extends models.Model {
     date_closed = fields.Datetime({ string: "Date closed" });
     stage_id = fields.Many2one({ string: "Stage", relation: "crm.stage" });
     user_id = fields.Many2one({ string: "Salesperson", relation: "users" });
-    team_id = fields.Many2one({ string: "Sales Team", relation: "crm.team" });
+    team_id = fields.Many2one({ string: "Sales Team", relation: "team.team" });
 
     _records = [
         {

@@ -16,7 +16,7 @@
                         domain="[('share', '=', False)]" />
                     <field
                         name="team_id"
-                        context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"
+                        context="{'kanban_view_ref': 'team.team_view_kanban'}"
                         options="{'no_open': True, 'no_create': True}" />
                 </group>
                 <group string="Opportunities" col="4" invisible="name != 'merge'">
@@ -41,7 +41,7 @@
                             <field
                                 name="team_id"
                                 optional="hide"
-                                context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}" />
+                                context="{'kanban_view_ref': 'team.team_view_kanban'}" />
                         </list>
                     </field>
                 </group>

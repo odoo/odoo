@@ -14,7 +14,7 @@ class TestEquipmentMulticompany(TransactionCase):
         Category = self.env["maintenance.equipment.category"]
         ResUsers = self.env["res.users"]
         ResCompany = self.env["res.company"]
-        MaintenanceTeam = self.env["maintenance.team"]
+        MaintenanceTeam = self.env["team.team"]
 
         # Use full reference.
         group_user = self.env.ref("base.group_user")
@@ -64,6 +64,7 @@ class TestEquipmentMulticompany(TransactionCase):
         # create a maintenance team for company A user
         MaintenanceTeam.with_user(equipment_manager).create(
             {
+                "use_maintenance": True,
                 "name": "Metrology",
                 "company_id": company_a.id,
             }
@@ -74,6 +75,7 @@ class TestEquipmentMulticompany(TransactionCase):
             .with_context(allowed_company_ids=cids)
             .create(
                 {
+                    "use_maintenance": True,
                     "name": "Subcontractor",
                     "company_id": company_b.id,
                 }
@@ -183,6 +185,7 @@ class TestEquipmentMulticompany(TransactionCase):
         with self.assertRaises(AccessError):
             MaintenanceTeam.with_user(user).create(
                 {
+                    "use_maintenance": True,
                     "name": "Subcontractor",
                     "company_id": company_b.id,
                 }

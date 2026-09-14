@@ -1,4 +1,3 @@
-from collections import defaultdict
 from datetime import UTC, timedelta
 
 from odoo import _, api, fields, models
@@ -345,7 +344,7 @@ class MaintenanceRequest(models.Model):
         help="Expected completion date and time of the maintenance request.",
     )
     maintenance_team_id = fields.Many2one(
-        comodel_name="maintenance.team",
+        comodel_name="team.team",
         string="Team",
         compute="_compute_maintenance_team_id",
         precompute=True,
@@ -353,6 +352,7 @@ class MaintenanceRequest(models.Model):
         index=True,
         readonly=False,
         required=True,
+        domain=[("use_maintenance", "=", True)],
         check_company=True,
     )
     duration = fields.Float(
@@ -463,10 +463,13 @@ class MaintenanceRequest(models.Model):
     @api.model
     def _get_default_maintenance_team(self, company):
         return (
-            self.env["maintenance.team"]
+            self.env["team.team"]
             .with_company(company)
             .search(
-                [("company_id", "in", [company.id, False])],
+                [
+                    ("use_maintenance", "=", True),
+                    ("company_id", "in", [company.id, False]),
+                ],
                 order="company_id NULLS LAST, id",
                 limit=1,
             )
@@ -614,9 +617,7 @@ class MaintenanceRequest(models.Model):
     @api.model
     def message_new(self, msg_dict, custom_values=None):
         values = dict(custom_values or {})
-        team = self.env["maintenance.team"].browse(
-            values.get("maintenance_team_id") or ()
-        )
+        team = self.env["team.team"].browse(values.get("maintenance_team_id") or ())
         if team.company_id and "company_id" not in values:
             values["company_id"] = team.company_id.id
         return super().message_new(msg_dict, custom_values=values)
@@ -628,96 +629,3 @@ class MaintenanceRequest(models.Model):
         """
         stage_ids = stages.sudo()._search([], order=stages._order)
         return stages.browse(stage_ids)
-
-
-class MaintenanceTeam(models.Model):
-    _name = "maintenance.team"
-    _inherit = ["mixin.mail.alias", "mixin.mail.thread"]
-    _description = "Maintenance Teams"
-
-    name = fields.Char(
-        string="Team Name",
-        translate=True,
-        required=True,
-    )
-    active = fields.Boolean(default=True)
-    company_id = fields.Many2one(
-        comodel_name="res.company",
-        default=lambda self: self.env.company,
-    )
-    member_ids = fields.Many2many(
-        comodel_name="res.users",
-        relation="maintenance_team_users_rel",
-        string="Team Members",
-        domain="company_id and [('company_ids', 'in', company_id)] or []",
-    )
-    color = fields.Integer(string="Color Index")
-    request_ids = fields.One2many(
-        comodel_name="maintenance.request",
-        inverse_name="maintenance_team_id",
-        copy=False,
-    )
-    equipment_ids = fields.One2many(
-        comodel_name="maintenance.equipment",
-        inverse_name="maintenance_team_id",
-        copy=False,
-    )
-
-    # For the dashboard only
-    todo_request_count = fields.Integer(
-        string="Number of Requests",
-        compute="_compute_todo_requests",
-    )
-    todo_request_count_date = fields.Integer(
-        string="Number of Requests Scheduled",
-        compute="_compute_todo_requests",
-    )
-    todo_request_count_high_priority = fields.Integer(
-        string="Number of Requests in High Priority",
-        compute="_compute_todo_requests",
-    )
-    todo_request_count_block = fields.Integer(
-        string="Number of Requests Blocked",
-        compute="_compute_todo_requests",
-    )
-    todo_request_count_unscheduled = fields.Integer(
-        string="Number of Requests Unscheduled",
-        compute="_compute_todo_requests",
-    )
-    alias_id = fields.Many2one(help="Email alias for this maintenance team.")
-
-    @api.depends("request_ids.stage_id.done")
-    def _compute_todo_requests(self):
-        Request = self.env["maintenance.request"]
-        data_by_team = defaultdict(list)
-        for team, *row in Request._read_group(
-            [("maintenance_team_id", "in", self.ids), *Request._get_domain_open()],
-            ["maintenance_team_id", "schedule_date:year", "priority", "kanban_state"],
-            ["__count"],
-        ):
-            data_by_team[team].append(row)
-        for team in self:
-            data = data_by_team[team]
-            team.todo_request_count = sum(count for (_, _, _, count) in data)
-            team.todo_request_count_date = sum(
-                count for (schedule_date, _, _, count) in data if schedule_date
-            )
-            team.todo_request_count_high_priority = sum(
-                count for (_, priority, _, count) in data if priority == "3"
-            )
-            team.todo_request_count_block = sum(
-                count
-                for (_, _, kanban_state, count) in data
-                if kanban_state == "blocked"
-            )
-            team.todo_request_count_unscheduled = (
-                team.todo_request_count - team.todo_request_count_date
-            )
-
-    def _alias_get_creation_values(self):
-        values = super()._alias_get_creation_values()
-        values["alias_model_id"] = self.env["ir.model"]._get("maintenance.request").id
-        if self.id:
-            values["alias_defaults"] = defaults = self._get_alias_defaults()
-            defaults["maintenance_team_id"] = self.id
-        return values

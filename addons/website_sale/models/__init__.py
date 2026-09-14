@@ -1,5 +1,5 @@
 from . import account_move
-from . import crm_team
+from . import team_team
 from . import documents_document
 from . import delivery_carrier
 from . import digest

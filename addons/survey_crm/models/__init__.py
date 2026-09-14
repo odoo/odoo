@@ -1,5 +1,5 @@
 from . import crm_lead
-from . import crm_team
+from . import team_team
 from . import survey_question
 from . import survey_question_answer
 from . import survey_survey

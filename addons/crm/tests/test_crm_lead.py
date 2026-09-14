@@ -372,7 +372,7 @@ class TestCRMLead(TestCrmCommon):
             )
         )
         self.assertEqual(lead.user_id, self.env["res.users"])
-        self.assertEqual(lead.team_id, self.env["crm.team"])
+        self.assertEqual(lead.team_id, self.env["team.team"])
         self.assertEqual(lead.stage_id, self.stage_gen_1)
 
         lead = self.env["crm.lead"].create(
@@ -789,23 +789,24 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(lead.stage_id, self.stage_gen_won)
 
     def test_crm_lead_stages_with_multiple_possible_teams(self):
-        self.sales_team_2 = self.env["crm.team"].create(
+        self.sales_team_2 = self.env["team.team"].create(
             {
+                "use_sale": True,
                 "name": "Test Sales Team 2",
                 "company_id": False,
                 "user_id": self.user_sales_manager.id,
             }
         )
-        self.sales_team_2_m1 = self.env["crm.team.member"].create(
+        self.sales_team_2_m1 = self.env["team.member"].create(
             {
                 "user_id": self.user_sales_leads.id,
-                "crm_team_id": self.sales_team_2.id,
+                "team_id": self.sales_team_2.id,
             }
         )
 
-        user_teams = self.env["crm.team"].search(
+        user_teams = self.env["team.team"].search(
             [
-                ("crm_team_member_all_ids.user_id", "=", self.user_sales_leads.id),
+                ("team_member_all_ids.user_id", "=", self.user_sales_leads.id),
             ]
         )
         self.assertIn(self.sales_team_1, user_teams)
@@ -974,9 +975,9 @@ class TestCRMLead(TestCrmCommon):
             )
             self.assertEqual(lead.date_last_stage_update, first_now)
 
-        member = self.env["crm.team.member"].search(
+        member = self.env["team.member"].search(
             [
-                ("crm_team_id", "=", self.sales_team_1.id),
+                ("team_id", "=", self.sales_team_1.id),
                 ("user_id", "=", self.user_sales_salesman.id),
             ],
             limit=1,
@@ -991,7 +992,9 @@ class TestCRMLead(TestCrmCommon):
 
     @users("user_sales_manager")
     def test_crm_lead_won_stage_is_the_teams_own(self):
-        team_other = self.env["crm.team"].create({"name": "Other Team"})
+        team_other = self.env["team.team"].create(
+            {"use_sale": True, "name": "Other Team"}
+        )
         stage_other, stage_other_won = self.env["crm.stage"].create(
             [
                 {"name": "Other New", "sequence": 1, "team_ids": [team_other.id]},
@@ -1147,16 +1150,17 @@ class TestCRMLead(TestCrmCommon):
 
     @users("user_sales_manager")
     def test_crm_team_alias(self):
-        new_team = self.env["crm.team"].create(
+        new_team = self.env["team.team"].create(
             {
+                "use_sale": True,
                 "name": "TestAlias",
                 "use_leads": True,
                 "use_opportunities": True,
-                "alias_name": "test.alias",
+                "lead_alias_name": "test.alias",
             }
         )
-        self.assertEqual(new_team.alias_id.alias_name, "test.alias")
-        self.assertEqual(new_team.alias_name, "test.alias")
+        self.assertEqual(new_team.lead_alias_id.alias_name, "test.alias")
+        self.assertEqual(new_team.lead_alias_name, "test.alias")
 
         new_team.write(
             {
@@ -1167,7 +1171,7 @@ class TestCRMLead(TestCrmCommon):
 
     @users("user_sales_manager")
     def test_crm_team_alias_helper(self):
-        self.env["crm.team"].search([]).active = False
+        self.env["team.team"].search([]).active = False
         self.env["ir.config_parameter"].sudo().set_param(
             "sales_team.membership_multi", True
         )
@@ -1176,28 +1180,32 @@ class TestCRMLead(TestCrmCommon):
         team_other_comp = self.team_company2
 
         user_team_leads, team_leads, user_team_opport, team_opport = self.env[
-            "crm.team"
+            "team.team"
         ].create(
             [
                 {
+                    "use_sale": True,
                     "name": "UserTeamLeads",
                     "company_id": self.env.company.id,
                     "use_leads": True,
                     "member_ids": [(6, 0, [self.env.user.id])],
                 },
                 {
+                    "use_sale": True,
                     "name": "TeamLeads",
                     "company_id": self.env.company.id,
                     "use_leads": True,
                     "member_ids": [],
                 },
                 {
+                    "use_sale": True,
                     "name": "UserTeamOpportunities",
                     "company_id": self.env.company.id,
                     "use_leads": False,
                     "member_ids": [(6, 0, [self.env.user.id])],
                 },
                 {
+                    "use_sale": True,
                     "name": "TeamOpportunities",
                     "company_id": self.env.company.id,
                     "use_leads": False,
@@ -1250,18 +1258,18 @@ class TestCRMLead(TestCrmCommon):
             team_other_comp,
         ]
         for team in teams:
-            team.alias_id.sudo().write({"alias_name": team.name})
+            team.lead_alias_id.sudo().write({"alias_name": team.name})
 
         for team in teams:
             with self.subTest(team=team):
                 if team != team_other_comp:
                     self.assertIn(
-                        f"<a href='mailto:{team.alias_email}'>{team.alias_email}</a>",
+                        f"<a href='mailto:{team.lead_alias_email}'>{team.lead_alias_email}</a>",
                         self.env["crm.lead"].sudo().get_empty_list_help(""),
                     )
                 else:
                     self.assertNotIn(
-                        f"<a href='mailto:{team.alias_email}'>{team.alias_email}</a>",
+                        f"<a href='mailto:{team.lead_alias_email}'>{team.lead_alias_email}</a>",
                         self.env["crm.lead"].sudo().get_empty_list_help(""),
                     )
                 team.active = False
@@ -1271,7 +1279,7 @@ class TestCRMLead(TestCrmCommon):
         new_lead = self.format_and_process(
             INCOMING_EMAIL,
             "unknown.sender@test.example.com",
-            self.sales_team_1.alias_email,
+            self.sales_team_1.lead_alias_email,
             subject="Delivery cost inquiry",
             target_model="crm.lead",
         )
@@ -1673,9 +1681,10 @@ class TestLeadTeamIsAlive(TestCrmCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env["crm.team"].search([]).action_archive()
-        cls.dead_team = cls.env["crm.team"].create(
+        cls.env["team.team"].search([]).action_archive()
+        cls.dead_team = cls.env["team.team"].create(
             {
+                "use_sale": True,
                 "name": "Archived Team",
                 "company_id": False,
                 "user_id": cls.user_sales_manager.id,
@@ -1714,7 +1723,7 @@ class TestLeadEmptyListHelp(TestCrmCommon):
     def test_empty_list_help_names_the_team_alias(self):
         help_html = self.env["crm.lead"].get_empty_list_help("")
         self.assertIn(
-            self.sales_team_1.alias_email,
+            self.sales_team_1.lead_alias_email,
             help_html,
             "the help offers the lead-creating team's alias, so the lookup ran",
         )

@@ -3,7 +3,7 @@ from . import account_move_line
 from . import pos_config
 from . import pos_order
 from . import product_template
-from . import crm_team
+from . import team_team
 from . import pos_session
 from . import sale_order
 from . import sale_order_line

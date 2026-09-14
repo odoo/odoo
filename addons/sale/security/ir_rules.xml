@@ -56,7 +56,7 @@
         <field name="name">Team Orders</field>
         <field name="model_id" ref="model_sale_order" />
         <field
-            name="domain_force">['|', ('user_id.crm_team_ids', 'in', user.crm_team_ids.ids), ('user_id', '=', False)]</field>
+            name="domain_force">['|', ('user_id.sale_team_ids', 'in', user.sale_team_ids.ids), ('user_id', '=', False)]</field>
         <field
             name="groups"
             eval="[Command.link(ref('sales_team.group_sale_salesman_team'))]" />
@@ -84,7 +84,7 @@
         <field name="name">Team Order Lines</field>
         <field name="model_id" ref="model_sale_order_line" />
         <field
-            name="domain_force">['|', ('user_id.crm_team_ids', 'in', user.crm_team_ids.ids), ('user_id', '=', False)]</field>
+            name="domain_force">['|', ('user_id.sale_team_ids', 'in', user.sale_team_ids.ids), ('user_id', '=', False)]</field>
         <field
             name="groups"
             eval="[Command.link(ref('sales_team.group_sale_salesman_team'))]" />
@@ -112,7 +112,7 @@
         <field name="name">Team Orders Analysis</field>
         <field name="model_id" ref="model_sale_report" />
         <field
-            name="domain_force">['|', ('user_id.crm_team_ids', 'in', user.crm_team_ids.ids), ('user_id', '=', False)]</field>
+            name="domain_force">['|', ('user_id.sale_team_ids', 'in', user.sale_team_ids.ids), ('user_id', '=', False)]</field>
         <field
             name="groups"
             eval="[Command.link(ref('sales_team.group_sale_salesman_team'))]" />
@@ -141,7 +141,7 @@
         <field name="name">Team Customer Invoices Analysis</field>
         <field name="model_id" ref="account.model_account_invoice_report" />
         <field
-            name="domain_force">[('move_type', 'in', ('out_invoice', 'out_refund')), '|', ('invoice_user_id.crm_team_ids', 'in', user.crm_team_ids.ids), ('invoice_user_id', '=', False)]</field>
+            name="domain_force">[('move_type', 'in', ('out_invoice', 'out_refund')), '|', ('invoice_user_id.sale_team_ids', 'in', user.sale_team_ids.ids), ('invoice_user_id', '=', False)]</field>
         <field
             name="groups"
             eval="[Command.link(ref('sales_team.group_sale_salesman_team'))]" />
@@ -189,7 +189,7 @@
         <field name="name">Team Invoices</field>
         <field name="model_id" ref="account.model_account_move" />
         <field
-            name="domain_force">[('move_type', 'in', ('out_invoice', 'out_refund')), '|', ('invoice_user_id.crm_team_ids', 'in', user.crm_team_ids.ids), ('invoice_user_id', '=', False)]</field>
+            name="domain_force">[('move_type', 'in', ('out_invoice', 'out_refund')), '|', ('invoice_user_id.sale_team_ids', 'in', user.sale_team_ids.ids), ('invoice_user_id', '=', False)]</field>
         <field
             name="groups"
             eval="[Command.link(ref('sales_team.group_sale_salesman_team'))]" />
@@ -219,7 +219,7 @@
         <field name="name">Team Invoice Lines</field>
         <field name="model_id" ref="account.model_account_move_line" />
         <field
-            name="domain_force">[('move_id.move_type', 'in', ('out_invoice', 'out_refund')), '|', ('move_id.invoice_user_id.crm_team_ids', 'in', user.crm_team_ids.ids), ('move_id.invoice_user_id', '=', False)]</field>
+            name="domain_force">[('move_id.move_type', 'in', ('out_invoice', 'out_refund')), '|', ('move_id.invoice_user_id.sale_team_ids', 'in', user.sale_team_ids.ids), ('move_id.invoice_user_id', '=', False)]</field>
         <field
             name="groups"
             eval="[Command.link(ref('sales_team.group_sale_salesman_team'))]" />
@@ -275,7 +275,7 @@
         <field name="name">Team Invoice Send and Print (single mode)</field>
         <field name="model_id" ref="account.model_account_move_send_wizard" />
         <field
-            name="domain_force">[('move_id.move_type', 'in', ('out_invoice', 'out_refund')), '|', ('move_id.invoice_user_id.crm_team_ids', 'in', user.crm_team_ids.ids), ('move_id.invoice_user_id', '=', False)]</field>
+            name="domain_force">[('move_id.move_type', 'in', ('out_invoice', 'out_refund')), '|', ('move_id.invoice_user_id.sale_team_ids', 'in', user.sale_team_ids.ids), ('move_id.invoice_user_id', '=', False)]</field>
         <field
             name="groups"
             eval="[Command.link(ref('sales_team.group_sale_salesman_team'))]" />
@@ -305,7 +305,7 @@
         <field name="name">Team Invoice Send and Print (batch mode)</field>
         <field name="model_id" ref="account.model_account_move_send_batch_wizard" />
         <field
-            name="domain_force">[('move_ids.move_type', 'in', ('out_invoice', 'out_refund')), '|', ('move_ids.invoice_user_id.crm_team_ids', 'in', user.crm_team_ids.ids), ('move_ids.invoice_user_id', '=', False)]</field>
+            name="domain_force">[('move_ids.move_type', 'in', ('out_invoice', 'out_refund')), '|', ('move_ids.invoice_user_id.sale_team_ids', 'in', user.sale_team_ids.ids), ('move_ids.invoice_user_id', '=', False)]</field>
         <field
             name="groups"
             eval="[Command.link(ref('sales_team.group_sale_salesman_team'))]" />

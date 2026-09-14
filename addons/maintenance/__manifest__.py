@@ -1,6 +1,6 @@
 {
     "name": "Maintenance",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Supply Chain/Maintenance",
     "summary": "Track equipment and manage maintenance requests",
     "description": """
@@ -10,6 +10,7 @@ Track equipment and maintenance requests""",
     "license": "LGPL-3",
     "depends": [
         "mail",
+        "team",
     ],
     "data": [
         "security/maintenance.xml",

@@ -53,7 +53,7 @@ class SaleReport(models.Model):
         readonly=True,
     )
     team_id = fields.Many2one(
-        comodel_name="crm.team",
+        comodel_name="team.team",
         string="Sales Team",
         readonly=True,
     )

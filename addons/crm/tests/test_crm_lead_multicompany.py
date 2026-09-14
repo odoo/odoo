@@ -309,15 +309,15 @@ class TestCRMLeadMultiCompany(TestCrmCommon):
         self.assertEqual(crm_lead_form.team_id, self.team_company2)
 
         crm_lead_form.user_id = self.user_sales_manager_mc
-        crm_lead_form.team_id = self.env["crm.team"]
+        crm_lead_form.team_id = self.env["team.team"]
         self.assertEqual(crm_lead_form.company_id, self.company_2)
         self.assertEqual(crm_lead_form.user_id, self.user_sales_manager_mc)
-        self.assertEqual(crm_lead_form.team_id, self.env["crm.team"])
+        self.assertEqual(crm_lead_form.team_id, self.env["team.team"])
 
         crm_lead_form.user_id = self.env["res.users"]
         self.assertEqual(crm_lead_form.company_id, self.env["res.company"])
         self.assertEqual(crm_lead_form.user_id, self.env["res.users"])
-        self.assertEqual(crm_lead_form.team_id, self.env["crm.team"])
+        self.assertEqual(crm_lead_form.team_id, self.env["team.team"])
 
         crm_lead_form.company_id = self.company_2
         lead = crm_lead_form.save()
@@ -358,7 +358,7 @@ class TestCRMLeadMultiCompany(TestCrmCommon):
             crm_lead_form.team_id, self.team_company2, "Crm: team comes from sales"
         )
 
-        crm_lead_form.team_id = self.env["crm.team"]
+        crm_lead_form.team_id = self.env["team.team"]
         crm_lead_form.user_id = self.env["res.users"]
         self.assertEqual(
             crm_lead_form.company_id, self.company_2, "Crm: company comes from partner"
@@ -366,7 +366,7 @@ class TestCRMLeadMultiCompany(TestCrmCommon):
 
     def test_gateway_incompatible_company_error_on_incoming_email(self):
         self.env["ir.config_parameter"].set_param("crm.lead.auto.assignment", True)
-        self.assertTrue(self.sales_team_1.alias_name)
+        self.assertTrue(self.sales_team_1.lead_alias_name)
         self.assertFalse(self.sales_team_1.company_id)
         customer_company = self.env["res.partner"].create(
             {
@@ -382,7 +382,7 @@ class TestCRMLeadMultiCompany(TestCrmCommon):
         new_lead = self.format_and_process(
             INCOMING_EMAIL,
             customer_company.email,
-            self.sales_team_1.alias_email,
+            self.sales_team_1.lead_alias_email,
             subject="Team having partner in company",
             target_model="crm.lead",
         )

@@ -67,71 +67,49 @@
     </data>
 
     <data noupdate="1">
-        <record id="sale_team_comp_rule" model="ir.rule">
-            <field name="name">Sales Team multi-company</field>
-            <field name="model_id" ref="model_crm_team" />
-            <field
-                name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+        <!--
+            A Sales Administrator creates, edits and deletes sales teams only.
+            Reads stay with team's own rules, so perm_read is off: a team's name
+            is rendered on invoices and orders read far outside Sales.
+            Deleting a team another application also uses takes a Teams
+            Administrator (team.team._unlink_except_foreign_usage).
+        -->
+        <record id="team_team_rule_sale_manager" model="ir.rule">
+            <field name="name">Sales teams: Sales Administrators</field>
+            <field name="model_id" ref="team.model_team_team" />
+            <field name="domain_force">[('use_sale', '=', True)]</field>
+            <field name="groups" eval="[Command.link(ref('group_sale_manager'))]" />
+            <field name="perm_read" eval="False" />
+        </record>
+        <record id="team_member_rule_sale_manager" model="ir.rule">
+            <field name="name">Sales team members: Sales Administrators</field>
+            <field name="model_id" ref="team.model_team_member" />
+            <field name="domain_force">[('team_id.use_sale', '=', True)]</field>
+            <field name="groups" eval="[Command.link(ref('group_sale_manager'))]" />
+            <field name="perm_read" eval="False" />
         </record>
         <!--
-            Memberships follow their team: without this, crm.team is company-scoped
-            while its membership rows are not, so the memberships of another
-            company's teams stay readable to every internal user.
+            team.member_rule_personal shows every internal user the rosters of the
+            teams they lead or belong to; "All Documents" widens that to every
+            sales team's roster, OR-ed over it.
         -->
-        <record id="crm_team_member_comp_rule" model="ir.rule">
-            <field name="name">Sales Team Member multi-company</field>
-            <field name="model_id" ref="model_crm_team_member" />
-            <field
-                name="domain_force">[('crm_team_id.company_id', 'in', company_ids + [False])]</field>
-        </record>
-        <!--
-            The same principle within a company, which the rule above does not
-            cover: crm.team is restricted to the teams a salesperson leads or
-            belongs to, but its membership rows carried no such rule, so a
-            salesperson who cannot open team X could still search up X's roster.
-            The name of X stayed hidden (reading crm_team_id's display name
-            needs read on crm.team) but the rows, their user_id and the size of
-            the team did not.
-
-            A membership is visible when its team is one the reader leads or
-            belongs to, and the GROUP is deliberately base.group_user and not
-            group_sale_salesman. Record rules are selected by group and OR-ed,
-            so a rule carried by a Sales group binds nobody outside Sales: an
-            internal user with no sales group at all matched no rule here and
-            read every membership in the database, while granting that same
-            account "User: Own Documents Only" narrowed it to its own teams.
-            Access grew by dropping a group. Carried by base.group_user the
-            domain reaches every internal user, and the ladder above it is
-            unchanged: group_sale_salesman implies base.group_user, so a
-            salesperson still gets exactly this domain, and
-            group_sale_salesman_all_leads still ORs crm_team_member_rule_all
-            over it.
-
-            user.crm_team_ids is inlined when the rule domain is computed, and
-            that domain is cached per user: crm.team.member clears the registry
-            cache whenever a membership is created, moved, archived or deleted.
-
-            crm.team keeps the wider grant on purpose. Its name is rendered
-            outside the Sales app (team_id on an invoice, on a sales order), so
-            an accountant who reads one must be able to read the team; the same
-            domain applied to base.group_user turns that into an AccessError on
-            display_name. Membership rows have no such reader: nothing outside
-            this module puts them on screen.
-        -->
-        <record id="crm_team_member_rule_personal" model="ir.rule">
-            <field name="name">Personal Salesteam Members</field>
-            <field name="model_id" ref="model_crm_team_member" />
-            <field
-                name="domain_force">['|', ('crm_team_id.user_id', '=', user.id), ('crm_team_id', 'in', user.crm_team_ids.ids)]</field>
-            <field name="groups" eval="[Command.link(ref('base.group_user'))]" />
-        </record>
-        <record id="crm_team_member_rule_all" model="ir.rule">
-            <field name="name">All Salesteam Members</field>
-            <field name="model_id" ref="model_crm_team_member" />
-            <field name="domain_force">[(1, '=', 1)]</field>
+        <record id="team_member_rule_sale_all" model="ir.rule">
+            <field name="name">Sales team members: All Documents</field>
+            <field name="model_id" ref="team.model_team_member" />
+            <field name="domain_force">[('team_id.use_sale', '=', True)]</field>
             <field
                 name="groups"
                 eval="[Command.link(ref('sales_team.group_sale_salesman_all_leads'))]" />
+            <field name="perm_write" eval="False" />
+            <field name="perm_create" eval="False" />
+            <field name="perm_unlink" eval="False" />
+        </record>
+        <record id="team_alias_rule_sale_manager" model="ir.rule">
+            <field name="name">Sales team aliases: Sales Administrators</field>
+            <field name="model_id" ref="team.model_team_alias" />
+            <field name="domain_force">[('team_id.use_sale', '=', True)]</field>
+            <field name="groups" eval="[Command.link(ref('group_sale_manager'))]" />
+            <field name="perm_read" eval="False" />
         </record>
     </data>
 

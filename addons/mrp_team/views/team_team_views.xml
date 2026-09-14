@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="team_view_search_mrp" model="ir.ui.view">
+        <field name="name">team.team.view.search.mrp</field>
+        <field name="model">team.team</field>
+        <field name="inherit_id" ref="team.team_view_search" />
+        <field name="arch" type="xml">
+            <xpath expr="//separator[@name='usages']" position="before">
+                <filter
+                    name="use_mrp"
+                    string="Manufacturing"
+                    domain="[('use_mrp', '=', True)]" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="team_view_form_mrp" model="ir.ui.view">
+        <field name="name">team.team.view.form.mrp</field>
+        <field name="model">team.team</field>
+        <field name="inherit_id" ref="team.team_view_form" />
+        <field name="arch" type="xml">
+            <div name="usages" position="inside">
+                <span class="d-inline-flex">
+                    <field name="use_mrp" />
+                    <label for="use_mrp" />
+                </span>
+            </div>
+        </field>
+    </record>
+
+    <record id="team_action_mrp" model="ir.actions.act_window">
+        <field name="name">Manufacturing Teams</field>
+        <field name="res_model">team.team</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('use_mrp', '=', True)]</field>
+        <field
+            name="context">{'default_use_mrp': True, 'default_use_stock': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a manufacturing team
+            </p><p>
+                Give each manufacturing operation type a team: its members see and run its orders.
+            </p>
+        </field>
+    </record>
+
+</odoo>

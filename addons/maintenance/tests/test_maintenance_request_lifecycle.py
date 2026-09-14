@@ -213,14 +213,14 @@ class TestMaintenanceDefaultTeam(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env["maintenance.team"].search([]).action_archive()
+        cls.env["team.team"].search([]).action_archive()
         cls.company_a = cls.env["res.company"].create({"name": "Team probe A"})
         cls.company_b = cls.env["res.company"].create({"name": "Team probe B"})
-        cls.team_a = cls.env["maintenance.team"].create(
-            {"name": "Team A", "company_id": cls.company_a.id}
+        cls.team_a = cls.env["team.team"].create(
+            {"use_maintenance": True, "name": "Team A", "company_id": cls.company_a.id}
         )
-        cls.shared_team = cls.env["maintenance.team"].create(
-            {"name": "Shared team", "company_id": False}
+        cls.shared_team = cls.env["team.team"].create(
+            {"use_maintenance": True, "name": "Shared team", "company_id": False}
         )
 
     def _create_for(self, company):
@@ -298,9 +298,10 @@ class TestMaintenanceEquipmentAndDashboards(TransactionCase):
         self.assertTrue(self.category.fold)
 
     def test_a_shared_team_offers_every_internal_user_as_member(self):
+        shared = self.env["team.team"].new({"use_maintenance": True, "name": "Shared"})
         domain = safe_eval(
-            self.env["maintenance.team"]._fields["member_ids"].domain,
-            {"company_id": False},
+            self.env["team.team"]._fields["member_ids"].domain,
+            {"member_company_ids": shared.member_company_ids.ids},
         )
         self.assertIn(self.technician, self.env["res.users"].search(domain))
 
@@ -431,8 +432,13 @@ class TestMaintenanceReliabilityFigures(TransactionCase):
 class TestMaintenanceTeamAlias(TransactionCase):
     def test_a_mail_to_a_company_team_creates_the_request_in_that_company(self):
         company = self.env["res.company"].create({"name": "Alias company"})
-        team = self.env["maintenance.team"].create(
-            {"name": "Alias team", "company_id": company.id, "alias_name": "alias-team"}
+        team = self.env["team.team"].create(
+            {
+                "use_maintenance": True,
+                "name": "Alias team",
+                "company_id": company.id,
+                "maintenance_alias_name": "alias-team",
+            }
         )
         request = self.env["maintenance.request"].message_new(
             {
@@ -444,7 +450,7 @@ class TestMaintenanceTeamAlias(TransactionCase):
                 "body": "<p>It leaks.</p>",
                 "message_id": "<maintenance-team-alias@example.com>",
             },
-            custom_values=team.alias_id._get_alias_defaults(),
+            custom_values=team.maintenance_alias_id.alias_id._get_alias_defaults(),
         )
         self.assertRecordValues(
             request,

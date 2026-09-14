@@ -17,8 +17,9 @@ class TestCornerCases(TransactionCase):
             notification_type="inbox",
             groups="sales_team.group_sale_salesman_all_leads,base.group_partner_manager",
         )
-        self.sales_team_1 = self.env["crm.team"].create(
+        self.sales_team_1 = self.env["team.team"].create(
             {
+                "use_sale": True,
                 "name": "Test Sales Team",
                 "sequence": 5,
                 "company_id": False,
@@ -27,50 +28,50 @@ class TestCornerCases(TransactionCase):
         )
 
     def test_unicity(self):
-        sales_team_1_m1 = self.env["crm.team.member"].create(
+        sales_team_1_m1 = self.env["team.member"].create(
             {
                 "user_id": self.user_sales_leads.id,
-                "crm_team_id": self.sales_team_1.id,
+                "team_id": self.sales_team_1.id,
             }
         )
 
         sales_team_1_m1.write({"active": False})
         sales_team_1_m1.flush_recordset()
 
-        sales_team_1_m2 = self.env["crm.team.member"].create(
+        sales_team_1_m2 = self.env["team.member"].create(
             {
                 "user_id": self.user_sales_leads.id,
-                "crm_team_id": self.sales_team_1.id,
+                "team_id": self.sales_team_1.id,
             }
         )
 
-        found = self.env["crm.team.member"].search(
+        found = self.env["team.member"].search(
             [
                 ("user_id", "=", self.user_sales_leads.id),
-                ("crm_team_id", "=", self.sales_team_1.id),
+                ("team_id", "=", self.sales_team_1.id),
             ]
         )
         self.assertEqual(found, sales_team_1_m2)
 
         with self.assertRaises(exceptions.ValidationError):
-            self.env["crm.team.member"].create(
+            self.env["team.member"].create(
                 {
                     "user_id": self.user_sales_leads.id,
-                    "crm_team_id": self.sales_team_1.id,
+                    "team_id": self.sales_team_1.id,
                 }
             )
 
     def test_unicity_multicreate(self):
         with self.assertRaises(exceptions.ValidationError):
-            self.env["crm.team.member"].create(
+            self.env["team.member"].create(
                 [
                     {
                         "user_id": self.user_sales_leads.id,
-                        "crm_team_id": self.sales_team_1.id,
+                        "team_id": self.sales_team_1.id,
                     },
                     {
                         "user_id": self.user_sales_leads.id,
-                        "crm_team_id": self.sales_team_1.id,
+                        "team_id": self.sales_team_1.id,
                     },
                 ]
             )
@@ -80,8 +81,9 @@ class TestMembership(TestSalesCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.new_team = cls.env["crm.team"].create(
+        cls.new_team = cls.env["team.team"].create(
             {
+                "use_sale": True,
                 "name": "Test Specific",
                 "sequence": 10,
             }
@@ -105,15 +107,17 @@ class TestMembership(TestSalesCommon):
 
     def test_leader_can_read_led_team(self):
         salesman = self.user_sales_salesman
-        led_team = self.env["crm.team"].create(
+        led_team = self.env["team.team"].create(
             {
+                "use_sale": True,
                 "name": "Led Not Member",
                 "company_id": False,
                 "user_id": salesman.id,
             }
         )
-        foreign_team = self.env["crm.team"].create(
+        foreign_team = self.env["team.team"].create(
             {
+                "use_sale": True,
                 "name": "Foreign Team",
                 "company_id": False,
                 "user_id": self.user_sales_manager.id,
@@ -197,22 +201,22 @@ class TestMembership(TestSalesCommon):
 
         self.env.flush_all()
         memberships = (
-            self.env["crm.team.member"]
+            self.env["team.member"]
             .with_context(active_test=False)
             .search([("user_id", "=", self.user_sales_leads.id)])
         )
         self.assertEqual(len(memberships), 3)
-        self.assertEqual(memberships.crm_team_id, sales_team_1 | new_team)
+        self.assertEqual(memberships.team_id, sales_team_1 | new_team)
         self.assertFalse(
-            memberships.filtered(lambda m: m.crm_team_id == sales_team_1).active
+            memberships.filtered(lambda m: m.team_id == sales_team_1).active
         )
-        new_team_memberships = memberships.filtered(lambda m: m.crm_team_id == new_team)
+        new_team_memberships = memberships.filtered(lambda m: m.team_id == new_team)
         self.assertEqual(len(new_team_memberships), 2)
         self.assertEqual(set(new_team_memberships.mapped("active")), {False, True})
 
         with self.assertRaises(exceptions.UserError):
-            self.env["crm.team.member"].create(
-                {"crm_team_id": new_team.id, "user_id": new_user.id}
+            self.env["team.member"].create(
+                {"team_id": new_team.id, "user_id": new_user.id}
             )
 
     @users("user_sales_manager")
@@ -269,8 +273,8 @@ class TestMembership(TestSalesCommon):
         self.env.flush_all()
 
         with self.assertRaises(exceptions.UserError):
-            self.env["crm.team.member"].create(
-                {"crm_team_id": new_team.id, "user_id": new_user.id}
+            self.env["team.member"].create(
+                {"team_id": new_team.id, "user_id": new_user.id}
             )
 
     @users("user_sales_manager")
@@ -278,8 +282,8 @@ class TestMembership(TestSalesCommon):
         self.env["ir.config_parameter"].sudo().set_param(
             "sales_team.membership_multi", False
         )
-        sales_team_1 = self.env["crm.team"].browse(self.sales_team_1.ids)
-        new_team = self.env["crm.team"].browse(self.new_team.ids)
+        sales_team_1 = self.env["team.team"].browse(self.sales_team_1.ids)
+        new_team = self.env["team.team"].browse(self.new_team.ids)
         self.assertEqual(
             sales_team_1.member_ids, self.user_sales_leads | self.user_admin
         )
@@ -287,7 +291,7 @@ class TestMembership(TestSalesCommon):
         self.assertEqual(new_team.member_ids, self.env["res.users"])
         new_team.write(
             {
-                "crm_team_member_ids": [
+                "team_member_ids": [
                     (0, 0, {"user_id": self.user_sales_leads.id}),
                     (0, 0, {"user_id": self.uid}),
                 ]
@@ -298,36 +302,34 @@ class TestMembership(TestSalesCommon):
         self.env.flush_all()
 
         memberships = (
-            self.env["crm.team.member"]
+            self.env["team.member"]
             .with_context(active_test=False)
             .search([("user_id", "=", self.user_sales_leads.id)])
         )
-        self.assertEqual(memberships.crm_team_id, sales_team_1 | new_team)
+        self.assertEqual(memberships.team_id, sales_team_1 | new_team)
         self.assertFalse(
-            memberships.filtered(lambda m: m.crm_team_id == sales_team_1).active
+            memberships.filtered(lambda m: m.team_id == sales_team_1).active
         )
-        self.assertTrue(
-            memberships.filtered(lambda m: m.crm_team_id == new_team).active
-        )
+        self.assertTrue(memberships.filtered(lambda m: m.team_id == new_team).active)
 
         sales_team_1.write(
-            {"crm_team_member_ids": [(0, 0, {"user_id": self.user_sales_leads.id})]}
+            {"team_member_ids": [(0, 0, {"user_id": self.user_sales_leads.id})]}
         )
         memberships_new = (
-            self.env["crm.team.member"]
+            self.env["team.member"]
             .with_context(active_test=False)
             .search([("user_id", "=", self.user_sales_leads.id)])
         )
         self.assertTrue(memberships < memberships_new)
-        self.assertEqual(memberships.crm_team_id, sales_team_1 | new_team)
+        self.assertEqual(memberships.team_id, sales_team_1 | new_team)
 
         old_st_1 = memberships_new.filtered(
-            lambda m: m.crm_team_id == sales_team_1 and m in memberships
+            lambda m: m.team_id == sales_team_1 and m in memberships
         )
         new_st_1 = memberships_new.filtered(
-            lambda m: m.crm_team_id == sales_team_1 and m not in memberships
+            lambda m: m.team_id == sales_team_1 and m not in memberships
         )
-        new_nt = memberships_new.filtered(lambda m: m.crm_team_id == new_team)
+        new_nt = memberships_new.filtered(lambda m: m.team_id == new_team)
         self.assertFalse(old_st_1.active)
         self.assertTrue(new_st_1.active)
         self.assertFalse(new_nt.active)
@@ -351,8 +353,8 @@ class TestMembership(TestSalesCommon):
 
     @users("user_sales_manager")
     def test_memberships_multi(self):
-        sales_team_1 = self.env["crm.team"].browse(self.sales_team_1.ids)
-        new_team = self.env["crm.team"].browse(self.new_team.ids)
+        sales_team_1 = self.env["team.team"].browse(self.sales_team_1.ids)
+        new_team = self.env["team.team"].browse(self.new_team.ids)
         self.assertEqual(
             sales_team_1.member_ids, self.user_sales_leads | self.user_admin
         )
@@ -360,7 +362,7 @@ class TestMembership(TestSalesCommon):
         self.assertEqual(new_team.member_ids, self.env["res.users"])
         new_team.write(
             {
-                "crm_team_member_ids": [
+                "team_member_ids": [
                     (0, 0, {"user_id": self.user_sales_leads.id}),
                     (0, 0, {"user_id": self.uid}),
                 ]
@@ -373,39 +375,37 @@ class TestMembership(TestSalesCommon):
         self.env.flush_all()
 
         memberships = (
-            self.env["crm.team.member"]
+            self.env["team.member"]
             .with_context(active_test=False)
             .search([("user_id", "=", self.user_sales_leads.id)])
         )
-        self.assertEqual(memberships.crm_team_id, sales_team_1 | new_team)
+        self.assertEqual(memberships.team_id, sales_team_1 | new_team)
         self.assertTrue(
-            memberships.filtered(lambda m: m.crm_team_id == sales_team_1).active
+            memberships.filtered(lambda m: m.team_id == sales_team_1).active
         )
-        self.assertTrue(
-            memberships.filtered(lambda m: m.crm_team_id == new_team).active
-        )
+        self.assertTrue(memberships.filtered(lambda m: m.team_id == new_team).active)
 
-        memberships.filtered(lambda m: m.crm_team_id == sales_team_1).write(
+        memberships.filtered(lambda m: m.team_id == sales_team_1).write(
             {"active": False}
         )
         sales_team_1.write(
-            {"crm_team_member_ids": [(0, 0, {"user_id": self.user_sales_leads.id})]}
+            {"team_member_ids": [(0, 0, {"user_id": self.user_sales_leads.id})]}
         )
         memberships_new = (
-            self.env["crm.team.member"]
+            self.env["team.member"]
             .with_context(active_test=False)
             .search([("user_id", "=", self.user_sales_leads.id)])
         )
         self.assertTrue(memberships < memberships_new)
-        self.assertEqual(memberships.crm_team_id, sales_team_1 | new_team)
+        self.assertEqual(memberships.team_id, sales_team_1 | new_team)
 
         old_st_1 = memberships_new.filtered(
-            lambda m: m.crm_team_id == sales_team_1 and m in memberships
+            lambda m: m.team_id == sales_team_1 and m in memberships
         )
         new_st_1 = memberships_new.filtered(
-            lambda m: m.crm_team_id == sales_team_1 and m not in memberships
+            lambda m: m.team_id == sales_team_1 and m not in memberships
         )
-        new_nt = memberships_new.filtered(lambda m: m.crm_team_id == new_team)
+        new_nt = memberships_new.filtered(lambda m: m.team_id == new_team)
         self.assertFalse(old_st_1.active)
         self.assertTrue(new_st_1.active)
         self.assertTrue(new_nt.active)
@@ -420,61 +420,61 @@ class TestMembership(TestSalesCommon):
 
     @users("user_sales_manager")
     def test_memberships_sync(self):
-        sales_team_1 = self.env["crm.team"].browse(self.sales_team_1.ids)
-        new_team = self.env["crm.team"].browse(self.new_team.ids)
+        sales_team_1 = self.env["team.team"].browse(self.sales_team_1.ids)
+        new_team = self.env["team.team"].browse(self.new_team.ids)
         self.assertEqual(
             sales_team_1.member_ids, self.user_sales_leads | self.user_admin
         )
-        self.assertEqual(new_team.crm_team_member_ids, self.env["crm.team.member"])
-        self.assertEqual(new_team.crm_team_member_all_ids, self.env["crm.team.member"])
+        self.assertEqual(new_team.team_member_ids, self.env["team.member"])
+        self.assertEqual(new_team.team_member_all_ids, self.env["team.member"])
         self.assertEqual(new_team.member_ids, self.env["res.users"])
 
-        new_member = self.env["crm.team.member"].create(
+        new_member = self.env["team.member"].create(
             {
                 "user_id": self.env.user.id,
-                "crm_team_id": self.new_team.id,
+                "team_id": self.new_team.id,
             }
         )
-        self.assertEqual(new_team.crm_team_member_ids, new_member)
-        self.assertEqual(new_team.crm_team_member_all_ids, new_member)
+        self.assertEqual(new_team.team_member_ids, new_member)
+        self.assertEqual(new_team.team_member_all_ids, new_member)
         self.assertEqual(new_team.member_ids, self.env.user)
 
         new_team.write({"member_ids": [(4, self.user_sales_leads.id)]})
-        added = self.env["crm.team.member"].search(
+        added = self.env["team.member"].search(
             [
-                ("crm_team_id", "=", new_team.id),
+                ("team_id", "=", new_team.id),
                 ("user_id", "=", self.user_sales_leads.id),
             ]
         )
-        self.assertEqual(new_team.crm_team_member_ids, new_member + added)
-        self.assertEqual(new_team.crm_team_member_all_ids, new_member + added)
+        self.assertEqual(new_team.team_member_ids, new_member + added)
+        self.assertEqual(new_team.team_member_all_ids, new_member + added)
         self.assertEqual(new_team.member_ids, self.env.user | self.user_sales_leads)
 
         added.write({"active": False})
-        self.assertEqual(new_team.crm_team_member_ids, new_member)
-        self.assertEqual(new_team.crm_team_member_all_ids, new_member + added)
+        self.assertEqual(new_team.team_member_ids, new_member)
+        self.assertEqual(new_team.team_member_all_ids, new_member + added)
         self.assertEqual(new_team.member_ids, self.env.user)
 
         added.write({"active": True})
-        self.assertEqual(new_team.crm_team_member_ids, new_member + added)
-        self.assertEqual(new_team.crm_team_member_all_ids, new_member + added)
+        self.assertEqual(new_team.team_member_ids, new_member + added)
+        self.assertEqual(new_team.team_member_all_ids, new_member + added)
         self.assertEqual(new_team.member_ids, self.env.user | self.user_sales_leads)
 
-        admin_original = self.env["crm.team.member"].search(
+        admin_original = self.env["team.member"].search(
             [
-                ("crm_team_id", "=", sales_team_1.id),
+                ("team_id", "=", sales_team_1.id),
                 ("user_id", "=", self.user_admin.id),
             ]
         )
         self.assertTrue(bool(admin_original))
-        admin_archived = self.env["crm.team.member"].create(
+        admin_archived = self.env["team.member"].create(
             {
-                "crm_team_id": new_team.id,
+                "team_id": new_team.id,
                 "user_id": self.user_admin.id,
                 "active": False,
             }
         )
-        admin_original.write({"crm_team_id": new_team.id})
+        admin_original.write({"team_id": new_team.id})
         self.env.flush_all()
         self.assertTrue(self.user_admin in new_team.member_ids)
         self.assertTrue(admin_original.active)
@@ -482,32 +482,32 @@ class TestMembership(TestSalesCommon):
         self.assertFalse(admin_archived.active)
 
         with self.assertRaises(exceptions.ValidationError):
-            added.write({"crm_team_id": sales_team_1.id})
+            added.write({"team_id": sales_team_1.id})
 
     def test_users_sale_team_id(self):
         self.assertTrue(self.sales_team_1.sequence < self.new_team.sequence)
 
-        self.assertEqual(self.user_sales_leads.crm_team_ids, self.sales_team_1)
+        self.assertEqual(self.user_sales_leads.sale_team_ids, self.sales_team_1)
         self.assertEqual(self.user_sales_leads.sale_team_id, self.sales_team_1)
 
         self.new_team.write({"member_ids": [(4, self.user_sales_leads.id)]})
         self.assertEqual(
-            self.user_sales_leads.crm_team_ids, self.sales_team_1 | self.new_team
+            self.user_sales_leads.sale_team_ids, self.sales_team_1 | self.new_team
         )
         self.assertEqual(self.user_sales_leads.sale_team_id, self.sales_team_1)
 
         self.sales_team_1_m1.write({"active": False})
-        self.assertEqual(self.user_sales_leads.crm_team_ids, self.new_team)
+        self.assertEqual(self.user_sales_leads.sale_team_ids, self.new_team)
         self.assertEqual(self.user_sales_leads.sale_team_id, self.new_team)
 
         self.sales_team_1_m1.write({"active": True})
         self.assertEqual(
-            self.user_sales_leads.crm_team_ids, self.sales_team_1 | self.new_team
+            self.user_sales_leads.sale_team_ids, self.sales_team_1 | self.new_team
         )
         self.assertEqual(self.user_sales_leads.sale_team_id, self.sales_team_1)
 
         self.sales_team_1_m1.unlink()
-        self.assertEqual(self.user_sales_leads.crm_team_ids, self.new_team)
+        self.assertEqual(self.user_sales_leads.sale_team_ids, self.new_team)
         self.assertEqual(self.user_sales_leads.sale_team_id, self.new_team)
 
 
@@ -518,8 +518,12 @@ class TestMonoMembership(TestSalesCommon):
         cls.env["ir.config_parameter"].sudo().set_param(
             "sales_team.membership_multi", False
         )
-        cls.team_a = cls.env["crm.team"].create({"name": "A", "company_id": False})
-        cls.team_b = cls.env["crm.team"].create({"name": "B", "company_id": False})
+        cls.team_a = cls.env["team.team"].create(
+            {"use_sale": True, "name": "A", "company_id": False}
+        )
+        cls.team_b = cls.env["team.team"].create(
+            {"use_sale": True, "name": "B", "company_id": False}
+        )
         cls.salesperson = mail_new_test_user(
             cls.env,
             login="mono_user",
@@ -528,20 +532,20 @@ class TestMonoMembership(TestSalesCommon):
         )
 
     def _active_memberships(self):
-        return self.env["crm.team.member"].search(
+        return self.env["team.member"].search(
             [("user_id", "=", self.salesperson.id), ("active", "=", True)]
         )
 
     def test_creating_archived_membership_keeps_the_active_one(self):
-        live = self.env["crm.team.member"].create(
-            {"user_id": self.salesperson.id, "crm_team_id": self.team_a.id}
+        live = self.env["team.member"].create(
+            {"user_id": self.salesperson.id, "team_id": self.team_a.id}
         )
         self.env.flush_all()
 
-        self.env["crm.team.member"].create(
+        self.env["team.member"].create(
             {
                 "user_id": self.salesperson.id,
-                "crm_team_id": self.team_b.id,
+                "team_id": self.team_b.id,
                 "active": False,
             }
         )
@@ -554,11 +558,11 @@ class TestMonoMembership(TestSalesCommon):
         self.assertEqual(self.salesperson.sale_team_id, self.team_a)
 
     def test_batch_unarchive_keeps_a_single_team(self):
-        member_a = self.env["crm.team.member"].create(
-            {"user_id": self.salesperson.id, "crm_team_id": self.team_a.id}
+        member_a = self.env["team.member"].create(
+            {"user_id": self.salesperson.id, "team_id": self.team_a.id}
         )
-        member_b = self.env["crm.team.member"].create(
-            {"user_id": self.salesperson.id, "crm_team_id": self.team_b.id}
+        member_b = self.env["team.member"].create(
+            {"user_id": self.salesperson.id, "team_id": self.team_b.id}
         )
         (member_a | member_b).action_archive()
         self.env.flush_all()
@@ -570,23 +574,23 @@ class TestMonoMembership(TestSalesCommon):
         self.assertEqual(self._active_memberships(), member_b, "the last one wins")
 
     def test_batch_create_keeps_a_single_team(self):
-        self.env["crm.team.member"].create(
+        self.env["team.member"].create(
             [
-                {"user_id": self.salesperson.id, "crm_team_id": self.team_a.id},
-                {"user_id": self.salesperson.id, "crm_team_id": self.team_b.id},
+                {"user_id": self.salesperson.id, "team_id": self.team_a.id},
+                {"user_id": self.salesperson.id, "team_id": self.team_b.id},
             ]
         )
         self.env.flush_all()
         self.assertEqual(len(self._active_memberships()), 1)
 
     def test_same_team_duplicate_still_raises(self):
-        self.env["crm.team.member"].create(
-            {"user_id": self.salesperson.id, "crm_team_id": self.team_a.id}
+        self.env["team.member"].create(
+            {"user_id": self.salesperson.id, "team_id": self.team_a.id}
         )
         self.env.flush_all()
         with self.assertRaises(exceptions.ValidationError):
-            self.env["crm.team.member"].create(
-                {"user_id": self.salesperson.id, "crm_team_id": self.team_a.id}
+            self.env["team.member"].create(
+                {"user_id": self.salesperson.id, "team_id": self.team_a.id}
             )
 
 
@@ -597,8 +601,12 @@ class TestMonoMembershipReassignment(TestSalesCommon):
         cls.env["ir.config_parameter"].sudo().set_param(
             "sales_team.membership_multi", False
         )
-        cls.team_a = cls.env["crm.team"].create({"name": "RA", "company_id": False})
-        cls.team_b = cls.env["crm.team"].create({"name": "RB", "company_id": False})
+        cls.team_a = cls.env["team.team"].create(
+            {"use_sale": True, "name": "RA", "company_id": False}
+        )
+        cls.team_b = cls.env["team.team"].create(
+            {"use_sale": True, "name": "RB", "company_id": False}
+        )
         cls.alice = mail_new_test_user(
             cls.env, login="reass_alice", name="Alice", groups="base.group_user"
         )
@@ -608,17 +616,17 @@ class TestMonoMembershipReassignment(TestSalesCommon):
 
     def _live_teams(self, user):
         return (
-            self.env["crm.team.member"]
+            self.env["team.member"]
             .search([("user_id", "=", user.id), ("active", "=", True)])
-            .crm_team_id
+            .team_id
         )
 
     def test_reassigning_user_id_evicts_the_other_team(self):
-        on_a = self.env["crm.team.member"].create(
-            {"crm_team_id": self.team_a.id, "user_id": self.alice.id}
+        on_a = self.env["team.member"].create(
+            {"team_id": self.team_a.id, "user_id": self.alice.id}
         )
-        self.env["crm.team.member"].create(
-            {"crm_team_id": self.team_b.id, "user_id": self.bob.id}
+        self.env["team.member"].create(
+            {"team_id": self.team_b.id, "user_id": self.bob.id}
         )
         self.env.flush_all()
 
@@ -631,7 +639,7 @@ class TestMonoMembershipReassignment(TestSalesCommon):
             self.team_a,
             "the membership just handed over wins",
         )
-        self.assertEqual(self.bob.crm_team_ids, self.team_a)
+        self.assertEqual(self.bob.sale_team_ids, self.team_a)
         self.assertEqual(self.bob.sale_team_id, self.team_a)
         self.assertFalse(self._live_teams(self.alice))
 
@@ -640,11 +648,11 @@ class TestMonoMembershipReassignment(TestSalesCommon):
             "sales_team.membership_multi", True
         )
         self.env.invalidate_all()
-        on_a = self.env["crm.team.member"].create(
-            {"crm_team_id": self.team_a.id, "user_id": self.alice.id}
+        on_a = self.env["team.member"].create(
+            {"team_id": self.team_a.id, "user_id": self.alice.id}
         )
-        self.env["crm.team.member"].create(
-            {"crm_team_id": self.team_b.id, "user_id": self.bob.id}
+        self.env["team.member"].create(
+            {"team_id": self.team_b.id, "user_id": self.bob.id}
         )
         self.env.flush_all()
 
@@ -661,15 +669,21 @@ class TestMemberIdsDependencies(TestSalesCommon):
             "sales_team.membership_multi", True
         )
         self.env.invalidate_all()
-        team = self.env["crm.team"].create({"name": "Reassign", "company_id": False})
+        team = self.env["team.team"].create(
+            {
+                "use_sale": True,
+                "name": "Reassign",
+                "company_id": False,
+            }
+        )
         first = mail_new_test_user(
             self.env, login="reassign_1", name="Reassign One", groups="base.group_user"
         )
         second = mail_new_test_user(
             self.env, login="reassign_2", name="Reassign Two", groups="base.group_user"
         )
-        membership = self.env["crm.team.member"].create(
-            {"crm_team_id": team.id, "user_id": first.id}
+        membership = self.env["team.member"].create(
+            {"team_id": team.id, "user_id": first.id}
         )
         self.env.flush_all()
         self.assertEqual(team.member_ids, first)
@@ -681,9 +695,11 @@ class TestMemberIdsDependencies(TestSalesCommon):
 class TestMembershipCompanyChecks(TestSalesCommon):
     def test_unarchive_rechecks_company(self):
         company_2 = self.env["res.company"].create({"name": "Regression Co2"})
-        team = self.env["crm.team"].create({"name": "Movable", "company_id": False})
-        membership = self.env["crm.team.member"].create(
-            {"user_id": self.user_sales_leads.id, "crm_team_id": team.id}
+        team = self.env["team.team"].create(
+            {"use_sale": True, "name": "Movable", "company_id": False}
+        )
+        membership = self.env["team.member"].create(
+            {"user_id": self.user_sales_leads.id, "team_id": team.id}
         )
         membership.action_archive()
         self.env.flush_all()
@@ -722,17 +738,25 @@ class TestCompanyRevocation(TestSalesCommon):
             company_ids=[(6, 0, [cls.company_main.id, cls.company_2.id])],
             groups="base.group_user",
         )
-        cls.team_c2 = cls.env["crm.team"].create(
-            {"name": "Revoked Team", "company_id": cls.company_2.id}
+        cls.team_c2 = cls.env["team.team"].create(
+            {
+                "use_sale": True,
+                "name": "Revoked Team",
+                "company_id": cls.company_2.id,
+            }
         )
-        cls.team_shared = cls.env["crm.team"].create(
-            {"name": "Shared Team", "company_id": False}
+        cls.team_shared = cls.env["team.team"].create(
+            {
+                "use_sale": True,
+                "name": "Shared Team",
+                "company_id": False,
+            }
         )
-        cls.member_c2 = cls.env["crm.team.member"].create(
-            {"crm_team_id": cls.team_c2.id, "user_id": cls.salesperson.id}
+        cls.member_c2 = cls.env["team.member"].create(
+            {"team_id": cls.team_c2.id, "user_id": cls.salesperson.id}
         )
-        cls.member_shared = cls.env["crm.team.member"].create(
-            {"crm_team_id": cls.team_shared.id, "user_id": cls.salesperson.id}
+        cls.member_shared = cls.env["team.member"].create(
+            {"team_id": cls.team_shared.id, "user_id": cls.salesperson.id}
         )
         cls.env.flush_all()
 
@@ -746,14 +770,14 @@ class TestCompanyRevocation(TestSalesCommon):
             "the membership on the revoked company's team is archived",
         )
         self.assertTrue(self.member_shared.active, "a company-less team is unaffected")
-        self.assertEqual(self.salesperson.crm_team_ids, self.team_shared)
+        self.assertEqual(self.salesperson.sale_team_ids, self.team_shared)
         self.assertEqual(self.salesperson.sale_team_id, self.team_shared)
 
     def test_the_surviving_state_passes_the_constraints(self):
         self.salesperson.write({"company_ids": [(6, 0, [self.company_main.id])]})
         self.env.flush_all()
         self.team_c2._constrains_company_members()
-        self.env["crm.team.member"].search(
+        self.env["team.member"].search(
             [("user_id", "=", self.salesperson.id)]
         )._constrains_company_membership()
 

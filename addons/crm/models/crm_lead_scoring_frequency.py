@@ -10,8 +10,9 @@ class CrmLeadScoringFrequency(models.Model):
     won_count = fields.Float(digits=(16, 1))
     lost_count = fields.Float(digits=(16, 1))
     team_id = fields.Many2one(
-        comodel_name="crm.team",
+        comodel_name="team.team",
         string="Sales Team",
+        domain=[("use_sale", "=", True)],
         ondelete="cascade",
     )
 

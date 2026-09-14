@@ -36,11 +36,12 @@ class CrmMergeOpportunity(models.TransientModel):
         domain="[('share', '=', False)]",
     )
     team_id = fields.Many2one(
-        comodel_name="crm.team",
+        comodel_name="team.team",
         string="Sales Team",
         compute="_compute_team_id",
         store=True,
         readonly=False,
+        domain=[("use_sale", "=", True)],
     )
 
     def action_merge(self):
@@ -52,7 +53,7 @@ class CrmMergeOpportunity(models.TransientModel):
 
     @api.depends("user_id")
     def _compute_team_id(self):
-        Team = self.env["crm.team"]
+        Team = self.env["team.team"]
         for wizard in self:
             if wizard.user_id:
                 wizard.team_id = Team._get_team_for_user(wizard.user_id, wizard.team_id)

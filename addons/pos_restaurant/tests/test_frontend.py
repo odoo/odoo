@@ -420,12 +420,12 @@ class TestFrontend(TestFrontendCommon):
     def test_13_crm_team(self):
         if self.env["ir.module.module"]._get("pos_sale").state != "installed":
             self.skipTest("'pos_sale' module is required")
-        sale_team = self.env["crm.team"].search([], limit=1)
-        self.pos_config.crm_team_id = sale_team
+        sale_team = self.env["team.team"].search([], limit=1)
+        self.pos_config.team_id = sale_team
         self.pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour("CrmTeamTour")
         order = self.env["pos.order"].search([], limit=1)
-        self.assertEqual(order.crm_team_id.id, sale_team.id)
+        self.assertEqual(order.team_id.id, sale_team.id)
 
     def test_14_pos_payment_sync(self):
         self.pos_config.with_user(self.pos_user).open_ui()

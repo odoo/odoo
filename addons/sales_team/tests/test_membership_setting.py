@@ -17,12 +17,17 @@ class TestMembershipMultiParameter(TestSalesCommon):
             ICP.create({"key": "sales_team.membership_multi", "value": raw})
             self.env.invalidate_all()
             self.assertEqual(
-                self.env["crm.team"]._is_membership_multi(),
+                self.env["team.team"]._is_membership_multi("sale"),
                 expected,
                 f"parameter {raw!r} should read as {expected}",
             )
-            team = self.env["crm.team"].create(
-                {"name": f"P {raw}", "company_id": False}
+            team = self.env["team.team"].create(
+                {
+                    "use_sale": True,
+                    "use_sale": True,
+                    "name": f"P {raw}",
+                    "company_id": False,
+                }
             )
             self.assertEqual(team.is_membership_multi, expected)
 
@@ -31,7 +36,7 @@ class TestMembershipMultiParameter(TestSalesCommon):
             [("key", "=", "sales_team.membership_multi")]
         ).unlink()
         self.env.invalidate_all()
-        self.assertFalse(self.env["crm.team"]._is_membership_multi())
+        self.assertFalse(self.env["team.team"]._is_membership_multi("sale"))
 
 
 class TestMultiMembershipActivation(TestSalesCommon):
@@ -43,20 +48,20 @@ class TestMultiMembershipActivation(TestSalesCommon):
         )
 
     def test_sales_administrator_can_activate(self):
-        self.assertFalse(self.env["crm.team"]._is_membership_multi())
-        self.env["crm.team"].with_user(
+        self.assertFalse(self.env["team.team"]._is_membership_multi("sale"))
+        self.env["team.team"].with_user(
             self.user_sales_manager
         ).action_activate_multi_membership()
         self.env.invalidate_all()
-        self.assertTrue(self.env["crm.team"]._is_membership_multi())
+        self.assertTrue(self.env["team.team"]._is_membership_multi("sale"))
 
     def test_salesman_cannot_activate(self):
         salesman = self.user_sales_salesman
         self.assertFalse(salesman.has_group("sales_team.group_sale_manager"))
         with self.assertRaises(exceptions.AccessError):
-            self.env["crm.team"].with_user(salesman).action_activate_multi_membership()
+            self.env["team.team"].with_user(salesman).action_activate_multi_membership()
         self.env.invalidate_all()
-        self.assertFalse(self.env["crm.team"]._is_membership_multi())
+        self.assertFalse(self.env["team.team"]._is_membership_multi("sale"))
 
     def test_activation_does_not_require_settings_rights(self):
         manager = self.user_sales_manager
@@ -65,9 +70,9 @@ class TestMultiMembershipActivation(TestSalesCommon):
             self.env["ir.config_parameter"].with_user(manager).set_param(
                 "sales_team.membership_multi", True
             )
-        self.env["crm.team"].with_user(manager).action_activate_multi_membership()
+        self.env["team.team"].with_user(manager).action_activate_multi_membership()
         self.env.invalidate_all()
-        self.assertTrue(self.env["crm.team"]._is_membership_multi())
+        self.assertTrue(self.env["team.team"]._is_membership_multi("sale"))
 
 
 class TestMembershipMultiIsInvalidatedEverywhere(TestSalesCommon):
@@ -87,15 +92,17 @@ class TestMembershipMultiIsInvalidatedEverywhere(TestSalesCommon):
             and not field.store
         }
 
-    def test_only_crm_team_caches_the_setting(self):
-        self.assertEqual(self._cached_copies(), {"crm.team"})
+    def test_only_team_caches_the_setting(self):
+        self.assertEqual(self._cached_copies(), {"team.team"})
 
     def test_every_cached_copy_follows_the_parameter(self):
         ICP = self.env["ir.config_parameter"].sudo()
         for expected, value in ((True, True), (False, False)):
             with self.subTest(value=value):
                 ICP.set_param("sales_team.membership_multi", value)
-                self.assertEqual(self.env["crm.team"]._is_membership_multi(), expected)
+                self.assertEqual(
+                    self.env["team.team"]._is_membership_multi("sale"), expected
+                )
                 for name in self._cached_copies():
                     record = self.env[name].search([], limit=1)
                     if record:

@@ -10,9 +10,10 @@ class PosOrder(models.Model):
         store=True,
         readonly=True,
     )
-    crm_team_id = fields.Many2one(
-        comodel_name="crm.team",
+    team_id = fields.Many2one(
+        comodel_name="team.team",
         string="Sales Team",
+        domain=[("use_sale", "=", True)],
         ondelete="set null",
     )
     sale_order_count = fields.Integer(
@@ -29,10 +30,8 @@ class PosOrder(models.Model):
     @api.model
     def _update_values_from_session(self, session, values):
         values = super()._update_values_from_session(session, values)
-        values["crm_team_id"] = (
-            values["crm_team_id"]
-            if values.get("crm_team_id")
-            else session.config_id.crm_team_id.id
+        values["team_id"] = (
+            values["team_id"] if values.get("team_id") else session.config_id.team_id.id
         )
         return values
 
@@ -49,7 +48,7 @@ class PosOrder(models.Model):
 
     def _prepare_invoice_vals(self):
         invoice_vals = super()._prepare_invoice_vals()
-        invoice_vals["team_id"] = self.crm_team_id.id
+        invoice_vals["team_id"] = self.team_id.id
         # `sale_orders` can hold more than one sale order when this POS order's
         # lines settle several distinct sale orders (e.g. a downpayment
         # settlement from one order mixed with a direct sale of another's
@@ -234,11 +233,9 @@ class PosOrder(models.Model):
         return inv_line_vals
 
     def write(self, vals):
-        if "crm_team_id" in vals:
-            vals["crm_team_id"] = (
-                vals["crm_team_id"]
-                if vals.get("crm_team_id")
-                else self.session_id.crm_team_id.id
+        if "team_id" in vals:
+            vals["team_id"] = (
+                vals["team_id"] if vals.get("team_id") else self.session_id.team_id.id
             )
         return super().write(vals)
 

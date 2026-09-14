@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data noupdate="1">
+        <record id="team_sales_department" model="team.team">
+            <field name="name">Sales</field>
+            <field name="use_sale" eval="True" />
+            <field name="sequence">0</field>
+            <field name="company_id" eval="False" />
+            <field name="user_id" ref="base.user_admin" />
+        </record>
+        <record id="crm_team_member_admin_sales" model="team.member" forcecreate="0">
+            <field name="team_id" ref="team_sales_department" />
+            <field name="user_id" ref="base.user_admin" />
+        </record>
+        <record id="salesteam_website_sales" model="team.team">
+            <field name="name">Website</field>
+            <field name="use_sale" eval="True" />
+            <field name="company_id" eval="False" />
+            <field name="active" eval="False" />
+        </record>
+        <record id="pos_sales_team" model="team.team">
+            <field name="name">Point of Sale</field>
+            <field name="use_sale" eval="True" />
+            <field name="company_id" eval="False" />
+            <field name="active" eval="False" />
+        </record>
+    </data>
+
+</odoo>

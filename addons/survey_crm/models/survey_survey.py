@@ -19,9 +19,10 @@ class SurveySurvey(models.Model):
         inverse_name="origin_survey_id",
     )
     team_id = fields.Many2one(
-        comodel_name="crm.team",
+        comodel_name="team.team",
         string="Assign Leads to",
         index="btree_not_null",
+        domain=[("use_sale", "=", True)],
         ondelete="set null",
     )
 

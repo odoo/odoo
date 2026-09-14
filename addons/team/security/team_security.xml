@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+        <record id="res_groups_privilege_team" model="res.groups.privilege">
+            <field name="name">Teams</field>
+            <field name="category_id" ref="base.module_category_administration" />
+        </record>
+        <record id="group_team_manager" model="res.groups">
+            <field name="name">Administrator</field>
+            <field name="privilege_id" ref="res_groups_privilege_team" />
+            <field
+                name="comment">Manages every team, whichever applications use it, and alone may delete a team another application also uses.</field>
+            <field name="implied_ids" eval="[Command.link(ref('base.group_user'))]" />
+            <field
+                name="user_ids"
+                eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]" />
+        </record>
+    </data>
+
+    <data noupdate="1">
+        <record id="team_comp_rule" model="ir.rule">
+            <field name="name">Team multi-company</field>
+            <field name="model_id" ref="model_team_team" />
+            <field
+                name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
+        </record>
+        <record id="team_member_comp_rule" model="ir.rule">
+            <field name="name">Team Member multi-company</field>
+            <field name="model_id" ref="model_team_member" />
+            <field
+                name="domain_force">[('team_id.company_id', 'in', company_ids + [False])]</field>
+        </record>
+        <!--
+            A membership is visible to the leader and the members of its team.
+            The rule narrows reads only: writing a roster is each application
+            administrator's, through that application's own rule.
+            The group is base.group_user, not an application's user group: rules
+            are OR-ed per group, so a narrowing rule carried by an application
+            group binds nobody outside that application, and an internal user
+            holding no such group would read every roster.
+        -->
+        <record id="team_member_rule_personal" model="ir.rule">
+            <field name="name">Team Members: own teams</field>
+            <field name="model_id" ref="model_team_member" />
+            <field
+                name="domain_force">['|', ('team_id.user_id', '=', user.id), ('team_id', 'in', user.team_ids.ids)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_user'))]" />
+            <field name="perm_write" eval="False" />
+            <field name="perm_create" eval="False" />
+            <field name="perm_unlink" eval="False" />
+        </record>
+        <record id="team_member_rule_all" model="ir.rule">
+            <field name="name">Team Members: all</field>
+            <field name="model_id" ref="model_team_member" />
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[Command.link(ref('group_team_manager'))]" />
+        </record>
+        <record id="team_alias_comp_rule" model="ir.rule">
+            <field name="name">Team Alias multi-company</field>
+            <field name="model_id" ref="model_team_alias" />
+            <field
+                name="domain_force">[('team_id.company_id', 'in', company_ids + [False])]</field>
+        </record>
+    </data>
+
+</odoo>

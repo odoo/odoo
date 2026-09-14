@@ -70,14 +70,14 @@
     </record>
 
     <record id="crm_team_salesteams_view_form" model="ir.ui.view">
-        <field name="name">crm.team.form</field>
-        <field name="model">crm.team</field>
-        <field name="inherit_id" ref="sales_team.crm_team_view_form" />
+        <field name="name">team.team.form</field>
+        <field name="model">team.team</field>
+        <field name="inherit_id" ref="team.team_view_form" />
         <field name="priority">9</field>
         <field name="arch" type="xml">
             <field name="company_id" position="after">
-                <label for="invoiced_target" />
-                <div class="o_row" id="invoiced_target">
+                <label for="invoiced_target" invisible="not use_sale" />
+                <div class="o_row" id="invoiced_target" invisible="not use_sale">
                     <field
                         name="invoiced_target"
                         widget="monetary"
@@ -91,8 +91,8 @@
 
     <record id="crm_team_view_kanban_dashboard" model="ir.ui.view">
         <field name="name">crm.team.view.kanban.dashboard.inherit.sale</field>
-        <field name="model">crm.team</field>
-        <field name="inherit_id" ref="sales_team.crm_team_view_kanban_dashboard" />
+        <field name="model">team.team</field>
+        <field name="inherit_id" ref="team.team_view_kanban_dashboard" />
         <field name="arch" type="xml">
             <xpath expr="//templates" position="before">
                 <field name="invoiced_target" />

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_stock_picking_type_form_team" model="ir.ui.view">
+        <field name="name">stock.picking.type.form.team</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.view_stock_picking_type_form" />
+        <field name="arch" type="xml">
+            <field name="sequence_code" position="after">
+                <field name="team_id" options="{'no_create': True}" />
+            </field>
+        </field>
+    </record>
+
+    <record id="view_stock_picking_type_search_team" model="ir.ui.view">
+        <field name="name">stock.picking.type.search.team</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.view_stock_picking_type_search" />
+        <field name="arch" type="xml">
+            <field name="warehouse_id" position="after">
+                <field name="team_id" />
+            </field>
+            <filter name="favorites" position="after">
+                <filter
+                    name="my_teams"
+                    string="My Teams"
+                    domain="[('team_id.member_ids', 'in', uid)]" />
+            </filter>
+            <filter name="groupby_warehouse_id" position="after">
+                <filter
+                    name="groupby_team_id"
+                    string="Team"
+                    context="{'group_by': 'team_id'}" />
+            </filter>
+        </field>
+    </record>
+
+    <record id="view_stock_picking_form_team" model="ir.ui.view">
+        <field name="name">stock.picking.form.team</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_stock_picking_form" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//group[@name='other_infos']/field[@name='user_id']"
+                position="after">
+                <field
+                    name="team_id"
+                    options="{'no_create': True}"
+                    readonly="state in ['done', 'cancel']" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_stock_picking_list_team" model="ir.ui.view">
+        <field name="name">stock.picking.list.team</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_stock_picking_list_vpicktree" />
+        <field name="arch" type="xml">
+            <field name="user_id" position="after">
+                <field name="team_id" optional="hide" />
+            </field>
+        </field>
+    </record>
+
+    <record id="view_stock_picking_search_team" model="ir.ui.view">
+        <field name="name">stock.picking.search.team</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_stock_picking_search_internal" />
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="team_id" />
+                <filter
+                    name="my_teams_transfers"
+                    string="My Teams' Transfers"
+                    domain="[('team_id.member_ids', 'in', uid)]" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

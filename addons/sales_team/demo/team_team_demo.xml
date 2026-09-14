@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data noupdate="1">
+        <record id="base.user_demo" model="res.users">
+            <field
+                name="group_ids"
+                eval="[Command.unlink(ref('sales_team.group_sale_manager')), Command.unlink(ref('sales_team.group_sale_salesman_all_leads')), Command.link(ref('sales_team.group_sale_salesman'))]" />
+        </record>
+        <record id="base.default_user_group" model="res.groups">
+            <field
+                name="implied_ids"
+                eval="[Command.link(ref('sales_team.group_sale_manager'))]" />
+        </record>
+        <record id="team_sales_department" model="team.team">
+            <field name="name">Sales</field>
+        </record>
+        <record id="crm_team_1" model="team.team">
+            <field name="name">Pre-Sales</field>
+            <field name="use_sale" eval="True" />
+            <field name="company_id" eval="False" />
+        </record>
+        <record id="crm_team_member_demo_team_1" model="team.member">
+            <field name="user_id" ref="base.user_demo" />
+            <field name="team_id" ref="sales_team.crm_team_1" />
+        </record>
+    </data>
+
+</odoo>

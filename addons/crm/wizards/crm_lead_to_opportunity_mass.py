@@ -54,7 +54,7 @@ class CrmLead2opportunityPartnerMass(models.TransientModel):
 
     @api.depends("user_ids")
     def _compute_team_id(self):
-        Team = self.env["crm.team"]
+        Team = self.env["team.team"]
         for convert in self:
             if not convert.user_id and not convert.user_ids and convert.team_id:
                 continue

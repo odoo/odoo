@@ -1012,8 +1012,9 @@ class TestSalesTeam(SaleCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.sale_team_2 = cls.env["crm.team"].create(
+        cls.sale_team_2 = cls.env["team.team"].create(
             {
+                "use_sale": True,
                 "name": "Test Sales Team (2)",
             }
         )
@@ -1053,8 +1054,9 @@ class TestSalesTeam(SaleCommon):
                 "company_id": company_a.id,
             }
         )
-        team_b = self.env["crm.team"].create(
+        team_b = self.env["team.team"].create(
             {
+                "use_sale": True,
                 "name": "F32 team in company B",
                 "company_id": company_b.id,
                 "member_ids": [Command.set(user.ids)],

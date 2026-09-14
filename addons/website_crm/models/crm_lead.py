@@ -72,12 +72,12 @@ class CrmLead(models.Model):
             and not self._is_rule_based_assignment_activated()
         ):
             values["user_id"] = (
-                self.env["crm.team"].sudo().browse([values["team_id"]]).user_id.id
+                self.env["team.team"].sudo().browse([values["team_id"]]).user_id.id
             )
         if values.get("team_id"):
             values["type"] = (
                 "lead"
-                if self.env["crm.team"].sudo().browse(values["team_id"]).use_leads
+                if self.env["team.team"].sudo().browse(values["team_id"]).use_leads
                 else "opportunity"
             )
         else:

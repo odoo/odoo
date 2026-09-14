@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+        <record id="team_view_search" model="ir.ui.view">
+            <field name="name">team.view.search</field>
+            <field name="model">team.team</field>
+            <field name="arch" type="xml">
+                <search string="Teams">
+                    <field name="name" />
+                    <field name="user_id" />
+                    <field name="member_ids" />
+                    <separator name="usages" />
+                    <separator />
+                    <filter
+                        name="my_teams"
+                        string="My Teams"
+                        domain="['|', ('user_id', '=', uid), ('member_ids', 'in', uid)]" />
+                    <filter
+                        name="inactive"
+                        string="Archived"
+                        domain="[('active', '=', False)]" />
+                    <group>
+                        <filter
+                            name="company"
+                            string="Company"
+                            context="{'group_by': 'company_id'}"
+                            groups="base.group_multi_company" />
+                        <filter
+                            name="team_leader"
+                            string="Team Leader"
+                            context="{'group_by': 'user_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="team_view_form" model="ir.ui.view">
+            <field name="name">team.view.form</field>
+            <field name="model">team.team</field>
+            <field name="arch" type="xml">
+                <form string="Team" class="o_team_form_view" js_class="team_form">
+                    <div
+                        class="alert alert-info text-center d-flex flex-wrap justify-content-center gap-1"
+                        role="alert"
+                        invisible="not member_warning">
+                        <field name="member_warning" class="w-auto" />
+                        <span
+                            invisible="not can_activate_multi_membership"
+                            class="d-flex flex-wrap gap-1">
+                            Working in multiple teams?
+                            <button
+                                name="team_activate_multi_membership"
+                                type="team_event"
+                                class="btn btn-link p-0 lh-1">
+                                Activate "Multi-team"
+                            </button>
+                        </span>
+                    </div>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box" />
+                        <widget
+                            name="web_ribbon"
+                            title="Archived"
+                            invisible="active"
+                            bg_color="text-bg-danger" />
+                        <div class="oe_title">
+                            <label for="name" />
+                            <h1>
+                                <field
+                                    name="name"
+                                    placeholder="e.g. North America"
+                                    class="text-break" />
+                            </h1>
+                            <div name="usages" class="o_row d-flex flex-wrap gap-3" />
+                            <div name="options_active" class="o_row" />
+                        </div>
+                        <group>
+                            <group name="left" string="Team Details">
+                                <field name="active" invisible="1" />
+                                <field name="sequence" invisible="1" />
+                                <field name="is_membership_multi" invisible="1" />
+                                <field
+                                    name="can_activate_multi_membership"
+                                    invisible="1" />
+                                <field name="user_id" widget="many2one_avatar_user" />
+                                <field
+                                    name="company_id"
+                                    placeholder="Visible to all"
+                                    options="{'no_create': True}"
+                                    groups="base.group_multi_company" />
+                                <field name="member_company_ids" invisible="1" />
+                            </group>
+                            <group name="right" />
+                        </group>
+                        <notebook>
+                            <page name="members_users" string="Members">
+                                <field
+                                    name="member_ids"
+                                    mode="kanban"
+                                    invisible="is_membership_multi"
+                                    class="w-100">
+                                    <kanban>
+                                        <templates>
+                                            <t t-name="card" class="flex-row">
+                                                <aside>
+                                                    <field
+                                                        name="avatar_128"
+                                                        widget="image"
+                                                        class="o_image_64_cover"
+                                                        alt="Avatar" />
+                                                </aside>
+                                                <main class="ms-3">
+                                                    <field
+                                                        name="name"
+                                                        class="fw-bold fs-5" />
+                                                    <div
+                                                        class="d-flex align-items-baseline text-break">
+                                                        <i class="fa-solid fa-envelope me-1" role="img" aria-label="Email" title="Email" /><field name="email" />
+                                                    </div>
+                                                </main>
+                                            </t>
+                                        </templates>
+                                    </kanban>
+                                </field>
+                                <field
+                                    name="team_member_ids"
+                                    mode="kanban"
+                                    context="{'kanban_view_ref': 'team.team_member_view_kanban_from_team', 'form_view_ref': 'team.team_member_view_form_from_team', 'list_view_ref': 'team.team_member_view_tree_from_team', 'default_team_id': id}"
+                                    invisible="not is_membership_multi"
+                                    class="w-100" />
+                            </page>
+                            <page name="description" string="About">
+                                <field
+                                    name="description"
+                                    placeholder="What this team does, and how to reach it" />
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <chatter />
+                </form>
+            </field>
+        </record>
+        <record id="team_view_tree" model="ir.ui.view">
+            <field name="name">team.view.list</field>
+            <field name="model">team.team</field>
+            <field name="arch" type="xml">
+                <list string="Teams" multi_edit="1" sample="1">
+                    <field name="sequence" widget="handle" />
+                    <field name="name" readonly="1" />
+                    <field name="active" column_invisible="True" />
+                    <field name="usage_names" optional="show" />
+                    <field name="user_id" widget="many2one_avatar_user" />
+                    <field name="company_id" groups="base.group_multi_company" />
+                </list>
+            </field>
+        </record>
+        <record id="team_view_kanban" model="ir.ui.view">
+            <field name="name">team.view.kanban</field>
+            <field name="model">team.team</field>
+            <field name="arch" type="xml">
+                <kanban sample="1" class="o_kanban_mobile">
+                    <templates>
+                        <t t-name="card" class="row g-0">
+                            <field name="name" class="col-6 fw-bold" />
+                            <div class="col-6">
+                                <field name="user_id" class="float-end" />
+                            </div>
+                            <field name="usage_names" class="col-12 text-muted" />
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <record id="team_view_kanban_dashboard" model="ir.ui.view">
+            <field name="name">team.view.kanban.dashboard</field>
+            <field name="model">team.team</field>
+            <field name="priority">32</field>
+            <field name="arch" type="xml">
+                <kanban
+                    type="object"
+                    create="0"
+                    sample="1"
+                    class="o_team_kanban"
+                    action="action_primary_channel_button"
+                    can_open="0"
+                    highlight_color="color">
+                    <templates>
+                        <t t-name="menu">
+                            <div class="container">
+                                <div class="row">
+                                    <div name="manage_view" class="col-4">
+                                        <h5
+                                            role="menuitem"
+                                            class="o_kanban_card_manage_title">
+                                            <span>View</span>
+                                        </h5>
+                                    </div>
+                                    <div name="manage_new" class="col-4">
+                                        <h5
+                                            role="menuitem"
+                                            class="o_kanban_card_manage_title">
+                                            <span>New</span>
+                                        </h5>
+                                    </div>
+                                    <div name="manage_reports" class="col-4">
+                                        <h5
+                                            role="menuitem"
+                                            class="o_kanban_card_manage_title">
+                                            <span>Reporting</span>
+                                        </h5>
+                                        <div name="o_team_kanban_report_separator" />
+                                    </div>
+                                </div>
+                                <div
+                                    t-if="widget.editable"
+                                    class="o_kanban_card_manage_settings row">
+                                    <div
+                                        role="menuitem"
+                                        aria-haspopup="true"
+                                        class="col-8">
+                                        <field
+                                            name="color"
+                                            widget="kanban_color_picker" />
+                                    </div>
+                                    <div role="menuitem" class="col-4">
+                                        <a class="dropdown-item" type="open">Configuration</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                        <t t-name="card" class="flex-column justify-content-between">
+                            <div class="ms-2 me-3">
+                                <field name="name" class="fw-bold fs-2" />
+                            </div>
+                            <div
+                                class="o_team_kanban_bottom d-flex align-items-center mt-5">
+                                <field name="company_id" invisible="1" />
+                                <field
+                                    name="user_id"
+                                    widget="many2one_avatar_user"
+                                    class="ms-auto" />
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <record id="team_action" model="ir.actions.act_window">
+            <field name="name">Teams</field>
+            <field name="res_model">team.team</field>
+            <field name="view_mode">list,kanban,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a team
+                </p><p>
+                    A team gathers people who work together. Each application
+                    that uses it adds its own settings.
+                </p>
+            </field>
+        </record>
+    </data>
+
+</odoo>

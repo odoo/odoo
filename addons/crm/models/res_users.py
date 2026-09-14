@@ -10,6 +10,6 @@ class ResUsers(models.Model):
         formatted_display_name = self.env.context.get("formatted_display_name")
         team_id = self.env.context.get("crm_formatted_display_name_team", 0)
         if formatted_display_name and team_id:
-            leader_id = self.env["crm.team"].browse(team_id).user_id
+            leader_id = self.env["team.team"].browse(team_id).user_id
             for user in self.filtered(lambda u: u == leader_id):
                 user.display_name += " --%s--" % _("(Team Leader)")

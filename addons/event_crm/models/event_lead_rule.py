@@ -68,8 +68,9 @@ class EventLeadRule(models.Model):
         help="Default lead type when this rule is applied.",
     )
     lead_sales_team_id = fields.Many2one(
-        comodel_name="crm.team",
+        comodel_name="team.team",
         string="Sales Team",
+        domain=[("use_sale", "=", True)],
         ondelete="set null",
         help="Automatically assign the created leads to this Sales Team.",
     )

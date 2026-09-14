@@ -28,7 +28,7 @@ class TestLeadAssignCommon(TestLeadConvertCommon):
             + cls.sales_team_convert_m1
             + cls.sales_team_convert_m2
         )
-        cls.env["crm.team"].search([("id", "not in", cls.sales_teams.ids)]).write(
+        cls.env["team.team"].search([("id", "not in", cls.sales_teams.ids)]).write(
             {"active": False}
         )
 
@@ -47,26 +47,27 @@ class TestLeadAssignCommon(TestLeadConvertCommon):
         cls.env["ir.config_parameter"].set_param("crm.assignment.delay", "0")
 
     def assertInitialData(self):
-        self.assertEqual(self.sales_team_1.assignment_max, 75)
-        self.assertEqual(self.sales_team_convert.assignment_max, 90)
+        self.assertEqual(self.sales_team_1.lead_assignment_max, 75)
+        self.assertEqual(self.sales_team_convert.lead_assignment_max, 90)
 
-        self.assertEqual(self.sales_team_1.assignment_domain, False)
-        self.assertEqual(self.sales_team_1_m1.assignment_domain, False)
+        self.assertEqual(self.sales_team_1.lead_assignment_domain, False)
+        self.assertEqual(self.sales_team_1_m1.lead_assignment_domain, False)
         self.assertEqual(
-            self.sales_team_1_m2.assignment_domain, "[('probability', '>=', 10)]"
+            self.sales_team_1_m2.lead_assignment_domain, "[('probability', '>=', 10)]"
         )
         self.assertEqual(
-            self.sales_team_1_m3.assignment_domain, "[('probability', '>=', 20)]"
+            self.sales_team_1_m3.lead_assignment_domain, "[('probability', '>=', 20)]"
         )
 
         self.assertEqual(
-            self.sales_team_convert.assignment_domain,
+            self.sales_team_convert.lead_assignment_domain,
             "[('priority', 'in', ['1', '2', '3'])]",
         )
         self.assertEqual(
-            self.sales_team_convert_m1.assignment_domain, "[('probability', '>=', 20)]"
+            self.sales_team_convert_m1.lead_assignment_domain,
+            "[('probability', '>=', 20)]",
         )
-        self.assertEqual(self.sales_team_convert_m2.assignment_domain, False)
+        self.assertEqual(self.sales_team_convert_m2.lead_assignment_domain, False)
 
         self.assertEqual(self.sales_team_1_m1.lead_month_count, 0)
         self.assertEqual(self.sales_team_1_m2.lead_month_count, 0)
@@ -154,7 +155,7 @@ class TestLeadAssign(TestLeadAssignCommon):
         self.assertInitialData()
 
         self.sales_team_1_m1.action_archive()
-        self.sales_team_1_m2.assignment_max = 0
+        self.sales_team_1_m2.lead_assignment_max = 0
 
         leads = self.env["crm.lead"].search([("id", "in", leads.ids)])
         for idx, lead in enumerate(leads):
@@ -188,8 +189,10 @@ class TestLeadAssign(TestLeadAssignCommon):
         self.members.invalidate_model(["lead_month_count"])
         self.assertEqual(self.sales_team_1_m3.lead_month_count, 12)
 
-        self.sales_team_1_m2.update({"assignment_max": 45, "assignment_optout": True})
-        self.sales_team_1_m3.update({"assignment_max": 45})
+        self.sales_team_1_m2.update(
+            {"lead_assignment_max": 45, "lead_assignment_optout": True}
+        )
+        self.sales_team_1_m3.update({"lead_assignment_max": 45})
         with self.with_user("user_sales_manager"):
             teams_data, members_data = self.sales_team_1._action_assign_leads(
                 force_quota=True
@@ -228,7 +231,7 @@ class TestLeadAssign(TestLeadAssignCommon):
         self.assertEqual(self.sales_team_1_m3.lead_month_count, 14)
 
         with self.with_user("user_sales_manager"):
-            self.env["crm.team"].browse(self.sales_team_1.ids)._action_assign_leads(
+            self.env["team.team"].browse(self.sales_team_1.ids)._action_assign_leads(
                 force_quota=True
             )
 
@@ -258,7 +261,7 @@ class TestLeadAssign(TestLeadAssignCommon):
         leads.flush_recordset()
 
         with self.with_user("user_sales_manager"):
-            self.env["crm.team"].browse(self.sales_teams.ids)._action_assign_leads()
+            self.env["team.team"].browse(self.sales_teams.ids)._action_assign_leads()
 
         leads = self.env["crm.lead"].search([("id", "in", leads.ids)])
         self.assertEqual(len(leads), 122)
@@ -307,7 +310,7 @@ class TestLeadAssign(TestLeadAssignCommon):
         leads.flush_recordset()
 
         with self.with_user("user_sales_manager"):
-            self.env["crm.team"].browse(self.sales_teams.ids)._action_assign_leads()
+            self.env["team.team"].browse(self.sales_teams.ids)._action_assign_leads()
 
         leads = self.env["crm.lead"].search([("id", "in", leads.ids)])
         leads_st1 = leads.filtered_domain([("team_id", "=", self.sales_team_1.id)])
@@ -346,44 +349,46 @@ class TestLeadAssign(TestLeadAssignCommon):
         self.env.ref("crm.ir_cron_crm_lead_assign").write(
             {"repeat_unit": "day", "repeat_interval": 30}
         )
-        sales_team_3 = self.env["crm.team"].create(
+        sales_team_3 = self.env["team.team"].create(
             {
+                "use_sale": True,
+                "use_sale": True,
                 "name": "Sales Team 3",
                 "sequence": 15,
-                "alias_name": False,
+                "lead_alias_name": False,
                 "use_leads": True,
                 "use_opportunities": True,
                 "company_id": False,
                 "user_id": False,
-                "assignment_domain": [("country_id", "!=", False)],
+                "lead_assignment_domain": [("country_id", "!=", False)],
             }
         )
-        sales_team_3_m1 = self.env["crm.team.member"].create(
+        sales_team_3_m1 = self.env["team.member"].create(
             {
                 "user_id": self.user_sales_manager.id,
-                "crm_team_id": sales_team_3.id,
-                "assignment_max": 60,
-                "assignment_domain": False,
+                "team_id": sales_team_3.id,
+                "lead_assignment_max": 60,
+                "lead_assignment_domain": False,
             }
         )
-        sales_team_3_m2 = self.env["crm.team.member"].create(
+        sales_team_3_m2 = self.env["team.member"].create(
             {
                 "user_id": self.user_sales_leads.id,
-                "crm_team_id": sales_team_3.id,
-                "assignment_max": 60,
-                "assignment_domain": False,
+                "team_id": sales_team_3.id,
+                "lead_assignment_max": 60,
+                "lead_assignment_domain": False,
             }
         )
-        sales_team_3_m3 = self.env["crm.team.member"].create(
+        sales_team_3_m3 = self.env["team.member"].create(
             {
                 "user_id": self.user_sales_salesman.id,
-                "crm_team_id": sales_team_3.id,
-                "assignment_max": 15,
-                "assignment_domain": [("probability", ">=", 10)],
+                "team_id": sales_team_3.id,
+                "lead_assignment_max": 15,
+                "lead_assignment_domain": [("probability", ">=", 10)],
             }
         )
         sales_teams = self.sales_teams + sales_team_3
-        self.assertEqual(sum(team.assignment_max for team in sales_teams), 300)
+        self.assertEqual(sum(team.lead_assignment_max for team in sales_teams), 300)
         self.assertEqual(len(leads), 650)
 
         leads = self.env["crm.lead"].search([("id", "in", leads.ids)])
@@ -394,7 +399,7 @@ class TestLeadAssign(TestLeadAssignCommon):
         leads.flush_recordset()
 
         with self.with_user("user_sales_manager"):
-            self.env["crm.team"].browse(sales_teams.ids)._action_assign_leads()
+            self.env["team.team"].browse(sales_teams.ids)._action_assign_leads()
 
         leads = self.env["crm.lead"].search([("id", "in", leads.ids)])
         self.assertEqual(leads.team_id, sales_teams)
@@ -432,43 +437,45 @@ class TestLeadAssign(TestLeadAssignCommon):
         leads[:8].write({"tag_ids": [(6, 0, preferred_tag.ids)]})
         leads.flush_recordset()
         self.assertInitialData()
-        test_sales_team = self.env["crm.team"].create(
+        test_sales_team = self.env["team.team"].create(
             {
+                "use_sale": True,
+                "use_sale": True,
                 "name": "Sales Team 5",
                 "sequence": 15,
-                "alias_name": False,
+                "lead_alias_name": False,
                 "use_leads": True,
                 "use_opportunities": True,
                 "company_id": False,
                 "user_id": False,
             }
         )
-        test_sales_team_m1 = self.env["crm.team.member"].create(
+        test_sales_team_m1 = self.env["team.member"].create(
             {
                 "user_id": self.user_sales_manager.id,
-                "crm_team_id": test_sales_team.id,
-                "assignment_max": 150,
-                "assignment_domain": False,
-                "assignment_domain_preferred": "[('tag_ids', 'in', %s)]"
+                "team_id": test_sales_team.id,
+                "lead_assignment_max": 150,
+                "lead_assignment_domain": False,
+                "lead_assignment_domain_preferred": "[('tag_ids', 'in', %s)]"
                 % preferred_tag.ids,
             }
         )
-        test_sales_team_m2 = self.env["crm.team.member"].create(
+        test_sales_team_m2 = self.env["team.member"].create(
             {
                 "user_id": self.user_sales_leads.id,
-                "crm_team_id": test_sales_team.id,
-                "assignment_max": 150,
-                "assignment_domain": False,
-                "assignment_domain_preferred": False,
+                "team_id": test_sales_team.id,
+                "lead_assignment_max": 150,
+                "lead_assignment_domain": False,
+                "lead_assignment_domain_preferred": False,
             }
         )
-        test_sales_team_m3 = self.env["crm.team.member"].create(
+        test_sales_team_m3 = self.env["team.member"].create(
             {
                 "user_id": self.user_sales_salesman.id,
-                "crm_team_id": test_sales_team.id,
-                "assignment_max": 150,
-                "assignment_domain": False,
-                "assignment_domain_preferred": False,
+                "team_id": test_sales_team.id,
+                "lead_assignment_max": 150,
+                "lead_assignment_domain": False,
+                "lead_assignment_domain_preferred": False,
             }
         )
 
@@ -477,13 +484,13 @@ class TestLeadAssign(TestLeadAssignCommon):
         member_leads = self.env["crm.lead"].search(
             [
                 ("user_id", "=", test_sales_team_m1.user_id.id),
-                ("team_id", "=", test_sales_team_m1.crm_team_id.id),
+                ("team_id", "=", test_sales_team_m1.team_id.id),
                 ("date_open", ">=", Datetime.now() - timedelta(hours=24)),
             ]
         )
         self.assertEqual(
             member_leads.filtered_domain(
-                literal_eval(test_sales_team_m1.assignment_domain_preferred)
+                literal_eval(test_sales_team_m1.lead_assignment_domain_preferred)
             ),
             member_leads,
         )
@@ -548,12 +555,12 @@ class TestLeadAssign(TestLeadAssignCommon):
 
         leads.flush_recordset()
 
-        self.sales_team_1.crm_team_member_ids.write({"assignment_max": 45})
+        self.sales_team_1.team_member_ids.write({"lead_assignment_max": 45})
         with self.with_user("user_sales_manager"):
-            self.env["crm.team"].browse(self.sales_team_1.ids)._action_assign_leads()
+            self.env["team.team"].browse(self.sales_team_1.ids)._action_assign_leads()
 
         self.assertEqual(
-            leads[0].team_id, self.env["crm.team"], "Won lead should not be assigned"
+            leads[0].team_id, self.env["team.team"], "Won lead should not be assigned"
         )
         self.assertEqual(
             leads[0].user_id, self.env["res.users"], "Won lead should not be assigned"
@@ -562,7 +569,7 @@ class TestLeadAssign(TestLeadAssignCommon):
             self.assertIn(lead.user_id, self.sales_team_1.member_ids)
             self.assertEqual(lead.team_id, self.sales_team_1)
         self.assertEqual(
-            leads[4].team_id, self.env["crm.team"], "Lost lead should not be assigned"
+            leads[4].team_id, self.env["team.team"], "Lost lead should not be assigned"
         )
         self.assertEqual(
             leads[4].user_id, self.env["res.users"], "Lost lead should not be assigned"
@@ -596,7 +603,7 @@ class TestLeadAssign(TestLeadAssignCommon):
         self.assertFalse(duplicate_lead.date_open)
 
         sales_team = self.sales_team_1
-        sales_team.assignment_domain = [("user_id", "=", False)]
+        sales_team.lead_assignment_domain = [("user_id", "=", False)]
         with self.with_user("user_sales_manager"):
             sales_team._action_assign_leads()
 
@@ -605,24 +612,26 @@ class TestLeadAssign(TestLeadAssignCommon):
 
     @mute_logger("odoo.models.unlink")
     def test_merge_assign_keep_master_team(self):
-        sales_team_dupe = self.env["crm.team"].create(
+        sales_team_dupe = self.env["team.team"].create(
             {
+                "use_sale": True,
+                "use_sale": True,
                 "name": "Sales Team Dupe",
                 "sequence": 15,
-                "alias_name": False,
+                "lead_alias_name": False,
                 "use_leads": True,
                 "use_opportunities": True,
                 "company_id": False,
                 "user_id": False,
-                "assignment_domain": "[]",
+                "lead_assignment_domain": "[]",
             }
         )
-        self.env["crm.team.member"].create(
+        self.env["team.member"].create(
             {
                 "user_id": self.user_sales_salesman.id,
-                "crm_team_id": sales_team_dupe.id,
-                "assignment_max": 10,
-                "assignment_domain": "[]",
+                "team_id": sales_team_dupe.id,
+                "lead_assignment_max": 10,
+                "lead_assignment_domain": "[]",
             }
         )
 
@@ -663,18 +672,20 @@ class TestLeadAssign(TestLeadAssignCommon):
     def test_no_assign_if_exceed_max_assign(self):
         leads = self._create_leads_batch(lead_type="lead", user_ids=[False], count=1)
 
-        sales_team_4 = self.env["crm.team"].create(
+        sales_team_4 = self.env["team.team"].create(
             {
+                "use_sale": True,
+                "use_sale": True,
                 "name": "Sales Team 4",
                 "sequence": 15,
                 "use_leads": True,
             }
         )
-        sales_team_4_m1 = self.env["crm.team.member"].create(
+        sales_team_4_m1 = self.env["team.member"].create(
             {
                 "user_id": self.user_sales_salesman.id,
-                "crm_team_id": sales_team_4.id,
-                "assignment_max": 30,
+                "team_id": sales_team_4.id,
+                "lead_assignment_max": 30,
             }
         )
 

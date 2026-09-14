@@ -34,8 +34,9 @@ class CrmStage(models.Model):
         help="Enter here the internal requirements for this stage (ex: Offer sent to customer). It will appear as a tooltip over the stage's name."
     )
     team_ids = fields.Many2many(
-        comodel_name="crm.team",
+        comodel_name="team.team",
         string="Sales Teams",
+        domain=[("use_sale", "=", True)],
         ondelete="restrict",
     )
     fold = fields.Boolean(
@@ -49,7 +50,9 @@ class CrmStage(models.Model):
     color = fields.Integer(export_string_translation=False)
 
     def _compute_crm_team_count(self):
-        self.crm_team_count = self.env["crm.team"].search_count([])
+        self.crm_team_count = self.env["team.team"].search_count(
+            [("use_sale", "=", True)]
+        )
 
     @api.onchange("is_won")
     def _onchange_is_won(self):

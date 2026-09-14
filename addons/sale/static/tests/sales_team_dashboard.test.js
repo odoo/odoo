@@ -10,8 +10,8 @@ import {
     onRpc,
 } from "@web/../tests/web_test_helpers";
 
-class CRMTeam extends models.Model {
-    _name = "crm.team";
+class TeamTeam extends models.Model {
+    _name = "team.team";
 
     foo = fields.Char();
     invoiced = fields.Integer();
@@ -20,7 +20,7 @@ class CRMTeam extends models.Model {
     _records = [{ id: 1, foo: "yop", invoiced: 0, invoiced_target: 0 }];
 }
 
-defineModels([CRMTeam]);
+defineModels([TeamTeam]);
 defineMailModels();
 
 test("edit progressbar target", async () => {
@@ -28,7 +28,7 @@ test("edit progressbar target", async () => {
         doAction(action) {
             expect(action).toEqual(
                 {
-                    res_model: "crm.team",
+                    res_model: "team.team",
                     target: "current",
                     type: "ir.actions.act_window",
                     method: "get_formview_action",
@@ -40,7 +40,7 @@ test("edit progressbar target", async () => {
         },
     });
 
-    onRpc("crm.team", "get_formview_action", ({ method, model }) => ({
+    onRpc("team.team", "get_formview_action", ({ method, model }) => ({
         method,
         res_model: model,
         target: "current",
@@ -49,7 +49,7 @@ test("edit progressbar target", async () => {
 
     await mountView({
         type: "kanban",
-        resModel: "crm.team",
+        resModel: "team.team",
         arch: `
             <kanban>
                 <field name="invoiced_target"/>

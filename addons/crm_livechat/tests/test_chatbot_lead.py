@@ -43,13 +43,13 @@ class CrmChatbotCase(chatbot_common.CrmChatbotCase):
         self.assertFalse(quota_reached_lead.user_id)
         self.assertEqual(discuss_channel.livechat_operator_id, chatbot_partner)
         assigned_lead.unlink()
-        self.sale_team.crm_team_member_ids.assignment_optout = True
+        self.sale_team.team_member_ids.lead_assignment_optout = True
         discuss_channel = self._play_session_with_lead()
         optout_lead = self.env["crm.lead"].sudo().search([], limit=1, order="id desc")
         self.assertFalse(optout_lead.user_id)
         self.assertEqual(discuss_channel.livechat_operator_id, chatbot_partner)
-        self.sale_team.crm_team_member_ids.assignment_optout = False
-        self.sale_team.crm_team_member_ids.assignment_domain = (
+        self.sale_team.team_member_ids.lead_assignment_optout = False
+        self.sale_team.team_member_ids.lead_assignment_domain = (
             "[('probability', '>=', 20)]"
         )
         discuss_channel = self._play_session_with_lead()
@@ -58,8 +58,8 @@ class CrmChatbotCase(chatbot_common.CrmChatbotCase):
         )
         self.assertFalse(non_matching_domain_lead.user_id)
         self.assertEqual(discuss_channel.livechat_operator_id, chatbot_partner)
-        self.sale_team.crm_team_member_ids.assignment_domain = False
-        self.step_create_lead.crm_team_id = False
+        self.sale_team.team_member_ids.lead_assignment_domain = False
+        self.step_create_lead.team_id = False
         discuss_channel = self._play_session_with_lead()
         auto_team_lead = (
             self.env["crm.lead"].sudo().search([], limit=1, order="id desc")
@@ -68,15 +68,15 @@ class CrmChatbotCase(chatbot_common.CrmChatbotCase):
         self.assertEqual(auto_team_lead.team_id, self.sale_team)
         self.assertEqual(discuss_channel.livechat_operator_id, self.partner_employee)
         auto_team_lead.unlink()
-        self.sale_team.assignment_optout = True
+        self.sale_team.lead_assignment_optout = True
         discuss_channel = self._play_session_with_lead()
         team_optout_lead = (
             self.env["crm.lead"].sudo().search([], limit=1, order="id desc")
         )
         self.assertFalse(team_optout_lead.user_id)
         self.assertEqual(discuss_channel.livechat_operator_id, chatbot_partner)
-        self.sale_team.assignment_optout = False
-        self.sale_team.assignment_domain = "[('probability', '>=', 20)]"
+        self.sale_team.lead_assignment_optout = False
+        self.sale_team.lead_assignment_domain = "[('probability', '>=', 20)]"
         discuss_channel = self._play_session_with_lead()
         team_non_matching_domain_lead = (
             self.env["crm.lead"].sudo().search([], limit=1, order="id desc")
@@ -86,7 +86,7 @@ class CrmChatbotCase(chatbot_common.CrmChatbotCase):
 
     def test_chatbot_create_lead_portal_user(self):
         self.authenticate(self.user_portal.login, self.user_portal.login)
-        self.step_create_lead.write({"crm_team_id": self.sale_team_with_lead})
+        self.step_create_lead.write({"team_id": self.sale_team_with_lead})
         self._play_session_with_lead()
 
         created_lead = self.env["crm.lead"].sudo().search([], limit=1, order="id desc")
@@ -111,7 +111,7 @@ class CrmChatbotCase(chatbot_common.CrmChatbotCase):
         )
         team = self.sale_team_with_lead
         partner = self.user_portal.partner_id
-        self.step_create_lead.crm_team_id = team
+        self.step_create_lead.team_id = team
         self.authenticate(self.user_portal.login, self.user_portal.login)
 
         def play_script_and_get_created_lead():

@@ -2047,10 +2047,14 @@ class TestSaleToInvoice(TestSaleCommon):
 
     def test_refund_salesteam(self):
         salesperson = self.user
-        team1, team2 = self.env["crm.team"].create(
+        team1, team2 = self.env["team.team"].create(
             [
-                {"name": "Team 1", "member_ids": [Command.link(salesperson.id)]},
-                {"name": "Team 2"},
+                {
+                    "use_sale": True,
+                    "name": "Team 1",
+                    "member_ids": [Command.link(salesperson.id)],
+                },
+                {"use_sale": True, "name": "Team 2"},
             ]
         )
         self.assertEqual(salesperson.sale_team_id, team1)

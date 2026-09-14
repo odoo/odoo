@@ -62,10 +62,11 @@ class Website(models.Model):
         domain=[("share", "=", False)],
     )
     salesteam_id = fields.Many2one(
-        comodel_name="crm.team",
+        comodel_name="team.team",
         string="Sales Team",
         default=_default_salesteam_id,
         index="btree_not_null",
+        domain=[("use_sale", "=", True)],
         ondelete="set null",
     )
     show_line_subtotals_tax_selection = fields.Selection(

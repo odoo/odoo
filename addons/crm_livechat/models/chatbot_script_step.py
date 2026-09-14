@@ -15,10 +15,11 @@ class ChatbotScriptStep(models.Model):
         ],
         ondelete={"create_lead": "cascade", "create_lead_and_forward": "cascade"},
     )
-    crm_team_id = fields.Many2one(
-        comodel_name="crm.team",
+    team_id = fields.Many2one(
+        comodel_name="team.team",
         string="Sales Team",
         index="btree_not_null",
+        domain=[("use_sale", "=", True)],
         ondelete="set null",
         help="Used in combination with 'create_lead' step type in order to automatically "
         "assign the created lead/opportunity to the defined team",
@@ -35,13 +36,13 @@ class ChatbotScriptStep(models.Model):
         if msg := self._find_first_user_free_input(discuss_channel):
             name = html2plaintext(msg.body)[:100]
         partner = self.env.user.partner_id
-        team = self.crm_team_id
+        team = self.team_id
         if (
             partner.company_id
             and team.company_id
             and partner.company_id != team.company_id
         ):
-            team = self.env["crm.team"]
+            team = self.env["team.team"]
         vals = {
             "description": description + discuss_channel._get_channel_history(),
             "name": name,
@@ -93,8 +94,9 @@ class ChatbotScriptStep(models.Model):
         lead = self._process_step_create_lead(discuss_channel)
         teams = lead.team_id
         if not teams:
-            possible_teams = self.env["crm.team"].search(
-                Domain("assignment_optout", "=", False)
+            possible_teams = self.env["team.team"].search(
+                Domain("use_sale", "=", True)
+                & Domain("lead_assignment_optout", "=", False)
                 & (
                     Domain("use_leads", "=", True)
                     | Domain("use_opportunities", "=", True)
@@ -102,9 +104,9 @@ class ChatbotScriptStep(models.Model):
             )
             teams = possible_teams.filtered(
                 lambda team: (
-                    team.assignment_max
+                    team.lead_assignment_max
                     and lead.filtered_domain(
-                        literal_eval(team.assignment_domain or "[]")
+                        literal_eval(team.lead_assignment_domain or "[]")
                     )
                 )
             )
@@ -117,10 +119,12 @@ class ChatbotScriptStep(models.Model):
             )
         assignable_user_ids = [
             member.user_id.id
-            for member in teams.crm_team_member_ids
-            if not member.assignment_optout
+            for member in teams.team_member_ids
+            if not member.lead_assignment_optout
             and member._get_assignment_quota() > 0
-            and lead.filtered_domain(literal_eval(member.assignment_domain or "[]"))
+            and lead.filtered_domain(
+                literal_eval(member.lead_assignment_domain or "[]")
+            )
         ]
         previous_operator = discuss_channel.livechat_operator_id
         users = self.env["res.users"]
@@ -137,7 +141,7 @@ class ChatbotScriptStep(models.Model):
             )
             lead.user_id = user
             lead.team_id = next(
-                team for team in teams if user in team.crm_team_member_ids.user_id
+                team for team in teams if user in team.team_member_ids.user_id
             )
             msg = self.env._("Created a new lead: %s", lead._get_html_link())
             user._bus_send_transient_message(discuss_channel, msg)

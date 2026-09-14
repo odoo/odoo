@@ -37,7 +37,7 @@
         <!-- Salesteam-related subtypes for messaging / Chatter -->
         <record id="mt_salesteam_lead" model="mail.message.subtype">
             <field name="name">Opportunity Created</field>
-            <field name="res_model">crm.team</field>
+            <field name="res_model">team.team</field>
             <field name="relation_field">team_id</field>
             <field name="parent_id" ref="mt_lead_create" />
             <field name="sequence">10</field>
@@ -45,21 +45,21 @@
         </record>
         <record id="mt_salesteam_lead_stage" model="mail.message.subtype">
             <field name="name">Opportunity Stage Changed</field>
-            <field name="res_model">crm.team</field>
+            <field name="res_model">team.team</field>
             <field name="relation_field">team_id</field>
             <field name="parent_id" ref="mt_lead_stage" />
             <field name="sequence">11</field>
         </record>
         <record id="mt_salesteam_lead_won" model="mail.message.subtype">
             <field name="name">Opportunity Won</field>
-            <field name="res_model">crm.team</field>
+            <field name="res_model">team.team</field>
             <field name="relation_field">team_id</field>
             <field name="parent_id" ref="mt_lead_won" />
             <field name="sequence">12</field>
         </record>
         <record id="mt_salesteam_lead_lost" model="mail.message.subtype">
             <field name="name">Opportunity Lost</field>
-            <field name="res_model">crm.team</field>
+            <field name="res_model">team.team</field>
             <field name="relation_field">team_id</field>
             <field name="parent_id" ref="mt_lead_lost" />
             <field name="sequence">13</field>
@@ -67,7 +67,7 @@
         </record>
         <record id="mt_salesteam_lead_restored" model="mail.message.subtype">
             <field name="name">Opportunity Restored</field>
-            <field name="res_model">crm.team</field>
+            <field name="res_model">team.team</field>
             <field name="relation_field">team_id</field>
             <field name="parent_id" ref="mt_lead_restored" />
             <field name="sequence">14</field>

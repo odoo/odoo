@@ -15,8 +15,8 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
 
     @mute_logger(
         "odoo.models.unlink",
-        "odoo.addons.crm.models.crm_team",
-        "odoo.addons.crm.models.crm_team_member",
+        "odoo.addons.crm.models.team_team",
+        "odoo.addons.crm.models.team_member",
     )
     def test_assign_perf_duplicates(self):
         random.seed(1940)
@@ -46,7 +46,9 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
             # so they were reachable on neither. `assertQueryCount` only fails on an
             # over-count, so the ceiling belongs on the heavier path.
             with self.assertQueryCount(user_sales_manager=499):
-                self.env["crm.team"].browse(self.sales_teams.ids)._action_assign_leads()
+                self.env["team.team"].browse(
+                    self.sales_teams.ids
+                )._action_assign_leads()
 
         leads = self.env["crm.lead"].search([("id", "in", leads.ids)])
         leads_st1 = leads.filtered_domain([("team_id", "=", self.sales_team_1.id)])
@@ -66,8 +68,8 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
 
     @mute_logger(
         "odoo.models.unlink",
-        "odoo.addons.crm.models.crm_team",
-        "odoo.addons.crm.models.crm_team_member",
+        "odoo.addons.crm.models.team_team",
+        "odoo.addons.crm.models.team_member",
     )
     def test_assign_perf_no_duplicates(self):
         random.seed(1945)
@@ -87,7 +89,9 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
 
         with self.with_user("user_sales_manager"):
             with self.assertQueryCount(user_sales_manager=246):
-                self.env["crm.team"].browse(self.sales_teams.ids)._action_assign_leads()
+                self.env["team.team"].browse(
+                    self.sales_teams.ids
+                )._action_assign_leads()
 
         leads = self.env["crm.lead"].search([("id", "in", leads.ids)])
         leads_st1 = leads.filtered_domain([("team_id", "=", self.sales_team_1.id)])
@@ -105,8 +109,8 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
 
     @mute_logger(
         "odoo.models.unlink",
-        "odoo.addons.crm.models.crm_team",
-        "odoo.addons.crm.models.crm_team_member",
+        "odoo.addons.crm.models.team_team",
+        "odoo.addons.crm.models.team_member",
     )
     def test_assign_perf_populated(self):
         random.seed(1871)
@@ -126,44 +130,46 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         self.env.ref("crm.ir_cron_crm_lead_assign").write(
             {"repeat_unit": "day", "repeat_interval": 30}
         )
-        sales_team_3 = self.env["crm.team"].create(
+        sales_team_3 = self.env["team.team"].create(
             {
+                "use_sale": True,
+                "use_sale": True,
                 "name": "Sales Team 3",
                 "sequence": 15,
-                "alias_name": False,
+                "lead_alias_name": False,
                 "use_leads": True,
                 "use_opportunities": True,
                 "company_id": False,
                 "user_id": False,
-                "assignment_domain": [("country_id", "!=", False)],
+                "lead_assignment_domain": [("country_id", "!=", False)],
             }
         )
-        sales_team_3_m1 = self.env["crm.team.member"].create(
+        sales_team_3_m1 = self.env["team.member"].create(
             {
                 "user_id": self.user_sales_manager.id,
-                "crm_team_id": sales_team_3.id,
-                "assignment_max": 60,
-                "assignment_domain": False,
+                "team_id": sales_team_3.id,
+                "lead_assignment_max": 60,
+                "lead_assignment_domain": False,
             }
         )
-        sales_team_3_m2 = self.env["crm.team.member"].create(
+        sales_team_3_m2 = self.env["team.member"].create(
             {
                 "user_id": self.user_sales_leads.id,
-                "crm_team_id": sales_team_3.id,
-                "assignment_max": 60,
-                "assignment_domain": False,
+                "team_id": sales_team_3.id,
+                "lead_assignment_max": 60,
+                "lead_assignment_domain": False,
             }
         )
-        sales_team_3_m3 = self.env["crm.team.member"].create(
+        sales_team_3_m3 = self.env["team.member"].create(
             {
                 "user_id": self.user_sales_salesman.id,
-                "crm_team_id": sales_team_3.id,
-                "assignment_max": 15,
-                "assignment_domain": [("probability", ">=", 10)],
+                "team_id": sales_team_3.id,
+                "lead_assignment_max": 15,
+                "lead_assignment_domain": [("probability", ">=", 10)],
             }
         )
         sales_teams = self.sales_teams | sales_team_3
-        self.assertEqual(sum(team.assignment_max for team in sales_teams), 300)
+        self.assertEqual(sum(team.lead_assignment_max for team in sales_teams), 300)
         self.assertEqual(len(leads), 650)
 
         leads = self.env["crm.lead"].search([("id", "in", leads.ids)])
@@ -175,7 +181,7 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
 
         with self.with_user("user_sales_manager"):
             with self.assertQueryCount(user_sales_manager=2441):
-                self.env["crm.team"].browse(sales_teams.ids)._action_assign_leads()
+                self.env["team.team"].browse(sales_teams.ids)._action_assign_leads()
 
         leads = self.env["crm.lead"].search([("id", "in", leads.ids)])
         self.assertEqual(leads.team_id, sales_teams)
@@ -193,29 +199,31 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
 
     @mute_logger(
         "odoo.models.unlink",
-        "odoo.addons.crm.models.crm_team",
-        "odoo.addons.crm.models.crm_team_member",
+        "odoo.addons.crm.models.team_team",
+        "odoo.addons.crm.models.team_member",
     )
     def test_allocate_leads_marginal_cost(self):
         counts = {}
         for index, count in enumerate((2, 20)):
             random.seed(2026 + index)
-            team = self.env["crm.team"].create(
+            team = self.env["team.team"].create(
                 {
-                    "alias_name": False,
-                    "assignment_domain": False,
-                    "assignment_optout": False,
+                    "use_sale": True,
+                    "use_sale": True,
+                    "lead_alias_name": False,
+                    "lead_assignment_domain": False,
+                    "lead_assignment_optout": False,
                     "name": f"Marginal Team {count}",
                     "use_leads": True,
                     "use_opportunities": True,
                     "user_id": False,
                 }
             )
-            self.env["crm.team.member"].create(
+            self.env["team.member"].create(
                 {
-                    "assignment_domain": False,
-                    "assignment_max": 200,
-                    "crm_team_id": team.id,
+                    "lead_assignment_domain": False,
+                    "lead_assignment_max": 200,
+                    "team_id": team.id,
                     "user_id": self.user_sales_manager.id,
                 }
             )

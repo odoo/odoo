@@ -5,19 +5,34 @@ class TestMaintenanceRequestTeam(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        Team = cls.env["maintenance.team"]
+        Team = cls.env["team.team"]
         cls.company = cls.env.company
         cls.other_company = cls.env["res.company"].create(
             {"name": "Probe Other Company"}
         )
         cls.default_team = Team.search(
-            [("company_id", "=", cls.company.id)], limit=1
-        ) or Team.create({"name": "Probe Default Team", "company_id": cls.company.id})
+            [("use_maintenance", "=", True), ("company_id", "=", cls.company.id)],
+            limit=1,
+        ) or Team.create(
+            {
+                "use_maintenance": True,
+                "name": "Probe Default Team",
+                "company_id": cls.company.id,
+            }
+        )
         cls.equipment_team = Team.create(
-            {"name": "Probe Equipment Team", "company_id": cls.company.id}
+            {
+                "use_maintenance": True,
+                "name": "Probe Equipment Team",
+                "company_id": cls.company.id,
+            }
         )
         cls.other_team = Team.create(
-            {"name": "Probe Other Company Team", "company_id": cls.other_company.id}
+            {
+                "use_maintenance": True,
+                "name": "Probe Other Company Team",
+                "company_id": cls.other_company.id,
+            }
         )
         cls.equipment = cls.env["maintenance.equipment"].create(
             {"name": "Probe Equipment", "maintenance_team_id": cls.equipment_team.id}

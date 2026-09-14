@@ -4,7 +4,7 @@
     <data noupdate="1">
         <record id="ir_cron_crm_lead_assign" model="ir.cron" forcecreate="True">
             <field name="name">CRM: Lead Assignment</field>
-            <field name="model_id" ref="crm.model_crm_team" />
+            <field name="model_id" ref="team.model_team_team" />
             <field name="state">code</field>
             <field name="code">model._cron_assign_leads()</field>
             <field name="user_id" ref="base.user_root" />

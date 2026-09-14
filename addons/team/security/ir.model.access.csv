@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_team_user,team user,model_team_team,base.group_user,1,0,0,0
+access_team_manager,team manager,model_team_team,team.group_team_manager,1,1,1,1
+access_team_member_user,team.member user,model_team_member,base.group_user,1,0,0,0
+access_team_member_manager,team.member manager,model_team_member,team.group_team_manager,1,1,1,1
+access_team_alias_user,team.alias user,model_team_alias,base.group_user,1,0,0,0
+access_team_alias_manager,team.alias manager,model_team_alias,team.group_team_manager,1,1,1,1

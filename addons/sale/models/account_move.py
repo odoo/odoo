@@ -13,12 +13,12 @@ class AccountMove(models.Model):
     source_id = fields.Many2one(ondelete="set null")
 
     team_id = fields.Many2one(
-        comodel_name="crm.team",
+        comodel_name="team.team",
         string="Sales Team",
         compute="_compute_team_id",
         store=True,
         readonly=False,
-        domain="[('company_id', 'in', [False, company_id])]",
+        domain="[('use_sale', '=', True), ('company_id', 'in', [False, company_id])]",
         ondelete="set null",
         tracking=True,
     )
@@ -84,11 +84,12 @@ class AccountMove(models.Model):
             key=lambda m: (m.invoice_user_id.id, m.company_id.id),
         ):
             self.env["account.move"].concat(*moves).team_id = (
-                self.env["crm.team"]
+                self.env["team.team"]
                 .with_context(
                     allowed_company_ids=[company_id],
                 )
-                ._get_default_team_id(
+                ._get_default_team(
+                    "sale",
                     user_id=user_id,
                 )
             )

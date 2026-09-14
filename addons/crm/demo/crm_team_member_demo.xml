@@ -2,13 +2,13 @@
 <odoo>
 
     <data noupdate="1">
-        <record id="sales_team.crm_team_member_admin_sales" model="crm.team.member">
-            <field name="assignment_max">30</field>
-            <field name="assignment_domain">[['probability', '&gt;=', 20]]</field>
+        <record id="sales_team.crm_team_member_admin_sales" model="team.member">
+            <field name="lead_assignment_max">30</field>
+            <field name="lead_assignment_domain">[['probability', '&gt;=', 20]]</field>
         </record>
-        <record id="sales_team.crm_team_member_demo_team_1" model="crm.team.member">
-            <field name="assignment_max">45</field>
-            <field name="assignment_domain">[['probability', '&gt;=', 5]]</field>
+        <record id="sales_team.crm_team_member_demo_team_1" model="team.member">
+            <field name="lead_assignment_max">45</field>
+            <field name="lead_assignment_domain">[['probability', '&gt;=', 5]]</field>
         </record>
     </data>
 

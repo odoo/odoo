@@ -14,17 +14,19 @@ class TestAccessRights(SalesTeamCommon):
     @users("salesmanager")
     def test_access_sales_manager(self):
         india_channel = (
-            self.env["crm.team"]
+            self.env["team.team"]
             .with_context(tracking_disable=True)
             .create(
                 {
+                    "use_sale": True,
                     "name": "India",
+                    "use_sale": True,
                 }
             )
         )
         self.assertIn(
             india_channel.id,
-            self.env["crm.team"].search([]).ids,
+            self.env["team.team"].search([]).ids,
             "Sales manager should be able to create a Sales Team",
         )
 
@@ -38,7 +40,7 @@ class TestAccessRights(SalesTeamCommon):
         india_channel.unlink()
         self.assertNotIn(
             india_channel.id,
-            self.env["crm.team"].search([]).ids,
+            self.env["team.team"].search([]).ids,
             "Sales manager should be able to delete a Sales Team",
         )
 
@@ -55,7 +57,7 @@ class TestSecurity(TestSalesMC):
         with self.assertRaises(exceptions.AccessError):
             sales_team.write({"name": "Trolling"})
 
-        for membership in sales_team.crm_team_member_ids:
+        for membership in sales_team.team_member_ids:
             membership.read(["name"])
             with self.assertRaises(exceptions.AccessError):
                 membership.write({"active": False})
@@ -73,7 +75,7 @@ class TestSecurity(TestSalesMC):
 class TestMultiCompany(TestSalesMC):
     @users("user_sales_manager")
     def test_team_members(self):
-        team_c2 = self.env["crm.team"].browse(self.team_c2.id)
+        team_c2 = self.env["team.team"].browse(self.team_c2.id)
         team_c2.write({"name": "Manager Update"})
         self.assertEqual(team_c2.member_ids, self.env["res.users"])
 
@@ -108,27 +110,23 @@ class TestMultiCompany(TestSalesMC):
 
     @users("user_sales_manager")
     def test_team_memberships(self):
-        team_c2 = self.env["crm.team"].browse(self.team_c2.id)
+        team_c2 = self.env["team.team"].browse(self.team_c2.id)
         team_c2.write({"name": "Manager Update"})
         self.assertEqual(team_c2.member_ids, self.env["res.users"])
 
         self.env.user.write({"company_id": self.company_2.id})
-        team_c2.write({"crm_team_member_ids": [(0, 0, {"user_id": self.env.user.id})]})
+        team_c2.write({"team_member_ids": [(0, 0, {"user_id": self.env.user.id})]})
         self.assertEqual(team_c2.member_ids, self.env.user)
 
         with self.assertRaises(exceptions.UserError):
             team_c2.write(
-                {
-                    "crm_team_member_ids": [
-                        (0, 0, {"user_id": self.user_sales_salesman.id})
-                    ]
-                }
+                {"team_member_ids": [(0, 0, {"user_id": self.user_sales_salesman.id})]}
             )
 
         team_c2.write({"member_ids": [(5, 0)], "company_id": self.company_main.id})
         self.assertEqual(team_c2.member_ids, self.env["res.users"])
         team_c2.write(
-            {"crm_team_member_ids": [(0, 0, {"user_id": self.user_sales_salesman.id})]}
+            {"team_member_ids": [(0, 0, {"user_id": self.user_sales_salesman.id})]}
         )
         self.assertEqual(team_c2.member_ids, self.user_sales_salesman)
 
@@ -149,21 +147,29 @@ class TestMembershipMultiCompany(TestSalesCommon):
             company_ids=[(6, 0, [cls.company_2.id])],
             groups="base.group_user",
         )
-        cls.foreign_team = cls.env["crm.team"].create(
-            {"name": "Foreign Team", "company_id": cls.company_2.id}
+        cls.foreign_team = cls.env["team.team"].create(
+            {
+                "use_sale": True,
+                "name": "Foreign Team",
+                "company_id": cls.company_2.id,
+            }
         )
-        cls.foreign_membership = cls.env["crm.team.member"].create(
-            {"crm_team_id": cls.foreign_team.id, "user_id": cls.foreign_user.id}
+        cls.foreign_membership = cls.env["team.member"].create(
+            {"team_id": cls.foreign_team.id, "user_id": cls.foreign_user.id}
         )
-        cls.shared_team = cls.env["crm.team"].create(
-            {"name": "Shared Team", "company_id": False}
+        cls.shared_team = cls.env["team.team"].create(
+            {
+                "use_sale": True,
+                "name": "Shared Team",
+                "company_id": False,
+            }
         )
-        cls.shared_membership = cls.env["crm.team.member"].create(
-            {"crm_team_id": cls.shared_team.id, "user_id": cls.user_sales_leads.id}
+        cls.shared_membership = cls.env["team.member"].create(
+            {"team_id": cls.shared_team.id, "user_id": cls.user_sales_leads.id}
         )
 
     def test_rule_exists(self):
-        self.assertTrue(self.env.ref("sales_team.crm_team_member_comp_rule"))
+        self.assertTrue(self.env.ref("team.team_member_comp_rule"))
 
     def test_foreign_membership_is_hidden(self):
         reader = self.user_sales_leads
@@ -174,7 +180,7 @@ class TestMembershipMultiCompany(TestSalesCommon):
             self.foreign_membership.with_user(reader).read(["name"])
         self.assertNotIn(
             self.foreign_membership,
-            self.env["crm.team.member"].with_user(reader).search([]),
+            self.env["team.member"].with_user(reader).search([]),
         )
 
     def test_company_less_and_own_memberships_stay_readable(self):
@@ -182,7 +188,7 @@ class TestMembershipMultiCompany(TestSalesCommon):
         self.assertTrue(self.shared_membership.with_user(reader).read(["name"]))
         self.assertIn(
             self.shared_membership,
-            self.env["crm.team.member"].with_user(reader).search([]),
+            self.env["team.member"].with_user(reader).search([]),
         )
         self.assertTrue(
             self.foreign_membership.with_user(self.foreign_user).read(["name"])
@@ -196,14 +202,18 @@ class TestMembershipVisibility(TestSalesCommon):
         cls.env["ir.config_parameter"].sudo().set_param(
             "sales_team.membership_multi", True
         )
-        cls.my_team = cls.env["crm.team"].create(
-            {"name": "My Team", "company_id": False}
+        cls.my_team = cls.env["team.team"].create(
+            {"use_sale": True, "name": "My Team", "company_id": False}
         )
-        cls.led_team = cls.env["crm.team"].create(
-            {"name": "Led Team", "company_id": False}
+        cls.led_team = cls.env["team.team"].create(
+            {
+                "use_sale": True,
+                "name": "Led Team",
+                "company_id": False,
+            }
         )
-        cls.foreign_team = cls.env["crm.team"].create(
-            {"name": "Foreign", "company_id": False}
+        cls.foreign_team = cls.env["team.team"].create(
+            {"use_sale": True, "name": "Foreign", "company_id": False}
         )
         cls.salesman = mail_new_test_user(
             cls.env,
@@ -218,20 +228,20 @@ class TestMembershipVisibility(TestSalesCommon):
             cls.env, login="vis_stranger", name="Vis Stranger", groups="base.group_user"
         )
         cls.led_team.user_id = cls.salesman.id
-        cls.mine, cls.mates, cls.theirs = cls.env["crm.team.member"].create(
+        cls.mine, cls.mates, cls.theirs = cls.env["team.member"].create(
             [
-                {"crm_team_id": cls.my_team.id, "user_id": cls.salesman.id},
-                {"crm_team_id": cls.my_team.id, "user_id": cls.teammate.id},
-                {"crm_team_id": cls.foreign_team.id, "user_id": cls.stranger.id},
+                {"team_id": cls.my_team.id, "user_id": cls.salesman.id},
+                {"team_id": cls.my_team.id, "user_id": cls.teammate.id},
+                {"team_id": cls.foreign_team.id, "user_id": cls.stranger.id},
             ]
         )
-        cls.led = cls.env["crm.team.member"].create(
-            {"crm_team_id": cls.led_team.id, "user_id": cls.teammate.id}
+        cls.led = cls.env["team.member"].create(
+            {"team_id": cls.led_team.id, "user_id": cls.teammate.id}
         )
         cls.env.flush_all()
 
     def test_foreign_membership_is_not_searchable(self):
-        visible = self.env["crm.team.member"].with_user(self.salesman).search([])
+        visible = self.env["team.member"].with_user(self.salesman).search([])
         self.assertNotIn(
             self.theirs,
             visible,
@@ -265,8 +275,8 @@ class TestMembershipVisibility(TestSalesCommon):
     def test_a_readable_team_never_implies_a_readable_roster(self):
         for label, group in self.PROFILES.items():
             reader = self._reader(label, group)
-            visible = self.env["crm.team.member"].with_user(reader).search([])
-            readable_teams = self.env["crm.team"].with_user(reader).search([])
+            visible = self.env["team.member"].with_user(reader).search([])
+            readable_teams = self.env["team.team"].with_user(reader).search([])
             self.assertIn(
                 self.foreign_team,
                 readable_teams,
@@ -281,7 +291,7 @@ class TestMembershipVisibility(TestSalesCommon):
             )
 
     def test_the_ladder_never_narrows_either_model(self):
-        for model in ("crm.team", "crm.team.member"):
+        for model in ("team.team", "team.member"):
             counts = [
                 len(self.env[model].with_user(self._reader(label, group)).search([]))
                 for label, group in self.PROFILES.items()
@@ -295,10 +305,10 @@ class TestMembershipVisibility(TestSalesCommon):
 
     def test_a_plain_internal_user_reads_no_foreign_roster(self):
         reader = self._reader("plain internal", "base.group_user")
-        self.assertFalse(self.env["crm.team.member"].with_user(reader).search([]))
+        self.assertFalse(self.env["team.member"].with_user(reader).search([]))
         self.assertIn(
             self.foreign_team,
-            self.env["crm.team"].with_user(reader).search([]),
+            self.env["team.team"].with_user(reader).search([]),
             "team names must stay readable outside the Sales app",
         )
 
@@ -306,31 +316,31 @@ class TestMembershipVisibility(TestSalesCommon):
         member = mail_new_test_user(
             self.env, login="vis_own", name="Vis Own", groups="base.group_user"
         )
-        own_team = self.env["crm.team"].create({"name": "Own", "company_id": False})
-        self.env["crm.team.member"].create(
-            {"user_id": member.id, "crm_team_id": own_team.id}
+        own_team = self.env["team.team"].create(
+            {"use_sale": True, "name": "Own", "company_id": False}
         )
-        readable = self.env["crm.team.member"].with_user(member).search([])
-        self.assertEqual(readable.crm_team_id, own_team)
+        self.env["team.member"].create({"user_id": member.id, "team_id": own_team.id})
+        readable = self.env["team.member"].with_user(member).search([])
+        self.assertEqual(readable.team_id, own_team)
 
     def test_the_team_roster_still_renders(self):
         team = self.my_team.with_user(self.salesman)
         self.assertEqual(team.member_ids, self.salesman | self.teammate)
-        self.assertEqual(team.crm_team_member_ids, self.mine | self.mates)
+        self.assertEqual(team.team_member_ids, self.mine | self.mates)
 
     def test_all_documents_and_managers_are_unaffected(self):
         for user in (
             self.user_sales_leads,
             self.user_sales_manager,
         ):
-            visible = self.env["crm.team.member"].with_user(user).search([])
+            visible = self.env["team.member"].with_user(user).search([])
             self.assertIn(
                 self.theirs, visible, f"{user.login} must still see everything"
             )
 
     def test_own_teams_still_resolve(self):
         as_self = self.salesman.with_user(self.salesman)
-        self.assertEqual(as_self.crm_team_ids, self.my_team)
+        self.assertEqual(as_self.sale_team_ids, self.my_team)
         self.assertEqual(as_self.sale_team_id, self.my_team)
 
 
@@ -350,22 +360,24 @@ class TestRosterVisibilityFollowsMembership(TestSalesCommon):
         cls.stranger = mail_new_test_user(
             cls.env, login="roster_stranger", name="Roster Stranger"
         )
-        cls.team = cls.env["crm.team"].create({"name": "Roster", "company_id": False})
-        cls.roster = cls.env["crm.team.member"].create(
-            {"crm_team_id": cls.team.id, "user_id": cls.stranger.id}
+        cls.team = cls.env["team.team"].create(
+            {"use_sale": True, "name": "Roster", "company_id": False}
+        )
+        cls.roster = cls.env["team.member"].create(
+            {"team_id": cls.team.id, "user_id": cls.stranger.id}
         )
         cls.env.flush_all()
 
     def _sees_roster(self):
         self.env.flush_all()
-        readable = self.env["crm.team.member"].with_user(self.salesman).search([])
+        readable = self.env["team.member"].with_user(self.salesman).search([])
         return self.roster in readable
 
     def test_joining_and_leaving_a_team_is_seen_at_once(self):
         self.assertFalse(self._sees_roster())
 
-        membership = self.env["crm.team.member"].create(
-            {"crm_team_id": self.team.id, "user_id": self.salesman.id}
+        membership = self.env["team.member"].create(
+            {"team_id": self.team.id, "user_id": self.salesman.id}
         )
         self.assertTrue(self._sees_roster(), "a new member reads the roster")
 
@@ -379,20 +391,24 @@ class TestRosterVisibilityFollowsMembership(TestSalesCommon):
         self.assertFalse(self._sees_roster())
 
     def test_moving_a_membership_is_seen_at_once(self):
-        elsewhere = self.env["crm.team"].create(
-            {"name": "Elsewhere", "company_id": False}
+        elsewhere = self.env["team.team"].create(
+            {
+                "use_sale": True,
+                "name": "Elsewhere",
+                "company_id": False,
+            }
         )
-        membership = self.env["crm.team.member"].create(
-            {"crm_team_id": elsewhere.id, "user_id": self.salesman.id}
+        membership = self.env["team.member"].create(
+            {"team_id": elsewhere.id, "user_id": self.salesman.id}
         )
         self.assertFalse(self._sees_roster())
 
-        membership.write({"crm_team_id": self.team.id})
+        membership.write({"team_id": self.team.id})
         self.assertTrue(self._sees_roster())
 
     def test_archiving_the_team_is_seen_at_once(self):
-        self.env["crm.team.member"].create(
-            {"crm_team_id": self.team.id, "user_id": self.salesman.id}
+        self.env["team.member"].create(
+            {"team_id": self.team.id, "user_id": self.salesman.id}
         )
         self.assertTrue(self._sees_roster())
 
@@ -406,7 +422,7 @@ class TestTeamWriteGrantsOutsideSales(TestSalesCommon):
         self.env["ir.model.access"].create(
             {
                 "name": "team writers",
-                "model_id": self.env.ref("sales_team.model_crm_team").id,
+                "model_id": self.env.ref("team.model_team_team").id,
                 "group_id": writers.id,
                 "perm_read": True,
                 "perm_write": True,
@@ -414,7 +430,13 @@ class TestTeamWriteGrantsOutsideSales(TestSalesCommon):
         )
         writer = mail_new_test_user(self.env, login="team_writer", name="Team Writer")
         writer.group_ids = [(4, writers.id)]
-        team = self.env["crm.team"].create({"name": "Writable", "company_id": False})
+        team = self.env["team.team"].create(
+            {
+                "use_sale": True,
+                "name": "Writable",
+                "company_id": False,
+            }
+        )
 
         team.with_user(writer).write({"name": "Written without Sales"})
         writer.group_ids = [(4, self.env.ref("sales_team.group_sale_salesman").id)]

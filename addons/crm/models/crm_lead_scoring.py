@@ -300,8 +300,8 @@ class CrmLead(models.Model):
                 ("create_date", ">=", pls_start_date),
                 ("won_status", "in", ["lost", "won"]),
             ]
-            team_ids = self.env["crm.team"].with_context(active_test=False).search(
-                []
+            team_ids = self.env["team.team"].with_context(active_test=False).search(
+                [("use_sale", "=", True)]
             ).ids + [0]
         else:
             domain = [("id", "in", pls_leads.ids)]

@@ -1,6 +1,6 @@
 {
     "name": "POS - Sales",
-    "version": "1.1",
+    "version": "1.2",
     "category": "Sales/Point of Sale",
     "sequence": 6,
     "summary": "Link module between Point of Sale and Sales",

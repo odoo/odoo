@@ -15,16 +15,18 @@ class TestDefaultTeam(TestSalesCommon):
                 "country_id": cls.env.ref("base.fr").id,
             }
         )
-        cls.team_c2 = cls.env["crm.team"].create(
+        cls.team_c2 = cls.env["team.team"].create(
             {
+                "use_sale": True,
                 "name": "C2 Team1",
                 "sequence": 1,
                 "company_id": cls.company_2.id,
                 "user_id": False,
             }
         )
-        cls.team_sequence = cls.env["crm.team"].create(
+        cls.team_sequence = cls.env["team.team"].create(
             {
+                "use_sale": True,
                 "company_id": False,
                 "name": "Team LowSequence",
                 "member_ids": [(4, cls.user_sales_leads.id)],
@@ -32,8 +34,9 @@ class TestDefaultTeam(TestSalesCommon):
                 "user_id": False,
             }
         )
-        cls.team_responsible = cls.env["crm.team"].create(
+        cls.team_responsible = cls.env["team.team"].create(
             {
+                "use_sale": True,
                 "company_id": cls.company_main.id,
                 "name": "Team 3",
                 "user_id": cls.user_sales_manager.id,
@@ -46,18 +49,16 @@ class TestDefaultTeam(TestSalesCommon):
         self.team_sequence.member_ids = [(5,)]
         (self.sales_team_1 + self.team_sequence).flush_model()
         self.assertFalse(
-            self.env["crm.team.member"].search(
-                [("user_id", "=", self.user_sales_leads.id)]
-            )
+            self.env["team.member"].search([("user_id", "=", self.user_sales_leads.id)])
         )
 
         with self.with_user("user_sales_leads"):
-            team = self.env["crm.team"]._get_default_team_id()
+            team = self.env["team.team"]._get_default_team("sale")
             self.assertEqual(team, self.team_sequence)
 
         self.team_sequence.active = False
         with self.with_user("user_sales_leads"):
-            team = self.env["crm.team"]._get_default_team_id()
+            team = self.env["team.team"]._get_default_team("sale")
             self.assertEqual(team, self.team_responsible)
 
         self.user_sales_leads.write(
@@ -67,39 +68,39 @@ class TestDefaultTeam(TestSalesCommon):
             }
         )
         with self.with_user("user_sales_leads"):
-            team = self.env["crm.team"]._get_default_team_id()
+            team = self.env["team.team"]._get_default_team("sale")
             self.assertEqual(team, self.team_c2)
 
     def test_default_team_member(self):
         with self.with_user("user_sales_leads"):
-            team = self.env["crm.team"]._get_default_team_id()
+            team = self.env["team.team"]._get_default_team("sale")
             self.assertEqual(team, self.team_sequence)
 
         self.team_sequence.member_ids = [(5,)]
         self.team_sequence.flush_model()
         with self.with_user("user_sales_leads"):
-            team = self.env["crm.team"]._get_default_team_id()
+            team = self.env["team.team"]._get_default_team("sale")
             self.assertEqual(team, self.sales_team_1)
 
         self.team_responsible.user_id = self.user_sales_leads.id
         with self.with_user("user_sales_leads"):
-            team = self.env["crm.team"]._get_default_team_id()
+            team = self.env["team.team"]._get_default_team("sale")
             self.assertEqual(team, self.team_responsible)
 
         self.team_responsible.sequence = self.sales_team_1.sequence
         with self.with_user("user_sales_leads"):
-            team = self.env["crm.team"]._get_default_team_id()
+            team = self.env["team.team"]._get_default_team("sale")
             self.assertEqual(team, self.team_responsible)
 
     def test_default_team_wcontext(self):
         with self.with_user("user_sales_leads"):
-            team = self.env["crm.team"]._get_default_team_id()
+            team = self.env["team.team"]._get_default_team("sale")
             self.assertEqual(team, self.team_sequence)
 
             team = (
-                self.env["crm.team"]
+                self.env["team.team"]
                 .with_context(default_team_id=self.sales_team_1.id)
-                ._get_default_team_id()
+                ._get_default_team("sale")
             )
             self.assertEqual(
                 team,
@@ -111,19 +112,17 @@ class TestDefaultTeam(TestSalesCommon):
         self.team_sequence.member_ids = [(5,)]
         (self.sales_team_1 + self.team_sequence).flush_model()
         self.assertFalse(
-            self.env["crm.team.member"].search(
-                [("user_id", "=", self.user_sales_leads.id)]
-            )
+            self.env["team.member"].search([("user_id", "=", self.user_sales_leads.id)])
         )
 
         with self.with_user("user_sales_leads"):
-            team = self.env["crm.team"]._get_default_team_id()
+            team = self.env["team.team"]._get_default_team("sale")
             self.assertEqual(team, self.team_sequence)
 
             team = (
-                self.env["crm.team"]
+                self.env["team.team"]
                 .with_context(default_team_id=self.sales_team_1.id)
-                ._get_default_team_id()
+                ._get_default_team("sale")
             )
             self.assertEqual(
                 team,
@@ -134,52 +133,64 @@ class TestDefaultTeam(TestSalesCommon):
 
 class TestDefaultTeamFromContext(TestSalesCommon):
     def test_archived_context_team_is_not_proposed(self):
-        live = self.env["crm.team"].create({"name": "Live", "company_id": False})
-        dead = self.env["crm.team"].create({"name": "Dead", "company_id": False})
+        live = self.env["team.team"].create(
+            {"use_sale": True, "name": "Live", "company_id": False}
+        )
+        dead = self.env["team.team"].create(
+            {"use_sale": True, "name": "Dead", "company_id": False}
+        )
         dead.action_archive()
         self.env.flush_all()
 
         team = (
-            self.env["crm.team"]
+            self.env["team.team"]
             .with_context(default_team_id=dead.id)
-            ._get_default_team_id()
+            ._get_default_team("sale")
         )
         self.assertNotEqual(team, dead, "an archived team must not be proposed")
         self.assertTrue(not team or team.active)
         self.assertTrue(
-            self.env["crm.team"]
+            self.env["team.team"]
             .with_context(default_team_id=live.id)
-            ._get_default_team_id()
+            ._get_default_team("sale")
         )
 
     def test_deleted_context_team_is_not_proposed(self):
-        dangling = self.env["crm.team"].create(
-            {"name": "Dangling", "company_id": False}
+        dangling = self.env["team.team"].create(
+            {
+                "use_sale": True,
+                "name": "Dangling",
+                "company_id": False,
+            }
         )
         dangling_id = dangling.id
         dangling.unlink()
         self.env.flush_all()
 
         team = (
-            self.env["crm.team"]
+            self.env["team.team"]
             .with_context(default_team_id=dangling_id)
-            ._get_default_team_id()
+            ._get_default_team("sale")
         )
         self.assertNotEqual(team.id, dangling_id)
 
     def test_foreign_company_context_team_is_not_proposed(self):
         salesman = self.user_sales_salesman
         other_company = self.env["res.company"].create({"name": "Ctx Other Co"})
-        foreign = self.env["crm.team"].create(
-            {"name": "Foreign", "company_id": other_company.id}
+        foreign = self.env["team.team"].create(
+            {
+                "use_sale": True,
+                "name": "Foreign",
+                "company_id": other_company.id,
+            }
         )
         self.env.flush_all()
 
         team = (
-            self.env["crm.team"]
+            self.env["team.team"]
             .with_user(salesman)
             .with_context(default_team_id=foreign.id)
-            ._get_default_team_id()
+            ._get_default_team("sale")
         )
         self.assertNotEqual(
             team,
@@ -191,24 +202,29 @@ class TestDefaultTeamFromContext(TestSalesCommon):
     def test_context_team_outside_the_allowed_companies_is_not_proposed(self):
         company_2 = self.env["res.company"].create({"name": "Ctx Allowed Co2"})
         self.user_sales_salesman.write({"company_ids": [(4, company_2.id)]})
-        team_c2 = self.env["crm.team"].create(
-            {"name": "Team Co2", "company_id": company_2.id}
+        team_c2 = self.env["team.team"].create(
+            {
+                "use_sale": True,
+                "name": "Team Co2",
+                "company_id": company_2.id,
+            }
         )
         self.env.flush_all()
 
-        CrmTeam = self.env["crm.team"].with_user(self.user_sales_salesman)
+        CrmTeam = self.env["team.team"].with_user(self.user_sales_salesman)
         allowed_c2 = CrmTeam.with_context(
             default_team_id=team_c2.id, allowed_company_ids=[company_2.id]
-        )._get_default_team_id()
+        )._get_default_team("sale")
         self.assertEqual(allowed_c2, team_c2)
         allowed_main = CrmTeam.with_context(
             default_team_id=team_c2.id, allowed_company_ids=[self.company_main.id]
-        )._get_default_team_id()
+        )._get_default_team("sale")
         self.assertNotEqual(allowed_main, team_c2)
 
     def test_readable_context_team_still_wins(self):
-        own = self.env["crm.team"].create(
+        own = self.env["team.team"].create(
             {
+                "use_sale": True,
                 "name": "Own",
                 "company_id": False,
                 "sequence": 99,
@@ -217,10 +233,10 @@ class TestDefaultTeamFromContext(TestSalesCommon):
         )
         self.env.flush_all()
         team = (
-            self.env["crm.team"]
+            self.env["team.team"]
             .with_user(self.user_sales_leads)
             .with_context(default_team_id=own.id)
-            ._get_default_team_id()
+            ._get_default_team("sale")
         )
         self.assertEqual(team, own)
         self.assertFalse(team.env.su)
@@ -230,13 +246,20 @@ class TestDefaultTeamFallbackQueries(TestSalesCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env["crm.team"].search([]).write({"sequence": 50})
-        cls.wanted = cls.env["crm.team"].create(
-            {"name": "Wanted", "company_id": False, "sequence": 1, "user_id": False}
+        cls.env["team.team"].search([]).write({"sequence": 50})
+        cls.wanted = cls.env["team.team"].create(
+            {
+                "use_sale": True,
+                "name": "Wanted",
+                "company_id": False,
+                "sequence": 1,
+                "user_id": False,
+            }
         )
-        cls.filler = cls.env["crm.team"].create(
+        cls.filler = cls.env["team.team"].create(
             [
                 {
+                    "use_sale": True,
                     "name": f"Filler {i}",
                     "company_id": False,
                     "sequence": 10,
@@ -256,22 +279,22 @@ class TestDefaultTeamFallbackQueries(TestSalesCommon):
     def test_domain_fallback_picks_the_same_team_as_filtered_domain(self):
         domain = [("name", "=", "Wanted")]
         team = (
-            self.env["crm.team"]
+            self.env["team.team"]
             .with_user(self.loner)
-            ._get_default_team_id(domain=domain)
+            ._get_default_team("sale", domain=domain)
         )
-        reference = self.env["crm.team"].with_user(self.loner).search([])
+        reference = self.env["team.team"].with_user(self.loner).search([])
         self.assertEqual(team, reference.filtered_domain(domain)[:1])
         self.assertEqual(team, self.wanted)
 
     def test_domain_fallback_falls_back_to_the_first_team(self):
         domain = [("name", "=", "No Such Team")]
         team = (
-            self.env["crm.team"]
+            self.env["team.team"]
             .with_user(self.loner)
-            ._get_default_team_id(domain=domain)
+            ._get_default_team("sale", domain=domain)
         )
-        reference = self.env["crm.team"].with_user(self.loner).search([])
+        reference = self.env["team.team"].with_user(self.loner).search([])
         self.assertEqual(team, reference[:1])
         self.assertEqual(team, self.wanted, "sequence 1 ranks first")
 
@@ -287,8 +310,8 @@ class TestDefaultTeamFallbackQueries(TestSalesCommon):
 
         cursor_cls.execute = counting
         try:
-            self.env["crm.team"].with_user(self.loner)._get_default_team_id(
-                domain=[("name", "=", "Wanted")]
+            self.env["team.team"].with_user(self.loner)._get_default_team(
+                "sale", domain=[("name", "=", "Wanted")]
             )
         finally:
             cursor_cls.execute = original
@@ -297,9 +320,10 @@ class TestDefaultTeamFallbackQueries(TestSalesCommon):
     def test_fallback_does_not_scale_with_the_table(self):
         self._rows_fetched_by_fallback()
         small = self._rows_fetched_by_fallback()
-        self.env["crm.team"].create(
+        self.env["team.team"].create(
             [
                 {
+                    "use_sale": True,
                     "name": f"Bulk {i}",
                     "company_id": False,
                     "sequence": 10,
@@ -325,7 +349,7 @@ class TestDefaultTeamIsNotCallerDependent(TestSalesCommon):
         cls.env["ir.config_parameter"].sudo().set_param(
             "sales_team.membership_multi", True
         )
-        cls.env["crm.team"].search([]).write({"sequence": 9000})
+        cls.env["team.team"].search([]).write({"sequence": 9000})
         cls.filer = mail_new_test_user(
             cls.env,
             login="dep_filer",
@@ -338,35 +362,47 @@ class TestDefaultTeamIsNotCallerDependent(TestSalesCommon):
             name="Dep Owner",
             groups="sales_team.group_sale_salesman_team",
         )
-        cls.owner_team = cls.env["crm.team"].create(
-            {"name": "Owner Team", "sequence": 10, "company_id": False}
+        cls.owner_team = cls.env["team.team"].create(
+            {
+                "use_sale": True,
+                "name": "Owner Team",
+                "sequence": 10,
+                "company_id": False,
+            }
         )
-        cls.shared_team = cls.env["crm.team"].create(
-            {"name": "Shared Team", "sequence": 20, "company_id": False}
+        cls.shared_team = cls.env["team.team"].create(
+            {
+                "use_sale": True,
+                "name": "Shared Team",
+                "sequence": 20,
+                "company_id": False,
+            }
         )
-        cls.env["crm.team.member"].create(
+        cls.env["team.member"].create(
             [
-                {"crm_team_id": cls.owner_team.id, "user_id": cls.owner.id},
-                {"crm_team_id": cls.shared_team.id, "user_id": cls.owner.id},
-                {"crm_team_id": cls.shared_team.id, "user_id": cls.filer.id},
+                {"team_id": cls.owner_team.id, "user_id": cls.owner.id},
+                {"team_id": cls.shared_team.id, "user_id": cls.owner.id},
+                {"team_id": cls.shared_team.id, "user_id": cls.filer.id},
             ]
         )
         cls.env.flush_all()
 
     def test_every_caller_gets_the_same_team(self):
-        CrmTeam = self.env["crm.team"]
+        CrmTeam = self.env["team.team"]
         for actor in (self.env.user, self.filer, self.owner):
             self.assertEqual(
-                CrmTeam.with_user(actor)._get_default_team_id(user_id=self.owner.id),
+                CrmTeam.with_user(actor)._get_default_team(
+                    "sale", user_id=self.owner.id
+                ),
                 self.owner_team,
                 f"{actor.login} got a different default team for the same salesperson",
             )
 
     def test_the_answer_is_not_sudoed(self):
         team = (
-            self.env["crm.team"]
+            self.env["team.team"]
             .with_user(self.filer)
-            ._get_default_team_id(user_id=self.owner.id)
+            ._get_default_team("sale", user_id=self.owner.id)
         )
         self.assertFalse(team.env.su)
 
@@ -378,9 +414,9 @@ class TestDefaultTeamIsNotCallerDependent(TestSalesCommon):
             groups="sales_team.group_sale_salesman",
         )
         self.env.flush_all()
-        CrmTeam = self.env["crm.team"]
+        CrmTeam = self.env["team.team"]
         answers = {
-            CrmTeam.with_user(actor)._get_default_team_id(user_id=loner.id)
+            CrmTeam.with_user(actor)._get_default_team("sale", user_id=loner.id)
             for actor in (self.env.user, self.filer, self.owner)
         }
         self.assertEqual(len(answers), 1, f"the fallback differed by caller: {answers}")
@@ -388,9 +424,9 @@ class TestDefaultTeamIsNotCallerDependent(TestSalesCommon):
 
     def test_a_document_opens_for_the_person_who_filed_it(self):
         team = (
-            self.env["crm.team"]
+            self.env["team.team"]
             .with_user(self.filer)
-            ._get_default_team_id(user_id=self.owner.id)
+            ._get_default_team("sale", user_id=self.owner.id)
         )
         self.assertEqual(team, self.owner_team)
         self.env.invalidate_all()
@@ -412,23 +448,28 @@ class TestDefaultTeamIgnoresArchived(TestSalesCommon):
             name="Arch Leader",
             groups="sales_team.group_sale_salesman",
         )
-        cls.env["crm.team"].search([]).write({"active": False})
-        cls.dead_team = cls.env["crm.team"].create(
-            {"name": "Dead", "company_id": False, "user_id": cls.leader.id}
+        cls.env["team.team"].search([]).write({"active": False})
+        cls.dead_team = cls.env["team.team"].create(
+            {
+                "use_sale": True,
+                "name": "Dead",
+                "company_id": False,
+                "user_id": cls.leader.id,
+            }
         )
         cls.dead_team.action_archive()
         cls.env.flush_all()
 
     def test_no_live_team_means_no_default(self):
-        team = self.env["crm.team"].with_user(self.leader)._get_default_team_id()
+        team = self.env["team.team"].with_user(self.leader)._get_default_team("sale")
         self.assertFalse(team)
 
     def test_archived_team_is_not_proposed_under_active_test_false(self):
         team = (
-            self.env["crm.team"]
+            self.env["team.team"]
             .with_user(self.leader)
             .with_context(active_test=False)
-            ._get_default_team_id()
+            ._get_default_team("sale")
         )
         self.assertFalse(team, "an archived team is never a default for a new document")
 
@@ -442,23 +483,28 @@ class TestDefaultTeamIgnoresArchived(TestSalesCommon):
         for domain in (False, [("name", "=", "Dead")]):
             with self.subTest(domain=domain):
                 team = (
-                    self.env["crm.team"]
+                    self.env["team.team"]
                     .with_user(stranger)
                     .with_context(active_test=False)
-                    ._get_default_team_id(domain=domain)
+                    ._get_default_team("sale", domain=domain)
                 )
                 self.assertFalse(team)
 
     def test_a_live_team_is_still_found(self):
-        live = self.env["crm.team"].create(
-            {"name": "Alive", "company_id": False, "user_id": self.leader.id}
+        live = self.env["team.team"].create(
+            {
+                "use_sale": True,
+                "name": "Alive",
+                "company_id": False,
+                "user_id": self.leader.id,
+            }
         )
         for context in ({}, {"active_test": False}):
             with self.subTest(context=context):
                 self.assertEqual(
-                    self.env["crm.team"]
+                    self.env["team.team"]
                     .with_user(self.leader)
                     .with_context(**context)
-                    ._get_default_team_id(),
+                    ._get_default_team("sale"),
                     live,
                 )

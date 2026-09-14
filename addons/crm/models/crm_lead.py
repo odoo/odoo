@@ -111,13 +111,14 @@ class CrmLead(models.Model):
         help="UX: Limit to lead company or all if no company",
     )
     team_id = fields.Many2one(
-        comodel_name="crm.team",
+        comodel_name="team.team",
         string="Sales Team",
         compute="_compute_team_id",
         precompute=True,
         store=True,
         index=True,
         readonly=False,
+        domain=[("use_sale", "=", True)],
         ondelete="set null",
         check_company=True,
         tracking=True,
@@ -530,7 +531,7 @@ class CrmLead(models.Model):
 
     @api.depends("user_id", "type")
     def _compute_team_id(self):
-        Team = self.env["crm.team"]
+        Team = self.env["team.team"]
         for lead in self:
             if not lead.user_id:
                 continue
@@ -1264,7 +1265,7 @@ class CrmLead(models.Model):
     def _read_group_stage_ids(self, stages, domain):
         team_id = self.env.context.get("default_team_id")
         team_ids = (
-            self.env.user.crm_team_ids._ids
+            self.env.user.sale_team_ids._ids
             if self.env.context.get("show_user_team_stages")
             else ()
         )
@@ -1659,26 +1660,29 @@ class CrmLead(models.Model):
             help_title = _("Create an opportunity to start playing with your pipeline.")
         alias_domain = [
             ("company_id", "in", [self.env.company.id, False]),
-            ("alias_id.alias_name", "!=", False),
-            ("alias_id.alias_name", "!=", ""),
-            ("alias_id.alias_model_id", "=", self.env["ir.model"]._get_id("crm.lead")),
+            ("lead_alias_id.alias_name", "!=", False),
+            ("lead_alias_id.alias_name", "!=", ""),
         ]
         alias_records = (
-            self.env["crm.team"]
+            self.env["team.team"]
             .search(alias_domain)
             .sorted(
                 lambda r: (r.use_leads, self.env.user in r.member_ids), reverse=True
             )
         )
         alias_record = alias_records[0] if alias_records else None
-        if alias_record and alias_record.alias_domain and alias_record.alias_name:
+        if (
+            alias_record
+            and alias_record.lead_alias_domain
+            and alias_record.lead_alias_name
+        ):
             sub_title = Markup(
                 _(
                     "Use the <i>New</i> button, or send an email to %(email_link)s to test the email gateway."
                 )
             ) % {
                 "email_link": Markup("<b><a href='mailto:%s'>%s</a></b>")
-                % (alias_record.alias_email, alias_record.alias_email),
+                % (alias_record.lead_alias_email, alias_record.lead_alias_email),
             }
         return super().get_empty_list_help(
             f'<p class="o_view_nocontent_smiling_face">{help_title}</p><p class="oe_view_nocontent_alias">{sub_title}</p>'

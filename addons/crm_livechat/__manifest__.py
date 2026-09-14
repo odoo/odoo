@@ -1,5 +1,6 @@
 {
     "name": "CRM Livechat",
+    "version": "1.1",
     "category": "Sales/CRM",
     "summary": "Create lead from livechat conversation",
     "description": "Create new lead with using /lead command in the channel",

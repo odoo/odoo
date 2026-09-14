@@ -8,7 +8,7 @@ class TestCrmTeamSales(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.team = cls.env["crm.team"].create({"name": "Grind team"})
+        cls.team = cls.env["team.team"].create({"use_sale": True, "name": "Grind team"})
         cls.customer = cls.env["res.partner"].create({"name": "Team customer"})
         cls.product = cls.env["product.product"].create(
             {
@@ -47,7 +47,7 @@ class TestCrmTeamSales(TransactionCase):
         self.assertEqual(self.team.sale_order_count, 2)
 
     def test_team_without_orders_counts_zero(self):
-        fresh = self.env["crm.team"].create({"name": "Empty team"})
+        fresh = self.env["team.team"].create({"use_sale": True, "name": "Empty team"})
         self.assertEqual(fresh.sale_order_count, 0)
 
     def test_deleting_a_lightly_used_team_is_allowed(self):
@@ -94,11 +94,11 @@ class TestOrderTeamFollowsCompany(TransactionCase):
     def test_moving_an_order_to_another_company_moves_its_team(self):
         company_main = self.env.company
         company_2 = self.env["res.company"].create({"name": "Order Team Co2"})
-        self.env["crm.team"].search([]).action_archive()
-        team_main, team_2 = self.env["crm.team"].create(
+        self.env["team.team"].search([]).action_archive()
+        team_main, team_2 = self.env["team.team"].create(
             [
-                {"name": "Main Team", "company_id": company_main.id},
-                {"name": "Co2 Team", "company_id": company_2.id},
+                {"use_sale": True, "name": "Main Team", "company_id": company_main.id},
+                {"use_sale": True, "name": "Co2 Team", "company_id": company_2.id},
             ]
         )
         seller = self.env["res.users"].create(

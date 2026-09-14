@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+        <!--
+            Restricting which manufacturing orders a user sees is opt in. Record rules bind
+            only the users in their groups, so a user outside both groups below
+            keeps seeing every one of them, as before this module; a user in
+            "Team Documents" also holds "Own Documents", whose rule is OR-ed in.
+            Neither group grants access: that stays with mrp.group_mrp_user.
+        -->
+        <record id="res_groups_privilege_mrp_documents" model="res.groups.privilege">
+            <field name="name">Manufacturing Documents</field>
+            <field name="sequence">6</field>
+            <field name="category_id" ref="base.module_category_supply_chain" />
+            <field name="placeholder">All Documents</field>
+            <field
+                name="description">Limit the manufacturing orders a user sees to their own, or to their teams'.</field>
+        </record>
+        <record id="group_mrp_user_own" model="res.groups">
+            <field name="name">Own Documents Only</field>
+            <field name="sequence">10</field>
+            <field name="privilege_id" ref="res_groups_privilege_mrp_documents" />
+            <field
+                name="comment">The user sees the manufacturing orders they are responsible for, and the ones nobody is.</field>
+        </record>
+        <record id="group_mrp_user_team" model="res.groups">
+            <field name="name">Team Documents</field>
+            <field name="sequence">20</field>
+            <field name="privilege_id" ref="res_groups_privilege_mrp_documents" />
+            <field
+                name="comment">The user also sees the manufacturing orders of their manufacturing teams.</field>
+            <field
+                name="implied_ids"
+                eval="[Command.link(ref('group_mrp_user_own'))]" />
+        </record>
+    </data>
+
+    <data noupdate="1">
+        <record id="team_team_rule_mrp_manager" model="ir.rule">
+            <field name="name">Manufacturing teams: Manufacturing Administrators</field>
+            <field name="model_id" ref="team.model_team_team" />
+            <field name="domain_force">[('use_mrp', '=', True)]</field>
+            <field name="groups" eval="[Command.link(ref('mrp.group_mrp_manager'))]" />
+            <field name="perm_read" eval="False" />
+        </record>
+        <record id="team_member_rule_mrp_manager" model="ir.rule">
+            <field
+                name="name">Manufacturing team members: Manufacturing Administrators</field>
+            <field name="model_id" ref="team.model_team_member" />
+            <field name="domain_force">[('team_id.use_mrp', '=', True)]</field>
+            <field name="groups" eval="[Command.link(ref('mrp.group_mrp_manager'))]" />
+            <field name="perm_read" eval="False" />
+        </record>
+        <record id="team_alias_rule_mrp_manager" model="ir.rule">
+            <field
+                name="name">Manufacturing team aliases: Manufacturing Administrators</field>
+            <field name="model_id" ref="team.model_team_alias" />
+            <field name="domain_force">[('team_id.use_mrp', '=', True)]</field>
+            <field name="groups" eval="[Command.link(ref('mrp.group_mrp_manager'))]" />
+            <field name="perm_read" eval="False" />
+        </record>
+        <record id="mrp_production_own_rule" model="ir.rule">
+            <field name="name">Mrp Production: Own Documents</field>
+            <field name="model_id" ref="mrp.model_mrp_production" />
+            <field
+                name="domain_force">['|', ('user_id', '=', False), ('user_id', '=', user.id)]</field>
+            <field
+                name="groups"
+                eval="[Command.link(ref('mrp_team.group_mrp_user_own'))]" />
+        </record>
+        <record id="mrp_production_team_rule" model="ir.rule">
+            <field name="name">Mrp Production: Team Documents</field>
+            <field name="model_id" ref="mrp.model_mrp_production" />
+            <field
+                name="domain_force">['|', '|', '|', ('user_id', '=', False), ('user_id', '=', user.id), ('team_id', 'in', user.mrp_team_ids.ids), ('user_id.mrp_team_ids', 'in', user.mrp_team_ids.ids)]</field>
+            <field
+                name="groups"
+                eval="[Command.link(ref('mrp_team.group_mrp_user_team'))]" />
+        </record>
+        <record id="mrp_workorder_own_rule" model="ir.rule">
+            <field name="name">Mrp Workorder: Own Documents</field>
+            <field name="model_id" ref="mrp.model_mrp_workorder" />
+            <field
+                name="domain_force">['|', ('production_id.user_id', '=', False), ('production_id.user_id', '=', user.id)]</field>
+            <field
+                name="groups"
+                eval="[Command.link(ref('mrp_team.group_mrp_user_own'))]" />
+        </record>
+        <record id="mrp_workorder_team_rule" model="ir.rule">
+            <field name="name">Mrp Workorder: Team Documents</field>
+            <field name="model_id" ref="mrp.model_mrp_workorder" />
+            <field
+                name="domain_force">['|', '|', '|', ('production_id.user_id', '=', False), ('production_id.user_id', '=', user.id), ('production_id.team_id', 'in', user.mrp_team_ids.ids), ('production_id.user_id.mrp_team_ids', 'in', user.mrp_team_ids.ids)]</field>
+            <field
+                name="groups"
+                eval="[Command.link(ref('mrp_team.group_mrp_user_team'))]" />
+        </record>
+    </data>
+
+</odoo>

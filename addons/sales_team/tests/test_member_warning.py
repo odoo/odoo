@@ -24,13 +24,18 @@ class TestMembershipQueries(TestSalesCommon):
             )
         )
         teams = (
-            self.env["crm.team"]
+            self.env["team.team"]
             .sudo()
-            .create([{"name": f"Batch {i}", "company_id": False} for i in range(20)])
+            .create(
+                [
+                    {"use_sale": True, "name": f"Batch {i}", "company_id": False}
+                    for i in range(20)
+                ]
+            )
         )
-        self.env["crm.team.member"].sudo().create(
+        self.env["team.member"].sudo().create(
             [
-                {"crm_team_id": team.id, "user_id": salesperson.id}
+                {"team_id": team.id, "user_id": salesperson.id}
                 for team in teams
                 for salesperson in salespersons
             ]
@@ -67,16 +72,26 @@ class TestMemberWarningVisibility(TestSalesCommon):
         cls.env["ir.config_parameter"].sudo().set_param(
             "sales_team.membership_multi", True
         )
-        cls.foreign_team = cls.env["crm.team"].create(
-            {"name": "FOREIGN TEAM", "company_id": cls.company_2.id}
+        cls.foreign_team = cls.env["team.team"].create(
+            {
+                "use_sale": True,
+                "use_sale": True,
+                "name": "FOREIGN TEAM",
+                "company_id": cls.company_2.id,
+            }
         )
-        cls.local_team = cls.env["crm.team"].create(
-            {"name": "Local Team", "company_id": cls.company_main.id}
+        cls.local_team = cls.env["team.team"].create(
+            {
+                "use_sale": True,
+                "use_sale": True,
+                "name": "Local Team",
+                "company_id": cls.company_main.id,
+            }
         )
-        cls.env["crm.team.member"].create(
+        cls.env["team.member"].create(
             [
-                {"crm_team_id": cls.foreign_team.id, "user_id": cls.shared_user.id},
-                {"crm_team_id": cls.local_team.id, "user_id": cls.shared_user.id},
+                {"team_id": cls.foreign_team.id, "user_id": cls.shared_user.id},
+                {"team_id": cls.local_team.id, "user_id": cls.shared_user.id},
             ]
         )
         cls.env.flush_all()
@@ -91,9 +106,9 @@ class TestMemberWarningVisibility(TestSalesCommon):
 
     def test_membership_warning_hides_the_foreign_team(self):
         self.env.invalidate_all()
-        membership = self.env["crm.team.member"].search(
+        membership = self.env["team.member"].search(
             [
-                ("crm_team_id", "=", self.local_team.id),
+                ("team_id", "=", self.local_team.id),
                 ("user_id", "=", self.shared_user.id),
             ]
         )
@@ -107,11 +122,16 @@ class TestMemberWarningVisibility(TestSalesCommon):
             "sales_team.membership_multi", True
         )
         self.env.invalidate_all()
-        third = self.env["crm.team"].create(
-            {"name": "Third Local", "company_id": self.company_main.id}
+        third = self.env["team.team"].create(
+            {
+                "use_sale": True,
+                "use_sale": True,
+                "name": "Third Local",
+                "company_id": self.company_main.id,
+            }
         )
-        self.env["crm.team.member"].create(
-            {"crm_team_id": third.id, "user_id": self.shared_user.id}
+        self.env["team.member"].create(
+            {"team_id": third.id, "user_id": self.shared_user.id}
         )
         self.env.flush_all()
         self.env["ir.config_parameter"].sudo().set_param(
@@ -126,11 +146,16 @@ class TestWarningFollowsTheParameter(TestSalesCommon):
     def test_a_computed_warning_is_recomputed_when_mono_mode_returns(self):
         ICP = self.env["ir.config_parameter"].sudo()
         ICP.set_param("sales_team.membership_multi", True)
-        second = self.env["crm.team"].create(
-            {"name": "Flip Second", "company_id": False}
+        second = self.env["team.team"].create(
+            {
+                "use_sale": True,
+                "use_sale": True,
+                "name": "Flip Second",
+                "company_id": False,
+            }
         )
-        membership = self.env["crm.team.member"].create(
-            {"crm_team_id": second.id, "user_id": self.user_sales_leads.id}
+        membership = self.env["team.member"].create(
+            {"team_id": second.id, "user_id": self.user_sales_leads.id}
         )
         self.assertFalse(self.sales_team_1.member_warning)
         self.assertFalse(membership.member_warning)
@@ -148,17 +173,22 @@ class TestMonoModeIsNotRetroactive(TestSalesCommon):
     def test_flipping_to_mono_leaves_the_extra_memberships_live(self):
         ICP = self.env["ir.config_parameter"].sudo()
         ICP.set_param("sales_team.membership_multi", True)
-        second = self.env["crm.team"].create(
-            {"name": "Mono Second", "company_id": False}
+        second = self.env["team.team"].create(
+            {
+                "use_sale": True,
+                "use_sale": True,
+                "name": "Mono Second",
+                "company_id": False,
+            }
         )
-        self.env["crm.team.member"].create(
-            {"crm_team_id": second.id, "user_id": self.user_sales_leads.id}
+        self.env["team.member"].create(
+            {"team_id": second.id, "user_id": self.user_sales_leads.id}
         )
-        self.assertEqual(len(self.user_sales_leads.crm_team_ids), 2)
+        self.assertEqual(len(self.user_sales_leads.sale_team_ids), 2)
 
         ICP.set_param("sales_team.membership_multi", False)
         self.assertEqual(
-            len(self.user_sales_leads.crm_team_ids),
+            len(self.user_sales_leads.sale_team_ids),
             2,
             "mono mode constrains writes, it does not rewrite history",
         )
@@ -166,11 +196,16 @@ class TestMonoModeIsNotRetroactive(TestSalesCommon):
     def test_the_state_is_surfaced_rather_than_silently_kept(self):
         ICP = self.env["ir.config_parameter"].sudo()
         ICP.set_param("sales_team.membership_multi", True)
-        second = self.env["crm.team"].create(
-            {"name": "Mono Second", "company_id": False}
+        second = self.env["team.team"].create(
+            {
+                "use_sale": True,
+                "use_sale": True,
+                "name": "Mono Second",
+                "company_id": False,
+            }
         )
-        self.env["crm.team.member"].create(
-            {"crm_team_id": second.id, "user_id": self.user_sales_leads.id}
+        self.env["team.member"].create(
+            {"team_id": second.id, "user_id": self.user_sales_leads.id}
         )
         ICP.set_param("sales_team.membership_multi", False)
 

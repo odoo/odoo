@@ -1028,105 +1028,61 @@
         </field>
     </record>
 
-    <!-- maintenance.team: views -->
-    <record id="maintenance_team_view_form" model="ir.ui.view">
-        <field name="name">maintenance.team.form</field>
-        <field name="model">maintenance.team</field>
+    <record id="team_view_search_maintenance" model="ir.ui.view">
+        <field name="name">team.team.view.search.maintenance</field>
+        <field name="model">team.team</field>
+        <field name="inherit_id" ref="team.team_view_search" />
         <field name="arch" type="xml">
-            <form string="Maintenance Team">
-                <sheet>
-                <widget
-                    name="web_ribbon"
-                    title="Archived"
-                    invisible="active"
-                    bg_color="text-bg-danger" />
-                <div class="oe_title">
-                    <label for="name" string="Team Name" />
-                    <h1>
-                        <field name="name" placeholder="e.g. Internal Maintenance" />
-                    </h1>
+            <xpath expr="//separator[@name='usages']" position="before">
+                <filter
+                    name="use_maintenance"
+                    string="Maintenance"
+                    domain="[('use_maintenance', '=', True)]" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="team_view_form_maintenance" model="ir.ui.view">
+        <field name="name">team.team.view.form.maintenance</field>
+        <field name="model">team.team</field>
+        <field name="inherit_id" ref="team.team_view_form" />
+        <field name="arch" type="xml">
+            <div name="usages" position="inside">
+                <span class="d-inline-flex">
+                    <field name="use_maintenance" />
+                    <label for="use_maintenance" />
+                </span>
+            </div>
+            <group name="left" position="inside">
+                <label
+                    for="maintenance_alias_name"
+                    string="Maintenance Alias"
+                    invisible="not use_maintenance" />
+                <div name="maintenance_alias_def" invisible="not use_maintenance">
+                    <field
+                        name="maintenance_alias_id"
+                        string="Maintenance Alias"
+                        class="oe_read_only oe_inline" />
+                    <div
+                        class="oe_edit_only oe_inline"
+                        name="edit_maintenance_alias"
+                        dir="ltr">
+                        <field name="maintenance_alias_name" placeholder="alias" class="oe_inline" />@
+                        <field
+                            name="maintenance_alias_domain_id"
+                            placeholder="e.g. mycompany.com"
+                            options="{'no_create': True, 'no_open': True}"
+                            class="oe_inline" />
+                    </div>
                 </div>
-                <group>
-                    <group>
-                        <field name="active" invisible="1" />
-                        <field
-                            name="member_ids"
-                            widget="many2many_tags"
-                            domain="[('share', '=', False)]"
-                            options="{'color_field': 'color', 'no_create': True}" />
-                    </group>
-                    <group name="group_alias">
-                        <label for="alias_name" string="Email Alias" />
-                        <div name="alias_def">
-                            <field
-                                name="alias_id"
-                                string="Email Alias"
-                                required="0"
-                                class="oe_read_only oe_inline" />
-                            <div
-                                class="oe_edit_only oe_inline"
-                                name="edit_alias"
-                                style="display: inline;"
-                                dir="ltr">
-                                <field name="alias_name" placeholder="alias" class="oe_inline" />@
-                                <field
-                                    name="alias_domain_id"
-                                    placeholder="e.g. mycompany.com"
-                                    options="{'no_create': True, 'no_open': True}"
-                                    class="oe_inline" />
-                            </div>
-                        </div>
-                    </group>
-                    <group>
-                        <field
-                            name="company_id"
-                            placeholder="Visible to all"
-                            options="{'no_create': True}"
-                            groups="base.group_multi_company" />
-                    </group>
-                </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
-
-    <record id="maintenance_team_view_tree" model="ir.ui.view">
-        <field name="name">maintenance.team.list</field>
-        <field name="model">maintenance.team</field>
-        <field name="arch" type="xml">
-            <list string="Maintenance Team" editable="bottom">
-                <field name="name" />
-                <field
-                    name="member_ids"
-                    widget="many2many_tags"
-                    domain="[('share', '=', False)]"
-                    options="{'color_field': 'color', 'no_create': True}" />
-                <field
-                    name="company_id"
-                    placeholder="Visible to all"
-                    options="{'no_create': True}"
-                    groups="base.group_multi_company" />
-            </list>
-        </field>
-    </record>
-
-    <record id="maintenance_team_view_kanban" model="ir.ui.view">
-        <field name="name">maintenance.team.kanban</field>
-        <field name="model">maintenance.team</field>
-        <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile">
-                <templates>
-                    <t t-name="card">
-                        <field name="name" class="fw-bold" />
-                    </t>
-                </templates>
-            </kanban>
+            </group>
         </field>
     </record>
 
     <record id="maintenance_team_kanban" model="ir.ui.view">
-        <field name="name">maintenance.team.kanban</field>
-        <field name="model">maintenance.team</field>
+        <field name="name">team.team.kanban.maintenance.dashboard</field>
+        <field name="model">team.team</field>
+        <field name="priority">40</field>
         <field name="arch" type="xml">
             <kanban
                 create="0"
@@ -1216,44 +1172,47 @@
                                     type="action"
                                     context="{'search_default_todo': 1}"
                                     class="btn btn-primary">
-                                    <field name="todo_request_count" /> To Do
+                                    <field name="maintenance_todo_request_count" /> To Do
                                 </button>
                             </div>
                             <div class="col-6">
                                 <a
-                                    t-if="record.todo_request_count_date.raw_value &gt; 0"
+                                    t-if="record.maintenance_todo_request_count_date.raw_value &gt; 0"
                                     name="%(hr_equipment_request_action_cal)d"
                                     type="action"
                                     context="{'search_default_todo': 1, 'search_default_maintenance_team_id': id}"
                                     class="d-block">
-                                    <field name="todo_request_count_date" />
+                                    <field name="maintenance_todo_request_count_date" />
                                     Scheduled
                                 </a>
                                 <a
-                                    t-if="record.todo_request_count_high_priority.raw_value &gt; 0"
+                                    t-if="record.maintenance_todo_request_count_high_priority.raw_value &gt; 0"
                                     name="%(hr_equipment_todo_request_action_from_dashboard)d"
                                     type="action"
                                     context="{'search_default_high_priority': 1}"
                                     class="d-block">
-                                    <field name="todo_request_count_high_priority" />
+                                    <field
+                                        name="maintenance_todo_request_count_high_priority" />
                                     Top Priorities
                                 </a>
                                 <a
-                                    t-if="record.todo_request_count_block.raw_value &gt; 0"
+                                    t-if="record.maintenance_todo_request_count_block.raw_value &gt; 0"
                                     name="%(hr_equipment_todo_request_action_from_dashboard)d"
                                     type="action"
                                     context="{'search_default_kanban_state_block': 1}"
                                     class="d-block">
-                                    <field name="todo_request_count_block" />
+                                    <field
+                                        name="maintenance_todo_request_count_block" />
                                     Blocked
                                 </a>
                                 <a
-                                    t-if="record.todo_request_count_unscheduled.raw_value &gt; 0"
+                                    t-if="record.maintenance_todo_request_count_unscheduled.raw_value &gt; 0"
                                     name="%(hr_equipment_todo_request_action_from_dashboard)d"
                                     type="action"
                                     context="{'search_default_todo': 1, 'search_default_unscheduled': 1}"
                                     class="d-block">
-                                    <field name="todo_request_count_unscheduled" />
+                                    <field
+                                        name="maintenance_todo_request_count_unscheduled" />
                                     Unscheduled
                                 </a>
                             </div>
@@ -1264,27 +1223,13 @@
         </field>
     </record>
 
-    <record id="maintenance_team_view_search" model="ir.ui.view">
-        <field name="name">maintenance.team.search</field>
-        <field name="model">maintenance.team</field>
-        <field name="arch" type="xml">
-            <search string="Search">
-                <field name="name" string="Team" />
-                <filter
-                    name="inactive"
-                    string="Archived"
-                    domain="[('active', '=', False)]" />
-            </search>
-        </field>
-    </record>
-
-    <!-- equipment.team: actions -->
     <record id="maintenance_team_action_settings" model="ir.actions.act_window">
         <field name="name">Teams</field>
-        <field name="res_model">maintenance.team</field>
+        <field name="res_model">team.team</field>
         <field name="path">maintenance-teams</field>
         <field name="view_mode">list,kanban,form</field>
-        <field name="search_view_id" ref="maintenance_team_view_search" />
+        <field name="domain">[('use_maintenance', '=', True)]</field>
+        <field name="context">{'default_use_maintenance': True}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Add a team in the maintenance request
@@ -1292,15 +1237,17 @@
         </field>
         <field
             name="view_ids"
-            eval="[Command.clear(), Command.create({'view_mode': 'list', 'view_id': ref('maintenance_team_view_tree')}), Command.create({'view_mode': 'kanban', 'view_id': ref('maintenance_team_view_kanban')})]" />
+            eval="[Command.clear(), Command.create({'view_mode': 'list', 'view_id': ref('team.team_view_tree')}), Command.create({'view_mode': 'kanban', 'view_id': ref('team.team_view_kanban')})]" />
     </record>
 
     <record id="maintenance_dashboard_action" model="ir.actions.act_window">
         <field name="name">Maintenance Teams</field>
-        <field name="res_model">maintenance.team</field>
+        <field name="res_model">team.team</field>
         <field name="path">maintenance</field>
         <field name="view_mode">kanban,form</field>
         <field name="view_id" ref="maintenance_team_kanban" />
+        <field name="domain">[('use_maintenance', '=', True)]</field>
+        <field name="context">{'default_use_maintenance': True}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Add a new maintenance team

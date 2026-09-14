@@ -21,8 +21,12 @@ class TestDefaultTeamProtection(TestSalesCommon):
         self.env.flush_all()
         self.env.registry.clear_cache()
 
-        disposable = self.env["crm.team"].create(
-            {"name": "Disposable", "company_id": False}
+        disposable = self.env["team.team"].create(
+            {
+                "use_sale": True,
+                "name": "Disposable",
+                "company_id": False,
+            }
         )
         self.env.flush_all()
         disposable.unlink()
@@ -31,7 +35,13 @@ class TestDefaultTeamProtection(TestSalesCommon):
 
 class TestFavorite(TestSalesCommon):
     def test_is_user_favorite_is_per_user(self):
-        team = self.env["crm.team"].create({"name": "Favorite", "company_id": False})
+        team = self.env["team.team"].create(
+            {
+                "use_sale": True,
+                "name": "Favorite",
+                "company_id": False,
+            }
+        )
         team.favorite_user_ids = [(6, 0, [self.user_sales_manager.id])]
         self.env.flush_all()
 
@@ -47,7 +57,13 @@ class TestFavorite(TestSalesCommon):
             )
 
     def test_is_user_favorite_follows_favorite_user_ids(self):
-        team = self.env["crm.team"].create({"name": "Favorite 2", "company_id": False})
+        team = self.env["team.team"].create(
+            {
+                "use_sale": True,
+                "name": "Favorite 2",
+                "company_id": False,
+            }
+        )
         as_leads = team.with_user(self.user_sales_leads)
         self.assertFalse(as_leads.is_user_favorite)
 
@@ -58,8 +74,9 @@ class TestFavorite(TestSalesCommon):
         self.assertFalse(as_leads.is_user_favorite)
 
     def test_adding_members_refreshes_the_flag(self):
-        team = self.env["crm.team"].create(
+        team = self.env["team.team"].create(
             {
+                "use_sale": True,
                 "name": "Favorite 3",
                 "company_id": False,
                 "member_ids": [(4, self.user_sales_leads.id)],
@@ -75,34 +92,38 @@ class TestFavorite(TestSalesCommon):
         leads = self.user_sales_leads
         teams = {}
 
-        teams["member_ids on create"] = self.env["crm.team"].create(
-            {"name": "Join A", "company_id": False, "member_ids": [(4, leads.id)]}
-        )
-
-        teams["member_ids on write"] = team = self.env["crm.team"].create(
-            {"name": "Join B", "company_id": False}
-        )
-        team.write({"member_ids": [(4, leads.id)]})
-
-        teams["crm_team_member_ids on create"] = self.env["crm.team"].create(
+        teams["member_ids on create"] = self.env["team.team"].create(
             {
-                "name": "Join C",
+                "use_sale": True,
+                "name": "Join A",
                 "company_id": False,
-                "crm_team_member_ids": [(0, 0, {"user_id": leads.id})],
+                "member_ids": [(4, leads.id)],
             }
         )
 
-        teams["crm_team_member_ids on write"] = team = self.env["crm.team"].create(
-            {"name": "Join D", "company_id": False}
+        teams["member_ids on write"] = team = self.env["team.team"].create(
+            {"use_sale": True, "name": "Join B", "company_id": False}
         )
-        team.write({"crm_team_member_ids": [(0, 0, {"user_id": leads.id})]})
+        team.write({"member_ids": [(4, leads.id)]})
 
-        teams["crm.team.member.create"] = team = self.env["crm.team"].create(
-            {"name": "Join E", "company_id": False}
+        teams["team_member_ids on create"] = self.env["team.team"].create(
+            {
+                "use_sale": True,
+                "name": "Join C",
+                "company_id": False,
+                "team_member_ids": [(0, 0, {"user_id": leads.id})],
+            }
         )
-        self.env["crm.team.member"].create(
-            {"crm_team_id": team.id, "user_id": leads.id}
+
+        teams["team_member_ids on write"] = team = self.env["team.team"].create(
+            {"use_sale": True, "name": "Join D", "company_id": False}
         )
+        team.write({"team_member_ids": [(0, 0, {"user_id": leads.id})]})
+
+        teams["team.member.create"] = team = self.env["team.team"].create(
+            {"use_sale": True, "name": "Join E", "company_id": False}
+        )
+        self.env["team.member"].create({"team_id": team.id, "user_id": leads.id})
 
         self.env.flush_all()
         for label, team in teams.items():
@@ -121,30 +142,46 @@ class TestFavoriteOnEveryJoin(TestSalesCommon):
         cls.second = mail_new_test_user(cls.env, login="fav_second", name="Fav Second")
 
     def test_handing_a_membership_over_favorites_the_new_salesperson(self):
-        team = self.env["crm.team"].create({"name": "Handover", "company_id": False})
-        membership = self.env["crm.team.member"].create(
-            {"crm_team_id": team.id, "user_id": self.first.id}
+        team = self.env["team.team"].create(
+            {
+                "use_sale": True,
+                "name": "Handover",
+                "company_id": False,
+            }
+        )
+        membership = self.env["team.member"].create(
+            {"team_id": team.id, "user_id": self.first.id}
         )
         membership.write({"user_id": self.second.id})
         self.assertIn(self.second, team.favorite_user_ids)
 
     def test_moving_a_membership_favorites_the_new_team(self):
-        team, target = self.env["crm.team"].create(
+        team, target = self.env["team.team"].create(
             [
-                {"name": "Move From", "company_id": False},
-                {"name": "Move To", "company_id": False},
+                {
+                    "use_sale": True,
+                    "name": "Move From",
+                    "company_id": False,
+                },
+                {
+                    "use_sale": True,
+                    "name": "Move To",
+                    "company_id": False,
+                },
             ]
         )
-        membership = self.env["crm.team.member"].create(
-            {"crm_team_id": team.id, "user_id": self.first.id}
+        membership = self.env["team.member"].create(
+            {"team_id": team.id, "user_id": self.first.id}
         )
-        membership.write({"crm_team_id": target.id})
+        membership.write({"team_id": target.id})
         self.assertIn(self.first, target.favorite_user_ids)
 
     def test_rejoining_favorites_again(self):
-        team = self.env["crm.team"].create({"name": "Rejoin", "company_id": False})
-        membership = self.env["crm.team.member"].create(
-            {"crm_team_id": team.id, "user_id": self.first.id}
+        team = self.env["team.team"].create(
+            {"use_sale": True, "name": "Rejoin", "company_id": False}
+        )
+        membership = self.env["team.member"].create(
+            {"team_id": team.id, "user_id": self.first.id}
         )
         membership.action_archive()
         team.favorite_user_ids = [(3, self.first.id)]
@@ -152,8 +189,14 @@ class TestFavoriteOnEveryJoin(TestSalesCommon):
         self.assertIn(self.first, team.favorite_user_ids)
 
     def test_an_archived_membership_does_not_favorite(self):
-        team = self.env["crm.team"].create({"name": "Archived", "company_id": False})
-        self.env["crm.team.member"].create(
-            {"crm_team_id": team.id, "user_id": self.first.id, "active": False}
+        team = self.env["team.team"].create(
+            {
+                "use_sale": True,
+                "name": "Archived",
+                "company_id": False,
+            }
+        )
+        self.env["team.member"].create(
+            {"team_id": team.id, "user_id": self.first.id, "active": False}
         )
         self.assertNotIn(self.first, team.favorite_user_ids)

@@ -12,9 +12,11 @@ class TestArchivedTeamMembership(TestSalesCommon):
         cls.env["ir.config_parameter"].sudo().set_param(
             "sales_team.membership_multi", True
         )
-        cls.team = cls.env["crm.team"].create({"name": "Doomed", "company_id": False})
-        cls.member = cls.env["crm.team.member"].create(
-            {"crm_team_id": cls.team.id, "user_id": cls.user_sales_leads.id}
+        cls.team = cls.env["team.team"].create(
+            {"use_sale": True, "name": "Doomed", "company_id": False}
+        )
+        cls.member = cls.env["team.member"].create(
+            {"team_id": cls.team.id, "user_id": cls.user_sales_leads.id}
         )
         cls.env.flush_all()
 
@@ -35,8 +37,8 @@ class TestArchivedTeamMembership(TestSalesCommon):
             self.env, login="joins_dead", name="Joins Dead", groups="base.group_user"
         )
         with self.assertRaises(exceptions.ValidationError):
-            self.env["crm.team.member"].create(
-                {"crm_team_id": self.team.id, "user_id": other.id}
+            self.env["team.member"].create(
+                {"team_id": self.team.id, "user_id": other.id}
             )
             self.env.flush_all()
 
@@ -55,8 +57,8 @@ class TestArchivedTeamMembership(TestSalesCommon):
         ghost.action_archive()
         self.env.flush_all()
         with self.assertRaises(exceptions.ValidationError):
-            self.env["crm.team.member"].create(
-                {"crm_team_id": self.team.id, "user_id": ghost.id}
+            self.env["team.member"].create(
+                {"team_id": self.team.id, "user_id": ghost.id}
             )
             self.env.flush_all()
 
@@ -75,12 +77,12 @@ class TestArchivedTeamMembership(TestSalesCommon):
 
         self.assertEqual(
             self.team.member_ids.ids,
-            self.team.crm_team_member_ids.user_id.ids,
+            self.team.team_member_ids.user_id.ids,
             "the many2many and the one2many must report the same people",
         )
         self.assertNotIn(
             self.team,
-            self.env["crm.team"].search(
+            self.env["team.team"].search(
                 [("member_ids", "in", [self.user_sales_leads.id])]
             ),
             "search must agree with the many2many read",
@@ -112,33 +114,35 @@ class TestArchivedMembershipVisibility(TestSalesCommon):
         cls.env["ir.config_parameter"].sudo().set_param(
             "sales_team.membership_multi", True
         )
-        cls.other_team = cls.env["crm.team"].create(
-            {"name": "Other", "company_id": False}
+        cls.other_team = cls.env["team.team"].create(
+            {"use_sale": True, "name": "Other", "company_id": False}
         )
-        cls.other_membership = cls.env["crm.team.member"].create(
+        cls.other_membership = cls.env["team.member"].create(
             {
                 "user_id": cls.user_sales_leads.id,
-                "crm_team_id": cls.other_team.id,
+                "team_id": cls.other_team.id,
             }
         )
 
-    def test_search_crm_team_ids_matches_compute(self):
+    def test_search_sale_team_ids_matches_compute(self):
         self.sales_team_1_m1.action_archive()
         self.env.flush_all()
         self.env.invalidate_all()
 
-        self.assertNotIn(self.sales_team_1, self.user_sales_leads.crm_team_ids)
+        self.assertNotIn(self.sales_team_1, self.user_sales_leads.sale_team_ids)
         matched = self.env["res.users"].search(
-            [("crm_team_ids", "in", self.sales_team_1.ids)]
+            [("sale_team_ids", "in", self.sales_team_1.ids)]
         )
         self.assertNotIn(self.user_sales_leads, matched)
-        self.assertIn(self.other_team, self.user_sales_leads.crm_team_ids)
+        self.assertIn(self.other_team, self.user_sales_leads.sale_team_ids)
         self.assertIn(
             self.user_sales_leads,
-            self.env["res.users"].search([("crm_team_ids", "in", self.other_team.ids)]),
+            self.env["res.users"].search(
+                [("sale_team_ids", "in", self.other_team.ids)]
+            ),
         )
 
-    def test_search_crm_team_ids_keeps_archived_users(self):
+    def test_search_sale_team_ids_keeps_archived_users(self):
         self.user_sales_leads.with_context(active_test=False).write({"active": False})
         self.env.flush_all()
         self.env.invalidate_all()
@@ -147,7 +151,7 @@ class TestArchivedMembershipVisibility(TestSalesCommon):
         matched = (
             self.env["res.users"]
             .with_context(active_test=False)
-            .search([("crm_team_ids", "=", False)])
+            .search([("sale_team_ids", "=", False)])
         )
         self.assertIn(
             self.user_sales_leads,
@@ -156,7 +160,7 @@ class TestArchivedMembershipVisibility(TestSalesCommon):
         )
         self.assertNotIn(
             self.user_sales_leads,
-            self.env["res.users"].search([("crm_team_ids", "=", False)]),
+            self.env["res.users"].search([("sale_team_ids", "=", False)]),
             "and must not leak into a default-context search",
         )
 
@@ -241,22 +245,22 @@ class TestUserSaleTeam(TransactionCase):
             email="sale.team@example.com",
             groups="sales_team.group_sale_salesman",
         )
-        cls.team = cls.env["crm.team"].create({"name": "STU team"})
+        cls.team = cls.env["team.team"].create({"use_sale": True, "name": "STU team"})
 
     def test_no_membership_no_team(self):
         self.user.invalidate_recordset(["sale_team_id"])
         self.assertFalse(self.user.sale_team_id)
 
     def test_membership_sets_sale_team(self):
-        self.env["crm.team.member"].create(
-            {"user_id": self.user.id, "crm_team_id": self.team.id}
+        self.env["team.member"].create(
+            {"user_id": self.user.id, "team_id": self.team.id}
         )
         self.user.invalidate_recordset(["sale_team_id"])
         self.assertEqual(self.user.sale_team_id, self.team)
 
     def test_archive_user_archives_memberships(self):
-        member = self.env["crm.team.member"].create(
-            {"user_id": self.user.id, "crm_team_id": self.team.id}
+        member = self.env["team.member"].create(
+            {"user_id": self.user.id, "team_id": self.team.id}
         )
         self.user.action_archive()
         self.assertFalse(member.active)

@@ -4,10 +4,11 @@ from odoo import api, fields, models
 class PosConfig(models.Model):
     _inherit = "pos.config"
 
-    crm_team_id = fields.Many2one(
-        comodel_name="crm.team",
+    team_id = fields.Many2one(
+        comodel_name="team.team",
         string="Sales Team",
         index="btree_not_null",
+        domain=[("use_sale", "=", True)],
         ondelete="set null",
         help="This Point of sale's sales will be related to this Sales Team.",
     )

@@ -10,7 +10,7 @@ class ResConfigSettings(models.TransientModel):
 
         for record in self:
             if record.pos_config_id.self_ordering_mode == "kiosk":
-                if not record.pos_crm_team_id:
-                    record.pos_crm_team_id = self.env.ref(
+                if not record.pos_team_id:
+                    record.pos_team_id = self.env.ref(
                         "pos_self_order_sale.pos_sales_team", raise_if_not_found=False
                     )

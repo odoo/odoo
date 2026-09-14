@@ -4,13 +4,13 @@
     <data noupdate="1">
         <record
             id="sales_team.team_sales_department"
-            model="crm.team"
+            model="team.team"
             forcecreate="False">
-            <field name="assignment_domain">[['probability', '&gt;=', 20]]</field>
+            <field name="lead_assignment_domain">[['probability', '&gt;=', 20]]</field>
         </record>
-        <record id="sales_team.crm_team_1" model="crm.team">
+        <record id="sales_team.crm_team_1" model="team.team">
             <field name="use_leads">True</field>
-            <field name="assignment_domain">[['phone_ids', '!=', False]]</field>
+            <field name="lead_assignment_domain">[['phone_ids', '!=', False]]</field>
         </record>
     </data>
 

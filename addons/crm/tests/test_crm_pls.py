@@ -26,8 +26,9 @@ class CrmPlsCommon(TransactionCase):
             groups="sales_team.group_sale_manager,base.group_partner_manager",
         )
 
-        cls.pls_team = cls.env["crm.team"].create(
+        cls.pls_team = cls.env["team.team"].create(
             {
+                "use_sale": True,
                 "name": "PLS Team",
             }
         )
@@ -61,9 +62,10 @@ class CrmPlsCommon(TransactionCase):
 
     def _generate_leads_with_tags(self, tag_ids):
         team_id = (
-            self.env["crm.team"]
+            self.env["team.team"]
             .create(
                 {
+                    "use_sale": True,
                     "name": "blup",
                 }
             )
@@ -184,12 +186,12 @@ class TestCrmPls(CrmPlsCommon):
         stage_ids = self.env["crm.stage"].search([], limit=3).ids
         won_stage_id = self.env["crm.stage"].search([("is_won", "=", True)], limit=1).id
         team_ids = (
-            self.env["crm.team"]
+            self.env["team.team"]
             .create(
                 [
-                    {"name": "Team Test 1"},
-                    {"name": "Team Test 2"},
-                    {"name": "Team Test 3"},
+                    {"use_sale": True, "name": "Team Test 1"},
+                    {"use_sale": True, "name": "Team Test 2"},
+                    {"use_sale": True, "name": "Team Test 3"},
                 ]
             )
             .ids
@@ -784,7 +786,9 @@ class TestCrmPls(CrmPlsCommon):
         LeadScoringFrequency = self.env["crm.lead.scoring.frequency"]
         country_id = self.env["res.country"].search([], limit=1).id
         stage_id = self.env["crm.stage"].search([], limit=1).id
-        team_id = self.env["crm.team"].create({"name": "Team Test 1"}).id
+        team_id = (
+            self.env["team.team"].create({"use_sale": True, "name": "Team Test 1"}).id
+        )
         leads = Lead.create(
             [
                 self._prepare_test_lead_values(
@@ -854,7 +858,9 @@ class TestCrmPls(CrmPlsCommon):
 
     def test_pls_no_share_stage(self):
         Lead = self.env["crm.lead"]
-        team_id = self.env["crm.team"].create([{"name": "Team Test"}]).id
+        team_id = (
+            self.env["team.team"].create([{"use_sale": True, "name": "Team Test"}]).id
+        )
         self.env["crm.stage"].search([("team_ids", "=", False)]).write(
             {"team_ids": [team_id]}
         )
@@ -872,7 +878,11 @@ class TestCrmPls(CrmPlsCommon):
         source_ids = self.env["utm.source"].search([], limit=2).ids
         stage_ids = self.env["crm.stage"].search([], limit=3).ids
         state_ids = self.env["res.country.state"].search([], limit=2).ids
-        team_id = self.env["crm.team"].create([{"name": "Team Tooltip"}]).id
+        team_id = (
+            self.env["team.team"]
+            .create([{"use_sale": True, "name": "Team Tooltip"}])
+            .id
+        )
         leads = Lead.create(
             [
                 self._prepare_test_lead_values(
@@ -1015,10 +1025,10 @@ class TestCrmPlsTeamPriors(CrmPlsCommon):
                 "team_ids": False,
             }
         )
-        cls.team_healthy, cls.team_unscoreable = cls.env["crm.team"].create(
+        cls.team_healthy, cls.team_unscoreable = cls.env["team.team"].create(
             [
-                {"name": "Healthy Team"},
-                {"name": "Unscoreable Team"},
+                {"use_sale": True, "name": "Healthy Team"},
+                {"use_sale": True, "name": "Unscoreable Team"},
             ]
         )
         cls.stage_healthy, cls.stage_healthy_won, cls.stage_unscoreable = cls.env[
@@ -1108,7 +1118,9 @@ class TestCrmPlsSides(CrmPlsCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.team = cls.env["crm.team"].create([{"name": "Team Test"}])
+        cls.team = cls.env["team.team"].create(
+            [{"use_sale": True, "name": "Team Test"}]
+        )
         cls.stage_new, cls.stage_in_progress, cls.stage_won = cls.env[
             "crm.stage"
         ].create(
@@ -1227,7 +1239,7 @@ class TestCrmPlsSides(CrmPlsCommon):
 
     @users("user_sales_manager")
     def test_team_unlink(self):
-        pls_team = self.env["crm.team"].browse(self.pls_team.ids)
+        pls_team = self.env["team.team"].browse(self.pls_team.ids)
 
         noteam_scoring_data = [
             ("stage_id", "1", 20, 10),
