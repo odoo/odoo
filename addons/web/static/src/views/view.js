@@ -24,6 +24,7 @@ import { useService } from "@web/core/utils/hooks";
 import { extractLayoutComponents } from "@web/search/layout";
 import { WithSearch } from "@web/search/with_search/with_search";
 import { session } from "@web/session";
+import { irToElement } from "@web/views/ir/view_ir";
 import { useActionLinks } from "@web/views/view_hook";
 
 import {
@@ -271,6 +272,7 @@ const ACTIONS = [
  * @typedef {{
  * viewDescription: any,
  * arch: string | undefined,
+ * ir: import("@web/views/ir/view_ir_schema").ViewIRNode | undefined,
  * fields: Record<string, any> | undefined,
  * relatedModels: Record<string, any> | undefined,
  * actionMenus: Record<string, any> | undefined,
@@ -308,13 +310,27 @@ function resolveViewSelection(props, configViews) {
     return { views, viewId, searchViewId };
 }
 
+/** @param {string} value */
+const literalNbsp = (value) => value.replaceAll("&nbsp;", nbsp);
+
 /**
- * @param {string | undefined} arch
+ * The element every parser and compiler walks. The server's IR is the
+ * contract; the arch string is kept for a caller that hands one in through
+ * props (embedded views, tests) and for a payload that predates the IR.
+ *
+ * @param {Pick<LoadedView, "arch" | "ir">} loaded
  * @param {Record<string, any>} context
  * @returns {Element}
  */
-function parseViewArch(arch, context) {
-    const archXmlDoc = parseXML((arch ?? "").replaceAll("&amp;nbsp;", nbsp));
+function parseViewArch({ arch, ir }, context) {
+    const source = ir ? "ir" : "arch";
+    log.logic("archSource", { source });
+    const archXmlDoc =
+        source === "ir"
+            ? irToElement(/** @type {NonNullable<typeof ir>} */ (ir), {
+                  text: literalNbsp,
+              })
+            : parseXML((arch ?? "").replaceAll("&amp;nbsp;", nbsp));
     for (const action of ACTIONS) {
         if (action in context && !context[action]) {
             archXmlDoc.setAttribute(action, "0");
@@ -449,7 +465,7 @@ export class View extends Component {
         }
         config.views = selection.views;
 
-        const archXmlDoc = parseViewArch(loaded.arch, props.context ?? {});
+        const archXmlDoc = parseViewArch(loaded, props.context ?? {});
         const jsClass = archXmlDoc.hasAttribute("js_class")
             ? /** @type {string} */ (archXmlDoc.getAttribute("js_class"))
             : props.jsClass || type;
@@ -544,6 +560,7 @@ export class View extends Component {
         return {
             viewDescription,
             arch: arch || viewDescription.arch,
+            ir: arch ? undefined : viewDescription.ir,
             fields,
             relatedModels,
             actionMenus: actionMenus || viewDescription.actionMenus,

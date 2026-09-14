@@ -24,8 +24,17 @@ This document is the inventory, so the next audit does not re-derive it.
 | Domain matching | `core/domain.js` `Domain.contains` | `filtered_domain()` / `_to_sql` | `tests/core/domain_server_parity.test.js` (3,331 cases) |
 | Decimal rounding | `core/utils/format/numbers.js` `roundPrecision` | `libs/numbers/float_utils.float_round` | `tests/core/utils/float_round_server_parity.test.js` (860 rows) |
 | `order` string validation | `core/utils/order_by.js` `stringToOrderBy` | `models._check_qorder` / `regex_order` | **not gated** — see *Known divergences* |
+| View IR ↔ arch element | `views/ir/view_ir.js` `irToElement` / `elementToIR` | `odoo.tools.view_ir.from_arch` / `to_arch` | `tests/views/view_ir.test.js` + `odoo/tools/tests/test_view_ir_fixture.py` over the same frozen fixture (`tests/views/view_ir_fixture.js`, 14 archs incl. the largest form in the checkout and four edge cases: comment tails, `&nbsp;` literals, namespaces, CDATA) |
 
-A fifth pair is client-internal rather than client/server, and has the same
+The view IR row is the newest (2026-09-13): `get_view()` now ships the tree it
+postprocessed as `ir` next to `arch`, and `View.loadView` materialises the
+element the parsers and compilers walk from that tree instead of parsing the
+string. Both readers are held to one fixture — Python asserts
+`from_arch(arch).to_dict() == ir`, HOOT asserts `elementToIR(parseXML(arch))`
+deep-equals `ir` and that `irToElement(ir)` serialises identically to the parsed
+arch — so a divergence in either fails on the same file.
+
+A sixth pair is client-internal rather than client/server, and has the same
 character: `registry.category("formatters")` and `("parsers")` must invert each
 other, or editing a field and saving it untouched moves the value. Gated by
 `tests/core/formatter_parser_roundtrip.test.js`.

@@ -9,6 +9,7 @@ from lxml import etree
 
 from odoo import tools
 from odoo.libs.debug_log import DebugLog
+from odoo.tools import view_ir
 
 if typing.TYPE_CHECKING:
     from collections.abc import Callable
@@ -246,6 +247,9 @@ def valid_view(arch: etree._Element, **kwargs: object) -> bool:
     if not schema_valid(arch, **kwargs):
         _logger.warning("Invalid XML for view type %r: schema", arch.tag)
         return False
+    if not ir_valid(arch):
+        _logger.warning("Invalid XML for view type %r: view IR", arch.tag)
+        return False
     for pred in _validators.get(arch.tag, ()):
         if not pred(arch, **kwargs):
             _logger.warning(
@@ -266,6 +270,30 @@ def valid_view(arch: etree._Element, **kwargs: object) -> bool:
         schema=_view_schemas.get(arch.tag) is not None,
     )
     return True
+
+
+def ir_valid(arch: etree._Element) -> bool:
+    """Reject what the view IR schema calls an error: a tag no view type knows,
+    a required attribute missing, a value the attribute's type cannot read.
+    Undeclared attributes are warnings there and do not fail here."""
+    view_type = view_ir.schema().view_type_of(arch.tag)
+    if view_type is None:
+        _debug.logic("view_validation.ir_skipped", root=arch.tag)
+        return True
+    errors = [
+        issue
+        for issue in view_ir.validate(view_ir.from_arch(arch), view_type)
+        if issue.severity == "error"
+    ]
+    for issue in errors:
+        _logger.warning("%s", issue)
+    _debug.logic(
+        "view_validation.ir_checked",
+        view_type=view_type,
+        errors=len(errors),
+        first=str(errors[0]) if errors else None,
+    )
+    return not errors
 
 
 def register_validator(*view_types: str) -> Callable[[Validator], Validator]:

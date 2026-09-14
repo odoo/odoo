@@ -5,8 +5,12 @@ import re
 from collections.abc import Iterator
 from dataclasses import dataclass
 
+from odoo.libs.debug_log import DebugLog
+
 from .node import Node
 from .schema import Schema, schema
+
+_debug = DebugLog(__name__)
 
 BOOL_LITERALS = frozenset({"1", "0", "True", "False", "true", "false"})
 # convert.py substitutes %(module.xmlid)d with the record id before the arch is stored
@@ -37,7 +41,26 @@ def validate(
     spec = spec or schema()
     if view_type is None:
         view_type = spec.view_type_of(node.kind)
-    return list(_validate(node, view_type, spec, ()))
+        _debug.logic("view_type_inferred", root=node.kind, view_type=view_type)
+    with _debug.perf("validate", kind=node.kind, view_type=view_type) as span:
+        issues = list(_validate(node, view_type, spec, ()))
+        if _debug.perf.enabled:
+            span.set(
+                nodes=sum(1 for _ in node.walk()),
+                errors=sum(i.severity == "error" for i in issues),
+                warnings=sum(i.severity == "warning" for i in issues),
+            )
+    if _debug.logic.enabled:
+        for issue in issues:
+            _debug.logic(
+                "issue",
+                code=issue.code,
+                severity=issue.severity,
+                kind=issue.kind,
+                path="/".join(map(str, issue.path)) or "root",
+                detail=issue.detail,
+            )
+    return issues
 
 
 def _validate(

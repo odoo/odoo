@@ -167,7 +167,7 @@
 | `search/` | widgets | 18 | Search model and its mixins (domain, group-by, favorites, properties, query, split-domain), search facets/state/context, arch parser, layout, pager hook |
 | `search/action_menus/` | widgets | 1 | Action/Print dropdown menus executing server actions on selected records |
 | `search/breadcrumbs/` | widgets | 1 | Breadcrumb trail over the action stack with back-navigation |
-| `search/cog_menu/` | widgets | 3 | Cog dropdown in named sections (`COG_GROUP`), its shared `CogMenuItem`, and the registry validation for Action, Print and registry items |
+| `search/cog_menu/` | widgets | 1 | Cog dropdown merging Action, Print, and registry-based menu items |
 | `search/control_panel/` | widgets | 1 | Control panel shell: search bar, breadcrumbs, filter/group-by menus |
 | `search/custom_favorite_item/` | widgets | 1 | Dropdown form saving the current search as a named favorite |
 | `search/custom_group_by_item/` | widgets | 1 | Dropdown item selecting a custom field to group by |
@@ -193,7 +193,7 @@
 | `ui/popover/` | shared | 4 | `popover` service, the component, its hook, and the detached-target watcher |
 | `ui/pwa/` | shared | 2 | `pwa` service (install prompt) and the Safari install-instructions dialog |
 | `ui/tooltip/` | shared | 2 | `tooltip` service driven by `data-tooltip` attributes, and its component |
-| `views/` | widgets | 34 | View infrastructure: the `view` service, `View` component, arch compiler, view utilities/measurements, standard props, action helper, view buttons, the shared multi-record renderer layer (`multi_record_selection.js`, `multi_record_group.js`), and the per-view faces (form, list, kanban, calendar, graph, pivot) |
+| `views/` | widgets | 33 | View infrastructure: the `view` service, `View` component, arch compiler, view utilities/measurements, standard props, action helper, view buttons, the shared multi-record renderer layer (`multi_record_selection.js`, `multi_record_group.js`), and the per-view faces (form, list, kanban, calendar, graph, pivot) |
 | `views/calendar/` | widgets | 9 | Calendar view: arch parser, model, controller, renderer, record wrapper, date-range and utility helpers |
 | `views/calendar/calendar_common/` | widgets | 3 | Day/week/month renderer and its event popover |
 | `views/calendar/calendar_filter_section/` | widgets | 1 | Collapsible sidebar filter section for one calendar filter field |
@@ -212,9 +212,9 @@
 | `views/form/status_bar_buttons/` | widgets | 1 | Status-bar action buttons with overflow dropdown |
 | `views/form_with_html_expander/` | widgets | 3 | Form view whose HTML description field grows to fill the sheet on XXL viewports: controller, renderer, view definition |
 | `views/graph/` | widgets | 8 | Graph view: arch parser, model, controller, renderer (lazy `loadChartJS`), chart config, search model |
-| `views/ir/` | widgets | 0 | Generated TypeScript types of the view IR (`view_ir.d.ts`, from `odoo/tools/view_ir/schema.json` via `python -m odoo.tools.view_ir._generate`); no runtime code yet — the client-side consumer arrives with the IR-fed parsers |
-| `views/kanban/` | widgets | 17 | Kanban view: arch parser, compiler, model wiring, renderer, record and header components, quick creates, progress-bar hook with local drag-move reconcile, sortable/keyboard hooks (selection now via the shared multi-record layer) |
-| `views/list/` | widgets | 21 | List view: arch parser, controller, renderer, per-row `ListRecordRow`, column widths and utilities, aggregates, grouping, sorting, selection, virtualization, keyboard nav/edit, focus geometry, styling |
+| `views/ir/` | widgets | 1 | The view IR on the client: `view_ir.js` (`irToElement` builds the Element the parsers and compilers walk from the tree `get_view()` ships; `elementToIR` is its inverse) and the generated `view_ir_schema.d.ts` types (from `odoo/tools/view_ir/schema.json` via `python -m odoo.tools.view_ir._generate`) |
+| `views/kanban/` | widgets | 18 | Kanban view: arch parser, compiler, model wiring, renderer, record and header components, quick creates, progress-bar hook with local drag-move reconcile, sortable/keyboard hooks (selection now via the shared multi-record layer) |
+| `views/list/` | widgets | 22 | List view: arch parser, controller, renderer, per-row `ListRecordRow`, column widths and utilities, aggregates, grouping, sorting, selection, virtualization, keyboard nav/edit, focus geometry, styling |
 | `views/list/export_all/` | widgets | 1 | Cog-menu item triggering direct XLSX export of all records |
 | `views/pivot/` | widgets | 12 | Pivot view: arch parser, model, controller, renderer, group tree, aggregation, measurements, value utilities, XLSX export trigger |
 | `views/section_list/` | widgets | 2 | List renderer and one2many field rendering `line_section` records as a full-width bold title row |

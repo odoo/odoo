@@ -5,6 +5,9 @@ from dataclasses import dataclass
 from functools import cache
 from pathlib import Path
 
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 SCHEMA_PATH = Path(__file__).with_name("schema.json")
 AttrType = str | list[str]
 
@@ -105,5 +108,16 @@ def _lookup(table: dict[str, AttrType], attr: str) -> AttrType | None:
 
 @cache
 def schema() -> Schema:
-    with SCHEMA_PATH.open(encoding="utf-8") as handle:
-        return Schema(json.load(handle))
+    with _debug.perf("schema_load", path=str(SCHEMA_PATH)) as span:
+        with SCHEMA_PATH.open(encoding="utf-8") as handle:
+            loaded = Schema(json.load(handle))
+        span.set(
+            version=loaded.version,
+            types=len(loaded.types),
+            kinds=sum(len(t.nodes) for t in loaded.types.values()),
+            attrs=sum(
+                len(n.attrs) for t in loaded.types.values() for n in t.nodes.values()
+            ),
+        )
+    _debug.lifecycle("schema_loaded", version=loaded.version, types=len(loaded.types))
+    return loaded

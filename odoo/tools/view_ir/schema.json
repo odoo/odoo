@@ -214,6 +214,31 @@
     "form": {
       "root": "form",
       "nodes": {
+        "app": {
+          "attrs": {
+            "logo": "str",
+            "notApp": "bool"
+          },
+          "children": [
+            "block",
+            "field",
+            "html",
+            "setting",
+            "t",
+            "widget"
+          ]
+        },
+        "block": {
+          "attrs": {},
+          "children": [
+            "block",
+            "field",
+            "html",
+            "setting",
+            "t",
+            "widget"
+          ]
+        },
         "board": {
           "attrs": {},
           "children": [
@@ -224,6 +249,7 @@
           "attrs": {
             "accesskey": "str",
             "barcode_trigger": "str",
+            "cancel-label": "str",
             "close": "bool",
             "column_invisible": "pyexpr",
             "confirm": "str",
@@ -233,16 +259,20 @@
             "default_focus": "bool",
             "disabled": "str",
             "icon": "str",
+            "noSaveDialog": "str",
             "special": [
               "cancel",
               "save"
             ],
             "target": "str",
-            "type": "str"
+            "type": "str",
+            "widget": "str"
           },
           "children": [
+            "button",
             "field",
-            "html"
+            "html",
+            "t"
           ]
         },
         "chatter": {
@@ -251,7 +281,10 @@
             "reload_on_attachment": "bool",
             "reload_on_follower": "bool",
             "reload_on_post": "bool"
-          }
+          },
+          "children": [
+            "footer"
+          ]
         },
         "column": {
           "attrs": {}
@@ -260,13 +293,17 @@
           "attrs": {},
           "children": [
             "button",
-            "create"
+            "create",
+            "delete"
           ]
         },
         "create": {
           "attrs": {
             "context": "context"
           }
+        },
+        "delete": {
+          "attrs": {}
         },
         "field": {
           "attrs": {
@@ -286,6 +323,7 @@
             "hideAddButton": "str",
             "iconField": "str",
             "label": "str",
+            "media_type": "str",
             "mode": "str",
             "month_field": "str",
             "no_label": "str",
@@ -305,9 +343,17 @@
             "width": "str"
           },
           "children": [
+            "button",
+            "field",
             "form",
+            "group",
+            "html",
             "kanban",
-            "list"
+            "label",
+            "list",
+            "separator",
+            "t",
+            "widget"
           ]
         },
         "footer": {
@@ -316,6 +362,7 @@
             "button",
             "field",
             "html",
+            "notebook",
             "t",
             "widget"
           ]
@@ -335,6 +382,7 @@
             "chatter",
             "field",
             "footer",
+            "form",
             "group",
             "header",
             "html",
@@ -370,6 +418,7 @@
           "children": [
             "button",
             "field",
+            "header",
             "html",
             "separator",
             "t",
@@ -394,7 +443,9 @@
             "readonly": "pyexpr"
           },
           "children": [
-            "html"
+            "field",
+            "html",
+            "label"
           ]
         },
         "list": {
@@ -426,6 +477,8 @@
           "attrs": {},
           "children": [
             "field",
+            "group",
+            "html",
             "page"
           ]
         },
@@ -437,21 +490,37 @@
             "group",
             "html",
             "label",
-            "separator"
+            "page",
+            "separator",
+            "widget"
           ]
         },
         "separator": {
-          "attrs": {}
+          "attrs": {},
+          "children": [
+            "button",
+            "field",
+            "html",
+            "label",
+            "separator"
+          ]
         },
         "setting": {
           "attrs": {
-            "documentation": "str"
+            "company_dependent": "bool",
+            "documentation": "str",
+            "info": "str",
+            "type": "str"
           },
           "children": [
+            "button",
             "field",
             "group",
             "html",
-            "label"
+            "label",
+            "setting",
+            "t",
+            "widget"
           ]
         },
         "sheet": {
@@ -474,6 +543,8 @@
         "t": {
           "attrs": {},
           "children": [
+            "app",
+            "block",
             "button",
             "field",
             "footer",
@@ -481,6 +552,7 @@
             "html",
             "label",
             "notebook",
+            "setting",
             "t",
             "widget"
           ]
@@ -503,12 +575,15 @@
             "btn_name": "ident",
             "field_to_edit": "ident",
             "fulfilled_at": "str",
+            "hide_service": "str",
             "highlight": "bool",
             "icon": "str",
             "label": "str",
             "options": "json",
             "path": "str",
-            "text": "str"
+            "service_name": "str",
+            "text": "str",
+            "tooltip": "str"
           }
         }
       }
@@ -525,15 +600,23 @@
             ],
             "icon": "str",
             "type": "str"
-          }
+          },
+          "children": [
+            "button"
+          ]
         },
         "control": {
           "attrs": {},
           "children": [
-            "create"
+            "button",
+            "create",
+            "delete"
           ]
         },
         "create": {
+          "attrs": {}
+        },
+        "delete": {
           "attrs": {}
         },
         "field": {
@@ -559,7 +642,13 @@
             "sum": "str",
             "widget": "str",
             "width": "str"
-          }
+          },
+          "children": [
+            "button",
+            "field",
+            "header",
+            "xpath"
+          ]
         },
         "groupby": {
           "attrs": {
@@ -567,7 +656,8 @@
           },
           "children": [
             "button",
-            "field"
+            "field",
+            "groupby"
           ]
         },
         "header": {
@@ -628,12 +718,20 @@
             "context": "context",
             "domain": "domain",
             "enable_counters": "bool",
+            "expand": "pyexpr",
             "filter_domain": "domain",
             "icon": "str",
+            "limit": "pyexpr",
             "operator": "str",
+            "options": "json",
             "select": "str",
             "widget": "str"
-          }
+          },
+          "children": [
+            "field",
+            "filter",
+            "separator"
+          ]
         },
         "filter": {
           "attrs": {
@@ -647,7 +745,10 @@
             "start_year": "str"
           },
           "children": [
-            "filter"
+            "field",
+            "filter",
+            "searchpanel",
+            "separator"
           ]
         },
         "group": {
@@ -688,7 +789,10 @@
               "horizontal",
               "vertical"
             ]
-          }
+          },
+          "children": [
+            "field"
+          ]
         }
       }
     },
@@ -708,9 +812,12 @@
             "display": [
               "always"
             ],
+            "icon": "str",
+            "options": "json",
             "type": "str"
           },
           "children": [
+            "button",
             "field",
             "html",
             "t"
@@ -719,15 +826,21 @@
         "control": {
           "attrs": {},
           "children": [
-            "create"
+            "button",
+            "create",
+            "delete"
           ]
         },
         "create": {
           "attrs": {}
         },
+        "delete": {
+          "attrs": {}
+        },
         "field": {
           "attrs": {
             "alt": "str",
+            "context": "context",
             "decoration-*": "pyexpr",
             "digits": "str",
             "domain": "domain",
@@ -738,7 +851,12 @@
             "readonly": "pyexpr",
             "required": "pyexpr",
             "widget": "str"
-          }
+          },
+          "children": [
+            "field",
+            "html",
+            "t"
+          ]
         },
         "footer": {
           "attrs": {},
@@ -749,6 +867,12 @@
             "label",
             "t",
             "widget"
+          ]
+        },
+        "group": {
+          "attrs": {},
+          "children": [
+            "field"
           ]
         },
         "header": {
@@ -806,6 +930,7 @@
         "t": {
           "attrs": {},
           "children": [
+            "attribute",
             "button",
             "field",
             "footer",
@@ -844,7 +969,10 @@
               "measure"
             ],
             "widget": "str"
-          }
+          },
+          "children": [
+            "field"
+          ]
         },
         "graph": {
           "attrs": {
@@ -881,7 +1009,10 @@
               "measure"
             ],
             "widget": "str"
-          }
+          },
+          "children": [
+            "field"
+          ]
         },
         "pivot": {
           "attrs": {
@@ -942,7 +1073,10 @@
             "widget": "str",
             "write_field": "ident",
             "write_model": "ident"
-          }
+          },
+          "children": [
+            "field"
+          ]
         }
       }
     },
@@ -1055,6 +1189,7 @@
             "widget": "str"
           },
           "children": [
+            "field",
             "range"
           ]
         },
@@ -1085,7 +1220,10 @@
       "root": "map",
       "nodes": {
         "field": {
-          "attrs": {}
+          "attrs": {},
+          "children": [
+            "field"
+          ]
         },
         "map": {
           "attrs": {
@@ -1170,7 +1308,10 @@
         "field": {
           "attrs": {
             "select": "str"
-          }
+          },
+          "children": [
+            "field"
+          ]
         },
         "geoengine": {
           "attrs": {

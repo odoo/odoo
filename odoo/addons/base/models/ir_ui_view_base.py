@@ -8,6 +8,7 @@ from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import _, config, frozendict
+from odoo.tools.view_ir import from_arch
 
 from .ir_ui_view import _xpath_descendant_field
 
@@ -377,6 +378,11 @@ class Base(models.AbstractModel):
         ):
             node.set("string", header)
         result["arch"] = etree.tostring(node, encoding="unicode")
+        with _debug.perf("ir_build", model=self._name, view_type=node.tag) as span:
+            ir = from_arch(node)
+            result["ir"] = ir.to_dict()
+            if _debug.perf.enabled:
+                span.set(nodes=sum(1 for _ in ir.walk()))
         _debug.pipeline(
             "get_view",
             model=self._name,

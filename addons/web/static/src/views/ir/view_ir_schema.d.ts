@@ -122,7 +122,45 @@ export interface PatchDataAttrs {
     version?: string;
 }
 
-export type FormKind = "board" | "button" | "chatter" | "column" | "control" | "create" | "field" | "footer" | "form" | "group" | "header" | "kanban" | "label" | "list" | "newline" | "notebook" | "page" | "separator" | "setting" | "sheet" | "t" | "template" | "templates" | "widget";
+export type FormKind = "app" | "block" | "board" | "button" | "chatter" | "column" | "control" | "create" | "delete" | "field" | "footer" | "form" | "group" | "header" | "kanban" | "label" | "list" | "newline" | "notebook" | "page" | "separator" | "setting" | "sheet" | "t" | "template" | "templates" | "widget";
+export interface FormAppAttrs {
+    class?: string;
+    colspan?: string;
+    groups?: string;
+    help?: string;
+    id?: string;
+    invisible?: string;
+    logo?: string;
+    name?: string;
+    notApp?: string;
+    position?: "after" | "before" | "inside" | "replace" | "attributes" | "move";
+    role?: string;
+    string?: string;
+    style?: string;
+    title?: string;
+    version?: string;
+    [key: `aria-${string}`]: string;
+    [key: `data-${string}`]: string;
+    [key: `t-${string}`]: string;
+}
+export interface FormBlockAttrs {
+    class?: string;
+    colspan?: string;
+    groups?: string;
+    help?: string;
+    id?: string;
+    invisible?: string;
+    name?: string;
+    position?: "after" | "before" | "inside" | "replace" | "attributes" | "move";
+    role?: string;
+    string?: string;
+    style?: string;
+    title?: string;
+    version?: string;
+    [key: `aria-${string}`]: string;
+    [key: `data-${string}`]: string;
+    [key: `t-${string}`]: string;
+}
 export interface FormBoardAttrs {
     class?: string;
     colspan?: string;
@@ -144,6 +182,7 @@ export interface FormBoardAttrs {
 export interface FormButtonAttrs {
     accesskey?: string;
     barcode_trigger?: string;
+    "cancel-label"?: string;
     class?: string;
     close?: string;
     colspan?: string;
@@ -160,6 +199,7 @@ export interface FormButtonAttrs {
     id?: string;
     invisible?: string;
     name?: string;
+    noSaveDialog?: string;
     position?: "after" | "before" | "inside" | "replace" | "attributes" | "move";
     role?: string;
     special?: "cancel" | "save";
@@ -169,6 +209,7 @@ export interface FormButtonAttrs {
     title?: string;
     type?: string;
     version?: string;
+    widget?: string;
     [key: `aria-${string}`]: string;
     [key: `data-${string}`]: string;
     [key: `t-${string}`]: string;
@@ -250,6 +291,24 @@ export interface FormCreateAttrs {
     [key: `data-${string}`]: string;
     [key: `t-${string}`]: string;
 }
+export interface FormDeleteAttrs {
+    class?: string;
+    colspan?: string;
+    groups?: string;
+    help?: string;
+    id?: string;
+    invisible?: string;
+    name?: string;
+    position?: "after" | "before" | "inside" | "replace" | "attributes" | "move";
+    role?: string;
+    string?: string;
+    style?: string;
+    title?: string;
+    version?: string;
+    [key: `aria-${string}`]: string;
+    [key: `data-${string}`]: string;
+    [key: `t-${string}`]: string;
+}
 export interface FormFieldAttrs {
     "add-label"?: string;
     alt?: string;
@@ -272,6 +331,7 @@ export interface FormFieldAttrs {
     id?: string;
     invisible?: string;
     label?: string;
+    media_type?: string;
     mode?: string;
     month_field?: string;
     name?: string;
@@ -523,10 +583,12 @@ export interface FormSeparatorAttrs {
 export interface FormSettingAttrs {
     class?: string;
     colspan?: string;
+    company_dependent?: string;
     documentation?: string;
     groups?: string;
     help?: string;
     id?: string;
+    info?: string;
     invisible?: string;
     name?: string;
     position?: "after" | "before" | "inside" | "replace" | "attributes" | "move";
@@ -534,6 +596,7 @@ export interface FormSettingAttrs {
     string?: string;
     style?: string;
     title?: string;
+    type?: string;
     version?: string;
     [key: `aria-${string}`]: string;
     [key: `data-${string}`]: string;
@@ -622,6 +685,7 @@ export interface FormWidgetAttrs {
     fulfilled_at?: string;
     groups?: string;
     help?: string;
+    hide_service?: string;
     highlight?: string;
     icon?: string;
     id?: string;
@@ -632,22 +696,27 @@ export interface FormWidgetAttrs {
     path?: string;
     position?: "after" | "before" | "inside" | "replace" | "attributes" | "move";
     role?: string;
+    service_name?: string;
     string?: string;
     style?: string;
     text?: string;
     title?: string;
+    tooltip?: string;
     version?: string;
     [key: `aria-${string}`]: string;
     [key: `data-${string}`]: string;
     [key: `t-${string}`]: string;
 }
 export interface FormAttrs {
+    "app": FormAppAttrs;
+    "block": FormBlockAttrs;
     "board": FormBoardAttrs;
     "button": FormButtonAttrs;
     "chatter": FormChatterAttrs;
     "column": FormColumnAttrs;
     "control": FormControlAttrs;
     "create": FormCreateAttrs;
+    "delete": FormDeleteAttrs;
     "field": FormFieldAttrs;
     "footer": FormFooterAttrs;
     "form": FormFormAttrs;
@@ -668,33 +737,36 @@ export interface FormAttrs {
     "widget": FormWidgetAttrs;
 }
 export interface FormChildren {
+    "app": "block" | "field" | "html" | "setting" | "t" | "widget";
+    "block": "block" | "field" | "html" | "setting" | "t" | "widget";
     "board": "column";
-    "button": "field" | "html";
-    "chatter": string;
+    "button": "button" | "field" | "html" | "t";
+    "chatter": "footer";
     "column": string;
-    "control": "button" | "create";
+    "control": "button" | "create" | "delete";
     "create": string;
-    "field": "form" | "kanban" | "list";
-    "footer": "button" | "field" | "html" | "t" | "widget";
-    "form": "board" | "button" | "chatter" | "field" | "footer" | "group" | "header" | "html" | "label" | "notebook" | "separator" | "sheet" | "t" | "widget";
+    "delete": string;
+    "field": "button" | "field" | "form" | "group" | "html" | "kanban" | "label" | "list" | "separator" | "t" | "widget";
+    "footer": "button" | "field" | "html" | "notebook" | "t" | "widget";
+    "form": "board" | "button" | "chatter" | "field" | "footer" | "form" | "group" | "header" | "html" | "label" | "notebook" | "separator" | "sheet" | "t" | "widget";
     "group": "button" | "field" | "group" | "html" | "label" | "newline" | "notebook" | "separator" | "setting" | "t" | "widget";
-    "header": "button" | "field" | "html" | "separator" | "t" | "widget";
+    "header": "button" | "field" | "header" | "html" | "separator" | "t" | "widget";
     "kanban": "control" | "field" | "t" | "templates";
-    "label": "html";
+    "label": "field" | "html" | "label";
     "list": "button" | "control" | "field" | "widget";
     "newline": string;
-    "notebook": "field" | "page";
-    "page": "button" | "field" | "group" | "html" | "label" | "separator";
-    "separator": string;
-    "setting": "field" | "group" | "html" | "label";
+    "notebook": "field" | "group" | "html" | "page";
+    "page": "button" | "field" | "group" | "html" | "label" | "page" | "separator" | "widget";
+    "separator": "button" | "field" | "html" | "label" | "separator";
+    "setting": "button" | "field" | "group" | "html" | "label" | "setting" | "t" | "widget";
     "sheet": "button" | "chatter" | "field" | "footer" | "group" | "header" | "html" | "label" | "notebook" | "separator" | "t" | "widget";
-    "t": "button" | "field" | "footer" | "group" | "html" | "label" | "notebook" | "t" | "widget";
+    "t": "app" | "block" | "button" | "field" | "footer" | "group" | "html" | "label" | "notebook" | "setting" | "t" | "widget";
     "template": string;
     "templates": "html" | "t";
     "widget": string;
 }
 
-export type ListKind = "button" | "control" | "create" | "field" | "groupby" | "header" | "list" | "widget";
+export type ListKind = "button" | "control" | "create" | "delete" | "field" | "groupby" | "header" | "list" | "widget";
 export interface ListButtonAttrs {
     class?: string;
     colspan?: string;
@@ -737,6 +809,24 @@ export interface ListControlAttrs {
     [key: `t-${string}`]: string;
 }
 export interface ListCreateAttrs {
+    class?: string;
+    colspan?: string;
+    groups?: string;
+    help?: string;
+    id?: string;
+    invisible?: string;
+    name?: string;
+    position?: "after" | "before" | "inside" | "replace" | "attributes" | "move";
+    role?: string;
+    string?: string;
+    style?: string;
+    title?: string;
+    version?: string;
+    [key: `aria-${string}`]: string;
+    [key: `data-${string}`]: string;
+    [key: `t-${string}`]: string;
+}
+export interface ListDeleteAttrs {
     class?: string;
     colspan?: string;
     groups?: string;
@@ -891,6 +981,7 @@ export interface ListAttrs {
     "button": ListButtonAttrs;
     "control": ListControlAttrs;
     "create": ListCreateAttrs;
+    "delete": ListDeleteAttrs;
     "field": ListFieldAttrs;
     "groupby": ListGroupbyAttrs;
     "header": ListHeaderAttrs;
@@ -898,11 +989,12 @@ export interface ListAttrs {
     "widget": ListWidgetAttrs;
 }
 export interface ListChildren {
-    "button": string;
-    "control": "create";
+    "button": "button";
+    "control": "button" | "create" | "delete";
     "create": string;
-    "field": string;
-    "groupby": "button" | "field";
+    "delete": string;
+    "field": "button" | "field" | "header" | "xpath";
+    "groupby": "button" | "field" | "groupby";
     "header": "button";
     "list": "button" | "control" | "field" | "groupby" | "header" | "widget";
     "widget": string;
@@ -915,14 +1007,17 @@ export interface SearchFieldAttrs {
     context?: string;
     domain?: string;
     enable_counters?: string;
+    expand?: string;
     filter_domain?: string;
     groups?: string;
     help?: string;
     icon?: string;
     id?: string;
     invisible?: string;
+    limit?: string;
     name?: string;
     operator?: string;
+    options?: string;
     position?: "after" | "before" | "inside" | "replace" | "attributes" | "move";
     role?: string;
     select?: string;
@@ -1064,16 +1159,16 @@ export interface SearchAttrs {
     "separator": SearchSeparatorAttrs;
 }
 export interface SearchChildren {
-    "field": string;
-    "filter": "filter";
+    "field": "field" | "filter" | "separator";
+    "filter": "field" | "filter" | "searchpanel" | "separator";
     "group": "field" | "filter" | "newline" | "separator";
     "newline": string;
     "search": "field" | "filter" | "group" | "searchpanel" | "separator";
     "searchpanel": "field";
-    "separator": string;
+    "separator": "field";
 }
 
-export type KanbanKind = "bottom" | "button" | "control" | "create" | "field" | "footer" | "header" | "kanban" | "label" | "progressbar" | "t" | "templates" | "widget";
+export type KanbanKind = "bottom" | "button" | "control" | "create" | "delete" | "field" | "footer" | "group" | "header" | "kanban" | "label" | "progressbar" | "t" | "templates" | "widget";
 export interface KanbanBottomAttrs {
     class?: string;
     colspan?: string;
@@ -1100,9 +1195,11 @@ export interface KanbanButtonAttrs {
     display?: "always";
     groups?: string;
     help?: string;
+    icon?: string;
     id?: string;
     invisible?: string;
     name?: string;
+    options?: string;
     position?: "after" | "before" | "inside" | "replace" | "attributes" | "move";
     role?: string;
     string?: string;
@@ -1150,10 +1247,29 @@ export interface KanbanCreateAttrs {
     [key: `data-${string}`]: string;
     [key: `t-${string}`]: string;
 }
+export interface KanbanDeleteAttrs {
+    class?: string;
+    colspan?: string;
+    groups?: string;
+    help?: string;
+    id?: string;
+    invisible?: string;
+    name?: string;
+    position?: "after" | "before" | "inside" | "replace" | "attributes" | "move";
+    role?: string;
+    string?: string;
+    style?: string;
+    title?: string;
+    version?: string;
+    [key: `aria-${string}`]: string;
+    [key: `data-${string}`]: string;
+    [key: `t-${string}`]: string;
+}
 export interface KanbanFieldAttrs {
     alt?: string;
     class?: string;
     colspan?: string;
+    context?: string;
     digits?: string;
     domain?: string;
     force_save?: string;
@@ -1180,6 +1296,24 @@ export interface KanbanFieldAttrs {
     [key: `t-${string}`]: string;
 }
 export interface KanbanFooterAttrs {
+    class?: string;
+    colspan?: string;
+    groups?: string;
+    help?: string;
+    id?: string;
+    invisible?: string;
+    name?: string;
+    position?: "after" | "before" | "inside" | "replace" | "attributes" | "move";
+    role?: string;
+    string?: string;
+    style?: string;
+    title?: string;
+    version?: string;
+    [key: `aria-${string}`]: string;
+    [key: `data-${string}`]: string;
+    [key: `t-${string}`]: string;
+}
+export interface KanbanGroupAttrs {
     class?: string;
     colspan?: string;
     groups?: string;
@@ -1356,8 +1490,10 @@ export interface KanbanAttrs {
     "button": KanbanButtonAttrs;
     "control": KanbanControlAttrs;
     "create": KanbanCreateAttrs;
+    "delete": KanbanDeleteAttrs;
     "field": KanbanFieldAttrs;
     "footer": KanbanFooterAttrs;
+    "group": KanbanGroupAttrs;
     "header": KanbanHeaderAttrs;
     "kanban": KanbanKanbanAttrs;
     "label": KanbanLabelAttrs;
@@ -1368,16 +1504,18 @@ export interface KanbanAttrs {
 }
 export interface KanbanChildren {
     "bottom": "button";
-    "button": "field" | "html" | "t";
-    "control": "create";
+    "button": "button" | "field" | "html" | "t";
+    "control": "button" | "create" | "delete";
     "create": string;
-    "field": string;
+    "delete": string;
+    "field": "field" | "html" | "t";
     "footer": "button" | "field" | "html" | "label" | "t" | "widget";
+    "group": "field";
     "header": "button";
     "kanban": "control" | "field" | "header" | "progressbar" | "t" | "templates";
     "label": string;
     "progressbar": string;
-    "t": "button" | "field" | "footer" | "html" | "t" | "widget";
+    "t": "attribute" | "button" | "field" | "footer" | "html" | "t" | "widget";
     "templates": "field" | "html" | "progressbar" | "t";
     "widget": string;
 }
@@ -1436,7 +1574,7 @@ export interface GraphAttrs {
     "graph": GraphGraphAttrs;
 }
 export interface GraphChildren {
-    "field": string;
+    "field": "field";
     "graph": "field";
 }
 
@@ -1492,7 +1630,7 @@ export interface PivotAttrs {
     "pivot": PivotPivotAttrs;
 }
 export interface PivotChildren {
-    "field": string;
+    "field": "field";
     "pivot": "field";
 }
 
@@ -1571,7 +1709,7 @@ export interface CalendarAttrs {
 }
 export interface CalendarChildren {
     "calendar": "field";
-    "field": string;
+    "field": "field";
 }
 
 export type ActivityKind = "activity" | "field" | "templates";
@@ -1876,7 +2014,7 @@ export interface GridAttrs {
     "range": GridRangeAttrs;
 }
 export interface GridChildren {
-    "field": "range";
+    "field": "field" | "range";
     "grid": "field";
     "range": string;
 }
@@ -1928,7 +2066,7 @@ export interface MapAttrs {
     "map": MapMapAttrs;
 }
 export interface MapChildren {
-    "field": string;
+    "field": "field";
     "map": "field";
 }
 
@@ -2181,7 +2319,7 @@ export interface GeoengineAttrs {
     "templates": GeoengineTemplatesAttrs;
 }
 export interface GeoengineChildren {
-    "field": string;
+    "field": "field";
     "geoengine": "field" | "templates";
     "t": "html" | "t";
     "templates": "t";

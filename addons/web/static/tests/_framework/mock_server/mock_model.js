@@ -16,6 +16,7 @@ import {
     unique,
 } from "@web/core/utils/collections/arrays";
 import { deepCopy, isObject, pick } from "@web/core/utils/collections/objects";
+import { elementToIR } from "@web/views/ir/view_ir";
 
 import * as fields from "./mock_fields.js";
 import { MockServer } from "./mock_server.js";
@@ -946,6 +947,7 @@ function parseView(model, params) {
     }
     return {
         arch: processedArch,
+        ir: elementToIR(/** @type {Element} */ (doc)),
         model: model._name,
         models: getViewFields(model, /** @type {ViewType} */ (viewType), relatedModels),
         type: viewType,

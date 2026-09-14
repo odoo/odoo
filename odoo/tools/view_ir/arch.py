@@ -4,11 +4,19 @@ import json
 
 from lxml import etree
 
+from odoo.libs.debug_log import DebugLog
+
 from .node import Node
+
+_debug = DebugLog(__name__)
 
 
 def from_arch(element: etree._Element) -> Node:
-    return _from_element(element, {})
+    with _debug.perf("from_arch", kind=element.tag) as span:
+        node = _from_element(element, {})
+        if _debug.perf.enabled:
+            span.set(nodes=sum(1 for _ in node.walk()))
+    return node
 
 
 def _from_element(element: etree._Element, inherited: dict[str | None, str]) -> Node:
@@ -25,14 +33,23 @@ def _from_element(element: etree._Element, inherited: dict[str | None, str]) -> 
         nsmap=declared or None,
     )
     scope = {**inherited, **declared}
-    node.children = [
-        _from_element(child, scope) for child in element if isinstance(child.tag, str)
-    ]
+    for child in element:
+        if isinstance(child.tag, str):
+            node.children.append(_from_element(child, scope))
+        elif child.tail:
+            if node.children:
+                node.children[-1].tail = (node.children[-1].tail or "") + child.tail
+            else:
+                node.text = (node.text or "") + child.tail
     return node
 
 
 def to_arch(node: Node) -> etree._Element:
-    return _to_element(node, None)
+    with _debug.perf("to_arch", kind=node.kind) as span:
+        element = _to_element(node, None)
+        if _debug.perf.enabled:
+            span.set(nodes=sum(1 for _ in element.iter()))
+    return element
 
 
 def _to_element(node: Node, parent: etree._Element | None) -> etree._Element:
@@ -56,11 +73,15 @@ def to_string(node: Node) -> str:
 
 
 def to_json(node: Node) -> str:
-    return json.dumps(node.to_dict(), ensure_ascii=False, separators=(",", ":"))
+    payload = json.dumps(node.to_dict(), ensure_ascii=False, separators=(",", ":"))
+    _debug.pipeline("to_json", kind=node.kind, chars=len(payload))
+    return payload
 
 
 def from_json(payload: str | bytes) -> Node:
-    return Node.from_dict(json.loads(payload))
+    node = Node.from_dict(json.loads(payload))
+    _debug.pipeline("from_json", kind=node.kind, chars=len(payload))
+    return node
 
 
 def canonical(element: etree._Element) -> bytes:

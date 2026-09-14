@@ -74,6 +74,16 @@ class TestViewIrRoundTrip(unittest.TestCase):
             '<form> a <field name="x"/> b <span>c</span>d</form>',
         )
 
+    def test_text_after_a_comment_is_kept(self):
+        node = view_ir.from_string(
+            "<form> a <!-- c --> b <field name='x'/> d <!-- e --> f </form>"
+        )
+        self.assertEqual(node.text, " a  b ")
+        self.assertEqual(node.children[0].tail, " d  f ")
+        self.assertEqual(
+            view_ir.to_string(node), '<form> a  b <field name="x"/> d  f </form>'
+        )
+
     def test_json_form_omits_empty_members(self):
         node = view_ir.from_string("<list><field name='x'/></list>")
         self.assertEqual(

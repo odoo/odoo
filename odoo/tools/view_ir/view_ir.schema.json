@@ -49,12 +49,15 @@
    "properties": {
     "kind": {
      "enum": [
+      "app",
+      "block",
       "board",
       "button",
       "chatter",
       "column",
       "control",
       "create",
+      "delete",
       "field",
       "footer",
       "form",
@@ -160,6 +163,202 @@
    },
    "additionalProperties": false,
    "allOf": [
+    {
+     "if": {
+      "properties": {
+       "kind": {
+        "const": "app"
+       }
+      }
+     },
+     "then": {
+      "properties": {
+       "attrs": {
+        "type": "object",
+        "properties": {
+         "position": {
+          "enum": [
+           "after",
+           "before",
+           "inside",
+           "replace",
+           "attributes",
+           "move"
+          ]
+         },
+         "version": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "invisible": {
+          "type": "string",
+          "x-odoo-type": "pyexpr"
+         },
+         "groups": {
+          "type": "string",
+          "x-odoo-type": "groups"
+         },
+         "class": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "name": {
+          "type": "string",
+          "x-odoo-type": "ident"
+         },
+         "id": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "string": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "colspan": {
+          "type": "string",
+          "pattern": "^-?[0-9]+$"
+         },
+         "style": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "title": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "help": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "role": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "logo": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "notApp": {
+          "enum": [
+           "1",
+           "0",
+           "True",
+           "False",
+           "true",
+           "false"
+          ]
+         }
+        },
+        "additionalProperties": false,
+        "patternProperties": {
+         "^aria-": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "^data-": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "^t-": {
+          "type": "string",
+          "x-odoo-type": "qweb"
+         }
+        }
+       }
+      }
+     }
+    },
+    {
+     "if": {
+      "properties": {
+       "kind": {
+        "const": "block"
+       }
+      }
+     },
+     "then": {
+      "properties": {
+       "attrs": {
+        "type": "object",
+        "properties": {
+         "position": {
+          "enum": [
+           "after",
+           "before",
+           "inside",
+           "replace",
+           "attributes",
+           "move"
+          ]
+         },
+         "version": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "invisible": {
+          "type": "string",
+          "x-odoo-type": "pyexpr"
+         },
+         "groups": {
+          "type": "string",
+          "x-odoo-type": "groups"
+         },
+         "class": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "name": {
+          "type": "string",
+          "x-odoo-type": "ident"
+         },
+         "id": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "string": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "colspan": {
+          "type": "string",
+          "pattern": "^-?[0-9]+$"
+         },
+         "style": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "title": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "help": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "role": {
+          "type": "string",
+          "x-odoo-type": "str"
+         }
+        },
+        "additionalProperties": false,
+        "patternProperties": {
+         "^aria-": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "^data-": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "^t-": {
+          "type": "string",
+          "x-odoo-type": "qweb"
+         }
+        }
+       }
+      }
+     }
+    },
     {
      "if": {
       "properties": {
@@ -330,6 +529,10 @@
           "type": "string",
           "x-odoo-type": "str"
          },
+         "cancel-label": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
          "close": {
           "enum": [
            "1",
@@ -378,6 +581,10 @@
           "type": "string",
           "x-odoo-type": "str"
          },
+         "noSaveDialog": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
          "special": {
           "enum": [
            "cancel",
@@ -389,6 +596,10 @@
           "x-odoo-type": "str"
          },
          "type": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "widget": {
           "type": "string",
           "x-odoo-type": "str"
          }
@@ -824,6 +1035,97 @@
      "if": {
       "properties": {
        "kind": {
+        "const": "delete"
+       }
+      }
+     },
+     "then": {
+      "properties": {
+       "attrs": {
+        "type": "object",
+        "properties": {
+         "position": {
+          "enum": [
+           "after",
+           "before",
+           "inside",
+           "replace",
+           "attributes",
+           "move"
+          ]
+         },
+         "version": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "invisible": {
+          "type": "string",
+          "x-odoo-type": "pyexpr"
+         },
+         "groups": {
+          "type": "string",
+          "x-odoo-type": "groups"
+         },
+         "class": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "name": {
+          "type": "string",
+          "x-odoo-type": "ident"
+         },
+         "id": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "string": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "colspan": {
+          "type": "string",
+          "pattern": "^-?[0-9]+$"
+         },
+         "style": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "title": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "help": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "role": {
+          "type": "string",
+          "x-odoo-type": "str"
+         }
+        },
+        "additionalProperties": false,
+        "patternProperties": {
+         "^aria-": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "^data-": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "^t-": {
+          "type": "string",
+          "x-odoo-type": "qweb"
+         }
+        }
+       }
+      }
+     }
+    },
+    {
+     "if": {
+      "properties": {
+       "kind": {
         "const": "field"
        }
       }
@@ -960,6 +1262,10 @@
           "x-odoo-type": "str"
          },
          "label": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "media_type": {
           "type": "string",
           "x-odoo-type": "str"
          },
@@ -2297,7 +2603,25 @@
           "type": "string",
           "x-odoo-type": "str"
          },
+         "company_dependent": {
+          "enum": [
+           "1",
+           "0",
+           "True",
+           "False",
+           "true",
+           "false"
+          ]
+         },
          "documentation": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "info": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "type": {
           "type": "string",
           "x-odoo-type": "str"
          }
@@ -2780,6 +3104,10 @@
           "type": "string",
           "x-odoo-type": "str"
          },
+         "hide_service": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
          "highlight": {
           "enum": [
            "1",
@@ -2806,7 +3134,15 @@
           "type": "string",
           "x-odoo-type": "str"
          },
+         "service_name": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
          "text": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "tooltip": {
           "type": "string",
           "x-odoo-type": "str"
          }
@@ -3309,6 +3645,7 @@
       "button",
       "control",
       "create",
+      "delete",
       "field",
       "groupby",
       "header",
@@ -3609,6 +3946,97 @@
       "properties": {
        "kind": {
         "const": "create"
+       }
+      }
+     },
+     "then": {
+      "properties": {
+       "attrs": {
+        "type": "object",
+        "properties": {
+         "position": {
+          "enum": [
+           "after",
+           "before",
+           "inside",
+           "replace",
+           "attributes",
+           "move"
+          ]
+         },
+         "version": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "invisible": {
+          "type": "string",
+          "x-odoo-type": "pyexpr"
+         },
+         "groups": {
+          "type": "string",
+          "x-odoo-type": "groups"
+         },
+         "class": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "name": {
+          "type": "string",
+          "x-odoo-type": "ident"
+         },
+         "id": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "string": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "colspan": {
+          "type": "string",
+          "pattern": "^-?[0-9]+$"
+         },
+         "style": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "title": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "help": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "role": {
+          "type": "string",
+          "x-odoo-type": "str"
+         }
+        },
+        "additionalProperties": false,
+        "patternProperties": {
+         "^aria-": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "^data-": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "^t-": {
+          "type": "string",
+          "x-odoo-type": "qweb"
+         }
+        }
+       }
+      }
+     }
+    },
+    {
+     "if": {
+      "properties": {
+       "kind": {
+        "const": "delete"
        }
       }
      },
@@ -5081,6 +5509,10 @@
            "false"
           ]
          },
+         "expand": {
+          "type": "string",
+          "x-odoo-type": "pyexpr"
+         },
          "filter_domain": {
           "type": "string",
           "x-odoo-type": "domain"
@@ -5089,9 +5521,17 @@
           "type": "string",
           "x-odoo-type": "str"
          },
+         "limit": {
+          "type": "string",
+          "x-odoo-type": "pyexpr"
+         },
          "operator": {
           "type": "string",
           "x-odoo-type": "str"
+         },
+         "options": {
+          "type": "string",
+          "x-odoo-type": "json"
          },
          "select": {
           "type": "string",
@@ -6193,8 +6633,10 @@
       "button",
       "control",
       "create",
+      "delete",
       "field",
       "footer",
+      "group",
       "header",
       "kanban",
       "label",
@@ -6464,6 +6906,14 @@
            "always"
           ]
          },
+         "icon": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "options": {
+          "type": "string",
+          "x-odoo-type": "json"
+         },
          "type": {
           "type": "string",
           "x-odoo-type": "str"
@@ -6674,6 +7124,97 @@
      "if": {
       "properties": {
        "kind": {
+        "const": "delete"
+       }
+      }
+     },
+     "then": {
+      "properties": {
+       "attrs": {
+        "type": "object",
+        "properties": {
+         "position": {
+          "enum": [
+           "after",
+           "before",
+           "inside",
+           "replace",
+           "attributes",
+           "move"
+          ]
+         },
+         "version": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "invisible": {
+          "type": "string",
+          "x-odoo-type": "pyexpr"
+         },
+         "groups": {
+          "type": "string",
+          "x-odoo-type": "groups"
+         },
+         "class": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "name": {
+          "type": "string",
+          "x-odoo-type": "ident"
+         },
+         "id": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "string": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "colspan": {
+          "type": "string",
+          "pattern": "^-?[0-9]+$"
+         },
+         "style": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "title": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "help": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "role": {
+          "type": "string",
+          "x-odoo-type": "str"
+         }
+        },
+        "additionalProperties": false,
+        "patternProperties": {
+         "^aria-": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "^data-": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "^t-": {
+          "type": "string",
+          "x-odoo-type": "qweb"
+         }
+        }
+       }
+      }
+     }
+    },
+    {
+     "if": {
+      "properties": {
+       "kind": {
         "const": "field"
        }
       }
@@ -6744,6 +7285,10 @@
          "alt": {
           "type": "string",
           "x-odoo-type": "str"
+         },
+         "context": {
+          "type": "string",
+          "x-odoo-type": "context"
          },
          "digits": {
           "type": "string",
@@ -6822,6 +7367,97 @@
       "properties": {
        "kind": {
         "const": "footer"
+       }
+      }
+     },
+     "then": {
+      "properties": {
+       "attrs": {
+        "type": "object",
+        "properties": {
+         "position": {
+          "enum": [
+           "after",
+           "before",
+           "inside",
+           "replace",
+           "attributes",
+           "move"
+          ]
+         },
+         "version": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "invisible": {
+          "type": "string",
+          "x-odoo-type": "pyexpr"
+         },
+         "groups": {
+          "type": "string",
+          "x-odoo-type": "groups"
+         },
+         "class": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "name": {
+          "type": "string",
+          "x-odoo-type": "ident"
+         },
+         "id": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "string": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "colspan": {
+          "type": "string",
+          "pattern": "^-?[0-9]+$"
+         },
+         "style": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "title": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "help": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "role": {
+          "type": "string",
+          "x-odoo-type": "str"
+         }
+        },
+        "additionalProperties": false,
+        "patternProperties": {
+         "^aria-": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "^data-": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "^t-": {
+          "type": "string",
+          "x-odoo-type": "qweb"
+         }
+        }
+       }
+      }
+     }
+    },
+    {
+     "if": {
+      "properties": {
+       "kind": {
+        "const": "group"
        }
       }
      },

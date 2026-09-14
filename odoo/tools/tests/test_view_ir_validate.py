@@ -1,6 +1,9 @@
 import unittest
 
+from lxml import etree
+
 from odoo.tools import view_ir
+from odoo.tools.view_validation import ir_valid, valid_view
 
 
 def codes(arch, view_type=None):
@@ -99,4 +102,34 @@ class TestViewIrValidate(unittest.TestCase):
         )
         self.assertEqual(
             str(issue), "error missing-attr at field[0/0]: 'name' is required"
+        )
+
+
+class TestViewValidationUsesTheIr(unittest.TestCase):
+    def test_valid_view_refuses_what_the_ir_calls_an_error(self):
+        with self.assertLogs("odoo.tools.view_validation", "WARNING") as logs:
+            self.assertFalse(
+                valid_view(etree.fromstring("<form><bold>x</bold></form>"))
+            )
+            self.assertFalse(
+                valid_view(
+                    etree.fromstring('<pivot><field name="d" type="rowt"/></pivot>')
+                )
+            )
+        self.assertTrue(any("unknown-kind" in line for line in logs.output))
+        self.assertTrue(any("bad-enum" in line for line in logs.output))
+
+    def test_valid_view_keeps_accepting_a_clean_arch_and_undeclared_attributes(self):
+        self.assertTrue(
+            valid_view(
+                etree.fromstring('<form><field name="x" nb_records_shown="3"/></form>')
+            )
+        )
+        self.assertTrue(
+            ir_valid(etree.fromstring('<list><field name="x" optional="show"/></list>'))
+        )
+
+    def test_a_root_the_ir_does_not_know_is_not_the_ir_s_business(self):
+        self.assertTrue(
+            ir_valid(etree.fromstring("<my_custom_view><bold/></my_custom_view>"))
         )

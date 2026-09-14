@@ -77,6 +77,7 @@ capabilities so portal pages can be rendered without the ``website`` module.
             "web/static/src/model/**/*",
             "web/static/src/search/**/*",
             "web/static/src/views/view.js",
+            "web/static/src/views/ir/view_ir.js",
             "web/static/src/views/view_hook.js",
             "web/static/src/webclient/actions/action_dialog.js",
             "web/static/src/webclient/actions/reports/utils.js",
