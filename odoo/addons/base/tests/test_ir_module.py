@@ -826,7 +826,7 @@ class IrModuleUpgradeCascadeOverrideCase(TransactionCase):
                 "odoo.addons.base.models.ir_module.get_module_content_checksum",
                 side_effect=checksums.get,
             ),
-            patch.dict(config.options, {"skip_unchanged_modules": True}),
+            config.patch(skip_unchanged_modules=True),
         ):
             marked = modules[requested]._get_module_ids_to_upgrade(
                 list(modules.values())
