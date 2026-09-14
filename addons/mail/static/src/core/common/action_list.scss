@@ -10,6 +10,12 @@
         }
     }
 
+    // Unlike the generic switcher, an action group may have no active action:
+    // hide the sliding background, which would otherwise sit on the first one.
+    .o-mail-ActionList-group.o_switcher:not(:has(.btn.active))::before {
+        display: none;
+    }
+
     button {
         z-index: 1;
         --btn-disabled-opacity: 0.25;
