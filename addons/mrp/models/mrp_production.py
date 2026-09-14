@@ -1848,6 +1848,11 @@ class MrpProduction(models.Model):
             and not wo.needed_by_workorder_ids
         )._action_plan(from_date=self.date_start, ignore_schedule=ignore_schedule)
 
+        if self.state == 'draft':
+            # In order to avoid a cyclic dependency resulting in caching errors,
+            # we update WOs state here rather than in their _compute_state method.
+            self.workorder_ids.filtered(lambda wo: wo.state == 'blocked').state = 'ready'
+
     def button_unplan(self):
         orders_to_unplan = self.filtered(lambda order: order.is_planned)
         orders_to_unplan._unplan_workorders()
