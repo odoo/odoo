@@ -9,9 +9,12 @@ from odoo.addons.hr_homeworking.models.hr_homeworking import DAYS
 @tagged("post_install", "-at_install")
 class TestWorkLocationDelete(HomeworkingCase):
     def test_the_current_day_field_is_one_of_the_seven(self):
-        field = self.env["hr.employee"]._get_current_day_location_field()
+        # Against the READER's today, not the host's: the two disagree for six
+        # hours a day on this server, so `Date.today()` here would flake.
+        Employee = self.env["hr.employee"]
+        field = Employee._get_current_day_location_field()
         self.assertIn(field, DAYS)
-        self.assertEqual(field, DAYS[Date.today().weekday()])
+        self.assertEqual(field, DAYS[Date.context_today(Employee).weekday()])
 
     def test_an_unused_location_can_be_deleted(self):
         spare = self.env["hr.work.location"].create(
