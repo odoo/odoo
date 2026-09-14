@@ -67,6 +67,7 @@ class WebsiteRoute(models.Model):
 class WebsiteRewrite(models.Model):
     _name = "website.rewrite"
     _description = "Website rewrite"
+    _order = "sequence"
 
     name = fields.Char(required=True)
     website_id = fields.Many2one(

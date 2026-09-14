@@ -340,6 +340,42 @@ class TestAccountJournal(AccountTestInvoicingCommon, HttpCase):
             "two same-named journals must not end up sharing one alias",
         )
 
+    def test_ledger_groups_come_back_in_the_order_they_were_dragged_into(self):
+        """`account_journal_views.xml` puts `widget="handle"` on the ledger-group
+        list, and `_get_filter_journal_groups` already asks for `order="sequence"`
+        by hand -- the model simply never declared it, so every other reader,
+        the settings list included, got id order.
+        """
+        Group = self.env["account.journal.group"]
+        groups = Group.create(
+            [
+                {"name": "Third", "sequence": 30},
+                {"name": "Second", "sequence": 20},
+                {"name": "First", "sequence": 10},
+            ]
+        )
+        self.env.flush_all()
+        self.env.invalidate_all()
+
+        found = Group.search([("id", "in", groups.ids)])
+
+        self.assertEqual(found.mapped("name"), ["First", "Second", "Third"])
+
+    def test_ledger_groups_at_the_default_sequence_keep_a_stable_order(self):
+        """Every row in an existing database sits at the default sequence, so the
+        case that matters is the tie: a sort key with no tiebreak would order
+        them however the query plan came out."""
+        Group = self.env["account.journal.group"]
+        tied = Group.create([{"name": f"Tied {index}"} for index in range(6)])
+        self.env.flush_all()
+        self.env.invalidate_all()
+        self.assertEqual(len(set(tied.mapped("sequence"))), 1, "the fixture must tie")
+
+        orders = [Group.search([("id", "in", tied.ids)]).ids for _ in range(4)]
+
+        self.assertEqual(orders[0], sorted(tied.ids))
+        self.assertTrue(all(order == orders[0] for order in orders))
+
 
 @tagged("post_install", "-at_install")
 class TestAccountJournalSelectableDomain(AccountTestInvoicingCommon):

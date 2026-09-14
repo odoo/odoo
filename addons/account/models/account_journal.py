@@ -119,6 +119,7 @@ CASH_DIFFERENCE_TYPES = _types_where(cash_difference=True)
 class AccountJournalGroup(models.Model):
     _name = "account.journal.group"
     _description = "Account Journal Group"
+    _order = "sequence"
     _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of
 

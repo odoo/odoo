@@ -6,6 +6,7 @@ from odoo.addons.base.models.mixin_catalog import name_uniq_index
 class HrRecruitmentDegree(models.Model):
     _name = "hr.recruitment.degree"
     _description = "Applicant Degree"
+    _order = "sequence"
 
     name = fields.Char(
         string="Degree Name",

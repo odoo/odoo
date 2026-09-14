@@ -1145,3 +1145,39 @@ class TestRecruitment(TransactionCase):
         )
         self.assertEqual(other_job.document_ids.mapped("name"), ["on_other_job.txt"])
         self.assertEqual(job.documents_count, 2)
+
+    def test_degrees_come_back_in_the_order_they_were_dragged_into(self):
+        """The degree list ships `widget="handle"`, which writes `sequence`.
+
+        Without `_order` naming it the drag wrote a column nothing read, so the
+        list re-rendered in id order and the reordering silently did nothing.
+        """
+        Degree = self.env["hr.recruitment.degree"]
+        degrees = Degree.create(
+            [
+                {"name": "Third", "sequence": 30},
+                {"name": "Second", "sequence": 20},
+                {"name": "First", "sequence": 10},
+            ]
+        )
+        self.env.flush_all()
+        self.env.invalidate_all()
+
+        found = Degree.search([("id", "in", degrees.ids)])
+
+        self.assertEqual(found.mapped("name"), ["First", "Second", "Third"])
+
+    def test_degrees_left_at_the_default_sequence_keep_a_stable_order(self):
+        """Every row in an existing database sits at the default sequence, so the
+        interesting case is the tie, not the reordering: a sort key with no
+        tiebreak would order them however the plan happened to come out."""
+        Degree = self.env["hr.recruitment.degree"]
+        tied = Degree.create([{"name": f"Tied {index}"} for index in range(6)])
+        self.env.flush_all()
+        self.env.invalidate_all()
+        self.assertEqual(len(set(tied.mapped("sequence"))), 1, "the fixture must tie")
+
+        orders = [Degree.search([("id", "in", tied.ids)]).ids for _ in range(4)]
+
+        self.assertEqual(orders[0], sorted(tied.ids))
+        self.assertTrue(all(order == orders[0] for order in orders))

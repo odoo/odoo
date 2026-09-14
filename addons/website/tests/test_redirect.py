@@ -468,3 +468,51 @@ class TestWebsiteRedirectServe(HttpCase):
             "website-specific 301 must win over the generic one, got %r"
             % res.headers.get("Location"),
         )
+
+
+@tagged("-at_install", "post_install")
+class TestWebsiteRewriteOrdering(TransactionCase):
+    def _rewrite(self, name, **values):
+        return self.env["website.rewrite"].create(
+            {
+                "name": name,
+                "redirect_type": "301",
+                "url_from": f"/from-{name}",
+                "url_to": f"/to-{name}",
+                **values,
+            }
+        )
+
+    def test_rewrites_come_back_in_the_order_they_were_dragged_into(self):
+        """`website_rewrite.xml` puts `widget="handle"` on the redirect list, so
+        the drag writes `sequence`; without `_order` naming it the list
+        re-rendered in id order and the reordering did nothing.
+
+        Routing is unaffected either way: `ir_http._get_rewrites` passes its own
+        `order="website_id DESC, id"`.
+        """
+        rewrites = (
+            self._rewrite("third", sequence=30)
+            | self._rewrite("second", sequence=20)
+            | self._rewrite("first", sequence=10)
+        )
+        self.env.flush_all()
+        self.env.invalidate_all()
+
+        found = self.env["website.rewrite"].search([("id", "in", rewrites.ids)])
+
+        self.assertEqual(found.mapped("name"), ["first", "second", "third"])
+
+    def test_rewrites_at_the_default_sequence_keep_a_stable_order(self):
+        Rewrite = self.env["website.rewrite"]
+        tied = Rewrite.browse()
+        for index in range(6):
+            tied |= self._rewrite(f"tied-{index}")
+        self.env.flush_all()
+        self.env.invalidate_all()
+        self.assertEqual(len(set(tied.mapped("sequence"))), 1, "the fixture must tie")
+
+        orders = [Rewrite.search([("id", "in", tied.ids)]).ids for _ in range(4)]
+
+        self.assertEqual(orders[0], sorted(tied.ids))
+        self.assertTrue(all(order == orders[0] for order in orders))
