@@ -60,6 +60,7 @@ beforeEach(async () => {
             name: "Pierre",
             resource_type: "user",
             user_id: data.userPierreId,
+            partner_id: data.partnerPierreId,
             im_status: "online",
         },
     ]);
@@ -84,16 +85,23 @@ beforeEach(async () => {
             resource_type: "user",
         },
     ]);
+    // resource_mail/models/resource_resource.py reads the stored fields and
+    // derives `phone` from the party's phone records; the mock does the same
     onRpc("resource.resource", "get_avatar_card_data", (params) => {
         const resourceIdArray = params.args[0];
         const resourceId = resourceIdArray[0];
         const resources = pyEnv["resource.resource"].read([resourceId]);
-        const result = resources.map((resource) => ({
-            name: resource.name,
-            email: resource.email,
-            phone: resource.phone,
-            user_id: resource.user_id,
-        }));
+        const result = resources.map((resource) => {
+            const [partner] = resource.partner_id
+                ? pyEnv["res.partner"].read([resource.partner_id[0]])
+                : [undefined];
+            return {
+                name: resource.name,
+                email: resource.email,
+                phone: partner?.phone,
+                user_id: resource.user_id,
+            };
+        });
         return result;
     });
 });

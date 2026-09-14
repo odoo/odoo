@@ -11,7 +11,7 @@ export const applyFrCertResCompanyRecords = () => {
             company_registry: false,
             vat: false,
             name: "My FR Company",
-            phone: "",
+            phone_ids: [],
             partner_id: 1,
             country_id: 75,
             state_id: false,

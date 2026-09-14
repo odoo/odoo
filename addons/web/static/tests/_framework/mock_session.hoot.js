@@ -2,6 +2,24 @@
 
 import { onServerStateChange, serverState } from "./mock_server_state.hoot.js";
 
+/**
+ * Mirror of `ir.http.session_info()["groups"]`: `web` seeds
+ * `base.group_allow_export`; an addon whose `ir.http` override adds a group
+ * registers it here from its test helpers, so a mock session seeds
+ * `user.hasGroup` exactly as a real one does and a service that reads those
+ * groups at boot makes no RPC in a test either.
+ *
+ * @type {Map<string, boolean>}
+ */
+const sessionGroups = new Map([["base.group_allow_export", true]]);
+
+/** @param {Record<string, boolean>} groups */
+export function registerSessionGroups(groups) {
+    for (const [group, value] of Object.entries(groups)) {
+        sessionGroups.set(group, value);
+    }
+}
+
 /** @param {typeof serverState} serverState */
 export const makeSession = ({
     companies,
@@ -25,6 +43,7 @@ export const makeSession = ({
     db,
     registry_hash: "05500d71e084497829aa807e3caa2e7e9782ff702c15b2f57f87f2d64d049bd0",
     menus_cache_version: `05500d71e084497829aa807e3caa2e7e9782ff702c15b2f57f87f2d64d049bd0:${userId}`,
+    groups: Object.fromEntries(sessionGroups),
     home_action_id: false,
     is_admin: true,
     is_internal_user: true,

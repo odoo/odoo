@@ -138,7 +138,7 @@ test("ProductCard is operable from the keyboard", async () => {
             clicks.push("activated");
         }
     }
-    await mountWithCleanup(Parent, { env: { currency: { id: 1 } } });
+    await mountWithCleanup(Parent, { componentEnv: { currency: { id: 1 } } });
 
     const card = queryFirst("article.product-card");
     expect(card).toHaveAttribute("role", "button");
