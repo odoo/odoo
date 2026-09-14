@@ -30,6 +30,7 @@ export class WithSearch extends Component {
         orderBy: { type: Array, element: Object, optional: true },
 
         searchViewArch: { type: String, optional: true },
+        searchViewIR: { type: Object, optional: true },
         searchViewFields: { type: Object, optional: true },
         searchViewId: { type: [Number, Boolean], optional: true },
 

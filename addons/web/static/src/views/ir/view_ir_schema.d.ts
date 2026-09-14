@@ -860,7 +860,7 @@ export interface ListFieldAttrs {
     invisible?: string;
     name?: string;
     nolabel?: string;
-    optional?: "show" | "hide" | "conditional";
+    optional?: string;
     options?: string;
     password?: string;
     placeholder?: string;

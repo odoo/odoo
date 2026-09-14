@@ -281,8 +281,9 @@ export function getMultiRecordModelParams({
  * @returns {Record<string, any>}
  */
 export function defaultViewProps(genericProps, view) {
-    const { arch, relatedModels, resModel } = genericProps;
-    const archInfo = new view.ArchParser().parse(arch, relatedModels, resModel);
+    const { arch, ir, relatedModels, resModel } = genericProps;
+    const input = view.ArchParser.consumes === "ir" ? ir : arch;
+    const archInfo = new view.ArchParser().parse(input, relatedModels, resModel);
     return {
         ...genericProps,
         Model: view.Model,

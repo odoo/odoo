@@ -2,6 +2,7 @@
 /** @odoo-module native */
 
 import { makeLogger } from "@web/core/debug/debug_logger";
+import { nbsp } from "@web/core/utils/format/strings";
 
 /**
  * @typedef {import("./view_ir_schema").ViewIRNode} ViewIRNode
@@ -9,6 +10,15 @@ import { makeLogger } from "@web/core/debug/debug_logger";
  */
 
 const log = makeLogger("web.view_ir");
+
+/**
+ * The arch text hook every view applies: a literal "&nbsp;" in a text node or
+ * an attribute value is the non-breaking space the author meant — the same
+ * rule the arch-string path applied with one replaceAll over the whole arch.
+ *
+ * @param {string} value
+ */
+export const literalNbsp = (value) => value.replaceAll("&nbsp;", nbsp);
 
 const XMLNS_NS = "http://www.w3.org/2000/xmlns/";
 const XML_NS = "http://www.w3.org/XML/1998/namespace";

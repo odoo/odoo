@@ -26,8 +26,8 @@ class TestViewIrValidate(unittest.TestCase):
     def test_the_view_type_is_inferred_from_the_root(self):
         self.assertEqual(codes('<list><field name="x" optional="show"/></list>'), [])
         self.assertEqual(
-            codes('<list><field name="x" optional="maybe"/></list>'),
-            [("bad-enum", "field", "error")],
+            codes('<list editable="sideways"><field name="x"/></list>'),
+            [("bad-enum", "list", "error")],
         )
 
     def test_a_conditional_column_is_a_valid_optional(self):

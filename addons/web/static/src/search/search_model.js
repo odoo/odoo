@@ -68,6 +68,7 @@ import { getIntervalOptions } from "./utils/dates.js";
  * @typedef {Object} SearchModelConfig
  * @property {string} resModel
  * @property {string} [searchViewArch]
+ * @property {import("@web/views/ir/view_ir_schema").ViewIRNode} [searchViewIR]
  * @property {Record<string, any>} [searchViewFields]
  * @property {number|false} [searchViewId]
  * @property {Record<string, any>[]} [irFilters]
@@ -235,7 +236,8 @@ export class SearchModel extends SearchQueryMixin(
      * @returns {Promise<{searchViewDescription: Record<string, any>, searchViewFields: Record<string, any>}>}
      */
     async _resolveSearchView(config) {
-        const { irFilters, loadIrFilters, searchViewArch, searchViewId } = config;
+        const { irFilters, loadIrFilters, searchViewArch, searchViewIR, searchViewId } =
+            config;
         let { searchViewFields } = config;
         const loadSearchView =
             searchViewId !== undefined &&
@@ -260,6 +262,7 @@ export class SearchModel extends SearchQueryMixin(
         }
         if (searchViewArch) {
             searchViewDescription.arch = searchViewArch;
+            searchViewDescription.ir = searchViewIR;
         }
         if (irFilters) {
             searchViewDescription.irFilters = irFilters;

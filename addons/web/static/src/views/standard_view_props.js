@@ -7,6 +7,7 @@ export const standardViewProps = {
     },
     resModel: String,
     arch: { type: Element },
+    ir: { type: Object, optional: true },
     className: { type: String, optional: true },
     context: { type: Object },
     createRecord: { type: Function, optional: true },
