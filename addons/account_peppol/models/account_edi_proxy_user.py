@@ -268,6 +268,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             move_type = 'out_invoice'
             if not journal:
                 return {}
+        partner_endpoint = self.env.context.get('peppol_sender_identifier')
 
         move = self.env['account.move'].create({
             'journal_id': journal.id,
@@ -287,8 +288,8 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             move._autopost_bill()
         except Exception as err:
             _logger.exception(
-                "Unexpected error occurred during the import of bill with id %s (%s uuid: %s, attachment: %s)",
-                move.id, self.proxy_type, uuid, attachment.id,
+                "Unexpected error occurred during the import of bill with id %s (%s uuid: %s, attachment: %s, partner_endpoint: %s)",
+                move.id, self.proxy_type, uuid, attachment.id, partner_endpoint,
             )
             move._message_log(
                 body=Markup("%s<br/>%s") % (
@@ -382,6 +383,10 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 endpoint=edi_user._get_peppol_proxy_endpoint('1/get_document'),
                 params={'message_uuids': message_uuids},
             )
+            # The sender identifier is only returned by `get_all_documents`.
+            uuid_to_sender = {message['uuid']: message.get('sender') for message in received_messages}
+            for uuid, content in all_messages.items():
+                content.setdefault('sender', uuid_to_sender.get(uuid))
 
             processed_uuids, moves = edi_user._peppol_process_new_messages(all_messages)
 
@@ -420,7 +425,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 "mimetype": mimetype,
             })
             try:
-                if uuid_move := self._peppol_import_invoice(attachment, content['state'], uuid):
+                if uuid_move := self.with_context(peppol_sender_identifier=content.get('sender'))._peppol_import_invoice(attachment, content['state'], uuid):
                     # Only acknowledge when we saved the document somewhere
                     processed_uuids.append(uuid)
                     moves += uuid_move.get('move', self.env['account.move'])
