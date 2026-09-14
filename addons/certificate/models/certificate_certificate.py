@@ -27,7 +27,9 @@ def _parse_x509_certificate(pem_bytes):
 
 class CertificateCertificate(models.Model):
     _name = "certificate.certificate"
-    _inherit = ["mixin.encryption"]
+    _inherit = ["mixin.encryption", "mixin.credential.holder"]
+    _credential_holder_field = "certificate_credential_id"
+    _credential_purpose = "certificate:secrets"
     _description = "Certificate"
     _order = "date_end DESC"
     _check_company_auto = True
@@ -46,6 +48,14 @@ class CertificateCertificate(models.Model):
         default=lambda self: self.env.company,
         required=True,
         ondelete="cascade",
+    )
+    certificate_credential_id = fields.Many2one(
+        comodel_name="credential.credential",
+        string="Credential",
+        copy=False,
+        ondelete="restrict",
+        groups="base.group_system",
+        help="Holds the session and service secrets modules keep for this certificate.",
     )
     country_code = fields.Char(
         related="company_id.country_code",
