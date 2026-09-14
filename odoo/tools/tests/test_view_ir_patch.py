@@ -103,6 +103,7 @@ class TestPatchAlgebra(unittest.TestCase):
         )
         ids = view_ir.identify(applied.root)
         wrap = ids["group:main"].children[0]
+        self.assertEqual(wrap.children[0].children[0].attrs, {"name": "partner_id"})
         self.assertIs(wrap.children[0].children[0], ids["field:partner_id"])
         self.assertIsNone(ids["field:partner_id"].origin)
         self.assertEqual(wrap.origin, "b")
