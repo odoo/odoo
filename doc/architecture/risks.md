@@ -65,10 +65,15 @@ both and still be wrong at runtime.
 
 **Evidence.** As of odoo `f7e799ce3578` (2026-09-13) no dispatch site branches on a
 capability instead of calling the port, and record rules, the parent store and
-translation echoes run on `InMemoryBackend` as they do on PostgreSQL; what
-`odoo/orm/tests/test_backend_dispatch_surface.py` still marks `LOSSY` is fetch
-bookkeeping (`bin_size`, to-flush), jsonb translation merges and
-company-dependent columns on update, and the `ir.default` cleanup on unlink.
+translation echoes run on `InMemoryBackend` as they do on PostgreSQL. Re-read
+2026-09-14: the one site `odoo/orm/tests/test_backend_dispatch_surface.py` still
+marks `LOSSY` is `_read_group`, for `sum_currency`, an order by an array
+aggregate and an order term outside the groupby; fetch bookkeeping, the jsonb
+merges, the company-dependent guards on unlink and `load()` (with the real
+`ir.fields.converter` handed to an isolated registry) run on both tiers, and
+`model_test_env` ends every test with `Cache.check` against its rows as
+`TransactionCase` does against PostgreSQL. Access rights and record rules stay
+outside the tier by design and raise loud markers.
 The gap that remains is not in the port but in the harness: a module's test
 class cannot yet be hosted on the in-memory tier, because building a registry
 from `base`'s real models and their data files stops at the shared id space of
