@@ -20,6 +20,7 @@ from odoo.libs.json import dumps as json_dumps
 from odoo.libs.json import loads as json_loads
 from odoo.models import PREFETCH_MAX
 
+from ..tools import debug_log as dbg
 from .export_writers import (
     ExportXlsxWriter,
     GroupExportXlsxWriter,
@@ -34,17 +35,20 @@ _EXPORT_MAX_ROWS_DEFAULT = 100_000
 class Export(http.Controller):
     @http.route("/web/export/formats", type="jsonrpc", auth="user", readonly=True)
     def formats(self) -> list[dict[str, Any]]:
+        dbg.lifecycle.debug("[export] formats: %s", dbg.req())
         try:
             import xlsxwriter  # noqa: F401 — availability probe (try/except gates xlsx export)
 
             xlsx_error = None
         except ModuleNotFoundError:
+            dbg.logic.debug("[export] formats: xlsxwriter missing")
             xlsx_error = "XlsxWriter 0.9.3 required"
         return [
             {"tag": "xlsx", "label": "XLSX", "error": xlsx_error},
             {"tag": "csv", "label": "CSV"},
         ]
 
+    @dbg.timed
     def _get_property_fields(
         self,
         fields: dict[str, dict[str, Any]],
@@ -72,11 +76,25 @@ class Export(http.Controller):
                 domain_definition.append(
                     ("id", "in", self_subquery.subselect(field_to_get))
                 )
+            dbg.logic.debug(
+                "[export_fields:%s] properties %s via %s.%s scoped=%s",
+                model,
+                fname,
+                target_model._name,
+                definition_record_field,
+                bool(domain),
+            )
 
             definition_records = target_model.search_fetch(  # noqa: E8507 - one query per properties field of the export
                 domain_definition,
                 [definition_record_field, "display_name"],
                 order="id",
+            )
+            dbg.performance.debug(
+                "[export_fields:%s] properties %s: %d definition records",
+                model,
+                fname,
+                len(definition_records),
             )
 
             for record in definition_records:
@@ -99,6 +117,11 @@ class Export(http.Controller):
                     if definition["type"] in ("many2one", "many2many"):
                         property_fields[id_field]["relation"] = definition["comodel"]
 
+        dbg.pipeline.debug(
+            "[export_fields:%s] %d property fields expanded",
+            model,
+            len(property_fields),
+        )
         return property_fields
 
     @http.route("/web/export/get_fields", type="jsonrpc", auth="user", readonly=True)
@@ -113,6 +136,17 @@ class Export(http.Controller):
         parent_field: dict[str, Any] | None = None,
         exclude: list[str] | None = None,
     ) -> list[dict[str, Any]]:
+        dbg.lifecycle.debug(
+            "[export_fields:%s] get: %s prefix=%r import_compat=%s parent_type=%s "
+            "exclude=%s domain_terms=%s",
+            model,
+            dbg.req(),
+            prefix,
+            import_compat,
+            parent_field_type,
+            dbg.count(exclude or ()),
+            dbg.count(domain),
+        )
 
         Model = request.env[model]
         fields = Model.fields_get(
@@ -130,9 +164,18 @@ class Export(http.Controller):
             ],
         )
 
+        dbg.performance.debug(
+            "[export_fields:%s] fields_get -> %d fields", model, len(fields)
+        )
+
         if import_compat:
             if parent_field_type in ["many2one", "many2many"]:
                 rec_name = Model._get_rec_name_fallback()
+                dbg.logic.debug(
+                    "[export_fields:%s] import-compat relational child: id + %s only",
+                    model,
+                    rec_name,
+                )
                 fields = {"id": fields["id"], rec_name: fields[rec_name]}
         else:
             fields[".id"] = {**fields["id"]}
@@ -140,6 +183,7 @@ class Export(http.Controller):
         fields["id"]["string"] = request.env._("External ID")
 
         if not Model._is_an_ordinary_table():
+            dbg.logic.debug("[export_fields:%s] not an ordinary table: no id", model)
             fields.pop("id", None)
         elif parent_field:
             parent_field["string"] = request.env._("External ID")
@@ -164,6 +208,12 @@ class Export(http.Controller):
         fields_sequence = sorted(
             exportable_fields.items(),
             key=lambda field: field[1]["string"].lower(),
+        )
+        dbg.pipeline.debug(
+            "[export_fields:%s] %d of %d fields exportable",
+            model,
+            len(fields_sequence),
+            len(fields),
         )
 
         return [
@@ -220,10 +270,17 @@ class Export(http.Controller):
 
     @http.route("/web/export/namelist", type="jsonrpc", auth="user", readonly=True)
     def namelist(self, model: str, export_id: int) -> list[dict[str, Any]]:
+        dbg.lifecycle.debug(
+            "[export_fields:%s] namelist: %s export_id=%s", model, dbg.req(), export_id
+        )
         export = request.env["ir.exports"].browse([export_id])
         return self.fields_info(model, export.export_fields.mapped("name"))
 
+    @dbg.timed
     def fields_info(self, model: str, export_fields: list[str]) -> list[dict[str, Any]]:
+        dbg.pipeline.debug(
+            "[export_fields:%s] fields_info for %d paths", model, len(export_fields)
+        )
         field_info = []
         fields = request.env[model].fields_get(
             attributes=[
@@ -248,6 +305,11 @@ class Export(http.Controller):
             subfields = list(subfields)
             if length == 2:
                 if base not in fields or "relation" not in fields[base]:
+                    dbg.logic.debug(
+                        "[export_fields:%s] stale subpaths under %r skipped",
+                        model,
+                        base,
+                    )
                     _logger.debug(
                         "Skipping stale export paths %s on %s: field %r is "
                         "missing or not relational",
@@ -256,6 +318,13 @@ class Export(http.Controller):
                         base,
                     )
                     continue
+                dbg.logic.debug(
+                    "[export_fields:%s] graft %d subpaths under %s -> %s",
+                    model,
+                    len(subfields),
+                    base,
+                    fields[base]["relation"],
+                )
                 field_info.extend(
                     self.graft_subfields(
                         fields[base]["relation"],
@@ -314,6 +383,7 @@ class ExportFormat:
 
     def filename(self, base: str) -> str:
         if base not in request.env:
+            dbg.logic.debug("[export:%s] filename: unknown model, bare name", base)
             return base
 
         model_description = request.env["ir.model"]._get(base).name
@@ -336,9 +406,18 @@ class ExportFormat:
         raise NotImplementedError
 
     def base_response(self, data: str) -> Response:
+        dbg.lifecycle.debug(
+            "[export] %s: %s payload=%d chars", self.format_key, dbg.req(), len(data)
+        )
         try:
-            return self.base(data)
+            with dbg.timer(request.env, "[export] %s whole request", self.format_key):
+                return self.base(data)
         except Exception as exc:
+            dbg.logic.debug(
+                "[export] %s: failed (%s) -> 500 json envelope",
+                self.format_key,
+                type(exc).__name__,
+            )
             _logger.exception("Exception during request handling.")
             payload = json_dumps(
                 {
@@ -370,6 +449,12 @@ class ExportFormat:
             order_root.append(parts[0].split(":", 1)[0].split(".", 1)[0])
         unknown = [f for f in order_root if f not in Model._fields]
         if unknown:
+            dbg.logic.debug(
+                "[export:%s] order %r has unknown fields %s",
+                Model._name,
+                order,
+                unknown,
+            )
             raise UserError(
                 request.env._(
                     "Unknown order fields for %(model)s: %(fields)s",
@@ -378,14 +463,28 @@ class ExportFormat:
                 )
             )
 
+    @dbg.timed
     def _get_export_rows(
         self, Model: Any, records: Any, field_names: list[str]
     ) -> list[list]:
         all_rows = []
+        batches = 0  # debuglog
         for batch_ids in itertools.batched(records.ids, PREFETCH_MAX, strict=False):
             batch = Model.browse(batch_ids)
-            all_rows.extend(batch.export_data(field_names).get("datas", []))
+            with dbg.timer(
+                Model.env, "[export:%s] export_data batch #%d", Model._name, batches
+            ):
+                all_rows.extend(batch.export_data(field_names).get("datas", []))
             batch.invalidate_recordset()
+            batches += 1
+        dbg.pipeline.debug(
+            "[export:%s] %d records -> %d rows in %d batches of %d",
+            Model._name,
+            len(records),
+            len(all_rows),
+            batches,
+            PREFETCH_MAX,
+        )
         return all_rows
 
     def _get_export_groups_tree(
@@ -400,6 +499,12 @@ class ExportFormat:
         groupby_root = [x.split(":", 1)[0].split(".", 1)[0] for x in groupby]
         unknown = [f for f in groupby_root if f not in Model._fields]
         if unknown:
+            dbg.logic.debug(
+                "[export:%s] groupby %s has unknown fields %s",
+                Model._name,
+                groupby,
+                unknown,
+            )
             raise UserError(
                 request.env._(
                     "Unknown groupby fields for %(model)s: %(fields)s",
@@ -414,21 +519,30 @@ class ExportFormat:
             SearchModel = Model.with_context(active_test=False)
         else:
             SearchModel = Model
-        groups_data = SearchModel.formatted_read_group(
-            domain, groupby, ["__count", "id:array_agg"]
+        dbg.logic.debug(
+            "[export:%s] grouped by %s (%s), scope=%s",
+            Model._name,
+            groupby,
+            groupby_type,
+            "ids" if ids else "domain",
         )
+        with dbg.timer(Model.env, "[export:%s] formatted_read_group", Model._name):
+            groups_data = SearchModel.formatted_read_group(
+                domain, groupby, ["__count", "id:array_agg"]
+            )
 
         record_rows = {}
         current_id = None
-        for batch_ids in itertools.batched(records.ids, PREFETCH_MAX, strict=False):
-            batch = Model.browse(batch_ids)
-            export_data = batch.export_data([".id"] + field_names).get("datas", [])
-            for row in export_data:
-                if row[0]:
-                    current_id = int(row[0])
-                    record_rows[current_id] = []
-                record_rows[current_id].append(row[1:])
-            batch.invalidate_recordset()
+        with dbg.timer(Model.env, "[export:%s] grouped export_data", Model._name):
+            for batch_ids in itertools.batched(records.ids, PREFETCH_MAX, strict=False):
+                batch = Model.browse(batch_ids)
+                export_data = batch.export_data([".id"] + field_names).get("datas", [])
+                for row in export_data:
+                    if row[0]:
+                        current_id = int(row[0])
+                        record_rows[current_id] = []
+                    record_rows[current_id].append(row[1:])
+                batch.invalidate_recordset()
 
         groups = [group["id:array_agg"] for group in groups_data]
         record_to_group = defaultdict(list)
@@ -443,6 +557,14 @@ class ExportFormat:
 
         for group_info, group_rows in zip(groups_data, grouped_rows, strict=True):
             tree.add_leaf(group_info, group_rows)
+        dbg.pipeline.debug(
+            "[export:%s] tree: %d groups, %d records, %d rows, count=%d",
+            Model._name,
+            len(groups),
+            len(record_rows),
+            sum(len(rows) for rows in grouped_rows),
+            tree.count,
+        )
         return tree
 
     def base(self, data: str) -> Response:
@@ -454,7 +576,23 @@ class ExportFormat:
         Model = request.env[model].with_context(
             import_compat=import_compat, **params.get("context", {})
         )
+        dbg.pipeline.debug(
+            "[export:%s] %s: %d fields ids=%s domain_terms=%s import_compat=%s "
+            "groupby=%s order=%r context=%s",
+            model,
+            self.format_key,
+            len(fields),
+            dbg.count(ids or ()),
+            dbg.count(domain or ()),
+            import_compat,
+            params.get("groupby"),
+            params.get("order"),
+            dbg.keys(params.get("context", {})),
+        )
         if not Model._is_an_ordinary_table():
+            dbg.logic.debug(
+                "[export:%s] not an ordinary table: id column dropped", model
+            )
             fields = [field for field in fields if field["name"] != "id"]
 
         field_names = [f["name"] for f in fields]
@@ -474,7 +612,14 @@ class ExportFormat:
                 .sudo()
                 .get_param("web.export_max_rows", _EXPORT_MAX_ROWS_DEFAULT)
             )
-            records = Model.search(domain, order=order, limit=max_rows)
+            with dbg.timer(Model.env, "[export:%s] search limit=%d", model, max_rows):
+                records = Model.search(domain, order=order, limit=max_rows)
+            dbg.logic.debug(
+                "[export:%s] search -> %d records (cap %d)",
+                model,
+                len(records),
+                max_rows,
+            )
             if len(records) >= max_rows:
                 _logger.warning(
                     "Export of %s truncated at %d rows (web.export_max_rows)",
@@ -487,10 +632,19 @@ class ExportFormat:
             tree = self._get_export_groups_tree(
                 Model, records, field_names, groupby, ids, domain
             )
-            response_data = self.from_group_data(fields, columns_headers, tree)
+            with dbg.timer(
+                Model.env, "[export:%s] %s from_group_data", model, self.format_key
+            ):
+                response_data = self.from_group_data(fields, columns_headers, tree)
         else:
             all_rows = self._get_export_rows(Model, records, field_names)
-            response_data = self.from_data(fields, columns_headers, all_rows)
+            with dbg.timer(
+                Model.env, "[export:%s] %s from_data", model, self.format_key
+            ):
+                response_data = self.from_data(fields, columns_headers, all_rows)
+        dbg.performance.debug(
+            "[export:%s] %s: %d bytes", model, self.format_key, len(response_data)
+        )
 
         _logger.info(
             "User %d exported %d %r records from %s. Fields: %s. %s: %s",
@@ -534,6 +688,7 @@ class CSVExport(ExportFormat, http.Controller):
         columns_headers: list[str],
         groups: GroupsTreeNode,
     ) -> str | bytes:
+        dbg.logic.debug("[export] csv: grouped export refused")
         raise UserError(
             request.env._("Exporting grouped data to csv is not supported.")
         )
@@ -566,6 +721,11 @@ class ExcelExport(ExportFormat, http.Controller):
             x, y = 1, 0
             for group_name, group in groups.children.items():
                 x, y = xlsx_writer.write_group(x, y, group_name, group)
+        dbg.pipeline.debug(
+            "[export] xlsx grouped: %d top groups -> %d rows",
+            len(groups.children),
+            x,
+        )
 
         return xlsx_writer.value
 

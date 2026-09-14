@@ -15,6 +15,7 @@ from odoo.libs.documents import extension_for
 from odoo.libs.filesystem import osutil
 from odoo.libs.json import loads as json_loads
 
+from ..tools import debug_log as dbg
 from .export_writers import XLSX_MIMETYPE
 
 MAX_EXPORT_CELLS = 1_000_000
@@ -37,8 +38,22 @@ class TableExporter(http.Controller):
     @http.route("/web/pivot/export_xlsx", type="http", auth="user", readonly=True)
     def export_xlsx(self, data: str | FileStorage, **kw) -> Response:
         jdata = json_loads(data.read() if isinstance(data, FileStorage) else data)
+        dbg.lifecycle.debug(
+            "[pivot] export_xlsx: %s payload=%s keys=%s",
+            dbg.req(),
+            "file" if isinstance(data, FileStorage) else "string",
+            dbg.keys(jdata or {}),
+        )
         if not jdata:
+            dbg.logic.debug("[pivot] export_xlsx: empty payload, refused")
             raise UnprocessableEntity(_("No data to export"))
+        dbg.performance.debug(
+            "[pivot:%s] export_xlsx: %d header rows, %d measures, %d rows",
+            jdata.get("title"),
+            len(jdata.get("col_group_headers", ())),
+            len(jdata.get("measure_headers", ())),
+            len(jdata.get("rows", ())),
+        )
         output = io.BytesIO()
         with xlsxwriter.Workbook(
             output, {"in_memory": True, "strings_to_formulas": False}
@@ -52,6 +67,11 @@ class TableExporter(http.Controller):
                 nonlocal cells_written
                 cells_written += 1
                 if cells_written > MAX_EXPORT_CELLS:
+                    dbg.logic.debug(
+                        "[pivot:%s] export_xlsx: cell cap %d hit, refused",
+                        jdata.get("title"),
+                        MAX_EXPORT_CELLS,
+                    )
                     raise UnprocessableEntity(
                         _(
                             "This pivot is too large to export (over %s cells). "
@@ -71,18 +91,29 @@ class TableExporter(http.Controller):
 
             measure_count = _clamp_int(jdata["measure_count"], 100000)
 
-            y = self._write_pivot_col_headers(
-                worksheet, jdata, header_plain, measure_count
+            with dbg.timer(request.env, "[pivot:%s] write sheet", jdata.get("title")):
+                y = self._write_pivot_col_headers(
+                    worksheet, jdata, header_plain, measure_count
+                )
+                y = self._write_pivot_measure_headers(
+                    worksheet, jdata, y, header_bold, header_plain
+                )
+                worksheet.freeze_panes(y, 1)
+                self._write_pivot_rows(worksheet, jdata, y, header_plain, bold)
+            dbg.pipeline.debug(
+                "[pivot:%s] export_xlsx: %d cells written, header height %d",
+                jdata.get("title"),
+                cells_written,
+                y,
             )
-            y = self._write_pivot_measure_headers(
-                worksheet, jdata, y, header_bold, header_plain
-            )
-            worksheet.freeze_panes(y, 1)
-            self._write_pivot_rows(worksheet, jdata, y, header_plain, bold)
 
-            worksheet.autofit()
+            with dbg.timer(request.env, "[pivot:%s] autofit", jdata.get("title")):
+                worksheet.autofit()
 
         xlsx_data = output.getvalue()
+        dbg.performance.debug(
+            "[pivot:%s] export_xlsx: %d bytes", jdata.get("title"), len(xlsx_data)
+        )
         filename = osutil.clean_filename(
             _(
                 "Pivot %(title)s (%(model_name)s)",
@@ -103,6 +134,7 @@ class TableExporter(http.Controller):
             ],
         )
 
+    @dbg.timed
     def _write_pivot_col_headers(self, worksheet, jdata, header_plain, measure_count):
         x, y, carry = 1, 0, deque()
         for i, header_row in enumerate(jdata["col_group_headers"]):
@@ -137,11 +169,13 @@ class TableExporter(http.Controller):
             x, y = 1, y + 1
         return y
 
+    @dbg.timed
     def _write_pivot_measure_headers(
         self, worksheet, jdata, y, header_bold, header_plain
     ):
         measure_headers = jdata["measure_headers"]
         if not measure_headers:
+            dbg.logic.debug("[pivot] no measure headers, row %d skipped", y)
             return y
         worksheet.write(y, 0, "", header_plain)
         for x, measure in enumerate(measure_headers, start=1):
@@ -149,6 +183,7 @@ class TableExporter(http.Controller):
             worksheet.write(y, x, _get_capped_cell(measure["title"]), style)
         return y + 1
 
+    @dbg.timed
     def _write_pivot_rows(self, worksheet, jdata, y, header_plain, bold):
         for row in jdata["rows"]:
             indent = _clamp_int(row.get("indent", 0), 50)

@@ -9,8 +9,11 @@ from odoo.http import Response, request
 from odoo.tools import file_open, file_path, str2bool
 from odoo.tools.image import image_process
 
+from ..tools import debug_log as dbg
+
 
 class WebManifest(http.Controller):
+    @dbg.timed
     def _get_shortcuts(self) -> list[dict[str, Any]]:
         module_names = ["mail", "crm", "project", "project_todo"]
         try:
@@ -20,6 +23,7 @@ class WebManifest(http.Controller):
                 .sorted(key=lambda r: module_names.index(r["name"]))
             )
         except AccessError:
+            dbg.logic.debug("[manifest] shortcuts: module list denied -> none")
             return []
         menu_roots = request.env["ir.ui.menu"].get_user_roots()
         menu_data_records = (
@@ -34,6 +38,13 @@ class WebManifest(http.Controller):
             )
         )
         shortcuts = []
+        dbg.performance.debug(
+            "[manifest] shortcuts: %d installed of %d, %d roots, %d xmlids",
+            len(module_ids),
+            len(module_names),
+            len(menu_roots),
+            len(menu_data_records),
+        )
         for module in module_ids:
             data = menu_data_records.filtered(
                 lambda res, m=module: res.module == m.name
@@ -53,6 +64,10 @@ class WebManifest(http.Controller):
                             }
                         ],
                     }
+                )
+            else:
+                dbg.logic.debug(
+                    "[manifest] shortcuts: %s has no root menu", module.name
                 )
         return shortcuts
 
@@ -91,8 +106,15 @@ class WebManifest(http.Controller):
         readonly=True,
     )
     def webmanifest(self) -> Response:
+        dbg.lifecycle.debug("[manifest] webmanifest: %s", dbg.req())
+        manifest = self._get_webmanifest()
+        dbg.pipeline.debug(
+            "[manifest] webmanifest: name=%r shortcuts=%d",
+            manifest["name"],
+            len(manifest["shortcuts"]),
+        )
         return request.prepare_json_response(
-            self._get_webmanifest(),
+            manifest,
             {"Content-Type": "application/manifest+json"},
         )
 
@@ -104,6 +126,7 @@ class WebManifest(http.Controller):
         readonly=True,
     )
     def service_worker(self) -> Response:
+        dbg.lifecycle.debug("[manifest] service_worker: %s", dbg.req())
         return request.prepare_response(
             self._get_service_worker_content(),
             [
@@ -127,6 +150,7 @@ class WebManifest(http.Controller):
         readonly=True,
     )
     def offline(self) -> Response:
+        dbg.lifecycle.debug("[manifest] offline: %s", dbg.req())
         with file_open(self._get_icon_path(), "rb") as f:
             odoo_icon = base64.b64encode(f.read())
         return request.render(
@@ -142,6 +166,13 @@ class WebManifest(http.Controller):
         readonly=True,
     )
     def scoped_app(self, app_id: str, path: str = "", app_name: str = "") -> Response:
+        dbg.lifecycle.debug(
+            "[scoped_app:%s] page: %s path=%r explicit_name=%s",
+            app_id,
+            dbg.req(),
+            path,
+            bool(app_name),
+        )
         app_name = unquote(app_name) if app_name else self._get_scoped_app_name(app_id)
         path = f"/{unquote(path)}"
         scoped_app_values = {
@@ -162,6 +193,9 @@ class WebManifest(http.Controller):
         readonly=True,
     )
     def scoped_app_icon_png(self, app_id: str, add_padding: bool = False) -> Response:
+        dbg.lifecycle.debug(
+            "[scoped_app:%s] icon: %s add_padding=%r", app_id, dbg.req(), add_padding
+        )
         if isinstance(add_padding, str):
             add_padding = str2bool(add_padding, False)
         app_icon = self._get_scoped_app_icons(app_id)[0]
@@ -173,12 +207,23 @@ class WebManifest(http.Controller):
                 icon_src = manifest["icon"]
             else:
                 icon_src = f"/{self._get_icon_path()}"
+            dbg.logic.debug(
+                "[scoped_app:%s] icon: svg -> rasterize %s with padding",
+                app_id,
+                icon_src,
+            )
         else:
             icon_src = app_icon["src"]
             if not add_padding:
+                dbg.logic.debug(
+                    "[scoped_app:%s] icon: png without padding -> redirect", app_id
+                )
                 return request.redirect(app_icon["src"])
 
-        with file_open(icon_src.removeprefix("/"), "rb") as file:
+        with (
+            dbg.timer(None, "[scoped_app:%s] icon: image_process", app_id),
+            file_open(icon_src.removeprefix("/"), "rb") as file,
+        ):
             image = image_process(
                 file.read(),
                 size=(180, 180),
@@ -186,6 +231,7 @@ class WebManifest(http.Controller):
                 colorize=(255, 255, 255),
                 padding=16,
             )
+        dbg.performance.debug("[scoped_app:%s] icon: %d bytes", app_id, len(image))
         return request.prepare_response(image, headers=[("Content-Type", "image/png")])
 
     @http.route(
@@ -198,6 +244,13 @@ class WebManifest(http.Controller):
     def scoped_app_manifest(
         self, app_id: str, path: str, app_name: str = ""
     ) -> Response:
+        dbg.lifecycle.debug(
+            "[scoped_app:%s] manifest: %s path=%r explicit_name=%s",
+            app_id,
+            dbg.req(),
+            path,
+            bool(app_name),
+        )
         path = unquote(path)
         app_name = unquote(app_name) if app_name else self._get_scoped_app_name(app_id)
         webmanifest = {
@@ -222,12 +275,14 @@ class WebManifest(http.Controller):
         manifest = modules.Manifest.for_addon(app_id, display_warning=False)
         if manifest:
             return manifest["name"]
+        dbg.logic.debug("[scoped_app:%s] no manifest, name falls back to id", app_id)
         return app_id
 
     def _get_scoped_app_icons(self, app_id: str) -> list[dict[str, str]]:
         try:
             file_path(f"{app_id}/static/description/icon.svg")
         except FileNotFoundError:
+            dbg.logic.debug("[scoped_app:%s] no icon.svg, default icon", app_id)
             src = self._get_icon_path()
         else:
             src = f"{app_id}/static/description/icon.svg"

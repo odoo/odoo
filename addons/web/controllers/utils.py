@@ -12,6 +12,8 @@ from odoo.http import abort, request
 from odoo.tools.misc import file_open
 from odoo.tools.translate import JAVASCRIPT_TRANSLATION_COMMENT
 
+from ..tools import debug_log as dbg
+
 _logger = logging.getLogger(__name__)
 
 
@@ -37,6 +39,11 @@ def _is_local_url(url: str | None) -> bool:
 def clean_action(action: dict, env: Any) -> dict:
     action_type = action.setdefault("type", "ir.actions.act_window_close")
     if action_type == "ir.actions.act_window" and not action.get("views"):
+        dbg.logic.debug(
+            "[clean_action:%s] no views, derive from view_mode=%r",
+            action.get("id"),
+            action.get("view_mode"),
+        )
         update_action_views(action)
 
     action_model = env[action["type"]]
@@ -53,6 +60,14 @@ def clean_action(action: dict, env: Any) -> dict:
 
     action_name = action.get("name") or action
     custom_properties = action.keys() - readable_fields - action_type_fields
+    dbg.pipeline.debug(
+        "[clean_action:%s] %s: %d keys -> %d kept, %d custom",
+        action.get("id"),
+        action_type,
+        len(action),
+        len(cleaned_action),
+        len(custom_properties),
+    )
     if custom_properties:
         _logger.warning(
             "Action %r contains custom properties %s. Passing them "
@@ -65,10 +80,18 @@ def clean_action(action: dict, env: Any) -> dict:
 
 
 def select_db(redirect: str = "/web/database/selector", db: str | None = None) -> None:
+    dbg.lifecycle.debug(
+        "[select_db] %s explicit=%r param=%r session=%r",
+        dbg.req(),
+        db,
+        request.params.get("db"),
+        request.session.db,
+    )
     if db is None:
         db = (raw_db := request.params.get("db")) and raw_db.strip()
 
     if db and db not in http.filter_dbs_served([db]):
+        dbg.logic.debug("[select_db] %r not served, dropped", db)
         db = None
 
     if db and not request.session.db:
@@ -78,24 +101,36 @@ def select_db(redirect: str = "/web/database/selector", db: str | None = None) -
             query_string = iri_to_uri(r.query_string.decode())
             url_redirect = url_redirect._replace(query=query_string)
         request.session.db = db
+        dbg.pipeline.debug(
+            "[select_db] session had no db: bind %r, redirect 302 to strip param", db
+        )
         abort(request.redirect(urlunsplit(url_redirect), 302))
 
     if not db and request.session.db and http.filter_dbs_served([request.session.db]):
         db = request.session.db
+        dbg.logic.debug("[select_db] from session: %r", db)
 
     if not db:
         all_dbs = http.get_dbs_served(force=True)
+        dbg.logic.debug("[select_db] no db yet, %d served (forced scan)", len(all_dbs))
         if len(all_dbs) == 1:
             db = all_dbs[0]
 
     if not db:
+        dbg.pipeline.debug("[select_db] unresolved -> 303 %s", redirect)
         abort(request.redirect(redirect, 303))
 
     if db != request.session.db:
+        dbg.pipeline.debug(
+            "[select_db] session db %r != %r: new session, redirect 302",
+            request.session.db,
+            db,
+        )
         request.session = http.root.session_store.new()
         request.session.update(http.prepare_default_session(), db=db)
         request.session.context["lang"] = request.get_default_lang()
         abort(request.redirect(request.httprequest.url, 302))
+    dbg.logic.debug("[select_db] settled on %r", db)
 
 
 def update_action_views(action: dict) -> None:
@@ -104,6 +139,7 @@ def update_action_views(action: dict) -> None:
         view_id = view_id[0]
 
     view_modes = action["view_mode"].split(",")
+    dbg.logic.debug("[update_action_views] view_id=%s modes=%s", view_id, view_modes)
 
     if len(view_modes) > 1:
         if view_id:
@@ -124,12 +160,16 @@ def get_action(env: Any, path_part: str) -> Any:
     if path_part.startswith("action-"):
         someid = path_part.removeprefix("action-")
         if someid.isdigit():
+            dbg.logic.debug("[action_path:%s] by id", path_part)
             action = Actions.sudo().browse(int(someid)).exists()
         elif "." in someid:
+            dbg.logic.debug("[action_path:%s] by xmlid", path_part)
             action = env.ref(someid, False)
             if not action or not action._name.startswith("ir.actions"):
+                dbg.logic.debug("[action_path:%s] xmlid is not an action", path_part)
                 action = Actions
         else:
+            dbg.logic.debug("[action_path:%s] malformed action- part", path_part)
             action = Actions
     elif path_part.startswith("m-") or "." in path_part:
         model = path_part.removeprefix("m-")
@@ -139,18 +179,27 @@ def get_action(env: Any, path_part: str) -> Any:
                 .sudo()
                 .search([("res_model", "=", model)], limit=1)
             )
+            dbg.logic.debug(
+                "[action_path:%s] by model %s: %s",
+                path_part,
+                model,
+                "first act_window" if action else "synthetic formview",
+            )
             if not action:
                 action = env["ir.actions.act_window"].new(
                     env[model].get_formview_action()
                 )
         else:
+            dbg.logic.debug("[action_path:%s] unknown or abstract model", path_part)
             action = Actions
     else:
+        dbg.logic.debug("[action_path:%s] by path", path_part)
         return Actions._get_action_by_path(path_part)
 
     if action and action._name == "ir.actions.actions":
         action = action._get_action_concrete()
 
+    dbg.pipeline.debug("[action_path:%s] -> %s", path_part, dbg.rec(action))
     return action
 
 
@@ -165,6 +214,12 @@ def get_action_triples(
         action_name = parts.popleft()
         action = get_action(env, action_name)
         if not action:
+            dbg.logic.debug(
+                "[action_path:%s] no action at word %d of %r",
+                action_name,
+                path.count("/") - len(parts) + start_pos,
+                path,
+            )
             raise ValueError(
                 f"expected action at word {path.count('/') - len(parts) + start_pos} but found “{action_name}”"
             )
@@ -177,6 +232,13 @@ def get_action_triples(
             elif parts[0].isdigit():
                 record_id = int(parts.popleft())
 
+        dbg.pipeline.debug(
+            "[action_path:%s] triple active_id=%s record_id=%s rest=%d",
+            action_name,
+            active_id,
+            record_id,
+            len(parts),
+        )
         yield (active_id, action, record_id)
 
         if len(parts) > 1 and parts[0].isdigit():
@@ -188,14 +250,23 @@ def get_action_triples(
 def _get_login_redirect_url(uid: int, redirect: str | None = None) -> str:
     if request.session.uid:
         if redirect and _is_local_url(redirect):
+            dbg.logic.debug("[login_redirect] uid=%s local redirect %r", uid, redirect)
             return redirect
-        return (
-            "/odoo"
-            if is_user_internal(request.session.uid)
-            else "/web/login_successful"
+        internal = is_user_internal(request.session.uid)
+        dbg.logic.debug(
+            "[login_redirect] uid=%s internal=%s redirect=%r dropped",
+            uid,
+            internal,
+            redirect,
         )
+        return "/odoo" if internal else "/web/login_successful"
 
     url = request.env(user=uid)["res.users"].browse(uid)._get_mfa_url()
+    dbg.logic.debug(
+        "[login_redirect] uid=%s session not authenticated: mfa url, redirect=%r",
+        uid,
+        redirect,
+    )
     if not redirect or not _is_local_url(redirect):
         return url
 
@@ -211,12 +282,22 @@ def is_user_internal(uid: int) -> bool:
 
 def _local_web_translations(trans_file: str) -> list[dict[str, str]] | None:
     try:
-        with file_open(trans_file, filter_ext=(".po")) as t_file:
+        with (
+            dbg.timer(None, "[translations] read_po %s", trans_file),
+            file_open(trans_file, filter_ext=(".po")) as t_file,
+        ):
             po = babel.messages.pofile.read_po(t_file)
-    except Exception:
+    except Exception as exc:
+        dbg.logic.debug(
+            "[translations] %s unreadable (%s)", trans_file, type(exc).__name__
+        )
         return None
-    return [
+    messages = [
         {"id": x.id, "string": x.string}
         for x in po
         if x.id and x.string and JAVASCRIPT_TRANSLATION_COMMENT in x.auto_comments
     ]
+    dbg.performance.debug(
+        "[translations] %s: %d of %d entries are JS", trans_file, len(messages), len(po)
+    )
+    return messages

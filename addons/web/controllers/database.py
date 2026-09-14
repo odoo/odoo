@@ -27,6 +27,7 @@ from odoo.service.db import DBNAME_PATTERN
 from odoo.tools.misc import file_open, str2bool
 from odoo.tools.translate import _
 
+from ..tools import debug_log as dbg
 from odoo.addons.base.models.ir_qweb import render as qweb_render
 
 _logger = logging.getLogger(__name__)
@@ -59,9 +60,12 @@ DATABASE_MANAGER_TEMPLATES = {
 
 def render_database_manager(values: dict) -> Markup:
     templates = {}
-    for name, path in DATABASE_MANAGER_TEMPLATES.items():
-        with file_open(path, "r") as fd:
-            templates[name] = fd.read()
+    with dbg.timer(
+        None, "[dbmanager] read %d templates", len(DATABASE_MANAGER_TEMPLATES)
+    ):
+        for name, path in DATABASE_MANAGER_TEMPLATES.items():
+            with file_open(path, "r") as fd:
+                templates[name] = fd.read()
 
     def load(template_name):
         fromstring = (
@@ -71,7 +75,10 @@ def render_database_manager(values: dict) -> Markup:
         )
         return (fromstring(templates[template_name]), template_name)
 
-    return Markup("<!DOCTYPE html>\n") + qweb_render("database_manager", values, load)
+    with dbg.timer(None, "[dbmanager] qweb render"):
+        return Markup("<!DOCTYPE html>\n") + qweb_render(
+            "database_manager", values, load
+        )
 
 
 class Database(http.Controller):
@@ -79,6 +86,11 @@ class Database(http.Controller):
         if not (odoo.tools.config.is_valid_admin_password("admin") and master_pwd):
             return
         remote_addr = request.httprequest.remote_addr
+        dbg.logic.debug(
+            "[dbmanager] default master password in place, request from %s loopback=%s",
+            remote_addr,
+            _is_loopback(remote_addr),
+        )
         if not _is_loopback(remote_addr):
             _logger.warning(
                 "Refusing to auto-promote the default master password for a "
@@ -98,28 +110,44 @@ class Database(http.Controller):
         d.setdefault("manage", True)
         d["insecure"] = odoo.tools.config.is_valid_admin_password("admin")
         d["list_db"] = odoo.tools.config["list_db"]
-        d["langs"] = odoo.service.db.exp_list_lang()
-        d["countries"] = odoo.service.db.exp_list_countries()
+        with dbg.timer(None, "[dbmanager] list langs + countries"):
+            d["langs"] = odoo.service.db.exp_list_lang()
+            d["countries"] = odoo.service.db.exp_list_countries()
         d["pattern"] = DBNAME_PATTERN
         try:
-            d["databases"] = http.get_dbs_served()
-            d["incompatible_databases"] = odoo.service.db.list_db_incompatible(
-                d["databases"]
+            with dbg.timer(None, "[dbmanager] list databases + incompatible"):
+                d["databases"] = http.get_dbs_served()
+                d["incompatible_databases"] = odoo.service.db.list_db_incompatible(
+                    d["databases"]
+                )
+            dbg.logic.debug(
+                "[dbmanager] render manage=%s error=%s: %d databases, %d incompatible",
+                d["manage"],
+                "error" in d,
+                len(d["databases"]),
+                len(d["incompatible_databases"]),
             )
         except odoo.exceptions.AccessDenied:
             d["databases"] = [request.db] if request.db else []
+            dbg.logic.debug(
+                "[dbmanager] render: db list denied, showing %s", d["databases"]
+            )
 
         return render_database_manager(d)
 
     @http.route("/web/database/selector", type="http", auth="none")
     def selector(self, **kw) -> str:
+        dbg.lifecycle.debug("[dbmanager] selector: %s", dbg.req())
         if request.db:
+            dbg.logic.debug("[dbmanager] selector: detach %s", request.db)
             request.detach_database()
         return self._render_template(manage=False)
 
     @http.route("/web/database/manager", type="http", auth="none")
     def manager(self, **kw) -> str:
+        dbg.lifecycle.debug("[dbmanager] manager: %s", dbg.req())
         if request.db:
+            dbg.logic.debug("[dbmanager] manager: detach %s", request.db)
             request.detach_database()
         return self._render_template()
 
@@ -133,41 +161,57 @@ class Database(http.Controller):
     def create(
         self, master_pwd: str, name: str, lang: str, password: str, **post
     ) -> str | Response:
+        dbg.lifecycle.debug(
+            "[db:%s] create: %s lang=%s demo=%s country=%s login=%r",
+            name,
+            dbg.req(),
+            lang,
+            bool(post.get("demo")),
+            post.get("country_code") or None,
+            post.get("login"),
+        )
         self._handle_insecure_password(master_pwd)
         try:
             if not re.match(DBNAME_PATTERN, name):
+                dbg.logic.debug("[db:%s] create: name rejected by pattern", name)
                 raise UserError(
                     _(
                         "Houston, we have a database naming issue! Make sure you only use letters, numbers, underscores, hyphens, or dots in the database name, and you'll be golden."
                     )
                 )
             country_code = post.get("country_code") or False
-            dispatch_rpc(
-                "db",
-                "create_database",
-                [
-                    master_pwd,
-                    name,
-                    bool(post.get("demo")),
-                    lang,
-                    password,
-                    post["login"],
-                    country_code,
-                    post["phone"],
-                ],
-            )
+            with dbg.timer(None, "[db:%s] create_database rpc", name):
+                dispatch_rpc(
+                    "db",
+                    "create_database",
+                    [
+                        master_pwd,
+                        name,
+                        bool(post.get("demo")),
+                        lang,
+                        password,
+                        post["login"],
+                        country_code,
+                        post["phone"],
+                    ],
+                )
             credential = {
                 "login": post["login"],
                 "password": password,
                 "type": "password",
             }
+            dbg.pipeline.debug("[db:%s] create: created -> authenticate admin", name)
             with odoo.modules.registry.Registry(name).cursor() as cr:
                 env = odoo.api.Environment(cr, None, {})
                 request.session.authenticate(env, credential)
                 request._save_session(env)
                 request.session.db = name
+            dbg.pipeline.debug(
+                "[db:%s] create: session uid=%s -> /odoo", name, request.session.uid
+            )
             return request.redirect("/odoo")
         except Exception as e:
+            dbg.logic.debug("[db:%s] create: failed (%s)", name, type(e).__name__)
             _log_operation_failure("Database creation error.", e)
             error = f"Database creation error: {str(e) or repr(e)}"
         return self._render_template(error=error)
@@ -186,23 +230,36 @@ class Database(http.Controller):
         new_name: str,
         neutralize_database: bool | str = False,
     ) -> str | Response:
+        dbg.lifecycle.debug(
+            "[db:%s] duplicate: %s -> %s neutralize=%r",
+            name,
+            dbg.req(),
+            new_name,
+            neutralize_database,
+        )
         self._handle_insecure_password(master_pwd)
         try:
             if not re.match(DBNAME_PATTERN, new_name):
+                dbg.logic.debug("[db:%s] duplicate: new name rejected", name)
                 raise UserError(
                     _(
                         "Houston, we have a database naming issue! Make sure you only use letters, numbers, underscores, hyphens, or dots in the database name, and you'll be golden."
                     )
                 )
-            dispatch_rpc(
-                "db",
-                "duplicate_database",
-                [master_pwd, name, new_name, str2bool(neutralize_database)],
-            )
+            with dbg.timer(
+                None, "[db:%s] duplicate_database rpc -> %s", name, new_name
+            ):
+                dispatch_rpc(
+                    "db",
+                    "duplicate_database",
+                    [master_pwd, name, new_name, str2bool(neutralize_database)],
+                )
             if request.db == name:
+                dbg.logic.debug("[db:%s] duplicate: source is request db, detach", name)
                 request.detach_database()
             return request.redirect("/web/database/manager")
         except Exception as e:
+            dbg.logic.debug("[db:%s] duplicate: failed (%s)", name, type(e).__name__)
             _log_operation_failure("Database duplication error.", e)
             error = f"Database duplication error: {str(e) or repr(e)}"
             return self._render_template(error=error)
@@ -215,15 +272,21 @@ class Database(http.Controller):
         csrf=False,
     )
     def drop(self, master_pwd: str, name: str) -> str | Response:
+        dbg.lifecycle.debug("[db:%s] drop: %s", name, dbg.req())
         self._handle_insecure_password(master_pwd)
         try:
-            if not dispatch_rpc("db", "drop", [master_pwd, name]):
+            with dbg.timer(None, "[db:%s] drop rpc", name):
+                dropped = dispatch_rpc("db", "drop", [master_pwd, name])
+            if not dropped:
+                dbg.logic.debug("[db:%s] drop: not found", name)
                 raise RuntimeError(f"Database {name!r} was not found")
             if request.session.db == name:
+                dbg.logic.debug("[db:%s] drop: was session db, detach + logout", name)
                 request.detach_database()
                 request.session.logout()
             return request.redirect("/web/database/manager")
         except Exception as e:
+            dbg.logic.debug("[db:%s] drop: failed (%s)", name, type(e).__name__)
             _log_operation_failure("Database deletion error.", e)
             error = f"Database deletion error: {str(e) or repr(e)}"
             return self._render_template(error=error)
@@ -243,6 +306,13 @@ class Database(http.Controller):
         filestore: bool | str = True,
     ) -> str | Response:
         filestore = str2bool(filestore)
+        dbg.lifecycle.debug(
+            "[db:%s] backup: %s format=%s filestore=%s",
+            name,
+            dbg.req(),
+            backup_format,
+            filestore,
+        )
         self._handle_insecure_password(master_pwd)
         try:
             if backup_format not in odoo.service.db.BACKUP_FORMATS:
@@ -254,12 +324,22 @@ class Database(http.Controller):
                 )
             odoo.service.db.check_super(master_pwd)
             if name not in http.get_dbs_served():
+                dbg.logic.debug("[db:%s] backup: not served", name)
                 raise ValueError(f"Database {name!r} is not known")
             ts = datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%d_%H-%M-%S")
             filename = f"{name}_{ts}.{backup_format}"
-            dump_stream = odoo.service.db.dump_db(name, None, backup_format, filestore)
+            with dbg.timer(None, "[db:%s] dump_db %s", name, backup_format):
+                dump_stream = odoo.service.db.dump_db(
+                    name, None, backup_format, filestore
+                )
             dump_size = dump_stream.seek(0, os.SEEK_END)
             dump_stream.seek(0)
+            dbg.performance.debug(
+                "[db:%s] backup: %s, %d bytes (buffered before streaming)",
+                name,
+                filename,
+                dump_size,
+            )
             headers = [
                 ("Content-Type", "application/octet-stream; charset=binary"),
                 ("Content-Disposition", prepare_content_disposition_header(filename)),
@@ -267,6 +347,7 @@ class Database(http.Controller):
             ]
             return Response(dump_stream, headers=headers, direct_passthrough=True)
         except Exception as e:
+            dbg.logic.debug("[db:%s] backup: failed (%s)", name, type(e).__name__)
             _log_operation_failure("Database.backup", e)
             error = f"Database backup error: {str(e) or repr(e)}"
             return self._render_template(error=error)
@@ -288,6 +369,14 @@ class Database(http.Controller):
         neutralize_database: bool | str = False,
     ) -> str | Response:
         tmp_path = None
+        dbg.lifecycle.debug(
+            "[db:%s] restore: %s copy=%r neutralize=%r upload=%r",
+            name,
+            dbg.req(),
+            copy,
+            neutralize_database,
+            getattr(backup_file, "filename", None),
+        )
         try:
             self._handle_insecure_password(master_pwd)
             db.check_super(master_pwd)
@@ -297,17 +386,27 @@ class Database(http.Controller):
                         "Houston, we have a database naming issue! Make sure you only use letters, numbers, underscores, hyphens, or dots in the database name, and you'll be golden."
                     )
                 )
-            with tempfile.NamedTemporaryFile(delete=False) as tmp:
+            with (
+                dbg.timer(None, "[db:%s] restore: spool upload", name),
+                tempfile.NamedTemporaryFile(delete=False) as tmp,
+            ):
                 tmp_path = pathlib.Path(tmp.name)
                 backup_file.save(tmp)
-            db.restore_db(
+            dbg.pipeline.debug(
+                "[db:%s] restore: spooled %d bytes -> restore_db",
                 name,
-                str(tmp_path),
-                str2bool(copy),
-                str2bool(neutralize_database),
+                tmp_path.stat().st_size,
             )
+            with dbg.timer(None, "[db:%s] restore_db", name):
+                db.restore_db(
+                    name,
+                    str(tmp_path),
+                    str2bool(copy),
+                    str2bool(neutralize_database),
+                )
             return request.redirect("/web/database/manager")
         except Exception as e:
+            dbg.logic.debug("[db:%s] restore: failed (%s)", name, type(e).__name__)
             _log_operation_failure("Database restore error.", e)
             error = f"Database restore error: {str(e) or repr(e)}"
             return self._render_template(error=error)
@@ -323,10 +422,18 @@ class Database(http.Controller):
         csrf=False,
     )
     def change_password(self, master_pwd: str, master_pwd_new: str) -> str | Response:
+        dbg.lifecycle.debug(
+            "[dbmanager] change_password: %s has_new=%s",
+            dbg.req(),
+            bool(master_pwd_new),
+        )
         try:
             if odoo.tools.config.is_valid_admin_password("admin"):
                 remote_addr = request.httprequest.remote_addr
                 if not _is_loopback(remote_addr):
+                    dbg.logic.debug(
+                        "[dbmanager] change_password: default pwd, non-loopback, refused"
+                    )
                     _logger.warning(
                         "Refusing a non-loopback master-password change from %s "
                         "while the default password is still in place.",
@@ -340,11 +447,17 @@ class Database(http.Controller):
                         )
                     )
             dispatch_rpc("db", "change_admin_password", [master_pwd, master_pwd_new])
+            dbg.pipeline.debug("[dbmanager] change_password: changed")
             return request.redirect("/web/database/manager")
         except Exception as e:
+            dbg.logic.debug(
+                "[dbmanager] change_password: failed (%s)", type(e).__name__
+            )
             error = f"Master password update error: {str(e) or repr(e)}"
             return self._render_template(error=error)
 
     @http.route("/web/database/list", type="jsonrpc", auth="none")
     def list(self) -> list[str]:
-        return http.get_dbs_served()
+        dbs = http.get_dbs_served()
+        dbg.lifecycle.debug("[dbmanager] list: %s -> %d", dbg.req(), len(dbs))
+        return dbs

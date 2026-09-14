@@ -13,6 +13,7 @@ from odoo.fields import Domain
 from odoo.http import BadRequest, NotFound, request
 from odoo.tools.safe_eval import safe_eval
 
+from ..tools import debug_log as dbg
 from .json_helpers import (
     get_domain_date,
     get_domain_default_filter,
@@ -27,6 +28,7 @@ _logger = logging.getLogger(__name__)
 class WebJsonController(http.Controller):
     @http.route("/json/<path:subpath>", auth="user", type="http", readonly=True)
     def web_json(self, subpath, **kwargs):
+        dbg.lifecycle.debug("[json:%s] unversioned: %s -> /json/1", subpath, dbg.req())
         self._check_json_route_active()
         return request.redirect(
             f"/json/1/{subpath}?{urlencode(kwargs)}",
@@ -35,8 +37,12 @@ class WebJsonController(http.Controller):
 
     @http.route("/json/1/<path:subpath>", auth="bearer", type="http", readonly=True)
     def web_json_1(self, subpath, **kwargs):
+        dbg.lifecycle.debug(
+            "[json:%s] request: %s params=%s", subpath, dbg.req(), dbg.keys(kwargs)
+        )
         self._check_json_route_active()
         if not request.env.user.has_group("base.group_allow_export"):
+            dbg.logic.debug("[json:%s] no export group, refused", subpath)
             raise AccessError(
                 request.env._("You need export permissions to use the /json route")
             )
@@ -46,6 +52,12 @@ class WebJsonController(http.Controller):
         def resolve_canonical_redirect():
             if param_list == set(kwargs):
                 return None
+            dbg.pipeline.debug(
+                "[json:%s] params grew %s -> %s: canonical 307",
+                subpath,
+                sorted(param_list),
+                dbg.keys(kwargs),
+            )
             encoded_kwargs = urlencode(kwargs, safe="()[], '\"")
             return request.redirect(
                 f"/json/1/{subpath}?{encoded_kwargs}",
@@ -53,15 +65,27 @@ class WebJsonController(http.Controller):
             )
 
         env = request.env
-        action, context, eval_context, record_id = self._get_action(subpath)
+        with dbg.timer(env, "[json:%s] resolve action", subpath):
+            action, context, eval_context, record_id = self._get_action(subpath)
         model = env[action.res_model].with_context(context)
 
         view_type = kwargs.get("view_type")
         if not view_type and record_id:
             view_type = "form"
         view_id, view_type = get_view_id_and_type(action, view_type)
-        view = model.get_view(view_id, view_type)
+        with dbg.timer(env, "[json:%s] get_view %s/%s", subpath, view_id, view_type):
+            view = model.get_view(view_id, view_type)
         spec = model._get_fields_spec(view)
+        dbg.pipeline.debug(
+            "[json:%s] action=%s model=%s view=%s/%s record_id=%s spec=%d fields",
+            subpath,
+            action.id,
+            model._name,
+            view_id,
+            view_type,
+            record_id,
+            len(spec),
+        )
 
         if view_type == "form" or record_id:
             if redirect := resolve_canonical_redirect():
@@ -74,9 +98,11 @@ class WebJsonController(http.Controller):
         view_tree = etree.fromstring(view["arch"])
 
         if env["ir.ui.view"]._view_type_has_date_range(view_type):
+            dbg.logic.debug("[json:%s] %s view has date range", subpath, view_type)
             domains.append(self._get_domain_json_date(view_tree, kwargs))
 
         if view_type == "activity":
+            dbg.logic.debug("[json:%s] activity view: extend domain + spec", subpath)
             domains.append([("activity_ids", "!=", False)])
             self._update_json_activity_spec(model, spec)
 
@@ -95,15 +121,29 @@ class WebJsonController(http.Controller):
 
         if redirect := resolve_canonical_redirect():
             return redirect
+        dbg.pipeline.debug(
+            "[json:%s] listing: %d domains groupby=%s aggregates=%s limit=%s offset=%s",
+            subpath,
+            len(domains),
+            groupby,
+            aggregates,
+            limit,
+            offset,
+        )
         return self._get_json_listing(
             model, Domain.AND(domains), spec, groupby, aggregates, limit, offset
         )
 
     def _get_json_record(self, model, spec, record_id):
         if not record_id:
+            dbg.logic.debug("[json] form view without record id, refused")
             raise BadRequest(request.env._("Missing record id"))
-        res = model.browse(int(record_id)).web_read(spec)
+        with dbg.timer(model.env, "[json] web_read %s/%s", model._name, record_id):
+            res = model.browse(int(record_id)).web_read(spec)
         if not res:
+            dbg.logic.debug(
+                "[json] %s/%s: web_read empty -> 404", model._name, record_id
+            )
             raise NotFound
         return request.prepare_json_response(res[0])
 
@@ -111,21 +151,32 @@ class WebJsonController(http.Controller):
         self, model, domain, spec, groupby, aggregates, limit, offset
     ):
         if groupby:
-            res = model.web_read_group(
-                domain,
-                aggregates=aggregates,
-                groupby=groupby,
-                limit=limit,
-                offset=offset,
-            )
+            with dbg.timer(model.env, "[json] web_read_group %s", model._name):
+                res = model.web_read_group(
+                    domain,
+                    aggregates=aggregates,
+                    groupby=groupby,
+                    limit=limit,
+                    offset=offset,
+                )
             for value in res["groups"]:
                 del value["__extra_domain"]
+            dbg.performance.debug(
+                "[json] %s: %d groups of %s", model._name, len(res["groups"]), groupby
+            )
         else:
-            res = model.web_search_read(
-                domain,
-                spec,
-                limit=limit,
-                offset=offset,
+            with dbg.timer(model.env, "[json] web_search_read %s", model._name):
+                res = model.web_search_read(
+                    domain,
+                    spec,
+                    limit=limit,
+                    offset=offset,
+                )
+            dbg.performance.debug(
+                "[json] %s: %d of %s records",
+                model._name,
+                len(res.get("records", ())),
+                res.get("length"),
             )
         res.pop("__version", None)
         return request.prepare_json_response(res)
@@ -136,13 +187,18 @@ class WebJsonController(http.Controller):
             try:
                 user_domain = ast.literal_eval(kwargs.get("domain") or "[]")
             except (ValueError, SyntaxError) as exc:
+                dbg.logic.debug(
+                    "[json] user domain unparsable (%s)", type(exc).__name__
+                )
                 raise BadRequest(f"Invalid domain: {exc}") from exc
+            dbg.logic.debug("[json] user domain: %s terms", dbg.count(user_domain))
             domains.append(user_domain)
         else:
             default_domain = get_domain_default_filter(
                 model, action, context, eval_context
             )
             if default_domain and not Domain(default_domain).is_true():
+                dbg.logic.debug("[json] default filter domain pinned into params")
                 kwargs["domain"] = repr(list(default_domain))
             domains.append(default_domain)
         return domains
@@ -152,6 +208,7 @@ class WebJsonController(http.Controller):
             limit = int(kwargs.get("limit", 0)) or action.limit
             offset = int(kwargs.get("offset", 0))
         except ValueError as exc:
+            dbg.logic.debug("[json] window unparsable: %s", exc.args[0])
             raise BadRequest(exc.args[0]) from exc
         if "offset" not in kwargs:
             kwargs["offset"] = offset
@@ -164,12 +221,14 @@ class WebJsonController(http.Controller):
             start_date = date.fromisoformat(kwargs["start_date"])
             end_date = date.fromisoformat(kwargs["end_date"])
         except ValueError as exc:
+            dbg.logic.debug("[json] date range unparsable: %s", exc.args[0])
             raise BadRequest(exc.args[0]) from exc
         except KeyError:
             start_date = end_date = None
         try:
             date_domain = get_domain_date(start_date, end_date, view_tree)
         except ValueError as exc:
+            dbg.logic.debug("[json] date range rejected: %s", exc.args[0])
             raise BadRequest(exc.args[0]) from exc
         if "start_date" not in kwargs or "end_date" not in kwargs:
             kwargs.update(
@@ -181,6 +240,7 @@ class WebJsonController(http.Controller):
         return date_domain
 
     def _update_json_activity_spec(self, model, spec):
+        added = 0  # debuglog
         for field_name, field in model._fields.items():
             if (
                 field_name.startswith("activity_")
@@ -188,6 +248,8 @@ class WebJsonController(http.Controller):
                 and model._has_field_access(field, "read")
             ):
                 spec[field_name] = {}
+                added += 1
+        dbg.logic.debug("[json] activity spec: %d activity_* fields added", added)
 
     def _get_json_aggregates(self, model, fields):
         if not fields:
@@ -195,6 +257,7 @@ class WebJsonController(http.Controller):
         env = request.env
         invalid = [f for f in fields if ":" not in f and f not in model._fields]
         if invalid:
+            dbg.logic.debug("[json] %s: unknown fields %s", model._name, invalid)
             raise BadRequest(
                 env._(
                     "Unknown fields for %(model)s: %(fields)s",
@@ -206,6 +269,9 @@ class WebJsonController(http.Controller):
             f for f in fields if ":" not in f and model._fields[f].aggregator is None
         ]
         if not_aggregatable:
+            dbg.logic.debug(
+                "[json] %s: not aggregatable %s", model._name, not_aggregatable
+            )
             raise BadRequest(
                 env._(
                     "Fields not aggregatable for %(model)s: %(fields)s",
@@ -224,6 +290,7 @@ class WebJsonController(http.Controller):
             sudo_env.ref("base.module_base").demo
             or sudo_env["ir.config_parameter"].get_param("web.json.enabled")
         ):
+            dbg.logic.debug("[json] route inactive (no demo, web.json.enabled unset)")
             raise NotFound
 
     def _get_action(self, subpath):
@@ -237,25 +304,47 @@ class WebJsonController(http.Controller):
         active_id, action, record_id = list(get_action_triples_())[-1]
         action = action.sudo()
         if action.usage == "ir_actions_server" and action.path:
+            dbg.pipeline.debug(
+                "[json:%s] server action %s: run on a read-only cursor",
+                subpath,
+                action.id,
+            )
             try:
                 with action.pool.cursor(readonly=True) as ro_cr:
                     if not ro_cr.readonly:
+                        dbg.logic.debug(
+                            "[json:%s] pool gave a rw cursor, forcing read_only",
+                            subpath,
+                        )
                         ro_cr.connection.read_only = True
                     if not ro_cr.readonly:
                         msg = "Failed to obtain a read-only cursor for server action evaluation"
                         raise RuntimeError(msg)
                     action_data = action.with_env(action.env(cr=ro_cr, su=False)).run()
             except psycopg.errors.ReadOnlySqlTransaction as e:
+                dbg.logic.debug("[json:%s] server action tried to write", subpath)
                 raise AccessError(action.env._("Unsupported server action")) from e
             except ValueError as e:
                 if "ReadOnlySqlTransaction" not in e.args[0]:
                     raise
+                dbg.logic.debug(
+                    "[json:%s] server action tried to write (wrapped)", subpath
+                )
                 raise AccessError(action.env._("Unsupported server action")) from e
             action = action.env[action_data["type"]]
             action = action.new(
                 action_data, origin=action.browse(action_data.pop("id"))
             )
+            dbg.pipeline.debug(
+                "[json:%s] server action -> %s %s",
+                subpath,
+                action._name,
+                action._origin.id,
+            )
         if action._name != "ir.actions.act_window":
+            dbg.logic.debug(
+                "[json:%s] %s unsupported server-side", subpath, action._name
+            )
             e = f"{action._name} are not supported server-side"
             raise BadRequest(e)
         eval_context = dict(

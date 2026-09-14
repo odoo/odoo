@@ -7,6 +7,8 @@ from odoo.exceptions import UserError
 from odoo.http import prepare_content_disposition_header, request
 from odoo.libs.filesystem import osutil
 
+from ..tools import debug_log as dbg
+
 
 class Partner(http.Controller):
     @http.route(
@@ -18,7 +20,14 @@ class Partner(http.Controller):
         auth="user",
     )
     def download_vcard(self, partner_ids=None, partner=None, **kwargs):
+        dbg.lifecycle.debug(
+            "[vcard] download: %s partner=%s partner_ids=%r",
+            dbg.req(),
+            partner.id if partner else None,
+            partner_ids,
+        )
         if importlib.util.find_spec("vobject") is None:
+            dbg.logic.debug("[vcard] download: vobject missing")
             raise UserError(_("vobject library is not installed"))
 
         partners = request.env["res.partner"]
@@ -29,9 +38,17 @@ class Partner(http.Controller):
                 if pid.isdigit() and pid != "0"
             ]
             partners = request.env["res.partner"].browse(partner_ids)
+            dbg.logic.debug(
+                "[vcard] download: %s -> %s",
+                "zip" if len(partners) > 1 else "single",
+                dbg.rec(partners),
+            )
             if len(partners) > 1:
                 buffer = io.BytesIO()
-                with zipfile.ZipFile(buffer, "w") as zipf:
+                with (
+                    dbg.timer(request.env, "[vcard] zip %d partners", len(partners)),
+                    zipfile.ZipFile(buffer, "w") as zipf,
+                ):
                     used_names = set()
                     for p in partners:
                         label = p.name or p.email or f"contact_{p.id}"
@@ -43,6 +60,11 @@ class Partner(http.Controller):
                         used_names.add(candidate)
                         zipf.writestr(candidate, p._get_vcard_file())
                 zip_data = buffer.getvalue()
+                dbg.pipeline.debug(
+                    "[vcard] download: zip %d entries, %d bytes",
+                    len(used_names),
+                    len(zip_data),
+                )
                 return request.prepare_response(
                     zip_data,
                     [
@@ -57,7 +79,11 @@ class Partner(http.Controller):
 
         if partner or partners:
             partner = partner or partners
-            content = partner._get_vcard_file()
+            with dbg.timer(request.env, "[vcard] render %s", dbg.rec(partner)):
+                content = partner._get_vcard_file()
+            dbg.pipeline.debug(
+                "[vcard] download: single %s, %d bytes", dbg.rec(partner), len(content)
+            )
             return request.prepare_response(
                 content,
                 [
@@ -72,4 +98,5 @@ class Partner(http.Controller):
                 ],
             )
 
+        dbg.logic.debug("[vcard] download: no partner resolved -> 404")
         raise request.prepare_not_found_error()

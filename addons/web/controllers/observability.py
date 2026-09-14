@@ -9,6 +9,8 @@ from odoo.http import Controller, Response, request, route
 from odoo.libs.json import loads as json_loads
 from odoo.tools import config
 
+from ..tools import debug_log as dbg
+
 _logger = logging.getLogger(__name__)
 
 _RATE_LIMIT_WINDOW_S = 60
@@ -23,20 +25,34 @@ def _is_rate_limited(key: str) -> bool:
     with _rate_lock:
         if len(_rate_state) > _RATE_LIMIT_MAX_KEYS:
             cutoff = now - _RATE_LIMIT_WINDOW_S
+            before = len(_rate_state)  # debuglog
             for stale in [k for k, v in _rate_state.items() if v[0] < cutoff]:
                 del _rate_state[stale]
+            dbg.performance.debug(
+                "[rate] sweep: %d keys -> %d after stale eviction",
+                before,
+                len(_rate_state),
+            )
             if len(_rate_state) > _RATE_LIMIT_MAX_KEYS:
                 low_water = _RATE_LIMIT_MAX_KEYS * 9 // 10
                 evict_n = len(_rate_state) - low_water
+                dbg.logic.debug(
+                    "[rate] sweep: still %d keys, evict %d oldest",
+                    len(_rate_state),
+                    evict_n,
+                )
                 for k in heapq.nsmallest(
                     evict_n, _rate_state, key=lambda k: _rate_state[k][0]
                 ):
                     del _rate_state[k]
         state = _rate_state.get(key)
         if state is None or now - state[0] >= _RATE_LIMIT_WINDOW_S:
+            if state is not None:
+                dbg.logic.debug("[rate] %s: window expired after %d", key, state[1])
             _rate_state[key] = [now, 1]
             return False
         if state[1] >= _RATE_LIMIT_MAX:
+            dbg.logic.debug("[rate] %s: limited at %d", key, state[1])
             return True
         state[1] += 1
         return False
@@ -136,16 +152,26 @@ class Observability(Controller):
         csrf=False,
     )
     def cwv(self) -> Response:
+        dbg.lifecycle.debug(
+            "[cwv] beacon: %s bytes=%d",
+            dbg.req(),
+            len(request.httprequest.data or b""),
+        )
         client_key = _get_client_rate_key("cwv")
         if _is_rate_limited(client_key):
+            dbg.logic.debug("[cwv] beacon: rate limited -> 429")
             return Response("", status=429, mimetype="text/plain")
 
         try:
             payload = json_loads(request.httprequest.data or b"{}")
         except ValueError, TypeError:
+            dbg.logic.debug("[cwv] beacon: invalid json -> 400")
             return Response("invalid json", status=400, mimetype="text/plain")
 
         if not isinstance(payload, dict):
+            dbg.logic.debug(
+                "[cwv] beacon: payload is %s -> 400", type(payload).__name__
+            )
             return Response("invalid payload", status=400, mimetype="text/plain")
 
         lcp = _clamp_latency(payload.get("lcp"))
@@ -167,9 +193,11 @@ class Observability(Controller):
         pageview_id = raw_pageview[:64] if isinstance(raw_pageview, str) else ""
 
         if lcp is None and fcp is None and ttfb is None and cls is None and inp is None:
+            dbg.logic.debug("[cwv] beacon: no metric survived clamping -> 204")
             return Response("", status=204)
 
         if not url:
+            dbg.logic.debug("[cwv] beacon: no url -> 204")
             return Response("", status=204)
 
         uid = request.session.uid or False
@@ -196,7 +224,8 @@ class Observability(Controller):
             "user_agent": user_agent or False,
             "pageview_id": pageview_id or False,
         }
-        Metric._record_beacon(values)
+        with dbg.timer(request.env, "[cwv] record beacon pageview=%s", pageview_id):
+            Metric._record_beacon(values)
         return Response("", status=204)
 
     @route(
@@ -208,20 +237,31 @@ class Observability(Controller):
         csrf=False,
     )
     def js_error(self) -> Response:
+        dbg.lifecycle.debug(
+            "[js_error] beacon: %s bytes=%d",
+            dbg.req(),
+            len(request.httprequest.data or b""),
+        )
         client_key = _get_client_rate_key("js_error")
         if _is_rate_limited(client_key):
+            dbg.logic.debug("[js_error] beacon: rate limited -> 429")
             return Response("", status=429, mimetype="text/plain")
 
         try:
             payload = json_loads(request.httprequest.data or b"{}")
         except ValueError, TypeError:
+            dbg.logic.debug("[js_error] beacon: invalid json -> 400")
             return Response("invalid json", status=400, mimetype="text/plain")
 
         if not isinstance(payload, dict):
+            dbg.logic.debug(
+                "[js_error] beacon: payload is %s -> 400", type(payload).__name__
+            )
             return Response("invalid payload", status=400, mimetype="text/plain")
 
         beacon = _prepare_js_error_values(payload)
         if beacon is None:
+            dbg.logic.debug("[js_error] beacon: no message -> 204")
             return Response("", status=204)
 
         uid = request.session.uid or False
@@ -230,6 +270,13 @@ class Observability(Controller):
             logging.DEBUG
             if beacon["kind"] == "module_rebind" and in_test
             else logging.WARNING
+        )
+        dbg.logic.debug(
+            "[js_error] beacon: kind=%s phase=%s in_test=%s -> level=%s",
+            beacon["kind"],
+            beacon["phase"],
+            in_test,
+            logging.getLevelName(level),
         )
         _logger.log(
             level,
@@ -249,15 +296,16 @@ class Observability(Controller):
             beacon["stack"],
         )
         reloaded = beacon["reloaded"]
-        request.env["web.js.error"].sudo()._record_beacon(
-            {
-                "user_id": uid,
-                **beacon,
-                "reloaded": (
-                    None
-                    if reloaded is None
-                    else ("reloaded" if reloaded else "suppressed")
-                ),
-            }
-        )
+        with dbg.timer(request.env, "[js_error] record beacon kind=%s", beacon["kind"]):
+            request.env["web.js.error"].sudo()._record_beacon(
+                {
+                    "user_id": uid,
+                    **beacon,
+                    "reloaded": (
+                        None
+                        if reloaded is None
+                        else ("reloaded" if reloaded else "suppressed")
+                    ),
+                }
+            )
         return Response("", status=204)
