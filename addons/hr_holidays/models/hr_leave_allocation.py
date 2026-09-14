@@ -662,6 +662,247 @@ class HrLeaveAllocation(models.Model):
             period_prorata = min(1, call_days / period_days) if period_days else 1
         return added_value * period_prorata
 
+    def _seed_accrual_schedule(self, level_ids, date_to, log):
+        """Place the first accrual call of an allocation that has never run.
+
+        Returns False when the plan has not started by `date_to`, which is the
+        caller's signal that there is nothing to accrue yet.
+        """
+        self.check_singleton()
+        first_level = level_ids[0]
+        first_level_start_date = self.date_from + get_timedelta(
+            first_level.start_count, first_level.start_type
+        )
+        if date_to < first_level_start_date:
+            return False
+        self.lastcall = max(self.lastcall, first_level_start_date)
+        self.actual_lastcall = self.lastcall
+        self.nextcall = first_level._get_next_anchor(self.lastcall)
+        carryover_date = self._get_carryover_date(self.nextcall)
+        self.nextcall = min(carryover_date, self.nextcall)
+        if len(level_ids) > 1:
+            second_level_start_date = self.date_from + get_timedelta(
+                level_ids[1].start_count, level_ids[1].start_type
+            )
+            self.nextcall = min(second_level_start_date, self.nextcall)
+        if log:
+            self._message_log(
+                body=_(
+                    """This allocation have already ran once, any modification won't be effective to the days allocated to the employee. If you need to change the configuration of the allocation, delete and create a new one."""
+                )
+            )
+        return True
+
+    def _run_accrual_steps(self, level_ids, date_to, force_period, leaves_taken):
+        """Walk the plan forward one accrual period at a time, up to `date_to`.
+
+        Returns the level it stopped on, that level's cap in days and what is
+        left of `force_period` -- which the caller threads through its whole
+        recordset, because the first allocation to consume it spends it for all
+        of them.
+        """
+        self.check_singleton()
+        expiration_date = False
+        (current_level, current_level_idx) = (False, 0)
+        current_level_maximum_leave = 0.0
+        cap_days_by_level = {}
+        while self._get_accrual_step_date() <= date_to:
+            (current_level, current_level_idx) = (
+                self._get_current_accrual_plan_level_id(self.nextcall)
+            )
+            if not current_level:
+                break
+            if current_level.cap_accrued_time:
+                if current_level.id not in cap_days_by_level:
+                    cap_days_by_level[current_level.id] = self._level_amount_in_days(
+                        current_level, current_level.maximum_leave
+                    )
+                current_level_maximum_leave = cap_days_by_level[current_level.id]
+            nextcall = current_level._get_next_anchor(self.nextcall)
+            period_start = current_level._get_previous_anchor(self.lastcall)
+            period_end = current_level._get_next_anchor(self.lastcall)
+            current_level_last_date = False
+            if (
+                current_level_idx < (len(level_ids) - 1)
+                and self.accrual_plan_id.transition_mode == "immediately"
+            ):
+                next_level = level_ids[current_level_idx + 1]
+                current_level_last_date = self.date_from + get_timedelta(
+                    next_level.start_count, next_level.start_type
+                )
+                if self.nextcall != current_level_last_date:
+                    nextcall = min(nextcall, current_level_last_date)
+            carryover_date = self._get_carryover_date(self.nextcall)
+            if self.nextcall < carryover_date < nextcall:
+                nextcall = min(nextcall, carryover_date)
+
+            is_accrual_date = self.nextcall in (
+                period_end,
+                current_level_last_date,
+            )
+            # A last-day period is credited on its last day, a day before its
+            # boundary, so the credit precedes whatever else happens at the
+            # boundary: a carryover, an expiry, the next level.
+            if (
+                self.accrual_plan_id.accrued_gain_time == "end"
+                and self.nextcall == period_end
+                and current_level._get_anchor_day(period_end) < period_end
+                and not self.already_accrued
+            ):
+                self._add_days_to_allocation(
+                    current_level,
+                    current_level_maximum_leave,
+                    leaves_taken,
+                    period_start,
+                    period_end,
+                )
+                self.already_accrued = True
+            if self.nextcall > date_to:
+                break
+
+            if current_level.accrual_validity:
+                expiration_date = self.carried_over_days_expiration_date
+                if (
+                    not expiration_date
+                    or self.nextcall > expiration_date
+                    or self.expiring_carryover_days == 0
+                ):
+                    expiration_date = carryover_date + relativedelta(
+                        **{
+                            current_level.accrual_validity_type
+                            + "s": current_level.accrual_validity_count
+                        }
+                    )
+                    self.carried_over_days_expiration_date = expiration_date
+                if self.nextcall < expiration_date < nextcall:
+                    nextcall = expiration_date
+                if self.nextcall == expiration_date:
+                    expiring_days = max(
+                        0,
+                        self.expiring_carryover_days - self.leaves_taken,
+                    )
+                    self.number_of_days = max(0, self.number_of_days - expiring_days)
+                    self.expiring_carryover_days = 0
+
+            if (
+                not self.already_accrued
+                and is_accrual_date
+                and self.accrual_plan_id.accrued_gain_time == "start"
+            ):
+                self._add_days_to_allocation(
+                    current_level,
+                    current_level_maximum_leave,
+                    leaves_taken,
+                    period_start,
+                    period_end,
+                )
+
+            if self.nextcall == carryover_date:
+                self.last_executed_carryover_date = carryover_date
+                self._apply_carryover_limit(current_level, leaves_taken)
+                self.expiring_carryover_days = self.number_of_days
+
+            if (
+                not self.already_accrued
+                and is_accrual_date
+                and self.accrual_plan_id.accrued_gain_time == "end"
+            ):
+                self._add_days_to_allocation(
+                    current_level,
+                    current_level_maximum_leave,
+                    leaves_taken,
+                    period_start,
+                    period_end,
+                )
+
+            if self.nextcall == carryover_date:
+                self.yearly_accrued_amount = 0
+
+            if (
+                self.accrual_plan_id.accrued_gain_time == "start"
+                and self.last_executed_carryover_date
+            ):
+                last_carryover_date = self.last_executed_carryover_date
+                carryover_level, carryover_level_idx = (
+                    self._get_current_accrual_plan_level_id(last_carryover_date)
+                )
+                carryover_period_end = carryover_level._get_next_anchor(
+                    last_carryover_date
+                )
+                if (
+                    carryover_level_idx < (len(level_ids) - 1)
+                    and self.accrual_plan_id.transition_mode == "immediately"
+                ):
+                    next_level = level_ids[carryover_level_idx + 1]
+                    carryover_level_last_date = self.date_from + get_timedelta(
+                        next_level.start_count, next_level.start_type
+                    )
+                    carryover_period_end = min(
+                        carryover_period_end, carryover_level_last_date
+                    )
+                if carryover_level.repeat_unit == "day":
+                    carryover_period_end = last_carryover_date
+                accrued = not self.already_accrued and self.nextcall == period_end
+                if (
+                    accrued
+                    and last_carryover_date <= self.nextcall <= carryover_period_end
+                ):
+                    if self._apply_carryover_limit(carryover_level, leaves_taken):
+                        self.last_executed_carryover_date = carryover_date
+
+            if is_accrual_date:
+                self.lastcall = self.nextcall
+            self.actual_lastcall = self.nextcall
+            self.nextcall = nextcall
+            self.already_accrued = False
+            if force_period and self.nextcall > date_to:
+                self.nextcall = date_to
+                force_period = False
+        return current_level, current_level_maximum_leave, force_period
+
+    def _accrue_trailing_period(
+        self, current_level, current_level_maximum_leave, leaves_taken
+    ):
+        """Credit the period the allocation has just entered.
+
+        A plan that accrues at the start of a period owes the period it is in,
+        which the step loop has not reached the end of.
+        """
+        self.check_singleton()
+        level_start = {
+            level._get_level_transition_date(self.date_from): level
+            for level in self.accrual_plan_id.level_ids
+        }
+        current_level = (
+            level_start.get(self.actual_lastcall)
+            or current_level
+            or self.accrual_plan_id.level_ids[0]
+        )
+        period_start = current_level._get_previous_anchor(self.actual_lastcall)
+        if current_level.cap_accrued_time:
+            current_level_maximum_leave = self._level_amount_in_days(
+                current_level, current_level.maximum_leave
+            )
+        if self.actual_lastcall in {
+            period_start,
+            self.date_from,
+        } | set(level_start.keys()) or (
+            self.actual_lastcall
+            - get_timedelta(
+                current_level.accrual_validity_count,
+                current_level.accrual_validity_type,
+            )
+            in {period_start, self.date_from} | set(level_start.keys())
+        ):
+            self._add_days_to_allocation(
+                current_level,
+                current_level_maximum_leave,
+                leaves_taken,
+                period_start,
+                self.nextcall,
+            )
+            self.already_accrued = True
+
     def _process_accrual_plans(self, date_to=False, force_period=False, log=True):
         date_to = date_to or fields.Date.today()
         already_accrued = {
@@ -672,20 +913,12 @@ class HrLeaveAllocation(models.Model):
             )
             for allocation in self
         }
-        first_allocation = _(
-            """This allocation have already ran once, any modification won't be effective to the days allocated to the employee. If you need to change the configuration of the allocation, delete and create a new one."""
-        )
         for allocation in self:
-            expiration_date = False
             if allocation.allocation_type != "accrual":
                 continue
             level_ids = allocation.accrual_plan_id.level_ids.sorted("sequence")
             if not level_ids:
                 continue
-            first_level = level_ids[0]
-            first_level_start_date = allocation.date_from + get_timedelta(
-                first_level.start_count, first_level.start_type
-            )
             if allocation.holiday_status_id.request_unit in ["day", "half_day"]:
                 leaves_taken = allocation.leaves_taken
             else:
@@ -694,232 +927,19 @@ class HrLeaveAllocation(models.Model):
                     / allocation.employee_id._get_hours_per_day(allocation.date_from)
                 )
             allocation.already_accrued = already_accrued[allocation.id]
-            if not allocation.nextcall:
-                if date_to < first_level_start_date:
-                    continue
-                allocation.lastcall = max(allocation.lastcall, first_level_start_date)
-                allocation.actual_lastcall = allocation.lastcall
-                allocation.nextcall = first_level._get_next_anchor(allocation.lastcall)
-                carryover_date = allocation._get_carryover_date(allocation.nextcall)
-                allocation.nextcall = min(carryover_date, allocation.nextcall)
-                if len(level_ids) > 1:
-                    second_level_start_date = allocation.date_from + get_timedelta(
-                        level_ids[1].start_count, level_ids[1].start_type
-                    )
-                    allocation.nextcall = min(
-                        second_level_start_date, allocation.nextcall
-                    )
-                if log:
-                    allocation._message_log(body=first_allocation)
-            (current_level, current_level_idx) = (False, 0)
-            current_level_maximum_leave = 0.0
-            cap_days_by_level = {}
-            while allocation._get_accrual_step_date() <= date_to:
-                (current_level, current_level_idx) = (
-                    allocation._get_current_accrual_plan_level_id(allocation.nextcall)
+            if not allocation.nextcall and not allocation._seed_accrual_schedule(
+                level_ids, date_to, log
+            ):
+                continue
+            current_level, current_level_maximum_leave, force_period = (
+                allocation._run_accrual_steps(
+                    level_ids, date_to, force_period, leaves_taken
                 )
-                if not current_level:
-                    break
-                if current_level.cap_accrued_time:
-                    if current_level.id not in cap_days_by_level:
-                        cap_days_by_level[current_level.id] = (
-                            allocation._level_amount_in_days(
-                                current_level, current_level.maximum_leave
-                            )
-                        )
-                    current_level_maximum_leave = cap_days_by_level[current_level.id]
-                nextcall = current_level._get_next_anchor(allocation.nextcall)
-                period_start = current_level._get_previous_anchor(allocation.lastcall)
-                period_end = current_level._get_next_anchor(allocation.lastcall)
-                current_level_last_date = False
-                if (
-                    current_level_idx < (len(level_ids) - 1)
-                    and allocation.accrual_plan_id.transition_mode == "immediately"
-                ):
-                    next_level = level_ids[current_level_idx + 1]
-                    current_level_last_date = allocation.date_from + get_timedelta(
-                        next_level.start_count, next_level.start_type
-                    )
-                    if allocation.nextcall != current_level_last_date:
-                        nextcall = min(nextcall, current_level_last_date)
-                carryover_date = allocation._get_carryover_date(allocation.nextcall)
-                if allocation.nextcall < carryover_date < nextcall:
-                    nextcall = min(nextcall, carryover_date)
-
-                is_accrual_date = allocation.nextcall in (
-                    period_end,
-                    current_level_last_date,
-                )
-                # A last-day period is credited on its last day, a day before its
-                # boundary, so the credit precedes whatever else happens at the
-                # boundary: a carryover, an expiry, the next level.
-                if (
-                    allocation.accrual_plan_id.accrued_gain_time == "end"
-                    and allocation.nextcall == period_end
-                    and current_level._get_anchor_day(period_end) < period_end
-                    and not allocation.already_accrued
-                ):
-                    allocation._add_days_to_allocation(
-                        current_level,
-                        current_level_maximum_leave,
-                        leaves_taken,
-                        period_start,
-                        period_end,
-                    )
-                    allocation.already_accrued = True
-                if allocation.nextcall > date_to:
-                    break
-
-                if current_level.accrual_validity:
-                    expiration_date = allocation.carried_over_days_expiration_date
-                    if (
-                        not expiration_date
-                        or allocation.nextcall > expiration_date
-                        or allocation.expiring_carryover_days == 0
-                    ):
-                        expiration_date = carryover_date + relativedelta(
-                            **{
-                                current_level.accrual_validity_type
-                                + "s": current_level.accrual_validity_count
-                            }
-                        )
-                        allocation.carried_over_days_expiration_date = expiration_date
-                    if allocation.nextcall < expiration_date < nextcall:
-                        nextcall = expiration_date
-                    if allocation.nextcall == expiration_date:
-                        expiring_days = max(
-                            0,
-                            allocation.expiring_carryover_days
-                            - allocation.leaves_taken,
-                        )
-                        allocation.number_of_days = max(
-                            0, allocation.number_of_days - expiring_days
-                        )
-                        allocation.expiring_carryover_days = 0
-
-                if (
-                    not allocation.already_accrued
-                    and is_accrual_date
-                    and allocation.accrual_plan_id.accrued_gain_time == "start"
-                ):
-                    allocation._add_days_to_allocation(
-                        current_level,
-                        current_level_maximum_leave,
-                        leaves_taken,
-                        period_start,
-                        period_end,
-                    )
-
-                if allocation.nextcall == carryover_date:
-                    allocation.last_executed_carryover_date = carryover_date
-                    allocation._apply_carryover_limit(current_level, leaves_taken)
-                    allocation.expiring_carryover_days = allocation.number_of_days
-
-                if (
-                    not allocation.already_accrued
-                    and is_accrual_date
-                    and allocation.accrual_plan_id.accrued_gain_time == "end"
-                ):
-                    allocation._add_days_to_allocation(
-                        current_level,
-                        current_level_maximum_leave,
-                        leaves_taken,
-                        period_start,
-                        period_end,
-                    )
-
-                if allocation.nextcall == carryover_date:
-                    allocation.yearly_accrued_amount = 0
-
-                if (
-                    allocation.accrual_plan_id.accrued_gain_time == "start"
-                    and allocation.last_executed_carryover_date
-                ):
-                    last_carryover_date = allocation.last_executed_carryover_date
-                    carryover_level, carryover_level_idx = (
-                        allocation._get_current_accrual_plan_level_id(
-                            last_carryover_date
-                        )
-                    )
-                    carryover_period_end = carryover_level._get_next_anchor(
-                        last_carryover_date
-                    )
-                    if (
-                        carryover_level_idx < (len(level_ids) - 1)
-                        and allocation.accrual_plan_id.transition_mode == "immediately"
-                    ):
-                        next_level = level_ids[carryover_level_idx + 1]
-                        carryover_level_last_date = (
-                            allocation.date_from
-                            + get_timedelta(
-                                next_level.start_count, next_level.start_type
-                            )
-                        )
-                        carryover_period_end = min(
-                            carryover_period_end, carryover_level_last_date
-                        )
-                    if carryover_level.repeat_unit == "day":
-                        carryover_period_end = last_carryover_date
-                    accrued = (
-                        not allocation.already_accrued
-                        and allocation.nextcall == period_end
-                    )
-                    if (
-                        accrued
-                        and last_carryover_date
-                        <= allocation.nextcall
-                        <= carryover_period_end
-                    ):
-                        if allocation._apply_carryover_limit(
-                            carryover_level, leaves_taken
-                        ):
-                            allocation.last_executed_carryover_date = carryover_date
-
-                if is_accrual_date:
-                    allocation.lastcall = allocation.nextcall
-                allocation.actual_lastcall = allocation.nextcall
-                allocation.nextcall = nextcall
-                allocation.already_accrued = False
-                if force_period and allocation.nextcall > date_to:
-                    allocation.nextcall = date_to
-                    force_period = False
-
+            )
             if allocation.accrual_plan_id.accrued_gain_time == "start":
-                level_start = {
-                    level._get_level_transition_date(allocation.date_from): level
-                    for level in allocation.accrual_plan_id.level_ids
-                }
-                current_level = (
-                    level_start.get(allocation.actual_lastcall)
-                    or current_level
-                    or allocation.accrual_plan_id.level_ids[0]
+                allocation._accrue_trailing_period(
+                    current_level, current_level_maximum_leave, leaves_taken
                 )
-                period_start = current_level._get_previous_anchor(
-                    allocation.actual_lastcall
-                )
-                if current_level.cap_accrued_time:
-                    current_level_maximum_leave = allocation._level_amount_in_days(
-                        current_level, current_level.maximum_leave
-                    )
-                if allocation.actual_lastcall in {
-                    period_start,
-                    allocation.date_from,
-                } | set(level_start.keys()) or (
-                    allocation.actual_lastcall
-                    - get_timedelta(
-                        current_level.accrual_validity_count,
-                        current_level.accrual_validity_type,
-                    )
-                    in {period_start, allocation.date_from} | set(level_start.keys())
-                ):
-                    allocation._add_days_to_allocation(
-                        current_level,
-                        current_level_maximum_leave,
-                        leaves_taken,
-                        period_start,
-                        allocation.nextcall,
-                    )
-                    allocation.already_accrued = True
 
     def _get_accrual_step_date(self):
         self.check_singleton()
