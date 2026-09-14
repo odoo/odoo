@@ -20,19 +20,13 @@ from .ai_orchestrator import (
     get_ai_orchestrator,
     is_retryable,
 )
-from .catalog_client import CatalogAIClient
 from .json_payload import parse_json_response, strip_json_fence
 from .provider_assistant import ProviderAssistant
-from .vendor_catalog import (
-    CHAT_TIMEOUT,
-    PROVIDERS,
-    SYNTHESIZE_TIMEOUT,
-    TRANSCRIBE_TIMEOUT,
+from .wire_formats import (
     audio_mimetype,
     get_anthropic_content,
     get_openai_content,
     get_whisper_form,
-    provider_selection,
     read_anthropic_content,
     read_openai_content,
     read_whisper_segments,
@@ -41,14 +35,9 @@ from .vendor_catalog import (
 
 __all__ = [
     "AI_CLIENT_REGISTRY",
-    "CHAT_TIMEOUT",
     "NON_RETRYABLE_ERRORS",
-    "PROVIDERS",
-    "SYNTHESIZE_TIMEOUT",
-    "TRANSCRIBE_TIMEOUT",
     "AIOrchestrator",
     "BaseAIClient",
-    "CatalogAIClient",
     "ClaudeClient",
     "DeepSeekClient",
     "DeepgramClient",
@@ -68,7 +57,6 @@ __all__ = [
     "get_whisper_form",
     "is_retryable",
     "parse_json_response",
-    "provider_selection",
     "read_anthropic_content",
     "read_openai_content",
     "read_whisper_segments",

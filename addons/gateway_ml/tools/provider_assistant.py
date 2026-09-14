@@ -5,7 +5,7 @@ import logging
 from odoo.exceptions import UserError
 
 from .json_payload import strip_json_fence
-from .vendor_catalog import (
+from .wire_formats import (
     audio_mimetype,
     get_anthropic_content,
     get_openai_content,

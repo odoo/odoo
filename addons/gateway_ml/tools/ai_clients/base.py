@@ -51,11 +51,11 @@ class BaseAIClient:
             return model
         return (
             self._provider_default_model()
-            or self._catalog_default_model()
+            or self._operation_default_model()
             or self.FALLBACK_MODEL
         )
 
-    def _catalog_default_model(self):
+    def _operation_default_model(self):
         return self._operation("chat").model_id.code or None
 
     def _provider(self):

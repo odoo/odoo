@@ -134,7 +134,7 @@ class TestOpenAIWire(EncryptionKeyCase, TransactionCase):
         self.assertNotIn("max_tokens", sent)
         self.assertEqual(sent["reasoning_effort"], "none")
 
-    def test_a_callers_reasoning_effort_wins_over_the_catalog(self):
+    def test_a_callers_reasoning_effort_wins_over_the_model_row(self):
         client = OpenAIClient(self.env)
         body = {"choices": [{"message": {"content": "ok"}, "finish_reason": "stop"}]}
         with patch.object(client._client, "post", return_value=_ok(body)) as post:

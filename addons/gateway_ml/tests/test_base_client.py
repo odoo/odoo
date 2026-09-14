@@ -48,8 +48,8 @@ class TestClientContract(TransactionCase):
                 self.assertTrue(
                     client._resolve_model(),
                     f"{cls.__name__} resolves no model without a gateway.ml.provider "
-                    f"row: it is neither in vendor_catalog under its "
-                    f"ENDPOINT_CODE nor carrying a FALLBACK_MODEL.",
+                    f"row: its ENDPOINT_CODE has no chat operation row and it "
+                    f"carries no FALLBACK_MODEL.",
                 )
 
     def test_no_client_redefines_validate_params(self):

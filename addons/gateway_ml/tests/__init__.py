@@ -1,7 +1,6 @@
 from . import test_ai_orchestrator
 from . import test_ai_provider
 from . import test_base_client
-from . import test_catalog_client
 from . import test_claude_client
 from . import test_claude_sdk
 from . import test_deepgram_params
@@ -18,3 +17,4 @@ from . import test_vendor_wires
 from . import test_vision_completion
 from . import test_provider_services
 from . import test_provider_assistant
+from . import test_wire_formats

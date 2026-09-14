@@ -1,7 +1,7 @@
 import json
 import logging
 
-from ..vendor_catalog import get_anthropic_content, read_anthropic_content
+from ..wire_formats import get_anthropic_content, read_anthropic_content
 from .base import BaseAIClient
 from odoo.addons.integration.tools.exceptions import CommError
 

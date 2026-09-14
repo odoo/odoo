@@ -24,23 +24,24 @@ Models
 * ``ai.use.case.tag`` -- provider classification: vision, reasoning, speed,
   budget, long context, OCR, embeddings, audio
 
-Vendor catalog
---------------
-``tools/vendor_catalog.py`` holds ``PROVIDERS``: per-vendor endpoint paths,
-model defaults, vision and audio capability, and the timeouts and token floors
-measured against live keys, plus what a vendor's wire needs in every chat body:
-``extra`` (DeepSeek's thinking switch, a reasoning effort) and
-``max_tokens_param``, the name its output cap goes under -- OpenAI's reasoning
-models refuse ``max_tokens``. ``CatalogAIClient`` and ``OpenAICompatibleClient``
-both apply them; a caller's own keyword still wins in the latter, which is how
-``DeepSeekClient.reasoning_completion`` turns thinking back on. Callers that
-build their own request bodies read it
-instead of restating it -- ``telegram_bot`` is the one that does, because a
-bot's key belongs to the bot rather than the company and so cannot go through
-``credential.credential``. ``get_openai_content`` and
-``get_anthropic_content`` shape the two chat wires; ``strip_json_fence``, in
-``tools/json_payload.py``, is the fence half of ``parse_json_response`` for
-callers that must not let it raise.
+Provider operations
+-------------------
+A vendor's wire lives in rows, not in Python. ``gateway.ml.provider.service``
+names, per operation (chat, transcribe, transcribe_timed, synthesize, embed),
+the ``integration.service`` the call rides, the wire it speaks, the path, the
+default model and the timeout -- Gemini's chat and audio ride two services.
+The ``gateway.ml.model`` row carries what that model needs in a body:
+``request_extra`` (DeepSeek's thinking switch, a reasoning effort),
+``max_tokens_param`` -- OpenAI's reasoning models refuse ``max_tokens`` --
+``min_max_tokens``, and whether sampling parameters are accepted. A caller's
+own keyword still wins in ``OpenAICompatibleClient``, which is how
+``DeepSeekClient.reasoning_completion`` turns thinking back on.
+``tools/wire_formats.py`` shapes and reads the wires: ``get_openai_content``
+and ``get_anthropic_content`` build image-carrying messages,
+``read_openai_content`` and ``read_anthropic_content`` are the single reader per
+wire that both stacks use, and the Whisper form and readers sit beside them.
+``strip_json_fence``, in ``tools/json_payload.py``, is the fence half of
+``parse_json_response`` for callers that must not let it raise.
 
 Orchestration
 -------------
@@ -72,17 +73,19 @@ redaction and the event log.
   and Deepgram. Raising, credential resolved from the company, rich where a
   vendor is rich (prompt caching, tool-call structured output, model tables).
   What ``AIOrchestrator`` drives.
-* ``tools/catalog_client.py`` -- ``CatalogAIClient``, one class driving every
-  catalog vendor off ``PROVIDERS``. Fail-soft, key passed in per call, and the
-  only way to reach the ``gemini_openai`` endpoint, which the catalog's
-  ``gemini`` entry uses for chat and which no class targets -- ``GeminiClient``
+* ``tools/provider_assistant.py`` -- ``ProviderAssistant``, one class driving
+  any provider's chat and transcribe operations off its rows, built by
+  ``gateway.ml.provider._assistant(model=)``. Fail-soft, and authenticated by
+  the company's ``integration.connection`` like every other outbound call, so
+  it is configured only when the company is connected to the operation's
+  service. It is the only way to reach the ``gemini_openai`` endpoint, which
+  Gemini's chat operation uses and which no class targets -- ``GeminiClient``
   is on ``gemini``, the native wire. ``groq`` and ``moonshot`` DO have classes,
   in ``tools/ai_clients/openai_wire_vendors.py``, registered like the rest:
-  ``tests/test_registry_coherence.py`` requires every catalog vendor to be in
-  ``AI_CLIENT_REGISTRY`` so that ``_get_ai_client`` can answer for whichever one
-  the orchestrator selects. Neither is re-exported from ``tools/__init__.py``.
-  It arrived from ``telegram_bot`` in 19.0.1.7.0, where being a second
-  implementation of the same two chat wires had let the two drift.
+  ``tests/test_registry_coherence.py`` requires every provider to be in
+  ``AI_CLIENT_REGISTRY`` so that ``_get_ai_client`` can answer for whichever
+  one the orchestrator selects. The Telegram bots' assistants are its callers;
+  ``tools/assistant_adoption.py`` moved their own keys onto connections.
 
 The third is not HTTP at all and so inherits none of that.
 
@@ -99,9 +102,6 @@ The third is not HTTP at all and so inherits none of that.
   ``extract_ai`` all import that package without ever driving a
   subprocess. Import the submodule. It arrived from ``agromarin/ai_claude`` in
   19.0.1.15.0.
-
-``read_openai_content`` and ``read_anthropic_content`` in ``vendor_catalog``
-are the single reader per wire that both stacks use.
 
 Audio
 -----

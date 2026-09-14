@@ -138,36 +138,25 @@ class TestAIProviderClientHook(TransactionCase):
 
 
 @tagged("post_install", "-at_install")
-class TestSeededDefaultsMatchTheCatalog(TransactionCase):
-    def _catalog_pairs(self):
-        from odoo.addons.gateway_ml.tools.vendor_catalog import PROVIDERS
-
-        return [
-            (spec["chat_service"], spec["chat_model"])
-            for spec in PROVIDERS.values()
-            if spec.get("chat_service") and spec.get("chat_model")
-        ]
-
-    def test_every_seeded_provider_agrees_with_the_catalog(self):
+class TestSeededDefaultsMatchTheChatOperation(TransactionCase):
+    def test_every_provider_defaults_to_its_chat_operations_model(self):
         checked = 0
-        for code, catalog_model in self._catalog_pairs():
-            provider = self.env["gateway.ml.provider"].search(
-                [("endpoint_id.code", "=", code)], limit=1
-            )
-            if not provider:
+        for provider in self.env["gateway.ml.provider"].search([]):
+            chat = provider.service_ids.filtered(lambda row: row.operation == "chat")
+            if not chat:
                 continue
-            with self.subTest(service=code):
+            with self.subTest(provider=provider.code):
                 self.assertEqual(
-                    provider.default_model_id.code,
-                    catalog_model,
-                    f"gateway.ml.provider.default_model_id for '{code}' disagrees with "
-                    f"vendor_catalog. Change the catalog and re-seed, or add a "
+                    provider.default_model_id,
+                    chat.model_id,
+                    f"gateway.ml.provider.default_model_id for '{provider.code}' "
+                    f"disagrees with its chat operation. Change both in one "
                     f"migration — do not let the two answer differently.",
                 )
                 checked += 1
-        self.assertTrue(checked, "no seeded provider matched a catalog vendor")
+        self.assertTrue(checked, "no seeded provider carries a chat operation")
 
-    def test_the_catalog_answers_when_no_provider_row_exists(self):
+    def test_the_chat_operation_answers_when_the_provider_names_no_default(self):
         from odoo.addons.gateway_ml.tools.ai_clients import OpenAIClient
 
         client = OpenAIClient.__new__(OpenAIClient)
@@ -176,20 +165,24 @@ class TestSeededDefaultsMatchTheCatalog(TransactionCase):
         client._default_model = ""
         self.assertEqual(client._resolve_model(), "gpt-5.6-luna")
 
-    def test_a_client_on_a_wire_the_catalog_does_not_describe_keeps_its_own(self):
+    def test_a_client_without_a_chat_operation_keeps_its_own(self):
         from odoo.addons.gateway_ml.tools.ai_clients import DeepgramClient
 
         client = DeepgramClient.__new__(DeepgramClient)
         client.env = self.env
         client._default_model = ""
-        self.assertIsNone(client._catalog_default_model())
+        self.assertIsNone(client._operation_default_model())
         self.assertEqual(client._resolve_model(), "nova-3")
 
-    def test_gemini_resolves_the_catalogs_model_whichever_wire_it_speaks(self):
+    def test_gemini_resolves_its_chat_model_whichever_wire_it_speaks(self):
         from odoo.addons.gateway_ml.tools.ai_clients import GeminiClient
-        from odoo.addons.gateway_ml.tools.vendor_catalog import PROVIDERS
 
         client = GeminiClient.__new__(GeminiClient)
         client.env = self.env
         client._default_model = ""
-        self.assertEqual(client._resolve_model(), PROVIDERS["gemini"]["chat_model"])
+        self.assertEqual(
+            client._resolve_model(),
+            self.env.ref("gateway_ml.ai_provider_google")
+            ._service_for("chat")
+            .model_id.code,
+        )

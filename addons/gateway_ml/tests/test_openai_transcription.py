@@ -5,8 +5,7 @@ from odoo.tests import TransactionCase, tagged
 from odoo.addons.gateway_ml.tests.common import credential_for
 from odoo.addons.gateway_ml.tools.ai_clients import GroqClient, OpenAIClient
 from odoo.addons.gateway_ml.tools.ai_clients.deepseek import DeepSeekClient
-from odoo.addons.gateway_ml.tools.vendor_catalog import (
-    PROVIDERS,
+from odoo.addons.gateway_ml.tools.wire_formats import (
     get_whisper_form,
     read_whisper_transcript,
 )
@@ -68,7 +67,7 @@ class TestOpenAICompatibleTranscribe(EncryptionKeyCase, TransactionCase):
     def _client(self, cls=OpenAIClient):
         return cls(self.env)
 
-    def test_it_posts_the_catalog_wire(self):
+    def test_it_posts_the_transcribe_operation(self):
         client = self._client()
         sent = {}
 
@@ -80,11 +79,13 @@ class TestOpenAICompatibleTranscribe(EncryptionKeyCase, TransactionCase):
         with patch.object(client._client, "post", side_effect=fake_post):
             result = client.transcribe(b"AUDIO", "note.ogg", language="es")
 
-        spec = PROVIDERS["openai"]
+        transcribe = self.env.ref("gateway_ml.ai_provider_openai")._service_for(
+            "transcribe"
+        )
         self.assertEqual(result, "hola mundo")
-        self.assertEqual(sent["path"], spec["audio_path"])
+        self.assertEqual(sent["path"], transcribe.path)
         self.assertEqual(sent["data"]["model"], "gpt-transcribe")
-        self.assertEqual(sent["data"]["model"], spec["audio_model"])
+        self.assertEqual(sent["data"]["model"], transcribe.model_id.code)
         self.assertEqual(sent["data"]["response_format"], "json")
         self.assertEqual(sent["data"]["languages[]"], "es")
         self.assertEqual(sent["files"]["file"][0], "note.ogg")
@@ -114,7 +115,12 @@ class TestOpenAICompatibleTranscribe(EncryptionKeyCase, TransactionCase):
         ) as post:
             spans = client.transcribe_cues(b"AUDIO", "note.ogg", language="es")
         data = post.call_args.kwargs["data"]
-        self.assertEqual(data["model"], PROVIDERS["openai"]["cues_model"])
+        self.assertEqual(
+            data["model"],
+            self.env.ref("gateway_ml.ai_provider_openai")
+            ._service_for("transcribe_timed")
+            .model_id.code,
+        )
         self.assertEqual(data["response_format"], "verbose_json")
         self.assertEqual(data["language"], "es")
         self.assertEqual(spans[0]["end"], 1.5)
@@ -160,5 +166,8 @@ class TestOpenAICompatibleTranscribe(EncryptionKeyCase, TransactionCase):
         ) as post:
             self.assertEqual(client.transcribe(b"AUDIO", "n.ogg"), "transcrito")
         self.assertEqual(
-            post.call_args.kwargs["data"]["model"], PROVIDERS["groq"]["audio_model"]
+            post.call_args.kwargs["data"]["model"],
+            self.env.ref("gateway_ml.ai_provider_groq")
+            ._service_for("transcribe")
+            .model_id.code,
         )

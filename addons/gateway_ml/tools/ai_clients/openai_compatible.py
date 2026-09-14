@@ -1,6 +1,6 @@
 import logging
 
-from ..vendor_catalog import (
+from ..wire_formats import (
     audio_mimetype,
     get_openai_content,
     get_whisper_form,

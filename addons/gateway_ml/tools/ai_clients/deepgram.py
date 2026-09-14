@@ -2,11 +2,12 @@ import logging
 from collections import Counter
 from urllib.parse import urlencode
 
-from ..vendor_catalog import SYNTHESIZE_TIMEOUT
 from .base import BaseAIClient
 from odoo.addons.integration.tools.exceptions import CommError
 
 _logger = logging.getLogger(__name__)
+
+SYNTHESIZE_TIMEOUT = 60
 
 
 class DeepgramClient(BaseAIClient):

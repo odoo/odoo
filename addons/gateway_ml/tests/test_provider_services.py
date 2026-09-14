@@ -2,64 +2,127 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tests import TransactionCase, tagged
 
 from odoo.addons.gateway_ml.tools.ai_clients.claude import ClaudeClient
-from odoo.addons.gateway_ml.tools.vendor_catalog import (
-    CHAT_TIMEOUT,
-    PROVIDERS,
-    TRANSCRIBE_TIMEOUT,
-    UNTIMED_TRANSCRIPTION_MODELS,
-)
+from odoo.addons.gateway_ml.tools.wire_formats import UNTIMED_TRANSCRIPTION_MODELS
 
-CATALOG_PROVIDERS = {
-    "groq": "gateway_ml.ai_provider_groq",
-    "gemini": "gateway_ml.ai_provider_google",
-    "openai": "gateway_ml.ai_provider_openai",
-    "deepseek": "gateway_ml.ai_provider_deepseek",
-    "moonshot": "gateway_ml.ai_provider_moonshot",
-    "claude": "gateway_ml.ai_provider_anthropic",
+CHAT = {
+    "gateway_ml.ai_provider_groq": (
+        "https://api.groq.com/openai/v1/chat/completions",
+        "openai_compatible",
+        "openai/gpt-oss-120b",
+        25,
+    ),
+    "gateway_ml.ai_provider_google": (
+        "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions",
+        "openai_compatible",
+        "gemini-3.5-flash-lite",
+        25,
+    ),
+    "gateway_ml.ai_provider_openai": (
+        "https://api.openai.com/v1/chat/completions",
+        "openai_compatible",
+        "gpt-5.6-luna",
+        25,
+    ),
+    "gateway_ml.ai_provider_deepseek": (
+        "https://api.deepseek.com/v1/chat/completions",
+        "openai_compatible",
+        "deepseek-flash",
+        25,
+    ),
+    "gateway_ml.ai_provider_moonshot": (
+        "https://api.moonshot.ai/v1/chat/completions",
+        "openai_compatible",
+        "kimi-k3",
+        60,
+    ),
+    "gateway_ml.ai_provider_anthropic": (
+        "https://api.anthropic.com/v1/messages",
+        "anthropic_messages",
+        "claude-sonnet-5",
+        25,
+    ),
 }
 
-WIRES = {"openai": "openai_compatible", "anthropic": "anthropic_messages"}
+TRANSCRIBE = {
+    "gateway_ml.ai_provider_groq": (
+        "https://api.groq.com/openai/v1/audio/transcriptions",
+        "openai_compatible",
+        "whisper-large-v3-turbo",
+        30,
+    ),
+    "gateway_ml.ai_provider_google": (
+        "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
+        "gemini_native",
+        "gemini-flash-lite-latest",
+        90,
+    ),
+    "gateway_ml.ai_provider_openai": (
+        "https://api.openai.com/v1/audio/transcriptions",
+        "openai_compatible",
+        "gpt-transcribe",
+        30,
+    ),
+}
+
+
+CHAT_MODEL_SHAPES = {
+    "gateway_ml.ai_provider_groq": ({"reasoning_effort": "low"}, "max_tokens", 0),
+    "gateway_ml.ai_provider_google": ({"reasoning_effort": "low"}, "max_tokens", 2000),
+    "gateway_ml.ai_provider_openai": (
+        {"reasoning_effort": "none"},
+        "max_completion_tokens",
+        0,
+    ),
+    "gateway_ml.ai_provider_deepseek": (
+        {"thinking": {"type": "disabled"}},
+        "max_tokens",
+        0,
+    ),
+    "gateway_ml.ai_provider_moonshot": ({"temperature": 1}, "max_tokens", 2000),
+    "gateway_ml.ai_provider_anthropic": ({}, "max_tokens", 0),
+}
 
 
 @tagged("post_install", "-at_install")
-class TestProviderServicesMatchTheCatalog(TransactionCase):
-    def test_every_catalog_chat_is_a_row(self):
-        for code, xmlid in CATALOG_PROVIDERS.items():
-            spec = PROVIDERS[code]
-            with self.subTest(provider=code):
-                chat = self.env.ref(xmlid)._service_for("chat")
-                self.assertEqual(chat.service_id.code, spec["chat_service"])
-                self.assertEqual(chat.path, spec["chat_path"])
-                self.assertEqual(chat.wire, WIRES[spec["wire"]])
-                self.assertEqual(chat.model_id.code, spec["chat_model"])
-                self.assertEqual(chat.timeout, spec.get("chat_timeout") or CHAT_TIMEOUT)
-                model = chat.model_id
-                self.assertEqual(model.request_extra or {}, spec.get("extra") or {})
-                self.assertEqual(
-                    model.max_tokens_param, spec.get("max_tokens_param", "max_tokens")
-                )
-                self.assertEqual(model.min_max_tokens, spec.get("min_max_tokens") or 0)
+class TestProviderServicesSendWhatTheModuleSent(TransactionCase):
+    def _composed(self, xmlid, operation):
+        row = self.env.ref(xmlid)._service_for(operation)
+        return (
+            f"{row.service_id.endpoint_url}{row.path}",
+            row.wire,
+            row.model_id.code,
+            row.timeout,
+        )
 
-    def test_every_catalog_transcription_is_a_row(self):
-        for code, xmlid in CATALOG_PROVIDERS.items():
-            spec = PROVIDERS[code]
-            if not spec.get("audio"):
-                continue
-            with self.subTest(provider=code):
-                transcribe = self.env.ref(xmlid)._service_for("transcribe")
-                self.assertEqual(transcribe.service_id.code, spec["audio_service"])
-                self.assertEqual(transcribe.path, spec["audio_path"])
-                self.assertEqual(transcribe.model_id.code, spec["audio_model"])
+    def test_every_chat_operation_composes_the_request_it_always_sent(self):
+        for xmlid, expected in CHAT.items():
+            with self.subTest(provider=xmlid):
+                self.assertEqual(self._composed(xmlid, "chat"), expected)
+
+    def test_every_transcription_composes_the_request_it_always_sent(self):
+        for xmlid, expected in TRANSCRIBE.items():
+            with self.subTest(provider=xmlid):
+                self.assertEqual(self._composed(xmlid, "transcribe"), expected)
+
+    def test_every_chat_model_keeps_the_request_shape_it_always_sent(self):
+        for xmlid, expected in CHAT_MODEL_SHAPES.items():
+            model = self.env.ref(xmlid)._service_for("chat").model_id
+            with self.subTest(provider=xmlid):
                 self.assertEqual(
-                    transcribe.timeout, spec.get("audio_timeout") or TRANSCRIBE_TIMEOUT
+                    (
+                        model.request_extra or {},
+                        model.max_tokens_param,
+                        model.min_max_tokens,
+                    ),
+                    expected,
                 )
 
-    def test_the_timed_transcription_model_is_the_catalogs_cues_model(self):
+    def test_the_timed_transcription_runs_on_whisper(self):
         timed = self.env.ref("gateway_ml.ai_provider_openai")._service_for(
             "transcribe_timed"
         )
 
-        self.assertEqual(timed.model_id.code, PROVIDERS["openai"]["cues_model"])
+        self.assertEqual(timed.model_id.code, "whisper-1")
         self.assertTrue(timed.model_id.has_timestamps)
 
     def test_an_untimed_transcription_model_reads_languages_as_a_list(self):
