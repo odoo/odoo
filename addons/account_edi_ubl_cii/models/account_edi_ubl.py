@@ -2187,6 +2187,8 @@ class AccountEdiUBL(models.AbstractModel):
             percentage = subtotal_elem.findtext('.//{*}TaxCategory/{*}Percent')
             if percentage is None:
                 percentage = subtotal_elem.findtext('.//{*}Percent')
+            if collected_values['company'].vat_disabled and percentage is None and category_code == 'O':
+                percentage = 0
             if percentage is None:
                 continue
 
@@ -2593,6 +2595,9 @@ class AccountEdiUBL(models.AbstractModel):
     def _import_ubl_invoice_line_prepare_classified_tax_category_tax_values(self, collected_values, tax_category_tree):
         percentage = tax_category_tree.findtext('./{*}Percent')
         category_code = tax_category_tree.findtext('./{*}ID')
+
+        if collected_values['company'].vat_disabled and category_code == 'O' and percentage is None:
+            percentage = 0
 
         if percentage is None or category_code is None:
             return
