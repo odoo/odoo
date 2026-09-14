@@ -435,6 +435,12 @@ class HrEmployee(models.Model):
 
     def write(self, vals):
         values = vals
+        # Read the caller's flag before setting our own: this method re-enters
+        # itself through the `leave_manager_id` write below, and the guard is
+        # there to stop that recursion -- not to stop the resync it is tested
+        # against further down, which is what happened when the two were read
+        # from the same context.
+        resync_leaves = not self.env.context.get("no_leave_resource_calendar_update")
         self = self.with_context(no_leave_resource_calendar_update=True)
         if "parent_id" in values:
             manager = self.env["hr.employee"].browse(values["parent_id"]).user_id
@@ -469,9 +475,7 @@ class HrEmployee(models.Model):
         res = super().write(values)
         old_managers.sudo()._clean_leave_responsible_users()
 
-        if "resource_calendar_id" in values and not self.env.context.get(
-            "no_leave_resource_calendar_update"
-        ):
+        if "resource_calendar_id" in values and resync_leaves:
             try:
                 leaves = self.env["hr.leave"].search(
                     [

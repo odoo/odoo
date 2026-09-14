@@ -1498,7 +1498,17 @@ Versions:
         )
 
     def _apply_leave_request(self):
+        """Make the calendar reflect these leaves: block the working time and
+        raise the meeting.
+
+        Idempotent, because it is not only called once at validation -- a
+        working-schedule or contract change re-applies an already approved
+        leave, and appending a second `resource.calendar.leaves` row there
+        would have the working-time engine subtract the period twice.
+        """
         holidays = self.filtered("employee_id")
+        holidays._remove_resource_leave()
+        holidays.meeting_id.write({"active": False})
         holidays._create_resource_leave()
         meeting_holidays = holidays.filtered(
             lambda l: l.holiday_status_id.create_calendar_meeting

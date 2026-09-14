@@ -1,6 +1,6 @@
 import logging
 from collections import defaultdict
-from datetime import UTC, date, datetime
+from datetime import UTC, date, datetime, timedelta
 from unittest.mock import patch
 
 from freezegun import freeze_time
@@ -1818,3 +1818,111 @@ class TestGeneratedTimeOffWaitsForApproval(TestHrHolidaysCommon):
         leaves = self._generate(self.user_hruser)
         self.assertEqual(set(leaves.mapped("state")), {"validate"})
         self.assertEqual(len(self._resource_leaves(leaves)), len(leaves))
+
+
+@tagged("post_install", "-at_install")
+class TestScheduleChangeRepricesFutureLeave(TestHrHolidaysCommon):
+    """Changing an employee's working schedule re-prices the leave they have
+    already been granted for after it, and books it exactly once."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.full_time = cls.company.resource_calendar_id
+        cls.mornings = cls.env["resource.calendar"].create(
+            {
+                "name": "Mornings only",
+                "tz": cls.full_time.tz,
+                "company_id": cls.company.id,
+                "attendance_ids": [
+                    Command.create(
+                        {
+                            "name": f"Day {weekday} morning",
+                            "dayofweek": str(weekday),
+                            "hour_from": 8,
+                            "hour_to": 12,
+                            "day_period": "morning",
+                        }
+                    )
+                    for weekday in range(5)
+                ],
+            }
+        )
+        cls.leave_type = cls.env["hr.leave.type"].create(
+            {
+                "name": "Repriced",
+                "requires_allocation": False,
+                "leave_validation_type": "no_validation",
+                "create_calendar_meeting": True,
+                "company_id": cls.company.id,
+            }
+        )
+
+    def _employee_with_an_approved_future_leave(self):
+        employee = self.env["hr.employee"].create(
+            {
+                "name": "Rescheduled",
+                "company_id": self.company.id,
+                "resource_calendar_id": self.full_time.id,
+            }
+        )
+        day = date.today() + timedelta(days=40)
+        while day.weekday() > 4:
+            day += timedelta(days=1)
+        leave = (
+            self.env["hr.leave"]
+            .with_context(leave_skip_date_check=True)
+            .create(
+                {
+                    "employee_id": employee.id,
+                    "holiday_status_id": self.leave_type.id,
+                    "request_date_from": day,
+                    "request_date_to": day,
+                }
+            )
+        )
+        self.assertEqual(leave.state, "validate")
+        self.assertEqual(leave.number_of_hours, 8)
+        return employee, leave
+
+    def _bookings(self, leave):
+        return self.env["resource.calendar.leaves"].search(
+            [("holiday_id", "=", leave.id)]
+        )
+
+    def test_the_leave_is_repriced_against_the_new_schedule(self):
+        employee, leave = self._employee_with_an_approved_future_leave()
+        employee.write({"resource_calendar_id": self.mornings.id})
+        leave.invalidate_recordset()
+        self.assertEqual(
+            leave.resource_calendar_id,
+            self.mornings,
+            "the request kept the schedule the employee no longer works, so "
+            "its duration was still priced against it",
+        )
+        self.assertEqual(leave.number_of_hours, 4)
+
+    def test_it_is_booked_once_not_twice(self):
+        employee, leave = self._employee_with_an_approved_future_leave()
+        self.assertEqual(len(self._bookings(leave)), 1)
+        employee.write({"resource_calendar_id": self.mornings.id})
+        self.assertEqual(
+            len(self._bookings(leave)),
+            1,
+            "re-applying an already approved leave must replace its booking, "
+            "not add a second one the working-time engine subtracts again",
+        )
+        self.assertEqual(len(leave.meeting_id), 1)
+        self.assertTrue(leave.meeting_id.active)
+
+    def test_a_caller_can_still_ask_for_no_resync(self):
+        employee, leave = self._employee_with_an_approved_future_leave()
+        employee.with_context(no_leave_resource_calendar_update=True).write(
+            {"resource_calendar_id": self.mornings.id}
+        )
+        leave.invalidate_recordset()
+        self.assertEqual(
+            leave.resource_calendar_id,
+            self.full_time,
+            "the escape hatch the guard exists for still works",
+        )
