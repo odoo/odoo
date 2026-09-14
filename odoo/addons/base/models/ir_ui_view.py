@@ -33,7 +33,15 @@ from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools.misc import ConstantMapping, file_path
 from odoo.tools.template_inheritance import apply_inheritance_specs, locate_node
 from odoo.tools.translate import TRANSLATED_ATTRS, xml_translate
-from odoo.tools.view_ir import Patch, apply_patches, from_arch, to_arch, translate_specs
+from odoo.tools.view_ir import (
+    Node,
+    Patch,
+    apply_patches,
+    from_arch,
+    identify,
+    to_arch,
+    translate_specs,
+)
 from odoo.tools.view_validation import (
     get_class_accessibility_warnings,
     get_domain_value_names,
@@ -121,6 +129,11 @@ ref_re = re.compile(
 """,
     re.VERBOSE,
 )
+
+
+def hierarchy_views(hierarchy: dict[Any, list[Any]]) -> list[Any]:
+    """Every overlay in a `_get_hierarchies()` tree, in no particular order."""
+    return [view for children in hierarchy.values() for view in children]
 
 
 def _hasclass(context: Any, *cls: str) -> bool:
@@ -1273,6 +1286,13 @@ class IrUiView(models.Model):
         return source
 
     def _combine(self, hierarchy: dict[Self, list[Self]]) -> _Element:
+        return self._combine_tree(hierarchy)[0]
+
+    def _combine_tree(
+        self, hierarchy: dict[Self, list[Self]]
+    ) -> tuple[_Element, Node | None]:
+        """The combined arch, and the IR it was combined on — None on the XML
+        path (branding), where the tree carries no provenance."""
         self.check_singleton()
         if self.mode != "primary":
             raise ValueError(
@@ -1330,7 +1350,31 @@ class IrUiView(models.Model):
         _debug.pipeline(
             "combine", root=self.id, key=self.key, applied=applied, patched=patched
         )
-        return combined_arch
+        return combined_arch, combined
+
+    def get_provenance(self) -> dict[str, dict[str, Any]]:
+        """Which view put each node of this view's combined arch where it is.
+
+        Keyed by the node's id (`odoo.tools.view_ir.identify`): the primary
+        for what its own arch holds, the overlay that inserted the node
+        otherwise, as ``{"view_id": int, "xml_id": str | None, "kind": str}``.
+        Empty while branding is on — the XML combine carries no provenance.
+        """
+        self.check_singleton()
+        self.browse().check_access("read")
+        (root, hierarchy) = self._get_hierarchies()[0]
+        _arch, combined = root._combine_tree(hierarchy)
+        if combined is None:
+            return {}
+        origins = {
+            f"ir.ui.view,{view.id}": {"view_id": view.id, "xml_id": view.xml_id or None}
+            for view in [root, *hierarchy_views(hierarchy)]
+        }
+        primary = origins[f"ir.ui.view,{root.id}"]
+        return {
+            node_id: {**origins.get(node.origin or "", primary), "kind": node.kind}
+            for node_id, node in identify(combined).items()
+        }
 
     def _patch_ir(
         self, combined: Any, view: Self, arch: _Element
@@ -1391,7 +1435,8 @@ class IrUiView(models.Model):
         ids, inherit_ids = zip(*rows, strict=True)
         self._fields["inherit_id"]._insert_cache(self.browse(ids), inherit_ids)
 
-    def _get_combined_archs(self) -> list[_Element]:
+    def _get_hierarchies(self) -> list[tuple[Self, dict[Self, list[Self]]]]:
+        """For each view, its primary root and the overlay tree under it."""
         self._prefetch_ancestry()
         parented = []
         roots = self.env["ir.ui.view"]
@@ -1443,9 +1488,12 @@ class IrUiView(models.Model):
         roots = roots.with_prefetch(all_tree_views._prefetch_ids)
 
         return [
-            root._combine(get_hierarchy(root, parented_ids))
+            (root, get_hierarchy(root, parented_ids))
             for root, parented_ids in zip(roots, parented, strict=True)
         ]
+
+    def _get_combined_archs(self) -> list[_Element]:
+        return [root._combine(hierarchy) for root, hierarchy in self._get_hierarchies()]
 
     def _get_view_refs(self, node: _Element) -> dict[str, str]:
         context = node.get("context")
