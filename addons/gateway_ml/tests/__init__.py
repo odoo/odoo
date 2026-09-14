@@ -2,7 +2,6 @@ from . import test_ai_orchestrator
 from . import test_ai_provider
 from . import test_base_client
 from . import test_claude_client
-from . import test_claude_sdk
 from . import test_deepgram_params
 from . import test_deepgram_speech
 from . import test_deepseek_client

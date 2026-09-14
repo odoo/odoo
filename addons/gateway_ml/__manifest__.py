@@ -65,9 +65,9 @@ Orchestration
 
 Clients
 -------
-Three ways to reach a vendor. The first two are on the generic HTTP transport
-and so inherit session pooling, retry, rate limiting, response caching, secret
-redaction and the event log.
+Two ways to reach a vendor, both on the generic HTTP transport, so both inherit
+session pooling, retry, rate limiting, response caching, secret redaction and
+the event log.
 
 * ``tools/ai_clients/`` -- a class per vendor: Claude, DeepSeek, OpenAI, Gemini
   and Deepgram. Raising, credential resolved from the company, rich where a
@@ -87,21 +87,8 @@ redaction and the event log.
   one the orchestrator selects. The Telegram bots' assistants are its callers;
   ``tools/assistant_adoption.py`` moved their own keys onto connections.
 
-The third is not HTTP at all and so inherits none of that.
-
-* ``tools/claude_sdk.py`` -- ``ClaudeSDKClient`` drives ``claude_agent_sdk``,
-  which spawns the Claude Code CLI as a Node subprocess and lets it read and
-  write files under a work-dir root the caller names. ``get_claude_api_token``
-  is beside it because a subprocess needs the key as a string in its
-  environment, which ``get_api_client`` cannot hand back. The SDK import is
-  soft: absent ``claude-agent-sdk``, the module still imports and the client
-  raises on construction, so nothing here is an ``external_dependencies`` entry
-  for the modules that merely need the HTTP path. It is deliberately **not**
-  re-exported from ``tools/__init__.py``: importing ``claude_agent_sdk`` costs
-  343ms and 137 modules, and ``api_ai_agent``, ``telegram_bot`` and
-  ``extract_ai`` all import that package without ever driving a
-  subprocess. Import the submodule. It arrived from ``agromarin/ai_claude`` in
-  19.0.1.15.0.
+The Claude Agent SDK, which drives the Claude Code CLI as a subprocess rather
+than calling a wire, is ``ai_project``'s, its only caller.
 
 Audio
 -----
