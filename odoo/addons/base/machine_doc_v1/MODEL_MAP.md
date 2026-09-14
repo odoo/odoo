@@ -965,35 +965,6 @@ HTTP routing, authentication, and request dispatch.
 
 ---
 
-## Mail
-
-### models/ir_mail_server.py
-
-#### IrMail_Server — `ir.mail_server` (`_name`)
-
-SMTP server configuration and email sending.
-
-**Fields:**
-- `name` (Char, required), `from_filter` (Char) — Domain/email filters
-- `smtp_host`, `smtp_port` (Char, Integer)
-- `smtp_authentication` (Selection) — `login`, `certificate`, `cli`
-- `smtp_user`, `smtp_pass` (Char, groups=system)
-- `smtp_encryption` (Selection) — `none`, `starttls`, `ssl` (with variants)
-- `smtp_ssl_certificate`, `smtp_ssl_private_key` (Binary)
-- `smtp_debug` (Boolean), `max_email_size` (Float)
-- `sequence` (Integer, default=10), `active` (Boolean, default=True)
-
-**Key Methods:**
-- `_connect__(host, port, user, password, encryption, ...)` — Open an SMTP connection (thin socket I/O)
-- `_prepare_smtp_transport(mail_server, *, host, port, ...)` — Assembles the transport value object (host/port/auth/encryption/SSL context) from the record, or from CLI/config/params; socket-free and unit-testable
-- `_open_smtp_connection(transport, smtp_from)` — Open/secure/authenticate a socket for a resolved `_SmtpTransport`
-- `_build_email__(email_from, email_to, subject, body, ...)` — Build RFC2822 EmailMessage (`headers` override singleton headers via del-then-set)
-- `send_email(message, mail_server_id, ...)` — Send email via SMTP
-- `_find_mail_server(email_from, mail_servers)` — Find server by FROM address
-- `test_smtp_connection(autodetect_max_email_size)` — Test connection; maps low-level errors via `_prepare_connection_test_error`
-
----
-
 ## Module System
 
 ### models/mixin_module_link.py
@@ -2017,7 +1988,6 @@ Quick lookup — file → model → primary role:
 | `ir_job.py` | ir.job, ir.job.channel | Background job queue + channels |
 | `ir_http.py` | ir.http | HTTP routing/auth/dispatch |
 | `ir_logging.py` | ir.logging | Server/client logs |
-| `ir_mail_server.py` | ir.mail_server | SMTP configuration/sending |
 | `ir_model.py` | ir.model, ir.model.inherit | Model registry + inheritance |
 | `ir_model_access.py` | ir.model.access | Model-level ACL |
 | `ir_model_reflection.py` | ir.model.constraint, ir.model.relation | DB constraint/relation tracking for uninstall |

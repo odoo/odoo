@@ -17,11 +17,11 @@ from odoo.addons.mail.tools.discuss import Store, StoreFieldSpec
 if typing.TYPE_CHECKING:
     from collections.abc import Collection
 
+    from .ir_mail_server import IrMail_Server
     from .mail_activity import MailActivity
     from .mail_mail import MailMail
     from .mail_presence import MailPresence
     from .res_role import ResRole
-    from odoo.addons.base.models.ir_mail_server import IrMail_Server
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)

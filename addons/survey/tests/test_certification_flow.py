@@ -4,7 +4,7 @@ from odoo import Command
 from odoo.tests import tagged
 from odoo.tests.common import HttpCase
 
-from odoo.addons.base.models.ir_mail_server import IrMail_Server
+from odoo.addons.mail.models.ir_mail_server import IrMail_Server
 from odoo.addons.mail.tests.common import MockEmail
 from odoo.addons.survey.tests import common
 

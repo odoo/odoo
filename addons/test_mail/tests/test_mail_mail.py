@@ -20,7 +20,7 @@ from odoo.libs.datetime import timezone
 from odoo.tests import tagged, users
 from odoo.tools import file_path, formataddr, mute_logger
 
-from odoo.addons.base.models.ir_mail_server import (
+from odoo.addons.mail.models.ir_mail_server import (
     MailDeliveryError,
     OutgoingEmailError,
 )

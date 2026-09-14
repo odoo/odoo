@@ -28,6 +28,7 @@ from odoo.addons.mail.tools.parser import parse_res_ids
 from odoo.addons.mail.tools.recipients import prepare_recipient_data
 
 if typing.TYPE_CHECKING:
+    from ..models.ir_mail_server import IrMail_Server
     from ..models.mail_activity_type import MailActivityType
     from ..models.mail_alias_domain import MailAliasDomain
     from ..models.mail_mail import MailMail
@@ -36,7 +37,6 @@ if typing.TYPE_CHECKING:
     from ..models.mail_scheduled_message import MailScheduledMessage
     from ..models.mail_template import MailTemplate
     from ..models.res_partner import ResPartner
-    from odoo.addons.base.models.ir_mail_server import IrMail_Server
     from odoo.addons.base.models.res_company import ResCompany
     from odoo.addons.bus.models.ir_attachment import IrAttachment
     from odoo.addons.bus.models.res_users import ResUsers

@@ -4730,7 +4730,7 @@ statement about spelling and answers from the name; these two cannot.
   gate's proxy is mechanical -- the body returns a value and raises nothing --
   and it **is** a proxy: a check whose failure path is a helper's raise reads
   from here exactly like a read. ``safe_eval``'s ``check_values`` and
-  ``ir_mail_server``'s ``_check_hostname_callback`` are that shape and are
+  ``mail``'s ``ir_mail_server._check_hostname_callback`` are that shape and are
   argued into the allowlist rather than renamed. **A rule whose test is one
   frame deep should say so in the allowlist rather than in a comment nobody
   reads.**

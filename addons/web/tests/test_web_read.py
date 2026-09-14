@@ -206,18 +206,18 @@ class TestWebReadFieldContext(common.TransactionCase):
 @common.tagged("post_install", "-at_install", "web_unit", "web_read")
 class TestWebReadIdOnlyAccessCheck(common.TransactionCase):
     def test_id_only_spec_enforces_access(self):
-        mail_server = (
-            self.env["ir.mail_server"]
+        parameter = (
+            self.env["ir.config_parameter"]
             .sudo()
-            .create({"name": "Test SMTP", "smtp_host": "localhost"})
+            .create({"key": "web_read.test", "value": "secret"})
         )
         user = new_test_user(self.env, login="web_read_unprivileged")
-        record = mail_server.with_user(user)
+        record = parameter.with_user(user)
         with self.assertRaises(AccessError):
             record.web_read({"id": {}})
 
     def test_an_empty_recordset_reads_as_empty_without_access(self):
         user = new_test_user(self.env, login="web_read_unprivileged_empty")
-        nothing = self.env["ir.mail_server"].with_user(user).browse()
+        nothing = self.env["ir.config_parameter"].with_user(user).browse()
         self.assertEqual(nothing.web_read({"id": {}}), [])
-        self.assertEqual(nothing.web_read({"name": {}}), [])
+        self.assertEqual(nothing.web_read({"key": {}}), [])

@@ -329,14 +329,14 @@ class TestOriginDisplayAccess(TransactionCase):
         )
 
     def test_unreadable_source_falls_back_to_raw_reference(self):
-        server = self.env["ir.mail_server"].create(
-            {"name": "secret smtp", "smtp_host": "h"}
+        parameter = self.env["ir.config_parameter"].create(
+            {"key": "resource.secret", "value": "secret"}
         )
-        reservation = self._reservation("ir.mail_server", server.id, 1)
+        reservation = self._reservation("ir.config_parameter", parameter.id, 1)
         reservation.invalidate_recordset(["origin_display"])
         self.assertEqual(
             reservation.with_user(self.user).origin_display,
-            f"ir.mail_server,{server.id}",
+            f"ir.config_parameter,{parameter.id}",
         )
 
     def test_readable_source_still_resolves(self):

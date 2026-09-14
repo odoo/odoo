@@ -44,7 +44,7 @@ class MailCase(TransactionCase):
         disconnected_smtpsession.quit.side_effect = smtplib.SMTPServerDisconnected
         mail = self.env["mail.mail"].create({})
         with mock.patch(
-            "odoo.addons.base.models.ir_mail_server.IrMail_Server._connect__",
+            "odoo.addons.mail.models.ir_mail_server.IrMail_Server._connect__",
             return_value=disconnected_smtpsession,
         ):
             with mock.patch(

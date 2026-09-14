@@ -51,7 +51,6 @@ from . import ir_exports
 from . import ir_rule
 from . import ir_config_parameter
 
-from . import ir_mail_server
 
 from . import ir_fields
 

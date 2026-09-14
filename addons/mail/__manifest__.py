@@ -1,6 +1,6 @@
 {
     "name": "Discuss",
-    "version": "1.32",
+    "version": "1.33",
     "category": "Productivity/Discuss",
     "sequence": 145,
     "summary": "Chat, mail gateway and private channels",
@@ -180,6 +180,7 @@ For more specific needs, you may also assign custom-defined actions
         ],
         "web.assets_frontend": [
             "mail/static/src/utils/common/format.js",
+            "mail/static/src/utils/common/mail_delivery_error.js",
         ],
         "mail.assets_discuss_public_test_tours": [
             "web/static/lib/hoot-dom/**/*",

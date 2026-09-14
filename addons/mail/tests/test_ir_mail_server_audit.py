@@ -23,7 +23,7 @@ from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 from odoo.tools import config, email_domain_extract, email_normalize, mute_logger
 
-from odoo.addons.base.models.ir_mail_server import (
+from odoo.addons.mail.models.ir_mail_server import (
     IMPLICIT_TLS_ENCRYPTIONS,
     STARTTLS_ENCRYPTIONS,
     VERIFIED_ENCRYPTIONS,
@@ -34,7 +34,7 @@ from odoo.addons.base.models.ir_mail_server import (
     _SmtpSessionContext,
 )
 
-_IR_MAIL_SERVER_LOGGER = "odoo.addons.base.models.ir_mail_server"
+_IR_MAIL_SERVER_LOGGER = "odoo.addons.mail.models.ir_mail_server"
 
 
 @tagged("post_install", "-at_install")

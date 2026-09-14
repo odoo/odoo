@@ -5,6 +5,9 @@ from . import test_js
 from . import test_fetchmail_server
 from . import test_font_to_img
 from . import test_ir_mail_server
+from . import test_ir_mail_server_audit
+from . import test_ir_mail_server_smtpd
+from . import test_ir_mail_server_transport
 from . import test_ir_model
 from . import test_ir_ui_menu
 from . import test_ir_websocket

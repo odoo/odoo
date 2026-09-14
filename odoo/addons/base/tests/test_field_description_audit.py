@@ -1,5 +1,6 @@
 from unittest.mock import patch
 
+from odoo.models import BaseModel
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
@@ -102,7 +103,7 @@ class TestFieldDescriptionMemo(TransactionCaseWithUserDemo):
         for model_name in sorted(env.registry):
             model = env[model_name]
             for wanted in (None, attributes):
-                memoised = model.fields_get(attributes=wanted)
+                memoised = BaseModel.fields_get(model, attributes=wanted)
                 expected = self._uncached(model, wanted)
                 if not expected.keys() <= memoised.keys():
                     differing.append(f"{model_name}: fields missing")
@@ -134,16 +135,16 @@ class TestFieldDescriptionMemo(TransactionCaseWithUserDemo):
             )
 
     def test_field_access_is_applied_per_user_over_one_memo(self):
-        admin_fields = self.env["ir.mail_server"].fields_get(
-            ["smtp_user", "name"], ["string", "readonly"]
+        admin_fields = self.env["ir.actions.server"].fields_get(
+            ["code", "name"], ["string", "readonly"]
         )
         demo_fields = (
-            self.env["ir.mail_server"]
+            self.env["ir.actions.server"]
             .with_user(self.user_demo)
-            .fields_get(["smtp_user", "name"], ["string", "readonly"])
+            .fields_get(["code", "name"], ["string", "readonly"])
         )
-        self.assertIn("smtp_user", admin_fields)
-        self.assertNotIn("smtp_user", demo_fields)
+        self.assertIn("code", admin_fields)
+        self.assertNotIn("code", demo_fields)
         self.assertIn("name", demo_fields)
 
     def test_the_caller_may_edit_a_description_without_touching_the_memo(self):

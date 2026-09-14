@@ -24,10 +24,10 @@ from odoo.tools.rendering_tools import parse_inline_template
 from odoo.tools.safe_eval import safe_eval, time
 
 if typing.TYPE_CHECKING:
+    from .ir_mail_server import IrMail_Server
     from .mail_mail import MailMail
     from odoo.addons.base.models.ir_actions_act_window import IrActionsAct_Window
     from odoo.addons.base.models.ir_actions_report import IrActionsReport
-    from odoo.addons.base.models.ir_mail_server import IrMail_Server
     from odoo.addons.base.models.ir_model import IrModel
     from odoo.addons.bus.models.ir_attachment import IrAttachment
     from odoo.addons.bus.models.res_users import ResUsers

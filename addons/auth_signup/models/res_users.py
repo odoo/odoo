@@ -9,7 +9,7 @@ from odoo.exceptions import UserError
 from odoo.fields import Domain
 
 from odoo.addons.auth_signup.models.res_partner import SignupError
-from odoo.addons.base.models.ir_mail_server import MailDeliveryError
+from odoo.addons.mail.models.ir_mail_server import MailDeliveryError
 
 _logger = logging.getLogger(__name__)
 

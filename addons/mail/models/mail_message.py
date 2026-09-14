@@ -24,6 +24,7 @@ from odoo.addons.mail.tools.discuss import Store
 
 if typing.TYPE_CHECKING:
     from .discuss.mail_guest import MailGuest
+    from .ir_mail_server import IrMail_Server
     from .mail_activity_type import MailActivityType
     from .mail_alias_domain import MailAliasDomain
     from .mail_mail import MailMail
@@ -33,7 +34,6 @@ if typing.TYPE_CHECKING:
     from .mail_notification import MailNotification
     from .mail_tracking_value import MailTrackingValue
     from .res_partner import ResPartner
-    from odoo.addons.base.models.ir_mail_server import IrMail_Server
     from odoo.addons.base.models.res_company import ResCompany
     from odoo.addons.bus.models.ir_attachment import IrAttachment
 

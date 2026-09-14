@@ -341,7 +341,7 @@ class TestIrMailServer(MailCommon):
                 self.assertEqual(mail_server, expected_mail_server)
                 self.assertEqual(mail_from, expected_email_from)
 
-    @mute_logger("odoo.models.unlink", "odoo.addons.base.models.ir_mail_server")
+    @mute_logger("odoo.models.unlink", "odoo.addons.mail.models.ir_mail_server")
     def test_mail_server_send_email(self):
         IrMailServer = self.env["ir.mail_server"]
 
@@ -487,7 +487,7 @@ class TestPersonalServer(MailCommon):
                 set(to_check), {send_datetime.replace(second=0) + timedelta(minutes=i)}
             )
 
-    @mute_logger("odoo.models.unlink", "odoo.addons.base.models.ir_mail_server")
+    @mute_logger("odoo.models.unlink", "odoo.addons.mail.models.ir_mail_server")
     @config.patch(from_filter="cli@example.com", smtp_server="example.com")
     def test_personal_mail_server(self):
         IrMailServer = self.env["ir.mail_server"]

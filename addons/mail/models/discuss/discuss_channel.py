@@ -20,8 +20,8 @@ from odoo.libs.sql import SQL
 from odoo.tools import email_normalize, format_list
 from odoo.tools.misc import OrderedSet, hash_sign
 
-from odoo.addons.base.models.ir_mail_server import MailDeliveryError
 from odoo.addons.mail.models.discuss.discuss_channel_member import AVATAR_CARD_FIELDS
+from odoo.addons.mail.models.ir_mail_server import MailDeliveryError
 from odoo.addons.mail.tools.channel_avatar import CHANNEL_AVATAR, GROUP_AVATAR
 from odoo.addons.mail.tools.discuss import Store, StoreFieldsInput, StoreFieldSpec
 from odoo.addons.mail.tools.recipients import prepare_recipient_data

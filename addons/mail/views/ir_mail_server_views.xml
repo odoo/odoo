@@ -1,27 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="ir_mail_server_view_form" model="ir.ui.view">
-        <field name="name">ir.mail_server.view.form.inherit.mail</field>
+    <record id="view_ir_mail_server_search" model="ir.ui.view">
         <field name="model">ir.mail_server</field>
-        <field name="inherit_id" ref="base.ir_mail_server_form" />
         <field name="arch" type="xml">
-            <xpath expr="//label[@for='smtp_user']" position="attributes">
-                <attribute name="invisible" add="owner_user_id" separator="or" />
-            </xpath>
-            <xpath expr="//label[@for='smtp_user']" position="after">
-                <label
-                    for="smtp_user"
-                    string="User email"
-                    invisible="smtp_authentication == 'certificate' or not owner_user_id" />
-            </xpath>
-            <xpath expr="//field[@name='smtp_pass']" position="after">
+            <search string="Outgoing Mail Servers">
                 <field
-                    name="owner_user_id"
-                    placeholder="Restrict usage to a user"
-                    widget="many2one_avatar_user"
-                    groups="base.group_no_one" />
-            </xpath>
+                    name="name"
+                    string="Outgoing Mail Server"
+                    filter_domain="['|', '|',('name', 'ilike', self),('smtp_host', 'ilike', self),('smtp_user', 'ilike', self)]" />
+                <field name="smtp_encryption" />
+                <field name="from_filter" />
+                <separator />
+                <filter
+                    name="inactive"
+                    string="Archived"
+                    domain="[('active', '=', False)]" />
+            </search>
+        </field>
+    </record>
+
+    <record id="ir_mail_server_list" model="ir.ui.view">
+        <field name="model">ir.mail_server</field>
+        <field name="arch" type="xml">
+            <list string="Outgoing Mail Servers">
+                <field name="sequence" widget="handle" />
+                <field name="name" />
+                <field name="smtp_host" />
+                <field name="smtp_user" />
+                <field name="smtp_encryption" />
+                <field name="from_filter" optional="hide" />
+            </list>
+        </field>
+    </record>
+
+    <record id="ir_mail_server_form" model="ir.ui.view">
+        <field name="model">ir.mail_server</field>
+        <field name="arch" type="xml">
+            <form string="Outgoing Mail Servers">
+                <header>
+                    <button
+                        name="test_smtp_connection"
+                        type="object"
+                        string="Test Connection"
+                        class="btn-primary" />
+                </header>
+                <sheet>
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        invisible="active"
+                        bg_color="text-bg-danger" />
+                    <group>
+                        <group>
+                            <field name="name" placeholder="e.g. My Outgoing Server" />
+                            <field
+                                name="from_filter"
+                                placeholder="e.g. email@domain.com, domain.com" />
+                        </group>
+                        <group>
+                            <field name="sequence" />
+                            <div colspan="2" class="d-flex justify-content-between">
+                                <div>
+                                    <label
+                                        for="max_email_size"
+                                        string="Convert attachments to links for emails over" />
+                                    <field
+                                        name="max_email_size"
+                                        class="oe_inline mx-1" />
+                                    <span class="o_form_label">MB</span>
+                                </div>
+                                <button
+                                    name="action_update_max_email_size"
+                                    type="object"
+                                    class="btn btn-link pt-0">
+                                    <i class="fa-solid fa-gear" /> Detect Max Limit
+                                </button>
+                            </div>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="smtp_authentication" widget="radio" />
+                        </group>
+                        <group>
+                            <div
+                                class="text-muted fst-italic"
+                                role="alert"
+                                colspan="2"
+                                invisible="not smtp_authentication_info">
+                                <field name="smtp_authentication_info" />
+                            </div>
+                        </group>
+                    </group>
+                    <notebook colspan="4" invisible="smtp_authentication == 'cli'">
+                        <page name="connection" string="Connection">
+                            <group>
+                                <group>
+                                    <field name="smtp_encryption" widget="radio" />
+                                    <field
+                                        name="smtp_debug"
+                                        groups="base.group_no_one" />
+                                    <field
+                                        name="smtp_host"
+                                        required="smtp_authentication != 'cli'" />
+                                    <field
+                                        name="smtp_port"
+                                        options="{'format': false}"
+                                        required="smtp_authentication != 'cli'" />
+                                </group>
+                                <group>
+                                    <label
+                                        for="smtp_user"
+                                        string="Username"
+                                        invisible="smtp_authentication == 'certificate' or owner_user_id" />
+                                    <label
+                                        for="smtp_user"
+                                        string="User email"
+                                        invisible="smtp_authentication == 'certificate' or not owner_user_id" />
+                                    <field
+                                        name="smtp_user"
+                                        nolabel="1"
+                                        force_save="1"
+                                        invisible="smtp_authentication == 'certificate'" />
+                                    <field
+                                        name="smtp_pass"
+                                        password="True"
+                                        force_save="1"
+                                        invisible="smtp_authentication != 'login'" />
+                                    <field
+                                        name="owner_user_id"
+                                        placeholder="Restrict usage to a user"
+                                        widget="many2one_avatar_user"
+                                        groups="base.group_no_one" />
+                                    <field
+                                        name="smtp_ssl_certificate"
+                                        force_save="1"
+                                        invisible="smtp_authentication != 'certificate'" />
+                                    <field
+                                        name="smtp_ssl_private_key"
+                                        force_save="1"
+                                        invisible="smtp_authentication != 'certificate'" />
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ir_mail_server_list" model="ir.actions.act_window">
+        <field name="name">Outgoing Mail Servers</field>
+        <field name="res_model">ir.mail_server</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="ir_mail_server_list" />
+        <field name="search_view_id" ref="view_ir_mail_server_search" />
+        <field name="help" type="html">
+            <div>
+                <b class="o_view_nocontent_smiling_face">
+                    No Outgoing Servers yet
+                </b>
+            </div>
         </field>
     </record>
 

@@ -16,8 +16,8 @@ from unittest.mock import patch
 from odoo.exceptions import UserError
 from odoo.tools import config, file_path, mute_logger
 
-from .common import TransactionCaseWithUserDemo
-from odoo.addons.base.models.ir_mail_server import IrMail_Server, OutgoingEmailError
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
+from odoo.addons.mail.models.ir_mail_server import IrMail_Server, OutgoingEmailError
 
 try:
     import aiosmtpd

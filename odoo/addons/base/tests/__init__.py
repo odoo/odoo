@@ -38,8 +38,6 @@ from . import test_ir_cron_audit
 from . import test_ir_job
 from . import test_ir_filters
 from . import test_ir_http
-from . import test_ir_mail_server
-from . import test_ir_mail_server_smtpd
 from . import test_ir_model
 from . import test_table_object_conversion
 from . import test_ir_model_data
@@ -52,7 +50,6 @@ from . import test_ir_default_audit
 from . import test_ir_autovacuum_audit
 from . import test_ir_demo
 from . import test_ir_logging
-from . import test_ir_mail_server_audit
 from . import test_cache_scan_predicates
 from . import test_log_access_cache
 from . import test_sort_collation
@@ -139,6 +136,7 @@ from . import test_backend_integration
 from . import test_res_config_install
 from . import test_default_group
 from . import test_ir_actions_webhook
+from . import test_x2many_cache_scope
 from . import test_xml_utils
 from . import test_device_log_isolation
 from . import test_id_sequence_names

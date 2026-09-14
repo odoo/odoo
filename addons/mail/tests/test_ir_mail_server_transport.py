@@ -9,15 +9,15 @@ from unittest.mock import patch
 import psycopg.errors
 
 from odoo.exceptions import UserError
-from odoo.tests import tagged, users
+from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 from odoo.tools import config, mute_logger
 
-from odoo.addons.base.models.ir_mail_server import (
+from odoo.addons.mail.models.ir_mail_server import (
     MailDeliveryError,
     OutgoingEmailError,
 )
-from odoo.addons.base.tests.common import MockSmtplibCase
+from odoo.addons.mail.tests.common import MockSmtplibCase
 
 
 def _generate_self_signed_cert(common_name="smtp.example.com"):
@@ -244,7 +244,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
 
         with (
             patch.object(type(IrMailServer), "_disable_send", lambda _: False),
-            mute_logger("odoo.addons.base.models.ir_mail_server"),
+            mute_logger("odoo.addons.mail.models.ir_mail_server"),
             self.assertRaises(MailDeliveryError) as capture,
         ):
             IrMailServer.send_email(message, smtp_session=_RaisingSession())
@@ -375,41 +375,6 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
                     "smtp_authentication": "certificate",
                 }
             )
-
-    @users("admin")
-    def test_mail_server_get_test_email_from(self):
-        self.env.user.email = "mitchell.admin@example.com"
-        test_server = self.env["ir.mail_server"].create(
-            {
-                "from_filter": "example_2.com, example_3.com",
-                "name": "Test Server",
-                "smtp_host": "smtp_host",
-                "smtp_encryption": "none",
-            }
-        )
-        from odoo.addons.base.models.ir_mail_server import IrMail_Server
-
-        for from_filter, expected_test_email in zip(
-            [
-                "example_2.com, example_3.com",
-                "dummy.com, full_email@example_2.com, dummy2.com",
-                " ",
-                ",",
-                False,
-            ],
-            [
-                "noreply@example_2.com",
-                "full_email@example_2.com",
-                self.env.user.email,
-                self.env.user.email,
-                self.env.user.email,
-            ],
-            strict=False,
-        ):
-            with self.subTest(from_filter=from_filter):
-                test_server.from_filter = from_filter
-                email_from = IrMail_Server._get_test_email_from(test_server)
-                self.assertEqual(email_from, expected_test_email)
 
     def test_mail_server_match_from_filter(self):
         tests = [
@@ -560,7 +525,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
                 from_filter=False,
             )
 
-    @mute_logger("odoo.models.unlink", "odoo.addons.base.models.ir_mail_server")
+    @mute_logger("odoo.models.unlink", "odoo.addons.mail.models.ir_mail_server")
     def test_mail_server_send_email_context_force(self):
         context_server = self.env["ir.mail_server"].create(
             {
@@ -618,7 +583,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
             from_filter=False,
         )
 
-    @mute_logger("odoo.models.unlink", "odoo.addons.base.models.ir_mail_server")
+    @mute_logger("odoo.models.unlink", "odoo.addons.mail.models.ir_mail_server")
     @config.patch(
         from_filter="dummy@example.com, test.mycompany.com, dummy2@example.com",
         smtp_server="example.com",
@@ -1044,7 +1009,7 @@ class TestResolveTransport(TransactionCase):
         self.assertEqual(t.login_server, server)
 
     def test_session_context_roundtrip(self):
-        from odoo.addons.base.models.ir_mail_server import _SmtpSessionContext
+        from odoo.addons.mail.models.ir_mail_server import _SmtpSessionContext
 
         IrMailServer = self.env["ir.mail_server"]
 
@@ -1052,7 +1017,7 @@ class TestResolveTransport(TransactionCase):
             pass
 
         conn = _BareSession()
-        with mute_logger("odoo.addons.base.models.ir_mail_server"):
+        with mute_logger("odoo.addons.mail.models.ir_mail_server"):
             self.assertEqual(
                 IrMailServer._read_session_context(conn),
                 _SmtpSessionContext(from_filter=False, smtp_from=False),

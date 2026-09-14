@@ -230,10 +230,6 @@ export class SessionExpiredDialog extends Component {
 /** @type {{name: string, title?: any, Dialog?: import("@odoo/owl").ComponentConstructor}[]} */
 const ODOO_EXCEPTIONS = [
     {
-        name: "odoo.addons.base.models.ir_mail_server.MailDeliveryError",
-        title: _t("MailDeliveryError"),
-    },
-    {
         name: "odoo.exceptions.AccessDenied",
         title: _t("Access Denied"),
         Dialog: WarningDialog,

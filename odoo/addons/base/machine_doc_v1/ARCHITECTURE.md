@@ -31,9 +31,9 @@ High-level structure, data flow, and component organization for `odoo/addons/bas
 │  ┌────────┴────────┐  ┌────────┴──────────┐  ┌─────────┴──────────┐  │
 │  │ UI Framework    │  │ Actions           │  │ Infrastructure     │  │
 │  │ ir.ui.view      │  │ ir.actions.*      │  │ ir.cron            │  │
-│  │ ir.ui.menu      │  │ ir.actions.server │  │ ir.mail_server     │  │
-│  │ ir.asset        │  │ ir.actions.report │  │ ir.sequence        │  │
-│  │ ir.qweb         │  │ ir.embedded.*     │  │ ir.attachment      │  │
+│  │ ir.ui.menu      │  │ ir.actions.server │  │ ir.sequence        │  │
+│  │ ir.asset        │  │ ir.actions.report │  │ ir.attachment      │  │
+│  │ ir.qweb         │  │ ir.embedded.*     │  │ ir.job             │  │
 │  └─────────────────┘  └───────────────────┘  └────────────────────┘  │
 │                                                                      │
 │  ┌─────────────────┐  ┌───────────────────┐  ┌────────────────────┐  │
@@ -70,7 +70,7 @@ access control, and ORM extensions that those controllers depend on.
 odoo/addons/base/
 ├── __manifest__.py              # Module metadata + asset/data file declarations
 ├── __init__.py                  # Imports models, report, wizard + post_init hook
-├── models/                      # 106 Python model files (core ORM infrastructure)
+├── models/                      # 105 Python model files (core ORM infrastructure)
 │   ├── assetsbundle/            #   Asset compilation package (bundle, JS/CSS/XML pipelines, store)
 │   ├── decimal_precision.py         #   Configurable decimal precision
 │   ├── ir_actions_act_url.py        #   URL action
@@ -103,7 +103,6 @@ odoo/addons/base/
 │   ├── ir_http.py                   #   HTTP routing, auth, dispatch, translations
 │   ├── ir_job.py                    #   Background job queue + channels
 │   ├── ir_logging.py                #   Server/client log storage
-│   ├── ir_mail_server.py            #   SMTP mail server configuration and sending
 │   ├── ir_model.py                  #   Model registry + ir.model.inherit
 │   ├── ir_model_access.py           #   ir.model.access (model-level ACL)
 │   ├── ir_model_common.py           #   Shared helpers for the ir.model family (xmlids, upserts, access errors)
@@ -190,10 +189,10 @@ odoo/addons/base/
 │   ├── reset_view_arch.py           #   Reset view to original arch (soft/hard)
 │   ├── server_action_history.py     #   Server-action run history (diff + restore)
 │   └── wizard_ir_model_menu_create.py #   Create menu item for custom model
-├── tests/                       # 141 Python test files + test assets
+├── tests/                       # 138 Python test files + test assets
 │   ├── common.py                #   Base test classes (demo user, portal user)
 │   └── test_*.py                #   Test modules -- counts in TEST_TAGS.md, derived by factcheck.sh
-├── views/                       # 38 XML view definition files
+├── views/                       # 37 XML view definition files
 ├── data/                        # 20 data files (XML, CSV, SQL, JSON)
 ├── reports/                      # Report templates + the module-reference report model
 ├── security/                    # ir.model.access.csv + groups and record-rule XML
@@ -227,7 +226,6 @@ registry, access control, UI framework, scheduling, and module system.
 | Sequences | ir.sequence, ir.sequence.date_range | Auto-incrementing sequences |
 | Configuration | ir.config_parameter, ir.default, ir.filters, ir.exports | System params, defaults, saved filters |
 | Module System | ir.module.module, ir.module.category | Module lifecycle management |
-| Mail | ir.mail_server | SMTP configuration and email sending |
 | HTTP | ir.http | Routing, auth dispatch, translations |
 | Logging | ir.logging, ir.profile | Server logs, code profiling |
 | Import | ir.fields.converter | Data import type conversion |
@@ -280,10 +278,10 @@ Derived by `factcheck.sh`, which re-measures every row against the tree.
 
 | Category | Count |
 |----------|-------|
-| Python (models) | 106 |
+| Python (models) | 105 |
 | Python (wizards) | 11 |
-| Python (tests) | 141 |
-| XML (views) | 38 |
+| Python (tests) | 138 |
+| XML (views) | 37 |
 | Data files | 20 |
 | XML (reports) | 4 |
 | XML (wizard views) | 8 |

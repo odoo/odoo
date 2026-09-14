@@ -336,14 +336,14 @@ class TestIrDefault(TransactionCase):
         self.assertEqual(IrDefault._get("res.partner", "ref"), "CHANGED")
 
     def test_set_checks_field_write_access(self):
-        model_name, field_name = "ir.mail_server", "smtp_user"
+        model_name, field_name = "ir.actions.server", "code"
 
         plain_user = new_test_user(
             self.env, login="ird_plain_user", groups="base.group_user"
         )
         with self.assertRaises(AccessError):
             self.env["ir.default"].with_user(plain_user).set(
-                model_name, field_name, "smtp-login", user_id=True
+                model_name, field_name, "record", user_id=True
             )
 
         system_user = new_test_user(
@@ -352,10 +352,10 @@ class TestIrDefault(TransactionCase):
             groups="base.group_user,base.group_system",
         )
         IrDefaultAsSystem = self.env["ir.default"].with_user(system_user)
-        IrDefaultAsSystem.set(model_name, field_name, "smtp-login", user_id=True)
+        IrDefaultAsSystem.set(model_name, field_name, "record", user_id=True)
         self.assertEqual(
             IrDefaultAsSystem._get(model_name, field_name, user_id=True),
-            "smtp-login",
+            "record",
         )
 
     def test_set_allows_writable_field_for_plain_user(self):

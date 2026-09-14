@@ -21,7 +21,7 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
 from odoo.modules.registry import Registry
 
-from odoo.addons.base.models.ir_mail_server import (
+from odoo.addons.mail.models.ir_mail_server import (
     MailDeliveryError,
     OutgoingEmailError,
 )
@@ -31,11 +31,11 @@ if typing.TYPE_CHECKING:
     from email.message import EmailMessage
 
     from .fetchmail import FetchmailServer
+    from .ir_mail_server import IrMail_Server
     from .mail_alias_domain import MailAliasDomain
     from .mail_message import MailMessage
     from .mail_notification import MailNotification
     from .res_partner import ResPartner
-    from odoo.addons.base.models.ir_mail_server import IrMail_Server
     from odoo.addons.bus.models.ir_attachment import IrAttachment
 
 _logger = logging.getLogger(__name__)
