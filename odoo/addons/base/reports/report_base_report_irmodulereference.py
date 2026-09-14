@@ -70,7 +70,8 @@ class ReportBaseReport_Irmodulereference(models.AbstractModel):
         if model is None:
             return []
         try:
-            descriptions = model.fields_get(field_names)
+            with self.env.cr.savepoint(flush=False):
+                descriptions = model.fields_get(field_names)
         except Exception:
             _logger.warning(
                 "Cannot describe the fields of %s; reporting it without them.",

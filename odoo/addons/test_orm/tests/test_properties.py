@@ -4618,3 +4618,72 @@ class PropertiesDefinitionColumnNamedDefinitionCase(TransactionCase):
             "the definition is stored and reachable; an empty dict here means the "
             "SQL alias shadowed the column again",
         )
+
+
+class TestPropertiesBaseDefinitionReadPaths(TransactionCase):
+    def setUp(self):
+        super().setUp()
+        self.Definition = self.env["properties.base.definition"].sudo()
+        self.Model = self.env["test_orm.emailmessage"]
+        field = self.env["ir.model.fields"].sudo()._get(self.Model._name, "properties")
+        self.Definition.search([("properties_field_id", "=", field.id)]).unlink()
+
+    def _definition_id(self):
+        return self.Definition._get_definition_id_for_property_field(
+            self.Model._name, "properties"
+        )
+
+    def test_unlink_forgets_the_cached_definition(self):
+        self.assertIsNone(self._definition_id())
+
+    def test_reading_the_definition_never_creates_it(self):
+        before = self.Definition.search_count([])
+
+        self.assertFalse(
+            self.Model.search([("properties_base_definition_id", "!=", False)])
+        )
+        self.Model.fields_get(["properties_base_definition_id"])
+        self.Model._read_group([], groupby=["properties_base_definition_id"])
+
+        self.assertEqual(self.Definition.search_count([]), before)
+        self.assertIsNone(self._definition_id())
+
+    def test_the_search_method_answers_both_operators(self):
+        record = self.Model.create({})
+        definition_id = self._definition_id()
+        Model = self.Model.with_context(active_test=False)
+        self.assertIn(
+            record,
+            Model.search([("properties_base_definition_id", "=", definition_id)]),
+        )
+        self.assertNotIn(
+            record,
+            Model.search([("properties_base_definition_id", "!=", definition_id)]),
+        )
+        self.assertNotIn(
+            record, Model.search([("properties_base_definition_id", "=", False)])
+        )
+        self.assertIn(
+            record, Model.search([("properties_base_definition_id", "!=", False)])
+        )
+
+    def test_creating_a_record_attaches_a_definition(self):
+        record = self.Model.create({})
+        definition_id = self._definition_id()
+        self.assertTrue(definition_id)
+        self.assertEqual(record.properties_base_definition_id.id, definition_id)
+        self.assertIn(
+            record,
+            self.Model.search([("properties_base_definition_id", "=", definition_id)]),
+        )
+
+    def test_grouping_by_the_definition_groups_every_record_under_it(self):
+        records = self.Model.create([{}, {}])
+        definition = records.properties_base_definition_id
+        self.assertEqual(len(definition), 1)
+        groups = self.Model.with_context(active_test=False)._read_group(
+            [("id", "in", records.ids)],
+            groupby=["properties_base_definition_id"],
+            aggregates=["__count"],
+        )
+        self.assertEqual(groups, [(definition, 2)])

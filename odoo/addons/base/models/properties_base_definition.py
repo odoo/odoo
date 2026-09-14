@@ -55,6 +55,15 @@ class PropertiesBaseDefinition(models.Model):
             raise AccessError(_("You can not change the field of a base definition"))
         return super().write(vals)
 
+    def unlink(self) -> bool:
+        memo = self.env.cr.cache.get(DEFINITION_MEMO_CACHE_KEY) or {}
+        for key in [key for key, value in memo.items() if value in self.ids]:
+            del memo[key]
+        result = super().unlink()
+        self.env.registry.clear_cache("stable")
+        _debug.lifecycle("definition_unlinked", definitions=self.ids)
+        return result
+
     def _get_definition_for_property_field(
         self, model_name: str, field_name: str
     ) -> Self:
@@ -62,22 +71,30 @@ class PropertiesBaseDefinition(models.Model):
             self._get_or_create_definition_id_for_property_field(model_name, field_name)
         )
 
-    def _get_or_create_definition_id_for_property_field(
+    def _get_definition_id_for_property_field(
         self, model_name: str, field_name: str
-    ) -> int:
+    ) -> int | None:
         memo = self.env.cr.cache.get(DEFINITION_MEMO_CACHE_KEY)
         if memo and (definition_id := memo.get((model_name, field_name))):
             _debug.logic(
                 "definition_resolved", model=model_name, field=field_name, by="memo"
             )
             return definition_id
-
         try:
             return self._get_definition_id_for_property_field_stored(
                 model_name, field_name
             )
         except ValueError:
-            pass
+            return None
+
+    def _get_or_create_definition_id_for_property_field(
+        self, model_name: str, field_name: str
+    ) -> int:
+        definition_id = self._get_definition_id_for_property_field(
+            model_name, field_name
+        )
+        if definition_id:
+            return definition_id
         _debug.logic(
             "definition_resolved", model=model_name, field=field_name, by="create"
         )

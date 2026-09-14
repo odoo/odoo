@@ -34,7 +34,7 @@ class MixinPropertiesBaseDefinition(models.AbstractModel):
     def _search_properties_base_definition_id(
         self, operator: str, value: Any
     ) -> Domain:
-        if operator != "in":
+        if operator not in ("in", "not in"):
             raise NotImplementedError(
                 f"Unsupported operator {operator!r} for properties_base_definition_id"
             )
@@ -42,18 +42,20 @@ class MixinPropertiesBaseDefinition(models.AbstractModel):
         properties_base_definition_id = (
             self.env["properties.base.definition"]
             .sudo()
-            ._get_or_create_definition_id_for_property_field(self._name, "properties")
-        )
+            ._get_definition_id_for_property_field(self._name, "properties")
+        ) or False
 
         if not isinstance(value, Iterable):
             value = (value,)
+        matched = (properties_base_definition_id in value) == (operator == "in")
         _debug.logic(
             "definition_searched",
             model=self._name,
             definition=properties_base_definition_id,
-            matched=properties_base_definition_id in value,
+            operator=operator,
+            matched=matched,
         )
-        return Domain.TRUE if properties_base_definition_id in value else Domain.FALSE
+        return Domain.TRUE if matched else Domain.FALSE
 
     @api.model_create_multi
     def create(self, vals_list: list[ValuesType]) -> Self:
@@ -77,10 +79,8 @@ class MixinPropertiesBaseDefinition(models.AbstractModel):
             parent = (
                 self.env["properties.base.definition"]
                 .sudo()
-                ._get_or_create_definition_id_for_property_field(
-                    self._name, "properties"
-                )
+                ._get_definition_id_for_property_field(self._name, "properties")
             )
-            return SQL("%s", parent)
+            return SQL("%s::int4", parent)
 
         return super()._field_to_sql(alias, fname, query)
