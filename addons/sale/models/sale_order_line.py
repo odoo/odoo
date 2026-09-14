@@ -6,8 +6,11 @@ from markupsafe import Markup
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_compare, float_is_zero, format_date, groupby
 from odoo.tools.translate import _
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrderLine(models.Model):
@@ -202,6 +205,12 @@ class SaleOrderLine(models.Model):
                 linked_line.product_template_id.combo_ids.combo_item_ids
             )
             if line.combo_item_id and line.combo_item_id not in allowed_combo_items:
+                _debug.logic(
+                    "combo_item_rejected",
+                    line=line,
+                    reason="not_in_linked_line_combos",
+                    combo_item=line.combo_item_id,
+                )
                 raise ValidationError(
                     _(
                         "A sale order line's combo item must be among its linked line's available"
@@ -209,6 +218,12 @@ class SaleOrderLine(models.Model):
                     ),
                 )
             if line.combo_item_id and line.combo_item_id.product_id != line.product_id:
+                _debug.logic(
+                    "combo_item_rejected",
+                    line=line,
+                    reason="product_mismatch",
+                    combo_item=line.combo_item_id,
+                )
                 raise ValidationError(
                     _(
                         "A sale order line's product must match its combo item's product.",
@@ -220,17 +235,21 @@ class SaleOrderLine(models.Model):
         for vals in vals_list:
             if "price_unit_auto" in vals and "price_unit" not in vals:
                 vals.pop("price_unit_auto")
+                _debug.logic("price_unit_auto_dropped", stage="create")
 
         lines = super().create(vals_list)
+        _debug.lifecycle("create", lines=lines, rows=len(vals_list))
 
         for line in lines:
             linked_line = line._get_line_linked()
             if linked_line:
                 line.linked_line_id = linked_line
+                _debug.lifecycle("line_linked", line=line, linked_to=linked_line)
 
         return lines
 
     def write(self, vals):
+        _debug.lifecycle("write", lines=self, fields=list(vals))
         if "product_qty" in vals:
             precision = self.env["decimal.precision"].get_precision("Product Unit")
             self.filtered(
@@ -251,6 +270,7 @@ class SaleOrderLine(models.Model):
             and not self.env.context.get("sale_write_from_compute")
         ):
             vals.pop("price_unit_auto")
+            _debug.logic("price_unit_auto_dropped", stage="write", lines=self)
 
         return super().write(vals)
 
@@ -286,6 +306,14 @@ class SaleOrderLine(models.Model):
                 computed_price = vals.get("price_unit")
                 if computed_price is not None:
                     vals["price_unit_auto"] = computed_price
+        if _debug.pipeline.enabled:
+            _debug.pipeline(
+                "precomputed_prices",
+                rows=len(vals_list),
+                manual=sum(
+                    1 for orig in original_values if orig["price_unit"] is not None
+                ),
+            )
 
     def _compute_customer_lead(self):
         for line in self.filtered(lambda x: not x.display_type):
@@ -363,6 +391,13 @@ class SaleOrderLine(models.Model):
                     ):
                         invalid_custom |= pacv
                 line.product_custom_attribute_value_ids -= invalid_custom
+                if _debug.logic.enabled and invalid_custom:
+                    _debug.logic(
+                        "attribute_values_dropped",
+                        line=line,
+                        kind="custom",
+                        dropped=invalid_custom,
+                    )
 
             if has_no_variant:
                 invalid_no_variant = (
@@ -372,6 +407,13 @@ class SaleOrderLine(models.Model):
                     if ptav._origin not in valid_values:
                         invalid_no_variant |= ptav
                 line.product_no_variant_attribute_value_ids -= invalid_no_variant
+                if _debug.logic.enabled and invalid_no_variant:
+                    _debug.logic(
+                        "attribute_values_dropped",
+                        line=line,
+                        kind="no_variant",
+                        dropped=invalid_no_variant,
+                    )
 
     @api.depends("product_id")
     def _compute_product_name_translated(self):
@@ -391,6 +433,9 @@ class SaleOrderLine(models.Model):
                 line.product_name_translated = line.product_id.with_context(
                     lang=lang,
                 ).display_name
+        _debug.perf.count(
+            "product_names_translated", lines=len(self), orders=len(lines_by_order)
+        )
 
     @api.depends("product_id")
     def _compute_product_template_id(self):
@@ -415,6 +460,12 @@ class SaleOrderLine(models.Model):
             if not line.product_uom_id or (
                 line.product_id.uom_id.id != line.product_uom_id.id
             ):
+                _debug.logic(
+                    "uom_realigned",
+                    line=line,
+                    before=line.product_uom_id,
+                    after=line.product_id.uom_id,
+                )
                 line.product_uom_id = line.product_id.uom_id
 
     @api.depends("product_id", "linked_line_id", "linked_line_ids")
@@ -469,6 +520,7 @@ class SaleOrderLine(models.Model):
                     product=line.product_id,
                     **line._get_pricelist_kwargs(),
                 )
+        _debug.perf.count("pricelist_rules_resolved", lines=len(self))
 
     @api.depends(
         "product_id",
@@ -600,6 +652,11 @@ class SaleOrderLine(models.Model):
         mapping = lines_by_analytic._get_qty_delivered_by_analytic(
             [("amount", "<=", 0.0)],
         )
+        _debug.perf.count(
+            "qty_transferred_from_analytic",
+            lines=len(self),
+            analytic=len(lines_by_analytic),
+        )
         for line in lines_by_analytic:
             line.qty_transferred = mapping.get(line.id or line._origin.id, 0.0)
 
@@ -624,6 +681,7 @@ class SaleOrderLine(models.Model):
         precision = self.env["decimal.precision"].get_precision("Product Unit")
         discount_precision = self.env["decimal.precision"].get_precision("Discount")
         invoiced_outside_moves = self._get_invoiced_outside_account_moves()
+        _debug.perf.count("invoice_amounts", lines=len(self))
 
         for line in self.filtered(lambda x: not x.display_type):
             qty_to_consider = (
@@ -884,6 +942,7 @@ class SaleOrderLine(models.Model):
             return _("Down Payments")
 
         dp_state = self._get_downpayment_state()
+        _debug.logic("downpayment_description", line=self, state=dp_state or "invoiced")
         name = _("Down Payment")
         if dp_state == "draft":
             name = _(
@@ -921,6 +980,9 @@ class SaleOrderLine(models.Model):
             return ""
 
         invoice_lines = self._get_invoice_lines()
+        _debug.perf.count(
+            "downpayment_state", line=self, invoice_lines=len(invoice_lines)
+        )
         if all(line.parent_state == "draft" for line in invoice_lines):
             return "draft"
         if all(line.parent_state == "cancel" for line in invoice_lines):
@@ -1067,9 +1129,12 @@ class SaleOrderLine(models.Model):
         self.check_singleton()
 
         if self.product_type == "combo":
+            _debug.logic("price_display", line=self, by="combo_parent")
             return 0
         if self.combo_item_id:
+            _debug.logic("price_display", line=self, by="combo_item")
             return self._get_price_display_combo_item()
+        _debug.logic("price_display", line=self, by="regular")
         return self._get_price_display_regular_item(
             pricelist_price=pricelist_price, base_price=base_price
         )
@@ -1079,6 +1144,7 @@ class SaleOrderLine(models.Model):
 
         combo_line = self._get_line_linked()
         if not combo_line:
+            _debug.logic("combo_item_price", line=self, by="no_linked_line")
             return 0.0
         combo_product_price = combo_line._get_price_display_regular_item()
         combo_base_prices = {
@@ -1103,7 +1169,15 @@ class SaleOrderLine(models.Model):
                 combo_product_price / len(combo_base_prices)
             )
             combo_prices = dict.fromkeys(combo_base_prices, even_share)
+            _debug.logic(
+                "combo_item_price",
+                line=self,
+                by="even_share",
+                combos=len(combo_base_prices),
+            )
         combo_price_delta = combo_product_price - sum(combo_prices.values())
+        if _debug.logic.enabled and combo_price_delta:
+            _debug.logic("combo_rounding_delta", line=self, delta=combo_price_delta)
         if combo_price_delta:
             combo_prices[combo_line.product_template_id.sudo().combo_ids[-1]] += (
                 combo_price_delta
@@ -1126,11 +1200,19 @@ class SaleOrderLine(models.Model):
             pricelist_price = self._get_pricelist_price()
 
         if not self.pricelist_item_id._is_discount_shown():
+            _debug.logic("regular_item_price", line=self, by="pricelist_price")
             return pricelist_price
 
         if base_price is None:
             base_price = self._get_pricelist_price_before_discount()
 
+        _debug.logic(
+            "regular_item_price",
+            line=self,
+            by="max_of_base_and_pricelist",
+            base=base_price,
+            pricelist=pricelist_price,
+        )
         return max(base_price, pricelist_price)
 
     def _get_pricelist_kwargs(self):
@@ -1144,6 +1226,7 @@ class SaleOrderLine(models.Model):
     def _get_pricelist_price(self):
         self.check_singleton()
         self.product_id.check_singleton()
+        _debug.perf.count("pricelist_price", line=self, rule=self.pricelist_item_id)
         return self.pricelist_item_id._get_price(
             product=self.product_id.with_context(**self._get_product_price_context()),
             **self._get_pricelist_kwargs(),
@@ -1153,6 +1236,9 @@ class SaleOrderLine(models.Model):
         self.check_singleton()
         self.product_id.check_singleton()
 
+        _debug.perf.count(
+            "pricelist_price_before_discount", line=self, rule=self.pricelist_item_id
+        )
         return self.pricelist_item_id._compute_price_before_discount(
             product=self.product_id.with_context(**self._get_product_price_context()),
             **self._get_pricelist_kwargs(),
@@ -1173,6 +1259,7 @@ class SaleOrderLine(models.Model):
             return False
 
         line = self.with_company(self.company_id)
+        _debug.logic("pricelist_price_current", line=self)
         return line._get_price_display()
 
     def _get_product_price_context(self):
@@ -1188,11 +1275,12 @@ class SaleOrderLine(models.Model):
             return result
 
         domain = Domain.AND([[("so_line", "in", self.ids)], additional_domain])
-        data = self.env["account.analytic.line"]._read_group(
-            domain,
-            ["product_uom_id", "so_line"],
-            ["unit_amount:sum", "move_line_id:count_distinct", "__count"],
-        )
+        with _debug.perf("qty_delivered_by_analytic", cr=self.env.cr, lines=self):
+            data = self.env["account.analytic.line"]._read_group(
+                domain,
+                ["product_uom_id", "so_line"],
+                ["unit_amount:sum", "move_line_id:count_distinct", "__count"],
+            )
 
         for uom, line, unit_amount_sum, move_line_id_count_distinct, count in data:
             if not uom:
@@ -1208,6 +1296,9 @@ class SaleOrderLine(models.Model):
             )
             result[line.id] += qty
 
+        _debug.perf.count(
+            "qty_delivered_by_analytic_rows", groups=len(data), lines=len(result)
+        )
         return result
 
     def _get_section_lines(self):
@@ -1342,6 +1433,7 @@ class SaleOrderLine(models.Model):
                     fiscal_position=self.order_id.fiscal_position_id,
                 )
 
+        _debug.lifecycle("price_unit_reset", line=self, price=price_unit)
         self.update(
             {
                 "price_unit": price_unit,
@@ -1366,19 +1458,27 @@ class SaleOrderLine(models.Model):
     def set_manual_price(self, price):
         for line in self:
             if line.qty_invoiced > 0:
+                _debug.logic(
+                    "manual_price_refused", line=line, reason="already_invoiced"
+                )
                 raise UserError(
                     _("Cannot set manual price on invoiced line %s", line.display_name),
                 )
 
+            _debug.lifecycle("manual_price_set", line=line, price=price)
             line.write({"price_unit": price})
 
     def reset_to_pricelist_price(self):
         for line in self:
             if line.qty_invoiced > 0:
+                _debug.logic(
+                    "price_reset_refused", line=line, reason="already_invoiced"
+                )
                 raise UserError(
                     _("Cannot reset price on invoiced line %s", line.display_name),
                 )
 
+        _debug.lifecycle("price_reset_to_pricelist", lines=self)
         return self.with_context(
             force_price_recomputation=True
         )._compute_price_and_discount()
@@ -1410,6 +1510,12 @@ class SaleOrderLine(models.Model):
                     )
                 msg += _("Invoiced Quantity: %s", line.qty_invoiced) + Markup("<br/>")
             msg += Markup("</ul>")
+            _debug.lifecycle(
+                "ordered_quantity_updated",
+                order=order,
+                lines=order_lines,
+                new_qty=values.get("product_qty"),
+            )
             order.message_post(body=msg)
 
     def _update_price_unit(self):
@@ -1482,8 +1588,10 @@ class SaleOrderLine(models.Model):
 
     def _is_price_update_blocked(self):
         if any(aml.move_id.state != "cancel" for aml in self.invoice_line_ids):
+            _debug.logic("price_update_blocked", line=self, reason="invoiced")
             return True
         if self.product_id.expense_policy == "cost" and self.is_expense:
+            _debug.logic("price_update_blocked", line=self, reason="expense_at_cost")
             return True
         return super()._is_price_update_blocked()
 
@@ -1509,6 +1617,9 @@ class SaleOrderLine(models.Model):
                 ),
             )
             if lines_blocked:
+                _debug.logic(
+                    "field_change_blocked", lines=lines_blocked, field="product_id"
+                )
                 self._raise_field_change_error(lines_blocked, "product")
 
         if "product_uom_id" in write_vals:
@@ -1519,6 +1630,9 @@ class SaleOrderLine(models.Model):
                 ),
             )
             if lines_blocked:
+                _debug.logic(
+                    "field_change_blocked", lines=lines_blocked, field="product_uom_id"
+                )
                 self._raise_field_change_error(
                     lines_blocked,
                     "unit of measure",

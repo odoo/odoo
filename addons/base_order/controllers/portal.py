@@ -2,8 +2,11 @@ from collections import OrderedDict
 
 from odoo import _
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.portal.controllers.portal import pager as portal_pager
+
+_debug = DebugLog(__name__)
 
 
 class OrderPortalMixin:
@@ -32,6 +35,12 @@ class OrderPortalMixin:
         for counter_key, domain in counter_specs:
             if counter_key in counters:
                 values[counter_key] = Order.search_count(domain) if can_read else 0  # noqa: E8507 - one count per portal counter
+                _debug.perf.count(
+                    "portal_counter",
+                    model=model_name,
+                    key=counter_key,
+                    value=values[counter_key],
+                )
         return values
 
     def _order_portal_rendering_values(
@@ -94,6 +103,16 @@ class OrderPortalMixin:
         )
 
         request.session[cfg["session_key"]] = orders.ids
+        _debug.pipeline(
+            "portal_order_list",
+            model=model_name,
+            page=cfg["page_name"],
+            total=total,
+            shown=len(orders),
+            sortby=sortby,
+            filterby=filterby or "none",
+            readable=can_read,
+        )
 
         values.update(
             {
@@ -114,6 +133,7 @@ class OrderPortalMixin:
         builders = order_sudo._get_edi_builders()
 
         if len(builders) == 0:
+            _debug.logic("edi_download_skipped", order=order_sudo, reason="no_builder")
             return None
         builder = builders[0]
 
@@ -126,4 +146,10 @@ class OrderPortalMixin:
             ("Content-Length", len(xml_content)),
             ("Content-Disposition", f"attachment; filename={download_name}"),
         ]
+        _debug.pipeline(
+            "edi_document_served",
+            order=order_sudo,
+            builders=len(builders),
+            bytes=len(xml_content),
+        )
         return request.prepare_response(xml_content, headers=http_headers)

@@ -2,11 +2,14 @@ from datetime import timedelta
 
 from odoo import fields, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 
 #: Fixed lookback window for `_compute_ordered_qty`, intentionally
 #: independent of `res.company.order_cycle_count/unit` (which
 #: drives a separate, configurable "gone quiet" cutoff on `res.partner`).
 ORDERED_QTY_WINDOW_DAYS = 365
+
+_debug = DebugLog(__name__)
 
 
 class ProductProduct(models.Model):
@@ -16,6 +19,7 @@ class ProductProduct(models.Model):
         order_id = self.env.context.get("order_id")
         if not order_id:
             self[field_name] = False
+            _debug.logic("is_in_order_skipped", field=field_name, reason="no_order_id")
             return
 
         counts = {
@@ -26,6 +30,9 @@ class ProductProduct(models.Model):
                 aggregates=["__count"],
             )
         }
+        _debug.perf.count(
+            "is_in_order", model=line_model, products=len(self), rows=len(counts)
+        )
         for product in self:
             product[field_name] = bool(counts.get(product.id))
 
@@ -43,6 +50,7 @@ class ProductProduct(models.Model):
     def _compute_ordered_qty(self, field_name, model, group, date_field, domain):
         self[field_name] = 0.0
         if not self.env.user.has_group(group):
+            _debug.logic("ordered_qty_skipped", field=field_name, reason="no_group")
             return
 
         date_from = fields.Date.today() - timedelta(days=ORDERED_QTY_WINDOW_DAYS)
@@ -62,6 +70,13 @@ class ProductProduct(models.Model):
                 ["product_uom_qty:sum"],
             )
         }
+        _debug.perf.count(
+            "ordered_qty",
+            model=model,
+            products=len(self),
+            rows=len(quantities),
+            window_days=ORDERED_QTY_WINDOW_DAYS,
+        )
         for product in self:
             if product.id:
                 product[field_name] = product.uom_id.round(
@@ -76,4 +91,10 @@ class ProductProduct(models.Model):
         )
 
     def _update_uom_on_order_lines(self, line_model, to_uom_id):
+        _debug.lifecycle(
+            "order_line_uom_restamped",
+            model=line_model,
+            products=self,
+            uom=to_uom_id,
+        )
         self._restamp_uom(line_model, to_uom_id).flush_recordset()

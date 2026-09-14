@@ -1,6 +1,9 @@
 from datetime import datetime
 
 from odoo.http import Controller, request, route
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class SaleProductConfiguratorController(Controller):
@@ -42,6 +45,13 @@ class SaleProductConfiguratorController(Controller):
             )
         if not combination:
             combination = product_template._get_first_possible_combination()
+        _debug.pipeline(
+            "configurator_values",
+            template=product_template,
+            combination=combination,
+            requested=len(ptav_ids or ()),
+            only_main=only_main_product,
+        )
         currency = request.env["res.currency"].browse(currency_id)
         pricelist = request.env["product.pricelist"].browse(pricelist_id)
         so_date = datetime.fromisoformat(so_date)
@@ -100,6 +110,12 @@ class SaleProductConfiguratorController(Controller):
             .filtered(lambda ptav: ptav.product_tmpl_id.id == product_template_id)
         )
         product = product_template._create_product_variant(combination)
+        _debug.lifecycle(
+            "configurator_variant_created",
+            template=product_template,
+            combination=combination,
+            product=product,
+        )
         return product.id
 
     @route(
@@ -129,6 +145,12 @@ class SaleProductConfiguratorController(Controller):
         currency = request.env["res.currency"].browse(currency_id)
         combination = request.env["product.template.attribute.value"].browse(ptav_ids)
         product = product_template._get_variant_for_combination(combination)
+        _debug.logic(
+            "configurator_combination_updated",
+            template=product_template,
+            combination=combination,
+            variant=product,
+        )
 
         values = self._get_basic_product_information(
             product or product_template,
@@ -168,6 +190,11 @@ class SaleProductConfiguratorController(Controller):
         )
         currency = request.env["res.currency"].browse(currency_id)
         pricelist = request.env["product.pricelist"].browse(pricelist_id)
+        _debug.pipeline(
+            "configurator_optional_products",
+            template=product_template,
+            optional=product_template.optional_product_ids,
+        )
         return [
             dict(
                 **self._get_product_information(
@@ -272,6 +299,7 @@ class SaleProductConfiguratorController(Controller):
             parent_exclusions=attribute_exclusions["parent_exclusions"],
         )
         if show_packaging and product_template._has_multiple_uoms():
+            _debug.logic("configurator_multiple_uoms", template=product_template)
             values["available_uoms"] = product_template._get_available_uoms().read(
                 ["id", "display_name"],
             )
@@ -305,6 +333,12 @@ class SaleProductConfiguratorController(Controller):
             **kwargs,
         )
         pricelist_rule = request.env["product.pricelist.item"].browse(pricelist_rule_id)
+        _debug.logic(
+            "configurator_price",
+            product=product_or_template,
+            price=price,
+            rule=pricelist_rule,
+        )
         return dict(
             **basic_information,
             price=price,

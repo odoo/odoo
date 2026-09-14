@@ -4,9 +4,12 @@ from odoo import SUPERUSER_ID, _, fields, http
 from odoo.exceptions import AccessError, MissingError, ValidationError
 from odoo.fields import Command
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.base_order.controllers.portal import OrderPortalMixin
 from odoo.addons.payment.controllers import portal as payment_portal
+
+_debug = DebugLog(__name__)
 
 
 class CustomerPortal(payment_portal.PaymentPortal, OrderPortalMixin):
@@ -99,6 +102,7 @@ class CustomerPortal(payment_portal.PaymentPortal, OrderPortalMixin):
     )
     def portal_my_quotes(self, **kw):
         values = self._sale_prepare_order_portal_rendering_values("quote", **kw)
+        _debug.pipeline("portal_list", page="quote", orders=values.get("quotations"))
         return request.render("sale.portal_my_quotations", values)
 
     @http.route(
@@ -109,6 +113,7 @@ class CustomerPortal(payment_portal.PaymentPortal, OrderPortalMixin):
     )
     def portal_my_orders(self, **kw):
         values = self._sale_prepare_order_portal_rendering_values("order", **kw)
+        _debug.pipeline("portal_list", page="order", orders=values.get("orders"))
         return request.render("sale.portal_my_orders", values)
 
     def _sale_order_get_page_view_values(
@@ -140,6 +145,7 @@ class CustomerPortal(payment_portal.PaymentPortal, OrderPortalMixin):
                 "sale.order", order_id, access_token=access_token
             )
         except AccessError, MissingError:
+            _debug.logic("portal_access_denied", route="order_page", order=order_id)
             return request.redirect("/my")
 
         payment_amount = self._cast_as_float(payment_amount)
@@ -149,9 +155,16 @@ class CustomerPortal(payment_portal.PaymentPortal, OrderPortalMixin):
             and payment_amount < prepayment_amount
             and order_sudo.state != "done"
         ):
+            _debug.logic(
+                "portal_payment_amount_refused",
+                order=order_sudo,
+                requested=payment_amount,
+                prepayment=prepayment_amount,
+            )
             raise MissingError(_("The amount is lower than the prepayment amount."))
 
         if report_type in ("html", "pdf", "text"):
+            _debug.pipeline("portal_report", order=order_sudo, kind=report_type)
             return self._show_report(
                 model=order_sudo,
                 report_type=report_type,
@@ -184,6 +197,9 @@ class CustomerPortal(payment_portal.PaymentPortal, OrderPortalMixin):
                     .with_context(lang=lang)
                     .env._("Quotation viewed by customer %s", author.name)
                 )
+                _debug.lifecycle(
+                    "quotation_viewed_by_customer", order=order_sudo, author=author
+                )
                 order_sudo.with_user(SUPERUSER_ID).message_post(
                     body=msg,
                     message_type="notification",
@@ -203,6 +219,7 @@ class CustomerPortal(payment_portal.PaymentPortal, OrderPortalMixin):
             "payment_amount": payment_amount,
         }
 
+        _debug.logic("portal_order_page", order=order_sudo, state=order_sudo.state)
         if order_sudo._has_to_be_paid() or (
             payment_amount and not order_sudo.is_expired
         ):
@@ -239,6 +256,12 @@ class CustomerPortal(payment_portal.PaymentPortal, OrderPortalMixin):
                 if payment_amount is None
                 else payment_amount < order_sudo.amount_total
             )
+        _debug.logic(
+            "down_payment_decision",
+            order=order_sudo,
+            down_payment=is_down_payment,
+            selection=amount_selection or "implicit",
+        )
         return is_down_payment
 
     def _get_payment_values(
@@ -262,36 +285,40 @@ class CustomerPortal(payment_portal.PaymentPortal, OrderPortalMixin):
             amount = order_sudo.amount_total
 
         availability_report = {}
-        providers_sudo = (
-            request.env["payment.provider"]
-            .sudo()
-            ._get_compatible_providers(
-                company.id,
-                partner_sudo.id,
-                amount,
-                currency_id=currency.id,
-                sale_order_id=order_sudo.id,
-                report=availability_report,
-                **kwargs,
+        with _debug.perf(
+            "payment_options", cr=request.env.cr, order=order_sudo
+        ) as span:
+            providers_sudo = (
+                request.env["payment.provider"]
+                .sudo()
+                ._get_compatible_providers(
+                    company.id,
+                    partner_sudo.id,
+                    amount,
+                    currency_id=currency.id,
+                    sale_order_id=order_sudo.id,
+                    report=availability_report,
+                    **kwargs,
+                )
             )
-        )
-        payment_methods_sudo = (
-            request.env["payment.method"]
-            .sudo()
-            ._get_compatible_payment_methods(
-                providers_sudo.ids,
-                partner_sudo.id,
-                currency_id=currency.id,
-                sale_order_id=order_sudo.id,
-                report=availability_report,
-                **kwargs,
+            payment_methods_sudo = (
+                request.env["payment.method"]
+                .sudo()
+                ._get_compatible_payment_methods(
+                    providers_sudo.ids,
+                    partner_sudo.id,
+                    currency_id=currency.id,
+                    sale_order_id=order_sudo.id,
+                    report=availability_report,
+                    **kwargs,
+                )
             )
-        )
-        tokens_sudo = (
-            request.env["payment.token"]
-            .sudo()
-            ._get_available_tokens(providers_sudo.ids, partner_sudo.id, **kwargs)
-        )
+            tokens_sudo = (
+                request.env["payment.token"]
+                .sudo()
+                ._get_available_tokens(providers_sudo.ids, partner_sudo.id, **kwargs)
+            )
+            span.set(amount=amount, providers=providers_sudo, tokens=tokens_sudo)
 
         company_mismatch = not payment_portal.PaymentPortal._can_partner_pay_in_company(
             partner_sudo, company
@@ -341,13 +368,20 @@ class CustomerPortal(payment_portal.PaymentPortal, OrderPortalMixin):
                 "sale.order", order_id, access_token=access_token
             )
         except AccessError, MissingError:
+            _debug.logic("portal_access_denied", route="accept", order=order_id)
             return {"error": _("Invalid order.")}
 
         if not order_sudo._has_to_be_signed():
+            _debug.logic(
+                "portal_sign_refused", order=order_sudo, reason="not_awaiting_signature"
+            )
             return {
                 "error": _("The order is not in a state requiring customer signature.")
             }
         if not signature:
+            _debug.logic(
+                "portal_sign_refused", order=order_sudo, reason="missing_signature"
+            )
             return {"error": _("Signature is missing.")}
 
         try:
@@ -360,9 +394,14 @@ class CustomerPortal(payment_portal.PaymentPortal, OrderPortalMixin):
             )
             request.env.cr.flush()
         except TypeError, binascii.Error:
+            _debug.logic(
+                "portal_sign_refused", order=order_sudo, reason="undecodable_signature"
+            )
             return {"error": _("Invalid signature data.")}
 
+        _debug.lifecycle("portal_order_signed", order=order_sudo, signed_by=bool(name))
         if not order_sudo._has_to_be_paid():
+            _debug.pipeline("portal_confirm_after_sign", order=order_sudo)
             order_sudo.with_context(sale_include_signature=True)._confirm_order()
 
         pdf = (
@@ -407,9 +446,11 @@ class CustomerPortal(payment_portal.PaymentPortal, OrderPortalMixin):
                 "sale.order", order_id, access_token=access_token
             )
         except AccessError, MissingError:
+            _debug.logic("portal_access_denied", route="decline", order=order_id)
             return request.redirect("/my")
 
         if order_sudo._has_to_be_signed() and decline_message:
+            _debug.lifecycle("portal_order_declined", order=order_sudo)
             order_sudo._action_cancel()
             order_sudo.line_ids.currency_id  # noqa: B018 (intentional: primes the currency cache)
 
@@ -425,6 +466,11 @@ class CustomerPortal(payment_portal.PaymentPortal, OrderPortalMixin):
             )
             redirect_url = order_sudo.get_portal_url()
         else:
+            _debug.logic(
+                "portal_decline_refused",
+                order=order_sudo,
+                has_message=bool(decline_message),
+            )
             redirect_url = order_sudo.get_portal_url(
                 query_string="&message=cant_reject"
             )
@@ -443,14 +489,25 @@ class CustomerPortal(payment_portal.PaymentPortal, OrderPortalMixin):
                 "sale.order", order_id, access_token=access_token
             )
         except AccessError, MissingError:
+            _debug.logic("portal_access_denied", route="document", order=order_id)
             return request.redirect("/my")
 
         document = request.env["document.document"].browse(document_id).sudo().exists()
         if not document or not document.active:
+            _debug.logic(
+                "portal_document_refused",
+                order=order_sudo,
+                reason="missing_or_archived",
+            )
             return request.redirect("/my")
 
         if document not in order_sudo._get_product_documents():
+            _debug.logic(
+                "portal_document_refused", order=order_sudo, reason="not_on_order"
+            )
             return request.redirect("/my")
+
+        _debug.pipeline("portal_document_served", order=order_sudo, document=document)
 
         return (
             request.env["ir.binary"]
@@ -471,8 +528,10 @@ class CustomerPortal(payment_portal.PaymentPortal, OrderPortalMixin):
                 "sale.order", order_id, access_token=access_token
             )
         except AccessError, MissingError:
+            _debug.logic("portal_access_denied", route="download_edi", order=order_id)
             return request.redirect("/my")
 
+        _debug.pipeline("portal_edi_download", order=order_sudo)
         return self._order_portal_edi_response(order_sudo) or request.redirect("/my")
 
     @http.route(
@@ -536,6 +595,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         except MissingError:
             raise
         except AccessError:
+            _debug.logic("portal_access_denied", route="transaction", order=order_id)
             raise ValidationError(_("The access token is invalid.")) from None
 
         logged_in = not request.env.user._is_public()
@@ -553,6 +613,9 @@ class PaymentPortal(payment_portal.PaymentPortal):
         tx_sudo = self._create_transaction(
             custom_create_values={"sale_order_ids": [Command.set([order_id])]},
             **kwargs,
+        )
+        _debug.lifecycle(
+            "portal_transaction_created", order=order_sudo, transaction=tx_sudo
         )
 
         return tx_sudo._get_processing_values()

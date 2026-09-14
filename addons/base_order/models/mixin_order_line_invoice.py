@@ -3,9 +3,12 @@ from collections import defaultdict
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.numbers import float_compare, float_is_zero
 
 from .mixin_order_invoice import INVOICE_STATE
+
+_debug = DebugLog(__name__)
 
 
 class MixinOrderLineInvoice(models.AbstractModel):
@@ -87,6 +90,7 @@ class MixinOrderLineInvoice(models.AbstractModel):
             accrual_date = fields.Date.from_string(
                 self.env.context["accrual_entry_date"],
             )
+            _debug.logic("invoice_lines", line=self, by="accrual_entry_date")
             return self.invoice_line_ids.filtered(
                 lambda l: (
                     l.move_id.invoice_date and l.move_id.invoice_date <= accrual_date
@@ -133,6 +137,7 @@ class MixinOrderLineInvoice(models.AbstractModel):
     @api.depends("qty_invoiced")
     def _compute_qty_invoiced_at_date(self):
         if not self._date_in_the_past():
+            _debug.logic("qty_invoiced_at_date", lines=self, by="current_quantity")
             for line in self:
                 line.qty_invoiced_at_date = line.qty_invoiced
             return
@@ -157,6 +162,7 @@ class MixinOrderLineInvoice(models.AbstractModel):
             ) * line._get_price_unit_gross()
 
     def _compute_invoice_amounts(self):
+        _debug.logic("invoice_amounts_not_implemented", model=self._name)
         raise NotImplementedError(
             f"{self._name} must implement _compute_invoice_amounts()"
         )
@@ -164,6 +170,7 @@ class MixinOrderLineInvoice(models.AbstractModel):
     def _compute_invoice_state(self):
         precision = self.env["decimal.precision"].get_precision("Product Unit")
         policy_field = self._get_invoice_policy_field()
+        _debug.perf.count("line_invoice_state", lines=len(self), policy=policy_field)
         for line in self.filtered(lambda l: not l.display_type):
             policy = line.product_id[policy_field]
 
@@ -224,6 +231,12 @@ class MixinOrderLineInvoice(models.AbstractModel):
                 if not source_uom or not inv_line.quantity:
                     continue
                 if not source_uom._has_common_reference(target_uom):
+                    _debug.logic(
+                        "invoiced_uom_not_convertible",
+                        line=line,
+                        source=source_uom,
+                        target=target_uom,
+                    )
                     raise UserError(
                         _(
                             "Cannot invoice “%(line)s”: its already-invoiced "
@@ -264,7 +277,9 @@ class MixinOrderLineInvoice(models.AbstractModel):
             res[link_field] = [Command.link(self.id)]
         if self.is_downpayment and self.invoice_line_ids:
             res["account_id"] = self.invoice_line_ids.account_id[:1].id
+            _debug.logic("aml_account_from_downpayment", line=self)
         res.update(optional_values)
+        _debug.pipeline("aml_vals", line=self, quantity=res["quantity"])
         return res
 
     def _get_invoice_line_link_field(self):

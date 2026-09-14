@@ -2,10 +2,13 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
 from odoo.fields import Command
+from odoo.libs.debug_log import DebugLog
 
 STATS_SAMPLE_LIMIT = 500
 
 HISTORY_RESULT_LIMIT = 20
+
+_debug = DebugLog(__name__)
 
 
 class MixinOrderLinePriceHistory(models.AbstractModel):
@@ -169,6 +172,7 @@ class MixinOrderLinePriceHistory(models.AbstractModel):
 
     def _get_domain_price_stats(self):
         if not self.product_id:
+            _debug.logic("price_stats_skipped", wizard=self, reason="no_product")
             return None
         return [
             ("product_id", "=", self.product_id.id),
@@ -207,10 +211,23 @@ class MixinOrderLinePriceHistory(models.AbstractModel):
                 vals["divergence_favorable"] = (
                     divergence * self._get_price_direction() > 0
                 )
+        _debug.logic(
+            "price_stats",
+            wizard=self,
+            product=self.product_id,
+            market=market,
+            current=vals["current_price_unit"],
+            divergence=vals["divergence_pct"],
+            samples=vals["avg_sample_count"],
+            truncated=vals["avg_sample_truncated"],
+        )
         return vals
 
     def _get_partner_price_aggregates(self, domain, market_vals) -> dict:
         if not self.partner_id:
+            _debug.logic(
+                "partner_price_stats_skipped", wizard=self, reason="no_partner"
+            )
             return {}
         partner_domain = [
             *domain,
@@ -233,6 +250,7 @@ class MixinOrderLinePriceHistory(models.AbstractModel):
 
     def _get_price_aggregates(self, domain) -> dict:
         if not self._price_history_sql:
+            _debug.logic("price_aggregates", wizard=self, by="python_sample")
             return self._get_price_sample_aggregates(domain)
         Line = self.env[self._price_history_line_model]
         groups = Line._read_group(
@@ -247,12 +265,22 @@ class MixinOrderLinePriceHistory(models.AbstractModel):
             ],
         )
         if not groups:
+            _debug.logic("price_aggregates", wizard=self, by="no_history")
             return {}
         if len(groups) > 1 or groups[0][0] != self.currency_id:
+            _debug.logic(
+                "price_aggregates",
+                wizard=self,
+                by="python_sample",
+                reason="mixed_currency",
+                currencies=len(groups),
+            )
             return self._get_price_sample_aggregates(domain)
         _currency, amount, minimum, maximum, qty, count = groups[0]
         if not qty:
+            _debug.logic("price_aggregates", wizard=self, by="zero_quantity")
             return {}
+        _debug.perf.count("price_aggregates_sql", wizard=self, lines=count)
         return {
             "avg_price_unit": amount / qty,
             "avg_price_unit_exact": amount / qty,
@@ -278,6 +306,13 @@ class MixinOrderLinePriceHistory(models.AbstractModel):
             count += 1
             min_price = price if min_price is None else min(min_price, price)
             max_price = price if max_price is None else max(max_price, price)
+        _debug.perf.count(
+            "price_aggregates_sample",
+            wizard=self,
+            fetched=len(lines),
+            used=count,
+            truncated=len(lines) == STATS_SAMPLE_LIMIT,
+        )
         if not total_qty:
             return {"avg_sample_truncated": len(lines) == STATS_SAMPLE_LIMIT}
         return {
@@ -307,10 +342,18 @@ class MixinOrderLinePriceHistory(models.AbstractModel):
     def _onchange_price_history_filters(self):
         self.line_ids = [Command.clear()]
         if not self.product_id:
+            _debug.logic("price_history_cleared", wizard=self, reason="no_product")
             return
         lines = self.env[self._price_history_line_model].search(
             self._get_domain_price_history(),
             order=self._price_history_order,
+            limit=HISTORY_RESULT_LIMIT,
+        )
+        _debug.pipeline(
+            "price_history_loaded",
+            wizard=self,
+            product=self.product_id,
+            lines=lines,
             limit=HISTORY_RESULT_LIMIT,
         )
         self.line_ids = [Command.create({"line_id": line.id}) for line in lines]
@@ -390,5 +433,10 @@ class MixinOrderLinePriceHistoryLine(models.AbstractModel):
 
     def action_set_price(self):
         self.check_singleton()
+        _debug.lifecycle(
+            "price_set_from_history",
+            target=self.wizard_id.line_id,
+            source=self.line_id,
+        )
         self.wizard_id.line_id.write(self._get_price_vals())
         return {"type": "ir.actions.act_window_close"}

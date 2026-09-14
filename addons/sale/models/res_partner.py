@@ -1,5 +1,8 @@
 from odoo import api, fields, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ResPartner(models.Model):
@@ -39,11 +42,13 @@ class ResPartner(models.Model):
         super()._compute_credit_to_invoice()
 
         if not (commercial_partners := self.commercial_partner_id & self):
+            _debug.logic("credit_to_invoice_skipped", reason="no_commercial_partner")
             return
 
         company = self.env.company
 
         if not company.account_use_credit_limit:
+            _debug.logic("credit_to_invoice_skipped", reason="credit_limit_disabled")
             return
 
         sale_orders = self.env["sale.order"].search(
@@ -71,6 +76,12 @@ class ResPartner(models.Model):
                 fields.Date.context_today(self),
             )
             partner.commercial_partner_id.credit_to_invoice += credit_company_currency
+            _debug.logic(
+                "credit_to_invoice",
+                partner=partner,
+                orders=orders,
+                amount=credit_company_currency,
+            )
 
     @api.model
     def _get_sale_order_domain_count(self):
@@ -99,6 +110,7 @@ class ResPartner(models.Model):
                 limit=1,
             )
         )
+        _debug.perf.count("partner_has_order", partner=self, found=bool(sale_order))
         return bool(sale_order)
 
     def _can_edit_country(self):

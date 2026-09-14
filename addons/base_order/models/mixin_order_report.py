@@ -1,5 +1,8 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, Query
+
+_debug = DebugLog(__name__)
 
 
 class MixinOrderReport(models.AbstractModel):
@@ -68,6 +71,7 @@ class MixinOrderReport(models.AbstractModel):
     def _read_group_select(self, aggregate_spec: str, query: Query) -> SQL:
         if aggregate_spec != "price_average:avg":
             return super()._read_group_select(aggregate_spec, query)
+        _debug.logic("price_average_weighted", model=self._name)
         return SQL(
             "SUM(%(f_price)s * %(f_qty)s) / NULLIF(SUM(%(f_qty)s), 0.0)",
             f_qty=self._field_to_sql(self._table, "product_uom_qty", query),

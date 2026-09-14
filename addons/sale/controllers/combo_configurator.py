@@ -1,7 +1,10 @@
 from datetime import datetime
 
 from odoo.http import Controller, request, route
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import groupby
+
+_debug = DebugLog(__name__)
 
 
 class SaleComboConfiguratorController(Controller):
@@ -31,6 +34,11 @@ class SaleComboConfiguratorController(Controller):
         selected_combo_item_dict = {
             item["id"]: item for item in selected_combo_items or []
         }
+        _debug.perf.count(
+            "combo_configurator_data",
+            template=product_template,
+            preselected=len(selected_combo_item_dict),
+        )
 
         return {
             "product_tmpl_id": product_tmpl_id,
@@ -89,6 +97,12 @@ class SaleComboConfiguratorController(Controller):
         pricelist = request.env["product.pricelist"].browse(pricelist_id)
         date = datetime.fromisoformat(date)
 
+        _debug.pipeline(
+            "combo_configurator_price",
+            template=product_template,
+            pricelist=pricelist,
+            quantity=quantity,
+        )
         return product_template._get_configurator_display_price(
             product_template, quantity, date, currency, pricelist, **kwargs
         )[0]
@@ -111,6 +125,13 @@ class SaleComboConfiguratorController(Controller):
             for ptav in combo_item.product_id.product_template_attribute_value_ids
         )
         is_preselected = len(combo.combo_item_ids) == 1 and not is_configurable
+        _debug.logic(
+            "combo_item_data",
+            combo=combo,
+            item=combo_item,
+            configurable=is_configurable,
+            preselected=is_preselected,
+        )
 
         return {
             "id": combo_item.id,
@@ -157,6 +178,12 @@ class SaleComboConfiguratorController(Controller):
 
         custom_ptavs = selected_combo_item.get("custom_ptavs", [])
         custom_value_by_ptav_id = {ptav["id"]: ptav["value"] for ptav in custom_ptavs}
+        _debug.perf.count(
+            "combo_ptals_resolved",
+            product=product,
+            lines=len(ptavs_by_ptal_id),
+            custom=len(custom_value_by_ptav_id),
+        )
 
         return [
             {

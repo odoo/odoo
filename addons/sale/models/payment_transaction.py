@@ -5,8 +5,11 @@ from dateutil import relativedelta
 from odoo import api, fields, models
 from odoo.api import SUPERUSER_ID
 from odoo.fields import Command
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import str2bool
 from odoo.tools.translate import _
+
+_debug = DebugLog(__name__)
 
 
 class PaymentTransaction(models.Model):
@@ -35,6 +38,7 @@ class PaymentTransaction(models.Model):
             )
             orders = self.env["sale.order"].browse(order_ids).exists()
             if len(orders) == len(order_ids):
+                _debug.logic("reference_prefix", by="sale_orders", orders=orders)
                 return separator.join(orders.mapped("name"))
         return super()._compute_reference_prefix(separator, **values)
 
@@ -51,6 +55,12 @@ class PaymentTransaction(models.Model):
         else:
             order_reference = False
 
+        _debug.logic(
+            "sale_order_reference",
+            transaction=self,
+            order=order,
+            by=self.provider_id.so_reference_type,
+        )
         invoice_journal = self.env["account.journal"].search(
             [("type", "=", "sale"), ("company_id", "=", self.company_id.id)], limit=1
         )
@@ -62,6 +72,7 @@ class PaymentTransaction(models.Model):
         return order_reference
 
     def _post_process(self):
+        _debug.pipeline("tx_post_process", transactions=self)
         for pending_tx in self.filtered(lambda tx: tx.state == "pending"):
             super(PaymentTransaction, pending_tx)._post_process()
             sales_orders = pending_tx.sale_order_ids.filtered(
@@ -100,6 +111,12 @@ class PaymentTransaction(models.Model):
         async_emails = auto_invoice and str2bool(
             params.get_param("sale.async_emails"),
         )
+        _debug.logic(
+            "tx_done_policy",
+            transactions=done_txs,
+            auto_invoice=auto_invoice,
+            async_emails=async_emails,
+        )
         for done_tx in done_txs:
             if done_tx.operation != "validation":
                 confirmed_orders = done_tx._confirm_orders_if_amount_reached()
@@ -115,6 +132,7 @@ class PaymentTransaction(models.Model):
                         "sale.send_invoice_cron", raise_if_not_found=False
                     )
                 ):
+                    _debug.lifecycle("invoice_send_deferred", transaction=done_tx)
                     send_invoice_cron._trigger()
                 else:
                     self._send_invoice()
@@ -129,10 +147,18 @@ class PaymentTransaction(models.Model):
                     and not quotation._has_to_be_signed()
                     and quotation._is_confirmation_amount_reached()
                 ):
+                    _debug.lifecycle(
+                        "order_confirmed_by_payment", transaction=tx, order=quotation
+                    )
                     quotation.with_context(
                         send_email=True, sale_include_signature=True
                     ).action_confirm()
                     confirmed_orders |= quotation
+        _debug.pipeline(
+            "confirm_orders_if_amount_reached",
+            transactions=self,
+            confirmed=confirmed_orders,
+        )
         return confirmed_orders
 
     def _log_message_on_linked_documents(self, message):
@@ -171,6 +197,9 @@ class PaymentTransaction(models.Model):
                 if mail_template.exists():
                     send_context["mail_template"] = mail_template
 
+            _debug.pipeline(
+                "tx_send_invoices", transaction=tx, invoices=invoice_to_send
+            )
             tx.env["mixin.account.move.send"]._generate_and_send_invoices(
                 invoice_to_send,
                 **send_context,
@@ -182,6 +211,7 @@ class PaymentTransaction(models.Model):
             .sudo()
             .get_param("sale.automatic_invoice")
         ):
+            _debug.logic("cron_send_invoice_skipped", reason="automatic_invoice_off")
             return
 
         retry_limit_date = datetime.now() - relativedelta.relativedelta(days=2)
@@ -224,6 +254,13 @@ class PaymentTransaction(models.Model):
 
                 for invoice in invoices:
                     invoice._portal_ensure_token()
+                _debug.pipeline(
+                    "tx_invoice_sale_orders",
+                    transaction=tx,
+                    confirmed=confirmed_orders,
+                    fully_paid=fully_paid_orders,
+                    invoices=invoices,
+                )
                 if invoices:
                     tx.invoice_ids = [Command.set(invoices.ids)]
 

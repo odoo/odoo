@@ -6,6 +6,7 @@ from odoo.api import SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import (
     float_is_zero,
     format_amount,
@@ -18,6 +19,8 @@ from odoo.tools.translate import _
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.sale import const
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrder(models.Model):
@@ -310,6 +313,11 @@ class SaleOrder(models.Model):
     def _check_prepayment_percent(self):
         for order in self:
             if order.require_payment and not (0 < order.prepayment_percent <= 1.0):
+                _debug.logic(
+                    "prepayment_percent_rejected",
+                    order=order,
+                    percent=order.prepayment_percent,
+                )
                 raise ValidationError(
                     _(
                         "Prepayment percentage must be greater than 0% and at most 100%."
@@ -333,6 +341,9 @@ class SaleOrder(models.Model):
 
         upselling_orders = filtered_self.filtered(
             lambda so: so.has_upsell_opportunity,
+        )
+        _debug.pipeline(
+            "upsell_scan", candidates=filtered_self, upselling=upselling_orders
         )
         upselling_orders._create_upsell_activity()
         return None
@@ -359,6 +370,13 @@ class SaleOrder(models.Model):
                 data[0].id for data in pricelist_data if data[0]
             }
 
+        _debug.perf.count(
+            "active_pricelist_scan",
+            orders=len(self),
+            companies=len(company_ids),
+            global_pricelist=has_global_pricelist,
+            with_pricelist=len(companies_with_pricelist),
+        )
         for order in self:
             order.has_active_pricelist = (
                 has_global_pricelist or order.company_id.id in companies_with_pricelist
@@ -433,15 +451,20 @@ class SaleOrder(models.Model):
             if order_company.terms_type == "html" and company.invoice_terms_html:
                 baseurl = html_keep_url(order_company._get_note_url() + "/terms")
                 order.notes = _("Terms & Conditions: %s", baseurl)
+                _debug.logic("notes_computed", order=order, source="terms_url")
             elif not is_html_empty(company.invoice_terms):
                 order_ctx = order_company
                 if order.partner_id.lang:
                     order_ctx = order_company.with_context(lang=order.partner_id.lang)
                 order.notes = order_ctx.env.company.invoice_terms
+                _debug.logic("notes_computed", order=order, source="invoice_terms")
 
     @api.depends("partner_id")
     def _compute_partner_invoice_id(self):
         addresses = self.partner_id._address_get_multi(["invoice"])
+        _debug.perf.count(
+            "invoice_addresses_read", orders=len(self), partners=len(addresses)
+        )
         for order in self:
             order.partner_invoice_id = (
                 addresses[order.partner_id.id]["invoice"] if order.partner_id else False
@@ -450,6 +473,9 @@ class SaleOrder(models.Model):
     @api.depends("partner_id")
     def _compute_partner_shipping_id(self):
         addresses = self.partner_id._address_get_multi(["delivery"])
+        _debug.perf.count(
+            "delivery_addresses_read", orders=len(self), partners=len(addresses)
+        )
         for order in self:
             order.partner_shipping_id = (
                 addresses[order.partner_id.id]["delivery"]
@@ -461,6 +487,12 @@ class SaleOrder(models.Model):
         "commercial_partner_id", "company_id", "allow_external_delivery_address"
     )
     def _compute_partner_address_domains(self):
+        if _debug.logic.enabled:
+            _debug.logic(
+                "address_domains",
+                orders=self,
+                external_allowed=self.filtered("allow_external_delivery_address"),
+            )
         for order in self:
             company_ids = [False, order.company_id.id] if order.company_id else [False]
             company_term = ("company_id", "in", company_ids)
@@ -494,12 +526,17 @@ class SaleOrder(models.Model):
     def _compute_pricelist_id(self):
         for order in self:
             if order.state != "draft":
+                _debug.logic("pricelist_kept", order=order, reason="not_draft")
                 continue
             if not order.partner_id:
                 order.pricelist_id = False
+                _debug.logic("pricelist_cleared", order=order, reason="no_partner")
                 continue
             order = order.with_company(order.company_id)
             order.pricelist_id = order.partner_id.property_product_pricelist
+            _debug.logic(
+                "pricelist_from_partner", order=order, pricelist=order.pricelist_id
+            )
 
     @api.depends("partner_id", "client_order_ref", "origin")
     def _compute_duplicated_order_ids(self):
@@ -534,7 +571,16 @@ class SaleOrder(models.Model):
                 )
             if fpos_id_before != cache[key] and order.line_ids:
                 order.show_update_fpos = True
+                _debug.logic(
+                    "fiscal_position_changed",
+                    order=order,
+                    before=fpos_id_before,
+                    after=cache[key],
+                )
             order.fiscal_position_id = cache[key]
+        _debug.perf.count(
+            "fiscal_positions_resolved", orders=len(self), keys=len(cache)
+        )
 
     @api.depends(
         "state",
@@ -544,6 +590,10 @@ class SaleOrder(models.Model):
         "line_ids.product_id.type",
     )
     def _compute_date_planned(self):
+        if _debug.perf.enabled:
+            _debug.perf.count(
+                "date_planned_computed", orders=len(self), lines=len(self.line_ids)
+            )
         for order in self:
             if order.state == "cancel":
                 order.date_planned = False
@@ -671,6 +721,9 @@ class SaleOrder(models.Model):
             return None
 
         if self.line_ids and self.state == "draft":
+            _debug.logic(
+                "company_change_warning", order=self._origin, company=self.company_id
+            )
             return {
                 "warning": {
                     "title": _("Warning for the change of your quotation's company"),
@@ -690,6 +743,7 @@ class SaleOrder(models.Model):
             and self.date_planned
             and self.date_commitment < self.date_planned
         ):
+            _debug.logic("commitment_date_too_soon", order=self._origin)
             return {
                 "warning": {
                     "title": _("Requested date is too soon."),
@@ -723,6 +777,11 @@ class SaleOrder(models.Model):
                 if selected_combo_items and len(selected_combo_items) != len(
                     line.product_template_id.sudo().combo_ids,
                 ):
+                    _debug.logic(
+                        "combo_selection_mismatch",
+                        order=self._origin,
+                        selected=len(selected_combo_items),
+                    )
                     raise ValidationError(
                         _(
                             "The number of selected combo items must match the number of available combo choices.",
@@ -770,6 +829,12 @@ class SaleOrder(models.Model):
 
                 line.selected_combo_items = False
                 self.line_ids = delete_commands + create_commands + update_commands
+                _debug.pipeline(
+                    "combo_lines_rebuilt",
+                    order=self._origin,
+                    deleted=len(delete_commands),
+                    created=len(create_commands),
+                )
             elif (
                 combo_item_lines
                 and combo_item_lines.combo_item_id.combo_id
@@ -802,6 +867,7 @@ class SaleOrder(models.Model):
     def action_invoice_matching(self):
         self.check_singleton()
         product_ids = self.line_ids.product_id.ids
+        _debug.logic("invoice_matching_action", order=self, products=len(product_ids))
         return {
             "name": _("Invoice Matching"),
             "type": "ir.actions.act_window",
@@ -825,9 +891,12 @@ class SaleOrder(models.Model):
         }
 
     def action_confirm(self):
-        res = super().action_confirm()
+        with _debug.perf("action_confirm", cr=self.env.cr, orders=self):
+            res = super().action_confirm()
+        _debug.lifecycle("order_confirmed", orders=self)
 
         if self.env.context.get("send_email"):
+            _debug.pipeline("confirmation_mail_requested", orders=self)
             self._send_mail_order_confirmation()
             return res
 
@@ -840,6 +909,7 @@ class SaleOrder(models.Model):
 
     def action_draft(self):
         orders = self.filtered(lambda s: s.state in ["cancel", "draft"])
+        _debug.lifecycle("reset_to_draft", requested=self, reset=orders)
         return orders.write(
             {
                 "state": "draft",
@@ -863,9 +933,11 @@ class SaleOrder(models.Model):
 
     def action_quotation_sent(self):
         if any(order.state != "draft" for order in self):
+            _debug.logic("mark_sent_refused", orders=self, reason="not_draft")
             raise UserError(_("Only draft orders can be marked as sent directly."))
 
         self.write({"sent": True})
+        _debug.lifecycle("quotation_marked_sent", orders=self)
 
     def action_send_quotation(self):
         action = self._action_send_by_email()
@@ -875,6 +947,7 @@ class SaleOrder(models.Model):
             and self.env.is_admin()
             and not self.env.company.external_report_layout_id
         ):
+            _debug.logic("layout_configurator_shown", order=self)
             layout_action = self.env[
                 "ir.actions.report"
             ]._prepare_layout_configurator_action(
@@ -895,11 +968,15 @@ class SaleOrder(models.Model):
             )
         else:
             message = _("Product prices have been recomputed.")
+        _debug.lifecycle("prices_updated", order=self, pricelist=self.pricelist_id)
         self.message_post(body=message)
 
     def action_update_taxes(self):
         self.check_singleton()
         self._recompute_taxes()
+        _debug.lifecycle(
+            "taxes_updated", order=self, fiscal_position=self.fiscal_position_id
+        )
         if self.partner_id:
             self.message_post(
                 body=_(
@@ -925,6 +1002,9 @@ class SaleOrder(models.Model):
 
     def _merge_check_selection(self, quotations):
         if len(quotations) < 2:
+            _debug.logic(
+                "merge_refused", quotations=quotations, reason="fewer_than_two"
+            )
             raise UserError(
                 _("Please select at least two quotations to merge."),
             )
@@ -948,6 +1028,7 @@ class SaleOrder(models.Model):
 
     def _create_upsell_activity(self):
         self.activity_unlink(["mail.mail_activity_data_todo"])
+        _debug.pipeline("upsell_activities", orders=self)
         for order in self:
             order_ref = order._get_html_link()
             customer_ref = order.partner_id._get_html_link()
@@ -963,6 +1044,7 @@ class SaleOrder(models.Model):
 
     def _discard_tracking(self):
         self.check_singleton()
+        _debug.logic("discard_tracking_checked", order=self, state=self.state)
         return (
             self.state == "draft"
             and request
@@ -1049,6 +1131,12 @@ class SaleOrder(models.Model):
                 lambda sol: not sol._can_be_invoiced_alone(),
             )
             if invoiceable_lines and invoiceable_lines == auxiliary_lines:
+                _debug.logic(
+                    "outstanding_invoice_state",
+                    order=self,
+                    state="no",
+                    reason="only_auxiliary_lines",
+                )
                 return "no"
         return "to do"
 
@@ -1066,6 +1154,7 @@ class SaleOrder(models.Model):
                 if g[0] in ("portal_customer", "portal", "follower", "customer")
             ]:
                 group[2]["has_button_access"] = False
+            _debug.logic("notify_groups", order=self, mode="proforma")
             return
 
         try:
@@ -1090,6 +1179,12 @@ class SaleOrder(models.Model):
                 access_opt["title"] = _("Accept & Pay Quotation")
             elif self.state == "draft":
                 access_opt["title"] = _("View Quotation")
+            _debug.logic(
+                "portal_button",
+                order=self,
+                title=access_opt.get("title"),
+                tx_pending=is_tx_pending,
+            )
 
     def _get_phone_number_fields(self):
         return []
@@ -1100,6 +1195,9 @@ class SaleOrder(models.Model):
             and self.env.cache.contains(self, self._fields["state"])
             and self._discard_tracking()
         ):
+            _debug.logic(
+                "tracking_discarded", order=self, reason="catalog_skip_tracking"
+            )
             tracking = self.env.cr.precommit.data.get(f"mail.tracking.{self._name}")
             if tracking is not None:
                 tracking.pop(self.id, None)
@@ -1143,6 +1241,12 @@ class SaleOrder(models.Model):
 
     def _prepare_invoice_line_commands(self, invoiceable_lines, sequence=10):
         if all(line.display_type for line in invoiceable_lines):
+            _debug.logic(
+                "invoice_line_commands_empty",
+                order=self,
+                reason="all_display_type",
+                lines=invoiceable_lines,
+            )
             return [], sequence
 
         commands = []
@@ -1170,6 +1274,13 @@ class SaleOrder(models.Model):
                 for vals in line._prepare_aml_vals_list(**optional_values)
             )
             sequence += 1
+        _debug.pipeline(
+            "invoice_line_commands",
+            order=self,
+            lines=len(invoiceable_lines),
+            commands=len(commands),
+            down_payment_section=down_payment_section_added,
+        )
         return commands, sequence
 
     def _group_invoice_vals(self, invoice_vals_list):
@@ -1210,11 +1321,23 @@ class SaleOrder(models.Model):
                 },
             )
             new_invoice_vals_list.append(ref_invoice_vals)
+        _debug.pipeline(
+            "invoice_vals_grouped",
+            orders=self,
+            before=len(invoice_vals_list),
+            after=len(new_invoice_vals_list),
+            keys=format_list(self.env, invoice_grouping_keys),
+        )
         return new_invoice_vals_list
 
     def _post_group_invoice_vals(self, invoice_vals_list):
         invoice_vals_list = super()._post_group_invoice_vals(invoice_vals_list)
         if len(invoice_vals_list) < len(self):
+            _debug.pipeline(
+                "invoice_line_sequences_renumbered",
+                orders=self,
+                invoices=len(invoice_vals_list),
+            )
             SaleOrderLine = self.env["sale.order.line"]
             for invoice in invoice_vals_list:
                 for sequence, line in enumerate(invoice["invoice_line_ids"], start=1):
@@ -1228,6 +1351,9 @@ class SaleOrder(models.Model):
         if final and (
             moves_to_switch := moves.sudo().filtered(lambda m: m.amount_total < 0)
         ):
+            _debug.lifecycle(
+                "negative_moves_switched", order=self, moves=moves_to_switch
+            )
             moves_to_switch.action_switch_move_type()
             self.invoice_ids._set_reversed_entry(moves_to_switch)
 
@@ -1290,6 +1416,13 @@ class SaleOrder(models.Model):
                     subsection_line_ids = []
                 invoiceable_line_ids.append(line.id)
 
+        _debug.perf.count(
+            "invoiceable_lines",
+            order=self,
+            lines=len(self.line_ids),
+            invoiceable=len(invoiceable_line_ids),
+            down_payments=len(down_payment_line_ids),
+        )
         return self.line_ids.browse(
             invoiceable_line_ids + down_payment_line_ids,
         ).with_prefetch(self.line_ids._prefetch_ids)
@@ -1320,6 +1453,7 @@ class SaleOrder(models.Model):
                 or (tx.state == "done" and not tx.payment_id.is_invoice_reconciled)
             ),
         )
+        _debug.pipeline("invoice_vals", order=self, transactions=txs_to_be_linked)
         values.update(
             {
                 "partner_shipping_id": self.partner_shipping_id.id,
@@ -1337,6 +1471,7 @@ class SaleOrder(models.Model):
         return values
 
     def _force_lines_to_invoice_policy_order(self):
+        _debug.lifecycle("invoice_policy_forced", order=self, lines=self.line_ids)
         for line in self.line_ids:
             if line.state == "done":
                 line.qty_to_invoice = line.product_qty - line.qty_invoiced
@@ -1350,6 +1485,13 @@ class SaleOrder(models.Model):
             suggested_amount = prepayment_amount
         else:
             suggested_amount = remaining_balance
+        _debug.logic(
+            "payment_link_amount",
+            order=self,
+            suggested=suggested_amount,
+            prepayment=prepayment_amount,
+            remaining=remaining_balance,
+        )
         return {
             "currency_id": self.currency_id.id,
             "partner_id": self.partner_invoice_id.id,
@@ -1388,11 +1530,19 @@ class SaleOrder(models.Model):
         self.check_singleton()
         payment_utils.check_rights_on_recordset(self)
 
+        _debug.lifecycle(
+            "transactions_capture", order=self, transactions=self.sudo().transaction_ids
+        )
         return self.sudo().transaction_ids.action_capture()
 
     def payment_action_void(self):
         payment_utils.check_rights_on_recordset(self)
 
+        _debug.lifecycle(
+            "transactions_void",
+            order=self,
+            transactions=self.sudo().authorized_transaction_ids,
+        )
         self.sudo().authorized_transaction_ids.action_void()
 
     def _has_to_be_paid(self):
@@ -1426,13 +1576,14 @@ class SaleOrder(models.Model):
         return self.env.ref("sale.action_quotations_with_onboarding")
 
     def _get_catalog_product_data(self, products, **kwargs):
-        pricelist = self.pricelist_id._get_products_price(
-            quantity=1.0,
-            products=products,
-            currency=self.currency_id,
-            date=self.date_order,
-            **kwargs,
-        )
+        with _debug.perf("catalog_product_data", cr=self.env.cr, products=products):
+            pricelist = self.pricelist_id._get_products_price(
+                quantity=1.0,
+                products=products,
+                currency=self.currency_id,
+                date=self.date_order,
+                **kwargs,
+            )
         has_warning_group = self.env.user.has_group("sale.group_warning_sale")
         catalog_data = {}
         for product in products:
@@ -1488,6 +1639,7 @@ class SaleOrder(models.Model):
             self.line_ids.product_id.product_document_ids
             | self.line_ids.product_template_id.product_document_ids
         )
+        _debug.perf.count("product_documents", order=self, documents=documents)
         return self._filter_product_documents(documents).sorted()
 
     def _add_base_lines_for_early_payment_discount(self):
@@ -1499,6 +1651,7 @@ class SaleOrder(models.Model):
             and self.payment_term_id.discount_percentage
         ):
             percentage = self.payment_term_id.discount_percentage
+            _debug.logic("early_payment_discount", order=self, percentage=percentage)
             currency = self.currency_id or self.company_id.currency_id
             for line in self.line_ids.filtered(lambda x: not x.display_type):
                 line_amount_after_discount = (line.price_subtotal / 100) * percentage
@@ -1550,6 +1703,7 @@ class SaleOrder(models.Model):
             order="date_order ASC",
         )
         self.env["ir.cron"]._commit_progress(remaining=len(pending_email_orders))
+        _debug.pipeline("cron_pending_emails", orders=pending_email_orders)
         for order in pending_email_orders:
             order._send_mail_order_notification(
                 order.pending_email_template_id,
@@ -1558,6 +1712,7 @@ class SaleOrder(models.Model):
             order.pending_email_template_id = None
             remaining_time = self.env["ir.cron"]._commit_progress(processed=1)
             if not remaining_time:
+                _debug.pipeline("cron_pending_emails_yielded", order=order)
                 break
 
     def _generate_downpayment_invoices(self):
@@ -1573,6 +1728,9 @@ class SaleOrder(models.Model):
             )
             generated_invoices |= downpayment_wizard._create_invoices(order)
 
+        _debug.lifecycle(
+            "downpayment_invoices", orders=self, invoices=generated_invoices
+        )
         return generated_invoices
 
     def _get_confirmation_template(self):
@@ -1591,8 +1749,10 @@ class SaleOrder(models.Model):
             .exists()
         )
         if default_confirmation_template:
+            _debug.logic("confirmation_template", order=self, by="config_parameter")
             return default_confirmation_template
         else:
+            _debug.logic("confirmation_template", order=self, by="default_xmlid")
             return self.env.ref(
                 "sale.mail_template_sale_confirmation",
                 raise_if_not_found=False,
@@ -1614,16 +1774,19 @@ class SaleOrder(models.Model):
     def _get_mail_template(self):
         self.check_singleton()
         if self.env.context.get("proforma"):
+            _debug.logic("mail_template", order=self, by="proforma")
             return self.env.ref(
                 "sale.email_template_proforma",
                 raise_if_not_found=False,
             )
         elif self.state != "done":
+            _debug.logic("mail_template", order=self, by="quotation")
             return self.env.ref(
                 "sale.email_template_edi_sale",
                 raise_if_not_found=False,
             )
         else:
+            _debug.logic("mail_template", order=self, by="confirmation")
             return self._get_confirmation_template()
 
     @api.model
@@ -1695,16 +1858,18 @@ class SaleOrder(models.Model):
 
     def _recompute_prices(self):
         lines_to_recompute = self._get_order_lines_price_updatable()
-        lines_to_recompute.invalidate_recordset(["pricelist_item_id"])
-        lines_to_recompute.discount = 0.0
-        lines_to_recompute.with_context(
-            force_price_recomputation=True,
-        )._compute_price_and_discount()
+        with _debug.perf("recompute_prices", cr=self.env.cr, lines=lines_to_recompute):
+            lines_to_recompute.invalidate_recordset(["pricelist_item_id"])
+            lines_to_recompute.discount = 0.0
+            lines_to_recompute.with_context(
+                force_price_recomputation=True,
+            )._compute_price_and_discount()
         self.show_update_pricelist = False
 
     def _recompute_taxes(self):
         lines_to_recompute = self.line_ids.filtered(lambda line: not line.display_type)
-        lines_to_recompute._compute_tax_ids()
+        with _debug.perf("recompute_taxes", cr=self.env.cr, lines=lines_to_recompute):
+            lines_to_recompute._compute_tax_ids()
         self.show_update_fpos = False
 
     def _send_mail_order_confirmation(self):
@@ -1716,6 +1881,7 @@ class SaleOrder(models.Model):
         self.check_singleton()
 
         if not mail_template:
+            _debug.logic("order_mail_skipped", order=self, reason="no_template")
             return
 
         if self.env.su:
@@ -1729,7 +1895,16 @@ class SaleOrder(models.Model):
         if async_send and cron_enabled and allow_deferred_sending:
             self.pending_email_template_id = mail_template
             cron._trigger()
+            _debug.lifecycle("order_mail_deferred", order=self, template=mail_template)
         else:
+            _debug.lifecycle(
+                "order_mail_posted",
+                order=self,
+                template=mail_template,
+                async_send=async_send,
+                cron_enabled=bool(cron_enabled),
+                deferrable=allow_deferred_sending,
+            )
             self.with_context(force_send=True).message_post_with_source(
                 mail_template,
                 email_layout_xmlid="mail.mail_notification_layout_with_responsible_signature",
@@ -1796,6 +1971,11 @@ class SaleOrder(models.Model):
                     ),
                 )
 
+            _debug.logic(
+                "confirm_refused",
+                confirmed=confirmed_orders,
+                cancelled=cancelled_orders,
+            )
             raise UserError(
                 _(
                     "Cannot confirm sale orders that are not in Quotation (draft) state:\n\n%s\n\n"

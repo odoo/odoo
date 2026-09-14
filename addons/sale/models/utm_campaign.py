@@ -1,5 +1,8 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
+
+_debug = DebugLog(__name__)
 
 
 class UtmCampaign(models.Model):
@@ -41,6 +44,9 @@ class UtmCampaign(models.Model):
             ["__count"],
         )
         data_map = {campaign.id: count for campaign, count in quotation_data}
+        _debug.perf.count(
+            "campaign_quotation_count", campaigns=len(self), rows=len(data_map)
+        )
         for campaign in self:
             campaign.quotation_count = data_map.get(campaign.id, 0)
 
@@ -72,6 +78,9 @@ class UtmCampaign(models.Model):
         data_map = {
             datum["campaign_id"]: datum["price_subtotal"] for datum in query_res
         }
+        _debug.perf.count(
+            "campaign_invoiced_amount", campaigns=len(self), rows=len(data_map)
+        )
         for campaign in self:
             campaign.invoiced_amount = data_map.get(campaign.id, 0)
 
@@ -88,6 +97,7 @@ class UtmCampaign(models.Model):
             "account.action_move_journal_line"
         )
         invoices = self.env["account.move"].search([("campaign_id", "=", self.id)])
+        _debug.logic("campaign_invoiced_action", campaign=self, invoices=invoices)
         action["context"] = {"create": False, "edit": False, "view_no_maturity": True}
         action["domain"] = [
             ("id", "in", invoices.ids),

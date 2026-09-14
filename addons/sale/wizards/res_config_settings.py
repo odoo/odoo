@@ -1,4 +1,7 @@
 from odoo import _, api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ResConfigSettings(models.TransientModel):
@@ -124,6 +127,9 @@ class ResConfigSettings(models.TransientModel):
     def _onchange_group_product_variant(self):
         if self.module_sale_product_matrix and not self.group_product_variant:
             self.module_sale_product_matrix = False
+            _debug.logic(
+                "module_disabled", module="sale_product_matrix", by="no_product_variant"
+            )
 
     @api.onchange("portal_confirmation_pay")
     def _onchange_portal_confirmation_pay(self):
@@ -153,7 +159,16 @@ class ResConfigSettings(models.TransientModel):
             if companies:
                 companies.sale_order_template_id = False
         super().set_values()
+        _debug.lifecycle(
+            "sale_settings_saved",
+            invoice_policy=self.default_invoice_policy,
+            lock_confirmed=self.lock_confirmed_so,
+            automatic_invoice=self.automatic_invoice,
+        )
         if self.default_invoice_policy != "ordered":
+            _debug.logic(
+                "automatic_invoice_forced_off", reason="invoice_policy_not_ordered"
+            )
             self.env["ir.config_parameter"].set_param(
                 key="sale.automatic_invoice", value=False
             )

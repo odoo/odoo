@@ -2,7 +2,10 @@ from collections import defaultdict
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.translate import _
+
+_debug = DebugLog(__name__)
 
 
 class ProductTemplate(models.Model):
@@ -97,6 +100,12 @@ class ProductTemplate(models.Model):
                     fields=["id", "product_id"],
                 )
             )
+            _debug.perf.count(
+                "product_company_probe",
+                company=target_company,
+                products=products,
+                offending_lines=len(so_lines),
+            )
             if so_lines:
                 used_products = [sol["product_id"][1] for sol in so_lines]
                 raise ValidationError(
@@ -116,6 +125,7 @@ class ProductTemplate(models.Model):
     def _check_incompatible_types(self):
         incompatible_types = self._get_incompatible_types()
         if len(incompatible_types) < 2:
+            _debug.logic("incompatible_types_skipped", declared=len(incompatible_types))
             return
         fields = (
             self.env["ir.model.fields"]
@@ -134,6 +144,11 @@ class ProductTemplate(models.Model):
         for val in values:
             incompatible_fields = [f for f in incompatible_types if val[f]]
             if len(incompatible_fields) > 1:
+                _debug.logic(
+                    "incompatible_types_rejected",
+                    product=val["name"],
+                    fields=",".join(incompatible_fields),
+                )
                 raise ValidationError(
                     _(
                         "The product (%(product)s) has incompatible values: %(value_list)s",
@@ -161,6 +176,9 @@ class ProductTemplate(models.Model):
     def _compute_sales_count(self):
         variants = self.with_context(active_test=False).product_variant_ids
         count_by_variant = {variant.id: variant.sales_count for variant in variants}
+        _debug.perf.count(
+            "template_sales_count", templates=len(self), variants=len(variants)
+        )
         for template in self:
             template.sales_count = template.uom_id.round(
                 sum(
@@ -191,6 +209,11 @@ class ProductTemplate(models.Model):
     def _onchange_type(self):
         res = super()._onchange_type()
         if self._origin and self.sales_count > 0:
+            _debug.logic(
+                "template_type_change_warning",
+                template=self._origin,
+                sold=self.sales_count,
+            )
             res["warning"] = {
                 "title": _("Warning"),
                 "message": _(
@@ -250,6 +273,11 @@ class ProductTemplate(models.Model):
                     )
                 ):
                     has_optional_products = True
+                    _debug.logic(
+                        "optional_products_found",
+                        template=self,
+                        optional=optional_product,
+                    )
                     break
             res.update(
                 {
@@ -292,6 +320,12 @@ class ProductTemplate(models.Model):
         pricelist,
         **kwargs,
     ):
+        _debug.perf.count(
+            "configurator_price",
+            product=product_or_template,
+            pricelist=pricelist,
+            quantity=quantity,
+        )
         return pricelist._get_product_price_rule(
             product_or_template,
             quantity=quantity,
@@ -331,6 +365,12 @@ class ProductTemplate(models.Model):
         return tooltip
 
     def _prepare_invoicing_tooltip(self):
+        _debug.logic(
+            "invoicing_tooltip",
+            template=self,
+            policy=self.invoice_policy,
+            type=self.type,
+        )
         if self.invoice_policy == "transferred" and self.type != "consu":
             return _(
                 "Invoice after delivery, based on quantities delivered, not ordered."

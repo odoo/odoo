@@ -1,5 +1,8 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, formatLang
+
+_debug = DebugLog(__name__)
 
 
 class MixinOrderDocumentMatch(models.AbstractModel):
@@ -112,6 +115,7 @@ class MixinOrderDocumentMatch(models.AbstractModel):
     @api.model
     def _get_move_types(self):
         if not self._move_types:
+            _debug.logic("move_types_undeclared", model=self._name)
             raise NotImplementedError(f"{self._name} must declare _move_types")
         return self._move_types
 
@@ -162,6 +166,7 @@ class MixinOrderDocumentMatch(models.AbstractModel):
     @api.model
     def _get_order_table(self):
         if not self._order_table:
+            _debug.logic("order_table_undeclared", model=self._name)
             raise NotImplementedError(f"{self._name} must declare _order_table")
         return self._order_table
 

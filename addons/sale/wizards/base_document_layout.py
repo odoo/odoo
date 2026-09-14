@@ -1,4 +1,7 @@
 from odoo import models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class BaseDocumentLayout(models.TransientModel):
@@ -8,6 +11,7 @@ class BaseDocumentLayout(models.TransientModel):
         if self.env.context.get(
             "active_model"
         ) == "sale.order" and self.env.context.get("active_id"):
+            _debug.logic("layout_preview", by="sale_order")
             return "sale.quote_document_layout_preview"
         return super()._get_preview_template()
 
@@ -19,4 +23,5 @@ class BaseDocumentLayout(models.TransientModel):
             res["doc"] = self.env["sale.order"].browse(
                 self.env.context.get("active_id"),
             )
+            _debug.logic("layout_render_doc", order=res["doc"])
         return res

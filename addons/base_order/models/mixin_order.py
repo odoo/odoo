@@ -4,8 +4,11 @@ from datetime import timedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command, Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.models import MAGIC_COLUMNS
 from odoo.tools import SQL, OrderedSet, format_list
+
+_debug = DebugLog(__name__)
 
 
 class MixinOrder(models.AbstractModel):
@@ -307,6 +310,11 @@ class MixinOrder(models.AbstractModel):
                     ["order_id:array_agg"],
                 )
             }
+        _debug.perf.count(
+            "show_comparison",
+            orders=len(self),
+            companies=len(order_by_product_by_company),
+        )
         for order in self:
             order_by_product = order_by_product_by_company.get(order.company_id, {})
             order.show_comparison = any(
@@ -330,6 +338,7 @@ class MixinOrder(models.AbstractModel):
 
     def _get_order_type(self):
         if not self._order_type:
+            _debug.logic("order_type_undeclared", model=self._name)
             raise NotImplementedError(f"{self._name} must declare _order_type")
         return self._order_type
 
@@ -378,10 +387,18 @@ class MixinOrder(models.AbstractModel):
                 unnamed, names or [False] * len(unnamed), strict=True
             ):
                 vals["name"] = name
+        _debug.pipeline(
+            "order_names_from_sequence",
+            model=self._name,
+            rows=len(vals_list),
+            batches=len(unnamed_by_key),
+        )
+        _debug.lifecycle("create", model=self._name, rows=len(vals_list))
         return super().create(vals_list)
 
     def write(self, vals):
         self._check_write_guards(vals)
+        _debug.lifecycle("write", orders=self, fields=list(vals))
         return super().write(vals)
 
     def copy_data(self, default=None):
@@ -395,6 +412,11 @@ class MixinOrder(models.AbstractModel):
                     Command.create(line_vals)
                     for line_vals in order._get_order_lines_copiable().copy_data()
                 ]
+                _debug.pipeline(
+                    "order_lines_copied",
+                    order=order,
+                    lines=len(vals["line_ids"]),
+                )
         return vals_list
 
     def _get_order_lines_copiable(self):
@@ -404,6 +426,7 @@ class MixinOrder(models.AbstractModel):
     def _unlink_except_draft_or_cancel(self):
         confirmed = self.filtered(lambda o: o.state not in ("draft", "cancel"))
         if confirmed:
+            _debug.logic("unlink_refused", orders=confirmed, reason="not_draft_cancel")
             raise UserError(
                 _(
                     "Cannot delete confirmed %(desc)s. Cancel them first:\n%(orders)s",
@@ -426,6 +449,12 @@ class MixinOrder(models.AbstractModel):
                         p.company_id and p.company_id in invalid
                     ),
                 )
+                _debug.logic(
+                    "company_consistency_refused",
+                    order=order,
+                    products=bad_products,
+                    companies=invalid_companies,
+                )
                 raise ValidationError(
                     _(
                         "Your %(desc)s contains products from company %(product_company)s "
@@ -443,6 +472,7 @@ class MixinOrder(models.AbstractModel):
 
     @api.depends("company_id", "currency_id", "date_order")
     def _compute_currency_rate(self):
+        _debug.perf.count("currency_rate", orders=len(self))
         for order in self:
             order.currency_rate = self.env["res.currency"]._get_conversion_rate(
                 from_currency=order.company_id.currency_id,
@@ -501,6 +531,12 @@ class MixinOrder(models.AbstractModel):
     def _compute_duplicated_order_ids(self):
         draft_orders = self.filtered(lambda order: order.state == "draft")
         order_to_duplicate_orders = draft_orders._get_duplicate_orders()
+        _debug.perf.count(
+            "duplicated_orders",
+            orders=len(self),
+            draft=len(draft_orders),
+            with_duplicates=len(order_to_duplicate_orders),
+        )
         for order in draft_orders:
             duplicate_ids = order_to_duplicate_orders.get(order.id, [])
             order.duplicated_order_ids = [Command.set(duplicate_ids)]
@@ -620,8 +656,10 @@ class MixinOrder(models.AbstractModel):
             lambda invoice: invoice.state == "draft",
         )
         if draft_invoices:
+            _debug.lifecycle("draft_invoices_cancelled", invoices=draft_invoices)
             draft_invoices.action_cancel()
         self.write({"state": "cancel"})
+        _debug.lifecycle("order_cancelled", orders=self)
         return True
 
     def _get_lock_setting_field(self):
@@ -634,8 +672,10 @@ class MixinOrder(models.AbstractModel):
     def _is_lock_required(self):
         self.check_singleton()
         if self.company_id[self._get_lock_setting_field()] == "lock":
+            _debug.logic("lock_required", order=self, by="company_setting")
             return True
         group = self._auto_lock_group
+        _debug.logic("lock_required_check", order=self, group=group or "none")
         return bool(group) and self._get_lock_setting_user().has_group(group)
 
     def _is_readonly(self):
@@ -663,6 +703,11 @@ class MixinOrder(models.AbstractModel):
             return
         confirmed_orders = orders_wrong_state.filtered(lambda o: o.state == "done")
         cancelled_orders = orders_wrong_state.filtered(lambda o: o.state == "cancel")
+        _debug.logic(
+            "confirm_refused",
+            confirmed=confirmed_orders,
+            cancelled=cancelled_orders,
+        )
         error_parts = []
         if confirmed_orders:
             error_parts.append(
@@ -695,6 +740,9 @@ class MixinOrder(models.AbstractModel):
             lambda order: not order.line_ids and order._requires_lines_to_confirm()
         )
         if orders_without_lines:
+            _debug.logic(
+                "confirm_refused", orders=orders_without_lines, reason="no_lines"
+            )
             raise UserError(
                 _(
                     "Cannot confirm %(desc)s without lines: %(orders)s\n\n"
@@ -718,6 +766,11 @@ class MixinOrder(models.AbstractModel):
         )
         if not orders_without_line_product:
             return
+        _debug.logic(
+            "confirm_refused",
+            orders=orders_without_line_product,
+            reason="line_without_product",
+        )
         error_details = []
         for order in orders_without_line_product:
             missing_product_lines = order.line_ids.filtered(
@@ -756,6 +809,9 @@ class MixinOrder(models.AbstractModel):
     def _check_cancel_state(self):
         cancelled_orders = self.filtered(lambda order: order.state == "cancel")
         if cancelled_orders:
+            _debug.logic(
+                "cancel_refused", orders=cancelled_orders, reason="already_cancelled"
+            )
             raise UserError(
                 _(
                     "The following %(desc)s are already cancelled: %(orders)s",
@@ -770,6 +826,7 @@ class MixinOrder(models.AbstractModel):
     def _check_cancel_except_locked(self):
         orders_locked = self.filtered(lambda order: order.locked)
         if orders_locked:
+            _debug.logic("cancel_refused", orders=orders_locked, reason="locked")
             raise UserError(
                 _(
                     "Cannot cancel locked %(desc)s: %(orders)s. "
@@ -781,9 +838,11 @@ class MixinOrder(models.AbstractModel):
 
     def action_confirm(self):
         self._check_confirm_allowed()
-        self.write(self._prepare_confirmation_values())
-        self.with_context(self._get_confirmation_context())._action_confirm()
-        self.filtered(lambda order: order._is_lock_required()).action_lock()
+        with _debug.perf("action_confirm", cr=self.env.cr, orders=self):
+            self.write(self._prepare_confirmation_values())
+            self.with_context(self._get_confirmation_context())._action_confirm()
+            self.filtered(lambda order: order._is_lock_required()).action_lock()
+        _debug.lifecycle("order_confirmed", orders=self)
         return True
 
     def action_cancel(self):
@@ -791,18 +850,22 @@ class MixinOrder(models.AbstractModel):
         return self._action_cancel()
 
     def action_draft(self):
+        _debug.lifecycle("order_reset_to_draft", orders=self)
         self.write({"state": "draft"})
         return True
 
     def action_lock(self):
+        _debug.lifecycle("order_locked", orders=self)
         self.write({"locked": True})
         return True
 
     def action_unlock(self):
+        _debug.lifecycle("order_unlocked", orders=self)
         self.write({"locked": False})
         return True
 
     def action_acknowledge(self):
+        _debug.lifecycle("order_acknowledged", orders=self)
         self.write({"acknowledged": True})
 
     def _mark_as_printed(self):
@@ -810,6 +873,7 @@ class MixinOrder(models.AbstractModel):
             vals = {"count_print": order.count_print + 1}
             if order.state == "draft":
                 vals["printed_before"] = True
+            _debug.lifecycle("order_printed", order=order, count=vals["count_print"])
             order.write(vals)
 
     def action_view_business_doc(self):
@@ -873,6 +937,12 @@ class MixinOrder(models.AbstractModel):
                 if order._is_locked_field_changed(name, vals[name])
             }
             if forbidden:
+                _debug.logic(
+                    "write_refused",
+                    order=order,
+                    reason="locked",
+                    fields=",".join(sorted(forbidden)),
+                )
                 raise UserError(
                     _(
                         "This order is locked and cannot be modified. "
@@ -915,6 +985,13 @@ class MixinOrder(models.AbstractModel):
                 & changed
             )
             if frozen:
+                _debug.logic(
+                    "write_refused",
+                    order=order,
+                    reason="state_frozen_field",
+                    fields=",".join(sorted(frozen)),
+                    state=target_state or order.state,
+                )
                 raise UserError(
                     _(
                         "You cannot modify %(fields)s on a %(state)s order.",
@@ -931,6 +1008,13 @@ class MixinOrder(models.AbstractModel):
             if order.state == target:
                 continue
             if target not in self._STATE_TRANSITIONS.get(order.state, set()):
+                _debug.logic(
+                    "write_refused",
+                    order=order,
+                    reason="illegal_state_transition",
+                    src=order.state,
+                    dst=target,
+                )
                 raise UserError(
                     _(
                         "Cannot move order %(name)s from %(src)s to %(dst)s.",
@@ -963,6 +1047,9 @@ class MixinOrder(models.AbstractModel):
             return
         if vals["user_id"] == self.env.uid:
             return
+        _debug.logic(
+            "write_refused", orders=self, reason="reassign_without_all_documents_group"
+        )
         raise AccessError(
             _(
                 "You are limited to your own documents, so you may only make "
@@ -987,6 +1074,9 @@ class MixinOrder(models.AbstractModel):
         group = self._get_warning_group()
         if group and not self.env.user.has_group(group):
             setattr(self, target_field, "")
+            _debug.logic(
+                "warnings_skipped", orders=self, field=target_field, reason="no_group"
+            )
             return
 
         partner_field = self._get_partner_warn_field()
@@ -1005,6 +1095,13 @@ class MixinOrder(models.AbstractModel):
                     if msg := line[line_field]:
                         warnings.add(line.product_id.display_name + " - " + msg)
             setattr(order, target_field, "\n".join(warnings))
+            if _debug.logic.enabled and warnings:
+                _debug.logic(
+                    "order_warnings",
+                    order=order,
+                    field=target_field,
+                    count=len(warnings),
+                )
 
     def _get_duplicate_ref_field(self):
         return "partner_ref"
@@ -1015,12 +1112,14 @@ class MixinOrder(models.AbstractModel):
             lambda order: order.id and (order[ref_field] or order.origin),
         )
         if not orders:
+            _debug.logic("duplicate_probe_skipped", orders=self, reason="no_reference")
             return {}
 
         self.flush_model(
             ["company_id", "partner_id", "name", ref_field, "origin", "state"],
         )
 
+        _debug.perf.count("duplicate_orders_probe", orders=orders)
         result = self.env.execute_query(
             SQL(
                 """
@@ -1051,6 +1150,7 @@ class MixinOrder(models.AbstractModel):
         return self._mark_sent_context_key
 
     def _mark_as_sent(self):
+        _debug.lifecycle("order_marked_sent", orders=self)
         for order in self:
             order.with_context(**order._get_mark_as_sent_context()).write(
                 {"sent": True, "count_sent": order.count_sent + 1},
@@ -1084,6 +1184,9 @@ class MixinOrder(models.AbstractModel):
         if lang:
             ctx["lang"] = lang
         compose_form_id = self._get_mail_compose_form()
+        _debug.pipeline(
+            "send_by_email_composer", orders=self, lang=lang or self.env.lang
+        )
         return {
             "name": self._get_mail_composer_action_name(),
             "type": "ir.actions.act_window",
@@ -1127,6 +1230,7 @@ class MixinOrder(models.AbstractModel):
         if mail_template := self._get_mail_template():
             ctx["default_template_id"] = mail_template.id
             ctx[self._get_mark_sent_context_key()] = True
+            _debug.logic("composer_template", order=self, template=mail_template)
         return ctx
 
     def _get_mail_template(self):
@@ -1141,6 +1245,7 @@ class MixinOrder(models.AbstractModel):
         template = self.env["mail.template"].browse(ctx["default_template_id"])
         if res_ids and template.lang:
             lang = template._render_lang(res_ids)[res_ids[0]]
+            _debug.logic("composer_lang", orders=self, by="template", lang=lang)
         return lang
 
     def _notify_by_email_prepare_rendering_context(
@@ -1243,6 +1348,12 @@ class MixinOrder(models.AbstractModel):
             ):
                 continue
             grouped_lines[line.product_id] |= line
+        _debug.perf.count(
+            "catalog_record_lines",
+            order=self,
+            lines=len(self.line_ids),
+            products=len(grouped_lines),
+        )
         return grouped_lines
 
     def _get_action_add_from_catalog_extra_context(self):

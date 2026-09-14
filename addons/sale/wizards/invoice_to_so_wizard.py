@@ -1,5 +1,8 @@
 from odoo import Command, _, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class InvoiceToSoWizard(models.TransientModel):
@@ -21,6 +24,9 @@ class InvoiceToSoWizard(models.TransientModel):
             .filtered(lambda line: line.product_id)
         )
         if not lines_to_add:
+            _debug.logic(
+                "invoice_to_so_refused", wizard=self, reason="no_product_lines"
+            )
             raise UserError(_("There are no products to add to the Sales Order."))
         line_vals = lines_to_add._sale_prepare_order_line_values()
         if self.sale_order_id:
@@ -34,6 +40,11 @@ class InvoiceToSoWizard(models.TransientModel):
                 ]
             )
             self.sale_order_id.line_ids += new_order_lines
+            _debug.lifecycle(
+                "invoice_lines_added_to_order",
+                order=self.sale_order_id,
+                lines=new_order_lines,
+            )
         else:
             self.sale_order_id = self.env["sale.order"].create(
                 {
@@ -42,8 +53,14 @@ class InvoiceToSoWizard(models.TransientModel):
                 }
             )
             new_order_lines = self.sale_order_id.line_ids
+            _debug.lifecycle(
+                "order_created_from_invoice_lines",
+                order=self.sale_order_id,
+                lines=new_order_lines,
+            )
 
         if self.sale_order_id.state == "draft":
+            _debug.pipeline("confirm_after_invoice_match", order=self.sale_order_id)
             self.sale_order_id.action_confirm()
         for aml, order_line in zip(lines_to_add, new_order_lines, strict=False):
             if aml.product_id == order_line.product_id:

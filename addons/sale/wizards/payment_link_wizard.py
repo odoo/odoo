@@ -1,4 +1,7 @@
 from odoo import _, api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class PaymentLinkWizard(models.TransientModel):
@@ -21,6 +24,7 @@ class PaymentLinkWizard(models.TransientModel):
                 wizard.confirmation_message = _(
                     "This payment will confirm the quotation.",
                 )
+                _debug.logic("payment_link_confirms_order", order=sale_order)
 
     @api.depends("res_model", "res_id")
     def _compute_warning_message(self):
@@ -31,9 +35,16 @@ class PaymentLinkWizard(models.TransientModel):
                 wizard.warning_message = _(
                     "The amount must be greater than the prepayment amount.",
                 )
+                _debug.logic(
+                    "payment_link_warning",
+                    order=sale_order,
+                    reason="below_prepayment",
+                    amount=wizard.amount,
+                )
                 sale_wizards |= wizard
             if sale_order.is_expired:
                 wizard.warning_message = _("The sale order has expired.")
+                _debug.logic("payment_link_warning", order=sale_order, reason="expired")
                 sale_wizards |= wizard
         super(PaymentLinkWizard, self - sale_wizards)._compute_warning_message()
 

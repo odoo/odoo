@@ -1,6 +1,9 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.sale import const
+
+_debug = DebugLog(__name__)
 
 
 class SaleReport(models.Model):
@@ -269,6 +272,11 @@ class SaleReport(models.Model):
 
         additional_fields = self._select_additional_fields()
         fields.update(additional_fields)
+        _debug.pipeline(
+            "report_fields_select",
+            columns=len(fields),
+            additional=len(additional_fields),
+        )
 
         return fields
 
@@ -276,6 +284,7 @@ class SaleReport(models.Model):
         currency_table = self.env["res.currency"]._get_simple_currency_table(
             self.env.companies,
         )
+        _debug.perf.count("report_currency_table", companies=self.env.companies)
 
         return [
             ("sale_order_line", "l", None, None),

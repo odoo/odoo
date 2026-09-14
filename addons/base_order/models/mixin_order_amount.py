@@ -1,4 +1,7 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class MixinOrderAmount(models.AbstractModel):
@@ -59,6 +62,9 @@ class MixinOrderAmount(models.AbstractModel):
         base_lines += self._get_additional_base_lines()
         AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
         AccountTax._round_base_lines_tax_details(base_lines, self.company_id)
+        _debug.perf.count(
+            "tax_totals_data", order=self, lines=len(order_lines), base=len(base_lines)
+        )
         return AccountTax._get_tax_totals_summary(
             base_lines=base_lines,
             currency=self.currency_id or self.company_id.currency_id,
@@ -86,6 +92,13 @@ class MixinOrderAmount(models.AbstractModel):
             order.amount_untaxed = tax_totals["base_amount_currency"]
             order.amount_tax = tax_totals["tax_amount_currency"]
             order.amount_total = tax_totals["total_amount_currency"]
+            _debug.logic(
+                "order_amounts",
+                order=order,
+                untaxed=order.amount_untaxed,
+                tax=order.amount_tax,
+                total=order.amount_total,
+            )
 
     @api.depends(
         "line_ids.amount_taxexc_invoiced",
@@ -119,6 +132,7 @@ class MixinOrderAmount(models.AbstractModel):
             show_warning = (
                 order.state == "draft" and order.company_id.account_use_credit_limit
             )
+            _debug.logic("credit_warning_checked", order=order, show=bool(show_warning))
             if show_warning:
                 order.partner_credit_warning = self.env[
                     "account.move"

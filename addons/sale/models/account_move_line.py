@@ -1,6 +1,9 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_compare, float_is_zero
+
+_debug = DebugLog(__name__)
 
 
 class AccountMoveLine(models.Model):
@@ -69,6 +72,11 @@ class AccountMoveLine(models.Model):
         ):
             map_sale_line_per_move = (
                 move_to_reinvoice._sale_create_reinvoice_sale_line()
+            )
+            _debug.pipeline(
+                "reinvoice_lines_mapped",
+                lines=move_to_reinvoice,
+                mapped=len(map_sale_line_per_move),
             )
             for values in values_list:
                 sale_line = map_sale_line_per_move.get(values.get("move_line_id"))
@@ -153,6 +161,12 @@ class AccountMoveLine(models.Model):
             slot_by_move_line[move_line.id] = slot
 
         new_sale_lines = self.env["sale.order.line"].create(sale_line_values_to_create)
+        _debug.lifecycle(
+            "reinvoice_sale_lines",
+            move_lines=self,
+            created=new_sale_lines,
+            reused=len(existing_line_by_key),
+        )
 
         return {
             move_line_id: (new_sale_lines[slot] if isinstance(slot, int) else slot)
@@ -176,6 +190,7 @@ class AccountMoveLine(models.Model):
 
     def _sale_check_order_accepts_expense(self, sale_order):
         if sale_order.state == "draft":
+            _debug.logic("expense_refused", order=sale_order, reason="draft")
             raise UserError(
                 _(
                     "The Sales Order %(order)s to be reinvoiced must be validated before registering expenses.",
@@ -183,6 +198,7 @@ class AccountMoveLine(models.Model):
                 ),
             )
         if sale_order.state == "cancel":
+            _debug.logic("expense_refused", order=sale_order, reason="cancelled")
             raise UserError(
                 _(
                     "The Sales Order %(order)s to be reinvoiced is cancelled."
@@ -191,6 +207,7 @@ class AccountMoveLine(models.Model):
                 ),
             )
         if sale_order.locked:
+            _debug.logic("expense_refused", order=sale_order, reason="locked")
             raise UserError(
                 _(
                     "The Sales Order %(order)s to be reinvoiced is currently locked."
@@ -240,6 +257,7 @@ class AccountMoveLine(models.Model):
         amount = (self.credit or 0.0) - (self.debit or 0.0)
 
         if self.product_id.expense_policy == "sales_price":
+            _debug.logic("expense_price", line=self, by="pricelist")
             return order.pricelist_id._get_product_price(
                 self.product_id,
                 1.0,
@@ -251,6 +269,7 @@ class AccountMoveLine(models.Model):
             "Product Unit"
         )
         if float_is_zero(unit_amount, precision_digits=uom_precision_digits):
+            _debug.logic("expense_price", line=self, by="zero_quantity")
             return 0.0
 
         if (
@@ -258,6 +277,7 @@ class AccountMoveLine(models.Model):
             and amount
             and self.company_id.currency_id == order.currency_id
         ):
+            _debug.logic("expense_price", line=self, by="company_currency")
             return self.company_id.currency_id.round(abs(amount / unit_amount))
 
         price_unit = abs(amount / unit_amount)
@@ -269,6 +289,7 @@ class AccountMoveLine(models.Model):
                 order.company_id,
                 order.date_order or fields.Date.today(),
             )
+        _debug.logic("expense_price", line=self, by="converted", price=price_unit)
         return price_unit
 
     def _sale_can_be_reinvoiced(self):

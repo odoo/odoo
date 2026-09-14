@@ -1,7 +1,10 @@
 from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import formatLang
+
+_debug = DebugLog(__name__)
 
 
 class SaleAdvancePaymentInv(models.TransientModel):
@@ -121,10 +124,22 @@ class SaleAdvancePaymentInv(models.TransientModel):
             ) or (
                 wizard.advance_payment_method == "fixed" and wizard.fixed_amount <= 0.00
             ):
+                _debug.logic(
+                    "down_payment_amount_rejected",
+                    wizard=wizard,
+                    method=wizard.advance_payment_method,
+                    reason="not_positive",
+                )
                 raise UserError(
                     _("The value of the down payment amount must be positive.")
                 )
             if wizard.advance_payment_method == "percentage" and wizard.amount > 100.0:
+                _debug.logic(
+                    "down_payment_amount_rejected",
+                    wizard=wizard,
+                    method=wizard.advance_payment_method,
+                    reason="over_100_percent",
+                )
                 raise UserError(
                     _("The percentage of the down payment cannot exceed 100%.")
                 )
@@ -132,6 +147,12 @@ class SaleAdvancePaymentInv(models.TransientModel):
     def create_invoices(self):
         self._check_amount_is_positive()
         invoices = self._create_invoices(self.sale_order_ids)
+        _debug.lifecycle(
+            "advance_invoices_created",
+            wizard=self,
+            orders=self.sale_order_ids,
+            invoices=invoices,
+        )
         return self.sale_order_ids.action_view_invoice(invoices=invoices)
 
     def view_draft_invoices(self):
@@ -150,6 +171,14 @@ class SaleAdvancePaymentInv(models.TransientModel):
     def _create_invoices(self, sale_orders):
         self.check_singleton()
         if self.advance_payment_method == "delivered":
+            _debug.pipeline(
+                "invoice_wizard",
+                wizard=self,
+                method="delivered",
+                orders=sale_orders,
+                deduct=self.deduct_down_payments,
+                consolidated=self.consolidated_billing,
+            )
             return sale_orders._create_invoices(
                 final=self.deduct_down_payments, grouped=not self.consolidated_billing
             )
@@ -173,6 +202,14 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 amount_type = "fixed"
                 amount = self.fixed_amount
 
+            _debug.pipeline(
+                "down_payment_base_lines",
+                wizard=self,
+                order=order,
+                lines=order_lines,
+                amount_type=amount_type,
+                amount=amount,
+            )
             down_payment_base_lines = AccountTax._prepare_down_payment_lines(
                 base_lines=base_lines,
                 company=self.company_id,
@@ -197,6 +234,12 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 so_lines=so_lines,
             )
             invoice_sudo = self.env["account.move"].sudo().create(invoice_values)
+            _debug.lifecycle(
+                "down_payment_invoice_created",
+                order=order,
+                invoice=invoice_sudo,
+                so_lines=so_lines,
+            )
 
             invoice = invoice_sudo.sudo(self.env.su)
             poster = (self.env.user._is_internal() and self.env.user.id) or SUPERUSER_ID
@@ -248,5 +291,10 @@ class SaleAdvancePaymentInv(models.TransientModel):
     def _get_down_payment_account(self, product):
         product_account = product.product_tmpl_id._get_product_accounts(
             fiscal_pos=self.sale_order_ids.fiscal_position_id
+        )
+        _debug.logic(
+            "down_payment_account",
+            product=product,
+            by="downpayment" if product_account.get("downpayment") else "income",
         )
         return product_account.get("downpayment") or product_account.get("income")

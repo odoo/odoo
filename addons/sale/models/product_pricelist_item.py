@@ -1,4 +1,7 @@
 from odoo import api, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ProductPricelistItem(models.Model):
@@ -12,6 +15,7 @@ class ProductPricelistItem(models.Model):
 
     def _is_discount_shown(self):
         if not self:
+            _debug.logic("discount_not_shown", reason="no_pricelist_rule")
             return False
 
         self.check_singleton()

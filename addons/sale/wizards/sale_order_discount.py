@@ -1,7 +1,10 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, ValidationError
 from odoo.fields import Command
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_repr
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrderDiscount(models.TransientModel):
@@ -31,14 +34,26 @@ class SaleOrderDiscount(models.TransientModel):
         for wizard in self:
             if wizard.discount_type in ("sol_discount", "so_discount"):
                 if wizard.discount_percentage > 1.0:
+                    _debug.logic(
+                        "discount_rejected",
+                        wizard=wizard,
+                        reason="over_100_percent",
+                        percentage=wizard.discount_percentage,
+                    )
                     raise ValidationError(
                         _("Discount percentage must be at most 100%.")
                     )
                 if wizard.discount_percentage < 0.0:
+                    _debug.logic(
+                        "discount_rejected", wizard=wizard, reason="negative_percentage"
+                    )
                     raise ValidationError(_("Discount percentage cannot be negative."))
             if wizard.discount_type == "amount":
                 currency = wizard.currency_id or wizard.sale_order_id.currency_id
                 if wizard.discount_amount < 0.0:
+                    _debug.logic(
+                        "discount_rejected", wizard=wizard, reason="negative_amount"
+                    )
                     raise ValidationError(
                         _("The discount amount cannot be negative."),
                     )
@@ -48,6 +63,12 @@ class SaleOrderDiscount(models.TransientModel):
                     )
                     > 0
                 ):
+                    _debug.logic(
+                        "discount_rejected",
+                        wizard=wizard,
+                        reason="over_order_total",
+                        amount=wizard.discount_amount,
+                    )
                     raise ValidationError(
                         _("The discount amount cannot exceed the order total."),
                     )
@@ -84,6 +105,12 @@ class SaleOrderDiscount(models.TransientModel):
             > 1
         )
         so_line_values_list = []
+        _debug.pipeline(
+            "global_discount_lines",
+            wizard=self,
+            base_lines=len(base_lines),
+            multiple_tax_combinations=has_multiple_tax_combinations,
+        )
         for base_line in base_lines:
             if has_multiple_tax_combinations:
                 if self.discount_type == "so_discount":
@@ -139,7 +166,15 @@ class SaleOrderDiscount(models.TransientModel):
                 company.sale_discount_product_id = self.env["product.product"].create(
                     self._prepare_discount_product_values()
                 )
+                _debug.lifecycle(
+                    "discount_product_created",
+                    company=company,
+                    product=company.sale_discount_product_id,
+                )
             else:
+                _debug.logic(
+                    "discount_product_refused", company=company, reason="no_access"
+                )
                 raise AccessError(
                     _(
                         "There does not seem to be any discount product configured for this company yet."
@@ -183,6 +218,13 @@ class SaleOrderDiscount(models.TransientModel):
             computation_key=f"global_discount,{self.id}",
             grouping_function=grouping_function,
         )
+        _debug.pipeline(
+            "discount_lines_created",
+            order=order,
+            amount_type=amount_type,
+            amount=amount,
+            discount_lines=len(global_discount_base_lines),
+        )
         order.line_ids = [
             Command.create(values)
             for values in self._prepare_global_discount_so_lines(
@@ -193,6 +235,13 @@ class SaleOrderDiscount(models.TransientModel):
     def action_apply_discount(self):
         self.check_singleton()
         self = self.with_company(self.company_id)
+        _debug.lifecycle(
+            "discount_applied",
+            order=self.sale_order_id,
+            kind=self.discount_type,
+            percentage=self.discount_percentage,
+            amount=self.discount_amount,
+        )
         if self.discount_type == "sol_discount":
             self.sale_order_id.line_ids.filtered(
                 lambda line: not line.display_type and not line.is_downpayment
