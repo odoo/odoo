@@ -284,7 +284,10 @@ export function getMultiRecordModelParams({
  */
 export function defaultViewProps(genericProps, view) {
     const { arch, ir, relatedModels, resModel } = genericProps;
-    const input = view.ArchParser.consumes === "ir" ? ir : arch;
+    // `View` supplies both; a caller that builds its props from an arch
+    // element alone (web studio's editors) hands the element to an IR
+    // parser, whose toIR() converts it
+    const input = view.ArchParser.consumes === "ir" ? (ir ?? arch) : arch;
     const archInfo = new view.ArchParser().parse(input, relatedModels, resModel);
     return {
         ...genericProps,

@@ -770,6 +770,7 @@ export type ListKind = "button" | "control" | "create" | "delete" | "field" | "g
 export interface ListButtonAttrs {
     class?: string;
     colspan?: string;
+    column_invisible?: string;
     confirm?: string;
     context?: string;
     display?: "always";
