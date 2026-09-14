@@ -71,7 +71,9 @@ class TestTaskTemplates(TestProjectCommon, MailCase):
         Copying a project should also copy its task templates
         """
         copied_project = self.project_with_templates.copy()
-        task = self.env["project.task"].search([("project_id", "=", copied_project.id)], order="id asc", limit=1)
+        task = self.env["project.task"].with_context(render_task_templates=True).search(
+            [("project_id", "=", copied_project.id)], order="id asc", limit=1
+            )
         self.assertTrue(task, "The copied project should contain a copy of the template.")
         self.assertTrue(task.is_template, "The copied template should still be a template.")
 
@@ -178,7 +180,11 @@ class TestTaskTemplates(TestProjectCommon, MailCase):
         self.assertEqual(task_2.repeat_type, "forever", "The created task should have the same repeat type as the template as the project has recurring tasks enabled.")
         self.assertEqual(task_2.repeat_unit, "month", "The created task should have the same repeat unit as the template as the project has recurring tasks enabled.")
         self.assertEqual(task_2.repeat_interval, 3, "The created task should have the same repeat interval as the template as the project has recurring tasks enabled.")
-        self.assertEqual(task_2.depend_on_ids, self.template_task, "The created task should have the same dependencies as the template as the project has task dependencies enabled.")
+        self.assertEqual(
+            task_2.with_context(render_task_templates=True).depend_on_ids,
+            self.template_task,
+            "The created task should have the same dependencies as the template as the project has task dependencies enabled."
+            )
 
     def test_subtask_count_ignores_template_child_on_normal_parent(self):
         """Template subtasks should not be counted on a normal parent task."""
