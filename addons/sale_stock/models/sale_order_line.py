@@ -436,13 +436,11 @@ class SaleOrderLine(models.Model):
         if procurements:
             self.env["stock.rule"].run(procurements)
 
-        orders = self.mapped("order_id")
-        for order in orders:
-            pickings_to_confirm = order.picking_ids.filtered(
-                lambda p: p.state not in ["cancel", "done"],
-            )
-            if pickings_to_confirm:
-                pickings_to_confirm.action_confirm()
+        pickings_to_confirm = self.order_id.picking_ids.filtered(
+            lambda p: p.state not in ["cancel", "done"],
+        )
+        if pickings_to_confirm:
+            pickings_to_confirm.action_confirm()
         return True
 
     def _get_product_catalog_lines_data(self, **kwargs):
