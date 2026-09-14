@@ -33,6 +33,9 @@ from odoo.addons.test_orm.models.test_orm import (
     TestOrmMove_Line,
     TestOrmMultiTag,
     TestOrmPayment,
+    TestOrmRelated,
+    TestOrmRelated_Bar,
+    TestOrmRelated_Foo,
     TestOrmRelated_Translation_1,
 )
 
@@ -920,6 +923,67 @@ class TestBackendDifferential(TransactionCase):
                 TestOrmPayment,
                 TestOrmMultiTag,
                 TestOrmCategory,
+            ),
+            script,
+        )
+
+    def test_related_fields_agree_across_tiers(self):
+        def script(env):
+            Bar = env["test_orm.related_bar"]
+            Foo = env["test_orm.related_foo"]
+            Related = env["test_orm.related"]
+            bar, other = Bar.create([{"name": "bar one"}, {"name": "other"}])
+            foo = Foo.create({"name": "f", "bar_id": bar.id, "test_float": 1.25})
+            related = Related.create({"name": "r", "foo_id": foo.id})
+            env.flush_all()
+            env.invalidate_all()
+            observed = {
+                "read": (
+                    foo.bar_name,
+                    foo.bar_alias.name,
+                    related.related_name,
+                    related.related_related_name,
+                    related.foo_float_id,
+                ),
+                "search": (
+                    Foo.search([("bar_name", "=", "bar one")]).mapped("name"),
+                    Foo.search([("bar_alias", "=", bar.id)]).mapped("name"),
+                    Related.search([("related_related_name", "ilike", "r")]).mapped(
+                        "name"
+                    ),
+                    Related.search([("foo_float_id", ">", 1)]).mapped("name"),
+                ),
+            }
+            # writing through a related writes the target
+            foo.bar_name = "renamed"
+            related.related_related_name = "r2"
+            env.flush_all()
+            env.invalidate_all()
+            observed["written through"] = (bar.name, related.name, foo.bar_name)
+            # moving the many2one moves the related along
+            foo.bar_id = other
+            env.flush_all()
+            env.invalidate_all()
+            observed["moved"] = (foo.bar_name, foo.bar_alias == other)
+            # a change on the target reaches every reader
+            other.name = "other renamed"
+            observed["target renamed"] = (foo.bar_name, foo.bar_alias.name)
+            env.flush_all()
+            env.invalidate_all()
+            observed["target renamed, flushed"] = foo.bar_name
+            observed["fields_get"] = {
+                name: (desc["related"], desc.get("readonly"), desc.get("store"))
+                for name, desc in Foo.fields_get(["bar_name", "bar_alias"]).items()
+            }
+            return observed
+
+        self._diff(
+            (
+                TestOrmRelated,
+                TestOrmRelated_Foo,
+                TestOrmRelated_Bar,
+                _StubPropertyMessage,
+                _StubPropertyDiscussion,
             ),
             script,
         )
