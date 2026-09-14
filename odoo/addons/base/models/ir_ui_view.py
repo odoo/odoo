@@ -33,6 +33,7 @@ from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools.misc import ConstantMapping, file_path
 from odoo.tools.template_inheritance import apply_inheritance_specs, locate_node
 from odoo.tools.translate import TRANSLATED_ATTRS, xml_translate
+from odoo.tools.view_ir import Patch, apply_patches, from_arch, to_arch, translate_specs
 from odoo.tools.view_validation import (
     get_class_accessibility_warnings,
     get_domain_value_names,
@@ -700,9 +701,9 @@ class IrUiView(models.Model):
             lines = etree.tostring(
                 view._get_combined_arch(), encoding="unicode"
             ).splitlines(keepends=True)
-            fivelines = "".join(
-                lines[max(0, error.context["line"] - 3) : error.context["line"] + 2]
-            )
+            # a node built in code, not parsed, has no line: show the start
+            line = error.context["line"] or 1
+            fivelines = "".join(lines[max(0, line - 3) : line + 2])
             err = ValidationError(
                 _(
                     "Error while validating view near:\n\n%(fivelines)s\n%(error)s",
@@ -1293,17 +1294,30 @@ class IrUiView(models.Model):
             sorted(hierarchy[self], key=lambda v: v.mode == "primary")
         )
         tree_cut_off_view = self.env.context.get("ir_ui_view_tree_cut_off_view")
-        applied = 0  # debuglog
+        # The overlays apply as id-addressed patches on the view IR; a spec
+        # the ids cannot name, and every spec while branding is on (the
+        # website editor reads the processing instructions and data-oe-*
+        # marks the XML path leaves), goes through the XML combine.
+        branding = bool(self.env.context.get("inherit_branding"))
+        combined = None if branding else from_arch(combined_arch)
+        applied = patched = 0  # debuglog
         while queue:
             view = queue.popleft()
             if view == tree_cut_off_view:
                 break
             applied += 1  # debuglog
             arch = etree.fromstring(view.arch or "<data/>")
-            if view.env.context.get("inherit_branding"):
+            if branding:
                 view.inherit_branding(arch)
             self._add_validation_flag(combined_arch, view, arch)
-            combined_arch = view.apply_inheritance_specs(combined_arch, arch)
+            if combined is None:
+                combined_arch = view.apply_inheritance_specs(combined_arch, arch)
+            else:
+                # the whole-view flag lands on the element; the tree carries it
+                if combined_arch.get("__validate__"):
+                    combined.attrs["__validate__"] = "1"
+                combined, combined_arch, ok = self._patch_ir(combined, view, arch)
+                patched += ok  # debuglog
 
             for child_view in reversed(hierarchy[view]):
                 if child_view.mode == "primary":
@@ -1311,8 +1325,45 @@ class IrUiView(models.Model):
                 else:
                     queue.appendleft(child_view)
 
-        _debug.pipeline("combine", root=self.id, key=self.key, applied=applied)
+        if combined is not None:
+            combined_arch = to_arch(combined)
+        _debug.pipeline(
+            "combine", root=self.id, key=self.key, applied=applied, patched=patched
+        )
         return combined_arch
+
+    def _patch_ir(
+        self, combined: Any, view: Self, arch: _Element
+    ) -> tuple[Any, _Element, int]:
+        """One inheriting view onto the IR: its specs as patches when the ids
+        name every target, the XML combine otherwise. Returns the IR, the
+        arch it stands for, and whether the patches were used."""
+        # the record reference, not the xml id: a provenance that costs no
+        # query per overlay (the xml id is one ir.model.data lookup each)
+        origin = f"ir.ui.view,{view.id}"
+        items = translate_specs(combined, arch, origin)
+        if not all(isinstance(item, Patch) for item in items):
+            _debug.logic(
+                "combine.xml_fallback",
+                view=view.id,
+                specs=len(items),
+                fallbacks=sum(not isinstance(item, Patch) for item in items),
+            )
+            combined_arch = view.apply_inheritance_specs(to_arch(combined), arch)
+            return from_arch(combined_arch), combined_arch, 0
+        try:
+            result = apply_patches(combined, [i for i in items if isinstance(i, Patch)])
+        except ValueError as e:
+            raise view._prepare_view_error(str(e), arch) from None
+        for conflict in result.conflicts:
+            _debug.logic(
+                "combine.attribute_conflict",
+                view=view.id,
+                target=conflict.target,
+                attribute=conflict.attribute,
+                origins=conflict.origins,
+            )
+        return result.root, to_arch(result.root), 1
 
     def get_combined_arch(self) -> str:
         return etree.tostring(self._get_combined_arch(), encoding="unicode")

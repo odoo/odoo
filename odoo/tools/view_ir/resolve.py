@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import copy
+import re
 
 from lxml import etree
 
@@ -50,8 +51,14 @@ def translate_specs(
                 out.extend(flat[index + 1 :])
                 break
         else:
+            try:
+                work.root = apply(work.root, [copy.deepcopy(patch)]).root
+            except ValueError:
+                # a change the merge refuses (a bad separator, say): the XML
+                # path applies the same spec and reports it in its own words
+                out.extend(flat[index:])
+                break
             out.append(patch)
-            work.root = apply(work.root, [copy.deepcopy(patch)]).root
             work.invalidate()
     return out
 
@@ -70,6 +77,12 @@ def _flatten(specs_tree: etree._Element) -> list[etree._Element]:
     return flat
 
 
+SIMPLE_XPATH = re.compile(
+    r"^//(?P<tag>[A-Za-z_][\w.-]*)"
+    r"(?:\[@(?P<attr>[A-Za-z_][\w.-]*)=(?P<q>['\"])(?P<value>[^'\"]*)(?P=q)\])?$"
+)
+
+
 class _Working:
     """The tree as the specs so far leave it, materialised on demand for xpath."""
 
@@ -77,14 +90,49 @@ class _Working:
         self.root = root
         self._arch: etree._Element | None = None
         self._nodes: dict[etree._Element, Node] | None = None
+        self._ids: dict[str, Node] | None = None
 
     def invalidate(self) -> None:
         self._arch = None
         self._nodes = None
+        self._ids = None
+
+    def ids(self) -> dict[str, Node]:
+        if self._ids is None:
+            self._ids = identify(self.root)
+        return self._ids
+
+    def locate(self, spec: etree._Element) -> Node | None:
+        """The node a spec addresses — off the ids for the shapes that name
+        one node (`<field name="x">`, `//tag`, `//tag[@attr='v']`, the
+        overwhelming majority), off the materialised arch's xpath otherwise,
+        both with the XML combine's first-match rule."""
+        ids = self.ids()
+        tag, attr, value = _simple_target(spec)
+        if tag is not None:
+            if attr == "name" and value:
+                named = ids.get(f"{tag}:{value}")
+                # a node under an explicit html id has no `kind:name` entry,
+                # and an explicit id spelled `kind:name` is not that node:
+                # both fall through to the scan the XML locate does
+                if (
+                    named is not None
+                    and named.kind == tag
+                    and named.attrs.get("name") == value
+                ):
+                    return named
+            if attr is None:
+                return next(self.root.find(tag), None)
+            return next(
+                (node for node in self.root.find(tag) if node.attrs.get(attr) == value),
+                None,
+            )
+        target = locate_node(self.arch(), spec)
+        return None if target is None else self.node_of(target)
 
     def arch(self) -> etree._Element:
         if self._arch is None:
-            identify(self.root)
+            self.ids()
             self._arch = to_arch(self.root)
             elements = [el for el in self._arch.iter() if isinstance(el.tag, str)]
             nodes = [node for _path, node in self.root.walk()]
@@ -102,6 +150,26 @@ class _Working:
         self.invalidate()
 
 
+def _simple_target(
+    spec: etree._Element,
+) -> tuple[str | None, str | None, str | None]:
+    """(tag, attr, value) when the spec names its target by one attribute or
+    by tag alone; (None, None, None) when only xpath can say."""
+    if spec.tag != "xpath":
+        attrs = [(k, v) for k, v in spec.attrib.items() if k != "position"]
+        if spec.tag == "field":
+            return "field", "name", spec.get("name")
+        if not attrs:
+            return spec.tag, None, None
+        if len(attrs) == 1:
+            return spec.tag, attrs[0][0], attrs[0][1]
+        return None, None, None
+    match = SIMPLE_XPATH.match((spec.get("expr") or "").strip())
+    if not match:
+        return None, None, None
+    return match.group("tag"), match.group("attr"), match.group("value")
+
+
 def _translate(
     work: _Working, spec: etree._Element, origin: str | None
 ) -> Patch | None:
@@ -113,16 +181,28 @@ def _translate(
     )
     if op is None:
         return None
-    target = locate_node(work.arch(), spec)
-    if target is None:
+    target_node = work.locate(spec)
+    if target_node is None:
         return None
-    target_id = work.node_of(target).id
+    target_id = target_node.id
     assert target_id is not None
     if op == "attributes":
         changes = []
         for attribute in spec.iterchildren("attribute"):
             name = attribute.get("name")
-            if not name or (attribute.get("add") is not None and attribute.text):
+            # a malformed <attribute> is the XML path's to refuse, with its
+            # message: an unknown attribute, add/remove beside text
+            if (
+                not name
+                or any(
+                    key not in ("name", "add", "remove", "separator")
+                    and not key.startswith("data-oe-")
+                    for key in attribute.attrib
+                )
+                or (
+                    (attribute.get("add") or attribute.get("remove")) and attribute.text
+                )
+            ):
                 return None
             changes.append(
                 AttrChange(
@@ -144,12 +224,11 @@ def _translate(
         if not isinstance(child.tag, str):
             continue
         if child.get("position") == "move":
-            moved = locate_node(work.arch(), child)
+            moved = work.locate(child)
             if moved is None or len(child):
                 return None
-            moved_id = work.node_of(moved).id
-            assert moved_id is not None
-            content.append(Move(moved_id))
+            assert moved.id is not None
+            content.append(Move(moved.id))
             continue
         node = _content_node(child, op)
         if node is None:

@@ -31,6 +31,7 @@ def _from_element(element: etree._Element, inherited: dict[str | None, str]) -> 
         text=element.text,
         tail=element.tail,
         nsmap=declared or None,
+        line=element.sourceline,
     )
     scope = {**inherited, **declared}
     for child in element:
@@ -59,6 +60,10 @@ def _to_element(node: Node, parent: etree._Element | None) -> etree._Element:
         element = etree.SubElement(parent, node.kind, node.attrs, nsmap=node.nsmap)
     element.text = node.text
     element.tail = node.tail
+    if node.line is not None:
+        # the line a view error points at: an element the IR materialises
+        # answers for the arch line it was read from
+        element.sourceline = node.line
     for child in node.children:
         _to_element(child, element)
     return element

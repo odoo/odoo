@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import copy
+import re
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 from typing import Literal
@@ -13,6 +14,9 @@ from .node import Node
 Op = Literal[
     "replace", "replace_inner", "before", "after", "inside", "attributes", "remove"
 ]
+
+
+_INDENTATION = re.compile(r"\n[ \t]*$")
 
 
 class PatchError(ValueError):
@@ -130,23 +134,41 @@ def apply(root: Node, patches: Iterable[Patch]) -> Applied:
                 elif patch.op == "before":
                     _insert(parent, index, content, patch.text)
                 else:
+                    # what followed the target follows the content now
+                    trailing = target.tail
+                    target.tail = None
                     _insert(parent, index + 1, content, patch.text)
+                    last = content[-1] if content else target
+                    last.tail = (last.tail or "") + (trailing or "") or None
         ids = identify(result.root)
     return result
 
 
 def _insert(parent: Node, index: int, content: list[Node], text: str | None) -> None:
-    """Place ``content`` at ``index`` under ``parent``, ``text`` ahead of it —
-    on the tail of the node before the insertion point, or the parent's text."""
-    if text:
-        # as the XML combine does: the text before the point loses its
-        # trailing whitespace, the spec's text carries its own
-        if index:
-            previous = parent.children[index - 1]
-            previous.tail = (previous.tail or "").rstrip() + text
-        else:
-            parent.text = (parent.text or "").rstrip() + text
+    """Place ``content`` at ``index`` under ``parent``, ``text`` ahead of it.
+
+    As the XML combine's ``add_stripped_items_before``: the text before the
+    insertion point (the previous node's tail, or the parent's text) loses
+    its trailing whitespace and gains ``text``; that whitespace reappears
+    after the inserted content, so the indentation the arch had is kept.
+    """
+    if index:
+        previous = parent.children[index - 1]
+        before = previous.tail or ""
+    else:
+        before = parent.text or ""
+    stripped = before.rstrip()
+    indentation = _INDENTATION.search(before)
+    trailing = indentation.group(0) if indentation else ""
+    joined = (stripped + (text or "")) if (text or trailing) else before
+    if index:
+        parent.children[index - 1].tail = joined or None
+    else:
+        parent.text = joined or None
     parent.children[index:index] = content
+    if content and trailing:
+        last = content[-1]
+        last.tail = (last.tail or "").rstrip() + trailing
 
 
 def _materialise(
