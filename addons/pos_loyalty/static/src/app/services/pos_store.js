@@ -359,6 +359,7 @@ patch(PosStore.prototype, {
                     this.models["loyalty.card"].get(pe.coupon_id)
                 )
             );
+            order._restoreCodeActivatedCoupons();
         });
     },
     async applyDiscount(percent, type = "percent", order = this.getOrder()) {
