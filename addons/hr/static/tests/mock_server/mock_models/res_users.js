@@ -19,7 +19,7 @@ export class ResUsers extends mailModels.ResUsers {
         related: "employee_id.work_location_id",
         relation: "hr.work.location",
     });
-    job_title = fields.Char({ related: "employee_id.job_title" });
+    job_id = fields.Many2one({ related: "employee_id.job_id", relation: "hr.job" });
 
     _store_im_status_fields(res) {
         super._store_im_status_fields(res);

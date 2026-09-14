@@ -17,7 +17,7 @@
         </xpath>
 
         <xpath expr="//span[hasclass('o-mail-avatar-card-name')]" position="after">
-            <small t-if="this.employee?.job_title" class="text-muted text-truncate" t-att-title="this.employee.job_title" t-out="this.employee.job_title"/>
+            <small t-if="this.employee?.job_id" class="text-muted text-truncate" t-att-title="this.employee.job_id.name" t-out="this.employee.job_id.name"/>
         </xpath>
 
         <xpath expr="//div[hasclass('o_avatar_card_details')]" position="inside">
