@@ -21,6 +21,9 @@ from odoo.addons.base.models.assetsbundle import (
 from odoo.addons.base.models.assetsbundle import bundle as bundle_module
 from odoo.addons.base.models.assetsbundle.common import _pipeline_fingerprint
 from odoo.addons.base.models.ir_attachment import IrAttachment
+from odoo.addons.base.models.ir_attachment_assets import (
+    IrAttachment as AssetIrAttachment,
+)
 
 PLAIN_JS = "(function () {\n    window.auditX = 1;\n})();\n"
 
@@ -37,13 +40,20 @@ class _FakeIrAsset:
         return self._get_asset_bundle_url(like_escape(filename), unique, assets_params)
 
 
+class _FakeIrAttachment:
+    _prepare_generated_asset_vals = AssetIrAttachment._prepare_generated_asset_vals
+
+
 class _FakeEnv:
     def __init__(self, calls):
-        self._asset = _FakeIrAsset(calls)
+        self._models = {
+            "ir.asset": _FakeIrAsset(calls),
+            "ir.attachment": _FakeIrAttachment(),
+        }
 
     def __getitem__(self, model):
-        assert model == "ir.asset", model
-        return self._asset
+        assert model in self._models, model
+        return self._models[model]
 
 
 class TestAssetAttachmentStoreUnit(BaseCase):

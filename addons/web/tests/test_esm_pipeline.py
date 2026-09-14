@@ -3806,6 +3806,46 @@ class TestLogicalParentExportSurface(TransactionCase):
 
 
 @tagged("-at_install", "post_install", "web_assets")
+class TestRuntimeBundleExportSurface(TransactionCase):
+    PAGES = ("web.assets_web", "web.assets_unit_tests_setup")
+
+    def test_a_parentless_runtime_bundle_finds_its_imports_registered(self):
+        IrQweb = self.env["ir.qweb"]
+        params = self.env["ir.asset"]._prepare_assets_params()
+        installed = self.env["ir.asset"]._get_addons_installed()
+        registry = esm_registry()
+        declared_children = {
+            name for children in registry.dynamic_children.values() for name in children
+        }
+        runtime_bundles = [
+            name
+            for name in sorted(registry.runtime_bundle_names - declared_children)
+            if registry.bundle_addon(name) in installed
+        ]
+        if not runtime_bundles:
+            self.skipTest("no parentless runtime bundle is installed")
+        for page in self.PAGES:
+            bundle = IrQweb._get_asset_bundle(page, css=False, js=True)
+            members = {a.module_path for a in bundle.native_modules}
+            children = IrQweb._get_dynamic_child_bundles(
+                page, params, debug_assets=False
+            )
+            exported = IrQweb._get_exported_specs(page, bundle, params, children)
+            for name in runtime_bundles:
+                consumer = IrQweb._get_asset_bundle(
+                    name, css=False, js=True, debug_assets=True
+                )
+                own = {a.module_path for a in consumer.native_modules}
+                discovered, _ext = consumer._bridges._discover_bridge_specifiers(
+                    own, set(external_libs())
+                )
+                self.assertFalse(
+                    (set(discovered) & members) - exported,
+                    f"{name} imports from {page} a module it does not register",
+                )
+
+
+@tagged("-at_install", "post_install", "web_assets")
 class TestLibraryFacades(TransactionCase):
     PAGE_FAMILIES = ("web.assets_web", "web.assets_frontend")
 

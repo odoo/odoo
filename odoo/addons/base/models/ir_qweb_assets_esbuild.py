@@ -370,6 +370,11 @@ class IrQweb(models.AbstractModel):
                         continue
                 for name in children:
                     add_consumer(name)
+        declared_children = {
+            name for children in registry.dynamic_children.values() for name in children
+        }
+        for name in sorted(registry.runtime_bundle_names - declared_children):
+            add_consumer(name)
         return consumers
 
     def _get_exported_specs(

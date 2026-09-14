@@ -25,6 +25,7 @@ _ESM_MANIFEST_KEYS = frozenset(
     {
         "bundles",
         "dynamic_children",
+        "dynamic_children_from",
         "exports",
         "external_libs",
         "import_map_includes",
@@ -113,6 +114,58 @@ def _merge_mapping(target: dict, declared: Mapping, *, module: str, key: str) ->
                 f"list of bundle names"
             )
         target.setdefault(parent, []).extend(children)
+
+
+def _merge_children_from(target: dict, declared: Mapping, *, module: str) -> None:
+    if not isinstance(declared, Mapping):
+        raise TypeError(
+            f"Module {module!r}: manifest 'esm.dynamic_children_from' must be a "
+            f"dict (page bundle -> page whose dynamic children it takes), "
+            f"got {type(declared).__name__}"
+        )
+    for page, base in declared.items():
+        if not isinstance(base, str):
+            raise TypeError(
+                f"Module {module!r}: 'esm.dynamic_children_from[{page!r}]' must "
+                f"be one bundle name"
+            )
+        known = target.setdefault(page, base)
+        if known != base:
+            raise ValueError(
+                f"esm.dynamic_children_from[{page!r}] names both {known!r} and {base!r}"
+            )
+
+
+def _inherit_dynamic_children(
+    bundles: set, dynamic_children: dict, children_from: Mapping
+) -> None:
+    for page, base in children_from.items():
+        for name in (page, base):
+            if name not in bundles:
+                raise ValueError(
+                    f"esm.dynamic_children_from names {name!r}, which is not a "
+                    f"registered ESM bundle"
+                )
+        if base in children_from:
+            raise ValueError(
+                f"esm.dynamic_children_from[{page!r}] names {base!r}, which "
+                f"takes its own dynamic children from {children_from[base]!r}"
+            )
+        inherited = dynamic_children.get(base, ())
+        own = dynamic_children.setdefault(page, [])
+        restated = sorted(set(own) & set(inherited))
+        if restated:
+            raise ValueError(
+                f"esm.dynamic_children[{page!r}] restates {restated}, which "
+                f"{page!r} already takes from {base!r}"
+            )
+        own.extend(inherited)
+        _debug.pipeline(
+            "esm_registry.children_inherited",
+            page=page,
+            base=base,
+            children=len(inherited),
+        )
 
 
 def _merge_external_libs(
@@ -237,6 +290,7 @@ def _prepare_esm_registry() -> EsmRegistry:
     exports: set = set()
     external_lib_owner: dict = {}
     bundle_owners: dict = {}
+    children_from: dict = {}
     declaring_modules = 0
     for manifest in Manifest.get_all_addon_manifests():
         esm = _validated_esm_section(manifest)
@@ -278,7 +332,12 @@ def _prepare_esm_registry() -> EsmRegistry:
         ):
             if key in esm:
                 _merge_mapping(target, esm[key], module=manifest.name, key=key)
+        if "dynamic_children_from" in esm:
+            _merge_children_from(
+                children_from, esm["dynamic_children_from"], module=manifest.name
+            )
 
+    _inherit_dynamic_children(bundles, dynamic_children, children_from)
     check_esm_config(
         bundles,
         dynamic_children,

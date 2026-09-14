@@ -121,6 +121,9 @@ the Studio automation upsell.
             "document.public_page_assets",
             "document.webclient",
         ],
+        "dynamic_children_from": {
+            "document.webclient": "web.assets_web",
+        },
         "secondary_import_map_includes": {
             "document.webclient": [
                 "web.assets_tests",
