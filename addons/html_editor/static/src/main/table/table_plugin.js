@@ -646,6 +646,7 @@ export class TablePlugin extends Plugin {
             }
 
             this.wrapTable(table);
+            table.querySelectorAll(":scope > colgroup ~ colgroup").forEach((el) => el.remove());
             const firstRow = table.rows[0];
             let colgroup;
             for (const cell of firstRow?.children || []) {
