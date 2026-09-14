@@ -96,7 +96,7 @@ Audio
 moment each was said, which is what a player and a subtitle track need. Both
 wires answer the same signature. OpenAI transcribes text on ``gpt-transcribe``,
 which returns no timestamps, and asks ``whisper-1`` for ``verbose_json`` segments
-when timing is wanted -- the catalog's ``cues_model``; Deepgram asks for utterances
+when timing is wanted -- the ``transcribe_timed`` operation's model; Deepgram asks for utterances
 and carries the speaker through where diarization gave it one. ``gateway.ml.model``
 says which models time their words (``has_timestamps``): speech_ai selects on
 it, and a fallback hop may not hand a timed request to a model without it.
@@ -104,12 +104,13 @@ OpenAI shuts ``whisper-1`` down on 2027-02-26 and names only untimed
 replacements, so from then on OpenAI can no longer serve ``transcribe_cues``;
 Deepgram and Groq still can.
 
-``synthesize`` is the other direction, and it is new: Deepgram's
-``text_to_speech`` had raised since it was written, on the grounds that binary
-response bodies were not exposed. They are -- ``OutboundAPIClient.request``
-takes ``raw=True`` and hands back the response -- so it now speaks, and the
-OpenAI wire speaks beside it. A vendor that writes no audio says so from the
-catalog rather than from a client.
+``synthesize`` is the other direction: ``OutboundAPIClient.request`` takes
+``raw=True`` and hands back the binary response, so Deepgram's ``/speak`` and the
+OpenAI wire both speak. A vendor that writes no audio says so by carrying no
+``synthesize`` operation rather than from a client. Deepgram's client keeps only
+what a caller uses -- ``transcribe_file``, ``transcribe_cues`` and
+``synthesize``; its URL, streaming and audio-intelligence helpers had no caller
+outside their tests and are gone.
 
 Depends on ``integration`` alone.
     """,

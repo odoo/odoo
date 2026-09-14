@@ -1,5 +1,4 @@
 from unittest.mock import Mock, patch
-from urllib.parse import parse_qs, urlsplit
 
 from odoo.tests import TransactionCase, tagged
 
@@ -93,14 +92,6 @@ class TestDeepgramSpeech(EncryptionKeyCase, TransactionCase):
         ) as post:
             self.client.synthesize("hola", voice="alloy", model="aura-2-luna-en")
         self.assertEqual(post.call_args.kwargs["params"]["model"], "aura-2-luna-en")
-
-    def test_streaming_url_encodes_list_parameters(self):
-        url = self.client.streaming_transcribe(
-            model="nova-3", keyterm=["tarima", "romana cañera"]
-        )["websocket_url"]
-        query = parse_qs(urlsplit(url).query)
-        self.assertEqual(query["keyterm"], ["tarima", "romana cañera"])
-        self.assertEqual(query["model"], ["nova-3"])
 
 
 @tagged("post_install", "-at_install")
