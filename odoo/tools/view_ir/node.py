@@ -14,6 +14,7 @@ class Node:
     tail: str | None = None
     nsmap: dict[str | None, str] | None = None
     id: str | None = field(default=None, compare=False)
+    origin: str | None = field(default=None, compare=False)
 
     def walk(
         self, path: tuple[int, ...] = ()

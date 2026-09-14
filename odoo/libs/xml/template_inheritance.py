@@ -27,6 +27,7 @@ __all__ = [
     "add_text_before",
     "apply_inheritance_specs",
     "locate_node",
+    "merge_attribute_value",
     "remove_element",
 ]
 
@@ -257,6 +258,20 @@ def _prepare_list_attribute_value(
     )
 
 
+def merge_attribute_value(
+    attribute: str, current: str, add: str, remove: str, separator: str | None
+) -> str:
+    """The value ``attribute`` takes after an ``add``/``remove`` edit of
+    ``current`` — a python expression joined by ``and``/``or`` for the
+    modifier and ``decoration-*`` attributes, a separated list otherwise.
+    One definition for the XML specs and the IR patches."""
+    if attribute in PYTHON_ATTRIBUTES or attribute.startswith("decoration-"):
+        return _prepare_python_attribute_value(
+            attribute, current, add, remove, separator
+        )
+    return _prepare_list_attribute_value(current, add, remove, separator)
+
+
 def _apply_attributes(spec: etree._Element, node: etree._Element) -> None:
     for child in spec.iter("attribute"):
         unknown = [
@@ -281,14 +296,9 @@ def _apply_attributes(spec: etree._Element, node: etree._Element) -> None:
                     f"Element <attribute> with 'add' or 'remove' cannot contain "
                     f"text {child.text!r}"
                 )
-            current = node.get(attribute, "")
-            separator = child.get("separator")
-            if attribute in PYTHON_ATTRIBUTES or attribute.startswith("decoration-"):
-                value = _prepare_python_attribute_value(
-                    attribute, current, add, remove, separator
-                )
-            else:
-                value = _prepare_list_attribute_value(current, add, remove, separator)
+            value = merge_attribute_value(
+                attribute, node.get(attribute, ""), add, remove, child.get("separator")
+            )
         else:
             value = child.text or ""
 
