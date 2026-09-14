@@ -1,6 +1,6 @@
 {
     "name": "Speech - AI Engines",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.1.0",
     "category": "Hidden",
     "sequence": 10,
     "summary": "Transcription and synthesis engines on the gateway_ml registry",

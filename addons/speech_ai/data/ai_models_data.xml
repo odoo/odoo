@@ -22,6 +22,36 @@
             <field name="accuracy_rating">4</field>
             <field name="speed_rating">5</field>
         </record>
+        <record
+            id="provider_service_openai_synthesize"
+            model="gateway.ml.provider.service">
+            <field name="provider_id" ref="gateway_ml.ai_provider_openai" />
+            <field name="operation">synthesize</field>
+            <field name="service_id" ref="gateway_ml.service_openai" />
+            <field name="wire">openai_compatible</field>
+            <field name="path">/audio/speech</field>
+            <field name="model_id" ref="ai_model_openai_gpt_4o_mini_tts" />
+            <field name="timeout" eval="60" />
+            <field name="voice">alloy</field>
+            <field
+                name="formats"
+                eval="{'audio/mpeg': 'mp3', 'audio/wav': 'wav', 'audio/ogg': 'opus'}" />
+        </record>
+        <record
+            id="provider_service_deepgram_synthesize"
+            model="gateway.ml.provider.service">
+            <field name="provider_id" ref="gateway_ml.ai_provider_deepgram" />
+            <field name="operation">synthesize</field>
+            <field name="service_id" ref="gateway_ml.service_deepgram" />
+            <field name="wire">deepgram</field>
+            <field name="path">/speak</field>
+            <field name="model_id" ref="ai_model_deepgram_aura_2_asteria" />
+            <field name="timeout" eval="60" />
+            <field name="voice">aura-2-asteria-en</field>
+            <field
+                name="formats"
+                eval="{'audio/mpeg': {'encoding': 'mp3'}, 'audio/ogg': {'encoding': 'opus'}, 'audio/flac': {'encoding': 'flac'}, 'audio/aac': {'encoding': 'aac'}, 'audio/wav': {'encoding': 'linear16', 'container': 'wav'}}" />
+        </record>
     </data>
 
 </odoo>

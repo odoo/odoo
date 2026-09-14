@@ -69,6 +69,13 @@ class AIProvider(models.Model):
         inverse_name="provider_id",
         help="Models reachable through this provider",
     )
+    service_ids = fields.One2many(
+        comodel_name="gateway.ml.provider.service",
+        inverse_name="provider_id",
+        string="Operations",
+        help="What this provider can be asked to do, and through which service, wire "
+        "and path each operation goes.",
+    )
     default_model_id = fields.Many2one(
         comodel_name="gateway.ml.model",
         domain="[('provider_id', '=', id)]",
@@ -107,6 +114,19 @@ class AIProvider(models.Model):
                         provider=record.display_name,
                     )
                 )
+
+    def _service_for(self, operation):
+        self.check_singleton()
+        service = self.service_ids.filtered(lambda row: row.operation == operation)
+        if not service:
+            raise UserError(
+                self.env._(
+                    "%(provider)s does not offer %(operation)s.",
+                    provider=self.display_name,
+                    operation=operation,
+                )
+            )
+        return service
 
     def _get_ai_client(self, company_id=None):
         self.check_singleton()

@@ -1,6 +1,6 @@
 {
     "name": "API AI",
-    "version": "19.0.1.19.0",
+    "version": "19.0.1.20.0",
     "category": "Hidden",
     "sequence": 10,
     "summary": "AI provider registry, orchestration and vendor clients",
@@ -139,6 +139,7 @@ Depends on ``integration`` alone.
         "data/ai_use_case_tags_data.xml",
         "data/ai_providers_data.xml",
         "data/ai_models_data.xml",
+        "data/ai_provider_services_data.xml",
         "views/ai_provider_views.xml",
         "views/ai_model_views.xml",
         "views/ai_use_case_tag_views.xml",

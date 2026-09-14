@@ -172,6 +172,23 @@
                                 </list>
                             </field>
                         </page>
+                        <page name="operations" string="Operations">
+                            <field
+                                name="service_ids"
+                                context="{'default_provider_id': id}">
+                                <list editable="bottom">
+                                    <field name="operation" />
+                                    <field name="service_id" />
+                                    <field name="wire" />
+                                    <field name="path" />
+                                    <field
+                                        name="model_id"
+                                        domain="[('provider_id', '=', parent.id)]" />
+                                    <field name="timeout" />
+                                    <field name="voice" optional="hide" />
+                                </list>
+                            </field>
+                        </page>
                         <page name="capabilities" string="Capabilities">
                             <group>
                                 <group string="Derived from the models">

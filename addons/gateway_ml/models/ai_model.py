@@ -52,6 +52,51 @@ class AIModel(models.Model):
         default=False,
         help="Supports function/tool calling",
     )
+    max_tokens_param = fields.Selection(
+        selection=[
+            ("max_tokens", "max_tokens"),
+            ("max_completion_tokens", "max_completion_tokens"),
+        ],
+        string="Output Cap Parameter",
+        default="max_tokens",
+        required=True,
+        help="The body member this model reads its output cap from. OpenAI's "
+        "reasoning models refuse max_tokens and want max_completion_tokens.",
+    )
+    min_max_tokens = fields.Integer(
+        string="Minimum Output Cap",
+        help="The smallest output cap worth sending: a model that reasons before it "
+        "answers spends a small budget on reasoning and returns nothing.",
+    )
+    request_extra = fields.Json(
+        string="Extra Request Members",
+        help="Members sent in every request body to this model, such as a reasoning "
+        "effort or a fixed temperature the vendor requires.",
+    )
+    sampling_params = fields.Boolean(
+        string="Accepts Sampling Parameters",
+        default=True,
+        help="Accepts temperature, top_p and top_k. Anthropic's newest models "
+        "reject them.",
+    )
+    forced_tool_choice = fields.Boolean(
+        string="Accepts a Forced Tool",
+        default=True,
+        help="Accepts a tool_choice that forces a tool. A model that does not is "
+        "asked for structured output through output_config instead.",
+    )
+    language_form_key = fields.Selection(
+        selection=[("language", "language"), ("languages[]", "languages[]")],
+        string="Language Form Key",
+        default="language",
+        required=True,
+        help="The multipart form key a transcription model reads the language from.",
+    )
+    vocabulary_param = fields.Selection(
+        selection=[("keyterm", "keyterm"), ("keywords", "keywords")],
+        string="Vocabulary Parameter",
+        help="The query parameter a Deepgram model reads boosted vocabulary from.",
+    )
     max_context_window = fields.Integer(help="Maximum context window size in tokens")
     max_output_tokens = fields.Integer(
         help="Maximum number of output tokens per request"

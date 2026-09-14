@@ -16,3 +16,4 @@ from . import test_orchestrator_event_log
 from . import test_registry_coherence
 from . import test_vendor_wires
 from . import test_vision_completion
+from . import test_provider_services

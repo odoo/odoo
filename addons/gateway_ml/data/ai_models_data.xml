@@ -16,6 +16,7 @@
         <field name="cost_per_1m_output">10.00</field>
         <field name="accuracy_rating">5</field>
         <field name="speed_rating">4</field>
+        <field name="sampling_params" eval="False" />
     </record>
 
     <record id="ai_model_openai_gpt_5_6_luna" model="gateway.ml.model">
@@ -33,6 +34,8 @@
         <field name="cost_per_1m_output">1.20</field>
         <field name="accuracy_rating">4</field>
         <field name="speed_rating">4</field>
+        <field name="max_tokens_param">max_completion_tokens</field>
+        <field name="request_extra" eval="{'reasoning_effort': 'none'}" />
     </record>
 
     <record id="ai_model_openai_gpt_transcribe" model="gateway.ml.model">
@@ -46,6 +49,7 @@
         <field name="cost_per_audio_minute">0.0045</field>
         <field name="accuracy_rating">5</field>
         <field name="speed_rating">4</field>
+        <field name="language_form_key">languages[]</field>
     </record>
 
     <record id="ai_model_openai_whisper_1" model="gateway.ml.model">
@@ -76,6 +80,21 @@
         <field name="cost_per_1m_output">2.50</field>
         <field name="accuracy_rating">4</field>
         <field name="speed_rating">5</field>
+        <field name="min_max_tokens">2000</field>
+        <field name="request_extra" eval="{'reasoning_effort': 'low'}" />
+    </record>
+
+    <record id="ai_model_gemini_flash_lite_latest" model="gateway.ml.model">
+        <field name="provider_id" ref="ai_provider_google" />
+        <field name="name">Gemini Flash Lite (audio)</field>
+        <field name="code">gemini-flash-lite-latest</field>
+        <field name="kind">audio</field>
+        <field name="active" eval="False" />
+        <field name="sequence" eval="20" />
+        <field name="has_timestamps" eval="False" />
+        <field name="supports_streaming" eval="False" />
+        <field name="accuracy_rating">3</field>
+        <field name="speed_rating">4</field>
     </record>
 
     <record id="ai_model_deepseek_flash" model="gateway.ml.model">
@@ -92,6 +111,7 @@
         <field name="cost_per_1m_output">0.60</field>
         <field name="accuracy_rating">3</field>
         <field name="speed_rating">5</field>
+        <field name="request_extra" eval="{'thinking': {'type': 'disabled'}}" />
     </record>
 
     <record id="ai_model_deepgram_nova_3" model="gateway.ml.model">
@@ -105,6 +125,7 @@
         <field name="cost_per_audio_minute">0.0043</field>
         <field name="accuracy_rating">5</field>
         <field name="speed_rating">5</field>
+        <field name="vocabulary_param">keyterm</field>
     </record>
 
     <record id="ai_model_groq_gpt_oss_120b" model="gateway.ml.model">
@@ -122,6 +143,7 @@
         <field name="cost_per_1m_output">0.60</field>
         <field name="accuracy_rating">3</field>
         <field name="speed_rating">5</field>
+        <field name="request_extra" eval="{'reasoning_effort': 'low'}" />
     </record>
 
     <record id="ai_model_groq_whisper_large_v3_turbo" model="gateway.ml.model">
@@ -151,6 +173,8 @@
         <field name="cost_per_1m_output">15.00</field>
         <field name="accuracy_rating">4</field>
         <field name="speed_rating">2</field>
+        <field name="min_max_tokens">2000</field>
+        <field name="request_extra" eval="{'temperature': 1}" />
     </record>
 
     <record id="ai_provider_anthropic" model="gateway.ml.provider">

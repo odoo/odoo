@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="provider_service_google_chat" model="gateway.ml.provider.service">
+        <field name="provider_id" ref="ai_provider_google" />
+        <field name="operation">chat</field>
+        <field name="service_id" ref="service_google_openai" />
+        <field name="wire">openai_compatible</field>
+        <field name="path">/chat/completions</field>
+        <field name="model_id" ref="ai_model_gemini_3_5_flash_lite" />
+        <field name="timeout" eval="25" />
+    </record>
+
+    <record id="provider_service_google_transcribe" model="gateway.ml.provider.service">
+        <field name="provider_id" ref="ai_provider_google" />
+        <field name="operation">transcribe</field>
+        <field name="service_id" ref="service_google" />
+        <field name="wire">gemini_native</field>
+        <field name="path">/models/{model}:generateContent</field>
+        <field name="model_id" ref="ai_model_gemini_flash_lite_latest" />
+        <field name="timeout" eval="90" />
+    </record>
+
+    <record id="provider_service_anthropic_chat" model="gateway.ml.provider.service">
+        <field name="provider_id" ref="ai_provider_anthropic" />
+        <field name="operation">chat</field>
+        <field name="service_id" ref="service_anthropic" />
+        <field name="wire">anthropic_messages</field>
+        <field name="path">/messages</field>
+        <field name="model_id" ref="ai_model_claude_sonnet_5" />
+        <field name="timeout" eval="25" />
+    </record>
+
+    <record id="provider_service_openai_chat" model="gateway.ml.provider.service">
+        <field name="provider_id" ref="ai_provider_openai" />
+        <field name="operation">chat</field>
+        <field name="service_id" ref="service_openai" />
+        <field name="wire">openai_compatible</field>
+        <field name="path">/chat/completions</field>
+        <field name="model_id" ref="ai_model_openai_gpt_5_6_luna" />
+        <field name="timeout" eval="25" />
+    </record>
+
+    <record id="provider_service_openai_transcribe" model="gateway.ml.provider.service">
+        <field name="provider_id" ref="ai_provider_openai" />
+        <field name="operation">transcribe</field>
+        <field name="service_id" ref="service_openai" />
+        <field name="wire">openai_compatible</field>
+        <field name="path">/audio/transcriptions</field>
+        <field name="model_id" ref="ai_model_openai_gpt_transcribe" />
+        <field name="timeout" eval="30" />
+    </record>
+
+    <record
+        id="provider_service_openai_transcribe_timed"
+        model="gateway.ml.provider.service">
+        <field name="provider_id" ref="ai_provider_openai" />
+        <field name="operation">transcribe_timed</field>
+        <field name="service_id" ref="service_openai" />
+        <field name="wire">openai_compatible</field>
+        <field name="path">/audio/transcriptions</field>
+        <field name="model_id" ref="ai_model_openai_whisper_1" />
+        <field name="timeout" eval="30" />
+    </record>
+
+    <record id="provider_service_deepseek_chat" model="gateway.ml.provider.service">
+        <field name="provider_id" ref="ai_provider_deepseek" />
+        <field name="operation">chat</field>
+        <field name="service_id" ref="service_deepseek" />
+        <field name="wire">openai_compatible</field>
+        <field name="path">/chat/completions</field>
+        <field name="model_id" ref="ai_model_deepseek_flash" />
+        <field name="timeout" eval="25" />
+    </record>
+
+    <record
+        id="provider_service_deepgram_transcribe_timed"
+        model="gateway.ml.provider.service">
+        <field name="provider_id" ref="ai_provider_deepgram" />
+        <field name="operation">transcribe_timed</field>
+        <field name="service_id" ref="service_deepgram" />
+        <field name="wire">deepgram</field>
+        <field name="path">/listen</field>
+        <field name="model_id" ref="ai_model_deepgram_nova_3" />
+        <field name="timeout" eval="30" />
+    </record>
+
+    <record id="provider_service_groq_chat" model="gateway.ml.provider.service">
+        <field name="provider_id" ref="ai_provider_groq" />
+        <field name="operation">chat</field>
+        <field name="service_id" ref="service_groq" />
+        <field name="wire">openai_compatible</field>
+        <field name="path">/chat/completions</field>
+        <field name="model_id" ref="ai_model_groq_gpt_oss_120b" />
+        <field name="timeout" eval="25" />
+    </record>
+
+    <record id="provider_service_groq_transcribe" model="gateway.ml.provider.service">
+        <field name="provider_id" ref="ai_provider_groq" />
+        <field name="operation">transcribe</field>
+        <field name="service_id" ref="service_groq" />
+        <field name="wire">openai_compatible</field>
+        <field name="path">/audio/transcriptions</field>
+        <field name="model_id" ref="ai_model_groq_whisper_large_v3_turbo" />
+        <field name="timeout" eval="30" />
+    </record>
+
+    <record
+        id="provider_service_groq_transcribe_timed"
+        model="gateway.ml.provider.service">
+        <field name="provider_id" ref="ai_provider_groq" />
+        <field name="operation">transcribe_timed</field>
+        <field name="service_id" ref="service_groq" />
+        <field name="wire">openai_compatible</field>
+        <field name="path">/audio/transcriptions</field>
+        <field name="model_id" ref="ai_model_groq_whisper_large_v3_turbo" />
+        <field name="timeout" eval="30" />
+    </record>
+
+    <record id="provider_service_moonshot_chat" model="gateway.ml.provider.service">
+        <field name="provider_id" ref="ai_provider_moonshot" />
+        <field name="operation">chat</field>
+        <field name="service_id" ref="service_moonshot" />
+        <field name="wire">openai_compatible</field>
+        <field name="path">/chat/completions</field>
+        <field name="model_id" ref="ai_model_moonshot_kimi_k3" />
+        <field name="timeout" eval="60" />
+    </record>
+
+</odoo>
