@@ -47,6 +47,15 @@ class AccountMove(models.Model):
             if move._is_exportable_as_self_invoice():
                 move.display_send_button = True
 
+    def _check_draftable(self):
+        # EXTENDS 'account'
+        if self.filtered(lambda move: move.is_sale_document(include_receipts=True) and move.peppol_is_sent):
+            raise UserError(self.env._(
+                "You cannot reset to draft invoices that were sent via Peppol / PDP. "
+                "If you need to modify them, you must issue a credit or debit note.",
+            ))
+        return super()._check_draftable()
+
     @api.depends('state')
     def _compute_peppol_move_state(self):
         for move in self:
