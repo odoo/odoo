@@ -13,6 +13,7 @@ from . import (
     _checker_noqa_rationale,
     _checker_onchange,
     _checker_orm_import,
+    _checker_receiver,
     _checker_row_counter,
     _checker_shadowed_def,
     _checker_sql,
@@ -239,6 +240,15 @@ RULES: tuple[Rule, ...] = (
         "`# noqa: E8518  <why it cannot>`",
     ),
     Rule(
+        "receiver-fail-open",
+        "E8528",
+        "resolve the caller through an inbound gate before doing anything: "
+        "`InboundController.inspect_inbound_request`, or the receiver's "
+        "`_check_inbound_request`, so an unknown caller is refused, a flood is "
+        "throttled and every refusal is recorded; a route that must stay open "
+        "takes `# noqa: E8528  <why>`",
+    ),
+    Rule(
         "secret-in-environ",
         "E8519",
         "hand the secret to the child process in its own `env=` mapping: "
@@ -373,6 +383,10 @@ def _raw_egress(unit: Unit) -> Iterable[object]:
     return _checker_egress.check_raw_egress(unit.tree, unit.nodes)
 
 
+def _receiver_fail_open(unit: Unit) -> Iterable[object]:
+    return _checker_receiver.check(unit.tree)
+
+
 def _secret_in_environ(unit: Unit) -> Iterable[object]:
     return _checker_egress.check_secret_in_environ(unit.tree, unit.nodes)
 
@@ -447,6 +461,11 @@ CHECKERS: tuple[Checker, ...] = (
         frozenset({"raw-egress"}),
     ),
     Checker(_secret_in_environ, _outside_tests, frozenset({"secret-in-environ"})),
+    Checker(
+        _receiver_fail_open,
+        _in_an_addon_outside_tests,
+        frozenset({"receiver-fail-open"}),
+    ),
     Checker(
         _credential_storage,
         _in_an_addon_outside_tests,

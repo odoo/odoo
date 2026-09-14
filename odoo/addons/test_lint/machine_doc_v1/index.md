@@ -27,10 +27,11 @@ it fails until the floor is lowered in the same change.
 This module was edited as a shared ledger: 24 of its last 40 commits changed
 nothing in it but an integer and the comment above it.
 
-Three gates are floored above zero: `lint_docstring` (a one-sided ratchet that
+Four gates are floored above zero: `lint_docstring` (a one-sided ratchet that
 reads 32 only on a fuller install), `bundle_double_eval` (ESM bundles that
-evaluate twice), and the migration ledger `lint_credential_storage`, whose floor
-is the columns still to move into the vault. Everything else -- every AST rule,
+evaluate twice), the migration ledger `lint_credential_storage`, whose floor
+is the columns still to move into the vault, and `lint_receiver_fail_open`, whose
+floor is the machine routes still to put behind an inbound gate. Everything else -- every AST rule,
 every XML rule, the manifest and record-order gates -- is a hard zero. `n-plus-one-query` reached
 zero on 2026-09-12 by reading each of its 295 sites: a loop over the records
 is hoisted, a loop that runs one query per distinct key (company, model,
@@ -61,6 +62,7 @@ database, and `test_checkers.py` does exactly that.
 | `_checker_http_json.py` | `http-json-string` |
 | `_checker_egress.py` | `raw-egress`, `secret-in-environ` |
 | `_checker_credential_storage.py` | `credential-storage` |
+| `_checker_receiver.py` | `receiver-fail-open` |
 | `_checker_row_counter.py` | `row-counter-in-test` |
 | `_checker_field_declaration.py` | `field-redeclared`, `default-evaluated-at-import`, `selection-duplicate-key`, `field-hook-prefix`, `field-positional-argument`, `field-attribute-order`, `dead-field-attribute` |
 
@@ -100,6 +102,15 @@ published keys, identifiers, hashes and cursors kept. It adds what the old gate
 never saw: a settings field with `config_parameter=`, which keeps its value in
 clear in `ir.config_parameter`. The floor is the backlog of fields still to move
 into the vault.
+
+`receiver-fail-open` (E8528) counts routes that take calls from machines without
+resolving the caller: `auth="public"` or `"none"` with `csrf=False`, whose handler --
+following the controller's own `self.` calls -- reaches none of the inbound gate's
+entry points (`inspect_inbound_request`, `_check_inbound_request`, `check_inbound_auth`,
+`_check_webhook_request`, `admit`, `_admit_mini_app_call`). Such a route answers an
+unknown caller without refusing it, throttles nobody and records nothing. The floor
+is P3 and P5 of the external-connections plan still to do: payment provider and POS terminal callbacks, Peppol and the other EDI
+webhooks, IoT, SMS. A route that must stay open carries `# noqa: E8528 - <why>`.
 
 `http-json-string` (E8515) catches `return json.dumps(...)` inside a route whose
 `type` is `"http"` or absent. The string goes out as `text/html`, and the client's

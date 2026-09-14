@@ -16,6 +16,7 @@ from . import (
     _checker_noqa_rationale,
     _checker_onchange,
     _checker_orm_import,
+    _checker_receiver,
     _checker_shadowed_def,
     _checker_sql,
     _checker_tax_company,
@@ -2230,3 +2231,55 @@ class TestFieldDeclarationLint(BaseCase):
         self.assertEqual(_checker_field_declaration.string_argument(call).value, "Name")
         call = ast.parse('fields.Many2one("a")').body[0].value
         self.assertIsNone(_checker_field_declaration.string_argument(call))
+
+
+class TestReceiverFailOpenLint(BaseCase):
+    def _routes(self, snippet):
+        tree = ast.parse(dedent(snippet).strip())
+        return [v.message.split(":")[0] for v in _checker_receiver.check(tree)]
+
+    def test_an_open_route_that_reaches_no_gate_is_flagged(self):
+        self.assertEqual(
+            self._routes("""
+            class Hooks(http.Controller):
+                @http.route("/hook", type="http", auth="public", csrf=False)
+                def hook(self, **kw):
+                    return self._handle(request.get_json_data())
+
+                def _handle(self, data):
+                    return data
+            """),
+            ["hook"],
+        )
+
+    def test_a_route_that_resolves_its_caller_through_a_helper_is_not(self):
+        self.assertEqual(
+            self._routes("""
+            class Hooks(http.Controller):
+                @route("/hook/<id>", type="http", auth="none", csrf=False)
+                def hook(self, id, **kw):
+                    device = self._resolve(id)
+                    return device
+
+                def _resolve(self, id):
+                    device = request.env["x"].search([("id", "=", id)])
+                    device.check_inbound_auth(dict(request.httprequest.headers), "1")
+                    return device
+            """),
+            [],
+        )
+
+    def test_a_route_with_a_session_or_csrf_is_out_of_scope(self):
+        self.assertEqual(
+            self._routes("""
+            class Pages(http.Controller):
+                @http.route("/page", type="http", auth="user", csrf=False)
+                def page(self):
+                    return ""
+
+                @http.route("/form", type="http", auth="public")
+                def form(self):
+                    return ""
+            """),
+            [],
+        )
