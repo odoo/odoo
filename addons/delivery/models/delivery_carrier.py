@@ -5,10 +5,14 @@ import psycopg
 
 from odoo import SUPERUSER_ID, Command, _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
 from odoo.modules.registry import Registry
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
+
+
+_debug = DebugLog(__name__)
 
 
 class DeliveryCarrier(models.Model):
@@ -293,10 +297,19 @@ class DeliveryCarrier(models.Model):
         return True
 
     def available_carriers(self, partner, source):
+        _debug.pipeline(
+            "carriers_filter_enter", carriers=self, partner=partner.id, source=source
+        )
         return self.filtered(lambda c: c._match(partner, source))
 
     def _match(self, partner, source):
         self.check_singleton()
+        _debug.logic(
+            "carrier_match_enter",
+            carrier=self.id,
+            partner=partner.id,
+            source=source,
+        )
         return (
             self._match_address(partner)
             and self._match_must_have_tags(source)
@@ -308,8 +321,20 @@ class DeliveryCarrier(models.Model):
     def _match_address(self, partner):
         self.check_singleton()
         if self.country_ids and partner.country_id not in self.country_ids:
+            _debug.logic(
+                "carrier_rejected",
+                carrier=self.id,
+                by="country",
+                partner_country=partner.country_id.id,
+            )
             return False
         if self.state_ids and partner.state_id not in self.state_ids:
+            _debug.logic(
+                "carrier_rejected",
+                carrier=self.id,
+                by="state",
+                partner_state=partner.state_id.id,
+            )
             return False
         if self.zip_prefix_ids:
             regex = re.compile(
@@ -321,6 +346,12 @@ class DeliveryCarrier(models.Model):
                 )
             )
             if not partner.zip or not re.match(regex, partner.zip.upper()):
+                _debug.logic(
+                    "carrier_rejected",
+                    carrier=self.id,
+                    by="zip_prefix",
+                    partner_zip=partner.zip or "",
+                )
                 return False
         return True
 
@@ -332,6 +363,12 @@ class DeliveryCarrier(models.Model):
             products = source.move_ids.with_prefetch().mapped("product_id")
         else:
             raise UserError(_("Invalid source document type"))
+        _debug.logic(
+            "carrier_match_must_have_tags",
+            carrier=self.id,
+            required=self.must_have_tag_ids,
+            products=products,
+        )
         return not self.must_have_tag_ids or any(
             tag in products.all_product_tag_ids for tag in self.must_have_tag_ids
         )
@@ -344,6 +381,12 @@ class DeliveryCarrier(models.Model):
             products = source.move_ids.with_prefetch().mapped("product_id")
         else:
             raise UserError(_("Invalid source document type"))
+        _debug.logic(
+            "carrier_match_excluded_tags",
+            carrier=self.id,
+            excluded=self.excluded_tag_ids,
+            products=products,
+        )
         return not any(
             tag in products.all_product_tag_ids for tag in self.excluded_tag_ids
         )
@@ -362,6 +405,12 @@ class DeliveryCarrier(models.Model):
             )
         else:
             raise UserError(_("Invalid source document type"))
+        _debug.logic(
+            "carrier_match_weight",
+            carrier=self.id,
+            total=total_weight,
+            max=self.max_weight,
+        )
         return not self.max_weight or total_weight <= self.max_weight
 
     def _match_volume(self, source):
@@ -378,6 +427,12 @@ class DeliveryCarrier(models.Model):
             )
         else:
             raise UserError(_("Invalid source document type"))
+        _debug.logic(
+            "carrier_match_volume",
+            carrier=self.id,
+            total=total_volume,
+            max=self.max_volume,
+        )
         return not self.max_volume or total_volume <= self.max_volume
 
     @api.onchange("integration_level")
@@ -429,6 +484,9 @@ class DeliveryCarrier(models.Model):
         return self.delivery_type
 
     def _apply_margins(self, price, order=False):
+        _debug.logic(
+            "carrier_margin_apply", carrier=self.id, price=price, margin=self.margin
+        )
         self.check_singleton()
         if self.delivery_type == "fixed":
             return float(price)
@@ -459,6 +517,12 @@ class DeliveryCarrier(models.Model):
         """
         # TODO maybe the currency code?
         self.check_singleton()
+        _debug.pipeline(
+            "rate_shipment_enter",
+            carrier=self.id,
+            delivery_type=self.delivery_type,
+            order=order.id,
+        )
         if hasattr(self, "%s_rate_shipment" % self.delivery_type):
             res = getattr(self, "%s_rate_shipment" % self.delivery_type)(order)
             # apply fiscal position
@@ -491,9 +555,27 @@ class DeliveryCarrier(models.Model):
                     "The shipping is free since the order amount exceeds %.2f.",
                     self.amount,
                 )
+                _debug.logic(
+                    "shipping_free_over",
+                    carrier=self.id,
+                    order=order.id,
+                    threshold=self.amount,
+                )
                 res["price"] = 0.0
+            _debug.pipeline(
+                "rate_shipment_done",
+                carrier=self.id,
+                order=order.id,
+                success=res["success"],
+                price=res["price"],
+            )
             return res
         else:
+            _debug.logic(
+                "rate_shipment_unsupported",
+                carrier=self.id,
+                delivery_type=self.delivery_type,
+            )
             return {
                 "success": False,
                 "price": 0.0,
@@ -551,6 +633,13 @@ class DeliveryCarrier(models.Model):
     def fixed_rate_shipment(self, order):
         carrier = self._match_address(order.partner_shipping_id)
         if not carrier:
+            _debug.logic(
+                "rate_refused",
+                carrier=self.id,
+                reason="address_not_matched",
+                order=order.id,
+                rating="fixed_rate_shipment",
+            )
             return {
                 "success": False,
                 "price": 0.0,
@@ -574,6 +663,13 @@ class DeliveryCarrier(models.Model):
     def base_on_rule_rate_shipment(self, order):
         carrier = self._match_address(order.partner_shipping_id)
         if not carrier:
+            _debug.logic(
+                "rate_refused",
+                carrier=self.id,
+                reason="address_not_matched",
+                order=order.id,
+                rating="base_on_rule_rate_shipment",
+            )
             return {
                 "success": False,
                 "price": 0.0,
@@ -586,6 +682,12 @@ class DeliveryCarrier(models.Model):
         try:
             price_unit = self._get_price_available(order)
         except UserError as e:
+            _debug.logic(
+                "rate_refused",
+                carrier=self.id,
+                reason="price_rule_error",
+                order=order.id,
+            )
             return {
                 "success": False,
                 "price": 0.0,
@@ -659,6 +761,15 @@ class DeliveryCarrier(models.Model):
         # 2- saved weight to use on sale order
         # 3- total order line weight as fallback
         weight = self.env.context.get("order_weight") or order.shipping_weight or weight
+        _debug.logic(
+            "price_available_inputs",
+            carrier=self.id,
+            order=order.id,
+            total=total,
+            weight=weight,
+            volume=volume,
+            quantity=quantity,
+        )
         return self._get_price_from_picking(total, weight, volume, quantity, wv=wv)
 
     def _get_price_dict(self, total, weight, volume, quantity, wv=0.0):

@@ -1,12 +1,16 @@
 from odoo import api, models
+from odoo.libs.debug_log import DebugLog
 
 from ._constants import DROPSHIP_DEST_LOCATION_XMLID, DROPSHIP_SOURCE_LOCATION_XMLID
+
+_debug = DebugLog(__name__)
 
 
 class ResCompany(models.Model):
     _inherit = "res.company"
 
     def _create_dropship_sequence(self):
+        _debug.lifecycle("dropship_sequence_create", companies=self)
         dropship_vals = [
             {
                 "name": "Dropship (%s)" % company.name,
@@ -34,6 +38,7 @@ class ResCompany(models.Model):
         self._create_dropship_sequence()
 
     def _create_dropship_picking_type(self):
+        _debug.lifecycle("dropship_picking_type_create", companies=self)
         dropship_vals = []
         for company in self:
             sequence = self.env["ir.sequence"].search(  # noqa: E8507 - company setup: one lookup per company
@@ -76,6 +81,7 @@ class ResCompany(models.Model):
         self._create_dropship_picking_type()
 
     def _create_dropship_rule(self):
+        _debug.lifecycle("dropship_rule_create", companies=self)
         dropship_route = self.env.ref("stock_dropshipping.route_drop_shipping")
         supplier_location = self.env.ref("stock.stock_location_suppliers")
         customer_location = self.env.ref("stock.stock_location_customers")

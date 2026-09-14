@@ -1,4 +1,7 @@
 from odoo import _, api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockPicking(models.Model):
@@ -21,6 +24,7 @@ class StockPicking(models.Model):
             picking.purchase_id = picking.move_ids.purchase_line_id.order_id
 
     def _action_done(self):
+        _debug.pipeline("purchase_picking_done", pickings=self)
         self.purchase_id.sudo().action_acknowledge()
         return super()._action_done()
 

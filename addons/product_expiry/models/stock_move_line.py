@@ -2,6 +2,9 @@ import datetime
 
 from odoo import api, fields, models
 from odoo.db.schema import column_exists, create_column
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockMoveLine(models.Model):
@@ -79,6 +82,7 @@ class StockMoveLine(models.Model):
                 move_line.removal_date = False
 
     def _filtered_expired(self, at=None):
+        _debug.logic("move_lines_expired_filter", lines=self, at=at)
         at = at or fields.Datetime.now()
         return self.filtered(
             lambda ml: (

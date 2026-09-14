@@ -1,5 +1,8 @@
 from odoo import fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_is_zero
+
+_debug = DebugLog(__name__)
 
 
 class AccountMove(models.Model):
@@ -43,6 +46,7 @@ class AccountMove(models.Model):
 
     def _post_entries(self):
 
+        _debug.pipeline("stock_entries_post", entries=self)
         if self.env.context.get("move_reverse_cancel"):
             return super()._post_entries()
 
@@ -59,6 +63,7 @@ class AccountMove(models.Model):
         return res
 
     def action_draft(self):
+        _debug.lifecycle("stock_entry_to_draft", entries=self)
         res = super().action_draft()
 
         with self.env.protecting(
@@ -70,6 +75,7 @@ class AccountMove(models.Model):
         return res
 
     def action_cancel(self):
+        _debug.lifecycle("stock_entry_cancel", entries=self)
         res = super().action_cancel()
 
         self.mapped("line_ids").filtered(
@@ -78,6 +84,7 @@ class AccountMove(models.Model):
         return res
 
     def _stock_account_prepare_realtime_out_lines_vals(self):
+        _debug.pipeline("anglo_saxon_out_lines_prepare", entries=self)
         lines_vals_list = []
 
         price_unit_prec = self.env["decimal.precision"].get_precision("Product Price")

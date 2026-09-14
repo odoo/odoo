@@ -1,4 +1,7 @@
 from odoo import fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockLocation(models.Model):
@@ -7,6 +10,7 @@ class StockLocation(models.Model):
     equipment_count = fields.Integer(compute="_compute_equipment_count")
 
     def _compute_equipment_count(self):
+        _debug.perf.count("location_equipment_count_compute", locations=self)
         equipment_data = self.env["maintenance.equipment"]._read_group(
             [("location_id", "in", self.ids)], ["location_id"], ["__count"]
         )

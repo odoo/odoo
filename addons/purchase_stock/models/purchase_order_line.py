@@ -4,8 +4,11 @@ from odoo import api, fields, models
 from odoo.api import SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.fields import Command
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.numbers import float_round
 from odoo.tools.translate import _
+
+_debug = DebugLog(__name__)
 
 
 class PurchaseOrderLine(models.Model):
@@ -58,6 +61,7 @@ class PurchaseOrderLine(models.Model):
     forecasted_issue = fields.Boolean(compute="_compute_forecasted_issue")
 
     def write(self, vals):
+        _debug.lifecycle("po_line_stock_write", lines=self, fields=len(vals))
         if vals.get("date_commitment"):
             new_date = fields.Datetime.to_datetime(vals["date_commitment"])
             self.filtered(
@@ -106,6 +110,7 @@ class PurchaseOrderLine(models.Model):
         return result
 
     def unlink(self):
+        _debug.lifecycle("po_line_stock_unlink", lines=self)
         self.move_ids._action_cancel()
 
         for line in self:
@@ -131,6 +136,7 @@ class PurchaseOrderLine(models.Model):
         "move_ids.quantity",
     )
     def _compute_qty_transferred(self):
+        _debug.perf.count("po_line_qty_transferred_compute", lines=self)
         lines_by_stock_move = self.filtered(
             lambda line: line.qty_transferred_method == "stock_move",
         )
@@ -144,6 +150,7 @@ class PurchaseOrderLine(models.Model):
 
     @api.depends("product_uom_qty", "date_commitment")
     def _compute_forecasted_issue(self):
+        _debug.perf.count("po_line_forecast_compute", lines=self)
         for line in self:
             warehouse = line.order_id.picking_type_id.warehouse_id
             line.forecasted_issue = False
@@ -176,6 +183,7 @@ class PurchaseOrderLine(models.Model):
         return action
 
     def _get_transferred_qty_from_moves(self):
+        _debug.logic("po_line_transferred_from_moves", lines=self)
         self.check_singleton()
         qty = 0.0
         for move in self._get_stock_moves():
@@ -214,6 +222,7 @@ class PurchaseOrderLine(models.Model):
         return values
 
     def _create_stock_moves(self, picking):
+        _debug.pipeline("po_line_moves_create", lines=self, picking=picking.id)
         return (
             self.env["stock.move"]
             .with_user(SUPERUSER_ID)
@@ -231,6 +240,7 @@ class PurchaseOrderLine(models.Model):
         company_id,
         values,
     ):
+        _debug.logic("po_line_candidate_search", lines=self)
         description_picking = ""
 
         if values.get("product_description_variants"):
@@ -278,6 +288,7 @@ class PurchaseOrderLine(models.Model):
         ]
 
     def _get_price_unit(self):
+        _debug.logic("po_line_price_unit", lines=self)
         self.check_singleton()
         order = self.order_id
         price_unit = self.price_unit_discounted_taxexc
@@ -371,6 +382,7 @@ class PurchaseOrderLine(models.Model):
             self._update_or_create_picking()
 
     def _merge_order_line(self, source_line):
+        _debug.pipeline("po_line_merge", lines=self, source=source_line.id)
         super()._merge_order_line(source_line)
         self.move_dest_ids += source_line.move_dest_ids
 
@@ -408,6 +420,7 @@ class PurchaseOrderLine(models.Model):
         values,
         po,
     ):
+        _debug.pipeline("po_line_from_procurement", lines=self)
         line_description = ""
 
         if values.get("product_description_variants"):

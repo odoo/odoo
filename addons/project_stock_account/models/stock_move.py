@@ -1,11 +1,15 @@
 from odoo import _, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockMove(models.Model):
     _inherit = "stock.move"
 
     def _get_analytic_distribution(self):
+        _debug.logic("project_analytic_distribution", moves=self)
         if not self.picking_type_id.analytic_costs:
             return super()._get_analytic_distribution()
         distribution = self.picking_id.project_id._get_analytic_distribution()
@@ -21,6 +25,7 @@ class StockMove(models.Model):
         return res
 
     def _get_domain_valid_moves(self):
+        _debug.logic("project_valid_moves_domain", moves=self)
         return [
             "&",
             ("picking_id.project_id", "!=", False),
@@ -28,6 +33,7 @@ class StockMove(models.Model):
         ]
 
     def _prepare_analytic_lines(self):
+        _debug.pipeline("project_analytic_lines_prepare", moves=self)
         res = super()._prepare_analytic_lines()
         if res and self.picking_id:
             project = self.picking_id.project_id

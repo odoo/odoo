@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
 
 TRANSFER_STATE = [
     ("no", "Nothing to transfer"),
@@ -7,6 +8,9 @@ TRANSFER_STATE = [
     ("done", "Fully transferred"),
     ("over done", "Over transferred"),
 ]
+
+
+_debug = DebugLog(__name__)
 
 
 class MixinOrderStock(models.AbstractModel):
@@ -48,6 +52,7 @@ class MixinOrderStock(models.AbstractModel):
         "force_fully_delivered",
     )
     def _compute_transfer_state(self):
+        _debug.perf.count("order_transfer_state_compute", orders=self)
         forced = self.filtered("force_fully_delivered")
         forced.transfer_state = "done"
         confirmed = (self - forced).filtered(lambda order: order.state == "done")
@@ -95,9 +100,11 @@ class MixinOrderStock(models.AbstractModel):
         )
 
     def action_force_transfer_state(self):
+        _debug.lifecycle("transfer_state_forced", orders=self)
         self.force_fully_delivered = True
 
     def action_unforce_transfer_state(self):
+        _debug.lifecycle("transfer_state_unforced", orders=self)
         self.force_fully_delivered = False
 
     def _get_action_view_picking(self, pickings):

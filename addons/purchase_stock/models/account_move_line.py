@@ -1,10 +1,14 @@
 from odoo import fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
     def _get_price_unit_val_dif_and_relevant_qty(self):
+        _debug.logic("price_difference_inputs", lines=self)
         self.check_singleton()
         valuation_price_unit = self.product_id.uom_id._compute_price(
             self.product_id.standard_price,
@@ -32,6 +36,7 @@ class AccountMoveLine(models.Model):
         return super()._get_stock_moves() | self.purchase_line_ids.move_ids
 
     def _prepare_price_difference_vals(self, quantity, amount_currency, account):
+        _debug.pipeline("price_difference_vals", lines=self, quantity=quantity)
         self.check_singleton()
         return {
             "name": self.name[:64],

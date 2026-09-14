@@ -1,4 +1,7 @@
 from odoo import api, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockScheduler(models.AbstractModel):
@@ -10,4 +13,5 @@ class StockScheduler(models.AbstractModel):
 
     @api.model
     def _alert_expired_lots(self, use_new_cursor=False, company_id=False):
+        _debug.lifecycle("cron_enter", cron="alert_expired_lots", company=company_id)
         self.env["stock.lot"]._alert_lots_past_alert_date(company_id=company_id)

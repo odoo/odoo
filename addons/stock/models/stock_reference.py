@@ -1,5 +1,7 @@
 from odoo import api, fields, models
 
+from ..tools import debug_log as dbg
+
 
 class StockReference(models.Model):
     _name = "stock.reference"
@@ -26,5 +28,6 @@ class StockReference(models.Model):
 
     @api.depends("move_ids.picking_id")
     def _compute_picking_ids(self):
+        dbg.lifecycle.debug("_compute_picking_ids on %s", dbg.rec(self))
         for reference in self:
             reference.picking_ids = reference.move_ids.picking_id

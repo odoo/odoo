@@ -5,6 +5,7 @@ from itertools import batched
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 
 from odoo.addons.stock_account.models.avco import AvcoAccumulator
@@ -12,6 +13,8 @@ from odoo.addons.stock_account.models.constants import (
     COST_METHOD_SELECTION,
     VALUATION_SELECTION,
 )
+
+_debug = DebugLog(__name__)
 
 
 class ProductTemplate(models.Model):
@@ -107,6 +110,12 @@ class ProductTemplate(models.Model):
     def write(self, vals):
         product_ids_to_update = set()
         lot_ids_to_update = set()
+        _debug.lifecycle(
+            "template_valuation_write",
+            templates=self,
+            categ=vals.get("categ_id"),
+            lot_valuated=vals.get("lot_valuated"),
+        )
         if "categ_id" in vals:
             category = self.env["product.category"].browse(vals["categ_id"])
             cost_method = category.property_cost_method or self.env.company.cost_method
@@ -236,6 +245,7 @@ class ProductProduct(models.Model):
     @api.depends_context("to_date", "company", "allowed_company_ids", "warehouse_id")
     @api.depends("cost_method", "stock_move_ids.value", "standard_price")
     def _compute_value(self):
+        _debug.perf.count("product_value_compute", products=self)
         main_currency = self.env.company.currency_id
         self.company_currency_id = main_currency
 
@@ -285,6 +295,12 @@ class ProductProduct(models.Model):
         std_price_by_product_id = {}
         total_value_by_product_id = {}
         lot_valuated_products_ids = {p.id for p in self if p.lot_valuated}
+        _debug.pipeline(
+            "valuation_batches_enter",
+            products=self,
+            at_date=at_date,
+            lot_valuated=len(lot_valuated_products_ids),
+        )
         if lot_valuated_products_ids:
             domain = Domain(
                 [
@@ -402,6 +418,7 @@ class ProductProduct(models.Model):
     def _create_standard_price_change_values(self, old_price):
         product_values = []
         product_ids_lot_valuated = set()
+        _debug.lifecycle("standard_price_change_enter", products=self)
         date = self.env.context.get("valuation_date") or fields.Datetime.now()
         for product in self:
             product_old_price = old_price.get(product, 0)
@@ -600,10 +617,23 @@ class ProductProduct(models.Model):
         value_by_product_id = {
             p.id: p.qty_available * std_price_by_product_id.get(p.id, 0) for p in self
         }
+        _debug.pipeline(
+            "standard_batch_done",
+            products=self,
+            at_date=at_date,
+            lot=lot.id if lot else False,
+        )
         return std_price_by_product_id, value_by_product_id
 
     def _run_average_batch(self, at_date=None, lots=None, force_recompute=False):
         lots = lots or self.env["stock.lot"]
+        _debug.perf.count(
+            "average_batch_enter",
+            products=self,
+            lots=lots,
+            at_date=at_date,
+            forced=force_recompute,
+        )
         std_price_by_key = {}
         value_by_key = {}
         quantity_by_key = {}
@@ -777,11 +807,23 @@ class ProductProduct(models.Model):
             std_price_by_key[key] = std_price
             value_by_key[key] = value
 
+        _debug.pipeline(
+            "fifo_batch_done",
+            products=self,
+            at_date=at_date,
+            lot=lot.id if lot else False,
+        )
         return std_price_by_key, value_by_key
 
     def _run_fifo(self, quantity, lot=None, at_date=None):
         self.check_singleton()
         if self.uom_id.compare(quantity, 0) <= 0:
+            _debug.logic(
+                "fifo_short_circuit",
+                product=self.id,
+                quantity=quantity,
+                reason="non_positive_qty",
+            )
             std_price = lot.standard_price if lot else self.standard_price
             if at_date:
                 last_in = self._get_last_in(at_date)
@@ -812,6 +854,12 @@ class ProductProduct(models.Model):
             quantity -= in_qty
         if quantity > 0:
             last_move_valued_qty = last_move._get_valued_qty() if last_move else 0
+            _debug.logic(
+                "fifo_stack_exhausted",
+                product=self.id,
+                unsourced_qty=quantity,
+                fallback="last_move" if last_move_valued_qty else "standard_price",
+            )
             if last_move and last_move_valued_qty:
                 last_move_value = (
                     last_move._get_value(at_date=at_date)
@@ -821,6 +869,7 @@ class ProductProduct(models.Model):
                 fifo_cost += quantity * (last_move_value / last_move_valued_qty)
             else:
                 fifo_cost += quantity * self.standard_price
+        _debug.logic("fifo_cost_resolved", product=self.id, value=fifo_cost)
         return fifo_cost
 
     def _run_fifo_get_stack(self, lot=None, at_date=None):
@@ -836,6 +885,12 @@ class ProductProduct(models.Model):
         if self.env.context.get("fifo_qty_already_processed"):
             fifo_stack_size -= self.env.context["fifo_qty_already_processed"]
         if self.uom_id.compare(fifo_stack_size, 0) <= 0:
+            _debug.logic(
+                "fifo_stack_empty",
+                product=self.id,
+                stack_size=fifo_stack_size,
+                lot=lot.id if lot else False,
+            )
             return fifo_stack, 0
 
         moves_domain = Domain(
@@ -874,11 +929,23 @@ class ProductProduct(models.Model):
                     offset=current_offset * initial_limit,
                     limit=initial_limit,
                 )
+        _debug.perf.count(
+            "fifo_stack_built",
+            product=self.id,
+            moves=len(fifo_stack),
+            extra_pages=current_offset,
+            page_size=initial_limit,
+        )
         fifo_stack.reverse()
         return fifo_stack, remaining_qty_on_first_stack_move
 
     def _update_standard_price(self, extra_value=None, extra_quantity=None):
         products_by_cost_method = defaultdict(set)
+        _debug.pipeline(
+            "standard_price_update_enter",
+            products=self,
+            incremental=extra_value is not None,
+        )
         for product in self:
             if product.lot_valuated and product.cost_method != "standard":
                 product.sudo().with_context(
@@ -888,6 +955,11 @@ class ProductProduct(models.Model):
             products_by_cost_method[product.cost_method].add(product.id)
         for cost_method, product_ids in products_by_cost_method.items():
             products = self.env["product.product"].sudo().browse(product_ids)
+            _debug.logic(
+                "standard_price_update_group",
+                cost_method=cost_method,
+                products=len(product_ids),
+            )
             if cost_method == "standard":
                 continue
 

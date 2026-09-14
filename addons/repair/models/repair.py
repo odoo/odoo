@@ -3,6 +3,7 @@ from collections import defaultdict
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_compare
 from odoo.tools.misc import format_date, unique
 
@@ -12,6 +13,9 @@ MAP_REPAIR_TO_PICKING_LOCATIONS = {
     "parts_location_id": "default_remove_location_dest_id",
     "recycle_location_id": "default_recycle_location_dest_id",
 }
+
+
+_debug = DebugLog(__name__)
 
 
 class RepairOrder(models.Model):
@@ -482,6 +486,7 @@ class RepairOrder(models.Model):
         "move_ids.date_planned_forecast",
     )
     def _compute_parts_availability_and_state(self):
+        _debug.perf.count("repair_parts_availability_compute", repairs=self)
         repairs = self.filtered(lambda ro: ro.state in ("confirmed", "under_repair"))
         repairs.parts_availability_state = "available"
         repairs.parts_availability = _("Available")
@@ -608,6 +613,7 @@ class RepairOrder(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        _debug.lifecycle("repair_create", count=len(vals_list))
         for vals in vals_list:
             if not vals.get("name") or vals["name"] == "New":
                 picking_type = self._picking_type_for_create(vals)
@@ -627,6 +633,7 @@ class RepairOrder(models.Model):
 
     @api.model
     def _picking_type_for_create(self, vals):
+        _debug.logic("repair_picking_type_for_create", repairs=self)
         defaults = self.default_get(["picking_type_id", "company_id", "user_id"])
         if picking_type_id := vals.get(
             "picking_type_id", defaults.get("picking_type_id")
@@ -640,6 +647,7 @@ class RepairOrder(models.Model):
         ).picking_type_id
 
     def write(self, vals):
+        _debug.lifecycle("repair_write", repairs=self, fields=len(vals))
         moves_to_reassign = self.env["stock.move"]
         if vals.get("picking_type_id"):
             picking_type = self.env["stock.picking.type"].browse(
@@ -674,10 +682,12 @@ class RepairOrder(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_confirmed(self):
+        _debug.logic("repair_unlink_guard", repairs=self)
         repairs_to_cancel = self.filtered(lambda ro: ro.state != "cancel")
         repairs_to_cancel.action_repair_cancel()
 
     def action_generate_serial(self):
+        _debug.lifecycle("repair_serial_generate", repairs=self)
         self.check_singleton()
         Lot = self.env["stock.lot"]
         self.lot_id = Lot.create(
@@ -685,9 +695,11 @@ class RepairOrder(models.Model):
         )
 
     def action_assign(self):
+        _debug.pipeline("repair_assign", repairs=self)
         return self.move_ids._action_assign()
 
     def action_create_sale_order(self):
+        _debug.pipeline("repair_sale_order_create", repairs=self)
         if any(repair.sale_order_id for repair in self):
             concerned_ro = self.filtered("sale_order_id")
             ref_str = "\n".join(ro.name for ro in concerned_ro)
@@ -723,6 +735,7 @@ class RepairOrder(models.Model):
         return self.action_view_sale_order()
 
     def action_repair_cancel(self):
+        _debug.lifecycle("repair_cancel", repairs=self)
         if any(repair.state == "done" for repair in self):
             raise UserError(
                 _("You cannot cancel a Repair Order that's already been completed")
@@ -736,6 +749,7 @@ class RepairOrder(models.Model):
         return self.write({"state": "cancel"})
 
     def action_repair_cancel_draft(self):
+        _debug.lifecycle("repair_back_to_draft", repairs=self)
         if self.filtered(lambda repair: repair.state != "cancel"):
             self.action_repair_cancel()
         sale_line_to_update = self.move_ids.sale_line_id.filtered(
@@ -755,6 +769,7 @@ class RepairOrder(models.Model):
         @return: True
         """
 
+        _debug.pipeline("repair_done_enter", repairs=self)
         precision = self.env["decimal.precision"].get_precision("Product Unit")
         product_move_vals = []
 
@@ -864,6 +879,7 @@ class RepairOrder(models.Model):
         """Checks before action_repair_done.
         @return: True
         """
+        _debug.lifecycle("repair_end", repairs=self)
         if self.filtered(lambda repair: repair.state != "under_repair"):
             raise UserError(
                 _("Repair must be under repair in order to end reparation.")
@@ -879,16 +895,19 @@ class RepairOrder(models.Model):
 
     def action_repair_start(self):
         """Writes repair order state to 'Under Repair'"""
+        _debug.lifecycle("repair_start", repairs=self)
         if self.filtered(lambda repair: repair.state != "confirmed"):
             self._action_repair_confirm()
         return self.write({"state": "under_repair"})
 
     def action_unreserve(self):
+        _debug.lifecycle("repair_unreserve", repairs=self)
         return self.move_ids.filtered(
             lambda m: m.state in ("assigned", "partially_available")
         )._unreserve()
 
     def action_validate(self):
+        _debug.pipeline("repair_validate_enter", repairs=self)
         self.check_singleton()
         if self.filtered(
             lambda repair: any(m.product_uom_qty < 0 for m in repair.move_ids)
@@ -968,6 +987,7 @@ class RepairOrder(models.Model):
         @param *arg: Arguments
         @return: True
         """
+        _debug.pipeline("repair_confirm_enter", repairs=self)
         repairs_to_confirm = self.filtered(lambda repair: repair.state == "draft")
         repairs_to_confirm._check_company()
         repairs_to_confirm.move_ids._check_company()
@@ -1028,6 +1048,7 @@ class RepairOrder(models.Model):
         return picking_type_by_company_user
 
     def _update_sale_order_line_price(self):
+        _debug.pipeline("repair_sale_line_price_update", repairs=self)
         for repair in self:
             add_moves = repair.move_ids.filtered(
                 lambda m: m.repair_line_type == "add" and m.sale_line_id

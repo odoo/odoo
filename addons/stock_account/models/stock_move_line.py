@@ -1,4 +1,7 @@
 from odoo import api, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockMoveLine(models.Model):
@@ -6,11 +9,13 @@ class StockMoveLine(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        _debug.lifecycle("valued_line_create", count=len(vals_list))
         mls = super().create(vals_list)
         mls._update_stock_move_value()
         return mls
 
     def write(self, vals):
+        _debug.lifecycle("valued_line_write", lines=self, fields=len(vals))
         analytic_move_to_recompute = set()
         if "quantity" in vals or "move_id" in vals:
             for move_line in self:
@@ -44,6 +49,7 @@ class StockMoveLine(models.Model):
         return res
 
     def unlink(self):
+        _debug.lifecycle("valued_line_unlink", lines=self)
         analytic_move_to_recompute = self.move_id
         res = super().unlink()
         analytic_move_to_recompute.sudo()._create_analytic_move()
@@ -54,6 +60,7 @@ class StockMoveLine(models.Model):
         return bool(self.owner_id and self.owner_id != self.company_id.partner_id)
 
     def _update_stock_move_value(self, old_qty_by_ml=None):
+        _debug.pipeline("move_value_refresh", lines=self)
         move_to_update = set()
         if not old_qty_by_ml:
             old_qty_by_ml = {}

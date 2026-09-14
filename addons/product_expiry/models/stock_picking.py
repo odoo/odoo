@@ -1,4 +1,7 @@
 from odoo import Command, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockPicking(models.Model):
@@ -15,12 +18,15 @@ class StockPicking(models.Model):
         return res
 
     def _get_expired_move_lines(self):
+        _debug.logic("expired_move_lines", pickings=self)
         return self.move_line_ids._filtered_expired()
 
     def _check_expired_lots(self):
+        _debug.logic("expired_lots_check", pickings=self)
         return self._get_expired_move_lines().picking_id
 
     def _action_generate_expired_wizard(self, expired_lines=None):
+        _debug.pipeline("expired_wizard_open", pickings=self)
         if expired_lines is None:
             expired_lines = self._get_expired_move_lines()
         view_id = self.env.ref("product_expiry.confirm_expiry_view").id

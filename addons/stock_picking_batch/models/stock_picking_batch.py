@@ -1,17 +1,22 @@
 from odoo import _, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockPickingBatch(models.Model):
     _inherit = "stock.picking.batch"
 
     def action_print(self):
+        _debug.lifecycle("batch_print", batches=self)
         self.check_singleton()
         return self.env.ref(
             "stock_picking_batch.action_report_picking_batch"
         ).report_action(self)
 
     def action_merge(self):
+        _debug.pipeline("batch_merge_enter", batches=self)
         if not self:
             return None
         if len(self) < 2:
@@ -67,6 +72,7 @@ class StockPickingBatch(models.Model):
         }
 
     def action_batch_detailed_operations(self):
+        _debug.lifecycle("batch_detailed_operations", batches=self)
         self.check_singleton()
         view_id = self.env.ref("stock_picking_batch.view_stock_move_line_list").id
         return {

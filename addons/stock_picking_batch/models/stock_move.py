@@ -1,5 +1,8 @@
 from odoo import models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockMove(models.Model):
@@ -12,6 +15,7 @@ class StockMove(models.Model):
         )
 
     def _action_cancel(self):
+        _debug.pipeline("batched_move_cancel", moves=self)
         res = super()._action_cancel()
 
         for picking in self.picking_id:
@@ -24,6 +28,7 @@ class StockMove(models.Model):
         return res
 
     def _post_process_picking(self, new=False):
+        _debug.pipeline("batched_picking_post_process", moves=self, new=new)
         super()._post_process_picking(new=new)
         for picking in self.picking_id:
             picking._resolve_auto_batch()

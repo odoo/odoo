@@ -1,5 +1,8 @@
 from odoo import api, fields, models
 from odoo.fields import Command
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class PurchaseOrder(models.Model):
@@ -36,10 +39,12 @@ class PurchaseOrder(models.Model):
         return res
 
     def _is_dropshipped(self):
+        _debug.logic("purchase_is_dropshipped", orders=self)
         self.check_singleton()
         return self.picking_type_id and self.picking_type_id.code == "dropship"
 
     def _is_dest_address_required(self):
+        _debug.logic("dropship_dest_address_required", orders=self)
         return super()._is_dest_address_required() or self._is_dropshipped()
 
 

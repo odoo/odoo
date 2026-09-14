@@ -1,4 +1,7 @@
 from odoo import _, api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ProductValue(models.Model):
@@ -68,6 +71,7 @@ class ProductValue(models.Model):
 
     @api.depends("move_id.value", "move_id.move_line_ids.quantity_product_uom")
     def _compute_current_value_details(self):
+        _debug.perf.count("manual_valuation_details", values=self)
         for product_value in self:
             move = product_value.move_id
             quantity = move._get_valued_qty() if move else 0
@@ -99,6 +103,7 @@ class ProductValue(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        _debug.lifecycle("manual_valuation_create", count=len(vals_list))
         product_ids = set()
         move_ids = set()
         lot_ids = set()

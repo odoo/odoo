@@ -1,4 +1,7 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class AccountMove(models.Model):
@@ -21,6 +24,7 @@ class AccountMove(models.Model):
                 )
 
     def button_create_landed_costs(self):
+        _debug.pipeline("landed_cost_from_bill", entries=self)
         self.check_singleton()
         landed_costs_lines = self.line_ids.filtered(
             lambda line: line.is_landed_costs_line
@@ -121,6 +125,7 @@ class AccountMoveLine(models.Model):
             self.is_landed_costs_line = False
 
     def _is_eligible_for_stock_account(self):
+        _debug.logic("landed_cost_aml_eligible", lines=self)
         return super()._is_eligible_for_stock_account() or (
             self.product_id.type == "service"
             and self.product_id.landed_cost_ok

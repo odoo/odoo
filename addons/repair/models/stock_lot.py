@@ -2,6 +2,9 @@ from collections import defaultdict
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockLot(models.Model):
@@ -27,6 +30,7 @@ class StockLot(models.Model):
 
     @api.depends("name")
     def _compute_repair_line_ids(self):
+        _debug.perf.count("repair_lot_lines_compute", lots=self)
         repair_orders = defaultdict(lambda: self.env["repair.order"])
         repair_moves = self.env["stock.move"].search(
             [
@@ -95,6 +99,7 @@ class StockLot(models.Model):
         return action
 
     def _check_lots_allowed(self, product_ids):
+        _debug.logic("repair_lots_allowed_check", lots=self)
         active_repair_id = self.env.context.get("active_repair_id")
         if active_repair_id:
             active_repair = self.env["repair.order"].browse(active_repair_id)

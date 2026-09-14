@@ -1,4 +1,7 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockPicking(models.Model):
@@ -19,11 +22,13 @@ class StockPicking(models.Model):
 
     @api.model
     def default_get(self, fields):
+        _debug.logic("picking_team_default", model="stock.picking")
         return self.env["team.team"]._drop_default_of_other_usage(
             super().default_get(fields), "stock"
         )
 
     @api.depends("picking_type_id")
     def _compute_team_id(self):
+        _debug.perf.count("picking_team_compute", pickings=self)
         for picking in self:
             picking.team_id = picking.picking_type_id.team_id

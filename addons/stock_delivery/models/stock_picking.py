@@ -6,6 +6,9 @@ from markupsafe import Markup
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockPicking(models.Model):
@@ -79,6 +82,7 @@ class StockPicking(models.Model):
         "move_ids.product_id.volume",
     )
     def _compute_allowed_carrier_ids(self):
+        _debug.perf.count("allowed_carriers_compute", pickings=self)
         Carrier = self.env["delivery.carrier"]
         carriers_by_company = {
             company: Carrier.search(Carrier._check_company_domain(company))
@@ -156,6 +160,7 @@ class StockPicking(models.Model):
             )
 
     def button_validate(self):
+        _debug.pipeline("delivery_validate_enter", pickings=self)
         res = super().button_validate()
         if res is not True:
             return res
@@ -175,6 +180,7 @@ class StockPicking(models.Model):
         return res
 
     def _get_carrier_exception_note(self, exception):
+        _debug.logic("carrier_exception", picking=self.id, carrier=self.carrier_id.id)
         self.check_singleton()
         line_1 = _("Exception occurred with respect to carrier on the transfer")
         line_2 = _("Manual actions might be needed.")
@@ -192,6 +198,7 @@ class StockPicking(models.Model):
 
     def _send_confirmation_email(self):
 
+        _debug.pipeline("delivery_confirmation_email", pickings=self)
         processed_carrier_picking = False
 
         for pick in self:
@@ -225,6 +232,9 @@ class StockPicking(models.Model):
         return super()._send_confirmation_email()
 
     def send_to_shipper(self):
+        _debug.pipeline(
+            "shipper_send_enter", picking=self.id, carrier=self.carrier_id.id
+        )
         self.check_singleton()
         res = self.carrier_id.send_shipping(self)[0]
         if self.carrier_id.free_over and self.sale_id:
@@ -237,6 +247,12 @@ class StockPicking(models.Model):
                 )
                 >= self.carrier_id.amount
             ):
+                _debug.logic(
+                    "shipping_free_over",
+                    picking=self.id,
+                    carrier=self.carrier_id.id,
+                    threshold=self.carrier_id.amount,
+                )
                 res["exact_price"] = 0.0
         self.carrier_price = self.carrier_id._apply_margins(
             res["exact_price"], self.sale_id
@@ -279,12 +295,22 @@ class StockPicking(models.Model):
             )
         )
         self.message_post(body=msg)
+        _debug.pipeline(
+            "shipper_send_done",
+            picking=self.id,
+            carrier=self.carrier_id.id,
+            price=self.carrier_price,
+            tracking=bool(self.carrier_tracking_ref),
+        )
         self._add_delivery_cost_to_so()
 
     def _check_carrier_details_compliance(self):
         return
 
     def print_return_label(self):
+        _debug.lifecycle(
+            "return_label_print", picking=self.id, carrier=self.carrier_id.id
+        )
         self.check_singleton()
         self.carrier_id.get_return_label(self)
 
@@ -304,6 +330,9 @@ class StockPicking(models.Model):
         }
 
     def _add_delivery_cost_to_so(self):
+        _debug.pipeline(
+            "delivery_cost_to_so", picking=self.id, price=self.carrier_price
+        )
         self.check_singleton()
         sale_order = self.sale_id
         if (
@@ -349,6 +378,7 @@ class StockPicking(models.Model):
         }
 
     def cancel_shipment(self):
+        _debug.lifecycle("shipment_cancel", pickings=self, carrier=self.carrier_id.id)
         for picking in self:
             picking.carrier_id.cancel_shipment(picking)
             msg = "Shipment %s cancelled" % picking.carrier_tracking_ref

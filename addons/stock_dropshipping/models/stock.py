@@ -1,7 +1,10 @@
 from odoo import api, fields, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 
 from ._constants import DROPSHIP_DEST_LOCATION_XMLID, DROPSHIP_SOURCE_LOCATION_XMLID
+
+_debug = DebugLog(__name__)
 
 
 class StockRule(models.Model):
@@ -14,6 +17,7 @@ class StockRule(models.Model):
         ), super()._get_procurements_to_merge_groupby(procurement)
 
     def _get_partner_id(self, values, rule):
+        _debug.logic("dropship_partner_resolve", rules=self)
         route_id = self.env["ir.model.data"]._xmlid_to_res_id(
             "stock_dropshipping.route_drop_shipping"
         )
@@ -50,6 +54,7 @@ class StockPicking(models.Model):
         "location_id.company_id",
     )
     def _compute_is_dropship(self):
+        _debug.perf.count("dropship_flag_compute", pickings=self)
         for picking in self:
             source, dest = picking.location_id, picking.location_dest_id
             picking.is_dropship = (
@@ -61,6 +66,7 @@ class StockPicking(models.Model):
             )
 
     def _is_to_external_location(self):
+        _debug.logic("dropship_external_location_check", pickings=self)
         self.check_singleton()
         return super()._is_to_external_location() or self.is_dropship
 

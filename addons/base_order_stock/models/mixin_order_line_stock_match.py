@@ -1,8 +1,12 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, float_compare, float_is_zero
 
 SPLITTABLE_STATES = ("waiting", "confirmed", "partially_available", "assigned")
+
+
+_debug = DebugLog(__name__)
 
 
 class MixinOrderLineStockMatch(models.AbstractModel):
@@ -160,11 +164,13 @@ class MixinOrderLineStockMatch(models.AbstractModel):
         return _("You must select at least one stock move to match.")
 
     def _action_create_moves_from_order_lines(self, order_lines):
+        _debug.pipeline("moves_from_order_lines", lines=order_lines)
         raise NotImplementedError(
             f"{self._name} must implement _action_create_moves_from_order_lines()",
         )
 
     def _rank_move_for_line(self, order_line, move):
+        _debug.logic("move_rank_for_line", line=order_line.id, move=move.id)
         precision = self.env["decimal.precision"].get_precision("Product Unit")
         residual = order_line.qty_to_transfer
         move_qty = move.product_uom_id._compute_quantity(
@@ -204,6 +210,12 @@ class MixinOrderLineStockMatch(models.AbstractModel):
         return order_line[self._date_expected_field]
 
     def _link_move_to_line(self, move, order_line, over_transferred):
+        _debug.pipeline(
+            "move_linked_to_line",
+            move=move.id,
+            line=order_line.id,
+            over=over_transferred,
+        )
         precision = self.env["decimal.precision"].get_precision("Product Unit")
         residual = order_line.qty_to_transfer
         move_qty = move.product_uom_id._compute_quantity(
@@ -239,6 +251,7 @@ class MixinOrderLineStockMatch(models.AbstractModel):
         return move.browse()
 
     def action_match_lines(self):
+        _debug.pipeline("order_line_match_enter", records=self)
         if not self.order_line_id:
             raise UserError(self._get_no_order_line_message())
         if not self.move_id:
@@ -267,6 +280,7 @@ class MixinOrderLineStockMatch(models.AbstractModel):
         return None
 
     def _warn_over_transferred(self, over_transferred):
+        _debug.logic("over_transferred_warning", records=self)
         details = "\n".join(
             _(
                 "%(product)s: %(move)s exceeds %(line)s by %(excess)s",

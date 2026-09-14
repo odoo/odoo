@@ -1,5 +1,8 @@
 from odoo import _, api, fields, models
 from odoo.fields import Command, Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockPickingType(models.Model):
@@ -26,6 +29,7 @@ class StockPickingType(models.Model):
             record.count_picking_batch = count.get((record.id, False), 0)
 
     def action_batch(self):
+        _debug.pipeline("picking_batch_action", picking_types=self)
         action = self._prepare_action_by_xml_id(
             "stock_picking_batch.stock_picking_batch_action"
         )
@@ -36,17 +40,20 @@ class StockPickingType(models.Model):
         return action
 
     def action_wave(self):
+        _debug.pipeline("picking_wave_action", picking_types=self)
         return self._prepare_action_by_xml_id(
             "stock_picking_batch.action_picking_tree_wave"
         )
 
     def _is_auto_batch_grouped(self):
+        _debug.logic("auto_batch_grouped_check", picking_types=self)
         self.check_singleton()
         return self.auto_batch and any(
             self[key] for key in self._get_batch_group_by_keys()
         )
 
     def _is_auto_wave_grouped(self):
+        _debug.logic("auto_wave_grouped_check", picking_types=self)
         self.check_singleton()
         return self.auto_batch and any(
             self[key] for key in self._get_wave_group_by_keys()

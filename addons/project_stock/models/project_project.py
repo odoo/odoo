@@ -1,5 +1,8 @@
 from odoo import _, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ProjectProject(models.Model):
@@ -19,6 +22,7 @@ class ProjectProject(models.Model):
         return self._get_picking_action(_("Stock Moves"))
 
     def _get_picking_action(self, action_name, picking_type=None):
+        _debug.logic("project_picking_action", projects=self, action=action_name)
         domain = Domain("project_id", "=", self.id)
         context = {"default_project_id": self.id}
         if picking_type:

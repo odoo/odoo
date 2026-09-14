@@ -5,9 +5,12 @@ from odoo import api, fields, models
 from odoo.api import SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.fields import Command, Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.numbers import float_repr
 from odoo.tools.misc import OrderedSet
 from odoo.tools.translate import _
+
+_debug = DebugLog(__name__)
 
 
 class PurchaseOrder(models.Model):
@@ -72,6 +75,7 @@ class PurchaseOrder(models.Model):
     )
 
     def write(self, vals):
+        _debug.lifecycle("po_stock_write", orders=self, fields=len(vals))
         pre_order_line_qty = {}
         if vals.get("line_ids"):
             for order in self.filtered(lambda po: po.state == "done"):
@@ -118,6 +122,7 @@ class PurchaseOrder(models.Model):
 
     @api.depends("picking_ids", "picking_ids.state")
     def _compute_is_shipped(self):
+        _debug.perf.count("po_is_shipped_compute", orders=self)
         for order in self:
             order.is_shipped = bool(order.picking_ids) and all(
                 picking.state in ("done", "cancel") for picking in order.picking_ids
@@ -137,6 +142,7 @@ class PurchaseOrder(models.Model):
             self.picking_type_id = self._get_picking_type(self.company_id.id)
 
     def _action_cancel(self):
+        _debug.pipeline("po_cancel_enter", orders=self)
         order_lines_ids = OrderedSet()
         pickings_to_cancel_ids = OrderedSet()
 
@@ -207,10 +213,12 @@ class PurchaseOrder(models.Model):
         return super()._action_cancel()
 
     def _action_confirm(self):
+        _debug.pipeline("po_confirm_enter", orders=self)
         self._create_picking()
         super()._action_confirm()
 
     def action_purchase_order_suggest(self):
+        _debug.pipeline("po_suggest_enter", orders=self)
         self.check_singleton()
         ctx = self.env.context
         domain = Domain("type", "=", "consu")
@@ -348,10 +356,12 @@ class PurchaseOrder(models.Model):
         )
 
     def _create_update_date_activity(self, updated_dates):
+        _debug.lifecycle("po_date_activity_create", orders=self)
         activity = super()._create_update_date_activity(updated_dates)
         self._add_picking_info(activity)
 
     def _update_update_date_activity(self, updated_dates, activity):
+        _debug.lifecycle("po_date_activity_update", orders=self)
         note_lines = activity.note.split("<p>")
         note_lines.pop()
         activity.note = Markup("<p>").join(note_lines)
@@ -382,6 +392,7 @@ class PurchaseOrder(models.Model):
         # the orders confirmed together get their pickings, moves, confirmation
         # and reservation in batches per company; the chatter link stays per
         # picking
+        _debug.pipeline("po_picking_create_enter", orders=self)
         StockPicking = self.env["stock.picking"].with_user(SUPERUSER_ID)
         orders = self.filtered(
             lambda po: (
@@ -434,6 +445,7 @@ class PurchaseOrder(models.Model):
     @api.model
     @api.depends("company_id")
     def _compute_picking_type_id(self):
+        _debug.perf.count("po_picking_type_compute", orders=self)
         for order in self:
             picking_type = order.picking_type_id
             type_company = picking_type.warehouse_id.company_id

@@ -1,4 +1,7 @@
 from odoo import api, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class AccountMove(models.Model):
@@ -16,6 +19,7 @@ class AccountMove(models.Model):
 
     def _post_entries(self):
 
+        _debug.pipeline("purchase_stock_entries_post", entries=self)
         if not self.env.context.get("move_reverse_cancel"):
             self.env["account.move.line"].create(
                 self._stock_account_prepare_anglo_saxon_in_lines_vals(),
@@ -40,6 +44,7 @@ class AccountMove(models.Model):
         return rslt
 
     def _stock_account_prepare_anglo_saxon_in_lines_vals(self):
+        _debug.pipeline("anglo_saxon_in_lines_prepare", entries=self)
         lines_vals_list = []
 
         for move in self:

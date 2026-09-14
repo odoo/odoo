@@ -1,6 +1,9 @@
 from collections import defaultdict
 
 from odoo import _, api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockLot(models.Model):
@@ -48,6 +51,7 @@ class StockLot(models.Model):
     )
     @api.depends_context("to_date", "company", "warehouse_id")
     def _compute_value(self):
+        _debug.perf.count("lot_value_compute", lots=self)
         company_id = self.env.company
         self.company_currency_id = company_id.currency_id
         at_date = fields.Datetime.to_datetime(self.env.context.get("to_date"))
@@ -104,6 +108,7 @@ class StockLot(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        _debug.lifecycle("lot_create", count=len(vals_list))
         lots = super().create(vals_list)
         for product, lots_by_product in lots.grouped("product_id").items():
             if product.lot_valuated:
@@ -117,6 +122,7 @@ class StockLot(models.Model):
         return lots
 
     def write(self, vals):
+        _debug.lifecycle("lot_write", lots=self, fields=len(vals))
         old_price = False
         if "standard_price" in vals and not self.env.context.get(
             "disable_auto_revaluation"
@@ -128,6 +134,7 @@ class StockLot(models.Model):
         return res
 
     def _update_standard_price(self):
+        _debug.pipeline("lot_standard_price_update", lots=self)
         avco_lots_by_product = defaultdict(lambda: self.env["stock.lot"])
         for lot in self:
             lot = lot.with_context(disable_auto_revaluation=True)
@@ -152,6 +159,7 @@ class StockLot(models.Model):
                 lot.standard_price = unit_cost_by_lot_id.get(lot.id, 0)
 
     def _create_standard_price_change_values(self, old_price):
+        _debug.lifecycle("lot_standard_price_change", lots=self)
         product_values = []
         for lot in self:
             lot_old_price = old_price.get(lot)

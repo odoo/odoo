@@ -3,6 +3,9 @@ from datetime import datetime
 
 from odoo import api, fields, models
 from odoo.fields import Command, Date
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockMove(models.Model):
@@ -61,6 +64,7 @@ class StockMove(models.Model):
                 ).strip()
 
     def _action_synch_order(self):
+        _debug.pipeline("move_order_synch_enter", moves=self)
         purchase_order_lines_vals = []
         for move in self:
             purchase_order = (
@@ -121,6 +125,7 @@ class StockMove(models.Model):
         )
 
     def _get_cost_ratio(self, quantity):
+        _debug.logic("move_cost_ratio", moves=self, quantity=quantity)
         self.check_singleton()
         return quantity
 
@@ -132,6 +137,7 @@ class StockMove(models.Model):
         )
 
     def _get_purchase_line_and_partner_from_chain(self):
+        _debug.logic("move_purchase_chain_walk", moves=self)
         moves_to_check = deque(self)
         queued = set(self)
         while moves_to_check:
@@ -148,6 +154,7 @@ class StockMove(models.Model):
         return None, None
 
     def _get_upstream_documents_and_responsibles(self, visited):
+        _debug.pipeline("move_upstream_walk", moves=self)
         created_pl = self.created_purchase_line_ids.filtered(
             lambda cpl: (
                 cpl.state != "cancel"
@@ -178,6 +185,7 @@ class StockMove(models.Model):
         return rslt
 
     def _get_value_from_account_move(self, quantity, at_date=None):
+        _debug.logic("move_value_from_bill", moves=self, quantity=quantity)
         valuation_data = super()._get_value_from_account_move(quantity, at_date=at_date)
         if not self.purchase_line_id:
             return valuation_data
@@ -246,6 +254,7 @@ class StockMove(models.Model):
         return valuation_data
 
     def _get_value_from_quotation(self, quantity, at_date=None):
+        _debug.logic("move_value_from_quotation", moves=self, quantity=quantity)
         if not self.purchase_line_id:
             return super()._get_value_from_quotation(quantity, at_date)
         price_unit = self.purchase_line_id.with_context(
@@ -266,6 +275,7 @@ class StockMove(models.Model):
         }
 
     def _is_purchase_return(self):
+        _debug.logic("move_is_purchase_return", moves=self)
         self.check_singleton()
         if self.location_dest_id.usage == "supplier":
             return True

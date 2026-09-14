@@ -1,9 +1,12 @@
 from odoo import _, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.numbers import float_is_zero, float_round
 from odoo.tools.misc import groupby
 
 from .delivery_request_objects import DeliveryCommodity, DeliveryPackage
+
+_debug = DebugLog(__name__)
 
 
 class DeliveryCarrier(models.Model):
@@ -27,12 +30,14 @@ class DeliveryCarrier(models.Model):
     )
 
     def send_shipping(self, pickings):
+        _debug.pipeline("carrier_send_shipping", carrier=self.id, pickings=pickings)
         self.check_singleton()
         if hasattr(self, "%s_send_shipping" % self.delivery_type):
             return getattr(self, "%s_send_shipping" % self.delivery_type)(pickings)
         return None
 
     def get_return_label(self, pickings, tracking_number=None, origin_date=None):
+        _debug.pipeline("carrier_return_label", carrier=self.id, pickings=pickings)
         self.check_singleton()
         if self.can_generate_return:
             res = getattr(self, "%s_get_return_label" % self.delivery_type)(
@@ -59,6 +64,7 @@ class DeliveryCarrier(models.Model):
         return None
 
     def cancel_shipment(self, pickings):
+        _debug.pipeline("carrier_cancel_shipment", carrier=self.id, pickings=pickings)
         self.check_singleton()
         if hasattr(self, "%s_cancel_shipment" % self.delivery_type):
             return getattr(self, "%s_cancel_shipment" % self.delivery_type)(pickings)
@@ -74,6 +80,7 @@ class DeliveryCarrier(models.Model):
             return False
 
     def _get_packages_from_order(self, order, default_package_type):
+        _debug.perf.count("packages_from_order", carrier=self.id, order=order.id)
         total_cost = 0
         for line in order.line_ids.filtered(
             lambda line: not line.is_delivery and not line.display_type
@@ -127,6 +134,7 @@ class DeliveryCarrier(models.Model):
         ]
 
     def _get_packages_from_picking(self, picking, default_package_type):
+        _debug.perf.count("packages_from_picking", carrier=self.id, picking=picking.id)
         packages = []
 
         if picking.is_return_picking:
@@ -198,6 +206,7 @@ class DeliveryCarrier(models.Model):
         return packages
 
     def _get_commodities_from_order(self, order):
+        _debug.perf.count("commodities_from_order", carrier=self.id, order=order.id)
         commodities = []
 
         for line in order.line_ids.filtered(
@@ -227,6 +236,7 @@ class DeliveryCarrier(models.Model):
         return commodities
 
     def _get_commodities_from_stock_move_lines(self, move_lines):
+        _debug.perf.count("commodities_from_lines", carrier=self.id, lines=move_lines)
         commodities = []
 
         product_lines = move_lines.filtered(

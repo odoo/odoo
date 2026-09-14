@@ -1,4 +1,5 @@
 from odoo import Command, api, fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.misc import groupby
 
 MAP_REPAIR_LINE_TYPE_TO_MOVE_LOCATIONS_FROM_REPAIR = {
@@ -12,6 +13,9 @@ MAP_REPAIR_LINE_TYPE_TO_MOVE_LOCATIONS_FROM_REPAIR = {
         "location_dest_id": "recycle_location_id",
     },
 }
+
+
+_debug = DebugLog(__name__)
 
 
 class StockMove(models.Model):
@@ -103,11 +107,13 @@ class StockMove(models.Model):
         return super()._unlink_except_done_or_linked()
 
     def unlink(self):
+        _debug.lifecycle("repair_move_unlink", moves=self)
         self._clean_repair_sale_order_line()
         return super().unlink()
 
     @api.model_create_multi
     def create(self, vals_list):
+        _debug.lifecycle("repair_move_create", count=len(vals_list))
         for vals in vals_list:
             if not vals.get("repair_id") or "repair_line_type" not in vals:
                 continue
@@ -140,6 +146,7 @@ class StockMove(models.Model):
         return confirmed_repair_moves | no_repair_moves
 
     def write(self, vals):
+        _debug.lifecycle("repair_move_write", moves=self, fields=len(vals))
         res = super().write(vals)
         repair_moves = self.env["stock.move"]
         moves_to_create_so_line = self.env["stock.move"]
@@ -172,6 +179,7 @@ class StockMove(models.Model):
         return super()._action_cancel()
 
     def _create_repair_sale_order_line(self):
+        _debug.pipeline("repair_move_sale_line_create", moves=self)
         if not self:
             return
         so_line_vals = []
@@ -205,11 +213,13 @@ class StockMove(models.Model):
         self.env["sale.order.line"].create(so_line_vals)
 
     def _clean_repair_sale_order_line(self):
+        _debug.pipeline("repair_move_sale_line_clean", moves=self)
         self.filtered(lambda m: m.repair_id and m.sale_line_id).mapped(
             "sale_line_id"
         ).write({"product_qty": 0.0})
 
     def _update_repair_sale_order_line(self):
+        _debug.pipeline("repair_move_sale_line_update", moves=self)
         if not self:
             return
         moves_to_clean = self.env["stock.move"]
@@ -226,11 +236,13 @@ class StockMove(models.Model):
             sale_line.product_qty = sum(sale_line.move_ids.mapped("product_uom_qty"))
 
     def _is_consuming(self):
+        _debug.logic("repair_move_is_consuming", moves=self)
         return super()._is_consuming() or (
             self.repair_id and self.repair_line_type == "add"
         )
 
     def _get_repair_locations(self, repair_line_type, repair_id=False):
+        _debug.logic("repair_locations_resolve", moves=self, line_type=repair_line_type)
         location_map = MAP_REPAIR_LINE_TYPE_TO_MOVE_LOCATIONS_FROM_REPAIR.get(
             repair_line_type
         )
@@ -249,6 +261,7 @@ class StockMove(models.Model):
         return self.repair_id or super()._get_source_document()
 
     def _set_repair_locations(self):
+        _debug.logic("repair_locations_set", moves=self)
         moves_per_repair = self.filtered(
             lambda m: (m.repair_id and m.repair_line_type) is not False
         ).grouped("repair_id")
@@ -260,6 +273,7 @@ class StockMove(models.Model):
                 m.location_id, m.location_dest_id = m._get_repair_locations(line_type)
 
     def _is_assignment_required(self):
+        _debug.logic("repair_move_assignment_required", moves=self)
         if self.repair_id:
             return False
         return super()._is_assignment_required()

@@ -1,6 +1,9 @@
 from collections import defaultdict
 
 from odoo import _, api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrder(models.Model):
@@ -50,6 +53,7 @@ class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
     def _compute_qty_transferred(self):
+        _debug.perf.count("repair_sale_qty_transferred_compute", lines=self)
         remaining_so_lines = self
         for so_line in self:
             move = so_line.move_ids.sudo().filtered(
@@ -88,6 +92,7 @@ class SaleOrderLine(models.Model):
 
     def _action_launch_stock_rule(self, **kwargs):
         # Picking must be generated for products created from the SO but not for parts added from the RO, as they're already handled there
+        _debug.pipeline("repair_stock_rule_launch", lines=self)
         lines_without_repair_move = self.filtered(
             lambda line: not line.move_ids.sudo().repair_id
         )
@@ -96,6 +101,7 @@ class SaleOrderLine(models.Model):
         )._action_launch_stock_rule(**kwargs)
 
     def _create_repair_order(self):
+        _debug.pipeline("repair_order_from_sale", lines=self)
         new_repair_vals = []
         for line in self:
             # One RO for each line with at least a quantity of 1, quantities > 1 don't create multiple ROs
@@ -137,6 +143,7 @@ class SaleOrderLine(models.Model):
 
     def _cancel_repair_order(self):
         # Each RO binded to a SO line with Qty set to 0 or cancelled is set to 'Cancelled'
+        _debug.lifecycle("repair_order_cancel_from_sale", lines=self)
         binded_ro_ids = self.env["repair.order"]
         for line in self:
             binded_ro_ids |= line.order_id.sudo().repair_order_ids.filtered(

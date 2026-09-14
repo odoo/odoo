@@ -1,5 +1,8 @@
 from odoo import _lt, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class Project(models.Model):
@@ -24,6 +27,7 @@ class Project(models.Model):
         ]
 
     def _get_profitability_items(self, with_action=True):
+        _debug.perf.count("project_profitability_items", projects=self)
         profitability_items = super()._get_profitability_items(with_action)
         aal_from_picking = self._get_items_from_aal_picking(with_action)
         if aal_from_picking:
@@ -34,6 +38,7 @@ class Project(models.Model):
         return profitability_items
 
     def _get_items_from_aal_picking(self, with_action=True):
+        _debug.perf.count("project_aal_picking_items", projects=self)
         domain = Domain(self._get_domain_aal_with_no_move_line()) & Domain(
             "category", "=", "picking_entry"
         )

@@ -1,7 +1,10 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_compare, float_is_zero
 
 from .mixin_order_stock import TRANSFER_STATE
+
+_debug = DebugLog(__name__)
 
 
 class MixinOrderLineStock(models.AbstractModel):
@@ -24,6 +27,7 @@ class MixinOrderLineStock(models.AbstractModel):
 
     @api.depends("state", "product_qty", "qty_transferred", "qty_to_transfer")
     def _compute_transfer_state(self):
+        _debug.perf.count("line_transfer_state_compute", lines=self)
         precision = self.env["decimal.precision"].get_precision("Product Unit")
         self.filtered("display_type").transfer_state = "no"
         for line in self.filtered(lambda l: not l.display_type):
@@ -62,6 +66,7 @@ class MixinOrderLineStock(models.AbstractModel):
         )
 
     def _get_procurement_qty(self, previous_product_qty=False):
+        _debug.logic("line_procurement_qty", lines=self)
         self.check_singleton()
         procured_moves, returned_moves = self._get_procurement_moves()
         return self._get_moves_qty_sum(procured_moves) - self._get_moves_qty_sum(
@@ -74,6 +79,7 @@ class MixinOrderLineStock(models.AbstractModel):
         )
 
     def _get_transferable_moves(self):
+        _debug.logic("transferable_moves", lines=self)
         self.check_singleton()
         return self.move_ids.filtered(
             lambda m: (

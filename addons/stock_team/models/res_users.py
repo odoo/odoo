@@ -1,4 +1,7 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ResUsers(models.Model):
@@ -18,6 +21,7 @@ class ResUsers(models.Model):
         "team_member_ids.team_id.use_stock",
     )
     def _compute_stock_team_ids(self):
+        _debug.perf.count("user_stock_teams_compute", users=self)
         for user in self:
             user.stock_team_ids = user._get_usage_team_ids("stock")
 

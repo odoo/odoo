@@ -1,4 +1,7 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockPackage(models.Model):
@@ -6,6 +9,7 @@ class StockPackage(models.Model):
 
     @api.depends("contained_quant_ids", "package_type_id")
     def _compute_weight(self):
+        _debug.perf.count("package_weight_compute", packages=self)
         packages_weight = self.sudo()._get_weight(self.env.context.get("picking_id"))
         for package in self:
             package.weight = packages_weight[package]
@@ -60,6 +64,7 @@ class StockPackage(models.Model):
         package_name=False,
         from_package_wizard=False,
     ):
+        _debug.pipeline("package_put_in_pack_pre", packages=self)
         res = super()._pre_put_in_pack_hook(
             package_id, package_type_id, package_name, from_package_wizard
         )
@@ -78,6 +83,7 @@ class StockPackage(models.Model):
         return res
 
     def _post_put_in_pack_hook(self):
+        _debug.pipeline("package_put_in_pack_post", packages=self)
         res = super()._post_put_in_pack_hook()
         weight = self.env.context.get("weight")
         if weight:

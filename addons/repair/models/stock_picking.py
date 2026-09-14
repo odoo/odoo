@@ -1,5 +1,8 @@
 from odoo import _, api, fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.misc import clean_context
+
+_debug = DebugLog(__name__)
 
 
 class StockPickingType(models.Model):
@@ -73,6 +76,7 @@ class StockPickingType(models.Model):
     )
 
     def _compute_count_repair(self):
+        _debug.perf.count("repair_count_compute", picking_types=self)
         repair_picking_types = self.filtered(
             lambda picking: picking.code == "repair_operation"
         )
@@ -198,6 +202,7 @@ class StockPickingType(models.Model):
         return action
 
     def _get_aggregated_records_by_date(self):
+        _debug.perf.count("repair_aggregate_by_date", picking_types=self)
         repair_picking_types = self.filtered(
             lambda picking: picking.code == "repair_operation"
         )
@@ -232,6 +237,7 @@ class StockPicking(models.Model):
     )
 
     def action_repair_return(self):
+        _debug.pipeline("repair_return_enter", pickings=self)
         self.check_singleton()
         ctx = clean_context(self.env.context.copy())
         warehouse = (

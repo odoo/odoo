@@ -1,4 +1,7 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class PurchaseOrder(models.Model):
@@ -11,6 +14,7 @@ class PurchaseOrder(models.Model):
 
     @api.depends("on_time_rate")
     def _compute_on_time_rate_perc(self):
+        _debug.perf.count("requisition_on_time_rate_compute", orders=self)
         for po in self:
             if po.on_time_rate >= 0:
                 po.on_time_rate_perc = po.on_time_rate / 100

@@ -2,6 +2,7 @@ from datetime import datetime
 
 from odoo import api, fields, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 
 from odoo.addons.stock.tools.reservation import RemovalStrategy
@@ -29,6 +30,9 @@ FEFO_REMOVAL_STRATEGY = RemovalStrategy(
 )
 
 
+_debug = DebugLog(__name__)
+
+
 class StockQuant(models.Model):
     _inherit = "stock.quant"
 
@@ -52,6 +56,7 @@ class StockQuant(models.Model):
         return Domain("removal_date", ">=", cutoff) | Domain("removal_date", "=", False)
 
     def _filtered_not_expired(self):
+        _debug.logic("quants_expiry_filter", quants=self)
         cutoff = self.env.context.get("with_expiration")
         if not cutoff:
             return super()._filtered_not_expired()
@@ -71,6 +76,7 @@ class StockQuant(models.Model):
 
     @api.model
     def _get_removal_strategies(self):
+        _debug.logic("removal_strategies_read", quants=self)
         strategies = super()._get_removal_strategies()
         strategies["fefo"] = FEFO_REMOVAL_STRATEGY
         return strategies

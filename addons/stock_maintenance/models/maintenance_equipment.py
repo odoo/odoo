@@ -1,4 +1,7 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class MaintenanceEquipment(models.Model):
@@ -12,6 +15,7 @@ class MaintenanceEquipment(models.Model):
 
     @api.depends("serial_no")
     def _compute_match_serial(self):
+        _debug.perf.count("equipment_serial_match_compute", equipments=self)
         if not self.env["stock.lot"].has_access("read") or not self.env.user.has_group(
             "stock.group_production_lot"
         ):
@@ -27,6 +31,7 @@ class MaintenanceEquipment(models.Model):
             equipment.match_serial = matched_serial_count.get(equipment.serial_no, 0)
 
     def action_view_matched_serial(self):
+        _debug.lifecycle("equipment_serial_view", equipments=self)
         self.check_singleton()
         action = self.env.ref("stock.action_stock_lot_form", raise_if_not_found=False)
         if not action:

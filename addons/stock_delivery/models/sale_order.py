@@ -1,10 +1,16 @@
 from odoo import _, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     def set_delivery_line(self, carrier, amount):
+        _debug.pipeline(
+            "delivery_line_set", order=self.id, carrier=carrier.id, amount=amount
+        )
         res = super().set_delivery_line(carrier, amount)
         for order in self:
             if order.state != "done":
@@ -19,6 +25,9 @@ class SaleOrder(models.Model):
         return res
 
     def _create_delivery_line(self, carrier, price_unit):
+        _debug.lifecycle(
+            "delivery_line_create", order=self.id, carrier=carrier.id, price=price_unit
+        )
         sol = super()._create_delivery_line(carrier, price_unit)
         context = {}
         if self.partner_id:

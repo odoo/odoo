@@ -1,4 +1,7 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrder(models.Model):
@@ -32,6 +35,7 @@ class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
     def _compute_is_mto(self):
+        _debug.perf.count("dropship_mto_compute", lines=self)
         super()._compute_is_mto()
         for line in self:
             if not line.display_qty_widget or line.is_mto:
@@ -50,6 +54,7 @@ class SaleOrderLine(models.Model):
                     break
 
     def _get_procurement_qty(self, previous_product_qty=False):
+        _debug.logic("dropship_procurement_qty", lines=self)
         purchase_lines_sudo = self.sudo().purchase_line_ids
         if (
             any(

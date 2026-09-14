@@ -3,6 +3,9 @@ from collections import defaultdict
 
 from odoo import SUPERUSER_ID, api, fields, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockLot(models.Model):
@@ -72,6 +75,7 @@ class StockLot(models.Model):
 
     @api.depends("expiration_date")
     def _compute_product_expiry_alert(self):
+        _debug.perf.count("expiry_alert_compute", lots=self)
         current_date = fields.Datetime.now()
         for lot in self:
             lot.product_expiry_alert = (
@@ -98,6 +102,7 @@ class StockLot(models.Model):
         self._update_expiry_date("alert_date", "alert_time")
 
     def _update_expiry_date(self, date_field, time_field):
+        _debug.lifecycle("lot_expiry_date_update", lots=self, field=date_field)
         for lot in self:
             if not lot.product_id.use_expiration_date or not lot.expiration_date:
                 lot[date_field] = False
@@ -108,6 +113,7 @@ class StockLot(models.Model):
 
     @api.model
     def _alert_lots_past_alert_date(self, company_id=False):
+        _debug.pipeline("expiry_alert_scan", company=company_id)
         domain = Domain(
             [
                 ("quantity", ">", 0),
@@ -129,6 +135,7 @@ class StockLot(models.Model):
         alert_lots.product_expiry_reminded = True
 
     def _schedule_expiry_activity(self):
+        _debug.lifecycle("expiry_activity_schedule", lots=self)
         lots_by_user = defaultdict(self.browse)
         for lot in self:
             product = lot.product_id

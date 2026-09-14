@@ -1,4 +1,7 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockPickingBatch(models.Model):
@@ -23,6 +26,7 @@ class StockPickingBatch(models.Model):
 
     @api.depends("picking_type_id", "picking_ids.team_id")
     def _compute_team_id(self):
+        _debug.perf.count("batch_team_compute", batches=self)
         for batch in self:
             if not batch.picking_ids:
                 batch.team_id = batch.picking_type_id.team_id or batch.team_id

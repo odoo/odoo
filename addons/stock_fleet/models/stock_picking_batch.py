@@ -1,6 +1,9 @@
 from datetime import timedelta
 
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockPickingBatch(models.Model):
@@ -77,6 +80,7 @@ class StockPickingBatch(models.Model):
 
     @api.depends("vehicle_id")
     def _compute_vehicle_category_id(self):
+        _debug.perf.count("batch_vehicle_category_compute", batches=self)
         for rec in self:
             rec.vehicle_category_id = rec.vehicle_id.category_id
 
@@ -119,6 +123,7 @@ class StockPickingBatch(models.Model):
         "vehicle_category_id.volume_capacity",
     )
     def _compute_capacity_percentage(self):
+        _debug.perf.count("batch_capacity_compute", batches=self)
         self.used_weight_percentage = False
         self.used_volume_percentage = False
         for batch in self:
@@ -133,12 +138,14 @@ class StockPickingBatch(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        _debug.lifecycle("fleet_batch_create", count=len(vals_list))
         batches = super().create(vals_list)
         batches.order_on_zip()
         batches.filtered(lambda b: b.dock_id)._set_moves_destination_to_dock()
         return batches
 
     def write(self, vals):
+        _debug.lifecycle("fleet_batch_write", batches=self, fields=len(vals))
         res = super().write(vals)
         if "picking_ids" in vals:
             self.order_on_zip()
@@ -147,11 +154,13 @@ class StockPickingBatch(models.Model):
         return res
 
     def order_on_zip(self):
+        _debug.pipeline("batch_order_on_zip", batches=self)
         sorted_records = self.picking_ids.sorted(lambda p: p.zip or "")
         for idx, record in enumerate(sorted_records):
             record.batch_sequence = idx
 
     def _set_moves_destination_to_dock(self):
+        _debug.pipeline("batch_moves_to_dock", batches=self)
         for batch in self:
             if not batch.dock_id:
                 batch.picking_ids._reset_location()

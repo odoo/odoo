@@ -1,4 +1,7 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ProductProduct(models.Model):
@@ -28,6 +31,7 @@ class ProductProduct(models.Model):
         return [("id", "in", product_ids)]
 
     def _update_uom(self, to_uom_id):
+        _debug.lifecycle("repair_product_uom_update", products=self, to_uom=to_uom_id)
         self._restamp_uom("repair.order", to_uom_id)
         return super()._update_uom(to_uom_id)
 

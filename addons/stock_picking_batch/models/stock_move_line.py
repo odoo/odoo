@@ -2,7 +2,10 @@ from collections import defaultdict
 
 from odoo import _, fields, models
 from odoo.fields import Command, Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.misc import OrderedSet
+
+_debug = DebugLog(__name__)
 
 
 class WaveFill:
@@ -131,6 +134,7 @@ class StockMoveLine(models.Model):
         }
 
     def _add_to_wave(self, wave=False):
+        _debug.pipeline("wave_add_enter", lines=self, wave=wave and wave.id)
         if not wave:
             wave = self.env["stock.picking.batch"].create(
                 {
@@ -159,6 +163,7 @@ class StockMoveLine(models.Model):
         return self._get_add_to_wave_action(wave, notification_title)
 
     def _is_auto_waveable(self):
+        _debug.logic("auto_waveable_check", lines=self)
         self.check_singleton()
         if (  # noqa: SIM103  the condition reads as a checklist; a bare return would not
             not self.picking_id
@@ -181,6 +186,7 @@ class StockMoveLine(models.Model):
         return True
 
     def _auto_wave(self):
+        _debug.pipeline("auto_wave_enter", lines=self)
         nearest_parent_locations = defaultdict(lambda: self.env["stock.location"])
         batchable_lines = self.browse()
         for line in self:
@@ -202,6 +208,7 @@ class StockMoveLine(models.Model):
         remaining_lines._auto_wave_lines_into_new_waves(nearest_parent_locations)
 
     def _get_potential_existing_waves(self, picking_type, batches_to_validate_ids):
+        _debug.logic("wave_candidates_search", picking_type=picking_type.id)
         domains = [
             Domain("picking_type_id", "=", picking_type.id),
             Domain("company_id", "in", self.company_id.ids),
@@ -248,6 +255,7 @@ class StockMoveLine(models.Model):
         )
 
     def _auto_wave_lines_into_existing_waves(self, nearest_parent_locations):
+        _debug.pipeline("auto_wave_into_existing", lines=self)
         remaining_lines = self.browse()
         batches_to_validate_ids = self.env.context.get("batches_to_validate", False)
         for picking_type, lines in self.grouped("picking_type_id").items():
@@ -277,6 +285,7 @@ class StockMoveLine(models.Model):
         return remaining_lines
 
     def _auto_wave_lines_into_new_waves(self, nearest_parent_locations):
+        _debug.pipeline("auto_wave_into_new", lines=self)
         for picking_type, lines in self.grouped("picking_type_id").items():
             grouped = lines.grouped(
                 lambda line, picking_type=picking_type: (
@@ -291,6 +300,7 @@ class StockMoveLine(models.Model):
                 )
 
     def _create_new_waves_for_lines(self, picking_type, nearest_parent_locations):
+        _debug.lifecycle("wave_create", picking_type=picking_type.id)
         potential_lines = self.sorted(
             key=lambda line: (line.picking_id.id, line.move_id.id)
         )
@@ -313,6 +323,7 @@ class StockMoveLine(models.Model):
             potential_lines -= wave_lines
 
     def _select_lines_for_one_wave(self, picking_type):
+        _debug.logic("wave_line_selection", lines=self, picking_type=picking_type.id)
         fill = WaveFill(
             self.env["stock.picking.batch"].new(
                 {"is_wave": True, "picking_type_id": picking_type.id}

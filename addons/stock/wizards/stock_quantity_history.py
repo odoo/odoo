@@ -2,6 +2,8 @@ from odoo import _, fields, models
 from odoo.fields import Domain
 from odoo.tools.misc import format_datetime
 
+from ..tools import debug_log as dbg
+
 
 class StockQuantityHistory(models.TransientModel):
     _name = "stock.quantity.history"
@@ -22,8 +24,17 @@ class StockQuantityHistory(models.TransientModel):
         product_tmpl_id = self.env.context.get("product_tmpl_id", False)
         if product_id:
             domain &= Domain("id", "=", product_id)
+            scope = f"product {product_id}"
         elif product_tmpl_id:
             domain &= Domain("product_tmpl_id", "=", product_tmpl_id)
+            scope = f"template {product_tmpl_id}"
+        else:
+            scope = "all storable products"
+        dbg.logic.debug(
+            "stock valuation at %s scoped to %s",
+            self.inventory_datetime,
+            scope,
+        )
         return {
             "type": "ir.actions.act_window",
             "views": [(tree_view_id, "list"), (form_view_id, "form")],

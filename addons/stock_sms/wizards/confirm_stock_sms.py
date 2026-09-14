@@ -1,4 +1,7 @@
 from odoo import fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ConfirmStockSms(models.TransientModel):
@@ -11,6 +14,7 @@ class ConfirmStockSms(models.TransientModel):
     )
 
     def send_sms(self):
+        _debug.lifecycle("sms_confirmed", wizards=self)
         self.check_singleton()
         for company in self.pick_ids.company_id:
             if not company.has_received_warning_stock_sms:
@@ -21,6 +25,7 @@ class ConfirmStockSms(models.TransientModel):
         return pickings_to_validate.button_validate()
 
     def dont_send_sms(self):
+        _debug.lifecycle("sms_declined", wizards=self)
         self.check_singleton()
         for company in self.pick_ids.company_id:
             if not company.has_received_warning_stock_sms:

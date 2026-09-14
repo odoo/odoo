@@ -2,6 +2,7 @@ from collections import defaultdict
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
 
 SPLIT_METHOD = [
     ("equal", "Equal"),
@@ -10,6 +11,9 @@ SPLIT_METHOD = [
     ("by_weight", "By Weight"),
     ("by_volume", "By Volume"),
 ]
+
+
+_debug = DebugLog(__name__)
 
 
 class StockLandedCost(models.Model):
@@ -112,12 +116,14 @@ class StockLandedCost(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        _debug.lifecycle("landed_cost_create", count=len(vals_list))
         for vals in vals_list:
             if vals.get("name", _("New")) == _("New"):
                 vals["name"] = self.env["ir.sequence"].next_by_code("stock.landed.cost")
         return super().create(vals_list)
 
     def unlink(self):
+        _debug.lifecycle("landed_cost_unlink", costs=self)
         self.button_cancel()
         return super().unlink()
 
@@ -127,6 +133,7 @@ class StockLandedCost(models.Model):
         return super()._track_subtype(init_values)
 
     def button_cancel(self):
+        _debug.lifecycle("landed_cost_cancel", costs=self)
         if any(cost.state == "done" for cost in self):
             raise UserError(
                 _(
@@ -136,6 +143,7 @@ class StockLandedCost(models.Model):
         return self.write({"state": "cancel"})
 
     def button_validate(self):
+        _debug.pipeline("landed_cost_validate_enter", costs=self)
         self._check_can_validate()
         cost_without_adjusment_lines = self.filtered(
             lambda c: not c.valuation_adjustment_lines
@@ -180,6 +188,7 @@ class StockLandedCost(models.Model):
         return True
 
     def get_valuation_lines(self):
+        _debug.perf.count("landed_cost_valuation_lines", costs=self)
         self.check_singleton()
         lines = []
 
@@ -217,6 +226,7 @@ class StockLandedCost(models.Model):
         return lines
 
     def compute_landed_cost(self):
+        _debug.pipeline("landed_cost_compute_enter", costs=self)
         AdjustementLines = self.env["stock.valuation.adjustment.lines"]
         AdjustementLines.search([("cost_id", "in", self.ids)]).unlink()
 
@@ -292,6 +302,7 @@ class StockLandedCost(models.Model):
         return self.picking_ids.move_ids
 
     def _check_can_validate(self):
+        _debug.logic("landed_cost_validate_check", costs=self)
         if any(cost.state != "draft" for cost in self):
             raise UserError(_("Only draft landed costs can be validated"))
         for cost in self:
@@ -307,6 +318,7 @@ class StockLandedCost(models.Model):
                 )
 
     def _check_sum(self):
+        _debug.logic("landed_cost_sum_check", costs=self)
         for landed_cost in self:
             total_amount = sum(
                 landed_cost.valuation_adjustment_lines.mapped("additional_landed_cost")
@@ -443,6 +455,9 @@ class StockValuationAdjustmentLines(models.Model):
             line.final_cost = line.former_cost + line.additional_landed_cost
 
     def _create_accounting_entries(self, remaining_qty):
+        _debug.pipeline(
+            "landed_cost_entries_create", lines=self, remaining=remaining_qty
+        )
         cost_product = self.cost_line_id.product_id
         if not cost_product:
             return False

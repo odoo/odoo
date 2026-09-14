@@ -1,6 +1,9 @@
 from odoo import api, fields, models
 from odoo.db.schema import column_exists, create_column
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockRoute(models.Model):
@@ -33,6 +36,7 @@ class StockMove(models.Model):
 
     @api.depends("product_id", "product_uom_qty", "product_uom_id")
     def _compute_weight(self):
+        _debug.perf.count("move_weight_compute", moves=self)
         moves_with_weight = self.filtered(lambda moves: moves.product_id.weight > 0.00)
         for move in moves_with_weight:
             move.weight = move.product_qty * move.product_id.weight
@@ -120,6 +124,7 @@ class StockMoveLine(models.Model):
         package_name=False,
         from_package_wizard=False,
     ):
+        _debug.pipeline("put_in_pack_pre", lines=self)
         res = super()._pre_put_in_pack_hook(
             all_lines, package_id, package_type_id, package_name, from_package_wizard
         )
@@ -132,6 +137,7 @@ class StockMoveLine(models.Model):
         return res
 
     def _post_put_in_pack_hook(self, package):
+        _debug.pipeline("put_in_pack_post", lines=self, package=package.id)
         weight = self.env.context.get("weight")
         if weight:
             package.shipping_weight = weight
@@ -151,6 +157,7 @@ class StockMoveLine(models.Model):
         return package_carrier_type
 
     def _is_package_set_required(self):
+        _debug.logic("package_set_required_check", lines=self)
         if self.carrier_id:
             return True
         return super()._is_package_set_required()

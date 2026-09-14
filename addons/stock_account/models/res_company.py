@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.stock_account.models.constants import (
     COST_METHOD_SELECTION,
@@ -13,6 +14,9 @@ from odoo.addons.stock_account.models.constants import (
 )
 
 _logger = logging.getLogger(__name__)
+
+
+_debug = DebugLog(__name__)
 
 
 class ResCompany(models.Model):
@@ -77,6 +81,12 @@ class ResCompany(models.Model):
         }
 
     def _close_stock_valuation(self, at_date=None, auto_post=False):
+        _debug.pipeline(
+            "valuation_closing_enter",
+            company=self.id,
+            at_date=at_date,
+            auto_post=auto_post,
+        )
         self.check_singleton()
         if not self.try_lock_for_update(allow_referencing=True):
             raise UserError(
@@ -96,6 +106,12 @@ class ResCompany(models.Model):
             order="date desc, id desc",
         )
         if reset := pending.filtered("posted_before"):
+            _debug.logic(
+                "valuation_closing_refused",
+                reason="posted_entry_in_draft",
+                company=self.id,
+                entry=reset[0].id,
+            )
             _logger.info(
                 "Stock valuation closing for company %s has a previously-posted entry"
                 " %s back in draft; not computing another.",
@@ -196,6 +212,7 @@ class ResCompany(models.Model):
         return account_data
 
     def _action_close_stock_valuation(self, at_date=None):
+        _debug.pipeline("valuation_closing_build", company=self.id, at_date=at_date)
         aml_vals_list = []
         accounts_by_product = self._get_accounts_by_product()
 
@@ -218,6 +235,7 @@ class ResCompany(models.Model):
 
     @api.model
     def _cron_post_stock_valuation(self):
+        _debug.lifecycle("cron_enter", cron="post_stock_valuation")
         today = fields.Date.today()
         periods = ["daily"]
         if today == today + relativedelta(day=31):
@@ -229,6 +247,7 @@ class ResCompany(models.Model):
             ]
         )
         companies = self.env["res.company"].search(domain)
+        _debug.logic("cron_scope", periods=",".join(periods), companies=companies)
         for company in companies:
             try:
                 with self.env.cr.savepoint():
@@ -274,6 +293,7 @@ class ResCompany(models.Model):
         return extra_balance
 
     def _get_location_valuation_vals(self, at_date=None, location_domain=False):
+        _debug.perf.count("location_valuation_vals", company=self.id, at_date=at_date)
         location_domain = Domain.AND(
             [
                 location_domain or [],

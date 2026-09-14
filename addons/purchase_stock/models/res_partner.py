@@ -2,6 +2,9 @@ from collections import defaultdict
 from datetime import timedelta
 
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ResPartner(models.Model):
@@ -57,6 +60,7 @@ class ResPartner(models.Model):
 
     @api.depends("purchase_line_ids")
     def _compute_on_time_rate(self):
+        _debug.perf.count("on_time_rate_compute", partners=self)
         date_order_days_delta = int(
             self.env["ir.config_parameter"]
             .sudo()

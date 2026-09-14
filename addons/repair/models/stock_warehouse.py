@@ -1,5 +1,8 @@
 from odoo import _, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockWarehouse(models.Model):
@@ -23,6 +26,7 @@ class StockWarehouse(models.Model):
         return codes
 
     def _prepare_picking_type_create_vals(self):
+        _debug.lifecycle("repair_picking_type_vals", warehouses=self)
         data = super()._prepare_picking_type_create_vals()
         prod_location = self._get_production_location()
         scrap_location = self.env["stock.location"].search(
@@ -64,6 +68,7 @@ class StockWarehouse(models.Model):
         return data
 
     def _create_missing_locations(self, vals):
+        _debug.lifecycle("repair_locations_create", warehouses=self)
         super()._create_missing_locations(vals)
         companies_with_production_location = {
             company

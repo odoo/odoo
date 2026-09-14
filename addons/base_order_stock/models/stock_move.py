@@ -1,5 +1,8 @@
 from odoo import api, models
 from odoo.fields import Command
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockMove(models.Model):
@@ -27,6 +30,7 @@ class StockMove(models.Model):
                     break
 
     def _update_merged_moves(self):
+        _debug.pipeline("merged_moves_update", moves=self)
         super()._update_merged_moves()
         cleared = {
             created: [Command.clear()]
@@ -54,6 +58,7 @@ class StockMove(models.Model):
         ]
 
     def _prepare_move_split_vals(self, uom_qty, force_uom_id=False):
+        _debug.logic("move_split_vals", moves=self, uom_qty=uom_qty)
         vals = super()._prepare_move_split_vals(uom_qty, force_uom_id=force_uom_id)
         for link, created in self._get_fields_linking_order_lines():
             if self.procure_method == "make_to_order" and self[created]:

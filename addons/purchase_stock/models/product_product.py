@@ -5,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.numbers import float_round
 
 _SUGGESTED_QTY_OPERATORS = {
@@ -15,6 +16,9 @@ _SUGGESTED_QTY_OPERATORS = {
     ">": py_operator.gt,
     ">=": py_operator.ge,
 }
+
+
+_debug = DebugLog(__name__)
 
 
 class ProductProduct(models.Model):
@@ -40,6 +44,7 @@ class ProductProduct(models.Model):
     )
     @api.depends("monthly_demand")
     def _compute_suggested_qty(self):
+        _debug.perf.count("suggested_qty_compute", products=self)
         ctx = self.env.context
         self.suggested_qty = 0
         if ctx.get("suggest_based_on") == "actual_demand":
@@ -78,6 +83,7 @@ class ProductProduct(models.Model):
     )
     @api.depends("suggested_qty")
     def _compute_suggest_estimated_price(self):
+        _debug.perf.count("suggest_price_compute", products=self)
         seller_args = {
             "partner_id": self.env["res.partner"].browse(
                 self.env.context.get("partner_id"),
@@ -109,6 +115,7 @@ class ProductProduct(models.Model):
 
     @api.depends_context("suggest_based_on", "warehouse_id")
     def _compute_monthly_demand(self):
+        _debug.perf.count("monthly_demand_compute", products=self)
         based_on = self.env.context.get("suggest_based_on", "30_days")
         start_date, limit_date = self._get_monthly_demand_range(based_on)
         move_domain = Domain(
@@ -257,6 +264,7 @@ class ProductProduct(models.Model):
             )
 
     def _get_monthly_demand_range(self, based_on):
+        _debug.logic("monthly_demand_range", products=self, based_on=based_on)
         start_date = limit_date = datetime.now()
 
         if not based_on or based_on in {"actual_demand", "30_days"}:
@@ -284,6 +292,7 @@ class ProductProduct(models.Model):
         return start_date, limit_date
 
     def _get_quantity_in_progress(self, location_ids=False, warehouse_ids=False):
+        _debug.logic("qty_in_progress_read", products=self)
         if not location_ids:
             location_ids = []
         if not warehouse_ids:

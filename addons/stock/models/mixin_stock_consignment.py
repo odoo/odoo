@@ -1,5 +1,7 @@
 from odoo import models
 
+from ..tools import debug_log as dbg
+
 
 class MixinStockConsignment(models.AbstractModel):
     _name = "mixin.stock.consignment"
@@ -15,10 +17,24 @@ class MixinStockConsignment(models.AbstractModel):
         return self.move_line_ids
 
     def _get_consignment_partners(self):
-        return self._get_consignment_pickings().partner_id
-
-    def _get_consignment_weight(self):
-        return sum(
-            line.product_id.weight * line.quantity_product_uom
-            for line in self._get_consignment_move_lines()
+        partners = self._get_consignment_pickings().partner_id
+        dbg.logic.debug(
+            "[consignment:%s] partners %s",
+            dbg.rec(self),
+            dbg.rec(partners),
         )
+        return partners
+
+    @dbg.timed
+    def _get_consignment_weight(self):
+        lines = self._get_consignment_move_lines()
+        weight = sum(
+            line.product_id.weight * line.quantity_product_uom for line in lines
+        )
+        dbg.logic.debug(
+            "[consignment:%s] weight %s over %d move line(s)",
+            dbg.rec(self),
+            weight,
+            len(lines),
+        )
+        return weight

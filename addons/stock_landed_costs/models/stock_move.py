@@ -1,10 +1,14 @@
 from odoo import models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockMove(models.Model):
     _inherit = "stock.move"
 
     def _get_landed_cost(self, at_date=None):
+        _debug.logic("move_landed_cost_read", moves=self, at_date=at_date)
         domain = [("move_id", "in", self.ids), ("cost_id.state", "=", "done")]
         if at_date:
             domain.append(("cost_id.date", "<=", at_date))
