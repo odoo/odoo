@@ -29,6 +29,11 @@ class TestPresenceState(HrPresenceCase):
         """
         truant = self._make_employee("truant")
         self.assertFalse(truant.is_absent)
+        self.assertIn(
+            truant.id,
+            truant._get_employee_ids_working_now(),
+            "fixture: the employee must be inside working hours",
+        )
         self.assertEqual(truant.hr_presence_state, "absent")
 
     def test_an_approved_time_off_excuses_the_absence(self):
@@ -36,6 +41,12 @@ class TestPresenceState(HrPresenceCase):
         installed, re-decides afterwards and marks any checked-out employee in
         working hours absent regardless of their time off."""
         excused = self._make_employee("excused")
+        self.assertEqual(
+            self._verdict(excused),
+            "absent",
+            "fixture: without the leave this employee is absentable, so the "
+            "verdict below tests the leave and not the schedule",
+        )
         self._approve_leave(excused)
         excused.invalidate_recordset()
         self.assertTrue(excused.is_absent)
@@ -97,6 +108,12 @@ class TestPresenceState(HrPresenceCase):
             }
         )
         sleeper = self._make_employee("sleeper", company=company, calendar=calendar)
+        self.assertEqual(
+            sleeper.resource_calendar_id,
+            calendar,
+            "fixture: an employee with no calendar is off-hours for another reason",
+        )
+        self.assertFalse(sleeper.resource_id._is_flexible())
         self.assertEqual(sleeper.hr_presence_state, "out_of_working_hour")
 
     def test_ip_evidence_of_today_makes_an_employee_present(self):
@@ -205,7 +222,13 @@ class TestEmailEvidence(HrPresenceCase):
 
     def test_fewer_emails_than_the_threshold_prove_nothing(self):
         writer = self._make_employee("shy")
-        self._post_emails(writer, 1)
+        posted = self._post_emails(writer, 1)
+        self._assert_authored(writer, posted, 1, internal=False, message_type="comment")
+        self.assertEqual(
+            self.company.hr_presence_control_email_amount,
+            2,
+            "fixture: one message must be under the threshold",
+        )
         self.env["hr.employee"]._check_presence()
         self.assertFalse(writer.hr_presence_email_date)
 
@@ -213,7 +236,8 @@ class TestEmailEvidence(HrPresenceCase):
         """Counting every mail.message let one internal note mark an employee
         present, and let every tracking message the system writes do the same."""
         noter = self._make_employee("noter")
-        self._post_emails(noter, 5, internal=True)
+        posted = self._post_emails(noter, 5, internal=True)
+        self._assert_authored(noter, posted, 5, internal=True, message_type="comment")
         self.env["hr.employee"]._check_presence()
         self.assertFalse(noter.hr_presence_email_date)
         self.assertEqual(noter.hr_presence_state, "absent")
@@ -229,7 +253,10 @@ class TestEmailEvidence(HrPresenceCase):
 
     def test_a_system_notification_is_not_an_email(self):
         notified = self._make_employee("notified")
-        self._post_emails(notified, 5, message_type="notification")
+        posted = self._post_emails(notified, 5, message_type="notification")
+        self._assert_authored(
+            notified, posted, 5, internal=False, message_type="notification"
+        )
         self.env["hr.employee"]._check_presence()
         self.assertFalse(notified.hr_presence_email_date)
 

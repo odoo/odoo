@@ -101,13 +101,31 @@ class HrPresenceCase(TransactionCase):
 
     def _post_emails(self, employee, count, internal=False, message_type="comment"):
         subtype = "mail.mt_note" if internal else "mail.mt_comment"
+        messages = self.env["mail.message"]
         for index in range(count):
-            employee.message_post(
+            messages |= employee.message_post(
                 body=f"message {index}",
                 author_id=employee.user_id.partner_id.id,
                 message_type=message_type,
                 subtype_xmlid=subtype,
             )
+        return messages
+
+    def _assert_authored(self, employee, messages, count, internal, message_type):
+        """A test that says "these do not count" proves nothing if they were
+        never posted -- it would pass just as well against an empty chatter."""
+        self.assertEqual(len(messages), count, "fixture: messages were not posted")
+        self.assertEqual(
+            messages.author_id,
+            employee.user_id.partner_id,
+            "fixture: the employee must be the author, or the sweep never sees them",
+        )
+        self.assertEqual(set(messages.mapped("message_type")), {message_type})
+        self.assertEqual(
+            set(messages.mapped("subtype_id.internal")),
+            {internal},
+            "fixture: the subtype decides whether this is an internal note",
+        )
 
     def _utc_bounds(self, tz_name, day):
         zone = timezone(tz_name)

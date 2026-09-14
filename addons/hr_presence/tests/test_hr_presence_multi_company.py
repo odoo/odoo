@@ -31,6 +31,11 @@ class TestMultiCompany(HrPresenceCase):
         )
 
     def test_the_sweep_reaches_a_company_the_cron_user_does_not_sit_in(self):
+        self.assertNotEqual(
+            self.there.company_id,
+            self.env.company,
+            "fixture: the employee must be outside the sweeping user's company",
+        )
         self.there.hr_presence_state_display = "present"
         self.env["hr.employee"].with_company(self.company)._check_presence()
         self.assertEqual(
@@ -69,6 +74,9 @@ class TestMultiCompany(HrPresenceCase):
             second,
             "reading order used to decide the answer for everyone in the transaction",
         )
+        # Equality alone would hold just as well if both readers were wrong, so
+        # say which answer they have to agree on.
+        self.assertEqual(first, "present")
 
     def test_each_company_keeps_its_own_valid_ip_list(self):
         self.assertEqual(
