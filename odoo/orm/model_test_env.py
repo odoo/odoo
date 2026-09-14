@@ -81,6 +81,8 @@ class _TestResUsers(Model):
     name = Char()
     login = Char()
     active = Boolean(default=True)
+    tz = Char()
+    lang = Char()
     company_id = Many2one("res.company")
 
     def _get_company_ids(self):

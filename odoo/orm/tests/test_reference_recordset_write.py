@@ -83,3 +83,19 @@ def test_an_empty_recordset_still_clears_the_field():
         holder = env["refw.holder"].create({"name": "h", "ref": target})
         holder.ref = env["refw.target"]
         assert not holder.ref
+
+
+def test_a_domain_on_a_reference_compares_the_model_id_form():
+    with model_test_env(Target, Holder) as env:
+        target = env["refw.target"].create({"name": "t"})
+        doc = env["refw.holder"].create({"ref": f"refw.target,{target.id}"})
+        other = env["refw.holder"].create({})
+        both = doc + other
+        value = f"refw.target,{target.id}"
+        # search and the Python predicate agree, as they do on PostgreSQL
+        assert env["refw.holder"].search([("ref", "=", value)]) == doc
+        assert both.filtered_domain([("ref", "=", value)]) == doc
+        assert both.filtered_domain([("ref", "in", [value])]) == doc
+        assert both.filtered_domain([("ref", "!=", value)]) == other
+        assert both.filtered_domain([("ref", "like", "refw.target")]) == doc
+        assert both.filtered_domain([("ref", "=", False)]) == other
