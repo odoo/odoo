@@ -114,6 +114,22 @@ class TestResourceAsset(TransactionCase):
                 {"asset_id": three.id, "type_id": self.plate.id, "value": "abc123"}
             )
 
+    def test_an_identifier_is_found_however_it_is_typed(self):
+        truck = self._truck()
+        other = self._truck("Other")
+        self.env["resource.asset.identifier"].create(
+            {"asset_id": truck.id, "type_id": self.plate.id, "value": "ABC 123"}
+        )
+        for typed in ("ABC 123", "abc-123", "ABC123", "c-12"):
+            with self.subTest(typed=typed):
+                found = self.Asset.search([("identifier_ids", "ilike", typed)])
+                self.assertIn(truck, found)
+                self.assertNotIn(other, found)
+        self.assertFalse(self.Asset.search([("identifier_ids", "ilike", "XYZ-9")]))
+        self.assertNotIn(
+            truck, self.Asset.search([("identifier_ids", "not ilike", "abc-123")])
+        )
+
     def test_one_value_per_type_per_asset(self):
         truck = self._truck()
         self.env["resource.asset.identifier"].create(

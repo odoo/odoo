@@ -92,6 +92,19 @@ class ResourceAssetIdentifier(models.Model):
         for identifier in self:
             identifier.normalized_value = normalize(identifier.value)
 
+    @api.model
+    def _search_display_name(self, operator, value):
+        domain = super()._search_display_name(operator, value)
+        if not operator.endswith("like") or not isinstance(value, str):
+            return domain
+        normalized = self.env["resource.asset.identifier.type"]._normalize(value)
+        if not normalized:
+            return domain
+        by_normalized = Domain("normalized_value", operator, normalized)
+        if operator in Domain.NEGATIVE_OPERATORS:
+            return Domain(domain) & by_normalized
+        return Domain(domain) | by_normalized
+
     @api.depends("type_id.name", "value")
     def _compute_display_name(self):
         for identifier in self:

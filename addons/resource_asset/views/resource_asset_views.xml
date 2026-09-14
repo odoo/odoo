@@ -172,10 +172,7 @@
         <field name="arch" type="xml">
             <search string="Assets">
                 <field name="name" />
-                <field
-                    name="identifier_ids"
-                    string="Identifier"
-                    filter_domain="[('identifier_ids.normalized_value', 'ilike', self)]" />
+                <field name="identifier_ids" string="Identifier" />
                 <field name="kind_id" />
                 <field name="holder_id" />
                 <filter
