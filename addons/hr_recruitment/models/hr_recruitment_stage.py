@@ -74,6 +74,11 @@ class HrRecruitmentStage(models.Model):
 
     @api.model
     def _get_first_stage_by_job(self, jobs):
+        """The stage a new application lands in, per job.
+
+        A job-specific stage wins over a generic one at the same sequence.
+        """
+        none = self.browse()
         stages_by_job = dict(
             self._read_group(
                 [("job_ids", "in", jobs.ids + [False]), ("fold", "=", False)],
@@ -81,22 +86,24 @@ class HrRecruitmentStage(models.Model):
                 ["id:recordset"],
             )
         )
-        generic_stages = stages_by_job.get(self.env["hr.job"], self)
+        generic_stages = stages_by_job.get(self.env["hr.job"], none)
         first_stage_by_job = {}
         for job in jobs:
-            job_stages = stages_by_job.get(job, self)
+            job_stages = stages_by_job.get(job, none)
             candidates = job_stages | generic_stages
-            first_stage_by_job[job] = (
-                min(
-                    candidates,
-                    key=lambda stage: (
-                        stage.sequence,
-                        stage not in job_stages,
-                        stage.id,
-                    ),
-                )
-                if candidates
-                else self
+            if not candidates:
+                first_stage_by_job[job] = none
+                continue
+            # By id, not by `stage not in job_stages`: recordset membership is a
+            # scan, and this runs inside the comparison key.
+            job_stage_ids = set(job_stages._ids)
+            first_stage_by_job[job] = min(
+                candidates,
+                key=lambda stage: (
+                    stage.sequence,
+                    stage.id not in job_stage_ids,
+                    stage.id,
+                ),
             )
         return first_stage_by_job
 

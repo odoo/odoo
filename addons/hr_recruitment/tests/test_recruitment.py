@@ -981,3 +981,167 @@ class TestRecruitment(TransactionCase):
             {"name": "Job", "favorite_user_ids": [Command.set(other.ids)]}
         )
         self.assertEqual(job.favorite_user_ids, other)
+
+    def test_restoring_a_job_restores_the_applications_it_archived(self):
+        """The cascade was one-way: archiving a job archived every running
+        application and un-archiving it restored none, with no record of which
+        ones the cascade had taken."""
+        job = self.env["hr.job"].create({"name": "Job"})
+        running = self.env["hr.applicant"].create(
+            [{"partner_name": f"Running {i}", "job_id": job.id} for i in range(3)]
+        )
+        refused = self.env["hr.applicant"].create(
+            {"partner_name": "Refused", "job_id": job.id}
+        )
+        wizard = self.env["applicant.get.refuse.reason"].create(
+            {
+                "applicant_ids": [Command.set(refused.ids)],
+                "refuse_reason_id": self.env["hr.applicant.refuse.reason"]
+                .search([], limit=1)
+                .id,
+            }
+        )
+        wizard.send_mail = False
+        wizard.action_refuse_reason_apply()
+        self.env.flush_all()
+
+        job.active = False
+        self.env.flush_all()
+        self.assertEqual(running.mapped("active"), [False] * 3)
+        self.assertTrue(all(running.mapped("archived_with_job")))
+        self.assertFalse(refused.archived_with_job)
+
+        job.active = True
+        self.env.flush_all()
+
+        self.assertEqual(running.mapped("active"), [True] * 3)
+        self.assertFalse(any(running.mapped("archived_with_job")))
+        self.assertFalse(refused.active, "a refusal is not undone by restoring the job")
+        self.assertTrue(refused.refuse_reason_id)
+
+    def test_a_meeting_carries_the_cv_whichever_way_it_was_made(self):
+        job = self.env["hr.job"].create({"name": "Job"})
+        applicant = self.env["hr.applicant"].create(
+            {"partner_name": "Applicant", "job_id": job.id}
+        )
+        self.Attachment.create(
+            {
+                "name": "cv.txt",
+                "datas": self.TEXT,
+                "res_model": "hr.applicant",
+                "res_id": applicant.id,
+            }
+        )
+        self.env.flush_all()
+
+        event = self.env["calendar.event"].create(
+            {
+                "name": "Interview",
+                "applicant_id": applicant.id,
+                "start": "2026-09-15 10:00:00",
+                "stop": "2026-09-15 11:00:00",
+            }
+        )
+
+        copied = self.Attachment.search(
+            [("res_model", "=", "calendar.event"), ("res_id", "=", event.id)]
+        )
+        self.assertEqual(copied.name, "cv.txt")
+
+    def test_recurring_interviews_do_not_each_copy_the_cv(self):
+        """`_apply_recurrence` copies the base event's values, applicant included,
+        so keying the copy on the record alone would duplicate every CV."""
+        job = self.env["hr.job"].create({"name": "Job"})
+        applicant = self.env["hr.applicant"].create(
+            {"partner_name": "Applicant", "job_id": job.id}
+        )
+        self.Attachment.create(
+            {
+                "name": "cv.txt",
+                "datas": self.TEXT,
+                "res_model": "hr.applicant",
+                "res_id": applicant.id,
+            }
+        )
+        self.env.flush_all()
+
+        self.env["calendar.event"].create(
+            {
+                "name": "Daily interview",
+                "applicant_id": applicant.id,
+                "start": "2026-09-15 10:00:00",
+                "stop": "2026-09-15 11:00:00",
+                "recurrency": True,
+                "repeat_unit": "day",
+                "repeat_type": "count",
+                "repeat_number": 4,
+                "event_tz": "UTC",
+            }
+        )
+        self.env.flush_all()
+
+        copied = self.Attachment.search(
+            [("res_model", "=", "calendar.event"), ("name", "=", "cv.txt")]
+        )
+        self.assertEqual(
+            len(copied), 1, "the CV belongs on the meeting, not on every occurrence"
+        )
+
+    def test_an_emailed_application_takes_the_contact_number_not_its_address(self):
+        contact = self.env["res.partner"].create(
+            {
+                "name": "Ada",
+                "email": "ada.personal@example.com",
+                "phone_ids": [Command.create({"number": "+32470112233"})],
+            }
+        )
+        self.env.flush_all()
+
+        applicant = self.env["hr.applicant"].message_new(
+            {
+                "from": "Ada <ada.work@example.com>",
+                "author_id": contact.id,
+                "subject": "Application",
+                "body": "",
+            }
+        )
+
+        self.assertEqual(applicant.phone_ids, contact.phone_ids)
+        self.assertEqual(
+            applicant.email_from,
+            "Ada <ada.work@example.com>",
+            "the address the applicant wrote from, not the contact's other one",
+        )
+
+    def test_job_documents_span_the_job_and_its_unhired_applications(self):
+        job, other_job = self.env["hr.job"].create([{"name": "A"}, {"name": "B"}])
+        applicant = self.env["hr.applicant"].create(
+            {"partner_name": "Applicant", "job_id": job.id}
+        )
+        hired = self.env["hr.applicant"].create(
+            {"partner_name": "Hired", "job_id": job.id}
+        )
+        hired.employee_id = self.env["hr.employee"].create({"name": "Hired"}).id
+        for name, model, res_id in [
+            ("on_job.txt", "hr.job", job.id),
+            ("on_other_job.txt", "hr.job", other_job.id),
+            ("on_applicant.txt", "hr.applicant", applicant.id),
+            ("on_hired.txt", "hr.applicant", hired.id),
+        ]:
+            self.Attachment.create(
+                {
+                    "name": name,
+                    "datas": self.TEXT,
+                    "res_model": model,
+                    "res_id": res_id,
+                }
+            )
+        self.env.flush_all()
+        self.env.invalidate_all()
+
+        self.assertEqual(
+            sorted(job.document_ids.mapped("name")),
+            ["on_applicant.txt", "on_job.txt"],
+        )
+        self.assertEqual(other_job.document_ids.mapped("name"), ["on_other_job.txt"])
+        self.assertEqual(job.documents_count, 2)

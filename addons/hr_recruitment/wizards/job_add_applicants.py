@@ -50,7 +50,11 @@ class JobAddApplicants(models.TransientModel):
             message = self.env._(
                 "Created %(amount)s new applications for: %(names)s",
                 amount=len(new_applicants),
-                names=", ".join({a.partner_name for a in new_applicants}),
+                names=", ".join(
+                    dict.fromkeys(
+                        a.partner_name for a in new_applicants if a.partner_name
+                    )
+                ),
             )
             return {
                 "type": "ir.actions.client",

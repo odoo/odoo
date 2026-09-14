@@ -6,8 +6,11 @@ export class RecruitmentFormController extends FormController {
     /** @override */
     get archiveDialogProps() {
         const result = super.archiveDialogProps;
+        // The cascade archives the *running* applications; a refused one is
+        // already archived and will not move, so `all_application_count` --
+        // which counts those too -- promised a cascade that would not happen.
         result.body =
-            this.model.root.data.all_application_count > 0
+            this.model.root.data.application_count > 0
                 ? _t(
                       "This job position and all related applicants will be archived. Are you sure?",
                   )

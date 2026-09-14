@@ -1,7 +1,23 @@
 from __future__ import annotations
 
-from odoo import _, api, fields, models
+from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
+
+
+def _ids_in_x2many(value):
+    """The ids an x2many write adds, for the command shapes a write can carry."""
+    if not isinstance(value, (list, tuple)):
+        return []
+    ids = []
+    for command in value:
+        if isinstance(command, int):
+            ids.append(command)
+        elif isinstance(command, (list, tuple)) and command:
+            if command[0] == Command.SET:
+                ids.extend(command[2])
+            elif command[0] == Command.LINK:
+                ids.append(command[1])
+    return ids
 
 
 class HrApplicant(models.Model):
@@ -13,10 +29,36 @@ class HrApplicant(models.Model):
     _extract_target = {
         "full_name": "partner_name",
         "email": "email_from",
-        "phone": "partner_phone",
+        "phone": "phone_ids",
     }
 
     extract_can_be_read = fields.Boolean(compute="_compute_extract_can_be_read")
+
+    def _extract_write_value(self, model_field, value):
+        """Resolve a phone read off a CV into a ``phone.number``.
+
+        An applicant's numbers are records, not a column: ``phone.number.create``
+        reuses an existing record with the same sanitized number, so a CV that
+        repeats a number the database already holds links it rather than
+        duplicating it. A blank read writes nothing rather than creating a
+        ``phone.number`` with no number in it.
+        """
+        if model_field == "phone_ids" and isinstance(value, str):
+            if not value.strip():
+                return []
+            phone = self.env["phone.number"].create({"number": value})
+            return [Command.set(phone.ids)]
+        return super()._extract_write_value(model_field, value)
+
+    def _extract_compare_value(self, model_field, value):
+        """Resolve what is being *written* -- ``_corrections_in`` runs before the
+        write lands, so the record still holds the old numbers."""
+        if model_field != "phone_ids":
+            return super()._extract_compare_value(model_field, value)
+        phone_ids = _ids_in_x2many(value)
+        if not phone_ids:
+            return None
+        return self.env["phone.number"].browse(phone_ids)[:1].number or None
 
     @api.depends("stage_id", "job_id", "extract_state")
     def _compute_extract_can_be_read(self) -> None:

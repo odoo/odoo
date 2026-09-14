@@ -1,4 +1,7 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class CalendarEvent(models.Model):
@@ -49,29 +52,44 @@ class CalendarEvent(models.Model):
         events = super().create(vals_list)
         if not self.env["hr.applicant"].has_access("read"):
             return events
-
-        attachments = False
-        if "default_applicant_id" in self.env.context:
-            attachments = (
-                self.env["hr.applicant"]
-                .browse(self.env.context["default_applicant_id"])
-                .attachment_ids
+        # Keyed on the event's own applicant, not on a context key: a meeting
+        # created from the Calendar app with an applicant on it used to get no
+        # CV while the same meeting created from the applicant's own button did.
+        # Occurrences are excluded -- `_apply_recurrence` copies the base event's
+        # values, applicant included, so keying on the record alone would put a
+        # copy of every CV on every occurrence. `recurrence_id` alone does not
+        # tell them apart: the base event carries it too by the time `create`
+        # returns, so the base is the one the recurrence points back at.
+        scheduled = events.filtered(
+            lambda event: (
+                event.applicant_id
+                and (
+                    not event.recurrence_id
+                    or event.recurrence_id.base_event_id == event
+                )
             )
-
-        if attachments:
-            self.env["ir.attachment"].create(
-                [
-                    {
-                        "name": att.name,
-                        "type": "binary",
-                        "datas": att.datas,
-                        "res_model": event._name,
-                        "res_id": event.id,
-                    }
-                    for event in events
-                    for att in attachments
-                ]
+        )
+        if not scheduled:
+            return events
+        copies = [
+            {
+                "name": attachment.name,
+                "type": "binary",
+                "datas": attachment.datas,
+                "res_model": event._name,
+                "res_id": event.id,
+            }
+            for applicant, applicant_events in scheduled.grouped("applicant_id").items()
+            for attachment in applicant.attachment_ids
+            for event in applicant_events
+        ]
+        if copies:
+            _debug.lifecycle(
+                "applicant_documents_copied",
+                events=len(scheduled),
+                attachments=len(copies),
             )
+            self.env["ir.attachment"].create(copies)
         return events
 
     def _compute_is_highlighted(self):

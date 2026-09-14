@@ -1,4 +1,7 @@
 from odoo import Command, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ResUsers(models.Model):
@@ -19,6 +22,12 @@ class ResUsers(models.Model):
         recruitment_group = self.env.ref("hr_recruitment.group_hr_recruitment_user")
 
         interviewers = self - recruitment_group.all_user_ids
+        _debug.lifecycle(
+            "interviewer_group_granted",
+            candidates=self,
+            granted=interviewers,
+            already_recruiters=len(self) - len(interviewers),
+        )
         interviewers.sudo().write({"group_ids": [Command.link(interviewer_group.id)]})
 
     def _remove_recruitment_interviewers(self):
@@ -41,6 +50,12 @@ class ResUsers(models.Model):
 
         users_to_remove = set(self.ids) - (
             user_ids | set(recruitment_group.all_user_ids.ids)
+        )
+        _debug.lifecycle(
+            "interviewer_group_revoked",
+            candidates=self,
+            revoked=len(users_to_remove),
+            still_interviewing=len(set(self.ids) & user_ids),
         )
         self.env["res.users"].browse(users_to_remove).sudo().write(
             {"group_ids": [Command.unlink(interviewer_group.id)]}

@@ -304,6 +304,11 @@ class HrApplicant(models.Model):
     )
     applicant_notes = fields.Html()
     refuse_date = fields.Datetime()
+    archived_with_job = fields.Boolean(
+        copy=False,
+        help="Archived because its job position was archived, rather than on its "
+        "own. Restoring the job position restores these.",
+    )
     talent_pool_ids = fields.Many2many(
         comodel_name="hr.talent.pool",
         string="Talent Pools",
@@ -393,6 +398,12 @@ class HrApplicant(models.Model):
                 for fname in self._DUPLICATE_KEY_FIELDS
                 if applicant[fname] and (fname, applicant[fname]) in pool_ids_by_key
             ]
+            _debug.logic(
+                "talent_pool_match",
+                applicant=applicant,
+                keys_matched=len(matches),
+                pools=len(set().union(*matches)) if matches else 0,
+            )
             applicant.is_applicant_in_pool = bool(matches)
             # The keys can match different talents, hence different pools: the
             # count is the union, not whichever key happened to be checked first.
@@ -1072,7 +1083,12 @@ class HrApplicant(models.Model):
             has_email=bool(defaults.get("email_from")),
         )
         applicant = super().message_new(msg_dict, custom_values=defaults)
-        applicant._compute_partner_phone_email()
+        # The mail carries an address but no number, so take the contact's --
+        # previously done by calling `_compute_partner_phone_email` directly,
+        # which also rewrote `email_from` from the contact and so could replace
+        # the address the applicant actually wrote from.
+        if applicant.partner_id and not applicant.phone_ids:
+            applicant.phone_ids = applicant.partner_id.phone_ids
         return applicant
 
     def _message_post_after_hook(self, message, msg_vals):
@@ -1125,6 +1141,12 @@ class HrApplicant(models.Model):
             .create(self._get_employee_create_vals())
         )
         action["res_id"] = employee.id
+        _debug.lifecycle(
+            "employee_created",
+            applicant=self,
+            employee=employee.id,
+            attachments=len(self.attachment_ids),
+        )
         self.attachment_ids.copy({"res_model": "hr.employee", "res_id": employee.id})
         return action
 
@@ -1185,6 +1207,7 @@ class HrApplicant(models.Model):
                     "stage_id": first_stage_by_job.get(job, Stage).id,
                     "refuse_reason_id": False,
                     "refuse_date": False,
+                    "archived_with_job": False,
                 }
             )
 

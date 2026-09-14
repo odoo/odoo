@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
@@ -234,16 +236,35 @@ class ApplicantGetRefuseReason(models.TransientModel):
         return related_original_applicants
 
     def _send_refusal_mails(self):
-        for applicant in self.applicant_ids:
-            mail_values = self._prepare_mail_values(applicant)
+        """Render the template once per language, not once per applicant.
+
+        Refusing is a bulk action, and the rendering has to be grouped by
+        language rather than done in one call because the template is rendered
+        in each recipient's.
+        """
+        applicants = self.applicant_ids
+        lang_by_applicant = self._render_lang(applicants.ids)
+        ids_by_lang = defaultdict(list)
+        for applicant in applicants:
+            ids_by_lang[lang_by_applicant[applicant.id]].append(applicant.id)
+        subjects, bodies = {}, {}
+        for lang, res_ids in ids_by_lang.items():
+            subjects.update(self._render_field("subject", res_ids, set_lang=lang))
+            bodies.update(self._render_field("body", res_ids, set_lang=lang))
+        _debug.perf.count(
+            "refusal_mails", applicants=len(applicants), languages=len(ids_by_lang)
+        )
+        for applicant in applicants:
+            mail_values = self._prepare_mail_values(applicant, subjects, bodies)
             applicant.message_post(**mail_values)
 
-    def _prepare_mail_values(self, applicant):
-        lang = self._render_lang(applicant.ids)[applicant.id]
-        subject = self._render_field("subject", applicant.ids, set_lang=lang)[
-            applicant.id
-        ]
-        body = self._render_field("body", applicant.ids, set_lang=lang)[applicant.id]
+    def _prepare_mail_values(self, applicant, subjects=None, bodies=None):
+        if subjects is None or bodies is None:
+            lang = self._render_lang(applicant.ids)[applicant.id]
+            subjects = self._render_field("subject", applicant.ids, set_lang=lang)
+            bodies = self._render_field("body", applicant.ids, set_lang=lang)
+        subject = subjects[applicant.id]
+        body = bodies[applicant.id]
         email_from = (
             self.template_id.email_from
             if self.template_id and self.template_id.email_from

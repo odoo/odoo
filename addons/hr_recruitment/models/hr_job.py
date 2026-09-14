@@ -199,23 +199,42 @@ class HrJob(models.Model):
 
     @api.depends_context("uid")
     def _compute_activity_count(self):
-        job_by_applicant_id = {
-            applicant.id: applicant.job_id
-            for applicant in self.env["hr.applicant"].search(
-                [("job_id", "in", self.ids), ("stage_id.hired_stage", "!=", True)]
+        """This user's activities on the still-running applications of these jobs.
+
+        The applications used to be *loaded* only to build an id -> job map, so a
+        job with ten thousand applications read ten thousand records to count a
+        handful of activities. The set is narrowed in SQL instead, and only the
+        applications that actually carry one of this user's activities are
+        mapped back to their job.
+        """
+        running = self.env["hr.applicant"]._search(
+            [("job_id", "in", self.ids), ("stage_id.hired_stage", "!=", True)]
+        )
+        counts_by_applicant = dict(
+            self.env["mail.activity"]._read_group(
+                [
+                    ("res_model", "=", "hr.applicant"),
+                    ("res_id", "in", running.subselect()),
+                    ("user_id", "=", self.env.uid),
+                ],
+                ["res_id"],
+                ["__count"],
             )
-        }
+        )
         activity_count_by_job = defaultdict(int)
-        for res_id, count in self.env["mail.activity"]._read_group(
-            [
-                ("res_model", "=", "hr.applicant"),
-                ("res_id", "in", list(job_by_applicant_id)),
-                ("user_id", "=", self.env.uid),
-            ],
-            ["res_id"],
-            ["__count"],
-        ):
-            activity_count_by_job[job_by_applicant_id[res_id]] += count
+        if counts_by_applicant:
+            for job, applicants in self.env["hr.applicant"]._read_group(
+                [("id", "in", list(counts_by_applicant))],
+                ["job_id"],
+                ["id:recordset"],
+            ):
+                for applicant in applicants:
+                    activity_count_by_job[job] += counts_by_applicant[applicant.id]
+        _debug.perf.count(
+            "activity_count",
+            jobs=len(self),
+            applicants_with_activities=len(counts_by_applicant),
+        )
         for job in self:
             job.activity_count = activity_count_by_job[job]
 
@@ -242,10 +261,21 @@ class HrJob(models.Model):
             ]
 
     def _compute_documents(self):
-        applicants = self.mapped("application_ids").filtered(
-            lambda self: not self.employee_id
-        )
-        app_to_job = {applicant.id: applicant.job_id.id for applicant in applicants}
+        """Documents on these jobs and on their applications that became nobody.
+
+        The application ids are collected by aggregate rather than by loading
+        `application_ids` for every job, which fetched whole applicant rows to
+        read one column off each.
+        """
+        job_by_applicant_id = {
+            applicant.id: job
+            for job, applicants in self.env["hr.applicant"]._read_group(
+                [("job_id", "in", self.ids), ("employee_id", "=", False)],
+                ["job_id"],
+                ["id:recordset"],
+            )
+            for applicant in applicants
+        }
         attachments = self.env["ir.attachment"].search(
             [
                 "|",
@@ -254,18 +284,19 @@ class HrJob(models.Model):
                 ("res_id", "in", self.ids),
                 "&",
                 ("res_model", "=", "hr.applicant"),
-                ("res_id", "in", applicants.ids),
+                ("res_id", "in", list(job_by_applicant_id)),
             ]
         )
-        result = dict.fromkeys(self.ids, self.env["ir.attachment"])
+        result = dict.fromkeys(self, self.env["ir.attachment"])
         for attachment in attachments:
             if attachment.res_model == "hr.applicant":
-                result[app_to_job[attachment.res_id]] |= attachment
+                job = job_by_applicant_id[attachment.res_id]
             else:
-                result[attachment.res_id] |= attachment
+                job = self.browse(attachment.res_id)
+            result[job] |= attachment
 
         for job in self:
-            job.document_ids = result.get(job.id, False)
+            job.document_ids = result[job]
 
     def _compute_all_application_count(self):
         read_group_result = (
@@ -374,8 +405,11 @@ class HrJob(models.Model):
             self.interviewer_ids if "interviewer_ids" in vals else self.browse()
         )
         old_recruiters = {job: job.user_id for job in self} if "user_id" in vals else {}
-        if "active" in vals and not vals["active"]:
-            self.application_ids.active = False
+        if "active" in vals:
+            if vals["active"]:
+                self._unarchive_cascaded_applications()
+            else:
+                self._archive_applications()
         res = super().write(vals)
         if "interviewer_ids" in vals:
             interviewers_to_clean = old_interviewers - self.interviewer_ids
@@ -406,6 +440,25 @@ class HrJob(models.Model):
             for job in self:
                 job.alias_defaults = job._alias_get_creation_values()["alias_defaults"]
         return res
+
+    def _archive_applications(self):
+        """Archive the applications still running on these jobs, reversibly.
+
+        Only the active ones: an application refused on its own is already
+        archived and must not be restored by restoring the job.
+        """
+        applications = self.application_ids
+        _debug.lifecycle("cascade_archive", jobs=self, applications=len(applications))
+        if applications:
+            applications.write({"active": False, "archived_with_job": True})
+
+    def _unarchive_cascaded_applications(self):
+        applications = self.with_context(active_test=False).application_ids.filtered(
+            "archived_with_job"
+        )
+        _debug.lifecycle("cascade_unarchive", jobs=self, applications=len(applications))
+        if applications:
+            applications.write({"active": True, "archived_with_job": False})
 
     def _creation_subtype(self):
         return self.env.ref("hr_recruitment.mt_job_new")

@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from odoo import fields, models
 
 
@@ -22,17 +24,24 @@ class HrDepartment(models.Model):
         first_stage_by_job = self.env["hr.recruitment.stage"]._get_first_stage_by_job(
             jobs
         )
+        if not first_stage_by_job:
+            return
+        # Ask only about the stages that can count, instead of grouping every
+        # (job, stage) pair in the department and discarding most of the rows.
         counts = self.env["hr.applicant"]._read_group(
-            [("job_id", "in", jobs.ids)], ["job_id", "stage_id"], ["__count"]
+            [
+                ("job_id", "in", jobs.ids),
+                ("stage_id", "in", [stage.id for stage in first_stage_by_job.values()]),
+            ],
+            ["job_id", "stage_id"],
+            ["__count"],
         )
-        new_by_department = {}
+        new_by_department = defaultdict(int)
         for job, stage, count in counts:
             if stage == first_stage_by_job[job]:
-                new_by_department[job.department_id] = (
-                    new_by_department.get(job.department_id, 0) + count
-                )
+                new_by_department[job.department_id] += count
         for department in self:
-            department.new_applicant_count = new_by_department.get(department, 0)
+            department.new_applicant_count = new_by_department[department]
 
     def _compute_recruitment_stats(self):
         job_data = self.env["hr.job"]._read_group(
