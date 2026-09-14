@@ -99,3 +99,7 @@ def test_a_domain_on_a_reference_compares_the_model_id_form():
         assert both.filtered_domain([("ref", "!=", value)]) == other
         assert both.filtered_domain([("ref", "like", "refw.target")]) == doc
         assert both.filtered_domain([("ref", "=", False)]) == other
+        # an inequality compares the text, as the column does; NULL never sorts
+        assert both.filtered_domain([("ref", ">=", "refw")]) == doc
+        assert both.filtered_domain([("ref", "<", "refw")]) == env["refw.holder"]
+        assert both.filtered_domain([("ref", "=~", r"target,\d+$")]) == doc

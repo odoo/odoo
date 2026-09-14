@@ -39,3 +39,12 @@ def test_a_named_precision_answers_the_model_default_without_the_table():
         assert env["fdd.doc"]._fields["amount"].get_digits(env) == (16, 2)
         doc = env["fdd.doc"].create({"amount": 1.23456})
         assert doc.amount == 1.23
+
+
+def test_a_domain_on_an_inline_binary_compares_the_base64_text():
+    with model_test_env(Doc) as env:
+        doc = env["fdd.doc"].create({"raw": b"aGVsbG8="})
+        empty = env["fdd.doc"].create({})
+        assert env["fdd.doc"].search([("raw", "=", "aGVsbG8=")]) == doc
+        assert env["fdd.doc"].search([("raw", "!=", "aGVsbG8=")]) == empty
+        assert (doc + empty).filtered_domain([("raw", "in", [b"aGVsbG8="])]) == doc

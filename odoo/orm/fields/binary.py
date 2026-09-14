@@ -4,7 +4,7 @@ import contextlib
 import functools
 import typing
 import warnings
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from operator import attrgetter
 from typing import override
 
@@ -308,6 +308,19 @@ class Binary(Field[bytes | typing.Literal[False]]):
                     attachments=len(atts),
                 )
                 atts.unlink()
+
+    @override
+    def filter_function(
+        self,
+        records: BaseModel,
+        field_expr: str,
+        operator: str,
+        value: typing.Any,
+    ) -> Callable[[BaseModel], bool]:
+        # the cache holds bytes; a domain spells the base64 as text
+        if operator == "in" and isinstance(value, COLLECTION_TYPES):
+            value = {v.encode() if isinstance(v, str) else v for v in value}
+        return super().filter_function(records, field_expr, operator, value)
 
     @override
     def condition_to_sql(

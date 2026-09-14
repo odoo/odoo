@@ -24,6 +24,7 @@ from ..domain.ast import DomainCondition, OptimizationLevel
 from ..parsing import parse_field_expr
 from ..primitives import COLLECTION_TYPES, SQL_OPERATORS
 from ..validation import regex_alphanumeric
+from ._field_sql import PYTHON_INEQUALITY_OPERATOR
 from .base import Field, _logger
 from .temporal import _value_to_date, _value_to_datetime
 
@@ -82,6 +83,24 @@ def _optimize_property_temporal_comparand(
 
 
 RELATIONAL_PROPERTY_TYPES = frozenset(("many2one", "many2many"))
+
+
+def _is_unset(value: typing.Any) -> bool:
+    return value is False or value is None or (type(value) is list and not value)
+
+
+def _same_value(domain_value: typing.Any, value: typing.Any) -> bool:
+    # 0 == False and 1 == True in Python; a stored 0 is not an unset property
+    return domain_value == value and isinstance(domain_value, bool) is isinstance(
+        value, bool
+    )
+
+
+def _unset_property_sql(raw_sql_field: SQL, property_name: str) -> tuple[SQL, SQL]:
+    return (
+        SQL("%s IS NULL", raw_sql_field),
+        SQL("NOT (%s ? %s)", raw_sql_field, property_name),
+    )
 
 
 class Properties(Field):
@@ -862,20 +881,31 @@ class Properties(Field):
         if domain is not None:
             return lambda rec: getter(rec).filtered_domain(domain)
 
-        match = super().filter_function(records, field_expr, operator, value)
-        if operator != "in" or not isinstance(value, COLLECTION_TYPES):
-            return match
+        if operator == "in" and isinstance(value, COLLECTION_TYPES):
+            return self._filter_property_in(getter, value)
+        return super().filter_function(records, field_expr, operator, value)
 
-        value_set = value if isinstance(value, abc.Set) else set(value)
-        match_empty = False in value_set or self.falsy_value in value_set
+    @staticmethod
+    def _filter_property_in(
+        getter: abc.Callable[[BaseModel], typing.Any], value: abc.Collection
+    ) -> abc.Callable[[BaseModel], bool]:
+        # the same buckets as _property_in_to_sql: False is the unset property
+        # (json false, null or no key), [True] alone means "set", and a value
+        # matches a scalar or one item of a tags list
+        values = list(value)
+        if len(values) == 1 and values[0] is True:
+            return lambda rec: not _is_unset(getter(rec))
+        match_unset = any(v is False for v in values)
+        values = [v for v in values if v is not False]
 
-        def match_collection(rec):
+        def matches(rec: BaseModel) -> bool:
             rec_value = getter(rec)
-            if type(rec_value) is not list:
-                return match(rec)
-            return match_empty if not rec_value else not value_set.isdisjoint(rec_value)
+            if _is_unset(rec_value):
+                return match_unset
+            items = rec_value if type(rec_value) is list else (rec_value,)
+            return any(_same_value(v, item) for v in values for item in items)
 
-        return match_collection
+        return matches
 
     def property_to_sql(
         self,
@@ -914,12 +944,7 @@ class Properties(Field):
                 )
             )
             if check_null_op_false == "=":
-                sqls.extend(
-                    (
-                        SQL("%s IS NULL", raw_sql_field),
-                        SQL("NOT (%s ? %s)", raw_sql_field, property_name),
-                    )
-                )
+                sqls.extend(_unset_property_sql(raw_sql_field, property_name))
         for one_value in value:
             sql_value = SQL("%s", json.dumps(one_value))
             sql_array = SQL("%s", json.dumps([one_value]))
@@ -944,6 +969,14 @@ class Properties(Field):
                     )
                 )
         assert sqls, "No SQL generated for property"
+        if operator == "not in" and check_null_op_false is None:
+            # "not in" keeps the records without the property, as a column's
+            # NOT IN keeps the NULLs; a NULL json value answers neither branch
+            return SQL(
+                "(%s OR %s)",
+                SQL(" AND ").join(sqls),
+                SQL(" OR ").join(_unset_property_sql(raw_sql_field, property_name)),
+            )
         if len(sqls) == 1:
             return sqls[0]
         combine_sql = SQL(" OR ") if operator == "in" else SQL(" AND ")
@@ -998,7 +1031,15 @@ class Properties(Field):
             raise ValueError(f"Invalid operator {operator} for Properties") from None
 
         if isinstance(value, str):
-            sql_left = SQL("(%s ->> %s)", raw_sql_field, property_name)
+            # ->> renders an unset property (json false) as the text 'false',
+            # which LIKE '%a%' and < 'red' would match; only text compares
+            sql_left = SQL(
+                "(CASE WHEN jsonb_typeof(%s) IN ('boolean', 'null')"
+                " THEN NULL ELSE %s ->> %s END)",
+                sql_left,
+                raw_sql_field,
+                property_name,
+            )
             sql_right = SQL("%s", value)
             sql = SQL(
                 "%s%s%s",
@@ -1011,12 +1052,13 @@ class Properties(Field):
             return sql
 
         sql_right = SQL("%s", json.dumps(value))
-        return SQL(
-            "%s%s%s",
-            unaccent(sql_left),
-            sql_operator,
-            unaccent(sql_right),
-        )
+        sql = SQL("%s%s%s", sql_left, sql_operator, sql_right)
+        if operator in PYTHON_INEQUALITY_OPERATOR and isinstance(value, int | float):
+            # jsonb orders every boolean above every number: an unset
+            # property (false) would satisfy size > 2
+            json_type = "boolean" if isinstance(value, bool) else "number"
+            sql = SQL("(jsonb_typeof(%s) = %s AND %s)", sql_left, json_type, sql)
+        return sql
 
 
 class Property(abc.Mapping):

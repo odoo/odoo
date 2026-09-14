@@ -53,7 +53,9 @@ def test_the_default_order_follows_the_groupby_values_nulls_last(env):
 
 
 def test_a_many2one_term_orders_by_the_comodel_order(env):
-    rows = env["rgo.score"]._read_group([], ["team_id"], ["points:sum"], order="team_id")
+    rows = env["rgo.score"]._read_group(
+        [], ["team_id"], ["points:sum"], order="team_id"
+    )
     assert _names(rows) == ["alpha", "zulu", None]
     rows = env["rgo.score"]._read_group(
         [], ["team_id"], ["points:sum"], order="team_id desc"

@@ -16,8 +16,6 @@ if typing.TYPE_CHECKING:
     from .._typing import ModelLike
     from ..models import BaseModel
 
-    M = typing.TypeVar("M", bound=BaseModel)
-
 REFERENCE_VERIFIED_CACHE_KEY = "reference.verified_pairs"
 
 _debug = DebugLog(__name__)
@@ -205,24 +203,20 @@ class Reference(Selection["BaseModel | None"]):
         return f"{value._name},{value.id}" if value else False
 
     @override
-    def filter_function(
-        self, records: M, field_expr: str, operator: str, value: typing.Any
-    ) -> typing.Callable[[M], bool]:
-        # the column holds "model,id" and the domain compares against that
-        # form; the getter answers the record, which no domain value equals
+    def get_expression_getter(
+        self, field_expr: str
+    ) -> typing.Callable[[BaseModel], typing.Any]:
         if field_expr != self.name:
-            return super().filter_function(records, field_expr, operator, value)
-        getter = self.get_expression_getter(field_expr)
+            return super().get_expression_getter(field_expr)
+        read = self.__get__
 
-        def text(record):
-            corecord = getter(record)
+        # the column holds "model,id" and every domain value takes that form;
+        # the record the descriptor answers equals none of them
+        def text(record: BaseModel) -> str | typing.Literal[False]:
+            corecord = read(record)
             return f"{corecord._name},{corecord.id}" if corecord else False
 
-        if operator == "in":
-            return self._filter_in(text, value)
-        if operator.endswith("like"):
-            return self._filter_like(records, field_expr, text, operator, value)
-        return super().filter_function(records, field_expr, operator, value)
+        return text
 
     @override
     def convert_to_export(self, value: typing.Any, record: ModelLike) -> str:

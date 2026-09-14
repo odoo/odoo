@@ -120,3 +120,21 @@ def test_read_group_by_property_shapes_each_type_as_the_sql_path(env):
             {"defs": [{"name": "labels", "type": "tags", "string": "L", "tags": []}]}
         )
         Card_._read_group([], ["props.labels"], ["__count"])
+
+
+def test_a_domain_on_a_property_keeps_zero_and_unset_apart(env):
+    # the buckets of the SQL branch: False is the unset property, 0 a value;
+    # card c has no prio and an empty tag
+    Card_ = env["prp.card"]
+    env["prp.card"].search([("name", "=", "b")]).props = {"prio": 0, "tag": False}
+    assert Card_.search([("props.prio", "=", 0)]).mapped("name") == ["b"]
+    assert Card_.search([("props.prio", "=", False)]).mapped("name") == ["c"]
+    assert Card_.search([("props.prio", "!=", False)]).mapped("name") == ["a", "b"]
+    assert Card_.search([("props.prio", "=", True)]).mapped("name") == ["a", "b"]
+    assert Card_.search([("props.prio", "!=", 3)]).mapped("name") == ["b", "c"]
+    assert Card_.search([("props.prio", "in", [0, 3])]).mapped("name") == ["a", "b"]
+    assert Card_.search([("props.prio", ">", -1)]).mapped("name") == ["a", "b"]
+    # an unset property renders no text: 'false' is not what LIKE sees
+    assert Card_.search([("props.tag", "like", "a")]).mapped("name") == []
+    assert Card_.search([("props.tag", "not like", "x")]).mapped("name") == ["b", "c"]
+    assert Card_.search([("props.tag", ">=", "")]).mapped("name") == ["a"]

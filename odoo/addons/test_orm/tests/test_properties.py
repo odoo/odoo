@@ -2524,8 +2524,9 @@ class PropertiesSearchCase(TransactionExpressionCase, TestPropertiesMixin):
             [("attributes.mychar", "ilike", "test")],
         )
         self.assertEqual(messages, self.message_1 | self.message_2)
-        messages = self.env["test_orm.message"].search(
-            [("attributes.mychar", "not ilike", "test")]
+        messages = self._search(
+            self.env["test_orm.message"],
+            [("attributes.mychar", "not ilike", "test")],
         )
         self.assertEqual(messages, self.message_3)
         messages = self._search(
@@ -2593,6 +2594,60 @@ class PropertiesSearchCase(TransactionExpressionCase, TestPropertiesMixin):
             self.env["test_orm.message"], [("attributes.mychar", "!=", False)]
         )
         self.assertEqual(messages, self.message_1)
+
+    def test_properties_field_search_unset_values(self):
+        # an unset property is stored as json false; ->> renders it as the
+        # text 'false' and jsonb orders a boolean above every number
+        self.messages.discussion = self.discussion_1
+        self.message_1.attributes = [
+            {
+                "name": "mychar",
+                "type": "char",
+                "value": "false",
+                "definition_changed": True,
+            },
+            {
+                "name": "myint",
+                "type": "integer",
+                "value": 3,
+                "definition_changed": True,
+            },
+        ]
+        self.message_2.attributes = {"mychar": False, "myint": 0}
+        self.message_3.attributes = {"mychar": False, "myint": False}
+        Message = self.env["test_orm.message"]
+
+        for domain, expected in [
+            ([("attributes.mychar", "ilike", "als")], self.message_1),
+            ([("attributes.mychar", "like", "a")], self.message_1),
+            ([("attributes.mychar", "=", "false")], self.message_1),
+            ([("attributes.mychar", "!=", "false")], self.message_2 | self.message_3),
+            ([("attributes.mychar", "<", "g")], self.message_1),
+            ([("attributes.mychar", ">=", "")], self.message_1),
+            ([("attributes.myint", "=", 0)], self.message_2),
+            ([("attributes.myint", "=", False)], self.message_3),
+            ([("attributes.myint", "in", [0, 3])], self.message_1 | self.message_2),
+            ([("attributes.myint", "!=", 3)], self.message_2 | self.message_3),
+            ([("attributes.myint", "!=", 7)], self.messages),
+            ([("attributes.myint", ">", 2)], self.message_1),
+            ([("attributes.myint", ">", -1)], self.message_1 | self.message_2),
+            ([("attributes.myint", "<=", 0)], self.message_2),
+        ]:
+            with self.subTest(domain=domain):
+                self.assertEqual(self._search(Message, domain), expected)
+
+        self.env.cr.execute(
+            "UPDATE test_orm_message SET attributes = NULL WHERE id = %s",
+            [self.message_3.id],
+        )
+        self.assertEqual(
+            self._search(Message, [("attributes.mychar", "!=", "false")]),
+            self.message_2 | self.message_3,
+        )
+        self.assertEqual(
+            self._search(Message, [("attributes.myint", "=", False)]),
+            self.message_3,
+        )
 
     def test_properties_field_search_float(self):
         self.message_1.attributes = [
@@ -4231,7 +4286,7 @@ class PropertiesFilteredDomainParityCase(
 
         domain = [("attributes.mypartner", "not in", [self.partner.id])]
         self.assertEqual(
-            self.messages.filtered_domain(domain),
+            self._search(Message, domain),
             self.message_2 | self.message_3,
         )
 
