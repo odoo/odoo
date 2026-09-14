@@ -9,8 +9,10 @@ from odoo.libs.datetime.date_utils import (
     Anchor,
     TimeUnit,
     anchor_day,
+    get_timedelta,
     next_after,
     next_anchor,
+    occurrences_after,
     previous_anchor,
 )
 
@@ -102,6 +104,69 @@ class TestNextAfter:
     def test_rejects_a_non_positive_interval(self):
         with pytest.raises(ValueError, match="positive"):
             next_after(NOW, NOW, 0, "day")
+
+
+def _walk_occurrences_after(start, after, interval, unit, tz, count):
+    local = start.replace(tzinfo=UTC).astimezone(tz)
+    found = []
+    k = 0
+    while len(found) < count:
+        candidate = (local + get_timedelta(interval, unit) * k).astimezone(UTC)
+        candidate = candidate.replace(tzinfo=None)
+        if candidate > after:
+            found.append(candidate)
+        k += 1
+    return found
+
+
+class TestOccurrencesAfter:
+    @pytest.mark.parametrize("unit", ["day", "week", "month", "year"])
+    @pytest.mark.parametrize("interval", [1, 2, 5])
+    @pytest.mark.parametrize(
+        "start",
+        [
+            datetime(2026, 1, 31, 23, 30),
+            datetime(2024, 2, 29, 8, 0),
+            NOW - timedelta(days=3),
+            NOW + timedelta(days=40),
+        ],
+    )
+    @pytest.mark.parametrize(
+        "tz_name", ["UTC", "America/Mexico_City", "Europe/Brussels"]
+    )
+    def test_yields_the_series_own_dates_after_the_moment(
+        self, unit, interval, start, tz_name
+    ):
+        tz = ZoneInfo(tz_name)
+        yielded = list(
+            itertools.islice(occurrences_after(start, NOW, interval, unit, tz), 6)
+        )
+        assert yielded == _walk_occurrences_after(start, NOW, interval, unit, tz, 6)
+
+    @pytest.mark.parametrize("unit", ["day", "week", "month", "year"])
+    def test_a_decades_old_series_lands_on_its_grid(self, unit):
+        tz = ZoneInfo("Europe/Brussels")
+        start = datetime(1990, 1, 31, 9, 0)
+        after = datetime(2026, 3, 30, 12, 0)
+        assert (
+            next(occurrences_after(start, after, 1, unit, tz))
+            == (_walk_occurrences_after(start, after, 1, unit, tz, 1)[0])
+        )
+
+    def test_hours_step_exact_time_from_the_start(self):
+        start = datetime(2026, 9, 12, 8, 15)
+        assert list(itertools.islice(occurrences_after(start, NOW, 1, "hour"), 3)) == [
+            datetime(2026, 9, 12, 11, 15),
+            datetime(2026, 9, 12, 12, 15),
+            datetime(2026, 9, 12, 13, 15),
+        ]
+
+    def test_a_future_start_is_the_first_occurrence(self):
+        start = NOW + timedelta(days=3)
+        assert list(itertools.islice(occurrences_after(start, NOW, 1, "week"), 2)) == [
+            start,
+            start + timedelta(weeks=1),
+        ]
 
 
 def _accrual_next(frequency, last_call, **anchors):

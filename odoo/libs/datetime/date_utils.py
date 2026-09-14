@@ -16,6 +16,7 @@ __all__ = [
     "localized",
     "next_after",
     "next_anchor",
+    "occurrences_after",
     "parse_iso_date",
     "previous_anchor",
     "real_cpu_time",
@@ -401,32 +402,53 @@ def next_after[D: (date, datetime)](
     unit: TimeUnit,
     tz: tzinfo | None = None,
 ) -> D:
+    return next(occurrences_after(start, after, interval, unit, tz))
+
+
+def occurrences_after[D: (date, datetime)](
+    start: D,
+    after: D,
+    interval: int,
+    unit: TimeUnit,
+    tz: tzinfo | None = None,
+) -> Iterator[D]:
     if interval <= 0:
         msg = f"interval must be positive, got {interval}"
         raise ValueError(msg)
-    if start > after:
-        return start
     if unit in _EXACT_UNITS:
         step = timedelta(**{_EXACT_UNITS[unit]: interval})
-        return start + ((after - start) // step + 1) * step
+        k = 0 if start > after else (after - start) // step + 1
+        while True:
+            yield start + k * step
+            k += 1
 
     # Each occurrence is start + k units, never the previous one + 1 unit: a
     # series started on the 31st lands on the 28th in February and back on the
     # 31st in March, instead of staying on the 28th for good.
     delta = get_timedelta(interval, unit)
-    local_start = (
-        start.replace(tzinfo=UTC).astimezone(tz)
-        if tz is not None and isinstance(start, datetime)
-        else start
-    )
-    k = 1
+    localize = tz is not None and isinstance(start, datetime)
+    local_start = start.replace(tzinfo=UTC).astimezone(tz) if localize else start
+    local_after = after.replace(tzinfo=UTC).astimezone(tz) if localize else after
+    # One period short of the whole periods elapsed is strictly before `after`
+    # whatever a short month clamps, so the walk starts there instead of at the
+    # first occurrence of a series that may be years old.
+    k = max(0, _count_elapsed_units(local_start, local_after, unit) // interval - 1)
     while True:
         candidate = local_start + delta * k
-        if tz is not None and isinstance(candidate, datetime):
+        if localize:
             candidate = candidate.astimezone(UTC).replace(tzinfo=None)
         if candidate > after:
-            return candidate
+            yield candidate
         k += 1
+
+
+def _count_elapsed_units(start: date, moment: date, unit: TimeUnit) -> int:
+    if unit == "year":
+        return moment.year - start.year
+    if unit == "month":
+        return (moment.year - start.year) * 12 + moment.month - start.month
+    days = moment.toordinal() - start.toordinal()
+    return days // 7 if unit == "week" else days
 
 
 @dataclass(frozen=True, slots=True)
