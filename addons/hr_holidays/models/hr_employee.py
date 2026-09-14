@@ -728,6 +728,10 @@ class HrEmployee(models.Model):
             ("state", "in", ["confirm", "validate1", "validate"]),
         ]
         if self.env.context.get("ignored_leave_ids"):
+            _debug.logic(
+                "consumed_leaves_ignoring",
+                ignored=len(self.env.context["ignored_leave_ids"]),
+            )
             leaves_domain.append(
                 ("id", "not in", self.env.context.get("ignored_leave_ids"))
             )
@@ -755,6 +759,15 @@ class HrEmployee(models.Model):
                     ("state", "=", "validate"),
                 ]
             )
+        )
+        _debug.perf.count(
+            "consumed_leaves_scanned",
+            employees=employees,
+            types=leave_types,
+            leaves=leaves,
+            allocations=allocations,
+            target_date=str(target_date),
+            ignore_future=ignore_future,
         )
         allocations_per_employee_type = defaultdict(
             lambda: defaultdict(lambda: self.env["hr.leave.allocation"])

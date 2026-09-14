@@ -1,5 +1,8 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class HrLeave(models.Model):
@@ -41,7 +44,9 @@ class HrLeave(models.Model):
     def write(self, vals):
         res = super().write(vals)
         if self.OVERTIME_TRIGGER_FIELDS.isdisjoint(vals):
+            _debug.logic("overtime_check_skipped", leaves=self, fields=list(vals))
             return res
+        _debug.pipeline("overtime_check_on_write", leaves=self, fields=list(vals))
         self._check_overtime_deductible(self)
         return res
 
@@ -59,6 +64,12 @@ class HrLeave(models.Model):
         hours = leaves.employee_id._get_deductible_employee_overtime()
         for leave in leaves.filtered("overtime_deductible"):
             if hours[leave.employee_id] < 0:
+                _debug.logic(
+                    "overtime_insufficient",
+                    leave=leave,
+                    employee=leave.employee_id,
+                    balance=hours[leave.employee_id],
+                )
                 if leave.employee_id.user_id == self.env.user:
                     raise ValidationError(
                         _("You do not have enough extra hours to request this leave")

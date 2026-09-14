@@ -1,6 +1,9 @@
 from collections import defaultdict
 
 from odoo import models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class HrEmployee(models.Model):
@@ -43,6 +46,9 @@ class HrEmployee(models.Model):
             aggregates=["number_of_hours_display:sum"],
         ):
             diff_by_employee[employee] -= hours
+        _debug.perf.count(
+            "deductible_overtime", employees=self, rows=len(diff_by_employee)
+        )
         return diff_by_employee
 
     def get_overtime_data_by_employee(self):

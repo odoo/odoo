@@ -927,6 +927,12 @@ class HrLeaveAllocation(models.Model):
 
     def _process_accrual_plans(self, date_to=False, force_period=False, log=True):
         date_to = date_to or fields.Date.today()
+        _debug.pipeline(
+            "accrual_run",
+            allocations=self,
+            date_to=str(date_to),
+            force_period=force_period,
+        )
         already_accrued = {
             allocation.id: allocation.already_accrued
             or (
@@ -940,6 +946,12 @@ class HrLeaveAllocation(models.Model):
                 continue
             level_ids = allocation.accrual_plan_id.level_ids.sorted("sequence")
             if not level_ids:
+                _debug.logic(
+                    "accrual_skipped",
+                    reason="plan_without_levels",
+                    allocation=allocation,
+                    plan=allocation.accrual_plan_id,
+                )
                 continue
             if allocation.holiday_status_id.request_unit in ["day", "half_day"]:
                 leaves_taken = allocation.leaves_taken
@@ -952,12 +964,26 @@ class HrLeaveAllocation(models.Model):
             if not allocation.nextcall and not allocation._seed_accrual_schedule(
                 level_ids, date_to, log
             ):
-                continue
-            current_level, current_level_maximum_leave, force_period = (
-                allocation._run_accrual_steps(
-                    level_ids, date_to, force_period, leaves_taken
+                _debug.logic(
+                    "accrual_skipped",
+                    reason="not_seeded",
+                    allocation=allocation,
+                    levels=len(level_ids),
                 )
-            )
+                continue
+            with _debug.perf(
+                "accrual_steps",
+                cr=self.env.cr,
+                allocation=allocation,
+                levels=len(level_ids),
+                leaves_taken=leaves_taken,
+            ) as span:
+                current_level, current_level_maximum_leave, force_period = (
+                    allocation._run_accrual_steps(
+                        level_ids, date_to, force_period, leaves_taken
+                    )
+                )
+                span.set(days=allocation.number_of_days, nextcall=allocation.nextcall)
             if allocation.accrual_plan_id.accrued_gain_time == "start":
                 allocation._accrue_trailing_period(
                     current_level, current_level_maximum_leave, leaves_taken
@@ -987,6 +1013,7 @@ class HrLeaveAllocation(models.Model):
                 ("nextcall", "<=", tomorrow),
             ]
         )
+        _debug.pipeline("accrual_cron", allocations=allocations)
         allocations._process_accrual_plans()
 
     def _get_future_leaves_on(self, accrual_date):
@@ -1120,6 +1147,9 @@ class HrLeaveAllocation(models.Model):
     def create(self, vals_list):
         for values in vals_list:
             if "state" in values and values["state"] != "confirm":
+                _debug.logic(
+                    "create_refused", reason="bad_state", state=values["state"]
+                )
                 raise UserError(_("Incorrect state for new allocation"))
         allocations = super(
             HrLeaveAllocation, self.with_context(mail_create_nosubscribe=True)
@@ -1130,6 +1160,7 @@ class HrLeaveAllocation(models.Model):
             for allocation, values in zip(allocations, vals_list, strict=True)
             if "name" in values
         )._mark_custom_names()
+        _debug.lifecycle("create", allocations=allocations, count=len(vals_list))
         for allocation in allocations:
             partners_to_subscribe = set()
             if allocation.employee_id.user_id:
@@ -1254,10 +1285,18 @@ class HrLeaveAllocation(models.Model):
             elif allocation.can_approve:
                 allocation_to_approve += allocation
             else:
+                _debug.logic(
+                    "approve_refused", allocation=allocation, state=allocation.state
+                )
                 raise UserError(
                     _('Allocation must be "To Approve" in order to approve it.')
                 )
 
+        _debug.lifecycle(
+            "approve",
+            first_approval=allocation_to_approve,
+            validated=allocation_to_validate,
+        )
         allocation_to_approve.write(
             {"state": "validate1", "approver_id": current_employee.id}
         )
@@ -1284,6 +1323,12 @@ class HrLeaveAllocation(models.Model):
         (allocation_both - allocation_first_approve).write(
             {"state": "validate", "second_approver_id": current_employee.id}
         )
+        _debug.lifecycle(
+            "validate",
+            both_first=allocation_first_approve,
+            both_second=allocation_both - allocation_first_approve,
+            single=self - allocation_both,
+        )
         (self - allocation_both).write(
             {"state": "validate", "approver_id": current_employee.id}
         )
@@ -1293,6 +1338,7 @@ class HrLeaveAllocation(models.Model):
             allocation.state not in ["confirm", "validate", "validate1"]
             for allocation in self
         ):
+            _debug.logic("refuse_refused", allocations=self)
             raise UserError(
                 _(
                     "Allocation request must be confirmed, second approval or validated in order to refuse it."

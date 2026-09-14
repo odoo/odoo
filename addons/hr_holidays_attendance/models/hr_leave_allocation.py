@@ -3,6 +3,9 @@ from datetime import datetime
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class HrLeaveAllocation(models.Model):
@@ -18,6 +21,7 @@ class HrLeaveAllocation(models.Model):
             if self.env.context.get("deduct_extra_hours_employee_request", False):
                 domain &= Domain("employee_requests", "=", True)
             leave_type = self.env["hr.leave.type"].search(domain, limit=1)
+            _debug.logic("deduct_extra_hours_default", leave_type=leave_type)
             res["holiday_status_id"] = leave_type.id
         return res
 
@@ -49,6 +53,12 @@ class HrLeaveAllocation(models.Model):
         for allocation in res:
             if allocation.overtime_deductible:
                 if deductible[allocation.employee_id] < 0:
+                    _debug.logic(
+                        "allocation_refused",
+                        reason="insufficient_overtime",
+                        allocation=allocation,
+                        balance=deductible[allocation.employee_id],
+                    )
                     raise ValidationError(
                         _(
                             "The employee does not have enough overtime hours to request this leave."
@@ -63,6 +73,9 @@ class HrLeaveAllocation(models.Model):
         if not self.env.user.has_group("hr_holidays.group_hr_holidays_user") and any(
             allocation.state not in ("draft", "confirm") for allocation in self
         ):
+            _debug.logic(
+                "duration_edit_refused", reason="not_officer", allocations=self
+            )
             raise ValidationError(
                 _(
                     "Only an Officer or Administrator is allowed to edit the allocation duration in this status."
@@ -71,6 +84,12 @@ class HrLeaveAllocation(models.Model):
         deductible = self.employee_id._get_deductible_employee_overtime()
         for allocation in self.sudo().filtered("overtime_deductible"):
             if deductible[allocation.employee_id] < 0:
+                _debug.logic(
+                    "allocation_write_refused",
+                    reason="insufficient_overtime",
+                    allocation=allocation,
+                    balance=deductible[allocation.employee_id],
+                )
                 raise ValidationError(
                     _(
                         "The employee does not have enough overtime hours to request this leave."
@@ -86,6 +105,9 @@ class HrLeaveAllocation(models.Model):
     ):
         self.check_singleton()
         if level.accrual_basis != "worked_hour":
+            _debug.logic(
+                "prorata", by="super", allocation=self, basis=level.accrual_basis
+            )
             return super()._get_accrual_plan_level_work_entry_prorata(
                 level, start_period, start_date, end_period, end_date
             )

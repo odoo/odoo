@@ -1316,6 +1316,7 @@ Versions:
     @api.model_create_multi
     def create(self, vals_list):
         if any(not vals.get("employee_id") for vals in vals_list):
+            _debug.logic("create_refused", reason="no_employee", rows=len(vals_list))
             raise UserError(
                 _(
                     "There is no employee set on the time off. Please make sure you're logged in the correct company."
@@ -1332,6 +1333,9 @@ Versions:
                     lambda leave, state=state: leave.state == state
                 )
                 by_state._check_double_validation_rules(by_state.employee_id, state)
+        _debug.lifecycle(
+            "create", leaves=holidays, count=len(vals_list), fast=bool(fast_create)
+        )
         holidays._check_validity()
         self._invalidate_allocation_computes()
         if not fast_create:
@@ -1369,6 +1373,7 @@ Versions:
 
     def write(self, vals):
         values = vals
+        _debug.lifecycle("write", leaves=self, fields=list(vals))
         is_officer = (
             self.env.user.has_group("hr_holidays.group_hr_holidays_user")
             or self.env.is_superuser()
@@ -1385,6 +1390,7 @@ Versions:
                 and hol.state != "confirm"
                 for hol in self
             ):
+                _debug.logic("write_refused", reason="already_begun", leaves=self)
                 raise UserError(
                     _(
                         "You must have manager rights to modify/validate a time off that already begun"
@@ -1458,6 +1464,7 @@ Versions:
                 )
 
     def unlink(self):
+        _debug.lifecycle("unlink", leaves=self)
         self.sudo()._post_leave_cancel()
         self._invalidate_allocation_computes()
         return super(HrLeave, self.with_context(leave_skip_date_check=True)).unlink()
@@ -1639,7 +1646,14 @@ Versions:
             ):
                 leave_to_approve += leave
             else:
+                _debug.logic("approve_refused", leave=leave, state=leave.state)
                 raise UserError(self.env._("You cannot approve this leave."))
+        _debug.lifecycle(
+            "approve",
+            first_approval=leave_to_approve,
+            validated=leave_to_validate,
+            checked=check_state,
+        )
         leave_to_approve.write(
             {"state": "validate1", "first_approver_id": current_employee.id}
         )
@@ -1653,6 +1667,7 @@ Versions:
         return True
 
     def _move_validate_leave_to_confirm(self):
+        _debug.lifecycle("back_to_approval", leaves=self)
         self.write({"state": "confirm"})
         self.activity_update()
         self._post_leave_cancel()
@@ -1725,8 +1740,10 @@ Versions:
         current_employee = self.env.user.employee_id
         leaves = self._filtered_on_public_holiday()
         if check_state and any(not holiday.can_validate for holiday in self):
+            _debug.logic("validate_refused", reason="cannot_validate", leaves=self)
             raise UserError(_("You can't validate this leave."))
         if leaves:
+            _debug.logic("validate_refused", reason="public_holiday", leaves=leaves)
             raise ValidationError(
                 _(
                     "The following employees are not supposed to work during that period:\n %s"
@@ -1748,6 +1765,11 @@ Versions:
         leaves_second_approver.write({"second_approver_id": current_employee.id})
         leaves_first_approver.write({"first_approver_id": current_employee.id})
 
+        _debug.lifecycle(
+            "validate",
+            second_approver=leaves_second_approver,
+            first_approver=leaves_first_approver,
+        )
         self._apply_leave_request()
         if not self.env.context.get("leave_fast_create"):
             self.filtered(
@@ -1760,12 +1782,14 @@ Versions:
             holiday.state not in ["confirm", "validate", "validate1"]
             for holiday in self
         ):
+            _debug.logic("refuse_refused", leaves=self)
             raise UserError(
                 _(
                     "Time off request must be confirmed or validated in order to refuse it."
                 )
             )
 
+        _debug.lifecycle("refuse", leaves=self, meetings=self.mapped("meeting_id"))
         self._notify_manager()
         # Refusing is not approving. Both approver fields say in their own help
         # text that they hold whoever validated the request, so a refusal

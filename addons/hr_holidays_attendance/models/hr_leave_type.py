@@ -1,5 +1,8 @@
 from odoo import _, api, fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.misc import format_duration
+
+_debug = DebugLog(__name__)
 
 
 class HrLeaveType(models.Model):
@@ -27,6 +30,7 @@ class HrLeaveType(models.Model):
         )
         unspent_overtime = employee._get_deductible_employee_overtime()[employee]
         if not unspent_overtime:
+            _debug.logic("no_unspent_overtime", employee=employee)
             return super()._compute_display_name()
 
         overtime_leaves = self.filtered(
@@ -45,6 +49,11 @@ class HrLeaveType(models.Model):
             [("overtime_deductible", "=", True), ("requires_allocation", "=", False)]
         )
         unspent_overtime = employees._get_deductible_employee_overtime()
+        _debug.pipeline(
+            "allocation_data_overtime",
+            employees=employees,
+            deductible_types=deductible_time_off_types,
+        )
         for employee in employees:
             for leave_type in deductible_time_off_types:
                 if leave_type in self and employee.sudo().total_overtime > 0:
