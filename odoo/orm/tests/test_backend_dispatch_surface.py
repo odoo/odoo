@@ -34,12 +34,14 @@ DISPATCH_SITES: dict[tuple[str, str], str] = {
     ("models/mixins/write.py", "_get_records_with_parent_changed"): "equivalent",
     ("models/mixins/write.py", "_update_parent_path_on_write"): "equivalent",
     ("models/mixins/unlink.py", "_unlink_process_batch"): (
-        "LOSSY: PostgresBackend.unlink_rows runs the many2one_company_dependents "
-        "guards and the ir.default cleanup through registry.metaschema; "
-        "InMemoryBackend.unlink_rows() only removes the rows. The ir.model.data "
-        "and ir.attachment rows left the port: the unlink mixin asks "
-        "registry.xmlids and registry.file_store for them, so both tiers collect "
-        "them alike."
+        "equivalent: both unlink_rows refuse a record a company-dependent "
+        "many2one with ondelete=restrict still names, clear the other "
+        "company-dependent references and tell their dependents, and ask "
+        "registry.metaschema about ir.default (the in-memory ir.default stub "
+        "answers nothing); the foreign keys cascade, null or refuse through "
+        "the database on PostgreSQL and through _ForeignKeyPlan in memory. The "
+        "ir.model.data and ir.attachment rows left the port: the unlink mixin "
+        "asks registry.xmlids and registry.file_store for them."
     ),
     ("models/mixins/search.py", "lock_for_update"): "equivalent",
     ("models/mixins/search.py", "try_lock_for_update"): "equivalent",

@@ -1,7 +1,8 @@
 import pytest
 from psycopg.errors import ForeignKeyViolation
 
-from odoo import fields, models
+from odoo import api, fields, models
+from odoo.exceptions import UserError
 from odoo.orm.model_test_env import model_test_env
 
 _MOD = "test_unlink_foreign_keys_dbfree"
@@ -93,3 +94,56 @@ def test_a_restrict_column_refuses_the_delete_like_the_database(env):
     with pytest.raises(ForeignKeyViolation):
         tags[1].unlink()
     assert tags[1].exists()
+
+
+class Account(models.Model):
+    _name = "fk.account"
+    _module = _MOD
+    _description = "account, referenced per company"
+    _log_access = False
+
+    name = fields.Char()
+
+
+class Partner(models.Model):
+    _name = "fk.partner"
+    _module = _MOD
+    _description = "partner with company-dependent accounts"
+    _log_access = False
+
+    name = fields.Char()
+    receivable_id = fields.Many2one(
+        "fk.account", company_dependent=True, ondelete="restrict"
+    )
+    payable_id = fields.Many2one("fk.account", company_dependent=True)
+    label = fields.Char(compute="_compute_label", store=True)
+
+    @api.depends("payable_id")
+    def _compute_label(self):
+        for partner in self:
+            partner.label = partner.payable_id.display_name or "none"
+
+
+def test_a_company_dependent_reference_refuses_or_clears_the_unlink():
+    with model_test_env(Account, Partner) as env:
+        keep, gone, other = env["fk.account"].create(
+            [{"name": "keep"}, {"name": "gone"}, {"name": "other"}]
+        )
+        partner = env["fk.partner"].create(
+            {"name": "p", "receivable_id": keep.id, "payable_id": gone.id}
+        )
+        env.flush_all()
+        assert partner.label == "gone"
+        # the json object the foreign keys do not see: refused on restrict
+        with pytest.raises(UserError, match="used by"):
+            keep.unlink()
+        assert keep.exists()
+        # cleared otherwise, and the dependents recompute
+        gone.unlink()
+        env.flush_all()
+        env.invalidate_all()
+        assert partner.payable_id == env["fk.account"]
+        assert partner.receivable_id == keep
+        assert partner.label == "none"
+        other.unlink()
+        assert not other.exists()

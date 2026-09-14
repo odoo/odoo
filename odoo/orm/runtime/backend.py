@@ -2577,13 +2577,51 @@ class InMemoryBackend:
         return model.browse(locked)
 
     def unlink_rows(self, model: BaseModel, sub_ids: tuple[int, ...]) -> None:
+        env = model.env
+        many2one_fields = env.registry.many2one_company_dependents[model._name]
+        uninstalling = env.context.get(MODULE_UNINSTALL_FLAG)
+        if many2one_fields and not uninstalling:
+            PostgresBackend._unlink_default_guard(model, sub_ids, many2one_fields)
+        # the company-dependent many2one references live in json objects the
+        # database's foreign keys do not see: refused or cleared here, as the
+        # SQL branch does with a jsonpath scan
+        wanted = set(sub_ids)
+        cleared: dict[Field, list[int]] = {}
+        for field in many2one_fields:
+            referrer = env[field.model_name]
+            for row_id in self.storage.get_table_ids(referrer._table):
+                row = self.storage.get_row(referrer._table, row_id)
+                values = row.get(field.name) if row else None
+                if not isinstance(values, dict):
+                    continue
+                hit = {key for key, value in values.items() if value in wanted}
+                if not hit:
+                    continue
+                if field.ondelete == "restrict" and not uninstalling:
+                    raise UserError(
+                        _(
+                            "You cannot delete %(to_delete_record)s, as it is used by %(on_restrict_record)s",
+                            to_delete_record=model.browse(values[next(iter(hit))]),
+                            on_restrict_record=referrer.browse(row_id),
+                        )
+                    )
+                cleared_values = {
+                    key: None if key in hit else value for key, value in values.items()
+                }
+                self.storage.update_rows(
+                    referrer._table, [(row_id, {field.name: cleared_values})]
+                )
+                cleared.setdefault(field, []).append(row_id)
         # what the database's foreign keys do on DELETE -- cascade through,
         # null out or refuse the referencing many2one columns, and drop the
         # rows of every many2many relation table naming the ids -- planned
         # in full first, so a refusal deep in a cascade deletes nothing
-        plan = _ForeignKeyPlan(self, model.env.registry)
-        plan.delete(model, set(sub_ids))
+        plan = _ForeignKeyPlan(self, env.registry)
+        plan.delete(model, wanted)
         plan.apply(self.storage)
+        for field, row_ids in cleared.items():
+            env[field.model_name].browse(row_ids).modified([field.name])
+        env.registry.metaschema.discard_defaults(env, model.browse(sub_ids))
 
     def _iter_m2m_rows(self, relation: str):
         for row_id in self.storage.get_table_ids(relation):

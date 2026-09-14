@@ -110,6 +110,8 @@ class MetaSchema:
     def default_referencing(
         self, env: Environment, fields: typing.Iterable[typing.Any], ids: tuple
     ) -> tuple[typing.Any, int] | None:
+        if env.registry["ir.default"]._abstract:
+            return None
         field_ids = tuple(
             self.field_ids_by_name(env, field.model_name).get(field.name)
             for field in fields
@@ -133,6 +135,8 @@ class MetaSchema:
         return field, json_loads(default.json_value)
 
     def discard_defaults(self, env: Environment, records: BaseModel) -> None:
+        if env.registry["ir.default"]._abstract:
+            return
         env["ir.default"].sudo().discard_records(records)
 
     def field_column_fallbacks(

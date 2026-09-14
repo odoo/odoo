@@ -656,6 +656,23 @@ class TestBackendDifferential(TransactionCase):
             (TestOrmRelated_Translation_1,), script, "translated en_US round-trip"
         )
 
+    def test_unlink_clears_a_company_dependent_reference_on_both_tiers(self):
+        def script(env):
+            Tag = env["test_orm.multi.tag"]
+            gone, kept = Tag.create([{"name": "gone"}, {"name": "kept"}])
+            records = env["test_orm.company"].create(
+                [{"tag_id": gone.id}, {"tag_id": kept.id}, {}]
+            )
+            env.flush_all()
+            gone.unlink()
+            env.flush_all()
+            env.invalidate_all()
+            return [record.tag_id.name for record in records]
+
+        self._diff(
+            (TestOrmCompany, TestOrmMultiTag, _StubPartner, _StubCompanyDefault), script
+        )
+
     def test_translations_agree_across_tiers(self):
         def script(env):
             M = env["test_orm.related_translation_1"]
