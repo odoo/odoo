@@ -81,6 +81,18 @@ def test_a_term_that_is_neither_groupby_nor_aggregate_is_refused(env):
         env["rgo.score"]._read_group([], ["team_id"], ["__count"], order="points")
 
 
+def test_an_aggregate_outside_the_selection_orders_without_being_returned(env):
+    rows = env["rgo.score"]._read_group(
+        [], ["team_id"], ["__count"], order="points:sum desc, team_id"
+    )
+    assert [(row[0].name or False, row[1]) for row in rows] == [
+        (False, 1),
+        ("zulu", 2),
+        ("alpha", 1),
+    ]
+    assert all(len(row) == 2 for row in rows)
+
+
 def test_having_filters_groups_on_aggregates_and_groupby_values(env):
     Score = env["rgo.score"]
     rows = Score._read_group(

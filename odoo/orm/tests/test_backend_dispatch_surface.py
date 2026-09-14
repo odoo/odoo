@@ -94,9 +94,10 @@ DISPATCH_SITES: dict[tuple[str, str], str] = {
         "groups the dict rows itself and covers column, many2one, many2one "
         "path, many2many and property groupbys (tags and many2many properties "
         "one key per known element), every granularity, the standard "
-        "aggregates (exact on numeric columns), having, an explicit order, "
-        "limit and offset, and raises NotImplementedError for sum_currency, "
-        "an order by an array aggregate and an order term outside the groupby"
+        "aggregates (exact on numeric columns), having, an explicit order "
+        "(an aggregate term outside the selection is computed for the sort "
+        "alone, as the SQL path selects it), limit and offset, and raises "
+        "NotImplementedError for sum_currency and an order by an array aggregate"
     ),
     ("models/mixins/traversal.py", "_has_cycle"): (
         "guarded by backend.supports_recursive_queries: the reachability CTE on "

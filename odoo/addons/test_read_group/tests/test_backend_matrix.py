@@ -165,6 +165,16 @@ class TestReadGroupBackendMatrix(TransactionCase):
                         observed[f"{groupby} order {order}"] = _rows(
                             Model, [], groupby, [aggregate], order=order
                         )
+            observed["order outside"] = _rows(
+                Model, [], ["key"], ["__count"], order="value:sum desc, key"
+            )
+            observed["order outside count"] = _rows(
+                Model,
+                [],
+                ["partner_id"],
+                ["value:sum"],
+                order="__count desc, partner_id",
+            )
             observed["having"] = _rows(
                 Model, [], ["key"], ["value:sum"], having=[("value:sum", ">", 0)]
             )

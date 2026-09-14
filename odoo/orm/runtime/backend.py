@@ -1754,6 +1754,8 @@ class _InMemoryReadGroup:
         self.aggregate_specs = list(aggregates)
         self.groupby = [self._groupby_reader(spec) for spec in groupby]
         self.aggregates = [self._aggregate_reader(spec) for spec in aggregates]
+        self.order_specs: list[str] = []
+        self.order_aggregates: list = []
 
     def _unsupported(self, what: str) -> typing.NoReturn:
         raise NotImplementedError(
@@ -2000,6 +2002,7 @@ class _InMemoryReadGroup:
         return readers[func]
 
     def rows(self, having, order, limit, offset) -> list[tuple]:
+        self._select_order_aggregates(order)
         groups: dict[tuple, list] = {}
         for record in self.records:
             # a many2many term yields one key per related row, as the
@@ -2018,7 +2021,7 @@ class _InMemoryReadGroup:
                 *key,
                 *(
                     aggregate(self.model.browse([r.id for r in members]))
-                    for aggregate in self.aggregates
+                    for aggregate in (*self.aggregates, *self.order_aggregates)
                 ),
             )
             for key, members in groups.items()
@@ -2031,7 +2034,37 @@ class _InMemoryReadGroup:
             rows = rows[offset:]
             if limit is not None:
                 rows = rows[:limit]
+        if self.order_specs:
+            width = len(self.groupby_specs) + len(self.aggregate_specs)
+            rows = [row[:width] for row in rows]
         return rows
+
+    def _select_order_aggregates(self, order: str | None) -> None:
+        from ..parsing import regex_order_part_read_group
+
+        self.order_specs = []
+        self.order_aggregates = []
+        if not order:
+            return
+        for order_part in order.split(","):
+            match = regex_order_part_read_group.fullmatch(order_part)
+            if not match:
+                raise ValueError(f"Invalid order {order!r} for _read_group()")
+            term = match["term"]
+            if (
+                term in self.groupby_specs
+                or term in self.aggregate_specs
+                or term in self.order_specs
+            ):
+                continue
+            try:
+                reader = self._aggregate_reader(term)
+            except (ValueError, KeyError) as e:
+                raise ValueError(
+                    f"Order term {order_part!r} is not a valid aggregate nor valid groupby"
+                ) from e
+            self.order_specs.append(term)
+            self.order_aggregates.append(reader)
 
     def _having_predicate(self, having: list):
         # the SQL path's polish-notation walk, with three-valued comparisons:
@@ -2187,7 +2220,11 @@ class _InMemoryReadGroup:
             elif term in self.aggregate_specs:
                 index = len(self.groupby) + self.aggregate_specs.index(term)
             else:
-                self._unsupported(f"order {order_part.strip()!r}")
+                index = (
+                    len(self.groupby)
+                    + len(self.aggregate_specs)
+                    + self.order_specs.index(term)
+                )
             terms.append((index, rank, desc, nulls_first))
         return terms
 
