@@ -470,7 +470,7 @@
                 <filter
                     name="hired"
                     string="Hired"
-                    domain="[('date_closed', '!=', False)]" />
+                    domain="[('date_closed', '!=', False), ('active', '=', True), ('refuse_reason_id', '=', False)]" />
                 <separator />
                 <filter
                     name="done"

@@ -1,6 +1,8 @@
+import ast
 import base64
 
 from dateutil.relativedelta import relativedelta
+from lxml import etree
 
 from odoo import Command
 from odoo.fields import Domain
@@ -1181,3 +1183,79 @@ class TestRecruitment(TransactionCase):
 
         self.assertEqual(orders[0], sorted(tied.ids))
         self.assertTrue(all(order == orders[0] for order in orders))
+
+    def test_the_status_filters_agree_with_the_status_field(self):
+        """The search view hand-rolls the four `application_status` states.
+
+        It has to: `application_status` is a computed field with a `search=`, and
+        the ORM decides whether to apply `active_test` from the *raw* domain
+        leaves, so `('application_status', '=', 'archived')` in a filter silently
+        returns nothing. The duplication is therefore load-bearing, which makes
+        it worth a test -- "Hired" used to be `date_closed != False` alone and
+        listed applications that had been refused after reaching a hired stage,
+        under both Hired and Refused at once.
+        """
+        job = self.env["hr.job"].create({"name": "Job"})
+        hired_stage = self.env["hr.recruitment.stage"].create(
+            {"name": "Contract Signed", "sequence": 99, "hired_stage": True}
+        )
+        reason = self.env["hr.applicant.refuse.reason"].search([], limit=1)
+
+        def refuse(applicant):
+            wizard = self.env["applicant.get.refuse.reason"].create(
+                {
+                    "applicant_ids": [Command.set(applicant.ids)],
+                    "refuse_reason_id": reason.id,
+                }
+            )
+            wizard.send_mail = False
+            wizard.action_refuse_reason_apply()
+
+        ongoing, hired, archived, refused, refused_after_hire = self.env[
+            "hr.applicant"
+        ].create([{"partner_name": name, "job_id": job.id} for name in "abcde"])
+        hired.stage_id = hired_stage
+        archived.action_archive()
+        refuse(refused)
+        refused_after_hire.stage_id = hired_stage
+        refuse(refused_after_hire)
+        everyone = ongoing | hired | archived | refused | refused_after_hire
+        self.env.flush_all()
+        self.env.invalidate_all()
+
+        # read the domains off the view itself, so this fails if the view drifts
+        arch = etree.fromstring(
+            self.env.ref("hr_recruitment.hr_applicant_view_search_bis").arch
+        )
+        filters = {}
+        for name in ("ongoing", "hired", "inactive", "refused"):
+            [node] = arch.xpath(f"//filter[@name='{name}']")
+            filters[name] = ast.literal_eval(node.get("domain"))
+
+        for name, status in (
+            ("ongoing", "ongoing"),
+            ("hired", "hired"),
+            ("inactive", "archived"),
+            ("refused", "refused"),
+        ):
+            with self.subTest(filter=name):
+                self.assertEqual(
+                    self._named(everyone, filters[name]),
+                    self._named(everyone, [("application_status", "=", status)]),
+                    f"the {name!r} filter must select exactly the {status!r} status",
+                )
+        self.assertNotIn(
+            refused_after_hire,
+            self.env["hr.applicant"]
+            .with_context(active_test=False)
+            .search([("id", "in", everyone.ids), *filters["hired"]]),
+            "a refused application is not a hire, whatever stage it reached",
+        )
+
+    def _named(self, population, domain):
+        return set(
+            self.env["hr.applicant"]
+            .with_context(active_test=False)
+            .search([("id", "in", population.ids), *domain])
+            .mapped("partner_name")
+        )
