@@ -5,8 +5,12 @@ import { reportUncaught } from "@web/core/errors/error_utils";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { intersection } from "@web/core/utils/collections/arrays";
+import { deepCopy } from "@web/core/utils/collections/objects";
+import { parseXML } from "@web/core/utils/dom/xml";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { formView } from "@web/views/form/form_view";
+import { elementToIR } from "@web/views/ir/view_ir";
+import { visitIR } from "@web/views/view_arch_parser";
 
 import { SettingsFormCompiler } from "./settings_form_compiler.js";
 import { SettingsFormController } from "./settings_form_controller.js";
@@ -75,15 +79,29 @@ const settingsFormView = {
     Controller: SettingsFormController,
     Compiler: SettingsFormCompiler,
     Renderer: SettingsFormRenderer,
+    // a field under <setting type="header"> is marked in its options before
+    // the form parser reads the tree; the mark goes on a copy of the IR, the
+    // one handed in may be the view cache's
     props: (genericProps, view) => {
-        [...genericProps.arch.querySelectorAll("setting[type='header'] field")].forEach(
-            (el) => {
-                const options = evaluateExpr(el.getAttribute("options") || "{}");
-                options.isHeaderField = true;
-                el.setAttribute("options", JSON.stringify(options));
-            },
+        const { arch, ir } = genericProps;
+        const marked = deepCopy(
+            ir ?? elementToIR(typeof arch === "string" ? parseXML(arch) : arch),
         );
-        return formView.props(genericProps, view);
+        visitIR(marked, (node) => {
+            if (node.kind !== "setting" || node.attrs?.type !== "header") {
+                return;
+            }
+            visitIR(node, (child) => {
+                if (child.kind === "field") {
+                    const attrs = (child.attrs ??= {});
+                    const options = evaluateExpr(attrs.options || "{}");
+                    options.isHeaderField = true;
+                    attrs.options = JSON.stringify(options);
+                }
+            });
+            return false;
+        });
+        return formView.props({ ...genericProps, ir: marked }, view);
     },
 };
 

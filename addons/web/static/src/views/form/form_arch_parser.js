@@ -1,59 +1,92 @@
 // @ts-check
 /** @odoo-module native */
 
-import { visitXML } from "@web/core/utils/dom/xml";
+import { deepCopy } from "@web/core/utils/collections/objects";
 import { exprToBoolean } from "@web/core/utils/format/strings";
 import { parseFieldNode } from "@web/views/field_arch";
+import { irToElement, literalNbsp } from "@web/views/ir/view_ir";
 import { getActiveActions } from "@web/views/view_utils";
 import { Widget } from "@web/views/widgets/widget";
 
-import { ViewArchParser } from "../view_arch_parser.js";
+import { irParents, ViewArchParser, visitIR } from "../view_arch_parser.js";
+
+/**
+ * @typedef {import("@web/views/ir/view_ir_schema").ViewIRNode} ViewIRNode
+ * @typedef {import("@web/views/ir/view_ir_schema").FormFormAttrs} FormAttrs
+ * @typedef {import("@web/views/ir/view_ir_schema").FormFieldAttrs} FormFieldAttrs
+ */
+
+/**
+ * @param {ViewIRNode} node
+ * @param {string} name
+ * @param {string} value
+ */
+function annotate(node, name, value) {
+    (node.attrs ??= {})[name] = value;
+}
 
 export class FormArchParser extends ViewArchParser {
+    /** @type {"element" | "ir"} */
+    static consumes = "ir";
+
     /**
-     * @param {Element} xmlDoc
+     * The parent of every node of the tree the last `parse()` walked — what
+     * a subclass that locates a node in the arch (web studio's xpath) reads.
+     * @type {Map<ViewIRNode, ViewIRNode | null>}
+     */
+    parents = new Map();
+
+    /**
+     * The tree the parser annotates (`field_id`, `widget_id`) is its own
+     * copy; `xmlDoc` is that copy materialised for the compiler.
+     *
+     * @param {ViewIRNode | Element | string} arch
      * @param {Object} models
      * @param {string} modelName
      * @returns {{ activeActions: Record<string, any>, autofocusFieldIds: string[], disableAutofocus: boolean, fieldNodes: Object, widgetNodes: Object, xmlDoc: Element }}
      */
-    parse(xmlDoc, models, modelName) {
-        const jsClass = xmlDoc.getAttribute("js_class");
-        const disableAutofocus = exprToBoolean(
-            xmlDoc.getAttribute("disable_autofocus") || "",
-        );
-        const activeActions = getActiveActions(xmlDoc);
+    parse(arch, models, modelName) {
+        const ir = deepCopy(this.toIR(arch));
+        /** @type {FormAttrs} */
+        const attrs = ir.attrs || {};
+        const jsClass = attrs.js_class;
+        const disableAutofocus = exprToBoolean(attrs.disable_autofocus || "");
+        const activeActions = getActiveActions(ir);
         const fieldNodes = {};
         const widgetNodes = {};
         let widgetNextId = 0;
         const fieldNextIds = {};
         const autofocusFieldIds = [];
-        visitXML(xmlDoc, (node) => {
-            if (node.tagName === "field") {
+        this.parents = irParents(ir);
+        visitIR(ir, (node) => {
+            if (node.kind === "field") {
+                /** @type {FormFieldAttrs} */
+                const fieldAttrs = node.attrs || {};
                 const fieldInfo = parseFieldNode(
                     node,
                     models,
                     modelName,
                     "form",
-                    jsClass ?? undefined,
+                    jsClass,
                 );
                 if (!(fieldInfo.name in fieldNextIds)) {
                     fieldNextIds[fieldInfo.name] = 0;
                 }
                 const fieldId = `${fieldInfo.name}_${fieldNextIds[fieldInfo.name]++}`;
                 fieldNodes[fieldId] = fieldInfo;
-                node.setAttribute("field_id", fieldId);
-                if (exprToBoolean(node.getAttribute("default_focus") || "")) {
+                annotate(node, "field_id", fieldId);
+                if (exprToBoolean(fieldAttrs.default_focus || "")) {
                     autofocusFieldIds.push(fieldId);
                 }
                 if (fieldInfo.type === "properties") {
                     /** @type {any} */ (activeActions).addPropertyFieldValue = true;
                 }
                 return false;
-            } else if (node.tagName === "widget") {
+            } else if (node.kind === "widget") {
                 const widgetInfo = Widget.parseWidgetNode(node);
                 const widgetId = `widget_${++widgetNextId}`;
                 widgetNodes[widgetId] = widgetInfo;
-                node.setAttribute("widget_id", widgetId);
+                annotate(node, "widget_id", widgetId);
             }
         });
         return {
@@ -62,7 +95,7 @@ export class FormArchParser extends ViewArchParser {
             disableAutofocus,
             fieldNodes,
             widgetNodes,
-            xmlDoc,
+            xmlDoc: irToElement(ir, { text: literalNbsp }),
         };
     }
 }
