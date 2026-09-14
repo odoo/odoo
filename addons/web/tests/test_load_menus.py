@@ -88,7 +88,6 @@ class LoadMenusTests(HttpCase):
                 "actionPath": False,
                 "actionResModel": False,
                 "appID": False,
-                "backgroundImage": None,
                 "children": [self.menu.id],
                 "id": "root",
                 "name": "root",
@@ -102,10 +101,16 @@ class LoadMenusTests(HttpCase):
             },
         }
 
+        loaded = menu_loaded.json()
+        self.assertEqual(loaded.keys(), expected.keys())
         self.assertDictEqual(
-            menu_loaded.json(),
+            {
+                menu_id: {key: menu[key] for key in expected[menu_id]}
+                for menu_id, menu in loaded.items()
+            },
             expected,
-            "load_menus didn't return the expected value",
+            "load_menus didn't return the expected value on the keys web owns "
+            "(an installed addon may add its own — web_studio's backgroundImage)",
         )
 
     def test_load_menus_web_icon_data(self):

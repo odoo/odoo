@@ -28,7 +28,6 @@ class IrUiMenu(models.Model):
                     "webCategorySequence": None,
                     "webIconData": None,
                     "webIconDataMimetype": None,
-                    "backgroundImage": menu.get("backgroundImage"),
                 }
             else:
                 action_id = menu.get("action_id")

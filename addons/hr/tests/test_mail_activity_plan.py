@@ -350,7 +350,7 @@ class TestActivitySchedule(ActivityScheduleHRCase):
             self.employee_coach.user_id = self.user_coach
             self.employee_manager.user_id = self.user_manager
 
-    @freeze_time("2023-08-31")
+    @freeze_time("2023-08-31 12:00:00")
     @users("admin")
     def test_default_due_date(self):
         for employees, plan_date in (
