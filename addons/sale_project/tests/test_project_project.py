@@ -1,4 +1,4 @@
-from odoo.tests import tagged
+from odoo.tests import Form, new_test_user, tagged
 from odoo.tests.common import TransactionCase
 
 
@@ -48,3 +48,15 @@ class TestProjectProject(TransactionCase):
         )[0]
         projects_to_make_billable += non_billable_projects
         self.assertEqual(projects_to_make_billable, project1 + project2)
+
+    def test_a_manager_without_sales_rights_opens_a_new_project_form(self):
+        user = new_test_user(
+            self.env,
+            login="project_only",
+            groups="base.group_user,project.group_project_manager",
+        )
+        self.assertFalse(user.has_group("sales_team.group_sale_salesman"))
+        form = Form(self.env["project.project"].with_user(user))
+        form.name = "Created without sales rights"
+        project = form.save()
+        self.assertEqual(project.name, "Created without sales rights")

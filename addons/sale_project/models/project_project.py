@@ -234,7 +234,12 @@ class ProjectProject(models.Model):
 
     @api.onchange("sale_line_id")
     def _onchange_sale_line_id(self):
-        if not self.reinvoiced_sale_order_id and self.sale_line_id:
+        reinvoiced = self._fields["reinvoiced_sale_order_id"]
+        if (
+            self.sale_line_id
+            and self._has_field_access(reinvoiced, "write")
+            and not self.reinvoiced_sale_order_id
+        ):
             self.reinvoiced_sale_order_id = self.sale_line_id.order_id
 
     def _confirm_linked_sale_orders(self, sol_ids):
