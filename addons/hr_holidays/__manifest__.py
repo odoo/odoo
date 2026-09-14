@@ -72,6 +72,10 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
         ],
         "mail.assets_public": [
             "hr_holidays/static/src/core/common/**/*",
+            "hr_holidays/static/src/store_service_patch.js",
+        ],
+        "mail.assets_discuss_core_common": [
+            "hr_holidays/static/src/store_service_patch.js",
         ],
         "web.assets_unit_tests": [
             "hr_holidays/static/tests/**/*",

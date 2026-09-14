@@ -1,3 +1,4 @@
+import logging
 from collections import defaultdict
 from datetime import UTC, date, datetime
 from unittest.mock import patch
@@ -7,8 +8,11 @@ from freezegun import freeze_time
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 
+from odoo.addons.base.models.ir_module import Manifest
 from odoo.addons.hr_holidays.models.hr_employee import HrEmployee
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
+
+_logger = logging.getLogger(__name__)
 
 
 @tagged("post_install", "-at_install")
@@ -1594,4 +1598,58 @@ class TestContextualEmployee(TestHrHolidaysCommon):
         )
         self.assertFalse(
             Employee.with_context(employee_id=False)._get_contextual_employee()
+        )
+
+
+@tagged("post_install", "-at_install")
+class TestLeaveStatusesTravelWithTheMemberList(TestHrHolidaysCommon):
+    """Wherever a client sorts members into online and offline, it must know
+    what a leave status means.
+
+    `res.partner._compute_presence` decorates `im_status` for every client, so
+    a bundle that renders the member list without this module's
+    `onlineMemberStatuses` patch puts an employee who is online but on leave
+    under Offline.
+    """
+
+    PARTITIONING_PATH = "mail/static/src/discuss/core/common/thread_model_patch.js"
+    VOCABULARY_PATH = "hr_holidays/static/src/store_service_patch.js"
+
+    def _bundles_containing(self, path):
+        """Every assembled bundle whose expanded contents include `path`."""
+        IrAsset = self.env["ir.asset"]
+        params = IrAsset._prepare_assets_params()
+        installed = set(
+            self.env["ir.module.module"]
+            .search([("state", "=", "installed")])
+            .mapped("name")
+        )
+        bundles = set(IrAsset.search([]).mapped("bundle"))
+        for manifest in Manifest.get_all_addon_manifests():
+            if manifest.name in installed:
+                bundles.update(manifest.get("assets") or {})
+        found = set()
+        for bundle in sorted(bundles):
+            try:
+                entries = IrAsset._get_asset_paths(bundle, params)
+            except Exception as exc:
+                _logger.info("skipping bundle %s: %s", bundle, exc)
+                continue
+            if any(entry.path.lstrip("/") == path for entry in entries):
+                found.add(bundle)
+        return found
+
+    def test_every_bundle_that_partitions_members_knows_the_leave_statuses(self):
+        partitioning = self._bundles_containing(self.PARTITIONING_PATH)
+        self.assertTrue(
+            partitioning,
+            "could not find the bundles carrying %s" % self.PARTITIONING_PATH,
+        )
+        vocabulary = self._bundles_containing(self.VOCABULARY_PATH)
+        self.assertFalse(
+            partitioning - vocabulary,
+            "%s sort members with mail's onlineMemberStatuses but never learn "
+            "that leave_online, leave_away and leave_busy are online, so an "
+            "employee on leave shows as offline there"
+            % sorted(partitioning - vocabulary),
         )
