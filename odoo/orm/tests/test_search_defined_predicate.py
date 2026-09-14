@@ -14,6 +14,9 @@ class Thing(models.Model):
     name = fields.Char()
     code = fields.Char()
     computed = fields.Char(compute="_compute_computed", search="_search_computed")
+    parent_id = fields.Many2one("sdp.thing")
+    parent_code = fields.Char(related="parent_id.code")
+    parent_computed = fields.Char(related="parent_id.computed")
 
     def _compute_computed(self):
         for record in self:
@@ -45,18 +48,22 @@ def test_plain_field_is_untouched():
         assert condition._is_search_defined(model) is False
 
 
-def test_inherited_fields_are_search_defined():
+def test_a_related_field_delegates_for_a_user_and_reads_through_as_the_superuser():
     with model_test_env(Thing) as env:
         model = env["sdp.thing"]
-        field = model._fields["name"]
-        assert field.inherited is False
-        condition, _ = _condition(env, "name", "=", "x")
-        assert condition._is_search_defined(model) is False
-        try:
-            field.inherited = True
-            assert condition._is_search_defined(model) is True
-        finally:
-            field.inherited = False
+        member = env["res.users"].create(
+            {"name": "Member", "login": "member", "company_id": 1}
+        )
+        user_model = model.with_user(member.id)
+        plain, _ = _condition(env, "parent_code", "=", "x")
+        searched, _ = _condition(env, "parent_computed", "=", "x")
+        # a record rule may narrow the path's sub-select for a user, never
+        # for the superuser, who reads through the path in memory -- unless
+        # the path ends on a field a search method defines
+        assert plain._is_search_defined(user_model) is True
+        assert plain._is_search_defined(model) is False
+        assert searched._is_search_defined(user_model) is True
+        assert searched._is_search_defined(model) is True
 
 
 def test_expression_paths_do_not_delegate():

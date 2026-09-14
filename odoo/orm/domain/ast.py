@@ -849,6 +849,30 @@ class DomainCustom(Domain):
         return self._sql(model, alias, query)
 
 
+def _defines_the_condition(field: Field, su: bool) -> bool:
+    # a search method answers the condition instead of the field's value. A
+    # related or inherited field's generic search is the path rewrite, whose
+    # sub-select a record rule may narrow for a user but never for the
+    # superuser: as the superuser the in-memory read through the path answers
+    # the same, unless the path ends on a field with a search method of its own
+    search = field.search
+    if not search:
+        return False
+    if getattr(search, "__func__", None) is not _search_related_function():
+        return True
+    if not su:
+        return True
+    target = field.related_field
+    return _defines_the_condition(target, su) if target is not None else False
+
+
+@functools.cache
+def _search_related_function():
+    from ..fields.base import Field as _Field
+
+    return _Field._search_related
+
+
 def ids_selected_without_query(domain: Domain) -> OrderedSet | None:
     if domain.is_false():
         return OrderedSet()
@@ -1243,7 +1267,9 @@ class DomainCondition(Domain):
 
     def _is_search_defined(self, records: BaseModel) -> bool:
         field = self._get_field(records)
-        return bool((field.search and field.name == self.field_expr) or field.inherited)
+        if field.name != self.field_expr:
+            return False
+        return _defines_the_condition(field, records.env.su)
 
     def _search_defined_predicate(
         self, records: BaseModel
@@ -1305,10 +1331,26 @@ class DomainCondition(Domain):
         # a fully optimized condition already ran its search method, which
         # answered with this very condition (a stored field searching itself):
         # the column answers now, or the in-memory search would loop
-        if opt_level < OptimizationLevel.FULL and self._is_search_defined(records):
-            return self._search_defined_predicate(records)
+        if opt_level < OptimizationLevel.FULL:
+            if self._is_search_defined(records):
+                return self._search_defined_predicate(records)
+            if self._is_related_path(records):
+                # the superuser walks the related path in memory: the FULL
+                # rewrite is the `any` chain the sub-select would join, and
+                # no rule narrows it for the superuser
+                with _recursion_error_as_value_error():
+                    domain = self._optimize(records, OptimizationLevel.FULL)
+                if domain is not self:
+                    return domain._as_predicate(records)
 
         return self._get_value_predicate(records)
+
+    def _is_related_path(self, records: BaseModel) -> bool:
+        field = self._get_field(records)
+        return (
+            field.name == self.field_expr
+            and getattr(field.search, "__func__", None) is _search_related_function()
+        )
 
     def _get_value_predicate(self, records: BaseModel) -> Callable[[BaseModel], bool]:
         op = self.operator
