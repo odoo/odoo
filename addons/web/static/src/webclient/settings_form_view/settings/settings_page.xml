@@ -22,7 +22,7 @@
                     <span class="btn btn-secondary my-2 mx-1 o-dropdown-caret">
                         <i class="d-inline-block flex-shrink-0 me-2" 
                             t-attf-style="background: url('#{this.selectedModule().imgurl}') no-repeat center; background-size: contain; width: 23px; height: 23px;" />
-                        <span class="pe-2" t-out="this.selectedModule().string"/>
+                        <span class="pe-2" t-out="this.selectedModule().string" t-att-id="this.selectedModule().id"/>
                     </span>
                     <t t-set-slot="content">
                         <t t-foreach="this.props.modules" t-as="module" t-key="module.key">
@@ -53,12 +53,14 @@
 
     <t t-name="web.SettingsPage.SidePanel.Regular">
         <div class="position-sticky top-0 flex-grow-0 z-1">
-            <div class="settings_tab h-100">
+            <div class="settings_tab h-100" role="tablist" aria-orientation="vertical" t-ref="this.tabListRef">
                 <t t-foreach="this.props.modules" t-as="module" t-key="module.key">
+                    <t t-set="selected" t-value="this.selectedModule().key === module.key and this.state.search.value.length === 0"/>
                     <a class="tab rounded-end-3" t-if="!module.isVisible"
                             t-att-class="{
-                            'o_page_invalid': this.invalidApps.includes(module.key), 'selected': this.selectedModule().key === module.key and this.state.search.value.length === 0
-                            }" t-att-data-key="module.key" role="tab" t-attf-href="#${ctx.module.key}" t-on-click="() => this.onSettingTabClick(module.key)">
+                            'o_page_invalid': this.invalidApps.includes(module.key), 'selected': selected
+                            }" t-att-data-key="module.key" role="tab" t-attf-href="#${ctx.module.key}" t-on-click="() => this.onSettingTabClick(module.key)"
+                            t-att-id="module.id">
                         <span class="icon d-none d-md-block" t-attf-style="background : url('{{module.imgurl}}') no-repeat center;background-size:contain;"/> <span class="app_name"><t t-out="module.string"/></span>
                     </a>
                 </t>
