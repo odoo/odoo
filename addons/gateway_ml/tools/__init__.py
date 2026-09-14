@@ -22,6 +22,7 @@ from .ai_orchestrator import (
 )
 from .catalog_client import CatalogAIClient
 from .json_payload import parse_json_response, strip_json_fence
+from .provider_assistant import ProviderAssistant
 from .vendor_catalog import (
     CHAT_TIMEOUT,
     PROVIDERS,
@@ -53,6 +54,7 @@ __all__ = [
     "DeepgramClient",
     "GeminiClient",
     "OpenAIClient",
+    "ProviderAssistant",
     "audio_mimetype",
     "get_ai_client",
     "get_ai_orchestrator",

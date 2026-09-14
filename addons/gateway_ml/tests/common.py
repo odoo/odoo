@@ -18,3 +18,25 @@ def credential_for(env, code, **vals):
             **vals,
         },
     )
+
+
+def disconnect(env, provider):
+    services = provider.service_ids.service_id.filtered(
+        lambda service: service.auth_type != "none"
+    )
+    env["integration.connection"].search(
+        [("service_id", "in", services.ids)]
+    ).action_archive()
+    return services
+
+
+def connect(env, provider, key="the-key"):
+    for service in disconnect(env, provider):
+        secret = "api_key" if service.auth_type == "api_key" else "bearer_token"
+        credential_for(
+            env,
+            service.code,
+            environment=service.environment,
+            company_id=env.company.id,
+            **{secret: key},
+        )

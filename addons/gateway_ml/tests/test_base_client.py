@@ -102,7 +102,9 @@ class TestModelResolution(TransactionCase):
             self.assertEqual(probe._resolve_model(None), "probe-fallback")
 
     def test_configured_default_model_is_honoured(self):
-        provider = self.env["gateway.ml.provider"].search([("code", "=", "claude")], limit=1)
+        provider = self.env["gateway.ml.provider"].search(
+            [("code", "=", "claude")], limit=1
+        )
         if not provider:
             self.skipTest("claude provider seed missing")
         code = "claude-opus-5"

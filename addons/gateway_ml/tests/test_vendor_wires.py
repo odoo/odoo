@@ -67,7 +67,9 @@ class TestGeminiWire(EncryptionKeyCase, TransactionCase):
         google.default_model_id.max_output_tokens = 100
         body = {"candidates": [{"content": {"parts": [{"text": "ok"}]}}]}
         with patch.object(self.client._client, "post", return_value=_ok(body)):
-            with self.assertLogs("odoo.addons.gateway_ml.tools.ai_clients.base", "WARNING"):
+            with self.assertLogs(
+                "odoo.addons.gateway_ml.tools.ai_clients.base", "WARNING"
+            ):
                 self.client.simple_completion("q", max_tokens=500)
 
     def test_a_small_image_is_still_sent(self):

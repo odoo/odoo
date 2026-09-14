@@ -37,7 +37,9 @@ class _SelectionCase(EncryptionKeyCase, TransactionCase):
             cls.env["credential.credential"].create(
                 {"name": f"{code} key", "endpoint_id": endpoint.id, "bearer_token": "K"}
             )
-        return cls.env["gateway.ml.provider"].create({"endpoint_id": endpoint.id, **vals})
+        return cls.env["gateway.ml.provider"].create(
+            {"endpoint_id": endpoint.id, **vals}
+        )
 
     @classmethod
     def _model(cls, provider, code, **vals):
@@ -87,7 +89,8 @@ class TestSelectModel(_SelectionCase):
         self._model(provider, "sel-b-dear", cost_per_1m_input=20.0)
         unpriced = self._model(provider, "sel-c-unpriced")
         ranked = self.orch._rank(
-            self.env["gateway.ml.model"].search([("provider_id", "=", provider.id)]), "cost"
+            self.env["gateway.ml.model"].search([("provider_id", "=", provider.id)]),
+            "cost",
         )
         self.assertLess(
             list(ranked).index(unpriced),

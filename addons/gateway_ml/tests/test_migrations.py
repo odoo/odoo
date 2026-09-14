@@ -75,8 +75,12 @@ class TestSeedPriceCorrection(TransactionCase):
 class TestFallbackRelationCarried(TransactionCase):
     def test_the_old_relation_becomes_ordered_hops(self):
         claude = self.env.ref("gateway_ml.ai_model_claude_sonnet_5")
-        later_provider = self.env["gateway.ml.provider"].search([("code", "=", "moonshot")])
-        earlier_provider = self.env["gateway.ml.provider"].search([("code", "=", "deepseek")])
+        later_provider = self.env["gateway.ml.provider"].search(
+            [("code", "=", "moonshot")]
+        )
+        earlier_provider = self.env["gateway.ml.provider"].search(
+            [("code", "=", "deepseek")]
+        )
         self.assertLess(earlier_provider.sequence, later_provider.sequence)
         created_first = self.env["gateway.ml.model"].create(
             {"provider_id": later_provider.id, "name": "Kimi hop", "code": "kimi-hop"}
@@ -204,7 +208,9 @@ class TestProviderChainsCarried(TransactionCase):
 class TestShutDownSeedsReplaced(TransactionCase):
     def setUp(self):
         super().setUp()
-        self.deepseek = self.env["gateway.ml.provider"].search([("code", "=", "deepseek")])
+        self.deepseek = self.env["gateway.ml.provider"].search(
+            [("code", "=", "deepseek")]
+        )
         self.flash = self.env.ref("gateway_ml.ai_model_deepseek_flash")
         self.chat = _seeded_row(
             self.env, "deepseek", "ai_model_deepseek_chat", "deepseek-chat"
@@ -332,7 +338,9 @@ class TestAdministratorsRowAdopted(TransactionCase):
         module.migrate(self.env.cr, "19.0.1.18.0")
         self.env.invalidate_all()
         self.assertEqual(
-            self.env.ref("gateway_ml.ai_model_deepseek_flash", raise_if_not_found=False),
+            self.env.ref(
+                "gateway_ml.ai_model_deepseek_flash", raise_if_not_found=False
+            ),
             flash,
         )
 

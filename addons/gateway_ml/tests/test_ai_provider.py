@@ -97,7 +97,9 @@ class TestAIProviderClientHook(TransactionCase):
         self.assertIs(AI_CLIENT_REGISTRY.get("deepgram"), DeepgramClient)
 
     def test_hook_returns_the_registered_class(self):
-        provider = self.env["gateway.ml.provider"].search([("code", "=", "claude")], limit=1)
+        provider = self.env["gateway.ml.provider"].search(
+            [("code", "=", "claude")], limit=1
+        )
         if not provider:
             self.skipTest("claude provider seed missing")
         self.assertIs(AI_CLIENT_REGISTRY[provider.code], ClaudeClient)

@@ -35,7 +35,9 @@ class TestRegistryCoherence(TransactionCase):
     def test_every_catalog_vendor_is_selectable(self):
         for key in PROVIDERS:
             with self.subTest(vendor=key):
-                self.assertIn(key, self.provider_codes, f"{key} has no gateway.ml.provider row")
+                self.assertIn(
+                    key, self.provider_codes, f"{key} has no gateway.ml.provider row"
+                )
                 self.assertIn(
                     key,
                     AI_CLIENT_REGISTRY,
@@ -146,7 +148,9 @@ class TestRegistryCoherence(TransactionCase):
                 if not code or spec.get("audio") != "whisper":
                     continue
                 with self.subTest(provider=provider.code, key=key):
-                    self.assertIn(code, rows, f"no gateway.ml.model row describes {code!r}")
+                    self.assertIn(
+                        code, rows, f"no gateway.ml.model row describes {code!r}"
+                    )
                     self.assertEqual(
                         rows[code].has_timestamps,
                         code not in UNTIMED_TRANSCRIPTION_MODELS,

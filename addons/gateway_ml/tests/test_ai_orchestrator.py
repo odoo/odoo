@@ -46,7 +46,9 @@ class TestRetryClassification(TransactionCase):
 class TestExecuteWithFallback(TransactionCase):
     def setUp(self):
         super().setUp()
-        self.models = self.env["gateway.ml.model"].search([("kind", "=", "chat")], limit=4)
+        self.models = self.env["gateway.ml.model"].search(
+            [("kind", "=", "chat")], limit=4
+        )
         if len(self.models) < 3:
             self.skipTest("need at least 3 seeded chat models")
         self.primary = self.models[0]
