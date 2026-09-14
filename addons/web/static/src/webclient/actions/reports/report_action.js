@@ -65,8 +65,8 @@ export class ReportAction extends Component {
                     views: [[element.getAttribute("view-id"), element.getAttribute("view-type")]],
                 });
             });
-            wrapper.appendChild(element);
             element.parentNode.insertBefore(wrapper, element);
+            wrapper.appendChild(element);
         }
     }
 

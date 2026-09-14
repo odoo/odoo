@@ -1,4 +1,4 @@
-import { afterEach, expect, test } from "@odoo/hoot";
+import { afterEach, expect, queryOne, test } from "@odoo/hoot";
 import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { waitFor } from "@odoo/hoot-dom";
 import {
@@ -22,6 +22,7 @@ import { registry } from "@web/core/registry";
 import { ReportAction } from "@web/webclient/actions/reports/report_action";
 import { downloadReport } from "@web/webclient/actions/reports/utils";
 import { WebClient } from "@web/webclient/webclient";
+import { patch } from "@web/core/utils/patch";
 
 class Partner extends models.Model {
     _rec_name = "display_name";
@@ -466,4 +467,28 @@ test("url is valid", async (assert) => {
     // used to put report.client_action in the url
     expect(urlState.action === "report.client_action").toBe(false);
     expect(urlState.action).toBe(12);
+});
+
+test("dynamic buttons in the report", async () => {
+    patch(ReportAction.prototype, {
+        onIframeLoaded(...args) {
+            expect.step("report iframe loaded");
+            return super.onIframeLoaded(...args);
+        },
+    });
+
+    const reportArch = `<div><a res-id="1" res-model="partner" view-type="form" class="test-dynamic-link">Link</a></div>`;
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction({
+        type: "ir.actions.report",
+        report_name: "dynamic_buttons",
+        report_type: "qweb-html",
+    });
+    await waitFor("iframe");
+    const iframe = queryOne("iframe");
+    iframe.srcdoc = reportArch;
+    await waitFor(":iframe .test-dynamic-link");
+    expect.verifySteps(["report iframe loaded"]);
+    await contains(":iframe .test-dynamic-link").click();
+    await waitFor(".o_form_view");
 });
