@@ -8,6 +8,15 @@ import { formView } from "@web/views/form/form_view";
 
 export class CurrencyFormController extends FormController {
 
+    /**
+     * The record is not saved automatically when the page is closed or hidden, as those saves
+     * can't go through the confirmation below: a rounding factor saved by mistake could
+     * potentially brick the DB.
+     */
+    beforeUnload() {}
+
+    beforeVisibilityChange() {}
+
     async onWillSaveRecord(record) {
         if (record.data.display_rounding_warning &&
             record._values.rounding !== undefined &&
