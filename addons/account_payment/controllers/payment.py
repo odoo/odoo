@@ -57,14 +57,19 @@ class PaymentPortal(payment_portal.PaymentPortal):
         return self._process_transaction(partner.id, currencies[0].id, overdue_invoices.ids, payment_reference, **kwargs)
 
     def _process_transaction(self, partner_id, currency_id, invoice_ids, payment_reference, **kwargs):
+        invoice_sudo = request.env['account.move'].sudo().browse(invoice_ids[0])
+        billing_address = invoice_sudo.partner_id
+        shipping_address = invoice_sudo.partner_shipping_id
         kwargs.update({
-            'currency_id': currency_id,
-            'partner_id': partner_id,
-            'reference_prefix': payment_reference,
+            "currency_id": currency_id,
+            "partner_id": partner_id,
+            "reference_prefix": payment_reference,
         })  # Inject the create values taken from the invoice into the kwargs.
         tx_sudo = self._create_transaction(
             custom_create_values={
                 'invoice_ids': [Command.set(invoice_ids)],
+                "billing_partner_id": billing_address.id,
+                "shipping_partner_id": shipping_address.id,
             },
             **kwargs,
         )

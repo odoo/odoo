@@ -74,6 +74,7 @@ class PaymentTransaction(models.Model):
             "shopperName": adyen_utils.format_partner_name(self.partner_name),
             "telephoneNumber": self.partner_phone,
             **adyen_utils.include_partner_addresses(self),
+            # add the new function here
             "lineItems": [
                 {
                     "amountIncludingTax": converted_amount,
