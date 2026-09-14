@@ -17,23 +17,23 @@ class TestEquipmentCommon(TransactionCase):
         res_manager = self.env.ref("maintenance.group_equipment_manager")
 
         self.user = self.res_users.create(
-            dict(
-                name="Normal User/Employee",
-                company_id=self.main_company.id,
-                login="emp",
-                email="empuser@yourcompany.example.com",
-                group_ids=[(6, 0, [res_user.id])],
-            )
+            {
+                "name": "Normal User/Employee",
+                "company_id": self.main_company.id,
+                "login": "emp",
+                "email": "empuser@yourcompany.example.com",
+                "group_ids": [(6, 0, [res_user.id])],
+            }
         )
 
         self.manager = self.res_users.create(
-            dict(
-                name="Equipment Manager",
-                company_id=self.main_company.id,
-                login="hm",
-                email="eqmanager@yourcompany.example.com",
-                group_ids=[(6, 0, [res_manager.id])],
-            )
+            {
+                "name": "Equipment Manager",
+                "company_id": self.main_company.id,
+                "login": "hm",
+                "email": "eqmanager@yourcompany.example.com",
+                "group_ids": [(6, 0, [res_manager.id])],
+            }
         )
 
         self.equipment_monitor = self.env["maintenance.equipment.category"].create(

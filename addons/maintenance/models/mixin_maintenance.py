@@ -75,7 +75,8 @@ class MixinMaintenance(models.AbstractModel):
 
     @api.depends(
         "date_effective",
-        "maintenance_ids.stage_id",
+        "maintenance_ids.maintenance_type",
+        "maintenance_ids.stage_id.done",
         "maintenance_ids.close_date",
         "maintenance_ids.request_date",
     )

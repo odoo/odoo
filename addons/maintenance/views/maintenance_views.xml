@@ -24,6 +24,10 @@
                     string="To Do"
                     domain="[('stage_id.done', '=', False)]" />
                 <filter
+                    name="progress"
+                    string="In Progress"
+                    domain="[('stage_id.done', '=', False), ('kanban_state', '=', 'normal')]" />
+                <filter
                     name="done"
                     string="Done"
                     domain="[('stage_id.done', '=', True)]" />
@@ -1298,7 +1302,7 @@
         <field name="view_id" ref="maintenance_team_kanban" />
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Add a new stage in the maintenance request
+                Add a new maintenance team
             </p>
         </field>
     </record>

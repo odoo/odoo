@@ -32,6 +32,9 @@ Track equipment and maintenance requests""",
         "web.assets_tests": [
             "maintenance/static/tests/tours/**/*",
         ],
+        "web.assets_unit_tests": [
+            "maintenance/static/tests/*.test.js",
+        ],
     },
     "application": True,
 }

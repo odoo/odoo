@@ -62,14 +62,14 @@ class TestEquipmentMulticompany(TransactionCase):
         )
 
         # create a maintenance team for company A user
-        team = MaintenanceTeam.with_user(equipment_manager).create(
+        MaintenanceTeam.with_user(equipment_manager).create(
             {
                 "name": "Metrology",
                 "company_id": company_a.id,
             }
         )
         # create a maintenance team for company B user
-        teamb = (
+        (
             MaintenanceTeam.with_user(equipment_manager)
             .with_context(allowed_company_ids=cids)
             .create(

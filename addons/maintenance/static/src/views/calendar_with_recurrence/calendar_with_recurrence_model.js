@@ -1,6 +1,11 @@
 /** @odoo-module native */
 import { luxon } from "@web/core/l10n/luxon";
-import { deserializeDateTime, serializeDateTime } from "@web/core/l10n/dates";
+import {
+    deserializeDate,
+    deserializeDateTime,
+    serializeDate,
+    serializeDateTime,
+} from "@web/core/l10n/dates";
 import { CalendarModel } from "@web/views/calendar";
 
 export class CalendarWithRecurrenceModel extends CalendarModel {
@@ -23,8 +28,8 @@ export class CalendarWithRecurrenceModel extends CalendarModel {
                 if (rawRecord.repeat_type == "until") {
                     end = luxon.DateTime.min(
                         end,
-                        deserializeDateTime(rawRecord.repeat_until),
-                    ).endOf("day");
+                        deserializeDate(rawRecord.repeat_until).endOf("day"),
+                    );
                 }
                 const duration = rawRecord.duration || 1;
                 const [unit, interval] = [
@@ -60,10 +65,22 @@ export class CalendarWithRecurrenceModel extends CalendarModel {
         return date.plus({ [unit]: interval });
     }
     computeRangeDomain(data) {
-        // Override to fix recurrence: show records even if end is before next range start.
-        const formattedEnd = serializeDateTime(data.range.end);
-        const domain = [[this.meta.fieldMapping.date_start, "<=", formattedEnd]];
-        return domain;
+        // A recurring request shows occurrences long after its own end, so it stays in
+        // range while its rule can still repeat into it.
+        const { date_start, date_stop } = this.meta.fieldMapping;
+        const { start, end } = data.range;
+        return [
+            [date_start, "<=", serializeDateTime(end)],
+            "|",
+            "|",
+            [date_stop, ">=", serializeDateTime(start)],
+            [date_stop, "=", false],
+            "&",
+            ["recurring_maintenance", "=", true],
+            "|",
+            ["repeat_type", "!=", "until"],
+            ["repeat_until", ">=", serializeDate(start)],
+        ];
     }
     normalizeRecord(rawRecord) {
         // Override to set end = start + 1h if schedule_end is False.
