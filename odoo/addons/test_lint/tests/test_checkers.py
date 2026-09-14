@@ -1960,6 +1960,17 @@ class TestCredentialStorageLint(BaseCase):
             [],
         )
 
+    def test_the_names_of_a_scheme_an_endpoint_and_a_booking_path_are_not_secrets(self):
+        self.assertEqual(
+            self._fields("""
+            class Service(models.Model):
+                api_key_scheme = fields.Char()
+                oauth_token_endpoint = fields.Char()
+                booking_key = fields.Char()
+            """),
+            [],
+        )
+
     def test_a_settings_secret_kept_in_config_parameters_is_flagged(self):
         self.assertEqual(
             self._fields("""

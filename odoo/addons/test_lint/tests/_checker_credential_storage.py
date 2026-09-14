@@ -19,13 +19,13 @@ PUBLIC_KEY = re.compile(
 NOT_A_KEY = re.compile(
     r"^(cache_key|bucket_key|grouping_key|job_key|period_key|source_key"
     r"|partner_key|zip_key|website_form_key|avatar_cache_key|push_to_talk_key"
-    r"|attendance_kiosk_key|identity_key)$",
+    r"|attendance_kiosk_key|identity_key|booking_key)$",
     re.IGNORECASE,
 )
 # Names that are about a secret rather than one.
 ABOUT = re.compile(
     r"(token_type|_expir|has_|is_|use_|show_|_count|_url|_uri|_header|_name"
-    r"|_id$|_ids$|_state|_status|_method|_type$)",
+    r"|_id$|_ids$|_state|_status|_method|_type$|_scheme$|_endpoint$)",
     re.IGNORECASE,
 )
 # A capability we mint so a link works; moving it into the vault breaks the URL.
@@ -44,6 +44,7 @@ JUDGED_NOT_SECRET = frozenset(
     {
         "appointment_google_reserve.google_reserve_idempotency_token",
         "approval.subject_key",
+        "auth_passkey.credential_identifier",
         "delivery_fedex.fedex_developer_key",
         "delivery_fedex_rest.fedex_rest_developer_key",
         "sale_lazada.app_key",
