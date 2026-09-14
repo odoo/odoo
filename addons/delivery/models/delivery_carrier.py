@@ -1,7 +1,5 @@
-import json
 import logging
 import re
-from uuid import uuid4
 
 import psycopg
 
@@ -12,19 +10,16 @@ from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
-# Vault fields a secret can land in directly. Anything else is a key in
-# `credential_data`, which is what carries the secrets the vault has no field
-# for -- Easypost's two are the same credential for two environments, not a key
-# and a secret, so neither `api_key` nor `api_secret` describes them.
-NATIVE_CREDENTIAL_FIELDS = frozenset({"api_key", "api_secret", "username", "password"})
-
 
 class DeliveryCarrier(models.Model):
     """Shipping carrier: rate computation and delivery-method configuration."""
 
     _name = "delivery.carrier"
+    _inherit = ["mixin.credential.holder"]
     _description = "Shipping Methods"
     _order = "sequence, id"
+    _credential_holder_field = "carrier_credential_id"
+    _credential_purpose = "delivery:carrier"
 
     # To add an external provider: inherit this model, extend the
     # "delivery_type" selection with a ('<my_provider>', 'My Provider') pair,
@@ -126,11 +121,10 @@ class DeliveryCarrier(models.Model):
     max_weight = fields.Float(
         help="If the total weight of the order is over this weight, the method won't be available."
     )
-    # Every carrier's secrets rest in credential.credential, and the
-    # plumbing is here rather than in each carrier module because the shape
-    # repeats twenty-two times across ten of them. The carriers keep their own
-    # field NAMES -- they are in the views and in every request builder -- and
-    # turn them into doors onto this.
+    # Every carrier's secrets rest in credential.credential, through
+    # mixin.credential.holder. The carriers keep their own field NAMES -- they
+    # are in the views and in every request builder -- and declare them as doors
+    # in `_CREDENTIAL_FIELDS`.
     #
     # The vault field a given secret maps to is the carrier's decision, because
     # the shapes differ: DHL has a key and a secret, Sendcloud has one key,
@@ -411,34 +405,10 @@ class DeliveryCarrier(models.Model):
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
-        doors = self._credential_doors_to_copy(default or {})
         return [
-            dict(
-                vals,
-                name=self.env._("%s (copy)", carrier.name),
-                **{door: carrier[door] for door in doors if carrier[door]},
-            )
+            dict(vals, name=self.env._("%s (copy)", carrier.name))
             for carrier, vals in zip(self, vals_list, strict=True)
         ]
-
-    def _credential_doors_to_copy(self, default):
-        """One readable door per vault field, for the secrets a copy must carry.
-
-        `carrier_credential_id` is not copied: two carriers sharing one vault
-        record would rewrite each other's secrets through their doors, and
-        clearing one would unlink the other's. The copy re-enters the secrets
-        through the doors instead, so `create` builds it a credential of its own
-        before any constraint that reads a door runs.
-        """
-        field_map = self._credential_field_map()
-        given = {field_map[name] for name in default if name in field_map}
-        doors = {}
-        for door, vault_field in field_map.items():
-            if vault_field in given or vault_field in doors:
-                continue
-            if self._has_field_access(self._fields[door], "read"):
-                doors[vault_field] = door
-        return list(doors.values())
 
     def copy_translations(self, new, excluded=()):
         # ``copy_data`` renames ``name`` in the duplicating user's language
@@ -725,175 +695,3 @@ class DeliveryCarrier(models.Model):
             raise UserError(_("Not available for current order"))
 
         return price
-
-    # Which of a carrier's own fields are doors onto the credential, and which
-    # vault field each lands in. A carrier extends this; the base holds none.
-    #
-    # It exists because an inverse is too late for some carriers. `create` runs
-    # `_validate_fields` INSIDE `_create`, before the inverse of a non-stored
-    # field has been called, so an `@api.constrains` that reads a door -- and
-    # `delivery_sendcloud` has exactly one -- sees an empty value and refuses the
-    # record. Routing the secrets in `create` puts the credential on the vals, so
-    # the door reads correctly by the time the constraint runs.
-    _CREDENTIAL_FIELDS: dict[str, str] = {}
-
-    def _credential_field_map(self):
-        """Every carrier's mapping, merged.
-
-        `_CREDENTIAL_FIELDS` is a plain class attribute, and six carrier modules
-        all extend `delivery.carrier` -- so reading it directly returns only the
-        LAST-loaded module's dict and silently drops the rest. Each carrier
-        passes its own tests alone and the combination fails, which is how this
-        was found: with `delivery_shiprocket` installed, `delivery_sendcloud`'s
-        secret stopped reaching the vault and its create-time constraint refused
-        every carrier.
-
-        Walking the MRO in reverse merges the contributions in load order.
-        """
-        mapping: dict[str, str] = {}
-        for cls in reversed(type(self).mro()):
-            mapping.update(getattr(cls, "_CREDENTIAL_FIELDS", None) or {})
-        return mapping
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        field_map = self._credential_field_map()
-        if field_map:
-            for vals in vals_list:
-                secrets = {
-                    field_map[name]: vals.pop(name)
-                    for name in list(vals)
-                    if name in field_map
-                }
-                secrets = {k: v for k, v in secrets.items() if v}
-                if secrets:
-                    native = {
-                        k: v
-                        for k, v in secrets.items()
-                        if k in NATIVE_CREDENTIAL_FIELDS
-                    }
-                    extra = {
-                        k: v
-                        for k, v in secrets.items()
-                        if k not in NATIVE_CREDENTIAL_FIELDS
-                    }
-                    # A placeholder unique name: the carrier has no id yet, and
-                    # the UNIQUE index on (company_id, name) does not wait. It is
-                    # replaced with the real one below, once the carrier exists.
-                    vals["carrier_credential_id"] = (
-                        self.env["credential.credential"]
-                        .sudo()
-                        .create(
-                            {
-                                "name": f"{vals.get('name') or _('Carrier')} "
-                                f"[{uuid4().hex[:12]}]",
-                                "category_id": self.env.ref(
-                                    "credential.credential_category_custom"
-                                ).id,
-                                "company_id": vals.get("company_id")
-                                or self.env.company.id,
-                                **native,
-                                **(
-                                    {"credential_data": json.dumps(extra)}
-                                    if extra
-                                    else {}
-                                ),
-                            }
-                        )
-                        .id
-                    )
-        records = super().create(vals_list)
-        for record in records:
-            if record.carrier_credential_id:
-                record.carrier_credential_id.sudo().name = (
-                    record._carrier_credential_name()
-                )
-        return records
-
-    def _carrier_credential_name(self):
-        """A name no other carrier's credential can collide with.
-
-        `credential.credential` holds a UNIQUE index on (company_id, name) --
-        and on (name) alone for system-wide ones -- while two delivery carriers
-        may legitimately share a name. The carrier id is what separates them.
-        """
-        self.check_singleton()
-        return f"{self.name or _('Carrier')} [#{self.id}]"
-
-    def _carrier_secret(self, field_name):
-        """One secret out of this carrier's credential, or False."""
-        self.check_singleton()
-        credential = self.carrier_credential_id.sudo()
-        if not credential:
-            return False
-        # Read through the vault's use path: rating runs per checkout under the
-        # shared website user, so the per-user reveal allowance would cap every
-        # shopper's quote together.
-        return (
-            credential._use_secret_payload("delivery:carrier").get(field_name) or False
-        )
-
-    def _carrier_store_secret(self, field_name, value):
-        """Write one secret into this carrier's credential.
-
-        One field at a time, because a carrier writes them one at a time: an
-        inverse fires per field, and a store that rewrote the whole credential
-        would clear the siblings that were not part of this write.
-        """
-        self.check_singleton()
-        credential = self.carrier_credential_id.sudo()
-        native = field_name in NATIVE_CREDENTIAL_FIELDS
-
-        if not credential:
-            if not value:
-                return
-            # `custom`, not `api_key`: the api_key category requires an api_key or
-            # a credential_value at create, and a carrier's FIRST write is often
-            # neither -- DHL's inverse may fire for the secret before the key.
-            # Satisfying that constraint with a placeholder would leave the
-            # placeholder readable as the key. `custom` names no required field,
-            # which is the honest shape for a record whose contents differ per
-            # carrier.
-            credential = (
-                self.env["credential.credential"]
-                .sudo()
-                .create(
-                    {
-                        # The carrier id is part of the name because `credential.credential`
-                        # holds a UNIQUE index on (company_id, name), and two carriers may
-                        # legitimately share a name -- a production and a test Sendcloud,
-                        # say. Without it the second one's first secret fails to store.
-                        "name": self._carrier_credential_name(),
-                        "category_id": self.env.ref(
-                            "credential.credential_category_custom"
-                        ).id,
-                        "company_id": self.company_id.id,
-                    }
-                )
-            )
-            self.carrier_credential_id = credential.id
-
-        if native:
-            credential[field_name] = value or False
-        else:
-            data = (
-                {
-                    key: value
-                    for key, value in credential._use_secret_payload(
-                        "delivery:store"
-                    ).items()
-                    if key not in credential._JSON_ACCESSOR_FIELDS
-                }
-                if credential.storage_method == "json"
-                else {}
-            )
-            if value:
-                data[field_name] = value
-            else:
-                data.pop(field_name, None)
-            credential.credential_data = json.dumps(data)
-
-        if not any(credential._use_secret_payload("delivery:store").values()):
-            # Nothing left: a carrier holding no secrets holds no credential.
-            self.carrier_credential_id = False
-            credential.unlink()

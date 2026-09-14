@@ -12,8 +12,8 @@ class TestCarrierSecretUse(EncryptionKeyCase, TransactionCase):
         carrier = self.env["delivery.carrier"].create(
             {"name": "Carrier under test", "product_id": product.id}
         )
-        carrier._carrier_store_secret("api_key", "carrier-key")
-        carrier._carrier_store_secret("account_token", "carrier-token")
+        carrier._set_held_secrets({"api_key": "carrier-key"})
+        carrier._set_held_secrets({"account_token": "carrier-token"})
         carrier.carrier_credential_id.sudo().write(
             {"decrypt_rate_limit_enabled": True, "decrypt_rate_limit_max": 1}
         )
@@ -26,7 +26,7 @@ class TestCarrierSecretUse(EncryptionKeyCase, TransactionCase):
         for _ in range(3):
             self.env.invalidate_all()
             as_shopper = carrier.with_env(public).sudo()
-            self.assertEqual(as_shopper._carrier_secret("api_key"), "carrier-key")
+            self.assertEqual(as_shopper._get_held_secret("api_key"), "carrier-key")
             self.assertEqual(
-                as_shopper._carrier_secret("account_token"), "carrier-token"
+                as_shopper._get_held_secret("account_token"), "carrier-token"
             )
