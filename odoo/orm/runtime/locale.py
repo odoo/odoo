@@ -2,12 +2,57 @@ from __future__ import annotations
 
 import typing
 
+from odoo.libs.collections.mappings import ReadonlyDict
+
 if typing.TYPE_CHECKING:
     from .environment import Environment
 
 
+class LangData(ReadonlyDict[str, typing.Any]):
+    # the shape res.lang caches per language, for a registry without the
+    # language table; attribute access like the model's own LangData
+    __slots__ = ()
+
+    def __bool__(self) -> bool:
+        return bool(self["id"])
+
+    def __getattr__(self, name: str) -> typing.Any:
+        try:
+            return self[name]
+        except KeyError:
+            raise AttributeError(name) from None
+
+
+# base's res.lang.csv row for en_US, the language every registry speaks
+_EN_US = {
+    "id": 1,
+    "name": "English (US)",
+    "code": "en_US",
+    "iso_code": "en",
+    "url_code": "en",
+    "active": True,
+    "direction": "ltr",
+    "date_format": "%m/%d/%Y",
+    "time_format": "%I:%M:%S %p",
+    "week_start": "7",
+    "grouping": "[3,0]",
+    "decimal_point": ".",
+    "thousands_sep": ",",
+    "flag_image_url": "/base/static/img/country_flags/us.png",
+}
+
+
 class Locale:
     __slots__ = ()
+
+    def lang_data(self, env: Environment, code: str) -> typing.Any:
+        if "res.lang" not in env.registry:
+            # every installed language answers en_US's formats: the DB-free
+            # tier has no language table to read them from
+            if not self.is_lang_installed(env, code):
+                return LangData({**_EN_US, "id": False, "code": code, "active": False})
+            return LangData({**_EN_US, "code": code})
+        return env["res.lang"]._get_data(code=code)
 
     def installed_langs(self, env: Environment) -> list[str]:
         if "res.lang" not in env.registry:

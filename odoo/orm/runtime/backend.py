@@ -1532,16 +1532,21 @@ _TRUNCATE_GRANULARITY = {
     "year": lambda d: d.replace(month=1, day=1),
     "quarter": lambda d: d.replace(month=3 * ((d.month - 1) // 3) + 1, day=1),
     "month": lambda d: d.replace(day=1),
-    "week": lambda d: d - _timedelta(days=d.weekday()),
     "day": lambda d: d,
 }
 
 
-def _truncate(value: typing.Any, granularity: str) -> typing.Any:
+def _truncate(
+    value: typing.Any, granularity: str, first_week_day: int = 0
+) -> typing.Any:
     if value is None:
         return None
     if isinstance(value, datetime):
         value = value.replace(hour=0, minute=0, second=0, microsecond=0)
+    if granularity == "week":
+        # the language's first week day, 0 Monday .. 6 Sunday, as the SQL
+        # path shifts date_trunc('week') by it
+        return value - _timedelta(days=(value.weekday() - first_week_day) % 7)
     try:
         return _TRUNCATE_GRANULARITY[granularity](value)
     except KeyError:
@@ -1584,12 +1589,18 @@ class _InMemoryReadGroup:
                 model, fname, field, seq_fnames, granularity, spec
             )
 
+        first_week_day = 0
+        if field.is_temporal and granularity == "week":
+            from odoo.tools import get_lang
+
+            first_week_day = int(get_lang(model.env).week_start) - 1
+
         def read(record):
             value = record[fname]
             if field.is_many2one:
                 return value.id or None
             if field.is_temporal:
-                return _truncate(value or None, granularity or "day")
+                return _truncate(value or None, granularity or "day", first_week_day)
             if field.is_boolean:
                 return bool(value)
             if field.is_text:

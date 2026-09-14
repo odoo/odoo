@@ -51,8 +51,19 @@ def get_languages() -> list[tuple[str, str]]:
         return [("en_US", "English")]
 
 
+def _company_lang(env: Environment) -> str | None:
+    if "res.users" not in env.registry:
+        return None
+    try:
+        return env.user.with_context(lang="en_US").company_id.partner_id.lang
+    except AttributeError:
+        # a DB-free registry whose user or company stub carries no partner
+        return None
+
+
 def get_lang(env: Environment, lang_code: str | None = None) -> LangData:
-    langs = [code for code, _ in env["res.lang"].get_installed()]
+    locale = env.registry.locale
+    langs = locale.installed_langs(env)
     lang = "en_US" if "en_US" in langs else langs[0]
     source = "default"  # debuglog
     if lang_code and lang_code in langs:
@@ -61,11 +72,7 @@ def get_lang(env: Environment, lang_code: str | None = None) -> LangData:
     elif (context_lang := env.context.get("lang")) in langs:
         lang = context_lang
         source = "context"  # debuglog
-    elif (
-        company_lang := env.user.with_context(  # type: ignore[attr-defined]
-            lang="en_US"
-        ).company_id.partner_id.lang
-    ) in langs:
+    elif (company_lang := _company_lang(env)) in langs:
         lang = company_lang
         source = "company"  # debuglog
     _debug.logic(
@@ -75,7 +82,7 @@ def get_lang(env: Environment, lang_code: str | None = None) -> LangData:
         requested=lang_code,
         installed=len(langs),
     )
-    return env["res.lang"]._get_data(code=lang)
+    return locale.lang_data(env, lang)
 
 
 @functools.cache
