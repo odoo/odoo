@@ -357,6 +357,7 @@ export class TablePlugin extends Plugin {
     normalizeTable(root) {
         const tables = root.querySelectorAll("table");
         for (const table of tables) {
+            table.querySelectorAll(":scope > colgroup ~ colgroup").forEach((el) => el.remove());
             const firstRow = table.rows[0];
             let colgroup;
             for (const cell of firstRow?.children || []) {
