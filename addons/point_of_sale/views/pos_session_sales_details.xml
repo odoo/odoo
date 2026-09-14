@@ -10,10 +10,11 @@
                             <br />
                             <br />
                             <div class="text-start" style="font-size:0.85rem;">
-                                <span t-out="company.name" />
+                                <span t-out="company_name" />
                                 <address
+                                    t-if="company_id"
                                     class="mb-0 text-muted"
-                                    t-field="env.company.partner_id"
+                                    t-field="company.partner_id"
                                     t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;], &quot;no_marker&quot;: True}" />
                             </div>
                         </div>
@@ -387,7 +388,7 @@
                 <div class="oe_structure" />
 
 
-                <div t-if="invoice_total" id="invoices">
+                <div t-if="invoice_list" id="invoices">
                     <br />
                     <h6 class="bg-secondary p-1 fw-bold">Invoices</h6>
                     <table class="table table-sm table-borderless">

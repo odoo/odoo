@@ -1,4 +1,5 @@
 from datetime import UTC, timedelta
+from itertools import starmap
 
 from odoo import _, api, fields, models
 from odoo.fields import Domain
@@ -8,7 +9,6 @@ from ..tools import debug_log as dbg
 
 class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
     _name = "report.point_of_sale.report_saledetails"
-
     _description = "Point of Sale Details"
 
     @api.model
@@ -21,6 +21,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         session_ids=False,
         **kwargs,
     ):
+        """Report selected sales; reconcile drawers only for complete sessions."""
         if not session_ids:
             date_start, date_stop = self._get_date_start_and_date_stop(
                 date_start, date_stop
@@ -34,6 +35,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             config_ids, session_ids, date_start, date_stop
         )
         currency = self._get_report_currency(configs)
+        companies = configs.company_id or self.env.company
         dbg.pipeline.debug(
             "[report] sale details %s..%s configs=%s sessions=%s -> %s in %s",
             date_start,
@@ -52,15 +54,20 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                 payments, orders, sessions, currency
             )
 
-        return {
+        data = {
             "state": sessions.state if len(sessions) == 1 else "multiple",
-            "date_start": sessions.start_at if len(sessions) == 1 else date_start,
-            "date_stop": sessions.stop_at if len(sessions) == 1 else date_stop,
+            "date_start": sessions.start_at
+            if session_ids and len(sessions) == 1
+            else date_start,
+            "date_stop": sessions.stop_at
+            if session_ids and len(sessions) == 1
+            else date_stop,
             "session_name": sessions.name if len(sessions) == 1 else False,
             "opening_note": sessions.opening_notes if len(sessions) == 1 else False,
             "closing_note": sessions.closing_notes if len(sessions) == 1 else False,
             "config_names": configs.mapped("name"),
-            "company_name": self.env.company.name,
+            "company_id": companies.id if len(companies) == 1 else False,
+            "company_name": ", ".join(companies.mapped("name")),
             "nbr_orders": len(orders),
             "currency": {
                 "symbol": currency.symbol,
@@ -72,8 +79,13 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             "discount_amount": sales["discount_amount"],
             **self._prepare_products_section(configs, sales["sold"], sales["refunded"]),
             **self._prepare_payments_section(payments, session_ids),
-            **self._prepare_invoice_section(sessions, currency),
+            **self._prepare_invoice_section(orders, currency),
         }
+        return self._finalize_sale_details(data, orders, configs, sessions)
+
+    def _finalize_sale_details(self, data, orders, configs, sessions):
+        """Extend a report using its resolved selection instead of searching again."""
+        return data
 
     @api.model
     def _get_report_values(self, docids, data=None):
@@ -171,19 +183,28 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
     def _get_report_scope(self, config_ids, session_ids, date_start, date_stop):
         if session_ids:
             sessions = self.env["pos.session"].browse(session_ids).exists()
-        else:
-            domain = Domain("start_at", "<=", date_stop) & (
-                Domain("stop_at", "=", False) | Domain("stop_at", ">=", date_start)
-            )
-            if config_ids:
-                domain &= Domain("config_id", "in", config_ids)
-            sessions = self.env["pos.session"].search(domain)
+            sessions.check_access("read")
+            configs = sessions.config_id
+            configs.check_access("read")
+            return configs, sessions
+        domain = Domain("start_at", "<=", date_stop) & (
+            Domain("stop_at", "=", False) | Domain("stop_at", ">=", date_start)
+        )
+        domain |= Domain(
+            "order_ids",
+            "any",
+            self._get_domain_orders(date_start, date_stop, config_ids),
+        )
+        if config_ids:
+            domain &= Domain("config_id", "in", config_ids)
+        sessions = self.env["pos.session"].search(domain)
 
         configs = (
             self.env["pos.config"].browse(config_ids).exists()
             if config_ids
             else sessions.config_id
         )
+        configs.check_access("read")
         return configs, sessions
 
     def _get_report_currency(self, configs):
@@ -203,7 +224,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         discount_amount = 0.0
         precision = self.env["decimal.precision"].get_precision("Product Unit")
 
-        for order in orders:
+        for order in orders.with_context(active_test=False):
             total += self._convert_order_amount(
                 order.amount_total, order, report_currency
             )
@@ -301,7 +322,12 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             for tax in line_taxes["taxes"]:
                 taxes.setdefault(
                     tax["id"],
-                    {"name": tax["name"], "tax_amount": 0.0, "base_amount": 0.0},
+                    {
+                        "id": tax["id"],
+                        "name": tax["name"],
+                        "tax_amount": 0.0,
+                        "base_amount": 0.0,
+                    },
                 )
                 taxes[tax["id"]]["tax_amount"] += convert(tax["amount"])
                 base_by_tax[tax["id"]] = tax["base"]
@@ -311,7 +337,8 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         else:
             base_amount = total_amount
             taxes.setdefault(
-                0, {"name": _("No Taxes"), "tax_amount": 0.0, "base_amount": 0.0}
+                0,
+                {"id": 0, "name": _("No Taxes"), "tax_amount": 0.0, "base_amount": 0.0},
             )
             taxes[0]["base_amount"] += base_amount
 
@@ -323,7 +350,9 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
         accumulator["base_amount"] += base_amount
 
     def _prepare_products_section(self, configs, sold, refunded):
-        report = self.with_context(config_id=configs[0].id if configs else False)
+        report = self.with_context(
+            report_currency_id=self._get_report_currency(configs).id,
+        )
         products, products_info = report._get_total_and_qty_per_category(
             self._serialize_products_by_category(sold["products"])
         )
@@ -385,23 +414,24 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
 
     def _get_total_and_qty_per_category(self, categories):
         qty_precision = self.env["decimal.precision"].get_precision("Product Unit")
-        price_precision = self.env["decimal.precision"].get_precision("Product Price")
+        currency = (
+            self.env["res.currency"].browse(self.env.context.get("report_currency_id"))
+            or self.env.company.currency_id
+        )
         for category_dict in categories:
             category_dict["qty"] = round(
                 sum(product["quantity"] for product in category_dict["products"]),
                 qty_precision,
             )
-            category_dict["total"] = round(
+            category_dict["total"] = currency.round(
                 sum(product["base_amount"] for product in category_dict["products"]),
-                price_precision,
             )
         all_products = [
             product for category in categories for product in category["products"]
         ]
         return categories, {
-            "total": round(
+            "total": currency.round(
                 sum(product["base_amount"] for product in all_products),
-                price_precision,
             ),
             "qty": round(
                 sum(product["quantity"] for product in all_products), qty_precision
@@ -410,6 +440,12 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
 
     def _get_counted_payments(self, orders, sessions):
         payments = self._get_payment_totals(orders)
+        sessions.check_access("read")
+        accounting_report = self.sudo()
+        sessions = accounting_report._get_complete_sessions(orders, sessions.sudo())
+        return accounting_report._prepare_counted_payments(payments, sessions)
+
+    def _prepare_counted_payments(self, payments, sessions):
         payments_by_session = {}
         for payment in payments:
             payments_by_session.setdefault(payment["session"], []).append(payment)
@@ -425,17 +461,28 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             .grouped(lambda line: line.pos_session_id.id)
         )
         diff_moves = self._get_closing_difference_moves(sessions, payments)
-        previous_sessions = self._get_previous_closed_sessions(sessions)
+        payment_keys = {(payment["session"], payment["id"]) for payment in payments}
+        for (session_id, method_id), move in diff_moves.items():
+            if move and (session_id, method_id) not in payment_keys:
+                payments_by_session.setdefault(session_id, []).append(
+                    self._prepare_payment_row(
+                        self.env["pos.payment.method"].browse(method_id),
+                        sessions.browse(session_id),
+                        0,
+                    )
+                )
 
         counted = []
         for session in sessions:
             session_payments = payments_by_session.pop(session.id, [])
-            if not any(payment["cash"] for payment in session_payments):
+            if session.cash_journal_id and not any(
+                payment["cash"] and payment["journal_id"] == session.cash_journal_id.id
+                for payment in session_payments
+            ):
                 counted.append(
                     self._prepare_uncounted_cash_row(
                         session,
                         statement_lines_by_session,
-                        previous_sessions.get(session.id, self.env["pos.session"]),
                     )
                 )
             for payment in session_payments:
@@ -456,7 +503,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             counted += session_payments
 
         dbg.logic.debug(
-            "[report] payments: %d counted rows, %d orphan sessions, %d diff moves",
+            "[report] payments: %d counted rows, %d uncounted sessions, %d diff moves",
             len(counted),
             len(payments_by_session),
             len(diff_moves),
@@ -465,28 +512,52 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             counted += orphan_payments
         return counted
 
+    def _get_complete_sessions(self, orders, sessions):
+        groups = self.env["pos.order"]._read_group(
+            self._get_domain_orders(session_ids=sessions.ids)
+            if sessions
+            else Domain.FALSE,
+            ["session_id"],
+            ["__count"],
+        )
+        captured_counts = {session.id: count for session, count in groups}
+        selected = orders.grouped("session_id")
+        complete = sessions.filtered(
+            lambda session: (
+                len(selected.get(session, ())) == captured_counts.get(session.id, 0)
+            )
+        )
+        dbg.logic.debug(
+            "[report] drawer scope: %d complete sessions, %d partial sessions omitted",
+            len(complete),
+            len(sessions - complete),
+        )
+        return complete
+
     def _get_payment_totals(self, orders):
         groups = self.env["pos.payment"]._read_group(
             [("pos_order_id", "in", orders.ids)],
             ["payment_method_id", "session_id"],
             ["amount:sum"],
         )
-        payments = [
-            {
-                "id": method.id,
-                "session": session.id,
-                "name": method.name,
-                "cash": method.is_cash_count,
-                "total": total,
-                "journal_id": method.journal_id.id,
-                "count": False,
-            }
-            for method, session, total in groups
-        ]
+        payments = list(starmap(self._prepare_payment_row, groups))
         payments.sort(key=lambda payment: (payment["id"], payment["session"]))
         return payments
 
+    def _prepare_payment_row(self, method, session, total):
+        return {
+            "id": method.id,
+            "session": session.id,
+            "name": method.name,
+            "cash": method.is_cash_count,
+            "total": total,
+            "journal_id": method.journal_id.id,
+            "count": False,
+        }
+
     def _get_closing_difference_moves(self, sessions, payments):
+        if not sessions:
+            return {}
         sessions_by_id = {session.id: session for session in sessions}
         methods = self.env["pos.payment.method"].browse(
             sorted({payment["id"] for payment in payments if not payment["cash"]})
@@ -498,125 +569,202 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             for payment in payments
             if not payment["cash"] and payment["session"] in sessions_by_id
         }
-        if not ref_by_key:
-            return {}
-
         moves = self.env["account.move"].search(
-            [
-                ("ref", "in", list(set(ref_by_key.values()))),
-                ("journal_id", "in", methods.journal_id.ids),
-            ]
+            Domain("state", "=", "posted")
+            & (
+                Domain("pos_diff_session_id", "in", sessions.ids)
+                | Domain(
+                    [
+                        ("pos_diff_payment_method_id", "=", False),
+                        ("ref", "in", list(set(ref_by_key.values()))),
+                        ("journal_id", "in", methods.journal_id.ids),
+                    ]
+                )
+            )
         )
-        move_by_key = {}
-        journal_by_method = {method.id: method.journal_id.id for method in methods}
-        moves_by_ref_and_journal = {}
-        for move in moves:
-            moves_by_ref_and_journal.setdefault((move.ref, move.journal_id.id), move)
-        for key, ref in ref_by_key.items():
-            journal_id = journal_by_method.get(key[1])
-            match = moves_by_ref_and_journal.get((ref, journal_id))
-            if match is not None:
-                move_by_key[key] = match
+        move_by_key = {
+            (move.pos_diff_session_id.id, move.pos_diff_payment_method_id.id): move
+            for move in moves
+            if move.pos_diff_session_id and move.pos_diff_payment_method_id
+        }
+        legacy_candidates = {}
+        ambiguous = set()
+        for move in moves.filtered(lambda move: not move.pos_diff_payment_method_id):
+            keys = self._get_legacy_difference_keys(move, methods, ref_by_key)
+            if len(keys) != 1:
+                ambiguous.update(keys)
+                continue
+            key = next(iter(keys))
+            legacy_candidates.setdefault(key, []).append(move)
+        for key in ambiguous | legacy_candidates.keys():
+            if key not in move_by_key:
+                candidates = legacy_candidates.get(key, [])
+                move_by_key[key] = (
+                    candidates[0]
+                    if key not in ambiguous and len(candidates) == 1
+                    else None
+                )
+        dbg.logic.debug(
+            "[report] closing differences: %d resolved, %d ambiguous",
+            sum(move is not None for move in move_by_key.values()),
+            sum(move is None for move in move_by_key.values()),
+        )
         return move_by_key
 
-    def _get_session_cash_moves(self, session, statement_lines_by_session):
-        return statement_lines_by_session.get(
-            session.id, self.env["account.bank.statement.line"]
-        ).sorted(lambda line: (line.date, line.id))
-
-    def _get_previous_closed_sessions(self, sessions):
-        if not sessions:
-            return {}
-        candidates = self.env["pos.session"].search(
-            [
-                ("config_id", "in", sessions.config_id.ids),
-                ("state", "=", "closed"),
-                ("id", "<", max(sessions.ids)),
-            ],
-            order="id desc",
-        )
-        by_config = candidates.grouped(lambda session: session.config_id.id)
-        return {
-            session.id: next(
-                (
-                    candidate
-                    for candidate in by_config.get(session.config_id.id, ())
-                    if candidate.id < session.id
-                ),
-                self.env["pos.session"],
+    def _get_legacy_difference_keys(self, move, methods, ref_by_key):
+        """Resolve old linked entries by accounting identity before mutable labels."""
+        if not move.pos_diff_session_id:
+            return {
+                key
+                for key, ref in ref_by_key.items()
+                if ref == move.ref
+                and methods.browse(key[1]).journal_id == move.journal_id
+            }
+        session = move.pos_diff_session_id
+        candidates = (methods | session.payment_method_ids).filtered(
+            lambda method: (
+                method.split_transactions
+                and method.type == "bank"
+                and method.journal_id == move.journal_id
+                and method.outstanding_account_id in move.line_ids.account_id
             )
-            for session in sessions
-        }
-
-    def _prepare_uncounted_cash_row(
-        self, session, statement_lines_by_session, previous_session
-    ):
-        final_count = (
-            previous_session.cash_register_balance_end_real
-            + session.cash_real_transaction
         )
-        cash_moves = self._get_session_cash_moves(session, statement_lines_by_session)
+        exact = candidates.filtered(
+            lambda method: ref_by_key.get((session.id, method.id)) == move.ref
+        )
+        return {(session.id, method.id) for method in exact or candidates}
 
+    def _get_session_cash_moves(self, session, statement_lines_by_session):
+        """Exclude closing entries using purpose tags or legacy reconciliation."""
+        moves = (
+            statement_lines_by_session.get(
+                session.id, self.env["account.bank.statement.line"]
+            )
+            .filtered(
+                lambda line: line.pos_cash_move_type not in ("payment", "difference")
+            )
+            .sorted(lambda line: (line.date, line.id))
+        )
+        legacy = moves.filtered(lambda line: not line.pos_cash_move_type)
+        if session.state == "closed" and session.move_id and legacy:
+            lines = legacy.move_id.line_ids
+            partials = lines.matched_debit_ids | lines.matched_credit_ids
+            settlement_moves = self.env["account.move"]
+            for partial in partials:
+                if partial.debit_move_id.move_id == session.move_id:
+                    settlement_moves |= partial.credit_move_id.move_id
+                if partial.credit_move_id.move_id == session.move_id:
+                    settlement_moves |= partial.debit_move_id.move_id
+            moves = moves.filtered(lambda line: line.move_id not in settlement_moves)
+            dbg.logic.debug(
+                "[report] legacy cash session=%s: excluded %d reconciled settlement moves",
+                session.id,
+                len(settlement_moves),
+            )
+        if session.state == "closed" and legacy:
+            moves = self._get_cash_moves_without_legacy_difference(session, moves)
+        return moves
+
+    def _get_cash_moves_without_legacy_difference(self, session, moves):
+        """Exclude only a uniquely identifiable old counting adjustment."""
+        difference = (
+            session.cash_register_balance_end_real - session.cash_register_balance_end
+        )
+        if session.currency_id.is_zero(difference):
+            return moves
+        residual = sum(moves.mapped("amount")) - session.cash_real_transaction
+        if session.currency_id.compare_amounts(residual, difference) != 0:
+            return moves
         diff_accounts = (
             session.cash_journal_id.loss_account_id
             | session.cash_journal_id.profit_account_id
         )
-        if diff_accounts:
-            cash_moves = cash_moves.filtered(
-                lambda line, accounts=diff_accounts: (
-                    not (line.move_id.line_ids.account_id & accounts)
-                )
+        candidates = moves.filtered(
+            lambda line: (
+                not line.pos_cash_move_type
+                and line.move_id.line_ids.account_id & diff_accounts
+                and session.currency_id.compare_amounts(line.amount, difference) == 0
             )
+        )
+        if len(candidates) == 1:
+            return moves - candidates
+        dbg.logic.debug(
+            "[report] legacy drawer %s: %d candidate counting adjustments",
+            session.id,
+            len(candidates),
+        )
+        return moves
 
-        cash_in_out_list = []
-        if previous_session.cash_register_balance_end_real > 0:
-            cash_in_out_list.append(
-                {
-                    "name": _("Cash Opening"),
-                    "amount": previous_session.cash_register_balance_end_real,
-                }
-            )
-        cash_in_out_list += [
-            {"name": cash_move.payment_ref, "amount": cash_move.amount}
-            for cash_move in cash_moves
-        ]
-
-        return {
+    def _prepare_uncounted_cash_row(self, session, statement_lines_by_session):
+        payment = {
             "id": False,
             "session": session.id,
             "name": _("Cash %(session_name)s", session_name=session.name),
             "cash": True,
             "journal_id": session.cash_journal_id.id,
             "total": 0,
-            "final_count": final_count,
-            "money_counted": session.cash_register_balance_end_real,
-            "money_difference": session.cash_register_balance_end_real - final_count,
-            "cash_moves": cash_in_out_list,
-            "count": True,
         }
+        self._count_cash_payment(payment, session, statement_lines_by_session)
+        return payment
 
     def _count_cash_payment(self, payment, session, statement_lines_by_session):
+        if payment["journal_id"] != session.cash_journal_id.id:
+            dbg.logic.debug(
+                "[report] session %s: no stored drawer count for cash method %s",
+                session.id,
+                payment["id"],
+            )
+            return
+        cash_moves = self._get_session_cash_moves(session, statement_lines_by_session)
+        cash_transactions = (
+            session.cash_real_transaction
+            if session.state == "closed"
+            else sum(cash_moves.mapped("amount"))
+        )
         payment["final_count"] = (
-            payment["total"]
-            + session.cash_register_balance_start
-            + session.cash_real_transaction
+            payment["total"] + session.cash_register_balance_start + cash_transactions
         )
         payment["money_counted"] = session.cash_register_balance_end_real or 0
         payment["money_difference"] = payment["money_counted"] - payment["final_count"]
 
+        payment["cash_moves"] = self._prepare_cash_movement_rows(session, cash_moves)
+        payment["count"] = True
+
+    def _prepare_cash_movement_rows(self, session, cash_moves):
         cash_in_out_list = []
-        if session.cash_register_balance_start > 0:
+        if not session.currency_id.is_zero(session.cash_register_balance_start):
             cash_in_out_list.append(
                 {
                     "name": _("Cash Opening"),
                     "amount": session.cash_register_balance_start,
                 }
             )
-        cash_in_count = cash_out_count = 0
-        for cash_move in self._get_session_cash_moves(
-            session, statement_lines_by_session
+        legacy = cash_moves.filtered(lambda line: not line.pos_cash_move_type)
+        if (
+            session.state == "closed"
+            and legacy
+            and session.currency_id.compare_amounts(
+                sum(cash_moves.mapped("amount")), session.cash_real_transaction
+            )
+            != 0
         ):
-            if cash_move.move_id.journal_id.id != payment["journal_id"]:
+            cash_moves -= legacy
+            legacy_amount = session.cash_real_transaction - sum(
+                cash_moves.mapped("amount")
+            )
+            if not session.currency_id.is_zero(legacy_amount):
+                cash_in_out_list.append(
+                    {"name": _("Other cash movements"), "amount": legacy_amount}
+                )
+            dbg.logic.debug(
+                "[report] session %s: summarized %d legacy cash entries as %s",
+                session.id,
+                len(legacy),
+                legacy_amount,
+            )
+        cash_in_count = cash_out_count = 0
+        for cash_move in cash_moves:
+            if cash_move.move_id.journal_id != session.cash_journal_id:
                 continue
             if cash_move.amount > 0:
                 cash_in_count += 1
@@ -627,29 +775,59 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             cash_in_out_list.append(
                 {"name": cash_move.payment_ref or name, "amount": cash_move.amount}
             )
-        payment["cash_moves"] = cash_in_out_list
-        payment["count"] = True
+        return cash_in_out_list
 
     def _count_non_cash_payment(self, payment, diff_move, account_payments):
+        if diff_move is None:
+            dbg.logic.debug(
+                "[report] method %s session %s: ambiguous legacy difference; count omitted",
+                payment["id"],
+                payment["session"],
+            )
+            return
         session = self.env["pos.session"].browse(payment["session"])
-        journal = self.env["pos.payment.method"].browse(payment["id"]).journal_id
-        diff_accounts = diff_move.line_ids.account_id
-        is_loss = bool(journal.loss_account_id & diff_accounts)
-        is_profit = bool(journal.profit_account_id & diff_accounts)
-
-        if is_loss or is_profit:
+        if diff_move:
+            method = self.env["pos.payment.method"].browse(payment["id"])
+            source_lines = diff_move.line_ids.filtered(
+                lambda line: line.account_id == method.outstanding_account_id
+            )
+            sign = 1
+            if not source_lines:
+                accounts = (
+                    method.journal_id.loss_account_id
+                    | method.journal_id.profit_account_id
+                )
+                source_lines = diff_move.line_ids.filtered(
+                    lambda line: line.account_id in accounts
+                )
+                sign = -1
+            if not source_lines:
+                dbg.logic.debug(
+                    "[report] difference move %s has no identifiable source or counterpart; count omitted",
+                    diff_move.id,
+                )
+                return
+            difference = sign * sum(
+                line.currency_id._convert(
+                    line.amount_currency,
+                    session.currency_id,
+                    session.company_id,
+                    diff_move.date,
+                )
+                for line in source_lines
+            )
+            dbg.logic.debug(
+                "[report] difference move %s: signed lines %s -> %s %s",
+                diff_move.id,
+                source_lines.ids,
+                difference,
+                session.currency_id.name,
+            )
             payment["final_count"] = payment["total"]
-            payment["money_difference"] = diff_move.company_currency_id._convert(
-                -diff_move.amount_total if is_loss else diff_move.amount_total,
-                session.currency_id,
-                session.company_id,
-                diff_move.date,
-            )
-            payment["money_counted"] = (
-                payment["final_count"] + payment["money_difference"]
-            )
+            payment["money_difference"] = difference
+            payment["money_counted"] = payment["total"] + difference
             payment["cash_moves"] = self._prepare_counting_difference_moves(
-                payment["money_difference"], is_loss
+                difference, difference < 0
             )
             payment["count"] = True
             return
@@ -716,14 +894,9 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
     def _update_payment_rows_with_report_currency(
         self, payments, orders, sessions, currency
     ):
-        """Count in the session currency, then present every amount in report currency.
-
-        Sales payments use their order date, like sales totals. Cash counts use
-        the closing date (or opening date while open). Counting differences
-        stay independent of exchange-rate changes between sales and closing.
-        """
         totals = {}
-        for payment in orders.payment_ids:
+        foreign_orders = orders.filtered(lambda order: order.currency_id != currency)
+        for payment in foreign_orders.payment_ids:
             key = (payment.session_id.id, payment.payment_method_id.id)
             totals[key] = totals.get(key, 0.0) + self._convert_order_amount(
                 payment.amount, payment.pos_order_id, currency
@@ -752,16 +925,21 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
             if row.get("count"):
                 row["money_difference"] = row["money_counted"] - row["final_count"]
 
-    def _prepare_invoice_section(self, sessions, currency=None):
-        currency = currency or self._get_report_currency(sessions.config_id)
+    def _prepare_invoice_section(self, orders, currency):
+        """List invoices from the same order selection as sales and payments."""
         invoice_list = []
         invoice_total = 0.0
-        for session in sessions:
+        for session, invoiced_orders in (
+            orders.filtered("is_invoiced").grouped("session_id").items()
+        ):
             invoices = []
-            for order in session._get_invoiced_orders():
+            for order in invoiced_orders:
                 move = order.account_move
-                total = move.company_currency_id._convert(
-                    move.amount_total_signed, currency, move.company_id, move.date
+                total = move.currency_id._convert(
+                    move.amount_total_in_currency_signed,
+                    currency,
+                    move.company_id,
+                    move.date,
                 )
                 invoices.append(
                     {
@@ -770,8 +948,6 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                         "order_ref": order.pos_reference,
                     }
                 )
-                invoice_total += self._convert_order_amount(
-                    order.amount_paid, order, currency
-                )
+                invoice_total += total
             invoice_list.append({"name": session.name, "invoices": invoices})
         return {"invoice_list": invoice_list, "invoice_total": invoice_total}

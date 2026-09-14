@@ -960,6 +960,7 @@ class PosSession(models.Model):
         if amount and self.config_id.cash_control:
             st_line_vals = {
                 "journal_id": self.cash_journal_id.id,
+                "pos_cash_move_type": "difference",
                 "amount": amount,
                 "date": max(
                     self.statement_line_ids.mapped("date"),
@@ -1171,6 +1172,7 @@ class PosSession(models.Model):
                 "date": fields.Date.context_today(self),
                 "ref": self._get_diff_account_move_ref(payment_method),
                 "pos_diff_session_id": self.id,
+                "pos_diff_payment_method_id": payment_method.id,
                 "line_ids": [Command.create(source_vals), Command.create(dest_vals)],
             }
         )
@@ -2442,6 +2444,7 @@ class PosSession(models.Model):
             "date": fields.Date.context_today(self),
             "payment_ref": self.name,
             "pos_session_id": self.id,
+            "pos_cash_move_type": "payment",
             "journal_id": journal.id,
             "counterpart_account_id": self._get_receivable_account(payment_method).id,
             **amount_values,
@@ -2454,6 +2457,7 @@ class PosSession(models.Model):
             "date": fields.Date.context_today(self, timestamp=payment.payment_date),
             "payment_ref": payment.name,
             "pos_session_id": self.id,
+            "pos_cash_move_type": "payment",
             "journal_id": journal.id,
             "counterpart_account_id": accounting_partner.property_account_receivable_id.id,
             "partner_id": accounting_partner.id,
@@ -2774,6 +2778,7 @@ class PosSession(models.Model):
         self.check_singleton()
         return {
             "pos_session_id": self.id,
+            "pos_cash_move_type": "manual",
             "journal_id": self.cash_journal_id.id,
             "amount": sign * amount,
             "date": fields.Date.context_today(self),

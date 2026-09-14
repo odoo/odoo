@@ -41,7 +41,7 @@
             </t>
         </template>
         <template id="report_saledetails">
-            <t t-set="company" t-value="env.company" />
+            <t t-set="company" t-value="env['res.company'].browse(company_id) if company_id else env.company" />
             <t t-call="point_of_sale.pos_daily_sales_html_container">
                 <t t-call="web.basic_layout">
                     <t t-call="point_of_sale.pos_session_sales_details" />

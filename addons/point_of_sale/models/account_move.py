@@ -33,6 +33,13 @@ class AccountMove(models.Model):
         index="btree_not_null",
         help="Session whose closing produced this payment-method difference entry.",
     )
+    pos_diff_payment_method_id = fields.Many2one(
+        comodel_name="pos.payment.method",
+        string="POS Closing Difference Payment Method",
+        copy=False,
+        index="btree_not_null",
+        help="Payment method whose closing count produced this difference entry.",
+    )
     pos_session_ids = fields.One2many(
         comodel_name="pos.session",
         inverse_name="move_id",

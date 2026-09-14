@@ -1,10 +1,16 @@
+import logging
 from datetime import timedelta
+
+from lxml import html as lxml_html
 
 import odoo
 from odoo import fields
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.tests import new_test_user
 
 from odoo.addons.point_of_sale.tests.common import TestPoSCommon
+
+_logger = logging.getLogger(__name__)
 
 
 @odoo.tests.tagged("post_install", "-at_install")
@@ -276,7 +282,14 @@ class TestPosSaleDetailsCoherence(TestPoSCommon):
         report = self.report.get_sale_details(session_ids=[session.id])
         self.assertEqual(
             report["taxes"],
-            [{"name": tax.name, "tax_amount": 10.0, "base_amount": 100.0}],
+            [
+                {
+                    "id": tax.id,
+                    "name": tax.name,
+                    "tax_amount": 10.0,
+                    "base_amount": 100.0,
+                }
+            ],
         )
         self.assertEqual(
             report["taxes_info"],
@@ -504,9 +517,25 @@ class TestPosSaleDetailsCoherence(TestPoSCommon):
 
     def test_a_started_session_without_sales_is_still_in_scope(self):
         product = self.create_product("Elsewhere", self.categ_basic, 100)
-        quiet_config = self.env["pos.config"].create({"name": "Quiet Shop"})
+        quiet_journal = self.cash_pm1.journal_id.copy(
+            {"name": "Quiet Cash", "code": "QUIET"}
+        )
+        quiet_method = self.cash_pm1.copy(
+            {
+                "name": "Quiet Cash",
+                "journal_id": quiet_journal.id,
+                "config_ids": [fields.Command.clear()],
+            }
+        )
+        quiet_config = self.env["pos.config"].create(
+            {
+                "name": "Quiet Shop",
+                "payment_method_ids": [fields.Command.set(quiet_method.ids)],
+            }
+        )
         quiet_config.open_ui()
         quiet_config.current_session_id.set_opening_control(0, None)
+        self.assertTrue(quiet_config.current_session_id.cash_journal_id)
         session = self._open_session()
         order = self._order(session, product, 100)
         self.make_payment(order, self.cash_pm1, 100)
@@ -533,7 +562,7 @@ class TestPosSaleDetailsCoherence(TestPoSCommon):
         run()
         return len([q for q in seen if 'FROM "pos_session"' in q])
 
-    def test_the_drawer_history_costs_one_query_not_one_per_session(self):
+    def test_drawer_queries_do_not_grow_per_session(self):
         product = self.create_product("Historic", self.categ_basic, 100)
         session_ids = []
         for _index in range(6):
@@ -656,3 +685,750 @@ class TestPosSaleDetailsCoherence(TestPoSCommon):
             "two categories are two rows even when they print the same name",
         )
         self.assertEqual(sorted(c["qty"] for c in drinks), [1.0, 1.0])
+
+    def test_date_report_keeps_requested_dates(self):
+        session = self._open_session()
+        start = fields.Datetime.now() - timedelta(hours=1)
+        stop = start + timedelta(hours=2)
+
+        report = self.report.get_sale_details(start, stop, self.config.ids)
+
+        _logger.debug(
+            "Window requested=%s..%s reported=%s..%s",
+            start,
+            stop,
+            report["date_start"],
+            report["date_stop"],
+        )
+        self.assertEqual(report["session_name"], session.name)
+        self.assertEqual((report["date_start"], report["date_stop"]), (start, stop))
+
+    def test_session_scope_takes_precedence_over_config(self):
+        session = self._open_session()
+        other = self.env["pos.config"].create({"name": "Unrelated register"})
+
+        report = self.report.get_sale_details(
+            config_ids=other.ids, session_ids=session.ids
+        )
+
+        _logger.debug("Explicit session report configs=%s", report["config_names"])
+        self.assertEqual(report["config_names"], [session.config_id.name])
+
+    def test_open_cash_movements_and_actual_opening_balance(self):
+        product = self.create_product("Cash audit", self.categ_basic, 100)
+        self.config.cash_control = True
+        self.config.open_ui()
+        session = self.config.current_session_id
+        session.set_opening_control(75, None)
+        self.assertEqual(session.cash_register_balance_start, 75)
+        session.try_cash_in_out("in", 20, "Float", False, {"translatedType": "in"})
+        session.try_cash_in_out("out", 5, "Supplies", False, {"translatedType": "out"})
+
+        for cash_sale in (False, True):
+            with self.subTest(cash_sale=cash_sale):
+                if cash_sale:
+                    order = self._order(session, product, 100)
+                    self.make_payment(order, self.cash_pm1, 100)
+                report = self.report.get_sale_details(session_ids=session.ids)
+                row = next(row for row in report["payments"] if row["cash"])
+                _logger.debug("Open drawer sale=%s row=%s", cash_sale, row)
+                self.assertEqual(row["final_count"], 190 if cash_sale else 90)
+                self.assertIn(75, [move["amount"] for move in row["cash_moves"]])
+
+    def test_partial_session_does_not_invent_counting_difference(self):
+        product = self.create_product("Partial drawer", self.categ_basic, 100)
+        session = self._open_session()
+        now = fields.Datetime.now()
+        for days in (0, -5):
+            order = self._order(session, product, 100)
+            self.make_payment(order, self.cash_pm1, 100)
+            order.date_order = now + timedelta(days=days)
+        session.update_closing_cash_details(200)
+        session.close_session_from_ui()
+
+        report = self.report.get_sale_details(
+            now - timedelta(hours=1), now + timedelta(hours=1), self.config.ids
+        )
+
+        _logger.debug("Partial session payments=%s", report["payments"])
+        self.assertEqual(report["total_paid"], 100)
+        self.assertTrue(report["payments"])
+        self.assertFalse(any(row["count"] for row in report["payments"]))
+        full = self.report.get_sale_details(session_ids=session.ids)
+        cash = next(row for row in full["payments"] if row["cash"])
+        self.assertEqual(cash["money_difference"], 0)
+
+    def test_invoice_section_uses_selected_orders(self):
+        product = self.create_product("Invoiced service", self.categ_basic, 100)
+        product.type = "service"
+        session = self._open_session()
+        now = fields.Datetime.now()
+        inside = self._order(session, product, 100)
+        outside = self._order(session, product, 250)
+        for order in inside | outside:
+            self.make_payment(order, self.bank_pm1, order.amount_total)
+            order.action_pos_order_invoice()
+        outside.date_order = now - timedelta(days=5)
+
+        report = self.report.get_sale_details(
+            now - timedelta(hours=1), now + timedelta(hours=1), self.config.ids
+        )
+
+        invoices = [
+            row for group in report["invoice_list"] for row in group["invoices"]
+        ]
+        _logger.debug("Window invoices=%s total=%s", invoices, report["invoice_total"])
+        self.assertEqual([row["name"] for row in invoices], [inside.account_move.name])
+        self.assertEqual(report["invoice_total"], 100)
+
+    def test_product_totals_use_currency_rounding(self):
+        self.env.company.currency_id.rounding = 0.001
+        self.env["decimal.precision"].search([("name", "=", "Product Unit")]).digits = 3
+        product = self.create_product("Fractional sale", self.categ_basic, 1)
+        session = self._open_session()
+        order = self._order(session, product, 1, qty=0.125)
+        self.assertEqual(order.lines.qty, 0.125)
+        self.make_payment(order, self.cash_pm1, order.amount_total)
+
+        report = self.report.get_sale_details(session_ids=session.ids)
+
+        _logger.debug(
+            "Three-decimal currency products=%s taxes=%s",
+            report["products_info"],
+            report["taxes_info"],
+        )
+        self.assertEqual(report["products_info"]["total"], 0.125)
+        self.assertEqual(report["products"][0]["total"], 0.125)
+        self.assertEqual(report["taxes_info"]["base_amount"], 0.125)
+
+    def test_challenge_cash_reconciles_before_and_after_close(self):
+        self.config.cash_control = True
+        self.config.open_ui()
+        session = self.config.current_session_id
+        session.set_opening_control(75, None)
+        product = self.create_product("Drawer challenge", self.categ_basic, 100)
+        order = self._order(session, product, 100)
+        self.make_payment(order, self.cash_pm1, 100)
+        session.try_cash_in_out("in", 20, "Float", False, {"translatedType": "in"})
+        session.try_cash_in_out("out", 5, "Supplies", False, {"translatedType": "out"})
+
+        for closed in (False, True):
+            with self.subTest(closed=closed):
+                if closed:
+                    session.update_closing_cash_details(188)
+                    session.close_session_from_ui()
+                report = self.report.get_sale_details(session_ids=session.ids)
+                row = next(row for row in report["payments"] if row["cash"])
+                _logger.debug(
+                    "CHALLENGE drawer closed=%s model_expected=%s row=%s",
+                    closed,
+                    session.cash_register_balance_end,
+                    row,
+                )
+                self.assertEqual(session.cash_register_balance_end, 190)
+                self.assertEqual(row["final_count"], session.cash_register_balance_end)
+                self.assertEqual(
+                    [move["amount"] for move in row["cash_moves"]], [75, 20, -5]
+                )
+                if closed:
+                    self.assertEqual(row["money_difference"], -2)
+
+    def test_challenge_difference_survives_language_and_method_rename(self):
+        self.env["res.lang"]._activate_lang("fr_FR")
+        session = self._open_session()
+        product = self.create_product("Renamed method", self.categ_basic, 100)
+        order = self._order(session, product, 100)
+        self.make_payment(order, self.bank_split_pm1, 100)
+        session.with_context(lang="fr_FR").action_pos_session_closing_control(
+            bank_payment_method_diffs={self.bank_split_pm1.id: -20}
+        )
+        self.bank_split_pm1.name = "New terminal name"
+
+        report = self.report.with_context(lang="en_US").get_sale_details(
+            session_ids=session.ids
+        )
+
+        row = next(
+            row for row in report["payments"] if row["id"] == self.bank_split_pm1.id
+        )
+        _logger.debug("CHALLENGE renamed split method row=%s", row)
+        self.assertEqual(row["money_counted"], 80)
+        self.assertEqual(row["money_difference"], -20)
+
+    def test_challenge_zero_net_invoices_are_rendered(self):
+        product = self.create_product("Offset invoices", self.categ_basic, 100)
+        product.type = "service"
+        session = self._open_session()
+        order = self._order(session, product, 100)
+        self.make_payment(order, self.bank_pm1, 100)
+        order.action_pos_order_invoice()
+        refund = order._refund()
+        self.make_payment(refund, self.bank_pm1, -100)
+        refund.action_pos_order_invoice()
+        data = (
+            self.env["pos.daily.sales.reports.wizard"]
+            .create({"pos_session_id": session.id})
+            ._get_report_data()
+        )
+
+        report = self.report.get_sale_details(session_ids=session.ids)
+        html = self.env["ir.actions.report"]._render_qweb_html(
+            "point_of_sale.sale_details_report", [], data=data
+        )[0]
+
+        _logger.debug(
+            "CHALLENGE offset invoices rows=%s total=%s rendered=%s",
+            report["invoice_list"],
+            report["invoice_total"],
+            b'id="invoices"' in html,
+        )
+        self.assertEqual(report["invoice_total"], 0)
+        self.assertIn(b'id="invoices"', html)
+        for move in (order | refund).account_move:
+            self.assertIn(move.name.encode(), html)
+
+    def test_challenge_report_denies_public_user(self):
+        session = self._open_session()
+        with self.assertRaises(AccessError):
+            self.report.with_user(self.env.ref("base.public_user")).get_sale_details(
+                session_ids=session.ids
+            )
+
+    def test_challenge_quiet_closed_drawer_uses_its_own_opening(self):
+        self.config.cash_control = True
+        self.config.open_ui()
+        previous = self.config.current_session_id
+        previous.set_opening_control(200, None)
+        previous.update_closing_cash_details(200)
+        previous.close_session_from_ui()
+        self.config.open_ui()
+        current = self.config.current_session_id
+        current.set_opening_control(75, None)
+        current.update_closing_cash_details(75)
+        current.close_session_from_ui()
+
+        report = self.report.get_sale_details(session_ids=current.ids)
+
+        row = next(row for row in report["payments"] if row["cash"])
+        _logger.debug(
+            "CHALLENGE quiet drawer previous=%s opening=%s row=%s",
+            previous.cash_register_balance_end_real,
+            current.cash_register_balance_start,
+            row,
+        )
+        self.assertEqual(row["final_count"], 75)
+        self.assertEqual(row["money_difference"], 0)
+
+    def test_challenge_same_currency_payment_fast_path(self):
+        product = self.create_product("Grouped payment", self.categ_basic, 100)
+        session = self._open_session()
+        orders = self._order(session, product, 100) | self._order(session, product, 100)
+        for order in orders:
+            self.make_payment(order, self.cash_pm1, 100)
+        payments = self.report._get_payment_totals(orders)
+        self.env.flush_all()
+        orders.invalidate_recordset(["payment_ids"])
+
+        with self.assertQueryCount(0):
+            self.report._update_payment_rows_with_report_currency(
+                payments, orders, session, session.currency_id
+            )
+
+        _logger.debug("CHALLENGE grouped native payments=%s", payments)
+        self.assertEqual(sum(row["total"] for row in payments), 200)
+
+    def test_challenge_split_methods_sharing_journal_keep_separate_differences(self):
+        other = self.bank_split_pm1.copy({"name": "Second terminal"})
+        self.config.payment_method_ids |= other
+        session = self._open_session()
+        product = self.create_product("Two terminals", self.categ_basic, 200)
+        order = self._order(session, product, 200)
+        self.make_payment(order, self.bank_split_pm1, 100)
+        self.make_payment(order, other, 100)
+        session.action_pos_session_closing_control(
+            bank_payment_method_diffs={self.bank_split_pm1.id: -20, other.id: 10}
+        )
+        (self.bank_split_pm1 | other).name = "Same new name"
+
+        report = self.report.get_sale_details(session_ids=session.ids)
+
+        rows = {row["id"]: row for row in report["payments"]}
+        _logger.debug("CHALLENGE shared journal rows=%s", rows)
+        self.assertEqual(rows[self.bank_split_pm1.id]["money_difference"], -20)
+        self.assertEqual(rows[other.id]["money_difference"], 10)
+
+    def test_challenge_legacy_difference_still_resolves(self):
+        session = self._open_session()
+        product = self.create_product("Legacy difference", self.categ_basic, 100)
+        order = self._order(session, product, 100)
+        self.make_payment(order, self.bank_split_pm1, 100)
+        session.action_pos_session_closing_control(
+            bank_payment_method_diffs={self.bank_split_pm1.id: -20}
+        )
+        move = self.env["account.move"].search(
+            [
+                ("pos_diff_session_id", "=", session.id),
+                ("pos_diff_payment_method_id", "=", self.bank_split_pm1.id),
+            ]
+        )
+        self.assertEqual(len(move), 1)
+        move.pos_diff_payment_method_id = False
+
+        for has_session_link in (True, False):
+            with self.subTest(has_session_link=has_session_link):
+                if not has_session_link:
+                    move.pos_diff_session_id = False
+                report = self.report.get_sale_details(session_ids=session.ids)
+                row = next(
+                    row
+                    for row in report["payments"]
+                    if row["id"] == self.bank_split_pm1.id
+                )
+                _logger.debug(
+                    "CHALLENGE legacy linked=%s row=%s", has_session_link, row
+                )
+                self.assertEqual(row["money_difference"], -20)
+
+    def test_challenge_manual_expense_is_not_a_counting_difference(self):
+        self.config.cash_control = True
+        self.config.open_ui()
+        session = self.config.current_session_id
+        session.set_opening_control(100, None)
+        session.try_cash_in_out(
+            "out", 5, "Manual expense", False, {"translatedType": "out"}
+        )
+        movement = session.statement_line_ids
+        self.assertEqual(len(movement), 1)
+        counterpart = movement.move_id.line_ids.filtered(
+            lambda line: line.account_id == session.cash_journal_id.suspense_account_id
+        )
+        self.assertEqual(len(counterpart), 1)
+        counterpart.account_id = session.cash_journal_id.loss_account_id
+        session.update_closing_cash_details(95)
+        session.close_session_from_ui()
+
+        report = self.report.get_sale_details(session_ids=session.ids)
+
+        row = next(row for row in report["payments"] if row["cash"])
+        _logger.debug("CHALLENGE manual loss-account movement row=%s", row)
+        self.assertEqual(row["final_count"], 95)
+        self.assertEqual(row["money_difference"], 0)
+        self.assertEqual([move["amount"] for move in row["cash_moves"]], [100, -5])
+
+    def test_backdated_sales_include_their_session_metadata(self):
+        session = self._open_session()
+        product = self.create_product("Recovered sale", self.categ_basic, 100)
+        order = self._order(session, product, 100)
+        self.make_payment(order, self.bank_pm1, 100)
+        order.date_order = fields.Datetime.now() - timedelta(days=5)
+        start = order.date_order - timedelta(hours=1)
+        stop = order.date_order + timedelta(hours=1)
+
+        report = self.report.get_sale_details(start, stop)
+
+        _logger.debug(
+            "Recovered sale scope configs=%s session=%s",
+            report["config_names"],
+            report["session_name"],
+        )
+        self.assertEqual(report["nbr_orders"], 1)
+        self.assertEqual(report["config_names"], [self.config.name])
+        self.assertEqual(report["session_name"], session.name)
+        self.assertEqual((report["date_start"], report["date_stop"]), (start, stop))
+
+    def test_report_header_uses_selected_company(self):
+        company = self.env.company
+        company.partner_id.street = "Report origin road"
+        other = self.setup_other_company(name="Unrelated current company")["company"]
+        other.partner_id.street = "Unrelated header road"
+        session = self._open_session()
+        report_model = self.report.with_context(
+            allowed_company_ids=[other.id, company.id]
+        )
+        data = (
+            self.env["pos.daily.sales.reports.wizard"]
+            .create({"pos_session_id": session.id})
+            ._get_report_data()
+        )
+
+        report = report_model.get_sale_details(session_ids=session.ids)
+        rendered = (
+            self.env["ir.actions.report"]
+            .with_context(allowed_company_ids=[other.id, company.id])
+            ._render_qweb_html(
+                "point_of_sale.sale_details_report",
+                [],
+                data=data,
+            )[0]
+        )
+
+        header = (
+            lxml_html.fromstring(rendered).xpath('//*[@id="header"]')[0].text_content()
+        )
+        _logger.debug(
+            "Company report current=%s selected=%s header=%s",
+            other.name,
+            report["company_name"],
+            header,
+        )
+        self.assertEqual(report["company_name"], company.name)
+        self.assertIn(company.name, header)
+        self.assertIn(company.partner_id.street, header)
+        self.assertNotIn(other.partner_id.street, header)
+
+    def test_bank_only_session_has_no_cash_drawer(self):
+        self.config.payment_method_ids = self.bank_pm1
+        session = self._open_session()
+        self.assertFalse(session.cash_journal_id)
+
+        report = self.report.get_sale_details(session_ids=session.ids)
+
+        _logger.debug("Bank-only session rows=%s", report["payments"])
+        self.assertFalse(any(row["cash"] for row in report["payments"]))
+
+    def test_legacy_settlement_is_identified_by_reconciliation(self):
+        self._assert_legacy_settlement()
+
+    def test_legacy_invoiced_settlement_is_identified_by_reconciliation(self):
+        self._assert_legacy_settlement(invoice=True)
+
+    def _assert_legacy_settlement(self, invoice=False):
+        session = self._open_session()
+        product = self.create_product("Legacy cash", self.categ_basic, 100)
+        product.type = "service"
+        order = self._order(session, product, 100)
+        self.make_payment(order, self.cash_pm1, 100)
+        if invoice:
+            order.action_pos_order_invoice()
+        session.try_cash_in_out("in", 20, "Float", False, {"translatedType": "in"})
+        session.update_closing_cash_details(120)
+        session.close_session_from_ui()
+        session.statement_line_ids.pos_cash_move_type = False
+        session.statement_line_ids.payment_ref = "Historical label"
+
+        report = self.report.get_sale_details(session_ids=session.ids)
+
+        row = next(row for row in report["payments"] if row["cash"])
+        _logger.debug("Legacy reconciled cash row=%s", row)
+        self.assertEqual(row["final_count"], 120)
+        self.assertEqual([move["amount"] for move in row["cash_moves"]], [20])
+
+    def test_legacy_difference_uses_session_and_accounts_after_rename(self):
+        session = self._open_session()
+        product = self.create_product("Legacy terminal", self.categ_basic, 100)
+        order = self._order(session, product, 100)
+        self.make_payment(order, self.bank_split_pm1, 100)
+        session.action_pos_session_closing_control(
+            bank_payment_method_diffs={self.bank_split_pm1.id: -20}
+        )
+        move = self.env["account.move"].search(
+            [("pos_diff_session_id", "=", session.id)]
+        )
+        self.assertEqual(len(move), 1)
+        move.pos_diff_payment_method_id = False
+        move.ref = "Historical language and terminal name"
+        self.bank_split_pm1.name = "Renamed terminal"
+
+        report = self.report.get_sale_details(session_ids=session.ids)
+
+        row = next(
+            row for row in report["payments"] if row["id"] == self.bank_split_pm1.id
+        )
+        _logger.debug("Legacy linked difference after rename=%s", row)
+        self.assertEqual(row["money_counted"], 80)
+        self.assertEqual(row["money_difference"], -20)
+
+    def test_ambiguous_legacy_difference_does_not_claim_zero(self):
+        other = self.bank_split_pm1.copy({"name": "Second terminal"})
+        self.config.payment_method_ids |= other
+        session = self._open_session()
+        product = self.create_product("Ambiguous terminals", self.categ_basic, 200)
+        order = self._order(session, product, 200)
+        self.make_payment(order, self.bank_split_pm1, 100)
+        self.make_payment(order, other, 100)
+        session.action_pos_session_closing_control(
+            bank_payment_method_diffs={self.bank_split_pm1.id: -20}
+        )
+        move = self.env["account.move"].search(
+            [("pos_diff_session_id", "=", session.id)]
+        )
+        move.pos_diff_payment_method_id = False
+        move.ref = "Unknown historical reference"
+
+        report = self.report.get_sale_details(session_ids=session.ids)
+
+        rows = [row for row in report["payments"] if not row["cash"]]
+        _logger.debug("Ambiguous legacy difference rows=%s", rows)
+        self.assertEqual(sum(row["total"] for row in rows), 200)
+        self.assertFalse(any(row["count"] for row in rows))
+
+    def test_cashier_can_read_own_company_report_without_accounting_groups(self):
+        session = self._open_session()
+        product = self.create_product("Cashier report", self.categ_basic, 100)
+        order = self._order(session, product, 100)
+        self.make_payment(order, self.cash_pm1, 100)
+        session.update_closing_cash_details(100)
+        session.close_session_from_ui()
+        session.statement_line_ids.pos_cash_move_type = False
+        cashier = new_test_user(
+            self.env,
+            login="sale_details_cashier",
+            groups="point_of_sale.group_pos_user",
+        )
+
+        report = self.report.with_user(cashier).get_sale_details(
+            session_ids=session.ids
+        )
+
+        _logger.debug(
+            "Cashier report paid=%s rows=%s", report["total_paid"], report["payments"]
+        )
+        self.assertEqual(report["total_paid"], 100)
+        row = next(row for row in report["payments"] if row["cash"])
+        self.assertEqual(row["money_difference"], 0)
+
+    def test_cashier_cannot_report_another_company_session(self):
+        other = self.setup_other_company(name="Private report company")["company"]
+        other_config = (
+            self.env["pos.config"]
+            .with_company(other)
+            .create({"name": "Private register"})
+        )
+        other_config.open_ui()
+        cashier = new_test_user(
+            self.env,
+            login="restricted_report_cashier",
+            groups="point_of_sale.group_pos_user",
+            company_id=self.env.company.id,
+        )
+
+        for scope in (
+            {"session_ids": other_config.current_session_id.ids},
+            {"config_ids": other_config.ids},
+        ):
+            with self.subTest(scope=scope), self.assertRaises(AccessError):
+                self.report.with_user(cashier).get_sale_details(**scope)
+
+    def test_legacy_manual_expense_remains_when_drawer_balances(self):
+        self.config.cash_control = True
+        self.config.open_ui()
+        session = self.config.current_session_id
+        session.set_opening_control(100, None)
+        session.try_cash_in_out(
+            "out", 5, "Old expense", False, {"translatedType": "out"}
+        )
+        movement = session.statement_line_ids
+        counterpart = movement.move_id.line_ids.filtered(
+            lambda line: line.account_id == session.cash_journal_id.suspense_account_id
+        )
+        counterpart.account_id = session.cash_journal_id.loss_account_id
+        movement.pos_cash_move_type = False
+        session.update_closing_cash_details(95)
+        session.close_session_from_ui()
+
+        report = self.report.get_sale_details(session_ids=session.ids)
+
+        row = next(row for row in report["payments"] if row["cash"])
+        _logger.debug("Balanced legacy loss-account expense=%s", row)
+        self.assertEqual([move["amount"] for move in row["cash_moves"]], [100, -5])
+        self.assertEqual(row["money_difference"], 0)
+
+    def test_multi_company_report_names_companies_without_unrelated_address(self):
+        company = self.env.company
+        company.partner_id.street = "First company street"
+        other = self.setup_other_company(name="Second report company")["company"]
+        other.partner_id.street = "Second company street"
+        other_config = (
+            self.env["pos.config"]
+            .with_context(allowed_company_ids=[other.id, company.id])
+            .create({"name": "Second register"})
+        )
+        configs = self.config | other_config
+        data = {"config_ids": configs.ids, "employee_ids": []}
+
+        rendered = (
+            self.env["ir.actions.report"]
+            .with_context(allowed_company_ids=[other.id, company.id])
+            ._render_qweb_html(
+                "point_of_sale.sale_details_report",
+                [],
+                data=data,
+            )[0]
+        )
+
+        header = (
+            lxml_html.fromstring(rendered).xpath('//*[@id="header"]')[0].text_content()
+        )
+        _logger.debug("Multi-company header=%s", header)
+        self.assertIn(company.name, header)
+        self.assertIn(other.name, header)
+        self.assertNotIn(company.partner_id.street, header)
+        self.assertNotIn(other.partner_id.street, header)
+
+    def test_ambiguous_legacy_cash_detail_uses_recorded_transaction_total(self):
+        self.config.cash_control = True
+        self.config.open_ui()
+        session = self.config.current_session_id
+        session.set_opening_control(100, None)
+        session.try_cash_in_out("out", 5, "Expense", False, {"translatedType": "out"})
+        counterpart = session.statement_line_ids.move_id.line_ids.filtered(
+            lambda line: line.account_id == session.cash_journal_id.suspense_account_id
+        )
+        counterpart.account_id = session.cash_journal_id.loss_account_id
+        session.update_closing_cash_details(90)
+        session.close_session_from_ui()
+        self.assertEqual(session.cash_real_transaction, -5)
+        self.assertEqual(len(session.statement_line_ids), 2)
+        session.statement_line_ids.write(
+            {"pos_cash_move_type": False, "payment_ref": "Old movement"}
+        )
+
+        report = self.report.get_sale_details(session_ids=session.ids)
+
+        row = next(row for row in report["payments"] if row["cash"])
+        _logger.debug(
+            "Ambiguous legacy cash snapshot=%s row=%s",
+            session.cash_real_transaction,
+            row,
+        )
+        self.assertEqual(row["final_count"], 95)
+        self.assertEqual(row["money_difference"], -5)
+        self.assertEqual([move["amount"] for move in row["cash_moves"]], [100, -5])
+
+    def test_secondary_cash_method_does_not_reuse_primary_drawer_count(self):
+        journal = self.cash_pm1.journal_id.copy(
+            {"name": "Secondary cash", "code": "CASH2"}
+        )
+        method = self.cash_pm1.copy(
+            {
+                "name": "Secondary cash",
+                "journal_id": journal.id,
+                "config_ids": [fields.Command.clear()],
+            }
+        )
+        self.config.payment_method_ids |= method
+        session = self._open_session()
+        self.assertEqual(session.cash_journal_id, self.cash_pm1.journal_id)
+        product = self.create_product("Two cash methods", self.categ_basic, 250)
+        order = self._order(session, product, 250)
+        self.make_payment(order, self.cash_pm1, 100)
+        self.make_payment(order, method, 150)
+        session.update_closing_cash_details(100)
+        session.close_session_from_ui()
+
+        report = self.report.get_sale_details(session_ids=session.ids)
+
+        rows = {row["id"]: row for row in report["payments"]}
+        _logger.debug("Primary and secondary cash counts=%s", rows)
+        self.assertEqual(report["total_paid"], 250)
+        self.assertEqual(rows[self.cash_pm1.id]["money_difference"], 0)
+        self.assertFalse(rows[method.id]["count"])
+
+    def test_archived_tax_remains_in_historical_report(self):
+        tax = self.env["account.tax"].create({"name": "Historical VAT", "amount": 21})
+        product = self.create_product(
+            "Historical product", self.categ_basic, 100, tax_ids=tax.ids
+        )
+        session = self._open_session()
+        order = self._order(session, product, 100, taxes=tax.ids)
+        self.make_payment(order, self.bank_pm1, order.amount_total)
+        self.assertEqual(order.state, "paid")
+        before = self.report.get_sale_details(session_ids=session.ids)
+        tax.active = False
+        after = self.report.get_sale_details(session_ids=session.ids)
+        _logger.debug(
+            "Archived tax before=%s after=%s", before["taxes"], after["taxes"]
+        )
+        self.assertEqual(after["taxes"], before["taxes"])
+        self.assertEqual(after["taxes_info"], {"base_amount": 100, "tax_amount": 21})
+
+    def test_bank_profit_with_shared_profit_and_loss_account(self):
+        journal = self.bank_split_pm1.journal_id
+        journal.profit_account_id = journal.loss_account_id
+        session = self._open_session()
+        product = self.create_product(
+            "Shared difference account", self.categ_basic, 100
+        )
+        order = self._order(session, product, 100)
+        self.make_payment(order, self.bank_split_pm1, order.amount_total)
+        session.action_pos_session_closing_control(
+            bank_payment_method_diffs={self.bank_split_pm1.id: 10}
+        )
+        data = self.report.get_sale_details(session_ids=session.ids)
+        row = next(
+            row for row in data["payments"] if row["id"] == self.bank_split_pm1.id
+        )
+        _logger.debug("Shared profit/loss account row=%s", row)
+        self.assertEqual(row["money_difference"], 10)
+        self.assertEqual(row["money_counted"], 110)
+
+    def test_bank_difference_survives_journal_account_changes(self):
+        session = self._open_session()
+        product = self.create_product(
+            "Historical journal accounts", self.categ_basic, 100
+        )
+        order = self._order(session, product, 100)
+        self.make_payment(order, self.bank_split_pm1, order.amount_total)
+        session.action_pos_session_closing_control(
+            bank_payment_method_diffs={self.bank_split_pm1.id: -10}
+        )
+        journal = self.bank_split_pm1.journal_id
+        journal.write(
+            {"loss_account_id": journal.loss_account_id.copy({"code": "LOSSNEW"}).id}
+        )
+        data = self.report.get_sale_details(session_ids=session.ids)
+        row = next(
+            row for row in data["payments"] if row["id"] == self.bank_split_pm1.id
+        )
+        _logger.debug("Changed journal accounts row=%s", row)
+        self.assertEqual(row["money_difference"], -10)
+        self.assertEqual(row["money_counted"], 90)
+
+    def test_bank_counting_difference_without_sales_is_reported(self):
+        session = self._open_session()
+        session.action_pos_session_closing_control()
+        method = self.bank_split_pm1
+        moves = self.env["account.move"].create(
+            {
+                "journal_id": method.journal_id.id,
+                "pos_diff_session_id": session.id,
+                "pos_diff_payment_method_id": method.id,
+                "line_ids": [
+                    fields.Command.create(
+                        {"account_id": method.outstanding_account_id.id, "debit": 10}
+                    ),
+                    fields.Command.create(
+                        {
+                            "account_id": method.journal_id.profit_account_id.id,
+                            "credit": 10,
+                        }
+                    ),
+                ],
+            }
+        )
+        moves._post()
+        data = self.report.get_sale_details(session_ids=session.ids)
+        rows = [row for row in data["payments"] if row["id"] == self.bank_split_pm1.id]
+        _logger.debug("No-sales bank difference moves=%s rows=%s", moves.ids, rows)
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["total"], 0)
+        self.assertEqual(rows[0]["money_counted"], 10)
+
+    def test_unposted_bank_difference_does_not_change_counted_amount(self):
+        session = self._open_session()
+        product = self.create_product("Unposted difference", self.categ_basic, 100)
+        order = self._order(session, product, 100)
+        self.make_payment(order, self.bank_split_pm1, order.amount_total)
+        session.action_pos_session_closing_control(
+            bank_payment_method_diffs={self.bank_split_pm1.id: -10}
+        )
+        move = self.env["account.move"].search(
+            [("pos_diff_session_id", "=", session.id)]
+        )
+        move.action_draft()
+        data = self.report.get_sale_details(session_ids=session.ids)
+        row = next(
+            row for row in data["payments"] if row["id"] == self.bank_split_pm1.id
+        )
+        _logger.debug("Unposted difference state=%s row=%s", move.state, row)
+        self.assertEqual(row["money_difference"], 0)
