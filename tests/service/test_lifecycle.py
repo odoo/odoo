@@ -376,11 +376,47 @@ class TestPreloadRegistriesReturnCode:
         logger.critical.assert_called_once()
         assert "db1" in str(logger.critical.call_args)
 
+    def test_a_broken_database_marks_its_test_report_aborted(self, preload):
+        report = make_report(tests_run=96)
+        boom = MagicMock(side_effect=RuntimeError("registry is toast"))
+        rc, _, _, _ = preload(
+            ["db1"],
+            report=report,
+            new=boom,
+            config_overrides={"test_enable": True},
+        )
+        assert rc == -1
+        report.record_abort.assert_called_once_with("RuntimeError: registry is toast")
+
     def test_the_registry_cache_grows_to_hold_every_database(self, preload):
         _, _, registry_cls, _ = preload(
             [f"db{i}" for i in range(40)], report=make_report()
         )
         assert registry_cls.registries.count >= 40
+
+
+class TestAbortedRunReport:
+    def test_an_aborted_run_is_not_summarised_as_clean(self):
+        from odoo.tests.result import OdooTestResult
+
+        report = OdooTestResult()
+        report.testsRun = 96
+        report.record_abort("FileNotFoundError: esbuild is required")
+
+        assert not report.wasSuccessful()
+        assert str(report).startswith("0 failed, 1 error(s) of 96 tests")
+        assert "aborted before it finished: FileNotFoundError" in str(report)
+
+    def test_merging_a_report_keeps_its_abort(self):
+        from odoo.tests.result import OdooTestResult
+
+        aborted = OdooTestResult()
+        aborted.record_abort("RuntimeError: boom")
+        merged = OdooTestResult()
+        merged.update(aborted)
+
+        assert not merged.wasSuccessful()
+        assert merged.aborted == "RuntimeError: boom"
 
 
 class TestReexecNtServiceRestart:

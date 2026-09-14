@@ -297,10 +297,14 @@ def preload_registries(dbnames: list[str] | None) -> int:
                         unrun = _run_post_install_tests(registry, update_module)
                         span.set(unrun=unrun)
                     rc += _get_test_run_rc(dbname, _get_assertion_report(dbname), unrun)
-        except Exception:
+        except Exception as exc:
             _logger.critical(
                 "Failed to initialize database `%s`.", dbname, exc_info=True
             )
+            from odoo.tests.result import assertion_report
+
+            if (report := assertion_report(dbname)) is not None:
+                report.record_abort(f"{type(exc).__name__}: {exc}")
             _debug.logic("service.preload_failed", db=dbname)
             return -1
     return rc

@@ -109,6 +109,7 @@ class OdooTestResult:
         self.testsRun = 0
         self.skipped = 0
         self.infrastructure_skipped = 0
+        self.aborted = ""
         self.tb_locals = False
         self.time_start = 0.0
         self.queries_start = 0
@@ -281,6 +282,11 @@ class OdooTestResult:
     def wasSuccessful(self) -> bool:
         return self.failures_count == self.errors_count == 0
 
+    def record_abort(self, reason: str) -> None:
+        self.aborted = reason
+        self.errors_count += 1
+        _debug.lifecycle("test.result.aborted", reason=reason)
+
     def _exc_info_to_string(self, err: tuple, test: TestLike) -> str:
         exctype, value, tb = err
         while tb and self._is_relevant_tb_level(tb):
@@ -320,6 +326,8 @@ class OdooTestResult:
                 f" ({self.infrastructure_skipped} skipped because the "
                 f"environment could not run them)"
             )
+        if self.aborted:
+            summary += f", run aborted before it finished: {self.aborted}"
         return summary
 
     @contextlib.contextmanager
@@ -350,6 +358,7 @@ class OdooTestResult:
         self.testsRun += other.testsRun
         self.skipped += other.skipped
         self.infrastructure_skipped += other.infrastructure_skipped
+        self.aborted = self.aborted or other.aborted
         for test_id, stat in other.stats.items():
             self.stats[test_id] += stat
         _debug.pipeline(
