@@ -62,7 +62,6 @@ These are the primary backend APIs consumed by the JS ORM service (`core/network
 | JSONRPC | `/web/session/get_session_info` | user (readonly) | `get_session_info()` | Current session state (user, lang, company, etc.) |
 | JSONRPC | `/web/session/check` | user (readonly) | `check()` | Verify session is still valid |
 | JSONRPC | `/web/session/modules` | user (readonly) | `modules()` | List installed modules |
-| JSONRPC | `/web/session/get_lang_list` | none | `get_lang_list()` | Available languages |
 | JSONRPC | `/web/session/account` | user (readonly) | `account()` | OAuth2 URL for Odoo account linking |
 | JSONRPC | `/web/session/destroy` | user (readonly) | `destroy()` | Logout (JSON-RPC) |
 | HTTP | `/web/session/logout` | none (readonly) | `logout()` | Logout (HTTP redirect) |
@@ -79,11 +78,18 @@ These are the primary backend APIs consumed by the JS ORM service (`core/network
 | HTTP | `/web/login` | none (readonly=False) | `web_login()` | Login page (GET = form, POST = authenticate) |
 | HTTP | `/web/login_successful` | user | `login_successful_external_user()` | External user landing page |
 | HTTP | `/web/become` | user (readonly) | `switch_to_admin()` | Switch session to admin (debug) |
+| HTTP | `/robots.txt` | none | `robots()` | Search engine robots file |
+
+### controllers/health.py — Health
+
+Process probes and the metrics scrape. No session, no database: every route is `auth="none"` with `save_session=False`, and `/web/readyz` opens its own cursor on `postgres` instead of the request's.
+
+| Method | Route | Auth | Handler | Purpose |
+|--------|-------|------|---------|---------|
 | HTTP | `/web/health` | none (save_session=False) | `health()` | Legacy health check (DB status optional). Prefer `/web/healthz` + `/web/readyz` for K8s probes. |
 | HTTP | `/web/healthz` | none (save_session=False) | `healthz()` | Kubernetes-style liveness probe (no I/O, returns 200 if the process is up) |
 | HTTP | `/web/readyz` | none (save_session=False) | `readyz()` | Kubernetes-style readiness probe (checks DB + data_dir, returns 503 on failure) |
 | HTTP | `/web/metrics` | none (save_session=False) | `metrics()` | Prometheus exposition of this process's counters. Off unless the `ODOO_METRICS_TOKEN` **env var** (not a config key — it must not be writable into a saved `.conf`) is set, and answers **404** rather than 401 when unset, so an unenabled surface is indistinguishable from one never built. Token travels as `Authorization: Bearer` and is compared with `consteq`; a bad token gets 401. Gated because the payload names every database this process serves |
-| HTTP | `/robots.txt` | none | `robots()` | Search engine robots file |
 
 ### controllers/webclient.py — WebClient
 
@@ -237,8 +243,8 @@ A single `@http.route(routes=[...])` counts as one handler but several URL varia
 | Category | Handlers / URLs | Controller |
 |----------|-----------------|------------|
 | RPC/Data | 8 / 10 | dataset, action, domain, view, model |
-| Session | 8 / 8 | session |
-| Bootstrap | 16 / 19 | home (11 handlers / 14 URLs; web_client has 4 URLs), webclient (5) |
+| Session | 7 / 7 | session |
+| Bootstrap | 16 / 19 | home (7 handlers / 10 URLs; web_client has 4 URLs), health (4), webclient (5) |
 | Binary/Assets | 10 / 35 | binary (17 image + 7 content + 3 logo + 2 fonts + upload + assets + scoped assets + esm assets + esm libraries + filestore) |
 | Export | 6 / 6 | export (5), pivot (1) |
 | Reports | 3 / 5 | report |
@@ -250,4 +256,4 @@ A single `@http.route(routes=[...])` counts as one handler but several URL varia
 | Settings | 2 / 2 | settings |
 | Observability | 2 / 2 | observability (CWV beacon + JS error beacon) |
 | OpenAPI | 1 / 1 | openapi (`/web/openapi.json`, `base.group_system` only) |
-| **Total** | **77 handlers / 110 declared URL paths** | **22 controller classes** (across 20 route-bearing files of 24 in `controllers/`; export.py contains 3: Export, CSVExport, ExcelExport. `json_helpers.py`, `export_writers.py`, `utils.py`, `__init__.py` have no routes.) |
+| **Total** | **76 handlers / 109 declared URL paths** | **23 controller classes** (across 21 route-bearing files of 25 in `controllers/`; export.py contains 3: Export, CSVExport, ExcelExport. `json_helpers.py`, `export_writers.py`, `utils.py`, `__init__.py` have no routes.) |

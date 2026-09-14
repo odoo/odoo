@@ -7,6 +7,7 @@ from . import pivot
 from . import view
 
 from . import database
+from . import health
 from . import home
 from . import session
 from . import settings

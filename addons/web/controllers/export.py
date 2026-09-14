@@ -267,10 +267,12 @@ class Export(http.Controller):
             "[export_fields:%s] namelist: %s export_id=%s", model, dbg.req(), export_id
         )
         export = request.env["ir.exports"].browse([export_id])
-        return self.fields_info(model, export.export_fields.mapped("name"))
+        return self._get_fields_info(model, export.export_fields.mapped("name"))
 
     @dbg.timed
-    def fields_info(self, model: str, export_fields: list[str]) -> list[dict[str, Any]]:
+    def _get_fields_info(
+        self, model: str, export_fields: list[str]
+    ) -> list[dict[str, Any]]:
         dbg.pipeline.debug(
             "[export_fields:%s] fields_info for %d paths", model, len(export_fields)
         )
@@ -308,7 +310,7 @@ class Export(http.Controller):
                     fields[base]["relation"],
                 )
                 field_info.extend(
-                    self.graft_subfields(
+                    self._graft_subfields(
                         fields[base]["relation"],
                         base,
                         fields[base]["string"],
@@ -328,7 +330,7 @@ class Export(http.Controller):
         indexes_dict = {fname: i for i, fname in enumerate(export_fields)}
         return sorted(field_info, key=lambda field_dict: indexes_dict[field_dict["id"]])
 
-    def graft_subfields(
+    def _graft_subfields(
         self,
         model: str,
         prefix: str,
@@ -342,7 +344,7 @@ class Export(http.Controller):
                 id=f"{prefix}/{field_info['id']}",
                 string=f"{prefix_string}/{field_info['string']}",
             )
-            for field_info in self.fields_info(model, export_fields)
+            for field_info in self._get_fields_info(model, export_fields)
         )
 
 

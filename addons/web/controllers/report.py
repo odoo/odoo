@@ -178,8 +178,7 @@ class ReportController(http.Controller):
     def report_download(
         self, data: str, context: str | None = None, **_kwargs
     ) -> Response:
-        requestcontent = json_loads(data)
-        url, type_ = requestcontent[0], requestcontent[1]
+        url, type_ = json_loads(data)[:2]
         reportname = "???"
         dbg.lifecycle.debug(
             "[report_download] %s type=%s url=%r has_context=%s",
@@ -189,76 +188,41 @@ class ReportController(http.Controller):
             context is not None,
         )
         try:
-            if type_ in _DOWNLOAD_TYPES:
-                converter, extension = _DOWNLOAD_TYPES[type_]
-
-                pattern = f"/report/{converter}/"
-                _, _, after_pattern = url.partition(pattern)
-                if not after_pattern:
-                    dbg.logic.debug("[report_download] url lacks %r, refused", pattern)
-                    raise BadRequest(
-                        description=f"URL does not match expected pattern {pattern!r}."
-                    )
-                reportname = after_pattern.split("?")[0]
-
-                docids = None
-                if "/" in reportname:
-                    reportname, docids = reportname.split("/", 1)
-                dbg.pipeline.debug(
-                    "[report:%s] download: %s docids=%r via %s",
-                    reportname,
-                    converter,
-                    docids,
-                    "docids" if docids else "query string",
-                )
-
-                if docids:
-                    response = self.report_routes(
-                        reportname,
-                        docids=docids,
-                        converter=converter,
-                        context=context,
-                    )
-                else:
-                    data = {k: v[0] for k, v in parse_qs(urlsplit(url).query).items()}
-                    if "context" in data:
-                        context, data_context = (
-                            json_loads(context or "{}"),
-                            json_loads(data.pop("context")),
-                        )
-                        context = json_dumps({**context, **data_context})
-                    response = self.report_routes(
-                        reportname, converter=converter, context=context, **data
-                    )
-
-                report = request.env["ir.actions.report"]._get_report_from_name(
-                    reportname
-                )
-                filename = f"{report.name}.{extension}"
-
-                if docids:
-                    obj = request.env[report.model].browse(_parse_docids(docids))
-                    if report.print_report_name and len(obj) == 1:
-                        report_name = safe_eval(
-                            report.print_report_name,
-                            {"object": obj, "time": time},
-                        )
-                        filename = f"{report_name}.{extension}"
-                        dbg.logic.debug(
-                            "[report:%s] download: print_report_name -> %r",
-                            reportname,
-                            filename,
-                        )
-                response.headers.add(
-                    "Content-Disposition", prepare_content_disposition_header(filename)
-                )
-                dbg.pipeline.debug(
-                    "[report:%s] download: attachment %r", reportname, filename
-                )
-                return response
-            else:
+            if type_ not in _DOWNLOAD_TYPES:
                 dbg.logic.debug("[report_download] type %r unsupported", type_)
                 raise BadRequest(description=f"Report type {type_!r} not supported.")
+            converter, extension = _DOWNLOAD_TYPES[type_]
+            reportname, docids, query = self._parse_report_download_url(url, converter)
+            dbg.pipeline.debug(
+                "[report:%s] download: %s docids=%r via %s",
+                reportname,
+                converter,
+                docids,
+                "docids" if docids else "query string",
+            )
+            if docids:
+                response = self.report_routes(
+                    reportname, docids=docids, converter=converter, context=context
+                )
+            else:
+                if "context" in query:
+                    context = json_dumps(
+                        {
+                            **json_loads(context or "{}"),
+                            **json_loads(query.pop("context")),
+                        }
+                    )
+                response = self.report_routes(
+                    reportname, converter=converter, context=context, **query
+                )
+            filename = self._get_report_download_name(reportname, docids, extension)
+            response.headers.add(
+                "Content-Disposition", prepare_content_disposition_header(filename)
+            )
+            dbg.pipeline.debug(
+                "[report:%s] download: attachment %r", reportname, filename
+            )
+            return response
         except Exception as e:
             dbg.logic.debug(
                 "[report:%s] download: failed (%s) -> 500 json envelope",
@@ -272,3 +236,33 @@ class ReportController(http.Controller):
             error = {"code": 0, "message": "Odoo Server Error", "data": se}
             res = request.prepare_response(html_escape(json_dumps(error)))
             raise InternalServerError(response=res) from e
+
+    def _parse_report_download_url(
+        self, url: str, converter: str
+    ) -> tuple[str, str | None, dict[str, str]]:
+        pattern = f"/report/{converter}/"
+        _, _, after_pattern = url.partition(pattern)
+        if not after_pattern:
+            dbg.logic.debug("[report_download] url lacks %r, refused", pattern)
+            raise BadRequest(
+                description=f"URL does not match expected pattern {pattern!r}."
+            )
+        reportname, _, docids = after_pattern.split("?")[0].partition("/")
+        query = {k: v[0] for k, v in parse_qs(urlsplit(url).query).items()}
+        return reportname, docids or None, query
+
+    def _get_report_download_name(
+        self, reportname: str, docids: str | None, extension: str
+    ) -> str:
+        report = request.env["ir.actions.report"]._get_report_from_name(reportname)
+        if docids and report.print_report_name:
+            records = request.env[report.model].browse(_parse_docids(docids))
+            if len(records) == 1:
+                name = safe_eval(
+                    report.print_report_name, {"object": records, "time": time}
+                )
+                dbg.logic.debug(
+                    "[report:%s] download: print_report_name -> %r", reportname, name
+                )
+                return f"{name}.{extension}"
+        return f"{report.name}.{extension}"

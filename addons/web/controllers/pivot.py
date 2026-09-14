@@ -34,6 +34,34 @@ def _clamp_int(value, hi):
         return 0
 
 
+class _CappedWorksheet:
+    def __init__(self, worksheet, cap: int, title: str) -> None:
+        self._worksheet = worksheet
+        self._cap = cap
+        self._title = title
+        self.cells_written = 0
+
+    def __getattr__(self, name):
+        return getattr(self._worksheet, name)
+
+    def write(self, *args, **kwargs):
+        self.cells_written += 1
+        if self.cells_written > self._cap:
+            dbg.logic.debug(
+                "[pivot:%s] export_xlsx: cell cap %d hit, refused",
+                self._title,
+                self._cap,
+            )
+            raise UnprocessableEntity(
+                _(
+                    "This pivot is too large to export (over %s cells). "
+                    "Narrow the grouping or add filters and try again.",
+                    self._cap,
+                )
+            )
+        return self._worksheet.write(*args, **kwargs)
+
+
 class TableExporter(http.Controller):
     @http.route("/web/pivot/export_xlsx", type="http", auth="user", readonly=True)
     def export_xlsx(self, data: str | FileStorage, **kw) -> Response:
@@ -58,30 +86,9 @@ class TableExporter(http.Controller):
         with xlsxwriter.Workbook(
             output, {"in_memory": True, "strings_to_formulas": False}
         ) as workbook:
-            worksheet = workbook.add_worksheet(jdata["title"])
-
-            cells_written = 0
-            _raw_write = worksheet.write
-
-            def _write(*args, **kwargs):
-                nonlocal cells_written
-                cells_written += 1
-                if cells_written > MAX_EXPORT_CELLS:
-                    dbg.logic.debug(
-                        "[pivot:%s] export_xlsx: cell cap %d hit, refused",
-                        jdata.get("title"),
-                        MAX_EXPORT_CELLS,
-                    )
-                    raise UnprocessableEntity(
-                        _(
-                            "This pivot is too large to export (over %s cells). "
-                            "Narrow the grouping or add filters and try again.",
-                            MAX_EXPORT_CELLS,
-                        )
-                    )
-                return _raw_write(*args, **kwargs)
-
-            worksheet.write = _write
+            worksheet = _CappedWorksheet(
+                workbook.add_worksheet(jdata["title"]), MAX_EXPORT_CELLS, jdata["title"]
+            )
 
             header_bold = workbook.add_format(
                 {"bold": True, "pattern": 1, "bg_color": "#AAAAAA"}
@@ -103,7 +110,7 @@ class TableExporter(http.Controller):
             dbg.pipeline.debug(
                 "[pivot:%s] export_xlsx: %d cells written, header height %d",
                 jdata.get("title"),
-                cells_written,
+                worksheet.cells_written,
                 y,
             )
 

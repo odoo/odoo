@@ -1,4 +1,3 @@
-import logging
 from contextlib import ExitStack
 from typing import Any
 from urllib.parse import urlencode
@@ -9,12 +8,9 @@ from odoo import http
 from odoo.exceptions import AccessError
 from odoo.http import Response, request
 from odoo.libs.json import dumps as json_dumps
-from odoo.tools.translate import _
 
 from ..tools import debug_log as dbg
 from .utils import _is_local_url
-
-_logger = logging.getLogger(__name__)
 
 
 class Session(http.Controller):
@@ -89,19 +85,6 @@ class Session(http.Controller):
 
             with dbg.timer(env, "[session] session_info uid=%s", request.session.uid):
                 return env["ir.http"].with_user(request.session.uid).session_info()
-
-    @http.route("/web/session/get_lang_list", type="jsonrpc", auth="none")
-    def get_lang_list(self) -> list[list[str]] | dict[str, str]:
-        dbg.lifecycle.debug("[session] get_lang_list: %s", dbg.req())
-        try:
-            return http.dispatch_rpc("db", "list_lang", []) or []
-        except Exception:
-            dbg.logic.debug("[session] get_lang_list: list_lang failed")
-            _logger.exception("Failed to fetch language list")
-            return {
-                "error": _("Could not fetch the language list."),
-                "title": _("Languages"),
-            }
 
     @http.route("/web/session/modules", type="jsonrpc", auth="user", readonly=True)
     def modules(self) -> list[str]:

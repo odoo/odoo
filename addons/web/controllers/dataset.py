@@ -9,6 +9,11 @@ from ..tools import debug_log as dbg
 from .utils import clean_action
 
 
+def _tag_thread_with_rpc_target(model: str, method: str, path: str | None) -> None:
+    if path != f"{model}.{method}":
+        threading.current_thread().rpc_model_method = f"{model}.{method}"
+
+
 class DataSet(http.Controller):
     def _call_kw_readonly(self, rule: Any, args: Any) -> bool:
         try:
@@ -57,8 +62,7 @@ class DataSet(http.Controller):
             dbg.keys(kwargs),
             path == f"{model}.{method}",
         )
-        if path != f"{model}.{method}":
-            threading.current_thread().rpc_model_method = f"{model}.{method}"
+        _tag_thread_with_rpc_target(model, method, path)
         with dbg.timer(request.env, "[rpc:%s.%s] call_kw", model, method):
             return call_kw(request.env[model], method, args, kwargs)
 
@@ -84,8 +88,7 @@ class DataSet(http.Controller):
             len(args),
             dbg.keys(kwargs),
         )
-        if path != f"{model}.{method}":
-            threading.current_thread().rpc_model_method = f"{model}.{method}"
+        _tag_thread_with_rpc_target(model, method, path)
         with dbg.timer(request.env, "[rpc:%s.%s] call_button", model, method):
             action = call_kw(request.env[model], method, args, kwargs)
         if isinstance(action, dict) and action.get("type") != "":

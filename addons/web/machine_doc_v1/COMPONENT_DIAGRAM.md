@@ -170,7 +170,8 @@ prose must not reach for them.
 | JS | `static/src/env.js` | 410 | `makeEnv()`, `startServices()`, `startMissingServices()`, `mountComponent()`, `customDirectives`, `globalValues` |
 | JS | `static/src/session.js` | 19 | Reads `odoo.__session_info__` into the exported `session`. **Does not delete it**: no `delete` exists in the tree; the raw payload stays on the `odoo` global for the page lifetime. |
 | JS | `static/src/module_loader.js` | 187 | Two jobs. (1) Installs `globalThis.odoo.loader` = `OdooModuleLoader`, 5 members: `modules` Map, `bus`, `registerNativeModules`, `handleAssetLoadError`, `_reloadPage`. Sibling esbuild bundles share singletons through `modules`; conflicting re-register → `module_rebind`. Not an ES module loader (AMD loader removed in the 2026 ESM migration). (2) JS error telemetry: global `error` / `unhandledrejection` → deduped beacon to `/web/observability/js_error`; failed `/web/assets/` tag → one page reload, guarded by a 60 s `sessionStorage` key. |
-| PY | `controllers/home.py` | 391 | `/`, `/web`, `/odoo`, `/odoo/<path:subpath>`, `/scoped_app/<path:subpath>`, `/web/webclient/load_menus`, `/web/login`, `/web/login_successful`, `/web/become`, `/web/health`, `/web/healthz`, `/web/readyz`, `/web/metrics`, `/robots.txt` |
+| PY | `controllers/home.py` | 324 | `/`, `/web`, `/odoo`, `/odoo/<path:subpath>`, `/scoped_app/<path:subpath>`, `/web/webclient/load_menus`, `/web/login`, `/web/login_successful`, `/web/become`, `/robots.txt` |
+| PY | `controllers/health.py` | 111 | `/web/health`, `/web/healthz`, `/web/readyz`, `/web/metrics` — process probes, no session, no request database |
 | PY | `models/ir_http.py` | 385 | `session_info()`, `webclient_rendering_context()`, `lazy_session_info()`, `color_scheme()` (returns `"light"`), `content_density()` |
 | XML | `views/webclient_templates.xml` | 406 | HTML shell, `t-call-assets`, inline session JSON. Contains `web.layout` with `<!DOCTYPE html>`, `<meta>`, `<link rel="icon">`, and inline `<script id="web.layout.odooscript">` that writes `window.odoo = {csrf_token, debug}`. Frontend layout injects `odoo.__session_info__` via `json.dumps(get_frontend_session_info())`. |
 
@@ -188,7 +189,7 @@ prose must not reach for them.
 
 | Layer | File | Lines | Role |
 |-------|------|-------|------|
-| PY | `controllers/session.py` | 104 | `get_session_info`, `authenticate`, `get_lang_list`, `modules`, `check`, `account`, `destroy`, `logout` |
+| PY | `controllers/session.py` | 125 | `get_session_info`, `authenticate`, `modules`, `check`, `account`, `destroy`, `logout` |
 | PY | `controllers/home.py:web_login` | 178–250 | Login form + CAPTCHA |
 | PY | `models/res_users.py` | 128 | `name_search()`, `_on_webclient_bootstrap()`, `_is_captcha_login_required()`, `web_create_users()` |
 | PY | `models/ir_http.py` | 385 | `_handle_debug()`, `_sanitize_cookies()`, `session_info()` |
