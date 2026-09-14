@@ -2696,9 +2696,6 @@ class SaleOrder(models.Model):
     def _get_catalog_currency(self):
         return self.currency_id or super()._get_catalog_currency()
 
-    def _get_product_catalog_domain(self):
-        return super()._get_product_catalog_domain() & Domain("sale_ok", "=", True)
-
     def _get_product_catalog_default_prices(self, products, **kwargs) -> dict:
         # Override the default price computation to consider the pricelist prices instead.
         return self.pricelist_id._get_products_price(

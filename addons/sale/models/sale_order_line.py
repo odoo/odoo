@@ -101,7 +101,7 @@ class SaleOrderLine(models.Model):
         change_default=True,
         ondelete="restrict",
         index="btree_not_null",
-        domain=lambda self: self._domain_product_id(),
+        domain=[("sale_ok", "=", True)],
         check_company=True,
     )
     product_template_id = fields.Many2one(
@@ -113,8 +113,8 @@ class SaleOrderLine(models.Model):
         # previously related='product_id.product_tmpl_id'
         # not anymore since the field must be considered editable for product configurator logic
         # without modifying the related product_id when updated.
-        # magic way to make sure the domain integrates the check_company _domain_product_id logics
-        # despite not being a check_company=True field
+        # magic way to make sure the domain integrates the product domain, including the
+        # check_company logic despite not being a check_company=True field
         domain=lambda self: self._fields["product_id"]._description_domain(self.env),
     )
 
@@ -468,9 +468,6 @@ class SaleOrderLine(models.Model):
             if additional_name:
                 name = f"{name} {additional_name}"
             so_line.display_name = name
-
-    def _domain_product_id(self):
-        return [("sale_ok", "=", True)]
 
     @api.depends("product_id")
     def _compute_product_template_id(self):
