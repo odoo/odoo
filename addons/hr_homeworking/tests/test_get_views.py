@@ -1,6 +1,10 @@
+import json
+
 from freezegun import freeze_time
+from lxml import etree
 
 from odoo.tests import tagged
+from odoo.tools.view_ir import from_arch
 
 from .common import HomeworkingCase
 
@@ -54,3 +58,36 @@ class TestGetViews(HomeworkingCase):
             result["views"]["list"]["arch"],
             """<list><field name="work_location_name"/></list>""",
         )
+
+    @freeze_time("2026-01-28")
+    def test_the_client_reads_the_rewritten_view_not_only_the_arch(self):
+        # get_view ships `ir` beside `arch` and the client reads `ir` first, so
+        # an override that rewrites only the arch rewrites nothing the user sees.
+        view = self._view(
+            "list", """<list><field name="today_location_name"/></list>"""
+        )
+        result = self.env["hr.employee"].get_views([(view.id, "list")])["views"]["list"]
+        self.assertIn("ir", result)
+        ir = json.dumps(result["ir"])
+        self.assertNotIn("today_location_name", ir)
+        self.assertIn("wednesday_location_id", ir)
+
+    @freeze_time("2026-01-28")
+    def test_the_ir_is_the_one_the_arch_derives(self):
+        for view_type, arch in (
+            ("list", """<list><field name="today_location_name"/></list>"""),
+            (
+                "search",
+                (
+                    """<search><filter name="x" string="X" """
+                    """context="{'group_by': 'today_location_name'}"/></search>"""
+                ),
+            ),
+        ):
+            view = self._view(view_type, arch)
+            result = self.env["hr.employee"].get_views([(view.id, view_type)])
+            payload = result["views"][view_type]
+            from_the_arch = from_arch(etree.fromstring(payload["arch"])).to_dict()
+            self.assertEqual(
+                payload["ir"], from_the_arch, f"{view_type} ir disagrees with its arch"
+            )

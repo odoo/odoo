@@ -79,16 +79,16 @@ class HrEmployee(models.Model):
     @api.model
     def _rewrite_today_location_marker(self, arch, dayfield):
         tree = etree.fromstring(arch)
-        rewritten = False
+        changed = False
         for node in tree.iter():
             if node.tag == "field" and node.get("name") == TODAY_LOCATION_MARKER:
                 node.set("name", dayfield)
-                rewritten = True
+                changed = True
             context = node.get("context")
             if context and _MARKER_TOKEN.search(context):
                 node.set("context", _MARKER_TOKEN.sub(dayfield, context))
-                rewritten = True
-        if not rewritten:
+                changed = True
+        if not changed:
             return arch
         return etree.tostring(tree, encoding="unicode")
 
@@ -96,7 +96,7 @@ class HrEmployee(models.Model):
     def get_views(self, views, options=None):
         res = super().get_views(views, options)
         dayfield = self._get_current_day_location_field()
-        rewritten = []
+        rewritten_types = []
         for view_type in ("search", "list"):
             view = res["views"].get(view_type)
             if not view:
@@ -106,9 +106,11 @@ class HrEmployee(models.Model):
                 continue
             view["arch"] = arch
             attach_ir(view)
-            rewritten.append(view_type)
+            rewritten_types.append(view_type)
         res["models"][self._name]["fields"].update(self.fields_get([dayfield]))
-        _debug.logic("get_views.today_location", dayfield=dayfield, views=rewritten)
+        _debug.logic(
+            "get_views.today_location", dayfield=dayfield, views=rewritten_types
+        )
         return res
 
     def _get_today_location(self):
