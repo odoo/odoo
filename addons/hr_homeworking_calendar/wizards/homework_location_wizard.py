@@ -1,41 +1,14 @@
-from odoo import api, fields, models, tools
+from odoo import fields, models
 
 from odoo.addons.hr_homeworking.models.hr_homeworking import DAYS
 
 
 class HomeworkLocationWizard(models.TransientModel):
     _name = "homework.location.wizard"
+    _inherit = ["mixin.work.location.assignment"]
     _description = "Set Homework Location Wizard"
 
-    work_location_id = fields.Many2one(
-        comodel_name="hr.work.location",
-        string="Location",
-        required=True,
-    )
-    work_location_name = fields.Char(
-        related="work_location_id.name",
-        string="Location name",
-    )
-    work_location_type = fields.Selection(related="work_location_id.location_type")
-    employee_id = fields.Many2one(
-        comodel_name="hr.employee",
-        default=lambda self: self.env.user.employee_id,
-        required=True,
-        ondelete="cascade",
-    )
-    employee_name = fields.Char(related="employee_id.name")
     weekly = fields.Boolean(default=False)
-    date = fields.Date()
-    day_week_string = fields.Char(compute="_compute_day_week_string")
-
-    @api.depends("date")
-    def _compute_day_week_string(self):
-        for record in self:
-            record.day_week_string = (
-                tools.format_date(record.env, record.date, date_format="EEEE")
-                if record.date
-                else ""
-            )
 
     def set_employee_location(self):
         self.check_singleton()
@@ -55,10 +28,8 @@ class HomeworkLocationWizard(models.TransientModel):
         if self.weekly:
             if employee_location:
                 employee_location.unlink()
-            employee_id.sudo().user_id.write(
-                {
-                    default_location_for_current_date: self.work_location_id.id,
-                }
+            employee_id.sudo().write(
+                {default_location_for_current_date: self.work_location_id.id}
             )
         elif (
             self.work_location_id.id

@@ -1,7 +1,5 @@
 from datetime import datetime
 
-from freezegun import freeze_time
-
 from odoo.tests import tagged
 
 from odoo.addons.hr_homeworking_calendar.tests.common import TestHrHomeworkingCommon
@@ -146,23 +144,15 @@ class TestHrHomeworkingHrEmployeeLocation(TestHrHomeworkingCommon):
             len(created_worklocations), 0, "should have deleted the worklocation record"
         )
 
-    def test_get_views_replace_hw_location_by_date(self):
-        view = self.env["ir.ui.view"].create(
+    def test_setting_a_weekly_location_works_for_an_employee_without_a_user(self):
+        employee = self.env["hr.employee"].create({"name": "No user"})
+        wizard = self.env["homework.location.wizard"].create(
             {
-                "arch": """<list><field name="work_location_name" /></list>""",
-                "model": "hr.employee",
-                "type": "list",
+                "work_location_id": self.work_home.id,
+                "date": datetime(2023, 10, 4),
+                "employee_id": employee.id,
+                "weekly": True,
             }
         )
-        with freeze_time("2026-01-28"):
-            got_view = self.env["hr.employee"].get_views([(view.id, "list")])
-        self.assertTrue(
-            "work_location_name" in got_view["models"]["hr.employee"]["fields"]
-        )
-        self.assertTrue(
-            "wednesday_location_id" in got_view["models"]["hr.employee"]["fields"]
-        )
-        self.assertEqual(
-            got_view["views"]["list"]["arch"],
-            """<list><field name="wednesday_location_id"/></list>""",
-        )
+        wizard.set_employee_location()
+        self.assertEqual(employee.wednesday_location_id, self.work_home)

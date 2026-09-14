@@ -2,7 +2,7 @@
 <odoo>
 
     <record id="view_employee_filter" model="ir.ui.view">
-        <field name="name">view.employee.form.inherit.hr</field>
+        <field name="name">hr.employee.search.inherit.hr_homeworking</field>
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_filter" />
         <field name="arch" type="xml">
@@ -16,7 +16,7 @@
     </record>
 
     <record id="view_employee_form" model="ir.ui.view">
-        <field name="name">view.employee.form.inherit.hr</field>
+        <field name="name">hr.employee.form.inherit.hr_homeworking</field>
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form" />
         <field name="arch" type="xml">
@@ -56,16 +56,15 @@
     </record>
 
     <record id="view_employee_tree" model="ir.ui.view">
-        <field name="name">hr.employee.list.timesheet</field>
+        <field name="name">hr.employee.list.inherit.hr_homeworking</field>
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_tree" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='work_email']" position="after">
-            <field
-                name="work_location_name"
-                string="Work Location"
-                optional="hide"
-                readonly="0" />
+                <field
+                    name="today_location_name"
+                    string="Work Location"
+                    optional="hide" />
             </xpath>
             <xpath expr="//field[@name='work_location_id']" position="attributes">
                 <attribute name="column_invisible">1</attribute>

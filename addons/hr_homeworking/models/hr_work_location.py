@@ -1,7 +1,10 @@
 from odoo import _, api, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
 
-from odoo.addons.hr_homeworking.models.hr_homeworking import DAYS
+from .hr_homeworking import DAYS
+
+_debug = DebugLog(__name__)
 
 
 class HrWorkLocation(models.Model):
@@ -9,13 +12,43 @@ class HrWorkLocation(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_used_by_employee(self):
-        domains = ["|"] * (len(DAYS) - 1) + [(day, "in", self.ids) for day in DAYS]
-        employee_uses_location = self.env["hr.employee"].search_count(domains, limit=1)
-        if employee_uses_location:
-            raise UserError(
-                _("You cannot delete locations that are being used by your employees")
+        # sudo and active_test=False on purpose: a location this user cannot see
+        # in use -- another company's employee, an archived one -- is still in
+        # use, and the foreign key is ON DELETE SET NULL, so letting the unlink
+        # through empties that employee's week with nothing to show for it.
+        employees = self.env["hr.employee"].sudo().with_context(active_test=False)
+        domain = ["|"] * (len(DAYS) - 1) + [(day, "in", self.ids) for day in DAYS]
+        if employees.search_count(domain, limit=1):
+            blocked = self.browse(sorted(self._used_as_weekly_location(employees)))
+            _debug.logic(
+                "work_location.unlink_refused", requested=self, blocked=blocked
             )
-        exceptions_using_location = self.env["hr.employee.location"].search(
-            [("work_location_id", "in", self.ids)]
+            raise UserError(
+                _(
+                    "You cannot delete a work location that is a weekly work "
+                    "location for an employee: %(locations)s",
+                    locations=", ".join(blocked.mapped("name")),
+                )
+            )
+        exceptions = (
+            self.env["hr.employee.location"]
+            .sudo()
+            .search([("work_location_id", "in", self.ids)])
         )
-        exceptions_using_location.unlink()
+        _debug.lifecycle(
+            "work_location.unlink_cascades_exceptions",
+            locations=self,
+            exceptions=len(exceptions),
+        )
+        exceptions.unlink()
+
+    def _used_as_weekly_location(self, employees):
+        used = set()
+        for day in DAYS:
+            used.update(
+                location.id
+                for (location,) in employees._read_group(
+                    [(day, "in", self.ids)], groupby=[day]
+                )
+            )
+        return used

@@ -19,33 +19,27 @@ import {
 } from "@hr/components/hr_presence_status_private_pill/hr_presence_status_private_pill";
 import { _t } from "@web/core/translation";
 
+const LOCATION_ICONS = {
+    home: "fa-home",
+    office: "fa-building",
+    other: "fa-map-marker",
+};
+
 const patchHrPresenceStatus = () => ({
     get color() {
-        if (this.location) {
-            let color = "text-muted";
-            if (this.props.record.data.hr_presence_state !== "out_of_working_hour") {
-                color =
-                    this.props.record.data.hr_presence_state === "present"
-                        ? "text-success"
-                        : "o_icon_employee_absent";
-            }
-            return color;
+        if (!this.location) {
+            return super.color;
         }
-        return super.color;
+        if (this.props.record.data.hr_presence_state === "out_of_working_hour") {
+            return "text-muted";
+        }
+        return this.props.record.data.hr_presence_state === "present"
+            ? "text-success"
+            : "o_icon_employee_absent";
     },
 
     get icon() {
-        if (this.location) {
-            switch (this.location) {
-                case "home":
-                    return "fa-home";
-                case "office":
-                    return "fa-building";
-                case "other":
-                    return "fa-map-marker";
-            }
-        }
-        return super.icon;
+        return LOCATION_ICONS[this.location] ?? super.icon;
     },
 
     get location() {
@@ -53,26 +47,24 @@ const patchHrPresenceStatus = () => ({
     },
 
     get label() {
-        if (this.location) {
-            return this.props.record.data.work_location_name || _t("Unspecified");
+        if (!this.location) {
+            return super.label;
         }
-        return super.label;
+        return this.props.record.data.work_location_name || _t("Unspecified");
     },
 });
 
 const patchHrPresenceStatusPill = () => ({
     get color() {
-        if (this.location) {
-            let color = "btn-outline-secondary text-muted";
-            if (this.props.record.data.hr_presence_state !== "out_of_working_hour") {
-                color =
-                    this.props.record.data.hr_presence_state === "present"
-                        ? "btn-outline-success"
-                        : "btn-outline-warning";
-            }
-            return color;
+        if (!this.location) {
+            return super.color;
         }
-        return super.color;
+        if (this.props.record.data.hr_presence_state === "out_of_working_hour") {
+            return "btn-outline-secondary text-muted";
+        }
+        return this.props.record.data.hr_presence_state === "present"
+            ? "btn-outline-success"
+            : "btn-outline-warning";
     },
 });
 
@@ -82,43 +74,22 @@ patch(HrPresenceStatusPrivate.prototype, patchHrPresenceStatus());
 patch(HrPresenceStatusPill.prototype, patchHrPresenceStatusPill());
 patch(HrPresenceStatusPrivatePill.prototype, patchHrPresenceStatusPill());
 
-const additionalFieldDependencies = [
+const LOCATION_FIELD_DEPENDENCIES = [
     { name: "hr_presence_state", type: "selection" },
-    { name: "work_location_type", type: "char" },
+    { name: "work_location_type", type: "selection" },
     { name: "work_location_name", type: "char" },
 ];
-if (typeof hrPresenceStatus.fieldDependencies === "function") {
-    const oldFieldDependencies = hrPresenceStatus.fieldDependencies;
-    hrPresenceStatus.fieldDependencies = (widgetInfo) => {
-        const fieldDependencies = oldFieldDependencies(widgetInfo);
-        fieldDependencies.push(...additionalFieldDependencies);
-        return fieldDependencies;
-    };
-} else {
-    hrPresenceStatus.fieldDependencies = [
-        ...(hrPresenceStatus.fieldDependencies || []),
-        ...additionalFieldDependencies,
-    ];
-}
-hrPresenceStatusPrivate.fieldDependencies = [
-    ...(hrPresenceStatusPrivate.fieldDependencies || []),
-    ...additionalFieldDependencies,
-];
 
-if (typeof hrPresenceStatusPill.fieldDependencies === "function") {
-    const oldFieldDependencies = hrPresenceStatusPill.fieldDependencies;
-    hrPresenceStatusPill.fieldDependencies = (widgetInfo) => {
-        const fieldDependencies = oldFieldDependencies(widgetInfo);
-        fieldDependencies.push(...additionalFieldDependencies);
-        return fieldDependencies;
-    };
-} else {
-    hrPresenceStatusPill.fieldDependencies = [
-        ...(hrPresenceStatusPill.fieldDependencies || []),
-        ...additionalFieldDependencies,
+// Each descriptor is a spread copy of hrPresenceStatus, so the four share one
+// fieldDependencies array until a fresh one is assigned here.
+for (const widget of [
+    hrPresenceStatus,
+    hrPresenceStatusPrivate,
+    hrPresenceStatusPill,
+    hrPresenceStatusPrivatePill,
+]) {
+    widget.fieldDependencies = [
+        ...(widget.fieldDependencies ?? []),
+        ...LOCATION_FIELD_DEPENDENCIES,
     ];
 }
-hrPresenceStatusPrivatePill.fieldDependencies = [
-    ...(hrPresenceStatusPrivatePill.fieldDependencies || []),
-    ...additionalFieldDependencies,
-];

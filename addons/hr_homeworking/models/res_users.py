@@ -1,6 +1,9 @@
 from odoo import fields, models
+from odoo.libs.debug_log import DebugLog
 
-from .hr_homeworking import DAYS
+from .hr_homeworking import DAYS, PLAIN_IM_STATUSES
+
+_debug = DebugLog(__name__)
 
 
 class ResUsers(models.Model):
@@ -59,11 +62,16 @@ class ResUsers(models.Model):
 
     def _compute_im_status(self):
         super()._compute_im_status()
-        dayfield = self.env["hr.employee"]._get_current_day_location_field()
+        employees = self.employee_id.sudo()
+        locations = employees._get_today_location()
         for user in self:
-            location_type = user[dayfield].location_type
-            if not location_type:
+            location = locations.get(user.employee_id.id)
+            if not location or user.im_status not in PLAIN_IM_STATUSES:
                 continue
-            im_status = user.im_status
-            if im_status in ["online", "away", "busy", "offline"]:
-                user.im_status = "presence_" + location_type + "_" + im_status
+            _debug.logic(
+                "im_status.located",
+                user=user,
+                status=user.im_status,
+                location_type=location.location_type,
+            )
+            user.im_status = f"{location.location_type}_{user.im_status}"

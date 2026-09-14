@@ -1,5 +1,7 @@
 from odoo import api, fields, models, tools
 
+PLAIN_IM_STATUSES = ("online", "away", "busy", "offline")
+
 DAYS = [
     "monday_location_id",
     "tuesday_location_id",
@@ -11,9 +13,9 @@ DAYS = [
 ]
 
 
-class HrEmployeeLocation(models.Model):
-    _name = "hr.employee.location"
-    _description = "Employee Location"
+class MixinWorkLocationAssignment(models.AbstractModel):
+    _name = "mixin.work.location.assignment"
+    _description = "One Employee at One Work Location on One Day"
 
     work_location_id = fields.Many2one(
         comodel_name="hr.work.location",
@@ -35,14 +37,31 @@ class HrEmployeeLocation(models.Model):
     date = fields.Date()
     day_week_string = fields.Char(compute="_compute_day_week_string")
 
-    _uniq_exceptional_per_day = models.UniqueIndex(
-        "(employee_id, date) WHERE date IS NOT NULL",
-        "Only one default work location and one exceptional work location per day per employee.",
-    )
-
     @api.depends("date")
     def _compute_day_week_string(self):
         for record in self:
             record.day_week_string = tools.format_date(
                 record.env, record.date, date_format="EEEE"
+            )
+
+
+class HrEmployeeLocation(models.Model):
+    _name = "hr.employee.location"
+    _inherit = ["mixin.work.location.assignment"]
+    _description = "Employee Location"
+    _order = "date desc, employee_id"
+    _rec_name = "work_location_name"
+
+    date = fields.Date(required=True)
+
+    _uniq_exceptional_per_day = models.UniqueIndex(
+        "(employee_id, date)",
+        "An employee has at most one exceptional work location per day.",
+    )
+
+    @api.depends("employee_name", "work_location_name", "date")
+    def _compute_display_name(self):
+        for record in self:
+            record.display_name = (
+                f"{record.employee_name} - {record.work_location_name} ({record.date})"
             )

@@ -155,7 +155,10 @@ class TestOutOfOfficePerformance(TestHrHolidaysCommon, TransactionCaseWithUserDe
     @warmup
     def test_leave_im_status_performance_partner_offline(self):
         self.user_employee.employee_id
-        with self.assertQueryCount(__system__=4, demo=4):
+        # One query over the budget hr_holidays alone needs: hr_homeworking
+        # resolves today's exceptional work location, one index-served SELECT per
+        # compute batch, so that a located chat status honours it.
+        with self.assertQueryCount(__system__=5, demo=5):
             self.assertEqual(self.employer_partner.im_status, "offline")
 
     @users("__system__", "demo")
@@ -164,7 +167,10 @@ class TestOutOfOfficePerformance(TestHrHolidaysCommon, TransactionCaseWithUserDe
         self.leave.write({"state": "validate"})
         self.hr_user.manual_im_status
         self.hr_user.employee_id
-        with self.assertQueryCount(__system__=2, demo=2):
+        # One query over the budget hr_holidays alone needs: hr_homeworking
+        # resolves today's exceptional work location, one index-served SELECT per
+        # compute batch, so that a located chat status honours it.
+        with self.assertQueryCount(__system__=3, demo=3):
             self.assertEqual(self.hr_user.im_status, "leave_offline")
 
     @users("__system__", "demo")
@@ -172,7 +178,10 @@ class TestOutOfOfficePerformance(TestHrHolidaysCommon, TransactionCaseWithUserDe
     def test_leave_im_status_performance_partner_leave_offline(self):
         self.leave.write({"state": "validate"})
         self.hr_user.employee_id
-        with self.assertQueryCount(__system__=4, demo=4):
+        # One query over the budget hr_holidays alone needs: hr_homeworking
+        # resolves today's exceptional work location, one index-served SELECT per
+        # compute batch, so that a located chat status honours it.
+        with self.assertQueryCount(__system__=5, demo=5):
             self.assertEqual(self.hr_partner.im_status, "leave_offline")
 
     def test_search_absent_employee(self):

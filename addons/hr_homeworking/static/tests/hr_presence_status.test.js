@@ -66,3 +66,59 @@ test("Home Location (away)", async () => {
     expect("small").toHaveClass(["fa-home"]);
     expect("div.rounded-pill[title='Home']").toHaveCount(1);
 });
+
+test("Other Location (busy)", async () => {
+    expect.assertions(4);
+    HrEmployee._records = [
+        {
+            id: 1,
+            name: "Employee test",
+            work_location_name: "Client site",
+            work_location_type: "other",
+            show_hr_icon_display: true,
+            hr_icon_display: "presence_other",
+            hr_presence_state: "out_of_working_hour",
+        },
+    ];
+    await mountView({
+        resModel: "hr.employee",
+        type: "form",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="hr_icon_display" widget="hr_presence_status"/>
+            </form>`,
+    });
+    expect("small.fa-map-marker").toHaveCount(1);
+    expect("small.fa-home").toHaveCount(0);
+    expect("small.fa-building").toHaveCount(0);
+    expect("div.rounded-pill[title='Client site']").toHaveCount(1);
+});
+
+test("no work location falls back to the plain presence icon", async () => {
+    expect.assertions(4);
+    HrEmployee._records = [
+        {
+            id: 1,
+            name: "Employee test",
+            work_location_name: false,
+            work_location_type: false,
+            show_hr_icon_display: true,
+            hr_icon_display: "presence_present",
+            hr_presence_state: "present",
+        },
+    ];
+    await mountView({
+        resModel: "hr.employee",
+        type: "form",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="hr_icon_display" widget="hr_presence_status"/>
+            </form>`,
+    });
+    expect("small.fa-home").toHaveCount(0);
+    expect("small.fa-building").toHaveCount(0);
+    expect("small.fa-map-marker").toHaveCount(0);
+    expect("small.fa-circle").toHaveCount(1);
+});
