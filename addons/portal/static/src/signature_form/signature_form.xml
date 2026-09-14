@@ -13,15 +13,15 @@
             </div>
             <t t-else="">
                 <NameAndSignature t-props="nameAndSignatureProps"/>
-                <form method="POST">
+                <form method="POST" t-on-submit.prevent="onClickSubmit">
                     <div class="o_web_sign_name_and_signature"/>
                     <div class="o_portal_sign_controls my-3">
                         <div t-if="state.error" class="o_portal_sign_error_msg alert alert-danger" role="status">
                             <t t-esc="state.error"/>
                         </div>
                         <div class="text-end my-3">
-                            <button type="submit" class="o_portal_sign_submit btn btn-primary" t-on-click.prevent="onClickSubmit" t-att-disabled="signature.isSignatureEmpty ? 'disabled' : ''">
-                                <i class="fa-solid fa-check me-1"/>
+                            <button type="submit" class="o_portal_sign_submit btn btn-primary" t-att-disabled="state.submitting || signature.isSignatureEmpty">
+                                <i class="fa-solid me-1" t-att-class="state.submitting ? 'fa-spinner fa-spin' : 'fa-check'"/>
                                 <t t-esc="sendLabel"/>
                             </button>
                         </div>

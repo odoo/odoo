@@ -37,6 +37,12 @@
         "web.assets_frontend": [
             "l10n_pe/static/src/interactions/**/*",
         ],
+        "web.assets_unit_tests_setup": [
+            "l10n_pe/static/src/interactions/**/*",
+        ],
+        "web.assets_unit_tests": [
+            "l10n_pe/static/tests/**/*.test.js",
+        ],
     },
     "auto_install": [
         "account",

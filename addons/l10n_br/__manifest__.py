@@ -83,6 +83,12 @@ Create electronic sales invoices with Avatax.
         "web.assets_frontend": [
             "l10n_br/static/src/interactions/**/*",
         ],
+        "web.assets_unit_tests_setup": [
+            "l10n_br/static/src/interactions/**/*",
+        ],
+        "web.assets_unit_tests": [
+            "l10n_br/static/tests/**/*.test.js",
+        ],
     },
     "auto_install": [
         "account",

@@ -18,11 +18,17 @@ export class PortalHomeCounters extends Interaction {
     }
 
     async updateCounters() {
-        const needed = [...this.el.querySelectorAll("[data-placeholder_count]")].map(
-            (documentsCounterEl) => documentsCounterEl.dataset["placeholder_count"],
-        );
+        const elementsByCounter = new Map();
+        for (const element of this.el.querySelectorAll("[data-placeholder_count]")) {
+            const name = element.dataset.placeholder_count;
+            if (!elementsByCounter.has(name)) {
+                elementsByCounter.set(name, []);
+            }
+            elementsByCounter.get(name).push(element);
+        }
+        const needed = [...elementsByCounter.keys()];
         const numberRpc = Math.min(Math.ceil(needed.length / 5), 3);
-        const counterByRpc = Math.ceil(needed.length / numberRpc);
+        const counterByRpc = Math.ceil(needed.length / (numberRpc || 1));
         const countersAlwaysDisplayed = this.getCountersAlwaysDisplayed();
 
         const proms = [...Array(Math.min(numberRpc, needed.length)).keys()].map(
@@ -35,24 +41,20 @@ export class PortalHomeCounters extends Interaction {
                         ),
                     }),
                 );
-                Object.keys(documentsCountersData).forEach((counterName) => {
-                    const documentsCounterEl = this.el.querySelector(
-                        `[data-placeholder_count='${counterName}']`,
-                    );
-                    if (!documentsCounterEl) {
-                        return;
+                for (const [counterName, count] of Object.entries(
+                    documentsCountersData,
+                )) {
+                    for (const element of elementsByCounter.get(counterName) || []) {
+                        element.textContent = count;
+                        element
+                            .closest(".o_portal_index_card")
+                            ?.classList.toggle(
+                                "d-none",
+                                count === 0 &&
+                                    !countersAlwaysDisplayed.includes(counterName),
+                            );
                     }
-                    documentsCounterEl.textContent = documentsCountersData[counterName];
-                    const cardEl = documentsCounterEl.closest(".o_portal_index_card");
-                    if (
-                        documentsCountersData[counterName] !== 0 ||
-                        countersAlwaysDisplayed.includes(counterName)
-                    ) {
-                        cardEl?.classList.remove("d-none");
-                    } else {
-                        cardEl?.classList.add("d-none");
-                    }
-                });
+                }
                 return documentsCountersData;
             },
         );

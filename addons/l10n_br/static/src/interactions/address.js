@@ -3,6 +3,9 @@ import { patch } from "@web/core/utils/patch";
 import { patchDynamicContent } from "@web/public/utils";
 import { CustomerAddress } from "@portal/interactions/address";
 import { SelectMenuWrapper } from "@l10n_latam_base/components/select_menu_wrapper/select_menu_wrapper";
+import { makeLogger } from "@web/core/debug/debug_logger";
+
+const log = makeLogger("portal.address.br");
 
 patch(CustomerAddress.prototype, {
     setup() {
@@ -22,7 +25,6 @@ patch(CustomerAddress.prototype, {
         this.mountComponent(this.citySelect.parentElement, SelectMenuWrapper, {
             el: this.citySelect,
         });
-        await this._onChangeCountry();
     },
 
     _selectState(id) {
@@ -100,8 +102,20 @@ patch(CustomerAddress.prototype, {
     },
 
     async _onChangeCountry() {
+        const request = (this.brazilianCountryRequest = Symbol());
+        const countryId = this.addressForm.country_id.value;
         await this.waitFor(super._onChangeCountry(...arguments));
         if (this.countryCode !== "BR") return;
+        if (
+            request !== this.brazilianCountryRequest ||
+            countryId !== this.addressForm.country_id.value
+        ) {
+            log.logic("discard stale country extension", { countryId });
+            return;
+        }
+        log.logic("apply Brazilian address visibility and ZIP selection", {
+            countryId,
+        });
 
         if (this._getSelectedCountryCode() === "BR") {
             this._setVisibility(".o_standard_address", false); // hide

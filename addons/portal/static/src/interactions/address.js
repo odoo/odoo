@@ -1,16 +1,20 @@
 /** @odoo-module native */
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { rpc } from "@web/core/network";
 import { registry } from "@web/core/registry";
 import { redirect } from "@web/core/utils/urls";
 import { Interaction } from "@web/public/interaction";
 
+const log = makeLogger("portal.address");
+
 export class CustomerAddress extends Interaction {
     static selector = ".o_customer_address_fill";
     dynamicContent = {
         'select[name="country_id"]': {
-            "t-on-change": this.debounced(this.onChangeCountry, 500),
+            "t-on-change": this.onChangeCountry,
         },
         'select[name="state_id"]': { "t-on-change": this.onChangeState },
+        "form.address_autoformat": { "t-on-submit.prevent": this.saveAddress },
         "#save_address": { "t-on-click.prevent": this.locked(this.saveAddress, true) },
     };
 
@@ -25,17 +29,30 @@ export class CustomerAddress extends Interaction {
     }
 
     start() {
-        // click (or Enter) then falls through to whatever native submission the
-        this.waitFor(this._onChangeCountry(true));
+        return this._loadCountry(true);
     }
 
-    async onChangeCountry() {
-        return this._onChangeCountry();
+    onChangeCountry() {
+        return this._loadCountry();
+    }
+
+    _loadCountry(init = false) {
+        this.countryChangeFailed = false;
+        const countryChange = this._onChangeCountry(init).catch((error) => {
+            if (this.countryChange === countryChange) {
+                this.countryChangeFailed = true;
+                log.logic("country metadata failed; next save can retry");
+            }
+            throw error;
+        });
+        this.countryChange = countryChange;
+        return countryChange;
     }
 
     async onChangeState() {}
 
     async _onChangeCountry(init = false) {
+        const request = (this.countryRequest = Symbol());
         const countryId = parseInt(this.addressForm.country_id.value, 10);
         if (!countryId) {
             return;
@@ -47,6 +64,15 @@ export class CustomerAddress extends Interaction {
             }),
         );
 
+        if (
+            request !== this.countryRequest ||
+            countryId !== parseInt(this.addressForm.country_id.value, 10)
+        ) {
+            log.logic("discard stale country response", { countryId });
+            return;
+        }
+        log.logic("apply country response", { countryId });
+
         if (this.addressForm.phone) {
             this.addressForm.phone.placeholder =
                 data.phone_code !== 0 ? `+${data.phone_code}` : "";
@@ -54,9 +80,8 @@ export class CustomerAddress extends Interaction {
 
         const selectStates = this.addressForm.state_id;
         if (selectStates && (!init || selectStates.options.length === 1)) {
+            selectStates.options.length = 1;
             if (data.states.length || data.state_required) {
-                selectStates.options.length = 1;
-
                 data.states.forEach((state) => {
                     const option = new Option(state[1], state[0]);
                     option.setAttribute("data-code", state[2]);
@@ -147,10 +172,38 @@ export class CustomerAddress extends Interaction {
      */
     async saveAddress(ev) {
         ev.preventDefault();
-        if (!this.addressForm.reportValidity()) {
+        if (this.isSaving) {
             return;
         }
 
+        this.isSaving = true;
+        try {
+            if (this.countryChangeFailed) {
+                this._loadCountry();
+            }
+            let countryChange;
+            do {
+                countryChange = this.countryChange;
+                try {
+                    await countryChange;
+                } catch (error) {
+                    if (countryChange === this.countryChange) {
+                        throw error;
+                    }
+                    log.logic("ignore obsolete country failure while saving");
+                }
+            } while (countryChange !== this.countryChange);
+            if (!this.addressForm.reportValidity()) {
+                return;
+            }
+            log.logic("submit after country metadata");
+            return await this._saveAddress();
+        } finally {
+            this.isSaving = false;
+        }
+    }
+
+    async _saveAddress() {
         const result = await this.waitFor(
             this.http.post(
                 this.addressForm.dataset.submitUrl,

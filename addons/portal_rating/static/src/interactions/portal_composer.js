@@ -145,6 +145,9 @@ patch(PortalComposer.prototype, {
      */
     async onSubmitButtonClick() {
         const result = await super.onSubmitButtonClick(...arguments);
+        if (!result) {
+            return;
+        }
         const modalEl = this.el.closest("#ratingpopupcomposer");
         this.addListener(modalEl, "hidden.bs.modal.noUpdate", () => {
             this.options.reloadRatingPopupComposer(result);

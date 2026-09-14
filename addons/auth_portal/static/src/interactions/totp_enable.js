@@ -1,8 +1,16 @@
+const log = makeLogger("portal.totp");
+
 /** @odoo-module native */
 import { markup } from "@odoo/owl";
-import { handleCheckIdentity } from "@portal/interactions/portal_security";
+import {
+    guardedByIdentity,
+    handleCheckIdentity,
+    IdentityCheckCancelled,
+} from "@portal/interactions/portal_security";
 import { InputConfirmationDialog } from "@portal/js/components/input_confirmation_dialog/input_confirmation_dialog";
 import { browser } from "@web/core/browser/browser";
+import { makeLogger } from "@web/core/debug/debug_logger";
+import { RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/translation";
 import { user } from "@web/core/user";
@@ -12,7 +20,7 @@ import { Interaction } from "@web/public/interaction";
 /**
  * Replaces specific <field> elements by normal HTML, strip out the rest entirely
  */
-function fromField(f, record) {
+function createFieldNode(f, record) {
     switch (f.getAttribute("name")) {
         case "qrcode": {
             const qrcode = document.createElement("img");
@@ -90,65 +98,31 @@ function fromField(f, record) {
     }
 }
 
-/**
- * Apparently chrome literally absolutely can't handle parsing XML and using
- * those nodes in an HTML document (even when parsing as application/xhtml+xml),
- * this results in broken rendering and a number of things not working (e.g.
- * classes) without any specific warning in the console or anything, things are
- * just broken with no indication of why.
- *
- * So... rebuild the entire f'ing body using document.createElement to ensure
- * we have HTML elements.
- *
- * This is a recursive implementation so it's not super efficient but the views
- * to fixup *should* be relatively simple.
- */
-function fixupViewBody(oldNode, record) {
-    let qrcode = null,
-        code = null,
-        node = null;
-
+/** Rebuild XML view nodes as HTML, replacing ORM fields with portal controls. */
+function createViewNode(oldNode, record) {
     switch (oldNode.nodeType) {
-        case 1: // element
+        case Node.ELEMENT_NODE: {
             if (oldNode.tagName === "field") {
-                node = fromField(oldNode, record);
-                switch (oldNode.getAttribute("name")) {
-                    case "qrcode":
-                        qrcode = node;
-                        break;
-                    case "code":
-                        code = node;
-                        break;
-                }
-                break; // no need to recurse here
+                return createFieldNode(oldNode, record);
             }
-            node = document.createElement(oldNode.tagName);
-            for (let i = 0; i < oldNode.attributes.length; ++i) {
-                const attr = oldNode.attributes[i];
+            const node = document.createElement(oldNode.tagName);
+            for (const attr of oldNode.attributes) {
                 node.setAttribute(attr.name, attr.value);
             }
-            for (let j = 0; j < oldNode.childNodes.length; ++j) {
-                const [ch, qr, co] = fixupViewBody(oldNode.childNodes[j], record);
-                if (ch) {
-                    node.appendChild(ch);
-                }
-                if (qr) {
-                    qrcode = qr;
-                }
-                if (co) {
-                    code = co;
+            for (const child of oldNode.childNodes) {
+                const converted = createViewNode(child, record);
+                if (converted) {
+                    node.appendChild(converted);
                 }
             }
-            break;
-        case 3:
-        case 4: // text, cdata
-            node = document.createTextNode(oldNode.data);
-            break;
+            return node;
+        }
+        case Node.TEXT_NODE:
+        case Node.CDATA_SECTION_NODE:
+            return document.createTextNode(oldNode.data);
         default:
-        // don't care about PI & al
+            return null;
     }
-
-    return [node, qrcode, code];
 }
 
 export class TOTPEnable extends Interaction {
@@ -158,77 +132,88 @@ export class TOTPEnable extends Interaction {
     };
 
     async onClick() {
-        const data = await this.waitFor(
-            handleCheckIdentity(
-                this.waitFor(
-                    this.services.orm.call("res.users", "action_totp_enable_wizard", [
-                        user.userId,
-                    ]),
-                ),
-                this.services.orm,
-                this.services.dialog,
-            ),
-        );
-
-        if (!data) {
-            // TOTP probably already enabled, just reload page
-            location.reload();
-            return;
-        }
-
-        const model = data.res_model;
-        const wizard_id = data.res_id;
-        const record = (await this.services.orm.read(model, [wizard_id], []))[0];
-
-        const doc = new DOMParser().parseFromString(
-            document.getElementById("totp_wizard_view").textContent,
-            "application/xhtml+xml",
-        );
-
-        const xmlBody = doc.querySelector("sheet *");
-        const [body, ,] = fixupViewBody(xmlBody, record);
-
-        this.services.dialog.add(InputConfirmationDialog, {
-            body: markup(body.outerHTML),
-            onInput: ({ inputEl }) => {
-                inputEl.setCustomValidity("");
-            },
-            confirmLabel: _t("Activate"),
-            confirm: async ({ inputEl }) => {
-                if (!inputEl.reportValidity()) {
-                    inputEl.classList.add("is-invalid");
-                    return false;
-                }
-
-                try {
-                    await this.waitFor(
-                        handleCheckIdentity(
-                            this.waitFor(
-                                this.services.orm.call(model, "enable", [record.id], {
-                                    context: { code: inputEl.value },
-                                }),
-                            ),
-                            this.services.orm,
-                            this.services.dialog,
+        return guardedByIdentity(async () => {
+            const data = await this.waitFor(
+                handleCheckIdentity(
+                    this.waitFor(
+                        this.services.orm.call(
+                            "res.users",
+                            "action_totp_enable_wizard",
+                            [user.userId],
                         ),
-                    );
-                } catch (e) {
-                    const errorMessage = !e.message
-                        ? e.toString()
-                        : !e.message.data
-                          ? e.message.message
-                          : e.message.data.message ||
-                            _t("Operation failed for unknown reason.");
-                    inputEl.classList.add("is-invalid");
-                    // show custom validity error message
-                    inputEl.setCustomValidity(errorMessage);
-                    inputEl.reportValidity();
-                    return false;
-                }
-                // reloads page, avoid window.location.reload() because it re-posts forms
+                    ),
+                    this.services.orm,
+                    this.services.dialog,
+                ),
+            );
+
+            if (!data) {
+                // TOTP probably already enabled, just reload page
                 location.reload();
-            },
-            cancel: () => {},
+                return;
+            }
+
+            const model = data.res_model;
+            const wizard_id = data.res_id;
+            const record = (await this.services.orm.read(model, [wizard_id], []))[0];
+
+            const doc = new DOMParser().parseFromString(
+                document.getElementById("totp_wizard_view").textContent,
+                "application/xhtml+xml",
+            );
+
+            const xmlBody = doc.querySelector("sheet *");
+            const body = createViewNode(xmlBody, record);
+
+            this.services.dialog.add(InputConfirmationDialog, {
+                body: markup(body.outerHTML),
+                onInput: ({ inputEl }) => {
+                    inputEl.setCustomValidity("");
+                },
+                confirmLabel: _t("Activate"),
+                confirm: async ({ inputEl }) => {
+                    try {
+                        await this.waitFor(
+                            handleCheckIdentity(
+                                this.waitFor(
+                                    this.services.orm.call(
+                                        model,
+                                        "enable",
+                                        [record.id],
+                                        {
+                                            context: { code: inputEl.value },
+                                        },
+                                    ),
+                                ),
+                                this.services.orm,
+                                this.services.dialog,
+                            ),
+                        );
+                    } catch (e) {
+                        if (e instanceof IdentityCheckCancelled) {
+                            return false;
+                        }
+                        if (
+                            !(e instanceof RPCError) ||
+                            e.data?.name !== "odoo.exceptions.UserError"
+                        ) {
+                            throw e;
+                        }
+                        log.logic("activation validation failed");
+                        const errorMessage =
+                            e.data.message ||
+                            _t("Operation failed for unknown reason.");
+                        inputEl.classList.add("is-invalid");
+                        // show custom validity error message
+                        inputEl.setCustomValidity(errorMessage);
+                        inputEl.reportValidity();
+                        return false;
+                    }
+                    // reloads page, avoid window.location.reload() because it re-posts forms
+                    location.reload();
+                },
+                cancel: () => {},
+            });
         });
     }
 }

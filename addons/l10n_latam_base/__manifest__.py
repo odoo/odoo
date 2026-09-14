@@ -62,6 +62,12 @@ This module is compatible with account_vat module in order to be able to validat
         "web.assets_frontend": [
             "l10n_latam_base/static/src/components/select_menu_wrapper/**.*",
         ],
+        "web.assets_unit_tests_setup": [
+            "l10n_latam_base/static/src/components/select_menu_wrapper/**/*",
+        ],
+        "web.assets_unit_tests": [
+            "l10n_latam_base/static/tests/**/*.test.js",
+        ],
     },
     "post_init_hook": "_set_default_identification_type",
 }

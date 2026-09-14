@@ -3,6 +3,9 @@ import { patch } from "@web/core/utils/patch";
 import { patchDynamicContent } from "@web/public/utils";
 import { rpc } from "@web/core/network";
 import { CustomerAddress } from "@portal/interactions/address";
+import { makeLogger } from "@web/core/debug/debug_logger";
+
+const log = makeLogger("portal.address.pe");
 
 patch(CustomerAddress.prototype, {
     setup() {
@@ -32,35 +35,78 @@ patch(CustomerAddress.prototype, {
     },
 
     async onChangeState() {
-        await this.waitFor(super.onChangeState());
-        if (!this.isPeruvianCompany || this._getSelectedCountryCode() !== "PE") return;
+        const parentChange = super.onChangeState(...arguments);
+        if (!this.isPeruvianCompany || this._getSelectedCountryCode() !== "PE") {
+            return await this.waitFor(parentChange);
+        }
 
+        const request = (this.peruvianStateRequest = Symbol());
+        const countryRequest = this.peruvianCountryRequest;
         const stateId = this.elementState.value;
+        this._changeOption(this.elementCities, []);
+        this._changeOption(this.elementDistricts, []);
+        await this.waitFor(parentChange);
         let choices = [];
         if (stateId) {
             const data = await this.waitFor(rpc(`/portal/state_infos/${stateId}`, {}));
             choices = data.cities;
         }
+        if (
+            request !== this.peruvianStateRequest ||
+            countryRequest !== this.peruvianCountryRequest ||
+            stateId !== this.elementState.value ||
+            this._getSelectedCountryCode() !== "PE"
+        ) {
+            log.logic("discard stale state response", { stateId });
+            return;
+        }
+        log.logic("apply state cities", { stateId });
         this._changeOption(this.elementCities, choices);
-        // reset districts input as well
-        await this.onChangeCity();
     },
 
     async onChangeCity() {
         if (!this.isPeruvianCompany || this._getSelectedCountryCode() !== "PE") return;
 
+        const request = (this.peruvianCityRequest = Symbol());
+        const countryRequest = this.peruvianCountryRequest;
+        const stateRequest = this.peruvianStateRequest;
         const cityId = this.elementCities.value;
+        this._changeOption(this.elementDistricts, []);
         let choices = [];
         if (cityId) {
             const data = await this.waitFor(rpc(`/portal/city_infos/${cityId}`, {}));
             choices = data.districts;
         }
+        if (
+            request !== this.peruvianCityRequest ||
+            countryRequest !== this.peruvianCountryRequest ||
+            stateRequest !== this.peruvianStateRequest ||
+            cityId !== this.elementCities.value ||
+            this._getSelectedCountryCode() !== "PE"
+        ) {
+            log.logic("discard stale city response", { cityId });
+            return;
+        }
+        log.logic("apply city districts", { cityId });
         this._changeOption(this.elementDistricts, choices);
     },
 
-    async _onChangeCountry() {
+    async _onChangeCountry(init = false) {
+        const request = (this.peruvianCountryRequest = Symbol());
+        const countryId = this.addressForm.country_id.value;
+        if (this.isPeruvianCompany && !init) {
+            this._changeOption(this.elementCities, []);
+            this._changeOption(this.elementDistricts, []);
+        }
         await this.waitFor(super._onChangeCountry(...arguments));
         if (!this.isPeruvianCompany) return;
+        if (
+            request !== this.peruvianCountryRequest ||
+            countryId !== this.addressForm.country_id.value
+        ) {
+            log.logic("discard stale country extension", { countryId });
+            return;
+        }
 
         if (this._getSelectedCountryCode() === "PE") {
             const cityInput = this.addressForm.city;

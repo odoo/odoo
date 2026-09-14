@@ -32,7 +32,16 @@ same kind of frontend interaction.
             "auth_portal/static/src/**/*",
         ],
         "web.assets_tests": [
-            "auth_portal/static/tests/**/*",
+            "auth_portal/static/tests/tours/**/*",
+        ],
+        "web.assets_unit_tests_setup": [
+            "auth_passkey/static/lib/simplewebauthn.js",
+            "auth_passkey/static/src/passkey_lib.js",
+            "auth_portal/static/src/interactions/**/*",
+            "auth_portal/static/src/xml/**/*",
+        ],
+        "web.assets_unit_tests": [
+            "auth_portal/static/tests/**/*.test.js",
         ],
     },
     "auto_install": True,

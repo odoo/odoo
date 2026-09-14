@@ -4,7 +4,6 @@ import { NameAndSignature } from "@web/components/signature";
 import { rpc } from "@web/core/network";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/translation";
-import { addLoadingEffect } from "@web/core/utils/dom/ui";
 import { redirect } from "@web/core/utils/urls";
 
 export class SignatureForm extends Component {
@@ -16,6 +15,7 @@ export class SignatureForm extends Component {
         this.rootRef = useRef("root");
 
         this.state = useState({
+            submitting: false,
             error: false,
             success: false,
         });
@@ -67,29 +67,30 @@ export class SignatureForm extends Component {
      * @returns {Promise}
      */
     async onClickSubmit() {
-        const button = this.rootRef.el.querySelector(".o_portal_sign_submit");
-        const icon = button.removeChild(button.firstChild);
-        const restoreBtnLoading = addLoadingEffect(button);
-
-        const name = this.signature.name;
-        const signature = this.signature.getSignatureImage().split(",")[1];
+        if (
+            this.state.submitting ||
+            this.state.success ||
+            this.signature.isSignatureEmpty
+        ) {
+            return;
+        }
+        this.state.submitting = true;
         let data;
         try {
+            const name = this.signature.name;
+            const signature = this.signature.getSignatureImage().split(",")[1];
             data = await rpc(this.props.callUrl, { name, signature });
-        } catch (error) {
-            restoreBtnLoading();
-            button.prepend(icon);
-            throw error;
+        } finally {
+            this.state.submitting = false;
         }
-        restoreBtnLoading();
-        button.prepend(icon);
         if (data.force_refresh) {
             if (data.redirect_url) {
                 redirect(data.redirect_url);
             } else {
                 window.location.reload();
             }
-            return new Promise(() => {});
+            this.state.submitting = true;
+            return;
         }
         this.state.error = data.error || false;
         this.state.success = !data.error && {

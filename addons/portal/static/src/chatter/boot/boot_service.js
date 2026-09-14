@@ -13,7 +13,12 @@ export const portalChatterBootService = {
     start() {
         const chatterEl = document.querySelector(".o_portal_chatter");
         if (chatterEl) {
-            loader.loadChatter();
+            // Loading the bundle waits for deferred service registration, which
+            // itself waits for this startup pass. Keep startup nonblocking.
+            loader.loadChatter().catch((error) => {
+                odoo.portalChatterReady.resolve(false);
+                console.error("Portal chatter bundle failed to load", error);
+            });
         } else {
             odoo.portalChatterReady.resolve(false);
         }

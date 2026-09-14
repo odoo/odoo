@@ -1,5 +1,8 @@
 /** @odoo-module native */
-import { handleCheckIdentity } from "@portal/interactions/portal_security";
+import {
+    guardedByIdentity,
+    handleCheckIdentity,
+} from "@portal/interactions/portal_security";
 import { InputConfirmationDialog } from "@portal/js/components/input_confirmation_dialog/input_confirmation_dialog";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/translation";
@@ -44,20 +47,22 @@ export class PortalPasskey extends Interaction {
     }
 
     async onDelete() {
-        await this.waitFor(
-            handleCheckIdentity(
-                this.waitFor(
-                    this.services.orm.call(
-                        "auth.passkey.key",
-                        "action_delete_passkey",
-                        [this.id],
+        return guardedByIdentity(async () => {
+            await this.waitFor(
+                handleCheckIdentity(
+                    this.waitFor(
+                        this.services.orm.call(
+                            "auth.passkey.key",
+                            "action_delete_passkey",
+                            [this.id],
+                        ),
                     ),
+                    this.services.orm,
+                    this.services.dialog,
                 ),
-                this.services.orm,
-                this.services.dialog,
-            ),
-        );
-        location.reload();
+            );
+            location.reload();
+        });
     }
 }
 

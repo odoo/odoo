@@ -1,6 +1,9 @@
 /** @odoo-module native */
 import { useEffect } from "@odoo/owl";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { ConfirmationDialog } from "@web/ui/dialog";
+
+const log = makeLogger("portal.input_dialog");
 
 export class InputConfirmationDialog extends ConfirmationDialog {
     static props = {
@@ -18,7 +21,7 @@ export class InputConfirmationDialog extends ConfirmationDialog {
             }
         };
         const onKeydown = (ev) => {
-            if (ev.key && ev.key.toLowerCase() === "enter") {
+            if (ev.key === "Enter" && !ev.isComposing) {
                 ev.preventDefault();
                 this.confirm();
             }
@@ -41,6 +44,13 @@ export class InputConfirmationDialog extends ConfirmationDialog {
     }
 
     confirm() {
-        this.execButton(() => this.props.confirm({ inputEl: this.inputEl }));
+        return this.execButton(() => {
+            const validationTarget = this.inputEl?.form || this.inputEl;
+            if (validationTarget && !validationTarget.reportValidity()) {
+                log.logic("confirmation blocked by invalid input");
+                return false;
+            }
+            return this.props.confirm?.({ inputEl: this.inputEl });
+        });
     }
 }

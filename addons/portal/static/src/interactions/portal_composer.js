@@ -1,9 +1,13 @@
 /** @odoo-module native */
-import { Component, markup } from "@odoo/owl";
+import { markup } from "@odoo/owl";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { post, rpc, RPCError } from "@web/core/network";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/translation";
+import { addLoadingEffect } from "@web/core/utils/dom/ui";
 import { Interaction } from "@web/public/interaction";
+
+const log = makeLogger("portal.composer");
 
 export class PortalComposer extends Interaction {
     static selector = ".o_portal_chatter_composer";
@@ -22,14 +26,12 @@ export class PortalComposer extends Interaction {
             ),
         },
         ".o_portal_chatter_composer_btn": {
-            "t-on-click.prevent.withTarget": this.locked(
-                this.onSubmitButtonClick,
-                true,
-            ),
+            "t-on-click.prevent.withTarget": this.locked(this.onSubmitButtonClick),
         },
     };
 
-    static prepareOptions(options) {
+    static prepareOptions(options = {}) {
+        options = { ...options };
         if (typeof options.default_attachment_ids === "string") {
             options.default_attachment_ids = JSON.parse(options.default_attachment_ids);
         }
@@ -56,6 +58,8 @@ export class PortalComposer extends Interaction {
         this.options =
             this.env.portalComposerOptions || PortalComposer.prepareOptions({});
         this.attachments = [];
+        this.pendingAttachmentOperations = 0;
+        this.isPosting = false;
         this.attachmentButtonEl = this.el.querySelector(
             ".o_portal_chatter_attachment_btn",
         );
@@ -71,19 +75,26 @@ export class PortalComposer extends Interaction {
 
     start() {
         if (this.options.default_attachment_ids) {
-            this.attachments = this.options.default_attachment_ids;
-            for (const attachment of this.attachments) {
-                attachment.state = "done";
-            }
+            this.attachments = this.options.default_attachment_ids.map(
+                (attachment) => ({
+                    ...attachment,
+                    state: "done",
+                }),
+            );
             this.updateAttachments();
         }
     }
 
     onAttachmentButtonClick() {
-        this.fileInputEl.click();
+        if (!this.isPosting) {
+            this.fileInputEl.click();
+        }
     }
 
     async onAttachmentDeleteClick(ev, currentTargetEl) {
+        if (this.isPosting) {
+            return;
+        }
         const attachmentId = parseInt(
             currentTargetEl.closest(".o_portal_chatter_attachment").dataset.id,
             10,
@@ -96,7 +107,7 @@ export class PortalComposer extends Interaction {
         }
         const accessToken = attachment.access_token;
 
-        this.sendButtonEl.disabled = true;
+        this._updatePendingAttachments(1);
         try {
             await this.waitFor(
                 rpc("/portal/attachment/remove", {
@@ -117,7 +128,7 @@ export class PortalComposer extends Interaction {
                 throw error;
             }
         } finally {
-            this.sendButtonEl.disabled = false;
+            this._updatePendingAttachments(-1);
         }
     }
 
@@ -132,17 +143,33 @@ export class PortalComposer extends Interaction {
     }
 
     async onFileInputChange() {
-        this.sendButtonEl.disabled = true;
+        if (this.isPosting) {
+            this.fileInputEl.value = "";
+            log.logic("discard file selection received while posting");
+            return;
+        }
+        this._updatePendingAttachments(1);
         try {
-            await this.waitFor(
-                Promise.all(
+            const results = await this.waitFor(
+                Promise.allSettled(
                     [...this.fileInputEl.files].map((file) => this._uploadOne(file)),
                 ),
             );
+            const failure = results.find((result) => result.status === "rejected");
+            if (failure) {
+                throw failure.reason;
+            }
         } finally {
             this.fileInputEl.value = null;
-            this.sendButtonEl.disabled = false;
+            this._updatePendingAttachments(-1);
         }
+    }
+
+    _updatePendingAttachments(delta) {
+        this.pendingAttachmentOperations += delta;
+        this.sendButtonEl.disabled =
+            this.isPosting || this.pendingAttachmentOperations > 0;
+        log.logic("pending attachments", { count: this.pendingAttachmentOperations });
     }
 
     async _uploadOne(file) {
@@ -165,6 +192,8 @@ export class PortalComposer extends Interaction {
                     _t("Could not save file %s", markup`<strong>${file.name}</strong>`),
                     { type: "warning", sticky: true },
                 );
+            } else {
+                throw error;
             }
         }
     }
@@ -187,15 +216,43 @@ export class PortalComposer extends Interaction {
     }
 
     async onSubmitButtonClick(ev, currentTargetEl) {
+        if (this.isPosting || this.pendingAttachmentOperations) {
+            return false;
+        }
         const error = this.onSubmitCheckContent();
         if (error) {
             this.inputTextareaEl.classList.add("border-danger");
             const errorEl = this.el.querySelector(".o_portal_chatter_composer_error");
             errorEl.innerText = error;
             errorEl.classList.remove("d-none");
-            return Promise.reject();
-        } else {
-            return this.chatterPostMessage(currentTargetEl.dataset.action);
+            return false;
+        }
+        this.inputTextareaEl.classList.remove("border-danger");
+        this.el
+            .querySelector(".o_portal_chatter_composer_error")
+            ?.classList.add("d-none");
+        const restoreLoading = addLoadingEffect(this.sendButtonEl);
+        const attachmentControls = [
+            this.attachmentButtonEl,
+            this.fileInputEl,
+            ...this.el.querySelectorAll(".o_portal_chatter_attachment_delete"),
+        ]
+            .filter(Boolean)
+            .map((element) => ({ element, disabled: element.disabled }));
+        for (const { element } of attachmentControls) {
+            element.disabled = true;
+        }
+        this.isPosting = true;
+        log.logic("posting with attachment controls locked");
+        try {
+            return await this.chatterPostMessage(currentTargetEl.dataset.action);
+        } finally {
+            restoreLoading();
+            this.isPosting = false;
+            this.sendButtonEl.disabled = this.pendingAttachmentOperations > 0;
+            for (const { element, disabled } of attachmentControls) {
+                element.disabled = disabled;
+            }
         }
     }
 
@@ -226,7 +283,7 @@ export class PortalComposer extends Interaction {
     async chatterPostMessage(route) {
         const result = await this.waitFor(rpc(route, this.prepareMessageData()));
         const res = result.store_data || result;
-        Component.env.bus.trigger("reload_chatter_content", res);
+        this.env.bus.trigger("reload_chatter_content", res);
         return res;
     }
 }

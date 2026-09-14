@@ -2,12 +2,15 @@
 import { loadCssFromBundle } from "@mail/utils/common/misc";
 import { App } from "@odoo/owl";
 import { PortalChatter } from "@portal/chatter/frontend/portal_chatter";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { ConnectionLostError, rpc } from "@web/core/network";
 import { registry } from "@web/core/registry";
 import { getTemplate } from "@web/core/templates";
 import { appTranslateFn } from "@web/core/translation";
 import { attachShadowRoot } from "@web/core/utils/dom/ui";
 import { session } from "@web/session";
+
+const log = makeLogger("portal.chatter");
 
 export class PortalChatterService {
     constructor(env, services) {
@@ -16,7 +19,6 @@ export class PortalChatterService {
 
     setup(env, services) {
         this.store = services["mail.store"];
-        this.busService = services.bus_service;
     }
 
     async createShadow(root) {
@@ -46,37 +48,47 @@ export class PortalChatterService {
             root.classList.add("p-0");
         }
         chatterEl.appendChild(root);
-        const thread = this.store.Thread.insert({
-            model: props.resModel,
-            id: props.resId,
-        });
-        Object.assign(thread, {
-            access_token: chatterEl.getAttribute("data-token"),
-            hash: chatterEl.getAttribute("data-hash"),
-            pid: parseInt(chatterEl.getAttribute("data-pid"), 10),
-        });
-        const [shadow, data] = await Promise.all([
-            this.createShadow(root),
-            rpc(
-                "/portal/chatter_init",
-                {
-                    thread_model: props.resModel,
-                    thread_id: props.resId,
-                    ...thread.rpcParams,
-                },
-                { silent: true },
-            ),
-        ]);
-        this.store.insert(data);
-        new App(PortalChatter, {
-            env,
-            getTemplate,
-            props,
-            translatableAttributes: ["data-tooltip"],
-            translateFn: appTranslateFn,
-            dev: env.debug,
-        }).mount(shadow);
-        odoo.portalChatterReady.resolve(true);
+        let app;
+        try {
+            const thread = this.store.Thread.insert({
+                model: props.resModel,
+                id: props.resId,
+            });
+            Object.assign(thread, {
+                access_token: chatterEl.getAttribute("data-token"),
+                hash: chatterEl.getAttribute("data-hash"),
+                pid: parseInt(chatterEl.getAttribute("data-pid"), 10),
+            });
+            const [shadow, data] = await Promise.all([
+                this.createShadow(root),
+                rpc(
+                    "/portal/chatter_init",
+                    {
+                        thread_model: props.resModel,
+                        thread_id: props.resId,
+                        ...thread.rpcParams,
+                    },
+                    { silent: true },
+                ),
+            ]);
+            this.store.insert(data);
+            app = new App(PortalChatter, {
+                env,
+                getTemplate,
+                props,
+                translatableAttributes: ["data-tooltip"],
+                translateFn: appTranslateFn,
+                dev: env.debug,
+            });
+            await app.mount(shadow);
+            log.lifecycle("mounted");
+            odoo.portalChatterReady.resolve(true);
+        } catch (error) {
+            app?.destroy();
+            root.remove();
+            log.lifecycle("initialization failed");
+            throw error;
+        }
     }
 }
 
