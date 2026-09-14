@@ -497,5 +497,100 @@ while read -r hook; do
 done < <(sed -n '/^## Extension Points/,$p' "$SCRIPT_DIR/index.md" \
     | grep -oP '^- `\K_\w+(?=\(\))' | sort -u)
 
+# ------------------------------------------------- cross-repo override arity --
+# An override sits ahead of the base in the MRO for EVERY caller, so a sibling
+# repo carrying the old arity of an advertised extension point does not fail
+# in that sibling -- it fails in whatever generic path next calls the hook,
+# with a TypeError out of a stored field's compute. `enterprise`'s
+# `hr_work_entry_attendance` kept `_get_employee_calendar(self)` after the base
+# grew a `version` parameter, and six tests died in `unlink()` and
+# `flush_all()`. hr_attendance's own lane was green throughout: it installs no
+# enterprise module, so the base signature was the only one in the MRO.
+#
+# CLAUDE.md §9: a cross-repo gate judges only the scopes it can see. Absent
+# siblings are SKIPPED and counted, never silently passed.
+_fc_ws="$(cd -- "$_fc_root/.." && pwd)"
+for sibling in enterprise agromarin design-themes; do
+    if [ ! -d "$_fc_ws/$sibling" ]; then
+        note "sibling repo $sibling is not in this workspace"
+        continue
+    fi
+    while read -r line; do
+        [ -z "$line" ] && continue
+        case "$line" in
+            OK\ *) ok ;;
+            *) bad "$line" ;;
+        esac
+    done < <("$PY" - "$MOD/models/hr_attendance.py" "$_fc_ws/$sibling" \
+                 "$SCRIPT_DIR/index.md" <<'ARITY'
+import ast, pathlib, re, sys
+
+base_path, sibling, index = sys.argv[1], pathlib.Path(sys.argv[2]), sys.argv[3]
+hooks = set(re.findall(r"^- `(_\w+)\(\)`", pathlib.Path(index).read_text(), re.M))
+
+
+def signatures(path):
+    found = {}
+    try:
+        tree = ast.parse(path.read_text())
+    except (SyntaxError, UnicodeDecodeError):
+        return found
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.ClassDef):
+            continue
+        # `_name` as well as `_inherit`: the BASE class declares
+        # `_name = "hr.attendance"` and inherits only `mixin.mail.thread`, so a
+        # scan keyed on `_inherit` alone read an empty base and then skipped
+        # every sibling override as "a hook the base does not have". It passed,
+        # scanning nothing, which is the shape this whole harness exists to
+        # refuse.
+        binds = any(
+            isinstance(statement, ast.Assign)
+            and any(
+                getattr(t, "id", "") in ("_inherit", "_name")
+                for t in statement.targets
+            )
+            and "hr.attendance" in ast.dump(statement.value)
+            for statement in node.body
+        )
+        if not binds:
+            continue
+        for statement in node.body:
+            if isinstance(statement, ast.FunctionDef) and statement.name in hooks:
+                args = statement.args
+                found[statement.name] = (
+                    [a.arg for a in args.posonlyargs + args.args],
+                    len(args.defaults),
+                    bool(args.vararg or args.kwarg),
+                )
+    return found
+
+
+base = signatures(pathlib.Path(base_path))
+for path in sorted(sibling.rglob("*.py")):
+    if "__pycache__" in path.parts:
+        continue
+    for hook, (names, defaults, catchall) in signatures(path).items():
+        if hook not in base:
+            continue
+        want, want_defaults, _ = base[hook]
+        rel = path.relative_to(sibling.parent)
+        if catchall or names == want:
+            print(f"OK {rel}:{hook}")
+        elif names == want[: len(names)] and len(want) - len(names) <= want_defaults:
+            print(
+                f"{rel} overrides {hook}{tuple(names)} while the base takes "
+                f"{tuple(want)}; the override shadows the base for every caller "
+                f"and raises TypeError on the new call sites"
+            )
+        else:
+            print(
+                f"{rel} overrides {hook}{tuple(names)}, which does not match the "
+                f"base {tuple(want)}"
+            )
+ARITY
+)
+done
+
 printf '\n%d passed, %d failed, %d skipped\n' "$pass" "$fail" "$skip"
 [ "$fail" -eq 0 ]
