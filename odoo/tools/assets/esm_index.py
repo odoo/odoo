@@ -7,6 +7,9 @@ from odoo.libs.debug_log import DebugLog
 
 _debug = DebugLog(__name__)
 
+# Bump when compiler semantics change without a corresponding source/stub change.
+_SOURCE_KEY_VERSION = "2"
+
 # the by-source index: one small row beside a compiled bundle, keyed on what
 # esbuild was given, so a process that has not compiled yet can serve the
 # bundle another one compiled
@@ -23,6 +26,7 @@ def source_key(
 ) -> str:
     digest = hashlib.sha256()
     for part in (
+        _SOURCE_KEY_VERSION,
         bundle,
         target,
         source_maps,

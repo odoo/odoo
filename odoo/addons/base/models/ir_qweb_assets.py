@@ -1574,6 +1574,21 @@ class IrQweb(models.AbstractModel):
             )
 
     @staticmethod
+    def _lock_esm_publication(cr) -> None:
+        # These dedicated write transactions must see the preceding writer's
+        # commit after waiting. REPEATABLE READ would retain the snapshot from
+        # the lock statement and let both writers insert the same URLs.
+        cr.execute("SET TRANSACTION ISOLATION LEVEL READ COMMITTED")
+        started = time.monotonic()
+        cr.execute("SELECT pg_advisory_xact_lock(hashtext('esm:publication'))")
+        log_event(
+            _attach_log,
+            logging.DEBUG,
+            "publication_acquired",
+            wait_s=time.monotonic() - started,
+        )
+
+    @staticmethod
     def _drop_rows_already_present(cr, vals_list: list[dict]) -> list[dict]:
         urls = [vals["url"] for vals in vals_list if vals.get("url")]
         if not urls:
@@ -1596,6 +1611,7 @@ class IrQweb(models.AbstractModel):
         with db_connect(self.env.cr.dbname).cursor() as own_cr:
             own_cr.execute(f"SET LOCAL lock_timeout = '{_AUTONOMOUS_LOCK_TIMEOUT}'")
             try:
+                self._lock_esm_publication(own_cr)
                 fresh = self._drop_rows_already_present(own_cr, vals_list)
                 if fresh:
                     api.Environment(own_cr, SUPERUSER_ID, {})["ir.attachment"].create(
@@ -1677,6 +1693,7 @@ class IrQweb(models.AbstractModel):
         try:
             with self.env.registry.cursor(readonly=False) as rw_cr:
                 if vals_list:
+                    self._lock_esm_publication(rw_cr)
                     fresh = self._drop_rows_already_present(rw_cr, vals_list)
                     if fresh:
                         rw_env = api.Environment(rw_cr, SUPERUSER_ID, {})

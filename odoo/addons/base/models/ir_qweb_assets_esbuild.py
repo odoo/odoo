@@ -214,9 +214,7 @@ class IrQweb(models.AbstractModel):
                     _fallback_log, logging.INFO, "lock_unavailable", bundle=bundle
                 )
                 return empty, child_bundles
-            if not self._acquire_esbuild_lock(bundle, cr=lock_cr):
-                log_event(_fallback_log, logging.INFO, "lock_contention", bundle=bundle)
-                return empty, child_bundles
+            self._acquire_esbuild_lock(bundle, cr=lock_cr)
 
             child_bundles = self._get_dynamic_child_bundles(
                 bundle, assets_params, debug_assets=False
@@ -511,9 +509,7 @@ class IrQweb(models.AbstractModel):
             if lock_cr is None:
                 log_event(_fallback_log, logging.INFO, "lock_unavailable", bundle=group)
                 return empty
-            if not self._acquire_esbuild_lock(group, cr=lock_cr):
-                log_event(_fallback_log, logging.INFO, "lock_contention", bundle=group)
-                return empty
+            self._acquire_esbuild_lock(group, cr=lock_cr)
             parent_specs = self._get_runtime_parent_specs(
                 parents, assets_params, with_test_satellites
             )

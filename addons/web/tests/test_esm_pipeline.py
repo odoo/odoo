@@ -5,6 +5,7 @@ import posixpath
 import re
 import shutil
 import tempfile
+import threading
 import time
 from pathlib import Path
 from types import SimpleNamespace
@@ -190,14 +191,64 @@ class TestEsbuildCircuitBreaker(TransactionCase):
 
 @tagged("web_unit", "web_assets")
 class TestEsbuildAdvisoryLock(TransactionCase):
+    def test_contender_waits_past_the_old_fallback_deadline(self):
+        qweb = self.env["ir.qweb"]
+        db = db_connect(self.env.cr.dbname)
+        ready = threading.Event()
+        finished = threading.Event()
+        errors = []
+        pids = []
+
+        def contend():
+            try:
+                with db.cursor() as cr:
+                    cr.execute("SET LOCAL lock_timeout = '5s'")
+                    cr.execute("SELECT pg_backend_pid()")
+                    pids.append(cr.fetchone()[0])
+                    ready.set()
+                    qweb._acquire_esbuild_lock("test.lock.wait", cr=cr)
+            except Exception as exc:
+                errors.append(exc)
+            finally:
+                finished.set()
+
+        with self.assertLogs(f"{ASSET_ROOT}.lock", level=logging.DEBUG) as logged:
+            with db.cursor() as holder:
+                qweb._acquire_esbuild_lock("test.lock.wait", cr=holder)
+                contender = threading.Thread(target=contend)
+                contender.start()
+                try:
+                    self.assertTrue(ready.wait(2), "contender did not connect")
+                    deadline = time.monotonic() + 2
+                    while time.monotonic() < deadline:
+                        holder.execute(
+                            "SELECT count(*) FROM pg_locks "
+                            "WHERE pid = %s AND locktype = 'advisory' AND NOT granted",
+                            (pids[0],),
+                        )
+                        if holder.fetchone()[0]:
+                            break
+                        time.sleep(0.01)
+                    else:
+                        self.fail("PostgreSQL never observed the contender waiting")
+                    self.assertFalse(
+                        finished.wait(0.3), "contention must not decline compilation"
+                    )
+                finally:
+                    holder.rollback()
+                    contender.join(6)
+            self.assertFalse(contender.is_alive())
+            self.assertEqual(errors, [])
+            self.assertTrue(finished.is_set())
+        self.assertEqual(sum("event=acquired" in line for line in logged.output), 2)
+
     def test_lock_acquired_in_own_cursor(self):
         IrQweb = self.env["ir.qweb"]
-        got = IrQweb._acquire_esbuild_lock("test.lock.alpha")
-        self.assertTrue(got)
+        IrQweb._acquire_esbuild_lock("test.lock.alpha")
 
     def test_lock_rejects_other_cursor_while_held(self):
         IrQweb = self.env["ir.qweb"]
-        self.assertTrue(IrQweb._acquire_esbuild_lock("test.lock.beta"))
+        IrQweb._acquire_esbuild_lock("test.lock.beta")
         with db_connect(self.env.cr.dbname).cursor() as cr2:
             cr2.execute(
                 "SELECT pg_try_advisory_xact_lock(hashtext(%s))",
@@ -467,12 +518,12 @@ class TestPipelineIntegration(TransactionCase):
             msg="admin override must bypass the esbuild subprocess",
         )
 
-    def test_contention_falls_through_to_debug_nodes(self):
+    def test_unavailable_lock_cursor_falls_through_to_debug_nodes(self):
         ir_qweb = self.env["ir.qweb"]
         with patch.object(
             type(ir_qweb),
-            "_acquire_esbuild_lock",
-            return_value=False,
+            "_get_esbuild_lock_cursor",
+            side_effect=lambda *_a: contextlib.nullcontext(None),
         ):
             self.env["ir.attachment"].sudo().search(
                 [
@@ -1509,7 +1560,7 @@ class TestEsbuildLockCursor(TransactionCase):
     def test_the_lock_is_released_when_the_block_exits(self):
         free = "SELECT pg_try_advisory_xact_lock(hashtext(%s))"
         with self._qweb._get_esbuild_lock_cursor("b.x") as lock_cr:
-            self.assertTrue(self._qweb._acquire_esbuild_lock("b.x", cr=lock_cr))
+            self._qweb._acquire_esbuild_lock("b.x", cr=lock_cr)
             self.env.cr.execute(free, ("esbuild:b.x",))
             self.assertFalse(
                 self.env.cr.fetchone()[0],
@@ -1531,7 +1582,7 @@ class TestEsbuildLockCursor(TransactionCase):
                     "one, and an advisory lock is legal on a read-only "
                     "transaction outside recovery",
                 )
-                self.assertTrue(self._qweb._acquire_esbuild_lock("b.x", cr=lock_cr))
+                self._qweb._acquire_esbuild_lock("b.x", cr=lock_cr)
 
     def test_acquire_lock_runs_on_the_given_cursor(self):
         executed = []
@@ -1540,10 +1591,9 @@ class TestEsbuildLockCursor(TransactionCase):
             execute=lambda sql, params=None: executed.append(sql),
             fetchone=lambda: (True,),
         )
-        got = self._qweb._acquire_esbuild_lock("b.x", cr=fake_cr)
-        self.assertTrue(got)
+        self._qweb._acquire_esbuild_lock("b.x", cr=fake_cr)
         self.assertEqual(len(executed), 1)
-        self.assertIn("pg_try_advisory_xact_lock", executed[0])
+        self.assertIn("pg_advisory_xact_lock", executed[0])
 
     def test_readonly_test_cursor_builds_under_the_lock(self):
         ir_qweb = self._qweb
@@ -1889,12 +1939,16 @@ class TestReadonlyDeclineIsRemembered(TransactionCase):
         attempts = []
         with patch.object(
             type(self.env["ir.qweb"]),
-            "_acquire_esbuild_lock",
-            lambda _self, bundle, cr=None: attempts.append(bundle) or False,
+            "_get_esbuild_lock_cursor",
+            lambda _self, bundle: (
+                attempts.append(bundle) or contextlib.nullcontext(None)
+            ),
         ):
             self._render()
             self._render()
-        self.assertEqual(len(attempts), 2, "lock contention is retried next time")
+        self.assertEqual(
+            len(attempts), 2, "an unavailable lock cursor is retried next time"
+        )
         self.assertEqual(self.compiles, 0)
 
     def test_a_readwrite_cursor_ignores_the_memo(self):
@@ -2323,6 +2377,26 @@ class TestGeneratedAssetDomains(TransactionCase):
 
 @tagged("web_unit", "web_assets")
 class TestSecondaryBundleSingletons(TransactionCase):
+    def test_explicit_members_already_owned_by_the_page_are_shared(self):
+        qweb = self.env["ir.qweb"]
+        spec = "@example/shared"
+        asset = SimpleNamespace(module_path=spec, url="/example/static/src/shared.js")
+        bundle = SimpleNamespace(
+            native_modules=[asset],
+            get_native_module_data=lambda **kw: {"import_map": {spec: asset.url}},
+            _bridges=SimpleNamespace(
+                _discover_reachable_specifiers=lambda *a, **kw: ({}, set())
+            ),
+        )
+        with patch.object(
+            type(qweb), "_get_secondary_provider_specs", return_value={spec}
+        ):
+            shared, inlined = qweb._get_secondary_reach(
+                "web.assets_tests", {}, ("web.assets_web",), sec_ab=bundle
+            )
+        self.assertEqual(shared, {spec})
+        self.assertEqual(inlined, set())
+
     def _shared(self):
         return self.env["ir.qweb"]._get_secondary_shared_specs("web.assets_tests", None)
 
@@ -3156,6 +3230,75 @@ class TestEsmPersistenceDegradation(TransactionCase):
     def test_both_decline_signals_share_one_contract(self):
         self.assertTrue(issubclass(_EsmFallbackError, _BuildDeclined))
         self.assertTrue(issubclass(_StandaloneBundleDeclined, _BuildDeclined))
+
+
+@tagged("-at_install", "post_install", "web_assets")
+class TestEsmConcurrentPublication(TransactionCase):
+    def test_concurrent_publishers_recheck_after_the_preceding_commit(self):
+        qweb = self.env["ir.qweb"]
+        db = db_connect(self.env.cr.dbname)
+        url = "/web/assets/esm/concurrent-test/publication.esm.js"
+        errors = []
+        vals = [
+            {
+                "url": url,
+                "name": "publication.esm.js",
+                "raw": b"export {};",
+                "company_id": False,
+            }
+        ]
+
+        def publish():
+            try:
+                qweb._save_esm_attachment_rows_autonomously(vals)
+            except Exception as exc:
+                errors.append(exc)
+
+        def remove_rows():
+            with db.cursor() as cr:
+                cr.execute("DELETE FROM ir_attachment WHERE url = %s", (url,))
+                cr.commit()
+
+        remove_rows()
+        self.addCleanup(remove_rows)
+        with self.assertLogs(f"{ASSET_ROOT}.attach", level=logging.DEBUG) as logged:
+            with db.cursor() as holder:
+                holder.execute(
+                    "SELECT pg_advisory_xact_lock(hashtext('esm:publication'))"
+                )
+                writers = [threading.Thread(target=publish) for _ in range(2)]
+                for writer in writers:
+                    writer.start()
+                try:
+                    deadline = time.monotonic() + 1
+                    while time.monotonic() < deadline:
+                        holder.execute(
+                            "SELECT count(*) FROM pg_locks WHERE locktype = 'advisory' "
+                            "AND objid = hashtext('esm:publication')::oid "
+                            "AND database = (SELECT oid FROM pg_database "
+                            "WHERE datname = current_database()) AND NOT granted"
+                        )
+                        if holder.fetchone()[0] == 2:
+                            break
+                        time.sleep(0.01)
+                    else:
+                        self.fail(
+                            "both publishers must wait before checking stored URLs"
+                        )
+                finally:
+                    holder.rollback()
+                    for writer in writers:
+                        writer.join(6)
+            self.assertFalse(any(writer.is_alive() for writer in writers))
+            self.assertEqual(errors, [])
+        self.assertEqual(
+            sum("event=publication_acquired" in line for line in logged.output), 2
+        )
+        with db.cursor() as cr:
+            cr.execute("SELECT count(*) FROM ir_attachment WHERE url = %s", (url,))
+            self.assertEqual(
+                cr.fetchone()[0], 1, "the second writer must reuse the row"
+            )
 
 
 @tagged("web_unit", "web_assets")

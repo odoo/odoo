@@ -1,4 +1,6 @@
+import logging
 import re
+import subprocess
 import tempfile
 import unittest
 from pathlib import Path
@@ -259,6 +261,86 @@ class _EntryMod:
         self.url = url
         self._filename = filename
         self.raw_content = raw_content
+
+
+class TestParentOwnedRelativeImports(BaseCase):
+    def test_relative_import_reuses_the_parent_without_running_its_source(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "probe/static/src"
+            other_root = Path(tmp) / "other/static/src"
+            for addon_root, marker in ((root, "first"), (other_root, "second")):
+                addon_root.mkdir(parents=True)
+                tests = addon_root.parent / "tests"
+                tests.mkdir()
+                (tests / "marker.js").write_text(f"export const marker = '{marker}';")
+            sources = {
+                "shared": "globalThis.sharedExecutions++; export const token = {};",
+                "entry": (
+                    "export { token } from './shared.js';"
+                    "import { marker as first } from '@probe/../tests/marker';"
+                    "import { marker as second } from '@other/../tests/marker';"
+                    "export const markers = [first, second];"
+                ),
+            }
+            modules = []
+            for name, content in sources.items():
+                path = root / f"{name}.js"
+                path.write_text(content)
+                module = _EntryMod(
+                    f"@probe/{name}",
+                    f"/probe/static/src/{name}.js",
+                    str(path),
+                    content,
+                )
+                module.parsed_header = None
+                modules.append(module)
+            compiler = EsbuildCompiler(
+                "test.parent_owned_relative",
+                modules,
+                [],
+                standalone=True,
+                addon_flags_provider=lambda _: (
+                    [f"--alias:@probe={root}", f"--alias:@other={other_root}"],
+                    [],
+                ),
+            )
+            compiled = compiler.compile(
+                secondary_parent_stubs={
+                    "@probe/shared": "export const token = globalThis.parentToken;",
+                    "@other/shared": "export const token = globalThis.parentToken;",
+                }
+            )
+            probe = subprocess.run(
+                ["node", "--input-type=module"],
+                input=(
+                    "globalThis.parentToken = {}; globalThis.sharedExecutions = 0;"
+                    "const modules = {}; globalThis.odoo = {loader: {"
+                    "registerNativeModules: values => Object.assign(modules, values)}};"
+                    + compiled.code
+                    + "\nconsole.log(JSON.stringify({"
+                    "same: modules['@probe/entry'].token === globalThis.parentToken,"
+                    "executions: globalThis.sharedExecutions,"
+                    "registeredParent: '@probe/shared' in modules,"
+                    "markers: modules['@probe/entry'].markers}));"
+                ),
+                capture_output=True,
+                text=True,
+                check=True,
+                timeout=10,
+            )
+            observed = json.loads(probe.stdout)
+            logging.getLogger(__name__).debug("Parent ownership probe: %s", observed)
+            self.assertEqual(
+                observed,
+                {
+                    "same": True,
+                    "executions": 0,
+                    "registeredParent": False,
+                    "markers": ["first", "second"],
+                },
+            )
+
+            self.assertEqual((root / "shared.js").read_text(), sources["shared"])
 
 
 class TestEsbuildEntryLines(BaseCase):

@@ -86,9 +86,6 @@ class IrQweb(models.AbstractModel):
                 bundle=bundle,
             )
 
-    _ESBUILD_LOCK_RETRIES: int = 1
-    _ESBUILD_LOCK_RETRY_SLEEP_S: float = 0.2
-
     @contextlib.contextmanager
     def _get_esbuild_lock_cursor(self, bundle: str):
         if self.env.cr.readonly and _module.current_test:
@@ -112,59 +109,22 @@ class IrQweb(models.AbstractModel):
             rw_cr.rollback()
             rw_cr.close()
 
-    def _acquire_esbuild_lock(self, bundle: str, cr=None) -> bool:
+    def _acquire_esbuild_lock(self, bundle: str, cr=None) -> None:
+        """Serialize compilation without changing the page's module layout.
+
+        Contention is not a compiler failure: switching just one bundle to
+        unbundled modules can instantiate dependencies a second time on a page
+        whose other bundles have already inlined them.
+        """
         if cr is None:
             cr = self.env.cr
-        config = self._get_esbuild_config()
-        retries = config.get_param_int(
-            "web.esbuild.lock_retries", self._ESBUILD_LOCK_RETRIES
-        )
-        sleep_s = config.get_param_float(
-            "web.esbuild.lock_retry_sleep_s", self._ESBUILD_LOCK_RETRY_SLEEP_S
-        )
-        key = f"esbuild:{bundle}"
-        for attempt in range(retries + 1):
-            cr.execute(
-                "SELECT pg_try_advisory_xact_lock(hashtext(%s))",
-                (key,),
-            )
-            got = cr.fetchone()[0]
-            if got:
-                log_event(
-                    _lock_log,
-                    logging.DEBUG,
-                    "acquired",
-                    bundle=bundle,
-                    attempt=attempt,
-                )
-                return True
-            if attempt < retries:
-                time.sleep(sleep_s)
+        started = time.monotonic()
+        log_event(_lock_log, logging.DEBUG, "waiting", bundle=bundle)
+        cr.execute("SELECT pg_advisory_xact_lock(hashtext(%s))", (f"esbuild:{bundle}",))
         log_event(
             _lock_log,
-            logging.INFO,
-            "contention",
+            logging.DEBUG,
+            "acquired",
             bundle=bundle,
-            attempts=retries + 1,
+            wait_s=time.monotonic() - started,
         )
-        if _debug.logic.enabled:
-            cr.execute(
-                """
-                SELECT a.pid, a.application_name, a.state, a.backend_start,
-                       a.xact_start, left(a.query, 300)
-                  FROM pg_locks l
-                  JOIN pg_stat_activity a ON a.pid = l.pid
-                 WHERE l.locktype = 'advisory'
-                   AND l.granted
-                   AND l.database = (SELECT oid FROM pg_database WHERE datname = current_database())
-                   AND l.objid::bigint = hashtext(%s)::bigint & 4294967295
-                """,
-                (key,),
-            )
-            _debug.logic(
-                "esbuild.lock_holders",
-                bundle=bundle,
-                own_pid=getattr(cr, "_backend_pid", None),
-                holders=cr.fetchall(),
-            )
-        return False

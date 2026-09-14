@@ -35,7 +35,7 @@ in the browser, with observability hooks, failure modes, and tunable knobs.
 ┌───────────────────────────┐   ┌───────────────────────────────────────┐
 │ Per-file serve            │   │ Admin override? (config param)        │
 │   get_native_module_data  │   │ Circuit open? (_esbuild_cooldowns)    │
-│   → import_map per spec   │   │ Lock held? (pg_try_advisory_xact_lock)│
+│   → import_map per spec   │   │ Wait for pg_advisory_xact_lock        │
 │   → <link modulepreload>  │   └─────────────────┬─────────────────────┘
 │   → <script type=module>  │                     │  all green
 │       /<addon>/static/... │                     ▼
@@ -464,9 +464,29 @@ unset or unparseable.
 | `source_maps` | `""` | `EsbuildCompiler._ESBUILD_SOURCE_MAPS` (esbuild.py) | esbuild `--sourcemap=<mode>`. `""` (off), `"linked"` (sidecar `.js.map` + `sourceMappingURL` comment — DevTools fetches only when opened), `"external"` (sidecar without comment), `"inline"` (base64 data URL appended — ~2x bundle size). Unknown modes silently fall back to `""`. |
 | `cooldown_s` | `60.0` | `IrQweb._ESBUILD_COOLDOWN_S` (ir_qweb_assets.py) | Circuit-breaker cooldown after 1st failure |
 | `extended_cooldown_s` | `600.0` | `IrQweb._ESBUILD_EXTENDED_COOLDOWN_S` (ir_qweb_assets.py) | Cooldown after 2nd consecutive failure |
-| `lock_retries` | `1` | `IrQweb._ESBUILD_LOCK_RETRIES` (ir_qweb_assets.py) | Advisory-lock retry count |
-| `lock_retry_sleep_s` | `0.2` | `IrQweb._ESBUILD_LOCK_RETRY_SLEEP_S` (ir_qweb_assets.py) | Sleep between lock attempts |
 | `force_fallback_bundles` | `""` | — | Comma-separated bundle names to force into debug path |
+
+Compilation waits for the transaction-scoped advisory lock. Contention must not
+switch an individual bundle to the debug layout: that can instantiate dependencies
+twice alongside already bundled code. The former `lock_retries` and
+`lock_retry_sleep_s` parameters are no longer read. Database lock/statement timeouts
+propagate as errors; they do not select a different module layout. The lock covers
+compilation, not subsequent attachment publication, so a waiting request can still
+compile again if the preceding result has not been published yet.
+
+Dedicated attachment-writing transactions serialize the URL existence check and
+insertion under a separate publication lock. They use READ COMMITTED so a waiter
+sees the preceding writer's commit. The request transaction keeps its original
+isolation level. This prevents concurrent cold requests from persisting duplicate
+library and compiled-asset URLs through that path.
+
+A secondary bundle that explicitly lists a parent-owned module uses the parent's
+module just like a transitive dependency. It does not import and register that
+module again as an entry. External libraries retain their separate serving path.
+Parent stubs also replace relative imports through a source mirror with symlink
+preservation. Each addon retains separate static sibling directories (`tests`,
+`lib`, etc.). The source index includes a compiler-semantics version; increment it
+when changed compilation semantics could otherwise reuse an old artifact.
 
 Operators set these via the UI (Settings → Technical → System Parameters)
 or programmatically:
@@ -482,7 +502,7 @@ env["ir.config_parameter"].sudo().set_param("web.esbuild.timeout_s", "60")
 | `Failed to resolve module specifier` in browser | import map missing a spec | `odoo.assets.esm DEBUG event=no_native_modules` or validator error at startup |
 | esbuild subprocess non-zero exit | Syntax error in an ESM source | `odoo.assets.esbuild WARNING event=failed bundle=<name> exit=<code>` + stderr on next line |
 | Requests serve un-minified bundles | Circuit open after failure | `odoo.assets.fallback WARNING event=circuit_open` (at trip) then `DEBUG event=circuit_blocked` (per request) |
-| Duplicate CPU on cold start | Multiple workers cold-building same bundle | `odoo.assets.lock INFO event=contention` |
+| Cold request waits before compilation | Another worker holds the bundle lock | `odoo.assets.lock DEBUG event=waiting`, then `event=acquired wait_s=…` |
 | `[registry] Duplicate add for key "…" … (first registration wins)` console.warn in debug | Module loaded twice (separate instances) — `registry.add` is first-wins and warns rather than throwing | Missing bridge shim (happy path is an attachment URL; `data:` URI only as the read-only-cursor fallback); check `_prepare_native_to_legacy_bridge` |
 | Test `patchWithCleanup(Klass.prototype, …)` has no effect; production code keeps using unpatched method | Parent + satellite each load their own copy of the same `@web/*` module → `Klass` in test bundle is a different class than the one the production controller instantiates | Add fingerprint logger to module body — two distinct `MODULE LOADED` events means two evaluations. Root cause is usually a sibling manifest (e.g. `spreadsheet/__manifest__.py` pulls `web/static/src/views/graph/graph_model.js` into `spreadsheet.o_spreadsheet`, which is then `('include',)`'d by the satellite test bundle). Fix wires the satellite import through the parent's self-bridge via the `prod_import_map[alias] = shim` override in `_get_esm_nodes_prod` (`ir_qweb_assets.py`). |
 

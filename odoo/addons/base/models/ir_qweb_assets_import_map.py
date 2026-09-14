@@ -218,20 +218,23 @@ class IrQweb(models.AbstractModel):
                 assets_params=assets_params,
             )
         own_specs = set(sec_ab.get_native_module_data(with_bridges=False)["import_map"])
+        external_libs = self._external_libs()
+        external_urls = set(external_libs.values())
         discovered, _ext = sec_ab._bridges._discover_reachable_specifiers(
             own_specs,
-            set(self._external_libs()),
+            set(external_libs),
             provided=shared,
         )
         reached = set(discovered) - own_specs
-        # an own module the page already registers is bridged, never bundled
-        # a second time: two copies of one module split its singletons
-        own_provided = {
-            spec
-            for spec in own_specs & shared
-            if "/../" not in spec and not spec.startswith("../")
+        # A satellite can explicitly list a module already owned by its parent
+        # (for example account's tour helpers). It must reuse that module too.
+        owned_modules = {
+            asset.module_path
+            for asset in sec_ab.native_modules
+            if asset.url not in external_urls
         }
-        stubbed = (reached & shared) | own_provided
+        stubbed = frozenset((reached | owned_modules) & shared)
+        inlined = frozenset(reached - shared)
         _debug.logic(
             "importmap.secondary_reach",
             bundle=bundle,
@@ -239,10 +242,9 @@ class IrQweb(models.AbstractModel):
             shared=len(shared),
             reached=len(reached),
             stubbed=len(stubbed),
-            own_provided=len(own_provided),
-            inlined=len(reached - shared),
+            inlined=len(inlined),
         )
-        return frozenset(stubbed), frozenset(reached - shared)
+        return stubbed, inlined
 
     def _get_secondary_shared_specs(
         self,

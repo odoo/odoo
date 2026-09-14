@@ -139,7 +139,18 @@ def mirror_aliases(
             continue
         mirror = stub_root / addon
         mirror_dir(mirror, real_dir, addon, occupied, must_be_real)
-        mirrored[addon] = mirror
+        # Keep each addon's static siblings separate: @addon/../tests and
+        # relative ../lib imports must not resolve into another addon's tree.
+        static_root = Path(tmp_dir) / "layout" / addon / "static"
+        static_root.mkdir(parents=True, exist_ok=True)
+        source_root = static_root / "src"
+        mirror.rename(source_root)
+        for sibling in real_dir.parent.iterdir():
+            if sibling != real_dir:
+                (static_root / sibling.name).symlink_to(
+                    sibling, target_is_directory=sibling.is_dir()
+                )
+        mirrored[addon] = source_root
     kept = [
         flag
         for flag in alias_flags

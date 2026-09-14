@@ -391,15 +391,24 @@ class EsbuildCompiler:
                 alias_flags, odoo_root
             )
             moved = set(alias_flags) - set(argv_aliases)
-            alias_flags = [
-                flag
-                for flag in esbuild_stubs.stub_aliases(
-                    list(alias_flags), secondary_parent_stubs, tmp_dir, odoo_root
+            if secondary_parent_stubs:
+                alias_flags, self._mirror_roots = esbuild_stubs.mirror_aliases(
+                    self.native_modules,
+                    list(alias_flags),
+                    secondary_parent_stubs,
+                    tmp_dir,
+                    odoo_root,
                 )
-                if flag not in moved
-            ]
+            alias_flags = [flag for flag in alias_flags if flag not in moved]
 
-            entry_lines = self._esbuild_entry_lines(odoo_root)
+            # Parent-owned members are supplied by the stubs when imported.
+            # Registering them again as entry modules creates a second namespace.
+            entry_modules = [
+                asset
+                for asset in self.native_modules
+                if asset.module_path not in (secondary_parent_stubs or {})
+            ]
+            entry_lines = self._esbuild_entry_lines(odoo_root, modules=entry_modules)
             entry_text = "\n".join(entry_lines)
             entry_bytes = len(entry_text.encode("utf-8"))
             span.set(
@@ -427,6 +436,7 @@ class EsbuildCompiler:
             external_flags=external_flags,
             sourcemap_flags=sourcemap_flags,
             alias_flags=alias_flags,
+            extra_flags=["--preserve-symlinks"] if self._mirror_roots else [],
         )
         try:
             esbuild_process.run_esbuild(
