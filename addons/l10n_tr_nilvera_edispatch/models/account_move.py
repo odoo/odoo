@@ -50,4 +50,4 @@ class AccountMove(models.Model):
 
     def _has_earchive_despatch_moves(self):
         pickings = self._get_related_pickings()
-        return self.l10n_tr_nilvera_customer_status == 'earchive' and any(p.l10n_tr_nilvera_dispatch_type == 'IS_DESPATCH' for p in pickings)
+        return self.l10n_tr_nilvera_customer_status == 'earchive' and pickings and any(p.l10n_tr_nilvera_dispatch_type == 'IS_DESPATCH' for p in pickings)
