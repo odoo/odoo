@@ -87,6 +87,7 @@
 
     --border-color: var(--o-hb-border-color);
     --#{$prefix}popover-border-radius: #{map-get($spacers, 2)};
+    --#{$prefix}popover-inner-border-radius: calc(var(--#{$prefix}popover-border-radius) - var(--#{$prefix}popover-border-width));
     --#{$prefix}dropdown-item-border-radius: 0;
 
     font-family: $o-we-font-family;
@@ -109,6 +110,14 @@
             color: var(--o-hb-select-color-hover);
         }
 
+        &:first-child {
+            @include border-top-radius(var(--#{$prefix}popover-inner-border-radius));
+        }
+
+        &:last-child {
+            @include border-bottom-radius(var(--#{$prefix}popover-inner-border-radius));
+        }
+
         &::before {
             color: $active-color !important;
         }
@@ -120,7 +129,8 @@
             &::after {
                 content: "";
                 @include o-position-absolute(0, 0, 0, 0);
-                border: 1px solid color-mix(in srgb, $active-color 50%, transparent);
+                border: 2px solid color-mix(in srgb, $active-color 50%, transparent);
+                border-radius: inherit;
             }
         }
     }
