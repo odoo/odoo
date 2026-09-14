@@ -1,5 +1,5 @@
 {
-    "name": "Customer Portal",
+    "name": "Partner Portal",
     "version": "19.0.1.1",
     "category": "Hidden",
     "sequence": 9000,
