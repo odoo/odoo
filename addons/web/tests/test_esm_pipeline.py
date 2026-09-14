@@ -3649,6 +3649,68 @@ class TestBundleDescriptorFormat(HttpCase):
 
 
 @tagged("-at_install", "post_install", "web_assets")
+class TestPerFileSecondaryOnAPage(TransactionCase):
+    # a page-scoped secondary whose compiled file could not be saved (a
+    # read-only test cursor) is served per file next to the page's compiled
+    # bundles; what those bundles carry must reach it through bridges, or the
+    # page evaluates a second copy (`Duplicate add for key "tools" in
+    # "debug_section"` on /?debug=tests, from debug_menu -> debug_menu_basic)
+    BUNDLE = "web.assets_tests"
+    PAGE = ("web.assets_frontend_minimal", "web.assets_frontend_lazy")
+
+    def _debug_map(self, page_scope):
+        IrQweb = self.env["ir.qweb"]
+        params = self.env["ir.asset"]._prepare_assets_params()
+        bundle = IrQweb._get_asset_bundle(
+            self.BUNDLE, js=True, css=False, debug_assets=False, assets_params=params
+        )
+        native_data = IrQweb._get_native_module_data_cached(
+            self.BUNDLE, assets_params=params
+        )
+        import_map, _bridges = IrQweb._get_esm_import_map_debug(
+            self.BUNDLE,
+            bundle,
+            native_data,
+            params,
+            debug_assets=False,
+            with_test_satellites=False,
+            page_scope=page_scope,
+        )
+        provided = IrQweb._get_secondary_provider_specs(
+            self.BUNDLE, params, self.PAGE
+        ) - set(native_data["import_map"])
+        return import_map, provided
+
+    def test_what_the_page_carries_is_bridged_not_served_again(self):
+        import_map, provided = self._debug_map(self.PAGE)
+        served_again = sorted(
+            spec
+            for spec, url in import_map.items()
+            if spec in provided
+            and not url.startswith(("/web/assets/esm/bridges/", "data:"))
+        )
+        self.assertEqual(served_again, [])
+        self.assertIn("@web/webclient/debug/debug_menu_basic", provided)
+        self.assertTrue(
+            import_map["@web/webclient/debug/debug_menu_basic"].startswith(
+                ("/web/assets/esm/bridges/", "data:")
+            )
+        )
+        self.assertEqual(
+            import_map["@web/webclient/debug/debug_menu"],
+            "/web/static/src/webclient/debug/debug_menu.js",
+            "what the page does not carry still resolves per file",
+        )
+
+    def test_without_a_page_scope_everything_reached_is_served_per_file(self):
+        import_map, _provided = self._debug_map(())
+        self.assertEqual(
+            import_map["@web/webclient/debug/debug_menu_basic"],
+            "/web/static/src/webclient/debug/debug_menu_basic.js",
+        )
+
+
+@tagged("-at_install", "post_install", "web_assets")
 class TestPageBundleExportSurface(TransactionCase):
     BUNDLE = "web.assets_web"
 

@@ -1129,6 +1129,7 @@ class IrQweb(models.AbstractModel):
             debug_assets,
             assets_params,
             with_test_satellites=with_test_satellites,
+            page_scope=page_scope,
         )
 
     def _get_dynamic_parent_bundles(
@@ -1452,6 +1453,7 @@ class IrQweb(models.AbstractModel):
         *,
         debug_assets: bool,
         with_test_satellites: bool,
+        page_scope: tuple[str, ...] = (),
     ) -> tuple[dict[str, str], dict[str, str]]:
         import_map = self._get_external_libs_served(debug_assets=debug_assets)
         import_map.update(native_data["import_map"])
@@ -1478,11 +1480,25 @@ class IrQweb(models.AbstractModel):
             all_native_specifiers.update(m.module_path for m in lazy_ab.native_modules)
             combined_native_modules.extend(lazy_ab.native_modules)
 
-        discovered, _ext_seen = asset_bundle._bridges._discover_bridge_specifiers(
-            all_native_specifiers,
-            set(self._external_libs()),
-            modules=combined_native_modules,
+        provided = (
+            self._get_secondary_provider_specs(bundle, assets_params, page_scope)
+            - all_native_specifiers
+            if page_scope
+            else set()
         )
+        if provided:
+            bridge_map, discovered = (
+                asset_bundle._bridges.prepare_page_provided_bridges(
+                    all_native_specifiers, provided, modules=combined_native_modules
+                )
+            )
+            import_map.update(bridge_map)
+        else:
+            discovered, _ext_seen = asset_bundle._bridges._discover_bridge_specifiers(
+                all_native_specifiers,
+                set(self._external_libs()),
+                modules=combined_native_modules,
+            )
         resolved_bridges = self._add_import_map_bridge_urls(
             import_map, discovered, drop_unresolved=False, bundle=bundle
         )
@@ -1535,6 +1551,7 @@ class IrQweb(models.AbstractModel):
         assets_params: dict[str, Any] | None,
         *,
         with_test_satellites: bool = False,
+        page_scope: tuple[str, ...] = (),
     ) -> EsmNodePair:
         pre_nodes = []
         post_nodes = []
@@ -1545,6 +1562,7 @@ class IrQweb(models.AbstractModel):
             assets_params,
             debug_assets=debug_assets,
             with_test_satellites=with_test_satellites,
+            page_scope=page_scope,
         )
 
         pre_nodes.append(

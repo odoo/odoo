@@ -1,7 +1,7 @@
 import logging
 import posixpath
 import re
-from collections.abc import Sequence
+from collections.abc import Collection, Mapping, Sequence
 from datetime import UTC, datetime, timedelta
 from typing import Any, Protocol
 from urllib.parse import quote
@@ -361,8 +361,25 @@ class BridgeShimManager:
         discovered, ext_seen = self._discover_bridge_specifiers(
             native_specifiers, set(external_libs()), modules=modules
         )
-        resolver = _BridgeExportResolver(external_libs(), self.bundle_name)
+        bridge_map, star_fallback = self._prepare_bridge_map(discovered)
+        log_event(
+            _bridge_log,
+            logging.DEBUG,
+            "build",
+            bundle=self.bundle_name,
+            shims=len(bridge_map),
+            discovered=len(discovered),
+            native_files=len(modules),
+            star_fallback=star_fallback,
+            ext_libs_skipped=len(ext_seen),
+            ext_libs=",".join(sorted(ext_seen)) or "-",
+        )
+        return bridge_map
 
+    def _prepare_bridge_map(
+        self, discovered: Mapping[str, set[str]]
+    ) -> tuple[dict[str, str], int]:
+        resolver = _BridgeExportResolver(external_libs(), self.bundle_name)
         shims_by_spec: dict[str, str] = {}
         star_fallback = 0
         for specifier, kinds in sorted(discovered.items()):
@@ -380,21 +397,38 @@ class BridgeShimManager:
                     kinds=sorted(kinds),
                     names=len(src_names),
                 )
+        return self._persist_bridge_shims(shims_by_spec), star_fallback
 
-        bridge_map = self._persist_bridge_shims(shims_by_spec)
+    def prepare_page_provided_bridges(
+        self,
+        native_specifiers: set[str],
+        provided: Collection[str],
+        modules: Sequence[NativeModuleLike] | None = None,
+    ) -> tuple[dict[str, str], set[str]]:
+        # a bundle served per file on a page that already carries some of
+        # what it reaches: the page's copy answers through a bridge, the rest
+        # resolves per file -- a second per-file copy of a page module is a
+        # second registry registration and a second class
+        if modules is None:
+            modules = self.native_modules
+        discovered, _ext = self._discover_reachable_specifiers(
+            native_specifiers, set(external_libs()), provided, modules=modules
+        )
+        bridged = {
+            spec: kinds for spec, kinds in discovered.items() if spec in provided
+        }
+        bridge_map, star_fallback = self._prepare_bridge_map(bridged)
+        per_file = set(discovered) - set(bridged)
         log_event(
             _bridge_log,
             logging.DEBUG,
-            "build",
+            "page_provided",
             bundle=self.bundle_name,
-            shims=len(bridge_map),
-            discovered=len(discovered),
-            native_files=len(modules),
+            bridged=len(bridge_map),
+            per_file=len(per_file),
             star_fallback=star_fallback,
-            ext_libs_skipped=len(ext_seen),
-            ext_libs=",".join(sorted(ext_seen)) or "-",
         )
-        return bridge_map
+        return bridge_map, per_file
 
 
 _EDGE_KINDS = {"default": "__default__", "star": "__star__"}
