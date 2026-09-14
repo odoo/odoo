@@ -14,6 +14,7 @@ GATE_CALLS = frozenset(
         "admit",
         "_admit_checked_request",
         "admit_notification",
+        "_admit_proxy_webhook",
     }
 )
 

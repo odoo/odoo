@@ -625,7 +625,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             id, endpoint = payload
             if not url.startswith(endpoint):
                 return None
-            company = self.env["res.company"].browse(id).exists()
+            company = self.env["res.company"].sudo().browse(id).exists()
             if company and company.account_peppol_edi_user:
                 return company.account_peppol_edi_user
             if edi_user := self.browse(id).exists():

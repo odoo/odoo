@@ -249,6 +249,35 @@ class L10nTWITestEdi(TestAccountMoveSendCommon, HttpCase):
                 }
             ],
         )
+        receiver = (
+            self.env["integration.receiver"]
+            .sudo()
+            .search(
+                [
+                    ("res_model", "=", "res.company"),
+                    ("res_id", "=", credit_note.company_id.id),
+                ]
+            )
+        )
+        exchange = (
+            self.env["integration.exchange"]
+            .sudo()
+            .search([("channel_id", "=", f"integration.receiver,{receiver.id}")])
+        )
+        self.assertEqual(exchange.mapped("event_type"), ["ecpay_invoice_allowance"])
+
+    def test_an_allowance_callback_with_a_wrong_token_changes_nothing(self):
+        api_url = urljoin(
+            self.basic_invoice.get_base_url(),
+            f"/invoice/ecpay/agreed_invoice_allowance/{self.basic_invoice.id}"
+            "?access_token=forged",
+        )
+        state = self.basic_invoice.l10n_tw_edi_refund_state
+
+        response = self.url_open(api_url, data={"RtnCode": "1"})
+
+        self.assertEqual(response.status_code, 404)
+        self.assertEqual(self.basic_invoice.l10n_tw_edi_refund_state, state)
 
     def test_07_fail_data_validation(self):
         """

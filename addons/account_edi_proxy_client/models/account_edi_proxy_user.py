@@ -5,8 +5,9 @@ from typing import Literal
 
 import requests
 
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import LockError, UserError
+from odoo.http import request
 
 from .account_edi_proxy_auth import OdooEdiProxyAuth
 
@@ -283,3 +284,28 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         return self.env["certificate.key"]._account_edi_fernet_decrypt(
             decrypted_key, base64.b64decode(data)
         )
+
+    @api.model
+    def _admit_proxy_webhook(self, edi_user, event_type):
+        httprequest = request.httprequest
+        if not edi_user:
+            self.env["inbound.access.log"]._record_unknown_caller(
+                self._name,
+                event_type,
+                httprequest.remote_addr,
+                user_agent=httprequest.headers.get("User-Agent"),
+                status_code=204,
+            )
+            return False
+        edi_user = edi_user.sudo()
+        receiver = self.env["integration.receiver"]._for_record(
+            edi_user,
+            self.env._("%(user)s proxy webhooks", user=edi_user.display_name),
+        )
+        return receiver._admit_checked_request(
+            _signed_token_was_resolved, event_type=event_type
+        )
+
+
+def _signed_token_was_resolved():
+    return None
