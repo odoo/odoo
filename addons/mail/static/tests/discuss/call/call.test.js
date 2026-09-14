@@ -30,6 +30,7 @@ import {
     CROSS_TAB_HOST_MESSAGE,
 } from "@mail/discuss/call/common/rtc_service";
 import { ChannelMember } from "@mail/discuss/core/common/channel_member_model";
+import { Meeting } from "@mail/discuss/call/common/meeting";
 
 import {
     advanceTime,
@@ -57,6 +58,7 @@ import {
 
 import { waitNotifications } from "@bus/../tests/bus_test_helpers";
 import { isMobileOS } from "@web/core/browser/feature_detection";
+import { patch } from "@web/core/utils/patch";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { user } from "@web/core/user";
 
@@ -2247,4 +2249,44 @@ test("confirm before switching calls", async () => {
     );
     await click(".modal-footer button:text('Switch')");
     await contains(".o-discuss-CallMenu-channelInfo:text('channel2')");
+});
+
+test("meeting ready banner is hidden in chat but shown in channel", async () => {
+    mockBrowserFullscreen();
+    let meeting;
+    patch(Meeting.prototype, {
+        setup() {
+            super.setup();
+            meeting = this;
+        },
+    });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Marc Demo" });
+    const chatId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(chatId);
+    await click("[title='Start Call']");
+    await click(".o-discuss-CallActionList button[title='More']");
+    await click("[name='fullscreen']");
+    await contains(".o-mail-Meeting");
+    await waitUntil(() => meeting?.channel?.id === chatId);
+    expect(meeting.showInviteBanner).toBe(false);
+    await contains(".o-mail-MeetingReadyBanner", { count: 0 });
+    await click(".o-mail-Meeting [title='Disconnect']");
+    await click(".o-mail-MessagingMenu-tab[data-id='channel']");
+    await click(".o-mail-NotificationItem-name:text('General')");
+    await click("[title='Start Call']");
+    await click(".o-discuss-CallActionList button[title='More']");
+    await click("[name='fullscreen']");
+    await contains(".o-mail-Meeting");
+    await waitUntil(() => meeting?.channel?.id === channelId);
+    expect(meeting.showInviteBanner).toBe(true);
+    await contains(".o-mail-MeetingReadyBanner button:text('Add Others')");
 });
