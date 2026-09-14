@@ -385,11 +385,12 @@ class Environment(Mapping[str, "BaseModel"]):
         if company_ids := self._get_allowed_company_ids():
             return self["res.company"].browse(company_ids)
         _debug.logic("environment.companies.fallback_to_user", uid=self.uid)
-        company_ids = self.user._get_company_ids()
+        user_company_ids = list(self.user._get_company_ids())
         current = self.user.company_id.id
-        if current in company_ids:
-            company_ids = (current, *(id_ for id_ in company_ids if id_ != current))
-        return self["res.company"].browse(company_ids)
+        if current in user_company_ids:
+            user_company_ids.remove(current)
+            user_company_ids.insert(0, current)
+        return self["res.company"].browse(user_company_ids)
 
     @functools.cached_property
     def tz(self) -> tzinfo:

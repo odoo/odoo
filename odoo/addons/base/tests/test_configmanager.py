@@ -308,10 +308,17 @@ class TestConfigManager(TransactionCase):
                 "limit_request": 100,
             }
         )
+        # /tmp/odoo may exist on a shared machine: then it is skipped as an
+        # invalid addons directory rather than a missing one
+        addons_reason = (
+            "invalid addons directory"
+            if Path("/tmp/odoo").is_dir()
+            else "no such directory"
+        )
         self.assertEqual(
             capture.output,
             [
-                "WARNING:odoo.tools.config:option addons_path, no such directory '/tmp/odoo', skipped",
+                f"WARNING:odoo.tools.config:option addons_path, {addons_reason} '/tmp/odoo', skipped",
                 "WARNING:odoo.tools.config:option upgrade_path, no such directory '/tmp/upgrade', skipped",
                 "WARNING:odoo.tools.config:option pre_upgrade_scripts, no such file '/tmp/pre-custom.py', skipped",
             ],
