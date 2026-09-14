@@ -44,8 +44,6 @@ class PartnerType extends models.Model {
 
 defineModels([Partner, PartnerType]);
 
-onRpc("has_group", () => true);
-
 test("Many2OneReferenceField in form view", async () => {
     mockService("action", {
         async doAction() {
@@ -182,7 +180,6 @@ test("Many2OneReferenceField set value with search more", async () => {
         "web_name_search",
         "get_views",
         "web_search_read",
-        "has_group",
         "web_read",
     ]);
 });

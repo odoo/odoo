@@ -157,7 +157,6 @@ test("connection lost when opening form view from kanban", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "has_group",
         "/web/dataset/call_kw/partner/web_read",
         "/web/dataset/call_kw/partner/web_search_read",
     ]);
@@ -218,7 +217,6 @@ test("connection lost when coming back to kanban from form", async () => {
         "/web/action/load",
         "/web/dataset/call_kw/partner/get_views",
         "/web/dataset/call_kw/partner/web_search_read",
-        "/web/dataset/call_kw/res.users/has_group",
         "/web/dataset/call_kw/partner/web_read",
         "/web/dataset/call_kw/partner/web_search_read",
     ]);
@@ -279,7 +277,6 @@ test("error on onMounted", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 
     await contains(".o_kanban_record").click();

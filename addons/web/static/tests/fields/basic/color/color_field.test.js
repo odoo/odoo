@@ -200,7 +200,6 @@ test(`color field in list view => automatic save by default`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
         "web_save",
     ]);
 });
@@ -227,6 +226,5 @@ test(`color field in list view => no save if autosave is false`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 });

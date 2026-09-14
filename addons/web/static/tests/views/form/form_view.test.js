@@ -197,8 +197,6 @@ class ResCompany extends models.Model {
 
 defineModels([Partner, PartnerType, Product, ResUsers, ResCompany]);
 
-onRpc("has_group", () => true);
-
 before(() => {
     patchWithCleanup(EventBus.prototype, {
         addEventListener(type, listener, options) {
@@ -3125,7 +3123,6 @@ test(`form with custom cog action that has a confirmation target="new" action`, 
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 });
 
@@ -10037,11 +10034,7 @@ test(`coming to a form view from a grouped and sorted list`, async () => {
 
     await mountWebClient();
     await getService("action").doAction(1);
-    expect.verifySteps([
-        "partner:get_views",
-        "partner:web_search_read",
-        "res.users:has_group",
-    ]);
+    expect.verifySteps(["partner:get_views", "partner:web_search_read"]);
     expect(`.o_list_view`).toHaveCount(1);
     expect(`.o_data_row`).toHaveCount(4);
     expect(queryAllTexts`.o_data_cell`).toEqual([
@@ -13269,7 +13262,7 @@ test("executing new action, closes dialog, and avoid reload previous view", asyn
         views: [[false, "kanban"]],
     });
     expect(`.o_kanban_view`).toHaveCount(1);
-    expect.verifySteps(["get_views", "get_views", "web_search_read", "has_group"]);
+    expect.verifySteps(["get_views", "get_views", "web_search_read"]);
 });
 
 test.tags("mobile");

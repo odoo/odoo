@@ -83,7 +83,6 @@ test("can execute server actions from db ID", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 });
 

@@ -235,7 +235,6 @@ test("can execute act_window actions from db ID", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 });
 
@@ -249,7 +248,6 @@ test("click on a list row when there is no form in the action", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
     await contains(".o_data_row:eq(0) .o_data_cell").click();
     expect.verifySteps([]);
@@ -267,7 +265,6 @@ test("click on open form view button when there is no form in the action", async
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
     await contains(".o_data_row:eq(0) .o_list_record_open_form_view").click();
     expect(".o_form_view").toHaveCount(1, { message: "should display the form view" });
@@ -284,7 +281,6 @@ test("click on new record button in list when there is no form in the action", a
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
     await contains(".o_list_button_add").click();
     expect(".o_form_view").toHaveCount(1, { message: "should display the form view" });
@@ -357,7 +353,6 @@ test("can switch between views", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "has_group",
         "web_search_read",
         "web_search_read",
         "web_read",
@@ -406,7 +401,6 @@ test("switching into a view with mode=edit lands in edit mode", async () => {
         "/web/action/load",
         "get_views",
         "web_read_group",
-        "has_group",
         "onchange",
         "name_create",
         "web_read",
@@ -937,7 +931,6 @@ test("reload previous controller when discarding a new record", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "has_group",
         "onchange",
         "web_search_read",
     ]);
@@ -978,7 +971,6 @@ test("execute_action of type object are handled", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "has_group",
         "web_read",
         "object",
         "web_read",
@@ -1139,7 +1131,6 @@ test("execute_action of type action are handled", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "has_group",
         "web_read",
         "/web/action/load",
         "get_views",
@@ -1220,7 +1211,6 @@ test("execute smart button and fails on desktop", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "has_group",
         "web_read",
     ]);
     await expect.waitForErrors(["Oups"]);
@@ -1259,7 +1249,6 @@ test("execute smart button and fails on mobile", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "has_group",
         "web_read",
     ]);
     await expect.waitForErrors(["Oups"]);
@@ -1335,7 +1324,6 @@ test("can open different records from a multi record view", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "has_group",
         "web_read",
         "web_search_read",
         "web_read",
@@ -1481,7 +1469,6 @@ test("can open a many2one external window", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "has_group",
         "web_read",
         "get_formview_action",
         "get_views",
@@ -1671,7 +1658,6 @@ test("switch request to unknown view type", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 });
 
@@ -2031,7 +2017,6 @@ test("execute action from dirty, new record, and come back", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "has_group",
         "onchange",
         "get_formview_action",
         "web_save",
@@ -2530,12 +2515,7 @@ test("action and get_views rpcs are cached", async () => {
 
     await getService("action").doAction(1);
     expect(".o_kanban_view").toHaveCount(1);
-    expect.verifySteps([
-        "/web/action/load",
-        "get_views",
-        "web_search_read",
-        "has_group",
-    ]);
+    expect.verifySteps(["/web/action/load", "get_views", "web_search_read"]);
 
     await getService("action").doAction(1);
     expect(".o_kanban_view").toHaveCount(1);
@@ -2568,7 +2548,7 @@ test("get_views rpcs are cached (different context.active_id)", async () => {
         context: { active_id: 33 },
     });
     expect(".o_kanban_view").toHaveCount(1);
-    expect.verifySteps(["get_views", "web_search_read", "has_group"]);
+    expect.verifySteps(["get_views", "web_search_read"]);
 
     await getService("action").doAction({
         name: "Partner",

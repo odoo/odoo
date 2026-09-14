@@ -164,8 +164,6 @@ class TestClientAction extends Component {
     }
 }
 
-onRpc("has_group", () => true);
-
 beforeEach(() => {
     actionRegistry.add("__test__client__action__", TestClientAction, {
         force: true,

@@ -3196,7 +3196,6 @@ test("many2one in editable list + onchange, with enter", async () => {
     expect.verifySteps([
         "get_views",
         "web_search_read",
-        "has_group",
         "web_name_search",
         "onchange",
         "web_save",
@@ -3237,7 +3236,6 @@ test("many2one in editable list + onchange, with enter, part 2", async () => {
     expect.verifySteps([
         "get_views",
         "web_search_read",
-        "has_group",
         "web_name_search",
         "onchange",
         "web_save",
@@ -3372,7 +3370,6 @@ test("search more in many2one: no text in input", async () => {
         "onchange",
         "web_name_search",
         "get_views",
-        "has_group",
         "web_search_read",
     ]);
 });
@@ -3427,7 +3424,6 @@ test("search more in many2one: text in input", async () => {
         "web_name_search",
         "web_name_search",
         "get_views",
-        "has_group",
         "web_search_read",
         "web_search_read",
     ]);
@@ -3556,7 +3552,6 @@ test("search more in many2one: cannot resequence inside dialog", async () => {
         "web_name_search",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 });
 

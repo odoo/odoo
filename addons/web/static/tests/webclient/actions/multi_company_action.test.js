@@ -140,7 +140,6 @@ test("form view in dialog shows wrong company error", async () => {
             context: { suggested_company: { id: 2, display_name: "Company 2" } },
         });
     });
-    onRpc("has_group", () => true);
     Partner._views.list = `
         <list>
             <field name="display_name" />

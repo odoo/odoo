@@ -8,7 +8,6 @@ import {
     getService,
     models,
     mountWebClient,
-    onRpc,
     stepAllNetworkCalls,
 } from "@web/../tests/web_test_helpers";
 import { redirect } from "@web/core/utils/urls";
@@ -75,8 +74,6 @@ defineActions([
 describe.current.tags("mobile");
 
 test("uses a mobile-friendly view by default (if possible)", async () => {
-    onRpc("has_group", () => true);
-
     await mountWebClient();
     await animationFrame();
     await getService("action").doAction(1);
@@ -114,7 +111,6 @@ test("lazy load mobile-friendly view", async () => {
         "get_views",
         "onchange",
         "web_search_read",
-        "has_group",
     ]);
 });
 
@@ -142,7 +138,6 @@ test("lazy load mobile-friendly view; legacy url", async () => {
         "get_views",
         "onchange",
         "web_search_read",
-        "has_group",
     ]);
 });
 

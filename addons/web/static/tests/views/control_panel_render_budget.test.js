@@ -101,12 +101,18 @@ describe("control-panel chain render budget", () => {
         ]);
     });
 
-    test("SearchBarMenu renders only in the second pass", async () => {
+    test("SearchBarMenu renders once per pass", async () => {
         const sequence = instrumentChain();
         await mountView({ resModel: "foo", type: "list", arch: ARCH });
         await animationFrame();
 
-        expect(sequence.filter((s) => s === "SearchBarMenu").length).toBe(1);
+        // The first pass used to abort before reaching SearchBarMenu: the
+        // controller's onWillStart awaited a has_group round trip for
+        // base.group_allow_export and the records landed mid-render. The mock
+        // session now seeds that group as session_info does, the lookup is a
+        // cache hit, and the first pass completes before it is superseded —
+        // the same one-render-per-pass budget SearchBar and ControlPanel have.
+        expect(sequence.filter((s) => s === "SearchBarMenu").length).toBe(2);
         expect(sequence.filter((s) => s === "SearchBar").length).toBe(2);
     });
 });

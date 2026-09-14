@@ -172,8 +172,6 @@ class TestClientAction extends Component {
     }
 }
 
-onRpc("has_group", () => true);
-
 beforeEach(() => {
     actionRegistry.add("__test__client__action__", TestClientAction);
     patchWithCleanup(transitionConfig, { disabled: true });
@@ -221,12 +219,7 @@ describe("basic flow with home menu", () => {
         ]);
         await contains(".o_app.o_menuitem").click();
         await animationFrame();
-        expect.verifySteps([
-            "/web/action/load",
-            "get_views",
-            "web_search_read",
-            "has_group",
-        ]);
+        expect.verifySteps(["/web/action/load", "get_views", "web_search_read"]);
         expect(document.body).not.toHaveClass("o_home_menu_background");
         expect(".o_home_menu").toHaveCount(0);
         expect(".o_kanban_view").toHaveCount(1);
@@ -242,12 +235,7 @@ describe("basic flow with home menu", () => {
         ]);
         await contains(".o_app.o_menuitem").click();
         await animationFrame();
-        expect.verifySteps([
-            "/web/action/load",
-            "get_views",
-            "web_search_read",
-            "has_group",
-        ]);
+        expect.verifySteps(["/web/action/load", "get_views", "web_search_read"]);
         expect(".o_kanban_view").toHaveCount(1);
         await contains(".o_kanban_record").click();
         await animationFrame();
@@ -272,12 +260,7 @@ describe("basic flow with home menu", () => {
         ]);
         await contains(".o_app.o_menuitem").click();
         await animationFrame();
-        expect.verifySteps([
-            "/web/action/load",
-            "get_views",
-            "web_search_read",
-            "has_group",
-        ]);
+        expect.verifySteps(["/web/action/load", "get_views", "web_search_read"]);
         expect(".o_kanban_view").toHaveCount(1);
         await contains(".o_kanban_record").click();
         expect.verifySteps(["web_read"]);
@@ -304,12 +287,7 @@ describe("basic flow with home menu", () => {
         ]);
         await contains(".o_app.o_menuitem").click();
         await animationFrame();
-        expect.verifySteps([
-            "/web/action/load",
-            "get_views",
-            "web_search_read",
-            "has_group",
-        ]);
+        expect.verifySteps(["/web/action/load", "get_views", "web_search_read"]);
         expect(".o_kanban_view").toHaveCount(1);
         await contains(".o_kanban_record").click();
         expect.verifySteps(["web_read"]);
@@ -339,12 +317,7 @@ describe("basic flow with home menu", () => {
         ]);
         await contains(".o_app.o_menuitem").click();
         await animationFrame();
-        expect.verifySteps([
-            "/web/action/load",
-            "get_views",
-            "web_search_read",
-            "has_group",
-        ]);
+        expect.verifySteps(["/web/action/load", "get_views", "web_search_read"]);
         expect(".o_kanban_view").toHaveCount(1);
         await contains(".o_kanban_record").click();
         expect.verifySteps(["web_read"]);

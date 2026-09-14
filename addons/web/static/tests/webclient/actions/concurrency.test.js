@@ -146,7 +146,6 @@ test("drop previous actions if possible", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 });
 
@@ -167,7 +166,6 @@ test("handle switching view and switching back on slow network", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "has_group",
         "web_search_read",
     ]);
 
@@ -250,7 +248,6 @@ test("execute a new action while loading a lazy-loaded controller", async () => 
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 
     def.resolve();
@@ -300,7 +297,6 @@ test("execute a new action while handling a call_button", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "has_group",
         "web_read",
         "object",
         "/web/action/load",
@@ -349,7 +345,6 @@ test("execute a new action while switching to another controller", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "has_group",
         "web_read",
         "/web/action/load",
         "get_views",
@@ -590,7 +585,6 @@ test("execute a new action while loading views", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 });
 
@@ -633,7 +627,6 @@ test("execute a new action while loading data of default view", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 });
 
@@ -733,7 +726,6 @@ test("restoring a controller when doing an action -- load_action slow", async ()
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "has_group",
         "web_read",
         "/web/action/load",
         "web_search_read",
@@ -772,7 +764,6 @@ test("switching when doing an action -- load_action slow", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "has_group",
         "/web/action/load",
         "web_search_read",
     ]);
@@ -810,7 +801,6 @@ test("switching when doing an action -- get_views slow", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "has_group",
         "/web/action/load",
         "get_views",
         "web_search_read",
@@ -847,7 +837,6 @@ test("switching when doing an action -- search_read slow", async () => {
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "has_group",
         "get_views",
         "search_read",
         "web_search_read",

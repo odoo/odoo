@@ -203,8 +203,6 @@ class TestClientAction extends Component {
     }
 }
 
-onRpc("has_group", () => true);
-
 beforeEach(() => {
     actionRegistry.add("__test__client__action__", TestClientAction, {
         force: true,
@@ -731,7 +729,6 @@ describe(`new urls`, () => {
             "/web/action/load",
             "get_views",
             "web_search_read",
-            "has_group",
             "Update the state without updating URL, nextState: actionStack,action",
         ]);
     });
@@ -821,7 +818,6 @@ describe(`new urls`, () => {
             "/web/action/load",
             "get_views",
             "web_search_read",
-            "has_group",
             "Update the state without updating URL, nextState: actionStack,action,view_type",
         ]);
     });
@@ -855,7 +851,7 @@ describe(`new urls`, () => {
         await contains(`.o_control_panel .breadcrumb a`).click();
         expect(`.o_list_view`).toHaveCount(1);
         expect(`.o_form_view`).toHaveCount(0);
-        expect.verifySteps(["web_search_read", "has_group"]);
+        expect.verifySteps(["web_search_read"]);
 
         await animationFrame();
         expect(browser.location.href).toBe("http://example.com/odoo/action-3");
@@ -1004,7 +1000,6 @@ describe(`new urls`, () => {
             "/web/action/load",
             "get_views",
             "web_search_read",
-            "has_group",
             "pushState http://example.com/odoo/action-1",
         ]);
     });
@@ -1390,7 +1385,6 @@ describe(`new urls`, () => {
         expect(`.o_list_view`).toHaveCount(1);
         expect.verifySteps([
             "web_search_read",
-            "has_group",
             "pushState http://example.com/odoo/action-3",
         ]);
     });
@@ -1414,7 +1408,6 @@ describe(`new urls`, () => {
             "get_views",
             "web_read",
             "web_search_read",
-            "has_group",
             "pushState http://example.com/odoo/action-3",
         ]);
     });
@@ -2206,7 +2199,6 @@ describe(`legacy urls`, () => {
             "/web/action/load",
             "get_views",
             "web_search_read",
-            "has_group",
         ]);
     });
 
@@ -2273,7 +2265,6 @@ describe(`legacy urls`, () => {
             "/web/action/load",
             "get_views",
             "web_search_read",
-            "has_group",
         ]);
     });
 
@@ -2302,7 +2293,6 @@ describe(`legacy urls`, () => {
             "get_views",
             "web_read",
             "web_search_read",
-            "has_group",
         ]);
     });
 
@@ -2392,7 +2382,6 @@ describe(`legacy urls`, () => {
             "/web/action/load",
             "get_views",
             "web_search_read",
-            "has_group",
         ]);
     });
 

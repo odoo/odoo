@@ -529,7 +529,6 @@ test("many2many list (non editable): create a new record and click on action but
         "web_read",
         "get_views",
         "web_search_read",
-        "has_group",
         "onchange",
     ]);
     await contains(".modal [name='name'] input").edit("Hello");
@@ -582,7 +581,6 @@ test("many2many list (non editable): create a new record and click on action but
         "web_read",
         "get_views",
         "web_search_read",
-        "has_group",
         "onchange",
     ]);
 
@@ -647,7 +645,6 @@ test("add a new record in a many2many non editable list", async () => {
         "onchange",
         "get_views",
         "web_search_read",
-        "has_group",
         "get_views",
         "onchange",
         "web_save",
@@ -767,13 +764,7 @@ test("many2many list (editable): edition", async () => {
         message: "the updated row still has the correct values",
     });
 
-    expect.verifySteps([
-        "get_views",
-        "web_search_read",
-        "has_group",
-        "web_read",
-        "web_save",
-    ]);
+    expect.verifySteps(["get_views", "web_search_read", "web_read", "web_save"]);
 });
 
 test("many2many: create & delete attributes (both true)", async () => {
@@ -1230,7 +1221,6 @@ test("many2many list with x2many: add a record", async () => {
     expect.verifySteps([
         "web_read on partner",
         "web_search_read on partner.type",
-        "has_group on res.users",
         "web_read on partner.type",
         "web_search_read on partner.type",
         "web_read on partner.type",
@@ -1497,7 +1487,7 @@ test("many2many widget: creates a new record with a context containing the paren
     expect.verifySteps(["get_views", "web_read"]);
 
     await contains(".o_field_x2many_list_row_add a").click();
-    expect.verifySteps(["get_views", "web_search_read", "has_group"]);
+    expect.verifySteps(["get_views", "web_search_read"]);
 
     await contains(".o_create_button").click();
     expect("[name='turtle_trululu'] input").toHaveValue("first record");

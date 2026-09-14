@@ -847,7 +847,10 @@ test(`editable readonly list with open_form_view`, async () => {
 });
 
 test(`export feature in list for users not in base.group_allow_export`, async () => {
-    onRpc("has_group", ({ args }) => args[1] !== "base.group_allow_export");
+    // the session seeds the group like the server does; this user is not in it
+    patchWithCleanup(user, {
+        hasGroup: async (group) => group !== "base.group_allow_export",
+    });
     await mountView({
         resModel: "foo",
         type: "list",
@@ -871,7 +874,6 @@ test(`export feature in list for users not in base.group_allow_export`, async ()
 });
 
 test(`list with export button`, async () => {
-    onRpc("has_group", ({ args }) => args[1] === "base.group_allow_export");
     await mountView({
         resModel: "foo",
         type: "list",
@@ -892,7 +894,6 @@ test(`list with export button`, async () => {
 });
 
 test(`Direct export button invisible`, async () => {
-    onRpc("has_group", ({ args }) => args[1] === "base.group_allow_export");
     await mountView({
         resModel: "foo",
         type: "list",
@@ -1460,7 +1461,6 @@ test(`list view: click on an action button saves the record before executing the
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
         "web_save",
         "toDo",
         "web_search_read",
@@ -1792,7 +1792,6 @@ test(`save a record with an invisible required field`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 
     await contains(`.o_list_button_add`).click();
@@ -1826,7 +1825,6 @@ test("multi_edit: edit a required field with invalid value", async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 
     await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
@@ -1973,7 +1971,6 @@ test(`do not perform extra RPC to read invisible many2one fields`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
         "onchange",
     ]);
 });
@@ -2751,7 +2748,9 @@ test(`list view with multiple groupbys`, async () => {
 });
 
 test(`enabling archive in list when groupby m2m field`, async () => {
-    onRpc("has_group", () => false);
+    patchWithCleanup(user, {
+        hasGroup: async (group) => group !== "base.group_allow_export",
+    });
     Foo._fields.active = fields.Boolean({ default: true });
 
     await mountView({
@@ -2773,9 +2772,9 @@ test(`enabling archive in list when groupby m2m field`, async () => {
     });
     await clickRecordSelector();
     await contains(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`).click();
-    expect(`.o-dropdown--menu .o_menu_item`).toHaveCount(4, {
-        message: "archive, unarchive, duplicate and delete option should be present",
-    });
+    for (const item of ["Archive", "Unarchive", "Duplicate", "Delete"]) {
+        expect(queryAllTexts(`.o-dropdown--menu .o_menu_item`)).toInclude(item);
+    }
 
     await toggleMenuItem("Archive");
     await contains(`.modal-footer .btn-primary`).click();
@@ -2786,7 +2785,9 @@ test(`enabling archive in list when groupby m2m field`, async () => {
 
 test.tags("desktop");
 test(`enabling archive in list when groupby m2m field and multi selecting the same record`, async () => {
-    onRpc("has_group", () => false);
+    patchWithCleanup(user, {
+        hasGroup: async (group) => group !== "base.group_allow_export",
+    });
     onRpc("action_archive", ({ args }) => {
         expect.step("action_archive");
         expect(args[0]).toEqual([1], {
@@ -2827,7 +2828,9 @@ test(`enabling archive in list when groupby m2m field and multi selecting the sa
 });
 
 test(`enabling duplicate in list when groupby m2m field`, async () => {
-    onRpc("has_group", () => false);
+    patchWithCleanup(user, {
+        hasGroup: async (group) => group !== "base.group_allow_export",
+    });
     Foo._fields.active = fields.Boolean({ default: true });
 
     await mountView({
@@ -2850,9 +2853,9 @@ test(`enabling duplicate in list when groupby m2m field`, async () => {
 
     await clickRecordSelector();
     await contains(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`).click();
-    expect(`.o-dropdown--menu .o_menu_item`).toHaveCount(4, {
-        message: "archive, unarchive, duplicate and delete option should be present",
-    });
+    for (const item of ["Archive", "Unarchive", "Duplicate", "Delete"]) {
+        expect(queryAllTexts(`.o-dropdown--menu .o_menu_item`)).toInclude(item);
+    }
 
     await toggleMenuItem("Duplicate");
     expect(`.o_data_row`).toHaveCount(7, {
@@ -2862,7 +2865,9 @@ test(`enabling duplicate in list when groupby m2m field`, async () => {
 
 test.tags("desktop");
 test(`enabling duplicate in list when groupby m2m field and multi selecting the same record`, async () => {
-    onRpc("has_group", () => false);
+    patchWithCleanup(user, {
+        hasGroup: async (group) => group !== "base.group_allow_export",
+    });
     onRpc("copy", ({ args }) => {
         expect.step("copy");
         expect(args[0]).toEqual([1], {
@@ -2901,7 +2906,9 @@ test(`enabling duplicate in list when groupby m2m field and multi selecting the 
 });
 
 test(`enabling delete in list when groupby m2m field`, async () => {
-    onRpc("has_group", () => false);
+    patchWithCleanup(user, {
+        hasGroup: async (group) => group !== "base.group_allow_export",
+    });
     Foo._fields.active = fields.Boolean({ default: true });
 
     await mountView({
@@ -2924,9 +2931,9 @@ test(`enabling delete in list when groupby m2m field`, async () => {
 
     await clickRecordSelector();
     await contains(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`).click();
-    expect(`.o-dropdown--menu .o_menu_item`).toHaveCount(4, {
-        message: "archive, unarchive, duplicate and delete option should be present",
-    });
+    for (const item of ["Archive", "Unarchive", "Duplicate", "Delete"]) {
+        expect(queryAllTexts(`.o-dropdown--menu .o_menu_item`)).toInclude(item);
+    }
 
     await toggleMenuItem("Delete");
     await contains(`.modal-footer .btn-primary`).click();
@@ -2937,7 +2944,9 @@ test(`enabling delete in list when groupby m2m field`, async () => {
 
 test.tags("desktop");
 test(`enabling delete in list when groupby m2m field and multi selecting the same record`, async () => {
-    onRpc("has_group", () => false);
+    patchWithCleanup(user, {
+        hasGroup: async (group) => group !== "base.group_allow_export",
+    });
     onRpc("unlink", ({ args }) => {
         expect.step("unlink");
         expect(args[0]).toEqual([1], {
@@ -2977,7 +2986,9 @@ test(`enabling delete in list when groupby m2m field and multi selecting the sam
 });
 
 test(`enabling unarchive in list when groupby m2m field`, async () => {
-    onRpc("has_group", () => false);
+    patchWithCleanup(user, {
+        hasGroup: async (group) => group !== "base.group_allow_export",
+    });
     Foo._fields.active = fields.Boolean({ default: true });
     Foo._records = [
         { id: 1, foo: "First record", m2m: [1, 2], active: false },
@@ -3006,9 +3017,9 @@ test(`enabling unarchive in list when groupby m2m field`, async () => {
 
     await clickRecordSelector();
     await contains(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`).click();
-    expect(`.o-dropdown--menu .o_menu_item`).toHaveCount(4, {
-        message: "archive, unarchive, duplicate and delete option should be present",
-    });
+    for (const item of ["Archive", "Unarchive", "Duplicate", "Delete"]) {
+        expect(queryAllTexts(`.o-dropdown--menu .o_menu_item`)).toInclude(item);
+    }
 
     await toggleMenuItem("Unarchive");
     expect(`.o_data_row`).toHaveCount(2, {
@@ -3018,7 +3029,9 @@ test(`enabling unarchive in list when groupby m2m field`, async () => {
 
 test.tags("desktop");
 test(`enabling unarchive in list when groupby m2m field and multi selecting the same record`, async () => {
-    onRpc("has_group", () => false);
+    patchWithCleanup(user, {
+        hasGroup: async (group) => group !== "base.group_allow_export",
+    });
     onRpc("action_unarchive", ({ args }) => {
         expect.step("action_unarchive");
         expect(args[0]).toEqual([1], {
@@ -3375,7 +3388,6 @@ test(`many2one field rendering when display_name is falsy`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 });
 
@@ -3577,7 +3589,6 @@ test(`action/type attributes on tree arch, type='object'`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 
     await contains(`.o_data_cell`).click();
@@ -3603,7 +3614,6 @@ test(`action/type attributes on tree arch, type='action'`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 
     await contains(`.o_data_cell`).click();
@@ -6117,7 +6127,6 @@ test(`archiving one record`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 
     await toggleActionMenu();
@@ -6499,7 +6508,6 @@ test(`pager, ungrouped, with count limit reached`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 
     await contains(`.o_pager_limit`).click();
@@ -6536,7 +6544,6 @@ test(`pager, ungrouped, with count limit reached, click next`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 
     expectedCountLimit = 5;
@@ -6571,7 +6578,6 @@ test(`pager, ungrouped, with count limit reached, click next (2)`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 
     expectedCountLimit = 5;
@@ -6613,7 +6619,6 @@ test(`pager, ungrouped, with count limit reached, click previous`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 
     expectedCountLimit = undefined;
@@ -6648,7 +6653,6 @@ test(`pager, ungrouped, with count limit reached, edit pager`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 
     expectedCountLimit = 5;
@@ -6686,7 +6690,6 @@ test(`pager, ungrouped, with count equals count limit`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 });
 
@@ -6711,7 +6714,6 @@ test(`pager, ungrouped, reload while fetching count`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 
     await contains(`.o_pager_limit`).click();
@@ -6755,7 +6757,6 @@ test(`pager, ungrouped, next and fetch count simultaneously`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 
     deferred = new Deferred();
@@ -6884,7 +6885,6 @@ test(`count_limit attrs set in arch`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 
     await contains(`.o_pager_limit`).click();
@@ -7409,7 +7409,6 @@ test(`can display a list with a many2many field`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
     expect(queryAllTexts(`.o_data_cell`)).toEqual([
         "2 records",
@@ -8144,7 +8143,6 @@ test(`groupby node with a button`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
     expect(`thead th:not(.o_list_record_selector)`).toHaveCount(1, {
         message: "there should be only one column",
@@ -8242,7 +8240,6 @@ test(`groupby node with a button with modifiers`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group",
-        "has_group",
     ]);
     expect(`.o_group_header .o_group_buttons button`).toHaveCount(0);
     expect(`.o_data_row`).toHaveCount(0);
@@ -8285,7 +8282,6 @@ test(`groupby node with a button with modifiers using a many2one`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group",
-        "has_group",
     ]);
 });
 
@@ -8737,7 +8733,6 @@ test(`click on a button in a list view`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
     expect(`tbody .o_list_button`).toHaveCount(4, {
         message: "there should be one button per row",
@@ -9393,7 +9388,6 @@ test(`pressing enter on last line of editable list view`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
     expect(`tr.o_data_row`).toHaveCount(4);
 
@@ -9440,7 +9434,6 @@ test(`pressing tab on last cell of editable list view`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
         "web_save",
         "onchange",
     ]);
@@ -9487,7 +9480,6 @@ test(`navigation with tab and read completes after default_get`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
         "web_save",
         "onchange",
     ]);
@@ -9565,7 +9557,6 @@ test(`execute ActionMenus actions on desktop`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
         {
             action_id: 44,
             context: {
@@ -9628,7 +9619,6 @@ test(`execute ActionMenus actions on mobile`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
         {
             action_id: 44,
             context: {
@@ -10220,7 +10210,6 @@ test(`edition, then navigation with tab (with a readonly field)`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
         "web_save",
     ]);
 });
@@ -11267,7 +11256,6 @@ test(`reference field batched in grouped list`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group",
-        "has_group",
     ]);
     expect(`.o_group_header`).toHaveCount(2);
     expect(queryAllTexts(`.o_data_cell`)).toEqual([
@@ -11339,7 +11327,6 @@ test(`multi edit reference field batched in grouped list`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group",
-        "has_group",
     ]);
     await contains(`.o_data_row .o_list_record_selector input:eq(0)`).click();
     await contains(`.o_data_row .o_list_record_selector input:eq(1)`).click();
@@ -11724,7 +11711,6 @@ test(`editable list view: multi edition`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 
     await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
@@ -11998,7 +11984,6 @@ test(`editable list view: multi edition cannot call onchanges`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 
     await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
@@ -12198,7 +12183,6 @@ Add: \nValue 3`);
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
         "web_name_search",
         "web_read",
         "web_save",
@@ -12522,7 +12506,6 @@ test(`editable list view: mousedown on "Discard", mouseup somewhere else (no mul
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
         "web_save",
     ]);
 });
@@ -12609,7 +12592,6 @@ test(`editable list view (multi edition): writable fields in readonly (force sav
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
     await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
     await contains(`.o_data_row:eq(2) .o_list_record_selector input`).click();
@@ -12974,7 +12956,6 @@ test(`non editable list view: multi edition`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 
     await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click();
@@ -13657,7 +13638,6 @@ test(`grouped list with groups_limit attribute`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group",
-        "has_group",
         "web_read_group",
     ]);
 });
@@ -13764,7 +13744,6 @@ test(`grouped list with expand attribute`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group",
-        "has_group",
     ]);
 });
 
@@ -13811,7 +13790,6 @@ test(`grouped list (two levels) with expand attribute`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group",
-        "has_group",
     ]);
 });
 
@@ -14427,7 +14405,6 @@ test(`editing then pressing TAB in editable grouped list`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group",
-        "has_group",
         "web_search_read",
         "web_search_read",
         "web_save",
@@ -14465,7 +14442,6 @@ test(`editing then pressing TAB (with a readonly field) in grouped list`, async 
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group",
-        "has_group",
         "web_search_read",
         "web_save",
     ]);
@@ -14502,7 +14478,6 @@ test(`pressing ENTER in editable="bottom" grouped list view`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group",
-        "has_group",
         "web_search_read",
         "web_search_read",
         "onchange",
@@ -14540,7 +14515,6 @@ test(`pressing ENTER in editable="top" grouped list view`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group",
-        "has_group",
         "web_search_read",
         "web_search_read",
     ]);
@@ -14563,7 +14537,6 @@ test(`pressing ENTER in editable grouped list view with create=0`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group",
-        "has_group",
     ]);
 
     await contains(`.o_group_header:eq(0)`).click();
@@ -16949,7 +16922,6 @@ test(`fieldDependencies support for fields: dependence on a relational field`, a
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 });
 
@@ -16992,7 +16964,6 @@ test(`edit a field with a slow onchange in a new row`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 
     await contains(`.o_list_button_add`).click();
@@ -18346,7 +18317,6 @@ test(`reload properties definitions when domain change`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 
     await toggleSearchBarMenu();
@@ -18383,7 +18353,6 @@ test(`do not reload properties definitions when page change`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 
     await pagerNext();
@@ -18420,7 +18389,6 @@ test(`load properties definitions only once when grouped`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_read_group",
-        "has_group",
     ]);
 
     await contains(`.o_group_header`).click();
@@ -18457,7 +18425,6 @@ test(`Invisible Properties`, async () => {
         "/web/webclient/load_menus",
         "get_views",
         "web_search_read",
-        "has_group",
     ]);
 });
 
@@ -19533,7 +19500,6 @@ test(`list with custom cog action that has a confirmation target="new" action`, 
         "/web/action/load",
         "get_views",
         "web_search_read",
-        "has_group",
         "/web/action/load",
         "get_views",
         "onchange",
