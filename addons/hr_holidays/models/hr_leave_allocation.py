@@ -693,6 +693,58 @@ class HrLeaveAllocation(models.Model):
             )
         return True
 
+    def _accrual_step_bounds(self, current_level, current_level_idx, level_ids):
+        """Where the step the allocation is standing on begins and ends.
+
+        `nextcall` is where the cursor moves to, and is pulled back to the next
+        level's start date when the plan changes level the moment it is due
+        rather than at the end of the period.
+        """
+        self.check_singleton()
+        nextcall = current_level._get_next_anchor(self.nextcall)
+        period_start = current_level._get_previous_anchor(self.lastcall)
+        period_end = current_level._get_next_anchor(self.lastcall)
+        current_level_last_date = False
+        if (
+            current_level_idx < (len(level_ids) - 1)
+            and self.accrual_plan_id.transition_mode == "immediately"
+        ):
+            next_level = level_ids[current_level_idx + 1]
+            current_level_last_date = self.date_from + get_timedelta(
+                next_level.start_count, next_level.start_type
+            )
+            if self.nextcall != current_level_last_date:
+                nextcall = min(nextcall, current_level_last_date)
+        return nextcall, period_start, period_end, current_level_last_date
+
+    def _expire_carried_over_days(self, current_level, carryover_date, nextcall):
+        """Drop the carried-over days whose validity has run out, and stop the
+        cursor on the expiry date if it falls inside the step.
+
+        Returns the step's end, which the expiry may have brought forward.
+        """
+        self.check_singleton()
+        expiration_date = self.carried_over_days_expiration_date
+        if (
+            not expiration_date
+            or self.nextcall > expiration_date
+            or self.expiring_carryover_days == 0
+        ):
+            expiration_date = carryover_date + relativedelta(
+                **{
+                    current_level.accrual_validity_type
+                    + "s": current_level.accrual_validity_count
+                }
+            )
+            self.carried_over_days_expiration_date = expiration_date
+        if self.nextcall < expiration_date < nextcall:
+            nextcall = expiration_date
+        if self.nextcall == expiration_date:
+            expiring_days = max(0, self.expiring_carryover_days - self.leaves_taken)
+            self.number_of_days = max(0, self.number_of_days - expiring_days)
+            self.expiring_carryover_days = 0
+        return nextcall
+
     def _run_accrual_steps(self, level_ids, date_to, force_period, leaves_taken):
         """Walk the plan forward one accrual period at a time, up to `date_to`.
 
@@ -702,7 +754,6 @@ class HrLeaveAllocation(models.Model):
         of them.
         """
         self.check_singleton()
-        expiration_date = False
         (current_level, current_level_idx) = (False, 0)
         current_level_maximum_leave = 0.0
         cap_days_by_level = {}
@@ -718,20 +769,9 @@ class HrLeaveAllocation(models.Model):
                         current_level, current_level.maximum_leave
                     )
                 current_level_maximum_leave = cap_days_by_level[current_level.id]
-            nextcall = current_level._get_next_anchor(self.nextcall)
-            period_start = current_level._get_previous_anchor(self.lastcall)
-            period_end = current_level._get_next_anchor(self.lastcall)
-            current_level_last_date = False
-            if (
-                current_level_idx < (len(level_ids) - 1)
-                and self.accrual_plan_id.transition_mode == "immediately"
-            ):
-                next_level = level_ids[current_level_idx + 1]
-                current_level_last_date = self.date_from + get_timedelta(
-                    next_level.start_count, next_level.start_type
-                )
-                if self.nextcall != current_level_last_date:
-                    nextcall = min(nextcall, current_level_last_date)
+            nextcall, period_start, period_end, current_level_last_date = (
+                self._accrual_step_bounds(current_level, current_level_idx, level_ids)
+            )
             carryover_date = self._get_carryover_date(self.nextcall)
             if self.nextcall < carryover_date < nextcall:
                 nextcall = min(nextcall, carryover_date)
@@ -761,28 +801,9 @@ class HrLeaveAllocation(models.Model):
                 break
 
             if current_level.accrual_validity:
-                expiration_date = self.carried_over_days_expiration_date
-                if (
-                    not expiration_date
-                    or self.nextcall > expiration_date
-                    or self.expiring_carryover_days == 0
-                ):
-                    expiration_date = carryover_date + relativedelta(
-                        **{
-                            current_level.accrual_validity_type
-                            + "s": current_level.accrual_validity_count
-                        }
-                    )
-                    self.carried_over_days_expiration_date = expiration_date
-                if self.nextcall < expiration_date < nextcall:
-                    nextcall = expiration_date
-                if self.nextcall == expiration_date:
-                    expiring_days = max(
-                        0,
-                        self.expiring_carryover_days - self.leaves_taken,
-                    )
-                    self.number_of_days = max(0, self.number_of_days - expiring_days)
-                    self.expiring_carryover_days = 0
+                nextcall = self._expire_carried_over_days(
+                    current_level, carryover_date, nextcall
+                )
 
             if (
                 not self.already_accrued
