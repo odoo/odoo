@@ -292,6 +292,19 @@ export class GeneratePrinterData {
         return changes;
     }
 
+    // Mirror of the Python `_preparation_delivery_address_lines`.
+    get deliveryAddressLines() {
+        const order = this.order;
+        const partner = order.partner_id;
+        if (!partner || order.preset_id?.identification !== "address") {
+            return [];
+        }
+        if (order.isSelfOrder) {
+            return partner.street ? [partner.street] : [];
+        }
+        return (partner.address || "").split("\n").filter(Boolean);
+    }
+
     generatePreparationChanges(orderChange, categoryIdsSet, opts = {}) {
         const isPartOfCombo = (line) =>
             line.combo_line_ids?.length ||
@@ -408,6 +421,7 @@ export class GeneratePrinterData {
                         general_customer_note: change.general_customer_note || false,
                         employee_name: order.employee_id?.name || order.user_id?.name || false,
                         preset_time: order.presetDateTime || false,
+                        delivery_address: this.deliveryAddressLines,
                         // This is only used to generate a barcode on the preparation ticket.
                         prepTicketBarcode: opts.prepBarcode || false,
                     },
