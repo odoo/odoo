@@ -2895,6 +2895,27 @@ class TestStockFlowPostInstall(TestStockCommon):
         new_location_complete_name = self.env['stock.location'].name_create('NoPrefixLocation')[1]
         self.assertEqual(new_location_complete_name, 'NoPrefixLocation')
 
+    def test_complete_name_nested_view_locations(self):
+        """
+        A view location only groups its children: it must neither cut the name
+        of its descendants nor hide its own path.
+        """
+        view_1 = self.env['stock.location'].create({'name': 'View 1', 'usage': 'view'})
+        view_2 = self.env['stock.location'].create({
+            'name': 'View 2',
+            'usage': 'view',
+            'location_id': view_1.id,
+        })
+        shelf = self.env['stock.location'].create({'name': 'Shelf', 'location_id': view_2.id})
+
+        self.assertEqual(view_2.complete_name, 'View 1/View 2')
+        self.assertEqual(view_2.display_name, 'View 1/View 2')
+        self.assertEqual(shelf.complete_name, 'View 1/View 2/Shelf')
+        self.assertEqual(shelf.display_name, 'View 1/View 2/Shelf')
+
+        view_1.name = 'Zone'
+        self.assertEqual(shelf.complete_name, 'Zone/View 2/Shelf')
+
     def test_past_qty_available(self):
         """
         Test that available quantity at a date (not datetime) is computed at the end of
