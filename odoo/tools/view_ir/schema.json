@@ -51,6 +51,7 @@
       "br",
       "caption",
       "code",
+      "del",
       "details",
       "div",
       "em",
@@ -1179,6 +1180,14 @@
     "grid": {
       "root": "grid",
       "nodes": {
+        "button": {
+          "attrs": {
+            "confirm": "str",
+            "context": "context",
+            "icon": "str",
+            "type": "str"
+          }
+        },
         "field": {
           "attrs": {
             "section": "ident",
@@ -1204,6 +1213,7 @@
             "js_class": "str"
           },
           "children": [
+            "button",
             "field"
           ]
         },

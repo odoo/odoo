@@ -89,6 +89,7 @@
       "br",
       "caption",
       "code",
+      "del",
       "details",
       "div",
       "em",
@@ -3300,6 +3301,7 @@
          "br",
          "caption",
          "code",
+         "del",
          "details",
          "div",
          "em",
@@ -3664,6 +3666,7 @@
       "br",
       "caption",
       "code",
+      "del",
       "details",
       "div",
       "em",
@@ -4985,6 +4988,7 @@
          "br",
          "caption",
          "code",
+         "del",
          "details",
          "div",
          "em",
@@ -5347,6 +5351,7 @@
       "br",
       "caption",
       "code",
+      "del",
       "details",
       "div",
       "em",
@@ -6288,6 +6293,7 @@
          "br",
          "caption",
          "code",
+         "del",
          "details",
          "div",
          "em",
@@ -6658,6 +6664,7 @@
       "br",
       "caption",
       "code",
+      "del",
       "details",
       "div",
       "em",
@@ -8506,6 +8513,7 @@
          "br",
          "caption",
          "code",
+         "del",
          "details",
          "div",
          "em",
@@ -8863,6 +8871,7 @@
       "br",
       "caption",
       "code",
+      "del",
       "details",
       "div",
       "em",
@@ -9326,6 +9335,7 @@
          "br",
          "caption",
          "code",
+         "del",
          "details",
          "div",
          "em",
@@ -9683,6 +9693,7 @@
       "br",
       "caption",
       "code",
+      "del",
       "details",
       "div",
       "em",
@@ -10140,6 +10151,7 @@
          "br",
          "caption",
          "code",
+         "del",
          "details",
          "div",
          "em",
@@ -10497,6 +10509,7 @@
       "br",
       "caption",
       "code",
+      "del",
       "details",
       "div",
       "em",
@@ -11063,6 +11076,7 @@
          "br",
          "caption",
          "code",
+         "del",
          "details",
          "div",
          "em",
@@ -11421,6 +11435,7 @@
       "br",
       "caption",
       "code",
+      "del",
       "details",
       "div",
       "em",
@@ -11944,6 +11959,7 @@
          "br",
          "caption",
          "code",
+         "del",
          "details",
          "div",
          "em",
@@ -12305,6 +12321,7 @@
       "br",
       "caption",
       "code",
+      "del",
       "details",
       "div",
       "em",
@@ -13215,6 +13232,7 @@
          "br",
          "caption",
          "code",
+         "del",
          "details",
          "div",
          "em",
@@ -13557,6 +13575,7 @@
    "properties": {
     "kind": {
      "enum": [
+      "button",
       "field",
       "grid",
       "range",
@@ -13573,6 +13592,7 @@
       "br",
       "caption",
       "code",
+      "del",
       "details",
       "div",
       "em",
@@ -13647,6 +13667,113 @@
    },
    "additionalProperties": false,
    "allOf": [
+    {
+     "if": {
+      "properties": {
+       "kind": {
+        "const": "button"
+       }
+      }
+     },
+     "then": {
+      "properties": {
+       "attrs": {
+        "type": "object",
+        "properties": {
+         "position": {
+          "enum": [
+           "after",
+           "before",
+           "inside",
+           "replace",
+           "attributes",
+           "move"
+          ]
+         },
+         "version": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "invisible": {
+          "type": "string",
+          "x-odoo-type": "pyexpr"
+         },
+         "groups": {
+          "type": "string",
+          "x-odoo-type": "groups"
+         },
+         "class": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "name": {
+          "type": "string",
+          "x-odoo-type": "ident"
+         },
+         "id": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "string": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "colspan": {
+          "type": "string",
+          "pattern": "^-?[0-9]+$"
+         },
+         "style": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "title": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "help": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "role": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "confirm": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "context": {
+          "type": "string",
+          "x-odoo-type": "context"
+         },
+         "icon": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "type": {
+          "type": "string",
+          "x-odoo-type": "str"
+         }
+        },
+        "additionalProperties": false,
+        "patternProperties": {
+         "^aria-": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "^data-": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "^t-": {
+          "type": "string",
+          "x-odoo-type": "qweb"
+         }
+        }
+       }
+      }
+     }
+    },
     {
      "if": {
       "properties": {
@@ -14127,6 +14254,7 @@
          "br",
          "caption",
          "code",
+         "del",
          "details",
          "div",
          "em",
@@ -14484,6 +14612,7 @@
       "br",
       "caption",
       "code",
+      "del",
       "details",
       "div",
       "em",
@@ -14906,6 +15035,7 @@
          "br",
          "caption",
          "code",
+         "del",
          "details",
          "div",
          "em",
@@ -15263,6 +15393,7 @@
       "br",
       "caption",
       "code",
+      "del",
       "details",
       "div",
       "em",
@@ -15679,6 +15810,7 @@
          "br",
          "caption",
          "code",
+         "del",
          "details",
          "div",
          "em",
@@ -16039,6 +16171,7 @@
       "br",
       "caption",
       "code",
+      "del",
       "details",
       "div",
       "em",
@@ -16736,6 +16869,7 @@
          "br",
          "caption",
          "code",
+         "del",
          "details",
          "div",
          "em",
@@ -17095,6 +17229,7 @@
       "br",
       "caption",
       "code",
+      "del",
       "details",
       "div",
       "em",
@@ -17693,6 +17828,7 @@
          "br",
          "caption",
          "code",
+         "del",
          "details",
          "div",
          "em",
@@ -18059,6 +18195,7 @@
       "br",
       "caption",
       "code",
+      "del",
       "details",
       "div",
       "em",
@@ -19312,6 +19449,7 @@
          "br",
          "caption",
          "code",
+         "del",
          "details",
          "div",
          "em",

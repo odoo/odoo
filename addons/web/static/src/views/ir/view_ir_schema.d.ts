@@ -4,7 +4,7 @@ export const SCHEMA_VERSION: 1;
 
 export type ViewType = "form" | "list" | "search" | "kanban" | "graph" | "pivot" | "calendar" | "activity" | "gantt" | "grid" | "map" | "cohort" | "hierarchy" | "geoengine" | "threed";
 export type AttrType = "str" | "bool" | "int" | "pyexpr" | "domain" | "context" | "json" | "ident" | "groups" | "xmlid" | "qweb" | "enum";
-export type HtmlTag = "a" | "abbr" | "article" | "aside" | "b" | "bdi" | "blockquote" | "br" | "caption" | "code" | "details" | "div" | "em" | "figure" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "hr" | "i" | "iframe" | "img" | "input" | "li" | "link" | "main" | "nav" | "ol" | "option" | "p" | "pre" | "progress" | "script" | "section" | "select" | "small" | "span" | "strong" | "sub" | "summary" | "sup" | "table" | "tbody" | "td" | "textarea" | "tfoot" | "th" | "thead" | "time" | "tr" | "u" | "ul" | "video";
+export type HtmlTag = "a" | "abbr" | "article" | "aside" | "b" | "bdi" | "blockquote" | "br" | "caption" | "code" | "del" | "details" | "div" | "em" | "figure" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "hr" | "i" | "iframe" | "img" | "input" | "li" | "link" | "main" | "nav" | "ol" | "option" | "p" | "pre" | "progress" | "script" | "section" | "select" | "small" | "span" | "strong" | "sub" | "summary" | "sup" | "table" | "tbody" | "td" | "textarea" | "tfoot" | "th" | "thead" | "time" | "tr" | "u" | "ul" | "video";
 export type PatchKind = "xpath" | "attribute" | "data";
 
 export interface ViewIRNode {
@@ -1940,7 +1940,29 @@ export interface GanttChildren {
     "templates": "html";
 }
 
-export type GridKind = "field" | "grid" | "range";
+export type GridKind = "button" | "field" | "grid" | "range";
+export interface GridButtonAttrs {
+    class?: string;
+    colspan?: string;
+    confirm?: string;
+    context?: string;
+    groups?: string;
+    help?: string;
+    icon?: string;
+    id?: string;
+    invisible?: string;
+    name?: string;
+    position?: "after" | "before" | "inside" | "replace" | "attributes" | "move";
+    role?: string;
+    string?: string;
+    style?: string;
+    title?: string;
+    type?: string;
+    version?: string;
+    [key: `aria-${string}`]: string;
+    [key: `data-${string}`]: string;
+    [key: `t-${string}`]: string;
+}
 export interface GridFieldAttrs {
     class?: string;
     colspan?: string;
@@ -2009,13 +2031,15 @@ export interface GridRangeAttrs {
     [key: `t-${string}`]: string;
 }
 export interface GridAttrs {
+    "button": GridButtonAttrs;
     "field": GridFieldAttrs;
     "grid": GridGridAttrs;
     "range": GridRangeAttrs;
 }
 export interface GridChildren {
+    "button": string;
     "field": "field" | "range";
-    "grid": "field";
+    "grid": "button" | "field";
     "range": string;
 }
 

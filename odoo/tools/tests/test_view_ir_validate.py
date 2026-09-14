@@ -35,6 +35,20 @@ class TestViewIrValidate(unittest.TestCase):
             codes('<list><field name="quantity" optional="conditional"/></list>'), []
         )
 
+    def test_a_grid_takes_buttons(self):
+        self.assertEqual(
+            codes(
+                '<grid><field name="unit_amount" type="measure"/>'
+                '<button type="object" name="action_validate" string="Validate"/></grid>'
+            ),
+            [],
+        )
+
+    def test_a_struck_through_price_is_html(self):
+        self.assertEqual(
+            codes('<form><del class="oe_read_only">10.00</del></form>'), []
+        )
+
     def test_unknown_kind_is_an_error_and_html_is_not(self):
         self.assertEqual(
             codes("<form><bold>x</bold></form>"), [("unknown-kind", "bold", "error")]
