@@ -26,7 +26,6 @@ from odoo.tools.translate import (
     get_translation,
 )
 
-from ..primitives import SUPERUSER_ID
 from .registry import Registry
 from .transaction import Transaction
 
@@ -358,10 +357,6 @@ class Environment(Mapping[str, "BaseModel"]):
     @functools.cached_property
     def user(self) -> ResUsersProtocol:
         return self(su=True)["res.users"].browse(self.uid)
-
-    @functools.cached_property
-    def _ir_defaults(self) -> BaseModel:
-        return self["ir.default"].with_user(SUPERUSER_ID).with_company(self.company)
 
     def _get_allowed_company_ids(self) -> list[int]:
         company_ids = self.context.get("allowed_company_ids", [])

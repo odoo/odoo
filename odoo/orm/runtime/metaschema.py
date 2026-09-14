@@ -6,6 +6,8 @@ from odoo.libs.debug_log import DebugLog
 from odoo.libs.json import dumps as json_dumps
 from odoo.libs.json import loads as json_loads
 
+from ..primitives import SUPERUSER_ID
+
 if typing.TYPE_CHECKING:
     from .._typing import BaseModel
     from .environment import Environment
@@ -106,6 +108,14 @@ class MetaSchema:
         if condition:
             return env["ir.default"]._get_model_defaults(model_name, condition)
         return env["ir.default"]._get_model_defaults(model_name)
+
+    def company_dependent_fallbacks(
+        self, env: Environment, model_name: str
+    ) -> dict[str, typing.Any]:
+        # the company's defaults, read as the superuser: a user who may not
+        # read ir.default still gets the fallback of a company-dependent field
+        scoped = env["ir.default"].with_user(SUPERUSER_ID).with_company(env.company)
+        return scoped._get_model_defaults(model_name)
 
     def default_referencing(
         self, env: Environment, fields: typing.Iterable[typing.Any], ids: tuple

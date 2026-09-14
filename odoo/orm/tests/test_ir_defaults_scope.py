@@ -2,55 +2,53 @@ from odoo import fields, models
 from odoo.orm.model_test_env import model_test_env
 from odoo.orm.primitives import SUPERUSER_ID
 
+_MOD = "test_ir_defaults_scope"
+
 
 class Thing(models.Model):
     _name = "ids.thing"
-    _module = "test_ir_defaults_scope"
+    _module = _MOD
     _description = "thing"
     _log_access = False
 
     name = fields.Char()
 
 
-def test_ir_defaults_is_superuser():
-    with model_test_env(Thing) as env:
-        assert env._ir_defaults._name == "ir.default"
-        assert env._ir_defaults.env.uid == SUPERUSER_ID
-        assert env._ir_defaults.env.su is True
+class IrDefault(models.AbstractModel):
+    _name = "ir.default"
+    _module = _MOD
+    _description = "ir.default (scope stub)"
+
+    asked: list = []
+
+    def _get_model_defaults(self, model_name, condition=False):
+        if model_name == "ids.thing":
+            self.asked.append((self.env.uid, self.env.su, self.env.company.id))
+        return {"name": "fallback"} if model_name == "ids.thing" else {}
 
 
-def test_ir_defaults_is_memoized_per_environment():
-    with model_test_env(Thing) as env:
-        assert env._ir_defaults.env is env._ir_defaults.env
-        other = env(context={"probe": 1})
-        assert other._ir_defaults.env is not env._ir_defaults.env
+def _fallbacks(env):
+    return env.registry.metaschema.company_dependent_fallbacks(env, "ids.thing")
 
 
-def test_ir_defaults_escalates_a_non_superuser_environment():
-    with model_test_env(Thing) as env:
+def test_the_fallbacks_are_read_as_the_superuser_in_the_environment_company():
+    with model_test_env(Thing, IrDefault) as env:
+        IrDefault.asked.clear()
         member = env["res.users"].create(
             {"name": "Member", "login": "member", "company_id": 1}
         )
         user_env = env(user=member.id, context={"allowed_company_ids": [1]})
-        assert user_env.uid == member.id
         assert user_env.su is False
-
-        assert user_env._ir_defaults.env.uid == SUPERUSER_ID
-        assert user_env._ir_defaults.env.su is True
-
-
-def test_ir_defaults_pins_the_company_even_when_the_context_omits_it():
-    with model_test_env(Thing) as env:
-        assert "allowed_company_ids" not in env.context
-
-        resolved = env._ir_defaults.env
-        assert resolved.context["allowed_company_ids"][0] == env.company.id
+        assert _fallbacks(user_env) == {"name": "fallback"}
+        assert IrDefault.asked == [(SUPERUSER_ID, True, 1)]
 
 
-def test_ir_defaults_follows_a_context_selected_company():
-    with model_test_env(Thing) as env:
+def test_the_fallbacks_follow_a_context_selected_company():
+    with model_test_env(Thing, IrDefault) as env:
+        IrDefault.asked.clear()
         other = env["res.company"].create({"name": "Other"})
         scoped = env(context={"allowed_company_ids": [other.id, 1]})
         assert scoped.company.id == other.id
-
-        assert scoped._ir_defaults.env.context["allowed_company_ids"][0] == other.id
+        _fallbacks(scoped)
+        _fallbacks(env)
+        assert [asked[2] for asked in IrDefault.asked] == [other.id, env.company.id]

@@ -39,6 +39,7 @@ class _FieldMetadataMixin(_FieldStubs):
         return self in env._field_depends_context
 
     def _get_company_dependent_fallback_raw(self, records: ModelLike) -> typing.Any:
-        return records.env._ir_defaults._get_model_defaults(records._name).get(
-            self.name
-        )
+        env = records.env
+        return env.registry.metaschema.company_dependent_fallbacks(
+            env, records._name
+        ).get(self.name)
