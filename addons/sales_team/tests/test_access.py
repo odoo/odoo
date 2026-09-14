@@ -20,7 +20,6 @@ class TestAccessRights(SalesTeamCommon):
                 {
                     "use_sale": True,
                     "name": "India",
-                    "use_sale": True,
                 }
             )
         )

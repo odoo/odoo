@@ -1,4 +1,4 @@
-from unittest.mock import patch
+from psycopg.errors import IntegrityError
 
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import tagged, users
@@ -123,6 +123,14 @@ class TestTeamUsage(MailCommon):
         self.assertTrue(self.env["team.team"]._is_membership_multi("alpha"))
         self.assertFalse(self.env["team.team"]._is_membership_multi("beta"))
 
+    def test_a_membership_form_activates_its_teams_usages(self):
+        self.team_beta.with_user(
+            self.user_beta_manager
+        ).action_activate_multi_membership(flags={})
+
+        self.assertTrue(self.env["team.team"]._is_membership_multi("beta"))
+        self.assertFalse(self.env["team.team"]._is_membership_multi("alpha"))
+
     def test_an_unsaved_team_activates_the_usages_its_flags_name(self):
         self.env["team.team"].with_user(
             self.user_beta_manager
@@ -154,7 +162,7 @@ class TestTeamUsage(MailCommon):
         self.assertFalse(mail_alias.exists())
 
     def test_a_second_alias_for_the_same_usage_is_refused(self):
-        with self.assertRaises(Exception), mute_logger("odoo.db.cursor"):
+        with self.assertRaises(IntegrityError), mute_logger("odoo.db.cursor"):
             self.env["team.alias"].create(
                 {"team_id": self.team_alpha_1.id, "usage": "alpha"}
             )
@@ -192,6 +200,42 @@ class TestTeamUsage(MailCommon):
             self.team_alpha_2,
         )
 
+    def test_without_fallback_a_user_outside_every_team_gets_none(self):
+        Team = self.env["team.team"]
+
+        self.assertFalse(
+            Team._get_default_team("alpha", user_id=self.user_member.id, fallback=False)
+        )
+        self.assertTrue(
+            Team._get_default_team("alpha", user_id=self.user_member.id).use_alpha
+        )
+
+    def test_a_default_naming_a_team_of_another_usage_is_dropped(self):
+        Team = self.env["team.team"]
+
+        self.assertEqual(
+            Team._drop_default_of_other_usage(
+                {"team_id": self.team_beta.id, "name": "x"}, "alpha"
+            ),
+            {"name": "x"},
+        )
+        self.assertEqual(
+            Team._drop_default_of_other_usage({"team_id": self.team_both.id}, "alpha"),
+            {"team_id": self.team_both.id},
+        )
+
+    def test_replies_go_to_the_alias_of_the_documents_usage(self):
+        self.team_both.alias_ids.alias_name = "both-alpha"
+
+        self.assertEqual(
+            self.team_both._notify_get_usage_reply_to_addresses("alpha"),
+            {self.team_both.id: f"both-alpha@{self.alias_domain}"},
+        )
+        self.assertEqual(
+            self.team_both._notify_get_usage_reply_to_addresses("beta"),
+            {self.team_both.id: f"{self.alias_catchall}@{self.alias_domain}"},
+        )
+
     def test_a_context_team_of_another_usage_is_ignored(self):
         self._join(self.team_alpha_2)
 
@@ -214,9 +258,76 @@ class TestTeamUsage(MailCommon):
     @users("alpha_manager")
     def test_a_usage_administrator_edits_only_teams_of_their_usage(self):
         self.team_alpha_1.with_env(self.env).name = "Alpha One"
+        self.env.flush_all()
+        self.assertEqual(self.team_alpha_1.name, "Alpha One")
         with self.assertRaises(AccessError):
             self.team_beta.with_env(self.env).name = "Beta One"
             self.env.flush_all()
+
+    @users("alpha_manager")
+    def test_another_usages_flag_takes_that_usages_administrator(self):
+        Team = self.env["team.team"]
+        with self.assertRaises(AccessError):
+            self.team_alpha_1.with_env(self.env).use_beta = True
+        with self.assertRaises(AccessError):
+            Team.create({"name": "Sneaky", "use_alpha": True, "use_beta": True})
+        with self.assertRaises(AccessError):
+            self.team_both.with_env(self.env).use_beta = False
+        self.team_both.with_env(self.env).name = "Both, renamed"
+        self.assertTrue(self.team_both.use_beta)
+
+    def test_a_teams_administrator_edits_every_team(self):
+        team_manager = mail_new_test_user(
+            self.env,
+            login="team_manager",
+            groups="base.group_user,team.group_team_manager",
+        )
+        flagless = self.env["team.team"].create({"name": "No usage"})
+
+        for team in (flagless, self.team_beta):
+            team.with_user(team_manager).write({"name": f"{team.name} renamed"})
+        self.team_alpha_1.with_user(team_manager).use_beta = True
+        self.env.flush_all()
+
+        self.assertEqual(flagless.name, "No usage renamed")
+        self.assertEqual(self.team_beta.name, "Beta renamed")
+        self.assertTrue(self.team_alpha_1.use_beta)
+
+    def test_joining_evicts_memberships_the_joining_administrator_cannot_read(self):
+        in_both = self._join(self.team_both)
+        Member = self.env["team.member"].with_user(self.user_alpha_manager)
+        self.assertFalse(Member.search([("id", "=", in_both.id)]))
+
+        Member.create({"team_id": self.team_alpha_2.id, "user_id": self.user_member.id})
+
+        self.assertFalse(in_both.active)
+
+    def test_memberships_created_together_keep_the_last_one(self):
+        first, last = self.env["team.member"].create(
+            [
+                {"team_id": self.team_alpha_1.id, "user_id": self.user_member.id},
+                {"team_id": self.team_alpha_2.id, "user_id": self.user_member.id},
+            ]
+        )
+
+        self.assertFalse(first.active)
+        self.assertTrue(last.active)
+
+    def test_adding_a_mono_usage_to_a_team_evicts_its_members_elsewhere(self):
+        in_beta = self._join(self.team_beta)
+        in_alpha = self._join(self.team_alpha_1)
+
+        self.team_alpha_1.use_beta = True
+
+        self.assertFalse(in_beta.active)
+        self.assertTrue(in_alpha.active)
+
+    def test_a_membership_without_a_team_has_no_warning(self):
+        self._join(self.team_alpha_1)
+
+        draft = self.env["team.member"].new({"user_id": self.user_member.id})
+
+        self.assertFalse(draft.member_warning)
 
     @users("alpha_manager")
     def test_a_usage_administrator_cannot_delete_a_team_another_usage_shares(self):
@@ -226,7 +337,9 @@ class TestTeamUsage(MailCommon):
 
     def test_a_teams_administrator_deletes_any_team(self):
         team_manager = mail_new_test_user(
-            self.env, login="team_manager", groups="team.group_team_manager"
+            self.env,
+            login="team_manager",
+            groups="base.group_user,team.group_team_manager",
         )
         self.team_both.with_user(team_manager).unlink()
         self.assertFalse(self.team_both.exists())
@@ -246,10 +359,19 @@ class TestTeamUsage(MailCommon):
         self.assertEqual(self.user_member.beta_team_ids, self.team_beta)
         self.assertFalse(self.user_member.alpha_team_ids)
 
-    def test_changing_a_usage_flag_clears_the_rule_cache(self):
-        with patch.object(type(self.env.registry), "clear_cache") as clear_cache:
-            self.team_beta.use_alpha = True
-        clear_cache.assert_called()
+    def test_a_usage_flag_reaches_the_users_teams_of_that_usage(self):
+        self._join(self.team_beta)
+        self.assertFalse(self.user_member.alpha_team_ids)
+
+        self.team_beta.use_alpha = True
+
+        self.assertEqual(self.user_member.alpha_team_ids, self.team_beta)
+        self.assertIn(
+            self.user_member,
+            self.env["res.users"].search(
+                [("alpha_team_ids", "in", self.team_beta.ids)]
+            ),
+        )
 
     def test_archiving_a_team_archives_its_memberships(self):
         membership = self._join(self.team_beta)

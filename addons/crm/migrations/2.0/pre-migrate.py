@@ -27,6 +27,9 @@ def migrate(cr, version):
     for model, old, new in RENAMES:
         rename_field(cr, model, old, new)
         rename_in_stored_expressions(cr, old, new, model=model)
+        if model == "team.team":
+            # leads, livechat steps and their templates reach the team by team_id
+            rename_in_stored_expressions(cr, f"team_id.{old}", f"team_id.{new}")
     # before crm's data syncs the sale usage's aliases, or it creates empty
     # ones and the named aliases the teams had are left without an owner
     _adopt_lead_aliases(cr)

@@ -77,7 +77,7 @@
             <field name="name">Stock Picking: Team Documents</field>
             <field name="model_id" ref="stock.model_stock_picking" />
             <field
-                name="domain_force">['|', '|', '|', ('user_id', '=', False), ('user_id', '=', user.id), ('team_id', 'in', user.stock_team_ids.ids), ('user_id.stock_team_ids', 'in', user.stock_team_ids.ids)]</field>
+                name="domain_force">['|', '|', '|', '|', ('user_id', '=', False), ('user_id', '=', user.id), ('team_id', 'in', user.stock_team_ids.ids), ('picking_type_id.team_id', 'in', user.stock_team_ids.ids), ('user_id.stock_team_ids', 'in', user.stock_team_ids.ids)]</field>
             <field
                 name="groups"
                 eval="[Command.link(ref('stock_team.group_stock_user_team'))]" />
@@ -95,7 +95,7 @@
             <field name="name">Stock Move: Team Documents</field>
             <field name="model_id" ref="stock.model_stock_move" />
             <field
-                name="domain_force">['|', ('picking_id', '=', False), '|', '|', '|', ('picking_id.user_id', '=', False), ('picking_id.user_id', '=', user.id), ('picking_id.team_id', 'in', user.stock_team_ids.ids), ('picking_id.user_id.stock_team_ids', 'in', user.stock_team_ids.ids)]</field>
+                name="domain_force">['|', ('picking_id', '=', False), '|', '|', '|', '|', ('picking_id.user_id', '=', False), ('picking_id.user_id', '=', user.id), ('picking_id.team_id', 'in', user.stock_team_ids.ids), ('picking_id.picking_type_id.team_id', 'in', user.stock_team_ids.ids), ('picking_id.user_id.stock_team_ids', 'in', user.stock_team_ids.ids)]</field>
             <field
                 name="groups"
                 eval="[Command.link(ref('stock_team.group_stock_user_team'))]" />
@@ -113,7 +113,7 @@
             <field name="name">Stock Move Line: Team Documents</field>
             <field name="model_id" ref="stock.model_stock_move_line" />
             <field
-                name="domain_force">['|', ('picking_id', '=', False), '|', '|', '|', ('picking_id.user_id', '=', False), ('picking_id.user_id', '=', user.id), ('picking_id.team_id', 'in', user.stock_team_ids.ids), ('picking_id.user_id.stock_team_ids', 'in', user.stock_team_ids.ids)]</field>
+                name="domain_force">['|', ('picking_id', '=', False), '|', '|', '|', '|', ('picking_id.user_id', '=', False), ('picking_id.user_id', '=', user.id), ('picking_id.team_id', 'in', user.stock_team_ids.ids), ('picking_id.picking_type_id.team_id', 'in', user.stock_team_ids.ids), ('picking_id.user_id.stock_team_ids', 'in', user.stock_team_ids.ids)]</field>
             <field
                 name="groups"
                 eval="[Command.link(ref('stock_team.group_stock_user_team'))]" />
@@ -131,7 +131,7 @@
             <field name="name">Stock Picking Batch: Team Documents</field>
             <field name="model_id" ref="stock.model_stock_picking_batch" />
             <field
-                name="domain_force">['|', '|', '|', ('user_id', '=', False), ('user_id', '=', user.id), ('team_id', 'in', user.stock_team_ids.ids), ('user_id.stock_team_ids', 'in', user.stock_team_ids.ids)]</field>
+                name="domain_force">['|', '|', '|', '|', ('user_id', '=', False), ('user_id', '=', user.id), ('team_id', 'in', user.stock_team_ids.ids), ('picking_type_id.team_id', 'in', user.stock_team_ids.ids), ('user_id.stock_team_ids', 'in', user.stock_team_ids.ids)]</field>
             <field
                 name="groups"
                 eval="[Command.link(ref('stock_team.group_stock_user_team'))]" />

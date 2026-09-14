@@ -157,6 +157,9 @@ class TeamMember(models.Model):
         teams_by_user = self._get_live_teams_by_user(active.user_id)
         for member in active:
             team = member.team_id
+            if not team:
+                member.member_warning = False
+                continue
             remaining = team._filter_sharing_mono_usage(
                 teams_by_user.get(member.user_id, self.env["team.team"])
                 - (team | member._origin.team_id)
@@ -247,28 +250,31 @@ class TeamMember(models.Model):
             ]
 
     def _enforce_mono_membership(self):
-        winners = {
-            member.user_id.id: member
-            for member in self.filtered("active")
-            if member.team_id._get_mono_usage_keys()
-        }
-        if not winners:
+        # the later of two memberships wins, whether it was created in this batch
+        # or before; eviction is bookkeeping the joining user may not see or write
+        active = self.filtered(lambda member: member.active and member.team_id)
+        if not active:
             return
-
-        candidates = self.sudo().search(
-            [
-                ("active", "=", True),
-                ("user_id", "in", list(winners)),
-                ("id", "not in", [member.id for member in winners.values()]),
-            ]
+        Member = self.sudo()
+        live = Member.search(
+            [("active", "=", True), ("user_id", "in", active.user_id.ids)]
         )
-        obsolete = self.browse()
-        for membership in candidates:
-            winner = winners[membership.user_id.id]
-            if membership.team_id == winner.team_id:
+        kept, obsolete = Member.browse(), Member.browse()
+        for winner in active.sudo().sorted("id", reverse=True):
+            if winner in obsolete:
                 continue
-            if winner.team_id._filter_sharing_mono_usage(membership.team_id.sudo()):
-                obsolete |= membership
+            kept |= winner
+            if not winner.team_id._get_mono_usage_keys():
+                continue
+            protected = kept
+            obsolete |= live.filtered(
+                lambda member, winner=winner, protected=protected: (
+                    member.user_id == winner.user_id
+                    and member not in protected
+                    and member.team_id != winner.team_id
+                    and winner.team_id._filter_sharing_mono_usage(member.team_id)
+                )
+            )
         if obsolete:
             _debug.logic("mono_membership_evicted", winners=self, evicted=obsolete)
             obsolete.action_archive()

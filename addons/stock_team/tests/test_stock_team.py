@@ -1,3 +1,4 @@
+from odoo import Command
 from odoo.tests import TransactionCase, tagged
 
 from odoo.addons.mail.tests.common import mail_new_test_user
@@ -115,3 +116,105 @@ class TestStockTeam(TransactionCase):
             self._visible(self.user_team, moves),
             {moves.filtered(lambda m: m.picking_id == self.picking_mate).id},
         )
+
+    def _transfer(self, picking_type, product, user, **move_vals):
+        return self.env["stock.picking"].create(
+            {
+                "picking_type_id": picking_type.id,
+                "user_id": user.id,
+                "move_ids": [
+                    Command.create(
+                        {
+                            "product_id": product.id,
+                            "product_uom_qty": 1,
+                            "location_id": picking_type.default_location_src_id.id,
+                            "location_dest_id": picking_type.default_location_dest_id.id,
+                            **move_vals,
+                        }
+                    )
+                ],
+            }
+        )
+
+    def test_a_transfer_keeps_its_team_when_its_operation_type_changes_team(self):
+        self.type_in.team_id = self.other_team
+
+        self.assertEqual(self.picking_team.team_id, self.team)
+
+    def test_the_team_running_an_operation_type_sees_its_transfers(self):
+        self.type_out.team_id = self.team
+
+        self.assertEqual(self.picking_stranger.team_id, self.other_team)
+        self.assertIn(self.picking_stranger.id, self._visible(self.user_team))
+
+    def test_a_context_team_of_another_usage_is_not_a_transfers_team(self):
+        sales = self.env["team.team"].create({"name": "Sales"})
+
+        picking = (
+            self.env["stock.picking"]
+            .with_context(default_team_id=sales.id)
+            .create({"picking_type_id": self.type_in.id})
+        )
+
+        self.assertEqual(picking.team_id, self.team)
+
+    def test_a_batch_takes_the_one_team_of_its_transfers(self):
+        self.type_out.team_id = False
+        batch = self.env["stock.picking.batch"].create(
+            {"picking_ids": [Command.set(self.picking_mate.ids)]}
+        )
+        self.assertEqual(batch.team_id, self.other_team)
+
+        self.picking_stranger.team_id = self.team
+        batch.picking_ids |= self.picking_stranger
+
+        self.assertFalse(batch.team_id)
+        self.picking_team.team_id = self.other_team
+        inbound = self.env["stock.picking.batch"].create(
+            {"picking_ids": [Command.set(self.picking_team.ids)]}
+        )
+        self.assertEqual(inbound.team_id, self.other_team)
+
+    def test_validating_a_transfer_frees_a_reservation_the_user_cannot_see(self):
+        product = self.env["product.product"].create(
+            {"name": "Pallet", "is_storable": True}
+        )
+        self.env["stock.quant"]._update_available_quantity(
+            product, self.type_out.default_location_src_id, 1
+        )
+        hidden = self._transfer(self.type_out, product, self.stranger)
+        hidden.action_assign()
+        self.assertEqual(hidden.state, "assigned")
+        mine = self._transfer(self.type_out, product, self.user_team)
+        mine.action_confirm()
+
+        mine = mine.with_user(self.user_team)
+        mine.move_ids.quantity = 1
+        mine.move_ids.picked = True
+        mine.button_validate()
+
+        self.assertEqual(mine.state, "done")
+        self.assertNotEqual(hidden.state, "assigned")
+
+    def test_validating_a_receipt_reserves_a_delivery_the_user_cannot_see(self):
+        product = self.env["product.product"].create(
+            {"name": "Barrel", "is_storable": True}
+        )
+        receipt = self._transfer(self.type_in, product, self.mate)
+        hidden = self._transfer(
+            self.type_out,
+            product,
+            self.stranger,
+            procure_method="make_to_order",
+            move_orig_ids=[Command.set(receipt.move_ids.ids)],
+        )
+        (receipt | hidden).action_confirm()
+        self.assertEqual(hidden.state, "waiting")
+
+        receipt = receipt.with_user(self.user_team)
+        receipt.move_ids.quantity = 1
+        receipt.move_ids.picked = True
+        receipt.button_validate()
+
+        self.assertEqual(receipt.state, "done")
+        self.assertEqual(hidden.state, "assigned")

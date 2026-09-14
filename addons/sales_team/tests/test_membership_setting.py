@@ -24,7 +24,6 @@ class TestMembershipMultiParameter(TestSalesCommon):
             team = self.env["team.team"].create(
                 {
                     "use_sale": True,
-                    "use_sale": True,
                     "name": f"P {raw}",
                     "company_id": False,
                 }

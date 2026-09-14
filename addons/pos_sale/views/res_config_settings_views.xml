@@ -13,7 +13,7 @@
                         help="Sales are reported to the following sales team">
                         <field
                             name="pos_team_id"
-                            domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"
+                            domain="[('use_sale', '=', True), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"
                             context="{'kanban_view_ref': 'team.team_view_kanban'}" />
                     </setting>
                     <setting

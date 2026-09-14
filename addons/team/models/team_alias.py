@@ -18,7 +18,7 @@ class TeamAlias(models.Model):
     alias_id = fields.Many2one(
         comodel_name="mail.alias",
         required=True,
-        ondelete="restrict",
+        ondelete="cascade",
     )
 
     _team_id_usage_uniq = models.Constraint(
@@ -97,6 +97,9 @@ class TeamAlias(models.Model):
     def _refresh_alias_values(self):
         for alias in self:
             values = alias.team_id._get_usage_alias_creation_values(alias.usage)
+            if not alias.team_id.company_id.alias_domain_id and alias.alias_domain_id:
+                # a team without a company keeps the domain someone chose for it
+                values["alias_domain_id"] = alias.alias_domain_id.id
             values["alias_defaults"] = str(
                 {
                     **alias.alias_id._get_alias_defaults(),

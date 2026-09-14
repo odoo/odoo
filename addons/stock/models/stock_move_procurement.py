@@ -642,7 +642,7 @@ class StockMoveProcurement(models.Model):
         if moves_to_push:
             moves_to_push._push_apply()
         move_dests_per_company = defaultdict(lambda: self.env["stock.move"])
-        for move_dest in self.move_dest_ids:
+        for move_dest in self.sudo().move_dest_ids:
             move_dests_per_company[move_dest.company_id.id] |= move_dest
         for company_id, move_dests in move_dests_per_company.items():
             dbg.pipeline.debug(

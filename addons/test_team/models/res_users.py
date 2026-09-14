@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class ResUsers(models.Model):
@@ -17,10 +17,20 @@ class ResUsers(models.Model):
         compute_sudo=True,
     )
 
+    @api.depends(
+        "team_member_ids.active",
+        "team_member_ids.team_id",
+        "team_member_ids.team_id.use_alpha",
+    )
     def _compute_alpha_team_ids(self):
         for user in self:
             user.alpha_team_ids = user._get_usage_team_ids("alpha")
 
+    @api.depends(
+        "team_member_ids.active",
+        "team_member_ids.team_id",
+        "team_member_ids.team_id.use_beta",
+    )
     def _compute_beta_team_ids(self):
         for user in self:
             user.beta_team_ids = user._get_usage_team_ids("beta")

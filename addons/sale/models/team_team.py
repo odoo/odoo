@@ -11,7 +11,7 @@ class TeamTeam(models.Model):
         string="Invoiced This Month",
         compute="_compute_invoiced",
         readonly=True,
-        groups="sales_team.group_sale_salesman",
+        groups="sales_team.group_sale_salesman,sales_team.group_sale_readonly",
         help="Invoice revenue for the current month. This is the amount the sales "
         "channel has invoiced this month. It is used to compute the progression ratio "
         "of the current and target revenue on the kanban view.",
@@ -28,7 +28,7 @@ class TeamTeam(models.Model):
     sale_order_count = fields.Integer(
         string="# Sale Orders",
         compute="_compute_sale_order_count",
-        groups="sales_team.group_sale_salesman",
+        groups="sales_team.group_sale_salesman,sales_team.group_sale_readonly",
     )
 
     @api.ondelete(at_uninstall=False)

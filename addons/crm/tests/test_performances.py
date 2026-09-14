@@ -133,7 +133,6 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
         sales_team_3 = self.env["team.team"].create(
             {
                 "use_sale": True,
-                "use_sale": True,
                 "name": "Sales Team 3",
                 "sequence": 15,
                 "lead_alias_name": False,
@@ -208,7 +207,6 @@ class TestLeadAssignPerf(TestLeadAssignCommon):
             random.seed(2026 + index)
             team = self.env["team.team"].create(
                 {
-                    "use_sale": True,
                     "use_sale": True,
                     "lead_alias_name": False,
                     "lead_assignment_domain": False,

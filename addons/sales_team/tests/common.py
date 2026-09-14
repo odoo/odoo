@@ -37,7 +37,6 @@ class SalesTeamCommon(BaseCommon):
         cls.sale_team = cls.env["team.team"].create(
             {
                 "use_sale": True,
-                "use_sale": True,
                 "name": "Test Sales Team",
             }
         )
@@ -93,7 +92,6 @@ class TestSalesCommon(TransactionCase):
         cls.sales_team_1 = cls.env["team.team"].create(
             {
                 "use_sale": True,
-                "use_sale": True,
                 "name": "Test Sales Team",
                 "sequence": 5,
                 "company_id": False,
@@ -128,7 +126,6 @@ class TestSalesMC(TestSalesCommon):
         cls.team_c2 = cls.env["team.team"].create(
             {
                 "use_sale": True,
-                "use_sale": True,
                 "name": "C2 Team1",
                 "sequence": 1,
                 "user_id": False,
@@ -137,7 +134,6 @@ class TestSalesMC(TestSalesCommon):
         )
         cls.team_mc = cls.env["team.team"].create(
             {
-                "use_sale": True,
                 "use_sale": True,
                 "name": "MainCompany Team",
                 "user_id": cls.user_admin.id,

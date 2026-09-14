@@ -29,8 +29,15 @@ def pre_init_hook(env):
         ("res.users", "crm_team_ids", "sale_team_ids"),
     ):
         rename_field(cr, model, old, new)
-        rename_in_stored_expressions(cr, old, new, model=model)
-    rename_in_stored_expressions(cr, "crm_team_id", "team_id", model="team.member")
+    # every field of these names is renamed, on these models and on pos, livechat
+    # and member models alike, and rules reach them through paths from elsewhere
+    for old, new in (
+        ("crm_team_member_all_ids", "team_member_all_ids"),
+        ("crm_team_member_ids", "team_member_ids"),
+        ("crm_team_ids", "sale_team_ids"),
+        ("crm_team_id", "team_id"),
+    ):
+        rename_in_stored_expressions(cr, old, new, unique=True)
     remove_xmlid_records(cr, "sales_team", SALES_TEAM_RULES)
     # crm's mixin.mail.alias made alias_id required on every crm.team; teams
     # created before crm moves that alias onto team.alias must not need one

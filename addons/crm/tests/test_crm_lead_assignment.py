@@ -352,7 +352,6 @@ class TestLeadAssign(TestLeadAssignCommon):
         sales_team_3 = self.env["team.team"].create(
             {
                 "use_sale": True,
-                "use_sale": True,
                 "name": "Sales Team 3",
                 "sequence": 15,
                 "lead_alias_name": False,
@@ -439,7 +438,6 @@ class TestLeadAssign(TestLeadAssignCommon):
         self.assertInitialData()
         test_sales_team = self.env["team.team"].create(
             {
-                "use_sale": True,
                 "use_sale": True,
                 "name": "Sales Team 5",
                 "sequence": 15,
@@ -615,7 +613,6 @@ class TestLeadAssign(TestLeadAssignCommon):
         sales_team_dupe = self.env["team.team"].create(
             {
                 "use_sale": True,
-                "use_sale": True,
                 "name": "Sales Team Dupe",
                 "sequence": 15,
                 "lead_alias_name": False,
@@ -674,7 +671,6 @@ class TestLeadAssign(TestLeadAssignCommon):
 
         sales_team_4 = self.env["team.team"].create(
             {
-                "use_sale": True,
                 "use_sale": True,
                 "name": "Sales Team 4",
                 "sequence": 15,

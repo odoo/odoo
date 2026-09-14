@@ -35,15 +35,16 @@ class TestMrpTeam(TransactionCase):
         cls.mo_mate = Production.create(
             {"product_id": cls.product.id, "user_id": cls.mate.id}
         )
+        cls.other_type = cls.manufacture_type.copy(
+            {"name": "Other manufacturing", "sequence_code": "MO2", "team_id": False}
+        )
         cls.mo_stranger = Production.create(
             {
                 "product_id": cls.product.id,
                 "user_id": cls.user_all.id,
-                "team_id": False,
-                "picking_type_id": cls.manufacture_type.id,
+                "picking_type_id": cls.other_type.id,
             }
         )
-        cls.mo_stranger.team_id = False
         cls.productions = cls.mo_unassigned | cls.mo_mate | cls.mo_stranger
 
     @classmethod
@@ -97,3 +98,36 @@ class TestMrpTeam(TransactionCase):
             .with_user(self.user_own)
             .search([("id", "=", picking.id)])
         )
+
+    def test_an_order_keeps_its_team_when_its_operation_type_changes_team(self):
+        other = self.env["team.team"].create({"name": "Line 2", "use_mrp": True})
+
+        self.manufacture_type.team_id = other
+
+        self.assertEqual(self.mo_mate.team_id, self.team)
+
+    def test_the_team_running_an_operation_type_sees_its_orders(self):
+        self.other_type.team_id = self.team
+
+        self.assertFalse(self.mo_stranger.team_id)
+        self.assertIn(self.mo_stranger.id, self._visible(self.user_team))
+
+    def test_changing_the_operation_type_takes_the_new_types_team(self):
+        self.other_type.team_id = self.env["team.team"].create(
+            {"name": "Line 2", "use_mrp": True}
+        )
+
+        self.mo_mate.picking_type_id = self.other_type
+
+        self.assertEqual(self.mo_mate.team_id, self.other_type.team_id)
+
+    def test_a_context_team_of_another_usage_is_not_an_orders_team(self):
+        sales = self.env["team.team"].create({"name": "Sales"})
+
+        production = (
+            self.env["mrp.production"]
+            .with_context(default_team_id=sales.id)
+            .create({"product_id": self.product.id})
+        )
+
+        self.assertEqual(production.team_id, self.team)

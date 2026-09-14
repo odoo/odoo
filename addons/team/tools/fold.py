@@ -1,7 +1,12 @@
+import ast
 import logging
 
 from odoo.db.schema import TableKind, column_exists, get_table_kind, table_exists
 from odoo.tools import SQL
+from odoo.tools.module_data import (
+    rename_in_stored_expressions,
+    rewrite_quoted_model_names,
+)
 
 _logger = logging.getLogger(__name__)
 
@@ -36,7 +41,15 @@ CORE_COLUMNS = (
 
 
 def fold_team_model(
-    cr, old_model, flag, *, renamed=None, members=None, alias_usage=None
+    cr,
+    old_model,
+    flag,
+    *,
+    renamed=None,
+    members=None,
+    alias_usage=None,
+    alias_team_field="team_id",
+    links=("team_id",),
 ):
     """Make every row of ``old_model`` a ``team.team`` flagged ``flag``.
 
@@ -47,7 +60,10 @@ def fold_team_model(
     copied onto ``team_team`` under ``renamed``'s name, for the modules that now
     declare them to adopt. ``members`` names the many2many table and user
     column whose rows become ``team.member`` rows. ``alias_usage`` turns the
-    old ``alias_id`` column into that usage's ``team.alias`` row.
+    old ``alias_id`` column into that usage's ``team.alias`` row, whose defaults
+    name the team under ``alias_team_field``. ``links`` are the many2one fields
+    through which stored expressions (rules, templates, filters) reach the
+    team, so ``links[i].<old field>`` is rewritten to the renamed field.
     """
     old_table = old_model.replace(".", "_")
     if not table_exists(cr, old_table):
@@ -67,16 +83,19 @@ def fold_team_model(
     )
     mapping = _insert_teams(cr, old_model, old_table, flag)
     if alias_usage:
-        _fold_alias(cr, old_model, old_table, alias_usage)
+        _fold_alias(cr, old_model, old_table, alias_usage, alias_team_field)
         renamed.setdefault("alias_id", None)
     _copy_columns(cr, old_model, old_table, renamed)
     if members:
-        _fold_members(cr, old_model, *members)
+        _fold_members(cr, old_model, old_table, *members)
     _rename_relation_tables(cr, old_model, old_table)
+    # tracking values find their fields by relation, which _repoint_relations moves
+    _repoint_tracking(cr, old_model)
     _repoint_relations(cr, old_model, old_table)
     _repoint_records(cr, old_model)
     _repoint_model_ids(cr, old_model)
     _move_registry_rows(cr, old_model, old_table, renamed)
+    _rewrite_expressions(cr, old_model, renamed, links)
     cr.execute(SQL("DROP TABLE %s CASCADE", SQL.identifier(old_table)))
     _logger.info(
         "team: %d %s record(s) folded into team.team as %s",
@@ -158,7 +177,7 @@ def _insert_teams(cr, old_model, old_table, flag):
     return mapping
 
 
-def _fold_alias(cr, old_model, old_table, usage):
+def _fold_alias(cr, old_model, old_table, usage, team_field):
     if not column_exists(cr, old_table, "alias_id"):
         return
     cr.execute(
@@ -171,6 +190,7 @@ def _fold_alias(cr, old_model, old_table, usage):
               FROM %s o
               JOIN %s m ON m.old_model = %s AND m.old_id = o.id
              WHERE o.alias_id IS NOT NULL
+            RETURNING team_id, alias_id
             """,
             usage,
             SQL.identifier(old_table),
@@ -178,6 +198,18 @@ def _fold_alias(cr, old_model, old_table, usage):
             old_model,
         )
     )
+    # mail to the alias creates records with these defaults: they name the old id
+    for team_id, alias_id in cr.fetchall():
+        cr.execute(SQL("SELECT alias_defaults FROM mail_alias WHERE id = %s", alias_id))
+        defaults = ast.literal_eval(cr.fetchone()[0] or "{}")
+        defaults[team_field] = team_id
+        cr.execute(
+            SQL(
+                "UPDATE mail_alias SET alias_defaults = %s WHERE id = %s",
+                repr(defaults),
+                alias_id,
+            )
+        )
 
 
 def _copy_columns(cr, old_model, old_table, renamed):
@@ -240,10 +272,13 @@ def _drop_foreign_keys(cr, table, column, referenced):
 
 
 def _remap_column(cr, old_model, table, column):
+    # Old and new ids overlap whenever team_team already holds ids beyond the
+    # smallest old one, so a one-pass UPDATE can move a row twice or collide on a
+    # relation table's primary key: park the new ids negative, then flip them.
     cr.execute(
         SQL(
             """
-            UPDATE %s x SET %s = m.new_id
+            UPDATE %s x SET %s = -m.new_id
               FROM %s m
              WHERE m.old_model = %s AND x.%s = m.old_id
             """,
@@ -251,6 +286,15 @@ def _remap_column(cr, old_model, table, column):
             SQL.identifier(column),
             SQL.identifier(MAP_TABLE),
             old_model,
+            SQL.identifier(column),
+        )
+    )
+    cr.execute(
+        SQL(
+            "UPDATE %s SET %s = -%s WHERE %s < 0",
+            SQL.identifier(table),
+            SQL.identifier(column),
+            SQL.identifier(column),
             SQL.identifier(column),
         )
     )
@@ -269,6 +313,7 @@ def _repoint_relations(cr, old_model, old_table):
             old_model,
         )
     )
+    remapped = set()
     for model, name, ttype, relation_table, column1, column2, relation in cr.fetchall():
         if ttype == "many2one":
             table = model.replace(".", "_")
@@ -278,16 +323,22 @@ def _repoint_relations(cr, old_model, old_table):
                 or not column_exists(cr, table, name)
             ):
                 continue
-            _drop_foreign_keys(cr, table, name, old_table)
-            _remap_column(cr, old_model, table, name)
+            target = (table, name)
+        else:
+            if (
+                not relation_table
+                or get_table_kind(cr, relation_table) != TableKind.Regular
+            ):
+                continue
+            column = column1 if model == old_model else column2
+            if relation == old_model and model != old_model:
+                column = column2
+            table, name, target = relation_table, column, (relation_table, column)
+        if target in remapped:
             continue
-        if not relation_table or not table_exists(cr, relation_table):
-            continue
-        column = column1 if model == old_model else column2
-        if relation == old_model and model != old_model:
-            column = column2
-        _drop_foreign_keys(cr, relation_table, column, old_table)
-        _remap_column(cr, old_model, relation_table, column)
+        remapped.add(target)
+        _drop_foreign_keys(cr, table, name, old_table)
+        _remap_column(cr, old_model, table, name)
     cr.execute(
         SQL(
             "UPDATE ir_model_fields SET relation = %s WHERE relation = %s",
@@ -361,13 +412,16 @@ def _repoint_records(cr, old_model):
             old_model,
         )
     )
+
+
+def _repoint_tracking(cr, old_model):
     for column in ("old_value_integer", "new_value_integer"):
         cr.execute(
             SQL(
                 """
-                UPDATE mail_tracking_value v SET %s = m.new_id
+                UPDATE mail_tracking_value v SET %s = -m.new_id
                   FROM ir_model_fields f, %s m
-                 WHERE v.field_id = f.id AND f.relation = %s
+                 WHERE v.field_id = f.id AND f.relation = %s AND f.ttype = 'many2one'
                    AND m.old_model = %s AND v.%s = m.old_id
                 """,
                 SQL.identifier(column),
@@ -377,6 +431,24 @@ def _repoint_records(cr, old_model):
                 SQL.identifier(column),
             )
         )
+        cr.execute(
+            SQL(
+                "UPDATE mail_tracking_value SET %s = -%s WHERE %s < 0",
+                SQL.identifier(column),
+                SQL.identifier(column),
+                SQL.identifier(column),
+            )
+        )
+
+
+def _rewrite_expressions(cr, old_model, renamed, links):
+    rewrite_quoted_model_names(cr, old_model, TEAM_MODEL)
+    for old, new in renamed.items():
+        if new is None or new == old:
+            continue
+        rename_in_stored_expressions(cr, old, new, model=TEAM_MODEL)
+        for link in links:
+            rename_in_stored_expressions(cr, f"{link}.{old}", f"{link}.{new}")
 
 
 def _rename_relation_tables(cr, old_model, old_table):
@@ -474,9 +546,13 @@ def _repoint_model_ids(cr, old_model):
         )
 
 
-def _fold_members(cr, old_model, relation_table, user_column, team_column):
+def _fold_members(cr, old_model, old_table, relation_table, user_column, team_column):
     if not table_exists(cr, relation_table):
         return
+    # team.member refuses a live membership of an archived user or team
+    team_active = (
+        SQL("AND o.active") if column_exists(cr, old_table, "active") else SQL()
+    )
     cr.execute(
         SQL(
             """
@@ -486,16 +562,23 @@ def _fold_members(cr, old_model, relation_table, user_column, team_column):
                    1, now() AT TIME ZONE 'UTC'
               FROM %s r
               JOIN %s m ON m.old_model = %s AND m.old_id = r.%s
+              JOIN %s o ON o.id = r.%s
+              JOIN res_users u ON u.id = r.%s AND u.active
              WHERE NOT EXISTS (SELECT 1 FROM team_member tm
                                 WHERE tm.team_id = m.new_id AND tm.user_id = r.%s
                                   AND tm.active)
+               %s
             """,
             SQL.identifier(user_column),
             SQL.identifier(relation_table),
             SQL.identifier(MAP_TABLE),
             old_model,
             SQL.identifier(team_column),
+            SQL.identifier(old_table),
+            SQL.identifier(team_column),
             SQL.identifier(user_column),
+            SQL.identifier(user_column),
+            team_active,
         )
     )
     cr.execute(SQL("DELETE FROM ir_model_relation WHERE name = %s", relation_table))

@@ -330,7 +330,6 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         cls.team_company2 = cls.env["team.team"].create(
             {
                 "use_sale": True,
-                "use_sale": True,
                 "company_id": cls.company_2.id,
                 "name": "C2 Team",
                 "sequence": 10,
@@ -348,7 +347,6 @@ class TestCrmCommon(TestSalesCommon, MailCase):
 
         cls.team_company1 = cls.env["team.team"].create(
             {
-                "use_sale": True,
                 "use_sale": True,
                 "company_id": cls.company_main.id,
                 "name": "MainCompany Team",
@@ -606,7 +604,6 @@ class TestLeadConvertCommon(TestCrmCommon):
 
         cls.sales_team_convert = cls.env["team.team"].create(
             {
-                "use_sale": True,
                 "use_sale": True,
                 "name": "Convert Sales Team",
                 "sequence": 10,

@@ -18,19 +18,31 @@ class PurchaseOrder(models.Model):
         tracking=True,
     )
 
+    @api.model
+    def default_get(self, fields):
+        return self.env["team.team"]._drop_default_of_other_usage(
+            super().default_get(fields), "purchase"
+        )
+
     @api.depends("user_id", "company_id")
     def _compute_team_id(self):
         Team = self.env["team.team"]
         for order in self:
+            team = order.team_id
+            if team.company_id and team.company_id != order.company_id:
+                team = Team
             if not order.user_id:
-                order.team_id = order.team_id if order.team_id.use_purchase else False
+                order.team_id = team if team.use_purchase else False
                 continue
-            if order.team_id and order.user_id in (
-                order.team_id.member_ids | order.team_id.user_id
-            ):
+            if team and order.user_id in (team.member_ids | team.user_id):
+                order.team_id = team
                 continue
             order.team_id = (
-                Team.with_company(order.company_id)
-                .with_context(default_team_id=order.team_id.id)
-                ._get_default_team("purchase", user_id=order.user_id.id)
+                Team.with_context(
+                    allowed_company_ids=order.company_id.ids,
+                    default_team_id=team.id,
+                )
+                .sudo()
+                ._get_default_team("purchase", user_id=order.user_id.id, fallback=False)
+                .with_env(self.env)
             )

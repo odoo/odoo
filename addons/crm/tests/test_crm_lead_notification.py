@@ -278,7 +278,6 @@ class NewLeadNotification(TestCrmCommon):
         sales_team_1 = self.env["team.team"].create(
             {
                 "use_sale": True,
-                "use_sale": True,
                 "name": "Test Sales Team",
                 "lead_alias_name": "test_sales_team",
             }
@@ -330,14 +329,12 @@ class NewLeadNotification(TestCrmCommon):
         crm_team0 = self.env["team.team"].create(
             {
                 "use_sale": True,
-                "use_sale": True,
                 "name": "crm team 0",
                 "company_id": company0.id,
             }
         )
         crm_team1 = self.env["team.team"].create(
             {
-                "use_sale": True,
                 "use_sale": True,
                 "name": "crm team 1",
                 "company_id": company1.id,
@@ -423,7 +420,6 @@ Content-Transfer-Encoding: quoted-printable
         )
         team_2 = self.env["team.team"].create(
             {
-                "use_sale": True,
                 "use_sale": True,
                 "name": "team_2",
                 "lead_alias_name": "team.2",

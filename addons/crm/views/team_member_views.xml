@@ -12,7 +12,10 @@
                     <field name="lead_assignment_enabled" column_invisible="True" />
                     <field name="lead_assignment_optout" optional="show" />
                     <field name="lead_assignment_max" optional="show" />
-                    <field name="lead_month_count" optional="show" />
+                    <field
+                        name="lead_month_count"
+                        optional="show"
+                        groups="sales_team.group_sale_salesman,sales_team.group_sale_readonly" />
                 </field>
             </field>
         </record>
@@ -35,6 +38,7 @@
                             name="lead_month_count"
                             widget="gauge"
                             options="{'max_field': 'lead_assignment_max'}"
+                            groups="sales_team.group_sale_salesman,sales_team.group_sale_readonly"
                             invisible="lead_assignment_max == 0" />
                     </div>
                 </xpath>
@@ -59,7 +63,10 @@
                                     invisible="lead_assignment_optout"
                                     class="o_form_label text-900" />
                                 <span invisible="lead_assignment_optout">
-                                    <field name="lead_month_count" class="oe_inline" />
+                                    <field
+                                        name="lead_month_count"
+                                        groups="sales_team.group_sale_salesman,sales_team.group_sale_readonly"
+                                        class="oe_inline" />
                                     <span> leads assigned the last 30 days out of a maximum of </span>
                                     <field
                                         name="lead_assignment_max"

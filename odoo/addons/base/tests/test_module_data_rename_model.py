@@ -1,6 +1,6 @@
 from odoo.db.schema import column_exists, table_exists
 from odoo.tests.common import TransactionCase, tagged
-from odoo.tools.module_data import rename_model
+from odoo.tools.module_data import rename_in_stored_expressions, rename_model
 
 
 @tagged("post_install", "-at_install")
@@ -23,6 +23,8 @@ class TestRenameModel(TransactionCase):
             );
             CREATE TABLE probe_log (res_model varchar);
             INSERT INTO probe_log VALUES ('probe.thing'), ('probe.thing.member');
+            INSERT INTO ir_filters (name, model_id, sort, domain, context, active)
+                 VALUES ('probe', 'probe.thing', '[]', '[]', '{}', true);
             INSERT INTO probe_thing_member (ref)
                  VALUES ('probe.thing,5'), ('probe.thing.member,5');
         """)
@@ -204,6 +206,12 @@ class TestRenameModel(TransactionCase):
             ["probe.thing.member,5", "team.probe,5"],
         )
 
+    def test_a_saved_filter_follows_the_model(self):
+        self.assertEqual(
+            self._scalar("SELECT model_id FROM ir_filters WHERE name = 'probe'"),
+            ["team.probe"],
+        )
+
     def test_a_quoted_model_name_is_rewritten_in_a_view_but_not_its_extension(self):
         self.view.invalidate_recordset(["arch_db"])
         arch = self.view.arch_db
@@ -214,3 +222,52 @@ class TestRenameModel(TransactionCase):
     def test_renaming_again_changes_nothing(self):
         self.assertEqual(rename_model(self.env.cr, "probe.thing", "team.probe"), {})
         self.assertTrue(table_exists(self.env.cr, "team_probe"))
+
+
+@tagged("post_install", "-at_install")
+class TestRenameInStoredExpressions(TransactionCase):
+    def _rule(self, model, domain):
+        self.env.cr.execute(
+            "INSERT INTO ir_rule (name, model_id, domain_force, composition, active) "
+            "VALUES ('probe', (SELECT id FROM ir_model WHERE model = %s), %s, "
+            "'or', true) RETURNING id",
+            (model, domain),
+        )
+        return self.env.cr.fetchone()[0]
+
+    def _domain(self, rule_id):
+        self.env.cr.execute(
+            "SELECT domain_force FROM ir_rule WHERE id = %s", (rule_id,)
+        )
+        return self.env.cr.fetchone()[0]
+
+    def test_a_bare_name_needs_a_model_unless_it_is_unique(self):
+        with self.assertRaises(ValueError):
+            rename_in_stored_expressions(self.env.cr, "probe_team_ids", "probe_x_ids")
+
+    def test_a_unique_name_is_rewritten_through_any_path_in_a_rule(self):
+        rule_id = self._rule(
+            "res.partner", "[('user_id.probe_team_ids', 'in', user.probe_team_ids.ids)]"
+        )
+        other_id = self._rule("res.partner", "[('probe_team_ids_count', '>', 0)]")
+
+        rename_in_stored_expressions(
+            self.env.cr, "probe_team_ids", "probe_sale_team_ids", unique=True
+        )
+
+        self.assertEqual(
+            self._domain(rule_id),
+            "[('user_id.probe_sale_team_ids', 'in', user.probe_sale_team_ids.ids)]",
+        )
+        self.assertEqual(self._domain(other_id), "[('probe_team_ids_count', '>', 0)]")
+
+    def test_a_scoped_rename_leaves_other_models_rules_alone(self):
+        partner_rule = self._rule("res.partner", "[('probe_flag', '=', True)]")
+        user_rule = self._rule("res.users", "[('probe_flag', '=', True)]")
+
+        rename_in_stored_expressions(
+            self.env.cr, "probe_flag", "probe_new_flag", model="res.users"
+        )
+
+        self.assertEqual(self._domain(partner_rule), "[('probe_flag', '=', True)]")
+        self.assertEqual(self._domain(user_rule), "[('probe_new_flag', '=', True)]")

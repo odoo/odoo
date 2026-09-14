@@ -77,18 +77,18 @@ class TeamTeam(models.Model):
     lead_unassigned_count = fields.Integer(
         string="# Unassigned Leads",
         compute="_compute_lead_unassigned_count",
-        groups="sales_team.group_sale_salesman",
+        groups="sales_team.group_sale_salesman,sales_team.group_sale_readonly",
     )
     lead_all_assigned_month_count = fields.Integer(
         string="# Leads/Opps assigned this month",
         compute="_compute_lead_all_assigned_month_count",
-        groups="sales_team.group_sale_salesman",
+        groups="sales_team.group_sale_salesman,sales_team.group_sale_readonly",
         help="Number of leads and opportunities assigned this last month.",
     )
     lead_all_assigned_month_exceeded = fields.Boolean(
         string="Exceed monthly lead assignement",
         compute="_compute_lead_all_assigned_month_count",
-        groups="sales_team.group_sale_salesman",
+        groups="sales_team.group_sale_salesman,sales_team.group_sale_readonly",
         help="True if the monthly lead assignment count is greater than the maximum assignment limit, false otherwise.",
     )
     lead_properties_definition = fields.PropertiesDefinition(string="Lead Properties")
@@ -192,8 +192,10 @@ class TeamTeam(models.Model):
     def unlink(self):
         # scoring frequencies are bookkeeping: deleting a team of another usage
         # must not need crm access
-        frequencies = self.env["crm.lead.scoring.frequency"].sudo().search(
-            [("team_id", "in", self.ids)]
+        frequencies = (
+            self.env["crm.lead.scoring.frequency"]
+            .sudo()
+            .search([("team_id", "in", self.ids)])
         )
         if frequencies:
             existing_noteam = (
@@ -791,7 +793,7 @@ class TeamTeam(models.Model):
         self.check_access("read")
         user_team_id = self.env.user.sale_team_id.id
         if not user_team_id:
-            user_team_id = self.search([], limit=1).id
+            user_team_id = self.search([("use_sale", "=", True)], limit=1).id
             action["help"] = "<p class='o_view_nocontent_smiling_face'>%s</p><p>" % _(
                 "Create an Opportunity"
             )

@@ -239,7 +239,7 @@ class StockMoveLineQuant(models.Model):
             product.id,
             location.id,
         )
-        self = self.with_context(quants_cache=None)
+        self = self.sudo().with_context(quants_cache=None)
 
         move_to_reassign = self.env["stock.move"]
         to_unlink_candidate_ids = set()

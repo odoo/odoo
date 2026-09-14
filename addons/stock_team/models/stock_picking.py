@@ -17,7 +17,13 @@ class StockPicking(models.Model):
         tracking=True,
     )
 
-    @api.depends("picking_type_id.team_id")
+    @api.model
+    def default_get(self, fields):
+        return self.env["team.team"]._drop_default_of_other_usage(
+            super().default_get(fields), "stock"
+        )
+
+    @api.depends("picking_type_id")
     def _compute_team_id(self):
         for picking in self:
             picking.team_id = picking.picking_type_id.team_id

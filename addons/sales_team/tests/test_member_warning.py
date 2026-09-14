@@ -75,14 +75,12 @@ class TestMemberWarningVisibility(TestSalesCommon):
         cls.foreign_team = cls.env["team.team"].create(
             {
                 "use_sale": True,
-                "use_sale": True,
                 "name": "FOREIGN TEAM",
                 "company_id": cls.company_2.id,
             }
         )
         cls.local_team = cls.env["team.team"].create(
             {
-                "use_sale": True,
                 "use_sale": True,
                 "name": "Local Team",
                 "company_id": cls.company_main.id,
@@ -125,7 +123,6 @@ class TestMemberWarningVisibility(TestSalesCommon):
         third = self.env["team.team"].create(
             {
                 "use_sale": True,
-                "use_sale": True,
                 "name": "Third Local",
                 "company_id": self.company_main.id,
             }
@@ -148,7 +145,6 @@ class TestWarningFollowsTheParameter(TestSalesCommon):
         ICP.set_param("sales_team.membership_multi", True)
         second = self.env["team.team"].create(
             {
-                "use_sale": True,
                 "use_sale": True,
                 "name": "Flip Second",
                 "company_id": False,
@@ -176,7 +172,6 @@ class TestMonoModeIsNotRetroactive(TestSalesCommon):
         second = self.env["team.team"].create(
             {
                 "use_sale": True,
-                "use_sale": True,
                 "name": "Mono Second",
                 "company_id": False,
             }
@@ -198,7 +193,6 @@ class TestMonoModeIsNotRetroactive(TestSalesCommon):
         ICP.set_param("sales_team.membership_multi", True)
         second = self.env["team.team"].create(
             {
-                "use_sale": True,
                 "use_sale": True,
                 "name": "Mono Second",
                 "company_id": False,

@@ -128,6 +128,8 @@ class Team(models.Model):
         teams = super(Team, self.with_context(mail_create_nosubscribe=True)).create(
             vals_list
         )
+        for team in teams:
+            team._check_usage_rights(team._get_team_usage_keys())
         # favorite_user_ids is written after the memberships created inline, and
         # replaces the favorites those memberships granted
         teams.team_member_ids._add_to_team_favorites()
@@ -140,6 +142,16 @@ class Team(models.Model):
 
     def write(self, vals):
         flags = set(vals) & self._get_usage_flags()
+        if flags:
+            usages = self._get_usages()
+            self._check_usage_rights(
+                [
+                    key
+                    for key, usage in usages.items()
+                    if usage.flag in flags
+                    and any(team[usage.flag] != bool(vals[usage.flag]) for team in self)
+                ]
+            )
         res = super().write(vals)
         if "active" in vals and not vals["active"]:
             _debug.logic(
@@ -150,11 +162,37 @@ class Team(models.Model):
             self.team_member_ids.action_archive()
         if flags:
             self._sync_usage_aliases()
+            # a usage the team now carries may be mono for its members
+            self.team_member_ids._enforce_mono_membership()
             # record rules inline a user's teams per usage
             self.env.registry.clear_cache()
         if "company_id" in vals:
             self._refresh_usage_aliases()
         return res
+
+    def _check_usage_rights(self, keys):
+        # a rule on the flag lets a usage's administrators edit its teams, but it
+        # reads the team before the write: setting or clearing another usage's
+        # flag must be that usage's administrators' call
+        if (
+            not keys
+            or self.env.su
+            or self.env.user.has_group("team.group_team_manager")
+        ):
+            return
+        usages = self._get_usages()
+        refused = [
+            str(usages[key].label)
+            for key in keys
+            if not self.env.user.has_group(usages[key].manager_group)
+        ]
+        if refused:
+            raise AccessError(
+                _(
+                    "Only an administrator of %(usages)s can add or remove that usage on a team.",
+                    usages=", ".join(sorted(refused)),
+                )
+            )
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_foreign_usage(self):
@@ -316,15 +354,22 @@ class Team(models.Model):
 
     def action_activate_multi_membership(self, flags=None):
         usages = self._get_usages()
-        if self:
+        if flags:
+            # the form sends its unsaved flags, which decide what the banner warned of
+            keys = {
+                key
+                for key, usage in usages.items()
+                if usage.membership_multi_param
+                and flags.get(usage.flag)
+                and not self._is_membership_multi(key)
+            }
+        elif self:
             keys = {key for team in self for key in team._get_mono_usage_keys()}
         else:
             keys = {
                 key
                 for key, usage in usages.items()
-                if usage.membership_multi_param
-                and (flags is None or flags.get(usage.flag))
-                and not self._is_membership_multi(key)
+                if usage.membership_multi_param and not self._is_membership_multi(key)
             }
         refused = [
             str(usages[key].label)
@@ -339,10 +384,11 @@ class Team(models.Model):
                 )
             )
         for key in keys:
-            if param := usages[key].membership_multi_param:
-                self.env["ir.config_parameter"].sudo().set_param(param, True)
+            self.env["ir.config_parameter"].sudo().set_param(
+                usages[key].membership_multi_param, True
+            )
 
-    def _get_default_team(self, usage, user_id=False, domain=()):
+    def _get_default_team(self, usage, user_id=False, domain=(), fallback=True):
         user = (
             self.env["res.users"].sudo().browse(user_id) if user_id else self.env.user
         )
@@ -367,9 +413,10 @@ class Team(models.Model):
             return team
 
         team = context_team
-        if not team and domain:
+        if not team and domain and fallback:
             team = self._search_ignoring_access(live & Domain(domain), limit=1)
-        team = team or self._search_ignoring_access(live, limit=1)
+        if not team and fallback:
+            team = self._search_ignoring_access(live, limit=1)
         _debug.logic(
             "default_team_fallback",
             usage=usage,
@@ -387,6 +434,14 @@ class Team(models.Model):
             )
         return self.browse()
 
+    @api.model
+    def _drop_default_of_other_usage(self, defaults, usage, field_name="team_id"):
+        if team_id := defaults.get(field_name):
+            team = self.sudo().browse(team_id).exists()
+            if not team.filtered_domain(self._get_domain_usage(usage)):
+                del defaults[field_name]
+        return defaults
+
     def _get_domain_live_team(self, user, usage):
         company_ids = (user.company_ids & self.env.companies).ids
         return (
@@ -401,6 +456,20 @@ class Team(models.Model):
     def _get_usage_alias(self, key):
         self.check_singleton()
         return self.alias_ids.filtered(lambda alias: alias.usage == key)
+
+    def _notify_get_usage_reply_to_addresses(self, key):
+        addresses = {}
+        for team in self:
+            alias = team._get_usage_alias(key)
+            if alias.alias_name and alias.alias_domain_id:
+                addresses[team.id] = alias.alias_full_name
+        leftover = self.filtered(lambda team: team.id not in addresses)
+        for company, teams in leftover.grouped(
+            lambda team: team.company_id or self.env.company
+        ).items():
+            if company.catchall_email:
+                addresses.update(dict.fromkeys(teams.ids, company.catchall_email))
+        return addresses
 
     @api.model
     def _get_usage_alias_related_fields(self):

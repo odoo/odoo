@@ -2343,7 +2343,7 @@ class CrmLead(models.Model):
         return render_context
 
     def _notify_get_reply_to_addresses(self):
-        addresses = self.mapped("team_id").sudo()._notify_get_reply_to_addresses()
+        addresses = self.team_id.sudo()._notify_get_usage_reply_to_addresses("sale")
         res = {
             lead.id: addresses[lead.team_id.id]
             for lead in self

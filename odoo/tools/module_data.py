@@ -204,6 +204,8 @@ _EXPRESSION_SOURCES = (
     ("ir_act_server", (), ("code",), "model_id", True),
     ("ir_filters", (), ("domain", "context", "sort"), "model_id", False),
     ("ir_act_window", (), ("domain", "context"), "res_model", False),
+    ("ir_rule", (), ("domain_force",), "model_id", True),
+    ("base_automation", (), ("filter_domain", "filter_pre_domain"), "model_id", True),
 )
 
 _RENAMEABLE = re.compile(r"\A[A-Za-z_][A-Za-z0-9_.]*\Z")
@@ -216,10 +218,14 @@ def rename_in_stored_expressions(
     new: str,
     *,
     model: str | None = None,
+    unique: bool = False,
 ) -> int:
+    # A record rule or filter reaches a renamed field through a path from its own
+    # model (`user_id.crm_team_ids`), so scoping to the field's model misses it;
+    # `unique` asserts no other model has a field of that name.
     if not _RENAMEABLE.match(old) or not _REPLACEMENT.match(new):
         raise ValueError(f"cannot rewrite {old!r} to {new!r}: unsupported characters")
-    if model is None and "." not in old:
+    if model is None and "." not in old and not unique:
         raise ValueError(f"{old!r} is a bare field name and needs model= to scope it")
 
     pattern = r"\y%s\y" % old.replace(".", r"\.")
@@ -495,6 +501,7 @@ def rename_field(
 
 MODEL_NAME_COLUMNS = (
     "model",
+    "model_id",
     "res_model",
     "model_name",
     "src_model",
@@ -522,7 +529,7 @@ def rename_model(cr: BaseCursor, old: str, new: str) -> dict[str, str]:
     _rewrite_model_registry(cr, old, new, old_table, new_table)
     _repoint_model_name_columns(cr, old, new)
     _rewrite_reference_values(cr, old, new)
-    _rewrite_quoted_model_names(cr, old, new)
+    rewrite_quoted_model_names(cr, old, new)
     _debug.lifecycle(
         "module_data.rename_model", old=old, new=new, relations=len(relations)
     )
@@ -754,7 +761,7 @@ def _rewrite_reference_values(cr: BaseCursor, old: str, new: str) -> None:
         )
 
 
-def _rewrite_quoted_model_names(cr: BaseCursor, old: str, new: str) -> None:
+def rewrite_quoted_model_names(cr: BaseCursor, old: str, new: str) -> None:
     existing = set(get_tables_existing(cr, [t for t, _ in _MODEL_EXPRESSION_COLUMNS]))
     for table, columns in _MODEL_EXPRESSION_COLUMNS:
         if table not in existing:

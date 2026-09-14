@@ -78,7 +78,7 @@ class TestPurchaseTeam(AccountTestInvoicingCommon):
         order = self.env["purchase.order"].create(
             {"partner_id": self.vendor.id, "user_id": self.buyer_own.id}
         )
-        self.assertNotEqual(order.team_id, self.sales_only)
+        self.assertFalse(order.team_id)
 
     def test_own_documents_see_their_orders_and_unowned_ones(self):
         order = self.env["purchase.order"].create(
@@ -122,3 +122,63 @@ class TestPurchaseTeam(AccountTestInvoicingCommon):
         self.env.flush_all()
         lines = self.env["purchase.report"].search([("team_id", "=", self.team.id)])
         self.assertEqual(lines.order_reference, self.order_mate)
+
+    def test_a_context_team_of_another_usage_is_not_an_orders_team(self):
+        order = (
+            self.env["purchase.order"]
+            .with_context(default_team_id=self.sales_only.id)
+            .create({"partner_id": self.vendor.id, "user_id": self.mate.id})
+        )
+
+        self.assertEqual(order.team_id, self.team)
+
+    def test_an_order_takes_a_purchase_team_of_its_own_company_only(self):
+        company_2 = self.setup_other_company()["company"]
+        self.mate.company_ids |= company_2
+        team_2 = self.env["team.team"].create(
+            {
+                "name": "Raw materials 2",
+                "use_purchase": True,
+                "company_id": company_2.id,
+            }
+        )
+        self.env["team.member"].create({"team_id": team_2.id, "user_id": self.mate.id})
+
+        order = (
+            self.env["purchase.order"]
+            .with_company(company_2)
+            .create(
+                {
+                    "partner_id": self.vendor.id,
+                    "user_id": self.mate.id,
+                    "company_id": company_2.id,
+                }
+            )
+        )
+
+        self.assertEqual(order.team_id, team_2)
+        order.company_id = self.env.company
+        self.assertEqual(order.team_id, self.team)
+
+    def test_team_documents_see_orders_filed_under_their_team(self):
+        self.order_outsider.team_id = self.team
+
+        self.assertIn(self.order_outsider.id, self._visible_orders(self.buyer_team).ids)
+
+    def test_team_documents_see_their_teammates_vendor_bills_only(self):
+        Move = self.env["account.move"]
+        bills = Move.create(
+            [
+                {
+                    "move_type": "in_invoice",
+                    "partner_id": self.vendor.id,
+                    "invoice_user_id": user.id,
+                    "invoice_date": "2026-01-01",
+                }
+                for user in (self.mate, self.outsider)
+            ]
+        )
+
+        visible = Move.with_user(self.buyer_team).search([("id", "in", bills.ids)])
+
+        self.assertEqual(visible.invoice_user_id, self.mate)
