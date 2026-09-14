@@ -1922,6 +1922,18 @@ class TestScheduleChangeRepricesFutureLeave(TestHrHolidaysCommon):
         )
         self.assertEqual(len(leave.meeting_id), 1)
         self.assertTrue(leave.meeting_id.active)
+        events = (
+            self.env["calendar.event"]
+            .with_context(active_test=False)
+            .search([("res_id", "=", leave.id), ("res_model", "=", "hr.leave")])
+        )
+        self.assertEqual(
+            events.filtered("active"),
+            leave.meeting_id,
+            "the superseded meeting is archived rather than left in the "
+            "employee's calendar beside its replacement; it stays in the "
+            "database as history, which is what cancelling a leave does too",
+        )
 
     def test_a_caller_can_still_ask_for_no_resync(self):
         employee, leave = self._employee_with_an_approved_future_leave()
@@ -1934,3 +1946,80 @@ class TestScheduleChangeRepricesFutureLeave(TestHrHolidaysCommon):
             self.full_time,
             "the escape hatch the guard exists for still works",
         )
+
+
+@tagged("post_install", "-at_install")
+class TestFlexibleDurationOverAPublicHoliday(TestHrHolidaysCommon):
+    """A public holiday inside a request costs nobody a day, on either kind of
+    schedule."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.fixed = cls.env["resource.calendar"].create(
+            {"name": "Fixed for holidays", "tz": "UTC", "company_id": cls.company.id}
+        )
+        cls.flexible = cls.env["resource.calendar"].create(
+            {
+                "name": "Flexible for holidays",
+                "tz": "UTC",
+                "company_id": cls.company.id,
+                "flexible_hours": True,
+                "hours_per_day": 8,
+                "full_time_required_hours": 40,
+            }
+        )
+        cls.leave_type = cls.env["hr.leave.type"].create(
+            {
+                "name": "Halves Over A Holiday",
+                "requires_allocation": False,
+                "request_unit": "half_day",
+                "leave_validation_type": "hr",
+                "company_id": cls.company.id,
+            }
+        )
+        cls.env["resource.calendar.leaves"].create(
+            {
+                "name": "A public holiday",
+                "resource_id": False,
+                "calendar_id": False,
+                "company_id": cls.company.id,
+                "date_from": "2026-03-03 00:00:00",
+                "date_to": "2026-03-03 23:59:59",
+            }
+        )
+
+    def _duration(self, calendar):
+        employee = self.env["hr.employee"].create(
+            {
+                "name": f"On {calendar.name}",
+                "company_id": self.company.id,
+                "resource_calendar_id": calendar.id,
+            }
+        )
+        leave = (
+            self.env["hr.leave"]
+            .with_context(leave_skip_date_check=True)
+            .new(
+                {
+                    "employee_id": employee.id,
+                    "holiday_status_id": self.leave_type.id,
+                    "request_date_from": date(2026, 3, 2),
+                    "request_date_to": date(2026, 3, 4),
+                    "request_date_from_period": "pm",
+                    "request_date_to_period": "am",
+                }
+            )
+        )
+        return leave.number_of_days, leave.number_of_hours
+
+    def test_the_holiday_is_not_charged_on_either_schedule(self):
+        """Half of Monday, all of Tuesday, half of Wednesday -- with Tuesday a
+        public holiday, that is one day, not two."""
+        self.assertEqual(
+            self._duration(self.flexible),
+            self._duration(self.fixed),
+            "a resource with no timetable prices the request from its own "
+            "shape, and a day nobody works is not part of that shape",
+        )
+        self.assertEqual(self._duration(self.flexible), (1.0, 8.0))
