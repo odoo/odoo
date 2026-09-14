@@ -137,4 +137,43 @@ class AccountChartTemplate(models.AbstractModel):
                 'asset_depreciation_account_id': 'account_account_us_depreciation_vehicles',
                 'asset_expense_account_id': 'account_account_us_expense_vehicles',
             },
+            'account_account_us_expense_technology': {
+                'tag_ids': 'account.account_tag_adj_depreciation_and_amortization',
+            },
+            'account_account_us_expense_buildings': {
+                'tag_ids': 'account.account_tag_adj_depreciation_and_amortization',
+            },
+            'account_account_us_expense_improvements': {
+                'tag_ids': 'account.account_tag_adj_depreciation_and_amortization',
+            },
+            'account_account_us_expense_machines': {
+                'tag_ids': 'account.account_tag_adj_depreciation_and_amortization',
+            },
+            'account_account_us_expense_other_property': {
+                'tag_ids': 'account.account_tag_adj_depreciation_and_amortization',
+            },
+            'account_account_us_expense_furniture': {
+                'tag_ids': 'account.account_tag_adj_depreciation_and_amortization',
+            },
+            'account_account_us_expense_vehicles': {
+                'tag_ids': 'account.account_tag_adj_depreciation_and_amortization',
+            },
+            'account_account_us_pos_receivable': {
+                'tag_ids': 'account.account_tag_wcap_trade_receivable',
+            },
+            'account_account_us_receivable': {
+                'tag_ids': 'account.account_tag_wcap_trade_receivable',
+            },
+            'account_account_us_owner_current_account': {
+                'tag_ids': 'account.account_tag_wcap_other_receivable',
+            },
+            'account_account_us_tax_receivable': {
+                'tag_ids': 'account.account_tag_wcap_other_receivable',
+            },
+            'account_account_us_payable': {
+                'tag_ids': 'account.account_tag_wcap_trade_payable',
+            },
+            'account_account_us_tax_payable': {
+                'tag_ids': 'account.account_tag_wcap_other_payable',
+            },
         }
