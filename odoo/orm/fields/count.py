@@ -2,7 +2,6 @@ import typing
 from typing import override
 
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import SQL
 from odoo.tools.misc import SENTINEL, Sentinel
 
 from .._recordset import is_recordset, is_search_overridden
@@ -235,22 +234,11 @@ class Count(Integer):
             bypass_access=bypass_access,
         ):
             query = comodel._search(domain, bypass_access=bypass_access)
+            # the pairs a pending write would add or drop, as the statement's
+            # to_flush did before the count went through the port
+            records.flush_recordset([counted.name])
             relation, column1, column2 = counted._get_relation_columns()
-            sql_id1 = SQL.identifier(relation, column1)
             result.update(
-                env.execute_query(
-                    SQL(
-                        "SELECT %s, count(*) FROM %s WHERE %s = ANY(%s) AND %s IN (%s) "
-                        "GROUP BY %s",
-                        sql_id1,
-                        SQL.identifier(relation),
-                        sql_id1,
-                        list(records.ids),
-                        SQL.identifier(relation, column2),
-                        query.subselect(),
-                        sql_id1,
-                        to_flush=counted,
-                    )
-                )
+                env.backend.count_m2m_groups(records, relation, column1, column2, query)
             )
         return result

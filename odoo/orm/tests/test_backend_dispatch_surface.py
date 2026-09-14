@@ -9,8 +9,8 @@ from odoo.orm.runtime.backend import InMemoryBackend
 _ORM_DIR = pathlib.Path(__file__).resolve().parent.parent
 
 # Every place the ORM chooses between the SQL path and env.backend. The surface
-# has grown to twenty-five sites across seventeen files
-# -- including six in Layer 1, where a field reaches the backend directly
+# has grown to twenty-six sites across eighteen files
+# -- including seven in Layer 1, where a field reaches the backend directly
 # rather than through a model mixin. Each entry says what the in-memory branch
 # does NOT do, so a site marked LOSSY is a known gap, not an oversight.
 # test_the_header_count_matches_the_dict parses these lines: the words are asserted.
@@ -68,6 +68,11 @@ DISPATCH_SITES: dict[tuple[str, str], str] = {
         "a raw SELECT DISTINCT ran on PostgreSQL alone"
     ),
     ("fields/relational/many2many.py", "read"): "equivalent",
+    ("fields/count.py", "_count_in_database"): (
+        "equivalent: a Count on a many2many asks count_m2m_groups for one row "
+        "per record (count(*) GROUP BY on PostgreSQL, the pairs' length in "
+        "memory) after flushing the counted relation"
+    ),
     ("fields/relational/many2many.py", "_apply_relation_delta"): "equivalent",
     ("fields/_field_translation.py", "get_stored_translations"): (
         "equivalent: both branches read the stored column through "
@@ -258,6 +263,7 @@ _NUMBER_WORDS = {
     "twenty-three": 23,
     "twenty-four": 24,
     "twenty-five": 25,
+    "twenty-six": 26,
 }
 
 

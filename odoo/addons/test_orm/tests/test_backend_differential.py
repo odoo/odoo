@@ -18,10 +18,14 @@ from odoo.tools import mute_logger
 
 from odoo.addons.test_orm.models.test_orm import (
     CalendarTest,
+    MixinTestOrmCount,
     TestOrmAutovacuumed,
     TestOrmBar,
     TestOrmCategory,
     TestOrmCompany,
+    TestOrmCountContainer,
+    TestOrmCountLine,
+    TestOrmCountTag,
     TestOrmFoo,
     TestOrmModel_A,
     TestOrmModel_B,
@@ -780,6 +784,93 @@ class TestBackendDifferential(TransactionCase):
 
         self._diff(
             (TestOrmFoo, TestOrmBar, TestOrmCategory, _StubJsonDiscussion), script
+        )
+
+    def test_count_fields_agree_across_tiers(self):
+        def script(env):
+            Container = env["test_orm.count.container"]
+            Line = env["test_orm.count.line"]
+            tags = env["test_orm.count.tag"].create(
+                [{"name": f"t{i}", "published": i % 2 == 0} for i in range(5)]
+            )
+            containers = Container.create(
+                [
+                    {
+                        "name": f"c{i}",
+                        "tag_ids": [(6, 0, tags[:i].ids)],
+                        "published_tag_ids": [(6, 0, tags[:i].ids)],
+                    }
+                    for i in range(4)
+                ]
+            )
+            lines = Line.create(
+                [
+                    {
+                        "name": f"l{index}-{line}",
+                        "container_id": container.id,
+                        "important": line % 2 == 0,
+                        "active": line != 1,
+                    }
+                    for index, container in enumerate(containers)
+                    for line in range(index * 3)
+                ]
+            )
+            env.flush_all()
+            env.invalidate_all()
+            counts = [
+                "line_count",
+                "important_line_count",
+                "all_line_count",
+                "unstored_inverse_count",
+                "computed_inverse_count",
+                "tag_count",
+                "stored_line_count",
+                "stored_important_line_count",
+                "stored_published_tag_count",
+                "computed_subset_line_count",
+                "mixin_line_count",
+            ]
+
+            def snapshot():
+                env.invalidate_all()
+                return {name: containers.mapped(name) for name in counts}
+
+            observed = {"created": snapshot()}
+            lines[0].important = False
+            lines[-1].active = False
+            lines[1].container_id = containers[0]
+            env.flush_all()
+            observed["after writes"] = snapshot()
+            tags[0].published = False
+            containers[3].tag_ids = [(3, tags[1].id)]
+            env.flush_all()
+            observed["after tags"] = snapshot()
+            lines[2:4].unlink()
+            env.flush_all()
+            observed["after unlink"] = snapshot()
+            fresh = Container.new({"name": "new", "line_ids": [(0, 0, {"name": "x"})]})
+            observed["new record"] = (fresh.line_count, fresh.mixin_line_count)
+            observed["grouped"] = [
+                (row[0], row[1])
+                for row in Container._read_group(
+                    [("id", "in", containers.ids)],
+                    ["stored_line_count"],
+                    ["__count"],
+                )
+            ]
+            observed["searched"] = Container.search(
+                [("id", "in", containers.ids), ("stored_important_line_count", ">", 1)]
+            ).mapped("name")
+            return observed
+
+        self._diff(
+            (
+                TestOrmCountTag,
+                TestOrmCountLine,
+                MixinTestOrmCount,
+                TestOrmCountContainer,
+            ),
+            script,
         )
 
     def test_translations_agree_across_tiers(self):

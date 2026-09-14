@@ -641,6 +641,15 @@ class StorageBackend(typing.Protocol):
         query: Query,
     ) -> dict[int, list[int]]: ...
 
+    def count_m2m_groups(
+        self,
+        records: BaseModel,
+        relation: str,
+        column1: str,
+        column2: str,
+        query: Query,
+    ) -> dict[int, int]: ...
+
     def set_parent_paths(
         self, model: BaseModel, ids: typing.Sequence[int]
     ) -> list[tuple[int, str]]: ...
@@ -1519,6 +1528,31 @@ class PostgresBackend:
         for id1, id2 in records.env.execute_query(query.select(sql_id1, sql_id2)):
             group[id1].append(id2)
         return group
+
+    def count_m2m_groups(
+        self,
+        records: BaseModel,
+        relation: str,
+        column1: str,
+        column2: str,
+        query: Query,
+    ) -> dict[int, int]:
+        # one row per record, not one per pair: what a Count field is for
+        sql_id1 = SQL.identifier(relation, column1)
+        rows = records.env.execute_query(
+            SQL(
+                "SELECT %s, count(*) FROM %s WHERE %s = ANY(%s) AND %s IN (%s) "
+                "GROUP BY %s",
+                sql_id1,
+                SQL.identifier(relation),
+                sql_id1,
+                list(records.ids),
+                SQL.identifier(relation, column2),
+                query.subselect(),
+                sql_id1,
+            )
+        )
+        return dict(rows)
 
     def link_m2m_pairs(
         self,
@@ -2719,6 +2753,17 @@ class InMemoryBackend:
         for ids2 in group.values():
             ids2.sort(key=position.__getitem__)
         return group
+
+    def count_m2m_groups(
+        self,
+        records: BaseModel,
+        relation: str,
+        column1: str,
+        column2: str,
+        query: Query,
+    ) -> dict[int, int]:
+        groups = self.read_m2m_groups(records, relation, column1, column2, query)
+        return {id1: len(ids2) for id1, ids2 in groups.items()}
 
     def link_m2m_pairs(
         self,
