@@ -1,4 +1,5 @@
 from datetime import timedelta
+from unittest.mock import patch
 
 from odoo import fields
 from odoo.exceptions import UserError
@@ -6,11 +7,11 @@ from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
 from odoo.addons.gateway_ml.tools.ai_clients import (
-    AI_CLIENT_REGISTRY,
-    BaseAIClient,
     ClaudeClient,
     DeepgramClient,
-    register_ai_client,
+    GeminiClient,
+    OpenAICompatibleClient,
+    get_client_class,
 )
 
 
@@ -87,22 +88,32 @@ class TestAIProviderStatistics(TransactionCase):
 class TestAIProviderClientHook(TransactionCase):
     def test_every_seeded_provider_resolves_to_a_client_class(self):
         for provider in self.env["gateway.ml.provider"].search([]):
-            self.assertIn(
-                provider.code,
-                AI_CLIENT_REGISTRY,
-                f"provider {provider.code} has no registered client",
-            )
+            with self.subTest(provider=provider.code):
+                self.assertTrue(get_client_class(provider))
 
-    def test_deepgram_is_registered(self):
-        self.assertIs(AI_CLIENT_REGISTRY.get("deepgram"), DeepgramClient)
+    def test_the_client_is_the_wire_of_the_providers_own_service(self):
+        for xmlid, expected in (
+            ("gateway_ml.ai_provider_anthropic", ClaudeClient),
+            ("gateway_ml.ai_provider_openai", OpenAICompatibleClient),
+            ("gateway_ml.ai_provider_groq", OpenAICompatibleClient),
+            ("gateway_ml.ai_provider_moonshot", OpenAICompatibleClient),
+            ("gateway_ml.ai_provider_deepseek", OpenAICompatibleClient),
+            ("gateway_ml.ai_provider_google", GeminiClient),
+            ("gateway_ml.ai_provider_deepgram", DeepgramClient),
+        ):
+            with self.subTest(provider=xmlid):
+                self.assertIs(get_client_class(self.env.ref(xmlid)), expected)
 
-    def test_hook_returns_the_registered_class(self):
-        provider = self.env["gateway.ml.provider"].search(
-            [("code", "=", "claude")], limit=1
-        )
-        if not provider:
-            self.skipTest("claude provider seed missing")
-        self.assertIs(AI_CLIENT_REGISTRY[provider.code], ClaudeClient)
+    def test_a_shared_wire_client_is_bound_to_the_providers_service(self):
+        provider = self.env.ref("gateway_ml.ai_provider_groq")
+        with patch(
+            "odoo.addons.gateway_ml.tools.ai_clients.base.get_api_client"
+        ) as factory:
+            client = provider._get_ai_client()
+        self.assertIsInstance(client, OpenAICompatibleClient)
+        self.assertEqual(client.ENDPOINT_CODE, "groq")
+        self.assertEqual(factory.call_args.args[1], "groq")
+        self.assertEqual(client._provider(), provider)
 
     def test_unknown_provider_raises_a_named_error(self):
         service = self.env["integration.service"].create(
@@ -116,25 +127,6 @@ class TestAIProviderClientHook(TransactionCase):
         with self.assertRaises(UserError) as ctx:
             provider._get_ai_client()
         self.assertIn("nowhere_ai", str(ctx.exception))
-
-    def test_registry_refuses_a_non_client(self):
-        class NotAClient:
-            pass
-
-        with self.assertRaises(TypeError):
-            register_ai_client("bogus", NotAClient)
-        self.assertNotIn("bogus", AI_CLIENT_REGISTRY)
-
-    def test_registry_accepts_a_downstream_client(self):
-        class ExtraClient(BaseAIClient):
-            ENDPOINT_CODE = "extra_probe"
-            FALLBACK_MODEL = "extra-1"
-
-        try:
-            register_ai_client("extra_probe", ExtraClient)
-            self.assertIs(AI_CLIENT_REGISTRY["extra_probe"], ExtraClient)
-        finally:
-            AI_CLIENT_REGISTRY.pop("extra_probe", None)
 
 
 @tagged("post_install", "-at_install")
@@ -157,9 +149,7 @@ class TestSeededDefaultsMatchTheChatOperation(TransactionCase):
         self.assertTrue(checked, "no seeded provider carries a chat operation")
 
     def test_the_chat_operation_answers_when_the_provider_names_no_default(self):
-        from odoo.addons.gateway_ml.tools.ai_clients import OpenAIClient
-
-        client = OpenAIClient.__new__(OpenAIClient)
+        client = OpenAICompatibleClient.__new__(OpenAICompatibleClient)
         client.env = self.env
         client.ENDPOINT_CODE = "openai"
         client._default_model = ""

@@ -4,12 +4,12 @@ from unittest.mock import Mock, patch
 from odoo.tests.common import TransactionCase
 
 from odoo.addons.gateway_ml.tests.common import credential_for
-from odoo.addons.gateway_ml.tools.ai_clients import get_deepseek_client
+from odoo.addons.gateway_ml.tools.ai_clients import get_ai_client
 from odoo.addons.integration.tools.exceptions import CommError
 from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 
-class TestDeepSeekClient(EncryptionKeyCase, TransactionCase):
+class TestOpenAICompatibleClient(EncryptionKeyCase, TransactionCase):
     def setUp(self):
         super().setUp()
 
@@ -18,14 +18,14 @@ class TestDeepSeekClient(EncryptionKeyCase, TransactionCase):
         )
 
     def test_validate_params_temperature_valid(self):
-        client = get_deepseek_client(self.env)
+        client = get_ai_client(self.env, "deepseek")
 
         client._check_params(temperature=0.0)
         client._check_params(temperature=1.0)
         client._check_params(temperature=2.0)
 
     def test_validate_params_temperature_invalid(self):
-        client = get_deepseek_client(self.env)
+        client = get_ai_client(self.env, "deepseek")
 
         with self.assertRaises(ValueError):
             client._check_params(temperature=-0.1)
@@ -37,13 +37,13 @@ class TestDeepSeekClient(EncryptionKeyCase, TransactionCase):
             client._check_params(temperature="not_a_number")
 
     def test_validate_params_max_tokens_valid(self):
-        client = get_deepseek_client(self.env)
+        client = get_ai_client(self.env, "deepseek")
 
         client._check_params(max_tokens=100)
         client._check_params(max_tokens=4096)
 
     def test_validate_params_max_tokens_invalid(self):
-        client = get_deepseek_client(self.env)
+        client = get_ai_client(self.env, "deepseek")
 
         with self.assertRaises(ValueError):
             client._check_params(max_tokens=0)
@@ -56,7 +56,7 @@ class TestDeepSeekClient(EncryptionKeyCase, TransactionCase):
 
     @patch("odoo.addons.gateway_ml.tools.ai_clients.base.get_api_client")
     def test_validate_response_valid_json(self, mock_get_client):
-        client = get_deepseek_client(self.env)
+        client = get_ai_client(self.env, "deepseek")
 
         wrapped_response = {
             "status_code": 200,
@@ -72,7 +72,7 @@ class TestDeepSeekClient(EncryptionKeyCase, TransactionCase):
 
     @patch("odoo.addons.gateway_ml.tools.ai_clients.base.get_api_client")
     def test_validate_response_invalid_json(self, mock_get_client):
-        client = get_deepseek_client(self.env)
+        client = get_ai_client(self.env, "deepseek")
 
         response_no_body = {
             "status_code": 200,
@@ -95,7 +95,7 @@ class TestDeepSeekClient(EncryptionKeyCase, TransactionCase):
         mock_client_instance.post.return_value = mock_response
         mock_get_client.return_value = mock_client_instance
 
-        client = get_deepseek_client(self.env)
+        client = get_ai_client(self.env, "deepseek")
 
         with patch.object(client, "_check_params") as mock_validate:
             with patch.object(
@@ -110,7 +110,7 @@ class TestDeepSeekClient(EncryptionKeyCase, TransactionCase):
                 mock_validate.assert_called_once()
 
     def test_get_usage_returns_token_counts(self):
-        client = get_deepseek_client(self.env)
+        client = get_ai_client(self.env, "deepseek")
 
         response = {
             "usage": {
@@ -130,7 +130,7 @@ class TestDeepSeekClient(EncryptionKeyCase, TransactionCase):
         self.assertNotIn("estimated_cost_usd", usage)
 
     def test_get_usage_empty_response(self):
-        client = get_deepseek_client(self.env)
+        client = get_ai_client(self.env, "deepseek")
 
         response = {}
         usage = client.get_usage(response)
@@ -140,7 +140,7 @@ class TestDeepSeekClient(EncryptionKeyCase, TransactionCase):
         self.assertEqual(usage["total_tokens"], 0)
 
 
-class TestDeepSeekVisionFix(EncryptionKeyCase, TransactionCase):
+class TestOpenAICompatibleVision(EncryptionKeyCase, TransactionCase):
     def setUp(self):
         super().setUp()
 
@@ -151,7 +151,7 @@ class TestDeepSeekVisionFix(EncryptionKeyCase, TransactionCase):
     @patch("odoo.addons.gateway_ml.tools.ai_clients.base.get_api_client")
     def test_it_refuses_images_from_the_catalog(self, mock_get_client):
         mock_get_client.return_value = Mock()
-        client = get_deepseek_client(self.env)
+        client = get_ai_client(self.env, "deepseek")
 
         with self.assertRaises(CommError) as caught:
             client.vision_completion(

@@ -5,9 +5,8 @@ from odoo.tests import TransactionCase, tagged
 from odoo.addons.gateway_ml.tests.common import credential_for
 from odoo.addons.gateway_ml.tools.ai_clients import (
     ClaudeClient,
-    DeepSeekClient,
     GeminiClient,
-    OpenAIClient,
+    OpenAICompatibleClient,
 )
 from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
@@ -124,7 +123,7 @@ class TestOpenAIWire(EncryptionKeyCase, TransactionCase):
         credential_for(cls.env, "openai", credential_value="K")
 
     def test_the_output_cap_goes_under_max_completion_tokens(self):
-        client = OpenAIClient(self.env)
+        client = OpenAICompatibleClient(self.env, endpoint_code="openai")
         body = {"choices": [{"message": {"content": "ok"}, "finish_reason": "stop"}]}
         with patch.object(client._client, "post", return_value=_ok(body)) as post:
             client.simple_completion("q", max_tokens=500)
@@ -135,53 +134,8 @@ class TestOpenAIWire(EncryptionKeyCase, TransactionCase):
         self.assertEqual(sent["reasoning_effort"], "none")
 
     def test_a_callers_reasoning_effort_wins_over_the_model_row(self):
-        client = OpenAIClient(self.env)
+        client = OpenAICompatibleClient(self.env, endpoint_code="openai")
         body = {"choices": [{"message": {"content": "ok"}, "finish_reason": "stop"}]}
         with patch.object(client._client, "post", return_value=_ok(body)) as post:
             client.simple_completion("q", reasoning_effort="high")
         self.assertEqual(post.call_args.kwargs["json"]["reasoning_effort"], "high")
-
-
-@tagged("post_install", "-at_install")
-class TestDeepSeekWire(EncryptionKeyCase, TransactionCase):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        credential_for(cls.env, "deepseek", credential_value="K")
-
-    def setUp(self):
-        super().setUp()
-        self.client = DeepSeekClient(self.env)
-
-    def test_a_forced_tool_call_is_sent_with_thinking_off(self):
-        body = {
-            "choices": [
-                {
-                    "message": {
-                        "tool_calls": [
-                            {
-                                "function": {
-                                    "name": "extract_data",
-                                    "arguments": '{"a": 1}',
-                                }
-                            }
-                        ]
-                    }
-                }
-            ]
-        }
-        with patch.object(self.client._client, "post", return_value=_ok(body)) as post:
-            self.assertEqual(
-                self.client.structured_output("q", {"type": "object"}), {"a": 1}
-            )
-        sent = post.call_args.kwargs["json"]
-        self.assertEqual(sent["model"], "deepseek-flash")
-        self.assertEqual(sent["thinking"], {"type": "disabled"})
-
-    def test_reasoning_turns_thinking_on(self):
-        body = {"choices": [{"message": {"content": "42"}}]}
-        with patch.object(self.client._client, "post", return_value=_ok(body)) as post:
-            self.client.reasoning_completion("q")
-        sent = post.call_args.kwargs["json"]
-        self.assertEqual(sent["model"], "deepseek-flash")
-        self.assertEqual(sent["thinking"], {"type": "enabled"})

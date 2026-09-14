@@ -3,7 +3,7 @@ from unittest.mock import patch
 from odoo.tests import TransactionCase, tagged
 
 from odoo.addons.gateway_ml.tests.common import credential_for
-from odoo.addons.gateway_ml.tools.ai_clients import ClaudeClient, OpenAIClient
+from odoo.addons.gateway_ml.tools.ai_clients import ClaudeClient, OpenAICompatibleClient
 from odoo.addons.gateway_ml.tools.ai_clients.claude import get_json_output_config
 from odoo.addons.integration.tools.exceptions import CommError
 from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
@@ -156,11 +156,15 @@ class TestModelRowsAreTheCatalogue(EncryptionKeyCase, TransactionCase):
             {"provider_id": openai.id, "name": "GPT-9", "code": "gpt-9"}
         )
         with self.assertNoLogs(self._BASE_LOGGER, "WARNING"):
-            OpenAIClient(self.env)._check_params(model="gpt-9")
+            OpenAICompatibleClient(self.env, endpoint_code="openai")._check_params(
+                model="gpt-9"
+            )
 
     def test_a_model_nobody_describes_still_warns(self):
         with self.assertLogs(self._BASE_LOGGER, "WARNING"):
-            OpenAIClient(self.env)._check_params(model="gpt-nope")
+            OpenAICompatibleClient(self.env, endpoint_code="openai")._check_params(
+                model="gpt-nope"
+            )
 
     def test_the_output_cap_is_the_model_rows(self):
         claude = self.env["gateway.ml.provider"].search([("code", "=", "claude")])

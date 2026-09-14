@@ -3,8 +3,7 @@ from unittest.mock import patch
 from odoo.tests import TransactionCase, tagged
 
 from odoo.addons.gateway_ml.tests.common import credential_for
-from odoo.addons.gateway_ml.tools.ai_clients import GroqClient, OpenAIClient
-from odoo.addons.gateway_ml.tools.ai_clients.deepseek import DeepSeekClient
+from odoo.addons.gateway_ml.tools.ai_clients import OpenAICompatibleClient
 from odoo.addons.gateway_ml.tools.wire_formats import (
     get_whisper_form,
     read_whisper_transcript,
@@ -64,8 +63,8 @@ class TestOpenAICompatibleTranscribe(EncryptionKeyCase, TransactionCase):
         super().setUpClass()
         credential_for(cls.env, "openai", bearer_token="K")
 
-    def _client(self, cls=OpenAIClient):
-        return cls(self.env)
+    def _client(self, code="openai"):
+        return OpenAICompatibleClient(self.env, endpoint_code=code)
 
     def test_it_posts_the_transcribe_operation(self):
         client = self._client()
@@ -151,14 +150,14 @@ class TestOpenAICompatibleTranscribe(EncryptionKeyCase, TransactionCase):
 
     def test_a_vendor_without_an_audio_wire_says_so(self):
         credential_for(self.env, "deepseek", bearer_token="K")
-        client = self._client(DeepSeekClient)
+        client = self._client("deepseek")
         with self.assertRaises(CommError) as caught:
             client.transcribe(b"AUDIO", "note.ogg")
         self.assertIn("offers no transcribe operation", str(caught.exception))
 
     def test_groq_transcribes_on_its_own_endpoint(self):
         credential_for(self.env, "groq", bearer_token="K")
-        client = self._client(GroqClient)
+        client = self._client("groq")
         with patch.object(
             client._client,
             "post",

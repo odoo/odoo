@@ -3,8 +3,8 @@ def endpoint_by_code(env, code):
     if not endpoint:
         raise AssertionError(
             f"no integration.service carries the code {code!r}. AI endpoints "
-            f"are addressed by vendor code — the key AI_CLIENT_REGISTRY and "
-            f"gateway.ml.provider.code use — never by "
+            f"are addressed by vendor code — the key gateway.ml.provider.code "
+            f"uses — never by "
             f"external id, which is free to be renamed without touching a wire.",
         )
     return endpoint

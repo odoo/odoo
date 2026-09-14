@@ -34,8 +34,8 @@ The ``gateway.ml.model`` row carries what that model needs in a body:
 ``request_extra`` (DeepSeek's thinking switch, a reasoning effort),
 ``max_tokens_param`` -- OpenAI's reasoning models refuse ``max_tokens`` --
 ``min_max_tokens``, and whether sampling parameters are accepted. A caller's
-own keyword still wins in ``OpenAICompatibleClient``, which is how
-``DeepSeekClient.reasoning_completion`` turns thinking back on.
+own keyword still wins in ``OpenAICompatibleClient``, so a caller can turn
+DeepSeek's thinking back on for one request.
 ``tools/wire_formats.py`` shapes and reads the wires: ``get_openai_content``
 and ``get_anthropic_content`` build image-carrying messages,
 ``read_openai_content`` and ``read_anthropic_content`` are the single reader per
@@ -69,10 +69,14 @@ Two ways to reach a vendor, both on the generic HTTP transport, so both inherit
 session pooling, retry, rate limiting, response caching, secret redaction and
 the event log.
 
-* ``tools/ai_clients/`` -- a class per vendor: Claude, DeepSeek, OpenAI, Gemini
-  and Deepgram. Raising, credential resolved from the company, rich where a
-  vendor is rich (prompt caching, tool-call structured output, model tables).
-  What ``AIOrchestrator`` drives.
+* ``tools/ai_clients/`` -- a class per wire, not per vendor:
+  ``OpenAICompatibleClient``, ``ClaudeClient`` (Anthropic Messages),
+  ``GeminiClient`` (the native wire) and ``DeepgramClient``, in
+  ``WIRE_CLIENTS``. ``get_client_class`` reads a provider's operation on its own
+  service -- chat first -- and ``get_ai_client`` binds that wire's class to the
+  provider's service, so OpenAI, Groq, Moonshot and DeepSeek are one class on
+  four services. Raising, credential resolved from the company. What
+  ``AIOrchestrator`` drives, through ``gateway.ml.provider._get_ai_client``.
 * ``tools/provider_assistant.py`` -- ``ProviderAssistant``, one class driving
   any provider's chat and transcribe operations off its rows, built by
   ``gateway.ml.provider._assistant(model=)``. Fail-soft, and authenticated by
@@ -80,11 +84,10 @@ the event log.
   it is configured only when the company is connected to the operation's
   service. It is the only way to reach the ``gemini_openai`` endpoint, which
   Gemini's chat operation uses and which no class targets -- ``GeminiClient``
-  is on ``gemini``, the native wire. ``groq`` and ``moonshot`` DO have classes,
-  in ``tools/ai_clients/openai_wire_vendors.py``, registered like the rest:
-  ``tests/test_registry_coherence.py`` requires every provider to be in
-  ``AI_CLIENT_REGISTRY`` so that ``_get_ai_client`` can answer for whichever
-  one the orchestrator selects. The Telegram bots' assistants are its callers;
+  is on ``gemini``, the native wire. ``tests/test_registry_coherence.py``
+  requires every provider to resolve a wire client, so that ``_get_ai_client``
+  can answer for whichever one the orchestrator selects. The Telegram bots'
+  assistants are its callers;
   ``tools/assistant_adoption.py`` moved their own keys onto connections.
 
 The Claude Agent SDK, which drives the Claude Code CLI as a subprocess rather

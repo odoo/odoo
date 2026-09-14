@@ -249,7 +249,3 @@ class DeepgramClient(BaseAIClient):
         if not transcript:
             raise CommError("Deepgram returned no usable transcript")
         return [{"start": 0.0, "end": 0.0, "text": transcript, "speaker": ""}]
-
-
-def get_deepgram_client(env, company_id=None):
-    return DeepgramClient(env, company_id)

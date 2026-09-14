@@ -129,7 +129,3 @@ class GeminiClient(BaseAIClient):
         if not text:
             raise CommError(f"Gemini returned no text (finishReason={finish})")
         return text
-
-
-def get_gemini_client(env, company_id=None):
-    return GeminiClient(env, company_id)

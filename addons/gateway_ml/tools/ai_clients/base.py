@@ -26,7 +26,9 @@ class BaseAIClient:
     MAX_TEMPERATURE = 1.0
     MAX_TOKENS_LIMIT = 8192
 
-    def __init__(self, env, company_id=None):
+    def __init__(self, env, company_id=None, endpoint_code=None):
+        if endpoint_code:
+            self.ENDPOINT_CODE = endpoint_code
         if not self.ENDPOINT_CODE:
             raise NotImplementedError(
                 f"{type(self).__name__} must declare ENDPOINT_CODE",

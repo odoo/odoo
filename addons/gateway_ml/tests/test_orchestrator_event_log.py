@@ -1,12 +1,10 @@
+from unittest.mock import patch
+
 from odoo.tests import TransactionCase, tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.gateway_ml.tools import AIOrchestrator
-from odoo.addons.gateway_ml.tools.ai_clients import (
-    AI_CLIENT_REGISTRY,
-    BaseAIClient,
-    register_ai_client,
-)
+from odoo.addons.gateway_ml.tools.ai_clients import BaseAIClient
 from odoo.addons.integration.tools.api_client import OutboundAPIClient
 from odoo.addons.integration.tools.exceptions import CommError
 from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
@@ -26,13 +24,15 @@ class TestOrchestratorEventLog(EncryptionKeyCase, TransactionCase):
         super().setUpClass()
         cls.log = cls.env["integration.exchange"]
         cls.orchestrator = AIOrchestrator(cls.env)
-        cls._registry_before = dict(AI_CLIENT_REGISTRY)
-        cls.addClassCleanup(cls._restore_client_registry)
+        cls._stub_clients = {}
+        provider_class = type(cls.env["gateway.ml.provider"])
 
-    @classmethod
-    def _restore_client_registry(cls):
-        AI_CLIENT_REGISTRY.clear()
-        AI_CLIENT_REGISTRY.update(cls._registry_before)
+        def get_stub_client(provider, company_id=None):
+            return cls._stub_clients[provider.code](provider.env, company_id=company_id)
+
+        cls.startClassPatcher(
+            patch.object(provider_class, "_get_ai_client", get_stub_client)
+        )
 
     def _model(self, code):
         endpoint = self.env["integration.service"].create(
@@ -51,8 +51,8 @@ class TestOrchestratorEventLog(EncryptionKeyCase, TransactionCase):
             {"name": f"{code} key", "endpoint_id": endpoint.id, "bearer_token": "K"}
         )
         endpoint.credential_id = credential
-        register_ai_client(
-            code, type(f"Stub{code}", (_StubClient,), {"ENDPOINT_CODE": code})
+        self._stub_clients[code] = type(
+            f"Stub{code}", (_StubClient,), {"ENDPOINT_CODE": code}
         )
         provider = self.env["gateway.ml.provider"].create({"endpoint_id": endpoint.id})
         provider.default_model_id = self.env["gateway.ml.model"].create(

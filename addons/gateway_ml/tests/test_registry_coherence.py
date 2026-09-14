@@ -1,6 +1,7 @@
 from odoo.tests import TransactionCase, tagged
 
-from odoo.addons.gateway_ml.tools.ai_clients import AI_CLIENT_REGISTRY
+from odoo.addons.gateway_ml.models.gateway_ml_provider_service import WIRES
+from odoo.addons.gateway_ml.tools.ai_clients import WIRE_CLIENTS, get_client_class
 from odoo.addons.gateway_ml.tools.wire_formats import UNTIMED_TRANSCRIPTION_MODELS
 
 NO_CHAT_OPERATION = {"deepgram"}
@@ -12,12 +13,14 @@ class TestRegistryCoherence(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.providers = cls.env["gateway.ml.provider"].sudo().search([])
-        cls.provider_codes = set(cls.providers.mapped("code"))
 
     def test_every_provider_has_a_client(self):
-        for code in sorted(self.provider_codes):
-            with self.subTest(provider=code):
-                self.assertIn(code, AI_CLIENT_REGISTRY)
+        for provider in self.providers:
+            with self.subTest(provider=provider.code):
+                self.assertTrue(get_client_class(provider))
+
+    def test_every_wire_has_a_client(self):
+        self.assertEqual(set(WIRE_CLIENTS), {code for code, _label in WIRES})
 
     def test_every_provider_carries_a_chat_operation_or_is_exempt(self):
         for provider in self.providers:
@@ -65,7 +68,7 @@ class TestRegistryCoherence(TransactionCase):
 
     def test_has_audio_means_the_orchestrators_client_can_transcribe(self):
         for provider in self.providers.filtered("has_audio"):
-            client_cls = AI_CLIENT_REGISTRY.get(provider.code)
+            client_cls = get_client_class(provider)
             with self.subTest(provider=provider.code):
                 self.assertIsNotNone(client_cls)
                 entry_points = [
@@ -107,9 +110,8 @@ class TestRegistryCoherence(TransactionCase):
         for model in self.env["gateway.ml.model"].sudo().search([]):
             for hop in model.fallback_model_ids:
                 with self.subTest(model=model.code, hop=hop.code):
-                    self.assertIn(
-                        hop.provider_id.code,
-                        AI_CLIENT_REGISTRY,
+                    self.assertTrue(
+                        get_client_class(hop.provider_id),
                         f"{model.code} falls back to {hop.code} on "
                         f"{hop.provider_id.code}, which has no client class; the "
                         f"hop would fail at _get_ai_client rather than on the wire",

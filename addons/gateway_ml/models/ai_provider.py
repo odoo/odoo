@@ -3,7 +3,7 @@ from typing import Any
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
-from ..tools.ai_clients import AI_CLIENT_REGISTRY, get_ai_client
+from ..tools.ai_clients import get_ai_client
 from ..tools.provider_assistant import ProviderAssistant
 
 
@@ -142,10 +142,9 @@ class AIProvider(models.Model):
         if client is None:
             raise UserError(
                 self.env._(
-                    "No AI client is registered for provider %(provider)s. "
-                    "Registered providers: %(available)s.",
+                    "Provider %(provider)s carries no operation on its own service "
+                    "over a wire a client speaks.",
                     provider=self.code,
-                    available=", ".join(sorted(AI_CLIENT_REGISTRY)) or "none",
                 ),
             )
         return client

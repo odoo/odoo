@@ -1,64 +1,41 @@
 from .base import BaseAIClient
 from .claude import ClaudeClient, get_claude_client
-from .deepgram import DeepgramClient, get_deepgram_client
-from .deepseek import DeepSeekClient, get_deepseek_client
-from .gemini import GeminiClient, get_gemini_client
-from .openai import OpenAIClient, get_openai_client
-from .openai_wire_vendors import (
-    GroqClient,
-    MoonshotClient,
-    get_groq_client,
-    get_moonshot_client,
-)
+from .deepgram import DeepgramClient
+from .gemini import GeminiClient
+from .openai_compatible import OpenAICompatibleClient
 
-AI_CLIENT_REGISTRY = {}
+WIRE_CLIENTS = {
+    "openai_compatible": OpenAICompatibleClient,
+    "anthropic_messages": ClaudeClient,
+    "gemini_native": GeminiClient,
+    "deepgram": DeepgramClient,
+}
 
 
-def register_ai_client(code, client_cls):
-    if not (isinstance(client_cls, type) and issubclass(client_cls, BaseAIClient)):
-        raise TypeError(
-            f"{client_cls!r} must be a BaseAIClient subclass to serve provider {code!r}",
-        )
-    AI_CLIENT_REGISTRY[code] = client_cls
+def get_client_class(provider):
+    own = provider.sudo().service_ids.filtered(
+        lambda row: row.service_id == provider.endpoint_id
+    )
+    chosen = own.filtered(lambda row: row.operation == "chat") or own
+    return WIRE_CLIENTS.get(chosen[:1].wire)
 
 
 def get_ai_client(env, code, company_id=None):
-    client_cls = AI_CLIENT_REGISTRY.get(code)
-    if client_cls is None:
+    provider = env["gateway.ml.provider"].sudo().search([("code", "=", code)], limit=1)
+    client_cls = provider and get_client_class(provider)
+    if not client_cls:
         return None
-    return client_cls(env, company_id=company_id)
-
-
-for _cls in (
-    ClaudeClient,
-    DeepSeekClient,
-    OpenAIClient,
-    GeminiClient,
-    DeepgramClient,
-    GroqClient,
-    MoonshotClient,
-):
-    register_ai_client(_cls.ENDPOINT_CODE, _cls)
-del _cls
+    return client_cls(env, company_id=company_id, endpoint_code=code)
 
 
 __all__ = [
-    "AI_CLIENT_REGISTRY",
+    "WIRE_CLIENTS",
     "BaseAIClient",
     "ClaudeClient",
-    "DeepSeekClient",
     "DeepgramClient",
     "GeminiClient",
-    "GroqClient",
-    "MoonshotClient",
-    "OpenAIClient",
+    "OpenAICompatibleClient",
     "get_ai_client",
     "get_claude_client",
-    "get_deepgram_client",
-    "get_deepseek_client",
-    "get_gemini_client",
-    "get_groq_client",
-    "get_moonshot_client",
-    "get_openai_client",
-    "register_ai_client",
+    "get_client_class",
 ]

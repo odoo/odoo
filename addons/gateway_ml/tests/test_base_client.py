@@ -4,16 +4,14 @@ from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
 from odoo.addons.gateway_ml.tools.ai_clients import (
-    AI_CLIENT_REGISTRY,
+    WIRE_CLIENTS,
     BaseAIClient,
     ClaudeClient,
-    DeepgramClient,
-    DeepSeekClient,
-    GeminiClient,
-    OpenAIClient,
+    OpenAICompatibleClient,
+    get_client_class,
 )
 
-CLIENTS = (ClaudeClient, DeepSeekClient, OpenAIClient, GeminiClient, DeepgramClient)
+CLIENTS = tuple(WIRE_CLIENTS.values())
 
 
 class _Probe(BaseAIClient):
@@ -35,15 +33,17 @@ class TestClientContract(TransactionCase):
         for cls in CLIENTS:
             self.assertTrue(issubclass(cls, BaseAIClient), cls.__name__)
 
-    def test_all_clients_declare_an_endpoint_code(self):
-        for cls in CLIENTS:
-            self.assertTrue(cls.ENDPOINT_CODE, f"{cls.__name__}.ENDPOINT_CODE")
+    def test_a_client_bound_to_no_service_refuses_to_build(self):
+        with self.assertRaises(NotImplementedError):
+            OpenAICompatibleClient(self.env)
 
     def test_every_client_resolves_a_model_with_nothing_to_go_on(self):
-        for cls in CLIENTS:
-            with self.subTest(client=cls.__name__):
+        for provider in self.env["gateway.ml.provider"].search([]):
+            cls = get_client_class(provider)
+            with self.subTest(provider=provider.code, client=cls.__name__):
                 client = cls.__new__(cls)
                 client.env = self.env
+                client.ENDPOINT_CODE = provider.code
                 client._default_model = ""
                 self.assertTrue(
                     client._resolve_model(),
@@ -63,21 +63,6 @@ class TestClientContract(TransactionCase):
     def test_every_client_validates(self):
         for cls in CLIENTS:
             self.assertTrue(hasattr(cls, "_check_params"), cls.__name__)
-
-    def test_endpoint_codes_are_unique(self):
-        codes = [cls.ENDPOINT_CODE for cls in CLIENTS]
-        self.assertEqual(len(codes), len(set(codes)))
-
-    def test_registry_maps_each_code_to_its_class(self):
-        for cls in CLIENTS:
-            self.assertIs(AI_CLIENT_REGISTRY[cls.ENDPOINT_CODE], cls)
-
-    def test_missing_service_code_is_refused(self):
-        class Broken(BaseAIClient):
-            pass
-
-        with self.assertRaises(NotImplementedError):
-            Broken(self.env)
 
 
 @tagged("post_install", "-at_install")
@@ -121,10 +106,13 @@ class TestModelResolution(TransactionCase):
         self.assertEqual(client._resolve_model(None), code)
 
     def test_resolution_survives_a_missing_provider_row(self):
-        client = OpenAIClient.__new__(OpenAIClient)
+        client = OpenAICompatibleClient.__new__(OpenAICompatibleClient)
         client.env = self.env
         client.company_id = None
-        with patch.object(OpenAIClient, "_provider_default_model", return_value=""):
+        client.ENDPOINT_CODE = "openai"
+        with patch.object(
+            OpenAICompatibleClient, "_provider_default_model", return_value=""
+        ):
             self.assertEqual(client._resolve_model(None), "gpt-5.6-luna")
 
 
@@ -177,7 +165,7 @@ class TestValidateParams(TransactionCase):
 
 @tagged("post_install", "-at_install")
 class TestJsonCompletionContract(TransactionCase):
-    TEXT_CLIENTS = (ClaudeClient, DeepSeekClient, OpenAIClient)
+    TEXT_CLIENTS = (ClaudeClient, OpenAICompatibleClient)
 
     def _client(self, cls, text):
         client = cls.__new__(cls)

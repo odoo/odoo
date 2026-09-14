@@ -4,7 +4,7 @@ from . import test_base_client
 from . import test_claude_client
 from . import test_deepgram_params
 from . import test_deepgram_speech
-from . import test_deepseek_client
+from . import test_openai_compatible_client
 from . import test_fallback_order
 from . import test_json_payload
 from . import test_migrations

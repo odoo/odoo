@@ -3,9 +3,7 @@ from unittest.mock import patch
 from odoo.tests import TransactionCase, tagged
 
 from odoo.addons.gateway_ml.tests.common import credential_for
-from odoo.addons.gateway_ml.tools.ai_clients import GroqClient, OpenAIClient
-from odoo.addons.gateway_ml.tools.ai_clients.deepseek import DeepSeekClient
-from odoo.addons.gateway_ml.tools.ai_clients.gemini import GeminiClient
+from odoo.addons.gateway_ml.tools.ai_clients import GeminiClient, OpenAICompatibleClient
 from odoo.addons.integration.tools.exceptions import CommError
 from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
@@ -21,7 +19,7 @@ class TestVisionCompletion(EncryptionKeyCase, TransactionCase):
             credential_for(cls.env, code, credential_value="K")
 
     def test_it_sends_the_image_as_a_data_uri_part(self):
-        client = OpenAIClient(self.env)
+        client = OpenAICompatibleClient(self.env, endpoint_code="openai")
         with patch.object(
             client._client,
             "post",
@@ -49,7 +47,7 @@ class TestVisionCompletion(EncryptionKeyCase, TransactionCase):
                 "has_vision": True,
             }
         )
-        client = GroqClient(self.env)
+        client = OpenAICompatibleClient(self.env, endpoint_code="groq")
         with patch.object(
             client._client,
             "post",
@@ -64,11 +62,13 @@ class TestVisionCompletion(EncryptionKeyCase, TransactionCase):
 
     def test_groq_reads_no_images_since_scout_shut_down(self):
         with self.assertRaises(CommError) as caught:
-            GroqClient(self.env).vision_completion("what is this?", _IMAGE)
+            OpenAICompatibleClient(self.env, endpoint_code="groq").vision_completion(
+                "what is this?", _IMAGE
+            )
         self.assertIn("no images", str(caught.exception))
 
     def test_a_truncated_answer_is_refused_rather_than_returned(self):
-        client = OpenAIClient(self.env)
+        client = OpenAICompatibleClient(self.env, endpoint_code="openai")
         with patch.object(
             client._client,
             "post",
@@ -87,13 +87,13 @@ class TestVisionCompletion(EncryptionKeyCase, TransactionCase):
         self.assertIn("no usable answer", str(caught.exception))
 
     def test_a_vendor_that_reads_no_images_says_so(self):
-        client = DeepSeekClient(self.env)
+        client = OpenAICompatibleClient(self.env, endpoint_code="deepseek")
         with self.assertRaises(CommError) as caught:
             client.vision_completion("what is this?", _IMAGE)
         self.assertIn("no images", str(caught.exception))
 
     def test_an_empty_image_is_refused_before_the_request(self):
-        client = OpenAIClient(self.env)
+        client = OpenAICompatibleClient(self.env, endpoint_code="openai")
         with patch.object(client._client, "post") as post:
             with self.assertRaises(CommError):
                 client.vision_completion("what is this?", "")
@@ -112,6 +112,6 @@ class TestVisionCompletion(EncryptionKeyCase, TransactionCase):
         )
 
     def test_every_vision_capable_client_answers_to_it(self):
-        for cls in (OpenAIClient, GeminiClient):
+        for cls in (OpenAICompatibleClient, GeminiClient):
             with self.subTest(client=cls.__name__):
                 self.assertTrue(callable(getattr(cls, "vision_completion", None)))

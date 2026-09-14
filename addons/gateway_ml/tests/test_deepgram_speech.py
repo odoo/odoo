@@ -3,7 +3,7 @@ from unittest.mock import Mock, patch
 from odoo.tests import TransactionCase, tagged
 
 from odoo.addons.gateway_ml.tests.common import credential_for
-from odoo.addons.gateway_ml.tools.ai_clients import AI_CLIENT_REGISTRY, DeepgramClient
+from odoo.addons.gateway_ml.tools.ai_clients import DeepgramClient, get_client_class
 from odoo.addons.integration.tools.exceptions import CommError
 from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
@@ -108,7 +108,7 @@ class TestEveryModelKindHasItsMethod(TransactionCase):
             method = self.METHOD_OF_KIND.get(model.kind)
             if not method:
                 continue
-            client_cls = AI_CLIENT_REGISTRY.get(model.provider_id.code)
+            client_cls = get_client_class(model.provider_id)
             with self.subTest(model=model.code, kind=model.kind):
                 self.assertIsNotNone(client_cls)
                 self.assertTrue(
