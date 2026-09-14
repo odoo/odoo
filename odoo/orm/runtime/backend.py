@@ -550,8 +550,6 @@ class StorageBackend(typing.Protocol):
     sequences: SequenceStore
     columns: ColumnStore
 
-    supports_column_scan: bool
-
     supports_recursive_queries: bool
 
     def timezone_names(self, env) -> frozenset[str]: ...
@@ -798,8 +796,6 @@ def _fetch_translated_term(model: BaseModel, field: Field, query: Query) -> SQL:
 class PostgresBackend:
     sequences: SequenceStore = PostgresSequenceStore()
     columns: ColumnStore = PostgresColumnStore()
-
-    supports_column_scan: bool = True
 
     supports_recursive_queries: bool = True
 
@@ -2245,8 +2241,6 @@ class _ForeignKeyPlan:
 
 
 class InMemoryBackend:
-    supports_column_scan: bool = False
-
     supports_recursive_queries: bool = False
 
     __slots__ = ("columns", "sequences", "storage")

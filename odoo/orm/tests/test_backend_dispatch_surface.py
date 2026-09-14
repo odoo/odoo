@@ -61,9 +61,9 @@ DISPATCH_SITES: dict[tuple[str, str], str] = {
         "equivalent: the same timezone_names lookup for a datetime property"
     ),
     ("fields/reference.py", "_reference_exists"): (
-        "BACKEND-SNIFF: `env.backend is None` gates a prefetch SELECT, i.e. it "
-        "reads as 'am I on PostgreSQL?'.  This is the inline test-backend sniff "
-        "the persistence port set out to remove, renamed from transaction.storage"
+        "equivalent: the siblings' stored pairs are read through "
+        "backend.columns on both tiers and verified in the same round, where "
+        "a raw SELECT DISTINCT ran on PostgreSQL alone"
     ),
     ("fields/relational/many2many.py", "read"): "equivalent",
     ("fields/relational/many2many.py", "_apply_relation_delta"): "equivalent",

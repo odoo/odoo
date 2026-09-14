@@ -5,7 +5,7 @@ from typing import override
 
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.sql import pg_varchar
-from odoo.tools import SQL, OrderedSet, unique
+from odoo.tools import OrderedSet, unique
 
 from .._recordset import is_recordset
 from .base import Field
@@ -146,19 +146,15 @@ class Reference(Selection["BaseModel | None"]):
             and len(prefetch_ids) > 1
             and self.store
             and self.column_type
-            and env.backend.supports_column_scan
         ):
-            env.cr.execute(
-                SQL(
-                    "SELECT DISTINCT %(column)s FROM %(table)s"
-                    " WHERE id = ANY(%(ids)s) AND %(column)s IS NOT NULL",
-                    column=SQL.identifier(self.name),
-                    table=SQL.identifier(env[self.model_name]._table),
-                    ids=prefetch_ids,
-                )
+            # the siblings' stored pairs, verified in the same round
+            stored = env.backend.columns.read(
+                env[self.model_name], self.name, prefetch_ids
             )
             valid_models = None
-            for (sibling,) in env.cr.fetchall():
+            for sibling in set(stored.values()):
+                if not sibling:
+                    continue
                 model, sep, id_str = sibling.partition(",")
                 try:
                     sibling_id = int(id_str)

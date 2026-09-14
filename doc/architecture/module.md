@@ -504,13 +504,15 @@ pins the database-free boundary.
 Production CRUD sniffs the test backend neither via `transaction.storage` nor
 via a null check.
 
-**Capabilities: 2 declared, no branch that is lossy or blocking** (frozen at
-odoo `f7e799ce3578`, 2026-09-13; pinned by `odoo/orm/tests/test_backend_dispatch_surface.py`
-and `test_backend_protocol.py`):
+**Capabilities: 1 declared, no branch that is lossy or blocking** (frozen at
+odoo `f7e799ce3578`, 2026-09-13, re-read 2026-09-14 when the Reference field's
+sibling prefetch moved onto `backend.columns` and `supports_column_scan` went
+with it; pinned by `odoo/orm/tests/test_backend_dispatch_surface.py` and
+`test_backend_protocol.py`):
 
 | Measure | Value | What it counts |
 |---|---:|---|
-| declared capabilities | 2 | `supports_column_scan`, `supports_recursive_queries` -- each guards a site whose in-memory branch the inventory marks *equivalent* |
+| declared capabilities | 1 | `supports_recursive_queries` -- guards a site whose in-memory branch the inventory marks *equivalent* |
 | dispatch sites | 20 across 12 files, 5 in Layer 1 | every `env.backend.<method>(` in the mixins, fields and domain |
 | protocol methods without a caller | 0 | every `StorageBackend` method is dispatched from the ORM or from a base model spelling `env.backend.` |
 

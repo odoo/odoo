@@ -18,7 +18,6 @@ _ADDON_ROOTS = (
 )
 
 _CAPABILITY_MEMBERS = {
-    "supports_column_scan",
     "supports_recursive_queries",
 }
 _ATTRIBUTE_MEMBERS = _CAPABILITY_MEMBERS | {"sequences", "columns"}
