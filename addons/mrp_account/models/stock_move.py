@@ -3,17 +3,46 @@
 from collections import defaultdict
 
 from odoo import models
+from odoo.tools import float_round
 
 
 class StockMove(models.Model):
     _inherit = "stock.move"
 
+    def _set_value(self, recompute_date=None, skip_check=False):
+        """Propagate component value changes through completed productions."""
+        changed_moves = super()._set_value(recompute_date=recompute_date, skip_check=skip_check)
+        if skip_check:
+            return changed_moves
+
+        changed_components = changed_moves.filtered(lambda move: move.product_id.cost_method in ('fifo', 'average'))
+        productions = changed_components.raw_material_production_id.filtered(lambda production: production.state == 'done')
+        finished_moves = productions.move_finished_ids.filtered(lambda move: move.state == 'done' and move.product_id.cost_method in ('fifo', 'average'))
+        if finished_moves:
+            finished_moves._set_value(recompute_date=min(finished_moves.mapped('date')))
+        return changed_moves
+
     def _get_value_from_production(self, quantity):
-        # TODO: Maybe move _cal_price here
         self.ensure_one()
-        if not self.production_id:
+        if not self.production_id or self.product_id.cost_method not in ('fifo', 'average'):
             return super()._get_value_from_production(quantity)
-        value = quantity * self.price_unit
+
+        production = self.production_id.with_company(self.company_id)
+        raw_moves = production.move_raw_ids.filtered(lambda move: move.state == 'done')
+        finished_moves = production.move_finished_ids.filtered(lambda move: move.state == 'done' and not move.product_id.uom_id.is_zero(move._get_valued_qty()))
+        main_moves = finished_moves.filtered(lambda move: move.product_id == production.product_id)
+        main_quantity = sum(move._get_valued_qty() for move in main_moves)
+        total_cost = abs(sum(raw_moves.mapped('value'))) + production.workorder_ids._cal_cost() + production.extra_cost * main_quantity
+
+        if self.product_id == production.product_id:
+            byproduct_cost_share = sum(finished_moves.filtered(lambda move: move.product_id != production.product_id).mapped('cost_share'))
+            cost_share = float_round(1 - byproduct_cost_share / 100, precision_rounding=0.0001)
+            output_quantity = main_quantity
+        else:
+            cost_share = self.cost_share / 100
+            output_quantity = self._get_valued_qty()
+
+        value = total_cost * cost_share * quantity / output_quantity if output_quantity else 0
         return {
             'value': value,
             'quantity': quantity,

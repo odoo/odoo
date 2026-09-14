@@ -382,7 +382,7 @@
                                 <div invisible="state == 'draft'" class="o_row flex-grow-1">
                                     <label for="qty_producing" string="Quantity" class="d-none d-touch-block"/>
                                     <field name="qty_producing" widget="external_placeholder_float_field" placeholder="product_qty" class="text-start text-truncate"
-                                           readonly="state == 'cancel' or (state == 'done' and is_locked) or product_tracking=='serial'" force_save="1"/>
+                                           readonly="state in ('done', 'cancel') or product_tracking=='serial'" force_save="1"/>
                                     /
                                 </div>
                                 <field name="product_qty" class="oe_inline text-start text-truncate"
@@ -480,7 +480,7 @@
                             <field name="move_raw_ids"
                                 mode="list,kanban"
                                 context="{'default_date': date_start, 'default_date_deadline': date_start, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_warehouse_id': warehouse_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id, 'form_view_ref': 'mrp.view_mrp_stock_move_operations', 'active_mo_id': id}"
-                                readonly="state == 'cancel' or (state == 'done' and is_locked)"
+                                readonly="state in ('done', 'cancel')"
                             >
                                 <list editable="bottom">
                                     <control>
@@ -559,7 +559,7 @@
                         <page string="By-Products" name="finished_products" groups="mrp.group_mrp_byproducts">
                             <field name="move_byproduct_ids"
                                 context="{'default_date': date_finished, 'default_date_deadline': date_deadline, 'default_warehouse_id': warehouse_id, 'default_location_id': production_location_id, 'default_location_dest_id': location_dest_id, 'default_state': 'draft', 'default_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id, 'form_view_ref': 'mrp.view_mrp_stock_move_operations'}"
-                                readonly="state == 'cancel' or (state == 'done' and is_locked)">
+                                readonly="state in ('done', 'cancel')">
                                 <list default_order="sequence, id" decoration-muted="state in ['done', 'cancel']" editable="bottom">
                                     <control>
                                         <create string="Add a line"/>
