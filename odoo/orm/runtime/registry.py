@@ -19,6 +19,7 @@ from odoo.libs.worker_thread import current_worker_thread
 from odoo.tools import OrderedSet, config
 from odoo.tools.cache import remove_counters
 from odoo.tools.constants import CACHES_BY_KEY
+from odoo.tools.translate import code_translations
 
 from .. import models, registration
 from ..primitives import SUPERUSER_ID
@@ -162,6 +163,20 @@ class Registry(
 
         cls.remove(db_name)
         cls.registries[db_name] = registry
+
+        # Code translations are cached in a process-global, outside the
+        # registry, and `_load_module_terms` clears them only in the worker
+        # that performs the install or upgrade. Every other worker learns of
+        # the change by rebuilding its registry -- which is here -- and would
+        # otherwise keep serving the `.po` it read before the module changed
+        # on disk. With several workers that means the language a user sees
+        # depends on which one answers.
+        #
+        # Dropping the whole cache is the honest scope: a rebuild means the
+        # addons directory may have moved under us, and the entries are read
+        # back lazily from disk on the next request that needs them.
+        code_translations.clear()
+
         try:
             registry.setup_signaling()
             with registry.cursor() as cr:

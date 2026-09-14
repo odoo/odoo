@@ -14,6 +14,7 @@ from odoo.tools.translate import (
     PoFileReader,
     TranslationImporter,
     TranslationModuleReader,
+    code_translations,
     html_translate,
     xml_translate,
 )
@@ -2418,4 +2419,43 @@ msgstr "SPECTATEUR INNOCENT"
             self.env["ir.ui.view"].browse(view.id).with_context(lang="fr_FR").arch_db,
             "<t><p>SPECTATEUR INNOCENT</p></t>",
             "the guard must not cost a correctly-referenced translation",
+        )
+
+
+@tagged("post_install", "-at_install")
+class TestCodeTranslationsClearedOnRegistryRebuild(TransactionCase):
+    """A registry rebuild must drop the process-global translation cache.
+
+    `code_translations` is not part of the registry, and `_load_module_terms`
+    clears it only inside the worker performing an install or upgrade. Every
+    other worker finds out that modules changed by rebuilding its registry, so
+    that rebuild is the only moment it can drop what it read from the old
+    `.po` files.
+
+    Without this, a multi-worker server answers the same translation request
+    differently depending on which worker takes it: measured on production
+    right after a UI upgrade, 13 workers served three different payloads of
+    11, 28 and 32 strings for one module.
+    """
+
+    def test_registry_rebuild_drops_the_cached_translations(self):
+        from odoo.orm.runtime.registry import Registry
+
+        # A value no `.po` could produce, so its survival proves the cache
+        # was reused rather than re-read from disk.
+        stale = {"messages": ({"id": "Solve", "string": "STALE"},)}
+        code_translations.web_translations[("base", "fr_FR")] = stale
+        code_translations.python_translations[("base", "fr_FR")] = {"Solve": "STALE"}
+
+        Registry.new(self.env.cr.dbname)
+
+        self.assertNotIn(
+            ("base", "fr_FR"),
+            code_translations.web_translations,
+            "the rebuilt registry kept web translations read before it",
+        )
+        self.assertNotIn(
+            ("base", "fr_FR"),
+            code_translations.python_translations,
+            "the rebuilt registry kept python translations read before it",
         )
