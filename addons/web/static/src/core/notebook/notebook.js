@@ -177,6 +177,7 @@ export class Notebook extends Component {
         return current;
     }
 
+    invalidPages = computed(() => this.computeInvalidPages());
     computeInvalidPages() {
         const invalidPages = new Set();
         for (const page of this.navItems) {
@@ -188,5 +189,18 @@ export class Notebook extends Component {
             }
         }
         return invalidPages;
+    }
+
+    _getNavItemClasses(navItem) {
+        const invalidPages = this.invalidPages();
+        const classes = {
+            "active position-relative cursor-default z-1": navItem[0] === this.state.currentPage,
+            "p-3 rounded-0 w-100": this.props.orientation === "vertical",
+            o_page_invalid: invalidPages.has(navItem[0]),
+        };
+        if (navItem[1].className) {
+            classes[navItem[1].className] = true;
+        }
+        return classes;
     }
 }
