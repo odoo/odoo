@@ -117,11 +117,14 @@ class TestResource(TestHrCommon):
             'name': 'Test resource',
             'user_id': user.id,
         }])
+        job = self.env['hr.job'].create([{
+            'name': 'Tester',
+        }])
         employee = self.env['hr.employee'].create([{
             'name': 'Test employee',
             'active': False,
             'user_id': user.id,
-            'job_title': 'Tester',
+            'job_id': job.id,
             'department_id': department.id,
             'work_email': 'test@odoo.pro',
             'work_phone': '+32800100100',
@@ -129,7 +132,7 @@ class TestResource(TestHrCommon):
         }])
         for field in 'email', 'phone':
             self.assertEqual(resource[field], user[field])
-        for field in 'job_title', 'department_id', 'work_email', 'work_phone', 'show_hr_icon_display', 'hr_icon_display':
+        for field in 'job_id', 'department_id', 'work_email', 'work_phone', 'show_hr_icon_display', 'hr_icon_display':
             self.assertEqual(resource[field], employee[field])
 
     def test_calendars_validity_within_period(self):
