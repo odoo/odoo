@@ -1,6 +1,8 @@
 .o_purchase_dashboard {
     .purchase-dashboard-card {
         @include media-breakpoint-up(lg) {
+            border-radius: var(--btn-border-radius);
+
             &.o_purchase_dashboard_card_top {
                 --btn-border-radius: #{$btn-border-radius} #{$btn-border-radius} 0 0;
             }
