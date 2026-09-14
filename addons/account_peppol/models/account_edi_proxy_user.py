@@ -231,6 +231,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         :return: the created move (if any)
         """
         self.ensure_one()
+<<<<<<< 29faba90020caa4cd1f35095c155c0ac52e97838
 
         is_self_billed = False
         files_data = self.env['account.move']._to_files_data(attachment)
@@ -268,6 +269,16 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             move_type = 'out_invoice'
             if not journal:
                 return {}
+||||||| 10fe2557f94fa0e0aa5a63006c74942e3d494b1d
+        journal, move_type = self._peppol_get_import_journal_and_move_type(attachment)
+        if not journal:
+            return False
+=======
+        partner_endpoint = self._context.get('peppol_sender_identifier')
+        journal, move_type = self._peppol_get_import_journal_and_move_type(attachment)
+        if not journal:
+            return False
+>>>>>>> fca10215178ae056ac2a33ced63a1889f2dbd00d
 
         move = self.env['account.move'].create({
             'journal_id': journal.id,
@@ -279,16 +290,43 @@ class Account_Edi_Proxy_ClientUser(models.Model):
             move.is_in_extractable_state = False
 
         try:
+<<<<<<< 29faba90020caa4cd1f35095c155c0ac52e97838
             if not move._extend_with_attachments(files_data, new=True):
                 move.peppol_move_state = 'error'
+||||||| 10fe2557f94fa0e0aa5a63006c74942e3d494b1d
+            if move._extend_with_attachments(attachment, new=True):
+                move._message_log(
+                    body=self.env._(
+                        "%(proxy_type)s document (UUID: %(uuid)s) has been received successfully",
+                        proxy_type=dict(self._fields['proxy_type']._description_selection(self.env))[self.proxy_type],
+                        uuid=uuid,
+                    ),
+                    attachment_ids=attachment.ids,
+                )
+                move._autopost_bill()
+            else:
+=======
+            if move._extend_with_attachments(attachment, new=True):
+                move._message_log(
+                    body=self.env._(
+                        "%(proxy_type)s document (UUID: %(uuid)s) has been received successfully from %(partner_endpoint)s",
+                        proxy_type=dict(self._fields['proxy_type']._description_selection(self.env))[self.proxy_type],
+                        uuid=uuid,
+                        partner_endpoint=partner_endpoint,
+                    ),
+                    attachment_ids=attachment.ids,
+                )
+                move._autopost_bill()
+            else:
+>>>>>>> fca10215178ae056ac2a33ced63a1889f2dbd00d
                 move.message_post(
                     body=self.env._("There was an error while importing the bill, you can find attached the incoming XML"),
                 )
             move._autopost_bill()
         except Exception as err:
             _logger.exception(
-                "Unexpected error occurred during the import of bill with id %s (%s uuid: %s, attachment: %s)",
-                move.id, self.proxy_type, uuid, attachment.id,
+                "Unexpected error occurred during the import of bill with id %s (%s uuid: %s, attachment: %s, partner_endpoint: %s)",
+                move.id, self.proxy_type, uuid, attachment.id, partner_endpoint,
             )
             move._message_log(
                 body=Markup("%s<br/>%s") % (
@@ -382,6 +420,10 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                 endpoint=edi_user._get_peppol_proxy_endpoint('1/get_document'),
                 params={'message_uuids': message_uuids},
             )
+            # The sender identifier is only returned by `get_all_documents`.
+            uuid_to_sender = {message['uuid']: message.get('sender') for message in received_messages}
+            for uuid, content in all_messages.items():
+                content.setdefault('sender', uuid_to_sender.get(uuid))
 
             processed_uuids, moves = edi_user._peppol_process_new_messages(all_messages)
 
@@ -412,6 +454,7 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         for uuid, content in messages.items():
             fileextension, mimetype = self._peppol_get_filetype(content)
             filename = content["filename"] or 'attachment'  # default to attachment, which should not usually happen
+<<<<<<< 29faba90020caa4cd1f35095c155c0ac52e97838
             decoded_document = self._peppol_get_decoded_document(content)
             attachment = self.env["ir.attachment"].create({
                 "name": f"{filename}.{fileextension}",
@@ -426,6 +469,35 @@ class Account_Edi_Proxy_ClientUser(models.Model):
                     moves += uuid_move.get('move', self.env['account.move'])
             except Exception as e:  # noqa: BLE001
                 _logger.error('Error while processing the Peppol document with uuid %s: %s', uuid, e)
+||||||| 10fe2557f94fa0e0aa5a63006c74942e3d494b1d
+            attachment = self.env["ir.attachment"].create(
+                {
+                    "name": f"{filename}.{fileextension}",
+                    "raw": self._peppol_get_decoded_document(content),
+                    "type": "binary",
+                    "mimetype": mimetype,
+                }
+            )
+            if move := self._peppol_import_invoice(attachment, None, content['state'], uuid):
+                # Only acknowledge when we saved the document somewhere
+                processed_uuids.append(uuid)
+                if not isinstance(move, bool):
+                    moves += move
+=======
+            attachment = self.env["ir.attachment"].create(
+                {
+                    "name": f"{filename}.{fileextension}",
+                    "raw": self._peppol_get_decoded_document(content),
+                    "type": "binary",
+                    "mimetype": mimetype,
+                }
+            )
+            if move := self.with_context(peppol_sender_identifier=content.get('sender'))._peppol_import_invoice(attachment, None, content['state'], uuid):
+                # Only acknowledge when we saved the document somewhere
+                processed_uuids.append(uuid)
+                if not isinstance(move, bool):
+                    moves += move
+>>>>>>> fca10215178ae056ac2a33ced63a1889f2dbd00d
         return processed_uuids, moves
 
     def _peppol_post_process_new_messages(self, moves):

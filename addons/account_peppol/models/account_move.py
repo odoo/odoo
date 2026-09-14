@@ -98,6 +98,7 @@ class AccountMove(models.Model):
                 'network_name': invoice.company_id._get_einvoicing_network_name(),
             }
         return render_context
+<<<<<<< 29faba90020caa4cd1f35095c155c0ac52e97838
 
     def action_peppol_cancel_and_remove_sequence(self):
         self.button_cancel()
@@ -108,3 +109,14 @@ class AccountMove(models.Model):
         self.filtered(lambda m: m.state not in ('draft', 'cancel') and not m.inalterable_hash).button_draft()
         if ids_to_delete:
             self.env['account.move'].browse(ids_to_delete).exists().unlink()
+||||||| 10fe2557f94fa0e0aa5a63006c74942e3d494b1d
+=======
+
+    def _get_edi_decoder(self, file_data, new=False):
+        # EXTENDS account
+        # The sender identifier of the Peppol envelope, if any, so that the decoders can use it.
+        # TODO master: pass it explicitly through `_extend_with_attachments` instead of the context.
+        if sender_identifier := self.env.context.get('peppol_sender_identifier'):
+            file_data['peppol_sender_identifier'] = sender_identifier
+        return super()._get_edi_decoder(file_data, new=new)
+>>>>>>> fca10215178ae056ac2a33ced63a1889f2dbd00d
