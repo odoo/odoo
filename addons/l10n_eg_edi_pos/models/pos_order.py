@@ -167,7 +167,7 @@ class PosOrder(models.Model):
         item_data, global_discounts, totals, tax_totals = self._l10n_eg_edi_pos_build_item_data()
         return {
             'header': self._l10n_eg_edi_pos_build_header(),
-            'documentType': {'receiptType': 'r' if self.refunded_order_id else 'S', 'typeVersion': '1.2'},
+            'documentType': {'receiptType': 'r' if self.refunded_order_id else 's', 'typeVersion': '1.2'},
             'seller': {
                 'rin': branch.vat or '',
                 'companyTradeName': branch.name or '',
