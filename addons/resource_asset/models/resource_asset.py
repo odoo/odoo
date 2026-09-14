@@ -190,6 +190,13 @@ class ResourceAsset(models.Model):
     def write(self, vals):
         if "active" in vals and not vals["active"]:
             self._end_custody()
+        if vals.get("active") and "state" not in vals:
+            disposed = self.filtered(lambda asset: asset.state == "disposed")
+            if disposed:
+                super(ResourceAsset, disposed).write(
+                    {**vals, "state": "out_of_service", "date_disposal": False}
+                )
+                return super(ResourceAsset, self - disposed).write(vals)
         return super().write(vals)
 
     def _end_custody(self):
@@ -204,6 +211,12 @@ class ResourceAsset(models.Model):
 
     def action_set_in_service(self):
         self.write({"state": "in_service"})
+
+    def action_set_maintenance(self):
+        self.write({"state": "maintenance"})
+
+    def action_set_out_of_service(self):
+        self.write({"state": "out_of_service"})
 
     def action_dispose(self):
         self.write(

@@ -36,6 +36,44 @@ class TestResourceAssetMaintenance(TransactionCase):
             [("resource_id", "=", self.press.resource_id.id)]
         )
 
+    def test_a_request_in_progress_puts_the_asset_under_maintenance(self):
+        new_stage, in_progress = self.env["maintenance.stage"].search([], limit=2)
+        self.press.action_set_in_service()
+        first = self._request(stage_id=new_stage.id, block_asset=False)
+        self.assertEqual(self.press.state, "in_service")
+        first.stage_id = in_progress
+        self.assertEqual(self.press.state, "maintenance")
+        second = self._request(name="Belt", stage_id=in_progress.id, block_asset=False)
+        first.stage_id = self.stage_done
+        self.assertEqual(self.press.state, "maintenance")
+        second.archive = True
+        self.assertEqual(self.press.state, "in_service")
+        second.archive = False
+        self.assertEqual(self.press.state, "maintenance")
+        second.unlink()
+        self.assertEqual(self.press.state, "in_service")
+
+    def test_moving_a_request_to_another_asset_moves_the_maintenance(self):
+        in_progress = self.env["maintenance.stage"].search([], limit=2)[1:]
+        other = self.env["resource.asset"].create(
+            {"name": "Press 2", "kind_id": self.machinery.id}
+        )
+        (self.press | other).action_set_in_service()
+        request = self._request(stage_id=in_progress.id)
+        self.assertEqual(self.press.state, "maintenance")
+        request.asset_id = other
+        self.assertEqual(self.press.state, "in_service")
+        self.assertEqual(other.state, "maintenance")
+
+    def test_requests_leave_an_asset_that_is_not_in_service_alone(self):
+        in_progress = self.env["maintenance.stage"].search([], limit=2)[1:]
+        self.assertEqual(self.press.state, "draft")
+        request = self._request(stage_id=in_progress.id)
+        self.assertEqual(self.press.state, "draft")
+        self.press.action_set_out_of_service()
+        request.stage_id = self.stage_done
+        self.assertEqual(self.press.state, "out_of_service")
+
     def test_a_scheduled_request_blocks_the_asset(self):
         request = self._request()
         self.assertRecordValues(

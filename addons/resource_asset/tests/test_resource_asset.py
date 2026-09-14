@@ -302,6 +302,28 @@ class TestResourceAsset(TransactionCase):
         self.assertTrue(truck.date_disposal)
         self.assertFalse(truck.active)
 
+    def test_every_state_has_a_way_in(self):
+        truck = self._truck()
+        truck.action_set_in_service()
+        self.assertEqual(truck.state, "in_service")
+        truck.action_set_maintenance()
+        self.assertEqual(truck.state, "maintenance")
+        truck.action_set_out_of_service()
+        self.assertEqual(truck.state, "out_of_service")
+        truck.action_set_in_service()
+        self.assertEqual(truck.state, "in_service")
+
+    def test_restoring_a_disposed_asset_reverses_the_disposal(self):
+        truck = self._truck()
+        truck.action_dispose()
+        truck.action_unarchive()
+        self.assertTrue(truck.active)
+        self.assertEqual(truck.state, "out_of_service")
+        self.assertFalse(truck.date_disposal)
+        truck.action_dispose()
+        truck.write({"active": True, "state": "in_service"})
+        self.assertEqual(truck.state, "in_service")
+
     def test_a_component_cannot_contain_its_whole(self):
         tractor = self._truck("Tractor")
         engine = self.Asset.create(

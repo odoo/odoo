@@ -60,6 +60,16 @@
                         invisible="state not in ('draft', 'out_of_service', 'maintenance')"
                         class="btn-primary" />
                     <button
+                        name="action_set_maintenance"
+                        type="object"
+                        string="Under Maintenance"
+                        invisible="state != 'in_service'" />
+                    <button
+                        name="action_set_out_of_service"
+                        type="object"
+                        string="Take Out of Service"
+                        invisible="state not in ('in_service', 'maintenance')" />
+                    <button
                         name="action_dispose"
                         type="object"
                         string="Dispose"
@@ -68,7 +78,7 @@
                     <field
                         name="state"
                         widget="statusbar"
-                        statusbar_visible="draft,in_service" />
+                        statusbar_visible="draft,in_service,maintenance" />
                 </header>
                 <sheet>
                     <widget

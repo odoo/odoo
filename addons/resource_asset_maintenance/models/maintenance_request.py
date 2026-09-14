@@ -98,6 +98,7 @@ class MaintenanceRequest(models.Model):
     def create(self, vals_list):
         requests = super().create(vals_list)
         requests.filtered("asset_id")._sync_asset_reservations()
+        requests.asset_id._sync_state_from_maintenance()
         return requests
 
     def write(self, vals):
@@ -113,4 +114,13 @@ class MaintenanceRequest(models.Model):
         }:
             touched = self.filtered(lambda r: r.asset_id or before[r.id])
             touched._sync_asset_reservations()
+        if vals.keys() & {"asset_id", "stage_id", "archive"}:
+            previous = self.env["resource.asset"].union(*before.values())
+            (self.asset_id | previous)._sync_state_from_maintenance()
+        return res
+
+    def unlink(self):
+        assets = self.asset_id
+        res = super().unlink()
+        assets.exists()._sync_state_from_maintenance()
         return res
