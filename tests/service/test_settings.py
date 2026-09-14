@@ -38,7 +38,8 @@ class TestTheLiveConfigIsLoggedWhenItChanges:
         assert "changed=['max_cron_threads', 'workers']" in events[1]
         assert "workers=5" in events[1]
 
-    def test_nothing_is_tracked_while_the_channel_is_off(self, monkeypatch):
+    def test_nothing_is_tracked_while_the_channel_is_off(self, monkeypatch, caplog):
+        caplog.set_level(logging.INFO, logger=_LIFECYCLE)
         monkeypatch.setattr(server_settings, "_last_seen", None)
         assert logging.getLogger(_LIFECYCLE).getEffectiveLevel() > logging.DEBUG
         server_settings.current()

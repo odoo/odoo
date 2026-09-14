@@ -1566,7 +1566,13 @@ class TestRpcDbExposedGate:
         ):
             assert gate("anything") is True
             assert gate("anything_else") is True
-        warnings = [r for r in caplog.records if "dbfilter" in r.getMessage()]
+        warnings = [
+            r
+            for r in caplog.records
+            if r.name == "odoo.service.server"
+            and r.levelno >= logging.WARNING
+            and "dbfilter" in r.getMessage()
+        ]
         assert len(warnings) == 1
 
 

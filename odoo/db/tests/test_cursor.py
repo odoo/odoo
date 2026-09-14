@@ -443,32 +443,36 @@ class TestPipelineAccountsForTheSyncCost(unittest.TestCase):
         thread.query_time = 0.0  # type: ignore[attr-defined]
         return thread, db_connect(self.DBNAME).cursor()
 
-    def test_pipelined_execute_values_accounts_for_almost_all_wall_time(self):
+    def test_pipelined_execute_values_accounts_for_server_wait(self):
         import time
 
         thread, cr = self._timed_cursor()
         with cr:
-            cr.execute("CREATE TABLE t_pipeline_sync(id serial primary key, a int)")
-            cr.commit()
-
-            rows = [(i,) for i in range(20000)]
+            cr.execute("CREATE TABLE t_pipeline_sync(a int)")
             before_time = thread.query_time  # type: ignore[attr-defined]
             t0 = time.monotonic()
+            # Two batches each wait on the server. Unlike a wall-time ratio for
+            # cheap inserts, this lower bound excludes Python and logging costs.
             cr.execute_values(
-                "INSERT INTO t_pipeline_sync (a) VALUES %s", rows, page_size=200
+                "INSERT INTO t_pipeline_sync "
+                "SELECT column1 FROM (VALUES %s) AS batch "
+                "CROSS JOIN (SELECT pg_sleep(0.05)) AS delay",
+                [(1,), (2,), (3,), (4,)],
+                page_size=2,
             )
             wall = time.monotonic() - t0
             recorded = thread.query_time - before_time  # type: ignore[attr-defined]
-            cr.rollback()
+            logging.getLogger(__name__).debug(
+                "pipeline server waits: recorded=%fs wall=%fs", recorded, wall
+            )
+            cr.execute("SELECT count(*) FROM t_pipeline_sync")
+            self.assertEqual(cr.fetchone(), (4,))
 
-        self.assertGreater(wall, 0)
-        # The remainder is the Python that renders 100 batches, which is client
-        # time and is not booked; an untimed sync reads a few percent, not 75.
-        self.assertGreater(
-            recorded / wall,
-            0.75,
-            f"only {recorded:.4f}s of {wall:.4f}s wall time was accounted for "
-            f"-- the pipeline sync/flush cost is going untimed again",
+        self.assertGreaterEqual(
+            recorded,
+            0.09,
+            f"only {recorded:.4f}s was accounted for two 50ms server waits "
+            "-- the pipeline sync/flush cost is going untimed again",
         )
 
     def test_python_time_inside_the_block_is_not_query_time(self):
