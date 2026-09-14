@@ -3,6 +3,8 @@ from odoo.exceptions import UserError
 from odoo.fields import Command
 from odoo.tests import TransactionCase, tagged
 
+from odoo.addons.stock.tests.common import is_module_installed
+
 
 class TestAuditFixesProduct(TransactionCase):
     @classmethod
@@ -343,6 +345,8 @@ class TestAuditFixesProduct(TransactionCase):
             report.action_unassign(out.id, 2, [])
 
     def test_traceability_allowed_models_no_mrp(self):
+        if is_module_installed(self.env, "mrp"):
+            self.skipTest("mrp adds mrp.production to the traceability report")
         report = self.env["stock.traceability.report"].create({})
         self.assertNotIn("mrp.production", report._get_models_allowed_line())
         self.assertEqual(

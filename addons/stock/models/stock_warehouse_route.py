@@ -80,7 +80,8 @@ class StockWarehouseRoute(models.Model):
                 "warehouse_selectable", False
             ):
                 routes.append(route)
-        new_links = [route for route in routes if route not in self.route_ids]
+        linked = self.with_context(active_test=False).route_ids
+        new_links = [route for route in routes if route not in linked]
         if new_links:
             field_vals["route_ids"] = [
                 fields.Command.link(route.id) for route in new_links
