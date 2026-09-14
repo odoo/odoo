@@ -113,10 +113,19 @@ class TestEsbuildFailurePath(TransactionCase):
         asset_bundle = self.env["ir.qweb"]._get_asset_bundle(
             NATIVE_BUNDLE, css=False, assets_params={}
         )
-        with patch.object(
-            type(asset_bundle),
-            "esbuild_native_bundle",
-            side_effect=RuntimeError("esbuild exploded"),
+        # a by-source row another test saved through its own connection
+        # would answer the compile before the broken compiler is asked
+        with (
+            patch.object(
+                type(asset_bundle),
+                "esbuild_native_bundle",
+                side_effect=RuntimeError("esbuild exploded"),
+            ),
+            patch.object(
+                type(self.env["ir.qweb"]),
+                "_load_esbuild_result_by_source",
+                return_value=None,
+            ),
         ):
             return self.env["ir.qweb"]._compile_with_esbuild_locked(
                 NATIVE_BUNDLE, asset_bundle, {}
