@@ -1,11 +1,38 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from itertools import product
 
 from odoo.addons.mail.tests.common_controllers import MailControllerThreadCommon, MessagePostSubTestData
 from odoo.tests import tagged
 
 
-@tagged("-at_install", "post_install", "mail_controller")
+@tagged("mail_controller")
 class TestPortalThreadController(MailControllerThreadCommon):
+    def _authenticate_pseudo_user(self, pseudo_user):
+        self._current_pseudo_user = pseudo_user
+        return super()._authenticate_pseudo_user(pseudo_user)
+
+    def _message_fetch_params(self, record, route_kw):
+        params = super()._message_fetch_params(record, route_kw)
+        if share_only := route_kw.pop("share_only", None):
+            params["share_only"] = share_only
+        return params
+
+    def _check_fetched_messages(self, record, messages, allowed, route_kw):
+        """Check which messages should be displayed in portal."""
+        super()._check_fetched_messages(record, messages, allowed, route_kw)
+        if allowed == "share_only":
+            user_data = self._current_pseudo_user
+            if not (user_data._name == "res.users" and user_data._is_internal()):
+                self._fetch_and_assert_is_not_note(record, messages, route_kw)
+            self._fetch_and_assert_is_not_note(record, messages, {**route_kw, "share_only": True})
+
+    def _fetch_and_assert_is_not_note(self, record, messages, route_kw):
+        fetched_data = self._message_fetch(record, route_kw)
+        fetched_messages = fetched_data["mail.message"]
+        self.assertNotEqual(len(fetched_messages), len(messages))
+        self.assertEqual(len(fetched_messages), 1)
+        self.assertEqual(fetched_messages[0]["subtype_id"], self.env.ref("mail.mt_comment").id)
 
     def test_message_post_portal_no_partner(self):
         """Test access of message post for portal without partner."""
@@ -207,3 +234,23 @@ class TestPortalThreadController(MailControllerThreadCommon):
                 self.assertFalse(thread_data["canPostOnReadonly"])
                 self.assertFalse(thread_data["hasReadAccess"])
                 self.assertFalse(thread_data["hasWriteAccess"])
+
+    def test_message_fetch_access_portal(self):
+        """Test access to fetch the messages on a portal record."""
+        record = self.env["mail.test.portal.no.partner"].create({"name": "Test"})
+        token, bad_token, sign, bad_sign, _ = self._get_sign_token_params(record)
+        route_kws = ({}, token, bad_token, sign, bad_sign)
+        # Subtest format: (user, security params)
+        self._execute_message_fetch_subtests(
+            product((self.guest, self.user_public), ({}, bad_token, bad_sign)),
+            record,
+            allowed=False,
+        )
+        self._execute_message_fetch_subtests(
+            product((self.guest, self.user_public), (token, sign)), record, allowed="share_only"
+        )
+        self._execute_message_fetch_subtests(
+            product((self.user_admin, self.user_employee, self.user_portal), route_kws),
+            record,
+            allowed="share_only",
+        )
