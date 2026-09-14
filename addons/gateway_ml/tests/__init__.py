@@ -16,4 +16,5 @@ from . import test_vendor_wires
 from . import test_vision_completion
 from . import test_provider_services
 from . import test_provider_assistant
+from . import test_usage_recording
 from . import test_wire_formats

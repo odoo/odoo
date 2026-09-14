@@ -72,6 +72,20 @@ class GatewayMlProviderService(models.Model):
         "A provider carries each operation once.",
     )
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        self.env.registry.clear_cache()
+        return super().create(vals_list)
+
+    def write(self, vals):
+        if {"service_id", "wire", "provider_id"} & set(vals):
+            self.env.registry.clear_cache()
+        return super().write(vals)
+
+    def unlink(self):
+        self.env.registry.clear_cache()
+        return super().unlink()
+
     @api.depends("provider_id", "operation")
     def _compute_display_name(self):
         labels = dict(OPERATIONS)

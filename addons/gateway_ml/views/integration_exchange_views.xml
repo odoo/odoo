@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="integration_exchange_view_form" model="ir.ui.view">
+        <field name="name">integration.exchange.form.gateway_ml</field>
+        <field name="model">integration.exchange</field>
+        <field name="inherit_id" ref="integration.view_integration_exchange_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='request_payload_size']" position="after">
+                <field name="ml_model_id" invisible="not ml_model_id" />
+                <field name="ml_input_tokens" invisible="not ml_input_tokens" />
+                <field name="ml_output_tokens" invisible="not ml_output_tokens" />
+                <field name="ml_audio_seconds" invisible="not ml_audio_seconds" />
+                <field name="ml_cost" invisible="not ml_cost" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

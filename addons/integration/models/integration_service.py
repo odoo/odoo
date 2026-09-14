@@ -156,6 +156,9 @@ class IntegrationService(models.Model):
             return {"Authorization": f"{scheme} {api_key}"}
         return {"Authorization": f"{scheme} {api_key}", "X-API-Key": api_key}
 
+    def _exchange_usage_values(self, url, request_kwargs, response_body):
+        return {}
+
     verify_tls = fields.Boolean(
         string="Verify TLS certificate",
         default=True,

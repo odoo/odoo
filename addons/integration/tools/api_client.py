@@ -1015,6 +1015,13 @@ class OutboundAPIClient:
                 },
             )
 
+        if response_data and not cache_hit:
+            vals.update(
+                self.service.sudo()._exchange_usage_values(
+                    url, request_kwargs, response_data.get("body")
+                )
+            )
+
         vals.update(self._event_log_annotations())
 
         queue_exchange_values(self.env, vals)
