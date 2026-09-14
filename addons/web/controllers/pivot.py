@@ -137,16 +137,21 @@ class TableExporter(http.Controller):
     @dbg.timed
     def _write_pivot_col_headers(self, worksheet, jdata, header_plain, measure_count):
         x, y, carry = 1, 0, deque()
-        for i, header_row in enumerate(jdata["col_group_headers"]):
-            worksheet.write(i, 0, "", header_plain)
+
+        def flush_carry(x):
+            while carry and carry[0]["x"] == x:
+                cell = carry.popleft()
+                for j in range(measure_count):
+                    worksheet.write(y, x + j, "", header_plain)
+                if cell["height"] > 1:
+                    carry.append({"x": x, "height": cell["height"] - 1})
+                x += measure_count
+            return x
+
+        for header_row in jdata["col_group_headers"]:
+            worksheet.write(y, 0, "", header_plain)
             for header in header_row:
-                while carry and carry[0]["x"] == x:
-                    cell = carry.popleft()
-                    for j in range(measure_count):
-                        worksheet.write(y, x + j, "", header_plain)
-                    if cell["height"] > 1:
-                        carry.append({"x": x, "height": cell["height"] - 1})
-                    x += measure_count
+                x = flush_carry(x)
                 width = _clamp_int(header["width"], 100000)
                 height = _clamp_int(header["height"], 100000)
                 for j in range(width):
@@ -159,13 +164,7 @@ class TableExporter(http.Controller):
                 if height > 1:
                     carry.append({"x": x, "height": height - 1})
                 x += width
-            while carry and carry[0]["x"] == x:
-                cell = carry.popleft()
-                for j in range(measure_count):
-                    worksheet.write(y, x + j, "", header_plain)
-                if cell["height"] > 1:
-                    carry.append({"x": x, "height": cell["height"] - 1})
-                x += measure_count
+            x = flush_carry(x)
             x, y = 1, y + 1
         return y
 

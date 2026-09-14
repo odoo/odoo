@@ -102,7 +102,7 @@ def select_db(redirect: str = "/web/database/selector", db: str | None = None) -
             url_redirect = url_redirect._replace(query=query_string)
         request.session.db = db
         dbg.pipeline.debug(
-            "[select_db] session had no db: bind %r, redirect 302 to strip param", db
+            "[select_db] session had no db: bind %r, 302 to re-route through it", db
         )
         abort(request.redirect(urlunsplit(url_redirect), 302))
 
@@ -284,7 +284,7 @@ def _local_web_translations(trans_file: str) -> list[dict[str, str]] | None:
     try:
         with (
             dbg.timer(None, "[translations] read_po %s", trans_file),
-            file_open(trans_file, filter_ext=(".po")) as t_file,
+            file_open(trans_file, filter_ext=(".po",)) as t_file,
         ):
             po = babel.messages.pofile.read_po(t_file)
     except Exception as exc:

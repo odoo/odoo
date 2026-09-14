@@ -61,6 +61,20 @@ def _resolve_res_id(value) -> int | None:
         return None
 
 
+def _get_send_file_kwargs(unique, download, nocache) -> dict[str, Any]:
+    send_file_kwargs: dict[str, Any] = {"as_attachment": str2bool(download, False)}
+    if unique:
+        send_file_kwargs["immutable"] = True
+        send_file_kwargs["max_age"] = http.STATIC_CACHE_LONG
+    if str2bool(nocache, False):
+        send_file_kwargs["max_age"] = None
+    return send_file_kwargs
+
+
+def _get_static_image_response(name: str) -> Response:
+    return http.Stream.from_path(file_path(f"web/static/img/{name}")).prepare_response()
+
+
 def _is_public_access_token_valid(record, field, access_token) -> bool:
     if not access_token:
         return False
@@ -155,12 +169,7 @@ class Binary(http.Controller):
             stream.public,
         )
 
-        send_file_kwargs = {"as_attachment": str2bool(download, False)}
-        if unique:
-            send_file_kwargs["immutable"] = True
-            send_file_kwargs["max_age"] = http.STATIC_CACHE_LONG
-        if str2bool(nocache, False):
-            send_file_kwargs["max_age"] = None
+        send_file_kwargs = _get_send_file_kwargs(unique, download, nocache)
         dbg.logic.debug(
             "[content:%s/%s/%s] send_file %s", model, id, field, send_file_kwargs
         )
@@ -214,7 +223,7 @@ class Binary(http.Controller):
         stream = None
         if unique in ("any", "%"):
             unique = ANY_UNIQUE
-        if unique != "debug":
+        if not debug_assets:
             url = env["ir.asset"]._get_asset_bundle_url_pattern(
                 filename, unique, assets_params
             )
@@ -265,7 +274,7 @@ class Binary(http.Controller):
         }
         if str2bool(nocache, False):
             send_file_kwargs["max_age"] = None
-        elif unique and unique != "debug":
+        elif not debug_assets:
             send_file_kwargs["immutable"] = True
             send_file_kwargs["max_age"] = http.STATIC_CACHE_LONG
 
@@ -278,6 +287,12 @@ class Binary(http.Controller):
         debug_assets: bool,
         assets_params: dict[str, Any],
     ) -> tuple[Any, Response | None]:
+        if filename.endswith(".map"):
+            _logger.error(
+                ".map should have been generated through debug assets, (version %s most likely outdated)",
+                unique,
+            )
+            raise request.prepare_not_found_error()
         env = request.env
         stream = None
         if env.cr.readonly:
@@ -298,12 +313,6 @@ class Binary(http.Controller):
                 )
             rw_env = api.Environment(rw_cr, env.user.id, {})
             try:
-                if filename.endswith(".map"):
-                    _logger.error(
-                        ".map should have been generated through debug assets, (version %s most likely outdated)",
-                        unique,
-                    )
-                    raise request.prepare_not_found_error()
                 bundle_name, rtl, asset_type, autoprefix = rw_env[
                     "ir.asset"
                 ]._parse_bundle_name(filename, debug_assets)
@@ -525,14 +534,9 @@ class Binary(http.Controller):
             )
             stream.public = False
 
-        send_file_kwargs = {"as_attachment": str2bool(download, False)}
-        if unique:
-            send_file_kwargs["immutable"] = True
-            send_file_kwargs["max_age"] = http.STATIC_CACHE_LONG
-        if str2bool(nocache, False):
-            send_file_kwargs["max_age"] = None
-
-        return stream.prepare_response(**send_file_kwargs)
+        return stream.prepare_response(
+            **_get_send_file_kwargs(unique, download, nocache)
+        )
 
     @http.route("/web/binary/upload_attachment", type="http", auth="user")
     def upload_attachment(
@@ -609,8 +613,6 @@ class Binary(http.Controller):
         readonly=True,
     )
     def company_logo(self, **kw: Any) -> Response:
-        imgname = "logo"
-        imgext = ".png"
         dbname = request.db
         uid = (request.session.uid if dbname else None) or odoo.SUPERUSER_ID
         dbg.lifecycle.debug(
@@ -619,9 +621,7 @@ class Binary(http.Controller):
 
         if not dbname:
             dbg.logic.debug("[logo] no db -> static odoo logo")
-            response = http.Stream.from_path(
-                file_path("web/static/img/logo.png")
-            ).prepare_response()
+            response = _get_static_image_response("logo.png")
         else:
             try:
                 try:
@@ -669,16 +669,14 @@ class Binary(http.Controller):
                     response = send_file(
                         image_data,
                         request.httprequest.environ,
-                        download_name=imgname + imgext,
+                        download_name=f"logo{imgext}",
                         mimetype=mimetype,
                         last_modified=row[1],
                         response_class=Response,
                     )
                 else:
                     dbg.logic.debug("[logo] no logo_web row -> nologo.png")
-                    response = http.Stream.from_path(
-                        file_path("web/static/img/nologo.png")
-                    ).prepare_response()
+                    response = _get_static_image_response("nologo.png")
             except Exception as exc:
                 dbg.logic.debug(
                     "[logo] lookup failed (%s) -> odoo logo", type(exc).__name__
@@ -687,9 +685,7 @@ class Binary(http.Controller):
                     "While retrieving the company logo, using the Odoo logo instead",
                     exc_info=True,
                 )
-                response = http.Stream.from_path(
-                    file_path("web/static/img/logo.png")
-                ).prepare_response()
+                response = _get_static_image_response("logo.png")
 
         return response
 
@@ -704,26 +700,27 @@ class Binary(http.Controller):
     )
     def get_fonts(self, fontname: str | None = None) -> list[bytes]:
         supported_exts = (".ttf", ".otf", ".woff", ".woff2")
-        fonts = []
         fonts_dir = Path(file_path("web/static/fonts/sign"))
         dbg.lifecycle.debug("[fonts] %s fontname=%r", dbg.req(), fontname)
         if fontname:
             if Path(fontname).name != fontname:
                 dbg.logic.debug("[fonts] %r is not a bare name -> 404", fontname)
                 raise request.prepare_not_found_error()
-            with file_open(
-                str(fonts_dir / fontname), "rb", filter_ext=supported_exts
-            ) as font_file:
-                fonts.append(base64.b64encode(font_file.read()))
+            font_filenames = [fontname]
         else:
             font_filenames = sorted(
                 fn.name for fn in fonts_dir.iterdir() if fn.suffix in supported_exts
             )
-            for filename in font_filenames:
+        fonts = []
+        for filename in font_filenames:
+            try:
                 with file_open(
                     str(fonts_dir / filename), "rb", filter_ext=supported_exts
                 ) as font_file:
                     fonts.append(base64.b64encode(font_file.read()))
+            except FileNotFoundError, ValueError:
+                dbg.logic.debug("[fonts] %r not a sign font -> 404", filename)
+                raise request.prepare_not_found_error() from None
         dbg.performance.debug(
             "[fonts] %d fonts, %d base64 bytes", len(fonts), sum(map(len, fonts))
         )

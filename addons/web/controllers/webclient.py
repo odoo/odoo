@@ -87,9 +87,8 @@ class WebClient(http.Controller):
                 odoo.tools.config["server_wide_modules"]
             )
 
-        if lang and lang not in {
-            code for code, _ in request.env["res.lang"].sudo().get_installed()
-        }:
+        installed_langs = request.env["res.lang"].sudo().get_installed()
+        if lang and lang not in {code for code, _ in installed_langs}:
             dbg.logic.debug("[translations] lang %s not installed, dropped", lang)
             lang = None
 
@@ -122,10 +121,7 @@ class WebClient(http.Controller):
                     {
                         "lang_parameters": lang_params,
                         "modules": translations_per_module,
-                        "multi_lang": len(
-                            request.env["res.lang"].sudo().get_installed()
-                        )
-                        > 1,
+                        "multi_lang": len(installed_langs) > 1,
                     }
                 )
             dbg.pipeline.debug(
@@ -264,7 +260,7 @@ class WebClient(http.Controller):
                 logging.INFO,
                 "served_legacy",
                 bundle=bundle_name,
-                files=len(data) if isinstance(data, list) else 0,
+                files=len(data),
             )
 
         return request.prepare_json_response(data)

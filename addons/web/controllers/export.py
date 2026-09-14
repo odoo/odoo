@@ -31,20 +31,26 @@ _logger = logging.getLogger(__name__)
 
 _EXPORT_MAX_ROWS_DEFAULT = 100_000
 
+_EXPORT_FIELD_ATTRIBUTES = [
+    "type",
+    "string",
+    "required",
+    "relation_field",
+    "default_export_compatible",
+    "relation",
+    "definition_record",
+    "definition_record_field",
+    "exportable",
+    "readonly",
+]
+
 
 class Export(http.Controller):
     @http.route("/web/export/formats", type="jsonrpc", auth="user", readonly=True)
     def formats(self) -> list[dict[str, Any]]:
         dbg.lifecycle.debug("[export] formats: %s", dbg.req())
-        try:
-            import xlsxwriter  # noqa: F401 — availability probe (try/except gates xlsx export)
-
-            xlsx_error = None
-        except ModuleNotFoundError:
-            dbg.logic.debug("[export] formats: xlsxwriter missing")
-            xlsx_error = "XlsxWriter 0.9.3 required"
         return [
-            {"tag": "xlsx", "label": "XLSX", "error": xlsx_error},
+            {"tag": "xlsx", "label": "XLSX", "error": None},
             {"tag": "csv", "label": "CSV"},
         ]
 
@@ -149,20 +155,7 @@ class Export(http.Controller):
         )
 
         Model = request.env[model]
-        fields = Model.fields_get(
-            attributes=[
-                "type",
-                "string",
-                "required",
-                "relation_field",
-                "default_export_compatible",
-                "relation",
-                "definition_record",
-                "definition_record_field",
-                "exportable",
-                "readonly",
-            ],
-        )
+        fields = Model.fields_get(attributes=_EXPORT_FIELD_ATTRIBUTES)
 
         dbg.performance.debug(
             "[export_fields:%s] fields_get -> %d fields", model, len(fields)
@@ -282,18 +275,7 @@ class Export(http.Controller):
             "[export_fields:%s] fields_info for %d paths", model, len(export_fields)
         )
         field_info = []
-        fields = request.env[model].fields_get(
-            attributes=[
-                "type",
-                "string",
-                "required",
-                "relation_field",
-                "default_export_compatible",
-                "relation",
-                "definition_record",
-                "definition_record_field",
-            ],
-        )
+        fields = request.env[model].fields_get(attributes=_EXPORT_FIELD_ATTRIBUTES)
         fields.update(self._get_property_fields(fields, model))
         if ".id" in export_fields:
             fields[".id"] = fields.get("id", {"string": "ID"})
@@ -463,29 +445,28 @@ class ExportFormat:
                 )
             )
 
-    @dbg.timed
-    def _get_export_rows(
+    def _iter_export_rows(
         self, Model: Any, records: Any, field_names: list[str]
-    ) -> list[list]:
-        all_rows = []
-        batches = 0  # debuglog
+    ) -> typing.Iterator[list]:
+        batches = rows = 0  # debuglog
         for batch_ids in itertools.batched(records.ids, PREFETCH_MAX, strict=False):
             batch = Model.browse(batch_ids)
             with dbg.timer(
                 Model.env, "[export:%s] export_data batch #%d", Model._name, batches
             ):
-                all_rows.extend(batch.export_data(field_names).get("datas", []))
+                batch_rows = batch.export_data(field_names).get("datas", [])
             batch.invalidate_recordset()
             batches += 1
+            rows += len(batch_rows)
+            yield from batch_rows
         dbg.pipeline.debug(
             "[export:%s] %d records -> %d rows in %d batches of %d",
             Model._name,
             len(records),
-            len(all_rows),
+            rows,
             batches,
             PREFETCH_MAX,
         )
-        return all_rows
 
     def _get_export_groups_tree(
         self,
@@ -534,15 +515,11 @@ class ExportFormat:
         record_rows = {}
         current_id = None
         with dbg.timer(Model.env, "[export:%s] grouped export_data", Model._name):
-            for batch_ids in itertools.batched(records.ids, PREFETCH_MAX, strict=False):
-                batch = Model.browse(batch_ids)
-                export_data = batch.export_data([".id"] + field_names).get("datas", [])
-                for row in export_data:
-                    if row[0]:
-                        current_id = int(row[0])
-                        record_rows[current_id] = []
-                    record_rows[current_id].append(row[1:])
-                batch.invalidate_recordset()
+            for row in self._iter_export_rows(Model, records, [".id", *field_names]):
+                if row[0]:
+                    current_id = int(row[0])
+                    record_rows[current_id] = []
+                record_rows[current_id].append(row[1:])
 
         groups = [group["id:array_agg"] for group in groups_data]
         record_to_group = defaultdict(list)
@@ -637,7 +614,7 @@ class ExportFormat:
             ):
                 response_data = self.from_group_data(fields, columns_headers, tree)
         else:
-            all_rows = self._get_export_rows(Model, records, field_names)
+            all_rows = list(self._iter_export_rows(Model, records, field_names))
             with dbg.timer(
                 Model.env, "[export:%s] %s from_data", model, self.format_key
             ):
@@ -718,13 +695,13 @@ class ExcelExport(ExportFormat, http.Controller):
         with GroupExportXlsxWriter(
             fields, columns_headers, groups.count
         ) as xlsx_writer:
-            x, y = 1, 0
+            row, column = 1, 0
             for group_name, group in groups.children.items():
-                x, y = xlsx_writer.write_group(x, y, group_name, group)
+                row, column = xlsx_writer.write_group(row, column, group_name, group)
         dbg.pipeline.debug(
             "[export] xlsx grouped: %d top groups -> %d rows",
             len(groups.children),
-            x,
+            row,
         )
 
         return xlsx_writer.value

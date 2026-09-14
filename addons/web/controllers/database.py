@@ -1,4 +1,5 @@
 import datetime
+import functools
 import ipaddress
 import logging
 import os
@@ -35,11 +36,37 @@ _logger = logging.getLogger(__name__)
 REJECTED_INPUT_ERRORS = (ValueError, odoo.exceptions.AccessDenied)
 
 
-def _log_operation_failure(operation: str, exc: BaseException) -> None:
-    if isinstance(exc, REJECTED_INPUT_ERRORS):
-        _logger.warning("%s: %s", operation, exc)
-    else:
-        _logger.error(operation, exc_info=exc)
+def _renders_failure(operation: str):
+    def decorate(handler):
+        @functools.wraps(handler)
+        def wrapper(self, *args, **kwargs):
+            try:
+                return handler(self, *args, **kwargs)
+            except Exception as exc:
+                dbg.logic.debug(
+                    "[dbmanager] %s failed (%s)", operation, type(exc).__name__
+                )
+                if isinstance(exc, REJECTED_INPUT_ERRORS):
+                    _logger.warning("%s: %s", operation, exc)
+                else:
+                    _logger.error(operation, exc_info=exc)
+                return self._render_template(
+                    error=f"{operation}: {str(exc) or repr(exc)}"
+                )
+
+        return wrapper
+
+    return decorate
+
+
+def _check_db_name(name: str) -> None:
+    if not re.match(DBNAME_PATTERN, name):
+        dbg.logic.debug("[db:%s] name rejected by pattern", name)
+        raise UserError(
+            _(
+                "Houston, we have a database naming issue! Make sure you only use letters, numbers, underscores, hyphens, or dots in the database name, and you'll be golden."
+            )
+        )
 
 
 def _is_loopback(addr: str | None) -> bool:
@@ -158,6 +185,7 @@ class Database(http.Controller):
         methods=["POST"],
         csrf=False,
     )
+    @_renders_failure("Database creation error")
     def create(
         self, master_pwd: str, name: str, lang: str, password: str, **post
     ) -> str | Response:
@@ -171,50 +199,38 @@ class Database(http.Controller):
             post.get("login"),
         )
         self._handle_insecure_password(master_pwd)
-        try:
-            if not re.match(DBNAME_PATTERN, name):
-                dbg.logic.debug("[db:%s] create: name rejected by pattern", name)
-                raise UserError(
-                    _(
-                        "Houston, we have a database naming issue! Make sure you only use letters, numbers, underscores, hyphens, or dots in the database name, and you'll be golden."
-                    )
-                )
-            country_code = post.get("country_code") or False
-            with dbg.timer(None, "[db:%s] create_database rpc", name):
-                dispatch_rpc(
-                    "db",
-                    "create_database",
-                    [
-                        master_pwd,
-                        name,
-                        bool(post.get("demo")),
-                        lang,
-                        password,
-                        post["login"],
-                        country_code,
-                        post["phone"],
-                    ],
-                )
-            credential = {
-                "login": post["login"],
-                "password": password,
-                "type": "password",
-            }
-            dbg.pipeline.debug("[db:%s] create: created -> authenticate admin", name)
-            with odoo.modules.registry.Registry(name).cursor() as cr:
-                env = odoo.api.Environment(cr, None, {})
-                request.session.authenticate(env, credential)
-                request._save_session(env)
-                request.session.db = name
-            dbg.pipeline.debug(
-                "[db:%s] create: session uid=%s -> /odoo", name, request.session.uid
+        _check_db_name(name)
+        country_code = post.get("country_code") or False
+        with dbg.timer(None, "[db:%s] create_database rpc", name):
+            dispatch_rpc(
+                "db",
+                "create_database",
+                [
+                    master_pwd,
+                    name,
+                    bool(post.get("demo")),
+                    lang,
+                    password,
+                    post["login"],
+                    country_code,
+                    post["phone"],
+                ],
             )
-            return request.redirect("/odoo")
-        except Exception as e:
-            dbg.logic.debug("[db:%s] create: failed (%s)", name, type(e).__name__)
-            _log_operation_failure("Database creation error.", e)
-            error = f"Database creation error: {str(e) or repr(e)}"
-        return self._render_template(error=error)
+        credential = {
+            "login": post["login"],
+            "password": password,
+            "type": "password",
+        }
+        dbg.pipeline.debug("[db:%s] create: created -> authenticate admin", name)
+        with odoo.modules.registry.Registry(name).cursor() as cr:
+            env = odoo.api.Environment(cr, None, {})
+            request.session.authenticate(env, credential)
+            request._save_session(env)
+            request.session.db = name
+        dbg.pipeline.debug(
+            "[db:%s] create: session uid=%s -> /odoo", name, request.session.uid
+        )
+        return request.redirect("/odoo")
 
     @http.route(
         "/web/database/duplicate",
@@ -223,6 +239,7 @@ class Database(http.Controller):
         methods=["POST"],
         csrf=False,
     )
+    @_renders_failure("Database duplication error")
     def duplicate(
         self,
         master_pwd: str,
@@ -238,31 +255,17 @@ class Database(http.Controller):
             neutralize_database,
         )
         self._handle_insecure_password(master_pwd)
-        try:
-            if not re.match(DBNAME_PATTERN, new_name):
-                dbg.logic.debug("[db:%s] duplicate: new name rejected", name)
-                raise UserError(
-                    _(
-                        "Houston, we have a database naming issue! Make sure you only use letters, numbers, underscores, hyphens, or dots in the database name, and you'll be golden."
-                    )
-                )
-            with dbg.timer(
-                None, "[db:%s] duplicate_database rpc -> %s", name, new_name
-            ):
-                dispatch_rpc(
-                    "db",
-                    "duplicate_database",
-                    [master_pwd, name, new_name, str2bool(neutralize_database)],
-                )
-            if request.db == name:
-                dbg.logic.debug("[db:%s] duplicate: source is request db, detach", name)
-                request.detach_database()
-            return request.redirect("/web/database/manager")
-        except Exception as e:
-            dbg.logic.debug("[db:%s] duplicate: failed (%s)", name, type(e).__name__)
-            _log_operation_failure("Database duplication error.", e)
-            error = f"Database duplication error: {str(e) or repr(e)}"
-            return self._render_template(error=error)
+        _check_db_name(new_name)
+        with dbg.timer(None, "[db:%s] duplicate_database rpc -> %s", name, new_name):
+            dispatch_rpc(
+                "db",
+                "duplicate_database",
+                [master_pwd, name, new_name, str2bool(neutralize_database)],
+            )
+        if request.db == name:
+            dbg.logic.debug("[db:%s] duplicate: source is request db, detach", name)
+            request.detach_database()
+        return request.redirect("/web/database/manager")
 
     @http.route(
         "/web/database/drop",
@@ -271,25 +274,20 @@ class Database(http.Controller):
         methods=["POST"],
         csrf=False,
     )
+    @_renders_failure("Database deletion error")
     def drop(self, master_pwd: str, name: str) -> str | Response:
         dbg.lifecycle.debug("[db:%s] drop: %s", name, dbg.req())
         self._handle_insecure_password(master_pwd)
-        try:
-            with dbg.timer(None, "[db:%s] drop rpc", name):
-                dropped = dispatch_rpc("db", "drop", [master_pwd, name])
-            if not dropped:
-                dbg.logic.debug("[db:%s] drop: not found", name)
-                raise RuntimeError(f"Database {name!r} was not found")
-            if request.session.db == name:
-                dbg.logic.debug("[db:%s] drop: was session db, detach + logout", name)
-                request.detach_database()
-                request.session.logout()
-            return request.redirect("/web/database/manager")
-        except Exception as e:
-            dbg.logic.debug("[db:%s] drop: failed (%s)", name, type(e).__name__)
-            _log_operation_failure("Database deletion error.", e)
-            error = f"Database deletion error: {str(e) or repr(e)}"
-            return self._render_template(error=error)
+        with dbg.timer(None, "[db:%s] drop rpc", name):
+            dropped = dispatch_rpc("db", "drop", [master_pwd, name])
+        if not dropped:
+            dbg.logic.debug("[db:%s] drop: not found", name)
+            raise RuntimeError(f"Database {name!r} was not found")
+        if request.session.db == name:
+            dbg.logic.debug("[db:%s] drop: was session db, detach + logout", name)
+            request.detach_database()
+            request.session.logout()
+        return request.redirect("/web/database/manager")
 
     @http.route(
         "/web/database/backup",
@@ -298,6 +296,7 @@ class Database(http.Controller):
         methods=["POST"],
         csrf=False,
     )
+    @_renders_failure("Database backup error")
     def backup(
         self,
         master_pwd: str,
@@ -314,43 +313,35 @@ class Database(http.Controller):
             filestore,
         )
         self._handle_insecure_password(master_pwd)
-        try:
-            if backup_format not in odoo.service.db.BACKUP_FORMATS:
-                expected = ", ".join(
-                    repr(f) for f in sorted(odoo.service.db.BACKUP_FORMATS)
-                )
-                raise ValueError(
-                    f"Invalid backup format {backup_format!r}; expected {expected}"
-                )
-            odoo.service.db.check_super(master_pwd)
-            if name not in http.get_dbs_served():
-                dbg.logic.debug("[db:%s] backup: not served", name)
-                raise ValueError(f"Database {name!r} is not known")
-            ts = datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%d_%H-%M-%S")
-            filename = f"{name}_{ts}.{backup_format}"
-            with dbg.timer(None, "[db:%s] dump_db %s", name, backup_format):
-                dump_stream = odoo.service.db.dump_db(
-                    name, None, backup_format, filestore
-                )
-            dump_size = dump_stream.seek(0, os.SEEK_END)
-            dump_stream.seek(0)
-            dbg.performance.debug(
-                "[db:%s] backup: %s, %d bytes (buffered before streaming)",
-                name,
-                filename,
-                dump_size,
+        if backup_format not in odoo.service.db.BACKUP_FORMATS:
+            expected = ", ".join(
+                repr(f) for f in sorted(odoo.service.db.BACKUP_FORMATS)
             )
-            headers = [
-                ("Content-Type", "application/octet-stream; charset=binary"),
-                ("Content-Disposition", prepare_content_disposition_header(filename)),
-                ("Content-Length", str(dump_size)),
-            ]
-            return Response(dump_stream, headers=headers, direct_passthrough=True)
-        except Exception as e:
-            dbg.logic.debug("[db:%s] backup: failed (%s)", name, type(e).__name__)
-            _log_operation_failure("Database.backup", e)
-            error = f"Database backup error: {str(e) or repr(e)}"
-            return self._render_template(error=error)
+            raise ValueError(
+                f"Invalid backup format {backup_format!r}; expected {expected}"
+            )
+        odoo.service.db.check_super(master_pwd)
+        if name not in http.get_dbs_served():
+            dbg.logic.debug("[db:%s] backup: not served", name)
+            raise ValueError(f"Database {name!r} is not known")
+        ts = datetime.datetime.now(datetime.UTC).strftime("%Y-%m-%d_%H-%M-%S")
+        filename = f"{name}_{ts}.{backup_format}"
+        with dbg.timer(None, "[db:%s] dump_db %s", name, backup_format):
+            dump_stream = odoo.service.db.dump_db(name, None, backup_format, filestore)
+        dump_size = dump_stream.seek(0, os.SEEK_END)
+        dump_stream.seek(0)
+        dbg.performance.debug(
+            "[db:%s] backup: %s, %d bytes (buffered before streaming)",
+            name,
+            filename,
+            dump_size,
+        )
+        headers = [
+            ("Content-Type", "application/octet-stream; charset=binary"),
+            ("Content-Disposition", prepare_content_disposition_header(filename)),
+            ("Content-Length", str(dump_size)),
+        ]
+        return Response(dump_stream, headers=headers, direct_passthrough=True)
 
     @http.route(
         "/web/database/restore",
@@ -360,6 +351,7 @@ class Database(http.Controller):
         csrf=False,
         max_content_length=None,
     )
+    @_renders_failure("Database restore error")
     def restore(
         self,
         master_pwd: str,
@@ -368,7 +360,6 @@ class Database(http.Controller):
         copy: bool | str = False,
         neutralize_database: bool | str = False,
     ) -> str | Response:
-        tmp_path = None
         dbg.lifecycle.debug(
             "[db:%s] restore: %s copy=%r neutralize=%r upload=%r",
             name,
@@ -377,21 +368,16 @@ class Database(http.Controller):
             neutralize_database,
             getattr(backup_file, "filename", None),
         )
+        self._handle_insecure_password(master_pwd)
+        db.check_super(master_pwd)
+        _check_db_name(name)
+        with (
+            dbg.timer(None, "[db:%s] restore: spool upload", name),
+            tempfile.NamedTemporaryFile(delete=False) as tmp,
+        ):
+            tmp_path = pathlib.Path(tmp.name)
+            backup_file.save(tmp)
         try:
-            self._handle_insecure_password(master_pwd)
-            db.check_super(master_pwd)
-            if not re.match(DBNAME_PATTERN, name):
-                raise UserError(
-                    _(
-                        "Houston, we have a database naming issue! Make sure you only use letters, numbers, underscores, hyphens, or dots in the database name, and you'll be golden."
-                    )
-                )
-            with (
-                dbg.timer(None, "[db:%s] restore: spool upload", name),
-                tempfile.NamedTemporaryFile(delete=False) as tmp,
-            ):
-                tmp_path = pathlib.Path(tmp.name)
-                backup_file.save(tmp)
             dbg.pipeline.debug(
                 "[db:%s] restore: spooled %d bytes -> restore_db",
                 name,
@@ -404,15 +390,9 @@ class Database(http.Controller):
                     str2bool(copy),
                     str2bool(neutralize_database),
                 )
-            return request.redirect("/web/database/manager")
-        except Exception as e:
-            dbg.logic.debug("[db:%s] restore: failed (%s)", name, type(e).__name__)
-            _log_operation_failure("Database restore error.", e)
-            error = f"Database restore error: {str(e) or repr(e)}"
-            return self._render_template(error=error)
         finally:
-            if tmp_path:
-                tmp_path.unlink(missing_ok=True)
+            tmp_path.unlink(missing_ok=True)
+        return request.redirect("/web/database/manager")
 
     @http.route(
         "/web/database/change_password",
@@ -421,40 +401,34 @@ class Database(http.Controller):
         methods=["POST"],
         csrf=False,
     )
+    @_renders_failure("Master password update error")
     def change_password(self, master_pwd: str, master_pwd_new: str) -> str | Response:
         dbg.lifecycle.debug(
             "[dbmanager] change_password: %s has_new=%s",
             dbg.req(),
             bool(master_pwd_new),
         )
-        try:
-            if odoo.tools.config.is_valid_admin_password("admin"):
-                remote_addr = request.httprequest.remote_addr
-                if not _is_loopback(remote_addr):
-                    dbg.logic.debug(
-                        "[dbmanager] change_password: default pwd, non-loopback, refused"
+        if odoo.tools.config.is_valid_admin_password("admin"):
+            remote_addr = request.httprequest.remote_addr
+            if not _is_loopback(remote_addr):
+                dbg.logic.debug(
+                    "[dbmanager] change_password: default pwd, non-loopback, refused"
+                )
+                _logger.warning(
+                    "Refusing a non-loopback master-password change from %s "
+                    "while the default password is still in place.",
+                    remote_addr,
+                )
+                raise UserError(
+                    _(
+                        "For security, the master password can only be changed "
+                        "from localhost while it is still the default. Set "
+                        "'admin_passwd' in the configuration file instead."
                     )
-                    _logger.warning(
-                        "Refusing a non-loopback master-password change from %s "
-                        "while the default password is still in place.",
-                        remote_addr,
-                    )
-                    raise UserError(
-                        _(
-                            "For security, the master password can only be changed "
-                            "from localhost while it is still the default. Set "
-                            "'admin_passwd' in the configuration file instead."
-                        )
-                    )
-            dispatch_rpc("db", "change_admin_password", [master_pwd, master_pwd_new])
-            dbg.pipeline.debug("[dbmanager] change_password: changed")
-            return request.redirect("/web/database/manager")
-        except Exception as e:
-            dbg.logic.debug(
-                "[dbmanager] change_password: failed (%s)", type(e).__name__
-            )
-            error = f"Master password update error: {str(e) or repr(e)}"
-            return self._render_template(error=error)
+                )
+        dispatch_rpc("db", "change_admin_password", [master_pwd, master_pwd_new])
+        dbg.pipeline.debug("[dbmanager] change_password: changed")
+        return request.redirect("/web/database/manager")
 
     @http.route("/web/database/list", type="jsonrpc", auth="none")
     def list(self) -> list[str]:

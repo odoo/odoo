@@ -57,6 +57,18 @@ LOGIN_SUCCESSFUL_PARAMS = set()
 CREDENTIAL_PARAMS = ["login", "password", "type"]
 
 
+def _is_db_server_reachable(probe: str) -> bool:
+    try:
+        with (
+            dbg.timer(None, "[%s] postgres probe", probe),
+            odoo.db.db_connect("postgres").cursor(),
+        ):
+            return True
+    except psycopg.Error as exc:
+        dbg.logic.debug("[%s] postgres probe failed (%s)", probe, type(exc).__name__)
+        return False
+
+
 class Home(http.Controller):
     @http.route("/", type="http", auth="none")
     def index(
@@ -322,18 +334,9 @@ class Home(http.Controller):
         health_info = {"status": "pass"}
         status = 200
         if str2bool(db_server_status, False):
-            try:
-                with (
-                    dbg.timer(None, "[health] postgres probe"),
-                    odoo.db.db_connect("postgres").cursor(),
-                ):
-                    pass
-                health_info["db_server_status"] = True
-            except psycopg.Error as exc:
-                dbg.logic.debug(
-                    "[health] postgres probe failed (%s)", type(exc).__name__
-                )
-                health_info["db_server_status"] = False
+            reachable = _is_db_server_reachable("health")
+            health_info["db_server_status"] = reachable
+            if not reachable:
                 health_info["status"] = "fail"
                 status = 500
         dbg.lifecycle.debug("[health] %s -> %d %s", dbg.req(), status, health_info)
@@ -348,15 +351,9 @@ class Home(http.Controller):
     def readyz(self) -> Response:
         checks: dict[str, str] = {}
         status = 200
-        try:
-            with (
-                dbg.timer(None, "[readyz] postgres probe"),
-                odoo.db.db_connect("postgres").cursor(),
-            ):
-                pass
+        if _is_db_server_reachable("readyz"):
             checks["db"] = "pass"
-        except psycopg.Error as exc:
-            dbg.logic.debug("[readyz] postgres probe failed (%s)", type(exc).__name__)
+        else:
             checks["db"] = "fail"
             status = 503
         if os.access(config["data_dir"], os.W_OK):

@@ -50,15 +50,20 @@ class TestWebCwvMetric(TransactionCase):
         self.assertLessEqual(len(rec.url), 2048)
 
     def test_controller_clamps_reject_non_finite(self):
-        from odoo.addons.web.controllers.observability import _clamp_cls, _clamp_latency
+        from odoo.addons.web.controllers.observability import (
+            _MAX_CLS,
+            _MAX_LATENCY_MS,
+            _get_clamped_metric,
+        )
 
         for bad in (float("nan"), float("inf"), float("-inf"), -1.0, True):
-            self.assertIsNone(
-                _clamp_latency(bad), f"_clamp_latency({bad!r}) must be None"
-            )
-            self.assertIsNone(_clamp_cls(bad), f"_clamp_cls({bad!r}) must be None")
-        self.assertEqual(_clamp_latency(1200), 1200.0)
-        self.assertEqual(_clamp_cls(0.05), 0.05)
+            for maximum in (_MAX_LATENCY_MS, _MAX_CLS):
+                self.assertIsNone(
+                    _get_clamped_metric(bad, maximum),
+                    f"_get_clamped_metric({bad!r}, {maximum}) must be None",
+                )
+        self.assertEqual(_get_clamped_metric(1200, _MAX_LATENCY_MS), 1200.0)
+        self.assertEqual(_get_clamped_metric(0.05, _MAX_CLS), 0.05)
 
     def test_rate_limiter_key_map_stays_bounded(self):
         from odoo.addons.web.controllers import observability as obs

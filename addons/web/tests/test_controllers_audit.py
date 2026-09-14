@@ -1,6 +1,6 @@
-import inspect
 import io
 from http import HTTPStatus
+from pathlib import Path
 from unittest.mock import patch
 
 from lxml import etree
@@ -8,9 +8,7 @@ from lxml import etree
 from odoo import http
 from odoo.libs.json import dumps as json_dumps
 from odoo.tests.common import BaseCase, HttpCase, TransactionCase, tagged
-from odoo.tools import mute_logger
-
-from odoo.addons.web.controllers.binary import Binary
+from odoo.tools import file_path, mute_logger
 
 
 @tagged("web_http", "web_controllers_audit")
@@ -193,16 +191,20 @@ class TestWebClientOpenRedirect(HttpCase):
         self.assertIn("/odoo/contacts", response.headers.get("Location", ""))
 
 
-@tagged("web_controllers_audit")
-class TestCompanyLogoFallback(TransactionCase):
-    def test_fallback_uses_hardcoded_logo_png(self):
-        source = inspect.getsource(Binary.company_logo)
-        self.assertIn('file_path("web/static/img/logo.png")', source)
-        self.assertNotIn(
-            'file_path(f"web/static/img/{imgname}{imgext}")',
-            source,
-            "Fallback must not use imgext — it may have been mutated to '.svg'",
-        )
+@tagged("web_http", "web_controllers_audit")
+class TestCompanyLogoFallback(HttpCase):
+    def test_a_failing_lookup_serves_the_odoo_logo(self):
+        odoo_logo = Path(file_path("web/static/img/logo.png")).read_bytes()
+        with (
+            patch(
+                "odoo.addons.web.controllers.binary.guess_mimetype",
+                side_effect=RuntimeError("simulated"),
+            ),
+            mute_logger("odoo.addons.web.controllers.binary"),
+        ):
+            response = self.url_open("/logo?company=1")
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertEqual(response.content, odoo_logo)
 
 
 @tagged("web_http", "web_controllers_audit")
@@ -372,3 +374,144 @@ class TestJsonHelpers(TransactionCase):
             view_id, False, "Must be False (Odoo 'no ID' convention), not None"
         )
         self.assertEqual(view_type, "list")
+
+
+@tagged("web_http", "web_controllers_audit")
+class TestActionLoadEdges(HttpCase):
+    def _rpc(self, path, params):
+        return self.url_open(
+            path,
+            headers={"Content-Type": "application/json"},
+            data=json_dumps({"params": params}),
+        ).json()
+
+    def test_load_with_a_null_id_is_a_missing_action_not_a_type_error(self):
+        self.authenticate("admin", "admin")
+        with mute_logger("odoo.http"):
+            body = self._rpc("/web/action/load", {"action_id": None})
+        self.assertIn("error", body)
+        self.assertIn("MissingActionError", body["error"]["data"]["name"])
+
+    def test_breadcrumb_of_a_report_action_with_a_record_has_no_res_model(self):
+        self.authenticate("admin", "admin")
+        report = self.env["ir.actions.report"].search([], limit=1)
+        body = self._rpc(
+            "/web/action/load_breadcrumbs",
+            {"actions": [{"action": report.id, "resId": 1}]},
+        )
+        self.assertEqual(body["result"], [{"display_name": report.name}])
+
+
+@tagged("web_http", "web_controllers_audit")
+class TestSignFonts(HttpCase):
+    def _rpc(self, path):
+        return self.url_open(
+            path,
+            headers={"Content-Type": "application/json"},
+            data=json_dumps({"params": {}}),
+        ).json()
+
+    def test_unknown_font_is_not_found(self):
+        with mute_logger("odoo.http"):
+            body = self._rpc("/web/sign/get_fonts/no_such_font.ttf")
+        self.assertIn("NotFound", body["error"]["data"]["name"])
+
+    def test_wrong_extension_is_not_found(self):
+        with mute_logger("odoo.http"):
+            body = self._rpc("/web/sign/get_fonts/__manifest__.py")
+        self.assertIn("NotFound", body["error"]["data"]["name"])
+
+    def test_listing_answers_every_sign_font(self):
+        body = self._rpc("/web/sign/get_fonts")
+        self.assertGreater(len(body["result"]), 0)
+        fonts_dir = Path(file_path("web/static/fonts/sign"))
+        first = min(
+            p.name
+            for p in fonts_dir.iterdir()
+            if p.suffix in (".ttf", ".otf", ".woff", ".woff2")
+        )
+        one = self._rpc(f"/web/sign/get_fonts/{first}")
+        self.assertEqual(one["result"], body["result"][:1])
+
+
+@tagged("web_http", "web_controllers_audit")
+class TestBaseSetupData(HttpCase):
+    def test_pending_users_are_the_internal_ones_that_never_logged_in(self):
+        never = self.env["res.users"].create(
+            {"name": "Never Logged", "login": "never_logged_audit"}
+        )
+        self.authenticate("admin", "admin")
+        body = self.url_open(
+            "/base_setup/data",
+            headers={"Content-Type": "application/json"},
+            data=json_dumps({"params": {}}),
+        ).json()["result"]
+        self.assertEqual(body["pending_users"][0], [never.id, never.login])
+        self.assertEqual(body["pending_count"], len(body["pending_users"]))
+        self.assertGreaterEqual(body["active_users"], body["pending_count"] + 1)
+        self.assertEqual(body["action_pending_users"]["res_model"], "res.users")
+
+
+@tagged("web_controllers_audit")
+class TestObservabilityHelpers(BaseCase):
+    def test_clamped_metric_rejects_bool_nan_negative_and_oversized(self):
+        from odoo.addons.web.controllers.observability import _get_clamped_metric
+
+        self.assertIsNone(_get_clamped_metric(True, 10))
+        self.assertIsNone(_get_clamped_metric(float("nan"), 10))
+        self.assertIsNone(_get_clamped_metric(-1, 10))
+        self.assertIsNone(_get_clamped_metric(11, 10))
+        self.assertIsNone(_get_clamped_metric("5", 10))
+        self.assertEqual(_get_clamped_metric(5, 10), 5.0)
+
+    def test_capped_str_and_positive_int(self):
+        from odoo.addons.web.controllers.observability import (
+            _get_capped_str,
+            _get_positive_int,
+        )
+
+        self.assertEqual(_get_capped_str("abcdef", 3), "abc")
+        self.assertEqual(_get_capped_str(42, 3), "")
+        self.assertEqual(_get_positive_int(-1), 0)
+        self.assertEqual(_get_positive_int(3.9), 3)
+        self.assertEqual(_get_positive_int("3"), 0)
+
+
+@tagged("web_controllers_audit")
+class TestReportHelpers(BaseCase):
+    def test_parse_docids_keeps_digits_only(self):
+        from odoo.addons.web.controllers.report import _parse_docids
+
+        self.assertIsNone(_parse_docids(None))
+        self.assertIsNone(_parse_docids(""))
+        self.assertEqual(_parse_docids("1,x,3"), [1, 3])
+
+
+@tagged("web_http", "web_controllers_audit")
+class TestReportConverters(HttpCase):
+    def test_unknown_converter_is_a_client_error(self):
+        self.authenticate("admin", "admin")
+        with mute_logger("odoo.http"):
+            resp = self.url_open("/report/docx/base.report_irmodulereference/1")
+        self.assertEqual(resp.status_code, HTTPStatus.BAD_REQUEST)
+
+    def test_describing_a_mixin_on_the_read_only_route_writes_nothing(self):
+        self.authenticate("admin", "admin")
+        module = self.env.ref("base.module_base")
+        with self.assertNoLogs(
+            "odoo.addons.base.reports.report_base_report_irmodulereference",
+            level="WARNING",
+        ):
+            resp = self.url_open(
+                f"/report/html/base.report_irmodulereference/{module.id}"
+            )
+        self.assertEqual(resp.status_code, HTTPStatus.OK)
+
+    def test_text_converter_answers_plain_text(self):
+        self.authenticate("admin", "admin")
+        resp = self.url_open(
+            f"/report/text/web.preview_internalreport/{self.env.company.id}"
+        )
+        self.assertEqual(resp.status_code, HTTPStatus.OK)
+        self.assertTrue(resp.headers["Content-Type"].startswith("text/plain"))
+        self.assertEqual(int(resp.headers["Content-Length"]), len(resp.content))

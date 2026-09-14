@@ -12,6 +12,10 @@ from odoo.tools.image import image_process
 from ..tools import debug_log as dbg
 
 
+def _get_icon_type(src: str) -> str:
+    return mimetypes.guess_type(src)[0] or "image/png"
+
+
 class WebManifest(http.Controller):
     @dbg.timed
     def _get_shortcuts(self) -> list[dict[str, Any]]:
@@ -59,8 +63,7 @@ class WebManifest(http.Controller):
                             {
                                 "sizes": "100x100",
                                 "src": module.icon,
-                                "type": mimetypes.guess_type(module.icon)[0]
-                                or "image/png",
+                                "type": _get_icon_type(module.icon),
                             }
                         ],
                     }
@@ -196,8 +199,7 @@ class WebManifest(http.Controller):
         dbg.lifecycle.debug(
             "[scoped_app:%s] icon: %s add_padding=%r", app_id, dbg.req(), add_padding
         )
-        if isinstance(add_padding, str):
-            add_padding = str2bool(add_padding, False)
+        add_padding = str2bool(add_padding, False)
         app_icon = self._get_scoped_app_icons(app_id)[0]
 
         if app_icon["type"] == "image/svg+xml":
@@ -290,6 +292,6 @@ class WebManifest(http.Controller):
             {
                 "src": f"/{src}",
                 "sizes": "any",
-                "type": mimetypes.guess_type(src)[0] or "image/png",
+                "type": _get_icon_type(src),
             }
         ]

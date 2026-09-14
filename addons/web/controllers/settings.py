@@ -15,50 +15,25 @@ class BaseSetup(http.Controller):
             dbg.logic.debug("[base_setup] data: not erp manager, refused")
             raise AccessError(_("Access Denied"))
 
-        cr = request.env.cr
-        cr.execute("""
-            SELECT count(*)
-              FROM res_users
-             WHERE active = true AND share = false
-        """)
-        active_count = cr.fetchone()[0]
-
-        cr.execute("""
-            SELECT count(u.*)
-              FROM res_users u
-             WHERE active = true
-               AND share = false
-               AND NOT exists(SELECT 1 FROM res_users_log WHERE create_uid = u.id)
-        """)
-        pending_count = cr.fetchone()[0]
-
-        cr.execute("""
-            SELECT id, login
-              FROM res_users u
-             WHERE active = true
-               AND share = false
-               AND NOT exists(SELECT 1 FROM res_users_log WHERE create_uid = u.id)
-          ORDER BY id DESC
-             LIMIT 10
-        """)
-        pending_users = cr.fetchall()
+        Users = request.env["res.users"]
+        internal = [("share", "=", False)]
+        with dbg.timer(request.env, "[base_setup] data: count + pending"):
+            active_count = Users.search_count(internal)
+            pending = Users.search(
+                [*internal, ("log_ids", "=", False)], order="id desc"
+            )
+        pending_users = [(user.id, user.login) for user in pending[:10]]
         dbg.performance.debug(
-            "[base_setup] data: active=%d pending=%d sample=%d (three counts, one scan)",
+            "[base_setup] data: active=%d pending=%d sample=%d",
             active_count,
-            pending_count,
+            len(pending),
             len(pending_users),
         )
-        action_pending_users = (
-            request.env["res.users"]
-            .browse([uid for (uid, login) in pending_users])
-            ._action_show()
-        )
-
         return {
             "active_users": active_count,
-            "pending_count": pending_count,
+            "pending_count": len(pending),
             "pending_users": pending_users,
-            "action_pending_users": action_pending_users,
+            "action_pending_users": pending[:10]._action_show(),
         }
 
     @http.route("/base_setup/demo_active", type="jsonrpc", auth="user")

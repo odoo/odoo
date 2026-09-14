@@ -28,7 +28,7 @@ class Action(Controller):
         Actions = request.env["ir.actions.actions"]
         try:
             action_id = int(action_id)
-        except ValueError:
+        except TypeError, ValueError:
             try:
                 if "." in action_id:
                     dbg.logic.debug("[action:%s] load: resolve by xmlid", action_id)
@@ -46,7 +46,13 @@ class Action(Controller):
                     "[action:%s] load: resolved -> %s", action_id, dbg.rec(action)
                 )
                 action_id = action.id
-            except (ValueError, KeyError, AttributeError, MissingError) as exc:
+            except (
+                TypeError,
+                ValueError,
+                KeyError,
+                AttributeError,
+                MissingError,
+            ) as exc:
                 dbg.logic.debug(
                     "[action:%s] load: unresolved (%s)", action_id, type(exc).__name__
                 )
@@ -107,8 +113,9 @@ class Action(Controller):
         results = []
         with dbg.timer(request.env, "[breadcrumbs] load %d actions", len(actions)):
             for idx, action in enumerate(actions):
+                next_action = actions[idx + 1] if idx + 1 < len(actions) else None
                 try:
-                    results.append(self._get_breadcrumb(action, idx, actions))
+                    results.append(self._get_breadcrumb(action, idx, next_action))
                 except (MissingActionError, MissingError, AccessError) as exc:
                     dbg.logic.debug(
                         "[breadcrumbs] #%d: error %s", idx, type(exc).__name__
@@ -122,7 +129,7 @@ class Action(Controller):
         return results
 
     def _get_breadcrumb(
-        self, action: dict[str, Any], idx: int, actions: list[dict[str, Any]]
+        self, action: dict[str, Any], idx: int, next_action: dict[str, Any] | None
     ) -> dict[str, Any]:
         record_id = action.get("resId")
         if action.get("action"):
@@ -132,7 +139,7 @@ class Action(Controller):
                 action.get("action"),
                 record_id,
             )
-            return self._get_action_breadcrumb(action, record_id, idx, actions)
+            return self._get_action_breadcrumb(action, record_id, idx, next_action)
         if action.get("model"):
             dbg.logic.debug(
                 "[breadcrumbs] #%d: by model %s res_id=%s",
@@ -156,7 +163,7 @@ class Action(Controller):
         action: dict[str, Any],
         record_id: Any,
         idx: int,
-        actions: list[dict[str, Any]],
+        next_action: dict[str, Any] | None,
     ) -> dict[str, Any]:
         act = self.load(action.get("action"))
         if not act:
@@ -180,8 +187,8 @@ class Action(Controller):
 
         if (
             act["type"] == "ir.actions.client"
-            and idx + 1 < len(actions)
-            and action.get("action") == actions[idx + 1].get("action")
+            and next_action is not None
+            and action.get("action") == next_action.get("action")
         ):
             dbg.logic.debug("[breadcrumbs] #%d: repeated client action", idx)
             return {"error": "Client actions don't have multi-record views"}
@@ -189,7 +196,7 @@ class Action(Controller):
         if record_id:
             if record_id == "new":
                 return {"display_name": _("New")}
-            if act["res_model"]:
+            if act.get("res_model"):
                 dbg.logic.debug(
                     "[breadcrumbs] #%d: record name %s/%s",
                     idx,

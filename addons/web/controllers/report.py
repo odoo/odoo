@@ -24,6 +24,24 @@ _MAX_BARCODE_DIM = 10_000
 _MAX_BARCODE_VALUE_LEN = 4096
 
 
+_RENDERERS = {
+    "html": ("_render_qweb_html", "text/html"),
+    "pdf": ("_render_qweb_pdf", "application/pdf"),
+    "text": ("_render_qweb_text", "text/plain"),
+}
+
+_DOWNLOAD_TYPES = {
+    "qweb-pdf": ("pdf", "pdf"),
+    "qweb-text": ("text", "txt"),
+}
+
+
+def _parse_docids(docids: str | None) -> list[int] | None:
+    if not docids:
+        return None
+    return [int(i) for i in docids.split(",") if i.isdigit()]
+
+
 def _clamp_barcode_dimension(raw: Any, default: int) -> int:
     try:
         value = int(raw)
@@ -60,11 +78,16 @@ class ReportController(http.Controller):
             docids,
             dbg.keys(data),
         )
+        if converter not in _RENDERERS:
+            dbg.logic.debug(
+                "[report:%s] routes: converter %r unsupported", reportname, converter
+            )
+            raise BadRequest(description=f"Converter {converter!r} not supported.")
+        render_method, content_type = _RENDERERS[converter]
         report = request.env["ir.actions.report"]
         context = dict(request.env.context)
 
-        if docids:
-            docids = [int(i) for i in docids.split(",") if i.isdigit()]
+        docids = _parse_docids(docids)
         if data.get("options"):
             data.update(json_loads(data.pop("options")))
             dbg.logic.debug(
@@ -86,40 +109,23 @@ class ReportController(http.Controller):
             converter,
             dbg.count(docids or ()),
         )
+        with dbg.timer(request.env, "[report:%s] render %s", reportname, converter):
+            body = getattr(report.with_context(context), render_method)(
+                reportname, docids, data=data
+            )[0]
+        dbg.performance.debug(
+            "[report:%s] %s: %d %s",
+            reportname,
+            converter,
+            len(body),
+            "bytes" if isinstance(body, bytes) else "chars",
+        )
         if converter == "html":
-            with dbg.timer(request.env, "[report:%s] render html", reportname):
-                html = report.with_context(context)._render_qweb_html(
-                    reportname, docids, data=data
-                )[0]
-            dbg.performance.debug("[report:%s] html: %d chars", reportname, len(html))
-            return request.prepare_response(html)
-        elif converter == "pdf":
-            with dbg.timer(request.env, "[report:%s] render pdf", reportname):
-                pdf = report.with_context(context)._render_qweb_pdf(
-                    reportname, docids, data=data
-                )[0]
-            dbg.performance.debug("[report:%s] pdf: %d bytes", reportname, len(pdf))
-            pdfhttpheaders = [
-                ("Content-Type", "application/pdf"),
-                ("Content-Length", len(pdf)),
-            ]
-            return request.prepare_response(pdf, headers=pdfhttpheaders)
-        elif converter == "text":
-            with dbg.timer(request.env, "[report:%s] render text", reportname):
-                text = report.with_context(context)._render_qweb_text(
-                    reportname, docids, data=data
-                )[0]
-            dbg.performance.debug("[report:%s] text: %d chars", reportname, len(text))
-            texthttpheaders = [
-                ("Content-Type", "text/plain"),
-                ("Content-Length", len(text)),
-            ]
-            return request.prepare_response(text, headers=texthttpheaders)
-        else:
-            dbg.logic.debug(
-                "[report:%s] routes: converter %r unsupported", reportname, converter
-            )
-            raise BadRequest(description=f"Converter {converter!r} not supported.")
+            return request.prepare_response(body)
+        return request.prepare_response(
+            body,
+            headers=[("Content-Type", content_type), ("Content-Length", len(body))],
+        )
 
     @http.route(
         [
@@ -183,11 +189,10 @@ class ReportController(http.Controller):
             context is not None,
         )
         try:
-            if type_ in ["qweb-pdf", "qweb-text"]:
-                converter = "pdf" if type_ == "qweb-pdf" else "text"
-                extension = "pdf" if type_ == "qweb-pdf" else "txt"
+            if type_ in _DOWNLOAD_TYPES:
+                converter, extension = _DOWNLOAD_TYPES[type_]
 
-                pattern = "/report/pdf/" if type_ == "qweb-pdf" else "/report/text/"
+                pattern = f"/report/{converter}/"
                 _, _, after_pattern = url.partition(pattern)
                 if not after_pattern:
                     dbg.logic.debug("[report_download] url lacks %r, refused", pattern)
@@ -232,8 +237,7 @@ class ReportController(http.Controller):
                 filename = f"{report.name}.{extension}"
 
                 if docids:
-                    ids = [int(x) for x in docids.split(",") if x.isdigit()]
-                    obj = request.env[report.model].browse(ids)
+                    obj = request.env[report.model].browse(_parse_docids(docids))
                     if report.print_report_name and len(obj) == 1:
                         report_name = safe_eval(
                             report.print_report_name,

@@ -22,8 +22,9 @@ class Domain(Controller):
             dbg.logic.debug("[domain:%s] validate: unknown model", model)
             raise ValidationError(_("Invalid model: %s", model))
         try:
-            with dbg.timer(
-                request.env, "[domain:%s] validate: search + EXPLAIN", model
+            with (
+                dbg.timer(request.env, "[domain:%s] validate: search + EXPLAIN", model),
+                request.env.cr.savepoint(flush=False),
             ):
                 query = Model.sudo()._search(domain)
 

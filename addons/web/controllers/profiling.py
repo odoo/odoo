@@ -17,6 +17,19 @@ from ..tools import debug_log as dbg
 JSON_MIMETYPE = mimetype_for("json")
 
 
+def _get_profiles(profile: str, purpose: str):
+    try:
+        profile_ids = [int(p) for p in profile.split(",")]
+    except ValueError, AttributeError:
+        dbg.logic.debug("[profile:%s] %s: unparsable ids -> 404", profile, purpose)
+        raise request.prepare_not_found_error() from None
+    profiles = request.env["ir.profile"].browse(profile_ids).exists()
+    if not profiles:
+        dbg.logic.debug("[profile:%s] %s: no such profiles -> 404", profile, purpose)
+        raise request.prepare_not_found_error()
+    return profiles
+
+
 class Profiling(Controller):
     @route("/web/set_profiling", type="http", auth="public", sitemap=False)
     def profile(
@@ -66,16 +79,7 @@ class Profiling(Controller):
             action,
             dbg.keys(kwargs),
         )
-        try:
-            profile_ids = [int(p) for p in profile.split(",")]
-        except ValueError, AttributeError:
-            dbg.logic.debug("[profile:%s] speedscope: unparsable ids -> 404", profile)
-            raise request.prepare_not_found_error() from None
-        profiles = request.env["ir.profile"].browse(profile_ids).exists()
-        profile_str = profile
-        if not profiles:
-            dbg.logic.debug("[profile:%s] speedscope: no such profiles -> 404", profile)
-            raise request.prepare_not_found_error()
+        profiles = _get_profiles(profile, "speedscope")
         params = kwargs or profiles._prepare_profile_params_default()
         dbg.logic.debug(
             "[profile:%s] speedscope: %s params, %s",
@@ -97,7 +101,7 @@ class Profiling(Controller):
                 (
                     "Content-Disposition",
                     prepare_content_disposition_header(
-                        f"profile_{profile_str}.{extension_for(JSON_MIMETYPE)}"
+                        f"profile_{profile}.{extension_for(JSON_MIMETYPE)}"
                     ),
                 ),
             ]
@@ -116,7 +120,7 @@ class Profiling(Controller):
             response = request.render("web.view_speedscope_index", context)
         if action == "speedscope_download_html":
             response.headers["Content-Disposition"] = (
-                prepare_content_disposition_header(f"profile_{profile_str}.html")
+                prepare_content_disposition_header(f"profile_{profile}.html")
             )
             response.headers["X-Content-Type-Options"] = "nosniff"
             response.headers["Content-Type"] = "text/html"
@@ -134,7 +138,6 @@ class Profiling(Controller):
     def profile_config(
         self, profile: str, action: str | bool = False, **kwargs
     ) -> Response:
-        profile_str = profile
         dbg.lifecycle.debug(
             "[profile:%s] config: %s action=%s params=%s",
             profile,
@@ -142,15 +145,7 @@ class Profiling(Controller):
             action,
             dbg.keys(kwargs),
         )
-        try:
-            profile_ids = [int(p) for p in profile_str.split(",")]
-        except ValueError, AttributeError:
-            dbg.logic.debug("[profile:%s] config: unparsable ids -> 404", profile)
-            raise request.prepare_not_found_error() from None
-        profiles = request.env["ir.profile"].browse(profile_ids).exists()
-        if not profiles:
-            dbg.logic.debug("[profile:%s] config: no such profiles -> 404", profile)
-            raise request.prepare_not_found_error()
+        profiles = _get_profiles(profile, "config")
 
         if action == "memory_open":
             with dbg.timer(
@@ -175,7 +170,7 @@ class Profiling(Controller):
 
         context = {
             "default_params": profiles._prepare_profile_params_default(),
-            "profile_str": profile_str,
+            "profile_str": profile,
             "profiles": profiles,
         }
         return request.render("web.config_speedscope_index", context)

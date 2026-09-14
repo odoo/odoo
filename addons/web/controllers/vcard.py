@@ -10,6 +10,10 @@ from odoo.libs.filesystem import osutil
 from ..tools import debug_log as dbg
 
 
+def _get_vcard_label(partner) -> str:
+    return partner.name or partner.email or f"contact_{partner.id}"
+
+
 class Partner(http.Controller):
     @http.route(
         [
@@ -51,7 +55,7 @@ class Partner(http.Controller):
                 ):
                     used_names = set()
                     for p in partners:
-                        label = p.name or p.email or f"contact_{p.id}"
+                        label = _get_vcard_label(p)
                         name = osutil.clean_filename(f"{label}.vcf")
                         candidate, i = name, 1
                         while candidate in used_names:
@@ -92,7 +96,7 @@ class Partner(http.Controller):
                     (
                         "Content-Disposition",
                         prepare_content_disposition_header(
-                            f"{partner.name or partner.email or f'contact_{partner.id}'}.vcf"
+                            osutil.clean_filename(f"{_get_vcard_label(partner)}.vcf")
                         ),
                     ),
                 ],

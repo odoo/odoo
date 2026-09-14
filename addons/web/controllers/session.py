@@ -53,7 +53,7 @@ class Session(http.Controller):
             raise AccessError(msg)
 
         with ExitStack() as stack:
-            if not request.db or request.db != db:
+            if request.db != db:
                 dbg.logic.debug(
                     "[session] authenticate: request db %s != %s, own cursor",
                     request.db,

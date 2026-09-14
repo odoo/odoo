@@ -85,35 +85,47 @@ _JS_ERROR_KINDS = frozenset(
 _JS_ERROR_PHASES = frozenset({"pre_boot", "post_boot", "boot_mount_failed"})
 
 
-def _clamp_latency(value):
+def _get_clamped_metric(value, maximum: float) -> float | None:
     if not isinstance(value, (int, float)) or isinstance(value, bool):
         return None
-    if not math.isfinite(value):
-        return None
-    if value < 0 or value > _MAX_LATENCY_MS:
+    if not math.isfinite(value) or value < 0 or value > maximum:
         return None
     return float(value)
 
 
-def _clamp_cls(value):
-    if not isinstance(value, (int, float)) or isinstance(value, bool):
-        return None
-    if not math.isfinite(value):
-        return None
-    if value < 0 or value > _MAX_CLS:
-        return None
-    return float(value)
+def _get_capped_str(raw, cap: int) -> str:
+    return raw[:cap] if isinstance(raw, str) else ""
+
+
+def _get_positive_int(raw) -> int:
+    return int(raw) if isinstance(raw, (int, float)) and raw >= 0 else 0
+
+
+def _read_beacon_payload(prefix: str) -> tuple[dict | None, Response | None]:
+    dbg.lifecycle.debug(
+        "[%s] beacon: %s bytes=%d",
+        prefix,
+        dbg.req(),
+        len(request.httprequest.data or b""),
+    )
+    if _is_rate_limited(_get_client_rate_key(prefix)):
+        dbg.logic.debug("[%s] beacon: rate limited -> 429", prefix)
+        return None, Response("", status=429, mimetype="text/plain")
+    try:
+        payload = json_loads(request.httprequest.data or b"{}")
+    except ValueError, TypeError:
+        dbg.logic.debug("[%s] beacon: invalid json -> 400", prefix)
+        return None, Response("invalid json", status=400, mimetype="text/plain")
+    if not isinstance(payload, dict):
+        dbg.logic.debug(
+            "[%s] beacon: payload is %s -> 400", prefix, type(payload).__name__
+        )
+        return None, Response("invalid payload", status=400, mimetype="text/plain")
+    return payload, None
 
 
 def _prepare_js_error_values(payload: dict) -> dict | None:
-
-    def get_capped_str(raw, cap):
-        return (str(raw)[:cap]) if isinstance(raw, str) else ""
-
-    def get_positive_int(raw):
-        return int(raw) if isinstance(raw, (int, float)) and raw >= 0 else 0
-
-    message = get_capped_str(payload.get("message"), _MAX_ERROR_MSG_LEN)
+    message = _get_capped_str(payload.get("message"), _MAX_ERROR_MSG_LEN)
     if not message:
         return None
 
@@ -127,13 +139,13 @@ def _prepare_js_error_values(payload: dict) -> dict | None:
             if payload.get("phase") in _JS_ERROR_PHASES
             else "unknown"
         ),
-        "filename": get_capped_str(payload.get("filename"), _MAX_ERROR_FILENAME_LEN),
-        "url": get_capped_str(payload.get("url"), _MAX_URL_LEN),
-        "user_agent": get_capped_str(payload.get("user_agent"), _MAX_UA_LEN),
-        "stack": get_capped_str(payload.get("stack"), _MAX_ERROR_STACK_LEN),
-        "cause": get_capped_str(payload.get("cause"), _MAX_ERROR_CAUSE_LEN),
-        "line": get_positive_int(payload.get("line")),
-        "col": get_positive_int(payload.get("col")),
+        "filename": _get_capped_str(payload.get("filename"), _MAX_ERROR_FILENAME_LEN),
+        "url": _get_capped_str(payload.get("url"), _MAX_URL_LEN),
+        "user_agent": _get_capped_str(payload.get("user_agent"), _MAX_UA_LEN),
+        "stack": _get_capped_str(payload.get("stack"), _MAX_ERROR_STACK_LEN),
+        "cause": _get_capped_str(payload.get("cause"), _MAX_ERROR_CAUSE_LEN),
+        "line": _get_positive_int(payload.get("line")),
+        "col": _get_positive_int(payload.get("col")),
         "reloaded": (
             bool(payload.get("reloaded"))
             if kind == "asset_load_error" and "reloaded" in payload
@@ -152,45 +164,18 @@ class Observability(Controller):
         csrf=False,
     )
     def cwv(self) -> Response:
-        dbg.lifecycle.debug(
-            "[cwv] beacon: %s bytes=%d",
-            dbg.req(),
-            len(request.httprequest.data or b""),
-        )
-        client_key = _get_client_rate_key("cwv")
-        if _is_rate_limited(client_key):
-            dbg.logic.debug("[cwv] beacon: rate limited -> 429")
-            return Response("", status=429, mimetype="text/plain")
+        payload, refusal = _read_beacon_payload("cwv")
+        if refusal is not None:
+            return refusal
 
-        try:
-            payload = json_loads(request.httprequest.data or b"{}")
-        except ValueError, TypeError:
-            dbg.logic.debug("[cwv] beacon: invalid json -> 400")
-            return Response("invalid json", status=400, mimetype="text/plain")
-
-        if not isinstance(payload, dict):
-            dbg.logic.debug(
-                "[cwv] beacon: payload is %s -> 400", type(payload).__name__
-            )
-            return Response("invalid payload", status=400, mimetype="text/plain")
-
-        lcp = _clamp_latency(payload.get("lcp"))
-        fcp = _clamp_latency(payload.get("fcp"))
-        ttfb = _clamp_latency(payload.get("ttfb"))
-        inp = _clamp_latency(payload.get("inp"))
-        cls = _clamp_cls(payload.get("cls"))
-        raw_url = payload.get("url")
-        if isinstance(raw_url, str):
-            url = raw_url.split("?", 1)[0][:_MAX_URL_LEN]
-        else:
-            url = ""
-        user_agent = (
-            (payload.get("user_agent") or "")[:_MAX_UA_LEN]
-            if isinstance(payload.get("user_agent"), str)
-            else ""
-        )
-        raw_pageview = payload.get("pageview_id")
-        pageview_id = raw_pageview[:64] if isinstance(raw_pageview, str) else ""
+        lcp = _get_clamped_metric(payload.get("lcp"), _MAX_LATENCY_MS)
+        fcp = _get_clamped_metric(payload.get("fcp"), _MAX_LATENCY_MS)
+        ttfb = _get_clamped_metric(payload.get("ttfb"), _MAX_LATENCY_MS)
+        inp = _get_clamped_metric(payload.get("inp"), _MAX_LATENCY_MS)
+        cls = _get_clamped_metric(payload.get("cls"), _MAX_CLS)
+        url = _get_capped_str(payload.get("url"), _MAX_URL_LEN).split("?", 1)[0]
+        user_agent = _get_capped_str(payload.get("user_agent"), _MAX_UA_LEN)
+        pageview_id = _get_capped_str(payload.get("pageview_id"), 64)
 
         if lcp is None and fcp is None and ttfb is None and cls is None and inp is None:
             dbg.logic.debug("[cwv] beacon: no metric survived clamping -> 204")
@@ -237,27 +222,9 @@ class Observability(Controller):
         csrf=False,
     )
     def js_error(self) -> Response:
-        dbg.lifecycle.debug(
-            "[js_error] beacon: %s bytes=%d",
-            dbg.req(),
-            len(request.httprequest.data or b""),
-        )
-        client_key = _get_client_rate_key("js_error")
-        if _is_rate_limited(client_key):
-            dbg.logic.debug("[js_error] beacon: rate limited -> 429")
-            return Response("", status=429, mimetype="text/plain")
-
-        try:
-            payload = json_loads(request.httprequest.data or b"{}")
-        except ValueError, TypeError:
-            dbg.logic.debug("[js_error] beacon: invalid json -> 400")
-            return Response("invalid json", status=400, mimetype="text/plain")
-
-        if not isinstance(payload, dict):
-            dbg.logic.debug(
-                "[js_error] beacon: payload is %s -> 400", type(payload).__name__
-            )
-            return Response("invalid payload", status=400, mimetype="text/plain")
+        payload, refusal = _read_beacon_payload("js_error")
+        if refusal is not None:
+            return refusal
 
         beacon = _prepare_js_error_values(payload)
         if beacon is None:

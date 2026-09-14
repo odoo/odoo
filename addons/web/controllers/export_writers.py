@@ -129,7 +129,7 @@ class GroupsTreeNode:
     def aggregated_values(self) -> dict[str, Any]:
         aggregated_values = {}
 
-        field_values = zip(*self.data, strict=True)
+        columns = list(zip(*self.data, strict=True))
         aggregated_field_names = self._get_aggregated_field_names()
         dbg.performance.debug(
             "[groups:%s] aggregate %s node: %d rows, %d children, %d aggregated fields",
@@ -139,14 +139,13 @@ class GroupsTreeNode:
             len(self.children),
             len(aggregated_field_names),
         )
-        for field_name in self._export_field_names:
-            field_data = (self.data and next(field_values)) or []
-
-            if field_name in aggregated_field_names:
-                field = self._model._fields[field_name]
-                aggregated_values[field_name] = self._get_aggregate(
-                    field_name, field_data, field.aggregator
-                )
+        for index, field_name in enumerate(self._export_field_names):
+            if field_name not in aggregated_field_names:
+                continue
+            field = self._model._fields[field_name]
+            aggregated_values[field_name] = self._get_aggregate(
+                field_name, iter(columns[index] if columns else ()), field.aggregator
+            )
 
         return aggregated_values
 
@@ -197,6 +196,20 @@ class ExportXlsxWriter:
             self.output,
             {"in_memory": True, "constant_memory": True, "strings_to_formulas": False},
         )
+        self.worksheet = self.workbook.add_worksheet()
+        if row_count + 1 > self.worksheet.xls_rowmax:
+            dbg.logic.debug(
+                "[xlsx] %d rows exceed xls_rowmax %d, refused",
+                row_count,
+                self.worksheet.xls_rowmax,
+            )
+            raise UserError(
+                self.env._(
+                    "There are too many rows (%(count)s rows, limit: %(limit)s) to export as Excel 2007-2013 (.xlsx) format. Consider splitting the export.",
+                    count=row_count,
+                    limit=self.worksheet.xls_rowmax,
+                )
+            )
         self.header_style = self.workbook.add_format({"bold": True})
         self.date_style = self.workbook.add_format(
             {"text_wrap": True, "num_format": "yyyy-mm-dd"}
@@ -237,7 +250,6 @@ class ExportXlsxWriter:
             )
         )
 
-        self.worksheet = self.workbook.add_worksheet()
         self.value = False
         dbg.lifecycle.debug(
             "[xlsx] writer: %d columns, %d rows, monetary decimals=%d",
@@ -245,20 +257,6 @@ class ExportXlsxWriter:
             row_count,
             self.monetary_decimal_places,
         )
-
-        if row_count + 1 > self.worksheet.xls_rowmax:
-            dbg.logic.debug(
-                "[xlsx] %d rows exceed xls_rowmax %d, refused",
-                row_count,
-                self.worksheet.xls_rowmax,
-            )
-            raise UserError(
-                self.env._(
-                    "There are too many rows (%(count)s rows, limit: %(limit)s) to export as Excel 2007-2013 (.xlsx) format. Consider splitting the export.",
-                    count=row_count,
-                    limit=self.worksheet.xls_rowmax,
-                )
-            )
 
     def __enter__(self) -> Self:
         self.write_header()
