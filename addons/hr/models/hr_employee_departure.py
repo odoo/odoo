@@ -36,8 +36,7 @@ class HrEmployeeDeparture(models.Model):
         help="Date at which the departure process starts. Differs from the actual departure date in case of a notice period.")
     departure_date = fields.Date(string="Departure Date", compute="_compute_departure_date",
         store=True, readonly=False, help="Date at which the departure actually takes place.")
-    action_date = fields.Date(string="Archive Employee On", compute="_compute_action_date",
-        store=True, help="Date at which the departure actually takes place.")
+    action_date = fields.Date(string="Archive Employee On", help="Date at which the departure actually takes place.")
     is_user_employee = fields.Boolean(
         compute='_compute_is_user_employee',
         export_string_translation=False,
@@ -51,19 +50,6 @@ class HrEmployeeDeparture(models.Model):
         # meant to be overriden in case of notice period
         for departure in self:
             departure.departure_date = departure.dismissal_date
-
-    @api.depends('departure_date')
-    def _compute_action_date(self):
-        for departure in self:
-            if not (departure.departure_date and departure.action_date):
-                continue
-            if departure.action_date < departure.departure_date:
-                departure.action_date = departure.departure_date + relativedelta(days=1)
-
-    @api.onchange("departure_date")
-    def _onchange_departure_date(self):
-        if self.departure_date:
-            self.action_date = self.departure_date + relativedelta(days=1)
 
     @api.depends('employee_id.user_id')
     def _compute_is_user_employee(self):
