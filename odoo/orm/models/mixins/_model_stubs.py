@@ -108,6 +108,11 @@ class _ModelStubs:
         grouped: typing.Any
 
         def fields_get(self, *args: typing.Any, **kwargs: typing.Any) -> dict: ...
+        def _get_field_descriptions_static(
+            self,
+            attributes: tuple[str, ...] | None,
+            field_names: tuple[str, ...] | None,
+        ) -> typing.Mapping[str, tuple[typing.Mapping, tuple[str, ...]]]: ...
         def invalidate_model(
             self, fnames: typing.Any = None, flush: bool = True
         ) -> None: ...

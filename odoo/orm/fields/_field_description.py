@@ -1,6 +1,7 @@
 import typing
 from collections.abc import (
     Collection,
+    Mapping,
 )
 
 from odoo.exceptions import AccessError
@@ -18,21 +19,72 @@ from ._field_stubs import _FieldStubs
 _debug = DebugLog(__name__)
 
 
+def description_key(attributes: Collection[str] | None) -> tuple[str, ...] | None:
+    """The hashable form of a ``fields_get`` attribute selection."""
+    if attributes is None:
+        return None
+    return tuple(sorted(set(attributes)))
+
+
 class _FieldDescriptionMixin(_FieldStubs):
     def get_description(
         self, env: Environment, attributes: Collection[str] | None = None
     ) -> ValuesType:
+        key = description_key(attributes)
+        static, dynamic = env[self.model_name]._get_field_descriptions_static(
+            key, (self.name,)
+        )[self.name]
+        return self._compose_description(env, static, dynamic)
+
+    def _compose_description(
+        self,
+        env: Environment,
+        static: Mapping[str, typing.Any],
+        dynamic: Collection[str],
+    ) -> ValuesType:
+        """A fresh description from its two halves: the memoised static
+        attributes (copied, so a caller may edit the result) and the ones
+        this call evaluates against the environment."""
+        desc = {
+            attr: list(value) if isinstance(value, list) else value
+            for attr, value in static.items()
+        }
+        for attr in dynamic:
+            value = getattr(self, self.description_props[attr])(env)
+            if value is not None:
+                desc[attr] = value
+        return desc
+
+    def _describe_static(
+        self, env: Environment, attributes: Collection[str] | None
+    ) -> tuple[ValuesType, tuple[str, ...]]:
+        """The half of the description that is a function of the registry,
+        the language and the superuser flag, and the names of the attributes
+        that are not — evaluated on every call by ``_compose_description``."""
+        dynamic = self._dynamic_description_attrs(env)
         desc = {}
         for attr, prop in self.description_attrs:
-            if attributes is not None and attr not in attributes:
+            if (attributes is not None and attr not in attributes) or attr in dynamic:
                 continue
             value = getattr(self, prop)
             if callable(value):
                 value = value(env)
             if value is not None:
                 desc[attr] = value
+        return desc, tuple(
+            attr
+            for attr, _prop in self.description_attrs
+            if attr in dynamic and (attributes is None or attr in attributes)
+        )
 
-        return desc
+    def _dynamic_description_attrs(self, env: Environment) -> frozenset[str]:
+        """The description attributes whose value depends on more than the
+        registry, the language and the superuser flag: an aggregator that
+        needs a query the user may not be allowed to run. Subclasses add a
+        callable selection or domain."""
+        if self.aggregator and not self.is_column:
+            return frozenset({"aggregator"})
+        return frozenset()
 
     def _description_depends(self, env: Environment) -> Collection[str]:
         return env.registry.field_depends[self]

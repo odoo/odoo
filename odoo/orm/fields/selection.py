@@ -218,6 +218,14 @@ class Selection[T = str | typing.Literal[False]](Field[T]):
                         value_modules[value_label[0]].add(module)
         return value_modules
 
+    @override
+    def _dynamic_description_attrs(self, env: Environment) -> frozenset[str]:
+        dynamic = super()._dynamic_description_attrs(env)
+        selection = self._get_selection()
+        if isinstance(selection, str) or callable(selection):
+            return dynamic | {"selection"}
+        return dynamic
+
     def _description_selection(self, env: Environment) -> list[SelectValue]:
         selection = self._get_selection()
         if isinstance(selection, str) or callable(selection):

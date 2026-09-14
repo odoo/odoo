@@ -276,6 +276,17 @@ class Monetary(Field[float]):
     def _description_currency_field(self, env: Environment) -> str | None:
         return self.get_currency_field(env[self.model_name])
 
+    @override
+    def _dynamic_description_attrs(self, env: Environment) -> frozenset[str]:
+        dynamic = super()._dynamic_description_attrs(env)
+        if not self.aggregator:
+            return dynamic
+        model = env[self.model_name]
+        currency_field = model._fields[self._get_currency_field_name(model)]
+        if not currency_field.column_type or not currency_field.store:
+            return dynamic | {"aggregator"}
+        return dynamic
+
     def _description_aggregator(self, env: Environment) -> str | None:
         model = env[self.model_name]
         currency_field_name = self._get_currency_field_name(model)

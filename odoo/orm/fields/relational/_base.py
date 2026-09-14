@@ -234,6 +234,13 @@ class _Relational(Field["BaseModel"]):
     _description_relation = property(attrgetter("comodel_name"))
     _description_context = property(attrgetter("context"))
 
+    @override
+    def _dynamic_description_attrs(self, env: Environment) -> frozenset[str]:
+        dynamic = super()._dynamic_description_attrs(env)
+        if callable(self.domain):
+            return dynamic | {"domain"}
+        return dynamic
+
     def _description_domain(self, env: Environment) -> str | list:
         domain = self._internal_description_domain_raw(env)
         if self.check_company:

@@ -42,6 +42,7 @@ class _FieldStubs:
         search: typing.Any
         falsy_value_label: str | None
         description_attrs: tuple[tuple[str, str], ...]
+        description_props: dict[str, str]
         related_attrs: tuple[tuple[str, str], ...]
         _explicit: bool
 

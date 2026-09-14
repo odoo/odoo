@@ -7,11 +7,12 @@ from odoo.exceptions import MissingError
 from odoo.libs.accel import batch_cache_fill as _batch_cache_fill
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.profiling import _OrmProfile
-from odoo.tools import OrderedSet
+from odoo.tools import OrderedSet, frozendict, ormcache
 from odoo.tools.misc import PENDING, SENTINEL
 
 from ... import decorators as api
 from ..._typing import ValuesType
+from ...fields._field_description import description_key
 from ...primitives import LOG_ACCESS_COLUMNS
 from ._cache_scan import can_scan_read, is_cache_detached
 from ._model_stubs import _ModelStubs
@@ -44,13 +45,17 @@ class ReadMixin(_ModelStubs):
             )
         res = {}
         wanted = set(allfields) if allfields else None
+        key = description_key(attributes)
+        described = self._get_field_descriptions_static(
+            key, None if wanted is None else tuple(sorted(wanted))
+        )
         for fname, field in self._fields.items():
             if wanted is not None and fname not in wanted:
                 continue
             if not self._has_field_access(field, "read"):
                 continue
 
-            description = field.get_description(self.env, attributes=attributes)
+            description = field._compose_description(self.env, *described[fname])
             if "readonly" in description:
                 description["readonly"] = description[
                     "readonly"
@@ -65,6 +70,34 @@ class ReadMixin(_ModelStubs):
             attributes=len(attributes) if attributes is not None else None,
         )
         return res
+
+    @api.model
+    @ormcache(
+        "attributes", "field_names", "self.env.lang", "self.env.su", cache="default"
+    )
+    def _get_field_descriptions_static(
+        self,
+        attributes: tuple[str, ...] | None,
+        field_names: tuple[str, ...] | None,
+    ) -> frozendict[str, tuple[frozendict, tuple[str, ...]]]:
+        """Per field, the memoised half of its description and the names of
+        the attributes ``fields_get`` evaluates on every call. Keyed on what
+        the static half reads besides the registry: the language (labels,
+        selection labels, decimal precisions) and the superuser flag (a
+        non-stored related field sorts only under sudo). Field-level access
+        is applied by the caller, never memoised."""
+        fields_ = (
+            self._fields.values()
+            if field_names is None
+            else (self._fields[name] for name in field_names if name in self._fields)
+        )
+        return frozendict(
+            {
+                field.name: (frozendict(static), dynamic)
+                for field in fields_
+                for static, dynamic in (field._describe_static(self.env, attributes),)
+            }
+        )
 
     @api.readonly
     def read(

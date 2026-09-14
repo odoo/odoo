@@ -291,6 +291,7 @@ class Field[T](
                 described.append((attr.removeprefix("_description_"), attr))
         cls.related_attrs = tuple(related)
         cls.description_attrs = tuple(described)
+        cls.description_props = dict(described)
 
     def __set_name__(self, owner: ModelClass, name: str) -> None:
         assert get_base_model() is None or is_model_class(owner)
