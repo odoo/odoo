@@ -1,12 +1,15 @@
 import { describe, expect, test } from "@odoo/hoot";
 import { click } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
+import { makeActionAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import {
+    contains,
     defineModels,
     fields,
     getService,
     makeDialogMockEnv,
     models,
+    mountActionHost,
     mountView,
     onRpc,
 } from "@web/../tests/web_test_helpers";
@@ -17,8 +20,61 @@ class Thing extends models.Model {
     _name = "thing";
     name = fields.Char();
     _records = [{ id: 1, name: "one" }];
+    _views = { form: `<form><field name="name"/></form>` };
 }
 defineModels([Thing]);
+
+for (const save of [false, true]) {
+    test(`awaitable form action settles after ${save ? "saving" : "canceling"} its dialog`, async () => {
+        await mountActionHost();
+        const pending = makeActionAwaitable(getService("action"), {
+            type: "ir.actions.act_window",
+            res_model: "thing",
+            res_id: 1,
+            views: [[false, "form"]],
+            target: "new",
+        });
+        if (save) {
+            await contains(".modal input").edit("changed");
+            await contains(".modal .o_form_button_save").click();
+        } else {
+            await contains(".modal .o_form_button_cancel").click();
+        }
+        const record = await pending;
+        expect(record?.resId).toBe(save ? 1 : undefined);
+        await animationFrame();
+        expect(".modal").toHaveCount(0);
+    });
+}
+
+test("an inherited dialog-close failure reaches the caller after saving", async () => {
+    await mountActionHost();
+    const action = getService("action");
+    const error = new Error("inherited close failed");
+    const editor = {
+        type: "ir.actions.act_window",
+        res_model: "thing",
+        res_id: 1,
+        views: [[false, "form"]],
+        target: "new",
+    };
+    await action.doAction(editor, {
+        onClose: () => {
+            throw error;
+        },
+    });
+    await animationFrame();
+    const pending = makeActionAwaitable(action, { ...editor }).catch(
+        (reason) => reason,
+    );
+    await animationFrame();
+    await animationFrame();
+    await contains(".modal input").edit("changed");
+    await contains(".modal .o_form_button_save").click();
+    expect(await pending).toBe(error);
+    await animationFrame();
+    expect(".modal").toHaveCount(0);
+});
 
 const API = [
     "doAction",

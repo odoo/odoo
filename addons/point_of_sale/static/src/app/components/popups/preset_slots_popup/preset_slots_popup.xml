@@ -15,7 +15,7 @@
                 <div t-foreach="timedPresets"
                     t-as="preset"
                     t-key="preset.id"
-                    t-attf-class="{{ preset.id === state.selectedPresetId ? '' : 'd-none' }}">
+                    t-if="preset.id === state.selectedPresetId">
                     <div class="d-flex w-100 flex-wrap gap-2 mt-2">
                         <button class="btn flex-grow-1"
                             t-foreach="Object.keys(preset.availabilities)" t-as="sqlDate" t-key="sqlDate"
@@ -26,12 +26,11 @@
                     </div>
                     <hr/>
                     <div class="w-100 mt-3">
-                        <div t-foreach="Object.keys(preset.availabilities)" t-as="sqlDate" t-key="sqlDate" class="row">
+                        <div t-foreach="Object.keys(preset.availabilities)" t-as="sqlDate" t-key="sqlDate" t-if="state.selectedDate === sqlDate" class="row">
                             <t t-set="slotByPeriod" t-value="Object.entries(this.getSlotsForDate(preset, sqlDate))"/>
                             <div t-foreach="slotByPeriod"
                                 t-as="entries"
                                 t-key="entries[0]"
-                                t-att-class="{'d-none': state.selectedDate !== sqlDate}"
                                 t-attf-class="{{`col-${12 / slotByPeriod.length}`}}">
                                 <span class="fs-6" t-esc="this.getPeriodName(entries[0])" />
                                 <div class="d-flex flex-wrap gap-1">
@@ -45,7 +44,7 @@
                                     </button>
                                 </div>
                             </div>
-                            <div t-if="state.selectedDate === sqlDate and Object.values(preset.availabilities[sqlDate]).length === 0" class="w-100 mt-2">
+                            <div t-if="Object.values(preset.availabilities[sqlDate]).length === 0" class="w-100 mt-2">
                                 <div class="alert alert-warning" role="alert">
                                     No slot available for this day
                                 </div>

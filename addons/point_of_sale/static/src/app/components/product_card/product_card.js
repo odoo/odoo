@@ -1,5 +1,5 @@
 /** @odoo-module native */
-import { Component, useState } from "@odoo/owl";
+import { Component, useEffect, useState } from "@odoo/owl";
 import { makeLogger } from "@web/core/debug/debug_logger";
 import { useLifecycleLog } from "@web/core/debug/logger_hooks";
 import { useService } from "@web/core/utils/hooks";
@@ -23,6 +23,7 @@ export class ProductCard extends Component {
         color: { type: [Number, undefined], optional: true },
         imageUrl: [String, Boolean],
         onClick: { type: Function, optional: true },
+        onMouseLeave: { type: Function, optional: true },
         showWarning: { type: Boolean, optional: true },
         productCartQty: { type: [Number, undefined], optional: true },
         slots: { type: Object, optional: true },
@@ -30,6 +31,7 @@ export class ProductCard extends Component {
     };
     static defaultProps = {
         onClick: () => {},
+        onMouseLeave: () => {},
         class: "",
         showWarning: false,
         isComboPopup: false,
@@ -40,8 +42,30 @@ export class ProductCard extends Component {
         this.pos = useService("pos");
         this.posStock = useService("pos_stock");
         this.stockQuantities = useState(this.posStock.quantities);
-        if (this.pos.config.show_stock_in_pos) {
-            this.posStock.request(this.stockProductIds);
+        useEffect(
+            () => {
+                if (this.pos.config.show_stock_in_pos) {
+                    this.posStock.request(this.stockProductIds);
+                }
+            },
+            () => [this.pos.config.show_stock_in_pos, ...this.stockProductIds],
+        );
+    }
+
+    onKeydown(event) {
+        if (
+            event.target !== event.currentTarget ||
+            !["Enter", " "].includes(event.key)
+        ) {
+            return;
+        }
+        event.preventDefault();
+        if (!event.repeat) {
+            log.logic("keyboard activation", () => ({
+                productId: this.props.productId,
+                key: event.key,
+            }));
+            this.props.onClick(event);
         }
     }
 

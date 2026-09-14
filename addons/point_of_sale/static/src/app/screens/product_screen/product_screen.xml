@@ -29,6 +29,7 @@
                     <CategorySelector t-if="pos.productsToDisplay.length > 0 and (!ui.isSmall || !pos.scanning)" />
                     <BarcodeVideoScanner t-if="pos.scanning" t-props="barcodeVideoScannerProps" />
                     <div t-elif="pos.productToDisplayByCateg.length > 0" class="overflow-y-auto" t-on-scroll="onScroll">
+                        <t t-set="cartQuantities" t-value="quantityByProductTmplId"/>
                         <div t-foreach="pos.productToDisplayByCateg" t-as="productCateg" t-key="productCateg[0]" class="product-list d-grid gap-1 gap-lg-2 px-2 pt-0 pb-2">
                             <ProductCard
                                 t-foreach="productCateg[1]" t-as="product" t-key="product.id"
@@ -41,9 +42,11 @@
                                 onClick.bind="() => this.addProductToOrder(product)"
                                 t-on-mousedown="(event) => this.onMouseDown(event, product)"
                                 t-on-mouseup="longPressHandlers.onMouseUp"
+                                onMouseLeave.bind="longPressHandlers.onMouseLeave"
                                 t-on-touchstart="(event) => this.onTouchStart(product)"
                                 t-on-touchend="longPressHandlers.onTouchEnd"
-                                productCartQty="this.state.quantityByProductTmplId[product.id]" />
+                                t-on-touchcancel="longPressHandlers.onTouchCancel"
+                                productCartQty="cartQuantities[product.id]" />
                         </div>
                     </div>
                     <div t-else="" class="flex-grow-1 text-center mt-5">

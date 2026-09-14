@@ -1,7 +1,7 @@
 /** @odoo-module native */
 /* global waitForWebfonts */
 
-import { markRaw, reactive } from "@odoo/owl";
+import { markRaw, reactive, toRaw } from "@odoo/owl";
 import { CashMovePopup } from "@point_of_sale/app/components/popups/cash_move_popup/cash_move_popup";
 import { ClosePosPopup } from "@point_of_sale/app/components/popups/closing_popup/closing_popup";
 import { ComboConfiguratorPopup } from "@point_of_sale/app/components/popups/combo_configurator_popup/combo_configurator_popup";
@@ -2704,6 +2704,10 @@ export class PosStore extends WithLazyGetterTrap {
                 additionalContext: this.editPartnerContext(partner),
             },
         );
+        if (!record) {
+            log.lifecycle("editPartner: canceled");
+            return;
+        }
         const newPartner = await this.data.read("res.partner", record.config.resIds);
         log.lifecycle("editPartner: saved", () => ({
             partner: newPartner[0]?.id,
@@ -2937,16 +2941,36 @@ export class PosStore extends WithLazyGetterTrap {
     }
     async syncPresetSlotAvaibility(preset) {
         const endSync = log.perf("syncPresetSlotAvaibility");
+        const requests = (this.unwatched.presetSlotRequests ??= new WeakMap());
+        // Different component observers can wrap the same record in different proxies.
+        const record = toRaw(preset);
+        const request = {};
+        requests.set(record, request);
+        let outcome = "superseded";
         try {
             const result = await this.data.call("pos.preset", "get_available_slots", [
                 preset.id,
             ]);
-            const localUsage = this.orderUsageUTCtoLocal(result.usage_utc);
-            preset.computeAvailabilities(localUsage);
-            endSync({ preset: preset.id, slots: Object.keys(localUsage || {}).length });
-        } catch {
-            preset.computeAvailabilities();
-            endSync({ preset: preset.id, failed: true });
+            if (requests.get(record) !== request) {
+                return;
+            }
+            preset.computeAvailabilities(this.orderUsageUTCtoLocal(result.usage_utc));
+            outcome = "updated";
+        } catch (error) {
+            if (requests.get(record) !== request) {
+                return;
+            }
+            outcome = "failed";
+            log.logic("preset refresh: retaining known bookings", () => ({
+                preset: preset.id,
+                error,
+            }));
+            preset.computeAvailabilities(preset.uiState.serverUsage);
+        } finally {
+            if (requests.get(record) === request) {
+                requests.delete(record);
+            }
+            endSync({ preset: preset.id, outcome });
         }
     }
     setPartnerToCurrentOrder(partner) {

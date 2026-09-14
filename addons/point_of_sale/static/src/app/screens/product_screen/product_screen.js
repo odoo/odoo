@@ -30,7 +30,6 @@ import { luxon } from "@web/core/l10n/luxon";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/translation";
 import { useService } from "@web/core/utils/hooks";
-import { debounce } from "@web/core/utils/timing";
 import { AlertDialog } from "@web/ui/dialog";
 const { DateTime } = luxon;
 
@@ -65,7 +64,6 @@ export class ProductScreen extends Component {
         this.state = useState({
             previousSearchWord: "",
             currentOffset: 0,
-            quantityByProductTmplId: {},
         });
 
         useRouterParamsChecker();
@@ -130,25 +128,19 @@ export class ProductScreen extends Component {
         this.longPressHandlers = useLongPress((product) =>
             this.pos.onProductInfoClick(product),
         );
-        this.onScroll = debounce(this.longPressHandlers.onScroll, 200, {
-            leading: true,
-        });
+        this.onScroll = this.longPressHandlers.onScroll;
+    }
 
-        useEffect(
-            () => {
-                this.state.quantityByProductTmplId = this.currentOrder?.lines?.reduce(
-                    (acc, ol) => {
-                        if (!ol.combo_parent_id) {
-                            const productTmplId = ol.product_id.product_tmpl_id.id;
-                            acc[productTmplId] = (acc[productTmplId] || 0) + ol.qty;
-                        }
-                        return acc;
-                    },
-                    {},
-                );
-            },
-            () => [this.currentOrder, this.currentOrder.totalQuantity],
-        );
+    get quantityByProductTmplId() {
+        const quantities = {};
+        for (const line of this.currentOrder?.lines ?? []) {
+            if (!line.combo_parent_id) {
+                const id = line.product_id.product_tmpl_id.id;
+                quantities[id] = (quantities[id] || 0) + line.qty;
+            }
+        }
+        log.logic("cart quantities", () => ({ quantities }));
+        return quantities;
     }
 
     onMouseDown(event, product) {

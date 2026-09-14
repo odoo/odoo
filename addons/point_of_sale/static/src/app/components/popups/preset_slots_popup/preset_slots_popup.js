@@ -30,10 +30,14 @@ export class PresetSlotsPopup extends Component {
 
         onWillStart(async () => {
             const endSync = log.perf("willStart: sync slot availability");
-            for (const preset of this.timedPresets) {
-                await this.pos.syncPresetSlotAvaibility(preset);
+            const presets = this.timedPresets;
+            try {
+                await Promise.all(
+                    presets.map((preset) => this.pos.syncPresetSlotAvaibility(preset)),
+                );
+            } finally {
+                endSync({ presets: presets.length });
             }
-            endSync({ presets: this.timedPresets.length });
         });
     }
 

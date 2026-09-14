@@ -6,6 +6,21 @@ import { getFilledOrder, setupPosEnv } from "../utils.js";
 
 definePosModels();
 
+test("canceling the customer editor settles without reading an unsaved customer", async () => {
+    const store = await setupPosEnv();
+    let options;
+    store.action = {
+        doAction: async (request, args) => {
+            options = args;
+        },
+    };
+    store.data.read = () => expect.step("read customer");
+    const result = store.editPartner();
+    await options.onClose();
+    expect(await result).toBe(undefined);
+    expect.verifySteps([]);
+});
+
 describe("pos_store.js resilience", () => {
     describe("removeOrders", () => {
         test("one failing order does not abort the batch nor throw", async () => {
