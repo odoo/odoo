@@ -45,7 +45,14 @@ class TestPortalShareEmails(SaleCommon, MockEmail):
         )
         with self.mock_mail_gateway():
             wizard._send_public_link()
-        messages = self.sale_order.message_ids.filtered(
+        invitations = self.env["mail.message"].search(
+            [
+                ("model", "=", self.sale_order._name),
+                ("res_id", "=", self.sale_order.id),
+                ("message_type", "=", "user_notification"),
+            ]
+        )
+        messages = invitations.filtered(
             lambda message: recipient in message.partner_ids
         )
         self.assertEqual(len(messages), 1)
@@ -55,7 +62,7 @@ class TestPortalShareEmails(SaleCommon, MockEmail):
             messages.subject, f"Invitation pour accéder {self.sale_order.display_name}"
         )
         self.assertEqual(messages.partner_ids, recipient)
-        fallback_message = self.sale_order.message_ids.filtered(
+        fallback_message = invitations.filtered(
             lambda message: fallback_recipient in message.partner_ids
         )
         self.assertEqual(len(fallback_message), 1)
@@ -75,13 +82,11 @@ class TestPortalShareEmails(SaleCommon, MockEmail):
                 wizard = self._share_wizard(recipient)
                 with (
                     self.mock_mail_gateway(),
-                    patch.object(
-                        type(self.sale_order), "message_post_with_source"
-                    ) as post,
+                    patch.object(type(wizard), "_notify_share_invitation") as notify,
                 ):
                     wizard._send_signup_link(recipient.with_context(signup_valid=True))
-                post.assert_called_once()
-                url = urlsplit(post.call_args.kwargs["render_values"]["share_link"])
+                notify.assert_called_once()
+                url = urlsplit(notify.call_args.args[1])
                 query = parse_qs(url.query)
                 _logger.debug(
                     "Signup share scope=%s path=%s query keys=%s",
@@ -113,7 +118,7 @@ class TestPortalShareEmails(SaleCommon, MockEmail):
         )
         wizard = self._share_wizard(recipients)
         # Isolate link preparation from the intentionally per-recipient mail delivery.
-        with patch.object(type(self.sale_order), "message_post_with_source") as post:
+        with patch.object(type(wizard), "_notify_share_invitation") as post:
             wizard._send_public_link(recipients)
             costs = []
             for batch in (recipients[:2], recipients):
@@ -125,9 +130,7 @@ class TestPortalShareEmails(SaleCommon, MockEmail):
                 costs.append(self.env.cr.sql_statement_count - before)
                 self.assertEqual(post.call_count, len(batch))
                 for recipient, call in zip(batch, post.call_args_list, strict=True):
-                    query = parse_qs(
-                        urlsplit(call.kwargs["render_values"]["share_link"]).query
-                    )
+                    query = parse_qs(urlsplit(call.args[1]).query)
                     self.assertEqual(query["pid"], [str(recipient.id)])
                     self.assertEqual(
                         query["hash"], [self.sale_order._sign_token(recipient.id)]

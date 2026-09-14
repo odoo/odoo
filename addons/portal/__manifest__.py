@@ -1,6 +1,6 @@
 {
     "name": "Customer Portal",
-    "version": "19.0.1.0",
+    "version": "19.0.1.1",
     "category": "Hidden",
     "sequence": 9000,
     "summary": "Shared base for portal-user pages: templates, mixin, and controllers for external authenticated access",

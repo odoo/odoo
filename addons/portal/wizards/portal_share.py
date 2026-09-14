@@ -1,5 +1,8 @@
+from markupsafe import Markup
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools import format_list
 
 
 class PortalShare(models.TransientModel):
@@ -105,14 +108,17 @@ class PortalShare(models.TransientModel):
         record.check_access("read")
         return record
 
-    def _post_share_email(self, partner, share_link, *, record=None):
-        """Render in the recipient's language, reusing a validated batch target."""
-        if record is None:
-            record = self._get_shared_record()
+    def _notify_share_invitation(self, partner, share_link, *, record):
+        """The link is a credential for ``partner`` (signup token, or ``pid``/``hash``
+        posting as them): it travels in a ``user_notification``, readable by author
+        and recipient only, never in a thread message every reader of ``record`` sees.
+        """
         record = record.with_context(lang=partner.lang or self.env.lang)
-        record.message_post_with_source(
+        body = record.env["mixin.mail.render"]._render_template_qweb_view(
             "portal.portal_share_template",
-            render_values={
+            record._name,
+            record.ids,
+            add_context={
                 "partner": partner,
                 "note": self.note,
                 "record": record,
@@ -121,10 +127,23 @@ class PortalShare(models.TransientModel):
                 ._get(record._name)
                 .display_name.lower(),
             },
+        )[record.id]
+        record.message_notify(
+            body=body,
             subject=record.env._("Invitation to access %s", record.display_name),
-            subtype_xmlid="mail.mt_note",
-            email_layout_xmlid="mail.mail_notification_light",
             partner_ids=partner.ids,
+            email_layout_xmlid="mail.mail_notification_light",
+        )
+
+    def _log_share_invitations(self, partners, *, record):
+        if not partners:
+            return
+        record._message_log(
+            body=Markup("<p>%s</p>")
+            % self.env._(
+                "Invitation to access this document sent to %(partners)s",
+                partners=format_list(self.env, partners.mapped("display_name")),
+            ),
         )
 
     def _send_public_link(self, partners=None):
@@ -135,23 +154,33 @@ class PortalShare(models.TransientModel):
             share_link = record.get_base_url() + record._get_share_url(
                 redirect=True, pid=partner.id
             )
-            self._post_share_email(partner, share_link, record=record)
+            self._notify_share_invitation(partner, share_link, record=record)
+        return partners
 
     def _send_signup_link(self, partners=None):
         if partners is None:
             partners = self.partner_ids.filtered(lambda partner: not partner.user_ids)
         if not partners:
-            return
+            return partners
         record = self._get_shared_record()
         for partner in partners:
             partner.signup_get_auth_param()
             share_link = partner._get_signup_url_for_action(
                 action="/mail/view", res_id=self.res_id, model=self.res_model
             )[partner.id]
-            self._post_share_email(partner, share_link, record=record)
+            self._notify_share_invitation(partner, share_link, record=record)
+        return partners
 
-    def _get_public_link_partners(self):
+    def _send_share_links(self, partners):
+        public_link_partners = self._get_public_link_partners(partners)
+        return self._send_public_link(public_link_partners) | self._send_signup_link(
+            partners - public_link_partners
+        )
+
+    def _get_public_link_partners(self, partners=None):
         self.check_singleton()
+        if partners is None:
+            partners = self.partner_ids
         signup_enabled = (
             self.env["ir.config_parameter"]
             .sudo()
@@ -159,14 +188,13 @@ class PortalShare(models.TransientModel):
             == "b2c"
         )
         if not signup_enabled:
-            return self.partner_ids
-        return self.partner_ids.filtered(lambda partner: partner.user_ids)
+            return partners
+        return partners.filtered(lambda partner: partner.user_ids)
 
     def action_send_mail(self):
         self.check_singleton()
-        self._get_shared_record()
-        public_link_partners = self._get_public_link_partners()
-        self._send_public_link(public_link_partners)
-        self._send_signup_link(self.partner_ids - public_link_partners)
+        record = self._get_shared_record()
+        invited = self._send_share_links(self.partner_ids)
+        self._log_share_invitations(invited, record=record)
 
         return {"type": "ir.actions.act_window_close"}

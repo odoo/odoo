@@ -269,6 +269,7 @@ class ProjectShareWizard(models.TransientModel):
             partner_ids_in_readonly_mode,
             partner_ids_in_edit_mode,
         )
+        invited = self.env["res.partner"]
         if partner_ids_in_edit_mode:
             new_collaborators = self.env["res.partner"].browse(partner_ids_in_edit_mode)
             portal_partners = new_collaborators.filtered("user_ids")
@@ -278,14 +279,15 @@ class ProjectShareWizard(models.TransientModel):
                 dbg.rec(portal_partners),
                 dbg.rec(new_collaborators - portal_partners),
             )
-            self._send_public_link(portal_partners)
-            self._send_signup_link(
+            invited |= self._send_public_link(portal_partners)
+            invited |= self._send_signup_link(
                 partners=new_collaborators.with_context({"signup_valid": True})
                 - portal_partners
             )
         if partner_ids_in_readonly_mode:
-            self.partner_ids = self.env["res.partner"].browse(
-                partner_ids_in_readonly_mode
+            invited |= self._send_share_links(
+                self.env["res.partner"].browse(partner_ids_in_readonly_mode)
             )
-            super().action_send_mail()
+        if invited:
+            self._log_share_invitations(invited, record=self._get_shared_record())
         return result

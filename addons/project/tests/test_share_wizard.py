@@ -97,6 +97,54 @@ class TestShareWizardAppliesOnConfirm(TestProjectCommon):
         revoke.action_share_record()
         self.assertFalse(project.collaborator_ids)
 
+    def test_invitations_leave_one_credential_free_note(self) -> None:
+        project = self.env["project.project"].create(
+            {"name": "Shared", "privacy_visibility": "portal"}
+        )
+        reader = self.env["res.partner"].create(
+            {"name": "Read-only guest", "email": "guest@example.com"}
+        )
+        wizard = self.env["project.share.wizard"].create(
+            {
+                "res_model": "project.project",
+                "res_id": project.id,
+                "collaborator_ids": [
+                    Command.create(
+                        {
+                            "partner_id": self.user_portal.partner_id.id,
+                            "access_mode": "edit",
+                        }
+                    ),
+                    Command.create({"partner_id": reader.id, "access_mode": "read"}),
+                ],
+            }
+        )
+        wizard.action_send_mail()
+
+        readable = (
+            self.env["mail.message"]
+            .with_user(self.user_projectuser)
+            .search([("model", "=", project._name), ("res_id", "=", project.id)])
+        )
+        for message in readable:
+            self.assertNotIn("token=", str(message.body))
+            self.assertNotIn("hash=", str(message.body))
+        notes = readable.filtered(
+            lambda message: (
+                reader.name in str(message.body)
+                and self.user_portal.partner_id.name in str(message.body)
+            )
+        )
+        self.assertEqual(len(notes), 1)
+        invitations = self.env["mail.message"].search(
+            [
+                ("model", "=", project._name),
+                ("res_id", "=", project.id),
+                ("message_type", "=", "user_notification"),
+            ]
+        )
+        self.assertEqual(invitations.partner_ids, self.user_portal.partner_id | reader)
+
     def test_applying_twice_is_a_no_op(self) -> None:
         project = self.env["project.project"].create(
             {"name": "Shared", "privacy_visibility": "portal"}

@@ -1,6 +1,6 @@
 {
     "name": "Hr Recruitment Interview Forms",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Human Resources",
     "summary": "Surveys",
     "description": """

@@ -1,4 +1,7 @@
+from markupsafe import Markup
+
 from odoo.exceptions import AccessError
+from odoo.modules.module import get_module_path, load_script
 from odoo.tests import Form, common, tagged
 from odoo.tools import mute_logger
 
@@ -133,6 +136,52 @@ class TestRecruitmentSurvey(common.TransactionCase):
 
         # Officer: unrestricted access to recruitment surveys, no interviewer gate.
         self.job_applicant.with_user(self.hr_recruitment_user).action_print_survey()
+
+    def test_invitation_link_stays_out_of_the_applicant_thread(self):
+        invite = self._prepare_invite(self.survey_sysadmin, self.job_applicant)
+        invite.action_invite()
+        answer = self.job_applicant.response_ids
+        self.assertTrue(answer.access_token)
+
+        messages = (
+            self.env["mail.message"]
+            .with_user(self.hr_recruitment_user)
+            .search(
+                [
+                    ("model", "=", self.job_applicant._name),
+                    ("res_id", "=", self.job_applicant.id),
+                ]
+            )
+        )
+        for message in messages:
+            self.assertNotIn(answer.access_token, str(message.body))
+        summaries = messages.filtered(
+            lambda message: self.survey_sysadmin.title in str(message.body)
+        )
+        self.assertEqual(len(summaries), 1)
+
+        mails = self.env["mail.mail"].sudo().search([("subject", "!=", False)])
+        self.assertTrue(
+            mails.filtered(lambda mail: answer.access_token in str(mail.body_html))
+        )
+
+    def test_migration_moves_posted_invitations_out_of_the_thread(self):
+        script = load_script(
+            f"{get_module_path('hr_recruitment_survey')}/migrations/1.1/post-migrate.py",
+            "hr_recruitment_survey_1_1_post_migrate",
+        )
+        leaked = self.job_applicant.message_post(
+            body=Markup('<p><a href="%s">Start</a></p>')
+            % "https://example.com/survey/start/x?answer_token=secret",
+        )
+        summary = self.job_applicant.message_post(body="The survey has been sent")
+        self.env.flush_all()
+
+        script.migrate(self.env.cr, "19.0.1.0")
+        self.env.invalidate_all()
+
+        self.assertEqual(leaked.message_type, "user_notification")
+        self.assertEqual(summary.message_type, "notification")
 
     def test_new_survey_sets_recruitment_type(self):
         action = self.job.with_user(self.hr_recruitment_manager).action_new_survey()
