@@ -135,6 +135,23 @@ registerWebsitePreviewTour(
             run: "dblclick",
         },
         {
+            content: "Check that every listed icon renders correctly",
+            trigger: ".o_select_media_dialog .font-icons-icons .font-icons-icon",
+            async run() {
+                await document.fonts.ready;
+                const ICON_WIDTH = 21;
+                const failures = [...this.anchor
+                    .closest(".font-icons-icons")
+                    .querySelectorAll(".font-icons-icon")]
+                    .filter((iconEl) => parseInt(getComputedStyle(iconEl, '::before').width) !== ICON_WIDTH)
+                    .map((iconEl) => iconEl.dataset.icon);
+
+                if (failures.length) {
+                    throw new Error(`Icons not correctly rendered: ${failures.join(", ")}`);
+                }
+            },
+        },
+        {
             content: "Pick the same icon",
             trigger: ".o_select_media_dialog .o_we_attachment_selected[data-icon='oi_instagram']",
             run: "click",
