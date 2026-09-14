@@ -15,7 +15,7 @@ class TestPerformanceTimesheet(TestSaleTimesheet):
         )
         self.assertFalse(project.task_ids.sale_line_id)
         self.env.invalidate_all()
-        with self.assertQueryCount(87):
+        with self.assertQueryCount(28):
             project.write(
                 {
                     "allow_billable": True,
@@ -36,7 +36,7 @@ class TestPerformanceTimesheet(TestSaleTimesheet):
             ]
         )
         self.env.invalidate_all()
-        with self.assertQueryCount(130):
+        with self.assertQueryCount(29):
             project.write(
                 {
                     "allow_billable": True,
