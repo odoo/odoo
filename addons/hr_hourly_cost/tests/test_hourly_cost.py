@@ -95,6 +95,28 @@ class TestHourlyCost(TestHrCommon):
         )
         self.assertEqual(group["hourly_cost:avg"], 30.0)
 
+    def test_an_unset_hourly_cost_is_stored_as_zero_not_null(self):
+        employee = self.officer_employees.create({"name": "Unset column"})
+        self.env.flush_all()
+        self.env.cr.execute(
+            "SELECT hourly_cost FROM hr_employee WHERE id = %s", (employee.id,)
+        )
+        self.assertEqual(self.env.cr.fetchone()[0], 0.0)
+
+    def test_two_employees_with_no_cost_set_weigh_the_same_in_an_average(self):
+        department = self.env["hr.department"].create({"name": "Mixed"})
+        paid, unset = self.env["hr.employee"].create(
+            [
+                {"name": "Paid", "hourly_cost": 30.0, "department_id": department.id},
+                {"name": "Unset", "department_id": department.id},
+            ]
+        )
+        self.env.flush_all()
+        [group] = self.env["hr.employee"].formatted_read_group(
+            [("id", "in", (paid + unset).ids)], [], ["hourly_cost:avg"]
+        )
+        self.assertEqual(group["hourly_cost:avg"], 15.0)
+
     def test_only_an_hr_user_reads_the_hourly_cost(self):
         employee = self.officer_employees.create(
             {"name": "Restricted", "hourly_cost": 50.0}
@@ -126,6 +148,20 @@ class TestHourlyCost(TestHrCommon):
         )
         self.assertFalse(plain_arch.xpath("//field[@name='hourly_cost']"))
         self.assertFalse(plain_arch.xpath("//label[@for='hourly_cost']"))
+
+    def test_an_hr_officer_who_is_not_a_manager_still_gets_a_currency(self):
+        self.assertFalse(self.res_users_hr_officer.has_group("hr.group_hr_manager"))
+        arch = etree.fromstring(
+            self.officer_employees.get_view(
+                self.env.ref("hr.view_employee_form").id, "form"
+            )["arch"]
+        )
+        currencies = arch.xpath("//field[@name='currency_id']")
+        self.assertTrue(currencies)
+        self.assertIn(
+            "hourly_cost",
+            [node.getparent().get("name") for node in currencies],
+        )
 
     def test_the_list_offers_the_hourly_cost_as_an_optional_column(self):
         arch = etree.fromstring(

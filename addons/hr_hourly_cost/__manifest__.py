@@ -1,6 +1,6 @@
 {
     "name": "Employee Hourly Cost",
-    "version": "1.1",
+    "version": "1.2",
     "category": "Services/Timesheets",
     "summary": "Hourly cost of an employee's work, for other modules to value time",
     "description": """

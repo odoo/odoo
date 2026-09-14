@@ -5,6 +5,7 @@ class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
     hourly_cost = fields.Monetary(
+        default=0.0,
         aggregator="avg",
         tracking=True,
         groups="hr.group_hr_user",
