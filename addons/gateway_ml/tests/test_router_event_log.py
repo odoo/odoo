@@ -7,7 +7,6 @@ from odoo.addons.gateway_ml.tools import MlRouter
 from odoo.addons.gateway_ml.tools.ai_clients import BaseAIClient
 from odoo.addons.integration.tools.api_client import OutboundAPIClient
 from odoo.addons.integration.tools.exceptions import CommError
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 
 class _StubClient(BaseAIClient):
@@ -18,7 +17,7 @@ class _StubClient(BaseAIClient):
 
 
 @tagged("post_install", "-at_install")
-class TestRouterEventLog(EncryptionKeyCase, TransactionCase):
+class TestRouterEventLog(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

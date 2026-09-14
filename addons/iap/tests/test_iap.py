@@ -1,10 +1,9 @@
 from odoo.exceptions import AccessError
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 
-class TestIAP(EncryptionKeyCase, TransactionCaseWithUserDemo):
+class TestIAP(TransactionCaseWithUserDemo):
     def test_get_iap_account(self):
         user_demo = self.user_demo
         user_admin = self.ref("base.user_admin")

@@ -3,11 +3,9 @@ from unittest.mock import patch
 from odoo.tests.common import TransactionCase, tagged
 from odoo.tools import mute_logger
 
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
-
 
 @tagged("post_install", "-at_install")
-class HealthValidationCommon(EncryptionKeyCase, TransactionCase):
+class HealthValidationCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

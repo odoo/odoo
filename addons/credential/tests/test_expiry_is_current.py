@@ -5,10 +5,8 @@ from freezegun import freeze_time
 from odoo import fields
 from odoo.tests.common import TransactionCase
 
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
-
-class TestExpiryIsCurrent(EncryptionKeyCase, TransactionCase):
+class TestExpiryIsCurrent(TransactionCase):
     def _credential(self, name, date_expiration):
         return self.env["credential.credential"].create(
             {

@@ -10,7 +10,6 @@ from odoo.addons.gateway_ml.tools.assistant_adoption import (
     connect_credential,
 )
 from odoo.addons.integration.tools import CommError
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 _CLIENT_FACTORY = "odoo.addons.gateway_ml.tools.provider_assistant.get_api_client"
 
@@ -28,7 +27,7 @@ VENDORS = ("groq", "google", "openai", "deepseek", "moonshot", "anthropic")
 
 
 @tagged("post_install", "-at_install")
-class TestProviderAssistant(EncryptionKeyCase, TransactionCase):
+class TestProviderAssistant(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -275,7 +274,7 @@ class TestProviderAssistant(EncryptionKeyCase, TransactionCase):
 
 
 @tagged("post_install", "-at_install")
-class TestAssistantAdoption(EncryptionKeyCase, TransactionCase):
+class TestAssistantAdoption(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

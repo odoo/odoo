@@ -1,10 +1,8 @@
 from odoo.tests import TransactionCase, tagged
 
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
-
 
 @tagged("post_install", "-at_install")
-class TestMicrosoftCredentials(EncryptionKeyCase, TransactionCase):
+class TestMicrosoftCredentials(TransactionCase):
     """The Microsoft OAuth tokens rest in the vault and the fields are doors.
 
     `microsoft_calendar_token_validity` is not among them: an expiry is not a

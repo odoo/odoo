@@ -4,11 +4,9 @@ from unittest.mock import patch
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
-
 
 @tagged("post_install", "-at_install", "integration")
-class TestInboundExchangeRecording(EncryptionKeyCase, TransactionCase):
+class TestInboundExchangeRecording(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

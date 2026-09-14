@@ -5,13 +5,12 @@ from odoo.tests import TransactionCase, tagged
 from odoo.addons.gateway_ml.tests.common import credential_for
 from odoo.addons.gateway_ml.tools.ai_clients import GeminiClient, OpenAICompatibleClient
 from odoo.addons.integration.tools.exceptions import CommError
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 _IMAGE = "aGVsbG8="
 
 
 @tagged("post_install", "-at_install")
-class TestVisionCompletion(EncryptionKeyCase, TransactionCase):
+class TestVisionCompletion(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

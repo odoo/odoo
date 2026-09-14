@@ -6,10 +6,9 @@ from odoo.tests.common import TransactionCase
 from odoo.addons.gateway_ml.tests.common import credential_for
 from odoo.addons.gateway_ml.tools.ai_clients import get_ai_client
 from odoo.addons.integration.tools.exceptions import CommError
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 
-class TestOpenAICompatibleClient(EncryptionKeyCase, TransactionCase):
+class TestOpenAICompatibleClient(TransactionCase):
     def setUp(self):
         super().setUp()
 
@@ -140,7 +139,7 @@ class TestOpenAICompatibleClient(EncryptionKeyCase, TransactionCase):
         self.assertEqual(usage["total_tokens"], 0)
 
 
-class TestOpenAICompatibleVision(EncryptionKeyCase, TransactionCase):
+class TestOpenAICompatibleVision(TransactionCase):
     def setUp(self):
         super().setUp()
 

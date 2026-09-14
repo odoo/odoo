@@ -2,11 +2,9 @@ from unittest.mock import patch
 
 from odoo.tests import TransactionCase, tagged
 
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
-
 
 @tagged("post_install", "-at_install")
-class TestSecretUseAndReveal(EncryptionKeyCase, TransactionCase):
+class TestSecretUseAndReveal(TransactionCase):
     def _credential(self, **payload):
         return self.env["credential.credential"].create(
             {

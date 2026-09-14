@@ -1,10 +1,8 @@
 from odoo.tests import TransactionCase, tagged
 from odoo.tools import mute_logger
 
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
-
-class CredentialUnlinkCommon(EncryptionKeyCase, TransactionCase):
+class CredentialUnlinkCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

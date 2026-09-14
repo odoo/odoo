@@ -7,8 +7,6 @@ from odoo.exceptions import UserError
 from odoo.libs.guarded_http import GuardedSession
 from odoo.tests import TransactionCase, tagged
 
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
-
 
 def _jwt(claims):
     payload = base64.urlsafe_b64encode(json.dumps(claims).encode()).rstrip(b"=")
@@ -16,7 +14,7 @@ def _jwt(claims):
 
 
 @tagged("post_install_l10n", "post_install", "-at_install")
-class TestL10nRoEdiTokenRefresh(EncryptionKeyCase, TransactionCase):
+class TestL10nRoEdiTokenRefresh(TransactionCase):
     def setUp(self):
         super().setUp()
         self.company = self.env.company

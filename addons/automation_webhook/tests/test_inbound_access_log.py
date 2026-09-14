@@ -4,13 +4,12 @@ from odoo.exceptions import UserError
 from odoo.tests import TransactionCase, tagged
 from odoo.tools import mute_logger
 
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 _GATE = "odoo.addons.integration.models.mixin_inbound_gate"
 
 
 @tagged("post_install", "-at_install")
-class TestInboundAccessLog(EncryptionKeyCase, TransactionCase):
+class TestInboundAccessLog(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -427,7 +426,7 @@ class TestInboundAccessLog(EncryptionKeyCase, TransactionCase):
 
 
 @tagged("post_install", "-at_install")
-class TestInboundRateLimitScope(EncryptionKeyCase, TransactionCase):
+class TestInboundRateLimitScope(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

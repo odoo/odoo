@@ -3,11 +3,9 @@ from unittest.mock import MagicMock, patch
 from odoo.libs.guarded_http import GuardedSession
 from odoo.tests import TransactionCase, tagged
 
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
-
 
 @tagged("post_install", "-at_install")
-class TestGoogleCredentials(EncryptionKeyCase, TransactionCase):
+class TestGoogleCredentials(TransactionCase):
     """The Google OAuth tokens rest in the vault and the fields are doors.
 
     They live on `res.users.settings`, which is where the columns were;

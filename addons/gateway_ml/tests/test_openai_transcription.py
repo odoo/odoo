@@ -9,7 +9,6 @@ from odoo.addons.gateway_ml.tools.wire_formats import (
     read_whisper_transcript,
 )
 from odoo.addons.integration.tools.exceptions import CommError
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 
 @tagged("post_install", "-at_install")
@@ -57,7 +56,7 @@ class TestWhisperFormAndReader(TransactionCase):
 
 
 @tagged("post_install", "-at_install")
-class TestOpenAICompatibleTranscribe(EncryptionKeyCase, TransactionCase):
+class TestOpenAICompatibleTranscribe(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

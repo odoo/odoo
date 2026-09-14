@@ -2,12 +2,11 @@ from odoo.exceptions import ValidationError
 from odoo.tests import TransactionCase, tagged
 from odoo.tools import mute_logger
 
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 from odoo.addons.rate_limit.tools import get_caller_rate_limiter
 
 
 @tagged("post_install", "-at_install")
-class TestDecryptionAllowance(EncryptionKeyCase, TransactionCase):
+class TestDecryptionAllowance(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

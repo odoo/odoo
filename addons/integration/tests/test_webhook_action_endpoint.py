@@ -5,13 +5,12 @@ from odoo.tests import TransactionCase, tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.integration.models.ir_actions_server import _EndpointDelivery
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 _MODULE = "odoo.addons.integration.models.ir_actions_server"
 
 
 @tagged("post_install", "-at_install")
-class TestWebhookActionEndpoint(EncryptionKeyCase, TransactionCase):
+class TestWebhookActionEndpoint(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

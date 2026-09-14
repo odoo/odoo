@@ -4,7 +4,6 @@ from pathlib import Path
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 MIGRATION = Path(__file__).resolve().parents[1] / "migrations/1.27.0/post-migrate.py"
 
@@ -17,7 +16,7 @@ def _migrate(env):
 
 
 @tagged("post_install", "-at_install", "integration")
-class TestCustomApiTemplateRemoval(EncryptionKeyCase, TransactionCase):
+class TestCustomApiTemplateRemoval(TransactionCase):
     def _seeded_template(self, **overrides):
         service = self.env["integration.service"].create(
             {

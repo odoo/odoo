@@ -6,10 +6,8 @@ from freezegun import freeze_time
 from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase
 
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
-
-class TestIrMailServer(EncryptionKeyCase, TransactionCase):
+class TestIrMailServer(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

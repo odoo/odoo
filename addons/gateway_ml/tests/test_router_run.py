@@ -9,11 +9,10 @@ from odoo.addons.gateway_ml.tools.ai_clients import (
     OpenAICompatibleClient,
 )
 from odoo.addons.integration.tools.exceptions import CommError
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 
 @tagged("post_install", "-at_install")
-class TestRouterRun(EncryptionKeyCase, TransactionCase):
+class TestRouterRun(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -105,7 +104,7 @@ class TestRouterRun(EncryptionKeyCase, TransactionCase):
 
 
 @tagged("post_install", "-at_install")
-class TestTranscriptionVocabulary(EncryptionKeyCase, TransactionCase):
+class TestTranscriptionVocabulary(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

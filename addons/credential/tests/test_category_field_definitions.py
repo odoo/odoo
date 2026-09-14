@@ -4,10 +4,8 @@ from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger
 
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
-
-class TestCategoryFieldDefinitions(EncryptionKeyCase, TransactionCase):
+class TestCategoryFieldDefinitions(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

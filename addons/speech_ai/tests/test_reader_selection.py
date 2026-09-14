@@ -1,12 +1,11 @@
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 from odoo.addons.speech_ai.tools.readers import _pick_timed_model
 
 
 @tagged("post_install", "-at_install")
-class TestReaderSelection(EncryptionKeyCase, TransactionCase):
+class TestReaderSelection(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

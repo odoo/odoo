@@ -6,7 +6,6 @@ from odoo.addons.gateway_ml.tests.common import credential_for
 from odoo.addons.gateway_ml.tools.ai_clients import ClaudeClient, OpenAICompatibleClient
 from odoo.addons.gateway_ml.tools.ai_clients.claude import get_json_output_config
 from odoo.addons.integration.tools.exceptions import CommError
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 _SCHEMA = {
     "type": "object",
@@ -28,7 +27,7 @@ def _ok(body):
 
 
 @tagged("post_install", "-at_install")
-class TestClaudeStructuredOutput(EncryptionKeyCase, TransactionCase):
+class TestClaudeStructuredOutput(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -141,7 +140,7 @@ class TestClaudeStructuredOutput(EncryptionKeyCase, TransactionCase):
 
 
 @tagged("post_install", "-at_install")
-class TestModelRowsAreTheCatalogue(EncryptionKeyCase, TransactionCase):
+class TestModelRowsAreTheCatalogue(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

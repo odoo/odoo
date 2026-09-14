@@ -9,12 +9,11 @@ from odoo.tests.common import HttpCase, TransactionCase, tagged
 
 from .. import uninstall_hook
 from ..tools import drive_import, s3
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 CLIENT_FACTORY = "odoo.addons.cloud_storage_s3.tools.s3.boto3.client"
 
 
-class TestCloudStorageS3Common(EncryptionKeyCase, TransactionCase):
+class TestCloudStorageS3Common(TransactionCase):
     def setUp(self):
         super().setUp()
         self.bucket_name = "test-odoo-bucket"
@@ -534,7 +533,7 @@ class TestDriveImport(TestCloudStorageS3Common):
 
 
 @tagged("post_install", "-at_install")
-class TestDocumentsDirectUpload(EncryptionKeyCase, HttpCase):
+class TestDocumentsDirectUpload(HttpCase):
     def setUp(self):
         super().setUp()
         if "document.document" not in self.env:
@@ -597,7 +596,7 @@ class TestDocumentsDirectUpload(EncryptionKeyCase, HttpCase):
 
 
 @tagged("post_install", "-at_install")
-class TestS3CredentialSlots(EncryptionKeyCase, TransactionCase):
+class TestS3CredentialSlots(TransactionCase):
     def test_the_category_declares_both_iam_keys(self):
         category = self.env.ref(s3.CREDENTIAL_CATEGORY_XMLID)
 

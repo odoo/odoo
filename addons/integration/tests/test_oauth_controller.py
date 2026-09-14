@@ -5,10 +5,9 @@ import requests
 from odoo.tests.common import TransactionCase
 
 from odoo.addons.integration.controllers.oauth import OAuthController
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 
-class TestOAuthTokenExchange(EncryptionKeyCase, TransactionCase):
+class TestOAuthTokenExchange(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -74,7 +73,7 @@ class TestOAuthTokenExchange(EncryptionKeyCase, TransactionCase):
         self.assertNotIn("client_secret", mock_post.call_args.kwargs["data"])
 
 
-class TestOAuthClientIdResolution(EncryptionKeyCase, TransactionCase):
+class TestOAuthClientIdResolution(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

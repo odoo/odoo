@@ -15,12 +15,11 @@ from odoo.addons.microsoft_calendar.utils.microsoft_calendar import (
     MicrosoftCalendarService,
 )
 from odoo.addons.microsoft_calendar.utils.microsoft_event import MicrosoftEvent
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 DEFAULT_TIMEOUT = 20
 
 
-class TestMicrosoftService(EncryptionKeyCase, TransactionCase):
+class TestMicrosoftService(TransactionCase):
     def _do_request_result(self, data):
         """_do_request returns a tuple (status, data, time) but only the data part is used"""
         return (None, data, None)

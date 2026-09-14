@@ -5,7 +5,6 @@ import json
 from odoo.tests import HttpCase, tagged
 
 from odoo.addons.automation.tests.test_audit_regressions import AutomationAuditCommon
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 
 @tagged("post_install", "-at_install")
@@ -41,7 +40,7 @@ class TestRecordlessWebhookRespectsDependencies(AutomationAuditCommon):
 
 
 @tagged("post_install", "-at_install")
-class TestWebhookOverHttp(EncryptionKeyCase, HttpCase):
+class TestWebhookOverHttp(HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

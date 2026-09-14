@@ -7,11 +7,10 @@ from odoo.tests import TransactionCase, tagged
 
 from odoo.addons.iap.models import iap_account as iap_account_module
 from odoo.addons.iap.tools import iap_tools
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 
 @tagged("post_install", "-at_install")
-class TestIapAccount(EncryptionKeyCase, TransactionCase):
+class TestIapAccount(TransactionCase):
     """IAP account lifecycle, credit URLs and warning alert guards."""
 
     @classmethod

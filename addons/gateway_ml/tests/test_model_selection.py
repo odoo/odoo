@@ -12,10 +12,9 @@ from odoo.addons.integration.tools.exceptions import (
     CommError,
     ServerError,
 )
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 
-class _SelectionCase(EncryptionKeyCase, TransactionCase):
+class _SelectionCase(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

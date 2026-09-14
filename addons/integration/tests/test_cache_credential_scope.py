@@ -3,7 +3,6 @@ from unittest.mock import patch
 from odoo.tests import TransactionCase, tagged
 
 from odoo.addons.integration.tools import get_api_client
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 
 class _FakeResponse:
@@ -23,7 +22,7 @@ class _FakeResponse:
 
 
 @tagged("post_install", "-at_install")
-class TestCacheIsScopedByCredential(EncryptionKeyCase, TransactionCase):
+class TestCacheIsScopedByCredential(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

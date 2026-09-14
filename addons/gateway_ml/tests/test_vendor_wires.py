@@ -8,7 +8,6 @@ from odoo.addons.gateway_ml.tools.ai_clients import (
     GeminiClient,
     OpenAICompatibleClient,
 )
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 
 def _ok(body):
@@ -16,7 +15,7 @@ def _ok(body):
 
 
 @tagged("post_install", "-at_install")
-class TestGeminiWire(EncryptionKeyCase, TransactionCase):
+class TestGeminiWire(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -82,7 +81,7 @@ class TestGeminiWire(EncryptionKeyCase, TransactionCase):
 
 
 @tagged("post_install", "-at_install")
-class TestClaudeSampling(EncryptionKeyCase, TransactionCase):
+class TestClaudeSampling(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -116,7 +115,7 @@ class TestClaudeSampling(EncryptionKeyCase, TransactionCase):
 
 
 @tagged("post_install", "-at_install")
-class TestOpenAIWire(EncryptionKeyCase, TransactionCase):
+class TestOpenAIWire(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

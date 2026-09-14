@@ -7,13 +7,12 @@ from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.tests import TransactionCase, tagged
 
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 MIGRATION = Path(__file__).resolve().parents[1] / "migrations/1.2/post-migrate.py"
 
 
 @tagged("post_install", "-at_install")
-class TestWebhookSecurity(EncryptionKeyCase, TransactionCase):
+class TestWebhookSecurity(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

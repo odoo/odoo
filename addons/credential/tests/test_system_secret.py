@@ -1,10 +1,8 @@
 from odoo.tests import TransactionCase, tagged
 
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
-
 
 @tagged("post_install", "-at_install")
-class TestSystemSecret(EncryptionKeyCase, TransactionCase):
+class TestSystemSecret(TransactionCase):
     def test_a_system_secret_round_trips_encrypted_and_leaves_no_parameter(self):
         Credential = self.env["credential.credential"]
 

@@ -11,7 +11,6 @@ from odoo.addons.integration.tools import CommError, get_api_client
 from odoo.addons.integration.tools.connection_migration import (
     connect_bound_credentials,
 )
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 
 def _ok_response():
@@ -26,7 +25,7 @@ def _ok_response():
 
 
 @tagged("post_install", "-at_install", "integration")
-class TestIntegrationConnection(EncryptionKeyCase, TransactionCase):
+class TestIntegrationConnection(TransactionCase):
     _names = count()
 
     @classmethod
@@ -207,7 +206,7 @@ class TestIntegrationConnection(EncryptionKeyCase, TransactionCase):
 
 
 @tagged("post_install", "-at_install", "integration")
-class TestPerRecordConnections(EncryptionKeyCase, TransactionCase):
+class TestPerRecordConnections(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

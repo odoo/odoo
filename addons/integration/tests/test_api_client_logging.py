@@ -13,7 +13,6 @@ from odoo.tests.common import TransactionCase, tagged
 
 from odoo.addons.integration.tools.api_client import _MAX_LOGGED_PAYLOAD
 from odoo.addons.integration.tools.exceptions import ClientError, CommError
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 SECRET_KEY = "-----BEGIN PRIVATE KEY-----MIIEvQIBADANBg"
 
@@ -49,7 +48,7 @@ def _error_response(status_code, json_data):
     return response
 
 
-class ClientLoggingCommon(EncryptionKeyCase, TransactionCase):
+class ClientLoggingCommon(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -530,7 +529,7 @@ class TestFailedExchangesAreRecordedAsFailed(ClientLoggingCommon):
 
 
 @tagged("post_install", "-at_install")
-class TestDigestAuthAndTlsVerification(EncryptionKeyCase, TransactionCase):
+class TestDigestAuthAndTlsVerification(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -822,7 +821,7 @@ class TestRequestHeadersReachTheRow(ClientLoggingCommon):
 
 
 @tagged("post_install", "-at_install")
-class TestCredentialChangesDropCachedSessions(EncryptionKeyCase, TransactionCase):
+class TestCredentialChangesDropCachedSessions(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

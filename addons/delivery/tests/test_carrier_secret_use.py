@@ -1,10 +1,8 @@
 from odoo.tests import TransactionCase, tagged
 
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
-
 
 @tagged("post_install", "-at_install")
-class TestCarrierSecretUse(EncryptionKeyCase, TransactionCase):
+class TestCarrierSecretUse(TransactionCase):
     def _carrier_with_secrets(self):
         product = self.env["product.product"].create(
             {"name": "Shipping under test", "type": "service"}

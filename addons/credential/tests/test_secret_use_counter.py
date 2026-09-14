@@ -4,11 +4,9 @@ from unittest.mock import patch
 from odoo import fields
 from odoo.tests import TransactionCase, tagged
 
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
-
 
 @tagged("post_install", "-at_install")
-class TestSecretUseCounter(EncryptionKeyCase, TransactionCase):
+class TestSecretUseCounter(TransactionCase):
     def setUp(self):
         super().setUp()
         self.credential = self.env["credential.credential"].create(

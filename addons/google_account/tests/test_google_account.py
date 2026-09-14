@@ -11,13 +11,12 @@ from odoo.addons.google_account.models.google_service import (
     GOOGLE_TOKEN_ENDPOINT,
     _get_client_secret,
 )
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 MODULE = "odoo.addons.google_account.models.google_service"
 
 
 @tagged("post_install", "-at_install")
-class TestGoogleService(EncryptionKeyCase, TransactionCase):
+class TestGoogleService(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

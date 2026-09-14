@@ -2,14 +2,13 @@
 
 from odoo.tests import TransactionCase, tagged
 
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 ACCESS = "google_gmail_access_token"
 REFRESH = "google_gmail_refresh_token"
 
 
 @tagged("post_install", "-at_install")
-class TestGmailCredentials(EncryptionKeyCase, TransactionCase):
+class TestGmailCredentials(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

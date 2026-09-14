@@ -1,10 +1,8 @@
 from odoo.tests import TransactionCase, tagged
 
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
-
 
 @tagged("post_install", "-at_install")
-class TestCredentialStorageModes(EncryptionKeyCase, TransactionCase):
+class TestCredentialStorageModes(TransactionCase):
     def _endpoint(self, code, auth_type):
         return self.env["integration.service"].create(
             {
@@ -99,7 +97,7 @@ class TestCredentialStorageModes(EncryptionKeyCase, TransactionCase):
 
 
 @tagged("post_install", "-at_install")
-class TestEndpointUnlinkAuditsItsCredentials(EncryptionKeyCase, TransactionCase):
+class TestEndpointUnlinkAuditsItsCredentials(TransactionCase):
     def test_deleting_an_endpoint_audits_the_credentials_it_takes_with_it(self):
         endpoint = self.env["integration.service"].create(
             {

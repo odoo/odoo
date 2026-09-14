@@ -5,7 +5,6 @@ from odoo.libs.logging import mute_logger
 from odoo.tests.common import TransactionCase, tagged
 
 from odoo.addons.integration.tools.exceptions import CommError
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 
 class TestIntegrationService(TransactionCase):
@@ -394,7 +393,7 @@ class TestGenericVersionHeaders(TransactionCase):
 
 
 @tagged("post_install", "-at_install", "integration")
-class TestApiKeyHeader(EncryptionKeyCase, TransactionCase):
+class TestApiKeyHeader(TransactionCase):
     def _credential_for(self, **service_vals):
         service = self.env["integration.service"].create(
             {

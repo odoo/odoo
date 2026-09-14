@@ -7,10 +7,8 @@ import requests
 from odoo import fields
 from odoo.tests.common import TransactionCase
 
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
-
-class APITransportTestCase(EncryptionKeyCase, TransactionCase):
+class APITransportTestCase(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

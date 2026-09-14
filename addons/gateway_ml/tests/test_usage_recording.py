@@ -11,7 +11,6 @@ from odoo.addons.gateway_ml.tools.usage import (
     read_gemini_native,
     read_openai_compatible,
 )
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 
 @tagged("post_install", "-at_install")
@@ -93,7 +92,7 @@ class TestUsageReaders(TransactionCase):
 
 
 @tagged("post_install", "-at_install")
-class TestUsageOnTheExchangeRow(EncryptionKeyCase, TransactionCase):
+class TestUsageOnTheExchangeRow(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -167,7 +166,7 @@ class TestUsageOnTheExchangeRow(EncryptionKeyCase, TransactionCase):
 
 
 @tagged("post_install", "-at_install")
-class TestMonthlySpendCap(EncryptionKeyCase, TransactionCase):
+class TestMonthlySpendCap(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

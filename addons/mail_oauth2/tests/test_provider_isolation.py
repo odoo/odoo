@@ -3,13 +3,12 @@ from urllib.parse import parse_qs, urlsplit
 
 from odoo.tests import TransactionCase, tagged
 
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 PROVIDER_MIXINS = ("mixin.google.gmail", "mixin.microsoft.outlook")
 
 
 @tagged("post_install", "-at_install")
-class TestProviderIsolation(EncryptionKeyCase, TransactionCase):
+class TestProviderIsolation(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

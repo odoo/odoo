@@ -2,11 +2,9 @@ from odoo.exceptions import ValidationError
 from odoo.tests import TransactionCase, tagged
 from odoo.tools import mute_logger
 
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
-
 
 @tagged("post_install", "-at_install")
-class TestVerificationSecret(EncryptionKeyCase, TransactionCase):
+class TestVerificationSecret(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

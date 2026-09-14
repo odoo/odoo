@@ -1,6 +1,5 @@
 from odoo.tests import TransactionCase, tagged
 
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 SYNC_DOMAIN = [
     ("google_calendar_rtoken", "!=", False),
@@ -9,7 +8,7 @@ SYNC_DOMAIN = [
 
 
 @tagged("post_install", "-at_install")
-class TestGoogleSyncCandidates(EncryptionKeyCase, TransactionCase):
+class TestGoogleSyncCandidates(TransactionCase):
     """Who the synchronisation cron picks up, and why it cannot ask SQL.
 
     This fork keeps the OAuth tokens in `credential.credential`'s encrypted

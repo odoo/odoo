@@ -7,13 +7,12 @@ from odoo import fields
 from odoo.libs.guarded_http import GuardedSession
 from odoo.tests import TransactionCase, tagged
 
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 TOKEN_URL = "https://oauth.example.com/token"
 
 
 @tagged("post_install", "-at_install")
-class TestOAuth2Refresh(EncryptionKeyCase, TransactionCase):
+class TestOAuth2Refresh(TransactionCase):
     def _credential(self, **vals):
         return self.env["credential.credential"].create(
             {
@@ -118,7 +117,7 @@ class TestOAuth2Refresh(EncryptionKeyCase, TransactionCase):
 
 
 @tagged("post_install", "-at_install")
-class TestHeldOAuth2RefreshGrant(EncryptionKeyCase, TransactionCase):
+class TestHeldOAuth2RefreshGrant(TransactionCase):
     def setUp(self):
         super().setUp()
         self.company = self.env.company

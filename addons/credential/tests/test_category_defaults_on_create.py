@@ -1,10 +1,8 @@
 from odoo.tests import TransactionCase, tagged
 
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
-
 
 @tagged("post_install", "-at_install")
-class TestCategoryDefaultsOnCreate(EncryptionKeyCase, TransactionCase):
+class TestCategoryDefaultsOnCreate(TransactionCase):
     def test_a_credential_created_in_code_takes_its_category_policy(self):
         credential = self.env["credential.credential"].create(
             {

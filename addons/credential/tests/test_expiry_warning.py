@@ -4,10 +4,8 @@ from odoo import fields
 from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger
 
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
-
-class TestExpiryWarning(EncryptionKeyCase, TransactionCase):
+class TestExpiryWarning(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

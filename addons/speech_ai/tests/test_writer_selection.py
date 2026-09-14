@@ -5,12 +5,11 @@ from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
 from odoo.addons.gateway_ml.tools.router import MlRouter
-from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 from odoo.addons.speech_ai.tools.writers import AiSpeech
 
 
 @tagged("post_install", "-at_install")
-class TestWriterSelection(EncryptionKeyCase, TransactionCase):
+class TestWriterSelection(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
