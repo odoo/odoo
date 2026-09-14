@@ -119,16 +119,14 @@ class AccountJournal(models.Model):
         ))
 
         income = -balances.get('income', 0)
-        expense_direct_cost = balances.get('expense_direct_cost', 0)
         expenses = (
             balances.get('expense', 0)
-            + expense_direct_cost
+            + balances.get('expense_direct_cost', 0)
             + balances.get('expense_depreciation', 0)
         )
 
         return {
             'income': income,
-            'expense_direct_cost': expense_direct_cost,
             'expenses': expenses,
         }
 
@@ -164,7 +162,7 @@ class AccountJournal(models.Model):
         return amounts
 
     @api.model
-    def _get_cashflow_kpi_amounts(self):
+    def _get_cashflow_kpi_amount(self):
         date_from = fields.Date.subtract(
             fields.Date.context_today(self),
             months=12,
@@ -180,70 +178,7 @@ class AccountJournal(models.Model):
             SQL("COALESCE(SUM(%(balance)s) FILTER (WHERE %(amount)s > 0 AND %(balance)s > 0), 0.0)", balance=table.consolidation_balance, amount=table.statement_line_id.amount),
             SQL("COALESCE(SUM(-%(balance)s) FILTER (WHERE %(amount)s < 0 AND %(balance)s < 0), 0.0)", balance=table.consolidation_balance, amount=table.statement_line_id.amount),
         ))[0]
-        return {'cash_in': cash_in, 'cash_out': cash_out}
-
-    def _action_open_profit_and_loss_journal_items(self, report_line):
-        if not self.env.user.has_group('account.group_account_basic'):
-            raise AccessError(self.env._("You do not have access to the Accounting Dashboard."))
-
-        report = self.env.ref('account_reports.profit_and_loss')
-        today = fields.Date.context_today(self)
-        fiscal_year = self.env.company.compute_fiscalyear_dates(today)
-        options = report.get_options({
-            'selected_variant_id': report.id,
-            'forced_companies': self.env.companies.ids,
-            'date': {
-                'date_from': fiscal_year['date_from'],
-                'date_to': fiscal_year['date_to'],
-                'period_type': 'custom',
-            },
-        })
-        return report.dispatch_report_action(options, 'action_audit_cell', {
-            'report_line_id': report_line.id,
-            'expression_label': 'balance',
-            'calling_line_dict_id': report._get_generic_line_id(
-                'account.report.line',
-                report_line.id,
-            ),
-            'column_group_index': 0,
-        })
-
-    @api.model
-    def action_open_revenue_journal_items(self):
-        return self._action_open_profit_and_loss_journal_items(
-            self.env.ref('account_reports.account_financial_report_revenue0')
-        )
-
-    @api.model
-    def action_open_expense_journal_items(self):
-        return self._action_open_profit_and_loss_journal_items(
-            self.env.ref('account_reports.account_financial_report_expense0')
-        )
-
-    def _action_open_items(self, account_type):
-        if not self.env.user.has_group('account.group_account_basic'):
-            raise AccessError(self.env._("You do not have access to the Accounting Dashboard."))
-
-        action = self.env['ir.actions.actions']._for_xml_id(
-            'account_reports.action_account_report_followup'
-        )
-        action['params'] = {
-            'options': {
-                'account_type': [
-                    {'id': account_type, 'selected': True},
-                ],
-            },
-            'ignore_session': True,
-        }
-        return action
-
-    @api.model
-    def action_open_receivable_items(self):
-        return self._action_open_items('trade_receivable')
-
-    @api.model
-    def action_open_payable_items(self):
-        return self._action_open_items('trade_payable')
+        return cash_in - cash_out
 
     @api.model
     def get_account_dashboard_kpis(self):
@@ -252,22 +187,24 @@ class AccountJournal(models.Model):
 
         currency = self.env.company.currency_id
 
-        def format_amount(amount, is_cashflow=False):
-            if is_cashflow:
-                return formatLang(self.env, amount, currency_obj=currency, rounding_unit='units')
+        def format_amount(amount):
             return formatLang(self.env, currency.round(amount), currency_obj=currency)
 
         profitability_amounts = self._get_profitability_kpi_amounts()
         income = profitability_amounts['income']
-        expense_direct_cost = profitability_amounts['expense_direct_cost']
         expenses = profitability_amounts['expenses']
 
+        invoice_analysis_action = self.env.ref('account.action_account_invoice_report_all')
         profit_and_loss_action = self.env.ref(
             'account_reports.action_account_report_pl',
             raise_if_not_found=False,
         )
-        open_items_action = self.env.ref(
-            'account_reports.action_account_report_followup',
+        aged_receivable_action = self.env.ref(
+            'account_reports.action_account_report_ar',
+            raise_if_not_found=False,
+        )
+        aged_payable_action = self.env.ref(
+            'account_reports.action_account_report_ap',
             raise_if_not_found=False,
         )
         cashflow_analysis_action = self.env.ref(
@@ -276,72 +213,41 @@ class AccountJournal(models.Model):
         )
         invoice_layout_action = self.env.ref('account.action_base_document_layout_configurator')
 
-        def build_profit_and_loss_card(kpi_id, name, amount, action_method=None):
-            card = {
-                'id': kpi_id,
-                'name': name,
-                'has_total': True,
-                'value': format_amount(amount),
-                'action_id': profit_and_loss_action.id if profit_and_loss_action else False,
-            }
-            if action_method:
-                card['action_method'] = action_method
-            return card
-
         unpaid_amounts = self._get_sale_purchase_kpi_amounts()
         customer_unpaid = unpaid_amounts['sale']
         supplier_unpaid = -unpaid_amounts['purchase']
-        cashflow_amounts = self._get_cashflow_kpi_amounts()
+        cashflow_amount = self._get_cashflow_kpi_amount()
 
         cards = [
-            build_profit_and_loss_card(
-                'revenue',
-                self.env._('Revenue'),
-                income,
-                'action_open_revenue_journal_items',
-            ),
-            build_profit_and_loss_card(
-                'expenses',
-                self.env._('Expenses'),
-                expenses,
-                'action_open_expense_journal_items',
-            ),
-            build_profit_and_loss_card(
-                'gross_margin',
-                self.env._('Gross Margin'),
-                income - expense_direct_cost,
-            ),
             {
-                'id': 'cashflow',
-                'has_total': False,
-                'is_cashflow_card': True,
-                'values': [
-                    {
-                        'label': self.env._('Cash In'),
-                        'value': format_amount(cashflow_amounts['cash_in'] or 0.0, is_cashflow=True),
-                    },
-                    {
-                        'label': self.env._('Cash Out'),
-                        'value': format_amount(cashflow_amounts['cash_out'] or 0.0, is_cashflow=True),
-                    },
-                ],
+                'id': 'invoices',
+                'name': self.env._('Invoices'),
+                'value': format_amount(income),
+                'action_id': invoice_analysis_action.id,
+            },
+            {
+                'id': 'expenses',
+                'name': self.env._('Expenses'),
+                'value': format_amount(expenses),
+                'action_id': profit_and_loss_action.id if profit_and_loss_action else False,
+            },
+            {
+                'id': 'cash',
+                'name': self.env._('Cash'),
+                'value': format_amount(cashflow_amount),
                 'action_id': cashflow_analysis_action.id if cashflow_analysis_action else False,
             },
             {
                 'id': 'receivable',
                 'name': self.env._('Receivable'),
-                'has_total': True,
                 'value': format_amount(customer_unpaid),
-                'action_id': open_items_action.id if open_items_action else False,
-                'action_method': 'action_open_receivable_items',
+                'action_id': aged_receivable_action.id if aged_receivable_action else False,
             },
             {
                 'id': 'payable',
                 'name': self.env._('Payable'),
-                'has_total': True,
                 'value': format_amount(supplier_unpaid),
-                'action_id': open_items_action.id if open_items_action else False,
-                'action_method': 'action_open_payable_items',
+                'action_id': aged_payable_action.id if aged_payable_action else False,
             },
         ]
         if (
@@ -351,7 +257,6 @@ class AccountJournal(models.Model):
             cards.append({
                 'id': 'invoice_layout',
                 'name': self.env._('Setup Your Invoice Layout'),
-                'has_total': False,
                 'is_invoice_layout_card': True,
                 'image': '/web/static/img/mimetypes/document.svg',
                 'action_id': invoice_layout_action.id,

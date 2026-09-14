@@ -49,11 +49,6 @@ export class AccountDashboardKpis extends Component {
             return;
         }
 
-        if (card.action_method) {
-            const action = await this.orm.call("account.journal", card.action_method, []);
-            return this.action.doAction(action);
-        }
-
         return this.action.doAction(card.action_id);
     }
 }

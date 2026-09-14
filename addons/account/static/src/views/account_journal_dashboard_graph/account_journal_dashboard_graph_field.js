@@ -1,5 +1,5 @@
 import { cookie } from "@web/core/browser/cookie";
-import { getCustomColor } from "@web/core/colors/colors";
+import { getColor, getCustomColor } from "@web/core/colors/colors";
 import { registry } from "@web/core/registry";
 import {
     JournalDashboardGraphField,
@@ -20,7 +20,7 @@ export class AccountJournalDashboardGraphField extends JournalDashboardGraphFiel
     }
 
     getMonthlyTotalChartConfig() {
-        const totalColor = "#875A7B";
+        const totalColor = getColor(2, colorScheme, "odoo");
 
         return {
             type: "bar",

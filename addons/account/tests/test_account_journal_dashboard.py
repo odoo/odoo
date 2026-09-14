@@ -576,75 +576,42 @@ class TestAccountJournalDashboard(TestAccountJournalDashboardCommon):
             ],
         }])
 
+        invoice_analysis_action = self.env.ref('account.action_account_invoice_report_all')
         profit_and_loss_action = self.env.ref('account_reports.action_account_report_pl')
-        open_items_action = self.env.ref('account_reports.action_account_report_followup')
+        aged_receivable_action = self.env.ref('account_reports.action_account_report_ar')
+        aged_payable_action = self.env.ref('account_reports.action_account_report_ap')
         cashflow_analysis_action = self.env.ref('account.action_account_cashflow_analysis')
         invoice_layout_action = self.env.ref('account.action_base_document_layout_configurator')
         kpis = self.env['account.journal'].get_account_dashboard_kpis()
         self.assertEqual(kpis, [{
-            'action_id': profit_and_loss_action.id,
-            'action_method': 'action_open_revenue_journal_items',
-            'has_total': True,
-            'id': 'revenue',
-            'name': 'Revenue',
+            'action_id': invoice_analysis_action.id,
+            'id': 'invoices',
+            'name': 'Invoices',
             'value': '$\xa075.00',
         }, {
             'action_id': profit_and_loss_action.id,
-            'action_method': 'action_open_expense_journal_items',
-            'has_total': True,
             'id': 'expenses',
             'name': 'Expenses',
             'value': '$\xa0750.00',
         }, {
-            'action_id': profit_and_loss_action.id,
-            'has_total': True,
-            'id': 'gross_margin',
-            'name': 'Gross Margin',
-            'value': '$\xa075.00',
-        }, {
             'action_id': cashflow_analysis_action.id,
-            'has_total': False,
-            'id': 'cashflow',
-            'is_cashflow_card': True,
-            'values': [
-                {'label': 'Cash In', 'value': '$\xa010,000'},
-                {'label': 'Cash Out', 'value': '$\xa00'},
-            ],
+            'id': 'cash',
+            'name': 'Cash',
+            'value': '$\xa010,000.00',
         }, {
-            'action_id': open_items_action.id,
-            'action_method': 'action_open_receivable_items',
-            'has_total': True,
+            'action_id': aged_receivable_action.id,
             'id': 'receivable',
             'name': 'Receivable',
             'value': '$\xa075.00',
         }, {
-            'action_id': open_items_action.id,
-            'action_method': 'action_open_payable_items',
-            'has_total': True,
+            'action_id': aged_payable_action.id,
             'id': 'payable',
             'name': 'Payable',
             'value': '$\xa0750.00',
         }, {
             'action_id': invoice_layout_action.id,
-            'has_total': False,
             'id': 'invoice_layout',
             'image': '/web/static/img/mimetypes/document.svg',
             'is_invoice_layout_card': True,
             'name': 'Setup Your Invoice Layout',
         }])
-
-    def test_account_dashboard_open_items_actions(self):
-        journal = self.env['account.journal']
-        for action_method, account_type in (
-            (journal.action_open_receivable_items, 'trade_receivable'),
-            (journal.action_open_payable_items, 'trade_payable'),
-        ):
-            action = action_method()
-            self.assertEqual(action['params'], {
-                'options': {
-                    'account_type': [
-                        {'id': account_type, 'selected': True},
-                    ],
-                },
-                'ignore_session': True,
-            })

@@ -6,7 +6,6 @@
             type="button"
             class="o_card o_account_dashboard_kpi_card btn text-start"
             t-att-class="{
-                'o_account_dashboard_kpi_cashflow_card': this.props.card.is_cashflow_card,
                 'o_account_dashboard_kpi_invoice_layout_card': this.props.card.is_invoice_layout_card,
             }"
             t-att-disabled="!this.props.card.action_id"
@@ -18,7 +17,7 @@
                     <span class="o_account_dashboard_kpi_name" t-out="this.props.card.name"/>
                 </span>
                 <span
-                    t-if="this.props.card.has_total"
+                    t-if="this.props.card.value"
                     class="o_account_dashboard_kpi_value"
                     t-out="this.props.card.value"
                 />
@@ -30,18 +29,6 @@
                 t-att-src="this.props.card.image"
                 alt=""
             />
-
-            <span t-if="this.props.card.values" class="o_account_dashboard_kpi_values">
-                <span
-                    t-foreach="this.props.card.values"
-                    t-as="value"
-                    t-key="value.label"
-                    class="o_account_dashboard_kpi_value_item"
-                >
-                    <span class="o_account_dashboard_kpi_value_label" t-out="value.label"/>
-                    <span class="o_account_dashboard_kpi_value_amount" t-out="value.value"/>
-                </span>
-            </span>
         </button>
     </t>
 
