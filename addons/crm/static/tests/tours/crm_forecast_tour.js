@@ -23,6 +23,10 @@ registry.category("web_tour.tours").add("crm_forecast", {
             run: "click",
         },
         {
+            trigger: ".o_facet_value:contains('Expected Closing')",
+            content: "Wait for the forecast action, not the pipeline it replaces",
+        },
+        {
             trigger: ".o_column_quick_create",
             content: "Wait page loading",
         },
