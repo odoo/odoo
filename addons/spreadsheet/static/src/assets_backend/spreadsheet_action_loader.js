@@ -1,10 +1,13 @@
 /** @odoo-module native */
 import { loadBundle } from "@web/core/assets";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/translation";
 import { startMissingServices } from "@web/env";
 
 const actionRegistry = registry.category("actions");
+
+const log = makeLogger("spreadsheet.action_loader");
 
 /**
  * Add a new function client action which loads the spreadsheet bundle, then
@@ -17,8 +20,11 @@ const actionRegistry = registry.category("actions");
  */
 export function addSpreadsheetActionLazyLoader(actionName, path, displayName) {
     const actionLazyLoader = async (env, action) => {
+        log.lifecycle("lazyLoad:start", { actionName });
+        const endBundle = log.perf("loadBundle spreadsheet.o_spreadsheet");
         // load the bundle which should redefine the action in the registry
         await loadBundle("spreadsheet.o_spreadsheet");
+        endBundle({ actionName });
 
         // loadBundle only guarantees the bundle's modules were evaluated, which
         // merely *registers* the services they declare (e.g.
@@ -27,9 +33,12 @@ export function addSpreadsheetActionLazyLoader(actionName, path, displayName) {
         // and call useService(...) before the service exists — which throws and
         // renders a blank action (notably: no dashboard ever shows). Force a
         // full startup pass so the bundle's services are available first.
+        const endServices = log.perf("startMissingServices");
         await startMissingServices(env);
+        endServices({ actionName });
 
         if (actionRegistry.get(actionName) === actionLazyLoader) {
+            log.logic("lazyLoad:actionNotRedefined", { actionName });
             // At this point, the real spreadsheet client action should be loaded and have
             // replaced this function in the action registry. If it's not the case,
             // it probably means that there was a crash in the bundle (e.g. syntax
@@ -45,6 +54,7 @@ export function addSpreadsheetActionLazyLoader(actionName, path, displayName) {
                 { force: true },
             );
         }
+        log.lifecycle("lazyLoad:done", { actionName });
         // then do the action again, with the actual definition registered
         return action;
     };

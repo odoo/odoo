@@ -100,8 +100,12 @@ function mockDashboardDataController(_request, { res_id }) {
     };
 }
 
-export function defineSpreadsheetDashboardModels() {
+export function defineSpreadsheetDashboardDataRoute() {
     onRpc("/spreadsheet/dashboard/data/<int:res_id>", mockDashboardDataController);
+}
+
+export function defineSpreadsheetDashboardModels() {
+    defineSpreadsheetDashboardDataRoute();
     const SpreadsheetDashboardModels = [
         SpreadsheetDashboard,
         SpreadsheetDashboardGroup,

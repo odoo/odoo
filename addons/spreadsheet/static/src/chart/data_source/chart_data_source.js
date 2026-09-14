@@ -1,8 +1,11 @@
 /** @odoo-module native */
 import { OdooViewsDataSource } from "@spreadsheet/data_sources/odoo_views_data_source";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/translation";
 import { GraphModel as ChartModel } from "@web/views/graph";
+
+const log = makeLogger("spreadsheet.chart");
 
 export class ChartDataSource extends OdooViewsDataSource {
     /**
@@ -31,7 +34,16 @@ export class ChartDataSource extends OdooViewsDataSource {
                 orm: this._orm,
             },
         );
+        log.pipeline("load", () => ({
+            model: metaData.resModel,
+            mode: metaData.mode,
+            measure: metaData.measure,
+            groupBy: metaData.groupBy,
+            domain: this._searchParams.domain,
+        }));
+        const endLoad = log.perf("graphModel.load");
         await this._model.load(this._searchParams);
+        endLoad({ model: metaData.resModel });
         this._hierarchicalData = undefined;
         this.labelToDomainMapping = undefined;
     }

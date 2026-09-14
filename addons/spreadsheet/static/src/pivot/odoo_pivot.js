@@ -8,6 +8,7 @@ import {
     registries,
 } from "@odoo/o-spreadsheet";
 import { LOADING_ERROR } from "@spreadsheet/data_sources/data_source";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/translation";
 import { user } from "@web/core/user";
@@ -18,6 +19,8 @@ import { getRelationalFieldDefinition } from "./pivot_helpers.js";
 import { NO_RECORD_AT_THIS_POSITION, OdooPivotModel } from "./pivot_model.js";
 
 const { pivotRegistry, supportedPivotPositionalFormulaRegistry } = registries;
+
+const log = makeLogger("spreadsheet.pivot");
 const {
     pivotTimeAdapter,
     toString,
@@ -179,9 +182,11 @@ export class OdooPivot {
     }
 
     async loadMetadata() {
+        const endMetadata = log.perf("loadMetadata");
         this._fields = await this.loader.getFields(this.coreDefinition.model);
         await this._loadRelationalFieldsDefinitions();
         await this._loadPropertiesDefinitions();
+        endMetadata({ model: this.coreDefinition.model });
     }
 
     async getModelLabel() {
@@ -241,10 +246,20 @@ export class OdooPivot {
         const { model, definition } = await this.createModelAndDefinition();
         this.model = model;
         this.runtimeDefinition = definition;
+        const domain = this.getDomainWithGlobalFilters();
+        log.pipeline("load", () => ({
+            model: this.coreDefinition.model,
+            measures: this.coreDefinition.measures.map((m) => m.id ?? m.fieldName),
+            rows: this.coreDefinition.rows.length,
+            columns: this.coreDefinition.columns.length,
+            domain,
+        }));
+        const endLoad = log.perf("model.load");
         await this.model.load({
             context: this.context,
-            domain: this.getDomainWithGlobalFilters(),
+            domain,
         });
+        endLoad({ model: this.coreDefinition.model });
     }
 
     get definition() {

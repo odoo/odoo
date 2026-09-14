@@ -1404,7 +1404,7 @@ test("pivot headers won't change when adding a filter ", async function () {
     expect(getCellValue(model, "A3")).toBe("xphone");
     expect(getCellValue(model, "B3")).toBe("");
     expect(getCellValue(model, "A4")).toBe("xpad");
-    expect(getCellValue(model, "B4")).toBe(121);
+    expect(getCellValue(model, "B4")).toBe(121 / 3);
 });
 
 test("load data only once if filter is not active (without default value)", async function () {

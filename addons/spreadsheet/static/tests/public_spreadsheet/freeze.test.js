@@ -116,7 +116,7 @@ test("odoo pivot functions detection is not case sensitive", async function () {
     setCellContent(model, "A1", '=pivot.value(1,"probability:avg")');
     const data = await freezeOdooData(model);
     const A1 = data.sheets[0].cells.A1;
-    expect(A1).toBe("131", { message: "the content is replaced with the value" });
+    expect(A1).toBe("32.75", { message: "the content is replaced with the value" });
 });
 
 test("computed format is exported", async function () {
@@ -335,7 +335,7 @@ test("spilled pivot table", async function () {
     expect(cells.A12).toBe("Total");
     expect(cells.B10).toBe("Total");
     expect(cells.B11).toBe("Probability");
-    expect(cells.B12).toBe("131");
+    expect(cells.B12).toBe("32.75");
     expect(data.formats[sheet.formats.B12]).toBe("#,##0.00");
     expect(data.pivots).toEqual({});
     expect(sheet.styles).toEqual({ B12: 1 });

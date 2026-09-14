@@ -1,6 +1,9 @@
 /** @odoo-module native */
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/translation";
+
+const log = makeLogger("spreadsheet.geo_json");
 
 const diacriticalMarksRegex = /[\u0300-\u036f]/g;
 
@@ -96,17 +99,22 @@ export const geoJsonService = {
                 return geoJsonCache.get(url);
             }
             if (geoJsonPromises.has(url)) {
+                log.logic("fetch:joinPending", { url });
                 return geoJsonPromises.get(url);
             }
+            log.pipeline("fetch", { url });
+            const endFetch = log.perf("fetchJson");
 
             const promise = fetch(url, { method: "GET" })
                 .then((res) => res.json())
                 .then((geoJson) => {
+                    endFetch({ url });
                     geoJsonCache.set(url, geoJson);
                     geoJsonPromises.delete(url);
                     return geoJson;
                 })
                 .catch((e) => {
+                    endFetch({ url, error: true });
                     console.error(e);
                     geoJsonCache.set(url, { type: "FeatureCollection", features: [] });
                     geoJsonPromises.delete(url);

@@ -63,6 +63,15 @@
             "web/static/src/core/template_inheritance.js",
             "web/static/src/session.js",
             "web/static/src/env.js",
+            "web/static/src/ui/**/*",
+            (
+                "remove",
+                "web/static/src/ui/commands/**/*",
+            ),
+            (
+                "remove",
+                "web/static/src/ui/commands.js",
+            ),
             "web/static/src/core/**/*.js",
             "spreadsheet/static/src/o_spreadsheet/chartjs_setup.js",
             "spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js",

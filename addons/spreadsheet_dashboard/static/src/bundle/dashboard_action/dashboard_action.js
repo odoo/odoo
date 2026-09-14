@@ -6,6 +6,8 @@ import { SpreadsheetShareButton } from "@spreadsheet/components/share_button/sha
 import { useSpreadsheetPrint } from "@spreadsheet/hooks";
 import { useSetupAction } from "@web/core/action_hook";
 import { router } from "@web/core/browser/router";
+import { makeLogger } from "@web/core/debug/debug_logger";
+import { useLifecycleLog } from "@web/core/debug/logger_hooks";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -17,6 +19,8 @@ import { Status } from "./dashboard_loader_service.js";
 import { DashboardSearchBar } from "./dashboard_search_bar/dashboard_search_bar.js";
 import { MobileFigureContainer } from "./mobile_figure_container/mobile_figure_container.js";
 import { DashboardMobileSearchPanel } from "./mobile_search_panel/mobile_search_panel.js";
+
+const log = makeLogger("spreadsheet_dashboard.action");
 
 export const dashboardActionRegistry = new Registry();
 
@@ -35,6 +39,7 @@ export class SpreadsheetDashboardAction extends Component {
     static displayName = _t("Dashboards");
 
     setup() {
+        useLifecycleLog(log);
         this.Status = Status;
         this.controlPanelDisplay = {};
         this.orm = useService("orm");
@@ -42,9 +47,11 @@ export class SpreadsheetDashboardAction extends Component {
         this.loader = useService("spreadsheet_dashboard_loader");
         onWillStart(async () => {
             if (this.props.state && this.props.state.dashboardLoader) {
+                log.logic("start:restoreState");
                 const state = this.props.state.dashboardLoader;
                 this.loader.restoreFromState(state);
             } else {
+                log.logic("start:freshLoad");
                 await this.loader.load();
             }
             const activeDashboardId = this.getInitialActiveDashboard();
@@ -157,6 +164,10 @@ export class SpreadsheetDashboardAction extends Component {
     }
 
     async shareSpreadsheet(data, excelExport) {
+        log.logic("shareSpreadsheet", () => ({
+            dashboardId: this.activeDashboardId,
+            excelFiles: excelExport.files.length,
+        }));
         const url = await this.orm.call(
             "spreadsheet.dashboard.share",
             "action_get_share_url",
@@ -176,6 +187,7 @@ export class SpreadsheetDashboardAction extends Component {
             return;
         }
         const { id, is_user_favorite } = this.loader.getActiveDashboard().data;
+        log.logic("toggleFavorite", { id, wasFavorite: is_user_favorite });
         await this.orm.call("spreadsheet.dashboard", "action_toggle_user_favorite", [
             id,
         ]);

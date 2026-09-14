@@ -3,11 +3,15 @@ import * as spreadsheet from "@odoo/o-spreadsheet";
 import { Model, registries, Spreadsheet } from "@odoo/o-spreadsheet";
 import { Component, onWillStart, useChildSubEnv, useState } from "@odoo/owl";
 import { useSpreadsheetNotificationStore } from "@spreadsheet/hooks";
+import { makeLogger } from "@web/core/debug/debug_logger";
+import { useLifecycleLog } from "@web/core/debug/logger_hooks";
 import { download } from "@web/core/network";
 import { _t } from "@web/core/translation";
 import { useService } from "@web/core/utils/hooks";
 
 import { useSpreadsheetPrint } from "../hooks.js";
+
+const log = makeLogger("spreadsheet.public");
 
 registries.topbarMenuRegistry.addChild("download_public_excel", ["file"], {
     name: _t("Download"),
@@ -27,6 +31,7 @@ export class PublicReadonlySpreadsheet extends Component {
     };
 
     setup() {
+        useLifecycleLog(log);
         useSpreadsheetNotificationStore();
         this.http = useService("http");
         this.state = useState({
@@ -60,7 +65,13 @@ export class PublicReadonlySpreadsheet extends Component {
     }
 
     async createModel() {
+        const endData = log.perf("fetchPublicData");
         this.data = await this.http.get(this.props.dataUrl);
+        endData({
+            mode: this.props.mode,
+            revisions: this.data.revisions?.length ?? 0,
+            globalFilters: this.data.globalFilters?.length ?? 0,
+        });
         this.model = new Model(
             this.data,
             {

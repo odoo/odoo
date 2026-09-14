@@ -500,7 +500,7 @@ test("An error is displayed if the pivot has invalid model", async function () {
         },
     });
     setCellContent(model, "A1", `=PIVOT.VALUE("1", "probability:avg")`);
-    await animationFrame();
+    await waitForDataLoaded(model);
     expect(getCellValue(model, "A1")).toBe("#ERROR");
     expect(getEvaluatedCell(model, "A1").message).toBe(
         `The model "unknown" does not exist.`,
@@ -576,7 +576,7 @@ test("Datasources are in error when their RPC fails", async function () {
         },
     });
     setCellContent(model, "A1", `=PIVOT.VALUE("1", "probability:avg")`);
-    await animationFrame();
+    await waitForDataLoaded(model);
     expect(getCellValue(model, "A1")).toBe("#ERROR");
     expect(getEvaluatedCell(model, "A1").message).toBe(
         `The model "unknown" does not exist.`,

@@ -2,8 +2,11 @@
 // @ts-check
 
 import { EvaluationError } from "@odoo/o-spreadsheet";
+import { makeLogger } from "@web/core/debug/debug_logger";
 
 import { isLoadingError, LoadingDataError } from "../o_spreadsheet/errors.js";
+
+const log = makeLogger("spreadsheet.server_data");
 
 /**
  * @param {T[]} array
@@ -126,6 +129,7 @@ export class ServerData {
     _getBatchItem(resModel, method, args) {
         const request = new Request(resModel, method, [args]);
         if (!(request.key in this.cache)) {
+            log.logic("batchItem:miss", () => ({ key: request.key }));
             const error = new LoadingDataError();
             this.cache[request.key] = error;
             this._batch(request);
@@ -143,17 +147,26 @@ export class ServerData {
     get(resModel, method, args) {
         const request = new Request(resModel, method, args);
         if (!(request.key in this.cache)) {
+            log.logic("get:miss", () => ({ key: request.key }));
             const error = new LoadingDataError();
             this.cache[request.key] = error;
+            const endGet = log.perf(`get ${resModel}.${method}`);
             const promise = this.orm
                 .call(resModel, method, args)
-                .then((result) => (this.cache[request.key] = result))
-                .catch(
-                    (error) =>
-                        (this.cache[request.key] = new EvaluationError(
-                            error.data?.message || error.message,
-                        )),
-                );
+                .then((result) => {
+                    endGet({ ok: true });
+                    return (this.cache[request.key] = result);
+                })
+                .catch((error) => {
+                    endGet({ ok: false });
+                    log.logic("get:error", () => ({
+                        key: request.key,
+                        message: error.data?.message || error.message,
+                    }));
+                    return (this.cache[request.key] = new EvaluationError(
+                        error.data?.message || error.message,
+                    ));
+                });
             this.startLoadingCallback(promise);
             throw error;
         }
@@ -213,10 +226,15 @@ export class ServerData {
             successCallback: (request, result) => {
                 this.cache[request.key] = result;
             },
-            failureCallback: (request, error) =>
-                (this.cache[request.key] = new EvaluationError(
+            failureCallback: (request, error) => {
+                log.logic("batchItem:error", () => ({
+                    key: request.key,
+                    message: error.data?.message || error.message,
+                }));
+                return (this.cache[request.key] = new EvaluationError(
                     error.data?.message || error.message,
-                )),
+                ));
+            },
         });
     }
 }
@@ -264,6 +282,12 @@ export class BatchEndpoint {
      * @private
      */
     _notifyResults(batchResult) {
+        log.pipeline("batch:results", () => ({
+            model: this.resModel,
+            method: this.method,
+            results: batchResult.size,
+            failed: [...batchResult.values()].filter((r) => r instanceof Error).length,
+        }));
         for (const [request, result] of batchResult) {
             if (result instanceof Error) {
                 this.failureCallback(request, result);
@@ -286,10 +310,28 @@ export class BatchEndpoint {
             const batch = this._pendingBatch;
             const { resModel, method } = batch;
             this._pendingBatch = new ListRequestBatch(resModel, method);
+            log.pipeline("batch:flush", () => ({
+                model: resModel,
+                method,
+                requests: batch.requests.length,
+            }));
+            const endBatch = log.perf(`batch ${resModel}.${method}`);
             const promise = this.orm
                 .call(resModel, method, batch.payload)
-                .then((result) => batch.splitResponse(result))
-                .catch(() => this._retryOneByOne(batch))
+                .then((result) => {
+                    endBatch({ requests: batch.requests.length });
+                    return batch.splitResponse(result);
+                })
+                .catch((error) => {
+                    endBatch({ requests: batch.requests.length, error: true });
+                    log.logic("batch:retryOneByOne", () => ({
+                        model: resModel,
+                        method,
+                        requests: batch.requests.length,
+                        message: error?.data?.message || error?.message,
+                    }));
+                    return this._retryOneByOne(batch);
+                })
                 .then((batchResults) => this._notifyResults(batchResults));
             this.batchStartsLoadingCallback(promise);
         });

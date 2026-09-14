@@ -5,7 +5,10 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import date_utils
+
+_debug = DebugLog(__name__)
 
 
 class AccountAccount(models.Model):
@@ -38,6 +41,13 @@ class AccountAccount(models.Model):
             fiscal_month = int(company.fiscalyear_last_month)
             end = date(year, month, day)
             start, _ = date_utils.get_fiscal_year(end, fiscal_day, fiscal_month)
+        _debug.logic(
+            "spreadsheet_period_boundaries",
+            company=company,
+            range_type=period_type,
+            start=start,
+            end=end,
+        )
         return start, end
 
     def _get_domain_spreadsheet_formula(self, formula_params, default_accounts=False):
@@ -65,6 +75,9 @@ class AccountAccount(models.Model):
         # Determine account domain based on tags or codes
         if "account_tag_ids" in formula_params:
             tag_ids = [int(tag_id) for tag_id in formula_params["account_tag_ids"]]
+            _debug.logic(
+                "spreadsheet_formula_accounts", source="tags", tags=len(tag_ids)
+            )
             account_id_domain = (
                 Domain("account_id.tag_ids", "in", tag_ids) if tag_ids else Domain.FALSE
             )
@@ -73,6 +86,12 @@ class AccountAccount(models.Model):
             default_domain = Domain.FALSE
             if not codes:
                 if not default_accounts:
+                    _debug.logic(
+                        "spreadsheet_formula_accounts",
+                        source="codes",
+                        reason="no_codes",
+                        matched=0,
+                    )
                     return default_domain
                 default_domain = Domain(
                     "account_type", "in", ["liability_payable", "asset_receivable"]
@@ -89,8 +108,16 @@ class AccountAccount(models.Model):
                 .search(account_domain)
                 .ids
             )
+            _debug.logic(
+                "spreadsheet_formula_accounts",
+                source="codes",
+                codes=len(codes),
+                default_accounts=default_accounts,
+                matched=len(account_ids),
+            )
             account_id_domain = [("account_id", "in", account_ids)]
         else:
+            _debug.logic("spreadsheet_formula_accounts", source="none", matched=0)
             account_id_domain = Domain.FALSE
 
         posted_domain = (
@@ -134,6 +161,7 @@ class AccountAccount(models.Model):
 
     @api.readonly
     @api.model
+    @_debug.perf.timed
     def spreadsheet_fetch_debit_credit(self, args_list):
         """Fetch data for ODOO.CREDIT, ODOO.DEBIT and ODOO.BALANCE formulas
         The input list looks like this::
@@ -158,10 +186,12 @@ class AccountAccount(models.Model):
             )
             results.append({"debit": debit or 0, "credit": credit or 0})
 
+        _debug.pipeline("spreadsheet_debit_credit_fetched", formulas=len(args_list))
         return results
 
     @api.readonly
     @api.model
+    @_debug.perf.timed
     def spreadsheet_fetch_residual_amount(self, args_list):
         """Fetch data for ODOO.RESUDUAL formulas
         The input list looks like this::
@@ -186,9 +216,11 @@ class AccountAccount(models.Model):
             )
             results.append({"amount_residual": amount_residual or 0})
 
+        _debug.pipeline("spreadsheet_residual_amount_fetched", formulas=len(args_list))
         return results
 
     @api.model
+    @_debug.perf.timed
     def spreadsheet_fetch_partner_balance(self, args_list):
         """Fetch data for ODOO.PARTNER.BALANCE formulas
         The input list looks like this::
@@ -219,6 +251,13 @@ class AccountAccount(models.Model):
             [(balance,)] = MoveLines._read_group(domain, aggregates=["balance:sum"])  # noqa: E8507 - one aggregate per spreadsheet formula call
             results.append({"balance": balance or 0})
 
+        _debug.pipeline(
+            "spreadsheet_partner_balance_fetched",
+            formulas=len(args_list),
+            without_partners=sum(
+                1 for args in args_list if not any(args.get("partner_ids", []))
+            ),
+        )
         return results
 
     @api.model
@@ -235,6 +274,7 @@ class AccountAccount(models.Model):
         return [mapped.get(account_type, []) for account_type in account_types]
 
     @api.model
+    @_debug.perf.timed
     def spreadsheet_fetch_balance_tag(self, args_list):
         """Fetch data for ODOO.BALANCE.TAG formulas
         The input list looks like this::
@@ -264,4 +304,11 @@ class AccountAccount(models.Model):
             [(balance,)] = MoveLines._read_group(domain, aggregates=["balance:sum"])  # noqa: E8507 - one aggregate per spreadsheet formula call
             results.append({"balance": balance or 0.0})
 
+        _debug.pipeline(
+            "spreadsheet_balance_tag_fetched",
+            formulas=len(args_list),
+            without_tags=sum(
+                1 for args in args_list if not any(args.get("account_tag_ids", []))
+            ),
+        )
         return results

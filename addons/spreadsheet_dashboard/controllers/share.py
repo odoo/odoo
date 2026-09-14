@@ -1,5 +1,8 @@
 from odoo import http
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class DashboardShareRoute(http.Controller):
@@ -9,8 +12,10 @@ class DashboardShareRoute(http.Controller):
             request.env["spreadsheet.dashboard.share"].sudo().browse(share_id).exists()
         )
         if not share:
+            _debug.logic("dashboard_share_not_found", route="portal", share_id=share_id)
             raise request.prepare_not_found_error()
         share._check_dashboard_access(token)
+        _debug.lifecycle("dashboard_share_portal_rendered", share=share)
         return request.render(
             "spreadsheet.public_spreadsheet_layout",
             {
@@ -37,8 +42,12 @@ class DashboardShareRoute(http.Controller):
             request.env["spreadsheet.dashboard.share"].sudo().browse(share_id).exists()
         )
         if not share:
+            _debug.logic(
+                "dashboard_share_not_found", route="download", share_id=share_id
+            )
             raise request.prepare_not_found_error()
         share._check_dashboard_access(token)
+        _debug.lifecycle("dashboard_share_downloaded", share=share)
         stream = request.env["ir.binary"]._get_stream_from_record(
             share, "excel_export", filename=share.name
         )
@@ -56,9 +65,11 @@ class DashboardShareRoute(http.Controller):
             request.env["spreadsheet.dashboard.share"].sudo().browse(share_id).exists()
         )
         if not share:
+            _debug.logic("dashboard_share_not_found", route="data", share_id=share_id)
             raise request.prepare_not_found_error()
 
         share._check_dashboard_access(token)
+        _debug.lifecycle("dashboard_share_data_served", share=share)
         stream = request.env["ir.binary"]._get_stream_from_record(
             share, "spreadsheet_binary_data"
         )

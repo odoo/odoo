@@ -1,7 +1,10 @@
 import json
 
 from odoo import _, fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import file_open
+
+_debug = DebugLog(__name__)
 
 
 class SpreadsheetDashboard(models.Model):
@@ -65,13 +68,26 @@ class SpreadsheetDashboard(models.Model):
             with file_open(self.sample_dashboard_file_path) as f:
                 return json.load(f)
         except FileNotFoundError:
+            _debug.logic(
+                "dashboard_sample_file_missing",
+                dashboard=self,
+                path=self.sample_dashboard_file_path,
+            )
             return None
 
     def _dashboard_is_empty(self):
-        return any(
-            self.env[model].search_count([], limit=1) == 0
-            for model in self.sudo().main_data_model_ids.mapped("model")
+        empty_model = next(
+            (
+                model
+                for model in self.sudo().main_data_model_ids.mapped("model")
+                if self.env[model].search_count([], limit=1) == 0
+            ),
+            None,
         )
+        _debug.logic(
+            "dashboard_emptiness_checked", dashboard=self, first_empty_model=empty_model
+        )
+        return empty_model is not None
 
     def _get_dashboard_translation_namespace(self):
         data = (

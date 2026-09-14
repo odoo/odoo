@@ -7,11 +7,14 @@ from collections import defaultdict
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import MissingError, ValidationError
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.spreadsheet.utils.validate_data import (
     fields_in_spreadsheet,
     menus_xml_ids_in_spreadsheet,
 )
+
+_debug = DebugLog(__name__)
 
 
 class MixinSpreadsheet(models.AbstractModel):
@@ -38,17 +41,42 @@ class MixinSpreadsheet(models.AbstractModel):
                     base64.b64decode(spreadsheet.spreadsheet_binary_data).decode()
                 )
             except (json.JSONDecodeError, UnicodeDecodeError) as e:
+                _debug.logic(
+                    "spreadsheet_data_rejected",
+                    records=spreadsheet,
+                    reason="undecodable",
+                    error=type(e).__name__,
+                )
                 raise ValidationError(
                     _("Uh-oh! Looks like the spreadsheet file contains invalid data.")
                 ) from e
             if not (tools.config["test_enable"] or tools.config["test_file"]):
+                _debug.logic(
+                    "spreadsheet_data_validation_skipped",
+                    records=spreadsheet,
+                    reason="not_test_mode",
+                )
                 continue
             if data.get("[Content_Types].xml"):
                 # this is a xlsx file
+                _debug.logic(
+                    "spreadsheet_data_validation_skipped",
+                    records=spreadsheet,
+                    reason="xlsx",
+                )
                 continue
             display_name = spreadsheet.display_name
             errors = []
-            for model, field_chains in fields_in_spreadsheet(data).items():
+            fields_by_model = fields_in_spreadsheet(data)
+            menu_xml_ids = menus_xml_ids_in_spreadsheet(data)
+            _debug.pipeline(
+                "spreadsheet_data_references_extracted",
+                records=spreadsheet,
+                models=len(fields_by_model),
+                field_chains=sum(len(chains) for chains in fields_by_model.values()),
+                menus=len(menu_xml_ids),
+            )
+            for model, field_chains in fields_by_model.items():
                 if model not in self.env:
                     errors.append(
                         f"- model '{model}' used in '{display_name}' does not exist"
@@ -63,12 +91,12 @@ class MixinSpreadsheet(models.AbstractModel):
                             errors.append(
                                 f"- field '{fname}' used in spreadsheet '{display_name}' does not exist on model '{field_model}'"
                             )
-                            continue
+                            break
                         field = self.env[field_model]._fields[fname]
                         if field.relational:
                             field_model = field.comodel_name
 
-            for xml_id in menus_xml_ids_in_spreadsheet(data):
+            for xml_id in menu_xml_ids:
                 record = self.env.ref(xml_id, raise_if_not_found=False)
                 if not record:
                     errors.append(
@@ -82,6 +110,12 @@ class MixinSpreadsheet(models.AbstractModel):
                     )
 
             if errors:
+                _debug.logic(
+                    "spreadsheet_data_rejected",
+                    records=spreadsheet,
+                    reason="dangling_references",
+                    errors=len(errors),
+                )
                 raise ValidationError(
                     _(
                         "Uh-oh! Looks like the spreadsheet file contains invalid data.\n\n%(errors)s",
@@ -101,6 +135,11 @@ class MixinSpreadsheet(models.AbstractModel):
                     ("res_id", "in", self.ids),
                 ]
             )
+        )
+        _debug.perf.count(
+            "spreadsheet_data_attachments_fetched",
+            records=self,
+            rows=len(attachments),
         )
         data = {attachment.res_id: attachment.raw for attachment in attachments}
         for spreadsheet in self:
@@ -136,11 +175,20 @@ class MixinSpreadsheet(models.AbstractModel):
         for model, ids in ids_per_model.items():
             Model = self.env.get(model)
             if Model is None:
+                _debug.logic(
+                    "spreadsheet_display_names_model_missing", model=model, ids=len(ids)
+                )
                 continue
             records = Model.with_context(active_test=False).search([("id", "in", ids)])  # noqa: E8507 - one query per model
             for record in records:
                 display_names[model][record.id] = record.display_name
 
+        _debug.pipeline(
+            "spreadsheet_display_names_resolved",
+            requested=len(args),
+            models=len(ids_per_model),
+            resolved=sum(len(names) for names in display_names.values()),
+        )
         # return the display names in the same order as the input
         return [display_names[arg["model"]].get(arg["id"]) for arg in args]
 
@@ -173,29 +221,47 @@ class MixinSpreadsheet(models.AbstractModel):
 
     def _zip_xslx_files(self, files):
         stream = io.BytesIO()
-        with zipfile.ZipFile(stream, "w", compression=zipfile.ZIP_DEFLATED) as doc_zip:
+        with (
+            _debug.perf("spreadsheet_xlsx_zipped", files=len(files)) as span,
+            zipfile.ZipFile(stream, "w", compression=zipfile.ZIP_DEFLATED) as doc_zip,
+        ):
+            images = missing_images = 0
             for f in files:
                 # to reduce networking load, only the image path is sent.
                 # It's replaced by the image content here.
                 if "imageSrc" in f:
+                    images += 1
                     try:
                         content = self._get_file_content(f["imageSrc"])
                         doc_zip.writestr(f["path"], content)
                     except MissingError:
-                        pass
+                        missing_images += 1
+                        _debug.logic("spreadsheet_xlsx_image_missing", path=f["path"])
                 else:
                     doc_zip.writestr(f["path"], f["content"])
+            span.set(images=images, missing_images=missing_images)
 
         return stream.getvalue()
 
     def _get_file_content(self, file_path):
         if file_path.startswith("data:image/png;base64,"):
+            _debug.logic("spreadsheet_file_content_source", source="data_uri")
             return base64.b64decode(file_path.split(",")[1])
         match = re.match(r"/web/image/(\d+)", file_path)
         if not match:
+            _debug.logic(
+                "spreadsheet_file_content_rejected",
+                reason="invalid_path",
+                path=file_path,
+            )
             raise ValidationError(
                 _("Invalid image path: %(file_path)s", file_path=file_path)
             )
+        _debug.logic(
+            "spreadsheet_file_content_source",
+            source="attachment",
+            attachment_id=match.group(1),
+        )
         file_record = self.env["ir.binary"]._get_record(
             res_model="ir.attachment",
             res_id=int(match.group(1)),

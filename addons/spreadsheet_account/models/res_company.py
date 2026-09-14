@@ -1,5 +1,8 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import date_utils
+
+_debug = DebugLog(__name__)
 
 
 class ResCompany(models.Model):
@@ -26,4 +29,9 @@ class ResCompany(models.Model):
                 month=int(company.fiscalyear_last_month),
             )
             results.append({"start": start, "end": end})
+        _debug.pipeline(
+            "spreadsheet_fiscal_dates_computed",
+            requests=len(payload),
+            unknown_companies=sum(1 for result in results if result is False),
+        )
         return results

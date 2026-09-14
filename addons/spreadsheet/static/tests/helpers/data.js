@@ -138,11 +138,19 @@ function mockSpreadsheetDataController(_request, { res_model, res_id }) {
     };
 }
 
+function mockBundleAlreadyOnTestPage() {
+    return new Response(
+        JSON.stringify({ is_esm: true, specifiers: [], import_map: {}, files: {} }),
+        { headers: { "Content-Type": "application/json" } },
+    );
+}
+
 export function defineSpreadsheetModels() {
     onRpc(
         "/spreadsheet/data/<string:res_model>/<int:res_id>",
         mockSpreadsheetDataController,
     );
+    onRpc("/web/bundle/spreadsheet.o_spreadsheet", mockBundleAlreadyOnTestPage);
     defineModels(SpreadsheetModels);
 }
 

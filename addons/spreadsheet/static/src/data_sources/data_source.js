@@ -3,9 +3,12 @@
 
 import { CellErrorType, EvaluationError } from "@odoo/o-spreadsheet";
 import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { RPCError } from "@web/core/network";
 import { _t } from "@web/core/translation";
 import { KeepLast } from "@web/core/utils/concurrency";
+
+const log = makeLogger("spreadsheet.data_source");
 
 /**
  * @typedef {import("./odoo_data_provider").OdooDataProvider} OdooDataProvider
@@ -64,6 +67,10 @@ export class LoadableDataSource {
      */
     async load(params) {
         if (params && params.reload) {
+            log.lifecycle("load:reload", () => ({
+                source: this.constructor.name,
+                pending: Boolean(this._loadPromise),
+            }));
             this.odooDataProvider.cancelPromise(this._loadPromise);
             this._loadPromise = undefined;
         }
@@ -71,10 +78,16 @@ export class LoadableDataSource {
             this._isFullyLoaded = false;
             this._isValid = true;
             this._loadError = undefined;
+            const endLoad = log.perf(`load ${this.constructor.name}`);
             this._loadPromise = this._concurrency
                 .add(this._load())
                 .catch((e) => {
                     this._isValid = false;
+                    log.logic("load:error", () => ({
+                        source: this.constructor.name,
+                        modelNotFound: e instanceof ModelNotFoundError,
+                        message: e instanceof RPCError ? e.data?.message : e.message,
+                    }));
                     if (e instanceof ModelNotFoundError) {
                         this._isModelValid = false;
                         this._loadError = Object.assign(
@@ -99,6 +112,7 @@ export class LoadableDataSource {
                 .finally(() => {
                     this._lastUpdate = Date.now();
                     this._isFullyLoaded = true;
+                    endLoad({ valid: this._isValid });
                 });
             await this.odooDataProvider.notifyWhenPromiseResolves(this._loadPromise);
         }
@@ -173,6 +187,7 @@ export async function getFields(fieldService, model) {
         return await fieldService.loadFields(model);
     } catch (e) {
         if (e instanceof RPCError && e.code === 404) {
+            log.logic("getFields:modelNotFound", { model });
             throw new ModelNotFoundError(model);
         }
         throw e;

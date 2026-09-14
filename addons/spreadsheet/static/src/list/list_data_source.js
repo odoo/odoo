@@ -3,6 +3,7 @@ import { EvaluationError } from "@odoo/o-spreadsheet";
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import { LOADING_ERROR } from "@spreadsheet/data_sources/data_source";
 import { OdooViewsDataSource } from "@spreadsheet/data_sources/odoo_views_data_source";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import {
     deserializeDate,
     deserializeDateTime,
@@ -13,6 +14,8 @@ import { _t } from "@web/core/translation";
 import { orderByToString } from "@web/core/utils/order_by";
 
 const { toNumber } = spreadsheet.helpers;
+
+const log = makeLogger("spreadsheet.list");
 const { DEFAULT_LOCALE } = spreadsheet.constants;
 
 /**
@@ -72,6 +75,9 @@ export class ListDataSource extends OdooViewsDataSource {
 
     async load(params) {
         if (this._fetchingPromise) {
+            log.logic("load:joinScheduledFetch", () => ({
+                model: this._metaData.resModel,
+            }));
             // if fetching is already scheduled for the next tick,
             // wait the fetching promise to trigger the data source loading
             // and then await the loading.
@@ -85,12 +91,23 @@ export class ListDataSource extends OdooViewsDataSource {
     async _load() {
         await super._load();
         if (this.maxPosition === 0) {
+            log.logic("load:skipped", () => ({
+                model: this._metaData.resModel,
+                reason: "maxPosition=0",
+            }));
             this.data = [];
             return;
         }
         this.fieldPathsToFieldMap = {};
         const { domain, orderBy, context } = this._searchParams;
         const specification = await this._getReadSpec();
+        log.pipeline("load", () => ({
+            model: this._metaData.resModel,
+            limit: this.maxPosition,
+            fieldPaths: [...this.fieldPathsToFetch],
+            domain,
+        }));
+        const endRead = log.perf("webSearchRead");
         const { records } = await this._orm.webSearchRead(
             this._metaData.resModel,
             domain,
@@ -101,6 +118,7 @@ export class ListDataSource extends OdooViewsDataSource {
                 context,
             },
         );
+        endRead({ model: this._metaData.resModel, records: records.length });
         this.alreadyFetchedFieldPaths = new Set([...this.fieldPathsToFetch]);
         this.data = records;
         this.maxPositionFetched = this.maxPosition;

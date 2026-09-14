@@ -3,6 +3,7 @@ import { Model } from "@odoo/o-spreadsheet";
 import { reactive } from "@odoo/owl";
 import { createDefaultCurrency } from "@spreadsheet/currency/helpers";
 import { OdooDataProvider } from "@spreadsheet/data_sources/odoo_data_provider";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/translation";
 
@@ -14,6 +15,8 @@ import { _t } from "@web/core/translation";
  *  Error: "Error",
  * }}
  */
+const log = makeLogger("spreadsheet_dashboard.loader");
+
 export const Status = {
     NotLoaded: "NotLoaded",
     Loading: "Loading",
@@ -69,6 +72,11 @@ export class DashboardLoader {
      * @param {number} state.activeDashboardId
      */
     restoreFromState({ groups, dashboards, activeDashboardId }) {
+        log.lifecycle("restoreFromState", () => ({
+            groups: groups.length,
+            dashboards: Object.keys(dashboards).length,
+            activeDashboardId,
+        }));
         this.groups = groups;
         this.dashboards = dashboards;
         this.activeDashboardId = activeDashboardId;
@@ -86,7 +94,9 @@ export class DashboardLoader {
     }
 
     async load() {
+        const endGroups = log.perf("fetchGroups");
         const groups = await this._fetchGroups();
+        endGroups({ groups: groups.length });
         this.groups = groups
             .filter((group) => group.published_dashboard_ids.length)
             .map((group) => ({
@@ -101,9 +111,17 @@ export class DashboardLoader {
                 status: Status.NotLoaded,
             };
         }
+        log.pipeline("load", () => ({
+            publishedGroups: this.groups.length,
+            dashboards: dashboards.length,
+        }));
     }
 
     activateDashboard(dashboardId) {
+        log.logic("activateDashboard", () => ({
+            dashboardId,
+            previous: this.activeDashboardId,
+        }));
         this.activeDashboardId = dashboardId;
     }
 
@@ -217,6 +235,7 @@ export class DashboardLoader {
     async _loadDashboardData(dashboardId) {
         const dashboard = this._getDashboard(dashboardId);
         dashboard.status = Status.Loading;
+        const endData = log.perf("loadDashboardData");
         try {
             const result = await this.env.services.http.get(
                 `/spreadsheet/dashboard/data/${dashboardId}`,
@@ -237,7 +256,17 @@ export class DashboardLoader {
             );
             dashboard.status = Status.Loaded;
             dashboard.isSample = is_sample;
+            endData({
+                dashboardId,
+                isSample: Boolean(is_sample),
+                revisions: revisions?.length ?? 0,
+            });
         } catch (error) {
+            endData({ dashboardId, error: true });
+            log.logic("loadDashboardData:error", () => ({
+                dashboardId,
+                message: error.data?.message || error.message,
+            }));
             dashboard.error = error;
             dashboard.status = Status.Error;
             throw error;

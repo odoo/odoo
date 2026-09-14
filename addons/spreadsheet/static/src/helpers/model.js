@@ -10,21 +10,30 @@ import {
 } from "@spreadsheet/ir_ui_menu/odoo_menu_link_cell";
 import { OdooSpreadsheetModel } from "@spreadsheet/model";
 import { isLoadingError } from "@spreadsheet/o_spreadsheet/errors";
+import { makeLogger } from "@web/core/debug/debug_logger";
 
 const { formatValue, isDefined, toCartesian, toXC } = helpers;
+
+const log = makeLogger("spreadsheet.model");
 
 /**
  * @typedef {import("@spreadsheet").OdooSpreadsheetModel} OdooSpreadsheetModel
  */
 
 export async function fetchSpreadsheetModel(env, resModel, resId) {
+    const endFetch = log.perf("fetchSpreadsheetModel");
     const { data, revisions } = await env.services.http.get(
         `/spreadsheet/data/${resModel}/${resId}`,
     );
+    endFetch({ resModel, resId, revisions: revisions?.length ?? 0 });
     return createSpreadsheetModel({ env, data, revisions });
 }
 
 export function createSpreadsheetModel({ env, data, revisions }) {
+    log.lifecycle("createSpreadsheetModel", () => ({
+        sheets: data?.sheets?.length ?? 0,
+        revisions: revisions?.length ?? 0,
+    }));
     const odooDataProvider = new OdooDataProvider(env);
     const model = new OdooSpreadsheetModel(
         data,
@@ -57,7 +66,10 @@ export async function waitForOdooSources(model) {
             .map((listId) => model.getters.getListDataSource(listId))
             .map((list) => list.load()),
     );
+    log.pipeline("waitForOdooSources", { sources: promises.length });
+    const endSources = log.perf("waitForOdooSources");
     await Promise.all(promises);
+    endSources({ sources: promises.length });
 }
 
 /**
@@ -99,6 +111,7 @@ function containsLinkToOdoo(link) {
  * @returns {Promise<object>}
  */
 export async function freezeOdooData(model) {
+    const endFreeze = log.perf("freezeOdooData");
     await waitForDataLoaded(model);
     const data = model.exportData();
     for (const sheet of Object.values(data.sheets)) {
@@ -190,6 +203,7 @@ export async function freezeOdooData(model) {
     }
     data.lists = {};
     exportGlobalFiltersToSheet(model, data);
+    endFreeze({ sheets: data.sheets.length });
     return data;
 }
 

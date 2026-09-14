@@ -90,7 +90,9 @@ test("Date filter with range value", async function () {
         value: { type: "range", from: "2023-01-01", to: "2023-01-31" },
         update: () => {},
     });
-    expect("input").toHaveValue("January 1 – 31, 2023");
+    expect(getFixture().querySelector("input").value.replace(/\s/g, " ")).toBe(
+        "January 1 – 31, 2023",
+    );
 });
 
 test("Date options are computed from the current date", async function () {
@@ -430,7 +432,9 @@ test("Input value is correct for range", async function () {
         value: { type: "range", from: "2023-01-01", to: "2023-01-31" },
         update: () => {},
     });
-    expect("input").toHaveValue("January 1 – 31, 2023");
+    expect(getFixture().querySelector("input").value.replace(/\s/g, " ")).toBe(
+        "January 1 – 31, 2023",
+    );
     await contains("input").click();
     expect("div.selected .o-date-option-label").toHaveText("Custom Range");
 });

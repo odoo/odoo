@@ -1,7 +1,10 @@
 /** @odoo-module native */
 import * as spreadsheet from "@odoo/o-spreadsheet";
+import { makeLogger } from "@web/core/debug/debug_logger";
 const { tokenize, parse, convertAstNodes, astToFormula } = spreadsheet;
 const { migrationStepRegistry } = spreadsheet.registries;
+
+const log = makeLogger("spreadsheet.migration");
 
 const MAP_V1 = {
     PIVOT: "ODOO.PIVOT",
@@ -183,6 +186,7 @@ migrationStepRegistry.add("18.5.10", {
 
 function migrateOdooData(data) {
     const version = data.odooVersion || 0;
+    log.pipeline("migrateOdooData", { fromVersion: version, toVersion: 12 });
     if (version < 1) {
         data = migrate0to1(data);
     }

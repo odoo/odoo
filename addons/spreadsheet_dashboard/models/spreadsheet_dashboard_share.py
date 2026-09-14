@@ -4,7 +4,10 @@ import uuid
 from werkzeug.exceptions import Forbidden
 
 from odoo import _, api, fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import consteq
+
+_debug = DebugLog(__name__)
 
 
 class SpreadsheetDashboardShare(models.Model):
@@ -43,7 +46,14 @@ class SpreadsheetDashboardShare(models.Model):
             excel_zip = self._zip_xslx_files(vals["excel_files"])
             del vals["excel_files"]
             vals["excel_export"] = base64.b64encode(excel_zip)
-        return self.create(vals).full_url
+        share = self.create(vals)
+        _debug.lifecycle(
+            "dashboard_share_created",
+            share=share,
+            dashboard_id=vals.get("dashboard_id"),
+            with_excel="excel_export" in vals,
+        )
+        return share.full_url
 
     def _check_token(self, access_token):
         if not access_token:
@@ -56,4 +66,10 @@ class SpreadsheetDashboardShare(models.Model):
         dashboard = self.dashboard_id.with_user(self.create_uid)
         user_access = dashboard.has_access("read")
         if not (token_access and user_access):
+            _debug.logic(
+                "dashboard_share_access_denied",
+                share=self,
+                token_valid=token_access,
+                creator_can_read=user_access,
+            )
             raise Forbidden(_("You don't have access to this dashboard. "))

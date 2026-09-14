@@ -33,7 +33,7 @@ test("Can have positional args in pivot formula", async function () {
     setCellContent(model, "I2", `=PIVOT.VALUE(1,"probability:avg","#bar", 2)`);
     setCellContent(model, "I3", `=PIVOT.VALUE(1,"probability:avg","#bar", 3)`);
     expect(getCellValue(model, "I1")).toBe(15);
-    expect(getCellValue(model, "I2")).toBe(116);
+    expect(getCellValue(model, "I2")).toBe(116 / 3);
     expect(getCellValue(model, "I3")).toBe("");
 });
 

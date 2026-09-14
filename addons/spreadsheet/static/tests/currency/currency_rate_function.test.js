@@ -3,7 +3,7 @@ import { setCellContent } from "@spreadsheet/../tests/helpers/commands";
 import { getCellValue, getEvaluatedCell } from "@spreadsheet/../tests/helpers/getters";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
-import { RPCError } from "@web/core/network";
+import { makeServerError } from "@web/../tests/web_test_helpers";
 
 import { defineSpreadsheetActions, defineSpreadsheetModels } from "../helpers/data.js";
 
@@ -100,9 +100,7 @@ test("invalid company id", async () => {
     const { model } = await createModelWithDataSource({
         mockRPC: async function (route, args) {
             if (args.method === "get_rates_for_spreadsheet") {
-                const error = new RPCError();
-                error.data = { message: "Invalid company id." };
-                throw error;
+                throw makeServerError({ description: "Invalid company id." });
             }
         },
     });

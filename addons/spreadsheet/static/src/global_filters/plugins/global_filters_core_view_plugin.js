@@ -18,6 +18,7 @@ import {
 } from "@spreadsheet/global_filters/helpers";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { OdooCoreViewPlugin } from "@spreadsheet/plugins";
+import { makeLogger } from "@web/core/debug/debug_logger";
 import { Domain } from "@web/core/domain";
 import { serializeDate } from "@web/core/l10n/dates";
 import { luxon } from "@web/core/l10n/luxon";
@@ -27,6 +28,8 @@ import { deepEqual } from "@web/core/utils/collections/objects";
 
 import { getItemId } from "../../helpers/model.js";
 import { getFilterCellValue, getFilterValueDomain } from "../helpers.js";
+
+const log = makeLogger("spreadsheet.global_filters");
 
 const { DateTime } = luxon;
 
@@ -61,9 +64,19 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
             case "SET_GLOBAL_FILTER_VALUE": {
                 const filter = this.getters.getGlobalFilter(cmd.id);
                 if (!filter) {
+                    log.logic("setValue:rejected", {
+                        id: cmd.id,
+                        reason: "FilterNotFound",
+                    });
                     return CommandResult.FilterNotFound;
                 }
                 if (!checkFilterValueIsValid(filter, cmd.value)) {
+                    log.logic("setValue:rejected", () => ({
+                        id: cmd.id,
+                        type: filter.type,
+                        reason: "InvalidValueTypeCombination",
+                        value: cmd.value,
+                    }));
                     return CommandResult.InvalidValueTypeCombination;
                 }
 
@@ -85,6 +98,11 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
     handle(cmd) {
         switch (cmd.type) {
             case "SET_GLOBAL_FILTER_VALUE":
+                log.logic("setValue", () => ({
+                    id: cmd.id,
+                    cleared: cmd.value === undefined,
+                    value: cmd.value,
+                }));
                 if (cmd.value === undefined) {
                     this._clearGlobalFilterValue(cmd.id);
                 } else {
@@ -117,11 +135,18 @@ export class GlobalFiltersCoreViewPlugin extends OdooCoreViewPlugin {
         const field = fieldMatching.chain;
         if (!field || !value) {
             return new Domain();
-        } else if (filter.type === "date") {
-            return this._getDateDomain(filter, fieldMatching);
-        } else {
-            return getFilterValueDomain(filter, value, field);
         }
+        const domain =
+            filter.type === "date"
+                ? this._getDateDomain(filter, fieldMatching)
+                : getFilterValueDomain(filter, value, field);
+        log.pipeline("domain", () => ({
+            filterId,
+            type: filter.type,
+            field,
+            domain: domain.toString(),
+        }));
+        return domain;
     }
 
     /**
