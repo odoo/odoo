@@ -35,8 +35,8 @@ class ResCompany(models.Model):
     attendance_kiosk_delay = fields.Integer(default=10)
     attendance_kiosk_key = fields.Char(
         default=lambda s: uuid.uuid4().hex,
-        required=True,
         copy=False,
+        required=True,
         groups="hr_attendance.group_hr_attendance_user",
     )
     attendance_kiosk_url = fields.Char(compute="_compute_attendance_kiosk_url")
