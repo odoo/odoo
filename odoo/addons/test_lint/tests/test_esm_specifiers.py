@@ -50,7 +50,7 @@ class TestEsmSpecifiers(lint_case.LintCase):
 
         for _addon, path, source in _addon_js_sources():
             scanned += 1
-            for spec in _js_sources.specifiers(source):
+            for spec in _js_sources.specifiers(source, strip_comments=True):
                 if spec in external_libs():
                     continue
                 url = IrQweb._specifier_to_static_url(spec)

@@ -125,17 +125,13 @@ class ReportPosOrder(models.Model):
         string="Subtotal w/o Discount",
         readonly=True,
     )
-    discount_amount = fields.Monetary(
-        readonly=True,
-    )
-    margin = fields.Monetary(
-        readonly=True,
-    )
+    discount_amount = fields.Monetary(readonly=True)
+    margin = fields.Monetary(readonly=True)
     delay_validation = fields.Float(
         string="Days to Order",
+        digits=(16, 2),
         readonly=True,
         aggregator="avg",
-        digits=(16, 2),
         help="Calendar days between order creation and the order date, averaged over order lines.",
     )
     invoiced = fields.Boolean(readonly=True)

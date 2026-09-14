@@ -391,7 +391,9 @@
                         required="required">
                         <option t-att-selected="not default_value" disabled="disabled" value=""><t t-out="'Select the %s ...' % required_field.field_description.lower()" /></option>
                         <t t-if="required_field.ttype == 'selection'">
-                            <t t-foreach="required_field.selection_ids" t-as="selection">
+                            <t
+                                t-foreach="required_field.selection_ids"
+                                t-as="selection">
                                 <option t-att-selected="bool(default_value) and default_value == selection.value" t-att-value="selection.value"><t t-out="selection.name" /></option>
                             </t>
                         </t>

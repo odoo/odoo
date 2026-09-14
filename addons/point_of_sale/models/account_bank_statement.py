@@ -11,7 +11,7 @@ class AccountBankStatementLine(models.Model):
         copy=False,
     )
     pos_cash_move_type = fields.Selection(
-        [
+        selection=[
             ("manual", "Cash In/Out"),
             ("payment", "POS Payment Settlement"),
             ("difference", "Cash Counting Difference"),

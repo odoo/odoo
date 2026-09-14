@@ -48,7 +48,10 @@ class PosOrderLine(models.Model):
         store=True,
         readonly=False,
     )
-    price_unit = fields.Float(string="Unit Price", digits=0)
+    price_unit = fields.Float(
+        string="Unit Price",
+        digits=0,
+    )
     qty = fields.Float(
         string="Quantity",
         digits="Product Unit",
@@ -75,7 +78,10 @@ class PosOrderLine(models.Model):
         ],
         default="original",
     )
-    margin = fields.Monetary(compute="_compute_margins", store=True)
+    margin = fields.Monetary(
+        compute="_compute_margins",
+        store=True,
+    )
     margin_percent = fields.Float(
         string="Margin (%)",
         digits=(12, 4),
@@ -83,7 +89,9 @@ class PosOrderLine(models.Model):
         store=True,
     )
     total_cost = fields.Float(
-        string="Total cost", min_display_digits="Product Price", readonly=True
+        string="Total cost",
+        min_display_digits="Product Price",
+        readonly=True,
     )
     price_cost = fields.Float(
         string="Cost",
@@ -94,7 +102,11 @@ class PosOrderLine(models.Model):
     is_total_cost_computed = fields.Boolean(
         help="Allows to know if the total cost has already been computed or not"
     )
-    discount = fields.Float(string="Discount (%)", digits=0, default=0.0)
+    discount = fields.Float(
+        string="Discount (%)",
+        digits=0,
+        default=0.0,
+    )
     order_id = fields.Many2one(
         comodel_name="pos.order",
         string="Order Ref",

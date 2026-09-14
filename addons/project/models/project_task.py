@@ -538,8 +538,8 @@ class ProjectTask(models.Model):
         store=False,
         readonly=False,
         group_expand="_read_group_triage_ids",
-        group_by_field="triage_ids",
         domain="[('user_id', '=', uid)]",
+        group_by_field="triage_ids",
         help="The current user's personal triage bucket.",
     )
     email_from = fields.Char()

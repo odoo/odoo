@@ -46,10 +46,7 @@
                                 <strong>Amounting to:</strong> <t t-out="format_amount(env, pos_order.amount_total, pos_order.currency_id)" />
                             </div>
                         </div>
-                        <div
-                            t-if="messages"
-                            class="alert alert-danger"
-                            role="alert">
+                        <div t-if="messages" class="alert alert-danger" role="alert">
                             <div class="col-lg-12">
                                 <t t-foreach="messages" t-as="err"><t t-out="err" /><br /></t>
                             </div>
