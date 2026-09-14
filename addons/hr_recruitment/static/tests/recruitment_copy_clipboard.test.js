@@ -89,8 +89,14 @@ test("the generating branch asks the server on every click", async () => {
     await click(copyButtons()[1]);
     await animationFrame();
 
-    // The generator used to be assigned onto `this.props.content`; a component
-    // that cached it would copy the first answer twice.
+    // Pins the behaviour, and deliberately does NOT claim to distinguish the
+    // shape this widget had before 8c630dedebf9. Driven against that shape in a
+    // worktree, all four of these tests pass: the old subclass assigned
+    // `this.props.content = await generator()` on every click, so the generator
+    // was re-invoked every time too. That refactor removed duplication and a
+    // props mutation, not a behavioural defect -- the two are indistinguishable
+    // from outside, and a test comment claiming otherwise would be a lie a
+    // reader has no way to check.
     expect.verifySteps([
         "writeText: first@example.com",
         "writeText: second@example.com",
