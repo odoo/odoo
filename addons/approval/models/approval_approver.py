@@ -696,33 +696,6 @@ class ApprovalApprover(models.Model):
         """
         self.check_singleton()
         if not self.step_ids:
-            request = self.request_id
-            if (
-                request.group_approval == "exclusive"
-                and not request.category_id.notify_pool_members
-                and self.source_rule_id
-            ):
-                trace.ACTIVITY.event(
-                    "asked_in_a_group_queue",
-                    approver=self.id,
-                    request=request.id,
-                    rule=self.source_rule_id.id,
-                )
-            if (
-                request.group_approval == "exclusive"
-                and not request.category_id.notify_pool_members
-                and not self.source_rule_id
-            ):
-                # A security group is a pool anyone in it may decide from To
-                # Review; asking each member is one e-mail, one follower and one
-                # activity per member -- 656 queries to confirm for a group of 40.
-                trace.ACTIVITY.event(
-                    "not_asked",
-                    approver=self.id,
-                    request=request.id,
-                    reason="pool_member",
-                )
-                return False
             return True
         document = self.request_id.get_source_document()
         listed = self.step_ids.filtered(

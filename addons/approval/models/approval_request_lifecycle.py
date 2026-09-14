@@ -182,8 +182,6 @@ class ApprovalRequestLifecycle(models.Model):
             )
         else:
             candidate = approver.filtered(lambda a: a.request_id == self)
-        if decision == "approve":
-            self._check_approve_sequentially_can_approve(candidate)
         if steps:
             approver = candidate.filtered(
                 lambda a: (
@@ -230,7 +228,6 @@ class ApprovalRequestLifecycle(models.Model):
             rows=approver.ids,
             acting=acting_user.id,
             asked_steps=steps.ids if steps else None,
-            sequential=self.approve_sequentially,
         )
         now = fields.Datetime.now()
         logged_steps = {}
@@ -306,21 +303,10 @@ class ApprovalRequestLifecycle(models.Model):
             partner_ids=self.request_owner_id.partner_id.ids,
         )
         self._notify_step_decision(approver, acting_user, decision, steps)
-        if decision == "approve":
-            self.sudo()._update_next_approvers_state(
-                approver,
-                "pending",
-                only_next_approver=True,
-            )
-        elif not all(row._is_advisory_only() for row in approver):
-            self.sudo()._update_next_approvers_state(
-                approver,
-                "refused",
-                only_next_approver=False,
-                cancel_activities=True,
-            )
-            if not self.approve_sequentially:
-                self._flip_unsettled_approvers("refused")
+        if decision == "refuse" and not all(
+            row._is_advisory_only() for row in approver
+        ):
+            self._flip_unsettled_approvers("refused")
         self._get_user_approval_activities(user=acting_user).sudo().action_feedback()
         if decision == "approve" and self.state == "pending":
             self._refresh_turn_states()
@@ -794,35 +780,22 @@ class ApprovalRequestLifecycle(models.Model):
                 category=request.category_id.id,
                 approvers=len(request.approver_ids),
                 minimum=request.approval_minimum,
-                sequential=request.approve_sequentially,
             )
-            request._log_cycle("confirm", sequential=request.approve_sequentially)
+            request._log_cycle("confirm")
 
     def _open_approval_round(self, approvers: models.BaseModel) -> None:
         rows_by_request: dict[int, list[int]] = {}
         for approver in approvers:
             rows_by_request.setdefault(approver.request_id.id, []).append(approver.id)
 
-        to_wait = self.env["approval.approver"]
         to_open = self.env["approval.approver"]
         for request in self:
             row_ids = rows_by_request.get(request.id)
-            if not row_ids:
-                continue
-            rows = approvers.browse(row_ids)
-            if request.approve_sequentially:
-                ordered = rows.sorted(lambda a: (a.sequence, a.id))
-                to_wait |= ordered[1:]
-                rows = ordered[:1]
-            to_open |= rows
+            if row_ids:
+                to_open |= approvers.browse(row_ids)
 
-        trace.annotate(work=len(to_open) + len(to_wait))
-        trace.LIFECYCLE.event(
-            "round_opened",
-            requests=self.ids,
-            opened=len(to_open),
-            waiting=len(to_wait),
-        )
+        trace.annotate(work=len(to_open))
+        trace.LIFECYCLE.event("round_opened", requests=self.ids, opened=len(to_open))
         trace.LIFECYCLE.items(
             "round_row",
             lambda: [
@@ -830,13 +803,10 @@ class ApprovalRequestLifecycle(models.Model):
                     "request": row.request_id.id,
                     "user": row.user_id.id,
                     "seq": row.sequence,
-                    "opened": row in to_open,
                 }
-                for row in (to_open | to_wait)
+                for row in to_open
             ],
         )
-        if to_wait:
-            to_wait.sudo().write({"flow_state": "waiting"})
         to_open._create_activity()
         to_open.sudo().write({"flow_state": "pending"})
         self.filtered(
@@ -1083,13 +1053,6 @@ class ApprovalRequestLifecycle(models.Model):
 
             old_state = request.state
 
-            request.sudo()._update_next_approvers_state(
-                req_approver,
-                "waiting",
-                only_next_approver=False,
-                cancel_activities=True,
-            )
-
             request._append_decision_log(
                 "withdrawn",
                 rows=req_approver,
@@ -1111,7 +1074,7 @@ class ApprovalRequestLifecycle(models.Model):
             else:
                 req_approver._create_activity()
 
-                if old_state == "approved" and not request.approve_sequentially:
+                if old_state == "approved":
                     parked = request.approver_ids.filtered(
                         lambda a: a.state == "waiting",
                     )
@@ -1156,15 +1119,6 @@ class ApprovalRequestLifecycle(models.Model):
 
             if old_state == "approved" and request.state != "approved":
                 request._notify_source_document_state_change("pending")
-
-    def _check_approve_sequentially_can_approve(self, candidate) -> None:
-        if self.approve_sequentially and any(a.state == "waiting" for a in candidate):
-            trace.REFUSAL.event(
-                "approve_out_of_sequence", request=self.id, rows=candidate.ids
-            )
-            raise ValidationError(
-                self.env._("You cannot approve before the previous approver.")
-            )
 
     def _check_confirm(self) -> None:
         self._check_enough_approvers()
@@ -1806,42 +1760,3 @@ class ApprovalRequestLifecycle(models.Model):
             rows,
             extra,
         )
-
-    def _update_next_approvers_state(
-        self,
-        approver: models.BaseModel,
-        new_state: str,
-        only_next_approver: bool,
-        cancel_activities: bool = False,
-    ) -> None:
-        approvers_updated = self.env["approval.approver"]
-        for approval in self.filtered("approve_sequentially"):
-            current_approver = approval.approver_ids & approver
-            if not current_approver:
-                continue
-            anchor = min(
-                ((a.sequence, a.id) for a in current_approver),
-            )
-            settled = approval.approver_ids._SETTLED_STATES
-            approvers_to_update = approval.approver_ids.filtered(
-                lambda a, anchor=anchor, settled=settled: (
-                    a.state not in settled and (a.sequence, a.id) > anchor
-                ),
-            ).sorted(lambda a: (a.sequence, a.id))
-            if only_next_approver and approvers_to_update:
-                approvers_to_update = approvers_to_update[0]
-            approvers_updated |= approvers_to_update
-        trace.DECISION.event(
-            "chain_advanced",
-            requests=self.ids,
-            decided=approver.ids,
-            moved=approvers_updated.ids,
-            to=new_state,
-            only_next=only_next_approver,
-            cancel_activities=cancel_activities,
-        )
-        approvers_updated.sudo().flow_state = new_state
-        if new_state == "pending":
-            approvers_updated._create_activity()
-        if cancel_activities:
-            approvers_updated.request_id._cancel_activities()

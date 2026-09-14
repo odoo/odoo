@@ -675,7 +675,7 @@ class TestApproverSyncTriggerFields(ApprovalCommon):
         request.sudo().write({"applied_rule_ids": [(5, 0, 0)]})
         self.env.flush_all()
 
-        result = request._compute_desired_approvers(500)
+        result = request._compute_desired_approvers()
 
         self.assertFalse(
             request.applied_rule_ids,

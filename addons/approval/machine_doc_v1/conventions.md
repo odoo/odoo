@@ -215,19 +215,20 @@ class ApprovalRequest(models.Model):
             self._raise_withdraw_blocked(po.invoice_ids, "invoice/bill")
 ```
 
-### Step 5 (optional): Add custom approvers via extension hook
+### Step 5 (optional): Ask a user a path names
+
+A step asks whoever a field path on the request or its document names, with
+`subject_model_id` and `subject_user_path`. approval_hr asks the requester's
+manager through `approval.request.requester_manager_user_id`:
 
 ```python
 class ApprovalRequest(models.Model):
     _inherit = "approval.request"
 
-    def _get_additional_approvers(self):
-        result = super()._get_additional_approvers()
-        # Add the employee's manager as first approver
-        if self.request_owner_id.employee_id.parent_id.user_id:
-            manager = self.request_owner_id.employee_id.parent_id.user_id
-            result.append((manager.id, True, self._get_sequence_manager()))
-        return result
+    requester_manager_user_id = fields.Many2one(
+        comodel_name="res.users",
+        compute="_compute_requester_manager_user_id",
+    )
 ```
 
 ### Step 6 (optional): Freeze additional value fields after submit
@@ -259,8 +260,7 @@ invalidation, delegation resolution, chain advancement, activity
 cleanup and the source-document notification. A decision taken outside
 those actions -- an import of history -- is `approver._record_decision(...)`.
 Routing in custom code writes `flow_state`, after locking, and calls
-`_update_next_approvers_state()` / `_notify_if_terminal_transition()`
-yourself.
+`_refresh_turn_states()` / `_notify_if_terminal_transition()` yourself.
 
 ### 2. Creating/deleting approvers without context
 
@@ -275,7 +275,7 @@ that is not `new` — managers and sudo included (only `env.su` **plus** the
 `approver_ids_computation` context is exempt). Approvers are managed by
 `_sync_approvers()`.
 
-**Right:** Configure the category, its rules, or override `_get_additional_approvers()`.
+**Right:** Configure the category's steps: members, a group, or a path to the user to ask.
 
 ### 3. Editing value fields after submission
 
@@ -426,7 +426,6 @@ factories) instead of rebuilding user fixtures.
 | `_compute_state()` logic | The action methods that call `_notify_if_terminal_transition()` -- the compute itself must stay side-effect free |
 | `_compute_sla_status()` logic | `_search_sla_status()` -- its SQL CASE mirrors the compute exactly; update both together |
 | `_sync_approvers()` / `_compute_desired_approvers()` sources | `_merge_approver_to_staging()` merge rules (required OR, sequence MIN); rows always stage 'new' (sync is draft-only) |
-| `_get_additional_approvers()` override | Must return `list[tuple[int, bool, int]]` (user_id, required, sequence) |
 | `ESCALATION_RULES` constant (`approval_request.py`) | `_get_escalation_rules()` overlays `approval.escalation.<priority>.<kind>` system parameters on top of it -- do not restate the numbers elsewhere |
 | `action_confirm()` validation | `_check_confirm()`, which calls `_check_enough_approvers()`; `approval_app` extends it with `_check_has_document_has_attachment()` and `_check_category_required_fields()` |
 | `_LOCKED_FIELDS` / `_get_fields_locked()` | `_PENDING_CHANGE_EDITABLE` (fields reopened by the change flow) and the form view `readonly` attrs |
@@ -466,7 +465,7 @@ factories) instead of rebuilding user fixtures.
 | `approval_request.py` | Fields, CRUD, copy, the state machine and the small computes, `_TERMINAL_STATES` / `_DECISION_STATES` | `_compute_*`, `create`/`write` |
 | `approval_request_access.py` | Who may write, unlink, decide, re-route, reopen a refusal, withdraw another's decision; locked and compute-only fields | `_check_access_*`, `_check_locked_fields`, `_check_reset_actor`, `_check_withdraw_actor`, `_is_later_step_member` |
 | `approval_request_lifecycle.py` | Every transition and what it touches: decisions, withdraw, cancel, reset, change requests, `_force_terminal`, activities, row locks | `action_*`, `_apply_decision`, `_force_terminal` |
-| `approval_request_routing.py` | Who approves: `_sync_approvers`, `_compute_desired_approvers`, rules, replacement bands, category snapshot | `_sync_*`, `_matched_*`, `_find_matching_replacement` |
+| `approval_request_routing.py` | Who approves: `_sync_approvers`, `_compute_desired_approvers` from the applicable steps, live rerouting, auto-action rules, list adoption, category snapshot | `_sync_*`, `_get_applicable_steps`, `_reroute_steps_live` |
 | `approval_request_escalation.py` | When: deadline, overdue, SLA compute and search, the three crons, reminders and escalation | `cron_*`, `_compute_sla_*`, `_send_reminder` |
 | `approval_request_prediction.py` | On-demand outcome prediction | `_predict_*` |
 

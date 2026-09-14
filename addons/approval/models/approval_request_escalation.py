@@ -452,11 +452,8 @@ class ApprovalRequestEscalation(models.Model):
         self,
         hours_field: str,
         extra_domain=None,
-        category_domain=None,
     ):
-        categories = self.env["approval.category"].search(
-            Domain([(hours_field, ">", 0)]) & Domain(category_domain or []),
-        )
+        categories = self.env["approval.category"].search([(hours_field, ">", 0)])
         if not categories:
             return self.browse(), {}
 
@@ -496,7 +493,6 @@ class ApprovalRequestEscalation(models.Model):
         eligible, _hours = self._eligible_by_category_domain(
             "consent_approval_hours",
             extra_domain=[("pending_change_field", "=", False)],
-            category_domain=[("approve_sequentially", "=", False)],
         )
         consent_count = 0
         for request in eligible:

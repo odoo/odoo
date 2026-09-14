@@ -573,11 +573,6 @@ class TestReplacementMatchingIsExtensible(ApprovalCommon):
 
         request = self._prepare_request(category, confirm=False, amount=-5.0)
 
-        self.assertFalse(
-            request._find_matching_replacement(),
-            "An unrecognised condition field must simply not match, not "
-            "raise out of the approver sync.",
-        )
         self.assertTrue(
             request.approver_ids,
             "The request must still get its category approvers.",

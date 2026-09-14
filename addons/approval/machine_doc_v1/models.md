@@ -388,14 +388,12 @@ requester re-submits (`action_resubmit`).
 | `_get_notifiable_source_document()` | lifecycle.py | The adopting document to tell, or None: registry, `mixin.approval` and two-way-link checks; returned under `sudo()` with `approval_acting_user_id` |
 | `_notify_source_document_progress()` | lifecycle.py | Calls the document's `_on_approval_progress()` after an approval that met a step while the request stays pending |
 | `_lock_for_approval_action()` | lifecycle.py | SELECT FOR UPDATE to prevent race conditions |
-| `_update_next_approvers_state()` | lifecycle.py | Sequential propagation; anchors on min (sequence,id) of the acting rows; never re-promotes terminal rows |
 | `_check_auto_action_rules()` | routing.py | Auto-approve/refuse rules; auto-refuse stamps `refusal_reason_auto_rule` metadata |
-| `_find_matching_replacement()` | routing.py | The first `set_approvers` rule this request falls into, by `(sequence, id)` (via prefetched `category_id.rule_ids`) |
-| `_get_additional_approvers()` | routing.py | Extension hook only (base returns `[]`); `add_approver` rules are merged by `_compute_desired_approvers` from the one `_matched_add_approver_rules()` evaluation. Neither is read for a request its category's steps route: those take their approvers from the steps alone, each row staged with its member's `required` and `sequence`, and hand back the applicable steps' `when_rule_ids` as the matched rules `applied_rule_ids` records. The rules steps read are evaluated once per request per sync (`_get_step_rule_matches`, remembered in the `approval_rule_matches` context) |
+| `_compute_desired_approvers()` | routing.py | Every request takes its approvers from its applicable steps alone, each row staged with its member's `required` and `sequence`, and hands back the steps' `when_rule_ids` as the matched rules `applied_rule_ids` records. The rules steps read are evaluated once per request per sync (`_get_step_rule_matches`, remembered in the `approval_rule_matches` context) |
 | `_reroute_steps_live(desired)` | routing.py | A pending request its steps route, after a routing field changed: rows join the steps that now apply (an approval given for a step that stopped applying carries to the step that replaced it), a user only an arriving step names gets a row, and nothing happens when no step arrived or departed, so a member added to a step already applying is not asked mid-flight |
 | `_get_escalation_rules()` | escalation.py | `ESCALATION_RULES` defaults + `approval.escalation.<priority>.<kind>` ir.config_parameter overrides |
 | `_get_escalation_manager()` | escalation.py | Hook: manager to escalate to (base returns empty; approval_hr overrides) |
-| `_prepare_category_snapshot()` | routing.py | Audit snapshot incl. `effective_*` keys and the matched replacing rule |
+| `_prepare_category_snapshot()` | routing.py | Audit snapshot of the category's configuration, its applicable steps and the `effective_*` keys |
 | `_notify_source_document_state_change()` | lifecycle.py | Calls mixin hook on source doc (registry isinstance check) |
 | `_check_access_write()` | access.py | Owner OR assigned approver write access |
 | `_check_locked_fields()` | access.py | **Business rule, never bypassed**: value fields frozen outside draft; `pending_change_field` selectively reopens date/reason, and only for the requester (owner/manager/sudo) |
@@ -732,7 +730,7 @@ refusals), `refusal_reason_auto_rule` (auto-refuse rules),
 
 | Method | Purpose |
 |--------|---------|
-| `_evaluate(request)` | Dispatches on `condition_type` and is the only entry point. `_find_matching_replacement` used to call `_get_field_value` + `_compare` directly, which silently never matched a non-threshold rule |
+| `_evaluate(request)` | Dispatches on `condition_type` and is the only entry point. A band matcher that once called `_get_field_value` + `_compare` directly silently never matched a non-threshold rule |
 | `_get_subject(request)` | The source document, or False when it is absent, deleted, or not of `subject_model_id` |
 | `_evaluate_domain(request)` / `_evaluate_field_selection(request)` | The two source-document condition types |
 | `_get_field_value(request)` | Extract numeric value using match/case; `amount` goes through `_convert_request_amount()` so the comparison happens in the rule's currency |
