@@ -25,6 +25,7 @@ class Score(models.Model):
     team_id = fields.Many2one("rgo.team")
     points = fields.Integer()
     played = fields.Date()
+    home = fields.Boolean()
 
 
 @pytest.fixture
@@ -33,7 +34,7 @@ def env():
         zulu, alpha = env["rgo.team"].create([{"name": "zulu"}, {"name": "alpha"}])
         env["rgo.score"].create(
             [
-                {"team_id": zulu.id, "points": 5, "played": "2026-01-01"},
+                {"team_id": zulu.id, "points": 5, "played": "2026-01-01", "home": True},
                 {"team_id": zulu.id, "points": 1, "played": "2026-02-01"},
                 {"team_id": alpha.id, "points": 2, "played": "2026-02-01"},
                 {"team_id": False, "points": 9, "played": False},
@@ -110,3 +111,16 @@ def test_a_many2one_path_groups_by_the_comodel_field(env):
         [], ["team_id.name"], ["__count"], order="team_id.name desc"
     )
     assert [row[0] for row in rows] == [False, "zulu", "alpha"]
+
+
+def test_a_never_written_boolean_aggregates_as_false(env):
+    # zulu's second score never wrote home: False to the ORM, as it is to a
+    # domain and to a groupby, and to the SQL aggregates through COALESCE
+    rows = env["rgo.score"]._read_group(
+        [("team_id.name", "=", "zulu")],
+        [],
+        ["home:bool_and", "home:bool_or", "home:count", "home:array_agg"],
+    )
+    assert rows == [(False, True, 2, [True, False])]
+    rows = env["rgo.score"]._read_group([], ["home"], ["__count"])
+    assert rows == [(False, 3), (True, 1)]

@@ -46,6 +46,48 @@ class TestReadGroupGroupKeyRoundTrip(TransactionCase):
                     "opening the group must show exactly the records it counted",
                 )
 
+    def test_a_never_written_boolean_aggregates_as_false(self):
+        Message = self.env["test_orm.message"]
+        discussion = self.env["test_orm.discussion"].create(
+            {"name": "booleans", "participants": [Command.link(self.env.user.id)]}
+        )
+        records = Message.create(
+            [
+                {"discussion": discussion.id, "body": "t", "important": True},
+                {"discussion": discussion.id, "body": "n"},
+                {"discussion": discussion.id, "body": "f", "important": False},
+            ]
+        )
+        self.env.flush_all()
+        self.env.cr.execute(
+            "SELECT COUNT(*) FROM test_orm_message"
+            " WHERE id = ANY(%s) AND important IS NULL",
+            (records.ids,),
+        )
+        self.assertEqual(self.env.cr.fetchone()[0], 1, "expected one NULL important")
+        [(every, any_, counted, distinct, values)] = Message._read_group(
+            [("id", "in", records.ids)],
+            [],
+            [
+                "important:bool_and",
+                "important:bool_or",
+                "important:count",
+                "important:count_distinct",
+                "important:array_agg",
+            ],
+        )
+        self.assertEqual(
+            (every, any_, counted, distinct, sorted(values)),
+            (False, True, 3, 2, [False, False, True]),
+            "the NULL is False to the ORM, as it is to a domain and to a groupby",
+        )
+        self.assertEqual(
+            Message._read_group(
+                [("id", "in", records.ids)], ["important"], ["__count"]
+            ),
+            [(False, 2), (True, 1)],
+        )
+
 
 class TestReadGroupAuditFixes(TransactionCase):
     def _read_group_deprecated(self, model, domain, fields, groupby, **kwargs):

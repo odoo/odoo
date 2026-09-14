@@ -118,6 +118,10 @@ class _ReadGroupSQLMixin(_ModelStubs):
             )
 
         sql_field = self._field_to_sql(self._table, fname, query)
+        if field.is_boolean:
+            # a never-written boolean is NULL in the column and False to the
+            # ORM; BOOL_AND, COUNT and ARRAY_AGG would skip or leak the NULL
+            sql_field = SQL("COALESCE(%s, FALSE)", sql_field)
         return READ_GROUP_AGGREGATE[func](self._table, sql_field)
 
     @api.model
