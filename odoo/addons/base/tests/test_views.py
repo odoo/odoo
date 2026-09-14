@@ -3265,6 +3265,72 @@ class TestViews(ViewCase):
         self.assertTrue(tree.xpath('//div[@id="foo"]'))
         self.assertTrue(tree.xpath('//div[@id="bar"]'))
 
+    def test_projection_is_shared_by_capability_signature(self):
+        view = self.View.create(
+            {
+                "name": "foo",
+                "model": "res.partner",
+                "arch": """
+                <form>
+                    <field name="name"/>
+                    <field name="company_id" groups="base.group_system"/>
+                </form>
+            """,
+            }
+        )
+        Partner = self.env["res.partner"]
+        demo = Partner.with_user(self.user_demo)
+        admin = Partner.with_user(self.env.ref("base.user_admin"))
+
+        first = demo.get_view(view_id=view.id)
+        second = demo.get_view(view_id=view.id)
+        self.assertIs(first["ir"], second["ir"])
+        self.assertIsNot(first, second)
+        self.assertEqual(first["arch"], second["arch"])
+        with self.assertRaises(NotImplementedError):
+            first["ir"]["kind"] = "mutated"
+
+        other = admin.get_view(view_id=view.id)
+        self.assertIsNot(first["ir"], other["ir"])
+        self.assertFalse(
+            etree.fromstring(first["arch"]).xpath("//field[@name='company_id']")
+        )
+        self.assertTrue(
+            etree.fromstring(other["arch"]).xpath("//field[@name='company_id']")
+        )
+
+    def test_projection_signature_covers_the_kanban_group_by_comodel(self):
+        view = self.View.create(
+            {
+                "name": "foo",
+                "model": "res.partner",
+                "arch": """
+                <kanban default_group_by="user_id">
+                    <templates>
+                        <t t-name="card"><field name="name"/></t>
+                    </templates>
+                </kanban>
+            """,
+            }
+        )
+        Partner = self.env["res.partner"]
+        demo = Partner.with_user(self.user_demo)
+        admin = Partner.with_user(self.env.ref("base.user_admin"))
+        capabilities = Partner._get_view_cache(view.id, "kanban")["capabilities"]
+        self.assertEqual(capabilities[1], (("res.partner", "user_id"),))
+        self.assertIn(
+            "res.users",
+            [entry[0] for entry in demo._view_capability_signature(capabilities)[1]],
+        )
+
+        self.assertFalse(
+            self.env["res.users"].with_user(self.user_demo).has_access("create")
+        )
+        demo_root = etree.fromstring(demo.get_view(view_id=view.id)["arch"])
+        admin_root = etree.fromstring(admin.get_view(view_id=view.id)["arch"])
+        self.assertEqual(demo_root.get("group_create"), "False")
+        self.assertIsNone(admin_root.get("group_create"))
+
     def test_attrs_groups_validation(self):
         def validate(arch, valid=False, parent=False, field="name", model="ir.ui.view"):
             parent = "parent." if parent else ""

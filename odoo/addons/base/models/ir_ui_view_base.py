@@ -19,6 +19,42 @@ _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
 
 
+_xpath_groups_key = etree.ETXPath("//*[@__groups_key__]")
+_xpath_model_access = etree.ETXPath("//*[@model_access_rights]")
+
+
+def _view_capabilities(
+    node: etree._Element,
+) -> tuple[tuple[str, ...], tuple[tuple[str, str | None], ...]]:
+    """The user-dependent inputs a cached arch still carries: the group keys
+    on its nodes and the models whose access rights decorate it — for a
+    kanban, with the field its default grouping goes through."""
+    return (
+        tuple(sorted({el.get("__groups_key__") for el in _xpath_groups_key(node)})),
+        tuple(
+            sorted(
+                {
+                    (
+                        el.get("model_access_rights"),
+                        el.get("default_group_by") if el.tag == "kanban" else None,
+                    )
+                    for el in _xpath_model_access(node)
+                },
+                key=lambda pair: (pair[0], pair[1] or ""),
+            )
+        ),
+    )
+
+
+def _freeze(value: Any) -> Any:
+    """A projected view is shared between requests: nothing in it is mutable."""
+    if isinstance(value, dict):
+        return frozendict({key: _freeze(item) for key, item in value.items()})
+    if isinstance(value, list):
+        return tuple(_freeze(item) for item in value)
+    return value
+
+
 def attach_ir(result: dict[str, Any]) -> dict[str, Any]:
     """Derive ``result["ir"]`` from ``result["arch"]`` again.
 
@@ -367,9 +403,81 @@ class Base(models.AbstractModel):
             "models": frozendict(
                 {model: tuple(fields) for model, fields in view_models.items()}
             ),
+            "capabilities": _view_capabilities(etree.fromstring(arch)),
         }
 
         return frozendict(result)
+
+    @api.model
+    def _view_capability_signature(self, capabilities: tuple) -> tuple:
+        """What of the user decides the projection of a cached view: which of
+        the group keys its nodes carry the user matches, what the user may do
+        on each model an x2many or the root points at, and debug mode. Two
+        users with the same signature get the same projected arch."""
+        group_keys, model_accesses = capabilities
+        definitions = self.env["res.groups"]._get_group_definitions()
+        user_group_ids = self.env.user._get_group_ids()
+
+        def access(model_name: str) -> tuple[str, bool, bool, bool]:
+            model = self.env[model_name]
+            return (
+                model_name,
+                *(
+                    bool(model.has_access(operation))
+                    for operation in ("create", "write", "unlink")
+                ),
+            )
+
+        accesses = []
+        for model_name, group_by_name in model_accesses:
+            accesses.append(access(model_name))
+            group_by_field = self.env[model_name]._fields.get(group_by_name)
+            if group_by_field and group_by_field.type == "many2one":
+                accesses.append(access(group_by_field.comodel_name))
+        return (
+            tuple(
+                definitions.from_key(key).matches(user_group_ids) for key in group_keys
+            ),
+            tuple(accesses),
+            self.env.user.has_group("base.group_no_one"),
+        )
+
+    @api.model
+    @tools.conditional(
+        "xml" not in config["dev_mode"],
+        tools.ormcache(
+            "self._get_view_cache_key(view_id, view_type, **options)",
+            "signature",
+            cache="templates",
+        ),
+    )
+    def _get_view_projected(
+        self,
+        view_id: int | None,
+        view_type: str,
+        signature: tuple,
+        **options: Any,
+    ) -> frozendict:
+        """The cached view as one capability signature sees it: access
+        rights and debug nodes resolved, the arch serialised and the IR
+        built — once per (view, signature), not once per request."""
+        cached = self._get_view_cache(view_id, view_type, **options)
+        node = etree.fromstring(cached["arch"])
+        node = self.env["ir.ui.view"]._postprocess_access_rights(node)
+        node = self.env["ir.ui.view"]._postprocess_debug(node)
+        with _debug.perf("ir_build", model=self._name, view_type=node.tag) as span:
+            ir = from_arch(node)
+            if _debug.perf.enabled:
+                span.set(nodes=sum(1 for _ in ir.walk()))
+        return frozendict(
+            {
+                "arch": etree.tostring(node, encoding="unicode"),
+                "id": cached["id"],
+                "model": cached["model"],
+                "models": cached["models"],
+                "ir": _freeze(ir.to_dict()),
+            }
+        )
 
     @api.model
     @api.readonly
@@ -381,26 +489,23 @@ class Base(models.AbstractModel):
     ) -> dict[str, Any]:
         self.browse().check_access("read")
 
-        result = dict(self._get_view_cache(view_id, view_type, **options))
-
-        node = etree.fromstring(result["arch"])
-        node = self.env["ir.ui.view"]._postprocess_access_rights(node)
-        node = self.env["ir.ui.view"]._postprocess_debug(node)
-        if node.tag in ("form", "list") and (
-            header := self.view_header_get(result["id"], node.tag)
+        cached = self._get_view_cache(view_id, view_type, **options)
+        signature = self._view_capability_signature(cached["capabilities"])
+        result = dict(
+            self._get_view_projected(view_id, view_type, signature, **options)
+        )
+        if view_type in ("form", "list") and (
+            header := self.view_header_get(result["id"], view_type)
         ):
+            node = etree.fromstring(result["arch"])
             node.set("string", header)
-        result["arch"] = etree.tostring(node, encoding="unicode")
-        with _debug.perf("ir_build", model=self._name, view_type=node.tag) as span:
-            ir = from_arch(node)
-            result["ir"] = ir.to_dict()
-            if _debug.perf.enabled:
-                span.set(nodes=sum(1 for _ in ir.walk()))
+            result["arch"] = etree.tostring(node, encoding="unicode")
+            attach_ir(result)
         _debug.pipeline(
             "get_view",
             model=self._name,
             view=result["id"],
-            view_type=node.tag,
+            view_type=view_type,
             arch_chars=len(result["arch"]),
         )
 

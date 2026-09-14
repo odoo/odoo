@@ -40,7 +40,9 @@ class TestViewPayloadConsistency(TransactionCase):
                 self.fail(f"{name}: get_views raised {error!r}")
             for view_type, view in result["views"].items():
                 checked += 1
-                if view_ir.from_string(view["arch"]).to_dict() != view["ir"]:
+                if view_ir.from_string(view["arch"]) != view_ir.Node.from_dict(
+                    view["ir"]
+                ):
                     disagreeing.append(f"{name}/{view_type}")
         self.assertGreater(checked, 0)
         self.assertEqual(disagreeing, [])
