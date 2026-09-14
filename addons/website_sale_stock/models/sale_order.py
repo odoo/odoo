@@ -61,7 +61,8 @@ class SaleOrder(models.Model):
                 self.partner_id,
                 pickup_delivery_method_id=self.carrier_id.id,
             )
-            self.partner_shipping_id = address or self.partner_id
+            if address:
+                self.partner_shipping_id = address
 
     def _get_shop_warehouse_id(self):
         """Return the warehouse to use for shop availability checks.
