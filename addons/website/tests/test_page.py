@@ -1,3 +1,5 @@
+import json
+import logging
 from unittest.mock import patch
 
 import werkzeug.exceptions
@@ -5,15 +7,115 @@ from lxml import html
 
 from odoo.fields import Command
 from odoo.http import root
-from odoo.tests import HttpCase, common, tagged
+from odoo.tests import HttpCase, common, freeze_time, tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.website.controllers.main import Website
 
+_logger = logging.getLogger(__name__)
+
 
 @tagged("-at_install", "post_install")
 class TestPage(common.TransactionCase):
+    @freeze_time("2026-09-13 12:00:00")
+    def test_scheduled_page_is_not_a_public_fuzzy_candidate_but_is_editable(self):
+        website = self.env.ref("website.default_website")
+        self.page_1.write(
+            {
+                "name": "zebratopic",
+                "is_published": True,
+                "website_indexed": True,
+                "date_publish": "2026-09-14 12:00:00",
+            }
+        )
+        public = website.with_user(website.user_id).with_context(website_id=website.id)
+        with MockRequest(public.env, website=public):
+            count, _results, fuzzy = public._search_with_fuzzy(
+                "pages",
+                "zebratopci",
+                10,
+                "id",
+                {"displayDescription": True, "allowFuzzy": True},
+            )
+        _logger.debug("Scheduled fuzzy candidate: count=%s correction=%s", count, fuzzy)
+        self.assertEqual(count, 0)
+        self.assertFalse(fuzzy)
+        with MockRequest(self.env, website=website):
+            count, results, _fuzzy = website._search_with_fuzzy(
+                "pages",
+                "zebratopic",
+                10,
+                "id",
+                {"displayDescription": True, "allowFuzzy": False},
+            )
+        self.assertEqual(count, 1)
+        self.assertEqual(results[0]["results"].ids, self.page_1.ids)
+
+    def test_visibility_cache_is_separate_for_each_website(self):
+        website = self.env.ref("website.default_website")
+        other = self.env["website"].create({"name": "Visibility challenge"})
+        self.page_1.write({"website_id": website.id, "is_published": True})
+        on_site = self.page_1.with_context(website_id=website.id)
+        off_site = self.page_1.with_context(website_id=other.id)
+        self.assertTrue(on_site.is_visible)
+        self.assertFalse(off_site.is_visible)
+        self.assertTrue(on_site.is_visible)
+        self.page_1.is_published = False
+        self.assertFalse(on_site.is_visible)
+
+    @freeze_time("2026-09-13 12:00:00")
+    def test_visibility_recomputes_after_publication_changes(self):
+        page = self.page_1
+        self.assertFalse(page.is_visible)
+        page.is_published = True
+        _logger.debug("Published page %s has is_visible=%s", page.id, page.is_visible)
+        self.assertTrue(page.is_visible)
+        page.date_publish = "2026-09-14 12:00:00"
+        self.assertFalse(page.is_visible)
+        page.date_publish = "2026-09-13 12:00:00"
+        self.assertTrue(page.is_visible)
+
+    @freeze_time("2026-09-13 12:00:00")
+    def test_public_search_excludes_scheduled_pages(self):
+        website = self.env.ref("website.default_website")
+        self.page_1.write(
+            {
+                "is_published": True,
+                "website_indexed": True,
+                "date_publish": "2026-09-14 12:00:00",
+            }
+        )
+        public_website = website.with_user(website.user_id).with_context(
+            website_id=website.id
+        )
+        with MockRequest(public_website.env, website=public_website):
+            count, results, _fuzzy = public_website._search_with_fuzzy(
+                "pages",
+                "page_1",
+                10,
+                "id",
+                {"displayDescription": True, "allowFuzzy": False},
+            )
+        _logger.debug(
+            "Scheduled page %s search count=%s results=%s",
+            self.page_1.id,
+            count,
+            [detail["results"].ids for detail in results],
+        )
+        self.assertEqual(count, 0)
+        self.page_1.date_publish = "2026-09-13 12:00:00"
+        with MockRequest(public_website.env, website=public_website):
+            count, results, _fuzzy = public_website._search_with_fuzzy(
+                "pages",
+                "page_1",
+                10,
+                "id",
+                {"displayDescription": True, "allowFuzzy": False},
+            )
+        self.assertEqual(count, 1)
+        self.assertEqual(results[0]["results"].ids, self.page_1.ids)
+
     def setUp(self):
         super().setUp()
         View = self.env["ir.ui.view"]
@@ -416,6 +518,48 @@ class TestPage(common.TransactionCase):
 
 @tagged("-at_install", "post_install")
 class WithContext(HttpCase):
+    def test_scheduled_page_becomes_visible_without_a_write(self):
+        with freeze_time("2026-09-13 12:00:00") as clock:
+            self.page.date_publish = "2026-09-14 12:00:00"
+            self.assertEqual(self.url_open(self.page.url).status_code, 404)
+            clock.move_to("2026-09-14 12:00:00")
+            response = self.url_open(self.page.url)
+            _logger.debug(
+                "Scheduled page after clock advance without a write: status=%s",
+                response.status_code,
+            )
+            self.assertEqual(response.status_code, 200)
+
+    @freeze_time("2026-09-13 12:00:00")
+    def test_scheduled_page_is_hidden_from_http_and_autocomplete(self):
+        self.page.write(
+            {"date_publish": "2026-09-14 12:00:00", "website_indexed": True}
+        )
+        response = self.url_open(self.page.url)
+        _logger.debug("Scheduled page HTTP challenge: status=%s", response.status_code)
+        self.assertEqual(response.status_code, 404)
+        response = self.url_open(
+            "/website/snippet/autocomplete",
+            data=json.dumps(
+                {
+                    "jsonrpc": "2.0",
+                    "method": "call",
+                    "id": 1,
+                    "params": {
+                        "search_type": "pages",
+                        "term": "page_1",
+                        "options": {"displayDescription": True, "allowFuzzy": False},
+                    },
+                }
+            ),
+            headers={"Content-Type": "application/json"},
+        )
+        result = response.json()["result"]
+        _logger.debug("Scheduled page autocomplete HTTP challenge: %s", result)
+        self.assertEqual(result["results_count"], 0)
+        self.page.date_publish = "2026-09-13 12:00:00"
+        self.assertEqual(self.url_open(self.page.url).status_code, 200)
+
     def setUp(self):
         super().setUp()
         Page = self.env["website.page"]

@@ -1,3 +1,4 @@
+import logging
 import random
 from contextlib import contextmanager
 from datetime import datetime, timedelta
@@ -7,6 +8,281 @@ from odoo.tests import HttpCase, common, tagged
 
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.addons.website.models.website_visitor import WebsiteVisitor
+
+_logger = logging.getLogger(__name__)
+
+
+@tagged("-at_install", "post_install")
+class TestVisitorState(common.TransactionCase):
+    def setUp(self):
+        super().setUp()
+        self.visitor = self.env["website.visitor"].create({"access_token": "a" * 32})
+        self.pages = self.env["website.page"].create(
+            [
+                {"name": name, "url": f"/{name}", "type": "qweb", "arch": "<div/>"}
+                for name in ("visitor-first", "visitor-second")
+            ]
+        )
+
+    def _track(self, page, **values):
+        return self.env["website.track"].create(
+            {
+                "visitor_id": self.visitor.id,
+                "page_id": page.id,
+                "url": page.url,
+                **values,
+            }
+        )
+
+    def _upsert(self, **values):
+        return self.visitor._upsert_visitor(
+            self.visitor.access_token,
+            lang_id=self.env.ref("base.lang_en").id,
+            country_code="BE",
+            website_id=self.env.ref("website.default_website").id,
+            timezone="UTC",
+            **values,
+        )
+
+    def test_statistics_follow_track_page_edits(self):
+        track = self._track(self.pages[0])
+        self.assertEqual(self.visitor.page_ids, self.pages[0])
+        track.page_id = self.pages[1]
+        _logger.debug("Track reassigned: pages=%s", self.visitor.page_ids.ids)
+        self.assertEqual(self.visitor.page_ids, self.pages[1])
+
+    def test_partner_merge_preserves_multiple_source_visitors(self):
+        partners = self.env["res.partner"].create(
+            [
+                {"name": "Merge source one"},
+                {"name": "Merge source two"},
+                {"name": "Merge target"},
+            ]
+        )
+        visitors = self.visitor.create(
+            [{"access_token": str(partner.id)} for partner in partners[:2]]
+        )
+        tracks = self.env["website.track"].create(
+            [
+                {"visitor_id": visitor.id, "page_id": page.id, "url": page.url}
+                for visitor, page in zip(visitors, self.pages, strict=True)
+            ]
+        )
+        self.assertFalse(partners[2].visitor_ids)
+        self.env["base.partner.merge.automatic.wizard"]._merge(
+            partners.ids, partners[2]
+        )
+        survivor = partners[2].visitor_ids
+        _logger.debug(
+            "Merged source visitors=%s survivor=%s tracks=%s",
+            visitors.ids,
+            survivor.ids,
+            survivor.website_track_ids.ids,
+        )
+        self.assertEqual(len(survivor), 1)
+        self.assertEqual(survivor.access_token, str(partners[2].id))
+        self.assertEqual(survivor.website_track_ids, tracks.sorted("id", reverse=True))
+        self.assertEqual(survivor.page_ids, self.pages)
+
+    def test_tracking_preserves_reusable_input_values(self):
+        values = {"url": self.pages[0].url, "page_id": self.pages[0].id}
+        expected = dict(values)
+        domain = [("page_id", "=", self.pages[0].id)]
+        self.visitor._add_tracking(domain, values)
+        self.visitor._add_tracking(domain, values)
+        _logger.debug(
+            "Repeated tracking: values=%s tracks=%s",
+            values,
+            self.visitor.website_track_ids.ids,
+        )
+        self.assertEqual(len(self.visitor.website_track_ids), 1)
+        self.assertEqual(values, expected)
+
+    def test_page_search_agrees_with_displayed_pages(self):
+        self._track(self.pages[0], url=False)
+        self._track(self.pages[1])
+        self._track(self.env["website.page"], url="/without-page")
+        self.assertEqual(self.visitor.page_ids, self.pages[1])
+        conditions = [
+            ("in", self.pages[:1].ids, False),
+            ("not in", self.pages[:1].ids, True),
+            ("in", self.pages[1:].ids, True),
+            ("not in", self.pages[1:].ids, False),
+            ("=", False, False),
+            ("!=", False, True),
+            ("in", [False, self.pages[0].id], False),
+            ("not in", [False, self.pages[0].id], True),
+            ("ilike", "visitor-first", False),
+            ("not ilike", "visitor-first", True),
+            ("any", [("id", "=", self.pages[0].id)], False),
+            ("not any", [("id", "=", self.pages[0].id)], True),
+        ]
+        for operator, value, expected in conditions:
+            with self.subTest(operator=operator, value=value):
+                result = self.visitor.search(
+                    [("id", "=", self.visitor.id), ("page_ids", operator, value)]
+                )
+                _logger.debug(
+                    "Page search %s %s -> %s expected=%s",
+                    operator,
+                    value,
+                    result.ids,
+                    expected,
+                )
+                self.assertEqual(bool(result), expected)
+
+    def test_empty_page_search_ignores_url_less_tracks(self):
+        self._track(self.pages[0], url=False)
+        self.assertFalse(self.visitor.page_ids)
+        found = self.visitor.search(
+            [("id", "=", self.visitor.id), ("page_ids", "=", False)]
+        )
+        _logger.debug("Empty page search: result=%s", found.ids)
+        self.assertEqual(found, self.visitor)
+
+    def test_latest_page_breaks_timestamp_ties_by_track_id(self):
+        for pages in (self.pages, self.pages[::-1]):
+            with self.subTest(pages=pages.ids):
+                self.visitor.website_track_ids.unlink()
+                self._track(pages[0], visit_datetime="2026-01-01 12:00:00")
+                newest = self._track(pages[1], visit_datetime="2026-01-01 12:00:00")
+                self._track(pages[0], visit_datetime="2026-01-01 10:00:00")
+                _logger.debug(
+                    "Equal timestamps: latest=%s expected_track=%s page=%s",
+                    self.visitor.last_visited_page_id.id,
+                    newest.id,
+                    pages[1].id,
+                )
+                self.assertEqual(self.visitor.last_visited_page_id, pages[1])
+
+    def test_latest_page_batches_visitors_in_one_query(self):
+        visitors = self.visitor | self.visitor.create(
+            [{"access_token": f"batch-visitor-{index:018d}"} for index in range(9)]
+        )
+        self.env["website.track"].create(
+            [
+                {
+                    "visitor_id": visitor.id,
+                    "page_id": self.pages[0].id,
+                    "url": self.pages[0].url,
+                }
+                for visitor in visitors
+            ]
+        )
+        self.env.flush_all()
+        visitors.invalidate_recordset(["last_visited_page_id"])
+        with self.assertQueryCount(1):
+            pages = visitors.mapped("last_visited_page_id")
+        _logger.debug(
+            "Batched last-page query: visitors=%s pages=%s", visitors.ids, pages.ids
+        )
+        self.assertEqual(pages, self.pages[0])
+
+    def test_statistics_follow_track_url_edits(self):
+        track = self._track(self.pages[0], url=False)
+        self.assertEqual(self.visitor.visitor_page_count, 0)
+        track.url = self.pages[0].url
+        _logger.debug("Track URL populated: count=%s", self.visitor.visitor_page_count)
+        self.assertEqual(self.visitor.visitor_page_count, 1)
+        track.url = False
+        self.assertEqual(self.visitor.visitor_page_count, 0)
+
+    def test_latest_page_follows_timestamp_edits(self):
+        first = self._track(self.pages[0], visit_datetime="2026-01-01 10:00:00")
+        self._track(self.pages[1], visit_datetime="2026-01-01 11:00:00")
+        self.assertEqual(self.visitor.last_visited_page_id, self.pages[1])
+        first.visit_datetime = "2026-01-01 12:00:00"
+        _logger.debug(
+            "Track timestamp changed: latest=%s", self.visitor.last_visited_page_id.id
+        )
+        self.assertEqual(self.visitor.last_visited_page_id, self.pages[0])
+
+    def test_last_visit_flushes_pending_values_and_updates_connection_state(self):
+        self.visitor.last_connection_datetime = datetime.now() - timedelta(hours=9)
+        self.assertFalse(self.visitor.is_connected)
+        self.visitor._update_visitor_last_visit()
+        _logger.debug(
+            "Visit updated: count=%s connected=%s",
+            self.visitor.visit_count,
+            self.visitor.is_connected,
+        )
+        self.assertEqual(self.visitor.visit_count, 2)
+        self.assertTrue(self.visitor.is_connected)
+
+    def test_upsert_refreshes_cached_visitor_and_tracks(self):
+        self.visitor.last_connection_datetime = datetime.now() - timedelta(hours=9)
+        self.env.flush_all()
+        self.assertFalse(self.visitor.is_connected)
+        self.assertEqual(self.visitor.visit_count, 1)
+        self.assertFalse(self.visitor.website_track_ids)
+        self.assertFalse(self.visitor.timezone)
+        self.assertEqual(self.visitor.visitor_page_count, 0)
+        visitor_id, created = self._upsert(
+            force_track_values={"url": self.pages[0].url, "page_id": self.pages[0].id}
+        )
+        _logger.debug(
+            "Visitor upsert id=%s created=%s count=%s tracks=%s",
+            visitor_id,
+            created,
+            self.visitor.visit_count,
+            self.visitor.website_track_ids.ids,
+        )
+        self.assertEqual(visitor_id, self.visitor.id)
+        self.assertFalse(created)
+        self.assertEqual(self.visitor.visit_count, 2)
+        self.assertTrue(self.visitor.is_connected)
+        self.assertEqual(len(self.visitor.website_track_ids), 1)
+        self.assertEqual(self.visitor.visitor_page_count, 1)
+        self.assertEqual(self.visitor.timezone, "UTC")
+
+    def test_upsert_refreshes_cached_partner_visitors(self):
+        partner = self.env["res.partner"].create({"name": "Cached visitor owner"})
+        self.assertFalse(partner.visitor_ids)
+        visitor_id, created = self.visitor._upsert_visitor(
+            partner.id,
+            lang_id=False,
+            country_code=False,
+            website_id=False,
+            timezone=False,
+        )
+        _logger.debug(
+            "Inserted visitor=%s created=%s cached_owner_visitors=%s",
+            visitor_id,
+            created,
+            partner.visitor_ids.ids,
+        )
+        self.assertTrue(created)
+        self.assertEqual(partner.visitor_ids.ids, [visitor_id])
+
+    def test_timezone_update_flushes_pending_value(self):
+        self.visitor.timezone = "Europe/Brussels"
+        self.visitor._update_visitor_timezone("Asia/Tokyo")
+        _logger.debug("Timezone after SQL update: %s", self.visitor.timezone)
+        self.assertEqual(self.visitor.timezone, "Asia/Tokyo")
+
+    def test_missing_connection_date(self):
+        self.visitor.last_connection_datetime = False
+        _logger.debug(
+            "Missing connection timestamp: connected=%s", self.visitor.is_connected
+        )
+        self.assertFalse(self.visitor.is_connected)
+        self.assertFalse(self.visitor.time_since_last_action)
+
+    def test_upsert_accepts_empty_optional_values(self):
+        visitor_id, created = self.visitor._upsert_visitor(
+            "b" * 32,
+            lang_id=False,
+            country_code=False,
+            website_id=False,
+            timezone=False,
+        )
+        visitor = self.visitor.browse(visitor_id)
+        _logger.debug("Visitor created with empty optional values: id=%s", visitor_id)
+        self.assertTrue(created)
+        self.assertFalse(visitor.lang_id)
+        self.assertFalse(visitor.country_id)
+        self.assertFalse(visitor.website_id)
+        self.assertFalse(visitor.timezone)
 
 
 class MockVisitor(common.BaseCase):

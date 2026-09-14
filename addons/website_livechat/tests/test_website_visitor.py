@@ -1,8 +1,40 @@
+import logging
+
 from odoo import Command, fields
 from odoo.exceptions import AccessError
-from odoo.tests import new_test_user, tagged
+from odoo.tests import TransactionCase, new_test_user, tagged
 
+from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.website.tests.test_website_visitor import WebsiteVisitorTestsCommon
+
+_logger = logging.getLogger(__name__)
+
+
+@tagged("-at_install", "post_install")
+class TestVisitorUpsertLivechat(TransactionCase):
+    def test_new_visitor_links_existing_guest_chat(self):
+        guest = self.env["mail.guest"].create({"name": "Visitor guest"})
+        channel = self.env["discuss.channel"].create(
+            {
+                "name": "Existing guest chat",
+                "channel_type": "livechat",
+                "livechat_operator_id": self.env.user.partner_id.id,
+                "channel_member_ids": [Command.create({"guest_id": guest.id})],
+            }
+        )
+        visitor_model = self.env["website.visitor"].with_context(guest=guest)
+        website = self.env.ref("website.default_website")
+        with MockRequest(visitor_model.env, website=website, country_code="BE"):
+            visitor_id, created = visitor_model._upsert_visitor("d" * 32)
+        _logger.debug(
+            "Guest chat link: visitor=%s created=%s channel_visitor=%s",
+            visitor_id,
+            created,
+            channel.livechat_visitor_id.id,
+        )
+        self.assertTrue(created)
+        self.assertEqual(channel.livechat_visitor_id.id, visitor_id)
+        self.assertEqual(channel.country_id.code, "BE")
 
 
 @tagged("website_visitor")

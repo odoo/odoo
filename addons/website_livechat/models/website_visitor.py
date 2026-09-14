@@ -144,11 +144,11 @@ class WebsiteVisitor(models.Model):
         ]
         return super()._merge_visitor(target)
 
-    def _upsert_visitor(self, access_token, force_track_values=None):
-        visitor_id, upsert = super()._upsert_visitor(
-            access_token, force_track_values=force_track_values
+    def _upsert_visitor(self, access_token, force_track_values=None, **visitor_values):
+        visitor_id, created = super()._upsert_visitor(
+            access_token, force_track_values=force_track_values, **visitor_values
         )
-        if upsert == "inserted":
+        if created:
             visitor_sudo = self.sudo().browse(visitor_id)
             if guest := self.env["mail.guest"]._get_guest_from_context():
                 guest_livechats = guest.sudo().channel_ids.filtered(
@@ -156,7 +156,7 @@ class WebsiteVisitor(models.Model):
                 )
                 guest_livechats.livechat_visitor_id = visitor_sudo.id
                 guest_livechats.country_id = visitor_sudo.country_id
-        return visitor_id, upsert
+        return visitor_id, created
 
     def _field_store_repr(self, field_spec):
         if field_spec == "page_visit_history":

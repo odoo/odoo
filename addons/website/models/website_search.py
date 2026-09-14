@@ -1,3 +1,4 @@
+import logging
 import re
 from collections import defaultdict
 
@@ -7,6 +8,8 @@ from odoo.libs.sql import escape_psql
 from odoo.tools import SQL, Query
 
 from odoo.addons.website.tools import similarity_score, text_from_html
+
+_logger = logging.getLogger(__name__)
 
 
 class Website(models.Model):
@@ -118,78 +121,97 @@ class Website(models.Model):
                 }
         return indirect_fields
 
-    def _trigram_enumerate_words(self, search_details, search, limit):
-        def get_similarity_subquery(
-            model, fields, id_column, rel_table="", rel_joinkey=""
-        ):
-            subquery = Query(self.env.cr, model._table, model._table_query)
-            unaccent = self.env.registry.unaccent
-            similarity = SQL(
-                "GREATEST(%(similarities)s) as similarity",
-                similarities=SQL(", ").join(
+    def _get_trigram_similarity_query(
+        self,
+        model,
+        fields,
+        search,
+        id_column,
+        rel_table="",
+        rel_joinkey="",
+        relation_field=None,
+        domain=None,
+    ):
+        subquery = (
+            model._search(domain)
+            if domain is not None
+            else Query(self.env.cr, model._table, model._table_query)
+        )
+        unaccent = self.env.registry.unaccent
+        similarity = SQL(
+            "GREATEST(%(similarities)s) as similarity",
+            similarities=SQL(", ").join(
+                SQL(
+                    "word_similarity(%(search)s, %(field)s)",
+                    search=unaccent(SQL("%s", search)),
+                    field=unaccent(model._field_to_sql(model._table, field, subquery)),
+                )
+                for field in fields
+            ),
+        )
+        where_clauses = []
+        for field_name in fields:
+            field = model._fields[field_name]
+            if field.translate:
+                alias = model._table
+                if field.related and not field.store:
+                    _, field, alias = model._traverse_related_sql(
+                        model._table, field, subquery
+                    )
+                where_clauses.append(
                     SQL(
-                        "word_similarity(%(search)s, %(field)s)",
+                        "(%(search)s <%% %(jsonb_path)s AND %(search)s <%% (%(field)s))",
                         search=unaccent(SQL("%s", search)),
+                        jsonb_path=unaccent(
+                            SQL(
+                                "jsonb_path_query_array(%s, '$.*')::text",
+                                SQL.identifier(alias, field.name),
+                            )
+                        ),
                         field=unaccent(
-                            model._field_to_sql(model._table, field, subquery)
+                            model._field_to_sql(model._table, field_name, subquery)
                         ),
                     )
-                    for field in fields
+                )
+            else:
+                where_clauses.append(
+                    SQL(
+                        "%(search)s <%% %(field)s",
+                        search=unaccent(SQL("%s", search)),
+                        field=unaccent(
+                            model._field_to_sql(model._table, field_name, subquery)
+                        ),
+                    )
+                )
+        subquery.add_where(SQL(" OR ").join(where_clauses))
+        tbl_alias = model._table
+        if rel_table:
+            rel_alias = subquery.get_table_alias(rel_table, rel_joinkey)
+            subquery.add_join(
+                "JOIN",
+                rel_alias,
+                rel_table,
+                SQL(
+                    "%s = %s",
+                    SQL(
+                        "%s",
+                        SQL.identifier(rel_alias, rel_joinkey),
+                        to_flush=relation_field,
+                    ),
+                    SQL.identifier(model._table, "id"),
                 ),
             )
-            where_clauses = []
-            for field_name in fields:
-                field = model._fields[field_name]
-                if field.translate:
-                    alias = model._table
-                    if field.related and not field.store:
-                        _, field, alias = model._traverse_related_sql(
-                            model._table, field, subquery
-                        )
-                    where_clauses.append(
-                        SQL(
-                            "(%(search)s <%% %(jsonb_path)s AND %(search)s <%% (%(field)s))",
-                            search=unaccent(SQL("%s", search)),
-                            jsonb_path=unaccent(
-                                SQL(
-                                    "jsonb_path_query_array(%s, '$.*')::text",
-                                    SQL.identifier(alias, field.name),
-                                )
-                            ),
-                            field=unaccent(
-                                model._field_to_sql(model._table, field_name, subquery)
-                            ),
-                        )
-                    )
-                else:
-                    where_clauses.append(
-                        SQL(
-                            "%(search)s <%% %(field)s",
-                            search=unaccent(SQL("%s", search)),
-                            field=unaccent(
-                                model._field_to_sql(model._table, field_name, subquery)
-                            ),
-                        )
-                    )
-            subquery.add_where(SQL(" OR ").join(where_clauses))
-            tbl_alias = model._table
-            if rel_table:
-                rel_alias = subquery.get_table_alias(rel_table, rel_joinkey)
-                subquery.add_join(
-                    "JOIN",
-                    rel_alias,
-                    rel_table,
-                    SQL(
-                        "%s = %s",
-                        SQL.identifier(rel_alias, rel_joinkey),
-                        SQL.identifier(model._table, "id"),
-                    ),
-                )
-                tbl_alias = rel_alias
-            return subquery.select(
-                SQL("%s as id", SQL.identifier(tbl_alias, id_column)), similarity
-            )
+            tbl_alias = rel_alias
+        return subquery.select(
+            SQL(
+                "%s as id",
+                SQL.identifier(tbl_alias, id_column),
+                to_flush=model._fields.get(id_column) if not rel_table else None,
+            ),
+            similarity,
+        )
 
+    def _trigram_enumerate_words(self, search_details, search, limit):
         match_pattern = r"[\w./-]{%s,}" % min(4, len(search) - 3)
         self.env.cr.execute("SET LOCAL pg_trgm.word_similarity_threshold to 0.3;")
         for search_detail in search_details:
@@ -200,48 +222,79 @@ class Website(models.Model):
             domain = Domain.AND(search_detail["base_domain"])
             direct_fields = set(fields).intersection(model._fields)
             indirect_fields = self._search_get_indirect_fields(fields, model)
-            indirect_fields_info = defaultdict(dict)
-            for name, indirect_field in indirect_fields.items():
-                indirect_fields_info[indirect_field["comodel"]][name] = indirect_field
-            subqueries = [get_similarity_subquery(model, direct_fields, "id")]
-            for comodel in indirect_fields_info:
-                comodel_similarity_fields = set()
+            fields_by_relation = defaultdict(set)
+            for indirect_field in indirect_fields.values():
+                fields_by_relation[indirect_field["direct"]].add(
+                    indirect_field["indirect"]
+                )
+            subqueries = (
+                [self._get_trigram_similarity_query(model, direct_fields, search, "id")]
+                if direct_fields
+                else []
+            )
+            for relation_name, relation_fields in fields_by_relation.items():
+                direct_field = model._fields[relation_name]
+                comodel = model.env[direct_field.comodel_name]
+                relation_domain = None
+                if direct_field.type in ("one2many", "many2many"):
+                    comodel = comodel.with_context(**direct_field.context)
+                    relation_domain = direct_field.get_comodel_domain(model)
                 id_column = rel_table = rel_joinkey = ""
-                for indirect_field_info in indirect_fields_info[comodel].values():
-                    direct_field = model._fields[indirect_field_info["direct"]]
-                    if direct_field.type == "one2many":
-                        comodel_similarity_fields.add(indirect_field_info["indirect"])
-                        id_column = indirect_field_info["cofield"]
-                    elif direct_field.type == "many2many":
-                        comodel_similarity_fields.add(indirect_field_info["indirect"])
-                        id_column = direct_field.column1
-                        rel_table = direct_field.relation
-                        rel_joinkey = direct_field.column2
+                if direct_field.type == "one2many":
+                    id_column = direct_field._description_relation_field
+                elif direct_field.type == "many2many":
+                    id_column = direct_field.column1
+                    rel_table = direct_field.relation
+                    rel_joinkey = direct_field.column2
+                elif direct_field.type == "many2one" and direct_field.store:
+                    id_column = "id"
+                    rel_table = model._table
+                    rel_joinkey = direct_field.name
+                else:
+                    continue
                 subqueries.append(
-                    get_similarity_subquery(
+                    self._get_trigram_similarity_query(
                         comodel,
-                        comodel_similarity_fields,
+                        relation_fields,
+                        search,
                         id_column,
                         rel_table,
                         rel_joinkey,
+                        direct_field,
+                        relation_domain,
                     )
                 )
+            if not subqueries:
+                continue
+            eligible = model._search(domain)
             query = SQL(
                 """
                 SELECT id,
                     MAX(similarity) as _best_similarity
                 FROM (%s) sub
+                WHERE id IN %s
                 GROUP BY id
-                ORDER BY _best_similarity DESC
+                ORDER BY _best_similarity DESC, id
                 LIMIT %s
             """,
                 SQL("\nUNION ALL\n").join(subqueries),
+                eligible.subselect(),
                 limit,
             )
-            self.env.cr.execute(query)
-            ids = {row[0] for row in self.env.cr.fetchall()}
+            ids = {row[0] for row in self.env.execute_query(query)}
+            _logger.debug(
+                "Fuzzy candidates model=%s fields=%s count=%s limit=%s",
+                model_name,
+                fields,
+                len(ids),
+                limit,
+            )
             domain = Domain.AND([domain, Domain([("id", "in", list(ids))])])
-            records = model.search_read(domain, direct_fields, limit=limit)  # noqa: E8507 - one query per searched model
+            records = (
+                model.search_read(domain, direct_fields, limit=limit)  # noqa: E8507 - one query per searched model
+                if direct_fields
+                else []
+            )
             for record in records:
                 for value in record.values():
                     if isinstance(value, str):
@@ -278,7 +331,11 @@ class Website(models.Model):
             )
             domain &= fields_domain
             perf_limit = 1000
-            records = model.search_read(domain, direct_fields, limit=perf_limit)  # noqa: E8507 - one query per searched model
+            records = (
+                model.search_read(domain, direct_fields, limit=perf_limit)  # noqa: E8507 - one query per searched model
+                if direct_fields
+                else []
+            )
             if len(records) == perf_limit:
                 exact_records, _count = model._search_fetch(
                     search_detail, search, 1, None

@@ -1,7 +1,79 @@
-from odoo.tests import tagged
+import logging
+
+from odoo.tests import TransactionCase, tagged
 
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
+
+_logger = logging.getLogger(__name__)
+
+
+@tagged("post_install", "-at_install")
+class TestVisitorProductStatistics(TransactionCase):
+    def setUp(self):
+        super().setUp()
+        self.visitor = self.env["website.visitor"].create({"access_token": "f" * 32})
+        self.products = self.env["product.product"].create(
+            [
+                {"name": "Tracked first"},
+                {"name": "Tracked second"},
+            ]
+        )
+
+    def _track(self, product):
+        return self.env["website.track"].create(
+            {"visitor_id": self.visitor.id, "product_id": product.id}
+        )
+
+    def test_repeated_views_count_distinct_products(self):
+        self._track(self.products[0])
+        self._track(self.products[0])
+        self._track(self.products[1])
+        _logger.debug(
+            "Product statistics: ids=%s distinct=%s views=%s",
+            self.visitor.product_ids.ids,
+            self.visitor.product_count,
+            self.visitor.visitor_product_count,
+        )
+        self.assertEqual(self.visitor.visitor_product_count, 3)
+        self.assertEqual(self.visitor.product_count, 2)
+        self.assertEqual(self.visitor.product_ids, self.products)
+
+    def test_statistics_follow_product_reassignment(self):
+        track = self._track(self.products[0])
+        self.assertEqual(self.visitor.product_ids, self.products[0])
+        track.product_id = self.products[1]
+        _logger.debug("Reassigned product track: ids=%s", self.visitor.product_ids.ids)
+        self.assertEqual(self.visitor.product_ids, self.products[1])
+
+    def test_statistics_follow_allowed_companies(self):
+        company = self.env["res.company"].create({"name": "Visitor company"})
+        self.products[1].company_id = company
+        self._track(self.products[0])
+        self._track(self.products[1])
+        narrow = self.visitor.with_context(allowed_company_ids=[self.env.company.id])
+        broad = self.visitor.with_context(
+            allowed_company_ids=[self.env.company.id, company.id]
+        )
+        self.assertEqual(narrow.product_ids, self.products[0])
+        _logger.debug(
+            "Company product statistics: narrow=%s broad=%s",
+            narrow.product_ids.ids,
+            broad.product_ids.ids,
+        )
+        self.assertEqual(broad.product_ids, self.products)
+        self.assertEqual(narrow.product_ids, self.products[0])
+
+    def test_statistics_follow_product_company_changes(self):
+        company = self.env["res.company"].create({"name": "Other product company"})
+        self._track(self.products[0])
+        visitor = self.visitor.with_context(allowed_company_ids=[self.env.company.id])
+        self.assertEqual(visitor.product_ids, self.products[0])
+        self.products[0].company_id = company
+        _logger.debug(
+            "Product moved to another company: tracked=%s", visitor.product_ids.ids
+        )
+        self.assertFalse(visitor.product_ids)
 
 
 @tagged("post_install", "-at_install")

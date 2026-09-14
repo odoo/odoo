@@ -97,10 +97,13 @@ class WebsitePage(models.Model):
                 website.homepage_url or (page.website_id == website and "/")
             )
 
+    @api.depends("website_published", "date_publish")
+    @api.depends_context("website_id")
     def _compute_is_visible(self):
+        now = fields.Datetime.now()
         for page in self:
             page.is_visible = page.website_published and (
-                not page.date_publish or page.date_publish < fields.Datetime.now()
+                not page.date_publish or page.date_publish <= now
             )
 
     @api.depends("menu_ids")
@@ -267,6 +270,10 @@ class WebsitePage(models.Model):
                 ]
             )
             domain.append([("visibility", "!=", "password")])
+            domain.append(
+                Domain("date_publish", "=", False)
+                | Domain("date_publish", "<=", fields.Datetime.now())
+            )
             if website.is_public_user():
                 domain.append([("visibility", "!=", "connected")])
             domain.append(

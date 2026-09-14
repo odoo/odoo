@@ -15,12 +15,15 @@ class WebsiteVisitor(models.Model):
         compute="_compute_product_statistics",
     )
     product_count = fields.Integer(
-        string="Products Views",
+        string="# Visited Products",
         compute="_compute_product_statistics",
-        help="Total number of product viewed",
+        help="Number of distinct products viewed",
     )
 
-    @api.depends("website_track_ids")
+    @api.depends(
+        "website_track_ids.product_id", "website_track_ids.product_id.company_id"
+    )
+    @api.depends_context("allowed_company_ids", "uid")
     def _compute_product_statistics(self):
         results = self.env["website.track"]._read_group(
             [
@@ -35,21 +38,17 @@ class WebsiteVisitor(models.Model):
                 ),
             ],
             ["visitor_id"],
-            ["product_id:array_agg", "__count"],
+            ["product_id:recordset", "__count"],
         )
         mapped_data = {
-            visitor.id: {"product_count": count, "product_ids": product_ids}
-            for visitor, product_ids, count in results
+            visitor.id: (products, count) for visitor, products, count in results
         }
-
+        no_products = self.env["product.product"]
         for visitor in self:
-            visitor_info = mapped_data.get(
-                visitor.id, {"product_ids": [], "product_count": 0}
-            )
-
-            visitor.product_ids = [(6, 0, visitor_info["product_ids"])]
-            visitor.visitor_product_count = visitor_info["product_count"]
-            visitor.product_count = len(visitor_info["product_ids"])
+            products, view_count = mapped_data.get(visitor.id, (no_products, 0))
+            visitor.product_ids = products
+            visitor.visitor_product_count = view_count
+            visitor.product_count = len(products)
 
     def _add_viewed_product(self, product_id):
         self.check_singleton()

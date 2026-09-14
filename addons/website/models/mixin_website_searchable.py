@@ -50,7 +50,8 @@ class MixinWebsiteSearchable(models.AbstractModel):
         return results, count
 
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
-        results_data = self.read(fetch_fields)[:limit]
+        records = self[:limit]
+        results_data = records.with_prefetch(records.ids).read(fetch_fields)
         for result in results_data:
             result["_fa"] = icon
             result["_mapping"] = mapping

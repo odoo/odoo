@@ -101,8 +101,9 @@ class WebsiteVisitor(models.Model):
     def _merge_visitor(self, target):
         if not target.partner_id:
             raise ValueError("The `target` visitor should be linked to a partner.")
-        self.event_registration_ids.visitor_id = target.id
-        registration_wo_partner = self.event_registration_ids.filtered(
+        registrations = self.event_registration_ids
+        registrations.visitor_id = target.id
+        registration_wo_partner = registrations.filtered(
             lambda registration: not registration.partner_id
         )
         if registration_wo_partner:

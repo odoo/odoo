@@ -5,7 +5,7 @@ from lxml import etree
 from markupsafe import Markup
 
 import odoo.tests
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, new_test_user
 
 from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.website.controllers.main import Website
@@ -16,6 +16,136 @@ _logger = logging.getLogger(__name__)
 
 @odoo.tests.tagged("-at_install", "post_install")
 class TestFuzzy(TransactionCase):
+    def _trigram_words(self, records, fields, term="mariglod", limit=1):
+        detail = {
+            "model": records._name,
+            "search_fields": fields,
+            "base_domain": [[("id", "in", records.ids)]],
+        }
+        words = set(
+            records.env.ref("website.default_website")._trigram_enumerate_words(
+                [detail], term, limit
+            )
+        )
+        _logger.debug(
+            "Trigram fields=%s eligible=%s words=%s", fields, records.ids, words
+        )
+        return words
+
+    def test_trigram_filters_before_candidate_limit(self):
+        eligible = self.env["res.partner"].create({"name": "marigold"})
+        self.env["res.partner"].create({"name": "mariglod"})
+        self.assertIn("marigold", self._trigram_words(eligible, ["name"]))
+
+    def test_trigram_applies_record_rules_before_candidate_limit(self):
+        user = new_test_user(self.env, login="fuzzy_reader", groups="base.group_user")
+        eligible = self.env["res.partner"].create({"name": "marigold"})
+        excluded = self.env["res.partner"].create({"name": "mariglod"})
+        self.env["ir.rule"].create(
+            {
+                "name": "Fuzzy candidate access regression",
+                "model_id": self.env["ir.model"]._get_id("res.partner"),
+                "domain_force": repr([("id", "!=", excluded.id)]),
+            }
+        )
+        records = (eligible | excluded).with_user(user)
+        self.assertIn("marigold", self._trigram_words(records, ["name"]))
+        self.assertIn("mariglod", self._trigram_words(records.sudo(), ["name"]))
+
+    def test_trigram_flushes_pending_search_values(self):
+        eligible = self.env["res.partner"].create({"name": "unrelated"})
+        self.env.flush_all()
+        eligible.name = "marigold"
+        self.assertIn("marigold", self._trigram_words(eligible, ["name"]))
+
+    def test_trigram_indirect_only_one2many(self):
+        parent = self.env["res.partner"].create({"name": "Parent"})
+        self.env["res.partner"].create({"name": "marigold", "parent_id": parent.id})
+        self.assertEqual({"marigold"}, self._trigram_words(parent, ["child_ids.name"]))
+
+    def test_trigram_relation_domain_applies_before_limit(self):
+        parents = self.env["res.partner"].create(
+            [{"name": "Eligible parent"}, {"name": "Excluded child parent"}]
+        )
+        self.env["res.partner"].create(
+            [
+                {"name": "marigold", "parent_id": parents[0].id},
+                {"name": "mariglod", "parent_id": parents[1].id, "active": False},
+            ]
+        )
+        self.assertFalse(parents[1].child_ids)
+        self.assertIn("marigold", self._trigram_words(parents, ["child_ids.name"]))
+
+    def test_trigram_many2one_keeps_archived_target(self):
+        parent = self.env["res.partner"].create({"name": "marigold", "active": False})
+        child = self.env["res.partner"].create(
+            {"name": "Child", "parent_id": parent.id}
+        )
+        self.assertEqual(child.parent_id, parent)
+        self.assertIn("marigold", self._trigram_words(child, ["parent_id.name"]))
+
+    def test_trigram_many2many_respects_active_context(self):
+        tags = self.env["res.partner.tag"].create(
+            [
+                {"name": "marigold"},
+                {"name": "mariglod", "active": False},
+            ]
+        )
+        partners = self.env["res.partner"].create(
+            [
+                {"name": name, "tag_ids": [(6, 0, tag.ids)]}
+                for name, tag in zip(("Visible", "Hidden"), tags, strict=True)
+            ]
+        )
+        self.assertFalse(partners[1].tag_ids)
+        self.assertIn("marigold", self._trigram_words(partners, ["tag_ids.name"]))
+        self.assertIn(
+            "mariglod",
+            self._trigram_words(
+                partners.with_context(active_test=False), ["tag_ids.name"]
+            ),
+        )
+
+    def test_trigram_indirect_only_many2many(self):
+        tag = self.env["res.partner.tag"].create({"name": "marigold"})
+        partner = self.env["res.partner"].create({"name": "Tagged"})
+        partner.tag_ids = tag
+        self.assertEqual({"marigold"}, self._trigram_words(partner, ["tag_ids.name"]))
+
+    def test_basic_indirect_search_uses_only_selected_fields(self):
+        parent = self.env["res.partner"].create({"name": "marathon"})
+        self.env["res.partner"].create({"name": "marigold", "parent_id": parent.id})
+        detail = {
+            "model": "res.partner",
+            "search_fields": ["child_ids.name"],
+            "base_domain": [[("id", "=", parent.id)]],
+        }
+        words = set(
+            self.env.ref("website.default_website")._basic_enumerate_words(
+                [detail], "mariglod", 1
+            )
+        )
+        _logger.debug("Basic indirect-only candidates=%s", words)
+        self.assertEqual(words, {"marigold"})
+
+    def test_trigram_flushes_pending_relation(self):
+        parent = self.env["res.partner"].create({"name": "marigold"})
+        child = self.env["res.partner"].create({"name": "Child"})
+        self.env.flush_all()
+        child.parent_id = parent
+        self.assertIn("marigold", self._trigram_words(child, ["parent_id.name"]))
+
+    def test_trigram_distinct_relations_to_same_model(self):
+        parent = self.env["res.partner"].create({"name": "marigold"})
+        child = self.env["res.partner"].create(
+            {"name": "Child", "parent_id": parent.id}
+        )
+        self.env["res.partner"].create({"name": "unrelated", "parent_id": child.id})
+        self.assertIn(
+            "marigold",
+            self._trigram_words(child, ["name", "parent_id.name", "child_ids.name"]),
+        )
+
     def test_01_fuzzy_names(self):
         fields_per_model = {
             "website.page": ["name", "arch"],
@@ -159,6 +289,28 @@ class TestTextFromHtml(TransactionCase):
 
 @odoo.tests.tagged("-at_install", "post_install")
 class TestAutoComplete(TransactionCase):
+    def test_render_does_not_fetch_undisplayed_records(self):
+        pages = self.env["website.page"].search([], limit=3)
+        self.assertEqual(len(pages), 3)
+        for limit, count in ((1, 1), (0, 0), (None, 3)):
+            with self.subTest(limit=limit):
+                pages.invalidate_recordset(["url"])
+                results = pages._search_render_results(["url"], {}, "icon", limit)
+                cached = [
+                    self.env.cache.contains(page, pages._fields["url"])
+                    for page in pages
+                ]
+                _logger.debug(
+                    "Limited render limit=%s returned=%s cached=%s",
+                    limit,
+                    results,
+                    cached,
+                )
+                self.assertEqual(
+                    [result["id"] for result in results], pages[:count].ids
+                )
+                self.assertEqual(cached, [True] * count + [False] * (3 - count))
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()

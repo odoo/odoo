@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 from odoo import api, fields, models
 from odoo.fields import Domain
 
@@ -88,17 +90,26 @@ class IrAsset(models.Model):
                 super(IrAsset, asset).write(vals)
                 continue
 
+            asset_values = vals
+            if not asset.key:
+                # Copy-on-write needs an identity shared by the generic asset
+                # and its overrides; False also matches unrelated unkeyed assets.
+                super(IrAsset, asset).write(
+                    {"key": vals.get("key") or f"website.asset_{uuid4().hex}"}
+                )
+                asset_values = {**vals, "key": asset.key}
+
             website_specific_asset = asset.search(
                 [("key", "=", asset.key), ("website_id", "=", current_website_id)],
                 limit=1,
             )
             if website_specific_asset:
-                super(IrAsset, website_specific_asset).write(vals)
+                super(IrAsset, website_specific_asset).write(asset_values)
                 continue
 
             copy_vals = {"website_id": current_website_id, "key": asset.key}
             website_specific_asset = asset.copy(copy_vals)
 
-            super(IrAsset, website_specific_asset).write(vals)
+            super(IrAsset, website_specific_asset).write(asset_values)
 
         return True

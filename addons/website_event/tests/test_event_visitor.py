@@ -1,10 +1,60 @@
+import logging
 from datetime import datetime, timedelta
 
 from odoo import fields
-from odoo.tests import tagged
+from odoo.tests import TransactionCase, tagged
 
 from odoo.addons.website.tests.test_website_visitor import WebsiteVisitorTestsCommon
 from odoo.addons.website_event.tests.common import TestEventOnlineCommon
+
+_logger = logging.getLogger(__name__)
+
+
+@tagged("post_install", "-at_install")
+class TestVisitorRegistrationMerge(TransactionCase):
+    def test_merge_assigns_only_unlinked_registration_partners(self):
+        partners = self.env["res.partner"].create(
+            [
+                {"name": "Visitor contact"},
+                {"name": "Existing attendee"},
+            ]
+        )
+        target, source = self.env["website.visitor"].create(
+            [
+                {"access_token": str(partners[0].id)},
+                {"access_token": "e" * 32},
+            ]
+        )
+        event = self.env["event.event"].create(
+            {
+                "name": "Visitor merge event",
+                "date_begin": "2026-10-01 10:00:00",
+                "date_end": "2026-10-01 12:00:00",
+            }
+        )
+        unlinked, linked = self.env["event.registration"].create(
+            [
+                {
+                    "event_id": event.id,
+                    "visitor_id": source.id,
+                    "partner_id": partner_id,
+                    "name": "Attendee",
+                }
+                for partner_id in (False, partners[1].id)
+            ]
+        )
+        source._merge_visitor(target)
+        _logger.debug(
+            "Merged registrations: visitor=%s assigned_partner=%s preserved_partner=%s",
+            target.id,
+            unlinked.partner_id.id,
+            linked.partner_id.id,
+        )
+        self.assertEqual(unlinked.visitor_id, target)
+        self.assertEqual(linked.visitor_id, target)
+        self.assertEqual(unlinked.partner_id, partners[0])
+        self.assertEqual(linked.partner_id, partners[1])
+        self.assertFalse(source.exists())
 
 
 @tagged("website_visitor", "is_query_count")

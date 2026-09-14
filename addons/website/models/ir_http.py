@@ -98,9 +98,14 @@ class IrHttp(models.AbstractModel):
             ("website_id", "=", False),
             ("website_id", "=", website_id),
         ]
-        return {
-            x.url_from: x for x in self.env["website.rewrite"].sudo().search(domain)
-        }
+        # Insert generic rules first so a website-specific rule always wins,
+        # even when the generic rule was created later.
+        rewrites = (
+            self.env["website.rewrite"]
+            .sudo()
+            .search(domain, order="website_id DESC, id")
+        )
+        return {rewrite.url_from: rewrite for rewrite in rewrites}
 
     def _generate_routing_rules(self, modules):
         if not request:
@@ -341,19 +346,19 @@ class IrHttp(models.AbstractModel):
     def _serve_redirect(cls):
         req_page = request.httprequest.path
         req_page_with_qs = request.httprequest.environ["REQUEST_URI"]
+        Rewrite = request.env["website.rewrite"].sudo()
         domain = Domain("redirect_type", "in", ("301", "302")) & Domain(
             "url_from",
             "in",
-            [req_page_with_qs, req_page.rstrip("/"), req_page + "/"],
+            Rewrite._get_redirect_source_urls(req_page, req_page_with_qs),
         )
-        Rewrite = request.env["website.rewrite"].sudo()
         return Rewrite.search(
             domain & Domain("website_id", "=", request.website.id),
-            order="url_from DESC",
+            order="url_from DESC, id",
             limit=1,
         ) or Rewrite.search(
             domain & Domain("website_id", "=", False),
-            order="url_from DESC",
+            order="url_from DESC, id",
             limit=1,
         )
 

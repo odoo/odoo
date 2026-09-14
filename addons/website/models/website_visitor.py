@@ -1,4 +1,6 @@
 import hashlib
+import logging
+from collections.abc import Collection
 from datetime import datetime, timedelta
 
 from odoo import api, fields, models
@@ -11,11 +13,13 @@ from odoo.tools.misc import _format_time_ago
 
 from odoo.addons.base.models.res_partner import _selection_timezones
 
+_logger = logging.getLogger(__name__)
+
 
 class WebsiteTrack(models.Model):
     _name = "website.track"
     _description = "Visited Pages"
-    _order = "visit_datetime DESC"
+    _order = "visit_datetime DESC, id DESC"
     _log_access = False
 
     visitor_id = fields.Many2one(
@@ -196,7 +200,7 @@ class WebsiteVisitor(models.Model):
             visitor.email = partner.email_normalized
             visitor.mobile = partner._phone_get_number().number if partner else False
 
-    @api.depends("website_track_ids")
+    @api.depends("website_track_ids.page_id", "website_track_ids.url")
     def _compute_page_statistics(self):
         results = self.env["website.track"]._read_group(
             [("visitor_id", "in", self.ids), ("url", "!=", False)],
@@ -225,28 +229,52 @@ class WebsiteVisitor(models.Model):
             visitor.page_count = visitor_info["page_count"]
 
     def _search_page_ids(self, operator, value):
-        return [("website_track_ids.page_id", operator, value)]
-
-    @api.depends("website_track_ids.page_id")
-    def _compute_last_visited_page_id(self):
-        results = self.env["website.track"]._read_group(
-            [("visitor_id", "in", self.ids), ("page_id", "!=", False)],
-            ["visitor_id", "page_id"],
-            order="visit_datetime:max",
+        negative = operator in Domain.NEGATIVE_OPERATORS
+        operator = Domain.NEGATIVE_OPERATORS.get(operator, operator)
+        tracked_pages = Domain("url", "!=", False) & Domain("page_id", "!=", False)
+        result = Domain(
+            "website_track_ids",
+            "any",
+            tracked_pages & Domain("page_id", operator, value),
         )
-        mapped_data = {visitor.id: page.id for visitor, page in results}
+        if (operator == "=" and value is False) or (
+            operator == "in" and isinstance(value, Collection) and False in value
+        ):
+            result |= Domain("website_track_ids", "not any", tracked_pages)
+        return ~result if negative else result
+
+    @api.depends("website_track_ids.page_id", "website_track_ids.visit_datetime")
+    def _compute_last_visited_page_id(self):
+        tracks = self.env["website.track"]
+        query = tracks._search(
+            [("visitor_id", "in", self.ids), ("page_id", "!=", False)]
+        )
+        visitor_id, page_id, visited_at, track_id = (
+            tracks._field_to_sql(tracks._table, name, query)
+            for name in ("visitor_id", "page_id", "visit_datetime", "id")
+        )
+        query.order = SQL("%s, %s DESC, %s DESC", visitor_id, visited_at, track_id)
+        mapped_data = dict(
+            self.env.execute_query(
+                query.select(
+                    SQL("DISTINCT ON (%s) %s, %s", visitor_id, visitor_id, page_id)
+                )
+            )
+        )
         for visitor in self:
             visitor.last_visited_page_id = mapped_data.get(visitor.id, False)
 
     @api.depends("last_connection_datetime")
     def _compute_time_statistics(self):
+        now = datetime.now()
         for visitor in self:
-            visitor.time_since_last_action = _format_time_ago(
-                self.env, (datetime.now() - visitor.last_connection_datetime)
-            )
-            visitor.is_connected = (
-                datetime.now() - visitor.last_connection_datetime
-            ) < timedelta(minutes=5)
+            if not visitor.last_connection_datetime:
+                visitor.time_since_last_action = False
+                visitor.is_connected = False
+                continue
+            elapsed = now - visitor.last_connection_datetime
+            visitor.time_since_last_action = _format_time_ago(self.env, elapsed)
+            visitor.is_connected = elapsed < timedelta(minutes=5)
 
     def _check_for_message_composer(self):
         return bool(self.partner_id and self.partner_id.email)
@@ -291,15 +319,19 @@ class WebsiteVisitor(models.Model):
         website_id=None,
         timezone=None,
     ):
+        updated_fields = ["last_connection_datetime", "visit_count", "timezone"]
+        self.flush_model(["access_token", *updated_fields])
         create_values = {
             "access_token": str(access_token),
-            "lang_id": request.lang.id if lang_id is None else lang_id,
+            "lang_id": (request.lang.id if lang_id is None else lang_id) or None,
             "country_code": (
                 request.geoip.get("country_code")
                 if country_code is None
                 else country_code
-            ),
-            "website_id": request.website.id if website_id is None else website_id,
+            )
+            or None,
+            "website_id": (request.website.id if website_id is None else website_id)
+            or None,
             "timezone": (self._get_visitor_timezone() if timezone is None else timezone)
             or None,
             "write_uid": self.env.uid,
@@ -349,6 +381,21 @@ class WebsiteVisitor(models.Model):
             )
 
         [result] = self.env.execute_query(query)
+        visitor = self.browse(result[0])
+        if force_track_values:
+            updated_fields.append("website_track_ids")
+        visitor.invalidate_recordset(updated_fields)
+        visitor.modified(updated_fields)
+        if result[1] and create_values["partner_id"]:
+            partner = self.env["res.partner"].browse(int(create_values["partner_id"]))
+            partner.invalidate_recordset(["visitor_ids"])
+            partner.modified(["visitor_ids"])
+        _logger.debug(
+            "Visitor upsert id=%s created=%s tracked=%s",
+            result[0],
+            result[1],
+            bool(force_track_values),
+        )
         return result
 
     def _get_visitor_from_request(self, force_create=False, force_track_values=None):
@@ -387,13 +434,15 @@ class WebsiteVisitor(models.Model):
         )
 
     def _add_tracking(self, domain, website_track_values):
+        self.check_singleton()
         domain = Domain.AND([domain, Domain("visitor_id", "=", self.id)])
         last_view = self.env["website.track"].sudo().search(domain, limit=1)
         if not last_view or last_view.visit_datetime < datetime.now() - timedelta(
             minutes=30
         ):
-            website_track_values["visitor_id"] = self.id
-            self.env["website.track"].create(website_track_values)
+            self.env["website.track"].create(
+                {**website_track_values, "visitor_id": self.id}
+            )
         self._update_visitor_last_visit()
 
     def _merge_visitor(self, target):
@@ -425,6 +474,8 @@ class WebsiteVisitor(models.Model):
         )
 
     def _update_visitor_timezone(self, timezone):
+        self.check_singleton()
+        self.flush_recordset(["timezone"])
         query = """
             UPDATE website_visitor
             SET timezone = %s
@@ -435,8 +486,12 @@ class WebsiteVisitor(models.Model):
         """
         self.env.cr.execute(query, (timezone, self.id))
         self.invalidate_recordset(["timezone"])
+        self.modified(["timezone"])
 
     def _update_visitor_last_visit(self):
+        self.check_singleton()
+        updated_fields = ["visit_count", "last_connection_datetime"]
+        self.flush_recordset(updated_fields)
         query = """
             UPDATE website_visitor
                SET visit_count = CASE
@@ -451,7 +506,9 @@ class WebsiteVisitor(models.Model):
              )
         """
         self.env.cr.execute(query, (self.id,), log_exceptions=False)
-        self.invalidate_recordset(["visit_count", "last_connection_datetime"])
+        self.invalidate_recordset(updated_fields)
+        self.modified(updated_fields)
+        _logger.debug("Visitor last visit refreshed id=%s", self.id)
 
     def _get_visitor_timezone(self):
         tz = request.cookies.get("tz") if request else None

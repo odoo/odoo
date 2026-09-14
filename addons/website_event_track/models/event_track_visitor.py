@@ -33,7 +33,7 @@ class EventTrackVisitor(models.Model):
         help="As key track cannot be un-favorited, this field store the partner choice to remove the reminder for key tracks.",
     )
 
-    @api.depends("visitor_id")
+    @api.depends("visitor_id.partner_id")
     def _compute_partner_id(self):
         for track_visitor in self:
             if track_visitor.visitor_id.partner_id and not track_visitor.partner_id:

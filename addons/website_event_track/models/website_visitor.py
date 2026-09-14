@@ -61,9 +61,4 @@ class WebsiteVisitor(models.Model):
 
     def _merge_visitor(self, target):
         self.event_track_visitor_ids.visitor_id = target.id
-        track_visitor_wo_partner = self.event_track_visitor_ids.filtered(
-            lambda track_visitor: not track_visitor.partner_id
-        )
-        if track_visitor_wo_partner:
-            track_visitor_wo_partner.partner_id = target.partner_id
         return super()._merge_visitor(target)

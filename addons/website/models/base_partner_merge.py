@@ -1,4 +1,8 @@
+import logging
+
 from odoo import api, models
+
+_logger = logging.getLogger(__name__)
 
 
 class BasePartnerMergeAutomaticWizard(models.TransientModel):
@@ -6,19 +10,18 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
 
     @api.model
     def _update_foreign_keys(self, src_partners, dst_partner):
-        dst_visitor = dst_partner.visitor_ids and dst_partner.visitor_ids[0]
-        if dst_visitor:
-            for visitor in src_partners.visitor_ids:
-                visitor._merge_visitor(dst_visitor)
+        visitors = dst_partner.visitor_ids | src_partners.visitor_ids
+        dst_visitor = visitors[:1]
+        for visitor in visitors[1:]:
+            visitor._merge_visitor(dst_visitor)
 
         super()._update_foreign_keys(src_partners, dst_partner)
 
-        self.env.cr.execute(
-            """
-            UPDATE website_visitor
-               SET access_token = partner_id::text
-             WHERE partner_id::text != access_token
-               AND partner_id = %s;
-        """,
-            (dst_partner.id,),
-        )
+        if dst_visitor:
+            dst_visitor.access_token = str(dst_partner.id)
+            _logger.debug(
+                "Partner merge destination=%s visitor=%s merged_visitors=%s",
+                dst_partner.id,
+                dst_visitor.id,
+                len(visitors),
+            )

@@ -1,10 +1,13 @@
 import logging
 import re
+from urllib.parse import parse_qsl, urljoin, urlsplit
 
 import werkzeug
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+
+from odoo.addons.portal.controllers.portal import _get_url_with_params
 
 _logger = logging.getLogger(__name__)
 
@@ -38,25 +41,27 @@ class WebsiteRoute(models.Model):
         return result
 
     def _refresh(self):
-        _logger.debug("Refreshing website.route")
         ir_http = self.env["ir.http"]
-        tocreate = []
-        paths = {rec.path: rec for rec in self.search([])}
-        for url, endpoint in ir_http._generate_routing_rules(self.pool.loaded_modules):
-            if "GET" in (endpoint.routing.get("methods") or ["GET"]):
-                if paths.get(url):
-                    paths.pop(url)
-                else:
-                    tocreate.append({"path": url})
-
-        if tocreate:
-            _logger.info("Add %d website.route", len(tocreate))
-            self.create(tocreate)
-
-        if paths:
-            find = self.search([("path", "in", list(paths.keys()))])
-            _logger.info("Delete %d website.route", len(find))
-            find.unlink()
+        routes = self.search([])
+        paths = {
+            url
+            for url, endpoint in ir_http._generate_routing_rules(
+                self.pool.loaded_modules
+            )
+            if "GET" in (endpoint.routing.get("methods") or ["GET"])
+        }
+        missing_paths = paths.difference(routes.mapped("path"))
+        obsolete_routes = routes.filtered(lambda route: route.path not in paths)
+        _logger.debug(
+            "Refreshing website.route: existing=%s current=%s new=%s obsolete=%s",
+            len(routes),
+            len(paths),
+            len(missing_paths),
+            len(obsolete_routes),
+        )
+        if missing_paths:
+            self.create([{"path": path} for path in sorted(missing_paths)])
+        obsolete_routes.unlink()
 
 
 class WebsiteRewrite(models.Model):
@@ -114,7 +119,6 @@ class WebsiteRewrite(models.Model):
                     raise ValidationError(
                         _("base URL of 'URL to' should not be same as 'URL from'.")
                     )
-                rewrite._check_no_redirect_cycle()
 
             if rewrite.redirect_type == "308":
                 if not rewrite.url_to.startswith("/"):
@@ -164,30 +168,132 @@ class WebsiteRewrite(models.Model):
                 except ValueError as e:
                     raise ValidationError(_('"URL to" is invalid: %s', e)) from e
 
+    @staticmethod
+    def _get_redirect_source_urls(path, full_path):
+        """Source spellings accepted by the HTTP fallback redirect resolver."""
+        return (full_path, path.rstrip("/"), path + "/")
+
+    @api.constrains("url_to", "url_from", "redirect_type", "active", "website_id")
     def _check_no_redirect_cycle(self):
+        self._check_redirect_cycles()
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_redirect_cycle(self):
+        self._check_redirect_cycles(excluded_ids=self.ids)
+
+    def _check_redirect_cycles(self, excluded_ids=()):
+        # Check the resulting configuration, including chains unmasked by an
+        # override being archived, renamed, moved to another site, or deleted.
+        redirects = self.search(
+            [("active", "=", True), ("id", "not in", excluded_ids)], order="id"
+        )
+        fallbacks_by_website = {}
+        routing_by_website = {}
+        for redirect in redirects:
+            website_id = redirect.website_id.id
+            if redirect.redirect_type in ("301", "302"):
+                if (
+                    not redirect.url_from
+                    or not redirect.url_to
+                    or redirect.url_from.startswith("#")
+                    or redirect.url_to.startswith("#")
+                    or redirect.url_from.split("#")[0] == redirect.url_to.split("#")[0]
+                ):
+                    # The structural constraint owns these diagnostics.
+                    continue
+                fallbacks_by_website.setdefault(website_id, {}).setdefault(
+                    redirect.url_from, redirect
+                )
+            elif redirect.redirect_type in ("308", "404"):
+                routing_by_website.setdefault(website_id, {})[redirect.url_from] = (
+                    redirect
+                )
+        if not fallbacks_by_website:
+            return
+        website_ids = self.env["website"].search([]).ids
+        generic_fallbacks = fallbacks_by_website.get(False, {})
+        generic_routing = routing_by_website.get(False, {})
+        _logger.debug(
+            "Checking redirect configuration: candidates=%s websites=%s excluded=%s",
+            len(redirects),
+            len(website_ids),
+            len(excluded_ids),
+        )
+        for website_id in website_ids:
+            specific_fallbacks = fallbacks_by_website.get(website_id, {})
+            routing = generic_routing | routing_by_website.get(website_id, {})
+            # A 308 publishes its controller at the destination. A 301/302
+            # fallback there does not redirect the newly published controller.
+            controller_paths = {
+                redirect.url_to
+                for redirect in routing.values()
+                if redirect.redirect_type == "308"
+            }
+            checked_urls = set()
+            for redirect in (generic_fallbacks | specific_fallbacks).values():
+                redirect._check_redirect_chain(
+                    generic_fallbacks,
+                    specific_fallbacks,
+                    controller_paths,
+                    website_id,
+                    checked_urls,
+                )
+
+    def _check_redirect_chain(
+        self,
+        generic_fallbacks,
+        specific_fallbacks,
+        controller_paths,
+        website_id,
+        checked_urls,
+    ):
         self.check_singleton()
-        seen = {self.url_from.split("#")[0]}
-        current_url = self.url_to.split("#")[0]
-        max_depth = self.search_count([]) + 1
-        for _i in range(max_depth):
+        seen = set()
+        current_url = self.url_from or ""
+        while current_url:
+            url = urlsplit(current_url)
+            if url.scheme or url.netloc or url.path in controller_paths:
+                break
+            current_url = url._replace(fragment="").geturl()
+            if current_url in checked_urls:
+                break
+            sources = sorted(
+                self._get_redirect_source_urls(url.path, current_url), reverse=True
+            )
+            redirect = next(
+                (
+                    mapping[source]
+                    for mapping in (specific_fallbacks, generic_fallbacks)
+                    for source in sources
+                    if source in mapping
+                ),
+                None,
+            )
+            if not redirect:
+                break
+            target = redirect.url_to or ""
+            if target.split("#")[0] == redirect.url_from.split("#")[0]:
+                # Structural validation owns invalid/self-referencing URLs.
+                break
             if current_url in seen:
+                _logger.debug(
+                    "Redirect cycle: website=%s start=%s repeated=%s hops=%s",
+                    website_id,
+                    self.id,
+                    redirect.id,
+                    len(seen),
+                )
                 raise ValidationError(
                     _("This redirect creates a cycle with another active redirect.")
                 )
             seen.add(current_url)
-            next_rewrite = self.search(  # noqa: E8507 - walks the redirect chain one hop at a time
-                [
-                    ("id", "!=", self.id),
-                    ("active", "=", True),
-                    ("redirect_type", "in", ("301", "302", "308")),
-                    ("website_id", "in", (False, self.website_id.id)),
-                    ("url_from", "=", current_url),
-                ],
-                limit=1,
+            params = dict(
+                werkzeug.datastructures.MultiDict(
+                    parse_qsl(url.query, keep_blank_values=True)
+                )
             )
-            if not next_rewrite:
-                return
-            current_url = next_rewrite.url_to.split("#")[0]
+            current_url = urljoin(current_url, _get_url_with_params(target, params))
+        checked_urls.update(seen)
 
     @api.depends("redirect_type")
     def _compute_display_name(self):
