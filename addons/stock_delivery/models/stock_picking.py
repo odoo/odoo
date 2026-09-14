@@ -112,6 +112,7 @@ class StockPicking(models.Model):
             else:
                 picking.is_return_picking = False
 
+    @api.depends("carrier_id")
     def _compute_return_label_ids(self):
         with_carrier = self.filtered("carrier_id")
         labels_by_picking = {}

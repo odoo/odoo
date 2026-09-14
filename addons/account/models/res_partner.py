@@ -504,6 +504,11 @@ class ResPartner(models.Model):
             partner.currency_id = currency
 
     def _aggregate_by_partner_hierarchy(self, comodel, domain, aggregate):
+        self_ids = set(self._ids)
+        # a partner is readable by users who may not read what hangs off it; a
+        # statistic over records they cannot see is 0, not an AccessError
+        if not self.env[comodel].has_access("read"):
+            return dict.fromkeys(self_ids, 0)
         all_partners = self.with_context(active_test=False).search_fetch(
             [("id", "child_of", self.ids)],
             ["parent_id"],
@@ -513,7 +518,6 @@ class ResPartner(models.Model):
             groupby=["partner_id"],
             aggregates=[aggregate],
         )
-        self_ids = set(self._ids)
         result = dict.fromkeys(self_ids, 0)
         for partner, value in groups:
             while partner:

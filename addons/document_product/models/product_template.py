@@ -6,6 +6,7 @@ class ProductTemplate(models.Model):
     _name = "product.template"
     _inherit = ["product.template", "mixin.documents.product"]
 
+    @api.depends("product_variant_ids")
     def _compute_product_document_count(self):
         template_counts = {}
         variant_counts = {}

@@ -21,6 +21,14 @@ class ResPartner(models.Model):
 
     @api.depends("sale_line_ids")
     def _compute_customer_on_time_rate(self):
+        if not (
+            self.env["sale.order.line"].has_access("read")
+            and self.env["stock.move"].has_access("read")
+        ):
+            # a partner is readable by users who may not read its orders or
+            # moves; the rate over records they cannot see is -1, not an error
+            self.customer_on_time_rate = -1
+            return
         date_order_days_delta = int(
             self.env["ir.config_parameter"]
             .sudo()

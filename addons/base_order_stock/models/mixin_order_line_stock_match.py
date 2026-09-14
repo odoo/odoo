@@ -78,11 +78,15 @@ class MixinOrderLineStockMatch(models.AbstractModel):
     transferred_qty = fields.Float(compute="_compute_side_quantities")
     ordered_qty = fields.Float(compute="_compute_side_quantities")
 
+    @api.depends("line_qty", "move_id", "order_id")
     def _compute_side_quantities(self):
         for line in self:
             line.transferred_qty = line.line_qty if line.move_id else False
             line.ordered_qty = line.line_qty if line.order_id else False
 
+    @api.depends(
+        "order_id.display_name", "picking_id.display_name", "move_id.display_name"
+    )
     def _compute_reference(self):
         for line in self:
             line.reference = (
@@ -91,6 +95,9 @@ class MixinOrderLineStockMatch(models.AbstractModel):
                 or line.move_id.display_name
             )
 
+    @api.depends(
+        "product_id.display_name", "move_id.description_picking", "order_line_id.name"
+    )
     def _compute_display_name(self):
         for line in self:
             line.display_name = (
@@ -99,10 +106,12 @@ class MixinOrderLineStockMatch(models.AbstractModel):
                 or line.order_line_id.name
             )
 
+    @api.depends("move_id.move_line_ids.lot_id")
     def _compute_lot_ids(self):
         for line in self:
             line.lot_ids = line.move_id.move_line_ids.lot_id
 
+    @api.depends("product_id", "line_uom_id", "line_qty", "product_uom_id")
     def _compute_product_uom_qty(self):
         for line in self:
             if line.product_id:

@@ -171,23 +171,9 @@ class ResPartner(models.Model):
         ]
 
     def _compute_pos_order_count(self):
-        all_partners = self.with_context(active_test=False).search_fetch(
-            [("id", "child_of", self.ids)],
-            ["parent_id"],
+        self._compute_order_count(
+            "pos.order", "pos_order_count", "point_of_sale.group_pos_user"
         )
-        pos_order_data = self.env["pos.order"]._read_group(
-            domain=[("partner_id", "in", all_partners.ids)],
-            groupby=["partner_id"],
-            aggregates=["__count"],
-        )
-        self_ids = set(self._ids)
-
-        self.pos_order_count = 0
-        for partner, count in pos_order_data:
-            while partner:
-                if partner.id in self_ids:
-                    partner.pos_order_count += count
-                partner = partner.parent_id
 
     @api.depends("email", "child_ids.type", "child_ids.email")
     def _compute_invoice_emails(self):

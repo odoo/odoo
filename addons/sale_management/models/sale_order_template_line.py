@@ -97,6 +97,12 @@ class SaleOrderTemplateLine(models.Model):
         for option in self:
             option.product_uom_id = option.product_id.uom_id
 
+    @api.depends(
+        "display_type",
+        "sequence",
+        "sale_order_template_id.sale_order_template_line_ids.display_type",
+        "sale_order_template_id.sale_order_template_line_ids.sequence",
+    )
     def _compute_parent_id(self):
         option_lines = set(self)
         for template, lines in self.grouped("sale_order_template_id").items():

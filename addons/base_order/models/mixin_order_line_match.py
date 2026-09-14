@@ -88,6 +88,7 @@ class MixinOrderLineMatch(models.AbstractModel):
         compute="_compute_amount_untaxed_fields",
     )
 
+    @api.depends("line_amount_taxexc", "account_move_id", "order_id")
     def _compute_amount_untaxed_fields(self):
         for line in self:
             line.invoiced_amount_taxexc = (
@@ -97,12 +98,14 @@ class MixinOrderLineMatch(models.AbstractModel):
                 line.line_amount_taxexc if line.order_id else False
             )
 
+    @api.depends("order_id.display_name", "account_move_id.display_name")
     def _compute_reference(self):
         for line in self:
             line.reference = (
                 line.order_id.display_name or line.account_move_id.display_name
             )
 
+    @api.depends("product_id.display_name", "aml_id.name", "order_line_id.name")
     def _compute_display_name(self):
         for line in self:
             line.display_name = (
@@ -111,6 +114,7 @@ class MixinOrderLineMatch(models.AbstractModel):
                 or line.order_line_id.name
             )
 
+    @api.depends("product_id", "line_uom_id", "line_qty", "product_uom_id")
     def _compute_product_uom_qty(self):
         for line in self:
             if line.product_id:

@@ -93,9 +93,11 @@ class TestSessionInfo(common.HttpCase):
             "allowed_companies": expected_allowed_companies,
             "disallowed_ancestor_companies": expected_disallowed_ancestor_companies,
         }
+        # session_info()["groups"] is an extension point: an addon's ir.http adds
+        # the groups its client reads at boot. web owns one key of it.
         self.assertEqual(
-            result["groups"],
-            {"base.group_allow_export": self.user.has_group("base.group_allow_export")},
+            result["groups"]["base.group_allow_export"],
+            self.user.has_group("base.group_allow_export"),
         )
         self.assertEqual(
             result["user_companies"],
