@@ -1,6 +1,6 @@
 {
     "name": "Greece - myDATA",
-    "version": "19.0.2.0.0",
+    "version": "19.0.2.1.0",
     "category": "Accounting/Localizations",
     "summary": "Connect to myDATA API implementation for Greece",
     "description": """
@@ -11,6 +11,7 @@
     "author": "Odoo",
     "license": "LGPL-3",
     "depends": [
+        "credential",
         "l10n_gr",
         "exchange",
     ],

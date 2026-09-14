@@ -11,8 +11,6 @@ DELETE FROM certificate_certificate
 -- clear KSeF Credentials
 UPDATE res_company
    SET l10n_pl_edi_certificate = NULL,
-       l10n_pl_edi_access_token = NULL,
-       l10n_pl_edi_refresh_token = NULL,
        l10n_pl_edi_session_id = NULL
 ;
 

@@ -16,6 +16,11 @@ from odoo.addons.l10n_hu_edi.models.l10n_hu_edi_connection import (
 
 class ResCompany(models.Model):
     _inherit = "res.company"
+    _CREDENTIAL_FIELDS = {
+        "l10n_hu_edi_password": "l10n_hu_edi_password",
+        "l10n_hu_edi_signature_key": "l10n_hu_edi_signature_key",
+        "l10n_hu_edi_replacement_key": "l10n_hu_edi_replacement_key",
+    }
 
     l10n_hu_group_vat = fields.Char(
         related="partner_id.l10n_hu_group_vat",
@@ -48,14 +53,20 @@ class ResCompany(models.Model):
     )
     l10n_hu_edi_password = fields.Char(
         string="NAV Password",
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         groups="base.group_system",
     )
     l10n_hu_edi_signature_key = fields.Char(
         string="NAV Signature Key",
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         groups="base.group_system",
     )
     l10n_hu_edi_replacement_key = fields.Char(
         string="NAV Replacement Key",
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         groups="base.group_system",
     )
     l10n_hu_edi_last_transaction_recovery = fields.Datetime(

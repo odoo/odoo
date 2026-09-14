@@ -1,6 +1,6 @@
 {
     "name": "Serbia - eFaktura E-invoicing",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Accounting/Localizations/EDI",
     "summary": "E-Invoice implementation for Serbia",
     "description": """
@@ -9,6 +9,7 @@ eFaktura E-invoice implementation for Serbia
     "author": "Odoo",
     "license": "LGPL-3",
     "depends": [
+        "credential",
         "account_edi_ubl_cii",
         "l10n_rs",
     ],

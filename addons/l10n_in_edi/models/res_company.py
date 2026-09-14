@@ -9,6 +9,10 @@ from odoo.libs.datetime import timezone
 
 class ResCompany(models.Model):
     _inherit = "res.company"
+    _CREDENTIAL_FIELDS = {
+        "l10n_in_edi_password": "l10n_in_edi_password",
+        "l10n_in_edi_token": "l10n_in_edi_token",
+    }
 
     # E-Invoice fields
     l10n_in_edi_feature = fields.Boolean(string="Indian E-Invoicing")
@@ -18,10 +22,14 @@ class ResCompany(models.Model):
     )
     l10n_in_edi_password = fields.Char(
         string="E-invoice (IN) Password",
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         groups="base.group_system",
     )
     l10n_in_edi_token = fields.Char(
         string="E-invoice (IN) Token",
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         groups="base.group_system",
     )
     l10n_in_edi_token_validity = fields.Datetime(

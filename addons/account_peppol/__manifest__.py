@@ -1,6 +1,6 @@
 {
     "name": "Peppol",
-    "version": "1.2",
+    "version": "1.3",
     "category": "Accounting/Accounting",
     "summary": "This module is used to send/receive documents with PEPPOL",
     "description": """
@@ -10,6 +10,7 @@
     "author": "Odoo S.A.",
     "license": "LGPL-3",
     "depends": [
+        "credential",
         "account_edi_proxy_client",
         "account_edi_ubl_cii",
     ],

@@ -8,6 +8,9 @@ from odoo.addons.sms_twilio.tools.sms_api import SmsApiTwilio
 
 class ResCompany(models.Model):
     _inherit = "res.company"
+    _CREDENTIAL_FIELDS = {
+        "sms_twilio_auth_token": "sms_twilio_auth_token",
+    }
 
     sms_provider = fields.Selection(
         selection=[
@@ -23,6 +26,8 @@ class ResCompany(models.Model):
     )
     sms_twilio_auth_token = fields.Char(
         string="Auth Token",
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         groups="base.group_system",
     )
     sms_twilio_number_ids = fields.One2many(

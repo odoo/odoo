@@ -880,8 +880,10 @@ class AccountMove(models.Model):
 
     @api.model
     def _cron_l10n_pl_edi_download_bills(self):
-        for company in self.env["res.company"].search(
-            [("l10n_pl_edi_access_token", "!=", False)]
+        for company in (
+            self.env["res.company"]
+            .search([("company_credential_id", "!=", False)])
+            .filtered("l10n_pl_edi_access_token")
         ):
             blocking_error = self.with_company(
                 company

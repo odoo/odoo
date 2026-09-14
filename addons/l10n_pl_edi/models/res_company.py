@@ -7,6 +7,10 @@ _logger = logging.getLogger(__name__)
 
 class ResCompany(models.Model):
     _inherit = "res.company"
+    _CREDENTIAL_FIELDS = {
+        "l10n_pl_edi_access_token": "l10n_pl_edi_access_token",
+        "l10n_pl_edi_refresh_token": "l10n_pl_edi_refresh_token",
+    }
 
     l10n_pl_edi_register = fields.Boolean(
         string="KSeF Integration Enabled",
@@ -21,13 +25,15 @@ class ResCompany(models.Model):
     )
     l10n_pl_edi_access_token = fields.Char(
         string="KSeF Token",
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         readonly=True,
         groups="base.group_system",
     )
     l10n_pl_edi_refresh_token = fields.Char(
         string="KSeF Token Expiration",
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         readonly=True,
         groups="base.group_system",
     )

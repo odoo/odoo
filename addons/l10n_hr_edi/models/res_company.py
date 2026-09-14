@@ -20,6 +20,9 @@ _logger = logging.getLogger(__name__)
 
 class ResCompany(models.Model):
     _inherit = "res.company"
+    _CREDENTIAL_FIELDS = {
+        "l10n_hr_mer_password": "l10n_hr_mer_password",
+    }
 
     l10n_hr_mer_username = fields.Char(
         string="MojEracun username",
@@ -27,6 +30,8 @@ class ResCompany(models.Model):
     )
     l10n_hr_mer_password = fields.Char(
         string="MojEracun password",
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         groups="account.group_account_manager",
     )
     l10n_hr_mer_company_ident = fields.Char(

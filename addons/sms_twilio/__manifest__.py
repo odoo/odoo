@@ -1,6 +1,6 @@
 {
     "name": "Twilio SMS",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Hidden/Tools",
     "summary": "Send SMS messages using Twilio",
     "description": """
@@ -11,6 +11,7 @@ up their account to start sending SMS messages.
     "author": "Odoo S.A.",
     "license": "LGPL-3",
     "depends": [
+        "credential",
         "sms",
     ],
     "data": [

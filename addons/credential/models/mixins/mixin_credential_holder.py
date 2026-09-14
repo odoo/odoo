@@ -39,24 +39,27 @@ class MixinCredentialHolder(models.AbstractModel):
         """Every inheriting module's doors, merged in load order.
 
         `_CREDENTIAL_FIELDS` is a plain class attribute, so reading it returns
-        only the last-loaded module's mapping.
+        only the last-loaded module's mapping. The merge is cached per MRO: the
+        registry keeps a model's class and swaps its bases as modules load.
         """
-        mapping: dict[str, str] = {}
-        for cls in reversed(type(self).mro()):
-            mapping.update(vars(cls).get("_CREDENTIAL_FIELDS") or {})
-        return mapping
+        model_class = type(self)
+        mro = model_class.__mro__
+        cached = vars(model_class).get("_credential_field_map_merged")
+        if cached is None or cached[0] is not mro:
+            mapping: dict[str, str] = {}
+            for cls in reversed(mro):
+                mapping.update(vars(cls).get("_CREDENTIAL_FIELDS") or {})
+            cached = model_class._credential_field_map_merged = (mro, mapping)
+        return cached[1]
 
     def _credential_holder_name(self) -> str:
         """Unique per record: credentials are unique on (company_id, name)."""
         self.check_singleton()
         return f"{self.display_name or self._description} [#{self.id}]"
 
-    def _credential_company_id(self, vals=None):
-        if "company_id" not in self._fields:
-            return False
-        if vals is not None:
-            return vals.get("company_id") or self.env.company.id
-        return self.company_id.id
+    def _credential_company_id(self):
+        self.check_singleton()
+        return self.company_id.id if "company_id" in self._fields else False
 
     def _pop_door_values(self, vals: dict) -> dict:
         field_map = self._credential_field_map()
@@ -75,14 +78,17 @@ class MixinCredentialHolder(models.AbstractModel):
             secrets = {k: v for k, v in self._pop_door_values(vals).items() if v}
             if secrets:
                 vals[holder] = self._create_holding_credential(
-                    f"{self._description} [{uuid4().hex[:12]}]",
-                    self._credential_company_id(vals),
-                    secrets,
+                    f"{self._description} [{uuid4().hex[:12]}]", False, secrets
                 ).id
         records = super().create(vals_list)
         for record in records.sudo():
             if record[holder]:
-                record[holder].name = record._credential_holder_name()
+                record[holder].write(
+                    {
+                        "name": record._credential_holder_name(),
+                        "company_id": record._credential_company_id(),
+                    }
+                )
         return records
 
     def write(self, vals):

@@ -5,3 +5,4 @@ from . import credential_credential
 from . import credential_access_log
 from . import credential_use
 from . import credential_oauth2
+from . import res_company

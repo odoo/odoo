@@ -3,9 +3,14 @@ from odoo import fields, models
 
 class ResCompany(models.Model):
     _inherit = "res.company"
+    _CREDENTIAL_FIELDS = {
+        "l10n_tr_nilvera_api_key": "l10n_tr_nilvera_api_key",
+    }
 
     l10n_tr_nilvera_api_key = fields.Char(
         string="Nilvera API key",
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         groups="base.group_system",
     )
     l10n_tr_nilvera_use_test_env = fields.Boolean(

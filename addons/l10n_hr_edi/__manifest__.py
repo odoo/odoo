@@ -1,6 +1,6 @@
 {
     "name": "Croatia - e-invoicing",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Accounting/Localizations/Reporting",
     "description": """
 e-invoicing for Croatia
@@ -9,6 +9,7 @@ e-invoicing for Croatia
     "website": "https://www.odoo.com/app/accounting",
     "license": "OEEL-1",
     "depends": [
+        "credential",
         "l10n_hr",
         "account_edi_ubl_cii",
         "account_peppol",

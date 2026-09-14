@@ -55,6 +55,9 @@ TIMEOUT = 10
 
 class ResCompany(models.Model):
     _inherit = "res.company"
+    _CREDENTIAL_FIELDS = {
+        "account_peppol_migration_key": "account_peppol_migration_key",
+    }
 
     account_peppol_contact_email = fields.Char(
         string="Primary contact email",
@@ -66,6 +69,8 @@ class ResCompany(models.Model):
     )
     account_peppol_migration_key = fields.Char(
         string="Migration Key",
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         groups="base.group_system",
     )
     account_peppol_phone_number = fields.Char(

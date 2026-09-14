@@ -1,6 +1,6 @@
 {
     "name": "Indian - E-invoicing",
-    "version": "1.03.00",
+    "version": "1.04.00",
     "category": "Accounting/Localizations/EDI",
     "description": """
 Indian - E-invoicing
@@ -16,6 +16,7 @@ For the creation of API username and password please ref this document: <https:/
     "author": "Odoo S.A.",
     "license": "LGPL-3",
     "depends": [
+        "credential",
         "account_edi",
         "l10n_in",
     ],

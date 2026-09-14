@@ -1,6 +1,6 @@
 {
     "name": "Indian - E-waybill",
-    "version": "2.0",
+    "version": "2.1",
     "category": "Accounting/Localizations",
     "description": """
 Indian - E-waybill
@@ -16,6 +16,7 @@ Step 4: Repeat steps 1,2,3 for all GSTIN you have in odoo. If you have a multi-c
     "author": "Odoo S.A.",
     "license": "LGPL-3",
     "depends": [
+        "credential",
         "l10n_in",
     ],
     "countries": [

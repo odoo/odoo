@@ -14,11 +14,28 @@ from odoo.tools.urls import urljoin as url_join
 
 class ResCompany(models.Model):
     _inherit = "res.company"
+    _CREDENTIAL_FIELDS = {
+        "l10n_ro_edi_client_secret": "l10n_ro_edi_client_secret",
+        "l10n_ro_edi_access_token": "l10n_ro_edi_access_token",
+        "l10n_ro_edi_refresh_token": "l10n_ro_edi_refresh_token",
+    }
 
     l10n_ro_edi_client_id = fields.Char(string="eFactura Client ID")
-    l10n_ro_edi_client_secret = fields.Char(string="Client Secret")
-    l10n_ro_edi_access_token = fields.Char(string="Access Token")
-    l10n_ro_edi_refresh_token = fields.Char(string="Refresh Token")
+    l10n_ro_edi_client_secret = fields.Char(
+        string="Client Secret",
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
+    )
+    l10n_ro_edi_access_token = fields.Char(
+        string="Access Token",
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
+    )
+    l10n_ro_edi_refresh_token = fields.Char(
+        string="Refresh Token",
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
+    )
     l10n_ro_edi_access_expiry_date = fields.Date(string="Access Token Expiry Date")
     l10n_ro_edi_refresh_expiry_date = fields.Date(string="Refresh Token Expiry Date")
     l10n_ro_edi_callback_url = fields.Char(compute="_compute_l10n_ro_edi_callback_url")
@@ -144,10 +161,15 @@ class ResCompany(models.Model):
             .sudo()
             .search(
                 [
-                    ("l10n_ro_edi_refresh_token", "!=", False),
+                    ("company_credential_id", "!=", False),
                     ("l10n_ro_edi_client_id", "!=", False),
-                    ("l10n_ro_edi_client_secret", "!=", False),
                 ]
+            )
+            .filtered(
+                lambda company: (
+                    company.l10n_ro_edi_refresh_token
+                    and company.l10n_ro_edi_client_secret
+                )
             )
         )
         session = self.env["ir.egress"].session(purpose="l10n_ro_edi")
@@ -184,10 +206,15 @@ class ResCompany(models.Model):
             .sudo()
             .search(
                 [
-                    ("l10n_ro_edi_refresh_token", "!=", False),
+                    ("company_credential_id", "!=", False),
                     ("l10n_ro_edi_client_id", "!=", False),
-                    ("l10n_ro_edi_client_secret", "!=", False),
                 ]
+            )
+            .filtered(
+                lambda company: (
+                    company.l10n_ro_edi_refresh_token
+                    and company.l10n_ro_edi_client_secret
+                )
             )
         )
         for company in ro_companies:
