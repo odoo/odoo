@@ -375,19 +375,27 @@ class HrAttendance(models.Model):
         from the span and is deducted from nothing: a nine-hour presence
         against a schedule carrying an hour of lunch was credited as nine
         worked hours instead of eight.
+
+        Asked WITHOUT a resource, so the answer is the calendar's own lunch
+        lines in the given zone and nothing else. Keyed by a resource it is not
+        that: for a flexible resource the batch answers with the whole span --
+        that resource may work at any time -- and subtracting it leaves no
+        worked hours at all.
         """
         self.check_singleton()
-        calendar = self._get_employee_calendar()
-        if not calendar or calendar.flexible_hours:
+        if self.employee_id.resource_id._is_flexible():
+            # A flexible resource keeps no scheduled break, which is the guard
+            # `hr.employee._get_attendance_intervals` was called behind.
             return Intervals([])
-        resource = self.employee_id.resource_id
+        calendar = self._get_employee_calendar()
+        if not calendar:
+            return Intervals([])
         return calendar._attendance_intervals_batch(
             start_dt_tz,
             end_dt_tz,
-            resources=resource,
             tz=self._schedule_tz(),
             lunch=True,
-        )[resource.id]
+        )[False]
 
     @api.constrains("check_in", "check_out")
     def _check_validity_check_in_check_out(self):
@@ -877,14 +885,14 @@ class HrAttendance(models.Model):
         if not calendar:
             return 0.0
         tz = self._schedule_tz()
-        resource = self.employee_id.resource_id
+        # Without a resource, for the same reason as `_lunch_intervals`: keyed
+        # by a flexible resource the batch answers with the whole day.
         return get_intervals_hours(
             calendar._attendance_intervals_batch(
                 datetime.combine(local_day, time.min).replace(tzinfo=tz),
                 datetime.combine(local_day, time.max).replace(tzinfo=tz),
-                resources=resource,
                 tz=tz,
-            )[resource.id]
+            )[False]
         )
 
     # A shift long enough to need more than a week of the schedule to spend its

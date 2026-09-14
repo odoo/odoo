@@ -260,3 +260,79 @@ class TestScheduledHoursExcludeTheBreak(ScheduleZoneCase):
             "9-12 and 13-17 is seven hours of work; the 12-13 lunch line is "
             "not one of them",
         )
+
+
+@tagged("post_install", "-at_install")
+class TestFlexibleResourceKeepsItsHours(ScheduleZoneCase):
+    """A flexible employee keeps no scheduled break, so nothing is deducted.
+
+    `resource.calendar._attendance_intervals_batch` answers per resource, and
+    for a FLEXIBLE resource its answer is the whole span -- that resource may
+    work at any time. Read as "the lunch break" it removes every worked hour
+    the attendance has. The company's calendar is not a fallback here either:
+    an employee with no schedule of their own does not take the company's
+    lunch.
+    """
+
+    def _worked(self, setup, flexible, calendar_tz="Asia/Tokyo"):
+        employee = self._employee(self._calendar(calendar_tz))
+        setup(employee)
+        self.env.flush_all()
+        self.env.invalidate_all()
+        # Assert the fixture before the behaviour: if clearing a calendar stops
+        # making a resource flexible, these tests would read nine hours for
+        # another reason entirely and pass without touching the guard.
+        self.assertEqual(
+            employee.resource_id._is_flexible(),
+            flexible,
+            "the fixture does not describe the case this test is about",
+        )
+        return (
+            self.env["hr.attendance"]
+            .create(
+                {
+                    "employee_id": employee.id,
+                    "check_in": self._utc(calendar_tz, datetime(2026, 9, 7, 9, 0)),
+                    "check_out": self._utc(calendar_tz, datetime(2026, 9, 7, 18, 0)),
+                }
+            )
+            .worked_hours
+        )
+
+    def test_a_resource_with_no_calendar_keeps_every_hour(self):
+        self.assertAlmostEqual(
+            self._worked(lambda e: e.resource_id.write({"calendar_id": False}), True),
+            9.0,
+            3,
+            "nine hours of presence, no schedule to take a break from",
+        )
+
+    def test_a_version_with_no_calendar_keeps_every_hour(self):
+        self.assertAlmostEqual(
+            self._worked(lambda e: e.write({"resource_calendar_id": False}), True),
+            9.0,
+            3,
+            "the company's calendar is not a schedule this employee works to; "
+            "reading it here deducted the company's lunch, and reading it "
+            "through the flexible resource deducted the entire nine hours",
+        )
+
+    def test_a_calendar_marked_flexible_keeps_every_hour(self):
+        flexible = self._calendar("Asia/Tokyo")
+        flexible.flexible_hours = True
+        self.assertAlmostEqual(
+            self._worked(
+                lambda e: e.write({"resource_calendar_id": flexible.id}), True
+            ),
+            9.0,
+            3,
+        )
+
+    def test_a_scheduled_employee_still_loses_the_break(self):
+        self.assertAlmostEqual(
+            self._worked(lambda e: None, False),
+            8.0,
+            3,
+            "the control: without it these three pass against a break that is "
+            "never deducted for anybody",
+        )
