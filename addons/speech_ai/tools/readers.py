@@ -48,12 +48,15 @@ class AiTranscription(BaseReader):
         try:
             spans = run(
                 env,
+                "transcribe_timed",
                 model,
-                lambda client, ai_model: _transcribe(
-                    client, ai_model, document, language, prompt
-                ),
                 log_metadata={"feature": "speech.transcription"},
-            )
+                audio=document.data,
+                filename=document.name or "audio",
+                mimetype=document.mimetype or "",
+                language=language,
+                prompt=prompt or "",
+            ).cues
         except Exception as error:
             record_engine_error(document, error)
             raise
@@ -65,28 +68,6 @@ class AiTranscription(BaseReader):
 def _pick_timed_model(env: Any) -> Any:
     return pick_model(
         env, TRANSCRIPTION_KIND, required_capabilities=TRANSCRIPTION_CAPABILITIES
-    )
-
-
-def _transcribe(
-    client: Any,
-    ai_model: Any,
-    document: Any,
-    language: str | None,
-    prompt: str | None,
-) -> list[dict]:
-    reader = getattr(client, "transcribe_cues", None)
-    if reader is None:
-        raise NotImplementedError(
-            f"{type(client).__name__} does not transcribe with timing"
-        )
-    return reader(
-        document.data,
-        filename=document.name or "audio",
-        mimetype=document.mimetype,
-        language=language,
-        prompt=prompt,
-        model=ai_model.code,
     )
 
 

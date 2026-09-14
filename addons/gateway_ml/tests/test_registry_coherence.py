@@ -66,7 +66,7 @@ class TestRegistryCoherence(TransactionCase):
                 if operation.operation == "transcribe_timed":
                     self.assertTrue(model.has_timestamps)
 
-    def test_has_audio_means_the_orchestrators_client_can_transcribe(self):
+    def test_has_audio_means_the_routers_client_can_transcribe(self):
         for provider in self.providers.filtered("has_audio"):
             client_cls = get_client_class(provider)
             with self.subTest(provider=provider.code):
@@ -80,7 +80,7 @@ class TestRegistryCoherence(TransactionCase):
                 self.assertTrue(
                     entry_points,
                     f"{provider.code} claims has_audio but {client_cls.__name__} "
-                    f"exposes no transcribe* method; the orchestrator would "
+                    f"exposes no transcribe* method; the router would "
                     f"select it and the call would fail at the attribute",
                 )
 

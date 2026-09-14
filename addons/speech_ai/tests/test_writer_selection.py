@@ -4,7 +4,7 @@ from odoo.libs.documents import TEXT, get_writers
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
-from odoo.addons.gateway_ml.tools.ai_orchestrator import AIOrchestrator
+from odoo.addons.gateway_ml.tools.router import MlRouter
 from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 from odoo.addons.speech_ai.tools.writers import AiSpeech
 
@@ -39,7 +39,7 @@ class TestWriterSelection(EncryptionKeyCase, TransactionCase):
             vendors.append(model.provider_id.code)
             return request_func(Mock(synthesize=Mock(return_value=b"AUDIO")), model)
 
-        with patch.object(AIOrchestrator, "execute_with_fallback", side_effect=run):
+        with patch.object(MlRouter, "run_with_fallback", side_effect=run):
             self._writer(mimetype).write("hola", env=self.env)
         return vendors
 

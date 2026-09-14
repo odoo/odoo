@@ -8,7 +8,7 @@ from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.gateway_ml.tests.test_model_selection import _SelectionCase
-from odoo.addons.gateway_ml.tools.ai_orchestrator import AIOrchestrator
+from odoo.addons.gateway_ml.tools.router import MlRouter
 from odoo.addons.integration.tools.exceptions import CommError, ServerError
 
 
@@ -22,7 +22,7 @@ class TestFallbackOrder(_SelectionCase):
         cls.first = cls._model(keyed, "order-z-first")
         cls.second = cls._model(keyed, "order-a-second")
 
-    @mute_logger("odoo.addons.gateway_ml.tools.ai_orchestrator")
+    @mute_logger("odoo.addons.gateway_ml.tools.router")
     def test_the_chain_runs_in_the_order_the_hops_were_given(self):
         self.primary.fallback_ids = [
             Command.create({"fallback_id": self.second.id, "sequence": 20}),
@@ -34,9 +34,9 @@ class TestFallbackOrder(_SelectionCase):
             attempted.append(ai_model.code)
             raise ServerError("503")
 
-        with patch.object(AIOrchestrator, "_get_client", return_value=object()):
+        with patch.object(MlRouter, "_get_client", return_value=object()):
             with self.assertRaises(CommError):
-                self.orch.execute_with_fallback(self.primary, fail)
+                MlRouter(self.env).run_with_fallback(self.primary, fail)
         self.assertEqual(
             attempted, ["order-primary", "order-z-first", "order-a-second"]
         )

@@ -42,8 +42,22 @@ class TestDeepgramSpeech(EncryptionKeyCase, TransactionCase):
         self.assertEqual(
             cues,
             [
-                {"start": 0.0, "end": 0.8, "text": "hola", "speaker": "Speaker 0"},
-                {"start": 1.0, "end": 1.5, "text": "adiós", "speaker": "Speaker 1"},
+                {
+                    "start": 0.0,
+                    "end": 0.8,
+                    "text": "hola",
+                    "speaker": "Speaker 0",
+                    "speaker_index": 0,
+                    "confidence": 0.0,
+                },
+                {
+                    "start": 1.0,
+                    "end": 1.5,
+                    "text": "adiós",
+                    "speaker": "Speaker 1",
+                    "speaker_index": 1,
+                    "confidence": 0.0,
+                },
             ],
         )
         self.assertEqual(post.call_args.args[0], "/listen")
@@ -113,7 +127,7 @@ class TestEveryModelKindHasItsMethod(TransactionCase):
                 self.assertIsNotNone(client_cls)
                 self.assertTrue(
                     callable(getattr(client_cls, method, None)),
-                    f"{model.code} is a {model.kind} model, so the orchestrator "
+                    f"{model.code} is a {model.kind} model, so the router "
                     f"can select it for a {method} call, and "
                     f"{client_cls.__name__} has no {method}",
                 )

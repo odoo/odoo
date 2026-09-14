@@ -150,3 +150,21 @@ def audio_mimetype(filename):
         if lowered.endswith(suffix):
             return mimetype
     return "audio/ogg"
+
+
+VOCABULARY_PROMPT_CHARS = 800
+
+
+def vocabulary_prompt(vocabulary):
+    return (
+        ", ".join(term for term in vocabulary or () if term)[:VOCABULARY_PROMPT_CHARS]
+        or None
+    )
+
+
+class Cues(list):
+    def __init__(self, spans=(), duration=0.0):
+        super().__init__(spans)
+        self.duration = float(duration or 0.0) or max(
+            (float(span.get("end") or 0.0) for span in self), default=0.0
+        )

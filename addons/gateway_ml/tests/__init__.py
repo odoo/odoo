@@ -1,4 +1,4 @@
-from . import test_ai_orchestrator
+from . import test_router
 from . import test_ai_provider
 from . import test_base_client
 from . import test_claude_client
@@ -10,7 +10,8 @@ from . import test_json_payload
 from . import test_migrations
 from . import test_model_selection
 from . import test_openai_transcription
-from . import test_orchestrator_event_log
+from . import test_router_event_log
+from . import test_router_run
 from . import test_registry_coherence
 from . import test_vendor_wires
 from . import test_vision_completion

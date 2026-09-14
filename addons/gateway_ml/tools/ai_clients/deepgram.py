@@ -1,5 +1,6 @@
 import logging
 
+from ..wire_formats import Cues
 from .base import BaseAIClient
 from odoo.addons.integration.tools.exceptions import CommError
 
@@ -163,19 +164,49 @@ class DeepgramClient(BaseAIClient):
         mimetype=None,
         language=None,
         prompt=None,
+        vocabulary=(),
+        speakers=False,
         model=None,
         **kwargs,
     ):
-        del filename, prompt
+        options = {"utterances": True, "diarize": speakers, **kwargs}
+        return self._read_cues(
+            self._transcribe_audio(
+                audio_bytes, mimetype, language, vocabulary, model, options
+            )
+        )
+
+    def transcribe(
+        self,
+        audio_bytes,
+        filename=None,
+        mimetype=None,
+        language=None,
+        prompt=None,
+        vocabulary=(),
+        model=None,
+    ):
+        result = self._transcribe_audio(
+            audio_bytes, mimetype, language, vocabulary, model, {}
+        )
+        channels = (result or {}).get("results", {}).get("channels") or []
+        alternatives = channels[0].get("alternatives") if channels else None
+        return (alternatives[0].get("transcript") or "").strip() if alternatives else ""
+
+    def _transcribe_audio(
+        self, audio_bytes, mimetype, language, vocabulary, model, options
+    ):
         if not audio_bytes:
             raise CommError("Deepgram was given no audio to send")
-        options = {"utterances": True, "smart_format": True, **kwargs}
+        model = self._resolve_model(model)
+        options = {"smart_format": True, **options}
         if language:
             options["language"] = language
-        result = self.transcribe_file(
+        if vocabulary:
+            options["keyterm"] = options["keywords"] = list(vocabulary)
+        return self.transcribe_file(
             audio_bytes, mimetype=mimetype, model=model, **options
         )
-        return self._read_cues(result)
 
     SPEECH_ENCODINGS = {
         "audio/mpeg": {"encoding": "mp3"},
@@ -225,8 +256,10 @@ class DeepgramClient(BaseAIClient):
 
     @staticmethod
     def _read_cues(result):
+        result = result or {}
+        duration = (result.get("metadata") or {}).get("duration") or 0.0
         spans = []
-        for utterance in (result or {}).get("results", {}).get("utterances", []) or []:
+        for utterance in result.get("results", {}).get("utterances", []) or []:
             text = (utterance.get("transcript") or "").strip()
             if not text:
                 continue
@@ -237,15 +270,20 @@ class DeepgramClient(BaseAIClient):
                     "end": float(utterance.get("end") or 0.0),
                     "text": text,
                     "speaker": f"Speaker {speaker}" if speaker is not None else "",
+                    "speaker_index": speaker,
+                    "confidence": float(utterance.get("confidence") or 0.0),
                 }
             )
         if spans:
-            return spans
-        channels = (result or {}).get("results", {}).get("channels") or []
+            return Cues(spans, duration)
+        channels = result.get("results", {}).get("channels") or []
         alternatives = channels[0].get("alternatives") if channels else None
         transcript = (
             (alternatives[0].get("transcript") or "").strip() if alternatives else ""
         )
         if not transcript:
             raise CommError("Deepgram returned no usable transcript")
-        return [{"start": 0.0, "end": 0.0, "text": transcript, "speaker": ""}]
+        return Cues(
+            [{"start": 0.0, "end": float(duration), "text": transcript, "speaker": ""}],
+            duration,
+        )

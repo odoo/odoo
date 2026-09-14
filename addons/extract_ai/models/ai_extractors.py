@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import base64
 import logging
 from typing import Any
 
@@ -10,7 +11,7 @@ from odoo.addons.extract.tools import (
     known_schemas,
 )
 from odoo.addons.extract.tools.schema import get_schema
-from odoo.addons.gateway_ml.tools import get_ai_orchestrator, parse_json_response
+from odoo.addons.gateway_ml.tools import MlRequest, get_router, parse_json_response
 
 _logger = logging.getLogger(__name__)
 
@@ -28,7 +29,7 @@ class _AiExtractor(BaseExtractor):
     def _get_model(self, env, doc_type: str):
         raise NotImplementedError
 
-    def _read(self, client, model, source, prompt: str, env):
+    def _request(self, source, prompt: str) -> MlRequest:
         raise NotImplementedError
 
     def extract(
@@ -50,18 +51,15 @@ class _AiExtractor(BaseExtractor):
             return None
 
         prompt = prepare_prompt(get_schema(doc_type), wanted)
-        orchestrator = get_ai_orchestrator(env)
-
-        def request_func(client, current_model):
-            return self._read(client, current_model, source, prompt, env)
-
         try:
-            return orchestrator.execute_with_fallback(
-                primary_model=model,
-                request_func=request_func,
+            result = get_router(env).run(
+                "chat",
+                self._request(source, prompt),
+                model=model,
                 log_metadata={"origin_model": "document.extract"},
                 company_id=env.company.id,
             )
+            return parse_json_response(result.text, env, expect=(dict,))
         except Exception:
             _logger.exception(
                 "%s could not read %r; the cascade continues without it",
@@ -77,19 +75,17 @@ class LlmTextExtractor(_AiExtractor):
     confidence = 0.5
 
     def _get_model(self, env, doc_type):
-        return get_ai_orchestrator(env).select_model(
+        return get_router(env).select_model(
             "chat",
             optimize_for=self.optimize_for,
             company_id=env.company.id,
         )
 
-    def _read(self, client, model, source, prompt, env):
-        response = client.simple_completion(
-            f"{prompt}\n\nDocument text:\n{source.text}",
-            model=model.code,
+    def _request(self, source, prompt):
+        return MlRequest(
+            prompt=f"{prompt}\n\nDocument text:\n{source.text}",
             temperature=TEMPERATURE,
         )
-        return parse_json_response(response, env, expect=(dict,))
 
 
 class LlmVisionExtractor(_AiExtractor):
@@ -98,7 +94,7 @@ class LlmVisionExtractor(_AiExtractor):
     confidence = 0.45
 
     def _get_model(self, env, doc_type):
-        return get_ai_orchestrator(env).select_model(
+        return get_router(env).select_model(
             ("chat", "vision"),
             use_case_tags=["vision", "ocr"],
             required_capabilities={"has_vision": True},
@@ -106,18 +102,13 @@ class LlmVisionExtractor(_AiExtractor):
             company_id=env.company.id,
         )
 
-    def _read(self, client, model, source, prompt, env):
-        import base64
-
+    def _request(self, source, prompt):
         page = source.images[0]
-        response = client.vision_completion(
+        return MlRequest(
             prompt=prompt,
-            image_data=base64.b64encode(page).decode("utf-8"),
-            media_type=_media_type(page),
-            model=model.code,
+            images=((base64.b64encode(page).decode("utf-8"), _media_type(page)),),
             temperature=TEMPERATURE,
         )
-        return parse_json_response(response, env, expect=(dict,))
 
 
 def _media_type(image: bytes) -> str:

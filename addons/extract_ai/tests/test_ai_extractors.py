@@ -9,6 +9,7 @@ from odoo.addons.extract_ai.models.ai_extractors import (
     LlmVisionExtractor,
     _media_type,
 )
+from odoo.addons.gateway_ml.tools import MlResult, MlRouter
 
 _PNG = b"\x89PNG\r\n\x1a\n" + b"\x00" * 32
 _TEXT_DOC = Document(b"CONSUMO 100 KWH TOTAL 139.86", "text/plain", "bill.txt")
@@ -29,16 +30,14 @@ class TestAiExtractors(TransactionCase):
 
         orchestrator = MagicMock()
         orchestrator.select_model.return_value = MagicMock(code="a-model")
-        orchestrator.execute_with_fallback.side_effect = (
-            lambda primary_model, request_func, **kw: request_func(
-                client, primary_model
-            )
+        orchestrator.run.side_effect = lambda operation, request, model=None, **kw: (
+            MlResult(model, **MlRouter._dispatch(operation, request, client, model))
         )
         return orchestrator, client
 
     def _run(self, reader, source, orchestrator, doc_type="invoice", wanted=()):
         with patch(
-            "odoo.addons.extract_ai.models.ai_extractors.get_ai_orchestrator",
+            "odoo.addons.extract_ai.models.ai_extractors.get_router",
             return_value=orchestrator,
         ):
             return reader.extract(source, doc_type, wanted, env=self.env)
@@ -137,7 +136,7 @@ class TestAiExtractors(TransactionCase):
 
     def test_a_vendor_failure_is_not_raised_at_the_cascade(self):
         orchestrator, _ = self._orchestrator()
-        orchestrator.execute_with_fallback.side_effect = RuntimeError("all keys down")
+        orchestrator.run.side_effect = RuntimeError("all keys down")
 
         self.assertIsNone(self._run(self.text_reader, _TEXT_DOC, orchestrator))
 

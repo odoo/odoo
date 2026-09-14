@@ -69,26 +69,13 @@ class AiSpeech(BaseWriter):
             raise ValueError("No speech model is configured with a usable credential")
         return run(
             env,
+            "synthesize",
             model,
-            lambda client, ai_model: _speak(
-                client, ai_model, str(value), options, self.mimetype
-            ),
             log_metadata={"feature": "speech.synthesis"},
-        )
-
-
-def _speak(
-    client: Any, ai_model: Any, text: str, options: dict, mimetype: str
-) -> bytes:
-    speaker = getattr(client, "synthesize", None)
-    if speaker is None:
-        raise NotImplementedError(f"{type(client).__name__} does not speak")
-    return speaker(
-        text,
-        voice=options.get("voice"),
-        mimetype=mimetype,
-        model=ai_model.code,
-    )
+            text=str(value),
+            voice=options.get("voice"),
+            mimetype=self.mimetype,
+        ).audio
 
 
 for _mimetype in sorted(SPEECH_MIMETYPES):

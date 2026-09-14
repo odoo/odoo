@@ -19,7 +19,7 @@ Models
 * ``gateway.ml.model`` -- holds what the model name decides: cost per token, context
   window, output cap, vision, function calling, accuracy and speed. A provider
   names one of its own as ``default_model_id``, and that is the model
-  ``AIOrchestrator`` ranks on and ``_resolve_model`` runs: cost and capability
+  ``MlRouter`` ranks on and ``_resolve_model`` runs: cost and capability
   follow the model name, not the API key.
 * ``ai.use.case.tag`` -- provider classification: vision, reasoning, speed,
   budget, long context, OCR, embeddings, audio
@@ -43,9 +43,17 @@ wire that both stacks use, and the Whisper form and readers sit beside them.
 ``strip_json_fence``, in ``tools/json_payload.py``, is the fence half of
 ``parse_json_response`` for callers that must not let it raise.
 
-Orchestration
--------------
-* ``AIOrchestrator.select_model`` picks a ``gateway.ml.model`` of the ``kind`` the
+Routing
+-------
+* ``MlRouter.run(operation, MlRequest(...))`` is the call a consumer makes:
+  ``chat`` (with ``images`` it needs a model that sees), ``transcribe``,
+  ``transcribe_timed`` (with ``vocabulary`` and ``speakers``) or ``synthesize``.
+  It selects the model, walks the fallback chain and dispatches to the wire's
+  client, and returns an ``MlResult`` with ``text``, ``cues`` and their
+  ``duration``, or ``audio``, and the model that answered. A ``provider``
+  narrows selection to that vendor, preferring its default model. Callers no
+  longer know which client class or method a vendor needs.
+* ``MlRouter.select_model`` picks a ``gateway.ml.model`` of the ``kind`` the
   caller will call -- a kind is a method, so it is required -- by cost, accuracy,
   speed or balanced score, filtered by the model's own capability and by an
   unexpired credential for the current company. Cost is read in the unit the
@@ -53,7 +61,7 @@ Orchestration
   output for text -- and an unpriced model is scored at the candidates' median
   price rather than as free. A free tier breaks a tie on price; it does not
   outrank a cheaper model.
-* ``execute_with_fallback`` walks ``ai.model.fallback_ids`` in their sequence --
+* ``run_with_fallback`` walks ``ai.model.fallback_ids`` in their sequence --
   ``gateway.ml.model.fallback`` rows, so the order is an administrator's, not the model
   list's. A hop may stay on one vendor -- a smaller model on a key already held --
   or cross to another; a hop that cannot answer for the model (an audio model
@@ -76,7 +84,7 @@ the event log.
   service -- chat first -- and ``get_ai_client`` binds that wire's class to the
   provider's service, so OpenAI, Groq, Moonshot and DeepSeek are one class on
   four services. Raising, credential resolved from the company. What
-  ``AIOrchestrator`` drives, through ``gateway.ml.provider._get_ai_client``.
+  ``MlRouter`` drives, through ``gateway.ml.provider._get_ai_client``.
 * ``tools/provider_assistant.py`` -- ``ProviderAssistant``, one class driving
   any provider's chat and transcribe operations off its rows, built by
   ``gateway.ml.provider._assistant(model=)``. Fail-soft, and authenticated by
@@ -86,7 +94,7 @@ the event log.
   Gemini's chat operation uses and which no class targets -- ``GeminiClient``
   is on ``gemini``, the native wire. ``tests/test_registry_coherence.py``
   requires every provider to resolve a wire client, so that ``_get_ai_client``
-  can answer for whichever one the orchestrator selects. The Telegram bots'
+  can answer for whichever one the router selects. The Telegram bots'
   assistants are its callers;
   ``tools/assistant_adoption.py`` moved their own keys onto connections.
 

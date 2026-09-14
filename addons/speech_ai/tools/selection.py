@@ -4,7 +4,7 @@ import logging
 from collections.abc import Iterable
 from typing import Any
 
-from odoo.addons.gateway_ml.tools.ai_orchestrator import get_ai_orchestrator
+from odoo.addons.gateway_ml.tools.router import MlRequest, get_router
 
 _logger = logging.getLogger(__name__)
 
@@ -20,7 +20,7 @@ def pick_model(
     provider_code: str | Iterable[str] | None = None,
     required_capabilities: dict | None = None,
 ) -> Any:
-    model = get_ai_orchestrator(env).select_model(
+    model = get_router(env).select_model(
         kind=kind,
         optimize_for=optimize_for,
         provider_code=provider_code,
@@ -36,7 +36,13 @@ def pick_model(
     return model
 
 
-def run(env: Any, model: Any, request_func: Any, log_metadata: dict | None = None):
-    return get_ai_orchestrator(env).execute_with_fallback(
-        model, request_func, log_metadata=log_metadata
+def run(
+    env: Any,
+    operation: str,
+    model: Any,
+    log_metadata: dict | None = None,
+    **request: Any,
+) -> Any:
+    return get_router(env).run(
+        operation, MlRequest(**request), model=model, log_metadata=log_metadata
     )

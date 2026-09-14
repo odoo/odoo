@@ -18,7 +18,7 @@ first, credential or not.
 
 ``ai_transcription``
     A reader of audio and video, yielding timed cues. It selects a model of kind
-    ``audio`` through ``AIOrchestrator`` -- by cost, accuracy or speed, filtered
+    ``audio`` through the gateway router, ``MlRouter`` -- by cost, accuracy or speed, filtered
     by which credentials this company actually holds -- and walks the model's
     fallback chain. Nothing here names a vendor, and adding one is an
     ``gateway.ml.model`` record rather than a code change.

@@ -1,12 +1,14 @@
 import logging
 
 from ..wire_formats import (
+    Cues,
     audio_mimetype,
     get_openai_content,
     get_whisper_form,
     read_openai_content,
     read_whisper_segments,
     read_whisper_transcript,
+    vocabulary_prompt,
 )
 from .base import BaseAIClient
 from odoo.addons.integration.tools.exceptions import CommError
@@ -108,9 +110,24 @@ class OpenAICompatibleClient(BaseAIClient):
             )
         return content
 
-    def transcribe(self, audio_bytes, filename, language=None, prompt=None, model=None):
+    def transcribe(
+        self,
+        audio_bytes,
+        filename=None,
+        mimetype=None,
+        language=None,
+        prompt=None,
+        vocabulary=(),
+        model=None,
+    ):
         body = self._post_whisper(
-            audio_bytes, filename, None, language, prompt, model, "text"
+            audio_bytes,
+            filename,
+            mimetype,
+            language,
+            prompt or vocabulary_prompt(vocabulary),
+            model,
+            "text",
         )
         text, problem = read_whisper_transcript(body)
         if problem:
@@ -126,6 +143,8 @@ class OpenAICompatibleClient(BaseAIClient):
         mimetype=None,
         language=None,
         prompt=None,
+        vocabulary=(),
+        speakers=False,
         model=None,
     ):
         timed = self._audio_operation("transcribe_timed")
@@ -134,7 +153,7 @@ class OpenAICompatibleClient(BaseAIClient):
             filename,
             mimetype,
             language,
-            prompt,
+            prompt or vocabulary_prompt(vocabulary),
             model or timed.model_id.code,
             "verbose_json",
             operation=timed,
@@ -144,7 +163,7 @@ class OpenAICompatibleClient(BaseAIClient):
             raise CommError(
                 f"{type(self).__name__} returned no usable transcript: {problem}",
             )
-        return spans
+        return Cues(spans, body.get("duration") if isinstance(body, dict) else 0.0)
 
     def _post_whisper(
         self,

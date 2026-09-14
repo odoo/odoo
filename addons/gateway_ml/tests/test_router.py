@@ -3,7 +3,7 @@ from unittest.mock import patch
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
-from odoo.addons.gateway_ml.tools.ai_orchestrator import AIOrchestrator, is_retryable
+from odoo.addons.gateway_ml.tools.router import MlRouter, is_retryable
 from odoo.addons.integration.tools.exceptions import (
     AuthenticationError,
     ClientError,
@@ -54,9 +54,9 @@ class TestExecuteWithFallback(TransactionCase):
         self.primary = self.models[0]
         self.rest = self.models[1:]
         self.primary.fallback_model_ids = [(6, 0, self.rest.ids)]
-        self.orch = AIOrchestrator(self.env)
+        self.router = MlRouter(self.env)
         patcher = patch.object(
-            AIOrchestrator,
+            MlRouter,
             "_get_usable_providers",
             side_effect=lambda providers, company_id=None: providers,
         )
@@ -71,17 +71,17 @@ class TestExecuteWithFallback(TransactionCase):
             return raiser(client, ai_model)
 
         with patch.object(
-            AIOrchestrator,
+            MlRouter,
             "_get_client",
             side_effect=lambda p, company_id=None: _FakeClient(),
         ):
             if use_assert_raises:
                 with self.assertRaises(CommError):
-                    self.orch.execute_with_fallback(self.primary, recording)
+                    self.router.run_with_fallback(self.primary, recording)
             else:
                 raised = None
                 try:
-                    self.orch.execute_with_fallback(self.primary, recording)
+                    self.router.run_with_fallback(self.primary, recording)
                 except CommError as exc:
                     raised = exc
                 self.assertIsNotNone(raised, "the chain should have raised CommError")
@@ -199,11 +199,11 @@ class TestExecuteWithFallback(TransactionCase):
             return request_func(client, ai_model)
 
         with patch.object(
-            AIOrchestrator,
+            MlRouter,
             "_get_client",
             side_effect=lambda p, company_id=None: _FakeClient(),
         ):
-            self.result = self.orch.execute_with_fallback(self.primary, recording)
+            self.result = self.router.run_with_fallback(self.primary, recording)
         return seen
 
 
@@ -211,7 +211,7 @@ class TestExecuteWithFallback(TransactionCase):
 class TestOptimizeModelSelection(TransactionCase):
     def setUp(self):
         super().setUp()
-        self.orch = AIOrchestrator(self.env)
+        self.router = MlRouter(self.env)
         one_per_provider = self.env["gateway.ml.model"]
         seen_providers = self.env["gateway.ml.provider"]
         for model in self.env["gateway.ml.model"].search([("kind", "=", "chat")]):
@@ -240,34 +240,36 @@ class TestOptimizeModelSelection(TransactionCase):
         )
 
     def test_cost_picks_the_cheapest(self):
-        self.assertEqual(self.orch._rank(self.models, "cost")[0], self.cheap)
+        self.assertEqual(self.router._rank(self.models, "cost")[0], self.cheap)
 
     def test_a_free_tier_does_not_outrank_a_cheaper_model(self):
         self.accurate.provider_id.has_free_tier = True
-        self.assertEqual(self.orch._rank(self.models, "cost")[0], self.cheap)
+        self.assertEqual(self.router._rank(self.models, "cost")[0], self.cheap)
 
     def test_a_free_tier_breaks_a_tie_on_price(self):
         self.accurate.write({"cost_per_1m_input": 0.10})
         self.accurate.provider_id.has_free_tier = True
-        self.assertEqual(self.orch._rank(self.models, "cost")[0], self.accurate)
+        self.assertEqual(self.router._rank(self.models, "cost")[0], self.accurate)
 
     def test_accuracy_picks_the_highest_rated(self):
         self.assertEqual(
-            self.orch._rank(self.models, "accuracy")[0],
+            self.router._rank(self.models, "accuracy")[0],
             self.accurate,
         )
 
     def test_speed_picks_the_fastest(self):
-        self.assertEqual(self.orch._rank(self.models, "speed")[0], self.fast)
+        self.assertEqual(self.router._rank(self.models, "speed")[0], self.fast)
 
     def test_balanced_ranks_every_candidate(self):
         self.assertEqual(
-            set(self.orch._rank(self.models, "balanced").ids), set(self.models.ids)
+            set(self.router._rank(self.models, "balanced").ids), set(self.models.ids)
         )
 
     def test_an_unknown_strategy_is_refused(self):
         with self.assertRaises(ValueError):
-            self.orch.select_model("chat", optimize_for="no-such-strategy")
+            self.router.select_model("chat", optimize_for="no-such-strategy")
 
     def test_empty_recordset_ranks_empty(self):
-        self.assertFalse(self.orch._rank(self.env["gateway.ml.model"].browse(), "cost"))
+        self.assertFalse(
+            self.router._rank(self.env["gateway.ml.model"].browse(), "cost")
+        )

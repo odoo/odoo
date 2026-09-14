@@ -3,7 +3,7 @@ from unittest.mock import patch
 from odoo.tests import TransactionCase, tagged
 from odoo.tools import mute_logger
 
-from odoo.addons.gateway_ml.tools import AIOrchestrator
+from odoo.addons.gateway_ml.tools import MlRouter
 from odoo.addons.gateway_ml.tools.ai_clients import BaseAIClient
 from odoo.addons.integration.tools.api_client import OutboundAPIClient
 from odoo.addons.integration.tools.exceptions import CommError
@@ -18,12 +18,12 @@ class _StubClient(BaseAIClient):
 
 
 @tagged("post_install", "-at_install")
-class TestOrchestratorEventLog(EncryptionKeyCase, TransactionCase):
+class TestRouterEventLog(EncryptionKeyCase, TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls.log = cls.env["integration.exchange"]
-        cls.orchestrator = AIOrchestrator(cls.env)
+        cls.router = MlRouter(cls.env)
         cls._stub_clients = {}
         provider_class = type(cls.env["gateway.ml.provider"])
 
@@ -64,7 +64,7 @@ class TestOrchestratorEventLog(EncryptionKeyCase, TransactionCase):
         return self.log.sudo().search([], order="id desc")
 
     def _run(self, request_func, ai_model, **kwargs):
-        return self.orchestrator.execute_with_fallback(
+        return self.router.run_with_fallback(
             primary_model=ai_model, request_func=request_func, **kwargs
         )
 
@@ -95,7 +95,7 @@ class TestOrchestratorEventLog(EncryptionKeyCase, TransactionCase):
         self.assertEqual(
             len(rows) - before,
             1,
-            "one exchange must leave one row; the orchestrator used to add a "
+            "one exchange must leave one row; the orchestrator this router replaced used to add a "
             "second with an invented status code",
         )
 
@@ -130,7 +130,7 @@ class TestOrchestratorEventLog(EncryptionKeyCase, TransactionCase):
             row.status_code, 200, "the status is the vendor's, not a constant"
         )
 
-    @mute_logger("odoo.addons.gateway_ml.tools.ai_orchestrator")
+    @mute_logger("odoo.addons.gateway_ml.tools.router")
     def test_a_fallback_names_who_it_followed(self):
         primary = self._model("orch_first")
         backup = self._model("orch_second")
@@ -161,7 +161,7 @@ class TestOrchestratorEventLog(EncryptionKeyCase, TransactionCase):
             "the chain must stay reconstructable from the row itself",
         )
 
-    @mute_logger("odoo.addons.gateway_ml.tools.ai_orchestrator")
+    @mute_logger("odoo.addons.gateway_ml.tools.router")
     def test_two_hops_on_one_provider_stay_distinguishable(self):
         primary = self._model("orch_same")
         sibling = self.env["gateway.ml.model"].create(
@@ -198,7 +198,7 @@ class TestOrchestratorEventLog(EncryptionKeyCase, TransactionCase):
         )
         self.assertIn("after:orch_same-m", row.tags)
 
-    @mute_logger("odoo.addons.gateway_ml.tools.ai_orchestrator")
+    @mute_logger("odoo.addons.gateway_ml.tools.router")
     def test_a_failure_before_the_request_writes_no_row(self):
         provider = self._model("orch_never")
         before = len(self._rows())

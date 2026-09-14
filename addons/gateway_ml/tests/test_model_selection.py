@@ -6,7 +6,7 @@ from odoo.exceptions import ValidationError
 from odoo.tests import TransactionCase, tagged
 from odoo.tools import mute_logger
 
-from odoo.addons.gateway_ml.tools.ai_orchestrator import AIOrchestrator
+from odoo.addons.gateway_ml.tools.router import MlRouter
 from odoo.addons.integration.tools.exceptions import (
     AuthenticationError,
     CommError,
@@ -20,7 +20,7 @@ class _SelectionCase(EncryptionKeyCase, TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.env["gateway.ml.provider"].search([]).action_archive()
-        cls.orch = AIOrchestrator(cls.env)
+        cls.router = MlRouter(cls.env)
 
     @classmethod
     def _provider(cls, code, keyed=True, auth_type="bearer", **vals):
@@ -52,14 +52,14 @@ class _SelectionCase(EncryptionKeyCase, TransactionCase):
 class TestSelectModel(_SelectionCase):
     def test_kind_is_required(self):
         with self.assertRaises(TypeError):
-            self.orch.select_model(optimize_for="cost")
+            self.router.select_model(optimize_for="cost")
 
     def test_several_kinds_may_be_accepted(self):
         provider = self._provider("sel_kinds")
         vision = self._model(provider, "sel-vision", kind="vision", has_vision=True)
         self._model(provider, "sel-audio2", kind="audio")
         self.assertEqual(
-            self.orch.select_model(
+            self.router.select_model(
                 kind=("chat", "vision"), required_capabilities={"has_vision": True}
             ),
             vision,
@@ -71,7 +71,7 @@ class TestSelectModel(_SelectionCase):
             provider, "sel-priced", cost_per_1m_input=0.5, accuracy_rating="4"
         )
         self._model(provider, "sel-unpriced", accuracy_rating="3")
-        self.assertEqual(self.orch.select_model(kind="chat"), priced)
+        self.assertEqual(self.router.select_model(kind="chat"), priced)
 
     def test_audio_is_ranked_on_its_per_minute_price(self):
         provider = self._provider("sel_audio_cost")
@@ -80,7 +80,7 @@ class TestSelectModel(_SelectionCase):
             provider, "sel-z-cheap", kind="audio", cost_per_audio_minute=0.004
         )
         self.assertEqual(
-            self.orch.select_model(kind="audio", optimize_for="cost"), cheap
+            self.router.select_model(kind="audio", optimize_for="cost"), cheap
         )
 
     def test_an_unpriced_model_is_not_ranked_behind_an_expensive_one(self):
@@ -88,7 +88,7 @@ class TestSelectModel(_SelectionCase):
         self._model(provider, "sel-a-cheap", cost_per_1m_input=0.2)
         self._model(provider, "sel-b-dear", cost_per_1m_input=20.0)
         unpriced = self._model(provider, "sel-c-unpriced")
-        ranked = self.orch._rank(
+        ranked = self.router._rank(
             self.env["gateway.ml.model"].search([("provider_id", "=", provider.id)]),
             "cost",
         )
@@ -105,7 +105,9 @@ class TestSelectModel(_SelectionCase):
         balanced = self._model(
             provider, "sel-z-even", cost_per_1m_input=2.0, cost_per_1m_output=2.0
         )
-        self.assertEqual(self.orch.select_model("chat", optimize_for="cost"), balanced)
+        self.assertEqual(
+            self.router.select_model("chat", optimize_for="cost"), balanced
+        )
 
     def test_an_expired_credential_makes_a_provider_unusable(self):
         provider = self._provider("sel_expired")
@@ -113,28 +115,28 @@ class TestSelectModel(_SelectionCase):
         self.env["credential.credential"].search(
             [("endpoint_id", "=", provider.endpoint_id.id)]
         ).date_expiration = fields.Datetime.now() - timedelta(days=1)
-        self.assertFalse(self.orch.select_model(kind="chat"))
+        self.assertFalse(self.router.select_model(kind="chat"))
 
     def test_an_archived_provider_is_not_selected_even_with_a_key(self):
         provider = self._provider("sel_archived")
         self._model(provider, "sel-archived-m")
         provider.endpoint_id.active = False
-        self.assertFalse(self.orch.select_model("chat"))
+        self.assertFalse(self.router.select_model("chat"))
 
     def test_an_endpoint_that_needs_no_key_is_usable_without_one(self):
         keyless = self._model(
             self._provider("sel_none", keyed=False, auth_type="none"), "sel-none-m"
         )
-        self.assertEqual(self.orch.select_model("chat"), keyless)
+        self.assertEqual(self.router.select_model("chat"), keyless)
 
     def test_several_providers_may_be_named(self):
         self._model(self._provider("sel_p1"), "sel-p1-m", accuracy_rating="5")
         second = self._model(self._provider("sel_p2"), "sel-p2-m", accuracy_rating="4")
         self._model(self._provider("sel_p3"), "sel-p3-m", accuracy_rating="2")
         self.assertEqual(
-            self.orch.select_model("chat", provider_code=["sel_p2", "sel_p3"]), second
+            self.router.select_model("chat", provider_code=["sel_p2", "sel_p3"]), second
         )
-        self.assertFalse(self.orch.select_model("chat", provider_code=[]))
+        self.assertFalse(self.router.select_model("chat", provider_code=[]))
 
     def test_queries_do_not_grow_with_the_models_a_provider_serves(self):
         provider = self._provider("sel_queries")
@@ -145,7 +147,7 @@ class TestSelectModel(_SelectionCase):
             self.env.flush_all()
             self.env.invalidate_all()
             before = self.env.cr.sql_statement_count
-            self.orch.select_model("chat")
+            self.router.select_model("chat")
             return self.env.cr.sql_statement_count - before
 
         few = count()
@@ -156,12 +158,12 @@ class TestSelectModel(_SelectionCase):
     def test_an_unknown_capability_is_a_programming_error(self):
         self._model(self._provider("sel_unknown"), "sel-unknown-m")
         with self.assertRaises(ValueError):
-            self.orch.select_model(kind="chat", required_capabilities={"no_such": 1})
+            self.router.select_model(kind="chat", required_capabilities={"no_such": 1})
 
     def test_an_unknown_use_case_tag_selects_nothing_rather_than_everything(self):
         self._model(self._provider("sel_tag"), "sel-tag-m")
         self.assertFalse(
-            self.orch.select_model(kind="chat", use_case_tags=["no-such-tag"])
+            self.router.select_model(kind="chat", use_case_tags=["no-such-tag"])
         )
 
 
@@ -185,16 +187,16 @@ class TestFallbackChain(_SelectionCase):
             attempted.append(ai_model.code)
             return raiser(ai_model)
 
-        with patch.object(AIOrchestrator, "_get_client", return_value=object()):
+        with patch.object(MlRouter, "_get_client", return_value=object()):
             try:
-                result = self.orch.execute_with_fallback(
+                result = self.router.run_with_fallback(
                     self.primary, request_func, fallback_chain=chain
                 )
             except CommError as error:
                 result = error
         return attempted, result
 
-    @mute_logger("odoo.addons.gateway_ml.tools.ai_orchestrator")
+    @mute_logger("odoo.addons.gateway_ml.tools.router")
     def test_hops_that_cannot_run_are_not_tried(self):
         def fail(ai_model):
             raise ServerError("503")
@@ -205,7 +207,7 @@ class TestFallbackChain(_SelectionCase):
         )
         self.assertEqual(attempted, ["fb-primary", "fb-sibling"])
 
-    @mute_logger("odoo.addons.gateway_ml.tools.ai_orchestrator")
+    @mute_logger("odoo.addons.gateway_ml.tools.router")
     def test_a_vision_model_may_back_up_a_chat_model_that_sees(self):
         seeing_chat = self._model(self._provider("fb_see"), "fb-see", has_vision=True)
         vision = self._model(
@@ -219,13 +221,13 @@ class TestFallbackChain(_SelectionCase):
                 raise ServerError("503")
             return "seen"
 
-        with patch.object(AIOrchestrator, "_get_client", return_value=object()):
-            result = self.orch.execute_with_fallback(
+        with patch.object(MlRouter, "_get_client", return_value=object()):
+            result = self.router.run_with_fallback(
                 seeing_chat, fail_first, fallback_chain=[vision]
             )
         self.assertEqual((attempted, result), (["fb-see", "fb-vision"], "seen"))
 
-    @mute_logger("odoo.addons.gateway_ml.tools.ai_orchestrator")
+    @mute_logger("odoo.addons.gateway_ml.tools.router")
     def test_an_untimed_hop_is_not_tried_for_a_timed_model(self):
         provider = self._provider("fb_timed")
         timed = self._model(provider, "fb-timed", kind="audio", has_timestamps=True)
@@ -239,14 +241,14 @@ class TestFallbackChain(_SelectionCase):
             attempted.append(ai_model.code)
             raise ServerError("503")
 
-        with patch.object(AIOrchestrator, "_get_client", return_value=object()):
+        with patch.object(MlRouter, "_get_client", return_value=object()):
             with self.assertRaises(CommError):
-                self.orch.execute_with_fallback(
+                self.router.run_with_fallback(
                     timed, fail, fallback_chain=[untimed, also_timed]
                 )
         self.assertEqual(attempted, ["fb-timed", "fb-also-timed"])
 
-    @mute_logger("odoo.addons.gateway_ml.tools.ai_orchestrator")
+    @mute_logger("odoo.addons.gateway_ml.tools.router")
     def test_a_non_retryable_failure_keeps_its_type(self):
         def fail(ai_model):
             raise AuthenticationError("401")
@@ -256,7 +258,7 @@ class TestFallbackChain(_SelectionCase):
         self.assertIsInstance(result, AuthenticationError)
 
     def test_caller_metadata_outside_the_allowlist_becomes_a_tag(self):
-        annotations = self.orch._event_annotations(
+        annotations = self.router._event_annotations(
             self.primary,
             False,
             None,

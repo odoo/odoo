@@ -1,6 +1,8 @@
 import logging
 import statistics
 import time
+from dataclasses import dataclass, field
+from typing import Any
 
 from odoo import fields
 
@@ -18,6 +20,38 @@ NON_RETRYABLE_ERRORS = (AuthenticationError, ClientError, ValidationError)
 
 STRATEGIES = ("balanced", "cost", "accuracy", "speed")
 
+OPERATION_KINDS = {
+    "chat": ("chat",),
+    "transcribe": ("audio",),
+    "transcribe_timed": ("audio",),
+    "synthesize": ("speech",),
+}
+
+
+@dataclass(frozen=True)
+class MlRequest:
+    prompt: str = ""
+    images: tuple = ()
+    temperature: float | None = None
+    max_tokens: int | None = None
+    audio: bytes = b""
+    filename: str = ""
+    mimetype: str = ""
+    language: str | None = None
+    vocabulary: tuple = ()
+    speakers: bool = False
+    text: str = ""
+    voice: str | None = None
+
+
+@dataclass(frozen=True)
+class MlResult:
+    model: Any
+    text: str | None = None
+    cues: list = field(default_factory=list)
+    duration: float = 0.0
+    audio: bytes | None = None
+
 
 def is_retryable(exc):
     return not isinstance(exc, NON_RETRYABLE_ERRORS)
@@ -27,7 +61,7 @@ def _as_list(value):
     return [value] if isinstance(value, str) else list(value)
 
 
-class AIOrchestrator:
+class MlRouter:
     _CALLER_ANNOTATIONS = ("origin_model", "origin_record_id")
 
     def __init__(self, env):
@@ -42,6 +76,7 @@ class AIOrchestrator:
         optimize_for="balanced",
         company_id=None,
         provider_code=None,
+        preferred=None,
     ):
         if optimize_for not in STRATEGIES:
             raise ValueError(
@@ -84,9 +119,115 @@ class AIOrchestrator:
                 domain,
             )
             return AIModel
+        if preferred and preferred in usable:
+            return preferred
         return self._rank(usable, optimize_for)[0]
 
-    def execute_with_fallback(
+    def run(
+        self,
+        operation,
+        request,
+        *,
+        model=None,
+        provider=None,
+        optimize_for="balanced",
+        use_case_tags=None,
+        company_id=None,
+        log_metadata=None,
+    ):
+        if operation not in OPERATION_KINDS:
+            raise ValueError(
+                f"Unknown operation {operation!r}; expected one of "
+                f"{', '.join(OPERATION_KINDS)}",
+            )
+        kinds, capabilities = self._selection_of(operation, request)
+        model = model or self.select_model(
+            kinds,
+            required_capabilities=capabilities or None,
+            use_case_tags=use_case_tags,
+            optimize_for=optimize_for,
+            company_id=company_id,
+            provider_code=provider.code if provider else None,
+            preferred=provider.default_model_id if provider else None,
+        )
+        if not model:
+            raise CommError(
+                f"No model is usable for {operation}"
+                + (f" on {provider.code}" if provider else "")
+                + f" in company {company_id or self.env.company.id}",
+            )
+        return self.run_with_fallback(
+            model,
+            lambda client, ai_model: MlResult(
+                ai_model, **self._dispatch(operation, request, client, ai_model)
+            ),
+            log_metadata=log_metadata,
+            company_id=company_id,
+        )
+
+    @staticmethod
+    def _selection_of(operation, request):
+        capabilities = {}
+        kinds = OPERATION_KINDS[operation]
+        if operation == "chat" and request.images:
+            kinds = ("chat", "vision")
+            capabilities["has_vision"] = True
+        if operation == "transcribe_timed":
+            capabilities["has_timestamps"] = True
+        return kinds, capabilities
+
+    @staticmethod
+    def _dispatch(operation, request, client, ai_model):
+        sampling = {
+            key: value
+            for key, value in (
+                ("temperature", request.temperature),
+                ("max_tokens", request.max_tokens),
+            )
+            if value is not None
+        }
+        if operation == "chat" and request.images:
+            data, media_type = request.images[0]
+            return {
+                "text": client.vision_completion(
+                    request.prompt,
+                    data,
+                    media_type=media_type,
+                    model=ai_model.code,
+                    **sampling,
+                )
+            }
+        if operation == "chat":
+            return {
+                "text": client.simple_completion(
+                    request.prompt, model=ai_model.code, **sampling
+                )
+            }
+        audio = {
+            "filename": request.filename or "audio",
+            "mimetype": request.mimetype or None,
+            "language": request.language,
+            "prompt": request.prompt or None,
+            "vocabulary": tuple(request.vocabulary),
+            "model": ai_model.code,
+        }
+        if operation == "transcribe":
+            return {"text": client.transcribe(request.audio, **audio)}
+        if operation == "transcribe_timed":
+            cues = client.transcribe_cues(
+                request.audio, speakers=request.speakers, **audio
+            )
+            return {"cues": cues, "duration": getattr(cues, "duration", 0.0)}
+        return {
+            "audio": client.synthesize(
+                request.text,
+                voice=request.voice,
+                mimetype=request.mimetype or "audio/mpeg",
+                model=ai_model.code,
+            )
+        }
+
+    def run_with_fallback(
         self,
         primary_model,
         request_func,
@@ -244,5 +385,5 @@ class AIOrchestrator:
         return annotations
 
 
-def get_ai_orchestrator(env):
-    return AIOrchestrator(env)
+def get_router(env):
+    return MlRouter(env)
