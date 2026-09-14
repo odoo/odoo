@@ -214,7 +214,7 @@
                                         <i class="oi oi-filled me-1" data-icon="send" />Send
                                     </button>
                                 </div>
-                                <div t-if="this.pos.accessRight.canShowPads" class="subpads d-flex flex-column">
+                                <div t-if="this.showSubPads" class="subpads d-flex flex-column">
                                     <Numpad class="'pb-2'" buttons="this.getNumpadButtons()"/>
                                         <ActionpadWidget
                                             order="this.getSelectedOrder()"

@@ -537,6 +537,10 @@ export class TicketScreen extends Component {
         );
     }
 
+    get showSubPads() {
+        return this.isOrderSynced && this.pos.accessRight.canShowPads;
+    }
+
     // Used to override inside `l10n_cl_edi_pos`
     get showInvoiceButton() {
         return this.isOrderSynced;
