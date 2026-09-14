@@ -372,3 +372,52 @@ test("a newer upload wins even when the older file finishes reading last", async
     await first;
     expect.verifySteps([TINY_PNG + "#new"]);
 });
+
+test("a name signed while the canvas is hidden is empty until the canvas is laid out", async () => {
+    const component = await mountWithCleanup(NameAndSignature, {
+        props: { signature: { name: "Owner" }, mode: "auto", noInputName: true },
+    });
+    const canvas = component.signaturePad.canvas;
+    canvas.style.display = "none";
+    await animationFrame();
+    await animationFrame();
+    expect([canvas.width, canvas.height]).toEqual([0, 0]);
+    expect(component.props.signature.isSignatureEmpty).toBe(true);
+
+    canvas.style.display = "";
+    await animationFrame();
+    await animationFrame();
+    expect(canvas.width).toBeGreaterThan(0);
+    expect(component.props.signature.isSignatureEmpty).toBe(false);
+    expect(component.props.signature.getSignatureImage()).not.toBe("data:,");
+});
+
+test("resizing the canvas keeps the drawn strokes", async () => {
+    const component = await mountWithCleanup(NameAndSignature, {
+        props: { signature: { name: "Owner" }, mode: "draw" },
+    });
+    const canvas = component.signaturePad.canvas;
+    const strokes = [
+        {
+            penColor: "black",
+            dotSize: 0,
+            minWidth: 2,
+            maxWidth: 2,
+            velocityFilterWeight: 0.7,
+            compositeOperation: "source-over",
+            points: [10, 20, 30, 40, 50].map((x, time) => ({
+                x,
+                y: x / 2,
+                pressure: 0.5,
+                time,
+            })),
+        },
+    ];
+    component.signaturePad.fromData(strokes);
+    canvas.style.width = "200px";
+    await animationFrame();
+    await animationFrame();
+    expect(canvas.width).toBe(200);
+    expect(component.signaturePad.toData()).toEqual(strokes);
+    expect(component.props.signature.isSignatureEmpty).toBe(false);
+});

@@ -75,6 +75,8 @@ export class NameAndSignature extends Component {
     defaultName = "";
     currentFont = 0;
     hasPaintedImage = false;
+    /** @type {string | Promise<string> | null} */
+    paintedImageSrc = null;
     /** @type {KeepLast<any>} */
     printImageKeepLast;
     /** @type {{ signMode: string, showSignatureArea: boolean, loadIsInvalid: boolean|undefined }} */
@@ -162,7 +164,10 @@ export class NameAndSignature extends Component {
                     this.clear();
                     this.fromDataURL(this.props.signature.signatureImage);
                 }
+                const resizeObserver = new ResizeObserver(() => this.fitSignature());
+                resizeObserver.observe(el);
                 return () => {
+                    resizeObserver.disconnect();
                     this.signaturePad.off();
                     Object.assign(signature, callerAccessors);
                 };
@@ -193,6 +198,7 @@ export class NameAndSignature extends Component {
         this.printImageKeepLast.cancel();
         this.signaturePad.clear();
         this.hasPaintedImage = false;
+        this.paintedImageSrc = null;
         this.props.signature.isSignatureEmpty = this.isSignatureEmpty;
     }
 
@@ -331,6 +337,7 @@ export class NameAndSignature extends Component {
             img.height * ratio,
         );
         this.hasPaintedImage = true;
+        this.paintedImageSrc = imgSrc;
         this.props.signature.isSignatureEmpty = this.isSignatureEmpty;
         this.props.onSignatureChange(this.state.signMode);
     }
@@ -345,11 +352,31 @@ export class NameAndSignature extends Component {
     resizeSignature() {
         const canvas = this.signatureRef.el;
         if (!canvas) {
-            return;
+            return false;
         }
         const width = canvas.clientWidth;
         const height = Math.trunc(width / this.props.displaySignatureRatio);
+        if (canvas.width === width && canvas.height === height) {
+            return false;
+        }
         Object.assign(canvas, { width, height });
+        return true;
+    }
+
+    fitSignature() {
+        const imgSrc = this.paintedImageSrc;
+        if (!this.resizeSignature()) {
+            return;
+        }
+        if (this.state.signMode === "auto") {
+            this.drawCurrentName();
+        } else if (imgSrc) {
+            this.printImage(imgSrc);
+        } else {
+            this.signaturePad.redraw();
+            this.props.signature.isSignatureEmpty = this.isSignatureEmpty;
+            this.props.onSignatureChange(this.state.signMode);
+        }
     }
 
     /**
@@ -374,7 +401,12 @@ export class NameAndSignature extends Component {
 
     /** @returns {boolean} */
     get isSignatureEmpty() {
-        return !this.hasPaintedImage && this.signaturePad.isEmpty();
+        const canvas = this.signaturePad.canvas;
+        return (
+            !canvas.width ||
+            !canvas.height ||
+            (!this.hasPaintedImage && this.signaturePad.isEmpty())
+        );
     }
 
     get loadIsInvalid() {
