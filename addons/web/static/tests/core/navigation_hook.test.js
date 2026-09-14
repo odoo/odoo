@@ -1,5 +1,6 @@
 import {
     animationFrame,
+    before,
     click,
     describe,
     expect,
@@ -7,13 +8,20 @@ import {
     manuallyDispatchProgrammaticEvent,
     press,
     queryAllTexts,
+    queryFirst,
     queryOne,
     test,
 } from "@odoo/hoot";
 import { Component, onMounted, proxy, signal, xml } from "@odoo/owl";
 import { destroyApp, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { ACTIVE_ELEMENT_CLASS, Navigator, useNavigation } from "@web/core/navigation/navigation";
+import {
+    ACTIVE_ELEMENT_CLASS,
+    Navigator,
+    useNavigation,
+    useTabsKeyboardNavigation,
+} from "@web/core/navigation/navigation";
 import { useAutofocus } from "@web/core/utils/hooks";
+import { patch } from "@web/core/utils/patch";
 
 class BasicHookParent extends Component {
     static template = xml`
@@ -525,4 +533,94 @@ test("focus not stolen from search input during typing, hovering, and clearing",
 
     expect(".fake-item").toHaveCount(10);
     expect("input").toBeFocused();
+});
+
+describe("useTabsKeyboardNavigation", () => {
+    let Tabs;
+    before(() => {
+        Tabs = class extends Component {
+            static template = xml`
+                <div role="tablist" t-ref="this.tablistRef">
+                    <button role="tab" t-on-click="this.onBtnClick">1</button>
+                    <button role="tab" t-on-click="this.onBtnClick">2</button>
+                    <button role="tab" t-on-click="this.onBtnClick">3</button>
+                </div>
+                <div role="tabpanel">
+                    <button>Tabpanel button</button>
+                </div>
+                `;
+            activeTab = signal();
+            tablistRef = signal.ref();
+            setup() {
+                onMounted(() => {
+                    this.activeTab.set(this.tablistRef().querySelector("[role=tab]"));
+                });
+                this.setupKeyboardNav();
+            }
+            onBtnClick(ev) {
+                this.activeTab.set(ev.currentTarget);
+            }
+            setupKeyboardNav() {
+                useTabsKeyboardNavigation({
+                    ref: this.tablistRef,
+                    isTabActive: (el) => el === this.activeTab(),
+                });
+            }
+        };
+    });
+
+    test.tags("desktop");
+    test("apply arrow navigation on tabs UI pattern", async () => {
+        await mountWithCleanup(Tabs);
+        await animationFrame();
+        expect("[role=tab]").toHaveCount(3);
+        expect("button:contains(1)").toHaveAttribute("tabindex", "0");
+        expect("button:contains(2)").toHaveAttribute("tabindex", "-1");
+        expect("button:contains(3)").toHaveAttribute("tabindex", "-1");
+        queryFirst("[role=tab]").focus();
+        await press("Tab");
+        expect("[role=tabpanel] button").toBeFocused();
+        await press("Tab", { shiftKey: true });
+        await press("ArrowRight");
+        expect("button:contains(2)").toBeFocused();
+        // Tabindex didn't change
+        expect("button:contains(1)").toHaveAttribute("tabindex", "0");
+        expect("button:contains(2)").toHaveAttribute("tabindex", "-1");
+        await press("Enter");
+        expect("button:contains(2)").toBeFocused();
+        expect("button:contains(1)").toHaveAttribute("tabindex", "-1");
+        expect("button:contains(2)").toHaveAttribute("tabindex", "0");
+        expect("button:contains(3)").toHaveAttribute("tabindex", "-1");
+        await press("End");
+        expect("button:contains(3)").toBeFocused();
+        expect("button:contains(3)").toHaveAttribute("tabindex", "-1");
+        await press("Home");
+        expect("button:contains(1)").toBeFocused();
+        expect("button:contains(1)").toHaveAttribute("tabindex", "-1");
+    });
+
+    test.tags("desktop");
+    test("loops from 1st to last and last to 1st", async () => {
+        patch(Tabs.prototype, {
+            setupKeyboardNav() {
+                useTabsKeyboardNavigation({
+                    ref: this.tablistRef,
+                    isTabActive: (el) => el === this.activeTab(),
+                    loop: true,
+                });
+            },
+        });
+
+        await mountWithCleanup(Tabs);
+        await animationFrame();
+        expect("[role=tab]").toHaveCount(3);
+        expect("button:contains(1)").toHaveAttribute("tabindex", "0");
+        expect("button:contains(2)").toHaveAttribute("tabindex", "-1");
+        expect("button:contains(3)").toHaveAttribute("tabindex", "-1");
+        queryFirst("[role=tab]").focus();
+        await press("ArrowLeft");
+        expect("button:contains(3)").toBeFocused();
+        await press("ArrowRight");
+        expect("button:contains(1)").toBeFocused();
+    });
 });
