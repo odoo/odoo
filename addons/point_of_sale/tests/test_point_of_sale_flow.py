@@ -2832,6 +2832,51 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.assertNotIn(item_future_start.id, loaded_ids,
             "item with date_start still in the future must not be fetched")
 
+    def test_incremental_load_attribute_values_of_old_attribute(self):
+        """Attribute values created after the last sync must be loaded even if
+        their attribute was not modified since (it is not part of the delta)."""
+        self.pos_config_usd.open_ui()
+        session = self.pos_config_usd.current_session_id
+        now = fields.Datetime.now()
+
+        attribute = self.env['product.attribute'].create({
+            'name': 'Vintage',
+            'create_variant': 'always',
+            'value_ids': [Command.create({'name': '2023'}), Command.create({'name': '2024'})],
+        })
+        # The attribute predates the last sync: backdate its write_date.
+        attribute.flush_model()
+        self.env.cr.execute(
+            "UPDATE product_attribute SET write_date = %s WHERE id = %s",
+            (now - timedelta(days=30), attribute.id),
+        )
+        attribute.invalidate_recordset(['write_date'])
+        last_server_date = fields.Datetime.to_string(now - timedelta(days=10))
+
+        # A configurable product created after the last sync, on that old attribute.
+        template = self.env['product.template'].create({
+            'name': 'Sèvre-et-Maine',
+            'available_in_pos': True,
+            'attribute_line_ids': [Command.create({
+                'attribute_id': attribute.id,
+                'value_ids': [Command.set(attribute.value_ids.ids)],
+            })],
+        })
+        ptavs = template.attribute_line_ids.product_template_value_ids
+        self.assertEqual(len(ptavs), 2)
+
+        data = session.with_context(pos_last_server_date=last_server_date).load_data([])
+        self.assertNotIn(attribute.id, {a['id'] for a in data['product.attribute']},
+            "unchanged attribute is not part of the incremental load")
+        self.assertTrue(set(template.attribute_line_ids.ids) <= {p['id'] for p in data['product.template.attribute.line']})
+        self.assertTrue(set(template.product_variant_ids.ids) <= {p['id'] for p in data['product.product']})
+        self.assertTrue(set(ptavs.ids) <= {v['id'] for v in data['product.template.attribute.value']},
+            "attribute values of the new line must be loaded even if their attribute is unchanged")
+
+        # A full load still returns them.
+        data = session.load_data([])
+        self.assertTrue(set(ptavs.ids) <= {v['id'] for v in data['product.template.attribute.value']})
+
     def test_sequence_dynamic_prefix_suffix(self):
         """Test that sequence_number is correctly extracted when sequence has dynamic prefix/suffix."""
         self.pos_config_usd.open_ui()
