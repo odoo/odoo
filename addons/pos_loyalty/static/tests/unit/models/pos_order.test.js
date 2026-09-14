@@ -512,3 +512,92 @@ describe("pos.order - loyalty", () => {
         expect(rewardLine.prices.total_included).toBe(-10);
     });
 });
+
+describe("pos.order - rebuilt client state", () => {
+    const activateGiftCard = async (store, order) => {
+        onRpc("loyalty.card", "get_loyalty_card_partner_by_code", () => false);
+        onRpc("pos.config", "use_coupon_code", () => ({
+            successful: true,
+            payload: {
+                coupon_id: 18,
+                program_id: 3,
+                partner_id: false,
+                points: 92,
+                points_display: "92",
+                has_source_order: true,
+            },
+        }));
+        const models = store.models;
+        deactivateAllProgramsExcept(store, [3]);
+        const reward = models["loyalty.reward"].get(5);
+        reward.discount_mode = "per_point";
+        reward.discount = 1;
+        reward.discount_line_product_id = models["product.product"].get(200);
+        await addProductLineToOrder(store, order, { productId: 1, price_unit: 92 });
+        await store.activateCode("0449-3984-4efe");
+        expect(order._get_reward_lines()).toHaveLength(1);
+        expect(order._get_reward_lines()[0].coupon_id.id).toBe(18);
+        expect(order.priceIncl).toBe(0);
+    };
+
+    test("code activated gift card reward survives a page reload", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        await activateGiftCard(store, order);
+
+        // `_code_activated_coupon_ids` is a local field, it is not restored with the order,
+        // and setup() flags the rebuilt order with invalidCoupons
+        order._code_activated_coupon_ids = [["clear"]];
+        order.invalidCoupons = true;
+        await store.orderUpdateLoyaltyPrograms();
+        order._updateRewardLines();
+
+        expect(order._get_reward_lines()).toHaveLength(1);
+        expect(order._get_reward_lines()[0].coupon_id.id).toBe(18);
+        expect(order.priceIncl).toBe(0);
+        expect(order._code_activated_coupon_ids.map((c) => c.id)).toEqual([18]);
+    });
+
+    test("code activated gift card reward survives a reload from the server", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        await activateGiftCard(store, order);
+
+        // neither the local field nor the uiState exist when the order comes from read_pos_orders
+        order._code_activated_coupon_ids = [["clear"]];
+        order.uiState.couponPointChanges = {};
+        order.invalidCoupons = true;
+        await store.orderUpdateLoyaltyPrograms();
+        order._updateRewardLines();
+
+        expect(order._get_reward_lines()).toHaveLength(1);
+        expect(order.priceIncl).toBe(0);
+    });
+
+    test("reward line of a nominative card is still dropped when the partner is removed", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = store.addNewOrder();
+        deactivateAllProgramsExcept(store, [7]);
+        const partner = models["res.partner"].get(1);
+        const program = models["loyalty.program"].get(7);
+        const reward = models["loyalty.reward"].get(1);
+        const card = models["loyalty.card"].get(4);
+        program.reward_ids = [1];
+        reward.program_id = program;
+        reward.required_points = 1;
+        reward.discount_line_product_id = models["product.product"].get(5);
+        order.setPartner(partner);
+        await store.orderUpdateLoyaltyPrograms();
+        await addProductLineToOrder(store, order, { productId: 1, price_unit: 10 });
+        expect(order._applyReward(reward, card.id)).toBe(true);
+        expect(order._get_reward_lines()).toHaveLength(1);
+
+        order.setPartner(false);
+        order.invalidCoupons = true;
+        await store.orderUpdateLoyaltyPrograms();
+        order._updateRewardLines();
+
+        expect(order._get_reward_lines()).toHaveLength(0);
+    });
+});
