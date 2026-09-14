@@ -88,7 +88,10 @@ def recompute(field: Field, records: ModelLike) -> None:
         )
         if existing:
             func(existing)
-        for f in records.pool.field_computed[field]:
+        # a record that is gone is gone for every pending field of the model,
+        # not only this one: the next field's recompute would only find it
+        # missing again, one existence query each
+        for f in records._get_stored_computed_fields():
             records.env.remove_to_compute(f, missing)
 
     if field.recursive:
