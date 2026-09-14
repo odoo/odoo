@@ -1,5 +1,6 @@
 import typing
 from collections import defaultdict
+from collections.abc import Iterator, Reversible
 from operator import attrgetter
 from typing import override
 
@@ -189,7 +190,11 @@ class Reference(Selection["BaseModel | None"]):
     ) -> BaseModel | None:
         if value:
             res_model, res_id = value.split(",")
-            return record.env[res_model].browse(int(res_id))
+            corecord = record.env[res_model].browse(int(res_id))
+            # the siblings naming the same model fetch with it, as a
+            # many2one's do
+            corecord._prefetch_ids = PrefetchReference(record, self, res_model)
+            return corecord
         return None
 
     @override
@@ -223,6 +228,31 @@ class Reference(Selection["BaseModel | None"]):
         self, value: typing.Any, record: ModelLike
     ) -> str | typing.Literal[False]:
         return value.display_name if value else False
+
+
+class PrefetchReference(Reversible):
+    __slots__ = ("field", "prefix", "record")
+
+    def __init__(self, record: ModelLike, field: Reference, res_model: str) -> None:
+        self.record = record
+        self.field = field
+        self.prefix = res_model + ","
+
+    def _ids(self, record_ids: typing.Iterable[typing.Any]) -> Iterator[int]:
+        field_cache = self.field._get_cache(self.record.env)
+        prefix = self.prefix
+        return unique(
+            int(value[len(prefix) :])
+            for id_ in record_ids
+            if isinstance(value := field_cache.get(id_), str)
+            and value.startswith(prefix)
+        )
+
+    def __iter__(self) -> Iterator[int]:
+        return self._ids(self.record._prefetch_ids)
+
+    def __reversed__(self) -> Iterator[int]:
+        return self._ids(reversed(self.record._prefetch_ids))
 
 
 class Many2oneReference(Integer):

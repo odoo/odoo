@@ -254,6 +254,16 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             SET compute = 'pass', depends = 'x_stuff_id.x_custom_1'
             WHERE model = 'x_test_10_compute_store_x_name' AND name = 'x_name'
         """)
+        if not self.registry.loaded:
+            # while modules load, a manual many2one to a model the registry
+            # has not seen is deferred without a field, not skipped with a
+            # warning (ir.model.fields._is_field_ready_now)
+            with self.assertNoLogs("odoo.registry", level="WARNING"):
+                self.registry.setup_models(self.cr, ["x_test_10_compute_store_x_name"])
+            self.assertNotIn(
+                "x_stuff_id", self.env["x_test_10_compute_store_x_name"]._fields
+            )
+            return
         with self.assertLogs("odoo.registry", level="WARNING") as logs:
             self.registry.setup_models(self.cr, ["x_test_10_compute_store_x_name"])
         self.assertEqual(len(logs.output), 1, logs.output)
@@ -1352,6 +1362,36 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
         self.assertEqual(record.reference, self.env.user.partner_id)
         with self.assertRaises(ValueError):
             record.reference = self.env["ir.model"].search([], limit=1)
+
+    def test_24_reference_records_prefetch_with_their_siblings(self):
+        partners = self.env["res.partner"].create(
+            [{"name": f"ref partner {i}"} for i in range(30)]
+        )
+        currencies = (
+            self.env["res.currency"].with_context(active_test=False).search([], limit=3)
+        )
+        records = self.env["test_orm.mixed"].create(
+            [
+                {
+                    "reference": f"res.partner,{partners[i % 30].id}"
+                    if i % 4
+                    else f"res.currency,{currencies[i % 3].id}"
+                }
+                for i in range(120)
+            ]
+        )
+        self.env.invalidate_all()
+        # the column, one verification per model, the partners' and the
+        # currencies' rows: the record a Reference answers carries the
+        # siblings naming its model as prefetch ids, as a many2one's does
+        with self.assertQueryCount(6):
+            names = [record.reference.display_name for record in records]
+        self.assertEqual(names[1], "ref partner 1")
+        self.assertEqual(names[0], currencies[0].display_name)
+        self.assertEqual(
+            sorted(set(records[1].reference._prefetch_ids)),
+            sorted(set(partners.ids)),
+        )
 
     def test_24_reference_validate_false_skips_db(self):
         record = self.env["test_orm.mixed"].create({})
