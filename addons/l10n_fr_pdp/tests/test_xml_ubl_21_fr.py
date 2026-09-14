@@ -169,3 +169,16 @@ class TestL10nFrPdpXml(TestL10nFrPdpCommon):
             {'price_subtotal': 1000.0, 'price_total': 1200.0},
             {'price_subtotal': 400.0, 'price_total': 480.0},
         ])
+
+    def test_import_retrieve_partner(self):
+        invoice = self._import_invoice_as_attachment_on('ubl_21_fr_in_partial_invoice_retrieve_partner')
+        self.assertEqual(invoice.partner_id, self.partner_a)
+
+        self.partner_a.peppol_eas = False
+        invoice = self._import_invoice_as_attachment_on('ubl_21_fr_in_partial_invoice_retrieve_partner')
+        self.assertRecordValues(invoice.partner_id, [{
+            'parent_id': self.partner_a.id,
+            'name': 'SUPER FRENCH PARTNER',
+            'peppol_eas': '0225',
+            'peppol_endpoint': '968515759',
+        }])

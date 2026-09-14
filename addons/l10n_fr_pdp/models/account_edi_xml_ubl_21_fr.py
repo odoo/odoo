@@ -237,6 +237,24 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
             }
         }
 
+    def _import_ubl_retrieve_customer(self, collected_values):
+        self._import_retrieve_customer(collected_values)
+        customer_id = collected_values['to_write'].get('partner_id')
+        if customer_id:
+            customer = self.env['res.partner'].browse(customer_id)
+            peppol_endpoint = collected_values['customer_values'].get('peppol_endpoint')
+            if customer.peppol_eas != '0225' or customer.peppol_endpoint != peppol_endpoint:
+                # the partner linked to the bill needs to have a valid french EAS to be able to send cancel/accept message to the IAP.
+                # If the retrieved customer doesn't have the same EAS as the bill, create a new contact on it with the right EAS.
+                new_contact = customer.copy({
+                    'name': customer.name,
+                    'peppol_eas': '0225',
+                    'peppol_endpoint': peppol_endpoint,
+                    'parent_id': customer_id,
+                    'company_type': customer.company_type,
+                })
+                collected_values['to_write']['partner_id'] = new_contact.id
+
     def _import_ubl_invoice_add_prepaid_amount(self, collected_values):
         # imported invoice is a final invoice following downpayments.
         # We assume all billing references are references to downpayments.
