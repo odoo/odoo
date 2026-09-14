@@ -42,6 +42,26 @@ class HrAttendance(http.Controller):
 
     @staticmethod
     def _get_company(token):
+        """The company whose kiosk key is `token`, or an empty recordset.
+
+        A FALSY token is refused before the search, and that is not defensive
+        tidiness. Every kiosk route is `auth="public"` and takes its token from
+        the client, so a caller can send `null`, `false` or `""` -- and an Odoo
+        domain turns all three into `attendance_kiosk_key IS NULL`. Against a
+        company whose key was NULL, `/hr_attendance/attendance_employee_data`
+        with `"token": null` returned that company's employee names, avatars
+        and hours to an unauthenticated caller, and the sibling routes would
+        have checked them in, created employees and assigned badges.
+
+        The key is `required` now and unique, so a NULL should be unreachable.
+        This guard is the half that does not depend on that being true of every
+        database the code meets: a restore, a migration that added the column
+        without the back-fill, or a future field change all reintroduce it, and
+        none of them would look like a security change.
+        """
+        if not token:
+            dbg.logic.debug("[kiosk] refusing a falsy token")
+            return request.env["res.company"].sudo().browse()
         company = (
             request.env["res.company"]
             .sudo()

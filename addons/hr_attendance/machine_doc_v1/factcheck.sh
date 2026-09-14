@@ -489,8 +489,15 @@ done
 # invisible without this.
 while read -r sha; do
     [ -z "$sha" ] && continue
-    if git -C "$MOD" cat-file -e "$sha^{commit}" 2>/dev/null; then ok
-    else bad "docs pin a figure to $sha, which is not a commit in this history"; fi
+    # `merge-base --is-ancestor`, not `cat-file -e`. A rebase rewrites a commit
+    # and the old object survives in the local database until it is collected,
+    # so `cat-file` says yes to a sha this branch no longer contains -- and
+    # says yes for as long as the one person running the harness has the old
+    # object, which is nobody after a fresh clone. That is `ratchet.py`'s
+    # ORPHANED-BASE in a different tool: a pin measured on a tree this history
+    # never had.
+    if git -C "$MOD" merge-base --is-ancestor "$sha" HEAD 2>/dev/null; then ok
+    else bad "docs pin a figure to $sha, which is not an ancestor of HEAD (rewritten by a rebase, or never in this history)"; fi
 done < <(grep -hoP '`\K[0-9a-f]{12}(?=`)' "${DOCS[@]}" | sort -u)
 
 # Every test class the docs name by hand must exist. A frozen figure that

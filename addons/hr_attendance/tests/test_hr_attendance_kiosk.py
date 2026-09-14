@@ -162,6 +162,92 @@ class TestKioskRouteAuthorisation(HttpCase):
         self.assertEqual(result.get("status"), "error")
         self.assertFalse(self.unbadged.sudo().barcode)
 
+    def test_a_falsy_token_reaches_nothing(self):
+        """A token of nothing is not a token, whatever the database looks like.
+
+        Every kiosk route is `auth="public"` and takes its token from the
+        caller, and an Odoo domain turns `None`, `False` and `""` alike into
+        `attendance_kiosk_key IS NULL`. Against a company whose key was NULL --
+        driven by hand with curl, all three values -- the route returned that
+        company's employee name, avatar and hours to an unauthenticated caller,
+        and the sibling routes would have checked them in, created employees
+        and assigned badges.
+
+        `required=True` closes that on its own, twice over (below). This test
+        is for the other end, the explicit guard, which does not depend on the
+        database in front of it having the constraint.
+        """
+        # THREE THINGS HAVE TO BE UNDONE, and the third is the one that makes
+        # this test a test rather than a tautology.
+        #
+        # `_optimize_in_required` (odoo/orm/domain/optimizations.py) strips
+        # `False` from an `in` set when the field is `required` AND is in
+        # `registry.not_null_fields`. `= False` normalises to `in {False}`, so
+        # stripped it becomes `in {}` and matches nothing -- which is the
+        # second way `required=True` closes this hole, and also the reason a
+        # test that only drops the NOT NULL and writes a NULL passes with the
+        # guard REMOVED. It is measuring the optimiser, not the data.
+        #
+        # `not_null_fields` is what the registry recorded about the SCHEMA at
+        # load, not the live schema, so the DDL below does not move it. The
+        # discard is what reproduces the world the guard exists for: a database
+        # where the column is nullable and the registry knows it.
+        field = self.env["res.company"]._fields["attendance_kiosk_key"]
+        in_not_null = field in self.registry.not_null_fields
+        self.registry.not_null_fields.discard(field)
+        if in_not_null:
+            self.addCleanup(self.registry.not_null_fields.add, field)
+        self.env.cr.execute(
+            "ALTER TABLE res_company ALTER COLUMN attendance_kiosk_key DROP NOT NULL"
+        )
+        self.env.cr.execute(
+            "UPDATE res_company SET attendance_kiosk_key = NULL WHERE id = %s",
+            (self.company.id,),
+        )
+        self.env.invalidate_all()
+
+        # The setup is asserted before what it sets up: a domain that matches
+        # nothing here would make every assertion below pass for free.
+        self.assertEqual(
+            self.env["res.company"]
+            .sudo()
+            .search([("attendance_kiosk_key", "=", False)])
+            .ids,
+            self.company.ids,
+            "the fixture no longer reproduces a nullable key; the assertions "
+            "below would pass against any code",
+        )
+
+        for token in (None, False, ""):
+            with self.subTest(token=token):
+                result = self._call(
+                    "/hr_attendance/attendance_employee_data",
+                    employee_id=self.badged.id,
+                    token=token,
+                )
+                self.assertEqual(result.get("status"), "error")
+                self.assertNotIn("employee_name", result)
+
+    def test_a_required_key_makes_the_falsy_domain_match_nothing(self):
+        """The other half, and it is not the same half.
+
+        With the column NOT NULL and the registry knowing it,
+        `_optimize_in_required` turns `attendance_kiosk_key = False` into a
+        domain matching nothing. That is what protects a database whose code
+        predates the guard, and it is what made the guard's own test vacuous
+        until the discard above. Asserted here so that if the optimisation
+        ever stops applying to this field, one of these two tests says which
+        layer moved.
+        """
+        field = self.env["res.company"]._fields["attendance_kiosk_key"]
+        self.assertTrue(field.required)
+        self.assertIn(field, self.registry.not_null_fields)
+        self.assertFalse(
+            self.env["res.company"]
+            .sudo()
+            .search([("attendance_kiosk_key", "=", False)])
+        )
+
 
 @tagged("post_install", "-at_install", "hr_attendance_kiosk")
 class TestKioskSettingsModeIsNotSelfServe(HttpCase):

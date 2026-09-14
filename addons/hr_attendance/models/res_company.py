@@ -35,6 +35,7 @@ class ResCompany(models.Model):
     attendance_kiosk_delay = fields.Integer(default=10)
     attendance_kiosk_key = fields.Char(
         default=lambda s: uuid.uuid4().hex,
+        required=True,
         copy=False,
         groups="hr_attendance.group_hr_attendance_user",
     )
@@ -90,6 +91,11 @@ class ResCompany(models.Model):
                 WHERE {self._table}.id = vals.id
             """
             self.env.cr.execute_values(query, values_args)
+
+    _attendance_kiosk_key_unique = models.Constraint(
+        "UNIQUE(attendance_kiosk_key)",
+        "Two companies cannot share a kiosk key.",
+    )
 
     def _regenerate_attendance_kiosk_key(self):
         self.check_singleton()
