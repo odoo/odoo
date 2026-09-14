@@ -785,10 +785,7 @@ Versions:
         for leave in employee_leaves:
             if not leave.date_from or not leave.date_to:
                 continue
-            if (
-                leave.employee_id.sudo().is_flexible
-                and leave.request_date_to == leave.request_date_from
-            ):
+            if leave._answers_its_own_duration():
                 continue
             key = (
                 leave.date_from,
@@ -834,44 +831,8 @@ Versions:
                 continue
             hours, days = (0, 0)
             if leave.employee_id:
-                if (
-                    leave.employee_id.sudo().is_flexible
-                    and leave.request_date_to == leave.request_date_from
-                ):
-                    public_holidays = self.env["resource.calendar.leaves"].search(  # noqa: E8507 - one lookup per flexible one-day leave, on its own calendar and date
-                        [
-                            ("resource_id", "=", False),
-                            ("date_from", "<", leave.date_to),
-                            ("date_to", ">", leave.date_from),
-                            ("calendar_id", "in", [False, calendar.id]),
-                            ("company_id", "=", leave.company_id.id),
-                        ]
-                    )
-                    if public_holidays:
-                        public_holidays_intervals = Intervals(
-                            [(ph.date_from, ph.date_to, ph) for ph in public_holidays]
-                        )
-                        leave_intervals = Intervals(
-                            [(leave.date_from, leave.date_to, leave)]
-                        )
-                        real_leave_intervals = (
-                            leave_intervals - public_holidays_intervals
-                        )
-                        hours = 0
-                        for start, stop, _meta in real_leave_intervals:
-                            hours += (stop - start).total_seconds() / 3600
-                    else:
-                        hours = (leave.date_to - leave.date_from).total_seconds() / 3600
-                    if not leave.request_unit_hours and not public_holidays:
-                        days = (
-                            1
-                            if not leave.request_unit_half
-                            or leave.request_date_from_period
-                            != leave.request_date_to_period
-                            else 0.5
-                        )
-                    else:
-                        days = hours / 24
+                if leave._answers_its_own_duration():
+                    days, hours = leave._flexible_duration(calendar)
                 elif leave.leave_type_request_unit == "day" and check_leave_type:
                     work_time_per_day_list = work_time_per_day_mapped[
                         leave.date_from,
@@ -905,6 +866,143 @@ Versions:
                 days = ceil(days)
             result[leave.id] = (days, hours)
         return result
+
+    def _answers_its_own_duration(self):
+        """Whether the request's own shape is the whole answer.
+
+        A resource with no timetable has no working schedule to intersect the
+        request with, so what was asked for is what it costs. The exception is
+        an hourly request spanning days: the hours between its two clock times
+        are a schedule question again, and that one keeps going through the
+        calendar.
+        """
+        self.check_singleton()
+        if not self.employee_id.sudo().is_flexible:
+            return False
+        return (
+            self.request_date_from == self.request_date_to
+            or not self.request_unit_hours
+        )
+
+    def _flexible_day_fractions(self):
+        """How much of each covered day the request asks for.
+
+        A whole day each, less a half at an end the requester halved -- which
+        is what a multi-day half-day request means, and what reading only the
+        first day of it loses.
+        """
+        self.check_singleton()
+        fractions = {}
+        day = self.request_date_from
+        while day <= self.request_date_to:
+            fraction = 1.0
+            if self.request_unit_half:
+                if day == self.request_date_from and (
+                    self.request_date_from_period == "pm"
+                ):
+                    fraction -= 0.5
+                if day == self.request_date_to and self.request_date_to_period == "am":
+                    fraction -= 0.5
+            fractions[day] = fraction
+            day += timedelta(days=1)
+        return fractions
+
+    def _daily_windows(self, tz):
+        """Each day a part-day request covers: its window in `tz`, and what it
+        costs that day.
+
+        A request that runs into the next day occupies part of every day it
+        touches. Reading only the day it starts on leaves the rest of it
+        available, and charges the whole request to that first day.
+        """
+        self.check_singleton()
+        if self.request_unit_hours:
+            start = self.date_from.replace(tzinfo=UTC).astimezone(tz)
+            stop = self.date_to.replace(tzinfo=UTC).astimezone(tz)
+            windows = []
+            day = start.date()
+            while day <= (stop - timedelta(microseconds=1)).date():
+                day_start = max(
+                    start, datetime.combine(day, time.min).replace(tzinfo=tz)
+                )
+                day_stop = min(
+                    stop, datetime.combine(day, time.max).replace(tzinfo=tz)
+                )
+                windows.append(
+                    (
+                        day,
+                        day_start,
+                        day_stop,
+                        (day_stop - day_start).total_seconds() / 3600,
+                    )
+                )
+                day += timedelta(days=1)
+            return windows
+        hours_per_day = self.resource_calendar_id.hours_per_day or HOURS_PER_DAY
+        windows = []
+        for day, fraction in self._flexible_day_fractions().items():
+            if not fraction:
+                continue
+            if not float_compare(fraction, 1.0, precision_digits=2):
+                window = (time.min, time.max)
+            elif day == self.request_date_from and (
+                self.request_date_from_period == "pm"
+            ):
+                window = (time(12), time.max)
+            else:
+                window = (time.min, time(12))
+            windows.append(
+                (
+                    day,
+                    datetime.combine(day, window[0]).replace(tzinfo=tz),
+                    datetime.combine(day, window[1]).replace(tzinfo=tz),
+                    fraction * hours_per_day,
+                )
+            )
+        return windows
+
+    def _flexible_duration(self, calendar):
+        self.check_singleton()
+        public_holidays = self.env["resource.calendar.leaves"].search(  # noqa: E8507 - one lookup per flexible leave, on its own calendar and dates
+            [
+                ("resource_id", "=", False),
+                ("date_from", "<", self.date_to),
+                ("date_to", ">", self.date_from),
+                ("calendar_id", "in", [False, calendar.id]),
+                ("company_id", "=", self.company_id.id),
+            ]
+        )
+        if self.request_date_from != self.request_date_to:
+            fractions = self._flexible_day_fractions()
+            for holiday in public_holidays:
+                for day in fractions:
+                    if holiday.date_from.date() <= day <= holiday.date_to.date():
+                        fractions[day] = 0.0
+            days = sum(fractions.values())
+            hours = days * (calendar.hours_per_day or HOURS_PER_DAY)
+            dbg.logic.debug(
+                "_flexible_duration on %s: %s -> %s days, %s hours",
+                dbg.rec(self),
+                fractions,
+                days,
+                hours,
+            )
+            return days, hours
+        if public_holidays:
+            worked = Intervals([(self.date_from, self.date_to, self)]) - Intervals(
+                [
+                    (holiday.date_from, holiday.date_to, holiday)
+                    for holiday in public_holidays
+                ]
+            )
+            hours = sum(
+                (stop - start).total_seconds() / 3600 for start, stop, _meta in worked
+            )
+            return hours / 24, hours
+        hours = (self.date_to - self.date_from).total_seconds() / 3600
+        if self.request_unit_hours:
+            return hours / 24, hours
+        return next(iter(self._flexible_day_fractions().values())), hours
 
     @api.depends(
         "date_from", "date_to", "resource_calendar_id", "holiday_status_id.request_unit"
@@ -1625,7 +1723,6 @@ Versions:
         return True
 
     def action_refuse(self):
-        current_employee = self.env.user.employee_id
         if any(
             holiday.state not in ["confirm", "validate", "validate1"]
             for holiday in self
@@ -1637,13 +1734,13 @@ Versions:
             )
 
         self._notify_manager()
-        validated_holidays = self.filtered(lambda hol: hol.state == "validate1")
-        validated_holidays.write(
-            {"state": "refuse", "first_approver_id": current_employee.id}
-        )
-        (self - validated_holidays).write(
-            {"state": "refuse", "second_approver_id": current_employee.id}
-        )
+        # Refusing is not approving. Both approver fields say in their own help
+        # text that they hold whoever validated the request, so a refusal
+        # leaves them alone: writing one made a leave nobody had approved show
+        # a Second Approval, and overwrote the real first approver of one that
+        # had been. Who refused is on the tracked state change and in the
+        # chatter message posted below.
+        self.write({"state": "refuse"})
         self.mapped("meeting_id").write({"active": False})
         for holiday in self:
             if holiday.employee_id.user_id:

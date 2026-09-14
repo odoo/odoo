@@ -1247,7 +1247,6 @@ class HrLeaveAllocation(models.Model):
         )
 
     def action_refuse(self):
-        current_employee = self.env.user.employee_id
         if any(
             allocation.state not in ["confirm", "validate", "validate1"]
             for allocation in self
@@ -1258,7 +1257,10 @@ class HrLeaveAllocation(models.Model):
                 )
             )
 
-        self.write({"state": "refuse", "approver_id": current_employee.id})
+        # `approver_id` holds whoever validated the allocation, so a refusal
+        # leaves it alone rather than overwriting the real approver of one that
+        # had been approved. The refusal itself is tracked on `state`.
+        self.write({"state": "refuse"})
         self.activity_update()
         return True
 

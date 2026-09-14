@@ -1,3 +1,4 @@
+from collections import defaultdict
 from datetime import UTC, date, datetime
 from unittest.mock import patch
 
@@ -6,6 +7,7 @@ from freezegun import freeze_time
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 
+from odoo.addons.hr_holidays.models.hr_employee import HrEmployee
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
 
 
@@ -1117,21 +1119,36 @@ class TestPresenceFollowsTheLeave(TestHrHolidaysCommon):
             "answers from the cache the approval never invalidated",
         )
 
-    def test_both_presence_fields_declare_what_they_read(self):
-        """The icon test above proves the icon; this proves the declaration.
+    def test_both_presence_computes_declare_what_they_read(self):
+        """This module's own overrides say they read `is_absent`.
 
-        `hr_presence_state` is reached through `user_id.im_status`, which is
-        invalidated often enough that a behavioural test of it passes with or
-        without the dependency -- so it is pinned where it is actually missing.
+        Asserted on the class rather than on `registry.field_depends`, which is
+        the union every installed module contributes: a sibling declaring the
+        same path would keep that green with this module's declaration deleted,
+        and on a database carrying hr_presence one of these two is exactly that
+        case. The behavioural test above covers the icon; `hr_presence_state`
+        is reached through `user_id.im_status`, invalidated often enough that
+        no behavioural test of it can fail.
         """
-        registry = self.env.registry
+        for compute in (
+            HrEmployee._compute_presence_icon,
+            HrEmployee._compute_hr_presence_state,
+        ):
+            self.assertIn(
+                "is_absent",
+                getattr(compute, "_depends", ()),
+                "%s reads is_absent and must declare it here, whether or not "
+                "some other module happens to declare it too" % compute.__name__,
+            )
+
+    def test_both_presence_fields_are_invalidated_by_it(self):
+        """And the declaration reaches the field the client reads."""
         for field_name in ("hr_icon_display", "hr_presence_state"):
             field = self.env["hr.employee"]._fields[field_name]
             self.assertIn(
                 "is_absent",
-                registry.field_depends[field],
-                "%s is computed from is_absent in hr_holidays and must say so, "
-                "or approving a leave leaves it reading a stale cache" % field_name,
+                self.env.registry.field_depends[field],
+                "%s must be invalidated when is_absent changes" % field_name,
             )
 
 
@@ -1210,3 +1227,221 @@ class TestOverlapWarning(TestHrHolidaysCommon):
         subject = self._request(self.employee_emp)
         subject.invalidate_recordset(["dashboard_warning_message"])
         self.assertFalse(subject.dashboard_warning_message)
+
+
+@tagged("post_install", "-at_install")
+class TestFlexibleRequestDuration(TestHrHolidaysCommon):
+    """A resource with no timetable still has a morning and an afternoon."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.flexible_calendar = cls.env["resource.calendar"].create(
+            {
+                "name": "Flexible 40h",
+                "tz": "UTC",
+                "company_id": cls.company.id,
+                "flexible_hours": True,
+                "hours_per_day": 8,
+                "full_time_required_hours": 40,
+            }
+        )
+        cls.standard_calendar = cls.env["resource.calendar"].create(
+            {
+                "name": "Standard for comparison",
+                "tz": "UTC",
+                "company_id": cls.company.id,
+            }
+        )
+        cls.half_day_type = cls.env["hr.leave.type"].create(
+            {
+                "name": "Flexible Halves",
+                "requires_allocation": False,
+                "request_unit": "half_day",
+                "leave_validation_type": "hr",
+                "company_id": cls.company.id,
+            }
+        )
+        cls.flexible = cls.env["hr.employee"].create(
+            {
+                "name": "No timetable",
+                "company_id": cls.company.id,
+                "resource_calendar_id": cls.flexible_calendar.id,
+            }
+        )
+        cls.standard = cls.env["hr.employee"].create(
+            {
+                "name": "Fixed timetable",
+                "company_id": cls.company.id,
+                "resource_calendar_id": cls.standard_calendar.id,
+            }
+        )
+
+    def _request(self, employee, date_from, date_to, period_from, period_to):
+        return (
+            self.env["hr.leave"]
+            .with_context(leave_skip_date_check=True)
+            .new(
+                {
+                    "employee_id": employee.id,
+                    "holiday_status_id": self.half_day_type.id,
+                    "request_date_from": date_from,
+                    "request_date_to": date_to,
+                    "request_date_from_period": period_from,
+                    "request_date_to_period": period_to,
+                }
+            )
+        )
+
+    def test_a_half_day_at_each_end_costs_one_day_either_way(self):
+        self.assertTrue(self.flexible.is_flexible)
+        shapes = [
+            ((date(2026, 3, 2), date(2026, 3, 3)), ("pm", "am")),
+            ((date(2026, 3, 2), date(2026, 3, 4)), ("pm", "am")),
+            ((date(2026, 3, 2), date(2026, 3, 4)), ("am", "pm")),
+            ((date(2026, 3, 2), date(2026, 3, 2)), ("am", "am")),
+            ((date(2026, 3, 2), date(2026, 3, 2)), ("pm", "pm")),
+            ((date(2026, 3, 2), date(2026, 3, 2)), ("am", "pm")),
+        ]
+        for (date_from, date_to), (period_from, period_to) in shapes:
+            with self.subTest(dates=(date_from, date_to), periods=period_to):
+                flexible = self._request(
+                    self.flexible, date_from, date_to, period_from, period_to
+                )
+                standard = self._request(
+                    self.standard, date_from, date_to, period_from, period_to
+                )
+                self.assertEqual(
+                    (flexible.number_of_days, flexible.number_of_hours),
+                    (standard.number_of_days, standard.number_of_hours),
+                    "a half at each end is a half at each end whether or not "
+                    "the employee has a schedule; reading the request's day "
+                    "count and ignoring its periods charges a whole day for a "
+                    "morning",
+                )
+
+    def test_every_day_of_a_part_day_request_gives_up_its_own_half(self):
+        leave = self.env["hr.leave"].create(
+            {
+                "employee_id": self.flexible.id,
+                "holiday_status_id": self.half_day_type.id,
+                "request_date_from": date(2026, 3, 2),
+                "request_date_to": date(2026, 3, 3),
+                "request_date_from_period": "pm",
+                "request_date_to_period": "am",
+            }
+        )
+        leave.action_approve()
+        resource_leave = self.env["resource.calendar.leaves"].search(
+            [("holiday_id", "=", leave.id)]
+        )
+        self.assertTrue(resource_leave)
+        removed = []
+        charged = defaultdict(lambda: defaultdict(float))
+        self.flexible.resource_id._format_leave(
+            (
+                resource_leave.date_from.replace(tzinfo=UTC),
+                resource_leave.date_to.replace(tzinfo=UTC),
+                resource_leave,
+            ),
+            charged,
+            defaultdict(lambda: defaultdict(float)),
+            removed,
+            date(2026, 3, 1),
+            date(2026, 3, 31),
+        )
+        self.assertEqual(
+            [(start.date(), start.hour, stop.hour) for start, stop, _ in removed],
+            [(date(2026, 3, 2), 12, 23), (date(2026, 3, 3), 0, 12)],
+            "the afternoon of the first day and the morning of the second, not "
+            "one window on the first day built from the first day's period",
+        )
+        self.assertEqual(
+            dict(charged[self.flexible.resource_id.id]),
+            {date(2026, 3, 2): -4.0, date(2026, 3, 3): -4.0},
+            "four hours on each day it touches, not eight on the first",
+        )
+
+
+@tagged("post_install", "-at_install")
+class TestRefusalIsNotAnApproval(TestHrHolidaysCommon):
+    """The two approver fields hold whoever validated, and a refuser did not."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.leave_type = cls.env["hr.leave.type"].create(
+            {
+                "name": "Two Step",
+                "requires_allocation": False,
+                "leave_validation_type": "both",
+                "company_id": cls.company.id,
+            }
+        )
+        cls.allocation_type = cls.env["hr.leave.type"].create(
+            {
+                "name": "Two Step Allocation",
+                "requires_allocation": True,
+                "allocation_validation_type": "hr",
+                "employee_requests": True,
+                "company_id": cls.company.id,
+            }
+        )
+
+    def _leave(self):
+        return (
+            self.env["hr.leave"]
+            .with_context(leave_skip_date_check=True)
+            .create(
+                {
+                    "employee_id": self.employee_emp_id,
+                    "holiday_status_id": self.leave_type.id,
+                    "request_date_from": date(2026, 3, 4),
+                    "request_date_to": date(2026, 3, 4),
+                }
+            )
+        )
+
+    def test_refusing_a_request_nobody_approved_records_no_approver(self):
+        leave = self._leave()
+        leave.with_user(self.user_hrmanager).action_refuse()
+        self.assertEqual(leave.state, "refuse")
+        self.assertFalse(
+            leave.second_approver_id,
+            "a leave that went straight from To Approve to Refused was never "
+            "given a second approval, and the form says it was",
+        )
+        self.assertFalse(leave.first_approver_id)
+
+    def test_refusing_after_a_first_approval_keeps_the_first_approver(self):
+        leave = self._leave()
+        leave.with_user(self.user_responsible).action_approve()
+        self.assertEqual(leave.state, "validate1")
+        self.assertEqual(leave.first_approver_id, self.employee_responsible)
+        leave.with_user(self.user_hrmanager).action_refuse()
+        self.assertEqual(leave.state, "refuse")
+        self.assertEqual(
+            leave.first_approver_id,
+            self.employee_responsible,
+            "whoever really gave the first approval stays on record when "
+            "somebody else refuses it later",
+        )
+
+    def test_refusing_an_allocation_keeps_its_approver(self):
+        allocation = self.env["hr.leave.allocation"].create(
+            {
+                "employee_id": self.employee_emp_id,
+                "holiday_status_id": self.allocation_type.id,
+                "date_from": date(2026, 1, 1),
+                "number_of_days": 3,
+            }
+        )
+        allocation.with_user(self.user_hruser).action_approve()
+        self.assertEqual(allocation.approver_id, self.employee_hruser)
+        allocation.with_user(self.user_hrmanager).action_refuse()
+        self.assertEqual(allocation.state, "refuse")
+        self.assertEqual(
+            allocation.approver_id,
+            self.employee_hruser,
+            "refusing must not rewrite who approved it",
+        )

@@ -1,4 +1,4 @@
-from datetime import UTC, datetime, time
+from datetime import UTC, datetime
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -262,62 +262,8 @@ class ResourceResource(models.Model):
                         end_day,
                     )
             return
-        leave_start = leave[0]
-        leave_record = leave[2]
-        holiday_id = leave_record.holiday_id
-        tz = timezone(self.tz or self.env.user.tz)
-
-        if holiday_id.request_unit_half:
-            leave_day = leave_start.date()
-            half_start_datetime = datetime.combine(
-                leave_day,
-                datetime.min.time()
-                if holiday_id.request_date_from_period == "am"
-                else time(12),
-            ).replace(tzinfo=tz)
-            half_end_datetime = datetime.combine(
-                leave_day,
-                time(12)
-                if holiday_id.request_date_from_period == "am"
-                else datetime.max.time(),
-            ).replace(tzinfo=tz)
-            ranges_to_remove.append(
-                (
-                    half_start_datetime,
-                    half_end_datetime,
-                    self.env["resource.calendar.attendance"],
-                )
-            )
-
-            if not self._is_fully_flexible():
-                if leave_day >= start_day and leave_day <= end_day:
-                    resource_hours_per_day[self.id][leave_day] -= (
-                        holiday_id.number_of_hours
-                    )
-                week = self._flexible_week_key(leave_day)
-                resource_hours_per_week[self.id][week] -= holiday_id.number_of_hours
-        elif holiday_id.request_unit_hours:
-            leave_day = leave_start.date()
-            range_start_datetime = leave_record.date_from.replace(
-                tzinfo=UTC
-            ).astimezone(tz)
-            range_end_datetime = leave_record.date_to.replace(tzinfo=UTC).astimezone(tz)
-            ranges_to_remove.append(
-                (
-                    range_start_datetime,
-                    range_end_datetime,
-                    self.env["resource.calendar.attendance"],
-                )
-            )
-
-            if not self._is_fully_flexible():
-                if leave_day >= start_day and leave_day <= end_day:
-                    resource_hours_per_day[self.id][leave_day] -= (
-                        holiday_id.number_of_hours
-                    )
-                week = self._flexible_week_key(leave_day)
-                resource_hours_per_week[self.id][week] -= holiday_id.number_of_hours
-        else:
+        holiday_id = leave[2].holiday_id
+        if not (holiday_id.request_unit_half or holiday_id.request_unit_hours):
             super()._format_leave(
                 leave,
                 resource_hours_per_day,
@@ -326,3 +272,14 @@ class ResourceResource(models.Model):
                 start_day,
                 end_day,
             )
+            return
+
+        attendances = self.env["resource.calendar.attendance"]
+        tz = timezone(self.tz or self.env.user.tz)
+        for day, window_start, window_stop, hours in holiday_id._daily_windows(tz):
+            ranges_to_remove.append((window_start, window_stop, attendances))
+            if self._is_fully_flexible():
+                continue
+            if start_day <= day <= end_day:
+                resource_hours_per_day[self.id][day] -= hours
+            resource_hours_per_week[self.id][self._flexible_week_key(day)] -= hours
