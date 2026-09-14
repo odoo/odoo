@@ -2,8 +2,11 @@ from collections import defaultdict
 
 from odoo import api, fields, models
 from odoo.exceptions import RedirectWarning, ValidationError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, float_round
 from odoo.tools.translate import _
+
+_debug = DebugLog(__name__)
 
 
 class ProjectProject(models.Model):
@@ -95,6 +98,7 @@ class ProjectProject(models.Model):
     @api.depends("account_id")
     def _compute_allow_timesheets(self):
         without_account = self.filtered(lambda t: t._origin and not t.account_id)
+        _debug.logic("timesheets_disabled_no_account", projects=without_account)
         without_account.update({"allow_timesheets": False})
 
     @api.depends("company_id")
@@ -128,6 +132,7 @@ class ProjectProject(models.Model):
             project.id: unit_amount_sum
             for project, unit_amount_sum in timesheets_read_group
         }
+        _debug.perf.count("remaining_hours_grouped", projects=self)
         for project in self:
             project.effective_hours = round(timesheet_time_dict.get(project.id, 0.0), 2)
             project.remaining_hours = project.allocated_hours - project.effective_hours
@@ -163,6 +168,12 @@ class ProjectProject(models.Model):
                 project_plan, _other_plans = self.env[
                     "account.analytic.plan"
                 ]._get_all_plans()
+                _debug.logic(
+                    "allow_timesheets_refused",
+                    reason="no_analytic_account",
+                    project=project,
+                    plan=project_plan,
+                )
                 raise ValidationError(
                     _(
                         "To use the timesheets feature, you need an analytic account for your project. Please set one up in the plan '%(plan_name)s' or turn off the timesheets feature.",
@@ -208,6 +219,11 @@ class ProjectProject(models.Model):
             analytic_accounts = self.env["account.analytic.account"].create(
                 self._prepare_analytic_account_vals_list(analytic_accounts_vals)
             )
+            _debug.lifecycle(
+                "analytic_accounts_created",
+                projects=len(vals_list),
+                accounts=analytic_accounts,
+            )
             for vals, analytic_account in zip(
                 analytic_accounts_vals, analytic_accounts, strict=True
             ):
@@ -220,6 +236,9 @@ class ProjectProject(models.Model):
                 lambda project: not project.account_id and not project.is_template
             )
             if project_wo_account:
+                _debug.lifecycle(
+                    "analytic_account_created_on_write", projects=project_wo_account
+                )
                 project_wo_account._create_analytic_account()
         return super().write(vals)
 
@@ -258,6 +277,11 @@ class ProjectProject(models.Model):
                 warning_msg = _(
                     "This project has some timesheet entries referencing it. Before removing this project, you have to remove these timesheet entries."
                 )
+            _debug.logic(
+                "project_unlink_refused",
+                reason="has_timesheets",
+                projects=projects_with_timesheets,
+            )
             raise RedirectWarning(
                 warning_msg,
                 self.env.ref("hr_timesheet.timesheet_action_project").id,

@@ -6,7 +6,10 @@ from . import wizards
 from odoo import fields
 
 from odoo.addons.project import _update_project_sharing_rules_if_collaborators
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.sql import SQL
+
+_debug = DebugLog(__name__)
 
 
 def create_internal_project(env):
@@ -16,6 +19,7 @@ def create_internal_project(env):
     if not admin:
         return
     project_ids = env["res.company"].search([])._create_internal_project_task()
+    _debug.lifecycle("install_internal_projects", projects=project_ids)
     env["account.analytic.line"].create(
         [
             {
@@ -55,6 +59,7 @@ def _uninstall_hook(env):
         .mapped("internal_project_id")
     )
     if project_ids:
+        _debug.lifecycle("uninstall_internal_projects_archived", projects=project_ids)
         project_ids.write({"active": False})
 
     env["ir.model.data"].search(

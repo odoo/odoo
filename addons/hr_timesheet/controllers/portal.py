@@ -5,12 +5,15 @@ from dateutil.relativedelta import relativedelta
 from odoo import _, fields, http
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import date_utils
 from odoo.tools import groupby as groupbyelem
 
 from odoo.addons.portal.controllers.portal import CustomerPortal
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.addons.project.controllers.portal import ProjectCustomerPortal
+
+_debug = DebugLog(__name__)
 
 
 class TimesheetCustomerPortal(CustomerPortal):
@@ -19,7 +22,9 @@ class TimesheetCustomerPortal(CustomerPortal):
         if "timesheet_count" in counters:
             Timesheet = request.env["account.analytic.line"]
             domain = Timesheet._timesheet_get_portal_domain()
-            values["timesheet_count"] = Timesheet.sudo().search_count(domain)
+            with _debug.perf("portal_timesheet_count", cr=request.env.cr) as span:
+                values["timesheet_count"] = Timesheet.sudo().search_count(domain)
+                span.set(count=values["timesheet_count"])
         return values
 
     def _get_searchbar_inputs(self):
@@ -133,6 +138,7 @@ class TimesheetCustomerPortal(CustomerPortal):
         Timesheet = request.env["account.analytic.line"]
         domain = Domain(Timesheet._timesheet_get_portal_domain())
         Timesheet_sudo = Timesheet.sudo()
+        _debug.pipeline("portal_timesheets", page=page, groupby=groupby)
 
         values = self._prepare_portal_layout_values()
         items_per_page = 100

@@ -1,4 +1,7 @@
 from odoo import api, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class IrHttp(models.AbstractModel):
@@ -22,6 +25,12 @@ class IrHttp(models.AbstractModel):
                     }
                 )
             result["uom_ids"] = self.get_timesheet_uoms()
+            _debug.pipeline(
+                "session_timesheet_uoms",
+                user=self.env.user,
+                companies=company_ids,
+                uoms=len(result["uom_ids"]),
+            )
         return result
 
     @api.model

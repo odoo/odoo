@@ -1,4 +1,7 @@
 from odoo import _, api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class HrEmployeeDeleteWizard(models.TransientModel):
@@ -43,6 +46,7 @@ class HrEmployeeDeleteWizard(models.TransientModel):
 
     def action_archive(self):
         self.check_singleton()
+        _debug.pipeline("employee_delete_to_departure", employees=self.employee_ids)
         return {
             "name": _("Employee Termination"),
             "type": "ir.actions.act_window",
@@ -58,6 +62,7 @@ class HrEmployeeDeleteWizard(models.TransientModel):
 
     def action_confirm_delete(self):
         self.check_singleton()
+        _debug.lifecycle("employees_deleted", employees=self.employee_ids)
         self.employee_ids.unlink()
         return self.env["ir.actions.act_window"]._get_action_dict_by_xml_id(
             "hr.open_view_employee_list_my"

@@ -1,6 +1,9 @@
 from odoo import api, fields, models
 from odoo.db.schema import drop_view_if_exists
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.sql import SQL
+
+_debug = DebugLog(__name__)
 
 
 class TimesheetsAnalysisReport(models.Model):
@@ -113,6 +116,7 @@ class TimesheetsAnalysisReport(models.Model):
         return "WHERE A.project_id IS NOT NULL"
 
     def init(self):
+        _debug.lifecycle("analysis_view_rebuilt", table=self._table)
         drop_view_if_exists(self.env.cr, self._table)
         self.env.cr.execute(
             SQL(

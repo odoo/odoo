@@ -3,6 +3,7 @@ from collections import defaultdict
 
 from odoo import _, api, fields, models
 from odoo.exceptions import RedirectWarning, UserError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 
 from odoo.addons.rating.models.rating_data import OPERATOR_MAPPING
@@ -22,6 +23,8 @@ PROJECT_TASK_READABLE_FIELDS = {
     "timesheet_ids",
     "total_hours_spent",
 }
+
+_debug = DebugLog(__name__)
 
 
 class ProjectTask(models.Model):
@@ -116,6 +119,9 @@ class ProjectTask(models.Model):
         if private_tasks and self.env["account.analytic.line"].sudo().search_count(
             [("task_id", "in", private_tasks.ids)], limit=1
         ):
+            _debug.logic(
+                "private_task_refused", reason="has_timesheets", tasks=private_tasks
+            )
             raise UserError(
                 _(
                     "This task cannot be private because there are some timesheets linked to it."
@@ -150,9 +156,11 @@ class ProjectTask(models.Model):
     @api.depends("timesheet_ids.unit_amount")
     def _compute_effective_hours(self):
         if not any(self._ids):
+            _debug.logic("effective_hours", by="in_memory", tasks=self)
             for task in self:
                 task.effective_hours = sum(task.timesheet_ids.mapped("unit_amount"))
             return
+        _debug.perf.count("effective_hours_grouped", tasks=self)
         timesheet_read_group = self.env["account.analytic.line"]._read_group(
             [("task_id", "in", self.ids)], ["task_id"], ["unit_amount:sum"]
         )
@@ -376,6 +384,11 @@ class ProjectTask(models.Model):
             .mapped("task_id.id")
         )
         if inaccessible_task_ids:
+            _debug.logic(
+                "task_unlink_refused",
+                reason="inaccessible_timesheets",
+                tasks=len(inaccessible_task_ids),
+            )
             raise UserError(
                 _(
                     "This task can’t be deleted because it’s linked to timesheets. Please contact someone with higher access to remove the timesheets first, "
@@ -390,6 +403,11 @@ class ProjectTask(models.Model):
             warning_msg = _(
                 "Some timesheet entries are weighing down these tasks! Remove them first, then you’ll be able to delete the tasks!"
             )
+        _debug.logic(
+            "task_unlink_refused",
+            reason="has_timesheets",
+            tasks=len(task_with_timesheets_ids),
+        )
         raise RedirectWarning(
             warning_msg,
             self.env.ref("hr_timesheet.timesheet_action_task").id,

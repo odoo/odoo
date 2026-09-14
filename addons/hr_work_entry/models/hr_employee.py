@@ -1,5 +1,8 @@
 from odoo import fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
+
+_debug = DebugLog(__name__)
 
 
 class HrEmployee(models.Model):
@@ -23,6 +26,9 @@ class HrEmployee(models.Model):
                     )
                 )
             }
+        _debug.perf.count(
+            "has_work_entries_probed", employees=self, found=len(with_entries)
+        )
         for employee in self:
             employee.has_work_entries = employee._origin.id in with_entries
 
@@ -48,8 +54,16 @@ class HrEmployee(models.Model):
             versions = self._get_versions_with_contract_overlap_with_period(
                 date_start, date_stop
             )
+            scope = "employees"  # debuglog
         else:
             versions = self._get_all_versions_with_contract_overlap_with_period(
                 date_start, date_stop
             )
+            scope = "all"  # debuglog
+        _debug.pipeline(
+            "generate_from_employees",
+            by=scope,
+            employees=self,
+            versions=versions,
+        )
         return versions.generate_work_entries(date_start, date_stop, force=force)

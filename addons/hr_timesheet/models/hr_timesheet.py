@@ -6,7 +6,10 @@ from statistics import mode
 from odoo import api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.translate import _
+
+_debug = DebugLog(__name__)
 
 
 class AccountAnalyticLine(models.Model):
@@ -28,12 +31,16 @@ class AccountAnalyticLine(models.Model):
         )
         if not last_timesheets:
             internal_project = self.env.company.internal_project_id
+            _debug.logic(
+                "favorite_project", by="internal_project", project=internal_project
+            )
             return (
                 internal_project.has_access("read")
                 and internal_project.active
                 and internal_project.allow_timesheets
                 and internal_project.id
             )
+        _debug.logic("favorite_project", by="recent_mode", sampled=len(last_timesheets))
         return mode([t.project_id.id for t in last_timesheets])
 
     @api.model
@@ -301,6 +308,12 @@ class AccountAnalyticLine(models.Model):
             self.env.user.has_group("hr_timesheet.group_hr_timesheet_approver")
             or self.env.su
         ) and any(analytic_line.user_id != self.env.user for analytic_line in self):
+            _debug.logic(
+                "write_denied",
+                reason="not_own_timesheet",
+                user=self.env.user,
+                lines=self,
+            )
             raise AccessError(_("You cannot access timesheets that are not yours."))
 
     def _check_can_create(self):
@@ -343,6 +356,7 @@ class AccountAnalyticLine(models.Model):
                 continue
             if task:
                 if not task.project_id:
+                    _debug.logic("create_refused", reason="private_task", task=task)
                     raise ValidationError(
                         _("Timesheets cannot be created on a private task.")
                     )
@@ -429,6 +443,7 @@ class AccountAnalyticLine(models.Model):
                         valid_employee_per_id[employee_in_id].sudo().user_id.id
                     )
                     continue
+                _debug.logic("create_refused", by="employee", id=employee_in_id)
                 raise ValidationError(error_msg)
             user_id = vals.get("user_id", default_user_id)
 
@@ -458,9 +473,12 @@ class AccountAnalyticLine(models.Model):
                         .project_time_mode_id.id
                     )
             else:
+                _debug.logic("create_refused", by="user", id=user_id)
                 raise ValidationError(error_msg)
 
+        _debug.pipeline("create_resolved", rows=valid_vals, skipped=skipped_vals)
         lines = super().create(vals_list)
+        _debug.lifecycle("create", lines=lines, count=len(vals_list))
         lines._check_can_create()
         for line, values in zip(lines, vals_list, strict=True):
             if line.project_id:
@@ -493,11 +511,13 @@ class AccountAnalyticLine(models.Model):
 
     def write(self, vals):
         values = vals
+        _debug.lifecycle("write", lines=self, fields=list(vals))
         self._check_can_write(values)
 
         task = self.env["project.task"].sudo().browse(values.get("task_id"))
         project = self.env["project.project"].sudo().browse(values.get("project_id"))
         if task and not task.project_id:
+            _debug.logic("write_refused", reason="private_task", task=task)
             raise ValidationError(_("Timesheets cannot be created on a private task."))
         if project or task:
             values["company_id"] = task.company_id.id or project.company_id.id
@@ -514,6 +534,9 @@ class AccountAnalyticLine(models.Model):
         if values.get("employee_id"):
             employee = self.env["hr.employee"].browse(values["employee_id"])
             if not employee.active:
+                _debug.logic(
+                    "write_refused", reason="archived_employee", employee=employee
+                )
                 raise UserError(
                     _("You cannot set an archived employee on existing timesheets.")
                 )
@@ -553,7 +576,9 @@ class AccountAnalyticLine(models.Model):
 
     def _timesheet_get_portal_domain(self):
         if self.env.user.has_group("hr_timesheet.group_hr_timesheet_user"):
+            _debug.logic("portal_domain", by="timesheet_user", user=self.env.user)
             return self.env["ir.rule"]._get_domain_accessible_records(self._name)
+        _debug.logic("portal_domain", by="portal_partner", user=self.env.user)
         commercial_partner_id = self.env.user.partner_id.commercial_partner_id.id
         accessible_projects = (
             self.env["project.project"].sudo()._search([("user_has_access", "=", True)])
@@ -578,6 +603,11 @@ class AccountAnalyticLine(models.Model):
             plan["name"] for plan in mandatory_plans if not project[plan["column_name"]]
         ]
         if missing_plan_names:
+            _debug.logic(
+                "mandatory_plans_missing",
+                project=project,
+                plans=",".join(missing_plan_names),
+            )
             raise ValidationError(
                 _(
                     "'%(missing_plan_names)s' analytic plan(s) required on the project '%(project_name)s' linked to the timesheet.",
@@ -590,6 +620,12 @@ class AccountAnalyticLine(models.Model):
     def _timesheet_postprocess(self, values):
         sudo_self = self.sudo()
         values_to_write = self._timesheet_postprocess_values(values)
+        _debug.pipeline(
+            "postprocess",
+            lines=self,
+            fields=list(values),
+            candidates=len(values_to_write),
+        )
         for timesheet in sudo_self:
             if values_to_write[timesheet.id]:
                 timesheet.write(values_to_write[timesheet.id])
@@ -686,6 +722,7 @@ class AccountAnalyticLine(models.Model):
                     "relative_factor": 1,
                 }
             )
+            _debug.lifecycle("uom_hours_created", uom=uom_hours)
             self.env["ir.model.data"].create(
                 {
                     "name": "product_uom_hour",

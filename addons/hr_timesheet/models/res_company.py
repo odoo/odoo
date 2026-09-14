@@ -1,5 +1,8 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ResCompany(models.Model):
@@ -40,6 +43,7 @@ class ResCompany(models.Model):
                 and company.internal_project_id.sudo().company_id != company
             )
         ):
+            _debug.logic("internal_project_company_mismatch", companies=self)
             raise ValidationError(
                 _("The Internal Project of a company should be in that company.")
             )
@@ -78,6 +82,9 @@ class ResCompany(models.Model):
                 }
             ]
         project_ids = self.env["project.project"].create(results)
+        _debug.lifecycle(
+            "internal_projects_created", companies=self, projects=project_ids
+        )
         projects_by_company = {
             project.company_id.id: project for project in project_ids
         }

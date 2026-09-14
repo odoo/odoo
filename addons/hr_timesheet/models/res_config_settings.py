@@ -1,4 +1,7 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ResConfigSettings(models.TransientModel):
@@ -50,6 +53,11 @@ class ResConfigSettings(models.TransientModel):
         uom_day = self.env.ref("uom.product_uom_day", raise_if_not_found=False)
         uom_hour = self.env.ref("uom.product_uom_hour", raise_if_not_found=False)
         for settings in self:
+            _debug.lifecycle(
+                "timesheet_encode_method_set",
+                company=settings.company_id,
+                method=settings.timesheet_encode_method,
+            )
             settings.company_id.timesheet_encode_uom_id = (
                 uom_day if settings.timesheet_encode_method == "days" else uom_hour
             )

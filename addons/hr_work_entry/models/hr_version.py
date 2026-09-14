@@ -8,10 +8,13 @@ from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command, Domain
 from odoo.libs.datetime import timezone
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.intervals import Intervals
 from odoo.tools import float_is_zero, ormcache
 
 CRON_BATCH_SIZE = 100
+
+_debug = DebugLog(__name__)
 
 
 def _default_date_generated(model):
@@ -137,6 +140,9 @@ class HrVersion(models.Model):
                     version.employee_id
                 )
         result = {}
+        _debug.perf.count(
+            "attendance_intervals", versions=self, calendars=len(employees_by_calendar)
+        )
         for calendar, employees in employees_by_calendar.items():
             if not calendar:
                 no_attendance = self.env["resource.calendar.attendance"]
@@ -422,6 +428,14 @@ class HrVersion(models.Model):
         versions_by_company_tz = self.grouped(
             lambda v: (v.company_id, v._get_work_entry_tz())
         )
+        _debug.pipeline(
+            "generate_start",
+            versions=self,
+            groups=len(versions_by_company_tz),
+            start=str(date_start),
+            stop=str(date_stop),
+            force=force,
+        )
         for (company, tz), versions in versions_by_company_tz.items():
             new_work_entries += (
                 versions.with_user(SUPERUSER_ID)
@@ -432,6 +446,7 @@ class HrVersion(models.Model):
                     force=force,
                 )
             )
+        _debug.lifecycle("generate_done", versions=self, entries=new_work_entries)
         return new_work_entries
 
     @staticmethod
@@ -520,16 +535,25 @@ class HrVersion(models.Model):
             {"date_generated_from": date_start, "date_generated_to": date_start}
         )
 
-        intervals_to_generate, domain_to_nullify = self._plan_work_entry_generation(
-            date_start, date_stop, force
-        )
+        with _debug.perf("plan_generation", cr=self.env.cr, versions=self) as span:
+            intervals_to_generate, domain_to_nullify = self._plan_work_entry_generation(
+                date_start, date_stop, force
+            )
+            span.set(intervals=len(intervals_to_generate))
 
         vals_list = []
-        for (date_from, date_to), versions in intervals_to_generate.items():
-            vals_list.extend(versions._get_work_entries_values(date_from, date_to))
+        with _debug.perf("build_work_entry_vals", cr=self.env.cr) as span:
+            for (date_from, date_to), versions in intervals_to_generate.items():
+                vals_list.extend(versions._get_work_entries_values(date_from, date_to))
+            span.set(rows=len(vals_list))
 
         if not domain_to_nullify.is_false():
             work_entries = self.env["hr.work.entry"]
+            if _debug.lifecycle.enabled:
+                _debug.lifecycle(
+                    "expired_entries_nullified",
+                    entries=work_entries.search(domain_to_nullify),
+                )
             work_entries.search(domain_to_nullify).write(
                 dict.fromkeys(
                     work_entries._get_fields_to_nullify_on_regeneration(), False
@@ -537,6 +561,7 @@ class HrVersion(models.Model):
             )
 
         if not vals_list:
+            _debug.logic("generate_nothing", versions=self)
             return self.env["hr.work.entry"]
 
         return self.env["hr.work.entry"].create(
@@ -802,8 +827,12 @@ class HrVersion(models.Model):
             ]
         )
         if not versions_todo:
+            _debug.pipeline("cron_generate", versions=0)
             return
         version_todo_count = len(versions_todo)
+        _debug.pipeline(
+            "cron_generate", versions=version_todo_count, batch=CRON_BATCH_SIZE
+        )
         versions_todo = versions_todo.filtered(
             lambda v: v.company_id == versions_todo[0].company_id
         ).sorted(key=lambda v: 1 if v._has_static_work_entries() else 100)
@@ -811,6 +840,7 @@ class HrVersion(models.Model):
             start.date(), stop.date(), False
         )
         if version_todo_count > CRON_BATCH_SIZE:
+            _debug.logic("cron_retriggered", remaining=version_todo_count)
             self.env.ref(
                 "hr_work_entry.ir_cron_generate_missing_work_entries"
             )._trigger()

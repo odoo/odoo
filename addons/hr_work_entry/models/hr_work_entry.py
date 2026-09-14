@@ -7,6 +7,7 @@ from psycopg import OperationalError
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.intervals import Intervals
 from odoo.tools import float_compare
 
@@ -14,6 +15,8 @@ CLOSED_STATES = ("validated", "cancelled")
 FIELDS_TRIGGERING_CHECK = frozenset(
     {"date", "duration", "employee_id", "work_entry_type_id", "active"}
 )
+
+_debug = DebugLog(__name__)
 
 
 class HrWorkEntry(models.Model):
@@ -96,6 +99,11 @@ class HrWorkEntry(models.Model):
                 float_compare(work_entry.duration, 0, 3) <= 0
                 or float_compare(work_entry.duration, 24, 3) > 0
             ):
+                _debug.logic(
+                    "duration_refused",
+                    entry=work_entry,
+                    duration=work_entry.duration,
+                )
                 raise ValidationError(
                     self.env._("Duration must be positive and cannot exceed 24 hours.")
                 )
@@ -144,7 +152,9 @@ class HrWorkEntry(models.Model):
     def action_validate(self):
         work_entries = self.filtered(lambda w: w.state not in CLOSED_STATES)
         if work_entries._check_if_error():
+            _debug.logic("validate_refused", reason="conflicts", entries=work_entries)
             return False
+        _debug.lifecycle("validate", entries=work_entries)
         work_entries.write({"state": "validated"})
         return True
 
@@ -169,6 +179,9 @@ class HrWorkEntry(models.Model):
         self.write({"duration": self.duration - split_duration})
         split_work_entry = self.copy()
         split_work_entry.write({**vals, "state": "draft"})
+        _debug.lifecycle(
+            "split", origin=self, split=split_work_entry, duration=split_duration
+        )
         return split_work_entry.id
 
     def _check_if_error(self):
@@ -178,9 +191,18 @@ class HrWorkEntry(models.Model):
         undefined_type = open_entries.filtered(lambda w: not w.work_entry_type_id)
         undefined_type.write({"state": "conflict"})
         dates = open_entries.mapped("date")
-        excessive = open_entries._mark_conflicting_work_entries(min(dates), max(dates))
-        outside_schedule = open_entries._mark_leaves_outside_schedule()
-        validated_days = open_entries._mark_already_validated_days()
+        with _debug.perf("error_check", cr=self.env.cr, entries=open_entries) as span:
+            excessive = open_entries._mark_conflicting_work_entries(
+                min(dates), max(dates)
+            )
+            outside_schedule = open_entries._mark_leaves_outside_schedule()
+            validated_days = open_entries._mark_already_validated_days()
+            span.set(
+                undefined_type=len(undefined_type),
+                excessive=excessive,
+                outside_schedule=outside_schedule,
+                validated_days=validated_days,
+            )
         return bool(undefined_type) or excessive or outside_schedule or validated_days
 
     def _mark_conflicting_work_entries(self, start, stop):
@@ -208,6 +230,11 @@ class HrWorkEntry(models.Model):
             {"start": start, "stop": stop, "employee_ids": self.employee_id.ids},
         )
         conflict_ids = [row[0] for row in self.env.cr.fetchall()]
+        _debug.logic(
+            "conflicts_over_24h",
+            entries=self.browse(conflict_ids),
+            employees=self.employee_id,
+        )
         self.browse(conflict_ids).write({"state": "conflict"})
         return bool(conflict_ids)
 
@@ -234,6 +261,11 @@ class HrWorkEntry(models.Model):
             outside_entries |= entries.filtered_domain(
                 [("date", "not in", working_days)]
             )
+        _debug.logic(
+            "conflicts_outside_schedule",
+            entries=outside_entries,
+            calendars=len(entries_by_calendar),
+        )
         outside_entries.write({"state": "conflict"})
         return bool(outside_entries)
 
@@ -255,6 +287,11 @@ class HrWorkEntry(models.Model):
         validated_days = {(w.employee_id.id, w.date) for w in validated}
         invalid_entries = self.filtered(
             lambda w: (w.employee_id.id, w.date) in validated_days
+        )
+        _debug.logic(
+            "conflicts_already_validated",
+            entries=invalid_entries,
+            validated_days=len(validated_days),
         )
         invalid_entries.write({"state": "conflict"})
         return bool(invalid_entries)
@@ -310,6 +347,7 @@ class HrWorkEntry(models.Model):
                 if not vals.get("company_id") and vals.get("employee_id"):
                     vals["company_id"] = company_by_employee_id[vals["employee_id"]]
         work_entries = super().create(vals_list)
+        _debug.lifecycle("create", entries=work_entries, count=len(vals_list))
         work_entries.employee_id.invalidate_recordset(["has_work_entries"])
         work_entries._check_if_error()
         return work_entries
@@ -331,12 +369,15 @@ class HrWorkEntry(models.Model):
                 hr_work_entry_no_check=True
             ).write({"state": "draft"})
         vals = self._sync_state_and_active(vals)
+        _debug.lifecycle("write", entries=self, fields=list(vals))
         if not self._write_needs_check(vals):
+            _debug.logic("write_skips_check", entries=self, fields=list(vals))
             return super().write(vals)
         employee_ids = set(self.employee_id.ids)
         if vals.get("employee_id"):
             employee_ids.add(vals["employee_id"])
         siblings = self._reset_conflicts(employee_ids)
+        _debug.pipeline("write_rechecks", entries=self, siblings=siblings)
         result = super().write(vals)
         (siblings | siblings.browse(self.ids)).exists()._check_if_error()
         return result
@@ -344,12 +385,14 @@ class HrWorkEntry(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_validated_work_entries(self):
         if any(w.state == "validated" for w in self):
+            _debug.logic("unlink_refused", reason="validated", entries=self)
             raise UserError(
                 self.env._("This work entry is validated. You can't delete it.")
             )
 
     def unlink(self):
         employees = self.employee_id
+        _debug.lifecycle("unlink", entries=self, employees=employees)
         siblings = self._reset_conflicts(employees.ids)
         result = super().unlink()
         siblings.exists()._check_if_error()
@@ -357,6 +400,7 @@ class HrWorkEntry(models.Model):
         return result
 
     def _reset_conflicting_state(self):
+        _debug.pipeline("conflicts_reset", entries=self)
         self.filtered(lambda w: w.state == "conflict").write({"state": "draft"})
 
     def _reset_conflicts(self, employee_ids):
@@ -396,6 +440,7 @@ class HrWorkEntry(models.Model):
 
     def _get_domain_work_entry_type(self):
         if len(self.env.companies.country_id.ids) > 1:
+            _debug.logic("work_entry_types", by="multi_country")
             return [("country_id", "=", False)]
         return [
             "|",
