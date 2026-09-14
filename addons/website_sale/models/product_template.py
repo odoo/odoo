@@ -1421,6 +1421,22 @@ class ProductTemplate(models.Model):
         self.ensure_one()
         return self.product_template_image_ids.sorted("sequence") or self
 
+    def _get_shop_images(self):
+        """Return the primary and secondary images to display on the shop page.
+
+        If the template has no primary or secondary images, fall back on the first 2 product images.
+        """
+        self.ensure_one()
+        all_images = self.product_template_image_ids.sorted("sequence")
+        images_with_type = all_images.filtered("type")
+        primary_image = (
+            images_with_type.filtered(lambda i: i.type == "primary")[:1] or all_images[:1]
+        )
+        secondary_image = (
+            images_with_type.filtered(lambda i: i.type == "secondary")[:1] or all_images[1:2]
+        )
+        return (primary_image + secondary_image) or self
+
     def _get_product_page_documents(self, variant=None):
         self.ensure_one()
         docs = self.sudo().product_document_ids
@@ -2014,10 +2030,20 @@ class ProductTemplate(models.Model):
 
     @api.model
     def _create_extra_variant_images(self):
+        """Duplicate the template and variant main images as extra images (if not already done).
+
+        The main images are stored as image fields (`image_1920` for templates and
+        `image_variant_1920` for variants), and the extra images are stored as `product.image`
+        records. By design, the main image should always be equal to the first extra image, both for
+        templates and variants.
+
+        This method is called both when installing and upgrading the module.
+        """
         image_vals = []
         for template in self.env["product.template"].search([("image_1920", "!=", False)]):
             template_image = template.image_1920
             first_extra_image = template.product_template_image_ids.sorted("sequence")[:1]
+            first_extra_image_sequence = first_extra_image.sequence
             add_template_main_image = template_image.content != first_extra_image.image_1920.content
             template_main_image_ptavs = self.env["product.template.attribute.value"]
 
@@ -2036,6 +2062,15 @@ class ProductTemplate(models.Model):
                 ):
                     continue
 
+                # Insert the variant's main image as its first extra image (required by design).
+                # If the variant has no extra images, insert the variant's main image after the
+                # template's first extra image to avoid overriding the template's main image.
+                sequence = (
+                    first_extra_image_product.sequence - 1
+                    if first_extra_image_product
+                    else first_extra_image.sequence + 1
+                )
+                first_extra_image_sequence = min(first_extra_image_sequence, sequence)
                 image_vals.append({
                     "name": product.display_name,
                     "product_tmpl_id": template.id,
@@ -2043,20 +2078,24 @@ class ProductTemplate(models.Model):
                         Command.set(product.product_template_attribute_value_ids.ids)
                     ],
                     "image_1920": variant_image,
-                    "sequence": first_extra_image_product.sequence - 1,
+                    "sequence": sequence,
                 })
 
             if add_template_main_image:
-                image_vals = [
-                    {
-                        "name": template.display_name,
-                        "product_tmpl_id": template.id,
-                        "attribute_value_ids": [Command.set(template_main_image_ptavs.ids)]
-                        if template_main_image_ptavs and len(template.product_variant_ids) > 1
-                        else False,
-                        "image_1920": template_image,
-                        "sequence": first_extra_image.sequence - 1,
-                    }
-                ] + image_vals  # Make sure the template image is created before the variant images.
+                image_vals.append({
+                    "name": template.display_name,
+                    "product_tmpl_id": template.id,
+                    "attribute_value_ids": [Command.set(template_main_image_ptavs.ids)]
+                    if template_main_image_ptavs and len(template.product_variant_ids) > 1
+                    else False,
+                    "image_1920": template_image,
+                    # Insert the template's main image as its first extra image (required by
+                    # design).
+                    "sequence": first_extra_image_sequence - 1,
+                })
+            else:
+                # Ensure that the template's first extra image remains first after creating the
+                # variant extra images, to avoid overriding the template's main image.
+                first_extra_image.write({"sequence": first_extra_image_sequence - 1})
 
         self.env["product.image"].with_context(skip_update_main_image=True).create(image_vals)
