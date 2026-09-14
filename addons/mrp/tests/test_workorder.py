@@ -141,3 +141,15 @@ class TestWorkorder(TestMrpCommon):
             ],
             field_names=['operation_id'],
         )
+
+    def test_start_workorder_keeps_mo_planned(self):
+        """Starting a work order on a planned MO with several work orders must not
+        unplan the MO.
+        """
+        mo = self.env['mrp.production'].create({'bom_id': self.bom_3.id})
+        mo.action_confirm()
+        mo.button_plan()
+        self.assertTrue(mo.is_planned)
+
+        mo.workorder_ids.sorted('date_start')[0].button_start()
+        self.assertTrue(mo.is_planned, "Starting a work order must not unplan the MO")

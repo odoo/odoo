@@ -711,7 +711,7 @@ class MrpWorkorder(models.Model):
                 )
 
             if wo.production_id.state != 'progress':
-                wo.production_id.write({
+                wo.production_id.with_context(force_date=True).write({
                     'date_start': fields.Datetime.now()
                 })
             if wo.state == 'progress':
