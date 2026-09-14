@@ -49,7 +49,7 @@ class ProductWishlist(models.Model):
         if not request:
             return self
 
-        if request.website.is_public_user():
+        if request.env.user._is_public():
             wish = self.sudo().search(
                 [("id", "in", request.session.get("wishlist_ids", []))]
             )

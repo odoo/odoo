@@ -9,7 +9,7 @@ class WebsiteSaleWishlist(Controller):
         price = product._get_combination_info_variant()["price"]
 
         Wishlist = request.env["product.wishlist"]
-        if request.website.is_public_user():
+        if request.env.user._is_public():
             Wishlist = Wishlist.sudo()
             partner_id = False
         else:
@@ -54,7 +54,7 @@ class WebsiteSaleWishlist(Controller):
     )
     def remove_from_wishlist(self, wish_id, **kw):
         wish = request.env["product.wishlist"].browse(wish_id)
-        if request.website.is_public_user():
+        if request.env.user._is_public():
             wish_ids = request.session.get("wishlist_ids") or []
             if wish_id in wish_ids:
                 request.session["wishlist_ids"].remove(wish_id)
