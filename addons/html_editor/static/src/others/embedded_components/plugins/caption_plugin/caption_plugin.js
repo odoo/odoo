@@ -83,7 +83,8 @@ export class CaptionPlugin extends Plugin {
                 figures = [closestElement(root, "figure")];
             } else {
                 figures = [...root.querySelectorAll("figure")]
-                    .filter(figure => figure.querySelectorAll("img").length === 1);
+                    .filter(figure => figure.querySelectorAll("img").length === 1
+                                        && figure.querySelectorAll("figure:has(img)").length == 0);
             }
             figures.forEach((figure) => {
                 const captionSpan = figure.querySelector(CAPTION_SPAN_SELECTOR);
@@ -119,7 +120,8 @@ export class CaptionPlugin extends Plugin {
 
     setup() {
         const figures = [...this.editable.querySelectorAll("figure")]
-            .filter(figure => figure.querySelectorAll("img").length === 1);
+            .filter(figure => figure.querySelectorAll("img").length === 1
+                                && figure.querySelectorAll("figure:has(img)").length == 0);
         for (const figure of figures) {
             const image = figure.querySelector("img");
             figure.before(image);
@@ -250,7 +252,8 @@ export class CaptionPlugin extends Plugin {
 
     cleanForSave({ root }) {
         const figures = [...root.querySelectorAll("figure")]
-            .filter(figure => figure.querySelectorAll("img").length === 1);
+            .filter(figure => figure.querySelectorAll("img").length === 1 
+                                && figure.querySelectorAll("figure:has(img)").length == 0);
         for (const figure of figures) {
             figure.removeAttribute("contenteditable");
             const image = figure.querySelector("img");
@@ -362,3 +365,38 @@ export class CaptionPlugin extends Plugin {
         return clonedContents;
     }
 }
+/*
+
+    normalizeFigures(){
+        let figures = [];
+        let createdFigures = [];
+        if (this.editable.matches(CAPTION_SPAN_SELECTOR)) {
+            figures = [closestElement(this.editable, "figure")];
+        } else {
+            figures = [...this.editable.querySelectorAll("figure")]
+                .filter(figure => figure.querySelectorAll("img").length === 1
+                                    && figure.querySelectorAll("figure:has(img)").length == 0);
+        }
+        for (const figure of figures) {
+            const image = figure.querySelector("img");
+            figure.before(image);
+            const caption = figure.querySelector("figcaption")?.textContent;
+            figure.remove();
+            createdFigures.push(this.addImageCaption(image, caption, false));
+
+            //this.dependencies.history.addStep();
+        }
+        for (const createdFigure of createdFigures) {
+            const image = createdFigure.querySelector("img");
+            const captionSpan = createdFigure.querySelector(CAPTION_SPAN_SELECTOR);
+            if (image && image.getAttribute("data-caption") !== captionSpan.textContent) {
+                image.setAttribute("data-caption", captionSpan.textContent);
+            }
+            if (captionSpan.textContent) {
+                const figcaption = createdFigure.querySelector("figcaption");
+                figcaption.setAttribute("placeholder", captionSpan.textContent);
+            }
+        }
+    }
+
+*/
