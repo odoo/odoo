@@ -47,6 +47,7 @@ JUDGED_NOT_SECRET = frozenset(
         "auth_passkey.credential_identifier",
         "delivery_fedex.fedex_developer_key",
         "delivery_fedex_rest.fedex_rest_developer_key",
+        "delivery_usps_rest.usps_extra_data_payment_token_request",
         "sale_lazada.app_key",
         "l10n_br_edi.l10n_br_access_key",
         "l10n_br_edi_pos.l10n_br_access_key",
