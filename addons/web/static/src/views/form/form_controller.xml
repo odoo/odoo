@@ -54,13 +54,13 @@
         <button t-if="this.model.root.isInEdition and this.props.removeRecord" class="btn btn-secondary o_form_button_remove" t-on-click="this.props.removeRecord" data-hotkey="x">
             Remove
         </button>
-        <button t-if="!this.model.root.isInEdition and this.canCreate" type="button" class="btn btn-secondary o_form_button_create" data-hotkey="c" t-on-click.stop="this.create">
+        <button t-if="!this.model.root.isInEdition and this.canCreate" type="button" class="btn btn-secondary o_form_button_create" data-hotkey="c" t-custom-click.stop="this.create">
             New
         </button>
     </t>
 
     <t t-name="web.FormView.Buttons">
-        <button t-if="this.canCreate" type="button" class="btn btn-outline-primary o_form_button_create" data-hotkey="c" t-on-click.stop="this.create" t-att-data-available-offline="this.isNewButtonAvailableOffline">New</button>
+        <button t-if="this.canCreate" type="button" class="btn btn-outline-primary o_form_button_create" data-hotkey="c" t-custom-click.stop="this.create" t-att-data-available-offline="this.isNewButtonAvailableOffline">New</button>
     </t>
 
     <t t-name="web.DefaultButtonsSlot">

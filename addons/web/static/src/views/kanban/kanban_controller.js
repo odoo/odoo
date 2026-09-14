@@ -443,10 +443,10 @@ export class KanbanController extends Component {
         this.props.selectRecord(record.resId, { activeIds, newWindow });
     }
 
-    async createRecord() {
+    async createRecord(newWindow) {
         const { onCreate } = this.props.archInfo;
         const { root } = this.model;
-        if (this.canQuickCreate && onCreate === "quick_create") {
+        if (this.canQuickCreate && onCreate === "quick_create" && !newWindow) {
             const firstGroup = root.groups.find((group) => !group.isFolded) || root.groups[0];
             if (firstGroup.isFolded) {
                 await firstGroup.toggle();
@@ -462,10 +462,11 @@ export class KanbanController extends Component {
                         render(this, true); // FIXME WOWL reactivity
                     }
                 },
+                newWindow,
             };
             await this.actionService.doAction(onCreate, options);
         } else {
-            await this.props.createRecord();
+            await this.props.createRecord(newWindow);
         }
     }
 

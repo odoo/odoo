@@ -19398,6 +19398,43 @@ test("Open record in new tab on ctrl+click and middleclick for an editable list"
     expect.verifySteps(["open record - newWindow: true"]);
 });
 
+test("middle click on New button opens a new record in a new window", async () => {
+    await mountView({
+        resModel: "res.partner",
+        type: "list",
+        arch: `
+            <list>
+                <field name="name" />
+            </list>`,
+        createRecord: (newWindow) => expect.step(`createRecord - newWindow: ${newWindow}`),
+    });
+
+    await contains(".o_list_button_add").click();
+    expect.verifySteps(["createRecord - newWindow: false"]);
+
+    await contains(".o_list_button_add").middleClick();
+    expect.verifySteps(["createRecord - newWindow: true"]);
+});
+
+test("middle click on New button of an editable list opens a new record in a new window", async () => {
+    await mountView({
+        resModel: "res.partner",
+        type: "list",
+        arch: `
+            <list editable="bottom">
+                <field name="name" />
+            </list>`,
+        createRecord: (newWindow) => expect.step(`createRecord - newWindow: ${newWindow}`),
+    });
+
+    await contains(".o_list_button_add").middleClick();
+    expect.verifySteps(["createRecord - newWindow: true"]);
+
+    await contains(".o_list_button_add").click();
+    expect(".o_selected_row").toHaveCount(1);
+    expect.verifySteps([]);
+});
+
 test.tags("mobile");
 test("selection is properly displayed (single page) on mobile", async () => {
     await mountView({
@@ -21095,16 +21132,12 @@ test(`column tag: numeric columns are right aligned`, async () => {
     expect(`thead th:not(.o_list_record_selector):eq(1) .o_list_number_th`).toHaveCount(0, {
         message: "header of a non numeric stacked column should not be right aligned",
     });
-    expect(`tbody tr:eq(0) td:not(.o_list_record_selector):eq(1)`).not.toHaveClass(
-        "o_list_number"
-    );
+    expect(`tbody tr:eq(0) td:not(.o_list_record_selector):eq(1)`).not.toHaveClass("o_list_number");
 
     expect(`thead th:not(.o_list_record_selector):eq(2) .o_list_number_th`).toHaveCount(0, {
         message: "a stacked column follows its first sub-field, not the ones below it",
     });
-    expect(`tbody tr:eq(0) td:not(.o_list_record_selector):eq(2)`).not.toHaveClass(
-        "o_list_number"
-    );
+    expect(`tbody tr:eq(0) td:not(.o_list_record_selector):eq(2)`).not.toHaveClass("o_list_number");
 });
 
 test(`column tag: aggregates of numeric columns are right aligned`, async () => {
