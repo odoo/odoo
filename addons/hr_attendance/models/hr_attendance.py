@@ -197,11 +197,21 @@ class HrAttendance(models.Model):
                 attendance.date,
             )
 
-    @api.depends("worked_hours", "overtime_hours")
+    @api.depends("worked_hours", "linked_overtime_ids.duration")
     def _compute_expected_hours(self):
+        """Of the hours worked, the ones that were not extra.
+
+        Against `duration`, the figure the rules computed, and not against
+        `overtime_hours`, which sums `manual_duration` -- the column a manager
+        edits. Correcting an overtime line used to change how many hours the
+        employee had been expected to work: a twelve-hour day against an
+        eight-hour schedule read 8 expected, then 11 when a manager cut the
+        overtime to one hour, then 12 when they cut it to nothing, while the
+        schedule never moved.
+        """
         for attendance in self:
-            attendance.expected_hours = (
-                attendance.worked_hours - attendance.overtime_hours
+            attendance.expected_hours = attendance.worked_hours - sum(
+                attendance.linked_overtime_ids.mapped("duration")
             )
 
     @api.depends("check_in", "check_out", "worked_hours", "out_mode")

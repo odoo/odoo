@@ -502,12 +502,25 @@ class TestOvertimeLineForeignKey(TransactionCase):
         )
 
     def test_editing_a_line_moves_the_derived_fields_with_no_hand_rolled_marking(self):
+        # 08:00-19:00 against an eight-hour schedule: eleven worked, three of
+        # them extra by the rules.
+        self.assertEqual(self.attendance.worked_hours, 11.0)
+        self.assertEqual(self.line.duration, 3.0)
+
         self.line.manual_duration = 5.0
         self.env.flush_all()
         self.env.invalidate_all()
         self.assertEqual(self.attendance.overtime_hours, 5.0)
         self.assertEqual(self.attendance.validated_overtime_hours, 5.0)
-        self.assertEqual(self.attendance.expected_hours, 6.0)
+        # And `expected_hours` does NOT move: it is measured against `duration`,
+        # what the rules computed, so a manager correcting the overtime cannot
+        # restate how many hours the schedule expected. This assertion still
+        # exercises the propagation the test is named for -- the field is
+        # recomputed through the real relation either way -- it just pins the
+        # value that does not depend on the correction. It read 6.0 while
+        # `expected_hours` subtracted `manual_duration`, which made a twelve-
+        # hour day's expectation follow whatever a manager typed.
+        self.assertEqual(self.attendance.expected_hours, 8.0)
 
     def test_two_same_check_in_attendances_no_longer_collide(self):
         """The old join keyed on `time_start == check_in`; distinct employees

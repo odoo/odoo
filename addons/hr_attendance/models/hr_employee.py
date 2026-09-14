@@ -54,6 +54,10 @@ class HrEmployee(models.Model):
         compute="_compute_attendance_state",
         groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user",
     )
+    # These four are not stored, and a non-stored compute with no `depends` is
+    # computed once and then held until something else happens to invalidate the
+    # cache -- so an attendance created after the first read did not move them.
+    # Measured: two hours read, three more worked, still two hours.
     hours_this_month = fields.Float(compute="_compute_hours_this_month")
     hours_this_month_overtime = fields.Float(compute="_compute_hours_this_month")
     hours_today = fields.Float(
@@ -158,6 +162,13 @@ class HrEmployee(models.Model):
         for employee in self:
             employee.total_overtime = mapped_validated_overtimes.get(employee, 0)
 
+    @api.depends(
+        "attendance_ids.worked_hours",
+        "attendance_ids.validated_overtime_hours",
+        "attendance_ids.check_in",
+        "attendance_ids.check_out",
+        "tz",
+    )
     def _compute_hours_this_month(self):
         now = fields.Datetime.now()
         now_utc = now.replace(tzinfo=UTC)
@@ -200,6 +211,7 @@ class HrEmployee(models.Model):
             employee.hours_this_month_display = "%g" % employee.hours_this_month
             employee.hours_this_month_overtime = round(overtime, 2)
 
+    @api.depends("attendance_ids.check_in", "attendance_ids.check_out", "tz")
     def _compute_hours_today(self):
         now = fields.Datetime.now()
         now_utc = now.replace(tzinfo=UTC)
