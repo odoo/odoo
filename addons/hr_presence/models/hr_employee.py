@@ -39,10 +39,20 @@ class HrEmployee(models.Model):
     # Stored mirror of hr_presence_state, which is computed and therefore
     # neither searchable nor groupable. It carries every value
     # hr_presence_state can take, 'archive' included, so that mirroring never
-    # has to drop one. Whoever changes the evidence refreshes it: the websocket
-    # as it stamps a connection, the sweep for the emails it counted, an action
-    # for a manager's override. The cron is what catches the rest -- the
-    # transitions time itself makes, into and out of working hours.
+    # has to drop one.
+    #
+    # A plain stored field refreshed at named points, NOT a stored computed one,
+    # and the reason is `user_id.im_status`: hr_presence_state depends on it,
+    # and mail.presence writes and commits a status on every websocket
+    # heartbeat. A computed mirror would therefore write an hr_employee row per
+    # user per heartbeat -- far worse than one sweep an hour.
+    #
+    # So whoever changes the evidence refreshes it: create, for an employee who
+    # would otherwise carry this default until the next sweep; the websocket as
+    # it stamps a connection; the sweep for the emails it counted; an action for
+    # a manager's override. The cron catches what is left, which is a state
+    # nobody wrote -- the transitions time itself makes, and a field the state
+    # reads changing under it.
     hr_presence_state_display = fields.Selection(
         selection=[
             ("out_of_working_hour", "Off-Hours"),
@@ -53,6 +63,23 @@ class HrEmployee(models.Model):
         string="Presence",
         default="out_of_working_hour",
     )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        employees = super().create(vals_list)
+        # Without this a new employee carries the field default until the next
+        # sweep -- reading Absent in the icon of their own row while the Absent
+        # filter, which reads the mirror, cannot see them. Six queries whatever
+        # the batch size, and the same population the sweep covers.
+        controlled = employees.filtered(
+            lambda employee: (
+                employee.company_id.hr_presence_control_email
+                or employee.company_id.hr_presence_control_ip
+            )
+        )
+        if controlled:
+            self._hr_presence_refresh_display(controlled)
+        return employees
 
     # ------------------------------------------------------------------ dates
     def _hr_presence_today(self):

@@ -694,6 +694,82 @@ class TestDayWindowsTile(HrPresenceCase):
 
 
 @tagged("post_install", "-at_install")
+class TestTheMirrorIsRightFromBirth(HrPresenceCase):
+    """The mirror feeds the Absent and Off-Hours filters and the group-by. A new
+    employee used to carry its field default until the next hourly sweep, so the
+    icon in their own row said Absent while the filter that selects the rows
+    could not see them."""
+
+    def test_a_new_employee_is_mirrored_at_once(self):
+        employee = self._make_employee("newborn")
+        self.assertEqual(
+            employee.hr_presence_state,
+            "absent",
+            "fixture: the live state must differ from the field default, or this "
+            "test would pass against a mirror that was never written",
+        )
+        self.assertEqual(employee.hr_presence_state_display, employee.hr_presence_state)
+
+    def test_a_new_employee_is_findable_by_the_filter_at_once(self):
+        employee = self._make_employee("findable")
+        self.assertIn(
+            employee,
+            self.env["hr.employee"].search(
+                [("hr_presence_state_display", "=", "absent")]
+            ),
+        )
+
+    def test_a_company_that_does_not_use_the_feature_is_left_alone(self):
+        """Same population the sweep covers, and for the same reason: a company
+        that asked for nothing gets nothing written on its behalf."""
+        plain = self.env["res.company"].create({"name": "Unmirrored Co"})
+        calendar = self._make_calendar(plain, "UTC")
+        plain.resource_calendar_id = calendar
+        employee = self._make_employee("unmirrored", company=plain, calendar=calendar)
+        self.assertEqual(employee.hr_presence_state_display, "out_of_working_hour")
+
+    def test_a_batch_is_mirrored_in_one_pass(self):
+        before = self.env.cr.sql_statement_count
+        employees = self.env["hr.employee"].create(
+            [
+                {
+                    "name": f"batch{index}",
+                    "company_id": self.company.id,
+                    "resource_calendar_id": self.calendar.id,
+                    "tz": "UTC",
+                }
+                for index in range(8)
+            ]
+        )
+        self.env.flush_all()
+        self.assertEqual(
+            set(employees.mapped("hr_presence_state_display")),
+            {"absent"},
+            "every employee of the batch, not just the first",
+        )
+        self.assertLess(
+            self.env.cr.sql_statement_count - before,
+            300,
+            "the refresh must not be per-record",
+        )
+
+    def test_the_mirror_is_a_plain_field_not_a_stored_compute(self):
+        """hr_presence_state depends on user_id.im_status, and mail.presence
+        writes a status on every websocket heartbeat -- a computed mirror would
+        write an hr_employee row at that rate."""
+        field = self.env["hr.employee"]._fields["hr_presence_state_display"]
+        self.assertTrue(field.store)
+        self.assertFalse(field.compute)
+        self.assertIn(
+            "user_id.im_status",
+            self.env.registry.field_depends[
+                self.env["hr.employee"]._fields["hr_presence_state"]
+            ],
+            "fixture: the high-churn dependency that makes a stored compute wrong",
+        )
+
+
+@tagged("post_install", "-at_install")
 class TestSweep(HrPresenceCase):
     def test_the_sweep_mirrors_the_state_into_the_searchable_field(self):
         truant = self._make_employee("mirrored")
