@@ -393,7 +393,28 @@ def addon_specifier_to_url(spec: str) -> str | None:
 def resolve_specifier_url(spec: str, ext_libs: Mapping[str, str]) -> str | None:
     if (url := ext_libs.get(spec)) is not None:
         return url
-    return addon_specifier_to_url(spec)
+    url = addon_specifier_to_url(spec)
+    if url is None or not url.endswith(".js"):
+        return url
+    # A specifier whose module is a directory index (`foo/index.js`) carries
+    # the directory name (`@addon/foo`); the string heuristic appends `.js` and
+    # points at a `foo.js` that does not exist, so the import map maps it to a
+    # 404 and every module the page imports through that map fails to link.
+    # Prefer `foo/index.js` when `foo.js` is absent, as `read_source` does.
+    if not _static_file_exists(url):
+        alt = f"{url[:-3]}/index.js"
+        if _static_file_exists(alt):
+            return alt
+    return url
+
+
+@functools.lru_cache(maxsize=8192)
+def _static_file_exists(url: str) -> bool:
+    try:
+        file_path(url.lstrip("/"))
+    except FileNotFoundError, ValueError:
+        return False
+    return True
 
 
 class _BridgeExportResolver:
