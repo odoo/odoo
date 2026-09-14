@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-07-17 17:38+0000\n"
-"PO-Revision-Date: 2026-08-31 19:37+0000\n"
-"Last-Translator: Anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2026-09-14 06:14+0000\n"
+"Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-4/"
 "account_edi_ubl_cii/th/>\n"
 "Language: th\n"
@@ -31,7 +31,7 @@ msgstr "%(invoice_name)s - ใบแจ้งหนี้ที่สร้า�
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint_eu.py:0
 msgid "%s should have a KVK or OIN number set."
-msgstr ""
+msgstr "%s ควรมีชุดตัวเลข KVK หรือ OIN"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -39,6 +39,7 @@ msgstr ""
 msgid ""
 "%s should have a valid KBO/BCE number set as additional identifier (BE_EN)."
 msgstr ""
+"%s ควรมีชุดหมายเลข KBO/BCE ที่ถูกต้องกำหนดไว้เป็นตัวระบุเพิ่มเติม (BE_EN)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.actions.server,name:account_edi_ubl_cii.action_group_ungroup_lines_by_tax
@@ -54,10 +55,14 @@ msgid ""
 "                        Preview\n"
 "                    </span>"
 msgstr ""
+"<span style=\"font-size: 16px; font-weight: bold; color: #ffffff; display: "
+"inline-block; vertical-align: middle; text-transform: uppercase; margin: 0px "
+"8px; letter-spacing: 0.5px;\">\n"
+"                        ดูตัวอย่าง\n"
+"                    </span>"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
-#, fuzzy
 msgid "A"
 msgstr "A"
 
@@ -65,7 +70,7 @@ msgstr "A"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_ubl_pint_eu.py:0
 msgid "A buyer reference or purchase order reference must be provided."
-msgstr ""
+msgstr "ต้องระบุหมายเลขอ้างอิงของผู้ซื้อหรือหมายเลขอ้างอิงใบการจัดซื้อ"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -78,7 +83,7 @@ msgstr "ตรวจพบการชำระเงินของ %s"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 msgid "A rounding amount of %s was detected."
-msgstr ""
+msgstr "ตรวจพบจำนวนปัดเศษสำหรับ %s"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_a_nz
@@ -122,7 +127,7 @@ msgstr "การแนบ"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__invoice_edi_format__ubl_a_nz
 msgid "Australia (BIS Billing 3.0 A-NZ)"
-msgstr ""
+msgstr "Australia (BIS Billing 3.0 A-NZ)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__routing_scheme__0151

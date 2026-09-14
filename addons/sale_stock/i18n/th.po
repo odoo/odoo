@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-05 19:34+0000\n"
-"PO-Revision-Date: 2026-08-31 19:47+0000\n"
+"PO-Revision-Date: 2026-09-14 06:58+0000\n"
 "Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
 "Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-4/"
 "sale_stock/th/>\n"
@@ -30,19 +30,19 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.actions.report,print_report_name:sale_stock.action_report_return_label
 msgid "\"Return - %s\" % (object.name)"
-msgstr ""
+msgstr "\"ส่งคืน - %s\" % (object.name)"
 
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/controllers/return_order.py:0
 msgid "%(quantity)s x %(product_name)s"
-msgstr ""
+msgstr "%(quantity)s x %(product_name)s"
 
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/controllers/return_order.py:0
 msgid "%s:"
-msgstr ""
+msgstr "%s:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -63,6 +63,8 @@ msgid ""
 "<br/>\n"
 "                                    Quantity:"
 msgstr ""
+"<br/>\n"
+"                                    ปริมาณ:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -92,12 +94,12 @@ msgstr "<i class=\"fa fa-fw fa-truck\"/> ได้รับแล้ว"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_template
 msgid "<i class=\"fa fa-reply me-2\"/>Return"
-msgstr ""
+msgstr "<i class=\"fa fa-reply me-2\"/>ส่งคืน"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "<span class=\"ms-2\">days after delivery</span>"
-msgstr ""
+msgstr "<span class=\"ms-2\">วันหลังจัดส่ง</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
@@ -122,7 +124,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "<strong>Customer Reference</strong>"
-msgstr ""
+msgstr "<strong>เลขอ้างอิงของลูกค้า</strong>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -132,18 +134,18 @@ msgstr "<strong>Incoterm</strong>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.return_label
 msgid "<strong>Return reason</strong>"
-msgstr ""
+msgstr "<strong>เหตุผลในการส่งคืน</strong>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.return_label
 msgid "<strong>Returned products</strong>"
-msgstr ""
+msgstr "<strong>สินค้าที่ถูกส่งคืนแล้ว</strong>"
 
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/controllers/return_order.py:0
 msgid "A return label has been downloaded for the following products:<br/>"
-msgstr ""
+msgstr "ได้ดาวน์โหลดฉลากส่งคืนสำหรับสินค้าต่อไปนี้แล้ว:<br/>"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
@@ -179,12 +181,12 @@ msgstr "รวมแผนปฏิบัติการทั้งหมด"
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__allow_spontaneous_returns
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking__allow_spontaneous_returns
 msgid "Allow Spontaneous Returns"
-msgstr ""
+msgstr "อนุญาตให้มีการส่งคืนแบบทันที"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Allow users to return products"
-msgstr ""
+msgstr "อนุญาตให้ผู้ใช้คืนสินค้า"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
@@ -211,7 +213,6 @@ msgstr "พร้อม"
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
-#, fuzzy
 msgid "Available in stock"
 msgstr "มีในสต็อก"
 
@@ -222,7 +223,6 @@ msgstr "เลือกใช้เส้นทาง SO เฉพาะ"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
-#, fuzzy
 msgid "Company"
 msgstr "บริษัท"
 
@@ -240,17 +240,17 @@ msgstr "ตั้งค่าการกำหนดค่า"
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/return_order_dialog/return_order_dialog.xml:0
 msgid "Continue"
-msgstr ""
+msgstr "ดำเนินการต่อ"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_return_reason__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "สร้างโดย"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_return_reason__create_date
 msgid "Created on"
-msgstr ""
+msgstr "สร้างเมื่อ"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -298,7 +298,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/return_order_dialog/return_order_dialog.xml:0
 msgid "Delivery:"
-msgstr ""
+msgstr "การส่งมอบ:"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_accrued_orders_wizard__display_name
@@ -341,7 +341,7 @@ msgstr "อย่าลืมเปลี่ยนพาร์ทเนอร์
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/return_order_dialog/return_order_dialog.js:0
 msgid "Download Return Label"
-msgstr ""
+msgstr "ดาวน์โหลดป้ายการส่งคืน"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
@@ -395,7 +395,7 @@ msgstr "จำนวนที่ฟรีวันนี้"
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/stock_valuation/stock_valuation_report.js:0
 msgid "Goods Delivered Not Invoiced"
-msgstr ""
+msgstr "สินค้าจัดส่งแล้วแต่ยังไม่ได้ออกใบแจ้งหนี้"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
@@ -435,7 +435,7 @@ msgstr "การโอนที่ได้รับผลกระทบ:"
 #. module: sale_stock
 #: model:return.reason,name:sale_stock.return_reason_incorrect_specs
 msgid "Incorrect specifications or compatibility issues"
-msgstr ""
+msgstr "การระบุข้อกำหนดไม่ถูกต้องหรือเกิดปัญหาเกี่ยวกับการเข้ากัน"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
@@ -445,7 +445,7 @@ msgstr "รายละเอียด Incoterm"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_route
 msgid "Inventory Route"
-msgstr ""
+msgstr "เส้นทางคลังสินค้า"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_mto
@@ -454,14 +454,13 @@ msgstr "เป็น Mto"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
-#, fuzzy
 msgid "It specifies goods to be deliver partially or all at once"
 msgstr "ระบุสินค้าที่จะส่งมอบบางส่วนหรือทั้งหมดในครั้งเดียว"
 
 #. module: sale_stock
 #: model:return.reason,name:sale_stock.return_reason_damaged_product
 msgid "Item arrived damaged or defective"
-msgstr ""
+msgstr "สินค้าได้รับมาในสภาพเสียหายหรือมีข้อบกพร่อง"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__json_popover
@@ -486,12 +485,12 @@ msgstr "คำสั่งซื้อการจัดส่งครั้ง
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_return_reason__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "อัปเดตครั้งสุดท้ายโดย"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_return_reason__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "อัพเดทครั้งสุดท้ายเมื่อ"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__late_availability
@@ -514,12 +513,12 @@ msgstr "ล็อต/ซีเรียล"
 #: code:addons/sale_stock/static/src/return_order_dialog/return_order_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:sale_stock.return_label
 msgid "Lot/Serial Number:"
-msgstr ""
+msgstr "หมายเลขล็อต/หมายเลขซีเรียล:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Manage Return Reasons"
-msgstr ""
+msgstr "จัดการเหตุผลการส่งคืน"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -556,7 +555,7 @@ msgstr "วิธีการอัปเดตจำนวนที่จัด
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by <br/>"
-msgstr ""
+msgstr "เลื่อนวันที่ส่งมอบที่คาดการณ์ไว้ให้เร็วขึ้น<br/>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_help_message_template
@@ -566,7 +565,6 @@ msgstr "ยังไม่มีการจัดส่ง! ให้ระบ�
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
-#, fuzzy
 msgid "No future availability"
 msgstr "ไม่มีว่างในอนาคต"
 
@@ -574,7 +572,7 @@ msgstr "ไม่มีว่างในอนาคต"
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/return_order_dialog/return_order_dialog.xml:0
 msgid "No products are available to return."
-msgstr ""
+msgstr "ไม่พบสินค้าเพื่อการส่งคืน"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
@@ -589,7 +587,6 @@ msgstr "ไม่ได้จัดส่ง"
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
-#, fuzzy
 msgid "Not enough future availability"
 msgstr "ความพร้อมใช้งานในอนาคตไม่เพียงพอ"
 
@@ -598,12 +595,11 @@ msgstr "ความพร้อมใช้งานในอนาคตไม
 msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products"
-msgstr ""
+msgstr "จำนวนวันระหว่างการยืนยันคำสั่งซื้อกับการจัดส่งสินค้า"
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
-#, fuzzy
 msgid "On"
 msgstr "เมื่อ"
 
@@ -629,7 +625,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/return_order_dialog/return_order_dialog.js:0
 msgid "Print the return request label."
-msgstr ""
+msgstr "พิมพ์ฉลากคำขอส่งคืน"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_product_template
@@ -705,7 +701,7 @@ msgstr "เติมสินค้าตามคำสั่งขาย (MTO)
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/return_order_dialog/return_order_dialog.xml:0
 msgid "Request a return"
-msgstr ""
+msgstr "ขอคืนสินค้า"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -716,36 +712,36 @@ msgstr "สำรองแล้ว"
 #. module: sale_stock
 #: model:ir.actions.report,name:sale_stock.action_report_return_label
 msgid "Return Label"
-msgstr ""
+msgstr "ฉลากการส่งคืน"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_return_reason
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking__return_reason_id
 msgid "Return Reason"
-msgstr ""
+msgstr "เหตุผลในการส่งคืน"
 
 #. module: sale_stock
 #: model:ir.actions.act_window,name:sale_stock.action_open_return_reasons
 msgid "Return Reasons"
-msgstr ""
+msgstr "เหตุผลในการส่งคืน"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_company__return_validity_days
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__return_validity_days
 msgid "Return Validity Days"
-msgstr ""
+msgstr "จำนวนวันที่อนุญาตคืนสินค้าได้"
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/return_order_dialog/return_order_dialog.xml:0
 msgid "Return reason"
-msgstr ""
+msgstr "เหตุผลการส่งคืน"
 
 #. module: sale_stock
 #. odoo-python
 #: code:addons/sale_stock/controllers/return_order.py:0
 msgid "Return reason: %s"
-msgstr ""
+msgstr "เหตุผลในการส่งกลับ: %s"
 
 #. module: sale_stock
 #: model:ir.actions.act_window,name:sale_stock.action_stock_picking_return_report
@@ -838,7 +834,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/return_order_dialog/return_order_dialog.xml:0
 msgid "Select at least one product and a return reason."
-msgstr ""
+msgstr "เลือกสินค้ากับเหตุผลการส่งคืนอย่างน้อยหนึ่งรายการ"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_route__sale_selectable
