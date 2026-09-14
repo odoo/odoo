@@ -313,13 +313,10 @@ class WebJsonController(http.Controller):
                 with action.pool.cursor(readonly=True) as ro_cr:
                     if not ro_cr.readonly:
                         dbg.logic.debug(
-                            "[json:%s] pool gave a rw cursor, forcing read_only",
+                            "[json:%s] pool gave a rw cursor, enforcing read-only",
                             subpath,
                         )
-                        ro_cr.connection.read_only = True
-                    if not ro_cr.readonly:
-                        msg = "Failed to obtain a read-only cursor for server action evaluation"
-                        raise RuntimeError(msg)
+                        ro_cr.enforce_readonly()
                     action_data = action.with_env(action.env(cr=ro_cr, su=False)).run()
             except psycopg.errors.ReadOnlySqlTransaction as e:
                 dbg.logic.debug("[json:%s] server action tried to write", subpath)
@@ -331,9 +328,14 @@ class WebJsonController(http.Controller):
                     "[json:%s] server action tried to write (wrapped)", subpath
                 )
                 raise AccessError(action.env._("Unsupported server action")) from e
+            if not isinstance(action_data, dict) or not action_data.get("type"):
+                dbg.logic.debug("[json:%s] server action returned no action", subpath)
+                raise BadRequest(
+                    action.env._("The server action %s returns no action.", action.path)
+                )
             action = action.env[action_data["type"]]
             action = action.new(
-                action_data, origin=action.browse(action_data.pop("id"))
+                action_data, origin=action.browse(action_data.pop("id", None))
             )
             dbg.pipeline.debug(
                 "[json:%s] server action -> %s %s",

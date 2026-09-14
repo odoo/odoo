@@ -42,3 +42,43 @@ class TestJsonExportRoute(HttpCase):
             f"grouped __count read should succeed, got {resp.status_code}: "
             f"{resp.text[:300]}",
         )
+
+    def _create_server_action(self, path, code):
+        return self.env["ir.actions.server"].create(
+            {
+                "name": path,
+                "model_id": self.env["ir.model"]._get_id("res.partner"),
+                "state": "code",
+                "path": path,
+                "code": code,
+            }
+        )
+
+    def test_server_action_path_runs_on_a_read_only_transaction(self):
+        self._create_server_action(
+            "json_probe_list",
+            "action = {'type': 'ir.actions.act_window', 'res_model': 'res.partner',"
+            " 'view_mode': 'list', 'name': 'probe'}",
+        )
+        resp = self.url_open("/json/1/json_probe_list", headers=_NAV_HEADERS)
+        self.assertEqual(resp.status_code, 200, resp.text[:300])
+        self.assertIn("records", resp.json())
+
+    def test_server_action_that_writes_is_refused_not_500(self):
+        self._create_server_action(
+            "json_probe_write",
+            "env['res.partner'].create({'name': 'must not land'})\n"
+            "action = {'type': 'ir.actions.act_window', 'res_model': 'res.partner',"
+            " 'view_mode': 'list', 'name': 'probe'}",
+        )
+        with self.assertLogs("odoo.http", level="WARNING"):
+            resp = self.url_open("/json/1/json_probe_write", headers=_NAV_HEADERS)
+        self.assertEqual(resp.status_code, 403, resp.text[:300])
+        self.assertFalse(
+            self.env["res.partner"].search_count([("name", "=", "must not land")])
+        )
+
+    def test_server_action_returning_no_action_is_a_client_error(self):
+        self._create_server_action("json_probe_none", "x = 1")
+        resp = self.url_open("/json/1/json_probe_none", headers=_NAV_HEADERS)
+        self.assertEqual(resp.status_code, 400, resp.text[:300])

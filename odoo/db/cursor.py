@@ -991,6 +991,13 @@ class Cursor(_BulkAccessMixin, _MetricsMixin, BaseCursor):
         except Exception:
             return False
 
+    def enforce_readonly(self) -> None:
+        if self._readonly:
+            return
+        self._cnx.read_only = True
+        self._readonly = True
+        _debug.lifecycle("cursor.readonly_enforced", db=vars(self).get("dbname"))
+
     def commit(self) -> None:
         if self._closed:
             _debug.logic(
