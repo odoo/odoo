@@ -337,6 +337,7 @@ class HrEmployee(models.Model):
         "hr_presence_manual_date",
         "hr_presence_manual_state",
         "is_absent",
+        "resource_calendar_id.flexible_hours",
         "resource_calendar_id",
         "tz",
         "user_id.im_status",
@@ -363,8 +364,12 @@ class HrEmployee(models.Model):
         )
         automatic = controlled - manual
         # Only this branch can need the schedule, so only this branch pays for
-        # it: hr and hr_attendance narrow before calling too.
-        working_now = frozenset(automatic._get_employee_ids_working_now())
+        # it: hr and hr_attendance narrow before calling too. A flexible
+        # employee is asked nothing -- see _hr_presence_verdict.
+        scheduled = automatic.filtered(
+            lambda e: not e.resource_id.sudo()._is_flexible()
+        )
+        working_now = frozenset(scheduled._get_employee_ids_working_now())
         for employee in controlled:
             employee.hr_presence_state = employee._hr_presence_verdict(
                 today_by_employee[employee.id], working_now
@@ -390,5 +395,11 @@ class HrEmployee(models.Model):
         if today in (self.hr_presence_ip_date, self.hr_presence_email_date):
             return "present"
         if self.id not in working_now or self.is_absent:
+            return "out_of_working_hour"
+        if self.resource_id.sudo()._is_flexible():
+            # A flexible calendar with no attendance line answers every window
+            # with an interval, so _get_employee_ids_working_now reports such an
+            # employee as working at three in the morning. Whoever chooses their
+            # own hours cannot be absent from them.
             return "out_of_working_hour"
         return "absent"

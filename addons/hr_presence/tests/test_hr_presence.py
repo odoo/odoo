@@ -41,6 +41,51 @@ class TestPresenceState(HrPresenceCase):
         self.assertTrue(excused.is_absent)
         self.assertEqual(self._verdict(excused), "out_of_working_hour")
 
+    def test_a_flexible_employee_is_never_absent_from_hours_they_choose(self):
+        """A resource.calendar with flexible_hours and no attendance line
+        answers EVERY window with an interval, so _get_employee_ids_working_now
+        reports such an employee as working at three in the morning."""
+        flexible = self.env["resource.calendar"].create(
+            {
+                "name": "flexible",
+                "tz": "UTC",
+                "company_id": self.company.id,
+                "flexible_hours": True,
+                "attendance_ids": [(5, 0, 0)],
+            }
+        )
+        employee = self._make_employee("flexible", calendar=flexible)
+        self.assertTrue(employee.resource_id._is_flexible())
+        self.assertIn(
+            employee.id,
+            employee._get_employee_ids_working_now(),
+            "fixture: hr still reports a flexible employee as working now",
+        )
+        self.assertEqual(self._verdict(employee), "out_of_working_hour")
+        self.assertNotEqual(employee.hr_presence_state, "absent")
+
+    def test_a_fully_flexible_employee_is_never_absent_either(self):
+        employee = self._make_employee("no_calendar")
+        employee.resource_calendar_id = False
+        employee.invalidate_recordset()
+        self.assertTrue(employee.resource_id._is_fully_flexible())
+        self.assertEqual(self._verdict(employee), "out_of_working_hour")
+
+    def test_a_flexible_employee_can_still_be_present(self):
+        """The exclusion is one-sided: evidence still counts."""
+        flexible = self.env["resource.calendar"].create(
+            {
+                "name": "flexible present",
+                "tz": "UTC",
+                "company_id": self.company.id,
+                "flexible_hours": True,
+                "attendance_ids": [(5, 0, 0)],
+            }
+        )
+        employee = self._make_employee("flexible_present", calendar=flexible)
+        employee.hr_presence_ip_date = self._today_for(employee)
+        self.assertEqual(self._verdict(employee), "present")
+
     def test_an_employee_outside_working_hours_is_off_hours_not_absent(self):
         company = self.env["res.company"].create({"name": "Night Co"})
         calendar = self._make_calendar(company, "UTC", hour_from=0.0, hour_to=0.01)
