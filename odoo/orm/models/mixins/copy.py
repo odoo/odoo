@@ -59,6 +59,14 @@ class CopyMixin(_ModelStubs):
             and self._has_field_access(field, "read")
         }
 
+        # the records a batch may link through its many2many fields, filtered
+        # once per field: each record then keeps the ones it holds
+        readable_by_field = {
+            name: set(self[name]._filtered_access("read")._ids)
+            for name, field in fields_to_copy.items()
+            if field.is_many2many
+        }
+
         seen_map = self.env.context["__copy_data_seen"]
         _debug.pipeline(
             "copy.data",
@@ -90,8 +98,11 @@ class CopyMixin(_ModelStubs):
                         Command.create(line) for line in lines.copy_data() if line
                     ]
                 elif field.is_many2many:
+                    readable = readable_by_field[name]
                     vals[name] = [
-                        Command.set(record[name]._filtered_access("read").ids)
+                        Command.set(
+                            [id_ for id_ in record[name]._ids if id_ in readable]
+                        )
                     ]
                 else:
                     vals[name] = field.convert_to_write(record[name], record)

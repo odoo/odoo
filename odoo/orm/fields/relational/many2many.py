@@ -9,7 +9,7 @@ from typing import override
 from odoo.exceptions import AccessError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, OrderedSet, Query, unique
-from odoo.tools.misc import SENTINEL, Sentinel
+from odoo.tools.misc import PENDING, SENTINEL, Sentinel
 
 from ..._recordset import is_search_overridden
 from ...primitives import NewId
@@ -381,7 +381,7 @@ class Many2many(_RelationalMulti):
         records = model.browse(ids)
 
         if self.store:
-            missing_ids = tuple(self._iter_cache_missing_ids(records))
+            missing_ids = set(self._iter_cache_missing_ids(records))
             if missing_ids:
                 _debug.logic(
                     "field.many2many.write.read_before_write",
@@ -390,7 +390,7 @@ class Many2many(_RelationalMulti):
                     records=len(records),
                     missing=len(missing_ids),
                 )
-                self.read(records.browse(missing_ids))
+                self._read_missing_with_batch(records_commands_list, missing_ids)
 
         old_relation = {
             record.id: OrderedSet(self._get_raw_ids(record))
@@ -415,6 +415,22 @@ class Many2many(_RelationalMulti):
         self._apply_relation_delta(
             records, comodel, old_relation, new_relation, store=self.store
         )
+
+    def _read_missing_with_batch(
+        self,
+        records_commands_list: Sequence[tuple[BaseModel, list[CommandValue]]],
+        missing_ids: set,
+    ) -> None:
+        # a compute assigning the field record by record over a batch hands
+        # each record with the batch as its prefetch: the relation is read for
+        # the batch once, as a getter would, not once per assignment
+        field_cache = self._get_cache(records_commands_list[0][0].env)
+        for recs, _commands in records_commands_list:
+            for record in recs:
+                if record.id in missing_ids and (
+                    record.id not in field_cache or field_cache[record.id] is PENDING
+                ):
+                    self.read(self._to_prefetch(record))
 
     @override
     def write_new(
