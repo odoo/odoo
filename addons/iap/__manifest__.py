@@ -1,6 +1,6 @@
 {
     "name": "In-App Purchases",
-    "version": "1.1",
+    "version": "1.2",
     "category": "Hidden/Tools",
     "summary": "Basic models and helpers to support In-App purchases.",
     "description": """
@@ -10,6 +10,7 @@ to support In-App purchases inside Odoo. """,
     "license": "LGPL-3",
     "depends": [
         "web",
+        "credential",
     ],
     "data": [
         "data/services.xml",

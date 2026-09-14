@@ -29,8 +29,17 @@ class IapAccount(models.Model):
         default=False
     )  # If True, the service can't be edited anymore
     description = fields.Char(related="service_id.description")
+    credential_id = fields.Many2one(
+        comodel_name="credential.credential",
+        string="Token Credential",
+        copy=False,
+        ondelete="restrict",
+        groups="base.group_system",
+        help="Holds this account's token.",
+    )
     account_token = fields.Char(
-        size=43,
+        compute="_compute_account_token",
+        inverse="_inverse_account_token",
         default=lambda s: uuid.uuid4().hex,
         copy=False,
         groups="base.group_system",
@@ -54,6 +63,42 @@ class IapAccount(models.Model):
         ],
         readonly=True,
     )
+
+    @api.depends("credential_id")
+    def _compute_account_token(self):
+        for account in self:
+            credential = account.sudo().credential_id
+            account.account_token = (
+                credential._use_secret("iap:account_token") if credential else False
+            ) or False
+
+    def _inverse_account_token(self):
+        for account in self.sudo():
+            token = account.account_token
+            credential = account.credential_id
+            if not token:
+                account.credential_id = False
+                credential.unlink()
+            elif credential:
+                credential.credential_value = token
+            else:
+                account.credential_id = (
+                    self.env["credential.credential"]
+                    .sudo()
+                    .create(
+                        {
+                            "name": self.env._(
+                                "IAP: %(service)s (account %(account)s)",
+                                service=account.service_id.name or account.name,
+                                account=account.id,
+                            ),
+                            "category_id": self.env.ref(
+                                "credential.credential_category_custom"
+                            ).id,
+                            "credential_value": token,
+                        }
+                    )
+                )
 
     @api.constrains("warning_threshold", "warning_user_ids")
     def check_warning_alerts(self):
@@ -219,7 +264,7 @@ class IapAccount(models.Model):
                 IapAccount = self.with_env(self.env(cr=cr))
                 # Need to use sudo because regular users do not have delete right
                 IapAccount.search(
-                    domain + [("account_token", "=", False)]
+                    domain + [("credential_id", "=", False)]
                 ).sudo().unlink()
                 accounts -= accounts_without_token
         if not accounts:

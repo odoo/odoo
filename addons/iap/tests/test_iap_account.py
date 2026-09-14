@@ -7,10 +7,11 @@ from odoo.tests import TransactionCase, tagged
 
 from odoo.addons.iap.models import iap_account as iap_account_module
 from odoo.addons.iap.tools import iap_tools
+from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 
 @tagged("post_install", "-at_install")
-class TestIapAccount(TransactionCase):
+class TestIapAccount(EncryptionKeyCase, TransactionCase):
     """IAP account lifecycle, credit URLs and warning alert guards."""
 
     @classmethod
@@ -35,6 +36,24 @@ class TestIapAccount(TransactionCase):
         )
         account = self.env["iap.account"].create({"service_id": self.service.id})
         self.assertTrue(account.account_token.endswith("+disabled"))
+
+    def test_the_token_lives_in_a_credential(self):
+        """The token is held by an encrypted credential, not a column."""
+        account = self.env["iap.account"].create({"service_id": self.service.id})
+        credential = account.sudo().credential_id
+        self.assertTrue(credential)
+        self.assertEqual(
+            credential._use_secret("iap:account_token"), account.sudo().account_token
+        )
+        self.assertFalse(self.env["iap.account"]._fields["account_token"].store)
+
+    def test_clearing_the_token_removes_its_credential(self):
+        """An account whose token is cleared keeps no credential behind."""
+        account = self.env["iap.account"].create({"service_id": self.service.id})
+        credential = account.sudo().credential_id
+        account.sudo().account_token = False
+        self.assertFalse(account.sudo().credential_id)
+        self.assertFalse(credential.exists())
 
     def test_service_locked_blocks_service_change(self):
         """A locked account's service_id cannot be changed."""
