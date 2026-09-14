@@ -2,6 +2,7 @@
 /** @odoo-module native */
 import { CountryFlag } from "@mail/core/common/country_flag";
 import { ImStatus } from "@mail/core/common/im_status";
+import { baseImStatus } from "@mail/core/common/presence_status";
 import { useHover } from "@mail/utils/common/hooks";
 import { Component, useEffect, useRef, useState, useSubEnv } from "@odoo/owl";
 import { isMobileOS } from "@web/core/browser/feature_detection";
@@ -89,7 +90,7 @@ export class ChatBubble extends Component {
     get showImStatus() {
         return (
             this.thread?.correspondent?.im_status &&
-            this.thread.correspondent.im_status !== "offline"
+            baseImStatus(this.thread.correspondent.im_status) !== "offline"
         );
     }
 }

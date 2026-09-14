@@ -1,6 +1,7 @@
 // @ts-check
 /** @odoo-module native */
 import { IM_STATUS_DEBOUNCE_DELAY } from "@mail/core/common/constants";
+import { baseImStatus } from "@mail/core/common/presence_status";
 import { fields } from "@mail/core/common/record";
 import { toRaw } from "@odoo/owl";
 import { makeLogger } from "@web/core/debug/debug_logger";
@@ -44,7 +45,7 @@ export const PresenceMixin = (Base) =>
         im_status = fields.Attr(null, {
             /** @this {import("models").Persona} */
             onUpdate() {
-                if (this.im_status === "offline" && this.isSelfPresence) {
+                if (baseImStatus(this.im_status) === "offline" && this.isSelfPresence) {
                     this.store.env.services.im_status.updateBusPresence();
                 }
             },
@@ -122,7 +123,7 @@ export const PresenceMixin = (Base) =>
                 from: this.im_status,
                 to: newStatus,
             }));
-            if (newStatus === "offline") {
+            if (baseImStatus(newStatus) === "offline") {
                 this.offline_since = DateTime.now();
             }
             this.im_status = newStatus;

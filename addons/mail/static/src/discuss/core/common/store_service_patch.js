@@ -1,5 +1,9 @@
 // @ts-check
 /** @odoo-module native */
+import {
+    REACHABLE_IM_STATUSES,
+    reachableDecoratedImStatuses,
+} from "@mail/core/common/presence_status";
 import { Store } from "@mail/core/common/store_service";
 import { compareDatetime } from "@mail/utils/common/misc";
 import { makeLogger } from "@web/core/debug/debug_logger";
@@ -21,7 +25,10 @@ const storeServicePatch = {
         );
     },
     get onlineMemberStatuses() {
-        return ["away", "bot", "busy", "online"];
+        // Derived, not a literal: a module that decorates `im_status` registers
+        // the pair once and every reader of a presence word sees it, rather than
+        // each module patching this getter with its own vocabulary.
+        return ["bot", ...REACHABLE_IM_STATUSES, ...reachableDecoratedImStatuses()];
     },
     /**
      * @param {Object} param0

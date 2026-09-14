@@ -1,4 +1,5 @@
 /** @odoo-module native */
+import { registerImStatusDecoration } from "@mail/core/common/presence_status";
 import { _t } from "@web/core/translation";
 
 // hr_homeworking spells a located presence `<location_type>_<im_status>` on both
@@ -10,6 +11,9 @@ const LOCATIONS = {
     office: { icon: "fa-solid fa-building", label: _t("At Office") },
     other: { icon: "fa-solid fa-location-dot", label: _t("At Other") },
 };
+
+/** @type {string[]} the location words this module decorates a status with */
+export const WORK_LOCATION_TYPES = [];
 
 const STATUSES = {
     online: { color: "text-success", label: _t("Online") },
@@ -39,12 +43,15 @@ export function workLocationPresence(imStatus) {
     };
 }
 
-// The presence words a located status can carry and still count as reachable.
-// mail's `onlineMemberStatuses` is a membership test against literal strings, so
-// a located status is absent from it and its member falls into Discuss's Offline
-// section while the person is at their desk.
-const REACHABLE = ["online", "away", "busy"];
+// Tell mail what each located status means, once. Everything that reads a
+// presence word -- the member partition, the chat bubble, the self-presence
+// restart, offline_since -- answers from this rather than from a literal list
+// repeated per reader.
+export const WORK_LOCATION_PRESENCE_WORDS = Object.keys(STATUSES);
 
-export const REACHABLE_WORK_LOCATION_STATUSES = Object.keys(LOCATIONS).flatMap(
-    (locationType) => REACHABLE.map((status) => `${locationType}_${status}`),
-);
+for (const locationType of Object.keys(LOCATIONS)) {
+    WORK_LOCATION_TYPES.push(locationType);
+    for (const status of WORK_LOCATION_PRESENCE_WORDS) {
+        registerImStatusDecoration(`${locationType}_${status}`, status);
+    }
+}
