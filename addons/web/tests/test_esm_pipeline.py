@@ -3681,32 +3681,47 @@ class TestPerFileSecondaryOnAPage(TransactionCase):
         ) - set(native_data["import_map"])
         return import_map, provided
 
+    _BRIDGE = ("/web/assets/esm/bridges/", "data:")
+
     def test_what_the_page_carries_is_bridged_not_served_again(self):
+        # what the tests bundle reaches AND the page carries -- derived from
+        # the install, not a fixed module name, since which page modules the
+        # bundle's test tours reach depends on what is installed
         import_map, provided = self._debug_map(self.PAGE)
-        served_again = sorted(
-            spec
-            for spec, url in import_map.items()
-            if spec in provided
-            and not url.startswith(("/web/assets/esm/bridges/", "data:"))
-        )
-        self.assertEqual(served_again, [])
-        self.assertIn("@web/webclient/debug/debug_menu_basic", provided)
+        reached = sorted(provided & set(import_map))
         self.assertTrue(
-            import_map["@web/webclient/debug/debug_menu_basic"].startswith(
-                ("/web/assets/esm/bridges/", "data:")
-            )
+            reached, "fixture: the tests bundle reaches modules the page carries"
         )
+        served_again = [
+            s for s in reached if not import_map[s].startswith(self._BRIDGE)
+        ]
         self.assertEqual(
-            import_map["@web/webclient/debug/debug_menu"],
-            "/web/static/src/webclient/debug/debug_menu.js",
-            "what the page does not carry still resolves per file",
+            served_again,
+            [],
+            "a page-carried module served per file is a second copy of it",
         )
 
-    def test_without_a_page_scope_everything_reached_is_served_per_file(self):
-        import_map, _provided = self._debug_map(())
-        self.assertEqual(
-            import_map["@web/webclient/debug/debug_menu_basic"],
-            "/web/static/src/webclient/debug/debug_menu_basic.js",
+    def test_a_page_scope_is_what_bridges_the_page_carried_modules(self):
+        # without the page scope the per-file branch does not bridge to the
+        # page's copies; at least one module the scoped map bridges is served
+        # per file (its own src url) unscoped -- the duplication the scope fixes
+        scoped, provided = self._debug_map(self.PAGE)
+        unscoped, _ = self._debug_map(())
+        bridged_by_scope = {
+            s for s in provided & set(scoped) if scoped[s].startswith(self._BRIDGE)
+        }
+        self.assertTrue(
+            bridged_by_scope, "fixture: the page scope bridges page-carried modules"
+        )
+        served_raw_unscoped = {
+            s
+            for s in bridged_by_scope
+            if s in unscoped and not unscoped[s].startswith(self._BRIDGE)
+        }
+        self.assertTrue(
+            served_raw_unscoped,
+            "the page scope must change the outcome: a module it bridges is "
+            "served per file without it",
         )
 
 
