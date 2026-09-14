@@ -291,7 +291,7 @@ done < <(grep -B1 'model="ir.cron"' "$MOD"/data/*.xml \
 # method fails at 2am in a log nobody reads.
 while read -r method; do
     [ -z "$method" ] && continue
-    if grep -rqF "def $method" "$MOD/models"; then ok
+    if grep -rqE "def $method\\(" "$MOD/models"; then ok
     else bad "a cron calls $method(), which no model defines"; fi
 done < <(grep -oP '_cron_\w+' "$MOD"/data/*.xml | cut -d: -f2 | sort -u)
 
@@ -356,7 +356,7 @@ else
 fi
 
 # The deferral, and the cron that deliberately does not use it.
-grep -q 'def _deferring_overtime' "$MOD/models/hr_attendance.py" \
+grep -qE 'def _deferring_overtime\(' "$MOD/models/hr_attendance.py" \
     && ok || bad "conventions.md describes _deferring_overtime(); it is gone"
 if "$PY" - "$MOD/models/hr_attendance.py" <<'PY'
 import ast, sys
@@ -433,7 +433,7 @@ done
 
 # The kiosk's single refusal shape.
 for helper in _refuse _employee_of; do
-    grep -q "def $helper" "$MOD/controllers/main.py" \
+    grep -qE "def $helper\\(" "$MOD/controllers/main.py" \
         && ok || bad "conventions.md names $helper(); controllers/main.py has no such method"
 done
 
@@ -508,12 +508,20 @@ while read -r case; do
     else bad "docs name the test class $case, which tests/ does not declare"; fi
 done < <(grep -hoP '`\K(Test|Schedule)\w+(?=`)' "${DOCS[@]}" | sort -u)
 
+# EVERY `def <name>` CHECK BELOW AND ABOVE REQUIRES THE OPEN PAREN. Without
+# it, `grep "def _deferring_overtime"` matches `def _deferring_overtime_ctx`,
+# so renaming an advertised method by SUFFIX passes every one of these -- which
+# is the rename most likely to happen, because that is what an author does when
+# they split a method in two. Mutation-tested: the suffix rename escaped this
+# harness until the parens went in, in the same week the identical trap was
+# found and fixed for `def copy` / `def copy_disabled`.
+
 # ---------------------------------------------------------- extension points --
 # Advertising a renamed method is how a downstream override gets written
 # against a name that has not existed for a month.
 while read -r hook; do
     [ -z "$hook" ] && continue
-    if grep -rqF "def $hook" "$MOD"/models "$MOD"/controllers; then ok
+    if grep -rqE "def $hook\\(" "$MOD"/models "$MOD"/controllers; then ok
     else bad "index.md advertises extension point $hook(), which no longer exists"; fi
 done < <(sed -n '/^## Extension Points/,$p' "$SCRIPT_DIR/index.md" \
     | grep -oP '^- `\K_\w+(?=\(\))' | sort -u)
