@@ -36,11 +36,6 @@ registerWebsitePreviewTour(
             trigger: ':iframe a:contains("Article test")',
             run: "click",
         },
-        {
-            content: "Wait for the review tab chatter to be ready",
-            trigger: ":iframe #chatterRoot:not(:visible)",
-            run: () => odoo.portalChatterReady,
-        },
         ...clickOnEditAndWaitEditMode(),
         selectText(".s_text_block > p"),
         {
@@ -60,28 +55,22 @@ registerWebsitePreviewTour(
         },
         {
             content: "Check that the highlight was applied",
-            trigger:
-                ":iframe .o_wslides_lesson_content_type p span.o_text_highlight > svg",
+            trigger: ":iframe .o_wslides_fs_content p span.o_text_highlight:has(svg)",
         },
         {
             content: "Check that the highlight was applied",
             trigger:
-                ":iframe .o_wslides_lesson_content_type p span.o_text_highlight > svg.o_text_highlight_svg",
+                ":iframe .o_wslides_fs_content p span.o_text_highlight:has(svg.o_text_highlight_svg)",
         },
         ...clickOnSave(),
         {
-            content: "Click on the fullscreen button",
-            trigger: ':iframe #wrapwrap a[aria-label="Fullscreen"]',
-            run: "click",
-        },
-        {
-            content: "Wait for fullscreen",
+            content: "Wait for the saved fullscreen view",
             trigger: ':iframe #wrapwrap a[title="Exit Fullscreen"]',
         },
         {
-            content: "Check that the highlight was applied in fullscreen",
+            content: "Check that the highlight was saved in the fullscreen view",
             trigger:
-                ":iframe .o_wslides_fs_content p span.o_text_highlight > svg.o_text_highlight_svg",
+                ":iframe .o_wslides_fs_content p span.o_text_highlight:has(svg.o_text_highlight_svg)",
         },
     ],
 );

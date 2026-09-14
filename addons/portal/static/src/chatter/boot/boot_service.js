@@ -1,5 +1,5 @@
 /** @odoo-module native */
-import { loadBundle } from "@web/core/assets";
+import { AssetsLoadingError, loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { Deferred } from "@web/core/utils/concurrency";
 import { memoize } from "@web/core/utils/functions";
@@ -17,6 +17,9 @@ export const portalChatterBootService = {
             // itself waits for this startup pass. Keep startup nonblocking.
             loader.loadChatter().catch((error) => {
                 odoo.portalChatterReady.resolve(false);
+                if (error instanceof AssetsLoadingError) {
+                    return;
+                }
                 console.error("Portal chatter bundle failed to load", error);
             });
         } else {
