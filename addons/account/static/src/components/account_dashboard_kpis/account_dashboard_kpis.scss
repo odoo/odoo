@@ -64,18 +64,17 @@ $o-account-dashboard-kpi-card-gap: $o-kanban-record-margin * 2;
     }
 
     > [data-kpi-id="invoice_layout"],
-    &:not(:has(> [data-kpi-id="invoice_layout"])) > [data-kpi-id="revenue"] {
+    &:not(:has(> [data-kpi-id="invoice_layout"])) > [data-kpi-id="invoices"] {
         display: flex;
     }
 }
 
 // Keep the highest-priority cards that fit on one row.
-@include show-account-dashboard-kpi-at-capacity(2, "revenue", "expenses");
+@include show-account-dashboard-kpi-at-capacity(2, "invoices", "expenses");
 @include show-account-dashboard-kpi-at-capacity(3, "expenses", "receivable");
 @include show-account-dashboard-kpi-at-capacity(4, "receivable", "payable");
-@include show-account-dashboard-kpi-at-capacity(5, "payable", "gross_margin");
-@include show-account-dashboard-kpi-at-capacity(6, "gross_margin", "cashflow");
-@include show-account-dashboard-kpi-at-capacity(7, "cashflow");
+@include show-account-dashboard-kpi-at-capacity(5, "payable", "cash");
+@include show-account-dashboard-kpi-at-capacity(6, "cash");
 
 @include media-breakpoint-down(sm) {
     $mobile-card-min-width: 12rem;
@@ -93,7 +92,7 @@ $o-account-dashboard-kpi-card-gap: $o-kanban-record-margin * 2;
 
     // Shift priorities because Invoice Layout is unavailable on mobile.
     @include show-account-dashboard-kpi-at-capacity(
-        1, "revenue", null, $mobile-card-min-width
+        1, "invoices", null, $mobile-card-min-width
     );
     @include show-account-dashboard-kpi-at-capacity(
         2, "expenses", null, $mobile-card-min-width
@@ -105,10 +104,7 @@ $o-account-dashboard-kpi-card-gap: $o-kanban-record-margin * 2;
         4, "payable", null, $mobile-card-min-width
     );
     @include show-account-dashboard-kpi-at-capacity(
-        5, "gross_margin", null, $mobile-card-min-width
-    );
-    @include show-account-dashboard-kpi-at-capacity(
-        6, "cashflow", null, $mobile-card-min-width
+        5, "cash", null, $mobile-card-min-width
     );
 }
 
@@ -145,18 +141,6 @@ $o-account-dashboard-kpi-card-gap: $o-kanban-record-margin * 2;
     }
 }
 
-.o_account_dashboard_kpi_cashflow_card {
-    .o_account_dashboard_kpi_values {
-        width: 100%;
-        margin-top: 0;
-    }
-
-    .o_account_dashboard_kpi_value_label {
-        font-size: 1.125rem;
-        font-weight: $font-weight-semibold;
-    }
-}
-
 .o_account_dashboard_kpi_content {
     display: flex;
     flex-direction: column;
@@ -188,26 +172,4 @@ $o-account-dashboard-kpi-card-gap: $o-kanban-record-margin * 2;
     font-weight: $font-weight-semibold;
     line-height: 1.15;
     color: $headings-color;
-}
-
-.o_account_dashboard_kpi_values {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: map-get($spacers, 3);
-    margin-top: map-get($spacers, 2);
-    font-size: $h4-font-size;
-    color: $text-muted;
-}
-
-.o_account_dashboard_kpi_value_item {
-    display: flex;
-    flex-direction: column;
-    gap: map-get($spacers, 1);
-}
-
-.o_account_dashboard_kpi_value_amount {
-    color: $headings-color;
-    font-weight: $font-weight-semibold;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
