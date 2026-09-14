@@ -287,7 +287,7 @@
                             width="100%"
                             style="color: #454748; font-size: 12px; border-spacing: 0px 4px; white-space: nowrap;"
                             align="right">
-                            <tr>
+                            <tr t-if="hasattr(object, 'amount_delivery')">
                                 <td style="width: 60%" />
                                 <td style="width: 30%; border-top: 1px solid #dee2e6;" align="right"><span style="font-weight:bold;">Delivery:</span></td>
                                 <td style="width: 10%; border-top: 1px solid #dee2e6;" align="right" t-out="format_amount(object.amount_delivery, object.currency_id) or ''">$ 0.00</td>
@@ -382,11 +382,13 @@
                                 <td>
                                     <span style="font-weight:bold;">Shipping Method:</span>
                                     <t t-out="object.carrier_id.name or ''" />
-                                    <t t-if="object.amount_delivery == 0.0">
-                                        (Free)
-                                    </t>
-                                    <t t-else="">
-                                        (<t t-out="format_amount(object.amount_delivery, object.currency_id) or ''">$ 10.00</t>)
+                                    <t t-if="hasattr(object, 'amount_delivery')">
+                                        <t t-if="object.amount_delivery == 0.0">
+                                            (Free)
+                                        </t>
+                                        <t t-else="">
+                                            (<t t-out="format_amount(object.amount_delivery, object.currency_id) or ''">$ 10.00</t>)
+                                        </t>
                                     </t>
                                 </td>
                             </tr>
