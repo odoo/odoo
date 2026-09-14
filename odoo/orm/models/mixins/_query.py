@@ -324,4 +324,7 @@ class _QueryMixin(_ModelStubs):
                 records=len(self._ids),
                 missing=len(self._ids) - len(valid_ids),
             )
-        return self.browse(i for i in self._ids if i in valid_ids)
+        # one record of a batch stays one record of the batch
+        return self._spawn(
+            self.env, tuple(i for i in self._ids if i in valid_ids), self._prefetch_ids
+        )

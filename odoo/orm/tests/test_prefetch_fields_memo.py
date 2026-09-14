@@ -73,3 +73,14 @@ def test_discarding_a_field_forgets_the_memo():
         before = registry.prefetch_fields("memo.item")
         registry.discard_fields([env["memo.item"]._fields["secret"]])
         assert registry.prefetch_fields("memo.item") is not before
+
+
+def test_exists_keeps_the_prefetch_ids_of_the_batch():
+    with model_test_env(Item) as env:
+        items = env["memo.item"].create([{"name": str(i)} for i in range(5)])
+        one = items[2]
+        assert set(one._prefetch_ids) == set(items.ids)
+        assert set(one.exists()._prefetch_ids) == set(items.ids)
+        items[0].unlink()
+        assert set(items.exists()._prefetch_ids) == set(items.ids)
+        assert items.exists().ids == items.ids[1:]
