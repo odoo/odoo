@@ -4,13 +4,10 @@ from collections.abc import Iterator
 from typing import Any
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
-import babel.messages.pofile
 from werkzeug.urls import iri_to_uri
 
 from odoo import http
 from odoo.http import abort, request
-from odoo.tools.misc import file_open
-from odoo.tools.translate import JAVASCRIPT_TRANSLATION_COMMENT
 
 from ..tools import debug_log as dbg
 
@@ -278,26 +275,3 @@ def _get_login_redirect_url(uid: int, redirect: str | None = None) -> str:
 
 def is_user_internal(uid: int) -> bool:
     return request.env["res.users"].browse(uid)._is_internal()
-
-
-def _local_web_translations(trans_file: str) -> list[dict[str, str]] | None:
-    try:
-        with (
-            dbg.timer(None, "[translations] read_po %s", trans_file),
-            file_open(trans_file, filter_ext=(".po",)) as t_file,
-        ):
-            po = babel.messages.pofile.read_po(t_file)
-    except Exception as exc:
-        dbg.logic.debug(
-            "[translations] %s unreadable (%s)", trans_file, type(exc).__name__
-        )
-        return None
-    messages = [
-        {"id": x.id, "string": x.string}
-        for x in po
-        if x.id and x.string and JAVASCRIPT_TRANSLATION_COMMENT in x.auto_comments
-    ]
-    dbg.performance.debug(
-        "[translations] %s: %d of %d entries are JS", trans_file, len(messages), len(po)
-    )
-    return messages

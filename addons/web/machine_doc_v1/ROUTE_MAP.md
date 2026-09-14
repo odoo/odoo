@@ -95,7 +95,6 @@ Process probes and the metrics scrape. No session, no database: every route is `
 
 | Method | Route | Auth | Handler | Purpose |
 |--------|-------|------|---------|---------|
-| JSONRPC | `/web/webclient/bootstrap_translations` | none | `bootstrap_translations()` | Login page translations from .po files |
 | HTTP | `/web/webclient/translations` | public (CORS, readonly) | `translations()` | Module translations with hash validation |
 | JSONRPC | `/web/webclient/version_info` | none | `version_info()` | Odoo version metadata |
 | HTTP GET | `/web/bundle/<bundle_name>` | public (readonly) | `bundle()` | JS/CSS bundle definition |
@@ -244,7 +243,7 @@ A single `@http.route(routes=[...])` counts as one handler but several URL varia
 |----------|-----------------|------------|
 | RPC/Data | 8 / 10 | dataset, action, domain, view, model |
 | Session | 7 / 7 | session |
-| Bootstrap | 16 / 19 | home (7 handlers / 10 URLs; web_client has 4 URLs), health (4), webclient (5) |
+| Bootstrap | 15 / 18 | home (7 handlers / 10 URLs; web_client has 4 URLs), health (4), webclient (4) |
 | Binary/Assets | 10 / 35 | binary (17 image + 7 content + 3 logo + 2 fonts + upload + assets + scoped assets + esm assets + esm libraries + filestore) |
 | Export | 6 / 6 | export (5), pivot (1) |
 | Reports | 3 / 5 | report |
@@ -256,4 +255,4 @@ A single `@http.route(routes=[...])` counts as one handler but several URL varia
 | Settings | 2 / 2 | settings |
 | Observability | 2 / 2 | observability (CWV beacon + JS error beacon) |
 | OpenAPI | 1 / 1 | openapi (`/web/openapi.json`, `base.group_system` only) |
-| **Total** | **76 handlers / 109 declared URL paths** | **23 controller classes** (across 21 route-bearing files of 25 in `controllers/`; export.py contains 3: Export, CSVExport, ExcelExport. `json_helpers.py`, `export_writers.py`, `utils.py`, `__init__.py` have no routes.) |
+| **Total** | **75 handlers / 108 declared URL paths** | **23 controller classes** (across 21 route-bearing files of 25 in `controllers/`; export.py contains 3: Export, CSVExport, ExcelExport. `json_helpers.py`, `export_writers.py`, `utils.py`, `__init__.py` have no routes.) |

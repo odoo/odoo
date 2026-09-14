@@ -5,61 +5,15 @@ import odoo.tools
 from odoo import http
 from odoo.http import Response, request
 from odoo.libs.asset_log import get_asset_logger, log_event
-from odoo.modules import Manifest
 from odoo.tools.assets.esm_registry import esm_registry
-from odoo.tools.misc import file_path
 
 from ..tools import debug_log as dbg
-from .utils import _local_web_translations
 
 _logger = logging.getLogger(__name__)
 _http_log = get_asset_logger("http")
 
 
 class WebClient(http.Controller):
-    @http.route("/web/webclient/bootstrap_translations", type="jsonrpc", auth="none")
-    def bootstrap_translations(self, mods: list[str] | None = None) -> dict[str, Any]:
-        lang = request.env.context["lang"].partition("_")[0]
-        dbg.lifecycle.debug(
-            "[translations] bootstrap: %s lang=%s mods=%s",
-            dbg.req(),
-            lang,
-            dbg.count(mods) if mods is not None else "all",
-        )
-
-        if mods is None:
-            mods = odoo.tools.config["server_wide_modules"]
-            if request.db:
-                mods = request.env.registry.loaded_modules.union(mods)
-            dbg.logic.debug(
-                "[translations] bootstrap: mods defaulted to %d %s",
-                len(mods),
-                "loaded + server-wide" if request.db else "server-wide",
-            )
-
-        translations_per_module = {}
-        with dbg.timer(request.env, "[translations] bootstrap %d mods", len(mods)):
-            for addon_name in mods:
-                manifest = Manifest.for_addon(addon_name)
-                if manifest and manifest["bootstrap"]:
-                    f_name = file_path(f"{addon_name}/i18n/{lang}.po")
-                    if not f_name:
-                        dbg.logic.debug(
-                            "[translations] bootstrap: %s has no %s.po",
-                            addon_name,
-                            lang,
-                        )
-                        continue
-                    translations_per_module[addon_name] = {
-                        "messages": _local_web_translations(f_name)
-                    }
-        dbg.pipeline.debug(
-            "[translations] bootstrap: %d modules answered",
-            len(translations_per_module),
-        )
-
-        return {"modules": translations_per_module, "lang_parameters": None}
-
     @http.route(
         "/web/webclient/translations",
         type="http",

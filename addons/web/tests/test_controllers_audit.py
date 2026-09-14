@@ -559,3 +559,106 @@ class TestReportConverters(HttpCase):
         self.assertEqual(resp.status_code, HTTPStatus.OK)
         self.assertTrue(resp.headers["Content-Type"].startswith("text/plain"))
         self.assertEqual(int(resp.headers["Content-Length"]), len(resp.content))
+
+
+@tagged("web_http", "web_controllers_audit")
+class TestUncoveredRoutes(HttpCase):
+    def _rpc(self, path, params=None):
+        return self.url_open(
+            path,
+            headers={"Content-Type": "application/json"},
+            data=json_dumps({"params": params or {}}),
+        ).json()
+
+    def test_robots_disallows_everything_by_default(self):
+        resp = self.url_open("/robots.txt")
+        self.assertEqual(resp.status_code, HTTPStatus.OK)
+        self.assertTrue(resp.headers["Content-Type"].startswith("text/plain"))
+        self.assertEqual(resp.text.splitlines(), ["User-agent: *", "Disallow: /"])
+
+    def test_filestore_is_never_served_by_odoo(self):
+        with mute_logger("odoo.http"):
+            resp = self.url_open("/web/filestore/odoo7f/00/deadbeef")
+        self.assertEqual(resp.status_code, HTTPStatus.NOT_FOUND)
+
+    def test_become_promotes_a_system_user_and_nobody_else(self):
+        self.authenticate("admin", "admin")
+        resp = self.url_open("/web/become", allow_redirects=False)
+        self.assertEqual(resp.status_code, HTTPStatus.SEE_OTHER)
+        self.assertEqual(self._rpc("/web/session/get_session_info")["result"]["uid"], 1)
+
+        user = self.env["res.users"].create(
+            {
+                "name": "Plain Internal",
+                "login": "plain_internal_audit",
+                "password": "plain_internal_audit",
+                "group_ids": [(6, 0, [self.env.ref("base.group_user").id])],
+            }
+        )
+        self.authenticate("plain_internal_audit", "plain_internal_audit")
+        resp = self.url_open("/web/become", allow_redirects=False)
+        self.assertEqual(resp.status_code, HTTPStatus.SEE_OTHER)
+        self.assertEqual(
+            self._rpc("/web/session/get_session_info")["result"]["uid"], user.id
+        )
+
+    def test_openapi_document_is_for_system_users_only(self):
+        self.authenticate("admin", "admin")
+        resp = self.url_open("/web/openapi.json")
+        self.assertEqual(resp.status_code, HTTPStatus.OK)
+        document = resp.json()
+        self.assertEqual(document["info"]["title"], "Odoo HTTP API")
+        self.assertIsInstance(document["paths"], dict)
+
+        self.env["res.users"].create(
+            {
+                "name": "Plain Internal",
+                "login": "plain_internal_audit",
+                "password": "plain_internal_audit",
+                "group_ids": [(6, 0, [self.env.ref("base.group_user").id])],
+            }
+        )
+        self.authenticate("plain_internal_audit", "plain_internal_audit")
+        with mute_logger("odoo.http"):
+            resp = self.url_open("/web/openapi.json")
+        self.assertEqual(resp.status_code, HTTPStatus.FORBIDDEN)
+
+    def test_edit_custom_writes_only_the_owner_s_view(self):
+        view = self.env.ref("base.view_partner_form")
+        admin = self.env.ref("base.user_admin")
+        other = self.env["res.users"].create(
+            {
+                "name": "Other Internal",
+                "login": "other_internal_audit",
+                "group_ids": [(6, 0, [self.env.ref("base.group_user").id])],
+            }
+        )
+        own = self.env["ir.ui.view.custom"].create(
+            {"ref_id": view.id, "user_id": admin.id, "arch": "<form/>"}
+        )
+        theirs = self.env["ir.ui.view.custom"].create(
+            {"ref_id": view.id, "user_id": other.id, "arch": "<form/>"}
+        )
+        self.authenticate("admin", "admin")
+        body = self._rpc(
+            "/web/view/edit_custom",
+            {"custom_id": own.id, "arch": "<form><sheet/></form>"},
+        )
+        self.assertEqual(body["result"], {"result": True})
+        self.assertEqual(own.arch, "<form><sheet/></form>")
+        with mute_logger("odoo.http"):
+            body = self._rpc(
+                "/web/view/edit_custom", {"custom_id": theirs.id, "arch": "<form/>"}
+            )
+        self.assertIn("AccessError", body["error"]["data"]["name"])
+
+    def test_scoped_app_icon_is_rasterised_with_padding(self):
+        resp = self.url_open("/scoped_app_icon_png?app_id=web")
+        self.assertEqual(resp.status_code, HTTPStatus.OK)
+        self.assertEqual(resp.headers["Content-Type"], "image/png")
+        self.assertTrue(resp.content.startswith(b"\x89PNG"))
+
+    def test_esm_library_url_without_an_attachment_is_not_found(self):
+        with mute_logger("odoo.http"):
+            resp = self.url_open("/web/assets/lib/nope/vendor/thing.js")
+        self.assertEqual(resp.status_code, HTTPStatus.NOT_FOUND)
