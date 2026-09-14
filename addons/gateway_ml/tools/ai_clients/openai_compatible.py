@@ -1,8 +1,6 @@
 import logging
 
 from ..vendor_catalog import (
-    SYNTHESIZE_TIMEOUT,
-    TRANSCRIBE_TIMEOUT,
     audio_mimetype,
     get_openai_content,
     get_whisper_form,
@@ -35,17 +33,17 @@ class OpenAICompatibleClient(BaseAIClient):
                 max_tokens=max_tokens,
             )
 
-            spec = self._catalog_spec() or {}
+            shape = self._request_shape(model)
             payload = {
                 "model": model,
                 "messages": messages,
                 "temperature": temperature,
-                spec.get("max_tokens_param", "max_tokens"): max_tokens,
-                **(spec.get("extra") or {}),
+                shape.max_tokens_param or "max_tokens": max_tokens,
+                **(shape.request_extra or {}),
                 **kwargs,
             }
 
-            response = self._client.post("/chat/completions", json=payload)
+            response = self._client.post(self._chat_path(), json=payload)
             return self._get_response_body(response)
 
         except ValueError, CommError:
@@ -82,11 +80,10 @@ class OpenAICompatibleClient(BaseAIClient):
         model=None,
         **kwargs,
     ):
-        spec = self._catalog_spec()
-        if not spec or not spec.get("vision"):
+        if not self._provider().has_vision:
             raise CommError(
-                f"{type(self).__name__} reads no images: the catalog describes "
-                f"no vision capability for {self.ENDPOINT_CODE!r}",
+                f"{type(self).__name__} reads no images: no active model of "
+                f"{self.ENDPOINT_CODE!r} reads images",
             )
         if not image_data:
             raise CommError(f"{type(self).__name__} was given no image to send")
@@ -99,7 +96,7 @@ class OpenAICompatibleClient(BaseAIClient):
         ]
         result = self.chat_completion(
             messages=messages,
-            model=model or spec.get("vision_model"),
+            model=model or self._vision_model(),
             **kwargs,
         )
 
@@ -131,15 +128,16 @@ class OpenAICompatibleClient(BaseAIClient):
         prompt=None,
         model=None,
     ):
-        spec = self._audio_spec()
+        timed = self._audio_operation("transcribe_timed")
         body = self._post_whisper(
             audio_bytes,
             filename,
             mimetype,
             language,
             prompt,
-            model or spec.get("cues_model"),
+            model or timed.model_id.code,
             "verbose_json",
+            operation=timed,
         )
         spans, problem = read_whisper_segments(body)
         if problem:
@@ -149,15 +147,25 @@ class OpenAICompatibleClient(BaseAIClient):
         return spans
 
     def _post_whisper(
-        self, audio_bytes, filename, mimetype, language, prompt, model, response_format
+        self,
+        audio_bytes,
+        filename,
+        mimetype,
+        language,
+        prompt,
+        model,
+        response_format,
+        operation=None,
     ):
-        spec = self._audio_spec()
+        operation = operation or self._audio_operation("transcribe")
+        model = model or operation.model_id.code
+        row = self._get_model_rows().get(model)
         if not audio_bytes:
             raise CommError(f"{type(self).__name__} was given no audio to send")
         filename = filename or "audio"
         try:
             response = self._client.post(
-                spec["audio_path"],
+                operation.path,
                 files={
                     "file": (
                         filename,
@@ -166,12 +174,14 @@ class OpenAICompatibleClient(BaseAIClient):
                     )
                 },
                 data=get_whisper_form(
-                    model or spec["audio_model"],
+                    model,
                     language=language,
                     prompt=prompt,
                     response_format=response_format,
+                    untimed=(not row.has_timestamps) if row else None,
+                    language_key=row.language_form_key if row else None,
                 ),
-                timeout=spec.get("audio_timeout") or TRANSCRIBE_TIMEOUT,
+                timeout=operation.timeout or None,
             )
         except CommError:
             raise
@@ -181,38 +191,49 @@ class OpenAICompatibleClient(BaseAIClient):
             ) from e
         return response.get("body") if isinstance(response, dict) else response
 
-    def _audio_spec(self):
-        spec = self._catalog_spec()
-        if not spec or not spec.get("audio"):
+    def _audio_operation(self, operation):
+        row = self._operation(operation) or (
+            self._operation("transcribe") if operation == "transcribe_timed" else None
+        )
+        if not row:
             raise CommError(
-                f"{type(self).__name__} has no transcription endpoint: the "
-                f"catalog describes no audio wire for {self.ENDPOINT_CODE!r}",
+                f"{type(self).__name__} has no transcription endpoint: "
+                f"{self.ENDPOINT_CODE!r} offers no {operation} operation",
             )
-        if spec["audio"] != "whisper":
+        if row.wire != "openai_compatible":
             raise CommError(
-                f"{self.ENDPOINT_CODE!r} transcribes over the "
-                f"{spec['audio']!r} wire, which this client does not speak",
+                f"{self.ENDPOINT_CODE!r} transcribes over the {row.wire!r} wire, "
+                f"which this client does not speak",
             )
-        if spec.get("audio_service") != self.ENDPOINT_CODE:
+        if row.service_id.code != self.ENDPOINT_CODE:
             raise CommError(
-                f"{self.ENDPOINT_CODE!r} serves audio on "
-                f"{spec['audio_service']!r}; build a client for that endpoint",
+                f"{self.ENDPOINT_CODE!r} serves audio on {row.service_id.code!r}; "
+                f"build a client for that endpoint",
             )
-        return spec
+        return row
+
+    def _chat_path(self):
+        return self._operation("chat").path or "/chat/completions"
+
+    def _vision_model(self):
+        vision = self._provider().model_ids.filtered(
+            lambda row: row.active and row.kind == "vision"
+        )
+        return vision[:1].code or None
 
     def synthesize(self, text, voice=None, mimetype="audio/mpeg", model=None, **kwargs):
-        spec = self._catalog_spec()
-        if not spec or not spec.get("speech"):
+        speech = self._operation("synthesize")
+        if not speech:
             raise CommError(
-                f"{type(self).__name__} has no synthesis endpoint: the catalog "
-                f"describes no speech wire for {self.ENDPOINT_CODE!r}",
+                f"{type(self).__name__} has no synthesis endpoint: "
+                f"{self.ENDPOINT_CODE!r} offers no synthesize operation",
             )
-        if spec.get("speech_service") != self.ENDPOINT_CODE:
+        if speech.service_id.code != self.ENDPOINT_CODE:
             raise CommError(
-                f"{self.ENDPOINT_CODE!r} serves speech on "
-                f"{spec['speech_service']!r}; build a client for that endpoint",
+                f"{self.ENDPOINT_CODE!r} serves speech on {speech.service_id.code!r}; "
+                f"build a client for that endpoint",
             )
-        response_format = (spec.get("speech_mimetypes") or {}).get(mimetype)
+        response_format = (speech.formats or {}).get(mimetype)
         if not response_format:
             raise CommError(
                 f"{self.ENDPOINT_CODE!r} does not write {mimetype!r}",
@@ -221,9 +242,9 @@ class OpenAICompatibleClient(BaseAIClient):
             raise CommError(f"{type(self).__name__} was given no text to speak")
 
         body = {
-            "model": model or spec["speech_model"],
+            "model": model or speech.model_id.code,
             "input": text,
-            "voice": voice or spec.get("speech_voice"),
+            "voice": voice or speech.voice,
             "response_format": response_format,
         }
         if kwargs.get("speed"):
@@ -233,10 +254,10 @@ class OpenAICompatibleClient(BaseAIClient):
 
         try:
             response = self._client.post(
-                spec["speech_path"],
+                speech.path,
                 json=body,
                 raw=True,
-                timeout=spec.get("speech_timeout") or SYNTHESIZE_TIMEOUT,
+                timeout=speech.timeout or None,
             )
         except CommError:
             raise
@@ -253,9 +274,9 @@ class OpenAICompatibleClient(BaseAIClient):
     def streaming_completion(self, messages, model=None, **kwargs):
         model = self._resolve_model(model)
         self._check_params(model=model, temperature=kwargs.get("temperature"))
-        extra = (self._catalog_spec() or {}).get("extra") or {}
+        extra = self._request_shape(model).request_extra or {}
         return self._stream_lines(
-            "/chat/completions",
+            self._chat_path(),
             {"model": model, "messages": messages, "stream": True, **extra, **kwargs},
         )
 

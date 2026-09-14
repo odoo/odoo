@@ -82,6 +82,8 @@ def _close_schema(schema):
 class ClaudeClient(BaseAIClient):
     ENDPOINT_CODE = "claude"
 
+    FALLBACK_MODEL = "claude-sonnet-5"
+
     VALID_MODELS = [model_id for model_id, _label in CLAUDE_MODELS]
 
     NO_SAMPLING_PARAMS = frozenset(
@@ -101,6 +103,16 @@ class ClaudeClient(BaseAIClient):
 
     DEFAULT_MAX_TOKENS = 16000
 
+    def _accepts_sampling(self, model):
+        row = self._get_model_rows().get(model)
+        return row.sampling_params if row else model not in self.NO_SAMPLING_PARAMS
+
+    def _accepts_forced_tool(self, model):
+        row = self._get_model_rows().get(model)
+        if row:
+            return row.forced_tool_choice
+        return model not in self.NO_FORCED_TOOL_CHOICE
+
     def _extract_text_from_response(self, result):
         text, problem = read_anthropic_content(result)
         if problem:
@@ -118,7 +130,7 @@ class ClaudeClient(BaseAIClient):
             "messages": messages,
             **{key: value for key, value in params.items() if value is not None},
         }
-        if model in self.NO_SAMPLING_PARAMS:
+        if not self._accepts_sampling(model):
             dropped = [key for key in _SAMPLING_PARAMS if payload.pop(key, None)]
             if dropped:
                 _logger.debug("%s takes no sampling; dropped %s", model, dropped)
@@ -137,7 +149,7 @@ class ClaudeClient(BaseAIClient):
         model = self._resolve_model(model)
         self._check_params(model=model, temperature=temperature, max_tokens=max_tokens)
         forced = (kwargs.get("tool_choice") or {}).get("type") in _FORCED_TOOL_CHOICES
-        if forced and model in self.NO_FORCED_TOOL_CHOICE:
+        if forced and not self._accepts_forced_tool(model):
             raise ValueError(
                 f"{model} rejects a forced tool_choice; ask for "
                 f"output_config=get_json_output_config(schema) instead",
@@ -253,7 +265,7 @@ class ClaudeClient(BaseAIClient):
         self, messages, tool_name, tool_description, schema, model, **kwargs
     ):
         model = self._resolve_model(model)
-        if model in self.NO_FORCED_TOOL_CHOICE:
+        if not self._accepts_forced_tool(model):
             return self._get_json_output(messages, schema, model, **kwargs)
         response = self.create_message(
             messages=messages,

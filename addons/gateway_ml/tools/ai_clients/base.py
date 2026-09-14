@@ -1,7 +1,6 @@
 import logging
 
 from ..json_payload import parse_json_response
-from ..vendor_catalog import PROVIDERS
 from odoo.addons.integration.tools.api_client import get_api_client
 from odoo.addons.integration.tools.exceptions import CommError
 
@@ -20,6 +19,8 @@ class BaseAIClient:
     _default_model = None
 
     _model_rows = None
+
+    _provider_row = None
 
     MIN_TEMPERATURE = 0.0
     MAX_TEMPERATURE = 1.0
@@ -55,11 +56,24 @@ class BaseAIClient:
         )
 
     def _catalog_default_model(self):
-        spec = self._catalog_spec()
-        return spec.get("chat_model") if spec else None
+        return self._operation("chat").model_id.code or None
 
-    def _catalog_spec(self):
-        return PROVIDERS.get(self.ENDPOINT_CODE)
+    def _provider(self):
+        if self._provider_row is None:
+            self._provider_row = (
+                self.env["gateway.ml.provider"]
+                .sudo()
+                .search([("endpoint_id.code", "=", self.ENDPOINT_CODE)], limit=1)
+            )
+        return self._provider_row
+
+    def _operation(self, operation):
+        return self._provider().service_ids.filtered(
+            lambda row: row.operation == operation
+        )[:1]
+
+    def _request_shape(self, model):
+        return self._get_model_rows().get(model) or self._operation("chat").model_id
 
     def _provider_default_model(self):
         if self._default_model is None:
@@ -159,5 +173,7 @@ class BaseAIClient:
                     max_tokens,
                     model or self.ENDPOINT_CODE,
                     limit,
-                    "its gateway.ml.model row" if model in rows else "the client default",
+                    "its gateway.ml.model row"
+                    if model in rows
+                    else "the client default",
                 )

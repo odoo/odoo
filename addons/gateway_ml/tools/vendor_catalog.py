@@ -171,8 +171,16 @@ def read_anthropic_content(payload):
 UNTIMED_TRANSCRIPTION_MODELS = frozenset({"gpt-transcribe"})
 
 
-def get_whisper_form(audio_model, language=None, prompt=None, response_format="text"):
-    untimed = audio_model in UNTIMED_TRANSCRIPTION_MODELS
+def get_whisper_form(
+    audio_model,
+    language=None,
+    prompt=None,
+    response_format="text",
+    untimed=None,
+    language_key=None,
+):
+    if untimed is None:
+        untimed = audio_model in UNTIMED_TRANSCRIPTION_MODELS
     if untimed and response_format != "text":
         raise ValueError(
             f"{audio_model} returns no segment timestamps, so it cannot answer "
@@ -183,7 +191,7 @@ def get_whisper_form(audio_model, language=None, prompt=None, response_format="t
         "model": audio_model,
     }
     if language:
-        form["languages[]" if untimed else "language"] = language
+        form[language_key or ("languages[]" if untimed else "language")] = language
     if prompt:
         form["prompt"] = prompt
     if response_format == "verbose_json":

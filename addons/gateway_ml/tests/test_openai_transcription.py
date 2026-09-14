@@ -148,7 +148,7 @@ class TestOpenAICompatibleTranscribe(EncryptionKeyCase, TransactionCase):
         client = self._client(DeepSeekClient)
         with self.assertRaises(CommError) as caught:
             client.transcribe(b"AUDIO", "note.ogg")
-        self.assertIn("no audio wire", str(caught.exception))
+        self.assertIn("offers no transcribe operation", str(caught.exception))
 
     def test_groq_transcribes_on_its_own_endpoint(self):
         credential_for(self.env, "groq", bearer_token="K")

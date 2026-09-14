@@ -6,7 +6,7 @@ from pathlib import Path
 from odoo.exceptions import UserError
 from odoo.tools import config as odoo_config
 
-from .vendor_catalog import PROVIDERS
+from .ai_clients.claude import ClaudeClient
 
 _logger = logging.getLogger(__name__)
 
@@ -61,11 +61,16 @@ def _default_base_dir(env):
 def _default_model(env):
     if env is not None:
         provider = (
-            env["gateway.ml.provider"].sudo().search([("code", "=", _ENDPOINT_CODE)], limit=1)
+            env["gateway.ml.provider"]
+            .sudo()
+            .search([("code", "=", _ENDPOINT_CODE)], limit=1)
         )
         if provider.default_model_id.active and provider.default_model_id.code:
             return provider.default_model_id.code
-    return PROVIDERS[_ENDPOINT_CODE]["chat_model"]
+        chat = provider.service_ids.filtered(lambda row: row.operation == "chat")
+        if chat.model_id.code:
+            return chat.model_id.code
+    return ClaudeClient.FALLBACK_MODEL
 
 
 def _resolve_work_dir(env, work_dir: str, base_dir: str | None = None):

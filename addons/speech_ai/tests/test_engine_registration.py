@@ -22,7 +22,7 @@ class TestEngineRegistration(TransactionCase):
             engine.mimetype
             for engine in self._ours()
             if not any(
-                engine.mimetype in written_by(vendor)
+                engine.mimetype in written_by(self.env, vendor)
                 for vendor in ("openai", "deepgram", "groq", "gemini")
             )
         ]
@@ -34,25 +34,24 @@ class TestEngineRegistration(TransactionCase):
         )
 
     def test_a_format_no_vendor_speaks_has_no_engine_at_all(self):
-        self.assertEqual(written_by("openai") & {"audio/x-aiff"}, frozenset())
+        self.assertEqual(written_by(self.env, "openai") & {"audio/x-aiff"}, frozenset())
         self.assertEqual(
             [w for w in get_writers("audio/x-aiff", TEXT) if isinstance(w, AiSpeech)],
             [],
         )
 
-    def test_flac_is_registered_because_deepgram_speaks_it_not_because_it_was_listed(
-        self,
-    ):
-        self.assertIn("audio/flac", written_by("deepgram"))
-        self.assertNotIn("audio/flac", written_by("openai"))
+    def test_flac_is_spoken_by_deepgram_and_not_by_openai(self):
+        self.assertIn("audio/flac", written_by(self.env, "deepgram"))
+        self.assertNotIn("audio/flac", written_by(self.env, "openai"))
         self.assertTrue(
             [w for w in get_writers("audio/flac", TEXT) if isinstance(w, AiSpeech)]
         )
 
     def test_the_formats_openai_declares_are_the_ones_it_is_asked_for(self):
         self.assertEqual(
-            written_by("openai"), frozenset({"audio/mpeg", "audio/wav", "audio/ogg"})
+            written_by(self.env, "openai"),
+            frozenset({"audio/mpeg", "audio/wav", "audio/ogg"}),
         )
 
     def test_deepgram_declares_its_own_encodings(self):
-        self.assertIn("audio/mpeg", written_by("deepgram"))
+        self.assertIn("audio/mpeg", written_by(self.env, "deepgram"))

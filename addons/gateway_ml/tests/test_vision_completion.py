@@ -6,7 +6,6 @@ from odoo.addons.gateway_ml.tests.common import credential_for
 from odoo.addons.gateway_ml.tools.ai_clients import GroqClient, OpenAIClient
 from odoo.addons.gateway_ml.tools.ai_clients.deepseek import DeepSeekClient
 from odoo.addons.gateway_ml.tools.ai_clients.gemini import GeminiClient
-from odoo.addons.gateway_ml.tools.vendor_catalog import PROVIDERS
 from odoo.addons.integration.tools.exceptions import CommError
 from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
@@ -41,19 +40,24 @@ class TestVisionCompletion(EncryptionKeyCase, TransactionCase):
         )
 
     def test_a_vendor_with_its_own_vision_model_uses_it(self):
+        self.env["gateway.ml.model"].create(
+            {
+                "provider_id": self.env.ref("gateway_ml.ai_provider_groq").id,
+                "name": "See Model",
+                "code": "see-model",
+                "kind": "vision",
+                "has_vision": True,
+            }
+        )
         client = GroqClient(self.env)
-        dedicated = {**PROVIDERS["groq"], "vision": True, "vision_model": "see-model"}
-        with (
-            patch.dict(PROVIDERS, {"groq": dedicated}),
-            patch.object(
-                client._client,
-                "post",
-                return_value={
-                    "status_code": 200,
-                    "body": {"choices": [{"message": {"content": "ok"}}]},
-                },
-            ) as post,
-        ):
+        with patch.object(
+            client._client,
+            "post",
+            return_value={
+                "status_code": 200,
+                "body": {"choices": [{"message": {"content": "ok"}}]},
+            },
+        ) as post:
             client.vision_completion("what is this?", _IMAGE)
 
         self.assertEqual(post.call_args.kwargs["json"]["model"], "see-model")

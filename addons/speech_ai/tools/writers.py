@@ -6,32 +6,34 @@ from typing import Any
 from odoo.libs.documents import TEXT, BaseWriter, register_writer
 
 from .selection import SYNTHESIS_KIND, pick_model, run
-from odoo.addons.gateway_ml.tools.ai_clients import AI_CLIENT_REGISTRY
-from odoo.addons.gateway_ml.tools.vendor_catalog import PROVIDERS
 
 _logger = logging.getLogger(__name__)
 
 
-def written_by(vendor: str) -> frozenset[str]:
-    for spec in PROVIDERS.values():
-        if spec.get("speech_service") == vendor:
-            return frozenset(spec.get("speech_mimetypes") or {})
-    client = AI_CLIENT_REGISTRY.get(vendor)
-    return frozenset(getattr(client, "SPEECH_ENCODINGS", None) or ())
+SPEECH_MIMETYPES = frozenset(
+    {"audio/aac", "audio/flac", "audio/mpeg", "audio/ogg", "audio/wav"}
+)
 
 
-def _vendors() -> frozenset[str]:
-    named = {
-        spec["speech_service"] for spec in PROVIDERS.values() if spec.get("speech")
-    }
-    return frozenset(named | set(AI_CLIENT_REGISTRY))
+def _speech_operations(env: Any) -> Any:
+    return (
+        env["gateway.ml.provider.service"]
+        .sudo()
+        .search([("operation", "=", "synthesize")])
+    )
 
 
-def _written_mimetypes() -> frozenset[str]:
-    spoken: set[str] = set()
-    for vendor in _vendors():
-        spoken |= written_by(vendor)
-    return frozenset(spoken)
+def written_by(env: Any, vendor: str) -> frozenset[str]:
+    return frozenset(
+        mimetype
+        for operation in _speech_operations(env)
+        if operation.service_id.code == vendor
+        for mimetype in (operation.formats or {})
+    )
+
+
+def _vendors(env: Any) -> frozenset[str]:
+    return frozenset(_speech_operations(env).mapped("service_id.code"))
 
 
 class AiSpeech(BaseWriter):
@@ -50,7 +52,9 @@ class AiSpeech(BaseWriter):
 
     def _pick_model(self, env: Any) -> Any:
         writing = [
-            vendor for vendor in _vendors() if self.mimetype in written_by(vendor)
+            vendor
+            for vendor in _vendors(env)
+            if self.mimetype in written_by(env, vendor)
         ]
         return pick_model(env, SYNTHESIS_KIND, provider_code=writing)
 
@@ -87,5 +91,5 @@ def _speak(
     )
 
 
-for _mimetype in sorted(_written_mimetypes()):
+for _mimetype in sorted(SPEECH_MIMETYPES):
     register_writer(AiSpeech(_mimetype))
