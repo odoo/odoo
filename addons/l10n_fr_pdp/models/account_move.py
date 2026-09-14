@@ -588,7 +588,12 @@ class AccountMove(models.Model):
                 if not move.name or not G1_05_RE.match(move.name):
                     yield _("Move name is not valid%s.", ref_move)
                 for tax in move.invoice_line_ids.tax_ids.flatten_taxes_hierarchy():
-                    if tax.amount not in VALID_PDP_TAX_RATES:
+                    is_valid_oss_rate = (
+                        tax._l10n_fr_pdp_is_oss()
+                        and tax.amount_type == 'percent'
+                        and 0 <= tax.amount <= 100
+                    )
+                    if tax.amount not in VALID_PDP_TAX_RATES and not is_valid_oss_rate:
                         yield _(
                             "Tax %(tax)s is not supported by French e-reporting%(ref_move)s.",
                             tax=tax.display_name,
