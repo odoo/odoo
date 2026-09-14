@@ -673,6 +673,99 @@ class TestBackendDifferential(TransactionCase):
             (TestOrmCompany, TestOrmMultiTag, _StubPartner, _StubCompanyDefault), script
         )
 
+    def test_copy_and_inherits_agree_across_tiers(self):
+        def script(env):
+            tag = env["test_orm.multi.tag"].create({"name": "t"})
+            move = env["test_orm.move"].create(
+                {
+                    "tag_id": tag.id,
+                    "tag_repeat": 2,
+                    "line_ids": [
+                        Command.create({"quantity": 3}),
+                        Command.create({"quantity": 4, "visible": False}),
+                    ],
+                }
+            )
+            payment = env["test_orm.payment"].create({"move_id": move.id, "amount": 5})
+            env.flush_all()
+            env.invalidate_all()
+            copied = move.copy({"tag_repeat": 3})
+            payment_copy = payment.copy()
+            env.flush_all()
+            env.invalidate_all()
+            hidden = env["test_orm.move_line"].with_context(active_test=False)
+            return {
+                "quantity": (move.quantity, copied.quantity),
+                "lines": (
+                    sorted(move.line_ids.mapped("quantity")),
+                    sorted(copied.line_ids.mapped("quantity")),
+                ),
+                "hidden lines copied": len(
+                    hidden.search(
+                        [("move_id", "=", copied.id), ("visible", "=", False)]
+                    )
+                ),
+                "tag": (copied.tag_id.name, copied.tag_string),
+                "payments not copied": len(copied.payment_ids),
+                "payment copy": (
+                    payment_copy.amount,
+                    payment_copy.move_id != payment.move_id,
+                    payment_copy.tag_string,
+                    payment_copy.payment_amount,
+                ),
+                "copy_data": [
+                    sorted(vals) for vals in move.copy_data({"tag_repeat": 9})
+                ],
+            }
+
+        self._diff(
+            (TestOrmMove, TestOrmMove_Line, TestOrmPayment, TestOrmMultiTag), script
+        )
+
+    def test_parent_store_moves_agree_across_tiers(self):
+        def script(env):
+            C = env["test_orm.category"]
+            root = C.create({"name": "root"})
+            a = C.create({"name": "a", "parent": root.id})
+            b = C.create({"name": "b", "parent": root.id})
+            a1 = C.create({"name": "a1", "parent": a.id})
+            a11 = C.create({"name": "a11", "parent": a1.id})
+            other = C.create({"name": "other"})
+            env.flush_all()
+            env.invalidate_all()
+            everything = root + a + b + a1 + a11 + other
+
+            def depths():
+                return {c.name: c.parent_path.count("/") for c in everything}
+
+            def tree(record, operator):
+                return sorted(
+                    C.search(
+                        [("id", operator, record.id), ("id", "in", everything.ids)]
+                    ).mapped("name")
+                )
+
+            observed = {"before": depths()}
+            a1.parent = b
+            env.flush_all()
+            env.invalidate_all()
+            observed["a1 under b"] = depths()
+            observed["b subtree"] = tree(b, "child_of")
+            observed["a subtree"] = tree(a, "child_of")
+            observed["a11 ancestors"] = tree(a11, "parent_of")
+            a.parent = other
+            b.parent = False
+            env.flush_all()
+            env.invalidate_all()
+            observed["a under other, b a root"] = depths()
+            observed["root subtree"] = tree(root, "child_of")
+            observed["other subtree"] = tree(other, "child_of")
+            observed["b ancestors"] = tree(b, "parent_of")
+            observed["display"] = sorted(everything.mapped("display_name"))
+            return observed
+
+        self._diff((TestOrmCategory,), script)
+
     def test_translations_agree_across_tiers(self):
         def script(env):
             M = env["test_orm.related_translation_1"]
