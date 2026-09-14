@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
 
-    <record id="service_custom_api" model="integration.service">
-        <field name="name">Custom API Integration</field>
-        <field name="code">custom_api</field>
-        <field name="category">other</field>
-        <field name="provider">Custom</field>
-        <field name="endpoint_url">https://api.example.com</field>
-        <field name="auth_type">bearer</field>
-        <field name="health_check_enabled" eval="False" />
-        <field name="description">Generic service for custom API integrations</field>
-    </record>
-
     <record id="service_stripe" model="integration.service">
         <field name="name">Stripe Payment Gateway</field>
         <field name="code">stripe</field>

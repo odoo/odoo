@@ -1,6 +1,7 @@
 from . import test_api_client_logging
 from . import test_integration_exchange
 from . import test_integration_connection
+from . import test_custom_api_template_removal
 from . import test_mixin_integration_receiver
 from . import test_integration_service
 from . import test_inbound_controller
