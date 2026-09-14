@@ -437,10 +437,15 @@ class HrApplicant(models.Model):
             partner = applicant.partner_id
             if not partner:
                 continue
-            if applicant.partner_name and applicant.partner_name != partner.name:
-                partner.name = applicant.partner_name
-            if email_normalized and email_normalized != partner.email:
-                partner.email = applicant.email_from
+            if email_normalized:
+                # Name and e-mail stay on the e-mail path they have always been on:
+                # `partner_id` is a plain m2o with no domain, so it can be a contact
+                # the recruiter picked, and writing a name onto one is not this
+                # defect's business.
+                if applicant.partner_name and applicant.partner_name != partner.name:
+                    partner.name = applicant.partner_name
+                if email_normalized != partner.email:
+                    partner.email = applicant.email_from
             if applicant.phone_ids and applicant.phone_ids != partner.phone_ids:
                 _debug.logic(
                     "partner_phone_sync",

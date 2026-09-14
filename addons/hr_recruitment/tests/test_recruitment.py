@@ -695,36 +695,56 @@ class TestRecruitment(TransactionCase):
         self.assertEqual(job.with_user(other_user).activity_count, 1)
 
     def test_refusing_an_application_of_a_talent_refuses_its_siblings(self):
-        """Duplicates found through the shared talent must be traceable.
+        """Driven through the module's own wizards, no field set by hand.
 
-        ``_get_domain_similar_applicants`` offers duplicates that match on
-        ``pool_applicant_id`` as well as on the e-mail/phone/LinkedIn keys, so
-        the wizard used to hand the message builder a duplicate it could not map
-        back to an original and died with a KeyError on a plain refusal.
+        Pool an applicant, put that talent on a second job, then correct the
+        e-mail on the first application: ``write`` propagates the correction to
+        the talent but not to the sibling application, so the sibling now shares
+        only ``pool_applicant_id`` with the refused one. The wizard offers it as
+        a duplicate and used to have no original to point it at -- a KeyError on
+        an ordinary refusal.
         """
-        job = self.env["hr.job"].create({"name": "Talented Job"})
+        job_one, job_two = self.env["hr.job"].create(
+            [{"name": "First Job"}, {"name": "Second Job"}]
+        )
         pool = self.env["hr.talent.pool"].create({"name": "Pool"})
-        talent = self.env["hr.applicant"].create(
+        application = self.env["hr.applicant"].create(
             {
-                "partner_name": "Talent",
-                "email_from": "talent@example.com",
-                "talent_pool_ids": [Command.set(pool.ids)],
+                "partner_name": "Rita Flow",
+                "email_from": "rita@example.com",
+                "job_id": job_one.id,
             }
         )
-        applications = self.env["hr.applicant"].create(
-            [
-                {
-                    "partner_name": "Talent",
-                    "email_from": f"talent+{index}@example.com",
-                    "job_id": job.id,
-                    "pool_applicant_id": talent.id,
-                }
-                for index in range(2)
-            ]
-        )
+        self.env.flush_all()
+
+        self.env["talent.pool.add.applicants"].create(
+            {
+                "applicant_ids": [Command.set(application.ids)],
+                "talent_pool_ids": [Command.set(pool.ids)],
+            }
+        ).action_add_applicants_to_pool()
+        self.env.flush_all()
+        talent = application.pool_applicant_id
+        self.assertTrue(talent)
+
+        self.env["job.add.applicants"].create(
+            {
+                "applicant_ids": [Command.set(talent.ids)],
+                "job_ids": [Command.set(job_two.ids)],
+            }
+        ).action_add_applicants_to_job()
+        self.env.flush_all()
+        sibling = self.env["hr.applicant"].search([("job_id", "=", job_two.id)])
+        self.assertEqual(sibling.pool_applicant_id, talent)
+
+        application.write({"email_from": "rita.flow@example.com"})
+        self.env.flush_all()
+        self.assertEqual(talent.email_from, "rita.flow@example.com")
+        self.assertEqual(sibling.email_from, "rita@example.com")
+
         wizard = self.env["applicant.get.refuse.reason"].create(
             {
-                "applicant_ids": [Command.set(applications[0].ids)],
+                "applicant_ids": [Command.set(application.ids)],
                 "refuse_reason_id": self.env["hr.applicant.refuse.reason"]
                 .search([], limit=1)
                 .id,
@@ -732,16 +752,14 @@ class TestRecruitment(TransactionCase):
             }
         )
         wizard.send_mail = False
-        self.assertIn(applications[1], wizard.duplicate_applicant_ids)
-        self.assertIn(talent, wizard.duplicate_applicant_ids)
-
-        original = wizard._get_related_original_applicants()
-        self.assertEqual(original[applications[1]], applications[0])
-        self.assertEqual(original[talent], applications[0])
+        self.assertIn(sibling, wizard.duplicate_applicant_ids)
+        self.assertEqual(
+            wizard._get_related_original_applicants()[sibling], application
+        )
 
         wizard.action_refuse_reason_apply()
 
-        self.assertFalse(applications[1].active)
+        self.assertFalse(sibling.active)
         self.assertFalse(talent.active)
 
     def test_refusing_a_hand_picked_non_duplicate_does_not_crash(self):
@@ -800,6 +818,23 @@ class TestRecruitment(TransactionCase):
         self.env.flush_all()
 
         self.assertEqual(partner.phone_ids, phone)
+
+    def test_a_phone_edit_does_not_rename_the_contact(self):
+        """The phone sync must not drag the name sync onto a path it was never on:
+        ``partner_id`` has no domain, so it can be a contact the recruiter picked."""
+        contact = self.env["res.partner"].create(
+            {"name": "ACME Corp", "is_company": True}
+        )
+        applicant = self.env["hr.applicant"].create(
+            {"partner_name": "Applicant One", "partner_id": contact.id}
+        )
+        phone = self.env["phone.number"].create({"number": "+32470999888"})
+
+        applicant.phone_ids = [Command.set(phone.ids)]
+        self.env.flush_all()
+
+        self.assertEqual(contact.phone_ids, phone)
+        self.assertEqual(contact.name, "ACME Corp")
 
     def test_rewriting_the_same_stage_keeps_the_previous_stage(self):
         """``last_stage_id`` answers "where did it come from"; a write that
@@ -869,6 +904,52 @@ class TestRecruitment(TransactionCase):
             all(duration >= 0 for duration in applicant.duration_tracking.values()),
             applicant.duration_tracking,
         )
+
+    def test_talent_pool_count_unions_every_matching_key(self):
+        """An applicant can match one talent by e-mail and another by phone.
+
+        The count used to report whichever key was checked first, so a person
+        present in two pools through two talents read as being in one.
+        """
+        pool_a, pool_b = self.env["hr.talent.pool"].create(
+            [{"name": "Pool A"}, {"name": "Pool B"}]
+        )
+        phone = self.env["phone.number"].create({"number": "+32470000111"})
+        self.env["hr.applicant"].create(
+            {
+                "partner_name": "Matched by mail",
+                "email_from": "shared@example.com",
+                "talent_pool_ids": [Command.set(pool_a.ids)],
+            }
+        )
+        self.env["hr.applicant"].create(
+            {
+                "partner_name": "Matched by phone",
+                "phone_ids": [Command.set(phone.ids)],
+                "talent_pool_ids": [Command.set(pool_b.ids)],
+            }
+        )
+        self.env.flush_all()
+        applicant = self.env["hr.applicant"].create(
+            {
+                "partner_name": "Both",
+                "email_from": "shared@example.com",
+                "phone_ids": [Command.set(phone.ids)],
+            }
+        )
+        self.env.flush_all()
+        applicant.invalidate_recordset()
+
+        self.assertTrue(applicant.is_applicant_in_pool)
+        self.assertEqual(applicant.talent_pool_count, 2)
+
+    def test_the_scenario_is_detected_by_its_xml_id(self):
+        Job = self.env["hr.job"]
+        self.assertFalse(Job.is_recruitment_scenario_loaded())
+
+        Job._action_load_recruitment_scenario()
+
+        self.assertTrue(Job.is_recruitment_scenario_loaded())
 
     def test_a_new_job_is_a_favorite_of_its_creator(self):
         """``_default_favorite_user_ids`` used to be dead: ``create`` forced the
