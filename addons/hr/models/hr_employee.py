@@ -1005,7 +1005,10 @@ class HrEmployee(models.Model):
                 employees_without_work_contact += employee
             else:
                 if len(employee.work_contact_id.employee_ids) <= 1:
-                    employee.work_contact_id.sudo().write({
+                    partner = employee.work_contact_id
+                    if not employee.user_id:
+                        partner = partner.sudo()
+                    partner.write({
                         'email': employee.work_email,
                         'phone': employee.work_phone,
                     })
