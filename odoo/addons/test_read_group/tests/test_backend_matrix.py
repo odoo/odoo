@@ -71,12 +71,13 @@ def _isolated_registry(*classes):
 
 
 # the key of a group and the value of an aggregate, spelled so that the two
-# tiers compare: a record by its name (ids differ), a float exactly
+# tiers compare: a record by its name (ids differ, creation order does not),
+# a float exactly; an array keeps its order, which both tiers define
 def _spell(value):
     if hasattr(value, "_ids"):
-        return tuple(sorted(value.mapped("display_name"), key=repr) if value else ())
+        return tuple(value.mapped("display_name")) if value else ()
     if isinstance(value, list):
-        return sorted((_spell(v) for v in value), key=repr)
+        return [_spell(v) for v in value]
     if isinstance(value, datetime.date):
         return value.isoformat()
     return value

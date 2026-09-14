@@ -1954,6 +1954,12 @@ class _InMemoryReadGroup:
         def present(records):
             return [v for v in values(records) if v is not None]
 
+        def distinct_sorted(all_values):
+            distinct = set(all_values)
+            has_null = None in distinct
+            distinct.discard(None)
+            return [*sorted(distinct), *([None] if has_null else [])] or None
+
         if field.column_type and field.column_type[0] == "numeric":
             # a numeric column holds the decimal the float spells, and SUM
             # is exact: 0.1 + 0.2 answers 0.3, not the double's 0.30000000000000004
@@ -1985,9 +1991,7 @@ class _InMemoryReadGroup:
                 any(present(records)) if present(records) else None
             ),
             "array_agg": lambda records: values(records) or None,
-            "array_agg_distinct": lambda records: (
-                list(dict.fromkeys(values(records))) or None
-            ),
+            "array_agg_distinct": lambda records: distinct_sorted(values(records)),
             "recordset": lambda records: (
                 [
                     id_
@@ -2052,7 +2056,7 @@ class _InMemoryReadGroup:
             (
                 *key,
                 *(
-                    aggregate(self.model.browse([r.id for r in members]))
+                    aggregate(self.model.browse(sorted(r.id for r in members)))
                     for aggregate in (*self.aggregates, *self.order_aggregates)
                 ),
             )
