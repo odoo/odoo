@@ -1,149 +1,239 @@
-import logging
 from collections import defaultdict
+from datetime import datetime, time
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.fields import Datetime
+from odoo.libs.datetime import timezone, to_timezone
+from odoo.libs.debug_log import DebugLog
 
-_logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 
 class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
-    email_sent = fields.Boolean(default=False)
-    ip_connected = fields.Boolean(default=False)
-    manually_set_present = fields.Boolean(default=False)
-    manually_set_presence = fields.Boolean(default=False)
+    hr_presence_ip_date = fields.Date(
+        string="Last Company-IP Connection",
+        groups="hr.group_hr_user",
+        help="Last day this employee reached the server from an address listed "
+        "in their company's valid IP addresses.",
+    )
+    hr_presence_email_date = fields.Date(
+        string="Last Day Emails Were Sent",
+        groups="hr.group_hr_user",
+        help="Last day this employee sent at least the number of emails their "
+        "company requires as proof of presence.",
+    )
+    hr_presence_manual_state = fields.Selection(
+        selection=[("present", "Present"), ("absent", "Absent")],
+        string="Manual Presence",
+        groups="hr.group_hr_user",
+        help="Presence set by hand by an HR manager. It applies to the day in "
+        "Manual Presence Date and is ignored on any other day.",
+    )
+    hr_presence_manual_date = fields.Date(
+        string="Manual Presence Date",
+        groups="hr.group_hr_user",
+    )
 
+    # Stored mirror of hr_presence_state, which is computed and therefore
+    # neither searchable nor groupable. The cron refreshes it; it carries every
+    # value hr_presence_state can take, 'archive' included, so that mirroring
+    # never has to drop one.
     hr_presence_state_display = fields.Selection(
         selection=[
             ("out_of_working_hour", "Off-Hours"),
             ("present", "Present"),
             ("absent", "Absent"),
+            ("archive", "Archived"),
         ],
+        string="Presence",
         default="out_of_working_hour",
     )
 
-    @api.model
-    def _check_presence(self):
-        company = self.env.company
-        employees = self.env["hr.employee"].search([("company_id", "=", company.id)])
+    # ------------------------------------------------------------------ dates
+    def _hr_presence_today(self):
+        """Today in each employee's own timezone, keyed by employee id.
 
-        employees.write(
-            {
-                "email_sent": False,
-                "ip_connected": False,
-                "manually_set_present": False,
-                "manually_set_presence": False,
-            }
+        A UTC day boundary puts an employee in UTC-6 at 18:00 of the previous
+        local day, so evening activity counts towards the wrong date.
+        """
+        today_by_employee = {}
+        for employee in self:
+            today_by_employee[employee.id] = fields.Datetime.context_timestamp(
+                employee.with_context(tz=employee.tz or "UTC"), fields.Datetime.now()
+            ).date()
+        return today_by_employee
+
+    @api.model
+    def _hr_presence_day_bounds_utc(self, tz_name, day):
+        """The employee's own day, as the naive UTC bounds the ORM compares to."""
+        zone = timezone(tz_name or "UTC")
+        to_utc = to_timezone(None)
+        return (
+            to_utc(datetime.combine(day, time.min).replace(tzinfo=zone)),
+            to_utc(datetime.combine(day, time.max).replace(tzinfo=zone)),
         )
 
-        all_employees = employees
+    # -------------------------------------------------------------- the cron
+    @api.model
+    def _check_presence(self):
+        """Refresh every company's presence evidence and its stored mirror.
 
-        if company.hr_presence_control_ip:
-            ip_list = company.hr_presence_control_ip_list
-            ip_list = ip_list.split(",") if ip_list else []
-            ip_employees = self.env["hr.employee"]
-            ips_by_user = defaultdict(set)
-            for log in (
-                self.env["res.users.log"]
+        Runs for every company that switched a control on, not only the one the
+        cron user happens to sit in: a company left out is not merely uncomputed,
+        its employees keep yesterday's evidence.
+        """
+        with _debug.perf("check_presence", cr=self.env.cr) as span:
+            companies = (
+                self.env["res.company"]
                 .sudo()
                 .search(
                     [
-                        ("create_uid", "in", employees.user_id.ids),
-                        ("ip", "!=", False),
-                        (
-                            "create_date",
-                            ">=",
-                            Datetime.to_string(
-                                Datetime.now().replace(
-                                    hour=0, minute=0, second=0, microsecond=0
-                                )
-                            ),
-                        ),
+                        "|",
+                        ("hr_presence_control_email", "=", True),
+                        ("hr_presence_control_ip", "=", True),
                     ]
                 )
-            ):
-                ips_by_user[log.create_uid].add(log.ip)
-            for employee in employees:
-                if any(ip in ip_list for ip in ips_by_user.get(employee.user_id, ())):
-                    ip_employees |= employee
-            ip_employees.write({"ip_connected": True})
-            employees -= ip_employees
-
-        if company.hr_presence_control_email:
-            email_employees = self.env["hr.employee"]
-            threshold = company.hr_presence_control_email_amount
-            sent_emails_by_author = dict(
-                self.env["mail.message"]._read_group(
-                    [
-                        ("author_id", "in", employees.user_id.partner_id.ids),
-                        (
-                            "date",
-                            ">=",
-                            Datetime.to_string(
-                                Datetime.now().replace(
-                                    hour=0, minute=0, second=0, microsecond=0
-                                )
-                            ),
-                        ),
-                        ("date", "<=", Datetime.to_string(Datetime.now())),
-                    ],
-                    ["author_id"],
-                    ["__count"],
-                )
             )
-            for employee in employees:
-                sent_emails = sent_emails_by_author.get(employee.user_id.partner_id, 0)
-                if sent_emails >= threshold:
-                    email_employees |= employee
-            email_employees.write({"email_sent": True})
-            employees -= email_employees
+            employees = (
+                self.env["hr.employee"]
+                .sudo()
+                .with_context(active_test=False)
+                .search([("company_id", "in", companies.ids)])
+            )
+            span.set(companies=len(companies), employees=len(employees))
+            if not employees:
+                _debug.logic("check_presence_idle", companies=len(companies))
+                return
+            self._hr_presence_mark_email_evidence(employees.filtered("active"))
+            self._hr_presence_refresh_display(employees)
 
-        company.sudo().hr_presence_last_compute_date = Datetime.now()
+    @api.model
+    def _hr_presence_mark_email_evidence(self, employees):
+        """Stamp today on employees who sent enough emails in their own day.
 
-        for employee in all_employees:
-            employee.hr_presence_state_display = employee.hr_presence_state
+        Only a message the employee wrote and that left the chatter counts:
+        'notification' and 'auto_comment' are written by the system in their
+        name, and an internal log note is not an email.
 
-    def get_presence_server_action_data(self):
-        server_action_xmlids = [
-            "action_hr_employee_presence_present",
-            "action_hr_employee_presence_absent",
-            "action_hr_employee_presence_log",
-            "action_hr_employee_presence_sms",
-            "action_hr_employee_presence_time_off",
-        ]
-        actions = self.env["ir.actions.server"].sudo()
-        for xmlid in server_action_xmlids:
-            actions += actions.env.ref(f"hr_presence.{xmlid}")
-        return actions.read(["id", "value"])
+        One query covers every timezone -- the messages are read once over the
+        union of the local days and bucketed here -- because a query per
+        distinct timezone is a query in a loop however few timezones there are.
+        """
+        by_email_control = employees.filtered(
+            lambda e: e.company_id.hr_presence_control_email
+        )
+        if not by_email_control:
+            return
+        today_by_employee = by_email_control._hr_presence_today()
+        window_by_employee = {}
+        partners = self.env["res.partner"]
+        employees_by_partner = defaultdict(lambda: self.env["hr.employee"])
+        for employee in by_email_control:
+            partner = employee.user_id.partner_id
+            if not partner:
+                continue
+            window_by_employee[employee.id] = self._hr_presence_day_bounds_utc(
+                employee.tz, today_by_employee[employee.id]
+            )
+            partners |= partner
+            employees_by_partner[partner.id] |= employee
+        if not partners:
+            return
 
-    def _action_set_manual_presence(self, state):
+        starts = [start for start, _end in window_by_employee.values()]
+        ends = [end for _start, end in window_by_employee.values()]
+        messages = (
+            self.env["mail.message"]
+            .sudo()
+            .search_read(
+                [
+                    ("author_id", "in", partners.ids),
+                    ("message_type", "in", ("comment", "email_outgoing")),
+                    ("subtype_id.internal", "=", False),
+                    ("date", ">=", min(starts)),
+                    ("date", "<=", max(ends)),
+                ],
+                ["author_id", "date"],
+                load=False,
+            )
+        )
+        sent_by_partner = defaultdict(list)
+        for message in messages:
+            sent_by_partner[message["author_id"]].append(message["date"])
+
+        # Over the employees, not over the authors: a company that turned the
+        # control on without setting an amount asks for a threshold of zero,
+        # and an employee who wrote nothing has to be able to meet it.
+        reached_by_day = defaultdict(lambda: self.env["hr.employee"])
+        for partner_id, candidates in employees_by_partner.items():
+            dates = sent_by_partner.get(partner_id, ())
+            for employee in candidates:
+                start, end = window_by_employee[employee.id]
+                count = sum(1 for date in dates if start <= date <= end)
+                threshold = employee.company_id.hr_presence_control_email_amount
+                today = today_by_employee[employee.id]
+                if count >= threshold and employee.hr_presence_email_date != today:
+                    reached_by_day[today] |= employee
+                    _debug.logic(
+                        "email_evidence",
+                        employee=employee,
+                        count=count,
+                        threshold=threshold,
+                        day=today,
+                    )
+        for day, records in reached_by_day.items():
+            records.hr_presence_email_date = day
+
+    @api.model
+    def _hr_presence_refresh_display(self, employees):
+        by_state = defaultdict(lambda: self.env["hr.employee"])
+        for employee in employees:
+            state = employee.hr_presence_state
+            if employee.hr_presence_state_display != state:
+                by_state[state] |= employee
+        for state, records in by_state.items():
+            records.hr_presence_state_display = state
+        _debug.lifecycle(
+            "display_refreshed",
+            employees=len(employees),
+            changed=sum(len(recs) for recs in by_state.values()),
+            states=",".join(sorted(by_state)),
+        )
+
+    # ----------------------------------------------------------------- guard
+    def _check_hr_manager(self):
         if not self.env.user.has_group("hr.group_hr_manager"):
+            _debug.logic("presence_action_refused", user=self.env.uid)
             raise UserError(
                 _(
                     "You don't have the right to do this. Please contact an Administrator."
                 )
             )
-        self.write(
-            {
-                "manually_set_present": state,
-                "manually_set_presence": True,
-                "hr_presence_state_display": "present" if state else "absent",
-            }
-        )
+
+    # --------------------------------------------------------------- actions
+    def _action_set_manual_presence(self, state):
+        self._check_hr_manager()
+        today_by_employee = self._hr_presence_today()
+        by_day = defaultdict(lambda: self.env["hr.employee"])
+        for employee in self:
+            by_day[today_by_employee[employee.id]] |= employee
+        for day, records in by_day.items():
+            records.write(
+                {
+                    "hr_presence_manual_state": state,
+                    "hr_presence_manual_date": day,
+                    "hr_presence_state_display": state,
+                }
+            )
+        _debug.lifecycle("manual_presence_set", employees=self, state=state)
 
     def action_set_present(self):
-        self._action_set_manual_presence(True)
+        self._action_set_manual_presence("present")
 
     def action_set_absent(self):
-        self._action_set_manual_presence(False)
-
-    def write(self, vals):
-        if vals.get("hr_presence_state_display") == "present":
-            vals["manually_set_present"] = True
-        return super().write(vals)
+        self._action_set_manual_presence("absent")
 
     def action_view_leave_request(self):
         if len(self) == 1:
@@ -168,13 +258,7 @@ class HrEmployee(models.Model):
         }
 
     def action_send_sms(self):
-        if not self.env.user.has_group("hr.group_hr_manager"):
-            raise UserError(
-                _(
-                    "You don't have the right to do this. Please contact an Administrator."
-                )
-            )
-
+        self._check_hr_manager()
         context = dict(self.env.context)
         context.update(
             default_res_model="hr.employee",
@@ -183,79 +267,128 @@ class HrEmployee(models.Model):
             default_number_field_name="phone_ids",
             default_mass_keep_log=True,
         )
-
-        template = self.env.ref("hr_presence.sms_template_presence", False)
-        if not template:
-            context["default_body"] = (
-                _("""We hope this message finds you well. It has come to our attention that you are currently not present at work, and there is no record of a time off request from you. If this absence is due to an oversight on our part, we sincerely apologize for any confusion.
-Please take the necessary steps to address this unplanned absence. Should you have any questions or need assistance, do not hesitate to reach out to your manager or the HR department at your earliest convenience.
-Thank you for your prompt attention to this matter.""")
-            )
-        else:
+        template = self.env.ref(
+            "hr_presence.sms_template_presence", raise_if_not_found=False
+        )
+        if template:
             context["default_template_id"] = template.id
-
+        else:
+            context["default_body"] = _(
+                "Hi, we noticed you're not at work and no time-off was submitted. "
+                "If this is an oversight from us, we apologize. Please contact "
+                "your manager or HR ASAP. Thanks"
+            )
         return {
             "type": "ir.actions.act_window",
             "res_model": "sms.composer",
             "view_mode": "form",
             "context": context,
-            "name": self.env._("Send SMS"),
+            "name": _("Send SMS"),
+            "target": "new",
+        }
+
+    def action_send_email(self):
+        self._check_hr_manager()
+        context = dict(self.env.context)
+        context.update(
+            default_model="hr.employee",
+            default_res_ids=self.ids,
+            default_composition_mode="mass_mail",
+        )
+        template = self.env.ref(
+            "hr_presence.mail_template_presence", raise_if_not_found=False
+        )
+        if template:
+            context["default_template_id"] = template.id
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "mail.compose.message",
+            "view_mode": "form",
+            "context": context,
+            "name": _("Send Email"),
             "target": "new",
         }
 
     def action_send_log(self):
-        if not self.env.user.has_group("hr.group_hr_manager"):
-            raise UserError(
-                _(
-                    "You don't have the right to do this. Please contact an Administrator."
-                )
-            )
-
+        self._check_hr_manager()
+        labels = dict(
+            self._fields["hr_presence_state_display"]._description_selection(self.env)
+        )
         for employee in self:
             employee.message_post(
                 body=_(
                     "%(name)s has been noted as %(state)s today",
                     name=employee.name,
-                    state=employee.hr_presence_state_display,
+                    state=labels.get(
+                        employee.hr_presence_state_display,
+                        employee.hr_presence_state_display,
+                    ),
                 )
             )
+        _debug.lifecycle("presence_logged", employees=self)
 
-    @api.depends("user_id.im_status", "hr_presence_state_display")
+    # --------------------------------------------------------------- compute
+    @api.depends(
+        "active",
+        "company_id.hr_presence_control_email",
+        "company_id.hr_presence_control_ip",
+        "hr_presence_email_date",
+        "hr_presence_ip_date",
+        "hr_presence_manual_date",
+        "hr_presence_manual_state",
+        "is_absent",
+        "resource_calendar_id",
+        "tz",
+        "user_id.im_status",
+    )
     def _compute_hr_presence_state(self):
         super()._compute_hr_presence_state()
-        company = self.env.company
-        working_now_list = self._get_employee_ids_working_now()
-        for employee in self:
-            if employee.manually_set_presence:
-                employee.hr_presence_state = employee.hr_presence_state_display
-                continue
-
-            if (
-                not employee.company_id.hr_presence_control_email
-                and not employee.company_id.hr_presence_control_ip
-            ):
-                continue
-            if (
-                company.hr_presence_last_compute_date
-                and employee.id in working_now_list
-                and company.hr_presence_last_compute_date.day
-                == fields.Datetime.now().day
+        controlled = self.filtered(
+            lambda e: (
+                e.active
                 and (
-                    employee.email_sent
-                    or employee.ip_connected
-                    or employee.manually_set_present
+                    e.company_id.hr_presence_control_email
+                    or e.company_id.hr_presence_control_ip
                 )
-            ):
-                employee.hr_presence_state = "present"
-            elif (
-                employee.id in working_now_list
-                and employee.is_absent
-                and not (
-                    employee.email_sent
-                    or employee.ip_connected
-                    or employee.manually_set_present
-                )
-            ):
-                employee.hr_presence_state = "absent"
-            else:
-                employee.hr_presence_state = "out_of_working_hour"
+            )
+        )
+        if not controlled:
+            return
+        today_by_employee = controlled._hr_presence_today()
+        manual = controlled.filtered(
+            lambda e: (
+                e.hr_presence_manual_state
+                and e.hr_presence_manual_date == today_by_employee[e.id]
+            )
+        )
+        automatic = controlled - manual
+        # Only this branch can need the schedule, so only this branch pays for
+        # it: hr and hr_attendance narrow before calling too.
+        working_now = frozenset(automatic._get_employee_ids_working_now())
+        for employee in controlled:
+            employee.hr_presence_state = employee._hr_presence_verdict(
+                today_by_employee[employee.id], working_now
+            )
+        _debug.logic(
+            "presence_computed",
+            controlled=len(controlled),
+            manual=len(manual),
+            working_now=len(working_now),
+        )
+
+    def _hr_presence_verdict(self, today, working_now):
+        """This module's own answer for one employee, whatever a later override
+        makes of it.
+
+        An approved time off does not make an employee absent -- it excuses
+        them. Requiring it was what put the verdict on everyone who was
+        excused and on nobody who was not.
+        """
+        self.check_singleton()
+        if self.hr_presence_manual_state and self.hr_presence_manual_date == today:
+            return self.hr_presence_manual_state
+        if today in (self.hr_presence_ip_date, self.hr_presence_email_date):
+            return "present"
+        if self.id not in working_now or self.is_absent:
+            return "out_of_working_hour"
+        return "absent"

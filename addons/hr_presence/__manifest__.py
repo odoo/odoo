@@ -1,17 +1,19 @@
 {
     "name": "Employee Presence Control",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Human Resources",
     "description": """
 Control Employees Presence
 ==========================
 
-Based on:
-    * The IP Address
-    * The User's Session
-    * The Sent Emails
+Marks an employee Absent when they are scheduled to work, have no approved
+time off, and left no sign of activity today. Evidence of activity is:
 
-Allows to contact directly the employee in case of unjustified absence.
+    * a connection from one of the company's valid IP addresses
+    * at least the configured number of emails sent
+
+An HR manager can override the verdict for the day, and reach the employee by
+email or SMS, log a note, or record the absence as time off.
     """,
     "author": "Odoo S.A.",
     "license": "LGPL-3",
