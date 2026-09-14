@@ -5,9 +5,11 @@ from collections import defaultdict
 from odoo import api, models
 from odoo.exceptions import UserError
 from odoo.fields import Command, Domain
+from odoo.tools import OrderedSet
 from odoo.tools.translate import _
 
 from ..tools import debug_log as dbg
+from .stock_orderpoint import ORDERPOINTS_BY_SCOPE_CACHE_KEY
 
 _logger = logging.getLogger(__name__)
 
@@ -527,10 +529,15 @@ class StockMoveProcurement(models.Model):
             )._procure_orderpoint_confirm(company_id=company, raise_user_error=False)
 
     def _get_orderpoints_to_update(self):
+        # every write of a move's state, date, quantity or locations asks
+        # which orderpoints it reaches; the answer per (product, warehouses)
+        # is memoized for the transaction and discarded when an orderpoint's
+        # scope changes
+        Orderpoint = self.env["stock.warehouse.orderpoint"]
         if not self:
-            return self.env["stock.warehouse.orderpoint"]
-        seen = set()
-        domains = []
+            return Orderpoint
+        memo = self.env.cr.cache.setdefault(ORDERPOINTS_BY_SCOPE_CACHE_KEY, {})
+        keys = OrderedSet()
         for move in self:
             wh_ids = tuple(
                 sorted(
@@ -540,19 +547,27 @@ class StockMoveProcurement(models.Model):
                     },
                 ),
             )
-            key = (move.product_id.id, wh_ids)
-            if key in seen:
-                continue
-            seen.add(key)
-            domain_for_move = Domain("product_id", "=", move.product_id.id)
-            if wh_ids:
-                domain_for_move &= Domain("warehouse_id", "in", list(wh_ids))
-            domains.append(domain_for_move)
-        return (
-            self.env["stock.warehouse.orderpoint"]
-            .sudo()
-            .search(Domain.OR(domains), order="id")
-        )
+            keys.add((move.product_id.id, wh_ids))
+        missing = [key for key in keys if key not in memo]
+        if missing:
+            domains = []
+            for product_id, wh_ids in missing:
+                domain_for_move = Domain("product_id", "=", product_id)
+                if wh_ids:
+                    domain_for_move &= Domain("warehouse_id", "in", list(wh_ids))
+                domains.append(domain_for_move)
+            found = Orderpoint.sudo().search(Domain.OR(domains), order="id")
+            for product_id, wh_ids in missing:
+                memo[product_id, wh_ids] = [
+                    orderpoint.id
+                    for orderpoint in found
+                    if orderpoint.product_id.id == product_id
+                    and (not wh_ids or orderpoint.warehouse_id.id in wh_ids)
+                ]
+        ids = OrderedSet()
+        for key in keys:
+            ids.update(memo[key])
+        return Orderpoint.sudo().browse(sorted(ids))
 
     def _update_orderpoints(self, orderpoints=None):
         if orderpoints is None:
