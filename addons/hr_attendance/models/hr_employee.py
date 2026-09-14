@@ -468,9 +468,22 @@ class HrEmployee(models.Model):
     def _compute_hr_presence_state(self):
         """An attendance is evidence of presence, over whatever `hr` concluded.
 
-        Checked in means present. Checked out during working hours means
-        absent -- the employee is expected and their own attendance says they
-        are not there.
+        Checked in means present, for every company. An attendance record is
+        somebody standing at the kiosk: it is evidence, and evidence does not
+        need the company's permission to count.
+
+        Checked out during working hours means absent only where the company
+        asked for attendance to be its presence control. That verdict is not
+        evidence but an INFERENCE from the absence of evidence -- "no record,
+        therefore not here" -- and it is only sound where the company expects
+        its employees to clock in at all.
+
+        Gating both halves was measured and is wrong. With
+        `hr_presence_control_login` on and attendance control off, an employee
+        physically checked in read **Absent**: their branch was skipped, and
+        `hr`'s own rule then judged them by a user session they did not have.
+        `_compute_presence_icon` below has consulted this flag all along, so
+        the module used to hold both answers to whether the company opted in.
         """
         super()._compute_hr_presence_state()
         # The same predicate was evaluated three times -- once to choose whom
@@ -492,7 +505,10 @@ class HrEmployee(models.Model):
         for employee in self:
             if attendance_state[employee.id] == "checked_in":
                 employee.hr_presence_state = "present"
-            elif employee.id in working_now:
+            elif (
+                employee.id in working_now
+                and employee.company_id.hr_presence_control_attendance
+            ):
                 employee.hr_presence_state = "absent"
 
     def _compute_presence_icon(self):

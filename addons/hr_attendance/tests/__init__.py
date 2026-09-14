@@ -15,4 +15,5 @@ from . import test_hr_attendance_timezone
 from . import test_hr_attendance_expected_hours_hook
 from . import test_hr_attendance_audit
 from . import test_hr_attendance_schedule_zone
+from . import test_hr_attendance_presence
 from . import test_hr_attendance_deferral
