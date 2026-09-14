@@ -18,3 +18,4 @@ from . import test_hr_attendance_schedule_zone
 from . import test_hr_attendance_presence
 from . import test_hr_attendance_deferral
 from . import test_hr_attendance_derived_freshness
+from . import test_hr_attendance_night_window
