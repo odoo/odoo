@@ -7,6 +7,7 @@ from psycopg.errors import UntranslatableCharacter
 from odoo import fields, models
 from odoo.fields import Command
 from odoo.orm.model_test_env import (
+    InMemoryAccessRightsNotSupported,
     InMemoryRecordRulesNotSupported,
     InMemorySqlNotSupported,
     ModelRegistry,
@@ -18,6 +19,7 @@ from odoo.tools import mute_logger
 from odoo.addons.test_orm.models.test_orm import (
     CalendarTest,
     TestOrmAutovacuumed,
+    TestOrmBar,
     TestOrmCategory,
     TestOrmCompany,
     TestOrmFoo,
@@ -114,6 +116,8 @@ def _isolated_registry(*classes):
 
 @tagged("post_install", "-at_install")
 class TestBackendDifferential(TransactionCase):
+    maxDiff = None
+
     def _diff(self, classes, script, msg=""):
         registry = _isolated_registry(*classes)
         with model_test_env(registry=registry) as env_a:
@@ -766,6 +770,18 @@ class TestBackendDifferential(TransactionCase):
 
         self._diff((TestOrmCategory,), script)
 
+    def test_fields_get_agrees_across_tiers(self):
+        def script(env):
+            described = {}
+            for model_name in ("test_orm.foo", "test_orm.bar", "test_orm.category"):
+                for name, description in env[model_name].fields_get().items():
+                    described[f"{model_name}.{name}"] = description
+            return described
+
+        self._diff(
+            (TestOrmFoo, TestOrmBar, TestOrmCategory, _StubJsonDiscussion), script
+        )
+
     def test_translations_agree_across_tiers(self):
         def script(env):
             M = env["test_orm.related_translation_1"]
@@ -878,8 +894,8 @@ class TestBackendDifferential(TransactionCase):
             with self.assertRaises(InMemoryRecordRulesNotSupported):
                 _ = env_a["ir.rule"]
             # the isolated registry has neither ir.model.access nor ir.rule: the
-            # ACL lookup fails first, the rule marker would fire right after
-            with self.assertRaises((KeyError, InMemoryRecordRulesNotSupported)):
+            # ACL marker fires first, the rule marker would fire right after
+            with self.assertRaises(InMemoryAccessRightsNotSupported):
                 env_a(user=2, su=False)["test_orm.foo"].search([])
         self.assertIn("ir.rule", self.env.registry)
 

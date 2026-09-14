@@ -54,6 +54,10 @@ class InMemoryRecordRulesNotSupported(NotImplementedError):
     pass
 
 
+class InMemoryAccessRightsNotSupported(NotImplementedError):
+    pass
+
+
 class _TestBase(AbstractModel):
     _name = "base"
     _description = "Base"
@@ -84,9 +88,54 @@ class _TestResUsers(Model):
     tz = Char()
     lang = Char()
     company_id = Many2one("res.company")
+    # res.users inherits res.partner's parent_id: a many2one to a user
+    # describes itself with the hierarchy operators, as on PostgreSQL
+    parent_id = Many2one("res.users")
+    # the group external ids the user holds, comma-separated: what a test
+    # gives a user instead of res.groups rows
+    group_xmlids = Char()
 
     def _get_company_ids(self):
         return self.company_id.ids
+
+    def _held_groups(self) -> set[str]:
+        self.check_singleton()
+        return {token for token in (self.group_xmlids or "").split(",") if token}
+
+    def _get_group_ids(self) -> tuple[str, ...]:
+        return tuple(sorted(self._held_groups()))
+
+    def _has_group(self, group_ext_id: str) -> bool:
+        return group_ext_id in self._held_groups()
+
+    def has_group(self, group_ext_id: str) -> bool:
+        return self._has_group(group_ext_id)
+
+    def has_groups(self, group_spec: str) -> bool:
+        if group_spec == ".":
+            return False
+        tokens = [token.strip() for token in group_spec.split(",") if token.strip()]
+        negatives = [token[1:] for token in tokens if token.startswith("!")]
+        positives = [token for token in tokens if not token.startswith("!")]
+        if not tokens:
+            return False
+        if any(self._has_group(ext_id) for ext_id in negatives):
+            return False
+        if any(self._has_group(ext_id) for ext_id in positives):
+            return True
+        return not positives
+
+    def _is_superuser(self) -> bool:
+        return self.id == SUPERUSER_ID
+
+    def _is_admin(self) -> bool:
+        return self._is_superuser() or self._has_group("base.group_erp_manager")
+
+    def _is_system(self) -> bool:
+        return self._has_group("base.group_system")
+
+    def _is_public(self) -> bool:
+        return self._has_group("base.group_public")
 
     @api.model
     def context_get(self):
@@ -346,6 +395,16 @@ class ModelRegistry(_RegistryFieldsMixin, Mapping):
                     "rule behaviour, or pass your own ir.rule model class to "
                     "model_test_env(...): the in-memory backend applies the "
                     "domain it returns."
+                ) from None
+            if model_name == "ir.model.access":
+                raise InMemoryAccessRightsNotSupported(
+                    "ModelRegistry (DB-free model_test_env) has no "
+                    "'ir.model.access' model: access rights are NOT enforced in "
+                    "this tier -- a read, write, create or unlink by a user "
+                    "other than the superuser asks registry.access_policy whether "
+                    "the model allows it and there is no ACL to answer. Use a "
+                    "DB-backed TransactionCase to test access rights, or pass "
+                    "your own ir.model.access model class to model_test_env(...)."
                 ) from None
             raise
 
