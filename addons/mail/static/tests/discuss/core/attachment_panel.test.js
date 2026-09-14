@@ -49,3 +49,30 @@ test("Attachment panel sort by date", async () => {
         after: [".o-mail-DateSection:text('August, 2023')"],
     });
 });
+
+test("show attachment in conversation from attachment panel", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const attachmentId = pyEnv["ir.attachment"].create({
+        mimetype: "image/png",
+        name: "Newton.png",
+        res_id: channelId,
+        res_model: "discuss.channel",
+    });
+    const messageId = pyEnv["mail.message"].create({
+        attachment_ids: [attachmentId],
+        body: "Here is my cat!",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    pyEnv["ir.attachment"].write([attachmentId], { message_ids: [messageId] });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
+    await click(".o-mail-DiscussContent-header button[title='Attachments']");
+    await click(
+        ".o-mail-ActionPanel .o-mail-AttachmentButtons button[title='Show in Conversation']"
+    );
+    await contains(".o-mail-Message.o-highlighted:contains('Here is my cat!')");
+});

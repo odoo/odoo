@@ -5229,9 +5229,16 @@ class MailThread(models.AbstractModel):
         if "attachments" in request_list:
             res.many(
                 "attachments",
-                "_store_attachment_fields",
+                lambda res: (
+                    res.from_method("_store_attachment_fields", chatter_fields=kwargs.get("chatter_fields", False)),
+                    # sudo: mail.message - can read the thread of messages of an attachment that the current user can access
+                    res.many(
+                        "message_ids",
+                        lambda res: res.one("thread", [], as_thread=True),
+                        sudo=True,
+                    ),
+                ),
                 value=lambda t: t._get_mail_thread_data_attachments(),
-                fields_params={"chatter_fields": kwargs.get("chatter_fields", False)},
             )
             res.append({"areAttachmentsLoaded": True, "isLoadingAttachments": False})
         if "contact_fields" in request_list:
