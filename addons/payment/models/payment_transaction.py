@@ -154,6 +154,12 @@ class PaymentTransaction(models.Model):
         string="Landing Route", help="The route the user is redirected to after the transaction"
     )
 
+    billing_partner_id = fields.Many2one(
+        string="Billing Address", comodel_name="res.partner", readonly=True
+    )
+    delivery_partner_id = fields.Many2one(
+        string="Shipping Address", comodel_name="res.partner", readonly=True
+    )
     # Duplicated partner values allowing to keep a record of them, should they be later updated.
     partner_id = fields.Many2one(
         string="Customer",
