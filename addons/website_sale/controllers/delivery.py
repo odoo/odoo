@@ -154,7 +154,11 @@ class Delivery(WebsiteSale):
             ):
                 order_sudo.partner_id = new_partner_sudo
         elif order_sudo.name in order_sudo.partner_shipping_id.name:
-            order_sudo.partner_shipping_id.write(partial_delivery_address)
+            order_sudo.partner_shipping_id.write(
+                self._resolve_address_phone_values(
+                    partial_delivery_address, order_sudo.partner_shipping_id
+                )
+            )
         elif not self._are_same_addresses(
             partial_delivery_address,
             order_sudo.partner_shipping_id,

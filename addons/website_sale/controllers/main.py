@@ -1321,7 +1321,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             request.env["res.partner"]
             .sudo()
             .with_context(creation_context)
-            .create(self._phone_to_address_values(address_values))
+            .create(self._resolve_address_phone_values(address_values))
         )
 
     @route(
@@ -1374,7 +1374,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
             if order_sudo.name in order_sudo.partner_shipping_id.name:
                 order_sudo.partner_shipping_id.write(
-                    self._phone_to_address_values(
+                    self._resolve_address_phone_values(
                         shipping_address, order_sudo.partner_shipping_id
                     )
                 )

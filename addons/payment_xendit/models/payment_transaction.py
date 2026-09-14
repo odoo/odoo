@@ -54,8 +54,7 @@ class PaymentTransaction(models.Model):
             return {}
 
         # Extract the payment link URL and embed it in the redirect form.
-        rendering_values = {"api_url": invoice_data.get("invoice_url")}
-        return rendering_values
+        return {"api_url": invoice_data.get("invoice_url")}
 
     def _xendit_prepare_invoice_request_payload(self):
         """Create the payload for the invoice request based on the transaction values.
@@ -95,7 +94,7 @@ class PaymentTransaction(models.Model):
         # Extra payload values that must not be included if empty.
         if self.partner_email:
             payload["customer"]["email"] = self.partner_email
-        if phone := self.partner_id.phone_ids._primary().number:
+        if phone := self.partner_phone:
             payload["customer"]["mobile_number"] = phone
         address_details = {}
         if self.partner_city:
@@ -119,6 +118,7 @@ class PaymentTransaction(models.Model):
             return super()._send_payment_request()
 
         self._xendit_create_charge(self.token_id.provider_ref)
+        return None
 
     def _xendit_create_charge(self, token_ref, auth_id=None):
         """Create a charge on Xendit using the `credit_card_charges` endpoint.
@@ -211,6 +211,7 @@ class PaymentTransaction(models.Model):
                     failure_reason,
                 )
             )
+        return None
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to return token data based on Xendit data.

@@ -5,7 +5,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 ## Quick Reference
 
 ```bash
-# All base tests (4062 methods, 836 classes, 137 files)
+# All base tests (4072 methods, 836 classes, 137 files)
 --test-tags '/base' -u base
 
 # Only post_install tests
@@ -170,11 +170,11 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 | `test_res_country.py` | `-at_install`, `post_install` | 2 | 4 | TransactionCase |
 | `test_res_partner.py` | `res_partner`, `res_partner_address`, `post_install`, `-at_install` | 14 | 89 | TransactionCaseWithUserDemo, TransactionCase |
 | `test_res_partner_identifier.py` | `post_install`, `-at_install` | 1 | 18 | TransactionCase |
-| `test_res_partner_main_channels.py` | `post_install`, `-at_install` | 1 | 7 | TransactionCase |
+| `test_res_partner_main_channels.py` | `post_install`, `-at_install` | 1 | 15 | TransactionCase |
 | `test_res_partner_merge.py` | `post_install`, `-at_install`, `res_partner_merge` | 10 | 34 | TransactionCase |
 | `test_res_partner_sync.py` | `res_partner`, `res_partner_sync` | 1 | 10 | TransactionCase |
-| `test_res_users.py` | `post_install`, `-at_install`, `groups` | 30 | 99 | UsersCommonCase, TransactionCase, HttpCase |
-| `test_res_users_apikeys.py` | `post_install`, `-at_install` | 1 | 23 | TransactionCase |
+| `test_res_users.py` | `post_install`, `-at_install`, `groups` | 30 | 100 | UsersCommonCase, TransactionCase, HttpCase |
+| `test_res_users_apikeys.py` | `post_install`, `-at_install` | 1 | 24 | TransactionCase |
 | `test_res_users_identitycheck.py` | `post_install`, `-at_install` | 1 | 5 | TransactionCase |
 | `test_res_users_log.py` | `post_install`, `-at_install` | 2 | 5 | TransactionCase |
 | `test_res_users_settings.py` | `post_install`, `-at_install` | 4 | 16 | TransactionCase |
@@ -257,7 +257,7 @@ These run in **both** at_install and post_install phases by default.
 |--------|-------|
 | Total test files | 137 |
 | Total test classes | 836 |
-| Total test methods | 4062 |
+| Total test methods | 4072 |
 | Files with @tagged | 76 (55%) |
 | Files without @tagged | 61 (45%) |
 | Classes using post_install | 300 |

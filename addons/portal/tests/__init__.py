@@ -3,6 +3,7 @@ from . import test_address_trust_boundary
 from . import test_addresses
 from . import test_apikeys_policy
 from . import test_controller_robustness
+from . import test_controller_integrity
 from . import test_editable_addresses
 from . import test_hardening
 from . import test_home_counters

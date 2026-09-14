@@ -4,11 +4,14 @@ from odoo.models import BaseModel
 from odoo.tools import consteq
 
 
-def get_url_with_params(url_string, query_params, remove_duplicates=True):
+def get_url_with_params(
+    url_string, query_params, remove_duplicates=True, *, doseq=False
+):
     """Merge query parameters while preserving the URL path and fragment.
 
     Replace only supplied keys by default; repeated unrelated keys and blank
-    values retain their meaning. Set ``remove_duplicates=False`` to append.
+    values retain their meaning. Set ``remove_duplicates=False`` to append,
+    or ``doseq=True`` to encode sequence values as repeated parameters.
     """
     if not query_params:
         return url_string
@@ -19,7 +22,7 @@ def get_url_with_params(url_string, query_params, remove_duplicates=True):
             (key, value) for key, value in url_params if key not in query_params
         ]
     url_params.extend(query_params.items())
-    return urlunsplit(url._replace(query=urlencode(url_params)))
+    return urlunsplit(url._replace(query=urlencode(url_params, doseq=doseq)))
 
 
 def resolve_message_thread(message: BaseModel) -> BaseModel:

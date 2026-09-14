@@ -33,7 +33,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
         if self.order_id.partner_shipping_id.is_mondialrelay:
             self.mondialrelay_last_selected_id = "%s-%s" % (
                 self.shipping_country_code,
-                self.order_id.partner_shipping_id.ref.lstrip("MR#"),
+                self.order_id.partner_shipping_id.ref.removeprefix("MR#"),
             )
         else:
             self.mondialrelay_last_selected_id = ""

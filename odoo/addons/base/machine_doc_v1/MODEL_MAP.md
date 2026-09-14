@@ -1203,7 +1203,8 @@ Inherits: `mixin.format.address`, `mixin.format.vat.label`, `mixin.avatar`, `mix
 - Address fields: `street`, `street2`, `zip`, `city`, `state_id`, `country_id`
 - `partner_latitude`, `partner_longitude` (Float)
 - `email`, `email_formatted` (Char), `phone_ids` (Many2many → phone.number)
-- `main_phone_id`, `main_mobile_id` (Many2one → phone.number, computed, stored)
+- `preferred_phone_id` (Many2one → phone.number, editable, stored) — contact-owned priority; unlinking the number clears it. `_phone_get_number()` selects active numbers using this preference, then the shared number order.
+- `main_phone_id`, `main_mobile_id` (Many2one → phone.number, computed, stored) — typed selections from that same contact order.
 - `main_bank_id` (Many2one → res.partner.bank, computed, stored)
 - `is_company` (Boolean)
 - `company_id` (Many2one → res.company)

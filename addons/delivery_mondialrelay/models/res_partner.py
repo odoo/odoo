@@ -1,4 +1,5 @@
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class ResPartner(models.Model):
@@ -11,32 +12,36 @@ class ResPartner(models.Model):
         for p in self:
             p.is_mondialrelay = p.ref and p.ref.startswith("MR#")
 
-    @api.model
     def _mondialrelay_search_or_create(self, data):
-        ref = "MR#%s" % data["id"]
-        partner = self.search(
-            [
-                ("id", "child_of", self.commercial_partner_id.ids),
-                ("ref", "=", ref),
-                # fast check that address always the same
-                ("street", "=", data["street"]),
-                ("zip", "=", data["zip"]),
-            ]
+        self.check_singleton()
+        country = self.env["res.country"].search(
+            [("code", "=", data["country_code"].upper())],
+            limit=1,
         )
-        if not partner:
-            partner = self.create(
-                {
-                    "ref": ref,
-                    "name": data["name"],
-                    "street": data["street"],
-                    "street2": data["street2"],
-                    "zip": data["zip"],
-                    "city": data["city"],
-                    "country_id": self.env.ref("base.%s" % data["country_code"]).id,
-                    "type": "delivery",
-                    "parent_id": self.id,
-                }
-            )
+        if not country:
+            raise ValidationError(_("The pickup point country is invalid."))
+        address_values = {
+            "ref": "MR#%s" % data["id"],
+            "name": data["name"],
+            "street": data["street"],
+            "street2": data["street2"] or False,
+            "zip": data["zip"],
+            "city": data["city"],
+            "country_id": country.id,
+            "type": "delivery",
+            "parent_id": self.id,
+        }
+        # Country and recipient are part of a pickup point's identity. Sibling
+        # contacts may use the same point with different phone numbers.
+        partner = self.search(
+            [(field, "=", value) for field, value in address_values.items()],
+            limit=1,
+        )
+        partner = partner or self.create(address_values)
+        if phone_values := partner._get_phone_replacement_values(
+            self._phone_get_number()
+        ):
+            partner.write(phone_values)
         return partner
 
     def _get_avatar_placeholder_path(self):

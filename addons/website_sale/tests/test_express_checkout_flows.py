@@ -1,3 +1,4 @@
+import logging
 from unittest.mock import Mock, patch
 
 from odoo import Command
@@ -12,6 +13,8 @@ from odoo.addons.website_sale.controllers.delivery import (
 )
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website_sale.tests.common import MockRequest, WebsiteSaleCommon
+
+_logger = logging.getLogger(__name__)
 
 
 @tagged("post_install", "-at_install")
@@ -385,6 +388,75 @@ class TestWebsiteSaleExpressCheckoutFlows(WebsiteSaleCommon, HttpCase):
             self.assertPartnerShippingValues(
                 new_partner, self.express_checkout_anonymized_shipping_values_2
             )
+
+    def test_partial_delivery_phone_updates_preserve_secondary_numbers(self):
+        session = self.authenticate(None, None)
+        session["sale_order_id"] = self.sale_order.id
+        root.session_store.save(session)
+        route = WebsiteSaleDeliveryController._express_checkout_delivery_route
+        with patch(
+            "odoo.addons.delivery.models.delivery_carrier.DeliveryCarrier.rate_shipment",
+            return_value=self.rate_shipment_result,
+        ):
+            self.call_jsonrpc(
+                route,
+                params={
+                    "partial_delivery_address": {
+                        **self.express_checkout_anonymized_shipping_values,
+                        "phone": "+32000999101",
+                    }
+                },
+            )
+            partner = self.sale_order.partner_shipping_id
+            initial = partner._phone_get_number()
+            secondary = self.env["phone.number"].create({"number": "+32000999102"})
+            partner.write({"phone_ids": [Command.link(secondary.id)]})
+            target = self.env["phone.number"].create(
+                {"number": "+32000999103", "sequence": 100}
+            )
+            owner = self.env["res.partner"].create(
+                {
+                    "name": "Other phone owner",
+                    "phone_ids": [
+                        Command.create({"number": "+32000999104", "primary": True}),
+                        Command.link(target.id),
+                    ],
+                }
+            )
+            owner_primary = owner._phone_get_number()
+            target_metadata = target.read(["number", "type", "sequence", "primary"])
+            for phone in ("+32000999103", ""):
+                with self.subTest(phone=phone):
+                    self.call_jsonrpc(
+                        route,
+                        params={
+                            "partial_delivery_address": {
+                                **self.express_checkout_anonymized_shipping_values,
+                                "phone": phone,
+                            }
+                        },
+                    )
+                    partner.invalidate_recordset()
+                    _logger.debug(
+                        "Partial delivery phone: partner=%s selected=%s linked=%s",
+                        partner.id,
+                        partner._phone_get_number().id,
+                        partner.phone_ids.ids,
+                    )
+                    self.assertEqual(self.sale_order.partner_shipping_id, partner)
+                    self.assertIn(secondary, partner.phone_ids)
+                    self.assertNotIn(initial, partner.phone_ids)
+                    self.assertEqual(owner._phone_get_number(), owner_primary)
+                    self.assertIn(target, owner.phone_ids)
+                    self.assertEqual(
+                        target.read(["number", "type", "sequence", "primary"]),
+                        target_metadata,
+                    )
+                    if phone:
+                        self.assertEqual(partner._phone_get_number(), target)
+                        self.assertNotEqual(partner.phone_ids._primary(), target)
+                    else:
+                        self.assertEqual(partner.phone_ids, secondary)
 
     def test_express_checkout_partial_delivery_address_context_key(self):
         delivery_carrier_mock = Mock()

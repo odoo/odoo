@@ -1,9 +1,62 @@
+import logging
+from urllib.parse import parse_qsl, urlsplit
+
 from odoo.tests.common import TransactionCase
 
 from odoo.addons.portal.controllers.portal import pager
 
+_logger = logging.getLogger(__name__)
+
 
 class TestPager(TransactionCase):
+    def test_pager_preserves_url_components_and_repeated_filters(self):
+        arguments = {"tag": ["new one", "new+two"], "blank": "", "ignored": None}
+        result = pager(
+            "https://example.test/my/orders?keep=1&keep=2&tag=old#results",
+            total=90,
+            page=2,
+            url_args=arguments,
+        )
+        for key, path in (
+            ("page_first", "/my/orders"),
+            ("page", "/my/orders/page/2"),
+            ("page_last", "/my/orders/page/3"),
+        ):
+            with self.subTest(key=key):
+                parsed = urlsplit(result[key]["url"])
+                _logger.debug("Pager URL %s: %s", key, parsed)
+                self.assertEqual(parsed.scheme, "https")
+                self.assertEqual(parsed.netloc, "example.test")
+                self.assertEqual(parsed.path, path)
+                self.assertEqual(parsed.fragment, "results")
+                self.assertEqual(
+                    parse_qsl(parsed.query, keep_blank_values=True),
+                    [
+                        ("keep", "1"),
+                        ("keep", "2"),
+                        ("tag", "new one"),
+                        ("tag", "new+two"),
+                        ("blank", ""),
+                    ],
+                )
+        self.assertEqual(arguments["tag"], ["new one", "new+two"])
+        self.assertIn("ignored", arguments)
+
+    def test_pager_preserves_existing_query_without_new_arguments(self):
+        for arguments in (None, {}, {"ignored": None}):
+            with self.subTest(arguments=arguments):
+                result = pager(
+                    "/my/orders?tag=a&tag=b#results",
+                    total=60,
+                    page=2,
+                    url_args=arguments,
+                )
+                _logger.debug("Pager without new arguments: %s", result["page"])
+                self.assertEqual(
+                    result["page"]["url"],
+                    "/my/orders/page/2?tag=a&tag=b#results",
+                )
+
     def test_pager_functionality(self):
         test_cases = [
             {"total": 20, "page": 1, "expected_pages": [1]},

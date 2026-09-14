@@ -206,6 +206,11 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
         self, src_partners: models.BaseModel, dst_partner: models.BaseModel
     ) -> None:
         src_partners = src_partners.with_context(active_test=False)
+        # Capture the choice before unlinking source relations clears their preferences.
+        preferred = (
+            dst_partner.preferred_phone_id
+            or src_partners.mapped("preferred_phone_id")[:1]
+        )
         numbers = src_partners.phone_ids.sudo()
         _debug.pipeline("merge_phone_numbers", dst=dst_partner.id, numbers=len(numbers))
         if numbers:
@@ -217,6 +222,9 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
                     ]
                 }
             )
+
+        if preferred and dst_partner.preferred_phone_id != preferred:
+            dst_partner.preferred_phone_id = preferred
 
     @api.model
     def _merge_identifiers(

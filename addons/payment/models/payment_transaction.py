@@ -199,7 +199,7 @@ class PaymentTransaction(models.Model):
     @api.depends("partner_id")
     def _compute_partner_phone(self):
         for tx in self:
-            tx.partner_phone = tx.partner_id.phone_ids._primary().number or False
+            tx.partner_phone = tx.partner_id._phone_get_number().number or False
 
     def _compute_primary_payment_method_id(self):
         for pm, txs in self.grouped("payment_method_id").items():

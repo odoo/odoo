@@ -11,6 +11,23 @@ class ResPartner(models.Model):
     _name = "res.partner"
     _inherit = ["mixin.mail.thread.phone", "res.partner"]
 
+    def _phone_replace_number(self, fname, number, *types):
+        self.check_singleton()
+        current = self._phone_get_number()
+        if fname != "phone_ids" or (
+            types and current != self._phone_get_number(*types)
+        ):
+            return super()._phone_replace_number(fname, number, *types)
+        if number == current.number:
+            return None
+        replacement = self.env["phone.number"]
+        if number:
+            replacement = replacement.create(
+                {"number": number, "type": current.type or "mobile"}
+            )
+        self.write(self._get_phone_replacement_values(replacement))
+        return None
+
     @property
     def _rec_names_search(self):
         return [*super()._rec_names_search, "phone_mobile_search"]

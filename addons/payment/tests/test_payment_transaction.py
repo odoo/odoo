@@ -1,14 +1,39 @@
+import logging
 from unittest.mock import patch
 
+from odoo import Command
 from odoo.exceptions import AccessError
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.payment.tests.common import PaymentCommon
 
+_logger = logging.getLogger(__name__)
+
 
 @tagged("-at_install", "post_install")
 class TestPaymentTransaction(PaymentCommon):
+    def test_transaction_uses_contact_phone_preference(self):
+        first = self.env["phone.number"].create(
+            {"number": "+32000111016", "primary": True}
+        )
+        preferred = self.env["phone.number"].create(
+            {"number": "+32000111017", "sequence": 100}
+        )
+        self.partner.write(
+            {
+                "phone_ids": [Command.set((first | preferred).ids)],
+                "preferred_phone_id": preferred.id,
+            }
+        )
+        self.env.flush_all()
+        self.env.invalidate_all()
+        tx = self._create_transaction("redirect")
+        _logger.debug(
+            "Payment phone selection: transaction=%s preferred=%s", tx.id, preferred.id
+        )
+        self.assertEqual(tx.partner_phone, preferred.number)
+
     def test_is_live_when_created_by_enabled_provider(self):
         self.provider.state = "enabled"
         tx = self._create_transaction("redirect")

@@ -175,7 +175,7 @@
                 id="o_phone"
                 type="tel"
                 name="phone"
-                t-att-value="submitted_address.get('phone', partner_sudo.phone_ids._primary().number if partner_sudo else '')"
+                t-att-value="submitted_address.get('phone', partner_sudo._phone_get_number().number if partner_sudo else '')"
                 class="form-control" />
         </div>
         <t name="b2b_fields">

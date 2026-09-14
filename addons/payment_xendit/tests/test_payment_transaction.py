@@ -1,6 +1,8 @@
+import logging
 from unittest.mock import patch
 from urllib.parse import urlencode as url_encode
 
+from odoo import Command
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
@@ -9,9 +11,46 @@ from odoo.addons.payment.tests.http_common import PaymentHttpCommon
 from odoo.addons.payment_xendit.controllers.main import XenditController
 from odoo.addons.payment_xendit.tests.common import XenditCommon
 
+_logger = logging.getLogger(__name__)
+
 
 @tagged("post_install", "-at_install")
 class TestPaymentTransaction(PaymentHttpCommon, XenditCommon):
+    def test_invoice_payload_uses_transaction_phone(self):
+        primary = self.env["phone.number"].create(
+            {"number": "+32000444003", "primary": True}
+        )
+        preferred = self.env["phone.number"].create(
+            {"number": "+32000444004", "sequence": 100}
+        )
+        self.partner.write(
+            {
+                "phone_ids": [Command.set((primary | preferred).ids)],
+                "preferred_phone_id": preferred.id,
+            }
+        )
+        tx = self._create_transaction("redirect")
+        with patch.object(
+            payment_utils, "generate_access_token", self._generate_test_access_token
+        ):
+            payload = tx._xendit_prepare_invoice_request_payload()
+            _logger.debug(
+                "Xendit phone: transaction=%s preferred=%s", tx.id, preferred.id
+            )
+            self.assertEqual(payload["customer"]["mobile_number"], preferred.number)
+            tx.partner_phone = "+32000444005"
+            self.assertEqual(
+                tx._xendit_prepare_invoice_request_payload()["customer"][
+                    "mobile_number"
+                ],
+                tx.partner_phone,
+            )
+            tx.partner_phone = False
+            self.assertNotIn(
+                "mobile_number",
+                tx._xendit_prepare_invoice_request_payload()["customer"],
+            )
+
     def test_no_item_missing_from_rendering_values(self):
         """Test that when the redirect flow is triggered, rendering_values contains the
         API_URL corresponding to the response of API request."""

@@ -346,21 +346,28 @@ class ResPartner(models.Model):
         column2="phone_number_id",
         string="Phone Numbers",
     )
+    preferred_phone_id = fields.Many2one(
+        comodel_name="phone.number",
+        compute="_compute_preferred_phone_id",
+        store=True,
+        readonly=False,
+        ondelete="set null",
+        help="Preferred number for this contact only. Shared numbers retain their "
+        "own priority for other contacts. Removing the number clears this preference.",
+    )
     main_phone_id = fields.Many2one(
         comodel_name="phone.number",
         compute="_compute_main_phone_ids",
         store=True,
-        help="The landline this contact is reached on when a single number is "
-        "needed. The first active number typed Landline, by the order phone "
-        "numbers carry.",
+        help="The preferred contact number when it is an active landline; "
+        "otherwise the first active landline by number priority.",
     )
     main_mobile_id = fields.Many2one(
         comodel_name="phone.number",
         compute="_compute_main_phone_ids",
         store=True,
-        help="The mobile this contact is reached on when a single number is "
-        "needed. The first active number typed Mobile, by the order phone "
-        "numbers carry.",
+        help="The preferred contact number when it is an active mobile; "
+        "otherwise the first active mobile by number priority.",
     )
     gender = fields.Selection(
         selection=[
@@ -636,7 +643,24 @@ class ResPartner(models.Model):
             else:
                 partner.main_user_id = False
 
+    @api.depends("phone_ids")
+    def _compute_preferred_phone_id(self):
+        for partner in self.with_context(active_test=False):
+            partner.preferred_phone_id &= partner.phone_ids
+
+    @api.constrains("preferred_phone_id", "phone_ids")
+    def _check_preferred_phone_id(self):
+        for partner in self.with_context(active_test=False):
+            if (
+                partner.preferred_phone_id
+                and partner.preferred_phone_id not in partner.phone_ids
+            ):
+                raise ValidationError(
+                    _("The preferred phone must belong to this contact.")
+                )
+
     @api.depends(
+        "preferred_phone_id",
         "phone_ids",
         "phone_ids.type",
         "phone_ids.primary",
@@ -646,9 +670,7 @@ class ResPartner(models.Model):
     def _compute_main_phone_ids(self) -> None:
         sources = self.with_context(active_test=False)
         for partner, source in zip(self, sources, strict=True):
-            numbers = source.phone_ids.filtered("active").sorted(
-                lambda number: (not number.primary, number.sequence)
-            )
+            numbers = source._phone_get_numbers()
             partner.main_phone_id = numbers.filtered(
                 lambda number: number.type == "landline"
             )[:1]
@@ -989,11 +1011,33 @@ class ResPartner(models.Model):
                 partner.type_address_label = _("Address")
 
     def _phone_get_numbers(self, fname=False):
+        """Active contact numbers, with the contact's preference first.
+
+        Explicit alternate fields retain their own selection semantics.
+        """
+        if not self:
+            return self.env["phone.number"]
         self.check_singleton()
-        return self[fname] if fname else self.phone_ids
+        if fname and fname != "phone_ids":
+            return self[fname]
+        numbers = self.phone_ids.filtered("active").sorted(
+            lambda number: (not number.primary, number.sequence, number.id)
+        )
+        preferred = self.preferred_phone_id & numbers
+        return preferred | numbers
 
     def _phone_get_number(self, *types: str, fname=False):
         return self._phone_get_numbers(fname=fname)._primary(*types)
+
+    def _get_phone_replacement_values(self, number):
+        """Replace this contact's selected number, preserving other linked numbers."""
+        current = self._phone_get_number()
+        if current == number:
+            return {}
+        commands = [Command.unlink(current.id)] if current else []
+        if number:
+            commands.append(Command.link(number.id))
+        return {"phone_ids": commands, "preferred_phone_id": number.id}
 
     @api.depends(
         lambda self: [*self._display_address_depends(), "commercial_company_name"]

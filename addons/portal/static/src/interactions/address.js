@@ -81,7 +81,11 @@ export class CustomerAddress extends Interaction {
 
             const all_fields = ["street", "zip", "city"];
             all_fields.forEach((fname) => {
-                if (data.fields.includes(fname)) {
+                if (
+                    data.fields.includes(fname) ||
+                    data.required_fields.includes(fname) ||
+                    this.requiredFields.includes(fname)
+                ) {
                     this._showInput(fname);
                 } else {
                     this._hideInput(fname);

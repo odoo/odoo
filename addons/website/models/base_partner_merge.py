@@ -10,7 +10,8 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
 
     @api.model
     def _update_foreign_keys(self, src_partners, dst_partner):
-        visitors = dst_partner.visitor_ids | src_partners.visitor_ids
+        # Visitor analytics are internal merge metadata, scoped to these contacts.
+        visitors = dst_partner.sudo().visitor_ids | src_partners.sudo().visitor_ids
         dst_visitor = visitors[:1]
         for visitor in visitors[1:]:
             visitor._merge_visitor(dst_visitor)

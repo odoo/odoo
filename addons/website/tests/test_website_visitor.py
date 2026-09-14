@@ -84,6 +84,48 @@ class TestVisitorState(common.TransactionCase):
         self.assertEqual(survivor.website_track_ids, tracks.sorted("id", reverse=True))
         self.assertEqual(survivor.page_ids, self.pages)
 
+    def test_contact_manager_merge_preserves_scoped_visitor_data(self):
+        manager = common.new_test_user(
+            self.env,
+            login="visitor_merge_manager",
+            groups="base.group_user,base.group_partner_manager",
+        )
+        source, destination, unrelated = self.env["res.partner"].create(
+            [
+                {"name": name}
+                for name in (
+                    "Visitor source",
+                    "Visitor destination",
+                    "Unrelated visitor",
+                )
+            ]
+        )
+        source_visitor, other_visitor = self.env["website.visitor"].create(
+            [{"access_token": str(partner.id)} for partner in (source, unrelated)]
+        )
+        self.assertFalse(source_visitor.with_user(manager).has_access("read"))
+        track = self.env["website.track"].create(
+            {"visitor_id": source_visitor.id, "url": "/merge-audit"}
+        )
+        self.env["base.partner.merge.automatic.wizard"].with_user(manager).create(
+            {}
+        )._merge(
+            (source | destination).ids,
+            destination.with_user(manager),
+            extra_checks=False,
+        )
+        self.assertEqual(destination.visitor_ids, source_visitor)
+        self.assertEqual(source_visitor.website_track_ids, track)
+        self.assertEqual(source_visitor.access_token, str(destination.id))
+        self.assertEqual(other_visitor.partner_id, unrelated)
+        self.assertEqual(other_visitor.access_token, str(unrelated.id))
+        _logger.debug(
+            "Contact-manager merge: destination=%s visitor=%s unrelated=%s",
+            destination.id,
+            source_visitor.id,
+            other_visitor.id,
+        )
+
     def test_tracking_preserves_reusable_input_values(self):
         values = {"url": self.pages[0].url, "page_id": self.pages[0].id}
         expected = dict(values)

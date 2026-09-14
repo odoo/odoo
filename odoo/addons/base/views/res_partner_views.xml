@@ -531,6 +531,11 @@
                         </group>
                         <group name="right_col">
                             <field
+                                name="preferred_phone_id"
+                                domain="[('id', 'in', phone_ids)]"
+                                options="{'no_create': True}"
+                                invisible="not phone_ids" />
+                            <field
                                 name="function"
                                 placeholder="e.g. Sales Director"
                                 invisible="is_company" />
