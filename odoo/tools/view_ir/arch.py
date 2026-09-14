@@ -6,7 +6,7 @@ from lxml import etree
 
 from odoo.libs.debug_log import DebugLog
 
-from .node import Node
+from .node import COMMENT, MARKUP_KINDS, PROCESSING_INSTRUCTION, Node
 
 _debug = DebugLog(__name__)
 
@@ -37,6 +37,20 @@ def _from_element(element: etree._Element, inherited: dict[str | None, str]) -> 
     for child in element:
         if isinstance(child.tag, str):
             node.children.append(_from_element(child, scope))
+        elif isinstance(child, etree._Comment):
+            node.children.append(
+                Node(COMMENT, text=child.text, tail=child.tail, line=child.sourceline)
+            )
+        elif isinstance(child, etree._ProcessingInstruction):
+            node.children.append(
+                Node(
+                    PROCESSING_INSTRUCTION,
+                    attrs={"target": child.target},
+                    text=child.text,
+                    tail=child.tail,
+                    line=child.sourceline,
+                )
+            )
         elif child.tail:
             if node.children:
                 node.children[-1].tail = (node.children[-1].tail or "") + child.tail
@@ -54,11 +68,20 @@ def to_arch(node: Node) -> etree._Element:
 
 
 def _to_element(node: Node, parent: etree._Element | None) -> etree._Element:
-    if parent is None:
+    if node.kind == COMMENT:
+        element = etree.Comment(node.text)
+    elif node.kind == PROCESSING_INSTRUCTION:
+        element = etree.ProcessingInstruction(node.attrs["target"], node.text)
+    elif parent is None:
         element = etree.Element(node.kind, node.attrs, nsmap=node.nsmap)
     else:
         element = etree.SubElement(parent, node.kind, node.attrs, nsmap=node.nsmap)
-    element.text = node.text
+    if node.kind in MARKUP_KINDS:
+        if parent is None:
+            raise ValueError(f"a {node.kind} node cannot be the root of an arch")
+        parent.append(element)
+    else:
+        element.text = node.text
     element.tail = node.tail
     if node.line is not None:
         # the line a view error points at: an element the IR materialises
@@ -90,4 +113,4 @@ def from_json(payload: str | bytes) -> Node:
 
 
 def canonical(element: etree._Element) -> bytes:
-    return etree.tostring(element, method="c14n", with_comments=False)
+    return etree.tostring(element, method="c14n", with_comments=True)

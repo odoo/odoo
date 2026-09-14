@@ -2,7 +2,7 @@
 /** @odoo-module native */
 
 import { parseXML, visitXML } from "@web/core/utils/dom/xml";
-import { elementToIR, nodeAttrs } from "@web/views/ir/view_ir";
+import { elementToIR, isMarkup, nodeAttrs } from "@web/views/ir/view_ir";
 import { processButton } from "@web/views/view_buttons";
 import { Widget } from "@web/views/widgets/widget";
 
@@ -78,6 +78,9 @@ export function visitIR(ir, callback) {
      * @param {ViewIRNode | null} parent
      */
     const visit = (node, parent) => {
+        if (isMarkup(node)) {
+            return;
+        }
         if (callback(node, parent) !== false) {
             for (const child of node.children || []) {
                 visit(child, node);
@@ -100,7 +103,9 @@ function kindOf(node) {
  * @returns {(ViewIRNode | Element)[]}
  */
 function childNodes(node) {
-    return "kind" in node ? node.children || [] : [...node.children];
+    return "kind" in node
+        ? (node.children || []).filter((child) => !isMarkup(child))
+        : [...node.children];
 }
 
 /**

@@ -16,31 +16,20 @@ function serialize(element) {
 
 /**
  * What the IR keeps of a parsed arch: comments and processing instructions
- * gone, CDATA read as text, adjacent text merged — the same on both sides.
+ * in place, CDATA read as text, adjacent text merged — the same on both sides.
  *
  * @param {Element} element
  */
-function withoutComments(element) {
+function normalized(element) {
     const doc = element.ownerDocument;
-    const walker = doc.createTreeWalker(
-        element,
-        NodeFilter.SHOW_COMMENT |
-            NodeFilter.SHOW_PROCESSING_INSTRUCTION |
-            NodeFilter.SHOW_CDATA_SECTION,
-    );
-    /** @type {ChildNode[]} */
+    const walker = doc.createTreeWalker(element, NodeFilter.SHOW_CDATA_SECTION);
+    /** @type {CDATASection[]} */
     const nodes = [];
     while (walker.nextNode()) {
-        nodes.push(/** @type {ChildNode} */ (walker.currentNode));
+        nodes.push(/** @type {CDATASection} */ (walker.currentNode));
     }
     for (const node of nodes) {
-        if (node.nodeType === Node.CDATA_SECTION_NODE) {
-            node.replaceWith(
-                doc.createTextNode(/** @type {CDATASection} */ (node).data),
-            );
-        } else {
-            node.remove();
-        }
+        node.replaceWith(doc.createTextNode(node.data));
     }
     element.normalize();
     return element;
@@ -57,7 +46,7 @@ describe("view IR fixture — the server and the client read the same tree", () 
             const parsed = parseXML(entry.arch);
             expect(elementToIR(parsed)).toEqual(entry.ir);
             const built = irToElement(entry.ir);
-            expect(serialize(built)).toBe(serialize(withoutComments(parsed)));
+            expect(serialize(built)).toBe(serialize(normalized(parsed)));
             expect(countNodes(built)).toBe(countNodes(parsed));
         });
     }
@@ -113,14 +102,18 @@ describe("irToElement", () => {
 });
 
 describe("elementToIR", () => {
-    test("omits empty members and keeps text after a comment", () => {
+    test("omits empty members and keeps a comment where the arch had it", () => {
         const ir = elementToIR(
-            parseXML("<list> a <!-- c --> b <field name='x'/> d </list>"),
+            parseXML("<list> a <!-- c --> b <field name='x'/> d <?pi e?></list>"),
         );
         expect(ir).toEqual({
             kind: "list",
-            text: " a  b ",
-            children: [{ kind: "field", attrs: { name: "x" }, tail: " d " }],
+            text: " a ",
+            children: [
+                { kind: "#comment", text: " c ", tail: " b " },
+                { kind: "field", attrs: { name: "x" }, tail: " d " },
+                { kind: "#pi", attrs: { target: "pi" }, text: "e" },
+            ],
         });
     });
 });

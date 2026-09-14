@@ -134,7 +134,7 @@ class _Working:
         if self._arch is None:
             self.ids()
             self._arch = to_arch(self.root)
-            elements = [el for el in self._arch.iter() if isinstance(el.tag, str)]
+            elements = list(self._arch.iter())
             nodes = [node for _path, node in self.root.walk()]
             self._nodes = dict(zip(elements, nodes, strict=True))
         return self._arch

@@ -66,6 +66,8 @@ def validate(
 def _validate(
     node: Node, view_type: str | None, spec: Schema, path: tuple[int, ...]
 ) -> Iterator[Issue]:
+    if node.is_markup:
+        return
     node_spec = spec.node_spec(view_type, node.kind)
     if node_spec is None and not spec.is_html(node.kind):
         yield Issue(
@@ -87,6 +89,8 @@ def _validate(
             yield Issue(f"bad-{problem}", path, node.kind, f"{attr}={value!r}")
     if node_spec is not None and node_spec.children is not None:
         for index, child in enumerate(node.children):
+            if child.is_markup:
+                continue
             child_kind = "html" if spec.is_html(child.kind) else child.kind
             if spec.node_spec(view_type, child.kind) is None and child_kind != "html":
                 continue

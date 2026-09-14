@@ -7,7 +7,7 @@ import { registry } from "@web/core/registry";
 import { exprToBoolean } from "@web/core/utils/format/strings";
 import { getFieldFromRegistry, getSupportedOptionNames } from "@web/fields/field";
 import { utils } from "@web/ui/viewport";
-import { elementToIR, irToElement, literalNbsp } from "@web/views/ir/view_ir";
+import { elementToIR, irToElement, isMarkup, literalNbsp } from "@web/views/ir/view_ir";
 
 /** @typedef {import("@web/views/ir/view_ir_schema").ViewIRNode} ViewIRNode */
 
@@ -81,6 +81,9 @@ function parseX2ManyViews(node, fieldInfo, models, field) {
     }
     const relation = /** @type {string} */ (field.relation);
     for (const child of node.children || []) {
+        if (isMarkup(child)) {
+            continue;
+        }
         const viewType = child.kind;
         const { ArchParser } =
             /** @type {{ ArchParser: { consumes?: string, new (): { parse: (n: ViewIRNode | Element, m: any, r?: string) => any } } }} */ (

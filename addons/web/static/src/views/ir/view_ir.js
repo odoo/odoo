@@ -20,6 +20,21 @@ const log = makeLogger("web.view_ir");
  */
 export const literalNbsp = (value) => value.replaceAll("&nbsp;", nbsp);
 
+/**
+ * The two markup kinds an arch carries besides elements, named as the DOM
+ * names them — the twins of `odoo.tools.view_ir.COMMENT` and
+ * `PROCESSING_INSTRUCTION`. A parser walk never visits them; the materialised
+ * element keeps them where the arch had them.
+ */
+export const COMMENT = "#comment";
+export const PROCESSING_INSTRUCTION = "#pi";
+
+/**
+ * @param {{ kind: string }} node
+ */
+export const isMarkup = (node) =>
+    node.kind === COMMENT || node.kind === PROCESSING_INSTRUCTION;
+
 const XMLNS_NS = "http://www.w3.org/2000/xmlns/";
 const XML_NS = "http://www.w3.org/XML/1998/namespace";
 const CLARK = /^\{([^}]*)\}(.+)$/;
@@ -102,7 +117,16 @@ function buildElement(doc, ir, inherited, text, state) {
         element.append(doc.createTextNode(text ? text(ir.text) : ir.text));
     }
     for (const child of ir.children || []) {
-        element.append(buildElement(doc, child, prefixes, text, state));
+        element.append(
+            child.kind === COMMENT
+                ? doc.createComment(child.text || "")
+                : child.kind === PROCESSING_INSTRUCTION
+                  ? doc.createProcessingInstruction(
+                        String(child.attrs?.target),
+                        child.text || "",
+                    )
+                  : buildElement(doc, child, prefixes, text, state),
+        );
         if (child.tail) {
             element.append(doc.createTextNode(text ? text(child.tail) : child.tail));
         }
@@ -159,6 +183,25 @@ export function nodeAttrs(node) {
 }
 
 /**
+ * @param {Comment | ProcessingInstruction} node
+ * @returns {ViewIRNode}
+ */
+function readMarkup(node) {
+    /** @type {ViewIRNode} */
+    const ir =
+        node.nodeType === Node.COMMENT_NODE
+            ? { kind: COMMENT }
+            : {
+                  kind: PROCESSING_INSTRUCTION,
+                  attrs: { target: /** @type {ProcessingInstruction} */ (node).target },
+              };
+    if (node.data) {
+        ir.text = node.data;
+    }
+    return ir;
+}
+
+/**
  * @param {Element} element
  * @param {{ nodes: number }} state
  * @returns {ViewIRNode}
@@ -191,12 +234,19 @@ function readElement(element, state) {
             } else {
                 text += /** @type {Text} */ (node).data;
             }
-        } else if (node.nodeType === Node.ELEMENT_NODE) {
+        } else if (
+            node.nodeType === Node.ELEMENT_NODE ||
+            node.nodeType === Node.COMMENT_NODE ||
+            node.nodeType === Node.PROCESSING_INSTRUCTION_NODE
+        ) {
             if (last && tail) {
                 last.tail = tail;
             }
             tail = "";
-            last = readElement(/** @type {Element} */ (node), state);
+            last =
+                node.nodeType === Node.ELEMENT_NODE
+                    ? readElement(/** @type {Element} */ (node), state)
+                    : readMarkup(/** @type {Comment | ProcessingInstruction} */ (node));
             children.push(last);
         }
     }
