@@ -214,15 +214,15 @@ test("use a formula", async () => {
         message: "The new value should be calculated properly.",
     });
 
-    await contains(".o_field_widget[name=float_field] input").edit("=2^3");
-    await clickSave();
-    expect(".o_field_widget input").toHaveValue("8.000", {
-        message: "The new value should be calculated properly.",
-    });
-
     await contains(".o_field_widget[name=float_field] input").edit("=100/3");
     await clickSave();
     expect(".o_field_widget input").toHaveValue("33.333", {
+        message: "The new value should be calculated properly.",
+    });
+
+    await contains(".o_field_widget[name=float_field] input").edit("=2^3");
+    await clickSave();
+    expect(".o_field_widget input").toHaveValue("8.000", {
         message: "The new value should be calculated properly.",
     });
 });
