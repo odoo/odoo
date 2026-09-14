@@ -99,9 +99,9 @@ ir.cron: "Automation Rules: check and execute"
 ### WEBHOOK Trigger
 
 Not in this module. The automation_webhook bridge, which depends on automation
-and credential and auto-installs with automation, adds the on_webhook value, the
-POST /web/hook/<uuid> route, the inbound gate and the fields they use, and runs
-the rule's `_process` on the record its getter returns.
+and api_transport and installs itself wherever both are present, adds the
+on_webhook value, the POST /web/hook/<uuid> route, the inbound gate and the fields
+they use, and runs the rule's `_process` on the record its getter returns.
 
 ### MAIL Triggers
 

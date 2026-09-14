@@ -13,8 +13,6 @@
     "data": [
         "views/automation_rule_views.xml",
     ],
-    "auto_install": [
-        "automation",
-    ],
+    "auto_install": True,
     "pre_init_hook": "pre_init_hook",
 }
