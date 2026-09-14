@@ -677,7 +677,7 @@ class AccountAnalyticLine(models.Model):
 
     def _hourly_cost(self):
         self.check_singleton()
-        return self.employee_id.hourly_cost or 0.0
+        return self.employee_id.hourly_cost
 
     def _get_report_base_filename(self):
         task_ids = self.task_id

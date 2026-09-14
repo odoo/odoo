@@ -2,7 +2,7 @@
 <odoo>
 
     <record id="view_employee_form" model="ir.ui.view">
-        <field name="name">view.employee.form.inherit.hr.employee.hourly.wage</field>
+        <field name="name">hr.employee.form.hourly.cost</field>
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form" />
         <field name="priority" eval="40" />
@@ -15,8 +15,22 @@
                 <div name="hourly_cost">
                     <field name="hourly_cost" class="oe_inline" />
                     <field name="currency_id" invisible="1" />
+                    <!-- MonetaryField reads its currency out of the record's own
+                        data (`record.data[currency_field]`), so the currency has
+                        to be in the view even though nobody looks at it. -->
                 </div>
             </group>
+        </field>
+    </record>
+
+    <record id="view_employee_tree" model="ir.ui.view">
+        <field name="name">hr.employee.list.hourly.cost</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_tree" />
+        <field name="arch" type="xml">
+            <field name="wage" position="after">
+                <field name="hourly_cost" widget="monetary" optional="hide" />
+            </field>
         </field>
     </record>
 

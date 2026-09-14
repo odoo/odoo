@@ -1,12 +1,12 @@
 {
-    "name": "Employee Hourly Wage",
-    "version": "1.0",
+    "name": "Employee Hourly Cost",
+    "version": "1.1",
     "category": "Services/Timesheets",
-    "summary": "Employee Hourly Wage",
+    "summary": "Hourly cost of an employee's work, for other modules to value time",
     "description": """
-This module assigns an hourly wage to employees to be used by other modules.
-============================================================================
-
+Gives every employee an hourly cost, so that a module valuing worked time --
+timesheets, attendances, work orders, planning -- has one number to read
+instead of inventing its own.
     """,
     "author": "Odoo S.A.",
     "license": "LGPL-3",

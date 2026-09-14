@@ -144,7 +144,7 @@ class ProjectSaleLineEmployeeMap(models.Model):
         self.env.remove_to_compute(self._fields["is_cost_changed"], self)
         for map_entry in self:
             if not map_entry.is_cost_changed:
-                map_entry.cost = map_entry.employee_id.hourly_cost or 0.0
+                map_entry.cost = map_entry.employee_id.hourly_cost
 
     def _get_working_hours_per_calendar(self, is_uom_day=False):
         resource_calendar_per_hours = {}
