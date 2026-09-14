@@ -11323,6 +11323,27 @@ test(`status indicator: discard dirty state`, async () => {
     expect(`.o_field_widget input`).toHaveValue("yop");
 });
 
+test(`status indicator: discard dirty state after retyping same value with different text`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><field name="float_field"/></form>`,
+        resId: 1,
+    });
+    expect(`.o_form_status_indicator_buttons.invisible`).toHaveCount(1);
+
+    await contains(`.o_field_widget input`).edit("1.2");
+    expect(`.o_form_status_indicator_buttons.invisible`).toHaveCount(0);
+
+    // retype a different text that parses to the same value as what was
+    // just committed: the field should no longer be considered dirty
+    await contains(`.o_field_widget input`).edit("1.200");
+
+    await contains(`.o_form_button_cancel`).click();
+    expect(`.o_form_status_indicator_buttons.invisible`).toHaveCount(1);
+    expect(`.o_field_widget input`).toHaveValue("0.44");
+});
+
 test(`status indicator: invalid state`, async () => {
     onRpc("web_save", () => {
         expect.step("save"); // not called
