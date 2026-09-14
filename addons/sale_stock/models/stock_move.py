@@ -116,13 +116,12 @@ class StockMove(models.Model):
         super()._post_process_picking(new=new)
         if not new:
             return
-        for picking, moves in self.filtered("picking_id").grouped("picking_id").items():
-            for sale_order in moves.sale_line_id.order_id:
-                picking.message_post_with_source(
-                    "mail.message_origin_link",
-                    render_values={"self": picking, "origin": sale_order},
-                    subtype_xmlid="mail.mt_note",
-                )
+        self.picking_id._message_post_origin_links(
+            (picking.id, order)
+            for picking, moves in self.grouped("picking_id").items()
+            if picking
+            for order in moves.sale_line_id.order_id
+        )
 
     def _get_related_invoices(self):
         rslt = super()._get_related_invoices()

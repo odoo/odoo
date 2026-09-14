@@ -4644,35 +4644,36 @@ class MrpProduction(models.Model):
 
     def _post_run_manufacture(self, post_production_values):
         note_subtype_id = self.env["ir.model.data"]._xmlid_to_res_id("mail.mt_note")
+        from_report = self.browse()
+        origins = []
         for production, procurement in zip(self, post_production_values, strict=True):
             if group_id := procurement.values.get("production_group_id"):
                 production.production_group_id.parent_ids = [Command.link(group_id)]
             orderpoint = production.orderpoint_id
-            origin_production = production.move_dest_ids.raw_material_production_id
             if (
                 orderpoint
                 and orderpoint.create_uid.id == api.SUPERUSER_ID
                 and orderpoint.trigger == "manual"
             ):
-                production.message_post(
-                    body=_(
+                from_report |= production
+            elif orderpoint:
+                origins.append((production.id, orderpoint))
+            else:
+                origins.append(
+                    (production.id, production.move_dest_ids.raw_material_production_id)
+                )
+        if from_report:
+            from_report._message_post_batch(
+                dict.fromkeys(
+                    from_report.ids,
+                    _(
                         "This production order has been created from Replenishment Report."
                     ),
-                    message_type="comment",
-                    subtype_id=note_subtype_id,
-                )
-            elif orderpoint:
-                production.message_post_with_source(
-                    "mail.message_origin_link",
-                    render_values={"self": production, "origin": orderpoint},
-                    subtype_id=note_subtype_id,
-                )
-            elif origin_production:
-                production.message_post_with_source(
-                    "mail.message_origin_link",
-                    render_values={"self": production, "origin": origin_production},
-                    subtype_id=note_subtype_id,
-                )
+                ),
+                message_type="comment",
+                subtype_id=note_subtype_id,
+            )
+        self._message_post_origin_links(origins, subtype_id=note_subtype_id)
         return True
 
     def _resequence_workorders(self):

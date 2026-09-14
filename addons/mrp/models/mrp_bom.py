@@ -6,6 +6,8 @@ from odoo.fields import Command, Domain
 from odoo.tools import float_compare
 from odoo.tools.misc import OrderedSet, clean_context
 
+BOM_BY_PRODUCT_CACHE_KEY = "mrp.bom.by_product"
+
 
 class ExplodeScratch(dict):
     __slots__ = ()
@@ -451,6 +453,7 @@ class MrpBom(models.Model):
                 else values
                 for values in vals_list
             ]
+        self._discard_bom_by_product_memo()
         res = super().create(vals_list)
         parent_production_id = self.env.context.get("parent_production_id")
         if parent_production_id:
@@ -469,10 +472,15 @@ class MrpBom(models.Model):
     )
 
     def write(self, vals):
+        self._discard_bom_by_product_memo()
         res = super().write(vals)
         if any(field_name in vals for field_name in self._OUTDATING_FIELDS):
             self._update_outdated_bom_in_productions()
         return res
+
+    def unlink(self):
+        self._discard_bom_by_product_memo()
+        return super().unlink()
 
     def copy(self, default=None):
         new_boms = super().copy({**(default or {}), "operation_ids": []})
@@ -652,6 +660,38 @@ class MrpBom(models.Model):
         products = products.filtered(lambda p: p.type != "service")
         if not products:
             return bom_by_product
+        memo = self.env.cr.cache.setdefault(BOM_BY_PRODUCT_CACHE_KEY, {})
+        scope = (
+            self.env.uid,
+            self.env.su,
+            tuple(self.env.companies.ids),
+            picking_type.id if picking_type else False,
+            company_id or self.env.context.get("company_id") or False,
+            bom_type,
+        )
+        unknown = products.browse()
+        for product in products:
+            bom_id = memo.get((scope, product.id), None)
+            if bom_id is None:
+                unknown |= product
+            elif bom_id:
+                bom_by_product[product] = self.browse(bom_id)
+        if not unknown:
+            return bom_by_product
+        found = self._search_bom_by_product(unknown, picking_type, company_id, bom_type)
+        for product in unknown:
+            bom = found.get(product)
+            memo[scope, product.id] = bom.id if bom else False
+            if bom:
+                bom_by_product[product] = bom
+        return bom_by_product
+
+    def _discard_bom_by_product_memo(self):
+        self.env.cr.cache.pop(BOM_BY_PRODUCT_CACHE_KEY, None)
+
+    @api.model
+    def _search_bom_by_product(self, products, picking_type, company_id, bom_type):
+        bom_by_product = defaultdict(lambda: self.env["mrp.bom"])
         domain = self._get_domain_bom(
             products,
             picking_type=picking_type,

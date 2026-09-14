@@ -616,6 +616,7 @@ class TestTemplateQuantityBatching(TransactionCase):
         large = self._templates(20, f"L{field_name}")
         self._cost(small, field_name)
         cost_small = self._cost(small, field_name)
+        self._cost(large, field_name)
         cost_large = self._cost(large, field_name)
         self.assertEqual(
             cost_large,

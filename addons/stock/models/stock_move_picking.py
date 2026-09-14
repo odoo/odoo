@@ -1,6 +1,7 @@
 import logging
 
-from odoo import models
+from odoo import api, models
+from odoo.fields import Domain
 from odoo.tools.misc import OrderedSet, groupby
 from odoo.tools.translate import _
 
@@ -18,12 +19,19 @@ class StockMovePicking(models.Model):
         # is attached and post-processed in one pass per kind: a picking's
         # creation posts to its chatter, and mail batches what it is given
         Picking = self.env["stock.picking"]
-        grouped_moves = groupby(self, key=lambda m: m._get_picking_assignation_key())
+        grouped_moves = [
+            self.env["stock.move"].concat(*moves)
+            for _group, moves in groupby(
+                self, key=lambda m: m._get_picking_assignation_key()
+            )
+        ]
+        picking_by_lead = self._get_pickings_for_assignation(
+            [moves[0] for moves in grouped_moves]
+        )
         existing = []
         wanted = []
-        for _group, moves in grouped_moves:
-            moves = self.env["stock.move"].concat(*moves)
-            picking = moves[0]._get_picking_for_assignation()
+        for moves in grouped_moves:
+            picking = picking_by_lead[moves[0]]
             if picking:
                 vals = moves._prepare_picking_vals(picking)
                 if vals:
@@ -171,12 +179,30 @@ class StockMovePicking(models.Model):
 
     def _get_picking_for_assignation(self):
         self.check_singleton()
-        if not self.reference_ids:
-            return self.env["stock.picking"]
-        domain = self._get_domain_picking_for_assignation()
+        return self._get_pickings_for_assignation([self])[self]
+
+    @api.model
+    def _get_pickings_for_assignation(self, leads):
+        Picking = self.env["stock.picking"]
+        domains = {
+            lead: lead._get_domain_picking_for_assignation()
+            for lead in leads
+            if lead.reference_ids
+        }
+        candidates = Picking.search(Domain.OR(domains.values())) if domains else Picking
+        return {
+            lead: (
+                lead._pick_picking_for_assignation(candidates.filtered_domain(domain))
+                if (domain := domains.get(lead)) is not None
+                else Picking
+            )
+            for lead in leads
+        }
+
+    def _pick_picking_for_assignation(self, candidates):
         reference_set = set(self.reference_ids.ids)
         covered_picking = self.env["stock.picking"]
-        for picking in self.env["stock.picking"].search(domain):
+        for picking in candidates:
             picking_set = set(picking.reference_ids.ids)
             if picking_set == reference_set:
                 dbg.logic.debug(

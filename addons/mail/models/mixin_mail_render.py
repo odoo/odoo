@@ -796,6 +796,7 @@ class MixinMailRender(models.AbstractModel):
         res_ids: list[int],
         add_context: dict | None = None,
         options: dict | None = None,
+        add_context_per_record: dict[int, dict] | None = None,
     ) -> dict:
         results = dict.fromkeys(res_ids, Markup())
         if not res_ids:
@@ -804,6 +805,7 @@ class MixinMailRender(models.AbstractModel):
         variables = self._render_eval_context()
         if add_context:
             variables.update(add_context)
+        add_context_per_record = add_context_per_record or {}
 
         view_ref = view_ref.id if isinstance(view_ref, models.BaseModel) else view_ref
         qweb = self.env["ir.qweb"].with_context(
@@ -821,7 +823,10 @@ class MixinMailRender(models.AbstractModel):
                 rendered = qweb._render_batch(
                     view_ref,
                     variables,
-                    ({"object": record} for record in records),
+                    (
+                        {"object": record, **add_context_per_record.get(record.id, {})}
+                        for record in records
+                    ),
                     minimal_qcontext=True,
                     raise_if_not_found=False,
                     **{

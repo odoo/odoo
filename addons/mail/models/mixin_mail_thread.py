@@ -2126,6 +2126,7 @@ class MixinMailThread(models.AbstractModel):
         source_ref: models.BaseModel | str,
         kwargs: dict,
         render_values: dict | None,
+        render_values_per_record: dict[int, dict] | None = None,
     ) -> tuple:
         template, view = self._get_source_from_ref(source_ref)
         self._check_supported_parameters(
@@ -2145,6 +2146,7 @@ class MixinMailThread(models.AbstractModel):
                 self._name,
                 self.ids,
                 add_context=render_values,
+                add_context_per_record=render_values_per_record,
             )
             if view
             else {}
@@ -2227,13 +2229,14 @@ class MixinMailThread(models.AbstractModel):
         source_ref: models.BaseModel | str,
         *,
         render_values: dict | None = None,
+        render_values_per_record: dict[int, dict] | None = None,
         message_type: str = "notification",
         subtype_xmlid: str | Literal[False] = False,
         subtype_id: int | Literal[False] = False,
         **kwargs,
     ) -> MailMessage:
         template, bodies = self._get_source_with_bodies(
-            source_ref, kwargs, render_values
+            source_ref, kwargs, render_values, render_values_per_record
         )
 
         if subtype_xmlid:
@@ -2284,6 +2287,37 @@ class MixinMailThread(models.AbstractModel):
             messages=len(messages_all),
         )
         return messages_all
+
+    def _message_post_origin_links(
+        self,
+        origins: Iterable[tuple[int, models.BaseModel]],
+        *,
+        subtype_xmlid: str | Literal[False] = "mail.mt_note",
+        subtype_id: int | Literal[False] = False,
+    ) -> MailMessage:
+        rounds: list[dict[int, models.BaseModel]] = []
+        for res_id, origin in origins:
+            if not origin:
+                continue
+            for pairs in rounds:
+                if res_id not in pairs:
+                    pairs[res_id] = origin
+                    break
+            else:
+                rounds.append({res_id: origin})
+        messages = self.env["mail.message"]
+        for pairs in rounds:
+            records = self.browse(list(pairs))
+            messages += records.message_post_with_source(
+                "mail.message_origin_link",
+                render_values_per_record={
+                    record.id: {"self": record, "origin": pairs[record.id]}
+                    for record in records
+                },
+                subtype_xmlid=subtype_xmlid,
+                subtype_id=subtype_id,
+            )
+        return messages
 
     def message_notify(
         self,

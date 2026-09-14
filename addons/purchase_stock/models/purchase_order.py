@@ -426,13 +426,9 @@ class PurchaseOrder(models.Model):
             pickings = self.env["stock.picking"].union(*picking_by_order.values())
             forward_pickings = self.env["stock.picking"]._get_impacted_pickings(moves)
             (pickings | forward_pickings).action_confirm()
-            for order in company_orders:
-                picking = picking_by_order[order.id]
-                picking.message_post_with_source(
-                    "mail.message_origin_link",
-                    render_values={"self": picking, "origin": order},
-                    subtype_xmlid="mail.mt_note",
-                )
+            pickings._message_post_origin_links(
+                (picking_by_order[order.id].id, order) for order in company_orders
+            )
         return True
 
     @api.model

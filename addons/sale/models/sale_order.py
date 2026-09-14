@@ -1184,15 +1184,9 @@ class SaleOrder(models.Model):
                 self.invoice_ids._set_reversed_entry(moves_to_switch)
 
     def _post_create_invoices(self, moves):
-        for move in moves:
-            move.message_post_with_source(
-                "mail.message_origin_link",
-                render_values={
-                    "self": move,
-                    "origin": move.line_ids.sale_line_ids.order_id,
-                },
-                subtype_xmlid="mail.mt_note",
-            )
+        moves._message_post_origin_links(
+            (move.id, move.line_ids.sale_line_ids.order_id) for move in moves
+        )
         return super()._post_create_invoices(moves)
 
     def _get_invoice_grouping_keys(self):
