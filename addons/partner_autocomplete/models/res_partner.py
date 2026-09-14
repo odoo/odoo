@@ -331,11 +331,6 @@ class ResPartner(models.Model):
             }
         return {'type': 'ir.actions.act_window_close'}
 
-    @api.model
-    def _get_identifier_fields(self):
-        # To be extended by localization
-        return ['vat']
-
     def _get_field_to_check(self):
         self.ensure_one()
 
