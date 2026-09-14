@@ -163,7 +163,7 @@ class Observability(Controller):
         methods=["POST"],
         csrf=False,
     )
-    def cwv(self) -> Response:
+    def cwv(self) -> Response:  # noqa: E8528 - a sendBeacon telemetry post, which cannot carry a CSRF token
         payload, refusal = _read_beacon_payload("cwv")
         if refusal is not None:
             return refusal
@@ -221,7 +221,7 @@ class Observability(Controller):
         methods=["POST"],
         csrf=False,
     )
-    def js_error(self) -> Response:
+    def js_error(self) -> Response:  # noqa: E8528 - a sendBeacon telemetry post, which cannot carry a CSRF token
         payload, refusal = _read_beacon_payload("js_error")
         if refusal is not None:
             return refusal

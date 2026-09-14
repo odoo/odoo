@@ -35,13 +35,24 @@ class IntegrationReceiver(models.Model):
         index=True,
         readonly=True,
     )
+    res_purpose = fields.Char(
+        string="Serves Purpose",
+        index=True,
+        readonly=True,
+        help="Which of the record's inbound flows this receiver admits, when a record "
+        "receives more than one.",
+    )
     processing_mode = fields.Selection(default="sync")
     duplicate_detection_enabled = fields.Boolean(default=False)
 
     @api.model
-    def _for_record(self, record, name):
+    def _for_record(self, record, name, purpose=None):
         record.check_singleton()
-        domain = [("res_model", "=", record._name), ("res_id", "=", record.id)]
+        domain = [
+            ("res_model", "=", record._name),
+            ("res_id", "=", record.id),
+            ("res_purpose", "=", purpose or False),
+        ]
         receivers = self.sudo().with_context(active_test=False)
         receiver = receivers.search(domain, limit=1)
         if receiver:
@@ -56,9 +67,14 @@ class IntegrationReceiver(models.Model):
             receiver = committed.search(domain, limit=1) or committed.create(
                 {
                     "name": name,
-                    "code": f"{record._table}_{record.id}",
+                    "code": "_".join(
+                        str(part)
+                        for part in (record._table, record.id, purpose)
+                        if part
+                    ),
                     "res_model": record._name,
                     "res_id": record.id,
+                    "res_purpose": purpose or False,
                     "auth_type": "caller_check",
                     "company_id": company.id if company else False,
                     "rate_limit_enabled": True,

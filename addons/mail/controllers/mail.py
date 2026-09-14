@@ -311,7 +311,7 @@ class MailController(http.Controller):
         return self._redirect_to_record(model, res_id, access_token, **kwargs)
 
     @http.route("/mail/unfollow", type="http", auth="public", csrf=False)
-    def mail_action_unfollow(
+    def mail_action_unfollow(  # noqa: E8528 - a link from an email, authorised by the record token
         self, model: str, res_id: str, pid: str, token: str, **kwargs
     ) -> Response:
         try:

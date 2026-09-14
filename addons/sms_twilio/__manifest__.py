@@ -1,6 +1,6 @@
 {
     "name": "Twilio SMS",
-    "version": "1.1",
+    "version": "1.2",
     "category": "Hidden/Tools",
     "summary": "Send SMS messages using Twilio",
     "description": """
@@ -12,6 +12,7 @@ up their account to start sending SMS messages.
     "license": "LGPL-3",
     "depends": [
         "credential",
+        "integration",
         "sms",
     ],
     "data": [

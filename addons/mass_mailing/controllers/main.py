@@ -106,7 +106,7 @@ class MassMailController(http.Controller):
         methods=["POST"],
         csrf=False,
     )
-    def mailing_unsubscribe_oneclick(
+    def mailing_unsubscribe_oneclick(  # noqa: E8528 - RFC 8058 one-click unsubscribe, authorised by the hash token
         self, mailing_id, document_id=None, email=None, hash_token=None, **post
     ):
         self.mailing_unsubscribe(

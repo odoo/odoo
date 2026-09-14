@@ -973,7 +973,7 @@ class AppointmentController(http.Controller):
         methods=["POST"],
         csrf=False,
     )
-    def appointment_form_submit(
+    def appointment_form_submit(  # noqa: E8528 - a visitor's booking form; a signed-in session's CSRF token is checked in the body
         self,
         appointment_type_id,
         datetime_str,

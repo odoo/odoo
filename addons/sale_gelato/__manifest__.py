@@ -1,6 +1,6 @@
 {
     "name": "Gelato",
-    "version": "1.1",
+    "version": "1.2",
     "category": "Sales/Sales",
     "summary": "Place orders through Gelato's print-on-demand service",
     "author": "Odoo S.A.",
@@ -8,6 +8,7 @@
     "depends": [
         "credential",
         "document",
+        "integration",
         "sale",
         "delivery",
     ],

@@ -42,7 +42,7 @@ class WebsiteForm(http.Controller):
         csrf=False,
         captcha="website_form",
     )
-    def website_form(self, model_name, **kwargs):
+    def website_form(self, model_name, **kwargs):  # noqa: E8528 - a visitor's form; a signed-in session's CSRF token is checked in the body
         csrf_token = request.params.pop("csrf_token", None)
         if request.session.uid and not request.is_valid_csrf(csrf_token):
             raise BadRequest("Session expired (invalid CSRF token)")

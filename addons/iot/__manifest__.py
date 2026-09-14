@@ -13,6 +13,7 @@ their own ``iot_*`` modules, so installing one never drags an application in.
     "author": "Odoo S.A.",
     "license": "LGPL-3",
     "depends": [
+        "integration",
         "mail",
     ],
     "data": [

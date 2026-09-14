@@ -6,7 +6,7 @@ from odoo.addons.mail.controllers.attachment import AttachmentController
 
 class LivechatAttachmentController(AttachmentController):
     @route("/im_livechat/cors/attachment/upload", auth="public", cors="*", csrf=False)
-    def im_livechat_attachment_upload(
+    def im_livechat_attachment_upload(  # noqa: E8528 - a cross-origin livechat upload, authorised by the guest token
         self, guest_token, ufile, thread_id, thread_model, is_pending=False, **kwargs
     ):
         force_guest_env(guest_token)

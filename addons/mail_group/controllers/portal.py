@@ -266,7 +266,7 @@ class PortalMailGroup(http.Controller):
         methods=["POST"],
         csrf=False,
     )
-    def group_unsubscribe_oneclick(self, group_id, token, email):
+    def group_unsubscribe_oneclick(self, group_id, token, email):  # noqa: E8528 - RFC 8058 one-click unsubscribe, authorised by the email access token
         group_sudo = request.env["mail.group"].sudo().browse(group_id).exists()
         if group_sudo and token and email:
             correct_token = group_sudo._generate_email_access_token(email)

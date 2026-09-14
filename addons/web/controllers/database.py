@@ -186,7 +186,7 @@ class Database(http.Controller):
         csrf=False,
     )
     @_renders_failure("Database creation error")
-    def create(
+    def create(  # noqa: E8528 - the database manager runs without a database and checks the master password
         self, master_pwd: str, name: str, lang: str, password: str, **post
     ) -> str | Response:
         dbg.lifecycle.debug(
@@ -240,7 +240,7 @@ class Database(http.Controller):
         csrf=False,
     )
     @_renders_failure("Database duplication error")
-    def duplicate(
+    def duplicate(  # noqa: E8528 - the database manager runs without a database and checks the master password
         self,
         master_pwd: str,
         name: str,
@@ -275,7 +275,7 @@ class Database(http.Controller):
         csrf=False,
     )
     @_renders_failure("Database deletion error")
-    def drop(self, master_pwd: str, name: str) -> str | Response:
+    def drop(self, master_pwd: str, name: str) -> str | Response:  # noqa: E8528 - the database manager runs without a database and checks the master password
         dbg.lifecycle.debug("[db:%s] drop: %s", name, dbg.req())
         self._handle_insecure_password(master_pwd)
         with dbg.timer(None, "[db:%s] drop rpc", name):
@@ -297,7 +297,7 @@ class Database(http.Controller):
         csrf=False,
     )
     @_renders_failure("Database backup error")
-    def backup(
+    def backup(  # noqa: E8528 - the database manager runs without a database and checks the master password
         self,
         master_pwd: str,
         name: str,
@@ -352,7 +352,7 @@ class Database(http.Controller):
         max_content_length=None,
     )
     @_renders_failure("Database restore error")
-    def restore(
+    def restore(  # noqa: E8528 - the database manager runs without a database and checks the master password
         self,
         master_pwd: str,
         backup_file: FileStorage,
@@ -402,7 +402,7 @@ class Database(http.Controller):
         csrf=False,
     )
     @_renders_failure("Master password update error")
-    def change_password(self, master_pwd: str, master_pwd_new: str) -> str | Response:
+    def change_password(self, master_pwd: str, master_pwd_new: str) -> str | Response:  # noqa: E8528 - the database manager runs without a database and checks the master password
         dbg.lifecycle.debug(
             "[dbmanager] change_password: %s has_new=%s",
             dbg.req(),

@@ -41,6 +41,7 @@ class EcpayInvoiceController(http.Controller):
                 "%(company)s ECPay allowance callbacks",
                 company=invoice_sudo.company_id.name,
             ),
+            purpose="ecpay_allowance",
         )
         if not receiver._admit_checked_request(
             check_access, event_type="ecpay_invoice_allowance"

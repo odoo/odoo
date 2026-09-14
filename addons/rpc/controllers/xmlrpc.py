@@ -132,7 +132,7 @@ class XMLRPC(Controller):
         csrf=False,
         save_session=False,
     )
-    def xmlrpc_1(self, service):
+    def xmlrpc_1(self, service):  # noqa: E8528 - the XML-RPC API, authenticated per call by the credentials it carries
         warn_endpoint_is_deprecated(logger, __name__)
         detach_database()
         try:
@@ -152,7 +152,7 @@ class XMLRPC(Controller):
         csrf=False,
         save_session=False,
     )
-    def xmlrpc_2(self, service):
+    def xmlrpc_2(self, service):  # noqa: E8528 - the XML-RPC API, authenticated per call by the credentials it carries
         warn_endpoint_is_deprecated(logger, __name__)
         detach_database()
         try:

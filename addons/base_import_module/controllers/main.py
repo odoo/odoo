@@ -13,7 +13,7 @@ class ImportModule(Controller):
         save_session=False,
         readonly=False,
     )
-    def login_upload(self, login, password, force="", mod_file=None, **kw):
+    def login_upload(self, login, password, force="", mod_file=None, **kw):  # noqa: E8528 - authenticates the login and password it is posted
         try:
             if not request.db:
                 raise UserError(_("Could not select a database."))

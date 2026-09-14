@@ -2,6 +2,8 @@ import hmac
 import logging
 import re
 
+from werkzeug.exceptions import Forbidden
+
 from odoo.http import Controller, request, route
 
 from odoo.addons.sms_twilio.tools.sms_twilio import (
@@ -56,12 +58,32 @@ class SmsTwilioController(Controller):
             )
             raise request.prepare_not_found_error()
 
-        # Verify Twilio Signature
-        if not self._is_twilio_signature_valid(request, uuid):
-            _logger.warning(
-                "Twilio SMS: update_sms_status could not validate Twilio signature with uuid='%s'",
-                uuid,
-            )
+        company_sudo = (
+            request.env["sms.sms"]
+            .sudo()
+            .search([("uuid", "=", uuid)])
+            ._get_sms_company()
+            .sudo()
+        )
+
+        def check_signature():
+            if not self._is_twilio_signature_valid(request, uuid):
+                _logger.warning(
+                    "Twilio SMS: update_sms_status could not validate Twilio signature with uuid='%s'",
+                    uuid,
+                )
+                raise Forbidden
+
+        receiver = request.env["integration.receiver"]._for_record(
+            company_sudo,
+            request.env._(
+                "%(company)s Twilio SMS status callbacks", company=company_sudo.name
+            ),
+            purpose="sms_twilio_status",
+        )
+        if not receiver._admit_checked_request(
+            check_signature, event_type=f"sms_twilio_{SmsStatus}"
+        ):
             raise request.prepare_not_found_error()
 
         # Update the tracker with the state

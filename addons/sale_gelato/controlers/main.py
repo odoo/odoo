@@ -23,8 +23,29 @@ class GelatoController(Controller):
         if event_data["event"] == "order_status_updated":
             order_id = int(event_data["orderReferenceId"])
             order_sudo = request.env["sale.order"].sudo().browse(order_id).exists()
+            if not order_sudo:
+                request.env["inbound.access.log"]._record_unknown_caller(
+                    "sale.order",
+                    f"Gelato order {order_id}",
+                    request.httprequest.remote_addr,
+                    user_agent=request.httprequest.headers.get("User-Agent"),
+                    status_code=403,
+                )
+                return request.prepare_response("", status=403)
             received_signature = request.httprequest.headers.get("signature", "")
-            self._check_notification_signature(received_signature, order_sudo)
+            company_sudo = order_sudo.company_id.sudo()
+            receiver = request.env["integration.receiver"]._for_record(
+                company_sudo,
+                _("%(company)s Gelato order updates", company=company_sudo.name),
+                purpose="gelato_webhook",
+            )
+            if not receiver._admit_checked_request(
+                lambda: self._check_notification_signature(
+                    received_signature, order_sudo
+                ),
+                event_type="gelato_order_status_updated",
+            ):
+                raise Forbidden
 
             fulfillment_status = event_data.get("fulfillmentStatus")
             if fulfillment_status == "failed":
