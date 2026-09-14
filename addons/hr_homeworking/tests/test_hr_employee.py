@@ -79,3 +79,16 @@ class TestEmployeeWorkLocation(HomeworkingCase):
         self.env.invalidate_all()
         with self.assertQueryCount(__system__=6):
             employees.mapped("work_location_name")
+
+    def test_the_exception_is_declared_as_a_dependency(self):
+        registry_depends = self.env.registry.field_depends
+        Employee = self.env["hr.employee"]
+        exceptional = Employee._fields["exceptional_location_id"]
+        self.assertIn("location_ids.date", registry_depends[exceptional])
+        self.assertIn("location_ids.work_location_id", registry_depends[exceptional])
+        for name in ("work_location_name", "work_location_type", "hr_icon_display"):
+            self.assertIn(
+                "exceptional_location_id",
+                registry_depends[Employee._fields[name]],
+                f"{name} must be recomputed when today's exception moves",
+            )
