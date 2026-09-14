@@ -461,7 +461,9 @@ class ProjectProject(models.Model):
             ],
         }
 
-        return self._get_domain_sale_items(section_domains.get(section_id, []))
+        if section_id not in section_domains:
+            return super()._get_domain_from_section_id(section_id)
+        return self._get_domain_sale_items(section_domains[section_id])
 
     def _get_profitability_labels(self):
         return {
