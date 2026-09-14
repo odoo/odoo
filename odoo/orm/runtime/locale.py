@@ -67,6 +67,9 @@ class Locale:
         return bool(env["res.lang"]._get_data(code=code))
 
     def decimal_precision(self, env: Environment, application: str) -> int:
+        if "decimal.precision" not in env.registry:
+            # the model's own default for an application nobody defined
+            return 2
         return env["decimal.precision"].get_precision(application)
 
 

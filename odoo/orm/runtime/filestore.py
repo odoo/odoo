@@ -27,11 +27,20 @@ class FileStore:
     __slots__ = ()
 
     def _attachments(self, env: Environment) -> IrAttachmentProtocol:
+        if "ir.attachment" not in env.registry:
+            raise NotImplementedError(
+                "no attachment table in this registry: an attachment-backed "
+                "binary needs an ir.attachment model in the model set, or "
+                "attachment=False on the field"
+            )
         return env["ir.attachment"].sudo()
 
     def read_field(
         self, records: BaseModel, field_name: str, *, bin_size: bool
     ) -> dict[int, typing.Any]:
+        if "ir.attachment" not in records.env.registry:
+            # nothing stored, nothing to read: the field answers False
+            return {}
         attachments = self._attachments(records.env)._with_bin_size_disabled()
         return {
             att.res_id: (human_size(att.file_size) if bin_size else att.datas)

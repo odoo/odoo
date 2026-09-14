@@ -29,7 +29,7 @@ from odoo.exceptions import LockError, UserError
 from odoo.libs.accel import fast_clone
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.profiling import _OrmProfile
-from odoo.tools import SQL, OrderedSet, Query, partition
+from odoo.tools import SQL, OrderedSet, Query, human_size, partition
 from odoo.tools.translate import _
 
 from ..components.storage import NamedSequence
@@ -143,6 +143,13 @@ def _get_column_read_value(field: Field, value: typing.Any, env) -> typing.Any:
             if scalar is not None:
                 return scalar
         return None
+    if (
+        field.is_binary
+        and value is not None
+        and (env.context.get("bin_size") or env.context.get("bin_size_" + field.name))
+    ):
+        # pg_size_pretty(length(col)) on the SQL path: the size, not the bytes
+        return human_size(len(value))
     return value
 
 
