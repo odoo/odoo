@@ -331,6 +331,38 @@ class TestComputeDeclaresWhatItReads(HrPresenceCase):
         field = self.env["hr.employee"]._fields[field_name]
         return set(self.env.registry.field_depends[field])
 
+    def _declared_by_this_module(self):
+        """What THIS module's override says, independent of the merged set.
+
+        `@api.depends` is `attrsetter("_depends", args)`, so the function object
+        on our own class carries the tuple. The registry's merged set answers a
+        different question -- is the field invalidated at all, by anyone -- and
+        a path a parent also declares keeps that one green while ours declares
+        nothing.
+        """
+        from odoo.addons.hr_presence.models.hr_employee import HrEmployee
+
+        return set(HrEmployee._compute_hr_presence_state._depends)
+
+    def test_this_modules_own_override_declares_them_and_not_by_luck(self):
+        missing = self.REQUIRED - self._declared_by_this_module()
+        self.assertFalse(
+            missing,
+            f"hr_presence's own _compute_hr_presence_state does not declare: "
+            f"{sorted(missing)}",
+        )
+
+    def test_the_two_paths_a_parent_also_declares_are_deliberate(self):
+        """`active` comes from hr and `is_absent` from hr_holidays, so the
+        registry assertion above cannot see whether we declare them. Naming
+        them here is what keeps the redundancy a decision rather than a
+        leftover: the alternative is leaning on two other modules never
+        narrowing theirs."""
+        ours = self._declared_by_this_module()
+        for path in ("active", "is_absent"):
+            with self.subTest(path=path):
+                self.assertIn(path, ours)
+
     def test_the_presence_state_declares_every_field_its_rule_reads(self):
         declared = self._declared("hr_presence_state")
         missing = self.REQUIRED - declared
@@ -353,6 +385,67 @@ class TestComputeDeclaresWhatItReads(HrPresenceCase):
         for path in sorted(self.REQUIRED):
             with self.subTest(path=path):
                 self.assertIn(path, declared)
+
+
+@tagged("post_install", "-at_install")
+class TestObservationOutranksInference(HrPresenceCase):
+    """This module may infer an absence; it may not overwrite somebody else's
+    observation with a conclusion drawn from that observation's absence.
+
+    hr_presence assigns last in the chain, so before this its `absent` branch
+    discarded an hr_attendance check-in and an hr online session alike -- an
+    employee standing at the kiosk read Absent because the IP they had not
+    connected from proved nothing.
+    """
+
+    def _verdict_with(self, employee, observed):
+        today = self._today_for(employee)
+        working_now = frozenset(employee._get_employee_ids_working_now())
+        return employee._hr_presence_verdict(today, working_now, observed)
+
+    def test_an_observation_below_survives_this_modules_inference(self):
+        employee = self._make_employee("observed")
+        self.assertEqual(
+            self._verdict_with(employee, "out_of_working_hour"),
+            "absent",
+            "fixture: with nothing observed this employee is absentable, so the "
+            "next assertion tests the observation and not the schedule",
+        )
+        self.assertEqual(self._verdict_with(employee, "present"), "present")
+
+    def test_an_observation_does_not_survive_a_managers_override(self):
+        """An explicit human decision outranks an observation; only inference
+        yields to it."""
+        employee = self._make_employee("overruled")
+        employee.with_user(self.manager).action_set_absent()
+        self.assertEqual(self._verdict_with(employee, "present"), "absent")
+
+    def test_this_modules_own_evidence_still_reads_present(self):
+        employee = self._make_employee("evidenced")
+        employee.hr_presence_ip_date = self._today_for(employee)
+        self.assertEqual(self._verdict_with(employee, "absent"), "present")
+
+    def test_an_observation_outranks_the_time_off_excuse_too(self):
+        """Somebody on approved leave who is nonetheless observed at work is
+        present -- hr_holidays has a presence_holiday_present icon for exactly
+        that, so the vocabulary already expects it."""
+        employee = self._make_employee("working_anyway")
+        self._approve_leave(employee)
+        employee.invalidate_recordset()
+        self.assertTrue(employee.is_absent)
+        self.assertEqual(
+            self._verdict_with(employee, "out_of_working_hour"),
+            "out_of_working_hour",
+            "fixture: the leave alone excuses them",
+        )
+        self.assertEqual(self._verdict_with(employee, "present"), "present")
+
+    def test_nothing_observed_still_flags_the_truant(self):
+        """The repair must not undo the module's whole point."""
+        employee = self._make_employee("still_truant")
+        for observed in ("out_of_working_hour", "absent", "archive", False, None):
+            with self.subTest(observed=observed):
+                self.assertEqual(self._verdict_with(employee, observed), "absent")
 
 
 @tagged("post_install", "-at_install")

@@ -380,20 +380,40 @@ class HrEmployee(models.Model):
             lambda e: not e.resource_id.sudo()._is_flexible()
         )
         working_now = frozenset(scheduled._get_employee_ids_working_now())
+        # What the chain below concluded, read before anything is overwritten.
+        observed = {employee.id: employee.hr_presence_state for employee in controlled}
         for employee in controlled:
             employee.hr_presence_state = employee._hr_presence_verdict(
-                today_by_employee[employee.id], working_now
+                today_by_employee[employee.id], working_now, observed[employee.id]
             )
         _debug.logic(
             "presence_computed",
             controlled=len(controlled),
             manual=len(manual),
             working_now=len(working_now),
+            kept_observed=sum(
+                1
+                for employee in controlled
+                if observed[employee.id] == "present"
+                and employee.hr_presence_state == "present"
+            ),
         )
 
-    def _hr_presence_verdict(self, today, working_now):
+    def _hr_presence_verdict(self, today, working_now, observed=None):
         """This module's own answer for one employee, whatever a later override
         makes of it.
+
+        The branches are ordered by what they are made of, because that is what
+        decides which may overwrite which:
+
+        1. a manager's override -- an explicit human decision, over everything;
+        2. this module's own evidence, a company-IP connection or emails sent;
+        3. `observed`, whatever the chain below concluded before this ran: a
+           kiosk check-in, an online session. This module may INFER, but it may
+           not overwrite an observation with a conclusion drawn from that
+           observation's absence -- an employee standing at the kiosk read
+           Absent because the IP they did not connect from proved nothing;
+        4. this module's inferences, which is everything left.
 
         An approved time off does not make an employee absent -- it excuses
         them. Requiring it was what put the verdict on everyone who was
@@ -403,6 +423,8 @@ class HrEmployee(models.Model):
         if self.hr_presence_manual_state and self.hr_presence_manual_date == today:
             return self.hr_presence_manual_state
         if today in (self.hr_presence_ip_date, self.hr_presence_email_date):
+            return "present"
+        if observed == "present":
             return "present"
         if self.id not in working_now or self.is_absent:
             return "out_of_working_hour"
