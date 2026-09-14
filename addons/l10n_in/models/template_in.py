@@ -134,7 +134,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     def _post_load_data(self, template_code, company, template_data):
         super()._post_load_data(template_code, company, template_data)
-        if template_code.startswith('in'):
+        if template_code and template_code.startswith('in'):
             company = company or self.env.company
             company._update_l10n_in_gst_registration_type()
 
@@ -170,15 +170,16 @@ class AccountChartTemplate(models.AbstractModel):
     def _load(self, template_code, company, install_demo, force_create=True):
         # Both fields use `ondelete='restrict'`, so the chart template cannot be changed while either account is set.
         # Clear them from the cash rounding configuration before changing the chart template.
+        is_indian_template = template_code and template_code.startswith('in')
         if (
-            template_code.startswith('in')
+            is_indian_template
             and (cash_rounding := self.with_company(company).ref('cash_rounding_in_half_up', raise_if_not_found=False))
             and (cash_rounding.profit_account_id or cash_rounding.loss_account_id)
         ):
             cash_rounding.write({'profit_account_id': False, 'loss_account_id': False})
 
         res = super()._load(template_code, company, install_demo, force_create)
-        if template_code.startswith('in'):
+        if is_indian_template:
             if company.l10n_in_tds_feature:
                 company._activate_l10n_in_taxes(['tds_it_act_25_group'], company)
             if company.l10n_in_tcs_feature:
