@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import UTC, date, datetime
 from unittest.mock import patch
 
 from freezegun import freeze_time
@@ -891,6 +891,76 @@ class TestBackToWorkDate(TestHrHolidaysCommon):
         )
         self.assertEqual(back_on.date(), date(2026, 3, 2))
 
+    def test_an_employee_already_at_work_is_back_at_that_moment(self):
+        """And the answer must not depend on where the batch began."""
+        employees = self.env["hr.employee"].create(
+            [
+                {"name": f"Midshift {index}", "company_id": self.company.id}
+                for index in range(2)
+            ]
+        )
+        # The calendar is Brussels, so on 2026-03-02 (CET) the morning runs
+        # 07:00-11:00 UTC. One employee asks from its very start, the other
+        # from the middle of it -- near enough to share a batch, which is the
+        # case where nothing clips the interval to the second one's question.
+        shift_start = datetime(2026, 3, 2, 7, 0)
+        midshift = datetime(2026, 3, 2, 9, 0)
+        together = employees._get_first_working_interval_batch(
+            {
+                employees[0].id: shift_start,
+                employees[1].id: midshift,
+            }
+        )
+        self.assertEqual(
+            together[employees[0].id].astimezone(UTC).replace(tzinfo=None),
+            shift_start,
+        )
+        self.assertEqual(
+            together[employees[1].id].astimezone(UTC).replace(tzinfo=None),
+            midshift,
+            "asked at a moment the employee is working, the answer is that "
+            "moment, not the start of the shift they are already in -- and not "
+            "the next shift, which is what reading the interval's own beginning "
+            "gives once a batch-mate's earlier question stopped it being clipped",
+        )
+        self.assertEqual(
+            together[employees[1].id],
+            employees[1]._get_first_working_interval(midshift),
+            "who else is in the batch cannot change an employee's answer",
+        )
+
+    @freeze_time("2026-03-04 10:00:00")
+    def test_distant_dates_do_not_widen_one_anothers_window(self):
+        employees = self.env["hr.employee"].create(
+            [
+                {"name": f"Spread {index}", "company_id": self.company.id}
+                for index in range(3)
+            ]
+        )
+        starts = {
+            employees[0].id: datetime(2026, 3, 2, 9, 0),
+            employees[1].id: datetime(2026, 9, 2, 9, 0),
+            employees[2].id: datetime(2027, 3, 2, 9, 0),
+        }
+        Calendar = type(self.env["resource.calendar"])
+        original = Calendar._work_intervals_batch
+        windows = []
+
+        def recording(calendar, start, end, *args, **kwargs):
+            windows.append((end - start).days)
+            return original(calendar, start, end, *args, **kwargs)
+
+        with patch.object(Calendar, "_work_intervals_batch", recording):
+            answers = employees._get_first_working_interval_batch(starts)
+        self.assertEqual(len(answers), 3)
+        self.assertTrue(all(answers.values()), answers)
+        self.assertTrue(
+            all(span <= 14 for span in windows),
+            "one employee whose leave ends a year out must not make the others "
+            "pay for a year of attendance intervals to answer a seven-day "
+            "question; spans asked were %s" % windows,
+        )
+
     @freeze_time("2026-03-04 10:00:00")
     def test_every_employee_is_asked_of_its_calendar_once(self):
         employees = self.env["hr.employee"].create(
@@ -1047,9 +1117,96 @@ class TestPresenceFollowsTheLeave(TestHrHolidaysCommon):
             "answers from the cache the approval never invalidated",
         )
 
-    @freeze_time("2026-03-04 10:00:00")
-    def test_the_presence_state_is_invalidated_by_the_approval(self):
-        employee = self.employee_emp
-        employee.hr_presence_state
-        self._leave_covering_now().action_approve()
-        self.assertEqual(employee.hr_presence_state, "absent")
+    def test_both_presence_fields_declare_what_they_read(self):
+        """The icon test above proves the icon; this proves the declaration.
+
+        `hr_presence_state` is reached through `user_id.im_status`, which is
+        invalidated often enough that a behavioural test of it passes with or
+        without the dependency -- so it is pinned where it is actually missing.
+        """
+        registry = self.env.registry
+        for field_name in ("hr_icon_display", "hr_presence_state"):
+            field = self.env["hr.employee"]._fields[field_name]
+            self.assertIn(
+                "is_absent",
+                registry.field_depends[field],
+                "%s is computed from is_absent in hr_holidays and must say so, "
+                "or approving a leave leaves it reading a stale cache" % field_name,
+            )
+
+
+@tagged("post_install", "-at_install")
+class TestOverlapWarning(TestHrHolidaysCommon):
+    """The text the form shows when a period is already taken."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.leave_type = cls.env["hr.leave.type"].create(
+            {
+                "name": "Overlapping",
+                "requires_allocation": False,
+                "leave_validation_type": "hr",
+                "allow_request_on_top": False,
+                "company_id": cls.company.id,
+            }
+        )
+
+    def _request(self, employee, user=None):
+        leaves = self.env["hr.leave"].with_context(leave_skip_date_check=True)
+        if user:
+            leaves = leaves.with_user(user)
+        return leaves.create(
+            {
+                "employee_id": employee.id,
+                "holiday_status_id": self.leave_type.id,
+                "request_date_from": date(2026, 3, 4),
+                "request_date_to": date(2026, 3, 4),
+            }
+        )
+
+    def test_someone_elses_time_off_is_reported_in_the_third_person(self):
+        subject = self._request(self.employee_hruser)
+        self._request(self.employee_hruser)
+        self._request(self.employee_hruser)
+        subject.invalidate_recordset(["dashboard_warning_message"])
+        message = subject.dashboard_warning_message
+        self.assertTrue(
+            message.startswith("An employee already booked time off"), message
+        )
+        self.assertIn("Armande HrUser", message)
+        self.assertEqual(
+            message.count("\n\t"),
+            1,
+            "two identical bookings by one employee are one line, not two: %r"
+            % message,
+        )
+
+    def test_the_warning_only_ever_looks_at_the_requester(self):
+        """It says "an employee", and it means this one.
+
+        The conflict search is bounded by `self.employee_id`, so the third
+        person in the message is about who is reading it, not about a second
+        employee. A colleague off on the same day is not a conflict here.
+        """
+        subject = self._request(self.employee_emp)
+        self._request(self.employee_hruser)
+        subject.invalidate_recordset(["dashboard_warning_message"])
+        self.assertFalse(subject.dashboard_warning_message)
+
+    def test_your_own_time_off_is_reported_in_the_first_person(self):
+        subject = self._request(self.employee_emp, user=self.user_employee)
+        self._request(self.employee_emp, user=self.user_employee)
+        subject.invalidate_recordset(["dashboard_warning_message"])
+        message = subject.with_user(self.user_employee).dashboard_warning_message
+        self.assertTrue(message.startswith("You've already booked time off"), message)
+        self.assertNotIn(
+            "David Employee",
+            message,
+            "your own name is not worth telling you: %r" % message,
+        )
+
+    def test_a_request_with_nothing_against_it_says_nothing(self):
+        subject = self._request(self.employee_emp)
+        subject.invalidate_recordset(["dashboard_warning_message"])
+        self.assertFalse(subject.dashboard_warning_message)

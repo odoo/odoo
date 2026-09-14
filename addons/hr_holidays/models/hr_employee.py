@@ -251,12 +251,45 @@ class HrEmployee(models.Model):
                     windows_by_calendar[calendar].append((employee, *window))
         return windows_by_calendar
 
+    def _first_working_moment(self, intervals, start, stop):
+        """The first moment in ``[start, stop)`` the resource is working.
+
+        An interval that already contains ``start`` answers ``start`` itself:
+        the employee is at work then. Reading the interval's own beginning
+        instead would make the answer depend on where the batch happened to
+        begin, because that is the only thing clipping it.
+        """
+        for interval_start, interval_stop, _meta in intervals:
+            if interval_stop <= start:
+                continue
+            if interval_start >= stop:
+                return None
+            return max(interval_start, start)
+        return None
+
+    def _cluster_windows(self, windows, lookahead_days):
+        """Group windows so that no batched question spans much more than the
+        lookahead it was asked for.
+
+        One employee whose leave ends a year out would otherwise make every
+        other employee on the same calendar pay for a year of attendance
+        intervals to answer a seven-day question.
+        """
+        span = timedelta(days=2 * lookahead_days)
+        clusters = []
+        for window in sorted(windows, key=lambda window: window[1]):
+            if clusters and window[2] - clusters[-1][0][1] <= span:
+                clusters[-1].append(window)
+            else:
+                clusters.append([window])
+        return clusters
+
     def _get_first_working_interval_batch(self, start_by_employee_id):
         """Map each employee id to the start of its first working interval at or
         after that employee's datetime, or None when it finds none in two years.
 
-        Every calendar is asked once per lookahead, for every employee that
-        still has no answer -- the same question asked per employee costs one
+        Every calendar is asked once per cluster of employees looking at nearby
+        dates -- the same question asked per employee costs one
         ``_work_intervals_batch`` each.
         """
         result = dict.fromkeys(start_by_employee_id)
@@ -270,29 +303,34 @@ class HrEmployee(models.Model):
                 start_by_employee_id, lookahead_days
             )
             found = {}
+            batches = 0
             for calendar, windows in windows_by_calendar.items():
-                intervals = calendar._work_intervals_batch(
-                    min(start for _employee, start, _stop in windows),
-                    max(stop for _employee, _start, stop in windows),
-                    resources=self.env["resource.resource"].union(
-                        *(employee.resource_id for employee, _start, _stop in windows)
-                    ),
-                )
-                for employee, start, stop in windows:
-                    for interval_start, _interval_stop, _meta in intervals.get(
-                        employee.resource_id.id, ()
-                    ):
-                        if start <= interval_start < stop:
+                for cluster in self._cluster_windows(windows, lookahead_days):
+                    batches += 1
+                    intervals = calendar._work_intervals_batch(
+                        cluster[0][1],
+                        max(stop for _employee, _start, stop in cluster),
+                        resources=self.env["resource.resource"].union(
+                            *(
+                                employee.resource_id
+                                for employee, _start, _stop in cluster
+                            )
+                        ),
+                    )
+                    for employee, start, stop in cluster:
+                        moment = self._first_working_moment(
+                            intervals.get(employee.resource_id.id, ()), start, stop
+                        )
+                        if moment is not None:
                             earliest = found.get(employee.id)
-                            if earliest is None or interval_start < earliest:
-                                found[employee.id] = interval_start
-                            break
+                            if earliest is None or moment < earliest:
+                                found[employee.id] = moment
             dbg.logic.debug(
                 "_get_first_working_interval_batch on %s: lookahead %s days over "
-                "%s calendar(s) answered %s of %s",
+                "%s batch(es) answered %s of %s",
                 dbg.rec(pending),
                 lookahead_days,
-                len(windows_by_calendar),
+                batches,
                 len(found),
                 len(pending),
             )

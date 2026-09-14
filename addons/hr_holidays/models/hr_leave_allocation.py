@@ -58,9 +58,9 @@ class HrLeaveAllocation(models.Model):
     )
     is_name_custom = fields.Boolean(
         string="Name Set By Hand",
+        export_string_translation=False,
         default=False,
         readonly=True,
-        export_string_translation=False,
         help="Set when someone writes a description of their own, so that the "
         "generated one stops overwriting it.",
     )
