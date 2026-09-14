@@ -549,13 +549,6 @@ class SaleOrderLine(models.Model):
             if should_update_discount:
                 line.discount = auto_discount
 
-    @api.depends("price_unit", "discount")
-    def _compute_price_unit_discounted_taxexc(self):
-        for line in self.filtered(lambda x: not x.display_type):
-            line.price_unit_discounted_taxexc = line.price_unit * (
-                1 - (line.discount or 0.0) / 100.0
-            )
-
     @api.depends(
         "qty_transferred_method",
         "analytic_line_ids.so_line",

@@ -43,7 +43,14 @@ class StockPicking(models.Model):
 
     @api.depends("move_ids.sale_line_id.order_id.picking_policy")
     def _compute_move_type(self):
-        super()._compute_move_type()
+        # the sale dependency also fires when a move joins the picking: one
+        # that already carries moves and a policy keeps it unless a sale
+        # order dictates one, so adding a line never resets the policy to
+        # the picking type's default
+        super(
+            StockPicking,
+            self.filtered(lambda picking: not (picking.move_type and picking.move_ids)),
+        )._compute_move_type()
         for picking in self:
             sale_orders = picking.move_ids.sale_line_id.order_id
             if sale_orders:
