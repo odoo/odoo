@@ -409,7 +409,7 @@ class IrModel(models.Model):
                 (
                     cls.__doc__
                     for cls in self.env.registry[model._name].mro()
-                    if cls is not object and cls.__doc__
+                    if cls.__doc__ and getattr(cls, "_name", None) == model._name
                 ),
                 None,
             ),

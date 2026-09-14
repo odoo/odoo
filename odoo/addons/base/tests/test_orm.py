@@ -153,7 +153,7 @@ class TestORM(TransactionCase):
 
     def test_lock_for_update(self):
         partner = self.env["res.partner"]
-        p1, p2 = partner.search([], limit=2)
+        p1, p2 = partner.search([("name", "!=", False)], limit=2)
 
         p1.lock_for_update(allow_referencing=True)
         p1.lock_for_update(allow_referencing=False)

@@ -1,5 +1,5 @@
 import traceback
-from contextlib import contextmanager
+from contextlib import ExitStack, contextmanager
 from unittest.mock import patch
 
 from psycopg import IntegrityError
@@ -2561,6 +2561,21 @@ class TestIrModelInfoStopsAtTheOrmBoundary(TransactionCase):
             self._info("ir.model"),
             msg="a model with no docstring of its own has no Information text",
         )
+
+    def test_a_documented_mixin_lends_no_text_to_the_model_inheriting_it(self):
+        Partner = self.env.registry["res.partner"]
+        mixins = [
+            cls
+            for cls in Partner.mro()
+            if getattr(cls, "_name", None) not in (None, "res.partner")
+        ]
+        self.assertTrue(mixins, "res.partner inherits at least one mixin")
+        with ExitStack() as stack:
+            for cls in mixins:
+                stack.enter_context(
+                    patch.object(cls, "__doc__", f"What {cls._name} is for.")
+                )
+            self.assertNotIn("is for.", self._info("res.partner") or "")
 
     def test_a_documented_model_still_reports_its_own_text(self):
         cls = self.env.registry["ir.model"]
