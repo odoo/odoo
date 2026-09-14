@@ -141,6 +141,20 @@ class TestConfigurator(TestConfiguratorCommon):
 
         self.assertEqual(themes, [])
 
+    def test_configurator_apply_fills_brief(self):
+        website = self.env['website'].create({'name': "New website"})
+        self.env['website'].with_context(website_id=website.id).configurator_apply(
+            theme_name='theme_default',
+            industry_id=-1,
+            industry_name='youtuber',
+            website_type='business',
+            website_purpose='eco-friendly',
+            skip_ai=True,
+        )
+        self.assertIn("Industry: youtuber", website.brief)
+        self.assertIn("Website aim: present the business and get contacted", website.brief)
+        self.assertIn("Vibe: eco-friendly", website.brief)
+
     def test_configurator_params_step(self):
         self.start_tour('/website/configurator/2', 'configurator_params_step', login='admin')
 
