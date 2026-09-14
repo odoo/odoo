@@ -7,9 +7,8 @@ class ResUsers(models.Model):
     _inherit = "res.users"
 
     def _get_default_warehouse_id(self):
-        warehouse = self.env["stock.warehouse"].search(
-            [("company_id", "=", self.env.company.id)],
-            limit=1,
+        warehouse = self.env["stock.warehouse"]._get_default_for_company(
+            self.env.company
         )
         dbg.logic.debug(
             "_get_default_warehouse_id: company %s -> %s",

@@ -9,6 +9,8 @@ from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import pdf
 
+from .account_move import INVOICE_TEMPLATE_REPORTS_CACHE_KEY
+
 _debug = DebugLog(__name__)
 
 
@@ -19,6 +21,22 @@ class IrActionsReport(models.Model):
         string="Invoice report",
         copy=True,
     )
+
+    def _discard_invoice_template_reports(self):
+        self.env.cr.cache.pop(INVOICE_TEMPLATE_REPORTS_CACHE_KEY, None)
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        self._discard_invoice_template_reports()
+        return super().create(vals_list)
+
+    def write(self, vals):
+        self._discard_invoice_template_reports()
+        return super().write(vals)
+
+    def unlink(self):
+        self._discard_invoice_template_reports()
+        return super().unlink()
 
     @_debug.perf.timed
     def _render_qweb_pdf_prepare_streams(self, report_ref, data, res_ids=None):

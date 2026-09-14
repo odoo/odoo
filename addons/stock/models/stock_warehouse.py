@@ -51,6 +51,8 @@ PARTNER_LOCATION_MISSING = {
     "supplier": _lt("Can't find any supplier location."),
 }
 
+DEFAULT_WAREHOUSE_CACHE_KEY = "stock.warehouse.default_by_company"
+
 WAREHOUSE_PICKING_TYPE_CODES = {
     "in_type_id": "IN",
     "qc_type_id": "QC",
@@ -324,9 +326,25 @@ class StockWarehouse(models.Model):
                     )
                 )
 
+    @api.model
+    def _get_default_for_company(self, company):
+        # the first warehouse of a company answers every default-warehouse
+        # question of a transaction; memoized until a warehouse changes
+        per_company = self.env.cr.cache.setdefault(DEFAULT_WAREHOUSE_CACHE_KEY, {})
+        key = (company.id, self.env.uid, self.env.su)
+        if key not in per_company:
+            per_company[key] = self.search(
+                [("company_id", "=", company.id)], limit=1
+            ).id
+        return self.browse(per_company[key])
+
+    def _discard_default_for_company(self):
+        self.env.cr.cache.pop(DEFAULT_WAREHOUSE_CACHE_KEY, None)
+
     @dbg.timed
     @api.model_create_multi
     def create(self, vals_list):
+        self._discard_default_for_company()
         dbg.lifecycle.debug(
             "stock.warehouse.create: %d vals, keys=%s",
             len(vals_list),
@@ -421,6 +439,7 @@ class StockWarehouse(models.Model):
 
     @dbg.timed
     def write(self, vals):
+        self._discard_default_for_company()
         dbg.lifecycle.debug(
             "stock.warehouse.write on %s: keys=%s", dbg.rec(self), dbg.keys(vals)
         )
@@ -541,6 +560,7 @@ class StockWarehouse(models.Model):
 
     @dbg.timed
     def unlink(self):
+        self._discard_default_for_company()
         dbg.lifecycle.debug("stock.warehouse.unlink %s", dbg.rec(self))
         if not self.env.context.get("_force_unlink"):
             self._unlink_except_in_use()

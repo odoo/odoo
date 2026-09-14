@@ -34,6 +34,7 @@ from odoo.tools.safe_eval import safe_eval
 from odoo.addons.account.tools.display_types import NON_ACCOUNTABLE_DISPLAY_TYPES
 
 _logger = logging.getLogger(__name__)
+INVOICE_TEMPLATE_REPORTS_CACHE_KEY = "account.move.invoice_template_reports"
 
 _debug = DebugLog(__name__)
 
@@ -1450,10 +1451,11 @@ class AccountMove(models.Model):
 
     @api.depends("partner_id")
     def _compute_partner_shipping_id(self):
+        invoices = self.filtered(lambda move: move.is_invoice(include_receipts=True))
+        addresses = invoices.partner_id._address_get_multi(["delivery"])
         for move in self:
-            if move.is_invoice(include_receipts=True):
-                addr = move.partner_id.address_get(["delivery"])
-                move.partner_shipping_id = addr and addr.get("delivery")
+            if move in invoices and move.partner_id:
+                move.partner_shipping_id = addresses[move.partner_id.id]["delivery"]
             else:
                 move.partner_shipping_id = False
 
@@ -7848,6 +7850,18 @@ class AccountMove(models.Model):
         return None
 
     def _get_available_invoice_template_pdf_report_ids(self):
+        # asked once per partner created and once per journal read, and
+        # answered from the report configuration alone for a model-level
+        # call: memoized per transaction until a report changes
+        if self:
+            return self._available_invoice_template_pdf_report_ids()
+        per_env = self.env.cr.cache.setdefault(INVOICE_TEMPLATE_REPORTS_CACHE_KEY, {})
+        key = (self.env.company.id, self.env.uid, self.env.su)
+        if key not in per_env:
+            per_env[key] = self._available_invoice_template_pdf_report_ids().ids
+        return self.env["ir.actions.report"].browse(per_env[key])
+
+    def _available_invoice_template_pdf_report_ids(self):
         moves = self
 
         for move_type in ["out_invoice", "out_refund", "out_receipt"]:

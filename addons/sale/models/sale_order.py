@@ -418,18 +418,18 @@ class SaleOrder(models.Model):
 
     @api.depends("partner_id")
     def _compute_partner_invoice_id(self):
+        addresses = self.partner_id._address_get_multi(["invoice"])
         for order in self:
             order.partner_invoice_id = (
-                order.partner_id.address_get(["invoice"])["invoice"]
-                if order.partner_id
-                else False
+                addresses[order.partner_id.id]["invoice"] if order.partner_id else False
             )
 
     @api.depends("partner_id")
     def _compute_partner_shipping_id(self):
+        addresses = self.partner_id._address_get_multi(["delivery"])
         for order in self:
             order.partner_shipping_id = (
-                order.partner_id.address_get(["delivery"])["delivery"]
+                addresses[order.partner_id.id]["delivery"]
                 if order.partner_id
                 else False
             )

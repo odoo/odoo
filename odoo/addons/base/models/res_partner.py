@@ -1810,70 +1810,104 @@ class ResPartner(models.Model):
             create_values["email"] = parsed_email_normalized
         return self.create(create_values)
 
+    def _address_get_chains(self) -> list[list[Self]]:
+        chains = []
+        for partner in self:
+            chain = [partner]
+            seen_ids = {partner.id}
+            current = partner
+            while not current.is_company and current.parent_id:
+                current = current.parent_id
+                if current.id in seen_ids:
+                    break
+                seen_ids.add(current.id)
+                chain.append(current)
+            chains.append(chain)
+        return chains
+
+    def _address_get_children(
+        self, chains: list[list[Self]], adr_pref: set[str]
+    ) -> dict[int, list[Self]]:
+        children_map: dict[int, list[Self]] = defaultdict(list)
+        root_ids = [chain[-1].id for chain in chains if isinstance(chain[-1].id, int)]
+        if root_ids:
+            nodes = self.with_context(active_test=False).search(
+                [("id", "child_of", root_ids), ("active", "=", True)]
+            )
+            nodes.fetch(["parent_id", "type", "is_company"])
+            for node in nodes:
+                if node.parent_id:
+                    children_map[node.parent_id.id].append(node)
+            _debug.perf.count(
+                "address_get_tree_loaded",
+                partners=len(self),
+                roots=len(root_ids),
+                nodes=len(nodes),
+                types=sorted(adr_pref),
+            )
+        return children_map
+
+    @staticmethod
+    def _address_get_walk(
+        chain: list[Self],
+        children_map: dict[int, list[Self]],
+        adr_pref: set[str],
+        result: dict[str, int | bool],
+        visited: set,
+    ) -> None:
+        for current in chain:
+            stack = [current]
+            while stack:
+                record = stack.pop()
+                if record.id in visited:
+                    continue
+                visited.add(record.id)
+                if record.type in adr_pref and not result.get(record.type):
+                    result[record.type] = record.id
+                if len(result) == len(adr_pref):
+                    return
+                if isinstance(record.id, int):
+                    children = children_map.get(record.id, ())
+                else:
+                    children = record.child_ids
+                stack.extend(reversed([c for c in children if not c.is_company]))
+
     def address_get(self, adr_pref: list[str] | None = None) -> dict[str, int | bool]:
         adr_pref = set(adr_pref or [])
-        if "contact" not in adr_pref:
-            adr_pref.add("contact")
-        result = {}
+        adr_pref.add("contact")
+        result: dict[str, int | bool] = {}
         if self:
-            chains = []
-            for partner in self:
-                chain = [partner]
-                seen_ids = {partner.id}
-                current = partner
-                while not current.is_company and current.parent_id:
-                    current = current.parent_id
-                    if current.id in seen_ids:
-                        break
-                    seen_ids.add(current.id)
-                    chain.append(current)
-                chains.append(chain)
-
-            children_map = defaultdict(list)
-            root_ids = [
-                chain[-1].id for chain in chains if isinstance(chain[-1].id, int)
-            ]
-            if root_ids:
-                nodes = self.with_context(active_test=False).search(
-                    [("id", "child_of", root_ids), ("active", "=", True)]
-                )
-                nodes.fetch(["parent_id", "type", "is_company"])
-                for node in nodes:
-                    if node.parent_id:
-                        children_map[node.parent_id.id].append(node)
-                _debug.perf.count(
-                    "address_get_tree_loaded",
-                    partners=len(self),
-                    roots=len(root_ids),
-                    nodes=len(nodes),
-                    types=sorted(adr_pref),
-                )
-
-            visited = set()
+            chains = self._address_get_chains()
+            children_map = self._address_get_children(chains, adr_pref)
+            visited: set = set()
             for chain in chains:
-                for current in chain:
-                    stack = [current]
-                    while stack:
-                        record = stack.pop()
-                        if record.id in visited:
-                            continue
-                        visited.add(record.id)
-                        if record.type in adr_pref and not result.get(record.type):
-                            result[record.type] = record.id
-                        if len(result) == len(adr_pref):
-                            return result
-                        if isinstance(record.id, int):
-                            children = children_map.get(record.id, ())
-                        else:
-                            children = record.child_ids
-                        stack.extend(
-                            reversed([c for c in children if not c.is_company])
-                        )
+                self._address_get_walk(chain, children_map, adr_pref, result, visited)
+                if len(result) == len(adr_pref):
+                    return result
 
         default = result.get("contact", self[:1].id or False)
         for adr_type in adr_pref:
             result[adr_type] = result.get(adr_type) or default
         return result
+
+    def _address_get_multi(
+        self, adr_pref: list[str] | None = None
+    ) -> dict[int, dict[str, int | bool]]:
+        # address_get for every partner of a batch, answered per partner from
+        # one tree load: a compute over many orders asks once, not per order
+        adr_pref = set(adr_pref or [])
+        adr_pref.add("contact")
+        chains = self._address_get_chains()
+        children_map = self._address_get_children(chains, adr_pref)
+        results: dict[int, dict[str, int | bool]] = {}
+        for partner, chain in zip(self, chains, strict=True):
+            result: dict[str, int | bool] = {}
+            self._address_get_walk(chain, children_map, adr_pref, result, set())
+            default = result.get("contact", partner.id or False)
+            for adr_type in adr_pref:
+                result[adr_type] = result.get(adr_type) or default
+            results[partner.id] = result
+        return results
 
     @api.model
     def view_header_get(self, view_id: int | None, view_type: str) -> str | bool:
