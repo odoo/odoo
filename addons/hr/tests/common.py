@@ -11,4 +11,4 @@ class TestHrCommon(common.TransactionCase):
     def setUpClass(cls):
         super(TestHrCommon, cls).setUpClass()
 
-        cls.res_users_hr_officer = mail_new_test_user(cls.env, login='hro', groups='base.group_user,hr.group_hr_user', name='HR Officer', email='hro@example.com')
+        cls.res_users_hr_officer = mail_new_test_user(cls.env, login='hro', groups='base.group_user,hr.group_hr_user,base.group_partner_manager', name='HR Officer', email='hro@example.com')
