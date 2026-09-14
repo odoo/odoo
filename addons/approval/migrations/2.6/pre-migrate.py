@@ -1,4 +1,5 @@
 from odoo import SUPERUSER_ID, api
+from odoo.tools import SQL
 
 _FORM_MODELS = ["approval.template", "approval.document.requirement"]
 
@@ -103,7 +104,27 @@ def _ensure_the_app_loads(cr):
     return True
 
 
+def _release_category_flag_columns(cr):
+    cr.execute(
+        """
+        SELECT column_name
+          FROM information_schema.columns
+         WHERE table_name = 'approval_category'
+           AND column_name LIKE 'has\\_%%'
+           AND is_nullable = 'NO'
+        """
+    )
+    for (column,) in cr.fetchall():
+        cr.execute(
+            SQL(
+                "ALTER TABLE approval_category ALTER COLUMN %s DROP NOT NULL",
+                SQL.identifier(column),
+            )
+        )
+
+
 def migrate(cr, version):
+    _release_category_flag_columns(cr)
     if not _ensure_the_app_loads(cr):
         cr.execute(
             "DROP TABLE IF EXISTS approval_template, approval_document_requirement CASCADE"
