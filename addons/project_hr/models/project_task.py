@@ -20,6 +20,13 @@ class ProjectTask(models.Model):
         tracking=True,
     )
 
+    direct_user_ids = fields.Many2many(
+        comodel_name="res.users",
+        relation="project_task_direct_user_rel",
+        column1="task_id",
+        column2="user_id",
+        string="Assignees without Employee",
+    )
     user_ids = fields.Many2many(
         comodel_name="res.users",
         relation="project_task_user_rel",
@@ -51,12 +58,12 @@ class ProjectTask(models.Model):
             )
         return self.env["hr.employee"]
 
-    @api.depends("employee_ids.user_id")
+    @api.depends("employee_ids.user_id", "direct_user_ids")
     def _compute_user_ids(self):
         for task in self:
-            task.user_ids = task.employee_ids.user_id
+            task.user_ids = task.employee_ids.user_id | task.direct_user_ids
 
-    def _employee_commands_for_users(self, value, company):
+    def _assignee_commands_for_users(self, value, company):
         if isinstance(value, models.BaseModel):
             commands = [Command.set(value.ids)]
         elif not value:
@@ -83,16 +90,20 @@ class ProjectTask(models.Model):
             .grouped("user_id")
         )
 
-        def assignee(user_id):
-            candidates = employees_by_user.get(
+        def employees_of(user_id):
+            return employees_by_user.get(
                 self.env["res.users"].browse(user_id), self.env["hr.employee"]
             )
+
+        def assignee(user_id):
+            candidates = employees_of(user_id)
             return (
                 candidates.filtered(lambda employee: employee.company_id == company)[:1]
                 or candidates[:1]
             )
 
         employee_commands = []
+        direct_commands = []
         for command in commands:
             match command[0]:
                 case Command.SET:
@@ -105,21 +116,30 @@ class ProjectTask(models.Model):
                             ]
                         )
                     )
+                    direct_commands.append(
+                        Command.set(
+                            [
+                                user_id
+                                for user_id in command[2]
+                                if not employees_of(user_id)
+                            ]
+                        )
+                    )
                 case Command.LINK:
-                    employee_commands += [
-                        Command.link(employee.id) for employee in assignee(command[1])
-                    ]
+                    if employee := assignee(command[1]):
+                        employee_commands.append(Command.link(employee.id))
+                    else:
+                        direct_commands.append(Command.link(command[1]))
                 case Command.UNLINK:
                     employee_commands += [
                         Command.unlink(employee.id)
-                        for employee in employees_by_user.get(
-                            self.env["res.users"].browse(command[1]),
-                            self.env["hr.employee"],
-                        )
+                        for employee in employees_of(command[1])
                     ]
+                    direct_commands.append(Command.unlink(command[1]))
                 case Command.CLEAR:
                     employee_commands.append(Command.clear())
-        return employee_commands
+                    direct_commands.append(Command.clear())
+        return {"employee_ids": employee_commands, "direct_user_ids": direct_commands}
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -137,9 +157,7 @@ class ProjectTask(models.Model):
                 .company_id
                 or self.env.company
             )
-            vals["employee_ids"] = self._employee_commands_for_users(
-                user_value, company
-            )
+            vals.update(self._assignee_commands_for_users(user_value, company))
         tasks = super().create(vals_list)
         now = fields.Datetime.now()
         for task in tasks:
@@ -215,14 +233,14 @@ class ProjectTask(models.Model):
                         tasks.write(
                             {
                                 **vals,
-                                "employee_ids": self._employee_commands_for_users(
+                                **self._assignee_commands_for_users(
                                     user_value, company
                                 ),
                             }
                         )
                     return True
-                vals["employee_ids"] = self._employee_commands_for_users(
-                    user_value, self.company_id
+                vals.update(
+                    self._assignee_commands_for_users(user_value, self.company_id)
                 )
         now = fields.Datetime.now()
         task_ids_without_employee: set[int] = set()

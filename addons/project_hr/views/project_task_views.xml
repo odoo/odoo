@@ -20,6 +20,11 @@
                     widget="many2many_tags"
                     domain="['|', ('company_id', '=', False), ('company_id', '=?', company_id)]"
                     options="{'no_open': True}" />
+                <field
+                    name="direct_user_ids"
+                    widget="many2many_avatar_user"
+                    options="{'no_open': True, 'no_create': True}"
+                    invisible="not direct_user_ids" />
             </xpath>
             <xpath
                 expr="//field[@name='child_ids']/list//field[@name='user_ids']"

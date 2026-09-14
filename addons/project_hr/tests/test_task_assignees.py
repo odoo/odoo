@@ -1,3 +1,4 @@
+from odoo.fields import Command
 from odoo.tests import new_test_user, tagged
 from odoo.tests.common import TransactionCase
 
@@ -67,7 +68,7 @@ class TestTaskAssigneesWrittenAsUsers(TransactionCase):
         )
         self.assertEqual(task.employee_ids, branch_employee)
 
-    def test_a_user_without_an_employee_cannot_be_an_assignee(self):
+    def test_a_user_without_an_employee_is_assigned_directly(self):
         stranger = new_test_user(
             self.env, login="assignee.stranger", groups="base.group_user"
         )
@@ -79,4 +80,46 @@ class TestTaskAssigneesWrittenAsUsers(TransactionCase):
             }
         )
         self.assertEqual(task.employee_ids, self.employee)
+        self.assertEqual(task.direct_user_ids, stranger)
+        self.assertEqual(task.user_ids, self.user | stranger)
+
+    def test_a_user_without_an_employee_keeps_their_own_to_do(self):
+        loner = new_test_user(
+            self.env,
+            login="assignee.loner",
+            groups="base.group_user,project.group_project_user",
+        )
+        todo = (
+            self.env["project.task"]
+            .with_user(loner)
+            .create({"name": "Own to-do", "user_ids": loner.ids})
+        )
+        self.assertEqual(todo.user_ids, loner)
+        self.assertFalse(todo.employee_ids)
+
+    def test_unlinking_and_clearing_reach_both_kinds_of_assignee(self):
+        stranger = new_test_user(
+            self.env, login="assignee.unlinked", groups="base.group_user"
+        )
+        task = self.env["project.task"].create(
+            {
+                "name": "Both kinds",
+                "project_id": self.project.id,
+                "user_ids": (self.user | stranger).ids,
+            }
+        )
+        task.write({"user_ids": [Command.unlink(stranger.id)]})
         self.assertEqual(task.user_ids, self.user)
+        task.write({"user_ids": [Command.clear()]})
+        self.assertFalse(task.user_ids)
+        self.assertFalse(task.employee_ids)
+
+    def test_employees_written_alone_leave_direct_assignees_alone(self):
+        stranger = new_test_user(
+            self.env, login="assignee.kept", groups="base.group_user"
+        )
+        task = self.env["project.task"].create(
+            {"name": "Kept", "project_id": self.project.id, "user_ids": stranger.ids}
+        )
+        task.employee_ids = self.employee
+        self.assertEqual(task.user_ids, self.user | stranger)
