@@ -161,7 +161,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
             if strikethrough_price:
                 basic_product_information["strikethrough_price"] = strikethrough_price
             if self.env.website.show_product_reference_price:
-                product_uom_price = (uom or product_or_template.uom_id)._compute_price(
+                product_uom_price = (uom or product_or_template._get_main_uom())._compute_price(
                     basic_product_information["price"], product_or_template.uom_id
                 )
                 basic_product_information.update({

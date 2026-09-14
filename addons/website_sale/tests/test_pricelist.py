@@ -372,6 +372,32 @@ class TestWebsitePriceList(WebsiteSaleCommon):
             )[product_template.id]["price_reduce"]
             self.assertEqual(price, 18, msg)
 
+    def test_reference_price_with_restricted_main_uom(self):
+        """Test that the reference price is correct when the website's main uom for a product
+        differs from its base uom.
+        """
+        self._enable_uom()
+        self.website.sudo().show_product_reference_price = True
+
+        product = self._create_product(
+            list_price=0.065,
+            uom_id=self.uom_gram.id,
+            uom_ids=[Command.link(self.uom_kgm.id)],
+            base_unit_count=0.001,
+            taxes_id=[Command.clear()],
+        )
+        template = product.product_tmpl_id
+        self.website.sudo().restricted_uom_ids = [self.uom_gram.id]
+
+        with self.mock_request() as request:
+            template = template.with_context(request.env.context)
+            self.assertEqual(template._get_main_uom(), self.uom_kgm)
+            base_unit_price = template._get_sales_prices(
+                request.pricelist, request.fiscal_position, self.website
+            )[template.id]["base_unit_price"]
+
+        self.assertEqual(base_unit_price, product.base_unit_price)
+
     def test_base_price_with_discount_on_pricelist_tax_included(self):
         """
         Test that the base price of a product with tax included
