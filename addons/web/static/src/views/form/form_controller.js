@@ -144,6 +144,7 @@ export const formControllerProps = {
     onDiscard: t.function().optional(),
     onSave: t.function().optional(() => () => {}),
     offlineId: t.string().optional(),
+    createRecord: t.function().optional(() => () => {}),
     updateActionState: t.function().optional(() => () => {}),
 };
 
@@ -745,7 +746,10 @@ export class FormController extends Component {
 
     async afterExecuteActionButton(clickParams) {}
 
-    async create() {
+    async create(_ev, newWindow) {
+        if (newWindow) {
+            return this.props.createRecord(newWindow);
+        }
         const dirty = await this.model.root.isDirty();
         const onError = (error, options) => this.onSaveError(error, options, true);
         const canProceed = !dirty || (await this.model.root.save({ onError }));
