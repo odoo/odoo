@@ -1,5 +1,10 @@
 from odoo import _, api, models
+<<<<<<< 625eb316e702d062645d5f69e3dda554afb4cb89
 from odoo.tools.misc import formatLang
+||||||| a5130072a2aa7dc32a0a9e30c62fda27d71e3218
+=======
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
+>>>>>>> 7f0350ce25a2f3d99fed64de0958d5c7dfa53fc0
 
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
 
@@ -184,6 +189,7 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
         partner = vals['party_vals']['partner']
         commercial_partner = partner.commercial_partner_id
 
+<<<<<<< 625eb316e702d062645d5f69e3dda554afb4cb89
         vals['party_node']['cac:PartyLegalEntity'] = {
             'cbc:RegistrationName': {'_text': commercial_partner.name},
             'cbc:CompanyID': {
@@ -279,3 +285,29 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
                 invoice._sync_dynamic_lines(container),
             ):
                 downpayment_lines.move_id = invoice.id
+||||||| a5130072a2aa7dc32a0a9e30c62fda27d71e3218
+    def _get_invoice_line_price_vals(self, line):
+        price_vals = super()._get_invoice_line_price_vals(line)
+        currency = price_vals['currency']
+        price_vals['allowance_charge_vals_list'] = [{
+            'charge_indicator': 'false',
+            'currency_dp': price_vals['product_price_dp'],
+            'currency_name': currency.name,
+            'amount': 0,  # Discount amount
+            'base_amount': price_vals['price_amount'],  # Pre-discount amount
+        }]
+        return price_vals
+=======
+    def _get_invoice_line_price_vals(self, line):
+        price_vals = super()._get_invoice_line_price_vals(line)
+        currency = price_vals['currency']
+        price_vals['price_amount'] = FloatFmt(price_vals['price_amount'], min_dp=1, max_dp=6)
+        price_vals['allowance_charge_vals_list'] = [{
+            'charge_indicator': 'false',
+            'currency_dp': min(price_vals['product_price_dp'], 6),
+            'currency_name': currency.name,
+            'amount': 0,  # Discount amount
+            'base_amount': price_vals['price_amount'],  # Pre-discount amount
+        }]
+        return price_vals
+>>>>>>> 7f0350ce25a2f3d99fed64de0958d5c7dfa53fc0
