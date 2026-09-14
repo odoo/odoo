@@ -348,24 +348,21 @@ class TestReservationSync(TransactionCase):
         )
         self.assertTrue(task.reservation_ids.active)
 
-    def test_writing_user_ids_is_silently_ignored(self):
+    def test_writing_user_ids_assigns_the_users_employee(self):
         task = self.env["project.task"].create(
             {
-                "name": "user_ids no-op",
+                "name": "user_ids assignment",
                 "project_id": self.project.id,
                 **self.scheduled_vals,
             }
         )
         self.assertFalse(task.employee_ids)
-        self.assertFalse(task.user_ids)
 
         task.write({"user_ids": [Command.link(self.user_with_resource.id)]})
 
-        self.assertFalse(
-            task.employee_ids,
-            "user_ids is read-only — writes must not propagate to employee_ids.",
-        )
-        self.assertFalse(task.reservation_ids)
+        self.assertEqual(task.employee_ids, self.employee)
+        self.assertEqual(task.user_ids, self.user_with_resource)
+        self.assertTrue(task.reservation_ids)
 
     def test_reassigning_employee_user_repropagates_task_user_ids(self):
         task = self.env["project.task"].create(

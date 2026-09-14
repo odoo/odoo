@@ -1,4 +1,5 @@
 from odoo import api, fields, models
+from odoo.fields import Command
 from odoo.tools import LazyTranslate
 
 _lt = LazyTranslate(__name__)
@@ -55,8 +56,90 @@ class ProjectTask(models.Model):
         for task in self:
             task.user_ids = task.employee_ids.user_id
 
+    def _employee_commands_for_users(self, value, company):
+        if isinstance(value, models.BaseModel):
+            commands = [Command.set(value.ids)]
+        elif not value:
+            commands = [Command.clear()]
+        elif all(isinstance(item, int) for item in value):
+            commands = [Command.set(list(value))]
+        else:
+            commands = list(value)
+        user_ids = {
+            user_id
+            for command in commands
+            for user_id in (
+                command[2]
+                if command[0] == Command.SET
+                else [command[1]]
+                if command[0] in (Command.LINK, Command.UNLINK)
+                else []
+            )
+        }
+        employees_by_user = (
+            self.env["hr.employee"]
+            .sudo()
+            .search([("user_id", "in", list(user_ids))])
+            .grouped("user_id")
+        )
+
+        def assignee(user_id):
+            candidates = employees_by_user.get(
+                self.env["res.users"].browse(user_id), self.env["hr.employee"]
+            )
+            return (
+                candidates.filtered(lambda employee: employee.company_id == company)[:1]
+                or candidates[:1]
+            )
+
+        employee_commands = []
+        for command in commands:
+            match command[0]:
+                case Command.SET:
+                    employee_commands.append(
+                        Command.set(
+                            [
+                                employee.id
+                                for user_id in command[2]
+                                for employee in assignee(user_id)
+                            ]
+                        )
+                    )
+                case Command.LINK:
+                    employee_commands += [
+                        Command.link(employee.id) for employee in assignee(command[1])
+                    ]
+                case Command.UNLINK:
+                    employee_commands += [
+                        Command.unlink(employee.id)
+                        for employee in employees_by_user.get(
+                            self.env["res.users"].browse(command[1]),
+                            self.env["hr.employee"],
+                        )
+                    ]
+                case Command.CLEAR:
+                    employee_commands.append(Command.clear())
+        return employee_commands
+
     @api.model_create_multi
     def create(self, vals_list):
+        for vals in vals_list:
+            if "user_ids" not in vals:
+                continue
+            user_value = vals.pop("user_ids")
+            if "employee_ids" in vals:
+                continue
+            company = (
+                self.env["res.company"].browse(vals["company_id"])
+                if vals.get("company_id")
+                else self.env["project.project"]
+                .browse(vals.get("project_id"))
+                .company_id
+                or self.env.company
+            )
+            vals["employee_ids"] = self._employee_commands_for_users(
+                user_value, company
+            )
         tasks = super().create(vals_list)
         now = fields.Datetime.now()
         for task in tasks:
@@ -124,6 +207,23 @@ class ProjectTask(models.Model):
         }
 
     def write(self, vals):
+        if "user_ids" in vals:
+            user_value = vals.pop("user_ids")
+            if "employee_ids" not in vals:
+                if len(self.company_id) > 1:
+                    for company, tasks in self.grouped("company_id").items():
+                        tasks.write(
+                            {
+                                **vals,
+                                "employee_ids": self._employee_commands_for_users(
+                                    user_value, company
+                                ),
+                            }
+                        )
+                    return True
+                vals["employee_ids"] = self._employee_commands_for_users(
+                    user_value, self.company_id
+                )
         now = fields.Datetime.now()
         task_ids_without_employee: set[int] = set()
         if "employee_ids" in vals and "date_assign" not in vals:
