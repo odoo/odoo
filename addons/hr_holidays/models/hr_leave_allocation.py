@@ -10,6 +10,8 @@ from odoo.libs.numbers import float_round
 from odoo.tools import format_date
 from odoo.tools.date_utils import get_timedelta
 
+from odoo.addons.hr_holidays.tools import debug_log as dbg
+
 
 class HrLeaveAllocation(models.Model):
     _name = "hr.leave.allocation"
@@ -55,8 +57,12 @@ class HrLeaveAllocation(models.Model):
         readonly=False,
     )
     is_name_custom = fields.Boolean(
-        store=False,
+        string="Name Set By Hand",
+        default=False,
         readonly=True,
+        export_string_translation=False,
+        help="Set when someone writes a description of their own, so that the "
+        "generated one stops overwriting it.",
     )
     name_validity = fields.Char(
         string="Description with validity",
@@ -274,12 +280,27 @@ class HrLeaveAllocation(models.Model):
             duration=float_round(self.number_of_days, precision_digits=2),
         )
 
-    @api.onchange("name")
-    def _onchange_name(self):
-        if not self.name:
-            self.is_name_custom = False
-        elif self.name != self._get_title():
-            self.is_name_custom = True
+    def _mark_custom_names(self):
+        """Record which allocations carry a description nobody generated.
+
+        Called after the values are in, so ``_get_title()`` is the title the
+        record would have had; anything else is somebody's own wording and
+        ``_compute_name`` must leave it alone from here on. The flag is stored
+        because the alternative -- deciding it again at each write -- cannot
+        tell a rename from a leave type that changed under an unchanged name.
+        """
+        for allocation in self:
+            is_custom = bool(allocation.name) and allocation.name != (
+                allocation._get_title()
+            )
+            if allocation.is_name_custom != is_custom:
+                allocation.is_name_custom = is_custom
+                dbg.lifecycle.debug(
+                    "allocation %s description is %s: %r",
+                    dbg.rec(allocation),
+                    "custom" if is_custom else "generated",
+                    allocation.name,
+                )
 
     @api.depends("holiday_status_id", "number_of_days")
     def _compute_name(self):
@@ -1062,6 +1083,11 @@ class HrLeaveAllocation(models.Model):
             HrLeaveAllocation, self.with_context(mail_create_nosubscribe=True)
         ).create(vals_list)
         allocations._add_lastcalls()
+        allocations.browse(
+            allocation.id
+            for allocation, values in zip(allocations, vals_list, strict=True)
+            if "name" in values
+        )._mark_custom_names()
         for allocation in allocations:
             partners_to_subscribe = set()
             if allocation.employee_id.user_id:
@@ -1083,79 +1109,76 @@ class HrLeaveAllocation(models.Model):
                 allocation.action_approve()
         return allocations
 
+    _DURATION_FIELDS = frozenset(
+        {"number_of_days_display", "number_of_hours_display", "state"}
+    )
+
     def write(self, vals):
         values = vals
         employee_id = values.get("employee_id", False)
         if values.get("state"):
             self._check_approval_update(values["state"])
+        if employee_id:
+            self.add_follower(employee_id)
 
-        self.add_follower(employee_id)
-
-        if (
-            "number_of_days_display" not in values
-            and "number_of_hours_display" not in values
-            and "state" not in values
-        ):
-            res = super().write(values)
-            if "allocation_type" in values:
-                self._add_lastcalls()
-            return res
-
-        previous_consumed_leaves = self.employee_id._get_consumed_leaves(
-            leave_types=self.holiday_status_id
+        changes_available_duration = not self._DURATION_FIELDS.isdisjoint(values)
+        excess_before = (
+            self._excess_days_by_allocation() if changes_available_duration else {}
         )
         result = super().write(values)
-        consumed_leaves = self.employee_id._get_consumed_leaves(
-            leave_types=self.holiday_status_id
-        )
-
+        if "name" in values:
+            self._mark_custom_names()
         if "allocation_type" in values:
             self._add_lastcalls()
-        for allocation in self:
-            current_excess = (
-                consumed_leaves[1]
-                .get(allocation.employee_id, {})
-                .get(allocation.holiday_status_id, {})
-                .get("excess_days", {})
-            )
-            previous_excess = (
-                previous_consumed_leaves[1]
-                .get(allocation.employee_id, {})
-                .get(allocation.holiday_status_id, {})
-                .get("excess_days", {})
-            )
-            total_current_excess = sum(
-                leave_date["amount"]
-                for leave_date in current_excess.values()
-                if not leave_date["is_virtual"]
-            )
-            total_previous_excess = sum(
-                leave_date["amount"]
-                for leave_date in previous_excess.values()
-                if not leave_date["is_virtual"]
-            )
+        if changes_available_duration:
+            self._check_duration_still_covers_leaves_taken(excess_before)
+        return result
 
-            if total_current_excess <= total_previous_excess:
+    def _excess_days_by_allocation(self):
+        """Leave days each allocation's holder has taken beyond what it grants."""
+        _consumed, extra_data = self.employee_id._get_consumed_leaves(
+            leave_types=self.holiday_status_id
+        )
+        return {
+            allocation.id: sum(
+                excess["amount"]
+                for excess in extra_data.get(allocation.employee_id, {})
+                .get(allocation.holiday_status_id, {})
+                .get("excess_days", {})
+                .values()
+                if not excess["is_virtual"]
+            )
+            for allocation in self
+        }
+
+    def _check_duration_still_covers_leaves_taken(self, excess_before):
+        excess_after = self._excess_days_by_allocation()
+        for allocation in self:
+            before = excess_before.get(allocation.id, 0)
+            after = excess_after.get(allocation.id, 0)
+            if after <= before:
                 continue
-            lt = allocation.holiday_status_id
-            if lt.allows_negative and total_current_excess <= lt.max_allowed_negative:
+            leave_type = allocation.holiday_status_id
+            if leave_type.allows_negative and after <= leave_type.max_allowed_negative:
                 continue
+            dbg.logic.debug(
+                "allocation %s refused: excess days %s -> %s, allows_negative=%s",
+                dbg.rec(allocation),
+                before,
+                after,
+                leave_type.allows_negative,
+            )
             raise ValidationError(
                 _(
                     "You cannot reduce the duration below the duration of leaves already taken by the employee."
                 )
             )
 
-        return result
-
     @api.ondelete(at_uninstall=False)
     def _unlink_if_correct_states(self):
         if self.env.context.get("allocation_skip_state_check"):
             return
-        state_description_values = {
-            elem[0]: elem[1]
-            for elem in self._fields["state"]._description_selection(self.env)
-        }
+        state_description_values = self._state_labels()
         for allocation in self.filtered(
             lambda allocation: allocation.state not in ["confirm", "refuse"]
         ):

@@ -9,7 +9,10 @@ from odoo.fields import Domain
 from odoo.libs.datetime import timezone
 from odoo.libs.numbers import float_round
 
+from odoo.addons.hr_holidays.tools import debug_log as dbg
 from odoo.addons.resource.models.utils import HOURS_PER_DAY
+
+_FIRST_WORKING_INTERVAL_LOOKAHEAD_DAYS = (7, 30, 90, 180, 365, 730)
 
 
 class HrEmployee(models.Model):
@@ -113,6 +116,7 @@ class HrEmployee(models.Model):
         for employee in self.filtered(lambda e: e.id in leave_type_by_employee):
             employee.current_leave_id = leave_type_by_employee[employee.id]
 
+    @api.depends("is_absent")
     def _compute_hr_presence_state(self):
         super()._compute_hr_presence_state()
         employees = self.filtered(
@@ -188,6 +192,7 @@ class HrEmployee(models.Model):
                 employee_max_leaves, precision_digits=2
             )
 
+    @api.depends("is_absent")
     def _compute_presence_icon(self):
         super()._compute_presence_icon()
         employees_absent = self.filtered(
@@ -211,31 +216,91 @@ class HrEmployee(models.Model):
         )
 
     def _get_first_working_interval(self, dt):
-        dt = dt.replace(tzinfo=UTC)
-        lookahead_days = [7, 30, 90, 180, 365, 730]
-        work_intervals = None
-        for lookahead_day in lookahead_days:
-            periods = self._get_calendar_periods(dt, dt + timedelta(days=lookahead_day))
-            if not periods:
-                calendar = (
-                    self.resource_calendar_id or self.company_id.resource_calendar_id
+        self.check_singleton()
+        return self._get_first_working_interval_batch({self.id: dt})[self.id]
+
+    def _calendar_windows_from(self, start_by_employee_id, lookahead_days):
+        """Group the employees' search windows by the calendar that answers them.
+
+        A window is a calendar period clipped to the employee's own
+        ``[start, start + lookahead_days]``. Periods that clip to nothing are
+        dropped: ``_get_calendar_periods`` clamps both ends to the requested
+        range, so a version starting after it comes back inverted.
+        """
+        starts = {
+            employee: start_by_employee_id[employee.id].replace(tzinfo=UTC)
+            for employee in self
+        }
+        stops = {
+            employee: start + timedelta(days=lookahead_days)
+            for employee, start in starts.items()
+        }
+        periods_by_employee = self._get_calendar_periods(
+            min(starts.values()), max(stops.values())
+        )
+        windows_by_calendar = defaultdict(list)
+        for employee in self:
+            start, stop = starts[employee], stops[employee]
+            periods = periods_by_employee.get(employee) or [
+                (start, stop, employee.resource_calendar_id)
+            ]
+            for period_start, period_stop, calendar in periods:
+                calendar = calendar or employee.company_id.resource_calendar_id
+                window = (max(period_start, start), min(period_stop, stop))
+                if calendar and window[0] < window[1]:
+                    windows_by_calendar[calendar].append((employee, *window))
+        return windows_by_calendar
+
+    def _get_first_working_interval_batch(self, start_by_employee_id):
+        """Map each employee id to the start of its first working interval at or
+        after that employee's datetime, or None when it finds none in two years.
+
+        Every calendar is asked once per lookahead, for every employee that
+        still has no answer -- the same question asked per employee costs one
+        ``_work_intervals_batch`` each.
+        """
+        result = dict.fromkeys(start_by_employee_id)
+        pending = self.filtered(
+            lambda employee: employee.id in start_by_employee_id
+        ).sudo()
+        for lookahead_days in _FIRST_WORKING_INTERVAL_LOOKAHEAD_DAYS:
+            if not pending:
+                break
+            windows_by_calendar = pending._calendar_windows_from(
+                start_by_employee_id, lookahead_days
+            )
+            found = {}
+            for calendar, windows in windows_by_calendar.items():
+                intervals = calendar._work_intervals_batch(
+                    min(start for _employee, start, _stop in windows),
+                    max(stop for _employee, _start, stop in windows),
+                    resources=self.env["resource.resource"].union(
+                        *(employee.resource_id for employee, _start, _stop in windows)
+                    ),
                 )
-                work_intervals = calendar._work_intervals_batch(
-                    dt, dt + timedelta(days=lookahead_day), resources=self.resource_id
-                )
-            else:
-                for period in periods[self]:
-                    start, end, calendar = period
-                    calendar = calendar or self.company_id.resource_calendar_id
-                    work_intervals = calendar._work_intervals_batch(
-                        start, end, resources=self.resource_id
-                    )
-            if (
-                work_intervals.get(self.resource_id.id)
-                and work_intervals[self.resource_id.id]._items
-            ):
-                return work_intervals[self.resource_id.id]._items[0][0]
-        return None
+                for employee, start, stop in windows:
+                    for interval_start, _interval_stop, _meta in intervals.get(
+                        employee.resource_id.id, ()
+                    ):
+                        if start <= interval_start < stop:
+                            earliest = found.get(employee.id)
+                            if earliest is None or interval_start < earliest:
+                                found[employee.id] = interval_start
+                            break
+            dbg.logic.debug(
+                "_get_first_working_interval_batch on %s: lookahead %s days over "
+                "%s calendar(s) answered %s of %s",
+                dbg.rec(pending),
+                lookahead_days,
+                len(windows_by_calendar),
+                len(found),
+                len(pending),
+            )
+            result.update(found)
+            pending = pending.filtered(
+                lambda employee, found=found: employee.id not in found
+            )
+        return result
 
     @api.depends(
         "leave_ids.state",
@@ -257,32 +322,20 @@ class HrEmployee(models.Model):
                 ]
             )
         )
-        leave_data = {}
-        for holiday in holidays:
-            leave_data[holiday.employee_id.id] = {}
-            leave_data[holiday.employee_id.id]["leave_date_from"] = (
-                holiday.date_from.date()
-            )
-            back_on = holiday.employee_id._get_first_working_interval(holiday.date_to)
-            leave_data[holiday.employee_id.id]["leave_date_to"] = (
-                back_on.date() if back_on else None
-            )
-            leave_data[holiday.employee_id.id]["current_leave_state"] = holiday.state
-
+        leave_by_employee_id = {holiday.employee_id.id: holiday for holiday in holidays}
+        back_on_by_employee_id = holidays.employee_id._get_first_working_interval_batch(
+            {
+                employee_id: holiday.date_to
+                for employee_id, holiday in leave_by_employee_id.items()
+            }
+        )
         for employee in self:
-            employee.leave_date_from = leave_data.get(employee.id, {}).get(
-                "leave_date_from"
-            )
-            employee.leave_date_to = leave_data.get(employee.id, {}).get(
-                "leave_date_to"
-            )
-            employee.current_leave_state = leave_data.get(employee.id, {}).get(
-                "current_leave_state"
-            )
-            employee.is_absent = (
-                leave_data.get(employee.id)
-                and leave_data.get(employee.id).get("current_leave_state") == "validate"
-            )
+            holiday = leave_by_employee_id.get(employee.id)
+            back_on = back_on_by_employee_id.get(employee.id)
+            employee.leave_date_from = holiday.date_from.date() if holiday else False
+            employee.leave_date_to = back_on.date() if back_on else False
+            employee.current_leave_state = holiday.state if holiday else False
+            employee.is_absent = bool(holiday) and holiday.state == "validate"
 
     @api.depends("parent_id")
     def _compute_leave_manager_id(self):

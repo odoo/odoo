@@ -125,15 +125,18 @@ class HrVersion(models.Model):
         return super(HrVersion, self - written_contracts).write(vals)
 
     def _get_leaves(self, extra_domain=None):
+        contracted = self.sudo().filtered("contract_date_start")
+        if not contracted:
+            return self.env["hr.leave"]
         domain = [
             ("state", "!=", "refuse"),
-            ("employee_id", "in", self.mapped("employee_id.id")),
+            ("employee_id", "in", contracted.employee_id.ids),
             (
                 "date_from",
                 "<=",
-                max(end or date.max for end in self.sudo().mapped("contract_date_end")),
+                max(end or date.max for end in contracted.mapped("contract_date_end")),
             ),
-            ("date_to", ">=", min(self.sudo().mapped("contract_date_start"))),
+            ("date_to", ">=", min(contracted.mapped("contract_date_start"))),
         ]
         if extra_domain:
             domain = Domain.AND([domain, extra_domain])

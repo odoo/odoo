@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 from unittest.mock import patch
 
 from freezegun import freeze_time
@@ -698,3 +698,358 @@ class TestDashboardConsumesLeavesOnce(TestHrHolidaysCommon):
             "simulating carry-over on the fake allocations must not recompute "
             "the consumed leaves once per leave type",
         )
+
+
+@tagged("post_install", "-at_install")
+class TestAllocationDescription(TestHrHolidaysCommon):
+    """A description somebody wrote is theirs; a generated one keeps following."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.leave_type = cls.env["hr.leave.type"].create(
+            {
+                "name": "Named Days",
+                "requires_allocation": True,
+                "request_unit": "day",
+                "allocation_validation_type": "no_validation",
+                "employee_requests": True,
+                "company_id": cls.company.id,
+            }
+        )
+
+    def _allocate(self, **vals):
+        return self.env["hr.leave.allocation"].create(
+            {
+                "employee_id": self.employee_emp_id,
+                "holiday_status_id": self.leave_type.id,
+                "date_from": date(2026, 1, 1),
+                "number_of_days": 5,
+                **vals,
+            }
+        )
+
+    def test_a_description_written_by_hand_survives_a_duration_change(self):
+        allocation = self._allocate(name="Christmas bonus days")
+        self.assertTrue(allocation.is_name_custom)
+        allocation.write({"number_of_days": 7})
+        self.assertEqual(
+            allocation.name,
+            "Christmas bonus days",
+            "recomputing the generated title must not overwrite a description "
+            "somebody typed; accrual runs write number_of_days every period",
+        )
+
+    def test_a_generated_description_still_follows_the_duration(self):
+        allocation = self._allocate()
+        self.assertFalse(allocation.is_name_custom)
+        self.assertEqual(allocation.name, "Named Days (5.0 day(s))")
+        allocation.write({"number_of_days": 7})
+        self.assertEqual(allocation.name, "Named Days (7.0 day(s))")
+
+    def test_writing_back_the_generated_title_is_not_a_rename(self):
+        allocation = self._allocate()
+        allocation.write({"name": allocation.name})
+        self.assertFalse(
+            allocation.is_name_custom,
+            "a form that echoes the onchange-filled description back on save "
+            "has not renamed anything",
+        )
+        allocation.write({"number_of_days": 7})
+        self.assertEqual(allocation.name, "Named Days (7.0 day(s))")
+
+    def test_clearing_the_description_hands_it_back_to_the_generator(self):
+        allocation = self._allocate(name="Mine")
+        allocation.write({"name": False})
+        self.assertFalse(allocation.is_name_custom)
+        allocation.write({"number_of_days": 7})
+        self.assertEqual(allocation.name, "Named Days (7.0 day(s))")
+
+
+@tagged("post_install", "-at_install")
+class TestLeaveTypeBalanceSearch(TestHrHolidaysCommon):
+    """A search on a balance must select what the compute would report."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.hour_type = cls.env["hr.leave.type"].create(
+            {
+                "name": "Hourly Balance",
+                "requires_allocation": True,
+                "request_unit": "hour",
+                "allocation_validation_type": "no_validation",
+                "employee_requests": True,
+                "company_id": cls.company.id,
+            }
+        )
+        cls.env["hr.leave.allocation"].create(
+            {
+                "employee_id": cls.employee_emp_id,
+                "holiday_status_id": cls.hour_type.id,
+                "date_from": date(2026, 1, 1),
+                "number_of_days": 2,
+            }
+        ).action_approve()
+
+    def test_an_hourly_type_is_searched_in_the_unit_it_reports(self):
+        leave_types = self.env["hr.leave.type"].with_context(
+            employee_id=self.employee_emp_id
+        )
+        balance = leave_types.browse(self.hour_type.id).max_leaves
+        self.assertGreater(
+            balance,
+            2,
+            "two days of an hourly type report as hours, not as days",
+        )
+        self.assertIn(
+            self.hour_type,
+            leave_types.search([("max_leaves", ">", 3)]),
+            "the search summed the allocation in days while the field reports "
+            "hours, so it missed a type whose balance is %s" % balance,
+        )
+
+    def test_a_type_with_no_allocation_has_a_zero_balance_to_be_found(self):
+        unallocated = self.env["hr.leave.type"].create(
+            {
+                "name": "Never Allocated",
+                "requires_allocation": True,
+                "company_id": self.company.id,
+            }
+        )
+        leave_types = self.env["hr.leave.type"].with_context(
+            employee_id=self.employee_emp_id
+        )
+        self.assertEqual(leave_types.browse(unallocated.id).max_leaves, 0)
+        self.assertIn(
+            unallocated,
+            leave_types.search([("max_leaves", "<=", 0)]),
+            "a type with no allocation row still has a balance, and it is zero",
+        )
+
+    def test_a_search_without_an_employee_in_context_is_not_empty(self):
+        leave_types = self.env["hr.leave.type"].with_context(employee_id=False)
+        self.assertTrue(
+            leave_types.search([("max_leaves", ">=", 0)]),
+            "with no employee to read a balance for, every balance is zero -- "
+            "which is >= 0, not 'no type matches'",
+        )
+
+
+@tagged("post_install", "-at_install")
+class TestBackToWorkDate(TestHrHolidaysCommon):
+    """`leave_date_to` is the first moment the employee works again."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.calendar = cls.company.resource_calendar_id
+        cls.idle_calendar = cls.env["resource.calendar"].create(
+            {
+                "name": "No attendance at all",
+                "tz": cls.calendar.tz,
+                "company_id": cls.company.id,
+                "attendance_ids": [],
+            }
+        )
+        cls.leave_type = cls.env["hr.leave.type"].create(
+            {
+                "name": "Back To Work",
+                "requires_allocation": False,
+                "leave_validation_type": "no_validation",
+                "company_id": cls.company.id,
+            }
+        )
+
+    def _employee_with_two_calendar_periods(self):
+        employee = self.env["hr.employee"].create(
+            {"name": "Two schedules", "company_id": self.company.id}
+        )
+        employee.version_id.write(
+            {
+                "date_version": date(2026, 3, 1),
+                "contract_date_start": date(2026, 3, 1),
+                "resource_calendar_id": self.calendar.id,
+            }
+        )
+        employee.create_version(
+            {
+                "date_version": date(2026, 3, 4),
+                "resource_calendar_id": self.idle_calendar.id,
+            }
+        )
+        return employee
+
+    def test_the_first_working_interval_comes_from_the_first_period(self):
+        employee = self._employee_with_two_calendar_periods()
+        back_on = employee._get_first_working_interval(datetime(2026, 3, 2, 12, 0))
+        self.assertIsNotNone(
+            back_on,
+            "Monday 2026-03-02 is a working day on the first period's calendar; "
+            "answering from the last period instead reports the employee as "
+            "never coming back",
+        )
+        self.assertEqual(back_on.date(), date(2026, 3, 2))
+
+    @freeze_time("2026-03-04 10:00:00")
+    def test_every_employee_is_asked_of_its_calendar_once(self):
+        employees = self.env["hr.employee"].create(
+            [
+                {"name": f"Absent {index}", "company_id": self.company.id}
+                for index in range(5)
+            ]
+        )
+        self.env["hr.leave"].with_context(leave_skip_date_check=True).create(
+            [
+                {
+                    "employee_id": employee.id,
+                    "holiday_status_id": self.leave_type.id,
+                    "request_date_from": date(2026, 3, 2),
+                    "request_date_to": date(2026, 3, 6),
+                }
+                for employee in employees
+            ]
+        )
+        self.env.flush_all()
+        employees.invalidate_recordset()
+        Calendar = type(self.env["resource.calendar"])
+        original = Calendar._work_intervals_batch
+        calls = []
+
+        def counting(calendar, *args, **kwargs):
+            calls.append(calendar.ids)
+            return original(calendar, *args, **kwargs)
+
+        with patch.object(Calendar, "_work_intervals_batch", counting):
+            employees.mapped("leave_date_to")
+        self.assertEqual(
+            len(calls),
+            1,
+            "five employees sharing one calendar are one batched question, not "
+            "one call each",
+        )
+
+    def test_the_batch_reports_what_it_answered(self):
+        employee = self._employee_with_two_calendar_periods()
+        with self.assertLogs(
+            "odoo.addons.hr_holidays.debug.logic", level="DEBUG"
+        ) as captured:
+            employee._get_first_working_interval(datetime(2026, 3, 2, 12, 0))
+        self.assertTrue(
+            any(
+                "_get_first_working_interval_batch" in line
+                and "answered 1 of 1" in line
+                for line in captured.output
+            ),
+            captured.output,
+        )
+
+
+@tagged("post_install", "-at_install")
+class TestVersionLeaveWindow(TestHrHolidaysCommon):
+    def test_a_version_without_contract_dates_bounds_nothing(self):
+        contracted = self.env["hr.employee"].create(
+            {"name": "Under contract", "company_id": self.company.id}
+        )
+        contracted.version_id.write(
+            {
+                "contract_date_start": date(2026, 1, 1),
+                "contract_date_end": date(2026, 6, 30),
+            }
+        )
+        uncontracted = self.env["hr.employee"].create(
+            {"name": "No contract", "company_id": self.company.id}
+        )
+        versions = contracted.version_id | uncontracted.version_id
+        self.assertFalse(uncontracted.version_id.contract_date_start)
+        leaves = versions._get_leaves()
+        self.assertEqual(
+            leaves,
+            self.env["hr.leave"],
+            "a version with no contract start contributes no window; taking the "
+            "min over it compares a date with False",
+        )
+
+    def test_no_contracted_version_searches_nothing(self):
+        employee = self.env["hr.employee"].create(
+            {"name": "Still no contract", "company_id": self.company.id}
+        )
+        self.assertEqual(employee.version_id._get_leaves(), self.env["hr.leave"])
+
+
+@tagged("post_install", "-at_install")
+class TestRequestDatesGoTogether(TestHrHolidaysCommon):
+    def test_clearing_one_request_date_clears_the_whole_period(self):
+        leave_type = self.env["hr.leave.type"].create(
+            {
+                "name": "Both Ends",
+                "requires_allocation": False,
+                "leave_validation_type": "no_validation",
+                "company_id": self.company.id,
+            }
+        )
+        leave = self.env["hr.leave"].new(
+            {
+                "employee_id": self.employee_emp_id,
+                "holiday_status_id": leave_type.id,
+                "request_date_from": date(2026, 4, 6),
+                "request_date_to": date(2026, 4, 8),
+            }
+        )
+        self.assertTrue(leave.date_from and leave.date_to)
+        leave.request_date_to = False
+        self.assertFalse(
+            leave.date_from,
+            "a request with only a start date has no period; keeping date_from "
+            "leaves a leave that starts and never ends",
+        )
+        self.assertFalse(leave.date_to)
+
+
+@tagged("post_install", "-at_install")
+class TestPresenceFollowsTheLeave(TestHrHolidaysCommon):
+    """Approving a leave changes the presence the same request reads back."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.leave_type = cls.env["hr.leave.type"].create(
+            {
+                "name": "Presence Leaves",
+                "time_type": "leave",
+                "requires_allocation": False,
+                "leave_validation_type": "hr",
+                "company_id": cls.company.id,
+            }
+        )
+
+    def _leave_covering_now(self):
+        return self.env["hr.leave"].create(
+            {
+                "employee_id": self.employee_emp_id,
+                "holiday_status_id": self.leave_type.id,
+                "request_date_from": date(2026, 3, 2),
+                "request_date_to": date(2026, 3, 6),
+            }
+        )
+
+    @freeze_time("2026-03-04 10:00:00")
+    def test_the_presence_icon_is_invalidated_by_the_approval(self):
+        employee = self.employee_emp
+        self.assertNotIn("holiday", employee.hr_icon_display)
+        self._leave_covering_now().action_approve()
+        self.assertTrue(employee.is_absent)
+        self.assertIn(
+            "holiday",
+            employee.hr_icon_display,
+            "hr_icon_display is read straight after the approval that made the "
+            "employee absent; without a declared dependency on is_absent it "
+            "answers from the cache the approval never invalidated",
+        )
+
+    @freeze_time("2026-03-04 10:00:00")
+    def test_the_presence_state_is_invalidated_by_the_approval(self):
+        employee = self.employee_emp
+        employee.hr_presence_state
+        self._leave_covering_now().action_approve()
+        self.assertEqual(employee.hr_presence_state, "absent")

@@ -17,6 +17,7 @@ from odoo.tools.translate import _
 
 from odoo.addons.base.models.ir_model_common import MODULE_UNINSTALL_FLAG
 from odoo.addons.base.models.res_partner import _selection_timezones
+from odoo.addons.hr_holidays.tools import debug_log as dbg
 from odoo.addons.resource.models.utils import HOURS_PER_DAY
 
 _logger = logging.getLogger(__name__)
@@ -403,7 +404,10 @@ class HrLeave(models.Model):
     def _compute_dashboard_warning_message(self):
         dated = self.filtered(lambda leave: leave.date_from and leave.date_to)
         (self - dated).dashboard_warning_message = False
-        if not dated:
+        settled = dated.filtered(lambda leave: leave.state in ("cancel", "refuse"))
+        settled.dashboard_warning_message = False
+        pending = dated - settled
+        if not pending:
             return
         all_leaves = self.search(
             [
@@ -414,12 +418,8 @@ class HrLeave(models.Model):
                 ("state", "not in", ["cancel", "refuse"]),
             ]
         )
-        dated.filtered(
-            lambda leave: leave.state in ["cancel", "refuse"]
-        ).dashboard_warning_message = False
-        for holiday in dated.filtered(
-            lambda leave: leave.state not in ["cancel", "refuse"]
-        ):
+        state_labels = self._state_labels()
+        for holiday in pending:
             conflicting_holidays = all_leaves.filtered_domain(
                 [
                     ("employee_id", "in", holiday.employee_id.ids),
@@ -428,60 +428,54 @@ class HrLeave(models.Model):
                     ("id", "not in", holiday.ids),
                 ]
             )
-            if not conflicting_holidays:
-                holiday.dashboard_warning_message = False
-                continue
-
-            conflicting_holidays_list = []
-            holidays_only_have_uid = bool(holiday.employee_id)
-            holiday_states = dict(
-                conflicting_holidays.fields_get(allfields=["state"])["state"][
-                    "selection"
-                ]
+            holiday.dashboard_warning_message = (
+                conflicting_holidays._overlap_warning(state_labels)
+                if conflicting_holidays
+                else False
             )
-            for conflicting_holiday in conflicting_holidays:
-                conflicting_holiday_data = {
-                    "employee_name": conflicting_holiday.employee_id.name,
-                    "date_from": format_date(
-                        self.env, min(conflicting_holiday.mapped("date_from"))
-                    ),
-                    "date_to": format_date(
-                        self.env, min(conflicting_holiday.mapped("date_to"))
-                    ),
-                    "state": holiday_states[conflicting_holiday.state],
-                }
-                if conflicting_holiday.employee_id.user_id.id != self.env.uid:
-                    holidays_only_have_uid = False
-                if conflicting_holiday_data not in conflicting_holidays_list:
-                    conflicting_holidays_list.append(conflicting_holiday_data)
 
-            msg = ""
-            if holidays_only_have_uid:
-                msg = self.env._(
-                    "You've already booked time off which overlaps with this period:"
-                )
-            else:
-                msg = self.env._(
-                    "An employee already booked time off which overlaps with this period:"
-                )
-
-            holiday.dashboard_warning_message = msg + "".join(
-                (
-                    "\n\t"
-                    + self.env._(
-                        "%(employee_name)s from %(date_from)s to %(date_to)s - %(state)s"
-                    )
-                )
-                % {
-                    "employee_name": conflicting_holiday_data["employee_name"]
-                    if not holidays_only_have_uid
-                    else "",
-                    "date_from": conflicting_holiday_data["date_from"],
-                    "date_to": conflicting_holiday_data["date_to"],
-                    "state": conflicting_holiday_data["state"],
-                }
-                for conflicting_holiday_data in conflicting_holidays_list
+    def _overlap_warning(self, state_labels):
+        """Say who else is off over this period, naming them only when it is not
+        all the reader themselves."""
+        mine_only = all(leave.employee_id.user_id.id == self.env.uid for leave in self)
+        lines = []
+        for leave in self:
+            line = (
+                "" if mine_only else leave.employee_id.name,
+                format_date(self.env, leave.date_from),
+                format_date(self.env, leave.date_to),
+                state_labels[leave.state],
             )
+            if line not in lines:
+                lines.append(line)
+        header = (
+            self.env._(
+                "You've already booked time off which overlaps with this period:"
+            )
+            if mine_only
+            else self.env._(
+                "An employee already booked time off which overlaps with this period:"
+            )
+        )
+        dbg.logic.debug(
+            "_overlap_warning on %s: %s distinct line(s), mine_only=%s",
+            dbg.rec(self),
+            len(lines),
+            mine_only,
+        )
+        return header + "".join(
+            "\n\t"
+            + self.env._(
+                "%(employee_name)s from %(date_from)s to %(date_to)s - %(state)s"
+            )
+            % {
+                "employee_name": employee_name,
+                "date_from": date_from,
+                "date_to": date_to,
+                "state": state,
+            }
+            for employee_name, date_from, date_to, state in lines
+        )
 
     @api.depends_context("uid")
     def _compute_name(self):
@@ -629,15 +623,14 @@ Versions:
         "employee_id",
     )
     def _compute_date_from_to(self):
-        for holiday in self:
-            if not holiday.request_date_from:
-                holiday.date_from = False
-                continue
-
-            if not holiday.request_date_to:
-                holiday.date_to = False
-                continue
-
+        undated = self.filtered(
+            lambda leave: not (leave.request_date_from and leave.request_date_to)
+        )
+        # A request with only one of its two dates has no period at all, so both
+        # ends go: leaving the other behind is what let a leave keep a start it
+        # no longer has an end for.
+        undated.date_from = undated.date_to = False
+        for holiday in self - undated:
             if holiday.request_unit_hours:
                 hour_from = holiday.request_hour_from
                 hour_to = holiday.request_hour_to
@@ -1320,10 +1313,7 @@ Versions:
         error_message = self.env._(
             "Oops! %(state)s Time-Off requests can only be deleted by Administrators."
         )
-        state_description_values = {
-            elem[0]: elem[1]
-            for elem in self._fields["state"]._description_selection(self.env)
-        }
+        state_description_values = self._state_labels()
         today = fields.Date.today()
 
         if not self.env.user.has_group("hr_holidays.group_hr_holidays_user"):

@@ -12,6 +12,8 @@ from odoo.libs.numbers import float_round
 from odoo.tools import format_date
 from odoo.tools.translate import _
 
+from odoo.addons.hr_holidays.tools import debug_log as dbg
+
 _logger = logging.getLogger(__name__)
 
 PY_OPERATORS = {
@@ -440,48 +442,48 @@ class HrLeaveType(models.Model):
             if holiday_type.company_id:
                 holiday_type.country_id = holiday_type.company_id.country_id
 
-    def _search_max_leaves(self, operator, value):
+    def _search_balance(self, field_name, operator, value, always_matches=None):
+        """Search a balance field by the value its compute would report.
+
+        Every balance on this model is a view of ``get_allocation_data`` for
+        the employee in context, so the only spelling of the search that can
+        agree with the compute is to run the compute. An allocation-level
+        aggregate cannot: it is in days where the field is in hours, and it
+        misses every type that has no allocation row at all -- including the
+        ones whose balance is legitimately zero.
+        """
         op = PY_OPERATORS.get(operator)
         if not op:
             return NotImplemented
         if operator != "in":
             value = float(value)
-        employee = self.env["hr.employee"]._get_contextual_employee()
-        leaves = defaultdict(int)
+        leave_types = self.search([])
+        matching = leave_types.filtered(
+            lambda leave_type: (
+                (always_matches is not None and always_matches(leave_type))
+                or op(leave_type[field_name], value)
+            )
+        )
+        dbg.logic.debug(
+            "_search_balance %s %s %r: %s of %s types match",
+            field_name,
+            operator,
+            value,
+            len(matching),
+            len(leave_types),
+        )
+        return [("id", "in", matching.ids)]
 
-        if employee:
-            today = fields.Date.context_today(self)
-            grouped = self.env["hr.leave.allocation"]._read_group(
-                [
-                    ("employee_id", "=", employee.id),
-                    ("state", "=", "validate"),
-                    ("date_from", "<=", today),
-                    "|",
-                    ("date_to", "=", False),
-                    ("date_to", ">=", today),
-                ],
-                ["holiday_status_id"],
-                ["number_of_days:sum"],
-            )
-            leaves.update(
-                {leave_type.id: total for leave_type, total in grouped if leave_type}
-            )
-        valid_leaves = [leaf for leaf, number in leaves.items() if op(number, value)]
-        return [("id", "in", valid_leaves)]
+    def _search_max_leaves(self, operator, value):
+        return self._search_balance("max_leaves", operator, value)
 
     def _search_virtual_remaining_leaves(self, operator, value):
-        def is_valid(leave_type):
-            return not leave_type.requires_allocation or op(
-                leave_type.virtual_remaining_leaves, value
-            )
-
-        op = PY_OPERATORS.get(operator)
-        if not op:
-            return NotImplemented
-        if operator != "in":
-            value = float(value)
-        leave_types = self.env["hr.leave.type"].search([])
-        return [("id", "in", leave_types.filtered(is_valid).ids)]
+        return self._search_balance(
+            "virtual_remaining_leaves",
+            operator,
+            value,
+            always_matches=lambda leave_type: not leave_type.requires_allocation,
+        )
 
     @api.depends_context(
         "employee_id", "default_employee_id", "leave_date_from", "default_date_from"
@@ -865,20 +867,11 @@ class HrLeaveType(models.Model):
     def _get_closest_expiring_leaves_date_and_count(
         self, allocations, remaining_leaves, target_date
     ):
-        expiration_dates_per_allocation = defaultdict(
-            lambda: {
-                "expiration_date": fields.Date(),
-                "carryover_date": fields.Date(),
-                "carried_over_days_expiration_date": fields.Date(),
-            }
-        )
-        expiration_dates = []
+        expiry_per_allocation = {}
         carried_over_days_expiration_data = self._get_carried_over_days_expiration_data(
             allocations, target_date
         )
         for allocation in allocations:
-            expiration_date = allocation.date_to
-
             accrual_plan_level = allocation.sudo()._get_current_accrual_plan_level_id(
                 target_date
             )[0]
@@ -890,59 +883,38 @@ class HrLeaveType(models.Model):
                 carryover_date = allocation.sudo()._get_carryover_date(target_date)
                 if carryover_date == target_date:
                     carryover_date += relativedelta(years=1)
+            expiry_per_allocation[allocation] = {
+                "expiration_date": allocation.date_to,
+                "carryover_date": carryover_date,
+                "carried_over_days_expiration_date": carried_over_days_expiration_data[
+                    allocation
+                ]["expiration_date"],
+                "accrual_plan_level": accrual_plan_level,
+            }
 
-            carried_over_days_expiration_date = carried_over_days_expiration_data[
-                allocation
-            ]["expiration_date"]
-
-            expiration_dates.extend(
-                [expiration_date, carryover_date, carried_over_days_expiration_date]
-            )
-            expiration_dates_per_allocation[allocation]["expiration_date"] = (
-                expiration_date
-            )
-            expiration_dates_per_allocation[allocation]["carryover_date"] = (
-                carryover_date
-            )
-            expiration_dates_per_allocation[allocation][
-                "carried_over_days_expiration_date"
-            ] = carried_over_days_expiration_date
-
-        expiration_dates = list(
-            filter(lambda date: date is not False, expiration_dates)
+        expiration_dates = sorted(
+            expiry_date
+            for expiry in expiry_per_allocation.values()
+            for key, expiry_date in expiry.items()
+            if key != "accrual_plan_level" and expiry_date is not False
         )
-        expiration_dates.sort()
         for closest_expiration_date in expiration_dates:
             expiring_leaves_count = 0
-            for allocation in allocations:
-                expiration_date = expiration_dates_per_allocation[allocation][
-                    "expiration_date"
+            for allocation, expiry in expiry_per_allocation.items():
+                virtual_remaining = remaining_leaves[allocation][
+                    "virtual_remaining_leaves"
                 ]
-                carryover_date = expiration_dates_per_allocation[allocation][
-                    "carryover_date"
-                ]
-                carried_over_days_expiration_date = expiration_dates_per_allocation[
-                    allocation
-                ]["carried_over_days_expiration_date"]
-
-                if expiration_date and expiration_date == closest_expiration_date:
-                    expiring_leaves_count += remaining_leaves[allocation][
-                        "virtual_remaining_leaves"
-                    ]
-                elif carryover_date and carryover_date == closest_expiration_date:
-                    accrual_plan_level = (
-                        allocation.sudo()._get_current_accrual_plan_level_id(
-                            target_date
-                        )[0]
-                    )
+                if expiry["expiration_date"] == closest_expiration_date:
+                    expiring_leaves_count += virtual_remaining
+                elif expiry["carryover_date"] == closest_expiration_date:
                     expiring_leaves_count += max(
                         0,
-                        remaining_leaves[allocation]["virtual_remaining_leaves"]
-                        - accrual_plan_level.postpone_max_days,
+                        virtual_remaining
+                        - expiry["accrual_plan_level"].postpone_max_days,
                     )
                 elif (
-                    carried_over_days_expiration_date
-                    and carried_over_days_expiration_date == closest_expiration_date
+                    expiry["carried_over_days_expiration_date"]
+                    == closest_expiration_date
                 ):
                     expiring_leaves_count += carried_over_days_expiration_data[
                         allocation
