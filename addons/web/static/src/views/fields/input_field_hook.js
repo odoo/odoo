@@ -84,10 +84,10 @@ export function useInputField(params) {
                     pendingUpdate = true;
                     await props.record.update({ [fieldName]: val }, { save: shouldSave() });
                     pendingUpdate = false;
-                    props.record.model.bus.trigger("FIELD_IS_DIRTY", isDirty);
                 } else {
                     getEl().value = params.getValue();
                 }
+                props.record.model.bus.trigger("FIELD_IS_DIRTY", isDirty);
             }
         }
     }
@@ -175,10 +175,10 @@ export function useInputField(params) {
             if ((val || false) !== (props.record.data[fieldName] || false)) {
                 lastSetValue = el.value;
                 await props.record.update({ [fieldName]: val }, { save: shouldSave() });
-                props.record.model.bus.trigger("FIELD_IS_DIRTY", false);
             } else {
                 el.value = params.getValue();
             }
+            props.record.model.bus.trigger("FIELD_IS_DIRTY", isDirty);
         }
     }
 
