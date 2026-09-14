@@ -427,3 +427,28 @@ test("every partner is asked for once, and as a number", async () => {
     });
     expect(sent).toInclude(serverState.partnerId);
 });
+
+test("a user with two employees keeps both work locations", async () => {
+    // `multiCalendar` asks whether any location belongs to somebody else. A user
+    // with an employee in each of two companies answers "no" to that, and the
+    // single-calendar branch keeps one event per day — so the second employee
+    // overwrites the first and one of the two silently disappears.
+    onRpc("get_worklocation", () => ({
+        1: {
+            ...EMPLOYEE_WORK_LOCATIONS[1],
+            monday_location_id: WORK_LOCATION_OFFICE,
+        },
+        2: {
+            ...EMPLOYEE_WORK_LOCATIONS[2],
+            user_id: serverState.userId,
+            partner_id: serverState.partnerId,
+            monday_location_id: WORK_LOCATION_HOME,
+        },
+    }));
+    await mountHomeWorkingView();
+    const monday = queryAllTexts(
+        `.fc-col-header-cell[data-date="2020-12-07"] .o_worklocation_btn`,
+    ).join(" ");
+    expect(monday).toInclude("Office");
+    expect(monday).toInclude("Home");
+});

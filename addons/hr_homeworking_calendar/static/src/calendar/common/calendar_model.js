@@ -39,9 +39,13 @@ patch(AttendeeCalendarModel.prototype, {
 
     async loadWorkLocations(data) {
         const res = await this.fetchEventLocation(data);
-        this.multiCalendar = Object.values(res).some(
-            (location) => location.user_id !== user.userId,
-        );
+        // More than one employee is a multi calendar whoever they belong to.
+        // Asking only whether somebody ELSE appears answers "no" for a user with
+        // an employee in each of two companies, and the single-calendar branch
+        // keeps one event per day, so all but one of them silently disappear.
+        this.multiCalendar =
+            Object.keys(res).length > 1 ||
+            Object.values(res).some((location) => location.user_id !== user.userId);
         const filters = data.filterSections.partner_ids?.filters;
         data.userFilterActive =
             filters &&
