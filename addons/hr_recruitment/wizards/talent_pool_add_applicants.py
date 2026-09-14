@@ -60,7 +60,12 @@ class TalentPoolAddApplicants(models.TransientModel):
         return talents
 
     def action_add_applicants_to_pool(self):
-        talents = self.sudo()._add_applicants_to_pool()
+        # Not `sudo()`: the applicants reach this wizard through the user's own
+        # rights, but an applicant's `pool_applicant_id` can point at a talent
+        # in a company the user cannot see, and running the whole operation as
+        # superuser wrote to that talent -- adding a record the user cannot read
+        # to a pool of their own company.
+        talents = self._add_applicants_to_pool()
         if len(talents) == 1:
             return {
                 "type": "ir.actions.act_window",

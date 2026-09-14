@@ -5,6 +5,7 @@ from dateutil.relativedelta import relativedelta
 from lxml import etree
 
 from odoo import Command
+from odoo.exceptions import AccessError
 from odoo.fields import Domain
 from odoo.tests import Form, TransactionCase, tagged
 
@@ -1258,4 +1259,117 @@ class TestRecruitment(TransactionCase):
             .with_context(active_test=False)
             .search([("id", "in", population.ids), *domain])
             .mapped("partner_name")
+        )
+
+    def test_pooling_an_applicant_needs_no_elevated_rights(self):
+        """The ordinary path runs on the recruiter's own rights."""
+        recruiter = self._recruiter()
+        pool = self.env["hr.talent.pool"].create({"name": "Pool"})
+        applicant = self.env["hr.applicant"].create(
+            {"partner_name": "Applicant", "email_from": "applicant@example.com"}
+        )
+        self.env.flush_all()
+
+        wizard = (
+            self.env["talent.pool.add.applicants"]
+            .with_user(recruiter)
+            .create(
+                {
+                    "applicant_ids": [Command.set(applicant.ids)],
+                    "talent_pool_ids": [Command.set(pool.ids)],
+                }
+            )
+        )
+        wizard.action_add_applicants_to_pool()
+
+        self.assertTrue(applicant.pool_applicant_id)
+        self.assertEqual(applicant.pool_applicant_id.talent_pool_ids, pool)
+
+    def test_pooling_cannot_write_to_a_talent_of_another_company(self):
+        """`_add_applicants_to_pool` used to run entirely as superuser.
+
+        An applicant the recruiter *can* see may carry a `pool_applicant_id`
+        pointing at a talent in a company they cannot, and the elevation wrote to
+        that talent -- putting a record the recruiter cannot read into a pool of
+        their own company.
+        """
+        recruiter = self._recruiter()
+        other_company = self.env["res.company"].create({"name": "Elsewhere"})
+        foreign_pool = self.env["hr.talent.pool"].create(
+            {"name": "Their pool", "company_id": other_company.id}
+        )
+        foreign_talent = self.env["hr.applicant"].create(
+            {
+                "partner_name": "Theirs",
+                "email_from": "theirs@example.com",
+                "company_id": other_company.id,
+                "talent_pool_ids": [Command.set(foreign_pool.ids)],
+            }
+        )
+        local = self.env["hr.applicant"].create(
+            {
+                "partner_name": "Ours",
+                "email_from": "ours@example.com",
+                "company_id": self.env.company.id,
+                "pool_applicant_id": foreign_talent.id,
+            }
+        )
+        our_pool = self.env["hr.talent.pool"].create(
+            {"name": "Our pool", "company_id": self.env.company.id}
+        )
+        self.env.flush_all()
+        self.assertFalse(
+            self.env["hr.applicant"]
+            .with_user(recruiter)
+            .search([("id", "=", foreign_talent.id)]),
+            "the fixture is pointless unless the talent is genuinely invisible",
+        )
+
+        wizard = (
+            self.env["talent.pool.add.applicants"]
+            .with_user(recruiter)
+            .create(
+                {
+                    "applicant_ids": [Command.set(local.ids)],
+                    "talent_pool_ids": [Command.set(our_pool.ids)],
+                }
+            )
+        )
+        # the write is buffered: the record rule is checked at flush, so a bare
+        # `assertRaises` around the action alone exits before the error is raised
+        # Two things about the shape of this assertion, both measured:
+        #  - the write is buffered and the rule is checked at flush, so the
+        #    action alone raises nothing; it must be flushed, and through the
+        #    *wizard's* env, since `self.env` is the superuser and flushing
+        #    through that applies superuser rights;
+        #  - `assertRaises` does not see it. This fork's `TransactionCase`
+        #    clears the cursor when an `AccessError` is expected
+        #    (`transaction_case.py::_assertRaises`) and the violation then does
+        #    not surface inside the block. Observed, not explained -- so what is
+        #    asserted here is the property that matters rather than the
+        #    exception type.
+        refused = False
+        try:
+            wizard.action_add_applicants_to_pool()
+            wizard.env.flush_all()
+        except AccessError:
+            refused = True
+        foreign_talent.invalidate_recordset()
+
+        self.assertTrue(refused, "a talent of another company must not be written")
+        self.assertEqual(foreign_talent.talent_pool_ids, foreign_pool)
+
+    def _recruiter(self):
+        return self.env["res.users"].create(
+            {
+                "name": "Recruiter",
+                "login": f"recruiter_{self.env.cr.now().timestamp()}",
+                "company_id": self.env.company.id,
+                "company_ids": [Command.set(self.env.company.ids)],
+                "group_ids": [
+                    Command.link(
+                        self.env.ref("hr_recruitment.group_hr_recruitment_user").id
+                    )
+                ],
+            }
         )
