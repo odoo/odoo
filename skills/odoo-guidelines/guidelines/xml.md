@@ -5,7 +5,7 @@
   records by model.
 - Prefer the syntactic-sugar tags `<menuitem>`, `<template>`, and `<asset>`
   over raw `<record>`. Trap: an `active` attribute on `<template>`/`<asset>`
-  is applied at record creation and module *install/re-install* (`-i`) only —
+  is applied at record creation and module *install/re-install* (`-i`) only;
   a module **update** (`-u`) updates the arch but never changes `active`, so
   it can't deactivate an already-installed record.
 - `<data noupdate="1">` only for non-updatable data; if the whole file is
@@ -23,28 +23,28 @@
 
 # Anchor view inheritance on names, never on position
 
-Anchor a view inheritance on a **stable, identifying attribute** — an
-element's `name` — never on document position.
+Anchor a view inheritance on a **stable, identifying attribute** (an
+element's `name`), never on document position.
 
 ```xml
-<!-- good — the shorthand: a field locator matches by name alone -->
+<!-- good: the shorthand form, which matches a field by name alone -->
 <field name="partner_id" position="after">
     <field name="delivery_instructions"/>
 </field>
 
-<!-- good — xpath when the shorthand can't express the match -->
+<!-- good: xpath when the shorthand can't express the match -->
 <xpath expr="//page[@name='other_information']//field[@name='user_id']" position="attributes">
     <attribute name="readonly">1</attribute>
 </xpath>
 
-<!-- bad — breaks as soon as the parent view inserts or reorders anything -->
+<!-- bad: breaks as soon as the parent view inserts or reorders anything -->
 <xpath expr="//group[2]/field[3]" position="after">
     <field name="delivery_instructions"/>
 </xpath>
 ```
 
 Shorthand matching is asymmetric: a `field` element matches the first field
-with the same `name` — in document order at **any** depth (use xpath when the
+with the same `name`, in document order at **any** depth (use xpath when the
 name recurs in an embedded subview), other locator attributes ignored. Any
 **other** tag matches the first node with the same tag carrying all the
 locator's attributes with equal values (`position` excepted); extra attributes
