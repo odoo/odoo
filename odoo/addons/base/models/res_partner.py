@@ -1794,10 +1794,7 @@ class ResPartner(models.Model):
         return identifier_vals or {}
 
     def _deduce_additional_identifiers_from_vat(self):
-        """Populate companion identifiers freely derivable from the VAT (e.g. BE_VAT → BE_EN,
-        AT_VAT → AT_EN) so users only enter the VAT and don't have to retype the same digits.
-        Pre-existing entries are kept as-is and tracking is muted to avoid recomputing
-        VAT-tracked computed fields mid-inverse."""
+        """Populate identifiers derivable from the VAT (e.g. BE_VAT => BE_EN, AT_VAT => AT_EN)."""
         for partner in self:
             if not partner.vat or not partner.country_code:
                 continue
@@ -1805,19 +1802,21 @@ class ResPartner(models.Model):
             if not vat_key:
                 continue
             deduced_identifiers = get_deduced_identifiers(vat_key, partner.vat)
+            if not deduced_identifiers:
+                continue
             identifiers = partner.additional_identifiers or {}
             # Only keep deduced identifiers that are actually valid: a VAT does not always map to a
             # well-formed companion id (e.g. a 13-digit RO fiscal code is not a valid 10-digit CUI).
-            new_identifiers = {
+            to_update = {
                 k: v for k, v in deduced_identifiers.items()
-                if k not in identifiers and self.env['res.partner']._validate_identifier(k, v)['valid']
+                if identifiers.get(k) != v and self.env['res.partner']._validate_identifier(k, v)['valid']
             }
-            if not new_identifiers:
+            if not to_update:
                 continue
             try:
                 # Use mail_notrack to avoid triggering mail tracking, which would
                 # recompute tracked computed fields (e.g. vies_valid) mid-inverse.
-                partner.with_context(mail_notrack=True).additional_identifiers = {**identifiers, **new_identifiers}
+                partner.with_context(mail_notrack=True).additional_identifiers = {**identifiers, **to_update}
             except ValidationError:
                 _logger.info("Skipped %s: deduced identifier from %s could not be validated.", deduced_identifiers, vat_key)
                 continue
