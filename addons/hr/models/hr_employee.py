@@ -2384,6 +2384,7 @@ class HrEmployee(models.Model):
 
     def _store_avatar_card_fields(self, res: Store.FieldList):
         res.one("department_id", ["name"])
+        res.one("job_id", ["name"])
         res.attr("resource_id", "_store_avatar_card_fields")
         res.one("user_id", "_store_avatar_card_fields")
         res.one("work_location_id", ["location_type", "name"])
@@ -2391,7 +2392,6 @@ class HrEmployee(models.Model):
             "active",
             "company_id",
             "hr_icon_display",
-            "job_title",
             "name",
             "show_hr_icon_display",
         ])
