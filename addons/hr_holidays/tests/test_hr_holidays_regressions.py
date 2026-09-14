@@ -5,12 +5,13 @@ from unittest.mock import patch
 
 from freezegun import freeze_time
 
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import tagged
 
 from odoo.addons.base.models.ir_module import Manifest
 from odoo.addons.hr_holidays.models.hr_employee import HrEmployee
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
+from odoo.addons.mail.tests.common import mail_new_test_user
 
 _logger = logging.getLogger(__name__)
 
@@ -1653,3 +1654,83 @@ class TestLeaveStatusesTravelWithTheMemberList(TestHrHolidaysCommon):
             "employee on leave shows as offline there"
             % sorted(partitioning - vocabulary),
         )
+
+
+@tagged("post_install", "-at_install")
+class TestReportDoesNotLeakTheDescription(TestHrHolidaysCommon):
+    """A leave's description is private, and a report is a second way in."""
+
+    SECRET = "Chemotherapy session"
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.leave_type = cls.env["hr.leave.type"].create(
+            {
+                "name": "Private Reasons",
+                "requires_allocation": False,
+                "leave_validation_type": "hr",
+                "company_id": cls.company.id,
+            }
+        )
+        # A department manager who is neither an officer nor anybody's approver.
+        cls.department = cls.env["hr.department"].create(
+            {"name": "Reporting dept", "company_id": cls.company.id}
+        )
+        cls.onlooker = mail_new_test_user(
+            cls.env, login="onlooker", groups="base.group_user"
+        )
+        cls.department.manager_id = cls.env["hr.employee"].create(
+            {
+                "name": "Department Manager",
+                "user_id": cls.onlooker.id,
+                "company_id": cls.company.id,
+                "department_id": cls.department.id,
+            }
+        )
+        cls.subject = cls.env["hr.employee"].create(
+            {
+                "name": "Reporting Subject",
+                "company_id": cls.company.id,
+                "department_id": cls.department.id,
+            }
+        )
+        cls.leave = (
+            cls.env["hr.leave"]
+            .with_context(leave_skip_date_check=True)
+            .create(
+                {
+                    "employee_id": cls.subject.id,
+                    "holiday_status_id": cls.leave_type.id,
+                    "name": cls.SECRET,
+                    "request_date_from": date(2026, 3, 2),
+                    "request_date_to": date(2026, 3, 2),
+                }
+            )
+        )
+
+    def _report_rows(self, user):
+        self.env.flush_all()
+        return (
+            self.env["hr.leave.report"]
+            .with_user(user)
+            .search([("leave_id", "=", self.leave.id)])
+        )
+
+    def test_a_department_manager_sees_the_row_and_not_the_reason(self):
+        self.assertFalse(self.onlooker.has_group("hr_holidays.group_hr_holidays_user"))
+        self.assertNotEqual(self.subject.leave_manager_id, self.onlooker)
+        rows = self._report_rows(self.onlooker)
+        self.assertTrue(
+            rows, "the department manager is meant to see that the leave exists"
+        )
+        with self.assertRaises(
+            AccessError,
+            msg="hr.leave hides the description from this user, and reading the "
+            "same column through the report must not hand it over",
+        ):
+            rows.mapped("name")
+
+    def test_an_officer_still_reads_it(self):
+        rows = self._report_rows(self.user_hruser)
+        self.assertEqual(rows.mapped("name"), [self.SECRET])

@@ -22,6 +22,11 @@ class HrLeaveReport(models.Model):
     name = fields.Char(
         string="Description",
         readonly=True,
+        groups="hr_holidays.group_hr_holidays_user",
+        help="A request's description is its private_name, which hr.leave "
+        "itself masks as ***** for anyone but an officer, the employee or "
+        "their approver. This view reads that column straight, so the field "
+        "carries the restriction the view cannot.",
     )
     number_of_days = fields.Float(
         string="Number of Days",
