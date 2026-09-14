@@ -25,9 +25,11 @@ const DiscussChannelPatch = {
         this.lastSessionIds = new Set();
         /** @type {number|undefined} */
         this.cancelRtcInvitationTimeout = undefined;
-        this.rtc_session_ids = fields.Many("discuss.channel.rtc.session", {
-            onDelete: (r) => r?.delete(),
-        });
+        this.rtc_session_ids = fields.Many("discuss.channel.rtc.session");
+        this.onRelationChange(
+            () => this.rtc_session_ids,
+            ({ removed }) => removed.forEach((session) => session.delete())
+        );
         this.onChange(
             () => [...this.rtc_session_ids],
             function onChangeRtcSessionIds(...rtcSessions) {
@@ -53,7 +55,6 @@ const DiscussChannelPatch = {
         );
         this.focusStack = fields.Many("discuss.channel.rtc.session");
         this.pinnedRtcSession = fields.One("discuss.channel.rtc.session");
-        /** @type {import("@mail/discuss/call/common/call").CardData[]} */
         this.visibleCards = this.computed(() => {
             const raisingHandCards = [];
             const sessionCards = [];

@@ -58,8 +58,9 @@ export class Thread extends Component {
         this.onParentMessageClick = this.onParentMessageClick.bind(this);
         this.startMessageAvatarRef = signal.ref(HTMLDivElement);
         this.messageRefs = useChildRefs();
+        const messageRefsCount = computed(() => this.messageRefs.size);
         useOnChange(
-            () => [this.messageRefs.size],
+            () => [messageRefsCount()],
             () => this.scrollToHighlighted()
         );
         this.store = useService("mail.store");

@@ -13,7 +13,7 @@ const messagingMenuPatch = {
             this.env.services.bus_service.addChannel("im_livechat.looking_for_help");
         });
         useEffect(() => {
-            if (this.state().activeTab.eq(this.store.messagingMenu.livechatTab)) {
+            if (this.state().activeTab?.eq(this.store.messagingMenu.livechatTab)) {
                 ensureLookingForHelpBusSubscription();
             }
         });

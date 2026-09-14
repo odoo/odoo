@@ -12,6 +12,18 @@ export class Chatbot extends Record {
     // completed.
     static MULTILINE_STEP_DEBOUNCE_DELAY = 10000;
 
+    setup() {
+        super.setup(...arguments);
+        this.onRelationChange(
+            () => this.channel_id,
+            ({ removed }) => {
+                if (removed.length) {
+                    this.delete();
+                }
+            }
+        );
+    }
+
     /**
      * Pair identifying this chatbot for the python store index.
      *
@@ -25,12 +37,7 @@ export class Chatbot extends Record {
     script = fields.One("chatbot.script");
     currentStep = fields.One("ChatbotStep");
     steps = fields.Many("ChatbotStep");
-    channel_id = fields.One("discuss.channel", {
-        inverse: "chatbot",
-        onDelete() {
-            this.delete();
-        },
-    });
+    channel_id = fields.One("discuss.channel", { inverse: "chatbot" });
     tmpAnswer = "";
     typingMessage = this.computed(() => {
         if (this.isTyping && this.channel_id) {
@@ -42,6 +49,7 @@ export class Chatbot extends Record {
         }
         return undefined;
     });
+
     /**
      * @type {(message: import("models").Message) => Promise<void>}
      */

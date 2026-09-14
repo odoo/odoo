@@ -1,7 +1,7 @@
 import { Discuss } from "@mail/core/public_web/discuss_app/discuss_app";
 import { propComputed } from "@mail/utils/common/hooks";
 
-import { Component, onMounted, onWillUnmount, t, useOnChange } from "@odoo/owl";
+import { Component, computed, onMounted, onWillUnmount, t, useOnChange } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -33,9 +33,15 @@ export class DiscussClientAction extends Component {
                 .optional()
         );
         this.store = useService("mail.store");
+        const actionActiveId = computed(() => {
+            const action = this.action();
+            return action?.context?.active_id ?? action?.params?.active_id;
+        });
         useOnChange(
-            () => [this.action()],
-            (action) => this.restoreDiscussThread(action)
+            () => [actionActiveId()],
+            () => {
+                this.restoreDiscussThread(this.action());
+            }
         );
         onMounted(() => (this.store.discuss.isActive = true));
         onWillUnmount(() => (this.store.discuss.isActive = false));
@@ -43,8 +49,8 @@ export class DiscussClientAction extends Component {
 
     getActiveId(action) {
         return (
-            action.context.active_id ??
-            action.params?.active_id ??
+            action?.context?.active_id ??
+            action?.params?.active_id ??
             this.store["mail.thread"].localIdToActiveId(this.store.discuss.thread?.localId) ??
             (this.env.services.ui.isSmall ? undefined : this.store.discuss.lastActiveId)
         );

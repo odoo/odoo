@@ -2,6 +2,8 @@ import { AWAY_DELAY } from "@mail/core/common/im_status_service";
 import { fields } from "@mail/model/misc";
 import { Record } from "@mail/model/record";
 
+import { computed } from "@odoo/owl";
+
 import { debounce } from "@web/core/utils/timing";
 
 /** @typedef {'offline' | 'bot' | 'online' | 'away' | undefined} ImStatus */
@@ -18,36 +20,26 @@ export class ImStatusMixin extends Record {
 
     setup() {
         super.setup(...arguments);
-        const setImStatusDebounced = debounce(
-            (status) => (this.imStatusUI = status),
-            ImStatusMixin.IM_STATUS_DEBOUNCE_DELAY
-        );
-        this.setImStatusDebounced = setImStatusDebounced;
-        this.cancelSetImStatusDebounced = setImStatusDebounced.cancel;
         this.onChange(
-            () => {
-                if (this.notEq(this.store.self_user) && this.notEq(this.store.self_guest)) {
-                    return [false];
+            () => [
+                this.presence_status,
+                this.eq(this.store.self_user) || this.eq(this.store.self_guest),
+            ],
+            function onChangePresenceStatus(presence_status, isSelf) {
+                if (!isSelf) {
+                    return;
                 }
-                const isOnline =
-                    this.store.env.services.presence.getInactivityPeriod() < AWAY_DELAY;
-                return [
-                    (this.presence_status === "away" && isOnline) ||
-                        this.presence_status === "offline",
-                ];
-            },
-            function updateBusPresence(isPresenceOutdated) {
-                if (isPresenceOutdated) {
+                const presenceService = this.store.env.services.presence;
+                const isOnline = presenceService.getInactivityPeriod() < AWAY_DELAY;
+                if ((presence_status === "away" && isOnline) || presence_status === "offline") {
                     this.store.env.services.im_status.updateBusPresence();
                 }
             }
         );
+        const presenceChannel = computed(() => this.monitorPresence && this.presenceChannel);
         this.onChange(
-            () => [
-                this.monitorPresence ? this.presenceChannel : undefined,
-                this.store.env.services.bus_service,
-            ],
-            function subscribeToPresenceChannel(presenceChannel, busService) {
+            () => [presenceChannel(), this.store.env.services.bus_service],
+            function onChangePresenceChannel(presenceChannel, busService) {
                 if (presenceChannel) {
                     busService.addChannel(presenceChannel);
                     return () => busService.deleteChannel(presenceChannel);
@@ -77,10 +69,18 @@ export class ImStatusMixin extends Record {
             { immediate: true }
         );
     }
-    /** @type {(status) => void} */
-    setImStatusDebounced;
-    /** @type {() => void} */
-    cancelSetImStatusDebounced;
+    /**
+     * Debounced write of `imStatusUI`: declared, so each record holds one
+     * debounced call instead of making a new one on every read.
+     *
+     * @type {(status) => void}
+     */
+    setImStatusDebounced = this.computed(() =>
+        debounce((status) => (this.imStatusUI = status), ImStatusMixin.IM_STATUS_DEBOUNCE_DELAY)
+    );
+    get cancelSetImStatusDebounced() {
+        return this.setImStatusDebounced.cancel;
+    }
     /** @type {ImStatus} */
     im_status;
     /**

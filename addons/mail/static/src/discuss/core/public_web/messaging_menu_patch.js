@@ -28,7 +28,7 @@ const messagingMenuPatch = {
         });
         this.channelSearch = useSearch({
             fetch: (searchTerm) =>
-                this.state().activeTab.loadMore({
+                this.state().activeTab?.loadMore({
                     filter: this.state().selectedFilter,
                     pluginFilters: this.state().activePluginFilters,
                     searchTerm,
