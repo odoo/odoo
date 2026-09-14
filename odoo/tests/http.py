@@ -4,6 +4,7 @@ import inspect
 import itertools
 import json
 import logging
+import operator
 import threading
 import time
 from contextlib import ExitStack, contextmanager
@@ -212,7 +213,8 @@ class HttpCase(TransactionCase):
         if not location:
             return urlsplit("")
         s = urlsplit(urljoin(self.base_url(), location))
-        return s._replace(query=urlencode(parse_qsl(s.query)))
+        params = sorted(parse_qsl(s.query), key=operator.itemgetter(0))
+        return s._replace(query=urlencode(params))
 
     def assertURLEqual(
         self, test_url: str, truth_url: str, message: str | None = None
