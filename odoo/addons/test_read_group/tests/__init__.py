@@ -8,3 +8,4 @@ from . import test_web_fill_temporal
 from . import test_web_group_expand
 from . import test_web_read_group
 from . import test_override
+from . import test_stand_in_fields

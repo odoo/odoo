@@ -538,6 +538,7 @@ class ProjectTask(models.Model):
         store=False,
         readonly=False,
         group_expand="_read_group_triage_ids",
+        group_by_field="triage_ids",
         domain="[('user_id', '=', uid)]",
         help="The current user's personal triage bucket.",
     )
@@ -4464,27 +4465,6 @@ class ProjectTask(models.Model):
             "url": f"/odoo/{self.project_id.id}/action-project.act_project_project_2_project_task_all/{self.id}?menu_id={menu_id}",
             "target": "new",
         }
-
-    @api.model
-    def _read_group(
-        self,
-        domain,
-        groupby=(),
-        aggregates=(),
-        having=(),
-        offset=0,
-        limit=None,
-        order=None,
-    ) -> list[tuple]:
-        if "triage_id" in groupby:
-            groupby = [
-                ("triage_ids" if fname == "triage_id" else fname) for fname in groupby
-            ]
-            if order:
-                order = re.sub(r"\btriage_id\b", "triage_ids", order)
-        return super()._read_group(
-            domain, groupby, aggregates, having, offset, limit, order
-        )
 
     def project_sharing_toggle_is_follower(self) -> bool:
         self.check_singleton()

@@ -82,6 +82,16 @@ class Test_Read_GroupAggregate(models.Model):
     numeric_value = fields.Float(digits=(4, 2))
     partner_id = fields.Many2one(comodel_name="res.partner")
     display_name = fields.Char(store=True)
+    customer_id = fields.Many2one(
+        comodel_name="res.partner",
+        compute="_compute_customer_id",
+        group_by_field="partner_id",
+    )
+
+    @api.depends("partner_id")
+    def _compute_customer_id(self):
+        for record in self:
+            record.customer_id = record.partner_id
 
 
 SELECTION = [("c", "C"), ("b", "B"), ("a", "A")]
@@ -151,6 +161,16 @@ class Test_Read_GroupOrderLine(models.Model):
     )
     value = fields.Integer()
     date = fields.Date(related="order_id.date")
+    current_order_id = fields.Many2one(
+        comodel_name="test_read_group.order",
+        compute="_compute_current_order_id",
+        group_by_field="order_id",
+    )
+
+    @api.depends("order_id")
+    def _compute_current_order_id(self):
+        for line in self:
+            line.current_order_id = line.order_id
 
 
 class Test_Read_GroupUser(models.Model):
@@ -212,6 +232,17 @@ class Test_Read_GroupTask(models.Model):
     date = fields.Date()
     integer = fields.Integer()
     key = fields.Char()
+    lead_user_id = fields.Many2one(
+        comodel_name="test_read_group.user",
+        compute="_compute_lead_user_id",
+        group_by_field="user_ids",
+    )
+    ref = fields.Char(order_by_field="id")
+
+    @api.depends("user_ids")
+    def _compute_lead_user_id(self):
+        for task in self:
+            task.lead_user_id = task.user_ids[:1]
 
 
 class Test_Read_GroupTag(models.Model):

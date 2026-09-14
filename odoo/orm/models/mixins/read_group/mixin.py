@@ -275,6 +275,10 @@ class ReadGroupMixin(_ReadGroupSQLMixin, _ReadGroupFormatMixin, _ReadGroupFillMi
     def _can_groupby_spec_duplicate_rows(self, model, spec) -> bool:
         fname, property_name, __ = parse_read_group_spec(spec)
         field = model._fields[fname]
+        if field.group_by_field:
+            return self._can_groupby_spec_duplicate_rows(
+                model, field.group_by_field + spec[len(fname) :]
+            )
         if field.is_properties:
             if not property_name:
                 raise ValueError(

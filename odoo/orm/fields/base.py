@@ -227,6 +227,8 @@ class Field[T](
     group_expand: (
         str | Callable[[ModelLike, typing.Any, DomainType], typing.Any] | None
     ) = None
+    group_by_field: str | None = None
+    order_by_field: str | None = None
     falsy_value_label: str | None = None
     prefetch: bool | str = True
 
@@ -366,6 +368,7 @@ class Field[T](
                 self.setup_related(model)
             else:
                 self.setup_nonrelated(model)
+            self._check_stand_in_fields(model)
 
             if not isinstance(self.required, bool):
                 warnings.warn(
@@ -384,6 +387,27 @@ class Field[T](
 
     def setup_nonrelated(self, model: BaseModel) -> None:
         pass
+
+    def _check_stand_in_fields(self, model: BaseModel) -> None:
+        for attribute in ("group_by_field", "order_by_field"):
+            target_name = getattr(self, attribute)
+            if target_name is None:
+                continue
+            target = model._fields.get(target_name)
+            if target is None or target is self:
+                raise ValueError(
+                    f"Field {self}: {attribute}={target_name!r} names no other field "
+                    f"of {model._name}"
+                )
+            if attribute == "group_by_field" and (
+                target.comodel_name != self.comodel_name
+                if self.relational
+                else target.type != self.type
+            ):
+                raise ValueError(
+                    f"Field {self}: group_by_field {target} groups other values "
+                    f"than {self.type} {self.comodel_name or ''} does"
+                )
 
     def get_depends(self, model: BaseModel) -> tuple[Iterable[str], Iterable[str]]:
         return _setup.get_depends(self, model)

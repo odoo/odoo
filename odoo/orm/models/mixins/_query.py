@@ -131,6 +131,15 @@ class _QueryMixin(_ModelStubs):
             )
             return SQL.EMPTY
 
+        if field.order_by_field:
+            return self._order_field_to_sql(
+                alias,
+                field.order_by_field + field_name[len(fname) :],
+                direction,
+                nulls,
+                query,
+            )
+
         if field.is_many2one:
             seen = self.env.context.get("__m2o_order_seen", ())
             if field in seen:

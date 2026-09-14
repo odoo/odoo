@@ -235,6 +235,10 @@ class _ReadGroupSQLMixin(_ModelStubs):
 
         field = self._fields[fname]
         self._check_field_access(field, "read")
+        if field.group_by_field:
+            return self._read_group_groupby(
+                alias, field.group_by_field + groupby_spec[len(fname) :], query
+            )
 
         _debug.logic(
             "read_group.groupby",
@@ -414,11 +418,14 @@ class _ReadGroupSQLMixin(_ModelStubs):
         groupby_terms: dict[str, SQL],
         orderby_terms: list,
         query: Query,
+        order_field: str | None = None,
     ) -> None:
         query._any_value_orderby = True
         query._collect_order_groupby = True
         try:
-            sql_order = self._order_to_sql(f"{term} {direction} {nulls}", query)
+            sql_order = self._order_to_sql(
+                f"{order_field or term} {direction} {nulls}", query
+            )
         finally:
             query._any_value_orderby = False
             query._collect_order_groupby = False
@@ -486,6 +493,8 @@ class _ReadGroupSQLMixin(_ModelStubs):
                 continue
 
             field = self._fields.get(term)
+            if field and field.group_by_field:
+                field = self._fields[field.group_by_field]
             spec_granularity = parse_read_group_spec(term)[2]
             if (
                 traverse_many2one
@@ -494,7 +503,13 @@ class _ReadGroupSQLMixin(_ModelStubs):
                 and self.env[field.comodel_name]._order != "id"
             ):
                 self._read_group_orderby_many2one(
-                    term, direction, nulls, groupby_terms, orderby_terms, query
+                    term,
+                    direction,
+                    nulls,
+                    groupby_terms,
+                    orderby_terms,
+                    query,
+                    order_field=field.name,
                 )
 
             elif spec_granularity == "day_of_week":
