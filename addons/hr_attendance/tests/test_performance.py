@@ -17,7 +17,18 @@ _logger = logging.getLogger(__name__)
 # is supposed to pin. 2025-09-02 gives 63 days (30 + 31 + 2) and therefore
 # 6,300 attendances over the 100 employees, whatever day this runs.
 _ANCHOR = date(2025, 9, 2)
-_REGENERATION_QUERIES = 259
+# TWO NUMBERS, BOTH EXACT, BECAUSE THE BUDGET IS A FUNCTION OF THE INSTALLED
+# MODULE SET AND NOT ONLY OF THIS MODULE'S CODE. `hr_work_entry_attendance`
+# overrides `hr.attendance._get_employee_calendar()` to prefer a contract's own
+# schedule, and that override costs exactly one query on this path -- measured
+# by installing it into a database that had just read 258 and re-running: 259.
+#
+# A single budget of 259 was what this test carried first, taken on a database
+# that happened to have the enterprise module on it, and it printed
+# `Query count less than expected: 258 < 259` on every clean run -- which is
+# the exact defect this test's own comment was written to describe.
+_REGENERATION_QUERIES = 258
+_REGENERATION_QUERIES_WITH_WORK_ENTRIES = 259
 
 
 @tagged("post_install", "-at_install", "hr_attendance_perf")
@@ -275,8 +286,18 @@ class TestHrAttendancePerformance(TransactionCase):
         # figure is only a figure because `_ANCHOR` is fixed; against
         # `date.today()` it moved with the weekday composition of the span.
         self.assertEqual(len(self.attendances), 6300)
+        budget = (
+            _REGENERATION_QUERIES_WITH_WORK_ENTRIES
+            if self.env["ir.module.module"].search_count(
+                [
+                    ("name", "=", "hr_work_entry_attendance"),
+                    ("state", "=", "installed"),
+                ]
+            )
+            else _REGENERATION_QUERIES
+        )
         t0 = time.time()
-        with self.assertQueryCount(_REGENERATION_QUERIES):
+        with self.assertQueryCount(budget):
             self.ruleset.action_regenerate_overtimes()
         t1 = time.time()
         _logger.info(
