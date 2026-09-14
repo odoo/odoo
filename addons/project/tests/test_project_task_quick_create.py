@@ -30,22 +30,22 @@ class TestProjectTaskQuickCreate(TestProjectCommon):
 
     def test_create_task_with_valid_expressions(self) -> None:
         valid_expressions = {
-            "task A 30H 2.5h #Tag1 #tag2 @Armande @Bast @raouf1 @raouf2 !": (
-                "task A 30H 2.5h",
+            "task A 30X 2.5x #Tag1 #tag2 @Armande @Bast @raouf1 @raouf2 !": (
+                "task A 30X 2.5x",
                 2,
                 4,
                 "1",
                 0,
             ),
-            "task A 30H 2.5h #Tag1 #tag2 #tag3 @Armande @Bast @raouf1 ! @raouf2": (
-                "task A 30H 2.5h",
+            "task A 30X 2.5x #Tag1 #tag2 #tag3 @Armande @Bast @raouf1 ! @raouf2": (
+                "task A 30X 2.5x",
                 3,
                 4,
                 "1",
                 0,
             ),
-            "task A ! 30H 2.5h #Tag1 #tag2 #tag3 @Armande @Bast ! @raouf1 #tag4": (
-                "task A 30H 2.5h",
+            "task A ! 30X 2.5x #Tag1 #tag2 #tag3 @Armande @Bast ! @raouf1 #tag4": (
+                "task A 30X 2.5x",
                 4,
                 3,
                 "1",
@@ -53,73 +53,73 @@ class TestProjectTaskQuickCreate(TestProjectCommon):
             ),
             "task A": ("task A", 0, 0, "0", 0),
             "task A !": ("task A", 0, 0, "1", 0),
-            "task A 30H   2.5h #Tag1 #tag2     #tag3    @Armande      @Bast @raouf1 @raouf2": (
-                "task A 30H   2.5h",
+            "task A 30X   2.5x #Tag1 #tag2     #tag3    @Armande      @Bast @raouf1 @raouf2": (
+                "task A 30X   2.5x",
                 3,
                 4,
                 "0",
                 0,
             ),
-            "task A 30H 2.5h #Tag1 @Armande #tag3 @Bast @raouf1 #tag2 @raouf2 #tag4": (
-                "task A 30H 2.5h",
+            "task A 30X 2.5x #Tag1 @Armande #tag3 @Bast @raouf1 #tag2 @raouf2 #tag4": (
+                "task A 30X 2.5x",
                 4,
                 4,
                 "0",
                 0,
             ),
-            "task A 30H #tag1 @raouf1 Nothing !": (
-                "task A 30H #tag1 @raouf1 Nothing",
+            "task A 30X #tag1 @raouf1 Nothing !": (
+                "task A 30X #tag1 @raouf1 Nothing",
                 0,
                 0,
                 "1",
                 0,
             ),
-            "task A 30H 2.5h #Tag1 #tag2 #tag3 @Armande @Bast @raouf !": (
-                "task A 30H 2.5h @raouf",
+            "task A 30X 2.5x #Tag1 #tag2 #tag3 @Armande @Bast @raouf !": (
+                "task A 30X 2.5x @raouf",
                 3,
                 2,
                 "1",
                 0,
             ),
-            "task A 30H 2.5h #Tag1 #tag2 #tag3 @Armande @Bastttt @raouf1 @raouf2 !": (
-                "task A 30H 2.5h @Bastttt",
+            "task A 30X 2.5x #Tag1 #tag2 #tag3 @Armande @Bastttt @raouf1 @raouf2 !": (
+                "task A 30X 2.5x @Bastttt",
                 3,
                 3,
                 "1",
                 0,
             ),
-            "task A 30H 2.5h #TAG1 #tag1 #TAG2": (
-                "task A 30H 2.5h",
+            "task A 30X 2.5x #TAG1 #tag1 #TAG2": (
+                "task A 30X 2.5x",
                 2,
                 0,
                 "0",
                 0,
             ),
-            "task A 30H 2.5h #Tag1 #tag2 @Armande @Bast @raouf1 @raouf2 !!": (
-                "task A 30H 2.5h",
+            "task A 30X 2.5x #Tag1 #tag2 @Armande @Bast @raouf1 @raouf2 !!": (
+                "task A 30X 2.5x",
                 2,
                 4,
                 "2",
                 0,
             ),
             "task A !!": ("task A", 0, 0, "2", 0),
-            "task A 30H 2.5h #Tag1 #tag2 #tag3 @Armande @Bastttt @raouf1 @raouf2 !!": (
-                "task A 30H 2.5h @Bastttt",
+            "task A 30X 2.5x #Tag1 #tag2 #tag3 @Armande @Bastttt @raouf1 @raouf2 !!": (
+                "task A 30X 2.5x @Bastttt",
                 3,
                 3,
                 "2",
                 0,
             ),
-            "task A 30H 2.5h #Tag1 #tag2 @Armande @Bast @raouf1 @raouf2 !!!": (
-                "task A 30H 2.5h",
+            "task A 30X 2.5x #Tag1 #tag2 @Armande @Bast @raouf1 @raouf2 !!!": (
+                "task A 30X 2.5x",
                 2,
                 4,
                 "3",
                 0,
             ),
             "task A !!!": ("task A", 0, 0, "3", 0),
-            "task A 30H 2.5h #Tag1 #tag2 #tag3 @Armande @Bastttt @raouf1 @raouf2 !!!": (
-                "task A 30H 2.5h @Bastttt",
+            "task A 30X 2.5x #Tag1 #tag2 #tag3 @Armande @Bastttt @raouf1 @raouf2 !!!": (
+                "task A 30X 2.5x @Bastttt",
                 3,
                 3,
                 "3",
