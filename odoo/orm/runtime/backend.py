@@ -1885,15 +1885,28 @@ class _InMemoryReadGroup:
         def present(records):
             return [v for v in values(records) if v is not None]
 
+        if field.column_type and field.column_type[0] == "numeric":
+            # a numeric column holds the decimal the float spells, and SUM
+            # is exact: 0.1 + 0.2 answers 0.3, not the double's 0.30000000000000004
+            def total(present_values):
+                return float(sum(Decimal(repr(v)) for v in present_values))
+
+            def mean(present_values):
+                exact = sum(Decimal(repr(v)) for v in present_values)
+                return float(exact / len(present_values))
+        else:
+            total = sum
+
+            def mean(present_values):
+                return sum(present_values) / len(present_values)
+
         readers = {
             "count": lambda records: len(present(records)),
             "count_distinct": lambda records: len(set(present(records))),
-            "sum": lambda records: sum(present(records)) if present(records) else None,
-            "avg": lambda records: (
-                sum(present(records)) / len(present(records))
-                if present(records)
-                else None
+            "sum": lambda records: (
+                total(present(records)) if present(records) else None
             ),
+            "avg": lambda records: mean(present(records)) if present(records) else None,
             "max": lambda records: max(present(records), default=None),
             "min": lambda records: min(present(records), default=None),
             "bool_and": lambda records: (

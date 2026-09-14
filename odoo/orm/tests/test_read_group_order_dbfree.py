@@ -124,3 +124,26 @@ def test_a_never_written_boolean_aggregates_as_false(env):
     assert rows == [(False, True, 2, [True, False])]
     rows = env["rgo.score"]._read_group([], ["home"], ["__count"])
     assert rows == [(False, 3), (True, 1)]
+
+
+class Ledger(models.Model):
+    _name = "rgo.ledger"
+    _module = _MOD
+    _description = "amounts on numeric and double precision columns"
+    _log_access = False
+
+    amount = fields.Float(digits=(16, 2))
+    ratio = fields.Float()
+
+
+def test_a_sum_on_a_numeric_column_is_exact_as_in_sql():
+    with model_test_env(Ledger) as env:
+        Ledger_ = env["rgo.ledger"]
+        Ledger_.create([{"amount": v, "ratio": v} for v in (0.1, 0.2)])
+        [(amount, ratio, mean)] = Ledger_._read_group(
+            [], [], ["amount:sum", "ratio:sum", "amount:avg"]
+        )
+        # numeric(16, 2) sums the decimals the floats spell; float8 sums doubles
+        assert amount == 0.3
+        assert ratio == 0.1 + 0.2 != 0.3
+        assert mean == 0.15
