@@ -3052,6 +3052,63 @@ test("monetary chart rendering with multiple currencies", async () => {
     checkTooltip(view, { title: "Amount", lines: [{ label: "true", value: "1,000.00 €" }] }, 1);
 });
 
+test.tags("desktop");
+test("monetary chart rendering with multiple currencies and a non-sum aggregator", async () => {
+    serverState.companies[0].currency_id = 2;
+
+    Foo._fields.amount = fields.Monetary({ currency_field: "currency_id", aggregator: "max" });
+    Foo._fields.currency_id = fields.Many2one({ relation: "res.currency", default: 1 });
+    Foo._records = [
+        { id: 1, bar: true, amount: 500 },
+        { id: 2, bar: false, amount: 400, currency_id: 2 },
+        { id: 3, bar: false, amount: 100 },
+    ];
+    const view = await mountView({
+        type: "graph",
+        resModel: "foo",
+        arch: /* xml */ `
+            <graph>
+                <field name="bar" />
+                <field name="amount" type="measure" />
+            </graph>
+        `,
+    });
+
+    // the "false" group mixes currencies, so its maximum has no currency
+    checkTooltip(view, { title: "Amount", lines: [{ label: "false", value: "400" }] }, 0);
+    checkTooltip(view, { title: "Amount", lines: [{ label: "true", value: "$ 500.00" }] }, 1);
+});
+
+test.tags("desktop");
+test("monetary chart rendering with a sum_currency aggregator", async () => {
+    serverState.companies[0].currency_id = 2;
+
+    Foo._fields.amount = fields.Monetary({
+        currency_field: "currency_id",
+        aggregator: "sum_currency",
+    });
+    Foo._fields.currency_id = fields.Many2one({ relation: "res.currency", default: 1 });
+    Foo._records = [
+        { id: 1, bar: true, amount: 500 },
+        { id: 2, bar: false, amount: 400 },
+        { id: 3, bar: false, amount: 100 },
+    ];
+    const view = await mountView({
+        type: "graph",
+        resModel: "foo",
+        arch: /* xml */ `
+            <graph>
+                <field name="bar" />
+                <field name="amount" type="measure" />
+            </graph>
+        `,
+    });
+
+    // sums are in the company currency, even for groups in a single other currency
+    checkTooltip(view, { title: "Amount", lines: [{ label: "false", value: "500.00 €" }] }, 0);
+    checkTooltip(view, { title: "Amount", lines: [{ label: "true", value: "500.00 €" }] }, 1);
+});
+
 test("graph renders percentage widget measures", async () => {
     Foo._fields.ratio = fields.Float({ string: "Ratio" });
     Foo._records = [{ id: 1, ratio: 0.3333333 }];
