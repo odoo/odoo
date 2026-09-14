@@ -9,6 +9,7 @@ from odoo import api, fields, models
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command, Date, Domain
 from odoo.libs.datetime import timezone
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.intervals import Intervals
 from odoo.libs.numbers import float_compare, float_round
 from odoo.tools.date_utils import float_to_time
@@ -17,10 +18,10 @@ from odoo.tools.translate import _
 
 from odoo.addons.base.models.ir_model_common import MODULE_UNINSTALL_FLAG
 from odoo.addons.base.models.res_partner import _selection_timezones
-from odoo.addons.hr_holidays.tools import debug_log as dbg
 from odoo.addons.resource.models.utils import HOURS_PER_DAY
 
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 VALIDITY_TRIGGER_FIELDS = frozenset(
     {
@@ -460,11 +461,8 @@ class HrLeave(models.Model):
                 "An employee already booked time off which overlaps with this period:"
             )
         )
-        dbg.logic.debug(
-            "_overlap_warning on %s: %s distinct line(s), mine_only=%s",
-            dbg.rec(self),
-            len(lines),
-            mine_only,
+        _debug.logic(
+            "overlap_warning", leaves=self, lines=len(lines), mine_only=mine_only
         )
         return header + "".join(
             "\n\t"
@@ -993,12 +991,12 @@ Versions:
                         fractions[day] = 0.0
             days = sum(fractions.values())
             hours = days * (calendar.hours_per_day or HOURS_PER_DAY)
-            dbg.logic.debug(
-                "_flexible_duration on %s: %s -> %s days, %s hours",
-                dbg.rec(self),
-                fractions,
-                days,
-                hours,
+            _debug.logic(
+                "flexible_duration",
+                leave=self,
+                covered_days=len(fractions),
+                days=days,
+                hours=hours,
             )
             return days, hours
         if public_holidays:

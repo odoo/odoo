@@ -6,11 +6,12 @@ from dateutil.relativedelta import relativedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.numbers import float_round
 from odoo.tools import format_date
 from odoo.tools.date_utils import get_timedelta
 
-from odoo.addons.hr_holidays.tools import debug_log as dbg
+_debug = DebugLog(__name__)
 
 
 class HrLeaveAllocation(models.Model):
@@ -295,11 +296,11 @@ class HrLeaveAllocation(models.Model):
             )
             if allocation.is_name_custom != is_custom:
                 allocation.is_name_custom = is_custom
-                dbg.lifecycle.debug(
-                    "allocation %s description is %s: %r",
-                    dbg.rec(allocation),
-                    "custom" if is_custom else "generated",
-                    allocation.name,
+                _debug.lifecycle(
+                    "allocation_description",
+                    allocation=allocation,
+                    custom=is_custom,
+                    name=allocation.name,
                 )
 
     @api.depends("holiday_status_id", "number_of_days")
@@ -1202,12 +1203,12 @@ class HrLeaveAllocation(models.Model):
             leave_type = allocation.holiday_status_id
             if leave_type.allows_negative and after <= leave_type.max_allowed_negative:
                 continue
-            dbg.logic.debug(
-                "allocation %s refused: excess days %s -> %s, allows_negative=%s",
-                dbg.rec(allocation),
-                before,
-                after,
-                leave_type.allows_negative,
+            _debug.logic(
+                "allocation_duration_refused",
+                allocation=allocation,
+                excess_before=before,
+                excess_after=after,
+                allows_negative=leave_type.allows_negative,
             )
             raise ValidationError(
                 _(

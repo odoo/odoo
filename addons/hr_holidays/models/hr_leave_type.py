@@ -8,13 +8,13 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.numbers import float_round
 from odoo.tools import format_date
 from odoo.tools.translate import _
 
-from odoo.addons.hr_holidays.tools import debug_log as dbg
-
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 PY_OPERATORS = {
     ">": py_operator.gt,
@@ -464,13 +464,13 @@ class HrLeaveType(models.Model):
                 or op(leave_type[field_name], value)
             )
         )
-        dbg.logic.debug(
-            "_search_balance %s %s %r: %s of %s types match",
-            field_name,
-            operator,
-            value,
-            len(matching),
-            len(leave_types),
+        _debug.logic(
+            "balance_search",
+            field=field_name,
+            operator=operator,
+            value=value,
+            matched=len(matching),
+            candidates=len(leave_types),
         )
         return [("id", "in", matching.ids)]
 

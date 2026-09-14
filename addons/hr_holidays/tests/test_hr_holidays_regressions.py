@@ -1008,15 +1008,23 @@ class TestBackToWorkDate(TestHrHolidaysCommon):
         )
 
     def test_the_batch_reports_what_it_answered(self):
+        """On the campaign's shared channel, in the campaign's line shape.
+
+        `odoo.debug.<channel>.<scope>` and `event=<name> k=v` are fixed by
+        `odoo.libs.debug_log` so one grep finds a site on both the Python and
+        the JS side, and so the strip pass at the end of the campaign has one
+        vocabulary to remove rather than one per module.
+        """
         employee = self._employee_with_two_calendar_periods()
         with self.assertLogs(
-            "odoo.addons.hr_holidays.debug.logic", level="DEBUG"
+            "odoo.debug.logic.hr_holidays.hr_employee", level="DEBUG"
         ) as captured:
             employee._get_first_working_interval(datetime(2026, 3, 2, 12, 0))
         self.assertTrue(
             any(
-                "_get_first_working_interval_batch" in line
-                and "answered 1 of 1" in line
+                "event=first_working_interval_batch" in line
+                and "answered=1" in line
+                and "pending=1" in line
                 for line in captured.output
             ),
             captured.output,

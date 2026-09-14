@@ -7,12 +7,15 @@ from odoo import Command, _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.libs.datetime import timezone
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.numbers import float_round
 
-from odoo.addons.hr_holidays.tools import debug_log as dbg
 from odoo.addons.resource.models.utils import HOURS_PER_DAY
 
 _FIRST_WORKING_INTERVAL_LOOKAHEAD_DAYS = (7, 30, 90, 180, 365, 730)
+
+
+_debug = DebugLog(__name__)
 
 
 class HrEmployee(models.Model):
@@ -325,14 +328,13 @@ class HrEmployee(models.Model):
                             earliest = found.get(employee.id)
                             if earliest is None or moment < earliest:
                                 found[employee.id] = moment
-            dbg.logic.debug(
-                "_get_first_working_interval_batch on %s: lookahead %s days over "
-                "%s batch(es) answered %s of %s",
-                dbg.rec(pending),
-                lookahead_days,
-                batches,
-                len(found),
-                len(pending),
+            _debug.logic(
+                "first_working_interval_batch",
+                employees=pending,
+                lookahead_days=lookahead_days,
+                batches=batches,
+                answered=len(found),
+                pending=len(pending),
             )
             result.update(found)
             pending = pending.filtered(
