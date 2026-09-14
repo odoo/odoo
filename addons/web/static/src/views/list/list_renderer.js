@@ -98,11 +98,35 @@ function containsActiveElement(parent) {
 }
 
 /**
+ * Tabable elements of a cell, or of a single one of its column group fields,
+ * ignoring those of readonly column group fields, e.g. the link of a readonly
+ * many2one.
+ *
+ * @param {HTMLElement} parent
+ */
+function getEditableTabableElements(parent) {
+    return getTabableElements(parent).filter(
+        (el) => !el.closest(".o_column_group_field.o_readonly_modifier")
+    );
+}
+
+/**
  * @param {HTMLTableCellElement} cell
  * @param {number} index
  */
 function getElementToFocus(cell, index) {
-    return getTabableElements(cell).at(index) || cell;
+    return getEditableTabableElements(cell).at(index) || cell;
+}
+
+/**
+ * A cell may display several fields (column group), in which case it is only
+ * readonly when all of them are.
+ *
+ * @param {HTMLTableCellElement} cell
+ */
+function hasOnlyReadonlyFields(cell) {
+    const fields = [...cell.children];
+    return fields.length > 0 && fields.every((el) => el.classList.contains("o_readonly_modifier"));
 }
 
 export const listRendererProps = {
@@ -511,7 +535,7 @@ export class ListRenderer extends Component {
         return {
             readonly:
                 this.props.readonly ||
-                this.isCellReadonly(column, record) ||
+                this.isFieldReadonly(column, record) ||
                 this.isRecordReadonly(record) ||
                 (column.widget === "handle" && !this.canResequenceRows),
         };
@@ -616,7 +640,7 @@ export class ListRenderer extends Component {
             if (column.type === "column_group") {
                 const hasEditable = column.fields.some(
                     (f) =>
-                        !this.isCellReadonly(f, this.editedRecord()) &&
+                        !this.isFieldReadonly(f, this.editedRecord()) &&
                         !this.evalInvisible(f.invisible, this.editedRecord()) &&
                         (!f.optional || this.optionalActiveFields[f.name])
                 );
@@ -629,7 +653,7 @@ export class ListRenderer extends Component {
                         const subFieldEl = cell.querySelector(
                             `[data-field-name='${targetFieldName}']`
                         );
-                        toFocus = subFieldEl && getTabableElements(subFieldEl).at(0);
+                        toFocus = subFieldEl && getEditableTabableElements(subFieldEl).at(0);
                     }
                     toFocus = toFocus || (cell && getElementToFocus(cell, forward ? 0 : -1));
                     if (toFocus && cell !== toFocus) {
@@ -645,7 +669,7 @@ export class ListRenderer extends Component {
             }
             // in findNextFocusableOnRow test is done by using classList
             // refactor
-            if (!this.isCellReadonly(column, this.editedRecord())) {
+            if (!this.isFieldReadonly(column, this.editedRecord())) {
                 const cell = this.tableRef().querySelector(
                     `.o_selected_row td[data-column-id='${column.id}']`
                 );
@@ -1161,7 +1185,7 @@ export class ListRenderer extends Component {
             if (record.isFieldInvalid(column.name)) {
                 classNames.push("o_invalid_cell");
             }
-            if (this.isCellReadonly(column, record)) {
+            if (this.isFieldReadonly(column, record)) {
                 classNames.push("o_readonly_modifier");
             }
             if (this.canUseFormatter(column, record)) {
@@ -1170,7 +1194,7 @@ export class ListRenderer extends Component {
             if (
                 record.isInEdition &&
                 this.editedRecord() &&
-                this.isCellReadonly(column, this.editedRecord())
+                this.isFieldReadonly(column, this.editedRecord())
             ) {
                 classNames.push("text-muted");
             } else if (this.isRecordAvailable(record)) {
@@ -1184,7 +1208,7 @@ export class ListRenderer extends Component {
      * @param {Column} column
      * @param {RelationalRecord} record
      */
-    isCellReadonly(column, record) {
+    isFieldReadonly(column, record) {
         return !!(
             this.isRecordReadonly(record) ||
             (column.relatedPropertyField && record.selected && record.model.multiEdit) ||
@@ -1230,6 +1254,12 @@ export class ListRenderer extends Component {
         }
         if (record.isFieldInvalid(fieldInfo.name)) {
             classNames.push("o_invalid_cell");
+        }
+        if (this.isFieldReadonly(fieldInfo, record)) {
+            classNames.push("o_readonly_modifier");
+            if (record.isInEdition) {
+                classNames.push("text-muted");
+            }
         }
         if (this.canUseFormatter(fieldInfo, record)) {
             classNames.push(...this.getDecorationClassNames(fieldInfo, record));
@@ -1527,7 +1557,7 @@ export class ListRenderer extends Component {
                     (!column.widget || column.widget === "boolean")
                 ) {
                     if (
-                        !this.isCellReadonly(column, record) &&
+                        !this.isFieldReadonly(column, record) &&
                         !this.evalInvisible(column.invisible, record)
                     ) {
                         await record.update({ [column.name]: !record.data[column.name] });
@@ -1749,10 +1779,7 @@ export class ListRenderer extends Component {
             if (!c.classList.contains("o_data_cell")) {
                 continue;
             }
-            if (
-                c.firstElementChild &&
-                c.firstElementChild.classList.contains("o_readonly_modifier")
-            ) {
+            if (hasOnlyReadonlyFields(c)) {
                 continue;
             }
             const toFocus = getElementToFocus(c, 0);
@@ -1776,10 +1803,7 @@ export class ListRenderer extends Component {
             if (!c.classList.contains("o_data_cell")) {
                 continue;
             }
-            if (
-                c.firstElementChild &&
-                c.firstElementChild.classList.contains("o_readonly_modifier")
-            ) {
+            if (hasOnlyReadonlyFields(c)) {
                 continue;
             }
             const toFocus = getElementToFocus(c, -1);

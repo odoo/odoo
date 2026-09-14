@@ -31,8 +31,8 @@ export class ProjectProjectListRenderer extends ListRenderer {
         return this._areSelectedProjectsInSameCompany;
     }
 
-    isCellReadonly(column, record) {
-        let readonly = super.isCellReadonly(column, record);
+    isFieldReadonly(column, record) {
+        let readonly = super.isFieldReadonly(column, record);
         if (!readonly && column.name === "stage_id") {
             readonly = !this.haveAllSelectedProjectsSameField('company_id');
         }

@@ -30,11 +30,11 @@ export class ProjectTaskListRenderer extends ListRenderer {
         }
         return this._areSelectedTasksInSameProject;
     }
-    isCellReadonly(column, record) {
+    isFieldReadonly(column, record) {
         let readonly = false;
         if (column.name === "stage_id") {
             readonly = !this.haveAllSelectedTasksSameField('project_id');
         }
-        return readonly || super.isCellReadonly(column, record);
+        return readonly || super.isFieldReadonly(column, record);
     }
 }
