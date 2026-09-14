@@ -132,7 +132,7 @@ class InboundAccessLog(models.Model):
                 )
             )
 
-    UNKNOWN_CALLER_WINDOW_SECONDS = 3600
+    REFUSED_CALLER_WINDOW_SECONDS = 3600
 
     @api.model
     def _record_unknown_caller(
@@ -143,19 +143,40 @@ class InboundAccessLog(models.Model):
         user_agent: str | None = None,
         status_code: int = 404,
     ) -> None:
+        self._record_refused_caller(
+            receiver_model,
+            label,
+            remote_addr,
+            outcome="unknown_receiver",
+            reason=f"no active {receiver_model} for {label}",
+            user_agent=user_agent,
+            status_code=status_code,
+        )
+
+    @api.model
+    def _record_refused_caller(
+        self,
+        gate_model: str,
+        label: str,
+        remote_addr: str | None,
+        outcome: str,
+        reason: str,
+        user_agent: str | None = None,
+        status_code: int = 401,
+    ) -> None:
         logs = self.sudo()
         now = fields.Datetime.now()
         standing = logs.search(
             [
-                ("gate_model", "=", receiver_model),
+                ("gate_model", "=", gate_model),
                 ("gate_id", "=", 0),
-                ("outcome", "=", "unknown_receiver"),
+                ("outcome", "=", outcome),
                 ("source_ip", "=", remote_addr or False),
                 (
                     "timestamp",
                     ">=",
                     fields.Datetime.subtract(
-                        now, seconds=self.UNKNOWN_CALLER_WINDOW_SECONDS
+                        now, seconds=self.REFUSED_CALLER_WINDOW_SECONDS
                     ),
                 ),
             ],
@@ -169,15 +190,15 @@ class InboundAccessLog(models.Model):
             return
         logs.create(
             {
-                "gate_model": receiver_model,
+                "gate_model": gate_model,
                 "gate_id": 0,
                 "gate_name": (label or "")[:128] or False,
                 "timestamp": now,
                 "last_seen_at": now,
                 "allowed": False,
-                "outcome": "unknown_receiver",
+                "outcome": outcome,
                 "status_code": status_code,
-                "reason": f"no active {receiver_model} for {label}"[:256],
+                "reason": (reason or "")[:256] or False,
                 "source_ip": remote_addr or False,
                 "user_agent": (user_agent or "")[:256] or False,
                 "mode": "enforce",
