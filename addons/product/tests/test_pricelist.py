@@ -757,6 +757,75 @@ class TestPricelist(ProductVariantsCommon):
             "Packaging rule with uom_dozen should be applied",
         )
 
+    def test_pricelist_item_form_packaging_price(self):
+        """The fixed unit price is kept in sync with the packaging price set in the rule form."""
+        self._enable_uom()
+        self.product_template_sofa.uom_ids = [Command.link(self.uom_pack_6.id)]
+        item_form_view = 'product.product_pricelist_item_form_view'
+        new_item = self.env['product.pricelist.item'].with_context(
+            default_pricelist_id=self.pricelist.id
+        )
+
+        with Form(new_item, view=item_form_view) as item_form:
+            # Product UoM and no min quantity: the packaging price is the unit price.
+            item_form.product_tmpl_id = self.product_template_sofa
+            item_form.uom_id = self.uom_unit
+            item_form.packaging_price = 100
+            self.assertEqual(item_form.fixed_price, 100)
+
+            # Changing the min quantity keeps the packaging price and updates the unit price.
+            item_form.min_quantity = 4
+            self.assertEqual(item_form.packaging_price, 100)
+            self.assertEqual(item_form.fixed_price, 25)
+
+            # Changing the packaging keeps the unit price and updates the packaging price.
+            item_form.uom_id = self.uom_pack_6
+            self.assertEqual(item_form.fixed_price, 25)
+            self.assertEqual(item_form.packaging_price, 600)
+
+            # Setting the packaging price on a packaging updates the unit price.
+            item_form.packaging_price = 240
+            self.assertEqual(item_form.fixed_price, 10)
+
+            # Changing the min quantity on a packaging keeps the packaging price.
+            item_form.min_quantity = 2
+            self.assertEqual(item_form.packaging_price, 240)
+            self.assertEqual(item_form.fixed_price, 20)
+        item = item_form.record
+
+        # The saved rule keeps both prices and applies the unit price per packaging.
+        self.assertRecordValues(item, [{'fixed_price': 20, 'packaging_price': 240}])
+        self.assertEqual(
+            self.pricelist._get_product_price(self.product_sofa_blue, 2, uom=self.uom_pack_6), 120
+        )
+
+        # Editing the packaging price of an existing rule updates its unit price.
+        with Form(item, view=item_form_view) as item_form:
+            item_form.packaging_price = 360
+            self.assertEqual(item_form.fixed_price, 30)
+        self.assertRecordValues(item, [{'fixed_price': 30, 'packaging_price': 360}])
+
+    def test_pricelist_item_form_packaging_price_without_product(self):
+        """Without product, the packaging price is converted into its relative UoM."""
+        self._enable_uom()
+        with Form(
+            self.env['product.pricelist.item'].with_context(default_pricelist_id=self.pricelist.id),
+            view='product.product_pricelist_item_form_view',
+        ) as item_form:
+            # Packaging without product: the unit price is expressed in its relative UoM.
+            item_form.uom_id = self.uom_pack_6
+            item_form.min_quantity = 2
+            item_form.packaging_price = 120
+            self.assertEqual(item_form.fixed_price, 10)
+
+            # No packaging: the packaging price is only divided by the min quantity.
+            item_form.uom_id = self.env['uom.uom']
+            item_form.packaging_price = 120
+            self.assertEqual(item_form.fixed_price, 60)
+        self.assertRecordValues(
+            item_form.record, [{'fixed_price': 60, 'applied_on': '3_global'}]
+        )
+
     def test_pricelist_item_creation_from_product_variant_form(self):
         """Creating a pricelist rule from a product variant's own form should
         keep the variant it was created from, instead of dropping it because
