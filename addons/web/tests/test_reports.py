@@ -73,7 +73,7 @@ class TestReports(odoo.tests.HttpCase):
             [("user_id", "=", admin.id)]
         )
         report = report.with_user(admin)
-        with MockRequest(report.env) as mock_request:
+        with MockRequest(report.env, is_frontend=False) as mock_request:
             mock_request.session = self.authenticate(admin.login, admin.login)
             report.with_context(force_report_rendering=True)._render_qweb_pdf(
                 report.id, [partner_id]
@@ -109,7 +109,7 @@ class TestReports(odoo.tests.HttpCase):
         # the partner is refused before the PDF engine is asked for anything,
         # so nothing is fetched as anyone and no device is logged in.
         report = report.with_user(public)
-        with MockRequest(self.env) as mock_request:
+        with MockRequest(self.env, is_frontend=False) as mock_request:
             mock_request.session = self.authenticate(None, None)
             with self.assertRaises(AccessError):
                 report.with_context(force_report_rendering=True)._render_qweb_pdf(
@@ -153,7 +153,7 @@ class TestReports(odoo.tests.HttpCase):
         report = report.with_user(admin)
 
         with (
-            MockRequest(report.env) as mock_request,
+            MockRequest(report.env, is_frontend=False) as mock_request,
             patch("weasyprint.HTML") as mock_weasyprint,
             patch.object(root.session_store, "delete") as mock_delete,
         ):
