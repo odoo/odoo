@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.SettingsApp">
-        <div class="app_settings_block" t-if="this.props.selectedTab === this.props.key or this.state.search.value.length !== 0" t-att-string="this.props.string" t-att-data-key="this.props.key" t-ref="this.settingsAppRef">
-            <div class="settingSearchHeader h4" t-if="this.state.search.value.length !== 0" role="search">
-                <img class="icon" t-att-src="this.props.imgurl" alt="Search"></img>
+        <t t-set="isSearching" t-value="this.state.search.value.length !== 0"/>
+        <t t-set="role" t-value="isSearching or this.ui.isSmall() ? undefined : 'tabpanel'" />
+        <section class="app_settings_block" t-if="this.props.selectedTab === this.props.key or this.state.search.value.length !== 0" t-att-string="this.props.string" t-att-data-key="this.props.key" t-ref="this.settingsAppRef"
+            t-att-role="role" t-att-aria-labelledby="this.props.tabId">
+            <div class="settingSearchHeader h4" t-if="isSearching">
+                <img class="icon" t-att-src="this.props.imgurl" alt=""></img>
                 <span class="appName"><t t-out="this.props.string"/></span>
             </div>
             <t t-call-slot="default"/>
-        </div>
+        </section>
     </t>
 </templates>
