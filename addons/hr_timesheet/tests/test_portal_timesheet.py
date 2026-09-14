@@ -10,7 +10,12 @@ class TestPortalTimesheet(TestProjectSharingCommon):
         self.project_portal.write(
             {
                 "collaborator_ids": [
-                    Command.create({"partner_id": self.user_portal.partner_id.id}),
+                    Command.create(
+                        {
+                            "partner_id": self.user_portal.partner_id.id,
+                            "access_mode": "advanced_edit",
+                        }
+                    ),
                 ],
             }
         )
@@ -24,7 +29,12 @@ class TestPortalTimesheet(TestProjectSharingCommon):
         self.project_portal.write(
             {
                 "collaborator_ids": [
-                    Command.create({"partner_id": self.user_portal.partner_id.id}),
+                    Command.create(
+                        {
+                            "partner_id": self.user_portal.partner_id.id,
+                            "access_mode": "advanced_edit",
+                        }
+                    ),
                 ],
             }
         )

@@ -26,7 +26,7 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
                     Command.create(
                         {
                             "partner_id": cls.partner_portal.id,
-                            "access_mode": "edit",
+                            "access_mode": "advanced_edit",
                         }
                     ),
                 ],
@@ -93,13 +93,13 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
         self.project_portal.collaborator_ids.filtered(
             lambda rec: rec.partner_id == self.user_portal.partner_id
         ).unlink()
-        self.assertEqual(
-            {},
+        with self.assertRaises(
+            AccessError,
+            msg="A revoked collaborator no longer reaches the task, nor its mentions",
+        ):
             self.task_portal.with_user(self.user_portal).get_mention_suggestions(
                 search=""
-            ),
-            "Non collaborator portal user should not have access to mention suggestions",
-        )
+            )
 
     def test_readonly_fields(self) -> None:
         view_infos = self.task_portal.get_view(
@@ -227,7 +227,7 @@ class TestProjectSharingPortalAccess(TestProjectSharingCommon):
                     Command.create(
                         {
                             "partner_id": partner_portal_no_user.id,
-                            "access_mode": "edit",
+                            "access_mode": "advanced_edit",
                         }
                     ),
                 ],

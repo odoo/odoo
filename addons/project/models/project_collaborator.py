@@ -32,9 +32,17 @@ class ProjectCollaborator(models.Model):
         related="partner_id.email",
         export_string_translation=False,
     )
-    limited_access = fields.Boolean(
-        export_string_translation=False,
-        default=False,
+    access_mode = fields.Selection(
+        selection=[
+            ("view", "View"),
+            ("edit", "Edit"),
+            ("advanced_edit", "Advanced Edit"),
+        ],
+        default="view",
+        required=True,
+        help="View: read the tasks and write in their chatter.\n"
+        "Edit: also create and update tasks.\n"
+        "Advanced Edit: also move tasks between steps and change their priority.",
     )
 
     _unique_collaborator = models.Constraint(
@@ -68,7 +76,13 @@ class ProjectCollaborator(models.Model):
     @dbg.timed
     def unlink(self) -> bool:
         dbg.lifecycle.debug("project.collaborator.unlink %s", dbg.rec(self))
+        revoked = [
+            (collaborator.project_id, collaborator.partner_id.id)
+            for collaborator in self.sudo()
+        ]
         res = super().unlink()
+        for project, partner_id in revoked:
+            project.message_unsubscribe(partner_ids=[partner_id])
         collaborator = self.env["project.collaborator"].search([], limit=1)
         if not collaborator:
             dbg.pipeline.debug(

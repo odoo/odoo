@@ -12,7 +12,7 @@ _logger = logging.getLogger(__name__)
 class TestShareWizardAppliesOnConfirm(TestProjectCommon):
     def test_partial_defaults_preserve_the_requested_field_contract(self):
         project = self.env["project.project"].create({"name": "Default target"})
-        project.message_subscribe(partner_ids=self.user_portal.partner_id.ids)
+        project._add_collaborators(self.user_portal.partner_id, access_mode="edit")
         model = self.env["project.share.wizard"].with_context(
             active_model=project._name,
             active_id=project.id,
@@ -30,7 +30,7 @@ class TestShareWizardAppliesOnConfirm(TestProjectCommon):
 
     def test_explicit_collaborator_defaults_are_preserved(self):
         project = self.env["project.project"].create({"name": "Explicit defaults"})
-        project.message_subscribe(partner_ids=self.user_portal.partner_id.ids)
+        project._add_collaborators(self.user_portal.partner_id, access_mode="edit")
         defaults = (
             self.env["project.share.wizard"]
             .with_context(
@@ -115,7 +115,7 @@ class TestShareWizardAppliesOnConfirm(TestProjectCommon):
                             "access_mode": "edit",
                         }
                     ),
-                    Command.create({"partner_id": reader.id, "access_mode": "read"}),
+                    Command.create({"partner_id": reader.id, "access_mode": "view"}),
                 ],
             }
         )

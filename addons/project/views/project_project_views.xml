@@ -50,7 +50,7 @@
                         name="action_view_share_project_wizard"
                         type="object"
                         string="Share Project"
-                        context="{'default_access_mode': 'read'}"
+                        context="{'default_access_mode': 'view'}"
                         groups="project.group_project_manager"
                         invisible="privacy_visibility in ['followers', 'employees'] or is_template"
                         class="oe_highlight"
@@ -323,17 +323,16 @@
                                     invisible="not alias_email"
                                     class="oe_inline" />
                                 <field name="privacy_visibility" widget="radio" />
+                                <field
+                                    name="member_user_ids"
+                                    widget="many2many_avatar_user"
+                                    options="{'no_create': True}"
+                                    invisible="privacy_visibility not in ['followers', 'invited_users']" />
                                 <span
                                     colspan="2"
                                     class="text-muted o_row ps-1"
                                     invisible="access_instruction_message == ''">
                                     <i class="fa-regular fa-lightbulb pe-2" title="Info" /><field name="access_instruction_message" nolabel="1" class="d-inline" />
-                                </span>
-                                <span
-                                    colspan="2"
-                                    class="text-muted o_row ps-1"
-                                    invisible="privacy_visibility_warning == ''">
-                                    <i class="fa-solid fa-triangle-exclamation pe-2" title="Warning" /><field name="privacy_visibility_warning" nolabel="1" class="d-inline" />
                                 </span>
                             </group>
                             <group

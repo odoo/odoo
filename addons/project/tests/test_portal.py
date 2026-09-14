@@ -2,6 +2,7 @@ from odoo import Command
 from odoo.exceptions import AccessError
 from odoo.tests import HttpCase
 from odoo.tools import mute_logger
+from odoo.tools.safe_eval import safe_eval
 
 from odoo.addons.project.tests.test_access_rights import TestProjectPortalCommon
 
@@ -41,6 +42,10 @@ class TestPortalProject(TestProjectPortalCommon, HttpCase):
         pigs.with_user(self.user_projectmanager).message_subscribe(
             partner_ids=[self.user_portal.partner_id.id]
         )
+        self.assertRaises(
+            AccessError, pigs.with_user(self.user_portal).read, ["user_id"]
+        )
+        pigs.sudo()._add_collaborators(self.user_portal.partner_id, access_mode="view")
         self.task_1.with_user(self.user_projectuser).message_subscribe(
             partner_ids=[self.user_portal.partner_id.id]
         )
@@ -96,10 +101,6 @@ class TestPortalProject(TestProjectPortalCommon, HttpCase):
         self.assertTrue(
             self.project_pigs.access_token,
             "The access token should be set since the project has been shared.",
-        )
-        self.assertTrue(
-            self.task_1.access_token,
-            "The access token should be set since the task has been shared.",
         )
         access_token = self.project_pigs.access_token
         task_access_token = self.task_1.access_token
@@ -214,6 +215,9 @@ class TestPortalProject(TestProjectPortalCommon, HttpCase):
         self.authenticate(self.user_portal.login, self.user_portal.login)
         portal_project = self.env["project.project"].create({"name": "Portal Project"})
         portal_project.message_subscribe(partner_ids=[self.user_portal.partner_id.id])
+        portal_project._add_collaborators(
+            self.user_portal.partner_id, access_mode="view"
+        )
         task, task_template = self.env["project.task"].create(
             [
                 {
@@ -238,11 +242,17 @@ class TestPortalProject(TestProjectPortalCommon, HttpCase):
         self.assertNotIn(task_template.child_ids[0].name, my_tasks_response.text)
         self.assertNotIn(task_template.child_ids[1].name, my_tasks_response.text)
 
-        project_tasks_response = self.url_open("/my/projects/%s" % (portal_project.id))
-        self.assertIn(task.name, project_tasks_response.text)
-        self.assertNotIn(task_template.name, project_tasks_response.text)
-        self.assertNotIn(task_template.child_ids[0].name, project_tasks_response.text)
-        self.assertNotIn(task_template.child_ids[1].name, project_tasks_response.text)
+        sharing_action = self.env.ref("project.project_sharing_project_task_action")
+        shared_names = (
+            self.env["project.task"]
+            .with_user(self.user_portal)
+            .search(safe_eval(sharing_action.domain, {"active_id": portal_project.id}))
+            .mapped("name")
+        )
+        self.assertIn(task.name, shared_names)
+        self.assertNotIn(task_template.name, shared_names)
+        self.assertNotIn(task_template.child_ids[0].name, shared_names)
+        self.assertNotIn(task_template.child_ids[1].name, shared_names)
 
     def test_home_badges_count_what_the_pages_list(self) -> None:
         from odoo.addons.project.controllers.portal import ProjectCustomerPortal

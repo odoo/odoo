@@ -73,9 +73,7 @@ class AccountAnalyticLine(models.Model):
     def _domain_project_id(self):
         domain = Domain([("allow_timesheets", "=", True), ("is_template", "=", False)])
         if not self.env.user.has_group("hr_timesheet.group_timesheet_manager"):
-            domain &= Domain(
-                "privacy_visibility", "in", ["employees", "portal"]
-            ) | Domain("message_partner_ids", "in", [self.env.user.partner_id.id])
+            domain &= Domain("user_has_access", "=", True)
         return domain
 
     def _domain_employee_id(self):
@@ -168,27 +166,20 @@ class AccountAnalyticLine(models.Model):
             self.env["mail.followers"]._read_group(
                 [
                     ("partner_id", operator, value),
-                    ("res_model", "in", ("project.project", "project.task")),
+                    ("res_model", "=", "project.task"),
                 ],
                 ["res_model"],
                 ["res_id:array_agg"],
             )
         )
-        if not followed_ids_by_model:
-            return Domain.FALSE
-        domain = Domain.FALSE
-        if project_ids := followed_ids_by_model.get("project.project"):
-            domain |= Domain("project_id", "in", project_ids)
         if task_ids := followed_ids_by_model.get("project.task"):
-            domain |= Domain("task_id", "in", task_ids)
-        return domain
+            return Domain("task_id", "in", task_ids)
+        return Domain.FALSE
 
-    @api.depends("project_id.message_partner_ids", "task_id.message_partner_ids")
+    @api.depends("task_id.message_partner_ids")
     def _compute_message_partner_ids(self):
         for line in self:
-            line.message_partner_ids = (
-                line.task_id.message_partner_ids | line.project_id.message_partner_ids
-            )
+            line.message_partner_ids = line.task_id.message_partner_ids
 
     @api.depends("project_id", "task_id")
     def _compute_display_name(self):
@@ -563,17 +554,14 @@ class AccountAnalyticLine(models.Model):
     def _timesheet_get_portal_domain(self):
         if self.env.user.has_group("hr_timesheet.group_hr_timesheet_user"):
             return self.env["ir.rule"]._get_domain_accessible_records(self._name)
+        commercial_partner_id = self.env.user.partner_id.commercial_partner_id.id
+        accessible_projects = (
+            self.env["project.project"].sudo()._search([("user_has_access", "=", True)])
+        )
         return (
-            Domain(
-                "message_partner_ids",
-                "child_of",
-                [self.env.user.partner_id.commercial_partner_id.id],
-            )
-            | Domain(
-                "partner_id",
-                "child_of",
-                [self.env.user.partner_id.commercial_partner_id.id],
-            )
+            Domain("project_id", "in", accessible_projects)
+            | Domain("message_partner_ids", "child_of", [commercial_partner_id])
+            | Domain("partner_id", "child_of", [commercial_partner_id])
         ) & Domain("project_id.privacy_visibility", "in", ["invited_users", "portal"])
 
     def _timesheet_preprocess_get_accounts(self, vals):

@@ -49,7 +49,12 @@ class TestProjectSharingWithSms(TestProjectSharingCommon, SMSCommon):
         cls.project_portal.write(
             {
                 "collaborator_ids": [
-                    Command.create({"partner_id": cls.user_portal.partner_id.id}),
+                    Command.create(
+                        {
+                            "partner_id": cls.user_portal.partner_id.id,
+                            "access_mode": "advanced_edit",
+                        }
+                    ),
                 ],
             }
         )

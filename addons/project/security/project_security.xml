@@ -68,14 +68,9 @@
                 eval="[Command.link(ref('project.group_project_manager'))]" />
         </record>
         <record id="project_public_members_rule" model="ir.rule">
-            <field
-                name="name">Project: employees: following required for follower-only projects</field>
+            <field name="name">Project: internal users: projects they can access</field>
             <field name="model_id" ref="model_project_project" />
-            <field
-                name="domain_force">['|',
-                                        ('privacy_visibility', 'in', ['employees', 'portal']),
-                                        ('message_partner_ids', 'in', [user.partner_id.id])
-                                    ]</field>
+            <field name="domain_force">[('user_has_access', '=', True)]</field>
             <field name="groups" eval="[Command.link(ref('base.group_user'))]" />
         </record>
         <record id="task_comp_rule" model="ir.rule">
@@ -86,19 +81,16 @@
         </record>
         <record id="task_visibility_rule" model="ir.rule">
             <field
-                name="name">Project/Task: employees: follow required for follower-only projects</field>
+                name="name">Project/Task: employees: tasks of accessible projects, followed or assigned tasks</field>
             <field name="model_id" ref="model_project_task" />
             <field
                 name="domain_force">[
             '|',
                 '&amp;',
                     ('project_id', '!=', False),
-                    '|',
-                        ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
-                        ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                    ('project_id.user_has_access', '=', True),
                 '|',
                     ('message_partner_ids', 'in', [user.partner_id.id]),
-                    # to subscribe check access to the record, follower is not enough at creation
                     ('user_ids', 'in', user.id)
         ]</field>
             <field name="groups" eval="[Command.link(ref('base.group_user'))]" />
@@ -139,11 +131,7 @@
                 name="name">Project/project.workflow.step: employees: project visibility required</field>
             <field name="model_id" ref="model_project_workflow_step" />
             <field
-                name="domain_force">['|', ('project_ids', '=', False),
-            '|', ('project_ids.privacy_visibility', 'in', ['employees', 'portal']),
-                '|', ('project_ids.message_partner_ids', 'in', [user.partner_id.id]),
-                     ('project_ids.user_id', '=', user.id)
-        ]</field>
+                name="domain_force">['|', ('project_ids', '=', False), ('project_ids.user_has_access', '=', True)]</field>
             <field
                 name="groups"
                 eval="[Command.link(ref('project.group_project_user'))]" />
@@ -153,7 +141,7 @@
                 name="name">Project/project.workflow.step: portal users: steps of projects they collaborate on</field>
             <field name="model_id" ref="model_project_workflow_step" />
             <field
-                name="domain_force">[('project_ids.collaborator_ids.partner_id', 'in', [user.partner_id.id])]</field>
+                name="domain_force">[('project_ids.user_has_access', '=', True)]</field>
             <field name="groups" eval="[Command.link(ref('base.group_portal'))]" />
         </record>
         <record id="triage_visibility_rule" model="ir.rule">
@@ -174,19 +162,16 @@
         </record>
         <record id="task_visibility_rule_project_user" model="ir.rule">
             <field
-                name="name">Project/Task: project users: follow required for follower-only projects</field>
+                name="name">Project/Task: project users: tasks of accessible projects, followed or assigned tasks</field>
             <field name="model_id" ref="model_project_task" />
             <field
                 name="domain_force">[
             '|',
                 '&amp;',
                     ('project_id', '!=', False),
-                    '|',
-                        ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
-                        ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                    ('project_id.user_has_access', '=', True),
                 '|',
                     ('message_partner_ids', 'in', [user.partner_id.id]),
-                    # to subscribe check access to the record, follower is not enough at creation
                     ('user_ids', 'in', user.id)
         ]</field>
             <field
@@ -209,14 +194,10 @@
                 eval="[Command.link(ref('project.group_project_user'))]" />
         </record>
         <record id="project_project_rule_portal" model="ir.rule">
-            <field name="name">Project: portal users: portal and following</field>
-            <field name="model_id" ref="project.model_project_project" />
             <field
-                name="domain_force">[
-            '&amp;',
-                ('privacy_visibility', 'in', ['invited_users', 'portal']),
-                ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
-        ]</field>
+                name="name">Project: portal users: projects they collaborate on</field>
+            <field name="model_id" ref="project.model_project_project" />
+            <field name="domain_force">[('user_has_access', '=', True)]</field>
             <field name="groups" eval="[Command.link(ref('base.group_portal'))]" />
         </record>
         <record id="project_collaborator_rule_portal" model="ir.rule">
@@ -241,10 +222,7 @@
                 name="name">Project/project.collaborator: employees: project visibility required</field>
             <field name="model_id" ref="project.model_project_collaborator" />
             <field
-                name="domain_force">['|',
-                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
-                ('project_id.user_id', '=', user.id)
-        ]</field>
+                name="domain_force">[('project_id.user_has_access', '=', True)]</field>
             <field
                 name="groups"
                 eval="[Command.link(ref('project.group_project_user'))]" />
@@ -259,18 +237,16 @@
         </record>
         <record id="project_task_rule_portal" model="ir.rule">
             <field
-                name="name">Project/Task: portal users: can only see a task if he's a collaborator of the project and a follower of the task</field>
+                name="name">Project/Task: portal users: tasks of projects they collaborate on, or tasks they follow</field>
             <field name="model_id" ref="project.model_project_task" />
             <field
                 name="domain_force">[
-            ('project_id.privacy_visibility', 'in', ['invited_users', 'portal']),
             ('active', '=', True),
             '|',
-                ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
-                ('project_id.collaborator_ids', 'any', [
-                    ('partner_id', '=', user.partner_id.id),
-                    ('limited_access', '=', False),
-                ]),
+                '&amp;',
+                    ('project_id.privacy_visibility', 'in', ['invited_users', 'portal']),
+                    ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
+                ('project_id.user_has_access', '=', True),
         ]</field>
             <field name="groups" eval="[Command.link(ref('base.group_portal'))]" />
             <field name="perm_read" eval="True" />
@@ -280,21 +256,17 @@
         </record>
         <record id="project_task_rule_portal_project_sharing" model="ir.rule">
             <field
-                name="name">Project/Task: portal users: portal user can edit with project sharing feature</field>
+                name="name">Project/Task: portal users: collaborators with edit access create and edit tasks</field>
             <field name="model_id" ref="project.model_project_task" />
             <field name="active">0</field>
             <field
                 name="domain_force">[
             ('project_id.privacy_visibility', 'in', ['invited_users', 'portal']),
             ('active', '=', True),
-            '|',
-                '&amp;',
-                    ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
-                    ('project_id.collaborator_ids.partner_id', 'in', [user.partner_id.id]),
-                ('project_id.collaborator_ids', 'any', [
-                    ('partner_id', '=', user.partner_id.id),
-                    ('limited_access', '=', False),
-                ]),
+            ('project_id.collaborator_ids', 'any', [
+                ('partner_id', '=', user.partner_id.id),
+                ('access_mode', 'in', ['edit', 'advanced_edit']),
+            ]),
         ]</field>
             <field name="groups" eval="[Command.link(ref('base.group_portal'))]" />
             <field name="perm_read" eval="False" />
@@ -310,18 +282,10 @@
         </record>
         <record id="update_visibility_rule" model="ir.rule">
             <field
-                name="name">Project/Update: employees: follow required for follower-only projects</field>
+                name="name">Project/Update: employees: updates of accessible projects or their own</field>
             <field name="model_id" ref="model_project_update" />
             <field
-                name="domain_force">[
-        '|',
-            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
-            '|',
-                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
-                '|',
-                    ('user_id', '=', user.id),
-                    ('project_id.user_id', '=', user.id)
-        ]</field>
+                name="domain_force">['|', ('project_id.user_has_access', '=', True), ('user_id', '=', user.id)]</field>
             <field name="groups" eval="[Command.link(ref('base.group_user'))]" />
         </record>
         <record id="report_project_task_user_rule" model="ir.rule">
@@ -330,12 +294,10 @@
             <field
                 name="domain_force">[
         '|',
-            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
+            ('project_id.user_has_access', '=', True),
             '|',
-                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
-                '|',
-                    ('task_id.message_partner_ids', 'in', [user.partner_id.id]),
-                    ('user_ids', 'in', user.id),
+                ('task_id.message_partner_ids', 'in', [user.partner_id.id]),
+                ('user_ids', 'in', user.id),
         ]</field>
             <field
                 name="groups"
@@ -362,13 +324,7 @@
             <field name="name">Burndown chart: project visibility User</field>
             <field name="model_id" ref="model_project_task_burndown_chart_report" />
             <field
-                name="domain_force">[
-        '|',
-            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
-            '|',
-                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
-                ('user_ids', 'in', user.id),
-        ]</field>
+                name="domain_force">['|', ('project_id.user_has_access', '=', True), ('user_ids', 'in', user.id)]</field>
             <field
                 name="groups"
                 eval="[Command.link(ref('project.group_project_user'))]" />
@@ -385,13 +341,7 @@
             <field name="name">Cumulative Flow Diagram: project visibility User</field>
             <field name="model_id" ref="model_project_cfd_report" />
             <field
-                name="domain_force">[
-        '|',
-            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
-            '|',
-                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
-                ('user_ids', 'in', user.id),
-        ]</field>
+                name="domain_force">['|', ('project_id.user_has_access', '=', True), ('user_ids', 'in', user.id)]</field>
             <field
                 name="groups"
                 eval="[Command.link(ref('project.group_project_user'))]" />
@@ -413,16 +363,10 @@
         </record>
         <record id="milestone_visibility_rule" model="ir.rule">
             <field
-                name="name">Project/Milestone: employees: follow required for follower-only projects</field>
+                name="name">Project/Milestone: employees: milestones of accessible projects</field>
             <field name="model_id" ref="model_project_milestone" />
             <field
-                name="domain_force">[
-        '|',
-            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
-            '|',
-                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
-                ('project_id.user_id', '=', user.id),
-        ]</field>
+                name="domain_force">[('project_id.user_has_access', '=', True)]</field>
             <field name="groups" eval="[Command.link(ref('base.group_user'))]" />
         </record>
         <record id="milestone_visibility_project_admin" model="ir.rule">
@@ -439,10 +383,7 @@
                 name="name">Project/milestone portal users: portal user can read with project sharing feature</field>
             <field name="model_id" ref="project.model_project_milestone" />
             <field
-                name="domain_force">[
-            ('project_id.privacy_visibility', 'in', ['invited_users', 'portal']),
-            ('project_id.collaborator_ids.partner_id', 'in', [user.partner_id.id]),
-        ]</field>
+                name="domain_force">[('project_id.user_has_access', '=', True)]</field>
             <field name="groups" eval="[Command.link(ref('base.group_portal'))]" />
         </record>
         <record id="mail_plan_rule_group_project_manager_task" model="ir.rule">
@@ -474,15 +415,9 @@
 
     <record id="risk_visibility_rule" model="ir.rule">
         <field
-            name="name">Project/project.risk: employees: follow required for follower-only projects</field>
+            name="name">Project/project.risk: project users: records of accessible projects</field>
         <field name="model_id" ref="model_project_risk" />
-        <field
-            name="domain_force">['|',
-            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
-            '|',
-                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
-                ('project_id.user_id', '=', user.id)
-        ]</field>
+        <field name="domain_force">[('project_id.user_has_access', '=', True)]</field>
         <field name="groups" eval="[Command.link(ref('project.group_project_user'))]" />
     </record>
 
@@ -504,15 +439,9 @@
 
     <record id="gate_visibility_rule" model="ir.rule">
         <field
-            name="name">Project/project.gate: employees: follow required for follower-only projects</field>
+            name="name">Project/project.gate: project users: records of accessible projects</field>
         <field name="model_id" ref="model_project_gate" />
-        <field
-            name="domain_force">['|',
-            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
-            '|',
-                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
-                ('project_id.user_id', '=', user.id)
-        ]</field>
+        <field name="domain_force">[('project_id.user_has_access', '=', True)]</field>
         <field name="groups" eval="[Command.link(ref('project.group_project_user'))]" />
     </record>
 
@@ -534,15 +463,10 @@
 
     <record id="gate_criterion_visibility_rule" model="ir.rule">
         <field
-            name="name">Project/project.gate.criterion: employees: follow required for follower-only projects</field>
+            name="name">Project/project.gate.criterion: project users: records of accessible projects</field>
         <field name="model_id" ref="model_project_gate_criterion" />
         <field
-            name="domain_force">['|',
-            ('gate_id.project_id.privacy_visibility', 'in', ['employees', 'portal']),
-            '|',
-                ('gate_id.project_id.message_partner_ids', 'in', [user.partner_id.id]),
-                ('gate_id.project_id.user_id', '=', user.id)
-        ]</field>
+            name="domain_force">[('gate_id.project_id.user_has_access', '=', True)]</field>
         <field name="groups" eval="[Command.link(ref('project.group_project_user'))]" />
     </record>
 
@@ -564,15 +488,9 @@
 
     <record id="benefit_visibility_rule" model="ir.rule">
         <field
-            name="name">Project/project.benefit: employees: follow required for follower-only projects</field>
+            name="name">Project/project.benefit: project users: records of accessible projects</field>
         <field name="model_id" ref="model_project_benefit" />
-        <field
-            name="domain_force">['|',
-            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
-            '|',
-                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
-                ('project_id.user_id', '=', user.id)
-        ]</field>
+        <field name="domain_force">[('project_id.user_has_access', '=', True)]</field>
         <field name="groups" eval="[Command.link(ref('project.group_project_user'))]" />
     </record>
 
@@ -594,15 +512,9 @@
 
     <record id="baseline_visibility_rule" model="ir.rule">
         <field
-            name="name">Project/project.baseline: employees: follow required for follower-only projects</field>
+            name="name">Project/project.baseline: project users: records of accessible projects</field>
         <field name="model_id" ref="model_project_baseline" />
-        <field
-            name="domain_force">['|',
-            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
-            '|',
-                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
-                ('project_id.user_id', '=', user.id)
-        ]</field>
+        <field name="domain_force">[('project_id.user_has_access', '=', True)]</field>
         <field name="groups" eval="[Command.link(ref('project.group_project_user'))]" />
     </record>
 
@@ -624,15 +536,9 @@
 
     <record id="baseline_line_visibility_rule" model="ir.rule">
         <field
-            name="name">Project/project.baseline.line: employees: follow required for follower-only projects</field>
+            name="name">Project/project.baseline.line: project users: records of accessible projects</field>
         <field name="model_id" ref="model_project_baseline_line" />
-        <field
-            name="domain_force">['|',
-            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
-            '|',
-                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
-                ('project_id.user_id', '=', user.id)
-        ]</field>
+        <field name="domain_force">[('project_id.user_has_access', '=', True)]</field>
         <field name="groups" eval="[Command.link(ref('project.group_project_user'))]" />
     </record>
 
@@ -654,15 +560,9 @@
 
     <record id="history_visibility_rule" model="ir.rule">
         <field
-            name="name">Project/project.history: employees: follow required for follower-only projects</field>
+            name="name">Project/project.history: project users: records of accessible projects</field>
         <field name="model_id" ref="model_project_history" />
-        <field
-            name="domain_force">['|',
-            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
-            '|',
-                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
-                ('project_id.user_id', '=', user.id)
-        ]</field>
+        <field name="domain_force">[('project_id.user_has_access', '=', True)]</field>
         <field name="groups" eval="[Command.link(ref('project.group_project_user'))]" />
     </record>
 
@@ -684,15 +584,9 @@
 
     <record id="retrospective_visibility_rule" model="ir.rule">
         <field
-            name="name">Project/project.retrospective: employees: follow required for follower-only projects</field>
+            name="name">Project/project.retrospective: project users: records of accessible projects</field>
         <field name="model_id" ref="model_project_retrospective" />
-        <field
-            name="domain_force">['|',
-            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
-            '|',
-                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
-                ('project_id.user_id', '=', user.id)
-        ]</field>
+        <field name="domain_force">[('project_id.user_has_access', '=', True)]</field>
         <field name="groups" eval="[Command.link(ref('project.group_project_user'))]" />
     </record>
 
@@ -714,15 +608,9 @@
 
     <record id="retrospective_action_visibility_rule" model="ir.rule">
         <field
-            name="name">Project/project.retrospective.action: employees: follow required for follower-only projects</field>
+            name="name">Project/project.retrospective.action: project users: records of accessible projects</field>
         <field name="model_id" ref="model_project_retrospective_action" />
-        <field
-            name="domain_force">['|',
-            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
-            '|',
-                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
-                ('project_id.user_id', '=', user.id)
-        ]</field>
+        <field name="domain_force">[('project_id.user_has_access', '=', True)]</field>
         <field name="groups" eval="[Command.link(ref('project.group_project_user'))]" />
     </record>
 
@@ -745,15 +633,9 @@
 
     <record id="sprint_visibility_rule" model="ir.rule">
         <field
-            name="name">Project/project.sprint: employees: follow required for follower-only projects</field>
+            name="name">Project/project.sprint: project users: records of accessible projects</field>
         <field name="model_id" ref="model_project_sprint" />
-        <field
-            name="domain_force">['|',
-            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
-            '|',
-                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
-                ('project_id.user_id', '=', user.id)
-        ]</field>
+        <field name="domain_force">[('project_id.user_has_access', '=', True)]</field>
         <field name="groups" eval="[Command.link(ref('project.group_project_user'))]" />
     </record>
 
@@ -775,15 +657,9 @@
 
     <record id="task_dependency_visibility_rule" model="ir.rule">
         <field
-            name="name">Project/project.task.dependency: employees: follow required for follower-only projects</field>
+            name="name">Project/project.task.dependency: project users: records of accessible projects</field>
         <field name="model_id" ref="model_project_task_dependency" />
-        <field
-            name="domain_force">['|',
-            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
-            '|',
-                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
-                ('project_id.user_id', '=', user.id)
-        ]</field>
+        <field name="domain_force">[('project_id.user_has_access', '=', True)]</field>
         <field name="groups" eval="[Command.link(ref('project.group_project_user'))]" />
     </record>
 
@@ -805,15 +681,9 @@
 
     <record id="resource_report_visibility_rule" model="ir.rule">
         <field
-            name="name">Project/project.resource.report: employees: follow required for follower-only projects</field>
+            name="name">Project/project.resource.report: project users: records of accessible projects</field>
         <field name="model_id" ref="model_project_resource_report" />
-        <field
-            name="domain_force">['|',
-            ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
-            '|',
-                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
-                ('project_id.user_id', '=', user.id)
-        ]</field>
+        <field name="domain_force">[('project_id.user_has_access', '=', True)]</field>
         <field name="groups" eval="[Command.link(ref('project.group_project_user'))]" />
     </record>
 

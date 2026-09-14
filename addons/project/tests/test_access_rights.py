@@ -86,6 +86,10 @@ class TestCRUDVisibilityFollowers(TestAccessRights):
     @users("Internal user")
     def test_project_allowed_internal_read(self) -> None:
         self.project_pigs.message_subscribe(partner_ids=[self.env.user.partner_id.id])
+        self.project_pigs.invalidate_model()
+        with self.assertRaises(AccessError, msg="Following grants no access"):
+            _ = self.project_pigs.with_user(self.env.user).name
+        self.project_pigs.member_user_ids = self.env.user
         self.project_pigs.flush_model()
         self.project_pigs.invalidate_model()
         _ = self.project_pigs.with_user(self.env.user).name
@@ -111,7 +115,7 @@ class TestCRUDVisibilityFollowers(TestAccessRights):
 
     @users("Internal user")
     def test_task_allowed_internal_read(self) -> None:
-        self.project_pigs.message_subscribe(partner_ids=[self.env.user.partner_id.id])
+        self.project_pigs.member_user_ids = self.env.user
         self.task.flush_model()
         self.task.invalidate_model()
         _ = self.task.with_user(self.env.user).name
@@ -443,7 +447,7 @@ class TestPortalProject(TestProjectPortalCommon):
             AccessError, pigs.with_user(self.user_public).read, ["user_id"]
         )
 
-        pigs.message_subscribe(partner_ids=[self.user_projectuser.partner_id.id])
+        pigs.member_user_ids = self.user_projectuser
 
         donkey = pigs.with_user(self.user_projectuser)
         donkey.invalidate_model()
@@ -455,9 +459,7 @@ class TestPortalProject(TestProjectPortalCommon):
         self.env["project.task"].with_user(self.user_projectuser).with_context(
             {"mail_create_nolog": True}
         ).create({"name": "Pigs task", "project_id": pigs.id})
-        pigs.with_user(self.user_projectuser).message_unsubscribe(
-            partner_ids=[self.user_projectuser.partner_id.id]
-        )
+        pigs.member_user_ids = False
         self.assertRaises(
             AccessError,
             self.env["project.task"]
@@ -647,21 +649,37 @@ class TestAccessRightsInvitedUsers(TestAccessRights):
 
     @users("admin")
     def test_admin_access_invited_project(self) -> None:
-        self.assertFalse(self.project_pigs.collaborator_ids)
+        self.assertEqual(
+            self.project_pigs.collaborator_ids.mapped(
+                lambda c: (c.partner_id, c.access_mode)
+            ),
+            [(self.project_pigs.partner_id, "view")],
+            "Opening the project to invited users invites its customer to view it.",
+        )
         self.assertEqual(self.project_pigs.with_user(self.env.user).name, "Pigs")
 
     @users("Project user", "Internal user", "Portal user")
     def test_other_users_access_invited_project(self) -> None:
         with self.assertRaises(
             AccessError,
-            msg="The user is not a follower of the project, he's not supposed to have access to the project.",
+            msg="The user is neither a team member nor a collaborator.",
         ):
             self.assertEqual(self.project_pigs.with_user(self.env.user).name, "Pigs")
         self.project_pigs.message_subscribe(partner_ids=[self.env.user.partner_id.id])
+        self.project_pigs.invalidate_model()
+        with self.assertRaises(AccessError, msg="Following grants no access."):
+            self.assertEqual(self.project_pigs.with_user(self.env.user).name, "Pigs")
+        if self.env.user.share:
+            self.project_pigs.sudo()._add_collaborators(
+                self.env.user.partner_id, access_mode="view"
+            )
+        else:
+            self.project_pigs.sudo().member_user_ids = self.env.user
+        self.project_pigs.invalidate_model()
         self.assertEqual(
             self.project_pigs.with_user(self.env.user).name,
             "Pigs",
-            "The user was set as a follower of the project, he's supposed to have access to the project.",
+            "A team member or a collaborator reaches the project.",
         )
 
     @users("admin")

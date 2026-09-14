@@ -66,7 +66,12 @@ class TestProjectSharingUi(HttpCase):
             {
                 "allow_dependencies": True,
                 "collaborator_ids": [
-                    Command.create({"partner_id": self.partner_portal.id}),
+                    Command.create(
+                        {
+                            "partner_id": self.partner_portal.id,
+                            "access_mode": "advanced_edit",
+                        }
+                    ),
                 ],
             }
         )
@@ -89,7 +94,7 @@ class TestProjectSharingUi(HttpCase):
                     Command.create(
                         {
                             "partner_id": self.partner_portal.id,
-                            "access_mode": "edit",
+                            "access_mode": "advanced_edit",
                         }
                     ),
                 ],
@@ -120,6 +125,33 @@ class TestProjectSharingUi(HttpCase):
             "/odoo", "project_sharing_with_blocked_task_tour", login="georges1"
         )
 
+    def _share_with_georges(self, access_mode: str) -> None:
+        self.project_portal.write(
+            {
+                "collaborator_ids": [
+                    Command.create(
+                        {
+                            "partner_id": self.partner_portal.id,
+                            "access_mode": access_mode,
+                        }
+                    )
+                ],
+                "task_ids": [Command.create({"name": "Shared Task"})],
+            }
+        )
+
+    def test_view_collaborator_gets_a_read_only_project(self) -> None:
+        self._share_with_georges("view")
+        self.start_tour(
+            "/my/projects", "portal_project_sharing_view_mode_tour", login="georges1"
+        )
+
+    def test_edit_collaborator_cannot_move_tasks(self) -> None:
+        self._share_with_georges("edit")
+        self.start_tour(
+            "/my/projects", "portal_project_sharing_edit_mode_tour", login="georges1"
+        )
+
     def test_01_project_sharing(self) -> None:
         self.env.ref("base.user_admin").write(
             {
@@ -137,7 +169,7 @@ class TestProjectSharingUi(HttpCase):
                     Command.create(
                         {
                             "partner_id": self.partner_portal.id,
-                            "access_mode": "edit",
+                            "access_mode": "advanced_edit",
                         }
                     ),
                 ],
@@ -169,7 +201,7 @@ class TestProjectSharingUi(HttpCase):
                     Command.create(
                         {
                             "partner_id": self.partner_portal.id,
-                            "access_mode": "edit",
+                            "access_mode": "advanced_edit",
                         }
                     ),
                 ],
@@ -206,7 +238,7 @@ class TestProjectSharingUi(HttpCase):
                     Command.create(
                         {
                             "partner_id": self.partner_portal.id,
-                            "access_mode": "edit",
+                            "access_mode": "advanced_edit",
                         }
                     ),
                 ],
@@ -265,7 +297,7 @@ class TestProjectSharingUi(HttpCase):
                     Command.create(
                         {
                             "partner_id": self.partner_portal.id,
-                            "access_mode": "edit",
+                            "access_mode": "advanced_edit",
                         }
                     ),
                 ],

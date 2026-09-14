@@ -267,11 +267,13 @@ class ProjectCustomerPortal(CustomerPortal):
         lang = user_context.get("lang")
 
         project_company = self._get_project_sharing_company(project)
+        access_mode = self._get_project_sharing_access_mode(project)
 
         session_info.update(
             action_name="project.project_sharing_project_task_action",
             project_id=project.id,
             project_name=project.name,
+            project_sharing_access_mode=access_mode,
             user_companies={
                 "current_company": project_company.id,
                 "allowed_companies": {
@@ -287,9 +289,27 @@ class ProjectCustomerPortal(CustomerPortal):
             {
                 "allow_milestones": project.allow_milestones,
                 "allow_dependencies": project.allow_dependencies,
+                "project_sharing_access_mode": access_mode,
             }
         )
         return session_info
+
+    def _get_project_sharing_access_mode(self, project: Any) -> str:
+        user = request.env.user
+        if not user._is_portal():
+            return "advanced_edit"
+        collaborator = (
+            request.env["project.collaborator"]
+            .sudo()
+            .search(
+                [
+                    ("project_id", "=", project.id),
+                    ("partner_id", "=", user.partner_id.id),
+                ],
+                limit=1,
+            )
+        )
+        return collaborator.access_mode or "view"
 
     @http.route(
         [

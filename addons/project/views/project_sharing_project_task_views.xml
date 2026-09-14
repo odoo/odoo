@@ -96,7 +96,11 @@
                         groups="base.group_user"
                         t-if="record.displayed_image_id.value" />
                     <footer t-if="!selection_mode">
-                        <field name="priority" widget="priority" class="pt-1" />
+                        <field
+                            name="priority"
+                            widget="priority"
+                            readonly="context.get('project_sharing_access_mode') != 'advanced_edit'"
+                            class="pt-1" />
                         <div class="d-flex ms-auto text-truncate">
                             <span
                                 t-if="record.portal_user_names.raw_value.length &gt; 0"
@@ -149,6 +153,10 @@
             <field name="rotting_days" position="replace" />
             <field name="step_id" position="attributes">
                 <attribute name="widget">selection_badge</attribute>
+                <attribute name="readonly">context.get('project_sharing_access_mode') != 'advanced_edit'</attribute>
+            </field>
+            <field name="priority" position="attributes">
+                <attribute name="readonly">context.get('project_sharing_access_mode') != 'advanced_edit'</attribute>
             </field>
         </field>
     </record>
@@ -167,7 +175,8 @@
                         name="step_id"
                         widget="statusbar_duration"
                         options="{'clickable': '1', 'fold_field': 'fold'}"
-                        invisible="not project_id and not step_id" />
+                        invisible="not project_id and not step_id"
+                        readonly="context.get('project_sharing_access_mode') != 'advanced_edit'" />
                 </header>
                 <div
                     groups="base.group_user"
@@ -247,7 +256,11 @@
                         <div
                             class="d-flex justify-content-end align-items-center px-1"
                             invisible="not active or is_template">
-                            <field name="priority" widget="priority" class="h3 pe-2" />
+                            <field
+                                name="priority"
+                                widget="priority"
+                                readonly="context.get('project_sharing_access_mode') != 'advanced_edit'"
+                                class="h3 pe-2" />
                             <field
                                 name="state"
                                 widget="project_task_state_selection"
@@ -256,7 +269,11 @@
                         <div
                             class="d-flex justify-content-start align-items-center w-100 w-md-50 w-lg-25"
                             invisible="active and not is_template">
-                            <field name="priority" widget="priority" class="h3 pe-2" />
+                            <field
+                                name="priority"
+                                widget="priority"
+                                readonly="context.get('project_sharing_access_mode') != 'advanced_edit'"
+                                class="h3 pe-2" />
                             <field
                                 name="state"
                                 widget="project_task_state_selection"
@@ -416,7 +433,8 @@
                                         widget="priority"
                                         width="20px"
                                         nolabel="1"
-                                        optional="show" />
+                                        optional="show"
+                                        readonly="context.get('project_sharing_access_mode') != 'advanced_edit'" />
                                     <field
                                         name="tag_ids"
                                         widget="many2many_tags"
@@ -424,7 +442,8 @@
                                         options="{'color_field': 'color'}" />
                                     <field
                                         name="step_id"
-                                        domain="[('project_ids', 'in', [project_id])]" />
+                                        domain="[('project_ids', 'in', [project_id])]"
+                                        readonly="context.get('project_sharing_access_mode') != 'advanced_edit'" />
                                     <button
                                         name="action_view_task"
                                         type="object"

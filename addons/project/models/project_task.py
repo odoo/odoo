@@ -1803,19 +1803,19 @@ class ProjectTask(models.Model):
         if not self.env.user.share:
             self.display_follow_button = False
             return
-        project_collaborator_read_group = self.env["project.collaborator"]._read_group(
-            [
-                ("project_id", "in", self.project_id.ids),
-                ("partner_id", "=", self.env.user.partner_id.id),
-            ],
-            ["project_id"],
-            ["limited_access:bool_and"],
-        )
-        limited_access_per_project_id = dict(project_collaborator_read_group)
-        for task in self:
-            task.display_follow_button = not limited_access_per_project_id.get(
-                task.project_id, True
+        collaborated_projects = (
+            self.env["project.collaborator"]
+            .sudo()
+            .search(
+                [
+                    ("project_id", "in", self.project_id.ids),
+                    ("partner_id", "=", self.env.user.partner_id.id),
+                ]
             )
+            .project_id
+        )
+        for task in self:
+            task.display_follow_button = task.project_id in collaborated_projects
 
     def _get_pattern_per_group(self) -> dict[str, str]:
         return {
@@ -2361,6 +2361,41 @@ class ProjectTask(models.Model):
             if field and field.type == "many2one":
                 self.env[field.comodel_name].browse(value).check_access("read")
 
+    def _check_portal_move_access(self, vals: dict[str, Any]) -> None:
+        moved = self.filtered(
+            lambda task: (
+                ("step_id" in vals and task.step_id.id != vals["step_id"])
+                or ("priority" in vals and task.priority != vals["priority"])
+            )
+        )
+        if not moved:
+            return
+        advanced_projects = (
+            self.env["project.collaborator"]
+            .sudo()
+            .search(
+                [
+                    ("project_id", "in", moved.project_id.ids),
+                    ("partner_id", "=", self.env.user.partner_id.id),
+                    ("access_mode", "=", "advanced_edit"),
+                ]
+            )
+            .project_id
+        )
+        if moved.project_id - advanced_projects:
+            dbg.logic.debug(
+                "_check_portal_move_access %s: user %s lacks advanced edit on %s",
+                dbg.rec(moved),
+                self.env.uid,
+                dbg.rec(moved.project_id - advanced_projects),
+            )
+            raise AccessError(
+                self.env._(
+                    "Moving a task to another step or changing its priority "
+                    "requires Advanced Edit access to the project."
+                )
+            )
+
     def _update_project_workflow_steps(self) -> None:
         step_ids_per_project = defaultdict(list)
         for task in self:
@@ -2610,6 +2645,7 @@ class ProjectTask(models.Model):
         additional_vals = {}
         if self.env.user._is_portal() and not self.env.su:
             self._check_write_values_access(vals, defaults=False)
+            self._check_portal_move_access(vals)
 
         self._write_propagate_milestone(vals)
 
@@ -4471,7 +4507,7 @@ class ProjectTask(models.Model):
 
     def project_sharing_toggle_is_follower(self) -> bool:
         self.check_singleton()
-        self.check_access("write")
+        self.check_access("read")
         is_follower = self.message_is_follower
         dbg.lifecycle.debug(
             "project_sharing_toggle_is_follower %s: user %s follower=%s -> %s",
@@ -4528,12 +4564,14 @@ class ProjectTask(models.Model):
                 project.id,
             )
             return {}
-        followers = (
-            project.sudo().message_follower_ids | self.sudo().message_follower_ids
+        participants = (
+            project.sudo().message_follower_ids.partner_id
+            | self.sudo().message_follower_ids.partner_id
+            | project.sudo().collaborator_ids.partner_id
         )
         domain = Domain(
             self.env["res.partner"]._get_domain_mention_suggestions(search)
-        ) & Domain("id", "in", followers.partner_id.ids)
+        ) & Domain("id", "in", participants.ids)
         partners = (
             self.env["res.partner"].sudo()._search_mention_suggestions(domain, limit)
         )

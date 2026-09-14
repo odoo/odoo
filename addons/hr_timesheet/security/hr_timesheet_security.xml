@@ -40,12 +40,7 @@
             <field name="model_id" ref="analytic.model_account_analytic_line" />
             <field name="active">0</field>
             <field
-                name="domain_force">[
-                ('project_id', '!=', False),
-                ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
-                ('project_id.privacy_visibility', 'in', ['invited_users', 'portal']),
-                ('project_id.collaborator_ids.partner_id', 'in', [user.partner_id.id]),
-            ]</field>
+                name="domain_force">[('project_id', '!=', False), ('project_id.user_has_access', '=', True)]</field>
             <field name="groups" eval="[Command.link(ref('base.group_portal'))]" />
             <field name="perm_read" eval="True" />
             <field name="perm_write" eval="True" />
@@ -60,7 +55,7 @@
                 ('user_id', '=', user.id),
                 ('project_id', '!=', False),
                 '|', '|',
-                    ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
+                    ('project_id.user_has_access', '=', True),
                     ('partner_id', '=', user.partner_id.id),
                     ('message_partner_ids', 'in', [user.partner_id.id])
             ]</field>
@@ -75,7 +70,7 @@
                 name="domain_force">[
                 ('project_id', '!=', False),
                 '|', '|',
-                    ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
+                    ('project_id.user_has_access', '=', True),
                     ('message_partner_ids', 'in', [user.partner_id.id]),
                     ('partner_id', '=', user.partner_id.id),
             ]</field>
@@ -117,7 +112,7 @@
                 name="domain_force">[
                 ('user_id', '=', user.id),
                 '|',
-                    ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
+                    ('project_id.user_has_access', '=', True),
                     ('message_partner_ids', 'in', [user.partner_id.id])
             ]</field>
             <field
@@ -128,11 +123,7 @@
             <field name="name">Timesheets Analysis Report approver</field>
             <field name="model_id" ref="model_timesheets_analysis_report" />
             <field
-                name="domain_force">[
-                '|',
-                    ('project_id.privacy_visibility', 'in', ['employees', 'portal']),
-                    ('project_id.message_partner_ids', 'in', [user.partner_id.id])
-            ]</field>
+                name="domain_force">[('project_id.user_has_access', '=', True)]</field>
             <field
                 name="groups"
                 eval="[Command.link(ref('group_hr_timesheet_approver'))]" />

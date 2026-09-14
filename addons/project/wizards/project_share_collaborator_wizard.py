@@ -18,15 +18,15 @@ class ProjectShareCollaboratorWizard(models.TransientModel):
     )
     access_mode = fields.Selection(
         selection=[
-            ("read", "Read"),
-            ("edit_limited", "Edit with limited access"),
+            ("view", "View"),
             ("edit", "Edit"),
+            ("advanced_edit", "Advanced Edit"),
         ],
-        default="read",
+        default="view",
         required=True,
-        help="Read: collaborators can view tasks but cannot edit them.\n"
-        "Edit with limited access: collaborators can view and edit tasks they follow in the Kanban view.\n"
-        "Edit: collaborators can view and edit all tasks in the Kanban view. Additionally, they can choose which tasks they want to follow.",
+        help="View: read the tasks and write in their chatter.\n"
+        "Edit: also create and update tasks.\n"
+        "Advanced Edit: also move tasks between steps and change their priority.",
     )
     send_invitation = fields.Boolean(
         compute="_compute_send_invitation",
@@ -39,10 +39,7 @@ class ProjectShareCollaboratorWizard(models.TransientModel):
     def _compute_send_invitation(self) -> None:
         project = self.parent_wizard_id.resource_ref
         for collaborator in self:
-            if collaborator.partner_id not in project.message_partner_ids or (
-                collaborator.access_mode != "read"
-                and collaborator.partner_id not in project.collaborator_ids.partner_id
-            ):
+            if collaborator.partner_id not in project.collaborator_ids.partner_id:
                 dbg.logic.debug(
                     "share collaborator: partner %s mode=%s is new to project %s -> "
                     "send_invitation",

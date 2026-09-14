@@ -35,7 +35,7 @@ const projectSharingSteps = [
         run: "click",
     },
     {
-        trigger: ".o_select_menu_item:contains(Edit)",
+        trigger: ".o_select_menu_item:contains(Advanced Edit)",
         run: "click",
     },
     {
@@ -308,3 +308,60 @@ registry
             { trigger: ".o-mail-Composer-suggestion:contains('Georges')" },
         ],
     });
+
+const openSharedProjectSteps = [
+    {
+        trigger: "table > tbody > tr a:has(span:contains(Project Sharing))",
+        run: "click",
+        expectUnloadPage: true,
+    },
+    {
+        trigger: ".o_project_sharing .o_kanban_renderer",
+    },
+];
+
+registry.category("web_tour.tours").add("portal_project_sharing_view_mode_tour", {
+    url: "/my/projects",
+    steps: () => [
+        ...openSharedProjectSteps,
+        {
+            content: "A view collaborator is offered no create button",
+            trigger: ".o_project_sharing:not(:has(button.o-kanban-button-new))",
+        },
+        {
+            content: "and cannot drag a task",
+            trigger: ".o_kanban_record:contains(Shared Task):not(.o_draggable)",
+            run: "click",
+        },
+        {
+            content: "The task opens read-only",
+            trigger: ".o_form_view .o_form_readonly",
+        },
+    ],
+});
+
+registry.category("web_tour.tours").add("portal_project_sharing_edit_mode_tour", {
+    url: "/my/projects",
+    steps: () => [
+        ...openSharedProjectSteps,
+        {
+            content: "An edit collaborator may create tasks",
+            trigger: "button.o-kanban-button-new",
+        },
+        {
+            content: "but cannot drag a task to another step",
+            trigger: ".o_kanban_record:contains(Shared Task):not(.o_draggable)",
+            run: "click",
+        },
+        {
+            content: "The step cannot be changed from the form",
+            trigger:
+                '.o_form_editable .o_field_widget[name="step_id"].o_readonly_modifier',
+        },
+        {
+            content: "nor the priority",
+            trigger:
+                '.o_form_editable .o_field_widget[name="priority"].o_readonly_modifier',
+        },
+    ],
+});

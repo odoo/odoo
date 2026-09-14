@@ -134,7 +134,7 @@ class TestProjectSharingCommon(TestProjectCommon):
                     Command.create(
                         {
                             "partner_id": self.user_portal.partner_id.id,
-                            "access_mode": "edit",
+                            "access_mode": "advanced_edit",
                         }
                     ),
                 ],
@@ -238,7 +238,7 @@ class TestProjectSharing(TestProjectSharingCommon):
         )
         with self.assertRaises(
             AccessError,
-            msg="The public user should not have any access to project sharing feature of the portal project.",
+            msg="A portal user who is not a collaborator cannot reach the project.",
         ):
             self.project_portal.with_user(
                 self.user_portal
@@ -249,28 +249,16 @@ class TestProjectSharing(TestProjectSharingCommon):
         project_share_wizard = project_share_form.save()
         project_share_wizard.action_send_mail()
         self.assertEqual(
-            len(self.project_portal.collaborator_ids),
-            1,
-            "The access right added in project share wizard should be added in the project when the user confirm the access in the wizard.",
-        )
-        self.assertDictEqual(
-            {
-                "partner_id": self.project_portal.collaborator_ids.partner_id,
-                "project_id": self.project_portal.collaborator_ids.project_id,
-                "limited_access": self.project_portal.collaborator_ids.limited_access,
-            },
-            {
-                "partner_id": self.user_portal.partner_id,
-                "project_id": self.project_portal,
-                "limited_access": False,
-            },
-            "The access rights added should be the read access for the portal project for Chell Gladys.",
+            self.project_portal.collaborator_ids.mapped(
+                lambda c: (c.partner_id, c.access_mode)
+            ),
+            [(self.user_portal.partner_id, "edit")],
         )
         self.assertTrue(
             self.project_portal.with_user(
                 self.user_portal
             )._is_project_sharing_accessible(),
-            "The portal user should have read access to the portal project with project sharing feature.",
+            "The collaborator reaches the project through project sharing.",
         )
         project_share_wizard = (
             self.env["project.share.wizard"]
@@ -280,22 +268,14 @@ class TestProjectSharing(TestProjectSharingCommon):
             .new({})
         )
         self.assertEqual(
-            len(project_share_wizard.collaborator_ids),
-            1,
-            "The access right added in project share wizard should be added in the project when the user confirm the access in the wizard.",
-        )
-        self.assertDictEqual(
-            {
-                "partner_id": project_share_wizard.collaborator_ids.partner_id,
-                "access_mode": project_share_wizard.collaborator_ids.access_mode,
-            },
-            {
-                "partner_id": self.user_portal.partner_id,
-                "access_mode": "edit",
-            },
+            project_share_wizard.collaborator_ids.mapped(
+                lambda c: (c.partner_id, c.access_mode)
+            ),
+            [(self.user_portal.partner_id, "edit")],
+            "The wizard reopens on the collaborators and their modes.",
         )
 
-    def test_project_share_wizard_add_collaborator_with_limited_access(
+    def test_project_share_wizard_adds_a_collaborator_beside_an_existing_one(
         self,
     ) -> None:
         ProjectShare = self.env["project.share.wizard"].with_context(
@@ -304,87 +284,36 @@ class TestProjectSharing(TestProjectSharingCommon):
         self.project_portal.write(
             {
                 "collaborator_ids": [
-                    Command.create({"partner_id": self.partner_1.id}),
+                    Command.create(
+                        {
+                            "partner_id": self.partner_1.id,
+                            "access_mode": "advanced_edit",
+                        }
+                    ),
                 ],
             }
-        )
-        self.project_portal.message_unsubscribe(
-            partner_ids=[self.user_portal.partner_id.id]
         )
         project_share_form = Form(ProjectShare)
         self.assertEqual(len(project_share_form.collaborator_ids), 1)
         with project_share_form.collaborator_ids.new() as collaborator_form:
             collaborator_form.partner_id = self.user_portal.partner_id
-            collaborator_form.access_mode = "edit_limited"
-        project_share_wizard = project_share_form.save()
-        project_share_wizard.action_send_mail()
-        self.assertEqual(
-            len(self.project_portal.collaborator_ids),
-            2,
-            "The access right added in project share wizard should be added in the project when the user confirm the access in the wizard.",
-        )
-        self.assertEqual(
-            self.project_portal.collaborator_ids.partner_id,
-            self.user_portal.partner_id + self.partner_1,
-        )
-        for collaborator in self.project_portal.collaborator_ids:
-            collaborator_vals = {
-                "partner_id": collaborator.partner_id,
-                "project_id": collaborator.project_id,
-                "limited_access": collaborator.limited_access,
-            }
-            if collaborator.partner_id == self.user_portal.partner_id:
-                self.assertDictEqual(
-                    collaborator_vals,
-                    {
-                        "partner_id": self.user_portal.partner_id,
-                        "project_id": self.project_portal,
-                        "limited_access": True,
-                    },
-                )
-            else:
-                self.assertDictEqual(
-                    collaborator_vals,
-                    {
-                        "partner_id": self.partner_1,
-                        "project_id": self.project_portal,
-                        "limited_access": False,
-                    },
-                )
-        self.assertTrue(
-            self.project_portal.with_user(
-                self.user_portal
-            )._is_project_sharing_accessible(),
-            "The portal user should have read access to the portal project with project sharing feature.",
-        )
+            collaborator_form.access_mode = "edit"
+        project_share_form.save().action_send_mail()
 
-        project_share_wizard = ProjectShare.new({})
+        modes = {
+            c.partner_id: c.access_mode for c in self.project_portal.collaborator_ids
+        }
         self.assertEqual(
-            len(project_share_wizard.collaborator_ids),
-            2,
-            "The access right added in project share wizard should be added in the project when the user confirm the access in the wizard.",
+            modes,
+            {self.partner_1: "advanced_edit", self.user_portal.partner_id: "edit"},
         )
-        for collaborator in project_share_wizard.collaborator_ids:
-            collaborator_vals = {
-                "partner_id": collaborator.partner_id,
-                "access_mode": collaborator.access_mode,
-            }
-            if collaborator.partner_id == self.user_portal.partner_id:
-                self.assertDictEqual(
-                    collaborator_vals,
-                    {
-                        "partner_id": self.user_portal.partner_id,
-                        "access_mode": "edit_limited",
-                    },
-                )
-            else:
-                self.assertDictEqual(
-                    collaborator_vals,
-                    {
-                        "partner_id": self.partner_1,
-                        "access_mode": "edit",
-                    },
-                )
+        self.assertEqual(
+            {
+                c.partner_id: c.access_mode
+                for c in ProjectShare.new({}).collaborator_ids
+            },
+            modes,
+        )
 
     def test_project_share_wizard_remove_collaborators(self) -> None:
         PortalShare = self.env["project.share.wizard"].with_context(
@@ -395,54 +324,25 @@ class TestProjectSharing(TestProjectSharingCommon):
                 "collaborator_ids": [
                     Command.create({"partner_id": self.user_portal.partner_id.id}),
                     Command.create(
-                        {
-                            "partner_id": self.partner_1.id,
-                            "limited_access": True,
-                        }
+                        {"partner_id": self.partner_1.id, "access_mode": "edit"}
                     ),
                 ],
             }
         )
-        self.project_portal.message_subscribe(partner_ids=[self.partner_2.id])
+        self.project_portal.message_subscribe(
+            partner_ids=[self.partner_2.id, self.user_portal.partner_id.id]
+        )
         with Form(PortalShare) as project_share_form:
             self.assertEqual(
-                len(project_share_form.collaborator_ids),
-                3,
-                "2 external collaborators should be found for that project.",
+                {
+                    vals["partner_id"]: vals["access_mode"]
+                    for vals in project_share_form.collaborator_ids._field_value._data.values()
+                },
+                {self.user_portal.partner_id.id: "view", self.partner_1.id: "edit"},
+                "Only collaborators are listed; a follower is not a collaborator.",
             )
-            collaborator_vals_per_id = (
-                project_share_form.collaborator_ids._field_value._data
-            )
-            collaborator_access_mode_per_partner_id = {
-                c["partner_id"]: c["access_mode"]
-                for c in collaborator_vals_per_id.values()
-            }
-            self.assertIn(
-                self.user_portal.partner_id.id,
-                collaborator_access_mode_per_partner_id,
-            )
-            self.assertIn(self.partner_1.id, collaborator_access_mode_per_partner_id)
-            self.assertIn(self.partner_2.id, collaborator_access_mode_per_partner_id)
-            access_mode_expected_per_partner_id = {
-                self.user_portal.partner_id.id: "edit",
-                self.partner_1.id: "edit_limited",
-                self.partner_2.id: "read",
-            }
-            self.assertDictEqual(
-                collaborator_access_mode_per_partner_id,
-                access_mode_expected_per_partner_id,
-            )
-            collaborator_ids_to_remove = {
-                c_id
-                for c_id, vals in collaborator_vals_per_id.items()
-                if vals["access_mode"] != "read"
-            }
-            index = 0
-            for collaborator_id in project_share_form.collaborator_ids.ids:
-                if collaborator_id in collaborator_ids_to_remove:
-                    project_share_form.collaborator_ids.remove(index)
-                else:
-                    index += 1
+            while project_share_form.collaborator_ids:
+                project_share_form.collaborator_ids.remove(0)
 
         self.assertTrue(
             self.project_portal.collaborator_ids,
@@ -454,17 +354,12 @@ class TestProjectSharing(TestProjectSharingCommon):
         self.assertIn(
             self.partner_2,
             self.project_portal.message_partner_ids,
-            "The readonly partner should still be a follower.",
+            "A follower who never collaborated keeps following.",
         )
         self.assertNotIn(
             self.user_portal.partner_id,
             self.project_portal.message_partner_ids,
-            "The readonly partner should still be a follower.",
-        )
-        self.assertNotIn(
-            self.partner_1,
-            self.project_portal.message_partner_ids,
-            "The readonly partner should still be a follower.",
+            "A revoked collaborator stops following.",
         )
 
     def test_project_share_wizard_alter_access_mode_collaborators(self) -> None:
@@ -474,12 +369,14 @@ class TestProjectSharing(TestProjectSharingCommon):
         self.project_portal.write(
             {
                 "collaborator_ids": [
-                    Command.create({"partner_id": self.user_portal.partner_id.id}),
                     Command.create(
                         {
-                            "partner_id": self.partner_1.id,
-                            "limited_access": True,
+                            "partner_id": self.user_portal.partner_id.id,
+                            "access_mode": "advanced_edit",
                         }
+                    ),
+                    Command.create(
+                        {"partner_id": self.partner_1.id, "access_mode": "edit"}
                     ),
                 ],
                 "message_partner_ids": [
@@ -488,18 +385,15 @@ class TestProjectSharing(TestProjectSharingCommon):
             }
         )
         with Form(ProjectShare) as project_share_form:
-            access_updated_per_partner_id = {
-                self.user_portal.partner_id.id: "edit_limited",
-                self.partner_2.id: "edit",
-            }
             for index in range(len(project_share_form.collaborator_ids.ids)):
                 with project_share_form.collaborator_ids.edit(
                     index
                 ) as collaborator_form:
-                    if collaborator_form.partner_id.id in access_updated_per_partner_id:
-                        collaborator_form.access_mode = access_updated_per_partner_id[
-                            collaborator_form.partner_id.id
-                        ]
+                    if collaborator_form.partner_id == self.user_portal.partner_id:
+                        collaborator_form.access_mode = "edit"
+            with project_share_form.collaborator_ids.new() as collaborator_form:
+                collaborator_form.partner_id = self.partner_2
+                collaborator_form.access_mode = "advanced_edit"
 
         self.assertEqual(
             len(self.project_portal.collaborator_ids),
@@ -509,21 +403,12 @@ class TestProjectSharing(TestProjectSharingCommon):
         project_share_form.record.action_send_mail()
 
         self.assertEqual(
-            len(self.project_portal.collaborator_ids),
-            3,
-            "3 collaborators should be found for that project.",
-        )
-        self.assertEqual(
-            self.project_portal.collaborator_ids.partner_id,
-            self.user_portal.partner_id + self.partner_1 + self.partner_2,
-            "The collaborators should be the portal user, Valid Lelitre and Valid Poilvache.",
-        )
-        self.assertEqual(
-            self.project_portal.collaborator_ids.filtered(
-                lambda c: c.limited_access
-            ).partner_id,
-            self.user_portal.partner_id + self.partner_1,
-            "The portal user and Valid Lelitre should have limited access.",
+            {c.partner_id: c.access_mode for c in self.project_portal.collaborator_ids},
+            {
+                self.user_portal.partner_id: "edit",
+                self.partner_1: "edit",
+                self.partner_2: "advanced_edit",
+            },
         )
 
     def test_project_sharing_access(self) -> None:
@@ -580,7 +465,12 @@ class TestProjectSharing(TestProjectSharingCommon):
         self.project_portal.write(
             {
                 "collaborator_ids": [
-                    Command.create({"partner_id": self.user_portal.partner_id.id}),
+                    Command.create(
+                        {
+                            "partner_id": self.user_portal.partner_id.id,
+                            "access_mode": "edit",
+                        }
+                    ),
                 ],
             }
         )
@@ -928,20 +818,20 @@ class TestProjectSharing(TestProjectSharingCommon):
                     Command.create(
                         {
                             "partner_id": self.user_portal.partner_id.id,
-                            "access_mode": "edit_limited",
+                            "access_mode": "edit",
                         }
                     ),
                 ],
             }
         ).action_send_mail()
-        self.assertTrue(self.project_cows.collaborator_ids.limited_access)
+        self.assertEqual(self.project_cows.collaborator_ids.access_mode, "edit")
 
         task.sudo().message_partner_ids -= self.user_portal.partner_id
-        with self.assertRaises(AccessError):
-            task.write({"name": "foo"})
-
-        task.sudo().message_partner_ids += self.user_portal.partner_id
         task.write({"name": "foo"})
+        self.assertEqual(task.name, "foo", "Following is not what grants editing.")
+        other_step = self.project_cows.workflow_step_ids - task.step_id
+        with self.assertRaises(AccessError):
+            task.write({"step_id": other_step[:1].id})
 
         self.env["project.share.wizard"].create(
             {
@@ -951,7 +841,7 @@ class TestProjectSharing(TestProjectSharingCommon):
                     Command.create(
                         {
                             "partner_id": self.user_portal.partner_id.id,
-                            "access_mode": "read",
+                            "access_mode": "view",
                         }
                     ),
                     Command.create(
@@ -969,7 +859,7 @@ class TestProjectSharing(TestProjectSharingCommon):
             self.env.ref("project.project_task_rule_portal_project_sharing").active
         )
 
-        self.assertIn(self.user_portal.partner_id, task.sudo().message_partner_ids)
+        task.sudo().message_partner_ids += self.user_portal.partner_id
         with self.assertRaises(AccessError):
             task.write({"name": "foo"})
 
@@ -1019,7 +909,12 @@ class TestProjectSharing(TestProjectSharingCommon):
         self.project_portal.write(
             {
                 "collaborator_ids": [
-                    Command.create({"partner_id": self.user_portal.partner_id.id}),
+                    Command.create(
+                        {
+                            "partner_id": self.user_portal.partner_id.id,
+                            "access_mode": "advanced_edit",
+                        }
+                    ),
                 ],
             }
         )
@@ -1216,7 +1111,7 @@ class TestProjectSharing(TestProjectSharingCommon):
                     Command.create(
                         {
                             "partner_id": self.user_portal.partner_id.id,
-                            "access_mode": "read",
+                            "access_mode": "view",
                         }
                     ),
                 ],
@@ -1229,9 +1124,9 @@ class TestProjectSharing(TestProjectSharingCommon):
             "Project manager should still be a follower after sharing the project",
         )
         self.assertEqual(
-            len(project.message_follower_ids),
-            2,
-            "number of followers should be 2",
+            project.message_partner_ids,
+            self.user_projectmanager.partner_id,
+            "Sharing grants access without subscribing the collaborator.",
         )
 
     def test_portal_user_with_edit_rights_can_close_recurring_task(
