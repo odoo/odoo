@@ -30,6 +30,11 @@ class TestViewIrValidate(unittest.TestCase):
             [("bad-enum", "field", "error")],
         )
 
+    def test_a_conditional_column_is_a_valid_optional(self):
+        self.assertEqual(
+            codes('<list><field name="quantity" optional="conditional"/></list>'), []
+        )
+
     def test_unknown_kind_is_an_error_and_html_is_not(self):
         self.assertEqual(
             codes("<form><bold>x</bold></form>"), [("unknown-kind", "bold", "error")]
