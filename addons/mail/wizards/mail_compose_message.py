@@ -51,9 +51,7 @@ COMPOSER_FIELD_TO_TEMPLATE_FIELD = {
 
 TEMPLATE_FIELD_TO_COMPOSER_FIELD = {"body_html": "body"}
 
-TEMPLATE_RENDER_FIELDS = (DYNAMIC_FIELD_NAMES - RECIPIENT_FIELD_NAMES) | (
-    ATTACHMENT_FIELD_NAMES
-)
+TEMPLATE_RENDER_FIELDS = DYNAMIC_FIELD_NAMES - RECIPIENT_FIELD_NAMES
 
 SENT_EMAILS_MAPPING_CONTEXT_KEY = "mail_composer_sent_emails_mapping"
 
@@ -133,6 +131,9 @@ class MailComposeMessage(models.TransientModel):
         domain="[('model', '=', model), '|', ('user_id','=', False), ('user_id', '=', uid)]",
     )
     template_render_values = fields.Json(compute="_compute_template_render_values")
+    template_render_attachments = fields.Json(
+        compute="_compute_template_render_attachments"
+    )
     lang = fields.Char(precompute=False)
     attachment_ids: IrAttachment = fields.Many2many(
         comodel_name="ir.attachment",
@@ -402,9 +403,28 @@ class MailComposeMessage(models.TransientModel):
     @api.depends("composition_mode", "model", "res_domain", "res_ids", "template_id")
     def _compute_template_render_values(self) -> None:
         for composer in self:
-            composer.template_render_values = composer._render_template_values()
+            values = composer._render_template_fields(TEMPLATE_RENDER_FIELDS)
+            if values and (scheduled_date := values.get("scheduled_date")):
+                values["scheduled_date"] = fields.Datetime.to_string(scheduled_date)
+            composer.template_render_values = values
 
-    def _render_template_values(self) -> dict | Literal[False]:
+    @api.depends("composition_mode", "model", "res_domain", "res_ids", "template_id")
+    def _compute_template_render_attachments(self) -> None:
+        for composer in self:
+            values = composer._render_template_fields(ATTACHMENT_FIELD_NAMES)
+            if values and (attachments := values.get("attachments")):
+                values["attachments"] = [
+                    [name, datas.decode()] for name, datas in attachments
+                ]
+            composer.template_render_attachments = values
+
+    def _render_template_fields(self, fnames) -> dict | Literal[False]:
+        """Render the template's `fnames` for the composer's one record.
+
+        Attachments render apart from the text fields: a report renders its page,
+        and building that page's assets flushes, which recomputes the composer's
+        other fields while the render that asked for it is still running.
+        """
         self.check_singleton()
         if (
             not self.template_id
@@ -413,16 +433,7 @@ class MailComposeMessage(models.TransientModel):
         ):
             return False
         res_ids = self._evaluate_res_ids() or [0]
-        values = self.template_id._prepare_mail_vals(res_ids, TEMPLATE_RENDER_FIELDS)[
-            res_ids[0]
-        ]
-        if scheduled_date := values.get("scheduled_date"):
-            values["scheduled_date"] = fields.Datetime.to_string(scheduled_date)
-        if attachments := values.get("attachments"):
-            values["attachments"] = [
-                [name, datas.decode()] for name, datas in attachments
-            ]
-        return values
+        return self.template_id._prepare_mail_vals(res_ids, fnames)[res_ids[0]]
 
     @api.depends("composition_mode", "model", "res_domain", "res_ids", "template_id")
     def _compute_attachment_ids(self) -> None:
@@ -431,7 +442,7 @@ class MailComposeMessage(models.TransientModel):
                 composer.composition_mode == "mass_mail" or composer.composition_batch
             ):
                 composer.attachment_ids = composer.template_id.attachment_ids
-            elif rendered_values := composer.template_render_values:
+            elif rendered_values := composer.template_render_attachments:
                 attachment_ids = list(rendered_values.get("attachment_ids") or [])
                 if attachments := rendered_values.get("attachments"):
                     attachment_ids += (
@@ -532,9 +543,13 @@ class MailComposeMessage(models.TransientModel):
 
     @api.depends("model")
     def _compute_model_is_thread(self) -> None:
+        thread = self.pool["mixin.mail.thread"]
         for composer in self:
-            model = self.env["ir.model"]._get(composer.model)
-            composer.model_is_thread = model.is_mail_thread
+            composer.model_is_thread = bool(
+                composer.model
+                and composer.model in self.env
+                and isinstance(self.env[composer.model], thread)
+            )
 
     @api.depends("composition_mode", "parent_id")
     def _compute_res_ids(self) -> None:

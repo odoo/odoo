@@ -617,7 +617,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
                 composer_form.attachment_ids.add(attachment)
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=49, employee=49):
+        with self.assertQueryCount(admin=48, employee=48):
             composer._action_send_mail()
 
         # notifications
@@ -787,7 +787,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
         test_template.write({"attachment_ids": [(5, 0)]})
 
         customer = self.env["res.partner"].browse(self.customer.ids)
-        with self.assertQueryCount(admin=26, employee=26):
+        with self.assertQueryCount(admin=21, employee=21):
             composer_form = Form(
                 self.env["mail.compose.message"].with_context(
                     {
@@ -832,7 +832,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
         test_record, test_template = self._create_test_records()
 
         customer = self.env["res.partner"].browse(self.customer.ids)
-        with self.assertQueryCount(admin=28, employee=28):
+        with self.assertQueryCount(admin=23, employee=23):
             composer_form = Form(
                 self.env["mail.compose.message"].with_context(
                     {
@@ -1703,7 +1703,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
                 .create({})
             )
 
-        with self.assertQueryCount(admin=12, employee=11):
+        with self.assertQueryCount(admin=8, employee=8):
             messages_as_sudo = test_records.message_post_with_source(
                 "test_mail.mail_template_simple_test",
                 render_values={"partner": self.user_emp_inbox.partner_id},
@@ -2907,7 +2907,7 @@ class TestPerformance(BaseMailPostPerformance):
         self.push_to_end_point_mocked.reset_mock()  # reset as executed twice
         self.flush_tracking()
 
-        with self.assertQueryCount(employee=376):
+        with self.assertQueryCount(employee=375):
             for ticket, attachments in zip(tickets, attachments_all, strict=True):
                 ticket.message_post(
                     attachments=attachments_vals,
