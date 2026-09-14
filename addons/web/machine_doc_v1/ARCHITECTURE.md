@@ -78,9 +78,9 @@ Top-level layout of `addons/web/` (detailed maps are separate docs):
 |------|----------|-----|
 | `controllers/` | 24 `.py` — HTTP endpoints (22 Controller classes, 76 route handlers) | `ROUTE_MAP.md` |
 | `models/` | 25 `.py` — ORM extensions (24 model classes: web_read, web_read_group, ir_http, …) | `MODEL_MAP.md` |
-| `static/src/` | 868 JavaScript/OWL source files across 248 directories (FSD layers) | `DIRECTORY_MAP.md` |
+| `static/src/` | 869 JavaScript/OWL source files across 248 directories (FSD layers) | `DIRECTORY_MAP.md` |
 | `static/lib/` | 18 directories (17 vendored libraries + generated `popper_compat/`) — DO NOT MODIFY | `static/lib/versions.json` |
-| `static/tests/` | 801 `.js` (incl. 736 `*.test.js` Hoot suites), mirroring the `static/src/` tree | `TEST_TAGS.md` |
+| `static/tests/` | 802 `.js` (incl. 737 `*.test.js` Hoot suites), mirroring the `static/src/` tree | `TEST_TAGS.md` |
 | `tests/` | 62 Python test files (`test_*.py`) | `TEST_TAGS.md` |
 | `machine_doc_v1/` | This directory: `COMPONENT_DIAGRAM.md` (18 audit areas) · `FLOW_DIAGRAM.md` (14 sequence diagrams) · `LAZY_VIEW_LOADING.md` · `VIEW_TEARDOWN_COST.md` (both decision records: investigated, not pursued) · `LIST_EDIT_RENDER_COST.md` (decision record: row-level waste fixed, renderer-level amplification measured and not pursued) · the maps below · `factcheck.sh` | — |
 | `views/` · `data/` · `security/` · `i18n/` | XML templates, data fixtures, `ir.model.access.csv`, translations | — |
@@ -98,9 +98,9 @@ Layered organization under `static/src/`:
 | **Components** | `components/` | Reusable OWL UI components (dropdown, pickers, editors, file handling) | 111 JS |
 | **UI** | `ui/` | Overlay layer and its services: dialog, popover, tooltip, notification, overlay, effects, block, alert, carousel, collapse, offcanvas, bottom sheet, command palette, PWA prompt | 47 JS |
 | **Fields** | `fields/` | 68 widget directories in 7 subcategories (basic, display, media, relational, selection, specialized, temporal); 116 fork-wide `registerField` / `registerFallbackField` sites | 129 JS |
-| **Views** | `views/` | View types: form, list, kanban, calendar, graph, pivot + view utilities + settings | 180 JS |
+| **Views** | `views/` | View types: form, list, kanban, calendar, graph, pivot + view utilities + settings | 179 JS |
 | **Webclient** | `webclient/` | App shell: home menu, navbar, menus, actions, user menu, colour scheme, density, debug/profiling, Studio upsell | 96 JS |
-| **Search** | `search/` | Search model and mixins, search bar, facets, filters, group-by, favorites, embedded actions bar | 38 JS |
+| **Search** | `search/` | Search model and mixins, search bar, facets, filters, group-by, favorites, embedded actions bar | 40 JS |
 | **Model** | `model/` | Client-side relational data model (`RelationalRecord`, `StaticList`, groups, save orchestration) | 52 JS |
 | **Public** | `public/` | Public (anonymous) page features; all run on `public.interactions`. Frontend app boot is `public/public_boot.js` (+ `public_boot_instance.js`, kept out of the test bundles via a `remove` directive); early-boot `lazyloader.js` / `minimal_dom.js` also live here. | 17 JS |
 | **Vendored-in-src** | `libs/` | FontAwesome 7 icon CSS/webfonts + its JS glue, and `popper_compat.js` — vendored inside `src/` (unlike `static/lib/`) | 2 JS |
@@ -486,8 +486,8 @@ an in-tree fork; only `hoot` and `hoot-dom` are internal, versioned with the for
 | Python (controllers) | 24 (22 Controller classes across 20 route-bearing files + `__init__.py`, `export_writers.py`, `json_helpers.py`, `utils.py`) |
 | Python (models) | 25 (24 model files + `__init__.py`) |
 | Python (tests) | 62 (`test_*.py`; 63 files incl. `__init__.py`) |
-| JavaScript (src) | 868 (866 carry `@ts-check`; `module_loader.js` + `service_worker.js` are the two exclusions) |
-| JavaScript (tests) | 801 (incl. 736 `*.test.js` Hoot suites) |
+| JavaScript (src) | 869 (867 carry `@ts-check`; `module_loader.js` + `service_worker.js` are the two exclusions) |
+| JavaScript (tests) | 802 (incl. 737 `*.test.js` Hoot suites) |
 | JavaScript (vendored libs) | 94 |
 | SCSS/CSS | 213 (34 in `static/src/scss/` shared base; remaining 179 co-located with JS components) |
 | XML (views/ + data/ + static/src OWL templates) | 293 (14 views + 5 data + 274 OWL templates) |

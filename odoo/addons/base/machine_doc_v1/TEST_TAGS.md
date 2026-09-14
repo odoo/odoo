@@ -5,7 +5,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 ## Quick Reference
 
 ```bash
-# All base tests (4059 methods, 836 classes, 137 files)
+# All base tests (4062 methods, 836 classes, 137 files)
 --test-tags '/base' -u base
 
 # Only post_install tests
@@ -127,7 +127,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 | `test_http_case.py` | `-at_install`, `post_install` | 10 | 26 | HttpCase, TestRequestRemainingCommon, TestChromeBrowser |
 | `test_import_files.py` | `post_install`, `-at_install` | 4 | 90 | TransactionCase |
 | `test_ir_actions.py` | `post_install`, `-at_install` | 7 | 104 | TestServerActionsBase, TransactionCase, TestCommonCustomFields |
-| `test_ir_actions_audit.py` | `post_install`, `-at_install` | 47 | 141 | TransactionCase |
+| `test_ir_actions_audit.py` | `post_install`, `-at_install` | 47 | 144 | TransactionCase |
 | `test_ir_actions_report_audit.py` | `post_install`, `-at_install` | 26 | 69 | TransactionCase, MultiArticleReportCase |
 | `test_ir_actions_server_audit.py` | `post_install`, `-at_install` | 3 | 8 | TransactionCase |
 | `test_ir_actions_server_regressions.py` | `post_install`, `-at_install` | 14 | 42 | ServerActionCase |
@@ -257,7 +257,7 @@ These run in **both** at_install and post_install phases by default.
 |--------|-------|
 | Total test files | 137 |
 | Total test classes | 836 |
-| Total test methods | 4059 |
+| Total test methods | 4062 |
 | Files with @tagged | 76 (55%) |
 | Files without @tagged | 61 (45%) |
 | Classes using post_install | 300 |

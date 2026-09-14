@@ -70,7 +70,7 @@ access control, and ORM extensions that those controllers depend on.
 odoo/addons/base/
 ├── __manifest__.py              # Module metadata + asset/data file declarations
 ├── __init__.py                  # Imports models, report, wizard + post_init hook
-├── models/                      # 105 Python model files (core ORM infrastructure)
+├── models/                      # 106 Python model files (core ORM infrastructure)
 │   ├── assetsbundle/            #   Asset compilation package (bundle, JS/CSS/XML pipelines, store)
 │   ├── decimal_precision.py         #   Configurable decimal precision
 │   ├── ir_actions_act_url.py        #   URL action
@@ -171,6 +171,7 @@ odoo/addons/base/
 │   ├── res_partner_tag.py           #   Partner tags (hierarchical)
 │   ├── res_users.py                 #   Users (inherits res.partner)
 │   ├── res_users_apikeys.py         #   API key management
+│   ├── res_users_auth.py            #   Password store: hashing and checks under _get_crypt_context
 │   ├── res_users_deletion.py        #   User deletion queue
 │   ├── res_users_identitycheck.py   #   Password verification wizard
 │   ├── res_users_log.py             #   Login tracking
@@ -279,7 +280,7 @@ Derived by `factcheck.sh`, which re-measures every row against the tree.
 
 | Category | Count |
 |----------|-------|
-| Python (models) | 105 |
+| Python (models) | 106 |
 | Python (wizards) | 11 |
 | Python (tests) | 137 |
 | XML (views) | 38 |
