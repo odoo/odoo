@@ -8,7 +8,7 @@ REQUEST_ACTIVITY_TYPE = "maintenance.mail_act_maintenance_request"
 
 class MaintenanceRequest(models.Model):
     _name = "maintenance.request"
-    _inherit = ["mixin.mail.thread.cc", "mixin.mail.activity", "mixin.recurrence.rule"]
+    _inherit = ["mixin.mail.thread.cc", "mixin.mail.activity"]
     _description = "Maintenance Request"
     _order = "id desc"
     _check_company_auto = True
@@ -147,17 +147,16 @@ class MaintenanceRequest(models.Model):
         help="Paste the url of your Google Slide. Make sure the access to the document is public.",
     )
     instruction_text = fields.Html(string="Text")
-    recurring_maintenance = fields.Boolean(
-        string="Recurrent",
-        compute="_compute_recurring_maintenance",
-        store=True,
-        readonly=False,
+    plan_id = fields.Many2one(
+        comodel_name="maintenance.plan",
+        index="btree_not_null",
+        ondelete="set null",
+        check_company=True,
+        tracking=True,
     )
-    repeat_until = fields.Date(string="End Date")
-    date_recurrence_origin = fields.Datetime(copy=False)
 
     def archive_equipment_request(self):
-        self.write({"archive": True, "recurring_maintenance": False})
+        self.write({"archive": True})
 
     def reset_equipment_request(self):
         """Reinsert the maintenance request into the maintenance pipe in the first stage"""
@@ -178,19 +177,6 @@ class MaintenanceRequest(models.Model):
                 raise ValidationError(
                     self.env._("End date cannot be earlier than start date.")
                 )
-
-    @api.constrains("recurring_maintenance", "repeat_type", "repeat_until")
-    def _check_until_recurrence_has_end_date(self):
-        if self.filtered(
-            lambda request: (
-                request.recurring_maintenance
-                and request.repeat_type == "until"
-                and not request.repeat_until
-            )
-        ):
-            raise ValidationError(
-                self.env._("A recurrence repeated until a date needs its end date.")
-            )
 
     @api.depends("stage_id")
     def _compute_close_date(self):
@@ -265,12 +251,6 @@ class MaintenanceRequest(models.Model):
             ):
                 request.user_id = False
 
-    @api.depends("maintenance_type")
-    def _compute_recurring_maintenance(self):
-        for request in self:
-            if request.maintenance_type != "preventive":
-                request.recurring_maintenance = False
-
     @api.model_create_multi
     def create(self, vals_list):
         requests = super().create(vals_list)
@@ -283,24 +263,23 @@ class MaintenanceRequest(models.Model):
     def write(self, vals):
         if "stage_id" in vals and "kanban_state" not in vals:
             vals = {**vals, "kanban_state": "normal"}
-        if "date_recurrence_origin" not in vals and vals.keys() & {
-            "recurring_maintenance",
-            "repeat_interval",
-            "repeat_unit",
-        }:
-            vals = {**vals, "date_recurrence_origin": False}
         closing = self.browse()
         if (
             "stage_id" in vals
             and self.env["maintenance.stage"].browse(vals["stage_id"]).done
         ):
             closing = self.filtered(lambda request: not request.stage_id.done)
+        if vals.get("archive"):
+            closing |= self.filtered(
+                lambda request: not request.archive and not request.stage_id.done
+            )
         res = super().write(vals)
         if vals.get("owner_user_id") or vals.get("user_id"):
             self._add_followers()
         if closing:
-            closing.activity_feedback([REQUEST_ACTIVITY_TYPE])
-            closing._create_next_occurrences()
+            closing.filtered("stage_id.done").activity_feedback([REQUEST_ACTIVITY_TYPE])
+            for request in closing.filtered("plan_id"):
+                request.plan_id._schedule_after(request)
         replace_activity = self._is_new_activity_required(vals)
         if replace_activity:
             self.activity_unlink([REQUEST_ACTIVITY_TYPE])
@@ -314,36 +293,28 @@ class MaintenanceRequest(models.Model):
             self.activity_update()
         return res
 
-    def _create_next_occurrences(self):
-        for request in self:
-            if vals := request._prepare_next_occurrence_vals():
-                request.copy(vals)
-
-    def _prepare_next_occurrence_vals(self):
-        self.check_singleton()
-        if self.maintenance_type != "preventive" or not self.recurring_maintenance:
-            return {}
-        after = self.schedule_date or fields.Datetime.now()
-        schedule_date = self._resolve_next_occurrence_date(after)
-        if not schedule_date:
-            return {}
+    def get_plan_occurrences(self, start, stop):
+        start, stop = (
+            fields.Datetime.to_datetime(start),
+            fields.Datetime.to_datetime(stop),
+        )
         return {
-            "schedule_date": schedule_date,
-            "date_recurrence_origin": self.date_recurrence_origin or after,
-            "stage_id": self._default_stage_id().id,
+            request.id: [
+                fields.Datetime.to_string(occurrence)
+                for occurrence in request.plan_id._get_occurrences_after(
+                    request.schedule_date, stop=stop
+                )
+                if occurrence >= start
+            ]
+            for request in self.filtered(
+                lambda request: (
+                    request.plan_id.active
+                    and request.schedule_date
+                    and not request.stage_id.done
+                    and not request.archive
+                )
+            )
         }
-
-    def _resolve_next_occurrence_date(self, after):
-        self.check_singleton()
-        origin = self.date_recurrence_origin or self.schedule_date or after
-        occurrence = self._get_next_recurrence_after(origin, after, self.env.tz)
-        if self.repeat_type == "until" and not (
-            self.repeat_until
-            and fields.Datetime.context_timestamp(self, occurrence).date()
-            <= self.repeat_until
-        ):
-            return None
-        return occurrence
 
     def _is_new_activity_required(self, vals):
         return vals.get("equipment_id")

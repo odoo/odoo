@@ -10,22 +10,11 @@ import {
     preloadFullCalendar,
 } from "@web/../tests/web_test_helpers";
 
-class MaintenanceRequest extends models.Model {
-    _name = "maintenance.request";
+class MaintenancePlan extends models.Model {
+    _name = "maintenance.plan";
 
     name = fields.Char();
-    schedule_date = fields.Datetime();
-    schedule_end = fields.Datetime();
-    duration = fields.Float();
-    recurring_maintenance = fields.Boolean();
-    repeat_interval = fields.Integer();
-    repeat_unit = fields.Selection({
-        selection: [
-            ["day", "Days"],
-            ["week", "Weeks"],
-            ["month", "Months"],
-        ],
-    });
+    active = fields.Boolean({ default: true });
     repeat_type = fields.Selection({
         selection: [
             ["forever", "Forever"],
@@ -33,7 +22,27 @@ class MaintenanceRequest extends models.Model {
         ],
     });
     repeat_until = fields.Date();
-    date_recurrence_origin = fields.Datetime();
+
+    _records = [
+        {
+            id: 1,
+            name: "daily",
+            active: true,
+            repeat_type: "until",
+            repeat_until: "2026-09-17",
+        },
+        { id: 2, name: "stopped", active: false, repeat_type: "forever" },
+    ];
+}
+
+class MaintenanceRequest extends models.Model {
+    _name = "maintenance.request";
+
+    name = fields.Char();
+    schedule_date = fields.Datetime();
+    schedule_end = fields.Datetime();
+    duration = fields.Float();
+    plan_id = fields.Many2one({ relation: "maintenance.plan" });
     done = fields.Boolean();
     archive = fields.Boolean();
 
@@ -48,11 +57,7 @@ class MaintenanceRequest extends models.Model {
             schedule_date: "2026-09-14 16:00:00",
             schedule_end: "2026-09-14 17:00:00",
             duration: 1,
-            recurring_maintenance: true,
-            repeat_interval: 1,
-            repeat_unit: "day",
-            repeat_type: "until",
-            repeat_until: "2026-09-17",
+            plan_id: 1,
         },
         {
             id: 2,
@@ -61,20 +66,23 @@ class MaintenanceRequest extends models.Model {
             schedule_end: "2025-09-10 17:00:00",
             duration: 1,
         },
+        {
+            id: 3,
+            name: "stopped plan",
+            schedule_date: "2025-09-11 16:00:00",
+            schedule_end: "2025-09-11 17:00:00",
+            duration: 1,
+            plan_id: 2,
+        },
     ];
 }
 
-defineModels([MaintenanceRequest]);
+defineModels([MaintenancePlan, MaintenanceRequest]);
 preloadFullCalendar();
 
 const arch = `
     <calendar js_class="calendar_with_recurrence" date_start="schedule_date" date_stop="schedule_end" mode="week">
-        <field name="recurring_maintenance" invisible="1"/>
-        <field name="repeat_interval" invisible="1"/>
-        <field name="repeat_unit" invisible="1"/>
-        <field name="repeat_type" invisible="1"/>
-        <field name="repeat_until" invisible="1"/>
-        <field name="date_recurrence_origin" invisible="1"/>
+        <field name="plan_id" invisible="1"/>
         <field name="done" invisible="1"/>
         <field name="archive" invisible="1"/>
         <field name="duration" invisible="1"/>
@@ -82,9 +90,16 @@ const arch = `
 `;
 
 test.tags("desktop");
-test("an until recurrence still shows its occurrence on the end date west of UTC", async () => {
+test("a plan's request shows the occurrences the server projects for it", async () => {
     mockDate("2026-09-14T08:00:00", -6);
+    onRpc("maintenance.request", "get_plan_occurrences", ({ args }) => {
+        expect.step(args[0]);
+        return {
+            1: ["2026-09-15 16:00:00", "2026-09-16 16:00:00", "2026-09-17 16:00:00"],
+        };
+    });
     await mountView({ resModel: "maintenance.request", type: "calendar", arch });
+    expect.verifySteps([[1]]);
     expect(queryAllTexts(".fc-event .o_event_title")).toEqual([
         "daily check",
         "daily check (+1)",
@@ -94,47 +109,9 @@ test("an until recurrence still shows its occurrence on the end date west of UTC
 });
 
 test.tags("desktop");
-test("a monthly series from the 31st shows its occurrence on the month end", async () => {
-    MaintenanceRequest._records = [
-        {
-            id: 3,
-            name: "month end",
-            schedule_date: "2026-01-31 16:00:00",
-            schedule_end: "2026-01-31 17:00:00",
-            duration: 1,
-            recurring_maintenance: true,
-            repeat_interval: 1,
-            repeat_unit: "month",
-            repeat_type: "forever",
-        },
-        {
-            id: 4,
-            name: "rescheduled",
-            schedule_date: "2026-03-03 16:00:00",
-            schedule_end: "2026-03-03 17:00:00",
-            date_recurrence_origin: "2026-01-31 16:00:00",
-            duration: 1,
-            recurring_maintenance: true,
-            repeat_interval: 1,
-            repeat_unit: "month",
-            repeat_type: "forever",
-        },
-    ];
-    mockDate("2026-03-15T08:00:00", -6);
-    await mountView({
-        resModel: "maintenance.request",
-        type: "calendar",
-        arch: arch.replace('mode="week"', 'mode="month"'),
-    });
-    expect(
-        queryAllTexts(".fc-daygrid-day[data-date='2026-03-31'] .o_event_title"),
-    ).toEqual(["month end (+2)", "rescheduled (+1)"]);
-    expect(".fc-daygrid-day[data-date='2026-03-28'] .fc-event").toHaveCount(0);
-});
-
-test.tags("desktop");
-test("a finished request that cannot repeat into the range is not fetched", async () => {
+test("a request that cannot repeat into the range is not fetched", async () => {
     mockDate("2026-09-14T08:00:00", -6);
+    onRpc("maintenance.request", "get_plan_occurrences", () => ({}));
     onRpc("maintenance.request", "search_read", async ({ parent }) => {
         const records = await parent();
         expect.step(records.map((record) => record.id));

@@ -1,6 +1,6 @@
 {
     "name": "Maintenance",
-    "version": "1.1",
+    "version": "1.2",
     "category": "Supply Chain/Maintenance",
     "summary": "Track equipment and manage maintenance requests",
     "description": """
@@ -19,6 +19,7 @@ Track equipment and maintenance requests""",
         "data/mail_activity_type_data.xml",
         "data/mail_message_subtype_data.xml",
         "views/maintenance_views.xml",
+        "views/maintenance_plan_views.xml",
         "views/mail_activity_views.xml",
         "wizards/res_config_settings_views.xml",
         "views/maintenance_menus.xml",

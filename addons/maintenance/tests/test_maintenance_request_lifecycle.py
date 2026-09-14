@@ -1,6 +1,5 @@
 from datetime import date, datetime
 
-from odoo.exceptions import ValidationError
 from odoo.tests import Form, TransactionCase
 from odoo.tools.safe_eval import safe_eval
 
@@ -25,110 +24,10 @@ class TestMaintenanceRequestLifecycle(TransactionCase):
             }
         )
 
-    def _recurring(self, **vals):
-        return self.Request.create(
-            {
-                "name": "Recurring probe",
-                "maintenance_type": "preventive",
-                "recurring_maintenance": True,
-                "repeat_interval": 1,
-                "repeat_unit": "week",
-                "schedule_date": datetime(2026, 9, 1, 10),
-                **vals,
-            }
-        )
-
-    def _successors(self, request):
-        return self.Request.search(
-            [("name", "=", request.name), ("id", "!=", request.id)]
-        )
-
     def _activities(self, request):
         return request.activity_ids.filtered(
             lambda activity: activity.activity_type_id == self.env.ref(ACTIVITY)
         )
-
-    def test_only_the_first_closing_stage_creates_the_next_occurrence(self):
-        request = self._recurring()
-        request.stage_id = self.stage_repaired
-        request.stage_id = self.stage_scrap
-        request.write({"stage_id": self.stage_scrap.id})
-        successor = self._successors(request)
-        self.assertEqual(len(successor), 1)
-        self.assertRecordValues(
-            successor,
-            [
-                {
-                    "stage_id": self.stage_new.id,
-                    "schedule_date": datetime(2026, 9, 8, 10),
-                    "close_date": False,
-                }
-            ],
-        )
-
-    def test_a_closing_write_that_stops_the_recurrence_creates_nothing(self):
-        request = self._recurring()
-        request.write(
-            {"stage_id": self.stage_repaired.id, "recurring_maintenance": False}
-        )
-        self.assertFalse(self._successors(request))
-
-    def test_an_until_recurrence_stops_after_its_end_date(self):
-        request = self._recurring(repeat_type="until", repeat_until=date(2026, 9, 5))
-        request.stage_id = self.stage_repaired
-        self.assertFalse(self._successors(request))
-
-    def test_an_until_recurrence_needs_its_end_date(self):
-        with self.assertRaises(ValidationError):
-            self._recurring(repeat_type="until")
-
-    def _close(self, request):
-        before = self._successors(request)
-        request.stage_id = self.stage_repaired
-        return (self._successors(request) - before).with_env(request.env)
-
-    def test_a_month_end_series_returns_to_the_month_end(self):
-        request = self._recurring(
-            repeat_unit="month", schedule_date=datetime(2026, 1, 31, 10)
-        ).with_context(tz="UTC")
-        february = self._close(request)
-        self.assertEqual(february.schedule_date, datetime(2026, 2, 28, 10))
-        march = self._close(february)
-        self.assertEqual(march.schedule_date, datetime(2026, 3, 31, 10))
-
-    def test_rescheduling_one_occurrence_keeps_the_series_on_its_dates(self):
-        request = self._recurring(
-            repeat_unit="month", schedule_date=datetime(2026, 1, 31, 10)
-        ).with_context(tz="UTC")
-        february = self._close(request)
-        february.schedule_date = datetime(2026, 3, 3, 10)
-        march = self._close(february)
-        self.assertEqual(march.schedule_date, datetime(2026, 3, 31, 10))
-
-    def test_changing_the_rule_starts_the_series_again_from_that_occurrence(self):
-        request = self._recurring(
-            repeat_unit="month", schedule_date=datetime(2026, 1, 31, 10)
-        ).with_context(tz="UTC")
-        february = self._close(request)
-        february.repeat_interval = 2
-        april = self._close(february)
-        self.assertEqual(april.schedule_date, datetime(2026, 4, 28, 10))
-
-    def test_a_series_keeps_its_local_hour_across_daylight_saving(self):
-        request = self._recurring(
-            repeat_unit="month", schedule_date=datetime(2026, 3, 15, 10)
-        ).with_context(tz="Europe/Brussels")
-        april = self._close(request)
-        self.assertEqual(april.schedule_date, datetime(2026, 4, 15, 9))
-
-    def test_the_until_date_is_the_local_day(self):
-        request = self._recurring(
-            schedule_date=datetime(2026, 9, 1, 3),
-            repeat_type="until",
-            repeat_until=date(2026, 9, 7),
-        ).with_context(tz="America/Mexico_City")
-        successor = self._close(request)
-        self.assertEqual(successor.schedule_date, datetime(2026, 9, 8, 3))
 
     def test_the_close_date_follows_the_stage_and_keeps_an_explicit_value(self):
         request = self.Request.create({"name": "Close date probe"})
@@ -368,28 +267,6 @@ class TestMaintenanceSchedule(TransactionCase):
         )
         self.assertEqual(request.schedule_end, datetime(2026, 9, 20, 11))
         self.assertEqual(request.duration, 1)
-
-    def test_the_next_occurrence_keeps_the_duration(self):
-        request = self._request(
-            maintenance_type="preventive",
-            recurring_maintenance=True,
-            repeat_interval=1,
-            repeat_unit="day",
-        )
-        request.stage_id = self.env.ref("maintenance.stage_3")
-        successor = self.env["maintenance.request"].search(
-            [("name", "=", request.name), ("id", "!=", request.id)]
-        )
-        self.assertRecordValues(
-            successor,
-            [
-                {
-                    "schedule_date": datetime(2026, 9, 21, 10),
-                    "schedule_end": datetime(2026, 9, 21, 14),
-                    "duration": 4,
-                }
-            ],
-        )
 
 
 class TestMaintenanceReliabilityFigures(TransactionCase):

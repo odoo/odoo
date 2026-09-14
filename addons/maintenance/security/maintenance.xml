@@ -92,6 +92,11 @@
                 eval="[Command.link(ref('group_equipment_manager'))]" />
             <field name="perm_read" eval="False" />
         </record>
+        <record id="maintenance_plan_comp_rule" model="ir.rule">
+            <field name="name">Maintenance Plan Multi-company rule</field>
+            <field name="model_id" ref="model_maintenance_plan" />
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        </record>
         <record id="maintenance_equipment_category_comp_rule" model="ir.rule">
             <field name="name">Maintenance Equipment Category Multi-company rule</field>
             <field name="model_id" ref="model_maintenance_equipment_category" />

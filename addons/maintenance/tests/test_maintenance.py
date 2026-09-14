@@ -96,36 +96,18 @@ class TestEquipment(TestEquipmentCommon):
             maintenance_request_01.stage_id.id, self.ref("maintenance.stage_1")
         )
 
-    def test_forever_maintenance_repeat_type(self):
-        """
-        Test that a maintenance request with repeat_type = forever will be duplicated when it
-        is moved to a 'done' stage, and the new request will be placed in the first stage.
-        """
-        maintenance_request = self.env["maintenance.request"].create(
-            {
-                "name": "Test forever maintenance",
-                "repeat_type": "forever",
-                "maintenance_type": "preventive",
-                "recurring_maintenance": True,
-            }
+    def test_a_forever_plan_opens_the_next_request_in_the_first_stage(self):
+        plan = self.env["maintenance.plan"].create(
+            {"name": "Test forever maintenance", "repeat_type": "forever"}
         )
         done_maintenance_stage = self.env["maintenance.stage"].create(
-            {
-                "name": "Test Done",
-                "done": True,
-            }
+            {"name": "Test Done", "done": True}
         )
-        maintenance_stages = self.env["maintenance.stage"].search([])
-        maintenance_request.with_context(
-            default_stage_id=maintenance_stages[1].id
-        ).stage_id = done_maintenance_stage
-        new_maintenance = self.env["maintenance.request"].search(
-            [
-                ("name", "=", "Test forever maintenance"),
-                ("stage_id", "=", maintenance_stages[0].id),
-            ]
+        plan.request_ids.stage_id = done_maintenance_stage
+        next_request = plan.request_ids.filtered(lambda request: not request.done)
+        self.assertEqual(
+            next_request.stage_id, self.env["maintenance.stage"].search([], limit=1)
         )
-        self.assertTrue(new_maintenance)
 
     def test_update_multiple_maintenance_request_record(self):
         """

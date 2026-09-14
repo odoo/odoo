@@ -1,7 +1,5 @@
 /** @odoo-module native */
-import { luxon } from "@web/core/l10n/luxon";
 import {
-    deserializeDate,
     deserializeDateTime,
     serializeDate,
     serializeDateTime,
@@ -11,6 +9,16 @@ import { CalendarModel } from "@web/views/calendar";
 export class CalendarWithRecurrenceModel extends CalendarModel {
     async loadRecords(data) {
         const rawRecords = await this.fetchRecords(data);
+        const planned = rawRecords.filter(
+            (rawRecord) => rawRecord.plan_id && !rawRecord.done && !rawRecord.archive,
+        );
+        const occurrencesByRequest = planned.length
+            ? await this.orm.call(this.meta.resModel, "get_plan_occurrences", [
+                  planned.map((rawRecord) => rawRecord.id),
+                  serializeDateTime(data.range.start),
+                  serializeDateTime(data.range.end),
+              ])
+            : {};
         const records = {};
         let recordsCounter = 1;
         for (const rawRecord of rawRecords) {
@@ -19,61 +27,28 @@ export class CalendarWithRecurrenceModel extends CalendarModel {
                 id: recordsCounter,
             };
             recordsCounter++;
-            if (
-                rawRecord.recurring_maintenance &&
-                !rawRecord.done &&
-                !rawRecord.archive
-            ) {
-                let { start, end } = data.range;
-                if (rawRecord.repeat_type == "until") {
-                    end = luxon.DateTime.min(
-                        end,
-                        deserializeDate(rawRecord.repeat_until).endOf("day"),
-                    );
-                }
-                const duration = rawRecord.duration || 1;
-                const [unit, interval] = [
-                    rawRecord.repeat_unit + "s",
-                    rawRecord.repeat_interval,
-                ];
-                const scheduleDate = deserializeDateTime(rawRecord.schedule_date);
-                const origin = rawRecord.date_recurrence_origin
-                    ? deserializeDateTime(rawRecord.date_recurrence_origin)
-                    : scheduleDate;
-                let step = 1;
-                let date = this._getOccurrenceDate(origin, unit, interval, step);
-                while (date <= scheduleDate) {
-                    date = this._getOccurrenceDate(origin, unit, interval, ++step);
-                }
-                let counter = 1;
-                while (date <= end) {
-                    if (date > start) {
-                        const endDate = date.plus({ hours: duration });
-                        const rawRecordCopy = { ...rawRecord };
-                        rawRecordCopy.display_name =
-                            rawRecord.display_name + " (+" + counter + ")";
-                        rawRecordCopy.schedule_date = serializeDateTime(date);
-                        rawRecordCopy.schedule_end = serializeDateTime(endDate);
-                        records[recordsCounter] = {
-                            ...this.normalizeRecord(rawRecordCopy),
-                            id: recordsCounter,
-                            isRecurrent: true,
-                        };
-                        recordsCounter++;
-                    }
-                    date = this._getOccurrenceDate(origin, unit, interval, ++step);
-                    counter++;
-                }
+            const duration = rawRecord.duration || 1;
+            const occurrences = occurrencesByRequest[rawRecord.id] || [];
+            for (const [index, occurrence] of occurrences.entries()) {
+                const date = deserializeDateTime(occurrence);
+                records[recordsCounter] = {
+                    ...this.normalizeRecord({
+                        ...rawRecord,
+                        display_name: `${rawRecord.display_name} (+${index + 1})`,
+                        schedule_date: occurrence,
+                        schedule_end: serializeDateTime(date.plus({ hours: duration })),
+                    }),
+                    id: recordsCounter,
+                    isRecurrent: true,
+                };
+                recordsCounter++;
             }
         }
         return records;
     }
-    _getOccurrenceDate(origin, unit, interval, step) {
-        return origin.plus({ [unit]: interval * step });
-    }
     computeRangeDomain(data) {
-        // A recurring request shows occurrences long after its own end, so it stays in
-        // range while its rule can still repeat into it.
+        // A request of a plan shows the plan's occurrences long after its own end, so
+        // it stays in range while the plan can still repeat into it.
         const { date_start, date_stop } = this.meta.fieldMapping;
         const { start, end } = data.range;
         return [
@@ -83,10 +58,10 @@ export class CalendarWithRecurrenceModel extends CalendarModel {
             [date_stop, ">=", serializeDateTime(start)],
             [date_stop, "=", false],
             "&",
-            ["recurring_maintenance", "=", true],
+            ["plan_id.active", "=", true],
             "|",
-            ["repeat_type", "!=", "until"],
-            ["repeat_until", ">=", serializeDate(start)],
+            ["plan_id.repeat_type", "!=", "until"],
+            ["plan_id.repeat_until", ">=", serializeDate(start)],
         ];
     }
     normalizeRecord(rawRecord) {

@@ -14,6 +14,29 @@
         </field>
     </record>
 
+    <record id="maintenance_plan_view_form_asset" model="ir.ui.view">
+        <field name="name">maintenance.plan.form.asset</field>
+        <field name="model">maintenance.plan</field>
+        <field name="inherit_id" ref="maintenance.maintenance_plan_view_form" />
+        <field name="arch" type="xml">
+            <field name="equipment_id" position="after">
+                <field name="asset_id" />
+                <field name="block_asset" invisible="not asset_id" />
+            </field>
+        </field>
+    </record>
+
+    <record id="maintenance_plan_view_list_asset" model="ir.ui.view">
+        <field name="name">maintenance.plan.list.asset</field>
+        <field name="model">maintenance.plan</field>
+        <field name="inherit_id" ref="maintenance.maintenance_plan_view_list" />
+        <field name="arch" type="xml">
+            <field name="equipment_id" position="after">
+                <field name="asset_id" optional="show" />
+            </field>
+        </field>
+    </record>
+
     <record id="maintenance_request_view_search_asset" model="ir.ui.view">
         <field name="name">maintenance.request.search.asset</field>
         <field name="model">maintenance.request</field>

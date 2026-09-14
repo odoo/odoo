@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="maintenance_plan_view_search" model="ir.ui.view">
+        <field name="name">maintenance.plan.search</field>
+        <field name="model">maintenance.plan</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="equipment_id" />
+                <field name="maintenance_team_id" />
+                <field name="user_id" />
+                <filter
+                    name="filter_fixed"
+                    string="Fixed Dates"
+                    domain="[('repeat_anchor', '=', 'fixed')]" />
+                <filter
+                    name="filter_completion"
+                    string="After Completion"
+                    domain="[('repeat_anchor', '=', 'completion')]" />
+                <separator />
+                <filter
+                    name="filter_archived"
+                    string="Archived"
+                    domain="[('active', '=', False)]" />
+                <group>
+                    <filter
+                        name="groupby_equipment"
+                        string="Equipment"
+                        context="{'group_by': 'equipment_id'}" />
+                    <filter
+                        name="groupby_team"
+                        string="Team"
+                        context="{'group_by': 'maintenance_team_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="maintenance_plan_view_list" model="ir.ui.view">
+        <field name="name">maintenance.plan.list</field>
+        <field name="model">maintenance.plan</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="equipment_id" optional="show" />
+                <field name="repeat_interval" string="Every" />
+                <field name="repeat_unit" nolabel="1" />
+                <field name="repeat_anchor" optional="show" />
+                <field name="date_next" />
+                <field name="date_last_done" optional="show" />
+                <field name="maintenance_team_id" optional="hide" />
+                <field name="user_id" widget="many2one_avatar_user" optional="show" />
+                <field
+                    name="company_id"
+                    optional="hide"
+                    groups="base.group_multi_company" />
+            </list>
+        </field>
+    </record>
+
+    <record id="maintenance_plan_view_form" model="ir.ui.view">
+        <field name="name">maintenance.plan.form</field>
+        <field name="model">maintenance.plan</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="action_view_requests"
+                            type="object"
+                            icon="fa-wrench"
+                            class="oe_stat_button">
+                            <field
+                                name="request_count"
+                                string="Requests"
+                                widget="statinfo" />
+                        </button>
+                    </div>
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        invisible="active"
+                        bg_color="text-bg-danger" />
+                    <field name="active" invisible="1" />
+                    <div class="oe_title">
+                        <label for="name" />
+                        <h1>
+                            <field
+                                name="name"
+                                placeholder="e.g. Quarterly inspection" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group name="target">
+                            <field name="equipment_id" />
+                            <field
+                                name="maintenance_team_id"
+                                options="{'no_create': True, 'no_open': True}" />
+                            <field name="user_id" widget="many2one_avatar_user" />
+                            <field name="duration" widget="float_time" />
+                            <field name="priority" widget="priority" />
+                            <field
+                                name="company_id"
+                                options="{'no_create': True}"
+                                groups="base.group_multi_company" />
+                        </group>
+                        <group name="recurrence">
+                            <field name="date_start" />
+                            <label for="repeat_interval" string="Repeat Every" />
+                            <div class="d-flex">
+                                <field
+                                    name="repeat_interval"
+                                    class="me-2"
+                                    style="max-width: 3rem !important;" />
+                                <field
+                                    name="repeat_unit"
+                                    class="me-2"
+                                    style="max-width: 6rem !important;" />
+                            </div>
+                            <field name="repeat_anchor" widget="radio" />
+                            <label for="repeat_type" />
+                            <div class="d-flex">
+                                <field
+                                    name="repeat_type"
+                                    class="me-2"
+                                    style="max-width: 10rem !important;" />
+                                <field
+                                    name="repeat_until"
+                                    invisible="repeat_type != 'until'"
+                                    required="repeat_type == 'until'" />
+                            </div>
+                            <field name="date_next" />
+                            <field name="date_last_done" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="description" string="Description">
+                            <field name="description" />
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter />
+            </form>
+        </field>
+    </record>
+
+    <record id="maintenance_plan_action" model="ir.actions.act_window">
+        <field name="name">Maintenance Plans</field>
+        <field name="res_model">maintenance.plan</field>
+        <field name="path">maintenance-plans</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a maintenance plan
+            </p><p>
+                A plan repeats a preventive maintenance: on fixed dates, or one interval after each completion.
+            </p>
+        </field>
+    </record>
+
+</odoo>

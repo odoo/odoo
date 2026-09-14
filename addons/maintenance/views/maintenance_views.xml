@@ -210,43 +210,9 @@
                             <field name="user_id" string="Responsible" />
                             <field name="schedule_date" />
                             <field name="schedule_end" />
-                            <label
-                                for="recurring_maintenance"
+                            <field
+                                name="plan_id"
                                 invisible="maintenance_type == 'corrective'" />
-                            <div
-                                class="d-inline-flex"
-                                invisible="maintenance_type == 'corrective'">
-                                <field
-                                    name="recurring_maintenance"
-                                    nolabel="1"
-                                    class="ms-0"
-                                    style="width: fit-content;" />
-                            </div>
-                            <label
-                                for="repeat_interval"
-                                invisible="not recurring_maintenance" />
-                            <div class="d-flex" invisible="not recurring_maintenance">
-                                <field
-                                    name="repeat_interval"
-                                    required="recurring_maintenance"
-                                    class="me-2"
-                                    style="max-width: 2rem !important;" />
-                                <field
-                                    name="repeat_unit"
-                                    required="recurring_maintenance"
-                                    class="me-2"
-                                    style="max-width: 4rem !important;" />
-                                <field
-                                    name="repeat_type"
-                                    required="recurring_maintenance"
-                                    class="me-2"
-                                    style="max-width: 15rem !important;" />
-                                <field
-                                    name="repeat_until"
-                                    invisible="repeat_type != 'until'"
-                                    required="repeat_type == 'until'"
-                                    class="me-2" />
-                            </div>
                             <field name="priority" widget="priority" />
                             <field
                                 name="email_cc"
@@ -381,7 +347,6 @@
                 <field name="stage_id" />
                 <field name="duration" type="measure" />
                 <field name="color" type="measure" invisible="1" />
-                <field name="repeat_interval" type="measure" invisible="1" />
             </graph>
         </field>
     </record>
@@ -411,12 +376,7 @@
                 <field name="user_id" filters="1" />
                 <field name="priority" />
                 <field name="maintenance_type" />
-                <field name="recurring_maintenance" invisible="1" />
-                <field name="repeat_interval" invisible="1" />
-                <field name="repeat_unit" invisible="1" />
-                <field name="repeat_type" invisible="1" />
-                <field name="repeat_until" invisible="1" />
-                <field name="date_recurrence_origin" invisible="1" />
+                <field name="plan_id" invisible="1" />
                 <field name="done" invisible="1" />
                 <field name="archive" invisible="1" />
                 <field name="duration" invisible="1" />
