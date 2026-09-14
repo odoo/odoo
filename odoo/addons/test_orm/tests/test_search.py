@@ -2226,7 +2226,7 @@ class TestFlushSearch(TransactionCase):
             SELECT "test_orm_city"."id", "test_orm_city"."name"
             FROM "test_orm_city"
             WHERE "test_orm_city"."id" IN (%s)
-            ORDER BY "test_orm_city"."name"
+            ORDER BY "test_orm_city"."name", "test_orm_city"."id"
         """,
             ],
             flush=False,
@@ -2489,4 +2489,29 @@ class TestRegexOperator(TransactionCase):
         self.assertEqual(
             (yearly + monthly + unnamed).filtered_domain(domain),
             Foo.search([("id", "in", ids)] + domain),
+        )
+
+
+class TestSearchOrderIsTotal(TransactionCase):
+    def test_rows_tied_on_the_order_come_back_by_id_whatever_their_storage(self):
+        Category = self.env["test_orm.category"]
+        tied = Category.create([{"name": "tie"} for _ in range(3)])
+        self.env.flush_all()
+        self.env.cr.execute(
+            "UPDATE test_orm_category SET color = 1 WHERE id = %s", [tied[0].id]
+        )
+        domain = [("id", "in", tied.ids)]
+        self.assertEqual(Category.search(domain, order="name").ids, sorted(tied.ids))
+        self.assertEqual(
+            [
+                Category.search(domain, order="name", limit=1, offset=page).id
+                for page in range(3)
+            ],
+            sorted(tied.ids),
+            "a page boundary inside the tie neither repeats nor skips a record",
+        )
+        self.assertEqual(
+            Category.search(domain, order="name, id desc").ids,
+            sorted(tied.ids, reverse=True),
+            "an order that already names id keeps its own direction",
         )

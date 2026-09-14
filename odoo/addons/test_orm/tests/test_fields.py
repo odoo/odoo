@@ -2549,7 +2549,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
                 """
             SELECT "test_orm_message"."id" FROM "test_orm_message"
             WHERE "test_orm_message"."active" IS TRUE
-            ORDER BY  "test_orm_message"."discussion"
+            ORDER BY  "test_orm_message"."discussion", "test_orm_message"."id"
         """
             ]
         ):

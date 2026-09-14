@@ -2141,7 +2141,7 @@ class TestQueries(TransactionCase):
             SELECT "res_partner"."id"
             FROM "res_partner"
             WHERE ("res_partner"."active" IS TRUE AND "res_partner"."name" LIKE %s)
-            ORDER BY "res_partner"."company_id"
+            ORDER BY "res_partner"."company_id", "res_partner"."id"
         """
             ]
         ):
@@ -2153,7 +2153,7 @@ class TestQueries(TransactionCase):
             SELECT "res_partner"."id"
             FROM "res_partner"
             WHERE ("res_partner"."active" IS TRUE AND "res_partner"."name" LIKE %s)
-            ORDER BY "res_partner"."company_id" DESC
+            ORDER BY "res_partner"."company_id" DESC, "res_partner"."id"
         """
             ]
         ):
@@ -2252,7 +2252,7 @@ class TestQueries(TransactionCase):
                 ("res_users"."partner_id" = "res_users__partner_id"."id")
             WHERE "res_users"."active" IS TRUE
             AND ("res_users"."id" IN (%s) AND "res_users"."partner_id" IN (%s))
-            ORDER BY "res_users__partner_id"."name", "res_users"."login"
+            ORDER BY "res_users__partner_id"."name", "res_users"."login", "res_users"."id"
         """
             ]
         ):
@@ -2425,7 +2425,7 @@ class TestQueries(TransactionCase):
                 "ir_model"."model" ILIKE %s
                 OR "ir_model"."name"->>%s ILIKE %s
             )
-            ORDER BY "ir_model"."model"
+            ORDER BY "ir_model"."model", "ir_model"."id"
             LIMIT %s
         """
             ]
@@ -2441,7 +2441,7 @@ class TestQueries(TransactionCase):
                 "ir_model"."model" NOT ILIKE %s
                 AND "ir_model"."name"->>%s NOT ILIKE %s
             )
-            ORDER BY "ir_model"."model"
+            ORDER BY "ir_model"."model", "ir_model"."id"
             LIMIT %s
         """
             ]
@@ -2466,7 +2466,7 @@ class TestMany2one(TransactionCase):
             LEFT JOIN "res_partner" AS "res_users__partner_id" ON
                 ("res_users"."partner_id" = "res_users__partner_id"."id")
             WHERE "res_users__partner_id"."name" LIKE %s
-            ORDER BY "res_users__partner_id"."name", "res_users"."login"
+            ORDER BY "res_users__partner_id"."name", "res_users"."login", "res_users"."id"
         """
             ]
         ):
@@ -2480,7 +2480,7 @@ class TestMany2one(TransactionCase):
             LEFT JOIN "res_partner" AS "res_users__partner_id" ON
                 ("res_users"."partner_id" = "res_users__partner_id"."id")
             WHERE "res_users__partner_id"."name" LIKE %s
-            ORDER BY "res_users__partner_id"."name", "res_users"."login"
+            ORDER BY "res_users__partner_id"."name", "res_users"."login", "res_users"."id"
         """
             ]
         ):
@@ -3344,7 +3344,7 @@ class TestMany2many(TransactionCase):
                     SELECT "res_groups"."id" FROM "res_groups" WHERE "res_groups"."name"->>%s IN (%s)
                 )
             )
-            ORDER BY "res_users__partner_id"."name"  , "res_users"."login"
+            ORDER BY "res_users__partner_id"."name"  , "res_users"."login", "res_users"."id"
         """
             ]
         ):

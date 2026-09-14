@@ -701,9 +701,7 @@ def _prepare_postgres_search_query(
     prof.mark("rules")
 
     if order:
-        query.order = model._order_to_sql(order, query) or SQL.identifier(
-            model._table, "id"
-        )
+        query.order = _total_order(model, order, model._order_to_sql(order, query))
 
     if limit is not None and limit is not False:
         query.limit = 1 if limit is True else limit
@@ -713,6 +711,15 @@ def _prepare_postgres_search_query(
     prof.stop("query")
     prof.report(_orm_read, "_search %s", model._name)
     return query
+
+
+def _total_order(model: BaseModel, order: str, order_sql: SQL) -> SQL:
+    id_sql = SQL.identifier(model._table, "id")
+    if not order_sql:
+        return id_sql
+    if any(part.split()[:1] == ["id"] for part in order.split(",")):
+        return order_sql
+    return SQL("%s, %s", order_sql, id_sql)
 
 
 def _single_table_where(model: BaseModel, domain: Domain) -> SQL | None:
