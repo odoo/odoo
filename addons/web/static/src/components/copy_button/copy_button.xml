@@ -10,7 +10,7 @@
             t-attf-class="btn o_clipboard_button {{ props.className || '' }}"
             t-on-click.stop="onClick"
         >
-            <span class="mx-1" t-attf-class="{{ props.icon || 'fa-solid fa-clipboard' }}"/>
+            <span class="mx-1" t-att-class="iconClass"/>
             <span t-if="props.copyText" t-esc="props.copyText"/>
         </button>
     </t>

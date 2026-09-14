@@ -3,6 +3,7 @@
 
 import { Component, onWillUnmount, useRef } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
+import { faIconClass } from "@web/core/utils/icons";
 import { usePopover } from "@web/ui/popover/popover_hook";
 import { Tooltip } from "@web/ui/tooltip/tooltip";
 
@@ -24,6 +25,10 @@ export class CopyButton extends Component {
 
     /** @type {number | undefined} */
     tooltipCloseTimer;
+
+    get iconClass() {
+        return faIconClass(this.props.icon || "fa-clipboard");
+    }
 
     setup() {
         /** @type {import("@odoo/owl").Ref<HTMLButtonElement>} */

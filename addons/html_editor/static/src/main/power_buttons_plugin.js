@@ -5,6 +5,7 @@ import { closestBlock } from "@html_editor/utils/blocks";
 import { isEditorTab, isEmptyBlock } from "@html_editor/utils/dom_info";
 import { closestElement, descendants } from "@html_editor/utils/dom_traversal";
 import { omit, pick } from "@web/core/utils/collections/objects";
+import { faIconClass } from "@web/core/utils/icons";
 import { debounce } from "@web/core/utils/timing";
 
 /** @typedef {import("./powerbox/powerbox_plugin").PowerboxCommand} PowerboxCommand */
@@ -84,17 +85,9 @@ export class PowerButtonsPlugin extends Plugin {
             const btn = this.document.createElement("button");
             let className = "power_button btn px-2 py-1 cursor-pointer";
             if (icon) {
-                if (
-                    icon.startsWith("fa-solid") ||
-                    icon.startsWith("fa-regular") ||
-                    icon.startsWith("fa-brands")
-                ) {
-                    className += ` ${icon}`;
-                } else if (icon.includes("fa-")) {
-                    className += ` fa-solid ${icon}`;
-                } else {
-                    className += ` oi ${icon}`;
-                }
+                className += icon.includes("fa-")
+                    ? ` ${faIconClass(icon)}`
+                    : ` oi ${icon}`;
             } else {
                 const span = this.document.createElement("span");
                 span.textContent = text;
