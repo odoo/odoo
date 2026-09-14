@@ -109,7 +109,7 @@ patch(AttendeeCalendarCommonRenderer.prototype, {
         const showLine = ["week", "month"].includes(this.props.model.scale);
         let worklocation = this.props.model.worklocations[parsedDate];
         const workLocationSetForCurrentUser = multiCalendar
-            ? Object.keys(worklocation).some((key) =>
+            ? Object.keys(worklocation ?? {}).some((key) =>
                   worklocation[key].some((wlItem) => wlItem.userId === user.userId),
               )
             : worklocation?.userId === user.userId;
