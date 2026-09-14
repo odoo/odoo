@@ -1,4 +1,5 @@
 from collections import defaultdict
+from contextlib import contextmanager
 from datetime import UTC, datetime, time, timedelta
 from itertools import chain, pairwise
 
@@ -712,6 +713,57 @@ class HrAttendance(models.Model):
         Line.create(overtime_vals_list)
 
     _OVERTIME_SOURCE_FIELDS = frozenset({"employee_id", "check_in", "check_out"})
+    _OVERTIME_DEFERRAL = "hr_attendance_deferred_overtime"
+
+    @contextmanager
+    def _deferring_overtime(self):
+        """Change several attendances, then price their periods once.
+
+        Every create, write and unlink regenerates the overtime of the whole
+        period the attendance lands in -- a day, or a week where a weekly rule
+        exists -- so a loop over twenty attendances pays for twenty
+        regenerations of periods that mostly overlap. Inside this block those
+        operations only record which periods they disturbed, and the block
+        prices all of them together on the way out.
+
+        It is not only cheaper. A regeneration deletes and recreates every line
+        of the period, so the second write of a loop runs against lines the
+        first one has just written and the manager decisions carried across
+        them are re-matched once per pass rather than once.
+
+        ONLY where nothing inside the block reads what the regeneration
+        produces. `overtime_hours`, `validated_overtime_hours`,
+        `overtime_status` and `linked_overtime_ids` are all that output, and
+        inside the block they hold whatever they held before it. The absence
+        cron cannot use this for exactly that reason: it drops a marker whose
+        `overtime_hours` came out zero, and deferred they are all zero.
+
+        Yields the recordset to work through: the operations that participate
+        are the ones reached from it, because the deferral travels in the
+        context.
+        """
+        pending = self.env.context.get(self._OVERTIME_DEFERRAL)
+        if pending is not None:
+            # Already inside a block; the outer one flushes.
+            yield self
+            return
+        pending = {"windows": {}, "records": self.browse()}
+        try:
+            yield self.with_context(**{self._OVERTIME_DEFERRAL: pending})
+        finally:
+            # `exists()` because a record created and then deleted inside the
+            # block leaves its id here; its period is still in `windows`.
+            pending["records"].exists()._update_overtime(pending["windows"])
+
+    def _defer_overtime(self, windows=None, records=None):
+        """Record a disturbed period for the enclosing block, if there is one."""
+        pending = self.env.context.get(self._OVERTIME_DEFERRAL)
+        if pending is None:
+            return False
+        pending["windows"] = self._merge_windows(pending["windows"], windows)
+        if records is not None:
+            pending["records"] |= records
+        return True
 
     @api.model_create_multi
     @dbg.timed
@@ -722,7 +774,8 @@ class HrAttendance(models.Model):
             dbg.vals_keys(vals_list),
         )
         res = super().create(vals_list)
-        res._update_overtime()
+        if not res._defer_overtime(records=res):
+            res._update_overtime()
         return res
 
     def write(self, vals):
@@ -754,6 +807,8 @@ class HrAttendance(models.Model):
             dbg.keys(vals),
         )
         windows_before = self._overtime_windows()
+        if self._defer_overtime(windows=windows_before, records=self):
+            return super().write(vals)
         result = super().write(vals)
         self._update_overtime(windows_before)
         return result
@@ -768,8 +823,12 @@ class HrAttendance(models.Model):
         # `total_overtime` keeps its pre-delete value in cache. The cascade
         # stays as an integrity net for any path that does not come through here.
         self.linked_overtime_ids.unlink()
+        # Only the windows: the records are about to stop existing, so there is
+        # nothing left to price them from.
+        deferred = self._defer_overtime(windows=windows)
         res = super().unlink()
-        self.env["hr.attendance"]._update_overtime(windows)
+        if not deferred:
+            self.env["hr.attendance"]._update_overtime(windows)
         return res
 
     def copy(self, default=None):
@@ -1013,34 +1072,60 @@ class HrAttendance(models.Model):
 
         now = fields.Datetime.now()
         already_closed = to_verify._worked_hours_already_closed()
-        body = _(
-            "This attendance was automatically checked out because the employee exceeded the allowed time for their scheduled work hours."
+        closed = self.browse()
+        # One block for the whole sweep: each `write` below would otherwise
+        # regenerate the overtime of the day it lands in, and the employees a
+        # sweep closes together largely share their days.
+        with to_verify._deferring_overtime() as attendances:
+            for attendance in attendances:
+                employee = attendance.employee_id
+                local_day = attendance._local_check_in().date()
+                budget = (
+                    attendance._scheduled_hours_on(local_day)
+                    + employee.company_id.auto_check_out_tolerance
+                    - already_closed[employee.id][local_day]
+                )
+                worked = attendance._worked_hours_between(attendance.check_in, now)
+                dbg.logic.debug(
+                    "_cron_auto_check_out %s: %.3fh worked against a %.3fh budget"
+                    " on %s (%s)",
+                    dbg.rec(attendance),
+                    worked,
+                    budget,
+                    local_day,
+                    attendance._schedule_tz(),
+                )
+                if worked <= budget:
+                    continue
+                check_out = attendance._worked_hours_spent_at(budget)
+                dbg.lifecycle.debug(
+                    "_cron_auto_check_out %s: closing at %s",
+                    dbg.rec(attendance),
+                    check_out,
+                )
+                attendance.write({"check_out": check_out, "out_mode": "auto_check_out"})
+                closed |= attendance
+        closed._log_cron_note(
+            _(
+                "This attendance was automatically checked out because the employee exceeded the allowed time for their scheduled work hours."
+            )
         )
-        for attendance in to_verify:
-            employee = attendance.employee_id
-            local_day = attendance._local_check_in().date()
-            budget = (
-                attendance._scheduled_hours_on(local_day)
-                + employee.company_id.auto_check_out_tolerance
-                - already_closed[employee.id][local_day]
-            )
-            worked = attendance._worked_hours_between(attendance.check_in, now)
-            dbg.logic.debug(
-                "_cron_auto_check_out %s: %.3fh worked against a %.3fh budget on %s (%s)",
-                dbg.rec(attendance),
-                worked,
-                budget,
-                local_day,
-                attendance._schedule_tz(),
-            )
-            if worked <= budget:
-                continue
-            check_out = attendance._worked_hours_spent_at(budget)
-            dbg.lifecycle.debug(
-                "_cron_auto_check_out %s: closing at %s", dbg.rec(attendance), check_out
-            )
-            attendance.write({"check_out": check_out, "out_mode": "auto_check_out"})
-            attendance.message_post(body=body)
+
+    def _log_cron_note(self, body):
+        """One chatter entry per attendance, written in one batch.
+
+        `message_post` per record costs a round of queries for each of them and
+        these are sweeps. Measured field by field, the two write the same
+        message -- same author, body, `message_type` and Note subtype, nobody
+        notified -- with one exception: `_message_log_batch` marks it
+        `is_internal`, which `message_post` leaves False. `hr.attendance` has
+        no portal surface for that flag to change anything on, but the flag is
+        restored anyway rather than left as an undocumented difference between
+        a note written by the cron and one written anywhere else.
+        """
+        if not self:
+            return
+        self._message_log_batch(dict.fromkeys(self.ids, body)).is_internal = False
 
     @dbg.timed
     def _cron_absence_detection(self):
@@ -1112,23 +1197,24 @@ class HrAttendance(models.Model):
             "_cron_absence_detection: %d absent employee(s) get a technical attendance",
             len(technical_attendances_vals),
         )
-        technical_attendances = self.env["hr.attendance"].create(
-            technical_attendances_vals
-        )
+        # NOT deferred, though the create and the unlink disturb the same days:
+        # `overtime_hours` below is the regeneration's own output, and the whole
+        # point of the filter is to drop a marker that produced none. Deferring
+        # makes every marker read zero and deletes all of them.
+        technical_attendances = self.create(technical_attendances_vals)
         to_unlink = technical_attendances.filtered(lambda a: a.overtime_hours == 0)
         dbg.logic.debug(
             "_cron_absence_detection: %d of %d marker(s) produced no overtime, dropping",
             len(to_unlink),
             len(technical_attendances),
         )
-
-        body = _(
-            "This attendance was automatically created to cover an unjustified absence on that day."
-        )
-        for technical_attendance in technical_attendances - to_unlink:
-            technical_attendance.message_post(body=body)
-
+        kept = technical_attendances - to_unlink
         to_unlink.unlink()
+        kept._log_cron_note(
+            _(
+                "This attendance was automatically created to cover an unjustified absence on that day."
+            )
+        )
 
     def _get_localized_times(self):
         self.check_singleton()
