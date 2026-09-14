@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.fields import Command
 from odoo.tools.translate import _
 
@@ -19,6 +19,7 @@ class StockWarehouse(models.Model):
         copy=False,
     )
 
+    @api.depends("buy_pull_id.route_id.warehouse_ids")
     def _compute_buy_to_resupply(self):
         for warehouse in self:
             buy_route = warehouse.buy_pull_id.route_id

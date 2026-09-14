@@ -15,6 +15,7 @@ class ResPartner(models.Model):
     on_time_rate = fields.Float(
         string="On-Time Delivery Rate",
         compute="_compute_on_time_rate",
+        groups="purchase.group_purchase_user",
         help="Over the past x days; the number of products received on time divided by the number of ordered products."
         "x is either the System Parameter purchase_stock.on_time_delivery_days or the default 365",
     )

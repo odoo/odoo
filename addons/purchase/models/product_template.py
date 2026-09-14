@@ -26,6 +26,7 @@ class ProductTemplate(models.Model):
         compute="_compute_purchased_product_qty",
     )
 
+    @api.depends("product_variant_ids.purchased_product_qty", "uom_id")
     def _compute_purchased_product_qty(self):
         for template in self.with_context(active_test=False):
             template.purchased_product_qty = template.uom_id.round(

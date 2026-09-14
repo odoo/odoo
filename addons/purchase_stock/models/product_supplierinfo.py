@@ -14,6 +14,7 @@ class ProductSupplierinfo(models.Model):
         compute="_compute_show_set_supplier_button"
     )
 
+    @api.depends("partner_id", "product_tmpl_id.product_variant_ids")
     def _compute_date_last_purchase(self):
         self.date_last_purchase = False
         groups = self.env["purchase.order.line"]._read_group(
