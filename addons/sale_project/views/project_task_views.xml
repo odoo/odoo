@@ -192,9 +192,6 @@
             <xpath expr="//field[@name='milestone_id']" position="attributes">
                 <attribute name="context">{'default_project_id': project_id, 'default_sale_line_id': sale_line_id}</attribute>
             </xpath>
-            <xpath expr="//field[@name='partner_id']" position="attributes">
-                <attribute name="invisible">not allow_billable or has_template_ancestor or has_project_template</attribute>
-            </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="project_sale_order_id" invisible="1" />
                 <field
@@ -254,12 +251,6 @@
                 <field name="allow_billable" column_invisible="True" />
             </xpath>
             <xpath
-                expr="//field[@name='child_ids']/list/field[@name='partner_id']"
-                position="attributes">
-                <attribute name="column_invisible">not parent.allow_billable</attribute>
-                <attribute name="invisible">not allow_billable</attribute>
-            </xpath>
-            <xpath
                 expr="//field[@name='predecessor_ids']/list/field[@name='partner_id']"
                 position="after">
                 <field
@@ -277,12 +268,6 @@
                     readonly="1" />
                 <field name="allow_billable" column_invisible="True" />
             </xpath>
-            <xpath
-                expr="//field[@name='predecessor_ids']/list/field[@name='partner_id']"
-                position="attributes">
-                <attribute name="column_invisible">not parent.allow_billable</attribute>
-                <attribute name="invisible">not allow_billable</attribute>
-            </xpath>
             <field name="project_id" position="attributes">
                 <attribute name="context">{'default_allow_billable': True}</attribute>
             </field>
@@ -299,7 +284,6 @@
             </field>
             <field name="partner_id" position="attributes">
                 <attribute name="column_invisible">context.get('hide_partner') or context.get('default_is_template')</attribute>
-                <attribute name="invisible">not allow_billable</attribute>
             </field>
         </field>
     </record>

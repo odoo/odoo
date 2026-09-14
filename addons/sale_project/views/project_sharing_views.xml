@@ -21,9 +21,6 @@
                     </div>
                 </button>
             </div>
-            <xpath expr="//field[@name='partner_id']" position="attributes">
-                <attribute name="invisible">not allow_billable</attribute>
-            </xpath>
             <xpath expr="//field[@name='partner_id']" position="after">
                 <field
                     name="sale_line_id"
@@ -42,18 +39,6 @@
                 expr="//field[@name='predecessor_ids']/list/field[@name='partner_id']"
                 position="after">
                 <field name="allow_billable" column_invisible="1" />
-            </xpath>
-            <xpath
-                expr="//field[@name='child_ids']/list/field[@name='partner_id']"
-                position="attributes">
-                <attribute name="column_invisible">not parent.allow_billable</attribute>
-                <attribute name="invisible">not allow_billable</attribute>
-            </xpath>
-            <xpath
-                expr="//field[@name='predecessor_ids']/list/field[@name='partner_id']"
-                position="attributes">
-                <attribute name="column_invisible">not parent.allow_billable</attribute>
-                <attribute name="invisible">not allow_billable</attribute>
             </xpath>
         </field>
     </record>
