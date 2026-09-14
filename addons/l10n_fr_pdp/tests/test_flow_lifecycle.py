@@ -585,6 +585,57 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             invoice._get_l10n_fr_pdp_errors(),
         )
 
+    def test_oss_b2c_transaction_excludes_foreign_vat(self):
+        """OSS VAT remains on the invoice but is not reported as French VAT."""
+        oss_tag = self.env.ref('l10n_eu_oss.tag_oss', raise_if_not_found=False)
+        if not oss_tag:
+            oss_tag = self.env['account.account.tag'].create({'name': 'OSS'})
+            self.env['ir.model.data'].create({
+                'module': 'l10n_eu_oss',
+                'name': 'tag_oss',
+                'model': 'account.account.tag',
+                'res_id': oss_tag.id,
+            })
+        # Reuse a fully configured cash-basis tax and only customize its OSS rate and tag.
+        oss_tax = self._get_tax_on_payment_20().copy({
+            'name': '21% BE VAT',
+            'amount': 21,
+        })
+        (oss_tax.invoice_repartition_line_ids | oss_tax.refund_repartition_line_ids).write({
+            'tag_ids': [Command.link(oss_tag.id)],
+        })
+        self.assertTrue(oss_tax._l10n_fr_pdp_is_oss())
+        oss_partner = self.env['res.partner'].create({
+            'name': 'OSS B2C Belgium',
+            'country_id': self.env.ref('base.be').id,
+        })
+
+        invoice = self._create_reporting_invoice(partner=oss_partner, tax_ids=oss_tax)
+
+        self.assertRecordValues(invoice, [{
+            'amount_untaxed': 100.0,
+            'amount_tax': 21.0,
+            'l10n_fr_pdp_has_error': False,
+            'l10n_fr_pdp_status': 'pending',
+        }])
+        transaction = self._build_flow_xml(invoice.l10n_fr_pdp_last_flow_id).find(
+            './TransactionsReport/Transactions'
+        )
+        self.assertEqual(transaction.findtext('CategoryCode'), 'TNT1')
+        self.assertEqual(float(transaction.findtext('TaxExclusiveAmount')), 100.0)
+        self.assertEqual(float(transaction.findtext('TaxTotal')), 0.0)
+        self.assertEqual(float(transaction.findtext('TaxSubtotal/TaxPercent')), 0.0)
+        self.assertEqual(float(transaction.findtext('TaxSubtotal/TaxableAmount')), 100.0)
+        self.assertEqual(float(transaction.findtext('TaxSubtotal/TaxTotal')), 0.0)
+
+        invalid_oss_tax = oss_tax.copy({'name': 'Invalid OSS tax', 'amount': 150})
+        self.assertTrue(invalid_oss_tax._l10n_fr_pdp_is_oss())
+        invalid_invoice = self._create_reporting_invoice(partner=oss_partner, tax_ids=invalid_oss_tax)
+        self.assertRecordValues(invalid_invoice, [{
+            'l10n_fr_pdp_has_error': True,
+            'l10n_fr_pdp_status': 'error',
+        }])
+
     def test_b2bi_invoice_creates_transaction_flow_payload(self):
         invoice = self._create_reporting_invoice(partner=self.b2bi_customer)
 
