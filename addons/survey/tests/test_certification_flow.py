@@ -119,12 +119,12 @@ class TestCertificationFlow(common.TestSurveyCommon, MockEmail, HttpCase):
             self._answer_question(q04, q04.suggested_answer_ids.ids[0], answer_token, csrf_token, button_submit='previous')
             self._answer_question(q03, "Just kidding, I don't like it...", answer_token, csrf_token)
             self._answer_question(q04, q04.suggested_answer_ids.ids[0], answer_token, csrf_token,
-                                  submit_query_count=43, access_page_query_count=25)
+                                  submit_query_count=37, access_page_query_count=19)
             q05_answers = q05.suggested_answer_ids.ids[0:2] + [q05.suggested_answer_ids.ids[3]]
             self._answer_question(q05, q05_answers, answer_token, csrf_token,
-                                  submit_query_count=29, access_page_query_count=25)
+                                  submit_query_count=21, access_page_query_count=19)
             self._answer_question(q06, q06.suggested_answer_ids.ids[0], answer_token, csrf_token,
-                                  submit_query_count=108, access_page_query_count=25)
+                                  submit_query_count=94, access_page_query_count=19)
 
         user_inputs.invalidate_recordset()
         # Check that certification is successfully passed
