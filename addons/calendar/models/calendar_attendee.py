@@ -128,6 +128,8 @@ class Attendee(models.Model):
         if not mail_template:
             _logger.warning("No template passed to %s notification process. Skipped.", self)
             return False
+        if not mail_template.active:
+            return False
 
         # get ics file for all meetings
         ics_files = notified_attendees.event_id._get_ics_file()
