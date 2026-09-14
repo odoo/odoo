@@ -1,5 +1,8 @@
 from odoo import api, fields, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class HrEmployee(models.Model):
@@ -39,6 +42,7 @@ class HrEmployee(models.Model):
         domain = Domain.FALSE
         user = self.env.user
         employee = user.employee_id
+        _debug.logic("expense_filter_domain", user=user, employee=employee)
         if user.has_groups("hr_expense.group_hr_expense_user"):
             domain = Domain("company_id", "=", False) | Domain(
                 "company_id", "child_of", self.env.company.root_id.id
@@ -68,6 +72,12 @@ class HrEmployee(models.Model):
                 employee.expense_manager_id == previous_manager
                 or not employee.expense_manager_id
             ):
+                _debug.lifecycle(
+                    "expense_manager_followed_parent",
+                    employee=employee,
+                    previous=previous_manager,
+                    new=new_manager,
+                )
                 employee.expense_manager_id = new_manager
             elif not employee.expense_manager_id:
                 employee.expense_manager_id = False

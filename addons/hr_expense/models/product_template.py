@@ -1,5 +1,8 @@
 from odoo import api, fields, models
 from odoo.db.schema import column_exists, create_column
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ProductTemplate(models.Model):
@@ -22,6 +25,7 @@ class ProductTemplate(models.Model):
 
     def _auto_init(self):
         if not column_exists(self.env.cr, "product_template", "can_be_expensed"):
+            _debug.lifecycle("can_be_expensed_column_created")
             create_column(self.env.cr, "product_template", "can_be_expensed", "boolean")
             self.env.cr.execute(
                 """

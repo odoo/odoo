@@ -1,5 +1,8 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
+
+_debug = DebugLog(__name__)
 
 
 class AccountMoveLine(models.Model):
@@ -13,6 +16,11 @@ class AccountMoveLine(models.Model):
 
     def _compute_partner_id(self):
         expense_lines = self.filtered("move_id.expense_ids")
+        _debug.logic(
+            "partner_from_expense_move",
+            expense_lines=expense_lines,
+            others=self - expense_lines,
+        )
         super(AccountMoveLine, self - expense_lines)._compute_partner_id()
         for line in expense_lines:
             line.partner_id = line.move_id.partner_id

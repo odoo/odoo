@@ -1,6 +1,9 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
+
+_debug = DebugLog(__name__)
 
 
 class AccountAnalyticApplicability(models.Model):
@@ -41,6 +44,9 @@ class AccountAnalyticAccount(models.Model):
         )
         expense_ids = self.env.cr.fetchall()
         if expense_ids:
+            _debug.logic(
+                "analytic_unlink_refused", accounts=self, expense=expense_ids[0][0]
+            )
             raise UserError(
                 _("You cannot delete an analytic account that is used in an expense.")
             )

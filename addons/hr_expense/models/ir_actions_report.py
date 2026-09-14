@@ -1,8 +1,11 @@
 import io
 
 from odoo import models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import pdf
 from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
+
+_debug = DebugLog(__name__)
 
 
 class IrActionsReport(models.Model):
@@ -18,6 +21,11 @@ class IrActionsReport(models.Model):
                 self.env["ir.attachment"]
                 .search([("res_id", "in", res_ids), ("res_model", "=", "hr.expense")])
                 .grouped("res_id")
+            )
+            _debug.pipeline(
+                "expense_report_streams",
+                expenses=len(res_ids),
+                with_attachments=len(attachments_by_res_id),
             )
             for expense in self.env["hr.expense"].browse(res_ids):
                 stream_list = []
@@ -46,6 +54,9 @@ class IrActionsReport(models.Model):
 
                 new_pdf_stream = io.BytesIO()
                 output_pdf.write(new_pdf_stream)
+                _debug.perf.count(
+                    "expense_report_merged", expense=expense, streams=len(stream_list)
+                )
                 res[expense.id]["stream"] = new_pdf_stream
 
                 for stream in stream_list:

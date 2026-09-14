@@ -1,9 +1,12 @@
 from copy import deepcopy
 
 from odoo import Command, api, fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_compare
 
 from odoo.addons.hr_expense.models.hr_expense import EXPENSE_REVIEW_STATE
+
+_debug = DebugLog(__name__)
 
 
 class HrExpenseSplit(models.TransientModel):
@@ -30,6 +33,7 @@ class HrExpenseSplit(models.TransientModel):
             result["review_state"] = expense.review_state
             result["approval_date"] = expense.approval_date
             result["manager_id"] = expense.manager_id
+            _debug.lifecycle("split_default_get", expense=expense)
         return result
 
     name = fields.Char(
@@ -159,4 +163,11 @@ class HrExpenseSplit(models.TransientModel):
         account = self.product_id.product_tmpl_id._get_product_accounts()["expense"]
         if account:
             vals["account_id"] = account.id
+        _debug.pipeline(
+            "split_line_values",
+            split=self,
+            expense=self.expense_id,
+            amount=self.total_amount_currency,
+            account=account,
+        )
         return vals

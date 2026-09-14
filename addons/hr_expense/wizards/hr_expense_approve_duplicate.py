@@ -1,4 +1,7 @@
 from odoo import Command, _, api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class HrExpenseApproveDuplicate(models.TransientModel):
@@ -20,12 +23,16 @@ class HrExpenseApproveDuplicate(models.TransientModel):
         return res
 
     def action_approve(self):
+        _debug.pipeline(
+            "duplicate_wizard", outcome="approve", expenses=self.expense_ids
+        )
         self.expense_ids.filtered(
             lambda expense: expense.state == "submitted"
         )._do_approve()
         return {"type": "ir.actions.act_window_close"}
 
     def action_refuse(self):
+        _debug.pipeline("duplicate_wizard", outcome="refuse", expenses=self.expense_ids)
         self.expense_ids.filtered(
             lambda expense: expense.state == "submitted"
         )._do_refuse(_("Duplicate Expense"))

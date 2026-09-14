@@ -1,4 +1,7 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ResConfigSettings(models.TransientModel):
@@ -73,6 +76,7 @@ class ResConfigSettings(models.TransientModel):
                     }
                 )
             )
+            _debug.lifecycle("expense_alias_created", alias=alias, settings=self)
             self.env["ir.model.data"].sudo().create(
                 {
                     "name": "mail_alias_expense",
@@ -83,6 +87,12 @@ class ResConfigSettings(models.TransientModel):
                 }
             )
         elif expense_alias and expense_alias.alias_name != self.hr_expense_alias_prefix:
+            _debug.lifecycle(
+                "expense_alias_renamed",
+                alias=expense_alias,
+                was=expense_alias.alias_name or "none",
+                now=self.hr_expense_alias_prefix or "none",
+            )
             expense_alias.alias_name = self.hr_expense_alias_prefix
 
     @api.depends("hr_expense_use_mailgateway")
@@ -106,4 +116,9 @@ class ResConfigSettings(models.TransientModel):
                 expense_alias
                 and expense_alias.alias_domain_id != record.hr_expense_alias_domain_id
             ):
+                _debug.lifecycle(
+                    "expense_alias_domain_changed",
+                    alias=expense_alias,
+                    domain=record.hr_expense_alias_domain_id,
+                )
                 expense_alias.alias_domain_id = record.hr_expense_alias_domain_id

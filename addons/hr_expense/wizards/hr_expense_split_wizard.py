@@ -1,4 +1,7 @@
 from odoo import _, api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class HrExpenseSplitWizard(models.TransientModel):
@@ -67,6 +70,12 @@ class HrExpenseSplitWizard(models.TransientModel):
         self.check_singleton()
         expense_split = self.expense_split_line_ids[0]
         copied_expenses = self.env["hr.expense"]
+        _debug.pipeline(
+            "split_start",
+            expense=self.expense_id,
+            lines=self.expense_split_line_ids,
+            possible=self.split_possible,
+        )
         if expense_split:
             self.expense_id.write(expense_split._get_values())
 
@@ -84,6 +93,12 @@ class HrExpenseSplitWizard(models.TransientModel):
                     ]
                 )
 
+                _debug.lifecycle(
+                    "split_copies_created",
+                    origin=self.expense_id,
+                    copies=copied_expenses,
+                    attachments=attachment_ids,
+                )
                 for copied_expense in copied_expenses:
                     for attachment in attachment_ids:
                         attachment.copy(
@@ -105,5 +120,10 @@ class HrExpenseSplitWizard(models.TransientModel):
             self.expense_id.split_expense_origin_id or self.expense_id
         )
         all_related_expenses = copied_expenses | self.expense_id | split_expense_ids
+        _debug.pipeline(
+            "split_done",
+            origin=self.expense_id.split_expense_origin_id or self.expense_id,
+            related=all_related_expenses,
+        )
 
         return all_related_expenses._get_records_action(name=_("Split Expenses"))

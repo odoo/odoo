@@ -1,5 +1,8 @@
 from odoo import _, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class AccountPayment(models.Model):
@@ -42,6 +45,12 @@ class AccountPayment(models.Model):
         if self.expense_ids and any(
             field_name in trigger_fields for field_name in vals
         ):
+            _debug.logic(
+                "payment_write_refused",
+                payments=self,
+                expenses=self.expense_ids,
+                fields=sorted(set(vals) & trigger_fields),
+            )
             raise UserError(
                 _(
                     "You cannot do this modification since the payment is linked to an expense."

@@ -1,4 +1,7 @@
 from odoo import models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class AccountTax(models.Model):
@@ -26,6 +29,11 @@ class AccountTax(models.Model):
             )
 
             used_taxes.update([tax[0] for tax in self.env.cr.fetchall()])
+            _debug.perf.count(
+                "expense_tax_usage_scanned",
+                candidates=len(remaining_ids),
+                used=len(used_taxes),
+            )
 
         return used_taxes
 

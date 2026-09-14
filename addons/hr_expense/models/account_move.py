@@ -1,6 +1,9 @@
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.misc import frozendict
+
+_debug = DebugLog(__name__)
 
 
 class AccountMove(models.Model):
@@ -30,6 +33,11 @@ class AccountMove(models.Model):
                 if move.partner_id.commercial_partner_id != move.company_id.partner_id
                 else move.partner_id
             )
+        _debug.logic(
+            "commercial_partner_split",
+            own_expense_moves=own_expense_moves,
+            others=self - own_expense_moves,
+        )
         super(AccountMove, self - own_expense_moves)._compute_commercial_partner_id()
 
     @api.constrains("expense_ids")
@@ -37,6 +45,11 @@ class AccountMove(models.Model):
         for move in self:
             expense_payment_modes = move.expense_ids.mapped("payment_mode")
             if "company_account" in expense_payment_modes and len(move.expense_ids) > 1:
+                _debug.logic(
+                    "shared_company_move_refused",
+                    move=move,
+                    expenses=move.expense_ids,
+                )
                 raise ValidationError(
                     _(
                         "Each expense paid by the company must have a distinct and dedicated journal entry."
@@ -118,6 +131,9 @@ class AccountMove(models.Model):
         return results
 
     def _reverse_moves(self, default_values_list=None, cancel=False):
+        _debug.lifecycle(
+            "expense_link_cleared", by="reverse", moves=self.filtered("expense_ids")
+        )
         self.filtered("expense_ids").write({"expense_ids": [Command.clear()]})
         return super()._reverse_moves(
             default_values_list=default_values_list, cancel=cancel
@@ -125,5 +141,8 @@ class AccountMove(models.Model):
 
     def action_cancel(self):
         res = super().action_cancel()
+        _debug.lifecycle(
+            "expense_link_cleared", by="cancel", moves=self.filtered("expense_ids")
+        )
         self.filtered("expense_ids").write({"expense_ids": [Command.clear()]})
         return res

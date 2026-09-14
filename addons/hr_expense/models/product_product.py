@@ -1,4 +1,7 @@
 from odoo import _, api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ProductProduct(models.Model):
@@ -38,6 +41,9 @@ class ProductProduct(models.Model):
     def write(self, vals):
         result = super().write(vals)
         if "standard_price" in vals:
+            _debug.pipeline(
+                "standard_price_changed", products=self, price=vals["standard_price"]
+            )
             expenses_sudo = (
                 self.env["hr.expense"]
                 .sudo()
@@ -49,6 +55,7 @@ class ProductProduct(models.Model):
                     ]
                 )
             )
+            _debug.lifecycle("draft_expenses_repriced", expenses=expenses_sudo)
             for expense_sudo in expenses_sudo:
                 expense_product_sudo = expense_sudo.product_id
                 product_has_cost = (
