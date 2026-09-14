@@ -36,6 +36,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'receivable_account_id': 'account_common_4300',
                 'payable_account_id': 'account_common_4100',
                 'account_stock_valuation_id': 'account_common_310',
+                'account_sale_tax_id': 'account_tax_template_s_iva21b',
+                'account_purchase_tax_id': 'account_tax_template_p_iva21_bc',
             },
         }
 
@@ -123,3 +125,10 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_stock_variation_id': 'account_common_611',
             },
         }
+
+    def _post_load_data(self, template_code, company, template_data):
+        company = (company or self.env.company)
+        if company:
+            company._l10n_es_archive_taxes_by_state()
+            company._l10n_es_apply_fiscal_positions_by_state()
+        return super()._post_load_data(template_code, company, template_data)
