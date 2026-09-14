@@ -37,3 +37,56 @@ test("Show Time Off before Work Location", async () => {
     );
     expect("div.o_field_hr_presence_status>div").toHaveClass("btn-outline-warning");
 });
+
+test("Without a leave, the work location still decides the icon", async () => {
+    // The location branches used to be copied into this module's patch. They are
+    // delegated now, so this asserts hr_homeworking's answer survives the chain.
+    HrEmployee._records = [
+        {
+            id: 1,
+            name: "Employee test",
+            work_location_name: "Office 1",
+            work_location_type: "office",
+            show_hr_icon_display: true,
+            hr_icon_display: "presence_office",
+            hr_presence_state: "present",
+        },
+    ];
+    await mountView({
+        resModel: "hr.employee",
+        type: "form",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="hr_icon_display" widget="hr_presence_status"/>
+            </form>`,
+    });
+    expect("small.fa-plane").toHaveCount(0);
+    expect("small.fa-building").toBeVisible();
+    expect("div.rounded-pill[title='Office 1']").toHaveCount(1);
+});
+
+test("On leave with no end date, the label drops the date rather than throwing", async () => {
+    HrEmployee._records = [
+        {
+            id: 1,
+            name: "Employee test",
+            work_location_name: "Office 1",
+            work_location_type: "office",
+            show_hr_icon_display: true,
+            hr_icon_display: "presence_holiday_absent",
+            leave_date_to: false,
+        },
+    ];
+    await mountView({
+        resModel: "hr.employee",
+        type: "form",
+        resId: 1,
+        arch: `
+            <form>
+                <field name="hr_icon_display" widget="hr_presence_status"/>
+            </form>`,
+    });
+    expect("small.fa-plane").toBeVisible();
+    expect("div.o_field_hr_presence_status>div").toHaveAttribute("title", "On leave");
+});

@@ -7,56 +7,48 @@ import { HrPresenceStatusPrivate } from "@hr/components/hr_presence_status_priva
 import { HrPresenceStatusPill } from "@hr/components/hr_presence_status_pill/hr_presence_status_pill";
 import { HrPresenceStatusPrivatePill } from "@hr/components/hr_presence_status_private_pill/hr_presence_status_private_pill";
 
+function onHoliday(component) {
+    return Boolean(component.value?.includes("holiday"));
+}
+
+// `back on <date>` where a date is known, and the plain label where it is not:
+// hr_holidays guards the same field before formatting it, and an employee can be
+// flagged absent without an end date having reached this record.
+function backOn(component, label) {
+    const end = component.props.record.data.leave_date_to;
+    if (!end) {
+        return label;
+    }
+    return _t("%(label)s, back on %(date)s", {
+        label,
+        date: end.toLocaleString({ day: "numeric", month: "short", year: "numeric" }),
+    });
+}
+
+// Each getter answers ONLY for a holiday and delegates everything else. The
+// location branches these used to carry were a verbatim copy of hr_homeworking's,
+// which this module is patched on top of, so `super` already answers them -- and
+// a copy is how the two come to disagree.
 const patchHrPresenceStatus = () => ({
     get color() {
-        if (this.value?.includes("holiday")) {
-            return `${this.value === "presence_holiday_present" ? "text-success" : "o_icon_employee_absent"}`;
-        } else if (this.location) {
-            let color = "text-muted";
-            if (this.props.record.data.hr_presence_state !== "out_of_working_hour") {
-                color =
-                    this.props.record.data.hr_presence_state === "present"
-                        ? "text-success"
-                        : "o_icon_employee_absent";
-            }
-            return color;
+        if (onHoliday(this)) {
+            return this.value === "presence_holiday_present"
+                ? "text-success"
+                : "o_icon_employee_absent";
         }
         return super.color;
     },
 
     get icon() {
-        if (this.value?.includes("holiday")) {
-            return "fa-plane";
-        } else if (this.location) {
-            switch (this.location) {
-                case "home":
-                    return "fa-home";
-                case "office":
-                    return "fa-building";
-                case "other":
-                    return "fa-map-marker";
-            }
-        }
-        return super.icon;
+        return onHoliday(this) ? "fa-plane" : super.icon;
     },
 
     get label() {
-        if (this.value?.includes("holiday")) {
-            return _t("%(label)s, back on %(date)s", {
-                label:
-                    this.value !== false
-                        ? this.options.find(([value]) => value === this.value)[1]
-                        : "",
-                date: this.props.record.data["leave_date_to"].toLocaleString({
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                }),
-            });
-        } else if (this.location) {
-            return this.props.record.data.work_location_name || _t("Unspecified");
+        if (!onHoliday(this)) {
+            return super.label;
         }
-        return super.label;
+        const option = this.options.find(([value]) => value === this.value);
+        return backOn(this, option ? option[1] : "");
     },
 });
 
@@ -65,19 +57,10 @@ patch(HrPresenceStatusPrivate.prototype, patchHrPresenceStatus());
 
 const patchHrPresenceStatusPill = () => ({
     get color() {
-        if (this.value?.includes("holiday")) {
+        if (onHoliday(this)) {
             return this.value === "presence_holiday_present"
                 ? "btn-outline-success"
                 : "btn-outline-warning";
-        } else if (this.location) {
-            let color = "btn-outline-secondary text-muted";
-            if (this.props.record.data.hr_presence_state !== "out_of_working_hour") {
-                color =
-                    this.props.record.data.hr_presence_state === "present"
-                        ? "btn-outline-success"
-                        : "btn-outline-warning";
-            }
-            return color;
         }
         return super.color;
     },
@@ -88,16 +71,8 @@ patch(HrPresenceStatusPrivatePill.prototype, patchHrPresenceStatusPill());
 
 const patchHrPresenceStatusPrivate = () => ({
     get label() {
-        return this.props.record.data.current_leave_id
-            ? _t("%(label)s, back on %(date)s", {
-                  label: this.props.record.data.current_leave_id.display_name,
-                  date: this.props.record.data["leave_date_to"].toLocaleString({
-                      day: "numeric",
-                      month: "short",
-                      year: "numeric",
-                  }),
-              })
-            : super.label;
+        const leave = this.props.record.data.current_leave_id;
+        return leave ? backOn(this, leave.display_name) : super.label;
     },
 });
 
