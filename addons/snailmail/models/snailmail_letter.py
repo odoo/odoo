@@ -514,7 +514,7 @@ class SnailmailLetter(models.Model):
         params = self._snailmail_create("print")
         try:
             response = iap_tools.iap_jsonrpc(
-                endpoint + PRINT_ENDPOINT, params=params, timeout=timeout
+                endpoint + PRINT_ENDPOINT, params=params, timeout=timeout, env=self.env
             )
         except AccessError as ae:
             for doc in params["documents"]:

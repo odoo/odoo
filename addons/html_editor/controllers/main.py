@@ -724,6 +724,7 @@ class HTML_Editor(http.Controller):
                     "database_id": database_id,
                 },
                 timeout=30,
+                env=request.env,
             )
             if response["status"] == "success":
                 return response["content"]

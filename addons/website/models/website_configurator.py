@@ -35,7 +35,9 @@ class Website(models.Model):
         api_endpoint = IrConfigParameter.get_param(
             endpoint_param_name, default_endpoint
         )
-        return iap_tools.iap_jsonrpc(api_endpoint + route, params=params, **kwargs)
+        return iap_tools.iap_jsonrpc(
+            api_endpoint + route, params=params, **kwargs, env=self.env
+        )
 
     def _website_api_rpc(self, route, params):
         return self._api_rpc(

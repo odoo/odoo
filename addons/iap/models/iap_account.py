@@ -119,7 +119,7 @@ class IapAccount(models.Model):
                     ],
                 }
                 try:
-                    iap_tools.iap_jsonrpc(url=url, params=data)
+                    iap_tools.iap_jsonrpc(url=url, params=data, env=self.env)
                 except AccessError as e:
                     _logger.warning(
                         "Update of the warning email configuration has failed: %s", e
@@ -145,7 +145,9 @@ class IapAccount(models.Model):
             "dbuuid": self.env["ir.config_parameter"].sudo().get_param("database.uuid"),
         }
         try:
-            accounts_information = iap_tools.iap_jsonrpc(url=url, params=params)
+            accounts_information = iap_tools.iap_jsonrpc(
+                url=url, params=params, env=self.env
+            )
         except AccessError as e:
             _logger.warning("Fetch of the IAP accounts information has failed: %s", e)
             return
@@ -326,7 +328,7 @@ class IapAccount(models.Model):
                 "service_name": service_name,
             }
             try:
-                credit = iap_tools.iap_jsonrpc(url=url, params=params)
+                credit = iap_tools.iap_jsonrpc(url=url, params=params, env=self.env)
             except AccessError as e:
                 _logger.info("Get credit error : %s", e)
                 credit = -1

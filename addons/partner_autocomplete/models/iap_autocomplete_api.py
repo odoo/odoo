@@ -45,7 +45,10 @@ class IapAutocompleteApi(models.AbstractModel):
             .get_param("iap.partner_autocomplete.endpoint", self._DEFAULT_ENDPOINT)
         )
         return iap_tools.iap_jsonrpc(
-            base_url + local_endpoint + "/" + action, params=params, timeout=timeout
+            base_url + local_endpoint + "/" + action,
+            params=params,
+            timeout=timeout,
+            env=self.env,
         )
 
     @api.model

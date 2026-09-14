@@ -20,7 +20,7 @@ class IapEnrichApi(models.AbstractModel):
             .get_param("enrich.endpoint", self._DEFAULT_ENDPOINT)
         )
         return iap_tools.iap_jsonrpc(
-            base_url + local_endpoint, params=params, timeout=300
+            base_url + local_endpoint, params=params, timeout=300, env=self.env
         )
 
     @api.model

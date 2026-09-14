@@ -362,7 +362,9 @@ class CrmIapLeadMiningRequest(models.Model):
             .get_param("reveal.endpoint", DEFAULT_ENDPOINT)
             + "/api/dnb/1/search_by_criteria"
         )
-        return iap_tools.iap_jsonrpc(endpoint, params=params, timeout=timeout)
+        return iap_tools.iap_jsonrpc(
+            endpoint, params=params, timeout=timeout, env=self.env
+        )
 
     def _create_leads_from_response(self, result):
         self.check_singleton()

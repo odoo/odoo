@@ -65,7 +65,7 @@ class TestIapJsonrpcContract(TransactionCase):
                 side_effect=side_effect,
             ),
         ):
-            return iap_jsonrpc("https://iap.mock/rpc", params={"x": 1})
+            return iap_jsonrpc("https://iap.mock/rpc", params={"x": 1}, env=self.env)
 
     def test_success_unwraps_result(self):
         """A successful JSON-RPC reply returns the bare result."""
@@ -113,4 +113,4 @@ class TestIapJsonrpcContract(TransactionCase):
     def test_guard_blocks_real_calls_in_tests(self):
         """Without the lifted guard, IAP calls are refused during tests."""
         with self.assertRaises(exceptions.AccessError):
-            iap_jsonrpc("https://iap.real/rpc")
+            iap_jsonrpc("https://iap.real/rpc", env=self.env)

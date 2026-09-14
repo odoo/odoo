@@ -401,7 +401,9 @@ class CrmRevealRule(models.Model):
             .get_param("reveal.endpoint", DEFAULT_ENDPOINT)
             + "/iap/clearbit/1/reveal"
         )
-        return iap_tools.iap_jsonrpc(endpoint, params=params, timeout=timeout)
+        return iap_tools.iap_jsonrpc(
+            endpoint, params=params, timeout=timeout, env=self.env
+        )
 
     def _create_lead_from_response(self, result):
         if result["rule_id"]:

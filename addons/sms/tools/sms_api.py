@@ -91,7 +91,7 @@ class SmsApi(
             .get_param("sms.endpoint", self.DEFAULT_ENDPOINT)
         )
         return iap_tools.iap_jsonrpc(
-            endpoint + local_endpoint, params=params, timeout=timeout
+            endpoint + local_endpoint, params=params, timeout=timeout, env=self.env
         )
 
     def _send_sms_batch(
