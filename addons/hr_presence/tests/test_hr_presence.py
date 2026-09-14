@@ -1,4 +1,5 @@
 from datetime import date, datetime, time, timedelta
+from unittest.mock import patch
 
 from odoo import fields
 from odoo.exceptions import UserError
@@ -837,6 +838,108 @@ class TestActions(HrPresenceCase):
             (one | two).action_view_leave_request()["res_model"],
             "hr.leave.generate.multi.wizard",
         )
+
+
+@tagged("post_install", "-at_install")
+class TestTheWebsocketRecordsTheEvidence(HrPresenceCase):
+    """The IP half of this module rests entirely on this override, and it had no
+    test at all -- because the stamp used to be written on a cursor of its own,
+    which a TransactionCase cannot see and which raised MissingError against a
+    record the outer transaction had not committed.
+    """
+
+    def _presence(self, employee, remote_addr):
+        """One websocket presence heartbeat from `remote_addr`.
+
+        mail's half needs a real websocket context to find the persona, so it is
+        patched out on its DEFINING class -- patching the registry class would
+        replace the whole override chain rather than one link in it.
+        """
+        from odoo.addons.mail.models.ir_websocket import IrWebsocket as MailWebsocket
+
+        class FakeRequest:
+            class httprequest:
+                pass
+
+        FakeRequest.httprequest.remote_addr = remote_addr
+        websocket = self.env["ir.websocket"].with_user(employee.user_id)
+        with (
+            patch.object(
+                MailWebsocket,
+                "_update_mail_presence",
+                lambda self, inactivity_period: None,
+            ),
+            patch("odoo.addons.hr_presence.models.ir_websocket.request", FakeRequest),
+        ):
+            websocket._update_mail_presence(0)
+        employee.invalidate_recordset()
+
+    def test_a_connection_from_a_listed_address_is_recorded(self):
+        employee = self._make_employee("connector")
+        self.assertFalse(employee.hr_presence_ip_date, "fixture: nothing recorded yet")
+        self._presence(employee, "10.0.0.1")
+        self.assertEqual(employee.hr_presence_ip_date, self._today_for(employee))
+        self.assertEqual(employee.hr_presence_state, "present")
+
+    def test_a_connection_from_an_unlisted_address_records_nothing(self):
+        employee = self._make_employee("stranger")
+        self.assertIn(
+            "10.0.0.1",
+            self.company._hr_presence_valid_ips(),
+            "fixture: the company must have a list, or nothing could be rejected",
+        )
+        self._presence(employee, "192.168.55.55")
+        self.assertFalse(employee.hr_presence_ip_date)
+        self.assertEqual(employee.hr_presence_state, "absent")
+
+    def test_a_company_that_does_not_use_ip_control_records_nothing(self):
+        plain = self.env["res.company"].create({"name": "No IP Co"})
+        calendar = self._make_calendar(plain, "UTC")
+        plain.write(
+            {
+                "resource_calendar_id": calendar.id,
+                "hr_presence_control_email": True,
+                "hr_presence_control_ip": False,
+            }
+        )
+        employee = self._make_employee("unwatched", company=plain, calendar=calendar)
+        self._presence(employee, "10.0.0.1")
+        self.assertFalse(employee.hr_presence_ip_date)
+
+    def test_the_stored_mirror_follows_the_connection_at_once(self):
+        """The mirror feeds the Absent/Off-Hours filters, and the cron refreshes
+        it hourly -- so without this the list said Absent for an hour after the
+        employee walked in, while the icon in the same row said Present."""
+        employee = self._make_employee("filtered")
+        self.env["hr.employee"]._check_presence()
+        self.assertEqual(employee.hr_presence_state_display, "absent")
+        self._presence(employee, "10.0.0.1")
+        self.assertEqual(employee.hr_presence_state_display, "present")
+        self.assertIn(
+            employee,
+            self.env["hr.employee"].search(
+                [("hr_presence_state_display", "=", "present")]
+            ),
+        )
+
+    def test_a_second_heartbeat_the_same_day_writes_nothing_more(self):
+        employee = self._make_employee("repeater")
+        self._presence(employee, "10.0.0.1")
+        stamped = employee.write_date
+        self._presence(employee, "10.0.0.1")
+        self.assertEqual(
+            employee.write_date, stamped, "the date guard must short-circuit"
+        )
+
+    def test_a_stamp_lost_to_a_rollback_is_recorded_again(self):
+        """Why the cursor of its own was not worth its cost: the guard is the
+        date itself, so a lost write is retried by the next heartbeat."""
+        employee = self._make_employee("retried")
+        self._presence(employee, "10.0.0.1")
+        self.assertTrue(employee.hr_presence_ip_date)
+        employee.hr_presence_ip_date = False  # as a rollback would leave it
+        self._presence(employee, "10.0.0.1")
+        self.assertEqual(employee.hr_presence_ip_date, self._today_for(employee))
 
 
 @tagged("post_install", "-at_install")

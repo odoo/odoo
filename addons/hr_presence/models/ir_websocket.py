@@ -1,8 +1,6 @@
 from odoo import fields, models
-from odoo.api import Environment
 from odoo.http import request
 from odoo.libs.debug_log import DebugLog
-from odoo.modules.registry import Registry
 
 from odoo.addons.bus.websocket import wsrequest
 
@@ -36,10 +34,13 @@ class IrWebsocket(models.AbstractModel):
         ).date()
         if employee.hr_presence_ip_date == today:
             return
-        # A cursor of its own: the evidence must outlive a websocket
-        # transaction that rolls back for unrelated reasons.
-        with Registry(self.env.cr.dbname).cursor() as cr:
-            env = Environment(cr, self.env.user.id, {})
-            env["hr.employee"].browse(employee.id).sudo().hr_presence_ip_date = today
-        employee.invalidate_recordset(["hr_presence_ip_date"])
+        # Written in the request's own transaction, which `retrying` commits.
+        # A cursor of its own would outlive a rollback, but it also cost a
+        # database connection per employee per day, raised MissingError when the
+        # employee was not visible to it, and put this whole branch beyond the
+        # reach of a TransactionCase -- which is why it had no tests. Losing a
+        # stamp to a rollback costs nothing: the guard above is the date itself,
+        # so the next heartbeat records it again.
+        employee.hr_presence_ip_date = today
+        employee.hr_presence_state_display = employee.hr_presence_state
         _debug.lifecycle("presence_ip_recorded", employee=employee, day=today)
