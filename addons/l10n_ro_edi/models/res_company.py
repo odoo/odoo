@@ -122,7 +122,7 @@ class ResCompany(models.Model):
             }
         )
 
-    def _l10n_ro_edi_refresh_access_token(self, session):
+    def _l10n_ro_edi_refresh_access_token(self):
         """
         Uses the saved client_id, client_secret, and refresh_token on the company (self)
         to make request to the SPV and renew the company's token fields.
@@ -130,20 +130,18 @@ class ResCompany(models.Model):
         self.check_singleton()
         if not self.l10n_ro_edi_client_id or not self.l10n_ro_edi_client_secret:
             raise UserError(_("Client ID and Client Secret field must be filled."))
-        if not self.l10n_ro_edi_refresh_token:
-            raise UserError(_("Refresh token not found"))
 
-        response = session.post(
-            url="https://logincert.anaf.ro/anaf-oauth2/v1/token",
-            headers={"Content-Type": "application/x-www-form-urlencoded"},
-            timeout=10,
-            data={
-                "grant_type": "refresh_token",
-                "refresh_token": self.l10n_ro_edi_refresh_token,
+        response = self._post_held_oauth2_refresh_grant(
+            "https://logincert.anaf.ro/anaf-oauth2/v1/token",
+            "l10n_ro_edi_refresh_token",
+            {
                 "client_id": self.l10n_ro_edi_client_id,
                 "client_secret": self.l10n_ro_edi_client_secret,
             },
+            purpose="l10n_ro_edi",
         )
+        if response is None:
+            raise UserError(_("Refresh token not found"))
         response_json = response.json()
         self._l10n_ro_edi_process_token_response(response_json)
 
@@ -172,11 +170,10 @@ class ResCompany(models.Model):
                 )
             )
         )
-        session = self.env["ir.egress"].session(purpose="l10n_ro_edi")
         for company in ro_companies:
             error_cause = ""
             try:
-                company._l10n_ro_edi_refresh_access_token(session)
+                company._l10n_ro_edi_refresh_access_token()
             except ValidationError as e:
                 # From access/refresh token not found after sending request
                 error_cause = e

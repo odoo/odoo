@@ -89,3 +89,70 @@ class TestOAuth2Refresh(EncryptionKeyCase, TransactionCase):
 
         self.assertIs(caught.exception.response, refused)
         self.assertEqual(credential.oauth_access_token, "old-access")
+
+    def test_the_row_is_locked_before_the_refresh_token_is_read(self):
+        credential = self._credential()
+        Credential = type(credential)
+        events = []
+        lock = Credential.lock_for_update
+        payload = Credential._use_secret_payload
+
+        def locking(records, **kwargs):
+            events.append("lock")
+            return lock(records, **kwargs)
+
+        def reading(records, purpose):
+            events.append("read")
+            return payload(records, purpose)
+
+        with (
+            patch.object(Credential, "lock_for_update", locking),
+            patch.object(Credential, "_use_secret_payload", reading),
+        ):
+            self._refresh(
+                credential,
+                self._response(payload={"access_token": "new", "expires_in": 60}),
+            )
+
+        self.assertEqual(events[:2], ["lock", "read"])
+
+
+@tagged("post_install", "-at_install")
+class TestHeldOAuth2RefreshGrant(EncryptionKeyCase, TransactionCase):
+    def setUp(self):
+        super().setUp()
+        self.company = self.env.company
+        self.company._set_held_secrets({"probe_refresh_token": "held-refresh"})
+
+    def _grant(self, response=None, **kwargs):
+        response = response or MagicMock(ok=True, status_code=200)
+        with patch.object(GuardedSession, "request", return_value=response) as sent:
+            result = self.company._post_held_oauth2_refresh_grant(
+                TOKEN_URL,
+                kwargs.pop("refresh_key", "probe_refresh_token"),
+                {"client_assertion": "signed-jwt"},
+                purpose="probe",
+                **kwargs,
+            )
+        return result, sent
+
+    def test_the_held_refresh_token_is_spent_with_the_client_auth(self):
+        response = MagicMock(ok=True, status_code=200)
+        result, sent = self._grant(response, headers={"accept": "application/json"})
+
+        self.assertIs(result, response)
+        self.assertEqual(
+            sent.call_args.kwargs["data"],
+            {
+                "grant_type": "refresh_token",
+                "refresh_token": "held-refresh",
+                "client_assertion": "signed-jwt",
+            },
+        )
+        self.assertEqual(sent.call_args.kwargs["headers"]["accept"], "application/json")
+
+    def test_nothing_is_sent_without_a_held_refresh_token(self):
+        result, sent = self._grant(refresh_key="probe_missing_token")
+
+        self.assertIsNone(result)
+        sent.assert_not_called()

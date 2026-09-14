@@ -129,6 +129,28 @@ class MixinCredentialHolder(models.AbstractModel):
     def _get_held_secret(self, key: str):
         return self._get_held_secrets().get(key) or False
 
+    def _post_held_oauth2_refresh_grant(
+        self, token_url, refresh_key, client_auth, *, purpose, **options
+    ):
+        """Spend the refresh token held under `refresh_key`, the row locked first.
+
+        Returns the token endpoint's response, or None when no refresh token is
+        held. Storing what it returns is the caller's, inside this transaction.
+        """
+        self.check_singleton()
+        credential = self.sudo()[self._credential_holder_field]
+        if not credential:
+            return None
+        credential._lock_for_oauth2_refresh()
+        refresh_token = credential._use_secret_payload(f"{purpose}:oauth2_refresh").get(
+            refresh_key
+        )
+        if not refresh_token:
+            return None
+        return credential._post_oauth2_refresh_grant(
+            token_url, refresh_token, client_auth, purpose=purpose, **options
+        )
+
     @api.model
     def _create_holding_credential(self, name, company_id, secrets):
         native = {k: v for k, v in secrets.items() if k in NATIVE_CREDENTIAL_FIELDS}
