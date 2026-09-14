@@ -2303,19 +2303,26 @@ export interface GeoengineFieldAttrs {
 export interface GeoengineGeoengineAttrs {
     class?: string;
     colspan?: string;
+    count_limit?: string;
+    default_group_by?: string;
+    default_order?: string;
     editable?: string;
     features_list?: string;
     features_list_field?: string;
+    features_list_group_by?: string;
     groups?: string;
     help?: string;
     id?: string;
     invisible?: string;
+    limit?: string;
     name?: string;
     position?: "after" | "before" | "inside" | "replace" | "attributes" | "move";
     role?: string;
     string?: string;
     style?: string;
     title?: string;
+    trail_color_field?: string;
+    trail_timestamps_field?: string;
     version?: string;
     webgl_trail?: string;
     [key: `aria-${string}`]: string;
@@ -2387,6 +2394,9 @@ export interface ThreedCameraAttrs {
     style?: string;
     title?: string;
     version?: string;
+    x?: string;
+    y?: string;
+    z?: string;
     [key: `aria-${string}`]: string;
     [key: `data-${string}`]: string;
     [key: `t-${string}`]: string;
@@ -2449,12 +2459,16 @@ export interface ThreedHeaderAttrs {
 }
 export interface ThreedLegendAttrs {
     class?: string;
+    color_field?: string;
     colspan?: string;
+    comodel_name?: string;
     groups?: string;
     help?: string;
     id?: string;
     invisible?: string;
     name?: string;
+    name_field?: string;
+    opacity_field?: string;
     position?: "after" | "before" | "inside" | "replace" | "attributes" | "move";
     role?: string;
     string?: string;
@@ -2562,6 +2576,7 @@ export interface ThreedTemplatesAttrs {
     [key: `t-${string}`]: string;
 }
 export interface ThreedThreedAttrs {
+    auto_refresh?: string;
     class?: string;
     colspan?: string;
     groups?: string;

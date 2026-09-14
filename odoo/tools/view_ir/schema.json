@@ -1345,9 +1345,16 @@
         },
         "geoengine": {
           "attrs": {
+            "count_limit": "int",
+            "default_group_by": "str",
+            "default_order": "str",
             "editable": "str",
             "features_list": "str",
             "features_list_field": "ident",
+            "features_list_group_by": "str",
+            "limit": "int",
+            "trail_color_field": "str",
+            "trail_timestamps_field": "str",
             "webgl_trail": "bool"
           },
           "children": [
@@ -1375,7 +1382,10 @@
       "nodes": {
         "camera": {
           "attrs": {
-            "fov": "str"
+            "fov": "str",
+            "x": "str",
+            "y": "str",
+            "z": "str"
           }
         },
         "field": {
@@ -1400,7 +1410,12 @@
           ]
         },
         "legend": {
-          "attrs": {}
+          "attrs": {
+            "color_field": "str",
+            "comodel_name": "str",
+            "name_field": "ident",
+            "opacity_field": "str"
+          }
         },
         "objects": {
           "attrs": {},
@@ -1442,6 +1457,7 @@
         },
         "threed": {
           "attrs": {
+            "auto_refresh": "str",
             "no_area_loaded": "str",
             "no_item": "str"
           },

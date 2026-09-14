@@ -17579,6 +17579,18 @@
           "type": "string",
           "x-odoo-type": "str"
          },
+         "count_limit": {
+          "type": "string",
+          "pattern": "^-?[0-9]+$"
+         },
+         "default_group_by": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "default_order": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
          "editable": {
           "type": "string",
           "x-odoo-type": "str"
@@ -17590,6 +17602,22 @@
          "features_list_field": {
           "type": "string",
           "x-odoo-type": "ident"
+         },
+         "features_list_group_by": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "limit": {
+          "type": "string",
+          "pattern": "^-?[0-9]+$"
+         },
+         "trail_color_field": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "trail_timestamps_field": {
+          "type": "string",
+          "x-odoo-type": "str"
          },
          "webgl_trail": {
           "enum": [
@@ -18453,6 +18481,18 @@
          "fov": {
           "type": "string",
           "x-odoo-type": "str"
+         },
+         "x": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "y": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "z": {
+          "type": "string",
+          "x-odoo-type": "str"
          }
         },
         "additionalProperties": false,
@@ -18823,6 +18863,22 @@
           "x-odoo-type": "str"
          },
          "role": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "color_field": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "comodel_name": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "name_field": {
+          "type": "string",
+          "x-odoo-type": "ident"
+         },
+         "opacity_field": {
           "type": "string",
           "x-odoo-type": "str"
          }
@@ -19393,6 +19449,10 @@
           "x-odoo-type": "str"
          },
          "role": {
+          "type": "string",
+          "x-odoo-type": "str"
+         },
+         "auto_refresh": {
           "type": "string",
           "x-odoo-type": "str"
          },
