@@ -203,6 +203,25 @@ class TestCompany(TransactionCase):
         self.assertEqual(branches(root, grand), grand)
         self.assertEqual(branches(root, root + child), root + child)
 
+    def test_the_companies_of_an_environment_begin_with_its_company(self):
+        user = new_test_user(self.env, "companies-first")
+        own = user.company_id
+        earlier = self.env["res.company"].create(
+            {"name": "AAA sorts first", "sequence": -1}
+        )
+        user.write({"company_ids": [Command.link(earlier.id)]})
+        env = self.env(user=user, context={})
+        self.assertEqual(env.company, own)
+        self.assertEqual(env.companies[:1], env.company)
+        self.assertEqual(set(env.companies.ids), {own.id, earlier.id})
+        self.assertEqual(
+            self.env(
+                user=user, context={"allowed_company_ids": [earlier.id, own.id]}
+            ).companies.ids,
+            [earlier.id, own.id],
+            "a list the request sends keeps its own order",
+        )
+
     def test_get_main_company_falls_back_to_the_first_company(self):
         main = self.env.ref("base.main_company")
         self.env["ir.model.data"].search(

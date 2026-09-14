@@ -703,7 +703,9 @@ ZeroDivisionError: division by zero"""
         bindings = Actions.get_bindings("res.country")
         self.assertItemsEqual(
             bindings.get("action"),
-            self.action.read(["name", "sequence", "binding_view_types"]),
+            self.action.read(
+                ["name", "binding_view_types", "binding_sequence", "binding_icon"]
+            ),
         )
 
         self.action.with_context(self.context).run()
@@ -722,14 +724,16 @@ ZeroDivisionError: division by zero"""
                 "binding_model_id": self.res_country_model.id,
             }
         )
-        self.action2 = self.action.copy({"name": "TestAction2", "sequence": 1})
+        self.action2 = self.action.copy({"name": "TestAction2", "binding_sequence": 1})
 
         bindings = Actions.get_bindings("res.country")
         self.assertEqual(
             [vals.get("name") for vals in bindings["action"]],
             ["TestAction2", "TestAction"],
         )
-        self.assertEqual([vals.get("sequence") for vals in bindings["action"]], [1, 5])
+        self.assertEqual(
+            [vals.get("binding_sequence") for vals in bindings["action"]], [1, 10]
+        )
 
     def test_70_copy_action(self):
         r = self.env["ir.actions.todo"].create(
