@@ -1078,6 +1078,36 @@ class TestMrpProductionBackorder(TestMrpCommon):
         mo.button_mark_done()
         self.assertEqual(backorder.move_raw_ids.quantity, 8.0)
 
+    def test_backorder_workorder_name_not_suffixed(self):
+        """
+        A backorder's workorders should keep the exact same name as the
+        original ones: the generic "(copy)" suffix applied by default to
+        'name' fields on copy should not apply to workorders.
+        """
+        self.bom_1.write({
+            'operation_ids': [
+                Command.create({'name': 'Cutting Machine', 'workcenter_id': self.workcenter_1.id, 'sequence': 1}),
+                Command.create({'name': 'Weld Machine', 'workcenter_id': self.workcenter_1.id, 'sequence': 2}),
+            ],
+        })
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_1
+        mo_form.product_qty = 4
+        mo = mo_form.save()
+        mo.picking_type_id.create_backorder = 'ask'
+        mo.action_confirm()
+        original_names = mo.workorder_ids.mapped('name')
+        self.assertEqual(original_names, ['Cutting Machine', 'Weld Machine'])
+
+        with Form(mo) as mo_form:
+            mo_form.qty_producing = 2
+        action = mo.button_mark_done()
+        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder.save().action_backorder()
+
+        bo = mo.production_group_id.production_ids - mo
+        self.assertEqual(bo.workorder_ids.mapped('name'), original_names)
+
 
 class TestMrpWorkorderBackorder(TransactionCase):
     @classmethod

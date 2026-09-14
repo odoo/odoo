@@ -27,7 +27,7 @@ class MrpWorkorder(models.Model):
         return workcenters.browse(workcenter_ids)
 
     name = fields.Char(
-        'Work Order', required=True)
+        'Work Order', required=True, copy=True)
     sequence = fields.Integer("Sequence", compute='_compute_sequence', store=True, readonly=False, precompute=True)
     barcode = fields.Char(compute='_compute_barcode', store=True)
     workcenter_id = fields.Many2one(
