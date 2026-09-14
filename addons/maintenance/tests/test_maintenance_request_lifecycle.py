@@ -402,3 +402,53 @@ class TestMaintenanceTeamAlias(TransactionCase):
             request,
             [{"company_id": company.id, "maintenance_team_id": team.id}],
         )
+
+
+class TestMaintenanceEquipmentAccess(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        group_user = cls.env.ref("base.group_user")
+        cls.technician, cls.category_technician = cls.env["res.users"].create(
+            [
+                {
+                    "name": "Equipment technician",
+                    "login": "equipment_technician",
+                    "group_ids": [(6, 0, [group_user.id])],
+                },
+                {
+                    "name": "Category technician",
+                    "login": "equipment_category_technician",
+                    "group_ids": [(6, 0, [group_user.id])],
+                },
+            ]
+        )
+
+    def _visible_to(self, user, equipment):
+        return bool(
+            self.env["maintenance.equipment"]
+            .with_user(user)
+            .search_count([("id", "=", equipment.id)])
+        )
+
+    def test_the_technician_can_read_the_equipment_they_maintain(self):
+        equipment = self.env["maintenance.equipment"].create(
+            {"name": "Compressor", "technician_user_id": self.technician.id}
+        )
+        self.assertTrue(self._visible_to(self.technician, equipment))
+        request = self.env["maintenance.request"].create(
+            {"name": "Noise", "equipment_id": equipment.id}
+        )
+        read = request.with_user(self.technician).web_read(
+            {"equipment_id": {"fields": {"display_name": {}}}}
+        )
+        self.assertEqual(read[0]["equipment_id"]["display_name"], "Compressor")
+
+    def test_a_technician_from_a_new_category_follows_the_equipment(self):
+        equipment = self.env["maintenance.equipment"].create({"name": "Lathe"})
+        category = self.env["maintenance.equipment.category"].create(
+            {"name": "Machines", "technician_user_id": self.category_technician.id}
+        )
+        equipment.category_id = category
+        self.assertEqual(equipment.technician_user_id, self.category_technician)
+        self.assertTrue(self._visible_to(self.category_technician, equipment))
