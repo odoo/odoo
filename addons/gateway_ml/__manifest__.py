@@ -136,6 +136,7 @@ Depends on ``integration`` alone.
         "views/ai_use_case_tag_views.xml",
         "views/ai_menu.xml",
         "views/integration_exchange_views.xml",
+        "views/res_company_views.xml",
     ],
     "pre_init_hook": "pre_init_hook",
 }

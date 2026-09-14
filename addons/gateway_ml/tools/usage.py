@@ -1,6 +1,12 @@
 import re
 
+from odoo.addons.integration.tools.exceptions import ClientError
+
 _GEMINI_MODEL_IN_PATH = re.compile(r"/models/([^/:]+):")
+
+
+class SpendCapReached(ClientError):
+    pass
 
 
 def _number(value):

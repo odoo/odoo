@@ -1,7 +1,9 @@
-from odoo import models
+from datetime import date
+
+from odoo import fields, models
 from odoo.tools import ormcache
 
-from ..tools.usage import USAGE_READERS, usage_cost
+from ..tools.usage import USAGE_READERS, SpendCapReached, usage_cost
 
 
 class IntegrationService(models.Model):
@@ -38,6 +40,30 @@ class IntegrationService(models.Model):
             )
         return values
 
+    def _check_before_request(self, company_id):
+        super()._check_before_request(company_id)
+        wire, _provider_ids = self._ml_wire_and_providers(self.id)
+        if not wire:
+            return
+        company = self.env["res.company"].browse(company_id or self.env.company.id)
+        cap = company.gateway_ml_monthly_budget
+        if not cap:
+            return
+        spent = company._gateway_ml_spend_this_month()
+        if spent >= cap:
+            raise SpendCapReached(
+                self.env._(
+                    "%(company)s has spent %(spent).2f USD of its %(cap).2f USD monthly "
+                    "machine learning budget; %(service)s is not called again before "
+                    "%(next_month)s.",
+                    company=company.name,
+                    spent=spent,
+                    cap=cap,
+                    service=self.name,
+                    next_month=_first_of_next_month(),
+                )
+            )
+
     @ormcache("service_id")
     def _ml_wire_and_providers(self, service_id):
         operations = (
@@ -46,3 +72,8 @@ class IntegrationService(models.Model):
             .search([("service_id", "=", service_id)])
         )
         return operations[:1].wire or None, tuple(operations.provider_id.ids)
+
+
+def _first_of_next_month():
+    today = fields.Datetime.now().date()
+    return date(today.year + (today.month == 12), today.month % 12 + 1, 1)

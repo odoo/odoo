@@ -363,6 +363,8 @@ class OutboundAPIClient:
             if cached is not None:
                 return cached
 
+        self.service.sudo()._check_before_request(self.company_id)
+
         if not skip_rate_limit:
             self.check_rate_limit()
 

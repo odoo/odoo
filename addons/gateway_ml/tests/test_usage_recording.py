@@ -5,6 +5,7 @@ from odoo.tests import TransactionCase, tagged
 from odoo.addons.gateway_ml.tests.common import connect
 from odoo.addons.gateway_ml.tools.ai_clients import get_ai_client
 from odoo.addons.gateway_ml.tools.usage import (
+    SpendCapReached,
     read_anthropic_messages,
     read_deepgram,
     read_gemini_native,
@@ -163,3 +164,91 @@ class TestUsageOnTheExchangeRow(EncryptionKeyCase, TransactionCase):
             ),
             {},
         )
+
+
+@tagged("post_install", "-at_install")
+class TestMonthlySpendCap(EncryptionKeyCase, TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.company = cls.env.company
+        cls.openai = cls.env.ref("gateway_ml.ai_provider_openai")
+        connect(cls.env, cls.openai)
+
+    def _spend(self, cost):
+        self.env["integration.exchange"].create(
+            {
+                "direction": "outbound",
+                "channel_id": f"integration.service,{self.openai.endpoint_id.id}",
+                "company_id": self.company.id,
+                "ml_model_id": self.openai._service_for("chat").model_id.id,
+                "ml_cost": cost,
+            }
+        )
+
+    def _call(self):
+        client = get_ai_client(self.env, "openai")
+        response = Mock(status_code=200, headers={"content-type": "application/json"})
+        response.json.return_value = {
+            "choices": [{"message": {"content": "ok"}, "finish_reason": "stop"}]
+        }
+        response.text = ""
+        response.content = b"{}"
+        with patch("requests.Session.request", return_value=response) as sent:
+            client.simple_completion("q")
+        return sent
+
+    def test_no_cap_sets_no_limit(self):
+        self._spend(10_000)
+        self.assertTrue(self._call().called)
+
+    def test_spend_under_the_cap_still_calls(self):
+        self.company.gateway_ml_monthly_budget = 50
+        self._spend(49.5)
+        self.assertTrue(self._call().called)
+        self.assertAlmostEqual(self.company.gateway_ml_spend_this_month, 49.5)
+
+    def test_a_reached_cap_stops_the_call_before_it_is_sent(self):
+        self.company.gateway_ml_monthly_budget = 50
+        self._spend(30)
+        self._spend(20)
+        with (
+            patch("requests.Session.request") as sent,
+            self.assertRaises(SpendCapReached) as caught,
+        ):
+            get_ai_client(self.env, "openai").simple_completion("q")
+        sent.assert_not_called()
+        self.assertIn("50.00", str(caught.exception))
+
+    def test_last_months_spend_does_not_count(self):
+        self.company.gateway_ml_monthly_budget = 50
+        self._spend(80)
+        self.env.flush_all()
+        self.env.cr.execute(
+            "UPDATE integration_exchange SET timestamp = timestamp - interval '40 days' "
+            "WHERE company_id = %s AND ml_cost = 80",
+            (self.company.id,),
+        )
+        self.env.invalidate_all()
+        self.assertTrue(self._call().called)
+
+    def test_a_reached_cap_leaves_the_assistant_quiet_rather_than_raising(self):
+        self.company.gateway_ml_monthly_budget = 1
+        self._spend(1)
+        with patch("requests.Session.request") as sent:
+            self.assertIsNone(
+                self.openai._assistant().chat_json("sys", "user", 100, 0.1)
+            )
+        sent.assert_not_called()
+
+    def test_a_service_no_provider_rides_ignores_the_cap(self):
+        self.company.gateway_ml_monthly_budget = 1
+        self._spend(5)
+        service = self.env["integration.service"].create(
+            {
+                "name": "Plain",
+                "code": "plain_cap_probe",
+                "endpoint_url": "https://example.com",
+            }
+        )
+        self.assertIsNone(service._check_before_request(self.company.id))

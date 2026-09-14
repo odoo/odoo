@@ -159,6 +159,9 @@ class IntegrationService(models.Model):
     def _exchange_usage_values(self, url, request_kwargs, response_body):
         return {}
 
+    def _check_before_request(self, company_id):
+        return None
+
     verify_tls = fields.Boolean(
         string="Verify TLS certificate",
         default=True,
