@@ -38,7 +38,7 @@ class ResPartner(models.Model):
 
     @api.model
     def _get_identifier_fields(self):
-        # Extend from partner_autocomplete, siret has a higher priority since it's more precise
+        # Extend from base, siret has a higher priority since it's more precise
         identifier_fields = super()._get_identifier_fields()
         identifier_fields.extend(['FR_SIRET', 'FR_SIREN'])
         return identifier_fields
