@@ -1397,7 +1397,6 @@ msgstr "Aprobador"
 
 #. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_category__approver_group_id
-#: model:ir.model.fields,field_description:approval.field_approval_request__approver_group_id
 msgid "Approver Group"
 msgstr ""
 
@@ -1422,7 +1421,6 @@ msgstr ""
 
 #. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_category__group_approval
-#: model:ir.model.fields,field_description:approval.field_approval_request__group_approval
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
 msgid "Approver Source"
 msgstr ""
@@ -1431,15 +1429,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_request_form
 msgid "Approver(s)"
 msgstr "Aprobador(es)"
-
-#. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_request_routing.py:0
-msgid ""
-"Approver(s) added because the request changed: %(names)s.\n"
-"\n"
-"The routing configured on category '%(category)s' now asks for them. Approvals already given stand."
-msgstr ""
 
 #. module: approval
 #. odoo-python
@@ -1469,7 +1458,6 @@ msgstr ""
 
 #. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_category__approve_sequentially
-#: model:ir.model.fields,field_description:approval.field_approval_request__approve_sequentially
 msgid "Approvers Sequence?"
 msgstr "¿Secuencia de aprobador?"
 
@@ -2846,7 +2834,6 @@ msgstr "Si está marcada, algunos mensajes tienen error de envío."
 
 #. module: approval
 #: model:ir.model.fields,help:approval.field_approval_category__approve_sequentially
-#: model:ir.model.fields,help:approval.field_approval_request__approve_sequentially
 msgid ""
 "If checked, the approvers have to approve in sequence (one after the other)."
 " If Employee's Manager is selected as approver, they will be the first in "
@@ -5468,7 +5455,6 @@ msgstr "Usuarios"
 
 #. module: approval
 #: model:ir.model.fields,help:approval.field_approval_category__approver_group_id
-#: model:ir.model.fields,help:approval.field_approval_request__approver_group_id
 msgid "Users in this security group can approve requests for this category"
 msgstr ""
 
@@ -5686,7 +5672,6 @@ msgstr ""
 
 #. module: approval
 #: model:ir.model.fields,help:approval.field_approval_category__group_approval
-#: model:ir.model.fields,help:approval.field_approval_request__group_approval
 msgid ""
 "Where the request's approvers come from:\n"
 "\n"
@@ -5945,12 +5930,6 @@ msgid ""
 "You cannot %(verb)s this request while a change is pending. Wait for the "
 "requester to update the requested field and re-submit."
 msgstr ""
-
-#. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_request_lifecycle.py:0
-msgid "You cannot approve before the previous approver."
-msgstr "No puede aprobarla antes del aprobador anterior."
 
 #. module: approval
 #: model:ir.model.constraint,message:approval.constraint_approval_approver_request_user_uniq
