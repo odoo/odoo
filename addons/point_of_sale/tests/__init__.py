@@ -53,6 +53,9 @@ from . import test_pos_data_integrity
 from . import test_pos_ticket_validation
 from . import test_pos_session_contracts
 from . import test_pos_config_audit
+from . import test_pos_config_challenge
+from . import test_pos_config_provisioning
+from . import test_pos_config_synchronization
 from . import test_pos_wizards
 
 from . import test_pos_model_regressions

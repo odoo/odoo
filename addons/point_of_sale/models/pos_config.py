@@ -4,7 +4,6 @@ from uuid import uuid4
 from odoo import SUPERUSER_ID, Command, _, api, fields, models, tools
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.http import request
-from odoo.libs.datetime import timezone
 from odoo.service.common import exp_version
 from odoo.tools import SQL
 
@@ -31,14 +30,7 @@ class PosConfig(models.Model):
         return self._get_default_warehouse().id
 
     def _default_picking_type_id(self):
-        return (
-            self.env["stock.warehouse"]
-            .search(
-                self.env["stock.warehouse"]._check_company_domain(self.env.company),
-                limit=1,
-            )
-            .pos_type_id.id
-        )
+        return self._get_default_warehouse().pos_type_id.id
 
     def _default_journal_id(self):
         return self.env["account.journal"]._get_or_create_company_account_journal()
@@ -78,12 +70,21 @@ class PosConfig(models.Model):
         tip_product_id = self.env.ref(
             "point_of_sale.product_product_tip", raise_if_not_found=False
         )
-        if not tip_product_id or (
-            tip_product_id.sudo().company_id
-            and tip_product_id.sudo().company_id != self.env.company
+        if (
+            not tip_product_id
+            or not tip_product_id.sudo().active
+            or (
+                tip_product_id.sudo().company_id
+                and tip_product_id.sudo().company_id != self.env.company
+            )
         ):
             tip_product_id = self.env["product.product"].search(
-                [("default_code", "=", "TIPS")], limit=1
+                [
+                    ("default_code", "=", "TIPS"),
+                    ("active", "=", True),
+                    ("company_id", "in", [False, self.env.company.id]),
+                ],
+                limit=1,
             )
         return tip_product_id
 
@@ -300,6 +301,7 @@ class PosConfig(models.Model):
     tip_product_id = fields.Many2one(
         comodel_name="product.product",
         default=_default_tip_product_id,
+        check_company=True,
         help="This product is used as reference on customer receipts.",
     )
     fiscal_position_ids = fields.Many2many(
@@ -457,7 +459,9 @@ class PosConfig(models.Model):
 
     def _get_next_order_refs(self, device_identifier="0"):
         next_number = self.order_backend_seq_id._next()
-        year_2_digits = fields.Datetime.now().astimezone(self.env.tz).strftime("%y")
+        year_2_digits = fields.Datetime.context_timestamp(
+            self, fields.Datetime.now()
+        ).strftime("%y")
         digits = "".join(c for c in next_number if c.isdigit()) or "0"
         tracking_number = f"{int(digits) % 1000}"
         dbg.logic.debug(
@@ -478,6 +482,7 @@ class PosConfig(models.Model):
             records = {}
         self.check_singleton()
         static_records = {}
+        self._validate_trusted_configs()
 
         for model, ids in records.items():
             browsed = self.env[model].browse(ids).exists()
@@ -514,28 +519,32 @@ class PosConfig(models.Model):
 
     @dbg.timed
     def read_config_open_orders(self, domain, record_ids=None):
+        self.check_singleton()
         if record_ids is None:
             record_ids = {}
         delete_record_ids = {}
         dynamic_records = {}
 
-        for model, dom in domain.items():
+        for model in dict.fromkeys([*domain, *record_ids]):
             ids = record_ids.get(model, [])
             browsed = self.env[model].browse(ids)
             existing = browsed.exists()
 
-            dynamic_records[model] = self.env[model].search(dom)  # noqa: E8507 - one query per model
+            if model in domain:
+                dynamic_records[model] = self.env[model].search(domain[model])  # noqa: E8507 - one query per model
             delete_record_ids[model] = (browsed - existing).ids
             if model == "pos.order":
-                delete_record_ids[model] += existing.filtered(
-                    lambda r: r.state == "cancel"
-                ).ids
+                delete_record_ids[model] += (
+                    existing._filtered_access("read")
+                    .filtered(lambda r: r.state == "cancel")
+                    .ids
+                )
             dbg.logic.debug(
                 "[config:%s] open orders %s: %d known, %s found, %d to delete",
                 self.id,
                 model,
                 len(ids),
-                dbg.rec(dynamic_records[model]),
+                dbg.rec(dynamic_records.get(model, self.env[model])),
                 len(delete_record_ids[model]),
             )
 
@@ -543,11 +552,21 @@ class PosConfig(models.Model):
         data = pos_order_data.read_pos_data([], self)
 
         for key, records in dynamic_records.items():
-            fields = self.env[key]._load_pos_data_fields(self)
-            ids = list(
-                set(records.ids + [record["id"] for record in data.get(key, [])])
-            )
-            dynamic_records[key] = self.env[key].browse(ids).read(fields, load=False)
+            rows_by_id = {row["id"]: row for row in data.get(key, [])}
+            serialized = self.env[key].browse(rows_by_id)
+            missing = records - serialized
+            if missing:
+                rows_by_id.update(
+                    {
+                        row["id"]: row
+                        for row in self.env[key]._load_pos_data_read(missing, self)
+                    }
+                )
+            dynamic_records[key] = [
+                rows_by_id[record_id]
+                for record_id in (records | serialized).ids
+                if record_id in rows_by_id
+            ]
 
         for key, value in data.items():
             if key not in dynamic_records:
@@ -685,12 +704,21 @@ class PosConfig(models.Model):
                 config.payment_method_ids.filtered("is_cash_count")
             )
 
-    @api.depends("company_id")
+    @api.depends("company_id.chart_template", "company_id.root_id.chart_template")
     def _compute_company_has_template(self):
         for config in self:
-            config.company_has_template = (
-                config.company_id.root_id.sudo()._existing_accounting()
-                or config.company_id.chart_template
+            root = config.company_id.root_id.sudo()
+            config.company_has_template = bool(
+                config.company_id.chart_template
+                or root.chart_template
+                or root._existing_accounting()
+            )
+            dbg.logic.debug(
+                "[config:%s] chart available=%s company_chart=%s root_chart=%s",
+                config.id,
+                config.company_has_template,
+                config.company_id.chart_template,
+                root.chart_template,
             )
 
     def _compute_is_installed_account_accountant(self):
@@ -719,34 +747,62 @@ class PosConfig(models.Model):
                 pos_config.currency_id = pos_config.company_id.sudo().currency_id.id
 
     def _get_open_sessions(self):
-        self.check_singleton()
-        return self.session_ids.filtered(lambda s: s.state != "closed")
-
-    def _get_current_session(self):
-        return self._get_open_sessions().filtered(lambda s: not s.rescue)[:1]
+        persisted = self.filtered("id")
+        sessions = (
+            self.env["pos.session"].search_fetch(
+                [("config_id", "in", persisted.ids), ("state", "!=", "closed")],
+                ["config_id", "state", "rescue"],
+            )
+            if persisted
+            else self.env["pos.session"]
+        )
+        # Onchange records can contain sessions that have not reached the database.
+        return sessions | (self - persisted).session_ids.filtered(
+            lambda session: session.state != "closed"
+        )
 
     @api.depends("session_ids", "session_ids.state", "session_ids.rescue")
     def _compute_current_session(self):
-        self.session_ids.fetch(["state"])
+        sessions_by_config = (
+            self.filtered("id")._get_open_sessions().grouped("config_id")
+        )
         for pos_config in self:
-            open_sessions = pos_config._get_open_sessions()
+            open_sessions = (
+                sessions_by_config.get(pos_config, self.env["pos.session"])
+                if pos_config.id
+                else pos_config._get_open_sessions()
+            )
             session = open_sessions.filtered(lambda s: not s.rescue)[:1]
             pos_config.has_active_session = bool(open_sessions)
-            pos_config.current_session_id = session.id or False
+            pos_config.current_session_id = session
             pos_config.current_session_state = session.state or False
             pos_config.number_of_rescue_session = len(open_sessions.filtered("rescue"))
             dbg.logic.debug(
                 "[config:%s] current session %s state=%s rescue=%d",
                 pos_config.id,
-                session.id or None,
+                session.id,
                 session.state or None,
                 pos_config.number_of_rescue_session,
             )
 
-    @api.depends("session_ids", "session_ids.state")
+    @api.depends_context("tz", "lang", "uid")
+    @api.depends(
+        "current_session_id",
+        "session_ids.start_at",
+        "session_ids.cash_register_balance_start",
+        "session_ids.order_ids.state",
+        "session_ids.order_ids.amount_total",
+        "session_ids.order_ids.is_refund",
+        "session_ids.order_ids.refunded_order_id",
+        "currency_id",
+        "currency_id.symbol",
+        "currency_id.position",
+        "currency_id.rounding",
+        "currency_id.decimal_places",
+    )
     def _compute_statistics_for_current_session(self):
         for config in self:
-            session = config._get_current_session()
+            session = config.current_session_id
             config.statistics_for_current_session = (
                 config._get_statistics_for_session(session) if session else False
             )
@@ -754,7 +810,6 @@ class PosConfig(models.Model):
     def _get_statistics_for_session(self, session):
         self.check_singleton()
         currency = self.currency_id
-        tz = timezone(self.env.context.get("tz") or self.env.user.tz or "UTC")
         statistics = {
             "cash": {
                 "raw_opening_cash": session.cash_register_balance_start,
@@ -762,7 +817,9 @@ class PosConfig(models.Model):
             },
             "date": {
                 "is_started": bool(session.start_at),
-                "start_date": session.start_at.astimezone(tz).strftime("%b %d")
+                "start_date": fields.Datetime.context_timestamp(
+                    self, session.start_at
+                ).strftime("%b %d")
                 if session.start_at
                 else False,
             },
@@ -787,13 +844,14 @@ class PosConfig(models.Model):
         paid_order_count = sum(
             1
             for order in non_refund_orders
-            if currency.compare_amounts(
+            if order.id not in refund_totals
+            or currency.compare_amounts(
                 refund_totals.get(order.id, 0.0), order.amount_total
             )
         )
 
-        if paid_order_count:
-            total_paid = currency.round(sum(all_paid_orders.mapped("amount_total")))
+        total_paid = currency.round(sum(all_paid_orders.mapped("amount_total")))
+        if paid_order_count or not currency.is_zero(total_paid):
             statistics["orders"]["paid"] = self._prepare_order_statistics(
                 currency, total_paid, paid_order_count
             )
@@ -818,9 +876,13 @@ class PosConfig(models.Model):
             ),
         }
 
-    @api.depends("session_ids")
+    @api.depends_context("tz", "uid")
+    @api.depends(
+        "session_ids.state",
+        "session_ids.stop_at",
+        "session_ids.cash_register_balance_end_real",
+    )
     def _compute_last_session(self):
-        tz = self.env.tz
         last_by_config = {}
         for group in self.env["pos.session"]._read_group(
             [
@@ -842,24 +904,33 @@ class PosConfig(models.Model):
         )
         balance_by_config = {
             session.config_id.id: session.cash_register_balance_end_real
-            for session in sessions.sorted("stop_at")
+            for session in sessions.sorted(
+                lambda session: (session.stop_at, session.id)
+            )
             if session.stop_at == last_by_config.get(session.config_id.id)
         }
 
         for pos_config in self:
             stop_at = last_by_config.get(pos_config.id)
             pos_config.last_session_closing_date = (
-                stop_at.astimezone(tz).date() if stop_at else False
+                fields.Datetime.context_timestamp(pos_config, stop_at).date()
+                if stop_at
+                else False
             )
             pos_config.last_session_closing_cash = balance_by_config.get(
                 pos_config.id, 0
             )
 
-    @api.depends("session_ids", "session_ids.state")
+    @api.depends(
+        "current_session_id",
+        "session_ids.state",
+        "session_ids.start_at",
+        "session_ids.user_id.name",
+    )
     def _compute_current_session_user(self):
         now = fields.Datetime.now()
         for pos_config in self:
-            session = pos_config._get_current_session()
+            session = pos_config.current_session_id
             pos_config.pos_session_username = session.user_id.sudo().name or False
             pos_config.pos_session_state = session.state or False
             pos_config.pos_session_duration = str(
@@ -984,7 +1055,7 @@ class PosConfig(models.Model):
                 )
             )
 
-    @api.constrains("pricelist_id", "available_pricelist_ids")
+    @api.constrains("company_id", "pricelist_id", "available_pricelist_ids")
     def _check_pricelists(self):
         for config in self.sudo():
             if (
@@ -1040,10 +1111,21 @@ class PosConfig(models.Model):
                         )
                     )
 
-    @api.constrains("trusted_config_ids")
-    def _check_trusted_config_ids_currency(self):
+    @api.constrains("trusted_config_ids", "company_id", "journal_id")
+    def _check_trusted_config_ids(self):
+        configs = self.sudo().with_context(active_test=False)
+        configs |= configs.search([("trusted_config_ids", "in", self.ids)])
+        configs._validate_trusted_configs()
+
+    def _validate_trusted_configs(self):
         for config in self:
             for trusted_config in config.trusted_config_ids:
+                if trusted_config.company_id != config.company_id:
+                    raise ValidationError(
+                        _(
+                            "You can only share open orders with configurations in the same company."
+                        )
+                    )
                 if trusted_config.currency_id != config.currency_id:
                     raise ValidationError(
                         _(
@@ -1185,13 +1267,12 @@ class PosConfig(models.Model):
         sequence = (
             self.env["ir.sequence"]
             .sudo()
-            .with_context(company_id=self.company_id.id)
             .search(
                 [
                     ("code", "=", "pos.session"),
                     ("company_id", "in", [self.company_id.id, False]),
                 ],
-                order="company_id",
+                order="company_id, id",
                 limit=1,
             )
         )
@@ -1199,7 +1280,14 @@ class PosConfig(models.Model):
             dbg.logic.debug("[config:%s] no pos.session sequence: name '/'", self.id)
             return "/"
         prefix = self.name if sequence.prefix == "/" else ""
-        return f"{prefix}{sequence.next_by_code('pos.session')}"
+        dbg.logic.debug(
+            "[config:%s] session sequence=%s company=%s active_company=%s",
+            self.id,
+            sequence.id,
+            self.company_id.id,
+            self.env.company.id,
+        )
+        return f"{prefix}{sequence.next_by_id()}"
 
     def register_new_device_identifier(self):
         self.check_singleton()
@@ -1216,15 +1304,31 @@ class PosConfig(models.Model):
             and "iface_tipproduct" in vals
             and vals["iface_tipproduct"]
         ):
-            default_product = self.env.ref("point_of_sale.product_product_tip", False)
-            if default_product:
-                vals["tip_product_id"] = default_product.id
-            else:
+            companies = (
+                self.env["res.company"].browse(vals.get("company_id"))
+                or self.company_id
+                or self.env.company
+            )
+            defaults = {
+                company: self.with_company(company)._default_tip_product_id()
+                for company in companies
+            }
+            if not all(defaults.values()):
                 raise UserError(
                     _(
                         "The default tip product is missing. Please manually specify the tip product. (See Tips field.)"
                     )
                 )
+            product_ids = {product.id for product in defaults.values()}
+            if len(product_ids) == 1:
+                vals["tip_product_id"] = product_ids.pop()
+            else:
+                vals.pop("tip_product_id")
+                return [
+                    (configs, defaults[company])
+                    for company, configs in self.grouped("company_id").items()
+                ]
+        return []
 
     def _update_preparation_printers_menuitem_visibility(self):
         prepa_printers_menuitem = self.sudo().env.ref(
@@ -1234,7 +1338,9 @@ class PosConfig(models.Model):
             prepa_printers_menuitem.active = (
                 self.sudo()
                 .env["pos.config"]
-                .search_count([("is_order_printer", "=", True)], limit=1)
+                .search_count(
+                    [("is_order_printer", "=", True), ("active", "=", True)], limit=1
+                )
                 > 0
             )
 
@@ -1263,48 +1369,16 @@ class PosConfig(models.Model):
             bool(self.env.context.get("from_settings_view")),
         )
         self._check_header_footer(vals)
-        self._update_vals_default_tip_product(vals)
+        tip_updates = self._update_vals_default_tip_product(vals)
         if "is_order_printer" in vals and not vals["is_order_printer"]:
             vals["printer_ids"] = [fields.Command.clear()]
 
-        bypass_payment_method_ids_forbidden_change = self.env.context.get(
-            "bypass_payment_method_ids_forbidden_change", False
-        )
-
         self._update_vals_x2many_from_settings_view(vals)
         vals = self._prepare_vals_changed(vals)
-        opened_session = self.mapped("session_ids").filtered(
-            lambda s: s.state != "closed"
-        )
-        if opened_session:
-            dbg.logic.debug(
-                "pos.config.write: open sessions %s, forbidden keys present=%s"
-                " bypass=%s",
-                dbg.rec(opened_session),
-                sorted(set(vals) & set(self._get_fields_forbidden_change())),
-                bypass_payment_method_ids_forbidden_change,
-            )
-            forbidden_fields = []
-            for key in self._get_fields_forbidden_change():
-                if key in vals:
-                    if (
-                        bypass_payment_method_ids_forbidden_change
-                        and key == "payment_method_ids"
-                    ):
-                        continue
-                    if key == "active" and vals["active"]:
-                        continue
-                    field_name = self._fields[key].get_description(self.env)["string"]
-                    forbidden_fields.append(field_name)
+        self._check_session_forbidden_changes(vals)
 
-            if len(forbidden_fields) > 0:
-                raise UserError(
-                    _(
-                        "Unable to modify this PoS Configuration because you can't modify %s while a session is open.",
-                        ", ".join(forbidden_fields),
-                    )
-                )
-
+        for configs, product in tip_updates:
+            configs.write({"tip_product_id": product.id})
         result = super().write(vals)
 
         for config in self:
@@ -1328,9 +1402,42 @@ class PosConfig(models.Model):
                 sorted(k for k in vals if k.startswith(("module_", "group_"))),
             )
             self.sudo()._install_missing_modules()
-        if "is_order_printer" in vals:
+        if {"is_order_printer", "active"} & vals.keys():
             self._update_preparation_printers_menuitem_visibility()
         return result
+
+    @dbg.timed
+    def _check_session_forbidden_changes(self, vals):
+        forbidden_keys = [
+            key for key in self._get_fields_forbidden_change() if key in vals
+        ]
+        if self.env.context.get("bypass_payment_method_ids_forbidden_change"):
+            forbidden_keys = [
+                key for key in forbidden_keys if key != "payment_method_ids"
+            ]
+        if vals.get("active"):
+            forbidden_keys = [key for key in forbidden_keys if key != "active"]
+        if not forbidden_keys:
+            return
+        opened_session = self.env["pos.session"].search(
+            [("config_id", "in", self.ids), ("state", "!=", "closed")], limit=1
+        )
+        if opened_session:
+            dbg.logic.debug(
+                "pos.config.write: open session %s prevents changing %s",
+                dbg.rec(opened_session),
+                forbidden_keys,
+            )
+            forbidden_fields = [
+                self._fields[key].get_description(self.env)["string"]
+                for key in forbidden_keys
+            ]
+            raise UserError(
+                _(
+                    "Unable to modify this PoS Configuration because you can't modify %s while a session is open.",
+                    ", ".join(forbidden_fields),
+                )
+            )
 
     def _update_vals_x2many_from_settings_view(self, vals):
         from_settings_view = self.env.context.get("from_settings_view")
@@ -1342,14 +1449,20 @@ class PosConfig(models.Model):
         for x2many_field in list(vals):
             field = self._fields.get(x2many_field)
             if field and field.type in ("many2many", "one2many"):
+                commands = vals[x2many_field]
+                if any(
+                    command[0] not in (Command.LINK, Command.CREATE)
+                    for command in commands
+                ):
+                    continue
                 linked_ids = set(self[x2many_field].ids)
 
-                for command in vals[x2many_field]:
-                    if command[0] == 4:
+                for command in commands:
+                    if command[0] == Command.LINK:
                         _id = command[1]
                         linked_ids.discard(_id)
 
-                unlink_commands = [Command.unlink(_id) for _id in linked_ids]
+                unlink_commands = [Command.unlink(_id) for _id in sorted(linked_ids)]
 
                 vals[x2many_field] = unlink_commands + vals[x2many_field]
 
@@ -1361,6 +1474,14 @@ class PosConfig(models.Model):
         for field, val in vals.items():
             config_field = self._fields.get(field)
             if config_field:
+                if config_field.type in ("many2many", "one2many") and any(
+                    isinstance(command, (tuple, list))
+                    and command[0] in (Command.CREATE, Command.UPDATE, Command.DELETE)
+                    for command in val
+                ):
+                    # UPDATE conversion writes records; defer it until after validation.
+                    new_vals[field] = val
+                    continue
                 cache_value = config_field.convert_to_cache(val, self)
                 record_value = config_field.convert_to_record(cache_value, self)
                 if record_value != self[field]:
@@ -1387,6 +1508,7 @@ class PosConfig(models.Model):
         )
         res = super().unlink()
         sequences_to_delete.sudo().unlink()
+        self._update_preparation_printers_menuitem_visibility()
         return res
 
     def _update_fiscal_position_ids(self, vals):
@@ -1650,28 +1772,45 @@ class PosConfig(models.Model):
             "company_id": self.env.company.id,
             **cash_journal_vals,
         }
-
-        default_cash_account = (
-            self.env["account.account"]
-            .with_context(lang="en_US")
-            .search(
-                [
-                    ("account_type", "=", "asset_cash"),
-                    ("name", "=", "Cash"),
-                    ("company_ids", "in", self.env.company.root_id.id),
-                ],
-                limit=1,
+        if (
+            journal_vals["type"] != "cash"
+            or journal_vals["company_id"] != self.env.company.id
+        ):
+            raise UserError(
+                _("Cash provisioning requires a cash journal in the current company.")
             )
-        )
+        company = self.env.company
+        for journal_field, company_field in (
+            ("profit_account_id", "default_cash_difference_income_account_id"),
+            ("loss_account_id", "default_cash_difference_expense_account_id"),
+        ):
+            account = (
+                company[company_field] | company.root_id[company_field]
+            ).filtered("active")[:1]
+            journal_vals.setdefault(journal_field, account.id)
 
-        if default_cash_account:
-            journal_vals["default_account_id"] = default_cash_account.id
+        if "default_account_id" not in journal_vals:
+            default_cash_account = (
+                self.env["account.account"]
+                .with_context(lang="en_US")
+                .search(
+                    [
+                        ("account_type", "=", "asset_cash"),
+                        ("active", "=", True),
+                        ("name", "=", "Cash"),
+                        ("company_ids", "in", self.env.company.root_id.id),
+                    ],
+                    limit=1,
+                )
+            )
 
+            if default_cash_account:
+                journal_vals["default_account_id"] = default_cash_account.id
         cash_journal = self.env["account.journal"].create(journal_vals)
         dbg.lifecycle.debug(
             "cash journal %s created (default account %s)",
             dbg.rec(cash_journal),
-            dbg.rec(default_cash_account),
+            dbg.rec(cash_journal.default_account_id),
         )
         return self.env["pos.payment.method"].create(
             {
@@ -1684,14 +1823,29 @@ class PosConfig(models.Model):
     def _create_journal_and_payment_methods(
         self, cash_ref=None, cash_journal_vals=None
     ):
-
+        if cash_ref:
+            cash_ref = self._get_suffixed_ref_name(cash_ref)
         journal = self.env["account.journal"]._get_or_create_company_account_journal()
         payment_methods = self.env["pos.payment.method"]
 
         cash_pm_from_ref = cash_ref and self.env.ref(cash_ref, raise_if_not_found=False)
         if cash_pm_from_ref:
+            if cash_pm_from_ref._name != "pos.payment.method":
+                raise UserError(_("The cash reference must identify a payment method."))
             try:
                 cash_pm_from_ref.check_access("read")
+                if cash_pm_from_ref.company_id != self.env.company:
+                    raise UserError(
+                        _(
+                            "The referenced cash payment method must belong to the current company."
+                        )
+                    )
+                if not cash_pm_from_ref.active or not cash_pm_from_ref.is_cash_count:
+                    raise UserError(
+                        _(
+                            "The cash reference must identify an active cash payment method."
+                        )
+                    )
                 cash_pm = cash_pm_from_ref
             except AccessError:
                 dbg.logic.debug(
@@ -1723,13 +1877,15 @@ class PosConfig(models.Model):
         bank_pm = self.env["pos.payment.method"].search(
             [
                 ("journal_id.type", "=", "bank"),
-                ("company_id", "in", self.env.company.parent_ids.ids),
+                ("company_id", "=", self.env.company.id),
+                ("active", "=", True),
             ]
         )
         if not bank_pm:
             bank_journal = self.env["account.journal"].search(
                 [
                     ("type", "=", "bank"),
+                    ("active", "=", True),
                     ("company_id", "in", self.env.company.parent_ids.ids),
                 ],
                 limit=1,
@@ -1766,7 +1922,9 @@ class PosConfig(models.Model):
         pay_later_pm = self.env["pos.payment.method"].search(
             [
                 ("journal_id", "=", False),
-                ("company_id", "in", self.env.company.parent_ids.ids),
+                ("company_id", "=", self.env.company.id),
+                ("active", "=", True),
+                ("split_transactions", "=", True),
             ]
         )
         if not pay_later_pm:

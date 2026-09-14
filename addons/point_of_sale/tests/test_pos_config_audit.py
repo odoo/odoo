@@ -1,4 +1,9 @@
-from odoo.exceptions import ValidationError
+import os
+import time
+from unittest.mock import patch
+
+from odoo import Command, fields
+from odoo.exceptions import UserError, ValidationError
 from odoo.service.model import call_kw
 from odoo.tests import tagged
 
@@ -11,6 +16,186 @@ class TestPosConfigAudit(TestPoSCommon):
     def setUpClass(cls):
         super().setUpClass()
         cls.config = cls.basic_config
+
+    def test_pricelist_is_rechecked_when_only_its_company_changes(self):
+        self.config.pricelist_id.company_id = self.config.company_id
+        company = self.env["res.company"].create({"name": "Pricelist destination"})
+        self.config.write(
+            {
+                "journal_id": False,
+                "invoice_journal_id": False,
+                "payment_method_ids": [Command.clear()],
+                "available_pricelist_ids": [Command.clear()],
+            }
+        )
+
+        with self.assertRaisesRegex(ValidationError, "default pricelist must belong"):
+            self.config.write({"company_id": company.id})
+
+    def test_printer_menu_tracks_archiving_and_deletion(self):
+        self.env["pos.config"].search([]).write({"is_order_printer": False})
+        menu = self.env.ref("point_of_sale.menu_pos_preparation_printer")
+        for action in ("archive", "unlink"):
+            with self.subTest(action=action):
+                config = self.config.copy({"name": action, "is_order_printer": True})
+                self.assertTrue(menu.active)
+
+                if action == "archive":
+                    config.with_context(active_test=False).action_archive()
+                else:
+                    config.unlink()
+
+                self.assertFalse(menu.active)
+
+    def test_open_and_rescue_sessions_prevent_archiving(self):
+        session = self.env["pos.session"].create({"config_id": self.config.id})
+        for rescue in (False, True):
+            session.rescue = rescue
+            with self.subTest(rescue=rescue), self.assertRaises(UserError):
+                self.config.active = False
+
+        self.config.write({"name": "Editable while open", "active": True})
+        self.assertEqual(self.config.name, "Editable while open")
+
+    def test_branch_payment_methods_belong_to_the_branch(self):
+        branch = self.env["res.company"].create(
+            {
+                "name": "POS branch",
+                "parent_id": self.config.company_id.id,
+            }
+        )
+
+        branch_config = self.config.with_context(
+            allowed_company_ids=[branch.id, self.config.company_id.id]
+        )
+        self.assertIn(self.bank_pm1, branch_config.env["pos.payment.method"].search([]))
+        _journal, method_ids = branch_config._create_journal_and_payment_methods()
+
+        methods = self.env["pos.payment.method"].browse(method_ids)
+        self.assertEqual(set(methods.mapped("type")), {"cash", "bank", "pay_later"})
+        self.assertEqual(methods.company_id, branch)
+
+    def test_dates_do_not_depend_on_the_server_timezone(self):
+        config = self.config.with_context(tz="UTC")
+        session = self.env["pos.session"].create({"config_id": config.id})
+        instant = fields.Datetime.to_datetime("2026-01-01 02:00:00")
+        session.write({"start_at": instant, "stop_at": instant, "state": "closed"})
+
+        try:
+            with (
+                patch.dict(os.environ, {"TZ": "Pacific/Kiritimati"}),
+                patch.object(fields.Datetime, "now", return_value=instant),
+            ):
+                time.tzset()
+                reference, _tracking = config._get_next_order_refs()
+                self.assertTrue(reference.startswith("26"), reference)
+                self.assertEqual(config.last_session_closing_date, instant.date())
+                self.assertEqual(
+                    config._get_statistics_for_session(session)["date"]["start_date"],
+                    "Jan 01",
+                )
+                self.assertEqual(
+                    config.with_context(
+                        tz="Pacific/Honolulu"
+                    ).last_session_closing_date,
+                    fields.Date.to_date("2025-12-31"),
+                )
+        finally:
+            time.tzset()
+
+    def test_session_name_uses_the_config_company_sequence(self):
+        other_company = self.env["res.company"].create({"name": "Active company"})
+        sequence = (
+            self.env["ir.sequence"]
+            .sudo()
+            .create(
+                {
+                    "name": "Config company sessions",
+                    "code": "pos.session",
+                    "company_id": self.config.company_id.id,
+                    "prefix": "CONFIG/",
+                    "padding": 3,
+                }
+            )
+        )
+        self.env["ir.sequence"].sudo().create(
+            {
+                "name": "Other company sessions",
+                "code": "pos.session",
+                "company_id": other_company.id,
+                "prefix": "OTHER/",
+            }
+        )
+
+        name = self.config.with_company(other_company)._get_next_session_name()
+
+        self.assertEqual(name, "CONFIG/001")
+        self.assertEqual(sequence.number_next_actual, 2)
+
+    def test_closing_a_session_refreshes_cached_last_session(self):
+        session = self.env["pos.session"].create({"config_id": self.config.id})
+        self.assertFalse(self.config.last_session_closing_date)
+        self.assertEqual(self.config.last_session_closing_cash, 0)
+
+        session.write(
+            {
+                "state": "closed",
+                "stop_at": fields.Datetime.to_datetime("2026-09-10 12:00:00"),
+                "cash_register_balance_end_real": 42,
+            }
+        )
+
+        self.assertEqual(self.config.last_session_closing_cash, 42)
+        self.assertEqual(
+            self.config.last_session_closing_date,
+            session.stop_at.astimezone(self.env.tz).date(),
+        )
+
+    def test_rescue_change_refreshes_current_session_user(self):
+        session = self.env["pos.session"].create({"config_id": self.config.id})
+        self.assertEqual(self.config.current_user_id, session.user_id)
+
+        session.rescue = True
+
+        self.assertFalse(self.config.current_user_id)
+        self.assertFalse(self.config.statistics_for_current_session)
+
+    def test_opening_balance_refreshes_cached_statistics(self):
+        session = self.env["pos.session"].create({"config_id": self.config.id})
+        self.assertEqual(
+            self.config.statistics_for_current_session["cash"]["raw_opening_cash"], 0
+        )
+
+        session.cash_register_balance_start = 42
+
+        self.assertEqual(
+            self.config.statistics_for_current_session["cash"]["raw_opening_cash"], 42
+        )
+
+
+    def test_settings_keeps_updates_to_linked_records(self):
+        note = self.env["pos.note"].create({"name": "Before"})
+        self.config.note_ids = note
+        values = {
+            "note_ids": [
+                Command.link(note.id),
+                Command.update(note.id, {"name": "After"}),
+            ],
+        }
+
+        changed = self.config.with_context(
+            from_settings_view=True
+        )._prepare_vals_changed(values)
+        self.assertEqual(
+            note.name, "Before", "comparison must not write related records"
+        )
+        self.assertEqual(changed, values)
+
+        self.config.with_context(from_settings_view=True).write(values)
+
+        note.invalidate_recordset()
+        self.assertEqual(note.name, "After")
+        self.assertEqual(self.config.note_ids, note)
 
     def test_last_session_survives_a_closed_session_without_stop_at(self):
         session = self.env["pos.session"].create(

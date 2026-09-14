@@ -668,6 +668,9 @@ class PosSession(models.Model):
             config_ids,
             dbg.vals_keys(vals_list),
         )
+        # The partial unique index must see pending closes before inserting a new session.
+        with dbg.timer(self.env, "flush session uniqueness fields before create"):
+            self.flush_model(["config_id", "state", "rescue"])
         if self.env.user.has_group("point_of_sale.group_pos_user"):
             sessions = super(PosSession, self.sudo()).create(vals_list)
         else:
