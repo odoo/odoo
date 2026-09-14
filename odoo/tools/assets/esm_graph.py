@@ -141,8 +141,8 @@ _IMPORT_ANY_RE = re.compile(
     r"|\s+(?P<mixed>\w+\s*,\s*(?:\{[^}]+\}|\*\s*as\s+\w+))\s*"
     r"|\s+(?P<default>\w+)\s+"
     r")from\s*"
-    r"""["'](?P<spec>@[^"']+)["']"""
-    r"""|import\s*["'](?P<side>@[^"']+)["']"""
+    r"""["'](?P<spec>[^"']+)["']"""
+    r"""|import\s*["'](?P<side>[^"']+)["']"""
 )
 
 _TRANSITIVE_IMPORT_RE = re.compile(

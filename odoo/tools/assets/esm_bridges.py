@@ -459,9 +459,10 @@ def _static_edges(src: str) -> list[tuple[str, str | None]]:
         else:
             edges.append((specifier, None))
     for match in _REEXPORT_ANY_RE.finditer(src):
-        if match.group("star"):
+        names = match.group("names")
+        if names is None:
             kind = "__star__"
-        elif re.search(r"\bdefault\b", match.group("names") or ""):
+        elif re.search(r"\bdefault\b", names):
             kind = "__default__"
         else:
             kind = None

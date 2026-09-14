@@ -85,3 +85,58 @@ class TestSpecifierUrlIndexFallback(unittest.TestCase):
             ),
             "/web/static/lib/x.js",
         )
+
+
+class TestStaticEdgesRegexFallbackParity(unittest.TestCase):
+    # With the es-module-lexer worker unavailable (no node, non-posix, or
+    # disabled after repeated failures) the regex extractors are the only
+    # path. They must see every edge the lexer sees, or the transitive reach
+    # walk misses page modules reached through relative imports and esbuild
+    # inlines them a second time.
+    SRC = (
+        'import { helper } from "./sibling";\n'
+        'import util from "../util/thing";\n'
+        'import "./side_effect";\n'
+        'export { reexported } from "./reexp";\n'
+        'export { default as Renamed } from "./def";\n'
+        'export * from "./everything";\n'
+        'export * as ns from "./nsmod";\n'
+        'import { widget } from "@web/core/widget";\n'
+        'import "@mail/side/patch";\n'
+    )
+    EXPECTED = {
+        ("@web/core/sibling", None),
+        ("@web/util/thing", "__default__"),
+        ("@web/core/side_effect", None),
+        ("@web/core/reexp", None),
+        ("@web/core/def", "__default__"),
+        ("@web/core/everything", "__star__"),
+        ("@web/core/nsmod", "__star__"),
+        ("@web/core/widget", None),
+        ("@mail/side/patch", None),
+    }
+
+    def _lexed_without_worker(self):
+        from unittest.mock import patch
+
+        from odoo.tools.assets import esm_bridges, esm_graph
+
+        with (
+            patch.object(esm_bridges, "lex_module", return_value=None),
+            patch.object(esm_graph, "lex_module", return_value=None),
+        ):
+            return set(
+                _lexed_imports(
+                    self.SRC,
+                    base_spec="@web/core/foo",
+                    base_url="/web/static/src/core/foo.js",
+                )
+            )
+
+    def test_relative_and_reexport_edges_survive_the_regex_fallback(self):
+        self.assertEqual(self._lexed_without_worker(), self.EXPECTED)
+
+    def test_a_named_reexport_is_not_a_star_reexport(self):
+        edges = self._lexed_without_worker()
+        self.assertIn(("@web/core/reexp", None), edges)
+        self.assertNotIn(("@web/core/reexp", "__star__"), edges)
