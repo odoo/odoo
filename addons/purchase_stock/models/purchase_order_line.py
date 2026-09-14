@@ -207,13 +207,18 @@ class PurchaseOrderLine(models.Model):
             return 0
         return 1
 
-    def _create_stock_moves(self, picking):
+    def _prepare_stock_moves_vals_list(self, picking):
         values = []
-
         for line in self.filtered(lambda l: not l.display_type):
             values.extend(line._prepare_stock_move_vals_list(picking))
+        return values
 
-        return self.env["stock.move"].with_user(SUPERUSER_ID).create(values)
+    def _create_stock_moves(self, picking):
+        return (
+            self.env["stock.move"]
+            .with_user(SUPERUSER_ID)
+            .create(self._prepare_stock_moves_vals_list(picking))
+        )
 
     def _get_candidate(
         self,

@@ -379,33 +379,55 @@ class PurchaseOrder(models.Model):
         self.reference_ids |= reference
 
     def _create_picking(self):
-        StockPicking = self.env["stock.picking"]
-        for order in self.filtered(lambda po: po.state == "done"):
-            if any(product.type == "consu" for product in order.line_ids.product_id):
-                order_in_company = order.with_company(order.company_id)
-                pickings = order_in_company.picking_ids.filtered(
+        # the orders confirmed together get their pickings, moves, confirmation
+        # and reservation in batches per company; the chatter link stays per
+        # picking
+        StockPicking = self.env["stock.picking"].with_user(SUPERUSER_ID)
+        orders = self.filtered(
+            lambda po: (
+                po.state == "done"
+                and any(product.type == "consu" for product in po.line_ids.product_id)
+            )
+        )
+        for company, company_orders in orders.grouped("company_id").items():
+            company_orders = company_orders.with_company(company)
+            picking_by_order = {}
+            without_picking = company_orders.browse()
+            for order in company_orders:
+                pickings = order.picking_ids.filtered(
                     lambda x: x.state not in ("done", "cancel"),
                 )
-                if not pickings:
-                    order_in_company._add_missing_reference()
-                    res = order_in_company._prepare_picking_vals()
-                    picking = StockPicking.with_user(SUPERUSER_ID).create(res)
-                    pickings = picking
+                if pickings:
+                    picking_by_order[order.id] = pickings[0]
                 else:
-                    picking = pickings[0]
-                moves = order_in_company.line_ids._create_stock_moves(picking)
-                moves = moves.filtered(
-                    lambda x: x.state not in ("done", "cancel"),
-                )._action_confirm()
+                    without_picking |= order
+            if without_picking:
+                without_picking._add_missing_references()
+                created = StockPicking.create(
+                    [order._prepare_picking_vals() for order in without_picking]
+                )
+                for order, picking in zip(without_picking, created, strict=True):
+                    picking_by_order[order.id] = picking
+            move_vals = []
+            for order in company_orders:
+                move_vals += order.line_ids._prepare_stock_moves_vals_list(
+                    picking_by_order[order.id]
+                )
+            moves = self.env["stock.move"].with_user(SUPERUSER_ID).create(move_vals)
+            moves = moves.filtered(
+                lambda x: x.state not in ("done", "cancel"),
+            )._action_confirm()
+            for picking_moves in moves.grouped("picking_id").values():
                 for seq, move in enumerate(
-                    moves.sorted(lambda move: move.date), start=1
+                    picking_moves.sorted(lambda move: move.date), start=1
                 ):
                     move.sequence = seq * 5
-                moves._action_assign()
-                forward_pickings = self.env["stock.picking"]._get_impacted_pickings(
-                    moves,
-                )
-                (pickings | forward_pickings).action_confirm()
+            moves._action_assign()
+            pickings = self.env["stock.picking"].union(*picking_by_order.values())
+            forward_pickings = self.env["stock.picking"]._get_impacted_pickings(moves)
+            (pickings | forward_pickings).action_confirm()
+            for order in company_orders:
+                picking = picking_by_order[order.id]
                 picking.message_post_with_source(
                     "mail.message_origin_link",
                     render_values={"self": picking, "origin": order},
@@ -582,10 +604,19 @@ class PurchaseOrder(models.Model):
         return invoice_vals
 
     def _add_missing_reference(self):
-        if not self.reference_ids:
-            self.reference_ids = self.reference_ids.sudo().create(
-                self._prepare_reference_vals(),
-            )
+        self._add_missing_references()
+
+    def _add_missing_references(self):
+        missing = self.filtered(lambda order: not order.reference_ids)
+        if not missing:
+            return
+        references = (
+            self.env["stock.reference"]
+            .sudo()
+            .create([order._prepare_reference_vals() for order in missing])
+        )
+        for order, reference in zip(missing, references, strict=True):
+            order.reference_ids = reference
 
     def _prepare_picking_vals(self):
         if not self.partner_id.property_stock_supplier.id:
