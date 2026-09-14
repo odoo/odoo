@@ -5,12 +5,14 @@ from odoo.http import Controller, request, route
 
 class ProductCatalogController(Controller):
     @staticmethod
-    def _get_order(res_model, order_id):
+    def _get_order(res_model, order_id, allow_unsaved=False):
         env = request.env
         if res_model not in env.registry or not isinstance(
             env[res_model], env.registry["mixin.product.catalog"]
         ):
             raise UserError(_("The product catalog cannot be used on this model."))
+        if allow_unsaved and not order_id:
+            return env[res_model]
         try:
             order_id = int(order_id)
         except ValueError, TypeError:
@@ -26,7 +28,7 @@ class ProductCatalogController(Controller):
     def product_catalog_get_order_lines_info(
         self, res_model, order_id, product_ids, **kwargs
     ):
-        order = self._get_order(res_model, order_id)
+        order = self._get_order(res_model, order_id, allow_unsaved=True)
         return order.with_company(
             order.company_id
         )._get_product_catalog_order_line_info(

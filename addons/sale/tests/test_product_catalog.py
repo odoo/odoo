@@ -49,6 +49,28 @@ class TestProductCatalog(HttpCase, SaleCommon):
         )
         return response.json()["result"]
 
+    def test_catalog_without_an_order_yet_lists_default_product_data(self):
+        catalog_data = self.request_get_order_lines_info(
+            products=self.products, order_id=False
+        )
+        for product in self.products:
+            self.assertEqual(catalog_data[str(product.id)]["productType"], product.type)
+            self.assertEqual(catalog_data[str(product.id)]["quantity"], 0)
+
+    def test_catalog_refuses_an_order_that_does_not_exist(self):
+        response = self.opener.post(
+            url=self.base_url + "/product/catalog/order_lines_info",
+            json={
+                "params": {
+                    "res_model": self.res_model,
+                    "order_id": self.empty_order.search([], order="id desc", limit=1).id
+                    + 1000,
+                    "product_ids": self.products.ids,
+                },
+            },
+        )
+        self.assertIn("does not exist", response.json()["error"]["data"]["message"])
+
     def _get_default_catalog_data(self, product):
         return {
             "quantity": 0,
