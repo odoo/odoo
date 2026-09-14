@@ -1,16 +1,24 @@
+import unittest
 from datetime import timedelta
 
 from odoo import Command
 from odoo.tests import Form
 
 from odoo.addons.stock.models.stock_rule import StockRule
-from odoo.addons.stock.tests.common import TestStockCommon
+from odoo.addons.stock.tests.common import (
+    RECEPTION_ROUTE_BOUGHT,
+    TestStockCommon,
+    is_module_installed,
+)
 
 
 class TestOldRules(TestStockCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        # the three-step reception route's third rule is the pull from Vendors
+        if is_module_installed(cls.env, "purchase_stock"):
+            raise unittest.SkipTest(RECEPTION_ROUTE_BOUGHT)
         cls.partner = cls.env["res.partner"].create({"name": "Partner"})
 
         cls.warehouse_3_steps = cls.env["stock.warehouse"].create(
