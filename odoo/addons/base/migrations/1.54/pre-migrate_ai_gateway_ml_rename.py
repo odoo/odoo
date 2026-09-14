@@ -16,9 +16,16 @@ def _rename_module(cr, old, new):
     cr.execute("UPDATE ir_model_data SET module = %s WHERE module = %s", [new, old])
     cr.execute(
         "DELETE FROM ir_module_module WHERE name = %s AND state = 'uninstalled'"
-        " AND EXISTS (SELECT 1 FROM ir_module_module WHERE name = %s)",
+        " AND EXISTS (SELECT 1 FROM ir_module_module WHERE name = %s)"
+        " RETURNING id",
         [new, old],
     )
+    if dissolved_ids := [row[0] for row in cr.fetchall()]:
+        cr.execute(
+            "DELETE FROM ir_model_data WHERE model = 'ir.module.module'"
+            " AND res_id = ANY(%s)",
+            [dissolved_ids],
+        )
     cr.execute("UPDATE ir_module_module SET name = %s WHERE name = %s", [new, old])
     for table in ("ir_module_module_dependency", "ir_module_module_exclusion"):
         if schema.table_exists(cr, table):
