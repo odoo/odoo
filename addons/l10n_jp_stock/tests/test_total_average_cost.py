@@ -395,6 +395,20 @@ class TestTotalAverageCost(TestTotalAverageCostCommon):
         self._run_category_wizard()
         self.assertAlmostEqual(self.product.standard_price, (100 * 100 + 10 * 90) / 110, places=2)
 
+    def test_return_nothing_priced_is_left_out_of_the_average(self):
+        # what the point of sale writes for a refund: no price, and no link to the sale
+        self._add_opening_stock()
+        self._create_move(10, 200, self.today, self.supplier_loc, self.stock_loc)
+        self._create_move(10, 0, self.today, self.customer_loc, self.stock_loc)
+        self._run_category_wizard()
+        expected = (100 * 100 + 10 * 200) / 110
+        self.assertAlmostEqual(self.product.standard_price, expected, places=2)
+        # taking it back in at the cost the period settles on is what leaving it out
+        # comes to, so a second run over the same period finds nothing left to move
+        action = self._run_category_wizard()
+        self.assertAlmostEqual(self.product.standard_price, expected, places=2)
+        self.assertEqual(action['params']['type'], 'info')
+
     def test_free_sample_receipt_at_zero(self):
         self._add_opening_stock()
         self._create_move(10, 0, self.today, self.supplier_loc, self.stock_loc)

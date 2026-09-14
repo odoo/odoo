@@ -158,7 +158,13 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                             returned = move._get_value_from_returns(qty)
                             purchases_val += returned['value']
                             if (remaining := qty - returned['quantity']) > 0:
-                                purchases_val += self._get_acquisition_value(move, remaining)
+                                if move.price_unit:
+                                    purchases_val += self._get_acquisition_value(move, remaining)
+                                else:
+                                    # nothing links it to the sale it undoes and nothing priced it,
+                                    # so leave it out of both, which is what taking it back in at
+                                    # the cost the period settles on would come to
+                                    purchases_qty -= remaining
                 opening_cost = opening_values[product].value if product in opening_values else product.standard_price
                 init_val = init_qty * opening_cost
                 tot_qty = init_qty + purchases_qty - returns_qty
