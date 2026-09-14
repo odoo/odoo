@@ -8,7 +8,7 @@ import { stringToOrderBy } from "@web/core/utils/order_by";
 import { combineModifiers } from "@web/model/relational_model";
 import { parseFieldNode } from "@web/views/field_arch";
 import { irToElement, literalNbsp } from "@web/views/ir/view_ir";
-import { ViewArchParser, visitIR } from "@web/views/view_arch_parser";
+import { irParents, ViewArchParser, visitIR } from "@web/views/view_arch_parser";
 import { processButton } from "@web/views/view_buttons";
 import { encodeObjectForTemplate } from "@web/views/view_compiler";
 import { getActiveActions } from "@web/views/view_utils";
@@ -80,8 +80,8 @@ export class ListArchParser extends ViewArchParser {
     static consumes = "ir";
 
     /**
-     * The parent of every node the last `parse()` visited — what a subclass
-     * that locates a node in the arch (web studio's xpath) reads.
+     * The parent of every node of the tree the last `parse()` walked — what
+     * a subclass that locates a node in the arch (web studio's xpath) reads.
      * @type {Map<ViewIRNode, ViewIRNode | null>}
      */
     parents = new Map();
@@ -415,11 +415,8 @@ export class ListArchParser extends ViewArchParser {
     parse(arch, models, modelName) {
         const ir = deepCopy(this.toIR(arch));
         const state = this.newParseState(ir, models, modelName);
-        this.parents = new Map();
-        visitIR(ir, (node, parent) => {
-            this.parents.set(node, parent);
-            return this.visitNode(node, state);
-        });
+        this.parents = irParents(ir);
+        visitIR(ir, (node) => this.visitNode(node, state));
 
         const { treeAttr, handleField } = state;
         if (!treeAttr.defaultOrder.length && handleField) {

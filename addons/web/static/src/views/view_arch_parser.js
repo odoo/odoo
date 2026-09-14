@@ -103,6 +103,23 @@ function childNodes(node) {
     return "kind" in node ? node.children || [] : [...node.children];
 }
 
+/**
+ * The parent of every node in an IR tree — what a subclass that must locate
+ * a node in the arch (web studio's xpath) reads, header and control children
+ * included, which the parsing walk itself never descends into.
+ *
+ * @param {ViewIRNode} ir
+ * @returns {Map<ViewIRNode, ViewIRNode | null>}
+ */
+export function irParents(ir) {
+    /** @type {Map<ViewIRNode, ViewIRNode | null>} */
+    const parents = new Map();
+    visitIR(ir, (node, parent) => {
+        parents.set(node, parent);
+    });
+    return parents;
+}
+
 export class ViewArchParser {
     /**
      * What `parse()` takes: the arch `Element` (default) or the view IR node

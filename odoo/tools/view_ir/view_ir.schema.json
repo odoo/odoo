@@ -7739,6 +7739,10 @@
            "false"
           ]
          },
+         "count_limit": {
+          "type": "string",
+          "pattern": "^-?[0-9]+$"
+         },
          "create": {
           "enum": [
            "1",
@@ -8076,6 +8080,10 @@
           "x-odoo-type": "json"
          },
          "field": {
+          "type": "string",
+          "x-odoo-type": "ident"
+         },
+         "sum_field": {
           "type": "string",
           "x-odoo-type": "ident"
          }

@@ -1356,6 +1356,7 @@ export interface KanbanKanbanAttrs {
     can_open?: string;
     class?: string;
     colspan?: string;
+    count_limit?: string;
     create?: string;
     default_group_by?: string;
     default_order?: string;
@@ -1424,6 +1425,7 @@ export interface KanbanProgressbarAttrs {
     role?: string;
     string?: string;
     style?: string;
+    sum_field?: string;
     title?: string;
     version?: string;
     [key: `aria-${string}`]: string;
