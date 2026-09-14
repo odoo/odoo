@@ -1,4 +1,5 @@
-import { Component, onMounted, onPatched, proxy, signal, t, useProps } from "@odoo/owl";
+import { Component, onMounted, onPatched, proxy, signal, t, usePlugin, useProps } from "@odoo/owl";
+import { UIPlugin } from "@web/core/ui/ui_plugin";
 
 export class SettingsApp extends Component {
     static template = "web.SettingsApp";
@@ -8,9 +9,11 @@ export class SettingsApp extends Component {
         key: t.string(),
         selectedTab: t.string().optional(),
         slots: t.object(),
+        tabId: t.string(),
     });
     settingsAppRef = signal.ref();
     setup() {
+        this.ui = usePlugin(UIPlugin);
         this.state = proxy({
             search: this.env.searchState,
         });
