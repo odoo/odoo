@@ -53,14 +53,14 @@ class TestRequest(common.TransactionCase):
             {
                 "user_id": self.approver_user_1.id,
                 "request_id": record.id,
-                "state": "new",
+                "flow_state": "new",
             }
         )
         second_approver = self.env["approval.approver"].create(
             {
                 "user_id": self.approver_user_2.id,
                 "request_id": record.id,
-                "state": "new",
+                "flow_state": "new",
             }
         )
         record.approver_ids = first_approver | second_approver
@@ -255,7 +255,7 @@ class TestRequest(common.TransactionCase):
             {
                 "user_id": self.approver_user_1.id,
                 "request_id": approval_request.id,
-                "state": "new",
+                "flow_state": "new",
             }
         )
         approval_request.action_confirm()
@@ -281,7 +281,7 @@ class TestRequestAuditRegressions(ApprovalCommon):
         ):
             request.action_confirm()
 
-        request.approver_ids.sudo().write({"state": "pending"})
+        request.approver_ids.sudo().write({"flow_state": "pending"})
         record_approval(request.approver_ids)
         request.invalidate_recordset(["state"])
         self.assertNotEqual(

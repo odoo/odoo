@@ -39,10 +39,7 @@ def new_trip_category(env, **values):
 
 
 def record_approval(rows):
-    for row in rows:
-        row.with_context(approval_decision=True).sudo().write(
-            {"state": "approved", "decided_step_ids": [(6, 0, row.step_ids.ids)]}
-        )
+    rows.sudo()._record_decision("approved")
 
 
 class ApprovalCommon(common.TransactionCase):

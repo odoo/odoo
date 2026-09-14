@@ -1,5 +1,6 @@
 from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import UserError
+from odoo.tools import SQL
 
 from . import approval_trace as trace
 
@@ -128,7 +129,14 @@ class ApprovalRequest(models.Model):
         return "superuser" if self.env.uid == SUPERUSER_ID else "self_elevated"
 
     def _append_decision_log(
-        self, verdict, rows=None, actor=None, steps_by_row=None, reason=None, note=None
+        self,
+        verdict,
+        rows=None,
+        actor=None,
+        steps_by_row=None,
+        reason=None,
+        note=None,
+        date=None,
     ) -> None:
         """Record one fact per row it concerns, or one for the request itself.
 
@@ -148,7 +156,6 @@ class ApprovalRequest(models.Model):
                     "approver_id": row.id if row is not None else False,
                     "step_ids": [(6, 0, steps.ids)] if steps else False,
                     "verdict": verdict,
-                    "state_after": self.state,
                     "user_id": acting.id,
                     "principal_id": principal.id
                     if principal and principal != acting
@@ -161,9 +168,19 @@ class ApprovalRequest(models.Model):
                     )
                     or False,
                     "note": note or (row.note if row is not None else False) or False,
+                    **({"date": date} if date else {}),
                 }
             )
-        self.env["approval.decision.log"].sudo().create(vals_list)
+        logs = self.env["approval.decision.log"].sudo().create(vals_list)
+        state_after = self.state
+        self.env.cr.execute(
+            SQL(
+                "UPDATE approval_decision_log SET state_after = %s WHERE id = ANY(%s)",
+                state_after,
+                logs.ids,
+            )
+        )
+        logs.invalidate_recordset(["state_after"])
         trace.DECISION.note(
             "logged",
             request=self.id,

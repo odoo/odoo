@@ -8,7 +8,7 @@
 |-------|---------------|--------|
 | 1. `ir.rule` (SQL) | Row-level filtering (read/write/create/unlink domains) | Sudo bypasses |
 | 2. Python CRUD access (`_check_access_*`) | WHO can perform the operation | Sudo or managers (the sync engine runs under sudo). Non-manager approvers may write only delegation and decision-note fields on their own row — never `state`/`sequence`/`required` |
-| 3. Python business rules (`_check_business_rules_*`, `_check_locked_fields`) | WHAT states allow the operation | Sudo-proof on the request: `_check_locked_fields` (`_LOCKED_FIELDS` half) and `_check_no_forged_computed_fields` bind everyone. On `approval.approver`, create and unlink are equally sudo-proof — their only exemption is `env.su` **plus** the `approver_ids_computation` context — but `_check_business_rules_write` returns early on `env.su` alone, because the workflow itself writes `state` and the decision stamps under sudo |
+| 3. Python business rules (`_check_business_rules_*`, `_check_locked_fields`) | WHAT states allow the operation | Sudo-proof on the request: `_check_locked_fields` (`_LOCKED_FIELDS` half) and `_check_no_forged_computed_fields` bind everyone. On `approval.approver`, create and unlink are equally sudo-proof — their only exemption is `env.su` **plus** the `approver_ids_computation` context — but `_check_business_rules_write` returns early on `env.su` alone, because the workflow itself writes `flow_state` and the decision stamps under sudo |
 
 ### Groups
 
@@ -251,12 +251,14 @@ class ApprovalRequest(models.Model):
 approver.write({"state": "approved"})
 ```
 
-**Right:** use `request.action_approve()` / `action_refuse()` (or, for
-non-decision terminations, `request._force_terminal(...)`). The funnel
+This raises for every caller: `state` is projected from the decision
+ledger. **Right:** use `request.action_approve()` / `action_refuse()` (or,
+for non-decision terminations, `request._force_terminal(...)`). The funnel
 `_apply_decision()` handles locking (`_lock_for_approval_action`), cache
 invalidation, delegation resolution, chain advancement, activity
-cleanup and the source-document notification. If you must write states
-in custom code, lock first and call
+cleanup and the source-document notification. A decision taken outside
+those actions -- an import of history -- is `approver._record_decision(...)`.
+Routing in custom code writes `flow_state`, after locking, and calls
 `_update_next_approvers_state()` / `_notify_if_terminal_transition()`
 yourself.
 

@@ -931,14 +931,6 @@ msgstr ""
 
 #. module: approval
 #. odoo-python
-#: code:addons/approval/models/approval_approver.py:0
-msgid ""
-"An approval is recorded by deciding the request, never by writing an "
-"approver's status."
-msgstr ""
-
-#. module: approval
-#. odoo-python
 #: code:addons/approval/models/mixin_approval.py:0
 msgid "An approval request already exists for this document."
 msgstr ""
@@ -966,6 +958,14 @@ msgid ""
 msgstr ""
 "Un aprobador retiró su aprobación — la aprobación está pendiente de nuevo. "
 "Revise este documento antes de continuar procesándolo."
+
+#. module: approval
+#. odoo-python
+#: code:addons/approval/models/approval_approver.py:0
+msgid ""
+"An approver's status is derived from the decisions recorded on the request, "
+"and cannot be written."
+msgstr ""
 
 #. module: approval
 #: model:ir.model.fields.selection,name:approval.selection__approval_binding__sudo_policy__bypass
@@ -1161,6 +1161,7 @@ msgid "Approval Requested Date"
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields,field_description:approval.field_mixin_approval_access__approval_request_ids
 #: model:ir.model.fields,field_description:approval.field_mixin_approval_subjects__approval_request_ids
 msgid "Approval Requests"
 msgstr ""
@@ -1360,6 +1361,20 @@ msgstr ""
 #. module: approval
 #: model_terms:ir.ui.view,arch_db:approval.report_approval_request_document
 msgid "Approved On"
+msgstr ""
+
+#. module: approval
+#. odoo-python
+#: code:addons/approval/models/approval_request_routing.py:0
+msgid "Approved by rule %(rule)s."
+msgstr ""
+
+#. module: approval
+#: model:ir.model.fields,help:approval.field_approval_approver__state
+msgid ""
+"Approved or refused while the decision ledger holds this row's latest "
+"approval or refusal since the request was last reset; otherwise the routing "
+"state. Never written: a decision exists only as a ledger row."
 msgstr ""
 
 #. module: approval
@@ -1728,6 +1743,7 @@ msgid ""
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields.selection,name:approval.selection__approval_approver__flow_state__cancelled
 #: model:ir.model.fields.selection,name:approval.selection__approval_approver__state__cancelled
 #: model:ir.model.fields.selection,name:approval.selection__approval_decision_log__verdict__cancelled
 #: model:ir.model.fields.selection,name:approval.selection__approval_request__revoked_state__cancelled
@@ -2277,6 +2293,11 @@ msgid "Decision History"
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields,field_description:approval.field_approval_approver__decision_log_ids
+msgid "Decision Log"
+msgstr ""
+
+#. module: approval
 #: model:ir.model.fields,help:approval.field_approval_category__step_ids
 msgid ""
 "Declare steps when approval must pass several pools, each needing its own "
@@ -2390,6 +2411,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:approval.field_mail_activity__display_name
 #: model:ir.model.fields,field_description:approval.field_mail_activity_type__display_name
 #: model:ir.model.fields,field_description:approval.field_mixin_approval__display_name
+#: model:ir.model.fields,field_description:approval.field_mixin_approval_access__display_name
 #: model:ir.model.fields,field_description:approval.field_mixin_approval_domain__display_name
 #: model:ir.model.fields,field_description:approval.field_mixin_approval_source__display_name
 #: model:ir.model.fields,field_description:approval.field_mixin_approval_state_sync__display_name
@@ -2782,6 +2804,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:approval.field_mail_activity__id
 #: model:ir.model.fields,field_description:approval.field_mail_activity_type__id
 #: model:ir.model.fields,field_description:approval.field_mixin_approval__id
+#: model:ir.model.fields,field_description:approval.field_mixin_approval_access__id
 #: model:ir.model.fields,field_description:approval.field_mixin_approval_domain__id
 #: model:ir.model.fields,field_description:approval.field_mixin_approval_source__id
 #: model:ir.model.fields,field_description:approval.field_mixin_approval_state_sync__id
@@ -3215,20 +3238,12 @@ msgid ""
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,help:approval.field_approval_approver__state
-msgid ""
-"Never copied: _sync_approvers() matches a copied approver row to its "
-"category source by user_id and only ever updates required/sequence on a "
-"match, never state — so a decided row (approved/refused) copied verbatim "
-"would stay decided forever on a request that was never confirmed."
-msgstr ""
-
-#. module: approval
 #. odoo-python
 #: code:addons/approval/models/approval_approver.py:0
 #: code:addons/approval/models/approval_request.py:0
 #: code:addons/approval/models/approval_request_access.py:0
 #: code:addons/approval/tests/test_approvals.py:0
+#: model:ir.model.fields.selection,name:approval.selection__approval_approver__flow_state__new
 #: model:ir.model.fields.selection,name:approval.selection__approval_approver__state__new
 #: model:ir.model.fields.selection,name:approval.selection__approval_request__user_approver_state__new
 #: model_terms:ir.ui.view,arch_db:approval.report_approval_request_document
@@ -3318,6 +3333,12 @@ msgstr ""
 #. module: approval
 #: model_terms:ir.actions.act_window,help:approval.action_approval_request_to_review
 msgid "No new approvals to review"
+msgstr ""
+
+#. module: approval
+#. odoo-python
+#: code:addons/approval/models/approval_request_escalation.py:0
+msgid "No objection within the %(hours)d-hour consent window."
 msgstr ""
 
 #. module: approval
@@ -3819,11 +3840,6 @@ msgid "Preview"
 msgstr ""
 
 #. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_request_form
-msgid "Print"
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_request__priority
 #: model:ir.model.fields.selection,name:approval.selection__approval_category_step__condition_field__priority
 #: model:ir.model.fields.selection,name:approval.selection__approval_rule__condition_field__priority
@@ -3905,6 +3921,11 @@ msgid "Record ID"
 msgstr ""
 
 #. module: approval
+#: model:ir.model,name:approval.model_mixin_approval_access
+msgid "Record Whose Access Is Asked For Through Approval"
+msgstr ""
+
+#. module: approval
 #: model:ir.model,name:approval.model_mixin_approval_source
 msgid "Record an Approval Request Is Raised For"
 msgstr ""
@@ -3976,6 +3997,7 @@ msgstr ""
 #. module: approval
 #. odoo-python
 #: code:addons/approval/models/approval_category.py:0
+#: model:ir.model.fields.selection,name:approval.selection__approval_approver__flow_state__refused
 #: model:ir.model.fields.selection,name:approval.selection__approval_approver__state__refused
 #: model:ir.model.fields.selection,name:approval.selection__approval_decision_log__verdict__refused
 #: model:ir.model.fields.selection,name:approval.selection__approval_request__revoked_state__refused
@@ -4245,6 +4267,11 @@ msgstr ""
 msgid ""
 "Rewrite this category's approvers and routing rules as steps? Submitted "
 "requests keep their approvers and decisions and continue by the steps."
+msgstr ""
+
+#. module: approval
+#: model:ir.model.fields,field_description:approval.field_approval_approver__flow_state
+msgid "Routing Status"
 msgstr ""
 
 #. module: approval
@@ -5060,6 +5087,12 @@ msgid "The requested amount exceeds available budget or budget limits."
 msgstr ""
 
 #. module: approval
+#. odoo-python
+#: code:addons/approval/models/approval_request_lifecycle.py:0
+msgid "The requested change was applied."
+msgstr ""
+
+#. module: approval
 #: model:ir.model.constraint,message:approval.constraint_approval_category_sequence_code_uniq
 msgid "The sequence code must be unique per company."
 msgstr ""
@@ -5263,6 +5296,7 @@ msgid "Timing Issue"
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields.selection,name:approval.selection__approval_approver__flow_state__pending
 #: model:ir.model.fields.selection,name:approval.selection__approval_approver__state__pending
 #: model:ir.model.fields.selection,name:approval.selection__approval_request__user_approver_state__pending
 msgid "To Approve"
@@ -5486,6 +5520,7 @@ msgid "Visible to all"
 msgstr ""
 
 #. module: approval
+#: model:ir.model.fields.selection,name:approval.selection__approval_approver__flow_state__waiting
 #: model:ir.model.fields.selection,name:approval.selection__approval_approver__state__waiting
 #: model:ir.model.fields.selection,name:approval.selection__approval_request__user_approver_state__waiting
 #: model_terms:ir.ui.view,arch_db:approval.report_approval_request_document
@@ -5618,6 +5653,14 @@ msgid ""
 "Where an approver's activity is created. Source Document asks on the record "
 "being approved, when the request has one that can hold activities; the "
 "activity still decides the request when done."
+msgstr ""
+
+#. module: approval
+#: model:ir.model.fields,help:approval.field_approval_approver__flow_state
+msgid ""
+"Where routing has put this row: asked, waiting its turn, or closed by a "
+"refusal or a forced end. The status shows it whenever no standing decision "
+"does."
 msgstr ""
 
 #. module: approval

@@ -74,7 +74,7 @@ class TestConsentApproval(common.TransactionCase):
         approver = request.approver_ids.filtered(
             lambda a: a.user_id == self.approver_user
         )
-        approver.sudo().write({"state": "refused"})
+        approver.sudo()._record_decision("refused")
 
         self.env["approval.request"].cron_consent_approval()
         self.assertEqual(request.state, "refused")

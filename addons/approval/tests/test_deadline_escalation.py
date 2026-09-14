@@ -717,7 +717,7 @@ class TestEscalationHookDefaults(common.TransactionCase):
             confirmed_at="2025-10-16 00:00:00", priority="3"
         )
 
-        request.approver_ids.sudo().write({"state": "refused"})
+        request.approver_ids.sudo()._record_decision("refused")
         self.env.cr.execute(
             "UPDATE approval_request SET state = 'pending' WHERE id = %s",
             [request.id],

@@ -145,7 +145,7 @@ class TestDecisionWizard(common.TransactionCase):
         approver = request.approver_ids.filtered(
             lambda a: a.user_id == self.approver_user
         )
-        approver.sudo().write({"state": "waiting"})
+        approver.sudo().write({"flow_state": "waiting"})
         wizard = (
             self.env["approval.decision.wizard"]
             .with_user(self.approver_user)

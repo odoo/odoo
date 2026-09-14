@@ -72,7 +72,7 @@ class TestApproverAccessControl(common.TransactionCase):
                 {
                     "user_id": self.user_3.id,
                     "request_id": request.id,
-                    "state": "pending",
+                    "flow_state": "pending",
                 }
             )
 
@@ -80,7 +80,7 @@ class TestApproverAccessControl(common.TransactionCase):
         request = self._create_pending_request(self.user_1)
         approver = request.approver_ids[0]
 
-        approver.sudo().write({"state": "new"})
+        approver.sudo().write({"flow_state": "new"})
 
         with self.assertRaises(AccessError):
             approver.with_user(self.user_3).unlink()
@@ -226,7 +226,7 @@ class TestBusinessRuleEnforcement(common.TransactionCase):
                 {
                     "user_id": self.admin_user.id,
                     "request_id": request.id,
-                    "state": "pending",
+                    "flow_state": "pending",
                 }
             )
 

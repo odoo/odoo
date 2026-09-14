@@ -979,9 +979,9 @@ class ApprovalRequest(models.Model):
                 opened=to_open.ids,
             )
             if to_wait:
-                to_wait.sudo().write({"state": "waiting", "pending_since": False})
+                to_wait.sudo().write({"flow_state": "waiting", "pending_since": False})
             if to_open:
-                to_open.sudo().write({"state": "pending"})
+                to_open.sudo().write({"flow_state": "pending"})
                 to_open._create_activity()
 
     def _is_row_turn(self, row, step) -> bool:

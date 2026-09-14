@@ -325,7 +325,9 @@ class ApprovalRequestRouting(models.Model):
                 action=rule.action_type,
             )
             if rule.action_type == "auto_approve":
-                self.approver_ids.sudo()._approve_for_every_step()
+                self.approver_ids.sudo()._approve_for_every_step(
+                    note=self.env._("Approved by rule %(rule)s.", rule=rule.name)
+                )
                 self.message_post(
                     body=self.env._(
                         "Auto-approved by rule: %(rule)s "
@@ -432,7 +434,7 @@ class ApprovalRequestRouting(models.Model):
             staging[user_id] = {
                 "required": required,
                 "sequence": sequence,
-                "state": "new",
+                "flow_state": "new",
                 "source_synced": True,
             }
 
@@ -484,7 +486,7 @@ class ApprovalRequestRouting(models.Model):
                         {
                             "request_id": request.id,
                             "user_id": user_id,
-                            "state": vals["state"],
+                            "flow_state": vals["flow_state"],
                             "required": vals["required"],
                             "sequence": vals["sequence"],
                             "source_rule_id": vals.get("source_rule_id"),
@@ -601,7 +603,7 @@ class ApprovalRequestRouting(models.Model):
             if row.state == "approved":
                 row_vals["decided_step_ids"] = [Command.set(vals["step_ids"])]
             if row.state == "waiting":
-                row_vals["state"] = "pending"
+                row_vals["flow_state"] = "pending"
             row.sudo().write(row_vals)
             adopted |= row
         created = adopting._create_live_approver_rows(desired.to_create)
@@ -774,7 +776,7 @@ class ApprovalRequestRouting(models.Model):
             {
                 "request_id": self.id,
                 "user_id": user_id,
-                "state": "waiting" if sequential else "pending",
+                "flow_state": "waiting" if sequential else "pending",
                 "required": vals["required"],
                 "sequence": (
                     max(vals["sequence"], anchor_sequence)
@@ -1061,7 +1063,7 @@ class ApprovalRequestRouting(models.Model):
             )
             if not is_injected_orphan:
                 approver_staging[user_id] = {
-                    "state": existing_approver.state,
+                    "flow_state": existing_approver.flow_state,
                     "required": existing_approver.required,
                     "sequence": existing_approver.sequence,
                     "source_rule_id": None,

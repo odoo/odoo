@@ -132,8 +132,9 @@
        +-- _check_approve_sequentially_can_approve() (approve only)
        +-- _get_current_pending_approver() (delegation-aware) unless a
        |       resolved approver was passed (re-filtered to still-pending)
-       +-- approver.state = approved/refused, stamping decision_date and
-       |       decided_by_user_id (the EFFECTIVE approver) in the same write
+       +-- stamp decision_date, decided_by_user_id (the EFFECTIVE approver)
+       |       and decided_step_ids, then _append_decision_log(approved/
+       |       refused): approver.state projects from that fact
        +-- Chatter audit entry attributed to the acting (effective) user
        +-- approve: _update_next_approvers_state(next -> pending)
        |   refuse:  _update_next_approvers_state(rest -> refused, cancel
@@ -295,8 +296,8 @@ When `category.approve_sequentially = True`:
 ```
 action_confirm():
     Sort "new" approvers by (sequence, id)
-    First approver -> state = "pending", create activity
-    Remaining approvers -> state = "waiting"
+    First approver -> flow_state = "pending", create activity
+    Remaining approvers -> flow_state = "waiting"
 
 _apply_decision("approve") (approver N):
     _update_next_approvers_state(approver_N, "pending", only_next_approver=True)

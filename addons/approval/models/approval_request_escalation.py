@@ -537,7 +537,12 @@ class ApprovalRequestEscalation(models.Model):
             rows=pending.ids,
             hours=category.consent_approval_hours,
         )
-        pending.sudo()._approve_for_every_step()
+        pending.sudo()._approve_for_every_step(
+            note=self.env._(
+                "No objection within the %(hours)d-hour consent window.",
+                hours=category.consent_approval_hours,
+            )
+        )
         request._cancel_activities()
         request._notify_if_terminal_transition(old_state)
         request.message_post(

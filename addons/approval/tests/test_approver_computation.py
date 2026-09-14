@@ -131,7 +131,7 @@ class TestApproverComputation(common.TransactionCase):
             {
                 "user_id": self.manual_user.id,
                 "request_id": request.id,
-                "state": "new",
+                "flow_state": "new",
             }
         )
 
@@ -179,7 +179,7 @@ class TestApproverComputation(common.TransactionCase):
             {
                 "user_id": self.manual_user.id,
                 "request_id": request.id,
-                "state": "new",
+                "flow_state": "new",
             }
         )
 

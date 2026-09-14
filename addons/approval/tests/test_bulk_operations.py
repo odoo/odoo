@@ -164,7 +164,7 @@ class TestBulkOperations(common.TransactionCase):
         request = self._create_test_requests(1)
 
         approver = request.approver_ids.filtered(lambda a: a.user_id == self.approver1)
-        approver.sudo().write({"state": "waiting"})
+        approver.sudo().write({"flow_state": "waiting"})
 
         with self.assertRaises(
             UserError,
@@ -237,7 +237,7 @@ class TestBulkOperations(common.TransactionCase):
             }
         )
         failing_request.action_confirm()
-        failing_request.approver_ids.sudo().write({"state": "refused"})
+        failing_request.approver_ids.sudo()._record_decision("refused")
 
         all_requests = normal_requests | failing_request
 

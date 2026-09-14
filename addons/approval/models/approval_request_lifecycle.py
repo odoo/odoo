@@ -155,7 +155,6 @@ class ApprovalRequestLifecycle(models.Model):
     ) -> None:
         self.check_singleton()
         assert decision in ("approve", "refuse")
-        approver_state = "approved" if decision == "approve" else "refused"
         self._lock_and_reload(with_approvers=True)
         if self.state != "pending":
             trace.REFUSAL.event(
@@ -250,9 +249,8 @@ class ApprovalRequestLifecycle(models.Model):
                 decided_steps = [Command.link(step.id) for step in decided]
             else:
                 decided_steps = [Command.set(decided.ids)]
-            row.with_context(approval_decision=True).write(
+            row.write(
                 {
-                    "state": approver_state,
                     "decision_date": now,
                     "decided_by_user_id": acting_user.id,
                     "decided_step_ids": decided_steps,
@@ -335,7 +333,7 @@ class ApprovalRequestLifecycle(models.Model):
         if self.state == "approved":
             self.approver_ids.sudo().filtered(
                 lambda a: a.state == "pending",
-            ).write({"state": "waiting"})
+            ).write({"flow_state": "waiting"})
         self._notify_if_terminal_transition(old_state)
         if (
             unmet_before is not None
@@ -700,9 +698,15 @@ class ApprovalRequestLifecycle(models.Model):
         added = self._extend_approvers_live()
         undone = self.approver_ids.filtered(lambda a: a.state == "approved")
         if undone:
+            self._append_decision_log(
+                "withdrawn",
+                rows=undone,
+                steps_by_row={row.id: row.decided_step_ids for row in undone},
+                note=self.env._("The requested change was applied."),
+            )
             undone.sudo().write(
                 {
-                    "state": "waiting",
+                    "flow_state": "waiting",
                     "decision_date": False,
                     "decided_by_user_id": False,
                     "decided_step_ids": [Command.clear()],
@@ -832,9 +836,9 @@ class ApprovalRequestLifecycle(models.Model):
             ],
         )
         if to_wait:
-            to_wait.sudo().write({"state": "waiting"})
+            to_wait.sudo().write({"flow_state": "waiting"})
         to_open._create_activity()
-        to_open.sudo().write({"state": "pending"})
+        to_open.sudo().write({"flow_state": "pending"})
         self.filtered(
             lambda request: request.approver_ids.step_ids
         )._refresh_turn_states()
@@ -914,7 +918,7 @@ class ApprovalRequestLifecycle(models.Model):
         request._close_pending_change()
         request.approver_ids.sudo().write(
             {
-                "state": "new",
+                "flow_state": "new",
                 "refusal_reason_id": False,
                 "note": False,
                 "decision_date": False,
@@ -1093,7 +1097,7 @@ class ApprovalRequestLifecycle(models.Model):
             )
             req_approver.sudo().write(
                 {
-                    "state": "pending",
+                    "flow_state": "pending",
                     "decision_date": False,
                     "decided_by_user_id": False,
                     "decided_step_ids": [Command.clear()],
@@ -1103,7 +1107,7 @@ class ApprovalRequestLifecycle(models.Model):
             still_approved = request.state == "approved"
 
             if still_approved:
-                req_approver.sudo().write({"state": "waiting"})
+                req_approver.sudo().write({"flow_state": "waiting"})
             else:
                 req_approver._create_activity()
 
@@ -1111,7 +1115,7 @@ class ApprovalRequestLifecycle(models.Model):
                     parked = request.approver_ids.filtered(
                         lambda a: a.state == "waiting",
                     )
-                    parked.sudo().write({"state": "pending"})
+                    parked.sudo().write({"flow_state": "pending"})
                     parked._create_activity()
                 if request.approver_ids.step_ids:
                     # A withdrawal can hand a turn back: whoever it passed to is no
@@ -1280,7 +1284,7 @@ class ApprovalRequestLifecycle(models.Model):
         )
         if old_state == "approved" and self.state == "pending":
             parked = self.approver_ids.filtered(lambda a: a.state == "waiting")
-            parked.sudo().write({"state": "pending"})
+            parked.sudo().write({"flow_state": "pending"})
             parked._create_activity()
         self._refresh_turn_states()
         self._retire_unasked_approval_activities()
@@ -1456,7 +1460,7 @@ class ApprovalRequestLifecycle(models.Model):
         trace.DECISION.event(
             "flip_unsettled", request=self.id, to=new_state, rows=unsettled.ids
         )
-        unsettled.write({"state": new_state})
+        unsettled.write({"flow_state": new_state})
 
     def _stamp_refusal_metadata(
         self,
@@ -1591,7 +1595,7 @@ class ApprovalRequestLifecycle(models.Model):
             request.sudo().write({"granted_by_user_id": self.env.user.id})
             request.approver_ids.sudo().filtered(
                 lambda a: a.state == "pending",
-            ).write({"state": "waiting"})
+            ).write({"flow_state": "waiting"})
             request._cancel_activities()
             request._close_pending_change()
             request._notify_if_terminal_transition("pending")
@@ -1836,7 +1840,7 @@ class ApprovalRequestLifecycle(models.Model):
             only_next=only_next_approver,
             cancel_activities=cancel_activities,
         )
-        approvers_updated.sudo().state = new_state
+        approvers_updated.sudo().flow_state = new_state
         if new_state == "pending":
             approvers_updated._create_activity()
         if cancel_activities:

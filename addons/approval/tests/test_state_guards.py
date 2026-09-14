@@ -37,14 +37,15 @@ class TestStateGuards(ApprovalCommon):
                 approver_ids_computation=True
             ).write({"approver_ids": [(0, 0, {"user_id": self.manager_user.id})]})
 
-    def test_an_approval_written_under_sudo_is_refused(self):
+    def test_an_approver_status_written_under_sudo_is_refused(self):
         category = self._parallel_category()
         request = self._prepare_request(category)
         row = request.approver_ids.filtered(lambda a: a.user_id == self.approver_1)
 
-        with self.assertRaisesRegex(AccessError, "recorded by deciding the request"):
-            row.sudo().write({"state": "approved"})
-        with self.assertRaisesRegex(AccessError, "recorded by deciding the request"):
+        for state in ("approved", "refused", "pending", "waiting"):
+            with self.assertRaisesRegex(AccessError, "derived from the decisions"):
+                row.sudo().write({"state": state})
+        with self.assertRaisesRegex(AccessError, "derived from the decisions"):
             self.env["approval.approver"].sudo().create(
                 {
                     "request_id": request.id,
@@ -54,6 +55,22 @@ class TestStateGuards(ApprovalCommon):
             )
         self.assertEqual(row.state, "pending")
         self.assertEqual(request.state, "pending")
+
+    def test_approver_status_follows_the_decision_ledger(self):
+        category = self._parallel_category()
+        request = self._prepare_request(category)
+        row = request.approver_ids.filtered(lambda a: a.user_id == self.approver_1)
+
+        row.sudo().write({"flow_state": "waiting"})
+        self.assertEqual(row.state, "waiting")
+
+        row.sudo()._record_decision("approved")
+        self.assertEqual(row.state, "approved")
+        row.sudo().write({"flow_state": "pending"})
+        self.assertEqual(row.state, "approved")
+
+        request.sudo()._append_decision_log("reset", rows=row)
+        self.assertEqual(row.state, "pending")
 
     def test_approver_cannot_write_own_state(self):
         category = self._parallel_category()

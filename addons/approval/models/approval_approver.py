@@ -7,8 +7,6 @@ from odoo.fields import Command, Domain
 from . import approval_trace as trace
 from .approval_utils import boolean_search_domain, is_approval_manager
 
-DECISION_CONTEXT = "approval_decision"
-
 
 class ApprovalApprover(models.Model):
     _name = "approval.approver"
@@ -54,15 +52,36 @@ class ApprovalApprover(models.Model):
             ("cancelled", "Cancelled"),
         ],
         string="Status",
-        default="new",
+        compute="_compute_state",
+        store=True,
         index=True,
         copy=False,
         readonly=True,
-        help="Never copied: _sync_approvers() matches a copied approver "
-        "row to its category source by user_id and only ever updates "
-        "required/sequence on a match, never state — so a decided row "
-        "(approved/refused) copied verbatim would stay decided forever "
-        "on a request that was never confirmed.",
+        help="Approved or refused while the decision ledger holds this row's latest "
+        "approval or refusal since the request was last reset; otherwise the "
+        "routing state. Never written: a decision exists only as a ledger row.",
+    )
+    flow_state = fields.Selection(
+        selection=[
+            ("new", "New"),
+            ("pending", "To Approve"),
+            ("waiting", "Waiting"),
+            ("refused", "Refused"),
+            ("cancelled", "Cancelled"),
+        ],
+        string="Routing Status",
+        default="new",
+        required=True,
+        copy=False,
+        readonly=True,
+        help="Where routing has put this row: asked, waiting its turn, or closed by "
+        "a refusal or a forced end. The status shows it whenever no standing "
+        "decision does.",
+    )
+    decision_log_ids = fields.One2many(
+        comodel_name="approval.decision.log",
+        inverse_name="approver_id",
+        readonly=True,
     )
     required = fields.Boolean(
         default=False,
@@ -287,8 +306,8 @@ class ApprovalApprover(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list: list[dict]) -> Self:
-        if any(vals.get("state") == "approved" for vals in vals_list):
-            self._check_approval_through_a_decision()
+        if any("state" in vals for vals in vals_list):
+            self._raise_state_is_derived()
         self._check_access_create(vals_list)
         self._check_business_rules_create(vals_list)
         return super().create([self._stamp_pending_since(v) for v in vals_list])
@@ -302,8 +321,8 @@ class ApprovalApprover(models.Model):
             if delegation
             else {}
         )
-        if vals.get("state") == "approved":
-            self._check_approval_through_a_decision()
+        if "state" in vals:
+            self._raise_state_is_derived()
         result = super().write(self._stamp_pending_since(vals))
         if delegation:
             self._hand_activities_to_effective_approver(previous_delegates)
@@ -363,21 +382,67 @@ class ApprovalApprover(models.Model):
             [("state", "=", "pending"), ("delegate_id", "!=", False)]
         )._hand_activities_to_effective_approver()
 
-    def _check_approval_through_a_decision(self) -> None:
-        if self.env.context.get(DECISION_CONTEXT):
-            return
-        trace.REFUSAL.event(
-            "approval_written_outside_a_decision", rows=self.ids, uid=self.env.uid
-        )
+    def _raise_state_is_derived(self) -> None:
+        trace.REFUSAL.event("approver_state_written", rows=self.ids, uid=self.env.uid)
         raise AccessError(
             self.env._(
-                "An approval is recorded by deciding the request, never by writing an "
-                "approver's status."
+                "An approver's status is derived from the decisions recorded on the "
+                "request, and cannot be written."
             )
         )
 
+    @api.depends("flow_state", "decision_log_ids", "decided_step_ids")
+    def _compute_state(self):
+        standing = self._get_standing_decisions()
+        for row in self:
+            verdict = standing.get(row.id)
+            if verdict == "approved" or (
+                verdict == "withdrawn" and row.decided_step_ids
+            ):
+                row.state = "approved"
+            elif verdict == "refused":
+                row.state = "refused"
+            else:
+                row.state = row.flow_state or "new"
+
+    def _get_standing_decisions(self) -> dict:
+        rows = self.filtered("id")
+        if not rows:
+            return {}
+        facts = (
+            self.env["approval.decision.log"]
+            .sudo()
+            .search_fetch(
+                [
+                    ("request_id", "in", rows.request_id.ids),
+                    ("verdict", "in", ("approved", "refused", "withdrawn", "reset")),
+                ],
+                ["request_id", "approver_id", "verdict"],
+                order="id",
+            )
+        )
+        standing = {}
+        for fact in facts:
+            if fact.verdict == "reset":
+                for row_id in [
+                    row_id
+                    for row_id, request_id in standing.items()
+                    if request_id[1] == fact.request_id.id
+                ]:
+                    del standing[row_id]
+                continue
+            if fact.approver_id:
+                standing[fact.approver_id.id] = (fact.verdict, fact.request_id.id)
+        trace.DECISION.event(
+            "standing_decisions",
+            rows=rows.ids,
+            facts=len(facts),
+            standing=len(standing),
+        )
+        return {row_id: verdict for row_id, (verdict, _request) in standing.items()}
+
     def _stamp_pending_since(self, vals: dict) -> dict:
-        state = vals.get("state")
+        state = vals.get("flow_state")
         if state == "pending":
             trace.DECISION.event("pending_clock", rows=self.ids, action="started")
             return {**vals, "pending_since": fields.Datetime.now()}
@@ -708,15 +773,45 @@ class ApprovalApprover(models.Model):
             return self.delegate_id
         return self.user_id
 
-    def _approve_for_every_step(self) -> None:
+    def _record_decision(
+        self, verdict: str, actor=None, steps=None, date=None, note: str | None = None
+    ) -> None:
+        assert verdict in ("approved", "refused")
+        for request, rows in self.grouped("request_id").items():
+            decided = {
+                row.id: steps if steps is not None else row.step_ids for row in rows
+            }
+            for row in rows:
+                row.write(
+                    {
+                        "decided_step_ids": [Command.set(decided[row.id].ids)],
+                        "decided_by_user_id": (actor or row.user_id).id,
+                        **({"decision_date": date} if date else {}),
+                    }
+                )
+            request._append_decision_log(
+                verdict,
+                rows=rows,
+                actor=actor,
+                steps_by_row=decided,
+                note=note,
+                date=date,
+            )
+
+    def _approve_for_every_step(self, note: str | None = None) -> None:
         """Approve rows nobody decided -- consent, an automatic rule -- for all their steps."""
         trace.DECISION.note("approve_every_step", rows=self.ids)
-        for approver in self:
-            approver.with_context(**{DECISION_CONTEXT: True}).write(
-                {
-                    "state": "approved",
-                    "decided_step_ids": [Command.set(approver.step_ids.ids)],
-                },
+        for request, rows in self.grouped("request_id").items():
+            for approver in rows:
+                approver.write(
+                    {"decided_step_ids": [Command.set(approver.step_ids.ids)]},
+                )
+            request._append_decision_log(
+                "approved",
+                rows=rows,
+                actor=self.env.ref("base.user_root"),
+                steps_by_row={row.id: row.step_ids for row in rows},
+                note=note,
             )
 
     def _check_access_create(self, vals_list: list[dict]) -> None:
@@ -870,6 +965,7 @@ class ApprovalApprover(models.Model):
     _WORKFLOW_MANAGED_FIELDS = frozenset(
         {
             "state",
+            "flow_state",
             "sequence",
             "required",
             "request_id",
