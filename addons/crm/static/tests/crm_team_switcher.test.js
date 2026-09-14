@@ -193,8 +193,8 @@ test.tags("desktop");
 test("crm team switcher rendering", async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1);
-    // Team switcher should default on "All Sales Teams", all records and stages should be visible
-    expect(".o_cp_team_switcher:contains('All Sales Teams')").toHaveCount(1);
+    // Team switcher should default on "All Teams", all records and stages should be visible
+    expect(".o_cp_team_switcher:contains('All Teams')").toHaveCount(1);
     expect(".o_kanban_record").toHaveCount(8);
     expect(".o_kanban_group").toHaveCount(4);
     // Changing the selected team should update the displayed stages and records

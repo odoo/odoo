@@ -801,7 +801,7 @@ class CrmTeam(models.Model):
                        regardless of the current user's own access.
         - "teams": A list of dictionaries containing the data of the teams to be displayed in the switcher.
                    Limited to own teams if the current user doesn't have "User: All Documents" access.
-                   Can be empty even when "available" is True, in this case only "All Sales Teams" will be visible.
+                   Can be empty even when "available" is True, in this case only "All Teams" will be visible.
         """
         teams = self.env["crm.team"].search([("use_opportunities", "=", True)], order="sequence, id")
         if len(teams) <= 1:
