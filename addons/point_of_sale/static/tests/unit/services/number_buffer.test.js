@@ -80,6 +80,22 @@ test("closing a holder cancels its keys before restoring the previous holder", a
     expect.verifySteps([]);
 });
 
+test("opening a popup applies the covered holder's pending keys to it", async () => {
+    await setupPosEnv();
+    const parent = await mountHolder({
+        triggerAtInput: () => expect.step("parent input"),
+    });
+    const nb = parent.numberBuffer;
+    nb.sendKey("2");
+    const popup = await mountHolder({
+        triggerAtInput: () => expect.step("popup input"),
+    });
+    await advanceTime(100);
+    expect.verifySteps(["parent input"]);
+    popup.__owl__.app.destroy();
+    expect(nb.get()).toBe("2");
+});
+
 test("destroying the last holder cancels pending input callbacks", async () => {
     await setupPosEnv();
     const holder = await mountHolder({ triggerAtInput: () => expect.step("input") });

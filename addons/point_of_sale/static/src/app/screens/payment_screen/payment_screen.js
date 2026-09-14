@@ -274,6 +274,7 @@ export class PaymentScreen extends Component {
         this.hardwareProxy.openCashbox();
     }
     async addTip() {
+        this.numberBuffer.capture();
         const tip = this.currentOrder.getTip();
         const change = Math.abs(this.currentOrder.change);
         const value = tip === 0 && change > 0 ? change : tip;

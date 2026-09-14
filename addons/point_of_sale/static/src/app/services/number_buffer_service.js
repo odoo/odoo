@@ -90,6 +90,8 @@ class NumberBuffer extends EventBus {
     use(config) {
         const currentComponent = useComponent();
         config = Object.assign(getDefaultConfig(), config);
+        // keys still batched for the holder about to be covered were typed for it
+        this.capture();
 
         const holder = {
             component: currentComponent,
