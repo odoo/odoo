@@ -12,6 +12,7 @@
                         <group>
                             <field name="departure_reason_id" options="{'no_edit': True, 'no_create': True, 'no_open': True}"/>
                             <field name="dismissal_date"/>
+                            <field name="activity_plan_ids" widget="many2many_tags"/>
                         </group>
                         <group>
                             <field name="departure_description" string="Reason" placeholder="Additional information"/>
