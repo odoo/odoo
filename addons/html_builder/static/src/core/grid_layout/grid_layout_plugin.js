@@ -29,7 +29,7 @@ function isGridItem(el) {
 
 export class GridLayoutPlugin extends Plugin {
     static id = "gridLayout";
-    static dependencies = ["selection", "builderOptions"];
+    static dependencies = ["selection", "builderOptions", "domReferenceMap", "domObserver"];
     /** @type {import("plugins").BuilderResources} */
     resources = {
         get_overlay_buttons: withSequence(0, {
@@ -63,9 +63,11 @@ export class GridLayoutPlugin extends Plugin {
         content_editable_providers: this.getContentEditableEls.bind(this),
         content_not_editable_providers: this.getContentNotEditableEls.bind(this),
         // Adjust the grids/grid items to the changes.
-        change_current_options_containers_listeners: this.onContainersChange.bind(this),
-        handleNewRecords: this.handleMutations.bind(this),
-        normalize_handlers: this.onNormalize.bind(this),
+        on_current_options_containers_changed_handlers: this.onContainersChange.bind(this),
+        on_pending_mutations_staged_handlers: this.handleMutations.bind(this),
+        normalize_processors: this.onNormalize.bind(this),
+        on_history_will_undo_handlers: this.onWillUndoOrRedo.bind(this),
+        on_history_will_redo_handlers: this.onWillUndoOrRedo.bind(this),
     };
 
     setup() {
@@ -176,7 +178,7 @@ export class GridLayoutPlugin extends Plugin {
         }
         optionsContainer.forEach(({ element }) => {
             if (element.classList.contains("o_grid_item")) {
-                this.dependencies.history.ignoreDOMMutations(() => {
+                this.dependencies.domObserver.ignore(() => {
                     const rowEl = element.parentElement;
                     adjustGrid(rowEl);
                 });
@@ -187,32 +189,39 @@ export class GridLayoutPlugin extends Plugin {
 
     /**
      *
-     * @param {*} records
+     * @param {*} mutations
      * @returns
      */
-    handleMutations(records) {
+    handleMutations(mutations) {
         if (this.config.isMobileView(this.editable)) {
             return;
         }
-        records.forEach((record) => {
-            if (record.target) {
-                const node = isElement(record.target) ? record.target : record.target.parentNode;
-                if (node) {
-                    this.modifiedGridItemEl = node.closest(".o_grid_item");
-                    this.modifiedGridEl = node.matches(".row.o_grid_mode") && node;
+        mutations.forEach((mutation) => {
+            if (mutation.type === "remove") {
+                return;
+            }
+            const node = this.dependencies.domReferenceMap.getNodeById(mutation.nodeId);
+            if (node) {
+                const targetEl = isElement(node) ? node : node.parentNode;
+                if (targetEl) {
+                    this.modifiedGridItemEl = targetEl.closest(".o_grid_item");
+                    this.modifiedGridEl = targetEl.matches(".row.o_grid_mode") && targetEl;
                 }
             }
         });
     }
 
+    onWillUndoOrRedo() {
+        this.isUndoingOrRedoing = true;
+    }
+
     /**
      *
-     * @param {*} root
-     * @param {*} type
+     * @param {*} rootEl
      */
-    onNormalize(root, type) {
-        if (type === "original") {
-            // console.warn("NORMALIZE", root, this.modifiedGridItemEl, this.modifiedGridEl);
+    onNormalize(rootEl) {
+        if (!this.isUndoingOrRedoing) {
+            // console.warn("NORMALIZE", rootEl, this.modifiedGridItemEl, this.modifiedGridEl);
             if (this.modifiedGridItemEl && !this.modifiedGridEl) {
                 // console.log("GRID ITEM");
                 // Lock the row size and adjust the height of the modified grid item.
@@ -226,8 +235,10 @@ export class GridLayoutPlugin extends Plugin {
                 adjustGrid(this.modifiedGridEl);
             }
         }
+        this.isUndoingOrRedoing = false;
         this.modifiedGridItemEl = null;
         this.modifiedGridEl = null;
+        return rootEl;
     }
 
     /**
