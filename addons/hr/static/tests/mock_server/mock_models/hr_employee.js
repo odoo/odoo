@@ -13,11 +13,12 @@ export class HrEmployee extends models.ServerModel {
     work_phone = fields.Char();
     work_location_type = fields.Char();
     work_location_id = fields.Many2one({ relation: "hr.work.location" });
-    job_title = fields.Char();
+    job_id = fields.Many2one({ relation: "hr.job" });
     company_id = fields.Many2one({ relation: "res.company" });
 
     _store_avatar_card_fields(res) {
         res.one("department_id", ["name"]);
+        res.one("job_id", ["name"]);
         res.one("user_id", "_store_avatar_card_fields");
         res.one("work_location_id", ["location_type", "name"]);
         res.many("employee_skill_ids", ["color", "display_name"]);
@@ -25,7 +26,6 @@ export class HrEmployee extends models.ServerModel {
             "active",
             "company_id",
             "hr_icon_display",
-            "job_title",
             "name",
             "show_hr_icon_display",
         ]);
