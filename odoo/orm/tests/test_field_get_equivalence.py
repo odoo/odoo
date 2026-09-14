@@ -109,7 +109,8 @@ def _put_cache(field, rec, value):
 
 
 def test_scalar_and_textual_fastpath_matches_canonical_on_cache_hit():
-    with model_test_env(GHost, GChild, GCurrency) as env:
+    # the test plants cache values: no cache-against-rows check at the end
+    with model_test_env(GHost, GChild, GCurrency, check_cache=False) as env:
         host, *_ = _seed(env)
         for fname, samples in _SCALAR_DIFFERENTIAL.items():
             field = host._fields[fname]
@@ -127,7 +128,8 @@ def test_scalar_and_textual_fastpath_matches_canonical_on_cache_hit():
 
 
 def test_many2one_fastpath_matches_canonical_on_cache_hit():
-    with model_test_env(GHost, GChild, GCurrency) as env:
+    # the test plants cache values: no cache-against-rows check at the end
+    with model_test_env(GHost, GChild, GCurrency, check_cache=False) as env:
         host, _cur_a, cur_b = _seed(env)
         field = host._fields["f_m2o"]
         fast = type(field).__get__
@@ -141,7 +143,8 @@ def test_many2one_fastpath_matches_canonical_on_cache_hit():
 
 
 def test_html_fastpath_matches_canonical_on_normal_hit():
-    with model_test_env(GHost, GChild, GCurrency) as env:
+    # the test plants cache values: no cache-against-rows check at the end
+    with model_test_env(GHost, GChild, GCurrency, check_cache=False) as env:
         host, *_ = _seed(env)
         field = host._fields["f_html"]
         fast = type(field).__get__
@@ -362,7 +365,8 @@ def test_id_field_invariants():
 
 
 def test_pending_in_cache_is_never_returned_protected_yields_falsy():
-    with model_test_env(GHost, GChild, GCurrency) as env:
+    # the test plants cache values: no cache-against-rows check at the end
+    with model_test_env(GHost, GChild, GCurrency, check_cache=False) as env:
         host = env["g.host"].create({"f_int": 5})
         field = host._fields["f_int"]
         _put_cache(field, host, PENDING)

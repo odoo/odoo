@@ -24,7 +24,9 @@ class Slot(models.Model):
 
 @pytest.fixture
 def env():
-    with model_test_env(Slot) as env:
+    # a refused flush leaves the cache ahead of the rows, as on PostgreSQL
+    # before the rollback: no cache-against-rows check at the end
+    with model_test_env(Slot, check_cache=False) as env:
         yield env
 
 

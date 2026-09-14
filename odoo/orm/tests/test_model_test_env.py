@@ -221,7 +221,8 @@ def test_filtered_id_keeps_only_saved_records():
 
 
 def test_write_multi_aliased_vals_not_uniform():
-    with model_test_env(HWidget) as env:
+    # _write_multi bypasses the cache on purpose: no cache-against-rows check
+    with model_test_env(HWidget, check_cache=False) as env:
         recs = env["h.widget"].create([{"qty": 1}, {"qty": 2}, {"qty": 3}])
         a, b = {"qty": 100}, {"qty": 200}
         recs._write_multi([a, b, a])

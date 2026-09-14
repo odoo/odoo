@@ -75,3 +75,16 @@ def normalize_identifier(identifier: str) -> str:
 
 def get_index_name(table_name: str, column_name: str) -> str:
     return normalize_identifier(f"{table_name}__{column_name}_index")
+
+
+def pg_size_pretty(size: int) -> str:
+    # PostgreSQL's rounding: one bit kept past the unit, then half-rounded
+    limit = 10 * 1024
+    if size < limit:
+        return f"{size} bytes"
+    size >>= 9
+    for unit in ("kB", "MB", "GB", "TB"):
+        if size < limit * 2:
+            return f"{(size + 1) // 2} {unit}"
+        size >>= 10
+    return f"{(size + 1) // 2} PB"

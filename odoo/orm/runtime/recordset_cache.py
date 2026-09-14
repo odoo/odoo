@@ -5,6 +5,7 @@ from pprint import pformat
 
 from odoo.exceptions import CacheMiss
 from odoo.libs.debug_log import DebugLog
+from odoo.libs.sql import pg_size_pretty
 from odoo.tools import SQL, OrderedSet, Query
 from odoo.tools.misc import PENDING, SENTINEL
 
@@ -215,18 +216,29 @@ class Cache:
             if not ids:
                 return
 
-            query = Query(env, model._table, model._table_sql)
-            sql_id = SQL.identifier(model._table, "id")
-            sql_field = model._field_to_sql(model._table, field.name, query)
-            if field.is_binary and (
+            bin_size = field.is_binary and (
                 model.env.context.get("bin_size")
                 or model.env.context.get("bin_size_" + field.name)
-            ):
-                sql_field = SQL("pg_size_pretty(length(%s)::bigint)", sql_field)
-            query.add_where(SQL("%s = ANY(%s)", sql_id, list(ids)))
-            env.cr.execute(query.select(sql_id, sql_field))
+            )
+            if model._table_query is None:
+                # the stored column as either backend holds it
+                rows = env.backend.columns.read(model, field.name, ids).items()
+                if bin_size:
+                    rows = [
+                        (id_, None if value is None else pg_size_pretty(len(value)))
+                        for id_, value in rows
+                    ]
+            else:
+                query = Query(env, model._table, model._table_sql)
+                sql_id = SQL.identifier(model._table, "id")
+                sql_field = model._field_to_sql(model._table, field.name, query)
+                if bin_size:
+                    sql_field = SQL("pg_size_pretty(length(%s)::bigint)", sql_field)
+                query.add_where(SQL("%s = ANY(%s)", sql_id, list(ids)))
+                env.cr.execute(query.select(sql_id, sql_field))
+                rows = env.cr.fetchall()
 
-            for id_, value in env.cr.fetchall():
+            for id_, value in rows:
                 cached = field_cache[id_]
                 if value == cached or (not value and not cached):
                     continue

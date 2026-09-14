@@ -615,6 +615,7 @@ def model_test_env(
     db_name: str = ":memory:",
     fixtures: dict[str, list[tuple]] | None = None,
     langs: Iterable[str] = (),
+    check_cache: bool = True,
 ):
     if registry is None:
         registry = ModelRegistry(model_classes, db_name=db_name)
@@ -637,7 +638,17 @@ def model_test_env(
     env = Environment(cr, SUPERUSER_ID, {})
     env.transaction.default_env = env
     _reflect_models(cr.storage, registry, env)
-    yield env
+    failed = True
+    try:
+        yield env
+        failed = False
+    finally:
+        # every test leaves the caches agreeing with the rows, as
+        # TransactionCase asserts against PostgreSQL; a test that plants
+        # cache values or expects a refused flush opts out, and a failing
+        # test reports its own error
+        if check_cache and not failed:
+            env.cache.check(env)
 
 
 def _reflect_models(storage: DictBackend, registry: ModelRegistry, env) -> None:

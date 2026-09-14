@@ -22,7 +22,8 @@ class Widget(models.Model):
 
 @pytest.fixture
 def env():
-    with model_test_env(Widget) as e:
+    # the tests plant cache values: no cache-against-rows check at the end
+    with model_test_env(Widget, check_cache=False) as e:
         yield e
 
 

@@ -29,6 +29,7 @@ from odoo.exceptions import LockError, UserError
 from odoo.libs.accel import fast_clone
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.profiling import _OrmProfile
+from odoo.libs.sql import pg_size_pretty
 from odoo.tools import SQL, OrderedSet, Query, partition
 from odoo.tools.translate import _
 
@@ -149,21 +150,8 @@ def _get_column_read_value(field: Field, value: typing.Any, env) -> typing.Any:
         and (env.context.get("bin_size") or env.context.get("bin_size_" + field.name))
     ):
         # pg_size_pretty(length(col)) on the SQL path: the size, not the bytes
-        return _pg_size_pretty(len(value))
+        return pg_size_pretty(len(value))
     return value
-
-
-def _pg_size_pretty(size: int) -> str:
-    # PostgreSQL's rounding: one bit kept past the unit, then half-rounded
-    limit = 10 * 1024
-    if size < limit:
-        return f"{size} bytes"
-    size >>= 9
-    for unit in ("kB", "MB", "GB", "TB", "PB"):
-        if size < limit * 2 or unit == "PB":
-            return f"{(size + 1) // 2} {unit}"
-        size >>= 10
-    return f"{(size + 1) // 2} PB"
 
 
 @typing.runtime_checkable
@@ -475,6 +463,14 @@ class PostgresColumnStore:
         )
 
 
+def _load(value: typing.Any) -> typing.Any:
+    # what the cursor's loaders answer for the stored value: a numeric as a
+    # float (db.lifecycle registers the loader), a json object unwrapped
+    if isinstance(value, Decimal):
+        return float(value)
+    return _unwrap_json(value)
+
+
 class InMemoryColumnStore:
     __slots__ = ("storage",)
 
@@ -485,7 +481,7 @@ class InMemoryColumnStore:
         self, model: BaseModel, column: str, ids: typing.Collection[int]
     ) -> dict[int, typing.Any]:
         rows = self.storage.get_rows(model._table, list(ids))
-        return {id_: row.get(column) for id_, row in rows.items()}
+        return {id_: _load(row.get(column)) for id_, row in rows.items()}
 
     def write(
         self,
@@ -538,7 +534,7 @@ class InMemoryColumnStore:
     def scan(self, model: BaseModel, column: str) -> list[tuple[int, typing.Any]]:
         storage = self.storage
         return [
-            (row_id, _unwrap_json(row[column]))
+            (row_id, _load(row[column]))
             for row_id in sorted(storage.get_table_ids(model._table))
             if (row := storage.get_row(model._table, row_id)) is not None
             and row.get(column) is not None

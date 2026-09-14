@@ -9,7 +9,7 @@ from odoo.orm.runtime.backend import InMemoryBackend
 _ORM_DIR = pathlib.Path(__file__).resolve().parent.parent
 
 # Every place the ORM chooses between the SQL path and env.backend. The surface
-# has grown to twenty-four sites across sixteen files
+# has grown to twenty-five sites across seventeen files
 # -- including six in Layer 1, where a field reaches the backend directly
 # rather than through a model mixin. Each entry says what the in-memory branch
 # does NOT do, so a site marked LOSSY is a known gap, not an oversight.
@@ -96,6 +96,12 @@ DISPATCH_SITES: dict[tuple[str, str], str] = {
     ("models/mixins/traversal.py", "_has_cycle"): (
         "guarded by backend.supports_recursive_queries: the reachability CTE on "
         "PostgreSQL, one relation read per step in memory, the same verdict"
+    ),
+    ("runtime/recordset_cache.py", "process"): (
+        "equivalent: Cache.check reads a stored column through backend.columns "
+        "on both tiers (the SQL path stays for a model with a _table_query), so "
+        "the DB-free harness asserts cache-against-rows after every test as "
+        "TransactionCase does against PostgreSQL"
     ),
     ("domain/optimizations.py", "_get_domain_child_of"): (
         "equivalent: the transitive closure of a many2one on a model without "
@@ -251,6 +257,7 @@ _NUMBER_WORDS = {
     "twenty-two": 22,
     "twenty-three": 23,
     "twenty-four": 24,
+    "twenty-five": 25,
 }
 
 
