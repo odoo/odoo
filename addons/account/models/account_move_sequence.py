@@ -10,6 +10,7 @@ from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import date_utils
 
+from .mixin_sequence import _last_sequence_memo
 from odoo.addons.account.tools import format_structured_reference_iso
 
 _debug = DebugLog(__name__)
@@ -77,20 +78,28 @@ class AccountMove(models.Model):
 
     def _get_strict_last_sequence_domain(self, is_payment):
         domain = self._get_domain_reference_move(is_payment)
-        reference_move_name = (
-            self.sudo()
-            .search(domain + [("date", "<=", self.date)], order="date desc", limit=1)
-            .name
-        )
-        _debug.logic(
-            "reference_move_before_date",
-            move=self,
-            found=bool(reference_move_name),
-        )
-        if not reference_move_name:
+        memo = _last_sequence_memo(self._name)(self.env)
+        key = ("reference_move_name", Domain(domain), self.date)
+        if key in memo:
+            reference_move_name = memo[key]
+        else:
             reference_move_name = (
-                self.sudo().search(domain, order="date asc", limit=1).name
+                self.sudo()
+                .search(
+                    domain + [("date", "<=", self.date)], order="date desc", limit=1
+                )
+                .name
             )
+            _debug.logic(
+                "reference_move_before_date",
+                move=self,
+                found=bool(reference_move_name),
+            )
+            if not reference_move_name:
+                reference_move_name = (
+                    self.sudo().search(domain, order="date asc", limit=1).name
+                )
+            memo[key] = reference_move_name
         sequence_number_reset = self._deduce_sequence_number_reset(reference_move_name)
         date_start, date_end, *_ = self._get_sequence_date_range(sequence_number_reset)
         strict = Domain("date", ">=", date_start) & Domain("date", "<=", date_end)

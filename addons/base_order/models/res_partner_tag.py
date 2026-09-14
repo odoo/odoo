@@ -1,5 +1,10 @@
 from odoo import api, fields, models
 from odoo.fields import Domain
+from odoo.tools import TransactionMemo
+
+RESERVED_TAGS = TransactionMemo(
+    "res.partner.tag.reserved", invalidated_by=("res.partner.tag",)
+)
 
 
 class ResPartnerTag(models.Model):
@@ -24,10 +29,17 @@ class ResPartnerTag(models.Model):
 
     @api.model
     def _get_domain_partner_allowed(self, order_type):
-        reserved = self.sudo().search(
-            Domain("group_ids", "!=", False)
-            & Domain("order_type", "in", (False, order_type)),
-        )
+        memo = RESERVED_TAGS(self.env)
+        if order_type not in memo:
+            memo[order_type] = (
+                self.sudo()
+                .search(
+                    Domain("group_ids", "!=", False)
+                    & Domain("order_type", "in", (False, order_type)),
+                )
+                .ids
+            )
+        reserved = self.sudo().browse(memo[order_type])
         if not reserved:
             return Domain.TRUE
 

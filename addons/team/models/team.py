@@ -4,9 +4,14 @@ from odoo import Command, _, api, fields, models
 from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
+from odoo.tools import TransactionMemo
 from odoo.tools.misc import str2bool
 
 _debug = DebugLog(__name__)
+
+TEAM_SEARCHES = TransactionMemo(
+    "team.team.searches", invalidated_by=("team.team", "team.member", "res.users")
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -451,7 +456,11 @@ class Team(models.Model):
         )
 
     def _search_ignoring_access(self, domain, limit=None):
-        return self.sudo().search(domain, limit=limit).with_env(self.env)
+        memo = TEAM_SEARCHES(self.env)
+        key = (Domain(domain), limit)
+        if key not in memo:
+            memo[key] = self.sudo().search(domain, limit=limit).ids
+        return self.browse(memo[key])
 
     def _get_usage_alias(self, key):
         self.check_singleton()

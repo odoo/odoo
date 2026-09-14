@@ -3,17 +3,27 @@ import re
 from collections import defaultdict
 from datetime import date
 
-
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import SQL, date_utils, frozendict
+from odoo.tools import SQL, TransactionMemo, date_utils, frozendict
 from odoo.tools.misc import format_date
 
 _logger = logging.getLogger(__name__)
 
 _debug = DebugLog(__name__)
+
+_LAST_SEQUENCE_MEMOS: dict[str, TransactionMemo] = {}
+
+
+def _last_sequence_memo(model_name):
+    memo = _LAST_SEQUENCE_MEMOS.get(model_name)
+    if memo is None:
+        memo = _LAST_SEQUENCE_MEMOS[model_name] = TransactionMemo(
+            f"mixin.sequence.last:{model_name}", invalidated_by=(model_name,)
+        )
+    return memo
 
 
 class MixinSequence(models.AbstractModel):
@@ -332,17 +342,23 @@ class MixinSequence(models.AbstractModel):
             relaxed=relaxed,
             with_prefix=with_prefix,
         )
+        memo = _last_sequence_memo(self._name)(self.env)
+        key = (self._sequence_field, domain)
+        if key in memo:
+            return memo[key]
         self.flush_model([self._sequence_field, "sequence_number", "sequence_prefix"])
         candidates = self.sudo().with_context(active_test=False)
         latest = candidates.search(domain, order="id DESC", limit=1)
-        if not latest:
-            return None
-        last = candidates.search(
-            domain & Domain("sequence_prefix", "=", latest.sequence_prefix or ""),
-            order="sequence_number DESC",
-            limit=1,
-        )
-        return last[self._sequence_field] or None
+        result = None
+        if latest:
+            last = candidates.search(
+                domain & Domain("sequence_prefix", "=", latest.sequence_prefix or ""),
+                order="sequence_number DESC",
+                limit=1,
+            )
+            result = last[self._sequence_field] or None
+        memo[key] = result
+        return result
 
     @_debug.perf.timed
     def _get_sequence_format_param(self, previous):
@@ -429,6 +445,7 @@ class MixinSequence(models.AbstractModel):
             sequence = format_string.format(**format_values, seq=seq)
             if columns.try_write(self, self._sequence_field, self.id, sequence):
                 cache[cache_key] = seq
+                _last_sequence_memo(self._name).discard(self.env)
                 _debug.lifecycle(
                     "sequence_assigned",
                     seq_model=self._name,

@@ -1,5 +1,6 @@
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.sales_team.tests.common import TestSalesCommon
+from odoo.addons.team.models.team import TEAM_SEARCHES
 
 
 class TestDefaultTeam(TestSalesCommon):
@@ -309,6 +310,7 @@ class TestDefaultTeamFallbackQueries(TestSalesCommon):
             return result
 
         cursor_cls.execute = counting
+        TEAM_SEARCHES.discard(self.env)
         try:
             self.env["team.team"].with_user(self.loner)._get_default_team(
                 "sale", domain=[("name", "=", "Wanted")]

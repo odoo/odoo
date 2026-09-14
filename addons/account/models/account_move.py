@@ -35,6 +35,9 @@ from odoo.tools.safe_eval import safe_eval
 from odoo.addons.account.tools.display_types import NON_ACCOUNTABLE_DISPLAY_TYPES
 
 _logger = logging.getLogger(__name__)
+DEFAULT_JOURNALS = TransactionMemo(
+    "account.move.default_journals", invalidated_by=("account.journal",)
+)
 INVOICE_TEMPLATE_REPORTS = TransactionMemo(
     "account.move.invoice_template_reports", invalidated_by=("ir.actions.report",)
 )
@@ -1312,17 +1315,25 @@ class AccountMove(models.Model):
             ("type", "in", journal_types),
         ]
 
-        journal = None
+        currency_id = None
         if self.env.cache.contains(self, self._fields["currency_id"]):
             currency_id = self.currency_id.id or self.env.context.get(
                 "default_currency_id"
             )
-            if currency_id and currency_id != company.currency_id.id:
+            if currency_id == company.currency_id.id:
+                currency_id = None
+        memo = DEFAULT_JOURNALS(self.env)
+        key = (self.env.uid, self.env.su, Domain(domain), currency_id)
+        if key in memo:
+            journal = self.env["account.journal"].browse(memo[key])
+        else:
+            journal = None
+            if currency_id:
                 currency_domain = domain + [("currency_id", "=", currency_id)]
                 journal = self.env["account.journal"].search(currency_domain, limit=1)
-
-        if not journal:
-            journal = self.env["account.journal"].search(domain, limit=1)
+            if not journal:
+                journal = self.env["account.journal"].search(domain, limit=1)
+            memo[key] = journal.id
         _debug.logic(
             "_search_default_journal",
             types=journal_types,
