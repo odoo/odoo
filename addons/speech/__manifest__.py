@@ -72,7 +72,7 @@ transcript, one rolled-up state and three hooks.
 No engine ships here
 --------------------
 This module registers no reader and no writer. ``speech_ai`` provides both on
-the ``api_ai`` registry, and a local engine would be a second module beside it.
+the ``gateway_ml`` registry, and a local engine would be a second module beside it.
 With neither installed, ``can_transcribe`` is False everywhere and the actions
 say so rather than failing at a vendor call.
     """,

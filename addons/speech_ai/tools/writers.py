@@ -6,8 +6,8 @@ from typing import Any
 from odoo.libs.documents import TEXT, BaseWriter, register_writer
 
 from .selection import SYNTHESIS_KIND, pick_model, run
-from odoo.addons.api_ai.tools.ai_clients import AI_CLIENT_REGISTRY
-from odoo.addons.api_ai.tools.vendor_catalog import PROVIDERS
+from odoo.addons.gateway_ml.tools.ai_clients import AI_CLIENT_REGISTRY
+from odoo.addons.gateway_ml.tools.vendor_catalog import PROVIDERS
 
 _logger = logging.getLogger(__name__)
 

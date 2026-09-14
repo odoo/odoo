@@ -4,7 +4,7 @@ from odoo.libs.documents import TEXT, get_writers
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
-from odoo.addons.api_ai.tools.ai_orchestrator import AIOrchestrator
+from odoo.addons.gateway_ml.tools.ai_orchestrator import AIOrchestrator
 from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 from odoo.addons.speech_ai.tools.writers import AiSpeech
 

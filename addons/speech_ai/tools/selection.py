@@ -4,7 +4,7 @@ import logging
 from collections.abc import Iterable
 from typing import Any
 
-from odoo.addons.api_ai.tools.ai_orchestrator import get_ai_orchestrator
+from odoo.addons.gateway_ml.tools.ai_orchestrator import get_ai_orchestrator
 
 _logger = logging.getLogger(__name__)
 

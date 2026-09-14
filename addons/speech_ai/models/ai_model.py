@@ -4,7 +4,7 @@ from odoo import fields, models
 
 
 class AiModel(models.Model):
-    _inherit = "ai.model"
+    _inherit = "gateway.ml.model"
 
     kind = fields.Selection(
         selection_add=[("speech", "Speech")],

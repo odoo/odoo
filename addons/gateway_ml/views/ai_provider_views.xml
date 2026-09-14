@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ai_provider_search" model="ir.ui.view">
+        <field name="name">gateway.ml.provider.search</field>
+        <field name="model">gateway.ml.provider</field>
+        <field name="arch" type="xml">
+            <search string="AI Providers">
+                <field name="name" />
+                <field name="code" />
+                <field name="default_model_id" />
+                <filter
+                    name="filter_active"
+                    string="Active"
+                    domain="[('active', '=', True)]" />
+                <filter
+                    name="filter_inactive"
+                    string="Inactive"
+                    domain="[('active', '=', False)]" />
+                <separator />
+                <filter
+                    name="filter_vision"
+                    string="Has Vision"
+                    domain="[('has_vision', '=', True)]" />
+                <filter
+                    name="filter_embeddings"
+                    string="Has Embeddings"
+                    domain="[('has_embeddings', '=', True)]" />
+                <filter
+                    name="filter_free"
+                    string="Has Free Tier"
+                    domain="[('has_free_tier', '=', True)]" />
+                <separator />
+                <filter
+                    name="filter_high_accuracy"
+                    string="High Accuracy"
+                    domain="[('default_model_id.accuracy_rating', 'in', ['4', '5'])]" />
+                <filter
+                    name="filter_fast"
+                    string="Fast"
+                    domain="[('default_model_id.speed_rating', 'in', ['4', '5'])]" />
+                <group>
+                    <filter
+                        name="group_by_category"
+                        string="Category"
+                        context="{'group_by': 'category'}" />
+                    <filter
+                        name="group_by_default_model"
+                        string="Default Model"
+                        context="{'group_by': 'default_model_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_ai_provider_list" model="ir.ui.view">
+        <field name="name">gateway.ml.provider.list</field>
+        <field name="model">gateway.ml.provider</field>
+        <field name="arch" type="xml">
+            <list string="AI Providers" create="1" delete="1">
+                <field name="sequence" widget="handle" />
+                <field name="name" />
+                <field name="code" />
+                <field name="default_model_id" />
+                <field name="has_vision" widget="boolean_toggle" />
+                <field name="has_audio" widget="boolean_toggle" />
+                <field name="total_requests" />
+                <field name="success_rate" widget="progressbar" />
+                <field name="active" widget="boolean_toggle" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ai_provider_kanban" model="ir.ui.view">
+        <field name="name">gateway.ml.provider.kanban</field>
+        <field name="model">gateway.ml.provider</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="name" />
+                <field name="code" />
+                <field name="default_model_id" />
+                <field name="has_vision" />
+                <field name="success_rate" />
+                <field name="active" />
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <strong>
+                                    <field name="name" />
+                                </strong>
+                                <div>
+                                    <field name="code" />
+                                </div>
+                            </div>
+                            <div>
+                                <field name="active" widget="boolean_toggle" />
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <span class="badge" t-if="record.has_vision.raw_value">Vision</span>
+                            <span class="badge"><field name="default_model_id" /></span>
+                        </div>
+                        <div class="mt-2">
+                            <div>Success: <field name="success_rate" />%</div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_ai_provider_form" model="ir.ui.view">
+        <field name="name">gateway.ml.provider.form</field>
+        <field name="model">gateway.ml.provider</field>
+        <field name="arch" type="xml">
+            <form string="AI Provider">
+                <header>
+                    <button
+                        name="action_view_request_logs"
+                        type="object"
+                        string="View Request Logs"
+                        class="btn-primary" />
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="action_view_request_logs"
+                            type="object"
+                            icon="fa-history"
+                            class="oe_stat_button">
+                            <field
+                                name="total_requests"
+                                string="Requests"
+                                widget="statinfo" />
+                        </button>
+                    </div>
+                    <widget
+                        name="web_ribbon"
+                        title="Inactive"
+                        invisible="active"
+                        bg_color="text-bg-danger" />
+                    <group>
+                        <group name="basic_info">
+                            <field name="name" />
+                            <field name="code" />
+                            <field name="category" />
+                            <field name="provider" />
+                            <field name="sequence" />
+                            <field name="active" widget="boolean_toggle" />
+                        </group>
+                        <group name="connection">
+                            <field name="endpoint_url" />
+                            <field name="endpoint_url_test" />
+                            <field name="environment" />
+                            <field name="default_model_id" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="models" string="Models">
+                            <field name="model_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle" />
+                                    <field name="name" />
+                                    <field name="code" />
+                                    <field name="kind" />
+                                    <field name="has_vision" widget="boolean_toggle" />
+                                    <field name="cost_per_1m_input" string="Input" />
+                                    <field name="cost_per_1m_output" string="Output" />
+                                    <field name="max_context_window" string="Context" />
+                                    <field name="active" widget="boolean_toggle" />
+                                </list>
+                            </field>
+                        </page>
+                        <page name="capabilities" string="Capabilities">
+                            <group>
+                                <group string="Derived from the models">
+                                    <field name="has_vision" />
+                                    <field name="has_audio" />
+                                </group>
+                                <group string="Vendor">
+                                    <field name="has_embeddings" />
+                                    <field name="has_free_tier" />
+                                    <field
+                                        name="free_tier_limit"
+                                        invisible="not has_free_tier" />
+                                </group>
+                            </group>
+                        </page>
+                        <page name="quality" string="Quality &amp; Performance">
+                            <group>
+                                <group string="Ratings (1-5)">
+                                    <field
+                                        name="reliability_rating"
+                                        widget="priority" />
+                                </group>
+                                <group string="Performance Metrics">
+                                    <field name="success_rate" widget="progressbar" />
+                                    <field name="avg_response_time" />
+                                </group>
+                            </group>
+                        </page>
+                        <page name="use_cases" string="Use Cases">
+                            <group>
+                                <field
+                                    name="best_for_tag_ids"
+                                    widget="many2many_tags"
+                                    options="{'color_field': 'color'}" />
+                            </group>
+                        </page>
+                        <page name="api_config" string="API Configuration">
+                            <group>
+                                <group string="Authentication">
+                                    <field name="auth_type" />
+                                </group>
+                                <group string="Rate Limiting">
+                                    <field name="rate_limit_enabled" />
+                                    <field
+                                        name="rate_limit_requests"
+                                        invisible="not rate_limit_enabled" />
+                                    <field
+                                        name="rate_limit_period"
+                                        invisible="not rate_limit_enabled" />
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Timeouts">
+                                    <field name="timeout_connect" />
+                                    <field name="timeout_read" />
+                                </group>
+                                <group string="Retry Settings">
+                                    <field name="retry_enabled" />
+                                    <field
+                                        name="retry_max_attempts"
+                                        invisible="not retry_enabled" />
+                                    <field
+                                        name="retry_backoff_type"
+                                        invisible="not retry_enabled" />
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ai_provider" model="ir.actions.act_window">
+        <field name="name">AI Providers</field>
+        <field name="res_model">gateway.ml.provider</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="context">{'search_default_filter_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first AI Provider
+            </p>
+            <p>
+                AI Providers allow you to connect to external AI services like OpenAI, Claude, or
+                Gemini.
+                Configure capabilities, pricing, and fallback chains for intelligent provider
+                selection.
+            </p>
+        </field>
+    </record>
+
+</odoo>

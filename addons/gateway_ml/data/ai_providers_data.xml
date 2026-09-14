@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="ai_provider_google" model="gateway.ml.provider">
+        <field name="endpoint_id" ref="service_google" />
+        <field name="sequence" eval="10" />
+        <field name="has_embeddings" eval="True" />
+        <field name="has_free_tier" eval="True" />
+        <field name="free_tier_limit">1500</field>
+        <field name="reliability_rating">4</field>
+        <field
+            name="best_for_tag_ids"
+            eval="[                 Command.link(ref('tag_vision')),                 Command.link(ref('tag_speed')),                 Command.link(ref('tag_budget')),                 Command.link(ref('tag_ocr')),                 Command.link(ref('tag_long_context')),             ]" />
+    </record>
+
+    <record id="ai_provider_anthropic" model="gateway.ml.provider">
+        <field name="endpoint_id" ref="service_anthropic" />
+        <field name="sequence" eval="20" />
+        <field name="has_embeddings" eval="False" />
+        <field name="has_free_tier" eval="False" />
+        <field name="reliability_rating">5</field>
+        <field
+            name="best_for_tag_ids"
+            eval="[                 Command.link(ref('tag_reasoning')),                 Command.link(ref('tag_accuracy')),                 Command.link(ref('tag_long_context')),                 Command.link(ref('tag_vision')),             ]" />
+    </record>
+
+    <record id="ai_provider_openai" model="gateway.ml.provider">
+        <field name="endpoint_id" ref="service_openai" />
+        <field name="sequence" eval="30" />
+        <field name="has_embeddings" eval="True" />
+        <field name="has_free_tier" eval="False" />
+        <field name="reliability_rating">5</field>
+        <field
+            name="best_for_tag_ids"
+            eval="[                 Command.link(ref('tag_vision')),                 Command.link(ref('tag_chat')),                 Command.link(ref('tag_content_generation')),                 Command.link(ref('tag_embeddings')),             ]" />
+    </record>
+
+    <record id="ai_provider_deepseek" model="gateway.ml.provider">
+        <field name="endpoint_id" ref="service_deepseek" />
+        <field name="sequence" eval="40" />
+        <field name="has_embeddings" eval="False" />
+        <field name="has_free_tier" eval="False" />
+        <field name="reliability_rating">3</field>
+        <field
+            name="best_for_tag_ids"
+            eval="[                 Command.link(ref('tag_budget')),                 Command.link(ref('tag_speed')),                 Command.link(ref('tag_chat')),             ]" />
+    </record>
+
+    <record id="ai_provider_deepgram" model="gateway.ml.provider">
+        <field name="endpoint_id" ref="service_deepgram" />
+        <field name="sequence" eval="50" />
+        <field name="has_embeddings" eval="False" />
+        <field name="has_free_tier" eval="True" />
+        <field name="reliability_rating">4</field>
+        <field
+            name="best_for_tag_ids"
+            eval="[                 Command.link(ref('tag_audio')),                 Command.link(ref('tag_speed')),                 Command.link(ref('tag_accuracy')),             ]" />
+    </record>
+
+    <record id="ai_provider_groq" model="gateway.ml.provider">
+        <field name="endpoint_id" ref="service_groq" />
+        <field name="sequence" eval="60" />
+        <field name="has_embeddings" eval="False" />
+        <field name="has_free_tier" eval="True" />
+        <field name="reliability_rating">3</field>
+        <field
+            name="best_for_tag_ids"
+            eval="[Command.link(ref('tag_speed')), Command.link(ref('tag_budget'))]" />
+    </record>
+
+    <record id="ai_provider_moonshot" model="gateway.ml.provider">
+        <field name="endpoint_id" ref="service_moonshot" />
+        <field name="sequence" eval="70" />
+        <field name="has_embeddings" eval="False" />
+        <field name="has_free_tier" eval="False" />
+        <field name="reliability_rating">3</field>
+        <field
+            name="best_for_tag_ids"
+            eval="[Command.link(ref('tag_reasoning')), Command.link(ref('tag_long_context'))]" />
+    </record>
+
+</odoo>

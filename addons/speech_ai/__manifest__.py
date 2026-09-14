@@ -3,7 +3,7 @@
     "version": "19.0.1.0.0",
     "category": "Hidden",
     "sequence": 10,
-    "summary": "Transcription and synthesis engines on the api_ai registry",
+    "summary": "Transcription and synthesis engines on the gateway_ml registry",
     "description": """
 Speech - AI Engines
 ===================
@@ -21,7 +21,7 @@ first, credential or not.
     ``audio`` through ``AIOrchestrator`` -- by cost, accuracy or speed, filtered
     by which credentials this company actually holds -- and walks the model's
     fallback chain. Nothing here names a vendor, and adding one is an
-    ``ai.model`` record rather than a code change.
+    ``gateway.ml.model`` record rather than a code change.
 
 ``ai_speech``
     A writer per audio mimetype, consuming text and emitting sound, selecting a
@@ -36,16 +36,16 @@ call.
 
 ``kind`` gains ``speech``
 -------------------------
-``ai.model.kind`` already separated chat, vision, audio and embeddings. Text to
+``gateway.ml.model.kind`` already separated chat, vision, audio and embeddings. Text to
 speech is a fifth thing a model name decides, and it is added here rather than
-in ``api_ai`` because the concept arrives with these engines.
+in ``gateway_ml`` because the concept arrives with these engines.
     """,
     "author": "AgroMarin",
     "website": "https://www.agromarin.mx",
     "license": "LGPL-3",
     "depends": [
         "speech",
-        "api_ai",
+        "gateway_ml",
     ],
     "data": [
         "data/ai_models_data.xml",

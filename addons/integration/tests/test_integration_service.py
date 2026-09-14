@@ -436,7 +436,7 @@ class TestApiKeyHeader(EncryptionKeyCase, TransactionCase):
             [("code", "=", "deepgram")], limit=1
         )
         if not service:
-            self.skipTest("api_ai not installed")
+            self.skipTest("gateway_ml not installed")
         self.assertEqual(service.api_key_scheme, "Token")
 
     def test_a_named_header_replaces_the_generic_pair(self):

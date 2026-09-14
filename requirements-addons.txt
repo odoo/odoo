@@ -58,11 +58,11 @@ boto3==1.43.93  # cloud_storage_s3
 botocore==1.43.93  # cloud_storage_s3 -- boto3's own pinned
                    # runtime, held at the matching version so a boto3 bump
                    # cannot silently drag a different botocore in
-# api_ai, for the subprocess path only: tools/claude_sdk.py guards the import
+# gateway_ml, for the subprocess path only: tools/claude_sdk.py guards the import
 # and sets SDK_AVAILABLE, so a module that only drives the HTTP path installs
 # and runs without it. Moved here from agromarin/requirements.txt, which had
-# kept it after api_ai itself moved into this tree.
-claude-agent-sdk==0.2.152  # api_ai — optional, degrades without it
+# kept it after gateway_ml itself moved into this tree.
+claude-agent-sdk==0.2.152  # gateway_ml — optional, degrades without it
 chardet==5.2.0  # base_import, mail
 defusedxml==0.7.1  # attachment_indexation, website
 google-auth==2.58.0  # cloud_storage_google

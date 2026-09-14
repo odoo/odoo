@@ -16,7 +16,7 @@ class TestReaderSelection(EncryptionKeyCase, TransactionCase):
         )
 
     def test_a_cheaper_model_without_timestamps_is_not_picked_for_cues(self):
-        transcribe = self.env.ref("api_ai.ai_model_openai_gpt_transcribe")
-        whisper = self.env.ref("api_ai.ai_model_openai_whisper_1")
+        transcribe = self.env.ref("gateway_ml.ai_model_openai_gpt_transcribe")
+        whisper = self.env.ref("gateway_ml.ai_model_openai_whisper_1")
         self.assertLess(transcribe.cost_per_audio_minute, whisper.cost_per_audio_minute)
         self.assertEqual(_pick_timed_model(self.env), whisper)

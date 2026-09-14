@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="service_anthropic" model="integration.service">
+        <field name="name">Claude AI (Anthropic)</field>
+        <field name="code">claude</field>
+        <field name="category">ai</field>
+        <field
+            name="description">Claude is Anthropic's AI assistant with advanced reasoning capabilities.
+
+Models: see ClaudeClient.VALID_MODELS and the provider's default_model_id. This
+field deliberately does not list them. It carried a "Latest Models (October
+2025)" block naming Sonnet 4.5, Haiku 4.5 and Opus 4.1 long after those stopped
+being latest, because a description loaded noupdate="1" is written once and read
+for years while the model line moves every few months. A fourth copy of the
+model list, and the one nothing could correct.
+
+Features:
+- 1M token context window on current models
+- Vision capabilities (images, PDFs, base64, URLs)
+- Adaptive thinking for complex reasoning
+- Tool use for structured outputs and function calling
+- Guaranteed valid JSON via tool use (structured_output method)
+- JSON parsed from a text answer (json_completion method)
+- Prompt caching for optimized repeated context usage
+
+For current pricing information, visit: https://www.anthropic.com/pricing
+
+Use Cases:
+- Complex agent building and automation
+- Code generation and review
+- Document understanding and summarization (vision + PDF)
+- Agentic workflows with tool use
+- Multi-turn conversations with vision
+- Data extraction with structured_output (production)
+- Simple JSON with json_completion (quick tasks)
+- Complex reasoning with adaptive thinking
+
+ClaudeClient Methods (Phase 1 - Quick Wins):
+- create_message() - Full API control with vision, thinking, tools
+- simple_completion() - Quick text generation
+- vision_completion() - Analyze images
+- structured_output() - Guaranteed JSON with schema validation
+- json_completion() - JSON parsed from a text answer
+- vision_structured_output() - Extract data from images
+- streaming_completion() - Stream responses
+- get_usage() - Track token usage
+
+ClaudeClient Methods (Phase 2 - Advanced):
+- create_cacheable_content() - Create cached content blocks
+- create_cached_system_prompt() - Cached system prompts for optimization
+- tool_conversation() - Agentic workflows with tool use
+
+ClaudeClient Methods (Phase 3 - PDF Support):
+- pdf_completion() - Analyze PDF documents (text, tables, charts)
+- pdf_structured_output() - Extract validated data from PDFs
+- pdf_with_caching() - Multi-question PDF analysis with optimization
+
+Real-World Use Cases:
+- Chatbots with cached guidelines (optimized token usage)
+- AI agents that query Odoo database (tool use)
+- Full module code analysis (extended context)
+- Invoice OCR with structured extraction (vision + structured output)
+- PDF invoice/contract processing (pdf_structured_output)
+- Multi-step workflows (tool conversation)
+- Document understanding at scale (extended context + caching)
+- Batch PDF processing (100s of documents)
+- Interactive PDF Q&amp;A (pdf_with_caching)</field>
+        <field name="provider">Anthropic</field>
+        <field name="website">https://www.anthropic.com</field>
+        <field name="documentation_url">https://docs.anthropic.com/en/api/</field>
+        <field name="endpoint_url">https://api.anthropic.com/v1</field>
+        <field name="api_version">2023-06-01</field>
+        <field name="send_version_headers" eval="False" />
+        <field name="api_version_header">anthropic-version</field>
+        <field name="auth_type">api_key</field>
+        <field name="api_key_header">x-api-key</field>
+        <field name="rate_limit_enabled" eval="True" />
+        <field name="rate_limit_requests" eval="50" />
+        <field name="rate_limit_period">minute</field>
+        <field name="timeout_connect" eval="10" />
+        <field name="timeout_read" eval="120" />
+        <field name="retry_enabled" eval="True" />
+        <field name="retry_max_attempts" eval="3" />
+        <field name="retry_backoff_type">exponential</field>
+        <field name="health_check_enabled" eval="False" />
+        <field name="cache_enabled" eval="False" />
+        <field name="active" eval="True" />
+        <field name="sequence" eval="10" />
+    </record>
+
+    <record id="service_deepseek" model="integration.service">
+        <field name="name">DeepSeek AI</field>
+        <field name="code">deepseek</field>
+        <field name="category">ai</field>
+        <field
+            name="description">DeepSeek provides powerful AI models for various tasks.
+
+Models: see the provider's gateway.ml.model rows and default_model_id. This field
+deliberately does not list them by name, after service_anthropic's description
+carried a hardcoded model list that aged badly in a noupdate="1" record.
+DeepSeek has no vision-capable model or OCR support in this client.
+
+Features:
+- Thinking mode, switched per request (off for chat, on for reasoning_completion)
+- Enhanced agent capabilities
+- OpenAI-compatible API format
+- Function calling / tool use support
+- JSON mode for structured output
+- Excellent for mathematical and coding tasks
+- MIT License (model is open-source)
+
+For current pricing information, visit: https://platform.deepseek.com/
+
+DeepSeekClient Methods:
+- chat_completion() - Full API control with messages
+- simple_completion() - Quick text generation
+- streaming_completion() - Stream responses in real-time
+- structured_output() - Guaranteed JSON with schema validation via function calling
+- json_completion() - JSON parsed from a text answer
+- get_usage() - Token usage tracking
+- reasoning_completion() - Complex reasoning with thinking mode on
+- tool_conversation() - Multi-turn agentic workflows with function calling
+
+Use Cases:
+- Code generation and analysis
+- Mathematical reasoning
+- Structured data extraction (structured_output)
+- AI agents with Odoo integration (tool_conversation)
+- Bulk text processing
+- Technical documentation
+- Code review and analysis
+- Long conversation workflows
+
+When to Use DeepSeek vs Claude:
+- Use DeepSeek for: Math, coding, bulk operations
+- Use Claude for: Vision/OCR, native PDF processing, extremely complex reasoning
+- Use Both: DeepSeek for general tasks, Claude for advanced features requiring vision/PDFs
+
+Limitations:
+- No vision or OCR capability
+- No native PDF processing
+- No batch API</field>
+        <field name="provider">DeepSeek</field>
+        <field name="website">https://www.deepseek.com</field>
+        <field name="documentation_url">https://platform.deepseek.com/api-docs/</field>
+        <field name="endpoint_url">https://api.deepseek.com/v1</field>
+        <field name="api_version">v1</field>
+        <field name="auth_type">bearer</field>
+        <field name="rate_limit_enabled" eval="True" />
+        <field name="rate_limit_requests" eval="60" />
+        <field name="rate_limit_period">minute</field>
+        <field name="timeout_connect" eval="10" />
+        <field name="timeout_read" eval="120" />
+        <field name="retry_enabled" eval="True" />
+        <field name="retry_max_attempts" eval="3" />
+        <field name="retry_backoff_type">exponential</field>
+        <field name="health_check_enabled" eval="False" />
+        <field name="cache_enabled" eval="False" />
+        <field name="active" eval="True" />
+        <field name="sequence" eval="11" />
+    </record>
+
+    <record id="service_openai" model="integration.service">
+        <field name="name">OpenAI API</field>
+        <field name="code">openai</field>
+        <field name="category">ai</field>
+        <field
+            name="description">OpenAI's GPT models for various AI tasks.
+
+Models: see the provider's gateway.ml.model rows and default_model_id. This field
+deliberately does not list them by name: it carried a "Latest Models (October
+2025)" block, the same noupdate="1" trap service_anthropic's describes.
+
+Features:
+- Image generation
+- Speech-to-text
+- Text-to-speech
+- Embeddings and fine-tuning
+- Function calling
+
+For current pricing information, visit: https://openai.com/api/pricing/
+
+Use Cases:
+- Conversational AI
+- Content creation
+- Code assistance
+- Translation
+- Summarization
+- Image generation</field>
+        <field name="provider">OpenAI</field>
+        <field name="website">https://openai.com</field>
+        <field
+            name="documentation_url">https://platform.openai.com/docs/api-reference</field>
+        <field name="endpoint_url">https://api.openai.com/v1</field>
+        <field name="api_version">v1</field>
+        <field name="auth_type">bearer</field>
+        <field name="rate_limit_enabled" eval="True" />
+        <field name="rate_limit_requests" eval="60" />
+        <field name="rate_limit_period">minute</field>
+        <field name="timeout_connect" eval="10" />
+        <field name="timeout_read" eval="120" />
+        <field name="retry_enabled" eval="True" />
+        <field name="retry_max_attempts" eval="3" />
+        <field name="retry_backoff_type">exponential</field>
+        <field name="health_check_enabled" eval="False" />
+        <field name="cache_enabled" eval="False" />
+        <field name="active" eval="True" />
+        <field name="sequence" eval="12" />
+    </record>
+
+    <record id="service_google" model="integration.service">
+        <field name="name">Google Gemini AI</field>
+        <field name="code">gemini</field>
+        <field name="category">ai</field>
+        <field
+            name="description">Google's AI models with multimodal capabilities.
+
+Models: see the provider's gateway.ml.model rows and default_model_id. This field
+deliberately does not list them by name: it carried a "Latest Models (October
+2025)" block, the same noupdate="1" trap service_anthropic's describes.
+
+Features:
+- 1M token context window
+- Native multimodal (text, images, audio, video)
+- Thinking with adjustable reasoning effort
+- Free tier available
+
+For current pricing information, visit: https://ai.google.dev/pricing
+
+Use Cases:
+- Long document analysis
+- Multimodal applications (images, video, audio)
+- Complex agentic workflows
+- Real-time streaming
+- Code generation and review
+- Large-scale data processing</field>
+        <field name="provider">Google AI</field>
+        <field name="website">https://ai.google.dev</field>
+        <field name="documentation_url">https://ai.google.dev/gemini-api/docs</field>
+        <field
+            name="endpoint_url">https://generativelanguage.googleapis.com/v1beta</field>
+        <field name="api_version">v1beta</field>
+        <field name="send_version_headers" eval="False" />
+        <field name="auth_type">api_key</field>
+        <field name="api_key_header">x-goog-api-key</field>
+        <field name="rate_limit_enabled" eval="True" />
+        <field name="rate_limit_requests" eval="60" />
+        <field name="rate_limit_period">minute</field>
+        <field name="timeout_connect" eval="10" />
+        <field name="timeout_read" eval="120" />
+        <field name="retry_enabled" eval="True" />
+        <field name="retry_max_attempts" eval="3" />
+        <field name="retry_backoff_type">exponential</field>
+        <field name="health_check_enabled" eval="False" />
+        <field name="cache_enabled" eval="False" />
+        <field name="active" eval="True" />
+        <field name="sequence" eval="13" />
+    </record>
+
+    <record id="service_deepgram" model="integration.service">
+        <field name="name">Deepgram Speech AI</field>
+        <field name="code">deepgram</field>
+        <field name="category">ai</field>
+        <field
+            name="description">Industry-leading speech recognition and audio intelligence platform.
+
+Core Capabilities:
+- Speech-to-Text: Pre-recorded and real-time streaming transcription
+- Text-to-Speech: Natural voice synthesis with multiple voices
+- Audio Intelligence: Summarization, sentiment, topics, entities, intents
+- Multi-language: Support for 30+ languages with code-switching
+- Speaker Diarization: Identify and separate different speakers
+
+Key Features:
+- Multiple transcription models for different use cases
+- Advanced audio intelligence and insights
+- PII redaction and content filtering
+- Custom vocabulary and keyword boosting
+- Real-time WebSocket streaming
+- High accuracy with low latency
+- Enterprise-grade reliability
+
+Use Cases:
+- Call center analytics and quality monitoring
+- Meeting transcription and insights
+- Media and podcast transcription
+- Voice-enabled applications
+- Compliance and legal documentation
+
+For current features, models, and pricing: https://deepgram.com
+API Documentation: https://developers.deepgram.com/docs</field>
+        <field name="provider">Deepgram</field>
+        <field name="website">https://deepgram.com</field>
+        <field name="documentation_url">https://developers.deepgram.com/docs</field>
+        <field name="endpoint_url">https://api.deepgram.com/v1</field>
+        <field name="api_version">v1</field>
+        <field name="auth_type">api_key</field>
+        <field name="api_key_scheme">Token</field>
+        <field name="rate_limit_enabled" eval="True" />
+        <field name="rate_limit_requests" eval="100" />
+        <field name="rate_limit_period">minute</field>
+        <field name="timeout_connect" eval="15" />
+        <field name="timeout_read" eval="180" />
+        <field name="retry_enabled" eval="True" />
+        <field name="retry_max_attempts" eval="3" />
+        <field name="retry_backoff_type">exponential</field>
+        <field name="health_check_enabled" eval="False" />
+        <field name="cache_enabled" eval="True" />
+        <field name="cache_ttl" eval="3600" />
+        <field name="active" eval="True" />
+        <field name="sequence" eval="14" />
+    </record>
+
+    <record id="service_groq" model="integration.service">
+        <field name="name">Groq</field>
+        <field name="code">groq</field>
+        <field name="category">ai</field>
+        <field name="provider">Groq</field>
+        <field name="website">https://groq.com</field>
+        <field name="documentation_url">https://console.groq.com/docs</field>
+        <field name="endpoint_url">https://api.groq.com/openai/v1</field>
+        <field name="auth_type">bearer</field>
+        <field name="rate_limit_enabled" eval="True" />
+        <field name="rate_limit_requests" eval="60" />
+        <field name="rate_limit_period">minute</field>
+        <field name="timeout_connect" eval="15" />
+        <field name="timeout_read" eval="120" />
+        <field name="retry_enabled" eval="True" />
+        <field name="retry_max_attempts" eval="2" />
+        <field name="retry_backoff_type">exponential</field>
+        <field name="health_check_enabled" eval="False" />
+        <field name="cache_enabled" eval="False" />
+        <field name="active" eval="True" />
+        <field name="sequence" eval="15" />
+    </record>
+
+    <record id="service_moonshot" model="integration.service">
+        <field name="name">Moonshot (Kimi)</field>
+        <field name="code">moonshot</field>
+        <field name="category">ai</field>
+        <field name="provider">Moonshot AI</field>
+        <field name="website">https://moonshot.ai</field>
+        <field name="documentation_url">https://platform.moonshot.ai/docs</field>
+        <field name="endpoint_url">https://api.moonshot.ai/v1</field>
+        <field name="auth_type">bearer</field>
+        <field name="rate_limit_enabled" eval="True" />
+        <field name="rate_limit_requests" eval="60" />
+        <field name="rate_limit_period">minute</field>
+        <field name="timeout_connect" eval="15" />
+        <field name="timeout_read" eval="120" />
+        <field name="retry_enabled" eval="True" />
+        <field name="retry_max_attempts" eval="2" />
+        <field name="retry_backoff_type">exponential</field>
+        <field name="health_check_enabled" eval="False" />
+        <field name="cache_enabled" eval="False" />
+        <field name="active" eval="True" />
+        <field name="sequence" eval="16" />
+    </record>
+
+    <record id="service_google_openai" model="integration.service">
+        <field name="name">Google Gemini (OpenAI-compatible)</field>
+        <field name="code">gemini_openai</field>
+        <field name="category">ai</field>
+        <field name="provider">Google</field>
+        <field name="website">https://ai.google.dev</field>
+        <field
+            name="documentation_url">https://ai.google.dev/gemini-api/docs/openai</field>
+        <field
+            name="endpoint_url">https://generativelanguage.googleapis.com/v1beta/openai</field>
+        <field name="auth_type">bearer</field>
+        <field name="rate_limit_enabled" eval="True" />
+        <field name="rate_limit_requests" eval="60" />
+        <field name="rate_limit_period">minute</field>
+        <field name="timeout_connect" eval="15" />
+        <field name="timeout_read" eval="120" />
+        <field name="retry_enabled" eval="True" />
+        <field name="retry_max_attempts" eval="2" />
+        <field name="retry_backoff_type">exponential</field>
+        <field name="health_check_enabled" eval="False" />
+        <field name="cache_enabled" eval="False" />
+        <field name="active" eval="True" />
+        <field name="sequence" eval="17" />
+    </record>
+
+</odoo>

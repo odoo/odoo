@@ -2,8 +2,8 @@
 <odoo>
 
     <data noupdate="1">
-        <record id="ai_model_openai_gpt_4o_mini_tts" model="ai.model">
-            <field name="provider_id" ref="api_ai.ai_provider_openai" />
+        <record id="ai_model_openai_gpt_4o_mini_tts" model="gateway.ml.model">
+            <field name="provider_id" ref="gateway_ml.ai_provider_openai" />
             <field name="name">GPT-4o mini TTS</field>
             <field name="code">gpt-4o-mini-tts</field>
             <field name="kind">speech</field>
@@ -12,8 +12,8 @@
             <field name="accuracy_rating">4</field>
             <field name="speed_rating">4</field>
         </record>
-        <record id="ai_model_deepgram_aura_2_asteria" model="ai.model">
-            <field name="provider_id" ref="api_ai.ai_provider_deepgram" />
+        <record id="ai_model_deepgram_aura_2_asteria" model="gateway.ml.model">
+            <field name="provider_id" ref="gateway_ml.ai_provider_deepgram" />
             <field name="name">Aura 2 Asteria</field>
             <field name="code">aura-2-asteria-en</field>
             <field name="kind">speech</field>

@@ -4,13 +4,13 @@ import logging
 from typing import Any
 
 from .prompt import prepare_prompt
-from odoo.addons.api_ai.tools import get_ai_orchestrator, parse_json_response
 from odoo.addons.extract.tools import (
     GENERATIVE,
     BaseExtractor,
     known_schemas,
 )
 from odoo.addons.extract.tools.schema import get_schema
+from odoo.addons.gateway_ml.tools import get_ai_orchestrator, parse_json_response
 
 _logger = logging.getLogger(__name__)
 

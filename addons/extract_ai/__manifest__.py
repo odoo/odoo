@@ -2,13 +2,13 @@
     "name": "Document Extraction - AI Readers",
     "version": "19.0.1.0.0",
     "category": "Hidden",
-    "summary": "Generative strategies for extract, on the api_ai registry",
+    "summary": "Generative strategies for extract, on the gateway_ml registry",
     "description": """
 Document Extraction - AI Readers
 ================================
 
 Two generative strategies for ``extract``, both reaching a model
-through ``api_ai`` -- its provider registry, its selection by cost or accuracy,
+through ``gateway_ml`` -- its provider registry, its selection by cost or accuracy,
 its fallback chain, its per-vendor clients. Neither knows a vendor's name.
 
 ``llm_text``
@@ -40,7 +40,7 @@ bill.
     "website": "https://agromarin.com",
     "license": "LGPL-3",
     "depends": [
-        "api_ai",
+        "gateway_ml",
         "extract",
     ],
 }
