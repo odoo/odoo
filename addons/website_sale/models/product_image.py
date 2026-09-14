@@ -82,6 +82,11 @@ class ProductImage(models.Model):
         ):
             self.product_tmpl_id._set_main_image_from_extra_images()
             self.product_tmpl_id.product_variant_ids._set_main_image_from_extra_images()
+        if self.type:
+            duplicate_types = self.product_tmpl_id.product_template_image_ids.filtered(
+                lambda i: i.type == self.type and i.id != self.id
+            )
+            duplicate_types.write({"type": False})
         return res
 
     def unlink(self):
