@@ -3,6 +3,7 @@ __all__ = [
     "convert_file",
     "convert_sql_import",
     "convert_xml_import",
+    "reload_records",
 ]
 import base64
 import csv
@@ -13,7 +14,7 @@ import pprint
 import re
 import subprocess
 import warnings
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import IO, TYPE_CHECKING, Any, Literal
@@ -1148,3 +1149,28 @@ def convert_xml_import(
         env, module, idref, mode, noupdate=noupdate, xml_filename=xml_filename
     )
     obj.parse(doc.getroot())
+
+
+def reload_records(
+    env: Environment, module: str, filename: str, xmlids: Iterable[str]
+) -> None:
+    """Re-import records a module's data file declares inside a ``noupdate`` block.
+
+    An update leaves such records untouched once they exist, which is what keeps a
+    customised record alive; a migration that changes what the module ships needs
+    the opposite for the records it names. They are loaded as at installation and
+    stay ``noupdate``, so the following updates skip them again.
+    """
+    wanted = set(xmlids)
+    path = file_path(f"{module}/{filename}")
+    source = etree.parse(path)
+    root = etree.Element("odoo")
+    data = etree.SubElement(root, "data")
+    for record in source.iter("record"):
+        if record.get("id") in wanted:
+            data.append(record)
+    if missing := wanted - {record.get("id") for record in data}:
+        raise ValueError(f"{module}/{filename} declares no record {sorted(missing)}")
+    content = io.BytesIO(etree.tostring(root))
+    content.name = path
+    convert_xml_import(env, module, content, mode="init", noupdate=True)
