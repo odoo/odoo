@@ -1,4 +1,7 @@
+import re
 from datetime import UTC, datetime, timedelta
+
+from lxml import etree
 
 from odoo.exceptions import ValidationError
 from odoo.tests import TransactionCase, tagged
@@ -253,3 +256,26 @@ class TestResourceAsset(TransactionCase):
             datetime(2026, 3, 3, tzinfo=UTC),
         )[truck.resource_id.id]
         self.assertEqual(len(unavailable), 1)
+
+    def test_every_asset_group_by_is_groupable(self):
+        views = self.env["ir.ui.view"].search(
+            [
+                ("model", "=", "resource.asset"),
+                ("type", "=", "search"),
+                ("mode", "=", "primary"),
+            ]
+        )
+        checked = 0
+        for view in views:
+            search_view = self.Asset.get_views([(view.id, "search")])["views"]["search"]
+            for node in etree.fromstring(search_view["arch"]).iter("filter"):
+                for group_by in re.findall(
+                    r"""["']group_by["']\s*:\s*["']([^"']+)["']""",
+                    node.get("context") or "",
+                ):
+                    checked += 1
+                    with self.subTest(view=view.xml_id, filter=node.get("name")):
+                        self.assertTrue(
+                            self.Asset._is_field_groupable(group_by.split(":")[0])
+                        )
+        self.assertGreater(checked, 0)
