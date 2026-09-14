@@ -184,6 +184,10 @@ class HrEmployee(models.Model):
             if not location or not employee.active:
                 continue
             employee.hr_icon_display = f"presence_{location.location_type}"
+            # Wider than base's `bool(user_id)` on purpose: a work location is
+            # roster data, not a presence signal, so it is known for an employee
+            # with no login. The colour still comes from hr_presence_state, which
+            # is `out_of_working_hour` for such an employee, so it reads muted.
             employee.show_hr_icon_display = True
 
     @api.depends(*DAYS, "tz", "exceptional_location_id")
