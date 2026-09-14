@@ -1,3 +1,6 @@
+from contextlib import contextmanager
+from unittest.mock import patch
+
 from odoo import Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import Form
@@ -1228,6 +1231,16 @@ class TestWarehouse(TestStockCommon):
             )
             self.assertEqual(res, expected, "Error with operator %s" % op)
 
+    @contextmanager
+    def _without_archive_guards(self):
+        # these tests are about the multi-warehouse group, and archiving every
+        # warehouse also meets whatever transfers and stock the database holds
+        with (
+            patch.object(type(self.env["stock.warehouse"]), "_check_archivable"),
+            patch.object(type(self.env["stock.location"]), "_check_archivable"),
+        ):
+            yield
+
     def test_create_second_warehouse_as_stock_manager(self):
         Warehouse = self.env["stock.warehouse"]
         group_user = self.env.ref("base.group_user")
@@ -1243,7 +1256,7 @@ class TestWarehouse(TestStockCommon):
             ("res.groups branch", [(3, multi_wh.id), (4, multi_loc.id)]),
         ]
         for index, (label, implied) in enumerate(branches):
-            with self.subTest(branch=label):
+            with self.subTest(branch=label), self._without_archive_guards():
                 Warehouse.search([]).write({"active": False})
                 group_user.write({"implied_ids": implied})
                 self.assertNotIn(multi_wh, group_user.implied_ids)
@@ -1274,7 +1287,8 @@ class TestWarehouse(TestStockCommon):
         Warehouse.create({"name": "Second one", "code": "SEC"})
         self.assertIn(multi_wh, group_user.implied_ids)
 
-        Warehouse.search([]).action_archive()
+        with self._without_archive_guards():
+            Warehouse.search([]).action_archive()
         self.assertEqual(Warehouse.search_count([]), 0)
         self.assertNotIn(
             multi_wh,
