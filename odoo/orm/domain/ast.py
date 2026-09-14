@@ -849,6 +849,22 @@ class DomainCustom(Domain):
         return self._sql(model, alias, query)
 
 
+def ids_selected_without_query(domain: Domain) -> OrderedSet | None:
+    if domain.is_false():
+        return OrderedSet()
+    if (
+        isinstance(domain, DomainCondition)
+        and domain.field_expr == "id"
+        and domain.operator == "in"
+        and isinstance(
+            domain.value, (list, tuple, set, frozenset, OrderedSet, FrozenOrderedSet)
+        )
+        and all(isinstance(id_, int) for id_ in domain.value)
+    ):
+        return OrderedSet(domain.value)
+    return None
+
+
 def _ids_matched_without_query(domain: Domain, universe: frozenset) -> set | None:
     if domain.is_false():
         return set()
@@ -1401,4 +1417,5 @@ __all__ = [
     "DomainOptimizationError",
     "DomainOr",
     "OptimizationLevel",
+    "ids_selected_without_query",
 ]

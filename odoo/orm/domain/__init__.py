@@ -24,6 +24,7 @@ from .ast import (
     DomainOr,
     DomainCustom,
     DomainCondition,
+    ids_selected_without_query,
 )
 
 from . import optimizations
@@ -58,6 +59,7 @@ __all__ = [
     "DomainOr",
     "OptimizationLevel",
     "field_type_optimization",
+    "ids_selected_without_query",
     "nary_condition_optimization",
     "nary_optimization",
     "operator_optimization",

@@ -15,6 +15,7 @@ from odoo.tools.misc import PENDING
 
 from ... import decorators as api
 from ...components.recompute import RecomputeScheduler
+from ...domain import Domain, ids_selected_without_query
 from ...helpers import get_fields_by_name, get_or_create_class_memo
 from ...primitives import NewId
 from ..table_objects import Constraint
@@ -258,7 +259,15 @@ class RecomputeMixin(_ModelStubs):
                     records=len(real_ids),
                 )
                 if real_ids:
-                    records = model.search([(field.name, "in", real_ids)], order="id")
+                    # the search method of the field often names the records
+                    # outright (an `id in` set): those are browsed without the
+                    # query a search would spend confirming them
+                    domain = Domain(field.name, "in", real_ids).optimize_full(model)
+                    ids = ids_selected_without_query(domain)
+                    if ids is None:
+                        records = model.search(domain, order="id")
+                    else:
+                        records = model.browse(sorted(ids))
                 if len(real_ids) != len(self_ids):
                     field_cache = field._get_cache(model.env)
                     cache_records = model.browse(field_cache)
