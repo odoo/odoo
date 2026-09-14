@@ -1176,6 +1176,7 @@
                 ])]"
             />
             <field name="image_1920" type="bytes" file="website_sale/static/src/img/products_demo/table02_02.jpg"/>
+            <field name="type">secondary</field>
         </record>
 
         <record id="product_product_1_product_template_extra_image" model="product.image">
@@ -1268,6 +1269,7 @@
             <field name="product_tmpl_id" ref="product.consu_delivery_01_product_template"/>
             <field name="attribute_value_ids" eval="[Command.set([ref('product.pav_sofa_linen')])]"/>
             <field name="image_1920" type="bytes" file="website_sale/static/src/img/products_demo/product_product_d01_image_02.jpg"/>
+            <field name="type">secondary</field>
         </record>
 
         <record id="product_product_3_extra_image" model="product.image">

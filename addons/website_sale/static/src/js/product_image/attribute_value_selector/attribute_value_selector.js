@@ -7,6 +7,7 @@ import { x2ManyCommands } from "@web/core/orm_plugin";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
+import { formatSelection } from "@web/views/fields/formatters";
 
 export class AttributeValueSelector extends Component {
     static template = "website_sale.attribute_value_selector";
@@ -40,6 +41,12 @@ export class AttributeValueSelector extends Component {
 
     get selectedValuesCount() {
         return this.state.selectedValues.size || _t("All");
+    }
+
+    get imageType() {
+        return formatSelection(this.props.record.data.type, {
+            selection: Array.from(this.props.record.fields.type.selection),
+        });
     }
 
     /**

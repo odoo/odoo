@@ -306,11 +306,13 @@ class TestWebsiteSaleImage(HttpCaseWithWebsiteUser):
             "name": "A Colorful Image",
             "image_1920": image_red,
             "website_published": True,
+        })
+        product.write({
             "product_template_image_ids": [
                 Command.create({"name": "image 1", "image_1920": image_green}),
                 Command.create({"name": "image 2", "image_1920": image_blue}),
                 Command.create({"name": "image 3", "image_1920": image_purple}),
-            ],
+            ]
         })
 
         self.env.ref("base.default_website").write({
