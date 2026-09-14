@@ -2023,3 +2023,71 @@ class TestFlexibleDurationOverAPublicHoliday(TestHrHolidaysCommon):
             "shape, and a day nobody works is not part of that shape",
         )
         self.assertEqual(self._duration(self.flexible), (1.0, 8.0))
+
+
+@tagged("post_install", "-at_install")
+class TestLeaveResourceCalendar(TestHrHolidaysCommon):
+    """`_compute_resource_calendar_id` used to re-derive the employee's working
+    schedule after `_get_calendars` had already answered, from a second
+    `_read_group` over `hr.version` filtered on **version validity** dates while
+    the rest of the module -- `_is_in_contract`, `_get_overlapping_contracts` --
+    reads **contract** dates, and it took `[:1]` of an id-ordered recordset.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.calendar_full = cls.env["resource.calendar"].create(
+            {"name": "Full 40h", "tz": "UTC", "hours_per_day": 8}
+        )
+        cls.calendar_half = cls.env["resource.calendar"].create(
+            {"name": "Half 20h", "tz": "UTC", "hours_per_day": 4}
+        )
+        cls.leave_type = cls.env["hr.leave.type"].create(
+            {
+                "name": "Calendar probe",
+                "requires_allocation": False,
+                "time_type": "leave",
+            }
+        )
+
+    def test_the_calendar_is_the_one_in_force_when_the_leave_starts(self):
+        employee = self.env["hr.employee"].create(
+            {
+                "name": "Two versions, no contract",
+                "date_version": "2024-02-01",
+                "resource_calendar_id": self.calendar_half.id,
+            }
+        )
+        employee.create_version(
+            {
+                "date_version": "2024-01-01",
+                "resource_calendar_id": self.calendar_full.id,
+            }
+        )
+        leave = self.env["hr.leave"].create(
+            {
+                "name": "spans the version boundary",
+                "employee_id": employee.id,
+                "holiday_status_id": self.leave_type.id,
+                "request_date_from": "2024-01-30",
+                "request_date_to": "2024-02-02",
+            }
+        )
+        self.assertFalse(
+            leave._get_overlapping_contracts(),
+            "neither version carries a contract, so nothing constrains the "
+            "leave to a single schedule and the compute is on its own here",
+        )
+        self.assertEqual(
+            employee._get_calendars("2024-01-30").get(employee.id),
+            self.calendar_full,
+            "the version covering 30 January is the full-time one",
+        )
+        self.assertEqual(
+            leave.resource_calendar_id,
+            self.calendar_full,
+            "the later version was created first, so an id-ordered [:1] used "
+            "to hand the leave a schedule that does not begin until two days "
+            "after it starts",
+        )

@@ -530,37 +530,17 @@ class HrLeave(models.Model):
         if not valid_leaves:
             return
         employees_by_dates = defaultdict(lambda: self.env["hr.employee"])
-        contracts_by_employee = dict(
-            self.env["hr.version"]._read_group(
-                domain=[("employee_id", "in", self.employee_id.ids)],
-                groupby=["employee_id"],
-                aggregates=["id:recordset"],
-            )
-        )
         for leave in valid_leaves:
-            employees_by_dates[leave.request_date_from] += leave.employee_id
+            employees_by_dates[leave.request_date_from] |= leave.employee_id
         calendar_by_dates = {
             date_from: employees._get_calendars(date_from)
             for date_from, employees in employees_by_dates.items()
         }
         for leave in valid_leaves:
-            calendar = (
-                calendar_by_dates.get(leave.request_date_from, {}).get(
-                    leave.employee_id.id
-                )
+            leave.resource_calendar_id = (
+                calendar_by_dates[leave.request_date_from].get(leave.employee_id.id)
                 or self.env.company.resource_calendar_id
             )
-            contracts = contracts_by_employee.get(
-                leave.employee_id, self.env["hr.version"]
-            ).filtered(
-                lambda c, leave=leave: (
-                    c.date_start <= leave.request_date_to
-                    and (not c.date_end or c.date_end >= leave.request_date_from)
-                )
-            )
-            if contracts:
-                calendar = contracts[:1].resource_calendar_id
-            leave.resource_calendar_id = calendar
 
     def _get_overlapping_contracts(self):
         self.check_singleton()
