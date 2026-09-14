@@ -151,6 +151,12 @@ class _TestResCompany(Model):
 
     name = Char()
     active = Boolean(default=True)
+    # a stub company is its own root, as a company without a parent is
+    root_id = Many2one("res.company", compute="_compute_root_id")
+
+    def _compute_root_id(self):
+        for company in self:
+            company.root_id = company
 
 
 _FALLBACK_MODELS = (

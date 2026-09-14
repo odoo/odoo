@@ -1997,9 +1997,41 @@ class _InMemoryReadGroup:
                 or None
             ),
         }
+        if func == "sum_currency":
+            return self._sum_currency_reader(field, fname, raw)
         if func not in readers:
             self._unsupported(f"aggregate {spec!r}")
         return readers[func]
+
+    def _sum_currency_reader(self, field, fname: str, raw):
+        # the SQL path divides each value by the rate of its currency, 1.0
+        # for a currency without one; the port picks the rate as its subquery does
+        if not field.is_monetary:
+            raise ValueError(
+                f'Aggregator "sum_currency" only works on currency field for {fname!r}'
+            )
+        from ..fields.temporal import Date
+
+        env = self.model.env
+        currency_field_name = field.get_currency_field(self.model)
+        rate_by_currency = env.registry.locale.currency_rates(
+            env, env.company, Date.context_today(self.model)
+        )
+
+        def read(records):
+            present = [
+                (value, record[currency_field_name].id)
+                for record in records
+                if (value := raw(record)) is not None
+            ]
+            if not present:
+                return None
+            return sum(
+                value / rate_by_currency.get(currency_id, 1.0)
+                for value, currency_id in present
+            )
+
+        return read
 
     def rows(self, having, order, limit, offset) -> list[tuple]:
         self._select_order_aggregates(order)

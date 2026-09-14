@@ -46,7 +46,7 @@ class _ReadGroupSQLMixin(_ModelStubs):
                 ORDER BY
                     %(currency_field_sql)s,
                     %(company_field_sql)s,
-                    CASE WHEN %(name_field_sql)s <= %(today)s THEN %(name_field_sql)s END DESC,
+                    CASE WHEN %(name_field_sql)s <= %(today)s THEN %(name_field_sql)s END DESC NULLS LAST,
                     CASE WHEN %(name_field_sql)s > %(today)s THEN %(name_field_sql)s END ASC)
             """,
             currency_field_sql=CurrencyRate._field_to_sql(

@@ -7,10 +7,12 @@ from odoo.tests import TransactionCase, tagged
 
 from odoo.addons.test_read_group.models import (
     Test_Read_GroupAggregate,
+    Test_Read_GroupAggregateMonetary,
     Test_Read_GroupFill_Temporal,
     Test_Read_GroupTag,
     Test_Read_GroupTask,
     Test_Read_GroupUser,
+    TestReadGroupAggregateMonetaryRelated,
 )
 
 _STUB_MODULE = "test_read_group_matrix_stub"
@@ -24,6 +26,32 @@ class _StubPartner(models.Model):
     _order = "name"
 
     name = fields.Char()
+
+
+class _StubCurrency(models.Model):
+    _name = "res.currency"
+    _module = _STUB_MODULE
+    _description = "Currency (matrix stub)"
+    _log_access = False
+
+    name = fields.Char()
+    symbol = fields.Char()
+    rounding = fields.Float(default=0.01)
+
+    def round(self, amount):
+        return round(amount, 2)
+
+
+class _StubCurrencyRate(models.Model):
+    _name = "res.currency.rate"
+    _module = _STUB_MODULE
+    _description = "Currency rate (matrix stub)"
+    _log_access = False
+
+    name = fields.Date()
+    rate = fields.Float()
+    currency_id = fields.Many2one("res.currency")
+    company_id = fields.Many2one("res.company")
 
 
 class _StubIrModelData(models.Model):
@@ -321,4 +349,82 @@ class TestReadGroupBackendMatrix(TransactionCase):
 
         self._diff(
             (Test_Read_GroupTask, Test_Read_GroupUser, Test_Read_GroupTag), script
+        )
+
+    def test_sum_currency_picks_the_latest_past_rate_per_company(self):
+        def script(env):
+            today = fields.Date.context_today(env["res.currency"])
+            usd, eur = env["res.currency"].create(
+                [{"name": "USX", "symbol": "$"}, {"name": "EUX", "symbol": "€"}]
+            )
+            company = env.company
+            env["res.currency.rate"].search([]).unlink()
+            env["res.currency.rate"].create(
+                [
+                    # eur: a shared past rate loses to the company's own future
+                    # one, and the company's latest past rate wins over a later
+                    # future one
+                    {
+                        "currency_id": eur.id,
+                        "name": today - datetime.timedelta(days=30),
+                        "rate": 0.5,
+                    },
+                    {
+                        "currency_id": eur.id,
+                        "name": today - datetime.timedelta(days=10),
+                        "rate": 0.8,
+                        "company_id": company.id,
+                    },
+                    {
+                        "currency_id": eur.id,
+                        "name": today - datetime.timedelta(days=1),
+                        "rate": 0.9,
+                        "company_id": company.id,
+                    },
+                    {
+                        "currency_id": eur.id,
+                        "name": today + datetime.timedelta(days=5),
+                        "rate": 4.0,
+                        "company_id": company.id,
+                    },
+                    # usd: only future rates, the earliest applies
+                    {
+                        "currency_id": usd.id,
+                        "name": today + datetime.timedelta(days=9),
+                        "rate": 2.0,
+                    },
+                    {
+                        "currency_id": usd.id,
+                        "name": today + datetime.timedelta(days=2),
+                        "rate": 1.25,
+                    },
+                ]
+            )
+            Model = env["test_read_group.aggregate.monetary"]
+            Model.create(
+                [
+                    {"name": "k1", "currency_id": eur.id, "total_in_currency_id": 9.0},
+                    {"name": "k1", "currency_id": usd.id, "total_in_currency_id": 5.0},
+                    {"name": "k2", "currency_id": usd.id, "total_in_currency_id": 2.5},
+                    {"name": "k2", "total_in_currency_id": 3.0},
+                ]
+            )
+            return {
+                "all": _rows(Model, [], [], ["total_in_currency_id:sum_currency"]),
+                "by name": _rows(
+                    Model, [], ["name"], ["total_in_currency_id:sum_currency"]
+                ),
+            }
+
+        observed = self._diff(
+            (
+                Test_Read_GroupAggregateMonetary,
+                TestReadGroupAggregateMonetaryRelated,
+                _StubCurrency,
+                _StubCurrencyRate,
+            ),
+            script,
+        )
+        self.assertEqual(
+            observed["all"], [(9.0 / 0.9 + 5.0 / 1.25 + 2.5 / 1.25 + 3.0,)]
         )

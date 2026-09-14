@@ -2763,7 +2763,7 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
                     ORDER BY
                         "res_currency_rate"."currency_id",
                         "res_currency_rate"."company_id",
-                        CASE WHEN "res_currency_rate"."name" <= %s THEN "res_currency_rate"."name" END DESC,
+                        CASE WHEN "res_currency_rate"."name" <= %s THEN "res_currency_rate"."name" END DESC NULLS LAST,
                         CASE WHEN "res_currency_rate"."name" > %s THEN "res_currency_rate"."name" END ASC
                 ) AS "test_read_group_aggregate_monetary__currency_id__rates" ON (
                     "test_read_group_aggregate_monetary"."currency_id" = "test_read_group_aggregate_monetary__currency_id__rates"."currency_id"
@@ -2866,7 +2866,7 @@ class TestFormattedReadGroupMonetary(common.TransactionCase):
                     ORDER BY
                         "res_currency_rate"."currency_id",
                         "res_currency_rate"."company_id",
-                        CASE WHEN "res_currency_rate"."name" <= %s THEN "res_currency_rate"."name" END DESC,
+                        CASE WHEN "res_currency_rate"."name" <= %s THEN "res_currency_rate"."name" END DESC NULLS LAST,
                         CASE WHEN "res_currency_rate"."name" > %s THEN "res_currency_rate"."name" END ASC
                 ) AS "test_read_group_aggregate_monetary__currency_id__rates" ON (
                     "test_read_group_aggregate_monetary"."currency_id" = "test_read_group_aggregate_monetary__currency_id__rates"."currency_id"

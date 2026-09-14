@@ -72,5 +72,33 @@ class Locale:
             return 2
         return env["decimal.precision"].get_precision(application)
 
+    def currency_rates(
+        self, env: Environment, company: typing.Any, date: typing.Any
+    ) -> dict[int, float]:
+        # the rate of every currency for a company's root, as the sum_currency
+        # aggregate's subquery picks it: the root's own rates before the shared
+        # ones, and in that bucket the latest rate dated up to the day, else
+        # the earliest later one; a currency without a rate is absent
+        if "res.currency.rate" not in env.registry:
+            return {}
+        root_id = company.root_id.id
+        rates = (
+            env["res.currency.rate"]
+            .sudo()
+            .search([("company_id", "in", [root_id, False])])
+        )
+        rate_by_currency: dict[int, float] = {}
+        for currency, currency_rates in rates.grouped("currency_id").items():
+            own = currency_rates.filtered(lambda r: r["company_id"].id == root_id)
+            bucket = own or currency_rates
+            past = bucket.filtered(lambda r: r["name"] <= date)
+            chosen = (
+                max(past, key=lambda r: r["name"])
+                if past
+                else min(bucket, key=lambda r: r["name"])
+            )
+            rate_by_currency[currency.id] = chosen["rate"]
+        return rate_by_currency
+
 
 LOCALE = Locale()

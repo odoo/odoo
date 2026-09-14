@@ -30,17 +30,17 @@ class Line(models.Model):
     @api.depends("order_id.name")
     def _compute_label(self):
         for line in self:
-            line.label = line.order_id.name
+            line.label = line.order_id["name"]
 
     @api.depends("order_id.name")
     def _compute_upper(self):
         for line in self:
-            line.upper = (line.order_id.name or "").upper()
+            line.upper = (line.order_id["name"] or "").upper()
 
     @api.depends("order_id.name")
     def _compute_length(self):
         for line in self:
-            line.length = len(line.order_id.name or "")
+            line.length = len(line.order_id["name"] or "")
 
 
 def test_records_deleted_by_cascade_are_dropped_from_every_pending_field():
