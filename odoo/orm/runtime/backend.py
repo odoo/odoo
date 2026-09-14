@@ -1,12 +1,14 @@
 from __future__ import annotations
 
+import functools
 import json
 import logging
 import os
 import typing
+import zoneinfo
 from collections import defaultdict
 from collections.abc import Callable
-from datetime import date, datetime
+from datetime import UTC, date, datetime
 from datetime import timedelta as _timedelta
 from decimal import Decimal
 from itertools import batched
@@ -506,6 +508,8 @@ class StorageBackend(typing.Protocol):
 
     supports_recursive_queries: bool
 
+    def timezone_names(self, env) -> frozenset[str]: ...
+
     def create_rows(
         self,
         model: BaseModel,
@@ -747,6 +751,17 @@ class PostgresBackend:
     supports_recursive_queries: bool = True
 
     __slots__ = ()
+
+    def timezone_names(self, env) -> frozenset[str]:
+        # the names the server's timezone() accepts, once per database
+        names = _sql_timezone_names.get(env.cr.dbname)
+        if names is None:
+            with _debug.perf("backend.timezones_loaded", cr=env.cr) as span:
+                env.cr.execute("SELECT name FROM pg_timezone_names")
+                names = frozenset(name for [name] in env.cr.fetchall())
+                span.set(timezones=len(names))
+            _sql_timezone_names[env.cr.dbname] = names
+        return names
 
     def create_rows(
         self,
@@ -1528,6 +1543,14 @@ class PostgresBackend:
 POSTGRES_BACKEND = PostgresBackend()
 
 
+_sql_timezone_names: dict[str, frozenset[str]] = {}
+
+
+@functools.cache
+def _python_timezone_names() -> frozenset[str]:
+    return frozenset(zoneinfo.available_timezones())
+
+
 _TRUNCATE_GRANULARITY = {
     "year": lambda d: d.replace(month=1, day=1),
     "quarter": lambda d: d.replace(month=3 * ((d.month - 1) // 3) + 1, day=1),
@@ -1537,11 +1560,20 @@ _TRUNCATE_GRANULARITY = {
 
 
 def _truncate(
-    value: typing.Any, granularity: str, first_week_day: int = 0
+    value: typing.Any,
+    granularity: str,
+    first_week_day: int = 0,
+    tz: zoneinfo.ZoneInfo | None = None,
 ) -> typing.Any:
     if value is None:
         return None
     if isinstance(value, datetime):
+        if tz is not None:
+            # timezone(tz, timezone('UTC', col)): the stored UTC instant as
+            # the local wall-clock time, without an offset
+            value = value.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
+        if granularity == "hour":
+            return value.replace(minute=0, second=0, microsecond=0)
         value = value.replace(hour=0, minute=0, second=0, microsecond=0)
     if granularity == "week":
         # the language's first week day, 0 Monday .. 6 Sunday, as the SQL
@@ -1590,17 +1622,26 @@ class _InMemoryReadGroup:
             )
 
         first_week_day = 0
+        tz = None
         if field.is_temporal and granularity == "week":
             from odoo.tools import get_lang
 
             first_week_day = int(get_lang(model.env).week_start) - 1
+        if field.is_datetime and (tz_name := model.env.context.get("tz")):
+            try:
+                tz = zoneinfo.ZoneInfo(tz_name)
+            except zoneinfo.ZoneInfoNotFoundError, ValueError:
+                # the SQL path groups in UTC when the server does not know the zone
+                tz = None
 
         def read(record):
             value = record[fname]
             if field.is_many2one:
                 return value.id or None
             if field.is_temporal:
-                return _truncate(value or None, granularity or "day", first_week_day)
+                return _truncate(
+                    value or None, granularity or "day", first_week_day, tz
+                )
             if field.is_boolean:
                 return bool(value)
             if field.is_text:
@@ -1954,6 +1995,9 @@ class InMemoryBackend:
         self.storage = storage
         self.sequences: SequenceStore = InMemorySequenceStore(storage)
         self.columns: ColumnStore = InMemoryColumnStore(storage)
+
+    def timezone_names(self, env) -> frozenset[str]:
+        return _python_timezone_names()
 
     def create_rows(
         self,

@@ -33,22 +33,8 @@ def _get_all_timezones_set() -> frozenset[str]:
     return frozenset(all_timezones())
 
 
-_sql_timezones_set: dict[str, frozenset[str]] = {}
-
-
-def _get_sql_timezones_set(env) -> frozenset[str]:
-    names = _sql_timezones_set.get(env.cr.dbname)
-    if names is None:
-        with _debug.perf("field.temporal.sql_timezones_loaded", cr=env.cr) as span:
-            env.cr.execute("SELECT name FROM pg_timezone_names")
-            names = frozenset(name for [name] in env.cr.fetchall())
-            span.set(timezones=len(names))
-        _sql_timezones_set[env.cr.dbname] = names
-    return names
-
-
 def _resolve_sql_timezone_name(env, tz_name: str) -> str | None:
-    sql_names = _get_sql_timezones_set(env)
+    sql_names = env.backend.timezone_names(env)
     if tz_name in sql_names:
         return tz_name
     canonical = TIMEZONE_ALIASES.get(tz_name)

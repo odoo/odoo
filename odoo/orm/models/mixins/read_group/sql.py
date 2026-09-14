@@ -24,8 +24,6 @@ if typing.TYPE_CHECKING:
 from odoo.tools import get_lang
 from odoo.tools.translate import _
 
-from ....fields.temporal import _get_sql_timezones_set
-
 _debug = DebugLog(__name__)
 
 
@@ -318,7 +316,7 @@ class _ReadGroupSQLMixin(_ModelStubs):
             prop_type = definition.get("type")
             if prop_type == "datetime":
                 if tz_name := self.env.context.get("tz"):
-                    if tz_name in _get_sql_timezones_set(self.env):
+                    if tz_name in self.env.backend.timezone_names(self.env):
                         sql_expr = SQL(
                             "timezone(%s, timezone('UTC', %s))",
                             SQL.literal(tz_name),

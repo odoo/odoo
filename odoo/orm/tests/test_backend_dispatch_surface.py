@@ -9,8 +9,8 @@ from odoo.orm.runtime.backend import InMemoryBackend
 _ORM_DIR = pathlib.Path(__file__).resolve().parent.parent
 
 # Every place the ORM chooses between the SQL path and env.backend. The surface
-# has grown to twenty-one sites across thirteen files
-# -- including five in Layer 1, where a field reaches the backend directly
+# has grown to twenty-three sites across fifteen files
+# -- including six in Layer 1, where a field reaches the backend directly
 # rather than through a model mixin. Each entry says what the in-memory branch
 # does NOT do, so a site marked LOSSY is a known gap, not an oversight.
 # test_the_header_count_matches_the_dict parses these lines: the words are asserted.
@@ -46,6 +46,14 @@ DISPATCH_SITES: dict[tuple[str, str], str] = {
     ("models/mixins/_query.py", "_search"): "equivalent",
     ("models/mixins/_query.py", "_as_query"): "equivalent",
     ("models/mixins/_query.py", "exists"): "equivalent",
+    ("fields/temporal.py", "_resolve_sql_timezone_name"): (
+        "equivalent: the zone names timezone() accepts, read once per database "
+        "from pg_timezone_names on PostgreSQL and from zoneinfo in memory, which "
+        "is what the in-memory read_group converts with"
+    ),
+    ("models/mixins/read_group/sql.py", "_read_group_groupby_temporal"): (
+        "equivalent: the same timezone_names lookup for a datetime property"
+    ),
     ("fields/reference.py", "_reference_exists"): (
         "BACKEND-SNIFF: `env.backend is None` gates a prefetch SELECT, i.e. it "
         "reads as 'am I on PostgreSQL?'.  This is the inline test-backend sniff "
@@ -231,6 +239,8 @@ _NUMBER_WORDS = {
     "twenty": 20,
     "twenty-one": 21,
     "twenty-two": 22,
+    "twenty-three": 23,
+    "twenty-four": 24,
 }
 
 

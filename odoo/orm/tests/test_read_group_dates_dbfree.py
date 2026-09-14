@@ -98,3 +98,49 @@ def test_quarters_and_years(env):
     ]
     rows = env["rgd.visit"]._read_group([], ["day:year"], ["visits:sum"])
     assert [(str(r[0]), r[1]) for r in rows] == [("2026-01-01", 8), ("False", 9)]
+
+
+class Event(models.Model):
+    _name = "rgd.event"
+    _module = _MOD
+    _description = "event at an instant"
+    _log_access = False
+
+    at = fields.Datetime()
+
+
+def test_a_datetime_groups_by_the_context_timezone_like_timezone_in_sql():
+    with model_test_env(Event) as env:
+        env["rgd.event"].create(
+            [
+                {"at": "2026-01-15 23:30:00"},
+                {"at": "2026-01-16 03:00:00"},
+                {"at": "2026-01-16 12:00:00"},
+            ]
+        )
+        Event_ = env["rgd.event"]
+        assert [
+            (str(r[0]), r[1]) for r in Event_._read_group([], ["at:day"], ["__count"])
+        ] == [
+            ("2026-01-15 00:00:00", 1),
+            ("2026-01-16 00:00:00", 2),
+        ]
+        local = Event_.with_context(tz="America/Mexico_City")
+        assert [
+            (str(r[0]), r[1]) for r in local._read_group([], ["at:day"], ["__count"])
+        ] == [
+            ("2026-01-15 00:00:00", 2),
+            ("2026-01-16 00:00:00", 1),
+        ]
+        assert [str(r[0]) for r in local._read_group([], ["at:hour"], ["__count"])] == [
+            "2026-01-15 17:00:00",
+            "2026-01-15 21:00:00",
+            "2026-01-16 06:00:00",
+        ]
+        # a zone the server would not know groups in UTC, as the SQL path does
+        unknown = Event_.with_context(tz="Mars/Olympus")
+        assert [r[1] for r in unknown._read_group([], ["at:day"], ["__count"])] == [
+            1,
+            2,
+        ]
+        assert "America/Mexico_City" in env.backend.timezone_names(env)
