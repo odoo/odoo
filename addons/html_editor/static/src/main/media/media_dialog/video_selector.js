@@ -130,6 +130,7 @@ export class VideoSelector extends Component {
     });
 
     urlInputRef = signal.ref();
+    validationSeq = 0;
 
     setup() {
         this.state = proxy({
@@ -290,6 +291,7 @@ export class VideoSelector extends Component {
      */
     async getVideoUrlData(url) {
         this.state.errorMessage = "";
+        this.state.isValidatingUrl = false;
         if (!URL.canParse(url)) {
             this.state.errorMessage = _t("The provided url is not valid");
             this.props.errorMessages(this.state.errorMessage);
@@ -308,6 +310,14 @@ export class VideoSelector extends Component {
         // Fall back on a video file.
         if (!platform && this.props.allowVideoFile) {
             this.state.isValidatingUrl = true;
+            // Avoid probing the server while the urser is still typing.
+            const validationId = ++this.validationSeq;
+            await new Promise((resolve) => setTimeout(resolve, 700));
+            if (validationId !== this.validationSeq) {
+                // A newer validation request is already in progress.
+                return;
+            }
+
             urlMatch = await VideoFile.isValidVideoUrl(url);
             this.state.isValidatingUrl = false;
             if (urlMatch) {

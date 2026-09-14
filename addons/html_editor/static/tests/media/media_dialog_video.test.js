@@ -632,7 +632,7 @@ describe("media dialog video", () => {
         async function typeVideoUrl(url) {
             await edit(url);
             // `refreshVideoData()` is debounced.
-            await advanceTime(100);
+            await advanceTime(800);
             await waitForNone(".o_video_dialog_loading");
         }
 
