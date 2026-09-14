@@ -250,6 +250,31 @@ class TestACL(TransactionCaseWithUserDemo):
 
 
 class TestIrRule(TransactionCaseWithUserDemo):
+    def test_a_rule_evaluated_record_by_record_fetches_the_batch_once(self):
+        self.env["ir.rule"].create(
+            {
+                "name": "partners of a company",
+                "model_id": self.env.ref("base.model_res_partner").id,
+                "domain_force": "[('company_id', 'in', [False] + company_ids)]",
+                "groups": [Command.set(self.env.ref("base.group_user").ids)],
+            }
+        )
+        partners = self.env["res.partner"].create(
+            [{"name": f"rule batch {i}"} for i in range(60)]
+        )
+        self.env.flush_all()
+        self.env.invalidate_all()
+        as_demo = partners.with_user(self.user_demo)
+        # the first write pays for the user, its groups, the rules and the
+        # batch's rows: every later write checks the rule on its one record,
+        # which keeps the batch's prefetch ids, so no row is fetched alone
+        as_demo[0].write({"comment": "note 0"})
+        with self.assertQueryCount(7):
+            for index, partner in enumerate(as_demo[1:], start=1):
+                partner.write({"comment": f"note {index}"})
+            self.env.flush_all()
+        self.assertEqual(partners[3].comment, "<p>note 3</p>")
+
     def test_ir_rule(self):
         model_res_partner = self.env.ref("base.model_res_partner")
         group_user = self.env.ref("base.group_user")

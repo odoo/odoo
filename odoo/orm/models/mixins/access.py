@@ -204,7 +204,14 @@ class AccessMixin(_ModelStubs):
                 policy.model_denied_error, self.env, self._name, operation
             )
 
-        real_self = self.browse(id_ for id_ in self._ids if id_)
+        # keep the prefetch ids: the rules' Python evaluation on one record
+        # of a batch would otherwise fetch that record's row alone
+        real_ids = tuple(id_ for id_ in self._ids if id_)
+        real_self = (
+            self
+            if len(real_ids) == len(self._ids)
+            else self._spawn(self.env, real_ids, self._prefetch_ids)
+        )
         if real_self:
             domain = policy.record_domain(self.env, self._name, operation)
             if domain and (
