@@ -14,16 +14,21 @@ class StockMovePicking(models.Model):
 
     @dbg.timed
     def _update_picking(self):
+        # the pickings the groups need are created together, then every group
+        # is attached and post-processed in one pass per kind: a picking's
+        # creation posts to its chatter, and mail batches what it is given
         Picking = self.env["stock.picking"]
         grouped_moves = groupby(self, key=lambda m: m._get_picking_assignation_key())
+        existing = []
+        wanted = []
         for _group, moves in grouped_moves:
             moves = self.env["stock.move"].concat(*moves)
-            new_picking = False
             picking = moves[0]._get_picking_for_assignation()
             if picking:
                 vals = moves._prepare_picking_vals(picking)
                 if vals:
                     picking.write(vals)
+                existing.append((moves, picking))
             else:
                 moves = moves.filtered(
                     lambda m: m.product_uom_id.compare(m.product_uom_qty, 0.0) >= 0,
@@ -31,17 +36,26 @@ class StockMovePicking(models.Model):
                 if not moves:
                     dbg.logic.debug("_update_picking: only negative moves, no picking")
                     continue
-                new_picking = True
-                picking = Picking.create(moves._prepare_new_picking_vals())
-
-            dbg.pipeline.debug(
-                "_update_picking: %s -> picking %s (%s)",
-                dbg.rec(moves),
-                picking.id,
-                "new" if new_picking else "existing",
-            )
-            moves.write({"picking_id": picking.id})
-            moves._post_process_picking(new=new_picking)
+                wanted.append(moves)
+        created = Picking.create(
+            [moves._prepare_new_picking_vals() for moves in wanted]
+        )
+        for new_picking, pairs in (
+            (False, existing),
+            (True, zip(wanted, created, strict=True)),
+        ):
+            attached = self.env["stock.move"]
+            for moves, picking in pairs:
+                dbg.pipeline.debug(
+                    "_update_picking: %s -> picking %s (%s)",
+                    dbg.rec(moves),
+                    picking.id,
+                    "new" if new_picking else "existing",
+                )
+                moves.write({"picking_id": picking.id})
+                attached |= moves
+            if attached:
+                attached._post_process_picking(new=new_picking)
         return True
 
     def _prepare_picking_vals(self, picking):
