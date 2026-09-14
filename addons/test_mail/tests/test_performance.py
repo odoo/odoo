@@ -633,7 +633,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             )
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=57, employee=57):
+        with self.assertQueryCount(admin=56, employee=56):
             composer._action_send_mail()
 
         # notifications
@@ -663,7 +663,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             )
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=72, employee=72):
+        with self.assertQueryCount(admin=71, employee=71):
             composer._action_send_mail()
 
         # notifications
@@ -1046,7 +1046,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     @warmup
     def test_message_get_suggested_recipients_batch(self):
         records = self.test_records_recipients.with_env(self.env)
-        with self.assertQueryCount(employee=29):  # tm: 20
+        with self.assertQueryCount(employee=27):  # tm: 20
             _recipients = records._message_get_suggested_recipients_batch(no_create=False)
 
     @users('employee')
@@ -1428,7 +1428,7 @@ class TestMailAccessPerformance(BaseMailPerformance):
         self.env.invalidate_all()
         self.env.transaction.invalidate_access_cache()
         profile = self.profile() if self.warm else nullcontext()
-        with self.assertQueryCount(employee=5), profile:
+        with self.assertQueryCount(employee=4), profile:
             found = self.activities.with_env(self.env).search([('summary', 'ilike', 'TestActivity')])
         self.assertEqual(found, self.activities - self.activities_emp_nope)
 
@@ -1606,7 +1606,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
         """
         messages_all = self.messages_all.with_env(self.env)
 
-        with self.assertQueryCount(employee=27):  # tm 24
+        with self.assertQueryCount(employee=25):  # tm 24
             res = Store().add(messages_all, "_store_message_fields")._build_result()
 
         self.assertEqual(len(res["mail.message"]), 2 * 2)
@@ -1619,7 +1619,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
     def test_store_add_message_single(self):
         message = self.messages_all[0].with_env(self.env)
 
-        with self.assertQueryCount(employee=27):  # tm 24
+        with self.assertQueryCount(employee=25):  # tm 24
             res = Store().add(message, "_store_message_fields")._build_result()
 
         self.assertEqual(len(res["mail.message"]), 1)
