@@ -1,5 +1,8 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class CrmQuotationPartner(models.TransientModel):
@@ -12,6 +15,9 @@ class CrmQuotationPartner(models.TransientModel):
 
         active_model = self.env.context.get("active_model")
         if active_model != "crm.lead":
+            _debug.logic(
+                "quotation_partner_wizard_refused", model=active_model or "none"
+            )
             raise UserError(_("You can only apply this action from a lead."))
 
         lead = False
@@ -50,6 +56,12 @@ class CrmQuotationPartner(models.TransientModel):
 
     def action_apply(self):
         self.check_singleton()
+        _debug.lifecycle(
+            "quotation_partner_applied",
+            lead=self.lead_id,
+            action=self.action,
+            partner=self.partner_id,
+        )
         if self.action == "create":
             self.lead_id._handle_partner_assignment(create_missing=True)
         elif self.action == "exist":

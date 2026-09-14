@@ -1,4 +1,7 @@
 from odoo import _, api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ProjectMilestone(models.Model):
@@ -81,8 +84,10 @@ class ProjectMilestone(models.Model):
                 milestone.product_uom_qty = (
                     milestone.quantity_percentage * milestone.sale_line_id.product_qty
                 )
+                _debug.logic("milestone_qty", milestone=milestone, by="percentage")
             else:
                 milestone.product_uom_qty = milestone.sale_line_id.product_qty
+                _debug.logic("milestone_qty", milestone=milestone, by="full_line_qty")
 
     @api.model
     def _get_fields_to_export(self):

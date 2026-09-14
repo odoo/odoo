@@ -1,4 +1,7 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ResUsers(models.Model):
@@ -42,3 +45,9 @@ class ResUsers(models.Model):
                 lambda m: m.active and m.team_id.use_sale
             )
             user.sale_team_id = memberships[:1].team_id
+            _debug.logic(
+                "sale_team_resolved",
+                user=user,
+                memberships=memberships,
+                team=user.sale_team_id,
+            )

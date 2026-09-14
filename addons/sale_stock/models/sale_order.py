@@ -4,10 +4,12 @@ import logging
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_compare
 from odoo.tools.translate import _
 
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 
 class SaleOrder(models.Model):
@@ -127,6 +129,11 @@ class SaleOrder(models.Model):
                 other_company.add(order_line.route_ids.company_id.id)
                 continue
             if order_line.order_id.company_id.id in company_ids_with_wh:
+                _debug.logic(
+                    "warehouse_required",
+                    order=order_line.order_id,
+                    company=order_line.order_id.company_id,
+                )
                 raise ValidationError(
                     _("You must set a warehouse on your sale order to proceed."),
                 )
@@ -137,6 +144,11 @@ class SaleOrder(models.Model):
             [("company_id", "in", list(other_company))],
         )
         if any(c not in other_company_warehouses.company_id.ids for c in other_company):
+            _debug.logic(
+                "cross_company_warehouse_missing",
+                orders=orders_without_wh,
+                companies=len(other_company),
+            )
             raise ValidationError(
                 _(
                     "You must have a warehouse for line using a delivery in different company.",
@@ -162,6 +174,9 @@ class SaleOrder(models.Model):
             "update_delivery_shipping_partner",
         ):
             for order in self:
+                _debug.lifecycle(
+                    "picking_partner_realigned", order=order, pickings=order.picking_ids
+                )
                 order.picking_ids.partner_id = vals.get("partner_shipping_id")
         elif vals.get("partner_shipping_id"):
             new_partner = self.env["res.partner"].browse(
@@ -180,6 +195,9 @@ class SaleOrder(models.Model):
                     old_address=record.partner_shipping_id.display_name,
                     new_address=new_partner.display_name,
                 )
+                _debug.lifecycle(
+                    "picking_partner_change_flagged", order=record, pickings=picking
+                )
                 picking.activity_schedule(
                     "mail.mail_activity_data_warning",
                     note=message,
@@ -195,6 +213,7 @@ class SaleOrder(models.Model):
                         and m.location_dest_id.usage == "customer"
                     ),
                 )
+                _debug.lifecycle("move_deadlines_realigned", order=order, moves=moves)
                 moves.date_deadline = deadline_datetime or order.date_planned
 
         res = super().write(vals)
@@ -238,6 +257,9 @@ class SaleOrder(models.Model):
                 documents = {
                     k: v for k, v in documents.items() if k[0].state != "cancel"
                 }
+                _debug.pipeline(
+                    "ordered_quantity_decreased", order=order, lines=len(to_log)
+                )
                 order._log_decrease_ordered_quantity(documents)
 
         return res
@@ -275,10 +297,12 @@ class SaleOrder(models.Model):
                 )
                 if default_warehouse_id is not None:
                     order.warehouse_id = default_warehouse_id
+                    _debug.logic("warehouse_resolved", order=order, by="ir_default")
                 else:
                     order.warehouse_id = order.user_id.with_company(
                         order.company_id,
                     )._get_default_warehouse_id()
+                    _debug.logic("warehouse_resolved", order=order, by="user_default")
 
     @api.depends("picking_policy")
     def _compute_date_planned(self):
@@ -325,6 +349,11 @@ class SaleOrder(models.Model):
             ),
         )
         if pickings:
+            _debug.logic(
+                "shipping_partner_change_warning",
+                order=self._origin,
+                pickings=pickings,
+            )
             res["warning"] = {
                 "title": _("Warning!"),
                 "message": _(
@@ -353,6 +382,9 @@ class SaleOrder(models.Model):
             else None
         )
 
+        _debug.lifecycle(
+            "order_pickings_cancelled", orders=self, pickings=self.picking_ids
+        )
         self.picking_ids.filtered(lambda p: p.state != "done").with_context(
             skip_cancel_activity=True
         ).action_cancel()
@@ -366,6 +398,11 @@ class SaleOrder(models.Model):
                         continue
                 filtered_documents[(parent, responsible)] = rendering_context
 
+            _debug.pipeline(
+                "cancel_quantity_exceptions_logged",
+                orders=self,
+                documents=len(filtered_documents),
+            )
             self._log_decrease_ordered_quantity(filtered_documents, cancel=True)
 
         return super()._action_cancel()
@@ -377,6 +414,7 @@ class SaleOrder(models.Model):
         }
 
     def _action_confirm(self):
+        _debug.pipeline("launch_stock_rules", orders=self, lines=self.line_ids)
         self.line_ids._action_launch_stock_rule()
         return super()._action_confirm()
 
@@ -400,6 +438,7 @@ class SaleOrder(models.Model):
         }
 
     def _get_date_planned(self, date_planneds):
+        _debug.logic("date_planned_policy", order=self, policy=self.picking_policy)
         if self.picking_policy == "direct":
             return super()._get_date_planned(date_planneds)
         return max(date_planneds)
@@ -428,6 +467,12 @@ class SaleOrder(models.Model):
             }
             return self.env["ir.qweb"]._render("sale_stock.exception_on_so", values)
 
+        _debug.pipeline(
+            "quantity_exception_activities",
+            orders=self,
+            documents=len(documents),
+            cancel=cancel,
+        )
         self.env["mixin.stock.activity"]._log_activity(
             _render_note_exception_quantity_so,
             documents,

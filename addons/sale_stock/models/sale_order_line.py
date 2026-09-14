@@ -5,8 +5,11 @@ from datetime import timedelta
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command, Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import float_compare, float_is_zero
 from odoo.tools.translate import _
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrderLine(models.Model):
@@ -76,6 +79,7 @@ class SaleOrderLine(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         lines = super().create(vals_list)
+        _debug.lifecycle("create", lines=lines, rows=len(vals_list))
         lines.filtered(lambda line: line.state == "done")._action_launch_stock_rule()
         return lines
 
@@ -89,6 +93,7 @@ class SaleOrderLine(models.Model):
         res = super().write(vals)
 
         if lines:
+            _debug.pipeline("relaunch_stock_rules", lines=lines)
             lines._action_launch_stock_rule(
                 previous_product_qty=previous_product_qty,
             )
@@ -119,6 +124,9 @@ class SaleOrderLine(models.Model):
                     precision_rounding=line.product_uom_id.rounding,
                 )
             ):
+                _debug.logic(
+                    "invoice_state_forced_done", line=line, by="moves_all_done"
+                )
                 line.invoice_state = "done"
 
     @api.depends("product_id")
@@ -172,6 +180,12 @@ class SaleOrderLine(models.Model):
                     ),
                 )
                 line.warehouse_id = best[0].location_src_id.warehouse_id
+                _debug.logic(
+                    "line_warehouse_from_rule",
+                    line=line,
+                    rule=best[0],
+                    warehouse=line.warehouse_id,
+                )
 
     @api.depends("move_ids")
     def _compute_product_readonly(self):
@@ -238,6 +252,7 @@ class SaleOrderLine(models.Model):
 
             if mto_route and mto_route in product_routes:
                 line.is_mto = True
+                _debug.logic("line_is_mto", line=line, route=mto_route)
 
     @api.depends(
         "order_id.date_commitment",
@@ -260,8 +275,12 @@ class SaleOrderLine(models.Model):
         lines_display_qty_widget = self.filtered(lambda x: x.display_qty_widget)
 
         if not lines_display_qty_widget:
+            _debug.logic("qty_at_date_skipped", lines=self, reason="no_qty_widget")
             return
 
+        _debug.perf.count(
+            "qty_at_date", lines=len(self), with_widget=len(lines_display_qty_widget)
+        )
         all_moves = self.env["stock.move"]
         line_all_moves_cached = {}
 
@@ -379,12 +398,16 @@ class SaleOrderLine(models.Model):
     def _inverse_customer_lead(self):
         for line in self:
             if line.state == "done" and not line.order_id.date_commitment:
+                _debug.lifecycle(
+                    "move_deadline_from_lead", line=line, moves=line.move_ids
+                )
                 line.move_ids.date_deadline = line.order_id.date_order + timedelta(
                     days=line.customer_lead or 0.0,
                 )
 
     def _action_launch_stock_rule(self, *, previous_product_qty=False):
         if self.env.context.get("skip_procurement"):
+            _debug.logic("stock_rules_skipped", lines=self, reason="skip_procurement")
             return True
 
         precision = self.env["decimal.precision"].get_precision("Product Unit")
@@ -401,6 +424,7 @@ class SaleOrderLine(models.Model):
             qty = line._get_procurement_qty(previous_product_qty)
 
             if float_compare(qty, line.product_qty, precision_digits=precision) == 0:
+                _debug.logic("line_not_procured", line=line, reason="already_covered")
                 continue
             procuring.append((line, qty))
 
@@ -410,6 +434,9 @@ class SaleOrderLine(models.Model):
             if not line.order_id.reference_ids:
                 first_line_by_order.setdefault(line.order_id.id, line)
         if first_line_by_order:
+            _debug.lifecycle(
+                "stock_references_created", orders=len(first_line_by_order)
+            )
             self.env["stock.reference"].sudo().create(
                 [
                     line._prepare_reference_vals()
@@ -434,12 +461,16 @@ class SaleOrderLine(models.Model):
                 values,
             )
         if procurements:
+            _debug.pipeline(
+                "procurements_run", lines=self, procurements=len(procurements)
+            )
             self.env["stock.rule"].run(procurements)
 
         pickings_to_confirm = self.order_id.picking_ids.filtered(
             lambda p: p.state not in ["cancel", "done"],
         )
         if pickings_to_confirm:
+            _debug.lifecycle("pickings_confirmed", pickings=pickings_to_confirm)
             pickings_to_confirm.action_confirm()
         return True
 
@@ -481,6 +512,13 @@ class SaleOrderLine(models.Model):
         self.check_singleton()
         moves = self._get_transferable_moves()
         delivered, returned = self._get_stock_moves_outgoing_incoming()
+        _debug.perf.count(
+            "procurement_qty",
+            line=self,
+            moves=moves,
+            delivered=delivered,
+            returned=returned,
+        )
         return (
             self._get_moves_qty_sum(delivered)
             - self._get_moves_qty_sum(returned)
@@ -625,6 +663,11 @@ class SaleOrderLine(models.Model):
             )
             == -1
         ):
+            _debug.logic(
+                "quantity_decrease_refused",
+                lines=line_products,
+                requested=values["product_qty"],
+            )
             raise UserError(
                 _(
                     "The ordered quantity of a sale order line cannot be decreased below the amount already delivered. Instead, create a return in your inventory.",

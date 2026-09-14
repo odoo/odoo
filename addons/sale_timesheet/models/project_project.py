@@ -3,8 +3,11 @@ import json
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 from odoo.tools.translate import _
+
+_debug = DebugLog(__name__)
 
 
 class ProjectProject(models.Model):
@@ -160,6 +163,12 @@ class ProjectProject(models.Model):
             )
 
         (self - projects).warning_employee_rate = False
+        _debug.perf.count(
+            "employee_rate_warning",
+            projects=len(self),
+            employee_rate=len(projects),
+            rows=len(dict_project_employee),
+        )
 
     @api.depends(
         "sale_line_employee_ids.sale_line_id", "sale_line_id", "allow_billable"
@@ -179,6 +188,9 @@ class ProjectProject(models.Model):
                     or project.sale_line_employee_ids.sale_line_id[:1]
                 )
                 project.partner_id = sol.partner_id
+                _debug.logic(
+                    "project_partner_from_sale_line", project=project, line=sol
+                )
         super(ProjectProject, self - billable_projects)._compute_partner_id()
 
     @api.depends("partner_id")
@@ -211,6 +223,12 @@ class ProjectProject(models.Model):
             project.sale_line_id = (
                 sol or project.sale_line_employee_ids.sale_line_id[:1]
             )
+            _debug.logic(
+                "project_sale_line_resolved",
+                project=project,
+                line=project.sale_line_id,
+                by="prepaid_search" if sol else "employee_map",
+            )
 
     @api.depends("sale_line_employee_ids.sale_line_id", "allow_billable")
     def _compute_sale_order_count(self):
@@ -233,12 +251,20 @@ class ProjectProject(models.Model):
     def _check_sale_line_type(self):
         for project in self.filtered(lambda project: project.sale_line_id):
             if not project.sale_line_id.is_service:
+                _debug.logic(
+                    "project_sale_line_rejected",
+                    project=project,
+                    reason="not_a_service",
+                )
                 raise ValidationError(
                     _(
                         "You cannot link a billable project to a sales order item that is not a service."
                     )
                 )
             if project.sale_line_id.is_expense:
+                _debug.logic(
+                    "project_sale_line_rejected", project=project, reason="is_expense"
+                )
                 raise ValidationError(
                     _(
                         "You cannot link a billable project to a sales order item that comes from an expense or a vendor bill."
@@ -248,6 +274,9 @@ class ProjectProject(models.Model):
     def write(self, vals):
         res = super().write(vals)
         if "allow_billable" in vals and not vals.get("allow_billable"):
+            _debug.lifecycle(
+                "timesheet_sale_lines_cleared", projects=self, reason="not_billable"
+            )
             self.task_ids._get_timesheet().write(
                 {
                     "so_line": False,
@@ -268,6 +297,12 @@ class ProjectProject(models.Model):
                 sale_line_id = project.sale_line_employee_ids.filtered(
                     lambda l: l.project_id == project and l.employee_id == employee_id
                 ).sale_line_id
+                _debug.lifecycle(
+                    "timesheets_repointed",
+                    project=project,
+                    employee=employee_id,
+                    line=sale_line_id,
+                )
                 timesheet_ids.filtered(
                     lambda t: t.employee_id == employee_id
                 ).sudo().so_line = sale_line_id

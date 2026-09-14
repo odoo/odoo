@@ -3,9 +3,12 @@ from collections import defaultdict
 
 from odoo import api, fields, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, Query
 from odoo.tools.misc import unquote
 from odoo.tools.translate import _
+
+_debug = DebugLog(__name__)
 
 
 class ProjectProject(models.Model):
@@ -123,6 +126,17 @@ class ProjectProject(models.Model):
 
     @api.depends("partner_id")
     def _compute_sale_line_id(self):
+        if _debug.logic.enabled:
+            _debug.logic(
+                "sale_line_cleared_on_partner_mismatch",
+                projects=self.filtered(
+                    lambda p: (
+                        p.sale_line_id
+                        and p.sale_line_id.partner_id.commercial_partner_id
+                        != p.partner_id.commercial_partner_id
+                    )
+                ),
+            )
         self.filtered(
             lambda p: (
                 p.sale_line_id
@@ -157,6 +171,12 @@ class ProjectProject(models.Model):
                 invoice_state=invoice_state,
             )
         )
+        _debug.perf.count(
+            "projects_for_invoice_state",
+            projects=len(self),
+            state=invoice_state,
+            matched=len(result),
+        )
         return self.env["project.project"].browse(id_ for (id_,) in result)
 
     @api.depends("sale_order_id.invoice_state", "task_ids.sale_order_id.invoice_state")
@@ -184,6 +204,12 @@ class ProjectProject(models.Model):
             project.sale_order_count = len(
                 sale_order_lines.sudo().order_id or project.reinvoiced_sale_order_id
             )
+            _debug.logic(
+                "project_sale_counts",
+                project=project,
+                lines=project.sale_order_line_count,
+                orders=project.sale_order_count,
+            )
 
     @api.depends("account_id")
     def _compute_invoice_count(self):
@@ -196,6 +222,9 @@ class ProjectProject(models.Model):
             aggregates=["__count"],
         )
         data = {int(account_id): move_count for account_id, move_count in data}
+        _debug.perf.count(
+            "project_invoice_count", projects=len(self), accounts=len(data)
+        )
         for project in self:
             project.invoice_count = data.get(project.account_id.id, 0)
 
@@ -221,6 +250,11 @@ class ProjectProject(models.Model):
                 "is_service"
             )
         ):
+            _debug.logic(
+                "sale_line_from_reinvoiced_order",
+                project=self._origin,
+                line=service_sols[0],
+            )
             self.sale_line_id = service_sols[0]
 
     @api.onchange("sale_line_id")
@@ -231,6 +265,11 @@ class ProjectProject(models.Model):
             and self._has_field_access(reinvoiced, "write")
             and not self.reinvoiced_sale_order_id
         ):
+            _debug.logic(
+                "reinvoiced_order_from_sale_line",
+                project=self._origin,
+                order=self.sale_line_id.order_id,
+            )
             self.reinvoiced_sale_order_id = self.sale_line_id.order_id
 
     def _confirm_linked_sale_orders(self, sol_ids):
@@ -243,6 +282,9 @@ class ProjectProject(models.Model):
             )[0][0]
         )
         if quotations:
+            _debug.pipeline(
+                "linked_quotations_confirmed", projects=self, orders=quotations
+            )
             quotations.action_confirm()
 
     @api.model_create_multi
@@ -259,12 +301,16 @@ class ProjectProject(models.Model):
                 and not project.sudo().reinvoiced_sale_order_id.project_id
             ):
                 project.sudo().reinvoiced_sale_order_id.project_id = project.id
+        _debug.lifecycle(
+            "create", projects=projects, rows=len(vals_list), linked_lines=len(sol_ids)
+        )
         if sol_ids:
             projects._confirm_linked_sale_orders(list(sol_ids))
         return projects
 
     def write(self, vals):
         project = super().write(vals)
+        _debug.lifecycle("write", projects=self, fields=list(vals))
         if sol_id := vals.get("sale_line_id"):
             self._confirm_linked_sale_orders([sol_id])
         return project
@@ -444,6 +490,7 @@ class ProjectProject(models.Model):
             "active_id": so_ids[0] if len(so_ids) == 1 else False,
             "active_ids": so_ids,
         }
+        _debug.logic("project_invoice_action", project=self, orders=len(so_ids))
         if not self.has_any_so_to_invoice:
             action["context"]["default_advance_payment_method"] = "percentage"
         return action
@@ -504,6 +551,7 @@ class ProjectProject(models.Model):
 
     def _get_sale_order_item_ids(self, domain_per_model=None, limit=None, offset=None):
         if not self or not self.filtered("allow_billable"):
+            _debug.logic("sale_items_skipped", projects=self, reason="not_billable")
             return []
         query = self._get_sale_order_items_query(domain_per_model)
         query.limit = limit

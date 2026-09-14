@@ -1,8 +1,11 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, ValidationError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 from odoo.tools.misc import unquote
+
+_debug = DebugLog(__name__)
 
 
 class ProjectTask(models.Model):
@@ -135,8 +138,12 @@ class ProjectTask(models.Model):
             ).commercial_partner_id
             if task.partner_id.commercial_partner_id in consistent_partners:
                 task.sale_order_id = sale_order
+                _debug.logic("task_sale_order", task=task, order=sale_order)
             else:
                 task.sale_order_id = False
+                _debug.logic(
+                    "task_sale_order_cleared", task=task, reason="partner_mismatch"
+                )
 
     def _inverse_partner_id(self):
         for task in self:
@@ -149,6 +156,9 @@ class ProjectTask(models.Model):
                 task.sale_order_id
                 and task.partner_id.commercial_partner_id not in consistent_partners
             ):
+                _debug.logic(
+                    "task_sale_links_cleared", task=task, reason="partner_changed"
+                )
                 task.sale_order_id = task.sale_line_id = False
 
     @api.depends(
@@ -180,6 +190,7 @@ class ProjectTask(models.Model):
                 ):
                     sale_line = task.project_id.sale_line_id
                 task.sale_line_id = sale_line
+                _debug.logic("task_sale_line_inherited", task=task, line=sale_line)
 
     @api.depends("sale_order_id")
     def _compute_display_sale_order_button(self):
@@ -193,6 +204,7 @@ class ProjectTask(models.Model):
             for task in self:
                 task.display_sale_order_button = task.sale_order_id in sale_orders
         except AccessError:
+            _debug.logic("sale_order_button_hidden", tasks=self, reason="no_access")
             self.display_sale_order_button = False
 
     @api.constrains("sale_line_id")
@@ -200,6 +212,12 @@ class ProjectTask(models.Model):
         for task in self.sudo():
             if task.sale_line_id:
                 if not task.sale_line_id.is_service or task.sale_line_id.is_expense:
+                    _debug.logic(
+                        "task_sale_line_rejected",
+                        task=task,
+                        line=task.sale_line_id,
+                        reason="not_a_service_or_reinvoiced_expense",
+                    )
                     raise ValidationError(
                         _(
                             "You cannot link the order item %(order_id)s - %(product_id)s to this task because it is a re-invoiced expense.",
@@ -218,6 +236,9 @@ class ProjectTask(models.Model):
             )[0][0]
         )
         if quotations:
+            _debug.pipeline(
+                "linked_quotations_confirmed", tasks=self, orders=quotations
+            )
             quotations.action_confirm()
 
     @api.model_create_multi
@@ -226,12 +247,16 @@ class ProjectTask(models.Model):
         sol_ids = {
             vals["sale_line_id"] for vals in vals_list if vals.get("sale_line_id")
         }
+        _debug.lifecycle(
+            "create", tasks=tasks, rows=len(vals_list), linked_lines=len(sol_ids)
+        )
         if sol_ids:
             tasks._confirm_linked_sale_orders(list(sol_ids))
         return tasks
 
     def write(self, vals):
         task = super().write(vals)
+        _debug.lifecycle("write", tasks=self, fields=list(vals))
         if sol_id := vals.get("sale_line_id"):
             self._confirm_linked_sale_orders([sol_id])
         return task

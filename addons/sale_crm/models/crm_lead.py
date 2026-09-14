@@ -1,5 +1,8 @@
 from odoo import _, api, fields, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class CrmLead(models.Model):
@@ -51,9 +54,17 @@ class CrmLead(models.Model):
                 lead.order_ids.filtered_domain(self._get_domain_lead_quotation())
             )
             lead.sale_order_count = len(sale_orders)
+            _debug.logic(
+                "lead_sale_data",
+                lead=lead,
+                orders=sale_orders,
+                quotations=lead.quotation_count,
+                amount=lead.sale_amount_total,
+            )
 
     def action_sale_quotations_new(self):
         if not self.partner_id:
+            _debug.logic("new_quotation_needs_partner", lead=self)
             return self.env["ir.actions.actions"]._get_action_dict_by_xml_id(
                 "sale_crm.crm_quotation_partner_action"
             )
@@ -148,6 +159,12 @@ class CrmLead(models.Model):
                 (opportunity.expected_revenue or 0) < order.amount_untaxed
                 and order.currency_id == opportunity.company_id.currency_id
             ):
+                _debug.lifecycle(
+                    "expected_revenue_raised",
+                    opportunity=opportunity,
+                    order=order,
+                    amount=order.amount_untaxed,
+                )
                 opportunity.expected_revenue = order.amount_untaxed
                 opportunity._track_set_log_message(
                     _(

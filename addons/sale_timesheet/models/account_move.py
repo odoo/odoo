@@ -2,6 +2,9 @@ from collections import defaultdict
 
 from odoo import _, api, fields, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class AccountMove(models.Model):
@@ -116,6 +119,12 @@ class AccountMove(models.Model):
                 if end_date:
                     domain &= Domain("date", "<=", end_date)
                 timesheets = self.env["account.analytic.line"].sudo().search(domain)  # noqa: E8507 - one query per invoiced line, on its own timesheet domain
+                _debug.lifecycle(
+                    "timesheets_invoiced",
+                    move=line.move_id,
+                    line=line,
+                    timesheets=timesheets,
+                )
                 timesheets.write({"timesheet_invoice_id": line.move_id.id})
 
     def _get_range_dates(self, order):

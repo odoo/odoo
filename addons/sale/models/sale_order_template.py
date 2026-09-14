@@ -1,6 +1,9 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrderTemplate(models.Model):
@@ -113,6 +116,12 @@ class SaleOrderTemplate(models.Model):
                 continue
 
             if not template.company_id:
+                _debug.logic(
+                    "template_company_rejected",
+                    template=template,
+                    reason="shared_template_with_company_products",
+                    products=restricted_products,
+                )
                 raise ValidationError(
                     _(
                         "Your template cannot contain products from specific companies if it's shared"
@@ -126,6 +135,12 @@ class SaleOrderTemplate(models.Model):
             )
             if unauthorized_products := restricted_products - authorized_products:
                 unaccessible_companies = unauthorized_products.company_id
+                _debug.logic(
+                    "template_company_rejected",
+                    template=template,
+                    reason="products_from_other_companies",
+                    products=unauthorized_products,
+                )
                 if len(unaccessible_companies) > 1:
                     raise ValidationError(
                         _(
@@ -157,6 +172,11 @@ class SaleOrderTemplate(models.Model):
             if template.require_payment and not (
                 0 < template.prepayment_percent <= 1.0
             ):
+                _debug.logic(
+                    "template_prepayment_rejected",
+                    template=template,
+                    percent=template.prepayment_percent,
+                )
                 raise ValidationError(
                     _("Prepayment percentage must be a valid percentage.")
                 )
@@ -164,6 +184,7 @@ class SaleOrderTemplate(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         records = super().create(vals_list)
+        _debug.lifecycle("create", templates=records, rows=len(vals_list))
         for record, vals in zip(records, vals_list, strict=True):
             if "sale_order_template_line_ids" in vals:
                 record._update_product_translations()
@@ -176,7 +197,13 @@ class SaleOrderTemplate(models.Model):
                 .sudo()
                 .search([("sale_order_template_id", "in", self.ids)])
             )
+            _debug.lifecycle(
+                "company_default_template_cleared",
+                templates=self,
+                companies=companies,
+            )
             companies.sale_order_template_id = None
+        _debug.lifecycle("write", templates=self, fields=list(vals))
         result = super().write(vals)
         if "sale_order_template_line_ids" in vals:
             self._update_product_translations()
@@ -199,6 +226,7 @@ class SaleOrderTemplate(models.Model):
             "sale.sale_order_template_1", raise_if_not_found=False
         )
         if not demo_template or demo_template.sale_order_template_line_ids:
+            _debug.logic("demo_template_skipped", reason="missing_or_already_filled")
             return
 
         acoustic_bloc_screen_product = self.env.ref(

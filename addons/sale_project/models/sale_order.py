@@ -3,8 +3,11 @@ from collections import defaultdict
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Command, Domain
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.project.models.project_task import CLOSED_STATES
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrder(models.Model):
@@ -209,11 +212,18 @@ class SaleOrder(models.Model):
             projects = projects._filtered_access("read")
             order.project_ids = projects
             order.project_count = len(projects.filtered("active"))
+            _debug.logic("order_projects", order=order, projects=projects)
 
     def _action_confirm(self):
         if self.env.context.get("disable_project_task_generation"):
+            _debug.logic(
+                "service_generation_skipped", orders=self, reason="context_opt_out"
+            )
             return super()._action_confirm()
 
+        _debug.pipeline(
+            "service_generation_on_confirm", orders=self, companies=self.company_id
+        )
         if len(self.company_id) == 1:
             self.line_ids.sudo().with_company(
                 self.company_id
@@ -231,6 +241,11 @@ class SaleOrder(models.Model):
                     if project == sol.project_id and (
                         project_template := sol.product_template_id.project_template_id
                     ):
+                        _debug.lifecycle(
+                            "project_company_from_template",
+                            project=project,
+                            template=project_template,
+                        )
                         project.sudo().company_id = project_template.sudo().company_id
                         break
         return super()._action_confirm()
@@ -249,6 +264,9 @@ class SaleOrder(models.Model):
     def action_create_project(self):
         self.check_singleton()
         if not self.show_create_project_button:
+            _debug.logic(
+                "create_project_refused", order=self, reason="not_confirmed_or_linked"
+            )
             return {
                 "type": "ir.actions.client",
                 "tag": "display_notification",
@@ -395,6 +413,11 @@ class SaleOrder(models.Model):
                 self.env["sale.order.line"],
             )
             if project and not project.sale_line_id:
+                _debug.lifecycle(
+                    "project_linked_on_order_create",
+                    project=project,
+                    line=service_sol,
+                )
                 project.sale_line_id = service_sol
                 if not project.reinvoiced_sale_order_id:
                     project.reinvoiced_sale_order_id = (
@@ -403,6 +426,9 @@ class SaleOrder(models.Model):
                         else False
                     )
             if task and not task.sale_line_id:
+                _debug.lifecycle(
+                    "task_linked_on_order_create", task=task, line=service_sol
+                )
                 created_records.with_context(
                     disable_project_task_generation=True
                 ).action_confirm()
@@ -412,6 +438,7 @@ class SaleOrder(models.Model):
     def write(self, vals):
         res = super().write(vals)
         if "state" in vals and vals["state"] == "cancel":
+            _debug.lifecycle("project_lines_unlinked_on_cancel", orders=self)
             self.env["project.project"].sudo().search(
                 [("sale_line_id.order_id", "in", self.ids)]
             ).sale_line_id = False
@@ -436,6 +463,7 @@ class SaleOrder(models.Model):
     def get_first_service_line(self):
         line = next((sol for sol in self.line_ids if sol.is_service), False)
         if not line:
+            _debug.logic("no_service_line", orders=self)
             raise UserError(
                 self.env._("The Sales Order must contain at least one service product.")
             )

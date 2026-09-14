@@ -1,4 +1,7 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ResConfigSettings(models.TransientModel):
@@ -28,4 +31,5 @@ class ResConfigSettings(models.TransientModel):
     @api.onchange("use_security_lead")
     def _onchange_use_security_lead(self):
         if not self.use_security_lead:
+            _debug.lifecycle("security_lead_cleared", company=self.company_id)
             self.security_lead = 0.0

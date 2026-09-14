@@ -1,6 +1,9 @@
 from odoo import _, api, fields, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import format_duration
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrderLine(models.Model):
@@ -101,6 +104,7 @@ class SaleOrderLine(models.Model):
                 and line.product_id.service_type == "timesheet"
             ):
                 line.qty_transferred_method = "timesheet"
+                _debug.logic("qty_method_timesheet", line=line)
 
     @api.depends("analytic_line_ids.project_id", "project_id.pricing_type")
     def _compute_qty_transferred(self):
@@ -110,6 +114,11 @@ class SaleOrderLine(models.Model):
         )
         domain = lines_by_timesheet._timesheet_compute_delivered_quantity_domain()
         mapping = lines_by_timesheet.sudo()._get_qty_delivered_by_analytic(domain)
+        _debug.perf.count(
+            "qty_from_timesheets",
+            lines=len(lines_by_timesheet),
+            rows=len(mapping),
+        )
         for line in lines_by_timesheet:
             line.qty_transferred = mapping.get(line.id or line._origin.id, 0.0)
 
@@ -150,6 +159,7 @@ class SaleOrderLine(models.Model):
     def _timesheet_create_project(self):
         project = super()._timesheet_create_project()
         if self.product_id.project_template_id.allocated_hours:
+            _debug.logic("project_hours", line=self, by="template")
             project.write(
                 {
                     "allocated_hours": self.product_id.project_template_id.allocated_hours,
@@ -179,6 +189,9 @@ class SaleOrderLine(models.Model):
                 uom_factor = factor_per_id[line.product_uom_id.id] / project_uom.factor
                 allocated_hours += line.product_qty * uom_factor
 
+        _debug.logic(
+            "project_hours", line=self, by="order_lines", hours=allocated_hours
+        )
         project.write(
             {
                 "allocated_hours": allocated_hours,
@@ -216,6 +229,12 @@ class SaleOrderLine(models.Model):
         if end_date:
             domain &= Domain("date", "<=", end_date)
         mapping = lines_by_timesheet.sudo()._get_qty_delivered_by_analytic(domain)
+        _debug.pipeline(
+            "qty_to_invoice_recomputed",
+            lines=lines_by_timesheet,
+            rows=len(mapping),
+            refunds=refund_account_moves,
+        )
 
         for line in lines_by_timesheet:
             qty_to_invoice = mapping.get(line.id, 0.0)
@@ -225,6 +244,9 @@ class SaleOrderLine(models.Model):
                 prev_inv_status = line.invoice_state
                 line.qty_to_invoice = qty_to_invoice
                 line.invoice_state = prev_inv_status
+                _debug.logic(
+                    "invoice_state_preserved", line=line, state=prev_inv_status
+                )
 
     def _get_action_per_item(self):
         action_per_sol = super()._get_action_per_item()
@@ -241,6 +263,9 @@ class SaleOrderLine(models.Model):
             timesheet_ids_per_sol = {
                 so_line.id: ids for so_line, ids in timesheet_read_group
             }
+            _debug.perf.count(
+                "timesheets_per_line", lines=len(self), rows=len(timesheet_ids_per_sol)
+            )
         for sol in self:
             timesheet_ids = timesheet_ids_per_sol.get(sol.id, [])
             if sol.is_service and len(timesheet_ids) > 0:

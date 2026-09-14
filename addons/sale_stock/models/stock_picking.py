@@ -1,5 +1,8 @@
 from odoo import Command, _, api, fields, models
 from odoo.db.schema import column_exists, create_column
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockPicking(models.Model):
@@ -39,6 +42,9 @@ class StockPicking(models.Model):
                 and not picking._is_replenishment_receipt_step()
             ):
                 sale_order = picking.reference_ids.sale_ids[:1]
+                _debug.logic(
+                    "picking_sale_from_reference", picking=picking, order=sale_order
+                )
             picking.sale_id = sale_order
 
     @api.depends("move_ids.sale_line_id.order_id.picking_policy")
@@ -54,6 +60,11 @@ class StockPicking(models.Model):
         for picking in self:
             sale_orders = picking.move_ids.sale_line_id.order_id
             if sale_orders:
+                _debug.logic(
+                    "picking_move_type_from_order",
+                    picking=picking,
+                    orders=sale_orders,
+                )
                 if any(so.picking_policy == "direct" for so in sale_orders):
                     picking.move_type = "direct"
                 else:
@@ -76,6 +87,7 @@ class StockPicking(models.Model):
                 and move.location_dest_id.usage != "customer"
                 for move in moves
             ):
+                _debug.logic("picking_is_replenishment_receipt", picking=self)
                 return True
             visited |= moves
             moves = moves.move_orig_ids - visited
@@ -99,6 +111,9 @@ class StockPicking(models.Model):
                         "name": self.sale_id.name,
                     },
                 )
+            )
+            _debug.lifecycle(
+                "stock_reference_created", picking=self, order=self.sale_id
             )
             self._add_reference(reference)
         self.move_ids._update_sale_lines_for_order(self.sale_id)
@@ -127,6 +142,12 @@ class StockPicking(models.Model):
 
         documents = self.sudo()._get_log_activity_documents(
             moves, "sale_line_id", "DOWN", _get_groupby_keys
+        )
+        _debug.pipeline(
+            "picking_shortfall_logged",
+            picking=self,
+            moves=moves,
+            documents=len(documents),
         )
         self._log_activity(_render_note_exception_quantity, documents)
 

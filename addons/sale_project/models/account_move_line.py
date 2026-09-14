@@ -1,5 +1,8 @@
 from odoo import models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class AccountMoveLine(models.Model):
@@ -18,6 +21,7 @@ class AccountMoveLine(models.Model):
                     line.account_type not in ["asset_receivable", "liability_payable"]
                 )
             )
+            _debug.logic("analytic_from_context_project", lines=lines, project=project)
             lines.analytic_distribution = project._get_analytic_distribution()
 
     def _get_domain_so_mapping(self):
@@ -76,6 +80,12 @@ class AccountMoveLine(models.Model):
                 in_sale_state_orders[0] if in_sale_state_orders else orders[0]
             )
 
+        _debug.perf.count(
+            "so_mapping_from_project",
+            lines=len(self),
+            projects=len(projects),
+            mapped=len(mapping),
+        )
         return mapping
 
     def _sale_get_order_map(self):

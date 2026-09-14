@@ -1,4 +1,7 @@
 from odoo import fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrder(models.Model):
@@ -19,5 +22,10 @@ class SaleOrder(models.Model):
             ),
         ).action_confirm()
         for order in self:
+            _debug.pipeline(
+                "opportunity_revenue_update",
+                order=order,
+                opportunity=order.opportunity_id,
+            )
             order.opportunity_id._update_revenues_from_so(order)
         return res

@@ -2,6 +2,9 @@ from collections import defaultdict
 from datetime import timedelta
 
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ResPartner(models.Model):
@@ -28,6 +31,7 @@ class ResPartner(models.Model):
             # a partner is readable by users who may not read its orders or
             # moves; the rate over records they cannot see is -1, not an error
             self.customer_on_time_rate = -1
+            _debug.logic("on_time_rate_unavailable", partners=self, reason="no_access")
             return
         date_order_days_delta = int(
             self.env["ir.config_parameter"]
@@ -83,6 +87,13 @@ class ResPartner(models.Model):
             ordered += line.product_uom_qty
             on_time += lines_quantity[line.id]
             partner_dict[line.partner_id] = (on_time, ordered)
+        _debug.perf.count(
+            "customer_on_time_rate",
+            partners=len(self),
+            order_lines=len(order_lines),
+            moves=len(moves),
+            window_days=date_order_days_delta,
+        )
         seen_partner = self.env["res.partner"]
         for partner, numbers in partner_dict.items():
             seen_partner |= partner

@@ -1,6 +1,9 @@
 from collections import defaultdict
 
 from odoo import Command, api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class StockLot(models.Model):
@@ -39,6 +42,13 @@ class StockLot(models.Model):
             so = ml.move_id.sale_line_id.order_id
             if so.id in readable_order_ids:
                 sale_orders[ml.lot_id.id].add(so.id)
+        _debug.perf.count(
+            "lot_sale_orders",
+            lots=len(self),
+            move_lines=len(move_lines),
+            readable_orders=len(readable_order_ids),
+            all_orders=len(orders),
+        )
         for lot in self:
             so_ids = sale_orders.get(lot.id, set())
             lot.sale_order_ids = [Command.set(list(so_ids))]

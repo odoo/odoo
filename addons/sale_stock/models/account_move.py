@@ -1,7 +1,10 @@
 from collections import defaultdict
 
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.misc import formatLang
+
+_debug = DebugLog(__name__)
 
 
 class AccountMove(models.Model):
@@ -31,6 +34,7 @@ class AccountMove(models.Model):
                 max(sale_order_date_effective) if sale_order_date_effective else False
             )
             if date_effective_res:
+                _debug.logic("delivery_date_from_order", move=move, by="date_effective")
                 move.delivery_date = fields.Datetime.context_timestamp(
                     move, date_effective_res
                 )
@@ -52,6 +56,7 @@ class AccountMove(models.Model):
             or not self.invoice_date
             or self.move_type not in ("out_invoice", "out_refund")
         ):
+            _debug.logic("invoiced_lots_skipped", move=self, reason="not_posted")
             return res
 
         current_invoice_amls = self.invoice_line_ids.filtered(
@@ -143,6 +148,7 @@ class AccountMove(models.Model):
 
             qties_per_lot[sml.lot_id] += quantity
 
+        _debug.perf.count("invoiced_lots", move=self, lots=len(qties_per_lot))
         for lot, qty in qties_per_lot.items():
             lot = lot.sudo()
 

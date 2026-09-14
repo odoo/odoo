@@ -1,5 +1,8 @@
 from odoo import _, fields, models
 from odoo.exceptions import AccessError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class DigestDigest(models.Model):
@@ -12,6 +15,7 @@ class DigestDigest(models.Model):
 
     def _compute_kpi_all_sale_total_value(self):
         if not self.env.user.has_group("sale.group_sale_salesman_all_leads"):
+            _debug.logic("digest_kpi_denied", kpi="all_sale_total", digests=self)
             raise AccessError(
                 _("Do not have access, skip this data for user's digest email")
             )

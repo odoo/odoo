@@ -1,5 +1,8 @@
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import AccessError, UserError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class SaleOrderLine(models.Model):
@@ -50,6 +53,7 @@ class SaleOrderLine(models.Model):
                 try:
                     self.env["sale.order"].browse(res["order_id"]).check_access("write")
                 except AccessError:
+                    _debug.logic("default_order_dropped", reason="no_write_access")
                     del res["order_id"]
 
             if "order_id" in fields and not res.get("order_id"):
@@ -98,6 +102,7 @@ class SaleOrderLine(models.Model):
                 and sol.product_id.service_type == "milestones"
             )
         )
+        _debug.logic("qty_method_milestones", lines=self, milestones=milestones_lines)
         milestones_lines.qty_transferred_method = "milestones"
         super(SaleOrderLine, self - milestones_lines)._compute_qty_transferred_method()
 
@@ -123,6 +128,11 @@ class SaleOrderLine(models.Model):
             sale_line.id: percentage_sum
             for sale_line, percentage_sum in project_milestone_read_group
         }
+        _debug.perf.count(
+            "qty_from_milestones",
+            lines=len(lines_by_milestones),
+            rows=len(reached_milestones_per_sol),
+        )
         for line in lines_by_milestones:
             sol_id = line.id or line._origin.id
             line.qty_transferred = (
@@ -187,11 +197,20 @@ class SaleOrderLine(models.Model):
                 if accounts_to_add := project._get_analytic_accounts().filtered(
                     lambda account: account.root_plan_id not in applied_root_plans  # noqa: B023 - lambda consumed immediately in-loop, no late binding
                 ):
+                    _debug.logic(
+                        "analytic_distribution_extended",
+                        line=line,
+                        project=project,
+                        added=accounts_to_add,
+                    )
                     line.analytic_distribution = {
                         f"{account_ids},{','.join(map(str, accounts_to_add.ids))}": percentage
                         for account_ids, percentage in line.analytic_distribution.items()
                     }
             else:
+                _debug.logic(
+                    "analytic_distribution_from_project", line=line, project=project
+                )
                 line.analytic_distribution = project._get_analytic_distribution()
 
     @api.model_create_multi
@@ -201,6 +220,12 @@ class SaleOrderLine(models.Model):
             lambda sol: sol.state == "done" and not sol.is_expense
         )
         has_task_lines = confirmed_lines.filtered("task_id")
+        _debug.pipeline(
+            "service_generation_on_create",
+            lines=lines,
+            confirmed=confirmed_lines,
+            already_with_task=has_task_lines,
+        )
         confirmed_lines.sudo()._timesheet_service_generation()
         for line in confirmed_lines - has_task_lines:
             if line.task_id:
@@ -216,6 +241,9 @@ class SaleOrderLine(models.Model):
             assert service_line
             project = self.env["project.project"].browse(project_id)
             if not project.sale_line_id:
+                _debug.lifecycle(
+                    "project_linked_to_order_line", project=project, line=service_line
+                )
                 project.sale_line_id = service_line
                 if not project.reinvoiced_sale_order_id:
                     project.reinvoiced_sale_order_id = service_line.order_id
@@ -237,6 +265,12 @@ class SaleOrderLine(models.Model):
                 if line.task_id and line.product_id.type == "service":
                     allocated_hours = line._convert_qty_company_hours(
                         line.task_id.company_id or self.env.user.company_id
+                    )
+                    _debug.lifecycle(
+                        "task_allocated_hours_realigned",
+                        line=line,
+                        task=line.task_id,
+                        hours=allocated_hours,
                     )
                     line.task_id.write({"planned_hours": allocated_hours})
         return result
@@ -338,6 +372,12 @@ class SaleOrderLine(models.Model):
                 ]
             )
 
+        _debug.lifecycle(
+            "project_created_from_line",
+            line=self,
+            project=project,
+            template=project_template,
+        )
         self.write({"project_id": project.id})
         project.reinvoiced_sale_order_id = self.order_id
         return project
@@ -425,6 +465,9 @@ class SaleOrderLine(models.Model):
             order_link=self.order_id._get_html_link(),
             product_name=self.product_id.name,
         )
+        _debug.lifecycle(
+            "task_created_from_line", line=self, task=task, project=project
+        )
         task.message_post(body=task_msg)
         return task
 
@@ -456,6 +499,12 @@ class SaleOrderLine(models.Model):
         )
         so_line_task_global_project = sale_order_lines._filtered_task_global_project()
         so_line_new_project = sale_order_lines._filtered_new_project()
+        _debug.pipeline(
+            "service_generation",
+            candidates=sale_order_lines,
+            global_project=so_line_task_global_project,
+            new_project=so_line_new_project,
+        )
         task_templates = self.env["project.task"]
 
         map_so_project = {}
@@ -576,6 +625,9 @@ class SaleOrderLine(models.Model):
                         so_line._timesheet_create_task(project)
 
                 elif not project:
+                    _debug.logic(
+                        "task_generation_refused", line=so_line, reason="no_project"
+                    )
                     raise UserError(
                         _(
                             "A project must be defined on the quotation %(order)s or on the form of products creating a task on order.\n"
@@ -588,12 +640,16 @@ class SaleOrderLine(models.Model):
     def _handle_milestones(self, project):
         self.check_singleton()
         if self.product_id.service_policy != "delivered_milestones":
+            _debug.logic(
+                "milestones_skipped", line=self, reason="policy_not_milestones"
+            )
             return
         if not self.project_id.allow_milestones:
             self.project_id.allow_milestones = True
         if milestones := project.milestone_ids.filtered(
             lambda milestone: not milestone.sale_line_id
         ):
+            _debug.lifecycle("milestones_attached", line=self, milestones=milestones)
             milestones.write(
                 {
                     "sale_line_id": self.id,
@@ -609,6 +665,7 @@ class SaleOrderLine(models.Model):
                     "quantity_percentage": 1,
                 }
             )
+            _debug.lifecycle("milestone_created", line=self, milestone=milestone)
             if self.product_id.service_tracking == "task_in_project":
                 self.task_id.milestone_id = milestone.id
 

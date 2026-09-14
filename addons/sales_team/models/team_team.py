@@ -1,5 +1,6 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 from odoo.tools.translate import LazyTranslate
 
@@ -12,6 +13,8 @@ DEFAULT_TEAM_XMLIDS = (
     "sales_team.salesteam_website_sales",
     "sales_team.pos_sales_team",
 )
+
+_debug = DebugLog(__name__)
 
 
 class TeamTeam(models.Model):
@@ -76,6 +79,7 @@ class TeamTeam(models.Model):
             )
 
         if protected := (self & default_teams):
+            _debug.logic("team_unlink_refused", teams=protected, reason="default_team")
             raise UserError(
                 _('Cannot delete default team "%(name)s"', name=protected[0].name)
             )

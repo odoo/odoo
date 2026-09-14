@@ -1,6 +1,9 @@
 from odoo import api, fields, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.misc import unquote
+
+_debug = DebugLog(__name__)
 
 
 class ProjectSaleLineEmployeeMap(models.Model):
@@ -145,6 +148,12 @@ class ProjectSaleLineEmployeeMap(models.Model):
         for map_entry in self:
             if not map_entry.is_cost_changed:
                 map_entry.cost = map_entry.employee_id.hourly_cost
+                _debug.logic(
+                    "map_cost_from_employee",
+                    entry=map_entry,
+                    employee=map_entry.employee_id,
+                    cost=map_entry.cost,
+                )
 
     def _get_working_hours_per_calendar(self, is_uom_day=False):
         resource_calendar_per_hours = {}
@@ -206,11 +215,13 @@ class ProjectSaleLineEmployeeMap(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         maps = super().create(vals_list)
+        _debug.lifecycle("create", entries=maps, rows=len(vals_list))
         maps._update_project_timesheet()
         return maps
 
     def write(self, vals):
         res = super().write(vals)
+        _debug.lifecycle("write", entries=self, fields=list(vals))
         self._update_project_timesheet()
         return res
 
