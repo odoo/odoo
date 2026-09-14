@@ -1337,17 +1337,16 @@ class TestRecruitment(TransactionCase):
         )
         # the write is buffered: the record rule is checked at flush, so a bare
         # `assertRaises` around the action alone exits before the error is raised
-        # Two things about the shape of this assertion, both measured:
-        #  - the write is buffered and the rule is checked at flush, so the
-        #    action alone raises nothing; it must be flushed, and through the
-        #    *wizard's* env, since `self.env` is the superuser and flushing
-        #    through that applies superuser rights;
-        #  - `assertRaises` does not see it. This fork's `TransactionCase`
-        #    clears the cursor when an `AccessError` is expected
-        #    (`transaction_case.py::_assertRaises`) and the violation then does
-        #    not surface inside the block. Observed, not explained -- so what is
-        #    asserted here is the property that matters rather than the
-        #    exception type.
+        # `assertRaises(AccessError)` cannot be used here, and the reason is
+        # worth stating because the obvious test passes against the bug.
+        # `TransactionCase._assertRaises` calls `cr.clear()` whenever the
+        # expected exception is an `AccessError`, and that discards the state
+        # staged before the block -- including this wizard's own `applicant_ids`,
+        # which then reads empty. `_add_applicants_to_pool` iterates nothing, the
+        # dangerous write never happens, and the assertion is vacuous. Measured:
+        # with `cr.clear()` the foreign talent is untouched and no error is
+        # raised; without it the error is raised every time, through either env.
+        # So this asserts the property, which is the stronger claim anyway.
         refused = False
         try:
             wizard.action_add_applicants_to_pool()
