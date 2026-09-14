@@ -12,7 +12,7 @@ from collections.abc import Callable
 from datetime import UTC, date, datetime
 from datetime import timedelta as _timedelta
 from decimal import Decimal
-from itertools import batched
+from itertools import batched, product
 
 from psycopg import errors as pgerrors
 from psycopg.errors import (
@@ -1639,6 +1639,26 @@ def _python_timezone_names() -> frozenset[str]:
     return frozenset(zoneinfo.available_timezones())
 
 
+class _MultiValued(list):
+    __slots__ = ()
+
+
+# date_part() for the number granularities, a double precision as PostgreSQL
+# answers it; its dow runs Sunday 0 .. Saturday 6 and its week is the ISO week
+_DATE_PART = {
+    "year_number": lambda d: float(d.year),
+    "quarter_number": lambda d: float((d.month - 1) // 3 + 1),
+    "month_number": lambda d: float(d.month),
+    "iso_week_number": lambda d: float(d.isocalendar()[1]),
+    "day_of_year": lambda d: float(d.timetuple().tm_yday),
+    "day_of_month": lambda d: float(d.day),
+    "day_of_week": lambda d: float((d.weekday() + 1) % 7),
+    "hour_number": lambda d: float(d.hour),
+    "minute_number": lambda d: float(d.minute),
+    "second_number": lambda d: float(d.second),
+}
+
+
 _TRUNCATE_GRANULARITY = {
     "year": lambda d: d.replace(month=1, day=1),
     "quarter": lambda d: d.replace(month=3 * ((d.month - 1) // 3) + 1, day=1),
@@ -1662,7 +1682,13 @@ def _truncate(
             value = value.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
         if granularity == "hour":
             return value.replace(minute=0, second=0, microsecond=0)
+        if granularity in _DATE_PART:
+            return _DATE_PART[granularity](value)
         value = value.replace(hour=0, minute=0, second=0, microsecond=0)
+    if granularity in _DATE_PART:
+        if granularity in ("hour_number", "minute_number", "second_number"):
+            return 0.0
+        return _DATE_PART[granularity](value)
     if granularity == "week":
         # the language's first week day, 0 Monday .. 6 Sunday, as the SQL
         # path shifts date_trunc('week') by it
@@ -1705,7 +1731,7 @@ class _InMemoryReadGroup:
         if field.is_properties:
             return self._property_reader(model, field, seq_fnames, granularity, spec)
         if field.is_many2many:
-            self._unsupported(f"groupby {spec!r}")
+            return self._many2many_reader(model, field, spec)
         if seq_fnames:
             return self._many2one_path_reader(
                 model, fname, field, seq_fnames, granularity, spec
@@ -1737,6 +1763,25 @@ class _InMemoryReadGroup:
             if field.is_text:
                 return value or None
             return value if value is not False else None
+
+        return read
+
+    def _many2many_reader(self, model, field, spec):
+        # the relation rows whose comodel side the user may see under the
+        # field's domain, as the LEFT JOIN's IN (subselect) keeps
+        if not field.store:
+            raise ValueError(f"Group by non-stored many2many field: {spec!r}")
+        comodel = model.env[field.comodel_name].with_context(**field.context)
+        allowed = set(
+            comodel._search(
+                field.get_comodel_domain(model),
+                bypass_access=field.bypass_search_access,
+            ).get_result_ids()
+        )
+
+        def read(record):
+            ids = [id_ for id_ in record[field.name]._ids if id_ in allowed]
+            return _MultiValued(ids or [None])
 
         return read
 
@@ -1877,8 +1922,15 @@ class _InMemoryReadGroup:
     def rows(self, having, order, limit, offset) -> list[tuple]:
         groups: dict[tuple, list] = {}
         for record in self.records:
-            key = tuple(read(record) for read in self.groupby)
-            groups.setdefault(key, []).append(record)
+            # a many2many term yields one key per related row, as the
+            # relation LEFT JOIN yields one row per pair (or one NULL row)
+            for key in product(
+                *(
+                    value if isinstance(value, _MultiValued) else (value,)
+                    for value in (read(record) for read in self.groupby)
+                )
+            ):
+                groups.setdefault(key, []).append(record)
         if not self.groupby:
             groups = {(): list(self.records)}
         rows = [
@@ -1999,19 +2051,34 @@ class _InMemoryReadGroup:
             def key(row, index=index, rank=rank, null_is_true=null_is_true):
                 value = row[index]
                 if value is not None and rank is not None:
-                    value = rank[value]
+                    value = rank(value)
                 if isinstance(value, list):
                     self._unsupported("ordering by an array aggregate")
                 return (value is None if null_is_true else value is not None, value)
 
             rows.sort(key=key, reverse=desc)
 
+    def _day_of_week_rank(self, spec: str):
+        from ..parsing import parse_read_group_spec
+
+        if parse_read_group_spec(spec)[2] != "day_of_week":
+            return None
+        from odoo.tools import get_lang
+
+        # mod(7 - week_start + dow, 7): the language's first day sorts first
+        week_start = int(get_lang(self.model.env).week_start)
+        return lambda dow: (7 - week_start + dow) % 7
+
     def _order_terms(self, rows: list[tuple], order: str | None) -> list[tuple]:
         from ..parsing import parse_read_group_spec, regex_order_part_read_group
 
         if not order:
-            # SQL orders by the groupby terms as they are, ascending
-            return [(index, None, False, False) for index in range(len(self.groupby))]
+            # SQL orders by the groupby terms as they are, ascending -- a
+            # day_of_week term through the week-start shift, as its ORDER BY does
+            return [
+                (index, self._day_of_week_rank(spec), False, False)
+                for index, spec in enumerate(self.groupby_specs)
+            ]
         terms = []
         for order_part in order.split(","):
             match = regex_order_part_read_group.fullmatch(order_part)
@@ -2024,9 +2091,8 @@ class _InMemoryReadGroup:
             rank = None
             if term in self.groupby_specs:
                 index = self.groupby_specs.index(term)
-                fname, seq_fnames, granularity = parse_read_group_spec(term)
-                if granularity == "day_of_week":
-                    self._unsupported(f"order {order_part.strip()!r}")
+                fname, seq_fnames, _granularity = parse_read_group_spec(term)
+                rank = self._day_of_week_rank(term)
                 field = self.model._fields[fname]
                 # a path spec groups by the comodel's field, which sorts as is
                 if field.is_many2one and not seq_fnames:
@@ -2034,9 +2100,10 @@ class _InMemoryReadGroup:
                     if comodel._order != "id":
                         ids = [row[index] for row in rows if row[index] is not None]
                         ordered = comodel.browse(ids).sorted(key=comodel._order)
-                        rank = {
+                        positions = {
                             id_: position for position, id_ in enumerate(ordered._ids)
                         }
+                        rank = positions.__getitem__
             elif term in self.aggregate_specs:
                 index = len(self.groupby) + self.aggregate_specs.index(term)
             else:

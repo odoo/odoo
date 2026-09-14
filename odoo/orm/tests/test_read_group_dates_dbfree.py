@@ -144,3 +144,89 @@ def test_a_datetime_groups_by_the_context_timezone_like_timezone_in_sql():
             2,
         ]
         assert "America/Mexico_City" in env.backend.timezone_names(env)
+
+
+class Tag(models.Model):
+    _name = "rgd.tag"
+    _module = _MOD
+    _description = "tag"
+    _order = "name"
+    _log_access = False
+
+    name = fields.Char()
+    active = fields.Boolean(default=True)
+
+
+class Post(models.Model):
+    _name = "rgd.post"
+    _module = _MOD
+    _description = "post"
+    _log_access = False
+
+    name = fields.Char()
+    tag_ids = fields.Many2many("rgd.tag")
+    day = fields.Date()
+
+
+def test_a_many2many_groupby_yields_one_row_per_relation_pair():
+    with model_test_env(Tag, Post) as env:
+        zeta, alpha, gone = env["rgd.tag"].create(
+            [{"name": "zeta"}, {"name": "alpha"}, {"name": "gone", "active": False}]
+        )
+        Post_ = env["rgd.post"]
+        Post_.create(
+            [
+                {"name": "p1", "tag_ids": [(6, 0, [zeta.id, alpha.id, gone.id])]},
+                {"name": "p2", "tag_ids": [(6, 0, [zeta.id])]},
+                {"name": "p3"},
+            ]
+        )
+        rows = Post_._read_group([], ["tag_ids"], ["__count", "name:array_agg"])
+        assert [(row[0].name if row[0] else None, row[1]) for row in rows] == [
+            ("zeta", 2),
+            ("alpha", 1),
+            (None, 1),
+        ]
+        # an inactive tag is outside the field's comodel domain, as the join's subselect leaves it
+        assert not any(row[0] == gone for row in rows)
+        # an explicit many2many term sorts by the relation column, the ids, not
+        # by the comodel's _order as a many2one term would
+        rows = Post_._read_group([], ["tag_ids"], ["__count"], order="tag_ids desc")
+        assert [row[0].name if row[0] else None for row in rows] == [
+            None,
+            "alpha",
+            "zeta",
+        ]
+
+
+def test_number_granularities_answer_date_part_and_day_of_week_sorts_from_the_week_start():
+    with model_test_env(Tag, Post) as env:
+        Post_ = env["rgd.post"]
+        # Thursday, Monday, Sunday, and no day
+        Post_.create(
+            [
+                {"day": "2026-01-15"},
+                {"day": "2026-03-02"},
+                {"day": "2026-03-01"},
+                {},
+            ]
+        )
+        parts = {
+            "day:month_number": [1, 3, 3, False],
+            "day:quarter_number": [1, 1, 1, False],
+            "day:iso_week_number": [3, 10, 9, False],
+            "day:day_of_year": [15, 61, 60, False],
+            "day:day_of_month": [15, 2, 1, False],
+            "day:year_number": [2026, 2026, 2026, False],
+        }
+        for spec, expected in parts.items():
+            rows = Post_._read_group([], [spec], ["__count"])
+            got = {row[0]: row[1] for row in rows}
+            wanted: dict = {}
+            for value in expected:
+                wanted[value] = wanted.get(value, 0) + 1
+            assert got == wanted, spec
+        # PostgreSQL's dow: Sunday 0 .. Saturday 6; en_US starts its week on
+        # Sunday, so the default order runs Sunday, Monday, Thursday, then NULL
+        rows = Post_._read_group([], ["day:day_of_week"], ["__count"])
+        assert [row[0] for row in rows] == [0, 1, 4, False]
