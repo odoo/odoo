@@ -521,7 +521,10 @@ class ModelRegistry(_RegistryFieldsMixin, Mapping):
 
     @staticmethod
     def _modules_of(model_defs) -> set[str]:
-        modules = {"base"}
+        # only the modules the named classes declare: once a test imports
+        # odoo.addons.base.models, "base" holds every base model class and an
+        # implicit "base" would drag them into every registry of the process
+        modules: set[str] = set()
         for cls in model_defs:
             module = getattr(cls, "_module", None)
             if module:

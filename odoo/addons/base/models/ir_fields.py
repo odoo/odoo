@@ -711,7 +711,7 @@ class IrFieldsConverter(models.AbstractModel):
             return tnx_cache[cache_key]
 
         values = OrderedSet()
-        for lang, __ in self.env["res.lang"].get_installed():
+        for lang in self.env.registry.locale.installed_langs(self.env):
             translations = code_translations.get_python_translations("base", lang)
             if src in translations:
                 values.add(translations[src])
@@ -764,6 +764,10 @@ class IrFieldsConverter(models.AbstractModel):
             return index, labels
 
         lang = self.env.lang or "en_US"
+        if "ir.model.fields.selection" not in self.env.registry:
+            # no translated labels without the table: the keys and the
+            # declared labels answer (the DB-free tier)
+            return index, labels
         selections = (
             self.env["ir.model.fields.selection"]
             .sudo()

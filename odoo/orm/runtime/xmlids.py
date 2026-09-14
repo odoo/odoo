@@ -52,6 +52,8 @@ class Xmlids:
     def resolve(
         self, env: Environment, xml_ids: list[str], model: BaseModel
     ) -> list[tuple]:
+        if not xml_ids:
+            return []
         return env["ir.model.data"].sudo()._get_xmlids(xml_ids, model)
 
     def target(
@@ -71,6 +73,8 @@ class Xmlids:
     def update(
         self, env: Environment, entries: list[dict], update: bool = False
     ) -> None:
+        if not entries:
+            return
         env["ir.model.data"].sudo()._update_xmlids(entries, update)
 
     def remove(self, env: Environment, ids: typing.Iterable[int]) -> None:
