@@ -3338,8 +3338,7 @@ class AccountMove(models.Model):
 
     def _compute_is_sale_installed(self):
         self.is_sale_installed = (
-            "sale_management"
-            in self.env["ir.module.module"]._get_installed_module_ids()
+            "sale" in self.env["ir.module.module"]._get_installed_module_ids()
         )
 
     @api.depends(

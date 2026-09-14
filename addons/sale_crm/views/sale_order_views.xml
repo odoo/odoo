@@ -19,11 +19,11 @@
                 <field
                     name="opportunity_id"
                     context="{                     'default_campaign_id': campaign_id,                     'default_company_id': company_id,                     'default_medium_id': medium_id,                     'default_partner_id': partner_id,                     'default_source_id': source_id,                     'default_tag_ids': tag_ids,                     'default_type': 'opportunity',                 }"
-                    groups="sales_team.group_sale_salesman" />
+                    groups="sale.group_sale_salesman" />
                 <field
                     name="opportunity_id"
                     context="{                     'default_campaign_id': campaign_id,                     'default_company_id': company_id,                     'default_medium_id': medium_id,                     'default_partner_id': partner_id,                     'default_source_id': source_id,                     'default_type': 'opportunity',                 }"
-                    groups="!sales_team.group_sale_salesman" />
+                    groups="!sale.group_sale_salesman" />
             </field>
         </field>
     </record>

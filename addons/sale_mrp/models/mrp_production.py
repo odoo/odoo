@@ -7,7 +7,7 @@ class MrpProduction(models.Model):
     sale_order_count = fields.Integer(
         string="Count of Source SO",
         compute="_compute_sale_order_count",
-        groups="sales_team.group_sale_salesman",
+        groups="sale.group_sale_salesman",
     )
     sale_line_id = fields.Many2one(
         comodel_name="sale.order.line",

@@ -218,7 +218,7 @@ class TestMembershipVisibility(TestSalesCommon):
             cls.env,
             login="vis_salesman",
             name="Vis Salesman",
-            groups="sales_team.group_sale_salesman",
+            groups="sale.group_sale_salesman",
         )
         cls.teammate = mail_new_test_user(
             cls.env, login="vis_teammate", name="Vis Teammate", groups="base.group_user"
@@ -254,10 +254,10 @@ class TestMembershipVisibility(TestSalesCommon):
 
     PROFILES = {
         "plain internal": "base.group_user",
-        "salesman own": "sales_team.group_sale_salesman",
-        "salesman team": "sales_team.group_sale_salesman_team",
-        "salesman all": "sales_team.group_sale_salesman_all_leads",
-        "sales manager": "sales_team.group_sale_manager",
+        "salesman own": "sale.group_sale_salesman",
+        "salesman team": "sale.group_sale_salesman_team",
+        "salesman all": "sale.group_sale_salesman_all_leads",
+        "sales manager": "sale.group_sale_manager",
     }
 
     def _reader(self, label, group):
@@ -281,7 +281,7 @@ class TestMembershipVisibility(TestSalesCommon):
                 readable_teams,
                 f"{label}: a team's row must be readable so team_id can render",
             )
-            if reader.has_group("sales_team.group_sale_salesman_all_leads"):
+            if reader.has_group("sale.group_sale_salesman_all_leads"):
                 continue
             self.assertNotIn(
                 self.theirs,
@@ -354,7 +354,7 @@ class TestRosterVisibilityFollowsMembership(TestSalesCommon):
             cls.env,
             login="roster_salesman",
             name="Roster Salesman",
-            groups="sales_team.group_sale_salesman",
+            groups="sale.group_sale_salesman",
         )
         cls.stranger = mail_new_test_user(
             cls.env, login="roster_stranger", name="Roster Stranger"
@@ -438,6 +438,6 @@ class TestTeamWriteGrantsOutsideSales(TestSalesCommon):
         )
 
         team.with_user(writer).write({"name": "Written without Sales"})
-        writer.group_ids = [(4, self.env.ref("sales_team.group_sale_salesman").id)]
+        writer.group_ids = [(4, self.env.ref("sale.group_sale_salesman").id)]
         team.with_user(writer).write({"name": "Written with Sales"})
         self.assertEqual(team.name, "Written with Sales")

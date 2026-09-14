@@ -112,11 +112,6 @@ msgstr ""
 "Legg til brukere for å automatisk legge dokumentene deres til salesteamet."
 
 #. module: sales_team
-#: model:res.groups,name:sales_team.group_sale_manager
-msgid "Administrator"
-msgstr "Administrator"
-
-#. module: sales_team
 #. odoo-javascript
 #: code:addons/sales_team/static/src/js/crm_team_form.js:0
 msgid "An error occurred while activating the Multi-Team option."
@@ -463,7 +458,7 @@ msgstr "Vurderinger"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.team_sales_department
-#: model:res.groups.privilege,name:sales_team.res_groups_privilege_sales
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
 msgid "Sales"
 msgstr "Salg"
 
@@ -485,6 +480,12 @@ msgstr "Salgsperson"
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_tree
+#: model:ir.model.fields,field_description:sales_team.field_account_invoice_report__team_id
+#: model:ir.model.fields,field_description:sales_team.field_account_move__team_id
+#: model:ir.model.fields,field_description:sales_team.field_sale_order__team_id
+#: model:ir.model.fields,field_description:sales_team.field_sale_report__team_id
+#: model_terms:ir.ui.view,arch_db:sales_team.account_invoice_groupby_inherit
+#: model_terms:ir.ui.view,arch_db:sales_team.view_account_invoice_report_search_inherit
 msgid "Sales Team"
 msgstr "Salgsteam"
 
@@ -508,6 +509,8 @@ msgstr "Salgsteam medlemmer (inkl inaktivte)"
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_config
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_sales
 #: model:ir.model.fields,field_description:sales_team.field_res_users__crm_team_ids
+#: model:ir.ui.menu,name:sales_team.report_sales_team
+#: model:ir.ui.menu,name:sales_team.sales_team_config
 msgid "Sales Teams"
 msgstr "Salgsteam"
 
@@ -560,6 +563,8 @@ msgstr "Tag finnes fra før"
 #: model:ir.actions.act_window,name:sales_team.sales_team_crm_tag_action
 #: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_tree
+#: model:ir.model.fields,field_description:sales_team.field_sale_order__tag_ids
+#: model:ir.ui.menu,name:sales_team.menu_tag_config
 msgid "Tags"
 msgstr "Etiketter"
 
@@ -687,16 +692,6 @@ msgid "User Sales Team"
 msgstr "Brukers salgsteam"
 
 #. module: sales_team
-#: model:res.groups,name:sales_team.group_sale_salesman_all_leads
-msgid "User: All Documents"
-msgstr "Bruker: Alle dokumenter"
-
-#. module: sales_team
-#: model:res.groups,name:sales_team.group_sale_salesman
-msgid "User: Own Documents Only"
-msgstr "Bruker: Bare egne dokumenter"
-
-#. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_ids
 msgid "Users assigned to this team."
 msgstr "Brukere tildelt dette teamet"
@@ -742,27 +737,6 @@ msgstr ""
 msgid "e.g. Services"
 msgstr ""
 
-#. module: sales_team
-#: model:res.groups,comment:sales_team.group_sale_salesman_all_leads
-msgid ""
-"the user will have access to all records of everyone in the sales "
-"application."
-msgstr ""
-"brukeren vil ha tilgang til alle poster fra alle brukere i salgs-appen."
-
-#. module: sales_team
-#: model:res.groups,comment:sales_team.group_sale_salesman
-msgid "the user will have access to his own data in the sales application."
-msgstr "brukeren vil bare ha tilgang til sine egne data i salgsapplikasjonen"
-
-#. module: sales_team
-#: model:res.groups,comment:sales_team.group_sale_manager
-msgid ""
-"the user will have an access to the sales configuration as well as statistic "
-"reports."
-msgstr ""
-"brukeren vil ha tilgang til oppsett av salgsappen og statistiske rapporter."
-
 #~ msgid "Contact"
 #~ msgstr "Kontakt"
 
@@ -793,3 +767,108 @@ msgstr ""
 
 #~ msgid "eBay"
 #~ msgstr "eBay"
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_form
+msgid "<span class=\"flex-grow-1\">/ Month</span>"
+msgstr "<span class=\"flex-grow-1\"> / måned</span>"
+
+#. module: sales_team
+#. odoo-javascript
+#: code:addons/sales_team/static/src/xml/sale_progressbar_field.xml:0
+msgid "Click to define an invoicing target"
+msgstr "Klikk for å definere et faktureringsmål"
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.action_invoice_salesteams
+msgid "Create a customer invoice"
+msgstr "Opprett kundefaktura"
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.action_orders_salesteams
+#: model_terms:ir.actions.act_window,help:sales_team.action_quotations_salesteams
+msgid "Create a new quotation, the first step of a new sale!"
+msgstr "Opprett et nytt tilbud, det første steget til et nytt salg!"
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.action_invoice_salesteams
+msgid ""
+"Create invoices, register payments and keep track of the discussions with "
+"your customers."
+msgstr ""
+"Opprett fakturaer, registrer betalinger og hold oversikt over diskusjonene "
+"med kundene dine."
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.action_account_invoice_report_salesteam
+msgid ""
+"From this report, you can have an overview of the amount invoiced to your "
+"customer. The search tool can also be used to personalise your Invoices "
+"reports and so, match this analysis to your needs."
+msgstr ""
+"I denne rapporten kan du se en oversikt over beløp fakturert til dine "
+"kunder. Søkeverktøyet kan også brukes til å tilpasse fakturarapportene til "
+"dine behov."
+
+#. module: sales_team
+#: model:mail.message.subtype,name:sales_team.mt_salesteam_invoice_paid
+msgid "Invoice Paid"
+msgstr ""
+
+#. module: sales_team
+#: model:mail.message.subtype,name:sales_team.mt_salesteam_invoice_posted
+msgid "Invoice Posted"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.action_invoice_salesteams
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
+msgid "Invoices"
+msgstr "Fakturaer"
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.action_account_invoice_report_salesteam
+msgid "Invoices Analysis"
+msgstr "Fakturaanalyse"
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.action_quotation_form
+msgid "New Quotation"
+msgstr "Nytt tilbud"
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.action_orders_salesteams
+#: model_terms:ir.actions.act_window,help:sales_team.action_quotations_salesteams
+msgid ""
+"Once the quotation is confirmed by the customer, it becomes a sales order."
+"<br> You will be able to create an invoice and collect the payment."
+msgstr ""
+"Så fort tilbudet er bekreftet av kunden, vil det bli til en salgsordre."
+"<br>Du vil da kunne opprette en faktura og ta imot betaling."
+
+#. module: sales_team
+#: model:mail.message.subtype,name:sales_team.mt_salesteam_order_viewed
+msgid "Quotation Viewed"
+msgstr ""
+
+#. module: sales_team
+#: model:mail.message.subtype,name:sales_team.mt_salesteam_order_sent
+msgid "Quotation sent"
+msgstr "Tilbud sendt"
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.action_quotations_salesteams
+msgid "Quotations"
+msgstr "Tilbud"
+
+#. module: sales_team
+#: model:mail.message.subtype,name:sales_team.mt_salesteam_order_confirmed
+msgid "Sales Order Confirmed"
+msgstr "Salgsordre bekreftet"
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.action_orders_salesteams
+#: model:ir.actions.act_window,name:sales_team.action_orders_to_invoice_salesteams
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
+msgid "Sales Orders"
+msgstr "Salgsordre"

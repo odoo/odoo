@@ -11,7 +11,7 @@ class TestPartnerSaleGuards(TransactionCase):
         cls.salesman = new_test_user(
             cls.env,
             login="partner_guard_seller",
-            groups="base.group_user,sales_team.group_sale_salesman",
+            groups="base.group_user,sale.group_sale_salesman",
         )
         cls.outsider = new_test_user(
             cls.env,

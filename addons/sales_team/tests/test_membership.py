@@ -15,7 +15,7 @@ class TestCornerCases(TransactionCase):
             email="crm_leads@test.example.com",
             company_id=self.env.user.company_id.id,
             notification_type="inbox",
-            groups="sales_team.group_sale_salesman_all_leads,base.group_partner_manager",
+            groups="sale.group_sale_salesman_all_leads,base.group_partner_manager",
         )
         self.sales_team_1 = self.env["team.team"].create(
             {
@@ -528,7 +528,7 @@ class TestMonoMembership(TestSalesCommon):
             cls.env,
             login="mono_user",
             name="Mono User",
-            groups="sales_team.group_sale_salesman",
+            groups="sale.group_sale_salesman",
         )
 
     def _active_memberships(self):
@@ -795,7 +795,7 @@ class TestCompanyRevocation(TestSalesCommon):
             name="Rev Settings Admin",
             groups="base.group_user,base.group_system,base.group_partner_manager",
         )
-        self.assertFalse(settings_admin.has_group("sales_team.group_sale_manager"))
+        self.assertFalse(settings_admin.has_group("sale.group_sale_manager"))
 
         self.salesperson.with_user(settings_admin).write(
             {"company_ids": [(6, 0, [self.company_main.id])]}

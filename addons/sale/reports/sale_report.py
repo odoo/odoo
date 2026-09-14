@@ -52,11 +52,6 @@ class SaleReport(models.Model):
         comodel_name="product.pricelist",
         readonly=True,
     )
-    team_id = fields.Many2one(
-        comodel_name="team.team",
-        string="Sales Team",
-        readonly=True,
-    )
     user_id = fields.Many2one(
         comodel_name="res.users",
         string="Salesperson",
@@ -163,7 +158,6 @@ class SaleReport(models.Model):
             "partner_zip": "partner.zip",
             "industry_id": "partner.primary_industry_id",
             "pricelist_id": "o.pricelist_id",
-            "team_id": "o.team_id",
             "user_id": "o.user_id",
             "campaign_id": "o.campaign_id",
             "medium_id": "o.medium_id",
@@ -319,7 +313,6 @@ class SaleReport(models.Model):
             "o.medium_id",
             "o.source_id",
             "o.pricelist_id",
-            "o.team_id",
             "p.product_tmpl_id",
             "partner.commercial_partner_id",
             "partner.country_id",

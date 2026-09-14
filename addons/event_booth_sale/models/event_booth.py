@@ -18,7 +18,7 @@ class EventBooth(models.Model):
         column2="sale_order_line_id",
         string="SO Lines with reservations",
         copy=False,
-        groups="sales_team.group_sale_salesman",
+        groups="sale.group_sale_salesman",
     )
     sale_order_line_id = fields.Many2one(
         comodel_name="sale.order.line",
@@ -27,14 +27,14 @@ class EventBooth(models.Model):
         copy=False,
         readonly=False,
         ondelete="set null",
-        groups="sales_team.group_sale_salesman",
+        groups="sale.group_sale_salesman",
     )
     sale_order_id = fields.Many2one(
         related="sale_order_line_id.order_id",
         store="True",
         index="btree_not_null",
         readonly=True,
-        groups="sales_team.group_sale_salesman",
+        groups="sale.group_sale_salesman",
     )
     is_paid = fields.Boolean(copy=False)
 

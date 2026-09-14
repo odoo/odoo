@@ -9,7 +9,7 @@
         <field name="context">{'default_partner_id': active_id}</field>
         <field
             name="group_ids"
-            eval="[Command.link(ref('sales_team.group_sale_salesman'))]" />
+            eval="[Command.link(ref('sale.group_sale_salesman'))]" />
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new quotation, the first step of a new sale!
@@ -30,7 +30,7 @@
                     name="sale.act_res_partner_2_sale_order"
                     type="action"
                     icon="fa-usd"
-                    groups="sales_team.group_sale_salesman"
+                    groups="sale.group_sale_salesman"
                     class="oe_stat_button">
                     <field name="sale_order_count" string="Sales" widget="statinfo" />
                 </button>
@@ -62,10 +62,7 @@
             ref="payment.view_partners_form_payment_defaultcreditcard" />
         <field name="arch" type="xml">
             <button position="attributes" id="button_payment_tokens">
-                <attribute
-                    name="groups"
-                    add="sales_team.group_sale_salesman"
-                    separator="," />
+                <attribute name="groups" add="sale.group_sale_salesman" separator="," />
             </button>
         </field>
     </record>
@@ -76,22 +73,13 @@
         <field name="inherit_id" ref="account.view_partner_property_form" />
         <field name="arch" type="xml">
             <group name="fiscal_information" position="attributes">
-                <attribute
-                    name="groups"
-                    add="sales_team.group_sale_salesman"
-                    separator="," />
+                <attribute name="groups" add="sale.group_sale_salesman" separator="," />
             </group>
             <field name="property_payment_term_id" position="attributes">
-                <attribute
-                    name="groups"
-                    add="sales_team.group_sale_salesman"
-                    separator="," />
+                <attribute name="groups" add="sale.group_sale_salesman" separator="," />
             </field>
             <field name="property_supplier_payment_term_id" position="attributes">
-                <attribute
-                    name="groups"
-                    add="sales_team.group_sale_salesman"
-                    separator="," />
+                <attribute name="groups" add="sale.group_sale_salesman" separator="," />
             </field>
         </field>
     </record>

@@ -273,7 +273,7 @@ class TestDefaultTeamFallbackQueries(TestSalesCommon):
             cls.env,
             login="fallback_loner",
             name="Fallback Loner",
-            groups="sales_team.group_sale_salesman_all_leads",
+            groups="sale.group_sale_salesman_all_leads",
         )
         cls.env.flush_all()
 
@@ -356,13 +356,13 @@ class TestDefaultTeamIsNotCallerDependent(TestSalesCommon):
             cls.env,
             login="dep_filer",
             name="Dep Filer",
-            groups="sales_team.group_sale_salesman_team",
+            groups="sale.group_sale_salesman_team",
         )
         cls.owner = mail_new_test_user(
             cls.env,
             login="dep_owner",
             name="Dep Owner",
-            groups="sales_team.group_sale_salesman_team",
+            groups="sale.group_sale_salesman_team",
         )
         cls.owner_team = cls.env["team.team"].create(
             {
@@ -413,7 +413,7 @@ class TestDefaultTeamIsNotCallerDependent(TestSalesCommon):
             self.env,
             login="dep_loner",
             name="Dep Loner",
-            groups="sales_team.group_sale_salesman",
+            groups="sale.group_sale_salesman",
         )
         self.env.flush_all()
         CrmTeam = self.env["team.team"]
@@ -448,7 +448,7 @@ class TestDefaultTeamIgnoresArchived(TestSalesCommon):
             cls.env,
             login="arch_leader",
             name="Arch Leader",
-            groups="sales_team.group_sale_salesman",
+            groups="sale.group_sale_salesman",
         )
         cls.env["team.team"].search([]).write({"active": False})
         cls.dead_team = cls.env["team.team"].create(
@@ -480,7 +480,7 @@ class TestDefaultTeamIgnoresArchived(TestSalesCommon):
             self.env,
             login="arch_stranger",
             name="Arch Stranger",
-            groups="sales_team.group_sale_salesman_all_leads",
+            groups="sale.group_sale_salesman_all_leads",
         )
         for domain in (False, [("name", "=", "Dead")]):
             with self.subTest(domain=domain):

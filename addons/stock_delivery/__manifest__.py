@@ -35,5 +35,4 @@ When creating invoices from picking, the system is able to add and compute the s
         "demo/delivery_demo.xml",
     ],
     "auto_install": True,
-    "post_init_hook": "_auto_install_sale_app",
 }

@@ -1,13 +1,50 @@
 from odoo.fields import Command
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon, TestTaxCommon
+from odoo.addons.base.tests.common import BaseCommon
 from odoo.addons.product.tests.common import ProductCommon
-from odoo.addons.sales_team.tests.common import SalesTeamCommon
+
+
+class SaleUsersCommon(BaseCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.group_sale_salesman = cls.env.ref("sale.group_sale_salesman")
+        cls.group_sale_manager = cls.env.ref("sale.group_sale_manager")
+
+        cls.sale_user = cls.env["res.users"].create(
+            {
+                "name": "Test Salesman",
+                "login": "salesman",
+                "password": "salesman",
+                "email": "default_user_salesman@example.com",
+                "signature": "--\nMark",
+                "notification_type": "email",
+                "group_ids": [(6, 0, cls.group_sale_salesman.ids)],
+            }
+        )
+        cls.sale_manager = cls.env["res.users"].create(
+            {
+                "name": "Test Sales Manager",
+                "login": "salesmanager",
+                "password": "salesmanager",
+                "email": "default_user_salesmanager@example.com",
+                "signature": "--\nDamien",
+                "notification_type": "email",
+                "group_ids": [(6, 0, cls.group_sale_manager.ids)],
+            }
+        )
+
+    @classmethod
+    def get_default_groups(cls):
+        groups = super().get_default_groups()
+        return groups | cls.quick_ref("sale.group_sale_manager")
 
 
 class SaleCommon(
     ProductCommon,
-    SalesTeamCommon,
+    SaleUsersCommon,
 ):
     @classmethod
     def setUpClass(cls):
@@ -74,6 +111,26 @@ class SaleCommon(
         return self.env["sale.order"].create(default_values)
 
 
+class SaleOrderTemplateCommon(SaleCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.env.user.group_ids += cls.env.ref("sale.group_sale_order_template")
+
+        cls.empty_order_template = cls.env["sale.order.template"].create(
+            {
+                "name": "Test Quotation Template",
+            }
+        )
+
+    @staticmethod
+    def _get_optional_product_lines(order):
+        return order.line_ids.filtered(
+            lambda line: not line.display_type and line._is_line_optional(),
+        )
+
+
 class TestSaleCommon(AccountTestInvoicingCommon):
     @classmethod
     def collect_company_accounting_data(cls, company):
@@ -89,7 +146,7 @@ class TestSaleCommon(AccountTestInvoicingCommon):
                         "signature": "--\nMark",
                         "notification_type": "email",
                         "group_ids": [
-                            (6, 0, cls.quick_ref("sales_team.group_sale_salesman").ids)
+                            (6, 0, cls.quick_ref("sale.group_sale_salesman").ids)
                         ],
                         "company_ids": [(6, 0, company.ids)],
                         "company_id": company.id,
@@ -252,7 +309,7 @@ class TestSaleCommon(AccountTestInvoicingCommon):
     @classmethod
     def get_default_groups(cls):
         groups = super().get_default_groups()
-        return groups | cls.quick_ref("sales_team.group_sale_manager")
+        return groups | cls.quick_ref("sale.group_sale_manager")
 
 
 class TestTaxCommonSale(TestSaleCommon, TestTaxCommon):

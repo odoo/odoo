@@ -116,11 +116,6 @@ msgid "Add members to automatically assign their documents to this sales team."
 msgstr "قم بإضافة أعضاء لإسناد مستنداتهم إلى فريق المبيعات هذا تلقائياً."
 
 #. module: sales_team
-#: model:res.groups,name:sales_team.group_sale_manager
-msgid "Administrator"
-msgstr "المدير"
-
-#. module: sales_team
 #. odoo-javascript
 #: code:addons/sales_team/static/src/js/crm_team_form.js:0
 msgid "An error occurred while activating the Multi-Team option."
@@ -464,7 +459,7 @@ msgstr "التقييمات"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.team_sales_department
-#: model:res.groups.privilege,name:sales_team.res_groups_privilege_sales
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
 msgid "Sales"
 msgstr "المبيعات"
 
@@ -486,6 +481,12 @@ msgstr "مندوب مبيعات"
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_tree
+#: model:ir.model.fields,field_description:sales_team.field_account_invoice_report__team_id
+#: model:ir.model.fields,field_description:sales_team.field_account_move__team_id
+#: model:ir.model.fields,field_description:sales_team.field_sale_order__team_id
+#: model:ir.model.fields,field_description:sales_team.field_sale_report__team_id
+#: model_terms:ir.ui.view,arch_db:sales_team.account_invoice_groupby_inherit
+#: model_terms:ir.ui.view,arch_db:sales_team.view_account_invoice_report_search_inherit
 msgid "Sales Team"
 msgstr "فريق المبيعات"
 
@@ -509,6 +510,8 @@ msgstr "أعضاء فريق المبيعات (بالإضافة إلى الأعض
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_config
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_sales
 #: model:ir.model.fields,field_description:sales_team.field_res_users__crm_team_ids
+#: model:ir.ui.menu,name:sales_team.report_sales_team
+#: model:ir.ui.menu,name:sales_team.sales_team_config
 msgid "Sales Teams"
 msgstr "فرق المبيعات"
 
@@ -561,6 +564,8 @@ msgstr "اسم علامة التصنيف مستخدم بالفعل!"
 #: model:ir.actions.act_window,name:sales_team.sales_team_crm_tag_action
 #: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_tree
+#: model:ir.model.fields,field_description:sales_team.field_sale_order__tag_ids
+#: model:ir.ui.menu,name:sales_team.menu_tag_config
 msgid "Tags"
 msgstr "علامات التصنيف"
 
@@ -689,16 +694,6 @@ msgid "User Sales Team"
 msgstr "فريق مبيعات المستخدم"
 
 #. module: sales_team
-#: model:res.groups,name:sales_team.group_sale_salesman_all_leads
-msgid "User: All Documents"
-msgstr "المستخدم: كافة المستندات"
-
-#. module: sales_team
-#: model:res.groups,name:sales_team.group_sale_salesman
-msgid "User: Own Documents Only"
-msgstr "المستخدم: مستنداته فقط"
-
-#. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_ids
 msgid "Users assigned to this team."
 msgstr "المستخدمين المسندين إلى هذا الفريق."
@@ -743,26 +738,6 @@ msgstr "مثال: أمريكا الجنوبية"
 #: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_form
 msgid "e.g. Services"
 msgstr "مثال: الخدمات"
-
-#. module: sales_team
-#: model:res.groups,comment:sales_team.group_sale_salesman_all_leads
-msgid ""
-"the user will have access to all records of everyone in the sales "
-"application."
-msgstr "سيملك المستخدم صلاحية الوصول لكافة سجلات مستخدمي تطبيق المبيعات."
-
-#. module: sales_team
-#: model:res.groups,comment:sales_team.group_sale_salesman
-msgid "the user will have access to his own data in the sales application."
-msgstr "سيملك المستخدم صلاحية الوصول لبياناته الخاصة في تطبيق المبيعات."
-
-#. module: sales_team
-#: model:res.groups,comment:sales_team.group_sale_manager
-msgid ""
-"the user will have an access to the sales configuration as well as statistic "
-"reports."
-msgstr ""
-"سيملك المستخدم صلاحية الوصول لتهيئة المبيعات، بالإضافة إلى تقارير الإحصائيات."
 
 #~ msgid ""
 #~ "Adding %(user_name)s in this team would remove him/her from its current "
@@ -832,3 +807,106 @@ msgstr ""
 
 #~ msgid "eBay"
 #~ msgstr "eBay"
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_form
+msgid "<span class=\"flex-grow-1\">/ Month</span>"
+msgstr "<span class=\"flex-grow-1\">/ الشهر</span>"
+
+#. module: sales_team
+#. odoo-javascript
+#: code:addons/sales_team/static/src/xml/sale_progressbar_field.xml:0
+msgid "Click to define an invoicing target"
+msgstr "اضغط هنا لتحديد ما يجب فوترته"
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.action_invoice_salesteams
+msgid "Create a customer invoice"
+msgstr "إنشاء فاتورة عميل"
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.action_orders_salesteams
+#: model_terms:ir.actions.act_window,help:sales_team.action_quotations_salesteams
+msgid "Create a new quotation, the first step of a new sale!"
+msgstr "أنشئ عرض سعر جديد، هذه هي أول خطوة لعمل خصم جديد!"
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.action_invoice_salesteams
+msgid ""
+"Create invoices, register payments and keep track of the discussions with "
+"your customers."
+msgstr "قم بإنشاء الفواتير، وتسجيل المدفوعات ومتابعة المناقشات مع عملائك."
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.action_account_invoice_report_salesteam
+msgid ""
+"From this report, you can have an overview of the amount invoiced to your "
+"customer. The search tool can also be used to personalise your Invoices "
+"reports and so, match this analysis to your needs."
+msgstr ""
+"من خلال هذا التقرير, يمكنك تكوين فكرة عامة عن المبالغ المفوترة إلى عملائك. "
+"كما يمكنك استخدام أداة البحث لإضافة الطابع الشخصي على تقارير فواتيرك وبهذا "
+"سوف تتمكن من تشكيل التحليل حسب احتياجاتك."
+
+#. module: sales_team
+#: model:mail.message.subtype,name:sales_team.mt_salesteam_invoice_paid
+msgid "Invoice Paid"
+msgstr ""
+
+#. module: sales_team
+#: model:mail.message.subtype,name:sales_team.mt_salesteam_invoice_posted
+msgid "Invoice Posted"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.action_invoice_salesteams
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
+msgid "Invoices"
+msgstr "فواتير العملاء"
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.action_account_invoice_report_salesteam
+msgid "Invoices Analysis"
+msgstr "تحليل الفواتير"
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.action_quotation_form
+msgid "New Quotation"
+msgstr "عرض سعر جديد"
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.action_orders_salesteams
+#: model_terms:ir.actions.act_window,help:sales_team.action_quotations_salesteams
+msgid ""
+"Once the quotation is confirmed by the customer, it becomes a sales order."
+"<br> You will be able to create an invoice and collect the payment."
+msgstr ""
+"بمجرد أن يقوم العميل بتأكيد عرض السعر، يتحول إلى أمر بيع. <br> سيكون بمقدورك "
+"إنشاء فاتورة وتحصيل الدفع."
+
+#. module: sales_team
+#: model:mail.message.subtype,name:sales_team.mt_salesteam_order_viewed
+msgid "Quotation Viewed"
+msgstr "تمت مراجعة عرض السعر"
+
+#. module: sales_team
+#: model:mail.message.subtype,name:sales_team.mt_salesteam_order_sent
+msgid "Quotation sent"
+msgstr "تم إرسال عرض السعر"
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.action_quotations_salesteams
+msgid "Quotations"
+msgstr "عروض الأسعار"
+
+#. module: sales_team
+#: model:mail.message.subtype,name:sales_team.mt_salesteam_order_confirmed
+msgid "Sales Order Confirmed"
+msgstr "تم تأكيد أمر البيع"
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.action_orders_salesteams
+#: model:ir.actions.act_window,name:sales_team.action_orders_to_invoice_salesteams
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
+msgid "Sales Orders"
+msgstr "أوامر البيع"

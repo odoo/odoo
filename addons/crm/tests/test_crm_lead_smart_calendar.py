@@ -19,7 +19,7 @@ class TestCRMLeadSmartCalendar(TestCrmCommon):
             name="user_NY_en_US User",
             email="user_NY_en_US@test.example.com",
             notification_type="inbox",
-            groups="sales_team.group_sale_salesman_all_leads,base.group_partner_manager,crm.group_use_lead",
+            groups="sale.group_sale_salesman_all_leads,base.group_partner_manager,crm.group_use_lead",
         )
         cls.env["res.lang"]._activate_lang("pt_PT")
         cls.user_UTC_pt_PT = mail_new_test_user(
@@ -30,7 +30,7 @@ class TestCRMLeadSmartCalendar(TestCrmCommon):
             name="user_UTC_pt_PT User",
             email="user_UTC_pt_PT@test.example.com",
             notification_type="inbox",
-            groups="sales_team.group_sale_salesman_all_leads,base.group_partner_manager,crm.group_use_lead",
+            groups="sale.group_sale_salesman_all_leads,base.group_partner_manager,crm.group_use_lead",
         )
 
         cls.next_year = datetime.now().year + 1

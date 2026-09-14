@@ -800,12 +800,6 @@ msgstr ""
 "qiymatlar kompaniyaga xos.\" groups=\"base.group_multi_company\"/>"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
-#, fuzzy
-msgid "<span class=\"flex-grow-1\">/ Month</span>"
-msgstr "<span class=\"flex-grow-1\">/ oyiga</span>"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #, fuzzy
 msgid "<span class=\"mx-3\" invisible=\"not require_payment\">of</span>"
@@ -834,6 +828,12 @@ msgid ""
 msgstr ""
 "<span invisible=\"advance_payment_method != 'percentage'\" "
 "class=\"oe_inline\">% </span>"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+#, fuzzy
+msgid "<span invisible=\"not require_payment\">of</span>"
+msgstr "<span invisible=\"not require_payment\">of</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1094,6 +1094,12 @@ msgid "Activate Stripe"
 msgstr "Stripe'ni faollashtirish"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__active
+#, fuzzy
+msgid "Active"
+msgstr "Faol"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_ids
 #: model:ir.ui.menu,name:sale.sale_menu_config_activities
 #, fuzzy
@@ -1164,18 +1170,21 @@ msgstr "Qo‘shish"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
 #, fuzzy
 msgid "Add a note"
 msgstr "Izoh qo‘shish"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
 #, fuzzy
 msgid "Add a product"
 msgstr "Mahsulot qo‘shish"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
 #, fuzzy
 msgid "Add a section"
 msgstr "Bo‘lim qo‘shish"
@@ -1189,6 +1198,7 @@ msgstr "Izoh qo‘shish"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_buttons/quantity_buttons.xml:0
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_optional_product_quantity
 #, fuzzy
 msgid "Add one"
 msgstr "Bitta qo‘shish"
@@ -1232,7 +1242,20 @@ msgid "Add/Remove Followers"
 msgstr "Kuzatuvchilarni qo‘shish/olib tashlash"
 
 #. module: sale
+#: model:res.groups,name:sale.group_sale_manager
+#, fuzzy
+msgid "Administrator"
+msgstr "Administrator"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_digest_digest__kpi_all_sale_total
+#, fuzzy
+msgid "All Sales"
+msgstr "Barcha sotuvlar"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__allowed_uom_ids
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__allowed_uom_ids
 #, fuzzy
 msgid "Allowed Uom"
 msgstr "Ruxsat etilgan o‘lchov birliklari"
@@ -1387,6 +1410,13 @@ msgstr ""
 "Savdo buyurtmasi satrlariga qo‘lda chegirmalarni qo‘llang yoki narxlar "
 "ro‘yxatidan hisoblangan chegirmalarni ko‘rsating (narxlar ro‘yxati "
 "sozlamasida faollashtirish imkoniyati mavjud)."
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_search
+#, fuzzy
+msgid "Archived"
+msgstr "Arxivlangan"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mass_cancel_orders_view_form
@@ -1698,13 +1728,6 @@ msgid "Click to configure"
 msgstr "Sozlash uchun bosing"
 
 #. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
-#, fuzzy
-msgid "Click to define an invoicing target"
-msgstr "Hisob-faktura maqsadini belgilash uchun bosing"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_sign_modal
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1775,6 +1798,9 @@ msgstr "Kompaniyalar"
 #: model:ir.model.fields,field_description:sale.field_sale_report__company_id
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__company_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__company_id
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__company_id
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_search
 #, fuzzy
 msgid "Company"
 msgstr "Kompaniya"
@@ -1905,6 +1931,12 @@ msgid "Confirm"
 msgstr "Tasdiqlash"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__mail_template_id
+#, fuzzy
+msgid "Confirmation Mail"
+msgstr "Tasdiqlash xati"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__confirmation_message
 #, fuzzy
 msgid "Confirmation Message"
@@ -1996,12 +2028,6 @@ msgid "Create a Sale Order Activity Plan"
 msgstr "Sotish buyurtmasi faoliyat rejasini yaratish"
 
 #. module: sale
-#: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
-#, fuzzy
-msgid "Create a customer invoice"
-msgstr "Mijoz hisob-fakturasini yaratish"
-
-#. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
 #, fuzzy
 msgid "Create a new product"
@@ -2010,8 +2036,6 @@ msgstr "Yangi mahsulot yaratish"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
 #: model_terms:ir.actions.act_window,help:sale.action_orders
-#: model_terms:ir.actions.act_window,help:sale.action_orders_salesteams
-#: model_terms:ir.actions.act_window,help:sale.action_quotations_salesteams
 #, fuzzy
 msgid "Create a new quotation, the first step of a new sale!"
 msgstr "Yangi narx taklifi yarating - bu yangi sotuvning birinchi qadami!"
@@ -2021,16 +2045,6 @@ msgstr "Yangi narx taklifi yarating - bu yangi sotuvning birinchi qadami!"
 #, fuzzy
 msgid "Create Invoice(s)…"
 msgstr "Hisob-faktura(lar) yaratish…"
-
-#. module: sale
-#: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
-#, fuzzy
-msgid ""
-"Create invoices, register payments and keep track of the discussions with "
-"your customers."
-msgstr ""
-"Hisob-fakturalar yarating, to‘lovlarni ro‘yxatga oling va mijozlaringiz "
-"bilan muloqotlarni kuzatib boring"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__service_tracking
@@ -2049,11 +2063,25 @@ msgstr ""
 "manziliga tegishli barcha buyurtmalar uchun bitta hisob-faktura yarating"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
+msgid "Create standardized offers with default products"
+msgstr "Standart mahsulotlar bilan andozalashtirilgan takliflar yaratish"
+
+#. module: sale
+#: model_terms:ir.actions.act_window,help:sale.sale_order_template_action
+#, fuzzy
+msgid "Create your quotation template"
+msgstr "Narxnoma andozangizni yarating"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__create_uid
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__create_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order__create_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__create_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__create_uid
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__create_uid
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__create_uid
 #, fuzzy
 msgid "Created by"
 msgstr "Yaratgan"
@@ -2063,6 +2091,8 @@ msgstr "Yaratgan"
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__create_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__create_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__create_date
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__create_date
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__create_date
 #, fuzzy
 msgid "Created on"
 msgstr "Yaratilgan sana"
@@ -2224,11 +2254,23 @@ msgid "Default Quotation Validity"
 msgstr "Standart narx taklifi amal qilish muddati"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_company__sale_order_template_id
+#, fuzzy
+msgid "Default Sale Template"
+msgstr "Standart sotuv andozasi"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__company_price_include
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__company_price_include
 #, fuzzy
 msgid "Default Sales Price Include"
 msgstr "Standart sotuv narxini o‘z ichiga olish"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__company_so_template_id
+#, fuzzy
+msgid "Default Template"
+msgstr "Standart andoza"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__company_price_include
@@ -2347,9 +2389,17 @@ msgstr "Boshlang‘ich to‘lov"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__name
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__name
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
 #, fuzzy
 msgid "Description"
 msgstr "Tavsif"
+
+#. module: sale
+#: model:ir.model,name:sale.model_digest_digest
+#, fuzzy
+msgid "Digest"
+msgstr "Qisqacha ma'lumot"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2486,12 +2536,16 @@ msgstr "Hisob-faktura loyihasi haqida ogohlantirishni ko‘rsatish"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:sale.field_sale_report__display_name
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__display_name
+#: model:ir.model.fields,field_description:sale.field_digest_digest__display_name
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__display_name
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__display_name
 #, fuzzy
 msgid "Display Name"
 msgstr "Ko‘rsatiladigan nomi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_type
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__display_type
 #, fuzzy
 msgid "Display Type"
 msgstr "Ko‘rsatish turi"
@@ -2501,6 +2555,15 @@ msgstr "Ko‘rsatish turi"
 #, fuzzy
 msgid "Distribution Analytic Account"
 msgstr "Taqsimot tahliliy hisobi"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/digest_digest.py:0
+#, fuzzy
+msgid "Do not have access, skip this data for user's digest email"
+msgstr ""
+"Kirish huquqi yo‘q, foydalanuvchining qisqacha xabari uchun bu ma'lumotlarni "
+"o‘tkazib yuborish"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2798,23 +2861,18 @@ msgid ""
 msgstr ""
 
 #. module: sale
+#: model:ir.model.constraint,message:sale.constraint_sale_order_template_line_non_accountable_fields_null
+#, fuzzy
+msgid "Forbidden product, quantity and UoM on non-accountable sale quote line"
+msgstr ""
+"Hisobga olinmaydigan sotuv narxnomasi qatorida taqiqlangan mahsulot, miqdor "
+"va o‘lchov birligi"
+
+#. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_non_accountable_null_fields
 #, fuzzy
 msgid "Forbidden values on non-accountable sale order line"
 msgstr "Hisobga olinmaydigan sotuv buyurtmasi satrida taqiqlangan qiymatlar"
-
-#. module: sale
-#: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
-#, fuzzy
-msgid ""
-"From this report, you can have an overview of the amount invoiced to your "
-"customer. The search tool can also be used to personalise your Invoices "
-"reports and so, match this analysis to your needs."
-msgstr ""
-"Ushbu hisobotdan mijozingizga hisoblangan summa haqida umumiy ma'lumot "
-"olishingiz mumkin. Qidiruv vositasi hisob-faktura hisobotlaringizni "
-"shaxsiylashtirish va shu orqali ushbu tahlilni ehtiyojlaringizga "
-"moslashtirish uchun ham ishlatilishi mumkin."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal_amount_selector
@@ -2874,6 +2932,14 @@ msgstr "Yaratilgan buyurtmalar"
 #, fuzzy
 msgid "Get warnings in orders for products or customers"
 msgstr "Mahsulotlar yoki mijozlar uchun buyurtmalarda ogohlantirishlar oling"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_template_line__sequence
+#, fuzzy
+msgid "Gives the sequence order when displaying a list of sale quote lines."
+msgstr ""
+"Sotuv narxnomasi qatorlari ro‘yxatini ko‘rsatishda ketma-ketlik tartibini "
+"beradi"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_discount__discount_type__so_discount
@@ -2993,6 +3059,9 @@ msgstr "Yashirin"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__id
 #: model:ir.model.fields,field_description:sale.field_sale_report__id
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__id
+#: model:ir.model.fields,field_description:sale.field_digest_digest__id
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__id
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__id
 #, fuzzy
 msgid "ID"
 msgstr "ID"
@@ -3023,6 +3092,16 @@ msgid "If checked, some messages have a delivery error."
 msgstr "Agar belgilansa, ba'zi xabarlarda yetkazib berish xatosi mavjud."
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_template__journal_id
+#, fuzzy
+msgid ""
+"If set, SO with this template will invoice in this journal; otherwise the "
+"sales journal with the lowest sequence is used."
+msgstr ""
+"Agar o‘rnatilgan bo‘lsa, ushbu andozali SO ushbu jurnalda hisob-faktura "
+"qiladi; aks holda, eng past ketma-ketlikka ega savdo jurnali ishlatiladi"
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__journal_id
 #, fuzzy
 msgid ""
@@ -3041,6 +3120,15 @@ msgid ""
 msgstr ""
 "Agar sotuv qulflangan bo‘lsa, uni boshqa o‘zgartira olmaysiz. Ammo, hali ham "
 "hisob-faktura yoki yetkazib berishni amalga oshirishingiz mumkin."
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_template__active
+#, fuzzy
+msgid ""
+"If unchecked, it will allow you to hide the quotation template without "
+"removing it."
+msgstr ""
+"Belgilanmasa, narxnoma andozasini o‘chirmasdan yashirish imkonini beradi"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
@@ -3178,18 +3266,6 @@ msgid "Invoice Lines"
 msgstr "Hisob-faktura qatorlari"
 
 #. module: sale
-#: model:mail.message.subtype,name:sale.mt_salesteam_invoice_paid
-#, fuzzy
-msgid "Invoice Paid"
-msgstr "Hisob-faktura to‘langan"
-
-#. module: sale
-#: model:mail.message.subtype,name:sale.mt_salesteam_invoice_posted
-#, fuzzy
-msgid "Invoice Posted"
-msgstr "Hisob-faktura joylashtirildi"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 #, fuzzy
 msgid "Invoice Sales Order"
@@ -3283,19 +3359,11 @@ msgid "Invoiced This Month"
 msgstr "Bu oyda hisoblangan"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_invoice_salesteams
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_ids
-#: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #, fuzzy
 msgid "Invoices"
 msgstr "Hisob-fakturalar"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_account_invoice_report_salesteam
-#, fuzzy
-msgid "Invoices Analysis"
-msgstr "Hisob-fakturalar tahlili"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice_report
@@ -3319,6 +3387,7 @@ msgstr "Hisob-kitob manzili"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__journal_id
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__journal_id
 #, fuzzy
 msgid "Invoicing Journal"
 msgstr "Hisob-kitob jurnali"
@@ -3423,6 +3492,12 @@ msgid "Journal Item"
 msgstr "Jurnal elementi"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_digest_digest__kpi_all_sale_total_value
+#, fuzzy
+msgid "Kpi All Sale Total Value"
+msgstr "Barcha sotuvlarning umumiy qiymati ko‘rsatkichi"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 #, fuzzy
 msgid "Last Invoices"
@@ -3434,6 +3509,8 @@ msgstr "So‘nggi hisob-kitoblar"
 #: model:ir.model.fields,field_description:sale.field_sale_order__write_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__write_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__write_uid
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__write_uid
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__write_uid
 #, fuzzy
 msgid "Last Updated by"
 msgstr "Oxirgi yangilagan"
@@ -3444,6 +3521,8 @@ msgstr "Oxirgi yangilagan"
 #: model:ir.model.fields,field_description:sale.field_sale_order__write_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__write_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__write_date
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__write_date
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__write_date
 #, fuzzy
 msgid "Last Updated on"
 msgstr "Oxirgi yangilangan sana"
@@ -3472,6 +3551,13 @@ msgstr ""
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Let’s create a beautiful quotation in a few clicks ."
 msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__sale_order_template_line_ids
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+#, fuzzy
+msgid "Lines"
+msgstr "Qatorlar"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__linked_line_id
@@ -3641,6 +3727,14 @@ msgid "Missing required fields on accountable sale order line."
 msgstr "Hisobga olinadigan sotuv buyurtmasi qatorida zarur maydonlar yo‘q."
 
 #. module: sale
+#: model:ir.model.constraint,message:sale.constraint_sale_order_template_line_accountable_product_id_required
+#, fuzzy
+msgid "Missing required product and UoM on accountable sale quote line."
+msgstr ""
+"Hisobga olinadigan sotuv narxnomasi qatorida talab qilinadigan mahsulot va "
+"o‘lchov birligi yo‘q"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #, fuzzy
 msgid "Mitchell Admin"
@@ -3696,12 +3790,6 @@ msgstr "Mening savdo buyurtmasi qatorlarim"
 #, fuzzy
 msgid "New"
 msgstr "Yangi"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_quotation_form
-#, fuzzy
-msgid "New Quotation"
-msgstr "Yangi narx taklifi"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_calendar_event_id
@@ -3773,6 +3861,8 @@ msgstr "Odoo ishlatmayapsizmi?"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_note
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model:ir.model.fields.selection,name:sale.selection__sale_order_template_line__display_type__line_note
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
 #, fuzzy
 msgid "Note"
 msgstr "Izoh"
@@ -3807,6 +3897,12 @@ msgid ""
 msgstr ""
 "Buyurtmani tasdiqlash va mahsulotlarni mijozga yetkazib berish orasidagi "
 "kunlar soni"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_template__number_of_days
+#, fuzzy
+msgid "Number of days for the validity date computation of the quotation"
+msgstr "Narxnomaning amal qilish muddatini hisoblash uchun kunlar soni"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error_counter
@@ -3871,8 +3967,6 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
-#: model_terms:ir.actions.act_window,help:sale.action_orders_salesteams
-#: model_terms:ir.actions.act_window,help:sale.action_quotations_salesteams
 #, fuzzy
 msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales order."
@@ -3894,6 +3988,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_pay
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_pay
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__require_payment
 #, fuzzy
 msgid "Online Payment"
 msgstr "Onlayn to‘lov"
@@ -3907,6 +4002,7 @@ msgstr "Onlayn to‘lovlar"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_sign
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_sign
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__require_signature
 #, fuzzy
 msgid "Online Signature"
 msgstr "Onlayn imzo"
@@ -3955,11 +4051,24 @@ msgid "Option for: %s"
 msgstr "%s uchun variant"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__is_optional
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__is_optional
+#, fuzzy
+msgid "Optional Line"
+msgstr "Ixtiyoriy qator"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__optional_product_ids
 #: model:ir.model.fields,field_description:sale.field_product_template__optional_product_ids
 #, fuzzy
 msgid "Optional Products"
 msgstr "Qo‘shimcha mahsulotlar"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_template.py:0
+msgid "Optional Products Section"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__optional_product_ids
@@ -4142,6 +4251,7 @@ msgstr "O‘ram"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__parent_id
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__parent_id
 #, fuzzy
 msgid "Parent Section Line"
 msgstr "Asosiy bo‘lim qatori"
@@ -4283,6 +4393,7 @@ msgstr "Oldindan to‘lov miqdori"
 #: model:ir.model.fields,field_description:sale.field_res_company__prepayment_percent
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__prepayment_percent
 #: model:ir.model.fields,field_description:sale.field_sale_order__prepayment_percent
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__prepayment_percent
 #, fuzzy
 msgid "Prepayment percentage"
 msgstr "Oldindan to‘lov foizi"
@@ -4291,6 +4402,7 @@ msgstr "Oldindan to‘lov foizi"
 #. odoo-python
 #: code:addons/sale/models/res_company.py:0
 #: code:addons/sale/models/sale_order.py:0
+#: code:addons/sale/models/sale_order_template.py:0
 #, fuzzy
 msgid "Prepayment percentage must be a valid percentage."
 msgstr "Oldindan to‘lov foizi to‘g‘ri foiz ko‘rsatkichi bo‘lishi kerak."
@@ -4380,6 +4492,7 @@ msgstr "Dastlabki hisob-fakturalar"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__product_id
 #, fuzzy
 msgid "Product"
 msgstr "Mahsulot"
@@ -4549,6 +4662,7 @@ msgstr "Sotish buyurtmalaridan hisob-faktura qilinadigan miqdorlar"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__product_uom_qty
 #, fuzzy
 msgid "Quantity"
 msgstr "Miqdor"
@@ -4597,11 +4711,61 @@ msgid "Quotation Date"
 msgstr "Taklif sanasi"
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__number_of_days
+#, fuzzy
+msgid "Quotation Duration"
+msgstr "Narxnoma muddati"
+
+#. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__sent
 #: model:ir.model.fields.selection,name:sale.selection__sale_report__state__sent
 #, fuzzy
 msgid "Quotation Sent"
 msgstr "Taklif yuborildi"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_order_template
+#: model:ir.model.fields,field_description:sale.field_sale_order__sale_order_template_id
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__name
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_tree
+#, fuzzy
+msgid "Quotation Template"
+msgstr "Narxnoma andozasi"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_order_template_line
+#, fuzzy
+msgid "Quotation Template Line"
+msgstr "Narxnoma andozasi qatori"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+#, fuzzy
+msgid "Quotation Template Lines"
+msgstr "Narxnoma andozasi qatorlari"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__sale_order_template_id
+#, fuzzy
+msgid "Quotation Template Reference"
+msgstr "Narxnoma andozasi havolasi"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.sale_order_template_action
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__group_sale_order_template
+#: model:ir.ui.menu,name:sale.sale_order_template_menu
+#: model:res.groups,name:sale.group_sale_order_template
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#, fuzzy
+msgid "Quotation Templates"
+msgstr "Iqtibos shablonlari"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+#, fuzzy
+msgid "Quotation Validity"
+msgstr "Narx taklifi amal qilish muddati"
 
 #. module: sale
 #. odoo-python
@@ -4614,7 +4778,6 @@ msgstr ""
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_viewed
-#: model:mail.message.subtype,name:sale.mt_salesteam_order_viewed
 #, fuzzy
 msgid "Quotation Viewed"
 msgstr "Taklif ko‘rib chiqildi"
@@ -4628,7 +4791,6 @@ msgstr "Taklif tasdiqlandi"
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
-#: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
 #, fuzzy
 msgid "Quotation sent"
 msgstr "Taklif yuborildi"
@@ -4642,7 +4804,6 @@ msgstr "Taklif %s mijoz tomonidan ko‘rib chiqildi"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotations
-#: model:ir.actions.act_window,name:sale.action_quotations_salesteams
 #: model:ir.actions.act_window,name:sale.action_quotations_with_onboarding
 #: model:ir.ui.menu,name:sale.menu_sale_quotations
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
@@ -4752,6 +4913,7 @@ msgstr "Olib tashlash"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_buttons/quantity_buttons.xml:0
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_optional_product_quantity
 #, fuzzy
 msgid "Remove one"
 msgstr "Bittasini olib tashlash"
@@ -4781,6 +4943,14 @@ msgid "Request a online signature from the customer to confirm the order."
 msgstr "Buyurtmani tasdiqlash uchun mijozdan onlayn imzo so‘rang"
 
 #. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_template__require_signature
+#, fuzzy
+msgid ""
+"Request a online signature to the customer in order to confirm orders "
+"automatically."
+msgstr "Buyurtmalarni avtomatik tasdiqlash uchun mijozdan onlayn imzo so‘rash"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #, fuzzy
 msgid ""
@@ -4789,6 +4959,15 @@ msgid ""
 msgstr ""
 "Buyurtmalarni tasdiqlash uchun to‘liq (100%) yoki qisman to‘lovni so‘rang. "
 "Standartni buyurtma yoki shablon bo‘yicha o‘zgartirish mumkin"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_template__require_payment
+#, fuzzy
+msgid ""
+"Request an online payment to the customer in order to confirm orders "
+"automatically."
+msgstr ""
+"Buyurtmalarni avtomatik tasdiqlash uchun mijozdan onlayn to‘lov so‘rash"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4943,11 +5122,12 @@ msgstr "Bekor qilinishi kerak bo‘lgan sotish buyurtmalari"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_reporting_sales
 #: model:ir.ui.menu,name:sale.sale_menu_root
-#: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.product_document_form
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.digest_digest_view_form
+#: model:res.groups.privilege,name:sale.res_groups_privilege_sales
 #, fuzzy
 msgid "Sales"
 msgstr "Sotishlar"
@@ -5020,7 +5200,6 @@ msgstr "Sotish buyurtmasi"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
-#: model:mail.message.subtype,name:sale.mt_salesteam_order_confirmed
 #, fuzzy
 msgid "Sales Order Confirmed"
 msgstr "Sotish buyurtmasi tasdiqlandi"
@@ -5076,11 +5255,8 @@ msgstr "Savdo buyurtma(lar)"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders
-#: model:ir.actions.act_window,name:sale.action_orders_salesteams
-#: model:ir.actions.act_window,name:sale.action_orders_to_invoice_salesteams
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids
 #: model:ir.ui.menu,name:sale.menu_sales_config
-#: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
@@ -5097,24 +5273,11 @@ msgstr "Savdo buyurtmalari"
 #. module: sale
 #: model:ir.model,name:sale.model_crm_team
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__team_id
-#: model:ir.model.fields,field_description:sale.field_account_invoice_report__team_id
-#: model:ir.model.fields,field_description:sale.field_account_move__team_id
-#: model:ir.model.fields,field_description:sale.field_sale_order__team_id
-#: model:ir.model.fields,field_description:sale.field_sale_report__team_id
-#: model_terms:ir.ui.view,arch_db:sale.account_invoice_groupby_inherit
-#: model_terms:ir.ui.view,arch_db:sale.view_account_invoice_report_search_inherit
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #, fuzzy
 msgid "Sales Team"
 msgstr "Savdo jamoasi"
-
-#. module: sale
-#: model:ir.ui.menu,name:sale.report_sales_team
-#: model:ir.ui.menu,name:sale.sales_team_config
-#, fuzzy
-msgid "Sales Teams"
-msgstr "Savdo jamoalari"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_analytic_line__so_line
@@ -5182,6 +5345,12 @@ msgid "Salespersons"
 msgstr "Sotuvchilar"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_search
+#, fuzzy
+msgid "Search Quotation Template"
+msgstr "Iqtibos shablonini qidirish"
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 #, fuzzy
@@ -5197,6 +5366,8 @@ msgstr "Mijoz nomini qidiring yoki tezda yangi mijoz yarating."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_section
+#: model:ir.model.fields.selection,name:sale.selection__sale_order_template_line__display_type__line_section
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
 #, fuzzy
 msgid "Section"
 msgstr "Bo‘lim"
@@ -5247,6 +5418,18 @@ msgid "Sell variants of a product using attributes (size, color, etc.)"
 msgstr ""
 "Mahsulotning xususiyatlari (o‘lcham, rang va boshqalar) asosida turlarini "
 "sotish"
+
+#. module: sale
+#: model_terms:digest.tip,tip_description:sale.digest_tip_sale_product_grid
+#, fuzzy
+msgid ""
+"Selling the same product in different sizes or colors? Try the product grid "
+"and populate your orders with multiple quantities of each variant. This "
+"feature also exists in the Purchase application."
+msgstr ""
+"Bir xil mahsulotni turli o‘lcham yoki ranglarda sotayapsizmi? Mahsulot "
+"panjarasini sinab ko‘ring va buyurtmalaringizni har bir variantning bir "
+"nechta miqdori bilan to‘ldiring. Bu xususiyat Xarid ilovasida ham mavjud."
 
 #. module: sale
 #. odoo-python
@@ -5312,9 +5495,18 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sequence
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__sequence
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__sequence
 #, fuzzy
 msgid "Sequence"
 msgstr "Ketma-ketlik"
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/sale_order_line_field/sale_order_line_field.xml:0
+#: code:addons/sale/static/src/js/sale_order_template_line_field/sale_order_template_line_field.xml:0
+msgid "Set Optional"
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5543,7 +5735,21 @@ msgstr ""
 "provayderidan foydalaning."
 
 #. module: sale
+#: model_terms:digest.tip,tip_description:sale.digest_tip_sale_configurable_products
+#, fuzzy
+msgid ""
+"Struggling with a complex product catalog? Try out the Product Configurator "
+"to help sales configure a product with different options: colors, size, "
+"capacity, etc. Make sale orders encoding easier and error-proof."
+msgstr ""
+"Murakkab mahsulot katalogi bilan qiynalayapsizmi? Mahsulot konfiguratorini "
+"sinab ko‘ring. U sotuvchilarga mahsulotni turli xil variantlar: ranglar, "
+"o‘lchamlar, sig‘im va boshqalar bilan sozlashda yordam beradi. Sotuv "
+"buyurtmalarini kiritishni osonlashtiring va xatoliklardan saqlaning."
+
+#. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_subsection
+#: model:ir.model.fields.selection,name:sale.selection__sale_order_template_line__display_type__line_subsection
 #, fuzzy
 msgid "Subsection"
 msgstr "Kichik bo‘lim"
@@ -5594,13 +5800,6 @@ msgstr ""
 #, fuzzy
 msgid "System Parameter"
 msgstr "Tizim parametri"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
-#: model:ir.ui.menu,name:sale.menu_tag_config
-#, fuzzy
-msgid "Tags"
-msgstr "Teglar"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -5693,6 +5892,12 @@ msgstr ""
 "xizmatlarimizni yaxshilashga yordam beradi."
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+#, fuzzy
+msgid "Terms & Conditions"
+msgstr "Shartlar va qoidalar"
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__terms_type
 #, fuzzy
 msgid "Terms & Conditions format"
@@ -5713,6 +5918,7 @@ msgstr "Shartlar va qoidalar"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__note
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__note
 #, fuzzy
 msgid "Terms and conditions"
 msgstr "Shartlar va qoidalar"
@@ -5722,6 +5928,17 @@ msgstr "Shartlar va qoidalar"
 #, fuzzy
 msgid "Terms and conditions..."
 msgstr "Shartlar va qoidalar..."
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+#, fuzzy
+msgid ""
+"The Administrator can set default Terms & Conditions in Sales Settings. "
+"Terms set here will show up instead if you select this quotation template."
+msgstr ""
+"Administrator Sotuvlar sozlamalarida standart Shartlar va qoidalarni "
+"o‘rnatishi mumkin. Agar ushbu iqtibos shablonini tanlasangiz, bu yerda "
+"belgilangan shartlar ko‘rsatiladi."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__country_code
@@ -5933,6 +6150,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__prepayment_percent
 #: model:ir.model.fields,help:sale.field_res_config_settings__prepayment_percent
+#: model:ir.model.fields,help:sale.field_sale_order_template__prepayment_percent
 #, fuzzy
 msgid "The percentage of the amount needed to be paid to confirm quotations."
 msgstr ""
@@ -6007,6 +6225,16 @@ msgid ""
 msgstr ""
 "Bu standart qiymat yangi yaratilgan har qanday mahsulotga qo‘llaniladi. Buni "
 "mahsulot tafsilotlari shaklida o‘zgartirish mumkin."
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_template__mail_template_id
+#, fuzzy
+msgid ""
+"This e-mail template will be sent on confirmation. Leave empty to send "
+"nothing."
+msgstr ""
+"Bu elektron pochta shabloni tasdiqlanganidan so‘ng yuboriladi. Hech narsa "
+"yubormaslik uchun bo‘sh qoldiring."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_bank_statement_line__campaign_id
@@ -6140,6 +6368,22 @@ msgid ""
 msgstr ""
 "Bu yangi narxlar ro‘yxati asosida barcha mahsulotlarning birlik narxini "
 "yangilaydi."
+
+#. module: sale
+#: model:digest.tip,name:sale.digest_tip_sale_configurable_products
+#: model_terms:digest.tip,tip_description:sale.digest_tip_sale_configurable_products
+#, fuzzy
+msgid "Tip: Odoo supports configurable products"
+msgstr "Maslahat: Odoo sozlanadigan mahsulotlarni qo‘llab-quvvatlaydi"
+
+#. module: sale
+#: model:digest.tip,name:sale.digest_tip_sale_product_grid
+#: model_terms:digest.tip,tip_description:sale.digest_tip_sale_product_grid
+#, fuzzy
+msgid "Tip: Sell or buy products in bulk with matrixes"
+msgstr ""
+"Maslahat: Mahsulotlarni matritsalar yordamida ulgurji soting yoki xarid "
+"qiling"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__to_invoice
@@ -6294,6 +6538,7 @@ msgstr "Hisob-faktura qilinmagan qoldiq"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_uom_id
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__product_uom_id
 #, fuzzy
 msgid "Unit"
 msgstr "Birlik"
@@ -6325,6 +6570,13 @@ msgstr "Birliklar va qadoqlar"
 #, fuzzy
 msgid "Unlock"
 msgstr "Qulfdan chiqarish"
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/sale_order_line_field/sale_order_line_field.xml:0
+#: code:addons/sale/static/src/js/sale_order_template_line_field/sale_order_template_line_field.xml:0
+msgid "Unset Optional"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_untaxed
@@ -6392,6 +6644,20 @@ msgid "Upselling Opportunity"
 msgstr "Qo‘shimcha sotish imkoniyati"
 
 #. module: sale
+#: model_terms:ir.actions.act_window,help:sale.sale_order_template_action
+#, fuzzy
+msgid ""
+"Use templates to create polished, professional quotes in minutes.\n"
+"                Send these quotes by email and let your customers sign "
+"online.\n"
+"                Use cross-selling and discounts to push and boost your sales."
+msgstr ""
+"Andozalardan foydalanib, bir necha daqiqada professional narx takliflarini "
+"yarating. Ushbu takliflarni elektron pochta orqali yuboring va "
+"mijozlaringizga onlayn imzolash imkonini bering. Qo‘shimcha sotuvlar va "
+"chegirmalardan foydalanib, savdolaringizni rag‘batlantiring va oshiring."
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 #, fuzzy
 msgid ""
@@ -6415,6 +6681,18 @@ msgid "Used by salespeople when they send quotations or proforma to prospects"
 msgstr ""
 "Sotuvchilar tomonidan potensial mijozlarga narx takliflari yoki proformalar "
 "yuborishda foydalaniladi"
+
+#. module: sale
+#: model:res.groups,name:sale.group_sale_salesman_all_leads
+#, fuzzy
+msgid "User: All Documents"
+msgstr "Foydalanuvchi: Barcha hujjatlar"
+
+#. module: sale
+#: model:res.groups,name:sale.group_sale_salesman
+#, fuzzy
+msgid "User: Own Documents Only"
+msgstr "Foydalanuvchi: Faqat o‘z hujjatlari"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -6492,6 +6770,12 @@ msgstr "Narx taklifini ko‘rish"
 #, fuzzy
 msgid "Virtual"
 msgstr "Virtual"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+#, fuzzy
+msgid "Visible to all"
+msgstr "Hammaga ko‘rinadigan"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -6624,6 +6908,17 @@ msgstr ""
 
 #. module: sale
 #. odoo-python
+#: code:addons/sale/models/sale_order_template_line.py:0
+#, fuzzy
+msgid ""
+"You cannot change the type of a sale quote line. Instead you should delete "
+"the current line and create a new line of the proper type."
+msgstr ""
+"Sotish narxi taklifi satrining turini o‘zgartira olmaysiz. Buning o‘rniga "
+"joriy satrni o‘chirib, kerakli turdagi yangi satr yaratishingiz lozim."
+
+#. module: sale
+#. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, fuzzy
 msgid "You cannot modify the product of this order line."
@@ -6724,6 +7019,37 @@ msgstr ""
 "olib tashlang (%(bad_products)s)."
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_template.py:0
+msgid ""
+"Your template belongs to company %(template_company)s but contains products "
+"from company (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
+msgstr ""
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_template.py:0
+msgid ""
+"Your template belongs to company %(template_company)s but contains products "
+"from other companies (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
+msgstr ""
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_template.py:0
+msgid ""
+"Your template cannot contain products from specific companies if it's shared "
+"between companies. Please restrict the template access, or remove those "
+"products."
+msgstr ""
+
+#. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, fuzzy
@@ -6751,9 +7077,16 @@ msgstr "yopish"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
 #, fuzzy
 msgid "days"
 msgstr "kun"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+#, fuzzy
+msgid "e.g. Standard Consultancy Package"
+msgstr "masalan, Standart konsalting paketi"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
@@ -6808,6 +7141,34 @@ msgstr "taklif."
 #, fuzzy
 msgid "sale order"
 msgstr "sotish buyurtmasi"
+
+#. module: sale
+#: model:res.groups,comment:sale.group_sale_salesman_all_leads
+#, fuzzy
+msgid ""
+"the user will have access to all records of everyone in the sales "
+"application."
+msgstr ""
+"foydalanuvchi savdo ilovasidagi barcha ma'lumotlarga kirish huquqiga ega "
+"bo‘ladi."
+
+#. module: sale
+#: model:res.groups,comment:sale.group_sale_salesman
+#, fuzzy
+msgid "the user will have access to his own data in the sales application."
+msgstr ""
+"foydalanuvchi savdo ilovasida faqat o‘z ma'lumotlariga kirish huquqiga ega "
+"bo‘ladi."
+
+#. module: sale
+#: model:res.groups,comment:sale.group_sale_manager
+#, fuzzy
+msgid ""
+"the user will have an access to the sales configuration as well as statistic "
+"reports."
+msgstr ""
+"foydalanuvchi savdo sozlamalariga, shuningdek statistik hisobotlarga kirish "
+"huquqiga ega bo‘ladi."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document

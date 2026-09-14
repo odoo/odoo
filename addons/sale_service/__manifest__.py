@@ -10,6 +10,6 @@ Additional information is displayed in the name of the SOL when it is used in se
     "author": "Odoo S.A.",
     "license": "LGPL-3",
     "depends": [
-        "sale_management",
+        "sale",
     ],
 }

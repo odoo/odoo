@@ -25,14 +25,14 @@
                     name="%(sale_loyalty.sale_loyalty_coupon_wizard_action)d"
                     type="action"
                     string="Coupon Code"
-                    groups="sales_team.group_sale_salesman"
+                    groups="sale.group_sale_salesman"
                     invisible="locked or state == 'cancel'"
                     class="btn btn-secondary" />
                 <button
                     name="%(sale_loyalty.sale_loyalty_coupon_wizard_action)d"
                     type="action"
                     string="Coupon Code"
-                    groups="sales_team.group_sale_salesman"
+                    groups="sale.group_sale_salesman"
                     invisible="not (locked or state == 'cancel')"
                     class="btn btn-secondary"
                     disabled="1" />
@@ -41,7 +41,7 @@
                     type="object"
                     string="Reward"
                     help="Update current promotional lines and select new rewards if applicable."
-                    groups="sales_team.group_sale_salesman"
+                    groups="sale.group_sale_salesman"
                     invisible="locked or state == 'cancel'"
                     class="btn btn-secondary" />
                 <button
@@ -49,7 +49,7 @@
                     type="object"
                     string="Reward"
                     help="Update current promotional lines and select new rewards if applicable."
-                    groups="sales_team.group_sale_salesman"
+                    groups="sale.group_sale_salesman"
                     invisible="not (locked or state == 'cancel')"
                     class="btn btn-secondary"
                     disabled="1" />

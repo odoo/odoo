@@ -1001,7 +1001,7 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
             [("id", "not in", (self.c2_pl + self.c1_pl + c2_pl2).ids)]
         ).write({"active": False})
 
-        self.demo_user.group_ids += self.env.ref("sales_team.group_sale_manager")
+        self.demo_user.group_ids += self.env.ref("sale.group_sale_manager")
 
         self.demo_user.group_ids += self.env.ref("product.group_product_manager")
         self.c2_pl.with_user(self.demo_user).with_context(

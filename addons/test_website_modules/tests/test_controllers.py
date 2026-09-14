@@ -148,7 +148,7 @@ class TestWebEditorController(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
                     Command.link(
                         self.env.ref("website.group_website_restricted_editor").id
                     ),
-                    Command.link(self.env.ref("sales_team.group_sale_manager").id),
+                    Command.link(self.env.ref("sale.group_sale_manager").id),
                 ],
             }
         )

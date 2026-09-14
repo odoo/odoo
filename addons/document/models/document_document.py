@@ -295,6 +295,7 @@ class DocumentsDocument(models.Model):
         string="Parent",
         compute="_compute_user_folder_id",
         search="_search_user_folder_id",
+        compute_sudo=True,
     )
     children_ids = fields.One2many(
         comodel_name="document.document",
@@ -1033,6 +1034,7 @@ class DocumentsDocument(models.Model):
             if to_copy_attachment_sudo := documents_sudo._copy_attachment_filter(
                 default
             ):
+                record_link = self._get_copy_record_link(default)
                 new_attachments_iterator = iter(
                     to_copy_attachment_sudo.attachment_id.with_context(
                         no_document=True
@@ -1048,16 +1050,20 @@ class DocumentsDocument(models.Model):
                         if old_document_sudo in to_copy_attachment_sudo:
                             new_attachment = next(new_attachments_iterator)
                             new_binary_sudo.write(
-                                {
-                                    "attachment_id": new_attachment.id,
-                                    "res_id": False,
-                                    "res_model": False,
-                                }
+                                {"attachment_id": new_attachment.id, **record_link}
                             )
 
         return self.browse(
             [new_document.id for new_document in new_documents if new_document]
         )
+
+    def _get_copy_record_link(self, default: dict | None) -> dict:
+        default = default or {}
+        res_model = default.get("res_model", self.env.context.get("default_res_model"))
+        res_id = default.get("res_id", self.env.context.get("default_res_id"))
+        if res_model and res_id:
+            return {"res_model": res_model, "res_id": res_id}
+        return {"res_model": False, "res_id": False}
 
     def copy_data(self, default: dict | None = None) -> list[dict]:
         default = dict(default or {})

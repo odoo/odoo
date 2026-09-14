@@ -110,11 +110,6 @@ msgid "Add members to automatically assign their documents to this sales team."
 msgstr "添加團隊成員，系統將自動將其檔分配給該銷售團隊。"
 
 #. module: sales_team
-#: model:res.groups,name:sales_team.group_sale_manager
-msgid "Administrator"
-msgstr "管理員"
-
-#. module: sales_team
 #. odoo-javascript
 #: code:addons/sales_team/static/src/js/crm_team_form.js:0
 msgid "An error occurred while activating the Multi-Team option."
@@ -453,7 +448,7 @@ msgstr "評分"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.team_sales_department
-#: model:res.groups.privilege,name:sales_team.res_groups_privilege_sales
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
 msgid "Sales"
 msgstr "銷售"
 
@@ -475,6 +470,12 @@ msgstr "銷售人員"
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_tree
+#: model:ir.model.fields,field_description:sales_team.field_account_invoice_report__team_id
+#: model:ir.model.fields,field_description:sales_team.field_account_move__team_id
+#: model:ir.model.fields,field_description:sales_team.field_sale_order__team_id
+#: model:ir.model.fields,field_description:sales_team.field_sale_report__team_id
+#: model_terms:ir.ui.view,arch_db:sales_team.account_invoice_groupby_inherit
+#: model_terms:ir.ui.view,arch_db:sales_team.view_account_invoice_report_search_inherit
 msgid "Sales Team"
 msgstr "銷售團隊"
 
@@ -498,6 +499,8 @@ msgstr "銷售團隊成員（包括已歸檔）"
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_config
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_sales
 #: model:ir.model.fields,field_description:sales_team.field_res_users__crm_team_ids
+#: model:ir.ui.menu,name:sales_team.report_sales_team
+#: model:ir.ui.menu,name:sales_team.sales_team_config
 msgid "Sales Teams"
 msgstr "銷售團隊"
 
@@ -550,6 +553,8 @@ msgstr "標籤名稱已存在!"
 #: model:ir.actions.act_window,name:sales_team.sales_team_crm_tag_action
 #: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_tree
+#: model:ir.model.fields,field_description:sales_team.field_sale_order__tag_ids
+#: model:ir.ui.menu,name:sales_team.menu_tag_config
 msgid "Tags"
 msgstr "標籤"
 
@@ -672,16 +677,6 @@ msgid "User Sales Team"
 msgstr "用戶銷售團隊"
 
 #. module: sales_team
-#: model:res.groups,name:sales_team.group_sale_salesman_all_leads
-msgid "User: All Documents"
-msgstr "使用者: 所有文件"
-
-#. module: sales_team
-#: model:res.groups,name:sales_team.group_sale_salesman
-msgid "User: Own Documents Only"
-msgstr "使用者: 僅自己的文件"
-
-#. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_ids
 msgid "Users assigned to this team."
 msgstr "歸屬該團隊的用戶。"
@@ -725,25 +720,6 @@ msgstr "例如,北美"
 msgid "e.g. Services"
 msgstr "例如,服務"
 
-#. module: sales_team
-#: model:res.groups,comment:sales_team.group_sale_salesman_all_leads
-msgid ""
-"the user will have access to all records of everyone in the sales "
-"application."
-msgstr "使用者可存取銷售系統中每個人的所有記錄。"
-
-#. module: sales_team
-#: model:res.groups,comment:sales_team.group_sale_salesman
-msgid "the user will have access to his own data in the sales application."
-msgstr "在銷售應用，使用者只能存取自己的資料。"
-
-#. module: sales_team
-#: model:res.groups,comment:sales_team.group_sale_manager
-msgid ""
-"the user will have an access to the sales configuration as well as statistic "
-"reports."
-msgstr "使用者將有權存取銷售配置及統計報告。"
-
 #~ msgid "Group By"
 #~ msgstr "分組依據"
 
@@ -752,3 +728,104 @@ msgstr "使用者將有權存取銷售配置及統計報告。"
 
 #~ msgid "Undefined graph model for Sales Team: %s"
 #~ msgstr "銷售團隊的不確定圖模型：%s"
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_form
+msgid "<span class=\"flex-grow-1\">/ Month</span>"
+msgstr "<span class=\"flex-grow-1\">/ 月</span>"
+
+#. module: sales_team
+#. odoo-javascript
+#: code:addons/sales_team/static/src/xml/sale_progressbar_field.xml:0
+msgid "Click to define an invoicing target"
+msgstr "點選以定義開立應收憑單目標"
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.action_invoice_salesteams
+msgid "Create a customer invoice"
+msgstr "建立客戶發票"
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.action_orders_salesteams
+#: model_terms:ir.actions.act_window,help:sales_team.action_quotations_salesteams
+msgid "Create a new quotation, the first step of a new sale!"
+msgstr "建立一個報價是新銷售的第一步!"
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.action_invoice_salesteams
+msgid ""
+"Create invoices, register payments and keep track of the discussions with "
+"your customers."
+msgstr "建立發票，登記付款，並追蹤與客戶的溝通歷程。"
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.action_account_invoice_report_salesteam
+msgid ""
+"From this report, you can have an overview of the amount invoiced to your "
+"customer. The search tool can also be used to personalise your Invoices "
+"reports and so, match this analysis to your needs."
+msgstr ""
+"從這個報表中，您可以得到一個總的客戶的應收憑單總額.搜尋功能也能用來個性化您的"
+"應收憑單報表等，例如根據您的需要匹配分析."
+
+#. module: sales_team
+#: model:mail.message.subtype,name:sales_team.mt_salesteam_invoice_paid
+msgid "Invoice Paid"
+msgstr ""
+
+#. module: sales_team
+#: model:mail.message.subtype,name:sales_team.mt_salesteam_invoice_posted
+msgid "Invoice Posted"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.action_invoice_salesteams
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
+msgid "Invoices"
+msgstr "發票"
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.action_account_invoice_report_salesteam
+msgid "Invoices Analysis"
+msgstr "發票分析"
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.action_quotation_form
+msgid "New Quotation"
+msgstr "新增報價單"
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.action_orders_salesteams
+#: model_terms:ir.actions.act_window,help:sales_team.action_quotations_salesteams
+msgid ""
+"Once the quotation is confirmed by the customer, it becomes a sales order."
+"<br> You will be able to create an invoice and collect the payment."
+msgstr ""
+"一旦客戶確認報價，報價單即變為銷售訂單.<br>您可以建立一張應收憑單來進行收款."
+
+#. module: sales_team
+#: model:mail.message.subtype,name:sales_team.mt_salesteam_order_viewed
+msgid "Quotation Viewed"
+msgstr "已查看報價"
+
+#. module: sales_team
+#: model:mail.message.subtype,name:sales_team.mt_salesteam_order_sent
+msgid "Quotation sent"
+msgstr "報價單已發送"
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.action_quotations_salesteams
+msgid "Quotations"
+msgstr "報價單"
+
+#. module: sales_team
+#: model:mail.message.subtype,name:sales_team.mt_salesteam_order_confirmed
+msgid "Sales Order Confirmed"
+msgstr "銷售訂單已確認"
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.action_orders_salesteams
+#: model:ir.actions.act_window,name:sales_team.action_orders_to_invoice_salesteams
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
+msgid "Sales Orders"
+msgstr "銷售訂單"

@@ -1056,7 +1056,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
                 "country_id": self.env.ref("base.be").id,
             }
         )
-        self.env.user.group_ids |= self.env.ref("sales_team.group_sale_salesman")
+        self.env.user.group_ids |= self.env.ref("sale.group_sale_salesman")
 
         self.env["ir.config_parameter"].sudo().set_param("sale.automatic_invoice", True)
         so = self._create_sale_order_one_line(product_id=product, partner_id=partner)

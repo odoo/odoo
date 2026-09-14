@@ -12,7 +12,7 @@
                     type="object"
                     help="Sold in the last 365 days"
                     icon="fa-signal"
-                    groups="sales_team.group_sale_salesman"
+                    groups="sale.group_sale_salesman"
                     invisible="not sale_ok"
                     class="oe_stat_button">
                     <div class="o_field_widget o_stat_info">
@@ -40,7 +40,7 @@
         <field name="inherit_id" ref="product.view_product_product_kanban_catalog" />
         <field name="arch" type="xml">
             <xpath expr="//t[@t-name='menu']" position="attributes">
-                <attribute name="groups">sales_team.group_sale_manager</attribute>
+                <attribute name="groups">sale.group_sale_manager</attribute>
             </xpath>
         </field>
     </record>

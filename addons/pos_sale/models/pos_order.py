@@ -19,7 +19,7 @@ class PosOrder(models.Model):
     sale_order_count = fields.Integer(
         compute="_compute_sale_order_count",
         readonly=True,
-        groups="sales_team.group_sale_salesman",
+        groups="sale.group_sale_salesman",
     )
 
     @api.depends("lines.sale_order_origin_id")
@@ -269,6 +269,26 @@ class PosOrderLine(models.Model):
         copy=False,
         readonly=False,
     )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        refunded_ids = {
+            vals["refunded_orderline_id"]
+            for vals in vals_list
+            if vals.get("refunded_orderline_id") and not vals.get("sale_order_line_id")
+        }
+        if refunded_ids:
+            refunded_lines = self.browse(list(refunded_ids)).sudo()
+            origin_by_refunded = {line.id: line for line in refunded_lines}
+            for vals in vals_list:
+                refunded = origin_by_refunded.get(vals.get("refunded_orderline_id"))
+                if not refunded or vals.get("sale_order_line_id"):
+                    continue
+                vals["sale_order_line_id"] = refunded.sale_order_line_id.id
+                vals.setdefault(
+                    "sale_order_origin_id", refunded.sale_order_origin_id.id
+                )
+        return super().create(vals_list)
 
     @api.depends(
         "order_id.state",

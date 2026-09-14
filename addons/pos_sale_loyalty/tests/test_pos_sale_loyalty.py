@@ -8,7 +8,7 @@ class TestPoSSaleLoyalty(TestPointOfSaleHttpCommon):
     @classmethod
     def get_default_groups(cls):
         groups = super().get_default_groups()
-        return groups | cls.quick_ref("sales_team.group_sale_manager")
+        return groups | cls.quick_ref("sale.group_sale_manager")
 
     def test_pos_sale_loyalty_1(self):
         """Test that only one loyalty card is created when settling an unconfirmed order."""

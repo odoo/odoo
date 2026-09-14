@@ -414,7 +414,6 @@ test("Forecast drag&drop and add column", async () => {
         "get_views",
         "read_progress_bar",
         "web_read_group",
-        "has_group",
         "web_save",
         "read_progress_bar",
         "formatted_read_group",

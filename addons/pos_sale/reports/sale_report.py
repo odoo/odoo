@@ -64,14 +64,17 @@ class SaleReport(models.Model):
     def _select_pos(self) -> SQL:
         """Build SELECT clause for POS orders from field registry."""
         fields = self._get_fields_pos_select()
-
-        field_parts = []
-        for field_name, expression in fields.items():
-            field_parts.append(
-                SQL("%s AS %s", SQL(expression), SQL.identifier(field_name)),
+        columns = list(self._get_fields_select())
+        if unmatched := set(columns).symmetric_difference(fields):
+            raise ValueError(
+                f"sale.report UNION ALL columns differ between sale and POS orders: "
+                f"{sorted(unmatched)}"
             )
 
-        return SQL(",\n    ").join(field_parts)
+        return SQL(",\n    ").join(
+            SQL("%s AS %s", SQL(fields[field_name]), SQL.identifier(field_name))
+            for field_name in columns
+        )
 
     def _from_pos(self) -> SQL:
         """Build FROM clause for POS orders from table registry."""

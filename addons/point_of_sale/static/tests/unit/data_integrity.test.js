@@ -466,6 +466,20 @@ test("display grouping keeps distinct lots independently selectable", async () =
     expect(groupOrderlines([line, second]).lines).toEqual([line, second]);
 });
 
+test("display grouping keeps the lines of a non-groupable unit apart", async () => {
+    const store = await setupPosEnv();
+    const order = await getFilledOrder(store);
+    const line = order.lines[0];
+    line.product_id.uom_id = store.models["uom.uom"].get(5);
+    const second = store.models["pos.order.line"].create({
+        order_id: order,
+        product_id: line.product_id,
+        price_unit: line.price_unit,
+        qty: 1,
+    });
+    expect(groupOrderlines([line, second]).lines).toEqual([line, second]);
+});
+
 test("a partial read fetches complete data before loading an unknown record", async () => {
     const store = await setupPosEnv();
     const partner = store.models["res.partner"].getAll()[0];

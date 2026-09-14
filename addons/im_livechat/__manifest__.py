@@ -278,7 +278,7 @@ Help your customers with this chat, and analyse their feedback.
             ],
         },
         "dynamic_children": {
-            "web.assets_web": [
+            "im_livechat.assets_embed_external": [
                 "im_livechat.assets_livechat_support_tours",
             ],
         },

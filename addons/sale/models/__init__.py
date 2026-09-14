@@ -4,6 +4,7 @@ from . import (
     account_move,
     account_move_line,
     chart_template,
+    digest_digest,
     documents_document,
     home_menu_badge,
     ir_actions_report,
@@ -18,6 +19,7 @@ from . import (
     res_partner,
     sale_order,
     sale_order_line,
-    team_team,
+    sale_order_template,
+    sale_order_template_line,
     utm_campaign,
 )

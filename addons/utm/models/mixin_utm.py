@@ -35,7 +35,7 @@ class MixinUtm(models.AbstractModel):
 
         # We ignore UTM for salesmen, except some requests that could be done as superuser_id to bypass access rights.
         if not self.env.is_superuser() and self.env.user.has_group(
-            "sales_team.group_sale_salesman"
+            "sale.group_sale_salesman"
         ):
             return values
 

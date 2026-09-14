@@ -20,7 +20,7 @@ class TestSaleMatrixUi(TestMatrixCommon):
             name="Salesman",
             login="salesman",
             password="salesman",
-            groups="sales_team.group_sale_salesman",
+            groups="sale.group_sale_salesman",
         )
 
         # Setup partner since user salesman don't have the right to create it on the fly
@@ -36,7 +36,7 @@ class TestSaleMatrixUi(TestMatrixCommon):
 
     def test_sale_matrix_ui(self):
         self.env.ref("base.group_user").implied_ids += self.env.ref(
-            "sale_management.group_sale_order_template"
+            "sale.group_sale_order_template"
         )
         # While we check the untaxed amounts, the view requires taxes to be present
         # on the sale order to display the untaxed amount line.

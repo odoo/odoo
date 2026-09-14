@@ -43,6 +43,11 @@ class SaleOrderLine(models.Model):
     is_expense = fields.Boolean(
         help="Is true if the sales order line comes from an expense or a vendor bills"
     )
+    is_optional = fields.Boolean(
+        string="Optional Line",
+        default=False,
+        copy=True,
+    )
 
     parent_id = fields.Many2one(
         comodel_name="sale.order.line",
@@ -392,6 +397,18 @@ class SaleOrderLine(models.Model):
         for line in self:
             line.product_template_id = line.product_id.product_tmpl_id
 
+    @api.depends("product_template_id")
+    def _compute_product_qty(self):
+        super()._compute_product_qty()
+        for line in self:
+            if (
+                not line.display_type
+                and not line.product_id
+                and line.product_template_id
+                and not line.product_qty
+            ):
+                line.product_qty = line._get_default_product_qty()
+
     @api.depends("product_id")
     def _compute_product_uom_id(self):
         for line in self:
@@ -416,6 +433,27 @@ class SaleOrderLine(models.Model):
 
             if line.is_downpayment:
                 line.name = line._get_downpayment_description()
+
+        for line in self:
+            if not (
+                line.product_id
+                and line.order_id.sale_order_template_id
+                and line._use_template_name()
+            ):
+                continue
+            template_lines = (
+                line.order_id.sale_order_template_id.sale_order_template_line_ids
+            )
+            for template_line in template_lines:
+                if line.product_id == template_line.product_id and template_line.name:
+                    lang = line.order_id.partner_id.lang
+                    line.name = (
+                        template_line.with_context(lang=lang).name
+                        + line.with_context(
+                            lang=lang
+                        )._get_line_multiline_description_variants()
+                    )
+                    break
 
     @api.depends("product_id", "product_uom_id", "product_qty")
     def _compute_pricelist_item_id(self):
@@ -585,6 +623,7 @@ class SaleOrderLine(models.Model):
         combo_lines = set()
         precision = self.env["decimal.precision"].get_precision("Product Unit")
         discount_precision = self.env["decimal.precision"].get_precision("Discount")
+        invoiced_outside_moves = self._get_invoiced_outside_account_moves()
 
         for line in self.filtered(lambda x: not x.display_type):
             qty_to_consider = (
@@ -641,6 +680,12 @@ class SaleOrderLine(models.Model):
                 ):
                     has_different_discount = True
 
+            outside_qty, outside_amount_taxexc = invoiced_outside_moves.get(
+                line, (0.0, 0.0)
+            )
+            qty_invoiced += outside_qty
+            amount_taxexc_invoiced += outside_amount_taxexc
+
             line.qty_invoiced = qty_invoiced
             line.amount_taxexc_invoiced = amount_taxexc_invoiced
             line.amount_taxinc_invoiced = amount_taxinc_invoiced
@@ -686,7 +731,7 @@ class SaleOrderLine(models.Model):
                     else:
                         amount += converted_price * invoice_line.quantity
 
-                amount_to_invoice = price_subtotal - amount
+                amount_to_invoice = price_subtotal - amount - outside_amount_taxexc
             else:
                 amount_to_invoice = price_subtotal - amount_taxexc_invoiced
 
@@ -1261,6 +1306,9 @@ class SaleOrderLine(models.Model):
     def _prepare_procurement_vals(self):
         return {}
 
+    def _get_invoiced_outside_account_moves(self):
+        return {}
+
     def _prepare_qty_invoiced(self):
         invoiced_qties = defaultdict(float)
         for line in self:
@@ -1375,6 +1423,18 @@ class SaleOrderLine(models.Model):
             self.order_id._can_be_edited_on_portal()
             and not self.combo_item_id
             and self.product_id != self.company_id.sale_discount_product_id
+            and self._is_line_optional()
+        )
+
+    def _use_template_name(self):
+        self.check_singleton()
+        return True
+
+    def _is_line_optional(self):
+        self.check_singleton()
+        return self.parent_id.is_optional or (
+            self.parent_id.display_type == "line_subsection"
+            and self.parent_id.parent_id.is_optional
         )
 
     def _can_be_invoiced_alone(self):

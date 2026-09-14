@@ -27,7 +27,7 @@ class TestCrmLeadRainbowmanMessages(TestCrmCommon):
             cls.env,
             login="sales_manager_casey",
             name="sales_manager_casey",
-            groups="sales_team.group_sale_manager,base.group_partner_manager",
+            groups="sale.group_sale_manager,base.group_partner_manager",
             company_id=cls.company_casey.id,
             company_ids=[(4, cls.company_casey.id)],
         )
@@ -391,21 +391,21 @@ class TestCrmLeadRainbowmanMessages(TestCrmCommon):
             login="polynesia_-10",
             tz="Pacific/Honolulu",
             name="polynesia_-10",
-            groups="sales_team.group_sale_manager",
+            groups="sale.group_sale_manager",
         )
         sales_p530 = mail_new_test_user(
             self.env(su=True),
             login="india_+5:30",
             tz="Asia/Kolkata",
             name="india_+5:30",
-            groups="sales_team.group_sale_manager",
+            groups="sale.group_sale_manager",
         )
         sales_p13 = mail_new_test_user(
             self.env(su=True),
             login="samoa_+13",
             tz="Pacific/Apia",
             name="samoa_+13",
-            groups="sales_team.group_sale_manager",
+            groups="sale.group_sale_manager",
         )
         sales_users = [sales_m10, sales_p530, sales_p13]
 

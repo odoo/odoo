@@ -1,27 +1,50 @@
 {
     "name": "Sales",
-    "version": "1.7",
+    "version": "1.8",
     "category": "Sales/Sales",
-    "summary": "Sales internal machinery",
+    "sequence": 5,
+    "summary": "From quotations to invoices",
     "description": """
-This module contains all the common features of Sales Management and eCommerce.
+Manage sales quotations and orders
+==================================
+
+This application allows you to manage your sales goals in an effective and efficient manner by keeping track of all sales orders and history.
+
+It handles the full sales workflow:
+
+* **Quotation** -> **Sales order** -> **Invoice**
+
+Preferences (only with Warehouse Management installed)
+------------------------------------------------------
+
+If you also installed the Warehouse Management, you can deal with the following preferences:
+
+* Shipping: Choice of delivery at once or partial delivery
+* Invoicing: choose how invoices will be paid
+* Incoterms: International Commercial terms
+
+
+With this module you can personnalize the sales order and invoice report with
+categories, subtotals or page-breaks.
+
+The Sales app can be hidden from the app launcher in the settings, for databases
+that reach sales orders only through another application.
     """,
     "author": "Odoo S.A.",
+    "website": "https://www.odoo.com/app/sales",
     "license": "LGPL-3",
     "depends": [
         "base_order",
         "mixin_report_sql",
         "document",
         "document_product",
-        "sales_team",
         "account_payment_provider",
         "utm",
     ],
     "data": [
-        "security/ir.model.access.csv",
         "security/res_groups.xml",
+        "security/ir.model.access.csv",
         "security/ir_rules.xml",
-        "reports/account_invoice_report_views.xml",
         "reports/ir_actions_report_templates.xml",
         "reports/ir_actions_report.xml",
         "reports/sale_report_views.xml",
@@ -33,6 +56,8 @@ This module contains all the common features of Sales Management and eCommerce.
         "data/mail_template_data.xml",
         "data/sale_tour.xml",
         "data/ir_config_parameter.xml",
+        "data/digest_data.xml",
+        "views/sale_order_template_views.xml",
         "wizards/account_accrued_orders_wizard_views.xml",
         "wizards/invoice_to_so_wizard_views.xml",
         "wizards/mass_cancel_orders_views.xml",
@@ -43,7 +68,7 @@ This module contains all the common features of Sales Management and eCommerce.
         "wizards/sale_order_line_price_history_views.xml",
         "views/sale_order_views.xml",
         "views/account_move_views.xml",
-        "views/crm_team_views.xml",
+        "views/digest_digest_views.xml",
         "views/mail_activity_views.xml",
         "views/mail_activity_plan_views.xml",
         "views/payment_views.xml",
@@ -60,6 +85,7 @@ This module contains all the common features of Sales Management and eCommerce.
     "demo": [
         "demo/product_demo.xml",
         "demo/sale_demo.xml",
+        "demo/sale_order_template_demo.xml",
     ],
     "assets": {
         "web.assets_backend": [
@@ -75,7 +101,8 @@ This module contains all the common features of Sales Management and eCommerce.
             "sale/static/src/js/product_template_attribute_line/*",
             "sale/static/src/js/quantity_buttons/*",
             "sale/static/src/js/sale_order_line_field/*",
-            "sale/static/src/js/sale_progressbar_field.js",
+            "sale/static/src/js/sale_order_template_line_field/*",
+            "sale/static/src/js/section_optional_line_utils.js",
             "sale/static/src/js/tours/sale.js",
             "sale/static/src/js/upload_rfq_cog_menu/*",
             "sale/static/src/js/sale_product_field.js",
@@ -104,5 +131,6 @@ This module contains all the common features of Sales Management and eCommerce.
             "sale/static/src/scss/sale_report.scss",
         ],
     },
+    "application": True,
     "post_init_hook": "_post_init_hook",
 }

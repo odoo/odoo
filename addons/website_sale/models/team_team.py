@@ -12,12 +12,12 @@ class TeamTeam(models.Model):
     abandoned_carts_amount = fields.Integer(
         string="Amount of Abandoned Carts",
         compute="_compute_abandoned_carts",
-        groups="sales_team.group_sale_salesman,sales_team.group_sale_readonly",
+        groups="sale.group_sale_salesman,sale.group_sale_readonly",
     )
     abandoned_carts_count = fields.Integer(
         string="Number of Abandoned Carts",
         compute="_compute_abandoned_carts",
-        groups="sales_team.group_sale_salesman,sales_team.group_sale_readonly",
+        groups="sale.group_sale_salesman,sale.group_sale_readonly",
     )
 
     def _compute_abandoned_carts(self):

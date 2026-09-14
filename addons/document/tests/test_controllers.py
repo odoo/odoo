@@ -576,6 +576,9 @@ class TestDocumentsControllers(HttpCaseWithUserDemo, MockEmail):
 
     @mute_logger("odoo.http")
     def test_doc_redirection_partner(self):
+        self.patch(
+            type(self.env["res.users"]), "_get_signup_invitation_scope", lambda _: "b2c"
+        )
         self.public_file.access_via_link = "none"
         access = self.env["document.access"].create(
             {

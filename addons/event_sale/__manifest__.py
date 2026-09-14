@@ -20,7 +20,8 @@ this event.
     "license": "LGPL-3",
     "depends": [
         "event_product",
-        "sale_management",
+        "sale",
+        "sales_team",
     ],
     "data": [
         "views/event_registration_views.xml",

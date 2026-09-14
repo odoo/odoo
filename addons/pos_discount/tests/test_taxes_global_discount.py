@@ -179,7 +179,7 @@ class TestTaxesGlobalDiscountPOS(TestTaxCommonPOS, TestTaxesGlobalDiscount):
             refund_order.lines[1].product_id.id,
             self.main_pos_config.discount_product_id.id,
         )
-        self.assertAlmostEqual(refund_order.lines[1].price_subtotal_incl, -0.15)
+        self.assertAlmostEqual(refund_order.lines[1].price_subtotal_incl, 0.15)
         self.assertAlmostEqual(refund_order.lines[0].margin, -2.0)
         self.assertAlmostEqual(refund_order.lines[0].margin_percent, 0.6667)
         self.assertAlmostEqual(refund_order.margin, -1.85)

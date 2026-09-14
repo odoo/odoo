@@ -5,38 +5,32 @@
         id="sale_menu_root"
         name="Sales"
         sequence="30"
-        web_icon="sale_management,static/description/icon.png"
-        web_keywords="quotation, quote, sales order, customer order, pricelist, salesperson"
-        active="False">
+        groups="group_sale_app_menu"
+        web_icon="sale,static/description/icon.png"
+        web_keywords="quotation, quote, sales order, customer order, pricelist, salesperson">
         <menuitem id="sale_order_menu" name="Orders" sequence="10">
             <menuitem
                 id="menu_sale_quotations"
                 action="action_quotations_with_onboarding"
                 sequence="10"
-                groups="sales_team.group_sale_salesman,sales_team.group_sale_readonly" />
+                groups="sale.group_sale_salesman,sale.group_sale_readonly" />
             <menuitem
                 id="menu_sale_order"
                 name="Orders"
                 action="action_sale_order"
                 sequence="20"
-                groups="sales_team.group_sale_salesman,sales_team.group_sale_readonly" />
-            <menuitem
-                id="report_sales_team"
-                name="Sales Teams"
-                action="sales_team.team_action_sales"
-                sequence="30"
-                groups="sales_team.group_sale_manager" />
+                groups="sale.group_sale_salesman,sale.group_sale_readonly" />
             <menuitem
                 id="res_partner_menu"
                 action="account.res_partner_action_customer"
                 sequence="40"
-                groups="sales_team.group_sale_salesman,sales_team.group_sale_readonly" />
+                groups="sale.group_sale_salesman,sale.group_sale_readonly" />
         </menuitem>
         <menuitem
             id="menu_sale_invoicing"
             name="To Invoice"
             sequence="20"
-            groups="sales_team.group_sale_salesman">
+            groups="sale.group_sale_salesman">
             <menuitem
                 id="menu_sale_order_invoice"
                 action="action_orders_to_invoice"
@@ -50,7 +44,7 @@
             id="product_menu_catalog"
             name="Products"
             sequence="30"
-            groups="sales_team.group_sale_salesman,sales_team.group_sale_readonly">
+            groups="sale.group_sale_salesman,sale.group_sale_readonly">
             <menuitem
                 id="menu_product_template_action"
                 action="action_product_template"
@@ -71,7 +65,7 @@
             id="menu_sale_report"
             name="Reporting"
             sequence="40"
-            groups="sales_team.group_sale_manager,sales_team.group_sale_readonly">
+            groups="sale.group_sale_manager,sale.group_sale_readonly">
             <menuitem
                 id="menu_reporting_sales"
                 name="Sales"
@@ -97,24 +91,20 @@
             id="menu_sale_config"
             name="Configuration"
             sequence="50"
-            groups="sales_team.group_sale_manager">
+            groups="sale.group_sale_manager">
             <menuitem
                 id="menu_sale_general_settings"
                 name="Settings"
                 action="action_sale_config_settings"
                 sequence="10"
                 groups="base.group_system" />
-            <menuitem
-                id="sales_team_config"
-                name="Sales Teams"
-                action="sales_team.team_action_config"
-                sequence="20" />
             <menuitem id="menu_sales_config" name="Sales Orders" sequence="30">
                 <menuitem
-                    id="menu_tag_config"
-                    name="Tags"
-                    action="sales_team.sales_team_crm_tag_action"
-                    sequence="10" />
+                    id="sale_order_template_menu"
+                    name="Quotation Templates"
+                    action="sale_order_template_action"
+                    sequence="1"
+                    groups="group_sale_order_template" />
             </menuitem>
             <menuitem id="prod_config_main" name="Products" sequence="40">
                 <menuitem
@@ -177,7 +167,7 @@
                     name="Activity Plans"
                     action="mail_activity_plan_action_sale_order"
                     sequence="20"
-                    groups="sales_team.group_sale_manager" />
+                    groups="sale.group_sale_manager" />
             </menuitem>
         </menuitem>
     </menuitem>

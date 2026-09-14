@@ -107,7 +107,7 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_sale_order_list" />
         <field name="arch" type="xml">
-            <field name="tag_ids" position="after">
+            <field name="has_upsell_opportunity" position="after">
                 <field
                     name="warehouse_id"
                     optional="hide"

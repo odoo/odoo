@@ -8,7 +8,7 @@ class UtmCampaign(models.Model):
     crm_lead_count = fields.Integer(
         string="Leads/Opportunities count",
         compute="_compute_crm_lead_count",
-        groups="sales_team.group_sale_salesman",
+        groups="sale.group_sale_salesman",
     )
 
     def _compute_use_leads(self):

@@ -56,7 +56,7 @@ class TestMultiMembershipActivation(TestSalesCommon):
 
     def test_salesman_cannot_activate(self):
         salesman = self.user_sales_salesman
-        self.assertFalse(salesman.has_group("sales_team.group_sale_manager"))
+        self.assertFalse(salesman.has_group("sale.group_sale_manager"))
         with self.assertRaises(exceptions.AccessError):
             self.env["team.team"].with_user(salesman).action_activate_multi_membership()
         self.env.invalidate_all()

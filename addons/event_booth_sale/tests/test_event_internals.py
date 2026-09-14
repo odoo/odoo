@@ -101,7 +101,7 @@ class TestEventData(TestEventBoothSaleCommon):
         self.user_eventmanager.write(
             {
                 "group_ids": [
-                    (4, self.env.ref("sales_team.group_sale_salesman").id),
+                    (4, self.env.ref("sale.group_sale_salesman").id),
                 ]
             }
         )

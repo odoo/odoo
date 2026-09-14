@@ -12,8 +12,8 @@ class TestDiscussChannelAccess(HttpCase):
             ("base.group_portal", True, False),
             ("base.group_user", False, False),
             ("base.group_user", True, False),
-            ("sales_team.group_sale_salesman", False, False),
-            ("sales_team.group_sale_salesman", True, True),
+            ("sale.group_sale_salesman", False, False),
+            ("sale.group_sale_salesman", True, True),
         ]
         for idx, case in enumerate(test_cases):
             user_grp, has_lead, expected_result = case
@@ -39,7 +39,7 @@ class TestDiscussChannelAccess(HttpCase):
 
     def test_cannot_link_lead_to_restricted_channel(self):
         user = new_test_user(
-            self.env, login="bob_user", groups="sales_team.group_sale_salesman"
+            self.env, login="bob_user", groups="sale.group_sale_salesman"
         )
         channel = (
             self.env["discuss.channel"]

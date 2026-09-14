@@ -30,7 +30,6 @@
                     invisible="1" />
                 <separator />
                 <field name="user_id" />
-                <field name="team_id" />
                 <field name="product_id" />
                 <field name="product_tmpl_id" />
                 <field name="product_category_id" />
@@ -56,10 +55,6 @@
                         name="User"
                         string="Salesperson"
                         context="{'group_by':'user_id'}" />
-                    <filter
-                        name="sales_channel"
-                        string="Sales Team"
-                        context="{'group_by':'team_id'}" />
                     <filter
                         name="Customer"
                         string="Customer"
@@ -115,7 +110,6 @@
         <field name="model">sale.report</field>
         <field name="arch" type="xml">
             <pivot string="Sales Analysis" sample="1">
-                <field name="team_id" type="col" />
                 <field name="date_order" type="row" interval="month" />
                 <field name="product_uom_qty" type="measure" />
             </pivot>
@@ -168,7 +162,6 @@
                 <field name="product_id" string="Product" optional="show" />
                 <field name="partner_id" />
                 <field name="user_id" widget="many2one_avatar_user" optional="show" />
-                <field name="team_id" optional="hide" />
                 <field
                     name="company_id"
                     optional="show"
@@ -263,39 +256,6 @@
         <field name="name">Sales Analysis</field>
         <field name="res_model">sale.report</field>
         <field name="view_mode">list,pivot,graph,form</field>
-    </record>
-
-    <record id="action_sale_report_quotation_salesteam" model="ir.actions.act_window">
-        <field name="name">Quotations Analysis</field>
-        <field name="res_model">sale.report</field>
-        <field name="view_mode">graph,list</field>
-        <field
-            name="domain">[('state', '=', 'draft'), ('team_id', '=', active_id)]</field>
-        <field name="context">{'search_default_order_month':1}</field>
-        <field
-            name="help">This report performs analysis on your quotations. Analysis check your
-            sales revenues and sort it by different group criteria (salesman, partner, product,
-            etc.) Use this report to perform analysis on sales not having invoiced yet. If you want
-            to analyse your turnover, you should use the Invoice Analysis report in the Accounting
-            application.</field>
-    </record>
-
-    <record id="action_sale_report_so_salesteam" model="ir.actions.act_window">
-        <field name="name">Sales Analysis</field>
-        <field name="res_model">sale.report</field>
-        <field name="view_mode">graph,list</field>
-        <field name="domain">[('state', 'not in', ('draft', 'cancel'))]</field>
-        <field
-            name="context">{
-            'search_default_Sales': 1,
-            'search_default_filter_date': 1,
-            'search_default_team_id': [active_id]}</field>
-        <field
-            name="help">This report performs analysis on your sales orders. Analysis check your
-            sales revenues and sort it by different group criteria (salesman, partner, product,
-            etc.) Use this report to perform analysis on sales not having invoiced yet. If you want
-            to analyse your turnover, you should use the Invoice Analysis report in the Accounting
-            application.</field>
     </record>
 
 </odoo>

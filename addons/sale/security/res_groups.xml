@@ -2,6 +2,55 @@
 <odoo>
 
     <data>
+        <record id="res_groups_privilege_sales" model="res.groups.privilege">
+            <field name="name">Sales</field>
+            <field name="sequence">1</field>
+            <field name="category_id" ref="base.module_category_sales" />
+        </record>
+        <!--
+            Read-only is the lowest rung. The rung that implies it is the lowest
+            one that already sees every document, "All Documents": record rules
+            OR across a user's groups, so the tier's read rules would hand an
+            own-documents salesperson every order if their rung implied it.
+            A gate on a sales affordance therefore spells the pair
+            `group_sale_salesman,group_sale_readonly`, as account's do.
+        -->
+        <record id="group_sale_readonly" model="res.groups">
+            <field name="name">Read-only</field>
+            <field name="sequence">5</field>
+            <field name="privilege_id" ref="res_groups_privilege_sales" />
+            <field
+                name="comment">Access to all Sales data but in read-only mode, no actions allowed.</field>
+            <field name="implied_ids" eval="[Command.link(ref('base.group_user'))]" />
+        </record>
+        <record id="group_sale_salesman" model="res.groups">
+            <field name="name">User: Own Documents Only</field>
+            <field name="sequence">10</field>
+            <field name="privilege_id" ref="res_groups_privilege_sales" />
+            <field
+                name="comment">The user will have access to their own data in the sales application.</field>
+            <field name="implied_ids" eval="[Command.link(ref('base.group_user'))]" />
+        </record>
+        <record id="group_sale_salesman_team" model="res.groups">
+            <field name="name">User: Team Documents</field>
+            <field name="sequence">15</field>
+            <field name="privilege_id" ref="res_groups_privilege_sales" />
+            <field
+                name="comment">The user will have access to records of their team members in the sales application.</field>
+            <field
+                name="implied_ids"
+                eval="[Command.link(ref('group_sale_salesman'))]" />
+        </record>
+        <record id="group_sale_salesman_all_leads" model="res.groups">
+            <field name="name">User: All Documents</field>
+            <field name="sequence">20</field>
+            <field name="privilege_id" ref="res_groups_privilege_sales" />
+            <field
+                name="comment">The user will have access to all records of everyone in the sales application.</field>
+            <field
+                name="implied_ids"
+                eval="[Command.link(ref('group_sale_salesman_team')), Command.link(ref('group_sale_readonly'))]" />
+        </record>
         <record id="group_warning_sale" model="res.groups">
             <field
                 name="name">A warning can be set on a product or a customer (Sale)</field>
@@ -19,19 +68,39 @@
             <field
                 name="comment">Users in this group can unlock locked sale orders</field>
         </record>
+        <record id="group_sale_manager" model="res.groups">
+            <field name="name">Administrator</field>
+            <field name="sequence">30</field>
+            <field name="privilege_id" ref="res_groups_privilege_sales" />
+            <field
+                name="comment">the user will have an access to the sales configuration as well as statistic reports.</field>
+            <field
+                name="implied_ids"
+                eval="[Command.link(ref('group_sale_salesman_all_leads')), Command.link(ref('mail.group_mail_canned_response_admin')), Command.link(ref('group_order_lock')), Command.link(ref('group_order_unlock'))]" />
+            <field
+                name="user_ids"
+                eval="[Command.link(ref('base.user_root')), Command.link(ref('base.user_admin'))]" />
+        </record>
         <record id="group_discount_per_so_line" model="res.groups">
             <field name="name">Discount on lines</field>
         </record>
         <record id="group_proforma_sales" model="res.groups">
             <field name="name">Pro-forma Invoices</field>
         </record>
-        <record id="sales_team.group_sale_manager" model="res.groups">
-            <field
-                name="implied_ids"
-                eval="[Command.link(ref('group_order_lock')), Command.link(ref('group_order_unlock'))]" />
+        <record id="group_sale_order_template" model="res.groups">
+            <field name="name">Quotation Templates</field>
+        </record>
+        <record id="group_sale_app_menu" model="res.groups">
+            <field name="name">Sales App in the App Launcher</field>
         </record>
     </data>
 
-    <data noupdate="1" />
+    <data noupdate="1">
+        <record id="base.group_user" model="res.groups">
+            <field
+                name="implied_ids"
+                eval="[Command.link(ref('group_sale_app_menu'))]" />
+        </record>
+    </data>
 
 </odoo>

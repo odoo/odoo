@@ -122,7 +122,7 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
         bob_operator = mail_new_test_user(
             self.env,
             login="bob_user",
-            groups="im_livechat.im_livechat_group_user,sales_team.group_sale_salesman",
+            groups="im_livechat.im_livechat_group_user,sale.group_sale_salesman",
         )
         self.authenticate("bob_user", "bob_user")
         self.livechat_channel.user_ids = bob_operator

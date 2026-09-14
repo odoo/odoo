@@ -1,39 +1,14 @@
 from odoo.tests import TransactionCase
 
-from odoo.addons.base.tests.common import BaseCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.addons.sale.tests.common import SaleCommon, SaleUsersCommon
 
 
-class SalesTeamCommon(BaseCommon):
+class SalesTeamCommon(SaleUsersCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.group_sale_salesman = cls.env.ref("sales_team.group_sale_salesman")
-        cls.group_sale_manager = cls.env.ref("sales_team.group_sale_manager")
-
-        cls.sale_user = cls.env["res.users"].create(
-            {
-                "name": "Test Salesman",
-                "login": "salesman",
-                "password": "salesman",
-                "email": "default_user_salesman@example.com",
-                "signature": "--\nMark",
-                "notification_type": "email",
-                "group_ids": [(6, 0, cls.group_sale_salesman.ids)],
-            }
-        )
-        cls.sale_manager = cls.env["res.users"].create(
-            {
-                "name": "Test Sales Manager",
-                "login": "salesmanager",
-                "password": "salesmanager",
-                "email": "default_user_salesmanager@example.com",
-                "signature": "--\nDamien",
-                "notification_type": "email",
-                "group_ids": [(6, 0, cls.group_sale_manager.ids)],
-            }
-        )
         cls.sale_team = cls.env["team.team"].create(
             {
                 "use_sale": True,
@@ -44,10 +19,9 @@ class SalesTeamCommon(BaseCommon):
             [("id", "!=", cls.sale_team.id), ("use_sale", "=", True)]
         ).action_archive()
 
-    @classmethod
-    def get_default_groups(cls):
-        groups = super().get_default_groups()
-        return groups | cls.quick_ref("sales_team.group_sale_manager")
+
+class SalesTeamSaleCommon(SaleCommon, SalesTeamCommon):
+    pass
 
 
 class TestSalesCommon(TransactionCase):
@@ -65,7 +39,7 @@ class TestSalesCommon(TransactionCase):
             email="crm_manager@test.example.com",
             company_id=cls.company_main.id,
             notification_type="inbox",
-            groups="sales_team.group_sale_manager,base.group_partner_manager",
+            groups="sale.group_sale_manager,base.group_partner_manager",
         )
         cls.user_sales_leads = mail_new_test_user(
             cls.env,
@@ -74,7 +48,7 @@ class TestSalesCommon(TransactionCase):
             email="crm_leads@test.example.com",
             company_id=cls.company_main.id,
             notification_type="inbox",
-            groups="sales_team.group_sale_salesman_all_leads,base.group_partner_manager",
+            groups="sale.group_sale_salesman_all_leads,base.group_partner_manager",
         )
         cls.user_sales_salesman = mail_new_test_user(
             cls.env,
@@ -83,7 +57,7 @@ class TestSalesCommon(TransactionCase):
             email="crm_salesman@test.example.com",
             company_id=cls.company_main.id,
             notification_type="inbox",
-            groups="sales_team.group_sale_salesman",
+            groups="sale.group_sale_salesman",
         )
 
         cls.env["team.team"].search([]).write({"sequence": 9999})

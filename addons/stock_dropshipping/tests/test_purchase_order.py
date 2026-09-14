@@ -99,7 +99,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         )
         self.env.user.group_ids |= self.quick_ref(
             "project.group_project_manager"
-        ) | self.quick_ref("sales_team.group_sale_salesman")
+        ) | self.quick_ref("sale.group_sale_salesman")
         project = self.env["project.project"].create(
             {
                 "name": "Test Project",
@@ -143,7 +143,7 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
             {
                 "group_ids": [
                     Command.link(self.env.ref("stock_account.group_lot_on_invoice").id),
-                    Command.link(self.env.ref("sales_team.group_sale_salesman").id),
+                    Command.link(self.env.ref("sale.group_sale_salesman").id),
                 ],
             }
         )

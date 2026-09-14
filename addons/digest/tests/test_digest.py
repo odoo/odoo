@@ -861,7 +861,7 @@ class TestDigestDefects(TestDigestCommon):
         `kpi_mail_message_total` never calls the helper, and
         `res.users.login_date` is not stored. The eight KPIs that do take it all
         come from other addons (crm x2, hr_recruitment, point_of_sale, project,
-        sale_management, website_sale, helpdesk)."""
+        sale, website_sale, helpdesk)."""
         digest = self.env["digest.digest"].browse(self.digest_1.ids)
         windows = tuple(
             (fields.Datetime.to_string(s), fields.Datetime.to_string(e))

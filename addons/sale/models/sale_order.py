@@ -1,5 +1,5 @@
 import json
-from itertools import groupby
+from itertools import groupby, starmap, zip_longest
 
 from odoo import api, fields, models
 from odoo.api import SUPERUSER_ID
@@ -110,27 +110,23 @@ class SaleOrder(models.Model):
                 ('company_ids', '=', company_id)
             ]
         """.format(
-            self.env.ref("sales_team.group_sale_salesman").ids,
+            self.env.ref("sale.group_sale_salesman").ids,
         ),
-    )
-    team_id = fields.Many2one(
-        comodel_name="team.team",
-        string="Sales Team",
-        compute="_compute_team_id",
-        precompute=True,
-        change_default=True,
-        store=True,
-        index=True,
-        readonly=False,
-        domain="[('use_sale', '=', True), ('company_id', 'in', [False, company_id])]",
-        ondelete="set null",
-        check_company=True,
-        tracking=True,
     )
     journal_id = fields.Many2one(
         domain=[("type", "=", "sale")],
         help="If set, the SO will invoice in this journal; "
         "otherwise the sales journal with the lowest sequence is used.",
+    )
+    sale_order_template_id = fields.Many2one(
+        comodel_name="sale.order.template",
+        string="Quotation Template",
+        compute="_compute_sale_order_template_id",
+        precompute=True,
+        store=True,
+        readonly=False,
+        domain="[('company_id', 'in', [False, company_id])]",
+        check_company=True,
     )
     state = fields.Selection(
         selection=const.ORDER_STATE,
@@ -278,13 +274,6 @@ class SaleOrder(models.Model):
         readonly=True,
         ondelete="set null",
     )
-    tag_ids = fields.Many2many(
-        comodel_name="crm.tag",
-        relation="sale_order_tag_rel",
-        column1="order_id",
-        column2="tag_id",
-        string="Tags",
-    )
     duplicated_order_ids = fields.Many2many(comodel_name="sale.order")
     sale_warning_text = fields.Text(
         string="Sale Warning",
@@ -375,36 +364,70 @@ class SaleOrder(models.Model):
                 has_global_pricelist or order.company_id.id in companies_with_pricelist
             )
 
-    @api.depends("company_id")
+    def _compute_sale_order_template_id(self):
+        for order in self:
+            company_template = order.company_id.sale_order_template_id
+            if company_template and order.sale_order_template_id != company_template:
+                if "website_id" in self._fields and order.website_id:
+                    continue
+                order.sale_order_template_id = company_template.id
+
+    @api.depends("company_id", "sale_order_template_id")
     def _compute_require_payment(self):
         for order in self:
-            order.require_payment = order.company_id.portal_confirmation_pay
+            if order.sale_order_template_id:
+                order.require_payment = order.sale_order_template_id.require_payment
+            else:
+                order.require_payment = order.company_id.portal_confirmation_pay
 
-    @api.depends("company_id", "require_payment")
+    @api.depends("company_id", "require_payment", "sale_order_template_id")
     def _compute_prepayment_percent(self):
         for order in self:
-            order.prepayment_percent = order.company_id.prepayment_percent
+            if order.sale_order_template_id and order.require_payment:
+                order.prepayment_percent = (
+                    order.sale_order_template_id.prepayment_percent
+                )
+            else:
+                order.prepayment_percent = order.company_id.prepayment_percent
+
+    @api.depends("company_id", "sale_order_template_id")
+    def _compute_date_validity(self):
+        return super()._compute_date_validity()
+
+    @api.depends("sale_order_template_id")
+    def _compute_journal_id(self):
+        for order in self:
+            order.journal_id = order.sale_order_template_id.journal_id
 
     @api.depends_context("sale_show_partner_name")
     @api.depends("partner_id")
     def _compute_display_name(self):
         return super()._compute_display_name()
 
-    @api.depends("company_id")
+    @api.depends("company_id", "sale_order_template_id")
     def _compute_require_signature(self):
         for order in self:
-            order.require_signature = order.company_id.portal_confirmation_sign
+            if order.sale_order_template_id:
+                order.require_signature = order.sale_order_template_id.require_signature
+            else:
+                order.require_signature = order.company_id.portal_confirmation_sign
 
-    @api.depends("partner_id")
+    @api.depends("partner_id", "sale_order_template_id")
     def _compute_notes(self):
         use_invoice_terms = (
             self.env["ir.config_parameter"]
             .sudo()
             .get_param("account.use_invoice_terms")
         )
-        if not use_invoice_terms:
-            return
         for order in self:
+            template = order.sale_order_template_id.with_context(
+                lang=order.partner_id.lang
+            )
+            if template and not is_html_empty(template.note):
+                order.notes = template.note
+                continue
+            if not use_invoice_terms:
+                continue
             company = order.company_id
             order_company = order.with_company(company)
             if order_company.terms_type == "html" and company.invoice_terms_html:
@@ -458,29 +481,6 @@ class SaleOrder(models.Model):
         for order in self:
             order = order.with_company(order.company_id)
             order.payment_term_id = order.partner_id.property_payment_term_id
-
-    @api.depends("user_id", "company_id")
-    def _compute_team_id(self):
-        cached_teams = {}
-        for order in self:
-            default_team_id = order._default_team_id()
-            user_id = order.user_id.id
-            company_id = order.company_id.id
-            key = (default_team_id, user_id, company_id)
-            if key not in cached_teams:
-                cached_teams[key] = (
-                    self.env["team.team"]
-                    .with_context(
-                        default_team_id=default_team_id,
-                        allowed_company_ids=[company_id],
-                    )
-                    ._get_default_team(
-                        "sale",
-                        user_id=user_id,
-                        domain=self.env["team.team"]._check_company_domain(company_id),
-                    )
-                )
-            order.team_id = cached_teams[key]
 
     @api.depends("partner_id", "company_id")
     def _compute_preferred_payment_channel_id(self):
@@ -615,6 +615,53 @@ class SaleOrder(models.Model):
                         "The company is required, please select one before making any other changes to the sale order.",
                     ),
                 )
+        if self._origin.id:
+            return
+        self._compute_sale_order_template_id()
+
+    @api.onchange("sale_order_template_id")
+    def _onchange_sale_order_template_id(self):
+        if not self.sale_order_template_id:
+            return
+
+        sale_order_template = self.sale_order_template_id.with_context(
+            lang=self.partner_id.lang
+        )
+
+        order_lines_data = [fields.Command.clear()]
+        order_lines_data += [
+            fields.Command.create(line._prepare_order_line_values())
+            for line in sale_order_template.sale_order_template_line_ids
+        ]
+
+        if len(order_lines_data) >= 2:
+            order_lines_data[1][2]["sequence"] = -99
+
+        self.line_ids = order_lines_data
+
+    @api.onchange("partner_id")
+    def _onchange_partner_id(self):
+        if self._origin or not self.sale_order_template_id:
+            return
+
+        def line_eqv(line, t_line):
+            return (
+                line
+                and t_line
+                and (
+                    line.product_qty == t_line.product_uom_qty
+                    and all(
+                        line[fname] == t_line[fname]
+                        for fname in ["product_id", "product_uom_id", "display_type"]
+                    )
+                )
+            )
+
+        lines = self.line_ids
+        t_lines = self.sale_order_template_id.sale_order_template_line_ids
+
+        if all(starmap(line_eqv, zip_longest(lines, t_lines))):
+            self._onchange_sale_order_template_id()
 
     @api.onchange("company_id")
     def _onchange_company_id_warning(self):
@@ -752,9 +799,6 @@ class SaleOrder(models.Model):
             self.line_ids and self._origin.pricelist_id != self.pricelist_id
         )
 
-    def _default_team_id(self):
-        return self.env.context.get("default_team_id", False) or self.team_id.id
-
     def action_invoice_matching(self):
         self.check_singleton()
         product_ids = self.line_ids.product_id.ids
@@ -785,7 +829,13 @@ class SaleOrder(models.Model):
 
         if self.env.context.get("send_email"):
             self._send_mail_order_confirmation()
+            return res
 
+        for order in self:
+            if order.sale_order_template_id.mail_template_id:
+                order._send_mail_order_notification(
+                    order.sale_order_template_id.mail_template_id
+                )
         return res
 
     def action_draft(self):
@@ -953,6 +1003,8 @@ class SaleOrder(models.Model):
 
     def _get_validity_days(self):
         self.check_singleton()
+        if self.sale_order_template_id.number_of_days > 0:
+            return self.sale_order_template_id.number_of_days
         return self.company_id.quotation_validity_days
 
     def _get_confirmed_type_name(self):
@@ -968,15 +1020,12 @@ class SaleOrder(models.Model):
         return (
             self.partner_id.user_id
             or self.partner_id.commercial_partner_id.user_id
-            or (
-                self.env.user.has_group("sales_team.group_sale_salesman")
-                and self.env.user
-            )
+            or (self.env.user.has_group("sale.group_sale_salesman") and self.env.user)
             or self.env["res.users"]
         )
 
     def _get_all_documents_group(self):
-        return "sales_team.group_sale_salesman_all_leads"
+        return "sale.group_sale_salesman_all_leads"
 
     def _get_warning_group(self):
         return "sale.group_warning_sale"
@@ -1179,9 +1228,8 @@ class SaleOrder(models.Model):
         if final and (
             moves_to_switch := moves.sudo().filtered(lambda m: m.amount_total < 0)
         ):
-            with self.env.protecting([moves._fields["team_id"]], moves_to_switch):
-                moves_to_switch.action_switch_move_type()
-                self.invoice_ids._set_reversed_entry(moves_to_switch)
+            moves_to_switch.action_switch_move_type()
+            self.invoice_ids._set_reversed_entry(moves_to_switch)
 
     def _post_create_invoices(self, moves):
         moves._message_post_origin_links(
@@ -1274,7 +1322,6 @@ class SaleOrder(models.Model):
         )
         values.update(
             {
-                "team_id": self.team_id.id,
                 "partner_shipping_id": self.partner_shipping_id.id,
                 "allow_external_delivery_address": self.allow_external_delivery_address,
                 "campaign_id": self.campaign_id.id,
@@ -1530,6 +1577,8 @@ class SaleOrder(models.Model):
 
     def _get_confirmation_template(self):
         self.check_singleton()
+        if self.sale_order_template_id.mail_template_id:
+            return self.sale_order_template_id.mail_template_id
         default_confirmation_template_id = (
             self.env["ir.config_parameter"]
             .sudo()

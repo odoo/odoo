@@ -645,7 +645,7 @@ class TestEvalContext(TransactionCase):
 class TestIrModelFieldsTranslation(HttpCase):
     def test_ir_model_fields_translation(self):
         group_order_template = self.env.ref(
-            "sale_management.group_sale_order_template",
+            "sale.group_sale_order_template",
             raise_if_not_found=False,
         )
         if group_order_template:

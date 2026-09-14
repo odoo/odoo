@@ -27,7 +27,7 @@ class TestSaleStockMultiCompany(TestSaleCommon, ValuationReconciliationTestCommo
 
         cls.env.user.group_ids |= cls.env.ref("stock.group_stock_user")
         cls.env.user.group_ids |= cls.env.ref("stock.group_stock_multi_locations")
-        cls.env.user.group_ids |= cls.env.ref("sales_team.group_sale_salesman")
+        cls.env.user.group_ids |= cls.env.ref("sale.group_sale_salesman")
 
         cls.env.user.with_company(
             cls.company_data["company"]

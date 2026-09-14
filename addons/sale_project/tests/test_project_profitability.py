@@ -14,7 +14,7 @@ class TestProjectProfitabilityCommon(Common):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env.user.group_ids += cls.env.ref("sales_team.group_sale_manager")
+        cls.env.user.group_ids += cls.env.ref("sale.group_sale_manager")
         uom_unit_id = cls.env.ref("uom.product_uom_unit").id
 
         cls.material_product = cls.env["product.product"].create(

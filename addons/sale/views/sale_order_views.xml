@@ -13,9 +13,7 @@
                     filter_domain="['|', '|', ('name', 'ilike', self), ('client_order_ref', 'ilike', self), ('partner_id', 'child_of', self)]" />
                 <field name="partner_id" operator="child_of" />
                 <field name="user_id" />
-                <field name="team_id" string="Sales Team" />
                 <field name="product_id" />
-                <field name="tag_ids" />
                 <field name="activity_user_id" string="Activities of" />
                 <field name="activity_type_id" string="Activity type" />
                 <filter
@@ -53,10 +51,6 @@
                         name="salesperson"
                         string="Salesperson"
                         context="{'group_by': 'user_id'}" />
-                    <filter
-                        name="tags"
-                        string="Tags"
-                        context="{'group_by': 'tag_ids'}" />
                     <filter
                         name="order_month"
                         string="Order Date"
@@ -284,7 +278,6 @@
                     name="activity_exception_decoration"
                     widget="activity_exception" />
                 <field name="user_id" widget="many2one_avatar_user" optional="show" />
-                <field name="team_id" optional="hide" />
                 <field
                     name="amount_untaxed"
                     widget="monetary"
@@ -321,11 +314,6 @@
                     widget="boolean"
                     optional="hide"
                     decoration-warning="has_upsell_opportunity == True" />
-                <field
-                    name="tag_ids"
-                    widget="many2many_tags"
-                    optional="hide"
-                    options="{'color_field': 'color'}" />
                 <field
                     name="company_id"
                     groups="!base.group_multi_company"
@@ -417,7 +405,7 @@
                         type="object"
                         string="Confirm"
                         context="{'validate_analytic': True}"
-                        groups="sales_team.group_sale_salesman"
+                        groups="sale.group_sale_salesman"
                         invisible="state != 'draft' or not sent"
                         class="btn-primary"
                         data-hotkey="q" />
@@ -426,7 +414,7 @@
                         type="object"
                         string="Confirm"
                         context="{'validate_analytic': True}"
-                        groups="sales_team.group_sale_salesman"
+                        groups="sale.group_sale_salesman"
                         invisible="state != 'draft' or sent"
                         data-hotkey="q" />
                     <button
@@ -435,7 +423,7 @@
                         type="object"
                         string="Send"
                         context="{'validate_analytic': True, 'check_document_layout': True}"
-                        groups="sales_team.group_sale_salesman"
+                        groups="sale.group_sale_salesman"
                         invisible="state != 'draft' or sent"
                         class="btn-primary"
                         data-hotkey="g" />
@@ -444,7 +432,7 @@
                         id="create_invoice"
                         type="action"
                         string="Create Invoice"
-                        groups="sales_team.group_sale_salesman"
+                        groups="sale.group_sale_salesman"
                         invisible="invoice_state not in ('to do', 'partial')"
                         class="btn-primary"
                         data-hotkey="q" />
@@ -454,7 +442,7 @@
                         type="action"
                         string="Create Invoice"
                         context="{'default_advance_payment_method': 'percentage'}"
-                        groups="sales_team.group_sale_salesman"
+                        groups="sale.group_sale_salesman"
                         invisible="invoice_state != 'no' or state != 'done'"
                         data-hotkey="q" />
                     <separator name="workflow" />
@@ -464,7 +452,7 @@
                         type="object"
                         string="Send"
                         context="{'validate_analytic': True, 'check_document_layout': True}"
-                        groups="sales_team.group_sale_salesman"
+                        groups="sale.group_sale_salesman"
                         invisible="state == 'cancel' or (state == 'draft' and not sent)"
                         data-hotkey="g" />
                     <button
@@ -485,7 +473,7 @@
                         name="payment_action_capture"
                         type="object"
                         string="Capture Transaction"
-                        groups="sales_team.group_sale_salesman"
+                        groups="sale.group_sale_salesman"
                         invisible="not has_authorized_transaction_ids"
                         class="oe_highlight"
                         data-hotkey="shift+g" />
@@ -494,7 +482,7 @@
                         type="object"
                         string="Void Transaction"
                         confirm="Are you sure you want to void the authorized transaction? This action can't be undone."
-                        groups="sales_team.group_sale_salesman"
+                        groups="sale.group_sale_salesman"
                         invisible="not has_authorized_transaction_ids"
                         data-hotkey="shift+v" />
                     <separator name="payment" />
@@ -519,14 +507,14 @@
                         type="object"
                         string="Cancel"
                         confirm="Are you sure you want to cancel this order?"
-                        groups="sales_team.group_sale_salesman"
+                        groups="sale.group_sale_salesman"
                         invisible="state not in ['draft', 'done'] or not id or locked"
                         data-hotkey="x" />
                     <button
                         name="action_draft"
                         type="object"
                         string="Set to Quotation"
-                        groups="sales_team.group_sale_salesman"
+                        groups="sale.group_sale_salesman"
                         invisible="state != 'cancel'"
                         data-hotkey="w" />
                     <field
@@ -650,6 +638,11 @@
                                     for="allow_external_delivery_address"
                                     string="External" />
                             </div>
+                            <field
+                                name="sale_order_template_id"
+                                options="{'no_create': True}"
+                                groups="sale.group_sale_order_template"
+                                readonly="state in ['cancel', 'done']" />
                         </group>
                         <group name="order_details">
                             <div class="o_td_label" invisible="state == 'done'">
@@ -686,7 +679,7 @@
                                     help="Recompute all prices based on this pricelist"
                                     confirm="This will update the unit price of all products based on the new pricelist."
                                     icon="fa-refresh"
-                                    groups="sales_team.group_sale_salesman"
+                                    groups="sale.group_sale_salesman"
                                     invisible="not show_update_pricelist or state in ['done', 'cancel']"
                                     class="btn-link mb-1 px-0" />
                             </div>
@@ -734,7 +727,7 @@
                                             type="object"
                                             string="Catalog"
                                             context="{'order_id': parent.id}"
-                                            groups="sales_team.group_sale_salesman"
+                                            groups="sale.group_sale_salesman"
                                             class="px-4 btn-link" />
                                     </control>
 
@@ -767,6 +760,7 @@
                                     <field
                                         name="linked_virtual_id"
                                         column_invisible="True" />
+                                    <field name="is_optional" column_invisible="True" />
                                     <field
                                         name="price_unit_auto"
                                         column_invisible="True" />
@@ -997,6 +991,12 @@
                                             invisible="display_type not in ['line_section', 'line_subsection']"
                                             readonly="1" />
                                     </group>
+                                    <group>
+                                        <field
+                                            name="is_optional"
+                                            invisible="display_type not in ['line_section', 'line_subsection']"
+                                            readonly="1" />
+                                    </group>
                                     <div
                                         name="invoice_lines"
                                         groups="base.group_no_one"
@@ -1025,7 +1025,7 @@
                                             type="object"
                                             string="Catalog"
                                             context="{'order_id': parent.id}"
-                                            groups="sales_team.group_sale_salesman"
+                                            groups="sale.group_sale_salesman"
                                             class="btn-secondary" />
                                     </control>
                                     <templates>
@@ -1125,10 +1125,6 @@
                                         name="user_id"
                                         widget="many2one_avatar_user" />
                                     <field
-                                        name="team_id"
-                                        context="{'kanban_view_ref': 'team.team_view_kanban'}"
-                                        options="{'no_create': True}" />
-                                    <field
                                         name="company_id"
                                         options="{'no_create': True}"
                                         groups="base.group_multi_company" />
@@ -1152,10 +1148,6 @@
                                         name="reference"
                                         invisible="not reference"
                                         readonly="1" />
-                                    <field
-                                        name="tag_ids"
-                                        widget="many2many_tags"
-                                        options="{'color_field': 'color', 'no_create_edit': True}" />
                                 </group>
                                 <group name="invoice_info" string="Invoicing">
                                     <field name="show_update_fpos" invisible="1" />
@@ -1171,7 +1163,7 @@
                                             help="Recompute all taxes based on this fiscal position"
                                             confirm="This will update all taxes based on the currently selected fiscal position."
                                             icon="fa-refresh"
-                                            groups="sales_team.group_sale_salesman"
+                                            groups="sale.group_sale_salesman"
                                             invisible="not show_update_fpos or state in ['done', 'cancel']"
                                             class="btn-link mb-1 px-0" />
                                     </div>

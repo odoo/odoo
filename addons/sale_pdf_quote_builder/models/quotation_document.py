@@ -35,7 +35,7 @@ class QuotationDocument(models.Model):
         relation="header_footer_quotation_template_rel",
         string="Quotation Templates",
         check_company=True,
-        groups="sales_team.group_sale_salesman",
+        groups="sale.group_sale_salesman",
     )
     form_field_ids = fields.Many2many(
         comodel_name="sale.pdf.form.field",

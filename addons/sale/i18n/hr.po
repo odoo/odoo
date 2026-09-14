@@ -866,11 +866,6 @@ msgstr ""
 "ovdje specifične su za tvrtku.\" groups=\"base.group_multi_company\"/>"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
-msgid "<span class=\"flex-grow-1\">/ Month</span>"
-msgstr "<span class=\"flex-grow-1\">/ Mjes</span>"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<span class=\"mx-3\" invisible=\"not require_payment\">of</span>"
 msgstr "<span class=\"mx-3\" invisible=\"not require_payment\">od</span>"
@@ -1181,16 +1176,19 @@ msgstr "Dodaj"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
 msgid "Add a note"
 msgstr "Dodaj bilješku"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
 msgid "Add a product"
 msgstr "Dodaj proizvod"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
 msgid "Add a section"
 msgstr "Dodaj odlomak"
 
@@ -1202,6 +1200,7 @@ msgstr "Dodaj bilješku"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_buttons/quantity_buttons.xml:0
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_optional_product_quantity
 msgid "Add one"
 msgstr "Dodaj jedan"
 
@@ -1239,6 +1238,7 @@ msgstr "Dodaj/Ukloni Pratitelje"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__allowed_uom_ids
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__allowed_uom_ids
 msgid "Allowed Uom"
 msgstr "Dodaj JM"
 
@@ -1646,12 +1646,6 @@ msgid "Click to configure"
 msgstr "Kliknite za konfiguraciju"
 
 #. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
-msgid "Click to define an invoicing target"
-msgstr "Kliknite da biste definirali ciljni za obračun"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_sign_modal
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1712,6 +1706,9 @@ msgstr "Tvrtke"
 #: model:ir.model.fields,field_description:sale.field_sale_report__company_id
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__company_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__company_id
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__company_id
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_search
 msgid "Company"
 msgstr "Tvrtka"
 
@@ -1900,11 +1897,6 @@ msgid "Create a Sale Order Activity Plan"
 msgstr "Izradite plan aktivnosti prodajnog naloga"
 
 #. module: sale
-#: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
-msgid "Create a customer invoice"
-msgstr "Kreiranje izlaznog računa"
-
-#. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
 msgid "Create a new product"
 msgstr "Kreiraj novi proizvod"
@@ -1912,8 +1904,6 @@ msgstr "Kreiraj novi proizvod"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
 #: model_terms:ir.actions.act_window,help:sale.action_orders
-#: model_terms:ir.actions.act_window,help:sale.action_orders_salesteams
-#: model_terms:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid "Create a new quotation, the first step of a new sale!"
 msgstr "Stvori novu ponudu, prvi korak nove prodaje!"
 
@@ -1921,14 +1911,6 @@ msgstr "Stvori novu ponudu, prvi korak nove prodaje!"
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
 msgid "Create Invoice(s)…"
 msgstr "Izradi fakturu(e)…"
-
-#. module: sale
-#: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
-msgid ""
-"Create invoices, register payments and keep track of the discussions with "
-"your customers."
-msgstr ""
-"Kreirajte račune, registirajte plaćanja i pratite rasprave sa svjim kupcima."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__service_tracking
@@ -1950,6 +1932,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order__create_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__create_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__create_uid
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__create_uid
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__create_uid
 msgid "Created by"
 msgstr "Kreirao"
 
@@ -1958,6 +1942,8 @@ msgstr "Kreirao"
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__create_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__create_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__create_date
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__create_date
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__create_date
 msgid "Created on"
 msgstr "Kreirano"
 
@@ -2200,6 +2186,8 @@ msgstr "Depozit"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__name
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__name
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
 msgid "Description"
 msgstr "Opis"
 
@@ -2321,11 +2309,15 @@ msgstr "Prikaži upozoronje o skici računa"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:sale.field_sale_report__display_name
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__display_name
+#: model:ir.model.fields,field_description:sale.field_digest_digest__display_name
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__display_name
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__display_name
 msgid "Display Name"
 msgstr "Naziv"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_type
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__display_type
 msgid "Display Type"
 msgstr "Vrsta prikaza"
 
@@ -2593,17 +2585,6 @@ msgid "Forbidden values on non-accountable sale order line"
 msgstr "Zabranjene vrijednosti na stavkama bez prodajnog naloga"
 
 #. module: sale
-#: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
-msgid ""
-"From this report, you can have an overview of the amount invoiced to your "
-"customer. The search tool can also be used to personalise your Invoices "
-"reports and so, match this analysis to your needs."
-msgstr ""
-"Iz ovog izvještaja imate pregled iznosa izdanih računa vašem kupcu. Alat "
-"pretrage može se također koristiti za personalizaciju vaših ispisa računa i "
-"priagođavanje analize vašim potrebama."
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal_amount_selector
 msgid "Full amount <br/>"
 msgstr "Puni iznos <br/>"
@@ -2757,6 +2738,9 @@ msgstr "Skriveno"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__id
 #: model:ir.model.fields,field_description:sale.field_sale_report__id
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__id
+#: model:ir.model.fields,field_description:sale.field_digest_digest__id
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__id
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__id
 msgid "ID"
 msgstr "ID"
 
@@ -2912,16 +2896,6 @@ msgid "Invoice Lines"
 msgstr "Stavke računa"
 
 #. module: sale
-#: model:mail.message.subtype,name:sale.mt_salesteam_invoice_paid
-msgid "Invoice Paid"
-msgstr "Plaćena faktura"
-
-#. module: sale
-#: model:mail.message.subtype,name:sale.mt_salesteam_invoice_posted
-msgid "Invoice Posted"
-msgstr "Faktura knjižena"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Invoice Sales Order"
 msgstr "Izradi račun za prodajni nalog"
@@ -2999,17 +2973,10 @@ msgid "Invoiced This Month"
 msgstr "Izdani računi u ovom mjesecu"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_invoice_salesteams
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_ids
-#: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoices"
 msgstr "Računi"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_account_invoice_report_salesteam
-msgid "Invoices Analysis"
-msgstr "Analiza računa"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice_report
@@ -3030,6 +2997,7 @@ msgstr "Adresa za fakturiranje"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__journal_id
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__journal_id
 msgid "Invoicing Journal"
 msgstr "Dnevnik fakturiranja"
 
@@ -3128,6 +3096,8 @@ msgstr "Posljednji računi"
 #: model:ir.model.fields,field_description:sale.field_sale_order__write_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__write_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__write_uid
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__write_uid
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__write_uid
 msgid "Last Updated by"
 msgstr "Promijenio"
 
@@ -3137,6 +3107,8 @@ msgstr "Promijenio"
 #: model:ir.model.fields,field_description:sale.field_sale_order__write_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__write_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__write_date
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__write_date
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__write_date
 msgid "Last Updated on"
 msgstr "Vrijeme promjene"
 
@@ -3354,11 +3326,6 @@ msgid "New"
 msgstr "Novi"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_quotation_form
-msgid "New Quotation"
-msgstr "Nova ponuda"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
 msgstr "Događaj sljedećeg kalendara aktivnosti"
@@ -3417,6 +3384,8 @@ msgstr "Ne koriste Odoo?"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_note
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model:ir.model.fields.selection,name:sale.selection__sale_order_template_line__display_type__line_note
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
 msgid "Note"
 msgstr "Bilješka"
 
@@ -3500,8 +3469,6 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
-#: model_terms:ir.actions.act_window,help:sale.action_orders_salesteams
-#: model_terms:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales order."
 "<br> You will be able to create an invoice and collect the payment."
@@ -3521,6 +3488,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_pay
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_pay
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__require_payment
 msgid "Online Payment"
 msgstr "Online plaćanje"
 
@@ -3532,6 +3500,7 @@ msgstr "Online plaćanja"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_sign
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_sign
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__require_signature
 msgid "Online Signature"
 msgstr "Mrežni potpis"
 
@@ -3731,6 +3700,7 @@ msgstr "Pakiranje"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__parent_id
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__parent_id
 msgid "Parent Section Line"
 msgstr "Nadređena linija presjeka"
 
@@ -3849,6 +3819,7 @@ msgstr "Iznos predujma"
 #: model:ir.model.fields,field_description:sale.field_res_company__prepayment_percent
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__prepayment_percent
 #: model:ir.model.fields,field_description:sale.field_sale_order__prepayment_percent
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__prepayment_percent
 msgid "Prepayment percentage"
 msgstr "Postotak plaćanja unaprijed"
 
@@ -3856,6 +3827,7 @@ msgstr "Postotak plaćanja unaprijed"
 #. odoo-python
 #: code:addons/sale/models/res_company.py:0
 #: code:addons/sale/models/sale_order.py:0
+#: code:addons/sale/models/sale_order_template.py:0
 msgid "Prepayment percentage must be a valid percentage."
 msgstr "Postotak plaćanja unaprijed mora biti valjan."
 
@@ -3932,6 +3904,7 @@ msgstr "Pro-forma računi"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__product_id
 msgid "Product"
 msgstr "Proizvod"
 
@@ -4076,6 +4049,7 @@ msgstr "Količine za u račun iz prodajnih naloga"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__product_uom_qty
 msgid "Quantity"
 msgstr "Količina"
 
@@ -4130,7 +4104,6 @@ msgstr "Valjanost ponude je obavezna i mora biti veća ili jednaka 0."
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_viewed
-#: model:mail.message.subtype,name:sale.mt_salesteam_order_viewed
 msgid "Quotation Viewed"
 msgstr "Ponuda pregledana"
 
@@ -4142,7 +4115,6 @@ msgstr "Ponuda potvrđena"
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
-#: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
 msgid "Quotation sent"
 msgstr "Ponuda poslana"
 
@@ -4154,7 +4126,6 @@ msgstr "Ponuda je pregledao kupac %s"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotations
-#: model:ir.actions.act_window,name:sale.action_quotations_salesteams
 #: model:ir.actions.act_window,name:sale.action_quotations_with_onboarding
 #: model:ir.ui.menu,name:sale.menu_sale_quotations
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
@@ -4249,6 +4220,7 @@ msgstr "Ukloniti"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_buttons/quantity_buttons.xml:0
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_optional_product_quantity
 msgid "Remove one"
 msgstr "Ukloni jedan"
 
@@ -4412,11 +4384,12 @@ msgstr "Nalozi za prodaju za otkazivanje"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_reporting_sales
 #: model:ir.ui.menu,name:sale.sale_menu_root
-#: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.product_document_form
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.digest_digest_view_form
+#: model:res.groups.privilege,name:sale.res_groups_privilege_sales
 msgid "Sales"
 msgstr "Prodaja"
 
@@ -4480,7 +4453,6 @@ msgstr "Prodajni nalog"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
-#: model:mail.message.subtype,name:sale.mt_salesteam_order_confirmed
 msgid "Sales Order Confirmed"
 msgstr "Prodajni nalog potvrđen"
 
@@ -4528,11 +4500,8 @@ msgstr "Prodajni nalozi"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders
-#: model:ir.actions.act_window,name:sale.action_orders_salesteams
-#: model:ir.actions.act_window,name:sale.action_orders_to_invoice_salesteams
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids
 #: model:ir.ui.menu,name:sale.menu_sales_config
-#: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
@@ -4548,22 +4517,10 @@ msgstr "Prodajni nalozi"
 #. module: sale
 #: model:ir.model,name:sale.model_crm_team
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__team_id
-#: model:ir.model.fields,field_description:sale.field_account_invoice_report__team_id
-#: model:ir.model.fields,field_description:sale.field_account_move__team_id
-#: model:ir.model.fields,field_description:sale.field_sale_order__team_id
-#: model:ir.model.fields,field_description:sale.field_sale_report__team_id
-#: model_terms:ir.ui.view,arch_db:sale.account_invoice_groupby_inherit
-#: model_terms:ir.ui.view,arch_db:sale.view_account_invoice_report_search_inherit
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Sales Team"
 msgstr "Prodajni tim"
-
-#. module: sale
-#: model:ir.ui.menu,name:sale.report_sales_team
-#: model:ir.ui.menu,name:sale.sales_team_config
-msgid "Sales Teams"
-msgstr "Prodajni timovi"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_analytic_line__so_line
@@ -4635,6 +4592,8 @@ msgstr "Pretražite ime kupca ili ga kreirajte u hodu."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_section
+#: model:ir.model.fields.selection,name:sale.selection__sale_order_template_line__display_type__line_section
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
 msgid "Section"
 msgstr "Odlomak"
 
@@ -4731,6 +4690,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sequence
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__sequence
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__sequence
 msgid "Sequence"
 msgstr "Sekvenca"
 
@@ -4930,6 +4891,7 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_subsection
+#: model:ir.model.fields.selection,name:sale.selection__sale_order_template_line__display_type__line_subsection
 msgid "Subsection"
 msgstr "Pododjeljak"
 
@@ -4971,12 +4933,6 @@ msgstr ""
 #: model:ir.model,name:sale.model_ir_config_parameter
 msgid "System Parameter"
 msgstr "Parametar sustava"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
-#: model:ir.ui.menu,name:sale.menu_tag_config
-msgid "Tags"
-msgstr "Oznake"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -5073,6 +5029,7 @@ msgstr "Odredbe i uvjeti"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__note
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__note
 msgid "Terms and conditions"
 msgstr "Uvijeti o korištenju"
 
@@ -5264,6 +5221,7 @@ msgstr "Postotak potrebnog iznosa koji kupac mora platiti za potvrdu narudžbe."
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__prepayment_percent
 #: model:ir.model.fields,help:sale.field_res_config_settings__prepayment_percent
+#: model:ir.model.fields,help:sale.field_sale_order_template__prepayment_percent
 msgid "The percentage of the amount needed to be paid to confirm quotations."
 msgstr "Postotak iznosa koji je potrebno platiti za potvrdu ponuda."
 
@@ -5575,6 +5533,7 @@ msgstr "Nefakturirani saldo"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_uom_id
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__product_uom_id
 msgid "Unit"
 msgstr "Jedinica"
 
@@ -5964,6 +5923,7 @@ msgstr "zatvori"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
 msgid "days"
 msgstr "dana"
 
@@ -7271,3 +7231,360 @@ msgstr ""
 #~ "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 #~ "(ctx.get('proforma') and 'Proforma' or 'Ponuda') or 'ProdajniNal' }} (Ref "
 #~ "{{ object.name or 'n/a' }})"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+msgid "<span invisible=\"not require_payment\">of</span>"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__active
+msgid "Active"
+msgstr "Aktivan"
+
+#. module: sale
+#: model:res.groups,name:sale.group_sale_manager
+msgid "Administrator"
+msgstr "Administrator"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_digest_digest__kpi_all_sale_total
+msgid "All Sales"
+msgstr "Sva prodaja"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_search
+msgid "Archived"
+msgstr "Arhivirano"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__mail_template_id
+msgid "Confirmation Mail"
+msgstr "Potvrdna mail poruka"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Create standardized offers with default products"
+msgstr "Kreiraj standardizirane ponude sa zadanim proizvodima"
+
+#. module: sale
+#: model_terms:ir.actions.act_window,help:sale.sale_order_template_action
+msgid "Create your quotation template"
+msgstr "Kreiraj predložak ponude"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_company__sale_order_template_id
+msgid "Default Sale Template"
+msgstr "Zadani prodajni predložak"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__company_so_template_id
+msgid "Default Template"
+msgstr "Zadani predložak"
+
+#. module: sale
+#: model:ir.model,name:sale.model_digest_digest
+msgid "Digest"
+msgstr "Sažetak"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/digest_digest.py:0
+msgid "Do not have access, skip this data for user's digest email"
+msgstr "Nemate pristup, preskočite ove podatke za sažetak e-pošte korisnika"
+
+#. module: sale
+#: model:ir.model.constraint,message:sale.constraint_sale_order_template_line_non_accountable_fields_null
+msgid "Forbidden product, quantity and UoM on non-accountable sale quote line"
+msgstr ""
+"Zabranjen proizvod, količina i jedinica mjere na ne računovodstvenoj stavci "
+"ponude."
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_template_line__sequence
+msgid "Gives the sequence order when displaying a list of sale quote lines."
+msgstr "Daje redoslijed kada se prikazuje popis stavaka ponude."
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_template__journal_id
+msgid ""
+"If set, SO with this template will invoice in this journal; otherwise the "
+"sales journal with the lowest sequence is used."
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_template__active
+msgid ""
+"If unchecked, it will allow you to hide the quotation template without "
+"removing it."
+msgstr ""
+"Ako nije označeno, omogućit će vam da sakrijete predložak ponude bez "
+"uklanjanja."
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_digest_digest__kpi_all_sale_total_value
+msgid "Kpi All Sale Total Value"
+msgstr "KPI Ukupna vrijednost sve prodaje"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__sale_order_template_line_ids
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+msgid "Lines"
+msgstr "Stavke"
+
+#. module: sale
+#: model:ir.model.constraint,message:sale.constraint_sale_order_template_line_accountable_product_id_required
+msgid "Missing required product and UoM on accountable sale quote line."
+msgstr ""
+"Nedostaju obavezna polja na stavkama narudžbe za koje je moguć izračun."
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_template__number_of_days
+msgid "Number of days for the validity date computation of the quotation"
+msgstr "Broj dana za izračun datuma valjanosti ponude"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__is_optional
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__is_optional
+msgid "Optional Line"
+msgstr ""
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_template.py:0
+msgid "Optional Products Section"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__number_of_days
+msgid "Quotation Duration"
+msgstr "Trajanje ponude"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_order_template
+#: model:ir.model.fields,field_description:sale.field_sale_order__sale_order_template_id
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__name
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_tree
+msgid "Quotation Template"
+msgstr "Predložak ponude"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_order_template_line
+msgid "Quotation Template Line"
+msgstr "Stavke predloška ponude"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+msgid "Quotation Template Lines"
+msgstr "Reci predloška ponude"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__sale_order_template_id
+msgid "Quotation Template Reference"
+msgstr "Referenca predloška ponude"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.sale_order_template_action
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__group_sale_order_template
+#: model:ir.ui.menu,name:sale.sale_order_template_menu
+#: model:res.groups,name:sale.group_sale_order_template
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Quotation Templates"
+msgstr "Predlošci ponude"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+msgid "Quotation Validity"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_template__require_signature
+msgid ""
+"Request a online signature to the customer in order to confirm orders "
+"automatically."
+msgstr ""
+"Zatražite online potpis od kupca kako bi se narudžbe automatski potvrdile."
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_template__require_payment
+msgid ""
+"Request an online payment to the customer in order to confirm orders "
+"automatically."
+msgstr ""
+"Zatražite online plaćanje kupca kako bi se narudžbe automatski potvrdile."
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_search
+msgid "Search Quotation Template"
+msgstr "Pretraži predložak ponude"
+
+#. module: sale
+#: model_terms:digest.tip,tip_description:sale.digest_tip_sale_product_grid
+msgid ""
+"Selling the same product in different sizes or colors? Try the product grid "
+"and populate your orders with multiple quantities of each variant. This "
+"feature also exists in the Purchase application."
+msgstr ""
+"Prodajete isti proizvod u različitim veličinama ili bojama? Isprobajte mrežu "
+"proizvoda i popunite svoje narudžbe s više količina svake varijante. Ova "
+"značajka postoji i u aplikaciji Nabava"
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/sale_order_line_field/sale_order_line_field.xml:0
+#: code:addons/sale/static/src/js/sale_order_template_line_field/sale_order_template_line_field.xml:0
+msgid "Set Optional"
+msgstr ""
+
+#. module: sale
+#: model_terms:digest.tip,tip_description:sale.digest_tip_sale_configurable_products
+msgid ""
+"Struggling with a complex product catalog? Try out the Product Configurator "
+"to help sales configure a product with different options: colors, size, "
+"capacity, etc. Make sale orders encoding easier and error-proof."
+msgstr ""
+"Mučite se sa složenim katalogom proizvoda? Isprobajte Konfigurator proizvoda "
+"kako biste pomogli prodaji da konfigurira proizvod s različitim opcijama: "
+"bojama, veličinom, kapacitetom itd. Učinite kreiranje prodajnih naloga "
+"lakšima i sigurnima od pogreške."
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+msgid "Terms & Conditions"
+msgstr "Uvijeti isporuke"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+msgid ""
+"The Administrator can set default Terms & Conditions in Sales Settings. "
+"Terms set here will show up instead if you select this quotation template."
+msgstr ""
+"Administrator može postaviti zadane Uvjete i odredbe u postavkama prodaje. "
+"Umjesto toga, pojavit će se ovdje postavljeni uvjeti ako odaberete ovaj "
+"predložak ponude."
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_template__mail_template_id
+msgid ""
+"This e-mail template will be sent on confirmation. Leave empty to send "
+"nothing."
+msgstr ""
+"Ovaj predložak e-pošte bit će poslan nakon potvrde. Ostavite prazno da ništa "
+"ne šaljete."
+
+#. module: sale
+#: model:digest.tip,name:sale.digest_tip_sale_configurable_products
+#: model_terms:digest.tip,tip_description:sale.digest_tip_sale_configurable_products
+msgid "Tip: Odoo supports configurable products"
+msgstr "Savjet: Odoo podržava proizvode koji se mogu konfigurirati"
+
+#. module: sale
+#: model:digest.tip,name:sale.digest_tip_sale_product_grid
+#: model_terms:digest.tip,tip_description:sale.digest_tip_sale_product_grid
+msgid "Tip: Sell or buy products in bulk with matrixes"
+msgstr "Savjet: prodajte ili kupujte proizvode na veliko s matricama"
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/sale_order_line_field/sale_order_line_field.xml:0
+#: code:addons/sale/static/src/js/sale_order_template_line_field/sale_order_template_line_field.xml:0
+msgid "Unset Optional"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.actions.act_window,help:sale.sale_order_template_action
+msgid ""
+"Use templates to create polished, professional quotes in minutes.\n"
+"                Send these quotes by email and let your customers sign "
+"online.\n"
+"                Use cross-selling and discounts to push and boost your sales."
+msgstr ""
+"Koristite predloške za stvaranje uglađenih, profesionalnih ponuda u nekoliko "
+"minuta.\n"
+"Pošaljite ove ponude e-poštom i dopustite svojim klijentima da se potpišu na "
+"mreži.\n"
+"Upotrijebite unakrsnu prodaju i popuste kako biste potaknuli i povećali "
+"svoju prodaju."
+
+#. module: sale
+#: model:res.groups,name:sale.group_sale_salesman_all_leads
+msgid "User: All Documents"
+msgstr "Korisnik: Svi dokumenti"
+
+#. module: sale
+#: model:res.groups,name:sale.group_sale_salesman
+msgid "User: Own Documents Only"
+msgstr "Korisnik: samo vlastiti dokumenti"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+msgid "Visible to all"
+msgstr ""
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_template_line.py:0
+msgid ""
+"You cannot change the type of a sale quote line. Instead you should delete "
+"the current line and create a new line of the proper type."
+msgstr ""
+"Ne možete promijeniti vrstu retka ponude za prodaju. Umjesto toga trebali "
+"biste izbrisati trenutnu stavku i stvoriti novu odgovarajuće vrste."
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_template.py:0
+msgid ""
+"Your template belongs to company %(template_company)s but contains products "
+"from company (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
+msgstr ""
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_template.py:0
+msgid ""
+"Your template belongs to company %(template_company)s but contains products "
+"from other companies (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
+msgstr ""
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_template.py:0
+msgid ""
+"Your template cannot contain products from specific companies if it's shared "
+"between companies. Please restrict the template access, or remove those "
+"products."
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+msgid "e.g. Standard Consultancy Package"
+msgstr "npr. Standardni savjetodavni paket"
+
+#. module: sale
+#: model:res.groups,comment:sale.group_sale_salesman_all_leads
+msgid ""
+"the user will have access to all records of everyone in the sales "
+"application."
+msgstr "korisnik će imati pristup svim zapisima u prodaji."
+
+#. module: sale
+#: model:res.groups,comment:sale.group_sale_salesman
+msgid "the user will have access to his own data in the sales application."
+msgstr "korisnik će imati pristup samo do svojih podataka u prodaji."
+
+#. module: sale
+#: model:res.groups,comment:sale.group_sale_manager
+msgid ""
+"the user will have an access to the sales configuration as well as statistic "
+"reports."
+msgstr ""
+"korisnik će imati pristup postavkama prodaje kao i statističkim izvještajima."

@@ -14,7 +14,7 @@
                         name="action_survey_see_leads"
                         type="object"
                         icon="fa-star"
-                        groups="sales_team.group_sale_salesman"
+                        groups="sale.group_sale_salesman"
                         invisible="not (survey_type in ['survey', 'live_session', 'custom'] and lead_count != 0)"
                         class="oe_stat_button">
                         <field name="lead_count" string="Leads" widget="statinfo" />

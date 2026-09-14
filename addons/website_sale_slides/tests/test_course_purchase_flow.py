@@ -12,9 +12,7 @@ class TestCoursePurchaseFlow(common.SlidesCase):
                 "name": "salesman",
                 "login": "salesman",
                 "email": "salesman007@example.com",
-                "group_ids": [
-                    (6, 0, cls.env.ref("sales_team.group_sale_salesman").ids)
-                ],
+                "group_ids": [(6, 0, cls.env.ref("sale.group_sale_salesman").ids)],
             }
         )
 

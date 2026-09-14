@@ -59,7 +59,7 @@ class TestMemberWarningVisibility(TestSalesCommon):
             name="Warn Mgr",
             company_id=cls.company_main.id,
             company_ids=[(6, 0, [cls.company_main.id])],
-            groups="sales_team.group_sale_manager",
+            groups="sale.group_sale_manager",
         )
         cls.shared_user = mail_new_test_user(
             cls.env,

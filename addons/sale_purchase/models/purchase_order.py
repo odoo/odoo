@@ -9,12 +9,12 @@ class PurchaseOrder(models.Model):
     sale_order_count = fields.Integer(
         string="Number of Source Sale",
         compute="_compute_sale_orders",
-        groups="sales_team.group_sale_salesman",
+        groups="sale.group_sale_salesman",
     )
     has_sale_order = fields.Boolean(
         string="Has Source Sale",
         compute="_compute_sale_orders",
-        groups="sales_team.group_sale_salesman",
+        groups="sale.group_sale_salesman",
         help="Technical field: whether the purchase order has associated sale orders.",
     )
 

@@ -5,11 +5,11 @@ from odoo.fields import Command
 from odoo.tests.common import TransactionCase, tagged
 
 CORE_GROUP_PER_GRANTED_MENU = {
-    "sale.menu_sale_quotations": "sales_team.group_sale_salesman",
-    "sale.menu_sale_order": "sales_team.group_sale_salesman",
-    "sale.res_partner_menu": "sales_team.group_sale_salesman",
-    "sale.product_menu_catalog": "sales_team.group_sale_salesman",
-    "sale.menu_sale_report": "sales_team.group_sale_manager",
+    "sale.menu_sale_quotations": "sale.group_sale_salesman",
+    "sale.menu_sale_order": "sale.group_sale_salesman",
+    "sale.res_partner_menu": "sale.group_sale_salesman",
+    "sale.product_menu_catalog": "sale.group_sale_salesman",
+    "sale.menu_sale_report": "sale.group_sale_manager",
 }
 
 FEATURE_FLAG_MENUS = {
@@ -30,7 +30,7 @@ class TestSaleGroupReadonly(TransactionCase):
     def setUpClass(cls) -> None:
         super().setUpClass()
 
-        cls.group_readonly = cls.env.ref("sales_team.group_sale_readonly")
+        cls.group_readonly = cls.env.ref("sale.group_sale_readonly")
 
         cls.user_readonly = cls.env["res.users"].create(
             {
@@ -50,7 +50,7 @@ class TestSaleGroupReadonly(TransactionCase):
                     Command.set(
                         [
                             cls.env.ref("base.group_user").id,
-                            cls.env.ref("sales_team.group_sale_salesman").id,
+                            cls.env.ref("sale.group_sale_salesman").id,
                         ]
                     )
                 ],
@@ -89,13 +89,13 @@ class TestSaleGroupReadonly(TransactionCase):
     def test_group_is_a_role_under_the_sales_privilege(self) -> None:
         self.assertEqual(
             self.group_readonly.privilege_id,
-            self.env.ref("sales_team.res_groups_privilege_sales"),
+            self.env.ref("sale.res_groups_privilege_sales"),
             "the role must sit under the Sales privilege",
         )
         self.assertIn(
             self.env.ref("base.group_user"),
             self.group_readonly.all_implied_ids,
-            "the group must imply base.group_user (sales_team/security/sales_team_security.xml)",
+            "the group must imply base.group_user (sale/security/res_groups.xml)",
         )
 
     def test_readonly_user_is_an_internal_user(self) -> None:
@@ -133,9 +133,9 @@ class TestSaleGroupReadonly(TransactionCase):
         lines.read(["product_id", "product_uom_qty", "price_unit"])
 
     def test_the_all_documents_rung_implies_readonly(self) -> None:
-        all_documents = self.env.ref("sales_team.group_sale_salesman_all_leads")
-        salesman = self.env.ref("sales_team.group_sale_salesman")
-        manager = self.env.ref("sales_team.group_sale_manager")
+        all_documents = self.env.ref("sale.group_sale_salesman_all_leads")
+        salesman = self.env.ref("sale.group_sale_salesman")
+        manager = self.env.ref("sale.group_sale_manager")
         self.assertIn(self.group_readonly, all_documents.implied_ids)
         self.assertIn(self.group_readonly, manager.all_implied_ids)
         self.assertNotIn(self.group_readonly, salesman.all_implied_ids)
@@ -313,7 +313,7 @@ class TestSaleGroupReadonly(TransactionCase):
         self._assert_write_buttons_gated(
             "sale.view_sale_order_form",
             "sale.order",
-            "sales_team.group_sale_salesman",
+            "sale.group_sale_salesman",
             (
                 "action_send_quotation",
                 "action_confirm",

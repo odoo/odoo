@@ -1156,11 +1156,6 @@ msgstr ""
 "company-specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
-msgid "<span class=\"flex-grow-1\">/ Month</span>"
-msgstr "<span class=\"flex-grow-1\">/月</span>"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<span class=\"mx-3\" invisible=\"not require_payment\">of</span>"
 msgstr "<span class=\"mx-3\" invisible=\"not require_payment\">之</span>"
@@ -1459,16 +1454,19 @@ msgstr "添加"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
 msgid "Add a note"
 msgstr "添加备注"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
 msgid "Add a product"
 msgstr "添加产品"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
 msgid "Add a section"
 msgstr "添加小节"
 
@@ -1480,6 +1478,7 @@ msgstr "添加备注"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_buttons/quantity_buttons.xml:0
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_optional_product_quantity
 msgid "Add one"
 msgstr "添加一行"
 
@@ -1517,6 +1516,7 @@ msgstr "添加/删除关注者"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__allowed_uom_ids
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__allowed_uom_ids
 msgid "Allowed Uom"
 msgstr "允许的单位"
 
@@ -1905,12 +1905,6 @@ msgid "Click to configure"
 msgstr ""
 
 #. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
-msgid "Click to define an invoicing target"
-msgstr "点击此处，定义开票目标"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_sign_modal
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1971,6 +1965,9 @@ msgstr "公司"
 #: model:ir.model.fields,field_description:sale.field_sale_report__company_id
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__company_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__company_id
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__company_id
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_search
 msgid "Company"
 msgstr "公司"
 
@@ -2151,11 +2148,6 @@ msgid "Create a Sale Order Activity Plan"
 msgstr "创建销售订单活动计划"
 
 #. module: sale
-#: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
-msgid "Create a customer invoice"
-msgstr "创建客户发票"
-
-#. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
 msgid "Create a new product"
 msgstr "创建新产品"
@@ -2163,8 +2155,6 @@ msgstr "创建新产品"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
 #: model_terms:ir.actions.act_window,help:sale.action_orders
-#: model_terms:ir.actions.act_window,help:sale.action_orders_salesteams
-#: model_terms:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid "Create a new quotation, the first step of a new sale!"
 msgstr "创建新报价是新销售的第一步！"
 
@@ -2172,13 +2162,6 @@ msgstr "创建新报价是新销售的第一步！"
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
 msgid "Create Invoice(s)…"
 msgstr "创建发票…"
-
-#. module: sale
-#: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
-msgid ""
-"Create invoices, register payments and keep track of the discussions with "
-"your customers."
-msgstr "创建发票，登记付款，追踪与客户的沟通。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__service_tracking
@@ -2198,6 +2181,8 @@ msgstr "为同一客户、同一开票地址和同一送货地址的所有订单
 #: model:ir.model.fields,field_description:sale.field_sale_order__create_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__create_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__create_uid
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__create_uid
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__create_uid
 msgid "Created by"
 msgstr "创建人"
 
@@ -2206,6 +2191,8 @@ msgstr "创建人"
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__create_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__create_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__create_date
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__create_date
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__create_date
 msgid "Created on"
 msgstr "创建日期"
 
@@ -2441,6 +2428,8 @@ msgstr "存款"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__name
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__name
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
 msgid "Description"
 msgstr "描述"
 
@@ -2562,11 +2551,15 @@ msgstr "显示发票草稿警告消息"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:sale.field_sale_report__display_name
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__display_name
+#: model:ir.model.fields,field_description:sale.field_digest_digest__display_name
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__display_name
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__display_name
 msgid "Display Name"
 msgstr "显示名称"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_type
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__display_type
 msgid "Display Type"
 msgstr "显示类型"
 
@@ -2826,16 +2819,6 @@ msgid "Forbidden values on non-accountable sale order line"
 msgstr "不可扣减的销售订单明细的禁止值"
 
 #. module: sale
-#: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
-msgid ""
-"From this report, you can have an overview of the amount invoiced to your "
-"customer. The search tool can also be used to personalise your Invoices "
-"reports and so, match this analysis to your needs."
-msgstr ""
-"可以通过该报告查看为客户开具发票的金额。搜索工具也可用于个性化发票报告，以使"
-"该分析匹配需求。"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal_amount_selector
 msgid "Full amount <br/>"
 msgstr "全额<br/>"
@@ -2989,6 +2972,9 @@ msgstr "隐藏"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__id
 #: model:ir.model.fields,field_description:sale.field_sale_report__id
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__id
+#: model:ir.model.fields,field_description:sale.field_digest_digest__id
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__id
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__id
 msgid "ID"
 msgstr "ID"
 
@@ -3138,16 +3124,6 @@ msgid "Invoice Lines"
 msgstr "发票行"
 
 #. module: sale
-#: model:mail.message.subtype,name:sale.mt_salesteam_invoice_paid
-msgid "Invoice Paid"
-msgstr ""
-
-#. module: sale
-#: model:mail.message.subtype,name:sale.mt_salesteam_invoice_posted
-msgid "Invoice Posted"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Invoice Sales Order"
 msgstr "销售订单开票"
@@ -3224,17 +3200,10 @@ msgid "Invoiced This Month"
 msgstr "本月已开具发票"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_invoice_salesteams
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_ids
-#: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoices"
 msgstr "发票"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_account_invoice_report_salesteam
-msgid "Invoices Analysis"
-msgstr "发票分析"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice_report
@@ -3255,6 +3224,7 @@ msgstr "开票地址"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__journal_id
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__journal_id
 msgid "Invoicing Journal"
 msgstr "发票日记账"
 
@@ -3352,6 +3322,8 @@ msgstr "最新发票"
 #: model:ir.model.fields,field_description:sale.field_sale_order__write_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__write_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__write_uid
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__write_uid
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__write_uid
 msgid "Last Updated by"
 msgstr "上一更新人"
 
@@ -3361,6 +3333,8 @@ msgstr "上一更新人"
 #: model:ir.model.fields,field_description:sale.field_sale_order__write_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__write_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__write_date
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__write_date
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__write_date
 msgid "Last Updated on"
 msgstr "上次更新日期"
 
@@ -3571,11 +3545,6 @@ msgid "New"
 msgstr "新建"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_quotation_form
-msgid "New Quotation"
-msgstr "新报价"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
 msgstr "下一活动日历事件"
@@ -3634,6 +3603,8 @@ msgstr "没有使用 Odoo？"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_note
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model:ir.model.fields.selection,name:sale.selection__sale_order_template_line__display_type__line_note
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
 msgid "Note"
 msgstr "备注"
 
@@ -3715,8 +3686,6 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
-#: model_terms:ir.actions.act_window,help:sale.action_orders_salesteams
-#: model_terms:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales order."
 "<br> You will be able to create an invoice and collect the payment."
@@ -3732,6 +3701,7 @@ msgstr "报价确认后，即成为销售订单。<br>可以创建发票并收�
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_pay
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_pay
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__require_payment
 msgid "Online Payment"
 msgstr "线上付款"
 
@@ -3743,6 +3713,7 @@ msgstr "网上支付"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_sign
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_sign
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__require_signature
 msgid "Online Signature"
 msgstr "网上签名"
 
@@ -3940,6 +3911,7 @@ msgstr "包装"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__parent_id
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__parent_id
 msgid "Parent Section Line"
 msgstr "父级章节行"
 
@@ -4058,6 +4030,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_res_company__prepayment_percent
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__prepayment_percent
 #: model:ir.model.fields,field_description:sale.field_sale_order__prepayment_percent
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__prepayment_percent
 msgid "Prepayment percentage"
 msgstr "预付百分比"
 
@@ -4065,6 +4038,7 @@ msgstr "预付百分比"
 #. odoo-python
 #: code:addons/sale/models/res_company.py:0
 #: code:addons/sale/models/sale_order.py:0
+#: code:addons/sale/models/sale_order_template.py:0
 msgid "Prepayment percentage must be a valid percentage."
 msgstr "预付百分比必须为有效百分比。"
 
@@ -4141,6 +4115,7 @@ msgstr "形式发票"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__product_id
 msgid "Product"
 msgstr "产品"
 
@@ -4285,6 +4260,7 @@ msgstr "销售订单中的待开票数量"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__product_uom_qty
 msgid "Quantity"
 msgstr "数量"
 
@@ -4339,7 +4315,6 @@ msgstr "需设定报价单有效期，且须大于或等于0。"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_viewed
-#: model:mail.message.subtype,name:sale.mt_salesteam_order_viewed
 msgid "Quotation Viewed"
 msgstr "已查看报价"
 
@@ -4351,7 +4326,6 @@ msgstr "已确认报价单"
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
-#: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
 msgid "Quotation sent"
 msgstr "已发送报价单"
 
@@ -4363,7 +4337,6 @@ msgstr "客户%s查看的报价单"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotations
-#: model:ir.actions.act_window,name:sale.action_quotations_salesteams
 #: model:ir.actions.act_window,name:sale.action_quotations_with_onboarding
 #: model:ir.ui.menu,name:sale.menu_sale_quotations
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
@@ -4457,6 +4430,7 @@ msgstr "移除"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_buttons/quantity_buttons.xml:0
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_optional_product_quantity
 msgid "Remove one"
 msgstr "移除一行"
 
@@ -4615,11 +4589,12 @@ msgstr "待取消销售订单"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_reporting_sales
 #: model:ir.ui.menu,name:sale.sale_menu_root
-#: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.product_document_form
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.digest_digest_view_form
+#: model:res.groups.privilege,name:sale.res_groups_privilege_sales
 msgid "Sales"
 msgstr "销售"
 
@@ -4683,7 +4658,6 @@ msgstr "销售订单"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
-#: model:mail.message.subtype,name:sale.mt_salesteam_order_confirmed
 msgid "Sales Order Confirmed"
 msgstr "已确认销售订单"
 
@@ -4731,11 +4705,8 @@ msgstr "销售订单"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders
-#: model:ir.actions.act_window,name:sale.action_orders_salesteams
-#: model:ir.actions.act_window,name:sale.action_orders_to_invoice_salesteams
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids
 #: model:ir.ui.menu,name:sale.menu_sales_config
-#: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
@@ -4751,21 +4722,9 @@ msgstr "销售订单"
 #. module: sale
 #: model:ir.model,name:sale.model_crm_team
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__team_id
-#: model:ir.model.fields,field_description:sale.field_account_invoice_report__team_id
-#: model:ir.model.fields,field_description:sale.field_account_move__team_id
-#: model:ir.model.fields,field_description:sale.field_sale_order__team_id
-#: model:ir.model.fields,field_description:sale.field_sale_report__team_id
-#: model_terms:ir.ui.view,arch_db:sale.account_invoice_groupby_inherit
-#: model_terms:ir.ui.view,arch_db:sale.view_account_invoice_report_search_inherit
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Sales Team"
-msgstr "销售团队"
-
-#. module: sale
-#: model:ir.ui.menu,name:sale.report_sales_team
-#: model:ir.ui.menu,name:sale.sales_team_config
-msgid "Sales Teams"
 msgstr "销售团队"
 
 #. module: sale
@@ -4837,6 +4796,8 @@ msgstr "搜寻客户名称，或即时创建一个。"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_section
+#: model:ir.model.fields.selection,name:sale.selection__sale_order_template_line__display_type__line_section
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
 msgid "Section"
 msgstr "小节"
 
@@ -4928,6 +4889,8 @@ msgstr "在收到付款但未立即确认订单时发送给客户"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sequence
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__sequence
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__sequence
 msgid "Sequence"
 msgstr "序列"
 
@@ -5123,6 +5086,7 @@ msgstr "Stripe支付的连接器在您的国家/地区不可用，请使用其�
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_subsection
+#: model:ir.model.fields.selection,name:sale.selection__sale_order_template_line__display_type__line_subsection
 msgid "Subsection"
 msgstr "小节"
 
@@ -5164,12 +5128,6 @@ msgstr ""
 #: model:ir.model,name:sale.model_ir_config_parameter
 msgid "System Parameter"
 msgstr "系统参数"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
-#: model:ir.ui.menu,name:sale.menu_tag_config
-msgid "Tags"
-msgstr "标签"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -5264,6 +5222,7 @@ msgstr "条款和条件"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__note
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__note
 msgid "Terms and conditions"
 msgstr "条款和条件"
 
@@ -5439,6 +5398,7 @@ msgstr "为确认订单，客户必须支付的金额百分比。"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__prepayment_percent
 #: model:ir.model.fields,help:sale.field_res_config_settings__prepayment_percent
+#: model:ir.model.fields,help:sale.field_sale_order_template__prepayment_percent
 msgid "The percentage of the amount needed to be paid to confirm quotations."
 msgstr "确认报价所需支付金额的百分比。"
 
@@ -5729,6 +5689,7 @@ msgstr "未开票余额"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_uom_id
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__product_uom_id
 msgid "Unit"
 msgstr "单元"
 
@@ -6104,6 +6065,7 @@ msgstr "关闭"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
 msgid "days"
 msgstr "天"
 
@@ -7571,3 +7533,351 @@ msgstr ""
 #~ msgstr ""
 #~ "{{ object.company_id.name }} {{ object.type_name }} 已取消(Ref "
 #~ "{{ object.name or 'n/a' }})"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+msgid "<span invisible=\"not require_payment\">of</span>"
+msgstr "<span invisible=\"not require_payment\">之</span>"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__active
+msgid "Active"
+msgstr "有效"
+
+#. module: sale
+#: model:res.groups,name:sale.group_sale_manager
+msgid "Administrator"
+msgstr "管理员"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_digest_digest__kpi_all_sale_total
+msgid "All Sales"
+msgstr "所有销售"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_search
+msgid "Archived"
+msgstr "已归档"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__mail_template_id
+msgid "Confirmation Mail"
+msgstr "确认邮件"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Create standardized offers with default products"
+msgstr "使用默认产品创建标准化优惠"
+
+#. module: sale
+#: model_terms:ir.actions.act_window,help:sale.sale_order_template_action
+msgid "Create your quotation template"
+msgstr "创建您的报价模板"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_company__sale_order_template_id
+msgid "Default Sale Template"
+msgstr "默认销售模板"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__company_so_template_id
+msgid "Default Template"
+msgstr "默认模板"
+
+#. module: sale
+#: model:ir.model,name:sale.model_digest_digest
+msgid "Digest"
+msgstr "摘要"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/digest_digest.py:0
+msgid "Do not have access, skip this data for user's digest email"
+msgstr "无访问权限，用户摘要邮件忽略该数据"
+
+#. module: sale
+#: model:ir.model.constraint,message:sale.constraint_sale_order_template_line_non_accountable_fields_null
+msgid "Forbidden product, quantity and UoM on non-accountable sale quote line"
+msgstr "在非负责任的销售报价行中禁止的产品，计数和单位"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_template_line__sequence
+msgid "Gives the sequence order when displaying a list of sale quote lines."
+msgstr "在显示销售报价行列表时给出序列顺序。"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_template__journal_id
+msgid ""
+"If set, SO with this template will invoice in this journal; otherwise the "
+"sales journal with the lowest sequence is used."
+msgstr ""
+"如果设置，使用此模板的 SO 将在此日记账中开票；否则将使用顺序最低的销售日记"
+"账。"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_template__active
+msgid ""
+"If unchecked, it will allow you to hide the quotation template without "
+"removing it."
+msgstr "如果取消选中，将允许您隐藏报价模板而不将其删除。"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_digest_digest__kpi_all_sale_total_value
+msgid "Kpi All Sale Total Value"
+msgstr "所有销售总价值KPI"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__sale_order_template_line_ids
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+msgid "Lines"
+msgstr "行"
+
+#. module: sale
+#: model:ir.model.constraint,message:sale.constraint_sale_order_template_line_accountable_product_id_required
+msgid "Missing required product and UoM on accountable sale quote line."
+msgstr "在责任销售报价上缺少所需产品和计量单位。"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_template__number_of_days
+msgid "Number of days for the validity date computation of the quotation"
+msgstr "用于报价有效日期计算的天数"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__is_optional
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__is_optional
+msgid "Optional Line"
+msgstr ""
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_template.py:0
+msgid "Optional Products Section"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__number_of_days
+msgid "Quotation Duration"
+msgstr "报价时长"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_order_template
+#: model:ir.model.fields,field_description:sale.field_sale_order__sale_order_template_id
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__name
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_tree
+msgid "Quotation Template"
+msgstr "报价模板"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_order_template_line
+msgid "Quotation Template Line"
+msgstr "报价模板行"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+msgid "Quotation Template Lines"
+msgstr "报价模板明细行"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__sale_order_template_id
+msgid "Quotation Template Reference"
+msgstr "报价模板参考"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.sale_order_template_action
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__group_sale_order_template
+#: model:ir.ui.menu,name:sale.sale_order_template_menu
+#: model:res.groups,name:sale.group_sale_order_template
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Quotation Templates"
+msgstr "报价模板"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+msgid "Quotation Validity"
+msgstr "报价有效期"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_template__require_signature
+msgid ""
+"Request a online signature to the customer in order to confirm orders "
+"automatically."
+msgstr "向客户申请线上签字，以便自动确认订单。"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_template__require_payment
+msgid ""
+"Request an online payment to the customer in order to confirm orders "
+"automatically."
+msgstr "向客户申请线上支付，以便自动确认订单。"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_search
+msgid "Search Quotation Template"
+msgstr "搜索报价模板"
+
+#. module: sale
+#: model_terms:digest.tip,tip_description:sale.digest_tip_sale_product_grid
+msgid ""
+"Selling the same product in different sizes or colors? Try the product grid "
+"and populate your orders with multiple quantities of each variant. This "
+"feature also exists in the Purchase application."
+msgstr ""
+"以不同的尺寸或颜色销售相同的产品？尝试产品网格并使用多个数量的每个变体填充您"
+"的订单。此功能也存在于采购应用程序中。"
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/sale_order_line_field/sale_order_line_field.xml:0
+#: code:addons/sale/static/src/js/sale_order_template_line_field/sale_order_template_line_field.xml:0
+msgid "Set Optional"
+msgstr ""
+
+#. module: sale
+#: model_terms:digest.tip,tip_description:sale.digest_tip_sale_configurable_products
+msgid ""
+"Struggling with a complex product catalog? Try out the Product Configurator "
+"to help sales configure a product with different options: colors, size, "
+"capacity, etc. Make sale orders encoding easier and error-proof."
+msgstr ""
+"为复杂的产品目录而苦恼？试用产品配置器，帮助销售人员配置具有不同选项的产品："
+"颜色、尺寸、能力等。使销售订单编码更容易且防错。"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+msgid "Terms & Conditions"
+msgstr "条款和条件"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+msgid ""
+"The Administrator can set default Terms & Conditions in Sales Settings. "
+"Terms set here will show up instead if you select this quotation template."
+msgstr ""
+"管理员可以在“销售设置”中设置默认条款和条件。如果您选择此报价模板，将显示此处"
+"设置的条款。"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_template__mail_template_id
+msgid ""
+"This e-mail template will be sent on confirmation. Leave empty to send "
+"nothing."
+msgstr "此EMail模板将在确认时发送。留空即表示没有要发送的内容。"
+
+#. module: sale
+#: model:digest.tip,name:sale.digest_tip_sale_configurable_products
+#: model_terms:digest.tip,tip_description:sale.digest_tip_sale_configurable_products
+msgid "Tip: Odoo supports configurable products"
+msgstr "提示：Odoo 支持可配置产品"
+
+#. module: sale
+#: model:digest.tip,name:sale.digest_tip_sale_product_grid
+#: model_terms:digest.tip,tip_description:sale.digest_tip_sale_product_grid
+msgid "Tip: Sell or buy products in bulk with matrixes"
+msgstr "提示：使用矩阵批量销售或购买产品"
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/sale_order_line_field/sale_order_line_field.xml:0
+#: code:addons/sale/static/src/js/sale_order_template_line_field/sale_order_template_line_field.xml:0
+msgid "Unset Optional"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.actions.act_window,help:sale.sale_order_template_action
+msgid ""
+"Use templates to create polished, professional quotes in minutes.\n"
+"                Send these quotes by email and let your customers sign "
+"online.\n"
+"                Use cross-selling and discounts to push and boost your sales."
+msgstr ""
+"使用模板在几分钟内创建精美的专业报价。通过EMail发送这些报价，让您的客户线上签"
+"名。使用交叉销售和折扣来推动和提高销售额。"
+
+#. module: sale
+#: model:res.groups,name:sale.group_sale_salesman_all_leads
+msgid "User: All Documents"
+msgstr "用户: 所有单据"
+
+#. module: sale
+#: model:res.groups,name:sale.group_sale_salesman
+msgid "User: Own Documents Only"
+msgstr "用户: 仅自己的单据"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+msgid "Visible to all"
+msgstr "对所有人可见"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_template_line.py:0
+msgid ""
+"You cannot change the type of a sale quote line. Instead you should delete "
+"the current line and create a new line of the proper type."
+msgstr "您无法更改销售报价的类型。相反，您应删除当前行并创建正确类型的新行。"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_template.py:0
+msgid ""
+"Your template belongs to company %(template_company)s but contains products "
+"from company (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
+msgstr ""
+"您的模板归属公司为 %(template_company)s，但其中包含了归属公司为 %"
+"(product_company)s 的产品，而这些产品对 %(template_company)s 公司无访问权"
+"限。\n"
+"请修改模板的归属公司，或移除这些来自其他公司的产品。"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_template.py:0
+msgid ""
+"Your template belongs to company %(template_company)s but contains products "
+"from other companies (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
+msgstr ""
+"您的模板归属公司为 %(template_company)s，但其中包含了归属公司为 %"
+"(product_company)s 的产品，\n"
+"而这些产品对%(template_company)s公司无访问权限。"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_template.py:0
+msgid ""
+"Your template cannot contain products from specific companies if it's shared "
+"between companies. Please restrict the template access, or remove those "
+"products."
+msgstr ""
+"若模板为多公司共享模板，则不可包含归属特定公司的产品。请限制该模板的访问范"
+"围，或移除这些专属公司的产品。"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+msgid "e.g. Standard Consultancy Package"
+msgstr "例如标准咨询套餐"
+
+#. module: sale
+#: model:res.groups,comment:sale.group_sale_salesman_all_leads
+msgid ""
+"the user will have access to all records of everyone in the sales "
+"application."
+msgstr "用户可访问销售系统中每个人的所有记录。"
+
+#. module: sale
+#: model:res.groups,comment:sale.group_sale_salesman
+msgid "the user will have access to his own data in the sales application."
+msgstr "在销售应用，用户只能访问自己的数据。"
+
+#. module: sale
+#: model:res.groups,comment:sale.group_sale_manager
+msgid ""
+"the user will have an access to the sales configuration as well as statistic "
+"reports."
+msgstr "用户将有权访问销售配置及统计报告。"

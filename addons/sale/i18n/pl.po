@@ -1195,11 +1195,6 @@ msgstr ""
 "są specyficzne dla firmy. \" groups=\"base.group_multi_company\"/>"
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
-msgid "<span class=\"flex-grow-1\">/ Month</span>"
-msgstr "<span class=\"flex-grow-1\">/Miesiąc</span>"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<span class=\"mx-3\" invisible=\"not require_payment\">of</span>"
 msgstr "<span class=\"mx-3\" invisible=\"not require_payment\">z</span>"
@@ -1508,16 +1503,19 @@ msgstr "Dodaj"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
 msgid "Add a note"
 msgstr "Dodaj notatkę"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
 msgid "Add a product"
 msgstr "Dodaj produkt"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
 msgid "Add a section"
 msgstr "Dodaj sekcję"
 
@@ -1529,6 +1527,7 @@ msgstr "Dodaj notatkę"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_buttons/quantity_buttons.xml:0
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_optional_product_quantity
 msgid "Add one"
 msgstr "Dodaj 1"
 
@@ -1566,6 +1565,7 @@ msgstr "Dodaj/usuń obserwujących"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__allowed_uom_ids
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__allowed_uom_ids
 msgid "Allowed Uom"
 msgstr "Dozwolone JM"
 
@@ -1978,12 +1978,6 @@ msgid "Click to configure"
 msgstr "Kliknij, aby skonfigurować"
 
 #. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
-msgid "Click to define an invoicing target"
-msgstr "Kliknij, aby zdefiniować cel fakturowania"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_sign_modal
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2044,6 +2038,9 @@ msgstr "Firmy"
 #: model:ir.model.fields,field_description:sale.field_sale_report__company_id
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__company_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__company_id
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__company_id
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_search
 msgid "Company"
 msgstr "Firma"
 
@@ -2236,11 +2233,6 @@ msgid "Create a Sale Order Activity Plan"
 msgstr "Stwórz plan aktywności zamówienia sprzedaży"
 
 #. module: sale
-#: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
-msgid "Create a customer invoice"
-msgstr "Utwórz fakturę klienta"
-
-#. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
 msgid "Create a new product"
 msgstr "Utwórz nowy produkt"
@@ -2248,8 +2240,6 @@ msgstr "Utwórz nowy produkt"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
 #: model_terms:ir.actions.act_window,help:sale.action_orders
-#: model_terms:ir.actions.act_window,help:sale.action_orders_salesteams
-#: model_terms:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid "Create a new quotation, the first step of a new sale!"
 msgstr "Utwórz nową ofertę, to pierwszy krok do nowej sprzedaży!"
 
@@ -2257,13 +2247,6 @@ msgstr "Utwórz nową ofertę, to pierwszy krok do nowej sprzedaży!"
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
 msgid "Create Invoice(s)…"
 msgstr "Stwórz fakturę (faktury)…"
-
-#. module: sale
-#: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
-msgid ""
-"Create invoices, register payments and keep track of the discussions with "
-"your customers."
-msgstr "Twórz faktury, rejestruj płatności i prowadź dyskusję z klientami."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__service_tracking
@@ -2285,6 +2268,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order__create_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__create_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__create_uid
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__create_uid
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__create_uid
 msgid "Created by"
 msgstr "Utworzone przez"
 
@@ -2293,6 +2278,8 @@ msgstr "Utworzone przez"
 #: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__create_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__create_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__create_date
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__create_date
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__create_date
 msgid "Created on"
 msgstr "Data utworzenia"
 
@@ -2537,6 +2524,8 @@ msgstr "Zaliczka/kaucja"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__name
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__name
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
 msgid "Description"
 msgstr "Opis"
 
@@ -2658,11 +2647,15 @@ msgstr "Wyświetl ostrzeżenie o wersji roboczej faktury"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:sale.field_sale_report__display_name
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__display_name
+#: model:ir.model.fields,field_description:sale.field_digest_digest__display_name
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__display_name
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__display_name
 msgid "Display Name"
 msgstr "Nazwa wyświetlana"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_type
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__display_type
 msgid "Display Type"
 msgstr "Typ wyświetlania"
 
@@ -2932,17 +2925,6 @@ msgid "Forbidden values on non-accountable sale order line"
 msgstr "Niedozwolone wartości w nieksięgowalnych pozycjach zamówień"
 
 #. module: sale
-#: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
-msgid ""
-"From this report, you can have an overview of the amount invoiced to your "
-"customer. The search tool can also be used to personalise your Invoices "
-"reports and so, match this analysis to your needs."
-msgstr ""
-"From this report, you can have an overview of the amount invoiced to your "
-"customer. The search tool can also be used to personalise your Invoices "
-"reports and so, match this analysis to your needs."
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_pay_modal_amount_selector
 msgid "Full amount <br/>"
 msgstr "Pełna kwota <br/>"
@@ -3096,6 +3078,9 @@ msgstr "Ukryte"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__id
 #: model:ir.model.fields,field_description:sale.field_sale_report__id
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__id
+#: model:ir.model.fields,field_description:sale.field_digest_digest__id
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__id
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__id
 msgid "ID"
 msgstr "ID"
 
@@ -3255,16 +3240,6 @@ msgid "Invoice Lines"
 msgstr "Pozycje faktury"
 
 #. module: sale
-#: model:mail.message.subtype,name:sale.mt_salesteam_invoice_paid
-msgid "Invoice Paid"
-msgstr "Faktura opłacona"
-
-#. module: sale
-#: model:mail.message.subtype,name:sale.mt_salesteam_invoice_posted
-msgid "Invoice Posted"
-msgstr "Wystawiona faktura"
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Invoice Sales Order"
 msgstr "Fakturuj zamówienie sprzedaży"
@@ -3342,17 +3317,10 @@ msgid "Invoiced This Month"
 msgstr "Zafakturowane w tym m-cu"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_invoice_salesteams
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_ids
-#: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoices"
 msgstr "Faktury"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_account_invoice_report_salesteam
-msgid "Invoices Analysis"
-msgstr "Analiza faktur"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice_report
@@ -3373,6 +3341,7 @@ msgstr "Adres do faktury"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__journal_id
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__journal_id
 msgid "Invoicing Journal"
 msgstr "Dziennik fakturowania"
 
@@ -3472,6 +3441,8 @@ msgstr "Ostatnie faktury"
 #: model:ir.model.fields,field_description:sale.field_sale_order__write_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__write_uid
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__write_uid
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__write_uid
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__write_uid
 msgid "Last Updated by"
 msgstr "Ostatnio aktualizowane przez"
 
@@ -3481,6 +3452,8 @@ msgstr "Ostatnio aktualizowane przez"
 #: model:ir.model.fields,field_description:sale.field_sale_order__write_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_discount__write_date
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__write_date
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__write_date
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__write_date
 msgid "Last Updated on"
 msgstr "Data ostatniej aktualizacji"
 
@@ -3698,11 +3671,6 @@ msgid "New"
 msgstr "Nowe"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_quotation_form
-msgid "New Quotation"
-msgstr "Nowa oferta"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
 msgstr "Następna Czynność wydarzenia w kalendarzu"
@@ -3761,6 +3729,8 @@ msgstr "Nie korzystasz z Odoo?"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_note
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model:ir.model.fields.selection,name:sale.selection__sale_order_template_line__display_type__line_note
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
 msgid "Note"
 msgstr "Notatka"
 
@@ -3843,8 +3813,6 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
-#: model_terms:ir.actions.act_window,help:sale.action_orders_salesteams
-#: model_terms:ir.actions.act_window,help:sale.action_quotations_salesteams
 msgid ""
 "Once the quotation is confirmed by the customer, it becomes a sales order."
 "<br> You will be able to create an invoice and collect the payment."
@@ -3864,6 +3832,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_pay
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_pay
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__require_payment
 msgid "Online Payment"
 msgstr "Płatność online"
 
@@ -3875,6 +3844,7 @@ msgstr "Płatności online"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_sign
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__portal_confirmation_sign
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__require_signature
 msgid "Online Signature"
 msgstr "Podpis online"
 
@@ -4075,6 +4045,7 @@ msgstr "Opakowania"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__parent_id
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__parent_id
 msgid "Parent Section Line"
 msgstr "Wiersz sekcji nadrzędnej"
 
@@ -4193,6 +4164,7 @@ msgstr "Kwota zaliczki"
 #: model:ir.model.fields,field_description:sale.field_res_company__prepayment_percent
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__prepayment_percent
 #: model:ir.model.fields,field_description:sale.field_sale_order__prepayment_percent
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__prepayment_percent
 msgid "Prepayment percentage"
 msgstr "Procentowa wartość zaliczki"
 
@@ -4200,6 +4172,7 @@ msgstr "Procentowa wartość zaliczki"
 #. odoo-python
 #: code:addons/sale/models/res_company.py:0
 #: code:addons/sale/models/sale_order.py:0
+#: code:addons/sale/models/sale_order_template.py:0
 msgid "Prepayment percentage must be a valid percentage."
 msgstr "Wartość procentowa przedpłaty musi być prawidłową wartością procentową."
 
@@ -4276,6 +4249,7 @@ msgstr "Faktury proforma"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__product_id
 msgid "Product"
 msgstr "Produkt"
 
@@ -4422,6 +4396,7 @@ msgstr "Ilość do zafakturowania z zamówień sprzedaży"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 #: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__product_uom_qty
 msgid "Quantity"
 msgstr "Ilość"
 
@@ -4476,7 +4451,6 @@ msgstr "Ważność oferty jest wymagana i musi być większa lub równa 0."
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_viewed
-#: model:mail.message.subtype,name:sale.mt_salesteam_order_viewed
 msgid "Quotation Viewed"
 msgstr "Oferta obejrzana"
 
@@ -4488,7 +4462,6 @@ msgstr "Oferta potwierdzona"
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_sent
 #: model:mail.message.subtype,name:sale.mt_order_sent
-#: model:mail.message.subtype,name:sale.mt_salesteam_order_sent
 msgid "Quotation sent"
 msgstr "Oferta wysłana"
 
@@ -4500,7 +4473,6 @@ msgstr "Oferta wyświetlona przez klienta %s"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_quotations
-#: model:ir.actions.act_window,name:sale.action_quotations_salesteams
 #: model:ir.actions.act_window,name:sale.action_quotations_with_onboarding
 #: model:ir.ui.menu,name:sale.menu_sale_quotations
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
@@ -4594,6 +4566,7 @@ msgstr "Usuń"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_buttons/quantity_buttons.xml:0
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_optional_product_quantity
 msgid "Remove one"
 msgstr "Usuń jeden"
 
@@ -4761,11 +4734,12 @@ msgstr "Zamówienia sprzedaży do anulowania"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_reporting_sales
 #: model:ir.ui.menu,name:sale.sale_menu_root
-#: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.product_document_form
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale.res_partner_view_buttons
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.digest_digest_view_form
+#: model:res.groups.privilege,name:sale.res_groups_privilege_sales
 msgid "Sales"
 msgstr "Sprzedaż"
 
@@ -4829,7 +4803,6 @@ msgstr "Zamówienie sprzedaży"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
-#: model:mail.message.subtype,name:sale.mt_salesteam_order_confirmed
 msgid "Sales Order Confirmed"
 msgstr "Zamówienie sprzedaży potwierdzone"
 
@@ -4877,11 +4850,8 @@ msgstr "Zamówienia sprzedaży"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders
-#: model:ir.actions.act_window,name:sale.action_orders_salesteams
-#: model:ir.actions.act_window,name:sale.action_orders_to_invoice_salesteams
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids
 #: model:ir.ui.menu,name:sale.menu_sales_config
-#: model_terms:ir.ui.view,arch_db:sale.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_home_menu_sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
@@ -4897,22 +4867,10 @@ msgstr "Zamówienia sprzedaży"
 #. module: sale
 #: model:ir.model,name:sale.model_crm_team
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__team_id
-#: model:ir.model.fields,field_description:sale.field_account_invoice_report__team_id
-#: model:ir.model.fields,field_description:sale.field_account_move__team_id
-#: model:ir.model.fields,field_description:sale.field_sale_order__team_id
-#: model:ir.model.fields,field_description:sale.field_sale_report__team_id
-#: model_terms:ir.ui.view,arch_db:sale.account_invoice_groupby_inherit
-#: model_terms:ir.ui.view,arch_db:sale.view_account_invoice_report_search_inherit
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Sales Team"
 msgstr "Zespół sprzedaży"
-
-#. module: sale
-#: model:ir.ui.menu,name:sale.report_sales_team
-#: model:ir.ui.menu,name:sale.sales_team_config
-msgid "Sales Teams"
-msgstr "Zespoły sprzedaży"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_account_analytic_line__so_line
@@ -4984,6 +4942,8 @@ msgstr "Wyszukaj nazwę klienta, lub stwórz nowego na poczekaniu."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_section
+#: model:ir.model.fields.selection,name:sale.selection__sale_order_template_line__display_type__line_section
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
 msgid "Section"
 msgstr "Sekcja"
 
@@ -5082,6 +5042,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sequence
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__sequence
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__sequence
 msgid "Sequence"
 msgstr "Sekwencja"
 
@@ -5281,6 +5243,7 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_subsection
+#: model:ir.model.fields.selection,name:sale.selection__sale_order_template_line__display_type__line_subsection
 msgid "Subsection"
 msgstr "Subsekcje"
 
@@ -5322,12 +5285,6 @@ msgstr ""
 #: model:ir.model,name:sale.model_ir_config_parameter
 msgid "System Parameter"
 msgstr "Parametr systemu"
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
-#: model:ir.ui.menu,name:sale.menu_tag_config
-msgid "Tags"
-msgstr "Tagi"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -5424,6 +5381,7 @@ msgstr "Regulamin"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__note
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__note
 msgid "Terms and conditions"
 msgstr "Regulamin"
 
@@ -5619,6 +5577,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_company__prepayment_percent
 #: model:ir.model.fields,help:sale.field_res_config_settings__prepayment_percent
+#: model:ir.model.fields,help:sale.field_sale_order_template__prepayment_percent
 msgid "The percentage of the amount needed to be paid to confirm quotations."
 msgstr "Procent kwoty wymaganej do zapłaty w celu potwierdzenia oferty."
 
@@ -5926,6 +5885,7 @@ msgstr "Niezafakturowane saldo"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_id
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_uom_id
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__product_uom_id
 msgid "Unit"
 msgstr "Jednostka"
 
@@ -6321,6 +6281,7 @@ msgstr "zamknij"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
 msgid "days"
 msgstr "dni"
 
@@ -7085,3 +7046,363 @@ msgstr ""
 #~ "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 #~ "(ctx.get('proforma') and 'Proforma' or 'Oferta') or 'Zamówienie' }} (Ref "
 #~ "{{ object.name or 'n/a' }})"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+msgid "<span invisible=\"not require_payment\">of</span>"
+msgstr "<span invisible=\"not require_payment\">z</span>"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__active
+msgid "Active"
+msgstr "Aktywne"
+
+#. module: sale
+#: model:res.groups,name:sale.group_sale_manager
+msgid "Administrator"
+msgstr "Administrator"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_digest_digest__kpi_all_sale_total
+msgid "All Sales"
+msgstr "Cała sprzedaż"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_search
+msgid "Archived"
+msgstr "Zarchiwizowane"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__mail_template_id
+msgid "Confirmation Mail"
+msgstr "e-mail potwierdzający"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Create standardized offers with default products"
+msgstr "Tworzenie standardowych ofert z domyślnymi produktami"
+
+#. module: sale
+#: model_terms:ir.actions.act_window,help:sale.sale_order_template_action
+msgid "Create your quotation template"
+msgstr "Utwórz szablon oferty"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_company__sale_order_template_id
+msgid "Default Sale Template"
+msgstr "Domyślny szablon sprzedaży"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__company_so_template_id
+msgid "Default Template"
+msgstr "Szablon domyślny"
+
+#. module: sale
+#: model:ir.model,name:sale.model_digest_digest
+msgid "Digest"
+msgstr "Podsumowanie"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/digest_digest.py:0
+msgid "Do not have access, skip this data for user's digest email"
+msgstr "Nie masz dostępu, pomiń te dane dla wiadomości e-mail użytkownika"
+
+#. module: sale
+#: model:ir.model.constraint,message:sale.constraint_sale_order_template_line_non_accountable_fields_null
+msgid "Forbidden product, quantity and UoM on non-accountable sale quote line"
+msgstr ""
+"Zabroniony produkt, ilość i UoM w nieobliczalnej linii wyceny sprzedaży"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_template_line__sequence
+msgid "Gives the sequence order when displaying a list of sale quote lines."
+msgstr ""
+"Daje kolejność sekwencji podczas wyświetlania listy pozycji ofert sprzedaży."
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_template__journal_id
+msgid ""
+"If set, SO with this template will invoice in this journal; otherwise the "
+"sales journal with the lowest sequence is used."
+msgstr ""
+"Jeśli zostanie ustawione, zamówienia zakupu z tym szablonem będą fakturowane "
+"w tym dzienniku; w przeciwnym razie wykorzystywany jest dziennik sprzedaży o "
+"najniższej sekwencji."
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_template__active
+msgid ""
+"If unchecked, it will allow you to hide the quotation template without "
+"removing it."
+msgstr "Jeśli odznaczone, pozwoli Ci ukryć szablon oferty bez jej usuwania."
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_digest_digest__kpi_all_sale_total_value
+msgid "Kpi All Sale Total Value"
+msgstr "Kpi Cała sprzedaż, wartość całkowita"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__sale_order_template_line_ids
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+msgid "Lines"
+msgstr "Pozycje"
+
+#. module: sale
+#: model:ir.model.constraint,message:sale.constraint_sale_order_template_line_accountable_product_id_required
+msgid "Missing required product and UoM on accountable sale quote line."
+msgstr "Brak wymaganego produktu i JM w pozycji oferty sprzedaży"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_template__number_of_days
+msgid "Number of days for the validity date computation of the quotation"
+msgstr "Liczba dni dla daty ważności oferty"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__is_optional
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__is_optional
+msgid "Optional Line"
+msgstr ""
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_template.py:0
+msgid "Optional Products Section"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__number_of_days
+msgid "Quotation Duration"
+msgstr "Ważność oferty"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_order_template
+#: model:ir.model.fields,field_description:sale.field_sale_order__sale_order_template_id
+#: model:ir.model.fields,field_description:sale.field_sale_order_template__name
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_tree
+msgid "Quotation Template"
+msgstr "Szablon oferty"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_order_template_line
+msgid "Quotation Template Line"
+msgstr "Pozycja szablonu oferty"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+msgid "Quotation Template Lines"
+msgstr "Pozycje szablonu oferty"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_template_line__sale_order_template_id
+msgid "Quotation Template Reference"
+msgstr "Odnośnik szablonu oferty"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.sale_order_template_action
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__group_sale_order_template
+#: model:ir.ui.menu,name:sale.sale_order_template_menu
+#: model:res.groups,name:sale.group_sale_order_template
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Quotation Templates"
+msgstr "Szablony ofert"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+msgid "Quotation Validity"
+msgstr "Ważność wyceny"
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_template__require_signature
+msgid ""
+"Request a online signature to the customer in order to confirm orders "
+"automatically."
+msgstr ""
+"Żądaj podpisu online do klienta, aby automatycznie potwierdzać zamówienia."
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_template__require_payment
+msgid ""
+"Request an online payment to the customer in order to confirm orders "
+"automatically."
+msgstr ""
+"Żądaj płatności online dla klienta, aby automatycznie potwierdzać zamówienia."
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_search
+msgid "Search Quotation Template"
+msgstr "Szukaj szablon oferty"
+
+#. module: sale
+#: model_terms:digest.tip,tip_description:sale.digest_tip_sale_product_grid
+msgid ""
+"Selling the same product in different sizes or colors? Try the product grid "
+"and populate your orders with multiple quantities of each variant. This "
+"feature also exists in the Purchase application."
+msgstr ""
+"Sprzedajesz ten sam produkt w różnych rozmiarach lub kolorach? Wypróbuj "
+"siatkę produktów i wypełnij swoje zamówienia wieloma ilościami każdego "
+"wariantu. Ta funkcja istnieje również w aplikacji Zakupy."
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/sale_order_line_field/sale_order_line_field.xml:0
+#: code:addons/sale/static/src/js/sale_order_template_line_field/sale_order_template_line_field.xml:0
+msgid "Set Optional"
+msgstr ""
+
+#. module: sale
+#: model_terms:digest.tip,tip_description:sale.digest_tip_sale_configurable_products
+msgid ""
+"Struggling with a complex product catalog? Try out the Product Configurator "
+"to help sales configure a product with different options: colors, size, "
+"capacity, etc. Make sale orders encoding easier and error-proof."
+msgstr ""
+"Zmagasz się ze złożonym katalogiem produktów? Wypróbuj Konfigurator "
+"Produktu, który pomoże sprzedawcom skonfigurować produkt z różnymi opcjami: "
+"kolorami, rozmiarem, pojemnością itp. Ułatw kodowanie zleceń sprzedaży i "
+"uczyń je odpornymi na błędy."
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+msgid "Terms & Conditions"
+msgstr "Warunki sprzedaży"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+msgid ""
+"The Administrator can set default Terms & Conditions in Sales Settings. "
+"Terms set here will show up instead if you select this quotation template."
+msgstr ""
+"Administrator może ustawić domyślne warunki w Ustawieniach sprzedaży. "
+"Wyświetlane będą warunki ustawione tutaj, jeśli wybierzesz ten szablon "
+"oferty."
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_template__mail_template_id
+msgid ""
+"This e-mail template will be sent on confirmation. Leave empty to send "
+"nothing."
+msgstr ""
+"Ten szablon wiadomości e-mail zostanie wysłany po potwierdzeniu. Pozostaw "
+"puste, aby niczego nie wysyłać."
+
+#. module: sale
+#: model:digest.tip,name:sale.digest_tip_sale_configurable_products
+#: model_terms:digest.tip,tip_description:sale.digest_tip_sale_configurable_products
+msgid "Tip: Odoo supports configurable products"
+msgstr "Podpowiedź: Odoo obsługuje produkty konfigurowalne"
+
+#. module: sale
+#: model:digest.tip,name:sale.digest_tip_sale_product_grid
+#: model_terms:digest.tip,tip_description:sale.digest_tip_sale_product_grid
+msgid "Tip: Sell or buy products in bulk with matrixes"
+msgstr "Wskazówka: Sprzedawaj lub kupuj produkty hurtowo za pomocą matryc"
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/sale_order_line_field/sale_order_line_field.xml:0
+#: code:addons/sale/static/src/js/sale_order_template_line_field/sale_order_template_line_field.xml:0
+msgid "Unset Optional"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.actions.act_window,help:sale.sale_order_template_action
+msgid ""
+"Use templates to create polished, professional quotes in minutes.\n"
+"                Send these quotes by email and let your customers sign "
+"online.\n"
+"                Use cross-selling and discounts to push and boost your sales."
+msgstr ""
+"Użyj szablonów, aby stworzyć polerowane, profesjonalne oferty w ciągu kilku "
+"minut.\n"
+"Wyślij te oferty pocztą elektroniczną i pozwól swoim klientom podpisać się "
+"online.\n"
+"Użyj sprzedaży krzyżowej i rabatów, aby popchnąć i zwiększyć sprzedaż."
+
+#. module: sale
+#: model:res.groups,name:sale.group_sale_salesman_all_leads
+msgid "User: All Documents"
+msgstr "Użytkownik: Wszystkie dokumenty"
+
+#. module: sale
+#: model:res.groups,name:sale.group_sale_salesman
+msgid "User: Own Documents Only"
+msgstr "Użytkownik: Tylko własne dokumenty"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+msgid "Visible to all"
+msgstr "Widoczne dla wszystkich"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_template_line.py:0
+msgid ""
+"You cannot change the type of a sale quote line. Instead you should delete "
+"the current line and create a new line of the proper type."
+msgstr ""
+"Nie można zmienić typu linii wyceny sprzedaży. Zamiast tego należy usunąć "
+"bieżącą linię i utworzyć nową linię o odpowiednim typie."
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_template.py:0
+msgid ""
+"Your template belongs to company %(template_company)s but contains products "
+"from company (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
+msgstr ""
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_template.py:0
+msgid ""
+"Your template belongs to company %(template_company)s but contains products "
+"from other companies (%(product_company)s) that are not accessible to %"
+"(template_company)s.\n"
+"Please change the company of your template or remove the products from other "
+"companies."
+msgstr ""
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_template.py:0
+msgid ""
+"Your template cannot contain products from specific companies if it's shared "
+"between companies. Please restrict the template access, or remove those "
+"products."
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_template_view_form
+msgid "e.g. Standard Consultancy Package"
+msgstr "np. Standardowy Pakiet Doradczy"
+
+#. module: sale
+#: model:res.groups,comment:sale.group_sale_salesman_all_leads
+msgid ""
+"the user will have access to all records of everyone in the sales "
+"application."
+msgstr ""
+"użytkownik będzie miał dostęp do wszystkich rekordów wszystkich w aplikacji "
+"sprzedażowej."
+
+#. module: sale
+#: model:res.groups,comment:sale.group_sale_salesman
+msgid "the user will have access to his own data in the sales application."
+msgstr ""
+"użytkownik będzie miał dostęp do jego własnych danych w aplikacji sprzedaży."
+
+#. module: sale
+#: model:res.groups,comment:sale.group_sale_manager
+msgid ""
+"the user will have an access to the sales configuration as well as statistic "
+"reports."
+msgstr ""
+"użytkownik będzie miał dostęp do konfiguracji sprzedaży jak również raportów "
+"statystycznych"

@@ -165,7 +165,7 @@ each and asserting the two registry objects are distinct. Run it in both orders
 
 ```bash
 odoo-bin -c <conf> -d <db_a> -i base --stop-after-init
-odoo-bin -c <conf> -d <db_b> -i sale_management,purchase,stock,account --stop-after-init
+odoo-bin -c <conf> -d <db_b> -i sale,purchase,stock,account --stop-after-init
 ```
 
 ## Scenario 4 — Request latency

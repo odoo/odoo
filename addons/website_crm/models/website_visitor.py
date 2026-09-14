@@ -8,12 +8,12 @@ class WebsiteVisitor(models.Model):
     lead_ids = fields.Many2many(
         comodel_name="crm.lead",
         string="Leads",
-        groups="sales_team.group_sale_salesman",
+        groups="sale.group_sale_salesman",
     )
     lead_count = fields.Count(
         count_of="lead_ids",
         string="# Leads",
-        groups="sales_team.group_sale_salesman",
+        groups="sale.group_sale_salesman",
     )
 
     @api.depends(

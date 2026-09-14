@@ -15,7 +15,7 @@ class DigestDigest(models.Model):
     )
 
     def _compute_kpi_crm_lead_created_value(self):
-        if not self.env.user.has_group("sales_team.group_sale_salesman"):
+        if not self.env.user.has_group("sale.group_sale_salesman"):
             raise AccessError(
                 _("Do not have access, skip this data for user's digest email")
             )
@@ -23,7 +23,7 @@ class DigestDigest(models.Model):
         self._update_company_based_kpi("crm.lead", "kpi_crm_lead_created_value")
 
     def _compute_kpi_crm_opportunities_won_value(self):
-        if not self.env.user.has_group("sales_team.group_sale_salesman"):
+        if not self.env.user.has_group("sale.group_sale_salesman"):
             raise AccessError(
                 _("Do not have access, skip this data for user's digest email")
             )

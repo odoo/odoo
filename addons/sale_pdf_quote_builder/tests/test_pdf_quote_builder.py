@@ -12,14 +12,14 @@ from odoo.tests import Form, tagged
 from odoo.tools.misc import file_open
 
 from .files import forms_pdf, plain_pdf
-from odoo.addons.sale_management.tests.common import SaleManagementCommon
+from odoo.addons.sale.tests.common import SaleOrderTemplateCommon
 from odoo.addons.sale_pdf_quote_builder.controllers.quotation_document import (
     QuotationDocumentController,
 )
 
 
 @tagged("-at_install", "post_install")
-class TestPDFQuoteBuilder(SaleManagementCommon):
+class TestPDFQuoteBuilder(SaleOrderTemplateCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -28,7 +28,7 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
 
         cls.sale_order.date_validity = "2020-11-04"
         cls.sale_order.partner_id.tz = "Europe/Brussels"
-        cls.env["document.document"].search([]).action_archive()
+        cls.env["document.document"].search([("type", "!=", "folder")]).action_archive()
         cls.env["quotation.document"].search([]).action_archive()
 
         with file_open(forms_pdf, "rb") as file:
@@ -57,12 +57,12 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
             [
                 {
                     "name": "Header",
-                    "attachment_id": att_header.id,
+                    "ir_attachment_id": att_header.id,
                     "document_type": "header",
                 },
                 {
                     "name": "Footer",
-                    "attachment_id": att_footer.id,
+                    "ir_attachment_id": att_footer.id,
                     "document_type": "footer",
                 },
             ]
@@ -77,7 +77,7 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
             }
         )
         cls.internal_user = cls._create_new_internal_user(
-            login="internal.user@test.odoo.com", groups="sales_team.group_sale_salesman"
+            login="internal.user@test.odoo.com", groups="sale.group_sale_salesman"
         )
         cls.alt_company = cls.env["res.company"].create({"name": "Backup Company"})
 
@@ -91,9 +91,17 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
         so_form.save()
         return so_form
 
+    @staticmethod
+    def _copy_on_same_record(document):
+        return document.copy(
+            {"res_model": document.res_model, "res_id": document.res_id}
+        )
+
     def test_compute_customizable_pdf_form_fields_when_no_file(self):
         self.env["quotation.document"].search([]).action_archive()
-        self.env["document.document"].search([]).action_archive()
+        self.env["document.document"].search(
+            [("type", "!=", "folder")]
+        ).action_archive()
         self.assertEqual(self.sale_order.customizable_pdf_form_fields, False)
 
     def test_dynamic_fields_mapping_for_quotation_document(self):
@@ -238,7 +246,10 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
             }
         )
         with self.assertRaises(ValidationError):
-            with Form(product_document) as doc_form:
+            with Form(
+                product_document,
+                view="document_product.view_documents_document_product_form",
+            ) as doc_form:
                 doc_form.attached_on_sale = "inside"
 
     def test_onchange_product_removes_previously_selected_documents(self):
@@ -267,7 +278,7 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
         self.assertFalse(self.sale_order.line_ids[0].product_document_ids, msg=msg)
 
     def test_available_documents_order(self):
-        product_document = self.product_document.copy()
+        product_document = self._copy_on_same_record(self.product_document)
         product_document.sequence = self.product_document.sequence - 1
         docs = self.sale_order.line_ids[0].available_product_document_ids
         self.assertEqual(len(docs), 2, "There should be 2 available documents.")
@@ -283,7 +294,7 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
         )
 
     def test_available_documents_multiple_products(self):
-        product_doc_copy = self.product_document.copy()
+        product_doc_copy = self._copy_on_same_record(self.product_document)
         product2 = self._create_product(name="Test Product 2")
         product_template_document2 = self.product_document.copy(
             {
@@ -470,7 +481,7 @@ class TestPDFQuoteBuilder(SaleManagementCommon):
 
 
 @tagged("-at_install", "post_install")
-class TestQuotationDocumentBinSize(SaleManagementCommon):
+class TestQuotationDocumentBinSize(SaleOrderTemplateCommon):
     def test_check_pdf_validity_under_bin_size(self):
         with file_open(plain_pdf, "rb") as plain_file:
             plain_data = b64encode(plain_file.read())

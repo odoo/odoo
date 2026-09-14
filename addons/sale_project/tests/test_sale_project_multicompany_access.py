@@ -28,7 +28,7 @@ class TestSaleOrderAccess(TransactionCase):
                         6,
                         0,
                         [
-                            self.env.ref("sales_team.group_sale_manager").id,
+                            self.env.ref("sale.group_sale_manager").id,
                             self.env.ref("project.group_project_manager").id,
                         ],
                     )
@@ -47,7 +47,7 @@ class TestSaleOrderAccess(TransactionCase):
                         6,
                         0,
                         [
-                            self.env.ref("sales_team.group_sale_manager").id,
+                            self.env.ref("sale.group_sale_manager").id,
                             self.env.ref("project.group_project_manager").id,
                         ],
                     )

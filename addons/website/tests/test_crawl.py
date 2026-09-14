@@ -184,7 +184,7 @@ class Crawler(HttpCaseWithUserDemo):
     def test_20_crawl_demo(self):
         groups = self.env["res.groups"]
         group_xmlids = [
-            "sales_team.group_sale_salesman",
+            "sale.group_sale_salesman",
             "purchase.group_purchase_user",
             "helpdesk.group_helpdesk_user",
         ]

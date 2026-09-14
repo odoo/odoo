@@ -2385,7 +2385,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                         [
                             self.ref("base.group_user"),
                             self.ref("stock.group_stock_manager"),
-                            self.ref("sales_team.group_sale_salesman"),
+                            self.ref("sale.group_sale_salesman"),
                         ],
                     )
                 ],
@@ -3241,7 +3241,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
                 "company_id": company_a.id,
                 "company_ids": [Command.link(company_a.id)],
                 "group_ids": [
-                    Command.link(self.env.ref("sales_team.group_sale_salesman").id)
+                    Command.link(self.env.ref("sale.group_sale_salesman").id)
                 ],
             }
         )
@@ -3733,7 +3733,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         user = new_test_user(
             self.env,
             login="fgh",
-            groups="base.group_user,stock.group_stock_user, sales_team.group_sale_salesman",
+            groups="base.group_user,stock.group_stock_user, sale.group_sale_salesman",
         )
         self.new_product.tracking = "lot"
         lot = self.env["stock.lot"].create(

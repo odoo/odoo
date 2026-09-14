@@ -216,7 +216,7 @@ class TestPurchaseGeneration(TestSalePurchaseCommon):
                     "login": "sale_purchase.salesperson",
                     "email": "salesperson@example.com",
                     "group_ids": [
-                        Command.set([self.env.ref("sales_team.group_sale_salesman").id])
+                        Command.set([self.env.ref("sale.group_sale_salesman").id])
                     ],
                 }
             )

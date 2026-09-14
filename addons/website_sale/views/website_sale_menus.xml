@@ -6,7 +6,7 @@
         name="eCommerce"
         parent="website.menu_website_configuration"
         sequence="20"
-        groups="sales_team.group_sale_salesman">
+        groups="sale.group_sale_salesman">
         <menuitem id="menu_orders" name="Orders" sequence="2">
             <menuitem
                 id="menu_orders_orders"
@@ -114,7 +114,7 @@
         parent="website.menu_reporting"
         action="sale_report_action_dashboard"
         sequence="30"
-        groups="sales_team.group_sale_manager" />
+        groups="sale.group_sale_manager" />
 
     <menuitem
         id="menu_product_pages"
@@ -126,7 +126,7 @@
     <record id="website.menu_website_dashboard" model="ir.ui.menu">
         <field
             name="group_ids"
-            eval="[Command.link(ref('sales_team.group_sale_salesman'))]" />
+            eval="[Command.link(ref('sale.group_sale_salesman'))]" />
     </record>
 
 </odoo>

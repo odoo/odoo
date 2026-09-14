@@ -323,7 +323,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             company_ids=[(4, cls.company_main.id), (4, cls.company_2.id)],
             email="user.sales.manager.mc@test.example.com",
             login="user_sales_manager_mc",
-            groups="sales_team.group_sale_manager,base.group_partner_manager",
+            groups="sale.group_sale_manager,base.group_partner_manager",
             name="Myrddin Sales Manager",
             notification_type="inbox",
         )
@@ -720,7 +720,7 @@ class TestLeadConvertMassCommon(TestLeadConvertCommon):
             email="crm_leads_2@test.example.com",
             company_id=cls.env.ref("base.main_company").id,
             notification_type="inbox",
-            groups="sales_team.group_sale_salesman_all_leads,base.group_partner_manager,crm.group_use_lead",
+            groups="sale.group_sale_salesman_all_leads,base.group_partner_manager,crm.group_use_lead",
         )
         cls.sales_team_convert_m2 = cls.env["team.member"].create(
             {

@@ -44,7 +44,7 @@ class CommonPosTest(ValuationReconciliationTestCommon):
         # AccountTestInvoicingCommon resolves mrp, purchase and stock.
         no_group = cls.env["res.groups"].browse()
         return super().get_default_groups() | (
-            cls.env.ref("sales_team.group_sale_manager", False) or no_group
+            cls.env.ref("sale.group_sale_manager", False) or no_group
         )
 
     @classmethod
@@ -520,7 +520,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
         # AccountTestInvoicingCommon resolves mrp, purchase and stock.
         no_group = cls.env["res.groups"].browse()
         return super().get_default_groups() | (
-            cls.env.ref("sales_team.group_sale_manager", False) or no_group
+            cls.env.ref("sale.group_sale_manager", False) or no_group
         )
 
     @classmethod

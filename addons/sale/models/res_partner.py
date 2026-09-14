@@ -12,7 +12,7 @@ class ResPartner(models.Model):
     )
     sale_order_count = fields.Integer(
         compute="_compute_sale_order_count",
-        groups="sales_team.group_sale_salesman",
+        groups="sale.group_sale_salesman",
     )
     sale_warn_msg = fields.Text(string="Message for Sales Order")
 
@@ -20,7 +20,7 @@ class ResPartner(models.Model):
         self._compute_order_count(
             "sale.order",
             "sale_order_count",
-            "sales_team.group_sale_salesman",
+            "sale.group_sale_salesman",
             domain=self._get_sale_order_domain_count(),
         )
 
@@ -29,7 +29,7 @@ class ResPartner(models.Model):
         return self._add_order_statistics(
             data_list,
             "sale_order_count",
-            "sales_team.group_sale_salesman",
+            "sale.group_sale_salesman",
             "fa-solid fa-dollar-sign",
             self.env._("Sale Orders"),
             "o_tag_color_2",

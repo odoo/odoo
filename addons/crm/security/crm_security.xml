@@ -10,9 +10,7 @@
     </record>
 
     <record id="partner.res_partner_menu_config" model="ir.ui.menu">
-        <field
-            name="group_ids"
-            eval="[Command.link(ref('sales_team.group_sale_manager'))]" />
+        <field name="group_ids" eval="[Command.link(ref('sale.group_sale_manager'))]" />
     </record>
 
     <data noupdate="1">
@@ -23,7 +21,7 @@
                 name="domain_force">['|',('user_id','=',user.id),('user_id','=',False)]</field>
             <field
                 name="groups"
-                eval="[Command.link(ref('sales_team.group_sale_salesman'))]" />
+                eval="[Command.link(ref('sale.group_sale_salesman'))]" />
         </record>
         <record id="crm_lead_company_rule" model="ir.rule">
             <field name="name">CRM Lead Multi-Company</field>
@@ -37,7 +35,7 @@
             <field name="domain_force">[(1,'=',1)]</field>
             <field
                 name="groups"
-                eval="[Command.link(ref('sales_team.group_sale_salesman_all_leads'))]" />
+                eval="[Command.link(ref('sale.group_sale_salesman_all_leads'))]" />
         </record>
         <record id="crm_activity_report_rule_all_activities" model="ir.rule">
             <field name="name">All Activities</field>
@@ -45,7 +43,7 @@
             <field name="domain_force">[(1,'=',1)]</field>
             <field
                 name="groups"
-                eval="[Command.link(ref('sales_team.group_sale_salesman_all_leads'))]" />
+                eval="[Command.link(ref('sale.group_sale_salesman_all_leads'))]" />
         </record>
         <record id="crm_activity_report_rule_personal_activities" model="ir.rule">
             <field name="name">Personal Activities</field>
@@ -54,7 +52,7 @@
                 name="domain_force">['|',('user_id','=',user.id),('user_id','=',False)]</field>
             <field
                 name="groups"
-                eval="[Command.link(ref('sales_team.group_sale_salesman'))]" />
+                eval="[Command.link(ref('sale.group_sale_salesman'))]" />
         </record>
         <record id="crm_activity_report_rule_multi_company" model="ir.rule">
             <field name="name">CRM Lead Multi-Company</field>
@@ -68,7 +66,7 @@
             <field name="domain_force">[('res_model', '=', 'crm.lead')]</field>
             <field
                 name="groups"
-                eval="[Command.link(ref('sales_team.group_sale_manager'))]" />
+                eval="[Command.link(ref('sale.group_sale_manager'))]" />
             <field name="perm_read" eval="False" />
         </record>
         <record id="mail_plan_templates_rule_group_sale_manager_lead" model="ir.rule">
@@ -77,7 +75,7 @@
             <field name="domain_force">[('plan_id.res_model', '=', 'crm.lead')]</field>
             <field
                 name="groups"
-                eval="[Command.link(ref('sales_team.group_sale_manager'))]" />
+                eval="[Command.link(ref('sale.group_sale_manager'))]" />
             <field name="perm_read" eval="False" />
         </record>
     </data>

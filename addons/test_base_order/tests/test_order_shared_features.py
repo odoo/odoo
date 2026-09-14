@@ -8,15 +8,15 @@ from odoo.tests import TransactionCase, tagged
 @tagged("post_install", "-at_install")
 class TestOrderSharedFeatures(TransactionCase):
     _ALL_DOCUMENTS_GROUPS = {
-        "sale.order": "sales_team.group_sale_salesman_all_leads",
+        "sale.order": "sale.group_sale_salesman_all_leads",
         "purchase.order": "purchase.group_purchase_user_all",
     }
     _OWN_DOCUMENTS_GROUPS = {
-        "sale.order": "sales_team.group_sale_salesman",
+        "sale.order": "sale.group_sale_salesman",
         "purchase.order": "purchase.group_purchase_user",
     }
     _MANAGER_GROUPS = {
-        "sale.order": "sales_team.group_sale_manager",
+        "sale.order": "sale.group_sale_manager",
         "purchase.order": "purchase.group_purchase_manager",
     }
     _PARTNER_RESPONSIBLE_FIELDS = {

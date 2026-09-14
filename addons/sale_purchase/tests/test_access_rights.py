@@ -10,7 +10,7 @@ class TestAccessRights(TestSalePurchaseCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        group_sale_user = cls.env.ref("sales_team.group_sale_salesman")
+        group_sale_user = cls.env.ref("sale.group_sale_salesman")
         group_purchase_user = cls.env.ref("purchase.group_purchase_user")
         cls.user_salesperson = (
             cls.env["res.users"]

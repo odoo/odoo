@@ -199,7 +199,7 @@
         <field name="visibility_mode">ranking</field>
         <field
             name="user_domain"
-            eval="str([('all_group_ids', 'in', [ref('sales_team.group_sale_salesman')])])" />
+            eval="str([('all_group_ids', 'in', [ref('sale.group_sale_salesman')])])" />
         <field name="report_message_frequency">weekly</field>
     </record>
 
@@ -209,7 +209,7 @@
         <field name="visibility_mode">ranking</field>
         <field
             name="user_domain"
-            eval="str([('all_group_ids', 'in', [ref('sales_team.group_sale_salesman')])])" />
+            eval="str([('all_group_ids', 'in', [ref('sale.group_sale_salesman')])])" />
         <field name="report_message_frequency">weekly</field>
     </record>
 

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="sale.sale_order_1" model="sale.order">
+        <field name="team_id" ref="team_sales_department" />
+    </record>
+
+    <record id="sale.sale_order_2" model="sale.order">
+        <field name="team_id" ref="team_sales_department" />
+        <field name="tag_ids" eval="[Command.link(ref('categ_oppor7'))]" />
+    </record>
+
+    <record id="sale.sale_order_3" model="sale.order">
+        <field name="team_id" ref="team_sales_department" />
+        <field
+            name="tag_ids"
+            eval="[Command.link(ref('categ_oppor1')), Command.link(ref('categ_oppor2'))]" />
+    </record>
+
+    <record id="sale.sale_order_4" model="sale.order">
+        <field name="team_id" ref="team_sales_department" />
+    </record>
+
+    <record id="sale.sale_order_5" model="sale.order">
+        <field name="team_id" ref="crm_team_1" />
+    </record>
+
+    <record id="sale.sale_order_6" model="sale.order">
+        <field name="team_id" ref="crm_team_1" />
+        <field name="tag_ids" eval="[Command.link(ref('categ_oppor6'))]" />
+    </record>
+
+    <record id="sale.sale_order_7" model="sale.order">
+        <field name="team_id" ref="team_sales_department" />
+        <field name="tag_ids" eval="[Command.link(ref('categ_oppor4'))]" />
+    </record>
+
+    <record id="sale.sale_order_8" model="sale.order">
+        <field name="team_id" ref="crm_team_1" />
+    </record>
+
+    <record id="sale.sale_order_9" model="sale.order">
+        <field name="team_id" ref="crm_team_1" />
+    </record>
+
+    <record id="sale.sale_order_10" model="sale.order">
+        <field name="team_id" ref="crm_team_1" />
+        <field name="tag_ids" eval="[Command.link(ref('categ_oppor3'))]" />
+    </record>
+
+    <record id="sale.sale_order_11" model="sale.order">
+        <field name="team_id" ref="crm_team_1" />
+    </record>
+
+    <record id="sale.sale_order_12" model="sale.order">
+        <field name="team_id" ref="crm_team_1" />
+        <field name="tag_ids" eval="[Command.link(ref('categ_oppor1'))]" />
+    </record>
+
+    <record id="sale.sale_order_13" model="sale.order">
+        <field name="team_id" ref="crm_team_1" />
+    </record>
+
+    <record id="sale.sale_order_14" model="sale.order">
+        <field name="team_id" ref="team_sales_department" />
+    </record>
+
+    <record id="sale.sale_order_15" model="sale.order">
+        <field name="team_id" ref="team_sales_department" />
+    </record>
+
+    <record id="sale.sale_order_16" model="sale.order">
+        <field name="team_id" ref="team_sales_department" />
+    </record>
+
+    <record id="sale.sale_order_17" model="sale.order">
+        <field name="team_id" ref="team_sales_department" />
+    </record>
+
+    <record id="sale.sale_order_18" model="sale.order">
+        <field name="team_id" ref="team_sales_department" />
+    </record>
+
+    <record id="sale.portal_sale_order_1" model="sale.order">
+        <field name="team_id" ref="team_sales_department" />
+        <field name="tag_ids" eval="[Command.link(ref('categ_oppor4'))]" />
+    </record>
+
+    <record id="sale.portal_sale_order_2" model="sale.order">
+        <field name="team_id" ref="team_sales_department" />
+    </record>
+
+</odoo>

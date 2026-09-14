@@ -10,7 +10,7 @@
         id="crm_menu_root"
         name="CRM"
         sequence="25"
-        groups="sales_team.group_sale_salesman,sales_team.group_sale_manager"
+        groups="sale.group_sale_salesman,sale.group_sale_manager"
         web_icon="crm,static/description/icon.png"
         web_keywords="lead, opportunity, pipeline, prospect, deal, forecast" />
 
@@ -30,7 +30,7 @@
         parent="crm_menu_sales"
         action="crm.crm_lead_action_my_activities"
         sequence="2"
-        groups="sales_team.group_sale_salesman" />
+        groups="sale.group_sale_salesman" />
 
     <menuitem
         id="sales_team_menu_team_pipeline"
@@ -61,7 +61,7 @@
         name="Reporting"
         parent="crm_menu_root"
         sequence="20"
-        groups="sales_team.group_sale_salesman" />
+        groups="sale.group_sale_salesman" />
 
     <menuitem
         id="crm_menu_forecast"
@@ -98,7 +98,7 @@
         parent="crm_menu_root"
         action="crm.action_your_pipeline"
         sequence="25"
-        groups="sales_team.group_sale_manager" />
+        groups="sale.group_sale_manager" />
 
     <menuitem
         id="crm_config_settings_menu"
@@ -113,7 +113,7 @@
         name="Opportunities"
         parent="crm_menu_config"
         sequence="1"
-        groups="sales_team.group_sale_manager" />
+        groups="sale.group_sale_manager" />
 
     <menuitem
         id="crm_team_config"
@@ -149,7 +149,7 @@
         parent="crm_team_menu_config_activities"
         action="mail_activity_plan_action_lead"
         sequence="11"
-        groups="sales_team.group_sale_manager" />
+        groups="sale.group_sale_manager" />
 
     <menuitem
         id="crm_recurring_plan_menu_config"
@@ -164,7 +164,7 @@
         name="Pipeline"
         parent="crm_menu_config"
         sequence="15"
-        groups="sales_team.group_sale_manager" />
+        groups="sale.group_sale_manager" />
 
     <menuitem
         id="menu_crm_lead_stage_act"

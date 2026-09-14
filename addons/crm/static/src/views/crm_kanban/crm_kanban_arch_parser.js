@@ -1,13 +1,12 @@
 /** @odoo-module native */
 import { KanbanArchParser } from "@web/views/kanban";
-import { extractAttributes } from "@web/core/utils/dom/xml";
 
 export class CrmKanbanArchParser extends KanbanArchParser {
     parseProgressBar(progressBar, fields) {
         const result = super.parseProgressBar(...arguments);
-        const attrs = extractAttributes(progressBar, ["recurring_revenue_sum_field"]);
+        const { recurring_revenue_sum_field } = progressBar.attrs || {};
         result.recurring_revenue_sum_field =
-            fields[attrs.recurring_revenue_sum_field] || false;
+            fields[recurring_revenue_sum_field] || false;
         return result;
     }
 }

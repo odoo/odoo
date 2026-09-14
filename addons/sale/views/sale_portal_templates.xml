@@ -59,6 +59,46 @@
         </div>
     </template>
 
+    <template id="sale_order_portal_optional_product_quantity" name="Order Quantity">
+        <div t-if="line._can_be_edited_on_portal()" class="d-inline-flex">
+            <div class="input-group js_quantity_container pull-right">
+                <span class="d-print-none input-group-text d-none d-md-inline-block">
+                    <a
+                        title="Remove one"
+                        aria-label="Remove one"
+                        href="#"
+                        t-att-class="'opacity-50' if line.product_qty == 0 else 'js_update_line_json'"
+                        t-att-data-line-id="line.id"
+                        t-att-data-remove="True">
+                        <span class="fa-solid fa-minus" />
+                    </a>
+                </span>
+                <input
+                    type="text"
+                    class="js_quantity form-control"
+                    t-att-data-line-id="line.id"
+                    t-att-value="int(line.product_qty) or '0'" />
+                <span class="d-print-none input-group-text d-none d-md-inline-block">
+                    <a
+                        title="Add one"
+                        aria-label="Add one"
+                        class="js_update_line_json"
+                        href="#"
+                        t-att-data-line-id="line.id">
+                        <span class="fa-solid fa-plus" />
+                    </a>
+                </span>
+            </div>
+            <div class="ms-1 align-self-center">
+                <span t-field="line.product_uom_id" />
+            </div>
+        </div>
+        <div t-else="">
+            <span t-field="line.product_qty" />
+            <span t-field="line.product_uom_id" />
+        </div>
+    </template>
+
     <template id="portal_my_quotations" name="My Quotations">
         <t t-call="portal.portal_layout">
             <t t-set="breadcrumbs_searchbar" t-value="True" />
@@ -160,7 +200,7 @@
         inherit_id="portal.portal_sidebar"
         primary="True">
         <t t-call="portal.portal_layout" position="inside">
-            <t t-set="o_portal_fullwidth_alert" groups="sales_team.group_sale_salesman">
+            <t t-set="o_portal_fullwidth_alert" groups="sale.group_sale_salesman">
                 <t t-call="portal.portal_back_in_edit_mode" />
             </t>
         </t>
@@ -965,10 +1005,8 @@
                                             <span t-field="line.name">Combo Product</span>
                                         </td>
                                         <td name="td_combo_quantity" class="text-end">
-                                            <div id="quote_qty">
-                                                <span t-field="line.product_qty" />
-                                                <span t-field="line.product_uom_id" />
-                                            </div>
+                                            <t
+                                                t-call="sale.sale_order_portal_optional_product_quantity" />
                                         </td>
                                         <td
                                             name="td_combo_priceunit"
@@ -1001,10 +1039,8 @@
                                                 t-field="line.name" />
                                         </td>
                                         <td name="td_product_quantity" class="text-end">
-                                            <div id="quote_qty">
-                                                <span t-field="line.product_qty" />
-                                                <span t-field="line.product_uom_id" />
-                                            </div>
+                                            <t
+                                                t-call="sale.sale_order_portal_optional_product_quantity" />
                                         </td>
                                         <td
                                             name="td_product_priceunit"

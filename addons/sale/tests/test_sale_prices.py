@@ -503,7 +503,7 @@ class TestSalePrices(SaleCommon):
                 "name": "E.T",
                 "login": "hohoho",
                 "group_ids": (
-                    self.env.ref("sales_team.group_sale_salesman")
+                    self.env.ref("sale.group_sale_salesman")
                     | self.env.ref("product.group_product_manager")
                 ),
             }
@@ -1084,7 +1084,6 @@ class TestSalePrices(SaleCommon):
                 "company_id": branch_company.id,
                 "fiscal_position_id": fpos.id,
                 "user_id": False,
-                "team_id": False,
                 "line_ids": [Command.create({"product_id": self.product.id})],
             }
         )

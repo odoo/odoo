@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_sale_order_search_team" model="ir.ui.view">
+        <field name="name">sale.order.search.team</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sale_order_search" />
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <field name="user_id" position="after">
+                <field name="team_id" string="Sales Team" />
+            </field>
+            <field name="product_id" position="after">
+                <field name="tag_ids" />
+            </field>
+            <filter name="salesperson" position="after">
+                <filter
+                    name="tags"
+                    string="Tags"
+                    context="{'group_by': 'tag_ids'}"
+                    groups="sale.group_sale_salesman,sale.group_sale_readonly" />
+            </filter>
+        </field>
+    </record>
+
+    <record id="view_sale_order_list_team" model="ir.ui.view">
+        <field name="name">sale.order.list.team</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sale_order_list" />
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <field name="user_id" position="after">
+                <field name="team_id" optional="hide" />
+            </field>
+            <field name="has_upsell_opportunity" position="after">
+                <field
+                    name="tag_ids"
+                    widget="many2many_tags"
+                    optional="hide"
+                    options="{'color_field': 'color'}" />
+            </field>
+        </field>
+    </record>
+
+    <record id="view_sale_order_form_team" model="ir.ui.view">
+        <field name="name">sale.order.form.team</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sale_order_form" />
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <xpath
+                expr="//group[@name='responsible_info']/field[@name='user_id']"
+                position="after">
+                <field
+                    name="team_id"
+                    context="{'kanban_view_ref': 'team.team_view_kanban'}"
+                    options="{'no_create': True}" />
+            </xpath>
+            <xpath
+                expr="//group[@name='responsible_info']/field[@name='reference']"
+                position="after">
+                <field
+                    name="tag_ids"
+                    widget="many2many_tags"
+                    options="{'color_field': 'color', 'no_create_edit': True}" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

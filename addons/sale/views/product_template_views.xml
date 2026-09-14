@@ -36,7 +36,7 @@
                 <attribute name="invisible" add="not sale_ok" separator="or" />
             </field>
             <group name="description" position="after">
-                <t groups="sales_team.group_sale_salesman">
+                <t groups="sale.group_sale_salesman">
                     <group
                         string="Warning on Sales Orders"
                         groups="sale.group_warning_sale">
@@ -68,7 +68,7 @@
                     type="object"
                     help="Sold in the last 365 days"
                     icon="fa-signal"
-                    groups="sales_team.group_sale_salesman"
+                    groups="sale.group_sale_salesman"
                     invisible="not sale_ok"
                     class="oe_stat_button">
                     <div class="o_field_widget o_stat_info">

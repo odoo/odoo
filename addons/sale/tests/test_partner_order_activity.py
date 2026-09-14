@@ -124,7 +124,7 @@ class TestPartnerOrderActivity(TransactionCase):
         salesman = new_test_user(
             self.env,
             login="order_activity_salesman",
-            groups="base.group_user,sales_team.group_sale_salesman_all_leads",
+            groups="base.group_user,sale.group_sale_salesman_all_leads",
         )
 
         partner = self.partner.with_user(salesman)
@@ -139,7 +139,7 @@ class TestPartnerOrderActivity(TransactionCase):
         restricted = new_test_user(
             self.env,
             login="order_activity_restricted",
-            groups="base.group_user,sales_team.group_sale_salesman",
+            groups="base.group_user,sale.group_sale_salesman",
         )
         self.assertFalse(
             self.env["sale.order"]

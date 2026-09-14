@@ -22,7 +22,7 @@ class TestEventSale(TestEventSaleCommon):
         )
 
         cls.user_salesperson = mail_new_test_user(
-            cls.env, login="user_salesman", groups="sales_team.group_sale_salesman"
+            cls.env, login="user_salesman", groups="sale.group_sale_salesman"
         )
 
         cls.ticket = cls.env["event.event.ticket"].create(

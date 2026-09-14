@@ -76,7 +76,7 @@ class TestAccessRights(SaleCommon, MailCommon):
         self.sale_order.write({"user_id": self.sale_user2.id})
 
         so_as_salesperson.read()
-        so_as_salesperson.write({"team_id": self.sale_team.id})
+        so_as_salesperson.write({"client_order_ref": "Salesperson reference"})
 
         with self.assertRaises(AccessError):
             self.env["sale.order"].with_user(self.sale_user2).create(
@@ -119,7 +119,7 @@ class TestAccessRights(SaleCommon, MailCommon):
         self.sale_order.partner_id = self.user_portal.partner_id
         self.sale_order.action_confirm()
         with self.assertRaises(AccessError):
-            so_as_portal_user.write({"team_id": self.sale_team.id})
+            so_as_portal_user.write({"client_order_ref": "Portal reference"})
         with self.assertRaises(AccessError):
             SaleOrder.create(
                 {
@@ -138,7 +138,7 @@ class TestAccessRights(SaleCommon, MailCommon):
         with self.assertRaises(AccessError):
             so_as_internal_user.read()
         with self.assertRaises(AccessError):
-            so_as_internal_user.write({"team_id": self.sale_team.id})
+            so_as_internal_user.write({"client_order_ref": "Employee reference"})
         with self.assertRaises(AccessError):
             SaleOrder.create(
                 {

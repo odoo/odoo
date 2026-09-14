@@ -8,12 +8,12 @@ class EventEvent(models.Model):
         comodel_name="sale.order.line",
         inverse_name="event_id",
         string="All sale order lines pointing to this event",
-        groups="sales_team.group_sale_salesman",
+        groups="sale.group_sale_salesman",
     )
     sale_price_total = fields.Monetary(
         string="Sales (Tax Included)",
         compute="_compute_sale_price_total",
-        groups="sales_team.group_sale_salesman",
+        groups="sale.group_sale_salesman",
     )
 
     @api.depends(

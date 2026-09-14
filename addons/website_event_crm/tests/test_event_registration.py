@@ -27,7 +27,7 @@ class EventRegistrationCase(TestEventCrmCommon):
         )
         cls.user_eventmanager.write(
             {
-                "group_ids": [(4, cls.env.ref("sales_team.group_sale_salesman").id)],
+                "group_ids": [(4, cls.env.ref("sale.group_sale_salesman").id)],
             }
         )
 

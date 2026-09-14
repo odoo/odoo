@@ -87,9 +87,7 @@ class ResPartner(models.Model):
         ]
 
     def _compute_opportunity_count(self):
-        if not self.ids or not self.env.user.has_group(
-            "sales_team.group_sale_salesman"
-        ):
+        if not self.ids or not self.env.user.has_group("sale.group_sale_salesman"):
             return super()._compute_opportunity_count()
 
         self.opportunity_count = 0

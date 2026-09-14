@@ -9,13 +9,13 @@ class EventEvent(models.Model):
         comodel_name="crm.lead",
         inverse_name="event_id",
         string="Leads",
-        groups="sales_team.group_sale_salesman",
+        groups="sale.group_sale_salesman",
         help="Leads generated from this event",
     )
     lead_count = fields.Integer(
         string="# Leads",
         compute="_compute_lead_count",
-        groups="sales_team.group_sale_salesman",
+        groups="sale.group_sale_salesman",
     )
 
     @api.depends("lead_ids")

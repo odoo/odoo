@@ -139,30 +139,30 @@ class TestResPartner(TestCrmCommon):
             (
                 [
                     {
-                        "iconClass": "fa-solid fa-star",
-                        "label": "Opportunities",
-                        "value": 4,
-                        "tagClass": "o_tag_color_8",
-                    },
-                    {
                         "iconClass": "fa-solid fa-dollar-sign",
                         "label": "Sale Orders",
                         "value": 2,
                         "tagClass": "o_tag_color_2",
                     },
-                ],
-                [
                     {
                         "iconClass": "fa-solid fa-star",
                         "label": "Opportunities",
-                        "value": 3,
+                        "value": 4,
                         "tagClass": "o_tag_color_8",
                     },
+                ],
+                [
                     {
                         "iconClass": "fa-solid fa-dollar-sign",
                         "label": "Sale Orders",
                         "value": 1,
                         "tagClass": "o_tag_color_2",
+                    },
+                    {
+                        "iconClass": "fa-solid fa-star",
+                        "label": "Opportunities",
+                        "value": 3,
+                        "tagClass": "o_tag_color_8",
                     },
                 ],
                 [

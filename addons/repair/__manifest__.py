@@ -20,7 +20,7 @@ The following topics are covered by this module:
     "license": "LGPL-3",
     "depends": [
         "sale_stock",
-        "sale_management",
+        "sale",
     ],
     "data": [
         "security/ir.model.access.csv",

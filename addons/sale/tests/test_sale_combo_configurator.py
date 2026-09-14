@@ -7,9 +7,6 @@ from odoo.addons.sale.tests.common import SaleCommon
 @tagged("post_install", "-at_install")
 class TestSaleComboConfigurator(HttpCase, SaleCommon):
     def test_sale_combo_configurator(self):
-        if self.env["ir.module.module"]._get("sale_management").state != "installed":
-            self.skipTest("Sale App is not installed, Sale menu is not accessible.")
-
         no_variant_attribute = self.env["product.attribute"].create(
             {
                 "name": "No variant attribute",
@@ -79,9 +76,6 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
         self.start_tour("/", "sale_combo_configurator", login="salesman")
 
     def test_sale_combo_configurator_with_optional_products(self):
-        if self.env["ir.module.module"]._get("sale_management").state != "installed":
-            self.skipTest("Sale App is not installed, Sale menu is not accessible.")
-
         combo_a = self.env["product.combo"].create(
             {
                 "name": "Combo A",
@@ -163,9 +157,6 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
         self.env["res.users"].search(
             [("login", "=", "salesman")]
         ).group_ids += self.env.ref("product.group_product_manager")
-        if self.env["ir.module.module"]._get("sale_management").state != "installed":
-            self.skipTest("Sale App is not installed, Sale menu is not accessible.")
-
         unconfigurable_no_variant_attribute = self.env["product.attribute"].create(
             {
                 "name": "Attribute A",
@@ -238,9 +229,6 @@ class TestSaleComboConfigurator(HttpCase, SaleCommon):
         )
 
     def test_sale_combo_configurator_preconfigure_unconfigurable_ptals(self):
-        if self.env["ir.module.module"]._get("sale_management").state != "installed":
-            self.skipTest("Sale App is not installed, Sale menu is not accessible.")
-
         unconfigurable_no_variant_attribute = self.env["product.attribute"].create(
             {
                 "name": "Attribute A",

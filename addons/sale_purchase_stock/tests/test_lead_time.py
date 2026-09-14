@@ -24,7 +24,7 @@ class TestLeadTime(TestSalePurchaseCommon):
                     "name": "Le Grand Horus",
                     "login": "grand.horus",
                     "email": "grand.horus@chansonbelge.dz",
-                    "group_ids": cls.env.ref("sales_team.group_sale_salesman"),
+                    "group_ids": cls.env.ref("sale.group_sale_salesman"),
                 }
             )
         )

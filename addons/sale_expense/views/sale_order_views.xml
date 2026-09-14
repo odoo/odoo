@@ -27,13 +27,13 @@
         <field name="priority" eval="18" />
         <field name="arch" type="xml">
             <field name="amount_untaxed" position="attributes">
-                <attribute name="groups">sales_team.group_sale_salesman,account.group_account_invoice,account.group_account_readonly</attribute>
+                <attribute name="groups">sale.group_sale_salesman,account.group_account_invoice,account.group_account_readonly</attribute>
             </field>
             <field name="amount_tax" position="attributes">
-                <attribute name="groups">sales_team.group_sale_salesman,account.group_account_invoice,account.group_account_readonly</attribute>
+                <attribute name="groups">sale.group_sale_salesman,account.group_account_invoice,account.group_account_readonly</attribute>
             </field>
             <field name="amount_total" position="attributes">
-                <attribute name="groups">sales_team.group_sale_salesman,account.group_account_invoice,account.group_account_readonly</attribute>
+                <attribute name="groups">sale.group_sale_salesman,account.group_account_invoice,account.group_account_readonly</attribute>
             </field>
         </field>
     </record>

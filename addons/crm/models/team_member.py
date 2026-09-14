@@ -23,7 +23,7 @@ class TeamMember(models.Model):
     lead_day_count = fields.Integer(
         string="Leads (last 24h)",
         compute="_compute_lead_day_count",
-        groups="sales_team.group_sale_salesman,sales_team.group_sale_readonly",
+        groups="sale.group_sale_salesman,sale.group_sale_readonly",
         help="Number of leads assigned to this member in the last 24 hours, "
         "archived and lost ones included. This is what the daily assignment "
         "quota is spent against.",
@@ -31,7 +31,7 @@ class TeamMember(models.Model):
     lead_month_count = fields.Integer(
         string="Leads (30 days)",
         compute="_compute_lead_month_count",
-        groups="sales_team.group_sale_salesman,sales_team.group_sale_readonly",
+        groups="sale.group_sale_salesman,sale.group_sale_readonly",
         help="Number of leads assigned to this member in the last 30 days, "
         "archived and lost ones included",
     )

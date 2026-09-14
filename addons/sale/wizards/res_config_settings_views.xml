@@ -9,14 +9,16 @@
         <field name="arch" type="xml">
             <xpath expr="//form" position="inside">
                 <app
-                    name="sale_management"
+                    name="sale"
                     string="Sales"
-                    groups="sales_team.group_sale_manager"
-                    data-string="Sales"
-                    notApp="1">
-                    <block name="sales_team_setting_container" title="Sales Teams">
-                        <setting help="Assign salespersons into multiple Sales Teams.">
-                            <field name="is_membership_multi" />
+                    groups="sale.group_sale_manager"
+                    data-string="Sales">
+                    <block name="sale_app_setting_container" title="Sales App">
+                        <setting
+                            id="sale_app_menu"
+                            help="Show the Sales app in the app launcher. When hidden, orders stay reachable from the applications that use them."
+                            groups="base.group_system">
+                            <field name="group_sale_app_menu" />
                         </setting>
                     </block>
                     <block name="catalog_setting_container" title="Product Catalog">
@@ -127,6 +129,33 @@
                             company_dependent="1"
                             documentation="/applications/sales/sales/send_quotations/get_signature_to_validate.html">
                             <field name="portal_confirmation_sign" />
+                        </setting>
+                        <setting
+                            id="standardized_offers_setting"
+                            help="Create standardized offers with default products"
+                            company_dependent="1"
+                            documentation="/applications/sales/sales/send_quotations/quote_template.html">
+                            <field name="group_sale_order_template" />
+                            <div
+                                class="content-group"
+                                invisible="not group_sale_order_template">
+                                <div class="mt16">
+                                    <label
+                                        for="company_so_template_id"
+                                        class="o_light_label mr8" />
+                                    <field
+                                        name="company_so_template_id"
+                                        class="oe_inline" />
+                                </div>
+                                <div class="mt8">
+                                    <button
+                                        name="%(sale.sale_order_template_action)d"
+                                        type="action"
+                                        string="Quotation Templates"
+                                        icon="oi-arrow-right"
+                                        class="btn-link" />
+                                </div>
+                            </div>
                         </setting>
                         <setting
                             id="online_payment"
@@ -423,7 +452,7 @@
         <field name="res_model">res.config.settings</field>
         <field name="view_mode">form</field>
         <field name="view_id" ref="res_config_settings_view_form" />
-        <field name="context">{'module' : 'sale_management', 'bin_size': False}</field>
+        <field name="context">{'module' : 'sale', 'bin_size': False}</field>
     </record>
 
 </odoo>

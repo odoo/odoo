@@ -6,7 +6,7 @@
     "license": "LGPL-3",
     "depends": [
         "document_product",
-        "sale_management",
+        "sale",
     ],
     "data": [
         "data/ir_cron.xml",

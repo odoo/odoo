@@ -13,7 +13,7 @@ class DiscussChannel(models.Model):
         comodel_name="crm.lead",
         inverse_name="origin_channel_id",
         string="Leads",
-        groups="sales_team.group_sale_salesman",
+        groups="sale.group_sale_salesman",
         help="The channel becomes accessible to sales users when leads are set.",
     )
     has_crm_lead = fields.Boolean(

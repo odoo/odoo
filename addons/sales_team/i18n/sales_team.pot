@@ -98,11 +98,6 @@ msgid ""
 msgstr ""
 
 #. module: sales_team
-#: model:res.groups,name:sales_team.group_sale_manager
-msgid "Administrator"
-msgstr ""
-
-#. module: sales_team
 #. odoo-javascript
 #: code:addons/sales_team/static/src/js/crm_team_form.js:0
 msgid "An error occurred while activating the Multi-Team option."
@@ -442,7 +437,7 @@ msgstr ""
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.team_sales_department
-#: model:res.groups.privilege,name:sales_team.res_groups_privilege_sales
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
 msgid "Sales"
 msgstr ""
 
@@ -464,6 +459,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_tree
+#: model:ir.model.fields,field_description:sales_team.field_account_invoice_report__team_id
+#: model:ir.model.fields,field_description:sales_team.field_account_move__team_id
+#: model:ir.model.fields,field_description:sales_team.field_sale_order__team_id
+#: model:ir.model.fields,field_description:sales_team.field_sale_report__team_id
+#: model_terms:ir.ui.view,arch_db:sales_team.account_invoice_groupby_inherit
+#: model_terms:ir.ui.view,arch_db:sales_team.view_account_invoice_report_search_inherit
+#: model_terms:ir.ui.view,arch_db:sales_team.view_sale_order_search_team
+#: model_terms:ir.ui.view,arch_db:sales_team.view_sale_report_search_team
 msgid "Sales Team"
 msgstr ""
 
@@ -487,6 +490,9 @@ msgstr ""
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_config
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_sales
 #: model:ir.model.fields,field_description:sales_team.field_res_users__crm_team_ids
+#: model:ir.ui.menu,name:sales_team.report_sales_team
+#: model:ir.ui.menu,name:sales_team.sales_team_config
+#: model_terms:ir.ui.view,arch_db:sales_team.res_config_settings_view_form
 msgid "Sales Teams"
 msgstr ""
 
@@ -539,6 +545,9 @@ msgstr ""
 #: model:ir.actions.act_window,name:sales_team.sales_team_crm_tag_action
 #: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_tree
+#: model:ir.model.fields,field_description:sales_team.field_sale_order__tag_ids
+#: model:ir.ui.menu,name:sales_team.menu_tag_config
+#: model_terms:ir.ui.view,arch_db:sales_team.view_sale_order_search_team
 msgid "Tags"
 msgstr ""
 
@@ -660,16 +669,6 @@ msgid "User Sales Team"
 msgstr ""
 
 #. module: sales_team
-#: model:res.groups,name:sales_team.group_sale_salesman_all_leads
-msgid "User: All Documents"
-msgstr ""
-
-#. module: sales_team
-#: model:res.groups,name:sales_team.group_sale_salesman
-msgid "User: Own Documents Only"
-msgstr ""
-
-#. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_ids
 msgid "Users assigned to this team."
 msgstr ""
@@ -714,13 +713,6 @@ msgid "e.g. Services"
 msgstr ""
 
 #. module: sales_team
-#: model:res.groups,comment:sales_team.group_sale_manager
-msgid ""
-"the user will have an access to the sales configuration as well as statistic"
-" reports."
-msgstr ""
-
-#. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_form
 msgid "<i class=\"fa-solid fa-building me-1 text-primary\" title=\"Company\"/>"
 msgstr ""
@@ -744,8 +736,18 @@ msgid "<i class=\"fa-solid fa-phone me-1 text-primary\" title=\"Phone\"/>"
 msgstr ""
 
 #. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_form
+msgid "<span class=\"flex-grow-1\">/ Month</span>"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_tag__active
 msgid "Archive a tag to hide it without deleting it."
+msgstr ""
+
+#. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.res_config_settings_view_form
+msgid "Assign salespersons into multiple Sales Teams."
 msgstr ""
 
 #. module: sales_team
@@ -760,6 +762,12 @@ msgid "Child Tags"
 msgstr ""
 
 #. module: sales_team
+#. odoo-javascript
+#: code:addons/sales_team/static/src/xml/sale_progressbar_field.xml:0
+msgid "Click to define an invoicing target"
+msgstr ""
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__code
 msgid "Code"
 msgstr ""
@@ -770,14 +778,61 @@ msgid "Config Settings"
 msgstr ""
 
 #. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.action_invoice_salesteams
+msgid "Create a customer invoice"
+msgstr ""
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.action_orders_salesteams
+#: model_terms:ir.actions.act_window,help:sales_team.action_quotations_salesteams
+msgid "Create a new quotation, the first step of a new sale!"
+msgstr ""
+
+#. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_member_action
 msgid "Create a new salesman"
+msgstr ""
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.action_invoice_salesteams
+msgid ""
+"Create invoices, register payments and keep track of the discussions with your\n"
+"                customers."
 msgstr ""
 
 #. module: sales_team
 #. odoo-python
 #: code:addons/sales_team/models/crm_team.py:0
 msgid "Dashboard"
+msgstr ""
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.action_account_invoice_report_salesteam
+msgid ""
+"From this report, you can have an overview of the amount invoiced to your\n"
+"            customer. The search tool can also be used to personalise your Invoices reports and so,\n"
+"            match this analysis to your needs."
+msgstr ""
+
+#. module: sales_team
+#: model:mail.message.subtype,name:sales_team.mt_salesteam_invoice_paid
+msgid "Invoice Paid"
+msgstr ""
+
+#. module: sales_team
+#: model:mail.message.subtype,name:sales_team.mt_salesteam_invoice_posted
+msgid "Invoice Posted"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.action_invoice_salesteams
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
+msgid "Invoices"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.action_account_invoice_report_salesteam
+msgid "Invoices Analysis"
 msgstr ""
 
 #. module: sales_team
@@ -788,6 +843,19 @@ msgstr ""
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_config_settings__is_membership_multi
 msgid "Multi Teams"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.action_quotation_form
+msgid "New Quotation"
+msgstr ""
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.action_orders_salesteams
+#: model_terms:ir.actions.act_window,help:sales_team.action_quotations_salesteams
+msgid ""
+"Once the quotation is confirmed by the customer, it becomes a sales order.<br> You\n"
+"                will be able to create an invoice and collect the payment."
 msgstr ""
 
 #. module: sales_team
@@ -806,6 +874,44 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_search
 #: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_tree
 msgid "Parent Tag"
+msgstr ""
+
+#. module: sales_team
+#: model:mail.message.subtype,name:sales_team.mt_salesteam_order_viewed
+msgid "Quotation Viewed"
+msgstr ""
+
+#. module: sales_team
+#: model:mail.message.subtype,name:sales_team.mt_salesteam_order_sent
+msgid "Quotation sent"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.action_quotations_salesteams
+msgid "Quotations"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.action_sale_report_quotation_salesteam
+msgid "Quotations Analysis"
+msgstr ""
+
+#. module: sales_team
+#. odoo-python
+#: model:ir.actions.act_window,name:sales_team.action_sale_report_so_salesteam
+msgid "Sales Analysis"
+msgstr ""
+
+#. module: sales_team
+#: model:mail.message.subtype,name:sales_team.mt_salesteam_order_confirmed
+msgid "Sales Order Confirmed"
+msgstr ""
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.action_orders_salesteams
+#: model:ir.actions.act_window,name:sales_team.action_orders_to_invoice_salesteams
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
+msgid "Sales Orders"
 msgstr ""
 
 #. module: sales_team
@@ -843,22 +949,23 @@ msgid "Tag"
 msgstr ""
 
 #. module: sales_team
-#: model:res.groups,comment:sales_team.group_sale_salesman_all_leads
+#: model_terms:ir.actions.act_window,help:sales_team.action_sale_report_quotation_salesteam
 msgid ""
-"The user will have access to all records of everyone in the sales "
-"application."
+"This report performs analysis on your quotations. Analysis check your\n"
+"            sales revenues and sort it by different group criteria (salesman, partner, product,\n"
+"            etc.) Use this report to perform analysis on sales not having invoiced yet. If you want\n"
+"            to analyse your turnover, you should use the Invoice Analysis report in the Accounting\n"
+"            application."
 msgstr ""
 
 #. module: sales_team
-#: model:res.groups,comment:sales_team.group_sale_salesman_team
+#: model_terms:ir.actions.act_window,help:sales_team.action_sale_report_so_salesteam
 msgid ""
-"The user will have access to records of their team members in the sales "
-"application."
-msgstr ""
-
-#. module: sales_team
-#: model:res.groups,comment:sales_team.group_sale_salesman
-msgid "The user will have access to their own data in the sales application."
+"This report performs analysis on your sales orders. Analysis check your\n"
+"            sales revenues and sort it by different group criteria (salesman, partner, product,\n"
+"            etc.) Use this report to perform analysis on sales not having invoiced yet. If you want\n"
+"            to analyse your turnover, you should use the Invoice Analysis report in the Accounting\n"
+"            application."
 msgstr ""
 
 #. module: sales_team
@@ -867,11 +974,6 @@ msgstr ""
 msgid ""
 "Use Sales Teams to organize your sales departments.\n"
 "                    Each team will work with a separate pipeline."
-msgstr ""
-
-#. module: sales_team
-#: model:res.groups,name:sales_team.group_sale_salesman_team
-msgid "User: Team Documents"
 msgstr ""
 
 #. module: sales_team

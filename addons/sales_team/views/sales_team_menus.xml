@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem
+        id="report_sales_team"
+        name="Sales Teams"
+        parent="sale.sale_order_menu"
+        action="team_action_sales"
+        sequence="30"
+        groups="sale.group_sale_manager" />
+
+    <menuitem
+        id="sales_team_config"
+        name="Sales Teams"
+        parent="sale.menu_sale_config"
+        action="team_action_config"
+        sequence="20" />
+
+    <menuitem
+        id="menu_tag_config"
+        name="Tags"
+        parent="sale.menu_sales_config"
+        action="sales_team_crm_tag_action"
+        sequence="10" />
+
+</odoo>

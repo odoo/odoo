@@ -12,7 +12,7 @@ class ResPartner(models.Model):
     )
     opportunity_count = fields.Integer(
         compute="_compute_opportunity_count",
-        groups="sales_team.group_sale_salesman",
+        groups="sale.group_sale_salesman",
     )
 
     def _get_children_partners_for_hierarchy(self):
@@ -26,7 +26,7 @@ class ResPartner(models.Model):
 
     def _compute_opportunity_count(self):
         self.opportunity_count = 0
-        if not self.env.user.has_group("sales_team.group_sale_salesman"):
+        if not self.env.user.has_group("sale.group_sale_salesman"):
             return
         opportunity_data = (
             self.env["crm.lead"]
@@ -46,7 +46,7 @@ class ResPartner(models.Model):
 
     def _get_application_statistics(self):
         data_list = super()._get_application_statistics()
-        if not self.env.user.has_group("sales_team.group_sale_salesman"):
+        if not self.env.user.has_group("sale.group_sale_salesman"):
             return data_list
         for partner in self.filtered("opportunity_count"):
             data_list[partner.id].append(

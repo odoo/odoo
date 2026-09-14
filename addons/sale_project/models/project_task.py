@@ -59,7 +59,7 @@ class ProjectTask(models.Model):
         string="To invoice",
         compute="_compute_task_to_invoice",
         search="_search_task_to_invoice",
-        groups="sales_team.group_sale_salesman_all_leads",
+        groups="sale.group_sale_salesman_all_leads",
         help="True when the task's sale order still has something left to invoice "
         "(fork invoice_state 'to do' or 'partial'); false when there is nothing to "
         "invoice ('no'), it is fully invoiced ('done'), or over-invoiced ('over done').",

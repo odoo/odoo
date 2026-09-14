@@ -41,6 +41,20 @@ class ResConfigSettings(models.TransientModel):
         string="Sale Order Warnings",
         implied_group="sale.group_warning_sale",
     )
+    group_sale_order_template = fields.Boolean(
+        string="Quotation Templates",
+        implied_group="sale.group_sale_order_template",
+    )
+    group_sale_app_menu = fields.Boolean(
+        string="Sales App",
+        implied_group="sale.group_sale_app_menu",
+    )
+    company_so_template_id = fields.Many2one(
+        related="company_id.sale_order_template_id",
+        string="Default Template",
+        readonly=False,
+        domain="[('company_id', 'in', [False, company_id])]",
+    )
 
     automatic_invoice = fields.Boolean(
         config_parameter="sale.automatic_invoice",
@@ -128,6 +142,16 @@ class ResConfigSettings(models.TransientModel):
         )
 
     def set_values(self):
+        if not self.group_sale_order_template:
+            if self.company_so_template_id:
+                self.company_so_template_id = False
+            companies = (
+                self.env["res.company"]
+                .sudo()
+                .search([("sale_order_template_id", "!=", False)])
+            )
+            if companies:
+                companies.sale_order_template_id = False
         super().set_values()
         if self.default_invoice_policy != "ordered":
             self.env["ir.config_parameter"].set_param(

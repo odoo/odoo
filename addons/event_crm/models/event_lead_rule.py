@@ -18,7 +18,7 @@ class EventLeadRule(models.Model):
         comodel_name="crm.lead",
         inverse_name="event_lead_rule_id",
         string="Created Leads",
-        groups="sales_team.group_sale_salesman",
+        groups="sale.group_sale_salesman",
     )
     lead_creation_basis = fields.Selection(
         selection=[("attendee", "Per Attendee"), ("order", "Per Order")],

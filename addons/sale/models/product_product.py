@@ -18,7 +18,7 @@ class ProductProduct(models.Model):
         self._compute_ordered_qty(
             "sales_count",
             "sale.report",
-            "sales_team.group_sale_salesman",
+            "sale.group_sale_salesman",
             "date_order",
             [("state", "in", self.env["sale.report"]._get_done_states())],
         )

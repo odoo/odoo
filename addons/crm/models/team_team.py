@@ -77,18 +77,18 @@ class TeamTeam(models.Model):
     lead_unassigned_count = fields.Integer(
         string="# Unassigned Leads",
         compute="_compute_lead_unassigned_count",
-        groups="sales_team.group_sale_salesman,sales_team.group_sale_readonly",
+        groups="sale.group_sale_salesman,sale.group_sale_readonly",
     )
     lead_all_assigned_month_count = fields.Integer(
         string="# Leads/Opps assigned this month",
         compute="_compute_lead_all_assigned_month_count",
-        groups="sales_team.group_sale_salesman,sales_team.group_sale_readonly",
+        groups="sale.group_sale_salesman,sale.group_sale_readonly",
         help="Number of leads and opportunities assigned this last month.",
     )
     lead_all_assigned_month_exceeded = fields.Boolean(
         string="Exceed monthly lead assignement",
         compute="_compute_lead_all_assigned_month_count",
-        groups="sales_team.group_sale_salesman,sales_team.group_sale_readonly",
+        groups="sale.group_sale_salesman,sale.group_sale_readonly",
         help="True if the monthly lead assignment count is greater than the maximum assignment limit, false otherwise.",
     )
     lead_properties_definition = fields.PropertiesDefinition(string="Lead Properties")
@@ -322,8 +322,7 @@ class TeamTeam(models.Model):
 
     def _action_assign_leads(self, force_quota=False, creation_delta_days=7):
         if not (
-            self.env.user.has_group("sales_team.group_sale_manager")
-            or self.env.is_system()
+            self.env.user.has_group("sale.group_sale_manager") or self.env.is_system()
         ):
             raise exceptions.UserError(
                 _(
@@ -798,7 +797,7 @@ class TeamTeam(models.Model):
                 "Create an Opportunity"
             )
             if user_team_id:
-                if self.env.user.has_group("sales_team.group_sale_manager"):
+                if self.env.user.has_group("sale.group_sale_manager"):
                     action["help"] += "<p>%s</p>" % _(
                         """As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>
                                         To work with the CRM, you should <a name="%d" type="action" tabindex="-1">join a team.</a>""",

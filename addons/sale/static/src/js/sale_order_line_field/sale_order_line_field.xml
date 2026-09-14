@@ -13,6 +13,17 @@
             />
         </t>
 
+        <t t-name="composition_button" position="after">
+            <DropdownItem
+                onSelected="() => api.toggleIsOptional(record)"
+                attrs="{ 'class': api.disableOptionalButton(record) ? 'disabled' : '' }"
+            >
+                <i class="me-1 fa-solid fa-list"/>
+                <span t-if="record.data.is_optional">Unset Optional</span>
+                <span t-else="">Set Optional</span>
+            </DropdownItem>
+        </t>
+
         <xpath expr="//td[hasclass('o_list_record_remove')]" position="attributes">
             <attribute name="t-if" separator=" and " add="!api.isCombo(record)"/>
         </xpath>

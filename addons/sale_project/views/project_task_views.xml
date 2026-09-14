@@ -74,7 +74,7 @@
                     type="object"
                     icon="fa-dollar"
                     context="{                         'create_for_project_id': id,                         'default_project_id': id,                         'default_partner_id': partner_id                     }"
-                    groups="sales_team.group_sale_salesman_all_leads"
+                    groups="sale.group_sale_salesman_all_leads"
                     invisible="not display_sales_stat_buttons or sale_order_count == 0 or is_template"
                     class="oe_stat_button">
                     <div class="o_field_widget o_stat_info">
@@ -91,7 +91,7 @@
                     type="object"
                     icon="fa-dollar"
                     context="{                         'create_for_project_id': id,                         'default_project_id': id,                         'default_partner_id': partner_id                     }"
-                    groups="sales_team.group_sale_salesman_all_leads"
+                    groups="sale.group_sale_salesman_all_leads"
                     invisible="not display_sales_stat_buttons or sale_order_count != 0 or is_template"
                     class="oe_stat_button">
                     <div class="o_field_widget o_stat_info">
@@ -143,11 +143,11 @@
                     <field
                         name="sale_line_id"
                         options="{'no_create': True, 'no_edit': True, 'delete': False, 'no_open': True}"
-                        groups="!sales_team.group_sale_salesman" />
+                        groups="!sale.group_sale_salesman" />
                     <field
                         name="sale_line_id"
                         options="{'no_create': True}"
-                        groups="sales_team.group_sale_salesman" />
+                        groups="sale.group_sale_salesman" />
                     <span
                         class="fa-solid fa-exclamation-triangle text-warning"
                         title="The sales order associated with this project has been cancelled. We recommend either updating the sales order item or cancelling this project in alignment with the cancellation of the sales order."
@@ -181,7 +181,7 @@
                     name="action_view_so"
                     type="object"
                     icon="fa-dollar"
-                    groups="sales_team.group_sale_salesman"
+                    groups="sale.group_sale_salesman"
                     invisible="not sale_order_id or has_template_ancestor or has_project_template"
                     class="oe_stat_button">
                     <div class="o_stat_info">
@@ -196,7 +196,7 @@
                 <field name="project_sale_order_id" invisible="1" />
                 <field
                     name="sale_order_id"
-                    groups="sales_team.group_sale_salesman"
+                    groups="sale.group_sale_salesman"
                     invisible="True" />
                 <label
                     for="sale_line_id"
@@ -209,7 +209,7 @@
                         name="sale_line_id"
                         string="Sales Order Item"
                         options="{&quot;no_open&quot;: True}"
-                        groups="!sales_team.group_sale_salesman"
+                        groups="!sale.group_sale_salesman"
                         invisible="not sale_line_id"
                         readonly="1" />
                     <field
@@ -219,7 +219,7 @@
                         widget="so_line_create_button"
                         context="{                             'so_form_view_ref': 'sale_project.view_order_simple_form',                             'create_for_task_id': id,                             'default_partner_id': partner_id,                             'default_company_id': company_id,                             'default_project_id': project_id,                             'with_price_unit': True,                             'dialog_size': 'large',                          }"
                         options="{'no_create': True}"
-                        groups="sales_team.group_sale_salesman"
+                        groups="sale.group_sale_salesman"
                         readonly="0" />
                     <span
                         class="fa-solid fa-exclamation-triangle text-warning"
@@ -238,14 +238,14 @@
                     optional="hide"
                     context="{'create': False, 'edit': False, 'delete': False, 'with_price_unit': True}"
                     options="{&quot;no_create&quot;: True}"
-                    groups="sales_team.group_sale_salesman"
+                    groups="sale.group_sale_salesman"
                     invisible="not allow_billable"
                     column_invisible="parent.has_template_ancestor or parent.has_project_template" />
                 <field
                     name="sale_line_id"
                     optional="hide"
                     options="{'no_open': True}"
-                    groups="!sales_team.group_sale_salesman"
+                    groups="!sale.group_sale_salesman"
                     column_invisible="parent.has_template_ancestor or parent.has_project_template"
                     readonly="1" />
                 <field name="allow_billable" column_invisible="True" />
@@ -256,14 +256,14 @@
                 <field
                     name="sale_line_id"
                     optional="hide"
-                    groups="sales_team.group_sale_salesman"
+                    groups="sale.group_sale_salesman"
                     column_invisible="parent.has_template_ancestor or parent.has_project_template"
                     readonly="1" />
                 <field
                     name="sale_line_id"
                     optional="hide"
                     options="{'no_open': True}"
-                    groups="!sales_team.group_sale_salesman"
+                    groups="!sale.group_sale_salesman"
                     column_invisible="parent.has_template_ancestor or parent.has_project_template"
                     readonly="1" />
                 <field name="allow_billable" column_invisible="True" />
@@ -298,13 +298,13 @@
                     name="sale_line_id"
                     optional="hide"
                     options="{'no_create': True}"
-                    groups="sales_team.group_sale_salesman"
+                    groups="sale.group_sale_salesman"
                     column_invisible="not context.get('allow_billable') or context.get('template_project')" />
                 <field
                     name="sale_line_id"
                     optional="hide"
                     options="{'no_open': True}"
-                    groups="!sales_team.group_sale_salesman"
+                    groups="!sale.group_sale_salesman"
                     column_invisible="not context.get('allow_billable') or context.get('template_project')"
                     readonly="1" />
             </xpath>
@@ -344,26 +344,26 @@
                         name="sale_line_id"
                         placeholder="Non-billable"
                         options="{'no_open': True}"
-                        groups="!sales_team.group_sale_salesman"
+                        groups="!sale.group_sale_salesman"
                         readonly="1" />
                     <field
                         name="sale_line_id"
                         placeholder="Non-billable"
                         options="{'no_create': True}"
-                        groups="sales_team.group_sale_salesman"
+                        groups="sale.group_sale_salesman"
                         readonly="0" />
                     <label for="quantity_percentage" invisible="not sale_line_id" />
                     <div class="col-6" invisible="not sale_line_id">
                         <field
                             name="quantity_percentage"
                             widget="percentage"
-                            groups="!sales_team.group_sale_salesman"
+                            groups="!sale.group_sale_salesman"
                             readonly="1"
                             class="mw-25" />
                         <field
                             name="quantity_percentage"
                             widget="percentage"
-                            groups="sales_team.group_sale_salesman"
+                            groups="sale.group_sale_salesman"
                             readonly="0"
                             class="mw-25"
                             decoration-danger="quantity_percentage &lt; 0 or 1 &lt; quantity_percentage" />
@@ -409,34 +409,34 @@
                     name="sale_line_id"
                     placeholder="Non-billable"
                     options="{'no_open': True}"
-                    groups="!sales_team.group_sale_salesman"
+                    groups="!sale.group_sale_salesman"
                     readonly="1" />
                 <field
                     name="sale_line_id"
                     placeholder="Non-billable"
                     options="{'no_create': True}"
-                    groups="sales_team.group_sale_salesman" />
+                    groups="sale.group_sale_salesman" />
                 <field
                     name="quantity_percentage"
                     string="Quantity (%)"
                     widget="percentage"
-                    groups="!sales_team.group_sale_salesman"
+                    groups="!sale.group_sale_salesman"
                     readonly="not sale_line_id" />
                 <field
                     name="quantity_percentage"
                     string="Quantity (%)"
                     widget="percentage"
-                    groups="sales_team.group_sale_salesman"
+                    groups="sale.group_sale_salesman"
                     readonly="not sale_line_id" />
                 <field
                     name="product_uom_qty"
                     optional="hide"
-                    groups="!sales_team.group_sale_salesman"
+                    groups="!sale.group_sale_salesman"
                     readonly="1" />
                 <field
                     name="product_uom_qty"
                     optional="hide"
-                    groups="sales_team.group_sale_salesman" />
+                    groups="sale.group_sale_salesman" />
             </xpath>
             <xpath expr="//button[@name='action_view_tasks']" position="after">
                 <button

@@ -32,7 +32,7 @@ class TestUi(HttpCase, TestCrmCommon):
                         0,
                         [
                             self.ref("base.group_user"),
-                            self.ref("sales_team.group_sale_salesman"),
+                            self.ref("sale.group_sale_salesman"),
                         ],
                     )
                 ],

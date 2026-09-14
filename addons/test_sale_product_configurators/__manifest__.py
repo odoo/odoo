@@ -6,7 +6,7 @@
     "license": "LGPL-3",
     "depends": [
         "event_sale",
-        "sale_management",
+        "sale",
         "sale_product_matrix",
     ],
     "assets": {

@@ -981,6 +981,30 @@ class TestCaseDocuments(TransactionCaseDocuments):
                 default={"user_folder_id": str(sub_folder.id)}
             )
 
+    def test_copy_document_keeps_the_record_link_it_is_given(self):
+        partner = self.env.user.partner_id
+        self.document_gif.write({"res_model": "res.partner", "res_id": partner.id})
+
+        with mute_logger("odoo.addons.document.models.document_document"):
+            detached = self.document_gif.copy()
+            from_default = self.document_gif.copy(
+                {"res_model": "res.partner", "res_id": partner.id}
+            )
+            from_record_panel = self.document_gif.with_context(
+                default_res_model="res.partner", default_res_id=partner.id
+            ).copy()
+
+        self.assertFalse(detached.res_model)
+        for copied in (from_default, from_record_panel):
+            self.assertEqual(
+                (copied.res_model, copied.res_id), ("res.partner", partner.id)
+            )
+            self.assertEqual(
+                (copied.attachment_id.res_model, copied.attachment_id.res_id),
+                ("res.partner", partner.id),
+            )
+            self.assertNotEqual(copied.attachment_id, self.document_gif.attachment_id)
+
     def test_copy_shortcut(self):
         manager_shortcut = self.document_txt.with_user(
             self.document_manager

@@ -1707,9 +1707,7 @@ class TestSaleToInvoice(TestSaleCommon):
                 "name": "Salesperson",
                 "login": "salesperson",
                 "email": "test@test.com",
-                "group_ids": [
-                    (6, 0, [self.env.ref("sales_team.group_sale_salesman").id])
-                ],
+                "group_ids": [(6, 0, [self.env.ref("sale.group_sale_salesman").id])],
             }
         )
 
@@ -2044,45 +2042,6 @@ class TestSaleToInvoice(TestSaleCommon):
         self.assertEqual(len(invoice.invoice_line_ids), 1)
         self.assertEqual(len(credit_note.invoice_line_ids), 2)
         self.assertFalse(credit_note.reversed_entry_id)
-
-    def test_refund_salesteam(self):
-        salesperson = self.user
-        team1, team2 = self.env["team.team"].create(
-            [
-                {
-                    "use_sale": True,
-                    "name": "Team 1",
-                    "member_ids": [Command.link(salesperson.id)],
-                },
-                {"use_sale": True, "name": "Team 2"},
-            ]
-        )
-        self.assertEqual(salesperson.sale_team_id, team1)
-        self.sale_order.write(
-            {
-                "user_id": salesperson,
-                "team_id": team2.id,
-                "line_ids": [
-                    Command.update(sol_id, {"price_unit": -10})
-                    for sol_id in self.sale_order.line_ids.ids
-                ],
-            }
-        )
-
-        self.sale_order.action_confirm()
-        invoice = self.sale_order._create_invoices(final=True)
-
-        self.assertEqual(invoice.move_type, "out_refund")
-        self.assertEqual(
-            invoice.invoice_user_id,
-            salesperson,
-            "Invoice salesperson should be the same as the order's salesperson",
-        )
-        self.assertEqual(
-            invoice.team_id,
-            team2,
-            "Invoice team should be the same as the order's team",
-        )
 
     def test_invoice_from_order_without_lines(self):
         sale_order = self.env["sale.order"].create(

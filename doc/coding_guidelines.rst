@@ -7437,7 +7437,7 @@ Every new model ships explicit access rules ``[review]``. A model with no
   optional-dependency idiom.
 
 * **A read-only tier is the lowest rung of its privilege**
-  ``[readonly_tiers]``. ``account``, ``stock``, ``sales_team``, ``purchase`` and
+  ``[readonly_tiers]``. ``account``, ``stock``, ``sale``, ``purchase`` and
   ``mrp`` each carry ``group_<app>_readonly``: sequence 5 or 10, ``privilege_id``
   set, implying ``base.group_user``. It reads every model the app shows and
   writes none (``grants_write``); where a rung of the same privilege narrows a

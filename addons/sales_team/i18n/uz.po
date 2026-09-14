@@ -69,6 +69,12 @@ msgid "<i class=\"fa fa-fw me-1 fa-phone text-primary\" title=\"Phone\"/>"
 msgstr "<i class=\"fa fa-fw me-1 fa-phone text-primary\" title=\"Telefon\"/>"
 
 #. module: sales_team
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_form
+#, fuzzy
+msgid "<span class=\"flex-grow-1\">/ Month</span>"
+msgstr "<span class=\"flex-grow-1\">/ oyiga</span>"
+
+#. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
 #, fuzzy
 msgid "<span>New</span>"
@@ -128,12 +134,6 @@ msgstr ""
 "qo‘shing."
 
 #. module: sales_team
-#: model:res.groups,name:sales_team.group_sale_manager
-#, fuzzy
-msgid "Administrator"
-msgstr "Administrator"
-
-#. module: sales_team
 #. odoo-javascript
 #: code:addons/sales_team/static/src/js/crm_team_form.js:0
 #, fuzzy
@@ -185,6 +185,13 @@ msgid "Cannot delete default team \"%s\""
 msgstr "\"%s\" standart jamoani o‘chirib bo‘lmaydi"
 
 #. module: sales_team
+#. odoo-javascript
+#: code:addons/sales_team/static/src/xml/sale_progressbar_field.xml:0
+#, fuzzy
+msgid "Click to define an invoicing target"
+msgstr "Hisob-faktura maqsadini belgilash uchun bosing"
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__color
 #, fuzzy
 msgid "Color"
@@ -229,10 +236,33 @@ msgid "Create a Sales Team"
 msgstr "Savdo jamoasini yaratish"
 
 #. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.action_invoice_salesteams
+#, fuzzy
+msgid "Create a customer invoice"
+msgstr "Mijoz hisob-fakturasini yaratish"
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.action_orders_salesteams
+#: model_terms:ir.actions.act_window,help:sales_team.action_quotations_salesteams
+#, fuzzy
+msgid "Create a new quotation, the first step of a new sale!"
+msgstr "Yangi narx taklifi yarating - bu yangi sotuvning birinchi qadami!"
+
+#. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
 #, fuzzy
 msgid "Create an Activity Type"
 msgstr "Faoliyat turini yaratish"
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.action_invoice_salesteams
+#, fuzzy
+msgid ""
+"Create invoices, register payments and keep track of the discussions with "
+"your customers."
+msgstr ""
+"Hisob-fakturalar yarating, to‘lovlarni ro‘yxatga oling va mijozlaringiz "
+"bilan muloqotlarni kuzatib boring"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__create_uid
@@ -319,6 +349,19 @@ msgid "Followers (Partners)"
 msgstr "Kuzatuvchilar (Hamkorlar)"
 
 #. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.action_account_invoice_report_salesteam
+#, fuzzy
+msgid ""
+"From this report, you can have an overview of the amount invoiced to your "
+"customer. The search tool can also be used to personalise your Invoices "
+"reports and so, match this analysis to your needs."
+msgstr ""
+"Ushbu hisobotdan mijozingizga hisoblangan summa haqida umumiy ma'lumot "
+"olishingiz mumkin. Qidiruv vositasi hisob-faktura hisobotlaringizni "
+"shaxsiylashtirish va shu orqali ushbu tahlilni ehtiyojlaringizga "
+"moslashtirish uchun ham ishlatilishi mumkin."
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__has_message
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__has_message
 #, fuzzy
@@ -387,6 +430,31 @@ msgstr "Rasm (128)"
 #, fuzzy
 msgid "Information"
 msgstr "Ma'lumot"
+
+#. module: sales_team
+#: model:mail.message.subtype,name:sales_team.mt_salesteam_invoice_paid
+#, fuzzy
+msgid "Invoice Paid"
+msgstr "Hisob-faktura to‘langan"
+
+#. module: sales_team
+#: model:mail.message.subtype,name:sales_team.mt_salesteam_invoice_posted
+#, fuzzy
+msgid "Invoice Posted"
+msgstr "Hisob-faktura joylashtirildi"
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.action_invoice_salesteams
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
+#, fuzzy
+msgid "Invoices"
+msgstr "Hisob-fakturalar"
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.action_account_invoice_report_salesteam
+#, fuzzy
+msgid "Invoices Analysis"
+msgstr "Hisob-fakturalar tahlili"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_is_follower
@@ -473,6 +541,12 @@ msgid "Name"
 msgstr "Nomi"
 
 #. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.action_quotation_form
+#, fuzzy
+msgid "New Quotation"
+msgstr "Yangi narx taklifi"
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction_counter
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__message_needaction_counter
 #, fuzzy
@@ -499,6 +573,17 @@ msgstr "Harakat talab qiladigan xabarlar soni"
 #, fuzzy
 msgid "Number of messages with delivery error"
 msgstr "Yetkazib berishda xato bo‘lgan xabarlar soni"
+
+#. module: sales_team
+#: model_terms:ir.actions.act_window,help:sales_team.action_orders_salesteams
+#: model_terms:ir.actions.act_window,help:sales_team.action_quotations_salesteams
+#, fuzzy
+msgid ""
+"Once the quotation is confirmed by the customer, it becomes a sales order."
+"<br> You will be able to create an invoice and collect the payment."
+msgstr ""
+"Narx taklifi mijoz tomonidan tasdiqlangach, u savdo buyurtmasiga aylanadi."
+"<br> Siz hisob-faktura yaratishingiz va to‘lovni qabul qilishingiz mumkin."
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor8
@@ -531,6 +616,24 @@ msgid "Product"
 msgstr "Mahsulot"
 
 #. module: sales_team
+#: model:mail.message.subtype,name:sales_team.mt_salesteam_order_viewed
+#, fuzzy
+msgid "Quotation Viewed"
+msgstr "Taklif ko‘rib chiqildi"
+
+#. module: sales_team
+#: model:mail.message.subtype,name:sales_team.mt_salesteam_order_sent
+#, fuzzy
+msgid "Quotation sent"
+msgstr "Taklif yuborildi"
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.action_quotations_salesteams
+#, fuzzy
+msgid "Quotations"
+msgstr "Takliflar"
+
+#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__rating_ids
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__rating_ids
 #, fuzzy
@@ -539,7 +642,7 @@ msgstr "Baholashlar"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.team_sales_department
-#: model:res.groups.privilege,name:sales_team.res_groups_privilege_sales
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
 #, fuzzy
 msgid "Sales"
 msgstr "Sotuvlar"
@@ -550,6 +653,20 @@ msgstr "Sotuvlar"
 #, fuzzy
 msgid "Sales Men"
 msgstr "Sotuvchilar"
+
+#. module: sales_team
+#: model:mail.message.subtype,name:sales_team.mt_salesteam_order_confirmed
+#, fuzzy
+msgid "Sales Order Confirmed"
+msgstr "Sotish buyurtmasi tasdiqlandi"
+
+#. module: sales_team
+#: model:ir.actions.act_window,name:sales_team.action_orders_salesteams
+#: model:ir.actions.act_window,name:sales_team.action_orders_to_invoice_salesteams
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
+#, fuzzy
+msgid "Sales Orders"
+msgstr "Savdo buyurtmalari"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
@@ -564,6 +681,12 @@ msgstr "Sotuvchi"
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_search
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_tree
+#: model:ir.model.fields,field_description:sales_team.field_account_invoice_report__team_id
+#: model:ir.model.fields,field_description:sales_team.field_account_move__team_id
+#: model:ir.model.fields,field_description:sales_team.field_sale_order__team_id
+#: model:ir.model.fields,field_description:sales_team.field_sale_report__team_id
+#: model_terms:ir.ui.view,arch_db:sales_team.account_invoice_groupby_inherit
+#: model_terms:ir.ui.view,arch_db:sales_team.view_account_invoice_report_search_inherit
 #, fuzzy
 msgid "Sales Team"
 msgstr "Savdo jamoasi"
@@ -591,6 +714,8 @@ msgstr "Savdo jamoasi a'zolari (nofaollarni qo‘shgan holda)"
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_config
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_sales
 #: model:ir.model.fields,field_description:sales_team.field_res_users__crm_team_ids
+#: model:ir.ui.menu,name:sales_team.report_sales_team
+#: model:ir.ui.menu,name:sales_team.sales_team_config
 #, fuzzy
 msgid "Sales Teams"
 msgstr "Savdo jamoalari"
@@ -653,6 +778,8 @@ msgstr "Teg nomi allaqachon mavjud!"
 #: model:ir.actions.act_window,name:sales_team.sales_team_crm_tag_action
 #: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_tree
+#: model:ir.model.fields,field_description:sales_team.field_sale_order__tag_ids
+#: model:ir.ui.menu,name:sales_team.menu_tag_config
 #, fuzzy
 msgid "Tags"
 msgstr "Teglar"
@@ -804,18 +931,6 @@ msgid "User Sales Team"
 msgstr "Foydalanuvchi savdo jamoasi"
 
 #. module: sales_team
-#: model:res.groups,name:sales_team.group_sale_salesman_all_leads
-#, fuzzy
-msgid "User: All Documents"
-msgstr "Foydalanuvchi: Barcha hujjatlar"
-
-#. module: sales_team
-#: model:res.groups,name:sales_team.group_sale_salesman
-#, fuzzy
-msgid "User: Own Documents Only"
-msgstr "Foydalanuvchi: Faqat o‘z hujjatlari"
-
-#. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_ids
 #, fuzzy
 msgid "Users assigned to this team."
@@ -868,31 +983,3 @@ msgstr "masalan, Shimoliy Amerika"
 #, fuzzy
 msgid "e.g. Services"
 msgstr "masalan, Xizmatlar"
-
-#. module: sales_team
-#: model:res.groups,comment:sales_team.group_sale_salesman_all_leads
-#, fuzzy
-msgid ""
-"the user will have access to all records of everyone in the sales "
-"application."
-msgstr ""
-"foydalanuvchi savdo ilovasidagi barcha ma'lumotlarga kirish huquqiga ega "
-"bo‘ladi."
-
-#. module: sales_team
-#: model:res.groups,comment:sales_team.group_sale_salesman
-#, fuzzy
-msgid "the user will have access to his own data in the sales application."
-msgstr ""
-"foydalanuvchi savdo ilovasida faqat o‘z ma'lumotlariga kirish huquqiga ega "
-"bo‘ladi."
-
-#. module: sales_team
-#: model:res.groups,comment:sales_team.group_sale_manager
-#, fuzzy
-msgid ""
-"the user will have an access to the sales configuration as well as statistic "
-"reports."
-msgstr ""
-"foydalanuvchi savdo sozlamalariga, shuningdek statistik hisobotlarga kirish "
-"huquqiga ega bo‘ladi."

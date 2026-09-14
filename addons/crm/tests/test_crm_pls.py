@@ -23,7 +23,7 @@ class CrmPlsCommon(TransactionCase):
             email="crm_manager@test.example.com",
             company_id=cls.company_main.id,
             notification_type="inbox",
-            groups="sales_team.group_sale_manager,base.group_partner_manager",
+            groups="sale.group_sale_manager,base.group_partner_manager",
         )
 
         cls.pls_team = cls.env["team.team"].create(

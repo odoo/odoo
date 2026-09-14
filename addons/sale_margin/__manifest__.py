@@ -12,7 +12,7 @@ Price and Cost Price.
     "author": "Odoo S.A.",
     "license": "LGPL-3",
     "depends": [
-        "sale_management",
+        "sale",
     ],
     "data": [
         "views/sale_order_views.xml",

@@ -257,7 +257,7 @@ class TestWebsiteSaleEditor(HttpCaseWithWebsiteUser):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.user_website_user.group_ids += cls.env.ref("sales_team.group_sale_manager")
+        cls.user_website_user.group_ids += cls.env.ref("sale.group_sale_manager")
         cls.user_website_user.group_ids += cls.env.ref("product.group_product_manager")
 
     def test_category_page_and_products_snippet(self):

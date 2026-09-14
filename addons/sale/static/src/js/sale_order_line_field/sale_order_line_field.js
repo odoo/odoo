@@ -5,6 +5,7 @@ import {
     productLabelSectionAndNoteOne2Many,
 } from "@account/components/product_label_section_and_note_field/product_label_section_and_note_field_o2m";
 import {
+    getSectionRecords,
     ListSectionAndNoteText,
     listSectionAndNoteText,
     sectionAndNoteFieldOne2Many,
@@ -12,8 +13,15 @@ import {
     sectionAndNoteText,
 } from "@account/components/section_and_note_fields_backend/section_and_note_fields_backend";
 import { useSubEnv } from "@odoo/owl";
+import {
+    getRecordsToRecompute,
+    handleQuantityAdjustment,
+} from "@sale/js/section_optional_line_utils";
+import { makeContext } from "@web/core/context";
+import { x2ManyCommands } from "@web/core/network";
 import { registry } from "@web/core/registry";
 import { CharField } from "@web/fields/basic/char/char_field";
+import { listId } from "@web/model/relational_model";
 
 const indexOfRecord = (records, record) => records.findIndex((r) => r.id === record.id);
 
@@ -62,6 +70,7 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
     setup() {
         super.setup();
         this.priceColumns.push("discount");
+        this.copyFields.push("is_optional");
 
         useSubEnv({
             shouldCollapse: this.shouldCollapse.bind(this),
@@ -79,6 +88,8 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
             getNextRecords: (record) => this.getNextRecords(rec(record)),
             moveCombo: (record, direction) => this.moveCombo(rec(record), direction),
             onDeleteRecord: (record) => this.onDeleteRecord(rec(record)),
+            disableOptionalButton: (record) => this.disableOptionalButton(record),
+            toggleIsOptional: (record) => this.toggleIsOptional(rec(record)),
         };
     }
 
@@ -119,7 +130,11 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
         if (this.isCombo(record) || this.isComboItem(record)) {
             classNames = classNames.replace("o_row_draggable", "");
         }
-        return `${classNames} ${this.isCombo(record) ? "o_is_line_section o_is_line_section_no_indent" : ""}`;
+        classNames = `${classNames} ${this.isCombo(record) ? "o_is_line_section o_is_line_section_no_indent" : ""}`;
+        if (this.shouldCollapse(record, "is_optional", true)) {
+            classNames += " text-primary";
+        }
+        return classNames;
     }
 
     isCellReadonly(column, record) {
@@ -143,11 +158,20 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
             return;
         }
 
+        const wasOptional = this.shouldCollapse(record, "is_optional");
         const { movingRecords, targetRecords } = this.getComboSwapPairs(
             record,
             direction,
         );
-        return this.swapSections(movingRecords, targetRecords);
+        await this.swapSections(movingRecords, targetRecords);
+
+        const isOptional = this.shouldCollapse(record, "is_optional");
+        const qtyField = this.optionalQuantityField;
+        if (wasOptional && !isOptional && !record.data[qtyField]) {
+            await record.update({ [qtyField]: 1 });
+        } else if (!wasOptional && isOptional) {
+            await record.update({ [qtyField]: 0 });
+        }
     }
 
     getComboSwapPairs(record, direction) {
@@ -231,6 +255,184 @@ export class SaleOrderLineListRenderer extends ProductLabelSectionAndNoteListRen
 
     displayDeleteIcon(record) {
         return super.displayDeleteIcon(record) && !this.isComboItem(record);
+    }
+
+    /** @see handleQuantityAdjustment in section_optional_line_utils.js — */
+    get optionalQuantityField() {
+        return "product_qty";
+    }
+
+    disableCompositionButton(record) {
+        return (
+            super.disableCompositionButton(record) ||
+            this.shouldCollapse(record, "is_optional", true)
+        );
+    }
+
+    disablePricesButton(record) {
+        return (
+            super.disablePricesButton(record) ||
+            this.shouldCollapse(record, "is_optional", true)
+        );
+    }
+
+    disableOptionalButton(record) {
+        return (
+            this.shouldCollapse(record, "is_optional") ||
+            this.shouldCollapse(record, "collapse_prices", true) ||
+            this.shouldCollapse(record, "collapse_composition", true)
+        );
+    }
+
+    /** @override */
+    getRowProps(record, group, groupId) {
+        return {
+            ...super.getRowProps(record, group, groupId),
+            mutedOptional: this.shouldCollapse(record, "is_optional", true),
+        };
+    }
+
+    get isCurrentSectionOptional() {
+        if (this.props.list.records.length === 0) {
+            return false;
+        }
+
+        return this.shouldCollapse(
+            this.props.list.records[this.props.list.records.length - 1],
+            "is_optional",
+            true,
+        );
+    }
+
+    add(params) {
+        params.context = this.getCreateContext(params);
+        super.add(params);
+    }
+
+    getCreateContext(params) {
+        const evaluatedContext = makeContext([params.context]);
+        if (
+            !evaluatedContext[`default_display_type`] &&
+            this.isCurrentSectionOptional
+        ) {
+            return {
+                ...evaluatedContext,
+                [`default_${this.optionalQuantityField}`]: 0,
+            };
+        }
+        return params.context;
+    }
+
+    getInsertLineContext(record, addSubSection) {
+        if (this.shouldCollapse(record, "is_optional", true) && !addSubSection) {
+            return {
+                ...super.getInsertLineContext(record, addSubSection),
+                [`default_${this.optionalQuantityField}`]: 0,
+            };
+        }
+        return super.getInsertLineContext(record, addSubSection);
+    }
+
+    /** @override */
+    async toggleCollapse(record, fieldName) {
+        await super.toggleCollapse(record, fieldName);
+
+        if (this.isTopSection(record) && record.data[fieldName]) {
+            const commands = [];
+
+            for (const sectionRecord of getSectionRecords(this.props.list, record)) {
+                if (this.isSubSection(sectionRecord)) {
+                    commands.push(
+                        x2ManyCommands.update(listId(sectionRecord), {
+                            is_optional: false,
+                        }),
+                    );
+                }
+            }
+
+            if (commands.length) {
+                await this.props.list.applyCommands(commands, { sort: true });
+            }
+        }
+    }
+
+    async toggleIsOptional(record) {
+        const setOptional = !record.data.is_optional;
+        const qtyField = this.optionalQuantityField;
+
+        const commands = [
+            x2ManyCommands.update(listId(record), {
+                is_optional: setOptional,
+            }),
+        ];
+
+        const linesToRestock = [];
+        for (const sectionRecord of getSectionRecords(this.props.list, record)) {
+            let changes = {};
+
+            if (!sectionRecord.data.display_type) {
+                if (setOptional) {
+                    changes = { [qtyField]: 0, price_total: 0, price_subtotal: 0 };
+                } else {
+                    linesToRestock.push(sectionRecord);
+                }
+            } else if (this.isSubSection(sectionRecord)) {
+                changes = setOptional && {
+                    collapse_composition: false,
+                    collapse_prices: false,
+                };
+            }
+
+            if (Object.keys(changes).length) {
+                commands.push(x2ManyCommands.update(listId(sectionRecord), changes));
+            }
+        }
+
+        await this.props.list.applyCommands(commands, { sort: true });
+        await Promise.all(
+            linesToRestock.map((line) =>
+                line.update({ [qtyField]: line.data[qtyField] || 1 }),
+            ),
+        );
+    }
+
+    /** @override */
+    async sortDrop(dataRowId, dataGroupId, { element, previous }) {
+        const record = this.props.list.records.find((r) => r.id === dataRowId);
+        const recordMap = this._getRecordsToRecompute(
+            record,
+            previous ? previous.dataset.id : null,
+        );
+
+        await super.sortDrop(dataRowId, dataGroupId, { element, previous });
+
+        await this._handleQuantityAdjustment(recordMap);
+    }
+
+    /** @see getRecordsToRecompute in section_optional_line_utils.js — shared */
+    _getRecordsToRecompute(record, targetId) {
+        return getRecordsToRecompute(this, record, targetId);
+    }
+
+    /** @see handleQuantityAdjustment in section_optional_line_utils.js — */
+    async _handleQuantityAdjustment(recordMap) {
+        return handleQuantityAdjustment(this, recordMap);
+    }
+
+    /** @override */
+    resetOnResequence(record, parentSection) {
+        return (
+            super.resetOnResequence(record, parentSection) ||
+            (this.isSubSection(record) &&
+                parentSection?.data.is_optional &&
+                (record.data.collapse_composition ||
+                    record.data.collapse_prices ||
+                    record.data.is_optional))
+        );
+    }
+
+    fieldsToReset() {
+        return { ...super.fieldsToReset(), is_optional: false };
     }
 }
 

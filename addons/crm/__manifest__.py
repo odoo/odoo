@@ -8,6 +8,7 @@
     "website": "https://www.odoo.com/app/crm",
     "license": "LGPL-3",
     "depends": [
+        "sale",
         "sales_team",
         "mail",
         "calendar",

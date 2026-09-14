@@ -20,7 +20,7 @@ class TestProductConfiguratorUi(TestProductConfiguratorCommon):
             name="Salesman",
             login="salesman",
             password="salesman",
-            groups="sales_team.group_sale_salesman",
+            groups="sale.group_sale_salesman",
         )
         cls.salesman.group_ids += cls.env.ref("product.group_product_manager")
 

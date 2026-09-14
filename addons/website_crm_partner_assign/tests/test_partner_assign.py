@@ -460,7 +460,7 @@ class TestPublish(HttpCase):
         cls.group_restricted_editor = cls.env.ref(
             "website.group_website_restricted_editor"
         )
-        cls.group_sale_salesman = cls.env.ref("sales_team.group_sale_salesman")
+        cls.group_sale_salesman = cls.env.ref("sale.group_sale_salesman")
         cls.user_test = new_test_user(cls.env, login="testtest", website_id=False)
 
         grade = cls.env["res.partner.grade"].create(

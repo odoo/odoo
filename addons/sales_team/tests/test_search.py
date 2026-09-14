@@ -371,7 +371,7 @@ class TestSalespersonDomainSelfExclusion(TestSalesCommon):
             cls.env,
             login="excl_user",
             name="Excl User",
-            groups="sales_team.group_sale_salesman",
+            groups="sale.group_sale_salesman",
         )
         cls.membership = cls.env["team.member"].create(
             {"team_id": cls.team.id, "user_id": cls.member_user.id}

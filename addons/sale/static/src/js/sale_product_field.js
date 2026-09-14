@@ -388,10 +388,22 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
 
     /** @return {Object} */
     _getAdditionalDialogProps() {
-        return {};
+        const isOptionalLine = this.env.shouldCollapse(
+            this.props.record,
+            "is_optional",
+        );
+        return {
+            options: {
+                showQuantity: !isOptionalLine,
+                showPrice: !isOptionalLine,
+            },
+        };
     }
 
-    _prepareNewLineData(_line, product) {
+    _prepareNewLineData(line, product) {
+        if (this.env.shouldCollapse(line, "is_optional")) {
+            return { ...product, quantity: 0 };
+        }
         return product;
     }
 

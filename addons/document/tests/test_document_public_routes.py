@@ -577,6 +577,9 @@ class TestDocumentsPublicRouteInput(HttpCase, TransactionCaseDocuments):
                 "access_internal": "none",
             }
         )
+        self.patch(
+            type(self.env["res.users"]), "_get_signup_invitation_scope", lambda _: "b2c"
+        )
         member = self.env["document.access"].create(
             {"document_id": private.id, "partner_id": invitee.id, "role": "view"}
         )

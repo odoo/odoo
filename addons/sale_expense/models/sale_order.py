@@ -22,8 +22,8 @@ class SaleOrder(models.Model):
     def _search_display_name(self, operator, value):
         if (
             self.env.context.get("sale_expense_all_order")
-            and self.env.user.has_group("sales_team.group_sale_salesman")
-            and not self.env.user.has_group("sales_team.group_sale_salesman_all_leads")
+            and self.env.user.has_group("sale.group_sale_salesman")
+            and not self.env.user.has_group("sale.group_sale_salesman_all_leads")
         ):
             if operator in Domain.NEGATIVE_OPERATORS:
                 return NotImplemented

@@ -225,7 +225,7 @@ class TestUserArchiving(TestSalesCommon):
             name="Settings Admin",
             groups="base.group_user,base.group_system",
         )
-        self.assertFalse(settings_admin.has_group("sales_team.group_sale_manager"))
+        self.assertFalse(settings_admin.has_group("sale.group_sale_manager"))
 
         self.user_sales_leads.with_user(settings_admin).action_archive()
         self.env.flush_all()
@@ -243,7 +243,7 @@ class TestUserSaleTeam(TransactionCase):
             cls.env,
             login="sale_team_user",
             email="sale.team@example.com",
-            groups="sales_team.group_sale_salesman",
+            groups="sale.group_sale_salesman",
         )
         cls.team = cls.env["team.team"].create({"use_sale": True, "name": "STU team"})
 

@@ -7,7 +7,7 @@ from odoo.addons.website.tests.test_configurator import TestConfiguratorCommon
 class TestAutomaticEditor(TestConfiguratorCommon):
     def test_skip_website_configurator(self):
         group_order_template = self.env.ref(
-            "sale_management.group_sale_order_template", raise_if_not_found=False
+            "sale.group_sale_order_template", raise_if_not_found=False
         )
         if group_order_template:
             self.env.ref("base.group_user").write(

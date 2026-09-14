@@ -87,7 +87,7 @@ class TestHttpWebJson_1(TestHttpBase):
             self.skipTest("crm is not installed")
 
         self.authenticate_demo()
-        self.user_demo.group_ids += self.env.ref("sales_team.group_sale_salesman")
+        self.user_demo.group_ids += self.env.ref("sale.group_sale_salesman")
         self.url_open_json("/crm")
 
         self.env["ir.model.access"].search(

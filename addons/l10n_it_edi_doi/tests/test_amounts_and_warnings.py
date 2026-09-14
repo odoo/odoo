@@ -11,7 +11,7 @@ class TestItEdiDoiRemaining(TestItEdiDoi):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env.user.group_ids |= cls.env.ref("sales_team.group_sale_salesman")
+        cls.env.user.group_ids |= cls.env.ref("sale.group_sale_salesman")
 
     def create_invoice(self, declaration, invoice_line_vals):
         return self.env["account.move"].create(

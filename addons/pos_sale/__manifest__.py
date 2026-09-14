@@ -12,7 +12,8 @@ This module adds a custom Sales Team for the Point of Sale. This enables you to 
     "license": "LGPL-3",
     "depends": [
         "point_of_sale",
-        "sale_management",
+        "sale",
+        "sales_team",
     ],
     "data": [
         "data/pos_sale_data.xml",

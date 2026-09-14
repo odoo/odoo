@@ -1007,119 +1007,7 @@ class TestSaleOrderInvoicing(AccountTestInvoicingCommon, SaleCommon):
 
 
 @tagged("post_install", "-at_install")
-class TestSalesTeam(SaleCommon):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
-        cls.sale_team_2 = cls.env["team.team"].create(
-            {
-                "use_sale": True,
-                "name": "Test Sales Team (2)",
-            }
-        )
-        cls.user_in_team = cls.env["res.users"].create(
-            {
-                "email": "team0user@example.com",
-                "login": "team0user",
-                "name": "User in Team 0",
-            }
-        )
-        cls.sale_team.write({"member_ids": [4, cls.user_in_team.id]})
-        cls.user_not_in_team = cls.env["res.users"].create(
-            {
-                "email": "noteamuser@example.com",
-                "login": "noteamuser",
-                "name": "User Not In Team",
-            }
-        )
-
-    def test_compute_team_id_does_not_cross_companies(self):
-        root_company = self.env["res.company"].create({"name": "F32 root company"})
-        root_company.write(
-            {
-                "child_ids": [
-                    Command.create({"name": "F32 company A"}),
-                    Command.create({"name": "F32 company B"}),
-                ]
-            }
-        )
-        company_a, company_b = root_company.child_ids
-
-        user = self.env["res.users"].create(
-            {
-                "name": "F32 multi-company salesman",
-                "login": "f32_multi_company_salesman",
-                "company_ids": [Command.set((company_a + company_b).ids)],
-                "company_id": company_a.id,
-            }
-        )
-        team_b = self.env["team.team"].create(
-            {
-                "use_sale": True,
-                "name": "F32 team in company B",
-                "company_id": company_b.id,
-                "member_ids": [Command.set(user.ids)],
-            }
-        )
-
-        order = self.env["sale.order"].create(
-            {
-                "partner_id": self.partner.id,
-                "company_id": company_a.id,
-                "user_id": user.id,
-            }
-        )
-        self.assertNotEqual(
-            order.team_id,
-            team_b,
-            "the order's team must not cross into another company",
-        )
-
-    def test_assign_sales_team_from_partner_user(self):
-        partner = self.env["res.partner"].create(
-            {
-                "name": "Customer of User In Team",
-                "user_id": self.user_in_team.id,
-            }
-        )
-        sale_order = self.env["sale.order"].create(
-            {
-                "partner_id": partner.id,
-            }
-        )
-        self.assertEqual(
-            sale_order.team_id.id,
-            self.sale_team.id,
-            "Should assign to team of sales person",
-        )
-
-    def test_assign_sales_team_when_changing_user(self):
-        sale_order = self.env["sale.order"].create(
-            {
-                "user_id": self.user_not_in_team.id,
-                "partner_id": self.partner.id,
-                "team_id": self.sale_team_2.id,
-            }
-        )
-        sale_order.user_id = self.user_in_team
-        self.assertEqual(
-            sale_order.team_id.id,
-            self.sale_team.id,
-            "Should assign to team of sales person",
-        )
-
-    def test_keep_sales_team_when_changing_user_with_no_team(self):
-        sale_order = self.env["sale.order"].create(
-            {"partner_id": self.partner.id, "team_id": self.sale_team_2.id}
-        )
-        sale_order.user_id = self.user_not_in_team
-        self.assertEqual(
-            sale_order.team_id.id,
-            self.sale_team_2.id,
-            "Should not reset the team to default",
-        )
-
+class TestSaleOrderCompany(SaleCommon):
     def test_sale_order_analytic_distribution_change(self):
         self.env.user.group_ids += self.env.ref("analytic.group_analytic_accounting")
 
@@ -1524,7 +1412,7 @@ class TestResPartnerViewGroups(SaleCommon):
         )
         self.assertIn("account.group_account_invoice", groups)
         self.assertIn("account.group_account_readonly", groups)
-        self.assertIn("sales_team.group_sale_salesman", groups)
+        self.assertIn("sale.group_sale_salesman", groups)
 
     def test_payment_term_fields_keep_base_groups(self):
         for field_name in (
@@ -1538,7 +1426,7 @@ class TestResPartnerViewGroups(SaleCommon):
                 )
                 self.assertIn("account.group_account_invoice", groups)
                 self.assertIn("account.group_account_readonly", groups)
-                self.assertIn("sales_team.group_sale_salesman", groups)
+                self.assertIn("sale.group_sale_salesman", groups)
 
     def test_saved_payment_methods_button_adds_group(self):
         view = self.env.ref("payment.view_partners_form_payment_defaultcreditcard")
@@ -1547,7 +1435,7 @@ class TestResPartnerViewGroups(SaleCommon):
         button = arch.find(f".//button[@name='{action_id}']")
         self.assertIsNotNone(button)
         groups = set((button.get("groups") or "").split(","))
-        self.assertIn("sales_team.group_sale_salesman", groups)
+        self.assertIn("sale.group_sale_salesman", groups)
 
 
 @tagged("post_install", "-at_install")
@@ -1580,11 +1468,6 @@ class TestAccountMoveSaleCustomerInvoiceDomain(SaleCommon):
 
 @tagged("post_install", "-at_install")
 class TestAccountMoveComputeDepends(SaleCommon):
-    def test_compute_team_id_depends_on_company(self):
-        AccountMove = self.env["account.move"]
-        depends = self.env.registry.field_depends[AccountMove._fields["team_id"]]
-        self.assertIn("company_id", depends)
-
     def test_compute_sale_warning_text_depends_on_commercial_parent(self):
         AccountMove = self.env["account.move"]
         depends = self.env.registry.field_depends[
@@ -1623,7 +1506,7 @@ class TestPortalRulePermFlags(SaleCommon):
 @tagged("post_install", "-at_install")
 class TestPriceHistoryWizardRule(SaleCommon):
     def test_wizard_is_scoped_to_its_creator(self):
-        group = self.env.ref("sales_team.group_sale_salesman")
+        group = self.env.ref("sale.group_sale_salesman")
         user_a, user_b = self.env["res.users"].create(
             [
                 {

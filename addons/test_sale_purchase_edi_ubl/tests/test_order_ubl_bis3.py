@@ -13,7 +13,7 @@ class TestOrderEdiUbl(TestAccountEdiUblCii, SaleCommon):
     @classmethod
     def get_default_groups(cls):
         groups = super().get_default_groups()
-        return groups | cls.quick_ref("sales_team.group_sale_manager")
+        return groups | cls.quick_ref("sale.group_sale_manager")
 
     @classmethod
     def setUpClass(cls):

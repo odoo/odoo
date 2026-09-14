@@ -49,12 +49,12 @@ class ProjectProject(models.Model):
     sale_order_line_count = fields.Integer(
         export_string_translation=False,
         compute="_compute_sale_order_count",
-        groups="sales_team.group_sale_salesman",
+        groups="sale.group_sale_salesman",
     )
     sale_order_count = fields.Integer(
         export_string_translation=False,
         compute="_compute_sale_order_count",
-        groups="sales_team.group_sale_salesman",
+        groups="sale.group_sale_salesman",
     )
     has_any_so_with_nothing_to_invoice = fields.Boolean(
         string="Has a SO with an invoice status of No",
@@ -91,7 +91,7 @@ class ProjectProject(models.Model):
         index="btree_not_null",
         copy=False,
         domain="[('partner_id', '=', partner_id)]",
-        groups="sales_team.group_sale_salesman",
+        groups="sale.group_sale_salesman",
         help="Products added to stock pickings, whose operation type is configured to generate analytic costs, will be re-invoiced in this sales order if they are set up for it.",
     )
 
@@ -777,7 +777,7 @@ class ProjectProject(models.Model):
         display_sol_action = (
             with_action
             and len(self) == 1
-            and self.env.user.has_group("sales_team.group_sale_salesman")
+            and self.env.user.has_group("sale.group_sale_salesman")
         )
         revenues_dict = {}
         total_to_invoice = total_invoiced = 0.0
@@ -825,7 +825,7 @@ class ProjectProject(models.Model):
                     "to_invoice": -downpayment_amount_invoiced,
                 }
                 if with_action and (
-                    self.env.user.has_group("sales_team.group_sale_salesman_all_leads,")
+                    self.env.user.has_group("sale.group_sale_salesman_all_leads,")
                     or self.env.user.has_group("account.group_account_invoice,")
                     or self.env.user.has_group("account.group_account_readonly")
                 ):
@@ -1015,9 +1015,7 @@ class ProjectProject(models.Model):
                         else "to_bill": amount_to_invoice,
                     }
                     if with_action and (
-                        self.env.user.has_group(
-                            "sales_team.group_sale_salesman_all_leads"
-                        )
+                        self.env.user.has_group("sale.group_sale_salesman_all_leads")
                         or self.env.user.has_group("account.group_account_invoice")
                         or self.env.user.has_group("account.group_account_readonly")
                     ):
@@ -1097,7 +1095,7 @@ class ProjectProject(models.Model):
 
     def _get_stat_buttons(self):
         buttons = super()._get_stat_buttons()
-        if self.env.user.has_group("sales_team.group_sale_salesman_all_leads"):
+        if self.env.user.has_group("sale.group_sale_salesman_all_leads"):
             buttons.append(
                 {
                     "icon": "dollar",

@@ -55,7 +55,7 @@ class TestProjectProject(TransactionCase):
             login="project_only",
             groups="base.group_user,project.group_project_manager",
         )
-        self.assertFalse(user.has_group("sales_team.group_sale_salesman"))
+        self.assertFalse(user.has_group("sale.group_sale_salesman"))
         form = Form(self.env["project.project"].with_user(user))
         form.name = "Created without sales rights"
         project = form.save()

@@ -68,7 +68,7 @@ class TestLoyalty(TestSaleCouponCommonWithCode10pc):
         cls.ewallet_program.coupon_ids = [Command.set([cls.ewallet.id])]
 
         cls.user_salemanager = new_test_user(
-            cls.env, login="user_salemanager", groups="sales_team.group_sale_manager"
+            cls.env, login="user_salemanager", groups="sale.group_sale_manager"
         )
 
         cls.promotion_code_10pc.active = True

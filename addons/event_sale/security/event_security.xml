@@ -2,7 +2,7 @@
 <odoo>
 
     <data noupdate="0">
-        <record id="sales_team.group_sale_salesman" model="res.groups">
+        <record id="sale.group_sale_salesman" model="res.groups">
             <field
                 name="implied_ids"
                 eval="[Command.link(ref('event.group_event_registration_desk'))]" />

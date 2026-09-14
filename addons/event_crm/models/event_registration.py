@@ -13,7 +13,7 @@ class EventRegistration(models.Model):
         string="Leads",
         copy=False,
         readonly=True,
-        groups="sales_team.group_sale_salesman",
+        groups="sale.group_sale_salesman",
     )
     lead_count = fields.Count(
         count_of="lead_ids",
