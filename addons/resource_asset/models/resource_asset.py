@@ -1,6 +1,7 @@
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
+from odoo.tools import SQL
 
 
 class ResourceAsset(models.Model):
@@ -103,14 +104,48 @@ class ResourceAsset(models.Model):
             )
 
     def _search_missing_identifier_type_ids(self, operator, value):
-        if operator not in ("in", "not in", "=", "!="):
-            return NotImplemented
-        missing = self.search([]).filtered(
-            lambda a: a.missing_identifier_type_ids.filtered_domain(
-                [("id", operator, value)]
+        if operator in ("any", "not any"):
+            type_query = self.env["resource.asset.identifier.type"]._search(value)
+            domain = self._get_missing_identifier_domain(
+                SQL("rel.type_id IN %s", type_query.subselect())
             )
-        )
-        return [("id", "in", missing.ids)]
+        elif operator in ("in", "not in"):
+            type_ids = [type_id for type_id in value if type_id]
+            domain = Domain.FALSE
+            if type_ids:
+                domain |= self._get_missing_identifier_domain(
+                    SQL("rel.type_id = ANY(%s)", type_ids)
+                )
+            if len(type_ids) < len(value):
+                domain |= ~self._get_missing_identifier_domain()
+        else:
+            return NotImplemented
+        return ~domain if operator.startswith("not") else domain
+
+    @api.model
+    def _get_missing_identifier_domain(self, type_condition=None):
+        def to_sql(model, alias, query):
+            return SQL(
+                """
+                EXISTS (
+                    SELECT 1
+                      FROM resource_asset_kind_identifier_type_rel rel
+                     WHERE rel.kind_id = %(kind)s
+                       AND %(types)s
+                       AND NOT EXISTS (
+                           SELECT 1
+                             FROM resource_asset_identifier identifier
+                            WHERE identifier.asset_id = %(asset)s
+                              AND identifier.type_id = rel.type_id
+                       )
+                )
+                """,
+                kind=SQL.identifier(alias, "kind_id"),
+                asset=SQL.identifier(alias, "id"),
+                types=type_condition or SQL("TRUE"),
+            )
+
+        return Domain.custom(to_sql=to_sql)
 
     @api.constrains("parent_id")
     def _check_parent(self):

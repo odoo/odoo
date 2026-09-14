@@ -70,6 +70,43 @@ class TestResourceAsset(TransactionCase):
             self.Asset.search([("missing_identifier_type_ids", "in", self.vin.ids)]),
         )
 
+    def test_assets_are_searched_by_what_identifiers_they_miss(self):
+        complete = self._truck("Complete")
+        complete.identifier_ids = [
+            (0, 0, {"type_id": self.plate.id, "value": "P-1"}),
+            (0, 0, {"type_id": self.vin.id, "value": "V1"}),
+        ]
+        no_vin = self._truck("No VIN")
+        no_vin.identifier_ids = [(0, 0, {"type_id": self.plate.id, "value": "P-2"})]
+        bare = self._truck("Bare")
+        trucks = complete | no_vin | bare
+
+        def found(domain):
+            return self.Asset.search(domain + [("id", "in", trucks.ids)])
+
+        cases = [
+            ([("missing_identifier_type_ids", "=", False)], complete),
+            ([("missing_identifier_type_ids", "!=", False)], no_vin | bare),
+            ([("missing_identifier_type_ids", "in", self.vin.ids)], no_vin | bare),
+            ([("missing_identifier_type_ids", "in", self.plate.ids)], bare),
+            (
+                [("missing_identifier_type_ids", "not in", self.plate.ids)],
+                complete | no_vin,
+            ),
+            (
+                [("missing_identifier_type_ids", "in", [False, self.plate.id])],
+                complete | bare,
+            ),
+            ([("missing_identifier_type_ids.code", "=", "plate")], bare),
+        ]
+        for domain, expected in cases:
+            with self.subTest(domain=domain):
+                self.assertEqual(found(domain), expected)
+                for asset in trucks:
+                    self.assertEqual(
+                        bool(asset.filtered_domain(domain)), asset in expected
+                    )
+
     def test_identifier_is_normalized_and_matches_its_pattern(self):
         self.vin.pattern = "[A-HJ-NPR-Z0-9]{17}"
         truck = self._truck()
