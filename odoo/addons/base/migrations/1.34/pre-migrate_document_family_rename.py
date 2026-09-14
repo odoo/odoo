@@ -139,7 +139,14 @@ def _rename_table(cr, old, new):
                 SQL.identifier(new + name[len(old) :]),
             )
         )
-    if schema.table_exists(cr, old + "_id_seq"):
+    cr.execute(
+        """
+        SELECT 1 FROM pg_sequences
+         WHERE schemaname = current_schema() AND sequencename = %s
+        """,
+        [old + "_id_seq"],
+    )
+    if cr.fetchone():
         cr.execute(
             SQL(
                 "ALTER SEQUENCE %s RENAME TO %s",
