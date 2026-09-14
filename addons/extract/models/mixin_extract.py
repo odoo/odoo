@@ -14,6 +14,12 @@ _logger = logging.getLogger(__name__)
 
 JOB_CHANNEL = "extract"
 
+#: Returned by ``_extract_compare_value`` when a written value cannot be reduced
+#: to something comparable with what was read. Distinct from ``None``, which is a
+#: value a caller can legitimately write and which must still count as a
+#: correction.
+NOT_COMPARABLE = object()
+
 WAIT_SECONDS = 30
 WAIT_ATTEMPTS = 40
 
@@ -143,9 +149,10 @@ class MixinExtract(models.AbstractModel):
 
         The inverse of ``_extract_write_value``: ``vals`` carries whatever the
         writer passed -- for a relation, command lists -- and comparing that to
-        an extracted string would record every write as a correction. Returning
-        ``None`` says the write is not comparable, and no correction is recorded;
-        it does not mean "corrected to nothing".
+        an extracted string would record every write as a correction. Return
+        ``NOT_COMPARABLE`` to say the write cannot be reduced to a comparable
+        value, which records nothing; ``None`` is a value like any other and
+        still counts as a correction.
         """
         return value
 
@@ -250,7 +257,11 @@ class MixinExtract(models.AbstractModel):
                 continue
             read = (self.extract_result or {}).get(schema_field)
             written = self._extract_compare_value(model_field, vals[model_field])
-            if not read or written is None or read.get("value") in (None, written):
+            if (
+                not read
+                or written is NOT_COMPARABLE
+                or read.get("value") in (None, written)
+            ):
                 continue
             found[schema_field] = {
                 "read": read.get("value"),

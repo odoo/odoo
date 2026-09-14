@@ -3,6 +3,8 @@ from __future__ import annotations
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 
+from odoo.addons.extract.models.mixin_extract import NOT_COMPARABLE
+
 
 def _ids_in_x2many(value):
     """The ids an x2many write adds, for the command shapes a write can carry."""
@@ -57,8 +59,8 @@ class HrApplicant(models.Model):
             return super()._extract_compare_value(model_field, value)
         phone_ids = _ids_in_x2many(value)
         if not phone_ids:
-            return None
-        return self.env["phone.number"].browse(phone_ids)[:1].number or None
+            return NOT_COMPARABLE
+        return self.env["phone.number"].browse(phone_ids)[:1].number or NOT_COMPARABLE
 
     @api.depends("stage_id", "job_id", "extract_state")
     def _compute_extract_can_be_read(self) -> None:
