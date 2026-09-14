@@ -7,7 +7,7 @@ import { Component, onMounted, onWillUnmount, t, useProps, xml } from "@odoo/owl
 import { useSpreadsheetNotificationStore } from "@spreadsheet/hooks";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { MainComponentsContainer } from "@web/core/main_components_container";
-import { render } from "@web/owl2/utils";
+import { render, useSubEnv } from "@web/owl2/utils";
 
 const { useStoreProvider, ModelStore } = stores;
 
@@ -19,9 +19,18 @@ class Parent extends Component {
     });
     setup() {
         useSpreadsheetNotificationStore();
+    }
+}
 
+class ComponentWithStores extends Component {
+    static template = xml`<t t-component="this.props.component" t-props="this.props.props"/>`;
+    static props = { model: Model };
+    setup() {
         const stores = useStoreProvider();
         stores.inject(ModelStore, this.props.model);
+        useSubEnv({
+            model: this.props.model,
+        });
         onMounted(() => {
             this.props.model.on("update", this, () => render(this, true));
             stores.on("store-updated", this, () => render(this, true));
@@ -33,25 +42,28 @@ class Parent extends Component {
     }
 }
 
+export async function mountComponentWithStores(component, model, props = {}) {
+    await mountWithCleanup(ComponentWithStores, {
+        props: {
+            component,
+            props,
+            model,
+        },
+        componentEnv: model.config.custom.env,
+        noMainContainer: false,
+    });
+    await animationFrame();
+    return getFixture();
+}
+
 /**
  * Mount o-spreadsheet component with the given spreadsheet model
  * @param {Model} model
  * @returns {Promise<HTMLElement>}
  */
 export async function mountSpreadsheet(model) {
-    // const serviceRegistry = registry.category("services");
-    // serviceRegistry.add("dialog", makeFakeDialogService(), { force: true });
-    // serviceRegistry.add("notification", makeFakeNotificationService(), { force: true });
     await loadBundle("web.chartjs_lib");
-    mountWithCleanup(Parent, {
-        props: {
-            model,
-        },
-        env: model.config.custom.env,
-        noMainContainer: false,
-    });
-    await animationFrame();
-    return getFixture();
+    return mountComponentWithStores(Parent, model, { model });
 }
 
 export async function doMenuAction(registry, path, env) {
