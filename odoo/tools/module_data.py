@@ -698,7 +698,7 @@ def _rewrite_model_registry(
                 SQL.identifier(scope),
                 owned,
             )
-            if source
+            if source and scope
             else SQL()
         )
         cr.execute(
