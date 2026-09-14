@@ -25,6 +25,7 @@ import { registry } from "@web/core/registry";
 /**
  * @typedef {Object} ViewDescription
  * @property {string} arch
+ * @property {import("@web/views/ir/view_ir_schema").ViewIRNode} [ir]
  * @property {number|false} id
  * @property {number|null} [custom_view_id]
  * @property {Object} [actionMenus]
@@ -147,9 +148,9 @@ class ViewService {
             views: {},
         };
         for (const viewType of Object.keys(result.views)) {
-            const { arch, toolbar, id, filters, custom_view_id } =
+            const { arch, ir, toolbar, id, filters, custom_view_id } =
                 result.views[viewType];
-            const viewDescription = { arch, id, custom_view_id };
+            const viewDescription = { arch, ir, id, custom_view_id };
             if (toolbar) {
                 viewDescription.actionMenus = toolbar;
             }
