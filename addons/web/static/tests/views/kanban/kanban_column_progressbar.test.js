@@ -1209,6 +1209,33 @@ test("progress bar with monetary aggregate and multi currencies", async () => {
     );
 });
 
+test("progress bar with a monetary aggregate in the company currency", async () => {
+    Partner._fields.salary = fields.Monetary({
+        aggregator: "sum_currency",
+        currency_field: "currency_id",
+    });
+    Partner._records[1].currency_id = 2;
+    Partner._records[3].currency_id = 2;
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban>
+                <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="salary"/>
+                <field name="currency_id"/>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                        <field name="salary"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        groupBy: ["product_id"],
+    });
+
+    expect(".o_kanban_counter:last .o_animated_number").toHaveText("$ 3,722");
+});
+
 test("progress bar with monetary aggregate and multi currencies: quick create record", async () => {
     Partner._views["form,some_view_ref"] = `
         <form>

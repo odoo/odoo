@@ -11,6 +11,7 @@ import { registry } from "@web/core/registry";
 import { useAutofocus, useBus, useService } from "@web/core/utils/hooks";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { getTabableElements } from "@web/core/utils/ui";
+import { getAggregateCurrencyId } from "@web/model/currency_aggregates";
 import { AGGREGATABLE_FIELD_TYPES, combineModifiers } from "@web/model/relational_model/utils";
 import { onWillRender, render } from "@web/owl2/utils";
 import { Field, getPropertyFieldInfo } from "@web/views/fields/field";
@@ -888,17 +889,28 @@ export class ListRenderer extends Component {
             if (type === "monetary" || widget === "monetary") {
                 const currencyField = this.getCurrencyField(aggColumn);
                 if (currencyField in this.props.list.activeFields) {
-                    if (this.props.list.isGrouped && !this.props.list.selection.length) {
-                        currencyId = values.find((v) => v[currencyField]?.length)?.[
-                            currencyField
-                        ][0];
+                    const isGroupAggregate =
+                        this.props.list.isGrouped && !this.props.list.selection.length;
+                    if (isGroupAggregate) {
+                        const group = values.find((v) => v[currencyField]?.length);
+                        currencyId = group && getAggregateCurrencyId(field, group[currencyField]);
                     } else {
                         currencyId = values[0][currencyField] && values[0][currencyField].id;
                     }
                     if (func && type === "monetary") {
                         const currencies = this.getFieldCurrencies(aggColumn);
-                        // in case of multiple currencies, convert values into default currency using conversion rates
-                        if (currencies.size > 1) {
+                        if (
+                            isGroupAggregate &&
+                            values.some(
+                                (v) =>
+                                    v[currencyField]?.length &&
+                                    !getAggregateCurrencyId(field, v[currencyField])
+                            )
+                        ) {
+                            // a group mixing currencies has an aggregate that can't be converted
+                            currencyId = undefined;
+                        } else if (currencies.size > 1) {
+                            // in case of multiple currencies, convert values into default currency using conversion rates
                             multiCurrency = true;
                             currencyId = user.activeCompany.currency_id;
                             for (const i in values) {
@@ -907,12 +919,9 @@ export class ListRenderer extends Component {
                                     continue;
                                 }
                                 let currency = currencyValue.id;
-                                if (
-                                    this.props.list.isGrouped &&
-                                    !this.props.list.selection.length
-                                ) {
-                                    currency =
-                                        currencyValue.length > 1 ? currencyId : currencyValue[0];
+                                if (isGroupAggregate) {
+                                    // a group aggregate may already be converted
+                                    currency = getAggregateCurrencyId(field, currencyValue);
                                 }
                                 if (currency !== currencyId) {
                                     fieldValues[i] *= currency
@@ -1021,15 +1030,14 @@ export class ListRenderer extends Component {
         };
         if (field.type === "monetary") {
             const currencies = group.aggregates[field.currency_field];
-            if (currencies.length > 1 && aggregateValue !== false) {
-                formatOptions.currencyId = user.activeCompany.currency_id;
+            formatOptions.currencyId = getAggregateCurrencyId(field, currencies);
+            if (formatOptions.currencyId && currencies.length > 1 && aggregateValue !== false) {
                 return {
                     value: formatter ? formatter(aggregateValue, formatOptions) : aggregateValue,
                     multiCurrency: true,
                     rawValue: aggregateValue,
                 };
             }
-            formatOptions.currencyId = currencies[0];
         }
         return {
             value: formatter ? formatter(aggregateValue, formatOptions) : aggregateValue,
