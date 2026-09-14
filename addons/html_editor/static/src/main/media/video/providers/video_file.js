@@ -1,3 +1,5 @@
+import { rpc } from "@web/core/network/rpc";
+
 /**
  * A video served as a plain video file, referenced by a url pointing at the
  * file itself.
@@ -34,6 +36,30 @@ export class VideoFile {
     }
 
     /**
+     * Video containers known to work across browsers.
+     *
+     * @type {string[]}
+     */
+    static playableMimetypes = ["video/mp4", "video/webm", "video/ogg"];
+
+    /**
+     * Ask the server what a url serves. Browsers cannot reliably inspect
+     * headers of cross-origin URLs without CORS.
+     *
+     * @param {string} url
+     * @returns {Promise<Object>} `{mimetype, size, accepts_ranges,
+     *      max_size_without_ranges}`, or an empty object when probing failed
+     */
+    static async probeUrl(url) {
+        try {
+            return await rpc("/html_editor/video_url/probe", { url });
+        } catch {
+            // Probe failed.
+            return {};
+        }
+    }
+
+    /**
      * @see AbstractThirdPartyVideo.isValidVideoUrl
      *
      * @param {string} url
@@ -44,22 +70,45 @@ export class VideoFile {
         if (!this.parseUrl(url)) {
             return false;
         }
+
+        const { mimetype, size, accepts_ranges, max_size_without_ranges } = await this.probeUrl(
+            url
+        );
+
+        if (mimetype?.startsWith("video/") && !this.playableMimetypes.includes(mimetype)) {
+            return false;
+        }
+
+        // Large videos must support range requests.
+        if (!accepts_ranges && size > max_size_without_ranges) {
+            return false;
+        }
+
+        // Final validation must happen in the browser.
         const isVideo = await new Promise((resolve) => {
             const videoEl = document.createElement("video");
+
             const conclude = (isVideo) => {
                 clearTimeout(timeoutId);
-                // Drop whatever is still being downloaded.
-                videoEl.removeAttribute("src");
+                videoEl.pause();
+                // Reset the element to abort any pending download.
+                videoEl.src = "";
                 videoEl.load();
+
                 resolve(isVideo);
             };
+
             const timeoutId = setTimeout(() => conclude(false), 8000);
-            videoEl.onloadedmetadata = () => conclude(true);
+
+            // Metadata can load for audio-only playback, dimensions confirm
+            // video.
+            videoEl.onloadedmetadata = () => conclude(videoEl.videoWidth > 0);
             videoEl.onerror = () => conclude(false);
             videoEl.preload = "metadata";
             videoEl.muted = true;
             videoEl.src = url;
         });
+
         return isVideo ? [url.trim()] : false;
     }
 
@@ -131,10 +180,8 @@ export class VideoFile {
         // The attribute alone only mutes an element created by the html parser,
         // which is the case of the saved video but not of this one.
         videoEl.muted = !!options.muted;
-        if (!options.autoplay) {
-            // do not download the whole file until the visitor plays it.
-            videoEl.setAttribute("preload", "metadata");
-        }
+        // Avoid downloading video data until playback starts.
+        videoEl.setAttribute("preload", "none");
         videoEl.setAttribute("contenteditable", "false");
         return videoEl;
     }

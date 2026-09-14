@@ -3,7 +3,7 @@ import re
 import uuid
 from base64 import b64decode
 from datetime import datetime
-from urllib.parse import urlparse, urljoin
+from urllib.parse import urlparse, urljoin, urlsplit
 
 import requests
 import werkzeug.exceptions
@@ -29,6 +29,8 @@ DEFAULT_LIBRARY_ENDPOINT = 'https://media-api.odoo.com'
 DEFAULT_OLG_ENDPOINT = 'https://olg.api.odoo.com'
 DEFAULT_OTS_ENDPOINT = 'https://ots.api.odoo.com'
 API_WEBSITE_IMAGES_URL = 'https://website-image.api.odoo.com/images/'
+
+MAX_VIDEO_SIZE_WITHOUT_RANGES = 100_000_000
 
 # Regex definitions to apply speed modification in SVG files
 # Note : These regex patterns are duplicated on the server side for
@@ -393,6 +395,80 @@ class HTML_Editor(Controller):
         self._clean_context()
         attachment = attachment_create(request.env['ir.attachment'], url=url, res_id=res_id, res_model=res_model)
         return attachment._get_media_info()
+
+    @staticmethod
+    def _video_probe_size(headers):
+        """Return the file size from Content-Range or Content-Length."""
+        size = headers.get('Content-Range', '').rpartition('/')[2]
+        if not size.isdigit():
+            size = headers.get('Content-Length', '')
+        return int(size) if size.isdigit() else 0
+
+    def _video_probe_request(self, session, url, ranged=False):
+        """Return ``(status_code, headers)`` for a HEAD or ranged GET request."""
+        if not ranged:
+            response = session.head(url, timeout=5, allow_redirects=True)
+            return (response.status_code, response.headers) if response.ok else None
+
+        with session.get(
+            url,
+            timeout=5,
+            allow_redirects=True,
+            stream=True,
+            headers={'Range': 'bytes=0-0'},
+        ) as response:
+            return (response.status_code, response.headers) if response.ok else None
+
+    @route('/html_editor/video_url/probe', type='jsonrpc', auth='user', methods=['POST'],
+           readonly=True)
+    def video_url_probe(self, url):
+        """Return mimetype, size and range support for a remote video URL."""
+        if urlsplit(url).scheme not in ('http', 'https'):
+            return {}
+
+        # Reuse connections across probe requests to the same host.
+        session = requests.Session()
+
+        try:
+            probed = self._video_probe_request(session, url)
+            used_ranged_probe = False
+
+            if probed is None:
+                # Some CDNs refuse HEAD while serving GET.
+                probed = self._video_probe_request(session, url, ranged=True)
+                used_ranged_probe = True
+            if probed is None:
+                return {}
+
+            status_code, headers = probed
+            mimetype = headers.get('Content-Type', '').split(';')[0].strip().lower()
+            size = self._video_probe_size(headers)
+
+            # Absence of Accept-Ranges is inconclusive; a 206 response confirms support.
+            if used_ranged_probe:
+                accepts_ranges = status_code == 206
+            else:
+                accepts_ranges = headers.get('Accept-Ranges', '').lower() == 'bytes'
+            if (
+                not used_ranged_probe
+                and not accepts_ranges
+                and size > MAX_VIDEO_SIZE_WITHOUT_RANGES
+            ):
+                confirmed = self._video_probe_request(session, url, ranged=True)
+                if confirmed is not None:
+                    confirmed_status, confirmed_headers = confirmed
+                    accepts_ranges = confirmed_status == 206
+                    size = self._video_probe_size(confirmed_headers) or size
+
+        except requests.RequestException:
+            return {}
+
+        return {
+            'mimetype': mimetype,
+            'size': size,
+            'accepts_ranges': accepts_ranges,
+            'max_size_without_ranges': MAX_VIDEO_SIZE_WITHOUT_RANGES,
+        }
 
     @route(['/web_editor/modify_image/<model("ir.attachment"):attachment>', '/html_editor/modify_image/<model("ir.attachment"):attachment>'], type="jsonrpc", auth="user", website=True)
     def modify_image(self, attachment, res_model=None, res_id=None, name=None, data=None, original_id=None, mimetype=None, alt_data=None, alt_images=None):

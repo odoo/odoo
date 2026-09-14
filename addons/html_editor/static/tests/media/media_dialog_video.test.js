@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, mockFetch, test, advanceTime } from "@odo
 import { click, edit, press, hover, queryAll, waitFor, waitForNone } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { patch } from "@web/core/utils/patch";
+import { onRpc } from "@web/../tests/web_test_helpers";
 
 import { setupEditor } from "../_helpers/editor";
 import { insertText } from "../_helpers/user_actions";
@@ -665,7 +666,7 @@ describe("media dialog video", () => {
             expect(videoEl).toHaveAttribute("src", "https://example.com/video/my-video.mp4");
             expect(videoEl).toHaveAttribute("controls");
             expect(videoEl).toHaveAttribute("playsinline");
-            expect(videoEl).toHaveAttribute("preload", "metadata");
+            expect(videoEl).toHaveAttribute("preload", "none");
             expect(videoEl).not.toHaveAttribute("loop");
             expect(videoEl).not.toHaveAttribute("autoplay");
         });
@@ -742,6 +743,11 @@ describe("media dialog video", () => {
             expect(videoEl).not.toHaveAttribute("autoplay");
             expect(videoEl.muted).toBe(false);
             expect.verifySteps(["pause"]);
+
+            // Closing the dialog pauses the preview to abort its download.
+            await click("div.modal .modal-footer button.btn-secondary");
+            await waitForNone("div.modal");
+            expect.verifySteps(["pause"]);
         });
 
         test("should not accept an url that is not a video", async () => {
@@ -760,6 +766,29 @@ describe("media dialog video", () => {
                 "The provided url does not reference any supported video"
             );
             expect.verifySteps(["probe https://www.myvideos.com/page/123456789"]);
+        });
+    });
+
+    describe("video file url probing", () => {
+        test("should reject a url the server serves as an unplayable container", async () => {
+            onRpc("/html_editor/video_url/probe", () => ({
+                mimetype: "video/x-matroska",
+                size: 10545417184,
+                accepts_ranges: true,
+                max_size_without_ranges: 100_000_000,
+            }));
+            expect(await VideoFile.isValidVideoUrl("https://example.com/movie.mkv")).toBe(false);
+            expect(await VideoFile.isValidVideoUrl("https://example.com/stream/12345")).toBe(false);
+        });
+
+        test("should reject a large video a host cannot serve by range", async () => {
+            onRpc("/html_editor/video_url/probe", () => ({
+                mimetype: "video/mp4",
+                size: 4 * 1024 * 1024 * 1024,
+                accepts_ranges: false,
+                max_size_without_ranges: 100_000_000,
+            }));
+            expect(await VideoFile.isValidVideoUrl("https://example.com/big.mp4")).toBe(false);
         });
     });
 });

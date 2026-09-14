@@ -2,7 +2,16 @@ import { _t } from "@web/core/l10n/translation";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
 
-import { Component, onMounted, useOnChange, useProps, proxy, signal, t } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillUnmount,
+    useOnChange,
+    useProps,
+    proxy,
+    signal,
+    t,
+} from "@odoo/owl";
 import { Switch } from "@html_editor/components/switch/switch";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 
@@ -61,14 +70,24 @@ class VideoIframe extends Component {
 
 class VideoFilePreview extends Component {
     static template = "html_editor.VideoFilePreview";
-    static props = {
-        src: { type: String },
-        options: { type: Object, optional: true },
-    };
+    props = useProps({
+        src: t.string(),
+        options: t.object().optional(),
+    });
 
     videoRef = signal.ref();
 
     setup() {
+        onWillUnmount(() => {
+            const videoEl = this.videoRef();
+            if (videoEl) {
+                videoEl.pause();
+                // Reset the media element to abort any pending download.
+                videoEl.src = "";
+                videoEl.load();
+            }
+        });
+
         // The `autoplay` and `muted` attributes are only taken into account
         // while the element loads its source: toggling them on the already
         // loaded preview has no effect, so the playback is updated manually.
