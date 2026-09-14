@@ -1,4 +1,7 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class HrResumeLine(models.Model):
@@ -25,6 +28,7 @@ class HrResumeLine(models.Model):
 
     @api.depends("course_type")
     def _compute_event_id(self):
+        _debug.logic("onsite_event_cleared", lines=self)
         for resume_line in self:
             if resume_line.course_type != "onsite":
                 resume_line.event_id = False

@@ -1,4 +1,7 @@
 from odoo import _, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class HrJob(models.Model):
@@ -23,6 +26,7 @@ class HrJob(models.Model):
                 "survey_type": "recruitment",
             }
         )
+        _debug.lifecycle("interview_form_created", job=self, survey=survey)
         self.write({"survey_id": survey.id})
 
         return {

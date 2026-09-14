@@ -5,7 +5,10 @@ from functools import reduce
 from odoo import api, models
 from odoo.fields import Domain
 from odoo.libs.datetime import timezone
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.intervals import Intervals
+
+_debug = DebugLog(__name__)
 
 
 class ResPartner(models.Model):
@@ -26,6 +29,7 @@ class ResPartner(models.Model):
     def _get_schedule(self, start_period, stop_period, everybody=False, merge=True):
         employees_by_partner = self._get_employees_from_attendees(everybody)
         if not employees_by_partner:
+            _debug.logic("schedule_empty", partners=self, everybody=everybody)
             return {}
         interval_by_calendar = defaultdict()
         calendar_periods_by_employee = defaultdict(list)
@@ -40,6 +44,13 @@ class ResPartner(models.Model):
                 calendar = calendar or self.env.company.resource_calendar_id
                 resources_by_calendar[calendar] += employee.resource_id
 
+        _debug.perf.count(
+            "schedule_calendars",
+            partners=self,
+            employees=len(calendar_periods_by_employee),
+            calendars=len(resources_by_calendar),
+            merge=merge,
+        )
         for calendar, resources in resources_by_calendar.items():
             work_intervals = calendar._work_intervals_batch(
                 start_period, stop_period, resources=resources, tz=timezone(calendar.tz)
@@ -94,6 +105,7 @@ class ResPartner(models.Model):
             ._get_schedule(start_period, stop_period, everybody)
         )
         if not schedule_by_partner:
+            _debug.logic("working_hours_none", attendees=len(attendee_ids))
             return []
         return self._interval_to_business_hours(
             reduce(Intervals.__and__, schedule_by_partner.values())

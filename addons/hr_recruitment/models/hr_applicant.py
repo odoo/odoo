@@ -360,6 +360,7 @@ class HrApplicant(models.Model):
     )
     def _compute_talent_pool(self):
         direct = self.filtered(lambda a: a.talent_pool_ids or a.pool_applicant_id)
+        _debug.logic("talent_pool_split", direct=direct, indirect=self - direct)
         for applicant in direct:
             applicant.is_applicant_in_pool = True
             # A talent being created is its own pool holder before ``create`` has
@@ -472,6 +473,11 @@ class HrApplicant(models.Model):
         domain = self._get_domain_similar_applicants(ignore_talent=True)
         matching_applicants = (
             self.env["hr.applicant"].with_context(active_test=False).search(domain)
+        )
+        _debug.perf.count(
+            "similar_applicants_scanned",
+            applicants=self,
+            matched=matching_applicants,
         )
 
         email_map = defaultdict(set)
@@ -660,6 +666,9 @@ class HrApplicant(models.Model):
         first_stage_by_job = self.env["hr.recruitment.stage"]._get_first_stage_by_job(
             to_assign.job_id
         )
+        _debug.logic(
+            "first_stage_assigned", applicants=to_assign, jobs=to_assign.job_id
+        )
         for applicant in to_assign:
             applicant.stage_id = first_stage_by_job[applicant.job_id]
 
@@ -695,6 +704,7 @@ class HrApplicant(models.Model):
             if vals.get("email_from"):
                 vals["email_from"] = vals["email_from"].strip()
         applicants = super().create(vals_list)
+        _debug.lifecycle("create", applicants=applicants, count=len(vals_list))
         applicants.sudo().interviewer_ids._create_recruitment_interviewers()
 
         for applicant in applicants:
@@ -708,6 +718,7 @@ class HrApplicant(models.Model):
         partners = interviewers.partner_id - self.env.user.partner_id
         if not partners:
             return
+        _debug.pipeline("interviewers_notified", applicant=self, partners=partners)
         self.message_notify(
             partner_ids=partners.ids,
             author_id=self.env.user.partner_id.id,
@@ -728,6 +739,7 @@ class HrApplicant(models.Model):
             vals["date_open"] = fields.Datetime.now()
         old_interviewers = self.interviewer_ids
         applicants_by_old_stage = {}
+        _debug.lifecycle("write", applicants=self, fields=list(vals))
         if "stage_id" in vals:
             new_stage = self.env["hr.recruitment.stage"].browse(vals["stage_id"])
             moving = self.filtered(lambda a: a.stage_id != new_stage)
@@ -759,6 +771,7 @@ class HrApplicant(models.Model):
             if fname in vals
         }
         if talent_vals:
+            _debug.pipeline("talent_sync", applicants=self, fields=list(talent_vals))
             for applicant in self:
                 talent = applicant.pool_applicant_id
                 if talent and talent != applicant and not applicant.is_pool_applicant:
@@ -766,6 +779,12 @@ class HrApplicant(models.Model):
 
         if "interviewer_ids" in vals:
             interviewers_to_clean = old_interviewers - self.interviewer_ids
+            _debug.lifecycle(
+                "interviewers_changed",
+                applicants=self,
+                removed=interviewers_to_clean,
+                kept=self.interviewer_ids,
+            )
             interviewers_to_clean._remove_recruitment_interviewers()
             self.sudo().interviewer_ids._create_recruitment_interviewers()
             new_interviewers = self.interviewer_ids - old_interviewers
@@ -783,6 +802,12 @@ class HrApplicant(models.Model):
                 delta_by_job[applicant.job_id] += 1
         for job, delta in delta_by_job.items():
             if job and delta:
+                _debug.lifecycle(
+                    "recruitment_target_moved",
+                    job=job,
+                    delta=delta,
+                    was=job.no_of_recruitment,
+                )
                 job.no_of_recruitment = max(0, job.no_of_recruitment + delta)
 
     @api.model
@@ -826,7 +851,9 @@ class HrApplicant(models.Model):
         if self.partner_id:
             return self.partner_id
         if not self.partner_name:
+            _debug.logic("partner_refused", reason="no_contact_name", applicant=self)
             raise UserError(_("You must define a Contact Name for this applicant."))
+        _debug.lifecycle("partner_created_for_applicant", applicant=self)
         self.partner_id = self.env["res.partner"].create(
             {
                 "is_company": False,
@@ -1089,6 +1116,11 @@ class HrApplicant(models.Model):
         # which also rewrote `email_from` from the contact and so could replace
         # the address the applicant actually wrote from.
         if applicant.partner_id and not applicant.phone_ids:
+            _debug.logic(
+                "phones_from_contact",
+                applicant=applicant,
+                partner=applicant.partner_id,
+            )
             applicant.phone_ids = applicant.partner_id.phone_ids
         return applicant
 

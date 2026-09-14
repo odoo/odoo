@@ -1,4 +1,7 @@
 from odoo import api, fields, models, tools
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class MaintenanceRequest(models.Model):
@@ -35,6 +38,7 @@ class MaintenanceRequest(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         requests = super().create(vals_list)
+        _debug.lifecycle("requests_created", requests=requests)
         for request in requests:
             if request.employee_id.user_id:
                 request.message_subscribe(
@@ -58,6 +62,9 @@ class MaintenanceRequest(models.Model):
             self.env["res.users"].search([("login", "=", email)], limit=1)
             if email
             else self.env["res.users"]
+        )
+        _debug.logic(
+            "request_from_email", email=email or "none", employee=user.employee_id
         )
         if user.employee_id:
             custom_values["employee_id"] = user.employee_id.id

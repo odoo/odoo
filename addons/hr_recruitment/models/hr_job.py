@@ -397,6 +397,7 @@ class HrJob(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         jobs = super().create(vals_list)
+        _debug.lifecycle("create", jobs=jobs, count=len(vals_list))
         jobs.sudo().interviewer_ids._create_recruitment_interviewers()
         return jobs
 
@@ -405,6 +406,7 @@ class HrJob(models.Model):
             self.interviewer_ids if "interviewer_ids" in vals else self.browse()
         )
         old_recruiters = {job: job.user_id for job in self} if "user_id" in vals else {}
+        _debug.lifecycle("write", jobs=self, fields=list(vals))
         if "active" in vals:
             if vals["active"]:
                 self._unarchive_cascaded_applications()
@@ -413,6 +415,12 @@ class HrJob(models.Model):
         res = super().write(vals)
         if "interviewer_ids" in vals:
             interviewers_to_clean = old_interviewers - self.interviewer_ids
+            _debug.lifecycle(
+                "job_interviewers_changed",
+                jobs=self,
+                removed=interviewers_to_clean,
+                kept=self.interviewer_ids,
+            )
             interviewers_to_clean._remove_recruitment_interviewers()
             self.sudo().interviewer_ids._create_recruitment_interviewers()
 
@@ -431,12 +439,20 @@ class HrJob(models.Model):
                     )
                 )
                 if application_ids:
+                    _debug.pipeline(
+                        "recruiter_changed",
+                        job=job,
+                        was=old_recruiters[job],
+                        now=job.user_id,
+                        applications=application_ids,
+                    )
                     application_ids.message_unsubscribe(to_unsubscribe)
                     application_ids.with_context(
                         mail_auto_subscribe_no_notify=True
                     ).user_id = job.user_id
 
         if "department_id" in vals or "user_id" in vals:
+            _debug.pipeline("alias_defaults_refreshed", jobs=self)
             for job in self:
                 job.alias_defaults = job._alias_get_creation_values()["alias_defaults"]
         return res

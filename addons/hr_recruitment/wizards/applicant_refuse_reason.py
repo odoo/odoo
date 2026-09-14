@@ -147,6 +147,9 @@ class ApplicantGetRefuseReason(models.TransientModel):
     def action_refuse_reason_apply(self):
         if self.send_mail:
             if not self.env.user.email:
+                _debug.logic(
+                    "refuse_refused", reason="no_sender_email", user=self.env.user
+                )
                 raise UserError(
                     _(
                         "Unable to post message, please configure the sender's email address."
@@ -156,6 +159,11 @@ class ApplicantGetRefuseReason(models.TransientModel):
                 not (applicant.email_from or applicant.partner_id.email)
                 for applicant in self.applicant_ids
             ):
+                _debug.logic(
+                    "refuse_refused",
+                    reason="applicant_without_email",
+                    applicants=self.applicant_ids,
+                )
                 raise UserError(
                     _(
                         "At least one applicant doesn't have a email; you can't use send email option."
@@ -182,6 +190,12 @@ class ApplicantGetRefuseReason(models.TransientModel):
                     for duplicate in self.duplicate_applicant_ids
                 }
             )
+        _debug.lifecycle(
+            "refuse",
+            applicants=refused_applications,
+            reason=self.refuse_reason_id,
+            mail=self.send_mail,
+        )
         refused_applications.write(
             {
                 "refuse_reason_id": self.refuse_reason_id.id,

@@ -1,7 +1,10 @@
 from markupsafe import Markup
 
 from odoo import _, fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import html2plaintext
+
+_debug = DebugLog(__name__)
 
 
 class SlideChannelPartner(models.Model):
@@ -25,6 +28,9 @@ class SlideChannelPartner(models.Model):
             .grouped(lambda employee: employee.user_id.partner_id)
         )
         if not employees_by_partner:
+            _debug.logic(
+                "course_completion_no_employee", memberships=completed_memberships
+            )
             return res
         resume_lines = self.env["hr.resume.line"].sudo()
         line_type = self.env.ref(
@@ -67,6 +73,11 @@ class SlideChannelPartner(models.Model):
                     }
                 )
         if lines_to_create:
+            _debug.lifecycle(
+                "course_resume_lines_created",
+                memberships=completed_memberships,
+                created=len(lines_to_create),
+            )
             resume_lines.create(lines_to_create)
         return res
 

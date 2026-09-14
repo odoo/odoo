@@ -1,4 +1,7 @@
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class MaintenanceEquipment(models.Model):
@@ -55,6 +58,7 @@ class MaintenanceEquipment(models.Model):
 
     @api.depends("equipment_assign_to")
     def _compute_equipment_assign(self):
+        _debug.logic("equipment_assign_recomputed", equipments=self)
         for equipment in self:
             if equipment.equipment_assign_to == "employee":
                 equipment.department_id = False
@@ -83,6 +87,11 @@ class MaintenanceEquipment(models.Model):
                     equipment.department_id.manager_id.user_id.partner_id.id
                 )
             if partner_ids:
+                _debug.lifecycle(
+                    "equipment_followers_added",
+                    equipment=equipment,
+                    partners=len(partner_ids),
+                )
                 equipment.message_subscribe(partner_ids=partner_ids)
         return equipments
 
@@ -97,6 +106,11 @@ class MaintenanceEquipment(models.Model):
             if department and department.manager_id and department.manager_id.user_id:
                 partner_ids.append(department.manager_id.user_id.partner_id.id)
         if partner_ids:
+            _debug.lifecycle(
+                "equipment_followers_added_on_write",
+                equipments=self,
+                partners=len(partner_ids),
+            )
             self.message_subscribe(partner_ids=partner_ids)
         return super().write(vals)
 

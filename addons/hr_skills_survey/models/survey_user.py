@@ -2,7 +2,10 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import fields, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import html2plaintext
+
+_debug = DebugLog(__name__)
 
 
 class SurveyUser_Input(models.Model):
@@ -33,6 +36,12 @@ class SurveyUser_Input(models.Model):
 
         lines_to_create = []
         today = fields.Date.today()
+        _debug.pipeline(
+            "certifications_completed",
+            inputs=certification_user_inputs,
+            employees=employees,
+            existing=len(resume_survey_by_ids),
+        )
         for employee in employees:
             for user_input in user_inputs_by_partner[employee.user_id.partner_id]:
                 survey = user_input.survey_id
@@ -57,4 +66,5 @@ class SurveyUser_Input(models.Model):
                     existing_resume_survey.write(resume_line_vals)
                 else:
                     lines_to_create.append(resume_line_vals)
+        _debug.lifecycle("certification_resume_lines", created=len(lines_to_create))
         self.env["hr.resume.line"].create(lines_to_create)

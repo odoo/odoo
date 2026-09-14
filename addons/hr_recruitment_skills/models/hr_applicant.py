@@ -1,4 +1,7 @@
 from odoo import Command, api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class HrApplicant(models.Model):
@@ -61,6 +64,15 @@ class HrApplicant(models.Model):
             min(skill.level_progress, required_progress[skill.skill_id] * 2)
             for skill in matching
         ) + (self.degree_id.score * 100 if job_degree > 1 else 0)
+        _debug.logic(
+            "skill_match",
+            applicant=self,
+            job=job,
+            required=len(required_progress),
+            matched=matching,
+            job_total=job_total,
+            applicant_total=applicant_total,
+        )
         return {
             "matching_skills": matching.skill_id,
             "missing_skills": requirements.skill_id - matching.skill_id,
@@ -82,6 +94,7 @@ class HrApplicant(models.Model):
         for applicant in self:
             job = matching_job or applicant.job_id
             if not job or not (job.current_job_skill_ids or job.expected_degree):
+                _debug.logic("skill_match_skipped", applicant=applicant, job=job)
                 applicant.matching_skill_ids = False
                 applicant.missing_skill_ids = False
                 applicant.matching_score = False
@@ -93,6 +106,11 @@ class HrApplicant(models.Model):
 
     def _get_employee_create_vals(self):
         vals = super()._get_employee_create_vals()
+        _debug.pipeline(
+            "skills_carried_to_employee",
+            applicant=self,
+            skills=self.current_applicant_skill_ids,
+        )
         vals["employee_skill_ids"] = [
             Command.create(
                 {
@@ -118,6 +136,12 @@ class HrApplicant(models.Model):
             return row and talent_row_by_skill.get(row.skill_id)
 
         mapped_commands = []
+        _debug.pipeline(
+            "skill_commands_mapped_to_talent",
+            applicant=self,
+            talent=self.pool_applicant_id,
+            own=len(own_skills),
+        )
         for command in vals.get("applicant_skill_ids"):
             match command[0]:
                 case Command.UPDATE:
