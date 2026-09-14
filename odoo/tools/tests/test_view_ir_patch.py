@@ -230,3 +230,71 @@ class TestPatchAlgebra(unittest.TestCase):
             base(), [Patch("after", "field:date", (node("<field name='z'/>"),))]
         )
         self.assertIn('<field name="z"/>', view_ir.to_string(applied.root))
+
+
+class TestIdsSurviveReordering(unittest.TestCase):
+    """The property the plan's Phase 3 rests on: an overlay addressed by id
+    still lands after the base reorders its siblings; the same overlay
+    addressed by position lands somewhere else. Anonymous nodes need to
+    differ in their own attributes for that — two alike siblings can be
+    told apart by nothing but their order."""
+
+    BASE = """
+    <form>
+        <sheet>
+            <group string="Partner"><field name="partner_id"/></group>
+            <group string="Owner"><field name="user_id"/></group>
+            <group name="dates"><field name="date"/></group>
+        </sheet>
+    </form>
+    """
+    REORDERED = """
+    <form>
+        <sheet>
+            <group name="dates"><field name="date"/></group>
+            <group string="Owner"><field name="user_id"/></group>
+            <group string="Partner"><field name="partner_id"/></group>
+        </sheet>
+    </form>
+    """
+
+    def test_id_patches_land_where_positional_xpaths_do_not(self):
+        from lxml import etree
+
+        from odoo.libs.xml import apply_inheritance_specs
+
+        base_ids = view_ir.identify(view_ir.from_string(self.BASE))
+        owner = next(i for i, n in base_ids.items() if n.attrs.get("string") == "Owner")
+        self.assertTrue(owner.startswith("group@"))
+        patch = Patch("inside", owner, (node("<field name='team_id'/>"),), origin="a")
+        for arch in (self.BASE, self.REORDERED):
+            applied = apply(view_ir.from_string(arch), [patch])
+            group = view_ir.identify(applied.root)[owner]
+            self.assertEqual(kinds(group), ["field:user_id", "field:team_id"], arch)
+
+        def positional(arch):
+            result = apply_inheritance_specs(
+                etree.fromstring(arch),
+                etree.fromstring(
+                    '<xpath expr="//sheet/group[2]" position="inside">'
+                    "<field name='team_id'/></xpath>"
+                ),
+            )
+            return [
+                g.get("string") or g.get("name")
+                for g in result.xpath("//group[field[@name='team_id']]")
+            ]
+
+        self.assertEqual(positional(self.BASE), ["Owner"])
+        # the second group is still "Owner" here; move Owner elsewhere and it is not
+        moved = self.REORDERED.replace(
+            '<group string="Owner"><field name="user_id"/></group>\n', ""
+        ).replace(
+            "</sheet>", '<group string="Owner"><field name="user_id"/></group></sheet>'
+        )
+        self.assertEqual(positional(moved), ["Partner"])
+        applied = apply(view_ir.from_string(moved), [patch])
+        self.assertEqual(
+            kinds(view_ir.identify(applied.root)[owner]),
+            ["field:user_id", "field:team_id"],
+        )

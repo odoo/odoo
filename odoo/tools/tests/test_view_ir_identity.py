@@ -50,12 +50,16 @@ class TestIdentify(unittest.TestCase):
         for expected in ("form", "header", "sheet", "notebook", "chatter", "list"):
             self.assertEqual(ids[expected].kind, expected)
 
-    def test_anonymous_nodes_hash_their_parent_kind_attributes_and_children(self):
+    def test_anonymous_nodes_hash_their_parent_and_own_kind_and_attributes(self):
         _root, ids = ids_of(FORM)
         anonymous = sorted(i for i in ids if i.startswith("group@"))
         self.assertEqual(len(anonymous), 3)
         outer = next(i for i in anonymous if ids[i].children[0].kind == "group")
         self.assertEqual(ids[outer].id, outer)
+        # the two inner groups are alike (same parent, kind, no attributes):
+        # document order tells them apart
+        inner = sorted(i for i in anonymous if i != outer)
+        self.assertEqual(inner[1], f"{inner[0]}#2")
         # the unnamed page is anonymous too, and distinct from the named one
         pages = [i for i in ids if i.startswith("page")]
         self.assertEqual(len(pages), 2)
@@ -68,22 +72,25 @@ class TestIdentify(unittest.TestCase):
         self.assertTrue(all(node.id for node in nodes))
         self.assertEqual({node.id for node in nodes}, set(ids))
 
-    def test_reordering_siblings_keeps_every_id(self):
+    def test_reordering_siblings_that_differ_keeps_every_id(self):
         root, ids = ids_of(FORM)
         before = {node.id: id(node) for node in ids.values()}
-        sheet = ids["sheet"]
-        sheet.children.reverse()
-        outer = ids[
-            next(
-                i
-                for i in ids
-                if i.startswith("group@") and ids[i].children[0].kind == "group"
-            )
-        ]
-        outer.children.reverse()
+        ids["sheet"].children.reverse()
+        ids["notebook"].children.reverse()
         identify(root)
         after = {node.id: id(node) for _path, node in root.walk()}
         self.assertEqual(before, after)
+
+    def test_adding_a_child_keeps_an_anonymous_id(self):
+        root, ids = ids_of(FORM)
+        target = next(
+            i
+            for i in ids
+            if i.startswith("group@")
+            and ids[i].children[0].attrs.get("name") == "user_id"
+        )
+        ids[target].children.append(view_ir.from_string("<field name='team_id'/>"))
+        self.assertIs(identify(root)[target], ids[target])
 
     def test_reparenting_changes_an_anonymous_id_and_keeps_a_named_one(self):
         root, ids = ids_of(FORM)

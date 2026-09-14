@@ -15,12 +15,11 @@ def _short_hash(parts: Iterable[str]) -> str:
 
 
 def _signature(node: Node) -> str:
+    # the node's own kind and attributes, not its children: an overlay that
+    # adds a field to an anonymous group must not change the group's id,
+    # or the next overlay's address is stale
     return _short_hash(
-        [
-            node.kind,
-            *(f"{key}={value}" for key, value in sorted(node.attrs.items())),
-            *(f"{child.kind}:{child.attrs.get('name', '')}" for child in node.children),
-        ]
+        [node.kind, *(f"{key}={value}" for key, value in sorted(node.attrs.items()))]
     )
 
 
@@ -33,10 +32,11 @@ def identify(root: Node) -> dict[str, Node]:
     2. a named node (``name=``) is ``kind:name`` — ``field:partner_id``,
        ``button:action_confirm``, ``page:other_info``;
     3. a kind that occurs once in the view is the kind — ``sheet``, ``header``;
-    4. anything else is ``kind@hash`` over the parent's id, the node's kind and
-       attributes and its children's kinds and names — so an anonymous
-       ``<group>`` keeps its id when its siblings are reordered, and loses it
-       when it is re-parented or its content changes.
+    4. anything else is ``kind@hash`` over the parent's id and the node's own
+       kind and attributes — so an anonymous ``<group>`` keeps its id when
+       its content changes or its siblings move, and loses it when it is
+       re-parented or its attributes change; two such siblings that are
+       alike are told apart by document order (``#2``).
 
     Ids are still unique when two nodes claim the same one — a field placed
     twice, an HTML ``id`` an arch repeats: the second and later carry ``#2``,
