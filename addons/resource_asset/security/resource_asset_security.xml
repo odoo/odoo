@@ -48,6 +48,29 @@
             <field
                 name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
         </record>
+        <record id="resource_assignment_rule_asset_user" model="ir.rule">
+            <field
+                name="name">resource.assignment: asset users manage the custody of material resources</field>
+            <field name="model_id" ref="resource.model_resource_assignment" />
+            <field
+                name="domain_force">[('resource_id.resource_type', '=', 'material')]</field>
+            <field name="groups" eval="[Command.link(ref('group_asset_user'))]" />
+            <field name="perm_read" eval="False" />
+            <field name="perm_write" eval="True" />
+            <field name="perm_create" eval="True" />
+            <field name="perm_unlink" eval="True" />
+        </record>
+        <record id="resource_assignment_rule_system" model="ir.rule">
+            <field
+                name="name">resource.assignment: administrators manage every assignment</field>
+            <field name="model_id" ref="resource.model_resource_assignment" />
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[Command.link(ref('base.group_system'))]" />
+            <field name="perm_read" eval="False" />
+            <field name="perm_write" eval="True" />
+            <field name="perm_create" eval="True" />
+            <field name="perm_unlink" eval="True" />
+        </record>
     </data>
 
 </odoo>

@@ -3,8 +3,8 @@ from datetime import UTC, datetime, timedelta
 
 from lxml import etree
 
-from odoo.exceptions import ValidationError
-from odoo.tests import TransactionCase, tagged
+from odoo.exceptions import AccessError, ValidationError
+from odoo.tests import TransactionCase, new_test_user, tagged
 from odoo.tools import mute_logger
 
 
@@ -229,6 +229,37 @@ class TestResourceAsset(TransactionCase):
         self.assertFalse(truck.resource_id.active)
         self.assertTrue(assignment.date_end)
         self.assertEqual(assignment.state, "ended")
+
+    def test_an_asset_user_manages_asset_custody_and_no_one_elses(self):
+        asset_user = new_test_user(
+            self.env, login="asset_user", groups="resource_asset.group_asset_user"
+        )
+        truck = self._truck()
+        office = self.env["resource.resource"].create(
+            {"name": "Office", "resource_type": "user", "tz": "UTC"}
+        )
+        Assignment = self.env["resource.assignment"].with_user(asset_user)
+        custody = Assignment.create(
+            {"resource_id": truck.resource_id.id, "assignee_id": self.driver.id}
+        )
+        custody.note = "keys in the glovebox"
+        custody.unlink()
+
+        human = self.env["resource.assignment"].create(
+            {"resource_id": office.id, "assignee_id": self.driver.id}
+        )
+        self.assertEqual(human.with_user(asset_user).assignee_id, self.driver)
+        with self.assertRaises(AccessError):
+            human.with_user(asset_user).note = "edited"
+        with self.assertRaises(AccessError):
+            human.with_user(asset_user).unlink()
+        with self.assertRaises(AccessError):
+            Assignment.create({"resource_id": office.id, "assignee_id": self.driver.id})
+
+        admin = self.env.ref("base.user_admin")
+        self.assertTrue(admin.has_group("resource_asset.group_asset_user"))
+        human.with_user(admin).note = "edited by an administrator"
+        human.with_user(admin).unlink()
 
     def test_disposal_voids_a_planned_hand_over(self):
         truck = self._truck()
