@@ -40,7 +40,7 @@ class StockMove(models.Model):
     product_id = fields.Many2one(
         'product.product', 'Product',
         check_company=True,
-        domain="[('type', '=', 'consu')]", index=True, required=True)
+        domain="[('type', '=', 'consu')]", index=True, required=True, ondelete='cascade')
     product_category_id = fields.Many2one(
         'product.category', 'Product Category',
         related='product_id.categ_id')
