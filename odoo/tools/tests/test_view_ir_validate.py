@@ -30,9 +30,18 @@ class TestViewIrValidate(unittest.TestCase):
             [("bad-enum", "list", "error")],
         )
 
-    def test_a_conditional_column_is_a_valid_optional(self):
+    def test_account_renderer_conditional_column_is_valid(self):
         self.assertEqual(
-            codes('<list><field name="quantity" optional="conditional"/></list>'), []
+            codes('<list><field name="quantity" optional="conditional"/></list>'),
+            [],
+        )
+
+    def test_website_sale_struck_through_price_is_valid_html(self):
+        self.assertEqual(
+            codes(
+                '<form><del class="oe_read_only"><field name="list_price"/></del></form>'
+            ),
+            [],
         )
 
     def test_a_grid_takes_buttons(self):
