@@ -45,7 +45,7 @@ export const websiteService = {
         let actionJsId;
         const blockingProcesses = [];
         let modelNamesProm = null;
-        const modelNames = {};
+        const modelNames = new Map();
         let invalidateSnippetCache = false;
         let lastWebsiteId = null;
 
@@ -274,12 +274,19 @@ export const websiteService = {
                 return currentMetadata.viewXmlid === "website.page_404";
             },
             get currentLocation() {
-                const path = decodeURIComponent(this.contentWindow.location.pathname);
+                let path = this.contentWindow.location.pathname;
+                try {
+                    path = decodeURIComponent(path);
+                } catch {
+                    log.logic("currentLocation: retain undecodable pathname", () => ({
+                        path,
+                    }));
+                }
                 if (!this.currentWebsite.metadata.translatable) {
                     return path;
                 }
                 const lang = path.split("/")[1];
-                return path.slice(lang.length + 1);
+                return path.slice(lang.length + 1) || "/";
             },
             get hasMultiWebsites() {
                 return hasMultiWebsites === true;
@@ -405,23 +412,26 @@ export const websiteService = {
             },
             /**
              * @param {string} [model]
-             * @returns {string}
+             * @returns {Promise<string>}
              */
             async getUserModelName(
-                model = this.currentWebsite.metadata.mainObject.model,
+                model = this.currentWebsite?.metadata?.mainObject?.model,
             ) {
                 log.logic("getUserModelName", () => ({
                     model,
                     cached: !!modelNamesProm,
                 }));
+                if (!model) {
+                    log.logic("getUserModelName: page has no model, use fallback");
+                    return _t("Data");
+                }
                 const endModelNames = log.perf("getUserModelName await model names");
                 if (!modelNamesProm) {
                     modelNamesProm = orm
                         .call("ir.model", "get_available_models")
                         .then((modelsData) => {
                             for (const modelData of modelsData) {
-                                modelNames[modelData["model"]] =
-                                    modelData["display_name"];
+                                modelNames.set(modelData.model, modelData.display_name);
                             }
                         })
                         .catch(() => {
@@ -430,8 +440,8 @@ export const websiteService = {
                         });
                 }
                 await modelNamesProm;
-                endModelNames(() => ({ model, found: model in modelNames }));
-                return modelNames[model] || _t("Data");
+                endModelNames(() => ({ model, found: modelNames.has(model) }));
+                return modelNames.get(model) || _t("Data");
             },
         };
     },
