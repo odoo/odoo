@@ -1,5 +1,6 @@
 import logging
 from pathlib import Path
+from unittest.mock import patch
 
 from odoo.modules import Manifest
 from odoo.tools.assets.esm_registry import external_libs
@@ -15,13 +16,53 @@ def _addon_js_sources():
 
 
 class TestEsmSpecifiers(lint_case.LintCase):
+    def test_specifiers_distinguish_code_from_comments_and_strings(self):
+        cases = [
+            ('const url = "https://example.test"; import("@web/real");', {"@web/real"}),
+            ('const a = "/*"; import("@web/real"); const b = "*/";', {"@web/real"}),
+            (
+                '/** @type {import("@web/types").T} */ import("@web/real");',
+                {"@web/real"},
+            ),
+            (
+                "const code = 'import(\"@web/fake\")'; export * from '@web/real';",
+                {"@web/real"},
+            ),
+            (
+                'const text = `import("@web/fake") ${import("@web/real")}`;',
+                {"@web/real"},
+            ),
+            (
+                'const regex = /import\\("@web\\/fake"\\)/; import("@web/real");',
+                {"@web/real"},
+            ),
+            (
+                '// import("@web/fake")\nimport /* comment */ ("@web/real");',
+                {"@web/real"},
+            ),
+            (
+                'import { x } from "@web/static"; export { y } from "@web/export"; import("@web/dynamic");',
+                {"@web/static", "@web/export", "@web/dynamic"},
+            ),
+        ]
+        for source, expected in cases:
+            with self.subTest(source=source):
+                actual = _js_sources.specifiers(source)
+                _logger.debug("ESM lexer probe: source=%r imports=%s", source, actual)
+                self.assertEqual(actual, expected)
+
+    def test_specifier_check_fails_when_lexer_is_unavailable(self):
+        with patch.object(_js_sources, "lex_module", return_value=None):
+            with self.assertRaisesRegex(RuntimeError, "module lexer is unavailable"):
+                _js_sources.specifiers('import "@web/missing";')
+
     def test_relative_specifiers_carry_their_extension(self):
         broken = []
         self.assertGreater(
             len(_addon_js_sources()), 1000, "the scan reached almost no JS"
         )
         for _addon, path, source in _addon_js_sources():
-            for spec in _js_sources.specifiers(source, strip_comments=True):
+            for spec in _js_sources.specifiers(source):
                 if not spec.startswith("."):
                     continue
                 target = (path.parent / spec).resolve()
@@ -50,7 +91,8 @@ class TestEsmSpecifiers(lint_case.LintCase):
 
         for _addon, path, source in _addon_js_sources():
             scanned += 1
-            for spec in _js_sources.specifiers(source, strip_comments=True):
+            # JSDoc import() expressions resolve types, not runtime JS assets.
+            for spec in _js_sources.specifiers(source):
                 if spec in external_libs():
                     continue
                 url = IrQweb._specifier_to_static_url(spec)

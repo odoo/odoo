@@ -1,15 +1,8 @@
 import functools
-import re
 from pathlib import Path
 
 from odoo.modules import Manifest
-
-STATIC_IMPORT_RE = re.compile(
-    r"""(?:^|[\s;}])(?:import|export)\s+(?:[^'"()]*?\sfrom\s+)?["']([^"']+)["']""",
-    re.MULTILINE,
-)
-DYNAMIC_IMPORT_RE = re.compile(r"""\bimport\(\s*["']([^"']+)["']\s*\)""")
-COMMENT_RE = re.compile(r"/\*.*?\*/|//[^\n]*", re.DOTALL)
+from odoo.tools.assets.esm_lexer import lex_module
 
 
 @functools.cache
@@ -41,9 +34,14 @@ def _under_static_lib(addon: str, path: Path) -> bool:
     return len(parts) == 2 and parts[1].split("/", 1)[0] == "lib"
 
 
-def specifiers(source: str, *, strip_comments: bool = False) -> set[str]:
-    code = COMMENT_RE.sub(" ", source) if strip_comments else source
-    return set(STATIC_IMPORT_RE.findall(code)) | set(DYNAMIC_IMPORT_RE.findall(code))
+def specifiers(source: str) -> set[str]:
+    result = lex_module(source)
+    if result is None:
+        raise RuntimeError(
+            "Cannot check ESM specifiers: the module lexer is unavailable "
+            "or the JavaScript source is invalid."
+        )
+    return set(result["specifiers"])
 
 
 def module_key(addon: str, path: Path) -> str | None:

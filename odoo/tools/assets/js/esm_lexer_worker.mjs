@@ -65,6 +65,9 @@ rl.on("line", (line) => {
         out.reexportFrom = reexportFrom;
         out.reexports = reexports;
         out.imports = importRecords;
+        // Dependency checks also need literal dynamic imports, without
+        // confusing source-like text in comments or strings with code.
+        out.specifiers = [...new Set(imports.map((i) => i.n).filter(Boolean))];
     } catch (err) {
         out.ok = false;
         out.error = String((err && err.message) || err);
