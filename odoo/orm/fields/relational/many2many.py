@@ -424,8 +424,8 @@ class Many2many(_RelationalMulti):
         # a compute assigning the field record by record over a batch hands
         # each record with the batch as its prefetch: the relation is read for
         # the batch once, as a getter would, not once per assignment
-        field_cache = self._get_cache(records_commands_list[0][0].env)
         for recs, _commands in records_commands_list:
+            field_cache = self._get_cache(recs.env)
             for record in recs:
                 if record.id in missing_ids and (
                     record.id not in field_cache or field_cache[record.id] is PENDING
