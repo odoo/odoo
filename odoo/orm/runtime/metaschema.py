@@ -100,6 +100,11 @@ class MetaSchema:
     ) -> list[tuple[str, str]]:
         return env["ir.model.fields"].get_field_selection(model_name, field_name)
 
+    def module_names(self, env: Environment) -> set[str]:
+        if "ir.module.module" not in env.registry:
+            return set()
+        return set(env["ir.module.module"].sudo().search([]).mapped("name"))
+
     # -- defaults
 
     def model_defaults(

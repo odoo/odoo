@@ -25,7 +25,7 @@ BASE_MODEL_REACHES = {
     "fields/properties.py": 2,  # env["base"], the properties-definition hooks
     "helpers.py": 1,  # res.company, the company check
     "models/mixins/access.py": 1,  # res.groups, the company-crossover message
-    "models/mixins/load.py": 2,  # ir.fields.converter, ir.module.module
+    "models/mixins/load.py": 1,  # ir.fields.converter
     "models/mixins/read_group/sql.py": 1,  # res.currency.rate, sum_currency
     "model_test_env.py": 2,  # ir.model, ir.model.fields: the in-memory reflection
     "registration.py": 1,  # ir.model.fields, manual fields at class build

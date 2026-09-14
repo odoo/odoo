@@ -153,3 +153,18 @@ def test_load_with_external_ids_creates_then_updates():
         doc = Doc_.browse(first["ids"])
         assert (doc.name, doc.qty) == ("one again", 2)
         assert env.ref("ldf.one") == doc
+
+
+def test_an_import_prefix_naming_a_module_is_refused_through_the_metaschema(
+    monkeypatch,
+):
+    with _env(IrModelData) as env:
+        Doc_ = env["ldf.doc"].with_context(import_file=True)
+        # no module table in memory: nothing to collide with
+        assert Doc_.load(["id", "name"], [["sale.doc", "d"]])["messages"] == []
+        monkeypatch.setattr(
+            type(env.registry.metaschema), "module_names", lambda self, env: {"sale"}
+        )
+        result = Doc_.load(["id", "name"], [["sale.other", "o"]])
+        assert [m["type"] for m in result["messages"]] == ["error"]
+        assert "module prefix sale" in result["messages"][0]["message"]

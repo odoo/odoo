@@ -735,9 +735,7 @@ class LoadMixin(_ModelStubs):
         ]
         if not dotted:
             return
-        existing_modules = set(
-            self.env["ir.module.module"].sudo().search([]).mapped("name")
-        )
+        existing_modules = self.env.registry.metaschema.module_names(self.env)
         _debug.logic(
             "load.import_prefix_checked",
             model=self._name,
