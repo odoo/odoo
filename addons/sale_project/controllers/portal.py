@@ -6,7 +6,7 @@ from odoo.addons.project.controllers.portal import ProjectCustomerPortal
 class SaleProjectCustomerPortal(ProjectCustomerPortal):
     def _task_get_searchbar_groupby(self, milestones_allowed, project=False):
         values = super()._task_get_searchbar_groupby(milestones_allowed, project)
-        if project and not project.sudo()._is_partner_hidden():
+        if project and project.sudo().allow_billable:
             del values["partner_id"]
         if not project or project.sudo().allow_billable:
             values |= {
@@ -16,7 +16,7 @@ class SaleProjectCustomerPortal(ProjectCustomerPortal):
 
     def _task_get_searchbar_inputs(self, milestones_allowed, project=False):
         values = super()._task_get_searchbar_inputs(milestones_allowed, project)
-        if project and not project.sudo()._is_partner_hidden():
+        if project and project.sudo().allow_billable:
             del values["partner_id"]
         if not project or project.sudo().allow_billable:
             values |= {

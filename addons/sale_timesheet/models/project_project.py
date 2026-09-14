@@ -161,7 +161,9 @@ class ProjectProject(models.Model):
 
         (self - projects).warning_employee_rate = False
 
-    @api.depends("sale_line_employee_ids.sale_line_id", "sale_line_id")
+    @api.depends(
+        "sale_line_employee_ids.sale_line_id", "sale_line_id", "allow_billable"
+    )
     def _compute_partner_id(self):
         billable_projects = self.filtered("allow_billable")
         for project in billable_projects:

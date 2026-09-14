@@ -47,42 +47,38 @@ class TestSaleProjectServices(TestSaleProjectCommon):
         with self.assertRaises(UserError):
             order.get_first_service_line()
 
-    def test_step_shows_rating_only_for_billable_projects(self):
-        step_billable, step_plain = self.env["project.workflow.step"].create(
-            [
-                {
-                    "name": "Billable step",
-                    "project_ids": [Command.link(self.project_global.id)],
-                },
-                {
-                    "name": "Plain step",
-                    "project_ids": [Command.link(self.project_template.id)],
-                },
-            ]
+    def test_a_non_billable_project_keeps_and_propagates_its_customer(self):
+        partner = self.env["res.partner"].create({"name": "Non-billable customer"})
+        project = self.env["project.project"].create(
+            {"name": "Not billed", "allow_billable": False, "partner_id": partner.id}
         )
-        self.assertTrue(step_billable.show_rating_active)
-        self.assertFalse(step_plain.show_rating_active)
+        partner.company_id = self.env.company
+        self.assertEqual(project.partner_id, partner)
+        self.assertFalse(project._is_partner_hidden())
 
-    def test_step_onchange_disables_rating_without_billable(self):
-        step = self.env["project.workflow.step"].new(
+        task = self.env["project.task"].create(
+            {"name": "Task", "project_id": project.id}
+        )
+        child = self.env["project.task"].create(
+            {"name": "Child", "project_id": project.id, "parent_id": task.id}
+        )
+        self.assertEqual(task.partner_id, partner)
+        self.assertEqual(child.partner_id, partner)
+
+    def test_moving_a_customer_to_another_company_is_refused(self):
+        other_company = self.env["res.company"].create({"name": "Other company"})
+        partner = self.env["res.partner"].create({"name": "Moving customer"})
+        project = self.env["project.project"].create(
             {
-                "name": "Step",
-                "rating_active": True,
-                "project_ids": [Command.set(self.project_template.ids)],
+                "name": "Company project",
+                "allow_billable": False,
+                "partner_id": partner.id,
+                "company_id": self.env.company.id,
             }
         )
-        step._onchange_project_ids()
-        self.assertFalse(step.rating_active)
-
-        step_billable = self.env["project.workflow.step"].new(
-            {
-                "name": "Step billable",
-                "rating_active": True,
-                "project_ids": [Command.set(self.project_global.ids)],
-            }
-        )
-        step_billable._onchange_project_ids()
-        self.assertTrue(step_billable.rating_active)
+        with self.assertRaises(UserError):
+            partner.company_id = other_company
+        self.assertEqual(project.partner_id, partner)
 
     def test_has_any_so_to_invoice_uses_fork_state_spelling(self):
         order = self.env["sale.order"].create(

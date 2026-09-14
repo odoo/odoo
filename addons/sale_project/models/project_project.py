@@ -121,16 +121,6 @@ class ProjectProject(models.Model):
         defaults["sale_line_id"] = False
         return defaults
 
-    @api.depends("allow_billable", "partner_id.company_id")
-    def _compute_partner_id(self):
-        for project in self:
-            if not project.allow_billable or (
-                project.company_id
-                and project.partner_id.company_id
-                and project.company_id != project.partner_id.company_id
-            ):
-                project.partner_id = False
-
     @api.depends("partner_id")
     def _compute_sale_line_id(self):
         self.filtered(
@@ -1166,9 +1156,6 @@ class ProjectProject(models.Model):
         if not self.allow_billable:
             return {}, False
         return super()._get_profitability_values()
-
-    def _is_partner_hidden(self):
-        return not self.allow_billable
 
     def _get_domain_projects_to_make_billable(self):
         return Domain.AND(

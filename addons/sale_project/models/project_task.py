@@ -138,16 +138,6 @@ class ProjectTask(models.Model):
             else:
                 task.sale_order_id = False
 
-    @api.depends("allow_billable")
-    def _compute_partner_id(self):
-        billable_task = self.filtered(
-            lambda t: (
-                t.allow_billable or (not self._origin and t.parent_id.allow_billable)
-            )
-        )
-        (self - billable_task).partner_id = False
-        super(ProjectTask, billable_task)._compute_partner_id()
-
     def _inverse_partner_id(self):
         for task in self:
             consistent_partners = (

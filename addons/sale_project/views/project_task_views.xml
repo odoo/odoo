@@ -45,7 +45,7 @@
                 <field name="allow_billable" column_invisible="True" />
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">
-                <attribute name="invisible">not allow_billable or is_template</attribute>
+                <attribute name="invisible">is_template</attribute>
             </xpath>
         </field>
     </record>
@@ -63,7 +63,7 @@
                     name="action_customer_preview"
                     type="object"
                     icon="fa-globe icon"
-                    invisible="not partner_id or not allow_billable or privacy_visibility not in ['invited_users', 'portal'] or is_template"
+                    invisible="not partner_id or privacy_visibility not in ['invited_users', 'portal'] or is_template"
                     class="oe_stat_button">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_text">Preview</span>
@@ -109,7 +109,7 @@
                 <field name="has_any_so_with_nothing_to_invoice" invisible="1" />
             </xpath>
             <xpath expr="//field[@name='partner_id']" position="attributes">
-                <attribute name="invisible">not allow_billable or is_template</attribute>
+                <attribute name="invisible">is_template</attribute>
             </xpath>
             <xpath expr="//group[@name='group_time_managment']" position="before">
                 <group

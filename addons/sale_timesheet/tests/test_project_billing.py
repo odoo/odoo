@@ -203,9 +203,10 @@ class TestProjectBilling(TestCommonSaleTimesheet):
             subtask.project_id.allow_billable,
             "The subtask project is non billable even if the subtask is",
         )
-        self.assertFalse(
+        self.assertEqual(
             subtask.partner_id,
-            "Subtask in non billable project should not have a customer",
+            task.partner_id,
+            "Subtask in non billable project takes its parent's customer",
         )
 
         timesheet2 = Timesheet.create(
@@ -358,9 +359,10 @@ class TestProjectBilling(TestCommonSaleTimesheet):
             }
         )
 
-        self.assertFalse(
+        self.assertEqual(
             subtask.partner_id,
-            "Subtask should not have the customer if it's project is not billable",
+            task.partner_id,
+            "Subtask in a non billable project takes its parent's customer",
         )
 
         timesheet2 = Timesheet.create(
