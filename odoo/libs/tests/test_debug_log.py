@@ -81,7 +81,7 @@ class TestFormatEvent(unittest.TestCase):
 
 class TestDebugLog(unittest.TestCase):
     def setUp(self):
-        self.debug = DebugLog("odoo.addons.base.models.ir_attachment")
+        self.log = DebugLog("odoo.addons.base.models.ir_attachment")
         self.root = logging.getLogger(ROOT)
         self.saved_level = self.root.level
         self.root.setLevel(logging.NOTSET)
@@ -92,18 +92,18 @@ class TestDebugLog(unittest.TestCase):
         self.root.setLevel(self.saved_level)
 
     def test_loggers_are_named_root_channel_scope(self):
-        self.assertEqual(self.debug.scope, "base.ir_attachment")
+        self.assertEqual(self.log.scope, "base.ir_attachment")
         for channel in CHANNELS:
-            logger = getattr(self.debug, channel).logger
+            logger = getattr(self.log, channel).logger
             self.assertEqual(logger.name, f"{ROOT}.{channel}.base.ir_attachment")
 
     def test_line_channel_emits_only_when_enabled(self):
         logging.getLogger(f"{ROOT}.logic").setLevel(logging.INFO)
         with self.assertNoLogs(self.root, logging.DEBUG):
-            self.debug.logic("noop", a=1)
+            self.log.logic("noop", a=1)
         logging.getLogger(f"{ROOT}.logic").setLevel(logging.NOTSET)
         with self.assertLogs(f"{ROOT}.logic", logging.DEBUG) as captured:
-            self.debug.logic("hit", model="res.partner", ids=[1, 2])
+            self.log.logic("hit", model="res.partner", ids=[1, 2])
         self.assertEqual(
             captured.output,
             [
@@ -113,7 +113,7 @@ class TestDebugLog(unittest.TestCase):
 
     def test_perf_span_is_a_shared_noop_when_disabled(self):
         self.root.setLevel(logging.INFO)
-        span = self.debug.perf("read", cr=_FakeCursor())
+        span = self.log.perf("read", cr=_FakeCursor())
         self.assertIs(span, _DISABLED_SPAN)
         with span as inner:
             inner.set(rows=1)
@@ -121,7 +121,7 @@ class TestDebugLog(unittest.TestCase):
     def test_perf_span_reports_ms_queries_and_extra_fields(self):
         cr = _FakeCursor()
         with self.assertLogs(f"{ROOT}.perf", logging.DEBUG) as captured:
-            with self.debug.perf("read", cr=cr, model="res.partner") as span:
+            with self.log.perf("read", cr=cr, model="res.partner") as span:
                 cr.sql_statement_count += 3
                 span.set(rows=7)
         (line,) = captured.output
@@ -131,7 +131,7 @@ class TestDebugLog(unittest.TestCase):
     def test_perf_span_counts_round_trips_not_rows(self):
         cr = _FakeCursor()
         with self.assertLogs(f"{ROOT}.perf", logging.DEBUG) as captured:
-            with self.debug.perf("insert", cr=cr):
+            with self.log.perf("insert", cr=cr):
                 cr.sql_statement_count += 1
                 cr.sql_log_count += 500
         (line,) = captured.output
@@ -147,7 +147,7 @@ class TestDebugLog(unittest.TestCase):
                 self._ids = (4, 5)
                 self.env = _FakeEnv(cr)
 
-            @self.debug.perf.timed
+            @self.log.perf.timed
             def action_post(self, value):
                 cr.sql_statement_count += 2
                 return value * 2
@@ -165,7 +165,7 @@ class TestDebugLog(unittest.TestCase):
         self.addCleanup(perf.setLevel, logging.NOTSET)
         calls = []
 
-        @self.debug.perf.timed
+        @self.log.perf.timed
         def helper(value):
             calls.append(value)
             return value
@@ -175,7 +175,7 @@ class TestDebugLog(unittest.TestCase):
         self.assertEqual(calls, [3])
 
     def test_timed_names_the_exception_and_reraises(self):
-        @self.debug.perf.timed
+        @self.log.perf.timed
         def boom():
             raise ValueError("x")
 
@@ -188,7 +188,7 @@ class TestDebugLog(unittest.TestCase):
 
     def test_perf_count_is_a_single_line(self):
         with self.assertLogs(f"{ROOT}.perf", logging.DEBUG) as captured:
-            self.debug.perf.count("cache", hits=3, misses=1)
+            self.log.perf.count("cache", hits=3, misses=1)
         self.assertEqual(
             captured.output,
             [f"DEBUG:{ROOT}.perf.base.ir_attachment:event=cache hits=3 misses=1"],
@@ -197,7 +197,7 @@ class TestDebugLog(unittest.TestCase):
     def test_perf_span_names_the_exception_and_reraises(self):
         with self.assertLogs(f"{ROOT}.perf", logging.DEBUG) as captured:
             with self.assertRaises(ValueError):
-                with self.debug.perf("boom"):
+                with self.log.perf("boom"):
                     raise ValueError("x")
         (line,) = captured.output
         self.assertTrue(line.endswith(" error=ValueError"))
@@ -205,7 +205,7 @@ class TestDebugLog(unittest.TestCase):
 
     def test_channel_enabled_reflects_the_logger_level(self):
         self.root.setLevel(logging.INFO)
-        self.assertFalse(self.debug.pipeline.enabled)
+        self.assertFalse(self.log.pipeline.enabled)
         logging.getLogger(f"{ROOT}.pipeline").setLevel(logging.DEBUG)
-        self.assertTrue(self.debug.pipeline.enabled)
+        self.assertTrue(self.log.pipeline.enabled)
         logging.getLogger(f"{ROOT}.pipeline").setLevel(logging.NOTSET)

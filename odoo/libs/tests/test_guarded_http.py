@@ -4,6 +4,7 @@ import re
 import socket
 import threading
 import time
+from collections.abc import Callable
 
 import pytest
 import requests
@@ -13,8 +14,13 @@ from odoo.libs import guarded_http, netguard
 LOOPBACK_ONLY = netguard.PUBLIC_ONLY.with_networks("127.0.0.0/8", "::1/128")
 
 
+class _Server(http.server.ThreadingHTTPServer):
+    seen: list[tuple[str, str | None]]
+
+
 class _Handler(http.server.BaseHTTPRequestHandler):
-    routes = {}
+    routes: dict[str, Callable[[_Handler], None]] = {}
+    server: _Server
 
     def do_GET(self):
         self.server.seen.append((self.path, self.headers.get("Host")))
@@ -91,7 +97,7 @@ _Handler.routes = {
 
 @pytest.fixture
 def server():
-    httpd = http.server.ThreadingHTTPServer(("127.0.0.1", 0), _Handler)
+    httpd = _Server(("127.0.0.1", 0), _Handler)
     httpd.seen = []
     thread = threading.Thread(target=httpd.serve_forever, args=(0.05,), daemon=True)
     thread.start()

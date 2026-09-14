@@ -41,7 +41,9 @@ _DEFAULT_PORTS = {"http": 80, "https": 443}
 
 
 class RefusedDestination(requests.exceptions.InvalidURL, netguard.DestinationRefused):
-    pass
+    def __init__(self, *args: object, request: PreparedRequest | None = None) -> None:
+        # the request keyword requests' base reads and ValueError's ignores
+        requests.exceptions.RequestException.__init__(self, *args, request=request)
 
 
 class ResponseTooLarge(requests.exceptions.RequestException):

@@ -7,6 +7,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo.libs.datetime.date_utils import (
     Anchor,
+    TimeUnit,
     anchor_day,
     next_after,
     next_anchor,
@@ -14,7 +15,7 @@ from odoo.libs.datetime.date_utils import (
 )
 
 NOW = datetime(2026, 9, 12, 10, 30)
-PLURAL = {
+PLURAL: dict[TimeUnit, str] = {
     "minute": "minutes",
     "hour": "hours",
     "day": "days",

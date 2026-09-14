@@ -104,7 +104,7 @@ class TestFreezeSurvivors(unittest.TestCase):
         import weakref
 
         class Node:
-            pass
+            self: Node
 
         survivor = Node()
         cycle = Node()
@@ -124,7 +124,7 @@ class TestFreezeSurvivors(unittest.TestCase):
         import weakref
 
         class Node:
-            pass
+            self: Node
 
         node = Node()
         node.self = node
