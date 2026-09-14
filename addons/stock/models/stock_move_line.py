@@ -445,7 +445,7 @@ class StockMoveLine(models.Model):
         plan.to_restock._update_quants_again(plan.reverted_in_dates)
         plan.to_adjust._update_quants_by_delta(plan.deltas)
 
-        survivors = self.exists()
+        survivors = self.exists() if plan.to_restock or plan.to_adjust else self
 
         plan.packages_to_check._update_orphaned_package_dests()
         if plan.reservation_touched:

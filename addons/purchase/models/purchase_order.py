@@ -1,3 +1,4 @@
+from collections import defaultdict
 from urllib.parse import urlencode
 
 from dateutil.relativedelta import relativedelta
@@ -334,8 +335,7 @@ class PurchaseOrder(models.Model):
         }
 
     def _action_confirm(self):
-        for order in self:
-            order._create_supplier_to_product()
+        self._create_supplier_to_product()
 
     def action_draft(self):
         self.filtered(lambda order: order.state in ("draft", "cancel")).write(
@@ -634,52 +634,44 @@ class PurchaseOrder(models.Model):
         return self.action_view_invoice(invoices)
 
     def _create_supplier_to_product(self):
-        partner = (
-            self.partner_id
-            if not self.partner_id.parent_id
-            else self.partner_id.parent_id
-        )
-        partners = partner | self.partner_id
-
-        suppinfo_vals_list = []
-        seen_tmpls = set()
-
-        for line in self.line_ids:
-            if not line.product_id:
-                continue
-            tmpl = line.product_id.product_tmpl_id
-            if tmpl.id in seen_tmpls:
-                continue
-            already_seller = partners & line.product_id.seller_ids.mapped("partner_id")
-            if (
-                already_seller
-                or len(line.product_id.seller_ids) >= const.MAX_SUPPLIERS_PER_PRODUCT
-            ):
-                seen_tmpls.add(tmpl.id)
-                continue
-
-            seen_tmpls.add(tmpl.id)
-            price = line.price_unit
-            if tmpl.uom_id != line.product_uom_id:
-                price = line.product_uom_id._compute_price(price, tmpl.uom_id)
-
-            supplierinfo = self._prepare_supplierinfo(
-                partner,
-                line,
-                price,
-                line.currency_id,
+        vals_by_company = defaultdict(list)
+        seen = set()
+        for order in self:
+            partner = order.partner_id.parent_id or order.partner_id
+            partners = partner | order.partner_id
+            for line in order.line_ids:
+                if not line.product_id:
+                    continue
+                tmpl = line.product_id.product_tmpl_id
+                key = (partner.id, tmpl.id)
+                if key in seen:
+                    continue
+                seen.add(key)
+                sellers = line.product_id.seller_ids
+                if (
+                    partners & sellers.partner_id
+                    or len(sellers) >= const.MAX_SUPPLIERS_PER_PRODUCT
+                ):
+                    continue
+                price = line.price_unit
+                if tmpl.uom_id != line.product_uom_id:
+                    price = line.product_uom_id._compute_price(price, tmpl.uom_id)
+                supplierinfo = order._prepare_supplierinfo(
+                    partner,
+                    line,
+                    price,
+                    line.currency_id,
+                )
+                if line.selected_seller_id:
+                    supplierinfo["product_name"] = line.selected_seller_id.product_name
+                    supplierinfo["product_code"] = line.selected_seller_id.product_code
+                    supplierinfo["product_uom_id"] = line.product_uom_id.id
+                supplierinfo["product_tmpl_id"] = tmpl.id
+                vals_by_company[order.company_id].append(supplierinfo)
+        for company, vals_list in vals_by_company.items():
+            self.env["product.supplierinfo"].sudo().with_company(company).create(
+                vals_list
             )
-            if line.selected_seller_id:
-                supplierinfo["product_name"] = line.selected_seller_id.product_name
-                supplierinfo["product_code"] = line.selected_seller_id.product_code
-                supplierinfo["product_uom_id"] = line.product_uom_id.id
-            supplierinfo["product_tmpl_id"] = tmpl.id
-            suppinfo_vals_list.append(supplierinfo)
-
-        if suppinfo_vals_list:
-            self.env["product.supplierinfo"].sudo().with_company(
-                self.company_id
-            ).create(suppinfo_vals_list)
 
     def get_acknowledge_url(self):
         return self.get_portal_url(query_string="&acknowledge=True")
