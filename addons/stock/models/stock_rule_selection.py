@@ -4,10 +4,15 @@ from functools import partial
 
 from odoo import api, models
 from odoo.fields import Domain
+from odoo.tools import TransactionMemo
 
 from ..tools import debug_log as dbg
 
 _logger = logging.getLogger(__name__)
+
+RULE_IDS_BY_ROUTE = TransactionMemo(
+    "stock.rule.ids_by_route", invalidated_by=("stock.rule",)
+)
 
 
 class StockRuleSelection(models.Model):
@@ -129,18 +134,34 @@ class StockRuleSelection(models.Model):
         valid_route_ids = self._get_valid_route_ids(
             route_ids, packaging_uom_id, product_id, warehouse_id
         )
-        if valid_route_ids:
-            domain &= Domain("route_id", "in", list(valid_route_ids))
         candidates_by_route = defaultdict(lambda: self.env["stock.rule"])
-        for route, rules in self.env["stock.rule"]._read_group(
-            domain, groupby=["route_id"], aggregates=["id:recordset"]
-        ):
-            candidates_by_route[route.id] |= rules
+        for route_id, rule_ids in self._get_rule_ids_by_route(domain).items():
+            if not valid_route_ids or route_id in valid_route_ids:
+                candidates_by_route[route_id] = self.env["stock.rule"].browse(rule_ids)
         return self._get_best_rule(
             candidates_by_route,
             self._get_sorted_buckets(product_id, warehouse_id, values),
             warehouse_id,
         )
+
+    @api.model
+    def _get_rule_ids_by_route(self, domain):
+        memo = RULE_IDS_BY_ROUTE(self.env)
+        key = (
+            self.env.uid,
+            self.env.su,
+            tuple(self.env.companies.ids),
+            self.env.context.get("active_test", True),
+            domain,
+        )
+        if key not in memo:
+            memo[key] = {
+                route.id: rules.ids
+                for route, rules in self.env["stock.rule"]._read_group(
+                    domain, groupby=["route_id"], aggregates=["id:recordset"]
+                )
+            }
+        return memo[key]
 
     @api.model
     def _get_location_hierarchy(self, location_id):

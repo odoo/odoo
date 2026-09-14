@@ -3,9 +3,14 @@ from typing import Any, Self
 from odoo import api, fields, models
 from odoo.exceptions import AccessError, ValidationError
 from odoo.fields import Command, Domain
+from odoo.tools import TransactionMemo
 
 from . import approval_trace as trace
 from .approval_utils import boolean_search_domain, is_approval_manager
+
+DELEGATION_TZ_BUCKETS = TransactionMemo(
+    "approval_delegation_tz_buckets", invalidated_by={"res.users": ("tz",)}
+)
 
 
 class ApprovalApprover(models.Model):
@@ -489,10 +494,9 @@ class ApprovalApprover(models.Model):
 
     @api.model
     def _delegation_date_buckets(self) -> dict:
-        cache = self.env.cr.cache
-        if "approval_delegation_tz_buckets" in cache:
-            return cache["approval_delegation_tz_buckets"]
-        buckets: dict = {}
+        if (buckets := DELEGATION_TZ_BUCKETS.peek(self.env)) is not None:
+            return buckets
+        buckets = DELEGATION_TZ_BUCKETS(self.env)
         rows = (
             self.env["res.users"]
             .sudo()
@@ -502,7 +506,6 @@ class ApprovalApprover(models.Model):
         for (tz,) in rows:
             local = fields.Date.context_today(self.with_context(tz=tz or "UTC"))
             buckets.setdefault(local, []).append(tz)
-        cache["approval_delegation_tz_buckets"] = buckets
         return buckets
 
     @api.model

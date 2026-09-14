@@ -13,14 +13,16 @@ from odoo import api, fields, models, tools
 from odoo.api import ValuesType
 from odoo.exceptions import UserError, ValidationError
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import SQL, ormcache, parse_date
+from odoo.tools import SQL, TransactionMemo, ormcache, parse_date
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
 
 _CURRENCY_TOTAL_DIGITS = 69
 
-RATE_HISTORY_CACHE_KEY = "res_currency_rate_history"
+RATE_HISTORY = TransactionMemo(
+    "res_currency_rate_history", invalidated_by=("res.currency.rate",)
+)
 
 
 class ResCurrency(models.Model):
@@ -241,7 +243,7 @@ class ResCurrency(models.Model):
             return None
         root_id = company.root_id.id
         scope = self._get_rate_history_scope()
-        memo = self.env.cr.cache.setdefault(RATE_HISTORY_CACHE_KEY, {})
+        memo = RATE_HISTORY(self.env)
         missing = {
             currency_id
             for currency_id in self.ids
@@ -584,7 +586,6 @@ class ResCurrencyRate(models.Model):
             ["rate", "inverse_rate", "rate_string"]
         )
         res = super().write(self._sanitize_vals(vals))
-        self.env.cr.cache.pop(RATE_HISTORY_CACHE_KEY, None)
         _debug.lifecycle("rate_write", count=len(self), fields=list(vals))
         return res
 
@@ -594,7 +595,6 @@ class ResCurrencyRate(models.Model):
             ["rate", "inverse_rate", "rate_string"]
         )
         records = super().create([self._sanitize_vals(vals) for vals in vals_list])
-        self.env.cr.cache.pop(RATE_HISTORY_CACHE_KEY, None)
         _debug.lifecycle("rate_create", count=len(records))
         return records
 
@@ -603,7 +603,6 @@ class ResCurrencyRate(models.Model):
             ["rate", "inverse_rate", "rate_string"]
         )
         res = super().unlink()
-        self.env.cr.cache.pop(RATE_HISTORY_CACHE_KEY, None)
         _debug.lifecycle("rate_unlink", count=len(self))
         return res
 

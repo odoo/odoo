@@ -6,6 +6,7 @@ from odoo.exceptions import AccessError, UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.profiling import _OrmProfile
 from odoo.libs.sql import SQL
+from odoo.tools.cache import TransactionMemo
 from odoo.tools.translate import _
 
 from ..._typing import ValuesType
@@ -169,6 +170,7 @@ class WriteMixin(_ModelStubs):
         if not self:
             return True
 
+        TransactionMemo.discard_for_model(self.env, self._name, vals)
         prof = _OrmProfile(_orm_crud)
 
         if self.env.transaction.observers:

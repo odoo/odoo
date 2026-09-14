@@ -1,9 +1,12 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.tools import TransactionMemo
 
 from ..tools import debug_log as dbg
 
-ROUTE_RULE_ACTIONS_CACHE_KEY = "stock.route.rule_actions"
+ROUTE_RULE_ACTIONS = TransactionMemo(
+    "stock.route.rule_actions", invalidated_by=("stock.rule",)
+)
 
 
 class StockRoute(models.Model):
@@ -92,7 +95,7 @@ class StockRoute(models.Model):
     )
 
     def _has_rule_with_action(self, action):
-        memo = self.env.cr.cache.setdefault(ROUTE_RULE_ACTIONS_CACHE_KEY, {})
+        memo = ROUTE_RULE_ACTIONS(self.env)
         missing = [route_id for route_id in self.ids if route_id not in memo]
         if missing:
             memo.update(dict.fromkeys(missing, frozenset()))

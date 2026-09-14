@@ -4,15 +4,18 @@ from collections import defaultdict
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
-from odoo.tools import frozendict
+from odoo.tools import TransactionMemo, frozendict
 
 from ..tools import debug_log as dbg
 from odoo.addons.stock.const import PY_OPERATORS
 
-ORDERPOINTS_BY_SCOPE_CACHE_KEY = "stock.warehouse.orderpoint.by_scope"
 # the fields that decide which orderpoints a move's product and warehouses
 # reach; a write to any of them discards the transaction's memo
 ORDERPOINT_SCOPE_FIELDS = ("product_id", "warehouse_id", "active", "company_id")
+ORDERPOINTS_BY_SCOPE = TransactionMemo(
+    "stock.warehouse.orderpoint.by_scope",
+    invalidated_by={"stock.warehouse.orderpoint": ORDERPOINT_SCOPE_FIELDS},
+)
 
 _logger = logging.getLogger(__name__)
 
@@ -273,17 +276,9 @@ class StockWarehouseOrderpoint(models.Model):
             vals = dict(vals, qty_to_order_manual_set=True)
         return vals
 
-    def _discard_by_scope_memo(self):
-        self.env.cr.cache.pop(ORDERPOINTS_BY_SCOPE_CACHE_KEY, None)
-
-    def unlink(self):
-        self._discard_by_scope_memo()
-        return super().unlink()
-
     @dbg.timed
     @api.model_create_multi
     def create(self, vals_list):
-        self._discard_by_scope_memo()
         dbg.lifecycle.debug(
             "orderpoint.create: %d vals, keys=%s",
             len(vals_list),
@@ -306,8 +301,6 @@ class StockWarehouseOrderpoint(models.Model):
 
     @dbg.timed
     def write(self, vals):
-        if any(name in vals for name in ORDERPOINT_SCOPE_FIELDS):
-            self._discard_by_scope_memo()
         dbg.lifecycle.debug(
             "orderpoint.write on %s: keys=%s", dbg.rec(self), dbg.keys(vals)
         )

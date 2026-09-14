@@ -3,6 +3,7 @@ from itertools import batched
 
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.profiling import _OrmProfile
+from odoo.tools.cache import TransactionMemo
 
 from ...fields.reference import REFERENCE_VERIFIED_CACHE_KEY, Reference
 from ...primitives import MODULE_UNINSTALL_FLAG
@@ -24,6 +25,7 @@ class UnlinkMixin(_ModelStubs):
         if not self:
             return True
 
+        TransactionMemo.discard_for_model(self.env, self._name)
         prof = _OrmProfile(_orm_crud)
 
         if self.env.transaction.observers:

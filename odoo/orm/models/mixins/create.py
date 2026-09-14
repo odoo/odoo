@@ -7,6 +7,7 @@ from typing import Self
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.profiling import _OrmProfile
 from odoo.tools import OrderedSet, clean_context
+from odoo.tools.cache import TransactionMemo
 from odoo.tools.misc import PENDING
 
 from ... import decorators as api
@@ -311,6 +312,7 @@ class CreateMixin(_ModelStubs):
         if not vals_list:
             return self.browse()
 
+        TransactionMemo.discard_for_model(self.env, self._name)
         prof = _OrmProfile(_orm_crud)
 
         if self.env.transaction.observers:

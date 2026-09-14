@@ -9,7 +9,7 @@ from odoo.tools import OrderedSet
 from odoo.tools.translate import _
 
 from ..tools import debug_log as dbg
-from .stock_orderpoint import ORDERPOINTS_BY_SCOPE_CACHE_KEY
+from .stock_orderpoint import ORDERPOINTS_BY_SCOPE
 
 _logger = logging.getLogger(__name__)
 
@@ -536,7 +536,7 @@ class StockMoveProcurement(models.Model):
         Orderpoint = self.env["stock.warehouse.orderpoint"]
         if not self:
             return Orderpoint
-        memo = self.env.cr.cache.setdefault(ORDERPOINTS_BY_SCOPE_CACHE_KEY, {})
+        memo = ORDERPOINTS_BY_SCOPE(self.env)
         keys = OrderedSet()
         for move in self:
             wh_ids = tuple(

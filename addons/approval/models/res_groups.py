@@ -10,5 +10,4 @@ class ResGroups(models.Model):
         res = super().write(vals)
         if {"user_ids", "implied_ids", "all_user_ids"} & vals.keys():
             trace.ESCALATION.event("manager_cache_dropped", groups=self.ids)
-            self.env["approval.request"]._invalidate_escalation_manager_cache()
         return res

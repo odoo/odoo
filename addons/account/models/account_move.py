@@ -17,6 +17,7 @@ from odoo.fields import Command, Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import (
     SQL,
+    TransactionMemo,
     date_utils,
     float_compare,
     format_date,
@@ -34,7 +35,9 @@ from odoo.tools.safe_eval import safe_eval
 from odoo.addons.account.tools.display_types import NON_ACCOUNTABLE_DISPLAY_TYPES
 
 _logger = logging.getLogger(__name__)
-INVOICE_TEMPLATE_REPORTS_CACHE_KEY = "account.move.invoice_template_reports"
+INVOICE_TEMPLATE_REPORTS = TransactionMemo(
+    "account.move.invoice_template_reports", invalidated_by=("ir.actions.report",)
+)
 
 _debug = DebugLog(__name__)
 
@@ -7855,7 +7858,7 @@ class AccountMove(models.Model):
         # call: memoized per transaction until a report changes
         if self:
             return self._available_invoice_template_pdf_report_ids()
-        per_env = self.env.cr.cache.setdefault(INVOICE_TEMPLATE_REPORTS_CACHE_KEY, {})
+        per_env = INVOICE_TEMPLATE_REPORTS(self.env)
         key = (self.env.company.id, self.env.uid, self.env.su)
         if key not in per_env:
             per_env[key] = self._available_invoice_template_pdf_report_ids().ids

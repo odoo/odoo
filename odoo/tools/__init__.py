@@ -18,7 +18,7 @@ from odoo.libs.numbers import (
 from odoo.libs.parse_version import parse_version
 from odoo.libs.set_expression import SetDefinitions, SetExpressionError
 
-from .cache import ormcache, ormcache_context
+from .cache import TransactionMemo, ormcache, ormcache_context
 from .config import config
 from .convert import (
     convert_csv_import,
@@ -129,6 +129,7 @@ __all__ = [
     "Query",
     "SetDefinitions",
     "SetExpressionError",
+    "TransactionMemo",
     "_",
     "babel_locale_parse",
     "check_xml_from_attachment",

@@ -6,9 +6,18 @@ from markupsafe import Markup
 
 from odoo import api, fields, models
 from odoo.fields import Domain
+from odoo.tools import TransactionMemo
 
 from . import approval_trace as trace
 from .approval_utils import boolean_search_domain
+
+DEFAULT_ESCALATION_MANAGER = TransactionMemo(
+    "approval_default_escalation_manager",
+    invalidated_by={
+        "res.users": ("group_ids", "active"),
+        "res.groups": ("user_ids", "implied_ids", "all_user_ids"),
+    },
+)
 
 _logger = logging.getLogger(__name__)
 
@@ -567,7 +576,7 @@ class ApprovalRequestEscalation(models.Model):
         return self._get_default_escalation_manager()
 
     def _get_default_escalation_manager(self) -> Any:
-        cache = self.env.cr.cache.setdefault("approval_default_escalation_manager", {})
+        cache = DEFAULT_ESCALATION_MANAGER(self.env)
         company_id = self.company_id.id
         if company_id not in cache:
             group = self.env.ref(
@@ -600,7 +609,7 @@ class ApprovalRequestEscalation(models.Model):
 
     @api.model
     def _invalidate_escalation_manager_cache(self) -> None:
-        self.env.cr.cache.pop("approval_default_escalation_manager", None)
+        DEFAULT_ESCALATION_MANAGER.discard(self.env)
 
     def _resolve_escalation_targets(self) -> tuple[dict, models.BaseModel]:
         self.check_singleton()

@@ -3,9 +3,12 @@ from itertools import starmap
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
-from odoo.tools import SQL
+from odoo.tools import SQL, TransactionMemo
 
-CANDIDATES_CACHE_KEY = "analytic.distribution.model.candidates"
+CANDIDATE_MODELS = TransactionMemo(
+    "analytic.distribution.model.candidates",
+    invalidated_by=("account.analytic.distribution.model",),
+)
 
 
 class AccountAnalyticDistributionModel(models.Model):
@@ -98,27 +101,11 @@ class AccountAnalyticDistributionModel(models.Model):
         # a lookup runs once per distinct argument set -- one per invoice line
         # of a batch, typically -- and the models are few: every model the
         # user may read is fetched once per transaction and matched in Python
-        per_env = self.env.cr.cache.setdefault(CANDIDATES_CACHE_KEY, {})
+        per_env = CANDIDATE_MODELS(self.env)
         key = (self.env.uid, self.env.su, tuple(self.env.companies.ids))
         if key not in per_env:
             per_env[key] = self.search([]).ids
         return self.browse(per_env[key])
-
-    def _discard_candidate_models(self):
-        self.env.cr.cache.pop(CANDIDATES_CACHE_KEY, None)
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        self._discard_candidate_models()
-        return super().create(vals_list)
-
-    def write(self, vals):
-        self._discard_candidate_models()
-        return super().write(vals)
-
-    def unlink(self):
-        self._discard_candidate_models()
-        return super().unlink()
 
     def _create_domain(self, fname, value):
         if fname == "partner_tag_id":

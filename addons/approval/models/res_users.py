@@ -19,10 +19,6 @@ class ResUsers(models.Model):
         if "active" in vals and not vals["active"]:
             archiving = self.filtered("active")
         res = super().write(vals)
-        if "tz" in vals:
-            self.env.cr.cache.pop("approval_delegation_tz_buckets", None)
-        if {"group_ids", "active"} & vals.keys():
-            self.env["approval.request"]._invalidate_escalation_manager_cache()
         if archiving:
             archiving._approval_handover_on_archive()
         return res

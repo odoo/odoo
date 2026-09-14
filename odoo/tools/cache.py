@@ -33,6 +33,62 @@ _logger_lock = threading.RLock()
 _logger_state: typing.Literal["wait", "abort", "run"] = "wait"
 
 
+class TransactionMemo:
+    __slots__ = ("factory", "invalidated_by", "key")
+
+    _by_model: typing.ClassVar[
+        defaultdict[str, list[tuple[TransactionMemo, frozenset[str] | None]]]
+    ] = defaultdict(list)
+
+    def __init__(
+        self,
+        key: str,
+        *,
+        invalidated_by: Collection[str] | Mapping[str, Collection[str]] = (),
+        factory: Callable[[], Any] = dict,
+    ) -> None:
+        self.key = key
+        self.factory = factory
+        if isinstance(invalidated_by, Mapping):
+            self.invalidated_by: dict[str, frozenset[str] | None] = {
+                model_name: frozenset(field_names) if field_names else None
+                for model_name, field_names in invalidated_by.items()
+            }
+        else:
+            self.invalidated_by = dict.fromkeys(invalidated_by)
+        for model_name, field_names in self.invalidated_by.items():
+            self._by_model[model_name].append((self, field_names))
+
+    def __call__(self, env: Any) -> Any:
+        cr_cache = env.cr.cache
+        try:
+            return cr_cache[self.key]
+        except KeyError:
+            value = cr_cache[self.key] = self.factory()
+            return value
+
+    def peek(self, env: Any) -> Any:
+        return env.cr.cache.get(self.key)
+
+    def discard(self, env: Any) -> None:
+        env.cr.cache.pop(self.key, None)
+
+    @classmethod
+    def discard_for_model(
+        cls, env: Any, model_name: str, written: Collection[str] | None = None
+    ) -> None:
+        memos = cls._by_model.get(model_name)
+        if memos:
+            cr_cache = env.cr.cache
+            for memo, field_names in memos:
+                if (
+                    written is None
+                    or field_names is None
+                    or not field_names.isdisjoint(written)
+                ):
+                    cr_cache.pop(memo.key, None)
+
+
 class ormcache_counter:
     __slots__ = [
         "cache_name",

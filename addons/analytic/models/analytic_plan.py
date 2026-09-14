@@ -4,6 +4,7 @@ from odoo import _, api, fields, models
 from odoo.db.schema import create_index
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import (
+    TransactionMemo,
     float_compare,
     float_round,
     frozendict,
@@ -12,6 +13,14 @@ from odoo.tools import (
 )
 
 from odoo.addons.base.models.ir_model_common import MODULE_UNINSTALL_FLAG
+
+RELEVANT_PLANS = TransactionMemo(
+    "get_relevant_plans",
+    invalidated_by={
+        "account.analytic.plan": ("default_applicability",),
+        "account.analytic.applicability": (),
+    },
+)
 
 
 class AccountAnalyticPlan(models.Model):
@@ -239,7 +248,7 @@ class AccountAnalyticPlan(models.Model):
     def get_relevant_plans(self, **kwargs):
         """Returns the list of plans that should be available.
         This list is computed based on the applicabilities of root plans."""
-        cache = self.env.cr.cache.setdefault("get_relevant_plans", {})
+        cache = RELEVANT_PLANS(self.env)
         # `default_applicability` is `company_dependent`, so the result also
         # depends on the active company even when `kwargs` doesn't carry a
         # `company_id` — key the cache on it too, or two calls for different
@@ -310,7 +319,6 @@ class AccountAnalyticPlan(models.Model):
         res = super().unlink()
         related_fields.filtered(lambda f: not self._is_subplan_field_used(f)).unlink()
         self.env.registry.clear_cache("stable")
-        self.env.cr.cache.pop("get_relevant_plans", None)
         return res
 
     def _hierarchy_name(self):
@@ -437,14 +445,7 @@ class AccountAnalyticPlan(models.Model):
         if self.children_ids:
             self.children_ids._sync_plan_column(model)
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        self.env.cr.cache.pop("get_relevant_plans", None)
-        return super().create(vals_list)
-
     def write(self, vals):
-        if "default_applicability" in vals:
-            self.env.cr.cache.pop("get_relevant_plans", None)
         new_parent = self.env["account.analytic.plan"].browse(vals.get("parent_id"))
         plan2previous_parent = {plan: plan.parent_id for plan in self if plan.parent_id}
         if "parent_id" in vals and new_parent:
@@ -546,19 +547,6 @@ class AccountAnalyticApplicability(models.Model):
         comodel_name="res.company",
         default=lambda self: self.env.company,
     )
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        self.env.cr.cache.pop("get_relevant_plans", None)
-        return super().create(vals_list)
-
-    def write(self, vals):
-        self.env.cr.cache.pop("get_relevant_plans", None)
-        return super().write(vals)
-
-    @api.ondelete(at_uninstall=False)
-    def _unlink_clear_cache(self):
-        self.env.cr.cache.pop("get_relevant_plans", None)
 
     def _get_score(self, **kwargs):
         """Gives the score of an applicability with the parameters of kwargs"""

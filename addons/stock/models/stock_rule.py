@@ -11,7 +11,6 @@ from odoo.tools import float_is_zero
 
 from ..tools import debug_log as dbg
 from .stock_procurement import Procurement, ProcurementException
-from .stock_route import ROUTE_RULE_ACTIONS_CACHE_KEY
 
 _logger = logging.getLogger(__name__)
 
@@ -183,23 +182,6 @@ class StockRule(models.Model):
                         route_company=route.company_id.display_name,
                     )
                 )
-
-    def _discard_route_actions_memo(self):
-        self.env.cr.cache.pop(ROUTE_RULE_ACTIONS_CACHE_KEY, None)
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        self._discard_route_actions_memo()
-        return super().create(vals_list)
-
-    def write(self, vals):
-        if vals.keys() & {"route_id", "action", "active"}:
-            self._discard_route_actions_memo()
-        return super().write(vals)
-
-    def unlink(self):
-        self._discard_route_actions_memo()
-        return super().unlink()
 
     def copy_data(self, default=None):
         default = dict(default or {})
