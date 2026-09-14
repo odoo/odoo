@@ -522,8 +522,29 @@ class Field[T](
         records.env.remove_to_compute(self, records)
 
         cache_value = self.convert_to_cache(value, records)
+        if cache_value is None:
+            self._settle_pending_as_null(records)
         records = self._filter_not_equal(records, cache_value)
         return records, cache_value
+
+    def _settle_pending_as_null(self, records: BaseModel) -> None:
+        """A just-inserted row already holds NULL where its compute is pending.
+
+        `_create` leaves PENDING, not None, in cache for a stored computed field it
+        did not insert. A compute that lands on the value NULL stands for is then
+        not a change, and writing it back would cost an UPDATE per create.
+        """
+        field_cache = self._get_cache(records.env)
+        dirty = records.env.core.get_dirty(self)
+        settled = [
+            id_
+            for id_ in records._ids
+            if id_
+            and field_cache.get(id_, SENTINEL) is PENDING
+            and not (dirty and id_ in dirty)
+        ]
+        if settled:
+            field_cache.update(dict.fromkeys(settled, None))
 
     def _get_cache(self, env: Environment) -> MutableMapping[IdType, typing.Any]:
         field_cache = env._field_cache_memo.get(self)
