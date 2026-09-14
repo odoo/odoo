@@ -347,6 +347,9 @@ class MixinOrder(models.AbstractModel):
     def create(self, vals_list):
         seq_code = self._sequence_code
         default_company_id = None
+        # the orders of one company and one date draw their names from the
+        # sequence in one batch, in the order they are created
+        unnamed_by_key = defaultdict(list)
         for vals in vals_list:
             if "company_id" in vals:
                 company_id = vals["company_id"]
@@ -364,10 +367,17 @@ class MixinOrder(models.AbstractModel):
                     self_comp,
                     fields.Datetime.to_datetime(date_order),
                 )
-                vals["name"] = self_comp.env["ir.sequence"].next_by_code(
-                    seq_code,
-                    sequence_date=seq_date,
-                )
+                unnamed_by_key[(company_id, seq_date)].append(vals)
+        for (company_id, seq_date), unnamed in unnamed_by_key.items():
+            names = (
+                self.with_company(company_id)
+                .env["ir.sequence"]
+                .next_by_code_batch(seq_code, len(unnamed), sequence_date=seq_date)
+            )
+            for vals, name in zip(
+                unnamed, names or [False] * len(unnamed), strict=True
+            ):
+                vals["name"] = name
         return super().create(vals_list)
 
     def write(self, vals):
