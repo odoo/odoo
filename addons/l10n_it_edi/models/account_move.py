@@ -131,6 +131,7 @@ class AccountMove(models.Model):
     l10n_it_available_document_type_ids = fields.Many2many(
         comodel_name='l10n_it.document.type',
         compute='_compute_l10n_it_available_document_type_ids',
+        compute_sudo=True,
     )
 
     l10n_it_convention_code = fields.Char(
