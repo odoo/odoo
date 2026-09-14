@@ -1,20 +1,17 @@
 import logging
 import math
-from collections import defaultdict
 from datetime import datetime
 
 from psycopg.errors import UntranslatableCharacter
 
 from odoo import fields, models
 from odoo.fields import Command
-from odoo.libs.lru import LRU
 from odoo.orm.model_test_env import (
     InMemoryRecordRulesNotSupported,
     InMemorySqlNotSupported,
     ModelRegistry,
     model_test_env,
 )
-from odoo.orm.models.metaclass import MetaModel
 from odoo.tests import TransactionCase, tagged
 from odoo.tools import mute_logger
 
@@ -89,14 +86,7 @@ class _StubJsonDiscussion(models.Model):
 
 
 def _isolated_registry(*classes):
-    saved = MetaModel._module_to_models__
-    try:
-        MetaModel._module_to_models__ = defaultdict(list)
-        registry = ModelRegistry([*classes, _StubIrModelData, _StubIrAttachment])
-    finally:
-        MetaModel._module_to_models__ = saved
-    registry.ormcache_lrus = defaultdict(lambda: LRU(4096))
-    return registry
+    return ModelRegistry([*classes, _StubIrModelData, _StubIrAttachment], isolated=True)
 
 
 @tagged("post_install", "-at_install")

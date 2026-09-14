@@ -1286,7 +1286,10 @@ class DomainCondition(Domain):
                 domain = self._optimize(records, OptimizationLevel.FULL)
             return domain._as_predicate(records)
 
-        if self._is_search_defined(records):
+        # a fully optimized condition already ran its search method, which
+        # answered with this very condition (a stored field searching itself):
+        # the column answers now, or the in-memory search would loop
+        if opt_level < OptimizationLevel.FULL and self._is_search_defined(records):
             return self._search_defined_predicate(records)
 
         return self._get_value_predicate(records)

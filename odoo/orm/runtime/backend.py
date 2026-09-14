@@ -1872,6 +1872,8 @@ class _InMemoryReadGroup:
             return len
         fname, _property, func = parse_read_group_spec(spec)
         field = self.model._fields[fname]
+        if not field.column_type:
+            raise ValueError(f"Cannot convert {field} to SQL because it is not stored")
 
         def raw(record):
             value = record[fname]

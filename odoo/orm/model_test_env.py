@@ -295,8 +295,10 @@ class ModelRegistry(_RegistryFieldsMixin, Mapping):
         model_defs: Iterable[type[BaseModel]],
         *,
         db_name: str = ":memory:",
+        isolated: bool = False,
     ) -> None:
         self.db_name = db_name
+        self._isolated = isolated
         self.models: dict[str, type[BaseModel]] = {}
 
         self.model_graph = ModelGraph()
@@ -471,10 +473,13 @@ class ModelRegistry(_RegistryFieldsMixin, Mapping):
     def _get_model_defs(
         cls,
         model_defs: list[type[BaseModel]],
+        isolated: bool = False,
     ) -> list[type[BaseModel]]:
         from .models.metaclass import MetaModel
 
-        modules = cls._modules_of(model_defs)
+        # an isolated registry holds these classes and nothing else of their
+        # module, so a test can pick real addon models without their neighbours
+        modules = () if isolated else cls._modules_of(model_defs)
 
         all_defs: list[Any] = []
         seen_ids: set[int] = set()
@@ -495,7 +500,7 @@ class ModelRegistry(_RegistryFieldsMixin, Mapping):
         return all_defs
 
     def _setup_registry(self, model_defs: list[type[BaseModel]]) -> None:
-        all_defs = self._get_model_defs(model_defs)
+        all_defs = self._get_model_defs(model_defs, self._isolated)
 
         for model_name, fallback in _FALLBACK_MODELS:
             if not any(getattr(cls, "_name", None) == model_name for cls in all_defs):
