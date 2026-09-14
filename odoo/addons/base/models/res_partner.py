@@ -625,13 +625,14 @@ class ResPartner(models.Model):
         )
 
         best_user: dict[int, ResUsers] = {}
-        all_users = Users.search_fetch(
-            [("partner_id", "in", self.ids), ("active", "=", True)],
-            ["partner_id", "share"],
-            order="share ASC, id ASC",
-        )
-        for user in all_users:
-            best_user.setdefault(user.partner_id.id, user)
+        other_partner_ids = [pid for pid in self.ids if pid != current_partner_id]
+        if other_partner_ids:
+            for user in Users.search_fetch(
+                [("partner_id", "in", other_partner_ids), ("active", "=", True)],
+                ["partner_id", "share"],
+                order="share ASC, id ASC",
+            ):
+                best_user.setdefault(user.partner_id.id, user)
 
         for partner in self:
             if partner.id == current_partner_id:
