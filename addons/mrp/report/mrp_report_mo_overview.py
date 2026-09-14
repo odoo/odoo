@@ -514,6 +514,16 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
             replenishment = {}
             forecast_uom_id = forecast_line['uom_id']
             line_quantity = min(quantity, forecast_uom_id._compute_quantity(forecast_line['quantity'], move_raw.uom_id))  # Avoid over-rounding
+<<<<<<< e96057c605bf8ff12569673c2ea0548840cbd711
+||||||| 0f347c52dbc0bad8514e4f674b94c225aef9a40c
+            bom_quantity = production.product_uom_qty * move_raw.bom_line_id.product_qty - (quantity - line_quantity)
+=======
+            qty_in_bom_uom = production.uom_id._compute_quantity(production.product_qty, production.bom_id.uom_id)
+            if production.bom_id:
+                bom_quantity = qty_in_bom_uom / production.bom_id.product_qty * move_raw.bom_line_id.product_qty - (quantity - line_quantity)
+            else:
+                bom_quantity = 0
+>>>>>>> 4b500fb576cfbcc4ab7c1122cc6b3e1d1112add6
             replenishment['summary'] = {
                 'level': level + 1,
                 'index': replenishment_index,
@@ -528,6 +538,14 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
                 'uom_precision': self._get_uom_precision(),
                 'unit_cost': self._get_unit_cost(move_raw),
                 'mo_cost': forecast_line.get('cost', self._get_replenishment_mo_cost(product, line_quantity, move_raw.uom_id, currency, forecast_line.get('move_in'))),
+<<<<<<< e96057c605bf8ff12569673c2ea0548840cbd711
+||||||| 0f347c52dbc0bad8514e4f674b94c225aef9a40c
+                'bom_cost': currency.round(self._get_component_real_cost(move_raw, bom_quantity)) if bom_quantity else False,
+                'real_cost': currency.round(self._get_component_real_cost(move_raw, line_quantity)),
+=======
+                'bom_cost': currency.round(self._get_component_real_cost(move_raw, bom_quantity)),
+                'real_cost': currency.round(self._get_component_real_cost(move_raw, line_quantity)),
+>>>>>>> 4b500fb576cfbcc4ab7c1122cc6b3e1d1112add6
                 'currency_id': currency.id,
                 'currency': currency,
             }
@@ -560,6 +578,17 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         free_qty = max(0, product.uom_id._compute_quantity(product.free_qty, move_raw.uom_id))
         available_qty = reserved_quantity + free_qty + total_ordered
         missing_quantity = quantity - available_qty
+<<<<<<< e96057c605bf8ff12569673c2ea0548840cbd711
+||||||| 0f347c52dbc0bad8514e4f674b94c225aef9a40c
+        qty_in_bom_uom = production.uom_id._compute_quantity(production.product_qty, production.bom_id.uom_id)
+        bom_missing_quantity = qty_in_bom_uom * move_raw.bom_line_id.product_qty - (reserved_quantity + free_qty + total_ordered)
+=======
+        if move_raw.bom_line_id:
+            qty_in_bom_uom = production.uom_id._compute_quantity(production.product_qty, production.bom_id.uom_id)
+            bom_missing_quantity = qty_in_bom_uom / production.bom_id.product_qty * move_raw.bom_line_id.product_qty - (reserved_quantity + free_qty + total_ordered)
+        else:
+            bom_missing_quantity = 0
+>>>>>>> 4b500fb576cfbcc4ab7c1122cc6b3e1d1112add6
 
         if product.is_storable and production.state not in ('done', 'cancel')\
            and move_raw.uom_id.compare(missing_quantity, 0) > 0:
