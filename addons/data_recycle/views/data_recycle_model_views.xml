@@ -49,7 +49,7 @@
                                 <!-- Manual cleaning -->
                                 <label for="notify_user_ids" invisible="recycle_mode == 'automatic'" />
                                 <div invisible="recycle_mode == 'automatic'">
-                                    <field name="notify_user_ids" widget="many2many_tags"  options="{'no_create': True, 'no_edit': True}" domain="[('share', '=', False)]" nolabel="1"/>
+                                    <field name="notify_user_ids" widget="many2many_tags"  options="{'no_create': True}" domain="[('share', '=', False)]" nolabel="1"/>
                                     <div class="d-flex w-50" invisible="not notify_user_ids">
                                         <span class="me-1">Every</span>
                                         <field name="notify_frequency" required="notify_user_ids" />
