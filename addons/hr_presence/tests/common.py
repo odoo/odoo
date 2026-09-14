@@ -20,8 +20,12 @@ class HrPresenceCase(TransactionCase):
                 "hr_presence_control_ip_list": "10.0.0.1, 10.0.0.2",
             }
         )
-        cls.manager = cls._make_user("presence_manager", cls.company)
-        cls.manager.group_ids |= cls.env.ref("hr.group_hr_manager")
+        cls.manager = cls._make_user(
+            "presence_manager", cls.company, groups=["hr.group_hr_manager"]
+        )
+        assert cls.manager.has_group("hr.group_hr_manager"), (
+            "fixture: the manager must be one"
+        )
 
     @classmethod
     def _make_calendar(cls, company, tz, hour_from=0.0, hour_to=23.99):
@@ -48,13 +52,30 @@ class HrPresenceCase(TransactionCase):
         )
 
     @classmethod
-    def _make_user(cls, login, company):
+    def _make_user(cls, login, company, groups=()):
+        """A user whose groups this fixture chose, not the database's.
+
+        `res.users.group_ids` carries a default, and on a database with demo
+        data that default includes `hr.group_hr_manager` -- so a user created
+        without saying otherwise arrives as an HR manager, and a test asserting
+        that a plain user is refused passes only where demo data is absent.
+        """
         return cls.env["res.users"].create(
             {
                 "name": login,
                 "login": login,
                 "company_id": company.id,
                 "company_ids": [(6, 0, [company.id])],
+                "group_ids": [
+                    (
+                        6,
+                        0,
+                        [
+                            cls.env.ref("base.group_user").id,
+                            *(cls.env.ref(group).id for group in groups),
+                        ],
+                    )
+                ],
             }
         )
 

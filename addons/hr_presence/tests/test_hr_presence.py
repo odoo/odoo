@@ -202,6 +202,12 @@ class TestManualOverride(HrPresenceCase):
     def test_only_an_hr_manager_may_act(self):
         employee = self._make_employee("guarded")
         plain_user = self._make_user("plain_actor", self.company)
+        self.assertFalse(
+            plain_user.has_group("hr.group_hr_manager"),
+            "fixture: the actor must not be a manager, or the guard has nothing "
+            "to refuse -- res.users.group_ids has a default, and on a demo "
+            "database it includes hr.group_hr_manager",
+        )
         for action in (
             "action_set_present",
             "action_set_absent",
