@@ -19,7 +19,7 @@ class HrWorkLocation(models.Model):
         employees = self.env["hr.employee"].sudo().with_context(active_test=False)
         domain = ["|"] * (len(DAYS) - 1) + [(day, "in", self.ids) for day in DAYS]
         if employees.search_count(domain, limit=1):
-            blocked = self.browse(sorted(self._used_as_weekly_location(employees)))
+            blocked = self.browse(sorted(self._weekly_location_ids(employees, domain)))
             _debug.logic(
                 "work_location.unlink_refused", requested=self, blocked=blocked
             )
@@ -42,13 +42,13 @@ class HrWorkLocation(models.Model):
         )
         exceptions.unlink()
 
-    def _used_as_weekly_location(self, employees):
-        used = set()
-        for day in DAYS:
-            used.update(
-                location.id
-                for (location,) in employees._read_group(
-                    [(day, "in", self.ids)], groupby=[day]
-                )
-            )
-        return used
+    def _weekly_location_ids(self, employees, domain):
+        blocking = employees.search(domain)
+        blocking.fetch(DAYS)
+        requested = set(self.ids)
+        return {
+            blocker[day].id
+            for blocker in blocking
+            for day in DAYS
+            if blocker[day].id in requested
+        }
