@@ -197,6 +197,7 @@ actual arch.
 """)
 
     warning_info = fields.Html(string="Warning information", compute='_compute_warning_info')
+    notes = fields.Html(string="Notes")
 
     # The "active" field is not updated during updates if <template> is used
     # instead of <record> to define the view in XML, see _tag_template. For
