@@ -12,6 +12,7 @@ import {
     props,
     proxy,
     t,
+    untrack,
 } from "@odoo/owl";
 
 function formatMinutes(value) {
@@ -106,7 +107,8 @@ class MrpTimerField extends Component {
         });
 
         useRecordObserver(async (record) => {
-            if (!this.props.record.model.useSampleModel && record.data.state === "progress") {
+            const useSampleModel = untrack(() => record.model.useSampleModel);
+            if (!useSampleModel && record.data.state === "progress") {
                 this.duration = await this.orm.call(
                     "mrp.workorder",
                     "get_duration",
