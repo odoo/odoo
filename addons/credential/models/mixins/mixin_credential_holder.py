@@ -93,17 +93,19 @@ class MixinCredentialHolder(models.AbstractModel):
 
     def write(self, vals):
         vals = dict(vals)
+        field_map = self._credential_field_map()
+        written = [door for door in vals if door in field_map]
         secrets = self._pop_door_values(vals)
         if secrets:
-            for record in self:
-                record._set_held_secrets(secrets)
-            self.invalidate_recordset(list(self._credential_field_map()))
+            written_fields = [self._fields[name] for name in vals]
+            with self.env.protecting(written_fields, self):
+                for record in self:
+                    record._set_held_secrets(secrets)
+                self.invalidate_recordset(written)
+                self.modified(written)
         result = super().write(vals)
         if secrets:
-            field_map = self._credential_field_map()
-            self._check_fields(
-                door for door, key in field_map.items() if key in secrets
-            )
+            self._check_fields(written)
         return result
 
     @api.depends(lambda self: (self._credential_holder_field,))

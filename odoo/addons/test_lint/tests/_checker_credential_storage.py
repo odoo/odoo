@@ -18,7 +18,7 @@ PUBLIC_KEY = re.compile(
 # An index, a lookup, a keyboard key: not a credential in any sense.
 NOT_A_KEY = re.compile(
     r"^(cache_key|bucket_key|grouping_key|job_key|period_key|source_key"
-    r"|partner_key|zip_key|website_form_key|avatar_cache_key|push_to_talk_key"
+    r"|zip_key|website_form_key|avatar_cache_key|push_to_talk_key"
     r"|attendance_kiosk_key|identity_key|booking_key)$",
     re.IGNORECASE,
 )
@@ -42,6 +42,8 @@ CURSOR = re.compile(r"(sync_token|page_token|next_token|_cursor)$", re.IGNORECAS
 # our records rather than us to somebody's API, or that we publish on purpose.
 JUDGED_NOT_SECRET = frozenset(
     {
+        "appointment_account_payment.booking_token",
+        "appointment_google_reserve.google_reserve_access_token",
         "appointment_google_reserve.google_reserve_idempotency_token",
         "approval.subject_key",
         "auth_passkey.credential_identifier",
@@ -54,6 +56,11 @@ JUDGED_NOT_SECRET = frozenset(
         "sale_amazon.seller_key",
         "website.google_analytics_key",
         "website_slides.website_slide_google_app_key",
+        "equity.equity_access_token",
+        "hr_contract_salary.hash_token",
+        "mail_mobile.ocn_token",
+        "planning.employee_token",
+        "web_map.map_box_token",
         "base.access_token",
         "calendar.access_token",
         "calendar.booking_access_token",
