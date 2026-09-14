@@ -9,6 +9,7 @@ from odoo.modules import Manifest
 from odoo.tools.assets.esm_registry import esm_registry
 from odoo.tools.misc import file_path
 
+from ..tools import debug_log as dbg
 from .utils import _local_web_translations
 
 _logger = logging.getLogger(__name__)
@@ -19,22 +20,43 @@ class WebClient(http.Controller):
     @http.route("/web/webclient/bootstrap_translations", type="jsonrpc", auth="none")
     def bootstrap_translations(self, mods: list[str] | None = None) -> dict[str, Any]:
         lang = request.env.context["lang"].partition("_")[0]
+        dbg.lifecycle.debug(
+            "[translations] bootstrap: %s lang=%s mods=%s",
+            dbg.req(),
+            lang,
+            dbg.count(mods) if mods is not None else "all",
+        )
 
         if mods is None:
             mods = odoo.tools.config["server_wide_modules"]
             if request.db:
                 mods = request.env.registry.loaded_modules.union(mods)
+            dbg.logic.debug(
+                "[translations] bootstrap: mods defaulted to %d %s",
+                len(mods),
+                "loaded + server-wide" if request.db else "server-wide",
+            )
 
         translations_per_module = {}
-        for addon_name in mods:
-            manifest = Manifest.for_addon(addon_name)
-            if manifest and manifest["bootstrap"]:
-                f_name = file_path(f"{addon_name}/i18n/{lang}.po")
-                if not f_name:
-                    continue
-                translations_per_module[addon_name] = {
-                    "messages": _local_web_translations(f_name)
-                }
+        with dbg.timer(request.env, "[translations] bootstrap %d mods", len(mods)):
+            for addon_name in mods:
+                manifest = Manifest.for_addon(addon_name)
+                if manifest and manifest["bootstrap"]:
+                    f_name = file_path(f"{addon_name}/i18n/{lang}.po")
+                    if not f_name:
+                        dbg.logic.debug(
+                            "[translations] bootstrap: %s has no %s.po",
+                            addon_name,
+                            lang,
+                        )
+                        continue
+                    translations_per_module[addon_name] = {
+                        "messages": _local_web_translations(f_name)
+                    }
+        dbg.pipeline.debug(
+            "[translations] bootstrap: %d modules answered",
+            len(translations_per_module),
+        )
 
         return {"modules": translations_per_module, "lang_parameters": None}
 
@@ -51,6 +73,13 @@ class WebClient(http.Controller):
         mods: str | None = None,
         lang: str | None = None,
     ) -> Response:
+        dbg.lifecycle.debug(
+            "[translations] %s lang=%s client_hash=%s explicit_mods=%s",
+            dbg.req(),
+            lang,
+            (hash or "")[:12] or None,
+            bool(mods),
+        )
         if mods:
             mods = mods.split(",")
         else:
@@ -61,13 +90,15 @@ class WebClient(http.Controller):
         if lang and lang not in {
             code for code, _ in request.env["res.lang"].sudo().get_installed()
         }:
+            dbg.logic.debug("[translations] lang %s not installed, dropped", lang)
             lang = None
 
-        current_hash = (
-            request.env["ir.http"]
-            .with_context(cache_translation_data=True)
-            ._get_web_translations_hash(mods, lang)
-        )
+        with dbg.timer(request.env, "[translations] hash for %d mods", len(mods)):
+            current_hash = (
+                request.env["ir.http"]
+                .with_context(cache_translation_data=True)
+                ._get_web_translations_hash(mods, lang)
+            )
 
         body = {
             "lang": lang,
@@ -75,11 +106,18 @@ class WebClient(http.Controller):
         }
         if current_hash != hash:
             if "translation_data" in request.env.cr.cache:
+                dbg.logic.debug(
+                    "[translations] hash miss: data cached by the hash pass, reused"
+                )
                 body.update(request.env.cr.cache.pop("translation_data"))
             else:
-                translations_per_module, lang_params = request.env[
-                    "ir.http"
-                ]._get_translations_for_webclient(mods, lang)
+                dbg.logic.debug("[translations] hash miss: data not cached, rebuilt")
+                with dbg.timer(
+                    request.env, "[translations] build for %d mods", len(mods)
+                ):
+                    translations_per_module, lang_params = request.env[
+                        "ir.http"
+                    ]._get_translations_for_webclient(mods, lang)
                 body.update(
                     {
                         "lang_parameters": lang_params,
@@ -90,6 +128,15 @@ class WebClient(http.Controller):
                         > 1,
                     }
                 )
+            dbg.pipeline.debug(
+                "[translations] hash %s -> %d modules in body",
+                current_hash[:12],
+                len(body.get("modules") or ()),
+            )
+        else:
+            dbg.logic.debug(
+                "[translations] hash match %s -> hash only", current_hash[:12]
+            )
 
         return request.prepare_json_response(
             body,
@@ -100,12 +147,17 @@ class WebClient(http.Controller):
 
     @http.route("/web/webclient/version_info", type="jsonrpc", auth="none")
     def version_info(self) -> dict[str, Any]:
+        dbg.lifecycle.debug("[version_info] %s", dbg.req())
         return odoo.service.common.exp_version()
 
     @http.route("/web/tests", type="http", auth="user", readonly=False)
     def unit_tests_suite(self, mod: str | None = None, **kwargs: Any) -> Response:
+        dbg.lifecycle.debug(
+            "[tests] suite page: %s mod=%s kwargs=%s", dbg.req(), mod, dbg.keys(kwargs)
+        )
         session_info = {"view_info": request.env["ir.ui.view"].get_view_info()}
         scope = request.env["ir.asset"]._get_unit_test_scope()
+        dbg.logic.debug("[tests] suite page: unit test scope=%s", scope or None)
         if scope:
             session_info["bundle_params"] = {"module_scope": scope}
         return request.render("web.unit_tests_suite", {"session_info": session_info})
@@ -118,6 +170,9 @@ class WebClient(http.Controller):
     )
     def bundle(self, bundle_name: str, **bundle_params: Any) -> Response:
         """Persist cold-generated assets before returning their descriptor URLs."""
+        dbg.lifecycle.debug(
+            "[bundle:%s] %s params=%s", bundle_name, dbg.req(), dbg.keys(bundle_params)
+        )
         if "lang" in bundle_params:
             request.update_context(
                 lang=request.env["res.lang"]._get_code(bundle_params["lang"])
@@ -127,6 +182,9 @@ class WebClient(http.Controller):
         page = bundle_params.pop("page", None) or None
 
         use_esm = bundle_name in esm_registry().bundles
+        dbg.logic.debug(
+            "[bundle:%s] esm=%s debug=%r page=%s", bundle_name, use_esm, debug, page
+        )
         log_event(
             _http_log,
             logging.DEBUG,
@@ -138,12 +196,15 @@ class WebClient(http.Controller):
         )
 
         IrQweb = request.env["ir.qweb"]
-        if use_esm:
-            nodes = IrQweb._links_to_nodes(
-                IrQweb._get_asset_links(bundle_name, debug=debug, js=True, css=True)
-            )
-        else:
-            nodes = IrQweb._get_asset_nodes(bundle_name, debug=debug, js=True, css=True)
+        with dbg.timer(request.env, "[bundle:%s] asset nodes", bundle_name):
+            if use_esm:
+                nodes = IrQweb._links_to_nodes(
+                    IrQweb._get_asset_links(bundle_name, debug=debug, js=True, css=True)
+                )
+            else:
+                nodes = IrQweb._get_asset_nodes(
+                    bundle_name, debug=debug, js=True, css=True
+                )
         data = [
             {
                 "type": tag,
@@ -154,17 +215,21 @@ class WebClient(http.Controller):
         ]
 
         if use_esm:
-            payload = IrQweb._get_esm_bundle_payload(
-                bundle_name,
-                debug_assets=bool(debug) and "assets" in debug,
-                page=page,
-                with_test_satellites=IrQweb._has_esm_test_satellites(debug),
-            )
+            with dbg.timer(request.env, "[bundle:%s] esm payload", bundle_name):
+                payload = IrQweb._get_esm_bundle_payload(
+                    bundle_name,
+                    debug_assets=bool(debug) and "assets" in debug,
+                    page=page,
+                    with_test_satellites=IrQweb._has_esm_test_satellites(debug),
+                )
             specifiers = payload["specifiers"]
             import_map = payload["import_map"]
             tpl_url = payload["template_url"]
             esm_url = payload.get("esm_url")
             if not specifiers and not esm_url and not tpl_url:
+                dbg.logic.debug(
+                    "[bundle:%s] esm payload empty, falling back to legacy", bundle_name
+                )
                 use_esm = False
 
         if use_esm:
