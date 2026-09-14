@@ -1,20 +1,6 @@
 from odoo.tests import common, tagged
 
 
-class TestCategoryApproverCompute(common.TransactionCase):
-    def test_existing_user_ids_with_no_category(self):
-        approver_record = self.env["approval.category.approver"].new(
-            {
-                "user_id": self.env.ref("base.user_admin").id,
-            }
-        )
-
-        self.assertFalse(
-            approver_record.existing_user_ids,
-            "Should return empty when no category",
-        )
-
-
 @tagged("post_install", "-at_install")
 class TestCategorySequenceCodeDerivation(common.TransactionCase):
     def test_derived_code_skips_a_code_held_by_an_archived_category(self):

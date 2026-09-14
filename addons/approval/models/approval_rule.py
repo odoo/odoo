@@ -37,11 +37,10 @@ class ApprovalRule(models.Model):
 
         • Numeric threshold: a normalized figure on the request itself
           (amount, quantity, date range, priority). Amounts are converted into
-          the rule's currency before comparison, and overlapping bands of
-          'Replace Approvers' rules are rejected outright.
+          the rule's currency before comparison, and overlapping auto-approve
+          and auto-refuse bands are rejected outright.
         • Source document domain: a domain evaluated against the document the
-          request was raised for. Bands cannot be checked for overlap, so the
-          first match by sequence wins.
+          request was raised for.
         • Source document field: a field on the source document equals a
           value.
 
@@ -87,77 +86,23 @@ class ApprovalRule(models.Model):
     )
     action_type = fields.Selection(
         selection=[
-            ("add_approver", "Add Approver"),
-            ("set_approvers", "Replace Approvers"),
             ("auto_approve", "Auto-Approve"),
             ("auto_refuse", "Auto-Refuse"),
             ("condition", "Step Condition"),
         ],
-        default="add_approver",
+        default="condition",
         required=True,
         help="Action to take when condition matches:\n"
-        "• Add Approver: inject additional approvers into the workflow\n"
-        "• Replace Approvers: these approvers instead of the category's, and "
-        "this rule's Minimum Approval instead of the category's. The first "
-        "matching rule by sequence wins. Skipped entirely when the category "
-        "takes its approvers from a security group, which is where this "
-        "differs from Add Approver\n"
         "• Auto-Approve: skip approval entirely (logged in audit trail)\n"
         "• Auto-Refuse: automatically refuse the request\n"
         "• Step Condition: nothing by itself; a step of the category applies "
         "when it matches, or unless it does",
-    )
-    approval_minimum = fields.Integer(
-        default=1,
-        help="Only for 'Replace Approvers': the minimum number of approvals "
-        "this band requires, overriding the category's.",
-    )
-    approver_ids = fields.Many2many(
-        comodel_name="res.users",
-        string="Add Approvers",
-        help="Users to add as approvers when condition is met. "
-        "Only used for 'Add Approver' action type.",
-    )
-    approver_required = fields.Boolean(
-        default=True,
-        help="Whether the added approvers are mandatory",
-    )
-    approver_sequence = fields.Integer(
-        default=5,
-        help="Approval order for added approvers (lower = earlier)",
     )
 
     _name_category_uniq = models.Constraint(
         "unique nulls not distinct (name, category_id, company_id)",
         "Rule name must be unique per category and company.",
     )
-
-    _APPROVER_ACTIONS = ("add_approver", "set_approvers")
-
-    @api.constrains("action_type", "active", "category_id")
-    def _check_category_routes_by_its_rules(self) -> None:
-        for rule in self:
-            if (
-                rule.active
-                and rule.action_type in self._APPROVER_ACTIONS
-                and rule.category_id.step_ids
-            ):
-                trace.REFUSAL.event(
-                    "routing_rule_on_steps",
-                    rule=rule.id,
-                    category=rule.category_id.id,
-                    action=rule.action_type,
-                )
-                raise ValidationError(
-                    self.env._(
-                        "'%(category)s' routes its requests by steps, which read no "
-                        "rule that adds or replaces approvers: give a step the "
-                        "approvers, and make '%(rule)s' a step condition it applies "
-                        "by.",
-                        category=rule.category_id.name,
-                        rule=rule.name,
-                    )
-                )
 
     def _get_reading_steps(self):
         steps = (
@@ -236,79 +181,6 @@ class ApprovalRule(models.Model):
                     ),
                 )
 
-    @api.constrains("approver_ids", "company_id", "category_id")
-    def _check_approvers_in_company(self):
-        for rule in self:
-            company = rule.company_id or rule.category_id.company_id
-            if not company:
-                continue
-            outside = rule.approver_ids.filtered(
-                lambda u, company=company: company not in u.company_ids
-            )
-            if outside:
-                trace.REFUSAL.event(
-                    "rule_approvers_outside_company",
-                    rule=rule.id,
-                    company=company.id,
-                    users=outside.ids,
-                )
-                raise ValidationError(
-                    self.env._(
-                        "Rule '%(rule)s' is scoped to %(company)s; these "
-                        "approvers are not members of it: %(users)s.",
-                        users=", ".join(outside.mapped("name")),
-                        company=company.name,
-                        rule=rule.name,
-                    ),
-                )
-
-    @api.constrains("action_type", "approver_ids")
-    def _check_approver_ids_required(self):
-        for rule in self:
-            if rule.action_type in self._APPROVER_ACTIONS and not rule.approver_ids:
-                trace.REFUSAL.event(
-                    "rule_without_approvers", rule=rule.id, action=rule.action_type
-                )
-                raise ValidationError(
-                    self.env._(
-                        "Approvers are required when the action is '%(action)s'.",
-                        action=dict(
-                            rule._fields["action_type"]._description_selection(
-                                self.env,
-                            ),
-                        )[rule.action_type],
-                    ),
-                )
-
-    @api.constrains("action_type", "approval_minimum", "approver_ids")
-    def _check_approval_minimum(self):
-        for rule in self:
-            if rule.action_type != "set_approvers":
-                continue
-            if rule.approval_minimum < 1:
-                trace.REFUSAL.event(
-                    "rule_minimum_below_one",
-                    rule=rule.id,
-                    minimum=rule.approval_minimum,
-                )
-                raise ValidationError(
-                    self.env._("Minimum Approval must be at least 1."),
-                )
-            if rule.approval_minimum > len(rule.approver_ids):
-                trace.REFUSAL.event(
-                    "rule_minimum_above_approvers",
-                    rule=rule.id,
-                    minimum=rule.approval_minimum,
-                    approvers=len(rule.approver_ids),
-                )
-                raise ValidationError(
-                    self.env._(
-                        "Minimum Approval must not exceed the number of "
-                        "approvers this rule sets (%(count)d).",
-                        count=len(rule.approver_ids),
-                    ),
-                )
-
     @api.constrains("operator", "threshold", "threshold_max")
     def _check_range_bounds(self):
         for rule in self:
@@ -327,77 +199,6 @@ class ApprovalRule(models.Model):
                         "(or 0 for unlimited).",
                     ),
                 )
-
-    @api.constrains(
-        "category_id",
-        "company_id",
-        "condition_type",
-        "condition_field",
-        "operator",
-        "threshold",
-        "threshold_max",
-        "action_type",
-        "active",
-    )
-    def _check_replacement_overlap(self):
-        replacements = self.filtered(
-            lambda r: (
-                r.action_type == "set_approvers" and r.condition_type == "threshold"
-            ),
-        )
-        if not replacements:
-            return
-        stored_peers = self.sudo().search(
-            [
-                ("category_id", "in", replacements.category_id.ids),
-                (
-                    "condition_field",
-                    "in",
-                    list(set(replacements.mapped("condition_field"))),
-                ),
-                ("action_type", "=", "set_approvers"),
-                ("condition_type", "=", "threshold"),
-                ("active", "=", True),
-            ],
-        )
-        for rule in replacements:
-            if not rule.active:
-                continue
-            peers = (stored_peers | self).filtered(
-                lambda r, cur=rule: (
-                    r.id != cur.id
-                    and r.category_id == cur.category_id
-                    and r.condition_type == "threshold"
-                    and r.condition_field == cur.condition_field
-                    and r.action_type == "set_approvers"
-                    and r.active
-                ),
-            )
-            for other in peers:
-                if (
-                    rule.company_id
-                    and other.company_id
-                    and rule.company_id != other.company_id
-                ):
-                    continue
-                if rule._condition_overlaps(other):
-                    trace.REFUSAL.event(
-                        "replacement_bands_overlap",
-                        rule=rule.id,
-                        other=other.id,
-                        field=rule.condition_field,
-                    )
-                    raise ValidationError(
-                        self.env._(
-                            "'%(rule)s' and '%(other)s' both replace the "
-                            "approvers on %(field)s and can match the same "
-                            "value. Narrow their ranges: which one applied "
-                            "would depend on sequence alone.",
-                            rule=rule.name,
-                            other=other.name,
-                            field=rule.condition_field,
-                        ),
-                    )
 
     @api.constrains(
         "category_id",
@@ -732,10 +533,3 @@ class ApprovalRule(models.Model):
             overlaps=overlaps,
         )
         return overlaps
-
-    def _get_approver_tuples(self) -> list[tuple[int, bool, int]]:
-        self.check_singleton()
-        return [
-            (user.id, self.approver_required, self.approver_sequence)
-            for user in self.approver_ids
-        ]

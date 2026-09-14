@@ -1,8 +1,7 @@
-from odoo import Command
 from odoo.exceptions import ValidationError
 from odoo.tests import common, tagged
 
-from odoo.addons.approval.tests.common import ApprovalCommon, record_approval
+from odoo.addons.approval.tests.common import ApprovalCommon, pool_step, record_approval
 from odoo.addons.approval.tests.test_multi_company import MultiCompanyCase
 
 
@@ -33,11 +32,7 @@ class TestRequestFormDefaults(common.TransactionCase):
                 "name": "Smart Clone Cat",
                 "has_amount": "required",
                 "approval_minimum": 1,
-                "approver_ids": [
-                    Command.create(
-                        {"user_id": self.approver_user_1.id, "required": True}
-                    )
-                ],
+                "step_ids": pool_step([(self.approver_user_1.id, True, 10)], minimum=1),
             }
         )
         for amt in (100, 200):

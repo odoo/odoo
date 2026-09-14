@@ -584,7 +584,6 @@ CALL_TRACES: dict[str, dict[str, str]] = {
         "create_request": "lifecycle",
         "_compute_kanban_dashboard": "compute",
         "_compute_count_request_to_validate": "compute",
-        "_compute_minimum_validity": "compute",
     },
     "approval.category.step": {
         "_get_pool_user_ids": "steps",
@@ -594,7 +593,6 @@ CALL_TRACES: dict[str, dict[str, str]] = {
     },
     "approval.rule": {
         "_evaluate": "rules",
-        "_get_approver_tuples": "rules",
     },
     "approval.binding": {
         "_register_hook": "registry",

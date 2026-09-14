@@ -5,7 +5,7 @@ from freezegun import freeze_time
 from odoo import fields
 from odoo.tests import common, tagged
 
-from odoo.addons.approval.tests.common import ApprovalCommon
+from odoo.addons.approval.tests.common import ApprovalCommon, add_category_approver
 
 
 @tagged("post_install", "-at_install")
@@ -39,13 +39,7 @@ class TestAnalyticsAccuracy(common.TransactionCase):
             }
         )
 
-        self.env["approval.category.approver"].create(
-            {
-                "user_id": self.approver1.id,
-                "category_id": self.category.id,
-                "required": True,
-            }
-        )
+        add_category_approver(self.category, self.approver1, required=True)
 
     def _create_and_process_request(self, state, confirmed_date, decision_date=None):
         request = self.env["approval.request"].create(
@@ -351,13 +345,7 @@ class TestAnalyticsAccuracy(common.TransactionCase):
                 "approval_minimum": 1,
             }
         )
-        self.env["approval.category.approver"].create(
-            {
-                "user_id": self.approver1.id,
-                "category_id": category2.id,
-                "required": True,
-            }
-        )
+        add_category_approver(category2, self.approver1, required=True)
 
         with freeze_time("2025-10-01 10:00:00"):
             confirmed = fields.Datetime.now()
@@ -408,13 +396,7 @@ class TestAnalyticsAccuracy(common.TransactionCase):
                 "approval_minimum": 1,
             }
         )
-        self.env["approval.category.approver"].create(
-            {
-                "user_id": self.approver1.id,
-                "category_id": category2.id,
-                "required": True,
-            }
-        )
+        add_category_approver(category2, self.approver1, required=True)
 
         with freeze_time("2025-10-01 10:00:00"):
             confirmed = fields.Datetime.now()
@@ -486,14 +468,8 @@ class TestAnalyticsAccuracy(common.TransactionCase):
         )
 
     def test_approver_performance_multiple_approvers(self):
-        self.env["approval.category.approver"].create(
-            {
-                "user_id": self.approver2.id,
-                "category_id": self.category.id,
-                "required": False,
-            }
-        )
-        self.category.approval_minimum = 2
+        add_category_approver(self.category, self.approver2, required=False)
+        self.category.step_ids.minimum = 2
 
         with freeze_time("2025-10-01 10:00:00"):
             confirmed = fields.Datetime.now()
@@ -580,7 +556,7 @@ class TestApproverResponseTimeBasis(ApprovalCommon):
         cls.sequential = cls._make_category(
             name="Response Basis Seq",
             approvers=[(cls.approver_1, True, 10), (cls.approver_2, True, 20)],
-            approve_sequentially=True,
+            in_order=True,
             approval_minimum=2,
         )
 

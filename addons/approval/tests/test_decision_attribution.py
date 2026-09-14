@@ -4,7 +4,7 @@ from odoo import fields
 from odoo.exceptions import UserError
 from odoo.tests import tagged
 
-from .common import ApprovalCommon, isolate_group_approval_manager
+from .common import ApprovalCommon, add_rule_step, isolate_group_approval_manager
 
 
 @tagged("post_install", "-at_install")
@@ -249,23 +249,19 @@ class TestEscalationManagerLookup(ApprovalCommon):
 
 @tagged("post_install", "-at_install")
 class TestManualApproverPreservation(ApprovalCommon):
-    def test_manual_approver_in_a_non_matching_tier_survives(self):
+    def test_manual_approver_in_a_step_that_does_not_apply_survives(self):
         category = self._make_category(
             "Manual Preservation",
             approvers=[(self.approver_1, True, 10)],
         )
-        self.env["approval.rule"].create(
-            {
-                "action_type": "set_approvers",
-                "operator": "between",
-                "name": "Audit3 High Tier",
-                "category_id": category.id,
-                "condition_field": "amount",
-                "threshold": 100000,
-                "threshold_max": 0,
-                "approver_ids": [(6, 0, [self.approver_2.id])],
-                "approval_minimum": 1,
-            },
+        add_rule_step(
+            category,
+            self.approver_2,
+            name="Audit3 High Tier",
+            condition_field="amount",
+            operator="between",
+            threshold=100000,
+            threshold_max=0,
         )
         request = self._prepare_request(category, confirm=False, amount=10)
         self.env["approval.approver"].create(
@@ -289,23 +285,19 @@ class TestManualApproverPreservation(ApprovalCommon):
             "non-matching tier happens to list them",
         )
 
-    def test_orphaned_tier_injection_is_still_removed(self):
+    def test_a_row_whose_step_stopped_applying_is_removed(self):
         category = self._make_category(
             "Orphan Removal",
             approvers=[(self.approver_1, True, 10)],
         )
-        self.env["approval.rule"].create(
-            {
-                "action_type": "set_approvers",
-                "operator": "between",
-                "name": "Audit3 Matching Tier",
-                "category_id": category.id,
-                "condition_field": "amount",
-                "threshold": 0,
-                "threshold_max": 1000,
-                "approver_ids": [(6, 0, [self.approver_2.id])],
-                "approval_minimum": 1,
-            },
+        add_rule_step(
+            category,
+            self.approver_2,
+            name="Audit3 Matching Tier",
+            condition_field="amount",
+            operator="between",
+            threshold=0,
+            threshold_max=1000,
         )
         request = self._prepare_request(category, confirm=False, amount=100)
         request.invalidate_recordset(["approver_ids"])
@@ -373,7 +365,7 @@ class TestConfirmActivityBatching(ApprovalCommon):
                 (self.approver_2, False, 20),
             ],
             approval_minimum=1,
-            approve_sequentially=True,
+            in_order=True,
         )
         requests = self.env["approval.request"].create(
             [
@@ -411,7 +403,7 @@ class TestConfirmActivityBatching(ApprovalCommon):
                 (self.approver_2, False, 20),
             ],
             approval_minimum=1,
-            approve_sequentially=True,
+            in_order=True,
         )
         parallel = self._make_category(
             "Batch Mixed Par",

@@ -27,9 +27,7 @@ class TestUi(HttpCaseWithUserDemo):
         else:
             category.write(
                 {
-                    "approver_ids": [(5, 0, 0)],
                     "approval_minimum": 1,
-                    "approve_sequentially": False,
                 }
             )
         category.allow_self_approval = True

@@ -1,6 +1,8 @@
 from odoo.exceptions import UserError
 from odoo.tests import common, tagged
 
+from odoo.addons.approval.tests.common import add_category_approver
+
 
 @tagged("post_install", "-at_install")
 class TestDecisionWizard(common.TransactionCase):
@@ -25,13 +27,7 @@ class TestDecisionWizard(common.TransactionCase):
             }
         )
 
-        self.env["approval.category.approver"].create(
-            {
-                "user_id": self.approver_user.id,
-                "category_id": self.category.id,
-                "required": True,
-            }
-        )
+        add_category_approver(self.category, self.approver_user, required=True)
 
         self.refusal_reason1 = self.env["approval.refusal.reason"].create(
             {

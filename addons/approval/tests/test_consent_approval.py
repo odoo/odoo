@@ -7,7 +7,7 @@ from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.tests import common, tagged
 
-from .common import ApprovalCommon, new_trip_category
+from .common import ApprovalCommon, add_category_approver, new_trip_category, pool_step
 
 
 @tagged("post_install", "-at_install")
@@ -26,17 +26,11 @@ class TestConsentApproval(common.TransactionCase):
         cls.category = new_trip_category(cls.env)
         cls.category.write(
             {
-                "approver_ids": [(5, 0, 0)],
                 "consent_approval_hours": 24,
             }
         )
-        cls.env["approval.category.approver"].create(
-            {
-                "category_id": cls.category.id,
-                "user_id": cls.approver_user.id,
-                "required": True,
-                "sequence": 10,
-            }
+        add_category_approver(
+            cls.category, cls.approver_user, required=True, sequence=10
         )
 
     def _create_and_confirm(self, **kwargs):
@@ -104,7 +98,7 @@ class TestConsentApproval(common.TransactionCase):
                     "sequence_code": "SC0026",
                     "name": "C3 Category",
                     "approval_minimum": 2,
-                    "approve_sequentially": True,
+                    "step_ids": pool_step([], minimum=2, in_order=True),
                     "consent_approval_hours": 1,
                 }
             )

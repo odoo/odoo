@@ -3,6 +3,8 @@ from unittest.mock import patch
 from odoo.exceptions import UserError
 from odoo.tests import common, tagged
 
+from odoo.addons.approval.tests.common import add_category_approver
+
 
 @tagged("post_install", "-at_install")
 class TestApprovalMixin(common.TransactionCase):
@@ -35,13 +37,7 @@ class TestApprovalMixin(common.TransactionCase):
             }
         )
 
-        cls.env["approval.category.approver"].create(
-            {
-                "user_id": cls.approver_user.id,
-                "category_id": cls.test_category.id,
-                "required": True,
-            }
-        )
+        add_category_approver(cls.test_category, cls.approver_user, required=True)
 
     def _create_test_document(self, **kwargs):
         vals = {

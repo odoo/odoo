@@ -2,8 +2,8 @@
 
 ## Purpose
 
-Multi-level approval workflow engine: configurable categories, sequential/parallel
-approval chains, banded routing by amount/quantity, conditional rules, delegation,
+Multi-level approval workflow engine: categories routed by steps (pools of approvers,
+in order or not, applying by conditions on the request or its document), delegation,
 consent-based auto-approval, SLA tracking, smart escalation with priority-based
 reminders, approver-requested mid-flow changes, cancel / reset-to-draft recovery,
 approval mixin for source document integration, and comprehensive analytics
@@ -14,7 +14,7 @@ dashboards.
 | Key | Value |
 |-----|-------|
 | Technical name | `approval` |
-| Version | 19.0.2.7.0 (matches `__manifest__.py`) |
+| Version | 19.0.2.8.0 (matches `__manifest__.py`) |
 | Category | Human Resources/Approvals |
 | Dependencies | `mail`, and nothing else. `approval_automation` (which needs `automation`) and `approval_analytics` (which needs `mixin_report_sql`) were split out at 19.0.2.0.0 so that adopting `mixin.approval` costs one manifest row rather than nineteen prerequisites; both auto-install |
 | Conflicts | `approvals` (upstream module — the two cannot coexist, and NOTHING enforces it: this fork's loader reads no `excludes` manifest key, so the one that used to sit here was inert) |
@@ -36,12 +36,10 @@ dashboards.
 | File | Models | Purpose |
 |------|--------|---------|
 | `approval_category.py` | `approval.category` | Category blueprint: field visibility, privacy visibility, approval minimums, escalation, SLA, consent, dashboard |
-| `approval_category_approver.py` | `approval.category.approver` | M2M with attrs between category and users (required, sequence) |
-| `approval_category_conversion.py` | `approval.category` (extension) | `steps_conversion_blockers` (computed Text, shown on the Steps page with the button) lists why it cannot convert. `_add_approver(user, required)` adds an approver wherever the category routes (its list, or its pool step); `approval.category.approver` refuses a line on a category that routes by steps, whose Approvers tab is hidden. 19.0.2.4.0's end migration runs `_convert_every_category_to_steps`; 19.0.2.5.0's turns sequencing off on security group categories (`_unorder_group_categories`), converts every category again now that fewer are blocked, moves the pending requests of every category routed by steps onto its steps (`_adopt_list_routed_requests`), then runs `_route_rules_of_step_categories_by_steps`, since a request its steps route reads no add rule or band: an add rule left on such a category becomes a step of its approvers applying when it matches (advisory when they are optional), a band is archived, and `approval.rule` refuses a new one there. It then logs `_get_list_routing_census`: the categories still on an approver list (with their blockers; a category whose module creates its steps, `_has_steps_from_its_module`, as mrp_plm's engineering change, is not counted) and the undecided requests that still route by one: a draft or pending request on such a category, or a request submitted on a list whose category was later given steps by hand. It read zero on a production copy (2026-09-14), and 19.0.2.7.0 retired the list path from the engine; and the categories modules ship install with their steps, so a fresh database routes as an upgraded one; a module whose steps come from elsewhere names it as a blocker (mrp_plm: the engineering change roles). Every category still on its approver list converts when its first request syncs its approvers (`_route_by_steps_on_first_use`, called by `_sync_approvers`), so the list only authors a category until then; the routing probes run every flat script converted at first use (`TestFirstUseRoutingOutcomes`) and converted first (`TestConvertedRoutingOutcomes`), both through `FlatRoutingScenarios`. A category created where the context carries `approval_category_routes_by_steps` (the Approval Categories menu, and agromarin's accounting, purchase and sale category menus) starts with an "Approvers" step that counts approvers added by hand (`default_get`), so it never routes by a list. `action_convert_routing_to_steps`: rewrites a flat category's approvers, sequencing, group and add/replace rules as equivalent steps, archiving the rules it replaces, or making them `condition` rules when steps apply by them; a required approver is a required member of the pool it counts toward. Several add-approver rules convert when they are tiers (same figure and currency, all 'greater than or equal'): one pool per range lists the approvers of every rule it matches. Replacement bands that are ranges of one figure (`between`, `gte`, `lt`, same currency) convert too: each band over its range, the category's approvers over every gap. Any other rule set (rules on several figures, on the source document, on a figure a request may lack such as `date_range_days`, on another company, or adding beside replacing) converts to one pool per case, `_prepare_rule_combination_steps`: which band replaces the approvers, if any, and which add rules match, each step applying through `when_rule_ids` and `unless_rule_ids`. `_get_steps_conversion_blockers` refuses only rule sets of more than 32 cases from the button, a size limit rather than a gap: the upgrade sweep (`_convert_every_category_to_steps`, `approval_conversion_uncapped`) converts them whatever their size, so after 19.0.2.5.0 no category routes by a list except one whose module creates its steps. A band's approvers keep the replacement sequence (`approval.sequence.tier`) in an in-order step, and a step's rows are created in its members' order, so approvers tied on a sequence decide in the order the approver list created them. A security group category cannot be sequential (`_constrains_group_not_sequential`: its form never offered the flag, and its members would have been asked one at a time in record order). Sequential approvers with add rules convert to in-order steps whose members keep their sequences, a rule's approvers at the rule's `approver_sequence`. A security group category converts to a group step that asks its members when the category did (`asks_group_members`), with its rule approvers as members above the rule's figure; its replacement bands, which never applied, are dropped. `_get_conversion_pool_source` and `_get_conversion_required_sources` let a module add approvers named by a path, as approval_hr adds the requester's manager. Converting also moves the category's pending requests onto the steps: `approval.request._adopt_list_routing_into_steps` gives each row the steps the routing now stages, carries an approval over to those steps, reopens rows waiting in a sequence (the in-order step takes over the turn), and re-asks only who the steps ask. Adoption is proven on requests built as a list-routed database holds them (`_request_routed_by_list` in `TestConvertingEveryCategory`): approved before the conversion, carrying a rule approver, still a draft, and counted by the census. One deliberate difference from the retired list path: step pools pass through the source document's approver policy, which it never read, so an expense category asks only who may approve that expense |
 | `approval_request.py` | `approval.request` | Core request: fields, CRUD, smart-copy defaults, `ESCALATION_RULES` constant |
 | `approval_request_access.py` | extends `approval.request` | Who may write, unlink, decide or re-route: the `_check_access_*` and locked-field rules |
 | `approval_request_lifecycle.py` | extends `approval.request` | The transitions: confirm, approve/refuse (`_apply_decision` funnel), withdraw, cancel, reset, change requests, `_force_terminal`, activities and row locking |
-| `approval_request_routing.py` | extends `approval.request` | Who approves: `_sync_approvers`, `_compute_desired_approvers`, rules, replacement bands, category snapshot |
+| `approval_request_routing.py` | extends `approval.request` | Who approves: `_sync_approvers`, `_compute_desired_approvers` over the applicable steps, live rerouting, auto-action rules, category snapshot |
 | `approval_request_escalation.py` | extends `approval.request` | When: deadline, overdue, SLA (compute + search), the three crons, reminders and escalation |
 | `approval_request_prediction.py` | extends `approval.request` | On-demand outcome prediction (`action_predict_outcome`) |
 | `approval_approver.py` | `approval.approver` | Individual approver: state, delegation, CRUD access control |
@@ -53,9 +51,9 @@ dashboards.
 | `mixin_approval_state_sync.py` | `mixin.approval.state.sync` (Abstract) | A source document whose own state drives its request: a state change syncs the request (decision, grant, revoke, force, reset), a request-side decision reaches the document through the document's own policy, and the request refuses being moved from the approvals app. Adopted by `hr.leave` and `hr.leave.allocation` |
 | `mixin_approval_threshold.py` | `mixin.approval.threshold` (Abstract) | Base of `approval.rule` and `approval.category.step`: `company_id` + `currency_id`, the numeric condition on the request (`condition_field`, `operator`, `threshold`, `threshold_max`, `_get_field_value()`, `_compare()`), `_convert_request_amount()` (a request's amount is converted into the record's currency before any comparison) and `_intervals_overlap()` |
 | `approval_refusal_reason.py` | `approval.refusal.reason` | Predefined refusal reasons with usage tracking |
-| `approval_rule.py` | `approval.rule` | Conditional rules: add approvers, REPLACE approvers (the former `approval.tier`, as `operator = between` + `action_type = set_approvers`), auto-approve, auto-refuse. A rule compares a normalized figure on the request (amount / quantity / date range / priority) or, by `condition_type`, reads the SOURCE DOCUMENT through a domain or a field value |
+| `approval_rule.py` | `approval.rule` | Conditional rules: auto-approve, auto-refuse, and step conditions a step applies by (`when_rule_ids`, `unless_rule_ids`). A rule compares a normalized figure on the request (amount / quantity / date range / priority) or, by `condition_type`, reads the SOURCE DOCUMENT through a domain or a field value |
 | `mixin_approval_domain.py` | `mixin.approval.domain` (Abstract) | Base of `approval.rule` and `approval.binding`: parses a subject domain and walks every dotted path in it against the registry at save time, because a condition that never matches reads as "approval was not required" |
-| `approval_category_step.py` | `approval.category.step`, `approval.category.step.member` | Steps: a category that needs several pools, each with its own quorum, declares them. A pool is its members (each with an optional end date, so a delegation is a membership that expires) together with a group. A category without steps keeps the flat approver list and Minimum Approval exactly as before |
+| `approval_category_step.py` | `approval.category.step`, `approval.category.step.member` | Steps: a category that needs several pools, each with its own quorum, declares them. A pool is its members (each with an optional end date, so a delegation is a membership that expires) together with a group. Every request routes by the steps that apply to it |
 | `approval_binding.py` | `approval.binding` | Gates a model's method on an approval by wrapping it at registry load: Observe, Block or Request, with a `sudo_policy` that tells the real superuser apart from an ordinary user elevated by `sudo()` |
 | `approval_binding_observation.py` | `approval.binding.observation` | Append-only record of each gated call with the caller's elevation and whether Block would have refused it — how a binding is sized before it is switched on |
 | `approval_binding_client.py` | extends `approval.binding` | What the approval button asks: `get_button_approvals`, `check_button_approval`, `action_decide_approval`, `action_withdraw_decision`, and the gated-model set `get_views` reads |
@@ -93,9 +91,8 @@ dashboards.
 | `test_activity_link.py` | An approval activity stores its approver row: engine activities store it, an activity on the document approves when done and goes with its request, and a delegator's old activity decides nothing |
 | `test_activity_target.py` | Where approvers are asked: a document-target category asks on the document, the default on the request, a request without a document on itself; a document activity approves when done and goes with a cancel; a step chooses the activity type; asking again and reminders do not duplicate |
 | `test_approvals.py` | Core approval lifecycle, state transitions (`TestRequest`) |
-| `test_approver_computation.py` | _sync_approvers, category changes, band matching |
-| `test_sequential_approval.py` | Sequential workflow, ordering, locking |
-| `test_group_approval.py` | Approver source modes (no = Specific Users / exclusive = Security Group) |
+| `test_approver_computation.py` | _sync_approvers, category changes, steps applying and ceasing to apply |
+| `test_sequential_approval.py` | In-order steps: ordering, turns, refusal and withdrawal in a chain |
 | `test_delegation.py` | Delegation lifecycle, effective approver |
 | `test_decision_wizard.py` | Wizard refuse / request-change with reasons and notes |
 | `test_bulk_operations.py` | Bulk approve/refuse from list view |
@@ -104,19 +101,18 @@ dashboards.
 | `test_auto_expire.py` | Auto-cancel expired pending requests |
 | `test_consent_approval.py` | Consent-based auto-approval after timeout |
 | `test_auto_action_rules.py` | Auto-approve/auto-refuse conditional rules |
-| `test_conditional_rules.py` | Rule evaluation, approver injection, live re-routing of a submitted request (`TestLiveRerouting`), routing-input lifecycle (`TestRoutingFieldLifecycle`) |
-| `test_subject_conditions.py` | Source-document conditions: `domain` and `field_selection` matching; absent, deleted and other-model source documents; configuration-time path validation; the overlap guard staying threshold-only |
+| `test_conditional_rules.py` | Rule evaluation through the steps that apply by it, live re-routing of a submitted request (`TestLiveRerouting`), routing-input lifecycle (`TestRoutingFieldLifecycle`) |
+| `test_subject_conditions.py` | Source-document conditions: `domain` and `field_selection` matching; absent, deleted and other-model source documents; configuration-time path validation |
 | `test_binding.py` | `approval.binding`: wrapping and unwrapping, one wrapper per method, Observe and Block, superuser vs `sudo()` elevation, the caller's elevation rather than the binding's, the kill switch, every configuration-time refusal; Request mode — no duplicate while pending, one replay as the requester, no replay after re-approval, no borrowing the approver's rights, no run once the snapshot moved, Block covered by a separately approved request; approve on invoke — an approver's call runs the operation exactly once, a non-approver's only raises the request, one step of two waits; run on approval off leaves the operation to the next call; the ORM-API and private-method refusals, and a stored refused binding left unapplied; a refusal that stands, who may reopen it, and withdrawing across steps |
 | `test_binding_actions.py` | Action bindings: a blocked server action refused on the server — the call web_studio let through — request, replay as the requester and approve-on-invoke on a server action, a report refused and then rendered once covered, the PDF entry point gated too, `is_enforced`, and every constraint on what an action binding may be |
 | `test_binding_client.py` | The approval button's questions: the `get_views` flag, an ungated button, who may decide each step before any call, a check that raises the request and runs nothing, decisions assigned to steps and withdrawn by a later step, a decision under one step leaving the user's other step open and withdrawn from that step alone, a step of another button refused, a refusal reopened by its refuser only, a record the caller cannot read, an action button |
 | `test_binding_editor.py` | Studio's editor on the engine: the first step binds the button as Studio did, further steps join it up to order nine, an action button named by xmlid, the approvers list keeping delegations, the steps action, the steps opening as a kanban with a quick-create card, a button whose steps are all archived no longer gated |
 | `test_binding_studio_parity.py` | What a Studio rule did, held by steps and bindings, each test naming its Studio test: a record no step applies to is not gated, an exclusive approval counts toward the exclusive step first, an archived step is ignored in any context, a group member decides but only listed members are asked, a step holding decisions is archived not deleted, a binding's target is fixed once it has requests |
-| `test_approver_replacement.py` | Approver-replacing rules: band matching, overlap validation, minimum override, batched constraints |
 | `test_engine_shape.py` | The engine ships no application: no root menu, no category records, its own menus only under Settings > Technical |
 | `test_sla_tracking.py` | SLA status computation, compliance tracking |
 | `test_lifecycle.py` | Cancelled state, reset-to-draft, forced-terminal paths, locked fields, delegation fan-in (19.0.1.0.7) |
 | `test_request_change.py` | Approver-requested mid-flow edit (`pending_change_field`), and re-routing at re-submit (`TestRequestChangeReroutes`) |
-| `test_pool_queue.py` | A security group is a queue: its members get rows and decide from To Review, nobody gets a personal activity except an approver a rule names, and a category may still ask every member (`notify_pool_members`) |
+| `test_pool_queue.py` | A group step is a queue: its members get rows and decide from To Review, nobody gets a personal activity, and a step may still ask every member (`asks_group_members`) |
 | `test_print_button.py` | Print-button visibility on the request form arch |
 | `test_dashboard.py` | Dashboard singleton, KPIs, bottleneck detection |
 | `test_analytics_accuracy.py` | SQL view accuracy, metric calculations |
@@ -127,10 +123,10 @@ dashboards.
 | `test_invariants.py` | invariants that must hold across the whole lifecycle (pending-review predicate, decision funnels) |
 | `test_multi_company.py` | Multi-company isolation across every company_id-scoped model |
 | `test_attachment_lock.py` | Attachments of a decided request are frozen: create, write, unlink, forged `res_field` |
-| `test_category.py` | Category configuration: approver-list domain helper, sequence-code derivation |
+| `test_category.py` | Category configuration: sequence-code derivation |
 | `test_category_steps.py` | Steps: two one-of-two steps need one approval from each, per-step quorum, one row per user counting toward every step, exclusivity in both directions, group and expired members, step conditions, refusal, asking steps in order while deciding freely, notify lists, configuration that could never be met, and a category without steps untouched |
 | `test_request_revocation.py` | Revoking an approved request from outside its decisions (`_revoke`): refused or cancelled, the rows keep their decisions and the request its approval date, only an approved request is revoked, the reason is recorded, a reset gives a clean draft, withdraw is refused afterwards |
-| `test_routing_outcomes.py` | The routing contract: scripted readings of state, who could approve and who holds an activity after each decision, for flat categories and their step twins -- required approvers, quorum, sequencing, refusal, withdrawal, group queues, owner exclusion, rules, bands and delegation. Sequential approval has no step form yet, and a twin pins what steps do instead |
+| `test_routing_outcomes.py` | The routing contract: scripted readings of state, who could approve and who holds an activity after each decision, on categories built from steps -- required approvers, quorum, members in order, refusal, withdrawal, group queues, owner exclusion, conditions, approvers added by hand, delegation; every shipped category routing by steps and a configured category born with its pool step (`TestCategoriesRouteBySteps`) |
 | `test_request_grant.py` | Approving a pending request from outside its decisions (`_approve_without_decision`): no row is named as deciding and none stays pending, an earlier decision stays as given, only a pending request is granted, withdrawal is refused, a grant can still be revoked and reset; the source document being told once is `test_approval/tests/test_source_document.py` |
 | `test_step_decisions.py` | Decisions given for steps: a named step counts toward that step only, an unnamed decision takes every step of the row, a step decided once per user, a step outside the row refused, exclusivity in both directions, withdrawing one step keeps the other and re-asks, withdrawing the only step withdraws the decision, a step never decided cannot be withdrawn, a refusal naming a step, a reset clearing decided steps, the note naming where the decision counts, an approver whose step is met no longer asked |
 | `test_step_source_approvers.py` | Steps whose approvers come from a field path on the source document (`subject_user_path`): each document names its own approver, only that user decides, members and the named user share the pool, confirm refuses a document naming nobody, the path must exist and end in `res.users` |
@@ -141,7 +137,7 @@ dashboards.
 Former `test_audit_regressions.py` and `test_audit_round3_regressions.py`
 (incident-named regression dumps, C1..M9 / A3-1..A3-19) were fully
 dissolved: every test was relocated into its feature-area file above
-(e.g. band regressions into `test_approver_replacement.py`, delegation
+(e.g. delegation
 regressions into `test_delegation.py`) so a maintainer editing a model
 finds ALL of its tests in one place instead of archaeology across
 incident files. `test_fix_coverage.py` was dissolved the same way
@@ -153,7 +149,7 @@ into `test_approvals.py`).
 
 | File | Content |
 |------|---------|
-| `ir_config_parameter_data.xml` | Sequence defaults for approver ordering: `approval.sequence.` `manager` 9, `tier` 10 (the approver-replacing rules — the key keeps its old name), `group` 500. A manually added approver row keeps the sequence it was given; there is no `approval.sequence.manual` since 19.0.1.0.26. There is **no** `approval.sequence.category` — category approvers carry the sequence entered on the category form |
+| `ir_config_parameter_data.xml` | Sequence default `approval.sequence.` `manager` 9, the place approval_hr gives the requester's manager in an in-order step. A manually added approver row keeps the sequence it was given |
 | `res_users_data.xml` | The administrator is an approval manager. The generic categories (General, Business Trip, etc.) are `approval_app`'s since 2.3 |
 | `mail_activity_type_data.xml` | 2 activity types: approval + change request |
 | `mail_message_subtype_data.xml` | Approval state change subtype |
@@ -196,8 +192,6 @@ approval/
 +-- __init__.py
 +-- models/
 |   +-- approval_category.py          # Category blueprint
-|   +-- approval_category_approver.py # Category-approver M2M
-|   +-- approval_category_conversion.py # Flat routing rewritten as steps
 |   +-- approval_category_step.py      # Steps and their members
 |   +-- approval_request.py           # Core fields + CRUD + smart copy
 |   +-- approval_request_access.py    # Who may do what (split by concern)
@@ -231,9 +225,9 @@ approval/
 |   +-- approval_delegate_wizard.py   # Delegation setup
 +-- reports/
 |   +-- approval_request_report.xml   # QWeb PDF report action
-+-- migrations/                       # 29 script directories (1.0.1 .. 2.7)
-+-- tests/                            # 46 test modules + common.py
-+-- views/                            # 11 XML view files
++-- migrations/                       # 28 script directories (1.0.1 .. 2.8)
++-- tests/                            # 44 test modules + common.py
++-- views/                            # 10 XML view files
 +-- data/                             # 6 XML data files
 +-- security/                         # Groups, rules, ACL
 +-- static/                           # JS, SCSS, images
@@ -244,19 +238,19 @@ approval/
 | Metric | Count |
 |--------|-------|
 | Python files (non-test, incl. `__init__`/`__manifest__`) | 44 |
-| Python test files | 46 (+ `common.py`) |
+| Python test files | 44 (+ `common.py`) |
 | XML files (non-static) | 28 |
 | XML files (static templates) | 4 |
 | JS files | 25 |
 | SCSS files | 4 |
-| ORM models (new) | 18 in `models/` + 2 wizards + 3 report models |
+| ORM models (new) | 17 in `models/` + 2 wizards + 3 report models |
 | ORM models (extended) | 8 (base, ir.actions.report, ir.actions.server, ir.attachment, mail.activity, mail.activity.type, res.groups, res.users) |
 | Abstract models | 7 (mixin.approval.source, mixin.approval, mixin.approval.state.sync, mixin.approval.subjects, mixin.approval.access, mixin.approval.threshold, mixin.approval.domain) |
 | SQL view models | 2 |
 | Transient models | 2 |
 | Test-only models | 3 |
 | Cron jobs | 4 |
-| Migration script directories | 29 |
+| Migration script directories | 28 |
 
 Re-measure rather than trusting these: `find . -name '*.py' -not -path './tests/*'
 -not -path './migrations/*' -not -path '*__pycache__*' -not -path './machine_doc_v1/*'
@@ -388,7 +382,7 @@ ships no controllers and no post-init hook.
 
 ## Extension Points
 
-- `_get_conversion_pool_source()` / `_get_conversion_required_sources()` -- Approvers a converted category's steps name by path (e.g., HR manager)
+- A step naming its approvers by a field path (`subject_model_id`, `subject_user_path`) -- e.g. approval_hr's requester manager
 - `_get_escalation_manager(approver)` -- Supply the manager for escalation (approval_hr)
 - `_check_withdraw_allowed()` / `_raise_withdraw_blocked()` -- Block withdrawal (e.g., linked invoices)
 - `_check_reset_allowed()` -- Veto reset-to-draft (base blocks released source docs)

@@ -1,5 +1,6 @@
 from odoo.tests import tagged
 
+from odoo.addons.approval.tests.common import add_category_approver
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 
@@ -11,14 +12,7 @@ class TestUi(HttpCaseWithUserDemo):
         category = self.env["approval.category"].create(
             {"name": "Button Tour", "approval_minimum": 1, "allow_self_approval": True}
         )
-        self.env["approval.category.approver"].create(
-            {
-                "category_id": category.id,
-                "user_id": admin.id,
-                "required": True,
-                "sequence": 10,
-            }
-        )
+        add_category_approver(category, admin, required=True, sequence=10)
         self.env["ir.ui.view"].create(
             {
                 "name": "res.partner.form.approval.button.tour",

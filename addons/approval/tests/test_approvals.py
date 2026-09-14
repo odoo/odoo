@@ -2,7 +2,13 @@ from odoo import Command, fields
 from odoo.exceptions import UserError
 from odoo.tests import Form, common, tagged
 
-from .common import ApprovalCommon, new_trip_category, record_approval
+from .common import (
+    ApprovalCommon,
+    add_category_approver,
+    new_trip_category,
+    pool_step,
+    record_approval,
+)
 
 
 @tagged("post_install", "-at_install")
@@ -30,6 +36,7 @@ class TestRequest(common.TransactionCase):
             {
                 "name": "Compute State Cat",
                 "sequence_code": "CSC01",
+                "step_ids": pool_step([], minimum=1),
             }
         )
         requester_user = self.env.ref("base.user_admin")
@@ -118,21 +125,11 @@ class TestRequest(common.TransactionCase):
                 "approval_minimum": 1,
             }
         )
-        self.env["approval.category.approver"].create(
-            [
-                {
-                    "category_id": category_test.id,
-                    "user_id": self.approver_user_1.id,
-                    "required": True,
-                    "sequence": 10,
-                },
-                {
-                    "category_id": category_test.id,
-                    "user_id": self.approver_user_2.id,
-                    "required": False,
-                    "sequence": 20,
-                },
-            ]
+        add_category_approver(
+            category_test, self.approver_user_1, required=True, sequence=10
+        )
+        add_category_approver(
+            category_test, self.approver_user_2, required=False, sequence=20
         )
         requester_user = self.env.ref("base.user_admin")
         record = self.env["approval.request"].create(
@@ -176,11 +173,7 @@ class TestRequest(common.TransactionCase):
                 "sequence_code": "SC0005",
                 "name": "Smart Clone Cat",
                 "approval_minimum": 1,
-                "approver_ids": [
-                    Command.create(
-                        {"user_id": self.approver_user_1.id, "required": True}
-                    )
-                ],
+                "step_ids": pool_step([(self.approver_user_1.id, True, 10)], minimum=1),
             }
         )
         for amt in (100, 200):
@@ -293,7 +286,7 @@ class TestRequestAuditRegressions(ApprovalCommon):
     def test_h3_confirm_rejects_non_draft_state(self):
         category = self._make_category(
             approval_minimum=2,
-            approve_sequentially=True,
+            in_order=True,
             approvers=[self.approver_1, self.approver_2],
         )
         request = self._prepare_request(category)

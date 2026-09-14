@@ -2,7 +2,7 @@ from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.tests import common, tagged
 
-from .common import new_trip_category
+from .common import add_category_approver, add_rule_step, new_trip_category
 
 
 @tagged("post_install", "-at_install")
@@ -33,14 +33,8 @@ class TestSubjectConditions(common.TransactionCase):
             }
         )
         cls.category = new_trip_category(cls.env)
-        cls.category.write({"approver_ids": [(5, 0, 0)]})
-        cls.env["approval.category.approver"].create(
-            {
-                "category_id": cls.category.id,
-                "user_id": cls.approver_user.id,
-                "required": True,
-                "sequence": 10,
-            }
+        add_category_approver(
+            cls.category, cls.approver_user, required=True, sequence=10
         )
         cls.partner_model = cls.env["ir.model"]._get("res.partner")
         cls.company_partner = cls.env["res.partner"].create(
@@ -64,16 +58,12 @@ class TestSubjectConditions(common.TransactionCase):
     def _domain_rule(self, domain, **kwargs):
         vals = {
             "name": "Company Partners Need Review",
-            "category_id": self.category.id,
             "condition_type": "domain",
             "subject_model_id": self.partner_model.id,
             "subject_domain": domain,
-            "approver_ids": [(4, self.extra_approver.id)],
-            "approver_required": True,
-            "approver_sequence": 5,
         }
         vals.update(kwargs)
-        return self.env["approval.rule"].create(vals)
+        return add_rule_step(self.category, self.extra_approver, **vals)
 
     # -- domain conditions -------------------------------------------------
 
@@ -125,18 +115,14 @@ class TestSubjectConditions(common.TransactionCase):
     # -- field_selection conditions ---------------------------------------
 
     def test_field_selection_condition_matches_on_the_stored_key(self):
-        self.env["approval.rule"].create(
-            {
-                "name": "Only Contacts",
-                "category_id": self.category.id,
-                "condition_type": "field_selection",
-                "subject_model_id": self.partner_model.id,
-                "subject_field": "type",
-                "subject_value": "contact",
-                "approver_ids": [(4, self.extra_approver.id)],
-                "approver_required": True,
-                "approver_sequence": 5,
-            }
+        add_rule_step(
+            self.category,
+            self.extra_approver,
+            name="Only Contacts",
+            condition_type="field_selection",
+            subject_model_id=self.partner_model.id,
+            subject_field="type",
+            subject_value="contact",
         )
         request = self._create_request(
             res_model="res.partner", res_id=self.company_partner.id
@@ -145,18 +131,14 @@ class TestSubjectConditions(common.TransactionCase):
         self.assertIn(self.extra_approver, request.approver_ids.mapped("user_id"))
 
     def test_field_selection_condition_does_not_match_another_value(self):
-        self.env["approval.rule"].create(
-            {
-                "name": "Only Invoice Addresses",
-                "category_id": self.category.id,
-                "condition_type": "field_selection",
-                "subject_model_id": self.partner_model.id,
-                "subject_field": "type",
-                "subject_value": "invoice",
-                "approver_ids": [(4, self.extra_approver.id)],
-                "approver_required": True,
-                "approver_sequence": 5,
-            }
+        add_rule_step(
+            self.category,
+            self.extra_approver,
+            name="Only Invoice Addresses",
+            condition_type="field_selection",
+            subject_model_id=self.partner_model.id,
+            subject_field="type",
+            subject_value="invoice",
         )
         request = self._create_request(
             res_model="res.partner", res_id=self.company_partner.id
@@ -212,67 +194,3 @@ class TestSubjectConditions(common.TransactionCase):
                     "threshold": 10,
                 }
             )
-
-    # -- interaction with the threshold-only guards ------------------------
-
-    def test_two_overlapping_threshold_replacements_are_still_refused(self):
-        """The overlap guard must survive the introduction of other types."""
-        self.env["approval.rule"].create(
-            {
-                "name": "Band A",
-                "category_id": self.category.id,
-                "condition_type": "threshold",
-                "condition_field": "amount",
-                "operator": "gt",
-                "threshold": 100,
-                "action_type": "set_approvers",
-                "approval_minimum": 1,
-                "approver_ids": [(4, self.extra_approver.id)],
-            }
-        )
-        with self.assertRaises(ValidationError):
-            self.env["approval.rule"].create(
-                {
-                    "name": "Band B",
-                    "category_id": self.category.id,
-                    "condition_type": "threshold",
-                    "condition_field": "amount",
-                    "operator": "gt",
-                    "threshold": 200,
-                    "action_type": "set_approvers",
-                    "approval_minimum": 1,
-                    "approver_ids": [(4, self.approver_user.id)],
-                }
-            )
-
-    def test_two_domain_replacements_are_allowed_to_coexist(self):
-        """Domains cannot be interval-checked, so sequence order decides."""
-        self._domain_rule(
-            "[('is_company', '=', True)]",
-            name="Domain Band A",
-            action_type="set_approvers",
-            approval_minimum=1,
-            sequence=10,
-        )
-        rule_b = self._domain_rule(
-            "[('is_company', '=', False)]",
-            name="Domain Band B",
-            action_type="set_approvers",
-            approval_minimum=1,
-            sequence=20,
-        )
-        self.assertTrue(rule_b.exists())
-
-    def test_a_domain_replacement_rule_actually_replaces_the_approvers(self):
-        self._domain_rule(
-            "[('is_company', '=', True)]",
-            name="Company Replacement",
-            action_type="set_approvers",
-            approval_minimum=1,
-        )
-        request = self._create_request(
-            res_model="res.partner", res_id=self.company_partner.id
-        )
-        approver_users = request.approver_ids.mapped("user_id")
-        self.assertIn(self.extra_approver, approver_users)
-        self.assertNotIn(self.approver_user, approver_users)

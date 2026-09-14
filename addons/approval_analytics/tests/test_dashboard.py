@@ -4,11 +4,11 @@ from datetime import datetime, timedelta
 from freezegun import freeze_time
 from lxml import etree
 
-from odoo import Command, fields
+from odoo import fields
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
-from odoo.addons.approval.tests.common import ApprovalCommon
+from odoo.addons.approval.tests.common import ApprovalCommon, pool_step
 
 
 @tagged("post_install", "-at_install")
@@ -42,15 +42,7 @@ class TestApprovalDashboard(TransactionCase):
                 "sequence_code": "SCDASH1",
                 "name": "Test Category",
                 "approval_minimum": 1,
-                "approver_ids": [
-                    Command.create(
-                        {
-                            "user_id": cls.approver1.id,
-                            "required": True,
-                            "sequence": 1,
-                        }
-                    ),
-                ],
+                "step_ids": pool_step([(cls.approver1.id, True, 1)], minimum=1),
             }
         )
 
@@ -152,17 +144,7 @@ class TestApprovalDashboard(TransactionCase):
                 "sequence_code": "SCDASH2",
                 "name": "Fast Category",
                 "approval_minimum": 1,
-                "approver_ids": [
-                    (
-                        0,
-                        0,
-                        {
-                            "user_id": self.approver2.id,
-                            "required": True,
-                            "sequence": 1,
-                        },
-                    ),
-                ],
+                "step_ids": pool_step([(self.approver2.id, True, 1)], minimum=1),
             }
         )
 

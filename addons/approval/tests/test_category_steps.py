@@ -251,11 +251,6 @@ class TestCategorySteps(ApprovalCommon):
         with self.assertRaises(UserError):
             self._prepare_request(category)
 
-    def test_steps_cannot_be_combined_with_the_approver_sequence(self):
-        category = self._category(approve_sequentially=True)
-        with self.assertRaises(ValidationError):
-            self._step(category, "Clash", (self.approver_1,))
-
     def test_a_step_needs_members_or_a_group(self):
         category = self._category()
         with self.assertRaises(ValidationError):
@@ -271,9 +266,7 @@ class TestCategorySteps(ApprovalCommon):
             ["First", "Second"],
         )
 
-    # -- untouched without steps -------------------------------------------
-
-    def test_a_category_without_steps_keeps_its_minimum(self):
+    def test_a_pool_step_keeps_its_minimum(self):
         category = self._category(
             approvers=[(self.approver_1, False, 10), (self.approver_2, False, 20)],
             approval_minimum=2,
@@ -291,10 +284,7 @@ class TestStepReadingTheRequest(ApprovalCommon):
     request raised with no document can still have its approvers named for it."""
 
     def _category_with_request_step(self, **step_vals):
-        category = self._make_category(
-            "Request subject", approvers=[(self.approver_2, True, 10)]
-        )
-        category.approver_ids.unlink()
+        category = self._make_category("Request subject")
         self.env["approval.category.step"].create(
             {
                 "category_id": category.id,

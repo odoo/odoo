@@ -490,7 +490,7 @@ class ApprovalBinding(models.Model):
     def _has_anyone_to_ask(self) -> bool:
         self.check_singleton()
         category = self.category_id.sudo()
-        anyone = bool(category.step_ids or category.approver_ids or category.rule_ids)
+        anyone = bool(category.step_ids or category.rule_ids)
         if not anyone:
             trace.DEGRADED.event(
                 "binding_has_nobody_to_ask",

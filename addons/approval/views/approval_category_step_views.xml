@@ -162,28 +162,11 @@
         <field name="model">approval.category</field>
         <field name="inherit_id" ref="view_approval_category_form" />
         <field name="arch" type="xml">
-            <xpath expr="//page[@name='approvers']" position="attributes">
-                <attribute name="invisible">step_ids</attribute>
-            </xpath>
             <xpath expr="//page[@name='approvers']" position="after">
                 <page name="steps" string="Steps">
                     <group>
                         <field name="notify_sequentially" invisible="not step_ids" />
                     </group>
-                    <div invisible="step_ids" class="mb-2">
-                        <field
-                            name="steps_conversion_blockers"
-                            invisible="not steps_conversion_blockers"
-                            class="text-muted" />
-                        <button
-                            name="action_convert_routing_to_steps"
-                            type="object"
-                            string="Convert Approvers to Steps"
-                            confirm="Rewrite this category's approvers and routing rules as steps? Submitted requests keep their approvers and decisions and continue by the steps."
-                            groups="approval.group_approval_manager"
-                            invisible="steps_conversion_blockers"
-                            class="btn-secondary" />
-                    </div>
                     <field name="step_ids" context="{'default_category_id': id}" />
                 </page>
             </xpath>

@@ -293,23 +293,17 @@ re-sync, never preserved as a phantom "manual" approver.
 
 Every request routes by its category's steps, so order is a step's: `in_order`
 asks a step's members one at a time by `(sequence, id)`, and
-`_refresh_turn_states()` moves the turn after each decision or withdrawal. A
-category's `approve_sequentially` is configuration the conversion reads, never
-routing: `action_convert_routing_to_steps()` (or a category's first request) turns
-it into in-order steps and clears it, and a category cannot hold both.
+`_refresh_turn_states()` moves the turn after each decision or withdrawal.
 
 **Sequence values by source:**
 
-Two `ir.config_parameter` keys, seeded in `data/ir_config_parameter_data.xml`
+One `ir.config_parameter` key, seeded in `data/ir_config_parameter_data.xml`
 and read through `_get_sequence_param(kind, default)` (which logs and falls
-back to the default on an unparseable value). The conversion reads them when it
-writes a list's approvers into steps:
+back to the default on an unparseable value):
 
 | Source | Default Sequence | Where it comes from |
 |--------|-----------------|---------------------|
 | HR manager (approval_hr's step source) | 9 | `approval.sequence.manager` → `_get_sequence_manager()` |
-| Category approvers | As defined (field default 10) | `approval.category.approver.sequence`, set per row on the category form. **No config parameter** — there is no `approval.sequence.category` |
-| Replacing-rule approvers | 10 | `approval.sequence.tier` → `_get_sequence_replacement()` (the parameter keeps its old name so a tuned deployment is not silently reset) |
 | Step members | As defined | `approval.category.step.member.sequence`; a member a path names takes the step's `subject_user_sequence` in order, the step's `sequence` otherwise |
 | Manual approvers | As given | The row's own `sequence`; a re-sync classifies a manual row but never rewrites it |
 
@@ -343,18 +337,20 @@ model's mapping and is picked up here automatically.
 `_sync_approvers` persists the `matched_rules` it returns on its
 `DesiredApprovers` result, which are the applicable steps' `when_rule_ids`.
 
-**Steps only (19.0.2.7.0).** The approver-list branches are gone from the
-engine: add and replace rules as routing, the HR extension hook, security-group
-rows and sequential chains. A category still on its list converts at its first
-request (`_route_by_steps_on_first_use`), and migration 2.5 converted the rest and
-adopted their pending requests. The conversion helpers stay, since they are
-what those two paths call.
+**Steps only (19.0.2.8.0).** A category has no approver list any more: no
+`approval.category.approver`, no `approve_sequentially`, `group_approval` or
+`approver_group_id`, and no rule that adds or replaces approvers. Migration 2.8's
+end script converts what a database still holds (a list into one pool step,
+sequential into `in_order`, a security group into a group step asking its members
+when `notify_pool_members` did) and hands the pending list-routed requests to those
+steps, refusing the upgrade on a rule that added or replaced approvers on a
+category with no step. approval_hr's 19.0.1.1.4 re-syncs the requester-manager
+steps after it, and telegram_bot_approval_request's 19.0.1.0.4 carries the
+Telegram opt-in onto the members.
 
 ```
 _sync_approvers()   [batch-level]
     |
-    +-- category_id._route_by_steps_on_first_use(): a category still on
-    |       its approver list converts before anything is staged
     +-- Prefetch the batch's categories' steps in one query:
     |       category_id.fetch(["step_ids"])
     |
@@ -541,25 +537,7 @@ holds the registry, `mixin.approval` and two-way-link checks and returns it unde
 
 ---
 
-## Banded and Conditional Routing
-
-### Approver-replacing rules (`action_type = "set_approvers"`)
-
-A band that supplied its own approvers INSTEAD of the category's, and its own
-`approval_minimum`. Routing no longer reads one: it is conversion input, which
-`action_convert_routing_to_steps()` rewrites as one condition step per band (a
-`condition` rule the step applies by), each with the band's approvers and
-minimum.
-
-```
-    Band 1: amount 0-5000      -> Approver: Department Lead (required)
-    Band 2: amount 5000-25000  -> Approvers: Lead + Finance Manager (both required)
-    Band 3: amount 25000+      -> Approvers: Lead + Finance + Director (all required)
-```
-
-**Constraint:** `_check_replacement_overlap` — two replacing rules on the same
-category and condition field may not both match one value, or which band a
-conversion applies would depend on sequence alone.
+## Conditional Routing
 
 ### Conditional Rules (`approval.rule`)
 
@@ -567,7 +545,6 @@ Rules evaluate conditions and take actions:
 
 | `action_type` | Effect |
 |--------------|--------|
-| `add_approver` | Conversion input: becomes a condition step of its approvers. Refused on a category its steps route |
 | `auto_approve` | Bypasses normal workflow, sets all approvers to approved |
 | `auto_refuse` | Bypasses normal workflow, sets all approvers to refused AND stamps `refusal_reason_auto_rule` + note on the request |
 | `condition` | Nothing by itself: a step applies when it matches (`when_rule_ids`) or unless it does (`unless_rule_ids`) |
@@ -774,7 +751,6 @@ and `has_product` now live in `approval_product`, which depends on
 
 | Hook | Purpose | Used By |
 |------|---------|---------|
-| `_get_conversion_pool_source()` / `_get_conversion_required_sources()` | Approvers a category adds beyond its list, named by a path, written into the steps a conversion creates | approval_hr (manager) |
 | `_get_escalation_manager(approver)` | Supply the manager for cron escalation | approval_hr |
 | `_check_withdraw_allowed()` + `_raise_withdraw_blocked()` | Block withdrawal when linked documents exist | approval_account / sale / purchase / stock |
 | `_check_reset_allowed()` | Veto reset-to-draft | Base only today (it blocks a request whose source-document link was released); no satellite overrides it |
@@ -795,7 +771,7 @@ and `has_product` now live in `approval_product`, which depends on
 | `_approval_rate_limit_rate_date()` | Pin the conversion date used by the throttle | any consumer |
 | `_get_fields_approval_protected()` | Fields on the SOURCE document frozen by the mixin's `write()` while an approval is in flight | any consumer |
 | `_before_approval_request_submit(approval)` | Act between request creation and auto-confirm | any consumer |
-| `_get_managed_approver_user_ids(replacement, matched_rules)` | Declare the user ids a satellite ACTUALLY injected, so a stale injection is not kept as a phantom manual approver (legacy backstop; `source_synced` covers rows since 19.0.1.0.13). Scoped to THIS request's category since 19.0.1.0.22 — it used to be seeded with every category approver in the company, which deleted a hand-added approver who merely appeared on an unrelated category | none today |
+| `_get_managed_approver_user_ids(steps)` | The user ids the applicable steps may stage, so a row whose step stopped applying is not kept as a phantom manual approver (legacy backstop; `source_synced` covers rows since 19.0.1.0.13) | none today |
 | `approval_type` selection | Extend with new types (e.g., 'purchase', 'expense') | Domain-specific modules |
 | `target_model` selection | Extend with new target models | Domain-specific modules |
 
@@ -806,14 +782,12 @@ and `has_product` now live in `approval_product`, which depends on
 At `action_confirm()`, `_prepare_category_snapshot()` captures the category
 configuration into a JSON field (`category_snapshot`). This preserves:
 
-- Category name, approval_minimum, approval_type
-- Sequential/group approval settings, `approval_deadline_hours`
-- Raw category approvers (user_id, name, required, sequence)
+- Category name, approval_minimum, approval_type, `approval_deadline_hours`
 - Active rules (name, condition_field, operator, threshold, action_type)
-- **Effective resolved workflow**: `effective_approval_minimum`,
-  `effective_approvers` (what was actually used after any replacement and
-  rule injection), and the matched `replacement_rule` (id, name, condition,
-  bounds, minimum)
+- The applicable steps: name, sequence, minimum, exclusivity, group, members,
+  condition and source path
+- **Effective resolved workflow**: `effective_approval_minimum` and
+  `effective_approvers` (the rows actually staged)
 
 Consumers read frozen values through `_get_snapshot_config(key)` (live
 category fallback for legacy rows): `approval_deadline` is computed from

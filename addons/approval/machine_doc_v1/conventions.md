@@ -25,7 +25,6 @@ Both sit under the `res_groups_privilege_approvals` privilege
 | Model | Internal User (group_user) | Manager (group_approval_manager) |
 |-------|---------------------------|----------------------------------|
 | `approval.category` | read | full CRUD |
-| `approval.category.approver` | read | full CRUD |
 | `approval.request` | full CRUD | (inherits from user) |
 | `approval.approver` | full CRUD (ACL level) | (inherits from user) |
 | `approval.refusal.reason` | read | full CRUD |
@@ -421,7 +420,7 @@ factories) instead of rebuilding user fixtures.
 
 | When You Modify... | Also Update... |
 |---------------------|---------------|
-| `approval.category` approver_ids | PENDING requests are frozen (their approver set is the audit trail); DRAFTS pick the change up at `action_confirm()`, which re-syncs against the current category configuration |
+| `approval.category.step` members, groups, conditions | PENDING requests reroute only when a step arrives or departs (`_reroute_steps_live`), so a member added to a step already applying is not asked mid-flight; DRAFTS pick the change up at `action_confirm()`, which re-syncs against the current steps |
 | `approval.category` fields (has_* from `approval_app`, approval_minimum) | Existing drafts are not rewritten on the spot, but `approval_minimum` is re-derived from the category at `action_confirm()`; `has_*` are related fields, so they follow immediately |
 | `_compute_state()` logic | The action methods that call `_notify_if_terminal_transition()` -- the compute itself must stay side-effect free |
 | `_compute_sla_status()` logic | `_search_sla_status()` -- its SQL CASE mirrors the compute exactly; update both together |
@@ -545,7 +544,7 @@ One per concern, so a session enables the axis it is working on. `_BY_NAME` in
 | `registry` | Load-time wrapping: this campaign's own, and the bindings' |
 | `report` | Dashboard and SQL-report queries |
 | `routing` | `_sync_approvers`: the desired set, the plan, where each staged approver came from |
-| `rules` | `approval.rule` evaluation, replacement bands, auto-approve/refuse, currency conversion |
+| `rules` | `approval.rule` evaluation, step conditions, auto-approve/refuse, currency conversion |
 | `search` | The search helpers behind the non-stored fields, and which branch `boolean_search_domain` took for an operator |
 | `snapshot` | The category snapshot taken at confirm |
 | `steps` | Applicability, pools, quorum assignment, open steps |

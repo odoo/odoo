@@ -4,7 +4,7 @@ from unittest.mock import patch
 from odoo import fields
 from odoo.tests import common, tagged
 
-from .common import ApprovalCommon, new_trip_category
+from .common import ApprovalCommon, add_category_approver, new_trip_category
 from odoo.addons.approval.models import approval_request_escalation as cron_module
 
 
@@ -24,17 +24,11 @@ class TestAutoExpire(common.TransactionCase):
         cls.category = new_trip_category(cls.env)
         cls.category.write(
             {
-                "approver_ids": [(5, 0, 0)],
                 "auto_expire_hours": 48,
             }
         )
-        cls.env["approval.category.approver"].create(
-            {
-                "category_id": cls.category.id,
-                "user_id": cls.approver_user.id,
-                "required": True,
-                "sequence": 10,
-            }
+        add_category_approver(
+            cls.category, cls.approver_user, required=True, sequence=10
         )
 
     def _create_and_confirm(self, **kwargs):

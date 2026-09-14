@@ -1,6 +1,8 @@
 from odoo.exceptions import AccessError, UserError
 from odoo.tests import common, tagged
 
+from odoo.addons.approval.tests.common import add_category_approver
+
 
 @tagged("post_install", "-at_install")
 class TestApprovalBindingClient(common.TransactionCase):
@@ -23,13 +25,8 @@ class TestApprovalBindingClient(common.TransactionCase):
         cls.flat_category = cls.env["approval.category"].create(
             {"name": "Client Flat", "approval_minimum": 1, "allow_self_approval": True}
         )
-        cls.env["approval.category.approver"].create(
-            {
-                "category_id": cls.flat_category.id,
-                "user_id": cls.approver.id,
-                "required": True,
-                "sequence": 10,
-            }
+        add_category_approver(
+            cls.flat_category, cls.approver, required=True, sequence=10
         )
         cls.step_category = cls.env["approval.category"].create(
             {"name": "Client Steps", "approval_minimum": 1, "allow_self_approval": True}

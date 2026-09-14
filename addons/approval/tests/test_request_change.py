@@ -4,7 +4,7 @@ from odoo import fields
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import common, tagged
 
-from .common import ApprovalCommon
+from .common import ApprovalCommon, add_category_approver, add_rule_step
 
 
 @tagged("post_install", "-at_install")
@@ -36,13 +36,7 @@ class TestRequestChange(common.TransactionCase):
                 "approval_minimum": 1,
             }
         )
-        cls.env["approval.category.approver"].create(
-            {
-                "user_id": cls.approver_user.id,
-                "category_id": cls.category.id,
-                "required": True,
-            }
-        )
+        add_category_approver(cls.category, cls.approver_user, required=True)
 
     def _pending_request(self):
         request = self.env["approval.request"].create(
@@ -369,7 +363,7 @@ class TestRequestChangeInvalidatesApprovals(ApprovalCommon):
         category = self._make_category(
             name=f"Change Seq Cat {self.id()}",
             approval_minimum=2,
-            approve_sequentially=True,
+            in_order=True,
             approvers=[(self.approver_1, True, 10), (self.approver_2, True, 20)],
         )
         request = self._prepare_request(category, date=fields.Datetime.now())
@@ -525,18 +519,15 @@ class TestRequestChangeReroutes(ApprovalCommon):
             "RC Reroute",
             approvers=[self.approver_1],
         )
-        self.env["approval.rule"].create(
-            {
-                "name": "Long trips need a second signature",
-                "category_id": category.id,
-                "condition_field": "date_range_days",
-                "operator": "gt",
-                "threshold": 14,
-                "action_type": "add_approver",
-                "approver_ids": [(6, 0, [self.long_trip_approver.id])],
-                "approver_required": False,
-                "approver_sequence": 20,
-            },
+        add_rule_step(
+            category,
+            self.long_trip_approver,
+            required=False,
+            sequence=20,
+            name="Long trips need a second signature",
+            condition_field="date_range_days",
+            operator="gt",
+            threshold=14,
         )
         return category
 
@@ -588,18 +579,15 @@ class TestRequestChangeReroutes(ApprovalCommon):
             approvers=[(self.approver_1, False, 10), (self.approver_2, False, 20)],
             approval_minimum=2,
         )
-        self.env["approval.rule"].create(
-            {
-                "name": "Long trips need a second signature",
-                "category_id": category.id,
-                "condition_field": "date_range_days",
-                "operator": "gt",
-                "threshold": 14,
-                "action_type": "add_approver",
-                "approver_ids": [(6, 0, [self.long_trip_approver.id])],
-                "approver_required": False,
-                "approver_sequence": 20,
-            },
+        add_rule_step(
+            category,
+            self.long_trip_approver,
+            required=False,
+            sequence=20,
+            name="Long trips need a second signature",
+            condition_field="date_range_days",
+            operator="gt",
+            threshold=14,
         )
         request = self._short_trip(category)
         request.with_user(self.approver_1).action_approve()

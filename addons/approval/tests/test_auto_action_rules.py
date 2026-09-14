@@ -2,7 +2,12 @@ from odoo import fields
 from odoo.exceptions import ValidationError
 from odoo.tests import common, tagged
 
-from .common import ApprovalCommon, new_trip_category
+from .common import (
+    ApprovalCommon,
+    add_category_approver,
+    add_rule_step,
+    new_trip_category,
+)
 
 
 @tagged("post_install", "-at_install")
@@ -19,18 +24,8 @@ class TestAutoActionRules(common.TransactionCase):
         )
         cls.owner = cls.env.ref("base.user_admin")
         cls.category = new_trip_category(cls.env)
-        cls.category.write(
-            {
-                "approver_ids": [(5, 0, 0)],
-            }
-        )
-        cls.env["approval.category.approver"].create(
-            {
-                "category_id": cls.category.id,
-                "user_id": cls.approver_user.id,
-                "required": True,
-                "sequence": 10,
-            }
+        add_category_approver(
+            cls.category, cls.approver_user, required=True, sequence=10
         )
 
     def _create_request(self, **kwargs):
@@ -123,7 +118,7 @@ class TestAutoActionRules(common.TransactionCase):
         request.action_confirm()
         self.assertTrue(request.date_confirmed)
 
-    def test_add_approver_rule_not_treated_as_auto_action(self):
+    def test_a_step_condition_rule_is_not_treated_as_auto_action(self):
         extra_user = self.env["res.users"].create(
             {
                 "name": "Extra",
@@ -131,16 +126,13 @@ class TestAutoActionRules(common.TransactionCase):
                 "email": "extra@test.com",
             }
         )
-        self.env["approval.rule"].create(
-            {
-                "name": "Add Extra",
-                "category_id": self.category.id,
-                "condition_field": "amount",
-                "operator": "gt",
-                "threshold": 1000,
-                "action_type": "add_approver",
-                "approver_ids": [(4, extra_user.id)],
-            }
+        add_rule_step(
+            self.category,
+            extra_user,
+            name="Add Extra",
+            condition_field="amount",
+            operator="gt",
+            threshold=1000,
         )
         request = self._create_request(amount=5000)
         request.action_confirm()

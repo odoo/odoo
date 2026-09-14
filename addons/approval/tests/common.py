@@ -1,5 +1,6 @@
 from datetime import date, timedelta
 
+from odoo.fields import Command
 from odoo.tests import common
 
 
@@ -36,6 +37,53 @@ def new_trip_category(env, **values):
             **values,
         }
     )
+
+
+def pool_step(members=(), minimum=1, **step_vals):
+    return [
+        Command.create(
+            {
+                "name": "In order" if step_vals.get("in_order") else "Approvers",
+                "sequence": 10,
+                "minimum": minimum,
+                "counts_added_approvers": True,
+                "member_ids": [
+                    Command.create(
+                        {"user_id": user_id, "required": required, "sequence": sequence}
+                    )
+                    for user_id, required, sequence in members
+                ],
+                **step_vals,
+            }
+        )
+    ]
+
+
+def add_rule_step(category, users, required=True, sequence=5, **rule_vals):
+    rule = category.env["approval.rule"].create(
+        {"category_id": category.id, "action_type": "condition", **rule_vals}
+    )
+    category.env["approval.category.step"].create(
+        {
+            "category_id": category.id,
+            "name": rule.name,
+            "sequence": 10,
+            "minimum": 1,
+            "advisory": not required,
+            "when_rule_ids": [Command.set(rule.ids)],
+            "member_ids": [
+                Command.create(
+                    {"user_id": user.id, "required": required, "sequence": sequence}
+                )
+                for user in users
+            ],
+        }
+    )
+    return rule
+
+
+def add_category_approver(category, user, required=False, sequence=10):
+    category._add_approver(user, required=required, sequence=sequence)
 
 
 def record_approval(rows):
@@ -97,31 +145,46 @@ class ApprovalCommon(common.TransactionCase):
         )
 
     @classmethod
-    def _make_category(cls, name="Lifecycle Cat", code=None, approvers=None, **vals):
+    def _make_category(
+        cls,
+        name="Lifecycle Cat",
+        code=None,
+        approvers=None,
+        in_order=False,
+        group_id=False,
+        asks_group_members=False,
+        with_pool=None,
+        **vals,
+    ):
         code = code or cls._next_sequence_code()
         specs = [
             spec if isinstance(spec, tuple) else (spec, True, 10 * (index + 1))
             for index, spec in enumerate(approvers or ())
         ]
         required_count = sum(1 for _user, required, _sequence in specs if required)
-        category = cls.env["approval.category"].create(
+        minimum = vals.pop("approval_minimum", max(1, required_count))
+        if with_pool is None:
+            with_pool = bool(specs or group_id or in_order)
+        steps = (
+            pool_step(
+                [(user.id, required, sequence) for user, required, sequence in specs],
+                minimum=minimum,
+                in_order=in_order,
+                group_id=group_id,
+                asks_group_members=asks_group_members,
+            )
+            if with_pool
+            else []
+        )
+        return cls.env["approval.category"].create(
             {
                 "name": name,
                 "sequence_code": code,
-                "approval_minimum": max(1, required_count),
+                "approval_minimum": minimum,
+                "step_ids": steps,
                 **vals,
             },
         )
-        for user, required, sequence in specs:
-            cls.env["approval.category.approver"].create(
-                {
-                    "category_id": category.id,
-                    "user_id": user.id,
-                    "required": required,
-                    "sequence": sequence,
-                },
-            )
-        return category
 
     @classmethod
     def _prepare_request(cls, category, confirm=True, owner=None, **vals):

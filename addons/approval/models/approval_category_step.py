@@ -319,17 +319,6 @@ class ApprovalCategoryStep(models.Model):
                 )
             step._check_domain_against_model(model)
 
-    @api.constrains("category_id")
-    def _check_category_not_sequential(self) -> None:
-        for step in self:
-            if step.category_id.approve_sequentially:
-                trace.REFUSAL.event(
-                    "step_added_to_sequential_category",
-                    step=step.id,
-                    category=step.category_id.id,
-                )
-                step.category_id._raise_steps_with_approver_sequence()
-
     @api.depends("member_ids.user_id", "member_ids.date_end")
     def _compute_user_ids(self) -> None:
         today = fields.Date.context_today(self)

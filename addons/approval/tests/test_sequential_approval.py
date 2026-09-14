@@ -1,6 +1,8 @@
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import common, tagged
 
+from odoo.addons.approval.tests.common import add_category_approver, pool_step
+
 
 @tagged("post_install", "-at_install")
 class TestSequentialApproval(common.TransactionCase):
@@ -46,31 +48,18 @@ class TestSequentialApproval(common.TransactionCase):
                 "sequence_code": "SC0057",
                 "name": "Sequential Test Category",
                 "approval_minimum": 2,
-                "approve_sequentially": True,
+                "step_ids": pool_step([], minimum=2, in_order=True),
             }
         )
 
-        cls.env["approval.category.approver"].create(
-            [
-                {
-                    "user_id": cls.approver_1.id,
-                    "category_id": cls.sequential_category.id,
-                    "required": True,
-                    "sequence": 10,
-                },
-                {
-                    "user_id": cls.approver_2.id,
-                    "category_id": cls.sequential_category.id,
-                    "required": True,
-                    "sequence": 20,
-                },
-                {
-                    "user_id": cls.approver_3.id,
-                    "category_id": cls.sequential_category.id,
-                    "required": False,
-                    "sequence": 30,
-                },
-            ]
+        add_category_approver(
+            cls.sequential_category, cls.approver_1, required=True, sequence=10
+        )
+        add_category_approver(
+            cls.sequential_category, cls.approver_2, required=True, sequence=20
+        )
+        add_category_approver(
+            cls.sequential_category, cls.approver_3, required=False, sequence=30
         )
 
         cls.parallel_category = cls.env["approval.category"].create(
@@ -78,24 +67,14 @@ class TestSequentialApproval(common.TransactionCase):
                 "sequence_code": "SC0058",
                 "name": "Parallel Test Category",
                 "approval_minimum": 2,
-                "approve_sequentially": False,
+                "step_ids": pool_step([], minimum=2, in_order=False),
             }
         )
-        cls.env["approval.category.approver"].create(
-            [
-                {
-                    "user_id": cls.approver_1.id,
-                    "category_id": cls.parallel_category.id,
-                    "required": True,
-                    "sequence": 10,
-                },
-                {
-                    "user_id": cls.approver_2.id,
-                    "category_id": cls.parallel_category.id,
-                    "required": True,
-                    "sequence": 20,
-                },
-            ]
+        add_category_approver(
+            cls.parallel_category, cls.approver_1, required=True, sequence=10
+        )
+        add_category_approver(
+            cls.parallel_category, cls.approver_2, required=True, sequence=20
         )
 
     def _create_sequential_request(self):
@@ -281,23 +260,11 @@ class TestSequentialApproval(common.TransactionCase):
                 "sequence_code": "SC0059",
                 "name": "Same Sequence Category",
                 "approval_minimum": 1,
-                "approve_sequentially": True,
+                "step_ids": pool_step([], minimum=1, in_order=True),
             }
         )
-        self.env["approval.category.approver"].create(
-            [
-                {
-                    "user_id": self.approver_1.id,
-                    "category_id": category.id,
-                    "sequence": 10,
-                },
-                {
-                    "user_id": self.approver_2.id,
-                    "category_id": category.id,
-                    "sequence": 10,
-                },
-            ]
-        )
+        add_category_approver(category, self.approver_1, sequence=10)
+        add_category_approver(category, self.approver_2, sequence=10)
 
         request = self.env["approval.request"].create(
             {
@@ -374,25 +341,11 @@ class TestSequentialApproval(common.TransactionCase):
                 "sequence_code": "SC0059",
                 "name": "Sequential Surplus Category",
                 "approval_minimum": 1,
-                "approve_sequentially": True,
+                "step_ids": pool_step([], minimum=1, in_order=True),
             }
         )
-        self.env["approval.category.approver"].create(
-            [
-                {
-                    "user_id": self.approver_1.id,
-                    "category_id": category.id,
-                    "required": False,
-                    "sequence": 10,
-                },
-                {
-                    "user_id": self.approver_2.id,
-                    "category_id": category.id,
-                    "required": True,
-                    "sequence": 20,
-                },
-            ]
-        )
+        add_category_approver(category, self.approver_1, required=False, sequence=10)
+        add_category_approver(category, self.approver_2, required=True, sequence=20)
         request = self.env["approval.request"].create(
             {
                 "name": "Sequential Surplus Request",
@@ -470,16 +423,10 @@ class TestSequentialApproval(common.TransactionCase):
                 "sequence_code": "SC0060",
                 "name": "Single Approver Sequential",
                 "approval_minimum": 1,
-                "approve_sequentially": True,
+                "step_ids": pool_step([], minimum=1, in_order=True),
             }
         )
-        self.env["approval.category.approver"].create(
-            {
-                "user_id": self.approver_1.id,
-                "category_id": category.id,
-                "required": True,
-            }
-        )
+        add_category_approver(category, self.approver_1, required=True)
 
         request = self.env["approval.request"].create(
             {
@@ -503,11 +450,11 @@ class TestSequentialApproval(common.TransactionCase):
                     "sequence_code": "SC0061",
                     "name": "Invalid Sequential",
                     "approval_minimum": 0,
-                    "approve_sequentially": True,
+                    "step_ids": pool_step([], minimum=0, in_order=True),
                 }
             )
 
         self.assertIn(
-            "at least 1",
+            "at least one",
             str(cm.exception).lower(),
         )

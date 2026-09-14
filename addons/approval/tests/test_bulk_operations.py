@@ -3,7 +3,7 @@ from unittest.mock import patch
 from odoo.exceptions import UserError
 from odoo.tests import common, tagged
 
-from .common import ApprovalCommon, record_approval
+from .common import ApprovalCommon, add_category_approver, record_approval
 
 
 @tagged("post_install", "-at_install")
@@ -46,20 +46,8 @@ class TestBulkOperations(common.TransactionCase):
             }
         )
 
-        cls.env["approval.category.approver"].create(
-            [
-                {
-                    "user_id": cls.approver1.id,
-                    "category_id": cls.category.id,
-                    "required": True,
-                },
-                {
-                    "user_id": cls.approver2.id,
-                    "category_id": cls.category.id,
-                    "required": False,
-                },
-            ]
-        )
+        add_category_approver(cls.category, cls.approver1, required=True)
+        add_category_approver(cls.category, cls.approver2, required=False)
 
     def _create_test_requests(self, count=3):
         requests = self.env["approval.request"]
@@ -180,13 +168,7 @@ class TestBulkOperations(common.TransactionCase):
                 "approval_minimum": 1,
             }
         )
-        self.env["approval.category.approver"].create(
-            {
-                "user_id": self.approver2.id,
-                "category_id": category_no_approver1.id,
-                "required": True,
-            }
-        )
+        add_category_approver(category_no_approver1, self.approver2, required=True)
 
         request1 = self.env["approval.request"].create(
             {

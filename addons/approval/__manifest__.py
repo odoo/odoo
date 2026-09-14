@@ -1,6 +1,6 @@
 {
     "name": "Base Approval",
-    "version": "19.0.2.7.0",
+    "version": "19.0.2.8.0",
     "category": "Human Resources/Approvals",
     "sequence": 190,
     "summary": "Create and validate approval requests with delegation and escalation",
@@ -14,10 +14,11 @@ delegation and escalation.
 Models
 ------
 * ``approval.request`` / ``approval.approver`` -- the request and its approvers
-* ``approval.category`` / ``approval.category.approver`` -- request types and
-  their default approvers
-* ``approval.rule`` / ``mixin.approval.threshold`` -- routing by amount,
-  quantity, date range or priority; adding or replacing approvers
+* ``approval.category`` / ``approval.category.step`` -- request types and the
+  steps their requests route by
+* ``approval.rule`` / ``mixin.approval.threshold`` -- conditions on amount,
+  quantity, date range or priority: a step applies by them, or they decide
+  the request outright
 * ``mixin.approval`` -- puts the workflow on any model
 * ``approval.document.requirement`` -- documents a category demands
 * ``approval.template`` -- reusable request presets
@@ -55,7 +56,6 @@ activities to a substitute for a dated window; escalation reminds by priority.
         "data/approval_refusal_reason_data.xml",
         "reports/approval_request_report.xml",
         "views/approval_category_views.xml",
-        "views/approval_category_approver_views.xml",
         "views/approval_category_step_views.xml",
         "views/approval_request_views.xml",
         "views/approval_refusal_reason_views.xml",

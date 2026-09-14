@@ -124,18 +124,18 @@ class ResUsers(models.Model):
                 )
 
         stale_config = (
-            self.env["approval.category.approver"]
+            self.env["approval.category.step.member"]
             .sudo()
             .search([("user_id", "in", self.ids)])
         )
-        for cat_approver in stale_config:
-            cat_approver.category_id.message_post(
+        for member in stale_config:
+            member.step_id.category_id.message_post(
                 body=self.env._(
-                    "%(name)s is still configured as an approver of this "
+                    "%(name)s is still a member of step '%(step)s' of this "
                     "category but their user account was archived — new "
-                    "requests would stall on them. Please update the "
-                    "approver list.",
-                    name=cat_approver.user_id.name,
+                    "requests would stall on them. Please update the step.",
+                    name=member.user_id.name,
+                    step=member.step_id.name,
                 ),
                 message_type="notification",
             )

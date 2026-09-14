@@ -60,14 +60,6 @@ msgstr ""
 
 #. module: approval
 #. odoo-python
-#: code:addons/approval/models/approval_category_conversion.py:0
-msgid ""
-"%(category)s cannot be converted to steps without changing how its requests are routed:\n"
-"%(reasons)s"
-msgstr ""
-
-#. module: approval
-#. odoo-python
 #: code:addons/approval/wizards/approval_delegate_wizard.py:0
 msgid ""
 "%(count)d approval(s) were skipped because %(delegate)s is the request owner"
@@ -233,9 +225,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/approval/models/res_users.py:0
 msgid ""
-"%(name)s is still configured as an approver of this category but their user "
-"account was archived — new requests would stall on them. Please update the "
-"approver list."
+"%(name)s is still a member of step '%(step)s' of this category but their "
+"user account was archived — new requests would stall on them. Please update "
+"the step."
 msgstr ""
 
 #. module: approval
@@ -411,15 +403,6 @@ msgstr ""
 
 #. module: approval
 #. odoo-python
-#: code:addons/approval/models/approval_category_approver.py:0
-msgid ""
-"%(user)s does not belong to company %(company)s, so they cannot approve "
-"requests of category '%(category)s'. Add the company to the user or choose "
-"another approver."
-msgstr ""
-
-#. module: approval
-#. odoo-python
 #: code:addons/approval/models/mixin_approval_access.py:0
 msgid "%(user)s granted %(partner)s access to %(record)s."
 msgstr ""
@@ -472,40 +455,6 @@ msgstr ""
 msgid ""
 "%(user)s withdrew their approval. The request stays approved: the remaining "
 "approvals still satisfy it."
-msgstr ""
-
-#. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_category_approver.py:0
-msgid ""
-"'%(category)s' routes its requests by steps, so its approver list is not "
-"read: add %(user)s to one of its steps instead."
-msgstr ""
-
-#. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_rule.py:0
-msgid ""
-"'%(category)s' routes its requests by steps, which read no rule that adds or"
-" replaces approvers: give a step the approvers, and make '%(rule)s' a step "
-"condition it applies by."
-msgstr ""
-
-#. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_category.py:0
-msgid ""
-"'%(category)s' takes its approvers from a security group, whose members have"
-" no order: turn off Approvers Sequence."
-msgstr ""
-
-#. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_rule.py:0
-msgid ""
-"'%(rule)s' and '%(other)s' both replace the approvers on %(field)s and can "
-"match the same value. Narrow their ranges: which one applied would depend on"
-" sequence alone."
 msgstr ""
 
 #. module: approval
@@ -602,13 +551,6 @@ msgid ""
 msgstr ""
 
 #. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
-msgid ""
-"<span class=\"fa-solid fa-triangle-exclamation\" title=\"Invalid minimum "
-"approvals\"/>"
-msgstr ""
-
-#. module: approval
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_category_kanban
 msgid "<span class=\"o_approval_menu_label\">Browse</span>"
 msgstr ""
@@ -681,15 +623,6 @@ msgstr ""
 
 #. module: approval
 #. odoo-python
-#: code:addons/approval/models/approval_category.py:0
-msgid ""
-"A category with steps orders them itself, so it cannot also use Approvers "
-"Sequence: sequencing individual approvers forbids a later step from deciding"
-" early, which steps allow. Use Request Steps In Order instead."
-msgstr ""
-
-#. module: approval
-#. odoo-python
 #: code:addons/approval/models/approval_request_lifecycle.py:0
 msgid ""
 "A change can only be requested while the approval is pending. Current state:"
@@ -740,11 +673,6 @@ msgstr ""
 #. module: approval
 #: model:ir.model.constraint,message:approval.constraint_approval_category_step_member_step_user_uniq
 msgid "A user is a member of a step only once."
-msgstr ""
-
-#. module: approval
-#: model:ir.model.constraint,message:approval.constraint_approval_category_approver_category_user_uniq
-msgid "A user may not be in the approver list of a category multiple times."
 msgstr ""
 
 #. module: approval
@@ -799,8 +727,6 @@ msgstr ""
 #: model:ir.model.fields,help:approval.field_approval_rule__action_type
 msgid ""
 "Action to take when condition matches:\n"
-"• Add Approver: inject additional approvers into the workflow\n"
-"• Replace Approvers: these approvers instead of the category's, and this rule's Minimum Approval instead of the category's. The first matching rule by sequence wins. Skipped entirely when the category takes its approvers from a security group, which is where this differs from Add Approver\n"
 "• Auto-Approve: skip approval entirely (logged in audit trail)\n"
 "• Auto-Refuse: automatically refuse the request\n"
 "• Step Condition: nothing by itself; a step of the category applies when it matches, or unless it does"
@@ -845,16 +771,6 @@ msgstr ""
 #. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_request__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields.selection,name:approval.selection__approval_rule__action_type__add_approver
-msgid "Add Approver"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_rule__approver_ids
-msgid "Add Approvers"
 msgstr ""
 
 #. module: approval
@@ -1032,14 +948,8 @@ msgstr ""
 
 #. module: approval
 #: model:ir.model,name:approval.model_approval_category
-#: model:ir.model.fields,field_description:approval.field_approval_category_approver__category_id
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
 msgid "Approval Category"
-msgstr ""
-
-#. module: approval
-#: model:ir.model,name:approval.model_approval_category_approver
-msgid "Approval Category Approver"
 msgstr ""
 
 #. module: approval
@@ -1101,7 +1011,6 @@ msgstr ""
 
 #. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_request__approval_minimum
-#: model:ir.model.fields,field_description:approval.field_approval_rule__approval_minimum
 msgid "Approval Minimum"
 msgstr ""
 
@@ -1277,11 +1186,6 @@ msgid ""
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,help:approval.field_approval_rule__approver_sequence
-msgid "Approval order for added approvers (lower = earlier)"
-msgstr ""
-
-#. module: approval
 #. odoo-python
 #: code:addons/approval/models/mixin_approval.py:0
 msgid "Approval refused"
@@ -1389,34 +1293,6 @@ msgid "Approver"
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_category__approver_group_id
-msgid "Approver Group"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_rule__approver_required
-msgid "Approver Required"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_rule__approver_sequence
-msgid "Approver Sequence"
-msgstr ""
-
-#. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_category.py:0
-msgid ""
-"Approver Sequence can only be activated with at least 1 minimum approver."
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_category__group_approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
-msgid "Approver Source"
-msgstr ""
-
-#. module: approval
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_request_form
 msgid "Approver(s)"
 msgstr ""
@@ -1432,8 +1308,8 @@ msgstr ""
 
 #. module: approval
 #. odoo-python
-#: code:addons/approval/models/approval_category_conversion.py:0
-#: model:ir.model.fields,field_description:approval.field_approval_category__approver_ids
+#: code:addons/approval/migrations/2.8/end-migrate.py:0
+#: code:addons/approval/models/approval_category.py:0
 #: model:ir.model.fields,field_description:approval.field_approval_category_step__user_ids
 #: model:ir.model.fields,field_description:approval.field_mixin_approval__approval_user_ids
 #: model:ir.model.fields,field_description:approval.field_mixin_approval_state_sync__approval_user_ids
@@ -1448,22 +1324,11 @@ msgid "Approvers From"
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_category__approve_sequentially
-msgid "Approvers Sequence?"
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,help:approval.field_approval_category_step__counts_added_approvers
 msgid ""
 "Approvers added by hand to a request, beyond those routing names, join this "
 "step: they are asked, may decide it, and their approvals count toward its "
 "quorum. It is how a category routed by its approver list treated them."
-msgstr ""
-
-#. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_rule.py:0
-msgid "Approvers are required when the action is '%(action)s'."
 msgstr ""
 
 #. module: approval
@@ -1627,11 +1492,6 @@ msgstr ""
 #. module: approval
 #: model:ir.model,name:approval.model_base
 msgid "Base"
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
-msgid "Based on"
 msgstr ""
 
 #. module: approval
@@ -1917,7 +1777,6 @@ msgstr ""
 #. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_approver__company_id
 #: model:ir.model.fields,field_description:approval.field_approval_category__company_id
-#: model:ir.model.fields,field_description:approval.field_approval_category_approver__company_id
 #: model:ir.model.fields,field_description:approval.field_approval_category_step__company_id
 #: model:ir.model.fields,field_description:approval.field_approval_category_step_member__company_id
 #: model:ir.model.fields,field_description:approval.field_approval_decision_log__company_id
@@ -2030,11 +1889,6 @@ msgid "Contact"
 msgstr ""
 
 #. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.approval_category_view_form_steps
-msgid "Convert Approvers to Steps"
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_request__count_attachment
 msgid "Count Attachment"
 msgstr ""
@@ -2069,7 +1923,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:approval.field_approval_binding__create_uid
 #: model:ir.model.fields,field_description:approval.field_approval_binding_observation__create_uid
 #: model:ir.model.fields,field_description:approval.field_approval_category__create_uid
-#: model:ir.model.fields,field_description:approval.field_approval_category_approver__create_uid
 #: model:ir.model.fields,field_description:approval.field_approval_category_step__create_uid
 #: model:ir.model.fields,field_description:approval.field_approval_category_step_member__create_uid
 #: model:ir.model.fields,field_description:approval.field_approval_decision_log__create_uid
@@ -2086,7 +1939,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:approval.field_approval_binding__create_date
 #: model:ir.model.fields,field_description:approval.field_approval_binding_observation__create_date
 #: model:ir.model.fields,field_description:approval.field_approval_category__create_date
-#: model:ir.model.fields,field_description:approval.field_approval_category_approver__create_date
 #: model:ir.model.fields,field_description:approval.field_approval_category_step__create_date
 #: model:ir.model.fields,field_description:approval.field_approval_category_step_member__create_date
 #: model:ir.model.fields,field_description:approval.field_approval_decision_log__create_date
@@ -2284,19 +2136,6 @@ msgid "Decision Log"
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,help:approval.field_approval_category__step_ids
-msgid ""
-"Declare steps when approval must pass several pools, each needing its own "
-"approvals. Without steps the flat approver list and Minimum Approval apply "
-"exactly as before."
-msgstr ""
-
-#. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
-msgid "Default Approvers"
-msgstr ""
-
-#. module: approval
 #: model:ir.actions.act_window,name:approval.action_approval_delegate_wizard
 #: model_terms:ir.ui.view,arch_db:approval.view_approval_delegate_wizard_form
 msgid "Delegate Approvals"
@@ -2382,7 +2221,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:approval.field_approval_binding__display_name
 #: model:ir.model.fields,field_description:approval.field_approval_binding_observation__display_name
 #: model:ir.model.fields,field_description:approval.field_approval_category__display_name
-#: model:ir.model.fields,field_description:approval.field_approval_category_approver__display_name
 #: model:ir.model.fields,field_description:approval.field_approval_category_step__display_name
 #: model:ir.model.fields,field_description:approval.field_approval_category_step_member__display_name
 #: model:ir.model.fields,field_description:approval.field_approval_decision_log__display_name
@@ -2473,14 +2311,6 @@ msgstr ""
 #. module: approval
 #: model:ir.actions.server,name:approval.server_action_approval_category_edit
 msgid "Edit Approval Category"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_category__approver_group_user_ids
-msgid ""
-"Effective members of the security group who become approvers when group "
-"approval is enabled. Mirrors the group's 'Users and implied users' "
-"(approver_group_id.all_user_ids), the same set used by _sync_approvers()."
 msgstr ""
 
 #. module: approval
@@ -2577,11 +2407,6 @@ msgstr ""
 #. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_category_step__exclusive
 msgid "Exclusive"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_category_approver__existing_user_ids
-msgid "Existing User"
 msgstr ""
 
 #. module: approval
@@ -2722,12 +2547,6 @@ msgid "Greater than or equal"
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_category__approver_group_user_ids
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
-msgid "Group Members"
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_category__has_message
 #: model:ir.model.fields,field_description:approval.field_approval_request__has_message
 msgid "Has Message"
@@ -2775,7 +2594,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:approval.field_approval_binding__id
 #: model:ir.model.fields,field_description:approval.field_approval_binding_observation__id
 #: model:ir.model.fields,field_description:approval.field_approval_category__id
-#: model:ir.model.fields,field_description:approval.field_approval_category_approver__id
 #: model:ir.model.fields,field_description:approval.field_approval_category_step__id
 #: model:ir.model.fields,field_description:approval.field_approval_category_step_member__id
 #: model:ir.model.fields,field_description:approval.field_approval_decision_log__id
@@ -2824,14 +2642,6 @@ msgid "If checked, some messages have a delivery error."
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,help:approval.field_approval_category__approve_sequentially
-msgid ""
-"If checked, the approvers have to approve in sequence (one after the other)."
-" If Employee's Manager is selected as approver, they will be the first in "
-"line."
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_category__image
 #: model:ir.model.fields,field_description:approval.field_approval_request__category_image
 msgid "Image"
@@ -2839,7 +2649,7 @@ msgstr ""
 
 #. module: approval
 #. odoo-python
-#: code:addons/approval/models/approval_category_conversion.py:0
+#: code:addons/approval/migrations/2.8/end-migrate.py:0
 msgid "In order"
 msgstr ""
 
@@ -2890,16 +2700,6 @@ msgid ""
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_category__invalid_minimum
-msgid "Invalid Minimum"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_category__invalid_minimum_warning
-msgid "Invalid Minimum Warning"
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_binding__is_enforced
 msgid "Is Enforced"
 msgstr ""
@@ -2921,14 +2721,6 @@ msgid "Is Terminal"
 msgstr ""
 
 #. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_category_conversion.py:0
-msgid ""
-"Its routing rules combine into %(count)s cases, each a step of its own; at "
-"most %(maximum)s are converted."
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_category__kanban_dashboard
 msgid "Kanban Dashboard"
 msgstr ""
@@ -2943,7 +2735,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:approval.field_approval_binding__write_uid
 #: model:ir.model.fields,field_description:approval.field_approval_binding_observation__write_uid
 #: model:ir.model.fields,field_description:approval.field_approval_category__write_uid
-#: model:ir.model.fields,field_description:approval.field_approval_category_approver__write_uid
 #: model:ir.model.fields,field_description:approval.field_approval_category_step__write_uid
 #: model:ir.model.fields,field_description:approval.field_approval_category_step_member__write_uid
 #: model:ir.model.fields,field_description:approval.field_approval_decision_log__write_uid
@@ -2960,7 +2751,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:approval.field_approval_binding__write_date
 #: model:ir.model.fields,field_description:approval.field_approval_binding_observation__write_date
 #: model:ir.model.fields,field_description:approval.field_approval_category__write_date
-#: model:ir.model.fields,field_description:approval.field_approval_category_approver__write_date
 #: model:ir.model.fields,field_description:approval.field_approval_category_step__write_date
 #: model:ir.model.fields,field_description:approval.field_approval_category_step_member__write_date
 #: model:ir.model.fields,field_description:approval.field_approval_decision_log__write_date
@@ -3098,39 +2888,7 @@ msgstr ""
 #. module: approval
 #. odoo-python
 #: code:addons/approval/models/approval_category.py:0
-msgid ""
-"Minimum Approval (%(minimum)d) exceeds the number of members in security "
-"group '%(group)s' (%(count)d). Requests in this category could never reach "
-"the required number of approvals."
-msgstr ""
-
-#. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_category.py:0
-#: code:addons/approval/models/approval_rule.py:0
 msgid "Minimum Approval must be at least 1."
-msgstr ""
-
-#. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_category.py:0
-msgid ""
-"Minimum Approval must be equal or superior to the sum of required Approvers."
-msgstr ""
-
-#. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_rule.py:0
-msgid ""
-"Minimum Approval must not exceed the number of approvers this rule sets "
-"(%(count)d)."
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_category_approver__company_id
-msgid ""
-"Mirrors the category's company; scopes the multi-company ir.rule on this "
-"model."
 msgstr ""
 
 #. module: approval
@@ -3381,11 +3139,6 @@ msgid "Notify"
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_category__notify_pool_members
-msgid "Notify Pool Members"
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_category__message_needaction_counter
 #: model:ir.model.fields,field_description:approval.field_approval_request__message_needaction_counter
 msgid "Number of Actions"
@@ -3542,13 +3295,6 @@ msgstr ""
 msgid ""
 "Only decided requests can be reset to draft. Request '%(name)s' is in state "
 "'%(state)s'."
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_rule__approval_minimum
-msgid ""
-"Only for 'Replace Approvers': the minimum number of approvals this band "
-"requires, overriding the category's."
 msgstr ""
 
 #. module: approval
@@ -4018,11 +3764,6 @@ msgid ""
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields.selection,name:approval.selection__approval_rule__action_type__set_approvers
-msgid "Replace Approvers"
-msgstr ""
-
-#. module: approval
 #. odoo-python
 #: code:addons/approval/models/res_users.py:0
 msgid "Replace departed approver %(name)s"
@@ -4148,7 +3889,6 @@ msgstr ""
 
 #. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_approver__required
-#: model:ir.model.fields,field_description:approval.field_approval_category_approver__required
 #: model:ir.model.fields,field_description:approval.field_approval_category_step_member__required
 #: model_terms:ir.ui.view,arch_db:approval.report_approval_request_document
 msgid "Required"
@@ -4242,13 +3982,6 @@ msgid "Revoked State"
 msgstr ""
 
 #. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.approval_category_view_form_steps
-msgid ""
-"Rewrite this category's approvers and routing rules as steps? Submitted "
-"requests keep their approvers and decisions and continue by the steps."
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_approver__flow_state
 msgid "Routing Status"
 msgstr ""
@@ -4306,14 +4039,6 @@ msgid ""
 msgstr ""
 
 #. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_rule.py:0
-msgid ""
-"Rule '%(rule)s' is scoped to %(company)s; these approvers are not members of"
-" it: %(users)s."
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,field_description:approval.field_approval_category__rule_count
 msgid "Rule Count"
 msgstr ""
@@ -4331,8 +4056,8 @@ msgstr ""
 #. module: approval
 #: model_terms:ir.actions.act_window,help:approval.action_approval_rule
 msgid ""
-"Rules dynamically add approvers based on request attributes.\n"
-"            For example: \"If amount exceeds 10,000, add CFO as required approver.\""
+"Rules decide a request outright or tell a step when it applies.\n"
+"            For example: \"If amount exceeds 10,000, the Finance step applies.\""
 msgstr ""
 
 #. module: approval
@@ -4385,24 +4110,6 @@ msgid ""
 msgstr ""
 
 #. module: approval
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
-msgid "Security Group"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__group_approval__exclusive
-msgid "Security group"
-msgstr ""
-
-#. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_category.py:0
-msgid ""
-"Security group '%(group)s' has no members. Add users to the group or change "
-"the approval mode."
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,help:approval.field_approval_category__allowed_group_ids
 msgid ""
 "Security groups whose members can create requests for this category. Leave "
@@ -4440,7 +4147,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:approval.field_approval_approver__sequence
 #: model:ir.model.fields,field_description:approval.field_approval_binding__sequence
 #: model:ir.model.fields,field_description:approval.field_approval_category__sequence
-#: model:ir.model.fields,field_description:approval.field_approval_category_approver__sequence
 #: model:ir.model.fields,field_description:approval.field_approval_category_step__sequence
 #: model:ir.model.fields,field_description:approval.field_approval_category_step_member__sequence
 #: model:ir.model.fields,field_description:approval.field_approval_refusal_reason__sequence
@@ -4947,12 +4653,6 @@ msgid ""
 msgstr ""
 
 #. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_category_conversion.py:0
-msgid "The category already routes by steps."
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,help:approval.field_approval_category__kanban_dashboard
 msgid ""
 "The counters the category kanban card renders. A Json field, not Text "
@@ -5002,6 +4702,13 @@ msgstr ""
 #. module: approval
 #: model:ir.model.fields,help:approval.field_approval_category_step_member__sequence
 msgid "The member's place when the step's members decide in order."
+msgstr ""
+
+#. module: approval
+#: model:ir.model.fields,help:approval.field_approval_category__step_ids
+msgid ""
+"The pools a request of this category must pass, each needing its own "
+"approvals. Every request routes by the steps whose condition it meets."
 msgstr ""
 
 #. module: approval
@@ -5381,11 +5088,9 @@ msgstr ""
 #: model:ir.model,name:approval.model_res_users
 #: model:ir.model.fields,field_description:approval.field_approval_approver__user_id
 #: model:ir.model.fields,field_description:approval.field_approval_binding_observation__user_id
-#: model:ir.model.fields,field_description:approval.field_approval_category_approver__user_id
 #: model:ir.model.fields,field_description:approval.field_approval_category_step_member__user_id
 #: model:ir.model.fields,field_description:approval.field_approval_decision_wizard__user_id
 #: model:ir.model.fields,field_description:approval.field_approval_request__user_ids
-#: model_terms:ir.ui.view,arch_db:approval.view_approval_category_form
 msgid "User"
 msgstr ""
 
@@ -5411,23 +5116,6 @@ msgstr ""
 #. module: approval
 #: model:ir.model.fields,help:approval.field_approval_delegate_wizard__user_id
 msgid "User whose approvals will be delegated"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields.selection,name:approval.selection__approval_category__group_approval__no
-msgid "Users"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_category__approver_group_id
-msgid "Users in this security group can approve requests for this category"
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_rule__approver_ids
-msgid ""
-"Users to add as approvers when condition is met. Only used for 'Add "
-"Approver' action type."
 msgstr ""
 
 #. module: approval
@@ -5516,13 +5204,6 @@ msgid "Warn when this percentage of SLA time has elapsed"
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,help:approval.field_approval_category__steps_conversion_blockers
-msgid ""
-"What keeps this category's approvers and routing rules from being rewritten "
-"as steps that route every request the same. Empty when it can."
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,help:approval.field_approval_binding__mode
 msgid ""
 "What the binding does when it applies:\n"
@@ -5556,11 +5237,10 @@ msgid ""
 "\n"
 "        • Numeric threshold: a normalized figure on the request itself\n"
 "          (amount, quantity, date range, priority). Amounts are converted into\n"
-"          the rule's currency before comparison, and overlapping bands of\n"
-"          'Replace Approvers' rules are rejected outright.\n"
+"          the rule's currency before comparison, and overlapping auto-approve\n"
+"          and auto-refuse bands are rejected outright.\n"
 "        • Source document domain: a domain evaluated against the document the\n"
-"          request was raised for. Bands cannot be checked for overlap, so the\n"
-"          first match by sequence wins.\n"
+"          request was raised for.\n"
 "        • Source document field: a field on the source document equals a\n"
 "          value.\n"
 "\n"
@@ -5636,23 +5316,6 @@ msgid ""
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,help:approval.field_approval_category__group_approval
-msgid ""
-"Where the request's approvers come from:\n"
-"\n"
-"        • Users: approvers are the ones listed below (plus the\n"
-"          Employee's Manager and any matching tier, if configured)\n"
-"        • Security group: approvers are exactly the members of the selected\n"
-"          security group; the explicit user list is bypassed\n"
-"\n"
-"        Note:\n"
-"        - The 'Minimum Approval' field applies to all resulting approvers\n"
-"        - In 'Security group' mode approvers are ONLY the group members; the\n"
-"          explicit list, the Employee's Manager and tiers are all bypassed\n"
-"        - A user added by multiple mechanisms appears only once"
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,help:approval.field_mixin_approval__can_request_approval
 #: model:ir.model.fields,help:approval.field_mixin_approval_state_sync__can_request_approval
 msgid "Whether approval can be requested (all required fields filled)"
@@ -5664,17 +5327,12 @@ msgid "Whether current user can withdraw their approval on this request."
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,help:approval.field_approval_rule__approver_required
-msgid "Whether the added approvers are mandatory"
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,help:approval.field_approval_category__allow_self_approval
 #: model:ir.model.fields,help:approval.field_approval_request__allow_self_approval
 msgid ""
 "Whether the person asking may also decide their own request. Off, the "
-"requester is never asked and any decision they attempt is refused, on every "
-"routing path: listed approvers, the security group, rules and steps."
+"requester is never asked by any step and any decision they attempt is "
+"refused."
 msgstr ""
 
 #. module: approval
@@ -5791,23 +5449,10 @@ msgid "Whoever decides this step decides no other step on this record"
 msgstr ""
 
 #. module: approval
-#: model:ir.model.fields,field_description:approval.field_approval_category__steps_conversion_blockers
-msgid "Why It Cannot Convert"
-msgstr ""
-
-#. module: approval
 #: model:ir.model.fields,help:approval.field_approval_request__binding_replay_error
 msgid ""
 "Why the gated operation did not run after approval. The approval itself "
 "stands."
-msgstr ""
-
-#. module: approval
-#: model:ir.model.fields,help:approval.field_approval_category__notify_pool_members
-msgid ""
-"With a security group as approvers, ask every member with an activity and an"
-" e-mail. Off, the group is a queue: its members decide from To Review and "
-"nobody is notified individually."
 msgstr ""
 
 #. module: approval
@@ -6007,30 +5652,6 @@ msgstr ""
 #: code:addons/approval/models/approval_request_lifecycle.py:0
 msgid ""
 "You have to add at least %(count)d approver(s) to confirm your request."
-msgstr ""
-
-#. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_category.py:0
-msgid "You must select a security group when group approval is enabled."
-msgstr ""
-
-#. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_category.py:0
-msgid ""
-"Your minimum approval (%(minimum)d) exceeds the estimated default approvers "
-"(%(total)d). Note: This count assumes all request owners will have managers."
-" Users may need to add additional approvers when creating requests."
-msgstr ""
-
-#. module: approval
-#. odoo-python
-#: code:addons/approval/models/approval_category.py:0
-msgid ""
-"Your minimum approval (%(minimum)d) exceeds the total of default approvers "
-"(%(total)d). Users will need to manually add approvers when creating "
-"requests."
 msgstr ""
 
 #. module: approval

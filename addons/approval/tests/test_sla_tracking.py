@@ -3,7 +3,12 @@ from datetime import timedelta
 from odoo import fields
 from odoo.tests import common, tagged
 
-from .common import ApprovalCommon, new_trip_category, record_approval
+from .common import (
+    ApprovalCommon,
+    add_category_approver,
+    new_trip_category,
+    record_approval,
+)
 
 
 @tagged("post_install", "-at_install")
@@ -22,18 +27,12 @@ class TestSLATracking(common.TransactionCase):
         cls.category = new_trip_category(cls.env)
         cls.category.write(
             {
-                "approver_ids": [(5, 0, 0)],
                 "sla_target_hours": 24,
                 "sla_warning_pct": 80,
             }
         )
-        cls.env["approval.category.approver"].create(
-            {
-                "category_id": cls.category.id,
-                "user_id": cls.approver_user.id,
-                "required": True,
-                "sequence": 10,
-            }
+        add_category_approver(
+            cls.category, cls.approver_user, required=True, sequence=10
         )
 
     def _create_request(self, **kwargs):

@@ -1,6 +1,8 @@
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import common, tagged
 
+from odoo.addons.approval.tests.common import add_category_approver
+
 
 @tagged("post_install", "-at_install")
 class TestApprovalBindingReset(common.TransactionCase):
@@ -34,14 +36,7 @@ class TestApprovalBindingReset(common.TransactionCase):
                 "allow_self_approval": True,
             }
         )
-        cls.env["approval.category.approver"].create(
-            {
-                "category_id": cls.category.id,
-                "user_id": cls.approver.id,
-                "required": True,
-                "sequence": 10,
-            }
-        )
+        add_category_approver(cls.category, cls.approver, required=True, sequence=10)
 
     def tearDown(self):
         for wrapper, real in reversed(getattr(self, "_swapped_origins", [])):

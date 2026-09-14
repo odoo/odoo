@@ -8,7 +8,7 @@ from odoo import fields
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import common, tagged
 
-from .common import ApprovalCommon
+from .common import ApprovalCommon, add_category_approver
 
 
 @tagged("post_install", "-at_install")
@@ -43,13 +43,7 @@ class TestApprovalDelegation(common.TransactionCase):
             }
         )
 
-        cls.env["approval.category.approver"].create(
-            {
-                "user_id": cls.approver_user.id,
-                "category_id": cls.category.id,
-                "required": True,
-            }
-        )
+        add_category_approver(cls.category, cls.approver_user, required=True)
 
     def _create_pending_request(self):
         request = self.env["approval.request"].create(
@@ -913,7 +907,7 @@ class TestDelegationScopeIsLiveRequestsOnly(ApprovalCommon):
         category = self._make_category(
             name="Sequential Chain",
             approvers=[(self.approver_1, False, 10), (self.approver_2, False, 20)],
-            approve_sequentially=True,
+            in_order=True,
             approval_minimum=2,
         )
         request = self._prepare_request(category)

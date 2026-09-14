@@ -20,20 +20,6 @@
                 <field name="subject_domain" optional="hide" />
                 <field name="action_type" />
                 <field
-                    name="approver_ids"
-                    widget="many2many_tags"
-                    invisible="action_type not in ('add_approver', 'set_approvers')" />
-                <field
-                    name="approver_required"
-                    invisible="action_type not in ('add_approver', 'set_approvers')" />
-                <field
-                    name="approver_sequence"
-                    optional="hide"
-                    invisible="action_type != 'add_approver'" />
-                <field
-                    name="approval_minimum"
-                    invisible="action_type != 'set_approvers'" />
-                <field
                     name="company_id"
                     optional="hide"
                     groups="base.group_multi_company" />
@@ -108,17 +94,6 @@
                         <group>
                             <field name="action_type" widget="radio" />
                         </group>
-                        <group
-                            invisible="action_type not in ('add_approver', 'set_approvers')">
-                            <field name="approver_ids" widget="many2many_tags" />
-                            <field name="approver_required" />
-                            <field
-                                name="approver_sequence"
-                                invisible="action_type != 'add_approver'" />
-                            <field
-                                name="approval_minimum"
-                                invisible="action_type != 'set_approvers'" />
-                        </group>
                     </group>
                 </sheet>
             </form>
@@ -163,8 +138,8 @@
             <p class="o_view_nocontent_smiling_face">
                 Create your first conditional approval rule
             </p>
-            <p>Rules dynamically add approvers based on request attributes.
-            For example: "If amount exceeds 10,000, add CFO as required approver."</p>
+            <p>Rules decide a request outright or tell a step when it applies.
+            For example: "If amount exceeds 10,000, the Finance step applies."</p>
         </field>
     </record>
 

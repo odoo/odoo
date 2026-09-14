@@ -8,12 +8,7 @@ engine routes and decides a request, the application is how a person raises one.
 
 ```
 approval.category                       [inherits mixin.mail.thread, mixin.catalog]
-    +-- approver_ids -----> approval.category.approver
-    |                           +-- user_id -----> res.users
-    |                           +-- approver_ids -> res.users (m2m)
-    |                           +-- currency_id -> res.currency
     +-- rule_ids ---------> approval.rule      [inherits mixin.approval.threshold, mixin.approval.domain]
-    |                           +-- approver_ids -> res.users (m2m)
     |                           +-- currency_id -> res.currency
     |                           +-- subject_model_id -> ir.model
     +-- step_ids ---------> approval.category.step   [inherits mixin.approval.threshold, mixin.approval.domain]
@@ -25,7 +20,6 @@ approval.category                       [inherits mixin.mail.thread, mixin.catal
     +-- template_count ----> approval.template (o2m via category_id)   (approval_app)
     +-- allowed_user_ids --> res.users (m2m)
     +-- allowed_group_ids -> res.groups (m2m)
-    +-- approver_group_id -> res.groups
     +-- escalation_user_id -> res.users
     +-- automation_id ----> automation.rule   (approval_automation)
     +-- sequence_id ------> ir.sequence
@@ -135,25 +129,17 @@ so category names are unique per company, archived rows included.
 | `has_reference` | Selection | Yes | Yes | default="no", tracking *(added by `approval_app`)* |
 | `has_location` | Selection | Yes | Yes | default="no", tracking *(added by `approval_app`)* |
 | `has_document` | Selection(required/optional) | Yes | Yes | default="optional", tracking *(added by `approval_app`)* |
-| `group_approval` | Selection(`no`="Users" / `exclusive`="Security group") | Yes | Yes | default="no", tracking. Labelled "Approver Source". Only two values, so `!= "no"` and `== "exclusive"` are the same test in `_compute_desired_approvers` — in `exclusive` mode the category list, the manager hook and approver-replacing rules are all bypassed and the group's `all_user_ids` become the approvers, all optional |
-| `allow_self_approval` | Boolean | No | Yes | Whether the request owner may also decide. Off by default; categories existing at 19.0.2.1.0 were migrated to on |
-| `notify_pool_members` | Boolean | No | Yes | With a security group as approvers, whether each member gets an activity. Off, the group is a queue decided from To Review (`_is_notifiable`), though an approver a rule adds is still asked; group categories existing at 19.0.2.2.0 were migrated to on |
-| `approver_group_id` | Many2one(`res.groups`) | Yes | No | tracking |
-| `approver_group_user_ids` | Many2many(`res.users`) | No | No | related=approver_group_id.all_user_ids — members reachable through implied groups, not just direct ones |
+| `allow_self_approval` | Boolean | No | Yes | Whether the request owner may also decide; off, no step stages them. Off by default; categories existing at 19.0.2.1.0 were migrated to on |
 | `allowed_user_ids` | Many2many(`res.users`) | Yes | No | Gate request creation; also the `restricted_users` read audience |
 | `allowed_group_ids` | Many2many(`res.groups`) | Yes | No | Gate request creation; also the `restricted_groups` read audience |
 | `privacy_visibility` | Selection(private/restricted_users/restricted_groups/employees) | Yes | Yes | **default="private"**, tracking. Additive READ audience (ir.rule based) — the default adds NO audience beyond requester/approvers/delegates/managers |
-| `approval_minimum` | Integer | Yes | Yes | default=1, tracking |
+| `approval_minimum` | Integer | Yes | Yes | default=1, tracking. A request's minimum when none of the category's steps applies, and the minimum of a pool step `_add_approver` creates |
 | `approval_type` | Selection([general]) | Yes | No | tracking, extensible |
 | `target_model` | Selection([]) | Yes | No | tracking, extensible |
-| `approve_sequentially` | Boolean | Yes | No | tracking |
-| `approver_ids` | One2many(`approval.category.approver`) | Yes | No | |
 | `document_requirement_ids` | One2many(`approval.document.requirement`) | Yes | No | *(added by `approval_app`)* |
 | `rule_ids` | One2many(`approval.rule`) | Yes | No | |
 | `rule_count` | Integer | No | No | compute |
 | `template_count` | Integer | No | No | compute *(added by `approval_app`)* |
-| `invalid_minimum` | Boolean | No | No | compute |
-| `invalid_minimum_warning` | Char | No | No | compute |
 | `count_request_to_validate` | Integer | No | No | compute |
 | `color` | Integer | Yes | No | |
 | `kanban_dashboard` | Text | No | No | compute (JSON) |
@@ -166,7 +152,7 @@ so category names are unique per company, archived rows included.
 | `sla_warning_pct` | Integer | Yes | No | default=80, tracking |
 | `consent_approval_hours` | Integer | Yes | No | default=0, tracking |
 | `automation_id` | Many2one(`automation.rule`) | Yes | No | *(added by `approval_automation`)* |
-| `step_ids` | One2many(`approval.category.step`) | — | No | Declaring steps switches the category to step mode. Without steps, the flat `approver_ids` and `approval_minimum` apply exactly as before |
+| `step_ids` | One2many(`approval.category.step`) | — | No | Every request routes by the steps whose condition it meets. A category created where the context carries `approval_category_routes_by_steps` starts with an "Approvers" step counting approvers added by hand (`default_get`) |
 | `notify_sequentially` | Boolean | Yes | No | Step mode only. Every step may be decided at any time, but an approver is only asked — given an activity — once every earlier step is met. It orders the asking, not the deciding |
 | `activity_target` | Selection | Yes | No | string="Ask Approvers On", default `request`. `document` asks each approver on the request's source document, when it has one that holds activities; the activity still decides the request when done (it carries `approver_id`) |
 
@@ -177,20 +163,16 @@ so category names are unique per company, archived rows included.
 | `create()` | Always auto-creates the ir.sequence from sequence_code |
 | `write()` | Syncs sequence_code and company_id to ir.sequence |
 | `_compute_kanban_dashboard()` | Batched _read_group for dashboard JSON |
-| `_compute_minimum_validity()` | Validates minimum vs available approvers |
 | `create_request()` | Opens new request form with defaults |
 | `_get_view_request()` | Base helper for all dashboard view actions |
+| `_add_approver(user, required, sequence)` | Adds `user` as a member of the category's pool step, the first counting approvers added by hand, creating that step when the category has none |
 
 ### Constraints
 
 | Method | Rule |
 |--------|------|
-| `_constrains_approval_minimum` | minimum >= count(required approvers) |
-| `_constrains_approver_ids` | No duplicate users in approver list |
-| `_constrains_approve_sequentially` | Sequential requires minimum >= 1 |
-| `_constrains_consent_sequential` | Consent auto-approval cannot be combined with sequential approval |
-| `_constrains_approval_minimum_vs_group` | In `exclusive` mode the minimum cannot exceed the security group's member count — the group IS the approver list, so a higher minimum is unreachable |
-| `_constrains_group_approval` | Group approval requires a security group (with members in exclusive mode) |
+| `_constrains_approval_minimum` | minimum >= 1 |
+| `_constrains_consent_sequential` | Consent auto-approval cannot be combined with a step whose members decide in order |
 
 ### SQL constraints
 
@@ -198,27 +180,6 @@ so category names are unique per company, archived rows included.
 |------|------|
 | `_name_src_uniq` | `name` unique per `company_id` (redeclares `mixin.catalog`'s default whole-table index with a company scope; archived rows keep their name reserved) |
 | `_sequence_code_uniq` | `unique nulls not distinct (sequence_code, company_id)` |
-
----
-
-## approval.category.approver
-
-| Key | Value |
-|-----|-------|
-| Model | `approval.category.approver` |
-| File | `models/approval_category_approver.py` |
-| Type | Model |
-| Order | `sequence` |
-
-### Fields
-
-| Field | Type | Stored | Required | Key Attributes |
-|-------|------|--------|----------|----------------|
-| `category_id` | Many2one(`approval.category`) | Yes | Yes | ondelete=cascade |
-| `existing_user_ids` | Many2many(`res.users`) | No | No | compute |
-| `user_id` | Many2one(`res.users`) | Yes | Yes | ondelete=cascade, index |
-| `sequence` | Integer | Yes | No | default=10 |
-| `required` | Boolean | Yes | No | default=False |
 
 ---
 
@@ -279,11 +240,8 @@ so category names are unique per company, archived rows included.
 | `can_change_request_owner` | Boolean | No | No | compute |
 | `has_*` | Selection | No | No | 10 related fields from category *(added by `approval_app`)* (there is no `has_product` — see `approval_product`, and no `has_payment_method` since 19.0.1.0.26) |
 | `approval_minimum` | Integer | Yes | No | default=1, readonly, copy=True. Effective minimum (an approver-replacing rule's override, or the category default) |
-| `approve_sequentially` | Boolean | No | No | related |
-| `group_approval` | Selection | No | No | related |
 | `allow_self_approval` | Boolean | No | No | related to the category |
 | `decision_log_ids` | One2many(`approval.decision.log`) | No | No | compute_sudo; the decision history |
-| `approver_group_id` | Many2one | No | No | related |
 | `approval_type` | Selection | Yes | No | related, store |
 | `target_model` | Selection | Yes | No | related, store |
 | `approval_progress` | Float | No | No | compute |
@@ -335,7 +293,6 @@ State is a **stored computed field** based on `approver_ids.state`
 - Any approver `new` => `new`
 - approved_count >= `approval_minimum` (NOT clamped to len(approvers)) AND all required approved => `approved`
 - Otherwise => `pending`
-- `_constrains_steps_not_sequential`: a category with steps cannot also use `approve_sequentially` — sequencing individual approvers forbids a later step from deciding early, which steps allow; `notify_sequentially` orders them instead
 
 `refused` outranks `cancelled` so a real decision is never masked.
 `_TERMINAL_STATES = frozenset({"approved", "refused", "cancelled"})`
@@ -406,8 +363,8 @@ requester re-submits (`action_resubmit`).
 | `cron_auto_expire()` | escalation.py | **Cancel** (not refuse) requests past `auto_expire_hours` via `_force_terminal` |
 | `cron_consent_approval()` | escalation.py | Auto-approve after consent window; skips sequential categories, refused approvers, `pending_change_field`, `_can_consent_approve()` vetoes |
 | `_replay_bound_operation()` | Called from `_notify_if_terminal_transition` when a request becomes `approved`, AFTER `_notify_source_document_state_change`, so an adopter sees itself approved before the operation it gated runs. Hands off to `approval.binding._replay`; does nothing once `date_binding_replayed` is set, when the binding's `run_on_approval` is off, or while an invoking call is recording its own approval |
-| `_get_applicable_steps()` | The category's steps whose condition this request meets, in order. Routing stages one row per user over them instead of the flat approvers, group and replacement |
-| `_is_quorum_met(state_counts, threshold)` | Step mode when any row carries steps: every applicable step meets its quorum. Otherwise the flat `approval_minimum`, unchanged |
+| `_get_applicable_steps()` | The category's steps whose condition this request meets, in order. Routing stages one row per user over them |
+| `_is_quorum_met(state_counts, threshold)` | When any row carries steps: every applicable step meets its quorum. Otherwise (rows added by hand where no step applies) the request's `approval_minimum` |
 | `_get_step_counts()` / `_get_step_assignment()` | Approvals per step. An approved row counts toward every step its decision was given for (`decided_step_ids`). Only a row approved for several steps one of which is exclusive -- consent, an automatic rule -- is resolved here, toward the lowest step still short |
 | `_get_steps_for_decision(approver)` | The steps an approval naming none is given for: every undecided step of the row, or, beside an exclusive step, the first still short of its quorum (exclusive first within a sequence). Decided when taken, so who decided which step stays fixed as later approvals come in |
 | `_check_steps_decidable(approvers, steps)` | Studio's exclusivity for decisions that name steps: a step already decided by the row, or a second step beside an exclusive decided one, raises |
@@ -464,7 +421,7 @@ resolved by `_get_escalation_rules()`:
 | `required` | Boolean | Yes | No | default=False, readonly |
 | `pending_since` | Datetime | Yes | No | readonly, copy=False, index=btree_not_null. Stamped by `_stamp_pending_since` (from `create`/`write`, so all five promotion paths are covered) when the row ENTERS `pending`; cleared by reset-to-draft. With `decision_date` it gives each approver's OWN turnaround instead of the request's age since `date_confirmed` |
 | `source_synced` | Boolean | Yes | No | readonly, copy=False. Exact sync provenance since 19.0.1.0.13: set on every row `_sync_approvers` creates. A synced row whose source stopped producing it is DELETED on re-sync rather than kept as a phantom manual approver |
-| `source_rule_id` | Many2one(`approval.rule`) | Yes | No | readonly, copy=False, index=btree_not_null. Which `add_approver` rule injected this row |
+| `source_rule_id` | Many2one(`approval.rule`) | Yes | No | readonly, copy=False, index=btree_not_null. Which rule injected this row, on rows staged before 19.0.2.8.0; the sync still reads it as an automated source |
 | `decision_date` | Datetime | Yes | No | readonly, copy=False, index. Stamped by `_apply_decision` on a GENUINE approve/refuse; cleared on withdraw/reset. NULL for non-decision flips. Drives the performance analytics |
 | `decided_by_user_id` | Many2one(`res.users`) | Yes | No | readonly, copy=False, index. WHO exercised the slot (`user_id` is WHOSE it is) — the delegate inside an active delegation window. Stamped and cleared beside `decision_date`; both analytics consumers key on `COALESCE(decided_by_user_id, user_id)` |
 | `delegate_id` | Many2one(`res.users`) | Yes | No | check_company, copy=False |
@@ -520,7 +477,7 @@ so the comparison is never raw.
 | Method | Purpose |
 |--------|---------|
 | `_convert_request_amount(request)` | Converts `request.amount` from `request.currency_id` into this record's `currency_id` before any threshold comparison. Rate date is `request.date` → `request.date_confirmed` → today; rate company is `request.company_id` → the record's → `env.company`. Identity short-circuit when the currencies match |
-| `_intervals_overlap(bounds_a, bounds_b)` (static) | Half-open/closed-aware interval overlap, used by `approval.rule._check_replacement_overlap` and `_check_auto_action_conflict` |
+| `_intervals_overlap(bounds_a, bounds_b)` (static) | Half-open/closed-aware interval overlap, used by `approval.rule._check_auto_action_conflict` |
 
 ---
 
@@ -704,38 +661,30 @@ refusals), `refusal_reason_auto_rule` (auto-refuse rules),
 | `condition_field` | Selection(amount/quantity/date_range_days/priority) | Yes | No | required by `_check_condition_shape` for `threshold` rules only |
 | `operator` | Selection(gt/gte/lt/lte/eq/neq/between) | Yes | No | string="Comparison"; required for `threshold` rules only |
 | `threshold` | Float | Yes | No | `threshold` rules only. The lower bound (inclusive) when `operator` is `between`; for `priority`, 0=Low 1=Normal 2=High 3=Urgent |
-| `threshold_max` | Float | Yes | No | `between` only: the upper bound, EXCLUSIVE. 0 means unlimited, which is how the highest band is spelled |
+| `threshold_max` | Float | Yes | No | `between` only: the upper bound, EXCLUSIVE. 0 means unlimited |
 | `subject_model_id` | Many2one(`ir.model`) | Yes | No | ondelete=cascade. Required for `domain` and `field_selection`: the model the condition reads |
 | `subject_model_name` | Char | No | No | related `subject_model_id.model`. The domain editor in the form reads its fields from it: the widget takes a model name, and handed the many2one it crashed the form |
 | `subject_domain` | Char | Yes | No | `domain` rules: evaluated with `filtered_domain` against the source document; every dotted path is walked against the registry at save time |
 | `subject_field` | Char | Yes | No | `field_selection` rules: the field on the source model |
 | `subject_value` | Char | Yes | No | `field_selection` rules: compared as text against the raw value — a Selection's key, a Many2one's id |
-| `action_type` | Selection(add_approver/set_approvers/auto_approve/auto_refuse/condition) | Yes | Yes | default="add_approver". `condition` does nothing by itself: steps apply by it (`when_rule_ids`, `unless_rule_ids`), and while one does the rule can be neither archived, deleted nor given another action (`_check_no_step_reads_it`). `set_approvers` replaces the category's approvers AND its minimum; first match by sequence wins, and it is skipped entirely when the category draws approvers from a security group |
-| `approval_minimum` | Integer | Yes | No | default=1. `set_approvers` only: the minimum this band requires, overriding the category's |
-| `approver_ids` | Many2many(`res.users`) | Yes | No | |
-| `approver_required` | Boolean | Yes | No | default=True |
-| `approver_sequence` | Integer | Yes | No | default=5 |
+| `action_type` | Selection(auto_approve/auto_refuse/condition) | Yes | Yes | default="condition". `condition` does nothing by itself: steps apply by it (`when_rule_ids`, `unless_rule_ids`), and while one does the rule can be neither archived, deleted nor given another action (`_check_no_step_reads_it`). Rules that added or replaced approvers were retired in 19.0.2.8.0: a step names the approvers and applies by a condition |
 
 ### Constraints
 
 - `_name_category_uniq`: unique nulls not distinct (name, category_id, company_id)
-- `_check_approver_ids_required`: `add_approver`/`set_approvers` need at least one approver
-- `_check_approval_minimum`: `set_approvers` only — at least 1, and no more than the approvers the rule sets
 - `_check_range_bounds`: `threshold` rules with `between` only — the upper bound exceeds the lower one, or is 0 for unlimited
 - `_check_threshold`: `threshold` rules only — a `priority` threshold is one of 0, 1, 2, 3
 - `_check_condition_shape`: a `threshold` rule needs `condition_field` and `operator`; any other type needs `subject_model_id`, and every path its `subject_domain` or `subject_field` names must exist on that model. Refused at save time because a rule that never matches reads as "approval was not required"
-- `_check_replacement_overlap`: compares `threshold` rules only. A domain cannot be interval-checked, so two `domain` replacement rules may coexist and the first match by sequence wins
 
 ### Key Methods
 
 | Method | Purpose |
 |--------|---------|
-| `_evaluate(request)` | Dispatches on `condition_type` and is the only entry point. A band matcher that once called `_get_field_value` + `_compare` directly silently never matched a non-threshold rule |
+| `_evaluate(request)` | Dispatches on `condition_type` and is the only entry point |
 | `_get_subject(request)` | The source document, or False when it is absent, deleted, or not of `subject_model_id` |
 | `_evaluate_domain(request)` / `_evaluate_field_selection(request)` | The two source-document condition types |
 | `_get_field_value(request)` | Extract numeric value using match/case; `amount` goes through `_convert_request_amount()` so the comparison happens in the rule's currency |
 | `_compare(value, threshold)` | Apply operator |
-| `_get_approver_tuples()` | Return (user_id, required, sequence) list |
 
 ---
 
@@ -968,11 +917,10 @@ question the table answers needs the breakdown rather than a total.
 | Order | `category_id, sequence, id` |
 
 One step of a category's approval: a pool of users, and how many of them must
-approve. The flat model — one approver list and one request-wide minimum —
-cannot tell two steps that each need one of two people from one step that needs
-two: a minimum of 2 accepts both approvals from the first. That is exactly what a
-Studio approval rule is. A category that needs steps declares them, and one that
-does not is left as it was.
+approve. One approver list and one request-wide minimum cannot tell two steps that
+each need one of two people from one step that needs two: a minimum of 2 accepts
+both approvals from the first. That is exactly what a Studio approval rule is, and
+since 19.0.2.8.0 every category routes by steps.
 
 ### Fields
 
@@ -987,9 +935,9 @@ does not is left as it was.
 | `member_ids` | One2many(`approval.category.step.member`) | — | No | the step's named users |
 | `group_id` | Many2one(`res.groups`) | Yes | No | its members join the pool too — the union Studio's `approver_ids` / `approval_group_id` pair expresses |
 | `exclusive` | Boolean | Yes | No | an approval counting toward this step counts toward no other step of the request, and the other way round |
-| `asks_group_members` | Boolean | Yes | No | Every user of `group_id` is asked (`_is_notifiable`), as `notify_pool_members` asks a security group's members. Off, the group is a queue and only listed members are asked. The conversion copies `notify_pool_members` onto a group category's step |
-| `counts_added_approvers` | Boolean | Yes | No | Approvers added by hand to a request (rows routing did not stage, `source_synced` False) join the step at sync: they are asked (`_is_notifiable`), may decide it, count toward its quorum, and count into its pool at confirm (`_check_steps_can_be_met`). The conversion sets it on every pool, group and in-order step, since the approver list counted them toward the minimum |
-| `in_order` | Boolean | Yes | No | string="Members Decide in Order". Only the member whose turn it is (`approval.request._get_step_turn_row`: the first, by member `sequence`, whose row has not approved the step) is asked and may decide; `_check_step_turn` refuses the others and `_get_steps_for_decision` leaves the step out of their decision. The step's quorum ends the chain. Rows are ordered by member `sequence`, and an added approver by its own row `sequence`, as the approver list ordered them. A step is also unmet while a member marked `required` (`approval.category.step.member.required`) has not approved it (`_get_step_required_rows_pending`). This is the step form of the flat `approve_sequentially`. The users an approver path names stand at `subject_user_sequence` in the order, and `subject_user_required` makes the step wait for them; `_check_in_order_pool` refuses a group on such a step, whose users have no place in the order |
+| `asks_group_members` | Boolean | Yes | No | Every user of `group_id` is asked (`_is_notifiable`). Off, the group is a queue and only listed members are asked |
+| `counts_added_approvers` | Boolean | Yes | No | Approvers added by hand to a request (rows routing did not stage, `source_synced` False) join the step at sync: they are asked (`_is_notifiable`), may decide it, count toward its quorum, and count into its pool at confirm (`_check_steps_can_be_met`). Migration 2.8 set it on every step it built from an approver list, since the list counted them toward the minimum |
+| `in_order` | Boolean | Yes | No | string="Members Decide in Order". Only the member whose turn it is (`approval.request._get_step_turn_row`: the first, by member `sequence`, whose row has not approved the step) is asked and may decide; `_check_step_turn` refuses the others and `_get_steps_for_decision` leaves the step out of their decision. The step's quorum ends the chain. Rows are ordered by member `sequence`, and an added approver by its own row `sequence`, as the approver list ordered them. A step is also unmet while a member marked `required` (`approval.category.step.member.required`) has not approved it (`_get_step_required_rows_pending`). The users an approver path names stand at `subject_user_sequence` in the order, and `subject_user_required` makes the step wait for them; `_check_in_order_pool` refuses a group on such a step, whose users have no place in the order |
 | `advisory` | Boolean | Yes | No | The step's approvers are asked (its unmet advisory steps are open beside the lowest blocking step) and their decisions recorded, but it decides nothing: `_is_quorum_met` reads `_get_blocking_unmet_steps()`, a row refused only for advisory steps (`approval.approver._is_advisory_only()`) is no deciding refusal (`_get_deciding_refusals()`) and flips no other row, progress is reported for blocking steps only, and confirmation does not need an advisory step's pool. The ECO's optional and comment roles |
 | `notify_user_ids` | Many2many(`res.users`) | Yes | No | posted an internal note when an approver of this step decides |
 | `subject_model_id` | Many2one(`ir.model`) | Yes | No | the model the condition and the approver path read; required when `subject_domain` or `subject_user_path` is set. **`approval.request` means the request itself** (`_get_subject`): its domain and path read the request, so a request raised with no source document can still name approvers, as approval_hr names the requester's manager through `requester_manager_user_id`. The document's own approver policy still filters the pool |

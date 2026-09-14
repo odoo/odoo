@@ -9,8 +9,6 @@ from . import (
     approval_binding_editor,
     approval_binding_observation,
     approval_category,
-    approval_category_approver,
-    approval_category_conversion,
     approval_category_step,
     mixin_approval,
     mixin_approval_state_sync,

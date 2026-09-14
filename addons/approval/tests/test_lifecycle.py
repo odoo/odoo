@@ -306,7 +306,7 @@ class TestDelegationPaths(ApprovalCommon):
                 (self.approver_2, True, 20),
                 (self.manager_user, False, 30),
             ],
-            approve_sequentially=True,
+            in_order=True,
         )
         request = self._prepare_request(category)
         rows = request.approver_ids.sorted("sequence")

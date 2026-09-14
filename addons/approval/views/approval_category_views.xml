@@ -272,7 +272,6 @@
                         invisible="active"
                         bg_color="text-bg-danger" />
                     <field name="active" invisible="1" />
-                    <field name="invalid_minimum" invisible="1" />
                     <field
                         name="image"
                         widget="image"
@@ -303,59 +302,10 @@
                     <notebook>
                         <page name="approvers" string="Approvers">
                             <group name="approvers_settings_group">
-                                <group name="approvers_source" string="Approver Source">
-                                    <field
-                                        name="group_approval"
-                                        string="Based on"
-                                        widget="radio" />
-                                    <field
-                                        name="approver_group_id"
-                                        string="Security Group"
-                                        invisible="group_approval == 'no'"
-                                        required="group_approval != 'no'" />
-                                </group>
                                 <group name="approvers_settings" string="Requirements">
                                     <field name="approval_minimum" />
-                                    <div
-                                        class="text-warning d-flex align-items-center gap-2"
-                                        colspan="2"
-                                        invisible="not invalid_minimum">
-                                        <span
-                                            class="fa-solid fa-triangle-exclamation"
-                                            title="Invalid minimum approvals" />
-                                        <field
-                                            name="invalid_minimum_warning"
-                                            nolabel="1"
-                                            class="mb-0" />
-                                    </div>
-                                    <field
-                                        name="approve_sequentially"
-                                        invisible="approval_minimum == 0 or group_approval != 'no'" />
                                     <field name="allow_self_approval" />
-                                    <field
-                                        name="notify_pool_members"
-                                        invisible="group_approval != 'exclusive'" />
                                 </group>
-                            </group>
-                            <group
-                                name="approvers_list"
-                                string="Default Approvers"
-                                invisible="group_approval == 'exclusive'">
-                                <field name="approver_ids" colspan="2" nolabel="1" />
-                            </group>
-                            <group
-                                name="group_members_list"
-                                string="Group Members"
-                                invisible="group_approval == 'no'">
-                                <field
-                                    name="approver_group_user_ids"
-                                    colspan="2"
-                                    nolabel="1"
-                                    readonly="1">
-                                    <list>
-                                        <field name="name" string="User" />
-                                    </list>
-                                </field>
                             </group>
                             <group name="conditional_rules" string="Conditional Rules">
                                 <field
@@ -373,16 +323,6 @@
                                             name="threshold_max"
                                             invisible="operator != 'between'" />
                                         <field name="action_type" />
-                                        <field
-                                            name="approver_ids"
-                                            widget="many2many_tags"
-                                            invisible="action_type not in ('add_approver', 'set_approvers')" />
-                                        <field
-                                            name="approver_required"
-                                            invisible="action_type not in ('add_approver', 'set_approvers')" />
-                                        <field
-                                            name="approval_minimum"
-                                            invisible="action_type != 'set_approvers'" />
                                     </list>
                                 </field>
                             </group>

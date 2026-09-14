@@ -156,35 +156,6 @@ class TestApproverUniquenessIsEnforcedInTheDatabase(ApprovalCommon):
             ).create({"request_id": request.id, "user_id": self.approver_1.id})
             self.env.flush_all()
 
-    def test_duplicate_category_approvers_are_rejected_on_direct_create(self):
-        category = self._make_category("A4 dup cat")
-        self.env["approval.category.approver"].create(
-            {"category_id": category.id, "user_id": self.approver_1.id},
-        )
-        with self.assertRaises(IntegrityError), mute_logger("odoo.db.cursor"):
-            self.env["approval.category.approver"].create(
-                {"category_id": category.id, "user_id": self.approver_1.id},
-            )
-            self.env.flush_all()
-
-    def test_category_minimum_is_checked_when_children_are_created_directly(self):
-        category = self._make_category("A4 minimum", approval_minimum=1)
-        self.env["approval.category.approver"].create(
-            {
-                "category_id": category.id,
-                "user_id": self.approver_1.id,
-                "required": True,
-            },
-        )
-        with self.assertRaises(ValidationError):
-            self.env["approval.category.approver"].create(
-                {
-                    "category_id": category.id,
-                    "user_id": self.approver_2.id,
-                    "required": True,
-                },
-            )
-
 
 @tagged("post_install", "-at_install")
 class TestTerminalDateStamps(ApprovalCommon):

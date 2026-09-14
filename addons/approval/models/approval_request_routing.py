@@ -38,22 +38,10 @@ class ApprovalRequestRouting(models.Model):
             "category_name": cat.name,
             "approval_minimum": cat.approval_minimum,
             "approval_type": cat.approval_type,
-            "approve_sequentially": cat.approve_sequentially,
-            "group_approval": cat.group_approval,
             "allow_self_approval": cat.allow_self_approval,
-            "notify_pool_members": cat.notify_pool_members,
             "approval_deadline_hours": cat.approval_deadline_hours,
             "sla_target_hours": cat.sla_target_hours,
             "sla_warning_pct": cat.sla_warning_pct,
-            "approvers": [
-                {
-                    "user_id": a.user_id.id,
-                    "user_name": a.user_id.name,
-                    "required": a.required,
-                    "sequence": a.sequence,
-                }
-                for a in cat.approver_ids
-            ],
             "rules": [
                 {
                     "name": r.name,
@@ -94,7 +82,6 @@ class ApprovalRequestRouting(models.Model):
             "prepared",
             request=self.id,
             category=cat.id,
-            approvers=len(snapshot["approvers"]),
             rules=len(snapshot["rules"]),
             steps=len(snapshot["steps"]),
             effective=len(snapshot["effective_approvers"]),
@@ -133,7 +120,7 @@ class ApprovalRequestRouting(models.Model):
     def _applied_rule_ids_after_sync(self, matched_rules):
         self.check_singleton()
         preserved = self.applied_rule_ids.filtered(
-            lambda r: r.action_type not in ("add_approver", "condition"),
+            lambda r: r.action_type != "condition",
         )
         kept = preserved | matched_rules
         trace.RULES.event(
@@ -276,9 +263,6 @@ class ApprovalRequestRouting(models.Model):
     def _get_sequence_manager(self) -> int:
         return self._get_sequence_param("manager", 9)
 
-    def _get_sequence_replacement(self) -> int:
-        return self._get_sequence_param("tier", 10)
-
     def _merge_approver_to_staging(
         self,
         staging: dict[int, dict],
@@ -310,7 +294,6 @@ class ApprovalRequestRouting(models.Model):
         self = self.filtered(lambda r: r.state == "new")
         if not self:
             return
-        self.category_id._route_by_steps_on_first_use()
         minimum_updates: dict[int, int] = {}
         rows_to_delete: list[int] = []
         rows_to_create: list[dict[str, Any]] = []
@@ -432,65 +415,6 @@ class ApprovalRequestRouting(models.Model):
                 continue
             added |= request._reroute_steps_live(request._compute_desired_approvers())
         return added
-
-    def _adopt_list_routing_into_steps(self) -> bool:
-        self.check_singleton()
-        if (
-            self.state != "pending"
-            or self.approver_ids.step_ids
-            or not self.category_id.step_ids
-        ):
-            trace.STEPS.event(
-                "adoption_skipped",
-                request=self.id,
-                state=self.state,
-                routed_by_steps=bool(self.approver_ids.step_ids),
-                category_steps=len(self.category_id.step_ids),
-            )
-            return False
-        desired = self._compute_desired_approvers()
-        adopted = self.env["approval.approver"]
-        for row in self.approver_ids:
-            vals = desired.staging.get(row.user_id.id)
-            if vals is None:
-                continue
-            row_vals = {
-                "step_ids": [Command.set(vals["step_ids"])],
-                "required": vals["required"],
-                "sequence": vals["sequence"],
-                "source_synced": vals.get("source_synced", True),
-            }
-            if row.state == "approved":
-                row_vals["decided_step_ids"] = [Command.set(vals["step_ids"])]
-            if row.state == "waiting":
-                row_vals["flow_state"] = "pending"
-            row.sudo().write(row_vals)
-            adopted |= row
-        created = self._create_live_approver_rows(desired.to_create)
-        for row in created:
-            row.write(
-                {
-                    "step_ids": [
-                        Command.set(desired.to_create[row.user_id.id]["step_ids"])
-                    ]
-                }
-            )
-        steps = self._get_applicable_steps()
-        self.sudo().approval_minimum = sum(steps.mapped("minimum"))
-        self.invalidate_recordset()
-        trace.STEPS.note(
-            "list_routing_adopted",
-            request=self.id,
-            adopted=adopted.ids,
-            kept=(self.approver_ids - adopted - created).ids,
-            created=created.ids,
-        )
-        self.approver_ids.filtered(
-            lambda row: row.state == "pending"
-        )._create_activity()
-        self._refresh_turn_states()
-        self._retire_unasked_approval_activities()
-        return True
 
     def _reroute_steps_live(self, desired) -> models.BaseModel:
         self.check_singleton()

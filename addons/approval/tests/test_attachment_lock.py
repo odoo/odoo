@@ -1,6 +1,8 @@
 from odoo.exceptions import UserError
 from odoo.tests import common, tagged
 
+from odoo.addons.approval.tests.common import add_category_approver
+
 
 @tagged("post_install", "-at_install")
 class TestAttachmentUnlinkProtection(common.TransactionCase):
@@ -26,13 +28,7 @@ class TestAttachmentUnlinkProtection(common.TransactionCase):
             }
         )
 
-        cls.env["approval.category.approver"].create(
-            {
-                "user_id": cls.approver_user.id,
-                "category_id": cls.category.id,
-                "required": True,
-            }
-        )
+        add_category_approver(cls.category, cls.approver_user, required=True)
 
     def _draft_request_with_attachment(self, name):
         request = self.env["approval.request"].create(

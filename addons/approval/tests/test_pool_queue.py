@@ -1,7 +1,7 @@
 from odoo.fields import Command
 from odoo.tests import tagged
 
-from .common import ApprovalCommon
+from .common import ApprovalCommon, pool_step
 
 
 @tagged("post_install", "-at_install")
@@ -19,15 +19,15 @@ class TestPoolQueue(ApprovalCommon):
             }
         )
 
-    def _pool_request(self, **category_vals):
+    def _pool_request(self, **step_vals):
         category = self.env["approval.category"].create(
             {
                 "name": "Pool Category",
                 "sequence_code": self._next_sequence_code(),
                 "approval_minimum": 1,
-                "group_approval": "exclusive",
-                "approver_group_id": self.group.id,
-                **category_vals,
+                "step_ids": pool_step(
+                    [], minimum=1, group_id=self.group.id, **step_vals
+                ),
             }
         )
         return self._prepare_request(category)
@@ -51,7 +51,7 @@ class TestPoolQueue(ApprovalCommon):
         self.assertEqual(request.state, "approved")
 
     def test_a_category_may_still_ask_every_member(self):
-        request = self._pool_request(notify_pool_members=True)
+        request = self._pool_request(asks_group_members=True)
         self.assertEqual(
             self._activities(request).user_id, self.approver_1 | self.approver_2
         )

@@ -6,7 +6,12 @@ from freezegun import freeze_time
 from odoo import fields
 from odoo.tests import common, tagged
 
-from .common import ApprovalCommon, isolate_group_approval_manager, record_approval
+from .common import (
+    ApprovalCommon,
+    add_category_approver,
+    isolate_group_approval_manager,
+    record_approval,
+)
 from .common import isolate_group_approval_manager as _isolate_group_approval_manager
 from odoo.addons.approval.models import approval_request_escalation
 
@@ -53,19 +58,11 @@ class TestDeadlineEscalation(common.TransactionCase):
             }
         )
 
-        self.env["approval.category.approver"].create(
-            {
-                "user_id": self.approver_user.id,
-                "category_id": self.category_with_deadline.id,
-                "required": True,
-            }
+        add_category_approver(
+            self.category_with_deadline, self.approver_user, required=True
         )
-        self.env["approval.category.approver"].create(
-            {
-                "user_id": self.approver_user.id,
-                "category_id": self.category_no_deadline.id,
-                "required": True,
-            }
+        add_category_approver(
+            self.category_no_deadline, self.approver_user, required=True
         )
 
     def test_approval_deadline_calculation(self):
@@ -499,12 +496,8 @@ class TestDeadlineEscalation(common.TransactionCase):
         # reassigning the first one: the successor it would pick is already an
         # approver, so the archived one stays pending. That is the shape a
         # stalled approver actually has in production.
-        self.env["approval.category.approver"].create(
-            {
-                "user_id": self.escalation_user.id,
-                "category_id": self.category_with_deadline.id,
-                "required": False,
-            }
+        add_category_approver(
+            self.category_with_deadline, self.escalation_user, required=False
         )
         confirmed_at = "2026-01-05 08:00:00"
         request = self._make_urgent_pending_request(confirmed_at)
@@ -658,13 +651,7 @@ class TestEscalationHookDefaults(common.TransactionCase):
                 "approval_deadline_hours": 24,
             }
         )
-        self.env["approval.category.approver"].create(
-            {
-                "user_id": self.approver_user.id,
-                "category_id": self.category.id,
-                "required": True,
-            }
-        )
+        add_category_approver(self.category, self.approver_user, required=True)
 
     def _make_pending_request(self, confirmed_at="2025-10-16 10:00:00", priority="1"):
         request = self.env["approval.request"].create(

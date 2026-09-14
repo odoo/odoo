@@ -1,7 +1,7 @@
 from odoo import fields
 from odoo.tests import common, tagged
 
-from .common import ApprovalCommon, new_trip_category
+from .common import ApprovalCommon, add_category_approver, new_trip_category
 
 
 @tagged("post_install", "-at_install")
@@ -20,17 +20,11 @@ class TestApprovalInsights(common.TransactionCase):
         cls.category = new_trip_category(cls.env)
         cls.category.write(
             {
-                "approver_ids": [(5, 0, 0)],
                 "approval_minimum": 1,
             }
         )
-        cls.env["approval.category.approver"].create(
-            {
-                "category_id": cls.category.id,
-                "user_id": cls.approver_user.id,
-                "required": True,
-                "sequence": 10,
-            }
+        add_category_approver(
+            cls.category, cls.approver_user, required=True, sequence=10
         )
 
     def _create_request(self, **kwargs):
@@ -96,16 +90,14 @@ class TestApprovalInsights(common.TransactionCase):
         self.assertIsInstance(snapshot, dict)
         self.assertEqual(snapshot["category_name"], self.category.name)
         self.assertEqual(snapshot["approval_minimum"], self.category.approval_minimum)
-        self.assertEqual(
-            snapshot["approve_sequentially"],
-            self.category.approve_sequentially,
-        )
 
-    def test_snapshot_preserves_approver_list(self):
+    def test_snapshot_preserves_the_steps_and_who_they_ask(self):
         request = self._create_request(amount=100.0)
         request.action_confirm()
 
-        approvers = request.category_snapshot["approvers"]
+        (step,) = request.category_snapshot["steps"]
+        self.assertEqual(step["members"], [self.approver_user.id])
+        approvers = request.category_snapshot["effective_approvers"]
         self.assertEqual(len(approvers), 1)
         self.assertEqual(approvers[0]["user_id"], self.approver_user.id)
         self.assertTrue(approvers[0]["required"])
