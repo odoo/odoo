@@ -11,7 +11,11 @@ from odoo.exceptions import ValidationError
 
 class L10n_Eg_EdiThumbDrive(models.Model):
     _name = "l10n_eg_edi.thumb.drive"
+    _inherit = ["mixin.credential.holder"]
     _description = "Thumb drive used to sign invoices in Egypt"
+    _credential_holder_field = "drive_credential_id"
+    _credential_purpose = "l10n_eg_edi:thumb_drive"
+    _CREDENTIAL_FIELDS = {"access_token": "access_token"}
 
     user_id = fields.Many2one(
         comodel_name="res.users",
@@ -28,7 +32,19 @@ class L10n_Eg_EdiThumbDrive(models.Model):
         string="ETA USB Pin",
         required=True,
     )
-    access_token = fields.Char(required=True)
+    access_token = fields.Char(
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
+        required=True,
+    )
+    drive_credential_id = fields.Many2one(
+        comodel_name="credential.credential",
+        string="Credential",
+        copy=False,
+        ondelete="restrict",
+        groups="base.group_system",
+        help="Holds this drive's access token.",
+    )
 
     _user_drive_uniq = models.Constraint(
         "unique (user_id, company_id)",

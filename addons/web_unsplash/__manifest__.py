@@ -1,12 +1,13 @@
 {
     "name": "Unsplash Image Library",
-    "version": "1.1",
+    "version": "1.2",
     "category": "Hidden",
     "summary": "Find free high-resolution images from Unsplash",
     "description": "Explore the free high-resolution image library of Unsplash.com and find images to use in Odoo. An Unsplash search bar is added to the image library modal.",
     "author": "Odoo S.A.",
     "license": "LGPL-3",
     "depends": [
+        "credential",
         "html_editor",
     ],
     "data": [

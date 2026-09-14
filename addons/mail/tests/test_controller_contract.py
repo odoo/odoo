@@ -419,7 +419,7 @@ class TestMailControllerContract(MailControllerCommon):
         self.assertTrue(result, "the well-formed params around them are answered")
 
     def test_gif_search_sends_no_absent_parameter(self):
-        self.env["ir.config_parameter"].sudo().set_param(
+        self.env["credential.credential"]._set_system_secret(
             "discuss.klipy_api_key", "test-key"
         )
         self.authenticate("contract_user", "contract_user")

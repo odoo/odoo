@@ -1,6 +1,6 @@
 {
     "name": "Events Organization",
-    "version": "1.12",
+    "version": "1.13",
     "category": "Marketing/Events",
     "summary": "Trainings, Conferences, Meetings, Exhibitions, Registrations",
     "description": """
@@ -19,6 +19,7 @@ Key Features
     "website": "https://www.odoo.com/app/events",
     "license": "LGPL-3",
     "depends": [
+        "credential",
         "barcodes",
         "mail",
         "phone_validation",

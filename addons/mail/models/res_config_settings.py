@@ -44,7 +44,7 @@ class ResConfigSettings(models.TransientModel):
     )
     twilio_account_token = fields.Char(
         string="Account Auth Token",
-        config_parameter="mail.twilio_account_token",
+        secret_parameter="mail.twilio_account_token",
     )
     use_sfu_server = fields.Boolean(
         string="Use SFU server",
@@ -57,7 +57,7 @@ class ResConfigSettings(models.TransientModel):
     )
     sfu_server_key = fields.Char(
         string="SFU Server key",
-        config_parameter="mail.sfu_server_key",
+        secret_parameter="mail.sfu_server_key",
         help="Base64 encoded key",
     )
     email_primary_color = fields.Char(
@@ -71,13 +71,13 @@ class ResConfigSettings(models.TransientModel):
 
     tenor_api_key = fields.Char(
         string="Klipy API key",
-        config_parameter="discuss.klipy_api_key",
+        secret_parameter="discuss.klipy_api_key",
         help="Add a Klipy GIF API key to enable GIFs support. https://docs.klipy.com/getting-started\n"
         "If you were using a Tenor GIF API key (service shutdown on June 30, 2026), please replace it here with a Klipy GIF API key",
     )
     google_translate_api_key = fields.Char(
         string="Message Translation API Key",
-        config_parameter="mail.google_translate_api_key",
+        secret_parameter="mail.google_translate_api_key",
         help="A valid Google API key is required to enable message translation. https://cloud.google.com/translate/docs/setup",
     )
 

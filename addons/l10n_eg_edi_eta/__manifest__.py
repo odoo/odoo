@@ -1,6 +1,6 @@
 {
     "name": "Egypt E-Invoicing",
-    "version": "0.3",
+    "version": "0.4",
     "category": "Accounting/Localizations/EDI",
     "summary": "Egypt Tax Authority Invoice Integration",
     "description": """

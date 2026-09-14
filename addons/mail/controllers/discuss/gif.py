@@ -35,7 +35,9 @@ class DiscussGifController(Controller):
 
     def _api_key(self) -> str:
         return (
-            request.env["ir.config_parameter"].sudo().get_param("discuss.klipy_api_key")
+            request.env["credential.credential"]._get_system_secret(
+                "discuss.klipy_api_key"
+            )
             or ""
         )
 

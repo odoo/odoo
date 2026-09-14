@@ -124,9 +124,13 @@ CONNECTION_ERROR_MESSAGES = (
 
 class FetchmailServer(models.Model):
     _name = "fetchmail.server"
+    _inherit = ["mixin.credential.holder"]
     _description = "Incoming Mail Server"
     _order = "priority"
     _email_field = "user"
+    _credential_holder_field = "server_credential_id"
+    _credential_purpose = "mail:fetchmail"
+    _CREDENTIAL_FIELDS = {"password": "password"}
 
     name = fields.Char(required=True)
     active = fields.Boolean(default=True)
@@ -206,7 +210,20 @@ class FetchmailServer(models.Model):
         string="Username",
         groups="base.group_system",
     )
-    password = fields.Char(groups="base.group_system")
+    password = fields.Char(
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
+        copy=True,
+        groups="base.group_system",
+    )
+    server_credential_id = fields.Many2one(
+        comodel_name="credential.credential",
+        string="Credential",
+        copy=False,
+        ondelete="restrict",
+        groups="base.group_system",
+        help="Holds this server's password.",
+    )
     object_id: IrModel = fields.Many2one(
         comodel_name="ir.model",
         string="Create a New Record",

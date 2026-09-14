@@ -80,8 +80,8 @@ class IrHttp(models.AbstractModel):
                  bad_request: The request is invalid or malformed.
         :rtype: str
         """
-        private_key = (
-            request.env["ir.config_parameter"].sudo().get_param("recaptcha_private_key")
+        private_key = request.env["credential.credential"]._get_system_secret(
+            "recaptcha_private_key"
         )
         if not private_key:
             return "no_secret"

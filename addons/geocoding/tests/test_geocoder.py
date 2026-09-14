@@ -104,7 +104,7 @@ class TestGeocoderEdges(TransactionCase):
 
     def test_googlemap_force_country_resolves_to_iso_code(self):
         """`force_country` is resolved to its ISO code for Google's `components` filter."""
-        self.env["ir.config_parameter"].sudo().set_param(
+        self.env["credential.credential"]._set_system_secret(
             "geocoding.google_map_api_key", "fake-key"
         )
         response = MagicMock()
@@ -123,7 +123,7 @@ class TestGeocoderEdges(TransactionCase):
 
     def test_googlemap_force_country_unknown_name_falls_back(self):
         """An unmatched `force_country` name is passed through as-is (no worse than before)."""
-        self.env["ir.config_parameter"].sudo().set_param(
+        self.env["credential.credential"]._set_system_secret(
             "geocoding.google_map_api_key", "fake-key"
         )
         response = MagicMock()
@@ -150,7 +150,7 @@ class TestGeocoderEdges(TransactionCase):
 
     def test_googlemap_non_200_raises_query_error(self):
         """A non-200 Gmaps response fails fast instead of being trusted as JSON."""
-        self.env["ir.config_parameter"].sudo().set_param(
+        self.env["credential.credential"]._set_system_secret(
             "geocoding.google_map_api_key", "fake-key"
         )
         response = MagicMock()
@@ -164,7 +164,7 @@ class TestGeocoderEdges(TransactionCase):
 
     def test_googlemap_empty_results_degrades_to_none(self):
         """`status: OK` with an empty `results` list is a normal "no match", not a crash."""
-        self.env["ir.config_parameter"].sudo().set_param(
+        self.env["credential.credential"]._set_system_secret(
             "geocoding.google_map_api_key", "fake-key"
         )
         response = MagicMock()

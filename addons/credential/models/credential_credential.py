@@ -6,9 +6,10 @@ from typing import Any, Self
 
 from cryptography.fernet import Fernet, InvalidToken
 
-from odoo import api, fields, models
+from odoo import api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.libs import redact
+from odoo.tools import SQL
 
 from .credential_use import check_purpose
 
@@ -534,6 +535,8 @@ class CredentialCredential(models.Model):
     )
 
     def write(self, vals):
+        if self._touches_system_secrets(vals):
+            self.env.registry.clear_cache()
         if "date_expiration" in vals and "date_expiry_warned" not in vals:
             vals = {**vals, "date_expiry_warned": False}
 
@@ -595,6 +598,8 @@ class CredentialCredential(models.Model):
         return result
 
     def unlink(self):
+        if self._touches_system_secrets():
+            self.env.registry.clear_cache()
         source_ip = self._get_request_source_ip()
         vals_list = [
             {
@@ -1222,6 +1227,7 @@ class CredentialCredential(models.Model):
         if credential:
             credential.set_credential_dict({"value": value})
             return
+        self.env.registry.clear_cache()
         self.sudo().create(
             {
                 "name": f"{self._SYSTEM_SECRET_PREFIX}{key}",
@@ -1230,6 +1236,61 @@ class CredentialCredential(models.Model):
                 "credential_data": json.dumps({"value": value}),
             }
         )
+
+    @api.model
+    def _has_system_secret(self, key: str) -> bool:
+        return (
+            f"{self._SYSTEM_SECRET_PREFIX}{key}"
+            in self._provisioned_system_secret_names()
+        )
+
+    @tools.ormcache()
+    def _provisioned_system_secret_names(self) -> frozenset[str]:
+        self.flush_model(["name", "company_id", "credential_value_encrypted"])
+        self.env.cr.execute(
+            SQL(
+                "SELECT name FROM credential_credential"
+                " WHERE company_id IS NULL AND name LIKE %s"
+                " AND credential_value_encrypted IS NOT NULL",
+                f"{self._SYSTEM_SECRET_PREFIX}%",
+            )
+        )
+        return frozenset(name for (name,) in self.env.cr.fetchall())
+
+    def _touches_system_secrets(self, vals=None) -> bool:
+        return bool(
+            (vals and vals.keys() & {"name", "company_id"})
+            or any(
+                not record.company_id
+                and (record.name or "").startswith(self._SYSTEM_SECRET_PREFIX)
+                for record in self.sudo()
+            )
+        )
+
+    @api.model
+    def _move_parameters_into_system_secrets(self, keys) -> int:
+        """Migrate `ir.config_parameter` secrets into system secrets.
+
+        Each non-empty parameter is moved and every named row deleted, so the
+        value does not stay readable in `ir_config_parameter` or later backups.
+        """
+        parameters = (
+            self.env["ir.config_parameter"].sudo().search([("key", "in", list(keys))])
+        )
+        held = parameters.filtered("value")
+        if held and not self._is_encryption_key_configured():
+            raise UserError(
+                self.env._(
+                    "System parameters %(keys)s hold secrets that must move into "
+                    "encrypted credentials. Set ODOO_API_ENCRYPTION_KEY and run the "
+                    "upgrade again.",
+                    keys=", ".join(held.mapped("key")),
+                )
+            )
+        for parameter in held:
+            self._set_system_secret(parameter.key, parameter.value)
+        parameters.unlink()
+        return len(held)
 
     def get_basic_auth(self):
         self.check_singleton()

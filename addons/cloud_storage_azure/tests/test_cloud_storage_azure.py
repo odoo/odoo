@@ -38,7 +38,7 @@ class TestCloudStorageAzureCommon(TransactionCase):
         self.env["ir.config_parameter"].set_param(
             "cloud_storage_azure_client_id", self.DUMMY_AZURE_CLIENT_ID
         )
-        self.env["ir.config_parameter"].set_param(
+        self.env["credential.credential"]._set_system_secret(
             "cloud_storage_azure_client_secret", self.DUMMY_AZURE_CLIENT_SECRET
         )
         self.env["ir.config_parameter"].set_param(
@@ -504,7 +504,7 @@ class TestCloudStorageAzure(TestCloudStorageAzureCommon, MockEmail):
             self.env["ir.config_parameter"].get_param("cloud_storage_azure_client_id")
         )
         self.assertFalse(
-            self.env["ir.config_parameter"].get_param(
+            self.env["credential.credential"]._get_system_secret(
                 "cloud_storage_azure_client_secret"
             )
         )

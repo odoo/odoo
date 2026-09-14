@@ -1,9 +1,11 @@
 {
     "name": "Authentication via LDAP",
+    "version": "1.1",
     "category": "Hidden/Tools",
     "author": "Odoo S.A.",
     "license": "LGPL-3",
     "depends": [
+        "credential",
         "web",
     ],
     "external_dependencies": {

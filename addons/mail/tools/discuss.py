@@ -72,7 +72,9 @@ def get_twilio_credentials(env: Environment) -> tuple[str | None, str | None]:
     if not params.get_param("mail.use_twilio_rtc_servers"):
         return None, None
     account_sid = params.get_param("mail.twilio_account_sid")
-    auth_token = params.get_param("mail.twilio_account_token")
+    auth_token = env["credential.credential"]._get_system_secret(
+        "mail.twilio_account_token"
+    )
     return account_sid, auth_token
 
 
@@ -96,7 +98,7 @@ def get_sfu_url(env: Environment) -> str | None:
 
 
 def get_sfu_key(env: Environment) -> str | None:
-    sfu_key = env["ir.config_parameter"].sudo().get_param("mail.sfu_server_key")
+    sfu_key = env["credential.credential"]._get_system_secret("mail.sfu_server_key")
     if not sfu_key:
         return os.getenv("ODOO_SFU_KEY")
     return sfu_key

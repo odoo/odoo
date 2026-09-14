@@ -6,7 +6,7 @@ class ResConfigSettings(models.TransientModel):
 
     unsplash_access_key = fields.Char(
         string="Access Key",
-        config_parameter="unsplash.access_key",
+        secret_parameter="unsplash.access_key",
     )
     unsplash_app_id = fields.Char(
         string="Application ID",

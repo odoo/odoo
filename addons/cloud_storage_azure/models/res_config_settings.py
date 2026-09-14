@@ -38,7 +38,7 @@ class ResConfigSettings(models.TransientModel):
     )
     cloud_storage_azure_client_secret = fields.Char(
         string="Azure Client Secret",
-        config_parameter="cloud_storage_azure_client_secret",
+        secret_parameter="cloud_storage_azure_client_secret",
     )
     cloud_storage_azure_invalidate_user_delegation_key = fields.Boolean(
         string="Invalidate Cached Azure User Delegation Key",
@@ -55,7 +55,9 @@ class ResConfigSettings(models.TransientModel):
             "account_name": ICP.get_param("cloud_storage_azure_account_name"),
             "tenant_id": ICP.get_param("cloud_storage_azure_tenant_id"),
             "client_id": ICP.get_param("cloud_storage_azure_client_id"),
-            "client_secret": ICP.get_param("cloud_storage_azure_client_secret"),
+            "client_secret": self.env["credential.credential"]._get_system_secret(
+                "cloud_storage_azure_client_secret"
+            ),
         }
         return configuration if all(configuration.values()) else {}
 

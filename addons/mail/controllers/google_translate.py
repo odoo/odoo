@@ -137,10 +137,8 @@ class GoogleTranslateController(Controller):
         return response.json()["data"]["translations"][0]["translatedText"]
 
     def _post(self, endpoint: str = "", data: dict | None = None) -> requests.Response:
-        api_key = (
-            request.env["ir.config_parameter"]
-            .sudo()
-            .get_param("mail.google_translate_api_key")
+        api_key = request.env["credential.credential"]._get_system_secret(
+            "mail.google_translate_api_key"
         )
         url = f"https://translation.googleapis.com/language/translate/v2/{endpoint}?key={api_key}"
         with _debug.perf(

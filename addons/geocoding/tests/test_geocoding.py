@@ -102,7 +102,7 @@ class TestGeocoderRequestsTimeout(TransactionCase):
 
     def test_call_googlemap_sets_timeout(self):
         """A stalled maps.googleapis.com must not hang the worker forever."""
-        self.env["ir.config_parameter"].sudo().set_param(
+        self.env["credential.credential"]._set_system_secret(
             "geocoding.google_map_api_key", "fake-key"
         )
         geocoder = self.env["geocoder"]

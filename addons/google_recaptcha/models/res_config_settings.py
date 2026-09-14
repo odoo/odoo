@@ -17,7 +17,7 @@ class ResConfigSettings(models.TransientModel):
     )
     recaptcha_private_key = fields.Char(
         string="Secret Key",
-        config_parameter="recaptcha_private_key",
+        secret_parameter="recaptcha_private_key",
         groups="base.group_system",
     )
     recaptcha_min_score = fields.Float(

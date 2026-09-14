@@ -1,6 +1,6 @@
 {
     "name": "Cloudflare Turnstile",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Website/Website",
     "description": """
 This module implements Cloudflare Turnstile so that you can prevent bot spam on your forms.
@@ -8,6 +8,7 @@ This module implements Cloudflare Turnstile so that you can prevent bot spam on 
     "author": "Odoo S.A.",
     "license": "LGPL-3",
     "depends": [
+        "credential",
         "website",
     ],
     "data": [

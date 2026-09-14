@@ -1,6 +1,6 @@
 {
     "name": "Geocoding",
-    "version": "3.0",
+    "version": "3.1",
     "category": "Hidden",
     "description": """
 Geocoding
@@ -11,6 +11,7 @@ through a pluggable provider.
     "author": "Odoo S.A.",
     "license": "LGPL-3",
     "depends": [
+        "credential",
         "web",
     ],
     "data": [

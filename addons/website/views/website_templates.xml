@@ -288,7 +288,7 @@
                     </t>
                 </script>
             </t>
-            <t t-if="website.plausible_shared_key and not editable">
+            <t t-if="website.plausible_shared_key_set and not editable">
                 <script
                     id="plausible_script"
                     name="plausible"
@@ -3854,7 +3854,7 @@
     <template id="404_plausible" name="Plausible 404" inherit_id="http_routing.404">
         <div id="wrap" position="inside">
             <input
-                t-if="website.plausible_shared_key"
+                t-if="website.plausible_shared_key_set"
                 type="hidden"
                 class="js_plausible_push"
                 data-event-name="404"

@@ -7,5 +7,5 @@ class ResConfigSettings(models.TransientModel):
     google_places_api_key = fields.Char(
         string="Google Places API Key",
         readonly=False,
-        config_parameter="google_address_autocomplete.google_places_api_key",
+        secret_parameter="google_address_autocomplete.google_places_api_key",
     )

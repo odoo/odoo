@@ -1,6 +1,6 @@
 {
     "name": "Discuss",
-    "version": "1.31",
+    "version": "1.32",
     "category": "Productivity/Discuss",
     "sequence": 145,
     "summary": "Chat, mail gateway and private channels",
@@ -64,6 +64,7 @@ For more specific needs, you may also assign custom-defined actions
     "website": "https://www.odoo.com/app/discuss",
     "license": "LGPL-3",
     "depends": [
+        "credential",
         "web_tour",
         "html_editor",
     ],

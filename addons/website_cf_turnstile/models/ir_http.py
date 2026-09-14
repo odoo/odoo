@@ -46,10 +46,8 @@ class IrHttp(models.AbstractModel):
 
     @api.model
     def _get_turnstile_verdict(self, ip_addr, token, action=False):
-        private_key = (
-            request.env["ir.config_parameter"]
-            .sudo()
-            .get_param("cf.turnstile_secret_key")
+        private_key = request.env["credential.credential"]._get_system_secret(
+            "cf.turnstile_secret_key"
         )
         if not private_key:
             return "no_secret"

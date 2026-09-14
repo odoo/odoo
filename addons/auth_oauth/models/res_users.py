@@ -25,8 +25,8 @@ class ResUsers(models.Model):
         copy=False,
         help="Oauth Provider user_id",
     )
-    oauth_access_token = fields.Char(
-        string="OAuth Access Token Store",
+    oauth_access_token_hash = fields.Char(
+        string="OAuth Access Token Hash",
         copy=False,
         readonly=True,
         prefetch=False,
@@ -48,10 +48,10 @@ class ResUsers(models.Model):
     def SELF_READABLE_FIELDS(self):
         return super().SELF_READABLE_FIELDS + ["has_oauth_access_token"]
 
-    @api.depends("oauth_access_token")
+    @api.depends("oauth_access_token_hash")
     def _compute_has_oauth_access_token(self):
         for user in self:
-            user.has_oauth_access_token = bool(user.sudo().oauth_access_token)
+            user.has_oauth_access_token = bool(user.sudo().oauth_access_token_hash)
 
     def remove_oauth_access_token(self):
         user = self.env.user
@@ -59,7 +59,7 @@ class ResUsers(models.Model):
             raise AccessError(
                 self.env._("You do not have permissions to remove the access token")
             )
-        self.sudo().oauth_access_token = False
+        self.sudo().oauth_access_token_hash = False
 
     def _auth_oauth_rpc(self, endpoint, access_token):
         if (
@@ -144,7 +144,9 @@ class ResUsers(models.Model):
             "email": email,
             "oauth_provider_id": provider,
             "oauth_uid": oauth_uid,
-            "oauth_access_token": params["access_token"],
+            "oauth_access_token_hash": self._get_crypt_context().hash(
+                params["access_token"]
+            ),
             "active": True,
         }
 
@@ -167,7 +169,13 @@ class ResUsers(models.Model):
             if not oauth_user:
                 raise AccessDenied
             assert len(oauth_user) == 1
-            oauth_user.write({"oauth_access_token": params["access_token"]})
+            oauth_user.write(
+                {
+                    "oauth_access_token_hash": self._get_crypt_context().hash(
+                        params["access_token"]
+                    )
+                }
+            )
             return oauth_user.login
         except AccessDenied as access_denied_exception:
             if self.env.context.get("no_user_creation"):
@@ -205,20 +213,19 @@ class ResUsers(models.Model):
             if not (credential["type"] == "oauth_token" and credential["token"]):
                 raise
             passwd_allowed = env["interactive"] or not self._is_rpc_api_key_only()
-            if passwd_allowed and self.active:
-                res = self.sudo().search(
-                    [
-                        ("id", "=", self.id),
-                        ("oauth_access_token", "=", credential["token"]),
-                    ]
-                )
-                if res:
-                    return {
-                        "uid": self.id,
-                        "auth_method": "oauth",
-                        "mfa": "default",
-                    }
+            stored = self.sudo().oauth_access_token_hash
+            if (
+                passwd_allowed
+                and self.active
+                and stored
+                and self._get_crypt_context().verify(credential["token"], stored)
+            ):
+                return {
+                    "uid": self.id,
+                    "auth_method": "oauth",
+                    "mfa": "default",
+                }
             raise
 
     def _get_fields_session_token(self):
-        return super()._get_fields_session_token() | {"oauth_access_token"}
+        return super()._get_fields_session_token() | {"oauth_access_token_hash"}

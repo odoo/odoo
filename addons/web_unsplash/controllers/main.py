@@ -20,8 +20,8 @@ REQUEST_TIMEOUT = 10
 
 class Web_Unsplash(HTML_Editor):
     def _get_access_key(self):
-        return (
-            request.env["ir.config_parameter"].sudo().get_param("unsplash.access_key")
+        return request.env["credential.credential"]._get_system_secret(
+            "unsplash.access_key"
         )
 
     def _notify_download(self, url):
@@ -146,7 +146,7 @@ class Web_Unsplash(HTML_Editor):
             request.env["ir.config_parameter"].sudo().set_param(
                 "unsplash.app_id", post.get("appId")
             )
-            request.env["ir.config_parameter"].sudo().set_param(
+            request.env["credential.credential"]._set_system_secret(
                 "unsplash.access_key", post.get("key")
             )
             return True

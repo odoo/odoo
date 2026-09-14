@@ -236,10 +236,8 @@ class AutoCompleteController(http.Controller):
     def _get_api_key(self, use_employees_key):
         if not request.env.user._is_internal():
             raise AccessError(_("You don't have access to the internal API key."))
-        return (
-            request.env["ir.config_parameter"]
-            .sudo()
-            .get_param("google_address_autocomplete.google_places_api_key")
+        return request.env["credential.credential"]._get_system_secret(
+            "google_address_autocomplete.google_places_api_key"
         )
 
     @http.route(

@@ -1,6 +1,6 @@
 {
     "name": "Google Address Autocomplete",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Hidden/Tools",
     "summary": "Assist with automatic completion & suggestions when filling address",
     "description": """
@@ -9,6 +9,7 @@ This module Auto complete the address data.
     "author": "Odoo S.A.",
     "license": "LGPL-3",
     "depends": [
+        "credential",
         "web",
     ],
     "data": [

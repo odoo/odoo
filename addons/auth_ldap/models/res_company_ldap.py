@@ -29,9 +29,13 @@ class LDAPWrapper:
 
 class ResCompanyLdap(models.Model):
     _name = "res.company.ldap"
+    _inherit = ["mixin.credential.holder"]
     _description = "Company LDAP configuration"
     _order = "sequence"
     _rec_name = "ldap_server"
+    _credential_holder_field = "ldap_credential_id"
+    _credential_purpose = "auth_ldap:bind"
+    _CREDENTIAL_FIELDS = {"ldap_password": "password"}
 
     sequence = fields.Integer(default=10)
     company = fields.Many2one(
@@ -56,7 +60,18 @@ class ResCompanyLdap(models.Model):
     )
     ldap_password = fields.Char(
         string="LDAP password",
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
+        copy=True,
         help="The password of the user account on the LDAP server that is used to query the directory.",
+    )
+    ldap_credential_id = fields.Many2one(
+        comodel_name="credential.credential",
+        string="Credential",
+        copy=False,
+        ondelete="restrict",
+        groups="base.group_system",
+        help="Holds the bind password.",
     )
     ldap_filter = fields.Char(
         string="LDAP filter",

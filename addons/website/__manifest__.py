@@ -1,6 +1,6 @@
 {
     "name": "Website",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Website/Website",
     "sequence": 20,
     "summary": "Enterprise website builder",
@@ -8,6 +8,7 @@
     "website": "https://www.odoo.com/app/website",
     "license": "LGPL-3",
     "depends": [
+        "credential",
         "digest",
         "social_media",
         "google_recaptcha",

@@ -5,15 +5,11 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     def _default_use_google_maps_static_api(self):
-        api_key = (
-            self.env["ir.config_parameter"]
-            .sudo()
-            .get_param("google_maps.signed_static_api_key")
+        api_key = self.env["credential.credential"]._get_system_secret(
+            "google_maps.signed_static_api_key"
         )
-        api_secret = (
-            self.env["ir.config_parameter"]
-            .sudo()
-            .get_param("google_maps.signed_static_api_secret")
+        api_secret = self.env["credential.credential"]._get_system_secret(
+            "google_maps.signed_static_api_secret"
         )
         return bool(api_key and api_secret)
 
@@ -22,14 +18,14 @@ class ResConfigSettings(models.TransientModel):
         compute="_compute_google_maps_static_api_key",
         store=True,
         readonly=False,
-        config_parameter="google_maps.signed_static_api_key",
+        secret_parameter="google_maps.signed_static_api_key",
     )
     google_maps_static_api_secret = fields.Char(
         string="Google Maps API secret",
         compute="_compute_google_maps_static_api_secret",
         store=True,
         readonly=False,
-        config_parameter="google_maps.signed_static_api_secret",
+        secret_parameter="google_maps.signed_static_api_secret",
     )
     module_event_sale = fields.Boolean(string="Tickets with Sale")
     module_pos_event = fields.Boolean(string="Tickets with PoS")

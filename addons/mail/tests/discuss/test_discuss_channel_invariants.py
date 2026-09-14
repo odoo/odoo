@@ -540,7 +540,9 @@ class TestDiscussChannelInvariants(MailCommon):
         params = self.env["ir.config_parameter"].sudo()
         params.set_param("mail.use_sfu_server", True)
         params.set_param("mail.sfu_server_url", "https://sfu.example.com")
-        params.set_param("mail.sfu_server_key", False)
+        self.env["credential.credential"]._set_system_secret(
+            "mail.sfu_server_key", False
+        )
         member_module = "odoo.addons.mail.models.discuss.discuss_channel_member"
 
         with (

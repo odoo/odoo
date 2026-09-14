@@ -58,9 +58,30 @@ class TestGoogleRecaptcha(TransactionCase):
 
     # ── _get_recaptcha_verdict ──────────────────────────────────────
 
+    def test_the_private_key_setting_lives_in_the_vault(self):
+        self.env["res.config.settings"].create(
+            {"recaptcha_private_key": " SECRET "}
+        ).execute()
+
+        self.assertEqual(
+            self.env["credential.credential"]._get_system_secret(
+                "recaptcha_private_key"
+            ),
+            "SECRET",
+        )
+        self.assertFalse(self.icp.get_param("recaptcha_private_key"))
+        self.assertEqual(
+            self.env["res.config.settings"].default_get(["recaptcha_private_key"])[
+                "recaptcha_private_key"
+            ],
+            "SECRET",
+        )
+
     def test_verify_returns_no_secret_without_private_key(self):
         """Verification is a no-op ('no_secret') when no secret is configured."""
-        self.icp.set_param("recaptcha_private_key", "")
+        self.env["credential.credential"]._set_system_secret(
+            "recaptcha_private_key", ""
+        )
         self.assertEqual(
             self._verify_token(json_result={"success": True, "score": 0.9}),
             "no_secret",
@@ -68,7 +89,9 @@ class TestGoogleRecaptcha(TransactionCase):
 
     def test_verify_human_on_high_score(self):
         """A successful high-score response is classified as human."""
-        self.icp.set_param("recaptcha_private_key", "SECRET")
+        self.env["credential.credential"]._set_system_secret(
+            "recaptcha_private_key", "SECRET"
+        )
         self.icp.set_param("recaptcha_min_score", "0.7")
         result = self._verify_token(
             json_result={"success": True, "score": 0.9, "action": "login"}
@@ -77,7 +100,9 @@ class TestGoogleRecaptcha(TransactionCase):
 
     def test_verify_bot_on_low_score(self):
         """A successful low-score response is classified as a bot."""
-        self.icp.set_param("recaptcha_private_key", "SECRET")
+        self.env["credential.credential"]._set_system_secret(
+            "recaptcha_private_key", "SECRET"
+        )
         self.icp.set_param("recaptcha_min_score", "0.7")
         result = self._verify_token(
             json_result={"success": True, "score": 0.1, "action": "login"}
@@ -86,7 +111,9 @@ class TestGoogleRecaptcha(TransactionCase):
 
     def test_verify_wrong_secret_error_code(self):
         """An invalid-secret error code maps to 'wrong_secret'."""
-        self.icp.set_param("recaptcha_private_key", "SECRET")
+        self.env["credential.credential"]._set_system_secret(
+            "recaptcha_private_key", "SECRET"
+        )
         result = self._verify_token(
             json_result={"success": False, "error-codes": ["invalid-input-secret"]}
         )
@@ -94,13 +121,17 @@ class TestGoogleRecaptcha(TransactionCase):
 
     def test_verify_timeout_on_request_timeout(self):
         """A request timeout maps to 'timeout'."""
-        self.icp.set_param("recaptcha_private_key", "SECRET")
+        self.env["credential.credential"]._set_system_secret(
+            "recaptcha_private_key", "SECRET"
+        )
         result = self._verify_token(post_side_effect=requests.exceptions.Timeout())
         self.assertEqual(result, "timeout")
 
     def test_verify_bad_request_on_unexpected_error(self):
         """Any other request error maps to 'bad_request'."""
-        self.icp.set_param("recaptcha_private_key", "SECRET")
+        self.env["credential.credential"]._set_system_secret(
+            "recaptcha_private_key", "SECRET"
+        )
         result = self._verify_token(post_side_effect=ValueError("boom"))
         self.assertEqual(result, "bad_request")
 
@@ -108,7 +139,9 @@ class TestGoogleRecaptcha(TransactionCase):
 
     def test_request_verification_raises_on_wrong_secret(self):
         """The request wrapper raises ValidationError on an invalid secret."""
-        self.icp.set_param("recaptcha_private_key", "SECRET")
+        self.env["credential.credential"]._set_system_secret(
+            "recaptcha_private_key", "SECRET"
+        )
         self.icp.set_param("enable_recaptcha", "True")
         with self._mocked_verify(
             json_result={"success": False, "error-codes": ["invalid-input-secret"]}
@@ -118,7 +151,9 @@ class TestGoogleRecaptcha(TransactionCase):
 
     def test_verify_wrong_token_error_code(self):
         """An invalid-response error code maps to 'wrong_token'."""
-        self.icp.set_param("recaptcha_private_key", "SECRET")
+        self.env["credential.credential"]._set_system_secret(
+            "recaptcha_private_key", "SECRET"
+        )
         result = self._verify_token(
             json_result={"success": False, "error-codes": ["invalid-input-response"]}
         )
@@ -126,7 +161,9 @@ class TestGoogleRecaptcha(TransactionCase):
 
     def test_verify_timeout_error_code(self):
         """A timeout-or-duplicate error code maps to 'timeout'."""
-        self.icp.set_param("recaptcha_private_key", "SECRET")
+        self.env["credential.credential"]._set_system_secret(
+            "recaptcha_private_key", "SECRET"
+        )
         result = self._verify_token(
             json_result={"success": False, "error-codes": ["timeout-or-duplicate"]}
         )
@@ -134,7 +171,9 @@ class TestGoogleRecaptcha(TransactionCase):
 
     def test_verify_bad_request_error_code(self):
         """A bad-request error code maps to 'bad_request'."""
-        self.icp.set_param("recaptcha_private_key", "SECRET")
+        self.env["credential.credential"]._set_system_secret(
+            "recaptcha_private_key", "SECRET"
+        )
         result = self._verify_token(
             json_result={"success": False, "error-codes": ["bad-request"]}
         )
@@ -142,7 +181,9 @@ class TestGoogleRecaptcha(TransactionCase):
 
     def test_verify_wrong_action_on_action_mismatch(self):
         """A successful response for a different action maps to 'wrong_action'."""
-        self.icp.set_param("recaptcha_private_key", "SECRET")
+        self.env["credential.credential"]._set_system_secret(
+            "recaptcha_private_key", "SECRET"
+        )
         self.icp.set_param("recaptcha_min_score", "0.7")
         result = self._verify_token(
             json_result={"success": True, "score": 0.9, "action": "signup"}
@@ -159,7 +200,9 @@ class TestGoogleRecaptcha(TransactionCase):
 
     def test_request_verification_raises_usererror_on_bot(self):
         """The request wrapper raises UserError for suspicious (bot) activity."""
-        self.icp.set_param("recaptcha_private_key", "SECRET")
+        self.env["credential.credential"]._set_system_secret(
+            "recaptcha_private_key", "SECRET"
+        )
         self.icp.set_param("recaptcha_min_score", "0.7")
         self.icp.set_param("enable_recaptcha", "True")
         with self._mocked_verify(

@@ -16,8 +16,10 @@ def uninstall_hook(env):
                     "cloud_storage_azure_account_name",
                     "cloud_storage_azure_tenant_id",
                     "cloud_storage_azure_client_id",
-                    "cloud_storage_azure_client_secret",
                 ],
             )
         ]
     ).unlink()
+    env["credential.credential"]._set_system_secret(
+        "cloud_storage_azure_client_secret", False
+    )

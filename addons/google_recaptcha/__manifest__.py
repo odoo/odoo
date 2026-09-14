@@ -1,6 +1,6 @@
 {
     "name": "Google reCAPTCHA integration",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Hidden",
     "description": """
 This module implements reCaptchaV3 so that you can prevent bot spam on your public modules.
@@ -8,6 +8,7 @@ This module implements reCaptchaV3 so that you can prevent bot spam on your publ
     "author": "Odoo S.A.",
     "license": "LGPL-3",
     "depends": [
+        "credential",
         "web",
     ],
     "data": [

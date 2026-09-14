@@ -30,3 +30,27 @@ class TestSystemSecret(EncryptionKeyCase, TransactionCase):
         self.assertFalse(
             Credential._get_system_secret_credential("probe_client_secret")
         )
+
+    def test_presence_is_known_without_the_value(self):
+        Credential = self.env["credential.credential"]
+        self.assertFalse(Credential._has_system_secret("probe_client_secret"))
+
+        Credential._set_system_secret("probe_client_secret", "s3cr3t")
+
+        self.assertTrue(Credential._has_system_secret("probe_client_secret"))
+
+    def test_parameters_move_into_system_secrets_and_their_rows_go(self):
+        Credential = self.env["credential.credential"]
+        parameters = self.env["ir.config_parameter"].sudo()
+        parameters.set_param("probe.api_key", "k3y")
+        parameters.create({"key": "probe.empty_key", "value": ""})
+
+        moved = Credential._move_parameters_into_system_secrets(
+            ["probe.api_key", "probe.empty_key"]
+        )
+
+        self.assertEqual(moved, 1)
+        self.assertEqual(Credential._get_system_secret("probe.api_key"), "k3y")
+        self.assertFalse(
+            parameters.search([("key", "in", ["probe.api_key", "probe.empty_key"])])
+        )

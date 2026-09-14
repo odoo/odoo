@@ -85,11 +85,11 @@ class ResUsers(models.Model):
 
     def _init_store_data(self, store: Store) -> None:
         super()._init_store_data(store)
-        get_param = self.env["ir.config_parameter"].sudo().get_param
+        Credential = self.env["credential.credential"]
         store.add_global_values(
-            hasGifPickerFeature=bool(get_param("discuss.klipy_api_key")),
-            hasMessageTranslationFeature=bool(
-                get_param("mail.google_translate_api_key")
+            hasGifPickerFeature=Credential._has_system_secret("discuss.klipy_api_key"),
+            hasMessageTranslationFeature=Credential._has_system_secret(
+                "mail.google_translate_api_key"
             ),
             hasCannedResponses=bool(
                 self.env["mail.canned.response"]

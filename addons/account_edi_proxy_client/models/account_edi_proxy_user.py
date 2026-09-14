@@ -27,7 +27,11 @@ class Account_Edi_Proxy_ClientUser(models.Model):
     """A user of the proxy for one electronic-invoicing format, identified by a per-format key."""
 
     _name = "account_edi_proxy_client.user"
+    _inherit = ["mixin.credential.holder"]
     _description = "Account EDI proxy user"
+    _credential_holder_field = "proxy_credential_id"
+    _credential_purpose = "account_edi_proxy_client:auth"
+    _CREDENTIAL_FIELDS = {"refresh_token": "refresh_token"}
 
     active = fields.Boolean(default=True)
     id_client = fields.Char(required=True)
@@ -47,7 +51,19 @@ class Account_Edi_Proxy_ClientUser(models.Model):
         domain=[("public", "=", False)],
         help="The key to encrypt all the user's data",
     )
-    refresh_token = fields.Char(groups="base.group_system")
+    refresh_token = fields.Char(
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
+        groups="base.group_system",
+    )
+    proxy_credential_id = fields.Many2one(
+        comodel_name="credential.credential",
+        string="Credential",
+        copy=False,
+        ondelete="restrict",
+        groups="base.group_system",
+        help="Holds this proxy user's refresh token.",
+    )
     is_token_out_of_sync = fields.Boolean(
         string="Token Out of Sync",
         help="This field is used to indicate that the edi user token is out of sync with the proxy server. "

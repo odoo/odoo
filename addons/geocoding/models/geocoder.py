@@ -166,10 +166,8 @@ class Geocoder(models.AbstractModel):
         """Use google maps API. It won't work without a valid API key.
         :return: (latitude, longitude) or None if not found
         """
-        apikey = (
-            self.env["ir.config_parameter"]
-            .sudo()
-            .get_param("geocoding.google_map_api_key")
+        apikey = self.env["credential.credential"]._get_system_secret(
+            "geocoding.google_map_api_key"
         )
         if not apikey:
             raise UserError(

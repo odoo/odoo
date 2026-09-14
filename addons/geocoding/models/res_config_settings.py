@@ -16,6 +16,6 @@ class ResConfigSettings(models.TransientModel):
     )
     geoloc_provider_googlemap_key = fields.Char(
         string="Google Map API Key",
-        config_parameter="geocoding.google_map_api_key",
+        secret_parameter="geocoding.google_map_api_key",
         help="Visit https://developers.google.com/maps/documentation/geocoding/get-api-key for more information.",
     )

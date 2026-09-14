@@ -69,9 +69,12 @@ def from_punycode(host):
 
 class Website(models.Model):
     _name = "website"
-
+    _inherit = ["mixin.credential.holder"]
     _description = "Website"
     _order = "sequence, id"
+    _credential_holder_field = "website_credential_id"
+    _credential_purpose = "website:settings"
+    _CREDENTIAL_FIELDS = {"plausible_shared_key": "plausible_shared_key"}
 
     def website_domain(self):
         return Domain("website_id", "in", [False, *self.ids])
@@ -212,8 +215,24 @@ class Website(models.Model):
 
     google_maps_api_key = fields.Char(string="Google Maps API Key")
 
-    plausible_shared_key = fields.Char()
+    plausible_shared_key = fields.Char(
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
+        copy=True,
+    )
+    plausible_shared_key_set = fields.Boolean(
+        copy=True,
+        readonly=True,
+    )
     plausible_site = fields.Char()
+    website_credential_id = fields.Many2one(
+        comodel_name="credential.credential",
+        string="Credential",
+        copy=False,
+        ondelete="restrict",
+        groups="base.group_system",
+        help="Holds this website's integration secrets.",
+    )
 
     user_id = fields.Many2one(
         comodel_name="res.users",
@@ -467,6 +486,8 @@ class Website(models.Model):
 
     @api.model
     def _update_vals(self, vals):
+        if "plausible_shared_key" in vals:
+            vals["plausible_shared_key_set"] = bool(vals["plausible_shared_key"])
         self._update_vals_favicon(vals)
         self._update_vals_domain(vals)
         self._update_vals_homepage_url(vals)

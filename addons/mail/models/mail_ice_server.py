@@ -15,8 +15,12 @@ _debug = DebugLog(__name__)
 
 class MailIceServer(models.Model):
     _name = "mail.ice.server"
+    _inherit = ["mixin.credential.holder"]
     _description = "ICE Server"
     _rec_name = "uri"
+    _credential_holder_field = "ice_credential_id"
+    _credential_purpose = "mail:ice_server"
+    _CREDENTIAL_FIELDS = {"credential": "credential"}
 
     server_type = fields.Selection(
         selection=[("stun", "stun:"), ("turn", "turn:")],
@@ -29,7 +33,19 @@ class MailIceServer(models.Model):
         required=True,
     )
     username = fields.Char()
-    credential = fields.Char()
+    credential = fields.Char(
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
+        copy=True,
+    )
+    ice_credential_id = fields.Many2one(
+        comodel_name="credential.credential",
+        string="Credential Record",
+        copy=False,
+        ondelete="restrict",
+        groups="base.group_system",
+        help="Holds this server's TURN credential.",
+    )
 
     def _get_local_ice_servers(self) -> list:
         ice_servers = self.sudo().search([], limit=5)

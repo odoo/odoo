@@ -11,6 +11,6 @@ class ResConfigSettings(models.TransientModel):
     )
     turnstile_secret_key = fields.Char(
         string="CF Secret Key",
-        config_parameter="cf.turnstile_secret_key",
+        secret_parameter="cf.turnstile_secret_key",
         groups="base.group_system",
     )
