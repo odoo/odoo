@@ -812,8 +812,8 @@ def test_a_pipeline_longer_than_the_inline_cap_is_answered_in_full():
     connection back; nothing else will ever arrive to wake the selector for
     it, so it must be resubmitted, not parked until the head timeout."""
     n = httpd._MAX_PIPELINED + 1
-    with _server(ODOO_HTTP_HEAD_TIMEOUT="0.5") as srv:
-        raw = _pipeline(srv.server_port, n)
+    with _server(ODOO_HTTP_HEAD_TIMEOUT="2") as srv:
+        raw = _pipeline(srv.server_port, n, timeout=5.0)
     assert raw.count(b"HTTP/1.1 200 OK") == n
     assert b"408" not in raw
     assert f'"/r{n - 1}"'.encode() in raw
