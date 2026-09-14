@@ -241,6 +241,15 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
                 'category_code': self._get_line_category_code(line),
             }),
         )
+        # _get_tax_summary() preserves the invoice's OSS VAT. Convert each aggregate
+        # to Flow 10 by moving OSS bases to the zero-rate subtotal and excluding their VAT.
+        for taxes in summary.values():
+            for tax in list(taxes['subtotals']):
+                if not tax or not tax._l10n_fr_pdp_is_oss():
+                    continue
+                oss_subtotal = taxes['subtotals'].pop(tax)
+                taxes['subtotals'][None]['taxable_amount'] += oss_subtotal['taxable_amount']
+                taxes['tax_total'] -= oss_subtotal['tax_amount']
         for agregate, taxes in summary.items():
             nodes.append({
                 'Date': {'_text': self._format_date(agregate['date'])},
@@ -266,7 +275,12 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
     @api.model
     def _get_line_category_code(self, line):
         # TODO: ADD TMA1 Margin scheme when applicable, add field on tax ??
-        if all(float_is_zero(tax.amount, tax.fields_get('amount')['amount']['digits'][1]) for tax in line.tax_ids):
+        has_oss_tax = any(tax._l10n_fr_pdp_is_oss() for tax in line.tax_ids)
+        has_only_zero_rate_taxes = all(
+            float_is_zero(tax.amount, tax.fields_get('amount')['amount']['digits'][1])
+            for tax in line.tax_ids
+        )
+        if has_oss_tax or has_only_zero_rate_taxes:
             return 'TNT1'
         if any(tax.tax_scope == 'service' for tax in line.tax_ids):
             return 'TPS1'
