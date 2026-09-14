@@ -378,3 +378,27 @@ class TestMaintenanceReliabilityFigures(TransactionCase):
         self.assertEqual(
             equipment.mtbf, (date(2026, 4, 1) - date(2026, 1, 1)).days // 2
         )
+
+
+class TestMaintenanceTeamAlias(TransactionCase):
+    def test_a_mail_to_a_company_team_creates_the_request_in_that_company(self):
+        company = self.env["res.company"].create({"name": "Alias company"})
+        team = self.env["maintenance.team"].create(
+            {"name": "Alias team", "company_id": company.id, "alias_name": "alias-team"}
+        )
+        request = self.env["maintenance.request"].message_new(
+            {
+                "from": "reporter@example.com",
+                "email_from": "reporter@example.com",
+                "to": "alias-team@example.com",
+                "cc": "",
+                "subject": "Pump leaking",
+                "body": "<p>It leaks.</p>",
+                "message_id": "<maintenance-team-alias@example.com>",
+            },
+            custom_values=team.alias_id._get_alias_defaults(),
+        )
+        self.assertRecordValues(
+            request,
+            [{"company_id": company.id, "maintenance_team_id": team.id}],
+        )

@@ -594,6 +594,16 @@ class MaintenanceRequest(models.Model):
             request.message_subscribe(partner_ids=partner_ids)
 
     @api.model
+    def message_new(self, msg_dict, custom_values=None):
+        values = dict(custom_values or {})
+        team = self.env["maintenance.team"].browse(
+            values.get("maintenance_team_id") or ()
+        )
+        if team.company_id and "company_id" not in values:
+            values["company_id"] = team.company_id.id
+        return super().message_new(msg_dict, custom_values=values)
+
+    @api.model
     def _read_group_stage_ids(self, stages, domain):
         """Read group customization in order to display all the stages in the
         kanban view, even if they are empty
