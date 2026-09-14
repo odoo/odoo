@@ -342,6 +342,8 @@ class ColumnStore(typing.Protocol):
         value: dict[str, typing.Any],
     ) -> int: ...
 
+    def scan(self, model: BaseModel, column: str) -> list[tuple[int, typing.Any]]: ...
+
 
 class PostgresColumnStore:
     __slots__ = ()
@@ -448,6 +450,17 @@ class PostgresColumnStore:
         )
         return cr.rowcount
 
+    def scan(self, model: BaseModel, column: str) -> list[tuple[int, typing.Any]]:
+        # every row holding a value in the column, by id, as stored
+        return model.env.execute_query(
+            SQL(
+                "SELECT id, %s FROM %s WHERE %s IS NOT NULL ORDER BY id",
+                SQL.identifier(column),
+                SQL.identifier(model._table),
+                SQL.identifier(column),
+            )
+        )
+
 
 class InMemoryColumnStore:
     __slots__ = ("storage",)
@@ -508,6 +521,15 @@ class InMemoryColumnStore:
         }
         self.storage.update_rows(model._table, [(record_id, {column: merged or None})])
         return 1
+
+    def scan(self, model: BaseModel, column: str) -> list[tuple[int, typing.Any]]:
+        storage = self.storage
+        return [
+            (row_id, _unwrap_json(row[column]))
+            for row_id in sorted(storage.get_table_ids(model._table))
+            if (row := storage.get_row(model._table, row_id)) is not None
+            and row.get(column) is not None
+        ]
 
 
 @typing.runtime_checkable
@@ -1673,7 +1695,9 @@ class _InMemoryReadGroup:
         model = self.model if model is None else model
         fname, seq_fnames, granularity = parse_read_group_spec(spec)
         field = model._fields[fname]
-        if field.is_properties or field.is_many2many:
+        if field.is_properties:
+            return self._property_reader(model, field, seq_fnames, granularity, spec)
+        if field.is_many2many:
             self._unsupported(f"groupby {spec!r}")
         if seq_fnames:
             return self._many2one_path_reader(
@@ -1706,6 +1730,55 @@ class _InMemoryReadGroup:
             if field.is_text:
                 return value or None
             return value if value is not False else None
+
+        return read
+
+    def _property_reader(self, model, field, property_name, granularity, spec):
+        # the SQL path groups by the property's raw json value shaped by its
+        # definition type; a collection property and html stay refused
+        if not property_name:
+            self._unsupported(f"groupby {spec!r}")
+        definition = model.get_property_definition(f"{field.name}.{property_name}")
+        property_type = definition.get("type")
+        if property_type in ("tags", "many2many"):
+            self._unsupported(f"groupby {spec!r} ({property_type} property)")
+        if property_type == "html":
+            raise UserError(_("Grouping by HTML properties is not supported."))
+        options = {option[0] for option in definition.get("selection") or ()}
+        comodel = None
+        if property_type == "many2one" and definition.get("comodel"):
+            comodel = (
+                model.env[definition["comodel"]].sudo().with_context(active_test=False)
+            )
+        first_week_day = 0
+        if granularity == "week":
+            from odoo.tools import get_lang
+
+            first_week_day = int(get_lang(model.env).week_start) - 1
+
+        def read(record):
+            values = record[field.name]
+            raw = (values._values or {}).get(property_name)
+            if property_type == "selection":
+                return raw if raw in options else None
+            if property_type == "many2one":
+                if not isinstance(raw, int) or isinstance(raw, bool) or comodel is None:
+                    return None
+                return raw if comodel.browse(raw).exists() else None
+            if property_type in ("date", "datetime"):
+                if not isinstance(raw, str):
+                    return None
+                parsed = (
+                    date.fromisoformat(raw[:10])
+                    if property_type == "date"
+                    else datetime.fromisoformat(raw)
+                )
+                return _truncate(parsed, granularity or "day", first_week_day)
+            if property_type == "boolean":
+                return bool(raw)
+            if raw is None or raw is False:
+                return None
+            return raw
 
         return read
 

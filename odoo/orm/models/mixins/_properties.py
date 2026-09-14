@@ -1,7 +1,6 @@
 import typing
 
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import SQL
 
 from ... import decorators as api
 from ...parsing import parse_field_expr
@@ -43,29 +42,34 @@ class _PropertiesMixin(_ModelStubs):
             )
 
         target_model = self.env[self._fields[definition_record].comodel_name or ""]
-        field_definition = target_model._fields[definition_record_field]
-        result = self.env.execute_query_dict(
-            SQL(
-                """ SELECT __property AS definition
-                  FROM %(table)s, jsonb_array_elements(%(field)s) __property
-                 WHERE %(field)s IS NOT NULL AND __property->>'name' = %(name)s
-                 LIMIT 1 """,
-                table=SQL.identifier(target_model._table),
-                field=SQL.identifier(
-                    definition_record_field, to_flush=field_definition
+        # the first definition record, by id, whose stored definition names
+        # the property -- the column as stored, through the column store, not
+        # the field's normalised reading, so an invalid comodel written to it
+        # still surfaces as the SQL scan surfaced it
+        target_model.flush_model([definition_record_field])
+        definition: dict = {}
+        for _holder_id, stored in self.env.backend.columns.scan(
+            target_model, definition_record_field
+        ):
+            definition = next(
+                (
+                    entry
+                    for entry in stored or ()
+                    if isinstance(entry, dict) and entry.get("name") == property_name
                 ),
-                name=property_name,
+                {},
             )
-        )
+            if definition:
+                break
         _debug.perf.count(
             "properties.definition_read",
             model=self._name,
             field=field_name,
             property=property_name,
             definition_model=target_model._name,
-            found=bool(result),
+            found=bool(definition),
         )
-        return result[0]["definition"] if result else {}
+        return dict(definition)
 
     def _remove_stale_properties(self) -> None:
         for fname, field in self._fields.items():

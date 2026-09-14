@@ -9,7 +9,7 @@ from odoo.orm.runtime.backend import InMemoryBackend
 _ORM_DIR = pathlib.Path(__file__).resolve().parent.parent
 
 # Every place the ORM chooses between the SQL path and env.backend. The surface
-# has grown to twenty-three sites across fifteen files
+# has grown to twenty-four sites across sixteen files
 # -- including six in Layer 1, where a field reaches the backend directly
 # rather than through a model mixin. Each entry says what the in-memory branch
 # does NOT do, so a site marked LOSSY is a known gap, not an oversight.
@@ -46,6 +46,12 @@ DISPATCH_SITES: dict[tuple[str, str], str] = {
     ("models/mixins/_query.py", "_search"): "equivalent",
     ("models/mixins/_query.py", "_as_query"): "equivalent",
     ("models/mixins/_query.py", "exists"): "equivalent",
+    ("models/mixins/_properties.py", "get_property_definition"): (
+        "equivalent: the definition column is scanned as stored through "
+        "backend.columns.scan -- every row holding one, by id -- and the first "
+        "entry naming the property answers, the raw jsonb on PostgreSQL and the "
+        "row's dict in memory, an invalid comodel written to it included"
+    ),
     ("fields/temporal.py", "_resolve_sql_timezone_name"): (
         "equivalent: the zone names timezone() accepts, read once per database "
         "from pg_timezone_names on PostgreSQL and from zoneinfo in memory, which "

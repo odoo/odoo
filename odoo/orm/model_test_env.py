@@ -165,6 +165,10 @@ class InMemoryCursor(BaseCursor):
         super().__init__()
         self.dbname = registry.db_name
         self.storage = DictBackend()
+        # SQL.inlined renders literals against the connection; without one
+        # psycopg renders them generically, which the compiled statement the
+        # in-memory backend never runs can carry
+        self._cnx = None
         self.transaction = Transaction(registry, storage=self.storage)
         self._fixtures: dict[str, list[tuple]] = fixtures or {}
         self._last_result: list[tuple] = []
