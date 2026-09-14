@@ -241,6 +241,12 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
                 'category_code': self._get_line_category_code(line),
             }),
         )
+        for taxes in summary.values():
+            for tax in list(taxes['subtotals']):
+                if tax and tax._l10n_fr_pdp_is_oss():
+                    oss_subtotal = taxes['subtotals'].pop(tax)
+                    taxes['subtotals'][None]['taxable_amount'] += oss_subtotal['taxable_amount']
+            taxes['tax_total'] = sum(subtotal['tax_amount'] for subtotal in taxes['subtotals'].values())
         for agregate, taxes in summary.items():
             nodes.append({
                 'Date': {'_text': self._format_date(agregate['date'])},
@@ -266,7 +272,10 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
     @api.model
     def _get_line_category_code(self, line):
         # TODO: ADD TMA1 Margin scheme when applicable, add field on tax ??
-        if all(float_is_zero(tax.amount, tax.fields_get('amount')['amount']['digits'][1]) for tax in line.tax_ids):
+        if any(tax._l10n_fr_pdp_is_oss() for tax in line.tax_ids) or all(
+            float_is_zero(tax.amount, tax.fields_get('amount')['amount']['digits'][1])
+            for tax in line.tax_ids
+        ):
             return 'TNT1'
         if any(tax.tax_scope == 'service' for tax in line.tax_ids):
             return 'TPS1'
