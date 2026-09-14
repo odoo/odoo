@@ -85,6 +85,29 @@ class _StubJsonDiscussion(models.Model):
     history = fields.Json()
 
 
+class _StubPropertyDiscussion(models.Model):
+    _name = "test_orm.discussion"
+    _module = _STUB_MODULE
+    _description = "the property definitions of test_orm.discussion (differential stub)"
+    _log_access = False
+
+    name = fields.Char()
+    participants = fields.Many2many("res.users")
+    attributes_definition = fields.PropertiesDefinition()
+
+
+class _StubPropertyMessage(models.Model):
+    _name = "test_orm.message"
+    _module = _STUB_MODULE
+    _description = "the property values of test_orm.message (differential stub)"
+    _log_access = False
+
+    discussion = fields.Many2one("test_orm.discussion")
+    author = fields.Many2one("res.users")
+    body = fields.Text()
+    attributes = fields.Properties(definition="discussion.attributes_definition")
+
+
 def _isolated_registry(*classes):
     return ModelRegistry([*classes, _StubIrModelData, _StubIrAttachment], isolated=True)
 
@@ -775,3 +798,146 @@ class TestBackendDifferential(TransactionCase):
             ]
         )
         self.assertEqual(sorted(subtree.mapped("name")), ["child", "grand", "root"])
+
+    def test_properties_read_group_and_search_agree_across_tiers(self):
+        def spell(value):
+            if hasattr(value, "_ids"):
+                return tuple(value.mapped("display_name")) if value else ()
+            if isinstance(value, list):
+                return sorted((spell(v) for v in value), key=repr)
+            return value if not isinstance(value, datetime) else value.isoformat()
+
+        def script(env):
+            Discussion = env["test_orm.discussion"]
+            Message = env["test_orm.message"]
+            discussion = Discussion.create(
+                {
+                    "name": "props",
+                    "participants": [Command.link(env.uid)],
+                    "attributes_definition": [
+                        {"name": "color", "type": "char"},
+                        {"name": "size", "type": "integer"},
+                        {"name": "ratio", "type": "float"},
+                        {"name": "flag", "type": "boolean"},
+                        {"name": "due", "type": "date"},
+                        {"name": "at", "type": "datetime"},
+                        {
+                            "name": "tag",
+                            "type": "selection",
+                            "selection": [["a", "A"], ["b", "B"]],
+                        },
+                        {
+                            "name": "labels",
+                            "type": "tags",
+                            "tags": [["x", "X", 1], ["y", "Y", 2]],
+                        },
+                        {
+                            "name": "peer",
+                            "type": "many2one",
+                            "comodel": "test_orm.discussion",
+                        },
+                    ],
+                }
+            )
+            other = Discussion.create({"name": "other"})
+            Message.create(
+                [
+                    {
+                        "discussion": discussion.id,
+                        "author": env.uid,
+                        "body": "one",
+                        "attributes": {
+                            "color": "red",
+                            "size": 3,
+                            "ratio": 0.1,
+                            "flag": True,
+                            "due": "2026-01-15",
+                            "at": "2026-01-15 23:30:00",
+                            "tag": "a",
+                            "labels": ["x", "y"],
+                            "peer": other.id,
+                        },
+                    },
+                    {
+                        "discussion": discussion.id,
+                        "author": env.uid,
+                        "body": "two",
+                        "attributes": {
+                            "color": False,
+                            "size": 0,
+                            "ratio": 0.2,
+                            "flag": False,
+                            "due": "2026-03-01",
+                            "at": "2026-03-01 00:00:00",
+                            "tag": False,
+                            "labels": ["y"],
+                            "peer": False,
+                        },
+                    },
+                    {
+                        "discussion": discussion.id,
+                        "author": env.uid,
+                        "body": "three",
+                        "attributes": {"color": "false", "size": False, "labels": []},
+                    },
+                    {"discussion": discussion.id, "author": env.uid, "body": "four"},
+                ]
+            )
+            env.flush_all()
+            env.invalidate_all()
+            observed = {}
+            mine = [("discussion", "=", discussion.id)]
+            specs = [
+                "attributes.color",
+                "attributes.size",
+                "attributes.ratio",
+                "attributes.flag",
+                "attributes.due",
+                "attributes.due:month",
+                "attributes.at:day",
+                "attributes.at:month",
+                "attributes.tag",
+                "attributes.peer",
+                "attributes.labels",
+            ]
+            for spec in specs:
+                for order in (None, f"{spec} desc"):
+                    try:
+                        rows = Message._read_group(
+                            mine, [spec], ["__count", "body:array_agg"], order=order
+                        )
+                    except NotImplementedError:
+                        rows = NotImplemented
+                    else:
+                        if spec == "attributes.peer":
+                            # a many2one property groups by the bare id
+                            rows = [
+                                (Discussion.browse(key).name if key else key, *rest)
+                                for key, *rest in rows
+                            ]
+                        rows = [tuple(spell(v) for v in row) for row in rows]
+                    observed[f"{spec} {order}"] = rows
+            for index, domain in enumerate(
+                [
+                    [("attributes.color", "ilike", "als")],
+                    [("attributes.color", "!=", "false")],
+                    [("attributes.size", "=", 0)],
+                    [("attributes.size", "=", False)],
+                    [("attributes.size", ">", -1)],
+                    [("attributes.flag", "=", True)],
+                    [("attributes.flag", "!=", True)],
+                    [("attributes.tag", "in", ["a", False])],
+                    [("attributes.labels", "in", ["y"])],
+                    [("attributes.labels", "not in", ["x"])],
+                    [("attributes.peer", "=", other.id)],
+                    [("attributes.peer", "!=", False)],
+                    [("attributes.due", ">=", "2026-02-01")],
+                ]
+            ):
+                # the label carries no id: the tiers number records apart
+                observed[f"domain {index}"] = Message.search([*mine, *domain]).mapped(
+                    "body"
+                )
+            return observed
+
+        self._diff((_StubPropertyDiscussion, _StubPropertyMessage), script)

@@ -115,11 +115,16 @@ def test_read_group_by_property_shapes_each_type_as_the_sql_path(env):
         ("2026-03-01", 1),
         ("False", 1),
     ]
-    with pytest.raises(NotImplementedError, match="tags"):
-        env["prp.board"].search([], limit=1).write(
-            {"defs": [{"name": "labels", "type": "tags", "string": "L", "tags": []}]}
-        )
-        Card_._read_group([], ["props.labels"], ["__count"])
+    # a tags property yields one row per tag the definition knows, and one
+    # NULL row for a card with none of them, as the LEFT JOIN does
+    board.defs = [
+        {"name": "labels", "type": "tags", "string": "L", "tags": [["x", "X", 1]]}
+    ]
+    cards = Card_.search([], order="name")
+    cards[0].props = {"labels": ["x", "stale"]}
+    cards[1].props = {"labels": ["stale"]}
+    rows = Card_._read_group([], ["props.labels"], ["__count", "name:array_agg"])
+    assert rows == [("x", 1, ["a"]), (False, 2, ["b", "c"])]
 
 
 def test_a_domain_on_a_property_keeps_zero_and_unset_apart(env):

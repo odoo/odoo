@@ -1792,16 +1792,42 @@ class _InMemoryReadGroup:
             self._unsupported(f"groupby {spec!r}")
         definition = model.get_property_definition(f"{field.name}.{property_name}")
         property_type = definition.get("type")
-        if property_type in ("tags", "many2many"):
-            self._unsupported(f"groupby {spec!r} ({property_type} property)")
         if property_type == "html":
             raise UserError(_("Grouping by HTML properties is not supported."))
         options = {option[0] for option in definition.get("selection") or ()}
+        tags = {tag[0] for tag in definition.get("tags") or ()}
         comodel = None
-        if property_type == "many2one" and definition.get("comodel"):
+        if property_type in ("many2one", "many2many") and definition.get("comodel"):
             comodel = (
                 model.env[definition["comodel"]].sudo().with_context(active_test=False)
             )
+
+        def is_id(raw):
+            return isinstance(raw, int) and not isinstance(raw, bool)
+
+        if property_type in ("tags", "many2many"):
+            # the SQL path LEFT JOINs the json array's elements that the
+            # definition (or the comodel's table) knows: one key per element,
+            # a NULL row when none qualifies
+            def read_collection(record):
+                values = record[field.name]
+                raw = (values._values or {}).get(property_name)
+                if not isinstance(raw, list):
+                    return None
+                if property_type == "tags":
+                    keys = [key for key in raw if key in tags]
+                elif comodel is None:
+                    keys = []
+                else:
+                    keys = [
+                        key
+                        for key in raw
+                        if is_id(key) and comodel.browse(key).exists()
+                    ]
+                return _MultiValued(keys) if keys else None
+
+            return read_collection
+
         first_week_day = 0
         if granularity == "week":
             from odoo.tools import get_lang
@@ -1814,7 +1840,7 @@ class _InMemoryReadGroup:
             if property_type == "selection":
                 return raw if raw in options else None
             if property_type == "many2one":
-                if not isinstance(raw, int) or isinstance(raw, bool) or comodel is None:
+                if not is_id(raw) or comodel is None:
                     return None
                 return raw if comodel.browse(raw).exists() else None
             if property_type in ("date", "datetime"):

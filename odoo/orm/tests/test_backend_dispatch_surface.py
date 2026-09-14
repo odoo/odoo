@@ -84,10 +84,12 @@ DISPATCH_SITES: dict[tuple[str, str], str] = {
     ),
     ("models/mixins/read_group/mixin.py", "_read_group"): (
         "LOSSY: PostgresBackend runs the compiled statement; InMemoryBackend "
-        "groups the dict rows itself and covers column and many2one groupbys, "
-        "day/week/month/quarter/year granularity and the standard aggregates, "
-        "and raises NotImplementedError for many2one paths, many2many and "
-        "properties groupbys, having, an explicit order and sum_currency"
+        "groups the dict rows itself and covers column, many2one, many2one "
+        "path, many2many and property groupbys (tags and many2many properties "
+        "one key per known element), every granularity, the standard "
+        "aggregates (exact on numeric columns), having, an explicit order, "
+        "limit and offset, and raises NotImplementedError for sum_currency, "
+        "an order by an array aggregate and an order term outside the groupby"
     ),
     ("models/mixins/traversal.py", "_has_cycle"): (
         "guarded by backend.supports_recursive_queries: the reachability CTE on "

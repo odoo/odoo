@@ -858,28 +858,39 @@ class Properties(Field):
         self, records: BaseModel, field_expr: str, operator: str, value: typing.Any
     ) -> typing.Any:
         getter = self.get_expression_getter(field_expr)
-        domain = None
-        if operator == "any" or isinstance(value, Domain):
-            domain = Domain(value).optimize(records)
-        elif (
+        relational = (
             operator == "in"
             and isinstance(value, COLLECTION_TYPES)
             and hasattr(getter(records[:1]), "_ids")
-        ):
-            domain = Domain("id", "in", value).optimize(records)
+        )
         _debug.logic(
             "field.properties.filter_function",
             model=self.model_name,
             field_expr=field_expr,
             operator=operator,
             strategy="relational_domain"
-            if domain is not None
+            if relational or operator == "any" or isinstance(value, Domain)
             else "collection"
             if operator == "in" and isinstance(value, COLLECTION_TYPES)
             else "scalar",
         )
-        if domain is not None:
+        if operator == "any" or isinstance(value, Domain):
+            domain = Domain(value).optimize(records)
             return lambda rec: getter(rec).filtered_domain(domain)
+        if relational:
+            # the same buckets as _property_in_to_sql: False is the unset
+            # property, an id matches the record or one of the records
+            match_unset = any(v is False for v in value)
+            ids = [v for v in value if v is not False]
+            domain = Domain("id", "in", ids).optimize(records) if ids else Domain.FALSE
+
+            def matches_record(rec: BaseModel) -> bool:
+                corecords = getter(rec)
+                if not corecords:
+                    return match_unset
+                return bool(corecords.filtered_domain(domain))
+
+            return matches_record
 
         if operator == "in" and isinstance(value, COLLECTION_TYPES):
             return self._filter_property_in(getter, value)

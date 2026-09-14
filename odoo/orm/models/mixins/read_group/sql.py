@@ -315,6 +315,7 @@ class _ReadGroupSQLMixin(_ModelStubs):
                 f"Granularity specification isn't correct: {granularity!r}"
             )
 
+        prop_type = None
         if field.is_properties:
             definition = self.get_property_definition(f"{field.name}.{seq_fnames}")
             prop_type = definition.get("type")
@@ -354,7 +355,10 @@ class _ReadGroupSQLMixin(_ModelStubs):
                 sql_expr,
             )
 
-        if field.is_date and granularity not in READ_GROUP_NUMBER_GRANULARITY:
+        is_date = field.is_date or (field.is_properties and prop_type == "date")
+        if is_date and granularity not in READ_GROUP_NUMBER_GRANULARITY:
+            # a date property groups by a date, as a Date column does; the
+            # in-memory backend answers the same
             sql_expr = SQL("%s::date", sql_expr)
 
         _debug.logic(
