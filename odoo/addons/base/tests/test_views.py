@@ -14,7 +14,7 @@ from markupsafe import Markup
 from psycopg import IntegrityError
 from psycopg.types.json import Json
 
-from odoo import Command
+from odoo import Command, api
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tests import common, tagged
@@ -5055,11 +5055,13 @@ class TestDefaultView(ViewCase):
             self.View._get_default_calendar_view()
 
     def test_get_view_is_readonly(self):
+        View = type(self.env["ir.ui.view"])
         self.assertTrue(
-            type(self.env["ir.ui.view"]).get_view._readonly,
+            api.is_readonly(View, "get_view"),
             "get_view should carry @api.readonly (read/write split)",
         )
-        self.assertTrue(type(self.env["ir.ui.view"]).get_views._readonly)
+        self.assertTrue(api.is_readonly(View, "get_views"))
+        self.assertFalse(api.is_readonly(View, "write"))
 
 
 class TestViewCombined(ViewCase):

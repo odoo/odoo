@@ -1,7 +1,7 @@
 import threading
 from typing import Any
 
-from odoo import http
+from odoo import api, http
 from odoo.http import NotFound, request
 from odoo.service.model import call_kw
 
@@ -23,21 +23,11 @@ class DataSet(http.Controller):
         except KeyError as e:
             dbg.logic.debug("[rpc] readonly probe: malformed params (%s)", e)
             raise NotFound from e
-        for cls in model_class.mro():
-            method = getattr(cls, method_name, None)
-            if method is not None and hasattr(method, "_readonly"):
-                dbg.logic.debug(
-                    "[rpc:%s.%s] readonly=%s from %s",
-                    params["model"],
-                    method_name,
-                    method._readonly,
-                    cls.__name__,
-                )
-                return method._readonly
+        readonly = api.is_readonly(model_class, method_name)
         dbg.logic.debug(
-            "[rpc:%s.%s] readonly=False (undeclared)", params["model"], method_name
+            "[rpc:%s.%s] readonly=%s", params["model"], method_name, readonly
         )
-        return False
+        return readonly
 
     @http.route(
         ["/web/dataset/call_kw", "/web/dataset/call_kw/<path:path>"],

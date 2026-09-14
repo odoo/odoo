@@ -303,3 +303,30 @@ class TestNoShippedConstraintReliesOnSu:
                 )
             )
         assert seen > 500, seen
+
+
+class TestReadonlyResolution:
+    def test_the_nearest_stamp_in_the_mro_decides(self):
+        class Base:
+            @api.readonly
+            def get_views(self):
+                return "base"
+
+            def write(self):
+                return "base"
+
+        class Override(Base):
+            def get_views(self):
+                return "override"
+
+        class Restated(Override):
+            @api.readonly
+            def write(self):
+                return "restated"
+
+        assert api.is_readonly(Base, "get_views") is True
+        assert api.is_readonly(Override, "get_views") is True
+        assert api.is_readonly(Restated, "get_views") is True
+        assert api.is_readonly(Override, "write") is False
+        assert api.is_readonly(Restated, "write") is True
+        assert api.is_readonly(Restated, "missing") is False
