@@ -64,4 +64,25 @@ class AccountChartTemplate(models.AbstractModel):
             'stock_valuation': {
                 'account_stock_variation_id': 'stock_variation',
             },
+            'receivable': {
+                'tag_ids': 'account.account_tag_wcap_trade_receivable',
+            },
+            'pos_receivable': {
+                'tag_ids': 'account.account_tag_wcap_trade_receivable',
+            },
+            'owner_current_account': {
+                'tag_ids': 'account.account_tag_wcap_other_receivable',
+            },
+            'tax_receivable': {
+                'tag_ids': 'account.account_tag_wcap_other_receivable',
+            },
+            'payable': {
+                'tag_ids': 'account.account_tag_wcap_trade_payable',
+            },
+            'tax_payable': {
+                'tag_ids': 'account.account_tag_wcap_other_payable',
+            },
+            'prepayments': {
+                'tag_ids': 'account.account_tag_wcap_deferred_revenue',
+            },
         }

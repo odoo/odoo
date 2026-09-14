@@ -30,6 +30,153 @@
             <field name="applicability">accounts</field>
         </record>
 
+        <!-- TAGS FOR CASH FLOW STATEMENT INDIRECT METHOD -->
+        <record id="account_tag_adj_depreciation_and_amortization" model="account.account.tag">
+            <field name="name">Adjustment - Depreciation and amortization</field>
+            <field name="applicability">accounts</field>
+            <field name="color" eval="1" />
+        </record>
+        <record id="account_tag_adj_provisions" model="account.account.tag">
+            <field name="name">Adjustment - Provisions</field>
+            <field name="applicability">accounts</field>
+            <field name="color" eval="1" />
+        </record>
+        <record id="account_tag_adj_PPE_sale" model="account.account.tag">
+            <field name="name">Adjustment - PPE Sale</field>
+            <field name="applicability">accounts</field>
+            <field name="color" eval="1" />
+        </record>
+        <record id="account_tag_adj_ROU_sale" model="account.account.tag">
+            <field name="name">Adjustment - Right of Use Sale</field>
+            <field name="applicability">accounts</field>
+            <field name="color" eval="1" />
+        </record>
+        <record id="account_tag_adj_forex" model="account.account.tag">
+            <field name="name">Adjustment - Forex</field>
+            <field name="applicability">accounts</field>
+            <field name="color" eval="1" />
+        </record>
+        <record id="account_tag_adj_net_fin_result" model="account.account.tag">
+            <field name="name">Adjustment - Net Financial Result</field>
+            <field name="applicability">accounts</field>
+            <field name="color" eval="1" />
+        </record>
+        <record id="account_tag_adj_income_tax_expense" model="account.account.tag">
+            <field name="name">Adjustment - Income Tax Expense</field>
+            <field name="applicability">accounts</field>
+            <field name="color" eval="1" />
+        </record>
+        <record id="account_tag_wcap_trade_receivable" model="account.account.tag">
+            <field name="name">Working Capital - Trade Receivable</field>
+            <field name="applicability">accounts</field>
+            <field name="color" eval="1" />
+        </record>
+        <record id="account_tag_wcap_other_receivable" model="account.account.tag">
+            <field name="name">working Capital - Other Receivable</field>
+            <field name="applicability">accounts</field>
+            <field name="color" eval="1" />
+        </record>
+        <record id="account_tag_wcap_trade_payable" model="account.account.tag">
+            <field name="name">Working Capital - Trade Payable</field>
+            <field name="applicability">accounts</field>
+            <field name="color" eval="1" />
+        </record>
+        <record id="account_tag_wcap_other_payable" model="account.account.tag">
+            <field name="name">Working Capital - Other Payable</field>
+            <field name="applicability">accounts</field>
+            <field name="color" eval="1" />
+        </record>
+        <record id="account_tag_wcap_inventory" model="account.account.tag">
+            <field name="name">Working Capital - Inventory</field>
+            <field name="applicability">accounts</field>
+            <field name="color" eval="1" />
+        </record>
+        <record id="account_tag_wcap_deferred_revenue" model="account.account.tag">
+            <field name="name">Working Capital - Deferred Revenue</field>
+            <field name="applicability">accounts</field>
+            <field name="color" eval="1" />
+        </record>
+        <record id="account_tag_op_income_tax_paid_received" model="account.account.tag">
+            <field name="name">Income Tax Paid Received</field>
+            <field name="applicability">accounts</field>
+            <field name="color" eval="1" />
+        </record>
+        <record id="account_tag_op_interest_paid" model="account.account.tag">
+            <field name="name">Interest Paid</field>
+            <field name="applicability">accounts</field>
+            <field name="color" eval="1" />
+        </record>
+        <record id="account_tag_inv_ppe_sale" model="account.account.tag">
+            <field name="name">Investment - PPE Sale</field>
+            <field name="applicability">accounts</field>
+            <field name="color" eval="1" />
+        </record>
+        <record id="account_tag_inv_ppe_purchase" model="account.account.tag">
+            <field name="name">Investment - PPE Purchase</field>
+            <field name="applicability">accounts</field>
+            <field name="color" eval="1" />
+        </record>
+        <record id="account_tag_inv_rou_sale" model="account.account.tag">
+            <field name="name">Investment - Right of Use Sale</field>
+            <field name="applicability">accounts</field>
+            <field name="color" eval="1" />
+        </record>
+        <record id="account_tag_inv_purch_fin_instru" model="account.account.tag">
+            <field name="name">Purchase of Financial Instruments</field>
+            <field name="applicability">accounts</field>
+            <field name="color" eval="1" />
+        </record>
+        <record id="account_tag_inv_purch_recoverable_cash_advances" model="account.account.tag">
+            <field name="name">Receipt of Recoverable Cash Advances</field>
+            <field name="applicability">accounts</field>
+            <field name="color" eval="1" />
+        </record>
+        <record id="account_tag_inv_repay_recoverable_cash_advances" model="account.account.tag">
+            <field name="name">Repayment of Recoverable Cash Advances</field>
+            <field name="applicability">accounts</field>
+            <field name="color" eval="1" />
+        </record>
+        <record id="account_tag_inv_interest_received" model="account.account.tag">
+            <field name="name">Interest Received</field>
+            <field name="applicability">accounts</field>
+            <field name="color" eval="1" />
+        </record>
+        <record id="account_tag_inv_purch_int_assets" model="account.account.tag">
+            <field name="name">Purchase of Intangible Assets</field>
+            <field name="applicability">accounts</field>
+            <field name="color" eval="1" />
+        </record>
+        <record id="account_tag_fin_borr_repay" model="account.account.tag">
+            <field name="name">Financing - Borrowings Repay</field>
+            <field name="applicability">accounts</field>
+            <field name="color" eval="1" />
+        </record>
+        <record id="account_tag_fin_lease_repay" model="account.account.tag">
+            <field name="name">Financing - Lease Repay</field>
+            <field name="applicability">accounts</field>
+            <field name="color" eval="1" />
+        </record>
+        <record id="account_tag_fin_income_tax_paid_received" model="account.account.tag">
+            <field name="name">Financing - Income Tax Paid Received</field>
+            <field name="applicability">accounts</field>
+            <field name="color" eval="1" />
+        </record>
+        <record id="account_tag_fin_net_cash" model="account.account.tag">
+            <field name="name">Financing - Net Cash</field>
+            <field name="applicability">accounts</field>
+            <field name="color" eval="1" />
+        </record>
+        <record id="account_tag_fin_net_forex_diff" model="account.account.tag">
+            <field name="name">Financing - Foreign Exchange Diff</field>
+            <field name="applicability">accounts</field>
+            <field name="color" eval="1" />
+        </record>
+        <record id="account_tag_cash_and_cash_equivalent" model="account.account.tag">
+            <field name="name">Cash and Cash Equivalent</field>
+            <field name="applicability">accounts</field>
+            <field name="color" eval="1" />
+        </record>
+
         <!--
         Payment terms
         -->
