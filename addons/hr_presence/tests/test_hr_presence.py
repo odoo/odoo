@@ -300,6 +300,62 @@ class TestDayBoundary(HrPresenceCase):
 
 
 @tagged("post_install", "-at_install")
+class TestComputeDeclaresWhatItReads(HrPresenceCase):
+    """Asserted against the registry, not through behaviour.
+
+    hr_presence_state is not stored and is reached through `user_id.im_status`,
+    which is invalidated often enough that a behavioural test can pass with a
+    dependency missing. Removing all eleven declarations this module adds fails
+    only two tests; removing most of them individually fails none. The registry
+    is the only thing that answers "is this declared".
+    """
+
+    # Every path _compute_hr_presence_state or _hr_presence_verdict reads.
+    REQUIRED = frozenset(
+        {
+            "active",
+            "company_id.hr_presence_control_email",
+            "company_id.hr_presence_control_ip",
+            "hr_presence_email_date",
+            "hr_presence_ip_date",
+            "hr_presence_manual_date",
+            "hr_presence_manual_state",
+            "is_absent",
+            "resource_calendar_id",
+            "resource_calendar_id.flexible_hours",
+            "tz",
+        }
+    )
+
+    def _declared(self, field_name):
+        field = self.env["hr.employee"]._fields[field_name]
+        return set(self.env.registry.field_depends[field])
+
+    def test_the_presence_state_declares_every_field_its_rule_reads(self):
+        declared = self._declared("hr_presence_state")
+        missing = self.REQUIRED - declared
+        self.assertFalse(
+            missing,
+            f"_compute_hr_presence_state reads these and does not declare them: "
+            f"{sorted(missing)}",
+        )
+
+    def test_the_stored_mirror_is_what_makes_the_state_searchable(self):
+        """The rest of the module leans on this: hr_presence_state cannot be
+        stored (it is a function of wall-clock time), so the filters and the
+        group-by read hr_presence_state_display instead."""
+        employee = self.env["hr.employee"]
+        self.assertFalse(employee._fields["hr_presence_state"].store)
+        self.assertTrue(employee._fields["hr_presence_state_display"].store)
+
+    def test_each_evidence_field_is_declared_by_name(self):
+        declared = self._declared("hr_presence_state")
+        for path in sorted(self.REQUIRED):
+            with self.subTest(path=path):
+                self.assertIn(path, declared)
+
+
+@tagged("post_install", "-at_install")
 class TestDayWindowsTile(HrPresenceCase):
     """Consecutive day windows must meet exactly: no hour in two of them, and no
     hour in none of them.
@@ -439,6 +495,48 @@ class TestSweep(HrPresenceCase):
         own date now, and ir.cron.lastcall already says when the sweep ran."""
         self.assertNotIn(
             "hr_presence_last_compute_date", self.env["res.company"]._fields
+        )
+
+
+@tagged("post_install", "-at_install")
+class TestTheCronEntryPoint(HrPresenceCase):
+    """Every other test calls _check_presence() directly. The thing that
+    actually runs in production is an ir.cron whose code is a string."""
+
+    def test_the_cron_record_still_points_at_a_method_that_exists(self):
+        cron = self.env.ref("hr_presence.ir_cron_presence_control")
+        self.assertEqual(cron.model_id.model, "hr.employee")
+        self.assertEqual(cron.state, "code")
+        self.assertEqual(cron.code.strip(), "model._check_presence()")
+        self.assertTrue(
+            hasattr(self.env[cron.model_id.model], "_check_presence"),
+            "the cron names a method the model does not have",
+        )
+
+    def test_running_the_cron_as_it_is_scheduled_sweeps(self):
+        """As the cron user, whose allowed company is not the one under test --
+        the sweep used to read self.env.company and reach that company only."""
+        company = self.env["res.company"].create({"name": "Cron Co"})
+        calendar = self._make_calendar(company, "UTC")
+        company.write(
+            {"resource_calendar_id": calendar.id, "hr_presence_control_ip": True}
+        )
+        employee = self._make_employee("cronned", company=company, calendar=calendar)
+        employee.hr_presence_state_display = "present"
+
+        cron = self.env.ref("hr_presence.ir_cron_presence_control")
+        self.assertNotEqual(
+            company,
+            cron.user_id.company_id,
+            "fixture: the company under test must not be the cron user's own, "
+            "or this test cannot tell a company-wide sweep from self.env.company "
+            "(which resolves to exactly that company)",
+        )
+        cron.sudo().with_user(cron.user_id).ir_actions_server_id.run()
+        self.assertEqual(
+            employee.hr_presence_state_display,
+            "absent",
+            "the cron must sweep every controlled company",
         )
 
 
