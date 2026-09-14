@@ -81,6 +81,10 @@ class TestWebsiteBlogUi(odoo.tests.HttpCase, TestWebsiteBlogCommon):
                 "social_discord": "https://discord.com/servers/discord-town-hall-169256939211980800",
             }
         )
+        # A second blog keeps /blog on the multi-blog landing (a single blog
+        # redirects to itself), where the "Our Latest Posts" title the tour
+        # edits and the blog navigation both live.
+        self.env["blog.blog"].create({"name": "Travel"})
         self.env.ref("website_blog.opt_blog_sidebar_show").active = True
         self.start_tour("/blog", "blog_context_and_social_media", login="admin")
 
