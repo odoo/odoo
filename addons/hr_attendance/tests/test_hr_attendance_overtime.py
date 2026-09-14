@@ -670,8 +670,19 @@ class TestHrAttendanceOvertime(HttpCase):
 
         with freeze_time("2024-01-01 22:00:00"):
             Attendance._cron_auto_check_out()
+            # The schedule is written in Europe/Brussels, so its 12:00-13:00
+            # lunch is 11:00-12:00 UTC and falls inside the 08:00-12:00 morning:
+            # three worked hours, not four. This read 9 and cut at 18:00 while
+            # the break was placed in the RESOURCE's zone (UTC here) instead of
+            # the schedule's, which put it at 12:00-13:00 UTC -- outside both
+            # attendances, deducted from neither.
+            self.assertEqual(morning.worked_hours, 3)
+            # The day is cut at exactly its budget: eight scheduled hours plus
+            # an hour of tolerance. Three were worked in the morning, so six
+            # more from the 13:00 UTC check-in.
+            self.assertEqual(afternoon.worked_hours, 6)
             self.assertEqual(morning.worked_hours + afternoon.worked_hours, 9)
-            self.assertEqual(afternoon.check_out, datetime(2024, 1, 1, 18, 0))
+            self.assertEqual(afternoon.check_out, datetime(2024, 1, 1, 19, 0))
 
     def test_auto_check_out_two_weeks_calendar(self):
         Attendance = self.env["hr.attendance"]

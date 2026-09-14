@@ -7,7 +7,7 @@ import { AttendanceActionHelper } from "@hr_attendance/views/attendance_helper_v
 export class AttendanceListRenderer extends ListRenderer {
     static template = "hr_attendance.AttendanceListRenderer";
     static components = {
-        ...AttendanceListRenderer.components,
+        ...ListRenderer.components,
         AttendanceActionHelper,
     };
 
@@ -17,14 +17,28 @@ export class AttendanceListRenderer extends ListRenderer {
 }
 
 export class AttendanceListModel extends listView.Model {
+    /**
+     * Hide the attendances of archived employees unless the caller asked about
+     * them.
+     */
     async load(params = {}) {
-        const activeDomainParam = params.domain?.some(
-            (index) => Array.isArray(index) && index[0] == "employee_id.active",
+        // `params.domain` is absent on every reload that means "same domain as
+        // before" -- after a save, after a discard -- so pushing into it left
+        // those loads unfiltered, and reached the current domain only because
+        // it had mutated the search model's own array on the first load and
+        // that array was still the one in the config.
+        const domain = params.domain ?? this.config.domain ?? [];
+        const filtersOnActive = domain.some(
+            (condition) =>
+                Array.isArray(condition) && condition[0] === "employee_id.active",
         );
-        if (!activeDomainParam) {
-            params.domain?.push(["employee_id.active", "=", true]);
+        if (filtersOnActive) {
+            return super.load(params);
         }
-        return super.load(params);
+        return super.load({
+            ...params,
+            domain: [...domain, ["employee_id.active", "=", true]],
+        });
     }
 }
 

@@ -11,15 +11,48 @@ from odoo.service.common import exp_version
 from odoo.tools import SQL, float_round, py_to_js_locale
 from odoo.tools.image import image_data_uri
 
+from ..tools import debug_log as dbg
+
 
 class HrAttendance(http.Controller):
+    # Every kiosk route answers the same way when it cannot act: a mapping
+    # carrying a status the caller can branch on. Four shapes were in use --
+    # a bare `{}`, a bare `[]`, `{"status": "error"}` and an uncaught
+    # `AccessError` reaching the client as an HTTP 500 -- for one situation,
+    # "the token does not entitle you to this".
+    @staticmethod
+    def _refuse(message=None):
+        return (
+            {"status": "error", "message": message} if message else {"status": "error"}
+        )
+
+    @classmethod
+    def _employee_of(cls, token, employee_id):
+        """The employee the kiosk at `token` may act for, or an empty recordset.
+
+        One check in one place: three routes each re-derived "exists, and
+        belongs to this token's company" inline, and the shape of the answer
+        when it did not hold differed between them.
+        """
+        company = cls._get_company(token)
+        if not company:
+            return request.env["hr.employee"].sudo().browse()
+        employee = request.env["hr.employee"].sudo().browse(employee_id).exists()
+        return employee if employee.company_id == company else employee.browse()
+
     @staticmethod
     def _get_company(token):
-        return (
+        company = (
             request.env["res.company"]
             .sudo()
             .search([("attendance_kiosk_key", "=", token)])
         )
+        dbg.pipeline.debug(
+            "[kiosk:%s] token resolves to %s",
+            dbg.lazy(lambda: (token or "")[:8]),
+            dbg.rec(company),
+        )
+        return company
 
     @staticmethod
     def _get_overtime_today(employee):
@@ -29,12 +62,16 @@ class HrAttendance(http.Controller):
             .astimezone(timezone(employee._get_tz()))
             .date()
         )
+        # `manual_duration`, not `duration`: it is what `hr.attendance`'s
+        # `overtime_hours`, the employee's `total_overtime` and the backend list
+        # all sum, so reading the raw `duration` here made the kiosk the one
+        # place where a manager's correction to an overtime line was invisible.
         groups = (
             employee.env["hr.attendance.overtime.line"]
             .sudo()
             ._read_group(
                 domain=[("employee_id", "=", employee.id), ("date", "=", today)],
-                aggregates=["duration:sum"],
+                aggregates=["manual_duration:sum"],
             )
         )
         return groups[0][0] or 0
@@ -80,6 +117,9 @@ class HrAttendance(http.Controller):
         try:
             location = request.env["geocoder"]._get_localisation(latitude, longitude)
         except UserError, RequestException:
+            dbg.logic.debug(
+                "_get_geoip_response: no place name for %s,%s", latitude, longitude
+            )
             location = _("Unknown")
         response.update(
             {
@@ -111,52 +151,51 @@ class HrAttendance(http.Controller):
     )
     def get_employees_without_badge(self, token, name=None, limit=20):
         company = self._get_company(token)
-        if company:
-            domain = Domain([("barcode", "=", False), ("company_id", "=", company.id)])
-            if name:
-                domain = Domain.AND([domain, [("name", "ilike", name)]])
+        if not company:
+            return self._refuse()
+        domain = Domain("barcode", "=", False) & Domain("company_id", "=", company.id)
+        if name:
+            domain &= Domain("name", "ilike", name)
+        try:
             employee_list = request.env["hr.employee"].search_read(
                 domain,
                 ["id", "name"],
                 limit=limit,
             )
-            return {"status": "success", "employees": employee_list}
-        return {}
+        except AccessError:
+            # The route is `auth="public"` and the listing is deliberately NOT
+            # sudo: only the signed-in setup session may see who has no badge.
+            return self._refuse(_("You are not allowed to list employees."))
+        return {"status": "success", "employees": employee_list}
 
     @http.route("/hr_attendance/set_badge", type="jsonrpc", auth="public")
     def set_badge(self, employee_id, badge, token):
-        company = self._get_company(token)
-        if not company:
-            return {}
-        employee = request.env["hr.employee"].sudo().browse(employee_id).exists()
-        if not employee or employee.company_id != company:
-            return {}
+        employee = self._employee_of(token, employee_id)
+        if not employee:
+            return self._refuse()
         if employee.barcode:
-            return {
-                "status": "error",
-                "message": _("This employee already has a badge."),
-            }
+            return self._refuse(_("This employee already has a badge."))
         try:
             request.env["hr.employee"].browse(employee.id).barcode = badge
         except AccessError:
-            return {
-                "status": "error",
-                "message": _("You are not allowed to assign badges."),
-            }
+            return self._refuse(_("You are not allowed to assign badges."))
         return {"status": "success"}
 
     @http.route("/hr_attendance/create_employee", type="jsonrpc", auth="public")
     def create_employee(self, name, token):
         company = self._get_company(token)
-        if company:
+        if not company:
+            return self._refuse()
+        try:
             request.env["hr.employee"].create(
                 {
                     "name": name,
                     "company_id": company.id,
                 }
             )
-            return True
-        return False
+        except AccessError:
+            return self._refuse(_("You are not allowed to create employees."))
+        return {"status": "success"}
 
     @http.route("/hr_attendance/kiosk_keepalive", auth="user", type="jsonrpc")
     def kiosk_keepalive(self):
@@ -217,72 +256,79 @@ class HrAttendance(http.Controller):
         "/hr_attendance/attendance_employee_data", type="jsonrpc", auth="public"
     )
     def employee_attendance_data(self, token, employee_id):
-        company = self._get_company(token)
-        if company:
-            employee = request.env["hr.employee"].sudo().browse(employee_id).exists()
-            if employee and employee.company_id == company:
-                return self._get_employee_info_response(employee)
-        return {}
+        employee = self._employee_of(token, employee_id)
+        return (
+            self._get_employee_info_response(employee) if employee else self._refuse()
+        )
 
     @http.route(
         "/hr_attendance/attendance_barcode_scanned", type="jsonrpc", auth="public"
     )
     def change_attendance_by_barcode(self, token, barcode):
+        dbg.pipeline.debug("[kiosk] barcode scan")
         company = self._get_company(token)
-        if company:
-            employee = (
-                request.env["hr.employee"]
-                .sudo()
-                .search(
-                    [("barcode", "=", barcode), ("company_id", "=", company.id)],
-                    limit=1,
-                )
+        if not company:
+            return self._refuse()
+        employee = (
+            request.env["hr.employee"]
+            .sudo()
+            .search(
+                [("barcode", "=", barcode), ("company_id", "=", company.id)],
+                limit=1,
             )
-            if employee:
-                employee._attendance_action_change(
-                    self._get_geoip_response(
-                        "kiosk",
-                        device_tracking_enabled=company.attendance_device_tracking,
-                    )
-                )
-                return self._get_employee_info_response(employee)
-        return {}
+        )
+        if not employee:
+            return self._refuse()
+        employee._attendance_action_change(
+            self._get_geoip_response(
+                "kiosk",
+                device_tracking_enabled=company.attendance_device_tracking,
+            )
+        )
+        return self._get_employee_info_response(employee)
 
     @http.route("/hr_attendance/manual_selection", type="jsonrpc", auth="public")
     def manual_selection(
         self, token, employee_id, pin_code, latitude=False, longitude=False
     ):
-        company = self._get_company(token)
-        if company:
-            employee = request.env["hr.employee"].sudo().browse(employee_id).exists()
-            if (
-                employee
-                and employee.company_id == company
-                and (
-                    (not company.attendance_kiosk_use_pin)
-                    or employee._check_attendance_pin(pin_code)
-                )
-            ):
-                employee._attendance_action_change(
-                    self._get_geoip_response(
-                        "kiosk",
-                        latitude=latitude,
-                        longitude=longitude,
-                        device_tracking_enabled=company.attendance_device_tracking,
-                    )
-                )
-                return self._get_employee_info_response(employee)
-        return {}
+        dbg.pipeline.debug(
+            "[kiosk] manual selection of employee %s, pin %s",
+            employee_id,
+            "given" if pin_code else "absent",
+        )
+        employee = self._employee_of(token, employee_id)
+        if not employee:
+            return self._refuse()
+        company = employee.company_id
+        if company.attendance_kiosk_use_pin and not employee._check_attendance_pin(
+            pin_code
+        ):
+            return self._refuse()
+        employee._attendance_action_change(
+            self._get_geoip_response(
+                "kiosk",
+                latitude=latitude,
+                longitude=longitude,
+                device_tracking_enabled=company.attendance_device_tracking,
+            )
+        )
+        return self._get_employee_info_response(employee)
 
     @http.route("/hr_attendance/employees_infos", type="jsonrpc", auth="public")
     def employees_infos(self, token, limit, offset, domain):
+        # The search runs as superuser, so this list is the whole of the access
+        # control on it. Anything the allowlist does not positively recognise
+        # is refused: skipping what it did not understand let a malformed
+        # condition through to `Domain()`, which raised out of the route as a
+        # server error rather than as this message.
         for condition in domain:
-            if not isinstance(condition, (list, tuple)) or len(condition) != 3:
+            if condition in ("&", "|", "!"):
                 continue
-            field_name, operator, _value = condition
-            if field_name not in ("name", "department_id") or operator not in (
-                "=",
-                "ilike",
+            if (
+                not isinstance(condition, (list, tuple))
+                or len(condition) != 3
+                or condition[0] not in ("name", "department_id")
+                or condition[1] not in ("=", "ilike")
             ):
                 raise UserError(
                     _(
@@ -292,20 +338,20 @@ class HrAttendance(http.Controller):
                 )
 
         company = self._get_company(token)
-        if company:
-            domain = Domain(domain) & Domain("company_id", "=", company.id)
-            employees = (
-                request.env["hr.employee"]
-                .sudo()
-                .search_fetch(
-                    domain,
-                    ["id", "display_name", "job_id"],
-                    limit=limit,
-                    offset=offset,
-                    order="name, id",
-                )
-            )
-            employees_data = [
+        if not company:
+            return self._refuse()
+        domain = Domain(domain) & Domain("company_id", "=", company.id)
+        Employee = request.env["hr.employee"].sudo()
+        employees = Employee.search_fetch(
+            domain,
+            ["id", "display_name", "job_id"],
+            limit=limit,
+            offset=offset,
+            order="name, id",
+        )
+        return {
+            "status": "success",
+            "records": [
                 {
                     "id": employee.id,
                     "display_name": employee.display_name,
@@ -315,16 +361,18 @@ class HrAttendance(http.Controller):
                     "mode": employee.last_attendance_id.in_mode,
                 }
                 for employee in employees
-            ]
-            return {
-                "records": employees_data,
-                "length": request.env["hr.employee"].sudo().search_count(domain),
-            }
-        return []
+            ],
+            "length": Employee.search_count(domain),
+        }
 
     @http.route("/hr_attendance/systray_check_in_out", type="jsonrpc", auth="user")
     def systray_attendance(self, latitude=False, longitude=False):
         employee = request.env.user.employee_id
+        dbg.pipeline.debug(
+            "[systray] check in/out by user %s as %s",
+            request.env.user.id,
+            dbg.rec(employee),
+        )
         geo_ip_response = self._get_geoip_response(
             mode="systray",
             latitude=latitude,
@@ -357,17 +405,14 @@ class HrAttendance(http.Controller):
     def set_attendance_settings(self, token, mode):
         company = self._get_company(token)
         if not company:
-            return {}
+            return self._refuse()
         modes = dict(
             request.env["res.company"]._fields["attendance_kiosk_mode"].selection
         )
         if mode not in modes:
-            return {"status": "error", "message": _("Unknown kiosk mode.")}
+            return self._refuse(_("Unknown kiosk mode."))
         try:
             request.env["res.company"].browse(company.id).attendance_kiosk_mode = mode
         except AccessError:
-            return {
-                "status": "error",
-                "message": _("You are not allowed to change the kiosk settings."),
-            }
+            return self._refuse(_("You are not allowed to change the kiosk settings."))
         return {"status": "success"}

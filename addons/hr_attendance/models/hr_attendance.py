@@ -1,8 +1,6 @@
-from calendar import monthrange
 from collections import defaultdict
 from datetime import UTC, datetime, time, timedelta
 from itertools import chain, pairwise
-from random import randint
 
 from dateutil.relativedelta import relativedelta
 from dateutil.rrule import DAILY, rrule
@@ -15,6 +13,9 @@ from odoo.libs.datetime import timezone
 from odoo.libs.intervals import Intervals
 from odoo.tools import convert, format_datetime, format_duration, format_time
 from odoo.tools.date_utils import get_intervals_hours
+
+from ..tools import debug_log as dbg
+from ..tools import demo
 
 
 def get_google_maps_url(latitude, longitude):
@@ -183,9 +184,16 @@ class HrAttendance(models.Model):
                 # takes a date, not a datetime that only coerces on flush.
                 attendance.date = fields.Date.context_today(attendance)
                 continue
-            tz = timezone(attendance.employee_id._get_tz())
+            tz = attendance._schedule_tz()
             attendance.date = (
                 attendance.check_in.replace(tzinfo=UTC).astimezone(tz).date()
+            )
+            dbg.logic.debug(
+                "_compute_date %s: check_in %s in %s -> %s",
+                dbg.rec(attendance),
+                attendance.check_in,
+                tz,
+                attendance.date,
             )
 
     @api.depends("worked_hours", "overtime_hours")
@@ -289,10 +297,34 @@ class HrAttendance(models.Model):
                 and attendance.attendance_manager_id.id == self.env.user.id
             )
 
+    def _schedule_version(self):
+        """The employee's version in force on the day of this check-in.
+
+        An attendance is priced and dated by the schedule the employee was on
+        when they worked it. Reading their *current* schedule instead re-dates
+        and re-prices every day they have ever worked the moment they move to
+        another one -- and does so silently, because the stored `date` only
+        changes the next time something happens to retrigger its compute.
+        """
+        self.check_singleton()
+        return self.employee_id.sudo()._get_version(self.check_in.date())
+
+    def _schedule_tz(self):
+        """The zone that version's schedule is written in.
+
+        Every reader of one attendance has to agree on which zone it is: the
+        day `date` files it under, the lunch break `worked_hours` deducts, the
+        local span the overtime engine dates its lines by. Three sources were
+        in use -- the employee's current schedule, the resource's own zone and
+        the version's -- and they disagree for anyone whose personal zone or
+        schedule is not the one their work contact carries.
+        """
+        return timezone(self._schedule_version()._get_tz())
+
     def _get_employee_calendar(self):
         self.check_singleton()
         return (
-            self.employee_id.resource_calendar_id
+            self._schedule_version().resource_calendar_id
             or self.employee_id.company_id.resource_calendar_id
         )
 
@@ -322,24 +354,40 @@ class HrAttendance(models.Model):
         attendance.
         """
         self.check_singleton()
-        calendar = self._get_employee_calendar()
-        resource = self.employee_id.resource_id
-        tz = timezone(resource.tz) if not calendar else timezone(calendar.tz)
+        tz = self._schedule_tz()
         start_dt_tz = start_dt.replace(tzinfo=UTC).astimezone(tz)
         end_dt_tz = end_dt.replace(tzinfo=UTC).astimezone(tz)
 
         if end_dt_tz < start_dt_tz:
             return 0.0
 
-        lunch_intervals = []
-        if not resource._is_flexible():
-            lunch_intervals = self.employee_id._get_attendance_intervals(
-                start_dt_tz, end_dt_tz, lunch=True
-            )
-        attendance_intervals = (
-            Intervals([(start_dt_tz, end_dt_tz, self)]) - lunch_intervals
+        return get_intervals_hours(
+            Intervals([(start_dt_tz, end_dt_tz, self)])
+            - self._lunch_intervals(start_dt_tz, end_dt_tz)
         )
-        return get_intervals_hours(attendance_intervals)
+
+    def _lunch_intervals(self, start_dt_tz, end_dt_tz):
+        """The schedule's lunch breaks inside a span, placed in the SCHEDULE's zone.
+
+        `hr.employee._get_attendance_intervals` places them in the RESOURCE's
+        zone, which follows the employee's work contact rather than the
+        schedule they work to. When the two differ the break lands hours away
+        from the span and is deducted from nothing: a nine-hour presence
+        against a schedule carrying an hour of lunch was credited as nine
+        worked hours instead of eight.
+        """
+        self.check_singleton()
+        calendar = self._get_employee_calendar()
+        if not calendar or calendar.flexible_hours:
+            return Intervals([])
+        resource = self.employee_id.resource_id
+        return calendar._attendance_intervals_batch(
+            start_dt_tz,
+            end_dt_tz,
+            resources=resource,
+            tz=self._schedule_tz(),
+            lunch=True,
+        )[resource.id]
 
     @api.constrains("check_in", "check_out")
     def _check_validity_check_in_check_out(self):
@@ -365,6 +413,12 @@ class HrAttendance(models.Model):
             for earlier, later in self._sorted_span_pairs(employee, attendances):
                 if earlier.check_out and earlier.check_out <= later.check_in:
                     continue
+                dbg.logic.debug(
+                    "_check_validity: %s overlaps %s for %s",
+                    dbg.rec(earlier),
+                    dbg.rec(later),
+                    dbg.rec(employee),
+                )
                 raise exceptions.ValidationError(
                     _(
                         "Cannot create new attendance record for %(empl_name)s, the employee was already checked in on %(datetime)s",
@@ -447,6 +501,13 @@ class HrAttendance(models.Model):
             first = min(span[0] for span in spans)
             last = max(span[1] for span in spans)
             windows[employee] = employee._round_overtime_window(first, last)
+            dbg.pipeline.debug(
+                "[overtime:%s] window %s..%s rounded to %s..%s",
+                employee.id,
+                first,
+                last,
+                *windows[employee],
+            )
         return windows
 
     def _attendances_in_overtime_windows(self, windows):
@@ -461,7 +522,9 @@ class HrAttendance(models.Model):
         selected = Attendance
         closed = {}
         for employee, (first, last) in windows.items():
+            passes = 0
             while True:
+                passes += 1
                 candidates = Attendance.search(  # noqa: E8507 - walks each employee's window in pages
                     [
                         ("employee_id", "=", employee.id),
@@ -492,8 +555,24 @@ class HrAttendance(models.Model):
                 )
                 if grown == (first, last):
                     break
+                dbg.logic.debug(
+                    "[overtime:%s] window grew %s..%s -> %s..%s on pass %d",
+                    employee.id,
+                    first,
+                    last,
+                    *grown,
+                    passes,
+                )
                 first, last = grown
             closed[employee] = (first, last)
+            dbg.pipeline.debug(
+                "[overtime:%s] closed window %s..%s over %d attendance(s) in %d pass(es)",
+                employee.id,
+                first,
+                last,
+                len(candidates),
+                passes,
+            )
             selected |= candidates.filtered(
                 lambda a, first=first, last=last: (
                     (span := a._local_date_span())[1] >= first and span[0] <= last
@@ -510,6 +589,9 @@ class HrAttendance(models.Model):
         """
         windows = self._merge_windows(self._overtime_windows(), windows)
         if not windows:
+            dbg.logic.debug(
+                "_update_overtime %s: no closed attendance to price", dbg.rec(self)
+            )
             return
         windows, all_attendances = self._attendances_in_overtime_windows(windows)
         Line = self.env["hr.attendance.overtime.line"].sudo()
@@ -531,6 +613,11 @@ class HrAttendance(models.Model):
             decisions_by_key[line._regeneration_key()].append(
                 {"status": line.status, "manual_duration": line.manual_duration}
             )
+        dbg.lifecycle.debug(
+            "_update_overtime: dropping %d superseded line(s) over %d employee window(s)",
+            len(superseded),
+            len(windows),
+        )
         superseded.unlink()
         if not all_attendances:
             return
@@ -598,6 +685,12 @@ class HrAttendance(models.Model):
             decisions = decisions_by_key.get(Line._regeneration_key_from_vals(vals))
             if decisions:
                 vals.update(decisions.pop(0))
+        dbg.lifecycle.debug(
+            "_update_overtime: creating %d line(s) for %d attendance(s), %d kept decision(s)",
+            len(overtime_vals_list),
+            len(all_attendances),
+            sum(len(decisions) for decisions in decisions_by_key.values()),
+        )
         # Each val carries its `attendance_id`; creating the lines marks the
         # attendance's stored `linked_overtime_ids` computes dirty through the
         # real relation, so nothing has to be marked by hand.
@@ -606,7 +699,13 @@ class HrAttendance(models.Model):
     _OVERTIME_SOURCE_FIELDS = frozenset({"employee_id", "check_in", "check_out"})
 
     @api.model_create_multi
+    @dbg.timed
     def create(self, vals_list):
+        dbg.lifecycle.debug(
+            "hr.attendance.create: %d record(s), keys %s",
+            len(vals_list),
+            dbg.vals_keys(vals_list),
+        )
         res = super().create(vals_list)
         res._update_overtime()
         return res
@@ -628,13 +727,25 @@ class HrAttendance(models.Model):
                 )
             )
         if self._OVERTIME_SOURCE_FIELDS.isdisjoint(vals):
+            dbg.lifecycle.debug(
+                "hr.attendance.write %s: keys %s touch no overtime source",
+                dbg.rec(self),
+                dbg.keys(vals),
+            )
             return super().write(vals)
+        dbg.lifecycle.debug(
+            "hr.attendance.write %s: keys %s regenerate overtime",
+            dbg.rec(self),
+            dbg.keys(vals),
+        )
         windows_before = self._overtime_windows()
         result = super().write(vals)
         self._update_overtime(windows_before)
         return result
 
+    @dbg.timed
     def unlink(self):
+        dbg.lifecycle.debug("hr.attendance.unlink %s", dbg.rec(self))
         windows = self._overtime_windows()
         # Unlink the lines through the ORM rather than leaving the database's
         # `ondelete=cascade` to drop them: a cascade at the SQL level removes
@@ -649,21 +760,21 @@ class HrAttendance(models.Model):
     def copy(self, default=None):
         raise exceptions.UserError(_("You cannot duplicate an attendance."))
 
-    def action_in_attendance_maps(self):
+    def _action_attendance_maps(self, side):
         self.check_singleton()
         return {
             "type": "ir.actions.act_url",
-            "url": get_google_maps_url(self.in_latitude, self.in_longitude),
+            "url": get_google_maps_url(
+                self[f"{side}_latitude"], self[f"{side}_longitude"]
+            ),
             "target": "new",
         }
 
+    def action_in_attendance_maps(self):
+        return self._action_attendance_maps("in")
+
     def action_out_attendance_maps(self):
-        self.check_singleton()
-        return {
-            "type": "ir.actions.act_url",
-            "url": get_google_maps_url(self.out_latitude, self.out_longitude),
-            "target": "new",
-        }
+        return self._action_attendance_maps("out")
 
     def get_kiosk_url(self):
         return (
@@ -685,6 +796,7 @@ class HrAttendance(models.Model):
 
     def _load_demo_data(self):
         if self.has_demo_data():
+            dbg.logic.debug("_load_demo_data: database already carries sample data")
             return None
         env_sudo = self.sudo().with_context({}).env
         env_sudo["hr.employee"]._load_scenario()
@@ -695,109 +807,11 @@ class HrAttendance(models.Model):
             None,
             mode="init",
         )
-        self.env["hr.attendance"].create(self._demo_attendance_vals())
+        self.env["hr.attendance"].create(demo.attendance_vals(env_sudo))
         return {
             "type": "ir.actions.client",
             "tag": "reload",
         }
-
-    def _demo_working_days(self):
-        now = fields.Datetime.now()
-        previous_month = now - relativedelta(months=1)
-        days_back = now.day + monthrange(previous_month.year, previous_month.month)[1]
-        for offset in range(1, days_back):
-            morning_in = now.replace(
-                hour=6, minute=0, second=randint(0, 59)
-            ) + timedelta(days=-offset, minutes=randint(-2, 3))
-            if morning_in.weekday() not in range(5):
-                continue
-            yield {
-                "morning_in": morning_in,
-                "morning_out": now.replace(hour=10, minute=0, second=randint(0, 59))
-                + timedelta(days=-offset, minutes=randint(-2, -1)),
-                "afternoon_in": now.replace(hour=11, minute=0, second=randint(0, 59))
-                + timedelta(days=-offset, minutes=randint(-2, -1)),
-                "afternoon_out": now.replace(hour=15, minute=0, second=randint(0, 59))
-                + timedelta(days=-offset, minutes=randint(1, 3)),
-            }
-
-    @staticmethod
-    def _demo_day_vals(employee, mode, morning, afternoon, **extra):
-        return [
-            {
-                "employee_id": employee.id,
-                "check_in": check_in,
-                "check_out": check_out,
-                "in_mode": mode,
-                "out_mode": mode,
-                **extra,
-            }
-            for check_in, check_out in (morning, afternoon)
-        ]
-
-    def _demo_kiosk_day_vals(self, employee, day):
-        if day["morning_in"].weekday() == 4:
-            return []
-        if day["morning_in"].isocalendar().week % 2:
-            morning_shift, afternoon_shift = timedelta(hours=1), timedelta(hours=-1)
-        else:
-            morning_shift = timedelta()
-            afternoon_shift = timedelta(hours=1, minutes=30)
-        return self._demo_day_vals(
-            employee,
-            "kiosk",
-            (day["morning_in"] + morning_shift, day["morning_out"]),
-            (day["afternoon_in"], day["afternoon_out"] + afternoon_shift),
-        )
-
-    def _demo_systray_day_vals(self, employee, day):
-        usual = {"latitude": 51.01, "longitude": 2.82, "city": "Rellemstraat"}
-        occasional = {"latitude": 50.27, "longitude": 5.31, "city": "Waillet"}
-        where = occasional if randint(1, 10) == 1 else usual
-        return self._demo_day_vals(
-            employee,
-            "systray",
-            (day["morning_in"], day["morning_out"]),
-            (day["afternoon_in"], day["afternoon_out"]),
-            **{
-                f"{side}_{key}": value
-                for side in ("in", "out")
-                for key, value in (
-                    ("latitude", where["latitude"]),
-                    ("longitude", where["longitude"]),
-                    ("location", where["city"]),
-                    ("ip_address", "127.0.0.1"),
-                    ("browser", "chrome"),
-                )
-            },
-        )
-
-    def _demo_manual_day_vals(self, employee, day):
-        return self._demo_day_vals(
-            employee,
-            "manual",
-            (
-                day["morning_in"] + timedelta(minutes=randint(-10, -5)),
-                day["morning_out"],
-            ),
-            (
-                day["afternoon_in"],
-                day["afternoon_out"] + timedelta(hours=1, minutes=randint(-20, 10)),
-            ),
-        )
-
-    def _demo_attendance_vals(self):
-        by_employee = (
-            (self.env.ref("hr.employee_eg"), self._demo_kiosk_day_vals),
-            (self.env.ref("hr.employee_mw"), self._demo_systray_day_vals),
-            (self.env.ref("hr.employee_sj"), self._demo_manual_day_vals),
-        )
-        return [
-            vals
-            for day in self._demo_working_days()
-            for employee, build in by_employee
-            for vals in build(employee, day)
-        ]
 
     def action_try_kiosk(self):
         if not self.env.user.has_group("hr_attendance.group_hr_attendance_user"):
@@ -845,12 +859,112 @@ class HrAttendance(models.Model):
     def action_refuse_overtime(self):
         self.linked_overtime_ids.action_refuse()
 
-    def _cron_auto_check_out(self):
-        def check_in_tz(attendance):
-            return attendance.check_in.replace(tzinfo=UTC).astimezone(
-                timezone(attendance.employee_id._get_tz())
-            )
+    def _local_check_in(self):
+        self.check_singleton()
+        return self.check_in.replace(tzinfo=UTC).astimezone(self._schedule_tz())
 
+    def _scheduled_hours_on(self, local_day):
+        """Worked hours the schedule places on one of the employee's own days.
+
+        The calendar's own batch rather than a hand-rolled sweep of
+        `attendance_ids`: that sweep summed every line matching the weekday,
+        the lunch line included, so a 9-17 schedule with an hour's lunch
+        claimed eight expected *worked* hours where the employee works seven --
+        and it re-derived the two-week alternation the batch already knows.
+        """
+        self.check_singleton()
+        calendar = self._get_employee_calendar()
+        if not calendar:
+            return 0.0
+        tz = self._schedule_tz()
+        resource = self.employee_id.resource_id
+        return get_intervals_hours(
+            calendar._attendance_intervals_batch(
+                datetime.combine(local_day, time.min).replace(tzinfo=tz),
+                datetime.combine(local_day, time.max).replace(tzinfo=tz),
+                resources=resource,
+                tz=tz,
+            )[resource.id]
+        )
+
+    # A shift long enough to need more than a week of the schedule to spend its
+    # budget is a data error, not a shift; stop walking rather than loop.
+    _AUTO_CHECK_OUT_HORIZON_DAYS = 7
+
+    def _worked_hours_spent_at(self, budget):
+        """When `budget` worked hours have accrued since check-in.
+
+        Walked rather than added, because the answer is not `check_in + budget`:
+        a break inside the span pushes it later. And walked past local midnight,
+        because a shift that starts in the evening spends its budget on the next
+        calendar day -- which is the case the previous form got wrong twice
+        over. It anchored on `check_in.replace(hour=23, minute=59, second=59)`,
+        the end of the check-in's UTC day rather than the employee's, and then
+        subtracted the excess from that anchor, which is exact only when no
+        break falls inside the part subtracted.
+        """
+        self.check_singleton()
+        tz = self._schedule_tz()
+        cursor = self._local_check_in()
+        floor = self.check_in + timedelta(seconds=1)
+        spent = 0.0
+        for _day in range(self._AUTO_CHECK_OUT_HORIZON_DAYS):
+            # The next local midnight, not `time.max`: a day that ends a
+            # microsecond early leaves that microsecond of the budget to be
+            # spent on the following day, and the cut lands a microsecond late.
+            day_end = datetime.combine(
+                cursor.date() + timedelta(days=1), time.min
+            ).replace(tzinfo=tz)
+            for period_start, period_stop, _record in Intervals(
+                [(cursor, day_end, self)]
+            ) - self._lunch_intervals(cursor, day_end):
+                hours = (period_stop - period_start).total_seconds() / 3600
+                if spent + hours >= budget:
+                    reached = period_start + timedelta(hours=budget - spent)
+                    return max(reached.astimezone(UTC).replace(tzinfo=None), floor)
+                spent += hours
+            cursor = day_end.astimezone(tz)
+        return max(cursor.astimezone(UTC).replace(tzinfo=None), floor)
+
+    def _worked_hours_already_closed(self):
+        """{employee_id: {local day: worked hours}} for what `self`'s employees
+        have already closed on the days `self` start on.
+
+        Bounded a day wider than the earliest check-in: an attendance that
+        opened before local midnight belongs to the same local day as one that
+        opened after it, and the previous bound was a naive-UTC midnight that
+        dropped it for anyone far enough east.
+        """
+        totals = defaultdict(lambda: defaultdict(float))
+        if not self:
+            return totals
+        earliest = min(self.mapped("check_in")).replace(
+            hour=0, minute=0, second=0, microsecond=0
+        ) - timedelta(days=1)
+        closed = self.env["hr.attendance"].search(
+            [
+                ("employee_id", "in", self.employee_id.ids),
+                ("check_in", ">=", earliest),
+                ("check_out", "!=", False),
+            ]
+        )
+        for attendance in closed:
+            totals[attendance.employee_id.id][attendance._local_check_in().date()] += (
+                attendance.worked_hours
+            )
+        return totals
+
+    @dbg.timed
+    def _cron_auto_check_out(self):
+        """Close the attendances of employees who have not checked out.
+
+        Everything here is counted in *worked* hours -- what the employee is
+        credited with and what their overtime is measured from. The four
+        quantities used to be three different currencies: wall-clock presence
+        for the open attendance, worked hours for the earlier ones, and
+        scheduled presence including lunch for what was expected, so the same
+        day could be over budget by an hour of lunch nobody worked.
+        """
         to_verify = self.env["hr.attendance"].search(
             [
                 ("check_out", "=", False),
@@ -859,108 +973,75 @@ class HrAttendance(models.Model):
             ]
         )
 
+        dbg.lifecycle.debug(
+            "_cron_auto_check_out: %d open attendance(s) to verify", len(to_verify)
+        )
         if not to_verify:
             return
 
-        to_verify_min_date = min(to_verify.mapped("check_in")).replace(
-            hour=0, minute=0, second=0
+        now = fields.Datetime.now()
+        already_closed = to_verify._worked_hours_already_closed()
+        body = _(
+            "This attendance was automatically checked out because the employee exceeded the allowed time for their scheduled work hours."
         )
-        previous_attendances = self.env["hr.attendance"].search(
-            [
-                ("employee_id", "in", to_verify.mapped("employee_id").ids),
-                ("check_in", ">", to_verify_min_date),
-                ("check_out", "!=", False),
-            ]
-        )
-
-        mapped_previous_duration = defaultdict(lambda: defaultdict(float))
-        for previous in previous_attendances:
-            mapped_previous_duration[previous.employee_id][
-                check_in_tz(previous).date()
-            ] += previous.worked_hours
-
-        all_companies = to_verify.employee_id.company_id
-
-        for company in all_companies:
-            max_tol = company.auto_check_out_tolerance
-            to_verify_company = to_verify.filtered(
-                lambda a, company=company: a.employee_id.company_id.id == company.id
+        for attendance in to_verify:
+            employee = attendance.employee_id
+            local_day = attendance._local_check_in().date()
+            budget = (
+                attendance._scheduled_hours_on(local_day)
+                + employee.company_id.auto_check_out_tolerance
+                - already_closed[employee.id][local_day]
             )
+            worked = attendance._worked_hours_between(attendance.check_in, now)
+            dbg.logic.debug(
+                "_cron_auto_check_out %s: %.3fh worked against a %.3fh budget on %s (%s)",
+                dbg.rec(attendance),
+                worked,
+                budget,
+                local_day,
+                attendance._schedule_tz(),
+            )
+            if worked <= budget:
+                continue
+            check_out = attendance._worked_hours_spent_at(budget)
+            dbg.lifecycle.debug(
+                "_cron_auto_check_out %s: closing at %s", dbg.rec(attendance), check_out
+            )
+            attendance.write({"check_out": check_out, "out_mode": "auto_check_out"})
+            attendance.message_post(body=body)
 
-            for att in to_verify_company:
-                employee_timezone = timezone(att.employee_id._get_tz())
-                check_in_datetime = check_in_tz(att)
-                now_datetime = (
-                    fields.Datetime.now()
-                    .replace(tzinfo=UTC)
-                    .astimezone(employee_timezone)
-                )
-                current_attendance_duration = (
-                    now_datetime - check_in_datetime
-                ).total_seconds() / 3600
-                previous_attendances_duration = mapped_previous_duration[
-                    att.employee_id
-                ][check_in_datetime.date()]
-
-                expected_worked_hours = sum(
-                    att.employee_id.resource_calendar_id.attendance_ids.filtered(
-                        lambda a, check_in_datetime=check_in_datetime: (
-                            a.dayofweek == str(check_in_datetime.weekday())
-                            and (
-                                not a.two_weeks_calendar
-                                or a.week_type
-                                == str(a.get_week_type(check_in_datetime.date()))
-                            )
-                        )
-                    ).mapped("duration_hours")
-                )
-
-                if (
-                    current_attendance_duration
-                    + previous_attendances_duration
-                    - max_tol
-                ) > expected_worked_hours:
-                    # Where the day's allowance runs out, priced without first
-                    # writing a throwaway end-of-day check-out: one write and one
-                    # overtime regeneration instead of two.
-                    end_of_day = att.check_in.replace(hour=23, minute=59, second=59)
-                    worked_to_end_of_day = att._worked_hours_between(
-                        att.check_in, end_of_day
-                    )
-                    excess_hours = worked_to_end_of_day - (
-                        expected_worked_hours + max_tol - previous_attendances_duration
-                    )
-                    att.write(
-                        {
-                            "check_out": max(
-                                end_of_day - relativedelta(hours=excess_hours),
-                                att.check_in + relativedelta(seconds=1),
-                            ),
-                            "out_mode": "auto_check_out",
-                        }
-                    )
-                    att.message_post(
-                        body=_(
-                            "This attendance was automatically checked out because the employee exceeded the allowed time for their scheduled work hours."
-                        )
-                    )
-
+    @dbg.timed
     def _cron_absence_detection(self):
         yesterday = fields.Date.today() - relativedelta(days=1)
         companies = self.env["res.company"].search([("absence_management", "=", True)])
+        dbg.lifecycle.debug(
+            "_cron_absence_detection: %s, %d company/companies manage absence",
+            yesterday,
+            len(companies),
+        )
         if not companies:
             return
 
+        # Both scans are bounded by the companies that asked for absence
+        # management. Unbounded, the second one reads every attendance ever
+        # left open in the database -- in every company, back to the first one
+        # anybody forgot to close -- to answer a question about a handful of
+        # employees.
+        in_scope = Domain("employee_id.company_id", "in", companies.ids)
         # An employee who worked exactly their expected hours has no overtime
         # line for the day; the attendances are what say they were there.
         checked_in_employees = (
-            self.env["hr.attendance"].search([("date", "=", yesterday)]).employee_id
+            self.env["hr.attendance"]
+            .search(in_scope & Domain("date", "=", yesterday))
+            .employee_id
         )
         # An employee who never checked out is not absent -- they are recorded
         # as still being there. Marking them absent contradicts their own open
         # attendance, and the marker cannot be placed without overlapping it.
         still_checked_in = (
-            self.env["hr.attendance"].search([("check_out", "=", False)]).employee_id
+            self.env["hr.attendance"]
+            .search(in_scope & Domain("check_out", "=", False))
+            .employee_id
         )
 
         technical_attendances_vals = []
@@ -982,7 +1063,7 @@ class HrAttendance(models.Model):
             # into the employee's zone and then storing that wall clock as UTC
             # placed the marker a whole day off for anyone far enough east.
             local_day_start = datetime.combine(yesterday, time.min).replace(
-                tzinfo=timezone(emp._get_tz())
+                tzinfo=timezone(emp.sudo()._get_version(yesterday)._get_tz())
             )
             check_in = local_day_start.astimezone(UTC).replace(tzinfo=None)
             technical_attendances_vals.append(
@@ -995,10 +1076,19 @@ class HrAttendance(models.Model):
                 }
             )
 
+        dbg.lifecycle.debug(
+            "_cron_absence_detection: %d absent employee(s) get a technical attendance",
+            len(technical_attendances_vals),
+        )
         technical_attendances = self.env["hr.attendance"].create(
             technical_attendances_vals
         )
         to_unlink = technical_attendances.filtered(lambda a: a.overtime_hours == 0)
+        dbg.logic.debug(
+            "_cron_absence_detection: %d of %d marker(s) produced no overtime, dropping",
+            len(to_unlink),
+            len(technical_attendances),
+        )
 
         body = _(
             "This attendance was automatically created to cover an unjustified absence on that day."
@@ -1010,9 +1100,8 @@ class HrAttendance(models.Model):
 
     def _get_localized_times(self):
         self.check_singleton()
-        tz = timezone(
-            self.employee_id.sudo()._get_version(self.check_in.date())._get_tz()
-        )
+        tz = self._schedule_tz()
+        dbg.logic.debug("_get_localized_times %s: schedule zone %s", dbg.rec(self), tz)
         localized_start = (
             self.check_in.replace(tzinfo=UTC).astimezone(tz).replace(tzinfo=None)
         )

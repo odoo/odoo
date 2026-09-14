@@ -47,19 +47,24 @@ export class NewEmployeeDialog extends Component {
             return;
         }
         try {
-            const is_created = await rpc("/hr_attendance/create_employee", {
+            // The route answers `{status}` like the rest of the kiosk surface.
+            // It used to answer `true`/`false`, and the falsy branch below was
+            // the only thing telling the setup session that its own refusal --
+            // an AccessError the route did not catch -- had happened at all.
+            const result = await rpc("/hr_attendance/create_employee", {
                 name: this.state.employeeName,
                 token: this.props.token,
             });
-            if (is_created) {
+            if (result?.status === "success") {
                 this.notification.add(_t("Employee created successfully!"), {
                     type: "success",
                 });
                 this.props.close();
             } else {
-                this.notification.add(_t("Failed to create employee."), {
-                    type: "danger",
-                });
+                this.notification.add(
+                    result?.message ?? _t("Failed to create employee."),
+                    { type: "danger" },
+                );
             }
         } catch (error) {
             this.notification.add(_t("Error creating employee: ") + error.message, {

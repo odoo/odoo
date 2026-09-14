@@ -149,14 +149,18 @@ class TestKioskRouteAuthorisation(HttpCase):
         self.assertEqual(self.company.attendance_kiosk_mode, before)
 
     def test_an_invalid_token_reaches_nothing(self):
-        self.assertFalse(
-            self._call(
-                "/hr_attendance/set_badge",
-                employee_id=self.unbadged.id,
-                badge="X",
-                token="not-a-token",
-            )
+        # Every kiosk route answers a refusal the same way, so the assertion is
+        # on the status rather than on truthiness: `{}` and `{"status": ...}`
+        # are both objects, and a route that starts returning the second while
+        # a test asks for the first is not a behaviour change worth a red.
+        result = self._call(
+            "/hr_attendance/set_badge",
+            employee_id=self.unbadged.id,
+            badge="X",
+            token="not-a-token",
         )
+        self.assertEqual(result.get("status"), "error")
+        self.assertFalse(self.unbadged.sudo().barcode)
 
 
 @tagged("post_install", "-at_install", "hr_attendance_kiosk")

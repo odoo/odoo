@@ -98,8 +98,11 @@ export class KioskManualSelection extends Component {
             offset: this.state.offset,
             domain: domain,
         });
-        this.state.employeesData.records = results.records;
-        this.state.employeesData.count = results.length;
+        // The route answers `{status: "error"}` when the token no longer opens
+        // this company's kiosk. Assigning its absent `records` straight into
+        // state left the grid iterating `undefined`.
+        this.state.employeesData.records = results?.records ?? [];
+        this.state.employeesData.count = results?.length ?? 0;
     }
 
     async onDepartmentClick(departmentId = false) {

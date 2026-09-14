@@ -99,11 +99,16 @@ class TestKioskPinRouteThrottle(HttpCase):
         )
         return response.json().get("result")
 
+    def _assert_refused(self, pin, message=None):
+        # A refusal is `{"status": "error"}` across the kiosk surface; asserting
+        # falsiness instead passed for any object the route might return.
+        self.assertEqual(self._attempt(pin).get("status"), "error", message)
+
     def test_guessing_through_the_route_is_throttled(self):
         for _ in range(4):
-            self.assertFalse(self._attempt("0000"))
-        self.assertFalse(
-            self._attempt("4242"),
+            self._assert_refused("0000")
+        self._assert_refused(
+            "4242",
             "the route must apply the same cost the keypad only pretends to",
         )
         self.assertTrue(self.employee.sudo().attendance_pin_retry_after)

@@ -258,8 +258,14 @@ class TestHrAttendancePerformance(TransactionCase):
         cls.attendances = cls.env["hr.attendance"].create(vals)
 
     def test_regenerate_overtime_line(self):
+        # 258 on 2026-09-14 over these 6,300 attendances, and 258 before the
+        # schedule-zone work too. A budget of 1,700 was six times the real cost:
+        # `assertQueryCount` only LOGS when the count comes in under budget, so
+        # the gap was reported on every run and failed nothing. A regeneration
+        # that started issuing a query per attendance would have had 1,400 to
+        # spare before this noticed.
         t0 = time.time()
-        with self.assertQueryCount(1700):
+        with self.assertQueryCount(270):
             self.ruleset.action_regenerate_overtimes()
         t1 = time.time()
         _logger.info(

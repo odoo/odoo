@@ -10,6 +10,8 @@ from odoo.libs.datetime import timezone
 from odoo.libs.intervals import Intervals
 from odoo.libs.numbers import float_round
 
+from ..tools import debug_log as dbg
+
 
 class HrEmployee(models.Model):
     _inherit = "hr.employee"
@@ -123,8 +125,8 @@ class HrEmployee(models.Model):
                     officer.sudo().write({"group_ids": [(4, officers_group.id)]})
 
         res = super().write(vals)
-        old_officers.sudo()._clean_attendance_officers()
-
+        if old_officers:
+            old_officers.sudo()._clean_attendance_officers()
         return res
 
     def action_archive(self):
@@ -160,7 +162,13 @@ class HrEmployee(models.Model):
         now = fields.Datetime.now()
         now_utc = now.replace(tzinfo=UTC)
         totals = {}
-        for tz_name, employees in self.grouped(lambda e: e.tz or "UTC").items():
+        # `_get_tz()`, not `tz`: `tz` is the employee's PERSONAL zone, which
+        # follows their work contact. Every other reader of an attendance --
+        # its stored `date`, the day its overtime is filed under, the kiosk's
+        # figure for today -- resolves the day through the schedule's zone, and
+        # a month bounded in a different one from the days inside it does not
+        # add up to the sum of those days.
+        for tz_name, employees in self.grouped(lambda e: e._get_tz()).items():
             now_tz = now_utc.astimezone(timezone(tz_name))
             start_naive = (
                 now_tz.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
@@ -191,7 +199,13 @@ class HrEmployee(models.Model):
     def _compute_hours_today(self):
         now = fields.Datetime.now()
         now_utc = now.replace(tzinfo=UTC)
-        by_tz = self.grouped("tz")
+        by_tz = self.grouped(lambda e: e._get_tz())
+        dbg.logic.debug(
+            "_compute_hours_today %s: %d time zone group(s) %s",
+            dbg.rec(self),
+            len(by_tz),
+            dbg.lazy(lambda: sorted(map(repr, by_tz))),
+        )
         for tz_name, employees in by_tz.items():
             start_tz = now_utc.astimezone(timezone(tz_name)).replace(
                 hour=0, minute=0, second=0, microsecond=0
@@ -295,6 +309,13 @@ class HrEmployee(models.Model):
             employee.attendance_pin_retry_after
             and now < employee.attendance_pin_retry_after
         )
+        dbg.logic.debug(
+            "_check_attendance_pin %s: %d earlier failure(s), locked=%s until %s",
+            dbg.rec(self),
+            employee.attendance_pin_failure_count,
+            bool(locked),
+            employee.attendance_pin_retry_after,
+        )
         if (
             not locked
             and pin_code
@@ -307,9 +328,16 @@ class HrEmployee(models.Model):
                         "attendance_pin_retry_after": False,
                     }
                 )
+            dbg.logic.debug("_check_attendance_pin %s: accepted", dbg.rec(self))
             return True
         employee.attendance_pin_failure_count += 1
         delay = employee._attendance_pin_retry_delay()
+        dbg.logic.debug(
+            "_check_attendance_pin %s: rejected, failure %d, next delay %ds",
+            dbg.rec(self),
+            employee.attendance_pin_failure_count,
+            delay,
+        )
         employee.attendance_pin_retry_after = (
             now + relativedelta(seconds=delay) if delay else False
         )
@@ -327,6 +355,13 @@ class HrEmployee(models.Model):
         employee = self.sudo()
         action_date = fields.Datetime.now()
         geo_information = geo_information or {}
+        dbg.pipeline.debug(
+            "[attendance:%s] _attendance_action_change at %s, state %s, geo keys %s",
+            self.id,
+            action_date,
+            employee.attendance_state,
+            dbg.keys(geo_information),
+        )
         if employee.attendance_state != "checked_in":
             attendance = employee.env["hr.attendance"].create(
                 {
@@ -379,6 +414,7 @@ class HrEmployee(models.Model):
             "device_tracking_enabled": employee.company_id.attendance_device_tracking,
         }
 
+    @dbg.timed
     def _round_overtime_window(self, first, last):
         """Widen a span of local dates to the periods its overtime is summed
         over: whole weeks when any rule the employee has ever had is weekly,
@@ -389,6 +425,12 @@ class HrEmployee(models.Model):
             rule.base_off == "quantity" and rule.quantity_period == "week"
             for rule in rules
         ):
+            dbg.logic.debug(
+                "_round_overtime_window %s: a weekly rule widens %s..%s to whole weeks",
+                dbg.rec(self),
+                first,
+                last,
+            )
             return (
                 first + relativedelta(weekday=MO(-1)),
                 last + relativedelta(weekday=SU),
@@ -420,24 +462,34 @@ class HrEmployee(models.Model):
 
     @api.depends("user_id.im_status", "attendance_state")
     def _compute_hr_presence_state(self):
+        """An attendance is evidence of presence, over whatever `hr` concluded.
+
+        Checked in means present. Checked out during working hours means
+        absent -- the employee is expected and their own attendance says they
+        are not there.
+        """
         super()._compute_hr_presence_state()
-        employees = self.filtered(lambda e: e.hr_presence_state != "present")
-        employee_to_check_working = self.filtered(
-            lambda e: (
-                e.sudo().attendance_state == "checked_out"
-                and e.hr_presence_state == "out_of_working_hour"
+        # The same predicate was evaluated three times -- once to choose whom
+        # to ask `_get_employee_ids_working_now` about, once to choose whom to
+        # decide for, and once more inside the loop -- each time re-deriving
+        # `.sudo()` on a single record. `attendance_state` is read once, on the
+        # superuser twin; `hr_presence_state` is read on `self`, because it is
+        # the field being computed and the twin has a cache entry of its own.
+        attendance_state = {
+            employee.id: employee.attendance_state for employee in self.sudo()
+        }
+        expected_but_out = self.filtered(
+            lambda employee: (
+                attendance_state[employee.id] == "checked_out"
+                and employee.hr_presence_state == "out_of_working_hour"
             )
         )
-        working_now_list = employee_to_check_working._get_employee_ids_working_now()
-        for employee in employees:
-            if (
-                employee.sudo().attendance_state == "checked_out"
-                and employee.hr_presence_state == "out_of_working_hour"
-                and employee.id in working_now_list
-            ):
-                employee.hr_presence_state = "absent"
-            elif employee.sudo().attendance_state == "checked_in":
+        working_now = set(expected_but_out._get_employee_ids_working_now())
+        for employee in self:
+            if attendance_state[employee.id] == "checked_in":
                 employee.hr_presence_state = "present"
+            elif employee.id in working_now:
+                employee.hr_presence_state = "absent"
 
     def _compute_presence_icon(self):
         res = super()._compute_presence_icon()

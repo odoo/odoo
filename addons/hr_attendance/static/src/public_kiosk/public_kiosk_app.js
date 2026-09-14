@@ -50,6 +50,11 @@ class kioskAttendanceApp extends Component {
         });
         this.state = useState({
             active_display: "settings",
+            // The kiosk's own mode, not the one it was served with: the
+            // settings screen changes it. It was written back onto `props`,
+            // which is not reactive, so the screen only caught up because the
+            // same handler happened to write `active_display` as well.
+            kioskMode: this.props.kioskMode,
             displayDemoMessage:
                 browser.localStorage.getItem("hr_attendance.ShowDemoMessage") !==
                 "false",
@@ -86,20 +91,19 @@ class kioskAttendanceApp extends Component {
     }
 
     async setSetting(mode) {
-        await rpc("/hr_attendance/set_settings", {
+        const result = await rpc("/hr_attendance/set_settings", {
             token: this.props.token,
             mode: mode,
         });
-        this.props.kioskMode = mode;
-        if (mode !== "manual") {
-            this.manualKioskMode = false;
-            this.state.active_display = "main";
-            this.props.kioskMode = mode;
-        } else {
-            this.manualKioskMode = true;
-            this.state.active_display = "manual";
-            this.props.kioskMode = "manual";
+        if (result?.status !== "success") {
+            this.displayNotification(
+                result?.message ?? _t("Could not save the kiosk mode."),
+            );
+            return;
         }
+        this.state.kioskMode = mode;
+        this.manualKioskMode = mode === "manual";
+        this.state.active_display = this.manualKioskMode ? "manual" : "main";
     }
 
     async kioskConfirm(employeeId) {
@@ -121,13 +125,13 @@ class kioskAttendanceApp extends Component {
         if (this.state.active_display === "settings") {
             history.back();
         } else if (
-            (["manual", "barcode"].includes(this.props.kioskMode) ||
-                (this.props.kioskMode === "barcode_manual" &&
+            (["manual", "barcode"].includes(this.state.kioskMode) ||
+                (this.state.kioskMode === "barcode_manual" &&
                     this.state.active_display === "main")) &&
             this.props.fromTrialMode
         ) {
             this.switchDisplay("settings");
-        } else if (this.props.kioskMode === "manual") {
+        } else if (this.state.kioskMode === "manual") {
             this.switchDisplay("manual");
         } else {
             this.switchDisplay("main");
