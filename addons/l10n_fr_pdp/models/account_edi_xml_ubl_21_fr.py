@@ -242,11 +242,22 @@ class AccountEdiXmlUbl21Fr(models.AbstractModel):
         }
 
     def _import_ubl_invoice_add_customer_values(self, collected_values):
+        invoice = collected_values['invoice']
         super()._import_ubl_invoice_add_customer_values(collected_values)
         party_tag = "AccountingCustomerParty" if collected_values['odoo_document_type'] == 'sale' else "AccountingSupplierParty"
         collected_values['customer_values']['siret'] = collected_values['tree'].findtext(
             f"./{{*}}{party_tag}/{{*}}Party/{{*}}PartyIdentification/{{*}}ID[@schemeID='0009']"
         )
+
+        # The sender identifier of the envelope is the one to use to send responses back,
+        # it takes precedence over the endpoint in the document (which may be a SIREN/SIRET).
+        if sender_identifier := collected_values['file_data'].get('peppol_sender_identifier'):
+            peppol_eas, _sep, peppol_endpoint = sender_identifier.partition(':')
+            if peppol_eas and peppol_endpoint and invoice.peppol_message_uuid:
+                collected_values['customer_values'].update({
+                    'peppol_eas': peppol_eas,
+                    'peppol_endpoint': peppol_endpoint,
+                })
 
     def _import_ubl_retrieve_customer_search_plan(self, collected_values):
         return [
