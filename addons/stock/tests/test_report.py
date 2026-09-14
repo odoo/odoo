@@ -4,6 +4,8 @@ from re import findall, sub
 from odoo import Command
 from odoo.tests import Form, TransactionCase
 
+from odoo.addons.stock.tests.common import RECEPTION_ROUTE_BOUGHT, is_module_installed
+
 
 class TestReportsCommon(TransactionCase):
     @classmethod
@@ -1041,6 +1043,9 @@ class TestReports(TestReportsCommon):
         self.assertEqual(lines[6]["document_in"], False)
 
     def test_report_forecast_4_intermediate_transfers(self):
+        # the three-step reception route pulls from Vendors with stock alone
+        if is_module_installed(self.env, "purchase_stock"):
+            self.skipTest(RECEPTION_ROUTE_BOUGHT)
         grp_multi_loc = self.env.ref("stock.group_stock_multi_locations")
         grp_multi_routes = self.env.ref("stock.group_adv_location")
         self.env.user.write({"group_ids": [(4, grp_multi_loc.id)]})

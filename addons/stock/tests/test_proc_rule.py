@@ -8,6 +8,8 @@ from odoo.fields import Command
 from odoo.tests import Form, TransactionCase
 from odoo.tools import mute_logger
 
+from odoo.addons.stock.tests.common import RECEPTION_ROUTE_BOUGHT, is_module_installed
+
 
 class TestProcRule(TransactionCase):
     @classmethod
@@ -930,6 +932,9 @@ class TestProcRule(TransactionCase):
         self.assertFalse(orderpoint_list_view.product_id)
 
     def test_orderpoint_warning(self):
+        # the reception route's pull rule is the supply the warning expects
+        if is_module_installed(self.env, "purchase_stock"):
+            self.skipTest(RECEPTION_ROUTE_BOUGHT)
         self.product.is_storable = True
         orderpoint = self.env["stock.warehouse.orderpoint"].create(
             {

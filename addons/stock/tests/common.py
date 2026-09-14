@@ -3,6 +3,12 @@ import re
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.product.tests.common import ProductVariantsCommon
 
+RECEPTION_ROUTE_BOUGHT = "purchase_stock replaces the reception pull rule by a buy rule"
+
+
+def is_module_installed(env, name):
+    return env["ir.module.module"]._get(name).state == "installed"
+
 
 class TestStockCommon(ProductVariantsCommon):
     def _create_move(self, product, src_location, dst_location, **values):

@@ -4,7 +4,11 @@ from odoo.tests import Form, HttpCase, tagged
 from odoo.tests.common import users
 from odoo.tools import float_round, mute_logger
 
-from odoo.addons.stock.tests.common import TestStockCommon
+from odoo.addons.stock.tests.common import (
+    RECEPTION_ROUTE_BOUGHT,
+    TestStockCommon,
+    is_module_installed,
+)
 
 
 class TestStockFlow(TestStockCommon):
@@ -2323,10 +2327,8 @@ class TestStockFlow(TestStockCommon):
     def test_74_move_state_waiting_mto(self):
         # pins the stock-alone routing: the reception route pulls from Vendors,
         # so an MTO move on a product without a vendor still finds a rule
-        if self.env["ir.module.module"]._get("purchase_stock").state == "installed":
-            self.skipTest(
-                "purchase_stock replaces the reception pull rule by a buy rule"
-            )
+        if is_module_installed(self.env, "purchase_stock"):
+            self.skipTest(RECEPTION_ROUTE_BOUGHT)
         picking_out = self.PickingObj.create(
             {
                 "picking_type_id": self.picking_type_out.id,
