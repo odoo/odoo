@@ -65,6 +65,7 @@
                         product_href="product.website_url"
                         product_image_title="product.display_name"
                         show_ribbons="True"
+                        show_variant_images="not data.get('hide_variants')"
                     />
                     <div t-if="data.get('is_sample')" class="oe_product_image position-relative flex-grow-0 overflow-hidden">
                         <a href="#" class="oe_product_image_link position-relative">
