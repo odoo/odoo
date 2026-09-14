@@ -265,6 +265,8 @@ class MixinInboundGate(models.AbstractModel):
         processing_result: str | None = None,
     ) -> None:
         self.check_singleton()
+        if getattr(self.env.cr, "readonly", False):
+            return
         failed = bool(error) or status_code >= 400
         vals = {
             "direction": "inbound",
