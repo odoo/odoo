@@ -1,7 +1,7 @@
 import logging
 import posixpath
 import re
-from collections.abc import Collection, Mapping, Sequence
+from collections.abc import Mapping, Sequence
 from datetime import UTC, datetime, timedelta
 from typing import Any, Protocol
 from urllib.parse import quote
@@ -402,7 +402,7 @@ class BridgeShimManager:
     def prepare_page_provided_bridges(
         self,
         native_specifiers: set[str],
-        provided: Collection[str],
+        provided: frozenset[str] | set[str],
         modules: Sequence[NativeModuleLike] | None = None,
     ) -> tuple[dict[str, str], set[str]]:
         # a bundle served per file on a page that already carries some of
