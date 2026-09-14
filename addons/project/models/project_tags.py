@@ -1,5 +1,5 @@
 from odoo import api, fields, models
-from odoo.api import DomainType, ValuesType
+from odoo.api import DomainType
 from odoo.fields import Domain
 from odoo.tools import SQL
 
@@ -26,56 +26,6 @@ class ProjectTags(models.Model):
         string="Tasks",
         export_string_translation=False,
     )
-
-    @api.model
-    def formatted_read_group(
-        self,
-        domain: list,
-        groupby: tuple | list = (),
-        aggregates: tuple | list = (),
-        having: tuple | list = (),
-        offset: int = 0,
-        limit: int | None = None,
-        order: str | None = None,
-    ) -> list[dict]:
-        if "project_id" in self.env.context:
-            tag_ids = [id_ for id_, _label in self.name_search(limit=None)]
-            domain = Domain.AND([domain, [("id", "in", tag_ids)]])
-        return super().formatted_read_group(
-            domain,
-            groupby,
-            aggregates,
-            having=having,
-            offset=offset,
-            limit=limit,
-            order=order,
-        )
-
-    @api.model
-    def search_read(
-        self,
-        domain: DomainType | None = None,
-        fields: list[str] | None = None,
-        offset: int = 0,
-        limit: int | None = None,
-        order: str | None = None,
-    ) -> list[ValuesType]:
-        if "project_id" in self.env.context:
-            tag_ids = [id_ for id_, _label in self.name_search(limit=None)]
-            domain = Domain.AND([domain, [("id", "in", tag_ids)]])
-            return self.sort_tags_by_ids(
-                super().search_read(
-                    domain=domain, fields=fields, offset=offset, limit=limit
-                ),
-                tag_ids,
-            )
-        return super().search_read(
-            domain=domain,
-            fields=fields,
-            offset=offset,
-            limit=limit,
-            order=order,
-        )
 
     @api.model
     def sort_tags_by_ids(self, tag_list: list[dict], id_order: list[int]) -> list[dict]:
