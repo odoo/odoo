@@ -35,6 +35,19 @@ class TestEgressRecording(TransactionCase):
         self.assertNotIn("s3cr3t-value", row.request_url)
         self.assertFalse(row.request_payload)
 
+    def test_a_keyword_call_reaches_the_session_as_keywords(self):
+        with patch.object(
+            GuardedSession, "request", return_value=MagicMock(status_code=200)
+        ) as sent:
+            session = self.env["ir.egress"].session(purpose="probe_api")
+            session.request(method="POST", url="https://api.example.com/v1/rates")
+
+        self.assertEqual(
+            sent.call_args.kwargs,
+            {"method": "POST", "url": "https://api.example.com/v1/rates"},
+        )
+        self.assertEqual(self._rows("probe_api").request_method, "POST")
+
     def test_repeated_calls_share_one_purpose_channel(self):
         for _ in range(2):
             self._send("probe_api", return_value=MagicMock(status_code=200))

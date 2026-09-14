@@ -108,10 +108,13 @@ class IrEgress(models.AbstractModel):
         env = self.env
         send = session.request
 
-        def request(method, url, *args, **kwargs):
+        def request(*args, **kwargs):
+            positional = iter(args)
+            method = kwargs.get("method") or next(positional)
+            url = kwargs.get("url") or next(positional)
             started = time.monotonic()
             try:
-                response = send(method, url, *args, **kwargs)
+                response = send(*args, **kwargs)
             except requests.RequestException as error:
                 _record_egress(env, purpose, method, url, started, error=error)
                 raise
