@@ -54,7 +54,6 @@ export function useNewAllocationRequest() {
         let size = "md";
         const context = {
             form_view_ref: "hr_holidays.hr_leave_allocation_view_form_dashboard",
-            is_employee_allocation: true,
         };
         if (employeeId) {
             size = "lg";

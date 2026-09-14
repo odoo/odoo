@@ -752,8 +752,7 @@
             name="search_view_id"
             ref="hr_holidays.hr_leave_allocation_view_search_my" />
         <field name="domain">[('employee_id.user_id', '=', uid)]</field>
-        <field
-            name="context">{'search_default_year': 1 , 'is_employee_allocation': True}</field>
+        <field name="context">{'search_default_year': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new allocation request

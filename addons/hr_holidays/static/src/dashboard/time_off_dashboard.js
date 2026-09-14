@@ -32,7 +32,7 @@ export class TimeOffDashboard extends Component {
     }
 
     getContext() {
-        const context = { from_dashboard: true };
+        const context = {};
         if (this.props && this.props.employeeId !== null) {
             context["employee_id"] = this.props.employeeId;
         }

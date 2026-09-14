@@ -351,7 +351,7 @@ class TestAllocations(TestHrHolidaysCommon):
         )
 
         with Form(
-            employee_allocation.with_context(is_employee_allocation=True),
+            employee_allocation,
             "hr_holidays.hr_leave_allocation_view_form_dashboard",
         ) as allocation:
             allocation.number_of_days_display = 10
@@ -374,7 +374,7 @@ class TestAllocations(TestHrHolidaysCommon):
         )
 
         with Form(
-            employee_allocation.with_context(is_employee_allocation=True),
+            employee_allocation,
             "hr_holidays.hr_leave_allocation_view_form_dashboard",
         ) as allocation:
             allocation.number_of_days_display = 10
