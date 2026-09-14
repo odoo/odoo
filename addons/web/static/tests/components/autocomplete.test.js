@@ -242,6 +242,29 @@ test("pending debounced input is cancelled on close (no reopen after escape)", a
     expect(loadCount).toBe(loadsAfterOpen);
 });
 
+test("clicking the input while typing is pending still searches what was typed", async () => {
+    class Parent extends Component {
+        static components = { AutoComplete };
+        static template = xml`<AutoComplete value="''" sources="sources"/>`;
+        static props = [];
+        sources = buildSources((/** @type {string} */ request) =>
+            [item("World"), item("Hello")].filter((option) =>
+                option.label.startsWith(request),
+            ),
+        );
+    }
+
+    await mountWithCleanup(Parent);
+    await contains(".o-autocomplete input").click();
+    expect(queryAllTexts(".o-autocomplete--dropdown-item")).toEqual(["World", "Hello"]);
+
+    await contains(".o-autocomplete input").edit("Wor", { confirm: false });
+    await contains(".o-autocomplete input").click();
+    await runAllTimers();
+    await animationFrame();
+    expect(queryAllTexts(".o-autocomplete--dropdown-item")).toEqual(["World"]);
+});
+
 test("select input text on first focus", async () => {
     class Parent extends Component {
         static components = { AutoComplete };

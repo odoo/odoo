@@ -597,6 +597,8 @@ export class AutoComplete extends Component {
     onInputClick() {
         if (!this.isOpened && this.props.searchOnInputClick) {
             this.open(this.inputRef.el.value.trim() !== this.props.value.trim());
+        } else if (this.pendingPromise) {
+            this.closeDropdown();
         } else {
             this.close();
         }
