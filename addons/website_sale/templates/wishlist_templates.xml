@@ -27,12 +27,16 @@
                             </p>
                         </div>
 
+                        <t
+                            t-set="wishlist_design_classes"
+                            t-value="website._get_wishlist_design_classes()"
+                        />
                         <div
                             id="o_comparelist_table"
                             t-att-data-wishlist-grid-columns="website.wishlist_grid_columns"
                             t-att-data-wishlist-mobile-columns="website.wishlist_mobile_columns"
-                            t-attf-style="--o-wsale-wishlist-grid-gap: {{website.wishlist_gap}};"
-                            t-attf-class="o_wishlist_table grid table-comparator mb-5 {{website.wishlist_opt_products_design_classes}}"
+                            t-attf-style="--o-wsale-wishlist-grid-gap: {{website.wishlist_gap or website.shop_gap}};"
+                            t-attf-class="o_wishlist_table grid table-comparator mb-5 {{wishlist_design_classes}}"
                         >
                             <t t-foreach="wishes" t-as="wish">
                                 <t t-set="product_variant" t-value="wish.product_id"/>
@@ -157,6 +161,7 @@
                                         extra_actions="extra_actions"
                                         show_combination_name="True"
                                         product_extra_information="product_extra_information"
+                                        design_field="wishlist_design_classes"
                                     />
                                 </div>
                             </t>

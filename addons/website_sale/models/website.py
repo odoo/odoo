@@ -216,15 +216,7 @@ class Website(models.Model):
 
     wishlist_opt_products_design_classes = fields.Char(
         string="Wishlist Page Design Class",
-        help="CSS class for wishlist page design",
-        default=(
-            "o_wsale_products_opt_layout_catalog o_wsale_products_opt_design_thumbs "
-            "o_wsale_products_opt_name_color_regular "
-            "o_wsale_products_opt_thumb_cover o_wsale_products_opt_img_secondary_show "
-            "o_wsale_products_opt_img_hover_zoom_out_light o_wsale_products_opt_has_cta "
-            "o_wsale_products_opt_actions_inline o_wsale_products_opt_has_description "
-            "o_wsale_products_opt_actions_promote o_wsale_products_opt_cc1 "
-        ),
+        help="CSS class for wishlist page design. Defaults to the shop design if not set.",
     )
 
     wishlist_grid_columns = fields.Integer(
@@ -240,7 +232,8 @@ class Website(models.Model):
     )
 
     wishlist_gap = fields.Char(
-        string="Wishlist Grid Gap", help="Gap between products on the wishlist page", default="16px"
+        string="Wishlist Grid Gap",
+        help="Gap between products on the wishlist page. Defaults to the shop gap if not set.",
     )
 
     prevent_sale = fields.Boolean(string="Hide Add To Cart")
@@ -312,6 +305,43 @@ class Website(models.Model):
         help="Align the category content on the shop page. Corresponds to the 'Center Content'"
         " editor option.",
     )
+
+    def _get_wishlist_design_classes(self):
+        """Return the effective CSS design classes for the wishlist page.
+
+        When the wishlist has not been customised (field is empty), derive the
+        classes from the shop design but substitute the shop-specific classes
+        that are incompatible with the wishlist layout:
+
+        - ``actions_onhover``  → ``actions_inline``  (buttons must always be
+          visible; hovering is not a reliable interaction on the wishlist page)
+        - ``actions_subtle``   → ``actions_promote``  (wishlist uses the
+          promote button style)
+        - remove ``has_wishlist`` / ``wishlist_fixed`` / ``wishlist_fixed_onhover``
+          (no "add to wishlist" button on the wishlist page itself)
+        """
+        if self.wishlist_opt_products_design_classes:
+            return self.wishlist_opt_products_design_classes
+
+        classes = (self.shop_opt_products_design_classes or "").split()
+
+        substitutions = {
+            "o_wsale_products_opt_actions_onhover": "o_wsale_products_opt_actions_inline",
+            "o_wsale_products_opt_actions_subtle": "o_wsale_products_opt_actions_promote",
+        }
+        remove = {
+            "o_wsale_products_opt_has_wishlist",
+            "o_wsale_products_opt_wishlist_fixed",
+            "o_wsale_products_opt_wishlist_fixed_onhover",
+        }
+
+        result = []
+        for cls in classes:
+            if cls in remove:
+                continue
+            result.append(substitutions.get(cls, cls))
+
+        return " ".join(result)
 
     # === COMPUTE METHODS ===#
 
