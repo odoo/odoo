@@ -1,7 +1,7 @@
 import ast
-import logging
 from datetime import date
 from http import HTTPStatus
+from typing import Any
 from urllib.parse import urlencode
 
 import psycopg.errors
@@ -10,7 +10,7 @@ from lxml import etree
 from odoo import http
 from odoo.exceptions import AccessError
 from odoo.fields import Domain
-from odoo.http import BadRequest, NotFound, request
+from odoo.http import BadRequest, NotFound, Response, request
 from odoo.tools.safe_eval import safe_eval
 
 from ..tools import debug_log as dbg
@@ -22,12 +22,10 @@ from .json_helpers import (
 )
 from .utils import get_action_triples
 
-_logger = logging.getLogger(__name__)
-
 
 class WebJsonController(http.Controller):
     @http.route("/json/<path:subpath>", auth="user", type="http", readonly=True)
-    def web_json(self, subpath, **kwargs):
+    def web_json(self, subpath: str, **kwargs: str) -> Response:
         dbg.lifecycle.debug("[json:%s] unversioned: %s -> /json/1", subpath, dbg.req())
         self._check_json_route_active()
         return request.redirect(
@@ -36,7 +34,7 @@ class WebJsonController(http.Controller):
         )
 
     @http.route("/json/1/<path:subpath>", auth="bearer", type="http", readonly=True)
-    def web_json_1(self, subpath, **kwargs):
+    def web_json_1(self, subpath: str, **kwargs: str) -> Response:
         dbg.lifecycle.debug(
             "[json:%s] request: %s params=%s", subpath, dbg.req(), dbg.keys(kwargs)
         )
@@ -45,23 +43,6 @@ class WebJsonController(http.Controller):
             dbg.logic.debug("[json:%s] no export group, refused", subpath)
             raise AccessError(
                 request.env._("You need export permissions to use the /json route")
-            )
-
-        param_list = set(kwargs)
-
-        def resolve_canonical_redirect():
-            if param_list == set(kwargs):
-                return None
-            dbg.pipeline.debug(
-                "[json:%s] params grew %s -> %s: canonical 307",
-                subpath,
-                sorted(param_list),
-                dbg.keys(kwargs),
-            )
-            encoded_kwargs = urlencode(kwargs, safe="()[], '\"")
-            return request.redirect(
-                f"/json/1/{subpath}?{encoded_kwargs}",
-                HTTPStatus.TEMPORARY_REDIRECT,
             )
 
         env = request.env
@@ -88,18 +69,23 @@ class WebJsonController(http.Controller):
         )
 
         if view_type == "form" or record_id:
-            if redirect := resolve_canonical_redirect():
-                return redirect
             return self._get_json_record(model, spec, record_id)
 
-        domains = self._get_json_domains(model, action, context, eval_context, kwargs)
-        limit, offset = self._get_json_window(action, kwargs)
+        pinned: dict[str, str] = {}
+        domains, pinned_domain = self._get_json_domains(
+            model, action, context, eval_context, kwargs
+        )
+        pinned.update(pinned_domain)
+        limit, offset, pinned_window = self._get_json_window(action, kwargs)
+        pinned.update(pinned_window)
 
         view_tree = etree.fromstring(view["arch"])
 
         if env["ir.ui.view"]._view_type_has_date_range(view_type):
             dbg.logic.debug("[json:%s] %s view has date range", subpath, view_type)
-            domains.append(self._get_domain_json_date(view_tree, kwargs))
+            date_domain, pinned_dates = self._get_domain_json_date(view_tree, kwargs)
+            domains.append(date_domain)
+            pinned.update(pinned_dates)
 
         if view_type == "activity":
             dbg.logic.debug("[json:%s] activity view: extend domain + spec", subpath)
@@ -112,15 +98,21 @@ class WebJsonController(http.Controller):
         aggregates = self._get_json_aggregates(model, fields)
 
         if groupby is not None and not kwargs.get("groupby"):
-            kwargs["groupby"] = ",".join(groupby)
+            pinned["groupby"] = ",".join(groupby)
             if "fields" not in kwargs and fields:
-                kwargs["fields"] = ",".join(fields)
+                pinned["fields"] = ",".join(fields)
         if groupby is None and fields:
             for field in fields:
                 spec.setdefault(field, {})
 
-        if redirect := resolve_canonical_redirect():
-            return redirect
+        if pinned:
+            dbg.pipeline.debug(
+                "[json:%s] server pinned %s: canonical 307", subpath, dbg.keys(pinned)
+            )
+            encoded = urlencode({**kwargs, **pinned}, safe="()[], '\"")
+            return request.redirect(
+                f"/json/1/{subpath}?{encoded}", HTTPStatus.TEMPORARY_REDIRECT
+            )
         dbg.pipeline.debug(
             "[json:%s] listing: %d domains groupby=%s aggregates=%s limit=%s offset=%s",
             subpath,
@@ -134,7 +126,9 @@ class WebJsonController(http.Controller):
             model, Domain.AND(domains), spec, groupby, aggregates, limit, offset
         )
 
-    def _get_json_record(self, model, spec, record_id):
+    def _get_json_record(
+        self, model: Any, spec: dict[str, Any], record_id: int | None
+    ) -> Response:
         if not record_id:
             dbg.logic.debug("[json] form view without record id, refused")
             raise BadRequest(request.env._("Missing record id"))
@@ -148,8 +142,15 @@ class WebJsonController(http.Controller):
         return request.prepare_json_response(res[0])
 
     def _get_json_listing(
-        self, model, domain, spec, groupby, aggregates, limit, offset
-    ):
+        self,
+        model: Any,
+        domain: Domain,
+        spec: dict[str, Any],
+        groupby: list[str] | None,
+        aggregates: list[str],
+        limit: int,
+        offset: int,
+    ) -> Response:
         if groupby:
             with dbg.timer(model.env, "[json] web_read_group %s", model._name):
                 res = model.web_read_group(
@@ -181,7 +182,15 @@ class WebJsonController(http.Controller):
         res.pop("__version", None)
         return request.prepare_json_response(res)
 
-    def _get_json_domains(self, model, action, context, eval_context, kwargs):
+    def _get_json_domains(
+        self,
+        model: Any,
+        action: Any,
+        context: dict[str, Any],
+        eval_context: dict[str, Any],
+        kwargs: dict[str, str],
+    ) -> tuple[list, dict[str, str]]:
+        pinned: dict[str, str] = {}
         domains = [safe_eval(action.domain or "[]", eval_context)]
         if "domain" in kwargs:
             try:
@@ -199,24 +208,29 @@ class WebJsonController(http.Controller):
             )
             if default_domain and not Domain(default_domain).is_true():
                 dbg.logic.debug("[json] default filter domain pinned into params")
-                kwargs["domain"] = repr(list(default_domain))
+                pinned["domain"] = repr(list(default_domain))
             domains.append(default_domain)
-        return domains
+        return domains, pinned
 
-    def _get_json_window(self, action, kwargs):
+    def _get_json_window(
+        self, action: Any, kwargs: dict[str, str]
+    ) -> tuple[int, int, dict[str, str]]:
         try:
             limit = int(kwargs.get("limit", 0)) or action.limit
             offset = int(kwargs.get("offset", 0))
         except ValueError as exc:
             dbg.logic.debug("[json] window unparsable: %s", exc.args[0])
             raise BadRequest(exc.args[0]) from exc
-        if "offset" not in kwargs:
-            kwargs["offset"] = offset
-        if "limit" not in kwargs:
-            kwargs["limit"] = limit
-        return limit, offset
+        pinned = {
+            key: str(value)
+            for key, value in (("offset", offset), ("limit", limit))
+            if key not in kwargs
+        }
+        return limit, offset, pinned
 
-    def _get_domain_json_date(self, view_tree, kwargs):
+    def _get_domain_json_date(
+        self, view_tree: etree._Element, kwargs: dict[str, str]
+    ) -> tuple[list, dict[str, str]]:
         try:
             start_date = date.fromisoformat(kwargs["start_date"])
             end_date = date.fromisoformat(kwargs["end_date"])
@@ -230,16 +244,15 @@ class WebJsonController(http.Controller):
         except ValueError as exc:
             dbg.logic.debug("[json] date range rejected: %s", exc.args[0])
             raise BadRequest(exc.args[0]) from exc
+        pinned: dict[str, str] = {}
         if "start_date" not in kwargs or "end_date" not in kwargs:
-            kwargs.update(
-                {
-                    "start_date": date_domain[0][2].isoformat(),
-                    "end_date": date_domain[1][2].isoformat(),
-                }
-            )
-        return date_domain
+            pinned = {
+                "start_date": date_domain[0][2].isoformat(),
+                "end_date": date_domain[1][2].isoformat(),
+            }
+        return date_domain, pinned
 
-    def _update_json_activity_spec(self, model, spec):
+    def _update_json_activity_spec(self, model: Any, spec: dict[str, Any]) -> None:
         added = 0  # debuglog
         for field_name, field in model._fields.items():
             if (
@@ -251,7 +264,7 @@ class WebJsonController(http.Controller):
                 added += 1
         dbg.logic.debug("[json] activity spec: %d activity_* fields added", added)
 
-    def _get_json_aggregates(self, model, fields):
+    def _get_json_aggregates(self, model: Any, fields: list[str] | None) -> list[str]:
         if not fields:
             return ["__count"]
         env = request.env
@@ -284,7 +297,7 @@ class WebJsonController(http.Controller):
             for fname in fields
         ]
 
-    def _check_json_route_active(self):
+    def _check_json_route_active(self) -> None:
         sudo_env = request.env(su=True)
         if not (
             sudo_env.ref("base.module_base").demo
@@ -293,7 +306,9 @@ class WebJsonController(http.Controller):
             dbg.logic.debug("[json] route inactive (no demo, web.json.enabled unset)")
             raise NotFound
 
-    def _get_action(self, subpath):
+    def _get_action(
+        self, subpath: str
+    ) -> tuple[Any, dict[str, Any], dict[str, Any], int | None]:
         def get_action_triples_():
             try:
                 yield from get_action_triples(request.env, subpath, start_pos=1)

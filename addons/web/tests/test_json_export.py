@@ -82,3 +82,26 @@ class TestJsonExportRoute(HttpCase):
         self._create_server_action("json_probe_none", "x = 1")
         resp = self.url_open("/json/1/json_probe_none", headers=_NAV_HEADERS)
         self.assertEqual(resp.status_code, 400, resp.text[:300])
+
+    def test_a_listing_with_defaults_left_out_is_redirected_to_its_canonical_url(self):
+        resp = self.url_open(
+            "/json/1/action-base.action_partner_form",
+            headers=_NAV_HEADERS,
+            allow_redirects=False,
+        )
+        self.assertEqual(resp.status_code, 307, resp.text[:300])
+        location = resp.headers["Location"]
+        self.assertIn("offset=0", location)
+        self.assertIn("limit=", location)
+        resp = self.url_open(location, headers=_NAV_HEADERS, allow_redirects=False)
+        self.assertEqual(resp.status_code, 200, resp.text[:300])
+
+    def test_a_record_read_is_never_redirected(self):
+        partner = self.env.ref("base.partner_admin")
+        resp = self.url_open(
+            f"/json/1/action-base.action_partner_form/{partner.id}",
+            headers=_NAV_HEADERS,
+            allow_redirects=False,
+        )
+        self.assertEqual(resp.status_code, 200, resp.text[:300])
+        self.assertEqual(resp.json()["id"], partner.id)
