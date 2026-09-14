@@ -2,7 +2,12 @@ import { test, expect, beforeEach } from "@odoo/hoot";
 import { queryAll } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 
-import { mountView, contains, onRpc } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    mountView,
+    onRpc,
+    toggleActionMenu,
+} from "@web/../tests/web_test_helpers";
 
 import { defineTodoModels } from "./todo_test_helpers";
 import { ProjectTask } from "./mock_server/mock_models/project_task";
@@ -64,7 +69,7 @@ test("Check that todo_conversion_form view focuses on the focus on the first ele
         actionMenus: {},
     });
 
-    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleActionMenu();
     await contains(".o-dropdown-item:contains('Convert to Task')").click();
     await animationFrame();
     expect(queryAll("div.o_todo_conversion_form_view input")[0]).toBeFocused({

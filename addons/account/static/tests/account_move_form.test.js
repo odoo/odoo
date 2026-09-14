@@ -7,7 +7,14 @@ import {
     triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { expect, test } from "@odoo/hoot";
-import { contains, defineModels, fields, onRpc, models} from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    defineModels,
+    fields,
+    models,
+    onRpc,
+    toggleActionMenu,
+} from "@web/../tests/web_test_helpers";
 import { defineAccountModels } from "./account_test_helpers";
 
 defineAccountModels();
@@ -54,7 +61,7 @@ test("Confirmation dialog on delete contains a warning", async () => {
             </sheet>
         </form>`,
     });
-    await contains(".o_cp_action_menus button").click();
+    await toggleActionMenu();
     await contains(".o_menu_item:contains(Delete)").click();
     expect(".o_dialog div.alert.alert-warning").toHaveText(
         "This operation will create a gap in the sequence.",

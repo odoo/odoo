@@ -15,6 +15,7 @@ import {
     mountViewInDialog,
     mountWithCleanup,
     onRpc,
+    toggleActionMenu,
 } from "../../web_test_helpers";
 
 import { WebClient } from "@web/webclient/webclient";
@@ -1000,7 +1001,7 @@ test("save when action button clicked", async () => {
     await contains(`.o_field_widget[name='expertise'] input`).edit("test");
     expect(`.o_field_widget[name='expertise'] input`).toHaveValue("test");
 
-    await contains(`.o_cp_action_menus button`).click();
+    await toggleActionMenu();
     await contains(`.o-dropdown--menu .dropdown-item`).click();
     expect.verifySteps(["save"]);
     expect(`.o_field_widget[name='expertise'] input`).toHaveValue("test");
@@ -1022,7 +1023,7 @@ test(`save when action button clicked on desktop`, async () => {
     await contains(`.o_field_widget[name='expertise'] input`).edit("test");
     expect(`.o_pager_counter`).toHaveText("1 / 1");
 
-    await contains(`.o_cp_action_menus button`).click();
+    await toggleActionMenu();
     await contains(`.o-dropdown--menu .dropdown-item`).click();
     expect(`.o_pager_counter`).toHaveText("2 / 2");
 
@@ -1044,7 +1045,7 @@ test("error on save when action button clicked", async () => {
     });
 
     await contains(`.o_field_widget[name='expertise'] input`).edit("test");
-    await contains(`.o_cp_action_menus button`).click();
+    await toggleActionMenu();
     await contains(`.o-dropdown--menu .dropdown-item`).click();
     expect.verifySteps(["save"]);
     await animationFrame();

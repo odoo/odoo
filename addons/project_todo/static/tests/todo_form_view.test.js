@@ -8,6 +8,7 @@ import {
     mountView,
     mountWithCleanup,
     onRpc,
+    toggleActionMenu,
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { WebClient } from "@web/webclient/webclient";
@@ -59,7 +60,7 @@ test("Check that project_task_action_convert_todo_to_task appears in the menu ac
         actionMenus: {},
     });
 
-    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleActionMenu();
     expect(queryAllTexts(".o-dropdown--menu span")).toInclude("Convert to Task", {
         message:
             "project_task_action_convert_todo_to_task action should appear in the menu actions",
@@ -76,7 +77,7 @@ test("Check that project_task_action_convert_todo_to_task does not appear in the
         actionMenus: {},
     });
 
-    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleActionMenu();
     expect(queryAllTexts(".o-dropdown--menu span")).not.toInclude("Convert to Task", {
         message:
             "project_task_action_convert_todo_to_task action should appear in the menu actions",

@@ -1,7 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { Component, useProps, xml } from "@odoo/owl";
-import { defineModels, fields, models, mountView, contains } from "@web/../tests/web_test_helpers";
+import { defineModels, fields, models, mountView } from "@web/../tests/web_test_helpers";
 
 import { registry } from "@web/core/registry";
 
@@ -144,7 +144,8 @@ test("compile a button with id on mobile", async () => {
         type: "form",
         resId: 1,
     });
-    await contains(`.o_cp_action_menus button:has([data-icon="more_vert"])`).click();
+    // a lone header button is the one the actions menu keeps outside of
+    // itself, so it is right there in the status bar
     expect(`button[id=action_button]`).toHaveCount(1);
 });
 

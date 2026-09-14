@@ -107,6 +107,7 @@ export {
 export { serverState } from "./_framework/mock_server_state.hoot";
 export { preventResizeObserverError } from "./_framework/resize_observer_error_catcher";
 export {
+    actionMenuToggler,
     editFavorite,
     editFavoriteName,
     editPager,

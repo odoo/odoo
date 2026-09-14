@@ -19,12 +19,13 @@ import {
     onRpc,
     patchWithCleanup,
     serverState,
+    toggleActionMenu,
     toggleSearchBarMenu,
 } from "@web/../tests/web_test_helpers";
 import { download } from "@web/core/network/download";
 
 async function exportAllAction() {
-    await contains(".o_cp_action_menus .dropdown-toggle").click();
+    await toggleActionMenu();
     await contains(".o-dropdown--menu .dropdown-item").click();
 }
 const openExportDialog = async () => {
@@ -36,7 +37,7 @@ const openExportDialog = async () => {
     } else {
         await contains(".o_list_record_selector input[type='checkbox']").click();
     }
-    await contains(".o_control_panel .o_cp_action_menus .dropdown-toggle").click();
+    await toggleActionMenu();
     await contains(".dropdown-menu span:contains(Export)").click();
     await animationFrame();
 };
@@ -831,7 +832,7 @@ test("ExportDialog: export all records of the domain", async () => {
 
     isDomainSelected = true;
     await contains(".o_select_domain").click();
-    await contains(".o_control_panel .o_cp_action_menus .dropdown-toggle").click();
+    await toggleActionMenu();
     await contains(".dropdown-menu span:contains(Export)").click();
     await contains(".o_select_button").click();
 

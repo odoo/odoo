@@ -2,14 +2,15 @@ import { NameAndSignature } from "@web/core/signature/name_and_signature";
 import { SignatureWidget } from "@web/views/widgets/signature/signature";
 
 import {
+    clickModalButton,
+    contains,
     defineModels,
     fields,
     models,
     mountView,
     onRpc,
     patchWithCleanup,
-    contains,
-    clickModalButton,
+    toggleActionMenu,
 } from "@web/../tests/web_test_helpers";
 import { beforeEach, test, expect } from "@odoo/hoot";
 import { click, queryFirst, waitFor } from "@odoo/hoot-dom";
@@ -103,7 +104,8 @@ test("Signature widget renders a Sign button on mobile", async () => {
         </form>`,
     });
 
-    await contains(`.o_cp_action_menus button:has([data-icon="more_vert"])`).click();
+    // a lone header widget is the one the actions menu keeps outside of
+    // itself, so it is right there in the status bar
     expect("button.o_sign_button").toHaveClass("btn-secondary", {
         message: `The button must have the 'btn-secondary' class as "highlight=0"`,
     });
@@ -171,7 +173,7 @@ test("Signature widget: full_name option on mobile", async () => {
         </form>`,
     });
 
-    await contains(`.o_cp_action_menus button:has([data-icon="more_vert"])`).click();
+    await toggleActionMenu();
     // Clicks on the sign button to open the sign modal.
     await click("span.o_sign_label");
     await waitFor(".modal .modal-body");
@@ -217,7 +219,7 @@ test("Signature widget: highlight option on mobile", async () => {
         </form>`,
     });
 
-    await contains(`.o_cp_action_menus button:has([data-icon="more_vert"])`).click();
+    await toggleActionMenu();
     expect("button.o_sign_button").toHaveClass("btn-primary", {
         message: `The button must have the 'btn-primary' class as "highlight=1"`,
     });
@@ -259,8 +261,9 @@ test("Signature widget works inside of a dropdown", async () => {
     // change display_name to enable auto-sign feature
     await contains(".o_field_widget[name=display_name] input").edit("test");
 
-    // open the signature dialog
-    await contains(".o_statusbar_buttons button:has([data-icon='more_vert']").click();
+    // open the signature dialog, from the actions menu of the control panel
+    // where the header buttons that do not fit the status bar now are
+    await contains("button.o-control-panel-adaptive-dropdown").click();
     await contains(".o_widget_signature button.o_sign_button").click();
     await waitFor(".modal .modal-body");
 

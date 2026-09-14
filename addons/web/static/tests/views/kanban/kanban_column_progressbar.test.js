@@ -38,6 +38,7 @@ import {
     quickCreateKanbanRecord,
     serverState,
     stepAllNetworkCalls,
+    toggleActionMenu,
     toggleKanbanColumnActions,
     toggleMenuItem,
     toggleSearchBarMenu,
@@ -661,7 +662,7 @@ test("column progressbars on archiving records update counter", async () => {
     await contains(".o_kanban_group:nth-of-type(2) .o_kanban_record:nth-of-type(1)").click();
     await keyUp("alt");
     await contains(".o_kanban_group:nth-of-type(2) .o_kanban_record:nth-of-type(2)").click();
-    await contains(".o_cp_action_menus button").click();
+    await toggleActionMenu();
     await contains(".o_menu_item:contains(Archive)").click();
     await contains(".modal-footer .btn-primary").click();
 
@@ -714,7 +715,7 @@ test("kanban with progressbars: correctly update env when archiving records", as
     await animationFrame();
     await contains(".o_kanban_group:nth-of-type(1) .o_kanban_record:nth-of-type(1)").click();
     await keyUp("alt");
-    await contains(".o_cp_action_menus button").click();
+    await toggleActionMenu();
     await contains(".o_menu_item:contains(Archive)").click();
     await contains(".modal-footer .btn-primary").click();
 
@@ -1396,7 +1397,7 @@ test("progress bar with aggregates: Archive all in a column", async () => {
     await contains(".o_kanban_group:nth-of-type(2) .o_kanban_record:nth-of-type(2)").click();
     await contains(".o_kanban_group:nth-of-type(2) .o_kanban_record:nth-of-type(3)").click();
     await contains(".o_kanban_group:nth-of-type(2) .o_kanban_record:nth-of-type(4)").click();
-    await contains(".o_cp_action_menus button").click();
+    await toggleActionMenu();
     await contains(".o_menu_item:contains(Archive)").click();
     expect(".o_dialog").toHaveCount(1);
     def = Promise.withResolvers();

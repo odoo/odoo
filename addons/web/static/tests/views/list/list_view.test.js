@@ -32,6 +32,7 @@ import { Component, markup, onPatched, onWillStart, signal, t, useProps, xml } f
 import { buildSelector } from "@web/../tests/_framework/view_test_helpers";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
+    actionMenuToggler,
     clickFieldDropdown,
     clickModalButton,
     clickSave,
@@ -217,9 +218,7 @@ defineModels([Foo, Bar, Currency, ResCompany, ResPartner, ResUsers]);
 
 async function clickControlPanelAction(buttonName) {
     if (isSmall()) {
-        await contains(
-            ".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='more_vert']"
-        ).click();
+        await toggleActionMenu();
         await contains(`.o-dropdown-item button[name="${buttonName}"]`).click();
     } else {
         await contains(`.o_control_panel_actions button[name="${buttonName}"]`).click();
@@ -540,7 +539,7 @@ test(`list with delete="0"`, async () => {
         arch: `<list delete="0"><field name="foo"/></list>`,
         actionMenus: {},
     });
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
     expect(`tbody tr.o_data_row[data-id]`).toHaveCount(4, { message: "should have 4 records" });
 
     await clickRecordSelector();
@@ -1099,7 +1098,7 @@ test(`export feature in list for users not in base.group_allow_export`, async ()
     expect(`div.o_control_panel .o_cp_buttons .o_list_export_xlsx`).toHaveCount(0);
 
     await clickRecordSelector();
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
 
     await toggleActionMenu();
     expect(queryAllTexts(`.o-dropdown--menu .o_menu_item`)).toEqual(["Duplicate", "Delete"], {
@@ -1115,11 +1114,11 @@ test(`list with export button`, async () => {
         arch: `<list><field name="foo"/></list>`,
         actionMenus: {},
     });
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
     expect(`.o_data_row`).toHaveCount(4);
 
     await clickRecordSelector();
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
 
     await toggleActionMenu();
     expect(queryAllTexts(`.o-dropdown--menu .o_menu_item`)).toEqual(
@@ -1448,14 +1447,11 @@ test(`list view: action button in controlPanel basic rendering on mobile`, async
         `,
     });
     expect(`.o_control_panel_actions > *`).toHaveCount(0);
-    await contains(
-        ".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='more_vert']"
-    ).click();
+    await toggleActionMenu();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual(["Export"]);
+    // the single actions menu stays open across a change of selection, where
+    // the cog had a dropdown of its own that closed with it
     await clickRecordSelector();
-    await contains(
-        ".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='more_vert']"
-    ).click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual([
         "plaf",
         "Export",
@@ -1463,9 +1459,6 @@ test(`list view: action button in controlPanel basic rendering on mobile`, async
         "Delete",
     ]);
     await clickRecordSelector();
-    await contains(
-        ".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='more_vert']"
-    ).click();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual(["Export"]);
 });
 
@@ -1536,19 +1529,13 @@ test(`list view: action button in controlPanel with display='always' on mobile`,
             a: true,
         },
     });
+    // the icon-only togglers, the actions menu among them, sit with the pager
     expect(
         queryAllTexts(`div.o_control_panel_breadcrumbs button, div.o_control_panel_actions button`)
-    ).toEqual([
-        "New",
-        "display",
-        "", // mobile dropdown
-        "", // default selection
-    ]);
+    ).toEqual(["New", "display"]);
 
     await clickRecordSelector();
-    await contains(
-        ".o_control_panel_breadcrumbs .o_cp_action_menus [data-icon='more_vert']"
-    ).click();
+    await toggleActionMenu();
     expect(queryAllTexts(`.o-dropdown--menu .o-dropdown-item`)).toEqual([
         "",
         "default-selection",
@@ -1560,12 +1547,7 @@ test(`list view: action button in controlPanel with display='always' on mobile`,
     await clickRecordSelector();
     expect(
         queryAllTexts(`div.o_control_panel_breadcrumbs button, div.o_control_panel_actions button`)
-    ).toEqual([
-        "New",
-        "display",
-        "", // mobile dropdown
-        "",
-    ]);
+    ).toEqual(["New", "display"]);
 });
 
 test(`list view: give a context dependent on the current context to a header button`, async () => {
@@ -2267,7 +2249,7 @@ test(`discard a new record in editable="top" list with less than 4 records`, asy
     expect(`tbody tr:eq(0)`).toHaveClass("o_selected_row");
 
     if (isSmall()) {
-        await contains(".o_control_panel_main_buttons button > [data-icon='more_vert']").click();
+        await toggleActionMenu();
         expect(`.o_list_button_discard`).toHaveCount(0);
         expect(`.o_control_panel .o_list_button_add`).toHaveCount(1);
     } else {
@@ -3026,7 +3008,7 @@ test(`enabling archive in list when groupby m2m field`, async () => {
     // Check for the initial number of records
     expect(`.o_data_row`).toHaveCount(5, { message: "Checking initial number of records" });
     await clickRecordSelector(); // select first task
-    await contains(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`).click(); // click on actions
+    await toggleActionMenu(); // click on actions
     // check that all the options are available
     expect(`.o-dropdown--menu .o_menu_item`).toHaveCount(4, {
         message: "archive, unarchive, duplicate and delete option should be present",
@@ -3071,7 +3053,7 @@ test(`enabling archive in list when groupby m2m field and multi selecting the sa
 
     await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click(); // select first record
     await contains(`.o_data_row:eq(3) .o_list_record_selector input`).click(); // select the same record in another group
-    await contains(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`).click(); // click on actions
+    await toggleActionMenu(); // click on actions
 
     await toggleMenuItem("Archive"); // toggle archive action
     await contains(`.modal-footer .btn-primary`).click(); // confirm the archive action
@@ -3105,7 +3087,7 @@ test(`enabling duplicate in list when groupby m2m field`, async () => {
     expect(`.o_data_row`).toHaveCount(5, { message: "Checking initial number of records" });
 
     await clickRecordSelector(); // select first task
-    await contains(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`).click(); // click on actions
+    await toggleActionMenu(); // click on actions
     // check that all the options are available
     expect(`.o-dropdown--menu .o_menu_item`).toHaveCount(4, {
         message: "archive, unarchive, duplicate and delete option should be present",
@@ -3149,7 +3131,7 @@ test(`enabling duplicate in list when groupby m2m field and multi selecting the 
 
     await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click(); // select first record
     await contains(`.o_data_row:eq(3) .o_list_record_selector input`).click(); // select the same record in another group
-    await contains(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`).click(); // click on actions
+    await toggleActionMenu(); // click on actions
 
     await toggleMenuItem("Duplicate"); // toggle duplicate action
     // check that after duplicate the record is duplicated in both 2nd and 3rd groups
@@ -3182,7 +3164,7 @@ test(`enabling delete in list when groupby m2m field`, async () => {
     expect(`.o_data_row`).toHaveCount(5, { message: "Checking initial number of records" });
 
     await clickRecordSelector(); // select first task
-    await contains(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`).click(); // click on actions
+    await toggleActionMenu(); // click on actions
     // check that all the options are available
     expect(`.o-dropdown--menu .o_menu_item`).toHaveCount(4, {
         message: "archive, unarchive, duplicate and delete option should be present",
@@ -3227,7 +3209,7 @@ test(`enabling delete in list when groupby m2m field and multi selecting the sam
 
     await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click(); // select first record
     await contains(`.o_data_row:eq(3) .o_list_record_selector input`).click(); // select the same record in another group
-    await contains(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`).click(); // click on actions
+    await toggleActionMenu(); // click on actions
 
     await toggleMenuItem("Delete"); // toggle delete action
     await contains(`.modal-footer .btn-danger`).click(); // confirm the delete action
@@ -3269,7 +3251,7 @@ test(`enabling unarchive in list when groupby m2m field`, async () => {
     expect(`.o_data_row`).toHaveCount(4, { message: "Checking initial number of records" });
 
     await clickRecordSelector(); // select first task
-    await contains(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`).click(); // click on actions
+    await toggleActionMenu(); // click on actions
     // check that all the options are available
     expect(`.o-dropdown--menu .o_menu_item`).toHaveCount(4, {
         message: "archive, unarchive, duplicate and delete option should be present",
@@ -3321,7 +3303,7 @@ test(`enabling unarchive in list when groupby m2m field and multi selecting the 
 
     await contains(`.o_data_row:eq(0) .o_list_record_selector input`).click(); // select first record
     await contains(`.o_data_row:eq(2) .o_list_record_selector input`).click(); // select the same record in another group
-    await contains(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`).click(); // click on actions
+    await toggleActionMenu(); // click on actions
 
     await toggleMenuItem("Unarchive"); // toggle unarchive action
     // check that after unarchive the record is unarchived in both 1st and 2nd groups
@@ -4673,7 +4655,7 @@ test("selection box is properly displayed (multi pages) on mobile", async () => 
     expect(".o_selection_box .o_select_domain").toHaveCount(1);
     expect(".o_selection_box").toHaveText("1\nselected\nAll");
     expect(".o_selection_box").toHaveCount(1);
-    expect("div.o_control_panel .o_cp_action_menus").toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
 
     await toggleActionMenu();
 
@@ -5077,13 +5059,13 @@ test(`selection is kept on render without reload`, async () => {
         groupBy: ["foo"],
         actionMenus: {},
     });
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
     expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(0);
 
     // open blip grouping and check all lines
     await contains(`.o_group_header:contains(blip)`).click();
     await contains(`.o_data_row input`).click();
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
     expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(1);
 
     // open yop grouping and verify blip are still checked
@@ -5091,7 +5073,7 @@ test(`selection is kept on render without reload`, async () => {
     expect(`.o_data_row input:checked`).toHaveCount(1, {
         message: "opening a grouping does not uncheck others",
     });
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
     expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(1);
 
     // close and open blip grouping and verify blip are unchecked
@@ -5100,7 +5082,7 @@ test(`selection is kept on render without reload`, async () => {
     expect(`.o_data_row input:checked`).toHaveCount(0, {
         message: "opening and closing a grouping uncheck its elements",
     });
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
     expect(`.o_control_panel_actions .o_selection_box`).toHaveCount(0);
 });
 
@@ -6215,13 +6197,13 @@ test(`deleting one record and verify context key`, async () => {
             ctx_key: "ctx_val",
         },
     });
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
     expect(`tbody td.o_field_cell`).toHaveCount(4, { message: "should have 4 records" });
 
     await clickRecordSelector();
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
 
-    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleActionMenu();
     await toggleMenuItem("Delete");
     expect(document.body).toHaveClass("modal-open", {
         message: "body should have modal-open class",
@@ -6253,7 +6235,7 @@ test(`custom delete confirmation dialog`, async () => {
         actionMenus: {},
     });
     await clickRecordSelector();
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
 
     await toggleActionMenu();
     await toggleMenuItem("Delete");
@@ -6279,7 +6261,7 @@ test(`deleting record which throws UserError should close confirmation dialog`, 
         arch: `<list><field name="foo"/></list>`,
     });
     await clickRecordSelector();
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
 
     await toggleActionMenu();
     await toggleMenuItem("Delete");
@@ -6366,15 +6348,15 @@ test(`delete all records matching the domain`, async () => {
         domain: [["bar", "=", true]],
         actionMenus: {},
     });
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
     expect(`tbody td.o_list_record_selector`).toHaveCount(2, { message: "should have 2 records" });
 
     await contains(`thead .o_list_record_selector input`).click();
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
     expect(`.o_selection_box .o_select_domain`).toHaveCount(1);
 
     await contains(`.o_selection_box .o_select_domain`).click();
-    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleActionMenu();
     await toggleMenuItem("Delete");
     expect(`.modal`).toHaveCount(1, { message: "a confirm modal should be displayed" });
 
@@ -6409,15 +6391,15 @@ test(`delete all records matching the domain (limit reached)`, async () => {
         domain: [["bar", "=", true]],
         actionMenus: {},
     });
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
     expect(`tbody td.o_list_record_selector`).toHaveCount(2, { message: "should have 2 records" });
 
     await contains(`thead .o_list_record_selector input`).click();
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
     expect(`.o_selection_box .o_select_domain`).toHaveCount(1);
 
     await contains(`.o_selection_box .o_select_domain`).click();
-    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleActionMenu();
     await toggleMenuItem("Delete");
     expect(`.modal`).toHaveCount(1, { message: "a confirm modal should be displayed" });
 
@@ -6438,7 +6420,7 @@ test(`duplicate one record`, async () => {
 
     // Duplicate one record
     await clickRecordSelector();
-    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleActionMenu();
     await toggleMenuItem("Duplicate");
 
     // Final state: there should be 5 records
@@ -6458,7 +6440,7 @@ test(`duplicate all records`, async () => {
 
     // Duplicate all records
     await selectAllRecords();
-    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleActionMenu();
     await toggleMenuItem("Duplicate");
 
     // A confirmation dialog should appear when duplicating multiple records.
@@ -6484,11 +6466,11 @@ test(`archiving one record`, async () => {
         actionMenus: {},
         arch: `<list><field name="foo"/></list>`,
     });
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
     expect(`tbody tr.o_data_row[data-id]`).toHaveCount(4, { message: "should have 4 records" });
 
     await clickRecordSelector();
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
     expect.verifySteps([
         "/web/webclient/translations",
         "/web/webclient/load_menus",
@@ -6539,15 +6521,15 @@ test(`archive all records matching the domain`, async () => {
         domain: [["bar", "=", true]],
         actionMenus: {},
     });
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
     expect(`tbody td.o_list_record_selector`).toHaveCount(2, { message: "should have 2 records" });
 
     await contains(`thead .o_list_record_selector input`).click();
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
     expect(`.o_selection_box .o_select_domain`).toHaveCount(1);
 
     await contains(`.o_selection_box .o_select_domain`).click();
-    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleActionMenu();
     await toggleMenuItem("Archive");
     expect(`.modal`).toHaveCount(1, { message: "a confirm modal should be displayed" });
 
@@ -6584,15 +6566,15 @@ test(`archive all records matching the domain (limit reached)`, async () => {
         domain: [["bar", "=", true]],
         actionMenus: {},
     });
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
     expect(`tbody td.o_list_record_selector`).toHaveCount(2, { message: "should have 2 records" });
 
     await contains(`thead .o_list_record_selector input`).click();
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
     expect(`.o_selection_box .o_select_domain`).toHaveCount(1);
 
     await contains(`.o_selection_box .o_select_domain`).click();
-    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleActionMenu();
     await toggleMenuItem("Archive");
     expect(`.modal`).toHaveCount(1, { message: "a confirm modal should be displayed" });
 
@@ -6644,7 +6626,7 @@ test(`archive/unarchive handles returned action`, async () => {
     expect(`tbody tr.o_data_row[data-id]`).toHaveCount(4, { message: "should have 4 records" });
 
     await clickRecordSelector();
-    expect(`.o_cp_action_menus`).toHaveCount(1, { message: "sidebar should be visible" });
+    expect(actionMenuToggler()).toHaveCount(1, { message: "sidebar should be visible" });
 
     await toggleActionMenu();
     await contains(`.o-dropdown--menu .o_menu_item:contains(Archive)`).click();
@@ -6682,10 +6664,10 @@ test(`apply custom static action menu (archive)`, async () => {
         arch: `<list js_class="custom_list"><field name="foo"/></list>`,
         actionMenus: {},
     });
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
 
     await clickRecordSelector();
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
 
     await toggleActionMenu();
     await toggleMenuItem("Archive");
@@ -6732,10 +6714,10 @@ test(`add custom static action menu`, async () => {
         arch: `<list js_class="custom_list"><field name="foo"/></list>`,
         actionMenus: {},
     });
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
 
     await clickRecordSelector();
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
 
     await toggleActionMenu();
     expect(queryAllTexts(`.o-dropdown--menu .dropdown-item`)).toEqual([
@@ -8352,7 +8334,7 @@ test(`non empty editable list with sample data: delete all records`, async () =>
 
     // Delete all records
     await contains(`thead .o_list_record_selector input`).click();
-    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleActionMenu();
     await toggleMenuItem("Delete");
     await contains(`.modal-footer .btn-danger`).click();
 
@@ -8435,7 +8417,7 @@ test(`empty editable list with sample data: create and delete record`, async () 
 
     // Delete newly created record
     await contains(`.o_data_row input`).click();
-    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleActionMenu();
     await toggleMenuItem("Delete");
     await contains(`.modal-footer .btn-danger`).click();
 
@@ -8482,7 +8464,7 @@ test(`empty editable list with sample data: create and duplicate record`, async 
 
     // Duplicate newly created record
     await contains(`.o_data_row input`).click();
-    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleActionMenu();
     await toggleMenuItem("Duplicate");
 
     // Final state: there should be 2 records
@@ -9913,7 +9895,7 @@ test(`display toolbar`, async () => {
             },
         },
     });
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
 
     await clickRecordSelector();
     await toggleActionMenu();
@@ -9955,14 +9937,14 @@ test(`execute ActionMenus actions on desktop`, async () => {
         actionMenus: {},
     });
 
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
     expect(`.o_data_row`).toHaveCount(4);
     // select all records
     await contains(`thead .o_list_record_selector input`).click();
     expect(`.o_list_record_selector input:checked`).toHaveCount(5);
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
 
-    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleActionMenu();
     await toggleMenuItem("Custom Action");
 
     expect.verifySteps([
@@ -10019,12 +10001,12 @@ test(`execute ActionMenus actions on mobile`, async () => {
         actionMenus: {},
     });
 
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
     expect(`.o_data_row`).toHaveCount(4);
     // select all records
     await selectAllRecords();
     expect(`.o_data_row.o_data_row_selected`).toHaveCount(4);
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
 
     await toggleActionMenu();
     await toggleMenuItem("Custom Action");
@@ -10083,22 +10065,22 @@ test(`execute ActionMenus actions with correct params (single page) on desktop`,
             </search>
         `,
     });
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
     expect(`.o_data_row`).toHaveCount(4);
 
     // select all records
     await contains(`thead .o_list_record_selector input`).click();
     expect(`.o_list_record_selector input:checked`).toHaveCount(5);
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
 
-    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleActionMenu();
     await toggleMenuItem("Custom Action");
 
     // unselect first record (will unselect the thead checkbox as well)
     await contains(`.o_data_row .o_list_record_selector input`).click();
     expect(`.o_list_record_selector input:checked`).toHaveCount(3);
 
-    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleActionMenu();
     await toggleMenuItem("Custom Action");
 
     // add a domain and select first two records (need to unselect records first)
@@ -10113,7 +10095,7 @@ test(`execute ActionMenus actions with correct params (single page) on desktop`,
     await contains(`.o_data_row:eq(1) .o_list_record_selector input`).click();
     expect(`.o_list_record_selector input:checked`).toHaveCount(2);
 
-    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleActionMenu();
     await toggleMenuItem("Custom Action");
     expect.verifySteps([
         {
@@ -10190,13 +10172,13 @@ test(`execute ActionMenus actions with correct params (single page) on mobile`, 
         `,
     });
 
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
     expect(`.o_data_row`).toHaveCount(4);
 
     // select all records
     await selectAllRecords();
     expect(`.o_data_row.o_data_row_selected`).toHaveCount(4);
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
 
     await toggleActionMenu();
     await toggleMenuItem("Custom Action");
@@ -10296,23 +10278,23 @@ test(`execute ActionMenus actions with correct params (multi pages)`, async () =
             </search>
         `,
     });
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
     expect(`.o_data_row`).toHaveCount(2);
 
     // select all records
     await contains(`thead .o_list_record_selector input`).click();
     expect(`.o_list_record_selector input:checked`).toHaveCount(3);
     expect(`.o_selection_box .o_select_domain`).toHaveCount(1);
-    expect(`div.o_control_panel .o_cp_action_menus`).toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
 
-    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleActionMenu();
     await toggleMenuItem("Custom Action");
 
     // select all domain
     await contains(`.o_selection_box .o_select_domain`).click();
     expect(`.o_list_record_selector input:checked`).toHaveCount(3);
 
-    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleActionMenu();
     await toggleMenuItem("Custom Action");
 
     // add a domain (need to unselect records first)
@@ -10327,7 +10309,7 @@ test(`execute ActionMenus actions with correct params (multi pages)`, async () =
     expect(`.o_list_record_selector input:checked`).toHaveCount(3);
     expect(`.o_selection_box .o_select_domain`).toHaveCount(0);
 
-    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleActionMenu();
     await toggleMenuItem("Custom Action");
     expect.verifySteps([
         {
@@ -14145,7 +14127,7 @@ test(`list view move to previous page when all records from last page deleted`, 
     await contains(`tbody .o_data_row td.o_list_record_selector input`).click();
     checkSearchRead = true;
 
-    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleActionMenu();
     await contains(`.o-dropdown--menu .o_menu_item:contains(Delete)`).click();
     await contains(`.modal button.btn-danger`).click();
     expect(getPagerValue()).toEqual([1, 3]);
@@ -14188,7 +14170,7 @@ test(`grouped list view move to previous page of group when all records from las
 
     // delete a record
     await contains(`.o_data_row .o_list_record_selector input`).click();
-    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleActionMenu();
     await contains(`.dropdown-item:contains(Delete)`).click();
     await contains(`.modal .btn-danger`).click();
     expect(`th.o_group_name:eq(0) .o_pager:visible`).toHaveCount(0);
@@ -14229,7 +14211,7 @@ test(`grouped list view move to previous page of group when all records from las
 
     // delete a record
     await contains(`.o_data_row .o_list_record_selector input`).click();
-    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleActionMenu();
     await contains(`.dropdown-item:contains(Delete)`).click();
     await contains(`.modal .btn-danger`).click();
     expect(`th.o_group_name:eq(0) .o_pager_counter`).toHaveCount(1);
@@ -14263,7 +14245,7 @@ test(`grouped list view move to next page when all records from the current page
 
     // delete all records from current page
     await contains(`thead .o_list_record_selector input`).click();
-    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleActionMenu();
     await contains(`.dropdown-item:contains(Delete)`).click();
     await contains(`.modal .btn-danger`).click();
     expect(`.o_group_header:eq(0) .o_group_name`).toHaveText(`Value 1 4 records 1-2 / 4`, {
@@ -14308,7 +14290,7 @@ test(`list view move to previous page when all records from last page archive/un
     });
 
     // archive all records of current page
-    await contains(`.o_cp_action_menus .dropdown-toggle`).click();
+    await toggleActionMenu();
     await toggleMenuItem("Archive");
     expect(`.modal`).toHaveCount(1, { message: "a confirm modal should be displayed" });
 
@@ -17563,9 +17545,9 @@ test(`archive/unarchive not available on active readonly models`, async () => {
         actionMenus: {},
     });
     await clickRecordSelector();
-    expect(`.o_cp_action_menus`).toHaveCount(1, { message: "sidebar should be available" });
+    expect(actionMenuToggler()).toHaveCount(1, { message: "sidebar should be available" });
 
-    await contains(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`).click();
+    await toggleActionMenu();
     expect(`a:contains(Archive)`).toHaveCount(0, {
         message: "Archive action should not be available",
     });
@@ -18372,7 +18354,7 @@ test(`list view with default_group_by`, async () => {
     expect(`.o_group_header`).toHaveCount(2);
     // open search bar in mobile
     if (isSmall()) {
-        await contains(".o_control_panel_navigation > button").click();
+        await contains(".o_control_panel_navigation button:has([data-icon='search'])").click();
     }
     expect(`.o_searchview_facet`).toHaveCount(1);
     expect(`.o_searchview_facet`).toHaveText("Bar");
@@ -18426,7 +18408,7 @@ test(`list view with multi-fields default_group_by`, async () => {
     expect(`.o_group_header`).toHaveCount(3);
     // open search bar in mobile
     if (isSmall()) {
-        await contains(".o_control_panel_navigation > button").click();
+        await contains(".o_control_panel_navigation button:has([data-icon='search'])").click();
     }
     expect(`.o_searchview_facet`).toHaveCount(1);
     expect(`.o_searchview_facet`).toHaveText("Foo\n>\nBar");
@@ -19932,7 +19914,7 @@ test("selection is properly displayed (single page) on mobile", async () => {
     await longPress(".o_data_row:nth-child(2)");
     expect(queryFirst(".o_selection_box")).toHaveText("2\nselected\nAll");
 
-    expect("div.o_control_panel .o_cp_action_menus").toHaveCount(1);
+    expect(actionMenuToggler()).toHaveCount(1);
 
     await toggleActionMenu();
     expect(getMenuItemTexts()).toEqual(["Export", "Duplicate", "Delete"]);
@@ -20332,7 +20314,7 @@ test(`list with custom cog action that has a confirmation target="new" action`, 
     expect(".o_list_view").toHaveCount(1);
 
     await selectAllRecords();
-    await contains(`.o_cp_action_menus button[data-hotkey='u']`).click();
+    await toggleActionMenu();
     await contains(`.o-dropdown-item:contains(Sort of confirmation dialog)`).click();
     expect(".o_dialog").toHaveCount(1);
 
@@ -20948,7 +20930,7 @@ test(`[Offline] delete records`, async () => {
 
     await clickRecordSelector(2); //select two records
 
-    await contains(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`).click(); // click on actions
+    await toggleActionMenu(); // click on actions
     await toggleMenuItem("Delete"); // toggle delete action
     await contains(`.modal-footer .btn-danger`).click(); // confirm the delete action
 
@@ -20998,7 +20980,7 @@ test(`[Offline] archiving records`, async () => {
 
     await clickRecordSelector(2); //select two records
 
-    await contains(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`).click(); // click on actions
+    await toggleActionMenu(); // click on actions
     await toggleMenuItem("Archive"); // toggle archive action
     await contains(`.modal-footer .btn-primary`).click(); // confirm the archive action
 
@@ -21048,7 +21030,7 @@ test(`[Offline] unarchiving records`, async () => {
 
     await clickRecordSelector(2); //select two records
 
-    await contains(`div.o_control_panel .o_cp_action_menus .dropdown-toggle`).click(); // click on actions
+    await toggleActionMenu(); // click on actions
     await toggleMenuItem("Unarchive"); // toggle archive action
 
     // The deleted records will be saved the next time we are online
@@ -21488,7 +21470,7 @@ test(`custom button that creates record in list with sample data`, async () => {
     expect(`.o_list_view .o_content`).toHaveClass("o_view_sample_data");
 
     if (isSmall()) {
-        await contains(".o_control_panel_main_buttons .btn.dropdown-toggle").click();
+        await toggleActionMenu();
     }
     await contains(".custom_create").click();
     expect(`.o_list_view .o_content`).not.toHaveClass("o_view_sample_data");
@@ -22440,7 +22422,7 @@ test("Empty Groups: filter out empty groups unless field has group_expand", asyn
 
     await contains(".o_group_name:eq(1)").click();
     await clickRecordSelector(1);
-    await contains("div.o_control_panel .o_cp_action_menus .dropdown-toggle").click();
+    await toggleActionMenu();
     await toggleMenuItem("Archive");
     await contains(".modal-footer .btn-primary").click();
 
@@ -22467,7 +22449,7 @@ test("Empty Groups: filter out empty groups", async () => {
 
     await contains(".o_group_name:eq(1)").click();
     await clickRecordSelector(1);
-    await contains("div.o_control_panel .o_cp_action_menus .dropdown-toggle").click();
+    await toggleActionMenu();
     await toggleMenuItem("Archive");
     await contains(".modal-footer .btn-primary").click();
 

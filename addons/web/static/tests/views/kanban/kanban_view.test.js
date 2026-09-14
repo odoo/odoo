@@ -32,7 +32,6 @@ import {
 import { onMounted, onPatched } from "@odoo/owl";
 import { addNewRule } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
 import {
-    MockServer,
     clickKanbanLoadMore,
     contains,
     createKanbanRecord,
@@ -55,6 +54,7 @@ import {
     getService,
     makeServerError,
     mockOffline,
+    MockServer,
     mockService,
     models,
     mountView,
@@ -69,6 +69,7 @@ import {
     serverState,
     stepAllNetworkCalls,
     switchView,
+    toggleActionMenu,
     toggleKanbanColumnActions,
     toggleKanbanRecordDropdown,
     toggleMenuItem,
@@ -2354,8 +2355,8 @@ test("kanban view with default_group_by", async () => {
     expect(".o_kanban_renderer").toHaveClass("o_kanban_grouped");
     expect(".o_kanban_group").toHaveCount(2);
     // open search bar in mobile
-    if (queryAll(".o_control_panel_navigation > button").length) {
-        await contains(".o_control_panel_navigation > button").click();
+    if (queryAll(".o_control_panel_navigation button:has([data-icon='search'])").length) {
+        await contains(".o_control_panel_navigation button:has([data-icon='search'])").click();
     }
     expect(`.o_searchview_facet`).toHaveCount(0);
 
@@ -8333,7 +8334,7 @@ test(`kanban with custom cog action that has a confirmation target="new" action`
     await keyDown("alt");
     await contains(".o_kanban_record:nth-of-type(1)").click();
     expect(".o_selection_box").toHaveCount(1);
-    await contains(`.o_cp_action_menus button[data-hotkey='u']`).click();
+    await toggleActionMenu();
     await contains(`.o-dropdown-item:contains(Sort of confirmation dialog)`).click();
     expect(".o_dialog").toHaveCount(1);
 

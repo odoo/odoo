@@ -20,16 +20,17 @@
                     </t>
 
                     <t t-set-slot="control-panel-actions">
-                        <t t-if="!this.ui.isSmall and this.buttonBoxTemplate">
-                            <t t-call="{{ this.buttonBoxTemplate }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this, props: { ...this.props, record: this.model.root } }) }"/>
-                        </t>
+                        <t t-if="!this.ui.isSmall" t-call="web.FormView.ButtonBox"/>
                     </t>
 
                     <t t-set-slot="control-panel-additional-actions">
+                        <t t-if="this.ui.isSmall" t-call="web.FormView.HeaderButtons"/>
                         <CogMenu t-props="this.cogMenuProps" />
-                        <t t-if="this.ui.isSmall and this.buttonBoxTemplate">
-                            <t t-call="{{ this.buttonBoxTemplate }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this, props: { ...this.props, record: this.model.root } }) }"/>
-                        </t>
+                    </t>
+
+                    <!-- a button of its own, not an entry of the actions menu -->
+                    <t t-set-slot="control-panel-additional-buttons">
+                        <t t-if="this.ui.isSmall" t-call="web.FormView.ButtonBox"/>
                     </t>
 
                     <t t-set-slot="control-panel-status-indicator">
@@ -42,6 +43,20 @@
                 </Layout>
             </div>
         </div>
+    </t>
+
+    <!--
+        The buttons of the <header>, as the first section of the actions menu.
+        It carries the class of the view buttons on purpose: the menu hides
+        the first entry of such a section, which is the one the status bar
+        keeps outside, and drops the separator when nothing else is left.
+    -->
+    <t t-name="web.FormView.HeaderButtons">
+        <t t-if="this.headerButtonsTemplate" t-call="{{ this.headerButtonsTemplate }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this, props: { ...this.props, record: this.model.root } }) }"/>
+    </t>
+
+    <t t-name="web.FormView.ButtonBox">
+        <t t-if="this.buttonBoxTemplate" t-call="{{ this.buttonBoxTemplate }}" t-call-context="{ __comp__: Object.assign(Object.create(this), { this, props: { ...this.props, record: this.model.root } }) }"/>
     </t>
 
     <t t-name="web.FormView.DialogButtons">

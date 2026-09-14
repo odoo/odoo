@@ -2,64 +2,79 @@
 <templates xml:space="preserve">
 
     <t t-name="web.CogMenu">
-        <div t-if="this.hasItems and !this.env.inDialog" class="o_cp_action_menus d-flex align-items-center gap-1">
-            <div class="lh-1">
-                <Dropdown menuClass="'lh-base'" beforeOpen.bind="this.loadPrintItems">
-                    <button class="o_btn_circle d-print-none btn btn-light" t-att-class="this.uiService.isSmall ? 'btn-secondary' : 'p-1 m-0 ms-1'" data-hotkey="u" data-tooltip="Actions" aria-label="Actions menu" data-available-offline="">
-                        <i class="oi" data-icon="more_vert" aria-hidden="true"/>
-                    </button>
-
-                    <t t-set-slot="content">
-                        <t t-call-slot="default"/>
-                        <t t-if="this.state.printItems.length">
-                            <Dropdown t-if="this.state.printItems.length > 1">
-                                <button>
-                                    <i class="oi me-1" data-icon="print"/> <t t-out="this.props.printDropdownTitle"/>
-                                </button>
-                                <t t-set-slot="content">
-                                    <DropdownItem
-                                        t-foreach="this.state.printItems"
-                                        t-as="item"
-                                        t-key="item.key"
-                                        class="'o_menu_item'"
-                                        attrs="{ 'aria-label': this.getPrintItemAriaLabel(item) }"
-                                        onSelected="() => this.onItemSelected(item)"
-                                    >
-                                        <t t-out="item.description"/>
-                                    </DropdownItem>
-                                </t>
-                            </Dropdown>
-
-                            <DropdownItem t-else="" class="'o_menu_item'" attrs="{ 'aria-label': this.getPrintItemAriaLabel(this.state.printItems[0]) }" onSelected="() => this.onItemSelected(this.state.printItems[0])">
-                                <i class="oi me-1" data-icon="print"/> <t t-out="this.state.printItems[0].description"/>
-                            </DropdownItem>
-                        </t>
-                        <t t-set="currentGroup" t-value="null"/>
-                        <t t-set="hasGroupIcons" t-value="null"/>
-                        <t t-foreach="this.cogItems" t-as="item" t-key="item.key">
-                            <t t-if="item_first or currentGroup !== item.groupNumber">
-                                <t t-set="currentGroup" t-value="item.groupNumber"/>
-                                <t t-set="hasGroupIcons" t-value="this.hasGroupIcons(currentGroup)"/>
-                                <div t-if="!item_first" role="separator" class="dropdown-divider"/>
-                            </t>
-                            
-
-                            <t t-if="item.Component" t-component="item.Component"/>
-
-                            <DropdownItem
-                                t-else=""
-                                class="{ [item.class]: !!item.class, 'o_menu_item': true, 'pe-none text-muted opacity-50': this.offlinePlugin.isOffline() and !(item.availableOffline and !this.env.model.root.isNew) }"
-                                onSelected="() => this.onItemSelected(item)"
-                            >
-                                <i t-if="hasGroupIcons" class="oi oi-fw me-1" t-att-data-icon="item.icon"/>
-                                <t t-out="item.description"/>
-                            </DropdownItem>
-
-                        </t>
-                    </t>
-                </Dropdown>
+        <t t-if="this.hasItems and !this.env.inDialog">
+            <!--
+                On small screens the cog has no toggler of its own: the control
+                panel already wraps this slot in its single actions menu, and
+                the items are inlined there.
+            -->
+            <div t-if="this.uiService.isSmall" class="o_cp_action_menus d-contents">
+                <t t-call="web.CogMenu.Items"/>
             </div>
-        </div>
+            <div t-else="" class="o_cp_action_menus d-flex align-items-center gap-1">
+                <div class="lh-1">
+                    <Dropdown menuClass="'lh-base'" beforeOpen.bind="this.loadPrintItems">
+                        <button class="o_btn_circle d-print-none btn btn-light p-1 m-0 ms-1" data-hotkey="u" data-tooltip="Actions" aria-label="Actions menu" data-available-offline="">
+                            <i class="oi" data-icon="more_vert" aria-hidden="true"/>
+                        </button>
+
+                        <t t-set-slot="content">
+                            <t t-call="web.CogMenu.Items"/>
+                        </t>
+                    </Dropdown>
+                </div>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="web.CogMenu.Items">
+        <t t-call-slot="default"/>
+        <t t-if="this.state.printItems.length">
+            <div t-if="this.printItemsSeparator" role="separator" class="dropdown-divider"/>
+            <Dropdown t-if="this.state.printItems.length > 1">
+                <button>
+                    <i class="oi me-1" data-icon="print"/> <t t-out="this.props.printDropdownTitle"/>
+                </button>
+                <t t-set-slot="content">
+                    <DropdownItem
+                        t-foreach="this.state.printItems"
+                        t-as="item"
+                        t-key="item.key"
+                        class="'o_menu_item'"
+                        attrs="{ 'aria-label': this.getPrintItemAriaLabel(item) }"
+                        onSelected="() => this.onItemSelected(item)"
+                    >
+                        <t t-out="item.description"/>
+                    </DropdownItem>
+                </t>
+            </Dropdown>
+
+            <DropdownItem t-else="" class="'o_menu_item'" attrs="{ 'aria-label': this.getPrintItemAriaLabel(this.state.printItems[0]) }" onSelected="() => this.onItemSelected(this.state.printItems[0])">
+                <i class="oi me-1" data-icon="print"/> <t t-out="this.state.printItems[0].description"/>
+            </DropdownItem>
+        </t>
+        <t t-set="currentGroup" t-value="null"/>
+        <t t-set="hasGroupIcons" t-value="null"/>
+        <t t-foreach="this.cogItems" t-as="item" t-key="item.key">
+            <t t-if="item_first or currentGroup !== item.groupNumber">
+                <t t-set="currentGroup" t-value="item.groupNumber"/>
+                <t t-set="hasGroupIcons" t-value="this.hasGroupIcons(currentGroup)"/>
+                <div t-if="!item_first" role="separator" class="dropdown-divider"/>
+            </t>
+            
+
+            <t t-if="item.Component" t-component="item.Component"/>
+
+            <DropdownItem
+                t-else=""
+                class="{ [item.class]: !!item.class, 'o_menu_item': true, 'pe-none text-muted opacity-50': this.offlinePlugin.isOffline() and !(item.availableOffline and !this.env.model.root.isNew) }"
+                onSelected="() => this.onItemSelected(item)"
+            >
+                <i t-if="hasGroupIcons" class="oi oi-fw me-1" t-att-data-icon="item.icon"/>
+                <t t-out="item.description"/>
+            </DropdownItem>
+
+        </t>
     </t>
 
 </templates>

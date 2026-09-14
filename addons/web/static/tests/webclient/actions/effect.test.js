@@ -9,6 +9,7 @@ import {
     mountWithCleanup,
     onRpc,
     patchWithCleanup,
+    toggleActionMenu,
     webModels,
 } from "@web/../tests/web_test_helpers";
 
@@ -160,7 +161,7 @@ test("on close with effect in xml on mobile", async () => {
 
     await mountWithCleanup(WebClient);
     await getService("action").doAction(6);
-    await contains(`.o_cp_action_menus button:has([data-icon="more_vert"])`).click();
+    await toggleActionMenu();
     await contains("button[name=object]").click();
     expect(".o_reward").toHaveCount(1);
     expect(".o_reward .o_reward_msg_content").toHaveText("rainBowInXML");

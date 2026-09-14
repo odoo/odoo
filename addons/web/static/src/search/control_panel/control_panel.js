@@ -39,6 +39,7 @@ export class ControlPanel extends Component {
     };
     props = useProps({
         display: t.object().optional(DEFAULT_DISPLAY),
+        slots: t.object().optional(),
     });
 
     root = signal.ref();
@@ -183,14 +184,31 @@ export class ControlPanel extends Component {
         this.switchView(viewSwitcherEntries[nextIndex].type);
     }
 
+    /**
+     * Whether the view puts anything in the actions menu besides the buttons
+     * that did not fit. A control panel with neither is not worth an ellipsis
+     * opening on an empty sheet.
+     */
+    hasActions() {
+        return Boolean(this.props.slots?.["control-panel-additional-actions"]);
+    }
+
     dropdownifyButtons() {
-        const adaptiveMenu = document.querySelector(
-            ".o-control-panel-adaptive-dropdown.dropdown-menu"
+        // Only the buttons need to be turned into menu entries: they are the
+        // ones rendered as buttons elsewhere. The rest of the menu (the cog
+        // actions) already comes from a menu. There is one section of them
+        // per origin: the buttons of the view, and those of a form header.
+        const sections = document.querySelectorAll(
+            ".o-control-panel-adaptive-dropdown.dropdown-menu .o-control-panel-adaptive-buttons"
         );
-        const meaningfulElements = this.getBoxedElements(adaptiveMenu.children);
-        for (const el of meaningfulElements) {
-            el.classList.add("dropdown-item");
-            el.classList.remove("btn");
+        for (const section of sections) {
+            const buttons = [...section.children].filter(
+                (el) => !el.classList.contains("dropdown-divider")
+            );
+            for (const el of this.getBoxedElements(buttons)) {
+                el.classList.add("dropdown-item");
+                el.classList.remove("btn");
+            }
         }
     }
 

@@ -269,6 +269,47 @@ export class FormController extends Component {
             this.buttonBoxTemplate = buttonBoxTemplates.ButtonBox;
         }
 
+        // The buttons of the <header> belong to the actions menu of the
+        // control panel on small screens, and the status bar they are
+        // compiled into cannot hand them over: it renders from the arch, in a
+        // `t-call-context` of its own that no slot reaches out of. Compile
+        // them a second time for the menu, the way the button box above is.
+        const xmlDocHeader = this.archInfo.xmlDoc.querySelector("header:not(field header)");
+        if (xmlDocHeader) {
+            const doc = xmlDocHeader.ownerDocument;
+            // The compiled root is the section itself: the menu hides the
+            // first entry of a section and drops its separator when nothing
+            // is left, and it counts the children of that very element.
+            const xmlDocHeaderButtons = doc.createElement("div");
+            xmlDocHeaderButtons.setAttribute(
+                "class",
+                "o-control-panel-adaptive-buttons d-contents"
+            );
+            // A compiler may walk the ancestors of a node up to the root of
+            // the arch, so give the section one: a detached container would
+            // let that walk run past it and read `tagName` off null.
+            const xmlDocHeaderArch = doc.createElement("form");
+            xmlDocHeaderArch.appendChild(xmlDocHeaderButtons);
+            for (const child of xmlDocHeader.children) {
+                // the fields of a header are its status bar widgets, not buttons
+                if (child.tagName.toLowerCase() !== "field" || child.classList.contains("btn")) {
+                    xmlDocHeaderButtons.appendChild(child.cloneNode(true));
+                }
+            }
+            if (xmlDocHeaderButtons.children.length) {
+                const separator = doc.createElement("div");
+                separator.setAttribute("role", "separator");
+                separator.setAttribute("class", "dropdown-divider");
+                xmlDocHeaderButtons.appendChild(separator);
+                const headerTemplates = useViewCompiler(
+                    this.props.Compiler || FormCompiler,
+                    { HeaderButtons: xmlDocHeaderButtons },
+                    { isSubView: true }
+                );
+                this.headerButtonsTemplate = headerTemplates.HeaderButtons;
+            }
+        }
+
         useViewButtons(this.rootRef, {
             beforeExecuteAction: this.beforeExecuteActionButton.bind(this),
             afterExecuteAction: this.afterExecuteActionButton.bind(this),

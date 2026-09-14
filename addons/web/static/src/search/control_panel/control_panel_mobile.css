@@ -1,27 +1,45 @@
 @media (max-width: 767.98px) { /* breakpoint-md */
-    .o_control_panel_main_buttons {
-        /* hide the ellipsis dropdown by default */
-        > .o-control-panel-adaptive-dropdown {
+    /*
+     * The actions menu of small screens sits with the pager rather than with
+     * the buttons: only the first button stays out of it, every other one is
+     * reachable from the menu, below which come the cog actions.
+     */
+    .o_control_panel_main_buttons > :nth-child(n + 2 of :not(.d-none, .o_hidden)) {
+        display: none !important;
+    }
+
+    /*
+     * The menu is worth a button of its own when it holds something: the
+     * actions of the view, or a button that did not fit beside the first.
+     */
+    button.o-control-panel-adaptive-dropdown {
+        display: none;
+    }
+
+    .o-control-panel-has-actions button.o-control-panel-adaptive-dropdown,
+    .o_control_panel_main:has(.o_control_panel_main_buttons > :nth-child(n + 2 of :not(.d-none, .o_hidden))) button.o-control-panel-adaptive-dropdown {
+        display: inline-block;
+    }
+
+    .o-control-panel-adaptive-dropdown.dropdown-menu {
+        /* a section other modules appended may well be empty on a given view */
+        > .dropdown-divider:last-child {
             display: none;
         }
 
-        /* hide the visible elements beside the first one and the ellipsis dropdown */
-        > :nth-child(n + 2 of :not(.d-none, .o_hidden, .o-control-panel-adaptive-dropdown)) {
-            display: none !important;
+        > .o-control-panel-adaptive-buttons {
+            /* hide the first button, it is the one kept visible outside the menu */
+            > :nth-child(1 of :not(.d-none, .o_hidden, .dropdown-divider)) {
+                display: none !important;
+            }
 
-            ~ .o-control-panel-adaptive-dropdown {
-                display: inline-block;
+            /* drop the separator when either of the two sections it splits is empty */
+            &:not(:has(> :nth-child(n + 2 of :not(.d-none, .o_hidden, .dropdown-divider)))),
+            &:last-child {
+                > .dropdown-divider {
+                    display: none;
+                }
             }
         }
-    }
-
-    /* hide the main buttons if the dropdown is empty to not render the gap */
-    .o_control_panel_main_buttons:has(> .o-control-panel-adaptive-dropdown:only-child) {
-        display: none !important;
-    }
-
-    /* hide the first element in the ellipsis dropdown menu */
-    .o-control-panel-adaptive-dropdown.dropdown-menu > :nth-child(1 of :not(.d-none, .o_hidden)) {
-        display: none !important;
     }
 }
