@@ -1970,11 +1970,17 @@ test("Discard button clean the settings view", async () => {
 
 test("standalone field labels with string inside a settings page", async () => {
     let compiled = undefined;
+    let settingsId;
     patchWithCleanup(SettingsFormCompiler.prototype, {
         compile() {
             const _compiled = super.compile(...arguments);
             compiled = _compiled;
             return _compiled;
+        },
+        compileApp() {
+            const settingsApp = super.compileApp(...arguments);
+            settingsId = settingsApp.getAttribute("tabId").slice(1, -1);
+            return settingsApp;
         },
     });
 
@@ -1995,8 +2001,8 @@ test("standalone field labels with string inside a settings page", async () => {
 
     expect("label.highhopes").toHaveText(`My" little ' Label`);
     const expectedCompiled = /* xml */ `
-            <SettingsPage slots="{NoContentHelper:__comp__.props.slots.NoContentHelper}" initialTab="__comp__.props.initialApp" t-slot-scope="settings" modules="[{&quot;key&quot;:&quot;crm&quot;,&quot;string&quot;:&quot;CRM&quot;,&quot;imgurl&quot;:&quot;${MOCK_IMAGE}&quot;}]" anchors="[{&quot;app&quot;:&quot;crm&quot;,&quot;settingId&quot;:&quot;setting_id&quot;,&quot;fieldNames&quot;:[&quot;display_name&quot;]}]">
-                <SettingsApp key="\`crm\`" string="\`CRM\`" imgurl="\`${MOCK_IMAGE}\`" selectedTab="settings.selectedTab">
+            <SettingsPage slots="{NoContentHelper:__comp__.props.slots.NoContentHelper}" initialTab="__comp__.props.initialApp" t-slot-scope="settings" modules="[{&quot;key&quot;:&quot;crm&quot;,&quot;string&quot;:&quot;CRM&quot;,&quot;imgurl&quot;:&quot;${MOCK_IMAGE}&quot;,&quot;id&quot;:&quot;${settingsId}&quot;}]" anchors="[{&quot;app&quot;:&quot;crm&quot;,&quot;settingId&quot;:&quot;setting_id&quot;,&quot;fieldNames&quot;:[&quot;display_name&quot;]}]">
+                <SettingsApp key="\`crm\`" string="\`CRM\`" imgurl="\`${MOCK_IMAGE}\`" selectedTab="settings.selectedTab" tabId="\`${settingsId}\`">
                     <SearchableSetting info="\`\`" title="\`\`"  help="\`\`" companyDependent="false" documentation="\`\`" record="__comp__.props.record" id="\`setting_id\`" string="\`\`" addLabel="true"  fieldLabels="[{fieldId: 'display_name_0', string: \`My&quot; little '  Label\`}]">
                         <FormLabel id="'display_name_0'" fieldName="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name_0']" className="&quot;highhopes&quot;" string="\`My&quot; little '  Label\`"/>
                         <Field id="'display_name_0'" name="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name_0']" readonly="__comp__.props.readonly"/>
