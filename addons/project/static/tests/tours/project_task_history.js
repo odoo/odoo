@@ -80,7 +80,7 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         },
         {
             content: "Open History Dialog",
-            trigger: ".o_menu_item i.fa-history",
+            trigger: ".o_menu_item:contains(Version History)",
             run: "click",
         },
         {
@@ -212,7 +212,7 @@ registry.category("web_tour.tours").add("project_task_history_tour", {
         },
         {
             content: "Open History Dialog",
-            trigger: ".o_menu_item i.fa-history",
+            trigger: ".o_menu_item:contains(Version History)",
             run: "click",
         },
         {
@@ -264,7 +264,7 @@ registry.category("web_tour.tours").add("project_task_last_history_steps_tour", 
         },
         {
             content: "Open History Dialog",
-            trigger: ".o_menu_item i.fa-history",
+            trigger: ".o_menu_item:contains(Version History)",
             run: "click",
         },
         {

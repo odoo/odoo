@@ -64,7 +64,7 @@ registry.category("web_tour.tours").add("project_todo_history_tour", {
         },
         {
             content: "Open History Dialog",
-            trigger: ".o_menu_item i.fa-history",
+            trigger: ".o_menu_item:contains(Version History)",
             run: "click",
         },
         {
