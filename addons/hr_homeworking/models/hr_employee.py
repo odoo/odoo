@@ -1,6 +1,7 @@
 from odoo import api, fields, models
 
 from .hr_homeworking import DAYS
+from odoo.addons.base.models.ir_ui_view_base import attach_ir
 
 
 class HrEmployee(models.Model):
@@ -62,10 +63,12 @@ class HrEmployee(models.Model):
             res["views"]["search"]["arch"] = res["views"]["search"]["arch"].replace(
                 "today_location_name", dayfield
             )
+            attach_ir(res["views"]["search"])
         if "list" in res["views"]:
             res["views"]["list"]["arch"] = res["views"]["list"]["arch"].replace(
                 "work_location_name", dayfield
             )
+            attach_ir(res["views"]["list"])
         res["models"][self._name]["fields"].update(self.fields_get([dayfield]))
         return res
 

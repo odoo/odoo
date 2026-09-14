@@ -6,6 +6,7 @@ from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.base.models.ir_module import assert_log_admin_access
+from odoo.addons.base.models.ir_ui_view_base import attach_ir
 
 _debug = DebugLog(__name__)
 
@@ -50,6 +51,7 @@ class BaseModuleUpgrade(models.TransientModel):
                                     <button special="cancel" data-hotkey="x" string="Close" class="btn-secondary"/>
                                 </footer>
                              </form>"""
+            attach_ir(res)
 
         return res
 

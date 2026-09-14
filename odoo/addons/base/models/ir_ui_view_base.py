@@ -8,7 +8,7 @@ from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
 from odoo.tools import _, config, frozendict
-from odoo.tools.view_ir import from_arch
+from odoo.tools.view_ir import from_arch, from_string
 
 from .ir_ui_view import _xpath_descendant_field
 
@@ -17,6 +17,19 @@ if TYPE_CHECKING:
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
+
+
+def attach_ir(result: dict[str, Any]) -> dict[str, Any]:
+    """Derive ``result["ir"]`` from ``result["arch"]`` again.
+
+    A view payload carries the arch twice — the string and the IR the
+    client reads first. An override that rewrites ``arch`` after
+    ``get_view`` (a js_class added on the fly, a field name substituted)
+    must hand the result through here, or the client renders the tree the
+    override never touched.
+    """
+    result["ir"] = from_string(result["arch"]).to_dict()
+    return result
 
 
 class Base(models.AbstractModel):

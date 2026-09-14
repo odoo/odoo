@@ -2,6 +2,8 @@ from lxml import etree
 
 from odoo import api, fields, models
 
+from odoo.addons.base.models.ir_ui_view_base import attach_ir
+
 
 class BoardBoard(models.AbstractModel):
     _name = "board.board"
@@ -35,7 +37,7 @@ class BoardBoard(models.AbstractModel):
         if custom_view:
             res.update({"custom_view_id": custom_view.id, "arch": custom_view.arch})
         res["arch"] = self._arch_preprocessing(res["arch"])
-        return res
+        return attach_ir(res)
 
     @api.model
     def _arch_preprocessing(self, arch):

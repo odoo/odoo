@@ -3,6 +3,8 @@ from lxml import etree
 from odoo import api, fields, models
 from odoo.fields import Domain
 
+from odoo.addons.base.models.ir_ui_view_base import attach_ir
+
 _NEGATIVE_OPERATORS = frozenset(
     (
         "!=",
@@ -147,7 +149,7 @@ class MixinDateRangeSearch(models.AbstractModel):
             search[0].append(separator)
             search[0].append(field)
         result["arch"] = etree.tostring(root, encoding="unicode")
-        return result
+        return attach_ir(result)
 
     @api.model
     def get_views(self, views, options=None):
