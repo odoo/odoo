@@ -2,11 +2,16 @@
 /** @odoo-module native */
 
 import { evaluateExpr } from "@web/core/py_js/py";
-import { visitXML } from "@web/core/utils/dom/xml";
 import { exprToBoolean } from "@web/core/utils/format/strings";
 import { parseFieldNode } from "@web/views/field_arch";
 
-import { ViewArchParser } from "../view_arch_parser.js";
+import { ViewArchParser, visitIR } from "../view_arch_parser.js";
+
+/**
+ * @typedef {import("@web/views/ir/view_ir_schema").ViewIRNode} ViewIRNode
+ * @typedef {import("@web/views/ir/view_ir_schema").CalendarCalendarAttrs} CalendarAttrs
+ * @typedef {import("@web/views/ir/view_ir_schema").CalendarFieldAttrs} CalendarFieldAttrs
+ */
 
 const FIELD_ATTRIBUTE_NAMES = [
     "date_start",
@@ -30,16 +35,20 @@ const FILTER_ATTRIBUTE_NAMES = [
 ];
 
 export class CalendarArchParser extends ViewArchParser {
+    /** @type {"element" | "ir"} */
+    static consumes = "ir";
+
     /**
-     * @param {Element} xmlDoc
+     * @param {ViewIRNode | Element | string} arch
      * @param {Object} models
      * @param {string} modelName
      * @returns {Object}
      * @throws {CalendarParseArchError}
      */
-    parse(xmlDoc, models, modelName) {
+    parse(arch, models, modelName) {
+        const ir = this.toIR(arch);
         const fields = models[modelName].fields;
-        const root = this.parseRootAttributes(xmlDoc, fields);
+        const root = this.parseRootAttributes(ir, fields);
         const state = {
             models,
             modelName,
@@ -52,8 +61,8 @@ export class CalendarArchParser extends ViewArchParser {
             filtersInfo: {},
         };
 
-        visitXML(xmlDoc, (node) => {
-            if (node.tagName === "field") {
+        visitIR(ir, (node) => {
+            if (node.kind === "field") {
                 this.parseFieldNodeInArch(node, state);
             }
         });
@@ -86,43 +95,38 @@ export class CalendarArchParser extends ViewArchParser {
     }
 
     /**
-     * @param {Element} xmlDoc
+     * @param {ViewIRNode} ir
      * @param {Record<string, any>} fields
      * @returns {Record<string, any>}
      */
-    parseRootAttributes(xmlDoc, fields) {
+    parseRootAttributes(ir, fields) {
+        /** @type {CalendarAttrs} */
+        const attrs = ir.attrs || {};
         /** @type {Record<string, string>} */
         const fieldMapping = {};
         /** @type {Set<string>} */
         const fieldNames = new Set(fields.display_name ? ["display_name"] : []);
         for (const fieldAttrName of FIELD_ATTRIBUTE_NAMES) {
-            if (xmlDoc.hasAttribute(fieldAttrName)) {
-                const fieldName = /** @type {string} */ (
-                    xmlDoc.getAttribute(fieldAttrName)
-                );
+            const fieldName = attrs[fieldAttrName];
+            if (fieldName !== undefined) {
                 fieldNames.add(fieldName);
                 fieldMapping[fieldAttrName] = fieldName;
             }
         }
-        const aggregate = xmlDoc.getAttribute("aggregate") || null;
+        const aggregate = attrs.aggregate || null;
         if (aggregate) {
             fieldNames.add(aggregate.split(":")[0]);
         }
 
-        const scalesAttr = xmlDoc.getAttribute("scales");
-        const scales = scalesAttr
-            ? scalesAttr
+        const scales = attrs.scales
+            ? attrs.scales
                   .split(",")
                   .map((scale) => scale.trim())
                   .filter((scale) => SCALES.includes(scale))
             : [...SCALES];
-        const scale = xmlDoc.hasAttribute("mode")
-            ? xmlDoc.getAttribute("mode")
-            : scales.includes("week")
-              ? "week"
-              : scales[0];
+        const scale = attrs.mode ?? (scales.includes("week") ? "week" : scales[0]);
 
-        const quickCreate = exprToBoolean(xmlDoc.getAttribute("quick_create"), true);
+        const quickCreate = exprToBoolean(attrs.quick_create, true);
         return {
             fieldMapping,
             fieldNames,
@@ -130,48 +134,35 @@ export class CalendarArchParser extends ViewArchParser {
             scales,
             scale,
             quickCreate,
-            canCreate: exprToBoolean(xmlDoc.getAttribute("create"), true),
-            canDelete: exprToBoolean(xmlDoc.getAttribute("delete"), true),
-            canEdit: exprToBoolean(xmlDoc.getAttribute("edit"), true),
-            eventLimit: xmlDoc.hasAttribute("event_limit")
-                ? evaluateExpr(
-                      /** @type {string} */ (xmlDoc.getAttribute("event_limit")),
-                  )
-                : 5,
-            formViewId:
-                Number.parseInt(
-                    /** @type {string} */ (xmlDoc.getAttribute("form_view_id")),
-                    10,
-                ) || false,
-            hasEditDialog: exprToBoolean(xmlDoc.getAttribute("event_open_popup")),
-            isDateHidden: exprToBoolean(xmlDoc.getAttribute("hide_date")),
-            isTimeHidden: exprToBoolean(xmlDoc.getAttribute("hide_time")),
-            jsClass: xmlDoc.getAttribute("js_class") || null,
-            monthOverflow: exprToBoolean(xmlDoc.getAttribute("month_overflow"), true),
-            multiCreateView: xmlDoc.getAttribute("multi_create_view"),
+            canCreate: exprToBoolean(attrs.create, true),
+            canDelete: exprToBoolean(attrs.delete, true),
+            canEdit: exprToBoolean(attrs.edit, true),
+            eventLimit:
+                attrs.event_limit !== undefined ? evaluateExpr(attrs.event_limit) : 5,
+            formViewId: Number.parseInt(attrs.form_view_id ?? "", 10) || false,
+            hasEditDialog: exprToBoolean(attrs.event_open_popup),
+            isDateHidden: exprToBoolean(attrs.hide_date),
+            isTimeHidden: exprToBoolean(attrs.hide_time),
+            jsClass: attrs.js_class || null,
+            monthOverflow: exprToBoolean(attrs.month_overflow, true),
+            multiCreateView: attrs.multi_create_view ?? null,
             quickCreateViewId:
                 (quickCreate &&
-                    Number.parseInt(
-                        /** @type {string} */ (
-                            xmlDoc.getAttribute("quick_create_view_id")
-                        ),
-                        10,
-                    )) ||
+                    Number.parseInt(attrs.quick_create_view_id ?? "", 10)) ||
                 null,
-            showDatePicker: exprToBoolean(
-                xmlDoc.getAttribute("show_date_picker"),
-                true,
-            ),
-            showUnusualDays: exprToBoolean(xmlDoc.getAttribute("show_unusual_days")),
+            showDatePicker: exprToBoolean(attrs.show_date_picker, true),
+            showUnusualDays: exprToBoolean(attrs.show_unusual_days),
         };
     }
 
     /**
-     * @param {Element} node
+     * @param {ViewIRNode} node
      * @param {Record<string, any>} state
      */
     parseFieldNodeInArch(node, state) {
-        const fieldName = /** @type {string} */ (node.getAttribute("name"));
+        /** @type {CalendarFieldAttrs} */
+        const attrs = node.attrs || {};
+        const fieldName = /** @type {string} */ (attrs.name);
         state.fieldNames.add(fieldName);
         const fieldInfo = parseFieldNode(
             node,
@@ -182,10 +173,10 @@ export class CalendarArchParser extends ViewArchParser {
         );
         state.popoverFieldNodes[fieldName] = fieldInfo;
 
-        if (node.hasAttribute("invisible") && !node.hasAttribute("filters")) {
+        if (attrs.invisible !== undefined && attrs.filters === undefined) {
             return;
         }
-        if (!FILTER_ATTRIBUTE_NAMES.some((attr) => node.hasAttribute(attr))) {
+        if (!FILTER_ATTRIBUTE_NAMES.some((attr) => attr in attrs)) {
             return;
         }
         state.filtersInfo[fieldName] = this.getFilterInfo(node, fieldName, {
@@ -196,12 +187,14 @@ export class CalendarArchParser extends ViewArchParser {
     }
 
     /**
-     * @param {Element} node
+     * @param {ViewIRNode} node
      * @param {string} fieldName
      * @param {{ field: any, context: string, previous?: any }} params
      * @returns {Record<string, any>}
      */
     getFilterInfo(node, fieldName, { field, context, previous }) {
+        /** @type {CalendarFieldAttrs} */
+        const attrs = node.attrs || {};
         const filterInfo = previous || {
             avatarFieldName: null,
             colorFieldName: null,
@@ -213,12 +206,12 @@ export class CalendarArchParser extends ViewArchParser {
             writeFieldName: null,
             writeResModel: null,
         };
-        filterInfo.avatarFieldName = node.getAttribute("avatar_field") || null;
+        filterInfo.avatarFieldName = attrs.avatar_field || null;
         filterInfo.colorFieldName =
-            (node.hasAttribute("filters") && node.getAttribute("color")) || null;
-        filterInfo.filterFieldName = node.getAttribute("filter_field") || null;
-        filterInfo.writeFieldName = node.getAttribute("write_field") || null;
-        filterInfo.writeResModel = node.getAttribute("write_model") || null;
+            (attrs.filters !== undefined && attrs.color) || null;
+        filterInfo.filterFieldName = attrs.filter_field || null;
+        filterInfo.writeFieldName = attrs.write_field || null;
+        filterInfo.writeResModel = attrs.write_model || null;
         return filterInfo;
     }
 

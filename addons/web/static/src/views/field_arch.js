@@ -7,6 +7,9 @@ import { registry } from "@web/core/registry";
 import { exprToBoolean } from "@web/core/utils/format/strings";
 import { getFieldFromRegistry, getSupportedOptionNames } from "@web/fields/field";
 import { utils } from "@web/ui/viewport";
+import { elementToIR, irToElement, literalNbsp } from "@web/views/ir/view_ir";
+
+/** @typedef {import("@web/views/ir/view_ir_schema").ViewIRNode} ViewIRNode */
 
 const isSmall = utils.isSmall;
 const viewRegistry = registry.category("views");
@@ -49,7 +52,7 @@ function warnUnknownOptions(widget, field, options) {
 }
 
 /**
- * @param {Element} node
+ * @param {ViewIRNode} node
  * @param {Record<string, any>} fieldInfo
  * @param {Record<string, any>} models
  * @param {{ relation?: string, [k: string]: any }} field
@@ -77,14 +80,19 @@ function parseX2ManyViews(node, fieldInfo, models, field) {
         }
     }
     const relation = /** @type {string} */ (field.relation);
-    for (const child of node.children) {
-        const viewType = child.tagName;
+    for (const child of node.children || []) {
+        const viewType = child.kind;
         const { ArchParser } =
-            /** @type {{ ArchParser: new () => { parse: (n: Element, m: any, r?: string) => any } }} */ (
+            /** @type {{ ArchParser: { consumes?: string, new (): { parse: (n: ViewIRNode | Element, m: any, r?: string) => any } } }} */ (
                 viewRegistry.get(viewType)
             );
-        const childCopy = /** @type {Element} */ (child.cloneNode(true));
-        const archInfo = new ArchParser().parse(childCopy, models, relation);
+        // a sub-view parser still on the element gets a fresh element built
+        // from the child node; one on the IR gets the node itself
+        const subArch =
+            ArchParser.consumes === "ir"
+                ? child
+                : irToElement(child, { text: literalNbsp });
+        const archInfo = new ArchParser().parse(subArch, models, relation);
         views[viewType] = {
             ...archInfo,
             limit: archInfo.limit || 40,
@@ -92,7 +100,7 @@ function parseX2ManyViews(node, fieldInfo, models, field) {
         };
     }
 
-    let viewMode = node.getAttribute("mode");
+    let viewMode = node.attrs?.mode ?? null;
     if (viewMode) {
         if (viewMode.split(",").length !== 1) {
             viewMode = isSmall() ? "kanban" : "list";
@@ -133,16 +141,21 @@ function parseMany2OneViews(fieldInfo) {
 }
 
 /**
- * @param {Element} node
+ * The field node as the view IR; a parser still walking the element hands
+ * its `<field>` over and it is converted here, nested sub-views included.
+ *
+ * @param {ViewIRNode | Element} archNode
  * @param {Record<string, { fields: Record<string, { type: string, string?: string, relation?: string, readonly?: boolean, [k: string]: any }> }>} models
  * @param {string} modelName
  * @param {string} viewType
  * @param {string} [jsClass]
  * @returns {{ name: string, type: string, viewType: string, widget: string | null, field: ReturnType<typeof getFieldFromRegistry>, context: string, string?: string, help?: string, onChange: boolean, forceSave: boolean, options: Object, decorations: Record<string, string>, attrs: Record<string, string>, domain?: string, readonly?: string | null, required?: string | null, invisible?: string | null, column_invisible?: string | null, viewMode?: string, views?: Object, relatedFields?: Object, isHandle?: boolean }}
  */
-export function parseFieldNode(node, models, modelName, viewType, jsClass) {
-    const name = /** @type {string} */ (node.getAttribute("name"));
-    const widget = node.getAttribute("widget");
+export function parseFieldNode(archNode, models, modelName, viewType, jsClass) {
+    const node = "kind" in archNode ? archNode : elementToIR(archNode);
+    const attrs = node.attrs || {};
+    const name = /** @type {string} */ (attrs.name);
+    const widget = attrs.widget ?? null;
     const fields = models[modelName].fields;
     if (!fields[name]) {
         throw new Error(`"${modelName}"."${name}" field is undefined.`);
@@ -171,7 +184,7 @@ export function parseFieldNode(node, models, modelName, viewType, jsClass) {
     };
 
     for (const attr of ["invisible", "column_invisible", "readonly", "required"]) {
-        fieldInfo[attr] = node.getAttribute(attr);
+        fieldInfo[attr] = attrs[attr] ?? null;
         if (fieldInfo[attr] === "True" || fieldInfo[attr] === "1") {
             if (attr === "column_invisible") {
                 fieldInfo.invisible = "True";
@@ -181,7 +194,7 @@ export function parseFieldNode(node, models, modelName, viewType, jsClass) {
         }
     }
 
-    for (const { name, value } of node.attributes) {
+    for (const [name, value] of Object.entries(attrs)) {
         if (["name", "widget"].includes(name)) {
             continue;
         }
