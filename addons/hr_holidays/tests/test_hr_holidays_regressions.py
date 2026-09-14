@@ -5,6 +5,7 @@ from unittest.mock import patch
 
 from freezegun import freeze_time
 
+from odoo import Command
 from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import tagged
 
@@ -1734,3 +1735,86 @@ class TestReportDoesNotLeakTheDescription(TestHrHolidaysCommon):
     def test_an_officer_still_reads_it(self):
         rows = self._report_rows(self.user_hruser)
         self.assertEqual(rows.mapped("name"), [self.SECRET])
+
+
+@tagged("post_install", "-at_install")
+class TestGeneratedTimeOffWaitsForApproval(TestHrHolidaysCommon):
+    """Generating time off in bulk must not book what nobody approved."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.leave_type = cls.env["hr.leave.type"].create(
+            {
+                "name": "Needs An Officer",
+                "requires_allocation": False,
+                "leave_validation_type": "hr",
+                "company_id": cls.company.id,
+            }
+        )
+        cls.team = cls.env["hr.employee"].create(
+            [
+                {
+                    "name": f"Shutdown {index}",
+                    "company_id": cls.company.id,
+                    "leave_manager_id": cls.user_responsible.id,
+                }
+                for index in range(3)
+            ]
+        )
+
+    def _generate(self, user):
+        wizard = (
+            self.env["hr.leave.generate.multi.wizard"]
+            .with_user(user)
+            .create(
+                {
+                    "name": "Team shutdown",
+                    "holiday_status_id": self.leave_type.id,
+                    "allocation_mode": "employee",
+                    "employee_ids": [Command.set(self.team.ids)],
+                    "date_from": date(2026, 3, 2),
+                    "date_to": date(2026, 3, 4),
+                }
+            )
+        )
+        return self.env["hr.leave"].browse(
+            wizard.action_generate_time_off()["domain"][0][2]
+        )
+
+    def _resource_leaves(self, leaves):
+        return self.env["resource.calendar.leaves"].search(
+            [("holiday_id", "in", leaves.ids)]
+        )
+
+    def test_pending_requests_reserve_nothing_until_they_are_approved(self):
+        self.assertFalse(
+            self.user_responsible.has_group("hr_holidays.group_hr_holidays_user")
+        )
+        leaves = self._generate(self.user_responsible)
+        self.assertEqual(set(leaves.mapped("state")), {"confirm"})
+        self.assertFalse(
+            self._resource_leaves(leaves),
+            "a request still waiting for an officer must not book the "
+            "employee's working time",
+        )
+        self.assertFalse(
+            leaves.mapped("meeting_id"),
+            "nor put a meeting in their calendar",
+        )
+
+    def test_approving_them_reserves_the_period_exactly_once(self):
+        leaves = self._generate(self.user_responsible)
+        leaves.with_user(self.user_hruser).action_approve()
+        self.assertEqual(set(leaves.mapped("state")), {"validate"})
+        self.assertEqual(
+            len(self._resource_leaves(leaves)),
+            len(leaves),
+            "applying the request at generation and again at approval booked "
+            "the same period twice, and the working-time engine subtracts both",
+        )
+
+    def test_an_officer_generating_them_reserves_the_period_once(self):
+        leaves = self._generate(self.user_hruser)
+        self.assertEqual(set(leaves.mapped("state")), {"validate"})
+        self.assertEqual(len(self._resource_leaves(leaves)), len(leaves))

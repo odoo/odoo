@@ -182,7 +182,12 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
             )
             .create(vals_list)
         )
-        leaves._apply_leave_request()
+        # Only what is actually approved reserves the calendar. A request still
+        # waiting for an officer would otherwise book the employee's working
+        # time and put a meeting in their calendar before anyone said yes --
+        # and its approval would then reserve the same period a second time,
+        # because `_action_validate` applies it again.
+        leaves.filtered(lambda leave: leave.state == "validate")._apply_leave_request()
 
         return {
             "type": "ir.actions.act_window",
