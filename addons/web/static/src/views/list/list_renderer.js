@@ -147,6 +147,7 @@ export class ListRenderer extends Component {
     static recordRowTemplate = "web.ListRenderer.RecordRow";
     static groupRowTemplate = "web.ListRenderer.GroupRow";
     static useMagicColumnWidths = true;
+    static rowsDependOnSelection = false;
     static LONG_TOUCH_THRESHOLD = 400;
     static VIRTUALIZATION_THRESHOLD = DEFAULT_VIRTUALIZATION_THRESHOLD;
     static components = {
@@ -701,7 +702,15 @@ export class ListRenderer extends Component {
             displayOptionalFields: this.displayOptionalFields,
             isX2Many: this.isX2Many,
             rowIndex: this.gridState.findRowByRecordId(String(record.id))?.globalIndex,
+            selectionKey: /** @type {typeof ListRenderer} */ (this.constructor)
+                .rowsDependOnSelection
+                ? this.selectionKey
+                : undefined,
         };
+    }
+
+    get selectionKey() {
+        return this.props.list.selection.map((record) => record.id).join(",");
     }
 
     /**

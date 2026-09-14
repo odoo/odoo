@@ -1,5 +1,6 @@
 /** @odoo-module native */
 import { useEffect, useRef } from "@odoo/owl";
+import { ParseError } from "@web/core/parse_error";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/translation";
 import { IntegerField, integerField } from "@web/fields/basic/integer/integer_field";
@@ -28,10 +29,18 @@ export class IntegerUpdateFlagField extends IntegerField {
     setup() {
         super.setup(...arguments);
         const inputRef = useRef("numpadDecimal");
-        const onChange = async () => {
+        const onChange = async (ev) => {
+            let value;
+            try {
+                value = this.parse(ev.target.value);
+            } catch (error) {
+                if (error instanceof ParseError) {
+                    return;
+                }
+                throw error;
+            }
             await this.props.record.update({
-                [this.props.flagFieldName]:
-                    parseInt(this.formattedValue) !== this.props.referenceValue,
+                [this.props.flagFieldName]: value !== this.props.referenceValue,
             });
         };
         useEffect(

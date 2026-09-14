@@ -1,4 +1,5 @@
 import { luxon } from "@web/core/l10n/luxon";
+import { defineAppointmentMockServer } from "@calendar/../tests/booking/appointment_mock_server";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import {
@@ -136,6 +137,7 @@ defineModels([
     Users,
 ]);
 defineMailModels();
+defineAppointmentMockServer();
 
 onRpc("/calendar/check_credentials", async () => ({}));
 onRpc("check_synchronization_status", async () => ({}));

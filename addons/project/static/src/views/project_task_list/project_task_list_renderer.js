@@ -5,6 +5,7 @@ import { ListRenderer } from "@web/views/list";
 import { ProjectTaskGroupConfigMenu } from "../project_task_kanban/project_task_group_config_menu.js";
 
 export class ProjectTaskListRenderer extends ListRenderer {
+    static rowsDependOnSelection = true;
     static components = {
         ...ListRenderer.components,
         GroupConfigMenu: ProjectTaskGroupConfigMenu,
