@@ -733,14 +733,17 @@ class HrVersion(models.Model):
             all_we_to_unlink = self.env["hr.work.entry"].search(Domain.OR(domains))
         entries_by_version = all_we_to_unlink.grouped("version_id")
         for version, date_start in before_start.items():
+            # `hr.work.entry.date` is a Date and the bounds here are Datetimes,
+            # so both comparisons are made against the version's own Date fields
+            # -- the same values the domains above selected on.
             if any(
-                entry.date < date_start for entry in entries_by_version.get(version, ())
+                entry.date < version.date_start
+                for entry in entries_by_version.get(version, ())
             ):
                 version.date_generated_from = date_start
         for version, date_end in after_end.items():
-            end_of_day_start = fields.Datetime.to_datetime(version.date_end)
             if any(
-                entry.date > end_of_day_start
+                entry.date > version.date_end
                 for entry in entries_by_version.get(version, ())
             ):
                 version.date_generated_to = date_end
