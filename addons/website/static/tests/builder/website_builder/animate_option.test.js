@@ -356,7 +356,6 @@ test("animation=onHover should not be visible when the image has a cors protecte
             switch (route) {
                 case "/html_editor/get_image_info":
                     return {
-                        error: null,
                         result: {
                             attachment: { id: 1 },
                             original: {

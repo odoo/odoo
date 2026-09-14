@@ -12,7 +12,13 @@ import {
     setupInteractionWhiteList,
     startInteractions,
 } from "@web/../tests/public/helpers";
-import { contains, defineWebModels, onRpc } from "@web/../tests/web_test_helpers";
+import {
+    contains,
+    defineWebModels,
+    mountWithCleanup,
+    onRpc,
+} from "@web/../tests/web_test_helpers";
+import { MainComponentsContainer } from "@web/ui/main_components_container";
 
 setupInteractionWhiteList(["website.form", "website.post_link"]);
 
@@ -396,6 +402,29 @@ test("(rpc) form checks conditions", async () => {
     await click("a.s_website_form_send");
     await rpcDone;
     expect(rpcCheck).toBe(true);
+});
+
+test("a date field with an empty value attribute opens its picker", async () => {
+    await startInteractions(`
+        <div id="wrapwrap">
+            <section class="s_website_form" data-snippet="s_website_form">
+                <form action="/website/form/" method="post" data-model_name="mail.mail">
+                    <div class="s_website_form_rows row">
+                        <div class="s_website_form_field col-12 s_website_form_custom" data-type="date">
+                            <div class="s_website_form_date input-group date">
+                                <input type="text" class="form-control datetimepicker-input s_website_form_input" name="when" value=""/>
+                                <div class="input-group-text o_input_group_date_icon"><i class="fa-solid fa-calendar-days"/></div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </div>
+    `);
+    await mountWithCleanup(MainComponentsContainer);
+    await click(".s_website_form_date input");
+    await animationFrame();
+    expect(".o_datetime_picker").toHaveCount(1);
 });
 
 test("form submit result cleaned but not removed on stop", async () => {

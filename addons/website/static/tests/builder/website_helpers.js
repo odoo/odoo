@@ -61,6 +61,8 @@ class IrUiView extends models.Model {
     }
 }
 
+export const websiteBuilderModels = [Website, IrUiView];
+
 export const setupWebsiteBuilderOeId = 539;
 
 export const invisibleEl =
@@ -69,7 +71,7 @@ export const invisibleEl =
 export function defineWebsiteModels() {
     describe.current.tags("desktop");
     defineMailModels();
-    defineModels([Website, IrUiView]);
+    defineModels(websiteBuilderModels);
     onRpc("/website/theme_customize_data_get", () => []);
     onRpc("website", "web_search_read", () => ({
         length: 1,

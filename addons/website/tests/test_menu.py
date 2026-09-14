@@ -87,9 +87,11 @@ class TestMenu(common.TransactionCase):
         )
 
         total_menus = Menu.search_count([])
+        default_tree = Menu.search_count([("id", "child_of", default_menu.id)])
+        self.assertGreaterEqual(default_tree, 4)
         Website.create({"name": "new website"})
         self.assertEqual(
-            total_menus + 4,
+            total_menus + default_tree,
             Menu.search_count([]),
             "New website's bootstraping should have duplicate default menu tree (Top/Home/Contactus/Sub Default Menu)",
         )
