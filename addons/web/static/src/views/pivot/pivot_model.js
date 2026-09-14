@@ -3,6 +3,10 @@ import { Domain } from "@web/core/domain";
 import { cartesian, sections, sortBy, symmetricalDifference } from "@web/core/utils/arrays";
 import { KeepLast, Race } from "@web/core/utils/concurrency";
 import { DEFAULT_INTERVAL } from "@web/search/utils/dates";
+import {
+    getCurrencyAggregateSpecs,
+    isConvertedAggregateUsed,
+} from "@web/model/currency_aggregates";
 import { addPropertyFieldDefs, Model } from "@web/model/model";
 import { computeReportMeasures, processMeasure } from "@web/views/utils";
 
@@ -995,12 +999,8 @@ export class PivotModel extends Model {
             if (aggregator === "array_agg_distinct") {
                 return measurements;
             }
-            if (aggregator === "sum_currency") {
-                const currencies =
-                    group[metaData.fields[fieldName].currency_field + ":array_agg_distinct"];
-                if (currencies.length === 1) {
-                    return measurements;
-                }
+            if (!isConvertedAggregateUsed(group, metaData.fields[fieldName], aggregator)) {
+                return measurements;
             }
             if (metaData.measures[fieldName].type === "boolean" && measurement instanceof Boolean) {
                 measurement = measurement ? 1 : 0;
@@ -1092,8 +1092,7 @@ export class PivotModel extends Model {
             }
             acc.push(measure + ":" + field.aggregator);
             if (field.currency_field) {
-                acc.push(field.currency_field + ":array_agg_distinct");
-                acc.push(field.name + ":sum_currency");
+                acc.push(...getCurrencyAggregateSpecs(field));
             }
             return acc;
         }, []);
