@@ -12,7 +12,7 @@ and they are translatable so that a search matches in the user's language.
 Use :func:`search_icons` to match a needle against both.
 """
 
-from odoo.tools import LazyTranslate, frozendict
+from odoo.tools import LazyTranslate, frozendict, remove_accents
 
 _lt = LazyTranslate(__name__)
 
@@ -701,10 +701,14 @@ ICONS = frozendict({
 })
 
 
+def _normalize(text):
+    return remove_accents(text.casefold())
+
+
 # Resolved to their English source: no language is detectable at import time,
 # and :func:`search_icons` translates the tags when it is given the means to.
 _ICONS_INDEX = [
-    (name, icon['has_fill'], f"{name} {icon['tags']._translate('en_US')}".lower())
+    (name, icon['has_fill'], _normalize(f"{name} {icon['tags']._source}"))
     for name, icon in ICONS.items()
 ]
 
@@ -712,13 +716,13 @@ _ICONS_INDEX = [
 def search_icons(needle='', translate=None):
     """Yield the ``(name, has_fill)`` of every icon matching ``needle``.
 
-    The needle is split on spaces and every word must be found in the icon name
-    or in its English search tags; an empty needle matches every icon.  Pass
-    ``env._`` as *translate* to look the missing words up in the tags translated
-    in the language of ``env`` too, the English ones staying searchable whatever
-    the language.
+    :param needle: search terms, split on spaces; every word must be found in
+        the icon name or in its tags.  An empty needle matches every icon.
+    :param translate: pass ``env._`` to look the missing words up in the tags
+        translated in the language of ``env`` too, the English ones staying
+        searchable whatever the language.
     """
-    terms = needle.lower().split()
+    terms = _normalize(needle).split()
     if not terms:
         yield from ((name, icon['has_fill']) for name, icon in ICONS.items())
         return
@@ -727,7 +731,7 @@ def search_icons(needle='', translate=None):
         if missing:
             if translate is None:
                 continue
-            translated = translate(ICONS[name]['tags']).lower()
+            translated = _normalize(translate(ICONS[name]['tags']))
             if any(term not in translated for term in missing):
                 continue
         yield name, has_fill

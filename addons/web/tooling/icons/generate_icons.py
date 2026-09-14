@@ -974,10 +974,14 @@ def write_font_face_css(ms_dir, style_lower: str, font_file: str, backend_font_p
 
 ICON_SEARCH_CODE = '''
 
+def _normalize(text):
+    return remove_accents(text.casefold())
+
+
 # Resolved to their English source: no language is detectable at import time,
 # and :func:`search_icons` translates the tags when it is given the means to.
 _ICONS_INDEX = [
-    (name, icon['has_fill'], f"{name} {icon['tags']._translate('en_US')}".lower())
+    (name, icon['has_fill'], _normalize(f"{name} {icon['tags']._source}"))
     for name, icon in ICONS.items()
 ]
 
@@ -985,13 +989,13 @@ _ICONS_INDEX = [
 def search_icons(needle='', translate=None):
     """Yield the ``(name, has_fill)`` of every icon matching ``needle``.
 
-    The needle is split on spaces and every word must be found in the icon name
-    or in its English search tags; an empty needle matches every icon.  Pass
-    ``env._`` as *translate* to look the missing words up in the tags translated
-    in the language of ``env`` too, the English ones staying searchable whatever
-    the language.
+    :param needle: search terms, split on spaces; every word must be found in
+        the icon name or in its tags.  An empty needle matches every icon.
+    :param translate: pass ``env._`` to look the missing words up in the tags
+        translated in the language of ``env`` too, the English ones staying
+        searchable whatever the language.
     """
-    terms = needle.lower().split()
+    terms = _normalize(needle).split()
     if not terms:
         yield from ((name, icon['has_fill']) for name, icon in ICONS.items())
         return
@@ -1000,7 +1004,7 @@ def search_icons(needle='', translate=None):
         if missing:
             if translate is None:
                 continue
-            translated = translate(ICONS[name]['tags']).lower()
+            translated = _normalize(translate(ICONS[name]['tags']))
             if any(term not in translated for term in missing):
                 continue
         yield name, has_fill
@@ -1059,7 +1063,7 @@ def write_python_icon_list(
         "Use :func:`search_icons` to match a needle against both.\n"
         '"""\n'
         "\n"
-        "from odoo.tools import LazyTranslate, frozendict\n"
+        "from odoo.tools import LazyTranslate, frozendict, remove_accents\n"
         "\n"
         "_lt = LazyTranslate(__name__)\n"
         "\n"

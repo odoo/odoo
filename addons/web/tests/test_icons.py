@@ -47,13 +47,21 @@ class TestIcons(BaseCase):
             "a single unmatched word is enough to discard an icon",
         )
 
+    def test_icons_search_is_case_and_accent_insensitive(self):
+        expected = list(search_icons('shopping cart'))
+        self.assertTrue(expected)
+        self.assertEqual(list(search_icons('SHOPPING Cart')), expected)
+        self.assertEqual(list(search_icons('shöpping cârt')), expected)
+
     def test_icons_search_translated(self):
+        """Translated tags are searched on top of the English ones, and are
+        normalized the same way, so an unaccented needle matches them."""
         def translate(tags):
             return 'chariot de marché' if tags == ICONS['shopping_cart']['tags'] else ''
 
         self.assertEqual(
-            list(search_icons('marché', translate)), [('shopping_cart', True)],
-            "the translated tags are searched on top of the English ones",
+            list(search_icons('marche', translate)), [('shopping_cart', True)],
+            "an unaccented needle matches an accented translated tag",
         )
         self.assertEqual(
             next(search_icons('shopping cart', translate)), ('shopping_cart', True),
