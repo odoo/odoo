@@ -273,7 +273,8 @@ class ResUsers(models.Model):
 
         mail_create_values = []
         for user in self:
-            body_html = self.env['mail.render.mixin']._render_template(
+            user_lang = user.lang or self.env.lang or 'en_US'
+            body_html = self.env['mail.render.mixin'].with_context(lang=user_lang)._render_template(
                 'mail.account_security_alert',
                 model='res.users',
                 res_ids=user.ids,
