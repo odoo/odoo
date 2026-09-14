@@ -153,3 +153,36 @@ class TestWorkorder(TestMrpCommon):
 
         mo.workorder_ids.sorted('date_start')[0].button_start()
         self.assertTrue(mo.is_planned, "Starting a work order must not unplan the MO")
+
+    def test_plan_draft_mo_does_not_block_workorders(self):
+        """ Planning a manufacturing order that is still in draft (not yet confirmed)
+        should not mark any of its workorders as "blocked": nothing can be reserved or
+        worked on before confirmation, so the usual "blocked until the previous
+        workorder is done" gating is meaningless at that point and should only kick in
+        once the MO is confirmed.
+        """
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product_6.product_tmpl_id.id,
+            'uom_id': self.product_6.uom_id.id,
+            'product_qty': 1.0,
+            'operation_ids': [
+                Command.create({'name': 'op1', 'workcenter_id': self.workcenter_2.id, 'time_cycle': 60, 'sequence': 1}),
+                Command.create({'name': 'op2', 'workcenter_id': self.workcenter_2.id, 'time_cycle': 60, 'sequence': 2}),
+            ],
+            'bom_line_ids': [Command.create({'product_id': self.product_1.id, 'product_qty': 1})],
+        })
+        mo = self.env['mrp.production'].create({'bom_id': bom.id})
+        self.assertEqual(mo.state, 'draft')
+
+        mo.button_plan()
+        self.assertTrue(mo.is_planned)
+        self.assertFalse(
+            any(wo.state == 'blocked' for wo in mo.workorder_ids),
+            "No workorder should be blocked while the manufacturing order is still in draft state",
+        )
+
+        mo.action_confirm()
+        wo1, wo2 = mo.workorder_ids.sorted('id')
+        self.assertEqual(wo1.state, 'ready')
+        self.assertEqual(wo2.state, 'blocked',
+                          "Once confirmed, the second workorder should be blocked until the first one is done")
