@@ -64,6 +64,17 @@ class TestPartnerIdentifiers(TransactionCase):
             "BE_EN should be deduced from BE VAT by stripping the country prefix",
         )
 
+    def test_vat_change_updates_be_en(self):
+        """Changing a Belgian VAT must update the existing BE_EN (BCE/KBO) to match."""
+        partner = self.env['res.partner'].create({
+            'name': 'BE Partner',
+            'country_id': self.env.ref('base.be').id,
+            'vat': 'BE0477472701',
+        })
+        self.assertEqual((partner.additional_identifiers or {}).get('BE_EN'), '0477472701')
+        partner.vat = 'BE0428759497'
+        self.assertEqual((partner.additional_identifiers or {}).get('BE_EN'), '0428759497')
+
     def test_vat_deduces_dk_cvr(self):
         """Setting a Danish VAT should automatically deduce DK_CVR."""
         partner = self.env['res.partner'].create({
