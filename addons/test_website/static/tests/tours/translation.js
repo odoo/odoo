@@ -256,7 +256,7 @@ function openTranslate(timeout = 50000) {
         awaitTranslationIsReady,
         {
             content: "Open edit dropdown",
-            trigger: ".o_edit_website_container button",
+            trigger: ".o_edit_website_container button.o-dropdown-toggle-custo",
             run: "click",
         },
         {
