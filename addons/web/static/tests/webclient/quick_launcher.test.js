@@ -5,10 +5,12 @@ import {
     click,
     describe,
     expect,
+    freezeTime,
     hover,
     leave,
     queryAllTexts,
     test,
+    unfreezeTime,
     waitFor,
 } from "@odoo/hoot";
 import { Component, xml } from "@odoo/owl";
@@ -67,10 +69,12 @@ test("hovering the home toggle inside an app opens the quick launcher, pinned fi
     defineThreeApps();
     await enterApp1();
 
+    freezeTime();
     await hover(".o_menu_toggle");
     await advanceTime(399);
     expect(".o_quick_launcher").toHaveCount(0);
     await advanceTime(1);
+    unfreezeTime();
     await animationFrame();
     expect(".o_quick_launcher .o_app").toHaveCount(3);
     expect(queryAllTexts(".o_quick_launcher .o_caption")).toEqual([
@@ -90,10 +94,12 @@ test("leaving the toggle before the delay, or clicking it, opens no launcher", a
     defineThreeApps();
     await enterApp1();
 
+    freezeTime();
     await hover(".o_menu_toggle");
     await advanceTime(200);
     await leave();
     await advanceTime(400);
+    unfreezeTime();
     expect(".o_quick_launcher").toHaveCount(0);
 
     await hover(".o_menu_toggle");
