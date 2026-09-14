@@ -381,6 +381,41 @@ class Many2one(_Relational):
                     ids1 = tuple(id_ for id_ in ids0 if id_ not in record_ids)
                     invf._update_cache(corecord, ids1)
 
+    def _resort_inverses(self, records: BaseModel) -> None:
+        env = records.env
+        field_cache = self._get_cache(env)
+        corecord_ids = {
+            coid
+            for id_ in records._ids
+            if (coid := field_cache.get(id_)) and isinstance(coid, int)
+        }
+        if not corecord_ids:
+            return
+        changed_ids = set(records._ids)
+        for invf in records.pool.field_inverses[self]:
+            if not invf.is_one2many:
+                continue
+            inv_cache = invf._get_cache(env)
+            for coid in corecord_ids:
+                ids0 = inv_cache.get(coid)
+                if (
+                    not isinstance(ids0, tuple)
+                    or len(ids0) < 2
+                    or changed_ids.isdisjoint(ids0)
+                    or not all(isinstance(id_, int) for id_ in ids0)
+                ):
+                    continue
+                ids1 = records.browse(ids0)._sorted_by_ids(records._order, False)
+                if ids1 is not None and ids1 != ids0:
+                    _debug.logic(
+                        "field.many2one.inverse_resorted",
+                        model=self.model_name,
+                        field=self.name,
+                        inverse=f"{invf.model_name}.{invf.name}",
+                        corecord=coid,
+                    )
+                    invf._update_cache(env[invf.model_name].browse(coid), ids1)
+
     def _update_inverses(self, records: BaseModel, value: int | NewId | None) -> None:
         if value is None:
             return

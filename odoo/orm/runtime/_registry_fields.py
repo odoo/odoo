@@ -11,6 +11,7 @@ from odoo.tools import OrderedSet
 from odoo.tools.misc import Collector
 
 from ..components.model_graph import ModelGraph, TriggerTree
+from ..parsing import regex_order
 from ._registry_stubs import _RegistryStubs
 
 if typing.TYPE_CHECKING:
@@ -72,6 +73,30 @@ class _RegistryFieldsMixin(_RegistryStubs):
             models=len(self.models),
             fields=len(result),
         )
+        return result
+
+    @functools.cached_property
+    def order_key_inverses(self) -> dict[Field, tuple[Field, ...]]:
+        field_inverses = self.field_inverses
+        result: dict[Field, tuple[Field, ...]] = {}
+        for model_cls in self.models.values():
+            fields = model_cls._fields
+            many2ones = tuple(
+                field
+                for field in fields.values()
+                if field.is_many2one
+                and any(invf.is_one2many for invf in field_inverses[field])
+            )
+            order = model_cls._order
+            if not many2ones or not isinstance(order, str):
+                continue
+            for part in order.split(","):
+                match = regex_order.match(part)
+                if not match or match["property"] or match["field"] == "id":
+                    continue
+                if (field := fields.get(match["field"])) is not None:
+                    result[field] = many2ones
+        _debug.perf.count("registry.order_key_inverses_built", fields=len(result))
         return result
 
     @functools.cached_property
@@ -195,6 +220,7 @@ class _RegistryFieldsMixin(_RegistryStubs):
             for _prop in (
                 "_field_triggers",
                 "field_inverses",
+                "order_key_inverses",
                 "field_computed",
                 "fields_by_comodel",
                 "fields_reading_through_a_reference",

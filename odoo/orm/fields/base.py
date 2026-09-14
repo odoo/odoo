@@ -677,6 +677,8 @@ class Field[T](
 
         if self.is_column and dirty:
             env.core.mark_dirty(self, (id_ for id_ in records._ids if id_))
+            for many2one in env.registry.order_key_inverses.get(self, ()):
+                many2one._resort_inverses(records)
 
     if typing.TYPE_CHECKING:
 
