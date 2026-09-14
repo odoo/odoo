@@ -750,6 +750,17 @@ class IrQwebFieldContact(models.AbstractModel):
             opsep = Markup("<br/>")
 
         value = value.sudo().with_context(show_address=True)
+        # a record delegating to a partner (a user) renders that partner's
+        # numbers; only res.partner carries them
+        contact = value
+        if value._name != "res.partner":
+            for parent_model, parent_field in value._inherits.items():
+                if parent_model == "res.partner":
+                    contact = value[parent_field]
+                    break
+        phone = (
+            contact._phone_get_number().number if contact._name == "res.partner" else ""
+        )
         display_name = value.display_name or ""
         name_line, *address_lines = display_name.split("\n")
         if any(elem.strip() for elem in address_lines):
@@ -766,7 +777,7 @@ class IrQwebFieldContact(models.AbstractModel):
         val = {
             "name": name_line,
             "address": address,
-            "phone": value._phone_get_number().number,
+            "phone": phone,
             "city": value.city,
             "country_id": value.country_id.display_name,
             "website": value.website,
