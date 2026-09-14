@@ -43,7 +43,7 @@
             </t>
             <t t-set="lines" t-value="this.extraLines"/>
             <t t-if="lines.length">
-                <div class="o_field_many2one_extra" t-on-click="this.onExtraLinesClick">
+                <div class="o_field_many2one_extra">
                     <t t-foreach="lines" t-as="line" t-key="line_index">
                         <div t-out="line" t-att-title="line"  class="text-truncate"/>
                     </t>
