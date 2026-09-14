@@ -925,9 +925,7 @@ Versions:
                 day_start = max(
                     start, datetime.combine(day, time.min).replace(tzinfo=tz)
                 )
-                day_stop = min(
-                    stop, datetime.combine(day, time.max).replace(tzinfo=tz)
-                )
+                day_stop = min(stop, datetime.combine(day, time.max).replace(tzinfo=tz))
                 windows.append(
                     (
                         day,
