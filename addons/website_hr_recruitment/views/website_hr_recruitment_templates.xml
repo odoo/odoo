@@ -68,7 +68,8 @@
                                                  data-editor-message.translate="Insert a Job Description..."
                                                  t-field="job.description"/>
                                             <div class="o_job_infos d-flex flex-column">
-                                                <span t-field="job.address_id" class="fw-light" t-options='{"widget": "contact", "fields": ["city"], "no_tag_br": True, "null_text": "Remote"}'/>
+                                                <t t-set='remote_label' t-valuef.translate="Remote"/>
+                                                <span t-field="job.address_id" class="fw-light" t-options='{"widget": "contact", "fields": ["city"], "no_tag_br": True, "null_text": remote_label}'/>
                                                 <div t-if="job.department_id"
                                                         class="d-inline-flex align-items-center">
                                                     <i class="fa fa-sitemap fa-fw"/><span t-field="job.department_id" class="fw-light" t-options='{"fields": ["name"], "no_tag_br": True}'/>
@@ -140,11 +141,12 @@
                             <div class="row">
                                 <div class="col-md-9">
                                     <h1 t-field="job.name"/>
+                                    <t t-set='remote_label' t-valuef.translate="Remote"/>
                                     <h5 class="fw-light o_not_editable" t-field="job.address_id" t-options='{
                                         "widget": "contact",
                                         "fields": ["city"],
                                         "no_tag_br": True,
-                                        "null_text": "Remote"
+                                        "null_text": remote_label
                                     }'/>
                                 </div>
                                 <div class="col-md-3">
