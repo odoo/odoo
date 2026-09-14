@@ -296,7 +296,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
 
     def test_received_bill_notification(self):
         peppol_purchase_journal = self.env.company.peppol_purchase_journal_id
-        peppol_purchase_journal.incoming_einvoice_notification_email = 'oops_another_bill@example.com'
+        peppol_purchase_journal.journal_notification_emails = 'oops_another_bill@example.com'
         self.env.company.email = 'hq@example.com'
 
         with self.mock_mail_gateway(), mock_documents_retrieval([{'uuid': self.MESSAGE_UUID, 'direction': 'incoming'}]), mock_ack():
