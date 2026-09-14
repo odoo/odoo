@@ -1,6 +1,6 @@
 {
     "name": "Payment Provider: Buckaroo",
-    "version": "2.0",
+    "version": "2.1",
     "category": "Accounting/Payment Providers",
     "sequence": 350,
     "summary": "A Dutch payment provider covering several countries in Europe.",

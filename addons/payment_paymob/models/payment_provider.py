@@ -13,6 +13,11 @@ _logger = get_payment_logger(__name__)
 
 class PaymentProvider(models.Model):
     _inherit = "payment.provider"
+    _CREDENTIAL_FIELDS = {
+        "paymob_secret_key": "paymob_secret_key",
+        "paymob_hmac_key": "paymob_hmac_key",
+        "paymob_api_key": "paymob_api_key",
+    }
 
     code = fields.Selection(
         selection_add=[("paymob", "Paymob")],
@@ -32,18 +37,21 @@ class PaymentProvider(models.Model):
         required_if_provider="paymob",
     )
     paymob_secret_key = fields.Char(
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         required_if_provider="paymob",
         groups="base.group_system",
     )
     paymob_hmac_key = fields.Char(
         string="Paymob HMAC Key",
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         required_if_provider="paymob",
     )
     paymob_api_key = fields.Char(
         string="Paymob API Key",
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         required_if_provider="paymob",
     )
 

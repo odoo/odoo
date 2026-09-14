@@ -1,5 +1,6 @@
 {
     "name": "Payment Provider: DPO",
+    "version": "1.1",
     "category": "Accounting/Payment Providers",
     "sequence": 350,
     "summary": "A Kenyan payment provider covering several African countries.",

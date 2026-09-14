@@ -18,10 +18,13 @@ _logger = get_payment_logger(__name__, sensitive_keys=SENSITIVE_KEYS)
 
 class PaymentProvider(models.Model):
     _name = "payment.provider"
+    _inherit = ["mixin.credential.holder"]
     _description = "Payment Provider"
     _order = "module_state, state desc, sequence, name"
     _check_company_auto = True
     _check_company_domain = models.check_company_domain_parent_of
+    _credential_holder_field = "provider_credential_id"
+    _credential_purpose = "payment:provider"
 
     def _is_valid_field_parameter(self, field, name):
         return name == "required_if_provider" or super()._is_valid_field_parameter(
@@ -34,6 +37,14 @@ class PaymentProvider(models.Model):
         required=True,
     )
     sequence = fields.Integer(help="Define the display order")
+    provider_credential_id = fields.Many2one(
+        comodel_name="credential.credential",
+        string="Credential",
+        copy=False,
+        ondelete="restrict",
+        groups="base.group_system",
+        help="Holds this provider's secrets.",
+    )
     code = fields.Selection(
         selection=[("none", "No Provider Set")],
         default="none",

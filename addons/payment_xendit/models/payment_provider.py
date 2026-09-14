@@ -8,6 +8,10 @@ _logger = get_payment_logger(__name__)
 
 class PaymentProvider(models.Model):
     _inherit = "payment.provider"
+    _CREDENTIAL_FIELDS = {
+        "xendit_secret_key": "xendit_secret_key",
+        "xendit_webhook_token": "xendit_webhook_token",
+    }
 
     code = fields.Selection(
         selection_add=[("xendit", "Xendit")],
@@ -19,12 +23,14 @@ class PaymentProvider(models.Model):
         groups="base.group_system",
     )
     xendit_secret_key = fields.Char(
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         required_if_provider="xendit",
         groups="base.group_system",
     )
     xendit_webhook_token = fields.Char(
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         required_if_provider="xendit",
         groups="base.group_system",
     )

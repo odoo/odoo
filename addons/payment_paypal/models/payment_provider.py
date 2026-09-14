@@ -14,6 +14,10 @@ _logger = get_payment_logger(__name__)
 
 class PaymentProvider(models.Model):
     _inherit = "payment.provider"
+    _CREDENTIAL_FIELDS = {
+        "paypal_client_secret": "paypal_client_secret",
+        "paypal_access_token": "paypal_access_token",
+    }
 
     code = fields.Selection(
         selection_add=[("paypal", "PayPal")],
@@ -33,12 +37,14 @@ class PaymentProvider(models.Model):
     )
     paypal_client_secret = fields.Char(
         string="PayPal Client Secret",
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         groups="base.group_system",
     )
     paypal_access_token = fields.Char(
         string="PayPal Access Token",
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         groups="base.group_system",
         help="The short-lived token used to access Paypal APIs",
     )

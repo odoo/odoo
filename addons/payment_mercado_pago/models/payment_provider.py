@@ -18,6 +18,10 @@ _logger = get_payment_logger(__name__)
 
 class PaymentProvider(models.Model):
     _inherit = "payment.provider"
+    _CREDENTIAL_FIELDS = {
+        "mercado_pago_access_token": "mercado_pago_access_token",
+        "mercado_pago_refresh_token": "mercado_pago_refresh_token",
+    }
 
     code = fields.Selection(
         selection_add=[("mercado_pago", "Mercado Pago")],
@@ -39,7 +43,8 @@ class PaymentProvider(models.Model):
 
     # OAuth fields
     mercado_pago_access_token = fields.Char(
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         groups="base.group_system",
     )
     mercado_pago_access_token_expiry = fields.Datetime(
@@ -47,7 +52,8 @@ class PaymentProvider(models.Model):
         groups="base.group_system",
     )
     mercado_pago_refresh_token = fields.Char(
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         groups="base.group_system",
     )
     mercado_pago_public_key = fields.Char(

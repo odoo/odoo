@@ -10,14 +10,24 @@ _logger = logging.getLogger(__name__)
 
 class PosPaymentMethod(models.Model):
     _inherit = "pos.payment.method"
+    _CREDENTIAL_FIELDS = {
+        "mp_bearer_token": "mp_bearer_token",
+        "mp_webhook_secret_key": "mp_webhook_secret_key",
+    }
 
     mp_bearer_token = fields.Char(
         string="Production user token",
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
+        copy=True,
         groups="point_of_sale.group_pos_manager",
         help="Mercado Pago customer production user token: https://www.mercadopago.com.mx/developers/en/reference",
     )
     mp_webhook_secret_key = fields.Char(
         string="Production secret key",
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
+        copy=True,
         groups="point_of_sale.group_pos_manager",
         help="Mercado Pago production secret key from integration application: https://www.mercadopago.com.mx/developers/panel/app",
     )

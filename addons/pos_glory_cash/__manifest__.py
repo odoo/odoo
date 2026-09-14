@@ -1,6 +1,6 @@
 {
     "name": "POS Glory Cash Machines",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Sales/Point of Sale",
     "summary": "Integrate your POS with a Glory automatic cash payment device",
     "author": "Odoo S.A.",

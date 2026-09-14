@@ -8,6 +8,9 @@ from odoo.addons.payment_buckaroo import const
 
 class PaymentProvider(models.Model):
     _inherit = "payment.provider"
+    _CREDENTIAL_FIELDS = {
+        "buckaroo_secret_key": "buckaroo_secret_key",
+    }
 
     code = fields.Selection(
         selection_add=[("buckaroo", "Buckaroo")],
@@ -20,7 +23,8 @@ class PaymentProvider(models.Model):
         help="The key solely used to identify the website with Buckaroo",
     )
     buckaroo_secret_key = fields.Char(
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         required_if_provider="buckaroo",
         groups="base.group_system",
     )

@@ -1,6 +1,6 @@
 {
     "name": "Payment Provider: Authorize.Net",
-    "version": "2.0",
+    "version": "2.1",
     "category": "Accounting/Payment Providers",
     "sequence": 350,
     "summary": "An payment provider covering the US, Australia, and Canada.",

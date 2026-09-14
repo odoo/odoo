@@ -18,6 +18,10 @@ _logger = get_payment_logger(__name__, const.SENSITIVE_KEYS)
 
 class PaymentProvider(models.Model):
     _inherit = "payment.provider"
+    _CREDENTIAL_FIELDS = {
+        "stripe_secret_key": "stripe_secret_key",
+        "stripe_webhook_secret": "stripe_webhook_secret",
+    }
 
     code = fields.Selection(
         selection_add=[("stripe", "Stripe")],
@@ -31,13 +35,15 @@ class PaymentProvider(models.Model):
     )
     stripe_secret_key = fields.Char(
         string="Secret Key",
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         required_if_provider="stripe",
         groups="base.group_system",
     )
     stripe_webhook_secret = fields.Char(
         string="Webhook Signing Secret",
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         groups="base.group_system",
         help="If a webhook is enabled on your Stripe account, this signing secret must be set to "
         "authenticate the messages sent from Stripe to Odoo.",

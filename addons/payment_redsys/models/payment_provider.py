@@ -12,6 +12,9 @@ from odoo.addons.payment_redsys import const
 
 class PaymentProvider(models.Model):
     _inherit = "payment.provider"
+    _CREDENTIAL_FIELDS = {
+        "redsys_secret_key": "redsys_secret_key",
+    }
 
     code = fields.Selection(
         selection_add=[("redsys", "Redsys")],
@@ -26,7 +29,8 @@ class PaymentProvider(models.Model):
         required_if_provider="redsys",
     )
     redsys_secret_key = fields.Char(
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         required_if_provider="redsys",
         groups="base.group_system",
     )

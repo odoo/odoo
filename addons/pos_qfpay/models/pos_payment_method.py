@@ -10,6 +10,10 @@ from odoo.exceptions import AccessDenied, UserError
 
 class PosPaymentMethod(models.Model):
     _inherit = "pos.payment.method"
+    _CREDENTIAL_FIELDS = {
+        "qfpay_pos_key": "qfpay_pos_key",
+        "qfpay_notification_key": "qfpay_notification_key",
+    }
 
     def _selection_payment_terminals(self):
         return super()._selection_payment_terminals() + [("qfpay", "QFPay")]
@@ -20,12 +24,14 @@ class PosPaymentMethod(models.Model):
     )
     qfpay_pos_key = fields.Char(
         string="QFPay POS Key",
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         groups="point_of_sale.group_pos_manager",
     )
     qfpay_notification_key = fields.Char(
         string="QFPay Notification Key",
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         groups="point_of_sale.group_pos_manager",
     )
     qfpay_latest_response = fields.Char(

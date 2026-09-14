@@ -61,7 +61,10 @@ class MixinCredentialHolder(models.AbstractModel):
     def _pop_door_values(self, vals: dict) -> dict:
         field_map = self._credential_field_map()
         return {
-            field_map[door]: vals.pop(door) for door in list(vals) if door in field_map
+            field_map[door]: self._fields[door].convert_to_cache(vals.pop(door), self)
+            or False
+            for door in list(vals)
+            if door in field_map
         }
 
     @api.model_create_multi

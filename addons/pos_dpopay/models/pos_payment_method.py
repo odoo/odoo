@@ -13,6 +13,10 @@ DPOPAY_DEFAULT_TIMEOUT = 35
 
 class PosPaymentMethod(models.Model):
     _inherit = "pos.payment.method"
+    _CREDENTIAL_FIELDS = {
+        "dpopay_client_secret": "dpopay_client_secret",
+        "dpopay_bearer_token": "dpopay_bearer_token",
+    }
 
     dpopay_client_id = fields.Char(
         string="DPO Pay Client ID",
@@ -20,6 +24,9 @@ class PosPaymentMethod(models.Model):
     )
     dpopay_client_secret = fields.Char(
         string="DPO Pay Client Secret",
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
+        copy=True,
         help="The Client Secret provided by DPO Pay for secure access. Keep it confidential.",
     )
     dpopay_mid = fields.Char(
@@ -44,7 +51,10 @@ class PosPaymentMethod(models.Model):
         help="Check this to use DPO Pay's sandbox environment for testing purposes.",
     )
     dpopay_bearer_token = fields.Char(
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         default="Token",
+        copy=True,
         help="Bearer token used for authenticating requests. Automatically refreshed when expired.",
     )
 

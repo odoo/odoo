@@ -12,6 +12,10 @@ _logger = get_payment_logger(__name__)
 
 class PaymentProvider(models.Model):
     _inherit = "payment.provider"
+    _CREDENTIAL_FIELDS = {
+        "adyen_api_key": "adyen_api_key",
+        "adyen_hmac_key": "adyen_hmac_key",
+    }
 
     code = fields.Selection(
         selection_add=[("adyen", "Adyen")],
@@ -26,7 +30,8 @@ class PaymentProvider(models.Model):
     )
     adyen_api_key = fields.Char(
         string="API Key",
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         required_if_provider="adyen",
         groups="base.group_system",
         help="The API key of the webservice user",
@@ -39,7 +44,8 @@ class PaymentProvider(models.Model):
     )
     adyen_hmac_key = fields.Char(
         string="HMAC Key",
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         required_if_provider="adyen",
         groups="base.group_system",
         help="The HMAC key of the webhook",

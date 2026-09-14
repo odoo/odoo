@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import patch
 from urllib.parse import urlencode as url_encode
 
+from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tests import tagged
 from odoo.tools import mute_logger
@@ -345,6 +346,47 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
                     mapped_country_company
                 ).action_start_onboarding("dummy")
             self.assertEqual(mock.call_count, len(const.COUNTRY_MAPPING))
+
+    def test_the_secrets_live_in_the_providers_credential(self):
+        self.stripe.write(
+            {"stripe_secret_key": "sk_vault", "stripe_webhook_secret": "wh"}
+        )
+        self.stripe.stripe_webhook_secret = "wh_rotated"
+        self.stripe.invalidate_recordset()
+
+        credential = self.stripe.provider_credential_id
+        self.assertTrue(credential)
+        self.assertFalse(self.stripe._fields["stripe_secret_key"].store)
+        self.assertEqual(
+            (self.stripe.stripe_secret_key, self.stripe.stripe_webhook_secret),
+            ("sk_vault", "wh_rotated"),
+        )
+        self.assertEqual(
+            credential.sudo()._use_secret_payload("payment:provider"),
+            {"stripe_secret_key": "sk_vault", "stripe_webhook_secret": "wh_rotated"},
+        )
+
+    def test_clearing_every_secret_unlinks_the_credential(self):
+        self.stripe.write(
+            {"stripe_secret_key": "sk_vault", "stripe_webhook_secret": "wh"}
+        )
+        credential = self.stripe.provider_credential_id
+
+        self.stripe.write(
+            {
+                "state": "disabled",
+                "stripe_secret_key": False,
+                "stripe_webhook_secret": False,
+            }
+        )
+
+        self.assertFalse(self.stripe.provider_credential_id)
+        self.assertFalse(credential.exists())
+
+    def test_a_required_secret_is_still_required_once_it_is_a_door(self):
+        self.stripe.write({"state": "test", "stripe_secret_key": "sk_vault"})
+        with self.assertRaises(ValidationError):
+            self.stripe.stripe_secret_key = False
 
     def test_only_create_webhook_if_not_already_done(self):
         """Test that a webhook is created only if the webhook secret is not already set."""

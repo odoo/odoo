@@ -14,6 +14,12 @@ _logger = get_payment_logger(__name__)
 
 class PaymentProvider(models.Model):
     _inherit = "payment.provider"
+    _CREDENTIAL_FIELDS = {
+        "worldline_api_key": "worldline_api_key",
+        "worldline_api_secret": "worldline_api_secret",
+        "worldline_webhook_key": "worldline_webhook_key",
+        "worldline_webhook_secret": "worldline_webhook_secret",
+    }
 
     code = fields.Selection(
         selection_add=[("worldline", "Worldline")],
@@ -26,20 +32,24 @@ class PaymentProvider(models.Model):
     )
     worldline_api_key = fields.Char(
         string="Worldline API Key",
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         required_if_provider="worldline",
     )
     worldline_api_secret = fields.Char(
         string="Worldline API Secret",
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         required_if_provider="worldline",
     )
     worldline_webhook_key = fields.Char(
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         required_if_provider="worldline",
     )
     worldline_webhook_secret = fields.Char(
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         required_if_provider="worldline",
     )
 

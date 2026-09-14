@@ -10,6 +10,9 @@ _logger = get_payment_logger(__name__)
 
 class PaymentProvider(models.Model):
     _inherit = "payment.provider"
+    _CREDENTIAL_FIELDS = {
+        "nuvei_secret_key": "nuvei_secret_key",
+    }
 
     code = fields.Selection(
         selection_add=[("nuvei", "Nuvei")],
@@ -27,7 +30,8 @@ class PaymentProvider(models.Model):
         help="The site identifier code associated with the merchant account.",
     )
     nuvei_secret_key = fields.Char(
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         required_if_provider="nuvei",
         groups="base.group_system",
     )

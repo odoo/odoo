@@ -8,7 +8,9 @@ class PosPaymentMethod(models.Model):
     _name = "pos.payment.method"
     _description = "Point of Sale Payment Methods"
     _order = "sequence, id"
-    _inherit = ["mixin.pos.load"]
+    _inherit = ["mixin.pos.load", "mixin.credential.holder"]
+    _credential_holder_field = "terminal_credential_id"
+    _credential_purpose = "pos:payment_method"
 
     def _selection_payment_terminals(self):
         return []
@@ -25,6 +27,14 @@ class PosPaymentMethod(models.Model):
     def _is_online_payment(self):
         return False
 
+    terminal_credential_id = fields.Many2one(
+        comodel_name="credential.credential",
+        string="Credential",
+        copy=False,
+        ondelete="restrict",
+        groups="base.group_system",
+        help="Holds the secrets of this method's payment terminal.",
+    )
     name = fields.Char(
         string="Method",
         translate=True,

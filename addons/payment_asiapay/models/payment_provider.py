@@ -8,6 +8,9 @@ from odoo.addons.payment_asiapay import const
 
 class PaymentProvider(models.Model):
     _inherit = "payment.provider"
+    _CREDENTIAL_FIELDS = {
+        "asiapay_secure_hash_secret": "asiapay_secure_hash_secret",
+    }
 
     code = fields.Selection(
         selection_add=[("asiapay", "AsiaPay")],
@@ -33,7 +36,8 @@ class PaymentProvider(models.Model):
     )
     asiapay_secure_hash_secret = fields.Char(
         string="AsiaPay Secure Hash Secret",
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         required_if_provider="asiapay",
         groups="base.group_system",
     )

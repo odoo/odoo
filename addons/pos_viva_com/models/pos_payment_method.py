@@ -12,6 +12,12 @@ TIMEOUT = 10
 
 class PosPaymentMethod(models.Model):
     _inherit = "pos.payment.method"
+    _CREDENTIAL_FIELDS = {
+        "viva_com_api_key": "viva_com_api_key",
+        "viva_com_client_secret": "viva_com_client_secret",
+        "viva_com_bearer_token": "viva_com_bearer_token",
+        "viva_com_webhook_verification_key": "viva_com_webhook_verification_key",
+    }
 
     # Viva.com
     viva_com_merchant_id = fields.Char(
@@ -20,6 +26,9 @@ class PosPaymentMethod(models.Model):
     )
     viva_com_api_key = fields.Char(
         string="API Key",
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
+        copy=True,
         help="Log into Viva.com then navigate to Settings > API Access > Access credentials",
     )
     viva_com_client_id = fields.Char(
@@ -28,14 +37,26 @@ class PosPaymentMethod(models.Model):
     )
     viva_com_client_secret = fields.Char(
         string="Client secret",
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
+        copy=True,
         help="Log into Viva.com then navigate to Settings > API Access > POS APIs Credentials",
     )
     viva_com_terminal_id = fields.Char(
         string="Terminal ID",
         help="[ID of the Viva.com terminal], e.g. 16002169",
     )
-    viva_com_bearer_token = fields.Char(default="Bearer Token")
-    viva_com_webhook_verification_key = fields.Char()
+    viva_com_bearer_token = fields.Char(
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
+        default="Bearer Token",
+        copy=True,
+    )
+    viva_com_webhook_verification_key = fields.Char(
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
+        copy=True,
+    )
     viva_com_latest_response = fields.Json()  # not used anymore, to remove in master
     viva_com_test_mode = fields.Boolean(
         string="Test mode",

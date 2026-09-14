@@ -1,6 +1,6 @@
 {
     "name": "Point of Sale",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "category": "Sales/Point of Sale",
     "sequence": 40,
     "summary": "Handle checkouts and payments for shops and restaurants.",
@@ -9,6 +9,7 @@
     "license": "LGPL-3",
     "depends": [
         "base_order",
+        "credential",
         "resource",
         "stock_account",
         "phone_validation",

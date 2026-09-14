@@ -17,6 +17,13 @@ _logger = get_payment_logger(__name__)
 
 class PaymentProvider(models.Model):
     _inherit = "payment.provider"
+    _CREDENTIAL_FIELDS = {
+        "razorpay_key_secret": "razorpay_key_secret",
+        "razorpay_webhook_secret": "razorpay_webhook_secret",
+        "razorpay_refresh_token": "razorpay_refresh_token",
+        "razorpay_public_token": "razorpay_public_token",
+        "razorpay_access_token": "razorpay_access_token",
+    }
 
     code = fields.Selection(
         selection_add=[("razorpay", "Razorpay")],
@@ -28,11 +35,13 @@ class PaymentProvider(models.Model):
         help="The key solely used to identify the account with Razorpay.",
     )
     razorpay_key_secret = fields.Char(
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         groups="base.group_system",
     )
     razorpay_webhook_secret = fields.Char(
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         groups="base.group_system",
     )
 
@@ -43,15 +52,18 @@ class PaymentProvider(models.Model):
         groups="base.group_system",
     )
     razorpay_refresh_token = fields.Char(
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         groups="base.group_system",
     )
     razorpay_public_token = fields.Char(
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         groups="base.group_system",
     )
     razorpay_access_token = fields.Char(
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         groups="base.group_system",
     )
     razorpay_access_token_expiry = fields.Datetime(

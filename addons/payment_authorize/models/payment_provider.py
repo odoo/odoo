@@ -14,6 +14,10 @@ _logger = get_payment_logger(__name__)
 
 class PaymentProvider(models.Model):
     _inherit = "payment.provider"
+    _CREDENTIAL_FIELDS = {
+        "authorize_transaction_key": "authorize_transaction_key",
+        "authorize_signature_key": "authorize_signature_key",
+    }
 
     code = fields.Selection(
         selection_add=[("authorize", "Authorize.Net")],
@@ -27,13 +31,15 @@ class PaymentProvider(models.Model):
     )
     authorize_transaction_key = fields.Char(
         string="API Transaction Key",
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         required_if_provider="authorize",
         groups="base.group_system",
     )
     authorize_signature_key = fields.Char(
         string="API Signature Key",
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         required_if_provider="authorize",
         groups="base.group_system",
     )

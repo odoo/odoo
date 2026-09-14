@@ -6,6 +6,9 @@ from .razorpay_pos_request import RazorpayPosRequest
 
 class PosPaymentMethod(models.Model):
     _inherit = "pos.payment.method"
+    _CREDENTIAL_FIELDS = {
+        "razorpay_api_key": "razorpay_api_key",
+    }
 
     razorpay_tid = fields.Char(
         string="Razorpay Device Serial No",
@@ -24,6 +27,9 @@ class PosPaymentMethod(models.Model):
     razorpay_username = fields.Char(help="Username(Device Login) \n ex: 1234500121")
     razorpay_api_key = fields.Char(
         string="Razorpay API Key",
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
+        copy=True,
         groups="point_of_sale.group_pos_manager",
         help="Used when connecting to Razorpay: https://razorpay.com/docs/payments/dashboard/account-settings/api-keys/",
     )

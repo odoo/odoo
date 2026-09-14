@@ -14,6 +14,9 @@ from odoo.addons.payment_iyzico import const
 
 class PaymentProvider(models.Model):
     _inherit = "payment.provider"
+    _CREDENTIAL_FIELDS = {
+        "iyzico_key_secret": "iyzico_key_secret",
+    }
 
     code = fields.Selection(
         selection_add=[("iyzico", "Iyzico")],
@@ -26,7 +29,8 @@ class PaymentProvider(models.Model):
     )
     iyzico_key_secret = fields.Char(
         string="Iyzico Secret Key",
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         required_if_provider="iyzico",
         groups="base.group_system",
     )

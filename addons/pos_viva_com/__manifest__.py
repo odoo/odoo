@@ -1,6 +1,6 @@
 {
     "name": "PoS Viva.com",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Sales/Point of Sale",
     "sequence": 7,
     "summary": "Integrate your PoS with a Viva.com payment terminal",

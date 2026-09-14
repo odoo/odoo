@@ -14,6 +14,9 @@ UNPREDICTABLE_ADYEN_DATA = object()  # sentinel
 
 class PosPaymentMethod(models.Model):
     _inherit = "pos.payment.method"
+    _CREDENTIAL_FIELDS = {
+        "adyen_api_key": "adyen_api_key",
+    }
 
     def _selection_payment_terminals(self):
         return super()._selection_payment_terminals() + [("adyen", "Adyen")]
@@ -21,7 +24,8 @@ class PosPaymentMethod(models.Model):
     # Adyen
     adyen_api_key = fields.Char(
         string="Adyen API key",
-        copy=False,
+        compute="_compute_credential_doors",
+        inverse="_inverse_credential_doors",
         groups="base.group_erp_manager",
         help="Used when connecting to Adyen: https://docs.adyen.com/user-management/how-to-get-the-api-key/#description",
     )

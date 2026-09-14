@@ -1,5 +1,6 @@
 {
     "name": "PoS DPO Pay",
+    "version": "1.1",
     "category": "Sales/Point of Sale",
     "sequence": 6,
     "summary": "Integrate your POS with DPO payment terminal.",
