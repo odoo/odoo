@@ -153,3 +153,19 @@ class TestMigration13(SkillsCase):
             "child_of",
             self.env.ref("hr_skills.hr_employee_skill_report_manager").domain_force,
         )
+
+    def test_open_certification_reminders_are_linked_by_their_summary(self):
+        employee = self.env["hr.employee"].create({"name": "Reminded"})
+        reminder, stranger = employee.activity_schedule(
+            act_type_xmlid="hr_skills.mail_activity_data_upload_certification",
+            summary="Conservatory: Certified",
+        ) | employee.activity_schedule(
+            act_type_xmlid="hr_skills.mail_activity_data_upload_certification",
+            summary="Something else",
+        )
+        self.migration._link_certification_reminders(self.env)
+        self.assertEqual(
+            (reminder.certification_skill_id, reminder.certification_skill_level_id),
+            (self.certification, self.level_certified),
+        )
+        self.assertFalse(stranger.certification_skill_id)

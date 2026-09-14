@@ -1,4 +1,5 @@
 import logging
+from collections import defaultdict
 from pathlib import Path
 
 from lxml import etree
@@ -138,6 +139,57 @@ def _repair_overlapping_rows(env):
     return repaired
 
 
+def _link_certification_reminders(env):
+    activity_type = env.ref(
+        "hr_skills.mail_activity_data_upload_certification", raise_if_not_found=False
+    )
+    if not activity_type:
+        return {}
+    activities = (
+        env["mail.activity"]
+        .with_context(active_test=False)
+        .search(
+            [
+                ("activity_type_id", "=", activity_type.id),
+                ("res_model", "=", "hr.employee"),
+                ("certification_skill_id", "=", False),
+            ]
+        )
+    )
+    if not activities:
+        return {}
+    levels = env["hr.skill.level"].search(
+        [("skill_type_id.is_certification", "=", True)]
+    )
+    requirement_by_summary = {}
+    for lang in {"en_US", *env.registry.locale.installed_langs(env)}:
+        for level in levels.with_context(lang=lang):
+            for skill in level.skill_type_id.skill_ids.with_context(lang=lang):
+                requirement_by_summary.setdefault(
+                    f"{skill.name}: {level.name}", (skill.id, level.id)
+                )
+    linked = defaultdict(lambda: env["mail.activity"])
+    for activity in activities:
+        if requirement := requirement_by_summary.get(activity.summary):
+            linked[requirement] |= activity
+    for (skill_id, level_id), matched in linked.items():
+        matched.write(
+            {
+                "certification_skill_id": skill_id,
+                "certification_skill_level_id": level_id,
+            }
+        )
+    unmatched = activities - env["mail.activity"].union(*linked.values())
+    _logger.warning(
+        "hr_skills 1.3: linked %s certification reminders to their requirement, "
+        "left %s unmatched: %s",
+        len(activities) - len(unmatched),
+        len(unmatched),
+        unmatched.ids,
+    )
+    return linked
+
+
 def migrate(cr, version):
     if not version:
         return
@@ -145,3 +197,4 @@ def migrate(cr, version):
     _rewrite_rules(env)
     _normalize_resume_urls(cr)
     _repair_overlapping_rows(env)
+    _link_certification_reminders(env)

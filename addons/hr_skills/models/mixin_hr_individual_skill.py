@@ -389,7 +389,7 @@ class MixinHrIndividualSkill(models.AbstractModel):
                 skill_levels.filtered("default_level")[:1] or skill_levels[:1]
             )
 
-    @api.depends("skill_id", "skill_level_id")
+    @api.depends("skill_id.name", "skill_level_id.name")
     def _compute_display_name(self):
         for individual_skill in self:
             individual_skill.display_name = f"{individual_skill.skill_id.name}: {individual_skill.skill_level_id.name}"

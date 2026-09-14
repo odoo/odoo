@@ -410,3 +410,23 @@ class TestCertificationActivities(TransactionCase):
         )
         activities = self._own_activities(employee_2)
         self.assertFalse(activities)
+
+    def test_a_reminder_names_the_requirement_it_is_for(self):
+        activities = self._own_activities()
+        self.assertEqual(
+            {
+                (activity.certification_skill_id, activity.certification_skill_level_id)
+                for activity in activities
+            },
+            {
+                (self.t_cert_1, self.t_cert_level_1),
+                (self.t_cert_2, self.t_cert_level_2),
+            },
+        )
+
+    def test_renaming_a_certification_does_not_repeat_its_reminder(self):
+        self.assertEqual(len(self._own_activities()), 2)
+        self.t_cert_1.name = "Certification 1 (renamed)"
+        self.t_cert_level_2.name = "Fully Certified (renamed)"
+        self.env.invalidate_all()
+        self.assertFalse(self._own_activities())

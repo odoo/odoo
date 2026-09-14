@@ -119,7 +119,11 @@ class HrEmployee(models.Model):
             "hr_skills.mail_activity_data_upload_certification"
         )
         existing_activity_keys = {
-            (activity.res_id, activity.summary)
+            (
+                activity.res_id,
+                activity.certification_skill_id,
+                activity.certification_skill_level_id,
+            )
             for activity in self.env["mail.activity"].search(
                 Domain("activity_type_id", "=", activity_type.id)
                 & Domain("res_model", "=", "hr.employee")
@@ -142,8 +146,11 @@ class HrEmployee(models.Model):
             if not responsible:
                 continue
             for requirement in requirements_by_job.get(employee.job_id, ()):
-                summary = requirement.display_name
-                if (employee.id, summary) in existing_activity_keys:
+                if (
+                    employee.id,
+                    requirement.skill_id,
+                    requirement.skill_level_id,
+                ) in existing_activity_keys:
                     continue
                 qualifying = certifications.get(
                     (employee, requirement.skill_id), self.env["hr.employee.skill"]
@@ -165,16 +172,25 @@ class HrEmployee(models.Model):
                     ),
                     default=today,
                 )
-                to_schedule[(summary, deadline, responsible)] |= employee
+                to_schedule[
+                    (
+                        requirement.skill_id,
+                        requirement.skill_level_id,
+                        deadline,
+                        responsible,
+                    )
+                ] |= employee
 
         note = self.env._("Certification missing or expiring soon")
-        for (summary, deadline, responsible), group in to_schedule.items():
+        for (skill, level, deadline, responsible), group in to_schedule.items():
             activities += group.activity_schedule(
                 act_type_xmlid="hr_skills.mail_activity_data_upload_certification",
-                summary=summary,
+                summary=f"{skill.name}: {level.name}",
                 note=note,
                 date_deadline=deadline,
                 user_id=responsible.id,
+                certification_skill_id=skill.id,
+                certification_skill_level_id=level.id,
             )
         return activities
 
