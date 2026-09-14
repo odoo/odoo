@@ -382,26 +382,30 @@ class TestAllocations(TestHrHolidaysCommon):
 
         self.assertEqual(employee_allocation.name, "Custom Time Off Test (10.0 day(s))")
 
-    def change_allocation_type_day(self):
+    def test_a_day_allocation_returning_from_accrual_asks_for_one_day(self):
+        """`_onchange_allocation_type` empties an allocation turned into an
+        accrual one, and offers a day back when it is turned into a regular one
+        with nothing in it.
+
+        Was `change_allocation_type_day`, which the runner never collected: the
+        name did not start with `test`, it wrote a `holiday_type` this model has
+        not had for some time, and it moved `allocation_type` through "extra",
+        which is not one of its two values.
+        """
         self.leave_type.write(
             {"name": "Custom Time Off Test", "allocation_validation_type": "hr"}
         )
 
-        employee_allocation = self.env["hr.leave.allocation"].create(
-            {
-                "holiday_type": "employee",
-                "employee_id": self.employee.id,
-                "holiday_status_id": self.leave_type.id,
-                "allocation_type": "regular",
-            }
-        )
-
         with Form(
-            employee_allocation.with_context(is_employee_allocation=True),
-            "hr_holidays.hr_leave_allocation_view_form_dashboard",
+            self.env["hr.leave.allocation"],
+            "hr_holidays.hr_leave_allocation_view_form_manager",
         ) as allocation:
-            allocation.allocation_type = "extra"
+            allocation.employee_id = self.employee
+            allocation.holiday_status_id = self.leave_type
+            allocation.allocation_type = "accrual"
+            self.assertEqual(allocation.number_of_days, 0.0)
             allocation.allocation_type = "regular"
+            self.assertEqual(allocation.number_of_days, 1.0)
             employee_allocation = allocation.save()
 
         self.assertEqual(employee_allocation.number_of_days, 1.0)
@@ -442,27 +446,32 @@ class TestAllocations(TestHrHolidaysCommon):
         self.assertEqual(employee_allocation.number_of_hours_display, 10)
         self.assertEqual(employee_emp_allocation.number_of_hours_display, 10)
 
-    def change_allocation_type_hours(self):
-        self.leave_type.write(
-            {"name": "Custom Time Off Test", "allocation_validation_type": "hr"}
-        )
+    def test_an_hour_allocation_returning_from_accrual_asks_for_one_day(self):
+        """The same, for a type requested in hours.
 
-        employee_allocation = self.env["hr.leave.allocation"].create(
+        Was `change_allocation_type_hours`, dead for the same three reasons, and
+        additionally setting `type_request_unit` in `create` -- a compute with
+        no writable side, so the unit has to come from the leave type.
+        """
+        self.leave_type.write(
             {
-                "holiday_type": "employee",
-                "employee_id": self.employee.id,
-                "holiday_status_id": self.leave_type.id,
-                "allocation_type": "regular",
-                "type_request_unit": "hour",
+                "name": "Custom Time Off Test",
+                "allocation_validation_type": "hr",
+                "request_unit": "hour",
             }
         )
 
         with Form(
-            employee_allocation.with_context(is_employee_allocation=True),
-            "hr_holidays.hr_leave_allocation_view_form_dashboard",
+            self.env["hr.leave.allocation"],
+            "hr_holidays.hr_leave_allocation_view_form_manager",
         ) as allocation:
-            allocation.allocation_type = "extra"
+            allocation.employee_id = self.employee
+            allocation.holiday_status_id = self.leave_type
+            self.assertEqual(allocation.type_request_unit, "hour")
+            allocation.allocation_type = "accrual"
+            self.assertEqual(allocation.number_of_days, 0.0)
             allocation.allocation_type = "regular"
+            self.assertEqual(allocation.number_of_days, 1.0)
             employee_allocation = allocation.save()
 
         self.assertEqual(employee_allocation.number_of_days, 1.0)
