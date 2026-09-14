@@ -1,6 +1,7 @@
 from . import base_document_layout
 from . import home_menu_badge
 from . import ir_asset
+from . import ir_exports
 from . import ir_http
 from . import ir_model
 from . import ir_qweb_fields

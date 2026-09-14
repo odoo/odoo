@@ -203,7 +203,7 @@ set. A change is only verified once both have run.
 | `web_assets` | test_assets, test_design_system, test_esm_pipeline, test_web_bundle_size | Bundle generation, asset cursors, compiled-CSS invariants (incl. `web.assets_frontend`, which no other test compiles) |
 | `web_db` | test_db_manager | Database manager UI |
 | `web_domain` | test_domain | Domain validation endpoint |
-| `web_export` | test_export | Export endpoints (XLSX/CSV writers) |
+| `web_export` | test_export, test_ir_exports | Export endpoints (XLSX/CSV writers), export preset access |
 | `web_favorite` | test_favorite | Favorite management tour |
 | `web_health` | test_health | /web/health endpoint |
 | `web_image` | test_image | Image serving, resize, access tokens |

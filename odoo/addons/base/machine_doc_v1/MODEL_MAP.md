@@ -925,22 +925,6 @@ Saved search filters.
 - `get_filters(model, action_id, embedded_action_id, ...)` — Retrieve user's filters
 - `create_filter(vals)` — Create filter with validation
 
-### models/ir_exports.py
-
-#### IrExports — `ir.exports` (`_name`)
-
-Saved export field presets.
-
-**Fields:**
-- `name` (Char), `resource` (Char, indexed)
-- `export_fields` (One2many → ir.exports.line)
-
-#### IrExportsLine — `ir.exports.line` (`_name`)
-
-**Fields:** `name` (Char), `export_id` (Many2one → ir.exports, cascade)
-
----
-
 ## HTTP and Routing
 
 ### models/ir_http.py
@@ -1982,7 +1966,6 @@ Quick lookup — file → model → primary role:
 | `ir_demo.py` | ir.demo | Demo data installation |
 | `ir_demo_failure.py` | ir.demo_failure, .demo_failure.wizard | Demo failure tracking |
 | `ir_actions_embedded.py` | ir.embedded.actions | Embedded view actions |
-| `ir_exports.py` | ir.exports, ir.exports.line | Export presets |
 | `ir_fields.py` | ir.fields.converter | Import type converters |
 | `ir_filters.py` | ir.filters | Saved search filters |
 | `ir_job.py` | ir.job, ir.job.channel | Background job queue + channels |

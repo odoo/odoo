@@ -1543,7 +1543,7 @@ assert_eq "MODEL_MAP Fields lists name every field on those models" \
 # reads as nothing missing. Pin the section count so a heading rename that
 # silently drops a model out of scope fails instead of passing.
 assert_eq "MODEL_MAP field gate actually scanned its models" \
-    "${field_scanned:-PARSE_FAILED}" "7"
+    "${field_scanned:-PARSE_FAILED}" "8"
 
 # 35. Module faces. The count is a filesystem property (a directory with a
 #     sibling <name>.js), so derive it; the doc said 38 against a real 39,

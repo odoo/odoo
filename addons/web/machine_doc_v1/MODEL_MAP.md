@@ -268,6 +268,18 @@ Model is **defined upstream in `base`**; web only extends it. The `ir.model.acce
 **Key Methods:**
 - `get_properties_base_definition(model_name, field_name)` — `@api.model`. ACL-checked retrieval of property field definitions. Returns the `web_search_read` result **dict** (`{"length", "records"}`) on `properties.base.definition` — annotated `-> dict[str, Any]`; a singular dict, not a list.
 
+## Export Presets
+
+### models/ir_exports.py — IrExports (`_name = 'ir.exports'`), IrExportsLine (`_name = 'ir.exports.line'`)
+
+Saved export field lists, read and written by the export dialog through
+`controllers/export.py`. Moved here from `base` at web 2.2: `base` never read
+them, and the two access rows (`base.group_allow_export`) are the only security.
+
+**Fields:**
+- `ir.exports`: `name` (Char), `resource` (Char, indexed), `export_fields` (One2many → ir.exports.line, `copy=True`)
+- `ir.exports.line`: `name` (Char), `export_id` (Many2one → ir.exports, cascade)
+
 ## Config
 
 ### models/res_config_settings.py — ResConfigSettings (`_inherit`, TransientModel)
@@ -423,6 +435,7 @@ Quick lookup — file → model → primary role:
 | `ir_model.py` | ir.model | Model schema introspection |
 | `ir_qweb_fields.py` | ir.qweb.field.image + ir.qweb.field.image_url | QWeb image rendering (2 classes: `IrQwebFieldImage`, `IrQwebFieldImage_Url`) |
 | `ir_asset.py` | ir.asset | HOOT `&module_scope=` bundle narrowing |
+| `ir_exports.py` | ir.exports + ir.exports.line | Export dialog presets (saved field lists) |
 | `res_users.py` | res.users | User search priority, bootstrap hook |
 | `home_menu_badge.py` | home.menu.badge | App launcher tile counts (abstract; addons extend `_get_badges`) |
 | `res_users_settings.py` | res.users.settings | UI density, embedded actions |

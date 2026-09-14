@@ -18,6 +18,7 @@ from . import test_fontawesome
 from . import test_health
 from . import test_image
 from . import test_ir_asset_scope
+from . import test_ir_exports
 from . import test_ir_model
 from . import test_ir_qweb
 from . import test_ir_qweb_fields

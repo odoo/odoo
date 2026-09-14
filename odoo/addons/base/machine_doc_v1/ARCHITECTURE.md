@@ -70,7 +70,7 @@ access control, and ORM extensions that those controllers depend on.
 odoo/addons/base/
 ├── __manifest__.py              # Module metadata + asset/data file declarations
 ├── __init__.py                  # Imports models, report, wizard + post_init hook
-├── models/                      # 105 Python model files (core ORM infrastructure)
+├── models/                      # 104 Python model files (core ORM infrastructure)
 │   ├── assetsbundle/            #   Asset compilation package (bundle, JS/CSS/XML pipelines, store)
 │   ├── decimal_precision.py         #   Configurable decimal precision
 │   ├── ir_actions_act_url.py        #   URL action
@@ -97,7 +97,6 @@ odoo/addons/base/
 │   ├── ir_default.py                #   Default field values (per-user, per-company)
 │   ├── ir_demo.py                   #   Demo data installation
 │   ├── ir_demo_failure.py           #   Demo data failure tracking
-│   ├── ir_exports.py                #   Export presets (saved field lists)
 │   ├── ir_fields.py                 #   Import field type converters
 │   ├── ir_filters.py                #   Saved search filters
 │   ├── ir_http.py                   #   HTTP routing, auth, dispatch, translations
@@ -224,7 +223,7 @@ registry, access control, UI framework, scheduling, and module system.
 | Storage | ir.attachment | File storage (DB or filestore) |
 | Streaming | ir.binary | File/image download helpers |
 | Sequences | ir.sequence, ir.sequence.date_range | Auto-incrementing sequences |
-| Configuration | ir.config_parameter, ir.default, ir.filters, ir.exports | System params, defaults, saved filters |
+| Configuration | ir.config_parameter, ir.default, ir.filters | System params, defaults, saved filters |
 | Module System | ir.module.module, ir.module.category | Module lifecycle management |
 | HTTP | ir.http | Routing, auth dispatch, translations |
 | Logging | ir.logging, ir.profile | Server logs, code profiling |
@@ -278,7 +277,7 @@ Derived by `factcheck.sh`, which re-measures every row against the tree.
 
 | Category | Count |
 |----------|-------|
-| Python (models) | 105 |
+| Python (models) | 104 |
 | Python (wizards) | 11 |
 | Python (tests) | 138 |
 | XML (views) | 37 |

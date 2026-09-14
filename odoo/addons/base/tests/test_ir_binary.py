@@ -107,12 +107,12 @@ class TestIrBinaryFindRecordAccess(TransactionCaseWithUserDemo):
         )
 
     def test_no_read_access_falls_through_and_raises(self):
-        export_group = self.env.ref("base.group_allow_export")
-        self.user_demo.write({"group_ids": [Command.unlink(export_group.id)]})
-        preset = self.env["ir.exports"].create({"name": "preset", "resource": "x"})
+        parameter = self.env["ir.config_parameter"].create(
+            {"key": "test.ir_binary.no_read", "value": "x"}
+        )
         with self.assertRaises(AccessError):
             self.env["ir.binary"].with_user(self.user_demo)._get_record(
-                res_model="ir.exports", res_id=preset.id
+                res_model="ir.config_parameter", res_id=parameter.id
             )
 
 

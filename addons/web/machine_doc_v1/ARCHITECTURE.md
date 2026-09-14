@@ -77,11 +77,11 @@ Top-level layout of `addons/web/` (detailed maps are separate docs):
 | Path | Contents | Map |
 |------|----------|-----|
 | `controllers/` | 24 `.py` — HTTP endpoints (22 Controller classes, 76 route handlers) | `ROUTE_MAP.md` |
-| `models/` | 25 `.py` — ORM extensions (24 model classes: web_read, web_read_group, ir_http, …) | `MODEL_MAP.md` |
+| `models/` | 26 `.py` — ORM extensions (25 model files: web_read, web_read_group, ir_http, …) | `MODEL_MAP.md` |
 | `static/src/` | 871 JavaScript/OWL source files across 249 directories (FSD layers) | `DIRECTORY_MAP.md` |
 | `static/lib/` | 18 directories (17 vendored libraries + generated `popper_compat/`) — DO NOT MODIFY | `static/lib/versions.json` |
 | `static/tests/` | 810 `.js` (incl. 744 `*.test.js` Hoot suites), mirroring the `static/src/` tree | `TEST_TAGS.md` |
-| `tests/` | 62 Python test files (`test_*.py`) | `TEST_TAGS.md` |
+| `tests/` | 63 Python test files (`test_*.py`) | `TEST_TAGS.md` |
 | `machine_doc_v1/` | This directory: `COMPONENT_DIAGRAM.md` (18 audit areas) · `FLOW_DIAGRAM.md` (14 sequence diagrams) · `LAZY_VIEW_LOADING.md` · `VIEW_TEARDOWN_COST.md` (both decision records: investigated, not pursued) · `LIST_EDIT_RENDER_COST.md` (decision record: row-level waste fixed, renderer-level amplification measured and not pursued) · the maps below · `factcheck.sh` | — |
 | `views/` · `data/` · `security/` · `i18n/` | XML templates, data fixtures, `ir.model.access.csv`, translations | — |
 
@@ -484,8 +484,8 @@ an in-tree fork; only `hoot` and `hoot-dom` are internal, versioned with the for
 | Category | Count |
 |----------|-------|
 | Python (controllers) | 24 (22 Controller classes across 20 route-bearing files + `__init__.py`, `export_writers.py`, `json_helpers.py`, `utils.py`) |
-| Python (models) | 25 (24 model files + `__init__.py`) |
-| Python (tests) | 62 (`test_*.py`; 63 files incl. `__init__.py`) |
+| Python (models) | 26 (25 model files + `__init__.py`) |
+| Python (tests) | 63 (`test_*.py`; 64 files incl. `__init__.py`) |
 | JavaScript (src) | 871 (869 carry `@ts-check`; `module_loader.js` + `service_worker.js` are the two exclusions) |
 | JavaScript (tests) | 810 (incl. 744 `*.test.js` Hoot suites) |
 | JavaScript (vendored libs) | 94 |

@@ -38,25 +38,33 @@ class TestCopyDataContract(TransactionCase):
         for partner, vals in zip(partners, vals_list, strict=True):
             self.assertIn(partner.name, vals["name"])
 
-    def _make_export(self, name):
-        return self.env["ir.exports"].create(
+    def _make_group(self, name):
+        return self.env["res.groups"].create(
             {
                 "name": name,
-                "resource": "res.partner",
-                "export_fields": [(0, 0, {"name": "name"})],
+                "model_access": [
+                    (
+                        0,
+                        0,
+                        {
+                            "name": name,
+                            "model_id": self.env["ir.model"]._get_id("res.partner"),
+                        },
+                    )
+                ],
             }
         )
 
     def test_already_copied_o2m_lines_never_reach_the_child_copy_data(self):
-        export = self._make_export("Copy Export")
-        line = export.export_fields
+        group = self._make_group("Copy Group")
+        line = group.model_access
         self.assertTrue(line, "the fixture needs a copied one2many line")
 
         seen = defaultdict(set)
-        seen["ir.exports.line"].add(line.id)
+        seen["ir.model.access"].add(line.id)
 
         received = []
-        line_cls = type(self.env["ir.exports.line"])
+        line_cls = type(self.env["ir.model.access"])
         original = line_cls.copy_data
 
         def spy(records, default=None):
@@ -64,19 +72,19 @@ class TestCopyDataContract(TransactionCase):
             return original(records, default)
 
         self.patch(line_cls, "copy_data", spy)
-        vals_list = export.with_context(__copy_data_seen=seen).copy_data()
+        vals_list = group.with_context(__copy_data_seen=seen).copy_data()
 
         self.assertNotIn(
             (line.id,),
             received,
             "an already-copied line must not be passed to the child copy_data",
         )
-        self.assertEqual(vals_list[0].get("export_fields", []), [])
+        self.assertEqual(vals_list[0].get("model_access", []), [])
         self.assertTrue(all(vals is not None for vals in vals_list))
 
     def test_normal_o2m_lines_are_still_copied(self):
-        export = self._make_export("Copy Export Kept")
-        copy = export.copy()
-        self.assertEqual(len(copy.export_fields), 1)
-        self.assertEqual(copy.export_fields.name, "name")
-        self.assertNotEqual(copy.export_fields, export.export_fields)
+        group = self._make_group("Copy Group Kept")
+        copy = group.copy()
+        self.assertEqual(len(copy.model_access), 1)
+        self.assertEqual(copy.model_access.name, "Copy Group Kept")
+        self.assertNotEqual(copy.model_access, group.model_access)
