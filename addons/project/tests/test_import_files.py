@@ -31,7 +31,13 @@ class TestImportFiles(TransactionCase):
             },
         )
         self.assertIsNone(result.get("error"))
-        field_names = ["/".join(v) for v in result["matches"].values()]
+        field_names = [
+            "/".join(result["matches"][index]) if index in result["matches"] else False
+            for index in range(len(result["headers"]))
+        ]
+        self.assertNotIn(
+            False, field_names, "every column of the template matches a field"
+        )
         results = import_wizard.execute_import(
             field_names,
             [r.lower() for r in result["headers"]],
