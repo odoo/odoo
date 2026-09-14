@@ -1,6 +1,6 @@
 {
     "name": "Sales Teams",
-    "version": "1.8",
+    "version": "1.9",
     "category": "Sales/Sales",
     "summary": "Sales Teams",
     "description": """

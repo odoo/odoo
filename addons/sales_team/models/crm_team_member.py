@@ -1,5 +1,8 @@
-from odoo import _, api, exceptions, fields, models
+from odoo import Command, _, api, exceptions, fields, models
 from odoo.fields import NEGATIVE_CONDITION_OPERATORS, Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class CrmTeamMember(models.Model):
@@ -12,12 +15,10 @@ class CrmTeamMember(models.Model):
     crm_team_id = fields.Many2one(
         comodel_name="crm.team",
         string="Sales Team",
-        default=False,
         index=True,
         required=True,
         group_expand="_read_group_expand_full",
         ondelete="cascade",
-        check_company=False,
     )
     user_id = fields.Many2one(
         comodel_name="res.users",
@@ -41,14 +42,10 @@ class CrmTeamMember(models.Model):
     image_1920 = fields.Image(
         related="user_id.image_1920",
         string="Image",
-        max_width=1920,
-        max_height=1920,
     )
     image_128 = fields.Image(
         related="user_id.image_128",
         string="Image (128)",
-        max_width=128,
-        max_height=128,
     )
     name = fields.Char(
         related="user_id.display_name",
@@ -103,18 +100,7 @@ class CrmTeamMember(models.Model):
 
     @api.constrains("crm_team_id", "user_id", "active")
     def _constrains_company_membership(self):
-        for membership in self.filtered(
-            lambda m: m.active and m.crm_team_id.company_id
-        ):
-            if membership.crm_team_id.company_id not in membership.user_id.company_ids:
-                raise exceptions.ValidationError(
-                    _(
-                        "User '%(user)s' is not allowed in the company '%(company)s' of the Sales Team '%(team)s'.",
-                        user=membership.user_id.name,
-                        company=membership.crm_team_id.company_id.display_name,
-                        team=membership.crm_team_id.name,
-                    )
-                )
+        self._check_company_membership()
 
     @api.constrains("crm_team_id", "user_id", "active")
     def _constrains_live_endpoints(self):
@@ -139,14 +125,18 @@ class CrmTeamMember(models.Model):
         memberships = super(
             CrmTeamMember, self.with_context(mail_create_nosubscribe=True)
         ).create(vals_list)
-        memberships._enforce_mono_membership()
-        memberships._add_to_team_favorites()
+        memberships._on_membership_changed()
         return memberships
 
     def write(self, vals):
         res = super().write(vals)
-        if vals.get("active") or "user_id" in vals or "crm_team_id" in vals:
-            self._enforce_mono_membership()
+        if vals.keys() & {"active", "user_id", "crm_team_id"}:
+            self._on_membership_changed()
+        return res
+
+    def unlink(self):
+        res = super().unlink()
+        self._clear_membership_dependent_caches()
         return res
 
     @api.depends("crm_team_id", "crm_team_id.company_id")
@@ -184,27 +174,23 @@ class CrmTeamMember(models.Model):
             return NotImplemented
 
         live = Domain("active", "=", True)
-        empty = Domain(membership_field, "not any!", live)
-
-        if value is False:
-            return empty
-
-        if operator == "in":
-            targets = [
-                target for target in value if target is not False and target is not None
-            ]
-            if not targets:
-                return empty
-            some = Domain(
-                membership_field, "any!", live & Domain(target_field, "in", targets)
+        if operator != "in":
+            return Domain(
+                membership_field, "any!", live & Domain(target_field, operator, value)
             )
-            if len(targets) == len(value):
-                return some
-            return empty | some
 
-        return Domain(
-            membership_field, "any!", live & Domain(target_field, operator, value)
+        targets = [target for target in value if target]
+        some = (
+            Domain(membership_field, "any!", live & Domain(target_field, "in", targets))
+            if targets
+            else Domain.FALSE
         )
+        empty = (
+            Domain(membership_field, "not any!", live)
+            if False in value
+            else Domain.FALSE
+        )
+        return empty | some
 
     @api.model
     def _get_live_teams_by_user(self, users):
@@ -225,21 +211,47 @@ class CrmTeamMember(models.Model):
             team_names=", ".join(teams.mapped("name")),
         )
 
-    def _add_to_team_favorites(self):
-        users_by_team = {}
-        for membership in self:
-            users_by_team.setdefault(membership.crm_team_id, []).append(
-                membership.user_id.id
+    def _check_company_membership(self):
+        foreign = self.filtered(
+            lambda m: (
+                m.active
+                and m.crm_team_id.company_id
+                and m.crm_team_id.company_id not in m.user_id.company_ids
             )
-        for team, user_ids in users_by_team.items():
-            team.favorite_user_ids = [(4, user_id) for user_id in user_ids]
+        )
+        if not foreign:
+            return
+        team = foreign.crm_team_id[:1]
+        raise exceptions.ValidationError(
+            _(
+                "The following team members are not allowed in company '%(company)s' of the Sales Team '%(team)s': %(users)s",
+                company=team.company_id.display_name,
+                team=team.name,
+                users=", ".join(
+                    foreign.filtered(lambda m: m.crm_team_id == team).user_id.mapped(
+                        "name"
+                    )
+                ),
+            )
+        )
+
+    def _on_membership_changed(self):
+        self._enforce_mono_membership()
+        self._add_to_team_favorites()
+        self._clear_membership_dependent_caches()
+
+    def _add_to_team_favorites(self):
+        for team, memberships in self.filtered("active").grouped("crm_team_id").items():
+            team.favorite_user_ids = [
+                Command.link(user_id) for user_id in memberships.user_id.ids
+            ]
 
     def _enforce_mono_membership(self):
         if self.env["crm.team"]._is_membership_multi():
-            return self.browse()
+            return
         winners = {member.user_id.id: member for member in self.filtered("active")}
         if not winners:
-            return self.browse()
+            return
 
         obsolete = (
             self.sudo()
@@ -253,5 +265,9 @@ class CrmTeamMember(models.Model):
             .filtered(lambda m: m.crm_team_id != winners[m.user_id.id].crm_team_id)
         )
         if obsolete:
+            _debug.logic("mono_membership_evicted", winners=self, evicted=obsolete)
             obsolete.action_archive()
-        return obsolete
+
+    def _clear_membership_dependent_caches(self):
+        _debug.logic("membership_caches_cleared", memberships=self)
+        self.env.registry.clear_cache()

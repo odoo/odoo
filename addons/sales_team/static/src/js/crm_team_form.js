@@ -37,10 +37,19 @@ class CrmTeamFormController extends FormController {
             );
             return false;
         }
-        // reload so `is_membership_multi` recomputes and the banner disappears on
-        // its own -- hiding the alert by hand left the record stale and the class
-        // was dropped by the next render anyway
-        await this.model.root.load();
+        const record = this.model.root;
+        if (record.isNew || (await record.isDirty())) {
+            // the banner is raised by the very edit that is still unsaved:
+            // reloading would discard it, and saving first would evict the
+            // salesperson from their other team before the option is on
+            const changes = { member_warning: false };
+            if ("is_membership_multi" in record.fields) {
+                changes.is_membership_multi = true;
+            }
+            await record.update(changes);
+        } else {
+            await record.load();
+        }
         return false;
     }
 }

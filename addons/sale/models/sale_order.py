@@ -459,7 +459,7 @@ class SaleOrder(models.Model):
             order = order.with_company(order.company_id)
             order.payment_term_id = order.partner_id.property_payment_term_id
 
-    @api.depends("user_id")
+    @api.depends("user_id", "company_id")
     def _compute_team_id(self):
         cached_teams = {}
         for order in self:

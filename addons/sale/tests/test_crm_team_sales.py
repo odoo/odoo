@@ -87,3 +87,43 @@ class TestCrmTeamSales(TransactionCase):
 
         action = in_sales.action_primary_channel_button()
         self.assertEqual(action["type"], "ir.actions.act_window")
+
+
+@tagged("post_install", "-at_install")
+class TestOrderTeamFollowsCompany(TransactionCase):
+    def test_moving_an_order_to_another_company_moves_its_team(self):
+        company_main = self.env.company
+        company_2 = self.env["res.company"].create({"name": "Order Team Co2"})
+        self.env["crm.team"].search([]).action_archive()
+        team_main, team_2 = self.env["crm.team"].create(
+            [
+                {"name": "Main Team", "company_id": company_main.id},
+                {"name": "Co2 Team", "company_id": company_2.id},
+            ]
+        )
+        seller = self.env["res.users"].create(
+            {
+                "name": "Teamless Seller",
+                "login": "teamless_seller",
+                "company_id": company_main.id,
+                "company_ids": [Command.set((company_main | company_2).ids)],
+                "group_ids": [
+                    Command.link(
+                        self.env.ref("sales_team.group_sale_salesman_all_leads").id
+                    )
+                ],
+            }
+        )
+        partner = self.env["res.partner"].create({"name": "Order Team Customer"})
+        order = (
+            self.env["sale.order"]
+            .with_user(seller)
+            .with_company(company_main)
+            .create({"partner_id": partner.id, "user_id": seller.id})
+        )
+        self.assertEqual(order.team_id, team_main)
+
+        order.with_context(
+            allowed_company_ids=(company_2 | company_main).ids
+        ).company_id = company_2
+        self.assertEqual(order.sudo().team_id, team_2)

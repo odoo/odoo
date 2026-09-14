@@ -23,6 +23,7 @@ const ARCH = `<form js_class="crm_team_form">
         </button>
     </div>
     <sheet>
+        <field name="name"/>
         <field name="member_ids">
             <kanban>
                 <templates>
@@ -79,6 +80,33 @@ test("crm team form activate multi-team option via alert", async () => {
         ".alert button[name='crm_team_activate_multi_membership']",
     ).click();
     await contains(".alert:visible", { count: 0 });
+    expect.verifySteps(["action_activate_multi_membership"]);
+});
+
+test("crm team form keeps unsaved edits when activating the multi-team option", async () => {
+    const { pyEnv, teamIds } = await setupSharedMember();
+
+    onRpc("crm.team", "action_activate_multi_membership", () => {
+        expect.step("action_activate_multi_membership");
+        pyEnv["crm.team"].write(teamIds, { is_membership_multi: true });
+        return true;
+    });
+    onRpc("crm.team", "web_save", () => {
+        expect.step("web_save");
+    });
+
+    await start();
+    await openFormView("crm.team", teamIds[0], { arch: ARCH });
+    await contains(".alert:visible", { count: 1 });
+    await webContains(".o_field_widget[name='name'] input").edit("Renamed draft", {
+        confirm: false,
+    });
+
+    await webContains(
+        ".alert button[name='crm_team_activate_multi_membership']",
+    ).click();
+    await contains(".alert:visible", { count: 0 });
+    expect(".o_field_widget[name='name'] input").toHaveValue("Renamed draft");
     expect.verifySteps(["action_activate_multi_membership"]);
 });
 

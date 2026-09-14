@@ -39,7 +39,7 @@
                     <div
                         class="alert alert-info text-center d-flex flex-wrap justify-content-center gap-1"
                         role="alert"
-                        invisible="is_membership_multi or not member_warning">
+                        invisible="not member_warning">
                         <field name="member_warning" class="w-auto" />
                         <!-- The question and its button are one offer: only the button
                             carried the group, so everyone else was asked "Working in
@@ -79,10 +79,7 @@
                                 <field name="active" invisible="1" />
                                 <field name="sequence" invisible="1" />
                                 <field name="is_membership_multi" invisible="1" />
-                                <field
-                                    name="user_id"
-                                    widget="many2one_avatar_user"
-                                    domain="[('share', '=', False)]" />
+                                <field name="user_id" widget="many2one_avatar_user" />
                                 <field
                                     name="company_id"
                                     placeholder="Visible to all"
@@ -146,10 +143,7 @@
                     <field name="sequence" widget="handle" />
                     <field name="name" readonly="1" />
                     <field name="active" column_invisible="True" />
-                    <field
-                        name="user_id"
-                        widget="many2one_avatar_user"
-                        domain="[('share', '=', False)]" />
+                    <field name="user_id" widget="many2one_avatar_user" />
                     <field name="company_id" groups="base.group_multi_company" />
                 </list>
             </field>

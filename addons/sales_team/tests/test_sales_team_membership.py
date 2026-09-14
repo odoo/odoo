@@ -32,12 +32,6 @@ class TestMembership(TestSalesCommon):
         self.assertFalse(self.sales_team_1_m2.active)
 
     def test_leader_can_read_led_team(self):
-        leader_domain = (
-            "['|', ('user_id', '=', user.id), ('id', 'in', user.crm_team_ids.ids)]"
-        )
-        self.env.ref(
-            "sales_team.crm_rule_personal_salesteam"
-        ).domain_force = leader_domain
         salesman = self.user_sales_salesman
         led_team = self.env["crm.team"].create(
             {
@@ -142,7 +136,7 @@ class TestMembership(TestSalesCommon):
         )
         new_team_memberships = memberships.filtered(lambda m: m.crm_team_id == new_team)
         self.assertEqual(len(new_team_memberships), 2)
-        self.assertTrue(set(new_team_memberships.mapped("active")), {False, True})
+        self.assertEqual(set(new_team_memberships.mapped("active")), {False, True})
 
         with self.assertRaises(exceptions.UserError):
             self.env["crm.team.member"].create(

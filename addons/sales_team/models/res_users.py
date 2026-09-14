@@ -11,8 +11,6 @@ class ResUsers(models.Model):
         compute="_compute_crm_team_ids",
         search="_search_crm_team_ids",
         compute_sudo=True,
-        copy=False,
-        readonly=True,
     )
     crm_team_member_ids = fields.One2many(
         comodel_name="crm.team.member",
@@ -24,7 +22,6 @@ class ResUsers(models.Model):
         string="User Sales Team",
         compute="_compute_sale_team_id",
         store=True,
-        readonly=True,
         help="Main user sales team. Used notably for pipeline, or to set sales team in invoicing or subscription.",
     )
 
@@ -55,11 +52,7 @@ class ResUsers(models.Model):
 
         return domain
 
-    @api.depends(
-        "crm_team_member_ids.crm_team_id",
-        "crm_team_member_ids.create_date",
-        "crm_team_member_ids.active",
-    )
+    @api.depends("crm_team_member_ids.crm_team_id", "crm_team_member_ids.active")
     def _compute_sale_team_id(self):
         for user in self:
             memberships = user.crm_team_member_ids.filtered("active")
@@ -67,7 +60,7 @@ class ResUsers(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
-        if vals.get("active") is False:
+        if "active" in vals and not vals["active"]:
             self.env["crm.team.member"].sudo().search(
                 [("user_id", "in", self.ids)]
             ).action_archive()

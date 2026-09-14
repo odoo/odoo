@@ -1,8 +1,20 @@
 from odoo import exceptions
 from odoo.tests.common import users
+from odoo.tools.safe_eval import safe_eval
 
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.sales_team.tests.common import TestSalesCommon
+
+
+def _salesperson_domain(env, team_id, record_id):
+    return safe_eval(
+        env["crm.team.member"]._fields["user_id"].domain,
+        {
+            "crm_team_id": team_id,
+            "id": record_id,
+            "user_company_ids": env["res.company"].search([]).ids,
+        },
+    )
 
 
 class TestMembershipMultiParameter(TestSalesCommon):
@@ -881,28 +893,44 @@ class TestDefaultTeamFromContext(TestSalesCommon):
         )
         self.assertNotEqual(team.id, dangling_id)
 
-    def test_unreadable_context_team_is_still_honoured(self):
+    def test_foreign_company_context_team_is_not_proposed(self):
         salesman = self.user_sales_salesman
         other_company = self.env["res.company"].create({"name": "Ctx Other Co"})
-        hidden = self.env["crm.team"].create(
-            {"name": "Hidden", "company_id": other_company.id}
+        foreign = self.env["crm.team"].create(
+            {"name": "Foreign", "company_id": other_company.id}
         )
         self.env.flush_all()
-        self.assertFalse(
-            self.env["crm.team"]
-            .with_user(salesman)
-            .search_count([("id", "=", hidden.id)]),
-            "test setup: the team must be invisible",
-        )
 
         team = (
             self.env["crm.team"]
             .with_user(salesman)
-            .with_context(default_team_id=hidden.id)
+            .with_context(default_team_id=foreign.id)
             ._get_default_team_id()
         )
-        self.assertEqual(team, hidden)
-        self.assertFalse(team.env.su, "and it must not come back sudoed")
+        self.assertNotEqual(
+            team,
+            foreign,
+            "a team of a company the document cannot carry must not be proposed",
+        )
+        self.assertFalse(team.env.su, "and whatever comes back is not sudoed")
+
+    def test_context_team_outside_the_allowed_companies_is_not_proposed(self):
+        company_2 = self.env["res.company"].create({"name": "Ctx Allowed Co2"})
+        self.user_sales_salesman.write({"company_ids": [(4, company_2.id)]})
+        team_c2 = self.env["crm.team"].create(
+            {"name": "Team Co2", "company_id": company_2.id}
+        )
+        self.env.flush_all()
+
+        CrmTeam = self.env["crm.team"].with_user(self.user_sales_salesman)
+        allowed_c2 = CrmTeam.with_context(
+            default_team_id=team_c2.id, allowed_company_ids=[company_2.id]
+        )._get_default_team_id()
+        self.assertEqual(allowed_c2, team_c2)
+        allowed_main = CrmTeam.with_context(
+            default_team_id=team_c2.id, allowed_company_ids=[self.company_main.id]
+        )._get_default_team_id()
+        self.assertNotEqual(allowed_main, team_c2)
 
     def test_readable_context_team_still_wins(self):
         own = self.env["crm.team"].create(
@@ -921,6 +949,7 @@ class TestDefaultTeamFromContext(TestSalesCommon):
             ._get_default_team_id()
         )
         self.assertEqual(team, own)
+        self.assertFalse(team.env.su)
 
 
 class TestMembershipVisibility(TestSalesCommon):
@@ -1398,11 +1427,7 @@ class TestSalespersonDomain(TestSalesCommon):
         return self.env["res.users"].search(
             [
                 ("id", "in", (self.in_a | self.in_b | self.free | self.former).ids),
-                (
-                    "crm_team_member_ids",
-                    "not any",
-                    [("active", "=", True), ("crm_team_id", "=", team_id)],
-                ),
+                *_salesperson_domain(self.env, team_id, False),
             ]
         )
 
@@ -1643,19 +1668,9 @@ class TestSalespersonDomainSelfExclusion(TestSalesCommon):
         cls.env.flush_all()
 
     def _offered(self, record_id):
-        domain = [
-            ("share", "=", False),
-            (
-                "crm_team_member_ids",
-                "not any",
-                [
-                    ("active", "=", True),
-                    ("crm_team_id", "=", self.team.id),
-                    ("id", "!=", record_id),
-                ],
-            ),
-        ]
-        return self.env["res.users"].search(domain)
+        return self.env["res.users"].search(
+            _salesperson_domain(self.env, self.team.id, record_id)
+        )
 
     def test_the_saved_record_offers_its_own_salesperson(self):
         self.assertIn(self.member_user, self._offered(self.membership.id))
@@ -1737,3 +1752,184 @@ class TestDefaultTeamIgnoresArchived(TestSalesCommon):
                     ._get_default_team_id(),
                     live,
                 )
+
+
+class TestWarningFollowsTheParameter(TestSalesCommon):
+    def test_a_computed_warning_is_recomputed_when_mono_mode_returns(self):
+        ICP = self.env["ir.config_parameter"].sudo()
+        ICP.set_param("sales_team.membership_multi", True)
+        second = self.env["crm.team"].create(
+            {"name": "Flip Second", "company_id": False}
+        )
+        membership = self.env["crm.team.member"].create(
+            {"crm_team_id": second.id, "user_id": self.user_sales_leads.id}
+        )
+        self.assertFalse(self.sales_team_1.member_warning)
+        self.assertFalse(membership.member_warning)
+
+        ICP.set_param("sales_team.membership_multi", False)
+        self.assertIn("Flip Second", self.sales_team_1.member_warning or "")
+        self.assertIn(self.sales_team_1.name, membership.member_warning or "")
+
+        ICP.set_param("sales_team.membership_multi", True)
+        self.assertFalse(self.sales_team_1.member_warning)
+        self.assertFalse(membership.member_warning)
+
+
+class TestRosterVisibilityFollowsMembership(TestSalesCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env["ir.config_parameter"].sudo().set_param(
+            "sales_team.membership_multi", True
+        )
+        cls.salesman = mail_new_test_user(
+            cls.env,
+            login="roster_salesman",
+            name="Roster Salesman",
+            groups="sales_team.group_sale_salesman",
+        )
+        cls.stranger = mail_new_test_user(
+            cls.env, login="roster_stranger", name="Roster Stranger"
+        )
+        cls.team = cls.env["crm.team"].create({"name": "Roster", "company_id": False})
+        cls.roster = cls.env["crm.team.member"].create(
+            {"crm_team_id": cls.team.id, "user_id": cls.stranger.id}
+        )
+        cls.env.flush_all()
+
+    def _sees_roster(self):
+        self.env.flush_all()
+        readable = self.env["crm.team.member"].with_user(self.salesman).search([])
+        return self.roster in readable
+
+    def test_joining_and_leaving_a_team_is_seen_at_once(self):
+        self.assertFalse(self._sees_roster())
+
+        membership = self.env["crm.team.member"].create(
+            {"crm_team_id": self.team.id, "user_id": self.salesman.id}
+        )
+        self.assertTrue(self._sees_roster(), "a new member reads the roster")
+
+        membership.action_archive()
+        self.assertFalse(self._sees_roster(), "a former member no longer does")
+
+        membership.action_unarchive()
+        self.assertTrue(self._sees_roster())
+
+        membership.unlink()
+        self.assertFalse(self._sees_roster())
+
+    def test_moving_a_membership_is_seen_at_once(self):
+        elsewhere = self.env["crm.team"].create(
+            {"name": "Elsewhere", "company_id": False}
+        )
+        membership = self.env["crm.team.member"].create(
+            {"crm_team_id": elsewhere.id, "user_id": self.salesman.id}
+        )
+        self.assertFalse(self._sees_roster())
+
+        membership.write({"crm_team_id": self.team.id})
+        self.assertTrue(self._sees_roster())
+
+    def test_archiving_the_team_is_seen_at_once(self):
+        self.env["crm.team.member"].create(
+            {"crm_team_id": self.team.id, "user_id": self.salesman.id}
+        )
+        self.assertTrue(self._sees_roster())
+
+        self.team.action_archive()
+        self.assertFalse(self._sees_roster())
+
+
+class TestFavoriteOnEveryJoin(TestSalesCommon):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env["ir.config_parameter"].sudo().set_param(
+            "sales_team.membership_multi", True
+        )
+        cls.first = mail_new_test_user(cls.env, login="fav_first", name="Fav First")
+        cls.second = mail_new_test_user(cls.env, login="fav_second", name="Fav Second")
+
+    def test_handing_a_membership_over_favorites_the_new_salesperson(self):
+        team = self.env["crm.team"].create({"name": "Handover", "company_id": False})
+        membership = self.env["crm.team.member"].create(
+            {"crm_team_id": team.id, "user_id": self.first.id}
+        )
+        membership.write({"user_id": self.second.id})
+        self.assertIn(self.second, team.favorite_user_ids)
+
+    def test_moving_a_membership_favorites_the_new_team(self):
+        team, target = self.env["crm.team"].create(
+            [
+                {"name": "Move From", "company_id": False},
+                {"name": "Move To", "company_id": False},
+            ]
+        )
+        membership = self.env["crm.team.member"].create(
+            {"crm_team_id": team.id, "user_id": self.first.id}
+        )
+        membership.write({"crm_team_id": target.id})
+        self.assertIn(self.first, target.favorite_user_ids)
+
+    def test_rejoining_favorites_again(self):
+        team = self.env["crm.team"].create({"name": "Rejoin", "company_id": False})
+        membership = self.env["crm.team.member"].create(
+            {"crm_team_id": team.id, "user_id": self.first.id}
+        )
+        membership.action_archive()
+        team.favorite_user_ids = [(3, self.first.id)]
+        membership.action_unarchive()
+        self.assertIn(self.first, team.favorite_user_ids)
+
+    def test_an_archived_membership_does_not_favorite(self):
+        team = self.env["crm.team"].create({"name": "Archived", "company_id": False})
+        self.env["crm.team.member"].create(
+            {"crm_team_id": team.id, "user_id": self.first.id, "active": False}
+        )
+        self.assertNotIn(self.first, team.favorite_user_ids)
+
+
+class TestArchiveCascadeOnFalsyValues(TestSalesCommon):
+    def test_a_falsy_active_archives_the_team_memberships(self):
+        self.sales_team_1.write({"active": 0})
+        self.assertFalse(self.sales_team_1_m1.active)
+        self.assertFalse(self.sales_team_1_m2.active)
+
+    def test_a_falsy_active_archives_the_user_memberships(self):
+        self.user_sales_leads.write({"active": 0})
+        self.assertFalse(self.sales_team_1_m1.active)
+
+
+class TestTeamWriteGrantsOutsideSales(TestSalesCommon):
+    def test_a_sales_group_never_takes_a_team_write_grant_away(self):
+        writers = self.env["res.groups"].create({"name": "Team writers"})
+        self.env["ir.model.access"].create(
+            {
+                "name": "team writers",
+                "model_id": self.env.ref("sales_team.model_crm_team").id,
+                "group_id": writers.id,
+                "perm_read": True,
+                "perm_write": True,
+            }
+        )
+        writer = mail_new_test_user(self.env, login="team_writer", name="Team Writer")
+        writer.group_ids = [(4, writers.id)]
+        team = self.env["crm.team"].create({"name": "Writable", "company_id": False})
+
+        team.with_user(writer).write({"name": "Written without Sales"})
+        writer.group_ids = [(4, self.env.ref("sales_team.group_sale_salesman").id)]
+        team.with_user(writer).write({"name": "Written with Sales"})
+        self.assertEqual(team.name, "Written with Sales")
+
+
+class TestCompanyMembershipMessage(TestSalesCommon):
+    def test_a_team_moving_company_names_every_member_left_behind(self):
+        company_2 = self.env["res.company"].create({"name": "Message Co2"})
+        self.sales_team_1.user_id = False
+        with self.assertRaises(exceptions.ValidationError) as caught:
+            self.sales_team_1.write({"company_id": company_2.id})
+        message = str(caught.exception)
+        self.assertIn(self.user_sales_leads.name, message)
+        self.assertIn(self.user_admin.name, message)

@@ -1,6 +1,10 @@
-from odoo import _, api, fields, models
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo import Command, _, api, fields, models
+from odoo.exceptions import AccessError, UserError
+from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.misc import str2bool
+
+_debug = DebugLog(__name__)
 
 
 class CrmTeam(models.Model):
@@ -11,7 +15,7 @@ class CrmTeam(models.Model):
     _check_company_auto = True
 
     def _default_favorite_user_ids(self):
-        return [(6, 0, [self.env.uid])]
+        return [Command.link(self.env.uid)]
 
     name = fields.Char(
         string="Sales Team",
@@ -95,31 +99,26 @@ class CrmTeam(models.Model):
 
     @api.constrains("company_id")
     def _constrains_company_members(self):
-        for team in self.filtered("company_id"):
-            invalid_members = team.crm_team_member_ids.filtered(
-                lambda m, team=team: team.company_id not in m.user_id.company_ids
-            )
-            if invalid_members:
-                raise ValidationError(
-                    _(
-                        "The following team members are not allowed in company '%(company)s' of the Sales Team '%(team)s': %(users)s",
-                        company=team.company_id.display_name,
-                        team=team.name,
-                        users=", ".join(invalid_members.mapped("user_id.name")),
-                    )
-                )
+        self.crm_team_member_ids._check_company_membership()
 
     @api.model_create_multi
     def create(self, vals_list):
         teams = super(CrmTeam, self.with_context(mail_create_nosubscribe=True)).create(
             vals_list
         )
+        # favorite_user_ids is written after the memberships created inline, and
+        # replaces the favorites those memberships granted
         teams.crm_team_member_ids._add_to_team_favorites()
         return teams
 
     def write(self, vals):
         res = super().write(vals)
-        if vals.get("active") is False:
+        if "active" in vals and not vals["active"]:
+            _debug.logic(
+                "team_archive_cascade",
+                teams=self,
+                memberships=self.crm_team_member_ids,
+            )
             self.crm_team_member_ids.action_archive()
         return res
 
@@ -152,27 +151,21 @@ class CrmTeam(models.Model):
     @api.depends("is_membership_multi", "member_ids")
     def _compute_member_warning(self):
         self.member_warning = False
-        teams = self.filtered(
-            lambda team: not team.is_membership_multi and team.member_ids
-        )
-        if not teams:
+        if self._is_membership_multi() or not self.member_ids:
             return
 
-        teams_by_user = self.env["crm.team.member"]._get_live_teams_by_user(
-            teams.member_ids
-        )
-
-        for team in teams:
-            user_names, other_teams = [], self.env["crm.team"]
+        Member = self.env["crm.team.member"]
+        teams_by_user = Member._get_live_teams_by_user(self.member_ids)
+        for team in self:
+            user_names, other_teams = [], self.browse()
             for user in team.member_ids:
-                elsewhere = teams_by_user.get(user, self.env["crm.team"]) - team._origin
-                if elsewhere:
+                if elsewhere := teams_by_user[user] - team._origin:
                     user_names.append(user.name)
                     other_teams |= elsewhere
             if user_names:
-                team.member_warning = self.env[
-                    "crm.team.member"
-                ]._get_membership_warning(user_names, other_teams)
+                team.member_warning = Member._get_membership_warning(
+                    user_names, other_teams
+                )
 
     @api.depends("company_id")
     def _compute_member_company_ids(self):
@@ -235,57 +228,50 @@ class CrmTeam(models.Model):
         user = (
             self.env["res.users"].sudo().browse(user_id) if user_id else self.env.user
         )
-        context_team = self._get_context_default_team()
-        live_teams = self._get_domain_live_teams(user)
-
-        own_teams = self._get_live_teams_for_user(user, live_teams)
+        live = self._get_domain_live_team(user)
+        own_teams = self._search_ignoring_access(
+            live
+            & (Domain("user_id", "=", user.id) | Domain("member_ids", "in", user.ids))
+        )
+        context_team = self._get_context_default_team(live)
         preferred = own_teams.filtered_domain(domain) if domain else own_teams
 
-        for candidates in (preferred, own_teams):
-            if candidates:
-                if context_team and context_team in candidates:
-                    return context_team
-                return candidates[:1]
-
-        if context_team:
-            return context_team
-
-        return self._get_company_default_team(live_teams, domain)
-
-    def _get_context_default_team(self):
-        context_team_id = self.env.context.get("default_team_id")
-        if not context_team_id:
-            return self.browse()
-        return self.browse(
-            self.sudo()
-            .search([("id", "=", context_team_id), ("active", "=", True)])
-            .ids
-        )
-
-    def _get_domain_live_teams(self, user):
-        valid_cids = [False] + [
-            cid for cid in user.company_ids.ids if cid in self.env.companies.ids
-        ]
-        return [("active", "=", True), ("company_id", "in", valid_cids)]
-
-    def _get_live_teams_for_user(self, user, live_teams):
-        return self.browse(
-            self.sudo()
-            .search(
-                [
-                    *live_teams,
-                    "|",
-                    ("user_id", "=", user.id),
-                    ("member_ids", "in", [user.id]),
-                ]
+        if candidates := preferred or own_teams:
+            team = context_team if context_team in candidates else candidates[:1]
+            _debug.logic(
+                "default_team_own",
+                user=user,
+                context_team=context_team,
+                preferred=bool(preferred),
+                team=team,
             )
-            .ids
+            return team
+
+        team = context_team
+        if not team and domain:
+            team = self._search_ignoring_access(live & Domain(domain), limit=1)
+        team = team or self._search_ignoring_access(live, limit=1)
+        _debug.logic(
+            "default_team_fallback",
+            user=user,
+            context_team=context_team,
+            domain=domain,
+            team=team,
+        )
+        return team
+
+    def _get_context_default_team(self, live_domain):
+        if context_team_id := self.env.context.get("default_team_id"):
+            return self._search_ignoring_access(
+                live_domain & Domain("id", "=", context_team_id)
+            )
+        return self.browse()
+
+    def _get_domain_live_team(self, user):
+        company_ids = (user.company_ids & self.env.companies).ids
+        return Domain("active", "=", True) & Domain(
+            "company_id", "in", [False, *company_ids]
         )
 
-    def _get_company_default_team(self, live_teams, domain):
-        teams = self.sudo()
-        if domain:
-            team = teams.search(live_teams + list(domain), limit=1)
-            if team:
-                return self.browse(team.ids)
-        return self.browse(teams.search(live_teams, limit=1).ids)
+    def _search_ignoring_access(self, domain, limit=None):
+        return self.sudo().search(domain, limit=limit).with_env(self.env)

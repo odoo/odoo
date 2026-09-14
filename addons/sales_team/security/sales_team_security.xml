@@ -67,58 +67,6 @@
     </data>
 
     <data noupdate="1">
-        <!--
-            A user MODIFIES the teams they belong to (member) or lead (responsible),
-            matching the member-OR-responsible heuristic of crm.team._get_default_team_id.
-            One rule covers all three salesman levels: group_sale_salesman_team and
-            group_sale_salesman_all_leads both imply group_sale_salesman, and the rules
-            selected by a user's groups are OR-ed, so a second rule carrying the very
-            same domain for the team group added nothing.
-
-            perm_read is False, so this rule does not narrow READS. A team's row
-            is a label rendered wherever team_id is: on a sales order, on an
-            invoice, on an opportunity. An internal user holding NO Sales group
-            already reads every team for exactly that reason (the comment on
-            crm_team_member_rule_personal below spells it out); and while this
-            rule applied to reads, granting that same account "User: Own
-            Documents Only" TOOK ROWS AWAY. Access grew by dropping a group,
-            which is the shape test_the_ladder_only_ever_widens already calls a
-            defect on crm.team.member.
-
-            It was not cosmetic. web_read fetches a many2one's display_name, so
-            a record whose team the reader cannot see does not render a blank
-            field: the whole record raises AccessError and will not open. The
-            only reason that was rarely hit is that _get_default_team_id used to
-            rule-filter its own answer, i.e. it papered over this by storing the
-            filer's team instead of the salesperson's. That compensation is
-            gone (it made stored data depend on who typed it), so the read grant
-            has to be honest.
-
-            What stays scoped: writing a team is group_sale_manager's, by ACL;
-            and a team's ROSTER stays personal, on crm.team.member's own rules
-            below. crm and sale hang lead counts and invoiced targets off
-            crm.team, and those become readable to any internal user holding a
-            Sales group; they were already readable to every internal user
-            without one, so this makes the exposure uniform rather than new.
-        -->
-        <record id="crm_rule_personal_salesteam" model="ir.rule">
-            <field name="name">Personal Salesteam</field>
-            <field name="model_id" ref="model_crm_team" />
-            <field
-                name="domain_force">['|', ('user_id', '=', user.id), ('id', 'in', user.crm_team_ids.ids)]</field>
-            <field
-                name="groups"
-                eval="[Command.link(ref('sales_team.group_sale_salesman'))]" />
-            <field name="perm_read" eval="False" />
-        </record>
-        <record id="crm_rule_all_salesteam" model="ir.rule">
-            <field name="name">All Salesteam</field>
-            <field name="model_id" ref="model_crm_team" />
-            <field name="domain_force">[(1, '=', 1)]</field>
-            <field
-                name="groups"
-                eval="[Command.link(ref('sales_team.group_sale_salesman_all_leads'))]" />
-        </record>
         <record id="sale_team_comp_rule" model="ir.rule">
             <field name="name">Sales Team multi-company</field>
             <field name="model_id" ref="model_crm_team" />
@@ -145,20 +93,23 @@
             needs read on crm.team) but the rows, their user_id and the size of
             the team did not.
 
-            The domain repeats crm_rule_personal_salesteam leaf for leaf ("a
-            membership is visible exactly when its team is"), but the GROUP is
-            deliberately base.group_user and not group_sale_salesman, so the
-            two rules do not mirror. Record rules are selected by group and
-            OR-ed, so a rule carried by a Sales group binds nobody outside
-            Sales: an internal user with no sales group at all matched no rule
-            here and read every membership in the database, while granting that
-            same account "User: Own Documents Only" narrowed it to its own
-            teams. Access grew by dropping a group. Carried by base.group_user
-            the domain reaches every internal user, and the ladder above it is
+            A membership is visible when its team is one the reader leads or
+            belongs to, and the GROUP is deliberately base.group_user and not
+            group_sale_salesman. Record rules are selected by group and OR-ed,
+            so a rule carried by a Sales group binds nobody outside Sales: an
+            internal user with no sales group at all matched no rule here and
+            read every membership in the database, while granting that same
+            account "User: Own Documents Only" narrowed it to its own teams.
+            Access grew by dropping a group. Carried by base.group_user the
+            domain reaches every internal user, and the ladder above it is
             unchanged: group_sale_salesman implies base.group_user, so a
             salesperson still gets exactly this domain, and
             group_sale_salesman_all_leads still ORs crm_team_member_rule_all
             over it.
+
+            user.crm_team_ids is inlined when the rule domain is computed, and
+            that domain is cached per user: crm.team.member clears the registry
+            cache whenever a membership is created, moved, archived or deleted.
 
             crm.team keeps the wider grant on purpose. Its name is rendered
             outside the Sales app (team_id on an invoice, on a sales order), so

@@ -73,12 +73,6 @@ class TestDefaultTeam(TestSalesCommon):
                 "company_id": self.company_2.id,
             }
         )
-        self.user_sales_leads.write(
-            {
-                "company_id": self.company_2.id,
-                "company_ids": [(4, self.company_2.id)],
-            }
-        )
         with self.with_user("user_sales_leads"):
             team = self.env["crm.team"]._get_default_team_id()
             self.assertEqual(team, self.team_c2)
