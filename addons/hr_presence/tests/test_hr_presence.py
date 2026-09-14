@@ -474,6 +474,73 @@ class TestObservationOutranksInference(HrPresenceCase):
         working_now = frozenset(employee._get_employee_ids_working_now())
         return employee._hr_presence_verdict(today, working_now, observed)
 
+    def test_the_precedence_ladder_holds_rung_by_rung(self):
+        """The order _hr_presence_verdict documents, asserted as behaviour.
+
+        Each rung is armed and then removed, so every assertion is the next rung
+        down taking over. Reordering the branches breaks this even where the
+        individual tests still pass, because each of those fixes one rung
+        against one alternative and this fixes all of them against each other.
+        """
+        employee = self._make_employee("ladder")
+        today = self._today_for(employee)
+        at_work = frozenset([employee.id])
+        verdict = employee._hr_presence_verdict
+
+        # 1. a manager's override, over this module's own evidence and over an
+        #    observation below -- an instruction is not an inference.
+        employee.write(
+            {"hr_presence_manual_state": "absent", "hr_presence_manual_date": today}
+        )
+        employee.hr_presence_ip_date = today
+        self.assertEqual(verdict(today, at_work, "present"), "absent")
+
+        # 2. this module's own evidence, over an observation that disagrees.
+        employee.hr_presence_manual_state = False
+        self.assertEqual(verdict(today, at_work, "absent"), "present")
+
+        # 3. the observation below, over every inference under it.
+        employee.hr_presence_ip_date = False
+        self.assertEqual(verdict(today, at_work, "present"), "present")
+
+        # 5. not expected at work -- checked before the inference that they are.
+        self.assertEqual(verdict(today, frozenset(), "absent"), "out_of_working_hour")
+
+        # 7. nothing above applies, and they are expected at work.
+        self.assertEqual(verdict(today, at_work, "absent"), "absent")
+
+    def test_the_abstention_rung_sits_below_the_observation_and_above_the_inference(
+        self,
+    ):
+        """Rung 4, which needs two employees to show: the same inputs that make
+        a colleague Absent leave an employee with no login untouched."""
+        with_login = self._make_employee("laddered_user")
+        today = self._today_for(with_login)
+        without = self.env["hr.employee"].create(
+            {
+                "name": "laddered_nouser",
+                "company_id": self.company.id,
+                "resource_calendar_id": self.calendar.id,
+                "tz": "UTC",
+            }
+        )
+        at_work = frozenset([with_login.id, without.id])
+        self.assertEqual(
+            with_login._hr_presence_verdict(today, at_work, "out_of_working_hour"),
+            "absent",
+            "rung 7 for the colleague this module can measure",
+        )
+        self.assertEqual(
+            without._hr_presence_verdict(today, at_work, "out_of_working_hour"),
+            "out_of_working_hour",
+            "rung 4 for the employee it cannot",
+        )
+        self.assertEqual(
+            without._hr_presence_verdict(today, at_work, "present"),
+            "present",
+            "and rung 3 still sits above rung 4",
+        )
+
     def test_an_observation_below_survives_this_modules_inference(self):
         employee = self._make_employee("observed")
         self.assertEqual(

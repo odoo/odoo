@@ -37,9 +37,12 @@ class HrEmployee(models.Model):
     )
 
     # Stored mirror of hr_presence_state, which is computed and therefore
-    # neither searchable nor groupable. The cron refreshes it; it carries every
-    # value hr_presence_state can take, 'archive' included, so that mirroring
-    # never has to drop one.
+    # neither searchable nor groupable. It carries every value
+    # hr_presence_state can take, 'archive' included, so that mirroring never
+    # has to drop one. Whoever changes the evidence refreshes it: the websocket
+    # as it stamps a connection, the sweep for the emails it counted, an action
+    # for a manager's override. The cron is what catches the rest -- the
+    # transitions time itself makes, into and out of working hours.
     hr_presence_state_display = fields.Selection(
         selection=[
             ("out_of_working_hour", "Off-Hours"),
@@ -404,17 +407,17 @@ class HrEmployee(models.Model):
         makes of it.
 
         The branches are ordered by what they are made of, because that is what
-        decides which may overwrite which:
+        decides which may overwrite which. In the order the code runs them:
 
         1. a manager's override -- an explicit human decision, over everything;
         2. this module's own evidence, a company-IP connection or emails sent;
-        2b. abstention, where this module has no instrument to point at all;
         3. `observed`, whatever the chain below concluded before this ran: a
            kiosk check-in, an online session. This module may INFER, but it may
            not overwrite an observation with a conclusion drawn from that
            observation's absence -- an employee standing at the kiosk read
            Absent because the IP they did not connect from proved nothing;
-        4. this module's inferences, which is everything left.
+        4. abstention, where neither instrument can reach the employee at all;
+        5. this module's inferences, which is everything left.
 
         An approved time off does not make an employee absent -- it excuses
         them. Requiring it was what put the verdict on everyone who was
