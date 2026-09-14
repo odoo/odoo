@@ -1,6 +1,7 @@
 // @ts-check
 
 import { describe, expect, test } from "@odoo/hoot";
+import { validateType } from "@odoo/owl";
 import { getFormattedRecord } from "@web/views/kanban/kanban_record";
 
 describe.current.tags("headless");
@@ -51,6 +52,16 @@ describe("getFormattedRecord", () => {
         expect("name" in formatted).toBe(true);
         expect("nope" in formatted).toBe(false);
         expect(Object.keys(formatted).sort()).toEqual(["id", "name"]);
+    });
+
+    test("is a plain object to a component prop typed Object", () => {
+        const record = makeRecord({
+            data: { name: "abc" },
+            activeFields: { name: {} },
+        });
+        const formatted = getFormattedRecord(record);
+        expect(formatted instanceof Object).toBe(true);
+        expect(validateType("record", formatted, Object)).toBe(null);
     });
 
     test("a non-field property does not resolve to a field entry", () => {

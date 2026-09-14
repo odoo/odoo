@@ -122,7 +122,7 @@ export function getFormattedRecord(record) {
     };
     const isField = (p) =>
         typeof p === "string" && (p === "id" || getFieldNames().has(p));
-    return new Proxy(Object.create(null), {
+    return new Proxy(Object.create(Object.prototype), {
         get(target, p) {
             return isField(p) ? getEntry(p) : Reflect.get(target, p);
         },
