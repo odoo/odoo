@@ -2113,10 +2113,6 @@ class HrEmployee(models.Model):
     def _adjust_leaves(self, leave_intervals):
         return leave_intervals
 
-    def _get_flexible_reference_calendar(self, date=fields.Date.today()):
-        self.ensure_one()
-        return self.company_id.resource_calendar_id
-
     def _get_employee_unavailable_intervals(self, start, stop):
         """ returns a dict {employee_id: [{start, stop}]} for the unavailability intervals of each employee which is used for _gantt_unavailability """
 
@@ -2143,7 +2139,7 @@ class HrEmployee(models.Model):
                     else:
                         work_resources_per_calendar[calendar, tz] += employee.resource_id
                 else:
-                    leave_resources_per_calendar[employee._get_flexible_reference_calendar(period_start), tz] += employee.resource_id
+                    leave_resources_per_calendar[employee.version_id._get_reference_calendar(period_start), tz] += employee.resource_id
 
         work_intervals_per_calendar = defaultdict()
         attendance_intervals_per_calendar = defaultdict()
@@ -2184,7 +2180,7 @@ class HrEmployee(models.Model):
                     else:
                         current_work_intervals = period_interval & work_intervals_per_calendar[calendar, tz][employee.resource_id.id]
                 else:
-                    current_work_intervals = period_interval - leave_intervals_per_calendar[employee._get_flexible_reference_calendar(calendar), tz][employee.resource_id.id]
+                    current_work_intervals = period_interval - leave_intervals_per_calendar[employee.version_id._get_reference_calendar(calendar), tz][employee.resource_id.id]
                 for interval_start, interval_stop, interval_calendar in current_work_intervals:
                     employee_work_intervals += Intervals([(
                         interval_start.astimezone(ZoneInfo(tz)).replace(tzinfo=self.env.tz),
