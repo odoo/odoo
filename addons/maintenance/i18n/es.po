@@ -60,6 +60,14 @@ msgstr ""
 "defecto al crear nuevos registros para este alias."
 
 #. module: maintenance
+#. odoo-python
+#: code:addons/maintenance/models/maintenance.py:0
+msgid "A recurrence repeated until a date needs its end date."
+msgstr ""
+"Una recurrencia que se repite hasta una fecha necesita su fecha de "
+"finalización."
+
+#. module: maintenance
 #: model:maintenance.equipment,name:maintenance.equipment_computer3
 #: model:maintenance.equipment,name:maintenance.equipment_computer5
 msgid "Acer Laptop"
@@ -129,6 +137,11 @@ msgstr "Añadir una nueva categoría de equipo"
 #: model_terms:ir.actions.act_window,help:maintenance.maintenance_request_action_reports
 msgid "Add a new maintenance request"
 msgstr "Añadir una nueva solicitud de mantenimiento"
+
+#. module: maintenance
+#: model_terms:ir.actions.act_window,help:maintenance.maintenance_dashboard_action
+msgid "Add a new maintenance team"
+msgstr "Añadir un nuevo equipo de mantenimiento"
 
 #. module: maintenance
 #: model_terms:ir.actions.act_window,help:maintenance.hr_equipment_stage_action
@@ -404,13 +417,8 @@ msgstr ""
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request__close_date
-msgid "Date the maintenance was finished. "
-msgstr "Fecha en la que se finalizó el mantenimiento. "
-
-#. module: maintenance
-#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__repeat_unit__day
-msgid "Days"
-msgstr "Días"
+msgid "Date the maintenance was finished."
+msgstr "Fecha en la que se finalizó el mantenimiento."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_defaults
@@ -617,17 +625,6 @@ msgid "Followers (Partners)"
 msgstr "Seguidores (Contactos)"
 
 #. module: maintenance
-#: model:ir.model.fields,help:maintenance.field_maintenance_equipment__activity_type_icon
-#: model:ir.model.fields,help:maintenance.field_maintenance_request__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Icono de Font Awesome p. ej. fa-tasks"
-
-#. module: maintenance
-#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__repeat_type__forever
-msgid "Forever"
-msgstr "Para siempre"
-
-#. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Future Activities"
@@ -805,11 +802,6 @@ msgstr "Fecha del último fallo"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team__alias_incoming_local
 msgid "Local-part based incoming detection"
 msgstr "Detección de entradas basada en partes locales"
-
-#. module: maintenance
-#: model:ir.ui.menu,name:maintenance.menu_m_reports_losses
-msgid "Losses Analysis"
-msgstr "Análisis de las pérdidas"
 
 #. module: maintenance
 #: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__priority__1
@@ -1003,11 +995,6 @@ msgid "Monitors"
 msgstr "Monitores"
 
 #. module: maintenance
-#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__repeat_unit__month
-msgid "Months"
-msgstr "Meses"
-
-#. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "My Activities"
@@ -1040,12 +1027,6 @@ msgstr "Nombre"
 #: model:maintenance.stage,name:maintenance.stage_0
 msgid "New Request"
 msgstr "Nueva solicitud"
-
-#. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_calendar_event_id
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Siguiente evento en el calendario de actividades."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__activity_date_deadline
@@ -1143,11 +1124,6 @@ msgstr ""
 "ID opcional de un hilo (registro) al que se adjuntarán todos los mensajes "
 "entrantes, incluso si no fueron respuestas del mismo. Si se establece, se "
 "deshabilitará completamente la creación de nuevos registros."
-
-#. module: maintenance
-#: model:ir.ui.menu,name:maintenance.menu_m_reports_oee
-msgid "Overall Equipment Effectiveness (OEE)"
-msgstr "Eficiencia general de los equipos (OEE)"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__owner_user_id
@@ -1281,11 +1257,6 @@ msgid "Repeat Every"
 msgstr "Repetir cada"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__repeat_unit
-msgid "Repeat Unit"
-msgstr "Unidad de repetición"
-
-#. module: maintenance
 #: model:ir.ui.menu,name:maintenance.maintenance_reporting
 #: model:ir.ui.menu,name:maintenance.menu_m_reports
 msgid "Reporting"
@@ -1330,11 +1301,6 @@ msgstr "Solicitado por"
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
 msgid "Requested by:"
 msgstr "Solicitado por:"
-
-#. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_team__todo_request_ids
-msgid "Requests"
-msgstr "Solicitudes"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category__technician_user_id
@@ -1527,12 +1493,6 @@ msgstr ""
 "si lo que quiere es obtener los correos para <trabajos@example.odoo.com>"
 
 #. module: maintenance
-#. odoo-python
-#: code:addons/maintenance/models/maintenance.py:0
-msgid "The repeat interval cannot be less than 1."
-msgstr "El intervalo de repetición no puede ser menor que 1."
-
-#. module: maintenance
 #: model:res.groups,comment:maintenance.group_equipment_manager
 msgid "The user will be able to manage equipment."
 msgstr "El usuario será capaz de gestionar el equipo."
@@ -1602,12 +1562,6 @@ msgid "Unscheduled"
 msgstr "No programado"
 
 #. module: maintenance
-#: model:ir.model.fields,field_description:maintenance.field_maintenance_request__repeat_type
-#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__repeat_type__until
-msgid "Until"
-msgstr "Hasta"
-
-#. module: maintenance
 #: model_terms:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_form
 msgid "Upload your PDF file."
 msgstr "Suba su archivo PDF."
@@ -1640,16 +1594,6 @@ msgstr "Visible para todos"
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment__warranty_date
 msgid "Warranty Expiration Date"
 msgstr "Fecha de vencimiento de la garantía"
-
-#. module: maintenance
-#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__repeat_unit__week
-msgid "Weeks"
-msgstr "Semanas"
-
-#. module: maintenance
-#: model:ir.model.fields.selection,name:maintenance.selection__maintenance_request__repeat_unit__year
-msgid "Years"
-msgstr "Años"
 
 #. module: maintenance
 #. odoo-python
