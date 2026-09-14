@@ -197,17 +197,14 @@ class StockMove(models.Model):
                 ids_to_super.add(move.id)
         return super(StockMove, self.browse(ids_to_super))._compute_location_dest_id()
 
-    @api.depends(
-        "bom_line_id",
-        "picking_id.move_ids",
-        "raw_material_production_id.move_raw_ids",
-    )
+    @api.depends("bom_line_id")
     def _compute_description_picking(self):
         super()._compute_description_picking()
+        stored = self.filtered("id")
         siblings = (
             self
-            | self.picking_id.move_ids
-            | self.raw_material_production_id.move_raw_ids
+            | stored.picking_id.move_ids
+            | stored.raw_material_production_id.move_raw_ids
         )
         present_lines = siblings.bom_line_id
         bom_line_description = {}
