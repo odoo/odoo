@@ -470,6 +470,9 @@ test("many2ones in form views with show_address", async () => {
         { type: "html" }
     );
     expect("button.o_external_button").toHaveCount(1);
+
+    await contains(".o_field_many2one_extra").click();
+    expect(".o-autocomplete--dropdown-menu").toHaveCount(0);
 });
 
 test("many2one show_address in edit", async () => {
