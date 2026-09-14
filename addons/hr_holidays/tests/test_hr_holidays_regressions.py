@@ -1445,3 +1445,90 @@ class TestRefusalIsNotAnApproval(TestHrHolidaysCommon):
             self.employee_hruser,
             "refusing must not rewrite who approved it",
         )
+
+
+@tagged("post_install", "-at_install")
+class TestCreatingManyRequests(TestHrHolidaysCommon):
+    """A wizard generating a company's leaves creates hundreds in one call."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.leave_type = cls.env["hr.leave.type"].create(
+            {
+                "name": "Batch Created",
+                "requires_allocation": False,
+                "leave_validation_type": "hr",
+                "company_id": cls.company.id,
+            }
+        )
+        cls.employees = cls.env["hr.employee"].create(
+            [
+                {"name": f"Batch {index}", "company_id": cls.company.id}
+                for index in range(20)
+            ]
+        )
+
+    def _create(self, count):
+        return (
+            self.env["hr.leave"]
+            .with_context(leave_skip_date_check=True)
+            .create(
+                [
+                    {
+                        "employee_id": self.employees[index].id,
+                        "holiday_status_id": self.leave_type.id,
+                        "request_date_from": date(2026, 3, 2),
+                        "request_date_to": date(2026, 3, 2),
+                    }
+                    for index in range(count)
+                ]
+            )
+        )
+
+    def _statements_to_create(self, count):
+        """Statements, not rows: one INSERT of twenty rows is one question, and
+        `sql_log_count` would read it as twenty."""
+        self.env.flush_all()
+        self.env.invalidate_all()
+        before = self.env.cr.sql_statement_count
+        self._create(count)
+        self.env.flush_all()
+        return self.env.cr.sql_statement_count - before
+
+    def test_the_cost_does_not_grow_with_the_number_of_requests(self):
+        self._statements_to_create(5)  # warm what the first call of anything warms
+        few = self._statements_to_create(5)
+        many = self._statements_to_create(20)
+        self.assertEqual(
+            many,
+            few,
+            "creating twenty requests on one calendar and one date must cost "
+            "what creating five does; asking the attendances once per request "
+            "made it grow with the batch -- %s statements against %s" % (many, few),
+        )
+
+    def test_one_calendar_and_one_date_are_asked_once_per_batch(self):
+        Calendar = type(self.env["resource.calendar"])
+        original = Calendar._get_hours_for_date
+        asked = []
+
+        def recording(calendar, day, day_period=None):
+            asked.append((calendar.id, day, day_period))
+            return original(calendar, day, day_period)
+
+        with patch.object(Calendar, "_get_hours_for_date", recording):
+            self._create(5)
+            self.env.flush_all()
+            after_five = len(asked)
+            self._create(20)
+            self.env.flush_all()
+            after_twenty = len(asked) - after_five
+        self.assertEqual(
+            after_twenty,
+            after_five,
+            "the working hours of a day are a property of the calendar and the "
+            "day, so a batch sharing both asks the same number of times "
+            "whatever its size: %s for twenty against %s for five"
+            % (after_twenty, after_five),
+        )

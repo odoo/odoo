@@ -375,6 +375,7 @@ class HrLeave(models.Model):
     )
     def _compute_request_hour_from_to(self):
         env_company_calendar = self.env.company.resource_calendar_id
+        hours_cache = {}
         for leave in self:
             calendar = leave.resource_calendar_id or env_company_calendar
             if (
@@ -385,7 +386,9 @@ class HrLeave(models.Model):
                 and calendar
             ):
                 hour_from, hour_to = leave._get_hour_from_to(
-                    leave.request_date_from, leave.request_date_to
+                    leave.request_date_from,
+                    leave.request_date_to,
+                    hours_cache=hours_cache,
                 )
                 leave.request_hour_from = hour_from
                 leave.request_hour_to = hour_to
@@ -630,13 +633,16 @@ Versions:
         # ends go: leaving the other behind is what let a leave keep a start it
         # no longer has an end for.
         undated.date_from = undated.date_to = False
+        hours_cache = {}
         for holiday in self - undated:
             if holiday.request_unit_hours:
                 hour_from = holiday.request_hour_from
                 hour_to = holiday.request_hour_to
                 if not hour_from or not hour_to:
                     computed_from, computed_to = holiday._get_hour_from_to(
-                        holiday.request_date_from, holiday.request_date_to
+                        holiday.request_date_from,
+                        holiday.request_date_to,
+                        hours_cache=hours_cache,
                     )
                     hour_from = hour_from or computed_from
                     hour_to = hour_to or computed_to
@@ -648,21 +654,30 @@ Versions:
                 if holiday.request_date_from == holiday.request_date_to:
                     day_period = from_period if from_period == to_period else None
                     hour_from, hour_to = holiday._get_hour_from_to(
-                        holiday.request_date_from, holiday.request_date_to, day_period
+                        holiday.request_date_from,
+                        holiday.request_date_to,
+                        day_period,
+                        hours_cache=hours_cache,
                     )
                 else:
                     hour_from, _ = holiday._get_hour_from_to(
                         holiday.request_date_from,
                         holiday.request_date_from,
                         from_period,
+                        hours_cache=hours_cache,
                     )
                     _, hour_to = holiday._get_hour_from_to(
-                        holiday.request_date_to, holiday.request_date_to, to_period
+                        holiday.request_date_to,
+                        holiday.request_date_to,
+                        to_period,
+                        hours_cache=hours_cache,
                     )
 
             else:
                 hour_from, hour_to = holiday._get_hour_from_to(
-                    holiday.request_date_from, holiday.request_date_to
+                    holiday.request_date_from,
+                    holiday.request_date_to,
+                    hours_cache=hours_cache,
                 )
 
             holiday.date_from = self._to_utc(
@@ -1311,36 +1326,48 @@ Versions:
         holidays = super(
             HrLeave, self.with_context(mail_create_nosubscribe=True)
         ).create(vals_list)
-        if not self.env.context.get("leave_fast_create"):
-            for holiday in holidays.filtered(
-                lambda leave: leave.validation_type == "both"
-            ):
-                holiday._check_double_validation_rules(
-                    holiday.employee_id, holiday.state
+        fast_create = self.env.context.get("leave_fast_create")
+        if not fast_create:
+            double = holidays.filtered(lambda leave: leave.validation_type == "both")
+            for state in set(double.mapped("state")):
+                by_state = double.filtered(
+                    lambda leave, state=state: leave.state == state
                 )
+                by_state._check_double_validation_rules(by_state.employee_id, state)
         holidays._check_validity()
         self._invalidate_allocation_computes()
-
-        for holiday in holidays:
-            if not self.env.context.get("leave_fast_create"):
-                holiday_sudo = holiday.sudo()
-                holiday_sudo.add_follower(holiday.employee_id.id)
-                if holiday.validation_type == "manager":
-                    holiday_sudo.message_subscribe(
-                        partner_ids=holiday.employee_id.leave_manager_id.partner_id.ids
-                    )
-                if holiday.validation_type == "no_validation":
-                    holiday_sudo.action_approve()
-                    holiday_sudo.message_subscribe(
-                        partner_ids=holiday._get_responsible_for_approval().partner_id.ids
-                    )
-                    holiday_sudo.message_post(
-                        body=_("The time off has been automatically approved"),
-                        subtype_xmlid="mail.mt_comment",
-                    )
-                elif not self.env.context.get("import_file"):
-                    holiday_sudo.activity_update()
+        if not fast_create:
+            holidays.sudo()._follow_up_on_creation()
         return holidays
+
+    def _follow_up_on_creation(self):
+        """Subscribe whoever the request concerns, then approve or chase it.
+
+        Grouped by audience and by what happens next rather than walked one
+        request at a time: a wizard generating a company's leaves creates
+        hundreds at once, and every step here takes a recordset.
+        """
+        leaves_by_audience = defaultdict(self.browse)
+        for leave in self:
+            partners = leave.employee_id.user_id.partner_id
+            if leave.validation_type == "manager":
+                partners |= leave.employee_id.leave_manager_id.partner_id
+            if partners:
+                leaves_by_audience[tuple(sorted(partners.ids))] |= leave
+        for partner_ids, leaves in leaves_by_audience.items():
+            leaves.message_subscribe(partner_ids=list(partner_ids))
+
+        automatic = self.filtered(
+            lambda leave: leave.validation_type == "no_validation"
+        )
+        automatic.action_approve()
+        for leave in automatic:
+            leave.message_post(
+                body=_("The time off has been automatically approved"),
+                subtype_xmlid="mail.mt_comment",
+            )
+        if not self.env.context.get("import_file"):
+            (self - automatic).activity_update()
 
     def write(self, vals):
         values = vals
@@ -2060,14 +2087,31 @@ is approved, validated or refused."
             .replace(tzinfo=None)
         )
 
-    def _get_hour_from_to(self, request_date_from, request_date_to, day_period=None):
+    def _get_hour_from_to(
+        self, request_date_from, request_date_to, day_period=None, hours_cache=None
+    ):
+        """The calendar's working hours on the two dates a request spans.
+
+        `hours_cache` is shared across a compute so that a batch of requests on
+        one calendar and one date asks the attendances once instead of once per
+        request: the answer is a property of the calendar and the day, and
+        nothing in the loop can change either.
+        """
         calendar = self.resource_calendar_id
         if not calendar:
             return (0, 24)
         calendar.check_singleton()
+        if hours_cache is None:
+            hours_cache = {}
 
-        hour_from, _ = calendar._get_hours_for_date(request_date_from, day_period)
-        _, hour_to = calendar._get_hours_for_date(request_date_to, day_period)
+        def hours_for(day):
+            key = (calendar.id, day, day_period)
+            if key not in hours_cache:
+                hours_cache[key] = calendar._get_hours_for_date(day, day_period)
+            return hours_cache[key]
+
+        hour_from, _ = hours_for(request_date_from)
+        _, hour_to = hours_for(request_date_to)
 
         return (hour_from, hour_to)
 

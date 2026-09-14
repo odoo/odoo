@@ -15,8 +15,8 @@ class HrHolidaysController(http.Controller):
         except TypeError, ValueError:
             _logger.warning("%s: non-numeric res_id %r from %s", model, res_id, action)
             return request.redirect("/odoo")
-        comparison, record, redirect = (
-            MailController._get_token_record_and_redirect(model, record_id, token)
+        comparison, record, redirect = MailController._get_token_record_and_redirect(
+            model, record_id, token
         )
         if comparison and record:
             try:
