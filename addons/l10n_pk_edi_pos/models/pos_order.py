@@ -5,7 +5,6 @@ from urllib.parse import urlencode
 import requests
 
 from odoo import api, fields, models
-from odoo.addons.iap.tools import iap_tools
 from odoo.exceptions import UserError
 from odoo.tools import BinaryBytes, float_round
 
@@ -82,10 +81,14 @@ class PosOrder(models.Model):
             'mode': mode,
             'db_uuid': self.env['ir.config_parameter'].sudo().get_str('database.uuid'),
         }
+        iap_endpoint = (
+            self.env['ir.config_parameter'].sudo().get_str('l10n_pk.iap_endpoint')
+            or 'https://iap-services.odoo.com'
+        )
         body = json.dumps(payload, default=str)
         try:
             response = requests.post(
-                iap_tools.iap_get_endpoint(self.env) + POS_SUBMIT_PATH,
+                iap_endpoint + POS_SUBMIT_PATH,
                 params=query,
                 data=body,
                 headers={'Content-Type': 'application/json', 'X-FBR-Token': auth_token},

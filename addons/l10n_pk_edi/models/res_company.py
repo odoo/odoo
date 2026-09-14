@@ -1,6 +1,4 @@
 import logging
-import socket
-from urllib.parse import urlsplit
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
@@ -13,7 +11,6 @@ _logger = logging.getLogger(__name__)
 # rather than per company: field name -> (system parameter key, default value).
 L10N_PK_EDI_SYSTEM_PARAMS = {
     'l10n_pk_edi_test_auth_token': ('l10n_pk_edi.test_auth_token', ''),
-    'l10n_pk_edi_iap_server_ip': ('l10n_pk_edi.iap_server_ip', ''),
     'l10n_pk_edi_test_vat': ('l10n_pk_edi.test_vat', ''),
 }
 
@@ -25,7 +22,6 @@ class ResCompany(models.Model):
     l10n_pk_edi_whitelisted = fields.Boolean(string="FBR IP Whitelisted")
     l10n_pk_edi_production_auth_token = fields.Char(string="E-invoice(PK) Production Authentication Token", groups='base.group_system')
     l10n_pk_edi_test_auth_token = fields.Char(string="E-invoice(PK) Testing Authentication Token", groups='base.group_system', compute='_compute_l10n_pk_edi_system_params', inverse='_inverse_l10n_pk_edi_test_auth_token')
-    l10n_pk_edi_iap_server_ip = fields.Char(string="Odoo Static IP Address", compute='_compute_l10n_pk_edi_system_params', inverse='_inverse_l10n_pk_edi_iap_server_ip')
     l10n_pk_edi_test_vat = fields.Char(
         string="Registered Business Identification Number",
         help="Business Identification Number of a registered business, used as the buyer for FBR sandbox scenarios that require one.",
@@ -43,9 +39,6 @@ class ResCompany(models.Model):
     def _inverse_l10n_pk_edi_test_auth_token(self):
         self._set_l10n_pk_edi_system_param('l10n_pk_edi_test_auth_token')
 
-    def _inverse_l10n_pk_edi_iap_server_ip(self):
-        self._set_l10n_pk_edi_system_param('l10n_pk_edi_iap_server_ip')
-
     def _inverse_l10n_pk_edi_test_vat(self):
         self._set_l10n_pk_edi_system_param('l10n_pk_edi_test_vat')
 
@@ -53,14 +46,6 @@ class ResCompany(models.Model):
         key, default = L10N_PK_EDI_SYSTEM_PARAMS[field_name]
         for company in self:
             self.env['ir.config_parameter'].sudo().set_str(key, company[field_name] or default)
-
-    def _get_iap_server_ip(self):
-        iap_endpoint = self.env['ir.config_parameter'].sudo().get_str('l10n_pk_edi.iap_endpoint')
-        try:
-            hostname = urlsplit(iap_endpoint).hostname
-            return socket.gethostbyname(hostname)
-        except (socket.gaierror, AttributeError):
-            return False
 
     def _l10n_pk_edi_is_test_mode(self):
         self.ensure_one()

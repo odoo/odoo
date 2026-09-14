@@ -108,7 +108,7 @@ class IapAccount(models.Model):
         # get_str() only falls back to the default when the parameter is absent, so an
         # existing-but-empty parameter must be defaulted here too.
         iap_endpoint = (
-            self.env['ir.config_parameter'].sudo().get_str('l10n_pk_edi.iap_endpoint')
+            self.env['ir.config_parameter'].sudo().get_str('l10n_pk.iap_endpoint')
             or 'https://iap-services.odoo.com'
         )
         request_url = "%s%s" % (iap_endpoint, url_path)
