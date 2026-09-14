@@ -218,8 +218,17 @@ class TestKioskRouteAuthorisation(HttpCase):
             "below would pass against any code",
         )
 
+        # EVERY ROUTE THAT RESOLVES THE TOKEN WITH `sudo()`, not one of them.
+        # Driven against the unfixed tree these four answered: one employee's
+        # name, avatar, hours and state; the company's whole roster with
+        # avatars and job titles; and -- twice over -- a written attendance
+        # record, `in_mode` "kiosk", for an employee nobody had authenticated
+        # as. The module's other four public routes refuse an anonymous caller
+        # on ACL because they deliberately do not `sudo()`, which is why they
+        # are not here: they were never the exposure.
+        attendances_before = self.env["hr.attendance"].search_count([])
         for token in (None, False, ""):
-            with self.subTest(token=token):
+            with self.subTest(token=token, route="attendance_employee_data"):
                 result = self._call(
                     "/hr_attendance/attendance_employee_data",
                     employee_id=self.badged.id,
@@ -227,6 +236,40 @@ class TestKioskRouteAuthorisation(HttpCase):
                 )
                 self.assertEqual(result.get("status"), "error")
                 self.assertNotIn("employee_name", result)
+
+            with self.subTest(token=token, route="employees_infos"):
+                result = self._call(
+                    "/hr_attendance/employees_infos",
+                    token=token,
+                    limit=10,
+                    offset=0,
+                    domain=[],
+                )
+                self.assertEqual(result.get("status"), "error")
+                self.assertFalse(result.get("records"))
+
+            with self.subTest(token=token, route="manual_selection"):
+                result = self._call(
+                    "/hr_attendance/manual_selection",
+                    token=token,
+                    employee_id=self.badged.id,
+                    pin_code=False,
+                )
+                self.assertEqual(result.get("status"), "error")
+
+            with self.subTest(token=token, route="attendance_barcode_scanned"):
+                result = self._call(
+                    "/hr_attendance/attendance_barcode_scanned",
+                    token=token,
+                    barcode="EXISTINGBADGE",
+                )
+                self.assertEqual(result.get("status"), "error")
+
+        # The refusal is what matters, but a route that answered `{"status":
+        # "error"}` after writing the record would satisfy every assertion
+        # above. This is the one that says nothing happened.
+        self.assertEqual(self.env["hr.attendance"].search_count([]), attendances_before)
+        self.assertFalse(self.badged.sudo().attendance_ids)
 
     def test_a_required_key_makes_the_falsy_domain_match_nothing(self):
         """The other half, and it is not the same half.
