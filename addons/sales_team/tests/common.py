@@ -41,9 +41,7 @@ class SalesTeamCommon(BaseCommon):
             }
         )
         cls.env["team.team"].search(
-            [
-                ("id", "!=", cls.sale_team.id),
-            ]
+            [("id", "!=", cls.sale_team.id), ("use_sale", "=", True)]
         ).action_archive()
 
     @classmethod
