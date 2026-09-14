@@ -1,7 +1,6 @@
 import ipaddress
 import json
 import logging
-import re
 from datetime import timedelta
 from typing import Any, Self
 
@@ -9,27 +8,13 @@ from cryptography.fernet import Fernet, InvalidToken
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.libs import redact
 
 _logger = logging.getLogger(__name__)
 
 DAYS_NO_EXPIRY = 999
 
 EXPIRY_WARNING_DAYS = 30
-
-
-SECRET_PATTERNS = [
-    ("password", r"\b(password|passwd|pwd)\s*[:=]\s*\S+"),
-    ("api_key", r"\b(api[_-]?key|apikey)\s*[:=]\s*\S+"),
-    ("secret_or_token", r"\b(secret|token)\s*[:=]\s*\S+"),
-    ("aws_style_key", r"\b(access[_-]?key|secret[_-]?key)\s*[:=]\s*\S+"),
-    ("private_key_pem", r"-----BEGIN\s+\w+\s+PRIVATE\s+KEY-----"),
-    ("github_token", r"\bghp_[a-zA-Z0-9]{36}\b"),
-    ("openai_api_key", r"\bsk-[a-zA-Z0-9]{48}\b"),
-    ("aws_access_key_id", r"\bAKIA[0-9A-Z]{16}\b"),
-]
-SECRET_NAMED_REGEXES = [
-    (name, re.compile(pattern, re.IGNORECASE)) for name, pattern in SECRET_PATTERNS
-]
 
 
 class CredentialCredential(models.Model):
@@ -440,11 +425,7 @@ class CredentialCredential(models.Model):
         for record in self:
             if not record.notes:
                 continue
-            matched_names = [
-                name
-                for name, regex in SECRET_NAMED_REGEXES
-                if regex.search(record.notes)
-            ]
+            matched_names = redact.find_secret_shapes(record.notes)
             if not matched_names:
                 continue
             _logger.warning(

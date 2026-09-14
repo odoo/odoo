@@ -6,7 +6,7 @@ import random
 import re
 import uuid
 from datetime import datetime
-from urllib.parse import parse_qsl, urlencode, urlparse, urlunparse
+from urllib.parse import urlparse
 
 import requests
 from requests.auth import HTTPDigestAuth
@@ -15,7 +15,7 @@ from urllib3.util.retry import Retry
 
 from odoo import _, api, fields
 from odoo.exceptions import UserError
-from odoo.libs import netguard
+from odoo.libs import netguard, redact
 from odoo.libs.guarded_http import GuardedSession
 
 from .exceptions import (
@@ -34,13 +34,7 @@ from .session_cache import (
 
 _logger = logging.getLogger(__name__)
 
-_URL_SECRET_PATTERNS: list[tuple[re.Pattern[str], object]] = []
-
-
-def register_url_secret(pattern, replacement):
-    _URL_SECRET_PATTERNS.append(
-        (re.compile(pattern) if isinstance(pattern, str) else pattern, replacement),
-    )
+register_url_secret = redact.register_pattern
 
 
 class _ShapedRetry(Retry):
@@ -104,34 +98,6 @@ class _ShapedRetry(Retry):
         return float(max(0, min(self.backoff_max, backoff_value)))
 
 
-def _apply_registered_secrets(value: str) -> str:
-    for pattern, replacement in _URL_SECRET_PATTERNS:
-        value = pattern.sub(replacement, value)
-    return value
-
-
-_SENSITIVE_FIELD_PATTERNS = (
-    "password",
-    "passwd",
-    "pwd",
-    "token",
-    "secret",
-    "api_key",
-    "apikey",
-    "authorization",
-    "access_token",
-    "refresh_token",
-    "client_secret",
-    "private_key",
-    "privatekey",
-    "credential",
-    "auth",
-    "bearer",
-    "signature",
-    "x_amz_security_token",
-    "x_amz_signature",
-)
-
 _MAX_LOGGED_PAYLOAD = 10000
 
 
@@ -163,51 +129,6 @@ def is_private_host(host):
     return all(netguard.classify(address) in _PRIVATE_SCOPES for address in addresses)
 
 
-_URL_IN_TEXT_PATTERN = re.compile(r"https?://[^\s'\"<>]+")
-
-_SENSITIVE_KV_PATTERN = re.compile(
-    r"(?i)("
-    + "|".join(re.escape(p) for p in _SENSITIVE_FIELD_PATTERNS)
-    + r")(\s*=\s*)([^\s&;'\"<>]+)",
-)
-
-
-def _mask_sensitive_text(text):
-    if not text:
-        return text
-    masked = _apply_registered_secrets(str(text))
-    masked = _URL_IN_TEXT_PATTERN.sub(lambda m: _mask_sensitive_url(m.group(0)), masked)
-    return _SENSITIVE_KV_PATTERN.sub(r"\1\2***REDACTED***", masked)
-
-
-def _mask_sensitive_url(url: str) -> str:
-    masked = _apply_registered_secrets(url)
-
-    try:
-        parsed = urlparse(masked)
-    except ValueError:
-        return masked
-
-    netloc = parsed.netloc
-    if "@" in netloc:
-        host_part = netloc.rsplit("@", 1)[1]
-        netloc = f"***:***@{host_part}"
-
-    query = parsed.query
-    if query:
-        redacted_pairs = []
-        for key, value in parse_qsl(query, keep_blank_values=True):
-            if any(p in key.lower() for p in _SENSITIVE_FIELD_PATTERNS):
-                redacted_pairs.append((key, "***REDACTED***"))
-            else:
-                redacted_pairs.append((key, value))
-        query = urlencode(redacted_pairs)
-
-    return urlunparse(
-        (parsed.scheme, netloc, parsed.path, parsed.params, query, parsed.fragment),
-    )
-
-
 def _is_exhausted_read_timeout(exc):
     # requests reports a read timeout that outlived its retries as a
     # ConnectionError wrapping urllib3's MaxRetryError, not as a Timeout.
@@ -217,7 +138,7 @@ def _is_exhausted_read_timeout(exc):
 
 def _masked_cause(exc: BaseException) -> BaseException:
     masked = tuple(
-        _mask_sensitive_text(arg) if isinstance(arg, str) else arg for arg in exc.args
+        redact.mask_text(arg) if isinstance(arg, str) else arg for arg in exc.args
     )
     if masked != exc.args:
         exc.args = masked
@@ -416,7 +337,7 @@ class OutboundAPIClient:
         start_time = datetime.now()
 
         try:
-            _logger.info("API Request: %s %s", method, _mask_sensitive_url(url))
+            _logger.info("API Request: %s %s", method, redact.mask_url(url))
             response = self.session.request(
                 method=method,
                 url=url,
@@ -433,18 +354,18 @@ class OutboundAPIClient:
             )
 
         except requests.exceptions.Timeout as e:
-            error = _mask_sensitive_text(str(e))
-            _logger.error("API Timeout: %s - %s", _mask_sensitive_url(url), error)
+            error = redact.mask_text(str(e))
+            _logger.error("API Timeout: %s - %s", redact.mask_url(url), error)
             self._record_failure(
                 method, url, kwargs, trace_id, skip_logging, error, "timeout"
             )
             raise CommTimeoutError(
-                _("Request timed out: %s") % _mask_sensitive_url(url)
+                _("Request timed out: %s") % redact.mask_url(url)
             ) from _masked_cause(e)
 
         except requests.exceptions.HTTPError as e:
-            error = _mask_sensitive_text(self._extract_error(e.response))
-            _logger.error("API HTTP Error: %s - %s", _mask_sensitive_url(url), error)
+            error = redact.mask_text(self._extract_error(e.response))
+            _logger.error("API HTTP Error: %s - %s", redact.mask_url(url), error)
             status_code = e.response.status_code
             self._record_failure(
                 method,
@@ -463,33 +384,31 @@ class OutboundAPIClient:
             raise self._prepare_http_error(status_code, error) from _masked_cause(e)
 
         except requests.exceptions.RetryError as e:
-            error = _mask_sensitive_text(str(e))
-            _logger.error(
-                "API Retries Exhausted: %s - %s", _mask_sensitive_url(url), error
-            )
+            error = redact.mask_text(str(e))
+            _logger.error("API Retries Exhausted: %s - %s", redact.mask_url(url), error)
             self._record_failure(
                 method, url, kwargs, trace_id, skip_logging, error, "server"
             )
             raise ServerError(_("Server error: %s") % error) from _masked_cause(e)
 
         except requests.exceptions.RequestException as e:
-            error = _mask_sensitive_text(str(e))
+            error = redact.mask_text(str(e))
             if _is_exhausted_read_timeout(e):
-                _logger.error("API Timeout: %s - %s", _mask_sensitive_url(url), error)
+                _logger.error("API Timeout: %s - %s", redact.mask_url(url), error)
                 self._record_failure(
                     method, url, kwargs, trace_id, skip_logging, error, "timeout"
                 )
                 raise CommTimeoutError(
-                    _("Request timed out: %s") % _mask_sensitive_url(url)
+                    _("Request timed out: %s") % redact.mask_url(url)
                 ) from _masked_cause(e)
-            _logger.error("API Request Error: %s - %s", _mask_sensitive_url(url), error)
+            _logger.error("API Request Error: %s - %s", redact.mask_url(url), error)
             self._record_failure(
                 method, url, kwargs, trace_id, skip_logging, error, "network"
             )
             raise CommError(_("Request failed: %s") % error) from _masked_cause(e)
 
         except Exception as e:
-            error = _mask_sensitive_text(str(e))
+            error = redact.mask_text(str(e))
             _logger.exception("Unexpected API error")
             self._record_failure(
                 method, url, kwargs, trace_id, skip_logging, error, "other"
@@ -968,7 +887,7 @@ class OutboundAPIClient:
                 "Could not record an api.event.log row for %s %s (trace %s); "
                 "the exchange itself is unaffected.",
                 method,
-                _mask_sensitive_url(url),
+                redact.mask_url(url),
                 trace_id,
             )
 
@@ -1009,7 +928,7 @@ class OutboundAPIClient:
         if not isinstance(body, (dict, list)):
             return f"<{type(body).__name__}, not logged>"
 
-        return json.dumps(self._redact_sensitive_data(body))[:_MAX_LOGGED_PAYLOAD]
+        return json.dumps(redact.mask_data(body))[:_MAX_LOGGED_PAYLOAD]
 
     EVENT_LOG_ANNOTATIONS_KEY = "api_event_log_annotations"
     _ANNOTATION_FIELDS = ("tags", "origin_model", "origin_record_id")
@@ -1042,7 +961,7 @@ class OutboundAPIClient:
             request_kwargs.get("json") or request_kwargs.get("data"),
         )
 
-        safe_url = _mask_sensitive_url(url)
+        safe_url = redact.mask_url(url)
 
         vals = {
             "direction": "outbound",
@@ -1059,10 +978,10 @@ class OutboundAPIClient:
         }
 
         if response_data:
-            safe_response_headers = self._redact_sensitive_data(
+            safe_response_headers = redact.mask_data(
                 response_data.get("headers") or {},
             )
-            safe_response_body = self._redact_sensitive_data(
+            safe_response_body = redact.mask_data(
                 response_data.get("body"),
             )
             status_code = response_data.get("status_code")
@@ -1084,7 +1003,7 @@ class OutboundAPIClient:
         if error:
             vals.update(
                 {
-                    "error_message": _mask_sensitive_text(error),
+                    "error_message": redact.mask_text(error),
                     "error_type": error_type,
                     "state": "failed",
                 },
@@ -1105,43 +1024,7 @@ class OutboundAPIClient:
             )
             for key, value in headers.items()
         }
-        return self._redact_sensitive_data(by_provenance)
-
-    def _redact_sensitive_data(self, data, _depth=0, _max_depth=50):
-        if not data:
-            return data
-
-        if _depth > _max_depth:
-            _logger.warning(
-                "Redaction depth limit (%s) exceeded at depth %s. Truncating structure. This may indicate a circular reference or maliciously crafted payload.",
-                _max_depth,
-                _depth,
-            )
-            return "***REDACTED_DEEP_NESTING***"
-
-        sensitive_patterns = _SENSITIVE_FIELD_PATTERNS
-
-        if isinstance(data, dict):
-            redacted = {}
-            for key, value in data.items():
-                key_lower = str(key).lower().replace("-", "_")
-                if any(pattern in key_lower for pattern in sensitive_patterns):
-                    redacted[key] = "***REDACTED***"
-                elif isinstance(value, (dict, list)):
-                    redacted[key] = self._redact_sensitive_data(
-                        value, _depth + 1, _max_depth
-                    )
-                else:
-                    redacted[key] = value
-            return redacted
-
-        if isinstance(data, list):
-            return [
-                self._redact_sensitive_data(item, _depth + 1, _max_depth)
-                for item in data
-            ]
-
-        return data
+        return redact.mask_data(by_provenance)
 
     def health_check(self):
         try:

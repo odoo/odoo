@@ -7,6 +7,7 @@ import requests
 from requests.auth import HTTPDigestAuth
 
 from odoo.exceptions import UserError, ValidationError
+from odoo.libs import redact
 from odoo.libs.logging import mute_logger
 from odoo.tests.common import TransactionCase, tagged
 
@@ -356,18 +357,16 @@ class TestErrorMessagesDoNotLeakCredentials(ClientLoggingCommon):
 
         pattern = re.compile(r"xyz(\d+):([A-Za-z0-9_-]+)")
         api_client.register_url_secret(pattern, r"xyz\1:***REDACTED***")
-        self.addCleanup(api_client._URL_SECRET_PATTERNS.pop)
+        self.addCleanup(redact.REGISTERED_PATTERNS.pop)
 
     def _last_log(self):
         self.env.cr.precommit.run()
         return self.env["api.event.log"].search([], order="id desc", limit=1)
 
     def test_an_unregistered_secret_shape_is_not_redacted(self):
-        from odoo.addons.api_transport.tools.api_client import _mask_sensitive_url
-
         self.assertIn(
             "unregistered-secret",
-            _mask_sensitive_url("https://vendor.invalid/abc/unregistered-secret"),
+            redact.mask_url("https://vendor.invalid/abc/unregistered-secret"),
         )
 
     @mute_logger("odoo.addons.api_transport.tools.api_client")

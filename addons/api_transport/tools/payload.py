@@ -1,9 +1,10 @@
 import hashlib
 import json
 import math
-import re
 from collections import deque
 from typing import Any
+
+from odoo.libs import redact
 
 from .exceptions import ClientError
 from odoo.addons.credential.tools import check_json_depth
@@ -51,12 +52,7 @@ def sanitize_error_message(error: str | Exception, max_length: int = 500) -> str
     if len(message) > max_length:
         message = message[:max_length] + "... (truncated)"
 
-    sensitive_patterns = ["password", "token", "secret", "api_key"]
-
-    for pattern in sensitive_patterns:
-        message = re.sub(re.escape(pattern), "***", message, flags=re.IGNORECASE)
-
-    return message
+    return redact.mask_text(message)
 
 
 def compute_payload_hash(payload: dict | str | Any) -> str:
