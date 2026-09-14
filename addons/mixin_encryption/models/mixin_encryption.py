@@ -221,7 +221,6 @@ class MixinEncryption(models.AbstractModel):
         if not encrypted_value:
             return False
 
-        allow_fallback = self._allow_key_fallback()
         encrypted_bytes = self._coerce_fernet_token(encrypted_value)
 
         def decode(raw: bytes) -> bytes | str:
@@ -244,10 +243,10 @@ class MixinEncryption(models.AbstractModel):
                 self._name,
                 self.id,
             )
-            if not allow_fallback:
+            if not self._allow_key_fallback():
                 raise self._prepare_fallback_disabled_error(binary) from None
         except InvalidToken:
-            if not allow_fallback:
+            if not self._allow_key_fallback():
                 raise self._prepare_fallback_disabled_error(binary) from None
             _logger.debug(
                 "Current key failed for %s record %s, trying old key versions",

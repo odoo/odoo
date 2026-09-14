@@ -485,6 +485,8 @@ class CredentialCredential(models.Model):
                     vals["encryption_key_version"] = current_version
 
         records = super().create(vals_list)
+        if records._touches_system_secrets():
+            self.env.registry.clear_cache()
 
         # The policy fields belong to the credential administrators, so a creator
         # outside that group cannot be handed them as create values; the category
@@ -590,6 +592,8 @@ class CredentialCredential(models.Model):
                 )
 
         result = super().write(vals)
+        if self._touches_system_secrets(vals):
+            self.env.registry.clear_cache()
 
         category_changed = "category_id" in vals
         if category_changed or adding_encrypted_content:
@@ -1155,9 +1159,11 @@ class CredentialCredential(models.Model):
     def _use_secret_payload(self, purpose: str) -> dict:
         self.check_singleton()
         check_purpose(purpose)
+        record = self.with_context(bin_size=False)
         if self.id:
             self.env["credential.use"]._queue(self.id, purpose)
-        encrypted = self.with_context(bin_size=False).credential_value_encrypted
+            record.fetch(["credential_value_encrypted", "storage_method"])
+        encrypted = record.credential_value_encrypted
         if not encrypted:
             return {}
         plaintext = self._decrypt_value_safe(encrypted, default=None)
@@ -1213,9 +1219,12 @@ class CredentialCredential(models.Model):
 
     @api.model
     def _get_system_secret(self, key: str) -> str | bool:
-        credential = self._get_system_secret_credential(key)
-        if not credential:
+        credential_id = self._provisioned_system_secrets().get(
+            f"{self._SYSTEM_SECRET_PREFIX}{key}"
+        )
+        if not credential_id:
             return False
+        credential = self.sudo().browse(credential_id)
         return credential._use_secret_payload("system_secret").get("value") or False
 
     @api.model
@@ -1240,22 +1249,24 @@ class CredentialCredential(models.Model):
     @api.model
     def _has_system_secret(self, key: str) -> bool:
         return (
-            f"{self._SYSTEM_SECRET_PREFIX}{key}"
-            in self._provisioned_system_secret_names()
+            f"{self._SYSTEM_SECRET_PREFIX}{key}" in self._provisioned_system_secrets()
         )
 
     @tools.ormcache()
-    def _provisioned_system_secret_names(self) -> frozenset[str]:
-        self.flush_model(["name", "company_id", "credential_value_encrypted"])
+    def _provisioned_system_secrets(self) -> dict[str, int]:
+        self.flush_model(
+            ["name", "company_id", "credential_value_encrypted", "sequence", "active"]
+        )
         self.env.cr.execute(
             SQL(
-                "SELECT name FROM credential_credential"
+                "SELECT name, id FROM credential_credential"
                 " WHERE company_id IS NULL AND name LIKE %s"
-                " AND credential_value_encrypted IS NOT NULL",
+                " AND credential_value_encrypted IS NOT NULL"
+                " ORDER BY sequence DESC, id DESC",
                 f"{self._SYSTEM_SECRET_PREFIX}%",
             )
         )
-        return frozenset(name for (name,) in self.env.cr.fetchall())
+        return dict(self.env.cr.fetchall())
 
     def _touches_system_secrets(self, vals=None) -> bool:
         return bool(
