@@ -1242,9 +1242,9 @@ class SaleOrder(models.Model):
                     subsection_line_ids = []
                 invoiceable_line_ids.append(line.id)
 
-        return self.env["sale.order.line"].browse(
+        return self.line_ids.browse(
             invoiceable_line_ids + down_payment_line_ids,
-        )
+        ).with_prefetch(self.line_ids._prefetch_ids)
 
     def _get_order_lines_price_updatable(self):
         return self.line_ids.filtered(lambda line: not line.display_type)
