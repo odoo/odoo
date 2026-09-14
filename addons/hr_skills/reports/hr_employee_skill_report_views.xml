@@ -37,22 +37,12 @@
     <record id="hr_employee_skill_report_view_list" model="ir.ui.view">
         <field name="model">hr.employee.skill.report</field>
         <field name="arch" type="xml">
-            <list editable="bottom" edit="1" expand="0">
-                <field
-                    name="employee_id"
-                    widget="many2one_avatar_employee"
-                    options="{'no_create': True, 'no_open': True}" />
-                <field
-                    name="skill_type_id"
-                    options="{'no_create': True, 'no_open': True}" />
-                <field name="skill_id" options="{'no_create': True, 'no_open': True}" />
-                <field
-                    name="skill_level"
-                    options="{'no_create': True, 'no_open': True}" />
-                <field
-                    name="level_progress"
-                    widget="percentage"
-                    options="{'no_create': True, 'no_open': True}" />
+            <list create="0" expand="0">
+                <field name="employee_id" widget="many2one_avatar_employee" />
+                <field name="skill_type_id" />
+                <field name="skill_id" />
+                <field name="skill_level" />
+                <field name="level_progress" widget="percentage" />
             </list>
         </field>
     </record>

@@ -23,7 +23,6 @@ This module introduces skills and resume management for employees.
         "views/hr_job_skill_views.xml",
         "data/hr_resume_data.xml",
         "data/hr_skill_data.xml",
-        "data/ir_actions_server_data.xml",
         "data/ir_cron_data.xml",
         "data/mail_activity_type_data.xml",
         "data/report_paperformat.xml",

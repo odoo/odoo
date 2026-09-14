@@ -178,6 +178,22 @@ class HrEmployee(models.Model):
             )
         return activities
 
+    @api.model
+    def _get_cv_printable_employees(self, employee_ids):
+        """The employees the current user may print, or an empty recordset.
+
+        An HR user prints whichever employees they can read; anyone else prints
+        only themself. The report renders as superuser, so this is the only
+        access check it gets.
+        """
+        user = self.env.user
+        employees = self.browse(employee_ids).exists()
+        if not user._is_internal() or len(employees) != len(set(employee_ids)):
+            return self.browse()
+        if user.has_group("hr.group_hr_user"):
+            return employees if employees.has_access("read") else self.browse()
+        return employees if employees == user.employee_id else self.browse()
+
     def _load_scenario(self):
         super()._load_scenario()
         demo_tag = self.env.ref(

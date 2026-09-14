@@ -51,6 +51,9 @@
         <field name="view_mode">form</field>
         <field name="target">new</field>
         <field name="context">{'default_employee_ids': active_ids}</field>
+        <field name="binding_model_id" ref="hr.model_hr_employee" />
+        <field name="binding_type">report</field>
+        <field name="binding_view_types">list,kanban,form</field>
     </record>
 
 </odoo>

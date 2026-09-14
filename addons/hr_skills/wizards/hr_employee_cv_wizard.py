@@ -1,6 +1,7 @@
 from urllib.parse import urlencode
 
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 
 class HrEmployeeCvWizard(models.TransientModel):
@@ -38,26 +39,39 @@ class HrEmployeeCvWizard(models.TransientModel):
 
     @api.depends("employee_ids")
     def _compute_printable_sections(self):
+        language = self.env.ref(
+            "hr_skills.hr_skill_type_lang", raise_if_not_found=False
+        )
         for wizard in self:
             wizard.can_show_others = any(
                 not line.line_type_id for line in wizard.employee_ids.resume_line_ids
             )
-            wizard.can_show_skills = bool(wizard.employee_ids.skill_ids)
+            wizard.can_show_skills = any(
+                skill.skill_type_id != language
+                for skill in wizard.employee_ids.employee_skill_ids._held_individual_skills()
+            )
 
     def action_validate(self):
         self.check_singleton()
+        printable = self.env["hr.employee"]._get_cv_printable_employees(
+            self.employee_ids.ids
+        )
+        if not self.employee_ids or printable != self.employee_ids:
+            raise UserError(
+                self.env._("You can only print the resume of employees you can access.")
+                if self.env.user.has_group("hr.group_hr_user")
+                else self.env._("You can only print your own resume.")
+            )
+        query = {
+            "employee_ids": ",".join(str(x) for x in self.employee_ids.ids),
+            "color_primary": self.color_primary,
+            "color_secondary": self.color_secondary,
+        }
+        for section in ("show_skills", "show_contact", "show_others"):
+            if self[section]:
+                query[section] = 1
         return {
             "name": self.env._("Print Resume"),
             "type": "ir.actions.act_url",
-            "url": "/print/cv?"
-            + urlencode(
-                {
-                    "employee_ids": ",".join(str(x) for x in self.employee_ids.ids),
-                    "color_primary": self.color_primary,
-                    "color_secondary": self.color_secondary,
-                    "show_skills": 1 if self.show_skills else None,
-                    "show_contact": 1 if self.show_contact else None,
-                    "show_others": 1 if self.show_others else None,
-                }
-            ),
+            "url": "/print/cv?" + urlencode(query),
         }

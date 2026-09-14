@@ -88,6 +88,9 @@ export class SkillsX2ManyField extends X2ManyField {
     }
 
     async onAdd({ context, editable } = {}) {
+        if (this.props.record.resModel !== "hr.employee") {
+            return super.onAdd({ context, editable });
+        }
         return super.onAdd({
             editable,
             context: {
