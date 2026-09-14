@@ -145,7 +145,7 @@ class AccountAccount(models.Model):
     opening_balance = fields.Monetary(string="Opening Balance", compute='_compute_opening_debit_credit', inverse='_set_opening_balance', currency_field='company_currency_id')
 
     current_balance = fields.Float(compute='_compute_current_balance')
-    related_taxes_amount = fields.Integer(compute='_compute_related_taxes_amount')
+    related_taxes_amount = fields.Integer(compute='_compute_related_taxes_amount', search='_search_related_taxes_amount')
 
     non_trade = fields.Boolean(default=False,
                                help="If set, this account will belong to Non Trade Receivable/Payable in reports and filters.\n"
@@ -603,6 +603,35 @@ class AccountAccount(models.Model):
                 *self.env['account.tax']._check_company_domain(self.env.company),
                 ('repartition_line_ids.account_id', 'in', record.ids),
             ])
+
+    def _search_related_taxes_amount(self, operator, value):
+        sql_operators = {
+            '<': SQL('<'),
+            '<=': SQL('<='),
+            '=': SQL('='),
+            '>': SQL('>'),
+            '>=': SQL('>='),
+        }
+        if operator not in sql_operators:
+            return NotImplemented
+
+        query = Query(self)
+        query.add_where(SQL(
+            """(
+                SELECT COUNT(DISTINCT tax.id)
+                  FROM account_tax_repartition_line rl
+                  JOIN account_tax tax
+                    ON tax.id = rl.tax_id
+                 WHERE rl.account_id = %(account_id)s
+                   AND tax.company_id IN %(company_ids)s
+                   AND tax.active
+            ) %(operator)s %(value)s""",
+            account_id=SQL.identifier(self._table, 'id'),
+            company_ids=tuple(self.env.companies.ids),
+            operator=sql_operators[operator],
+            value=value,
+        ))
+        return [('id', 'in', query)]
 
     @api.depends_context('company')
     def _compute_company_currency_id(self):
