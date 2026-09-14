@@ -1532,3 +1532,66 @@ class TestCreatingManyRequests(TestHrHolidaysCommon):
             "whatever its size: %s for twenty against %s for five"
             % (after_twenty, after_five),
         )
+
+
+@tagged("post_install", "-at_install")
+class TestContextualEmployee(TestHrHolidaysCommon):
+    """One key, two shapes, and everything downstream wants one employee."""
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.leave_type = cls.env["hr.leave.type"].create(
+            {
+                "name": "Contextual",
+                "requires_allocation": True,
+                "allocation_validation_type": "no_validation",
+                "employee_requests": True,
+                "company_id": cls.company.id,
+            }
+        )
+        cls.env["hr.leave.allocation"].create(
+            {
+                "holiday_status_id": cls.leave_type.id,
+                "employee_id": cls.employee_emp_id,
+                "date_from": date(2026, 1, 1),
+                "number_of_days": 12,
+            }
+        ).action_approve()
+
+    def test_the_dashboard_action_sends_a_shape_the_dashboard_accepts(self):
+        employees = self.employee_emp | self.employee_hruser
+        context = employees.action_time_off_dashboard()["context"]
+        data = (
+            self.env["hr.employee"]
+            .with_context(**context)
+            .get_time_off_dashboard_data()
+        )
+        self.assertTrue(
+            data["allocation_data"],
+            "the action hands its whole selection to the dashboard, which reads "
+            "a balance and so needs one employee: %s" % context,
+        )
+
+    def test_either_shape_names_the_same_employee(self):
+        Employee = self.env["hr.employee"]
+        for shape in (
+            self.employee_emp_id,
+            [self.employee_emp_id],
+            [self.employee_emp_id, self.employee_hruser_id],
+        ):
+            with self.subTest(shape=shape):
+                self.assertEqual(
+                    Employee.with_context(employee_id=shape)._get_contextual_employee(),
+                    self.employee_emp,
+                )
+
+    def test_no_employee_in_context_falls_back_to_the_user(self):
+        Employee = self.env["hr.employee"]
+        self.assertEqual(
+            Employee.with_context(employee_id=None)._get_contextual_employee(),
+            self.env.user.employee_id[:1],
+        )
+        self.assertFalse(
+            Employee.with_context(employee_id=False)._get_contextual_employee()
+        )

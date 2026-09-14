@@ -701,12 +701,18 @@ class HrEmployee(models.Model):
 
     @api.model
     def _get_contextual_employee(self):
+        """The one employee the screen in context is about.
+
+        The key arrives as an id or as a list of them -- a form button sends
+        its record, `action_time_off_dashboard` sends its whole selection so
+        the calendar can filter on it -- while every reader here wants one
+        employee and raises `Expected singleton` given more.
+        """
         ctx = self.env.context
-        if self.env.context.get("employee_id") is not None:
-            return self.browse(ctx.get("employee_id"))
-        if self.env.context.get("default_employee_id") is not None:
-            return self.browse(ctx.get("default_employee_id"))
-        return self.env.user.employee_id
+        for key in ("employee_id", "default_employee_id"):
+            if ctx.get(key) is not None:
+                return self.browse(ctx[key])[:1]
+        return self.env.user.employee_id[:1]
 
     def _get_consumed_leaves(self, leave_types, target_date=False, ignore_future=False):
         employees = self or self._get_contextual_employee()
