@@ -512,7 +512,11 @@ class ResCompany(models.Model):
             chart_template_data = ChartTemplate._get_chart_template_data(company.chart_template)
 
             tax_data = chart_template_data['account.tax']
-            default_inactive_tax_ids = {ChartTemplate.ref(key).id for key, values in tax_data.items() if not values.get('active', True)}
+            default_inactive_tax_ids = {
+                tax.id for key, values in tax_data.items()
+                if ((tax := ChartTemplate.ref(key, raise_if_not_found=False))
+                    and not values.get('active', True))
+            }
 
             taxes_to_toggle = self.env['account.tax'].with_context(active_test=False).search([
                 *self.env['account.tax']._check_company_domain(company),
