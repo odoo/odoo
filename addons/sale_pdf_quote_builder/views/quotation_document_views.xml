@@ -90,21 +90,21 @@
                             class="dropdown-item"
                         >Download</a>
                     </t>
-                    <t t-name="card" class="o_kanban_attachment flex-row">
+                    <t t-name="card" class="flex-row gap-2">
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
-                        <aside>
-                            <div class="o_image o_kanban_previewer w-100 h-100" t-att-data-mimetype="record.mimetype.value"/>
+                        <aside class="o_kanban_previewer">
+                            <div class="o_image o_image_64_contain" t-att-data-mimetype="record.mimetype.value"/>
                         </aside>
-                        <main class="ms-2">
+                        <main>
                             <field name="name" class="fw-bolder text-truncate"/>
-                            <div class="d-flex mt-2">
+                            <div class="d-flex text-nowrap">
                                 <span>Document type:</span>
                                 <field name="document_type" class="ms-2" widget="selection"/>
                             </div>
                             <div
                                 t-if="!context.hide_template_ids
                                       and !!record.quotation_template_ids.raw_value.length"
-                                class="mt-2"
+                                class="mt-1"
                             >
                                 <span class="pe-2">Templates:</span>
                                 <field name="quotation_template_ids" class="d-inline-block" widget="many2many_tags"/>
