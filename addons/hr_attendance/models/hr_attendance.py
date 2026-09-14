@@ -308,19 +308,47 @@ class HrAttendance(models.Model):
                 and attendance.attendance_manager_id.id == self.env.user.id
             )
 
+    # A zone offset is less than a day, so the fixed point below settles in one
+    # step. The bound is there because a fixed point without one is a loop.
+    _SCHEDULE_VERSION_PASSES = 3
+
     def _schedule_version(self):
-        """The employee's version in force on the day of this check-in.
+        """The employee's version in force on the LOCAL day of this check-in.
 
         An attendance is priced and dated by the schedule the employee was on
         when they worked it. Reading their *current* schedule instead re-dates
         and re-prices every day they have ever worked the moment they move to
         another one -- and does so silently, because the stored `date` only
         changes the next time something happens to retrigger its compute.
+
+        Which day that is, is circular: the local day needs the zone and the
+        zone comes from the version. Resolved as a fixed point rather than
+        broken in favour of UTC -- pick by the UTC date, localise in that
+        version's zone, re-pick by the local day, stop when it stops moving.
+        Broken in favour of UTC it picked the wrong side of a schedule change:
+        an attendance at 2026-09-07 22:00 UTC is already 2026-09-08 in Tokyo,
+        so an employee whose new schedule starts on the 8th was priced against
+        the old one for a day they worked entirely under the new.
+
+        Where no fixed point exists -- two versions whose zones each push the
+        day onto the other -- it stops on the last and does not oscillate.
         """
         self.check_singleton()
-        return self.employee_id.sudo()._get_version(self.check_in.date())
+        employee = self.employee_id.sudo()
+        version = employee._get_version(self.check_in.date())
+        for _pass in range(self._SCHEDULE_VERSION_PASSES):
+            local_day = (
+                self.check_in.replace(tzinfo=UTC)
+                .astimezone(timezone(version._get_tz()))
+                .date()
+            )
+            settled = employee._get_version(local_day)
+            if settled == version:
+                break
+            version = settled
+        return version
 
-    def _schedule_tz(self):
+    def _schedule_tz(self, version=None):
         """The zone that version's schedule is written in.
 
         Every reader of one attendance has to agree on which zone it is: the
@@ -330,14 +358,13 @@ class HrAttendance(models.Model):
         the version's -- and they disagree for anyone whose personal zone or
         schedule is not the one their work contact carries.
         """
-        return timezone(self._schedule_version()._get_tz())
+        return timezone((version or self._schedule_version())._get_tz())
 
-    def _get_employee_calendar(self):
+    def _get_employee_calendar(self, version=None):
         self.check_singleton()
         return (
-            self._schedule_version().resource_calendar_id
-            or self.employee_id.company_id.resource_calendar_id
-        )
+            version or self._schedule_version()
+        ).resource_calendar_id or self.employee_id.company_id.resource_calendar_id
 
     @api.depends("check_in", "check_out", "employee_id")
     def _compute_worked_hours(self):
@@ -365,7 +392,11 @@ class HrAttendance(models.Model):
         attendance.
         """
         self.check_singleton()
-        tz = self._schedule_tz()
+        # Resolved once and handed down. Reading it is a fixed point over the
+        # employee's versions, and this path used to ask for it four times for
+        # one span -- once here and three more inside `_lunch_intervals`.
+        version = self._schedule_version()
+        tz = self._schedule_tz(version)
         start_dt_tz = start_dt.replace(tzinfo=UTC).astimezone(tz)
         end_dt_tz = end_dt.replace(tzinfo=UTC).astimezone(tz)
 
@@ -374,10 +405,10 @@ class HrAttendance(models.Model):
 
         return get_intervals_hours(
             Intervals([(start_dt_tz, end_dt_tz, self)])
-            - self._lunch_intervals(start_dt_tz, end_dt_tz)
+            - self._lunch_intervals(start_dt_tz, end_dt_tz, version=version)
         )
 
-    def _lunch_intervals(self, start_dt_tz, end_dt_tz):
+    def _lunch_intervals(self, start_dt_tz, end_dt_tz, version=None):
         """The schedule's lunch breaks inside a span, placed in the SCHEDULE's zone.
 
         `hr.employee._get_attendance_intervals` places them in the RESOURCE's
@@ -398,7 +429,8 @@ class HrAttendance(models.Model):
             # A flexible resource keeps no scheduled break, which is the guard
             # `hr.employee._get_attendance_intervals` was called behind.
             return Intervals([])
-        calendar = self._get_employee_calendar()
+        version = version or self._schedule_version()
+        calendar = self._get_employee_calendar(version)
         if not calendar:
             # Not a second guard on the same case: removing it fails no test,
             # and no construction reached it -- `_is_flexible()` above fires
@@ -411,7 +443,7 @@ class HrAttendance(models.Model):
         return calendar._attendance_intervals_batch(
             start_dt_tz,
             end_dt_tz,
-            tz=self._schedule_tz(),
+            tz=self._schedule_tz(version),
             lunch=True,
         )[False]
 

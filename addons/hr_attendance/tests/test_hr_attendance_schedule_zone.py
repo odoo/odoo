@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from unittest.mock import patch
 
 import pytz
@@ -404,3 +404,89 @@ class TestADayIsNotAlwaysTwentyFourHours(ScheduleZoneCase):
             "the control: without it, a window that always overshot by an "
             "hour would satisfy the test above",
         )
+
+
+@tagged("post_install", "-at_install")
+class TestTheVersionIsChosenByTheLocalDay(ScheduleZoneCase):
+    """Which version prices an attendance is circular: the local day needs the
+    zone, and the zone comes from the version.
+
+    Broken in favour of the UTC date it picked the wrong side of a schedule
+    change, in both directions -- an evening attendance is already tomorrow for
+    an employee far enough east, and an early-morning one is still yesterday for
+    one far enough west.
+    """
+
+    def _moved(self, before_tz, after_tz, check_in, from_hour=7, to_hour=9):
+        before = self._calendar(before_tz, with_lunch=False)
+        before.attendance_ids.write({"hour_from": from_hour, "hour_to": from_hour + 8})
+        after = self._calendar(after_tz, with_lunch=False)
+        after.attendance_ids.write({"hour_from": to_hour, "hour_to": to_hour + 8})
+        employee = self._employee(before)
+        employee.create_version(
+            {"date_version": date(2026, 9, 8), "resource_calendar_id": after.id}
+        )
+        self.env.flush_all()
+        self.env.invalidate_all()
+        return self.env["hr.attendance"].create(
+            {
+                "employee_id": employee.id,
+                "check_in": check_in,
+                "check_out": check_in + timedelta(hours=4),
+            }
+        )
+
+    def test_an_evening_attendance_east_belongs_to_tomorrows_version(self):
+        # 22:00 UTC on the 7th is 07:00 on the 8th in Tokyo.
+        attendance = self._moved(
+            "Asia/Tokyo", "Asia/Tokyo", datetime(2026, 9, 7, 22, 0)
+        )
+        self.assertEqual(attendance._local_check_in().date(), date(2026, 9, 8))
+        self.assertEqual(
+            attendance._schedule_version().date_version,
+            date(2026, 9, 8),
+            "the employee worked that day entirely under the new schedule; "
+            "the UTC date said the 7th and priced it against the old one",
+        )
+
+    def test_an_early_attendance_west_belongs_to_yesterdays_version(self):
+        # 02:00 UTC on the 8th is still 16:00 on the 7th in Honolulu.
+        attendance = self._moved(
+            "Pacific/Honolulu", "Pacific/Honolulu", datetime(2026, 9, 8, 2, 0)
+        )
+        self.assertEqual(attendance._local_check_in().date(), date(2026, 9, 7))
+        self.assertEqual(
+            attendance._schedule_version().date_version,
+            date(2020, 1, 1),
+            "the same error in the other direction: the UTC date said the 8th",
+        )
+
+    def test_the_version_chosen_agrees_with_the_day_that_chooses_it(self):
+        for label, tz in (("east", "Asia/Tokyo"), ("west", "Pacific/Honolulu")):
+            with self.subTest(side=label):
+                check_in = (
+                    datetime(2026, 9, 7, 22, 0)
+                    if label == "east"
+                    else datetime(2026, 9, 8, 2, 0)
+                )
+                attendance = self._moved(tz, tz, check_in)
+                version = attendance._schedule_version()
+                self.assertEqual(
+                    attendance.employee_id.sudo()._get_version(
+                        attendance._local_check_in().date()
+                    ),
+                    version,
+                    "a fixed point: the version's own zone must agree with the "
+                    "day that selects it",
+                )
+
+    def test_zones_that_straddle_the_change_in_opposite_directions_terminate(self):
+        """No fixed point exists, so the resolution stops rather than loops."""
+        attendance = self._moved(
+            "Asia/Tokyo", "Pacific/Honolulu", datetime(2026, 9, 7, 22, 0)
+        )
+        self.assertTrue(
+            attendance._schedule_version(),
+            "there is no right answer here; there must still be an answer",
+        )
+        self.assertEqual(attendance.date, attendance._local_date_span()[0])
