@@ -2321,6 +2321,12 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(picking_out.state, "confirmed")
 
     def test_74_move_state_waiting_mto(self):
+        # pins the stock-alone routing: the reception route pulls from Vendors,
+        # so an MTO move on a product without a vendor still finds a rule
+        if self.env["ir.module.module"]._get("purchase_stock").state == "installed":
+            self.skipTest(
+                "purchase_stock replaces the reception pull rule by a buy rule"
+            )
         picking_out = self.PickingObj.create(
             {
                 "picking_type_id": self.picking_type_out.id,
