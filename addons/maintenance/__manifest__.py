@@ -20,7 +20,7 @@ Track equipment and maintenance requests""",
         "data/mail_message_subtype_data.xml",
         "views/maintenance_views.xml",
         "views/mail_activity_views.xml",
-        "views/res_config_settings_views.xml",
+        "wizards/res_config_settings_views.xml",
         "views/maintenance_menus.xml",
     ],
     "demo": [
