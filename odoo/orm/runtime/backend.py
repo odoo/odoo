@@ -4,6 +4,7 @@ import functools
 import json
 import logging
 import os
+import re
 import typing
 import zoneinfo
 from collections import defaultdict
@@ -17,7 +18,9 @@ from psycopg import errors as pgerrors
 from psycopg.errors import (
     ForeignKeyViolation,
     InvalidTextRepresentation,
+    NotNullViolation,
     NumericValueOutOfRange,
+    UniqueViolation,
     UntranslatableCharacter,
 )
 from psycopg.types.json import Json, Jsonb, JsonDumper
@@ -30,6 +33,7 @@ from odoo.tools import SQL, OrderedSet, Query, partition
 from odoo.tools.translate import _
 
 from ..components.storage import NamedSequence
+from ..models.table_objects import Constraint
 from ..primitives import (
     MODULE_UNINSTALL_FLAG,
     SQL_DEFAULT,
@@ -1545,6 +1549,54 @@ POSTGRES_BACKEND = PostgresBackend()
 
 _sql_timezone_names: dict[str, frozenset[str]] = {}
 
+_UNIQUE_DEFINITION = re.compile(r"^\s*unique\s*\(([^)]*)\)\s*$", re.IGNORECASE)
+
+
+def _check_table_constraints(storage, model: BaseModel, rows: list[dict]) -> None:
+    # what the table refuses on PostgreSQL: a NULL in a NOT NULL column and a
+    # duplicate under a unique constraint (NULLs distinct, as SQL treats them)
+    registry = model.env.registry
+    not_null = [
+        field.name
+        for field in model._fields.values()
+        if field.name != "id" and field in registry.not_null_fields
+    ]
+    for row in rows:
+        for name in not_null:
+            if name in row and row[name] is None:
+                raise NotNullViolation(
+                    f'null value in column "{name}" of relation '
+                    f'"{model._table}" violates not-null constraint'
+                )
+    uniques = [
+        (obj.get_full_name(model), tuple(c.strip() for c in match[1].split(",")))
+        for obj in model._table_objects.values()
+        if isinstance(obj, Constraint)
+        and (match := _UNIQUE_DEFINITION.match(obj.get_definition(registry)))
+    ]
+    if not uniques:
+        return
+    existing = [
+        stored
+        for row_id in storage.get_table_ids(model._table)
+        if (stored := storage.get_row(model._table, row_id)) is not None
+    ]
+    for conname, columns in uniques:
+        seen: set[tuple] = set()
+        for row in rows:
+            key = tuple(row.get(column) for column in columns)
+            if any(value is None for value in key):
+                continue
+            if key in seen or any(
+                stored.get("id") != row.get("id")
+                and tuple(stored.get(column) for column in columns) == key
+                for stored in existing
+            ):
+                raise UniqueViolation(
+                    f'duplicate key value violates unique constraint "{conname}"'
+                )
+            seen.add(key)
+
 
 @functools.cache
 def _python_timezone_names() -> frozenset[str]:
@@ -2018,6 +2070,7 @@ class InMemoryBackend:
                     )
             row_dicts.append(row_dict)
             new_ids.append(new_id)
+        _check_table_constraints(self.storage, model, row_dicts)
         self.storage.put_rows(model._table, row_dicts)
         _debug.pipeline(
             "backend.memory.rows_created",
@@ -2052,6 +2105,14 @@ class InMemoryBackend:
                         value = {**old, **value}
                 values[fname] = value
             updates.append((id_, values))
+        _check_table_constraints(
+            self.storage,
+            model,
+            [
+                {**(self.storage.get_row(model._table, id_) or {}), **values}
+                for id_, values in updates
+            ],
+        )
         self.storage.update_rows(model._table, updates)
 
     def fetch(
