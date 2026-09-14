@@ -7,6 +7,7 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import Form
 
 from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.addons.stock.models.stock_quant_reservation import LOCKED_QUANTS_CACHE_KEY
 from odoo.addons.stock.tests.common import TestStockCommon
 
 
@@ -437,6 +438,9 @@ class TestStockQuant(TestStockCommon):
             "UPDATE stock_quant SET reserved_quantity = reserved_quantity + 3 WHERE id = %s",
             (quant.id,),
         )
+        # the raw write stands in for another transaction's: the row must
+        # not count as already locked by this one
+        self.env.cr.cache.pop(LOCKED_QUANTS_CACHE_KEY, None)
         Quant._update_reserved_quantity(self.productA, self.stock_location, -2.0)
         quant.invalidate_recordset(["reserved_quantity"])
         self.assertEqual(quant.reserved_quantity, 5.0)

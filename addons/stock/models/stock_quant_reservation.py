@@ -381,10 +381,10 @@ class StockQuantReservation(models.Model):
         return (self.location_id, self.lot_id, self.package_id, self.owner_id)
 
     def _lock_one_for_reservation(self, reserved_quantity):
-        # a row this transaction already holds is locked without the query:
-        # the pick is the one the lock query makes -- the first lockable row
-        # in recordset order -- and a row of ours is always lockable. The
-        # re-read stays: a write of our own outside the cache is possible
+        # a row this transaction already holds needs neither the lock query
+        # nor a fresh read: nobody else can have written it since, and the
+        # pick is the one the lock query makes -- the first lockable row in
+        # recordset order -- as a row of ours is always lockable
         if not self:
             return self.env["stock.quant"]
         lockable = self
@@ -397,12 +397,15 @@ class StockQuantReservation(models.Model):
         held = self.env.cr.cache.setdefault(LOCKED_QUANTS_CACHE_KEY, set())
         first = lockable[:1]
         if first.id in held:
-            quant = first
-        else:
-            quant = lockable.try_lock_for_update(allow_referencing=True, limit=1)
-            held.update(quant.ids)
+            return first
+        quant = lockable.try_lock_for_update(allow_referencing=True, limit=1)
         if quant:
+            held.update(quant.ids)
+            # the row may have changed before the lock was ours: re-read the
+            # two columns alone, a bare attribute read after the invalidation
+            # would prefetch every column of the row
             quant.invalidate_recordset(["quantity", "reserved_quantity"])
+            quant.fetch(["quantity", "reserved_quantity"])
         return quant
 
     def _update_reserved_delta(self, delta):
