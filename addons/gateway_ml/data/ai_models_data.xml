@@ -19,6 +19,133 @@
         <field name="sampling_params" eval="False" />
     </record>
 
+    <record id="ai_model_claude_fable_5_1" model="gateway.ml.model">
+        <field name="provider_id" ref="ai_provider_anthropic" />
+        <field name="name">Claude Fable 5.1</field>
+        <field name="code">claude-fable-5-1</field>
+        <field name="kind">chat</field>
+        <field name="sequence" eval="20" />
+        <field name="has_vision" eval="True" />
+        <field name="supports_streaming" eval="True" />
+        <field name="supports_function_calling" eval="True" />
+        <field name="sampling_params" eval="False" />
+        <field name="forced_tool_choice" eval="False" />
+    </record>
+
+    <record id="ai_model_claude_opus_5" model="gateway.ml.model">
+        <field name="provider_id" ref="ai_provider_anthropic" />
+        <field name="name">Claude Opus 5</field>
+        <field name="code">claude-opus-5</field>
+        <field name="kind">chat</field>
+        <field name="sequence" eval="20" />
+        <field name="has_vision" eval="True" />
+        <field name="supports_streaming" eval="True" />
+        <field name="supports_function_calling" eval="True" />
+        <field name="sampling_params" eval="False" />
+    </record>
+
+    <record id="ai_model_claude_fable_5" model="gateway.ml.model">
+        <field name="provider_id" ref="ai_provider_anthropic" />
+        <field name="name">Claude Fable 5</field>
+        <field name="code">claude-fable-5</field>
+        <field name="kind">chat</field>
+        <field name="sequence" eval="20" />
+        <field name="has_vision" eval="True" />
+        <field name="supports_streaming" eval="True" />
+        <field name="supports_function_calling" eval="True" />
+        <field name="sampling_params" eval="False" />
+    </record>
+
+    <record id="ai_model_claude_opus_4_8" model="gateway.ml.model">
+        <field name="provider_id" ref="ai_provider_anthropic" />
+        <field name="name">Claude Opus 4.8</field>
+        <field name="code">claude-opus-4-8</field>
+        <field name="kind">chat</field>
+        <field name="sequence" eval="20" />
+        <field name="has_vision" eval="True" />
+        <field name="supports_streaming" eval="True" />
+        <field name="supports_function_calling" eval="True" />
+        <field name="sampling_params" eval="False" />
+    </record>
+
+    <record id="ai_model_claude_opus_4_7" model="gateway.ml.model">
+        <field name="provider_id" ref="ai_provider_anthropic" />
+        <field name="name">Claude Opus 4.7</field>
+        <field name="code">claude-opus-4-7</field>
+        <field name="kind">chat</field>
+        <field name="sequence" eval="20" />
+        <field name="has_vision" eval="True" />
+        <field name="supports_streaming" eval="True" />
+        <field name="supports_function_calling" eval="True" />
+        <field name="sampling_params" eval="False" />
+    </record>
+
+    <record id="ai_model_claude_opus_4_6" model="gateway.ml.model">
+        <field name="provider_id" ref="ai_provider_anthropic" />
+        <field name="name">Claude Opus 4.6</field>
+        <field name="code">claude-opus-4-6</field>
+        <field name="kind">chat</field>
+        <field name="sequence" eval="20" />
+        <field name="has_vision" eval="True" />
+        <field name="supports_streaming" eval="True" />
+        <field name="supports_function_calling" eval="True" />
+    </record>
+
+    <record id="ai_model_claude_sonnet_4_6" model="gateway.ml.model">
+        <field name="provider_id" ref="ai_provider_anthropic" />
+        <field name="name">Claude Sonnet 4.6</field>
+        <field name="code">claude-sonnet-4-6</field>
+        <field name="kind">chat</field>
+        <field name="sequence" eval="20" />
+        <field name="has_vision" eval="True" />
+        <field name="supports_streaming" eval="True" />
+        <field name="supports_function_calling" eval="True" />
+    </record>
+
+    <record id="ai_model_claude_sonnet_4_5" model="gateway.ml.model">
+        <field name="provider_id" ref="ai_provider_anthropic" />
+        <field name="name">Claude Sonnet 4.5</field>
+        <field name="code">claude-sonnet-4-5</field>
+        <field name="kind">chat</field>
+        <field name="sequence" eval="20" />
+        <field name="has_vision" eval="True" />
+        <field name="supports_streaming" eval="True" />
+        <field name="supports_function_calling" eval="True" />
+    </record>
+
+    <record id="ai_model_claude_haiku_4_5" model="gateway.ml.model">
+        <field name="provider_id" ref="ai_provider_anthropic" />
+        <field name="name">Claude Haiku 4.5</field>
+        <field name="code">claude-haiku-4-5</field>
+        <field name="kind">chat</field>
+        <field name="sequence" eval="20" />
+        <field name="has_vision" eval="True" />
+        <field name="supports_streaming" eval="True" />
+        <field name="supports_function_calling" eval="True" />
+    </record>
+
+    <record id="ai_model_claude_sonnet_4_5_20250929" model="gateway.ml.model">
+        <field name="provider_id" ref="ai_provider_anthropic" />
+        <field name="name">Claude Sonnet 4.5 (2025-09-29)</field>
+        <field name="code">claude-sonnet-4-5-20250929</field>
+        <field name="kind">chat</field>
+        <field name="sequence" eval="20" />
+        <field name="has_vision" eval="True" />
+        <field name="supports_streaming" eval="True" />
+        <field name="supports_function_calling" eval="True" />
+    </record>
+
+    <record id="ai_model_claude_haiku_4_5_20251001" model="gateway.ml.model">
+        <field name="provider_id" ref="ai_provider_anthropic" />
+        <field name="name">Claude Haiku 4.5 (2025-10-01)</field>
+        <field name="code">claude-haiku-4-5-20251001</field>
+        <field name="kind">chat</field>
+        <field name="sequence" eval="20" />
+        <field name="has_vision" eval="True" />
+        <field name="supports_streaming" eval="True" />
+        <field name="supports_function_calling" eval="True" />
+    </record>
+
     <record id="ai_model_openai_gpt_5_6_luna" model="gateway.ml.model">
         <field name="provider_id" ref="ai_provider_openai" />
         <field name="name">GPT-5.6 Luna</field>

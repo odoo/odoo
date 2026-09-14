@@ -1,7 +1,6 @@
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import TransactionCase, tagged
 
-from odoo.addons.gateway_ml.tools.ai_clients.claude import ClaudeClient
 from odoo.addons.gateway_ml.tools.wire_formats import UNTIMED_TRANSCRIPTION_MODELS
 
 CHAT = {
@@ -133,19 +132,31 @@ class TestProviderServicesSendWhatTheModuleSent(TransactionCase):
         self.assertTrue(rows)
         self.assertEqual(set(rows.mapped("language_form_key")), {"languages[]"})
 
-    def test_claude_rows_carry_the_clients_quirks(self):
-        for model in self.env["gateway.ml.model"].search(
-            [("provider_id", "=", self.env.ref("gateway_ml.ai_provider_anthropic").id)]
-        ):
-            with self.subTest(model=model.code):
-                self.assertEqual(
-                    model.sampling_params,
-                    model.code not in ClaudeClient.NO_SAMPLING_PARAMS,
-                )
-                self.assertEqual(
-                    model.forced_tool_choice,
-                    model.code not in ClaudeClient.NO_FORCED_TOOL_CHOICE,
-                )
+    def test_claude_rows_carry_what_each_model_refuses(self):
+        refusing = {
+            model.code: (model.sampling_params, model.forced_tool_choice)
+            for model in self.env["gateway.ml.model"].search(
+                [
+                    (
+                        "provider_id",
+                        "=",
+                        self.env.ref("gateway_ml.ai_provider_anthropic").id,
+                    )
+                ]
+            )
+            if not (model.sampling_params and model.forced_tool_choice)
+        }
+        self.assertEqual(
+            refusing,
+            {
+                "claude-fable-5-1": (False, False),
+                "claude-opus-5": (False, True),
+                "claude-sonnet-5": (False, True),
+                "claude-fable-5": (False, True),
+                "claude-opus-4-8": (False, True),
+                "claude-opus-4-7": (False, True),
+            },
+        )
 
 
 @tagged("post_install", "-at_install")

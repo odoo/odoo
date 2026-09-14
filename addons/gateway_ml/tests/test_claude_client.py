@@ -167,15 +167,7 @@ class TestModelRowsAreTheCatalogue(EncryptionKeyCase, TransactionCase):
             )
 
     def test_the_output_cap_is_the_model_rows(self):
-        claude = self.env["gateway.ml.provider"].search([("code", "=", "claude")])
-        self.env["gateway.ml.model"].create(
-            {
-                "provider_id": claude.id,
-                "name": "Haiku",
-                "code": "claude-haiku-4-5",
-                "max_output_tokens": 64000,
-            }
-        )
+        self.env.ref("gateway_ml.ai_model_claude_haiku_4_5").max_output_tokens = 64000
         client = ClaudeClient(self.env)
         with self.assertLogs(self._BASE_LOGGER, "WARNING"):
             client._check_params(model="claude-haiku-4-5", max_tokens=70000)

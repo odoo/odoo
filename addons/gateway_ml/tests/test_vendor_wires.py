@@ -98,7 +98,7 @@ class TestClaudeSampling(EncryptionKeyCase, TransactionCase):
         return post.call_args.kwargs["json"]
 
     def test_fable_5_1_is_a_known_model(self):
-        self.assertIn("claude-fable-5-1", ClaudeClient.VALID_MODELS)
+        self.assertIn("claude-fable-5-1", ClaudeClient(self.env)._get_model_rows())
 
     def test_models_without_sampling_receive_no_sampling_parameter(self):
         for model in ("claude-fable-5-1", "claude-opus-5", "claude-sonnet-5"):

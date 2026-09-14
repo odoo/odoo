@@ -8,24 +8,6 @@ from odoo.addons.integration.tools.exceptions import CommError
 _logger = logging.getLogger(__name__)
 
 
-CLAUDE_MODELS = (
-    ("claude-fable-5-1", "Claude Fable 5.1"),
-    ("claude-opus-5", "Claude Opus 5"),
-    ("claude-sonnet-5", "Claude Sonnet 5"),
-    ("claude-fable-5", "Claude Fable 5"),
-    ("claude-opus-4-8", "Claude Opus 4.8"),
-    ("claude-opus-4-7", "Claude Opus 4.7"),
-    ("claude-opus-4-6", "Claude Opus 4.6"),
-    ("claude-sonnet-4-6", "Claude Sonnet 4.6"),
-    ("claude-sonnet-4-5", "Claude Sonnet 4.5"),
-    ("claude-haiku-4-5", "Claude Haiku 4.5"),
-)
-
-CLAUDE_MODEL_ALIASES = (
-    ("claude-sonnet-4-5-20250929", "Claude Sonnet 4.5"),
-    ("claude-haiku-4-5-20251001", "Claude Haiku 4.5"),
-)
-
 _SAMPLING_PARAMS = ("temperature", "top_p", "top_k")
 
 _FORCED_TOOL_CHOICES = ("any", "tool")
@@ -84,34 +66,17 @@ class ClaudeClient(BaseAIClient):
 
     FALLBACK_MODEL = "claude-sonnet-5"
 
-    VALID_MODELS = [model_id for model_id, _label in CLAUDE_MODELS]
-
-    NO_SAMPLING_PARAMS = frozenset(
-        {
-            "claude-fable-5-1",
-            "claude-opus-5",
-            "claude-sonnet-5",
-            "claude-fable-5",
-            "claude-opus-4-8",
-            "claude-opus-4-7",
-        }
-    )
-
-    NO_FORCED_TOOL_CHOICE = frozenset({"claude-fable-5-1"})
-
     MAX_TOKENS_LIMIT = 128000
 
     DEFAULT_MAX_TOKENS = 16000
 
     def _accepts_sampling(self, model):
         row = self._get_model_rows().get(model)
-        return row.sampling_params if row else model not in self.NO_SAMPLING_PARAMS
+        return row.sampling_params if row else True
 
     def _accepts_forced_tool(self, model):
         row = self._get_model_rows().get(model)
-        if row:
-            return row.forced_tool_choice
-        return model not in self.NO_FORCED_TOOL_CHOICE
+        return row.forced_tool_choice if row else True
 
     def _extract_text_from_response(self, result):
         text, problem = read_anthropic_content(result)
