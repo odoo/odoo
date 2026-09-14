@@ -486,6 +486,50 @@ class TestReportHelpers(BaseCase):
         self.assertIsNone(_parse_docids(""))
         self.assertEqual(_parse_docids("1,x,3"), [1, 3])
 
+    def test_download_url_splits_report_docids_and_query(self):
+        from odoo.http import BadRequest
+
+        from odoo.addons.web.controllers.report import ReportController
+
+        parse = ReportController()._parse_report_download_url
+        self.assertEqual(
+            parse("/report/pdf/base.report_x/1,2?context=%7B%7D", "pdf"),
+            ("base.report_x", "1,2", {"context": "{}"}),
+        )
+        self.assertEqual(
+            parse("/report/text/base.report_x?a=1&a=2", "text"),
+            ("base.report_x", None, {"a": "1"}),
+        )
+        with self.assertRaises(BadRequest):
+            parse("/report/pdf/base.report_x", "text")
+
+
+@tagged("web_controllers_audit")
+class TestCappedWorksheet(BaseCase):
+    def test_write_counts_and_refuses_past_the_cap(self):
+        from odoo.http import UnprocessableEntity
+
+        from odoo.addons.web.controllers.pivot import _CappedWorksheet
+
+        class Sheet:
+            written = []
+
+            def write(self, *args, **kwargs):
+                self.written.append(args)
+
+            def freeze_panes(self, *args):
+                return args
+
+        sheet = Sheet()
+        capped = _CappedWorksheet(sheet, 2, "t")
+        capped.write(0, 0, "a")
+        capped.write(0, 1, "b")
+        self.assertEqual(capped.cells_written, 2)
+        self.assertEqual(capped.freeze_panes(1, 0), (1, 0))
+        with self.assertRaises(UnprocessableEntity):
+            capped.write(0, 2, "c")
+        self.assertEqual(len(sheet.written), 2)
+
 
 @tagged("web_http", "web_controllers_audit")
 class TestReportConverters(HttpCase):
