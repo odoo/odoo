@@ -38,3 +38,4 @@ from . import test_session_cache
 from . import test_session_cache_helpers
 from . import test_ingress_adoption
 from . import test_authentication_tools
+from . import test_unknown_caller_log

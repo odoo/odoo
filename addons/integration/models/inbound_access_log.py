@@ -55,6 +55,7 @@ class InboundAccessLog(models.Model):
             ("payload_too_large", "Refused: payload too large"),
             ("rate_limited", "Refused: endpoint rate limit"),
             ("unauthenticated", "Refused: authentication failed"),
+            ("unknown_receiver", "Refused: no such receiver"),
         ],
         index=True,
         required=True,
@@ -130,6 +131,58 @@ class InboundAccessLog(models.Model):
                     "removed by the retention cron once they age out."
                 )
             )
+
+    UNKNOWN_CALLER_WINDOW_SECONDS = 3600
+
+    @api.model
+    def _record_unknown_caller(
+        self,
+        receiver_model: str,
+        label: str,
+        remote_addr: str | None,
+        user_agent: str | None = None,
+        status_code: int = 404,
+    ) -> None:
+        logs = self.sudo()
+        now = fields.Datetime.now()
+        standing = logs.search(
+            [
+                ("gate_model", "=", receiver_model),
+                ("gate_id", "=", 0),
+                ("outcome", "=", "unknown_receiver"),
+                ("source_ip", "=", remote_addr or False),
+                (
+                    "timestamp",
+                    ">=",
+                    fields.Datetime.subtract(
+                        now, seconds=self.UNKNOWN_CALLER_WINDOW_SECONDS
+                    ),
+                ),
+            ],
+            order="timestamp desc",
+            limit=1,
+        )
+        if standing:
+            standing.write(
+                {"attempt_count": standing.attempt_count + 1, "last_seen_at": now}
+            )
+            return
+        logs.create(
+            {
+                "gate_model": receiver_model,
+                "gate_id": 0,
+                "gate_name": (label or "")[:128] or False,
+                "timestamp": now,
+                "last_seen_at": now,
+                "allowed": False,
+                "outcome": "unknown_receiver",
+                "status_code": status_code,
+                "reason": f"no active {receiver_model} for {label}"[:256],
+                "source_ip": remote_addr or False,
+                "user_agent": (user_agent or "")[:256] or False,
+                "mode": "enforce",
+            }
+        )
 
     @api.model
     def cron_gc_inbound_access_logs(self, retention_days: int = 365):

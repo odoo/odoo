@@ -67,7 +67,9 @@ class InboundController(BaseCommController):
             endpoint_model, endpoint_identifier, endpoint_domain
         )
         if not candidates:
-            return self._refuse_unknown_endpoint(endpoint_model, endpoint_identifier)
+            return self._refuse_unknown_endpoint(
+                endpoint_model, endpoint_identifier, remote_addr
+            )
         endpoint = candidates[:1]
 
         refusal = self._refuse_declared_oversize(endpoint) or self._refuse_caller(
@@ -135,13 +137,22 @@ class InboundController(BaseCommController):
         return request.env[endpoint_model].sudo().search(domain)
 
     def _refuse_unknown_endpoint(
-        self, endpoint_model: str, endpoint_identifier: str
+        self,
+        endpoint_model: str,
+        endpoint_identifier: str,
+        remote_addr: str | None = None,
     ) -> ValidationResult:
         _logger.warning(
             "Endpoint not found: %s with %s=%s",
             endpoint_model,
             self._get_identifier_field(endpoint_model),
             endpoint_identifier,
+        )
+        request.env["inbound.access.log"]._record_unknown_caller(
+            endpoint_model,
+            endpoint_identifier,
+            remote_addr,
+            user_agent=request.httprequest.headers.get("User-Agent"),
         )
         return ValidationResult(
             success=False,
