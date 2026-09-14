@@ -805,9 +805,13 @@ class ProductTemplate(models.Model):
                 )
 
             if uom_price_enabled:
-                template_price_vals["base_unit_price"] = (
-                    template.product_variant_id or template
-                )._get_base_unit_price(template_price_vals["price_reduce"])
+                product_or_template = template.product_variant_id or template
+                price_per_base_uom = product_or_template._get_main_uom()._compute_price(
+                    price=template_price_vals["price_reduce"], to_unit=product_or_template.uom_id
+                )
+                template_price_vals["base_unit_price"] = product_or_template._get_base_unit_price(
+                    price_per_base_uom
+                )
 
             res[template.id] = template_price_vals
 
