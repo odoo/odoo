@@ -656,6 +656,60 @@ class TestBackendDifferential(TransactionCase):
             (TestOrmRelated_Translation_1,), script, "translated en_US round-trip"
         )
 
+    def test_translations_agree_across_tiers(self):
+        def script(env):
+            M = env["test_orm.related_translation_1"]
+            fr = M.with_context(lang="fr_FR")
+            en = M.with_context(lang="en_US")
+            r1, r2, r3 = M.create(
+                [{"name": "Hello"}, {"name": "World"}, {"name": False}]
+            )
+            fr.browse(r1.id).name = "Bonjour"
+            r2.update_field_translations("name", {"fr_FR": "Monde"})
+            env.flush_all()
+            env.invalidate_all()
+            observed = {
+                "en": en.browse((r1 + r2 + r3).ids).mapped("name"),
+                "fr": fr.browse((r1 + r2 + r3).ids).mapped("name"),
+                "fr search": fr.search([("name", "ilike", "onjour")]).mapped("name"),
+                "en search": en.search([("name", "ilike", "onjour")]).mapped("name"),
+                "fr search en value": fr.search([("name", "=", "Hello")]).mapped(
+                    "name"
+                ),
+                "empty": fr.search([("name", "=", False)]).mapped("name"),
+                "fr order": fr.search(
+                    [("id", "in", (r1 + r2 + r3).ids)], order="name"
+                ).mapped("name"),
+                "en order": en.search(
+                    [("id", "in", (r1 + r2 + r3).ids)], order="name desc"
+                ).mapped("name"),
+                "fr group": [
+                    (key, count)
+                    for key, count in fr._read_group(
+                        [("id", "in", (r1 + r2 + r3).ids)], ["name"], ["__count"]
+                    )
+                ],
+                "stored": r1.get_field_translations("name")[0],
+                "copy fr": fr.browse(r1.id).copy().name,
+                "copy en": en.browse(r1.id).copy().name,
+            }
+            r1.write({"name": "Hi"})
+            env.flush_all()
+            env.invalidate_all()
+            observed["fr after en write"] = fr.browse(r1.id).name
+            fr.browse(r2.id).name = False
+            env.flush_all()
+            env.invalidate_all()
+            observed["cleared"] = (en.browse(r2.id).name, fr.browse(r2.id).name)
+            return observed
+
+        self.env["res.lang"]._activate_lang("fr_FR")
+        registry = _isolated_registry(TestOrmRelated_Translation_1)
+        with model_test_env(registry=registry, langs=("en_US", "fr_FR")) as env_a:
+            obs_a = script(env_a)
+        obs_b = script(self.env)
+        self.assertEqual(obs_a, obs_b, "translations diverged across tiers")
+
     def test_datetime_boundaries(self):
         moments = [
             datetime(2020, 1, 1, 12, 0, 0),
