@@ -4036,10 +4036,8 @@ class MixinMailThread(models.AbstractModel):
         devices_su = self.env["mail.push.device"].sudo()
         if not partner_ids:
             return devices_su, None, None
-        vapid_private_key = (
-            self.env["ir.config_parameter"]
-            .sudo()
-            .get_param("mail.web_push_vapid_private_key")
+        vapid_private_key = self.env["credential.credential"]._get_system_secret(
+            "mail.web_push_vapid_private_key"
         )
         vapid_public_key = (
             self.env["ir.config_parameter"]

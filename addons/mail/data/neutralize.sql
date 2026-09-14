@@ -8,7 +8,7 @@ UPDATE fetchmail_server
 -- reset WEB Push Notification:
 -- * delete VAPID/JWT keys
 DELETE FROM ir_config_parameter
-    WHERE key IN ('mail.web_push_vapid_private_key', 'mail.web_push_vapid_public_key');
+    WHERE key = 'mail.web_push_vapid_public_key';
 -- disconnect third-party services: RTC (SFU, Twilio), translation, GIF
 -- (a boolean config parameter is unset when its row is absent)
 DELETE FROM ir_config_parameter
@@ -17,7 +17,8 @@ DELETE FROM ir_config_parameter
 DELETE FROM credential_credential
     WHERE company_id IS NULL
       AND name IN ('System secret: mail.sfu_server_key', 'System secret: mail.twilio_account_token',
-                   'System secret: mail.google_translate_api_key', 'System secret: discuss.klipy_api_key');
+                   'System secret: mail.google_translate_api_key', 'System secret: discuss.klipy_api_key',
+                   'System secret: mail.web_push_vapid_private_key');
 -- incoming mail and TURN secrets are encrypted and cannot be blanked column by column
 UPDATE fetchmail_server
    SET server_credential_id = NULL

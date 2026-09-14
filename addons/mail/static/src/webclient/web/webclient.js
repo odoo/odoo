@@ -85,9 +85,14 @@ patch(WebClient.prototype, {
         }));
         if (!subscription) {
             try {
+                const applicationServerKey = await this._getApplicationServerKey();
+                if (!applicationServerKey) {
+                    log.logic("subscribePush: the server has no VAPID key");
+                    return;
+                }
                 subscription = await pushManager.subscribe({
                     userVisibleOnly: true,
-                    applicationServerKey: await this._getApplicationServerKey(),
+                    applicationServerKey,
                 });
             } catch (error) {
                 log.logic("pushManager.subscribe failed", () => ({
@@ -182,12 +187,15 @@ patch(WebClient.prototype, {
         return registration?.pushManager;
     },
 
-    /** @return {Promise<Uint8Array<ArrayBuffer>>} */
+    /** @return {Promise<Uint8Array<ArrayBuffer> | null>} */
     async _getApplicationServerKey() {
         const vapid_public_key_base64 = await this.orm.call(
             USER_DEVICES_MODEL,
             "get_or_create_web_push_vapid_public_key",
         );
+        if (!vapid_public_key_base64) {
+            return null;
+        }
         const padding = "=".repeat((4 - (vapid_public_key_base64.length % 4)) % 4);
         const base64 = (vapid_public_key_base64 + padding)
             .replace(/-/g, "+")

@@ -1211,18 +1211,8 @@ class TestWebPushNotification(SMSCommon):
             )
 
     def test_push_notification_regenerate_vapid_keys(self):
-        ir_params_sudo = self.env["ir.config_parameter"].sudo()
-        ir_params_sudo.search(
-            [
-                (
-                    "key",
-                    "in",
-                    [
-                        "mail.web_push_vapid_private_key",
-                        "mail.web_push_vapid_public_key",
-                    ],
-                )
-            ]
+        self.env["ir.config_parameter"].sudo().search(
+            [("key", "=", "mail.web_push_vapid_public_key")]
         ).unlink()
         new_vapid_public_key = self.env[
             "mail.push.device"
@@ -1241,6 +1231,54 @@ class TestWebPushNotification(SMSCommon):
                 partner_id=self.user_email.partner_id.id,
                 vapid_public_key=self.vapid_public_key,
             )
+
+    def test_the_vapid_private_key_is_a_system_secret(self):
+        Credential = self.env["credential.credential"]
+
+        self.assertTrue(
+            Credential._get_system_secret("mail.web_push_vapid_private_key")
+        )
+        self.assertFalse(
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("mail.web_push_vapid_private_key")
+        )
+
+    def test_a_lost_vapid_private_key_regenerates_the_pair(self):
+        self.env["credential.credential"]._set_system_secret(
+            "mail.web_push_vapid_private_key", False
+        )
+
+        new_vapid_public_key = self.env[
+            "mail.push.device"
+        ].get_or_create_web_push_vapid_public_key()
+
+        self.assertNotEqual(self.vapid_public_key, new_vapid_public_key)
+        self.assertFalse(self.env["mail.push.device"].sudo().search_count([]))
+
+    def test_without_an_encryption_key_no_vapid_keys_are_made(self):
+        self.env["ir.config_parameter"].sudo().search(
+            [("key", "=", "mail.web_push_vapid_public_key")]
+        ).unlink()
+        Credential = type(self.env["credential.credential"])
+
+        with (
+            patch.object(
+                Credential, "_is_encryption_key_configured", return_value=False
+            ),
+            mute_logger("odoo.addons.mail.models.mail_push_device"),
+        ):
+            public_key = self.env[
+                "mail.push.device"
+            ].get_or_create_web_push_vapid_public_key()
+
+        self.assertFalse(public_key)
+        self.assertFalse(
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("mail.web_push_vapid_public_key")
+        )
+        self.assertTrue(self.env["mail.push.device"].sudo().search_count([]))
 
     def test_register_devices_endpoint_rotation(self):
         """A push subscription endpoint rotation must update the existing
@@ -1447,10 +1485,8 @@ class TestWebPushNotification(SMSCommon):
             .sudo()
             .search([("partner_id", "=", self.user_email.partner_id.id)], limit=1)
         )
-        private_key = (
-            self.env["ir.config_parameter"]
-            .sudo()
-            .get_param("mail.web_push_vapid_private_key")
+        private_key = self.env["credential.credential"]._get_system_secret(
+            "mail.web_push_vapid_private_key"
         )
         with (
             patch("socket.getaddrinfo", **getaddrinfo),

@@ -57,7 +57,7 @@ class MailPush(models.Model):
             return
 
         ir_parameter_sudo = self.env["ir.config_parameter"].sudo()
-        vapid_private_key = ir_parameter_sudo.get_param(
+        vapid_private_key = self.env["credential.credential"]._get_system_secret(
             "mail.web_push_vapid_private_key"
         )
         vapid_public_key = ir_parameter_sudo.get_param("mail.web_push_vapid_public_key")

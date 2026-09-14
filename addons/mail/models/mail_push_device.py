@@ -50,20 +50,26 @@ class MailPushDevice(models.Model):
     )
 
     @api.model
-    def get_or_create_web_push_vapid_public_key(self) -> str:
+    def get_or_create_web_push_vapid_public_key(self) -> str | bool:
         ir_params_sudo = self.env["ir.config_parameter"].sudo()
+        credentials = self.env["credential.credential"]
         public_key = "mail.web_push_vapid_public_key"
+        private_key = "mail.web_push_vapid_private_key"
         public_key_value = ir_params_sudo.get_param(public_key)
-        if not public_key_value:
-            devices = self.sudo().search([])
-            _debug.lifecycle("vapid_keys_generated", devices_dropped=len(devices))
-            devices.unlink()
-            private_key_value, public_key_value = generate_vapid_keys()
-            ir_params_sudo.set_param(
-                "mail.web_push_vapid_private_key", private_key_value
+        if public_key_value and credentials._has_system_secret(private_key):
+            return public_key_value
+        if not credentials._is_encryption_key_configured():
+            _logger.warning(
+                "WebPush: VAPID keys need ODOO_API_ENCRYPTION_KEY, push is off"
             )
-            ir_params_sudo.set_param(public_key, public_key_value)
-            _logger.info("WebPush: missing public key, new VAPID keys generated")
+            return False
+        devices = self.sudo().search([])
+        _debug.lifecycle("vapid_keys_generated", devices_dropped=len(devices))
+        devices.unlink()
+        private_key_value, public_key_value = generate_vapid_keys()
+        credentials._set_system_secret(private_key, private_key_value)
+        ir_params_sudo.set_param(public_key, public_key_value)
+        _logger.info("WebPush: missing VAPID key, new VAPID keys generated")
         return public_key_value
 
     @api.model
