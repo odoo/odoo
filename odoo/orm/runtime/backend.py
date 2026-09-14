@@ -2369,6 +2369,10 @@ class InMemoryBackend:
                     )
                     field_caches[field] = env.core.get_field_data(field)
         prefetch_langs = bool(env.context.get("prefetch_langs"))
+        for field in column_fields:
+            if field.is_stored_computed:
+                # a stale PENDING marker would keep the row's value out
+                field._clear_dead_pending(records)
         for record_id in record_ids:
             row = self.storage.get_row(model._table, record_id)
             if row is not None:
