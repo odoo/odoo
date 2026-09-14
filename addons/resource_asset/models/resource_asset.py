@@ -154,10 +154,18 @@ class ResourceAsset(models.Model):
 
     def write(self, vals):
         if "active" in vals and not vals["active"]:
-            self.resource_id.assignment_ids.filtered(
-                lambda a: a.state != "ended"
-            ).write({"date_end": fields.Datetime.now()})
+            self._end_custody()
         return super().write(vals)
+
+    def _end_custody(self):
+        now = fields.Datetime.now()
+        open_assignments = self.resource_id.assignment_ids.filtered(
+            lambda a: not a.date_end or a.date_end > now
+        )
+        started = open_assignments.filtered(lambda a: a.date_start <= now)
+        started.write({"date_end": now})
+        for planned in open_assignments - started:
+            planned.date_end = planned.date_start
 
     def action_set_in_service(self):
         self.write({"state": "in_service"})

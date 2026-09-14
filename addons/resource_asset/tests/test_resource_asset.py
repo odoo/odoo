@@ -174,6 +174,38 @@ class TestResourceAsset(TransactionCase):
         self.assertTrue(assignment.date_end)
         self.assertEqual(assignment.state, "ended")
 
+    def test_disposal_voids_a_planned_hand_over(self):
+        truck = self._truck()
+        now = datetime.now()
+        current = self.env["resource.assignment"].create(
+            {
+                "resource_id": truck.resource_id.id,
+                "assignee_id": self.driver.id,
+                "role": "operator",
+                "date_start": now - timedelta(days=1),
+            }
+        )
+        successor = self.env["resource.resource"].create(
+            {"name": "Successor", "resource_type": "user", "tz": "UTC"}
+        )
+        planned = self.env["resource.assignment"].create(
+            {
+                "resource_id": truck.resource_id.id,
+                "assignee_id": successor.id,
+                "role": "operator",
+                "date_start": now + timedelta(days=3),
+            }
+        )
+        truck.action_dispose()
+        self.env.flush_all()
+        self.assertEqual(current.state, "ended")
+        self.assertEqual(planned.date_end, planned.date_start)
+        self.assertFalse(
+            truck._get_holder(
+                role="operator", at=planned.date_start + timedelta(hours=1)
+            )
+        )
+
     def test_disposal(self):
         truck = self._truck(date_acquisition="2020-01-01")
         with self.assertRaises(ValidationError):
