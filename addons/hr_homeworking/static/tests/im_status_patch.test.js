@@ -36,6 +36,9 @@ test("a plain status falls through to mail's own icon", async () => {
 
 test("a status another module owns falls through to mail's own icon", async () => {
     await mountStatus("leave_offline");
+    // Not only "none of ours": something must still be drawn, or this control
+    // would pass over a template that renders nothing at all.
+    expect(".o-mail-ImStatus i").toHaveCount(1);
     expect(".fa-house").toHaveCount(0);
     expect(".fa-building").toHaveCount(0);
     expect(".fa-location-dot").toHaveCount(0);

@@ -1,3 +1,4 @@
+from . import test_assets
 from . import test_get_views
 from . import test_hr_employee
 from . import test_hr_employee_location
