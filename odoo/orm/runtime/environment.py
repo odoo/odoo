@@ -306,8 +306,8 @@ class Environment(Mapping[str, "BaseModel"]):
     ) -> BaseModel | None: ...
 
     def ref(self, xml_id: str, raise_if_not_found: bool = True) -> BaseModel | None:
-        res_model, res_id = self["ir.model.data"]._xmlid_to_res_model_res_id(
-            xml_id, raise_if_not_found=raise_if_not_found
+        res_model, res_id = self.registry.xmlids.target(
+            self, xml_id, raise_if_not_found
         )
 
         if res_model and res_id:

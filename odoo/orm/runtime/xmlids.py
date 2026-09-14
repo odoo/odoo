@@ -54,6 +54,20 @@ class Xmlids:
     ) -> list[tuple]:
         return env["ir.model.data"].sudo()._get_xmlids(xml_ids, model)
 
+    def target(
+        self, env: Environment, xml_id: str, raise_if_not_found: bool
+    ) -> tuple[str, int] | tuple[typing.Literal[False], typing.Literal[False]]:
+        if "ir.model.data" not in env.registry:
+            if raise_if_not_found:
+                raise ValueError(
+                    f"No record found for unique ID {xml_id}: the registry has no "
+                    f"ir.model.data model to resolve it"
+                )
+            return (False, False)
+        return env["ir.model.data"]._xmlid_to_res_model_res_id(
+            xml_id, raise_if_not_found=raise_if_not_found
+        )
+
     def update(
         self, env: Environment, entries: list[dict], update: bool = False
     ) -> None:
