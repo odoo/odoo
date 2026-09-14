@@ -5,7 +5,7 @@ from odoo.tests import TransactionCase, tagged
 from odoo.addons.api_ai.tests.common import credential_for
 from odoo.addons.api_ai.tools.ai_clients import ClaudeClient, OpenAIClient
 from odoo.addons.api_ai.tools.ai_clients.claude import get_json_output_config
-from odoo.addons.api_transport.tools.exceptions import CommError
+from odoo.addons.integration.tools.exceptions import CommError
 from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 _SCHEMA = {

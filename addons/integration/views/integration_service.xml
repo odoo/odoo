@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_integration_service_search" model="ir.ui.view">
+        <field name="name">integration.service.search</field>
+        <field name="model">integration.service</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="code" />
+                <field name="provider" />
+
+                <filter
+                    name="filter_healthy"
+                    string="Healthy"
+                    domain="[('is_healthy', '=', True)]" />
+                <filter
+                    name="filter_unhealthy"
+                    string="Unhealthy"
+                    domain="[('is_healthy', '=', False)]" />
+
+                <separator />
+
+                <filter
+                    name="filter_production"
+                    string="Production"
+                    domain="[('environment', '=', 'production')]" />
+                <filter
+                    name="filter_test"
+                    string="Test"
+                    domain="[('environment', '=', 'test')]" />
+
+                <group>
+                    <filter
+                        name="group_category"
+                        string="Category"
+                        context="{'group_by': 'category'}" />
+                    <filter
+                        name="group_environment"
+                        string="Environment"
+                        context="{'group_by': 'environment'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_integration_service_list" model="ir.ui.view">
+        <field name="name">integration.service.list</field>
+        <field name="model">integration.service</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle" />
+                <field name="name" />
+                <field name="code" />
+                <field name="category" widget="badge" />
+                <field name="environment" widget="badge" />
+                <field name="is_healthy" widget="boolean_toggle" readonly="1" />
+                <field name="credential_count" />
+                <field name="active" widget="boolean_toggle" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_integration_service_form" model="ir.ui.view">
+        <field name="name">integration.service.form</field>
+        <field name="model">integration.service</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button
+                        name="action_test_connection"
+                        type="object"
+                        string="Test Connection"
+                        class="btn-primary" />
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="action_view_credentials"
+                            type="object"
+                            icon="fa-key"
+                            class="oe_stat_button">
+                            <field
+                                name="credential_count"
+                                string="Credentials"
+                                widget="statinfo" />
+                        </button>
+                        <button
+                            name="action_view_logs"
+                            type="object"
+                            icon="fa-list-alt"
+                            class="oe_stat_button">
+                            <field
+                                name="total_requests"
+                                string="Requests"
+                                widget="statinfo" />
+                        </button>
+                    </div>
+
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        invisible="active"
+                        bg_color="text-bg-danger" />
+
+                    <div class="oe_title">
+                        <label for="name" />
+                        <h1>
+                            <field name="name" placeholder="Service Name" />
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="code" />
+                            <field name="category" />
+                            <field name="provider" />
+                            <field name="active" invisible="1" />
+                        </group>
+                        <group>
+                            <field name="environment" />
+                            <field name="auth_type" />
+                            <field name="allow_multiple_credentials" />
+                            <field
+                                name="allow_user_credentials"
+                                invisible="auth_type == 'none'" />
+                            <field name="is_healthy" readonly="1" />
+                            <field name="health_message" readonly="1" />
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page name="api_config" string="API Configuration">
+                            <group>
+                                <group string="Endpoints">
+                                    <field name="endpoint_url" />
+                                    <field name="endpoint_url_test" />
+                                    <field name="allowed_hosts" />
+                                    <field name="api_version" />
+                                    <field
+                                        name="api_version_header"
+                                        invisible="not api_version" />
+                                    <field
+                                        name="send_version_headers"
+                                        invisible="not api_version" />
+                                    <field
+                                        name="api_key_header"
+                                        invisible="auth_type != 'api_key'" />
+                                    <field
+                                        name="api_key_scheme"
+                                        invisible="auth_type != 'api_key' or api_key_header" />
+                                </group>
+                                <group string="Timeouts">
+                                    <field name="timeout_connect" />
+                                    <field name="timeout_read" />
+                                </group>
+                            </group>
+
+                            <group invisible="auth_type != 'oauth2'">
+                                <group string="OAuth 2.0">
+                                    <field name="oauth_client_id" />
+                                    <field name="oauth_auth_endpoint" />
+                                    <field name="oauth_token_endpoint" />
+                                    <field name="oauth_scope" />
+                                </group>
+                            </group>
+                        </page>
+
+                        <page name="rate_limiting" string="Rate Limiting">
+                            <group>
+                                <group>
+                                    <field name="rate_limit_enabled" />
+                                    <field
+                                        name="rate_limit_requests"
+                                        invisible="not rate_limit_enabled" />
+                                    <field
+                                        name="rate_limit_period"
+                                        invisible="not rate_limit_enabled" />
+                                </group>
+                            </group>
+                        </page>
+
+                        <page name="retry" string="Retry">
+                            <group>
+                                <group>
+                                    <field name="retry_enabled" />
+                                    <field
+                                        name="retry_max_attempts"
+                                        invisible="not retry_enabled" />
+                                    <field
+                                        name="retry_initial_delay"
+                                        invisible="not retry_enabled" />
+                                    <field
+                                        name="retry_backoff_type"
+                                        invisible="not retry_enabled" />
+                                </group>
+                            </group>
+                        </page>
+
+                        <page name="caching" string="Caching">
+                            <group>
+                                <group>
+                                    <field name="cache_enabled" />
+                                    <field
+                                        name="cache_ttl"
+                                        invisible="not cache_enabled" />
+                                    <field
+                                        name="cache_health"
+                                        invisible="not cache_enabled" />
+                                </group>
+                            </group>
+                        </page>
+
+                        <page name="health_check" string="Health Check">
+                            <group>
+                                <group>
+                                    <field name="health_check_enabled" />
+                                    <field
+                                        name="health_check_endpoint"
+                                        invisible="not health_check_enabled" />
+                                    <field
+                                        name="health_check_interval"
+                                        invisible="not health_check_enabled" />
+                                    <field
+                                        name="health_check_environment"
+                                        invisible="not health_check_enabled" />
+                                </group>
+                                <group>
+                                    <field name="last_health_check" readonly="1" />
+                                    <field name="date_last_activity" readonly="1" />
+                                </group>
+                            </group>
+                        </page>
+
+                        <page name="statistics" string="Statistics">
+                            <group>
+                                <group>
+                                    <field name="total_requests" readonly="1" />
+                                    <field name="success_rate" readonly="1" />
+                                    <field name="avg_response_time" readonly="1" />
+                                </group>
+                                <group>
+                                    <field name="log_retention_days" />
+                                    <field name="log_request_payload" />
+                                </group>
+                            </group>
+                        </page>
+
+                        <page name="info" string="Info">
+                            <group>
+                                <group>
+                                    <field name="website" widget="url" />
+                                    <field name="documentation_url" widget="url" />
+                                </group>
+                                <group>
+                                    <field name="description" />
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_integration_service" model="ir.actions.act_window">
+        <field name="name">API Services</field>
+        <field name="res_model">integration.service</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_integration_service_search" />
+    </record>
+
+</odoo>

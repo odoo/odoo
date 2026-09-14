@@ -11697,10 +11697,10 @@ msgid ""
 "The request is UNAUTHENTICATED: no credential, no signature, no retry, and no record of the exchange beyond the server log. That is the right shape for notifying a receiver that accepts an open URL.\n"
 "\n"
 "For anything that needs a credential, a retry policy, a rate limit, secret redaction or an auditable record of what was sent, use an 'Execute Code' action against a configured outbound endpoint instead. With the API Transport application installed:\n"
-"    endpoint = env['api.endpoint.outbound'].search(\n"
+"    endpoint = env['integration.service'].search(\n"
 "        [('code', '=', 'my_service')], limit=1)\n"
 "    endpoint._get_api_client().post('/path', json={'id': record.id})\n"
-"That endpoint owns the credential, the retry policy and the api.event.log row."
+"That endpoint owns the credential, the retry policy and the integration.exchange row."
 msgstr ""
 
 #. module: mail

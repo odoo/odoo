@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="demo_service_restcountries" model="integration.service">
+        <field name="name">REST Countries API</field>
+        <field name="code">restcountries</field>
+        <field name="category">other</field>
+        <field
+            name="description">Get information about countries via a RESTful API.
+Provides data about countries including names, capitals, currencies, languages, flags, and more.</field>
+        <field name="provider">REST Countries</field>
+        <field name="website">https://restcountries.com</field>
+        <field
+            name="documentation_url">https://restcountries.com/#api-endpoints-v3</field>
+        <field name="endpoint_url">https://restcountries.com/v3.1</field>
+        <field name="endpoint_url_test">https://restcountries.com/v3.1</field>
+        <field name="api_version">v3.1</field>
+        <field name="auth_type">api_key</field>
+        <field name="rate_limit_enabled" eval="False" />
+        <field name="timeout_connect" eval="5" />
+        <field name="timeout_read" eval="10" />
+        <field name="retry_enabled" eval="True" />
+        <field name="retry_max_attempts" eval="2" />
+        <field name="health_check_enabled" eval="True" />
+        <field name="health_check_endpoint">/alpha/us</field>
+        <field name="cache_enabled" eval="True" />
+        <field name="cache_ttl" eval="3600" />
+        <field name="active" eval="True" />
+        <field name="sequence" eval="2" />
+    </record>
+
+    <record id="demo_service_coingecko" model="integration.service">
+        <field name="name">CoinGecko API - Crypto Prices</field>
+        <field name="code">coingecko</field>
+        <field name="category">analytics</field>
+        <field
+            name="description">Free cryptocurrency data API.
+Get real-time crypto prices, market data, historical data, and more for 10,000+ cryptocurrencies.</field>
+        <field name="provider">CoinGecko</field>
+        <field name="website">https://www.coingecko.com</field>
+        <field
+            name="documentation_url">https://www.coingecko.com/en/api/documentation</field>
+        <field name="endpoint_url">https://api.coingecko.com/api/v3</field>
+        <field name="endpoint_url_test">https://api.coingecko.com/api/v3</field>
+        <field name="api_version">v3</field>
+        <field name="auth_type">api_key</field>
+        <field name="rate_limit_enabled" eval="True" />
+        <field name="rate_limit_requests" eval="50" />
+        <field name="rate_limit_period">minute</field>
+        <field name="timeout_connect" eval="5" />
+        <field name="timeout_read" eval="15" />
+        <field name="retry_enabled" eval="True" />
+        <field name="retry_max_attempts" eval="3" />
+        <field name="health_check_enabled" eval="True" />
+        <field name="health_check_endpoint">/ping</field>
+        <field name="cache_enabled" eval="True" />
+        <field name="cache_ttl" eval="60" />
+        <field name="active" eval="True" />
+        <field name="sequence" eval="3" />
+    </record>
+
+    <record id="demo_service_openmeteo" model="integration.service">
+        <field name="name">Open-Meteo Weather API</field>
+        <field name="code">openmeteo</field>
+        <field name="category">other</field>
+        <field
+            name="description">Free weather forecast API with no API key required.
+Get weather forecasts, historical weather data, and climate information worldwide.</field>
+        <field name="provider">Open-Meteo</field>
+        <field name="website">https://open-meteo.com</field>
+        <field name="documentation_url">https://open-meteo.com/en/docs</field>
+        <field name="endpoint_url">https://api.open-meteo.com/v1</field>
+        <field name="endpoint_url_test">https://api.open-meteo.com/v1</field>
+        <field name="api_version">v1</field>
+        <field name="auth_type">api_key</field>
+        <field name="rate_limit_enabled" eval="True" />
+        <field name="rate_limit_requests" eval="100" />
+        <field name="rate_limit_period">minute</field>
+        <field name="timeout_connect" eval="5" />
+        <field name="timeout_read" eval="10" />
+        <field name="retry_enabled" eval="True" />
+        <field name="retry_max_attempts" eval="3" />
+        <field name="health_check_enabled" eval="True" />
+        <field
+            name="health_check_endpoint">/forecast?latitude=52.52&amp;longitude=13.41&amp;current=temperature_2m</field>
+        <field name="cache_enabled" eval="True" />
+        <field name="cache_ttl" eval="600" />
+        <field name="active" eval="True" />
+        <field name="sequence" eval="4" />
+    </record>
+
+    <record id="demo_credential_jsonplaceholder" model="credential.credential">
+        <field name="name">JSONPlaceholder - Demo (No Auth Required)</field>
+        <field name="endpoint_id" ref="integration.demo_service_jsonplaceholder" />
+        <field name="category_id" ref="credential.credential_category_api_key" />
+        <field name="company_id" ref="base.main_company" />
+        <field name="environment">production</field>
+        <field name="active" eval="True" />
+    </record>
+
+    <record id="demo_credential_restcountries" model="credential.credential">
+        <field name="name">REST Countries - Public Access</field>
+        <field name="endpoint_id" ref="demo_service_restcountries" />
+        <field name="category_id" ref="credential.credential_category_api_key" />
+        <field name="company_id" ref="base.main_company" />
+        <field name="environment">production</field>
+        <field name="active" eval="True" />
+    </record>
+
+    <record id="service_test" model="integration.service">
+        <field name="name">httpbin.org</field>
+        <field name="code">httpbin</field>
+        <field name="category">other</field>
+        <field name="provider">Test</field>
+        <field name="endpoint_url">https://httpbin.org</field>
+        <field name="auth_type">api_key</field>
+        <field name="description">Service for testing and development purposes</field>
+    </record>
+
+    <record id="demo_credential_coingecko" model="credential.credential">
+        <field name="name">CoinGecko - Free Tier (No Key Required)</field>
+        <field name="endpoint_id" ref="demo_service_coingecko" />
+        <field name="category_id" ref="credential.credential_category_api_key" />
+        <field name="company_id" ref="base.main_company" />
+        <field name="environment">production</field>
+        <field name="active" eval="True" />
+    </record>
+
+    <record id="demo_credential_openmeteo" model="credential.credential">
+        <field name="name">Open-Meteo - Public Access (No Auth)</field>
+        <field name="endpoint_id" ref="demo_service_openmeteo" />
+        <field name="category_id" ref="credential.credential_category_api_key" />
+        <field name="company_id" ref="base.main_company" />
+        <field name="environment">production</field>
+        <field name="active" eval="True" />
+    </record>
+
+</odoo>

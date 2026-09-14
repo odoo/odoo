@@ -4,7 +4,7 @@ from urllib.parse import urlencode
 
 from ..vendor_catalog import SYNTHESIZE_TIMEOUT
 from .base import BaseAIClient
-from odoo.addons.api_transport.tools.exceptions import CommError
+from odoo.addons.integration.tools.exceptions import CommError
 
 _logger = logging.getLogger(__name__)
 

@@ -21,7 +21,7 @@ def check_purpose(purpose: str) -> str:
         or not PURPOSE_RE.match(purpose)
     ):
         raise ValueError(
-            f"a secret use needs a purpose such as 'api_transport:bearer' or "
+            f"a secret use needs a purpose such as 'integration:bearer' or "
             f"'env:claude_sdk' (lowercase, at most {PURPOSE_MAX_LENGTH} characters), "
             f"got {purpose!r}"
         )

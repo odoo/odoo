@@ -42,7 +42,7 @@ class TestSecretUseCounter(EncryptionKeyCase, TransactionCase):
 
     def test_uses_are_counted_per_purpose_and_day_after_the_commit(self):
         for _ in range(3):
-            self.credential._use_secret("api_transport:api_key")
+            self.credential._use_secret("integration:api_key")
         self.credential._use_secret_payload("env:claude_sdk")
         self.assertEqual(self._counts(), {}, "nothing is written before the commit")
 
@@ -50,7 +50,7 @@ class TestSecretUseCounter(EncryptionKeyCase, TransactionCase):
         self.env.invalidate_all()
 
         self.assertEqual(
-            self._counts(), {"api_transport:api_key": 3, "env:claude_sdk": 1}
+            self._counts(), {"integration:api_key": 3, "env:claude_sdk": 1}
         )
         row = self.env["credential.use"].search(
             [("credential_id", "=", self.credential.id)], limit=1
@@ -59,12 +59,12 @@ class TestSecretUseCounter(EncryptionKeyCase, TransactionCase):
         self.assertEqual(row.company_id, self.credential.company_id)
 
     def test_a_later_transaction_adds_to_the_same_row(self):
-        self.credential._use_secret("api_transport:api_key")
+        self.credential._use_secret("integration:api_key")
         self._flush_into_this_transaction(self.env.cr.postcommit)
-        self.credential._use_secret("api_transport:api_key")
+        self.credential._use_secret("integration:api_key")
         self._flush_into_this_transaction(self.env.cr.postcommit)
         self.env.invalidate_all()
-        self.assertEqual(self._counts(), {"api_transport:api_key": 2})
+        self.assertEqual(self._counts(), {"integration:api_key": 2})
 
     def test_a_rolled_back_transaction_still_counts_its_uses(self):
         self.credential._use_basic_auth("delivery:carrier")
@@ -74,7 +74,7 @@ class TestSecretUseCounter(EncryptionKeyCase, TransactionCase):
         self.assertEqual(self._counts(), {"delivery:carrier": 1})
 
     def test_use_writes_no_reveal_audit_row(self):
-        self.credential._use_secret("api_transport:api_key")
+        self.credential._use_secret("integration:api_key")
         self._flush_into_this_transaction(self.env.cr.postcommit)
         self.assertFalse(
             self.env["credential.access.log"].search_count(

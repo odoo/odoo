@@ -7,7 +7,7 @@ does not provide one does not skip: it fails, once per test that stores a secret
 with ``ValidationError: Encryption key not configured!``.
 
 Measured on this workspace, that is 61 failures across ``credential`` and
-``api_transport`` on a run where the variable happened to be unset -- and no CI lane
+``integration`` on a run where the variable happened to be unset -- and no CI lane
 runs either suite, so nobody sees them go green anywhere else. Sixty-one red tests
 in the two modules a change was just made to is exactly the shape of an
 unattributable failure, and it costs a diagnostic detour every time.

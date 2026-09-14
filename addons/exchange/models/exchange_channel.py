@@ -9,14 +9,14 @@ _logger = logging.getLogger(__name__)
 class ExchangeChannel(models.Model):
     _name = "exchange.channel"
     _description = "Exchange Channel"
-    _inherits = {"api.endpoint.outbound": "endpoint_id"}
+    _inherits = {"integration.service": "endpoint_id"}
     _order = "sequence, name"
 
     # FIELDS
 
     # Transport block
     endpoint_id = fields.Many2one(
-        comodel_name="api.endpoint.outbound",
+        comodel_name="integration.service",
         index=True,
         required=True,
         ondelete="cascade",

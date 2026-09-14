@@ -9,11 +9,11 @@ from ..tools.ai_clients import AI_CLIENT_REGISTRY, get_ai_client
 class AIProvider(models.Model):
     _name = "ai.provider"
     _description = "AI Provider Configuration"
-    _inherits = {"api.endpoint.outbound": "endpoint_id"}
+    _inherits = {"integration.service": "endpoint_id"}
     _order = "sequence, name"
 
     endpoint_id = fields.Many2one(
-        comodel_name="api.endpoint.outbound",
+        comodel_name="integration.service",
         required=True,
         ondelete="cascade",
         help="Underlying API service configuration",
@@ -131,10 +131,10 @@ class AIProvider(models.Model):
         return {
             "name": self.env._("Request Logs - %(provider)s", provider=self.name),
             "type": "ir.actions.act_window",
-            "res_model": "api.event.log",
+            "res_model": "integration.exchange",
             "view_mode": "list,form",
             "domain": [
-                ("channel_id", "=", f"api.endpoint.outbound,{self.endpoint_id.id}"),
+                ("channel_id", "=", f"integration.service,{self.endpoint_id.id}"),
                 ("direction", "=", "outbound"),
             ],
         }

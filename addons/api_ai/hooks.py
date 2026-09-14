@@ -6,7 +6,7 @@ _OLD_MODULE = "api_gateway"
 _NEW_MODULE = "api_ai"
 
 _MOVED_RECORDS = {
-    "api.endpoint.outbound": [
+    "integration.service": [
         "service_anthropic",
         "service_deepseek",
         "service_openai",
@@ -60,10 +60,10 @@ _MOVED_RECORDS = {
 # after the model ("claude", "gemini"), api_ai names them after the vendor
 # ("anthropic", "google"). _retag_moved_records matches on name and only changes
 # the module, so without this pass it silently skips both -- and the data load
-# then inserts a second row, which api_endpoint_outbound_code_unique rejects
+# then inserts a second row, which integration_service_code_unique rejects
 # because the code ("claude", "gemini") did not change.
 _RENAMED_RECORDS = {
-    "api.endpoint.outbound": {
+    "integration.service": {
         "service_claude": "service_anthropic",
         "service_gemini": "service_google",
     },

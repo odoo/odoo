@@ -15,12 +15,12 @@ sending it to, whether it arrived, what the answer was, and when to ask again.
 
 Models
 ------
-* ``exchange.channel`` -- who. Delegates to ``api.endpoint.outbound`` for
+* ``exchange.channel`` -- who. Delegates to ``integration.service`` for
   transport, ``credential.credential`` for secrets and
   ``certificate.certificate`` for signing material, so none of the three is
   restated here.
 * ``exchange.transmission`` -- what happened. One row per ask, carrying the
-  *verdict* lifecycle. The transport lifecycle stays on ``api.event.log``,
+  *verdict* lifecycle. The transport lifecycle stays on ``integration.exchange``,
   which this points at: an HTTP 200 carrying a rejection is a transport
   success and a business rejection, and one Selection cannot be both.
 * ``exchange.protocol`` -- how. An ``AbstractModel`` registry, one concrete
@@ -41,7 +41,7 @@ three is a localisation.
     "author": "AgroMarin",
     "license": "LGPL-3",
     "depends": [
-        "api_transport",
+        "integration",
         "certificate",
     ],
     "data": [

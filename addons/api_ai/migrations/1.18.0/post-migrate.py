@@ -57,7 +57,7 @@ def _carry_fallback_relation(cr):
           FROM ai_model_fallback_rel r
           JOIN ai_model f ON f.id = r.fallback_id
           JOIN ai_provider p ON p.id = f.provider_id
-          JOIN api_endpoint_outbound e ON e.id = p.endpoint_id
+          JOIN integration_service e ON e.id = p.endpoint_id
          WHERE r.model_id <> r.fallback_id
         ON CONFLICT (model_id, fallback_id) DO NOTHING
         """

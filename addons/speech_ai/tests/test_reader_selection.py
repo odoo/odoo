@@ -10,7 +10,7 @@ class TestReaderSelection(EncryptionKeyCase, TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        endpoint = cls.env["api.endpoint.outbound"].search([("code", "=", "openai")])
+        endpoint = cls.env["integration.service"].search([("code", "=", "openai")])
         cls.env["credential.credential"].create(
             {"name": "openai", "endpoint_id": endpoint.id, "bearer_token": "K"}
         )

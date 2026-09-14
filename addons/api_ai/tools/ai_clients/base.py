@@ -2,8 +2,8 @@ import logging
 
 from ..json_payload import parse_json_response
 from ..vendor_catalog import PROVIDERS
-from odoo.addons.api_transport.tools.api_client import get_api_client
-from odoo.addons.api_transport.tools.exceptions import CommError
+from odoo.addons.integration.tools.api_client import get_api_client
+from odoo.addons.integration.tools.exceptions import CommError
 
 _logger = logging.getLogger(__name__)
 

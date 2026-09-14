@@ -4,7 +4,7 @@ from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
 from odoo.addons.api_ai.tools.ai_orchestrator import AIOrchestrator, is_retryable
-from odoo.addons.api_transport.tools.exceptions import (
+from odoo.addons.integration.tools.exceptions import (
     AuthenticationError,
     ClientError,
     CommError,
@@ -116,7 +116,7 @@ class TestExecuteWithFallback(TransactionCase):
         self.assertEqual(len(attempted), len(self.models))
 
     def test_a_non_retryable_failure_fabricates_no_exchange(self):
-        model = self.env["api.event.log"]
+        model = self.env["integration.exchange"]
         before = model.search([("direction", "=", "outbound")]).ids
         attempted = self._run(
             lambda client, provider: (_ for _ in ()).throw(AuthenticationError("401")),
@@ -136,7 +136,7 @@ class TestExecuteWithFallback(TransactionCase):
         )
 
     def test_a_retryable_failure_walks_the_chain_without_inventing_rows(self):
-        model = self.env["api.event.log"]
+        model = self.env["integration.exchange"]
         before = model.search([("direction", "=", "outbound")]).ids
         attempted = self._run(
             lambda client, provider: (_ for _ in ()).throw(ServerError("503")),

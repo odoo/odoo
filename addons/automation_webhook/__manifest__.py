@@ -7,7 +7,7 @@
     "website": "https://www.agromarin.mx",
     "license": "LGPL-3",
     "depends": [
-        "api_transport",
+        "integration",
         "automation",
     ],
     "data": [

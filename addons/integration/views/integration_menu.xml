@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem
+        id="menu_integration_root"
+        name="API Transport"
+        parent="credential.menu_integrations_root"
+        sequence="20" />
+
+    <menuitem
+        id="menu_integration_exchanges"
+        name="Event Logs"
+        parent="menu_integration_root"
+        action="action_integration_exchange"
+        sequence="10" />
+
+    <menuitem
+        id="menu_integration_services"
+        name="Services"
+        parent="menu_integration_root"
+        sequence="20" />
+
+    <menuitem
+        id="menu_integration_service_list"
+        name="API Services"
+        parent="menu_integration_services"
+        action="action_integration_service"
+        sequence="10" />
+
+    <menuitem
+        id="menu_integration_config"
+        name="Configuration"
+        parent="menu_integration_root"
+        sequence="90"
+        groups="group_api_transport_manager" />
+
+    <menuitem
+        id="menu_integration_response_cache"
+        name="Response Cache"
+        parent="menu_integration_config"
+        action="action_integration_response_cache"
+        sequence="10" />
+
+    <menuitem
+        id="menu_api_credential_list"
+        name="Credentials"
+        parent="menu_integration_config"
+        action="action_api_credential"
+        sequence="20" />
+
+    <menuitem
+        id="menu_integration_security"
+        name="Security &amp; Audit"
+        parent="menu_integration_root"
+        sequence="80"
+        groups="group_api_transport_manager" />
+
+    <menuitem
+        id="menu_api_credential_access_log"
+        name="Access Logs"
+        parent="menu_integration_security"
+        action="action_api_credential_access_log"
+        sequence="10" />
+
+    <menuitem
+        id="menu_api_credential_security_report"
+        name="Security Report"
+        parent="menu_integration_security"
+        action="action_api_credential_security_report"
+        sequence="20" />
+
+    <menuitem
+        id="menu_inbound_access_logs"
+        name="Inbound Access"
+        parent="credential.menu_credential_root"
+        action="action_inbound_access_log"
+        sequence="35"
+        groups="credential.group_credential_admin" />
+
+</odoo>

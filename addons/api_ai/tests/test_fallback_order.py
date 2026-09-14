@@ -9,7 +9,7 @@ from odoo.tools import mute_logger
 
 from odoo.addons.api_ai.tests.test_model_selection import _SelectionCase
 from odoo.addons.api_ai.tools.ai_orchestrator import AIOrchestrator
-from odoo.addons.api_transport.tools.exceptions import CommError, ServerError
+from odoo.addons.integration.tools.exceptions import CommError, ServerError
 
 
 @tagged("post_install", "-at_install")

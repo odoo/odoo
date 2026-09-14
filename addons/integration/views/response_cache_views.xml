@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_integration_response_cache_list" model="ir.ui.view">
+        <field name="name">integration.response.cache.list</field>
+        <field name="model">integration.response.cache</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="cache_key" />
+                <field name="endpoint_id" />
+                <field name="request_url" />
+                <field name="status_code" />
+                <field name="hit_count" />
+                <field name="last_accessed" />
+                <field name="date_expiration" />
+                <field name="is_expired" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_integration_response_cache_form" model="ir.ui.view">
+        <field name="name">integration.response.cache.form</field>
+        <field name="model">integration.response.cache</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="cache_key" readonly="1" />
+                            <field name="endpoint_id" readonly="1" />
+                            <field name="company_id" readonly="1" />
+                            <field name="request_url" readonly="1" />
+                        </group>
+                        <group>
+                            <field name="status_code" readonly="1" />
+                            <field name="hit_count" readonly="1" />
+                            <field name="ttl_seconds" readonly="1" />
+                            <field name="is_expired" readonly="1" />
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="date_created" readonly="1" />
+                            <field name="date_expiration" readonly="1" />
+                            <field name="last_accessed" readonly="1" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Response">
+                            <field name="response_body" readonly="1" />
+                        </page>
+                        <page string="Headers">
+                            <field name="response_headers" readonly="1" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_integration_response_cache" model="ir.actions.act_window">
+        <field name="name">Response Cache</field>
+        <field name="res_model">integration.response.cache</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

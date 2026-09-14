@@ -1884,7 +1884,7 @@ class TestRawEgressLint(BaseCase):
 
     def test_the_transport_module_has_no_exemption(self):
         unit = _rules.Unit(
-            "/w/odoo/addons/api_transport/tools/api_client.py",
+            "/w/odoo/addons/integration/tools/api_client.py",
             "",
             ast.parse(""),
             [],

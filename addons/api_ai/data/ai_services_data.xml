@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
 
-    <record id="service_anthropic" model="api.endpoint.outbound">
+    <record id="service_anthropic" model="integration.service">
         <field name="name">Claude AI (Anthropic)</field>
         <field name="code">claude</field>
         <field name="category">ai</field>
@@ -89,7 +89,7 @@ Real-World Use Cases:
         <field name="sequence" eval="10" />
     </record>
 
-    <record id="service_deepseek" model="api.endpoint.outbound">
+    <record id="service_deepseek" model="integration.service">
         <field name="name">DeepSeek AI</field>
         <field name="code">deepseek</field>
         <field name="category">ai</field>
@@ -161,7 +161,7 @@ Limitations:
         <field name="sequence" eval="11" />
     </record>
 
-    <record id="service_openai" model="api.endpoint.outbound">
+    <record id="service_openai" model="integration.service">
         <field name="name">OpenAI API</field>
         <field name="code">openai</field>
         <field name="category">ai</field>
@@ -209,7 +209,7 @@ Use Cases:
         <field name="sequence" eval="12" />
     </record>
 
-    <record id="service_google" model="api.endpoint.outbound">
+    <record id="service_google" model="integration.service">
         <field name="name">Google Gemini AI</field>
         <field name="code">gemini</field>
         <field name="category">ai</field>
@@ -258,7 +258,7 @@ Use Cases:
         <field name="sequence" eval="13" />
     </record>
 
-    <record id="service_deepgram" model="api.endpoint.outbound">
+    <record id="service_deepgram" model="integration.service">
         <field name="name">Deepgram Speech AI</field>
         <field name="code">deepgram</field>
         <field name="category">ai</field>
@@ -312,7 +312,7 @@ API Documentation: https://developers.deepgram.com/docs</field>
         <field name="sequence" eval="14" />
     </record>
 
-    <record id="service_groq" model="api.endpoint.outbound">
+    <record id="service_groq" model="integration.service">
         <field name="name">Groq</field>
         <field name="code">groq</field>
         <field name="category">ai</field>
@@ -335,7 +335,7 @@ API Documentation: https://developers.deepgram.com/docs</field>
         <field name="sequence" eval="15" />
     </record>
 
-    <record id="service_moonshot" model="api.endpoint.outbound">
+    <record id="service_moonshot" model="integration.service">
         <field name="name">Moonshot (Kimi)</field>
         <field name="code">moonshot</field>
         <field name="category">ai</field>
@@ -358,7 +358,7 @@ API Documentation: https://developers.deepgram.com/docs</field>
         <field name="sequence" eval="16" />
     </record>
 
-    <record id="service_google_openai" model="api.endpoint.outbound">
+    <record id="service_google_openai" model="integration.service">
         <field name="name">Google Gemini (OpenAI-compatible)</field>
         <field name="code">gemini_openai</field>
         <field name="category">ai</field>

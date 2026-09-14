@@ -12,7 +12,7 @@ AI layer on the outbound API transport.
 
 Models
 ------
-* ``ai.provider`` -- delegates to ``api.endpoint.outbound``; holds what the API
+* ``ai.provider`` -- delegates to ``integration.service``; holds what the API
   key decides: reliability, free tier, fallback chain, and ``has_vision`` /
   ``has_audio`` rolled up from its models
 * ``ai.model.fallback`` -- one ordered hop of a model's fallback chain
@@ -124,13 +124,13 @@ takes ``raw=True`` and hands back the response -- so it now speaks, and the
 OpenAI wire speaks beside it. A vendor that writes no audio says so from the
 catalog rather than from a client.
 
-Depends on ``api_transport`` alone.
+Depends on ``integration`` alone.
     """,
     "author": "AgroMarin",
     "website": "https://www.agromarin.mx",
     "license": "LGPL-3",
     "depends": [
-        "api_transport",
+        "integration",
     ],
     "data": [
         "security/api_ai_security.xml",

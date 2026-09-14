@@ -149,7 +149,7 @@ class ExchangeTransmission(models.Model):
 
     # Transport block
     event_log_id = fields.Many2one(
-        comodel_name="api.event.log",
+        comodel_name="integration.exchange",
         index=True,
         ondelete="set null",
         help="The transport record: whether the call completed. A settled "

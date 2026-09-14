@@ -12,7 +12,7 @@ def migrate(cr, version):
     for code, (key_header, version_header) in _VENDOR_HEADERS.items():
         cr.execute(
             """
-            UPDATE api_endpoint_outbound
+            UPDATE integration_service
                SET api_key_header = %s,
                    api_version_header = %s
              WHERE code = %s

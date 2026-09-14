@@ -7,8 +7,8 @@ from odoo.addons.api_ai.tools.ai_clients import (
     BaseAIClient,
     register_ai_client,
 )
-from odoo.addons.api_transport.tools.api_client import OutboundAPIClient
-from odoo.addons.api_transport.tools.exceptions import CommError
+from odoo.addons.integration.tools.api_client import OutboundAPIClient
+from odoo.addons.integration.tools.exceptions import CommError
 from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 
@@ -24,7 +24,7 @@ class TestOrchestratorEventLog(EncryptionKeyCase, TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.log = cls.env["api.event.log"]
+        cls.log = cls.env["integration.exchange"]
         cls.orchestrator = AIOrchestrator(cls.env)
         cls._registry_before = dict(AI_CLIENT_REGISTRY)
         cls.addClassCleanup(cls._restore_client_registry)
@@ -35,7 +35,7 @@ class TestOrchestratorEventLog(EncryptionKeyCase, TransactionCase):
         AI_CLIENT_REGISTRY.update(cls._registry_before)
 
     def _model(self, code):
-        endpoint = self.env["api.endpoint.outbound"].create(
+        endpoint = self.env["integration.service"].create(
             {
                 "name": code,
                 "code": code,
@@ -215,7 +215,7 @@ class TestOrchestratorEventLog(EncryptionKeyCase, TransactionCase):
             len(self._rows()),
             before,
             "an attempt that never sent a request must not fabricate an "
-            "api.event.log row",
+            "integration.exchange row",
         )
 
     def test_annotations_cannot_overwrite_the_transports_own_facts(self):

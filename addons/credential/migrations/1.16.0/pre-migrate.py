@@ -46,7 +46,7 @@ def _hand_consumer_rows_to_their_field_owner(cr):
     )
 
 
-def _install_api_transport_where_a_module_needs_it(cr):
+def _install_integration_where_a_module_needs_it(cr):
     cr.execute(
         """
         SELECT 1
@@ -54,7 +54,7 @@ def _install_api_transport_where_a_module_needs_it(cr):
           JOIN ir_module_module dependent
             ON dependent.id = dependency.module_id
            AND dependent.state IN ('installed', 'to upgrade')
-         WHERE dependency.name = 'api_transport'
+         WHERE dependency.name = 'integration'
          LIMIT 1
         """
     )
@@ -62,7 +62,7 @@ def _install_api_transport_where_a_module_needs_it(cr):
         return
     env = api.Environment(cr, SUPERUSER_ID, {})
     env["ir.module.module"].search(
-        [("name", "=", "api_transport"), ("state", "=", "uninstalled")]
+        [("name", "=", "integration"), ("state", "=", "uninstalled")]
     ).button_install()
 
 
@@ -70,4 +70,4 @@ def migrate(cr, version):
     if not version:
         return
     _hand_consumer_rows_to_their_field_owner(cr)
-    _install_api_transport_where_a_module_needs_it(cr)
+    _install_integration_where_a_module_needs_it(cr)

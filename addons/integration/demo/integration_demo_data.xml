@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="demo_service_jsonplaceholder" model="integration.service">
+        <field name="name">JSONPlaceholder</field>
+        <field name="code">jsonplaceholder</field>
+        <field name="category">other</field>
+        <field name="provider">Typicode</field>
+        <field name="description">Free fake REST API for testing and prototyping</field>
+        <field name="endpoint_url">https://jsonplaceholder.typicode.com</field>
+        <field name="auth_type">none</field>
+        <field name="environment">test</field>
+        <field name="website">https://jsonplaceholder.typicode.com</field>
+        <field
+            name="documentation_url">https://jsonplaceholder.typicode.com/guide/</field>
+        <field name="health_check_enabled">True</field>
+        <field name="health_check_endpoint">/posts/1</field>
+        <field name="rate_limit_enabled">True</field>
+        <field name="rate_limit_requests">100</field>
+        <field name="rate_limit_period">minute</field>
+    </record>
+
+</odoo>

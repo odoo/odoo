@@ -17,7 +17,7 @@ class TestClaudeCredentialLookup(EncryptionKeyCase, TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.service = cls.env["api.endpoint.outbound"].search(
+        cls.service = cls.env["integration.service"].search(
             [("code", "=", "claude")], limit=1
         )
 

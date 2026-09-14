@@ -2,7 +2,7 @@ import json
 import logging
 
 from .openai_compatible import OpenAICompatibleClient
-from odoo.addons.api_transport.tools.exceptions import CommError
+from odoo.addons.integration.tools.exceptions import CommError
 
 _logger = logging.getLogger(__name__)
 

@@ -8,7 +8,7 @@ _SELF_VERSIONED_CODES = ("claude", "gemini")
 def migrate(cr, version):
     cr.execute(
         """
-        UPDATE api_endpoint_outbound
+        UPDATE integration_service
            SET send_version_headers = false
          WHERE code = ANY(%s)
            AND send_version_headers IS DISTINCT FROM false

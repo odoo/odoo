@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form_inherit" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.api.transport</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app
+                    name="integration"
+                    string="API Transport"
+                    data-string="API Transport">
+                    <block title="API Transport Configuration">
+                        <setting
+                            string="Log Retention Period"
+                            help="How long to keep request logs before deletion">
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label
+                                        for="integration_log_retention_days"
+                                        string="Retention Days"
+                                        class="col-lg-3 o_light_label" />
+                                    <field name="integration_log_retention_days" />
+                                </div>
+                            </div>
+                        </setting>
+                        <setting
+                            string="API Response Cache Configuration"
+                            help="Maximum number of cached API responses">
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label
+                                        for="integration_max_cache_entries"
+                                        string="Max Entries"
+                                        class="col-lg-3 o_light_label" />
+                                    <field name="integration_max_cache_entries" />
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

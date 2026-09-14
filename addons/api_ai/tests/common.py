@@ -1,8 +1,8 @@
 def endpoint_by_code(env, code):
-    endpoint = env["api.endpoint.outbound"].search([("code", "=", code)], limit=1)
+    endpoint = env["integration.service"].search([("code", "=", code)], limit=1)
     if not endpoint:
         raise AssertionError(
-            f"no api.endpoint.outbound carries the code {code!r}. AI endpoints "
+            f"no integration.service carries the code {code!r}. AI endpoints "
             f"are addressed by vendor code — the key vendor_catalog.PROVIDERS, "
             f"AI_CLIENT_REGISTRY and ai.provider.code all use — never by "
             f"external id, which is free to be renamed without touching a wire.",

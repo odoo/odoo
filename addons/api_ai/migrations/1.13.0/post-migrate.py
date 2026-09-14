@@ -65,7 +65,7 @@ def migrate(cr, version):
         """
         SELECT p.id, p.default_model, e.code
           FROM ai_provider p
-          JOIN api_endpoint_outbound e ON e.id = p.endpoint_id
+          JOIN integration_service e ON e.id = p.endpoint_id
          WHERE p.default_model IS NOT NULL
            AND p.default_model <> ''
            AND p.default_model_id IS NULL
@@ -132,7 +132,7 @@ def migrate(cr, version):
         """
         SELECT e.code, p.available_models
           FROM ai_provider p
-          JOIN api_endpoint_outbound e ON e.id = p.endpoint_id
+          JOIN integration_service e ON e.id = p.endpoint_id
          WHERE p.available_models IS NOT NULL
            AND p.available_models <> ''
         """

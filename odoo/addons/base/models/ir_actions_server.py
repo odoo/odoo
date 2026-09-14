@@ -383,11 +383,11 @@ class IrActionsServer(models.Model):
         "secret redaction or an auditable record of what was sent, use an "
         "'Execute Code' action against a configured outbound endpoint "
         "instead. With the API Transport application installed:\n"
-        "    endpoint = env['api.endpoint.outbound'].search(\n"
+        "    endpoint = env['integration.service'].search(\n"
         "        [('code', '=', 'my_service')], limit=1)\n"
         "    endpoint._get_api_client().post('/path', json={'id': record.id})\n"
         "That endpoint owns the credential, the retry policy and the "
-        "api.event.log row.",
+        "integration.exchange row.",
     )
     webhook_timeout = fields.Integer(
         string="Webhook Timeout (s)",

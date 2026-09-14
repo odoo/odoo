@@ -17,7 +17,7 @@ from .vendor_catalog import (
     read_openai_content,
     read_whisper_transcript,
 )
-from odoo.addons.api_transport.tools import CommError, get_api_client
+from odoo.addons.integration.tools import CommError, get_api_client
 
 _logger = logging.getLogger(__name__)
 
@@ -222,7 +222,7 @@ class CatalogAIClient:
 
     def _auth_headers(self, endpoint_code):
         endpoint = (
-            self._env["api.endpoint.outbound"]
+            self._env["integration.service"]
             .sudo()
             .search([("code", "=", endpoint_code), ("active", "=", True)], limit=1)
         )

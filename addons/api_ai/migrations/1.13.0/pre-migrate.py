@@ -5,7 +5,7 @@ _logger = logging.getLogger(__name__)
 _MODULE = "api_ai"
 
 _RENAMED = {
-    "api.endpoint.outbound": (
+    "integration.service": (
         ("service_claude", "service_anthropic"),
         ("service_gemini", "service_google"),
         ("service_gemini_openai", "service_google_openai"),

@@ -10,7 +10,7 @@ from odoo.addons.api_ai.tools.vendor_catalog import (
     get_whisper_form,
     read_whisper_transcript,
 )
-from odoo.addons.api_transport.tools.exceptions import CommError
+from odoo.addons.integration.tools.exceptions import CommError
 from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 

@@ -7,7 +7,7 @@ from odoo.tests import TransactionCase, tagged
 from odoo.tools import mute_logger
 
 from odoo.addons.api_ai.tools.ai_orchestrator import AIOrchestrator
-from odoo.addons.api_transport.tools.exceptions import (
+from odoo.addons.integration.tools.exceptions import (
     AuthenticationError,
     CommError,
     ServerError,
@@ -24,7 +24,7 @@ class _SelectionCase(EncryptionKeyCase, TransactionCase):
 
     @classmethod
     def _provider(cls, code, keyed=True, auth_type="bearer", **vals):
-        endpoint = cls.env["api.endpoint.outbound"].create(
+        endpoint = cls.env["integration.service"].create(
             {
                 "name": code,
                 "code": code,

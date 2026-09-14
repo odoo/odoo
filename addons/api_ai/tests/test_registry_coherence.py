@@ -21,14 +21,14 @@ class TestRegistryCoherence(TransactionCase):
 
     def test_every_catalog_key_is_an_endpoint_code(self):
         endpoints = set(
-            self.env["api.endpoint.outbound"].sudo().search([]).mapped("code")
+            self.env["integration.service"].sudo().search([]).mapped("code")
         )
         for key in PROVIDERS:
             with self.subTest(vendor=key):
                 self.assertIn(
                     key,
                     endpoints,
-                    f"catalog key {key!r} names no api.endpoint.outbound; a "
+                    f"catalog key {key!r} names no integration.service; a "
                     f"vendor must have one name across all four registries",
                 )
 
@@ -66,7 +66,7 @@ class TestRegistryCoherence(TransactionCase):
             "from CATALOG_EXEMPT",
         )
         endpoints = set(
-            self.env["api.endpoint.outbound"].sudo().search([]).mapped("code")
+            self.env["integration.service"].sudo().search([]).mapped("code")
         )
         self.assertTrue(
             endpoints >= NOT_A_PROVIDER,

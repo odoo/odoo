@@ -10,7 +10,7 @@ from odoo.addons.api_ai.tools import (
     read_anthropic_content,
     read_openai_content,
 )
-from odoo.addons.api_transport.tools import CommError
+from odoo.addons.integration.tools import CommError
 
 _CLIENT_FACTORY = "odoo.addons.api_ai.tools.catalog_client.get_api_client"
 
@@ -281,7 +281,7 @@ class TestCatalogAIClient(TransactionCase):
         self.assertEqual(body["model"], PROVIDERS["groq"]["chat_model"])
 
     def test_every_wire_names_a_seeded_service(self):
-        outbound = self.env["api.endpoint.outbound"]
+        outbound = self.env["integration.service"]
         for code, spec in PROVIDERS.items():
             for key in ("chat_service", "audio_service"):
                 endpoint_code = spec.get(key)
@@ -290,7 +290,7 @@ class TestCatalogAIClient(TransactionCase):
                 self.assertTrue(
                     outbound.search_count([("code", "=", endpoint_code)]),
                     f"{code}.{key} names {endpoint_code!r}, which no "
-                    f"api.endpoint.outbound record declares",
+                    f"integration.service record declares",
                 )
 
     def test_gemini_chat_and_audio_ride_different_services(self):
@@ -303,7 +303,7 @@ class TestCatalogAIClient(TransactionCase):
                 if isinstance(value, str) and value.startswith("http"):
                     self.fail(
                         f"{code}.{key} carries a full URL ({value}); the base "
-                        f"belongs to the api.endpoint.outbound record and only "
+                        f"belongs to the integration.service record and only "
                         f"the path belongs here"
                     )
 
@@ -327,7 +327,7 @@ class TestCatalogAIClient(TransactionCase):
         self.assertIsNone(result)
 
     def test_an_archived_endpoint_fails_soft_like_any_transport_error(self):
-        self.env["api.endpoint.outbound"].search([("code", "=", "groq")]).active = False
+        self.env["integration.service"].search([("code", "=", "groq")]).active = False
         result = CatalogAIClient("groq", "key", env=self.env).chat_json(
             "sys", "user", 600, 0.1
         )
@@ -370,7 +370,7 @@ class TestCatalogAIClient(TransactionCase):
             ("moonshot", "chat"): "https://api.moonshot.ai/v1/chat/completions",
             ("claude", "chat"): "https://api.anthropic.com/v1/messages",
         }
-        outbound = self.env["api.endpoint.outbound"]
+        outbound = self.env["integration.service"]
         composed = {}
         for code, spec in PROVIDERS.items():
             for kind in ("chat", "audio"):
@@ -504,7 +504,7 @@ class TestAuthHeadersComeFromTheEndpoint(TransactionCase):
         self.assertNotIn("anthropic-version", self._sent_headers("claude"))
 
     def test_an_unseeded_endpoint_yields_no_auth_rather_than_raising(self):
-        endpoint = self.env["api.endpoint.outbound"].search(
+        endpoint = self.env["integration.service"].search(
             [("code", "=", "claude")], limit=1
         )
         self.assertTrue(endpoint)

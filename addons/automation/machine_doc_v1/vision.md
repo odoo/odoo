@@ -258,7 +258,7 @@ be a second way to say something already sayable.
 
 | Was proposed | Why it is gone |
 |---|---|
-| `http_request` — "call an external HTTP endpoint" | **Already a server action state.** `ir.actions.server.state = "webhook"` posts to `webhook_url`, and its own help already directs anything needing a credential, a retry or an audit trail to `api_transport`. A node type would be a second spelling of an action this module already runs. |
+| `http_request` — "call an external HTTP endpoint" | **Already a server action state.** `ir.actions.server.state = "webhook"` posts to `webhook_url`, and its own help already directs anything needing a credential, a retry or an audit trail to `integration`. A node type would be a second spelling of an action this module already runs. |
 | `parallel` — "activate all outgoing edges (fan-out)" | Already the behaviour. A node with several outgoing edges fans out; `test_parallel_branches_both_ready` and `test_run_all_parallel_branches` pin it. |
 | `join` — "wait until ALL incoming edges complete" | Already the behaviour. `_predecessors_satisfied` is an AND across the incoming edges; `test_diamond_join` pins it. |
 | `branch` — "evaluate expression, activate the matching edge" | Already the behaviour. An `expression` edge is the branch, and unlike a branch *node* it needs no node to own the decision. |

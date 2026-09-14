@@ -96,7 +96,7 @@ class ExchangeCase(TransactionCase):
         cls.addClassCleanup(restore)
         cls.env = cls.env(context=dict(cls.env.context))
 
-        cls.endpoint = cls.env["api.endpoint.outbound"].create(
+        cls.endpoint = cls.env["integration.service"].create(
             {
                 "name": "Demo Counterparty Endpoint",
                 "code": "demo_counterparty",

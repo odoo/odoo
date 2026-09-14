@@ -7,7 +7,7 @@ from odoo.addons.api_ai.tools.ai_clients import GroqClient, OpenAIClient
 from odoo.addons.api_ai.tools.ai_clients.deepseek import DeepSeekClient
 from odoo.addons.api_ai.tools.ai_clients.gemini import GeminiClient
 from odoo.addons.api_ai.tools.vendor_catalog import PROVIDERS
-from odoo.addons.api_transport.tools.exceptions import CommError
+from odoo.addons.integration.tools.exceptions import CommError
 from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 _IMAGE = "aGVsbG8="

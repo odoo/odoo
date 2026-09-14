@@ -5,7 +5,7 @@ from odoo.tests.common import TransactionCase
 
 from odoo.addons.api_ai.tests.common import credential_for
 from odoo.addons.api_ai.tools.ai_clients import get_deepseek_client
-from odoo.addons.api_transport.tools.exceptions import CommError
+from odoo.addons.integration.tools.exceptions import CommError
 from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
 
 

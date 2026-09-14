@@ -15,7 +15,7 @@ class TestWriterSelection(EncryptionKeyCase, TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         for code in ("openai", "deepgram"):
-            endpoint = cls.env["api.endpoint.outbound"].search([("code", "=", code)])
+            endpoint = cls.env["integration.service"].search([("code", "=", code)])
             cls.env["credential.credential"].create(
                 {
                     "name": code,

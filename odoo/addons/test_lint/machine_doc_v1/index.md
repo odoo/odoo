@@ -84,7 +84,7 @@ finding, and the five tests that assert the counter itself carry
 `raw-egress` (E8518) counts every call that leaves Odoo without `ir.egress`, base's
 one outbound pipeline: `requests` verbs and sessions, `httpx`,
 `urllib.request.urlopen`, zeep's `Transport` and `boto3` clients, with import aliases
-followed. It skips tests and nothing else: `api_transport` builds its sessions on
+followed. It skips tests and nothing else: `integration` builds its sessions on
 `ir.egress` like any other addon, and the pipeline's own transport lives in
 `odoo/libs/guarded_http.py`, outside every addon. It reached zero on 2026-09-13: a call
 that cannot take an `ir.egress` session -- a script run beside the server, the IoT box,

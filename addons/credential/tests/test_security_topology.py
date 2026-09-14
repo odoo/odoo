@@ -3,7 +3,7 @@ from odoo.tests.common import TransactionCase
 
 SUITE_MODULES = (
     "credential",
-    "api_transport",
+    "integration",
     "api_ai",
 )
 

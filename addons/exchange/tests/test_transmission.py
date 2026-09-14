@@ -129,10 +129,10 @@ class TestExchangeTransmission(ExchangeCase):
 
     def test_an_acceptance_cannot_stand_on_a_failed_call(self):
         transmission = self._add_transmission()
-        log = self.env["api.event.log"].create(
+        log = self.env["integration.exchange"].create(
             {
                 "direction": "outbound",
-                "channel_id": f"api.endpoint.outbound,{self.endpoint.id}",
+                "channel_id": f"integration.service,{self.endpoint.id}",
                 "state": "failed",
             },
         )

@@ -4,8 +4,8 @@ import time
 
 from odoo import fields
 
-from odoo.addons.api_transport.tools.api_client import OutboundAPIClient
-from odoo.addons.api_transport.tools.exceptions import (
+from odoo.addons.integration.tools.api_client import OutboundAPIClient
+from odoo.addons.integration.tools.exceptions import (
     AuthenticationError,
     ClientError,
     CommError,

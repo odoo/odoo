@@ -11,7 +11,7 @@ from ..vendor_catalog import (
     read_whisper_transcript,
 )
 from .base import BaseAIClient
-from odoo.addons.api_transport.tools.exceptions import CommError
+from odoo.addons.integration.tools.exceptions import CommError
 
 _logger = logging.getLogger(__name__)
 

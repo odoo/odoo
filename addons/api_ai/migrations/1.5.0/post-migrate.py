@@ -12,7 +12,7 @@ def migrate(cr, version):
         """
         UPDATE ai_provider p
            SET default_model = %s
-          FROM api_endpoint_outbound e
+          FROM integration_service e
          WHERE p.endpoint_id = e.id
            AND e.code = %s
            AND p.default_model = %s

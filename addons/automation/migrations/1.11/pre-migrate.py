@@ -9,7 +9,7 @@ def migrate(cr, version):
     if not version:
         return
     cr.execute(
-        "SELECT 1 FROM ir_module_module WHERE name = 'api_transport' AND state = %s",
+        "SELECT 1 FROM ir_module_module WHERE name = 'integration' AND state = %s",
         ("installed",),
     )
     if cr.fetchone():
@@ -30,7 +30,7 @@ def migrate(cr, version):
     if archived:
         _logger.warning(
             "automation: webhooks moved to automation_webhook, which needs "
-            "api_transport; this database has none, so %s webhook rule(s) were "
+            "integration; this database has none, so %s webhook rule(s) were "
             "archived and set to manual trigger: %s",
             len(archived),
             ", ".join(f"#{rule_id} {name}" for rule_id, name in archived),

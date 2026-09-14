@@ -24,22 +24,23 @@ class TestAIProviderStatistics(TransactionCase):
         if not self.provider:
             self.skipTest("claude provider seed missing")
         self.service = self.provider.endpoint_id
-        self.env["api.event.log"].search(
-            [("channel_id", "=", f"api.endpoint.outbound,{self.service.id}")]
+        self.env["integration.exchange"].search(
+            [("channel_id", "=", f"integration.service,{self.service.id}")]
         ).unlink()
 
     def _log(self, when, status_code, duration_ms):
-        log = self.env["api.event.log"].create(
+        log = self.env["integration.exchange"].create(
             {
                 "direction": "outbound",
-                "channel_id": f"api.endpoint.outbound,{self.service.id}",
+                "channel_id": f"integration.service,{self.service.id}",
                 "status_code": status_code,
                 "state": "success" if status_code < 400 else "failed",
                 "duration_ms": duration_ms,
             }
         )
         self.env.cr.execute(
-            "UPDATE api_event_log SET timestamp = %s WHERE id = %s", (when, log.id)
+            "UPDATE integration_exchange SET timestamp = %s WHERE id = %s",
+            (when, log.id),
         )
         return log
 
@@ -48,7 +49,7 @@ class TestAIProviderStatistics(TransactionCase):
             field = self.env["ai.provider"]._fields[name]
             self.assertTrue(
                 field.inherited,
-                f"{name} must be delegated to api.endpoint.outbound, not "
+                f"{name} must be delegated to integration.service, not "
                 f"redeclared on ai.provider -- two computes over the same rows "
                 f"produced two different answers.",
             )
@@ -102,7 +103,7 @@ class TestAIProviderClientHook(TransactionCase):
         self.assertIs(AI_CLIENT_REGISTRY[provider.code], ClaudeClient)
 
     def test_unknown_provider_raises_a_named_error(self):
-        service = self.env["api.endpoint.outbound"].create(
+        service = self.env["integration.service"].create(
             {
                 "name": "Nowhere AI",
                 "code": "nowhere_ai",

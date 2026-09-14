@@ -20,7 +20,7 @@ def migrate(cr, version):
 
     cr.execute(
         """
-        UPDATE api_endpoint_outbound
+        UPDATE integration_service
            SET endpoint_url_test = NULL
          WHERE code = ANY(%s)
            AND endpoint_url_test IS NOT NULL

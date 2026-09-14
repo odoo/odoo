@@ -1,5 +1,5 @@
 from .base import BaseAIClient
-from odoo.addons.api_transport.tools.exceptions import CommError
+from odoo.addons.integration.tools.exceptions import CommError
 
 _GENERATION_CONFIG_KEYS = {
     "temperature": "temperature",
