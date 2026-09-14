@@ -82,6 +82,7 @@ export class OrderSummary extends Component {
         };
 
         // Configurable product
+        const beforeValues = { ...values };
         let keepGoing = await this.pos.handleConfigurableProduct(
             values,
             productTemplate,
@@ -99,6 +100,10 @@ export class OrderSummary extends Component {
             line: orderline,
         });
         if (keepGoing === false) {
+            return false;
+        }
+
+        if (JSON.stringify(values) === JSON.stringify(beforeValues)) {
             return false;
         }
 
