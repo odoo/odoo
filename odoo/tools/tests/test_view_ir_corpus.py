@@ -140,3 +140,110 @@ def _attribute_problems(spec, view_type, patch):
         attr_type = spec.attr_type(view_type, target, attribute.get("name"))
         if attr_type is not None and (problem := _check_value(attr_type, value)):
             yield f"bad-{problem} at {target}: {attribute.get('name')}={value!r}"
+
+
+def _spec_xpath(patch):
+    if patch.tag == "xpath":
+        return patch.get("expr")
+    conditions = [
+        f"@{name}='{value}'"
+        for name, value in patch.attrib.items()
+        if name not in ("position", "version")
+    ]
+    return f"//{patch.tag}" + (f"[{' and '.join(conditions)}]" if conditions else "")
+
+
+def _id_kind(node_id):
+    if "@" in node_id:
+        return "anonymous"
+    if ":" in node_id:
+        return "named"
+    return "singleton"
+
+
+class TestViewIrIdentityCorpus(unittest.TestCase):
+    """Phase 3's decision figure, kept live: how many of the checkout's
+    inheritance specs address a node the derived ids can name."""
+
+    def test_inheritance_specs_resolve_through_derived_ids(self):
+        spec = view_ir.schema()
+        records = {
+            xmlid: (path, top, parent)
+            for path, xmlid, top, parent in iter_view_records()
+        }
+
+        def primary_of(xmlid, seen=()):
+            if xmlid not in records or xmlid in seen:
+                return None
+            _path, top, parent = records[xmlid]
+            if spec.view_type_of(top.tag):
+                return xmlid
+            return parent and primary_of(parent, (*seen, xmlid))
+
+        identified = {}
+
+        def ids_for(primary):
+            if primary not in identified:
+                _path, top, _parent = records[primary]
+                root = view_ir.from_arch(top)
+                view_ir.identify(root)
+                # a standalone element: `//` must not escape into the data file
+                identified[primary] = (
+                    {path: node.id for path, node in root.walk()},
+                    view_ir.to_arch(root),
+                )
+            return identified[primary]
+
+        def path_of(element, top):
+            path = []
+            while element is not top:
+                parent = element.getparent()
+                path.append(
+                    [c for c in parent if isinstance(c.tag, str)].index(element)
+                )
+                element = parent
+            return tuple(reversed(path))
+
+        counts = {
+            "named": 0,
+            "singleton": 0,
+            "anonymous": 0,
+            "unmatched": 0,
+            "several": 0,
+        }
+        for xmlid, (_path, top, _parent) in records.items():
+            if spec.view_type_of(top.tag):
+                continue
+            primary = primary_of(xmlid)
+            if primary is None:
+                continue
+            patches = (
+                [top]
+                if top.get("position") or top.tag == "xpath"
+                else [el for el in top if isinstance(el.tag, str)]
+            )
+            ids_by_path, primary_top = ids_for(primary)
+            for patch in patches:
+                expr = _spec_xpath(patch)
+                try:
+                    matches = primary_top.xpath(expr)
+                except etree.XPathError:
+                    counts["unmatched"] += 1
+                    continue
+                matches = [
+                    m for m in matches if isinstance(getattr(m, "tag", None), str)
+                ]
+                if not matches:
+                    counts["unmatched"] += 1
+                elif len(matches) > 1:
+                    counts["several"] += 1
+                else:
+                    counts[_id_kind(ids_by_path[path_of(matches[0], primary_top)])] += 1
+
+        total = sum(counts.values())
+        matched = total - counts["unmatched"] - counts["several"]
+        stable = counts["named"] + counts["singleton"]
+        self.assertGreater(total, 1500, counts)
+        # what the ids name without an authoring change, among the specs whose
+        # target lives in the primary view (the rest sits in another overlay)
+        self.assertGreaterEqual(stable / matched, 0.85, counts)
