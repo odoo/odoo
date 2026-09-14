@@ -214,3 +214,62 @@ test("test_printer_not_linked_to_any_combo_category: printer only shows non-comb
         invisibleInDom: ["Office Combo", "Combo Product 5"],
     });
 });
+
+const setupDeliveryOrder = async (store, identification) => {
+    const order = store.addNewOrder();
+    const product = store.models["product.template"].get(5);
+    store.config.module_pos_restaurant = true;
+    await store.addLineToOrder({ product_tmpl_id: product, qty: 1 }, order);
+
+    const preset = store.models["pos.preset"].get(1);
+    preset.identification = identification;
+
+    const partner = store.models["res.partner"].get(3);
+    partner.name = "John Doe";
+    partner.street = "12 Rue des Bouchers";
+    partner.street2 = "Floor 3";
+    partner.zip = "1000";
+    partner.city = "Brussels";
+    // Server-computed `_display_address`, laid out the way the country writes an address
+    partner.address = "12 Rue des Bouchers\nFloor 3\n1000 Brussels\nBelgium";
+
+    order.preset_id = preset;
+    order.partner_id = partner;
+    order.floating_order_name = "John Doe";
+    return order;
+};
+
+test("order change ticket renders the delivery address below the customer name", async () => {
+    const store = await setupPosEnv();
+    const order = await setupDeliveryOrder(store, "address");
+
+    const { changes, tickets } = renderOrderChangeReceipt(store, order);
+
+    expect(changes[0].extra_data.delivery_address).toEqual([
+        "12 Rue des Bouchers",
+        "Floor 3",
+        "1000 Brussels",
+        "Belgium",
+    ]);
+
+    const header = tickets[0].querySelector("[name='order-info']");
+    const address = header.querySelector("[name='delivery-address']");
+    expect(normalizeText(address.textContent)).toInclude("12 Rue des Bouchers");
+    expect(normalizeText(address.textContent)).toInclude("Floor 3");
+    expect(normalizeText(address.textContent)).toInclude("1000 Brussels");
+
+    // The address must come after the customer name, not before it
+    const label = header.querySelector("[name='order-label']");
+    const position = label.compareDocumentPosition(address);
+    expect(position & Node.DOCUMENT_POSITION_FOLLOWING).toBeGreaterThan(0);
+});
+
+test("order change ticket omits the delivery address when the preset collects none", async () => {
+    const store = await setupPosEnv();
+    const order = await setupDeliveryOrder(store, "name");
+
+    const { changes, tickets } = renderOrderChangeReceipt(store, order);
+
+    expect(changes[0].extra_data.delivery_address).toEqual([]);
+    expect(tickets[0].querySelector("[name='delivery-address']")).toBe(null);
+});
