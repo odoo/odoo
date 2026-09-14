@@ -1,8 +1,9 @@
-from datetime import timedelta
+from datetime import date, datetime, time, timedelta
 
 from odoo import fields
 from odoo.exceptions import UserError
-from odoo.tests import tagged
+from odoo.libs.datetime import timezone, to_timezone
+from odoo.tests import freeze_time, tagged
 
 from .common import HrPresenceCase
 
@@ -299,6 +300,113 @@ class TestDayBoundary(HrPresenceCase):
 
 
 @tagged("post_install", "-at_install")
+class TestDayWindowsTile(HrPresenceCase):
+    """Consecutive day windows must meet exactly: no hour in two of them, and no
+    hour in none of them.
+
+    Built from `time.max` they did not. On a day whose local midnight is
+    ambiguous, `fold=0` picks the earlier 23:59:59 and the day ends an hour
+    early, leaving that hour in no window -- measured over every day of 2026 in
+    twelve zones, America/Santiago 2026-04-04 and Asia/Beirut 2026-10-25.
+    """
+
+    ZONES = (
+        "UTC",
+        "America/Mexico_City",
+        "America/Santiago",
+        "Asia/Beirut",
+        "Australia/Lord_Howe",
+        "Asia/Kathmandu",
+        "Pacific/Chatham",
+        "Pacific/Kiritimati",
+    )
+
+    def _bounds(self, tz_name, day):
+        return self.env["hr.employee"]._hr_presence_day_bounds_utc(tz_name, day)
+
+    def test_the_two_days_that_used_to_leave_an_hour_uncovered(self):
+        for tz_name, day in (
+            ("America/Santiago", date(2026, 4, 4)),
+            ("Asia/Beirut", date(2026, 10, 24)),
+        ):
+            with self.subTest(tz=tz_name, day=day):
+                _start, end = self._bounds(tz_name, day)
+                next_start, _ = self._bounds(tz_name, day + timedelta(days=1))
+                self.assertEqual(
+                    end,
+                    next_start,
+                    "the hour between these two windows belonged to nobody",
+                )
+
+    def test_every_day_of_a_year_tiles_in_every_zone(self):
+        for tz_name in self.ZONES:
+            day = date(2026, 1, 1)
+            previous_end = None
+            while day <= date(2026, 12, 31):
+                start, end = self._bounds(tz_name, day)
+                self.assertLess(start, end, f"{tz_name} {day}: inverted window")
+                if previous_end is not None:
+                    self.assertEqual(
+                        start,
+                        previous_end,
+                        f"{tz_name} {day}: window does not meet the previous day",
+                    )
+                previous_end = end
+                day += timedelta(days=1)
+
+    def test_a_window_is_a_local_day_long_except_across_a_dst_step(self):
+        start, end = self._bounds("America/Mexico_City", date(2026, 6, 15))
+        self.assertEqual(end - start, timedelta(hours=24))
+        short_start, short_end = self._bounds("Europe/Brussels", date(2026, 3, 29))
+        self.assertEqual(short_end - short_start, timedelta(hours=23))
+        long_start, long_end = self._bounds("Europe/Brussels", date(2026, 10, 25))
+        self.assertEqual(long_end - long_start, timedelta(hours=25))
+
+    @freeze_time("2026-04-05 03:30:00")
+    def test_a_message_in_the_formerly_uncovered_hour_still_counts(self):
+        """2026-04-05 03:30 UTC is 2026-04-04 23:30 in Santiago, inside the hour
+        the `time.max` end used to leave in no window at all."""
+        company = self.env["res.company"].create({"name": "Santiago Co"})
+        calendar = self._make_calendar(company, "America/Santiago")
+        company.write(
+            {
+                "resource_calendar_id": calendar.id,
+                "hr_presence_control_email": True,
+                "hr_presence_control_email_amount": 1,
+            }
+        )
+        employee = self._make_employee(
+            "santiago", company=company, calendar=calendar, tz="America/Santiago"
+        )
+        today = self._today_for(employee)
+        self.assertEqual(today, date(2026, 4, 4), "fixture: the local day")
+
+        start, end = self._bounds("America/Santiago", today)
+        superseded_end = to_timezone(None)(
+            datetime.combine(today, time.max).replace(
+                tzinfo=timezone("America/Santiago")
+            )
+        )
+        posted = self._post_emails(employee, 1)
+        self._assert_authored(
+            employee, posted, 1, internal=False, message_type="comment"
+        )
+        self.assertTrue(
+            start <= posted.date < end,
+            f"fixture: {posted.date} must be inside [{start}, {end})",
+        )
+        self.assertGreater(
+            posted.date,
+            superseded_end,
+            "fixture: the message must fall AFTER the end the old shape computed, "
+            "or this test does not reach the hour that used to be dropped",
+        )
+
+        self.env["hr.employee"]._check_presence()
+        self.assertEqual(employee.hr_presence_email_date, today)
+
+
+@tagged("post_install", "-at_install")
 class TestSweep(HrPresenceCase):
     def test_the_sweep_mirrors_the_state_into_the_searchable_field(self):
         truant = self._make_employee("mirrored")
@@ -332,6 +440,173 @@ class TestSweep(HrPresenceCase):
         self.assertNotIn(
             "hr_presence_last_compute_date", self.env["res.company"]._fields
         )
+
+
+@tagged("post_install", "-at_install")
+class TestSettingsTriggerTheSweep(HrPresenceCase):
+    """Turning a control on sweeps immediately, rather than leaving the list
+    wrong until the next hour. The hook used to sit on create(), where
+    res.config.settings has already written the related field through, so a
+    before/after comparison there always read equal."""
+
+    def _save_settings(self, company, **values):
+        """What the Settings page does: create the transient, then execute it."""
+        settings = (
+            self.env["res.config.settings"]
+            .with_company(company)
+            .create({"company_id": company.id, **values})
+        )
+        settings.set_values()
+        return settings
+
+    def test_turning_a_control_on_sweeps_at_once(self):
+        company = self.env["res.company"].create({"name": "Settings Co"})
+        calendar = self._make_calendar(company, "UTC")
+        company.resource_calendar_id = calendar
+        employee = self._make_employee("swept", company=company, calendar=calendar)
+        self.assertEqual(
+            employee.hr_presence_state_display,
+            "out_of_working_hour",
+            "fixture: the stored mirror starts at its default",
+        )
+        self._save_settings(company, hr_presence_control_ip=True)
+        self.assertTrue(company.hr_presence_control_ip)
+        self.assertEqual(
+            employee.hr_presence_state_display,
+            "absent",
+            "the sweep must have run as part of saving the setting",
+        )
+
+    def test_saving_settings_that_change_nothing_does_not_sweep(self):
+        company = self.env["res.company"].create({"name": "Idle Settings Co"})
+        calendar = self._make_calendar(company, "UTC")
+        company.write(
+            {"resource_calendar_id": calendar.id, "hr_presence_control_ip": True}
+        )
+        employee = self._make_employee("untouched", company=company, calendar=calendar)
+        self.env["hr.employee"]._check_presence()
+        self.assertEqual(employee.hr_presence_state_display, "absent")
+        employee.hr_presence_state_display = "present"
+        self._save_settings(company, hr_presence_control_ip=True)
+        self.assertEqual(
+            employee.hr_presence_state_display,
+            "present",
+            "re-saving an unchanged setting must not re-sweep",
+        )
+
+    def test_turning_every_control_off_does_not_sweep(self):
+        company = self.env["res.company"].create({"name": "Off Settings Co"})
+        calendar = self._make_calendar(company, "UTC")
+        company.write(
+            {"resource_calendar_id": calendar.id, "hr_presence_control_ip": True}
+        )
+        employee = self._make_employee("switching", company=company, calendar=calendar)
+        employee.hr_presence_state_display = "present"
+        self._save_settings(company, hr_presence_control_ip=False)
+        self.assertFalse(company.hr_presence_control_ip)
+        self.assertEqual(employee.hr_presence_state_display, "present")
+
+
+@tagged("post_install", "-at_install")
+class TestOneUserTwoEmployees(HrPresenceCase):
+    """One res.users can hold an hr.employee in each company, so one partner's
+    messages are read against two companies' thresholds."""
+
+    def test_each_employee_is_judged_against_its_own_company_threshold(self):
+        lenient = self.env["res.company"].create({"name": "Lenient Co"})
+        strict = self.env["res.company"].create({"name": "Strict Co"})
+        lenient_cal = self._make_calendar(lenient, "UTC")
+        strict_cal = self._make_calendar(strict, "UTC")
+        lenient.write(
+            {
+                "resource_calendar_id": lenient_cal.id,
+                "hr_presence_control_email": True,
+                "hr_presence_control_email_amount": 1,
+            }
+        )
+        strict.write(
+            {
+                "resource_calendar_id": strict_cal.id,
+                "hr_presence_control_email": True,
+                "hr_presence_control_email_amount": 99,
+            }
+        )
+        user = self.env["res.users"].create(
+            {
+                "name": "shared",
+                "login": "shared_user",
+                "company_id": lenient.id,
+                "company_ids": [(6, 0, [lenient.id, strict.id])],
+            }
+        )
+        here = self._make_employee(
+            "lenient_emp", company=lenient, calendar=lenient_cal, user=user
+        )
+        there = self._make_employee(
+            "strict_emp", company=strict, calendar=strict_cal, user=user
+        )
+        self.assertEqual(
+            here.user_id.partner_id,
+            there.user_id.partner_id,
+            "fixture: both employees must share one partner, or the two "
+            "thresholds are never applied to the same messages",
+        )
+        posted = self._post_emails(here, 2)
+        self._assert_authored(here, posted, 2, internal=False, message_type="comment")
+
+        self.env["hr.employee"]._check_presence()
+        self.assertEqual(
+            here.hr_presence_email_date,
+            self._today_for(here),
+            "the company asking for one email is satisfied",
+        )
+        self.assertFalse(
+            there.hr_presence_email_date,
+            "the company asking for 99 is not, from the same messages",
+        )
+
+    def test_two_employees_of_one_user_share_a_timezone_by_construction(self):
+        """Not a defect of this module, but the limit of "the employee's own
+        timezone": resource.tz computes from partner_id.tz, and two employees of
+        one user reach the same partner. (A unique index on (user_id,
+        company_id) means they are always in different companies.)"""
+        first_company = self.env["res.company"].create({"name": "TZ One Co"})
+        second_company = self.env["res.company"].create({"name": "TZ Two Co"})
+        first_cal = self._make_calendar(first_company, "UTC")
+        second_cal = self._make_calendar(second_company, "Pacific/Midway")
+        first_company.resource_calendar_id = first_cal
+        second_company.resource_calendar_id = second_cal
+        user = self.env["res.users"].create(
+            {
+                "name": "one",
+                "login": "one_user",
+                "company_id": first_company.id,
+                "company_ids": [(6, 0, [first_company.id, second_company.id])],
+            }
+        )
+        first = self._make_employee(
+            "first", company=first_company, calendar=first_cal, user=user
+        )
+        second = self._make_employee(
+            "second",
+            company=second_company,
+            calendar=second_cal,
+            tz="Pacific/Midway",
+            user=user,
+        )
+        second.invalidate_recordset()
+        self.assertEqual(
+            first.user_id.partner_id,
+            second.user_id.partner_id,
+            "fixture: one partner behind both",
+        )
+        self.assertEqual(
+            first.tz,
+            second.tz,
+            "a tz written on one of them does not separate them",
+        )
+        today = (first | second)._hr_presence_today()
+        self.assertEqual(today[first.id], today[second.id])
 
 
 @tagged("post_install", "-at_install")

@@ -1,5 +1,5 @@
 from collections import defaultdict
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
@@ -67,13 +67,21 @@ class HrEmployee(models.Model):
 
     @api.model
     def _hr_presence_day_bounds_utc(self, tz_name, day):
-        """The employee's own day, as the naive UTC bounds the ORM compares to."""
+        """The employee's own day, half-open, as naive UTC bounds.
+
+        The end is the NEXT day's first instant, not this one's last. Built from
+        `time.max` the two disagree by an hour on a day whose local midnight is
+        ambiguous -- `fold=0` picks the earlier 23:59:59, so the day ends an
+        hour early and that hour falls in no window at all (America/Santiago
+        2026-04-04, Asia/Beirut 2026-10-25). Half-open tiles by construction.
+        """
         zone = timezone(tz_name or "UTC")
         to_utc = to_timezone(None)
-        return (
-            to_utc(datetime.combine(day, time.min).replace(tzinfo=zone)),
-            to_utc(datetime.combine(day, time.max).replace(tzinfo=zone)),
-        )
+
+        def first_instant(on):
+            return to_utc(datetime.combine(on, time.min).replace(tzinfo=zone))
+
+        return first_instant(day), first_instant(day + timedelta(days=1))
 
     # -------------------------------------------------------------- the cron
     @api.model
@@ -153,7 +161,7 @@ class HrEmployee(models.Model):
                     ("message_type", "in", ("comment", "email_outgoing")),
                     ("subtype_id.internal", "=", False),
                     ("date", ">=", min(starts)),
-                    ("date", "<=", max(ends)),
+                    ("date", "<", max(ends)),
                 ],
                 ["author_id", "date"],
                 load=False,
@@ -171,7 +179,7 @@ class HrEmployee(models.Model):
             dates = sent_by_partner.get(partner_id, ())
             for employee in candidates:
                 start, end = window_by_employee[employee.id]
-                count = sum(1 for date in dates if start <= date <= end)
+                count = sum(1 for date in dates if start <= date < end)
                 threshold = employee.company_id.hr_presence_control_email_amount
                 today = today_by_employee[employee.id]
                 if count >= threshold and employee.hr_presence_email_date != today:
@@ -363,9 +371,11 @@ class HrEmployee(models.Model):
             )
         )
         automatic = controlled - manual
-        # Only this branch can need the schedule, so only this branch pays for
-        # it: hr and hr_attendance narrow before calling too. A flexible
-        # employee is asked nothing -- see _hr_presence_verdict.
+        # Narrowing twice, and neither narrowing is the guard: an override and a
+        # flexible schedule both make the answer known without asking, and
+        # _hr_presence_verdict is what enforces that. Removing this line changes
+        # no verdict -- it only stops _work_intervals_batch being run for a
+        # calendar whose answer is discarded.
         scheduled = automatic.filtered(
             lambda e: not e.resource_id.sudo()._is_flexible()
         )
