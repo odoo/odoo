@@ -278,7 +278,10 @@
             "website/static/src/js/content/generate_video_iframe.js",
         ],
         "web.assets_frontend_lazy": [
-            ("remove", "website/static/src/utils/video_urls.js"),
+            (
+                "remove",
+                "website/static/src/utils/video_urls.js",
+            ),
             (
                 "remove",
                 "website/static/src/utils/misc.js",

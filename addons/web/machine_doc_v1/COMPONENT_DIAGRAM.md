@@ -212,7 +212,7 @@ prose must not reach for them.
 | Layer | File | Lines | Role |
 |-------|------|-------|------|
 | PY | `controllers/dataset.py` | 64 | `call_kw()`, `call_button()`, readonly detection |
-| PY | `controllers/utils.py` | 287 | `clean_action()`, `select_db()`, `update_action_views()`, `get_action()`, `get_action_triples()`, `_get_login_redirect_url()`, `is_user_internal()`, `_local_web_translations()` |
+| PY | `controllers/utils.py` | 287 | `clean_action()`, `select_db()`, `update_action_views()`, `get_action()`, `get_action_triples()`, `_get_login_redirect_url()`, `is_user_internal()` |
 | JS | `static/src/core/network/orm_service.js` | 428 | `ORM.call()`, `read()`, `write()`, etc. Builds `/web/dataset/call_kw/<model>/<method>`. |
 | JS | `static/src/core/network/rpc.js` | 768 | JSON-RPC envelope, error handling. Transport is **`fetch`**, not `XMLHttpRequest`. |
 | JS | `static/src/core/network/rpc_cache.js` | 672 | Dual-layer (RAM Map + IndexedDB) RPC cache with AES-GCM encryption (no HMAC — relies on GCM auth tag). Per-table `pendingRequests` Map dedups concurrent fetches of the same cache key; `modelIndex` is the O(1) model→keys reverse index used by model-scoped invalidation. For general concurrent-RPC deduplication (same URL+params across all callers), see `core/network/rpc_dedup.js`. |

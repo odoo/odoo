@@ -38,7 +38,7 @@ def _orphans(sources):
             resolved
             for resolved in (
                 _resolve(spec, addon, path)
-                for spec in _js_sources.STATIC_IMPORT_RE.findall(source)
+                for spec in _js_sources.specifiers(source)
             )
             if resolved
         )
