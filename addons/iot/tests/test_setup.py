@@ -40,6 +40,17 @@ class TestBoxEnrolment(HttpCase):
         self.assertIsNone(self._setup(self._payload("not-the-token"), {}))
         self.assertFalse(self._box(), "an unknown box must not enrol on a bad token")
 
+    def test_a_token_older_than_its_validity_does_not_enrol_a_box(self):
+        token = self._hand_out_token()
+        self.env.cr.execute(
+            "UPDATE ir_config_parameter SET write_date = now() at time zone 'UTC' "
+            "- interval '16 minutes' WHERE key = 'iot.iot_token'"
+        )
+        self.env["ir.config_parameter"].invalidate_model()
+
+        self.assertIsNone(self._setup(self._payload(token), {}))
+        self.assertFalse(self._box(), "a stale pairing token must not enrol a box")
+
     def test_the_token_is_spent_by_the_box_that_used_it(self):
         token = self._hand_out_token()
         self.assertTrue(self._setup(self._payload(token), {}))
