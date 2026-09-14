@@ -1,4 +1,7 @@
 from odoo import fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ResPartner(models.Model):
@@ -20,6 +23,7 @@ class ResPartner(models.Model):
             )
         )
 
+        _debug.perf.count("partner_document_counts", partners=self)
         for record in self:
             record.document_count = document_count_dict.get(record, 0)
 

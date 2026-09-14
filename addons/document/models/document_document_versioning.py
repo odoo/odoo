@@ -1,5 +1,8 @@
 from odoo import _, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class DocumentsDocument(models.Model):
@@ -15,9 +18,18 @@ class DocumentsDocument(models.Model):
         if attachment not in self.previous_attachment_ids and (
             attachment != self.attachment_id or not self.previous_attachment_ids
         ):
+            _debug.logic(
+                "version_delete_refused", document=self, attachment=attachment_id
+            )
             raise UserError(_("You cannot delete this attachment."))
 
         deleted_name = attachment.name
+        _debug.lifecycle(
+            "version_deleted",
+            document=self,
+            attachment=attachment_id,
+            was_current=attachment == self.attachment_id,
+        )
         if attachment == self.attachment_id:
             promoted = max(
                 self.previous_attachment_ids, key=lambda a: (a.create_date, a.id)
@@ -46,9 +58,18 @@ class DocumentsDocument(models.Model):
 
         attachment = self.env["ir.attachment"].browse(attachment_id).exists()
         if attachment not in self.previous_attachment_ids:
+            _debug.logic(
+                "version_restore_refused", document=self, attachment=attachment_id
+            )
             raise UserError(_("This version does not belong to this document."))
 
         replaced = self.attachment_id
+        _debug.lifecycle(
+            "version_restored",
+            document=self,
+            restored=attachment_id,
+            replaced=replaced.id,
+        )
         self.write({"attachment_id": attachment.id})
         self.message_post(
             body=_(
@@ -66,10 +87,16 @@ class DocumentsDocument(models.Model):
         )
         if max_versions <= 0:
             return
+        _debug.pipeline("version_trim", documents=self, max_versions=max_versions)
         for document in self:
             versions = document.previous_attachment_ids.sorted(
                 key=lambda attachment: (attachment.create_date, attachment.id),
                 reverse=True,
             )
             if len(versions) > max_versions:
+                _debug.lifecycle(
+                    "versions_dropped",
+                    document=document,
+                    dropped=len(versions) - max_versions,
+                )
                 versions[max_versions:].sudo().unlink()

@@ -1,4 +1,7 @@
 from odoo import Command, _, api, fields, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class DocumentsSharing(models.TransientModel):
@@ -170,6 +173,11 @@ class DocumentsSharing(models.TransientModel):
     def action_update_rights(self) -> dict:
         """Apply the edited access rights and reopen the sharing wizard."""
         self.check_singleton()
+        _debug.pipeline(
+            "sharing_apply",
+            documents=self.document_ids,
+            propagate=bool(self.is_folder_only),
+        )
         self.document_ids.action_update_access_rights(
             **self._get_update_rights_params(), no_propagation=not self.is_folder_only
         )
@@ -179,6 +187,7 @@ class DocumentsSharing(models.TransientModel):
         # document_ids, so only reopen on documents still readable.
         accessible = self.document_ids._filtered_access("read")
         if not accessible:
+            _debug.logic("sharing_self_access_lost", documents=self.document_ids)
             return {
                 "type": "ir.actions.client",
                 "tag": "display_notification",
@@ -194,18 +203,27 @@ class DocumentsSharing(models.TransientModel):
         """Invite the selected partners and optionally notify them by email."""
         self.check_singleton()
         if not self.invite_partner_ids:
+            _debug.logic("invite_refused", reason="no_partners")
             params = {
                 "title": _("No partners"),
                 "message": "",
                 "type": "warning",
             }
         elif self.invite_partner_ids.filtered(lambda p: not p.email):
+            _debug.logic("invite_refused", reason="missing_email")
             params = {
                 "title": _("Some emails are missing"),
                 "message": _("Please fill in the missing email addresses."),
                 "type": "warning",
             }
         else:
+            _debug.lifecycle(
+                "invite",
+                documents=self.document_ids,
+                partners=self.invite_partner_ids,
+                role=self.invite_role,
+                notify=self.invite_notify,
+            )
             self.document_ids.action_update_access_rights(
                 partners=dict.fromkeys(
                     self.invite_partner_ids, (self.invite_role, None)
@@ -229,11 +247,16 @@ class DocumentsSharing(models.TransientModel):
                             access_url = f"{access_url}?member_signup_token={member._get_member_signup_token()}&member_id={member.id}"
                         access_urls[document] = access_url
                     access_urls_by_partner[partner] = access_urls
-                share_template.with_context(
-                    documents=self.document_ids,
-                    access_urls_by_partner=access_urls_by_partner,
-                    message=self.invite_notify_message or "",
-                ).send_mail_batch(self.invite_partner_ids.ids)
+                with _debug.perf(
+                    "invite_mail_sent",
+                    cr=self.env.cr,
+                    partners=self.invite_partner_ids,
+                ):
+                    share_template.with_context(
+                        documents=self.document_ids,
+                        access_urls_by_partner=access_urls_by_partner,
+                        message=self.invite_notify_message or "",
+                    ).send_mail_batch(self.invite_partner_ids.ids)
 
             params = {
                 "title": _("Successfully Shared"),
@@ -255,6 +278,7 @@ class DocumentsSharing(models.TransientModel):
         """Enable link access when needed and apply the edited rights."""
         self.check_singleton()
         if self.has_warning_partners_without_access:
+            _debug.logic("link_access_forced", documents=self.document_ids)
             self.access_via_link = f"{self.WRITE_VALUE_PREFIX}view"
             self.access_via_link_mode = f"{self.WRITE_VALUE_PREFIX}link_required"
         return self.action_update_rights()
@@ -263,6 +287,7 @@ class DocumentsSharing(models.TransientModel):
     def action_open(self, document_ids: list[int]) -> dict:
         """Open documents sharing wizard on one or more documents."""
         if not document_ids:
+            _debug.logic("sharing_open_refused", reason="no_documents")
             raise ValueError("Expected one or more documents.")
         documents = (
             self.env["document.document"]
@@ -335,6 +360,12 @@ class DocumentsSharing(models.TransientModel):
         else:
             values["viewer_download_mode"] = "allowed"
 
+        _debug.pipeline(
+            "sharing_open",
+            documents=documents,
+            members=len(access_shares),
+            mixed=sorted(k for k, v in values.items() if v == "mixed"),
+        )
         doc_sharing = self.env["document.sharing"].create(
             [
                 {
@@ -404,6 +435,11 @@ class DocumentsSharing(models.TransientModel):
             {access.partner_id: (False, False) for access in removed_access}
         )
         if partners:
+            _debug.logic(
+                "sharing_params",
+                modified=len(modified_access),
+                removed=len(removed_access),
+            )
             res["partners"] = partners
         if self.access_internal.startswith(self.WRITE_VALUE_PREFIX):
             res["access_internal"] = self.access_internal.removeprefix(

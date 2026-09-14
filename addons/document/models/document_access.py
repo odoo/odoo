@@ -1,6 +1,9 @@
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.misc import consteq
+
+_debug = DebugLog(__name__)
 
 
 class DocumentsAccess(models.Model):
@@ -49,6 +52,7 @@ class DocumentsAccess(models.Model):
         public_partner = self.env.ref("base.public_user").partner_id
         for access in self:
             if access.role and access.partner_id == public_partner:
+                _debug.logic("member_refused", reason="public_partner", access=access)
                 raise ValidationError(_("This user can not be member."))
 
     def _prepare_create_values(self, vals_list: list[dict]) -> list[dict]:
@@ -57,13 +61,16 @@ class DocumentsAccess(models.Model):
             [vals["document_id"] for vals in vals_list]
         )
         documents.check_access("write")
+        _debug.lifecycle("access_create", count=len(vals_list), documents=documents)
         return vals_list
 
     def write(self, vals: dict) -> bool:
         if "partner_id" in vals or "document_id" in vals:
+            _debug.logic("access_write_refused", reason="identity_change")
             raise AccessError(_("Access documents and partners cannot be changed."))
 
         self.document_id.check_access("write")
+        _debug.lifecycle("access_write", access=self, fields=sorted(vals))
         return super().write(vals)
 
     @api.autovacuum
@@ -75,6 +82,12 @@ class DocumentsAccess(models.Model):
         if not expired:
             return 0, False
         visited = expired.filtered("last_access_date")
+        _debug.lifecycle(
+            "access_expired",
+            expired=len(expired),
+            demoted=len(visited),
+            removed=len(expired) - len(visited),
+        )
         visited.write({"role": False, "expiration_date": False})
         (expired - visited).unlink()
         return len(expired), len(expired) == limit
@@ -92,6 +105,7 @@ class DocumentsAccess(models.Model):
     def _get_member_signup_token(self) -> str:
         self.check_singleton()
         if not self._is_signup_available():
+            _debug.logic("member_invite_refused", access=self)
             raise UserError(_("Cannot invite this member."))
 
         return tools.hmac(
@@ -106,6 +120,7 @@ class DocumentsAccess(models.Model):
     ) -> DocumentsAccess | bool:
         member_sudo = self.browse(member_id).sudo().exists()
         if not member_sudo or not member_sudo._is_signup_available():
+            _debug.logic("signup_token_refused", reason="unavailable", member=member_id)
             return False
         # `consteq` is `hmac.compare_digest`, which raises TypeError on a `str`
         # holding non-ASCII. `token` is the raw, public, attacker-controlled
@@ -117,9 +132,12 @@ class DocumentsAccess(models.Model):
         # This is the same guard `document.ShareRoute._from_access_token`
         # already applies to `document_token`; this call site was missed.
         if not isinstance(token, str) or not token.isascii():
+            _debug.logic("signup_token_refused", reason="non_ascii", member=member_id)
             return False
         if not consteq(member_sudo._get_member_signup_token(), token):
+            _debug.logic("signup_token_refused", reason="mismatch", member=member_id)
             return False
+        _debug.logic("signup_token_accepted", member=member_id)
         return member_sudo
 
     @api.model

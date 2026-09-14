@@ -1,5 +1,8 @@
 from odoo import _, fields, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class IrActionsServer(models.Model):
@@ -50,6 +53,7 @@ class IrActionsServer(models.Model):
         # checked for the pin and for write on the records, and the action then
         # runs with the pinner's authority rather than the caller's.
         if self.usage == "documents_embedded" and not records.env.su:
+            _debug.logic("embedded_action_elevated", action=self, records=records)
             env = eval_context["env"](su=True)
             records = records.with_env(env)
             eval_context = {
@@ -85,6 +89,12 @@ class IrActionsServer(models.Model):
                 if self not in available_sudo or any(
                     not d.available_embedded_actions_ids for d in folder_records
                 ):
+                    _debug.logic(
+                        "embedded_action_refused",
+                        reason="not_pinned_on_folder",
+                        action=self,
+                        records=folder_records,
+                    )
                     raise UserError(
                         _(
                             "This action was not made available on the containing folder."

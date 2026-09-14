@@ -1,7 +1,10 @@
 from typing import Any
 
 from odoo import _, api, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
+
+_debug = DebugLog(__name__)
 
 
 class KpiProvider(models.AbstractModel):
@@ -59,6 +62,7 @@ def get_kpi_summary(cr: Any, uid: int) -> list[dict]:
     existing_columns = {x[0] for x in cr.fetchall()}
     if expected_columns - existing_columns:
         # Needed columns are not present -> module is not installed
+        _debug.logic("kpi_skipped", reason="module_absent")
         return []
 
     cr.execute(
@@ -74,6 +78,7 @@ def get_kpi_summary(cr: Any, uid: int) -> list[dict]:
     )
     row = cr.fetchone()
     if not row:
+        _debug.logic("kpi_skipped", reason="no_inbox_folder")
         return []
     (inbox_path,) = row
 
@@ -108,6 +113,7 @@ def get_kpi_summary(cr: Any, uid: int) -> list[dict]:
         "lang": row[0] if row else "en_US",
     }
 
+    _debug.perf.count("kpi_inbox_counted", count=count)
     return [
         {
             "id": "document.inbox",

@@ -1,5 +1,8 @@
 from odoo import _, models
 from odoo.exceptions import UserError
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class DocumentDocument(models.Model):
@@ -18,6 +21,9 @@ class DocumentDocument(models.Model):
         }
 
         if documents_link_record := self.filtered("res_model"):
+            _debug.logic(
+                "link_refused", reason="already_linked", documents=documents_link_record
+            )
             return {
                 "type": "ir.actions.client",
                 "tag": "display_notification",
@@ -36,6 +42,7 @@ class DocumentDocument(models.Model):
             context["default_model_id"] = self.env["ir.model"]._get_id(model)
             first_valid_id = self.env[model].search([], limit=1).id
             if not first_valid_id:
+                _debug.logic("link_refused", reason="no_target_record", model=model)
                 raise UserError(
                     _("There are no records to link this document. Create one first.")
                 )

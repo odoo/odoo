@@ -5,9 +5,12 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 
 from odoo.addons.document.tools import UserFolder
+
+_debug = DebugLog(__name__)
 
 
 class DocumentsDocument(models.Model):
@@ -161,14 +164,15 @@ class DocumentsDocument(models.Model):
 
     @api.model
     def _search_panel_get_folder_counts(self, model_domain: Domain) -> dict:
-        return {
-            folder.id: count
-            for folder, count in self._read_group(
-                model_domain & Domain("folder_id", "!=", False),
-                groupby=["folder_id"],
-                aggregates=["__count"],
-            )
-        }
+        with _debug.perf("search_panel_folder_counts", cr=self.env.cr):
+            return {
+                folder.id: count
+                for folder, count in self._read_group(
+                    model_domain & Domain("folder_id", "!=", False),
+                    groupby=["folder_id"],
+                    aggregates=["__count"],
+                )
+            }
 
     @api.model
     def _search_panel_rollup_folder_counts(self, values_range: dict) -> None:
@@ -178,6 +182,7 @@ class DocumentsDocument(models.Model):
         local_counts = {
             folder_id: values["__count"] for folder_id, values in values_range.items()
         }
+        _debug.pipeline("search_panel_rollup", folders=len(values_range))
         for folder_id, count in local_counts.items():
             if not count:
                 continue
@@ -202,6 +207,7 @@ class DocumentsDocument(models.Model):
             search_panel_fields = self._get_fields_search_panel()
             domain = Domain("type", "=", "folder")
 
+            _debug.pipeline("search_panel_range", counters=enable_counters)
             if unique_folder_id := self.env.context.get("documents_unique_folder_id"):
                 values = self.env["document.document"].search_read(
                     domain & Domain("folder_id", "child_of", unique_folder_id),

@@ -1,3 +1,8 @@
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
+
+
 class UserFolder:
     MY = "MY"
     COMPANY = "COMPANY"
@@ -20,15 +25,20 @@ class UserFolder:
         if value is None or value is False or value == "":
             return None
         if isinstance(value, bool):
+            _debug.logic("user_folder_parse_failed", reason="bool")
             raise ValueError(f"Unexpected user_folder_id value {value!r}")
         if isinstance(value, int):
             return cls(cls.FOLDER, value)
         if not isinstance(value, str):
+            _debug.logic(
+                "user_folder_parse_failed", reason="type", type=type(value).__name__
+            )
             raise ValueError(f"Unexpected user_folder_id value {value!r}")
         if value in cls.VIRTUAL_ROOTS:
             return cls(value)
         if value.isnumeric():
             return cls(cls.FOLDER, int(value))
+        _debug.logic("user_folder_parse_failed", reason="unknown", value=value)
         raise ValueError(f"Unknown searched value {value}")
 
     @property

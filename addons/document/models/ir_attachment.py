@@ -3,11 +3,13 @@ import logging
 from collections import defaultdict
 
 from odoo import api, fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
 
 from odoo.addons.document.tools import UserFolder
 
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 
 class IrAttachment(models.Model):
@@ -61,6 +63,12 @@ class IrAttachment(models.Model):
                     )
             with io.BytesIO() as stream:
                 output.write(stream)
+                _debug.pipeline(
+                    "pdf_page_set_written",
+                    name=new_file["name"],
+                    pages=len(new_file["new_pages"]),
+                    sources=len(used_pages_by_pdf),
+                )
                 vals_list.append(
                     {
                         "name": new_file["name"] + ".pdf",
@@ -75,6 +83,7 @@ class IrAttachment(models.Model):
                 [("id", "=", res_id)], []
             )
             if document and not document.attachment_id and document.type == "binary":
+                _debug.lifecycle("document_attachment_filled", document=document)
                 document.attachment_id = self[0].id
             return False
 
@@ -84,9 +93,11 @@ class IrAttachment(models.Model):
             or not res_id
             or not issubclass(self.pool[res_model], self.pool["mixin.documents"])
         ):
+            _debug.logic("auto_document_skipped", reason="model", res_model=res_model)
             return False
         record = model.browse(res_id)
         if not record._check_create_documents():
+            _debug.logic("auto_document_skipped", reason="no_folder", record=record)
             return False
         candidates = self.filtered(lambda attachment: not attachment.res_field)
         # `write` reaches here whenever res_model/res_id move, and an attachment
@@ -107,7 +118,15 @@ class IrAttachment(models.Model):
             and (document_vals := record._get_document_vals(attachment))
         ]
         if not vals_list:
+            _debug.logic(
+                "auto_document_skipped",
+                reason="already_documented",
+                candidates=len(candidates),
+            )
             return False
+        _debug.pipeline(
+            "auto_document_created", res_model=res_model, count=len(vals_list)
+        )
         self.env["document.document"].create(vals_list)
         return True
 
@@ -115,6 +134,7 @@ class IrAttachment(models.Model):
     def create(self, vals_list: list[dict]) -> IrAttachment:
         attachments = super().create(vals_list)
         if self.env.context.get("no_document"):
+            _debug.logic("auto_document_skipped", reason="no_document_context")
             return attachments
         to_document = attachments.filtered(lambda a: not a.res_field)
         for (res_model, res_id), grouped in to_document.grouped(
@@ -125,6 +145,7 @@ class IrAttachment(models.Model):
 
     def write(self, vals: dict) -> bool:
         if self.env.context.get("no_document"):
+            _debug.logic("auto_document_skipped", reason="no_document_context")
             return super().write(vals)
         to_document = self.filtered(
             lambda a: not (vals.get("res_field") or a.res_field)
@@ -132,6 +153,7 @@ class IrAttachment(models.Model):
         result = super().write(vals)
         if not {"res_model", "res_id"} & vals.keys():
             return result
+        _debug.pipeline("auto_document_rescan", attachments=to_document)
         for (res_model, res_id), attachments in to_document.grouped(
             lambda attachment: (attachment.res_model, attachment.res_id)
         ).items():

@@ -3,11 +3,14 @@ from typing import Any
 from urllib.parse import quote, urlencode
 
 from odoo.http import request, route
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.urls import keep_query
 
 from .document import ShareRoute
 from odoo.addons.web.controllers import home as web_home
 from odoo.addons.web.controllers.utils import select_db
+
+_debug = DebugLog(__name__)
 
 
 class Home(web_home.Home):
@@ -33,6 +36,7 @@ class Home(web_home.Home):
     def web_client(self, s_action: str | None = None, **kw: Any) -> Any:
         access_token = self._share_access_token(kw.get("subpath", ""), request.params)
         if not access_token or "/" in access_token:
+            _debug.pipeline("web_client", by="plain_backend")
             return super().web_client(s_action, **kw)
 
         select_db()
@@ -40,6 +44,7 @@ class Home(web_home.Home):
         request.env["ir.http"]._authenticate_explicit("public")
 
         if not request.env.user._is_internal():
+            _debug.pipeline("web_client", by="redirect_to_share")
             return request.redirect(
                 f"/documents/{quote(access_token, safe='')}?{keep_query('*')}",
                 HTTPStatus.TEMPORARY_REDIRECT,
@@ -49,6 +54,7 @@ class Home(web_home.Home):
             access_token, follow_shortcut=False
         )
 
+        _debug.pipeline("web_client", by="internal_deep_link", document=document_sudo)
         query = {}
         if request.session.debug:
             query["debug"] = request.session.debug

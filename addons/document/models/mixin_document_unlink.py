@@ -1,4 +1,7 @@
 from odoo import models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class MixinDocumentsUnlink(models.AbstractModel):
@@ -18,6 +21,12 @@ class MixinDocumentsUnlink(models.AbstractModel):
             )
         )
         if documents:
+            _debug.lifecycle(
+                "linked_documents_detached",
+                model=self._name,
+                records=self,
+                documents=documents,
+            )
             documents.write({"res_model": False, "res_id": False})
             documents.action_archive()
         return super().unlink()

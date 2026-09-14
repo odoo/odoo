@@ -3,7 +3,10 @@ from typing import Any
 
 from odoo import api, fields, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
+
+_debug = DebugLog(__name__)
 
 
 class DocumentsDocument(models.Model):
@@ -29,6 +32,13 @@ class DocumentsDocument(models.Model):
 
         documents = self._propagation_target_select(
             no_propagation=no_propagation, access=True
+        )
+        _debug.pipeline(
+            "members_update_plan",
+            documents=self,
+            to_remove=len(partners_to_remove),
+            role_groups=len(values_to_update),
+            propagate=not no_propagation,
         )
 
         created_or_updated_access = []
@@ -92,6 +102,9 @@ class DocumentsDocument(models.Model):
                 )
             )
             created_or_updated_access += self.env.cr.fetchall()
+            _debug.perf.count(
+                "members_upserted", role=role, partners=len(role_partners)
+            )
 
         removed_access = []
         if partners_to_remove:
@@ -112,6 +125,7 @@ class DocumentsDocument(models.Model):
                 )
             )
             removed_access = self.env.cr.fetchall()
+            _debug.perf.count("members_removed", rows=len(removed_access))
 
         self._invalidate_permission_cache(["access_ids"])
         self.env["document.access"].invalidate_model()
@@ -177,6 +191,12 @@ class DocumentsDocument(models.Model):
                     for owner, documents in documents_per_user.items()
                 )
             )
+        )
+        _debug.lifecycle(
+            "owner_role_kept",
+            role=role,
+            users=len(documents_per_user),
+            existing=len(existing_access),
         )
         existing_access.role = role
         existing_access_values = {
@@ -297,6 +317,12 @@ class DocumentsDocument(models.Model):
                     "documents_to_update", include=bool(company_id)
                 ),
             )
+        )
+        _debug.pipeline(
+            "company_propagated",
+            documents=self,
+            company=company_id,
+            rows=self.env.cr.rowcount,
         )
 
         self._invalidate_permission_cache(["company_id"])

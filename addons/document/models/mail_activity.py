@@ -2,6 +2,9 @@ from datetime import datetime
 
 from odoo import _, api, fields, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class MailActivity(models.Model):
@@ -25,6 +28,9 @@ class MailActivity(models.Model):
                 documents, upload_documents_activities, strict=True
             ):
                 if not document.request_activity_id:
+                    _debug.lifecycle(
+                        "request_activity_linked", document=document, activity=activity
+                    )
                     document.request_activity_id = activity.id
 
         doc_vals = [
@@ -46,6 +52,7 @@ class MailActivity(models.Model):
             )
         ]
         if doc_vals:
+            _debug.pipeline("upload_requests_created", count=len(doc_vals))
             self.env["document.document"].sudo().create(doc_vals)
         return activities
 
@@ -91,6 +98,11 @@ class MailActivity(models.Model):
                 for document_requestee_partner_id in document_requestee_partner_ids
             )
         ).expiration_date = new_expiration_date
+        _debug.pipeline(
+            "request_deadline_propagated",
+            activities=act_on_docs,
+            documents=len(document_requestee_partner_ids),
+        )
         return write_result
 
     def _prepare_next_activity_values(self) -> dict:
@@ -118,6 +130,11 @@ class MailActivity(models.Model):
                     "name": vals["summary"],
                 }
             )
+            _debug.lifecycle(
+                "next_upload_request_created",
+                activity=self,
+                document=new_doc_request,
+            )
             vals["res_id"] = new_doc_request.id
         return vals
 
@@ -141,6 +158,12 @@ class MailActivity(models.Model):
         messages, next_activities = super(
             MailActivity, self.with_context(no_document=True)
         )._action_done(feedback=feedback, attachment_ids=attachment_ids)
+        _debug.pipeline(
+            "upload_requests_done",
+            activities=self,
+            documents=documents,
+            unfulfilled=len(document_without_attachment),
+        )
         documents.filtered(
             lambda document: document.access_via_link == "edit"
         ).access_via_link = "view"

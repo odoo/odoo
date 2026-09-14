@@ -1,9 +1,12 @@
 from odoo import _, api, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 
 from odoo.addons.document.tools import UserFolder
+
+_debug = DebugLog(__name__)
 
 
 class DocumentsDocument(models.Model):
@@ -45,6 +48,7 @@ class DocumentsDocument(models.Model):
             return Domain(Domain("folder_id", operator, operand), internal=True)
         values = {operand} if isinstance(operand, int) else set(operand)
         if len(values) > 1:
+            _debug.logic("folder_search_refused", reason="many_child_of")
             raise UserError(
                 _("Only one value can be searched for child of `folder_id`.")
             )
@@ -58,6 +62,7 @@ class DocumentsDocument(models.Model):
             return NotImplemented
         values = {operand} if isinstance(operand, str) else set(operand)
         if UserFolder.TRASH in values:
+            _debug.logic("user_folder_search_refused", reason="trash")
             raise UserError(_("Searching on TRASH is not supported."))
         domain_parts = []
         folder_ids = []
@@ -97,6 +102,11 @@ class DocumentsDocument(models.Model):
             elif user_folder.is_folder:
                 folder_ids.append(user_folder.folder_id)
             else:
+                _debug.logic(
+                    "user_folder_search_refused",
+                    reason="unsupported_kind",
+                    kind=user_folder.kind,
+                )
                 raise UserError(_("Searching on %s is not supported.", user_folder))
 
         if folder_ids:
@@ -106,8 +116,16 @@ class DocumentsDocument(models.Model):
 
         domain = Domain.OR(domain_parts)
 
+        _debug.logic(
+            "user_folder_search",
+            operator=operator,
+            parts=len(domain_parts),
+            folders=len(folder_ids),
+        )
+
         if operator == "child_of":
             if len(values) > 1:
+                _debug.logic("user_folder_search_refused", reason="many_child_of")
                 raise UserError(
                     _("Only one value can be searched for children of `user_folder_id`")
                 )
@@ -119,6 +137,7 @@ class DocumentsDocument(models.Model):
         try:
             return UserFolder.parse(value)
         except ValueError as error:
+            _debug.logic("user_folder_parse_refused", value=value)
             raise UserError(_("Unexpected user_folder_id value %s", value)) from error
 
     @api.model
@@ -147,28 +166,41 @@ class DocumentsDocument(models.Model):
                 new_vals["access_internal"] = "view"
         elif user_folder.kind == UserFolder.MY:
             if not self.env.user.active:
+                _debug.logic("user_folder_refused", reason="inactive_user", kind="MY")
                 raise UserError(_("Inactive user cannot create/move in 'My Drive'."))
             new_vals = {"owner_id": self.env.user.id, "folder_id": False}
         elif user_folder.kind == UserFolder.RECENT:
+            _debug.logic("user_folder_refused", reason="virtual", kind="RECENT")
             raise UserError(_("Documents cannot be created or moved in 'Recent'."))
         elif user_folder.kind == UserFolder.SHARED:
+            _debug.logic("user_folder_refused", reason="virtual", kind="SHARED")
             raise UserError(
                 _("Documents cannot be created or moved in 'Shared With Me'.")
             )
         elif user_folder.kind == UserFolder.TRASH:
+            _debug.logic("user_folder_refused", reason="virtual", kind="TRASH")
             raise UserError(_("Documents cannot be created or moved in the trash."))
         else:
             new_vals = {"folder_id": user_folder.folder_id}
 
         message = _("Conflicting values passed with user_folder_id.")
         if (folder_id := vals.get("folder_id")) and folder_id != new_vals["folder_id"]:
+            _debug.logic(
+                "user_folder_conflict", field="folder_id", kind=user_folder.kind
+            )
             raise UserError(message)
         if (
             (owner_id := vals.get("owner_id"))
             and "owner_id" in new_vals
             and owner_id != new_vals["owner_id"]
         ):
+            _debug.logic(
+                "user_folder_conflict", field="owner_id", kind=user_folder.kind
+            )
             raise UserError(message)
+        _debug.logic(
+            "user_folder_resolved", kind=user_folder.kind, sets=sorted(new_vals)
+        )
         vals.update(new_vals)
 
     @api.model
@@ -185,6 +217,7 @@ class DocumentsDocument(models.Model):
             shared_roots = self.with_context(active_test=False).search_fetch(
                 roots_domain, ["id"]
             )
+            _debug.perf.count("child_of_shared_roots", roots=len(shared_roots))
             return Domain("id", "child_of", shared_roots.ids)
         candidates, top_level_folders = (
             query.select(

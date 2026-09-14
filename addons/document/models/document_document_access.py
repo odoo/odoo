@@ -4,9 +4,12 @@ from typing import Any
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL
 
 from odoo.addons.document.tools import UserFolder
+
+_debug = DebugLog(__name__)
 
 
 class DocumentsDocument(models.Model):
@@ -90,6 +93,9 @@ class DocumentsDocument(models.Model):
             document_id: "edit" if is_editable else "view"
             for document_id, is_editable in self.env.cr.fetchall()
         }
+        _debug.perf.count(
+            "user_permission_computed", documents=saved, resolved=len(levels)
+        )
         for document in saved:
             document.user_permission = levels.get(document.id, "none")
 
@@ -107,6 +113,7 @@ class DocumentsDocument(models.Model):
         if self.env.is_admin() or self.env.user.has_group(
             "document.group_documents_system"
         ):
+            _debug.logic("user_can_move", by="system_group", documents=self)
             active_documents.user_can_move = True
             return
         owned_documents = active_documents.filtered(
@@ -355,6 +362,7 @@ class DocumentsDocument(models.Model):
         )
 
         if self.shortcut_document_id:
+            _debug.logic("access_update_refused", reason="shortcut", documents=self)
             raise UserError(
                 _(
                     "You can not update the access of a shortcut, update its target instead."
@@ -394,6 +402,11 @@ class DocumentsDocument(models.Model):
             ),
         }
         if incorrect_fields_to_options:
+            _debug.logic(
+                "access_update_refused",
+                reason="bad_values",
+                fields=sorted(incorrect_fields_to_options),
+            )
             hints = "\n- " + "\n- ".join(
                 f"{name}: {options}"
                 for name, options in incorrect_fields_to_options.items()
@@ -418,6 +431,12 @@ class DocumentsDocument(models.Model):
                 )
                 for partner, (role, exp) in (partners or {}).items()
             }
+            _debug.pipeline(
+                "access_members_update",
+                documents=self,
+                partners=len(partners),
+                propagate=not no_propagation,
+            )
             member_changes = self._action_update_members(
                 partners, no_propagation=no_propagation
             )
@@ -437,6 +456,11 @@ class DocumentsDocument(models.Model):
 
         self.env["document.access.tracking"]._create_access_tracking(
             changes_by_document_dict
+        )
+        _debug.lifecycle(
+            "access_rights_updated",
+            documents=self,
+            changed=len(changes_by_document_dict),
         )
 
         return self.mapped("user_permission")
@@ -461,6 +485,7 @@ class DocumentsDocument(models.Model):
                 continue
 
             skip_propagation = no_propagation or field == "is_access_via_link_hidden"
+            _debug.pipeline("access_field_update", field=field, skip=skip_propagation)
 
             candidates_domain = Domain(
                 [
@@ -517,6 +542,7 @@ class DocumentsDocument(models.Model):
 
             for id, old_value in self.env.cr.fetchall():
                 changes_by_document_dict[id][field] = old_value
+            _debug.perf.count("access_field_rows", field=field, value=value)
 
         self._invalidate_permission_cache(
             [
@@ -540,6 +566,11 @@ class DocumentsDocument(models.Model):
             for field in self.pool.get_dependent_fields(permission)
             if field.model_name == self._name and not field.store
         ]
+        _debug.pipeline(
+            "permission_cache_invalidated",
+            written=fields_written,
+            dependents=len(dependents),
+        )
         self.invalidate_model([*fields_written, "user_permission", *dependents])
 
     def _get_permission_without_token(self) -> str:
@@ -573,6 +604,9 @@ class DocumentsDocument(models.Model):
                 )
             )
             levels.update(dict.fromkeys(query.get_result_ids(), level))
+        _debug.perf.count(
+            "permission_without_token", documents=saved, resolved=len(levels)
+        )
         for document in saved:
             permission_by_document[document] = levels.get(document.id, "none")
         return permission_by_document
@@ -604,6 +638,7 @@ class DocumentsDocument(models.Model):
                 continue
             if code == Command.SET and not command[2]:
                 continue
+            _debug.logic("access_command_refused", code=code)
             raise UserError(
                 _(
                     "Document access can only be granted at creation "
@@ -641,4 +676,9 @@ class DocumentsDocument(models.Model):
         if any(
             folder.user_permission != "edit" for folder in unowned_documents.folder_id
         ):
+            _debug.logic(
+                "archive_refused",
+                reason="unowned_in_uneditable_folder",
+                documents=unowned_documents,
+            )
             raise UserError(self._archive_denied_message())

@@ -1,8 +1,11 @@
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.document.tools import UserFolder
+
+_debug = DebugLog(__name__)
 
 
 class DocumentsOperation(models.TransientModel):
@@ -21,6 +24,7 @@ class DocumentsOperation(models.TransientModel):
                     result["destination"] = str(first_folder[0]["id"])
                     result["display_name"] = first_folder[0]["display_name"]
                 else:
+                    _debug.logic("operation_refused", reason="no_editable_folder")
                     raise UserError(
                         self.env._("You do not have editor access to any folder.")
                     )
@@ -118,16 +122,28 @@ class DocumentsOperation(models.TransientModel):
     def action_confirm(self) -> None:
         """Execute the selected operation on the documents."""
         self.check_singleton()
+        _debug.pipeline(
+            "operation",
+            by=self.operation,
+            documents=self.document_ids,
+            destination=self.destination,
+        )
         if self.operation == "move":
             self.document_ids.user_folder_id = self.destination
         elif self.operation == "copy":
             self.document_ids.copy({"user_folder_id": self.destination})
         elif self.operation == "add":
             if not self.attachment_id:
+                _debug.logic("operation_refused", reason="no_attachment")
                 raise UserError(self.env._("No attachment to add."))
             if self.attachment_id.type not in dict(
                 self.env["document.document"]._fields["type"].selection
             ):
+                _debug.logic(
+                    "operation_refused",
+                    reason="bad_attachment_type",
+                    type=self.attachment_id.type,
+                )
                 raise UserError(
                     self.env._(
                         "Unsupported attachment type: %s", self.attachment_id.type
@@ -148,6 +164,7 @@ class DocumentsOperation(models.TransientModel):
                 location_user_folder_id=self.destination
             )
         else:
+            _debug.logic("operation_refused", reason="unknown", by=self.operation)
             raise UserError(self.env._("Invalid operation"))
 
     @api.readonly

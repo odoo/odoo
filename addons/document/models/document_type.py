@@ -2,8 +2,11 @@ from typing import Any
 
 from odoo import api, fields, models
 from odoo.fields import Command
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.base.models.mixin_catalog import name_uniq_index
+
+_debug = DebugLog(__name__)
 
 
 class DocumentType(models.Model):
@@ -97,6 +100,7 @@ class DocumentType(models.Model):
             groupby=["document_type_id", "expiration_state"],
             aggregates=["__count"],
         )
+        _debug.perf.count("document_type_counts", types=self, rows=len(data))
         totals: dict[int, int] = {}
         per_state: dict[tuple[int, str], int] = {}
         for doc_type, state, count in data:

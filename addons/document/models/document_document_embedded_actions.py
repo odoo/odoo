@@ -3,6 +3,9 @@ from typing import Any
 from odoo import _, api, models
 from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class DocumentsDocument(models.Model):
@@ -29,6 +32,7 @@ class DocumentsDocument(models.Model):
             not self.env.user.has_group("document.group_documents_user")
             and not self.env.su
         ):
+            _debug.logic("embed_refused", reason="not_a_documents_user")
             raise AccessError(_("You are not allowed to pin/unpin embedded Actions."))
         embeddable_domain = self._get_domain_embeddable_server_action()
         action = (
@@ -37,11 +41,14 @@ class DocumentsDocument(models.Model):
             .search(Domain("id", "=", action_id) & embeddable_domain)
         )
         if not action:
+            _debug.logic("embed_refused", reason="unknown_action")
             raise UserError(_("This action does not exist."))
         if action.type != "ir.actions.server":
+            _debug.logic("embed_refused", reason="bad_action_type")
             raise UserError(_("You cannot pin that type of action."))
         folder = self.env["document.document"].browse(folder_id).sudo().exists()
         if not folder or folder.type != "folder":
+            _debug.logic("embed_refused", reason="not_a_folder")
             raise UserError(_("You cannot pin an action on that document."))
         if folder.shortcut_document_id:
             return self.action_folder_embed_action(
@@ -51,6 +58,7 @@ class DocumentsDocument(models.Model):
             not self.env.su
             and folder.with_user(self.env.user).user_permission != "edit"
         ):
+            _debug.logic("embed_refused", reason="folder_not_editable", folder=folder)
             raise AccessError(
                 _("You are not allowed to pin/unpin actions on this folder.")
             )
@@ -73,8 +81,10 @@ class DocumentsDocument(models.Model):
             )
         )
         if all_embedded_actions_sudo:
+            _debug.lifecycle("action_unpinned", folder=folder_id, action=action_id)
             all_embedded_actions_sudo.unlink()
         else:
+            _debug.lifecycle("action_pinned", folder=folder_id, action=action_id)
             last_action = self.env["ir.embedded.actions"].search(
                 [], order="sequence DESC", limit=1
             )
@@ -101,8 +111,10 @@ class DocumentsDocument(models.Model):
     @api.model
     def action_execute_embedded_action(self, action_id: int) -> Any:
         if self.env.user.share:
+            _debug.logic("embed_run_refused", reason="share_user")
             raise AccessError(_("You are not allowed to execute embedded actions."))
         if self.env.context.get("active_model") != "document.document":
+            _debug.logic("embed_run_refused", reason="wrong_active_model")
             raise UserError(_("Unavailable action."))
         ids = self.env.context.get(
             "active_ids",
@@ -111,6 +123,7 @@ class DocumentsDocument(models.Model):
             else [],
         )
         if not ids:
+            _debug.logic("embed_run_refused", reason="no_active_ids")
             raise UserError(_("Missing documents reference."))
 
         embedded_action = self.env["ir.embedded.actions"].browse([action_id])
@@ -118,13 +131,17 @@ class DocumentsDocument(models.Model):
             action_id in document.available_embedded_actions_ids.ids
             for document in self.browse(ids)
         ):
-            return (
-                self.env["ir.actions.server"]
-                .with_context(documents_active_ids=ids)
-                .browse(embedded_action.action_id.id)
-                .run()
-            )
+            with _debug.perf(
+                "embed_run", cr=self.env.cr, action=action_id, documents=len(ids)
+            ):
+                return (
+                    self.env["ir.actions.server"]
+                    .with_context(documents_active_ids=ids)
+                    .browse(embedded_action.action_id.id)
+                    .run()
+                )
 
+        _debug.logic("embed_run_refused", reason="not_available_on_documents")
         raise UserError(_("Unavailable action."))
 
     @api.model

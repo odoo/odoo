@@ -1,5 +1,8 @@
 from odoo import api, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class IrEmbeddedActions(models.Model):
@@ -29,6 +32,7 @@ class IrEmbeddedActions(models.Model):
             folders = self.env["document.document"].browse(
                 to_check.mapped("parent_res_id")
             )
+            _debug.logic("pin_access_checked", embedded=to_check, folders=folders)
             folders.check_access("write")
 
     @api.model
@@ -57,5 +61,6 @@ class IrEmbeddedActions(models.Model):
             limit=limit,
         )
         removed = len(obsolete)
+        _debug.lifecycle("embedded_actions_gc", removed=removed)
         obsolete.unlink()
         return removed, removed == limit

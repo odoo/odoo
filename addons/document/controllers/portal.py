@@ -2,8 +2,11 @@ from typing import Any
 
 from odoo.exceptions import AccessError
 from odoo.http import request
+from odoo.libs.debug_log import DebugLog
 
 from odoo.addons.portal.controllers.portal import CustomerPortal
+
+_debug = DebugLog(__name__)
 
 
 class DocumentCustomerPortal(CustomerPortal):
@@ -14,6 +17,7 @@ class DocumentCustomerPortal(CustomerPortal):
             try:
                 count = Document.search_count([])
             except AccessError:
+                _debug.logic("portal_count_denied", user=request.env.user)
                 count = 0
             values["document_count"] = count
         return values

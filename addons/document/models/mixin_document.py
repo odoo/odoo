@@ -1,4 +1,7 @@
 from odoo import Command, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class MixinDocuments(models.AbstractModel):
@@ -16,6 +19,11 @@ class MixinDocuments(models.AbstractModel):
                 "access_internal",
                 "is_access_via_link_hidden",
             }:
+                _debug.logic(
+                    "document_vals_refused",
+                    model=self._name,
+                    keys=sorted(access_rights_vals),
+                )
                 raise ValueError("Invalid access right values")
 
             owner = self._get_document_owner()
@@ -29,6 +37,12 @@ class MixinDocuments(models.AbstractModel):
                 "partner_id": self._get_document_partner().id,
                 "tag_ids": [(6, 0, self._get_document_tags().ids)],
             } | access_rights_vals
+            _debug.pipeline(
+                "document_vals_built",
+                model=self._name,
+                folder=folder,
+                owner=owner,
+            )
         return document_vals
 
     def _get_document_vals_access_rights(self) -> dict:
@@ -60,6 +74,9 @@ class MixinDocuments(models.AbstractModel):
         self, res_model: str, vals_list: list[dict], pre_vals_list: list[dict]
     ) -> list[dict]:
         if self._name != res_model:
+            _debug.logic(
+                "linked_record_vals_refused", model=self._name, res_model=res_model
+            )
             raise ValueError(f"Invalid model {res_model} (expected {self._name})")
 
         related_record_by_id = (
@@ -109,4 +126,7 @@ class MixinDocuments(models.AbstractModel):
                 if partner.id not in partner_with_access
             )
             vals["access_ids"] = access_ids
+        _debug.pipeline(
+            "linked_record_vals_prepared", res_model=res_model, count=len(vals_list)
+        )
         return vals_list

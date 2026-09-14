@@ -16,6 +16,7 @@ import odoo
 from odoo import SUPERUSER_ID, Command, _, api, fields, models, modules
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.libs.filesystem import get_extension
 from odoo.tools import groupby
 from odoo.tools.date_utils import time_unit_selection
@@ -27,6 +28,7 @@ from odoo.addons.document.tools import UserFolder
 from odoo.addons.mail.tools import link_preview
 
 _logger = logging.getLogger(__name__)
+_debug = DebugLog(__name__)
 
 
 def _sanitize_file_extension(extension: str) -> str:
@@ -455,6 +457,14 @@ class DocumentsDocument(models.Model):
             shortcuts_list = "\n- ".join(chained_shortcuts.mapped("name"))
             errors.append(f"{message}\n- {shortcuts_list}")
         if errors:
+            _debug.logic(
+                "shortcut_constraint_refused",
+                documents=self,
+                wrong_types=len(wrong_types),
+                wrong_parents=len(wrong_parents_sudo),
+                wrong_companies=len(wrong_companies),
+                chained=len(chained_shortcuts),
+            )
             raise ValidationError("\n\n".join(errors))
 
     @api.constrains("owner_id", "folder_id")
@@ -464,6 +474,11 @@ class DocumentsDocument(models.Model):
             root_documents._get_unauthorized_root_document_owners_sudo()
         )
         if unauthorized_owners_sudo:
+            _debug.logic(
+                "root_owner_refused",
+                documents=root_documents,
+                owners=unauthorized_owners_sudo,
+            )
             users_documents_list = [
                 (document.owner_id.name, document.name)
                 for document in root_documents
@@ -512,6 +527,7 @@ class DocumentsDocument(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list: list[dict]) -> DocumentsDocument:
+        _debug.pipeline("create_start", count=len(vals_list), su=self.env.su)
         attachments = []
         for vals in vals_list:
             self._clean_vals_for_user_folder_id(vals, is_create=True)
@@ -521,6 +537,7 @@ class DocumentsDocument(models.Model):
             attachment = self.env["ir.attachment"].browse(vals.get("attachment_id"))
             if not self.env.su and self.env.user.share:
                 if not vals.get("folder_id"):
+                    _debug.logic("create_refused", reason="share_user_no_folder")
                     raise AccessError(
                         _("You are not allowed to create documents here.")
                     )
@@ -529,6 +546,9 @@ class DocumentsDocument(models.Model):
             if attachment and attachment_dict:
                 attachment.write(attachment_dict)
             elif attachment_dict:
+                _debug.lifecycle(
+                    "attachment_created_for_document", keys=len(attachment_dict)
+                )
                 attachment_dict.setdefault("name", vals.get("name", "unnamed"))
                 attachment = (
                     self.env["ir.attachment"]
@@ -541,14 +561,17 @@ class DocumentsDocument(models.Model):
                 vals["name"] = attachment.name
             attachments.append(attachment)
 
-        documents = super(
-            DocumentsDocument, self.with_context(default_access_ids=None)
-        ).create(vals_list)
+        with _debug.perf("create_super", cr=self.env.cr, count=len(vals_list)):
+            documents = super(
+                DocumentsDocument, self.with_context(default_access_ids=None)
+            ).create(vals_list)
 
         if not self._is_documents_manager():
             if any(d.alias_name for d in documents):
+                _debug.logic("create_refused", reason="alias_needs_manager")
                 raise AccessError(_("Only Documents Managers can set aliases."))
             if any(d._is_company_root_folder() for d in documents):
+                _debug.logic("create_refused", reason="company_root_needs_manager")
                 self._raise_company_folder_manager_only()
 
         for document, attachment in zip(documents, attachments, strict=True):
@@ -567,6 +590,11 @@ class DocumentsDocument(models.Model):
                     }
                 )
         self._mark_url_preview_pending(documents)
+        _debug.lifecycle(
+            "create",
+            documents=documents,
+            types=sorted({d.type or "" for d in documents}),
+        )
         return documents
 
     @api.model
@@ -591,10 +619,15 @@ class DocumentsDocument(models.Model):
     def _check_parent_folders(self, folder_ids: list) -> None:
         folders = self.browse({folder_id for folder_id in folder_ids if folder_id})
         if folders and folders.sudo().filtered(lambda folder: folder.type != "folder"):
+            _debug.logic(
+                "parent_folder_refused", reason="not_a_folder", folders=folders
+            )
             raise UserError(_("Invalid folder id"))
 
     def write(self, vals: dict) -> bool:
+        _debug.lifecycle("write", documents=self, fields=sorted(vals))
         if "shortcut_document_id" in vals:
+            _debug.logic("write_refused", reason="shortcut_retarget", documents=self)
             raise UserError(_("Shortcuts cannot change target document."))
 
         if (
@@ -602,6 +635,7 @@ class DocumentsDocument(models.Model):
             and not self.env.su
             and not self.env.context.get("documents_archiving")
         ):
+            _debug.pipeline("write_rerouted_to_archive", documents=self)
             if remaining_vals := {k: v for k, v in vals.items() if k != "active"}:
                 self.write(remaining_vals)
             self.action_archive()
@@ -617,6 +651,7 @@ class DocumentsDocument(models.Model):
         has_content = any(vals.get(key) for key in content_keys)
         replaces_content = writes_content or "attachment_id" in vals
         if replaces_content and (locked_by_other := self._locked_by_other()):
+            _debug.logic("write_refused", reason="locked_by_other")
             raise UserError(
                 _(
                     "“%(name)s” is locked by %(user)s and its content cannot "
@@ -631,6 +666,7 @@ class DocumentsDocument(models.Model):
 
         if (owner_id := vals.get("owner_id")) is not None:
             if not is_manager and any(d.owner_id != self.env.user for d in self):
+                _debug.logic("write_refused", reason="owner_change_not_owner")
                 raise AccessError(
                     _("You cannot change the owner of documents you do not own.")
                 )
@@ -641,6 +677,9 @@ class DocumentsDocument(models.Model):
             )
             previous_owner_access_to_keep.update(
                 documents_changing_owner.grouped("owner_id")
+            )
+            _debug.logic(
+                "owner_changed", documents=documents_changing_owner, to=owner_id
             )
 
         new_parent_folder = self.browse()
@@ -656,18 +695,22 @@ class DocumentsDocument(models.Model):
                 lambda d: d.folder_id != new_parent_folder
             )
             if documents_to_move and new_parent_folder and not new_parent_folder.active:
+                _debug.logic("move_refused", reason="target_archived")
                 raise UserError(
                     _("It is not possible to move documents into archived folders.")
                 )
             if documents_to_move and not self.env.su:
                 if new_parent_folder and new_parent_folder.user_permission != "edit":
+                    _debug.logic("move_refused", reason="target_not_editable")
                     raise AccessError(_("You can't access that folder_id."))
                 for doc in documents_to_move:
                     if doc.user_permission != "edit":
+                        _debug.logic("move_refused", reason="source_not_editable")
                         raise AccessError(
                             _("You are not allowed to move (some of) these documents.")
                         )
                     if not doc.user_can_move:
+                        _debug.logic("move_refused", reason="cannot_move_out")
                         raise AccessError(
                             _(
                                 "You can't move documents you do not own out of folders you cannot edit."
@@ -675,6 +718,11 @@ class DocumentsDocument(models.Model):
                         )
 
             if new_parent_folder.shortcut_document_id:
+                _debug.pipeline(
+                    "move_target_resolved_through_shortcut",
+                    shortcut=new_parent_folder,
+                    target=new_parent_folder.shortcut_document_id,
+                )
                 resolved_vals = vals | {
                     "folder_id": new_parent_folder.shortcut_document_id.id
                 }
@@ -689,16 +737,24 @@ class DocumentsDocument(models.Model):
                         and not doc.folder_id.active
                         and (not to_active or doc.folder_id not in self)
                     ):
+                        _debug.logic("move_refused", reason="source_archived")
                         raise UserError(
                             _("It is not possible to move archived documents.")
                         )
             documents_to_move_per_initial_folder = documents_to_move.grouped(
                 "folder_id"
             )
+            _debug.pipeline(
+                "move_planned",
+                documents=documents_to_move,
+                to=new_parent_folder,
+                from_folders=len(documents_to_move_per_initial_folder),
+            )
 
         if (to_active := vals.get("active")) is not None:
             if to_active is False:
                 if not self.env.su and self.env.user.share:
+                    _debug.logic("archive_refused", reason="share_user", documents=self)
                     raise UserError(_("You are not allowed to (un)archive documents."))
                 self.check_access("unlink")
             documents_per_initial_active = self.grouped("active")
@@ -761,6 +817,7 @@ class DocumentsDocument(models.Model):
                     record.previous_attachment_ids = [
                         (4, record.attachment_id.id, False)
                     ]
+                    _debug.logic("versioned", by="attachment_swap", document=record)
                     versioned |= record
                 elif "attachment_id" in vals and not attachment_id:
                     # Detaching the file outright. This used to keep no version
@@ -778,6 +835,7 @@ class DocumentsDocument(models.Model):
                     record.previous_attachment_ids = [
                         (4, record.attachment_id.id, False)
                     ]
+                    _debug.logic("versioned", by="detach", document=record)
                     versioned |= record
                 elif writes_content:
                     old_attachment = record.attachment_id.with_context(
@@ -790,11 +848,13 @@ class DocumentsDocument(models.Model):
                         }
                     )
                     record.previous_attachment_ids = [(4, old_attachment.id, False)]
+                    _debug.logic("versioned", by="content_copy", document=record)
                     versioned |= record
             elif has_content and not vals.get("attachment_id"):
                 res_model = vals.get("res_model", record.res_model)
                 res_id = vals.get("res_id", record.res_id)
                 if res_model and not self.env[res_model].browse(res_id).exists():
+                    _debug.logic("res_record_cleared", res_model=res_model)
                     record.res_model = False
                     record.res_id = False
 
@@ -814,9 +874,11 @@ class DocumentsDocument(models.Model):
         attachment_dict = self._pop_attachment_vals(vals)
 
         if not is_manager and set(vals) & set(self.env["mixin.mail.alias"]._fields):
+            _debug.logic("write_refused", reason="alias_needs_manager")
             raise AccessError(_("Only Documents Managers can set aliases."))
 
-        write_result = super().write(vals)
+        with _debug.perf("write_super", cr=self.env.cr, documents=self):
+            write_result = super().write(vals)
         if attachment_dict:
             self.attachment_id.write(attachment_dict)
 
@@ -830,6 +892,7 @@ class DocumentsDocument(models.Model):
                 if self.sudo().search(
                     [("id", "child_of", self.ids), ("active", "=", True)]
                 ):
+                    _debug.logic("archive_refused", reason="active_descendants")
                     raise UserError(
                         _(
                             'Operation not supported. Please use "Move to Trash" / `action_archive` instead.'
@@ -847,6 +910,7 @@ class DocumentsDocument(models.Model):
                 if self.sudo().search(
                     [("id", "parent_of", self.ids), ("active", "=", False)]
                 ):
+                    _debug.logic("unarchive_refused", reason="archived_ancestors")
                     raise UserError(
                         _(
                             'Operation not supported. Please use "Restore" / `action_unarchive` instead.'
@@ -899,6 +963,13 @@ class DocumentsDocument(models.Model):
                 lambda d: not d.shortcut_document_id
             )
         ):
+            _debug.pipeline(
+                "move_access_synced",
+                documents=documents_to_sync,
+                folder=new_parent_folder,
+                access_internal=new_parent_folder.access_internal,
+                access_via_link=new_parent_folder.access_via_link,
+            )
             documents_to_sync.action_update_access_rights(
                 access_internal=new_parent_folder.access_internal,
                 access_via_link=new_parent_folder.access_via_link,
@@ -928,12 +999,19 @@ class DocumentsDocument(models.Model):
         if "url" in vals:
             self._mark_url_preview_pending(self)
 
+        _debug.pipeline(
+            "write_done",
+            documents=self,
+            moved=len(documents_to_move),
+            versioned=len(versioned),
+        )
         return write_result
 
     def copy(self, default: dict | None = None) -> DocumentsDocument:
         if not self:
             return self
         if not all(self.mapped("active")):
+            _debug.logic("copy_refused", reason="in_trash", documents=self)
             raise UserError(_("You cannot duplicate document(s) in the Trash."))
         if default and default.get("user_folder_id") == UserFolder.MY:
             default["owner_id"] = self.env.user.id
@@ -946,6 +1024,12 @@ class DocumentsDocument(models.Model):
         skip_documents = self.env.context.get("documents_copy_folders_only")
 
         shortcuts = self.filtered("shortcut_document_id")
+        _debug.pipeline(
+            "copy_start",
+            documents=self,
+            shortcuts=len(shortcuts),
+            folders_only=bool(skip_documents),
+        )
         if shortcuts and not skip_documents:
             for destination, targets in self._get_copy_shortcuts_destinations(
                 shortcuts, default
@@ -987,6 +1071,7 @@ class DocumentsDocument(models.Model):
                     children_default.update(owner_id=default["owner_id"])
 
                 if new_folder._is_descendant_of(old_folder):
+                    _debug.logic("copy_refused", reason="into_own_descendant")
                     raise UserError(
                         _(
                             "You cannot copy a folder into itself or into one of its own descendants."
@@ -1007,6 +1092,7 @@ class DocumentsDocument(models.Model):
         if not skip_documents and (
             documents_sudo := (self - shortcuts - folders).sudo()
         ):
+            _debug.pipeline("copy_binaries", documents=documents_sudo)
             new_binaries_sudo = documents_sudo._copy_with_access(default=default)
             for old_document_sudo, new_binary_sudo in zip(
                 documents_sudo, new_binaries_sudo, strict=True
@@ -1053,6 +1139,7 @@ class DocumentsDocument(models.Model):
                                 {"attachment_id": new_attachment.id, **record_link}
                             )
 
+        _debug.lifecycle("copy", source=self, slots=len(new_documents))
         return self.browse(
             [new_document.id for new_document in new_documents if new_document]
         )
@@ -1099,8 +1186,16 @@ class DocumentsDocument(models.Model):
         removable_attachments = to_delete.attachment_id.filtered(
             lambda a: a.res_model != "document.document"
         )
+        _debug.lifecycle(
+            "unlink",
+            documents=self,
+            with_descendants=len(to_delete),
+            attachments=len(removable_attachments),
+            emptied_parents=len(removable_parent_folders),
+        )
 
-        res = super(DocumentsDocument, to_delete).unlink()
+        with _debug.perf("unlink_super", cr=self.env.cr, documents=to_delete):
+            res = super(DocumentsDocument, to_delete).unlink()
 
         if removable_attachments:
             removable_attachments.unlink()
@@ -1114,6 +1209,7 @@ class DocumentsDocument(models.Model):
         try:
             self.check_access("unlink")
         except UserError as e:
+            _debug.logic("unlink_refused", reason="no_unlink_access", documents=self)
             raise UserError(_("You are not allowed to delete all these items.")) from e
         self._raise_if_unauthorized_archive()
 
@@ -1144,6 +1240,8 @@ class DocumentsDocument(models.Model):
     def _compute_display_name(self) -> None:
         accessible_records = self._filtered_access("read")
         not_accessible_records = self - accessible_records
+        if _debug.logic.enabled and not_accessible_records:
+            _debug.logic("display_name_masked", documents=not_accessible_records)
         not_accessible_records.display_name = _("Restricted")
         folders = accessible_records.filtered(lambda d: d.type == "folder")
         for record in folders:
@@ -1219,6 +1317,7 @@ class DocumentsDocument(models.Model):
         )
         if not to_fetch:
             return
+        _debug.pipeline("url_preview_pending", documents=to_fetch)
         to_fetch.url_preview_pending = True
         self._trigger_url_preview_cron()
 
@@ -1229,14 +1328,17 @@ class DocumentsDocument(models.Model):
         )
         if not documents:
             return
+        _debug.pipeline("url_preview_pass", documents=documents, limit=limit)
         session = link_preview.get_link_preview_session(self.env)
         for document in documents:
             vals = {"url_preview_pending": False}
-            preview = (
-                link_preview.get_link_preview_from_url(document.url, session)
-                if document.url
-                else None
-            )
+            with _debug.perf("url_preview_fetch", document=document) as span:
+                preview = (
+                    link_preview.get_link_preview_from_url(document.url, session)
+                    if document.url
+                    else None
+                )
+                span.set(found=bool(preview))
             if preview:
                 if preview.get("og_title") and document.name in (False, document.url):
                     vals["name"] = preview["og_title"]
@@ -1247,6 +1349,7 @@ class DocumentsDocument(models.Model):
                 self.env.cr.commit()
 
         if len(documents) == limit:
+            _debug.pipeline("url_preview_requeued", documents=len(documents))
             self._trigger_url_preview_cron()
 
     @api.depends("checksum", "mimetype")
@@ -1298,6 +1401,11 @@ class DocumentsDocument(models.Model):
             except MissingError:
                 record.res_name = False
             except AccessError:
+                _debug.logic(
+                    "res_name_masked",
+                    document=record,
+                    res_model=record.res_model,
+                )
                 record.res_name = _("Restricted")
 
     @api.depends(
@@ -1336,6 +1444,12 @@ class DocumentsDocument(models.Model):
                     thumbnail = None
                 document.thumbnail = base64.b64encode(thumbnail) if thumbnail else False
                 document.thumbnail_status = "present" if thumbnail else "error"
+                if _debug.logic.enabled and not thumbnail:
+                    _debug.logic(
+                        "thumbnail_failed",
+                        document=document,
+                        mimetype=document.mimetype,
+                    )
             else:
                 document.thumbnail = False
                 document.thumbnail_status = False
@@ -1399,6 +1513,12 @@ class DocumentsDocument(models.Model):
     ) -> bool | None:
         self.check_singleton()
         if self.type != "folder" or not self.active:
+            _debug.logic(
+                "move_folder_noop",
+                document=self,
+                type=self.type,
+                active=self.active,
+            )
             return None
 
         values = {"user_folder_id": target}
@@ -1421,6 +1541,12 @@ class DocumentsDocument(models.Model):
                 folders_to_resequence_sudo
                 and before_folder == folders_to_resequence_sudo[0]
             ):
+                _debug.pipeline(
+                    "folder_resequence",
+                    folder=self,
+                    before=before_folder,
+                    siblings=len(folders_to_resequence_sudo),
+                )
                 values["sequence"] = before_folder.sequence
                 new_sequence = before_folder.sequence + 1
                 for folder_sudo in folders_to_resequence_sudo:
@@ -1451,10 +1577,12 @@ class DocumentsDocument(models.Model):
             return self.browse()
 
         if len(self.folder_id.ids) > 1 and location_user_folder_id is None:
+            _debug.logic("shortcut_refused", reason="ambiguous_destination")
             raise UserError(
                 _("A destination is required when creating multiple shortcuts at once.")
             )
         if location_user_folder_id is False:
+            _debug.logic("shortcut_refused", reason="ambiguous_location")
             raise UserError(_("Ambiguous shortcut target location."))
         if location_user_folder_id is not None:
             user_folder = self._parse_user_folder(location_user_folder_id)
@@ -1476,6 +1604,7 @@ class DocumentsDocument(models.Model):
 
         if location:
             if location.user_permission != "edit":
+                _debug.logic("shortcut_refused", reason="location_not_editable")
                 raise AccessError(_("You are not allowed to write in this folder."))
         elif location_user_folder_id == UserFolder.COMPANY and not self.env.su:
             targets = self.shortcut_document_id | self.filtered(
@@ -1543,6 +1672,7 @@ class DocumentsDocument(models.Model):
 
     def toggle_lock(self) -> None:
         self.check_singleton()
+        _debug.lifecycle("toggle_lock", document=self, locked_by=self.lock_uid)
         if self.lock_uid:
             self.lock_uid = False
         else:
@@ -1576,6 +1706,9 @@ class DocumentsDocument(models.Model):
             return None
 
         if locked_by_other := self._locked_by_other():
+            _debug.logic(
+                "archive_refused", reason="locked_by_other", documents=locked_by_other
+            )
             raise UserError(
                 _(
                     "“%(name)s” is locked by %(user)s and cannot be sent to "
@@ -1588,6 +1721,7 @@ class DocumentsDocument(models.Model):
         to_archive_sudo = self._with_descendants_sudo()
         active_documents = to_archive_sudo.filtered(self._active_name).sudo(False)
         if not active_documents:
+            _debug.logic("archive_noop", reason="nothing_active", documents=self)
             return None
 
         active_documents._check_access_or_raise(
@@ -1605,6 +1739,12 @@ class DocumentsDocument(models.Model):
         )
         active_documents._message_log_batch(
             bodies={doc.id: log_message for doc in active_documents}
+        )
+        _debug.lifecycle(
+            "archive",
+            documents=active_documents,
+            requested=len(self),
+            deletion_date=deletion_date,
         )
         return super(
             DocumentsDocument,
@@ -1632,6 +1772,11 @@ class DocumentsDocument(models.Model):
             .sudo(False)
         )
         if archived_top_parent_documents:
+            _debug.logic(
+                "unarchive_refused",
+                reason="archived_parent_folders",
+                folders=archived_top_parent_documents,
+            )
             raise UserError(
                 _(
                     "Item(s) you wish to restore are included in archived folders. "
@@ -1671,6 +1816,11 @@ class DocumentsDocument(models.Model):
         log_message = _("This document has been restored.")
         to_unarchive_documents._message_log_batch(
             bodies={doc.id: log_message for doc in to_unarchive_documents}
+        )
+        _debug.lifecycle(
+            "unarchive",
+            documents=to_unarchive_documents,
+            candidates=len(to_unarchive_candidate_documents),
         )
         return super(DocumentsDocument, to_unarchive_documents).action_unarchive()
 
@@ -1809,6 +1959,7 @@ class DocumentsDocument(models.Model):
         )
         folder_sudo = self.env["document.document"].sudo().browse(folder_id)
         if not folder_sudo or not folder_sudo.exists():
+            _debug.lifecycle("support_folder_created", previous=folder_id)
             folder_sudo = (
                 self.env["document.document"]
                 .sudo()
@@ -1938,6 +2089,7 @@ class DocumentsDocument(models.Model):
     def _prepare_create_values(self, vals_list: list[dict]) -> list[dict]:
         old_vals_list = [vals.copy() for vals in vals_list]
         vals_list = super()._prepare_create_values(vals_list)
+        _debug.pipeline("prepare_create_values", count=len(vals_list))
         folders = self.env["document.document"].browse(
             v["folder_id"] for v in vals_list if v.get("folder_id")
         )
@@ -1974,6 +2126,7 @@ class DocumentsDocument(models.Model):
                 )
                 owner = self.env["res.users"]
                 vals["owner_id"] = False
+                _debug.logic("owner_dropped", reason="inactive_user")
 
             vals_values = {"owner_id": owner.id}
             shortcut_target = self.browse()
@@ -1983,6 +2136,7 @@ class DocumentsDocument(models.Model):
             folder = self.env["document.document"].browse(vals.get("folder_id", False))
             if folder:
                 if not folder.active:
+                    _debug.logic("create_refused", reason="archived_folder")
                     raise UserError(
                         self.env._(
                             "It is not possible to create documents in an archived folder."
@@ -1990,6 +2144,7 @@ class DocumentsDocument(models.Model):
                     )
 
                 if not shortcut_target:
+                    _debug.logic("access_defaults", by="folder", folder=folder)
                     vals_values.update(
                         {
                             "access_via_link": folder.access_via_link,
@@ -2000,6 +2155,7 @@ class DocumentsDocument(models.Model):
                     vals_values["company_id"] = folder.company_id.id
 
             if shortcut_target:
+                _debug.logic("access_defaults", by="shortcut_target")
                 vals_values.update(
                     self._shortcut_access_defaults(shortcut_target)
                     | {
@@ -2030,6 +2186,9 @@ class DocumentsDocument(models.Model):
                     for v in inherited_access_ids
                     if v["partner_id"] not in partner_ids
                 ]
+                _debug.pipeline(
+                    "access_inherited", folder=folder, added=len(access_vals_to_add)
+                )
                 vals["access_ids"] = list(vals["access_ids"] or []) + [
                     Command.create(access_vals) for access_vals in access_vals_to_add
                 ]
@@ -2062,6 +2221,10 @@ class DocumentsDocument(models.Model):
                 vals_list_to_update_linked_record.append(vals)
 
         if vals_list_to_update_linked_record:
+            _debug.pipeline(
+                "res_record_from_attachment",
+                n=len(vals_list_to_update_linked_record),
+            )
             attachment_by_id = (
                 self.env["ir.attachment"]
                 .browse(
@@ -2127,9 +2290,11 @@ class DocumentsDocument(models.Model):
         vals: dict | None = None,
     ) -> DocumentsDocument:
         vals = vals or {}
-        new_attachments = self.env["ir.attachment"]._pdf_split(
-            new_files=new_files, open_files=open_files
-        )
+        with _debug.perf("pdf_split", cr=self.env.cr) as span:
+            new_attachments = self.env["ir.attachment"]._pdf_split(
+                new_files=new_files, open_files=open_files
+            )
+            span.set(attachments=len(new_attachments))
         new_documents = self.create(
             [dict(vals, attachment_id=attachment.id) for attachment in new_attachments]
         )
@@ -2152,9 +2317,11 @@ class DocumentsDocument(models.Model):
     @api.autovacuum
     def _gc_clear_bin(self) -> tuple:
         limit = 1000
-        expired = self.search(self._get_domain_gc_clear_bin(), limit=limit)
-        removed = len(expired)
-        expired.unlink()
+        with _debug.perf("gc_clear_bin", cr=self.env.cr) as span:
+            expired = self.search(self._get_domain_gc_clear_bin(), limit=limit)
+            removed = len(expired)
+            expired.unlink()
+            span.set(removed=removed, more=removed == limit)
         return removed, removed == limit
 
     def _raise_if_used_folder(self) -> None:
@@ -2167,6 +2334,11 @@ class DocumentsDocument(models.Model):
                 .sudo()
                 .search_count(company_used_folders_domain, limit=1)
             ):
+                _debug.logic(
+                    "unlink_refused",
+                    reason="folder_used_by_company",
+                    folders=folder_ids,
+                )
                 raise ValidationError(
                     _("Impossible to delete folders used by other applications.")
                 )

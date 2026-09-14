@@ -3,7 +3,10 @@ from typing import Any
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.date_utils import get_timedelta
+
+_debug = DebugLog(__name__)
 
 
 class DocumentsDocument(models.Model):
@@ -15,6 +18,9 @@ class DocumentsDocument(models.Model):
             lambda d: (d.type != "folder" or d.shortcut_document_id) and d.alias_name
         )
         if wrong_records:
+            _debug.logic(
+                "alias_refused", reason="not_a_plain_folder", documents=wrong_records
+            )
             raise ValidationError(
                 _(
                     "The following documents can't have alias: \n- %(records)s",
@@ -100,6 +106,12 @@ class DocumentsDocument(models.Model):
             )
 
         custom_values["active"] = False
+        _debug.pipeline(
+            "mail_gateway_document",
+            folder=folder,
+            tags=len(custom_values["tag_ids"]),
+            attachments=len(msg_dict.get("attachments") or ()),
+        )
         return (
             super()
             .message_new(msg_dict, custom_values)
@@ -126,6 +138,7 @@ class DocumentsDocument(models.Model):
             "document_message_new"
         ):
             return super()._message_post_after_hook(message, msg_vals)
+        _debug.pipeline("mail_to_document_start", document=self)
 
         m2m_commands = msg_vals["attachment_ids"]
         attachments = self.env["ir.attachment"].browse([x[1] for x in m2m_commands])
@@ -137,6 +150,7 @@ class DocumentsDocument(models.Model):
         documents = None
 
         if attachments:
+            _debug.logic("mail_to_document", by="attachments", count=len(attachments))
             self.attachment_id = False
             documents = self.env["document.document"].create(
                 [
@@ -171,6 +185,7 @@ class DocumentsDocument(models.Model):
                 sub_message_values.pop("attachment_ids", None)
                 document.message_post(**sub_message_values)
         elif not self.attachment_id and not disable_mail_to_document:
+            _debug.logic("mail_to_document", by="body")
             attachment = self.env["ir.attachment"].create(
                 {
                     "name": msg_vals.get("subject")
@@ -192,6 +207,7 @@ class DocumentsDocument(models.Model):
             documents = document
 
         if documents:
+            _debug.lifecycle("mail_to_document_created", documents=documents)
             for document in documents:
                 if self.create_activity_option:
                     document.documents_set_activity(settings_record=self)
@@ -228,4 +244,9 @@ class DocumentsDocument(models.Model):
                 activity_vals["user_id"] = (
                     settings_record.create_activity_user_id or self.env.user
                 ).id
+                _debug.lifecycle(
+                    "activity_scheduled",
+                    document=record,
+                    activity_type=settings_record.create_activity_type_id,
+                )
                 record.activity_schedule(**activity_vals)
