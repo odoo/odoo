@@ -53,6 +53,7 @@ class ResUsersDeletion(models.Model):
         vals = super()._prepare_approval_request_values(category)
         if self.user_id.partner_id:
             vals["partner_id"] = self.user_id.partner_id.id
+        vals["request_owner_id"] = self.env.ref("base.user_root").id
         return vals
 
     def _on_approval_refused(self) -> None:
