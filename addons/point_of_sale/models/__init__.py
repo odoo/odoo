@@ -16,6 +16,8 @@ from . import pos_config
 from . import pos_config_onboarding
 from . import pos_config_stock
 from . import pos_order
+from . import pos_order_line
+from . import pos_pack_operation_lot
 from . import pos_session
 from . import product_pricelist
 from . import product_attribute

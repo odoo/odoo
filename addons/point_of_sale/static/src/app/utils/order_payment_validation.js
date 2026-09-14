@@ -80,6 +80,13 @@ export default class OrderPaymentValidation {
         return this.order.payment_ids;
     }
 
+    shouldRemoveZeroPayment(line) {
+        return (
+            line.amount === 0 &&
+            !(this.pos.config.hasCashRounding && line.payment_method_id.is_cash_count)
+        );
+    }
+
     async beforePostPushOrderResolve(order, order_server_ids) {
         return true;
     }
@@ -174,7 +181,7 @@ export default class OrderPaymentValidation {
         if (await this.isOrderValid(isForceValidate)) {
             const toRemove = [];
             for (const line of this.paymentLines) {
-                if (!line.isDone() || line.amount === 0) {
+                if (!line.isDone() || this.shouldRemoveZeroPayment(line)) {
                     toRemove.push(line);
                 }
             }
@@ -219,7 +226,7 @@ export default class OrderPaymentValidation {
 
         this.order.date_order = serializeDateTime(luxon.DateTime.now());
         for (const line of this.paymentLines) {
-            if (line.amount === 0) {
+            if (this.shouldRemoveZeroPayment(line)) {
                 this.order.removePaymentline(line);
             }
         }

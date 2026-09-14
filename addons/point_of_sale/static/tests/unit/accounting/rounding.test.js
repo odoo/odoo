@@ -1,10 +1,85 @@
 import { expect, test } from "@odoo/hoot";
+import OrderPaymentValidation from "@point_of_sale/app/utils/order_payment_validation";
 
 import { definePosModels } from "../data/generate_model_definitions.js";
 import { setupPosEnv } from "../utils.js";
 import { getFilledOrderForPriceCheck, prepareRoundingVals } from "./utils.js";
 
 definePosModels();
+
+test("zero cash payment preserves explicit rounding intent through validation", async () => {
+    const store = await setupPosEnv();
+    const { cashPm, cardPm } = prepareRoundingVals(store, 0.05, "HALF-UP");
+    const order = await getFilledOrderForPriceCheck(store);
+    order.addPaymentline(cardPm).data.setAmount(order.totalDue - 0.02);
+    const cashPayment = order.addPaymentline(cashPm).data;
+    cashPayment.setAmount(0);
+
+    expect(order.orderIsRounded).toBe(true);
+    expect(order.remainingDue).toBe(0);
+
+    const validation = new OrderPaymentValidation({
+        pos: store,
+        orderUuid: order.uuid,
+    });
+    await validation.validateOrder(false);
+
+    expect(order.state).toBe("paid");
+    expect(order.payment_ids.map((payment) => payment.uuid)).toInclude(
+        cashPayment.uuid,
+    );
+    expect(cashPayment.amount).toBe(0);
+});
+
+test("cash rounding can settle an entire small order at zero", async () => {
+    const store = await setupPosEnv();
+    const { cashPm } = prepareRoundingVals(store, 0.05, "HALF-UP");
+    for (const [id, price] of [
+        [15, 0.02],
+        [16, 0],
+    ]) {
+        const product = store.models["product.template"].get(id);
+        product.taxes_id = [];
+        product.list_price = price;
+        product.product_variant_ids[0].lst_price = price;
+    }
+    const order = await getFilledOrderForPriceCheck(store);
+    const cashPayment = order.addPaymentline(cashPm).data;
+    expect(order.priceIncl).toBe(0.02);
+    expect(cashPayment.amount).toBe(0);
+
+    const validation = new OrderPaymentValidation({
+        pos: store,
+        orderUuid: order.uuid,
+    });
+    await validation.validateOrder(false);
+
+    expect(order.state).toBe("paid");
+    expect(order.payment_ids.map((payment) => payment.uuid)).toInclude(
+        cashPayment.uuid,
+    );
+    expect(order.amountPaid).toBe(0);
+});
+
+test("unrelated zero bank payment is removed during cash-rounded validation", async () => {
+    const store = await setupPosEnv();
+    const { cashPm, cardPm } = prepareRoundingVals(store, 0.05, "HALF-UP");
+    const order = await getFilledOrderForPriceCheck(store);
+    const cashPayment = order.addPaymentline(cashPm).data;
+    const bankPayment = order.addPaymentline(cardPm).data;
+    bankPayment.setAmount(0);
+
+    const validation = new OrderPaymentValidation({
+        pos: store,
+        orderUuid: order.uuid,
+    });
+    await validation.validateOrder(false);
+
+    expect(order.state).toBe("paid");
+    expect(order.payment_ids.map((payment) => payment.uuid)).toEqual([
+        cashPayment.uuid,
+    ]);
+});
 
 test("Rounding sale HALF-UP 0.05 (cash only)", async () => {
     const store = await setupPosEnv();

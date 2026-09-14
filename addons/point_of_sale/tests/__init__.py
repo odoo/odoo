@@ -59,6 +59,7 @@ from . import test_pos_config_synchronization
 from . import test_pos_wizards
 
 from . import test_pos_model_regressions
+from . import test_pos_order_audit
 from . import test_pos_session_audit
 from . import test_pos_session_closing_integrity
 from . import test_pos_session_amounts
