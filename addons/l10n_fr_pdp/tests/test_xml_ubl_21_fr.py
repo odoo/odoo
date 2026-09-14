@@ -2,8 +2,7 @@ from odoo import Command
 from odoo.tests import tagged
 
 from odoo.addons.l10n_fr_pdp.models.account_edi_xml_ubl_21_fr import CPRO_INVOICE_IDENTIFIER
-
-from .common import TestL10nFrPdpCommon
+from .common import FAKE_UUID, TestL10nFrPdpCommon
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
@@ -195,3 +194,48 @@ class TestL10nFrPdpXml(TestL10nFrPdpCommon):
         bill = self._import_invoice_as_attachment_on('ubl_21_fr_in_invoice_establishment')
         self.assertEqual(bill.partner_id, other_establishment)
         self.assertEqual(bill.partner_bank_id.partner_id, other_establishment)
+
+    def _import_invoice_from_pdp(self, test_name, uuid, sender=None):
+        """ Simulate the reception of a document through the PDP proxy. """
+        self.env.company.peppol_purchase_journal_id = self.company_data['default_journal_purchase']
+        attachment = self._import_invoice_as_attachment(test_name)
+        return self.proxy_user._peppol_import_invoice(attachment, sender, 'done', uuid)
+
+    def test_import_retrieve_partner(self):
+        invoice = self._import_invoice_from_pdp('ubl_21_fr_in_partial_invoice_retrieve_partner', FAKE_UUID[0])
+        self.assertEqual(invoice.peppol_message_uuid, FAKE_UUID[0])
+        self.assertEqual(invoice.partner_id, self.partner_a)
+
+        self.partner_a.peppol_eas = False
+        self.partner_a.peppol_endpoint = False
+        invoice = self._import_invoice_from_pdp('ubl_21_fr_in_partial_invoice_retrieve_partner', FAKE_UUID[1])
+        self.assertEqual(invoice.peppol_message_uuid, FAKE_UUID[1])
+        self.assertEqual(invoice.partner_id, self.partner_a)
+
+        # if the eas and endpoint of matching partners doesn't match, create a new partner
+        self.partner_a.peppol_eas = '0225'
+        self.partner_a.peppol_endpoint = '968515759_96851575905823'
+        invoice = self._import_invoice_from_pdp('ubl_21_fr_in_partial_invoice_retrieve_partner', FAKE_UUID[2])
+        self.assertEqual(invoice.peppol_message_uuid, FAKE_UUID[2])
+        self.assertRecordValues(invoice.partner_id, [{
+            'name': 'SUPER FRENCH PARTNER',
+            'peppol_eas': '0225',
+            'peppol_endpoint': '334175221_33417522105821',
+        }])
+        self.assertNotEqual(invoice.partner_id, self.partner_a)
+
+    def test_import_retrieve_partner_from_sender_identifier(self):
+        """ Some platforms only put a SIRET/SIREN as seller endpoint in the document: the '0225' identifier
+        to send responses to is then only known from the envelope.
+        """
+        # The sender identifier takes precedence over the endpoint in the document
+        invoice = self._import_invoice_from_pdp(
+            'ubl_21_fr_in_partial_invoice_retrieve_partner_siret', FAKE_UUID[0], sender='0225:334175221_33417522105821',
+        )
+        self.assertEqual(invoice.partner_id, self.partner_a)
+        self.assertTrue(invoice.pdp_can_send_response)
+
+        # Without the sender identifier, the endpoint in the document doesn't match: a new partner is created
+        invoice = self._import_invoice_from_pdp('ubl_21_fr_in_partial_invoice_retrieve_partner_siret', FAKE_UUID[1])
+        self.assertNotEqual(invoice.partner_id, self.partner_a)
+        self.assertRecordValues(invoice.partner_id, [{'peppol_eas': '0009', 'peppol_endpoint': '33417522105821'}])

@@ -148,7 +148,7 @@ class AccountEdiProxyClientUser(models.Model):
         """Save new documents in an accounting journal, when one is specified on the company.
 
         :param attachment: the new document
-        :param partner_endpoint: DEPRECATED - to be removed in master
+        :param partner_endpoint: the sender's identifier from the Peppol envelope (e.g. '0208:0477472701'), if known
         :param peppol_state: the state of the received Peppol document
         :param uuid: the UUID of the Peppol document
         :return: the created invoice if the document was saved, `False` if it was not
@@ -281,6 +281,10 @@ class AccountEdiProxyClientUser(models.Model):
                 endpoint=edi_user._get_peppol_proxy_endpoint('1/get_document'),
                 params={'message_uuids': message_uuids},
             )
+            # The sender identifier is only returned by `get_all_documents`.
+            uuid_to_sender = {message['uuid']: message.get('sender') for message in received_messages}
+            for uuid, content in all_messages.items():
+                content.setdefault('sender', uuid_to_sender.get(uuid))
 
             processed_uuids, moves = edi_user._peppol_process_new_messages(all_messages)
 
@@ -328,7 +332,7 @@ class AccountEdiProxyClientUser(models.Model):
                     "mimetype": mimetype,
                 }
             )
-            if move := self._peppol_import_invoice(attachment, None, content['state'], uuid):
+            if move := self._peppol_import_invoice(attachment, content.get('sender'), content['state'], uuid):
                 # Only acknowledge when we saved the document somewhere
                 processed_uuids.append(uuid)
                 if not isinstance(move, bool):

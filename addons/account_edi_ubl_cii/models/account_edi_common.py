@@ -1123,6 +1123,9 @@ class AccountEdiCommon(models.AbstractModel):
             ResPartner._import_retrieve_customer_from_name,
         ]
 
+    def _check_customer_endpoint_match(self, customer, peppol_eas, peppol_endpoint):
+        return customer.peppol_eas == peppol_eas and customer.peppol_endpoint == peppol_endpoint
+
     def _check_customer_vat_match(self, customer, vat, collected_values):
         """
         Compare the VAT from an EDI document against a partner's stored VAT,
@@ -1137,33 +1140,54 @@ class AccountEdiCommon(models.AbstractModel):
             vat_to_compare = re.sub(r"(TVA|IVA|MWST)?$", "", vat_to_compare.replace('-', ''))
         return customer_vat == vat_to_compare
 
-    def _import_create_missing_customer(self, collected_values):
+    def _import_check_retrieved_customer(self, collected_values):
+        """Check whether the retrieved customer matches the one described in the EDI document."""
         customer_values = collected_values['customer_values']
+        invoice = collected_values['invoice']
         logs = collected_values['logs']
-        customer = customer_values.get('customer')
-
+        customer = customer_values['customer'].commercial_partner_id
         name = customer_values.get('name')
         vat = customer_values.get('vat')
+
+        peppol_eas = customer_values.get('peppol_eas')
+        peppol_endpoint = customer_values.get('peppol_endpoint')
+
+        if not customer.vat:
+            country = self._import_retrieve_country(collected_values)
+            if self.env['res.partner']._run_vat_test(vat, country, True):
+                customer.vat = vat
+        elif not self._check_customer_vat_match(customer, vat, collected_values):
+            logs.append(_("Could not retrieve a partner corresponding to '%s' with the same VAT. A new partner was created.", name))
+            return False
+
+        if peppol_eas and peppol_endpoint:
+            if not customer.peppol_eas and not customer.peppol_endpoint:
+                customer.peppol_eas = peppol_eas
+                customer.peppol_endpoint = peppol_endpoint
+            # only check for matching endpoint if the invoice was receive from peppol/PDP
+            elif 'peppol_message_uuid' in invoice._fields and invoice.peppol_message_uuid and not self._check_customer_endpoint_match(customer, peppol_eas, peppol_endpoint):
+                logs.append(_("Could not retrieve a partner corresponding to '%s' with the same endpoint. A new partner was created.", name))
+                return False
+        return True
+
+    def _import_create_missing_customer(self, collected_values):
+        customer_values = collected_values['customer_values']
+        customer = customer_values.get('customer')
+        name = customer_values.get('name')
+        vat = customer_values.get('vat')
+        logs = collected_values['logs']
+
         if not name or not vat:
             return
 
-        vat_mismatch = False
         if customer:
-            if not customer.vat:
-                country = self._import_retrieve_country(collected_values)
-                if self.env['res.partner']._run_vat_test(vat, country, True):
-                    customer.vat = vat
+            if self._import_check_retrieved_customer(collected_values):
                 return
-            if self._check_customer_vat_match(customer, vat, collected_values):
-                return
-            vat_mismatch = True
+        else:
+            logs.append(_("Could not retrieve a partner corresponding to '%s'. A new partner was created.", name))
 
         partner_create_values = self._import_prepare_missing_customer_create_values(collected_values)
         customer = self.env['res.partner'].create(partner_create_values)
-        if vat_mismatch:
-            logs.append(_("Could not retrieve a partner corresponding to '%s' with the same VAT. A new partner was created.", name))
-        else:
-            logs.append(_("Could not retrieve a partner corresponding to '%s'. A new partner was created.", name))
         customer_values['customer'] = customer
         collected_values['to_write']['partner_id'] = customer.id
 

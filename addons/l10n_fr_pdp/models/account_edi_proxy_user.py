@@ -224,6 +224,15 @@ class AccountEdiProxyClientUser(models.Model):
             return self.with_context(pdp_einvoicing_chatter_messages={})._peppol_get_new_documents()
         return super()._peppol_get_new_documents()
 
+    def _peppol_import_invoice(self, attachment, partner_endpoint, peppol_state, uuid):
+        # EXTENDS account_peppol
+        # Some platforms only put the SIREN/SIRET of the seller in the document, the routable '0225' identifier is only
+        # in the envelope. Pass it to the import so that the partner can be retrieved/created with the right endpoint.
+        # TODO master: pass it explicitly instead of using the context.
+        if self.proxy_type == 'pdp' and partner_endpoint:
+            self = self.with_context(l10n_fr_pdp_sender_identifier=partner_endpoint)  # noqa: PLW0642
+        return super()._peppol_import_invoice(attachment, partner_endpoint, peppol_state, uuid)
+
     def _pdp_get_regulatory_documents(self, batch_size=None):
         if 'pdp_einvoicing_chatter_messages' not in self.env.context:
             return self.with_context(pdp_einvoicing_chatter_messages={})._pdp_get_regulatory_documents(batch_size)
