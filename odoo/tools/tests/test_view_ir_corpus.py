@@ -79,7 +79,7 @@ class TestViewIrCorpus(unittest.TestCase):
                 parent and view_type_of(parent, (*seen, xmlid))
             )
 
-        errors = []
+        errors: list[str] = []
         for xmlid, (path, top, _parent) in records.items():
             view_type = view_type_of(xmlid)
             if view_type is None:
