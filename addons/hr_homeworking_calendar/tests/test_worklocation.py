@@ -52,3 +52,21 @@ class TestWorkLocation(TransactionCase):
         )
         data = self.employee._get_worklocation(date(2026, 1, 5), date(2026, 1, 11))
         self.assertNotIn("exceptions", data[self.employee.id])
+
+    def test_the_calendar_covers_every_allowed_company(self):
+        # The lookup filtered on env.company, so an employee in a second allowed
+        # company vanished from the calendar of a user who had both enabled.
+        other = self.env["res.company"].create({"name": "Second"})
+        partner = self.env["res.partner"].create({"name": "Elsewhere worker"})
+        self.env["hr.employee"].create(
+            {
+                "name": "Elsewhere worker",
+                "company_id": other.id,
+                "partner_id": partner.id,
+            }
+        )
+        both = self.env.companies | other
+        data = partner.with_context(allowed_company_ids=both.ids).get_worklocation(
+            date(2026, 1, 5), date(2026, 1, 11)
+        )
+        self.assertTrue(data, "an employee of an allowed company must be covered")
