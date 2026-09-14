@@ -3,7 +3,7 @@ from odoo.tests import Form, TransactionCase
 
 class TestSaleOrderAccess(TransactionCase):
     def setUp(self):
-
+        super().setUp()
         self.company_1 = self.env["res.company"].create(
             {
                 "name": "Company 1",
@@ -75,9 +75,13 @@ class TestSaleOrderAccess(TransactionCase):
                 "project_id": self.project_company_2.id,
             }
         )
+        service = self.env["product.product"].create(
+            {"name": "Access service", "type": "service"}
+        )
         self.sale_line = self.env["sale.order.line"].create(
             {
                 "name": "XA",
+                "product_id": service.id,
                 "product_qty": 1.00,
                 "price_unit": 20.00,
                 "order_id": self.sale_order_company_1.id,
