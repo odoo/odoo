@@ -1,6 +1,6 @@
 import unittest
 
-from odoo.db.breaker import CircuitBreaker
+from odoo.libs.breaker import CircuitBreaker
 
 
 class TestClosedBreaker(unittest.TestCase):
@@ -161,5 +161,62 @@ class TestConstruction(unittest.TestCase):
             CircuitBreaker(max_cooldown=0.5, initial_cooldown=1.0)
 
 
-if __name__ == "__main__":
-    unittest.main()
+class TestFailureThreshold(unittest.TestCase):
+    def test_the_default_still_opens_on_the_first_failure(self):
+        breaker = CircuitBreaker(max_cooldown=1200)
+        breaker.record_failure()
+        self.assertFalse(breaker.closed)
+
+    def test_failures_below_the_threshold_keep_it_closed(self):
+        breaker = CircuitBreaker(max_cooldown=1200, failure_threshold=3)
+        breaker.record_failure()
+        breaker.record_failure()
+        self.assertTrue(breaker.closed)
+        self.assertTrue(breaker.acquire_attempt())
+        breaker.record_failure()
+        self.assertFalse(breaker.closed)
+        self.assertEqual(breaker.trips, 1)
+        self.assertEqual(breaker.failures, 3)
+
+    def test_a_success_resets_the_count_toward_the_threshold(self):
+        breaker = CircuitBreaker(max_cooldown=1200, failure_threshold=2)
+        breaker.record_failure()
+        breaker.record_success()
+        breaker.record_failure()
+        self.assertTrue(breaker.closed)
+
+    def test_failures_older_than_the_window_do_not_count(self):
+        breaker = CircuitBreaker(
+            max_cooldown=1200, failure_threshold=2, failure_window=30
+        )
+        breaker.record_failure()
+        breaker._recent_failures[0] -= 31
+        breaker.record_failure()
+        self.assertTrue(breaker.closed, "the first failure fell out of the window")
+        breaker.record_failure()
+        self.assertFalse(breaker.closed)
+
+    def test_reopening_after_a_probe_counts_from_zero_again(self):
+        breaker = CircuitBreaker(
+            max_cooldown=1200, initial_cooldown=60, failure_threshold=2
+        )
+        breaker.record_failure()
+        breaker.record_failure()
+        breaker._opened_at -= 61
+        self.assertTrue(breaker.acquire_attempt())
+        breaker.record_success()
+        breaker.record_failure()
+        self.assertTrue(breaker.closed)
+
+    def test_the_snapshot_names_the_threshold_and_window(self):
+        snap = CircuitBreaker(
+            max_cooldown=1200, failure_threshold=5, failure_window=60
+        ).get_snapshot()
+        self.assertEqual(snap["failure_threshold"], 5)
+        self.assertEqual(snap["failure_window_seconds"], 60)
+
+    def test_an_impossible_threshold_or_window_is_rejected(self):
+        with self.assertRaises(ValueError):
+            CircuitBreaker(max_cooldown=10, failure_threshold=0)
+        with self.assertRaises(ValueError):
+            CircuitBreaker(max_cooldown=10, failure_window=0)

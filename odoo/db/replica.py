@@ -5,9 +5,9 @@ import typing
 
 import psycopg
 
+from odoo.libs.breaker import CircuitBreaker
 from odoo.libs.debug_log import DebugLog
 
-from .breaker import CircuitBreaker
 from .lag import LAG_SQL, ReplicaLagGate
 from .pool import PoolError
 from .settings import PoolSettings, current

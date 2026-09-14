@@ -5,11 +5,11 @@ import psycopg
 
 from odoo.db import replica as replica_module
 from odoo.db import settings as pool_settings
-from odoo.db.breaker import CircuitBreaker
 from odoo.db.lag import ReplicaLagGate
 from odoo.db.pool import PoolError
 from odoo.db.replica import REPLICA_RETRY_TIME, ReplicaRouter
 from odoo.db.settings import PoolSettings
+from odoo.libs.breaker import CircuitBreaker
 from odoo.tools.config import configmanager
 
 

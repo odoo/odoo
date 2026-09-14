@@ -6,7 +6,6 @@ import typing
 import unittest
 
 from odoo.db import (
-    breaker,
     bulk,
     cursor,
     lag,
@@ -14,6 +13,7 @@ from odoo.db import (
     pool,
     probe,
 )
+from odoo.libs import breaker
 
 from ._source import _callees, _calls_on, _def_ast, _instance_attrs
 

@@ -167,7 +167,7 @@ The question to ask of any change: *if these disagreed, which one wins?*
 ## What this view does not cover
 
 - **Replica topology.** There is a read-only replica path with a breaker —
-  `db/breaker.py` owns the mechanism, `db/replica.py` the policy
+  `libs/breaker.py` owns the mechanism, `db/replica.py` the policy
   (`ReplicaRouter`, and `REPLICA_RETRY_TIME`, the cooldown ceiling it
   constructs the breaker with).
   Which data may be read from a replica, and the staleness window, are not

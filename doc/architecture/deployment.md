@@ -129,7 +129,6 @@ long-lived Python process accumulates; recycling is the design, not a workaround
 | Module | Handles |
 |---|---|
 | `budget.py` | `ConnectionBudget` — the shared `db_maxconn` cap, its permit semaphore, its saturation counter |
-| `breaker.py` | `CircuitBreaker` — failure gating with exponential backoff for an optional endpoint (the read replica) |
 | `lag.py` | `ReplicaLagGate` + `LAG_SQL` — a sampled apply-lag ceiling that **demotes stale reads to the primary** |
 | `reaper.py` | `IdlePoolReaper` — which quiet per-DSN pools to close, and how often to look |
 | `probe.py` | `ReachabilityProbe` — is this DSN connectable, and **permanently or not**: a pre-flight connect that turns a missing database or a rejected password into a millisecond error instead of a `PoolTimeout` at the end of the borrow budget, plus the per-key proof that stops it re-asking |
@@ -137,8 +136,8 @@ long-lived Python process accumulates; recycling is the design, not a workaround
 | `metrics.py` | `_MetricsMixin` — the per-cursor SQL counters (`sql_from_log`, `sql_into_log`, `sql_log_count`), so a slow request can name its statements rather than report a total |
 | `stats.py` | `PoolStats` — the counters behind `ConnectionPool.get_health()`: borrows, failures, and a bucketed borrow-wait histogram, each written under one lock because `x += 1` lost increments in exactly the concurrency they exist to diagnose |
 
-**Five of the eight act and three only observe**: `breaker`, `lag`, `budget`,
-`reaper` and `probe` change what a request gets, while `leaks`, `metrics` and
+**Four of the seven act and three only observe**: `lag`, `budget`, `reaper`
+and `probe` change what a request gets, while `leaks`, `metrics` and
 `stats` only say what happened — and the observers are what a capacity
 decision is made from. The tier is `db-resilience-below-connectivity`'s
 source list ([`module.md`](module.md#dependency-rules)).
@@ -154,7 +153,9 @@ single budget across two independent servers under-uses both.
 would be too stale go to the primary instead of being served wrong. The breaker
 backs off exponentially to a ceiling of `REPLICA_RETRY_TIME` (1200 s),
 which the table above does not list because it is not the resilience tier's:
-`db/breaker.py` owns the `CircuitBreaker`, and `db/replica.py` — connectivity,
+`libs/breaker.py` owns the `CircuitBreaker` (failure gating with exponential
+backoff, an optional failure threshold and window, no framework dependency, so
+the egress pipeline can use it too), and `db/replica.py` — connectivity,
 since it holds the two connections — owns the constant and constructs the
 breaker with it inside the `ReplicaRouter` that `Registry.cursor` delegates
 to. The ceiling is the maximum a doubling backoff reaches, so a blip recovers
