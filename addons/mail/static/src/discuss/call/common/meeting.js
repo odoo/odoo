@@ -79,6 +79,17 @@ export class Meeting extends Component {
         });
     }
 
+    /** @returns {boolean} */
+    get showInviteBanner() {
+        return Boolean(
+            this.channel &&
+                !this.rtc.isPipMode &&
+                this.channel.channel_type !== "chat" &&
+                !this.rtc.isMeetingReadyBannerDismissed &&
+                this.channel.rtc_session_ids.length <= 1
+        );
+    }
+
     get pipExtraActions() {
         if (!this.rtc.isPipMode) {
             return [];
