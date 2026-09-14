@@ -474,6 +474,11 @@ class HrVersion(models.Model):
             version.is_fully_flexible = version._is_fully_flexible()
             version.is_flexible = version._is_fully_flexible() or (not version.resource_calendar_id and (version.hours_per_week or version.hours_per_day))
 
+    def _get_reference_calendar(self, date=None):
+        self.ensure_one()
+        version = self.employee_id._get_version(date) if date else self
+        return version.resource_calendar_id.reference_calendar_id or version.company_id.resource_calendar_id
+
     @api.model
     def _get_whitelist_fields_from_template(self):
         # Add here any field that you want to copy from a contract template
