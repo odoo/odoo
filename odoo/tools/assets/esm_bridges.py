@@ -438,12 +438,13 @@ def _static_edges(src: str) -> list[tuple[str, str | None]]:
 def _lexed_imports(
     src: str, *, base_spec: str, base_url: str | None = None
 ) -> list[tuple[str, str | None]]:
-    out = []
+    out: list[tuple[str, str | None]] = []
     for specifier, kind in _static_edges(src):
         if specifier.startswith("."):
-            specifier = _relative_to_specifier(base_spec, specifier, base_url)
-            if specifier is None:
+            resolved = _relative_to_specifier(base_spec, specifier, base_url)
+            if resolved is None:
                 continue
+            specifier = resolved
         elif not specifier.startswith("@"):
             continue
         out.append((specifier, kind))

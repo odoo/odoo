@@ -1,5 +1,6 @@
 import json
 from types import SimpleNamespace
+from typing import Any
 
 from odoo.tools.assets import esm_index
 
@@ -9,7 +10,7 @@ def _asset(path: str, raw: str):
 
 
 def _key(**overrides):
-    params = {
+    params: dict[str, Any] = {
         "group": "runtime:web.assets_web:tests",
         "entries": {"a.child": [_asset("@a/x", "export const x = 1;")]},
         "templates": {"a.child": "<t/>"},

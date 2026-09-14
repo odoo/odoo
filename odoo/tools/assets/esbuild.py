@@ -681,10 +681,10 @@ class EsbuildCompiler:
         for i, (spec, url) in enumerate(sorted(self._registered_reach.items())):
             if spec in registered_specs:
                 continue
-            path = self._reached_module_path(url, odoo_root)
-            if path is None:
+            reached = self._reached_module_path(url, odoo_root)
+            if reached is None:
                 continue
-            entry_lines.append(f"import * as __r{i} from {json.dumps(path)};")
+            entry_lines.append(f"import * as __r{i} from {json.dumps(reached)};")
             register_entries.append(f"  {json.dumps(spec)}: __r{i}")
             registered_specs.add(spec)
 

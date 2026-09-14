@@ -1,5 +1,6 @@
 import pathlib
 import types
+import typing
 from typing import Any
 from unittest.mock import patch
 
@@ -312,7 +313,7 @@ def test_update_context_with_nothing_new_rebuilds_no_environment():
     request = Request(_httprequest(), app=None)
     env = _Env()
     env.transaction.default_env = env
-    request.env = env
+    request.env = typing.cast("Any", env)
 
     request.update_context()
     request.update_context(lang="en_US")
