@@ -20,9 +20,9 @@ DISPATCH_SITES: dict[tuple[str, str], str] = {
     ),
     ("models/mixins/create.py", "_update_parent_path_on_create"): "equivalent",
     ("models/mixins/read.py", "_fetch_query"): (
-        "LOSSY: PostgresBackend.fetch applies bin_size / bin_size_<field> "
-        "(pg_size_pretty) and to_flush bookkeeping; InMemoryBackend.fetch "
-        "does not"
+        "equivalent: both fetches answer an inline binary's pg_size_pretty "
+        "text under bin_size / bin_size_<field> and clear a stale PENDING "
+        "marker of a stored compute before the row's value takes the cache"
     ),
     ("models/mixins/write.py", "_execute_update"): (
         "equivalent: PostgresBackend.update_rows merges jsonb translations "

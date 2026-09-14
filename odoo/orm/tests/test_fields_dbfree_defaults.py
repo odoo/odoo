@@ -30,7 +30,19 @@ def test_an_inline_binary_answers_its_size_under_bin_size():
         env.flush_all()
         env.invalidate_all()
         assert doc.raw == b"aGVsbG8="
-        assert doc.with_context(bin_size=True).raw.endswith(b"bytes")
+        # pg_size_pretty's text, units and rounding, as the SQL path answers
+        assert doc.with_context(bin_size=True).raw == "8 bytes"
+        for size, pretty in (
+            (1024, "1024 bytes"),
+            (10240, "10 kB"),
+            (1500000, "1465 kB"),
+            (10485760, "10 MB"),
+            (15000000, "14 MB"),
+        ):
+            doc.raw = b"x" * size
+            env.flush_all()
+            env.invalidate_all()
+            assert doc.with_context(bin_size=True).raw == pretty, size
 
 
 def test_a_named_precision_answers_the_model_default_without_the_table():

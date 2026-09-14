@@ -29,7 +29,7 @@ from odoo.exceptions import LockError, UserError
 from odoo.libs.accel import fast_clone
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.profiling import _OrmProfile
-from odoo.tools import SQL, OrderedSet, Query, human_size, partition
+from odoo.tools import SQL, OrderedSet, Query, partition
 from odoo.tools.translate import _
 
 from ..components.storage import NamedSequence
@@ -149,8 +149,21 @@ def _get_column_read_value(field: Field, value: typing.Any, env) -> typing.Any:
         and (env.context.get("bin_size") or env.context.get("bin_size_" + field.name))
     ):
         # pg_size_pretty(length(col)) on the SQL path: the size, not the bytes
-        return human_size(len(value))
+        return _pg_size_pretty(len(value))
     return value
+
+
+def _pg_size_pretty(size: int) -> str:
+    # PostgreSQL's rounding: one bit kept past the unit, then half-rounded
+    limit = 10 * 1024
+    if size < limit:
+        return f"{size} bytes"
+    size >>= 9
+    for unit in ("kB", "MB", "GB", "TB", "PB"):
+        if size < limit * 2 or unit == "PB":
+            return f"{(size + 1) // 2} {unit}"
+        size >>= 10
+    return f"{(size + 1) // 2} PB"
 
 
 @typing.runtime_checkable
@@ -2386,13 +2399,13 @@ class InMemoryBackend:
                         )
                         continue
                     value = _get_column_read_value(field, row.get(field.name), env)
-                    fc = field_caches[field]
-                    fc.setdefault(
-                        record_id,
-                        fast_clone(value)
-                        if field.type == "json"
-                        else field.convert_to_cache(value, records),
-                    )
+                    if field.type == "json":
+                        value = fast_clone(value)
+                    elif not (field.is_binary and isinstance(value, str)):
+                        # a pretty size enters the cache as the text SQL
+                        # answers, not as the bytes a binary holds
+                        value = field.convert_to_cache(value, records)
+                    field_caches[field].setdefault(record_id, value)
 
     def search(
         self,
