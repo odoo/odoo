@@ -1,4 +1,6 @@
-import { describe, expect, getFixture, test } from "@odoo/hoot";
+import "@website/interactions/parallax/parallax.preview";
+
+import { after, describe, expect, getFixture, test } from "@odoo/hoot";
 import {
     animationFrame,
     manuallyDispatchProgrammaticEvent,
@@ -10,10 +12,53 @@ import {
     setupInteractionWhiteList,
     startInteractions,
 } from "@web/../tests/public/helpers";
+import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { registry } from "@web/core/registry";
+import { Parallax } from "@website/interactions/parallax/parallax";
 
 setupInteractionWhiteList("website.parallax");
 
 describe.current.tags("interaction_dev");
+
+test("destroying a visible preview removes its scroll listener", async () => {
+    const { mixin } = registry
+        .category("public.interactions.preview")
+        .get("website.parallax");
+    registry
+        .category("public.interactions")
+        .add("website.parallax", mixin(Parallax), { force: true });
+    let onIntersection;
+    patchWithCleanup(window, {
+        IntersectionObserver: class {
+            constructor(callback) {
+                onIntersection = callback;
+            }
+            observe() {}
+            disconnect() {
+                expect.step("disconnect");
+            }
+        },
+    });
+    const { core } = await startInteractions(
+        '<section class="parallax"><div class="s_parallax_bg"></div></section>',
+    );
+    const interaction = core.interactions[0].interaction;
+    patchWithCleanup(interaction, {
+        updateParallaxPosition() {
+            expect.step("update");
+        },
+    });
+    const handler = interaction.updateParallaxPosition;
+    after(() => interaction.previewContainerEl.removeEventListener("scroll", handler));
+    onIntersection([{ isIntersecting: true }]);
+    interaction.previewContainerEl.dispatchEvent(new Event("scroll"));
+    expect.verifySteps(["update", "update"]);
+    core.stopInteractions();
+    // A notification already queued by the browser can outlive disconnect().
+    onIntersection([{ isIntersecting: true }]);
+    interaction.previewContainerEl.dispatchEvent(new Event("scroll"));
+    expect.verifySteps(["disconnect"]);
+});
 
 const getTemplate = function (options = {}) {
     const speed = options.speed || 0;

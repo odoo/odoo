@@ -115,7 +115,6 @@ test.tags("desktop");
 test("faq_horizontal updates titles position with a o_header_fixed", async () => {
     const { core } = await startInteractions(getTemplate("o_header_fixed"));
     expect(core.interactions).toHaveLength(2);
-    core.interactions[0].interaction.topGap = -1;
     const wrapwrap = queryOne("#wrapwrap");
     const title = queryFirst(".s_faq_horizontal_entry_title");
     await setupTest(core, wrapwrap);

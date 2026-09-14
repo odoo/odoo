@@ -1,17 +1,13 @@
 /** @odoo-module native */
 import { makeLogger } from "@web/core/debug/debug_logger";
+import { isSupportedVideoUrl, parseVideoUrl } from "@website/utils/video_urls";
 
 const log = makeLogger("website.content.generate_video_iframe");
 
-const SUPPORTED_DOMAINS = [
-    "youtu.be",
-    "youtube.com",
-    "youtube-nocookie.com",
-    "instagram.com",
-    "player.vimeo.com",
-    "vimeo.com",
-    "dailymotion.com",
-];
+/** @param {HTMLElement} el */
+export function isVideoInClosedPopup(el) {
+    return !!el.closest(".s_popup .modal:not(.show)");
+}
 
 /**
  * @param {HTMLIFrameElement} iframeEl
@@ -30,41 +26,41 @@ function manageIframeSrcOnLoad(iframeEl, src) {
 
 /**
  * @param {HTMLElement} parentEl
- * @param {function} manageIframeSrcFct
+ * @param {function} [manageIframeSrcFct]
  * @returns {HTMLIframeElement}
  */
 export function generateVideoIframe(parentEl, manageIframeSrcFct) {
+    const src = parentEl.dataset.oeExpression || parentEl.dataset.src;
+    const url = parseVideoUrl(src);
+    if (!isSupportedVideoUrl(url)) {
+        log.logic("skip: unsupported or incomplete video URL", () => ({ src }));
+        return;
+    }
     parentEl.replaceChildren();
-
     const extraEditionEl = document.createElement("div");
     extraEditionEl.className = "css_editable_mode_display";
     const extraSizeEl = document.createElement("div");
     extraSizeEl.className = "media_iframe_video_size";
     parentEl.append(extraEditionEl, extraSizeEl);
 
-    const src = parentEl.dataset.oeExpression || parentEl.dataset.src;
-    const m = src.match(/^(?:https?:)?\/\/([^/?#]+)/);
-    if (!m) {
-        log.logic("skip: video src is not an absolute URL", () => ({ src }));
-        return;
-    }
-    const domain = m[1].replace(/^www\./, "");
-    if (!SUPPORTED_DOMAINS.includes(domain)) {
-        log.logic("skip: unsupported video domain", () => ({ domain }));
-        return;
-    }
     const iframeEl = document.createElement("iframe");
     iframeEl.setAttribute("frameborder", "0");
     iframeEl.setAttribute("allowfullscreen", "allowfullscreen");
     iframeEl.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
     parentEl.appendChild(iframeEl);
     log.pipeline("video iframe created", () => ({
-        domain,
+        domain: url.hostname,
         customSrcManager: !!manageIframeSrcFct,
     }));
-    manageIframeSrcFct
-        ? manageIframeSrcFct(iframeEl, src)
-        : manageIframeSrcOnLoad(iframeEl, src);
+    if (isVideoInClosedPopup(parentEl)) {
+        // A consent event must not load a popup that has never been opened.
+        iframeEl.setAttribute("src", "about:blank");
+        log.lifecycle("video source deferred until popup opening");
+    } else {
+        manageIframeSrcFct
+            ? manageIframeSrcFct(iframeEl, src)
+            : manageIframeSrcOnLoad(iframeEl, src);
+    }
 
     return iframeEl;
 }

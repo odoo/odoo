@@ -269,6 +269,7 @@
             "website/static/src/components/user_switch.*",
         ],
         "web.assets_frontend_minimal": [
+            "website/static/src/utils/video_urls.js",
             "website/static/src/utils/misc.js",
             "website/static/src/js/content/inject_dom.js",
             "website/static/src/js/content/auto_hide_menu.js",
@@ -277,6 +278,7 @@
             "website/static/src/js/content/generate_video_iframe.js",
         ],
         "web.assets_frontend_lazy": [
+            ("remove", "website/static/src/utils/video_urls.js"),
             (
                 "remove",
                 "website/static/src/utils/misc.js",

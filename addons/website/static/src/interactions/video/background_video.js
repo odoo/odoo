@@ -3,6 +3,7 @@ import { makeLogger } from "@web/core/debug/debug_logger";
 import { registry } from "@web/core/registry";
 import { uniqueId } from "@web/core/utils/functions";
 import { Interaction } from "@web/public/interaction";
+import { isYoutubeUrl, parseVideoUrl } from "@website/utils/video_urls";
 import { setupAutoplay, triggerAutoplay } from "@website/utils/videos";
 
 const log = makeLogger("website.interaction.background_video");
@@ -12,12 +13,11 @@ export class BackgroundVideo extends Interaction {
     dynamicSelectors = {
         ...this.dynamicSelectors,
         _dropdown: () => this.el.closest(".dropdown-menu")?.parentElement,
-        _modal: () => this.el.closest("modal"),
+        _modal: () => this.el.closest(".modal"),
     };
     dynamicContent = {
         _document: {
-            "t-on-optionalCookiesAccepted.once": () =>
-                (this.iframeEl.src = this.videoSrc),
+            "t-on-optionalCookiesAccepted.once": this.onOptionalCookiesAccepted,
         },
         _window: {
             "t-on-resize": this.throttled(this.adjustIframe),
@@ -38,7 +38,12 @@ export class BackgroundVideo extends Interaction {
 
     setup() {
         this.hideVideoContainer = false;
-        this.videoSrc = this.el.dataset.bgVideoSrc;
+        this.cookiesAccepted = !this.el.closest("[data-need-cookies-approval]");
+        const url = parseVideoUrl(this.el.dataset.bgVideoSrc);
+        if (isYoutubeUrl(url)) {
+            url.searchParams.set("enablejsapi", "1");
+        }
+        this.videoSrc = url?.href || "about:blank";
         this.iframeID = uniqueId("o_bg_video_iframe_");
         this.iframeEl = null;
         this.bgVideoContainer = null;
@@ -49,18 +54,8 @@ export class BackgroundVideo extends Interaction {
     }
 
     start() {
-        const promise = setupAutoplay(
-            this.videoSrc,
-            !!this.el.dataset.needCookiesApproval,
-        );
-        log.logic("BackgroundVideo start: autoplay setup", () => ({
-            hasPromise: !!promise,
-            needCookiesApproval: !!this.el.dataset.needCookiesApproval,
-        }));
-        if (promise) {
-            this.videoSrc += "&enablejsapi=1";
-            this.waitFor(promise).then(this.bindDeferred(this.appendBgVideo));
-        }
+        // Render independently of an optional provider API download.
+        this.waitFor().then(this.bindDeferred(this.appendBgVideo));
         this.__adjustIframe = this.throttled(this.adjustIframe);
         const resizeObserver = new ResizeObserver(this.__adjustIframe.bind(this));
         resizeObserver.observe(this.el.parentElement);
@@ -69,6 +64,39 @@ export class BackgroundVideo extends Interaction {
             iframeID: this.iframeID,
         }));
         this.registerCleanup(() => resizeObserver.disconnect());
+    }
+
+    onOptionalCookiesAccepted() {
+        if (this.cookiesAccepted) {
+            return;
+        }
+        this.cookiesAccepted = true;
+        if (this.iframeEl) {
+            this.iframeEl.src = this.videoSrc;
+            this.activateAutoplay();
+        }
+        log.lifecycle("BackgroundVideo cookies accepted", () => ({
+            hasIframe: !!this.iframeEl,
+        }));
+    }
+
+    activateAutoplay() {
+        const iframe = this.iframeEl;
+        const src = iframe.getAttribute("src");
+        const request = {};
+        this.autoplayRequest = request;
+        const canPlay = () =>
+            !this.isDestroyed &&
+            this.autoplayRequest === request &&
+            iframe === this.iframeEl &&
+            this.el.contains(iframe);
+        this.waitFor(setupAutoplay(this.videoSrc, !this.cookiesAccepted)).then(
+            this.bindDeferred(() => {
+                if (canPlay() && iframe.getAttribute("src") === src) {
+                    triggerAutoplay(iframe, canPlay);
+                }
+            }),
+        );
     }
 
     adjustIframe() {
@@ -110,7 +138,7 @@ export class BackgroundVideo extends Interaction {
     }
 
     appendBgVideo() {
-        const allowedCookies = !this.el.dataset.needCookiesApproval;
+        const allowedCookies = this.cookiesAccepted;
 
         const oldContainer =
             this.bgVideoContainer ||
@@ -149,7 +177,7 @@ export class BackgroundVideo extends Interaction {
         );
 
         this.adjustIframe();
-        triggerAutoplay(this.iframeEl);
+        this.activateAutoplay();
     }
 }
 

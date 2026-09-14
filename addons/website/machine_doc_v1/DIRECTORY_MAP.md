@@ -1,6 +1,6 @@
 # Directory Map
 
-> **142 directories** under `static/src/` | **347 `.js` files** | Maps directory
+> **142 directories** under `static/src/` | **349 `.js` files** | Maps directory
 > → runtime + responsibility.
 >
 > Two runtimes: **public** (visitor-facing Interaction framework) and
@@ -19,7 +19,7 @@
 | `scss/` (+ `options/`, `options/colors/`) | — | 0 | All frontend/backend/editor stylesheets + color-palette / user-value SCSS variables |
 | `libs/bootstrap/` | public | 1 | Bootstrap frontend tweaks/overrides (`bootstrap.js`) |
 | `libs/zoomodoo/` | public | 1 | Image zoom-on-hover library (`zoomodoo.js`) |
-| `utils/` | both | 3 | Shared helpers: `images.js`, `videos.js`, `misc.js` (EventBus, UTM dataset) |
+| `utils/` | both | 4 | Shared helpers: `google_maps.js` (API loading and validation), `images.js`, `videos.js`, `misc.js` (EventBus, UTM dataset) |
 | `common/` (+ `@types/`) | both | 2 | Mail `Record` models shared public+backend: `website_model.js`, `website_visitor_model.js` |
 
 ## Public-Site Interaction Framework

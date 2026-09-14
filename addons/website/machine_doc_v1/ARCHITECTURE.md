@@ -134,8 +134,8 @@ Top-level layout (detailed maps are separate docs):
 | `controllers/` | 7 `.py` — 8 Controller classes (public pages, sitemap, form builder, model pages, dashboard) | `ROUTE_MAP.md` |
 | `models/` | 45 `.py` — 63 model classes (website, mixins, pages/menus, framework extensions, themes, visitors) | `MODEL_MAP.md` |
 | `wizards/` | 4 `.py` + XML — transient wizards (robots, blocked domains, language install, portal) | `MODEL_MAP.md` |
-| `static/src/` | 347 JS across 142 directories (two runtimes) | `DIRECTORY_MAP.md` |
-| `static/tests/` | 219 `.js` (HOOT suites + 86 tours) | `TEST_TAGS.md` |
+| `static/src/` | 349 JS across 142 directories (two runtimes) | `DIRECTORY_MAP.md` |
+| `static/tests/` | 223 `.js` (HOOT suites + 86 tours) | `TEST_TAGS.md` |
 | `tests/` | 50 Python test files | `TEST_TAGS.md` |
 | `views/` · `data/` · `security/` · `i18n/` | QWeb templates, ~66 `s_*` snippet templates, fixtures, ACLs, translations | — |
 | `doc/` | `website.snippet.rst` (snippet authoring guide) | — |
@@ -156,7 +156,7 @@ per-directory table.
 | **Components** | `components/` | backend | Editor dialogs (add-page, edit-menu, SEO, page-properties), backend fields, page/theme views, media/resource editors, loaders. |
 | **Services** | `services/` | backend | `website_service.js` (reactive backend state), `website_custom_menus.js`. |
 | **Common** | `common/` | both | Mail `Record` models (`Website`, `WebsiteVisitor`) shared public + backend. |
-| **Utils** | `utils/`, `js/` | both | `images.js`, `videos.js`, `misc.js` (EventBus, UTM); `text_processing.js`, `highlight_utils.js`, `http_cookie.js`. |
+| **Utils** | `utils/`, `js/` | both | `google_maps.js` (shared public/editor API loader), `images.js`, `videos.js`, `misc.js` (EventBus, UTM); `text_processing.js`, `highlight_utils.js`, `http_cookie.js`. |
 
 ## Asset Bundles
 
@@ -211,9 +211,9 @@ recolor the whole UI:
 | Python (models) | 45 files (63 model classes) |
 | Python (wizard) | 4 `.py` + XML |
 | Python (tests) | 50 |
-| JavaScript (src) | 347 across 142 directories |
+| JavaScript (src) | 349 across 142 directories |
 | JavaScript (`.edit.js` variants) | 32 |
-| JavaScript (tests) | 217 (incl. 86 tours) |
+| JavaScript (tests) | 223 (incl. 86 tours) |
 | SCSS | 153 |
 | Snippet template dirs (`s_*`) | 66 |
 | Route handlers / URL variants | 57 / 70 |

@@ -227,7 +227,6 @@ test.tags("desktop");
 test("table_of_content updates titles position with a o_header_fixed", async () => {
     const { core } = await startInteractions(getTemplate("o_header_fixed"));
     expect(core.interactions).toHaveLength(2);
-    core.interactions[0].interaction.topGap = -1;
     const wrapwrap = queryOne("#wrapwrap");
     const title = queryOne(".s_table_of_content_navbar");
     await setupTest(core, wrapwrap);

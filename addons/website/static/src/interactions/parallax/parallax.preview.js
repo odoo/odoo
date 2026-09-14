@@ -41,6 +41,10 @@ const ParallaxPreview = (I) =>
         }
 
         destroy() {
+            this.previewContainerEl?.removeEventListener(
+                "scroll",
+                this.updateParallaxPosition,
+            );
             if (this.observer) {
                 this.observer.disconnect();
                 this.observer = null;
@@ -63,26 +67,33 @@ const ParallaxPreview = (I) =>
         }
 
         initializeIntersectionObserver() {
-            this.observer = new IntersectionObserver((entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        log.lifecycle("ParallaxPreview visible: scroll listener added");
-                        this.updateParallaxPosition();
-                        this.previewContainerEl.addEventListener(
-                            "scroll",
-                            this.updateParallaxPosition,
-                        );
-                    } else {
-                        log.lifecycle(
-                            "ParallaxPreview hidden: scroll listener removed",
-                        );
-                        this.previewContainerEl.removeEventListener(
-                            "scroll",
-                            this.updateParallaxPosition,
-                        );
+            this.observer = new IntersectionObserver(
+                this.bindDeferred((entries) => {
+                    if (this.isDestroyed) {
+                        return;
                     }
-                });
-            });
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            log.lifecycle(
+                                "ParallaxPreview visible: scroll listener added",
+                            );
+                            this.updateParallaxPosition();
+                            this.previewContainerEl.addEventListener(
+                                "scroll",
+                                this.updateParallaxPosition,
+                            );
+                        } else {
+                            log.lifecycle(
+                                "ParallaxPreview hidden: scroll listener removed",
+                            );
+                            this.previewContainerEl.removeEventListener(
+                                "scroll",
+                                this.updateParallaxPosition,
+                            );
+                        }
+                    });
+                }),
+            );
 
             this.observer.observe(this.el);
         }

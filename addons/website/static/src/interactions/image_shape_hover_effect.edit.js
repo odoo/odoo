@@ -7,59 +7,32 @@ const log = makeLogger("website.interaction.image_shape_hover_effect.edit");
 
 const ImageShapeHoverEffectEdit = (I) =>
     class extends I {
-        destroy() {
-            log.lifecycle("ImageShapeHoverEffectEdit destroy", () => ({
-                restoreOriginal: this.el.src === this.hoveringImgSrc,
-            }));
-            if (this.el.src === this.hoveringImgSrc) {
-                this.el.src = this.originalImgSrc;
-            }
-            this.disconnectSourceObserver();
-        }
-
-        mouseLeave() {
-            this.lastMouseEvent = this.lastMouseEvent.then(
-                () =>
-                    new Promise((resolve) => {
-                        if (
-                            !this.originalImgSrc ||
-                            !this.svgInEl ||
-                            !this.el.dataset.hoverEffect
-                        ) {
-                            resolve();
-                            return;
-                        }
-                        if (!this.svgOutEl) {
-                            this.svgOutEl = this.svgInEl.cloneNode(true);
-                            const animateTransformEls = this.svgOutEl.querySelectorAll(
-                                "#hoverEffects animateTransform, #hoverEffects animate",
-                            );
-                            animateTransformEls.forEach((animateTransformEl) => {
-                                let valuesValue =
-                                    animateTransformEl.getAttribute("values");
-                                valuesValue = valuesValue
-                                    .split(";")
-                                    .reverse()
-                                    .join(";");
-                                animateTransformEl.setAttribute("values", valuesValue);
-                            });
-                        }
-                        this.setImgSrc(this.svgOutEl, () => {
-                            setTimeout(() => {
-                                if (this.isDestroyed) {
-                                    resolve();
-                                    return;
-                                }
-                                this.disconnectSourceObserver();
-                                this.el.src = this.originalImgSrc;
-                                this.connectSourceObserver();
-                                this.el.onload = () => {
-                                    resolve();
-                                };
-                            }, this.getAnimationMaxDuration(this.svgOutEl));
-                        });
-                    }),
-            );
+        afterMouseLeave(svg, version) {
+            return new Promise((resolve) => {
+                const cancel = () => {
+                    clearTimeout(timer);
+                    forgetCleanup();
+                    if (this.cancelPendingHover === cancel) {
+                        this.cancelPendingHover = null;
+                    }
+                    resolve();
+                };
+                const timer = setTimeout(() => {
+                    this.flushSourceChanges();
+                    forgetCleanup();
+                    if (this.cancelPendingHover === cancel) {
+                        this.cancelPendingHover = null;
+                    }
+                    if (this.isDestroyed || version !== this.sourceVersion) {
+                        resolve();
+                        return;
+                    }
+                    log.lifecycle("ImageShapeHoverEffectEdit restore original source");
+                    this.setImageSource(this.originalImgSrc, resolve);
+                }, this.getAnimationMaxDuration(svg));
+                const forgetCleanup = this.registerCleanup(cancel);
+                this.cancelPendingHover = cancel;
+            });
         }
 
         getAnimationMaxDuration(svg) {
@@ -71,7 +44,9 @@ const ImageShapeHoverEffectEdit = (I) =>
                 const dur = animateEl.getAttribute("dur");
                 if (dur) {
                     const duration = parseFloat(dur) * (dur.endsWith("ms") ? 1 : 1000);
-                    maxDuration = Math.max(maxDuration, duration);
+                    if (Number.isFinite(duration)) {
+                        maxDuration = Math.max(maxDuration, duration);
+                    }
                 }
             });
             return maxDuration;
