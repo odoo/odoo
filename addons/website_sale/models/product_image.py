@@ -71,6 +71,13 @@ class ProductImage(models.Model):
         if not self.env.context.get("skip_update_main_image"):
             images.product_tmpl_id._set_main_image_from_extra_images()
             images.product_tmpl_id.product_variant_ids._set_main_image_from_extra_images()
+        primary_images = images.filtered(lambda i: i.type == "primary")
+        secondary_images = images.filtered(lambda i: i.type == "secondary")
+        for imgs, img_type in ((primary_images, "primary"), (secondary_images, "secondary")):
+            duplicate_types = (imgs.product_tmpl_id.product_template_image_ids - imgs).filtered(
+                lambda i: i.type == img_type
+            )
+            duplicate_types.write({"type": False})
         return images
 
     def write(self, vals):
@@ -82,6 +89,11 @@ class ProductImage(models.Model):
         ):
             self.product_tmpl_id._set_main_image_from_extra_images()
             self.product_tmpl_id.product_variant_ids._set_main_image_from_extra_images()
+        if new_type := vals.get("type"):
+            duplicate_types = (self.product_tmpl_id.product_template_image_ids - self).filtered(
+                lambda i: i.type == new_type
+            )
+            duplicate_types.write({"type": False})
         return res
 
     def unlink(self):
