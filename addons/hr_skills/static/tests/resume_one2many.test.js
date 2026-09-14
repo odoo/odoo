@@ -4,6 +4,8 @@ import {
 } from "@hr_skills/../tests/hr_skills_test_helpers";
 import { contains } from "@mail/../tests/mail_test_helpers";
 import { describe, expect, test } from "@odoo/hoot";
+import { click, queryOne } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
 import { mountView, onRpc } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
@@ -21,23 +23,22 @@ const RESUME_ARCH = `
         </field>
     </form>`;
 
-// The row template calls api.formatDate(...). web hands the row helpers to a row
-// COMPONENT as its `api` prop; this renderer calls the row template directly, so
-// `api` has to be bound in the calling scope. When it was not, rendering an
-// employee that holds any resume line threw "Cannot read properties of undefined
-// (reading 'formatDate')" and took the form down -- a crash the tour caught only
-// at step 12 of 36, and only as an OwlError with the selector of a later step.
-test("resume_one2many renders a stored line", async () => {
+const RESUME_ARCH_WITH_DESCRIPTION = RESUME_ARCH.replace(
+    '<field name="name"/>',
+    '<field name="name"/><field name="description"/><field name="is_course"/><field name="external_url"/>',
+);
+
+function defineEmployeeWithLine(line) {
     const { HrEmployee, HrResumeLine, HrResumeLineType } = hrSkillModels;
     const typeId = HrResumeLineType._records.length + 1;
     HrResumeLineType._records.push({ id: typeId, name: "Experience" });
     const lineId = HrResumeLine._records.length + 1;
     HrResumeLine._records.push({
         id: lineId,
-        name: "Mamie Rock",
         line_type_id: typeId,
         date_start: "2020-01-01",
         date_end: "2021-01-01",
+        ...line,
     });
     const employeeId = HrEmployee._records.length + 1;
     HrEmployee._records.push({
@@ -46,6 +47,11 @@ test("resume_one2many renders a stored line", async () => {
         resume_line_ids: [lineId],
     });
     onRpc("hr.employee", "get_internal_resume_lines", () => []);
+    return employeeId;
+}
+
+test("resume_one2many renders a stored line", async () => {
+    const employeeId = defineEmployeeWithLine({ name: "Mamie Rock" });
 
     await mountView({
         type: "form",
@@ -58,4 +64,36 @@ test("resume_one2many renders a stored line", async () => {
     expect(".o_resume_line_title").toHaveCount(1);
     expect(".o_resume_line_title").toHaveText("Mamie Rock");
     expect(".o_resume_line_dates").toHaveCount(1);
+});
+
+test("a link in a resume line opens in a new tab without opening the line", async () => {
+    const employeeId = defineEmployeeWithLine({
+        name: "Mamie Rock",
+        is_course: true,
+        external_url: "https://example.com/course",
+        description:
+            '<p>See <a href="https://example.com/cert">the certificate</a></p>',
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "hr.employee",
+        resId: employeeId,
+        arch: RESUME_ARCH_WITH_DESCRIPTION,
+    });
+
+    for (const link of [".o_resume_line_desc a", "#external_link"]) {
+        await contains(link);
+        queryOne(link).addEventListener("click", (ev) => ev.preventDefault());
+        await click(link);
+        await animationFrame();
+
+        expect(link).toHaveAttribute("target", "_blank");
+        expect(link).toHaveAttribute("rel", "noopener noreferrer");
+        expect(".modal").toHaveCount(0);
+    }
+
+    await click(".o_resume_line_title");
+    await animationFrame();
+    expect(".modal").toHaveCount(1);
 });

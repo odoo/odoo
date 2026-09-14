@@ -7,7 +7,10 @@
         <field name="inherit_id" ref="hr.view_employee_filter" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='job_id']" position="after">
-                <field name="employee_skill_ids" />
+                <field
+                    name="employee_skill_ids"
+                    string="Skills"
+                    filter_domain="[('employee_skill_ids', 'any', [('skill_id', 'ilike', self), ('valid_from', '&lt;=', 'today'), '|', ('valid_to', '=', False), ('valid_to', '&gt;=', 'today')])]" />
                 <field
                     name="resume_line_ids"
                     string="Resume"
@@ -588,7 +591,7 @@
                 <filter
                     name="valid_certification"
                     string="Valid certification"
-                    domain="[                         '|',                             ('valid_to', '=', False),                             ('valid_to', '&gt;', 'today')                     ]" />
+                    domain="[                         '|',                             ('valid_to', '=', False),                             ('valid_to', '&gt;=', 'today')                     ]" />
                 <filter
                     name="group_by_certification"
                     string="Certification"

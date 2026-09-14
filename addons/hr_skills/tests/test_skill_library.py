@@ -1,5 +1,6 @@
+from odoo.exceptions import AccessError, ValidationError
 from odoo.fields import Command
-from odoo.tests import tagged
+from odoo.tests import new_test_user, tagged
 
 from .common import SkillsCase
 
@@ -66,6 +67,54 @@ class TestSkillTypeCopy(SkillsCase):
         self.assertIn("Instruments", copy.name)
         self.assertNotEqual(copy.name, self.skill_type.name)
         self.assertEqual(copy.color, 0)
+
+    def test_a_copy_keeps_the_values_it_is_given(self):
+        copy = self.skill_type.copy({"name": "Strings", "color": 4})
+        self.assertEqual((copy.name, copy.color), ("Strings", 4))
+
+
+@tagged("post_install", "-at_install")
+class TestLibraryTypeFollowsTheRows(SkillsCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.employee = cls.env["hr.employee"].create({"name": "Library employee"})
+        cls.env["hr.employee.skill"].create(
+            {
+                "employee_id": cls.employee.id,
+                "skill_id": cls.skill_piano.id,
+                "skill_level_id": cls.level_novice.id,
+                "skill_type_id": cls.skill_type.id,
+            },
+        )
+
+    def test_a_skill_in_use_cannot_change_type(self):
+        with self.assertRaises(ValidationError):
+            self.skill_piano.skill_type_id = self.certification_type
+
+    def test_a_level_in_use_cannot_change_type(self):
+        with self.assertRaises(ValidationError):
+            self.level_novice.skill_type_id = self.certification_type
+
+    def test_an_unused_skill_and_level_move_freely(self):
+        self.skill_guitar.skill_type_id = self.certification_type
+        self.level_expert.skill_type_id = self.certification_type
+        self.assertEqual(self.skill_guitar.skill_type_id, self.certification_type)
+        self.assertEqual(self.level_expert.skill_type_id, self.certification_type)
+
+    def test_a_plain_employee_cannot_add_skills_to_the_library(self):
+        user = new_test_user(self.env, login="library.plain", groups="base.group_user")
+        with self.assertRaises(AccessError):
+            self.env["hr.skill"].with_user(user).create(
+                {"name": "Self-made", "skill_type_id": self.skill_type.id}
+            )
+
+    def test_every_individual_skill_model_is_checked(self):
+        models = self.env[
+            "mixin.hr.individual.skill"
+        ]._concrete_individual_skill_models()
+        self.assertIn("hr.employee.skill", [model._name for model in models])
+        self.assertIn("hr.job.skill", [model._name for model in models])
 
 
 @tagged("post_install", "-at_install")

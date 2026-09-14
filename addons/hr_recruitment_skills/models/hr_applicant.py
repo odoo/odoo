@@ -13,7 +13,7 @@ class HrApplicant(models.Model):
     current_applicant_skill_ids = fields.One2many(
         comodel_name="hr.applicant.skill",
         inverse_name="applicant_id",
-        compute="_compute_current_applicant_skill_ids",
+        compute="_compute_current_individual_skill_ids",
         readonly=False,
     )
     skill_ids = fields.Many2many(
@@ -36,24 +36,8 @@ class HrApplicant(models.Model):
     def _individual_skill_field_name(self):
         return "applicant_skill_ids"
 
-    def _individual_skill_command_field_names(self):
-        return ("current_applicant_skill_ids", "applicant_skill_ids")
-
-    @api.depends(
-        "applicant_skill_ids.valid_to",
-        "applicant_skill_ids.skill_id",
-        "applicant_skill_ids.is_certification",
-    )
-    def _compute_current_applicant_skill_ids(self):
-        current_by_applicant = (
-            self.applicant_skill_ids._current_individual_skills().grouped(
-                "applicant_id"
-            )
-        )
-        for applicant in self:
-            applicant.current_applicant_skill_ids = current_by_applicant.get(
-                applicant, self.env["hr.applicant.skill"]
-            )
+    def _current_individual_skill_field_name(self):
+        return "current_applicant_skill_ids"
 
     @api.depends("applicant_skill_ids.skill_id")
     def _compute_skill_ids(self):
@@ -115,48 +99,62 @@ class HrApplicant(models.Model):
                     "skill_id": applicant_skill.skill_id.id,
                     "skill_level_id": applicant_skill.skill_level_id.id,
                     "skill_type_id": applicant_skill.skill_type_id.id,
+                    "valid_from": applicant_skill.valid_from,
+                    "valid_to": applicant_skill.valid_to,
                 }
             )
-            for applicant_skill in self.applicant_skill_ids
+            for applicant_skill in self.current_applicant_skill_ids
         ]
         return vals
 
     def _map_applicant_skill_ids_to_talent_skill_ids(self, vals):
-        applicant_skills = {a.id: a.skill_id.id for a in self.applicant_skill_ids}
-        applicant_skills_type = {
-            a.id: a.skill_type_id.id for a in self.applicant_skill_ids
+        own_skills = {row.id: row for row in self.applicant_skill_ids}
+        talent_row_by_skill = {
+            row.skill_id: row.id for row in self.pool_applicant_id.applicant_skill_ids
         }
-        talent_skills = {
-            a.skill_id.id: a.id for a in self.pool_applicant_id.applicant_skill_ids
-        }
+
+        def talent_row_of(row_id):
+            row = own_skills.get(row_id)
+            return row and talent_row_by_skill.get(row.skill_id)
+
         mapped_commands = []
         for command in vals.get("applicant_skill_ids"):
-            command_number = command[0]
-            record_id = command[1]
-            if command_number == Command.UPDATE:
-                values = command[2]
-                if applicant_skills[record_id] in talent_skills:
-                    mapped_command = Command.update(
-                        talent_skills[applicant_skills[record_id]], values
+            match command[0]:
+                case Command.UPDATE:
+                    if talent_row_id := talent_row_of(command[1]):
+                        mapped_commands.append(
+                            Command.update(talent_row_id, command[2])
+                        )
+                    elif row := own_skills.get(command[1]):
+                        mapped_commands.append(
+                            Command.create(
+                                {
+                                    "skill_id": row.skill_id.id,
+                                    "skill_type_id": row.skill_type_id.id,
+                                    "skill_level_id": command[2].get(
+                                        "skill_level_id", row.skill_level_id.id
+                                    ),
+                                }
+                            )
+                        )
+                case Command.DELETE | Command.UNLINK:
+                    if talent_row_id := talent_row_of(command[1]):
+                        mapped_commands.append(Command.delete(talent_row_id))
+                case Command.LINK:
+                    if talent_row_id := talent_row_of(command[1]):
+                        mapped_commands.append(Command.link(talent_row_id))
+                case Command.SET:
+                    mapped_commands.append(
+                        Command.set(
+                            [
+                                talent_row_id
+                                for row_id in command[2]
+                                if (talent_row_id := talent_row_of(row_id))
+                            ]
+                        )
                     )
-                    mapped_commands.append(mapped_command)
-                else:
-                    mapped_command = Command.create(
-                        {
-                            "skill_id": applicant_skills[record_id],
-                            "skill_type_id": applicant_skills_type[record_id],
-                            "skill_level_id": values["skill_level_id"],
-                        },
-                    )
-                    mapped_commands.append(mapped_command)
-            elif command_number == Command.DELETE:
-                if applicant_skills[record_id] in talent_skills:
-                    mapped_command = Command.delete(
-                        talent_skills[applicant_skills[record_id]]
-                    )
-                    mapped_commands.append(mapped_command)
-            else:
-                mapped_commands.append(command)
+                case _:
+                    mapped_commands.append(command)
         return mapped_commands
 
     def action_add_to_job(self):

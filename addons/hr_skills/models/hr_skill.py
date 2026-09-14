@@ -19,6 +19,12 @@ class HrSkill(models.Model):
     )
     color = fields.Integer(related="skill_type_id.color")
 
+    @api.constrains("skill_type_id")
+    def _check_skill_type_id(self):
+        self.env["mixin.hr.individual.skill"]._check_library_type_matches_rows(
+            self, "skill_id"
+        )
+
     @api.depends("skill_type_id")
     @api.depends_context("from_skill_dropdown")
     def _compute_display_name(self):

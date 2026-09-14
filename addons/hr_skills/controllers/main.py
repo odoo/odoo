@@ -3,6 +3,8 @@ import re
 from odoo.http import Controller, prepare_content_disposition_header, request, route
 
 EMPLOYEE_IDS_RE = re.compile(r"^[0-9]+(,[0-9]+)*$")
+COLOR_RE = re.compile(r"^#[0-9a-fA-F]{6}$")
+DEFAULT_COLOR = "#666666"
 
 
 class HrEmployeeCV(Controller):
@@ -26,12 +28,18 @@ class HrEmployeeCV(Controller):
             return employees if employees.has_access("read") else employees.browse()
         return employees if employees == user.employee_id else employees.browse()
 
+    @staticmethod
+    def _css_color(color):
+        return (
+            color if isinstance(color, str) and COLOR_RE.match(color) else DEFAULT_COLOR
+        )
+
     @route(["/print/cv"], type="http", auth="user")
     def print_employee_cv(
         self,
         employee_ids="",
-        color_primary="#666666",
-        color_secondary="#666666",
+        color_primary=DEFAULT_COLOR,
+        color_secondary=DEFAULT_COLOR,
         **post,
     ):
         employees = self._printable_employees(employee_ids)
@@ -54,8 +62,8 @@ class HrEmployeeCV(Controller):
                 report,
                 employees.ids,
                 data={
-                    "color_primary": color_primary,
-                    "color_secondary": color_secondary,
+                    "color_primary": self._css_color(color_primary),
+                    "color_secondary": self._css_color(color_secondary),
                     "resume_type_education": resume_type_education,
                     "skill_type_language": skill_type_language,
                     "show_skills": "show_skills" in post,

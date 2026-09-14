@@ -1,5 +1,7 @@
 /** @odoo-module native */
 import { AvatarCardResourcePopover } from "@resource_mail/components/avatar_card_resource/avatar_card_resource_popover";
+import { serializeDate } from "@web/core/l10n/dates";
+import { luxon } from "@web/core/l10n/luxon";
 import { patch } from "@web/core/utils/patch";
 
 export const patchAvatarCardResourcePopover = {
@@ -12,9 +14,16 @@ export const patchAvatarCardResourcePopover = {
                     .read("hr.employee.skill", this.record.current_employee_skill_ids, [
                         "display_name",
                         "color",
+                        "valid_from",
+                        "valid_to",
                     ])
                     .then((skills) => {
-                        this.skills = skills;
+                        const today = serializeDate(luxon.DateTime.now());
+                        this.skills = skills.filter(
+                            (skill) =>
+                                skill.valid_from <= today &&
+                                (!skill.valid_to || skill.valid_to >= today),
+                        );
                     }),
             );
         }

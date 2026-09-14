@@ -53,6 +53,44 @@ class TestSkillReportScope(SkillsCase):
         )
         self.assertFalse(rows)
 
+    def test_a_skill_starting_later_is_not_current(self):
+        self.env["hr.employee.skill"].create(
+            {
+                "employee_id": self.employee.id,
+                "skill_id": self.skill_guitar.id,
+                "skill_level_id": self.level_novice.id,
+                "skill_type_id": self.skill_type.id,
+                "valid_from": self.today + relativedelta(days=10),
+            },
+        )
+        self.env.flush_all()
+
+        rows = self.env["hr.employee.skill.report"].search(
+            [("employee_id", "=", self.employee.id)]
+        )
+        self.assertFalse(rows)
+
+    def test_the_report_hides_the_skills_of_an_archived_employee(self):
+        self.env["hr.employee.skill"].create(
+            {
+                "employee_id": self.employee.id,
+                "skill_id": self.skill_piano.id,
+                "skill_level_id": self.level_expert.id,
+                "skill_type_id": self.skill_type.id,
+                "valid_from": self.today - relativedelta(months=1),
+            },
+        )
+        self.employee.active = False
+        self.env.flush_all()
+
+        report = self.env["hr.employee.skill.report"]
+        self.assertFalse(report.search([("employee_id", "=", self.employee.id)]))
+        self.assertTrue(
+            report.with_context(active_test=False).search(
+                [("employee_id", "=", self.employee.id)]
+            )
+        )
+
 
 @tagged("post_install", "-at_install")
 class TestCertificationReportValidity(SkillsCase):
@@ -191,6 +229,49 @@ class TestCertificationReportAccess(SkillsCase):
         )
         self.assertTrue(rows)
 
+    def test_a_line_manager_reads_all_three_reports(self):
+        manager_employee = self.env["hr.employee"].search(
+            [("user_id", "=", self.onlooker.id)]
+        )
+        self.someone_else.parent_id = manager_employee
+        self.env["hr.employee.skill"].create(
+            {
+                "employee_id": self.someone_else.id,
+                "skill_id": self.skill_piano.id,
+                "skill_level_id": self.level_novice.id,
+                "skill_type_id": self.skill_type.id,
+                "valid_from": self.today - relativedelta(days=3),
+            },
+        )
+        self.env.flush_all()
+        self.env.invalidate_all()
+
+        for model in (
+            "hr.employee.certification.report",
+            "hr.employee.skill.report",
+            "hr.employee.skill.history.report",
+        ):
+            with self.subTest(model=model):
+                self.assertTrue(
+                    self.env[model]
+                    .with_user(self.onlooker)
+                    .search([("employee_id", "=", self.someone_else.id)])
+                )
+
+    def test_a_department_manager_reads_the_history(self):
+        manager_employee = self.env["hr.employee"].search(
+            [("user_id", "=", self.onlooker.id)]
+        )
+        self.their_department.manager_id = manager_employee
+        self.env.flush_all()
+        self.env.invalidate_all()
+
+        self.assertTrue(
+            self.env["hr.employee.skill.history.report"]
+            .with_user(self.onlooker)
+            .search([("employee_id", "=", self.someone_else.id)])
+        )
+
     def test_the_report_does_not_cross_companies(self):
         """An HR user in one company must not see another company's rows."""
         other_company = self.env["res.company"].create({"name": "Other company"})
@@ -243,6 +324,37 @@ class TestCertificationReportAccess(SkillsCase):
 
 @tagged("post_install", "-at_install")
 class TestSkillHistoryReport(SkillsCase):
+    def test_a_row_keeps_its_id_when_other_rows_appear(self):
+        employee, other = self.env["hr.employee"].create(
+            [{"name": "Stable employee"}, {"name": "Newcomer"}]
+        )
+        self.env["hr.employee.skill"].create(
+            {
+                "employee_id": employee.id,
+                "skill_id": self.skill_piano.id,
+                "skill_level_id": self.level_novice.id,
+                "skill_type_id": self.skill_type.id,
+                "valid_from": date(2025, 1, 1),
+            },
+        )
+        self.env.flush_all()
+        report = self.env["hr.employee.skill.history.report"]
+        before = report.search([("employee_id", "=", employee.id)]).ids
+
+        self.env["hr.employee.skill"].create(
+            {
+                "employee_id": other.id,
+                "skill_id": self.skill_guitar.id,
+                "skill_level_id": self.level_novice.id,
+                "skill_type_id": self.skill_type.id,
+                "valid_from": date(2024, 1, 1),
+            },
+        )
+        self.env.flush_all()
+
+        self.assertEqual(report.search([("employee_id", "=", employee.id)]).ids, before)
+        self.assertEqual(len(report.browse(before).exists()), 1)
+
     def test_the_report_carries_department_and_company(self):
         department = self.env["hr.department"].create({"name": "Percussion"})
         employee = self.env["hr.employee"].create(

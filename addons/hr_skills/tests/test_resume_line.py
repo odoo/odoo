@@ -18,6 +18,21 @@ class TestResumeLineSiteName(TransactionCase):
         ):
             self.assertEqual(line._site_name(url), expected, url)
 
+    def test_the_stored_url_is_a_web_address(self):
+        employee = self.env["hr.employee"].create({"name": "Linked"})
+        line = self.env["hr.resume.line"].create(
+            {
+                "employee_id": employee.id,
+                "name": "Course",
+                "external_url": " coursera.org ",
+            }
+        )
+        self.assertEqual(line.external_url, "http://coursera.org")
+        line.external_url = "javascript:alert(document.domain)"
+        self.assertTrue(line.external_url.startswith("http://"))
+        line.external_url = "https://www.edx.org/x"
+        self.assertEqual(line.external_url, "https://www.edx.org/x")
+
     def test_the_onchange_fills_only_an_empty_name(self):
         employee = self.env["hr.employee"].create({"name": "Named"})
         line = self.env["hr.resume.line"].new(

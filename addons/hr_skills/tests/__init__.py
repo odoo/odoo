@@ -16,3 +16,4 @@ from . import test_overlap_constraint
 from . import test_current_set_follows_rows
 from . import test_current_skill_set
 from . import test_printed_cv
+from . import test_migration_1_3

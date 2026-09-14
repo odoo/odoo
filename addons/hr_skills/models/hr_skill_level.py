@@ -31,6 +31,12 @@ class HrSkillLevel(models.Model):
         "Progress should be a number between 0 and 100.",
     )
 
+    @api.constrains("skill_type_id")
+    def _check_skill_type_id(self):
+        self.env["mixin.hr.individual.skill"]._check_library_type_matches_rows(
+            self, "skill_level_id"
+        )
+
     def _compute_technical_is_new_default(self):
         self.technical_is_new_default = False
 

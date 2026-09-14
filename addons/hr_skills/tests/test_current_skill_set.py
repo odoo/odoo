@@ -45,6 +45,74 @@ class TestSkillIdsMeansCurrentlyHeld(SkillsCase):
             "history, and current_employee_skill_ids already excludes it",
         )
 
+    def test_a_lapsed_certification_is_shown_but_not_held(self):
+        self.env["hr.employee.skill"].create(
+            {
+                "employee_id": self.employee.id,
+                "skill_id": self.certification.id,
+                "skill_level_id": self.level_certified.id,
+                "skill_type_id": self.certification_type.id,
+                "valid_from": self.today - relativedelta(years=2),
+                "valid_to": self.today - relativedelta(years=1),
+            },
+        )
+        self.assertIn(
+            self.certification, self.employee.current_employee_skill_ids.skill_id
+        )
+        self.assertNotIn(self.certification, self.employee.skill_ids)
+        self.assertNotIn(
+            self.employee,
+            self.env["hr.employee"].search(
+                [("skill_ids", "in", self.certification.ids)]
+            ),
+        )
+
+    def test_a_skill_starting_later_is_not_held_yet(self):
+        self.env["hr.employee.skill"].create(
+            {
+                "employee_id": self.employee.id,
+                "skill_id": self.certification.id,
+                "skill_level_id": self.level_certified.id,
+                "skill_type_id": self.certification_type.id,
+                "valid_from": self.today + relativedelta(days=10),
+            },
+        )
+        self.assertIn(
+            self.certification, self.employee.current_employee_skill_ids.skill_id
+        )
+        self.assertNotIn(self.certification, self.employee.skill_ids)
+        self.assertNotIn(
+            self.employee,
+            self.env["hr.employee"].search(
+                [("skill_ids", "in", self.certification.ids)]
+            ),
+        )
+
+    def test_searching_the_current_list_finds_what_it_shows(self):
+        lapsed = self.env["hr.employee.skill"].create(
+            {
+                "employee_id": self.employee.id,
+                "skill_id": self.certification.id,
+                "skill_level_id": self.level_certified.id,
+                "skill_type_id": self.certification_type.id,
+                "valid_from": self.today - relativedelta(years=2),
+                "valid_to": self.today - relativedelta(years=1),
+            },
+        )
+        self.env.flush_all()
+        shown = self.employee.current_employee_skill_ids
+        self.assertIn(lapsed, shown)
+        Employee = self.env["hr.employee"]
+        for row in self.employee.employee_skill_ids:
+            with self.subTest(row=row.display_name, shown=row in shown):
+                found = Employee.search(
+                    [
+                        ("id", "=", self.employee.id),
+                        ("current_employee_skill_ids", "in", row.ids),
+                    ]
+                )
+                self.assertEqual(bool(found), row in shown)
+
     def test_searching_by_skill_does_not_return_people_who_lost_it(self):
         holders = self.env["hr.employee"].search(
             [("skill_ids", "in", self.skill_piano.ids)]
@@ -257,4 +325,4 @@ class TestCurrentEmployeeSkillSearch(SkillsCase):
 
     def test_an_unsupported_operator_fails_loudly(self):
         with self.assertRaises(NotImplementedError):
-            self.env["hr.employee"]._search_current_employee_skill_ids("=", True)
+            self.env["hr.employee"]._search_current_individual_skill_ids("=", True)

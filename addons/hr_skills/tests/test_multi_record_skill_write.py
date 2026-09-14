@@ -2,6 +2,7 @@ from datetime import date
 
 from dateutil.relativedelta import relativedelta
 
+from odoo.fields import Command
 from odoo.tests import tagged
 
 from .common import SkillsCase
@@ -104,53 +105,84 @@ class TestMultiRecordSkillWrite(SkillsCase):
         self.assertEqual(rows.skill_level_id, self.level_expert)
         self.assertFalse(self.newcomer.employee_skill_ids)
 
-    def test_the_mixin_archives_across_every_replay_target(self):
-        """The transformation is a public extension point for other modules.
+    def _hold_piano(self, employees):
+        self.env["hr.employee.skill"].create(
+            [
+                {
+                    "employee_id": employee.id,
+                    "skill_id": self.skill_piano.id,
+                    "skill_level_id": self.level_novice.id,
+                    "skill_type_id": self.skill_type.id,
+                    "valid_from": self.today - relativedelta(months=2),
+                }
+                for employee in employees
+            ]
+        )
+        self.env.flush_all()
+        self.env.invalidate_all()
 
-        hr.employee and hr.job now hand it one record at a time, but
-        hr_recruitment_skills and hr_appraisal_skills still pass the whole
-        recordset and let the ORM replay one command against each. The archive
-        of the skill each of those records already holds has to be resolved
-        across all of them, not against whichever id reached the vals.
-        """
+    def _queries_to_promote(self, employees):
+        before = self.env.cr.sql_statement_count
+        employees.write(
+            {
+                "current_employee_skill_ids": [
+                    Command.create(
+                        {
+                            "skill_id": self.skill_piano.id,
+                            "skill_level_id": self.level_expert.id,
+                            "skill_type_id": self.skill_type.id,
+                        }
+                    )
+                ]
+            }
+        )
+        self.env.flush_all()
+        return self.env.cr.sql_statement_count - before
+
+    def test_the_cost_of_a_multi_record_write_does_not_grow_with_the_records(self):
+        few = self.env["hr.employee"].create([{"name": f"Few {i}"} for i in range(2)])
+        many = self.env["hr.employee"].create([{"name": f"Many {i}"} for i in range(8)])
+        self._hold_piano(few | many)
+
+        few_queries = self._queries_to_promote(few)
+        self.env.invalidate_all()
+        many_queries = self._queries_to_promote(many)
+
+        self.assertEqual(many_queries, few_queries)
+        for employee in few | many:
+            live = self._piano_rows(employee).filtered(lambda row: not row.valid_to)
+            self.assertEqual(live.skill_level_id, self.level_expert, employee.name)
+
+    def test_a_certification_one_of_them_holds_is_added_to_the_others_only(self):
         self.env["hr.employee.skill"].create(
             {
                 "employee_id": self.novice_holder.id,
-                "skill_id": self.skill_piano.id,
-                "skill_level_id": self.level_novice.id,
-                "skill_type_id": self.skill_type.id,
-                "valid_from": self.today - relativedelta(months=2),
+                "skill_id": self.certification.id,
+                "skill_level_id": self.level_certified.id,
+                "skill_type_id": self.certification_type.id,
+                "valid_from": self.today,
             },
         )
-        self.env.flush_all()
-
-        commands = self.env["hr.employee.skill"]._get_transformed_commands(
-            [
-                [
-                    0,
-                    0,
-                    {
-                        "skill_id": self.skill_piano.id,
-                        "skill_level_id": self.level_expert.id,
-                        "skill_type_id": self.skill_type.id,
-                    },
+        (self.novice_holder | self.newcomer).write(
+            {
+                "current_employee_skill_ids": [
+                    Command.create(
+                        {
+                            "skill_id": self.certification.id,
+                            "skill_level_id": self.level_certified.id,
+                            "skill_type_id": self.certification_type.id,
+                            "valid_from": self.today,
+                        }
+                    )
                 ]
-            ],
-            self.novice_holder | self.newcomer,
+            }
         )
-
-        archives = [command for command in commands if command[0] in (1, 2)]
-        creates = [command for command in commands if command[0] == 0]
-        self.assertEqual(
-            len(creates), 1, "one CREATE, replayed by the ORM against each record"
-        )
-        self.assertTrue(
-            archives,
-            "the skill novice_holder already holds must be archived; without it "
-            "the replayed CREATE collides with it and the constraint rejects "
-            "the whole write",
-        )
-        self.assertEqual(archives[0][2]["valid_to"], self.today - relativedelta(days=1))
+        for employee in (self.novice_holder, self.newcomer):
+            self.assertEqual(
+                len(employee.employee_skill_ids.filtered("is_certification")),
+                1,
+                employee.name,
+            )
 
     def test_creating_an_employee_without_skills_touches_no_skill_field(self):
         employee = self.env["hr.employee"].create({"name": "No skills at all"})

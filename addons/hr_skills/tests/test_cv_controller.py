@@ -1,7 +1,7 @@
 from odoo.tests import HttpCase, new_test_user, tagged
 from odoo.tests.common import TransactionCase
 
-from odoo.addons.hr_skills.controllers.main import EMPLOYEE_IDS_RE
+from odoo.addons.hr_skills.controllers.main import EMPLOYEE_IDS_RE, HrEmployeeCV
 
 
 @tagged("post_install", "-at_install")
@@ -17,6 +17,17 @@ class TestEmployeeIdsPattern(TransactionCase):
     def test_a_repeated_query_parameter_is_not_a_string(self):
         with self.assertRaises(TypeError):
             EMPLOYEE_IDS_RE.match(["1", "2"])
+
+    def test_only_a_hex_color_reaches_the_report_styles(self):
+        self.assertEqual(HrEmployeeCV._css_color("#1a2B3c"), "#1a2B3c")
+        for rejected in (
+            "red",
+            "#fff",
+            "#123456;background:url(/web/session/logout)",
+            ["#123456"],
+            None,
+        ):
+            self.assertEqual(HrEmployeeCV._css_color(rejected), "#666666", rejected)
 
     def test_the_rejected_shapes_are_the_ones_that_used_to_reach_int(self):
         for crashing in ("1|2", "1,,2", "", ",", "1,", "1 2", "1;2", "a"):

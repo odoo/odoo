@@ -25,8 +25,8 @@ class HrEmployee(models.Model):
     )
     current_employee_skill_ids = fields.One2many(
         comodel_name="hr.employee.skill",
-        compute="_compute_current_employee_skill_ids",
-        search="_search_current_employee_skill_ids",
+        compute="_compute_current_individual_skill_ids",
+        search="_search_current_individual_skill_ids",
         readonly=False,
     )
     skill_ids = fields.Many2many(
@@ -47,58 +47,11 @@ class HrEmployee(models.Model):
     def _individual_skill_field_name(self):
         return "employee_skill_ids"
 
+    def _current_individual_skill_field_name(self):
+        return "current_employee_skill_ids"
+
     def _individual_skill_command_field_names(self):
-        return ("current_employee_skill_ids", "certification_ids", "employee_skill_ids")
-
-    @api.depends(
-        "employee_skill_ids.valid_to",
-        "employee_skill_ids.skill_id",
-        "employee_skill_ids.is_certification",
-    )
-    def _compute_current_employee_skill_ids(self):
-        current_by_employee = (
-            self.employee_skill_ids._current_individual_skills().grouped("employee_id")
-        )
-        for employee in self:
-            employee.current_employee_skill_ids = current_by_employee.get(
-                employee, self.env["hr.employee.skill"]
-            )
-
-    @api.depends(
-        "employee_skill_ids.valid_to",
-        "employee_skill_ids.skill_id",
-        "employee_skill_ids.is_certification",
-    )
-    def _compute_skill_ids(self):
-        for employee in self:
-            employee.skill_ids = employee.current_employee_skill_ids.skill_id
-
-    def _get_domain_for_current_employee_skills(self, skill_domain):
-        skill_model = self.env["hr.employee.skill"]
-        current = skill_model._search(
-            Domain.AND(
-                [skill_model._validity_domain(fields.Date.today()), skill_domain]
-            )
-        )
-        return Domain("employee_skill_ids", "in", current)
-
-    def _search_current_employee_skill_ids(self, operator, value):
-        if operator not in ("in", "not in", "any"):
-            raise NotImplementedError
-        if operator == "any" and isinstance(value, Domain):
-            skill_domain = value
-        else:
-            skill_domain = Domain("id", "in", value)
-        result = self._get_domain_for_current_employee_skills(skill_domain)
-        return ~result if operator == "not in" else result
-
-    def _search_skill_ids(self, operator, value):
-        if operator not in ("in", "not in"):
-            raise NotImplementedError
-        result = self._get_domain_for_current_employee_skills(
-            Domain("skill_id", "in", value)
-        )
-        return ~result if operator == "not in" else result
+        return (*super()._individual_skill_command_field_names(), "certification_ids")
 
     @api.depends("employee_skill_ids.is_certification")
     def _compute_certification_ids(self):
@@ -114,93 +67,64 @@ class HrEmployee(models.Model):
 
     @api.model
     def _get_required_certifications_by_job(self):
-        """Map each job to {(skill, level): summary} for what it requires today."""
-        required = defaultdict(dict)
-        jobs = self.env["hr.job"].search(
-            [("current_job_skill_ids", "any", [("is_certification", "=", True)])]
-        )
-        for job in jobs:
-            for cert in job.current_job_skill_ids.filtered("is_certification"):
-                required[job][(cert.skill_id, cert.skill_level_id)] = (
-                    f"{cert.skill_id.name}: {cert.skill_level_id.name}"
-                )
-        return required
+        job_skill_model = self.env["hr.job.skill"]
+        return job_skill_model.search(
+            job_skill_model._domain_held(fields.Date.today())
+            & Domain("is_certification", "=", True)
+            & Domain("skill_type_id.active", "=", True)
+            & Domain("job_id.active", "=", True)
+        ).grouped("job_id")
 
-    @api.model
-    def _get_certification_expiry_by_employee(self, employees):
-        """Map each employee to {(skill, level): valid_to} for the certifications held.
-
-        ``valid_to`` is False for one that never expires, and the latest expiry
-        among those already lapsed when none is still valid. Grouping by
-        (employee, skill, level) rather than assigning per row matters because an
-        employee may legitimately hold both a lapsed certification and its
-        renewal, and last-write-wins picks whichever was iterated last.
-        """
-        today = fields.Date.today()
-        held = self.env["hr.employee.skill"].search(
-            Domain.AND(
-                [
-                    Domain("employee_id", "in", employees.ids),
-                    Domain("is_certification", "=", True),
-                ],
-            ),
-        )
-        expiry = defaultdict(dict)
-        grouped = held.grouped(
-            lambda skill: (skill.employee_id, skill.skill_id, skill.skill_level_id)
-        )
-        for (employee, skill, level), certifications in grouped.items():
-            current = certifications.filtered(
-                lambda c: not c.valid_to or c.valid_to >= today
-            )
-            if current:
-                without_expiry = current.filtered(lambda c: not c.valid_to)
-                valid_to = False if without_expiry else max(current.mapped("valid_to"))
-            else:
-                valid_to = max(certifications.mapped("valid_to"))
-            expiry[employee][(skill, level)] = valid_to
-        return expiry
+    @staticmethod
+    def _certification_covered_until(certifications, today):
+        covered_until = today - relativedelta(days=1)
+        for certification in certifications.sorted("valid_from"):
+            if certification.valid_from > covered_until + relativedelta(days=1):
+                break
+            if not certification.valid_to:
+                return False
+            covered_until = max(covered_until, certification.valid_to)
+        return covered_until if covered_until >= today else None
 
     @api.model
     def _add_certification_activity_to_employees(self):
         today = fields.Date.today()
         three_months_later = today + relativedelta(months=3)
-        return_val = self.env["mail.activity"]
+        activities = self.env["mail.activity"]
 
-        job_skill_level_mapping = self._get_required_certifications_by_job()
-        if not job_skill_level_mapping:
-            return return_val
+        requirements_by_job = self._get_required_certifications_by_job()
+        if not requirements_by_job:
+            return activities
 
-        employee_domain = Domain.AND(
-            [
-                Domain("job_id", "in", [job.id for job in job_skill_level_mapping]),
-                Domain.OR(
-                    [
-                        Domain("user_id", "!=", False),
-                        Domain("parent_id.user_id", "!=", False),
-                        Domain("job_id.user_id", "!=", False),
-                    ],
-                ),
-            ],
+        employees = self.env["hr.employee"].search(
+            Domain("job_id", "in", [job.id for job in requirements_by_job])
+            & (
+                Domain("user_id", "!=", False)
+                | Domain("parent_id.user_id", "!=", False)
+                | Domain("job_id.user_id", "!=", False)
+            )
         )
-        employees = self.env["hr.employee"].search(employee_domain)
         if not employees:
-            return return_val
+            return activities
 
-        employee_cert_data = self._get_certification_expiry_by_employee(employees)
-
-        existing_activities = self.env["mail.activity"].search(
-            Domain.AND(
-                [
-                    Domain("active", "=", True),
-                    Domain("activity_category", "=", "upload_file"),
-                    Domain("res_model", "=", "hr.employee"),
-                    Domain("res_id", "in", employees.ids),
-                ],
-            ),
+        certifications = (
+            self.env["hr.employee.skill"]
+            .search(
+                Domain("employee_id", "in", employees.ids)
+                & Domain("is_certification", "=", True)
+            )
+            .grouped(lambda row: (row.employee_id, row.skill_id))
+        )
+        activity_type = self.env.ref(
+            "hr_skills.mail_activity_data_upload_certification"
         )
         existing_activity_keys = {
-            (act.res_id, act.summary) for act in existing_activities
+            (activity.res_id, activity.summary)
+            for activity in self.env["mail.activity"].search(
+                Domain("activity_type_id", "=", activity_type.id)
+                & Domain("res_model", "=", "hr.employee")
+                & Domain("res_id", "in", employees.ids)
+            )
         }
 
         # activity_schedule already creates one activity per record of the
@@ -210,38 +134,49 @@ class HrEmployee(models.Model):
         # group of employees that share a summary, a deadline and a responsible.
         to_schedule = defaultdict(lambda: self.env["hr.employee"])
         for employee in employees:
-            job_id = employee.job_id
             responsible = (
-                employee.user_id or employee.parent_id.user_id or job_id.user_id
+                employee.user_id
+                or employee.parent_id.user_id
+                or employee.job_id.user_id
             )
-            if job_id not in job_skill_level_mapping or not responsible:
+            if not responsible:
                 continue
-
-            for skill_level_key, summary in job_skill_level_mapping[job_id].items():
+            for requirement in requirements_by_job.get(employee.job_id, ()):
+                summary = requirement.display_name
                 if (employee.id, summary) in existing_activity_keys:
                     continue
-
-                valid_to_date = employee_cert_data.get(employee, {}).get(
-                    skill_level_key
+                qualifying = certifications.get(
+                    (employee, requirement.skill_id), self.env["hr.employee.skill"]
+                ).filtered(
+                    lambda row, requirement=requirement: (
+                        row.level_progress >= requirement.level_progress
+                    )
                 )
-                if valid_to_date is not None and (
-                    valid_to_date is False or valid_to_date > three_months_later
+                covered_until = self._certification_covered_until(qualifying, today)
+                if covered_until is False or (
+                    covered_until and covered_until > three_months_later
                 ):
                     continue
-
-                to_schedule[(summary, valid_to_date or today, responsible)] |= employee
+                deadline = covered_until or max(
+                    (
+                        row.valid_to
+                        for row in qualifying
+                        if row.valid_to and row.valid_to < today
+                    ),
+                    default=today,
+                )
+                to_schedule[(summary, deadline, responsible)] |= employee
 
         note = self.env._("Certification missing or expiring soon")
         for (summary, deadline, responsible), group in to_schedule.items():
-            return_val += group.activity_schedule(
+            activities += group.activity_schedule(
                 act_type_xmlid="hr_skills.mail_activity_data_upload_certification",
                 summary=summary,
                 note=note,
                 date_deadline=deadline,
                 user_id=responsible.id,
             )
-
-        return return_val
+        return activities
 
     def _load_scenario(self):
         super()._load_scenario()

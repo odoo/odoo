@@ -2,6 +2,7 @@ from datetime import date
 
 from dateutil.relativedelta import relativedelta
 
+from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.tests import tagged
 
@@ -178,9 +179,36 @@ class TestEveryX2ManyCommandIsAnswered(SkillsCase):
         self.assertFalse(self.new_guitar.exists())
 
     def test_linking_another_employee_row_is_refused_rather_than_ignored(self):
-        with self.assertRaises(NotImplementedError):
+        with self.assertRaisesRegex(ValidationError, "belong to another record"):
             self.employee.write(
                 {"current_employee_skill_ids": [Command.link(self.foreign.id)]}
+            )
+
+    def test_updating_another_employee_row_is_refused_rather_than_moving_it(self):
+        with self.assertRaisesRegex(ValidationError, "belong to another record"):
+            self.employee.write(
+                {
+                    "current_employee_skill_ids": [
+                        Command.update(
+                            self.foreign.id, {"skill_level_id": self.level_novice.id}
+                        )
+                    ]
+                }
+            )
+        self.assertEqual(self.foreign.employee_id, self.other)
+        self.assertFalse(self.foreign.valid_to)
+
+    def test_deleting_another_employee_row_is_refused(self):
+        with self.assertRaisesRegex(ValidationError, "belong to another record"):
+            self.employee.write(
+                {"current_employee_skill_ids": [Command.delete(self.foreign.id)]}
+            )
+
+    def test_a_multi_record_write_refuses_a_row_none_of_them_owns(self):
+        third = self.env["hr.employee"].create({"name": "Bystander"})
+        with self.assertRaisesRegex(ValidationError, "belong to another record"):
+            (self.employee | third).write(
+                {"current_employee_skill_ids": [Command.delete(self.foreign.id)]}
             )
 
     def test_a_multi_record_set_routes_each_row_to_its_owner(self):
@@ -248,6 +276,53 @@ class TestOneCommandPerRow(SkillsCase):
     def test_clear_then_create_closes_the_old_row_once(self):
         old, commands = self._commands_for(lambda row: Command.clear())
         self._assert_each_row_once(old, commands)
+
+    def test_a_level_change_closes_the_old_row_once(self):
+        employee = self.env["hr.employee"].create({"name": "Level change employee"})
+        for age in (relativedelta(months=2), relativedelta()):
+            with self.subTest(age=age):
+                old = self.env["hr.employee.skill"].create(
+                    {
+                        "employee_id": employee.id,
+                        "skill_id": self.skill_piano.id,
+                        "skill_level_id": self.level_novice.id,
+                        "skill_type_id": self.skill_type.id,
+                        "valid_from": date.today() - age,
+                    },
+                )
+                commands = self.env["hr.employee.skill"]._get_transformed_commands(
+                    [Command.update(old.id, {"skill_level_id": self.level_expert.id})],
+                    employee,
+                )
+                self._assert_each_row_once(old, commands)
+                old.unlink()
+
+    def test_two_updates_of_one_row_make_one_successor(self):
+        employee = self.env["hr.employee"].create({"name": "Two updates employee"})
+        old = self.env["hr.employee.skill"].create(
+            {
+                "employee_id": employee.id,
+                "skill_id": self.skill_piano.id,
+                "skill_level_id": self.level_novice.id,
+                "skill_type_id": self.skill_type.id,
+                "valid_from": date.today() - relativedelta(months=2),
+            },
+        )
+        commands = self.env["hr.employee.skill"]._get_transformed_commands(
+            [
+                Command.update(old.id, {"skill_id": self.skill_guitar.id}),
+                Command.update(old.id, {"skill_level_id": self.level_expert.id}),
+            ],
+            employee,
+        )
+        self._assert_each_row_once(old, commands)
+        (created,) = [
+            command[2] for command in commands if command[0] == Command.CREATE
+        ]
+        self.assertEqual(
+            (created["skill_id"], created["skill_level_id"]),
+            (self.skill_guitar.id, self.level_expert.id),
+        )
 
 
 @tagged("post_install", "-at_install")

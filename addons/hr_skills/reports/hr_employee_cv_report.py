@@ -18,14 +18,15 @@ class ReportHr_SkillsReport_Employee_Cv(models.AbstractModel):
                 if not show_others and not line.line_type_id:
                     continue
                 grouped[line.line_type_id] |= line
-            resume_lines[employee] = {
-                line_type.name or self.env._("Other"): lines
-                for line_type, lines in grouped.items()
-            }
+            resume_lines[employee] = dict(grouped)
 
         return {
             "doc_ids": docids,
             "doc_model": "hr.employee",
             "docs": employees,
             "resume_lines": resume_lines,
+            "held_skills": {
+                employee: employee.employee_skill_ids._held_individual_skills()
+                for employee in employees
+            },
         }

@@ -37,7 +37,7 @@
     </record>
 
     <record id="hr_skill_rule_hr_user" model="ir.rule">
-        <field name="name">Employee skill: HR user: read all</field>
+        <field name="name">Employee skill: HR user: all</field>
         <field name="model_id" ref="model_hr_employee_skill" />
         <field name="domain_force">[(1, '=', 1)]</field>
         <field name="groups" eval="[Command.link(ref('hr.group_hr_user'))]" />
@@ -62,7 +62,7 @@
         <field name="name">Employee Skill Report: employee's manager</field>
         <field name="model_id" ref="model_hr_employee_skill_report" />
         <field
-            name="domain_force">[('has_department_manager_access', '=', True)]</field>
+            name="domain_force">['|', ('employee_id', 'child_of', user.employee_ids.ids), ('has_department_manager_access', '=', True)]</field>
         <field name="groups" eval="[Command.link(ref('base.group_user'))]" />
     </record>
 
@@ -77,7 +77,7 @@
         <field name="name">Employee Skill History Report: employee's manager</field>
         <field name="model_id" ref="model_hr_employee_skill_history_report" />
         <field
-            name="domain_force">[('employee_id', 'child_of', user.employee_ids.ids)]</field>
+            name="domain_force">['|', ('employee_id', 'child_of', user.employee_ids.ids), ('has_department_manager_access', '=', True)]</field>
         <field name="groups" eval="[Command.link(ref('base.group_user'))]" />
     </record>
 
@@ -92,7 +92,7 @@
         <field name="name">Employee Certification Report: employee's manager</field>
         <field name="model_id" ref="model_hr_employee_certification_report" />
         <field
-            name="domain_force">[('has_department_manager_access', '=', True)]</field>
+            name="domain_force">['|', ('employee_id', 'child_of', user.employee_ids.ids), ('has_department_manager_access', '=', True)]</field>
         <field name="groups" eval="[Command.link(ref('base.group_user'))]" />
     </record>
 

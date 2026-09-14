@@ -1,5 +1,4 @@
 /** @odoo-module native */
-import { onMounted, onPatched, useRef } from "@odoo/owl";
 import { formatDate } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/translation";
@@ -15,13 +14,7 @@ export class ResumeListRenderer extends CommonSkillsListRenderer {
     static rowsTemplate = "hr_skills.ResumeListRenderer.Rows";
     static recordRowTemplate = "hr_skills.ResumeListRenderer.RecordRow";
     static useMagicColumnWidths = false;
-    setup() {
-        super.setup();
 
-        this.linkRef = useRef("link-target-blank");
-        onMounted(this._setLinksToOpenInNewTab);
-        onPatched(this._setLinksToOpenInNewTab);
-    }
     get groupBy() {
         return "line_type_id";
     }
@@ -33,27 +26,22 @@ export class ResumeListRenderer extends CommonSkillsListRenderer {
         return 2;
     }
 
-    formatDate(date) {
-        return formatDate(date);
-    }
-
     buildRowApi() {
         return {
             ...super.buildRowApi(),
-            formatDate: (date) => this.formatDate(date),
+            formatDate,
+            onLineLinkClick: (ev) => this.onLineLinkClick(ev),
         };
     }
 
-    _setLinksToOpenInNewTab() {
-        const resumeLines = this.linkRef.el;
-
-        if (resumeLines) {
-            const links = resumeLines.querySelectorAll("a");
-
-            links.forEach((link) => {
-                link.setAttribute("target", "_blank");
-            });
+    onLineLinkClick(ev) {
+        const link = ev.target.closest("a[href]");
+        if (!link) {
+            return;
         }
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        ev.stopPropagation();
     }
 }
 

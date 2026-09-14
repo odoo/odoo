@@ -1,6 +1,7 @@
 from urllib.parse import urlsplit
 
 from odoo import api, fields, models
+from odoo.tools.mail import normalize_url
 
 
 class HrResumeLine(models.Model):
@@ -56,6 +57,21 @@ class HrResumeLine(models.Model):
         "CHECK ((date_start <= date_end OR date_end IS NULL))",
         "The start date must be anterior to the end date.",
     )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            self._normalize_external_url(vals)
+        return super().create(vals_list)
+
+    def write(self, vals):
+        self._normalize_external_url(vals)
+        return super().write(vals)
+
+    @staticmethod
+    def _normalize_external_url(vals):
+        if url := (vals.get("external_url") or "").strip():
+            vals["external_url"] = normalize_url(url)
 
     @api.onchange("external_url")
     def _onchange_external_url(self):

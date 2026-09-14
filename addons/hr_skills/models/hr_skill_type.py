@@ -64,15 +64,8 @@ class HrSkillType(models.Model):
 
     @api.depends("skill_level_ids")
     def _compute_levels_count(self):
-        level_count_by_skill_type = dict(
-            self.env["hr.skill.level"]._read_group(
-                domain=[("skill_type_id", "in", self.ids)],
-                groupby=["skill_type_id"],
-                aggregates=["__count"],
-            )
-        )
         for skill_type in self:
-            skill_type.levels_count = level_count_by_skill_type.get(skill_type, 0)
+            skill_type.levels_count = len(skill_type.skill_level_ids)
 
     @api.onchange("skill_level_ids")
     def _onchange_skill_level_ids(self):
@@ -83,21 +76,21 @@ class HrSkillType(models.Model):
                 break
 
     def copy_data(self, default=None):
+        default = default or {}
         vals_list = super().copy_data(default=default)
-        return [
-            {
-                **vals,
-                "name": self.env._(
+        for skill_type, vals in zip(self, vals_list, strict=True):
+            if "name" not in default:
+                vals["name"] = self.env._(
                     "%(skill_type_name)s (copy)", skill_type_name=skill_type.name
-                ),
-                "color": 0,
-                "skill_ids": [
+                )
+            if "color" not in default:
+                vals["color"] = 0
+            if "skill_ids" not in default:
+                vals["skill_ids"] = [
                     Command.create(skill_vals)
                     for skill_vals in skill_type.skill_ids.copy_data()
-                ],
-            }
-            for skill_type, vals in zip(self, vals_list, strict=True)
-        ]
+                ]
+        return vals_list
 
     def copy_translations(self, new, excluded=()):
         super().copy_translations(new, excluded=(*excluded, "name"))

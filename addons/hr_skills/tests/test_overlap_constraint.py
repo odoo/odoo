@@ -1,7 +1,6 @@
 from datetime import date
 
 from odoo.exceptions import ValidationError
-from odoo.fields import Domain
 from odoo.tests import tagged
 
 from .common import SkillsCase
@@ -57,32 +56,58 @@ class TestOverlapConstraintTotality(SkillsCase):
                 ],
             )
 
-    def test_covering_a_missing_date_matches_what_the_domain_does(self):
-        """`_covers_date` must answer False for an absent date, not raise.
-
-        The domain it mirrors compiles `valid_from <= False` to WHERE FALSE, so
-        False is the answer that keeps the Python side and the SQL side saying
-        the same thing.
-        """
-        stored = self.env["hr.employee.skill"].create(
+    def _guitar(self, level, valid_from, valid_to):
+        return self.env["hr.employee.skill"].create(
             {
                 "employee_id": self.employee.id,
                 "skill_id": self.skill_guitar.id,
-                "skill_level_id": self.level_novice.id,
+                "skill_level_id": level.id,
                 "skill_type_id": self.skill_type.id,
-                "valid_from": date(2026, 1, 1),
-                "valid_to": False,
+                "valid_from": valid_from,
+                "valid_to": valid_to,
             },
         )
-        model = self.env["hr.employee.skill"]
 
-        self.assertFalse(model._covers_date(stored, False))
-        self.assertTrue(model._covers_date(stored, date(2026, 6, 1)))
-        self.assertFalse(model._covers_date(stored, date(2025, 6, 1)))
+    def test_a_span_inside_a_stored_one_is_refused(self):
+        self._guitar(self.level_novice, date(2025, 1, 1), date(2025, 12, 31))
 
-        query = model._search(Domain("valid_from", "<=", False))
+        with self.assertRaises(ValidationError):
+            self._guitar(self.level_expert, date(2025, 3, 1), date(2025, 4, 1))
+
+    def test_a_span_enclosing_a_stored_one_is_refused(self):
+        self._guitar(self.level_novice, date(2025, 3, 1), date(2025, 4, 1))
+
+        with self.assertRaises(ValidationError):
+            self._guitar(self.level_expert, date(2025, 1, 1), date(2025, 12, 31))
+
+    def test_an_open_ended_span_starting_earlier_is_refused(self):
+        self._guitar(self.level_novice, date(2025, 3, 1), False)
+
+        with self.assertRaises(ValidationError):
+            self._guitar(self.level_expert, date(2025, 1, 1), False)
+
+    def test_widening_a_row_over_another_is_refused(self):
+        self._guitar(self.level_novice, date(2025, 1, 1), date(2025, 1, 31))
+        later = self._guitar(self.level_expert, date(2025, 3, 1), date(2025, 3, 31))
+
+        with self.assertRaises(ValidationError):
+            later.valid_from = date(2024, 12, 1)
+
+    def test_back_to_back_spans_are_accepted(self):
+        self._guitar(self.level_novice, date(2025, 1, 1), date(2025, 1, 31))
+        self._guitar(self.level_expert, date(2025, 2, 1), False)
+
+        self.assertEqual(len(self.employee.employee_skill_ids), 2)
+
+    def test_the_span_predicate_is_total(self):
+        spans_overlap = self.env["hr.employee.skill"]._spans_overlap
+
+        self.assertTrue(spans_overlap(date(2025, 1, 1), False, date(2024, 1, 1), False))
+        self.assertTrue(
+            spans_overlap(date(2025, 1, 1), False, date(2024, 1, 1), date(2025, 1, 1))
+        )
         self.assertFalse(
-            list(query), "the domain selects nothing, so neither may the predicate"
+            spans_overlap(date(2025, 1, 1), False, date(2024, 1, 1), date(2024, 12, 31))
         )
 
     def test_the_error_names_the_skill_rather_than_dumping_a_vals_dict(self):

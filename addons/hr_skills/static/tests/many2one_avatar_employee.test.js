@@ -9,9 +9,10 @@ defineHrSkillModels();
 
 test("many2one_avatar_employee widget in kanban view with skills on avatar card", async () => {
     const pyEnv = await startServer();
-    const [java, tigrinya] = pyEnv["hr.skill"].create([
+    const [java, tigrinya, latin] = pyEnv["hr.skill"].create([
         { name: "Java" },
         { name: "Tigrinya" },
+        { name: "Latin" },
     ]);
     const pierrePid = pyEnv["res.partner"].create({ name: "Pierre" });
     const pierreUid = pyEnv["res.users"].create({
@@ -23,13 +24,26 @@ test("many2one_avatar_employee widget in kanban view with skills on avatar card"
         user_id: pierreUid,
         partner_id: pierrePid,
     });
-    const [javaForPierre, tigrinyaForPierre] = pyEnv["hr.employee.skill"].create([
-        { employee_id: pierreEid, skill_id: java },
-        { employee_id: pierreEid, skill_id: tigrinya, valid_to: "2020-01-01" },
+    const [javaForPierre, tigrinyaForPierre, latinForPierre] = pyEnv[
+        "hr.employee.skill"
+    ].create([
+        { employee_id: pierreEid, skill_id: java, valid_from: "2019-01-01" },
+        {
+            employee_id: pierreEid,
+            skill_id: tigrinya,
+            valid_from: "2019-01-01",
+            valid_to: "2020-01-01",
+        },
+        {
+            employee_id: pierreEid,
+            skill_id: latin,
+            valid_from: "2018-01-01",
+            valid_to: "2019-01-01",
+        },
     ]);
     pyEnv["hr.employee"].write([pierreEid], {
-        employee_skill_ids: [javaForPierre, tigrinyaForPierre],
-        current_employee_skill_ids: [javaForPierre],
+        employee_skill_ids: [javaForPierre, tigrinyaForPierre, latinForPierre],
+        current_employee_skill_ids: [javaForPierre, latinForPierre],
     });
     pyEnv["m2o.avatar.employee"].create([{ employee_id: pierreEid }]);
     await start();

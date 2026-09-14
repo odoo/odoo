@@ -1,3 +1,7 @@
+from datetime import date
+
+from dateutil.relativedelta import relativedelta
+
 from odoo import Command
 from odoo.tests import Form, TransactionCase, tagged
 from odoo.tests.common import new_test_user
@@ -721,6 +725,71 @@ class TestRecruitmentSkills(TransactionCase):
             lambda s: (s.skill_id, s.skill_type_id, s.skill_level_id)
         )
         self.assertCountEqual(applicant_skills_name_list, employee_skills_name_list)
+
+    def test_a_new_employee_gets_the_levels_the_applicant_holds_now(self):
+        today = date.today()
+        self.env["hr.applicant.skill"].create(
+            [
+                {
+                    "applicant_id": self.t_applicant.id,
+                    "skill_id": self.t_skill_1.id,
+                    "skill_level_id": level.id,
+                    "skill_type_id": self.t_skill_type.id,
+                    "valid_from": valid_from,
+                    "valid_to": valid_to,
+                }
+                for level, valid_from, valid_to in (
+                    (
+                        self.t_skill_level_2,
+                        today - relativedelta(years=2),
+                        today - relativedelta(years=1, days=1),
+                    ),
+                    (self.t_skill_level_3, today - relativedelta(years=1), False),
+                )
+            ]
+        )
+        self.t_applicant.create_employee_from_applicant()
+
+        rows = self.t_applicant.employee_id.employee_skill_ids
+        self.assertEqual(rows.skill_level_id, self.t_skill_level_3)
+        self.assertEqual(rows.valid_from, today - relativedelta(years=1))
+
+    def test_unlinking_a_pooled_applicant_skill_ends_the_talent_copy(self):
+        self.t_applicant.write(
+            {
+                "current_applicant_skill_ids": [
+                    Command.create(
+                        {
+                            "skill_id": self.t_skill_1.id,
+                            "skill_level_id": self.t_skill_level_1.id,
+                            "skill_type_id": self.t_skill_type.id,
+                        }
+                    )
+                ]
+            }
+        )
+        talent = (
+            self.env["talent.pool.add.applicants"]
+            .create(
+                {
+                    "applicant_ids": self.t_applicant,
+                    "talent_pool_ids": self.t_talent_pool,
+                }
+            )
+            ._add_applicants_to_pool()
+        )
+        self.assertTrue(talent.current_applicant_skill_ids)
+
+        self.t_applicant.write(
+            {
+                "current_applicant_skill_ids": [
+                    Command.unlink(self.t_applicant.applicant_skill_ids.id)
+                ]
+            }
+        )
+
+        self.assertFalse(self.t_applicant.current_applicant_skill_ids)
+        self.assertFalse(talent.current_applicant_skill_ids)
 
     def test_interviewer_skills_access(self):
         interviewer_user = new_test_user(

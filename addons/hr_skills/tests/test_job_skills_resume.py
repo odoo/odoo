@@ -76,7 +76,7 @@ class TestCurrentJobSkills(TransactionCase):
 
     def test_current_job_skills_unsupported_operator(self):
         with self.assertRaises(NotImplementedError):
-            self.env["hr.job"]._search_current_job_skill_ids("=", True)
+            self.env["hr.job"]._search_current_individual_skill_ids("=", True)
 
 
 @tagged("post_install", "-at_install")

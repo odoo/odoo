@@ -77,6 +77,46 @@ class TestPrintedCv(SkillsCase):
         self.env.flush_all()
         self.assertNotIn("Guitar", self._render())
 
+    def test_two_sections_sharing_a_name_are_both_printed(self):
+        first, second = self.env["hr.resume.line.type"].create(
+            [{"name": "Tours", "sequence": 1}, {"name": "Tours", "sequence": 2}]
+        )
+        self.env["hr.resume.line"].create(
+            [
+                {
+                    "employee_id": self.employee.id,
+                    "name": "Europe",
+                    "line_type_id": first.id,
+                },
+                {
+                    "employee_id": self.employee.id,
+                    "name": "Asia",
+                    "line_type_id": second.id,
+                },
+            ]
+        )
+        self.env.flush_all()
+        html = self._render()
+        self.assertIn("Europe", html)
+        self.assertIn("Asia", html)
+
+    def test_a_lapsed_certification_is_not_printed_as_a_skill(self):
+        self.env["hr.employee.skill"].create(
+            {
+                "employee_id": self.employee.id,
+                "skill_id": self.certification.id,
+                "skill_level_id": self.level_certified.id,
+                "skill_type_id": self.certification_type.id,
+                "valid_from": self.today - relativedelta(years=2),
+                "valid_to": self.today - relativedelta(years=1),
+            },
+        )
+        self.env.flush_all()
+        self.assertIn(
+            self.certification, self.employee.current_employee_skill_ids.skill_id
+        )
+        self.assertNotIn("Conservatory", self._render())
+
     def _piano_rows(self):
         return self.employee.employee_skill_ids.filtered(
             lambda skill: skill.skill_id == self.skill_piano

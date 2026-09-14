@@ -124,24 +124,60 @@ class TestCertificationActivities(TransactionCase):
         activities = self._own_activities()
         self.assertFalse(activities)
 
-    def test_employee_with_wrong_certifications_gets_activity(self):
-        self.env["hr.employee.skill"].create(
+    def _hold(self, skill, level, valid_from, valid_to=False):
+        return self.env["hr.employee.skill"].create(
             {
                 "employee_id": self.t_employee_1.id,
-                "skill_id": self.t_cert_1.id,
-                "skill_level_id": self.t_cert_level_2.id,
+                "skill_id": skill.id,
+                "skill_level_id": level.id,
                 "skill_type_id": self.t_cert_type.id,
-                "valid_from": self.today,
-                "valid_to": False,
+                "valid_from": valid_from,
+                "valid_to": valid_to,
             },
         )
+
+    def test_employee_with_a_lower_level_gets_activity(self):
+        self._hold(self.t_cert_2, self.t_cert_level_1, self.today)
         activities = self._own_activities()
         self.assertEqual(len(activities), 2)
         self.assertEqual(
             self.t_job.job_skill_ids.mapped("display_name"),
             activities.mapped("summary"),
         )
-        self.assertEqual(set(activities.mapped("res_id")), set(self.t_employee_1.ids))
+
+    def test_a_higher_level_than_required_satisfies_it(self):
+        self._hold(self.t_cert_1, self.t_cert_level_2, self.today)
+        activities = self._own_activities()
+        self.assertEqual(
+            activities.mapped("summary"), self.t_job_cert_2.mapped("display_name")
+        )
+
+    def test_a_renewal_that_takes_over_counts_as_covered(self):
+        self._hold(self.t_cert_2, self.t_cert_level_2, self.today)
+        ends = self.today + relativedelta(months=1)
+        self._hold(
+            self.t_cert_1,
+            self.t_cert_level_1,
+            self.today - relativedelta(years=1),
+            ends,
+        )
+        self._hold(self.t_cert_1, self.t_cert_level_1, ends + relativedelta(days=1))
+        self.assertFalse(self._own_activities())
+
+    def test_a_certification_starting_later_does_not_cover_today(self):
+        self._hold(self.t_cert_2, self.t_cert_level_2, self.today)
+        self._hold(
+            self.t_cert_1, self.t_cert_level_1, self.today + relativedelta(days=10)
+        )
+        activities = self._own_activities()
+        self.assertEqual(
+            activities.mapped("summary"), self.t_job_cert_1.mapped("display_name")
+        )
+        self.assertEqual(activities.date_deadline, self.today)
+
+    def test_an_archived_job_requires_nothing(self):
+        self.t_job.active = False
+        self.assertFalse(self._own_activities())
 
     def test_employee_with_one_correct_certification_gets_one_activity(self):
         self.env["hr.employee.skill"].create(
