@@ -73,8 +73,9 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             self.push_to_end_point_mocked = patched_push
             yield
 
+    @staticmethod
     @contextmanager
-    def _patch_push_to_end_point(self):
+    def _patch_push_to_end_point():
         patched_push = MagicMock(name="push_to_end_point")
         with (
             patch.object(mixin_mail_thread, "push_to_end_point", patched_push),

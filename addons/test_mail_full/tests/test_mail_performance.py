@@ -293,6 +293,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
         # ratings values related to rating-enabled records
         cls.ratings_all = (
             cls.env["rating.rating"]
+            .with_user(cls.user_admin)
             .sudo()
             .create(
                 [
@@ -301,7 +302,6 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
                         "message_id": message.id,
                         "partner_id": record.customer_id.id,
                         "publisher_comment": "Comment",
-                        "publisher_id": cls.user_admin.partner_id.id,
                         "publisher_datetime": datetime(2023, 5, 15, 10, 30, 5)
                         - timedelta(days=2),
                         "rated_partner_id": record.user_id.partner_id.id,
