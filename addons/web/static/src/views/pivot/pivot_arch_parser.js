@@ -4,16 +4,27 @@
 import { evaluateExpr } from "@web/core/py_js/py";
 import { exprToBoolean } from "@web/core/utils/format/strings";
 import {
-    requiredAttribute,
+    irAttribute,
+    requiredIRAttribute,
     staticModifier,
     ViewArchParser,
 } from "@web/views/view_arch_parser";
+
+/**
+ * @typedef {import("@web/views/ir/view_ir_schema").ViewIRNode} ViewIRNode
+ * @typedef {import("@web/views/ir/view_ir_schema").PivotPivotAttrs} PivotAttrs
+ * @typedef {import("@web/views/ir/view_ir_schema").PivotFieldAttrs} PivotFieldAttrs
+ */
+
 /** @type {string[]} */
 const PIVOT_FIELD_ATTRS = ["name", "type", "operator", "interval", "string", "widget"];
 
 export class PivotArchParser extends ViewArchParser {
+    /** @type {"element" | "ir"} */
+    static consumes = "ir";
+
     /**
-     * @param {Element} arch
+     * @param {ViewIRNode | Element | string} arch
      * @param {Record<string, any>} [_models]
      * @param {string} [_modelName]
      * @returns {{
@@ -29,8 +40,8 @@ export class PivotArchParser extends ViewArchParser {
      * }}
      */
     parse(arch, _models, _modelName) {
-        return this.visitArch(
-            arch,
+        return this.visitIR(
+            this.toIR(arch),
             /** @type {any} */ ({
                 activeMeasures: [],
                 colGroupBys: [],
@@ -44,59 +55,55 @@ export class PivotArchParser extends ViewArchParser {
     }
 
     /**
-     * @param {Element} node
+     * @param {ViewIRNode} node
      * @param {any} archInfo
      */
     parseRootNode(node, archInfo) {
-        if (node.hasAttribute("disable_linking")) {
-            archInfo.disableLinking = exprToBoolean(
-                node.getAttribute("disable_linking"),
-            );
+        /** @type {PivotAttrs} */
+        const attrs = node.attrs || {};
+        if (attrs.disable_linking !== undefined) {
+            archInfo.disableLinking = exprToBoolean(attrs.disable_linking);
         }
-        if (node.hasAttribute("default_order")) {
-            archInfo.defaultOrder = node.getAttribute("default_order");
+        if (attrs.default_order !== undefined) {
+            archInfo.defaultOrder = attrs.default_order;
         }
-        if (node.hasAttribute("string")) {
-            archInfo.title = node.getAttribute("string");
+        if (attrs.string !== undefined) {
+            archInfo.title = attrs.string;
         }
-        if (node.hasAttribute("display_quantity")) {
-            archInfo.displayQuantity = exprToBoolean(
-                node.getAttribute("display_quantity"),
-            );
+        if (attrs.display_quantity !== undefined) {
+            archInfo.displayQuantity = exprToBoolean(attrs.display_quantity);
         }
     }
 
     /**
-     * @param {Element} node
+     * @param {ViewIRNode} node
      * @param {any} archInfo
      */
     parseFieldNode(node, archInfo) {
-        const name = requiredAttribute(node, "name");
+        const name = requiredIRAttribute(node, "name");
+        /** @type {PivotFieldAttrs} */
+        const nodeAttrs = node.attrs || {};
         const attrs = (archInfo.fieldAttrs[name] ??= {});
-        if (node.hasAttribute("string")) {
-            attrs.string = node.getAttribute("string");
+        if (nodeAttrs.string !== undefined) {
+            attrs.string = nodeAttrs.string;
         }
-        if (staticModifier(node.getAttribute("invisible"))) {
+        if (staticModifier(irAttribute(node, "invisible"))) {
             attrs.isInvisible = true;
             return;
         }
-        for (const attribute of node.attributes) {
-            if (PIVOT_FIELD_ATTRS.includes(attribute.name)) {
+        for (const [attribute, value] of Object.entries(nodeAttrs)) {
+            if (PIVOT_FIELD_ATTRS.includes(attribute)) {
                 continue;
             }
-            attrs[attribute.name] =
-                attribute.name === "options"
-                    ? evaluateExpr(attribute.value)
-                    : attribute.value;
+            attrs[attribute] = attribute === "options" ? evaluateExpr(value) : value;
         }
 
-        const interval = node.getAttribute("interval");
-        const groupBy = interval ? `${name}:${interval}` : name;
-        if (node.hasAttribute("widget")) {
-            archInfo.widgets[groupBy] = node.getAttribute("widget");
+        const groupBy = nodeAttrs.interval ? `${name}:${nodeAttrs.interval}` : name;
+        if (nodeAttrs.widget !== undefined) {
+            archInfo.widgets[groupBy] = nodeAttrs.widget;
         }
-        const type = node.getAttribute("type");
-        if (type === "measure" || node.hasAttribute("operator")) {
+        const type = nodeAttrs.type;
+        if (type === "measure" || nodeAttrs.operator !== undefined) {
             archInfo.activeMeasures.push(groupBy);
         }
         if (type === "col") {

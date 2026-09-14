@@ -1588,6 +1588,7 @@ export interface PivotFieldAttrs {
     interval?: string;
     invisible?: string;
     name?: string;
+    operator?: string;
     options?: string;
     position?: "after" | "before" | "inside" | "replace" | "attributes" | "move";
     role?: string;
