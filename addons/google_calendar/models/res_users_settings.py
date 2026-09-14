@@ -168,15 +168,14 @@ class ResUsersSettings(models.Model):
         self.check_singleton()
 
         try:
-            access_token, ttl = self.env["google.service"]._refresh_google_token(
-                "calendar", self.sudo().google_calendar_rtoken
+            _access_token, ttl = self.env["google.service"]._refresh_google_token(
+                "calendar", self.sudo().google_calendar_credential_id
             )
-            self.sudo().write(
-                {
-                    "google_calendar_token": access_token,
-                    "google_calendar_token_validity": fields.Datetime.now()
-                    + timedelta(seconds=ttl),
-                }
+            self.sudo().google_calendar_token_validity = (
+                fields.Datetime.now() + timedelta(seconds=ttl)
+            )
+            self.invalidate_recordset(
+                ["google_calendar_token", "google_calendar_rtoken"]
             )
         except requests.HTTPError as error:
             if error.response.status_code in (

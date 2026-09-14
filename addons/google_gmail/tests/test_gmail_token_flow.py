@@ -70,17 +70,41 @@ class TestGmailTokenFlow(EncryptionKeyCase, TransactionCase):
         self.assertEqual((refresh, access), ("RT", "AT"))
         self.assertGreaterEqual(expiration, before + 1000)
 
-    def test_access_token_uses_credentials_when_configured(self):
-        """With client credentials set, the direct Google endpoint is used."""
+    def test_renewing_runs_the_refresh_grant_on_the_servers_credential(self):
+        """With client credentials set, renewal refreshes through the server's credential."""
+        server = self.env["ir.mail_server"].create(
+            {"name": "Gmail probe", "smtp_host": "smtp.gmail.com"}
+        )
+        server._oauth2_store_tokens(access_token="AT1", refresh_token="RT")
         payload = {"access_token": "AT2", "expires_in": 500}
+        before = int(time.time())
         with patch.object(
             GuardedSession,
             "request",
             return_value=self._response(payload=payload),
         ) as post:
-            access, _expiration = self.Mixin._get_gmail_access_token("RT")
-        self.assertEqual(access, "AT2")
+            server._renew_gmail_access_token()
         post.assert_called_once()
+        self.assertEqual(post.call_args.kwargs["data"]["refresh_token"], "RT")
+        self.assertEqual(server.google_gmail_access_token, "AT2")
+        self.assertEqual(server.google_gmail_refresh_token, "RT")
+        self.assertGreaterEqual(
+            server.google_gmail_access_token_expiration, before + 500
+        )
+
+    def test_a_refused_refresh_is_a_user_error(self):
+        """A refused refresh grant surfaces as a UserError (negative)."""
+        server = self.env["ir.mail_server"].create(
+            {"name": "Gmail probe", "smtp_host": "smtp.gmail.com"}
+        )
+        server._oauth2_store_tokens(access_token="AT1", refresh_token="RT")
+        with (
+            patch.object(
+                GuardedSession, "request", return_value=self._response(ok=False)
+            ),
+            self.assertRaises(UserError),
+        ):
+            server._renew_gmail_access_token()
 
     def test_iap_http_error_rejected(self):
         """An IAP transport failure surfaces as a UserError (negative)."""

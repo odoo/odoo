@@ -70,12 +70,12 @@ class TestOutlookTokenFlow(EncryptionKeyCase, TransactionCase):
         self.assertEqual((refresh, access), ("RT", "AT"))
         self.assertGreaterEqual(expiration, before + 1000)
 
-    def test_access_token_uses_credentials_when_configured(self):
-        """With client credentials set, the direct Microsoft endpoint is used.
-
-        Unlike Gmail, Microsoft rotates the refresh token: the method
-        returns a 4-tuple (refresh, access, id_token, expiration).
-        """
+    def test_renewing_stores_the_rotated_refresh_token(self):
+        """Microsoft rotates the refresh token: renewal keeps the new one on the credential."""
+        server = self.env["ir.mail_server"].create(
+            {"name": "Outlook probe", "smtp_host": "smtp.office365.com"}
+        )
+        server._oauth2_store_tokens(access_token="AT1", refresh_token="RT")
         payload = {
             "refresh_token": "RT2",
             "access_token": "AT2",
@@ -87,11 +87,15 @@ class TestOutlookTokenFlow(EncryptionKeyCase, TransactionCase):
             "request",
             return_value=self._response(payload=payload),
         ) as post:
-            refresh, access, id_token, _expiration = (
-                self.Mixin._get_outlook_access_token("RT")
-            )
-        self.assertEqual((refresh, access, id_token), ("RT2", "AT2", "IDT"))
+            server._renew_outlook_access_token()
         post.assert_called_once()
+        self.assertEqual(
+            (
+                server.microsoft_outlook_refresh_token,
+                server.microsoft_outlook_access_token,
+            ),
+            ("RT2", "AT2"),
+        )
 
     def test_iap_http_error_rejected(self):
         """An IAP transport failure surfaces as a UserError (negative)."""

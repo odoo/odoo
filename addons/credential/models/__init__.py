@@ -4,3 +4,4 @@ from . import credential_category_field
 from . import credential_credential
 from . import credential_access_log
 from . import credential_use
+from . import credential_oauth2

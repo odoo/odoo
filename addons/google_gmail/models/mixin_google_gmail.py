@@ -1,4 +1,3 @@
-import time
 
 from odoo import api, fields, models
 
@@ -94,22 +93,6 @@ class MixinGoogleGmail(models.AbstractModel):
         """
         return self._oauth2_get_refresh_token(GMAIL, authorization_code)
 
-    def _get_gmail_access_token(self, refresh_token):
-        """Refresh the access token thanks to the refresh token.
-
-        :return:
-            access_token, access_token_expiration
-        """
-        client_id, client_secret = self._oauth2_credentials(GMAIL)
-        if not client_id or not client_secret:
-            return self._get_gmail_access_token_iap(refresh_token)
-
-        response = self._get_gmail_token("refresh_token", refresh_token=refresh_token)
-        return (
-            response["access_token"],
-            int(time.time()) + int(response["expires_in"]),
-        )
-
     def _get_gmail_token(self, grant_type, **values):
         return self._oauth2_get_token(GMAIL, grant_type, **values)
 
@@ -127,15 +110,20 @@ class MixinGoogleGmail(models.AbstractModel):
         return self._oauth2_generate_string(GMAIL, user, self._renew_gmail_access_token)
 
     def _renew_gmail_access_token(self):
-        access_token, expiration = self._get_gmail_access_token(
-            self.google_gmail_refresh_token
-        )
-        self.write(
-            {
-                "google_gmail_access_token": access_token,
-                "google_gmail_access_token_expiration": expiration,
-            }
-        )
+        client_id, client_secret = self._oauth2_credentials(GMAIL)
+        if not client_id or not client_secret:
+            access_token, expiration = self._get_gmail_access_token_iap(
+                self.google_gmail_refresh_token
+            )
+            self.write(
+                {
+                    "google_gmail_access_token": access_token,
+                    "google_gmail_access_token_expiration": expiration,
+                }
+            )
+            return
+        _access_token, expiration = self._oauth2_refresh_access_token(GMAIL)
+        self.google_gmail_access_token_expiration = expiration
 
     def _get_gmail_csrf_token(self):
         return self._oauth2_csrf_token(GMAIL)

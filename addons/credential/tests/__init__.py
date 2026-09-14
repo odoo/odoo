@@ -19,3 +19,4 @@ from . import test_system_secret
 from . import test_request_source_ip
 from . import test_every_category_declares_its_fields
 from . import test_secret_use_counter
+from . import test_oauth2_refresh

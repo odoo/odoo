@@ -112,24 +112,14 @@ class GoogleService(models.AbstractModel):
                 error_msg
             ) from e
 
-    def _refresh_google_token(self, service, rtoken):
-        ICP = self.env["ir.config_parameter"].sudo()
-
-        headers = {"content-type": "application/x-www-form-urlencoded"}
-        data = {
-            "refresh_token": rtoken,
-            "client_id": self._get_client_id(service),
-            "client_secret": _get_client_secret(ICP, service),
-            "grant_type": "refresh_token",
-        }
-        _status, response, _ask_time = self._do_request(
+    def _refresh_google_token(self, service, credential):
+        return credential._oauth2_refresh(
             GOOGLE_TOKEN_ENDPOINT,
-            params=data,
-            headers=headers,
-            method="POST",
-            preuri="",
+            self._get_client_id(service),
+            _get_client_secret(self.env["ir.config_parameter"].sudo(), service),
+            purpose="google_api",
+            timeout=TIMEOUT,
         )
-        return response.get("access_token"), response.get("expires_in")
 
     @api.model
     def _do_request(

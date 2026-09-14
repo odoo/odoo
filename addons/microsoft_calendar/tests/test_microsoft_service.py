@@ -4,6 +4,7 @@ from unittest.mock import MagicMock, call, patch
 import requests
 
 from odoo import fields
+from odoo.libs.guarded_http import GuardedSession
 from odoo.tests import TransactionCase
 
 from odoo.addons.microsoft_account.models.microsoft_service import (
@@ -601,45 +602,42 @@ class TestMicrosoftService(EncryptionKeyCase, TransactionCase):
             [self.call_with_sync_token, self.call_without_sync_token]
         )
 
-    @patch.object(MicrosoftService, "_do_request")
-    def test_refresh_microsoft_calendar_token_uses_correct_endpoint(
-        self, mock_do_request
-    ):
+    def test_refresh_microsoft_calendar_token_uses_correct_endpoint(self):
         # Ensure we use the correct endpoint (useful for single/multi-tenant deployments).
-        mock_do_request.return_value = self._do_request_result(
-            {
-                "access_token": "dummy_access_token",
-                "token_type": "Bearer",
-                "expires_in": 3599,
-                "scope": "Mail.Read User.Read",
-                "refresh_token": "dummy_refresh_token",
-            }
-        )
+        response = MagicMock(ok=True)
+        response.json.return_value = {
+            "access_token": "dummy_access_token",
+            "token_type": "Bearer",
+            "expires_in": 3599,
+            "scope": "Mail.Read User.Read",
+            "refresh_token": "dummy_refresh_token",
+        }
         IrParameter = self.env["ir.config_parameter"].sudo()
         IrParameter.set_param("microsoft_calendar_client_id", "dummy_client_id")
         self.env["credential.credential"]._set_system_secret(
             "microsoft_calendar_client_secret", "dummy_client_secret"
         )
+        self.env.user._set_microsoft_auth_tokens("access", "refresh", 0)
 
-        self.env.user._refresh_microsoft_calendar_token()
+        with patch.object(GuardedSession, "request", return_value=response) as sent:
+            self.env.user._refresh_microsoft_calendar_token()
 
-        custom_token_endpoint = (
-            "https://login.microsoftonline.com/dummy_tenant_id/oauth2/v2.0/token"
+            custom_token_endpoint = (
+                "https://login.microsoftonline.com/dummy_tenant_id/oauth2/v2.0/token"
+            )
+            IrParameter.set_param(
+                "microsoft_account.token_endpoint", custom_token_endpoint
+            )
+            self.env.user.microsoft_calendar_credential_id.oauth_token_date_expiration = False
+            self.env.user._refresh_microsoft_calendar_token()
+
+        self.assertEqual(
+            [call.args[1] for call in sent.call_args_list],
+            [DEFAULT_MICROSOFT_TOKEN_ENDPOINT, custom_token_endpoint],
         )
-        IrParameter.set_param("microsoft_account.token_endpoint", custom_token_endpoint)
-        self.env.user._refresh_microsoft_calendar_token()
-
-        kwargs = {
-            "params": {
-                "client_id": "dummy_client_id",
-                "client_secret": "dummy_client_secret",
-                "grant_type": "refresh_token",
-                "refresh_token": False,
-            },
-            "headers": {"Content-type": "application/x-www-form-urlencoded"},
-            "method": "POST",
-            "preuri": "",
-        }
-        first_call = call(DEFAULT_MICROSOFT_TOKEN_ENDPOINT, **kwargs)
-        second_call = call(custom_token_endpoint, **kwargs)
-        mock_do_request.assert_has_calls([first_call, second_call])
+        data = sent.call_args.kwargs["data"]
+        self.assertEqual(
+            (data["client_id"], data["client_secret"], data["grant_type"]),
+            ("dummy_client_id", "dummy_client_secret", "refresh_token"),
+        )
+        self.assertEqual(data["refresh_token"], "dummy_refresh_token")

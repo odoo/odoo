@@ -221,6 +221,29 @@ class MixinOauth2MailProvider(models.AbstractModel):
             int(time.time()) + int(response["expires_in"]),
         )
 
+    def _oauth2_refresh_access_token(self, provider):
+        self.check_singleton()
+        client_id, client_secret = self._oauth2_credentials(provider)
+        extra = {"redirect_uri": self._oauth2_redirect_uri(provider)}
+        if provider.token_sends_scope:
+            extra["scope"] = provider.resolve(provider.scope, self)
+        try:
+            access_token, seconds = self.oauth2_credential_id._oauth2_refresh(
+                provider.resolve(provider.token_url, self),
+                client_id,
+                client_secret,
+                purpose="mail_oauth2",
+                policy="private",
+                timeout=OAUTH2_TOKEN_REQUEST_TIMEOUT,
+                extra=extra,
+            )
+        except requests.HTTPError as error:
+            raise UserError(
+                self._oauth2_token_error(provider, error.response)
+            ) from error
+        self.invalidate_recordset()
+        return access_token, int(time.time()) + seconds
+
     def _oauth2_get_token(self, provider, grant_type, **values):
         client_id, client_secret = self._oauth2_credentials(provider)
         data = {

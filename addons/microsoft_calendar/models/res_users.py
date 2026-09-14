@@ -59,15 +59,14 @@ class ResUsers(models.Model):
     def _refresh_microsoft_calendar_token(self, service="calendar"):
         self.check_singleton()
         try:
-            access_token, ttl = self.env["microsoft.service"]._refresh_microsoft_token(
-                "calendar", self.sudo().microsoft_calendar_rtoken
+            _access_token, ttl = self.env["microsoft.service"]._refresh_microsoft_token(
+                "calendar", self.sudo().microsoft_calendar_credential_id
             )
-            self.sudo().write(
-                {
-                    "microsoft_calendar_token": access_token,
-                    "microsoft_calendar_token_validity": fields.Datetime.now()
-                    + timedelta(seconds=ttl),
-                }
+            self.sudo().microsoft_calendar_token_validity = (
+                fields.Datetime.now() + timedelta(seconds=ttl)
+            )
+            self.invalidate_recordset(
+                ["microsoft_calendar_token", "microsoft_calendar_rtoken"]
             )
         except requests.HTTPError as error:
             if error.response.status_code in (

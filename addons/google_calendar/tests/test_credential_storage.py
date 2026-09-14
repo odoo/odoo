@@ -1,3 +1,6 @@
+from unittest.mock import MagicMock, patch
+
+from odoo.libs.guarded_http import GuardedSession
 from odoo.tests import TransactionCase, tagged
 
 from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
@@ -93,3 +96,19 @@ class TestGoogleCredentials(EncryptionKeyCase, TransactionCase):
             "the migration drops the columns; a nulled one still sits in every "
             "backup taken before it was nulled",
         )
+
+    def test_an_expired_token_is_refreshed_and_the_new_one_is_returned(self):
+        self.settings._set_google_auth_tokens("stale-access", "the-refresh", 0)
+        response = MagicMock(ok=True)
+        response.json.return_value = {
+            "access_token": "fresh-access",
+            "expires_in": 3600,
+        }
+
+        with patch.object(GuardedSession, "request", return_value=response) as sent:
+            token = self.user._get_google_calendar_token()
+
+        self.assertEqual(token, "fresh-access")
+        self.assertEqual(sent.call_args.kwargs["data"]["refresh_token"], "the-refresh")
+        self.assertTrue(self.settings._is_google_calendar_valid())
+        self.assertEqual(self.settings.google_calendar_rtoken, "the-refresh")

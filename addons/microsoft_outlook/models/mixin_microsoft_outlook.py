@@ -1,4 +1,3 @@
-import time
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
@@ -105,24 +104,6 @@ class MixinMicrosoftOutlook(models.AbstractModel):
         """
         return self._oauth2_get_refresh_token(OUTLOOK, authorization_code)
 
-    def _get_outlook_access_token(self, refresh_token):
-        """Refresh the access token thanks to the refresh token.
-
-        :return:
-            refresh_token, access_token, id_token, access_token_expiration
-        """
-        client_id, client_secret = self._oauth2_credentials(OUTLOOK)
-        if not client_id or not client_secret:
-            return self._get_outlook_access_token_iap(refresh_token)
-
-        response = self._get_outlook_token("refresh_token", refresh_token=refresh_token)
-        return (
-            response["refresh_token"],
-            response["access_token"],
-            response["id_token"],
-            int(time.time()) + int(response["expires_in"]),
-        )
-
     def _get_outlook_token(self, grant_type, **values):
         return self._oauth2_get_token(OUTLOOK, grant_type, **values)
 
@@ -144,12 +125,17 @@ class MixinMicrosoftOutlook(models.AbstractModel):
             raise UserError(
                 _("Please connect with your Outlook account before using it.")
             )
-        (
-            self.microsoft_outlook_refresh_token,
-            self.microsoft_outlook_access_token,
-            _id_token,
-            self.microsoft_outlook_access_token_expiration,
-        ) = self._get_outlook_access_token(self.microsoft_outlook_refresh_token)
+        client_id, client_secret = self._oauth2_credentials(OUTLOOK)
+        if not client_id or not client_secret:
+            (
+                self.microsoft_outlook_refresh_token,
+                self.microsoft_outlook_access_token,
+                _id_token,
+                self.microsoft_outlook_access_token_expiration,
+            ) = self._get_outlook_access_token_iap(self.microsoft_outlook_refresh_token)
+            return
+        _access_token, expiration = self._oauth2_refresh_access_token(OUTLOOK)
+        self.microsoft_outlook_access_token_expiration = expiration
 
     def _get_outlook_csrf_token(self):
         return self._oauth2_csrf_token(OUTLOOK)

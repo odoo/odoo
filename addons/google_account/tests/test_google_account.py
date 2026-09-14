@@ -91,12 +91,24 @@ class TestGoogleService(EncryptionKeyCase, TransactionCase):
             with self.assertRaises(UserError):
                 self.service._get_google_tokens("bad-code", "gmail", "https://cb")
 
-    def test_refresh_google_token_returns_access_and_expiry(self):
-        """Refreshing a token returns the new access token and its expiry."""
-        with patch(
-            f"{MODULE}.GoogleService._do_request",
-            return_value=(200, {"access_token": "AT2", "expires_in": 1800}, False),
-        ):
+    def test_refresh_google_token_goes_through_the_credential(self):
+        """Refreshing a token runs the credential's refresh grant with Google's endpoint."""
+        self.icp.set_param("google_calendar_client_id", "CID")
+        credential = self.env["credential.credential"].create(
+            {
+                "name": "Google probe",
+                "category_id": self.env.ref("credential.credential_category_oauth2").id,
+                "oauth_access_token": "AT1",
+                "oauth_refresh_token": "rtoken",
+            }
+        )
+        response = MagicMock(ok=True)
+        response.json.return_value = {"access_token": "AT2", "expires_in": 1800}
+        with patch.object(GuardedSession, "request", return_value=response) as sent:
             self.assertEqual(
-                self.service._refresh_google_token("gmail", "rtoken"), ("AT2", 1800)
+                self.service._refresh_google_token("calendar", credential),
+                ("AT2", 1800),
             )
+        self.assertEqual(sent.call_args.args[1], GOOGLE_TOKEN_ENDPOINT)
+        self.assertEqual(sent.call_args.kwargs["data"]["client_id"], "CID")
+        self.assertEqual(credential.oauth_access_token, "AT2")
