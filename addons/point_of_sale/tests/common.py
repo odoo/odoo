@@ -2,6 +2,7 @@ import logging
 from datetime import datetime
 from itertools import starmap
 from random import randint
+from unittest.mock import patch
 
 from odoo import fields, models, tools
 from odoo.fields import Command
@@ -24,9 +25,14 @@ def archive_products(env):
     Naming the tip here instead duplicated that extension point with a fixed
     list of one, so this raised as soon as any of them was installed.
     """
-    all_pos_product = env["product.template"].search([("available_in_pos", "=", True)])
+    Template = env["product.template"]
+    all_pos_product = Template.search([("available_in_pos", "=", True)])
     reserved = all_pos_product._filtered_pos_special_products()
-    (all_pos_product - reserved).write({"active": False})
+    # demo data leaves sessions open, and the fixtures replace the whole catalog
+    with patch.object(
+        type(Template), "_is_blocked_by_open_pos_session", return_value=False
+    ):
+        (all_pos_product - reserved).write({"active": False})
 
 
 class CommonPosTest(ValuationReconciliationTestCommon):
