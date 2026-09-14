@@ -7,7 +7,7 @@ from lxml.builder import E
 from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import _, config, frozendict
+from odoo.tools import TransactionMemo, _, config, frozendict
 from odoo.tools.view_ir import from_arch, from_string
 
 from .ir_ui_view import _xpath_descendant_field
@@ -17,6 +17,10 @@ if TYPE_CHECKING:
 
 _logger = logging.getLogger(__name__)
 _debug = DebugLog(__name__)
+MODEL_ACCESS = TransactionMemo(
+    "ir_ui_view_model_access",
+    invalidated_by=("res.users", "res.groups", "ir.model.access"),
+)
 
 
 _xpath_groups_key = etree.ETXPath("//*[@__groups_key__]")
@@ -417,16 +421,22 @@ class Base(models.AbstractModel):
         group_keys, model_accesses = capabilities
         definitions = self.env["res.groups"]._get_group_definitions()
         user_group_ids = self.env.user._get_group_ids()
+        accessed = MODEL_ACCESS(self.env).setdefault((self.env.uid, self.env.su), {})
 
         def access(model_name: str) -> tuple[str, bool, bool, bool]:
+            try:
+                return accessed[model_name]
+            except KeyError:
+                pass
             model = self.env[model_name]
-            return (
+            accessed[model_name] = result = (
                 model_name,
                 *(
                     bool(model.has_access(operation))
                     for operation in ("create", "write", "unlink")
                 ),
             )
+            return result
 
         accesses = []
         for model_name, group_by_name in model_accesses:

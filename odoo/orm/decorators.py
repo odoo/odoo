@@ -176,8 +176,8 @@ def is_readonly(model_class: type, method_name: str) -> bool:
     """Whether ``method_name`` is declared read-only on ``model_class``: the
     nearest definition in the MRO that says so decides, so an override that
     does not restate the decorator inherits the declaration below it."""
-    for cls in model_class.mro():
-        method = getattr(cls, method_name, None)
+    for cls in model_class.__mro__:
+        method = cls.__dict__.get(method_name)
         if method is not None and hasattr(method, "_readonly"):
             return bool(method._readonly)
     return False

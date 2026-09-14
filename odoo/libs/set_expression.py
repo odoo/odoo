@@ -26,10 +26,11 @@ class SetDefinition(TypedDict):
 
 
 class SetDefinitions:
-    __slots__ = ("__leaves",)
+    __slots__ = ("__from_key", "__leaves")
 
     def __init__(self, definitions: dict[int, SetDefinition]) -> None:
         self.__leaves: dict[int | str, Leaf] = {}
+        self.__from_key: dict[str, SetExpression] = {}
 
         for leaf_id, info in definitions.items():
             ref = info["ref"]
@@ -115,6 +116,14 @@ class SetDefinitions:
         return SetExpression(Inter([self.__leaves[leaf_id]]) for leaf_id in ids)
 
     def from_key(self, key: str) -> SetExpression:
+        try:
+            return self.__from_key[key]
+        except KeyError:
+            pass
+        expression = self.__from_key[key] = self._parse_key(key)
+        return expression
+
+    def _parse_key(self, key: str) -> SetExpression:
         union_tuple = ast.literal_eval(key)
         return SetExpression(
             [
