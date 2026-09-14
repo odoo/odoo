@@ -930,18 +930,15 @@ class HrLeaveType(models.Model):
             allocation: {"expiration_date": False, "no_expiring_days": 0}
             for allocation in allocations
         }
-        fake_allocations = self.env["hr.leave.allocation"]
+        projected = self.env["hr.leave.allocation"].with_context(
+            default_date_from=target_date
+        )
+        fake_allocations = projected.browse()
         for allocation in allocations.filtered(
             lambda allocation: allocation.allocation_type == "accrual"
         ):
-            fake_allocations |= (
-                self.env["hr.leave.allocation"]
-                .with_context(default_date_from=target_date)
-                .new(origin=allocation)
-            )
-        fake_allocations.sudo().with_context(
-            default_date_from=target_date
-        )._process_accrual_plans(target_date, log=False)
+            fake_allocations |= projected.new(origin=allocation)
+        fake_allocations.sudo()._process_accrual_plans(target_date, log=False)
         for fake_allocation in fake_allocations:
             carried_over_days_expiration_data[fake_allocation._origin] = {
                 "expiration_date": fake_allocation.carried_over_days_expiration_date,

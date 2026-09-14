@@ -1038,9 +1038,7 @@ class HrLeaveAllocation(models.Model):
             .with_context(default_date_from=accrual_date)
             .new(origin=self)
         )
-        fake_allocation.sudo().with_context(
-            default_date_from=accrual_date
-        )._process_accrual_plans(accrual_date, log=False)
+        fake_allocation.sudo()._process_accrual_plans(accrual_date, log=False)
         if self.holiday_status_id.request_unit == "hour":
             res = float_round(
                 fake_allocation.number_of_hours_display - self.number_of_hours_display,
