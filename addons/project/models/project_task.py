@@ -2242,6 +2242,11 @@ class ProjectTask(models.Model):
             )
             vals["project_id"] = project_id
 
+        if "date_start_effective" in vals:
+            date_start_effective = vals.pop("date_start_effective")
+            if "date_start" in fields and not vals.get("date_start"):
+                vals["date_start"] = date_start_effective
+
         if "state" in fields and vals.get("state") == "blocked":
             vals["state"] = "in_progress"
 
