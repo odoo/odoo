@@ -1,3 +1,5 @@
+import pytest
+
 from odoo import fields, models
 from odoo.fields import Domain
 from odoo.orm.model_test_env import model_test_env
@@ -80,3 +82,23 @@ def test_has_cycle_walks_the_relation_in_memory():
         assert tree["root"]._has_cycle("parent_id")
         assert tree["child"]._has_cycle("parent_id")
         assert not tree["stranger"]._has_cycle("parent_id")
+
+
+class Leaf(models.Model):
+    _name = "d.leaf"
+    _module = "odoo.addons.test_descendants_harness"
+    _description = "a model with no parent field"
+
+    name = fields.Char()
+    node_id = fields.Many2one("d.node")
+
+
+def test_child_of_without_a_parent_field_names_what_is_missing():
+    with model_test_env(Node, Leaf) as env:
+        leaf = env["d.leaf"].create({"name": "leaf"})
+        with pytest.raises(ValueError, match=r"d\.leaf\.parent_id: no such field"):
+            env["d.leaf"].search([("id", "child_of", leaf.id)])
+        # the many2one names its comodel, whose parent field exists
+        tree = _tree(env)
+        leaf.node_id = tree["child"]
+        assert env["d.leaf"].search([("node_id", "child_of", tree["root"].id)]) == leaf

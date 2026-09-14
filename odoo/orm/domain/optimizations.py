@@ -693,6 +693,11 @@ def _optimize_hierarchy(condition, model):
             parent = condition.field_expr
         if field.is_many2one:
             field = model._fields["id"]
+    if parent not in comodel._fields:
+        raise condition._prepare_condition_error(
+            f"Cannot execute {condition.operator} through {comodel._name}.{parent}: "
+            f"no such field; set _parent_name on the model or name the many2one"
+        )
     if isinstance(value, (int, str)):
         value = [value]
     elif not isinstance(value, COLLECTION_TYPES):
