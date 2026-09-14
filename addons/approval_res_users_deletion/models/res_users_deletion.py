@@ -1,6 +1,6 @@
 from typing import Any
 
-from odoo import _, api, fields, models
+from odoo import SUPERUSER_ID, _, api, fields, models
 
 
 class ResUsersDeletion(models.Model):
@@ -17,7 +17,7 @@ class ResUsersDeletion(models.Model):
         requests = super().create(vals_list)
         if self.env.context.get("approval_skip"):
             return requests
-        for deletion in requests:
+        for deletion in requests.with_user(SUPERUSER_ID):
             if deletion.approval_required and not deletion.approval_request_id:
                 deletion.action_create_approval_request()
         return requests

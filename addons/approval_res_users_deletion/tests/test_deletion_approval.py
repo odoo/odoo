@@ -46,6 +46,22 @@ class TestDeletionApproval(TransactionCase):
         self.assertEqual(deletion.state, "done")
 
     @mute_logger("odoo.addons.base.models.res_users_deletion")
+    def test_a_user_deleting_their_own_account_leaves_no_reference_to_it(self):
+        user = self._portal_user("portal_leaving")
+        user.with_user(user).sudo()._deactivate_portal_user()
+        deletion = self._request_for(user)
+        request = deletion.approval_request_id
+        self.assertEqual(deletion.approval_state, "approved")
+        self.assertNotEqual(request.request_owner_id, user)
+        self.assertEqual(request.partner_id, user.partner_id)
+        self.assertNotIn(user, request.decision_log_ids.user_id)
+
+        self._run_cron()
+        self.assertFalse(user.exists())
+        self.assertEqual(deletion.state, "done")
+        self.assertTrue(request.exists())
+
+    @mute_logger("odoo.addons.base.models.res_users_deletion")
     def test_without_the_rule_an_administrator_decides(self):
         self.rule.active = False
         user = self._portal_user("portal_reviewed")
