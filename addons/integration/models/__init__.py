@@ -3,6 +3,7 @@ from . import mixin_inbound_gate
 from . import mixin_integration_channel
 from . import integration_exchange
 from . import mixin_integration_receiver
+from . import integration_receiver
 from . import integration_service
 from . import integration_connection
 from . import response_cache

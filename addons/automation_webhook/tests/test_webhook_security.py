@@ -4,6 +4,7 @@ import importlib.util
 from pathlib import Path
 
 from odoo import fields
+from odoo.exceptions import ValidationError
 from odoo.tests import TransactionCase, tagged
 
 from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
@@ -142,3 +143,30 @@ class TestWebhookSecurity(EncryptionKeyCase, TransactionCase):
         remaining = rule.webhook_enforce_from - fields.Datetime.now()
         self.assertEqual(round(remaining.total_seconds() / 86400), 30)
         self.assertTrue(rule._check_webhook_request({}, self.body, "1.2.3.4")[0])
+
+    def _calls(self, rule):
+        self.env.cr.precommit.run()
+        return self.env["integration.exchange"].search(
+            [("channel_id", "=", f"automation.rule,{rule.id}")]
+        )
+
+    def test_every_call_is_recorded_without_its_body_unless_asked(self):
+        rule = self._new_rule(auth_type="none")
+
+        rule._execute_webhook({"secret_field": "value"})
+
+        call = self._calls(rule)
+        self.assertEqual(len(call), 1)
+        self.assertEqual(call.state, "success")
+        self.assertFalse(call.request_payload)
+        self.assertNotIn(rule.webhook_uuid, call.request_url)
+
+    def test_a_failing_call_is_recorded_with_its_error(self):
+        rule = self._new_rule(auth_type="none", record_getter="model.browse([])")
+
+        with self.assertRaises(ValidationError):
+            rule._execute_webhook({"id": 1})
+
+        call = self._calls(rule)
+        self.assertEqual(call.state, "failed")
+        self.assertEqual(call.status_code, 500)

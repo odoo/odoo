@@ -259,19 +259,25 @@ class IntegrationExchange(models.Model):
         "External event ID must be unique per channel!",
     )
 
+    _CHANNEL_MIXINS = ("mixin.integration.channel", "mixin.inbound.gate")
+
     @api.model
     def _selection_channel_models(self):
-        mixin_cls = self.env.registry.get("mixin.integration.channel")
-        if not mixin_cls:
+        roots = [
+            self.env.registry.get(name)
+            for name in self._CHANNEL_MIXINS
+            if self.env.registry.get(name)
+        ]
+        if not roots:
             return [("integration.service", "Outbound Service")]
 
         channels = []
         visited = set()
-        queue = list(mixin_cls._inherit_children)
+        queue = [child for root in roots for child in root._inherit_children]
 
         while queue:
             child_name = queue.pop(0)
-            if child_name in visited or child_name == "mixin.integration.channel":
+            if child_name in visited or child_name in self._CHANNEL_MIXINS:
                 continue
             visited.add(child_name)
 

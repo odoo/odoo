@@ -639,15 +639,15 @@ record.write({'state': next_states.get(current, 'cancel')})
             }
         )
 
-        # Clear existing logs
-        initial_log_count = self.env["ir.logging"].sudo().search_count([])
-
-        # Execute webhook
         automation._execute_webhook({"test": "logging"})
+        self.env.cr.precommit.run()
 
-        # Should create log entry
-        final_log_count = self.env["ir.logging"].sudo().search_count([])
-        self.assertGreater(final_log_count, initial_log_count)
+        call = self.env["integration.exchange"].search(
+            [("channel_id", "=", f"automation.rule,{automation.id}")]
+        )
+        self.assertEqual(len(call), 1)
+        self.assertEqual(call.state, "success")
+        self.assertIn("logging", call.request_payload)
 
     def test_webhook_logging_error(self):
         """Test webhook logs errors when log_webhook_calls is enabled."""
@@ -678,13 +678,13 @@ record.write({'state': next_states.get(current, 'cancel')})
         with contextlib.suppress(ValidationError):
             automation._execute_webhook({})
 
-        # Should have logged error
-        error_logs = (
-            self.env["ir.logging"]
-            .sudo()
-            .search([("level", "=", "ERROR")], order="id desc", limit=1)
+        self.env.cr.precommit.run()
+
+        call = self.env["integration.exchange"].search(
+            [("channel_id", "=", f"automation.rule,{automation.id}")]
         )
-        self.assertTrue(error_logs)
+        self.assertEqual(call.state, "failed")
+        self.assertIn("No record to run the automation on", call.error_message)
 
     # =========================================================================
     # Test Webhook with Different Models

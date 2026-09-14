@@ -13,7 +13,7 @@ from requests.auth import HTTPDigestAuth
 from urllib3.exceptions import ReadTimeoutError
 from urllib3.util.retry import Retry
 
-from odoo import _, api, fields
+from odoo import _, fields
 from odoo.exceptions import UserError
 from odoo.libs import netguard, redact
 from odoo.libs.guarded_http import GuardedSession
@@ -27,6 +27,7 @@ from .exceptions import (
     RateLimitError,
     ServerError,
 )
+from .exchange_queue import queue_exchange_values
 from .payload import split_large_payload
 from .session_cache import (
     get_session_cache,
@@ -824,39 +825,6 @@ class OutboundAPIClient:
         except Exception as e:
             _logger.debug("Failed to increment cache error counter: %s", e)
 
-    def _register_log_hooks(self):
-        cr = self.env.cr
-        if "integration.exchange.values" in cr.precommit.data:
-            return
-        pending = cr.precommit.data["integration.exchange.values"] = []
-        registry = self.env.registry
-        uid = self.env.uid
-
-        @cr.precommit.add
-        def batch_create_logs():
-            logs = cr.precommit.data.pop("integration.exchange.values", pending)
-            if logs:
-                self.env["integration.exchange"].sudo().create(logs)
-                _logger.debug("Batch created %d API event logs", len(logs))
-
-        # A caller that lets a CommError propagate rolls its transaction back,
-        # and the exchange that failed is the one most worth a row. `_rollback`
-        # empties `precommit.data` before running this, so it keeps its own list.
-        @cr.postrollback.add
-        def keep_logs_of_rolled_back_transaction():
-            if not pending:
-                return
-            try:
-                with registry.cursor() as log_cr:
-                    log_env = api.Environment(log_cr, uid, {})
-                    log_env["integration.exchange"].sudo().create(list(pending))
-            except Exception:
-                _logger.exception(
-                    "Could not keep %d API event log row(s) of a rolled-back "
-                    "transaction",
-                    len(pending),
-                )
-
     def log_external_exchange(
         self,
         method,
@@ -993,7 +961,6 @@ class OutboundAPIClient:
         error=None,
         error_type=None,
     ):
-        self._register_log_hooks()
 
         safe_headers = self._redact_headers(request_kwargs.get("headers"))
         safe_body = self._serialize_payload_for_log(
@@ -1050,7 +1017,7 @@ class OutboundAPIClient:
 
         vals.update(self._event_log_annotations())
 
-        self.env.cr.precommit.data["integration.exchange.values"].append(vals)
+        queue_exchange_values(self.env, vals)
 
     def _redact_headers(self, headers):
         if not isinstance(headers, dict):

@@ -27,6 +27,12 @@ class AutomationRuleController(Controller):
             )
         )
         if not rule:
+            request.env["inbound.access.log"]._record_unknown_caller(
+                "automation.rule",
+                f"uuid {rule_uuid[:8]}",
+                request.httprequest.remote_addr,
+                user_agent=request.httprequest.headers.get("User-Agent"),
+            )
             return request.prepare_json_response({"status": "error"}, status=404)
 
         ok, status, message = rule._check_webhook_request(

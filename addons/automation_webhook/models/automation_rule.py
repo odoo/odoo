@@ -1,5 +1,7 @@
+import json
 import logging
 import secrets
+import time
 import traceback
 from datetime import timedelta
 from uuid import uuid4
@@ -44,8 +46,11 @@ class AutomationRule(models.Model):
         "cleared by hand."
     )
     log_webhook_calls = fields.Boolean(
-        string="Log Calls",
+        string="Store Payloads",
         default=False,
+        help="Keep each call's body on its exchange row. Every call is recorded "
+        "either way, with its status, caller, timing and error; this only decides "
+        "whether what the sender posted is kept too.",
     )
 
     auth_type = fields.Selection(
@@ -102,10 +107,10 @@ class AutomationRule(models.Model):
         self.check_singleton()
         return {
             "type": "ir.actions.act_window",
-            "name": _("Webhook Logs"),
-            "res_model": "ir.logging",
+            "name": _("Webhook Calls"),
+            "res_model": "integration.exchange",
             "view_mode": "list,form",
-            "domain": [("path", "=", f"automation({self.id})")],
+            "domain": [("channel_id", "=", f"{self._name},{self.id}")],
         }
 
     WEBHOOK_AUDIT_DAYS = 30
@@ -194,7 +199,33 @@ class AutomationRule(models.Model):
 
     def _execute_webhook(self, payload):
         self.check_singleton()
+        started = time.monotonic()
+        try:
+            result = self._dispatch_webhook(payload)
+        except Exception as error:
+            self._record_webhook_exchange(payload, started, error=error)
+            raise
+        self._record_webhook_exchange(payload, started)
+        return result
 
+    def _record_webhook_exchange(self, payload, started, error=None):
+        httprequest = request.httprequest if request else None
+        body = None
+        if self.log_webhook_calls and payload is not None:
+            body = json.dumps(payload, default=str)
+        self._record_inbound_exchange(
+            method=httprequest.method if httprequest else "POST",
+            path=f"/web/hook/{(self.webhook_uuid or '')[:8]}",
+            body=body,
+            status_code=500 if error else 200,
+            error=f"{type(error).__name__}: {error}" if error else None,
+            remote_addr=httprequest.remote_addr if httprequest else None,
+            user_agent=httprequest.headers.get("User-Agent") if httprequest else None,
+            duration_ms=(time.monotonic() - started) * 1000,
+            event_type="webhook",
+        )
+
+    def _dispatch_webhook(self, payload):
         if self.trigger != "on_webhook":
             _logger.warning(
                 "Webhook #%s refused: rule trigger is %r, not 'on_webhook'.",
@@ -205,13 +236,7 @@ class AutomationRule(models.Model):
                 _("This automation rule is not a webhook."),
             )
 
-        ir_logging_sudo = self.env["ir.logging"].sudo()
-
-        msg = "Webhook #%s triggered with payload %s"
-        msg_args = (self.id, payload)
-        _logger.debug(msg, *msg_args)
-        if self.log_webhook_calls:
-            ir_logging_sudo.create(self._prepare_logging_values(message=msg % msg_args))
+        _logger.debug("Webhook #%s triggered with payload %s", self.id, payload)
 
         record = self.env[self.model_name]
         if self.record_getter:
@@ -221,26 +246,20 @@ class AutomationRule(models.Model):
                     self._prepare_eval_context(payload=payload),
                 )
             except Exception:
-                msg = "Webhook #%s could not be triggered because the record_getter failed:\n%s"
-                msg_args = (self.id, traceback.format_exc())
-                _logger.warning(msg, *msg_args)
-                if self.log_webhook_calls:
-                    ir_logging_sudo.create(
-                        self._prepare_logging_values(
-                            message=msg % msg_args,
-                            level="ERROR",
-                        ),
-                    )
+                _logger.warning(
+                    "Webhook #%s could not be triggered because the record_getter "
+                    "failed:\n%s",
+                    self.id,
+                    traceback.format_exc(),
+                )
                 raise
 
         if not record.exists() and self.record_getter:
-            msg = "Webhook #%s could not be triggered because no record to run it on was found."
-            msg_args = (self.id,)
-            _logger.warning(msg, *msg_args)
-            if self.log_webhook_calls:
-                ir_logging_sudo.create(
-                    self._prepare_logging_values(message=msg % msg_args, level="ERROR"),
-                )
+            _logger.warning(
+                "Webhook #%s could not be triggered because no record to run it on "
+                "was found.",
+                self.id,
+            )
             raise exceptions.ValidationError(
                 _("No record to run the automation on was found."),
             )
@@ -250,13 +269,9 @@ class AutomationRule(models.Model):
                 return self.with_context(webhook_payload=payload)._process(record)
             return self._run_webhook_recordless(payload)
         except Exception:
-            msg = "Webhook #%s failed with error:\n%s"
-            msg_args = (self.id, traceback.format_exc())
-            _logger.warning(msg, *msg_args)
-            if self.log_webhook_calls:
-                ir_logging_sudo.create(
-                    self._prepare_logging_values(message=msg % msg_args, level="ERROR"),
-                )
+            _logger.warning(
+                "Webhook #%s failed with error:\n%s", self.id, traceback.format_exc()
+            )
             raise
 
     def _run_webhook_recordless(self, payload):

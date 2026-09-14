@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_integration_receiver_list" model="ir.ui.view">
+        <field name="name">integration.receiver.list</field>
+        <field name="model">integration.receiver</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle" />
+                <field name="name" />
+                <field name="code" optional="show" />
+                <field name="res_model" optional="show" />
+                <field name="auth_type" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="date_last_activity" optional="show" />
+                <field name="active" column_invisible="True" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_integration_receiver_form" model="ir.ui.view">
+        <field name="name">integration.receiver.form</field>
+        <field name="model">integration.receiver</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code" />
+                            <field name="res_model" />
+                            <field name="res_id" invisible="not res_model" />
+                            <field name="auth_type" />
+                            <field
+                                name="credential_id"
+                                invisible="auth_type == 'none'" />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company" />
+                        </group>
+                        <group>
+                            <field name="ip_whitelist" />
+                            <field name="max_payload_size" />
+                            <field name="rate_limit_enabled" />
+                            <field
+                                name="rate_limit_requests"
+                                invisible="not rate_limit_enabled" />
+                            <field name="log_inbound_access" />
+                            <field name="date_last_activity" />
+                            <field name="active" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_integration_receiver_search" model="ir.ui.view">
+        <field name="name">integration.receiver.search</field>
+        <field name="model">integration.receiver</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="code" />
+                <field name="res_model" />
+                <filter
+                    name="archived"
+                    string="Archived"
+                    domain="[('active', '=', False)]" />
+            </search>
+        </field>
+    </record>
+
+    <record id="action_integration_receiver" model="ir.actions.act_window">
+        <field name="name">Receivers</field>
+        <field name="res_model">integration.receiver</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No receiver yet</p>
+            <p>A receiver admits inbound calls for a feature: who may call, how they
+                authenticate, and how much they may send.</p>
+        </field>
+    </record>
+
+</odoo>

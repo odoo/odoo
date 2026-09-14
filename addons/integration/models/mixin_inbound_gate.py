@@ -1,8 +1,10 @@
+import json
 import logging
 from typing import Any
 
 from odoo import fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs import redact
 
 from ..tools.authentication import (
     CaseInsensitiveHeaders,
@@ -10,6 +12,7 @@ from ..tools.authentication import (
     is_signature_valid,
     is_timestamp_valid,
 )
+from ..tools.exchange_queue import queue_exchange_values
 from odoo.addons.rate_limit.tools import get_caller_rate_limiter
 
 _logger = logging.getLogger(__name__)
@@ -184,7 +187,13 @@ class MixinInboundGate(models.AbstractModel):
     ) -> bool:
         self.check_singleton()
 
-        if not self.credential_id and self.auth_type not in ("none", "custom"):
+        scheme = getattr(self, f"_authenticate_scheme_{self.auth_type}", None)
+
+        if (
+            not scheme
+            and not self.credential_id
+            and self.auth_type not in ("none", "custom")
+        ):
             raise ValidationError(
                 self.env._("No credential configured for endpoint '%s'")
                 % self.display_name,
@@ -210,6 +219,9 @@ class MixinInboundGate(models.AbstractModel):
         if self.auth_type == "none":
             return True
 
+        if scheme:
+            return bool(scheme(headers, body))
+
         if self.auth_type in ("bearer", "api_key"):
             token = self._presented_token(headers)
             if not token:
@@ -231,6 +243,71 @@ class MixinInboundGate(models.AbstractModel):
             verification_method=self.verification_method,
             env=self.env,
         )
+
+    _INBOUND_PAYLOAD_LOG_BYTES = 64 * 1024
+
+    def _inbound_payload_log_bytes(self) -> int:
+        return self._INBOUND_PAYLOAD_LOG_BYTES
+
+    def _record_inbound_exchange(
+        self,
+        *,
+        method: str | None = None,
+        path: str | None = None,
+        body: str | bytes | None = None,
+        status_code: int = 200,
+        error: str | None = None,
+        remote_addr: str | None = None,
+        user_agent: str | None = None,
+        duration_ms: float = 0.0,
+        event_type: str | None = None,
+        event_id_external: str | None = None,
+        processing_result: str | None = None,
+    ) -> None:
+        self.check_singleton()
+        failed = bool(error) or status_code >= 400
+        vals = {
+            "direction": "inbound",
+            "channel_id": f"{self._name},{self.id}",
+            "company_id": self._inbound_company_id() or False,
+            "request_method": (method or "").upper() or False,
+            "request_url": (path or "")[:2048] or False,
+            "status_code": status_code,
+            "duration_ms": duration_ms,
+            "source_ip": remote_addr or False,
+            "user_agent": (user_agent or "")[:512] or False,
+            "event_type": event_type or False,
+            "event_id_external": event_id_external or False,
+            "processing_result": processing_result or False,
+            "state": "failed" if failed else "success",
+            "date_completed": fields.Datetime.now(),
+            "signature_verified": not failed and self.auth_type != "none",
+            **self._inbound_payload_values(body),
+        }
+        if error:
+            vals["error_message"] = redact.mask_text(error)
+        queue_exchange_values(self.env, vals)
+
+    def _inbound_payload_values(self, body: str | bytes | None) -> dict[str, Any]:
+        if not body:
+            return {}
+        text = (
+            body.decode("utf-8", errors="replace") if isinstance(body, bytes) else body
+        )
+        try:
+            text = json.dumps(redact.mask_data(json.loads(text)))
+        except ValueError, TypeError:
+            text = redact.mask_text(text)
+        limit = self._inbound_payload_log_bytes()
+        size = len(text.encode("utf-8"))
+        if limit and size > limit:
+            return {
+                "request_payload": text.encode("utf-8")[:limit].decode(
+                    "utf-8", errors="ignore"
+                ),
+                "request_payload_omitted_bytes": size - limit,
+            }
+        return {"request_payload": text}
 
     def _presented_token(self, headers: dict[str, Any]) -> str:
         auth_header = headers.get("Authorization") or ""
