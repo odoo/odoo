@@ -5,6 +5,7 @@ import { Component, xml } from "@odoo/owl";
 import { evaluateBooleanExpr, evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { FIELD_DEPENDENCIES_VALIDATION } from "@web/model/relational_model/field_metadata";
+import { nodeAttrs } from "@web/views/ir/view_ir";
 const viewWidgetRegistry = registry.category("view_widgets");
 
 const supportedInfoValidation = {
@@ -51,11 +52,12 @@ export class Widget extends Component {
         </div>`;
 
     /**
-     * @param {Element} node
+     * @param {import("@web/views/ir/view_ir_schema").ViewIRNode | Element} node
      * @returns {{ name: string, widget: Object, options: Object, attrs: Object }}
      */
     static parseWidgetNode = function (node) {
-        const name = /** @type {string} */ (node.getAttribute("name"));
+        const nodeAttributes = nodeAttrs(node);
+        const name = /** @type {string} */ (nodeAttributes.name);
         const widget = viewWidgetRegistry.get(name);
         /** @type {{ name: any, widget: any, options: any, attrs: Record<string, any> }} */
         const widgetInfo = {
@@ -65,7 +67,7 @@ export class Widget extends Component {
             attrs: {},
         };
 
-        for (const { name, value } of node.attributes) {
+        for (const [name, value] of Object.entries(nodeAttributes)) {
             if (["name", "widget"].includes(name)) {
                 continue;
             }

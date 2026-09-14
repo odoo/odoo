@@ -6,15 +6,14 @@ import { getClassNameFromDecoration, getDecoration } from "@web/core/utils/decor
 describe.current.tags("headless");
 
 /**
+ * getDecoration reads a node's attribute record (`nodeAttrs()` of the view
+ * IR builds one from an IR node or an element), so the record is the input.
+ *
  * @param {Record<string, string>} attrs
- * @returns {Element}
+ * @returns {Record<string, string>}
  */
 function nodeWith(attrs) {
-    const el = document.createElement("field");
-    for (const [name, value] of Object.entries(attrs)) {
-        el.setAttribute(name, value);
-    }
-    return el;
+    return attrs;
 }
 
 test("getClassNameFromDecoration: bf and it are the two non-text specials", () => {

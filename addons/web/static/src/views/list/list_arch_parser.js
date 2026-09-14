@@ -7,6 +7,7 @@ import { exprToBoolean } from "@web/core/utils/format/strings";
 import { stringToOrderBy } from "@web/core/utils/order_by";
 import { combineModifiers } from "@web/model/relational_model";
 import { parseFieldNode } from "@web/views/field_arch";
+import { nodeAttrs } from "@web/views/ir/view_ir";
 import { ViewArchParser } from "@web/views/view_arch_parser";
 import { processButton } from "@web/views/view_buttons";
 import { encodeObjectForTemplate } from "@web/views/view_compiler";
@@ -340,7 +341,7 @@ export class ListArchParser extends ViewArchParser {
 
         treeAttr.noOpen = exprToBoolean(xmlDoc.getAttribute("no_open") || "");
         treeAttr.rawExpand = xmlDoc.getAttribute("expand");
-        treeAttr.decorations = getDecoration(xmlDoc);
+        treeAttr.decorations = getDecoration(nodeAttrs(xmlDoc));
 
         treeAttr.defaultOrder = stringToOrderBy(
             xmlDoc.getAttribute("default_order") || null,

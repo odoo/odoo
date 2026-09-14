@@ -14,6 +14,7 @@ import { useService } from "@web/core/utils/hooks";
 import { COG_GROUP } from "@web/search/cog_menu/cog_menu_group";
 import { session } from "@web/session";
 import { ConfirmationDialog } from "@web/ui/dialog/confirmation_dialog";
+import { nodeAttrs } from "@web/views/ir/view_ir";
 
 /**
  * @typedef ViewActiveActions
@@ -87,20 +88,21 @@ export function getFormattedValue(record, fieldName, fieldInfo = null) {
 }
 
 /**
- * @param {Element} rootNode
+ * @param {import("@web/views/ir/view_ir_schema").ViewIRNode | Element} rootNode
  * @returns {ViewActiveActions}
  */
 export function getActiveActions(rootNode) {
+    const attrs = nodeAttrs(rootNode);
     /** @type {ViewActiveActions} */
     const activeActions = {
         type: "view",
-        edit: exprToBoolean(rootNode.getAttribute("edit"), true),
-        create: exprToBoolean(rootNode.getAttribute("create"), true),
-        delete: exprToBoolean(rootNode.getAttribute("delete"), true),
+        edit: exprToBoolean(attrs.edit, true),
+        create: exprToBoolean(attrs.create, true),
+        delete: exprToBoolean(attrs.delete, true),
         duplicate: false,
     };
     activeActions.duplicate =
-        activeActions.create && exprToBoolean(rootNode.getAttribute("duplicate"), true);
+        activeActions.create && exprToBoolean(attrs.duplicate, true);
     return activeActions;
 }
 

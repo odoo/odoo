@@ -15,16 +15,19 @@ export function getClassNameFromDecoration(decoration) {
 }
 
 /**
- * @param {Element} rootNode
+ * The `decoration-*` attributes of a node, given as its attribute record —
+ * `nodeAttrs()` from the view IR reads one off an IR node or an element.
+ *
+ * @param {Record<string, string>} attrs
  * @returns {{ class: string, condition: string }[]}
  */
-export function getDecoration(rootNode) {
+export function getDecoration(attrs) {
     const decorations = [];
-    for (const name of rootNode.getAttributeNames()) {
+    for (const [name, condition] of Object.entries(attrs)) {
         if (name.startsWith("decoration-")) {
             decorations.push({
                 class: getClassNameFromDecoration(name.replace("decoration-", "")),
-                condition: /** @type {string} */ (rootNode.getAttribute(name)),
+                condition,
             });
         }
     }

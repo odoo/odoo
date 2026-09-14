@@ -127,17 +127,9 @@ export function elementToIR(element) {
 
 /**
  * @param {Element} element
- * @param {{ nodes: number }} state
- * @returns {ViewIRNode}
+ * @returns {{ attrs: Record<string, string>, nsmap: Record<string, string> }}
  */
-function readElement(element, state) {
-    state.nodes++;
-    /** @type {ViewIRNode} */
-    const ir = {
-        kind: element.namespaceURI
-            ? `{${element.namespaceURI}}${element.localName}`
-            : element.localName,
-    };
+function readAttributes(element) {
     /** @type {Record<string, string>} */
     const attrs = {};
     /** @type {Record<string, string>} */
@@ -151,6 +143,35 @@ function readElement(element, state) {
             attrs[attr.name] = attr.value;
         }
     }
+    return { attrs, nsmap };
+}
+
+/**
+ * The attributes of a node in either form, in document order — what a helper
+ * that reads one node (a button, a widget, a view root) needs, without
+ * converting the subtree under an element.
+ *
+ * @param {ViewIRNode | Element} node
+ * @returns {Record<string, string>}
+ */
+export function nodeAttrs(node) {
+    return "kind" in node ? node.attrs || {} : readAttributes(node).attrs;
+}
+
+/**
+ * @param {Element} element
+ * @param {{ nodes: number }} state
+ * @returns {ViewIRNode}
+ */
+function readElement(element, state) {
+    state.nodes++;
+    /** @type {ViewIRNode} */
+    const ir = {
+        kind: element.namespaceURI
+            ? `{${element.namespaceURI}}${element.localName}`
+            : element.localName,
+    };
+    const { attrs, nsmap } = readAttributes(element);
     if (Object.keys(attrs).length) {
         ir.attrs = attrs;
     }

@@ -2,7 +2,7 @@
 /** @odoo-module native */
 
 import { parseXML, visitXML } from "@web/core/utils/dom/xml";
-import { elementToIR } from "@web/views/ir/view_ir";
+import { elementToIR, nodeAttrs } from "@web/views/ir/view_ir";
 import { processButton } from "@web/views/view_buttons";
 import { Widget } from "@web/views/widgets/widget";
 
@@ -87,6 +87,22 @@ export function visitIR(ir, callback) {
     visit(ir, null);
 }
 
+/**
+ * @param {ViewIRNode | Element} node
+ * @returns {string}
+ */
+function kindOf(node) {
+    return "kind" in node ? node.kind : node.tagName;
+}
+
+/**
+ * @param {ViewIRNode | Element} node
+ * @returns {(ViewIRNode | Element)[]}
+ */
+function childNodes(node) {
+    return "kind" in node ? node.children || [] : [...node.children];
+}
+
 export class ViewArchParser {
     /**
      * What `parse()` takes: the arch `Element` (default) or the view IR node
@@ -156,7 +172,7 @@ export class ViewArchParser {
     }
 
     /**
-     * @param {Element} node
+     * @param {ViewIRNode | Element} node
      * @returns {any}
      */
     processButton(node) {
@@ -164,7 +180,7 @@ export class ViewArchParser {
     }
 
     /**
-     * @param {Element} node
+     * @param {ViewIRNode | Element} node
      * @param {Record<string, any>} [_models]
      * @param {string} [_modelName]
      * @returns {any}
@@ -174,14 +190,14 @@ export class ViewArchParser {
     }
 
     /**
-     * @param {Element} node
+     * @param {ViewIRNode | Element} node
      * @param {number} [firstId=0]
      * @returns {any[]}
      */
     parseHeaderButtons(node, firstId = 0) {
         let id = firstId;
-        return [...node.children]
-            .filter((child) => child.tagName === "button")
+        return childNodes(node)
+            .filter((child) => kindOf(child) === "button")
             .map((child) => ({
                 ...this.processButton(child),
                 type: "button",
@@ -190,29 +206,30 @@ export class ViewArchParser {
     }
 
     /**
-     * @param {Element} node
+     * @param {ViewIRNode | Element} node
      * @returns {any[]}
      */
     parseControls(node) {
         const controls = [];
-        for (const child of node.children) {
-            switch (child.tagName) {
+        for (const child of childNodes(node)) {
+            const attrs = nodeAttrs(child);
+            switch (kindOf(child)) {
                 case "button":
                     controls.push({ ...this.processButton(child), type: "button" });
                     break;
                 case "create":
                     controls.push({
                         type: "create",
-                        context: child.getAttribute("context"),
-                        string: child.getAttribute("string"),
-                        invisible: child.getAttribute("invisible"),
-                        class: child.getAttribute("class"),
+                        context: attrs.context ?? null,
+                        string: attrs.string ?? null,
+                        invisible: attrs.invisible ?? null,
+                        class: attrs.class ?? null,
                     });
                     break;
                 case "delete":
                     controls.push({
                         type: "delete",
-                        invisible: child.getAttribute("invisible"),
+                        invisible: attrs.invisible ?? null,
                     });
                     break;
             }
