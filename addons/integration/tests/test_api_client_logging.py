@@ -540,6 +540,7 @@ class TestDigestAuthAndTlsVerification(EncryptionKeyCase, TransactionCase):
                 "category_id": cls.env.ref(
                     "credential.credential_category_basic_auth"
                 ).id,
+                "environment": "production",
                 "username": "admin",
                 "password": "device-pass",
             }
@@ -838,6 +839,7 @@ class TestCredentialChangesDropCachedSessions(EncryptionKeyCase, TransactionCase
             {
                 "name": "Session probe key",
                 "category_id": cls.env.ref("credential.credential_category_api_key").id,
+                "environment": "production",
                 "api_key": "first-key",
                 "endpoint_id": cls.service.id,
             }

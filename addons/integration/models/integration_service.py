@@ -255,6 +255,11 @@ class IntegrationService(models.Model):
         inverse_name="endpoint_id",
         string="Credentials",
     )
+    connection_ids = fields.One2many(
+        comodel_name="integration.connection",
+        inverse_name="service_id",
+        string="Connections",
+    )
 
     def unlink(self) -> bool:
         credentials = self.sudo().credential_ids
@@ -305,10 +310,10 @@ class IntegrationService(models.Model):
                             % record.endpoint_url,
                         )
 
-    @api.depends("credential_ids", "credential_ids.active")
+    @api.depends("connection_ids", "connection_ids.active")
     def _compute_credential_count(self):
         for service in self:
-            service.credential_count = len(service.credential_ids.filtered("active"))
+            service.credential_count = len(service.connection_ids.filtered("active"))
 
     @api.depends("cache_error_count", "cache_last_error", "cache_enabled")
     def _compute_cache_health(self):
@@ -377,7 +382,7 @@ class IntegrationService(models.Model):
 
     def action_test_connection(self) -> dict[str, Any]:
         self.check_singleton()
-        credential = self.credential_ids.filtered("active")[:1]
+        credential = self.env["integration.connection"]._resolve(self).credential_id
         if not credential:
             raise ValidationError(self.env._("No active credentials configured"))
 
@@ -499,14 +504,18 @@ class IntegrationService(models.Model):
 
     def _perform_health_check(self):
         self.check_singleton()
+        connections = self.connection_ids.filtered(
+            lambda c: c.active and (not c.credential_id or c.credential_id.active)
+        )
         if self.health_check_environment == "any":
-            credential = self.credential_ids.filtered("active").sorted(
+            connection = connections.sorted(
                 key=lambda c: (c.environment != "production", c.sequence),
             )[:1]
         else:
-            credential = self.credential_ids.filtered(
-                lambda c: c.active and c.environment == self.health_check_environment,
+            connection = connections.filtered(
+                lambda c: c.environment == self.health_check_environment,
             )[:1]
+        credential = connection.credential_id
 
         if not credential:
             env_label = (

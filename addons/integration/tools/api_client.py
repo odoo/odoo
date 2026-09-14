@@ -195,21 +195,26 @@ class OutboundAPIClient:
                 _("API service '%s' not found or inactive") % endpoint_code,
             )
 
+        connections = env["integration.connection"]
         if credential_id:
             self.credential = env["credential.credential"].sudo().browse(credential_id)
             if not self.credential.exists() or not self.credential.active:
                 raise CommError(_("Invalid or inactive credential"))
+            self.connection = connections._for_credential(self.service, self.credential)
         else:
-            self.credential = env["credential.credential"]._get_for_endpoint(
+            self.connection = connections._resolve(
                 self.service, company=self.company_id, user=self.user_id
             )
+            self.credential = self.connection.credential_id
 
         if not self.credential and self.service.auth_type != "none":
             raise CommError(
                 _(
-                    "No active credentials for service '%(service)s' and company ID %(company)s",
+                    "No active credentials for service '%(service)s' and company ID "
+                    "%(company)s in its %(environment)s environment",
                     service=endpoint_code,
                     company=self.company_id,
+                    environment=self.service.environment,
                 ),
             )
 
@@ -218,34 +223,36 @@ class OutboundAPIClient:
                 _("Credentials have expired on %s") % self.credential.date_expiration,
             )
 
-        bound_endpoint = self.credential.endpoint_id
         self._credential_usable = bool(self.credential) and (
-            not bound_endpoint or bound_endpoint == self.service
+            self.connection.credential_id == self.credential
         )
         if self.credential and not self._credential_usable:
             _logger.warning(
-                "Credential %s is bound to endpoint '%s' and will not authenticate "
-                "calls to '%s'; the request is sent without its secret.",
+                "Credential %s has no connection to service '%s' and will not "
+                "authenticate its calls; the request is sent without its secret.",
                 self.credential.id,
-                bound_endpoint.code,
                 endpoint_code,
             )
 
         self.session = self._get_or_create_session()
 
-        environment = (
-            self.credential.environment if self.credential else self.service.environment
-        )
-        if environment == "production":
-            self.base_url = self.service.endpoint_url
+        if self.connection:
+            self.environment = self.connection.environment
+            self.base_url = self.connection._base_url()
         else:
-            self.base_url = self.service.endpoint_url_test or self.service.endpoint_url
+            self.environment = self.service.environment
+            if self.environment == "production":
+                self.base_url = self.service.endpoint_url
+            else:
+                self.base_url = (
+                    self.service.endpoint_url_test or self.service.endpoint_url
+                )
 
         _logger.info(
             "OutboundAPIClient initialized: service=%s, company=%s, environment=%s",
             endpoint_code,
             self.company_id,
-            self.credential.environment,
+            self.environment,
         )
 
     def _get_or_create_session(self):
@@ -693,7 +700,7 @@ class OutboundAPIClient:
 
     def _get_headers(self, additional_headers=None):
         credential_headers = (
-            self.credential._get_auth_headers() if self._credential_usable else {}
+            self.connection._get_auth_headers() if self._credential_usable else {}
         )
         self._credential_header_names = frozenset(
             str(name).lower() for name in credential_headers

@@ -23,6 +23,11 @@ class CredentialCredential(models.Model):
         ondelete="cascade",
         help="The outbound API endpoint this credential is associated with.",
     )
+    connection_ids = fields.One2many(
+        comodel_name="integration.connection",
+        inverse_name="credential_id",
+        string="Connections",
+    )
     endpoint_auth_type = fields.Selection(
         related="endpoint_id.auth_type",
         readonly=True,
@@ -66,32 +71,10 @@ class CredentialCredential(models.Model):
 
     @api.model
     def _get_for_endpoint(self, service, company=None, user=None):
-        company_id = getattr(company, "id", company) or self.env.company.id
-
-        if service.allow_user_credentials:
-            user_id = getattr(user, "id", user) or self.env.uid
-            personal = self.sudo().search(
-                [
-                    ("endpoint_id", "=", service.id),
-                    ("owner_user_id", "=", user_id),
-                    ("company_id", "in", (company_id, False)),
-                    ("active", "=", True),
-                ],
-                order="sequence, id",
-                limit=1,
-            )
-            if personal:
-                return personal
-
-        return self.sudo().search(
-            [
-                ("endpoint_id", "=", service.id),
-                ("company_id", "=", company_id),
-                ("owner_user_id", "=", False),
-                ("active", "=", True),
-            ],
-            order="sequence, id",
-            limit=1,
+        return (
+            self.env["integration.connection"]
+            ._resolve(service, company=company, user=user)
+            .credential_id
         )
 
     def _oauth_client_id(self) -> str:
@@ -100,89 +83,14 @@ class CredentialCredential(models.Model):
 
     def _get_auth_headers(self):
         self.check_singleton()
-        headers = {}
-
         if not self.endpoint_id:
-            return headers
-
-        auth_type = self.endpoint_id.auth_type
-
-        if auth_type == "bearer":
-            token = self._use_secret("integration:bearer", prefer="bearer_token")
-            if token:
-                headers["Authorization"] = f"Bearer {token}"
-        elif auth_type == "api_key":
-            api_key = self._use_secret("integration:api_key", prefer="api_key")
-            if api_key:
-                headers.update(self.endpoint_id._api_key_headers(api_key))
-        elif auth_type == "oauth2":
-            access_token = self._use_secret_payload("integration:oauth").get(
-                "oauth_access_token"
-            )
-            if access_token:
-                headers["Authorization"] = f"Bearer {access_token}"
-
-        if self.custom_headers:
-            try:
-                headers.update(json.loads(self.custom_headers))
-            except json.JSONDecodeError, ValueError, TypeError:
-                _logger.warning(
-                    "Invalid custom_headers JSON for credential %s: %s",
-                    self.id,
-                    self.custom_headers[:100] if self.custom_headers else "",
-                )
-
-        return headers
-
-    @api.constrains(
-        "endpoint_id", "company_id", "environment", "active", "owner_user_id"
-    )
-    def _check_unique_active_credential(self) -> None:
-        constrained = self.filtered(
-            lambda cred: (
-                cred.active
-                and cred.endpoint_id
-                and not cred.endpoint_id.allow_multiple_credentials
-            )
+            return {}
+        connection = self.env["integration.connection"]._for_credential(
+            self.endpoint_id, self
+        ) or self.env["integration.connection"].new(
+            {"service_id": self.endpoint_id.id, "credential_id": self.id}
         )
-        if not constrained:
-            return
-
-        companies = set(constrained.company_id.ids)
-        if any(not cred.company_id for cred in constrained):
-            companies.add(False)
-        peers = self.search(
-            [
-                ("endpoint_id", "in", constrained.endpoint_id.ids),
-                ("company_id", "in", list(companies) or [False]),
-                ("environment", "in", list(set(constrained.mapped("environment")))),
-                ("active", "=", True),
-            ],
-        )
-        ids_by_key: dict[tuple, set[int]] = {}
-        for peer in peers:
-            key = (
-                peer.endpoint_id.id,
-                peer.company_id.id,
-                peer.environment,
-                peer.owner_user_id.id,
-            )
-            ids_by_key.setdefault(key, set()).add(peer.id)
-
-        for cred in constrained:
-            key = (
-                cred.endpoint_id.id,
-                cred.company_id.id,
-                cred.environment,
-                cred.owner_user_id.id,
-            )
-            if ids_by_key.get(key, set()) - {cred.id}:
-                raise ValidationError(
-                    self.env._(
-                        "Only one active credential per service/company/"
-                        "environment, and per user for a personal credential."
-                    )
-                )
+        return connection._get_auth_headers()
 
     _CATEGORY_BY_AUTH_TYPE = {
         "api_key": "credential.credential_category_api_key",
@@ -205,6 +113,9 @@ class CredentialCredential(models.Model):
                     vals["category_id"] = category.id
 
         records = super().create(vals_list)
+        self.env["integration.connection"]._sync_from_credentials(
+            records.filtered("endpoint_id")
+        )
 
         for record in records:
             if record.endpoint_id:
@@ -216,6 +127,17 @@ class CredentialCredential(models.Model):
                     self.env.user.login,
                 )
         return records
+
+    _CONNECTION_SYNC_FIELDS = frozenset(
+        {
+            "endpoint_id",
+            "company_id",
+            "owner_user_id",
+            "environment",
+            "sequence",
+            "active",
+        }
+    )
 
     _AUDITED_PAYLOAD_FIELDS = frozenset(
         {
@@ -263,6 +185,15 @@ class CredentialCredential(models.Model):
             self = self.with_context(**{self._AUDIT_FIELDS_CONTEXT_KEY: audited})
 
         result = super().write(vals)
+
+        if self._CONNECTION_SYNC_FIELDS & set(vals):
+            self.env["integration.connection"]._sync_from_credentials(
+                self.with_context(active_test=False)
+            )
+        if vals.get("endpoint_id"):
+            self.sudo().with_context(
+                active_test=False
+            ).connection_ids._check_credential_serves_this_service()
 
         if audited or storage_modified:
             api_credentials = self.filtered("endpoint_id")

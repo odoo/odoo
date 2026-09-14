@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_integration_connection_list" model="ir.ui.view">
+        <field name="name">integration.connection.list</field>
+        <field name="model">integration.connection</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="environment != service_environment">
+                <field name="sequence" widget="handle" />
+                <field name="service_id" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="environment" />
+                <field name="user_id" optional="hide" />
+                <field name="credential_id" />
+                <field name="base_url" optional="show" />
+                <field name="synced_from_credential" optional="hide" />
+                <field name="service_environment" column_invisible="True" />
+                <field name="active" column_invisible="True" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_integration_connection_form" model="ir.ui.view">
+        <field name="name">integration.connection.form</field>
+        <field name="model">integration.connection</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div
+                        class="alert alert-warning"
+                        role="alert"
+                        invisible="not service_id or environment == service_environment">
+                        This connection is not used: its service runs in the
+                        <field name="service_environment" class="fw-bold" /> environment.
+                    </div>
+                    <group>
+                        <group>
+                            <field name="service_id" />
+                            <field name="credential_id" />
+                            <field name="environment" />
+                            <field
+                                name="base_url"
+                                placeholder="The service's URL for this environment" />
+                        </group>
+                        <group>
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company" />
+                            <field name="user_id" />
+                            <field name="sequence" />
+                            <field name="active" />
+                            <field name="synced_from_credential" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_integration_connection_search" model="ir.ui.view">
+        <field name="name">integration.connection.search</field>
+        <field name="model">integration.connection</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="service_id" />
+                <field name="credential_id" />
+                <field name="company_id" />
+                <filter
+                    name="archived"
+                    string="Archived"
+                    domain="[('active', '=', False)]" />
+                <group>
+                    <filter
+                        name="group_by_service"
+                        string="Service"
+                        context="{'group_by': 'service_id'}" />
+                    <filter
+                        name="group_by_environment"
+                        string="Environment"
+                        context="{'group_by': 'environment'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_integration_connection" model="ir.actions.act_window">
+        <field name="name">Connections</field>
+        <field name="res_model">integration.connection</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No connection yet</p>
+            <p>A connection binds a credential to a service for a company, an environment
+                and optionally a user, and may override the service's URL.</p>
+        </field>
+    </record>
+
+</odoo>
