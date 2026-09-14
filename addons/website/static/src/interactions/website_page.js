@@ -1,4 +1,5 @@
 /** @odoo-module native */
+import { browser } from "@web/core/browser/browser";
 import { makeLogger } from "@web/core/debug/debug_logger";
 import { registry } from "@web/core/registry";
 import { Interaction } from "@web/public/interaction";
@@ -45,19 +46,19 @@ export class WebsitePage extends Interaction {
         ev.preventDefault();
         if (document.body.classList.contains("editor_enable")) {
             log.logic("WebsitePage lang change: ignored in editor", () => ({
-                lang: target.dataset.urlCode,
+                lang: target.dataset.url_code,
             }));
             return;
         }
         const redirect = {
-            lang: encodeURIComponent(target.dataset.urlCode),
+            lang: encodeURIComponent(target.dataset.url_code),
             url: encodeURIComponent(
                 target.getAttribute("href").replace(/[&?]edit_translations[^&?]+/, ""),
             ),
-            hash: encodeURIComponent(window.location.hash),
+            hash: encodeURIComponent(browser.location.hash),
         };
         log.pipeline("WebsitePage lang change: redirect", () => ({ redirect }));
-        window.location.href = `/website/lang/${redirect.lang}?r=${redirect.url}${redirect.hash}`;
+        browser.location.href = `/website/lang/${redirect.lang}?r=${redirect.url}${redirect.hash}`;
     }
 
     /**
