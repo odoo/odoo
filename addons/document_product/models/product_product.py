@@ -1,4 +1,7 @@
 from odoo import api, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ProductProduct(models.Model):
@@ -14,6 +17,7 @@ class ProductProduct(models.Model):
                 ["__count"],
             )
             counts = dict(data)
+        _debug.perf.count("variant_document_counts", products=self, rows=len(counts))
         for product in self:
             product.product_document_count = counts.get(product.id, 0)
 

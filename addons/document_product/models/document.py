@@ -1,7 +1,10 @@
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import clean_context
+
+_debug = DebugLog(__name__)
 
 
 class DocumentsDocument(models.Model):
@@ -55,10 +58,12 @@ class DocumentsDocument(models.Model):
             # also fires on the real product id 1 and `value - {True}` then drops
             # that id, widening the search to every product-linked document.
             if any(v is True for v in value):
+                _debug.logic("product_search", by="any_product", field=field_name)
                 return Domain(field_name, "not in", [False]) | Domain(
                     field_name, "in", [v for v in value if v is not True]
                 )
             if any(v is False for v in value):
+                _debug.logic("product_search", by="no_product", field=field_name)
                 return Domain(
                     "res_model", "!=", Model._name
                 ) | self._search_related_product_field(
@@ -72,10 +77,13 @@ class DocumentsDocument(models.Model):
                 )
             )
         elif operator == "any" and isinstance(value, Domain):
+            _debug.logic("product_search", by="subdomain", field=field_name)
             query_model = Model._search(value)
         elif operator.endswith("like") and not operator.startswith("not"):
+            _debug.logic("product_search", by="name", field=field_name)
             query_model = Model._search([(Model._rec_name, operator, value)])
         else:
+            _debug.logic("product_search_unsupported", operator=operator)
             return NotImplemented
         return (
             Domain.FALSE
@@ -87,6 +95,7 @@ class DocumentsDocument(models.Model):
         # Creates a single product.template for the whole recordset and links every
         # document to it; the product image is taken from the first image document.
         if not self:
+            _debug.logic("product_create_refused", reason="no_documents")
             raise UserError(
                 self.env._("Select at least one document to create a product from.")
             )
@@ -101,6 +110,9 @@ class DocumentsDocument(models.Model):
             .create({"name": self.env._("Product created from Documents")})
         )
 
+        _debug.lifecycle(
+            "product_created_from_documents", documents=self, product=product
+        )
         for document in self:
             if document.res_model or document.res_id:
                 att_copy = document.attachment_id.with_context(no_document=True).copy()
@@ -113,6 +125,7 @@ class DocumentsDocument(models.Model):
             )
             is_image = (document.mimetype or "").partition("/")[0] == "image"
             if is_image and not product.image_1920:
+                _debug.logic("product_image_taken", document=document)
                 product.write({"image_1920": document.datas})
 
         view_id = product.get_formview_id()

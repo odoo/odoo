@@ -1,5 +1,8 @@
 from odoo import _, api, models
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ProductTemplate(models.Model):
@@ -28,6 +31,12 @@ class ProductTemplate(models.Model):
                     ["__count"],
                 )
                 variant_counts = dict(var_data)
+        _debug.perf.count(
+            "template_document_counts",
+            templates=self,
+            tmpl_rows=len(template_counts),
+            variant_rows=len(variant_counts),
+        )
         for template in self:
             count = template_counts.get(template.id, 0)
             for variant in template.product_variant_ids:
