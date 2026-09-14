@@ -22,6 +22,7 @@ class Partner(http.Controller):
         ],
         type="http",
         auth="user",
+        readonly=True,
     )
     def download_vcard(self, partner_ids=None, partner=None, **kwargs):
         dbg.lifecycle.debug(

@@ -76,7 +76,7 @@ These are the primary backend APIs consumed by the JS ORM service (`core/network
 | HTTP | `/odoo`, `/odoo/<path>`, `/web`, `/scoped_app/<path>` | none (readonly=dynamic) | `web_client()` | Main webclient SPA bootstrap page |
 | HTTP GET | `/web/webclient/load_menus` | user (readonly) | `web_load_menus()` | Sidebar menu tree. Conditional fetch: 200 responses carry `X-Menus-Hash` (SHA-256 of JSON body); client echoes it back as `?hash=` and gets an empty `304` when unchanged. Always `Cache-Control: no-store` (payload is session-dependent) |
 | HTTP | `/web/login` | none (readonly=False) | `web_login()` | Login page (GET = form, POST = authenticate) |
-| HTTP | `/web/login_successful` | user | `login_successful_external_user()` | External user landing page |
+| HTTP | `/web/login_successful` | user (readonly) | `login_successful_external_user()` | External user landing page |
 | HTTP | `/web/become` | user (readonly) | `switch_to_admin()` | Switch session to admin (debug) |
 | HTTP | `/robots.txt` | none | `robots()` | Search engine robots file |
 
@@ -126,8 +126,8 @@ Process probes and the metrics scrape. No session, no database: every route is `
 | JSONRPC | `/web/export/formats` | user (readonly) | `formats()` | List available export formats |
 | JSONRPC | `/web/export/get_fields` | user (readonly) | `get_fields()` | Exportable fields for a model |
 | JSONRPC | `/web/export/namelist` | user (readonly) | `namelist()` | Field names from saved export preset |
-| HTTP | `/web/export/csv` | user | `web_export_csv()` | Export records as CSV |
-| HTTP | `/web/export/xlsx` | user | `web_export_xlsx()` | Export records as XLSX with grouping |
+| HTTP | `/web/export/csv` | user (readonly) | `web_export_csv()` | Export records as CSV |
+| HTTP | `/web/export/xlsx` | user (readonly) | `web_export_xlsx()` | Export records as XLSX with grouping |
 
 ### controllers/pivot.py — TableExporter
 
@@ -205,7 +205,7 @@ Process probes and the metrics scrape. No session, no database: every route is `
 
 | Method | Route | Auth | Handler | Purpose |
 |--------|-------|------|---------|---------|
-| HTTP | `/web/partner/vcard` | user | `download_vcard()` | Download partner vCard |
+| HTTP | `/web/partner/vcard` | user (readonly) | `download_vcard()` | Download partner vCard |
 | HTTP | `/web_enterprise/partner/<model("res.partner"):partner>/vcard` | user | `download_vcard()` | Same, enterprise URL variant |
 
 ## Settings
@@ -214,8 +214,8 @@ Process probes and the metrics scrape. No session, no database: every route is `
 
 | Method | Route | Auth | Handler | Purpose |
 |--------|-------|------|---------|---------|
-| JSONRPC | `/base_setup/data` | user | `base_setup_data()` | Base setup configuration data |
-| JSONRPC | `/base_setup/demo_active` | user | `base_setup_is_demo()` | Check if demo data is active |
+| JSONRPC | `/base_setup/data` | user (readonly) | `base_setup_data()` | Base setup configuration data |
+| JSONRPC | `/base_setup/demo_active` | user (readonly) | `base_setup_is_demo()` | Check if demo data is active |
 
 ## Observability
 

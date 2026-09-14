@@ -662,3 +662,22 @@ class TestUncoveredRoutes(HttpCase):
         with mute_logger("odoo.http"):
             resp = self.url_open("/web/assets/lib/nope/vendor/thing.js")
         self.assertEqual(resp.status_code, HTTPStatus.NOT_FOUND)
+
+
+@tagged("web_controllers_audit")
+class TestGroupedXlsxHeaderTolerance(BaseCase):
+    def test_a_field_without_a_type_gets_the_plain_bold_header(self):
+        from unittest.mock import MagicMock
+
+        from odoo.addons.web.controllers.export_writers import GroupExportXlsxWriter
+
+        writer = GroupExportXlsxWriter.__new__(GroupExportXlsxWriter)
+        writer.fields = [{"name": "name"}, {"name": "id"}]
+        writer.monetary_decimal_places = 2
+        writer.header_bold_style = "bold"
+        writer.header_bold_style_float = "float"
+        writer.header_bold_style_monetary = "monetary"
+        writer.write = MagicMock()
+        group = MagicMock(count=2, aggregated_values={"id": 7})
+        self.assertEqual(writer._write_group_header(0, 0, "G", group), (1, 0))
+        writer.write.assert_any_call(0, 1, "7", "bold")

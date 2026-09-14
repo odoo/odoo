@@ -653,7 +653,7 @@ class ExportFormat:
 class CSVExport(ExportFormat, http.Controller):
     format_key = "csv"
 
-    @http.route("/web/export/csv", type="http", auth="user")
+    @http.route("/web/export/csv", type="http", auth="user", readonly=True)
     def web_export_csv(self, data: str) -> Response:
         return self.base_response(data)
 
@@ -684,7 +684,7 @@ class CSVExport(ExportFormat, http.Controller):
 class ExcelExport(ExportFormat, http.Controller):
     format_key = "xlsx"
 
-    @http.route("/web/export/xlsx", type="http", auth="user")
+    @http.route("/web/export/xlsx", type="http", auth="user", readonly=True)
     def web_export_xlsx(self, data: str) -> Response:
         return self.base_response(data)
 

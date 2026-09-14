@@ -8,7 +8,7 @@ from ..tools import debug_log as dbg
 
 
 class BaseSetup(http.Controller):
-    @http.route("/base_setup/data", type="jsonrpc", auth="user")
+    @http.route("/base_setup/data", type="jsonrpc", auth="user", readonly=True)
     def base_setup_data(self, **kw) -> dict[str, Any]:
         dbg.lifecycle.debug("[base_setup] data: %s ignored=%s", dbg.req(), dbg.keys(kw))
         if not request.env.user.has_group("base.group_erp_manager"):
@@ -36,7 +36,7 @@ class BaseSetup(http.Controller):
             "action_pending_users": pending[:10]._action_show(),
         }
 
-    @http.route("/base_setup/demo_active", type="jsonrpc", auth="user")
+    @http.route("/base_setup/demo_active", type="jsonrpc", auth="user", readonly=True)
     def base_setup_is_demo(self, **kwargs) -> bool:
         demo = bool(
             request.env["ir.module.module"].search_count([("demo", "=", True)], limit=1)

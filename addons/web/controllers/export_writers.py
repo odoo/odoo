@@ -350,7 +350,9 @@ class ExportXlsxWriter:
         elif isinstance(cell_value, float):
             field = self.fields[column]
             cell_style = (
-                self.monetary_style if field["type"] == "monetary" else self.float_style
+                self.monetary_style
+                if field.get("type") == "monetary"
+                else self.float_style
             )
         self.write(row, column, cell_value, cell_style)
 
@@ -423,9 +425,9 @@ class GroupExportXlsxWriter(ExportXlsxWriter):
             column += 1
             aggregated_value = aggregates.get(field["name"])
             header_style = self.header_bold_style
-            if field["type"] == "monetary":
+            if field.get("type") == "monetary":
                 header_style = self.header_bold_style_monetary
-            elif field["type"] == "float":
+            elif field.get("type") == "float":
                 header_style = self.header_bold_style_float
             else:
                 aggregated_value = str(

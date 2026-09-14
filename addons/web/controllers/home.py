@@ -280,6 +280,7 @@ class Home(http.Controller):
         auth="user",
         website=True,
         sitemap=False,
+        readonly=True,
     )
     def login_successful_external_user(self, **kwargs: Any) -> Response:
         valid_values = {k: v for k, v in kwargs.items() if k in LOGIN_SUCCESSFUL_PARAMS}
