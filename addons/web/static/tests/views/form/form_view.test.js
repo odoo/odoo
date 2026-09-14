@@ -3927,6 +3927,19 @@ test(`can create a record with default values`, async () => {
     expect(MockServer.env["partner"]).toHaveLength(n + 1);
 });
 
+test(`middle click on New button opens a new record in a new window`, async () => {
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `<form><field name="foo"/></form>`,
+        resId: 1,
+        createRecord: (newWindow) => expect.step(`createRecord - newWindow: ${newWindow}`),
+    });
+
+    await contains(`.o_form_button_create`).middleClick();
+    expect.verifySteps(["createRecord - newWindow: true"]);
+});
+
 test(`default record with a one2many and an onchange on sub field`, async () => {
     Partner._onChanges = {
         foo: () => {},

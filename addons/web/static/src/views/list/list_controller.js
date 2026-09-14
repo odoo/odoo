@@ -354,14 +354,14 @@ export class ListController extends Component {
      */
     async onWillSaveRecord(record) {}
 
-    async createRecord({ group } = {}) {
+    async createRecord({ group, newWindow } = {}) {
         if (!this.model.isReady() && !this.model.config.groupBy.length && this.editable) {
             // If the view isn't grouped and the list is editable, a new record row will be added,
             // in edition. In this situation, we must wait for the model to be ready.
             await this.model.whenReady.promise;
         }
         const list = (group && group.list) || this.model.root;
-        if (this.editable && !list.isGrouped) {
+        if (this.editable && !list.isGrouped && !newWindow) {
             if (!(list instanceof DynamicRecordList)) {
                 throw new Error("List should be a DynamicRecordList");
             }
@@ -371,7 +371,7 @@ export class ListController extends Component {
             }
             render(this);
         } else {
-            await this.props.createRecord();
+            await this.props.createRecord(newWindow);
         }
     }
 
@@ -403,8 +403,8 @@ export class ListController extends Component {
         }
     }
 
-    async onClickCreate() {
-        return executeButtonCallback(this.rootRef(), () => this.createRecord());
+    async onClickCreate(_ev, newWindow) {
+        return executeButtonCallback(this.rootRef(), () => this.createRecord({ newWindow }));
     }
 
     async onClickDiscard() {
