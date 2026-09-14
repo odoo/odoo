@@ -299,7 +299,7 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
 
     def _get_queries_shop(self):
         html = self.url_open('/shop').text
-        self.assertIn(f'<img src="/web/image/product.template/{self.productC.product_tmpl_id.id}/', html)
+        self.assertIn(f'<img src="/web/image/product.image/{self.productC.product_template_image_ids.ids[0]}/', html)
         self.assertIn(f'<img src="/web/image/product.template/{self.productA.product_tmpl_id.id}/', html)
         self.assertIn(f'<img src="/web/image/product.image/{self.product_images.ids[0]}/', html)
 

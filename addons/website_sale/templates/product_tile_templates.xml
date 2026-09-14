@@ -107,11 +107,29 @@
 </template>
 
 <template id="website_sale.product_image_and_ribbon" name="Products Images and Ribbons">
+    <!-- Parameters:
+        - show_variant_images: Whether to show the variant images instead of the template's primary
+          and secondary images.
+    -->
     <div class="oe_product_image position-relative flex-grow-0 overflow-hidden">
         <!-- Fetch Images Data -->
         <t
+            t-if="show_variant_images and product_variant and product_variant.image_128"
+            t-set="all_images"
+            t-value="product_variant._get_images()"
+        />
+        <t
+            t-else=""
+            t-set="all_images"
+            t-value="product._get_images()"
+        />
+        <t
+            t-set="primary_image_holder"
+            t-value="all_images[:1]"
+        />
+        <t
             t-set="secondary_image_holder"
-            t-value="product.product_template_image_ids.sorted('sequence')[1:2]"
+            t-value="all_images[1:2]"
         />
 
         <a
@@ -122,7 +140,7 @@
         >
             <!-- Primary image -->
             <span
-                t-field="product.image_1920"
+                t-field="primary_image_holder.image_1920"
                 t-options="{'widget': 'image', 'preview_image': 'image_1024', 'class': 'oe_product_image_img h-100 w-100'}"
                 class="oe_product_image_img_wrapper oe_product_image_img_wrapper_primary d-flex h-100 justify-content-center align-items-center"
             />
