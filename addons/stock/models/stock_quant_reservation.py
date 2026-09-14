@@ -25,6 +25,7 @@ from ..tools.reservation import (
 from .stock_quant import CORE_REMOVAL_STRATEGIES
 
 _logger = logging.getLogger(__name__)
+LOCKED_QUANTS_CACHE_KEY = "stock.quant.locked"
 
 
 class StockQuantReservation(models.Model):
@@ -380,6 +381,10 @@ class StockQuantReservation(models.Model):
         return (self.location_id, self.lot_id, self.package_id, self.owner_id)
 
     def _lock_one_for_reservation(self, reserved_quantity):
+        # a row this transaction already holds is locked without the query:
+        # the pick is the one the lock query makes -- the first lockable row
+        # in recordset order -- and a row of ours is always lockable. The
+        # re-read stays: a write of our own outside the cache is possible
         if not self:
             return self.env["stock.quant"]
         lockable = self
@@ -389,12 +394,20 @@ class StockQuantReservation(models.Model):
             )
             if reserved_rows:
                 lockable = reserved_rows
-        return lockable.try_lock_for_update(allow_referencing=True, limit=1)
+        held = self.env.cr.cache.setdefault(LOCKED_QUANTS_CACHE_KEY, set())
+        first = lockable[:1]
+        if first.id in held:
+            quant = first
+        else:
+            quant = lockable.try_lock_for_update(allow_referencing=True, limit=1)
+            held.update(quant.ids)
+        if quant:
+            quant.invalidate_recordset(["quantity", "reserved_quantity"])
+        return quant
 
     def _update_reserved_delta(self, delta):
         quant = self.sudo()._lock_one_for_reservation(delta)
         if quant:
-            quant.invalidate_recordset(["reserved_quantity"])
             dbg.lifecycle.debug(
                 "[quant:%s] reserved_quantity %s delta %s",
                 quant.id,
@@ -679,7 +692,6 @@ class StockQuantReservation(models.Model):
 
         new_quant = self.env["stock.quant"]
         if quant:
-            quant.invalidate_recordset(["quantity", "reserved_quantity"])
             vals = {}
             if quantity:
                 vals["in_date"] = in_date

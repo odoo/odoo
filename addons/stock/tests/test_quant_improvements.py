@@ -5,6 +5,7 @@ from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tests import TransactionCase, tagged
 
+from odoo.addons.stock.models.stock_quant_reservation import LOCKED_QUANTS_CACHE_KEY
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.addons.stock.tools.reservation import (
     LeastPackagesPriorityQueue,
@@ -1001,6 +1002,9 @@ class TestStockQuantImprovements(TestStockCommon):
         def lock_nothing(records, **kwargs):
             return records.browse()
 
+        # the reservation above locked the row for this transaction; the
+        # simulated miss only makes sense once that lock is forgotten
+        self.env.cr.cache.pop(LOCKED_QUANTS_CACHE_KEY, None)
         with patch.object(type(self.Quant), "try_lock_for_update", lock_nothing):
             self.Quant._update_reserved_quantity(product, self.loc, -6.0)
 
