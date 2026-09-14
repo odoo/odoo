@@ -188,7 +188,9 @@ def _translate(
     assert target_id is not None
     if op == "attributes":
         changes = []
-        for attribute in spec.iterchildren("attribute"):
+        # every <attribute> under the spec, wrapped or not, as the XML combine
+        # reads them (`spec.iter("attribute")`): a wrapper says nothing there
+        for attribute in spec.iter("attribute"):
             name = attribute.get("name")
             # a malformed <attribute> is the XML path's to refuse, with its
             # message: an unknown attribute, add/remove beside text
