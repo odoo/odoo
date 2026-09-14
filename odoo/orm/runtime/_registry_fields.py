@@ -199,6 +199,7 @@ class _RegistryFieldsMixin(_RegistryStubs):
                 "fields_by_comodel",
                 "fields_reading_through_a_reference",
                 "models_cascading_from",
+                "_prefetch_fields_by_model",
             ):
                 self.__dict__.pop(_prop, None)
 

@@ -65,3 +65,11 @@ def test_a_model_overriding_has_field_access_keeps_its_own_verdict():
             "name",
             "private",
         ]
+
+
+def test_discarding_a_field_forgets_the_memo():
+    with model_test_env(Item) as env:
+        registry = env.registry
+        before = registry.prefetch_fields("memo.item")
+        registry.discard_fields([env["memo.item"]._fields["secret"]])
+        assert registry.prefetch_fields("memo.item") is not before
