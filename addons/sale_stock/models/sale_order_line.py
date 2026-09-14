@@ -388,7 +388,7 @@ class SaleOrderLine(models.Model):
             return True
 
         precision = self.env["decimal.precision"].get_precision("Product Unit")
-        procurements = []
+        procuring = []
         for line in self:
             line = line.with_company(line.company_id)
             if (
@@ -402,14 +402,23 @@ class SaleOrderLine(models.Model):
 
             if float_compare(qty, line.product_qty, precision_digits=precision) == 0:
                 continue
+            procuring.append((line, qty))
 
-            references = line.order_id.reference_ids
-
-            if not references:
-                self.env["stock.reference"].sudo().create(
+        # one reference per order that has none yet, created together
+        first_line_by_order = {}
+        for line, _qty in procuring:
+            if not line.order_id.reference_ids:
+                first_line_by_order.setdefault(line.order_id.id, line)
+        if first_line_by_order:
+            self.env["stock.reference"].sudo().create(
+                [
                     line._prepare_reference_vals()
-                )
+                    for line in first_line_by_order.values()
+                ]
+            )
 
+        procurements = []
+        for line, qty in procuring:
             values = line._prepare_procurement_vals()
             procurement_qty = line.product_qty - qty
 
