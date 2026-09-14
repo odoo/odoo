@@ -1,4 +1,5 @@
 import base64
+import hashlib
 import logging
 import os
 import threading
@@ -9,6 +10,7 @@ from cryptography.fernet import Fernet, InvalidToken
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.tools import config
 
 _logger = logging.getLogger(__name__)
 
@@ -21,6 +23,32 @@ _KEY_STATE: dict[str, Any] = {
     "version_cache_checked": False,
     "missing_warning_last_at": 0.0,
 }
+
+TEST_RUN_KEY = base64.urlsafe_b64encode(
+    hashlib.sha256(b"odoo test run without ODOO_API_ENCRYPTION_KEY").digest()
+).decode()
+
+
+def provide_test_run_key() -> bool:
+    """Give a test run that configured no key a fixed, publicly known one.
+
+    Only a process started with tests enabled gets it. A server started without
+    the variable keeps refusing to encrypt, because a key made up there would be
+    lost at restart along with everything it sealed. The key is fixed rather
+    than random so that a database installed by one test run still decrypts in
+    the next.
+    """
+    if not config["test_enable"] or os.environ.get("ODOO_API_ENCRYPTION_KEY"):
+        return False
+    os.environ["ODOO_API_ENCRYPTION_KEY"] = TEST_RUN_KEY
+    _logger.warning(
+        "Tests are enabled and ODOO_API_ENCRYPTION_KEY is not set: encrypting with "
+        "the fixed test-run key, which protects nothing"
+    )
+    return True
+
+
+provide_test_run_key()
 
 
 class MixinEncryption(models.AbstractModel):

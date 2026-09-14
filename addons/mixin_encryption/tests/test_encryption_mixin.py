@@ -16,8 +16,9 @@ from cryptography.fernet import Fernet
 
 from odoo.exceptions import ValidationError
 from odoo.tests.common import TransactionCase
-from odoo.tools import mute_logger
+from odoo.tools import config, mute_logger
 
+from odoo.addons.mixin_encryption.models import mixin_encryption as mixin_module
 from odoo.addons.mixin_encryption.models.mixin_encryption import MixinEncryption
 
 _KEY = "7ftr9ALjwK7f4IqWwnpFxWx4Wn8vetsznoGT3Oh46eU="
@@ -126,6 +127,31 @@ class TestEncryptionMixin(TransactionCase):
             self.mixin._invalidate_key_version_cache()
             self.assertFalse(self.mixin._decrypt_value(b"gAAAAA-anything"))
         self.mixin._invalidate_key_version_cache()
+
+    def test_a_test_run_without_a_key_is_given_the_fixed_one(self):
+        with (
+            patch.dict(os.environ, clear=False) as env,
+            config.patch(test_enable=True),
+        ):
+            env.pop("ODOO_API_ENCRYPTION_KEY", None)
+            with self.assertLogs(mixin_module._logger, "WARNING"):
+                self.assertTrue(mixin_module.provide_test_run_key())
+            self.assertEqual(env["ODOO_API_ENCRYPTION_KEY"], mixin_module.TEST_RUN_KEY)
+            Fernet(mixin_module.TEST_RUN_KEY)
+
+    def test_a_server_without_tests_is_never_given_a_key(self):
+        with (
+            patch.dict(os.environ, clear=False) as env,
+            config.patch(test_enable=False),
+        ):
+            env.pop("ODOO_API_ENCRYPTION_KEY", None)
+            self.assertFalse(mixin_module.provide_test_run_key())
+            self.assertNotIn("ODOO_API_ENCRYPTION_KEY", env)
+
+    def test_a_configured_key_is_kept_by_a_test_run(self):
+        with config.patch(test_enable=True):
+            self.assertFalse(mixin_module.provide_test_run_key())
+        self.assertEqual(os.environ["ODOO_API_ENCRYPTION_KEY"], _KEY)
 
     def test_the_walker_reports_consumers_never_the_mixin(self):
         discovered = self.mixin._get_encryption_migration_models()

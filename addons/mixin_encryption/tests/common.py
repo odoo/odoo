@@ -2,9 +2,10 @@
 
 Every model built on ``mixin.encryption`` refuses to store anything without
 ``ODOO_API_ENCRYPTION_KEY`` in the process environment -- deliberately, because the
-key must not live in the database. The consequence for tests is that a suite which
-does not provide one does not skip: it fails, once per test that stores a secret,
-with ``ValidationError: Encryption key not configured!``.
+key must not live in the database. A process started with tests enabled and no key
+is given the fixed ``TEST_RUN_KEY`` at import (``provide_test_run_key``), so a suite
+that stores a secret no longer fails for want of one. This class predates that and
+still gives a class its own key when none is set at all.
 
 Measured on this workspace, that is 61 failures across ``credential`` and
 ``integration`` on a run where the variable happened to be unset -- and no CI lane
