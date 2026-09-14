@@ -131,4 +131,5 @@ class ProjectShareWizard(models.TransientModel):
         }
         if partners_to_invite := self.collaborator_ids.filtered('send_invitation').partner_id:
             self._send_signup_link(partners=partners_to_invite.with_context({'signup_valid': True}))
+            self._log_share_message(partners_to_invite)
         return result
