@@ -3,7 +3,6 @@ import { AccountReturnCheckKanbanRecord } from "@account/components/account_retu
 import { WebChatter } from "@mail/chatter/web/web_chatter";
 import { onWillDestroy, onWillStart } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { parseXML } from "@web/core/utils/dom/xml";
 import { useService } from "@web/core/utils/hooks";
 import {
     extractFieldsFromArchInfo,
@@ -76,9 +75,8 @@ export class AccountReturnCheckKanbanRenderer extends KanbanRenderer {
             views: [[context.account_return_view_id, "kanban"]],
         });
         const { ArchParser } = viewRegistry.get("kanban");
-        const xmlDoc = parseXML(views["kanban"].arch);
         this.returnArchInfo = new ArchParser().parse(
-            xmlDoc,
+            views["kanban"].ir,
             relatedModels,
             "account.return",
         );

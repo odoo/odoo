@@ -24,7 +24,7 @@ import { registry } from "@web/core/registry";
 
 /**
  * @typedef {Object} ViewDescription
- * @property {string} arch
+ * @property {string} [arch] only when loaded with `{ arch: true }`
  * @property {import("@web/views/ir/view_ir_schema").ViewIRNode} [ir]
  * @property {number|false} id
  * @property {number|null} [custom_view_id]
@@ -107,6 +107,7 @@ class ViewService {
             embedded_parent_res_id: embeddedParentResId || false,
             load_filters: loadIrFilters || false,
             toolbar: (!context?.disable_toolbar && loadActionMenus) || false,
+            arch: false,
             ...forwardedOptions,
         };
         if (this.env.isSmall) {

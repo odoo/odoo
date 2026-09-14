@@ -229,7 +229,8 @@ class Base(models.AbstractModel):
         views: list[list[int | str]],
         options: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
-        options = options or {}
+        options = dict(options or {})
+        with_arch = options.pop("arch", True)
         result = {}
 
         with _debug.perf(
@@ -238,6 +239,7 @@ class Base(models.AbstractModel):
             model=self._name,
             views=[v_type for _v_id, v_type in views],
             toolbar=bool(options.get("toolbar")),
+            arch=with_arch,
         ):
             result["views"] = {
                 v_type: self.get_view(v_id, v_type, **options)
@@ -284,6 +286,10 @@ class Base(models.AbstractModel):
                 options.get("embedded_action_id"),
                 options.get("embedded_parent_res_id"),
             )
+
+        if not with_arch:
+            for view in result["views"].values():
+                del view["arch"]
 
         return result
 

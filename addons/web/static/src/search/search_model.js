@@ -241,7 +241,9 @@ export class SearchModel extends SearchQueryMixin(
         let { searchViewFields } = config;
         const loadSearchView =
             searchViewId !== undefined &&
-            (!searchViewArch || !searchViewFields || (!irFilters && loadIrFilters));
+            ((!searchViewArch && !searchViewIR) ||
+                !searchViewFields ||
+                (!irFilters && loadIrFilters));
 
         const searchViewDescription = {};
         if (loadSearchView) {
@@ -260,7 +262,7 @@ export class SearchModel extends SearchQueryMixin(
             Object.assign(searchViewDescription, result.views.search);
             searchViewFields = searchViewFields || result.fields;
         }
-        if (searchViewArch) {
+        if (searchViewArch || searchViewIR) {
             searchViewDescription.arch = searchViewArch;
             searchViewDescription.ir = searchViewIR;
         }

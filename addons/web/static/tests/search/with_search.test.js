@@ -180,6 +180,7 @@ test("load view description if it is not complete and loadSearchView=true", asyn
             action_id: false,
             load_filters: true,
             toolbar: false,
+            arch: false,
             embedded_action_id: false,
             embedded_parent_res_id: false,
         });

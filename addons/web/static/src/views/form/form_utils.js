@@ -7,7 +7,6 @@ import { isX2Many } from "@web/core/field_types";
 import { registry } from "@web/core/registry";
 import { sharedComponents } from "@web/core/shared_components";
 import { user } from "@web/core/user";
-import { parseXML } from "@web/core/utils/dom/xml";
 import { useService } from "@web/core/utils/hooks";
 
 const viewRegistry = registry.category("views");
@@ -83,8 +82,11 @@ export async function loadSubViews(
                 context: makeContext([fieldContext, user.context, refinedContext]),
             });
             const { ArchParser } = viewRegistry.get(viewType);
-            const xmlDoc = parseXML(views[viewType].arch);
-            const archInfo = new ArchParser().parse(xmlDoc, relatedModels, comodel);
+            const archInfo = new ArchParser().parse(
+                views[viewType].ir,
+                relatedModels,
+                comodel,
+            );
             fieldInfo.views[viewType] = {
                 ...archInfo,
                 limit: archInfo.limit || 40,

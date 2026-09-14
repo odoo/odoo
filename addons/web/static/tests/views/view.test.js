@@ -407,9 +407,9 @@ test("rendering with given searchViewId", async function () {
     patchWithCleanup(ToyController.prototype, {
         setup() {
             super.setup();
-            const { irFilters, searchViewArch, searchViewFields, searchViewId } =
+            const { irFilters, searchViewIR, searchViewFields, searchViewId } =
                 this.props.info;
-            expect(searchViewArch).toBe(`<search/>`);
+            expect(searchViewIR).toEqual({ kind: "search" });
             expect(searchViewFields).toEqual({
                 id: {
                     string: "Id",
@@ -936,7 +936,7 @@ test("'searchViewArch' cannot be passed as prop alone", async function () {
         expect.step(error.message);
     }
     expect.verifySteps([
-        `"searchViewArch" and "searchViewFields" props must be given together`,
+        `"searchViewArch"/"searchViewIR" and "searchViewFields" props must be given together`,
     ]);
 });
 
@@ -948,7 +948,7 @@ test("'searchViewFields' cannot be passed as prop alone", async function () {
         expect.step(error.message);
     }
     expect.verifySteps([
-        `"searchViewArch" and "searchViewFields" props must be given together`,
+        `"searchViewArch"/"searchViewIR" and "searchViewFields" props must be given together`,
     ]);
 });
 

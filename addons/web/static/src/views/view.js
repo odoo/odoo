@@ -401,8 +401,15 @@ export class View extends Component {
     withSearchProps;
 
     setup() {
-        const { arch, fields, resModel, searchViewArch, searchViewFields, type } =
-            this.props;
+        const {
+            arch,
+            fields,
+            resModel,
+            searchViewArch,
+            searchViewIR,
+            searchViewFields,
+            type,
+        } = this.props;
         if (!resModel) {
             throw Error(`View props should have a "resModel" key`);
         }
@@ -412,12 +419,10 @@ export class View extends Component {
         if ((arch && !fields) || (!arch && fields)) {
             throw new Error(`"arch" and "fields" props must be given together`);
         }
-        if (
-            (searchViewArch && !searchViewFields) ||
-            (!searchViewArch && searchViewFields)
-        ) {
+        const searchView = searchViewArch || searchViewIR;
+        if ((searchView && !searchViewFields) || (!searchView && searchViewFields)) {
             throw new Error(
-                `"searchViewArch" and "searchViewFields" props must be given together`,
+                `"searchViewArch"/"searchViewIR" and "searchViewFields" props must be given together`,
             );
         }
 
@@ -531,7 +536,7 @@ export class View extends Component {
         const mustLoadView = !arch || (!actionMenus && loadActionMenus);
         const mustLoadSearchView =
             hasSearchView &&
-            ((searchViewId !== undefined && !searchViewArch) ||
+            ((searchViewId !== undefined && !searchViewArch && !searchViewIR) ||
                 (!irFilters && loadIrFilters));
 
         /** @type {any} */
@@ -555,7 +560,7 @@ export class View extends Component {
             const searchViewDescription = /** @type {any} */ (result.views).search;
             if (mustLoadSearchView) {
                 searchViewId = searchViewId || searchViewDescription.id;
-                if (!searchViewArch) {
+                if (!searchViewArch && !searchViewIR) {
                     searchViewArch = searchViewDescription.arch;
                     searchViewIR = searchViewDescription.ir;
                     searchViewFields = result.fields;
@@ -656,7 +661,7 @@ export class View extends Component {
         if (loaded.searchViewId !== undefined) {
             withSearchProps.searchViewId = loaded.searchViewId;
         }
-        if (loaded.searchViewArch) {
+        if (loaded.searchViewArch || loaded.searchViewIR) {
             withSearchProps.searchViewArch = loaded.searchViewArch;
             withSearchProps.searchViewIR = loaded.searchViewIR;
             withSearchProps.searchViewFields = loaded.searchViewFields;

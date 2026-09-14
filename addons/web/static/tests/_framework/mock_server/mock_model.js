@@ -2087,7 +2087,7 @@ export class Model extends Array {
 
     /**
      * @param {[number | false, string][]} views
-     * @param {{ load_filters?: boolean }} [options]
+     * @param {{ load_filters?: boolean, arch?: boolean }} [options]
      */
     get_views(views, options) {
         const kwargs = getKwArgs(arguments, "views", "options");
@@ -2112,6 +2112,9 @@ export class Model extends Array {
                 }
             }
             delete result[viewType].models;
+            if (options.arch === false) {
+                delete result[viewType].arch;
+            }
         }
 
         for (const [modelName, value] of Object.entries(modelFields)) {

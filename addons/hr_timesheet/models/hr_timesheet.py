@@ -1,4 +1,3 @@
-import re
 from collections import defaultdict
 from datetime import datetime, time
 from statistics import mode
@@ -8,6 +7,7 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.debug_log import DebugLog
 from odoo.tools.translate import _
+from odoo.tools.view_ir import Node
 
 _debug = DebugLog(__name__)
 
@@ -562,8 +562,9 @@ class AccountAnalyticLine(models.Model):
             for view_data in res["views"].values():
                 print_data_list = view_data.get("toolbar", {}).get("print")
                 if print_data_list:
-                    if wip_report_id is None and re.search(
-                        r'widget="timesheet_uom(\w)*"', view_data["arch"]
+                    if wip_report_id is None and any(
+                        node.attrs.get("widget", "").startswith("timesheet_uom")
+                        for _path, node in Node.from_dict(view_data["ir"]).walk()
                     ):
                         wip_report_id = get_wip_report_id()
                     if wip_report_id:

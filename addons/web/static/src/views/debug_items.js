@@ -38,8 +38,9 @@ export function getView({ component, env }) {
         type: "item",
         description: _t("Computed Arch"),
         callback: () => {
+            const { rawArch, viewArch } = component.env.config;
             env.services.dialog.add(GetViewDialog, {
-                arch: component.env.config.rawArch,
+                arch: rawArch ?? new XMLSerializer().serializeToString(viewArch),
             });
         },
         sequence: 270,

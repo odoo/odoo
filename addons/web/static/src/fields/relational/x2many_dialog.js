@@ -9,7 +9,7 @@ import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { sharedComponents as shared } from "@web/core/shared_components";
 import { _t } from "@web/core/translation";
-import { createElement, parseXML } from "@web/core/utils/dom/xml";
+import { createElement } from "@web/core/utils/dom/xml";
 import {
     useBus,
     useChildRef,
@@ -243,8 +243,11 @@ async function getFormViewInfo({ list, context, activeField, viewService, env })
             views: [[false, "form"]],
         });
         const { ArchParser } = views.get("form");
-        const xmlDoc = parseXML(loadedViews.form.arch);
-        formArchInfo = new ArchParser().parse(xmlDoc, relatedModels, comodel);
+        formArchInfo = new ArchParser().parse(
+            loadedViews.form.ir,
+            relatedModels,
+            comodel,
+        );
         fields = { ...list.fields, ...formFields };
     }
 

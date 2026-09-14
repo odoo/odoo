@@ -15,7 +15,6 @@ import { makeLogger } from "@web/core/debug/debug_logger";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { RPCError } from "@web/core/network/rpc";
 import { _t } from "@web/core/translation";
-import { parseXML } from "@web/core/utils/dom/xml";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { extractFieldsFromArchInfo } from "@web/model/relational_model";
 import { formView } from "@web/views/form/form_view";
@@ -297,7 +296,7 @@ export class KanbanRecordQuickCreate extends Component {
             [props.group.resModel]: quickCreateFields,
         };
         const archInfo = new formView.ArchParser().parse(
-            parseXML(quickCreateForm.arch),
+            quickCreateForm.ir ?? quickCreateForm.arch,
             models,
             props.group.resModel,
         );

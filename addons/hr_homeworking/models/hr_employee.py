@@ -2,13 +2,11 @@ import re
 from datetime import UTC, datetime
 from zoneinfo import ZoneInfo
 
-from lxml import etree
-
 from odoo import api, fields, models
 from odoo.libs.debug_log import DebugLog
+from odoo.tools.view_ir import Node, to_string
 
 from .hr_homeworking import DAYS
-from odoo.addons.base.models.ir_ui_view_base import attach_ir
 
 _debug = DebugLog(__name__)
 
@@ -103,20 +101,17 @@ class HrEmployee(models.Model):
         return today
 
     @api.model
-    def _rewrite_today_location_marker(self, arch, dayfield):
-        tree = etree.fromstring(arch)
+    def _rewrite_today_location_marker(self, root: Node, dayfield: str) -> bool:
         changed = False
-        for node in tree.iter():
-            if node.tag == "field" and node.get("name") == TODAY_LOCATION_MARKER:
-                node.set("name", dayfield)
+        for _path, node in root.walk():
+            if node.kind == "field" and node.attrs.get("name") == TODAY_LOCATION_MARKER:
+                node.attrs["name"] = dayfield
                 changed = True
-            context = node.get("context")
+            context = node.attrs.get("context")
             if context and _MARKER_TOKEN.search(context):
-                node.set("context", _MARKER_TOKEN.sub(dayfield, context))
+                node.attrs["context"] = _MARKER_TOKEN.sub(dayfield, context)
                 changed = True
-        if not changed:
-            return arch
-        return etree.tostring(tree, encoding="unicode")
+        return changed
 
     @api.model
     def get_views(self, views, options=None):
@@ -127,11 +122,12 @@ class HrEmployee(models.Model):
             view = res["views"].get(view_type)
             if not view:
                 continue
-            arch = self._rewrite_today_location_marker(view["arch"], dayfield)
-            if arch is view["arch"]:
+            root = Node.from_dict(view["ir"])
+            if not self._rewrite_today_location_marker(root, dayfield):
                 continue
-            view["arch"] = arch
-            attach_ir(view)
+            view["ir"] = root.to_dict()
+            if "arch" in view:
+                view["arch"] = to_string(root)
             rewritten_types.append(view_type)
         res["models"][self._name]["fields"].update(self.fields_get([dayfield]))
         _debug.logic(
