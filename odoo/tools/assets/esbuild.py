@@ -604,8 +604,7 @@ class EsbuildCompiler:
             source_maps = ""
         return timeout_s, target, source_maps
 
-    @staticmethod
-    def _reached_module_path(url: str, odoo_root: Path) -> str | None:
+    def _reached_module_path(self, url: str, odoo_root: Path) -> str | None:
         from odoo.tools.misc import file_path
 
         rel = url.lstrip("/")
@@ -614,8 +613,22 @@ class EsbuildCompiler:
                 path = file_path(candidate)
             except ValueError, FileNotFoundError:
                 continue
-            return "./" + os.path.relpath(path, odoo_root)
+            return self._mirrored_path(candidate) or (
+                "./" + os.path.relpath(path, odoo_root)
+            )
         return None
+
+    def _mirrored_path(self, url: str) -> str | None:
+        # a mirrored addon's static/src lives in the layout with its siblings
+        # (tests, lib) symlinked next to it, and esbuild preserves symlinks
+        # there: an entry spelled by its real path and an alias import of the
+        # same file (`@website/../tests/tours/x`) are two modules to esbuild,
+        # each registering its tours once
+        addon, _, rest = url.lstrip("/").partition("/static/")
+        mirror = self._mirror_roots.get(addon) if rest else None
+        if mirror is None:
+            return None
+        return str(mirror.parent / rest)
 
     def _standalone_alias_flags(
         self, odoo_root: Path, already_aliased: set[str]
@@ -641,10 +654,9 @@ class EsbuildCompiler:
 
     def _entry_path(self, asset, odoo_root: Path) -> str:
         url = asset.url or ""
-        addon, _, rest = url.lstrip("/").partition("/static/src/")
-        mirror = self._mirror_roots.get(addon) if rest else None
-        if mirror is not None:
-            return str(mirror / rest)
+        mirrored = self._mirrored_path(url)
+        if mirrored is not None:
+            return mirrored
         if self._absolute_entry_paths:
             return str(
                 Path(asset._filename) if asset._filename else odoo_root / f"addons{url}"
