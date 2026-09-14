@@ -1,6 +1,6 @@
 {
     "name": "Maintenance",
-    "version": "1.2",
+    "version": "1.3",
     "category": "Supply Chain/Maintenance",
     "summary": "Track equipment and manage maintenance requests",
     "description": """

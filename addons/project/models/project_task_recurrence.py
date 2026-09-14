@@ -3,6 +3,7 @@ from typing import Self
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.datetime import timezone
 
 from ..tools import debug_log as dbg
 
@@ -20,6 +21,7 @@ class ProjectTaskRecurrence(models.Model):
 
     repeat_until = fields.Date(string="End Date")
     date_recurrence_origin = fields.Datetime(copy=False)
+    recurrence_anchor_field = fields.Char(copy=False)
 
     @api.constrains("repeat_type", "repeat_until")
     def _check_repeat_until_date(self) -> None:
@@ -38,7 +40,11 @@ class ProjectTaskRecurrence(models.Model):
             "repeat_interval",
             "repeat_unit",
         }:
-            vals = {**vals, "date_recurrence_origin": False}
+            vals = {
+                **vals,
+                "date_recurrence_origin": False,
+                "recurrence_anchor_field": False,
+            }
         return super().write(vals)
 
     @api.model
@@ -54,23 +60,28 @@ class ProjectTaskRecurrence(models.Model):
             "date_start",
         ]
 
-    def _get_occurrence_anchor(self, task) -> datetime | None:
+    def _get_occurrence_anchor(self, task) -> tuple[str, datetime] | tuple[None, None]:
         return next(
             (
-                task[field]
+                (field, task[field])
                 for field in self._get_recurring_fields_to_postpone()
                 if task[field]
             ),
-            None,
+            (None, None),
         )
 
     def _get_next_occurrence_shift(self, task) -> timedelta | None:
         self.check_singleton()
-        anchor = self._get_occurrence_anchor(task)
+        field, anchor = self._get_occurrence_anchor(task)
         if not anchor:
             return None
-        origin = self.date_recurrence_origin or anchor
-        return self._get_next_recurrence_after(origin, anchor, self.env.tz) - anchor
+        origin = (
+            self.date_recurrence_origin
+            if self.date_recurrence_origin and self.recurrence_anchor_field == field
+            else anchor
+        )
+        tz = timezone((task.company_id or self.env.company).partner_id.tz or "UTC")
+        return self._get_next_recurrence_after(origin, anchor, tz) - anchor
 
     def _get_last_task_id_per_recurrence_id(self) -> dict[int, int]:
         return (
@@ -127,9 +138,17 @@ class ProjectTaskRecurrence(models.Model):
                 .sudo(False)
             )
             for task, recurrence in recurrence_by_task.items():
-                anchor = recurrence._get_occurrence_anchor(task)
-                if anchor and not recurrence.date_recurrence_origin:
-                    recurrence.date_recurrence_origin = anchor
+                field, anchor = recurrence._get_occurrence_anchor(task)
+                if anchor and (
+                    not recurrence.date_recurrence_origin
+                    or recurrence.recurrence_anchor_field != field
+                ):
+                    recurrence.write(
+                        {
+                            "date_recurrence_origin": anchor,
+                            "recurrence_anchor_field": field,
+                        }
+                    )
             dbg.lifecycle.debug(
                 "recurrence._create_next_occurrences: %s -> %s",
                 dbg.rec(occurrences_from),

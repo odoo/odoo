@@ -706,6 +706,24 @@ class TestRecurrenceSeriesDates(TestProjectCommon):
             ],
         )
 
+    def test_a_series_counts_from_the_field_it_was_anchored_on(self) -> None:
+        self.task.date_end = False
+        self.task.date_start = datetime(2030, 1, 10, 10, 0)
+        february = self.Recurrence._create_next_occurrences(self.task)
+        self.assertEqual(february.date_start, datetime(2030, 2, 10, 10, 0))
+        february.date_end = datetime(2030, 2, 28, 10, 0)
+        march = self.Recurrence._create_next_occurrences(february)
+        self.assertEqual(march.date_end, datetime(2030, 3, 28, 10, 0))
+
+    def test_the_dates_do_not_depend_on_the_closer_timezone(self) -> None:
+        self.task.company_id.partner_id.tz = "UTC"
+        self.task.date_end = datetime(2030, 1, 30, 20, 0)
+        task = self.task.with_context(tz="Asia/Tokyo")
+        february = self.Recurrence.with_context(
+            tz="Asia/Tokyo"
+        )._create_next_occurrences(task)
+        self.assertEqual(february.date_end, datetime(2030, 2, 28, 20, 0))
+
     def test_rescheduling_one_occurrence_keeps_the_series_on_its_dates(self) -> None:
         february = self.Recurrence._create_next_occurrences(self.task)
         february.write(

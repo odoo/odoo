@@ -67,6 +67,15 @@ class MaintenanceRequest extends models.Model {
             duration: 1,
         },
         {
+            id: 4,
+            name: "closed occurrence of an active plan",
+            schedule_date: "2025-09-12 16:00:00",
+            schedule_end: "2025-09-12 17:00:00",
+            duration: 1,
+            plan_id: 1,
+            done: true,
+        },
+        {
             id: 3,
             name: "stopped plan",
             schedule_date: "2025-09-11 16:00:00",

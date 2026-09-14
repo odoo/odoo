@@ -2926,7 +2926,9 @@ class ProjectTask(models.Model):
             return
         shifted = scope["shift_from"]
         if shifted:
-            self.recurrence_id.sudo().date_recurrence_origin = False
+            self.recurrence_id.sudo().write(
+                {"date_recurrence_origin": False, "recurrence_anchor_field": False}
+            )
         targets = scope["targets"].exists()
         if not targets:
             return

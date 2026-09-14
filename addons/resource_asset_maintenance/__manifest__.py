@@ -1,6 +1,6 @@
 {
     "name": "Assets - Maintenance",
-    "version": "1.0",
+    "version": "1.1",
     "category": "Hidden",
     "summary": "Maintenance requests on assets; a planned request blocks the asset's time",
     "author": "AgroMarin",

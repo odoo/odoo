@@ -150,9 +150,16 @@ class MaintenanceRequest(models.Model):
     plan_id = fields.Many2one(
         comodel_name="maintenance.plan",
         index="btree_not_null",
+        copy=False,
         ondelete="set null",
         check_company=True,
         tracking=True,
+    )
+    date_occurrence = fields.Datetime(
+        string="Planned Occurrence",
+        copy=False,
+        readonly=True,
+        help="The date of its plan's series this request stands for, however it is rescheduled.",
     )
 
     def archive_equipment_request(self):
@@ -278,7 +285,9 @@ class MaintenanceRequest(models.Model):
             self._add_followers()
         if closing:
             closing.filtered("stage_id.done").activity_feedback([REQUEST_ACTIVITY_TYPE])
-            for request in closing.filtered("plan_id"):
+            # sudo: opening the next occurrence is a consequence of closing this one,
+            # not an edit of the plan by whoever closes it.
+            for request in closing.filtered("plan_id").sudo():
                 request.plan_id._schedule_after(request)
         replace_activity = self._is_new_activity_required(vals)
         if replace_activity:
@@ -298,23 +307,26 @@ class MaintenanceRequest(models.Model):
             fields.Datetime.to_datetime(start),
             fields.Datetime.to_datetime(stop),
         )
-        return {
-            request.id: [
+        occurrences = {}
+        for plan in self.plan_id.sudo().filtered("active"):
+            latest = plan._get_open_requests()[-1:]
+            base = plan._get_projection_base()
+            if latest.id not in self.ids or not base:
+                continue
+            occurrences[latest.id] = [
                 fields.Datetime.to_string(occurrence)
-                for occurrence in request.plan_id._get_occurrences_after(
-                    request.schedule_date, stop=stop
-                )
+                for occurrence in plan._get_occurrences_after(base, stop=stop)
                 if occurrence >= start
             ]
-            for request in self.filtered(
-                lambda request: (
-                    request.plan_id.active
-                    and request.schedule_date
-                    and not request.stage_id.done
-                    and not request.archive
-                )
-            )
-        }
+        return occurrences
+
+    def unlink(self):
+        plans = self.filtered(
+            lambda request: not request.stage_id.done and not request.archive
+        ).plan_id
+        res = super().unlink()
+        plans.exists().sudo()._ensure_open_request()
+        return res
 
     def _is_new_activity_required(self, vals):
         return vals.get("equipment_id")

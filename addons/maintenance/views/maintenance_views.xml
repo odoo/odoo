@@ -213,6 +213,7 @@
                             <field
                                 name="plan_id"
                                 invisible="maintenance_type == 'corrective'" />
+                            <field name="date_occurrence" invisible="not plan_id" />
                             <field name="priority" widget="priority" />
                             <field
                                 name="email_cc"

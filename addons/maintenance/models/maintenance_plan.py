@@ -3,7 +3,19 @@ from itertools import count, islice, takewhile
 
 from odoo import api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.libs.datetime import timezone
 from odoo.tools.date_utils import get_timedelta, occurrences_after
+
+from odoo.addons.base.models.res_partner import _selection_timezones
+
+RESCHEDULING_FIELDS = frozenset(
+    {"date_start", "repeat_anchor", "repeat_interval", "repeat_unit", "tz"}
+)
+
+
+def _occurrence_key(request):
+    moment = request.date_occurrence or request.schedule_date
+    return (not moment, moment or request.id)
 
 
 class MaintenancePlan(models.Model):
@@ -52,7 +64,10 @@ class MaintenancePlan(models.Model):
         selection=[("0", "Very Low"), ("1", "Low"), ("2", "Normal"), ("3", "High")]
     )
     description = fields.Html()
-    repeat_unit = fields.Selection(default="month")
+    repeat_unit = fields.Selection(
+        default="month",
+        required=True,
+    )
     repeat_until = fields.Date(string="End Date")
     repeat_anchor = fields.Selection(
         selection=[
@@ -66,6 +81,15 @@ class MaintenancePlan(models.Model):
         help="Fixed Dates: every occurrence falls on the series' own dates, and a late "
         "completion skips the dates it missed. After Completion: the next occurrence "
         "is one interval after the day the last one was done.",
+    )
+    tz = fields.Selection(
+        selection=_selection_timezones,
+        string="Timezone",
+        default=lambda self: (
+            self.env.company.partner_id.tz or self.env.user.tz or "UTC"
+        ),
+        required=True,
+        help="The local time the series' dates and days are counted in, whoever closes its requests.",
     )
     date_start = fields.Datetime(
         string="First Occurrence",
@@ -100,6 +124,7 @@ class MaintenancePlan(models.Model):
 
     @api.depends(
         "request_ids.schedule_date",
+        "request_ids.date_occurrence",
         "request_ids.stage_id.done",
         "request_ids.archive",
         "request_ids.close_date",
@@ -125,54 +150,121 @@ class MaintenancePlan(models.Model):
     def write(self, vals):
         res = super().write(vals)
         if vals.get("active"):
-            for plan in self.filtered(lambda plan: not plan._get_open_request()):
-                if occurrence := plan._resolve_resumed_occurrence():
-                    plan._create_request(occurrence)
+            self._ensure_open_request()
+        if vals.keys() & RESCHEDULING_FIELDS:
+            for plan in self.filtered("active"):
+                plan._reschedule_open_request()
         return res
 
-    def _get_open_request(self):
+    def _get_open_requests(self):
         self.check_singleton()
-        return self.request_ids.filtered(
-            lambda request: not request.stage_id.done and not request.archive
-        ).sorted("schedule_date")[:1]
+        return (
+            self.sudo()
+            .request_ids.filtered(
+                lambda request: not request.stage_id.done and not request.archive
+            )
+            .sorted(key=_occurrence_key)
+            .with_env(self.env)
+        )
 
-    def _prepare_request_vals(self, schedule_date):
+    def _get_open_request(self):
+        return self._get_open_requests()[:1]
+
+    def _get_last_done_request(self):
         self.check_singleton()
-        vals = {
-            "name": self.name,
-            "plan_id": self.id,
-            "company_id": self.company_id.id,
-            "maintenance_type": "preventive",
-            "schedule_date": schedule_date,
-            "duration": self.duration,
-            "description": self.description,
-            "priority": self.priority,
-        }
-        if self.equipment_id:
-            vals["equipment_id"] = self.equipment_id.id
-        if self.maintenance_team_id:
-            vals["maintenance_team_id"] = self.maintenance_team_id.id
-        if self.user_id:
-            vals["user_id"] = self.user_id.id
+        return (
+            self.sudo()
+            .request_ids.filtered("stage_id.done")
+            .sorted(
+                key=lambda request: (
+                    bool(request.close_date),
+                    request.close_date or request.id,
+                    _occurrence_key(request),
+                )
+            )[-1:]
+            .with_env(self.env)
+        )
+
+    def _get_tzinfo(self):
+        self.check_singleton()
+        return timezone(self.tz or "UTC")
+
+    def _get_local_date(self, moment):
+        return moment.replace(tzinfo=UTC).astimezone(self._get_tzinfo()).date()
+
+    def _prepare_request_vals(self, occurrence, previous=None):
+        self.check_singleton()
+        vals = previous.copy_data()[0] if previous else {}
+        vals.update(
+            {
+                "name": self.name,
+                "plan_id": self.id,
+                "company_id": self.company_id.id,
+                "maintenance_type": "preventive",
+                "schedule_date": occurrence,
+                "date_occurrence": occurrence,
+                "request_date": fields.Date.context_today(self),
+                "duration": self.duration,
+                "archive": False,
+                "kanban_state": "normal",
+            }
+        )
+        for fname in ("description", "priority"):
+            if self[fname]:
+                vals[fname] = self[fname]
+        for fname in ("equipment_id", "maintenance_team_id", "user_id"):
+            if self[fname]:
+                vals[fname] = self[fname].id
         return vals
 
-    def _create_request(self, schedule_date):
+    def _create_request(self, occurrence, previous=None):
         self.check_singleton()
         return self.env["maintenance.request"].create(
-            self._prepare_request_vals(schedule_date)
+            self._prepare_request_vals(occurrence, previous)
         )
+
+    def _ensure_open_request(self):
+        for plan in self.filtered(
+            lambda plan: plan.active and not plan._get_open_request()
+        ):
+            if occurrence := plan._resolve_resumed_occurrence():
+                plan._create_request(occurrence, plan._get_last_done_request())
+
+    def _reschedule_open_request(self):
+        self.check_singleton()
+        first_stage = self.env["maintenance.request"]._default_stage_id()
+        untouched = self._get_open_requests().filtered(
+            lambda request: (
+                request.stage_id == first_stage
+                and request.date_occurrence
+                and request.schedule_date == request.date_occurrence
+            )
+        )[:1]
+        if untouched and (occurrence := self._resolve_resumed_occurrence()):
+            untouched.write(
+                {"schedule_date": occurrence, "date_occurrence": occurrence}
+            )
 
     def _schedule_after(self, request):
         self.check_singleton()
         if not self.active or self._get_open_request():
             return self.env["maintenance.request"]
         now = fields.Datetime.now()
-        planned = request.schedule_date or now
-        done_at = now if request.stage_id.done else planned
-        occurrence = self._resolve_occurrence_after(planned, done_at)
-        if not occurrence:
+        planned = request.date_occurrence or request.schedule_date or now
+        missed = 0
+        if self.repeat_anchor == "completion":
+            day = (
+                request.close_date
+                if request.stage_id.done and request.close_date
+                else self._get_local_date(now)
+            )
+            occurrence = self._get_completion_occurrence(day)
+        else:
+            occurrence = next(self._get_grid_occurrences(max(planned, now)))
+            missed = self._count_missed_occurrences(planned, occurrence)
+        if not self._is_within_until(occurrence):
             return self.env["maintenance.request"]
-        if missed := self._count_missed_occurrences(planned, occurrence):
+        if missed:
             self.message_post(
                 body=self.env._(
                     "%(count)s occurrence(s) skipped: %(request)s was done after them.",
@@ -180,60 +272,52 @@ class MaintenancePlan(models.Model):
                     request=request._get_html_link(),
                 )
             )
-        return self._create_request(occurrence)
-
-    def _resolve_occurrence_after(self, planned, done_at):
-        self.check_singleton()
-        if self.repeat_anchor == "completion":
-            occurrence = self._get_completion_occurrence(done_at)
-        else:
-            occurrence = next(self._get_grid_occurrences(max(planned, done_at)))
-        return occurrence if self._is_within_until(occurrence) else None
+        return self._create_request(occurrence, request)
 
     def _resolve_resumed_occurrence(self):
         self.check_singleton()
         now = fields.Datetime.now()
+        last = self._get_last_done_request()
         if self.repeat_anchor == "fixed":
+            after = max(now, last.date_occurrence or now)
             occurrence = (
                 self.date_start
-                if self.date_start > now
-                else next(self._get_grid_occurrences(now))
+                if self.date_start > after
+                else next(self._get_grid_occurrences(after))
             )
-        elif self.date_last_done:
-            done_at = datetime.combine(self.date_last_done, self.date_start.time())
-            occurrence = max(now, self._get_completion_occurrence(done_at))
+        elif last.close_date:
+            occurrence = max(now, self._get_completion_occurrence(last.close_date))
         else:
             occurrence = max(now, self.date_start)
         return occurrence if self._is_within_until(occurrence) else None
 
     def _count_missed_occurrences(self, planned, occurrence):
-        if self.repeat_anchor != "fixed":
-            return 0
         return sum(
             1
             for _date in takewhile(
-                lambda date: date < occurrence, self._get_grid_occurrences(planned)
+                lambda moment: moment < occurrence, self._get_grid_occurrences(planned)
             )
         )
 
     def _get_grid_occurrences(self, after):
         return occurrences_after(
-            self.date_start, after, self.repeat_interval, self.repeat_unit, self.env.tz
+            self.date_start,
+            after,
+            self.repeat_interval,
+            self.repeat_unit,
+            self._get_tzinfo(),
         )
 
-    def _get_completion_occurrence(self, done_at):
-        tz = self.env.tz
-        local_start = self.date_start.replace(tzinfo=UTC).astimezone(tz)
-        local_done = done_at.replace(tzinfo=UTC).astimezone(tz)
-        local = datetime.combine(local_done.date(), local_start.timetz())
-        occurrence = local + get_timedelta(self.repeat_interval, self.repeat_unit)
-        return occurrence.astimezone(UTC).replace(tzinfo=None)
+    def _get_completion_occurrence(self, day, steps=1):
+        tz = self._get_tzinfo()
+        start_time = self.date_start.replace(tzinfo=UTC).astimezone(tz).time()
+        local = datetime.combine(day, start_time).replace(tzinfo=tz)
+        delta = get_timedelta(self.repeat_interval, self.repeat_unit) * steps
+        return (local + delta).astimezone(UTC).replace(tzinfo=None)
 
     def _is_within_until(self, occurrence):
-        return self.repeat_type != "until" or (
-            self.repeat_until
-            and fields.Datetime.context_timestamp(self, occurrence).date()
-            <= self.repeat_until
+        return self.repeat_type != "until" or bool(
+            self.repeat_until and self._get_local_date(occurrence) <= self.repeat_until
         )
 
     def _get_occurrences_after(self, after, stop=None, limit=None):
@@ -241,13 +325,27 @@ class MaintenancePlan(models.Model):
         if self.repeat_anchor == "fixed":
             candidates = self._get_grid_occurrences(after)
         else:
-            delta = get_timedelta(self.repeat_interval, self.repeat_unit)
-            candidates = (after + delta * k for k in count(1))
+            day = self._get_local_date(after)
+            candidates = (
+                self._get_completion_occurrence(day, steps) for steps in count(1)
+            )
         occurrences = takewhile(
-            lambda date: (stop is None or date <= stop) and self._is_within_until(date),
+            lambda moment: (
+                (stop is None or moment <= stop) and self._is_within_until(moment)
+            ),
             candidates,
         )
         return list(islice(occurrences, limit))
+
+    def _get_projection_base(self):
+        self.check_singleton()
+        latest = self._get_open_requests()[-1:]
+        occurrence = latest.date_occurrence or latest.schedule_date
+        if not occurrence:
+            return None
+        if self.repeat_anchor == "fixed":
+            return max(occurrence, fields.Datetime.now())
+        return occurrence
 
     def action_view_requests(self):
         self.check_singleton()
