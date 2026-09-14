@@ -697,7 +697,7 @@ class PosConfig(models.Model):
                     )
                 )
 
-    @api.depends("payment_method_ids")
+    @api.depends("payment_method_ids.is_cash_count")
     def _compute_cash_control(self):
         for config in self:
             config.cash_control = bool(
@@ -1380,6 +1380,11 @@ class PosConfig(models.Model):
         for configs, product in tip_updates:
             configs.write({"tip_product_id": product.id})
         result = super().write(vals)
+
+        if "payment_method_ids" in vals:
+            self.env["pos.session"].search(
+                [("config_id", "in", self.ids), ("state", "!=", "closed")]
+            )._compute_cash_journal_id()
 
         for config in self:
             if (

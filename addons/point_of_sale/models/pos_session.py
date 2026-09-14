@@ -1,7 +1,8 @@
 import logging
+import math
 from collections import defaultdict
 from datetime import timedelta
-from itertools import batched, groupby, starmap
+from itertools import batched, starmap
 
 from markupsafe import Markup
 from psycopg.errors import LockNotAvailable
@@ -11,7 +12,7 @@ from odoo.db.schema import create_index
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.models import PREFETCH_MAX
-from odoo.tools import float_compare, float_is_zero, frozendict, plaintext2html
+from odoo.tools import float_is_zero, frozendict, plaintext2html
 
 from ..tools import debug_log as dbg
 
@@ -342,7 +343,7 @@ class PosSession(models.Model):
             response, self.config_id
         )
 
-        for model in self._get_model_names_to_load(self.config_id):
+        for model in dict.fromkeys(self._get_model_names_to_load(self.config_id)):
             if models_to_load and model not in models_to_load:
                 continue
 
@@ -372,7 +373,7 @@ class PosSession(models.Model):
             "relations": self._get_field_relations("pos.session", fields),
         }
 
-        for model in self._get_model_names_to_load(self.config_id):
+        for model in dict.fromkeys(self._get_model_names_to_load(self.config_id)):
             fields = self.env[model]._load_pos_data_fields(self.config_id)
             response[model] = {
                 "fields": fields,
@@ -535,7 +536,7 @@ class PosSession(models.Model):
         action["domain"] = [("id", "in", self.picking_ids.ids)]
         return action
 
-    @api.depends("cash_journal_id")
+    @api.depends("cash_journal_id", "config_id.cash_control")
     def _compute_cash_control(self):
         for session in self:
             if session.cash_journal_id:
@@ -543,8 +544,11 @@ class PosSession(models.Model):
             else:
                 session.cash_control = False
 
-    @api.depends("config_id", "payment_method_ids")
+    @api.depends("config_id")
     def _compute_cash_journal_id(self):
+        # Initialize the drawer when assigning a register. Later payment-method
+        # changes refresh open sessions explicitly in pos.config.write, preserving
+        # the journal used by closed sessions and their accounting history.
         for session in self:
             cash_journal = session.payment_method_ids.filtered("is_cash_count")[
                 :1
@@ -604,6 +608,8 @@ class PosSession(models.Model):
     @api.constrains("start_at")
     def _check_start_date(self):
         for record in self:
+            if not record.start_at:
+                continue
             journal = record.config_id.journal_id
             company = journal.company_id
             start_date = record.start_at.date()
@@ -698,15 +704,25 @@ class PosSession(models.Model):
         )
         if not opening:
             return True
-        previous_sessions = self.search(
+        latest_sessions = self._read_group(
             [
                 ("config_id", "in", opening.config_id.ids),
                 ("id", "not in", opening.ids),
-            ]
+            ],
+            ["config_id"],
+            ["id:max"],
         )
-        latest_per_config = {}
-        for session in previous_sessions:
-            latest_per_config.setdefault(session.config_id.id, session)
+        previous_sessions = self.browse(
+            [session_id for _, session_id in latest_sessions]
+        )
+        latest_per_config = {
+            session.config_id.id: session for session in previous_sessions
+        }
+        dbg.logic.debug(
+            "Opening %d sessions: selected %d previous sessions",
+            len(opening),
+            len(previous_sessions),
+        )
         for session in opening:
             last_session = latest_per_config.get(session.config_id.id)
             session.cash_register_balance_start = (
@@ -820,14 +836,8 @@ class PosSession(models.Model):
     ):
         bank_payment_method_diffs = bank_payment_method_diffs or {}
         record = self.check_singleton()
-        try:
-            self.env.cr.execute(
-                "SELECT id FROM pos_session WHERE id = %s FOR UPDATE NOWAIT",
-                (self.id,),
-            )
-        except LockNotAvailable as e:
-            dbg.logic.debug("[session:%s] close refused: row locked", self.name)
-            raise UserError(_("Another user is currently closing this session.")) from e
+        self._check_bank_payment_method_diffs(bank_payment_method_diffs)
+        self._lock_sessions(_("Another user is currently closing this session."))
         if self.env.user.has_group("point_of_sale.group_pos_user"):
             record = record.sudo()
         if self.state == "closed":
@@ -931,6 +941,9 @@ class PosSession(models.Model):
                     )._reconcile_account_move_lines(data)
         else:
             self.sudo()._post_statement_difference(self.cash_register_difference)
+            record.with_company(
+                record.company_id
+            )._create_bank_payment_difference_moves(bank_payment_method_diffs)
 
         if self.config_id.order_edit_tracking:
             edited_orders = self.get_session_orders().filtered(lambda o: o.is_edited)
@@ -951,6 +964,50 @@ class PosSession(models.Model):
         self.write({"state": "closed"})
         self.env.flush_all()
         return True
+
+    def _lock_sessions(self, error_message):
+        """Serialize closing and cash mutations, keeping locks until transaction end."""
+        self.check_access("write")
+        try:
+            with self.env.cr.savepoint(flush=False):
+                self.env.cr.execute(
+                    "SELECT id FROM pos_session WHERE id = ANY(%s) ORDER BY id FOR UPDATE NOWAIT",
+                    (self.ids,),
+                )
+        except LockNotAvailable as error:
+            dbg.logic.debug("Session mutation refused: %s is locked", dbg.rec(self))
+            raise UserError(error_message) from error
+
+    def _check_bank_payment_method_diffs(self, differences):
+        """Accept finite amounts only for bank methods belonging to this session."""
+        if not differences:
+            return
+        self.check_singleton()
+        bank_methods = self.payment_method_ids.filtered(
+            lambda method: method.type == "bank"
+        )
+        if set(differences) - set(bank_methods.ids):
+            raise UserError(
+                _(
+                    "Closing differences must use bank payment methods configured on this session."
+                )
+            )
+        for amount in differences.values():
+            self._check_amount_is_finite(amount)
+
+    @api.model
+    def _check_amount_is_finite(self, amount):
+        try:
+            valid = (
+                isinstance(amount, (int, float))
+                and not isinstance(amount, bool)
+                and math.isfinite(amount)
+            )
+        except OverflowError:
+            valid = False
+        if not valid:
+            dbg.logic.debug("Session amount rejected: %r", amount)
+            raise UserError(_("An amount must be a finite number."))
 
     def _post_statement_difference(self, amount):
         dbg.logic.debug(
@@ -1108,6 +1165,8 @@ class PosSession(models.Model):
         self.message_post(body=_("Closed Register"))
 
     def update_closing_control_state_session(self, notes):
+        self.check_singleton()
+        self._lock_sessions(_("Another user is currently updating this session."))
         if self.state == "closed":
             raise UserError(_("This session is already closed."))
         dbg.lifecycle.debug(
@@ -1132,6 +1191,7 @@ class PosSession(models.Model):
 
     def update_closing_cash_details(self, counted_cash):
         self.check_singleton()
+        self._lock_sessions(_("Another user is currently updating this session."))
         check_closing_session = self._resolve_close_refusal()
         if check_closing_session:
             open_order_ids = (
@@ -1140,6 +1200,7 @@ class PosSession(models.Model):
             check_closing_session["open_order_ids"] = open_order_ids
             return check_closing_session
 
+        self._check_amount_is_finite(counted_cash)
         if not self.cash_journal_id:
             raise UserError(_("There is no cash register in this session."))
 
@@ -1153,12 +1214,34 @@ class PosSession(models.Model):
 
         return {"successful": True}
 
-    def _create_diff_account_move_for_split_payment_method(
-        self, payment_method, diff_amount
-    ):
+    def _create_diff_account_move_for_payment_method(self, payment_method, diff_amount):
         self.check_singleton()
 
-        diff_line_vals = self._prepare_diff_line_vals(payment_method.id, diff_amount)
+        outstanding_account = payment_method.outstanding_account_id
+        if not outstanding_account and not self.currency_id.is_zero(diff_amount):
+            # Resolve the same defaults as a captured payment without creating a
+            # zero-value payment or changing any accounting records.
+            payment = (
+                self.env["account.payment"]
+                .with_context(pos_payment=True)
+                .new(
+                    {
+                        "amount": abs(diff_amount),
+                        "payment_type": "outbound" if diff_amount < 0 else "inbound",
+                        "currency_id": self.currency_id.id,
+                        "journal_id": payment_method.journal_id.id,
+                        "company_id": self.company_id.id,
+                        "destination_account_id": self._get_receivable_account(
+                            payment_method
+                        ).id,
+                    }
+                )
+            )
+            self._update_payment_outstanding_account(payment, diff_amount)
+            outstanding_account = payment.outstanding_account_id
+        diff_line_vals = self._prepare_diff_line_vals(
+            payment_method.id, diff_amount, outstanding_account
+        )
         if not diff_line_vals:
             dbg.logic.debug(
                 "[session:%s] no diff move for %s (amount=%s)",
@@ -1208,8 +1291,22 @@ class PosSession(models.Model):
         elif diff_compare_to_zero < 0:
             destination_account = payment_method.journal_id.loss_account_id
 
-        if diff_compare_to_zero == 0 or not source_account:
+        if diff_compare_to_zero == 0:
             return False
+        if not source_account:
+            raise UserError(
+                _(
+                    "Configure an outstanding account for payment method %s before posting its closing difference.",
+                    payment_method.name,
+                )
+            )
+        if not destination_account:
+            raise UserError(
+                _(
+                    "Configure a profit or loss account on journal %s before posting its closing difference.",
+                    payment_method.journal_id.name,
+                )
+            )
 
         amounts = self._update_amounts(
             {"amount": 0, "amount_converted": 0}, {"amount": diff_amount}, self.stop_at
@@ -1228,6 +1325,7 @@ class PosSession(models.Model):
 
     def _resolve_close_refusal(self, bank_payment_method_diffs=None):
         bank_payment_method_diffs = bank_payment_method_diffs or {}
+        self._check_bank_payment_method_diffs(bank_payment_method_diffs)
         if any(order.state == "draft" for order in self.get_session_orders()):
             return {
                 "successful": False,
@@ -1314,34 +1412,23 @@ class PosSession(models.Model):
             )
         self.check_singleton()
         orders = self._get_closed_orders()
-        payments = orders.payment_ids.filtered(
-            lambda p: p.payment_method_id.type != "pay_later"
-        )
-        cash_payment_method_ids = self.payment_method_ids.filtered("is_cash_count")
-        default_cash_payment_method_id = (
-            cash_payment_method_ids[0] if cash_payment_method_ids else None
-        )
-        default_cash_payments = (
-            payments.filtered(
-                lambda p: p.payment_method_id == default_cash_payment_method_id
+        payments_by_method = orders.payment_ids.grouped("payment_method_id")
+        cash_method = self.payment_method_ids.filtered("is_cash_count")[:1]
+        cash_payments = payments_by_method.get(cash_method, self.env["pos.payment"])
+        cash_payment_amount = sum(cash_payments.mapped("amount"))
+        non_cash_methods = self.payment_method_ids - cash_method
+        non_cash_details = []
+        for method in non_cash_methods:
+            payments = payments_by_method.get(method, self.env["pos.payment"])
+            non_cash_details.append(
+                {
+                    "name": method.name,
+                    "amount": sum(payments.mapped("amount")),
+                    "number": len(payments),
+                    "id": method.id,
+                    "type": method.type,
+                }
             )
-            if default_cash_payment_method_id
-            else []
-        )
-        total_default_cash_payment_amount = (
-            sum(default_cash_payments.mapped("amount"))
-            if default_cash_payment_method_id
-            else 0
-        )
-        non_cash_payment_method_ids = (
-            self.payment_method_ids - default_cash_payment_method_id
-            if default_cash_payment_method_id
-            else self.payment_method_ids
-        )
-        non_cash_payments_grouped_by_method_id = {
-            pm: orders.payment_ids.filtered(lambda p, pm=pm: p.payment_method_id == pm)
-            for pm in non_cash_payment_method_ids
-        }
 
         cash_in_out_list = self.get_cash_in_out_list()
 
@@ -1352,29 +1439,18 @@ class PosSession(models.Model):
             },
             "opening_notes": self.opening_notes,
             "default_cash_details": {
-                "name": default_cash_payment_method_id.name,
+                "name": cash_method.name,
                 "amount": self.cash_register_balance_start
-                + total_default_cash_payment_amount
+                + cash_payment_amount
                 + sum(self.sudo().statement_line_ids.mapped("amount")),
                 "opening": self.cash_register_balance_start,
-                "payment_amount": total_default_cash_payment_amount,
+                "payment_amount": cash_payment_amount,
                 "moves": cash_in_out_list,
-                "id": default_cash_payment_method_id.id,
+                "id": cash_method.id,
             }
-            if default_cash_payment_method_id
+            if cash_method
             else {},
-            "non_cash_payment_methods": [
-                {
-                    "name": pm.name,
-                    "amount": sum(
-                        non_cash_payments_grouped_by_method_id[pm].mapped("amount")
-                    ),
-                    "number": len(non_cash_payments_grouped_by_method_id[pm]),
-                    "id": pm.id,
-                    "type": pm.type,
-                }
-                for pm in non_cash_payment_method_ids
-            ],
+            "non_cash_payment_methods": non_cash_details,
             "is_manager": self.env.user.has_group("point_of_sale.group_pos_manager"),
             "amount_authorized_diff": self.config_id.amount_authorized_diff
             if self.config_id.set_maximum_difference
@@ -1866,13 +1942,9 @@ class PosSession(models.Model):
                 split_receivable_line | payment_receivable_line
             )
 
-        for bank_payment_method in self.payment_method_ids.filtered(
-            lambda pm: pm.type == "bank" and pm.split_transactions
-        ):
-            self._create_diff_account_move_for_split_payment_method(
-                bank_payment_method,
-                bank_payment_method_diffs.get(bank_payment_method.id) or 0,
-            )
+        self._create_bank_payment_difference_moves(
+            bank_payment_method_diffs, combine_receivables_bank
+        )
 
         dbg.pipeline.debug(
             "[session:%s] bank: %d combined methods, %d split payments, diffs=%s",
@@ -1884,6 +1956,15 @@ class PosSession(models.Model):
         data["payment_method_to_receivable_lines"] = payment_method_to_receivable_lines
         data["payment_to_receivable_lines"] = payment_to_receivable_lines
         return data
+
+    def _create_bank_payment_difference_moves(self, differences, combined_methods=()):
+        """Post standalone differences not already included in combined payments."""
+        for method in self.payment_method_ids.filtered(
+            lambda method: method.type == "bank" and method not in combined_methods
+        ):
+            self._create_diff_account_move_for_payment_method(
+                method, differences.get(method.id, 0)
+            )
 
     def _create_pay_later_receivable_lines(self, data):
         MoveLine = data.get("MoveLine")
@@ -1908,6 +1989,19 @@ class PosSession(models.Model):
         return data
 
     def _update_payment_outstanding_account(self, payment, payment_amount):
+        """Assign the payment direction and resolve its outstanding account."""
+        payment_type = (
+            "outbound"
+            if self.currency_id.compare_amounts(payment_amount, 0) < 0
+            else "inbound"
+        )
+        if payment.payment_type != payment_type:
+            payment.write(
+                {
+                    "payment_type": payment_type,
+                    "destination_account_id": payment.destination_account_id.id,
+                }
+            )
         if (
             not payment.outstanding_account_id
             and self.env["account.move"]._get_invoice_in_payment_state() == "in_payment"
@@ -1916,24 +2010,14 @@ class PosSession(models.Model):
                 payment.payment_type
             )
 
-        if (
-            float_compare(
-                payment_amount, 0, precision_rounding=self.currency_id.rounding
-            )
-            < 0
-        ):
-            dbg.logic.debug(
-                "[session:%s] negative payment %s: flipped to outbound",
-                self.name,
-                dbg.rec(payment),
-            )
-            payment.write(
-                {
-                    "force_outstanding_account_id": payment.destination_account_id,
-                    "destination_account_id": payment.outstanding_account_id,
-                    "payment_type": "outbound",
-                }
-            )
+        dbg.logic.debug(
+            "[session:%s] payment %s direction=%s outstanding=%s destination=%s",
+            self.name,
+            dbg.rec(payment),
+            payment.payment_type,
+            dbg.rec(payment.outstanding_account_id),
+            dbg.rec(payment.destination_account_id),
+        )
 
     def _create_combine_account_payment(self, payment_method, amounts, diff_amount):
         outstanding_account = payment_method.outstanding_account_id
@@ -2036,6 +2120,10 @@ class PosSession(models.Model):
         account_payment.write(
             {
                 "amount": abs(new_amount_currency),
+                "payment_type": "outbound" if new_amount_currency < 0 else "inbound",
+                # Changing direction recomputes the payment defaults. Keep the
+                # POS receivable account used by the session's counterpart.
+                "destination_account_id": account_payment.destination_account_id.id,
             }
         )
         account_payment.move_id.action_post()
@@ -2119,10 +2207,6 @@ class PosSession(models.Model):
         BankStatementLine = self.env["account.bank.statement.line"].with_context(
             no_retrieve_partner=True
         )
-        split_cash_statement_lines = {}
-        combine_cash_statement_lines = {}
-        split_cash_receivable_lines = {}
-        combine_cash_receivable_lines = {}
         split_cash_statement_lines = (
             BankStatementLine.create(split_cash_statement_line_vals)
             .mapped("move_id.line_ids")
@@ -2648,7 +2732,8 @@ class PosSession(models.Model):
             return {}
         return self.config_id.open_ui()
 
-    def _set_opening_control_data(self, cashbox_value: int, notes: str):
+    def _set_opening_control_data(self, cashbox_value: float, notes: str):
+        self._check_amount_is_finite(cashbox_value)
         dbg.lifecycle.debug(
             "[session:%s] %s -> opened (cashbox=%s expected=%s)",
             self.name,
@@ -2674,7 +2759,9 @@ class PosSession(models.Model):
             message += notes
             self.message_post(body=plaintext2html(message))
 
-    def set_opening_control(self, cashbox_value: int, notes: str):
+    def set_opening_control(self, cashbox_value: float, notes: str):
+        self.check_singleton()
+        self._lock_sessions(_("Another user is currently updating this session."))
         if self.state != "opening_control":
             dbg.logic.debug(
                 "[session:%s] set_opening_control ignored in state %s",
@@ -2739,7 +2826,15 @@ class PosSession(models.Model):
         already_alerted = self.browse(
             res_id
             for [res_id] in self.env["mail.activity"]._read_group(
-                [("res_model", "=", "pos.session"), ("res_id", "in", sessions.ids)],
+                [
+                    ("res_model", "=", "pos.session"),
+                    ("res_id", "in", sessions.ids),
+                    (
+                        "activity_type_id",
+                        "=",
+                        self.env.ref("point_of_sale.mail_activity_old_session").id,
+                    ),
+                ],
                 ["res_id"],
             )
         )
@@ -2800,8 +2895,10 @@ class PosSession(models.Model):
     def try_cash_in_out(self, _type, amount, reason, partner_id, extras):
         if _type not in self.CASH_MOVE_TYPES:
             raise UserError(_("Unknown cash movement type %(type)s.", type=_type))
+        self._check_amount_is_finite(amount)
         sign = 1 if _type == "in" else -1
-        amount = abs(amount or 0.0)
+        amount = abs(amount)
+        self._lock_sessions(_("Another user is currently updating this session."))
 
         if no_journal := self.filtered(lambda session: not session.cash_journal_id):
             raise UserError(
@@ -2851,9 +2948,17 @@ class PosSession(models.Model):
         ).create(vals_list)
 
     def remove_cash_in_out(self, absl_id, partner_id):
+        self.check_singleton()
         if not self.env.user.has_group("account.group_account_basic"):
             raise AccessError(
                 _("You don't have the access rights to delete a cash in/out.")
+            )
+        self._lock_sessions(_("Another user is currently updating this session."))
+        if self.state not in self.CASH_MOVE_STATES:
+            raise UserError(
+                _(
+                    "You cannot delete a cash movement after closing control has started."
+                )
             )
         absl = self.env["account.bank.statement.line"].browse(absl_id)
         if absl not in self.statement_line_ids:
@@ -2868,60 +2973,6 @@ class PosSession(models.Model):
         )
         absl.unlink()
         self.log_partner_message(partner_id, action, "CASH_IN_OUT_UNLINK")
-
-    def _get_attributes_by_ptal_id(self):
-        product_attributes = self.env["product.attribute"].search_fetch(
-            [("create_variant", "=", "no_variant")],
-            ["name", "display_type"],
-        )
-        product_template_attribute_values = self.env[
-            "product.template.attribute.value"
-        ].search_fetch(
-            [("attribute_id", "in", product_attributes.ids)],
-            [
-                "attribute_id",
-                "attribute_line_id",
-                "product_attribute_value_id",
-                "price_extra",
-            ],
-        )
-        product_template_attribute_values.product_attribute_value_id.fetch(
-            ["name", "is_custom", "html_color", "image"]
-        )
-
-        def sort_key(ptav):
-            return (ptav.attribute_line_id.id, ptav.attribute_id.id)
-
-        def group_key(ptav):
-            return (ptav.attribute_line_id.id, ptav.attribute_id)
-
-        res = {}
-        for key, group in groupby(
-            sorted(product_template_attribute_values, key=sort_key), key=group_key
-        ):
-            attribute_line_id, attribute = key
-            values = [
-                {
-                    **ptav.product_attribute_value_id.read(
-                        ["name", "is_custom", "html_color", "image"]
-                    )[0],
-                    "price_extra": ptav.price_extra,
-                    "id": ptav.id,
-                }
-                for ptav in list(group)
-            ]
-            res[attribute_line_id] = {
-                "id": attribute_line_id,
-                "name": attribute.name,
-                "display_type": attribute.display_type,
-                "values": values,
-                "sequence": attribute.sequence,
-            }
-
-        return res
-
-    def _get_invoiced_orders(self):
-        return self.order_ids.filtered("is_invoiced")
 
     def log_partner_message(self, partner_id, action, message_type):
         if message_type == "ACTION_CANCELLED":

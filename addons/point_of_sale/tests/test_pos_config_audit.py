@@ -172,6 +172,19 @@ class TestPosConfigAudit(TestPoSCommon):
             self.config.statistics_for_current_session["cash"]["raw_opening_cash"], 42
         )
 
+    def test_payment_journal_change_refreshes_cash_control(self):
+        method = self.env["pos.payment.method"].create(
+            {
+                "name": "Initially on account",
+                "company_id": self.config.company_id.id,
+            }
+        )
+        self.config.payment_method_ids = [Command.set(method.ids)]
+        self.assertFalse(self.config.cash_control)
+
+        method.journal_id = self.cash_pm1.journal_id
+
+        self.assertTrue(self.config.cash_control)
 
     def test_settings_keeps_updates_to_linked_records(self):
         note = self.env["pos.note"].create({"name": "Before"})

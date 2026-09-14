@@ -695,7 +695,7 @@ class TestPosSessionDiffMoveLink(TestPoSCommon):
                 }
             ]
         )
-        session._create_diff_account_move_for_split_payment_method(
+        session._create_diff_account_move_for_payment_method(
             self.bank_split_pm1, 5.0
         )
 

@@ -18,7 +18,7 @@ class PosSession(models.Model):
             data += ["hr.employee"]
         return data
 
-    def _set_opening_control_data(self, cashbox_value: int, notes: str):
+    def _set_opening_control_data(self, cashbox_value: float, notes: str):
         super()._set_opening_control_data(cashbox_value, notes)
         if author_id := self._get_message_author():
             self.message_post(
