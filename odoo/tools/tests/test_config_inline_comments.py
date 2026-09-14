@@ -61,7 +61,6 @@ class TestInlineComments(unittest.TestCase):
 
 
 class TestEmptyValueIsUnset(TestInlineComments):
-
     def test_an_empty_boolean_or_integer_is_left_to_its_default(self):
         options = self._load("""
             [options]
