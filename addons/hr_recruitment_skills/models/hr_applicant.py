@@ -14,6 +14,7 @@ class HrApplicant(models.Model):
         comodel_name="hr.applicant.skill",
         inverse_name="applicant_id",
         compute="_compute_current_individual_skill_ids",
+        search="_search_current_individual_skill_ids",
         readonly=False,
     )
     skill_ids = fields.Many2many(
@@ -44,52 +45,51 @@ class HrApplicant(models.Model):
         for applicant in self:
             applicant.skill_ids = applicant.applicant_skill_ids.skill_id
 
+    def _get_skill_match(self, job):
+        self.check_singleton()
+        requirements = job.current_job_skill_ids
+        required_progress = {
+            requirement.skill_id: requirement.level_progress
+            for requirement in requirements
+        }
+        job_degree = job.expected_degree.sudo().score * 100
+        matching = self.current_applicant_skill_ids.filtered(
+            lambda skill: skill.skill_id in required_progress
+        )
+        job_total = sum(required_progress.values()) + job_degree
+        applicant_total = sum(
+            min(skill.level_progress, required_progress[skill.skill_id] * 2)
+            for skill in matching
+        ) + (self.degree_id.score * 100 if job_degree > 1 else 0)
+        return {
+            "matching_skills": matching.skill_id,
+            "missing_skills": requirements.skill_id - matching.skill_id,
+            "score": applicant_total / job_total * 100 if job_total else 0,
+        }
+
     @api.depends_context("matching_job_id")
     @api.depends(
         "current_applicant_skill_ids",
         "degree_id",
         "job_id",
-        "job_id.job_skill_ids",
+        "job_id.current_job_skill_ids",
         "job_id.expected_degree",
     )
     def _compute_matching_skill_ids(self):
-        matching_job_id = self.env.context.get("matching_job_id")
-        matching_job = self.env["hr.job"].browse(matching_job_id)
+        matching_job = self.env["hr.job"].browse(
+            self.env.context.get("matching_job_id")
+        )
         for applicant in self:
             job = matching_job or applicant.job_id
-            if not job or not (job.job_skill_ids or job.expected_degree):
+            if not job or not (job.current_job_skill_ids or job.expected_degree):
                 applicant.matching_skill_ids = False
                 applicant.missing_skill_ids = False
                 applicant.matching_score = False
                 continue
-            job_skills = job.job_skill_ids
-            job_degree = job.expected_degree.sudo().score * 100
-            job_total = sum(job_skills.mapped("level_progress")) + job_degree
-            job_skill_map = {js.skill_id: js.level_progress for js in job_skills}
-
-            matching_applicant_skills = applicant.current_applicant_skill_ids.filtered(
-                lambda a, job_skill_map=job_skill_map: a.skill_id in job_skill_map,
-            )
-            applicant_degree = applicant.degree_id.score * 100 if job_degree > 1 else 0
-            applicant_total = (
-                sum(
-                    min(skill.level_progress, job_skill_map[skill.skill_id] * 2)
-                    for skill in matching_applicant_skills
-                )
-                + applicant_degree
-            )
-
-            matching_skill_ids = matching_applicant_skills.mapped("skill_id")
-            missing_skill_ids = job_skills.mapped(
-                "skill_id"
-            ) - matching_applicant_skills.mapped("skill_id")
-            matching_score = (
-                round(applicant_total / job_total * 100) if job_total else 0
-            )
-
-            applicant.matching_skill_ids = matching_skill_ids
-            applicant.missing_skill_ids = missing_skill_ids
-            applicant.matching_score = matching_score
+            match = applicant._get_skill_match(job)
+            applicant.matching_skill_ids = match["matching_skills"]
+            applicant.missing_skill_ids = match["missing_skills"]
+            applicant.matching_score = round(match["score"])
 
     def _get_employee_create_vals(self):
         vals = super()._get_employee_create_vals()

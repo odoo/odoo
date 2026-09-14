@@ -791,6 +791,98 @@ class TestRecruitmentSkills(TransactionCase):
         self.assertFalse(self.t_applicant.current_applicant_skill_ids)
         self.assertFalse(talent.current_applicant_skill_ids)
 
+    def _job_with_history(self):
+        today = date.today()
+        job = self.env["hr.job"].create({"name": "Job with history"})
+        self.env["hr.job.skill"].create(
+            [
+                {
+                    "job_id": job.id,
+                    "skill_id": skill.id,
+                    "skill_level_id": level.id,
+                    "skill_type_id": self.t_skill_type.id,
+                    "valid_from": valid_from,
+                    "valid_to": valid_to,
+                }
+                for skill, level, valid_from, valid_to in (
+                    (
+                        self.t_skill_1,
+                        self.t_skill_level_2,
+                        today - relativedelta(years=1),
+                        today - relativedelta(months=6),
+                    ),
+                    (
+                        self.t_skill_2,
+                        self.t_skill_level_2,
+                        today - relativedelta(years=1),
+                        today - relativedelta(months=6),
+                    ),
+                    (
+                        self.t_skill_1,
+                        self.t_skill_level_3,
+                        today - relativedelta(months=6, days=-1),
+                        False,
+                    ),
+                )
+            ]
+        )
+        return job
+
+    def test_a_dropped_requirement_neither_lowers_the_score_nor_goes_missing(self):
+        job = self._job_with_history()
+        self.t_applicant.write(
+            {
+                "job_id": job.id,
+                "current_applicant_skill_ids": [
+                    Command.create(
+                        {
+                            "skill_id": self.t_skill_1.id,
+                            "skill_level_id": self.t_skill_level_3.id,
+                            "skill_type_id": self.t_skill_type.id,
+                        }
+                    )
+                ],
+            }
+        )
+
+        self.assertEqual(self.t_applicant.matching_score, 100)
+        self.assertEqual(self.t_applicant.matching_skill_ids, self.t_skill_1)
+        self.assertFalse(self.t_applicant.missing_skill_ids)
+        self.assertEqual(
+            job.with_context(
+                active_applicant_id=self.t_applicant.id
+            ).applicant_matching_score,
+            100,
+        )
+
+    def test_matching_applicants_hold_a_skill_the_job_still_asks_for(self):
+        job = self._job_with_history()
+        holder, former = self.env["hr.applicant"].create(
+            [{"partner_name": "Holds skill 1"}, {"partner_name": "Holds skill 2"}]
+        )
+        for applicant, skill in ((holder, self.t_skill_1), (former, self.t_skill_2)):
+            applicant.write(
+                {
+                    "current_applicant_skill_ids": [
+                        Command.create(
+                            {
+                                "skill_id": skill.id,
+                                "skill_level_id": self.t_skill_level_1.id,
+                                "skill_type_id": self.t_skill_type.id,
+                            }
+                        )
+                    ]
+                }
+            )
+        action = job.action_search_matching_applicants()
+        found = (
+            self.env["hr.applicant"]
+            .with_context(action["context"])
+            .search(action["domain"])
+        )
+        self.assertIn(holder, found)
+        self.assertNotIn(former, found)
+
     def test_interviewer_skills_access(self):
         interviewer_user = new_test_user(
             self.env,
