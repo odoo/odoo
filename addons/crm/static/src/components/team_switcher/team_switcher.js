@@ -23,7 +23,7 @@ export class TeamSwitcher extends Component {
     }
 
     get allTeamsLabel() {
-        return _t("All Sales Teams");
+        return _t("All Teams");
     }
 
     get currentLabel() {

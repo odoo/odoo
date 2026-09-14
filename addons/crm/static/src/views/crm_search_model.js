@@ -17,7 +17,7 @@ export class CrmSearchModel extends SearchModel {
         this.state = proxy({
             switcherAvailable: false, // Whether or not there's enough teams in DB to display the switcher.
             switcherTeams: [], // Teams to display in the switcher.
-            switcherTeamId: null, // Selected team id ("undefined" = "All Sales Teams")
+            switcherTeamId: null, // Selected team id ("undefined" = "All Teams")
         });
     }
 
@@ -147,13 +147,13 @@ export class CrmSearchModel extends SearchModel {
 
     /**
      * Init the switcher selected team by retrieving it from
-     * the local storage or fallback on "All Sales Teams".
+     * the local storage or fallback on "All Teams".
      */
     _initSwitcherSelection(loaded=false) {
         let teamId = JSON.parse(browser.localStorage.getItem("crm.switcher_team_id"));
         const isValid = this.state.switcherTeams.find((t) => t.id === teamId);
         if (!isValid) {
-            // Fallback on "All Sales Teams"
+            // Fallback on "All Teams"
             teamId = undefined;
         }
         if (teamId === this.state.switcherTeamId) {
