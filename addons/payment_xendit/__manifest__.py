@@ -14,12 +14,12 @@
 
         'data/payment_provider_data.xml',  # Depends on payment_xendit_templates.xml
     ],
-    'post_init_hook': 'post_init_hook',
-    'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_frontend': [
-            'payment_xendit/static/src/**/*',
+            'payment_xendit/static/src/js/payment_form.js',
         ]
     },
+    'post_init_hook': 'post_init_hook',
+    'uninstall_hook': 'uninstall_hook',
     'license': 'LGPL-3',
 }
