@@ -52,6 +52,75 @@ patch(PosStore.prototype, {
                 reward.delete();
             }
         }
+<<<<<<< 72d9be2f10f1a3f6a036c04c5f5ee26e9c0b64f8
+||||||| 277f865d46ce497bbe244b57736fccc55013b78f
+        if (claimableRewards && claimableRewards.length === 1) {
+            if (
+                claimableRewards[0].reward.reward_type !== "product" ||
+                !claimableRewards[0].reward.multi_product
+            ) {
+                order._applyReward(claimableRewards[0].reward, claimableRewards[0].coupon_id);
+                this.updateRewards();
+            }
+        }
+        if (!rule && order.lines.length === 0 && coupon) {
+            return _t("%s: %s\nBalance: %s", coupon.program_id.name, code, coupon.points_display);
+        }
+        return true;
+    },
+    async checkMissingCoupons() {
+        // This function must stay sequential to avoid potential concurrency errors.
+        const order = this.getOrder();
+        await mutex.exec(async () => {
+            if (!order.invalidCoupons) {
+                return;
+            }
+            order.invalidCoupons = false;
+            order.uiState.couponPointChanges = Object.fromEntries(
+                Object.entries(order.uiState.couponPointChanges).filter(([k, pe]) =>
+                    this.models["loyalty.card"].get(pe.coupon_id)
+                )
+            );
+        });
+    },
+    async applyDiscount(percent, type = "percent", order = this.getOrder()) {
+        await super.applyDiscount(...arguments);
+        await this.updatePrograms();
+=======
+        if (claimableRewards && claimableRewards.length === 1) {
+            if (
+                claimableRewards[0].reward.reward_type !== "product" ||
+                !claimableRewards[0].reward.multi_product
+            ) {
+                order._applyReward(claimableRewards[0].reward, claimableRewards[0].coupon_id);
+                this.updateRewards();
+            }
+        }
+        if (!rule && order.lines.length === 0 && coupon) {
+            return _t("%s: %s\nBalance: %s", coupon.program_id.name, code, coupon.points_display);
+        }
+        return true;
+    },
+    async checkMissingCoupons() {
+        // This function must stay sequential to avoid potential concurrency errors.
+        const order = this.getOrder();
+        await mutex.exec(async () => {
+            if (!order.invalidCoupons) {
+                return;
+            }
+            order.invalidCoupons = false;
+            order.uiState.couponPointChanges = Object.fromEntries(
+                Object.entries(order.uiState.couponPointChanges).filter(([k, pe]) =>
+                    this.models["loyalty.card"].get(pe.coupon_id)
+                )
+            );
+            order._restoreCodeActivatedCoupons();
+        });
+    },
+    async applyDiscount(percent, type = "percent", order = this.getOrder()) {
+        await super.applyDiscount(...arguments);
+        await this.updatePrograms();
+>>>>>>> 8c7f085ae08dd109ec708bdaba606146f2ef726c
     },
     async addLineToCurrentOrder(vals, opt = {}, configure = true) {
         // A gift card / eWallet trigger product funds a loyalty program. Resolve which
