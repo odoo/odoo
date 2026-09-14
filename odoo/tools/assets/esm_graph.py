@@ -135,19 +135,19 @@ _ESM_EXPORT_DEFAULT_RE_SRC = (
 _ESM_EXPORT_DEFAULT_RE = re.compile(_ESM_EXPORT_DEFAULT_RE_SRC)
 
 _IMPORT_ANY_RE = re.compile(
-    r"import(?:"
+    r"(?<![\w$.])import(?:"
     r"\s*(?P<named>\{[^}]+\})\s*"
     r"|\s*(?P<star>\*\s*as\s+\w+)\s+"
     r"|\s+(?P<mixed>\w+\s*,\s*(?:\{[^}]+\}|\*\s*as\s+\w+))\s*"
     r"|\s+(?P<default>\w+)\s+"
     r")from\s*"
-    r"""["'](?P<spec>[^"']+)["']"""
-    r"""|import\s*["'](?P<side>[^"']+)["']"""
+    r"""["'](?P<spec>[^"'\n]+)["']"""
+    r"""|(?<![\w$.])import\s*["'](?P<side>[^"'\n]+)["']"""
 )
 
 _TRANSITIVE_IMPORT_RE = re.compile(
     r"(?<![\w$.])(?:import|export)\s*"
-    r"[\w$*{},\s]{0,400}?"
+    r"[\w$*{},\s]{0,2000}?"
     r"\bfrom\s*"
     r"""["'](?P<spec>[^"'\n]+)["']"""
     r"""|(?<![\w$.])import\s*["'](?P<side>[^"'\n]+)["']"""
@@ -161,9 +161,10 @@ def _get_import_specifiers(src: str) -> set[str]:
         specs.update(lexed.get("starFrom") or ())
         specs.update(lexed.get("reexportFrom") or ())
         return specs
+    scrubbed = _JS_OPAQUE_RE.sub("", src)
     specs = {
         match.group("spec") or match.group("side")
-        for match in _TRANSITIVE_IMPORT_RE.finditer(src)
+        for match in _TRANSITIVE_IMPORT_RE.finditer(scrubbed)
     }
     _debug.logic(
         "esm_graph.imports_by_regex", source_bytes=len(src), specifiers=len(specs)

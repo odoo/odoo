@@ -140,3 +140,52 @@ class TestStaticEdgesRegexFallbackParity(unittest.TestCase):
         edges = self._lexed_without_worker()
         self.assertIn(("@web/core/reexp", None), edges)
         self.assertNotIn(("@web/core/reexp", "__star__"), edges)
+
+
+class TestRegexFallbackCommentsAndBounds(unittest.TestCase):
+    # More ways the regex fallback used to disagree with the lexer, all fixed
+    # so a no-node host resolves the same graph a node host does.
+    def _patched(self):
+        from unittest.mock import patch
+
+        from odoo.tools.assets import esm_bridges, esm_graph
+
+        return (
+            patch.object(esm_bridges, "lex_module", return_value=None),
+            patch.object(esm_graph, "lex_module", return_value=None),
+        )
+
+    def test_a_jsdoc_import_is_not_a_runtime_import(self):
+        from odoo.tools.assets import esm_bridges, esm_graph
+
+        src = (
+            '/** @import { DynamicList }'
+            ' from "@web/model/relational_model/dynamic_list" */\n'
+            'import { real } from "@web/core/registry";\n'
+        )
+        p1, p2 = self._patched()
+        with p1, p2:
+            specs = esm_graph._get_import_specifiers(src)
+            edges = {s for s, _ in esm_bridges._static_edges(src)}
+        self.assertEqual(specs, {"@web/core/registry"})
+        self.assertEqual(edges, {"@web/core/registry"})
+
+    def test_a_large_named_import_is_not_truncated_away(self):
+        from odoo.tools.assets import esm_graph
+
+        names = ",\n    ".join(f"exportedHelper{i}" for i in range(60))
+        src = f"import {{\n    {names},\n}} from '@web/core/utils/big';\n"
+        self.assertGreater(len(src), 400)
+        p1, p2 = self._patched()
+        with p1, p2:
+            specs = esm_graph._get_import_specifiers(src)
+        self.assertIn("@web/core/utils/big", specs)
+
+    def test_a_default_plus_named_import_is_a_default_edge(self):
+        from odoo.tools.assets import esm_bridges
+
+        src = 'import lazyloader, { waitLazy } from "@web/public/lazyloader";\n'
+        p1, p2 = self._patched()
+        with p1, p2:
+            edges = dict(esm_bridges._static_edges(src))
+        self.assertEqual(edges.get("@web/public/lazyloader"), "__default__")
