@@ -71,9 +71,9 @@ class ApprovalApprover(models.Model):
         ],
         string="Routing Status",
         default="new",
-        required=True,
         copy=False,
         readonly=True,
+        required=True,
         help="Where routing has put this row: asked, waiting its turn, or closed by "
         "a refusal or a forced end. The status shows it whenever no standing "
         "decision does.",
