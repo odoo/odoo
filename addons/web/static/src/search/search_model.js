@@ -1,4 +1,4 @@
-import { EventBus, proxy, toRaw, usePlugin } from "@odoo/owl";
+import { computed, EventBus, proxy, toRaw, usePlugin } from "@odoo/owl";
 import { router } from "@web/core/browser/router";
 import { makeContext } from "@web/core/context";
 import { DebugModePlugin } from "@web/core/debug_mode_plugin";
@@ -215,6 +215,8 @@ const FACET_TYPES = {
 export class SearchModel extends EventBus {
     query = proxy([]);
     searchItems = proxy({});
+
+    _groupBy = computed(() => (this.searchMenuTypes.has("groupBy") ? this._getGroupBy() : []));
 
     constructor(env, services, args) {
         super();
@@ -501,13 +503,7 @@ export class SearchModel extends EventBus {
      * @returns {string[]}
      */
     get groupBy() {
-        if (!this.searchMenuTypes.has("groupBy")) {
-            return [];
-        }
-        if (!this._groupBy) {
-            this._groupBy = this._getGroupBy();
-        }
-        return deepCopy(this._groupBy);
+        return deepCopy(this._groupBy());
     }
 
     /**
@@ -2257,8 +2253,8 @@ export class SearchModel extends EventBus {
         const groupBy = groupBys.length
             ? groupBys
             : this.globalGroupBy.length
-            ? this.globalGroupBy.slice()
-            : (fallbackOnDefault && this.defaultGroupBy?.slice()) || [];
+              ? this.globalGroupBy.slice()
+              : (fallbackOnDefault && this.defaultGroupBy?.slice()) || [];
         return typeof groupBy === "string" ? [groupBy] : groupBy;
     }
 
@@ -2768,7 +2764,6 @@ export class SearchModel extends EventBus {
     _reset() {
         this._context = null;
         this._domain = null;
-        this._groupBy = null;
         this._orderBy = null;
     }
 
