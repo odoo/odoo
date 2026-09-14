@@ -117,6 +117,62 @@ class TestHourlyCost(TestHrCommon):
         )
         self.assertEqual(group["hourly_cost:avg"], 15.0)
 
+    def _company_in(self, currency_name, rate):
+        currency = self.env.ref(f"base.{currency_name}")
+        currency.active = True
+        company = self.env["res.company"].create(
+            {"name": f"Company {currency_name}", "currency_id": currency.id}
+        )
+        self.env["res.currency.rate"].create(
+            {
+                "name": "2020-01-01",
+                "currency_id": currency.id,
+                "company_id": company.id,
+                "rate": rate,
+            }
+        )
+        self.env.user.company_ids = [(4, company.id)]
+        return company
+
+    def test_moving_to_a_company_on_another_currency_converts_the_hourly_cost(self):
+        employee = self.officer_employees.create({"name": "Moved", "hourly_cost": 50.0})
+        self.assertEqual(employee.currency_id, self.env.company.currency_id)
+
+        company = self._company_in("EUR", 0.8)
+        employee.sudo().company_id = company
+
+        self.assertEqual(employee.currency_id, company.currency_id)
+        self.assertEqual(employee.hourly_cost, 40.0)
+
+    def test_moving_to_a_company_on_the_same_currency_leaves_the_hourly_cost_alone(
+        self,
+    ):
+        employee = self.officer_employees.create({"name": "Same", "hourly_cost": 50.0})
+        company = self.env["res.company"].create(
+            {"name": "Same currency", "currency_id": self.env.company.currency_id.id}
+        )
+        self.env.user.company_ids = [(4, company.id)]
+        employee.sudo().company_id = company
+        self.assertEqual(employee.hourly_cost, 50.0)
+
+    def test_an_explicit_hourly_cost_written_with_the_company_wins(self):
+        employee = self.officer_employees.create(
+            {"name": "Explicit", "hourly_cost": 50.0}
+        )
+        company = self._company_in("EUR", 0.8)
+        employee.sudo().write({"company_id": company.id, "hourly_cost": 33.0})
+        self.assertEqual(employee.hourly_cost, 33.0)
+
+    def test_someone_who_cannot_read_the_hourly_cost_can_still_move_the_employee(self):
+        employee = self.officer_employees.create(
+            {"name": "Moved by manager", "hourly_cost": 50.0}
+        )
+        company = self._company_in("EUR", 0.8)
+        mover = self.res_users_hr_manager
+        mover.company_ids = [(4, company.id)]
+        employee.with_user(mover).company_id = company
+        self.assertEqual(employee.hourly_cost, 40.0)
+
     def test_only_an_hr_user_reads_the_hourly_cost(self):
         employee = self.officer_employees.create(
             {"name": "Restricted", "hourly_cost": 50.0}
