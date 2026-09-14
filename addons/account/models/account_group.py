@@ -187,8 +187,10 @@ class AccountGroup(models.Model):
         # the hundreds, so the match is made in Python rather than a self-join
         updated = 0
         Group = self.env["account.group"].sudo().with_context(active_test=False)
-        for company_id in company_ids:
-            groups = Group.search([("company_id", "=", company_id)])
+        groups_by_company = Group.search([("company_id", "in", company_ids)]).grouped(
+            "company_id"
+        )
+        for groups in groups_by_company.values():
             candidates = [
                 group
                 for group in groups

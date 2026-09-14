@@ -2,8 +2,7 @@ import datetime
 
 from psycopg import errors as pgerrors
 
-from odoo import api, fields, models
-from odoo.orm.primitives import SUPERUSER_ID
+from odoo import SUPERUSER_ID, api, fields, models
 
 _EPOCH = datetime.datetime.min.replace(tzinfo=datetime.UTC)
 
