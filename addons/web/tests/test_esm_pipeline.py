@@ -3312,6 +3312,15 @@ class TestEsmPersistenceDegradation(TransactionCase):
 
 @tagged("-at_install", "post_install", "web_assets")
 class TestEsmConcurrentPublication(TransactionCase):
+    def test_the_lock_sets_the_isolation_level_and_the_timeout_on_a_fresh_cursor(self):
+        with db_connect(self.env.cr.dbname).cursor() as cr:
+            self.env["ir.qweb"]._lock_esm_publication(cr, "1500ms")
+            cr.execute("SHOW transaction_isolation")
+            self.assertEqual(cr.fetchone()[0], "read committed")
+            cr.execute("SHOW lock_timeout")
+            self.assertEqual(cr.fetchone()[0], "1500ms")
+            cr.rollback()
+
     def test_concurrent_publishers_recheck_after_the_preceding_commit(self):
         qweb = self.env["ir.qweb"]
         db = db_connect(self.env.cr.dbname)
@@ -3680,7 +3689,7 @@ class TestPageBundleExportSurface(TransactionCase):
         IrQweb = self.env["ir.qweb"]
         for child_name in esm_registry().dynamic_children.get(self.BUNDLE, ()):
             if (
-                child_name.partition(".")[0]
+                esm_registry().bundle_addon(child_name)
                 not in self.env["ir.asset"]._get_addons_installed()
             ):
                 continue
@@ -3696,6 +3705,40 @@ class TestPageBundleExportSurface(TransactionCase):
                 (set(discovered) & members) - exported,
                 f"{child_name} imports a parent module the parent does not register",
             )
+
+    def test_every_bridge_in_a_page_import_map_has_a_registered_provider(self):
+        # a bridge shim reads its provider from the loader; the per-file
+        # fallback of a secondary resolves a bare specifier through the page's
+        # map, so a bridged member nobody registers is "X is not a constructor"
+        # on the first request after the tests bundle changed
+        IrQweb = self.env["ir.qweb"]
+        params = self.env["ir.asset"]._prepare_assets_params()
+        pages = {
+            "backend": ("web.assets_web",),
+            "frontend": ("web.assets_frontend_minimal", "web.assets_frontend_lazy"),
+        }
+        for page, names in pages.items():
+            with self.subTest(page=page):
+                registered: set[str] = set()
+                bridged: set[str] = set()
+                for name in names:
+                    bundle = IrQweb._get_asset_bundle(name, css=False, js=True)
+                    children = IrQweb._get_dynamic_child_bundles(
+                        name, params, debug_assets=False
+                    )
+                    registered |= IrQweb._get_exported_specs(
+                        name, bundle, params, children
+                    )
+                    import_map, _dyn, _inc = IrQweb._get_esm_import_map_prod(
+                        name, bundle, params, children, with_test_satellites=True
+                    )
+                    bridged |= {
+                        spec
+                        for spec, url in import_map.items()
+                        if url.startswith("/web/assets/esm/bridges/")
+                    }
+                self.assertTrue(bridged, "fixture: the page bridges something")
+                self.assertFalse(sorted(bridged - registered))
 
     def test_a_declared_export_is_registered_without_a_source_naming_it(self):
         # test_click_everywhere asks the loader for the clickbot loader by

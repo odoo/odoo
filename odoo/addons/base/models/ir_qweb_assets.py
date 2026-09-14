@@ -1695,11 +1695,16 @@ class IrQweb(models.AbstractModel):
             )
 
     @staticmethod
-    def _lock_esm_publication(cr) -> None:
+    def _lock_esm_publication(cr, lock_timeout: str | None = None) -> None:
         # These dedicated write transactions must see the preceding writer's
         # commit after waiting. REPEATABLE READ would retain the snapshot from
-        # the lock statement and let both writers insert the same URLs.
+        # the lock statement and let both writers insert the same URLs. The
+        # isolation level is the transaction's first statement or PostgreSQL
+        # refuses it ("must be called before any query"), so the lock
+        # timeout comes after it
         cr.execute("SET TRANSACTION ISOLATION LEVEL READ COMMITTED")
+        if lock_timeout:
+            cr.execute("SELECT set_config('lock_timeout', %s, true)", (lock_timeout,))
         started = time.monotonic()
         cr.execute("SELECT pg_advisory_xact_lock(hashtext('esm:publication'))")
         log_event(
@@ -1730,9 +1735,8 @@ class IrQweb(models.AbstractModel):
         from odoo.db import db_connect
 
         with db_connect(self.env.cr.dbname).cursor() as own_cr:
-            own_cr.execute(f"SET LOCAL lock_timeout = '{_AUTONOMOUS_LOCK_TIMEOUT}'")
             try:
-                self._lock_esm_publication(own_cr)
+                self._lock_esm_publication(own_cr, _AUTONOMOUS_LOCK_TIMEOUT)
                 fresh = self._drop_rows_already_present(own_cr, vals_list)
                 if fresh:
                     api.Environment(own_cr, SUPERUSER_ID, {})["ir.attachment"].create(

@@ -390,6 +390,16 @@ class IrQweb(models.AbstractModel):
         exported = {"@web/core/templates", "@web/core/assets"} & members
         exported.update(esm_registry().exports & members)
         exported.update(_get_specs_imported_by_consumers(consumers, members))
+        # the page's import map bridges every specifier a dynamic child's
+        # modules import that the page does not serve as a file
+        # (`_get_esm_import_map_prod`): a per-file fallback of a secondary
+        # resolves its imports through those bridges, so each one this bundle
+        # carries, it registers
+        for child in child_bundles:
+            bridged, _ext = child._bridges._discover_bridge_specifiers(
+                set(), set(external_libs()), modules=child.native_modules
+            )
+            exported.update(bridged.keys() & members)
         for source in (
             *asset_bundle.native_modules,
             *(a for c in consumers for a in c.native_modules),
