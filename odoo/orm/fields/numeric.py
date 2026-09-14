@@ -323,9 +323,8 @@ class Monetary(Field[float]):
         return (
             record[:1]
             .with_prefetch(record._prefetch_ids)
-            .sudo()
-            .with_context(prefetch_fields=False)[currency_field_name]
-        )
+            .with_env(record.env._derive(su=True, prefetch_fields=False))
+        )[currency_field_name]
 
     def setup_nonrelated(self, model: BaseModel) -> None:
         super().setup_nonrelated(model)
@@ -414,7 +413,9 @@ class Monetary(Field[float]):
         value = float(value or 0.0)
         if value and validate:
             currency_field = self._get_currency_field_name(record)
-            currency = record.sudo().with_context(prefetch_fields=False)[currency_field]
+            currency = record.with_env(
+                record.env._derive(su=True, prefetch_fields=False)
+            )[currency_field]
             if len(currency) > 1:
                 raise ValueError(
                     "Got multiple currencies while assigning values of monetary field %s"

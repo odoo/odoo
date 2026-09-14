@@ -200,7 +200,7 @@ class RecomputeMixin(_ModelStubs):
             return ()
 
         if len(tree):
-            records = self.sudo().with_context(active_test=False)
+            records = self.with_env(env._derive(su=True, active_test=False))
         else:
             records = self
         return records._modified_triggers(tree, create)

@@ -62,6 +62,7 @@ if typing.TYPE_CHECKING:
 
 _logger = logging.getLogger("odoo.api")
 _debug = DebugLog(__name__)
+_MISSING = object()
 
 
 class _Protecting:
@@ -535,6 +536,24 @@ class Environment(Mapping[str, "BaseModel"]):
                     return val
 
         return tuple(get(key) for key in self._field_depends_context[field])
+
+    @functools.cached_property
+    def _derived_envs(self) -> dict[tuple, Environment]:
+        return {}
+
+    def _derive(self, *, su: bool | None = None, **overrides) -> Environment:
+        # sudo().with_context(key=value) as the ORM's own hot paths spell it
+        # (trigger traversal, monetary rounding): the answer for a given
+        # environment never changes, and each lookup would hash a fresh
+        # context, so it is memoized per environment
+        key = (su, tuple(sorted(overrides.items())))
+        env = self._derived_envs.get(key)
+        if env is None:
+            env = self if su is None or su == self.su else self(su=su)
+            if any(env.context.get(k, _MISSING) != v for k, v in overrides.items()):
+                env = env(context=dict(env.context, **overrides))
+            self._derived_envs[key] = env
+        return env
 
     @functools.cached_property
     def _field_cache_memo(
