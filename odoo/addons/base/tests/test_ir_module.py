@@ -9,7 +9,7 @@ from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
 from odoo.modules.db import _AUTO_INSTALL_CANDIDATES_QUERY
 from odoo.tests.common import TransactionCase, new_test_user
-from odoo.tools import mute_logger
+from odoo.tools import config, mute_logger
 
 from odoo.addons.base.models.ir_module import (
     GROUP_HIERARCHY_FIELDS,
@@ -799,3 +799,70 @@ class IrModuleStableCacheCase(TransactionCase):
         self.assertNotIn(module.name, Module._get_installed_module_ids())
         module.write({"state": "installed"})
         self.assertIn(module.name, Module._get_installed_module_ids())
+
+
+class IrModuleUpgradeCascadeOverrideCase(TransactionCase):
+    """The unchanged-module skip must not drop a dependent whose data
+    overrides a record of a module being upgraded — sale_management
+    re-activating sale.sale_menu_root is the shape: sale reloads and
+    deactivates it, sale_management is byte-identical and skipped, the
+    Sales app is gone."""
+
+    def _cascade(self, requested, stamped, data_files):
+        Module = self.env["ir.module.module"]
+        modules = {}
+        for name in stamped:
+            modules[name] = Module.create(
+                {
+                    "name": f"airm_{name}",
+                    "state": "installed",
+                    "content_checksum": stamped[name],
+                    "data_file_checksums": data_files.get(name),
+                }
+            )
+        checksums = {f"airm_{n}": v for n, v in stamped.items()}
+        with (
+            patch(
+                "odoo.addons.base.models.ir_module.get_module_content_checksum",
+                side_effect=checksums.get,
+            ),
+            patch.dict(config.options, {"skip_unchanged_modules": True}),
+        ):
+            marked = modules[requested]._get_module_ids_to_upgrade(
+                list(modules.values())
+            )
+        return {n for n, m in modules.items() if m.id in marked}
+
+    def test_an_unchanged_dependent_overriding_the_upgraded_module_is_kept(self):
+        marked = self._cascade(
+            "sale",
+            {"sale": "changed", "sale_mgmt": "same", "other": "same"},
+            {
+                "sale_mgmt": {
+                    "v": 2,
+                    "files": {
+                        "menus.xml": {"sha": "x", "xmlids": ["airm_sale.menu_root"]}
+                    },
+                },
+                "other": {
+                    "v": 2,
+                    "files": {"data.xml": {"sha": "x", "xmlids": ["airm_other.a"]}},
+                },
+            },
+        )
+        self.assertEqual(marked, {"sale", "sale_mgmt"})
+
+    def test_the_override_chain_is_followed_to_a_fixpoint(self):
+        marked = self._cascade(
+            "a",
+            {"a": "changed", "b": "same", "c": "same"},
+            {
+                "b": {"v": 2, "files": {"f": {"sha": "x", "xmlids": ["airm_a.r"]}}},
+                "c": {"v": 2, "files": {"f": {"sha": "x", "xmlids": ["airm_b.r"]}}},
+            },
+        )
+        self.assertEqual(marked, {"a", "b", "c"})
+
+    def test_a_module_with_no_stored_checksums_is_not_trusted_to_be_skippable(self):
+        marked = self._cascade("a", {"a": "changed", "b": "same"}, {})
+        self.assertEqual(marked, {"a", "b"})

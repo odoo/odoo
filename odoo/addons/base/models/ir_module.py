@@ -51,6 +51,22 @@ ACTION_DICT = {
 }
 
 
+def _modules_whose_records_it_writes(data_file_checksums: object) -> set[str] | None:
+    if not isinstance(data_file_checksums, dict):
+        return None
+    files = data_file_checksums.get("files")
+    if not isinstance(files, dict):
+        return None
+    modules: set[str] = set()
+    for entry in files.values():
+        xmlids = entry.get("xmlids") if isinstance(entry, dict) else None
+        for xmlid in xmlids or ():
+            module, dot, _name = xmlid.partition(".")
+            if dot:
+                modules.add(module)
+    return modules
+
+
 class UpdateListResult(NamedTuple):
     updated: int
     added: int
@@ -1033,12 +1049,15 @@ class IrModuleModule(models.Model):
             return [module.id for module in cascade]
 
         self.env.cr.execute(
-            "SELECT id, content_checksum FROM ir_module_module"
+            "SELECT id, content_checksum, data_file_checksums FROM ir_module_module"
             " WHERE content_checksum IS NOT NULL"
         )
-        stamped = dict(self.env.cr.fetchall())
+        stamped, overridden_modules = {}, {}
+        for module_id, checksum, data_files in self.env.cr.fetchall():
+            stamped[module_id] = checksum
+            overridden_modules[module_id] = _modules_whose_records_it_writes(data_files)
         requested_ids = set(self.ids)
-        marked_ids, skipped = [], 0
+        marked_ids, unchanged = [], []
         for module in cascade:
             stored = stamped.get(module.id)
             if (
@@ -1046,9 +1065,41 @@ class IrModuleModule(models.Model):
                 and stored is not None
                 and get_module_content_checksum(module.name) == stored
             ):
-                skipped += 1
+                unchanged.append(module)
             else:
                 marked_ids.append(module.id)
+        # An unchanged module whose data writes a record another module
+        # declares (sale_management re-activating sale.sale_menu_root) has its
+        # effect in the load order, not in its bytes: once the declaring module
+        # reloads, the override must be re-applied or it is silently reverted.
+        # The per-file skip in modules/loading.py already refuses to skip such
+        # a file; a module that is not loaded at all never reaches it.
+        marked_names = {m.name for m in cascade if m.id in set(marked_ids)}
+        while True:
+            reloaded = [
+                m
+                for m in unchanged
+                if overridden_modules.get(m.id) is None
+                or overridden_modules[m.id] & marked_names
+            ]
+            if not reloaded:
+                break
+            for module in reloaded:
+                _logger.info(
+                    "upgrade cascade: %s is unchanged but writes records of a "
+                    "module being upgraded (%s); re-applying it in order",
+                    module.name,
+                    ", ".join(
+                        sorted(
+                            (overridden_modules.get(module.id) or set()) & marked_names
+                        )
+                    )
+                    or "unknown, no data-file checksums stored yet",
+                )
+                marked_ids.append(module.id)
+                marked_names.add(module.name)
+                unchanged.remove(module)
+        skipped = len(unchanged)
         if skipped:
             _logger.info(
                 "upgrade cascade: %d modules to upgrade, %d unchanged "
