@@ -909,7 +909,7 @@ class AccountTestInvoicingCommon(ProductCommon):
         cls,
         price_unit=None,
         product_id=None,
-        product_uom_qty=1.0,
+        product_qty=1.0,
         tax_ids=None,
         **line_args,
     ):
@@ -921,7 +921,7 @@ class AccountTestInvoicingCommon(ProductCommon):
             "price_unit": price_unit,
             "product_id": product_id,
             "tax_ids": tax_ids,
-            "product_uom_qty": product_uom_qty,
+            "product_qty": product_qty,
             **line_args,
         }
         cls._prepare_record_kwargs("sale.order.line", order_line_args)
@@ -1144,7 +1144,7 @@ class AccountTestInvoicingCommon(ProductCommon):
         tax_ids=None,
         discount=None,
         name=None,
-        product_uom_qty=1.0,
+        product_qty=1.0,
         **values,
     ):
         assert price_unit is not None or product_id is not None
@@ -1156,7 +1156,7 @@ class AccountTestInvoicingCommon(ProductCommon):
                     product_id=product_id,
                     tax_ids=tax_ids,
                     discount=discount,
-                    product_uom_qty=product_uom_qty,
+                    product_qty=product_qty,
                 ),
             ],
             **values,
