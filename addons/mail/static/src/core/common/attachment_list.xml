@@ -188,7 +188,7 @@
     <t t-name="mail.Actions">
         <div class="position-absolute end-0 p-1">
             <button t-if="this.props.actions.length === 1" class="btn btn-sm btn-light rounded px-1 py-0" tabindex="0" t-att-aria-label="this.props.actions[0].label" t-att-title="this.props.actions[0].label" role="menuitem" t-on-click.stop="this.props.actions[0].onSelect">
-                <i t-att-data-icon="this.props.actions[0].icon"/>
+                <i class="oi oi-fw" t-att-data-icon="this.props.actions[0].icon"/>
             </button>
             <Dropdown t-else="" menuClass="'d-flex flex-column py-0'" state="this.actionsMenuState" position="'right-start'">
                 <button class="btn btn-sm btn-light rounded px-1 py-0" tabindex="0" aria-label="Actions" title="Actions" role="menuitem">
