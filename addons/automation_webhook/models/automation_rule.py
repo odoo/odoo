@@ -1,5 +1,7 @@
 import logging
+import secrets
 import traceback
+from datetime import timedelta
 from uuid import uuid4
 
 from odoo import _, api, exceptions, fields, models
@@ -48,7 +50,7 @@ class AutomationRule(models.Model):
 
     auth_type = fields.Selection(
         string="Webhook Authentication",
-        default="none",
+        default="hmac_sha256",
         help="How incoming webhook calls are authenticated. HMAC/bearer read "
         "their secret from the linked credential.",
     )
@@ -58,7 +60,15 @@ class AutomationRule(models.Model):
     )
     rate_limit_enabled = fields.Boolean(
         string="Rate Limit",
-        default=False,
+        default=True,
+    )
+    webhook_enforce_from = fields.Datetime(
+        string="Enforce Authentication From",
+        copy=False,
+        help="Until this moment a call that fails authentication is still run, and "
+        "recorded as accepted unauthenticated. Set when a rule that used to "
+        "authenticate nothing gained a secret, so its sender has time to start "
+        "signing. Empty: authentication is enforced.",
     )
     rate_limit_requests = fields.Integer(
         string="Requests / Window",
@@ -98,9 +108,83 @@ class AutomationRule(models.Model):
             "domain": [("path", "=", f"automation({self.id})")],
         }
 
+    WEBHOOK_AUDIT_DAYS = 30
+    _SECRET_AUTH_TYPES = ("bearer", "api_key", "hmac_sha256", "hmac_sha512")
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        rules = super().create(vals_list)
+        rules._ensure_webhook_secret()
+        return rules
+
+    def write(self, vals):
+        result = super().write(vals)
+        if {"trigger", "auth_type"} & set(vals):
+            self._ensure_webhook_secret()
+        return result
+
+    def _ensure_webhook_secret(self):
+        if not self.env["credential.credential"]._is_encryption_key_configured():
+            return
+        category = self.env.ref(
+            "credential.credential_category_custom", raise_if_not_found=False
+        )
+        for rule in self.filtered(
+            lambda rule: (
+                rule.trigger == "on_webhook"
+                and rule.auth_type in self._SECRET_AUTH_TYPES
+                and not rule.credential_id
+            )
+        ):
+            rule.credential_id = rule._new_webhook_secret(category)
+
+    def _new_webhook_secret(self, category):
+        self.check_singleton()
+        return (
+            self.env["credential.credential"]
+            .sudo()
+            .create(
+                {
+                    "name": f"Webhook secret: {self.name} ({secrets.token_hex(4)})",
+                    "category_id": category.id if category else False,
+                    "credential_value": secrets.token_urlsafe(32),
+                }
+            )
+        )
+
+    def action_generate_webhook_secret(self):
+        category = self.env.ref(
+            "credential.credential_category_custom", raise_if_not_found=False
+        )
+        for rule in self:
+            rule.credential_id = rule._new_webhook_secret(category)
+        return True
+
+    def _webhook_auth_mode(self):
+        self.check_singleton()
+        if (
+            self.webhook_enforce_from
+            and fields.Datetime.now() < self.webhook_enforce_from
+        ):
+            return self.AUTH_MODE_AUDIT
+        return self.AUTH_MODE_ENFORCE
+
+    def _start_webhook_audit_window(self):
+        self.write(
+            {
+                "webhook_enforce_from": fields.Datetime.now()
+                + timedelta(days=self.WEBHOOK_AUDIT_DAYS)
+            }
+        )
+
     def _check_webhook_request(self, headers, body, remote_addr):
         self.check_singleton()
-        return self._check_inbound_request(headers, body=body, remote_addr=remote_addr)
+        return self._check_inbound_request(
+            headers,
+            body=body,
+            remote_addr=remote_addr,
+            mode=self._webhook_auth_mode(),
+        )
 
     def _webhook_ip_allowed(self, remote_addr):
         return self.is_ip_allowed(remote_addr)

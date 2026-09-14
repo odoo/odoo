@@ -42,6 +42,7 @@ class TestAdoptionFromAutomation(TransactionCase):
             UPDATE ir_model_data SET module = 'automation'
              WHERE module = 'automation_webhook'
                AND name LIKE ANY(%s)
+               AND name != ALL(%s)
                AND NOT EXISTS (
                    SELECT 1 FROM ir_model_data own
                     WHERE own.module = 'automation' AND own.name = ir_model_data.name
@@ -53,6 +54,7 @@ class TestAdoptionFromAutomation(TransactionCase):
                     "selection__automation_rule__trigger__%",
                     "model_inherit__automation_rule__%",
                 ],
+                ["field_automation_rule__webhook_enforce_from"],
             ),
         )
         moved = self.env.cr.rowcount

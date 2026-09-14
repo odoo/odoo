@@ -45,12 +45,41 @@
                     string="Authentication"
                     invisible="trigger != 'on_webhook'" />
                 <div invisible="trigger != 'on_webhook'">
+                    <div
+                        class="alert alert-warning mb-2"
+                        role="alert"
+                        invisible="not webhook_enforce_from">
+                        Calls that fail authentication still run until
+                        <field name="webhook_enforce_from" readonly="1" class="fw-bold" />,
+                        and are recorded as accepted unauthenticated. Give the sender the
+                        secret before then.
+                    </div>
+                    <div
+                        class="alert alert-danger mb-2"
+                        role="alert"
+                        invisible="auth_type == 'none' or credential_id">
+                        This webhook has no secret, so every call is refused. Generate one
+                        with New Secret, or pick a credential.
+                    </div>
+                    <div
+                        class="alert alert-danger mb-2"
+                        role="alert"
+                        invisible="auth_type != 'none'">
+                        This webhook authenticates nothing: anyone holding its URL can run it.
+                    </div>
                     <field name="auth_type" class="oe_inline" />
                     <field
                         name="credential_id"
                         invisible="auth_type == 'none'"
-                        required="auth_type != 'none'"
                         class="oe_inline ms-2" />
+                    <button
+                        name="action_generate_webhook_secret"
+                        type="object"
+                        string="New Secret"
+                        help="Replace the secret with a newly generated one. The sender must use the new one."
+                        icon="fa-key"
+                        invisible="auth_type == 'none'"
+                        class="oe_inline btn btn-link px-1 py-0" />
                     <div
                         class="d-flex flex-row gap-2 mt8"
                         invisible="auth_type not in ['hmac_sha256', 'hmac_sha512']">

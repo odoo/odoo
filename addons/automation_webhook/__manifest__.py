@@ -1,6 +1,6 @@
 {
     "name": "Automation Webhooks",
-    "version": "1.1",
+    "version": "1.2",
     "category": "Hidden",
     "summary": "The On webhook trigger for automation rules, behind the credential inbound gate",
     "author": "AgroMarin",

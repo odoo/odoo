@@ -1,9 +1,14 @@
 import hashlib
 import hmac
+import importlib.util
+from pathlib import Path
 
+from odoo import fields
 from odoo.tests import TransactionCase, tagged
 
 from odoo.addons.mixin_encryption.tests.common import EncryptionKeyCase
+
+MIGRATION = Path(__file__).resolve().parents[1] / "migrations/1.2/post-migrate.py"
 
 
 @tagged("post_install", "-at_install")
@@ -69,12 +74,71 @@ class TestWebhookSecurity(EncryptionKeyCase, TransactionCase):
         self.assertFalse(res[0])
         self.assertEqual(res[1], 413)
 
-    def test_none_auth_is_open_by_default(self):
-        rule = self.env["automation.rule"].create(
+    def _new_rule(self, **vals):
+        return self.env["automation.rule"].create(
             {
-                "name": "open",
+                "name": "new webhook",
                 "model_id": self.env.ref("base.model_res_partner").id,
                 "trigger": "on_webhook",
+                **vals,
             }
         )
+
+    def test_a_new_webhook_authenticates_with_a_generated_secret(self):
+        rule = self._new_rule()
+
+        self.assertEqual(rule.auth_type, "hmac_sha256")
+        self.assertTrue(rule.rate_limit_enabled)
+        secret = rule.credential_id._use_secret("test")
+        self.assertGreaterEqual(len(secret), 40)
+        self.assertFalse(rule._check_webhook_request({}, self.body, "1.2.3.4")[0])
+        signed = {"X-Hub-Signature-256": self._sig(secret)}
+        self.assertTrue(rule._check_webhook_request(signed, self.body, "1.2.3.4")[0])
+
+    def test_two_rules_never_share_a_generated_secret(self):
+        first, second = self._new_rule(), self._new_rule(name="other")
+
+        self.assertNotEqual(first.credential_id, second.credential_id)
+
+    def test_a_rule_left_open_on_purpose_still_answers(self):
+        rule = self._new_rule(auth_type="none")
+
+        self.assertFalse(rule.credential_id)
+        self.assertTrue(rule._check_webhook_request({}, self.body, "1.2.3.4")[0])
+
+    def test_unsigned_calls_run_during_the_audit_window_and_not_after(self):
+        rule = self._new_rule()
+        rule._start_webhook_audit_window()
+
+        self.assertTrue(rule._check_webhook_request({}, self.body, "1.2.3.4")[0])
+        rule.webhook_enforce_from = fields.Datetime.subtract(
+            fields.Datetime.now(), seconds=1
+        )
+        self.assertFalse(rule._check_webhook_request({}, self.body, "1.2.3.4")[0])
+
+    def test_a_new_secret_replaces_the_old_one(self):
+        rule = self._new_rule()
+        old = rule.credential_id._use_secret("test")
+
+        rule.action_generate_webhook_secret()
+
+        new = rule.credential_id._use_secret("test")
+        self.assertNotEqual(old, new)
+        stale = {"X-Hub-Signature-256": self._sig(old)}
+        self.assertFalse(rule._check_webhook_request(stale, self.body, "1.2.3.4")[0])
+
+    def test_the_upgrade_gives_open_rules_a_secret_and_thirty_days(self):
+        rule = self._new_rule(auth_type="none")
+
+        spec = importlib.util.spec_from_file_location(
+            "automation_webhook_1_2", MIGRATION
+        )
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        module.migrate(self.env.cr, "1.1")
+
+        self.assertEqual(rule.auth_type, "hmac_sha256")
+        self.assertTrue(rule.credential_id)
+        remaining = rule.webhook_enforce_from - fields.Datetime.now()
+        self.assertEqual(round(remaining.total_seconds() / 86400), 30)
         self.assertTrue(rule._check_webhook_request({}, self.body, "1.2.3.4")[0])

@@ -18,7 +18,7 @@ class TestInboundAccessLog(EncryptionKeyCase, TransactionCase):
         cls.model_id = cls.env.ref("base.model_res_partner").id
 
     def _endpoint(self, code, **vals):
-        return self.env["automation.rule"].create(
+        endpoint = self.env["automation.rule"].create(
             {
                 "name": code,
                 "model_id": self.model_id,
@@ -27,6 +27,8 @@ class TestInboundAccessLog(EncryptionKeyCase, TransactionCase):
                 **vals,
             }
         )
+        endpoint.credential_id = False
+        return endpoint
 
     _GOOD_TOKEN = "the-token-the-caller-should-have-sent"
 

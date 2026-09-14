@@ -2186,6 +2186,7 @@ class TestHttp(common.HttpCase):
         automation = create_automation(
             self,
             trigger="on_webhook",
+            auth_type="none",
             model_id=model.id,
             record_getter=record_getter,
             _actions={
@@ -2220,6 +2221,7 @@ class TestHttp(common.HttpCase):
         automation = create_automation(
             self,
             trigger="on_webhook",
+            auth_type="none",
             model_id=model.id,
             record_getter=record_getter,
             _actions={
@@ -2259,6 +2261,7 @@ class TestHttp(common.HttpCase):
         automation_receiver = create_automation(
             self,
             trigger="on_webhook",
+            auth_type="none",
             model_id=model.id,
             record_getter="model.env[payload.get('_model')].browse(int(payload.get('_id')))",
             _actions={
