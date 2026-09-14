@@ -7,6 +7,7 @@ import {
     queryAllProperties,
     queryAllTexts,
     queryFirst,
+    waitFor,
 } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 import { toggleFilter } from "@web/../tests/views/calendar/calendar_test_helpers";
@@ -451,4 +452,30 @@ test("a user with two employees keeps both work locations", async () => {
     ).join(" ");
     expect(monday).toInclude("Office");
     expect(monday).toInclude("Home");
+});
+
+test("a work location that is not yours offers no edit or delete", async () => {
+    // `hasFooter` gates the footer on `record.userId === user.userId`, so the
+    // calendar is self-service: an HR user looking at somebody else's week can
+    // see it and cannot act on it. Nothing covered that, and it is the guard that
+    // makes the weekly-delete path unreachable for an employee with no user at
+    // all -- `user_id` is false there, and false never equals a user id.
+    onRpc("get_worklocation", () => EMPLOYEE_WORK_LOCATIONS);
+    await mountHomeWorkingView();
+    await contains(
+        `.fc-col-header-cell[data-date="2020-12-07"] .o_homeworking_content[data-employee="2"]`,
+    ).click();
+    await waitFor(`.o_cw_popover`);
+    expect(`.o_cw_popover .o_cw_popover_delete`).toHaveCount(0);
+    expect(`.o_cw_popover .o_cw_popover_edit`).toHaveCount(0);
+});
+
+test("your own work location does offer them", async () => {
+    onRpc("get_worklocation", () => EMPLOYEE_WORK_LOCATIONS);
+    await mountHomeWorkingView();
+    await contains(
+        `.fc-col-header-cell[data-date="2020-12-07"] .o_homeworking_content[data-employee="1"]`,
+    ).click();
+    await waitFor(`.o_cw_popover`);
+    expect(`.o_cw_popover .o_cw_popover_delete`).toHaveCount(1);
 });
