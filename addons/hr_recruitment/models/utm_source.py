@@ -19,10 +19,10 @@ class UtmSource(models.Model):
                     "You cannot delete these UTM Sources as they are linked to the following recruitment sources in "
                     "Recruitment:\n%(recruitment_sources)s",
                     recruitment_sources=", ".join(
-                        [
-                            '"%s"' % name
-                            for name in linked_recruitment_sources.job_id.mapped("name")
-                        ]
+                        sorted(
+                            f'"{source.display_name}"'
+                            for source in linked_recruitment_sources
+                        )
                     ),
                 )
             )

@@ -1,5 +1,7 @@
 import base64
 
+from dateutil.relativedelta import relativedelta
+
 from odoo import Command
 from odoo.fields import Domain
 from odoo.tests import Form, TransactionCase, tagged
@@ -691,3 +693,210 @@ class TestRecruitment(TransactionCase):
             applicant.activity_schedule("mail.mail_activity_data_todo", user_id=user.id)
         self.assertEqual(job.activity_count, 2)
         self.assertEqual(job.with_user(other_user).activity_count, 1)
+
+    def test_refusing_an_application_of_a_talent_refuses_its_siblings(self):
+        """Duplicates found through the shared talent must be traceable.
+
+        ``_get_domain_similar_applicants`` offers duplicates that match on
+        ``pool_applicant_id`` as well as on the e-mail/phone/LinkedIn keys, so
+        the wizard used to hand the message builder a duplicate it could not map
+        back to an original and died with a KeyError on a plain refusal.
+        """
+        job = self.env["hr.job"].create({"name": "Talented Job"})
+        pool = self.env["hr.talent.pool"].create({"name": "Pool"})
+        talent = self.env["hr.applicant"].create(
+            {
+                "partner_name": "Talent",
+                "email_from": "talent@example.com",
+                "talent_pool_ids": [Command.set(pool.ids)],
+            }
+        )
+        applications = self.env["hr.applicant"].create(
+            [
+                {
+                    "partner_name": "Talent",
+                    "email_from": f"talent+{index}@example.com",
+                    "job_id": job.id,
+                    "pool_applicant_id": talent.id,
+                }
+                for index in range(2)
+            ]
+        )
+        wizard = self.env["applicant.get.refuse.reason"].create(
+            {
+                "applicant_ids": [Command.set(applications[0].ids)],
+                "refuse_reason_id": self.env["hr.applicant.refuse.reason"]
+                .search([], limit=1)
+                .id,
+                "duplicates": True,
+            }
+        )
+        wizard.send_mail = False
+        self.assertIn(applications[1], wizard.duplicate_applicant_ids)
+        self.assertIn(talent, wizard.duplicate_applicant_ids)
+
+        original = wizard._get_related_original_applicants()
+        self.assertEqual(original[applications[1]], applications[0])
+        self.assertEqual(original[talent], applications[0])
+
+        wizard.action_refuse_reason_apply()
+
+        self.assertFalse(applications[1].active)
+        self.assertFalse(talent.active)
+
+    def test_refusing_a_hand_picked_non_duplicate_does_not_crash(self):
+        """``duplicate_applicant_ids`` is editable, so an unmatched entry is
+        reachable and must degrade to a link-less log, not an exception."""
+        job = self.env["hr.job"].create({"name": "Job"})
+        original, real_duplicate, unrelated = self.env["hr.applicant"].create(
+            [
+                {
+                    "partner_name": "Original",
+                    "email_from": "same@example.com",
+                    "job_id": job.id,
+                },
+                {
+                    "partner_name": "Duplicate",
+                    "email_from": "same@example.com",
+                    "job_id": job.id,
+                },
+                {
+                    "partner_name": "Unrelated",
+                    "email_from": "other@example.com",
+                    "job_id": job.id,
+                },
+            ]
+        )
+        wizard = self.env["applicant.get.refuse.reason"].create(
+            {
+                "applicant_ids": [Command.set(original.ids)],
+                "refuse_reason_id": self.env["hr.applicant.refuse.reason"]
+                .search([], limit=1)
+                .id,
+                "duplicates": True,
+            }
+        )
+        wizard.send_mail = False
+        self.assertEqual(wizard.duplicate_applicant_ids, real_duplicate)
+        wizard.duplicate_applicant_ids = [Command.link(unrelated.id)]
+        self.assertEqual(wizard.duplicate_applicant_ids, real_duplicate + unrelated)
+
+        wizard.action_refuse_reason_apply()
+
+        self.assertFalse(real_duplicate.active)
+        self.assertFalse(unrelated.active)
+        self.assertNotIn(unrelated, wizard._get_related_original_applicants())
+
+    def test_phone_reaches_the_contact_without_an_email(self):
+        """The inverse is shared by ``email_from`` and ``phone_ids``: gating it
+        on the e-mail dropped every phone edit on an e-mail-less applicant."""
+        partner = self.env["res.partner"].create({"name": "Phone Only"})
+        applicant = self.env["hr.applicant"].create(
+            {"partner_name": "Phone Only", "partner_id": partner.id}
+        )
+        phone = self.env["phone.number"].create({"number": "+32470123456"})
+
+        applicant.phone_ids = [Command.set(phone.ids)]
+        self.env.flush_all()
+
+        self.assertEqual(partner.phone_ids, phone)
+
+    def test_rewriting_the_same_stage_keeps_the_previous_stage(self):
+        """``last_stage_id`` answers "where did it come from"; a write that
+        moves nothing must not answer "from where it already is"."""
+        job = self.env["hr.job"].create({"name": "Job"})
+        first, second = self.env["hr.recruitment.stage"].create(
+            [
+                {"name": "First", "sequence": 1},
+                {"name": "Second", "sequence": 2},
+            ]
+        )
+        applicant = self.env["hr.applicant"].create(
+            {"partner_name": "Applicant", "job_id": job.id, "stage_id": first.id}
+        )
+        applicant.write({"stage_id": second.id})
+        self.assertEqual(applicant.last_stage_id, first)
+        stamp = applicant.date_last_stage_update
+
+        applicant.write({"stage_id": second.id})
+
+        self.assertEqual(applicant.last_stage_id, first)
+        self.assertEqual(applicant.date_last_stage_update, stamp)
+
+    def test_unarchiving_clears_the_refusal_date(self):
+        job = self.env["hr.job"].create({"name": "Job"})
+        applicant = self.env["hr.applicant"].create(
+            {"partner_name": "Applicant", "job_id": job.id}
+        )
+        wizard = self.env["applicant.get.refuse.reason"].create(
+            {
+                "applicant_ids": [Command.set(applicant.ids)],
+                "refuse_reason_id": self.env["hr.applicant.refuse.reason"]
+                .search([], limit=1)
+                .id,
+            }
+        )
+        wizard.send_mail = False
+        wizard.action_refuse_reason_apply()
+        self.assertTrue(applicant.refuse_date)
+
+        applicant.action_unarchive()
+
+        self.assertFalse(applicant.refuse_reason_id)
+        self.assertFalse(applicant.refuse_date)
+        self.assertEqual(applicant.application_status, "ongoing")
+
+    def test_stage_duration_of_a_refused_application_is_never_negative(self):
+        """The refusal freezes the stage clock; it must not run it backwards."""
+        job = self.env["hr.job"].create({"name": "Job"})
+        applicant = self.env["hr.applicant"].create(
+            {"partner_name": "Applicant", "job_id": job.id}
+        )
+        self.env.flush_all()
+        applicant.write(
+            {
+                "refuse_reason_id": self.env["hr.applicant.refuse.reason"]
+                .search([], limit=1)
+                .id,
+                "active": False,
+                "refuse_date": self.env.cr.now() - relativedelta(days=30),
+            }
+        )
+        self.env.flush_all()
+        applicant.invalidate_recordset()
+
+        self.assertTrue(
+            all(duration >= 0 for duration in applicant.duration_tracking.values()),
+            applicant.duration_tracking,
+        )
+
+    def test_a_new_job_is_a_favorite_of_its_creator(self):
+        """``_default_favorite_user_ids`` used to be dead: ``create`` forced the
+        key to ``[]`` before ``super()``, so the default never applied.
+
+        Driven as a real user: ``self.env.user`` is ``__system__``, which is
+        archived, and an archived user is filtered out of the m2m on read.
+        """
+        recruiter = self.env["res.users"].create(
+            {
+                "name": "Recruiter",
+                "login": "favorite_recruiter",
+                "group_ids": [
+                    Command.link(
+                        self.env.ref("hr_recruitment.group_hr_recruitment_manager").id
+                    )
+                ],
+            }
+        )
+        job = self.env["hr.job"].with_user(recruiter).create({"name": "Job"})
+        self.assertEqual(job.sudo().favorite_user_ids, recruiter)
+        self.assertTrue(job.with_user(recruiter).is_user_favorite)
+
+    def test_a_job_created_with_explicit_favorites_keeps_them(self):
+        other = self.env["res.users"].create(
+            {"name": "Other", "login": "other_favorite"}
+        )
+        job = self.env["hr.job"].create(
+            {"name": "Job", "favorite_user_ids": [Command.set(other.ids)]}
+        )
+        self.assertEqual(job.favorite_user_ids, other)

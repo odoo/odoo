@@ -1,7 +1,10 @@
 from collections import defaultdict
 
-from odoo import SUPERUSER_ID, Command, _, api, fields, models
+from odoo import Command, _, api, fields, models
+from odoo.libs.debug_log import DebugLog
 from odoo.tools.convert import convert_file
+
+_debug = DebugLog(__name__)
 
 
 class HrJob(models.Model):
@@ -66,7 +69,7 @@ class HrJob(models.Model):
         groups="hr_recruitment.group_hr_recruitment_interviewer",
     )
     application_count = fields.Integer(
-        compute="_compute_application_count",
+        compute="_compute_application_counts",
         groups="hr_recruitment.group_hr_recruitment_interviewer",
     )
     open_application_count = fields.Integer(
@@ -80,7 +83,7 @@ class HrJob(models.Model):
     )
     new_application_count = fields.Integer(
         string="New Application",
-        compute="_compute_new_application_count",
+        compute="_compute_application_counts",
         groups="hr_recruitment.group_hr_recruitment_interviewer",
         help="Number of applications that are new in the flow (typically at first step of the flow)",
     )
@@ -91,7 +94,7 @@ class HrJob(models.Model):
     )
     applicant_hired = fields.Integer(
         string="Applicants Hired",
-        compute="_compute_applicant_hired",
+        compute="_compute_application_counts",
         groups="hr_recruitment.group_hr_recruitment_interviewer",
     )
     manager_id = fields.Many2one(
@@ -218,19 +221,21 @@ class HrJob(models.Model):
 
     @api.depends("application_ids.interviewer_ids")
     def _compute_extended_interviewer_ids(self):
-        results_raw = (
-            self.env["hr.applicant"]
-            .with_user(SUPERUSER_ID)
-            .search_read(
-                [("job_id", "in", self.ids), ("interviewer_ids", "!=", False)],
-                ["interviewer_ids", "job_id"],
-            )
-        )
+        """Every interviewer named on any application of these jobs.
+
+        Aggregated rather than read: ``search_read`` loaded each application and
+        rendered ``job_id``'s display name only to throw both away.
+        """
         interviewers_by_job = defaultdict(set)
-        for result_raw in results_raw:
-            interviewers_by_job[result_raw["job_id"][0]] |= set(
-                result_raw["interviewer_ids"]
+        for job, interviewer in (
+            self.env["hr.applicant"]
+            .sudo()
+            ._read_group(
+                [("job_id", "in", self.ids), ("interviewer_ids", "!=", False)],
+                ["job_id", "interviewer_ids"],
             )
+        ):
+            interviewers_by_job[job.id].add(interviewer.id)
         for job in self:
             job.extended_interviewer_ids = [
                 Command.set(list(interviewers_by_job[job.id]))
@@ -283,23 +288,31 @@ class HrJob(models.Model):
         for job in self:
             job.all_application_count = result.get(job.id, 0)
 
-    def _count_applications_by_job(self, domain=()):
-        return {
-            job.id: count
-            for job, count in self.env["hr.applicant"]._read_group(
-                [("job_id", "in", self.ids), *domain], ["job_id"], ["__count"]
-            )
-        }
+    def _compute_application_counts(self):
+        """Total, hired and first-stage application counts in one read_group.
 
-    def _compute_application_count(self):
-        counts = self._count_applications_by_job()
+        The three used to be three ``_read_group`` calls over the same active
+        applications, so a job kanban paid for the same scan three times.
+        """
+        first_stage_by_job = self.env["hr.recruitment.stage"]._get_first_stage_by_job(
+            self
+        )
+        totals = defaultdict(int)
+        hired = defaultdict(int)
+        new_in_flow = defaultdict(int)
+        with _debug.perf("application_counts", cr=self.env.cr, jobs=len(self)):
+            for job, stage, count in self.env["hr.applicant"]._read_group(
+                [("job_id", "in", self.ids)], ["job_id", "stage_id"], ["__count"]
+            ):
+                totals[job] += count
+                if stage.hired_stage:
+                    hired[job] += count
+                if stage == first_stage_by_job.get(job):
+                    new_in_flow[job] += count
         for job in self:
-            job.application_count = counts.get(job.id, 0)
-
-    def _compute_applicant_hired(self):
-        counts = self._count_applications_by_job([("stage_id.hired_stage", "=", True)])
-        for job in self:
-            job.applicant_hired = counts.get(job.id, 0)
+            job.application_count = totals[job]
+            job.applicant_hired = hired[job]
+            job.new_application_count = new_in_flow[job]
 
     @api.depends("application_count", "applicant_hired")
     def _compute_open_application_count(self):
@@ -327,21 +340,6 @@ class HrJob(models.Model):
         self.check_singleton()
         return self.env["hr.recruitment.stage"]._get_first_stage_by_job(self)[self]
 
-    def _compute_new_application_count(self):
-        first_stage_by_job = self.env["hr.recruitment.stage"]._get_first_stage_by_job(
-            self
-        )
-        counts = {
-            (job.id, stage.id): count
-            for job, stage, count in self.env["hr.applicant"]._read_group(
-                [("job_id", "in", self.ids)], ["job_id", "stage_id"], ["__count"]
-            )
-        }
-        for job in self:
-            job.new_application_count = counts.get(
-                (job.id, first_stage_by_job[job].id), 0
-            )
-
     @api.depends("application_count", "new_application_count")
     def _compute_old_application_count(self):
         for job in self:
@@ -367,8 +365,6 @@ class HrJob(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        for vals in vals_list:
-            vals["favorite_user_ids"] = vals.get("favorite_user_ids", [])
         jobs = super().create(vals_list)
         jobs.sudo().interviewer_ids._create_recruitment_interviewers()
         return jobs
@@ -462,6 +458,17 @@ class HrJob(models.Model):
             "search_default_running_applicant_activities": True,
         }
         return action
+
+    @api.model
+    def is_recruitment_scenario_loaded(self):
+        """Whether ``_action_load_recruitment_scenario`` has already run.
+
+        Keyed on the scenario's xml id rather than on a tag label, so a tag a
+        user happens to name "Demo" neither hides nor fakes the scenario.
+        """
+        return bool(
+            self.env.ref("hr_recruitment.tag_applicant_demo", raise_if_not_found=False)
+        )
 
     @api.model
     def _action_load_recruitment_scenario(self):

@@ -4,7 +4,7 @@ import {
     copyClipboardCharField,
 } from "@web/fields/basic/copy_clipboard/copy_clipboard_field";
 import { CharField } from "@web/fields/basic/char/char_field";
-import { GenerateContentAndCopyButton } from "../../buttons/generate_content_and_copy_button.js";
+import { CopyButton } from "@web/components/copy_button";
 import { useService } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/collections/objects";
 import { _t } from "@web/core/translation";
@@ -12,7 +12,7 @@ import { registry } from "@web/core/registry";
 
 class RecruitmentCopyClipboardCharField extends CopyClipboardCharField {
     static template = "hr_recruitment.RecruitmentCopyClipboardCharField";
-    static components = { Field: CharField, GenerateContentAndCopyButton };
+    static components = { Field: CharField, CopyButton };
     static props = {
         ...CopyClipboardCharField.props,
         displayedValue: { type: String, optional: true },
@@ -32,6 +32,12 @@ class RecruitmentCopyClipboardCharField extends CopyClipboardCharField {
         );
     }
 
+    /**
+     * `CopyButton` awaits a function-valued `content`, so the value is
+     * generated on click without a component of our own.
+     *
+     * @returns {(() => Promise<string>) | null}
+     */
     get contentGenerationFunction() {
         if (this.props.contentGenerationFunctionName) {
             return () =>

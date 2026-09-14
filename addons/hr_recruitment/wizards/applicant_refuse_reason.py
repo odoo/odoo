@@ -1,9 +1,9 @@
-from datetime import datetime
-from itertools import product
-
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class ApplicantGetRefuseReason(models.TransientModel):
@@ -164,21 +164,19 @@ class ApplicantGetRefuseReason(models.TransientModel):
         if self.duplicates_count and self.duplicates:
             refused_applications |= self.duplicate_applicant_ids
 
-            original_applicant_by_duplicate_applicant = (
-                self._get_related_original_applicants()
+            original_by_duplicate = self._get_related_original_applicants()
+            _debug.logic(
+                "refuse_duplicates",
+                originals=self.applicant_ids,
+                duplicates=self.duplicate_applicant_ids,
+                unmatched=len(self.duplicate_applicant_ids)
+                - len(original_by_duplicate),
             )
-            message_by_duplicate_applicant = {}
-            for duplicate_applicant in self.duplicate_applicant_ids:
-                url = original_applicant_by_duplicate_applicant[
-                    duplicate_applicant
-                ]._get_html_link()
-                message_by_duplicate_applicant[duplicate_applicant.id] = _(
-                    "Refused automatically because this application has been identified as a duplicate of %(link)s",
-                    link=url,
-                )
             self.duplicate_applicant_ids._message_log_batch(
                 bodies={
-                    duplicate.id: message_by_duplicate_applicant[duplicate.id]
+                    duplicate.id: self._duplicate_refusal_body(
+                        original_by_duplicate.get(duplicate)
+                    )
                     for duplicate in self.duplicate_applicant_ids
                 }
             )
@@ -186,7 +184,7 @@ class ApplicantGetRefuseReason(models.TransientModel):
             {
                 "refuse_reason_id": self.refuse_reason_id.id,
                 "active": False,
-                "refuse_date": datetime.now(),
+                "refuse_date": self.env.cr.now(),
             }
         )
 
@@ -195,24 +193,43 @@ class ApplicantGetRefuseReason(models.TransientModel):
 
         return {"type": "ir.actions.act_window_close"}
 
-    def _get_related_original_applicants(self):
-        duplication_fields = ["id", *self.env["hr.applicant"]._DUPLICATE_KEY_FIELDS]
-        original_applicant_by_field_value = {field: {} for field in duplication_fields}
-        related_original_applicants = {}
-        for original_applicant, field in product(
-            self.applicant_ids, duplication_fields
-        ):
-            value = original_applicant[field]
-            if value:
-                original_applicant_by_field_value[field][value] = original_applicant
+    def _duplicate_refusal_body(self, original):
+        if original:
+            return _(
+                "Refused automatically because this application has been identified"
+                " as a duplicate of %(link)s",
+                link=original._get_html_link(),
+            )
+        return _(
+            "Refused automatically because this application has been identified"
+            " as a duplicate of another refused application."
+        )
 
-        for duplicate_applicant in self.duplicate_applicant_ids:
-            for field in duplication_fields:
-                value = duplicate_applicant[field]
-                if original_applicant_by_field_value[field].get(value):
-                    related_original_applicants[duplicate_applicant] = (
-                        original_applicant_by_field_value[field][value]
-                    )
+    def _duplicate_match_fields(self):
+        """Keys that make a duplicate traceable back to a refused application.
+
+        Must stay a superset of what ``_get_domain_similar_applicants`` selects
+        on, or a duplicate the wizard offers has no original to point at.
+        """
+        return (
+            *self.env["hr.applicant"]._DUPLICATE_KEY_FIELDS,
+            "pool_applicant_id",
+        )
+
+    def _get_related_original_applicants(self):
+        match_fields = self._duplicate_match_fields()
+        original_by_key = {}
+        for original in self.applicant_ids:
+            for fname in match_fields:
+                if value := original[fname]:
+                    original_by_key.setdefault((fname, value), original)
+
+        related_original_applicants = {}
+        for duplicate in self.duplicate_applicant_ids:
+            for fname in match_fields:
+                value = duplicate[fname]
+                if value and (original := original_by_key.get((fname, value))):
+                    related_original_applicants[duplicate] = original
                     break
         return related_original_applicants
 

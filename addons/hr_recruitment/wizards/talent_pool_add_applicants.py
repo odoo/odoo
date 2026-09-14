@@ -21,45 +21,42 @@ class TalentPoolAddApplicants(models.TransientModel):
     )
 
     def _add_applicants_to_pool(self):
-        talents = self.env["hr.applicant"]
+        """Return the talent record of every applicant, creating it when needed.
+
+        An applicant is either a talent already, or points at one, or needs one
+        copied from it. The first two only need the pools and tags linked, so
+        they are written as one batch rather than one write each.
+        """
+        pool_vals = {
+            "talent_pool_ids": [
+                Command.link(pool_id) for pool_id in self.talent_pool_ids.ids
+            ],
+            "categ_ids": [Command.link(categ_id) for categ_id in self.categ_ids.ids],
+        }
+        Applicant = self.env["hr.applicant"]
+        existing_talents = Applicant
+        without_talent = Applicant
         for applicant in self.applicant_ids:
             if applicant.talent_pool_ids:
-                applicant.write(
-                    {
-                        "talent_pool_ids": [
-                            Command.link(talent_pool.id)
-                            for talent_pool in self.talent_pool_ids
-                        ],
-                        "categ_ids": [
-                            Command.link(categ.id) for categ in self.categ_ids
-                        ],
-                    }
-                )
-                talents += applicant
+                existing_talents |= applicant
             elif applicant.pool_applicant_id:
-                talent = applicant.pool_applicant_id
-                talent.write(
-                    {
-                        "talent_pool_ids": [
-                            Command.link(talent_pool.id)
-                            for talent_pool in self.talent_pool_ids
-                        ],
-                        "categ_ids": [
-                            Command.link(categ.id) for categ in self.categ_ids
-                        ],
-                    }
-                )
-                talents += talent
+                existing_talents |= applicant.pool_applicant_id
             else:
-                talent = applicant.with_context(no_copy_in_partner_name=True).copy(
-                    {
-                        "job_id": False,
-                        "talent_pool_ids": self.talent_pool_ids.ids,
-                        "categ_ids": (applicant.categ_ids + self.categ_ids).ids,
-                    }
-                )
-                applicant.pool_applicant_id = talent
-                talents += talent
+                without_talent |= applicant
+        if existing_talents:
+            existing_talents.write(pool_vals)
+
+        talents = existing_talents
+        for applicant in without_talent:
+            talent = applicant.with_context(no_copy_in_partner_name=True).copy(
+                {
+                    "job_id": False,
+                    "talent_pool_ids": self.talent_pool_ids.ids,
+                    "categ_ids": (applicant.categ_ids + self.categ_ids).ids,
+                }
+            )
+            applicant.pool_applicant_id = talent
+            talents |= talent
         return talents
 
     def action_add_applicants_to_pool(self):

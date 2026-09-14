@@ -1,14 +1,16 @@
 import re
 from collections import defaultdict
-from datetime import datetime
 
 from markupsafe import Markup
 
 from odoo import Command, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
+from odoo.libs.debug_log import DebugLog
 from odoo.tools import clean_context
 from odoo.tools.translate import _
+
+_debug = DebugLog(__name__)
 
 AVAILABLE_PRIORITIES = [
     ("0", "Normal"),
@@ -355,9 +357,12 @@ class HrApplicant(models.Model):
         direct = self.filtered(lambda a: a.talent_pool_ids or a.pool_applicant_id)
         for applicant in direct:
             applicant.is_applicant_in_pool = True
-            applicant.talent_pool_count = len(
-                applicant.pool_applicant_id.talent_pool_ids
+            # A talent being created is its own pool holder before ``create`` has
+            # linked ``pool_applicant_id``, so fall back to its own pools.
+            pools = (
+                applicant.pool_applicant_id.talent_pool_ids or applicant.talent_pool_ids
             )
+            applicant.talent_pool_count = len(pools)
         indirect = self - direct
         if not indirect:
             return
@@ -389,7 +394,9 @@ class HrApplicant(models.Model):
                 if applicant[fname] and (fname, applicant[fname]) in pool_ids_by_key
             ]
             applicant.is_applicant_in_pool = bool(matches)
-            applicant.talent_pool_count = len(matches[0]) if matches else 0
+            # The keys can match different talents, hence different pools: the
+            # count is the union, not whichever key happened to be checked first.
+            applicant.talent_pool_count = len(set().union(*matches)) if matches else 0
 
     @api.depends(lambda self: self._phone_get_sanitize_triggers())
     def _compute_phone_sanitized(self):
@@ -406,11 +413,16 @@ class HrApplicant(models.Model):
                 applicant.phone_ids = applicant.partner_id.phone_ids
 
     def _inverse_partner_email(self):
+        """Push the applicant's contact details onto their contact record.
+
+        Shared by ``email_from`` and ``phone_ids``: only *creating* the contact
+        needs an email, so the sync below is gated on having a contact, not on
+        having an email -- otherwise a phone set on an email-less applicant is
+        silently dropped.
+        """
         for applicant in self:
             email_normalized = tools.email_normalize(applicant.email_from or "")
-            if not email_normalized:
-                continue
-            if not applicant.partner_id:
+            if email_normalized and not applicant.partner_id:
                 if not applicant.partner_name:
                     raise UserError(
                         _("You must define a Contact Name for this applicant.")
@@ -422,17 +434,21 @@ class HrApplicant(models.Model):
                         additional_values={email_normalized: {"lang": self.env.lang}},
                     )
                 )
-            if (
-                applicant.partner_name
-                and applicant.partner_name != applicant.partner_id.name
-            ):
-                applicant.partner_id.name = applicant.partner_name
-            if email_normalized and email_normalized != applicant.partner_id.email:
-                applicant.partner_id.email = applicant.email_from
-            if applicant.phone_ids and applicant.phone_ids != (
-                applicant.partner_id.phone_ids
-            ):
-                applicant.partner_id.phone_ids = [Command.set(applicant.phone_ids.ids)]
+            partner = applicant.partner_id
+            if not partner:
+                continue
+            if applicant.partner_name and applicant.partner_name != partner.name:
+                partner.name = applicant.partner_name
+            if email_normalized and email_normalized != partner.email:
+                partner.email = applicant.email_from
+            if applicant.phone_ids and applicant.phone_ids != partner.phone_ids:
+                _debug.logic(
+                    "partner_phone_sync",
+                    applicant=applicant,
+                    partner=partner,
+                    phones=len(applicant.phone_ids),
+                )
+                partner.phone_ids = [Command.set(applicant.phone_ids.ids)]
 
     @api.depends("email_normalized", "phone_sanitized", "linkedin_profile")
     def _compute_application_count(self):
@@ -696,14 +712,19 @@ class HrApplicant(models.Model):
         old_interviewers = self.interviewer_ids
         applicants_by_old_stage = {}
         if "stage_id" in vals:
-            vals["date_last_stage_update"] = fields.Datetime.now()
-            vals.setdefault("kanban_state", "normal")
             new_stage = self.env["hr.recruitment.stage"].browse(vals["stage_id"])
-            applicants_by_old_stage = self.grouped("stage_id")
-            self._update_job_recruitment_target(new_stage)
-            if len(applicants_by_old_stage) == 1:
-                vals["last_stage_id"] = self.stage_id.id
-                applicants_by_old_stage = {}
+            moving = self.filtered(lambda a: a.stage_id != new_stage)
+            _debug.logic(
+                "stage_write", applicants=self, moving=moving, new_stage=new_stage
+            )
+            if moving:
+                vals["date_last_stage_update"] = fields.Datetime.now()
+                vals.setdefault("kanban_state", "normal")
+                moving._update_job_recruitment_target(new_stage)
+                applicants_by_old_stage = moving.grouped("stage_id")
+                if moving == self and len(applicants_by_old_stage) == 1:
+                    vals["last_stage_id"] = next(iter(applicants_by_old_stage)).id
+                    applicants_by_old_stage = {}
         if "kanban_state" in vals:
             vals["date_last_stage_update"] = fields.Datetime.now()
         res = super().write(vals)
@@ -816,7 +837,6 @@ class HrApplicant(models.Model):
             "default_partner_ids": partners.ids,
             "default_user_id": self.env.uid,
             "default_name": self.partner_name,
-            "attachment_ids": self.attachment_ids.ids,
         }
         return res
 
@@ -1037,6 +1057,15 @@ class HrApplicant(models.Model):
             defaults["priority"] = msg_dict["priority"]
         if custom_values:
             defaults.update(custom_values)
+        _debug.pipeline(
+            "message_new",
+            platform=job_platform.name or "-",
+            regex_matched=bool(
+                job_platform and job_platform.regex and defaults.get("partner_name")
+            ),
+            partner_name=defaults.get("partner_name") or "-",
+            has_email=bool(defaults.get("email_from")),
+        )
         applicant = super().message_new(msg_dict, custom_values=defaults)
         applicant._compute_partner_phone_email()
         return applicant
@@ -1138,15 +1167,19 @@ class HrApplicant(models.Model):
         }
 
     def reset_applicant(self):
-        first_stage_by_job = self.env["hr.recruitment.stage"]._get_first_stage_by_job(
-            self.job_id
-        )
-        for applicant in self:
-            applicant.write(
+        """Send applications back to the start of their job's flow.
+
+        Grouped by job because the target stage is per job, so this costs one
+        write per distinct job rather than one per application.
+        """
+        Stage = self.env["hr.recruitment.stage"]
+        first_stage_by_job = Stage._get_first_stage_by_job(self.job_id)
+        for job, applicants in self.grouped("job_id").items():
+            applicants.write(
                 {
-                    "stage_id": first_stage_by_job.get(applicant.job_id, False)
-                    and first_stage_by_job[applicant.job_id].id,
+                    "stage_id": first_stage_by_job.get(job, Stage).id,
                     "refuse_reason_id": False,
+                    "refuse_date": False,
                 }
             )
 
@@ -1175,11 +1208,16 @@ class HrApplicant(models.Model):
         }
 
     def _get_duration_from_tracking(self, trackings):
-        json = super()._get_duration_from_tracking(trackings)
-        now = datetime.now()
-        for applicant in self:
-            if applicant.refuse_reason_id and applicant.refuse_date:
-                json[applicant.stage_id.id] -= (
-                    now - applicant.refuse_date
-                ).total_seconds()
-        return json
+        """Stop the current stage's clock at the moment of refusal.
+
+        ``super()`` counts every stage up to now; a refused application stopped
+        moving when it was refused, so the span since then is not time spent in
+        the stage. Clamped at zero: a ``refuse_date`` older than the stage entry
+        would otherwise report a negative duration that grows every day.
+        """
+        durations = super()._get_duration_from_tracking(trackings)
+        if self.refuse_reason_id and self.refuse_date:
+            stage_id = self.stage_id.id
+            since_refusal = (self.env.cr.now() - self.refuse_date).total_seconds()
+            durations[stage_id] = max(0, durations.get(stage_id, 0) - since_refusal)
+        return durations
