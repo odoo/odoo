@@ -1033,10 +1033,11 @@ class Properties(Field):
         if isinstance(value, str):
             # ->> renders an unset property (json false) as the text 'false',
             # which LIKE '%a%' and < 'red' would match; only text compares
+            sql_json = sql_left
             sql_left = SQL(
                 "(CASE WHEN jsonb_typeof(%s) IN ('boolean', 'null')"
                 " THEN NULL ELSE %s ->> %s END)",
-                sql_left,
+                sql_json,
                 raw_sql_field,
                 property_name,
             )
@@ -1049,6 +1050,9 @@ class Properties(Field):
             )
             if operator in Domain.NEGATIVE_OPERATORS:
                 sql = SQL("(%s OR %s IS NULL)", sql, sql_left)
+            elif operator in PYTHON_INEQUALITY_OPERATOR:
+                # a list or a number does not order against text
+                sql = SQL("(jsonb_typeof(%s) = 'string' AND %s)", sql_json, sql)
             return sql
 
         sql_right = SQL("%s", json.dumps(value))

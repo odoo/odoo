@@ -856,3 +856,271 @@ class TestSearchDefinedPredicateQueries(TransactionCase):
         messages = self.messages.sudo()
         subset = messages[:2]
         self.assertEqual(subset.filtered_domain([("size", ">", 1)]), subset)
+
+
+class TestFieldTypeMatrixParity(TransactionCase):
+    # every (field, operator, value) triple the generator above cannot reach:
+    # Reference, Binary, Html, Datetime, Selection, x2many and Properties
+    OPERATORS = (
+        "=",
+        "!=",
+        "in",
+        "not in",
+        "like",
+        "ilike",
+        "not like",
+        "not ilike",
+        "=like",
+        "=ilike",
+        "<",
+        "<=",
+        ">",
+        ">=",
+    )
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.partner = cls.env["res.partner"].create({"name": "Matrix partner"})
+        cls.currency = cls.env.ref("base.EUR")
+        cls.mixed = cls.env["test_orm.mixed"].create(
+            [
+                {
+                    "foo": "Alpha",
+                    "text": "first line",
+                    "truth": True,
+                    "count": 3,
+                    "number": 1.5,
+                    "date": "2026-01-15",
+                    "moment": "2026-01-15 23:30:00",
+                    "lang": "en_US",
+                    "reference": f"res.partner,{cls.partner.id}",
+                    "comment0": "<p>Hello <b>world</b></p>",
+                    "currency_id": cls.currency.id,
+                    "amount": 10.0,
+                },
+                {
+                    "foo": "beta",
+                    "text": "",
+                    "truth": False,
+                    "count": 0,
+                    "number": 0.0,
+                    "date": False,
+                    "moment": False,
+                    "lang": False,
+                    "reference": False,
+                    "comment0": "",
+                    "currency_id": False,
+                    "amount": 0.0,
+                },
+                {
+                    "foo": "",
+                    "text": False,
+                    "count": -2,
+                    "number": 3.14,
+                    "date": "2026-03-01",
+                    "moment": "2026-03-01 00:00:00",
+                    "lang": "fr_FR",
+                    "reference": f"res.currency,{cls.currency.id}",
+                    "comment0": "<p>Accent</p>",
+                    "currency_id": cls.currency.id,
+                    "amount": 0.005,
+                },
+                {"foo": False, "text": "x", "truth": True, "count": 7},
+            ]
+        )
+        bars = cls.env["test_orm.related_bar"].create(
+            [{"name": "bar one"}, {"name": False}]
+        )
+        cls.bars = bars
+        cls.foos = cls.env["test_orm.related_foo"].create(
+            [
+                {
+                    "name": "f1",
+                    "bar_id": bars[0].id,
+                    "bar_ids": [(6, 0, bars.ids)],
+                    "binary_bin": b"Ymlu",
+                },
+                {"name": "f2", "bar_id": bars[1].id, "bar_ids": [(6, 0, bars[1].ids)]},
+                {"name": False},
+            ]
+        )
+        discussion = cls.env["test_orm.discussion"].create(
+            {
+                "name": "matrix",
+                "participants": [(4, cls.env.user.id)],
+                "attributes_definition": [
+                    {"name": "color", "type": "char"},
+                    {"name": "size", "type": "integer"},
+                    {
+                        "name": "tag",
+                        "type": "selection",
+                        "selection": [["a", "A"], ["b", "B"]],
+                    },
+                    {"name": "flag", "type": "boolean"},
+                    {
+                        "name": "labels",
+                        "type": "tags",
+                        "tags": [["x", "X", 1], ["y", "Y", 2]],
+                    },
+                ],
+            }
+        )
+        cls.messages = cls.env["test_orm.message"].create(
+            [
+                {
+                    "discussion": discussion.id,
+                    "body": "one",
+                    "attributes": {
+                        "color": "red",
+                        "size": 3,
+                        "tag": "a",
+                        "flag": True,
+                        "labels": ["x", "y"],
+                    },
+                },
+                {
+                    "discussion": discussion.id,
+                    "body": "two",
+                    "attributes": {
+                        "color": False,
+                        "size": 0,
+                        "tag": False,
+                        "flag": False,
+                        "labels": ["y"],
+                    },
+                },
+                {
+                    "discussion": discussion.id,
+                    "body": "three",
+                    "attributes": {"color": "false", "size": False, "labels": []},
+                },
+                {"discussion": discussion.id, "body": "four"},
+            ]
+        )
+        cls.env.flush_all()
+        cls.env.invalidate_all()
+
+    def _specs(self):
+        partner, currency = self.partner, self.currency
+        bar_one, bar_none = self.bars
+        return [
+            (
+                self.mixed,
+                {
+                    "foo": ["Alpha", "alpha", "", False, "%pha", "a"],
+                    "text": ["first line", "", False, "line"],
+                    "truth": [True, False, "True", "false", "1", "0"],
+                    "count": [0, 3, False, -2, "3", 2.5],
+                    "number": [0.0, 1.5, 3.14, False, 0, "1.5", 1.4999999],
+                    "date": [
+                        "2026-01-15",
+                        False,
+                        "2026-01-15 10:00:00",
+                        "2026-02-01",
+                    ],
+                    "moment": [
+                        "2026-01-15",
+                        "2026-01-15 23:30:00",
+                        False,
+                        "2026-01-16",
+                    ],
+                    "lang": ["en_US", "fr_FR", False, "en"],
+                    "reference": [
+                        f"res.partner,{partner.id}",
+                        False,
+                        "res.partner",
+                        f"res.currency,{currency.id}",
+                        "res.partner,%",
+                        "res",
+                    ],
+                    "comment0": [
+                        "<p>Hello <b>world</b></p>",
+                        "Hello",
+                        "",
+                        False,
+                        "world",
+                    ],
+                    "currency_id": [
+                        currency.id,
+                        False,
+                        "EUR",
+                        [currency.id, False],
+                        "E",
+                    ],
+                    "amount": [10.0, 0.0, False, 0.005, 0.01],
+                    "id": [
+                        self.mixed[0].id,
+                        False,
+                        [self.mixed[0].id, self.mixed[1].id],
+                    ],
+                },
+            ),
+            (
+                self.foos,
+                {
+                    "bar_id": [bar_one.id, bar_none.id, False, "bar one", "bar", ""],
+                    "bar_id.name": ["bar one", False, "", "one"],
+                    "bar_ids": [bar_one.id, False, self.bars.ids, "bar one", "", "bar"],
+                    "bar_ids.name": ["bar one", False, ""],
+                    "bar_name": ["bar one", False, "", "bar"],
+                    "bar_alias": [bar_one.id, False, "bar"],
+                    "binary_bin": [False, "Ymlu"],
+                    "name": ["f1", False, "", "f"],
+                },
+            ),
+            (
+                self.messages,
+                {
+                    "attributes.color": ["red", False, "", "re", "RED", "false", "als"],
+                    "attributes.size": [3, 0, False, 2, 0.0, [0, 3]],
+                    "attributes.tag": ["a", "b", False, ["a", False]],
+                    "attributes.flag": [True, False],
+                    "attributes.labels": ["x", "y", False, ["x", "y"], ["y", False]],
+                },
+            ),
+        ]
+
+    def _triples(self):
+        for records, values in self._specs():
+            for field_expr, candidates in values.items():
+                for operator in self.OPERATORS:
+                    for value in candidates:
+                        if operator in ("in", "not in") and not isinstance(value, list):
+                            value = [value]
+                        if operator.endswith("like") and not isinstance(value, str):
+                            continue
+                        if operator in ("<", "<=", ">", ">=") and (
+                            isinstance(value, list | bool) or field_expr == "binary_bin"
+                        ):
+                            continue
+                        yield records, field_expr, operator, value
+
+    def _evaluate(self, records, domain):
+        model = records.with_context(active_test=False)
+        scoped = [("id", "in", records.ids), *domain]
+        try:
+            with self.env.cr.savepoint(), mute_logger("odoo.db.cursor"):
+                sql_ids = set(model.search(scoped).ids)
+        except Exception as exc:  # the pair of outcomes is the finding
+            sql_ids = type(exc).__name__
+        try:
+            with self.env.cr.savepoint():
+                py_ids = set(records.filtered_domain(domain).ids)
+        except Exception as exc:
+            py_ids = type(exc).__name__
+        return sql_ids, py_ids
+
+    def test_search_and_filtered_domain_agree_on_every_triple(self):
+        compared = 0
+        for records, field_expr, operator, value in self._triples():
+            domain = [(field_expr, operator, value)]
+            with self.subTest(model=records._name, domain=domain):
+                sql_ids, py_ids = self._evaluate(records, domain)
+                compared += 1
+                self.assertEqual(
+                    sql_ids,
+                    py_ids,
+                    f"search() and filtered_domain() disagree on {domain!r}",
+                )
+        self.assertGreater(compared, 1000)
