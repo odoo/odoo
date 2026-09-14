@@ -216,12 +216,6 @@ export class Many2One extends Component {
         return `/odoo/${relation}/${this.props.value.id}`;
     }
 
-    onExtraLinesClick() {
-        this.rootRef()
-            ?.querySelector(this.props.readonly ? ".o_form_uri" : "input")
-            .click();
-    }
-
     async openBarcodeScanner() {
         const barcode = await BarcodeScanner.scanBarcode(this.env);
         if (barcode) {
