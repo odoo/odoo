@@ -36,13 +36,28 @@ class StockMovePicking(models.Model):
                 if not moves:
                     dbg.logic.debug("_update_picking: only negative moves, no picking")
                     continue
-                wanted.append(moves)
+                pending = moves._pending_picking_for_assignation(wanted)
+                if pending is None:
+                    wanted.append([moves])
+                else:
+                    pending.append(moves)
         created = Picking.create(
-            [moves._prepare_new_picking_vals() for moves in wanted]
+            [groups[0]._prepare_new_picking_vals() for groups in wanted]
         )
+        for groups, picking in zip(wanted, created, strict=True):
+            for joining in groups[1:]:
+                vals = joining._prepare_picking_vals(picking)
+                if vals:
+                    picking.write(vals)
         for new_picking, pairs in (
             (False, existing),
-            (True, zip(wanted, created, strict=True)),
+            (
+                True,
+                (
+                    (self.env["stock.move"].concat(*groups), picking)
+                    for groups, picking in zip(wanted, created, strict=True)
+                ),
+            ),
         ):
             attached = self.env["stock.move"]
             for moves, picking in pairs:
@@ -57,6 +72,35 @@ class StockMovePicking(models.Model):
             if attached:
                 attached._post_process_picking(new=new_picking)
         return True
+
+    def _pending_picking_for_assignation(self, wanted):
+        if not self.reference_ids:
+            return None
+        first = self[0]
+        reference_set = set(first.reference_ids.ids)
+        covered = None
+
+        def destination(move):
+            return (
+                move.location_dest_id or move.picking_type_id.default_location_dest_id
+            )
+
+        for groups in wanted:
+            lead = groups[0][0]
+            if (
+                lead.location_id != first.location_id
+                or destination(lead) != destination(first)
+                or lead.picking_type_id != first.picking_type_id
+            ):
+                continue
+            pending_set = set().union(*(set(g.reference_ids.ids) for g in groups))
+            if not pending_set & reference_set:
+                continue
+            if pending_set == reference_set:
+                return groups
+            if covered is None and pending_set <= reference_set:
+                covered = groups
+        return covered
 
     def _prepare_picking_vals(self, picking):
         vals = {}

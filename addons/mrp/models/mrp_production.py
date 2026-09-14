@@ -2485,19 +2485,19 @@ class MrpProduction(models.Model):
         return "confirmed"
 
     def _confirm_draft_moves_and_workorders(self):
-        moves_to_confirm = self.env["stock.move"]
-        for production in self:
-            if production.state in ("done", "cancel"):
-                continue
-            additional_moves = production.move_raw_ids.filtered(
+        open_productions = self.filtered(
+            lambda production: production.state not in ("done", "cancel")
+        )
+        additional_moves = open_productions.move_raw_ids.filtered(
+            lambda move: move.state == "draft"
+        )
+        additional_moves._update_procure_method()
+        moves_to_confirm = (
+            additional_moves
+            | open_productions.move_finished_ids.filtered(
                 lambda move: move.state == "draft"
             )
-            additional_moves._update_procure_method()
-            moves_to_confirm |= additional_moves
-            additional_byproducts = production.move_finished_ids.filtered(
-                lambda move: move.state == "draft"
-            )
-            moves_to_confirm |= additional_byproducts
+        )
 
         if moves_to_confirm:
             moves_to_confirm = moves_to_confirm._action_confirm()
@@ -2720,8 +2720,7 @@ class MrpProduction(models.Model):
                 )
 
     def action_assign(self):
-        for production in self:
-            production.move_raw_ids._action_assign()
+        self.move_raw_ids._action_assign()
         return True
 
     def button_plan(self):
