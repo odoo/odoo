@@ -264,6 +264,20 @@ js_files=$(find "$MOD/static/src" -name '*.js' | wc -l)
 assert_cited_in index.md "| JavaScript source files | $js_files |" \
     "the JS source count"
 
+# Migration directories holding a script, not directories: an emptied one
+# survives in a working checkout as a `__pycache__` git cannot see, so a count
+# of directories reads differently in a fresh clone and next to a tree someone
+# has run.
+migrations=$(find "$MOD/migrations" -mindepth 2 -maxdepth 2 -name '*.py' \
+    -not -path '*/__pycache__/*' -printf '%h\n' | sort -u | wc -l)
+assert_cited_in index.md "| Migration script directories | $migrations |" \
+    "the migration count"
+while read -r dir; do
+    [ -z "$dir" ] && continue
+    assert_cited_in index.md "| \`$dir\` |" "migration $dir"
+done < <(find "$MOD/migrations" -mindepth 2 -maxdepth 2 -name '*.py' \
+    -not -path '*/__pycache__/*' -printf '%h\n' | xargs -rn1 basename | sort -u)
+
 # --------------------------------------------------------------------- crons --
 # Named by xml id, so a rename cannot leave the table describing a job that no
 # scheduler will ever run.

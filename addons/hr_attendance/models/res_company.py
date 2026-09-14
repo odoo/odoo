@@ -13,14 +13,6 @@ class ResCompany(models.Model):
         # differently shaped token from every other company's.
         return uuid.uuid4().hex
 
-    overtime_company_threshold = fields.Integer(
-        string="Tolerance Time In Favor Of Company",
-        default=0,
-    )
-    overtime_employee_threshold = fields.Integer(
-        string="Tolerance Time In Favor Of Employee",
-        default=0,
-    )
     hr_attendance_display_overtime = fields.Boolean(string="Display Extra Hours")
     attendance_kiosk_mode = fields.Selection(
         selection=[

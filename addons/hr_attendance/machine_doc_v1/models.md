@@ -144,11 +144,15 @@ its only credential. `attendance_kiosk_mode`, `attendance_barcode_source`,
 point and what it records. `auto_check_out` with `auto_check_out_tolerance`,
 `absence_management`, `attendance_overtime_validation` and
 `hr_attendance_display_overtime` drive the crons and the approval flow.
-`overtime_company_threshold` and `overtime_employee_threshold` predate the
-rule engine's own tolerances.
 
-`res.config.settings` mirrors all of them except the two thresholds and the
-kiosk key.
+`res.config.settings` mirrors all of them except the kiosk key, which is a
+credential and is regenerated rather than typed.
+
+There is no company-level overtime tolerance. `overtime_company_threshold` and
+`overtime_employee_threshold` were that, and the rule engine replaced them with
+`employer_tolerance` and `employee_tolerance` on each
+`hr.attendance.overtime.rule`, which is where a tolerance has to live once
+different rules can price the same hour differently.
 
 ## res.users (extended)
 

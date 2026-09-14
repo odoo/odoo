@@ -15,7 +15,7 @@ against this document. None of them is typed by hand here or there.
 
 | | |
 |---|---|
-| Version | 2.1 |
+| Version | 2.2 |
 | Application | yes |
 | License | LGPL-3 |
 | Dependencies | `hr`, `barcodes`, `geocoding` |
@@ -27,6 +27,7 @@ against this document. None of them is typed by hand here or there.
 | Cron jobs | 2 |
 | Security groups | 5 |
 | JavaScript source files | 14 |
+| Migration script directories | 2 |
 
 ## What it owns
 
@@ -87,6 +88,18 @@ overtime deferral; the absence one deliberately does not, for a reason
 | `test_hr_attendance_audit.py` | the regressions this module's audit pinned, each named for its defect |
 | `test_load_scenario.py` | `data/scenarios` loads |
 | `test_performance.py` | the sweep's query count and batch cost |
+
+## Migrations
+
+| Version | What it does |
+|---|---|
+| `2.1` | back-fills `hr.attendance.overtime.line.attendance_id`, the column that made the line-to-attendance join real instead of a `(employee_id, check_in)` match |
+| `2.2` | reports any company that had set one of the removed overtime thresholds, before the ORM drops the columns |
+
+Neither drops a column it did not create. `ir.model.fields._drop_columns()`
+removes the column of a field a module stopped declaring, during the upgrade
+that removes the field record — which is why `2.2` runs in `pre` and not in
+`post`: by `post` the column is gone and there is nothing left to read.
 
 ## Extension Points
 
