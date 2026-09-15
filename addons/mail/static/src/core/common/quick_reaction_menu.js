@@ -92,7 +92,7 @@ export class QuickReactionMenu extends Component {
         }
     }
 
-    toggleReaction(emoji) {
+    toggleReaction(emoji, shouldClosePicker) {
         const reaction = this.props.message.reactions.find(
             (r) => r.content === emoji && this.props.message.effectiveSelf.in(r.personas)
         );
@@ -102,8 +102,10 @@ export class QuickReactionMenu extends Component {
             this.props.message.react(emoji);
             this.frequentEmojiService.incrementEmojiUsage(emoji);
         }
-        this.dropdown.close();
-        this.picker.close();
+        if (shouldClosePicker) {
+            this.dropdown.close();
+            this.picker.close();
+        }
     }
 
     get attClass() {
