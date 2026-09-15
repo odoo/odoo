@@ -5,10 +5,22 @@
         <field name="model">hr.applicant</field>
         <field name="inherit_id" ref="hr_recruitment.hr_applicant_view_form"/>
         <field name="arch" type="xml">
+            <field name="type_id" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </field>
             <notebook position="inside">
-                <page string="Skills">
+                <page string="Qualifications">
                     <div class="o_hr_skills_editable o_hr_skills_group o_group_skills">
                         <field name="id" invisible="1"/>
+                        <group class="mb-4">
+                            <group>
+                                <field name="type_id" placeholder="e.g. Masters" />
+                                <label for="expected_experience" class="o_form_label"/>
+                                <div class="oe_inline">
+                                    <field name="expected_experience" nolabel="1" class="oe_inline"/> Years
+                                </div>
+                            </group>
+                        </group>
                         <group>
                             <group>
                                 <field mode="list" nolabel="1" name="current_applicant_skill_ids" widget="skills_one2many"
@@ -42,16 +54,26 @@
                                     <div>
                                         <field name="matching_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}"
                                             invisible="is_pool_applicant or not matching_skill_ids" nolabel="1"/>
-                                        <field name="type_id" nolabel="1" readonly="1" class="o_badge badge rounded-pill o_tag o_tag_color_7 w-auto mt-1 mt-sm-0"
+                                        <field name="type_id" nolabel="1" readonly="1" class="o_badge badge rounded-pill o_tag o_tag_color_7 w-auto mt-1 mt-sm-0 me-1"
                                             invisible="not type_id or is_pool_applicant" options="{'no_open': True}"/>
+                                        <div class="badge rounded-pill o_tag o_tag_color_7 w-auto mt-1 mt-sm-0"
+                                            invisible="job_expected_experience or is_pool_applicant">
+                                            <field name="job_expected_experience" nolabel="1" readonly="1" class="w-auto mb-0"/>
+                                            years
+                                        </div>
                                     </div>
                                     <label for="missing_skill_ids" invisible="is_pool_applicant"/>
                                     <div>
                                         <field name="missing_skill_ids" widget="many2many_tags" options="{'color_field': 'color'}"
                                             invisible="is_pool_applicant or not missing_skill_ids" nolabel="1"/>
-                                        <field name="job_expected_degree" nolabel="1" readonly="1" class="o_badge badge rounded-pill o_tag o_tag_color_7 w-auto mt-1 mt-sm-0"
+                                        <field name="job_expected_degree" nolabel="1" readonly="1" class="o_badge badge rounded-pill o_tag o_tag_color_7 w-auto mt-1 mt-sm-0 me-1"
                                             invisible="is_degree_score_matching or not job_expected_degree or is_pool_applicant"
                                             options="{'no_open': True}"/>
+                                        <div class="badge rounded-pill o_tag o_tag_color_7 w-auto mt-1 mt-sm-0"
+                                            invisible="not job_expected_experience or is_pool_applicant">
+                                            <field name="job_expected_experience" nolabel="1" readonly="1" class="w-auto mb-0"/>
+                                            years
+                                        </div>
                                     </div>
                                 </group>
                             </group>

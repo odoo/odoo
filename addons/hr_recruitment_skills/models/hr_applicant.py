@@ -35,6 +35,8 @@ class HrApplicant(models.Model):
         compute="_compute_matching_skill_ids")
     job_expected_degree = fields.Many2one('hr.recruitment.degree', related='job_id.expected_degree',
         string='Job Degree', readonly=True)
+    job_expected_experience = fields.Integer(related='job_id.expected_experience', string='Job Experience', readonly=True)
+    expected_experience = fields.Integer()
 
     @api.depends("applicant_skill_ids")
     def _compute_current_applicant_skill_ids(self):
@@ -48,7 +50,7 @@ class HrApplicant(models.Model):
             applicant.skill_ids = applicant.applicant_skill_ids.skill_id
 
     @api.depends_context("matching_job_id")
-    @api.depends("current_applicant_skill_ids", "type_id", "job_id", "job_id.job_skill_ids", "job_id.expected_degree")
+    @api.depends("current_applicant_skill_ids", "type_id", "job_id", "job_id.job_skill_ids", "job_id.expected_degree", "job_id.expected_experience")
     def _compute_matching_skill_ids(self):
         matching_job_id = self.env.context.get("matching_job_id")
         matching_job = self.env["hr.job"].browse(matching_job_id)
@@ -69,7 +71,7 @@ class HrApplicant(models.Model):
             applicant.is_degree_score_matching = bool(job.expected_degree) and applicant.type_id.score >= job.expected_degree.sudo().score
 
     @api.depends_context("matching_job_id")
-    @api.depends("current_applicant_skill_ids", "type_id", "job_id", "job_id.job_skill_ids", "job_id.expected_degree")
+    @api.depends("current_applicant_skill_ids", "type_id", "job_id", "job_id.job_skill_ids", "job_id.expected_degree", "job_id.expected_experience")
     def _compute_matching_score(self):
         matching_job_id = self.env.context.get("matching_job_id")
         matching_job = self.env["hr.job"].browse(matching_job_id)
