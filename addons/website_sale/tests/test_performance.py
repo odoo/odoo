@@ -87,6 +87,8 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
                 res["product_template"] += 1
                 # Out of Stock Ribbon in demo data
                 res["product_ribbon"] += 1
+                # Combination lookup needed to apply the auto-assigned ribbon
+                res["product_template_attribute_value"] += 3
         if "website_helpdesk" in self.installed_modules:
             # Additional query used to check whether "Helpdesk" menu should be visible
             res["helpdesk_team"] += 1
