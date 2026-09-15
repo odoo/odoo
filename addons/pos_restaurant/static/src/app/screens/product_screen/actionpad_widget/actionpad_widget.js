@@ -73,10 +73,9 @@ patch(ActionpadWidget.prototype, {
         return "";
     },
     getCourseToFire() {
-        const course = this.currentOrder.getSelectedCourse();
-        if (course?.isReadyToFire()) {
-            return course;
-        }
+        const courses = this.currentOrder.courses;
+        const start = Math.max(courses.indexOf(this.currentOrder.getSelectedCourse()), 0);
+        return courses.slice(start).find((course) => course.canBeFired());
     },
     async clickFireCourse() {
         const course = this.getCourseToFire();
