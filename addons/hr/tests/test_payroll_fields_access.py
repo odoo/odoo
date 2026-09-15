@@ -92,6 +92,9 @@ class TestPayrollFieldsAccess(TransactionCase):
             'structure_id',
             'attendance_based',
         ]
+        if self.env['ir.module.module']._get('hr_payroll').state != 'installed':
+            # payroll is not installed, payroll-specific fields are not there
+            whitelist_field_names.append('contract_template_id')
         missing_group_field_names = [
             f_name
             for f_name in payroll_field_names
