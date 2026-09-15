@@ -590,11 +590,12 @@ class DocumentsDocument(models.Model):
                     }
                 )
         self._mark_url_preview_pending(documents)
-        _debug.lifecycle(
-            "create",
-            documents=documents,
-            types=sorted({d.type or "" for d in documents}),
-        )
+        if _debug.lifecycle.enabled:
+            _debug.lifecycle(
+                "create",
+                documents=documents,
+                types=sorted({d.type or "" for d in documents}),
+            )
         return documents
 
     @api.model
