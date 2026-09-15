@@ -330,6 +330,13 @@ class HrExpense(models.Model):
     # Constraints
     # --------------------------------------------
 
+    # case where an expense has an existing bill, but it's not filled in. We cannot add this condition
+    # in can_approve as can_approve is used at submission (see action_submit)
+    _check_existing_bill_set = models.Constraint(
+        "check(has_existing_bill IS NOT TRUE OR state in ('draft', 'submitted', 'refused') OR existing_bill_id IS NOT NULL)",
+        "The existing bill must be set."
+    )
+
     @api.constrains('state', 'name', 'product_id', 'total_amount', 'total_amount_currency')
     def _check_required_fields(self):
         for expense in self.filtered(lambda expense: expense.state != 'draft'):
@@ -1387,7 +1394,9 @@ class HrExpense(models.Model):
     def _can_be_autovalidated(self):
         """ Check whether the given expenses can be auto-validated (no approver) """
         self.ensure_one()
-        return (not self.manager_id and not self.employee_id.expense_manager_id) or self.manager_id == self.employee_id.user_id
+        has_rights = (not self.manager_id and not self.employee_id.expense_manager_id) or self.manager_id == self.employee_id.user_id
+        existing_bill_is_set = self.existing_bill_id or not self.has_existing_bill
+        return has_rights and existing_bill_is_set
 
     def action_approve(self):
         """ Approve an expense, pops a wizard if a duplicated expense is found to confirm they are all valid expenses """
@@ -1693,6 +1702,9 @@ class HrExpense(models.Model):
 
     def _do_approve(self, check=True):
         expenses_to_approve = self.filtered(lambda s: s.state in {'submitted', 'draft'})
+        if any(expense.has_existing_bill and not expense.existing_bill_id for expense in expenses_to_approve):
+            raise UserError(self.env._("The existing bill must be set."))
+
         for expense in expenses_to_approve:
             expense.write({
                 'approval_state': 'approved',
