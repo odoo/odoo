@@ -3,6 +3,7 @@
     <t t-name="upload_rfq_cog_menu.QuotationRequestUploader">
         <DropdownItem>
             <FileUploader
+                fileUploadClass="'document_file_uploader'"
                 multiUpload="true"
                 onUploaded.bind="this.onFileUploaded"
                 onUploadComplete.bind="this.onUploadComplete"
