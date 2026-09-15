@@ -1,4 +1,5 @@
 import { useService } from "@web/core/utils/hooks";
+import { x2ManyCommands } from "@web/core/orm_plugin";
 
 import { ProductCatalogKanbanRenderer } from "@product/product_catalog/kanban_renderer";
 
@@ -11,7 +12,13 @@ export class PurchaseProductCatalogKanbanRenderer extends ProductCatalogKanbanRe
     }
 
     get createProductContext() {
-        return {default_seller_ids: [{partner_id:this.props.list._config.context.partner_id}],};
+        return {
+            default_seller_ids: [
+                x2ManyCommands.create(false, {
+                    partner_id: this.props.list._config.context.partner_id,
+                }),
+            ],
+        };
     }
 
     async createProduct() {
