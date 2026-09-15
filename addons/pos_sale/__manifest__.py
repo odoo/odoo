@@ -13,7 +13,7 @@ This module adds a custom Sales Team for the Point of Sale. This enables you to 
     "depends": [
         "point_of_sale",
         "sale",
-        "sales_team",
+        "sale_team",
     ],
     "data": [
         "data/pos_sale_data.xml",

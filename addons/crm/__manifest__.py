@@ -9,7 +9,7 @@
     "license": "LGPL-3",
     "depends": [
         "sale",
-        "sales_team",
+        "sale_team",
         "mail",
         "calendar",
         "utm",

@@ -13,6 +13,6 @@ class TeamTeam(models.Model):
     def action_primary_channel_button(self):
         if self.env.context.get("in_sales_app") and self.use_opportunities:
             return self.env["ir.actions.actions"]._get_action_dict_by_xml_id(
-                "sales_team.action_sale_report_so_salesteam"
+                "sale_team.action_sale_report_so_salesteam"
             )
         return super().action_primary_channel_button()

@@ -2,7 +2,7 @@ from odoo import tests
 from odoo.tests import HttpCase
 from odoo.tests.common import users
 
-from odoo.addons.sales_team.tests.common import SalesTeamCommon
+from odoo.addons.sale_team.tests.common import SalesTeamCommon
 
 
 @tests.tagged("post_install", "-at_install")
@@ -11,7 +11,7 @@ class TestUi(HttpCase, SalesTeamCommon):
     def test_crm_team_members_mono_company(self):
         self.sale_manager.sudo().group_ids -= self.env.ref("base.group_multi_company")
         self.env["ir.config_parameter"].sudo().set_param(
-            "sales_team.membership_multi", True
+            "sale_team.membership_multi", True
         )
 
         self.start_tour("/", "create_crm_team_tour", login="salesmanager")

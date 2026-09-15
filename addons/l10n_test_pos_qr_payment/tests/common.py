@@ -6,7 +6,7 @@ class TestPosQrCommon(AccountTestInvoicingHttpCommon):
     def get_default_groups(cls):
         # The POS fixtures flip `available_in_pos` on the products they build,
         # and that field is gated on the sales manager group. point_of_sale
-        # does not depend on sales_team, so resolve it optionally, the way
+        # does not depend on sale_team, so resolve it optionally, the way
         # AccountTestInvoicingCommon resolves mrp, purchase and stock.
         no_group = cls.env["res.groups"].browse()
         return super().get_default_groups() | (

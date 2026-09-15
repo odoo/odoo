@@ -9,7 +9,7 @@ from odoo.fields import Datetime
 from odoo.addons.crm.models.crm_lead import PARTNER_ADDRESS_FIELDS_TO_SYNC
 from odoo.addons.mail.tests.common import MailCase, mail_new_test_user
 from odoo.addons.phone_validation.tools import phone_validation
-from odoo.addons.sales_team.tests.common import TestSalesCommon
+from odoo.addons.sale_team.tests.common import TestSalesCommon
 
 INCOMING_EMAIL = """Return-Path: {return_path}
 X-Original-To: {to}
@@ -653,7 +653,7 @@ class TestLeadConvertCommon(TestCrmCommon):
             }
         )
 
-        cls.env["ir.config_parameter"].set_param("sales_team.membership_multi", True)
+        cls.env["ir.config_parameter"].set_param("sale_team.membership_multi", True)
         cls.sales_team_1_m3 = cls.env["team.member"].create(
             {
                 "user_id": cls.user_sales_salesman.id,

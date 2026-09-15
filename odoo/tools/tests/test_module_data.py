@@ -113,7 +113,7 @@ class TestAbsorbReadonlyForerunners(BaseCase):
     def test_a_database_that_took_the_intermediate_step_is_a_no_op(self):
         already = {
             1: (READONLY_MERGED_MODULE, "group_sale_readonly"),
-            2: ("sales_team", "group_sale_readonly"),
+            2: ("sale_team", "group_sale_readonly"),
         }
         cr = _Cursor(already)
         self.assertEqual(absorb_readonly_forerunners(cr), 0)
@@ -124,7 +124,7 @@ class TestAbsorbReadonlyForerunners(BaseCase):
         cr = _Cursor(FORERUNNER_ROWS, installed=("sale_group_readonly",))
         self.assertEqual(
             adopt_xmlids(
-                cr, READONLY_MERGED_MODULE, "sales_team", ("group_sale_readonly",)
+                cr, READONLY_MERGED_MODULE, "sale_team", ("group_sale_readonly",)
             ),
             0,
         )
@@ -133,13 +133,13 @@ class TestAbsorbReadonlyForerunners(BaseCase):
             adopt_xmlids(
                 cr,
                 READONLY_MERGED_MODULE,
-                "sales_team",
+                "sale_team",
                 ("group_sale_readonly", "access_crm_tag_sale_readonly"),
             ),
             2,
         )
-        self.assertEqual(cr.xmlids[1], ("sales_team", "group_sale_readonly"))
-        self.assertEqual(cr.xmlids[2], ("sales_team", "access_crm_tag_sale_readonly"))
+        self.assertEqual(cr.xmlids[1], ("sale_team", "group_sale_readonly"))
+        self.assertEqual(cr.xmlids[2], ("sale_team", "access_crm_tag_sale_readonly"))
 
 
 CRON = "ir_cron_find_and_set_documents_expired"

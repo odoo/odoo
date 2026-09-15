@@ -45,11 +45,11 @@
             <field name="bg_color">#0275d8</field>
             <field name="sequence">4</field>
         </record>
-        <record id="sales_team.salesteam_website_sales" model="team.team">
+        <record id="sale_team.salesteam_website_sales" model="team.team">
             <field name="active" eval="True" />
         </record>
         <record id="website.default_website" model="website">
-            <field name="salesteam_id" ref="sales_team.salesteam_website_sales" />
+            <field name="salesteam_id" ref="sale_team.salesteam_website_sales" />
             <field name="salesperson_id" ref="base.user_admin" />
         </record>
         <record

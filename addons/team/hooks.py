@@ -38,12 +38,12 @@ def pre_init_hook(env):
         ("crm_team_id", "team_id"),
     ):
         rename_in_stored_expressions(cr, old, new, unique=True)
-    remove_xmlid_records(cr, "sales_team", SALES_TEAM_RULES)
+    remove_xmlid_records(cr, "sale_team", SALES_TEAM_RULES)
     # crm's mixin.mail.alias made alias_id required on every crm.team; teams
     # created before crm moves that alias onto team.alias must not need one
     if column_exists(cr, "team_team", "alias_id"):
         cr.execute("ALTER TABLE team_team ALTER COLUMN alias_id DROP NOT NULL")
-    # every team a crm.team was is a sales team; sales_team adopts the column
+    # every team a crm.team was is a sales team; sale_team adopts the column
     if not column_exists(cr, "team_team", "use_sale"):
         cr.execute("ALTER TABLE team_team ADD COLUMN use_sale boolean")
         cr.execute("UPDATE team_team SET use_sale = true")

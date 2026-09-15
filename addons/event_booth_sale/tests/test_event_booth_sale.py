@@ -6,7 +6,7 @@ from odoo.tools import float_compare
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.event_booth_sale.tests.common import TestEventBoothSaleCommon
-from odoo.addons.sales_team.tests.common import TestSalesCommon
+from odoo.addons.sale_team.tests.common import TestSalesCommon
 
 
 class TestEventBoothSaleWData(TestEventBoothSaleCommon, TestSalesCommon):

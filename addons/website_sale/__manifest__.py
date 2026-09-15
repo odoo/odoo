@@ -13,7 +13,7 @@
         "website_mail",
         "portal_rating",
         "delivery",
-        "sales_team",
+        "sale_team",
     ],
     "data": [
         "security/ir.model.access.csv",

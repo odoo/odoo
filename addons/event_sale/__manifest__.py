@@ -21,7 +21,7 @@ this event.
     "depends": [
         "event_product",
         "sale",
-        "sales_team",
+        "sale_team",
     ],
     "data": [
         "views/event_registration_views.xml",

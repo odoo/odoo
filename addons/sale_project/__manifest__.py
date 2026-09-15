@@ -11,7 +11,7 @@ This module allows to generate a project/task from sales orders.
     "license": "LGPL-3",
     "depends": [
         "sale",
-        "sales_team",
+        "sale_team",
         "sale_service",
         "project_account",
     ],

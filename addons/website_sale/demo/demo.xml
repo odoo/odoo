@@ -2,7 +2,7 @@
 <odoo noupdate="1">
 
     <record id="website.website2" model="website">
-        <field name="salesteam_id" ref="sales_team.salesteam_website_sales" />
+        <field name="salesteam_id" ref="sale_team.salesteam_website_sales" />
     </record>
 
     <record id="product.pa_color" model="product.attribute">
@@ -782,7 +782,7 @@
         <field name="partner_invoice_id" ref="base.res_partner_address_25" />
         <field name="partner_shipping_id" ref="base.res_partner_address_25" />
         <field name="user_id" ref="base.user_demo" />
-        <field name="team_id" ref="sales_team.salesteam_website_sales" />
+        <field name="team_id" ref="sale_team.salesteam_website_sales" />
         <field
             name="date_order"
             eval="(datetime.now()-relativedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')" />
@@ -801,7 +801,7 @@
         <field name="partner_invoice_id" ref="base.res_partner_address_25" />
         <field name="partner_shipping_id" ref="base.res_partner_address_25" />
         <field name="user_id" ref="base.user_demo" />
-        <field name="team_id" ref="sales_team.salesteam_website_sales" />
+        <field name="team_id" ref="sale_team.salesteam_website_sales" />
         <field
             name="date_order"
             eval="(datetime.now()-relativedelta(days=6)).strftime('%Y-%m-%d %H:%M:%S')" />
@@ -820,11 +820,11 @@
         <field name="partner_invoice_id" ref="base.res_partner_address_25" />
         <field name="partner_shipping_id" ref="base.res_partner_address_25" />
         <field name="user_id" ref="base.user_demo" />
-        <field name="team_id" ref="sales_team.salesteam_website_sales" />
+        <field name="team_id" ref="sale_team.salesteam_website_sales" />
         <field
             name="date_order"
             eval="(datetime.now()-relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')" />
-        <field name="tag_ids" eval="[Command.link(ref('sales_team.categ_oppor2'))]" />
+        <field name="tag_ids" eval="[Command.link(ref('sale_team.categ_oppor2'))]" />
         <field name="state">done</field>
     </record>
 
@@ -840,7 +840,7 @@
         <field name="partner_invoice_id" ref="base.res_partner_address_25" />
         <field name="partner_shipping_id" ref="base.res_partner_address_25" />
         <field name="user_id" ref="base.user_demo" />
-        <field name="team_id" ref="sales_team.salesteam_website_sales" />
+        <field name="team_id" ref="sale_team.salesteam_website_sales" />
         <field
             name="date_order"
             eval="(datetime.now()-relativedelta(days=4)).strftime('%Y-%m-%d %H:%M:%S')" />
@@ -859,7 +859,7 @@
         <field name="partner_invoice_id" ref="base.res_partner_address_25" />
         <field name="partner_shipping_id" ref="base.res_partner_address_25" />
         <field name="user_id" ref="base.user_demo" />
-        <field name="team_id" ref="sales_team.salesteam_website_sales" />
+        <field name="team_id" ref="sale_team.salesteam_website_sales" />
         <field
             name="date_order"
             eval="(datetime.now()-relativedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')" />
@@ -879,7 +879,7 @@
         <field name="partner_invoice_id" ref="base.res_partner_address_25" />
         <field name="partner_shipping_id" ref="base.res_partner_address_25" />
         <field name="user_id" ref="base.user_demo" />
-        <field name="team_id" ref="sales_team.salesteam_website_sales" />
+        <field name="team_id" ref="sale_team.salesteam_website_sales" />
         <field
             name="date_order"
             eval="(datetime.now()-relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')" />
@@ -899,7 +899,7 @@
         <field name="partner_shipping_id" ref="base.res_partner_address_25" />
         <field name="user_id" ref="base.user_demo" />
         <field name="website_id" ref="website.default_website" />
-        <field name="team_id" ref="sales_team.salesteam_website_sales" />
+        <field name="team_id" ref="sale_team.salesteam_website_sales" />
         <field
             name="date_order"
             eval="(datetime.now()-relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')" />
@@ -918,9 +918,9 @@
         <field name="partner_shipping_id" ref="base.res_partner_address_25" />
         <field name="user_id" ref="base.user_demo" />
         <field name="website_id" ref="website.default_website" />
-        <field name="team_id" ref="sales_team.salesteam_website_sales" />
+        <field name="team_id" ref="sale_team.salesteam_website_sales" />
         <field name="date_order" eval="datetime.now()" />
-        <field name="tag_ids" eval="[Command.link(ref('sales_team.categ_oppor1'))]" />
+        <field name="tag_ids" eval="[Command.link(ref('sale_team.categ_oppor1'))]" />
         <field name="state">done</field>
     </record>
 
@@ -936,7 +936,7 @@
         <field name="partner_shipping_id" ref="base.res_partner_address_25" />
         <field name="user_id" ref="base.user_demo" />
         <field name="website_id" ref="website.default_website" />
-        <field name="team_id" ref="sales_team.salesteam_website_sales" />
+        <field name="team_id" ref="sale_team.salesteam_website_sales" />
         <field
             name="date_order"
             eval="(datetime.now()-relativedelta(hours=2)).strftime('%Y-%m-%d %H:%M:%S')" />
@@ -960,9 +960,9 @@
         <field name="partner_shipping_id" ref="base.res_partner_address_25" />
         <field name="user_id" ref="base.user_demo" />
         <field name="website_id" ref="website.default_website" />
-        <field name="team_id" ref="sales_team.salesteam_website_sales" />
+        <field name="team_id" ref="sale_team.salesteam_website_sales" />
         <field name="date_order" eval="datetime.now()" />
-        <field name="tag_ids" eval="[Command.link(ref('sales_team.categ_oppor5'))]" />
+        <field name="tag_ids" eval="[Command.link(ref('sale_team.categ_oppor5'))]" />
     </record>
 
     <record id="website_sale_order_line_11" model="sale.order.line">
@@ -978,7 +978,7 @@
         <field name="partner_shipping_id" ref="base.res_partner_address_25" />
         <field name="user_id" ref="base.user_demo" />
         <field name="website_id" ref="website.default_website" />
-        <field name="team_id" ref="sales_team.salesteam_website_sales" />
+        <field name="team_id" ref="sale_team.salesteam_website_sales" />
         <field
             name="date_order"
             eval="(datetime.now()-timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S')" />
@@ -996,7 +996,7 @@
         <field name="partner_shipping_id" ref="base.res_partner_address_25" />
         <field name="user_id" ref="base.user_demo" />
         <field name="website_id" ref="website.default_website" />
-        <field name="team_id" ref="sales_team.salesteam_website_sales" />
+        <field name="team_id" ref="sale_team.salesteam_website_sales" />
         <field name="payment_term_id" ref="account.account_payment_term_immediate" />
         <field
             name="date_order"
@@ -1016,7 +1016,7 @@
         <field name="partner_shipping_id" ref="base.res_partner_address_25" />
         <field name="user_id" ref="base.user_demo" />
         <field name="website_id" ref="website.default_website" />
-        <field name="team_id" ref="sales_team.salesteam_website_sales" />
+        <field name="team_id" ref="sale_team.salesteam_website_sales" />
     </record>
 
     <record id="website_sale_order_line_15" model="sale.order.line">
@@ -1032,7 +1032,7 @@
         <field name="partner_shipping_id" ref="base.res_partner_address_25" />
         <field name="user_id" ref="base.user_demo" />
         <field name="website_id" ref="website.default_website" />
-        <field name="team_id" ref="sales_team.salesteam_website_sales" />
+        <field name="team_id" ref="sale_team.salesteam_website_sales" />
         <field name="date_order" eval="datetime.now()-relativedelta(months=1)" />
         <field name="state">done</field>
     </record>
@@ -1053,7 +1053,7 @@
         <field name="partner_shipping_id" ref="base.res_partner_address_25" />
         <field name="user_id" ref="base.user_demo" />
         <field name="website_id" ref="website.default_website" />
-        <field name="team_id" ref="sales_team.salesteam_website_sales" />
+        <field name="team_id" ref="sale_team.salesteam_website_sales" />
         <field
             name="date_order"
             eval="datetime.now()-relativedelta(months=1, days=2)" />
@@ -1074,7 +1074,7 @@
         <field name="partner_shipping_id" ref="base.res_partner_address_25" />
         <field name="user_id" ref="base.user_demo" />
         <field name="website_id" ref="website.default_website" />
-        <field name="team_id" ref="sales_team.salesteam_website_sales" />
+        <field name="team_id" ref="sale_team.salesteam_website_sales" />
         <field name="date_order" eval="datetime.now()-relativedelta(months=2)" />
     </record>
 

@@ -32,7 +32,7 @@ class Website(models.Model):
 
     def _default_salesteam_id(self):
         team = self.env.ref(
-            "sales_team.salesteam_website_sales", raise_if_not_found=False
+            "sale_team.salesteam_website_sales", raise_if_not_found=False
         )
         if team and team.active:
             return team.id

@@ -9,7 +9,7 @@
     "depends": [
         "spreadsheet_dashboard",
         "sale",
-        "sales_team",
+        "sale_team",
     ],
     "data": [
         "data/dashboards.xml",

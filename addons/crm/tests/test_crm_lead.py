@@ -1173,7 +1173,7 @@ class TestCRMLead(TestCrmCommon):
     def test_crm_team_alias_helper(self):
         self.env["team.team"].search([]).active = False
         self.env["ir.config_parameter"].sudo().set_param(
-            "sales_team.membership_multi", True
+            "sale_team.membership_multi", True
         )
 
         self._activate_multi_company()

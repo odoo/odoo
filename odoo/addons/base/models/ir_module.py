@@ -1069,7 +1069,7 @@ class IrModuleModule(models.Model):
             else:
                 marked_ids.append(module.id)
         # An unchanged module whose data writes a record another module
-        # declares (website_sale re-activating sales_team.salesteam_website_sales) has its
+        # declares (website_sale re-activating sale_team.salesteam_website_sales) has its
         # effect in the load order, not in its bytes: once the declaring module
         # reloads, the override must be re-applied or it is silently reverted.
         # The per-file skip in modules/loading.py already refuses to skip such

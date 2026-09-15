@@ -7,7 +7,7 @@ from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.event.tests.common import EventCase
 from odoo.addons.event_crm.tests.common import EventCrmCase
 from odoo.addons.mail.tests.common import MailCase, mail_new_test_user
-from odoo.addons.sales_team.tests.common import TestSalesCommon
+from odoo.addons.sale_team.tests.common import TestSalesCommon
 from odoo.addons.sms.tests.common import SMSCase
 from odoo.addons.website.tests.test_website_visitor import MockVisitor
 

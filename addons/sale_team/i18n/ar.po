@@ -1,0 +1,912 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_team
+#
+# Translators:
+# Nisrine Tagri <nta@odoo.com>, 2022
+# Martin Trigaux, 2022
+# Niyas Raphy, 2022
+# Malaz Abuidris <msea@odoo.com>, 2023
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2025-11-10 13:18+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
+"sale_team/ar/>\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: sale_team
+#. odoo-python
+#: code:addons/sale_team/models/crm_team_member.py:0
+msgid "%(user_name)s already in other teams (%(team_names)s)."
+msgstr "%(user_name)s موجود بالفعل في فِرَق أخرى (%(team_names)s)."
+
+#. module: sale_team
+#. odoo-python
+#: code:addons/sale_team/models/crm_team.py:0
+msgid "%(user_names)s already in other teams (%(team_names)s)."
+msgstr "%(user_names)s موجود بالفعل في فِرَق أخرى (%(team_names)s)."
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_kanban
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_form
+msgid ""
+"<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" "
+"title=\"Email\"/>"
+msgstr ""
+"<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" "
+"title=\"البريد الإلكتروني \"/>"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_form
+msgid "<i class=\"fa fa-fw me-1 fa-building text-primary\" title=\"Company\"/>"
+msgstr ""
+"<i class=\"fa fa-fw me-1 fa-building text-primary\" title=\"الشركة \"/>"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_form
+msgid "<i class=\"fa fa-fw me-1 fa-envelope text-primary\" title=\"Email\"/>"
+msgstr ""
+"<i class=\"fa fa-fw me-1 fa-envelope text-primary\" title=\"البريد "
+"الإلكتروني \"/>"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_form
+msgid "<i class=\"fa fa-fw me-1 fa-phone text-primary\" title=\"Phone\"/>"
+msgstr ""
+"<i class=\"fa fa-fw me-1 fa-phone text-primary\" title=\"رقم الهاتف \"/>"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_kanban_dashboard
+msgid "<span>New</span>"
+msgstr "<span>جديد</span>"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_kanban_dashboard
+msgid "<span>Reporting</span>"
+msgstr "<span>إعداد التقارير</span>"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_kanban_dashboard
+msgid "<span>View</span>"
+msgstr "<span>عرض</span>"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__message_needaction
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__message_needaction
+msgid "Action Needed"
+msgstr "إجراء مطلوب"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_form
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_form
+msgid "Activate \"Multi-team\""
+msgstr "تفعيل خاصية \"الفِرَق المتعددة\""
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__active
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__active
+msgid "Active"
+msgstr "نشط"
+
+#. module: sale_team
+#: model:ir.actions.act_window,name:sale_team.mail_activity_type_action_config_sales
+msgid "Activity Types"
+msgstr "أنواع الأنشطة"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.crm_team_member_action
+msgid "Add a Team Member"
+msgstr "أضف عضو فريق"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__crm_team_member_ids
+msgid "Add members to automatically assign their documents to this sales team."
+msgstr "قم بإضافة أعضاء لإسناد مستنداتهم إلى فريق المبيعات هذا تلقائياً."
+
+#. module: sale_team
+#. odoo-javascript
+#: code:addons/sale_team/static/src/js/crm_team_form.js:0
+msgid "An error occurred while activating the Multi-Team option."
+msgstr "حدث خطأ أثناء تفعيل خيار الفِرَق المتعددة."
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_form
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_kanban
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_search
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_form
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_search
+msgid "Archived"
+msgstr "مؤرشف"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__message_attachment_count
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__message_attachment_count
+msgid "Attachment Count"
+msgstr "عدد المرفقات"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_kanban
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_form
+msgid "Avatar"
+msgstr "الصورة الرمزية"
+
+#. module: sale_team
+#. odoo-python
+#: code:addons/sale_team/models/crm_team.py:0
+msgid "Big Pretty Button :)"
+msgstr "زر كبير جميل :)"
+
+#. module: sale_team
+#: model:ir.model,name:sale_team.model_crm_tag
+msgid "CRM Tag"
+msgstr "علامة تصنيف إدارة علاقات العملاء"
+
+#. module: sale_team
+#. odoo-python
+#: code:addons/sale_team/models/crm_team.py:0
+msgid "Cannot delete default team \"%s\""
+msgstr "تعذر حذف الفريق الافتراضي \"%s\""
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_tag__color
+msgid "Color"
+msgstr "اللون"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__color
+msgid "Color Index"
+msgstr "مؤشر اللون"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__company_id
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__company_id
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_search
+msgid "Company"
+msgstr "الشركة"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_kanban_dashboard
+msgid "Configuration"
+msgstr "التهيئة"
+
+#. module: sale_team
+#: model:crm.tag,name:sale_team.categ_oppor7
+msgid "Consulting"
+msgstr "استشارة"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.sales_team_crm_tag_action
+msgid "Create CRM Tags"
+msgstr "إنشاء علامات تصنيف إدارة علاقات العملاء"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.crm_team_action_config
+msgid "Create a Sales Team"
+msgstr "إنشاء فريق مبيعات"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.mail_activity_type_action_config_sales
+msgid "Create an Activity Type"
+msgstr "إنشاء نوع نشاط"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_tag__create_uid
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__create_uid
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__create_uid
+msgid "Created by"
+msgstr "أنشئ بواسطة"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_tag__create_date
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__create_date
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__create_date
+msgid "Created on"
+msgstr "أنشئ في"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__currency_id
+msgid "Currency"
+msgstr "العملة"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__dashboard_button_name
+msgid "Dashboard Button"
+msgstr "زر لوحة البيانات"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.crm_team_action_pipeline
+#: model_terms:ir.actions.act_window,help:sale_team.crm_team_action_sales
+msgid "Define a new sales team"
+msgstr "تحديد فريق مبيعات جديد"
+
+#. module: sale_team
+#: model:crm.tag,name:sale_team.categ_oppor5
+msgid "Design"
+msgstr "تصميم"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_tag__display_name
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__display_name
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__display_name
+#: model:ir.model.fields,field_description:sale_team.field_res_users__display_name
+msgid "Display Name"
+msgstr "اسم العرض"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__email
+msgid "Email"
+msgstr "البريد الإلكتروني"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__favorite_user_ids
+msgid "Favorite Members"
+msgstr "الأعضاء المفضلين"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__is_favorite
+msgid "Favorite teams to display them in the dashboard and access them easily."
+msgstr "الفرق المفضلة لعرضها في لوحة البيانات للوصول إليها بسهولة."
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__message_follower_ids
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__message_follower_ids
+msgid "Followers"
+msgstr "المتابعين"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__message_partner_ids
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "المتابعين (الشركاء)"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__has_message
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__has_message
+msgid "Has Message"
+msgstr "يحتوي على رسالة"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_tag__id
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__id
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__id
+#: model:ir.model.fields,field_description:sale_team.field_res_users__id
+msgid "ID"
+msgstr "المُعرف"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__is_membership_multi
+#: model:ir.model.fields,help:sale_team.field_crm_team_member__is_membership_multi
+msgid ""
+"If True, users may belong to several sales teams. Otherwise membership is "
+"limited to a single sales team."
+msgstr ""
+"إذا كانت القيمة صحيحة، سيكون بإمكان المستخدمين أن ينتموا إلى عدة فرق مبيعات، "
+"وإلا فستكون العضوية مقتصرة على فريق مبيعات واحد."
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__message_needaction
+#: model:ir.model.fields,help:sale_team.field_crm_team_member__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "إذا كان محددًا، فهناك رسائل جديدة عليك رؤيتها."
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__message_has_error
+#: model:ir.model.fields,help:sale_team.field_crm_team_member__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "إذا كان محددًا، فقد حدث خطأ في تسليم بعض الرسائل."
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__active
+msgid ""
+"If the active field is set to false, it will allow you to hide the Sales "
+"Team without removing it."
+msgstr ""
+"إذا تم تحويل قيمة الحقل نشط إلى خطأ، يمكنك إخفاء فريق المبيعات دون إزالته."
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__image_1920
+msgid "Image"
+msgstr "صورة"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__image_128
+msgid "Image (128)"
+msgstr "صورة (128)"
+
+#. module: sale_team
+#: model:crm.tag,name:sale_team.categ_oppor4
+msgid "Information"
+msgstr "معلومات"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__message_is_follower
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__message_is_follower
+msgid "Is Follower"
+msgstr "متابع"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_tag__write_uid
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__write_uid
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__write_uid
+msgid "Last Updated by"
+msgstr "آخر تحديث بواسطة"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_tag__write_date
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__write_date
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__write_date
+msgid "Last Updated on"
+msgstr "آخر تحديث في"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_res_users__sale_team_id
+msgid ""
+"Main user sales team. Used notably for pipeline, or to set sales team in "
+"invoicing or subscription."
+msgstr ""
+"فريق المبيعات للمستخدم الرئيسي. يُستخدم لمخطط سير العمل بشكل كبير أو لتعيين "
+"فريق المبيعات في الفوترة أو الاشتراك."
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__member_company_ids
+msgid "Member Company"
+msgstr "شركة عضو"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__member_warning
+msgid "Member Warning"
+msgstr "تحذير عضو"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_form
+msgid "Members"
+msgstr "الأعضاء"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__member_warning
+msgid "Membership Issue Warning"
+msgstr "تحذير لمشكلة في العضوية"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__message_has_error
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__message_has_error
+msgid "Message Delivery error"
+msgstr "خطأ في تسليم الرسائل"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__message_ids
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__message_ids
+msgid "Messages"
+msgstr "الرسائل"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__is_membership_multi
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__is_membership_multi
+msgid "Multiple Memberships Allowed"
+msgstr "يسمح بعدة عضويات"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__name
+msgid "Name"
+msgstr "الاسم"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__message_needaction_counter
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__message_needaction_counter
+msgid "Number of Actions"
+msgstr "عدد الإجراءات"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__message_has_error_counter
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__message_has_error_counter
+msgid "Number of errors"
+msgstr "عدد الأخطاء"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__message_needaction_counter
+#: model:ir.model.fields,help:sale_team.field_crm_team_member__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "عدد الرسائل التي تتطلب اتخاذ إجراء"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__message_has_error_counter
+#: model:ir.model.fields,help:sale_team.field_crm_team_member__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "عدد الرسائل الحادث بها خطأ في التسليم"
+
+#. module: sale_team
+#: model:crm.tag,name:sale_team.categ_oppor8
+msgid "Other"
+msgstr "غير ذلك"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__phone
+msgid "Phone"
+msgstr "رقم الهاتف"
+
+#. module: sale_team
+#: model:crm.team,name:sale_team.pos_sales_team
+msgid "Point of Sale"
+msgstr "نقطة البيع"
+
+#. module: sale_team
+#: model:crm.team,name:sale_team.crm_team_1
+msgid "Pre-Sales"
+msgstr "ما قبل المبيعات"
+
+#. module: sale_team
+#: model:crm.tag,name:sale_team.categ_oppor1
+msgid "Product"
+msgstr "المنتج"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__rating_ids
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__rating_ids
+msgid "Ratings"
+msgstr "التقييمات"
+
+#. module: sale_team
+#: model:crm.team,name:sale_team.team_sales_department
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_kanban_dashboard
+msgid "Sales"
+msgstr "المبيعات"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_form
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_tree
+msgid "Sales Men"
+msgstr "مندوبي المبيعات"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_search
+msgid "Sales Person"
+msgstr "مندوب مبيعات"
+
+#. module: sale_team
+#: model:ir.model,name:sale_team.model_crm_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__name
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__crm_team_id
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_search
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_form
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_tree
+#: model:ir.model.fields,field_description:sale_team.field_account_invoice_report__team_id
+#: model:ir.model.fields,field_description:sale_team.field_account_move__team_id
+#: model:ir.model.fields,field_description:sale_team.field_sale_order__team_id
+#: model:ir.model.fields,field_description:sale_team.field_sale_report__team_id
+#: model_terms:ir.ui.view,arch_db:sale_team.account_invoice_groupby_inherit
+#: model_terms:ir.ui.view,arch_db:sale_team.view_account_invoice_report_search_inherit
+msgid "Sales Team"
+msgstr "فريق المبيعات"
+
+#. module: sale_team
+#: model:ir.model,name:sale_team.model_crm_team_member
+msgid "Sales Team Member"
+msgstr "عضو فريق المبيعات"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__crm_team_member_ids
+#: model:ir.model.fields,field_description:sale_team.field_res_users__crm_team_member_ids
+msgid "Sales Team Members"
+msgstr "أعضاء فريق المبيعات"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__crm_team_member_all_ids
+msgid "Sales Team Members (incl. inactive)"
+msgstr "أعضاء فريق المبيعات (بالإضافة إلى الأعضاء غير النشطين)"
+
+#. module: sale_team
+#: model:ir.actions.act_window,name:sale_team.crm_team_action_config
+#: model:ir.actions.act_window,name:sale_team.crm_team_action_sales
+#: model:ir.model.fields,field_description:sale_team.field_res_users__crm_team_ids
+#: model:ir.ui.menu,name:sale_team.report_sales_team
+#: model:ir.ui.menu,name:sale_team.sales_team_config
+msgid "Sales Teams"
+msgstr "فرق المبيعات"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__user_id
+msgid "Salesperson"
+msgstr "مندوب المبيعات"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__member_ids
+msgid "Salespersons"
+msgstr "مندوبي المبيعات"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_search
+msgid "Salesteams Search"
+msgstr "البحث في فرق المبيعات"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__sequence
+msgid "Sequence"
+msgstr "تسلسل"
+
+#. module: sale_team
+#: model:crm.tag,name:sale_team.categ_oppor3
+msgid "Services"
+msgstr "الخدمات"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__is_favorite
+msgid "Show on dashboard"
+msgstr "إظهار على لوحة البيانات"
+
+#. module: sale_team
+#: model:crm.tag,name:sale_team.categ_oppor2
+msgid "Software"
+msgstr "البرنامج"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_tag__name
+msgid "Tag Name"
+msgstr "اسم علامة التصنيف"
+
+#. module: sale_team
+#: model:ir.model.constraint,message:sale_team.constraint_crm_tag_name_uniq
+msgid "Tag name already exists!"
+msgstr "اسم علامة التصنيف مستخدم بالفعل!"
+
+#. module: sale_team
+#: model:ir.actions.act_window,name:sale_team.sales_team_crm_tag_action
+#: model_terms:ir.ui.view,arch_db:sale_team.sales_team_crm_tag_view_form
+#: model_terms:ir.ui.view,arch_db:sale_team.sales_team_crm_tag_view_tree
+#: model:ir.model.fields,field_description:sale_team.field_sale_order__tag_ids
+#: model:ir.ui.menu,name:sale_team.menu_tag_config
+msgid "Tags"
+msgstr "علامات التصنيف"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_form
+msgid "Team Details"
+msgstr "تفاصيل الفريق"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__user_id
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_search
+msgid "Team Leader"
+msgstr "قائد الفريق"
+
+#. module: sale_team
+#: model:ir.actions.act_window,name:sale_team.crm_team_member_action
+msgid "Team Members"
+msgstr "أعضاء الفريق"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.crm_team_member_action
+msgid "Team Members are salespersons assigned to specific teams."
+msgstr "أعضاء الفريق هم مندوبو مبيعات تم إسنادهم إلى فِرَق محددة."
+
+#. module: sale_team
+#: model:ir.actions.act_window,name:sale_team.crm_team_action_pipeline
+msgid "Teams"
+msgstr "الفِرَق"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__color
+msgid "The color of the channel"
+msgstr "لون القناة"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team_member__company_id
+msgid "The default company for this user."
+msgstr "الشركة الافتراضية لهذا المستخدم."
+
+#. module: sale_team
+#. odoo-python
+#: code:addons/sale_team/models/crm_team.py:0
+msgid ""
+"The following team members are not allowed in company '%(company)s' of the "
+"Sales Team '%(team)s': %(users)s"
+msgstr ""
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.mail_activity_type_action_config_sales
+msgid ""
+"Those represent the different categories of things you have to do (e.g. "
+"\"Call\" or \"Prepare meeting\")."
+msgstr ""
+"يمثلون الفئات المختلفة للأشياء التي عليك القيام بها (مثال: \"اتصال\" أو "
+"\"التحضير لاجتماع\")."
+
+#. module: sale_team
+#: model:crm.tag,name:sale_team.categ_oppor6
+msgid "Training"
+msgstr "التدريب"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team_member__user_in_teams_ids
+msgid ""
+"UX: Give users not to add in the currently chosen team to avoid duplicates"
+msgstr ""
+"تجربة المستخدم: امنح المستخدمين حتى لا يقوموا بالإضافة إلى فريق محدد بالفعل "
+"لتجنب وجود النسخ"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__member_company_ids
+#: model:ir.model.fields,help:sale_team.field_crm_team_member__user_company_ids
+msgid "UX: Limit to team company or all if no company"
+msgstr "تجربة المستخدم: يقتصر على شركة فريق أو الجميع، إذا لم تكن هناك شركة"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.crm_team_action_config
+msgid "Use Sales Teams to organize your sales departments and draw up reports."
+msgstr "استخدم فرق المبيعات لتنظيم أقسام المبيعات لديك وسحب التقارير."
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.crm_team_action_pipeline
+#: model_terms:ir.actions.act_window,help:sale_team.crm_team_action_sales
+msgid ""
+"Use Sales Teams to organize your sales departments.\n"
+"                Each team will work with a separate pipeline."
+msgstr ""
+"استخدم فرق المبيعات لتنظيم أقسام مبيعاتك.\n"
+"                سيعمل كل فريق بمخطط سير عمل مختلف."
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.sales_team_crm_tag_action
+msgid ""
+"Use Tags to manage and track your Opportunities (product structure, sales "
+"type, ...)"
+msgstr ""
+"استخدم علامات التصنيف لإدارة وتتبع فرصك (هيكل المنتج، نوع المبيعات، وما إلى "
+"ذلك)"
+
+#. module: sale_team
+#: model:ir.model,name:sale_team.model_res_users
+msgid "User"
+msgstr "المستخدم"
+
+#. module: sale_team
+#. odoo-python
+#: code:addons/sale_team/models/crm_team_member.py:0
+msgid ""
+"User '%(user)s' is not allowed in the company '%(company)s' of the Sales "
+"Team '%(team)s'."
+msgstr ""
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__user_company_ids
+msgid "User Company"
+msgstr "شركة المستخدم"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__user_in_teams_ids
+msgid "User In Teams"
+msgstr "المستخدم في الفرق"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_res_users__sale_team_id
+msgid "User Sales Team"
+msgstr "فريق مبيعات المستخدم"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__member_ids
+msgid "Users assigned to this team."
+msgstr "المستخدمين المسندين إلى هذا الفريق."
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_form
+msgid "Visible to all"
+msgstr "مرئي للكل"
+
+#. module: sale_team
+#: model:crm.team,name:sale_team.salesteam_website_sales
+msgid "Website"
+msgstr "الموقع الإلكتروني"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_form
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_form
+msgid "Working in multiple teams?"
+msgstr "تعمل في عدة فِرَق مختلفة؟"
+
+#. module: sale_team
+#. odoo-python
+#: code:addons/sale_team/models/crm_team_member.py:0
+msgid ""
+"You are trying to create duplicate membership(s). We found that %"
+"(duplicates)s already exist(s)."
+msgstr ""
+"أنت تحاول إنشاء عضوية (عضويات) متكررة. لقد وجدنا أن %(duplicates)s موجودة "
+"بالفعل."
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_form
+msgid "e.g. John Doe"
+msgstr "مثل: محمد محمود"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_form
+msgid "e.g. North America"
+msgstr "مثال: أمريكا الجنوبية"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.sales_team_crm_tag_view_form
+msgid "e.g. Services"
+msgstr "مثال: الخدمات"
+
+#~ msgid ""
+#~ "Adding %(user_name)s in this team would remove him/her from its current "
+#~ "team %(team_name)s."
+#~ msgstr ""
+#~ "سينتج عن إضافة %(user_name)s إلى هذه الفريق إزالته/إزالتها من فريقه/"
+#~ "فريقها الحالي %(team_name)s. "
+
+#~ msgid ""
+#~ "Adding %(user_name)s in this team would remove him/her from its current "
+#~ "teams %(team_names)s."
+#~ msgstr ""
+#~ "سينتج عن إضافة %(user_name)s إلى هذه الفريق إزالته/إزالتها من فريقه/"
+#~ "فريقها الحالي %(team_names)s. "
+
+#~ msgid ""
+#~ "Adding %(user_names)s in this team would remove them from their current "
+#~ "teams (%(team_names)s)."
+#~ msgstr ""
+#~ "سينتج عن إضافة %(user_names)s إلى هذه الفريق إزالتهم من فريقهم الحالي (%"
+#~ "(team_names)s). "
+
+#~ msgid "Contact"
+#~ msgstr "جهة الاتصال"
+
+#~ msgid "Dashboard Graph Data"
+#~ msgstr "بيانات الرسم البياني للوحة البيانات "
+
+#~ msgid ""
+#~ "Follow this salesteam to automatically track the events associated to "
+#~ "users of this team."
+#~ msgstr ""
+#~ "قم بمتابعة فريق المبيعات هذا حتى تتمكن من تعقب الفعاليات المتعلقة "
+#~ "بمستخدمي هذا الفريق. "
+
+#~ msgid "Group By"
+#~ msgstr "التجميع حسب "
+
+#~ msgid "Group By..."
+#~ msgstr "التجميع حسب.."
+
+#~ msgid ""
+#~ "If set, this Sales Team will be used for sales and assignments related to "
+#~ "this partner"
+#~ msgstr ""
+#~ "إذا كان محدداً، فسوف يُستخدَم فريق المبيعات هذا للمبيعات والتعيينات المتعلقة "
+#~ "بهذا الشريك "
+
+#~ msgid "Mobile"
+#~ msgstr "الهاتف المحمول"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "عدد الرسائل التي تتطلب اتخاذ إجراء "
+
+#~ msgid "Sample data"
+#~ msgstr "عينة المعلومات"
+
+#~ msgid ""
+#~ "To add a Salesperson into multiple Teams, activate the Multi-Team option "
+#~ "in settings."
+#~ msgstr ""
+#~ "لإضافة مندوب مبيعات إلى عدة فرق، قم بتفعيل خيار الفرق المتعددة من "
+#~ "الإعدادات. "
+
+#~ msgid "Undefined graph model for Sales Team: %s"
+#~ msgstr "نموذج رسم بياني غير محدد لفريق المبيعات: %s"
+
+#~ msgid "eBay"
+#~ msgstr "eBay"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_salesteams_view_form
+msgid "<span class=\"flex-grow-1\">/ Month</span>"
+msgstr "<span class=\"flex-grow-1\">/ الشهر</span>"
+
+#. module: sale_team
+#. odoo-javascript
+#: code:addons/sale_team/static/src/xml/sale_progressbar_field.xml:0
+msgid "Click to define an invoicing target"
+msgstr "اضغط هنا لتحديد ما يجب فوترته"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.action_invoice_salesteams
+msgid "Create a customer invoice"
+msgstr "إنشاء فاتورة عميل"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.action_orders_salesteams
+#: model_terms:ir.actions.act_window,help:sale_team.action_quotations_salesteams
+msgid "Create a new quotation, the first step of a new sale!"
+msgstr "أنشئ عرض سعر جديد، هذه هي أول خطوة لعمل خصم جديد!"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.action_invoice_salesteams
+msgid ""
+"Create invoices, register payments and keep track of the discussions with "
+"your customers."
+msgstr "قم بإنشاء الفواتير، وتسجيل المدفوعات ومتابعة المناقشات مع عملائك."
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.action_account_invoice_report_salesteam
+msgid ""
+"From this report, you can have an overview of the amount invoiced to your "
+"customer. The search tool can also be used to personalise your Invoices "
+"reports and so, match this analysis to your needs."
+msgstr ""
+"من خلال هذا التقرير, يمكنك تكوين فكرة عامة عن المبالغ المفوترة إلى عملائك. "
+"كما يمكنك استخدام أداة البحث لإضافة الطابع الشخصي على تقارير فواتيرك وبهذا "
+"سوف تتمكن من تشكيل التحليل حسب احتياجاتك."
+
+#. module: sale_team
+#: model:mail.message.subtype,name:sale_team.mt_salesteam_invoice_paid
+msgid "Invoice Paid"
+msgstr ""
+
+#. module: sale_team
+#: model:mail.message.subtype,name:sale_team.mt_salesteam_invoice_posted
+msgid "Invoice Posted"
+msgstr ""
+
+#. module: sale_team
+#: model:ir.actions.act_window,name:sale_team.action_invoice_salesteams
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_kanban_dashboard
+msgid "Invoices"
+msgstr "فواتير العملاء"
+
+#. module: sale_team
+#: model:ir.actions.act_window,name:sale_team.action_account_invoice_report_salesteam
+msgid "Invoices Analysis"
+msgstr "تحليل الفواتير"
+
+#. module: sale_team
+#: model:ir.actions.act_window,name:sale_team.action_quotation_form
+msgid "New Quotation"
+msgstr "عرض سعر جديد"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.action_orders_salesteams
+#: model_terms:ir.actions.act_window,help:sale_team.action_quotations_salesteams
+msgid ""
+"Once the quotation is confirmed by the customer, it becomes a sales order."
+"<br> You will be able to create an invoice and collect the payment."
+msgstr ""
+"بمجرد أن يقوم العميل بتأكيد عرض السعر، يتحول إلى أمر بيع. <br> سيكون بمقدورك "
+"إنشاء فاتورة وتحصيل الدفع."
+
+#. module: sale_team
+#: model:mail.message.subtype,name:sale_team.mt_salesteam_order_viewed
+msgid "Quotation Viewed"
+msgstr "تمت مراجعة عرض السعر"
+
+#. module: sale_team
+#: model:mail.message.subtype,name:sale_team.mt_salesteam_order_sent
+msgid "Quotation sent"
+msgstr "تم إرسال عرض السعر"
+
+#. module: sale_team
+#: model:ir.actions.act_window,name:sale_team.action_quotations_salesteams
+msgid "Quotations"
+msgstr "عروض الأسعار"
+
+#. module: sale_team
+#: model:mail.message.subtype,name:sale_team.mt_salesteam_order_confirmed
+msgid "Sales Order Confirmed"
+msgstr "تم تأكيد أمر البيع"
+
+#. module: sale_team
+#: model:ir.actions.act_window,name:sale_team.action_orders_salesteams
+#: model:ir.actions.act_window,name:sale_team.action_orders_to_invoice_salesteams
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_kanban_dashboard
+msgid "Sales Orders"
+msgstr "أوامر البيع"

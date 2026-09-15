@@ -1,0 +1,885 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_team
+#
+# Translators:
+# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2022
+# Odoo Thaidev <odoothaidev@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Wichanon Jamwutthipreecha, 2022
+# "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2025-11-10 14:27+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-19/sale_team/"
+"th/>\n"
+"Language: th\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: sale_team
+#. odoo-python
+#: code:addons/sale_team/models/crm_team_member.py:0
+msgid "%(user_name)s already in other teams (%(team_names)s)."
+msgstr ""
+
+#. module: sale_team
+#. odoo-python
+#: code:addons/sale_team/models/crm_team.py:0
+msgid "%(user_names)s already in other teams (%(team_names)s)."
+msgstr ""
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_kanban
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_form
+msgid ""
+"<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" "
+"title=\"Email\"/>"
+msgstr ""
+"<i class=\"fa fa-envelope me-1\" role=\"รูป\" aria-label=\"อีเมล\" "
+"title=\"อีเมล\"/>"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_form
+msgid "<i class=\"fa fa-fw me-1 fa-building text-primary\" title=\"Company\"/>"
+msgstr ""
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_form
+msgid "<i class=\"fa fa-fw me-1 fa-envelope text-primary\" title=\"Email\"/>"
+msgstr ""
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_form
+msgid "<i class=\"fa fa-fw me-1 fa-phone text-primary\" title=\"Phone\"/>"
+msgstr ""
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_kanban_dashboard
+msgid "<span>New</span>"
+msgstr "<span>ใหม่</span>"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_kanban_dashboard
+msgid "<span>Reporting</span>"
+msgstr "<span>รายงาน</span>"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_kanban_dashboard
+msgid "<span>View</span>"
+msgstr "<span>มุมมอง</span>"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__message_needaction
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__message_needaction
+msgid "Action Needed"
+msgstr "จำเป็นต้องดำเนินการ"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_form
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_form
+msgid "Activate \"Multi-team\""
+msgstr ""
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__active
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__active
+msgid "Active"
+msgstr "เปิดใช้งาน"
+
+#. module: sale_team
+#: model:ir.actions.act_window,name:sale_team.mail_activity_type_action_config_sales
+msgid "Activity Types"
+msgstr "ประเภทกิจกรรม"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.crm_team_member_action
+msgid "Add a Team Member"
+msgstr "เพิ่มสมาชิกในทีม"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__crm_team_member_ids
+msgid "Add members to automatically assign their documents to this sales team."
+msgstr "เพิ่มสมาชิกเพื่อมอบหมายเอกสารให้กับทีมขายนี้โดยอัตโนมัติ"
+
+#. module: sale_team
+#. odoo-javascript
+#: code:addons/sale_team/static/src/js/crm_team_form.js:0
+msgid "An error occurred while activating the Multi-Team option."
+msgstr ""
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_form
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_kanban
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_search
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_form
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_search
+msgid "Archived"
+msgstr "เก็บถาวรแล้ว"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__message_attachment_count
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__message_attachment_count
+msgid "Attachment Count"
+msgstr "จำนวนสิ่งที่แนบมา"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_kanban
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_form
+msgid "Avatar"
+msgstr "อวตาร"
+
+#. module: sale_team
+#. odoo-python
+#: code:addons/sale_team/models/crm_team.py:0
+msgid "Big Pretty Button :)"
+msgstr "ปุ่มใหญ่แสนน่ารัก :)"
+
+#. module: sale_team
+#: model:ir.model,name:sale_team.model_crm_tag
+msgid "CRM Tag"
+msgstr "แท็ก CRM"
+
+#. module: sale_team
+#. odoo-python
+#: code:addons/sale_team/models/crm_team.py:0
+msgid "Cannot delete default team \"%s\""
+msgstr "ไม่สามารถลบทีมเริ่มต้น \"%s\""
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_tag__color
+msgid "Color"
+msgstr "สี"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__color
+msgid "Color Index"
+msgstr "ดัชนีสี"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__company_id
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__company_id
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_search
+msgid "Company"
+msgstr "บริษัท"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_kanban_dashboard
+msgid "Configuration"
+msgstr "การกำหนดค่า"
+
+#. module: sale_team
+#: model:crm.tag,name:sale_team.categ_oppor7
+msgid "Consulting"
+msgstr "ปรึกษา"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.sales_team_crm_tag_action
+msgid "Create CRM Tags"
+msgstr "สร้างแท็ก CRM"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.crm_team_action_config
+msgid "Create a Sales Team"
+msgstr "สร้างทีมขาย"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.mail_activity_type_action_config_sales
+msgid "Create an Activity Type"
+msgstr "สร้างประเภทกิจกรรม"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_tag__create_uid
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__create_uid
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__create_uid
+msgid "Created by"
+msgstr "สร้างโดย"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_tag__create_date
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__create_date
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__create_date
+msgid "Created on"
+msgstr "สร้างเมื่อ"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__currency_id
+msgid "Currency"
+msgstr "สกุลเงิน"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__dashboard_button_name
+msgid "Dashboard Button"
+msgstr "ปุ่มแดชบอร์ด"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.crm_team_action_pipeline
+#: model_terms:ir.actions.act_window,help:sale_team.crm_team_action_sales
+msgid "Define a new sales team"
+msgstr "กำหนดทีมขายใหม่"
+
+#. module: sale_team
+#: model:crm.tag,name:sale_team.categ_oppor5
+msgid "Design"
+msgstr "ออกแบบ"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_tag__display_name
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__display_name
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__display_name
+#: model:ir.model.fields,field_description:sale_team.field_res_users__display_name
+msgid "Display Name"
+msgstr "แสดงชื่อ"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__email
+msgid "Email"
+msgstr "อีเมล"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__favorite_user_ids
+msgid "Favorite Members"
+msgstr "สมาชิกโปรด"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__is_favorite
+msgid "Favorite teams to display them in the dashboard and access them easily."
+msgstr "ทีมโปรดเพื่อแสดงในแดชบอร์ดและเข้าถึงได้ง่าย"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__message_follower_ids
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__message_follower_ids
+msgid "Followers"
+msgstr "ผู้ติดตาม"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__message_partner_ids
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "ผู้ติดตาม (พาร์ทเนอร์)"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__has_message
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__has_message
+msgid "Has Message"
+msgstr "มีข้อความ"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_tag__id
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__id
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__id
+#: model:ir.model.fields,field_description:sale_team.field_res_users__id
+msgid "ID"
+msgstr "ไอดี"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__is_membership_multi
+#: model:ir.model.fields,help:sale_team.field_crm_team_member__is_membership_multi
+msgid ""
+"If True, users may belong to several sales teams. Otherwise membership is "
+"limited to a single sales team."
+msgstr ""
+"หากเป็นจริง ผู้ใช้อาจอยู่ในทีมขายหลายทีม มิฉะนั้น การเป็นสมาชิกจะจำกัดให้ทีมขายเพียงทีมเดียว"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__message_needaction
+#: model:ir.model.fields,help:sale_team.field_crm_team_member__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "ถ้าเลือก ข้อความใหม่จะต้องการความสนใจจากคุณ"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__message_has_error
+#: model:ir.model.fields,help:sale_team.field_crm_team_member__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "ถ้าเลือก ข้อความบางข้อความมีข้อผิดพลาดในการส่ง"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__active
+msgid ""
+"If the active field is set to false, it will allow you to hide the Sales "
+"Team without removing it."
+msgstr "หากฟิลด์ที่ใช้งานอยู่ถูกตั้งค่าเป็น \"เท็จ\" จะอนุญาตให้คุณซ่อนทีมขายโดยไม่ต้องลบออก"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__image_1920
+msgid "Image"
+msgstr "รูปภาพ"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__image_128
+msgid "Image (128)"
+msgstr "รูปภาพ (128)"
+
+#. module: sale_team
+#: model:crm.tag,name:sale_team.categ_oppor4
+msgid "Information"
+msgstr "ข้อมูล"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__message_is_follower
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__message_is_follower
+msgid "Is Follower"
+msgstr "เป็นผู้ติดตาม"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_tag__write_uid
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__write_uid
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__write_uid
+msgid "Last Updated by"
+msgstr "อัปเดตครั้งล่าสุดโดย"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_tag__write_date
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__write_date
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__write_date
+msgid "Last Updated on"
+msgstr "อัปเดตครั้งล่าสุดเมื่อ"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_res_users__sale_team_id
+msgid ""
+"Main user sales team. Used notably for pipeline, or to set sales team in "
+"invoicing or subscription."
+msgstr "ทีมขายผู้ใช้หลัก ใช้สำหรับไปป์ไลน์หรือตั้งทีมขายในการออกใบแจ้งหนี้หรือสมัครสมาชิก"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__member_company_ids
+msgid "Member Company"
+msgstr "สมาชิกบริษัท"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__member_warning
+msgid "Member Warning"
+msgstr "คำเตือนสมาชิก"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_form
+msgid "Members"
+msgstr "สมาชิก"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__member_warning
+msgid "Membership Issue Warning"
+msgstr "คำเตือนปัญหาการเป็นสมาชิก"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__message_has_error
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__message_has_error
+msgid "Message Delivery error"
+msgstr "เกิดข้อผิดพลาดในการส่งข้อความ"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__message_ids
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__message_ids
+msgid "Messages"
+msgstr "ข้อความ"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__is_membership_multi
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__is_membership_multi
+msgid "Multiple Memberships Allowed"
+msgstr "อนุญาตให้สมาชิกหลายราย"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__name
+msgid "Name"
+msgstr "ชื่อ"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__message_needaction_counter
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__message_needaction_counter
+msgid "Number of Actions"
+msgstr "จํานวนการดําเนินการ"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__message_has_error_counter
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__message_has_error_counter
+msgid "Number of errors"
+msgstr "จํานวนข้อผิดพลาด"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__message_needaction_counter
+#: model:ir.model.fields,help:sale_team.field_crm_team_member__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "จำนวนข้อความที่ต้องดำเนินการ"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__message_has_error_counter
+#: model:ir.model.fields,help:sale_team.field_crm_team_member__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "จํานวนข้อความที่มีข้อผิดพลาดในการส่ง"
+
+#. module: sale_team
+#: model:crm.tag,name:sale_team.categ_oppor8
+msgid "Other"
+msgstr "อื่นๆ"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__phone
+msgid "Phone"
+msgstr "โทรศัพท์"
+
+#. module: sale_team
+#: model:crm.team,name:sale_team.pos_sales_team
+msgid "Point of Sale"
+msgstr "การขายหน้าร้าน"
+
+#. module: sale_team
+#: model:crm.team,name:sale_team.crm_team_1
+msgid "Pre-Sales"
+msgstr "การขายล่วงหน้า"
+
+#. module: sale_team
+#: model:crm.tag,name:sale_team.categ_oppor1
+msgid "Product"
+msgstr "สินค้า"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__rating_ids
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__rating_ids
+msgid "Ratings"
+msgstr "การให้คะแนน"
+
+#. module: sale_team
+#: model:crm.team,name:sale_team.team_sales_department
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_kanban_dashboard
+msgid "Sales"
+msgstr "การขาย"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_form
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_tree
+msgid "Sales Men"
+msgstr "พนักขาย"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_search
+msgid "Sales Person"
+msgstr "พนักงานขาย"
+
+#. module: sale_team
+#: model:ir.model,name:sale_team.model_crm_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__name
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__crm_team_id
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_search
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_form
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_tree
+#: model:ir.model.fields,field_description:sale_team.field_account_invoice_report__team_id
+#: model:ir.model.fields,field_description:sale_team.field_account_move__team_id
+#: model:ir.model.fields,field_description:sale_team.field_sale_order__team_id
+#: model:ir.model.fields,field_description:sale_team.field_sale_report__team_id
+#: model_terms:ir.ui.view,arch_db:sale_team.account_invoice_groupby_inherit
+#: model_terms:ir.ui.view,arch_db:sale_team.view_account_invoice_report_search_inherit
+msgid "Sales Team"
+msgstr "ทีมขาย"
+
+#. module: sale_team
+#: model:ir.model,name:sale_team.model_crm_team_member
+msgid "Sales Team Member"
+msgstr "สมาชิกทีมขาย"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__crm_team_member_ids
+#: model:ir.model.fields,field_description:sale_team.field_res_users__crm_team_member_ids
+msgid "Sales Team Members"
+msgstr "สมาชิกทีมขาย"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__crm_team_member_all_ids
+msgid "Sales Team Members (incl. inactive)"
+msgstr "สมาชิกทีมขาย (รวมไม่เปิดใช้งาน)"
+
+#. module: sale_team
+#: model:ir.actions.act_window,name:sale_team.crm_team_action_config
+#: model:ir.actions.act_window,name:sale_team.crm_team_action_sales
+#: model:ir.model.fields,field_description:sale_team.field_res_users__crm_team_ids
+#: model:ir.ui.menu,name:sale_team.report_sales_team
+#: model:ir.ui.menu,name:sale_team.sales_team_config
+msgid "Sales Teams"
+msgstr "ทีมขาย"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__user_id
+msgid "Salesperson"
+msgstr "พนักงานขาย"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__member_ids
+msgid "Salespersons"
+msgstr "พนักงานขาย"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_search
+msgid "Salesteams Search"
+msgstr "ค้นหาทีมขาย"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__sequence
+msgid "Sequence"
+msgstr "ลำดับ"
+
+#. module: sale_team
+#: model:crm.tag,name:sale_team.categ_oppor3
+msgid "Services"
+msgstr "บริการ"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__is_favorite
+msgid "Show on dashboard"
+msgstr "แสดงบนแดชบอร์ด"
+
+#. module: sale_team
+#: model:crm.tag,name:sale_team.categ_oppor2
+msgid "Software"
+msgstr "ซอฟต์แวร์"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_tag__name
+msgid "Tag Name"
+msgstr "ชื่อแท็ก"
+
+#. module: sale_team
+#: model:ir.model.constraint,message:sale_team.constraint_crm_tag_name_uniq
+msgid "Tag name already exists!"
+msgstr "มีชื่อแท็กแล้ว!"
+
+#. module: sale_team
+#: model:ir.actions.act_window,name:sale_team.sales_team_crm_tag_action
+#: model_terms:ir.ui.view,arch_db:sale_team.sales_team_crm_tag_view_form
+#: model_terms:ir.ui.view,arch_db:sale_team.sales_team_crm_tag_view_tree
+#: model:ir.model.fields,field_description:sale_team.field_sale_order__tag_ids
+#: model:ir.ui.menu,name:sale_team.menu_tag_config
+msgid "Tags"
+msgstr "แท็ก"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_form
+msgid "Team Details"
+msgstr "รายละเอียดทีม"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__user_id
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_search
+msgid "Team Leader"
+msgstr "หัวหน้าทีม"
+
+#. module: sale_team
+#: model:ir.actions.act_window,name:sale_team.crm_team_member_action
+msgid "Team Members"
+msgstr "สมาชิกทีม"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.crm_team_member_action
+msgid "Team Members are salespersons assigned to specific teams."
+msgstr "สมาชิกในทีมคือพนักงานขายที่ได้รับมอบหมายให้กับทีมเฉพาะ"
+
+#. module: sale_team
+#: model:ir.actions.act_window,name:sale_team.crm_team_action_pipeline
+msgid "Teams"
+msgstr "ทีม"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__color
+msgid "The color of the channel"
+msgstr "สีของช่อง"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team_member__company_id
+msgid "The default company for this user."
+msgstr "บริษัทที่เป็นค่าเริ่มต้นสำหรับผู้ใช้รายนี้"
+
+#. module: sale_team
+#. odoo-python
+#: code:addons/sale_team/models/crm_team.py:0
+msgid ""
+"The following team members are not allowed in company '%(company)s' of the "
+"Sales Team '%(team)s': %(users)s"
+msgstr ""
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.mail_activity_type_action_config_sales
+msgid ""
+"Those represent the different categories of things you have to do (e.g. "
+"\"Call\" or \"Prepare meeting\")."
+msgstr ""
+"สิ่งเหล่านี้แสดงถึงหมวดหมู่ต่างๆ ของสิ่งที่คุณต้องทำ (เช่น \"โทร\" หรือ \"เตรียมการประชุม\")"
+
+#. module: sale_team
+#: model:crm.tag,name:sale_team.categ_oppor6
+msgid "Training"
+msgstr "การอบรม"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team_member__user_in_teams_ids
+msgid ""
+"UX: Give users not to add in the currently chosen team to avoid duplicates"
+msgstr "UX: ไม่ให้ผู้ใช้เพิ่มทีมที่เลือกในปัจจุบันเพื่อหลีกเลี่ยงการทำซ้ำ"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__member_company_ids
+#: model:ir.model.fields,help:sale_team.field_crm_team_member__user_company_ids
+msgid "UX: Limit to team company or all if no company"
+msgstr "UX: จำกัดเฉพาะทีมบริษัทหรือทั้งหมดหากไม่มีบริษัท"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.crm_team_action_config
+msgid "Use Sales Teams to organize your sales departments and draw up reports."
+msgstr "ใช้ทีมขายเพื่อจัดระเบียบแผนกขายและจัดทำรายงาน"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.crm_team_action_pipeline
+#: model_terms:ir.actions.act_window,help:sale_team.crm_team_action_sales
+msgid ""
+"Use Sales Teams to organize your sales departments.\n"
+"                Each team will work with a separate pipeline."
+msgstr ""
+"ใช้ทีมขายเพื่อจัดระเบียบแผนกขายของคุณ\n"
+"                แต่ละทีมจะทำงานกับไปป์ไลน์แยกกัน"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.sales_team_crm_tag_action
+msgid ""
+"Use Tags to manage and track your Opportunities (product structure, sales "
+"type, ...)"
+msgstr "ใช้แท็กเพื่อจัดการและติดตามโอกาสของคุณ (โครงสร้างผลิตภัณฑ์ ประเภทการขาย และอื่น ๆ )"
+
+#. module: sale_team
+#: model:ir.model,name:sale_team.model_res_users
+msgid "User"
+msgstr "ผู้ใช้"
+
+#. module: sale_team
+#. odoo-python
+#: code:addons/sale_team/models/crm_team_member.py:0
+msgid ""
+"User '%(user)s' is not allowed in the company '%(company)s' of the Sales "
+"Team '%(team)s'."
+msgstr ""
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__user_company_ids
+msgid "User Company"
+msgstr "ผู้ใช้บริษัท"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__user_in_teams_ids
+msgid "User In Teams"
+msgstr "ผู้ใช้ในทีม"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_res_users__sale_team_id
+msgid "User Sales Team"
+msgstr "ผู้ใช้ทีมขาย"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__member_ids
+msgid "Users assigned to this team."
+msgstr "ผู้ใช้ที่ได้รับมอบหมายให้ทีมนี้"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_form
+msgid "Visible to all"
+msgstr "มองเห็นได้ทุกคน"
+
+#. module: sale_team
+#: model:crm.team,name:sale_team.salesteam_website_sales
+msgid "Website"
+msgstr "เว็บไซต์"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_form
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_form
+msgid "Working in multiple teams?"
+msgstr ""
+
+#. module: sale_team
+#. odoo-python
+#: code:addons/sale_team/models/crm_team_member.py:0
+msgid ""
+"You are trying to create duplicate membership(s). We found that %"
+"(duplicates)s already exist(s)."
+msgstr "คุณกำลังพยายามสร้างสมาชิกซ้ำ เราพบว่า%(duplicates)s นั้นมีอยู่แล้ว"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_form
+msgid "e.g. John Doe"
+msgstr "เช่น John Doe"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_form
+msgid "e.g. North America"
+msgstr "เช่น อเมริกาเหนือ"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.sales_team_crm_tag_view_form
+msgid "e.g. Services"
+msgstr "เช่น บริการ"
+
+#~ msgid ""
+#~ "Adding %(user_name)s in this team would remove him/her from its current "
+#~ "team %(team_name)s."
+#~ msgstr "เพิ่ม %(user_name)s ในทีมนี้จะลบเขา/เธอออกจากทีมปัจจุบัน %(team_name)s"
+
+#~ msgid ""
+#~ "Adding %(user_name)s in this team would remove him/her from its current "
+#~ "teams %(team_names)s."
+#~ msgstr "เพิ่ม  %(user_name)s ในทีมนี้จะลบเขา/เธอออกจากทีมปัจจุบัน %(team_names)s"
+
+#~ msgid ""
+#~ "Adding %(user_names)s in this team would remove them from their current "
+#~ "teams (%(team_names)s)."
+#~ msgstr ""
+#~ "เพิ่ม %(user_names)s ในทีมนี้จะลบพวกเขาออกจากทีมปัจจุบันของพวกเขา (%(team_names)s)"
+
+#~ msgid "Contact"
+#~ msgstr "ติดต่อ"
+
+#~ msgid "Dashboard Graph Data"
+#~ msgstr "ข้อมูลแดชบอร์ดกราฟ"
+
+#~ msgid ""
+#~ "Follow this salesteam to automatically track the events associated to "
+#~ "users of this team."
+#~ msgstr "ติดตามทีมขายนี้เพื่อติดตามเหตุการณ์ที่เกี่ยวข้องกับผู้ใช้ของทีมนี้โดยอัตโนมัติ"
+
+#~ msgid "Group By"
+#~ msgstr "กลุ่มโดย"
+
+#~ msgid "Group By..."
+#~ msgstr "จัดกลุ่มตาม..."
+
+#~ msgid ""
+#~ "If set, this Sales Team will be used for sales and assignments related to "
+#~ "this partner"
+#~ msgstr "หากตั้งค่าไว้ ทีมขายนี้จะใช้สำหรับการขายและการมอบหมายที่เกี่ยวข้องกับพาร์ทเนอร์รายนี้"
+
+#~ msgid "Mobile"
+#~ msgstr "มือถือ"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "จํานวนข้อความที่ต้องดําเนินการ"
+
+#~ msgid "Sample data"
+#~ msgstr "ข้อมูลตัวอย่าง"
+
+#~ msgid ""
+#~ "To add a Salesperson into multiple Teams, activate the Multi-Team option "
+#~ "in settings."
+#~ msgstr "หากต้องการเพิ่มพนักงานขายลงในหลายทีม ให้เปิดใช้งานตัวเลือกหลายทีมในการตั้งค่า  "
+
+#~ msgid "Undefined graph model for Sales Team: %s"
+#~ msgstr "โมเดลกราฟที่ไม่ได้กำหนดสำหรับทีมขาย: %s"
+
+#~ msgid "eBay"
+#~ msgstr "eBay"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_salesteams_view_form
+msgid "<span class=\"flex-grow-1\">/ Month</span>"
+msgstr "<span class=\"flex-grow-1\">/ เดือน</span>"
+
+#. module: sale_team
+#. odoo-javascript
+#: code:addons/sale_team/static/src/xml/sale_progressbar_field.xml:0
+msgid "Click to define an invoicing target"
+msgstr "คลิกเพื่อกำหนดเป้าหมายการออกใบแจ้งหนี้"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.action_invoice_salesteams
+msgid "Create a customer invoice"
+msgstr "สร้างใบแจ้งหนี้ลูกค้า"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.action_orders_salesteams
+#: model_terms:ir.actions.act_window,help:sale_team.action_quotations_salesteams
+msgid "Create a new quotation, the first step of a new sale!"
+msgstr "สร้างใบเสนอราคาใหม่ ขั้นตอนแรกของการขายใหม่!"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.action_invoice_salesteams
+msgid ""
+"Create invoices, register payments and keep track of the discussions with "
+"your customers."
+msgstr "สร้างใบแจ้งหนี้ ลงทะเบียนการชําระเงิน และติดตามการสนทนากับลูกค้าของคุณ"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.action_account_invoice_report_salesteam
+msgid ""
+"From this report, you can have an overview of the amount invoiced to your "
+"customer. The search tool can also be used to personalise your Invoices "
+"reports and so, match this analysis to your needs."
+msgstr ""
+"จากรายงานนี้ คุณจะมีภาพรวมของจำนวนเงินที่ออกใบแจ้งหนี้ให้กับลูกค้าของคุณได้ "
+"เครื่องมือค้นหายังสามารถใช้เพื่อปรับรายงานใบแจ้งหนี้ในแบบของคุณ "
+"และเพื่อให้ตรงกับการวิเคราะห์ที่ตรงความต้องการของคุณ"
+
+#. module: sale_team
+#: model:mail.message.subtype,name:sale_team.mt_salesteam_invoice_paid
+msgid "Invoice Paid"
+msgstr ""
+
+#. module: sale_team
+#: model:mail.message.subtype,name:sale_team.mt_salesteam_invoice_posted
+msgid "Invoice Posted"
+msgstr ""
+
+#. module: sale_team
+#: model:ir.actions.act_window,name:sale_team.action_invoice_salesteams
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_kanban_dashboard
+msgid "Invoices"
+msgstr "การแจ้งหนี้"
+
+#. module: sale_team
+#: model:ir.actions.act_window,name:sale_team.action_account_invoice_report_salesteam
+msgid "Invoices Analysis"
+msgstr "การวิเคราะห์ใบแจ้งหนี้"
+
+#. module: sale_team
+#: model:ir.actions.act_window,name:sale_team.action_quotation_form
+msgid "New Quotation"
+msgstr "ใบเสนอราคาใหม่"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.action_orders_salesteams
+#: model_terms:ir.actions.act_window,help:sale_team.action_quotations_salesteams
+msgid ""
+"Once the quotation is confirmed by the customer, it becomes a sales order."
+"<br> You will be able to create an invoice and collect the payment."
+msgstr ""
+"เมื่อลูกค้ายืนยันใบเสนอราคาแล้ว จะกลายเป็นคำสั่งขาย<br> "
+"คุณจะสามารถสร้างใบแจ้งหนี้และรับการชำระเงินได้"
+
+#. module: sale_team
+#: model:mail.message.subtype,name:sale_team.mt_salesteam_order_viewed
+msgid "Quotation Viewed"
+msgstr ""
+
+#. module: sale_team
+#: model:mail.message.subtype,name:sale_team.mt_salesteam_order_sent
+msgid "Quotation sent"
+msgstr "ส่งใบเสนอราคาแล้ว"
+
+#. module: sale_team
+#: model:ir.actions.act_window,name:sale_team.action_quotations_salesteams
+msgid "Quotations"
+msgstr "ใบเสนอราคา"
+
+#. module: sale_team
+#: model:mail.message.subtype,name:sale_team.mt_salesteam_order_confirmed
+msgid "Sales Order Confirmed"
+msgstr "ยืนยันคำสั่งขาย"
+
+#. module: sale_team
+#: model:ir.actions.act_window,name:sale_team.action_orders_salesteams
+#: model:ir.actions.act_window,name:sale_team.action_orders_to_invoice_salesteams
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_kanban_dashboard
+msgid "Sales Orders"
+msgstr "คำสั่งขาย"

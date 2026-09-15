@@ -1,0 +1,921 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * sale_team
+#
+# Translators:
+# Martin Trigaux, 2022
+# Jolien De Paepe, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2025-11-24 12:08+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
+"Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/sale_team/"
+"nl/>\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
+
+#. module: sale_team
+#. odoo-python
+#: code:addons/sale_team/models/crm_team_member.py:0
+msgid "%(user_name)s already in other teams (%(team_names)s)."
+msgstr "%(user_name)s zit al in andere teams (%(team_names)s)."
+
+#. module: sale_team
+#. odoo-python
+#: code:addons/sale_team/models/crm_team.py:0
+msgid "%(user_names)s already in other teams (%(team_names)s)."
+msgstr "%(user_names)s zitten al in andere teams (%(team_names)s)."
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_kanban
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_form
+msgid ""
+"<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"Email\" "
+"title=\"Email\"/>"
+msgstr ""
+"<i class=\"fa fa-envelope me-1\" role=\"img\" aria-label=\"E-mail\" "
+"title=\"E-mail\"/>"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_form
+msgid "<i class=\"fa fa-fw me-1 fa-building text-primary\" title=\"Company\"/>"
+msgstr ""
+"<i class=\"fa fa-fw me-1 fa-building text-primary\" title=\"Bedrijf\"/>"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_form
+msgid "<i class=\"fa fa-fw me-1 fa-envelope text-primary\" title=\"Email\"/>"
+msgstr "<i class=\"fa fa-fw me-1 fa-envelope text-primary\" title=\"E-mail\"/>"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_form
+msgid "<i class=\"fa fa-fw me-1 fa-phone text-primary\" title=\"Phone\"/>"
+msgstr "<i class=\"fa fa-fw me-1 fa-phone text-primary\" title=\"Telefoon\"/>"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_kanban_dashboard
+msgid "<span>New</span>"
+msgstr "<span>Nieuw</span>"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_kanban_dashboard
+msgid "<span>Reporting</span>"
+msgstr "<span>Rapportages</span>"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_kanban_dashboard
+msgid "<span>View</span>"
+msgstr "<span>Overzicht</span>"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__message_needaction
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__message_needaction
+msgid "Action Needed"
+msgstr "Actie gevraagd"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_form
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_form
+msgid "Activate \"Multi-team\""
+msgstr "Activeer 'Multiteam'"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__active
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__active
+msgid "Active"
+msgstr "Actief"
+
+#. module: sale_team
+#: model:ir.actions.act_window,name:sale_team.mail_activity_type_action_config_sales
+msgid "Activity Types"
+msgstr "Activiteitensoorten"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.crm_team_member_action
+msgid "Add a Team Member"
+msgstr "Voeg een teamlid toe"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__crm_team_member_ids
+msgid "Add members to automatically assign their documents to this sales team."
+msgstr ""
+"Voeg leden toe om hun documenten automatisch toe te wijzen aan dit "
+"verkoopteam."
+
+#. module: sale_team
+#. odoo-javascript
+#: code:addons/sale_team/static/src/js/crm_team_form.js:0
+msgid "An error occurred while activating the Multi-Team option."
+msgstr "Er is een fout opgetreden bij het activeren van de Multiteamoptie."
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_form
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_kanban
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_search
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_form
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_search
+msgid "Archived"
+msgstr "Gearchiveerd"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__message_attachment_count
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__message_attachment_count
+msgid "Attachment Count"
+msgstr "Aantal bijlagen"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_kanban
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_form
+msgid "Avatar"
+msgstr "Avatar"
+
+#. module: sale_team
+#. odoo-python
+#: code:addons/sale_team/models/crm_team.py:0
+msgid "Big Pretty Button :)"
+msgstr "Grote mooie knop :)"
+
+#. module: sale_team
+#: model:ir.model,name:sale_team.model_crm_tag
+msgid "CRM Tag"
+msgstr "CRM label"
+
+#. module: sale_team
+#. odoo-python
+#: code:addons/sale_team/models/crm_team.py:0
+msgid "Cannot delete default team \"%s\""
+msgstr "Kan standaard team \"%s\" niet verwijderen"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_tag__color
+msgid "Color"
+msgstr "Kleur"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__color
+msgid "Color Index"
+msgstr "Kleurindex"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__company_id
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__company_id
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_search
+msgid "Company"
+msgstr "Bedrijf"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_kanban_dashboard
+msgid "Configuration"
+msgstr "Configuratie"
+
+#. module: sale_team
+#: model:crm.tag,name:sale_team.categ_oppor7
+msgid "Consulting"
+msgstr "Consulting"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.sales_team_crm_tag_action
+msgid "Create CRM Tags"
+msgstr "CRM-labels maken"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.crm_team_action_config
+msgid "Create a Sales Team"
+msgstr "Maak een verkoopteam"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.mail_activity_type_action_config_sales
+msgid "Create an Activity Type"
+msgstr "Een activiteitstype maken"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_tag__create_uid
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__create_uid
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__create_uid
+msgid "Created by"
+msgstr "Aangemaakt door"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_tag__create_date
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__create_date
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__create_date
+msgid "Created on"
+msgstr "Aangemaakt op"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__currency_id
+msgid "Currency"
+msgstr "Valuta"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__dashboard_button_name
+msgid "Dashboard Button"
+msgstr "Dashboard knop"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.crm_team_action_pipeline
+#: model_terms:ir.actions.act_window,help:sale_team.crm_team_action_sales
+msgid "Define a new sales team"
+msgstr "Definieer een nieuw verkoopteam"
+
+#. module: sale_team
+#: model:crm.tag,name:sale_team.categ_oppor5
+msgid "Design"
+msgstr "Ontwerp"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_tag__display_name
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__display_name
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__display_name
+#: model:ir.model.fields,field_description:sale_team.field_res_users__display_name
+msgid "Display Name"
+msgstr "Weergavenaam"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__email
+msgid "Email"
+msgstr "E-mail"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__favorite_user_ids
+msgid "Favorite Members"
+msgstr "Favoriete leden"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__is_favorite
+msgid "Favorite teams to display them in the dashboard and access them easily."
+msgstr ""
+"Favoriete teams om ze te tonen in het dashboard en gemakkelijk toegang tot "
+"deze te krijgen."
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__message_follower_ids
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__message_follower_ids
+msgid "Followers"
+msgstr "Volgers"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__message_partner_ids
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Volgers (Partners)"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__has_message
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__has_message
+msgid "Has Message"
+msgstr "Heeft bericht"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_tag__id
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__id
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__id
+#: model:ir.model.fields,field_description:sale_team.field_res_users__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__is_membership_multi
+#: model:ir.model.fields,help:sale_team.field_crm_team_member__is_membership_multi
+msgid ""
+"If True, users may belong to several sales teams. Otherwise membership is "
+"limited to a single sales team."
+msgstr ""
+"Indien True, kunnen gebruikers tot meerdere verkoopteams behoren. Anders is "
+"het lidmaatschap beperkt tot een enkel verkoopteam."
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__message_needaction
+#: model:ir.model.fields,help:sale_team.field_crm_team_member__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Indien aangevinkt vragen nieuwe berichten je aandacht."
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__message_has_error
+#: model:ir.model.fields,help:sale_team.field_crm_team_member__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Indien aangevinkt hebben sommige berichten een leveringsfout."
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__active
+msgid ""
+"If the active field is set to false, it will allow you to hide the Sales "
+"Team without removing it."
+msgstr ""
+"Als het actief veld is ingesteld als false, kun je het verkoopteam verbergen "
+"zonder het te verwijderen."
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__image_1920
+msgid "Image"
+msgstr "Afbeelding"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__image_128
+msgid "Image (128)"
+msgstr "Afbeelding (128)"
+
+#. module: sale_team
+#: model:crm.tag,name:sale_team.categ_oppor4
+msgid "Information"
+msgstr "Informatie"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__message_is_follower
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__message_is_follower
+msgid "Is Follower"
+msgstr "Is een volger"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_tag__write_uid
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__write_uid
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__write_uid
+msgid "Last Updated by"
+msgstr "Laatst bijgewerkt door"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_tag__write_date
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__write_date
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__write_date
+msgid "Last Updated on"
+msgstr "Laatst bijgewerkt op"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_res_users__sale_team_id
+msgid ""
+"Main user sales team. Used notably for pipeline, or to set sales team in "
+"invoicing or subscription."
+msgstr ""
+"Hoofdgebruiker verkoopteam. Met name gebruikt voor pijplijn, of om het "
+"verkoopteam in te stellen op facturering of abonnement."
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__member_company_ids
+msgid "Member Company"
+msgstr "Lid bedrijf"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__member_warning
+msgid "Member Warning"
+msgstr "Ledenwaarschuwing"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_form
+msgid "Members"
+msgstr "Leden"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__member_warning
+msgid "Membership Issue Warning"
+msgstr "Waarschuwing voor lidmaatschapsprobleem"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__message_has_error
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__message_has_error
+msgid "Message Delivery error"
+msgstr "Bericht afleverfout"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__message_ids
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__message_ids
+msgid "Messages"
+msgstr "Berichten"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__is_membership_multi
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__is_membership_multi
+msgid "Multiple Memberships Allowed"
+msgstr "Meerdere lidmaatschappen toegestaan"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__name
+msgid "Name"
+msgstr "Naam"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__message_needaction_counter
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Aantal acties"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__message_has_error_counter
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__message_has_error_counter
+msgid "Number of errors"
+msgstr "Aantal fouten"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__message_needaction_counter
+#: model:ir.model.fields,help:sale_team.field_crm_team_member__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Aantal berichten die actie vereisen"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__message_has_error_counter
+#: model:ir.model.fields,help:sale_team.field_crm_team_member__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Aantal berichten met leveringsfout"
+
+#. module: sale_team
+#: model:crm.tag,name:sale_team.categ_oppor8
+msgid "Other"
+msgstr "Overige"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__phone
+msgid "Phone"
+msgstr "Telefoon"
+
+#. module: sale_team
+#: model:crm.team,name:sale_team.pos_sales_team
+msgid "Point of Sale"
+msgstr "Kassa"
+
+#. module: sale_team
+#: model:crm.team,name:sale_team.crm_team_1
+msgid "Pre-Sales"
+msgstr "Voorverkoop"
+
+#. module: sale_team
+#: model:crm.tag,name:sale_team.categ_oppor1
+msgid "Product"
+msgstr "Product"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__rating_ids
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__rating_ids
+msgid "Ratings"
+msgstr "Beoordelingen"
+
+#. module: sale_team
+#: model:crm.team,name:sale_team.team_sales_department
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_kanban_dashboard
+msgid "Sales"
+msgstr "Verkoop"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_form
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_tree
+msgid "Sales Men"
+msgstr "Verkoper"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_search
+msgid "Sales Person"
+msgstr "Verkoper"
+
+#. module: sale_team
+#: model:ir.model,name:sale_team.model_crm_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__name
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__crm_team_id
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_search
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_form
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_tree
+#: model:ir.model.fields,field_description:sale_team.field_account_invoice_report__team_id
+#: model:ir.model.fields,field_description:sale_team.field_account_move__team_id
+#: model:ir.model.fields,field_description:sale_team.field_sale_order__team_id
+#: model:ir.model.fields,field_description:sale_team.field_sale_report__team_id
+#: model_terms:ir.ui.view,arch_db:sale_team.account_invoice_groupby_inherit
+#: model_terms:ir.ui.view,arch_db:sale_team.view_account_invoice_report_search_inherit
+msgid "Sales Team"
+msgstr "Verkoopteam"
+
+#. module: sale_team
+#: model:ir.model,name:sale_team.model_crm_team_member
+msgid "Sales Team Member"
+msgstr "Lid van het verkoopteam"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__crm_team_member_ids
+#: model:ir.model.fields,field_description:sale_team.field_res_users__crm_team_member_ids
+msgid "Sales Team Members"
+msgstr "Leden van het verkoopteam"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__crm_team_member_all_ids
+msgid "Sales Team Members (incl. inactive)"
+msgstr "Leden van het verkoopteam (incl. inactief)"
+
+#. module: sale_team
+#: model:ir.actions.act_window,name:sale_team.crm_team_action_config
+#: model:ir.actions.act_window,name:sale_team.crm_team_action_sales
+#: model:ir.model.fields,field_description:sale_team.field_res_users__crm_team_ids
+#: model:ir.ui.menu,name:sale_team.report_sales_team
+#: model:ir.ui.menu,name:sale_team.sales_team_config
+msgid "Sales Teams"
+msgstr "Verkoopteams"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__user_id
+msgid "Salesperson"
+msgstr "Verkoper"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__member_ids
+msgid "Salespersons"
+msgstr "Verkopers"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_search
+msgid "Salesteams Search"
+msgstr "Zoek verkoopteams"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__sequence
+msgid "Sequence"
+msgstr "Reeks"
+
+#. module: sale_team
+#: model:crm.tag,name:sale_team.categ_oppor3
+msgid "Services"
+msgstr "Diensten"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__is_favorite
+msgid "Show on dashboard"
+msgstr "Weergeven op dashboard"
+
+#. module: sale_team
+#: model:crm.tag,name:sale_team.categ_oppor2
+msgid "Software"
+msgstr "Software"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_tag__name
+msgid "Tag Name"
+msgstr "Labelnaam"
+
+#. module: sale_team
+#: model:ir.model.constraint,message:sale_team.constraint_crm_tag_name_uniq
+msgid "Tag name already exists!"
+msgstr "Labelnaam bestaat al!"
+
+#. module: sale_team
+#: model:ir.actions.act_window,name:sale_team.sales_team_crm_tag_action
+#: model_terms:ir.ui.view,arch_db:sale_team.sales_team_crm_tag_view_form
+#: model_terms:ir.ui.view,arch_db:sale_team.sales_team_crm_tag_view_tree
+#: model:ir.model.fields,field_description:sale_team.field_sale_order__tag_ids
+#: model:ir.ui.menu,name:sale_team.menu_tag_config
+msgid "Tags"
+msgstr "Labels"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_form
+msgid "Team Details"
+msgstr "Teamdetails"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team__user_id
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_search
+msgid "Team Leader"
+msgstr "Teamleider"
+
+#. module: sale_team
+#: model:ir.actions.act_window,name:sale_team.crm_team_member_action
+msgid "Team Members"
+msgstr "Teamleden"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.crm_team_member_action
+msgid "Team Members are salespersons assigned to specific teams."
+msgstr "Teamleden zijn verkopers die aan specifieke teams zijn toegewezen."
+
+#. module: sale_team
+#: model:ir.actions.act_window,name:sale_team.crm_team_action_pipeline
+msgid "Teams"
+msgstr "Teams"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__color
+msgid "The color of the channel"
+msgstr "De kleur van het kanaal"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team_member__company_id
+msgid "The default company for this user."
+msgstr "Het standaard bedrijf voor deze gebruiker."
+
+#. module: sale_team
+#. odoo-python
+#: code:addons/sale_team/models/crm_team.py:0
+msgid ""
+"The following team members are not allowed in company '%(company)s' of the "
+"Sales Team '%(team)s': %(users)s"
+msgstr ""
+"De volgende teamleden zijn niet toegelaten in bedrijf '%(company)s' van het "
+"verkoopteam '%(team)s': %(users)s"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.mail_activity_type_action_config_sales
+msgid ""
+"Those represent the different categories of things you have to do (e.g. "
+"\"Call\" or \"Prepare meeting\")."
+msgstr ""
+"Die vertegenwoordigen de verschillende categorieën van dingen die je moet "
+"doen (bijvoorbeeld \"Bellen\" of \"Afspraak voorbereiden\")."
+
+#. module: sale_team
+#: model:crm.tag,name:sale_team.categ_oppor6
+msgid "Training"
+msgstr "Opleiding"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team_member__user_in_teams_ids
+msgid ""
+"UX: Give users not to add in the currently chosen team to avoid duplicates"
+msgstr ""
+"Gebruikerservaring: geef gebruikers om niet toe te voegen aan het momenteel "
+"gekozen team om duplicaten te voorkomen"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__member_company_ids
+#: model:ir.model.fields,help:sale_team.field_crm_team_member__user_company_ids
+msgid "UX: Limit to team company or all if no company"
+msgstr ""
+"Gebruikerservering: Beperk tot teambedrijf of alles als er geen bedrijf is"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.crm_team_action_config
+msgid "Use Sales Teams to organize your sales departments and draw up reports."
+msgstr ""
+"Gebruik verkoopteams om je verkoopafdelingen in te delen en rapportages op "
+"te stellen."
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.crm_team_action_pipeline
+#: model_terms:ir.actions.act_window,help:sale_team.crm_team_action_sales
+msgid ""
+"Use Sales Teams to organize your sales departments.\n"
+"                Each team will work with a separate pipeline."
+msgstr ""
+"Gebruik verkoopteams om je verkoopdepartementen te organiseren.\n"
+"                    Elk team zal met een afzonderlijke pijplijn werken."
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.sales_team_crm_tag_action
+msgid ""
+"Use Tags to manage and track your Opportunities (product structure, sales "
+"type, ...)"
+msgstr ""
+"Gebruik labels om je verkoopkansen te beheren en te volgen "
+"(productstructuur, verkooptype, ...)"
+
+#. module: sale_team
+#: model:ir.model,name:sale_team.model_res_users
+msgid "User"
+msgstr "Gebruiker"
+
+#. module: sale_team
+#. odoo-python
+#: code:addons/sale_team/models/crm_team_member.py:0
+msgid ""
+"User '%(user)s' is not allowed in the company '%(company)s' of the Sales "
+"Team '%(team)s'."
+msgstr ""
+"Gebruiker '%(user)s' is niet toegelaten in bedrijf '%(company)s' van het "
+"verkoopteam '%(team)s'."
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__user_company_ids
+msgid "User Company"
+msgstr "Gebruiker Bedrijf"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_crm_team_member__user_in_teams_ids
+msgid "User In Teams"
+msgstr "Gebruiker in teams"
+
+#. module: sale_team
+#: model:ir.model.fields,field_description:sale_team.field_res_users__sale_team_id
+msgid "User Sales Team"
+msgstr "Gebruiker verkoopteam"
+
+#. module: sale_team
+#: model:ir.model.fields,help:sale_team.field_crm_team__member_ids
+msgid "Users assigned to this team."
+msgstr "Gebruikers die aan dit team zijn toegewezen."
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_form
+msgid "Visible to all"
+msgstr "Voor iedereen zichtbaar"
+
+#. module: sale_team
+#: model:crm.team,name:sale_team.salesteam_website_sales
+msgid "Website"
+msgstr "Website"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_form
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_form
+msgid "Working in multiple teams?"
+msgstr "Werk je in meerdere teams?"
+
+#. module: sale_team
+#. odoo-python
+#: code:addons/sale_team/models/crm_team_member.py:0
+msgid ""
+"You are trying to create duplicate membership(s). We found that %"
+"(duplicates)s already exist(s)."
+msgstr ""
+"Je probeert dubbele lidmaatschap(pen) aan te maken. We hebben geconstateerd "
+"dat %(duplicates)s al bestaan(en)."
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_member_view_form
+msgid "e.g. John Doe"
+msgstr "b.v. John Doe"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_form
+msgid "e.g. North America"
+msgstr "bijv. Noord-Amerika"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.sales_team_crm_tag_view_form
+msgid "e.g. Services"
+msgstr "bijv. Diensten"
+
+#~ msgid ""
+#~ "Adding %(user_name)s in this team would remove him/her from its current "
+#~ "team %(team_name)s."
+#~ msgstr ""
+#~ "Het toevoegen van %(user_name)s in dit team zou hem/haar verwijderen uit "
+#~ "het huidige team %(team_name)s."
+
+#~ msgid ""
+#~ "Adding %(user_name)s in this team would remove him/her from its current "
+#~ "teams %(team_names)s."
+#~ msgstr ""
+#~ "Het toevoegen van %(user_name)s in dit team zou hem/haar uit de huidige "
+#~ "teams %(team_names)s verwijderen."
+
+#~ msgid ""
+#~ "Adding %(user_names)s in this team would remove them from their current "
+#~ "teams (%(team_names)s)."
+#~ msgstr ""
+#~ "Door %(user_names)s aan dit team toe te voegen, worden ze verwijderd uit "
+#~ "hun huidige teams (%(team_names)s)."
+
+#~ msgid "Contact"
+#~ msgstr "Contact"
+
+#~ msgid "Dashboard Graph Data"
+#~ msgstr "Dashboard grafiek data"
+
+#~ msgid ""
+#~ "Follow this salesteam to automatically track the events associated to "
+#~ "users of this team."
+#~ msgstr ""
+#~ "Volg dit verkoopkanaal om automatisch de afspraken verbonden aan "
+#~ "gebruikers van dit kanaal de volgen."
+
+#~ msgid "Group By"
+#~ msgstr "Groeperen op"
+
+#~ msgid "Group By..."
+#~ msgstr "Groeperen op..."
+
+#~ msgid ""
+#~ "If set, this Sales Team will be used for sales and assignments related to "
+#~ "this partner"
+#~ msgstr ""
+#~ "Indien aangevinkt, wordt dit verkoopteam gebruikt voor verkopen en "
+#~ "opdrachten met betrekking tot deze relatie"
+
+#~ msgid "Mobile"
+#~ msgstr "Mobiel"
+
+#~ msgid "Number of messages which requires an action"
+#~ msgstr "Aantal berichten die actie vereisen"
+
+#~ msgid "Sample data"
+#~ msgstr "Voorbeeld data"
+
+#~ msgid ""
+#~ "To add a Salesperson into multiple Teams, activate the Multi-Team option "
+#~ "in settings."
+#~ msgstr ""
+#~ "Om een Verkoper aan meerdere Teams toe te voegen, activeer je de Multi-"
+#~ "Team optie in de instellingen."
+
+#~ msgid "Undefined graph model for Sales Team: %s"
+#~ msgstr "ongedefinieerd grafiek model voor verkoopteam: %s"
+
+#~ msgid "eBay"
+#~ msgstr "eBay"
+
+#. module: sale_team
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_salesteams_view_form
+msgid "<span class=\"flex-grow-1\">/ Month</span>"
+msgstr "<span class=\"flex-grow-1\">/ Maand</span>"
+
+#. module: sale_team
+#. odoo-javascript
+#: code:addons/sale_team/static/src/xml/sale_progressbar_field.xml:0
+msgid "Click to define an invoicing target"
+msgstr "Klik om een facturatiedoel in te stellen"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.action_invoice_salesteams
+msgid "Create a customer invoice"
+msgstr "Maak een klantfactuur"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.action_orders_salesteams
+#: model_terms:ir.actions.act_window,help:sale_team.action_quotations_salesteams
+msgid "Create a new quotation, the first step of a new sale!"
+msgstr "Maak een nieuwe offerte, de eerste stap van een nieuwe verkoop!"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.action_invoice_salesteams
+msgid ""
+"Create invoices, register payments and keep track of the discussions with "
+"your customers."
+msgstr ""
+"Maak facturen, registreer betalingen en volg communicatie met je klanten op."
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.action_account_invoice_report_salesteam
+msgid ""
+"From this report, you can have an overview of the amount invoiced to your "
+"customer. The search tool can also be used to personalise your Invoices "
+"reports and so, match this analysis to your needs."
+msgstr ""
+"Deze rapportage geeft een overzicht van de uitstaande bedragen gefactureerd "
+"aan je klanten. De zoekopties geven de mogelijkheid om de analyses aan te "
+"passen."
+
+#. module: sale_team
+#: model:mail.message.subtype,name:sale_team.mt_salesteam_invoice_paid
+msgid "Invoice Paid"
+msgstr "Factuur betaald"
+
+#. module: sale_team
+#: model:mail.message.subtype,name:sale_team.mt_salesteam_invoice_posted
+msgid "Invoice Posted"
+msgstr "Factuur geboekt"
+
+#. module: sale_team
+#: model:ir.actions.act_window,name:sale_team.action_invoice_salesteams
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_kanban_dashboard
+msgid "Invoices"
+msgstr "Facturen"
+
+#. module: sale_team
+#: model:ir.actions.act_window,name:sale_team.action_account_invoice_report_salesteam
+msgid "Invoices Analysis"
+msgstr "Factuuranalyse"
+
+#. module: sale_team
+#: model:ir.actions.act_window,name:sale_team.action_quotation_form
+msgid "New Quotation"
+msgstr "Nieuwe offerte"
+
+#. module: sale_team
+#: model_terms:ir.actions.act_window,help:sale_team.action_orders_salesteams
+#: model_terms:ir.actions.act_window,help:sale_team.action_quotations_salesteams
+msgid ""
+"Once the quotation is confirmed by the customer, it becomes a sales order."
+"<br> You will be able to create an invoice and collect the payment."
+msgstr ""
+"Als de offerte wordt bevestigd door de klant wordt het een verkooporder."
+"<br>Je kunt er daarna een factuur van maken en de betaling verwerken."
+
+#. module: sale_team
+#: model:mail.message.subtype,name:sale_team.mt_salesteam_order_viewed
+msgid "Quotation Viewed"
+msgstr "Offerte bekeken"
+
+#. module: sale_team
+#: model:mail.message.subtype,name:sale_team.mt_salesteam_order_sent
+msgid "Quotation sent"
+msgstr "Offerte verzonden"
+
+#. module: sale_team
+#: model:ir.actions.act_window,name:sale_team.action_quotations_salesteams
+msgid "Quotations"
+msgstr "Offertes"
+
+#. module: sale_team
+#: model:mail.message.subtype,name:sale_team.mt_salesteam_order_confirmed
+msgid "Sales Order Confirmed"
+msgstr "Verkooporder bevestigd"
+
+#. module: sale_team
+#: model:ir.actions.act_window,name:sale_team.action_orders_salesteams
+#: model:ir.actions.act_window,name:sale_team.action_orders_to_invoice_salesteams
+#: model_terms:ir.ui.view,arch_db:sale_team.crm_team_view_kanban_dashboard
+msgid "Sales Orders"
+msgstr "Verkooporders"

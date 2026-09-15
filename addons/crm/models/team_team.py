@@ -801,7 +801,7 @@ class TeamTeam(models.Model):
                     action["help"] += "<p>%s</p>" % _(
                         """As you are a member of no Sales Team, you are showed the Pipeline of the <b>first team by default.</b>
                                         To work with the CRM, you should <a name="%d" type="action" tabindex="-1">join a team.</a>""",
-                        self.env.ref("sales_team.team_action_config").id,
+                        self.env.ref("sale_team.team_action_config").id,
                     )
                 else:
                     action["help"] += (

@@ -3,12 +3,12 @@
 
     <data noupdate="1">
         <record
-            id="sales_team.team_sales_department"
+            id="sale_team.team_sales_department"
             model="team.team"
             forcecreate="False">
             <field name="lead_assignment_domain">[['probability', '&gt;=', 20]]</field>
         </record>
-        <record id="sales_team.crm_team_1" model="team.team">
+        <record id="sale_team.crm_team_1" model="team.team">
             <field name="use_leads">True</field>
             <field name="lead_assignment_domain">[['phone_ids', '!=', False]]</field>
         </record>

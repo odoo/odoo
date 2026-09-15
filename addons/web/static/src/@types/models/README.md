@@ -27,7 +27,7 @@ each emit their own file; TS unions them at compile time.
 from addons.core.addons.web.tooling.scripts.generate_model_types import generate
 generate(env)  # all installed modules
 # or:
-generate(env, modules=["sale", "sales_team"])
+generate(env, modules=["sale", "sale_team"])
 generate(env, models=["res.partner"])
 PY
 
