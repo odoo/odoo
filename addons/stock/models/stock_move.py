@@ -821,8 +821,17 @@ Please change the quantity done or the rounding precision in your settings.""",
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if (vals.get('quantity') or vals.get('move_line_ids')) and 'lot_ids' in vals:
+            if vals.get('move_line_ids') and vals.get('lot_ids'):
                 vals.pop('lot_ids')
+            elif vals.get('quantity') and vals.get('lot_ids'):
+                product = self.env['product.product'].browse(vals.get('product_id'))
+                if product.tracking == 'serial':
+                    # A serial move line is always quantity 1: let the `lot_ids`
+                    # inverse create it instead of losing the user-picked serial
+                    # to the default reservation triggered by `quantity`.
+                    vals.pop('quantity')
+                else:
+                    vals.pop('lot_ids')
             picking_id = self.env['stock.picking'].browse(vals.get('picking_id'))
             if picking_id.state == 'done' and vals.get('state') != 'done':
                 vals['state'] = 'done'
