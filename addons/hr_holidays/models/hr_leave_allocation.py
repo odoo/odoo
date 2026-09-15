@@ -1080,6 +1080,7 @@ class HrLeaveAllocation(models.Model):
             'lastcall': False,
             'nextcall': False,
             'number_of_days': 0.0,
+            'yearly_accrued_days': 0,
             'carried_over_days_expiration_date': False,
             'previous_carryover_number_of_days': 0,
         }
