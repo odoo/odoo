@@ -2266,6 +2266,7 @@ export class PosStore extends WithLazyGetterTrap {
         }
     }
     async selectPreset(preset = false, order = this.getOrder(), presetSelection = false) {
+        const defaultPreset = this.config.default_preset_id;
         if (!preset || presetSelection) {
             const selectionList = this.config.available_preset_ids.map((preset) => ({
                 id: preset.id,
@@ -2322,6 +2323,8 @@ export class PosStore extends WithLazyGetterTrap {
             } else if (!preset.use_timing) {
                 order.preset_time = false;
             }
+        } else if (defaultPreset) {
+            order.setPreset(defaultPreset);
         }
     }
     orderUsageUTCtoLocal(data) {
