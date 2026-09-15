@@ -10,7 +10,7 @@
     'data': [
         'views/res_config_settings_view.xml',
         ],
-    'auto_install': True,
+    'auto_install': False,
     'assets': {
         'web.assets_frontend': [
             'web_unsplash/static/src/frontend/unsplash_beacon.js',
