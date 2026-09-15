@@ -55,6 +55,21 @@ $
 """, re.VERBOSE)
 
 
+class CallStat:
+    def __init__(self):
+        self.count = 0
+        self.total_time = 0.0
+        self.avoided = 0
+
+    def add_call(self, time: float):
+        self.count += 1
+        self.total_time += time
+
+    def report(self):
+        average_time = self.total_time / self.count if self.count else 0.0
+        return f"""count: {self.count} total_time: {self.total_time:.2f}s average_time: {average_time:.2f}s"""
+
+
 class OdooTestResult(object):
     """
     This class in inspired from TextTestResult and modifies TestResult
@@ -84,6 +99,7 @@ class OdooTestResult(object):
         self._soft_fail = False
         self.had_failure = False
         self.stats = collections.defaultdict(Stat)
+        self.call_stats = collections.defaultdict(CallStat)
         self.global_report = global_report
         self.shouldStop = self.global_report and self.global_report.shouldStop or False
 
@@ -251,6 +267,9 @@ class OdooTestResult(object):
     def log_stats(self):
         if not stats_logger.isEnabledFor(logging.INFO):
             return
+
+        for key, value in self.call_stats.items():
+            stats_logger.info("%s: %s", key, value.report())
 
         details = stats_logger.isEnabledFor(logging.DEBUG)
         stats_tree = collections.defaultdict(Stat)
