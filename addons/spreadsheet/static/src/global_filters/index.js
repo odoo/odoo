@@ -28,11 +28,12 @@ invalidateEvaluationCommands.add("SET_GLOBAL_FILTER_VALUE");
 
 readonlyAllowedCommands.add("SET_GLOBAL_FILTER_VALUE");
 readonlyAllowedCommands.add("SET_MANY_GLOBAL_FILTER_VALUE");
-readonlyAllowedCommands.add("UPDATE_OBJECT_DOMAINS");
 readonlyAllowedCommands.add("LOG_DATASOURCE_EXPORT");
 
 readonlyAllowedCommands.add("UPDATE_CHART_GRANULARITY");
 
+lockedSheetAllowedCommands.add("SET_GLOBAL_FILTER_VALUE");
+lockedSheetAllowedCommands.add("SET_MANY_GLOBAL_FILTER_VALUE");
 lockedSheetAllowedCommands.add("LOG_DATASOURCE_EXPORT");
 
 inverseCommandRegistry
