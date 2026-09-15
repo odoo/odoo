@@ -1,4 +1,7 @@
 from odoo import Command, api, models
+from odoo.libs.debug_log import DebugLog
+
+_debug = DebugLog(__name__)
 
 
 class PurchaseOrder(models.Model):
@@ -15,6 +18,12 @@ class PurchaseOrder(models.Model):
             if not order._is_dest_address_required():
                 continue
             shipping_addresses = order._get_sale_orders().partner_shipping_id
+            _debug.logic(
+                "dest_address_from_sale_orders",
+                order=order,
+                addresses=shipping_addresses,
+                applied=len(shipping_addresses) == 1,
+            )
             if len(shipping_addresses) == 1:
                 order.dest_address_id = shipping_addresses
 
@@ -31,10 +40,24 @@ class PurchaseOrderLine(models.Model):
 
     def _prepare_stock_move_vals_list(self, picking):
         res = super()._prepare_stock_move_vals_list(picking)
+        _debug.pipeline(
+            "move_vals_from_purchase_line",
+            line=self,
+            picking=picking,
+            moves=len(res),
+            sale_line=self.sale_line_id,
+        )
         for re in res:
             if self.sale_line_id and re.get("location_final_id"):
                 final_loc = self.env["stock.location"].browse(
                     re.get("location_final_id")
+                )
+                _debug.logic(
+                    "move_sale_line_link",
+                    line=self,
+                    location=final_loc,
+                    usage=final_loc.usage,
+                    linked=final_loc.usage in {"customer", "transit"},
                 )
                 if final_loc.usage in {"customer", "transit"}:
                     re["sale_line_id"] = self.sale_line_id.id
@@ -62,6 +85,12 @@ class PurchaseOrderLine(models.Model):
         if not values.get("move_dest_ids") and values.get("sale_line_id"):
             lines = self.filtered(
                 lambda po_line: po_line.sale_line_id.id == values["sale_line_id"]
+            )
+            _debug.logic(
+                "candidate_line_narrowed",
+                candidates=len(self),
+                matching=len(lines),
+                sale_line=values["sale_line_id"],
             )
             return super(PurchaseOrderLine, lines)._get_candidate(
                 product_id,
@@ -107,6 +136,12 @@ class PurchaseOrderLine(models.Model):
             company_id,
             values,
             po,
+        )
+        _debug.logic(
+            "procurement_line_sale_link",
+            product=product_id,
+            sale_line=values.get("sale_line_id", False),
+            linked=not values.get("move_dest_ids"),
         )
         if not values.get("move_dest_ids"):
             res["sale_line_id"] = values.get("sale_line_id", False)
