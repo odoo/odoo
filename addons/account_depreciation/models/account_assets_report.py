@@ -548,7 +548,7 @@ class AccountAssetReportHandler(models.AbstractModel):
                AND (asset.date_disposal >= %(date_from)s OR asset.date_disposal IS NULL)
                AND asset.depreciation_state IS NOT NULL
                AND (asset.depreciation_state not in ('draft', 'cancelled') OR (asset.depreciation_state = 'draft' AND %(include_draft)s))
-               AND asset.active = 't'
+               AND (asset.active = 't' OR asset.depreciation_state = 'close')
           GROUP BY asset.id, asset_company.currency_id, account_id, account_code, account_name
           ORDER BY account_code, asset.date_acquisition, asset.id;
             """,

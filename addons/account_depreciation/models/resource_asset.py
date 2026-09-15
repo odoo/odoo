@@ -32,6 +32,7 @@ BOARD_FIELDS = frozenset(
         "depreciation_state",
     }
 )
+RUNNING_BOARD = ("open", "paused")
 
 
 class ResourceAsset(models.Model):
@@ -278,6 +279,7 @@ class ResourceAsset(models.Model):
         comodel_name="resource.asset",
         inverse_name="increased_asset_id",
         string="Gross Increases",
+        context={"active_test": False},
     )
 
     value_depreciated_import = fields.Monetary(
@@ -357,8 +359,12 @@ class ResourceAsset(models.Model):
                 dates = asset.depreciation_move_ids.filtered(
                     lambda m: m.date and m.state != "cancel"
                 ).mapped("date")
-                asset.date_disposal = dates and max(
-                    [*dates, asset.date_acquisition or dates[0]]
+                asset.date_disposal = (
+                    max([*dates, asset.date_acquisition or dates[0]])
+                    if dates
+                    else asset.date_disposal
+                    or asset.date_acquisition
+                    or fields.Date.context_today(asset)
                 )
             elif asset.depreciation_state:
                 asset.date_disposal = False
@@ -895,6 +901,8 @@ class ResourceAsset(models.Model):
     )
 
     def write(self, vals):
+        if not self.env.context.get("board_lifecycle"):
+            self._check_lifecycle_write(vals)
         propagated = self.PROPAGATED_TO_MOVES & vals.keys()
         if not propagated:
             return super().write(vals)
@@ -1415,8 +1423,50 @@ class ResourceAsset(models.Model):
             for move_id in asset.original_move_line_ids.mapped("move_id"):
                 move_id.message_post(body=move_body)
 
+    def _check_lifecycle_write(self, vals):
+        if vals.get("state") == "disposed":
+            running = self.filtered(
+                lambda asset: asset.depreciation_state in RUNNING_BOARD
+            )
+            if running:
+                raise UserError(
+                    _(
+                        "%(assets)s: a running depreciation board is disposed through its Dispose or Sell action, which books the disposal entry.",
+                        assets=", ".join(running.mapped("display_name")),
+                    )
+                )
+        if vals.get("active"):
+            closed = self.filtered(
+                lambda asset: (
+                    asset.state == "disposed" and asset.depreciation_state == "close"
+                )
+            )
+            if closed:
+                raise UserError(
+                    _(
+                        "%(assets)s: the depreciation board is closed, so the asset stays disposed. Set the board running again to restore it.",
+                        assets=", ".join(closed.mapped("display_name")),
+                    )
+                )
+
+    def action_dispose(self):
+        running = self.filtered(lambda asset: asset.depreciation_state in RUNNING_BOARD)
+        if not running:
+            return super().action_dispose()
+        if len(self) == 1:
+            return self.action_asset_modify()
+        raise UserError(
+            _(
+                "%(assets)s: a running depreciation board is disposed one asset at a time, through its Dispose or Sell action.",
+                assets=", ".join(running.mapped("display_name")),
+            )
+        )
+
     def validate(self):
         self.write({"depreciation_state": "open"})
+        self.filtered(lambda asset: asset.state == "draft").write(
+            {"state": "in_service"}
+        )
         self._log_asset_created()
         try:
             with self.env.cr.savepoint():
@@ -1493,6 +1543,9 @@ class ResourceAsset(models.Model):
 
         full_asset._message_log_batch(
             bodies={asset.id: asset_body for asset in full_asset}
+        )
+        full_asset.with_context(board_lifecycle=True).write(
+            {"state": "disposed", "active": False}
         )
 
         selling_price = abs(
@@ -1598,7 +1651,10 @@ class ResourceAsset(models.Model):
             self.env["asset.modify"].create(
                 {"asset_id": self.id, "name": _("Reset to running")}
             ).modify()
-        self.write({"depreciation_state": "open", "value_gain_on_sale": 0})
+        vals = {"depreciation_state": "open", "value_gain_on_sale": 0}
+        if self.state == "disposed":
+            vals.update(state="in_service", date_disposal=False, active=True)
+        self.with_context(board_lifecycle=True).write(vals)
 
     def resume_after_pause(self):
         self.check_singleton()

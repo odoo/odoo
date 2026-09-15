@@ -80,6 +80,19 @@ class TestResourceAssetBoard(TestAccountAssetCommon):
         with self.assertRaises(AccessError):
             board.with_user(employee).read(["value_book"])
 
+    def test_an_asset_user_without_accounting_rights_creates_an_asset(self):
+        asset_user = new_test_user(
+            self.env,
+            login="asset_board_asset_user",
+            groups="base.group_user,resource_asset.group_asset_user",
+        )
+        van = (
+            self.env["resource.asset"]
+            .with_user(asset_user)
+            .create({"name": "Delivery van", "kind_id": self.vehicle.id})
+        )
+        self.assertFalse(van.sudo().depreciation_state)
+
     def test_a_gross_increase_is_a_component_and_an_increase_of_its_parent(self):
         today = fields.Date.today()
         asset = self.create_asset(

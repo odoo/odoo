@@ -69,6 +69,14 @@ def migrate(cr, version):
     profile_by_template = _create_profiles(env)
     if not profile_by_template:
         return
+    # On a jump past 1.4 the ORM never sees the renamed table, so the column 1.4
+    # carries onto each asset has to be made here.
+    cr.execute(
+        SQL(
+            "ALTER TABLE %s ADD COLUMN IF NOT EXISTS depreciation_profile_id int",
+            SQL.identifier(_table(cr)),
+        )
+    )
     mapping = SQL(
         "(VALUES %s) AS map(template_id, profile_id)",
         SQL(", ").join(

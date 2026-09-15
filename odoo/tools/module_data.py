@@ -75,8 +75,14 @@ def adopt_xmlids(
 def remove_xmlid_records(cr: BaseCursor, module: str, names: Iterable[str]) -> int:
     cr.execute(
         SQL(
-            "SELECT model, res_id FROM ir_model_data "
-            "WHERE module = %s AND name = ANY(%s)",
+            """
+            SELECT d.model, d.res_id FROM ir_model_data d
+             WHERE d.module = %s AND d.name = ANY(%s)
+               AND NOT EXISTS (
+                   SELECT 1 FROM ir_model_data other
+                    WHERE other.model = d.model AND other.res_id = d.res_id
+                      AND other.module != d.module)
+            """,
             module,
             list(names),
         )

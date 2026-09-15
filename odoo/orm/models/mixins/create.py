@@ -480,8 +480,10 @@ class CreateMixin(_ModelStubs):
                     for record, _vals, given in todo:
                         if given:
                             record._update_cache(given, validate=False)
+                    reads_as_su = bool(field.groups) and field.compute_sudo
                     for record, vals, _given in todo:
-                        vals[fname] = field.convert_to_write(record[fname], self)
+                        source = record.sudo() if reads_as_su else record
+                        vals[fname] = field.convert_to_write(source[fname], self)
                         vals["__precomputed__"].add(field)
             finally:
                 self._discard_precompute_scratch(records)

@@ -284,8 +284,8 @@ def _copy_board_columns(cr):
             UPDATE resource_asset asset
                SET state = CASE legacy.depreciation_state
                                WHEN 'close' THEN 'disposed'
-                               WHEN 'open' THEN CASE WHEN map.created THEN 'in_service' ELSE asset.state END
-                               WHEN 'paused' THEN CASE WHEN map.created THEN 'in_service' ELSE asset.state END
+                               WHEN 'open' THEN CASE WHEN map.created OR asset.state = 'draft' THEN 'in_service' ELSE asset.state END
+                               WHEN 'paused' THEN CASE WHEN map.created OR asset.state = 'draft' THEN 'in_service' ELSE asset.state END
                                ELSE asset.state
                            END
               FROM %(legacy)s legacy

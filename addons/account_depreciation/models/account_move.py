@@ -459,6 +459,7 @@ class AccountMoveLine(models.Model):
         column2="asset_id",
         string="Related Assets",
         copy=False,
+        context={"active_test": False},
     )
     non_deductible_tax_value = fields.Monetary(
         currency_field="company_currency_id",
