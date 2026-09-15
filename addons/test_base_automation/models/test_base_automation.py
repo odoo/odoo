@@ -49,6 +49,13 @@ class BaseAutomationLeadTest(models.Model):
             else:
                 record.deadline = record.create_date + relativedelta.relativedelta(days=3)
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        leads = super().create(vals_list)
+        if self.env.context.get('test_base_automation_read_stage_on_create'):
+            leads.mapped('stage_id')
+        return leads
+
     def write(self, vals):
         result = super().write(vals)
         # force recomputation of field 'deadline' via 'employee': the action
