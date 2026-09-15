@@ -164,8 +164,7 @@ def _get_settings_from_live_config() -> ServerSettings:
     import odoo.tools
 
     settings = ServerSettings.from_config(odoo.tools.config)
-    # Derived on every read, so a per-read event would only say "read"; the
-    # event is the change, and it names the fields that moved.
+    # Derived once per config change; the event names the fields that moved.
     if not _debug.lifecycle.enabled:
         return settings
     previous, _last_seen = _last_seen, settings  # debuglog
@@ -189,8 +188,25 @@ def _get_settings_from_live_config() -> ServerSettings:
     return settings
 
 
+def _get_live_inputs_version() -> object:
+    import odoo.tools
+
+    # Socket activation is read from the environment, not the option dict, so
+    # the two variables that decide it are part of the key.
+    return (
+        odoo.tools.config.generation,
+        os.getenv("LISTEN_FDS"),
+        os.getenv("LISTEN_PID"),
+    )
+
+
+# Derived once per change of its inputs, not per read; a key written after
+# boot still reaches the tier on the next read, and a test's override() or
+# installed() still wins.
 slot: SettingsSlot[ServerSettings] = SettingsSlot(
-    "odoo.service", _get_settings_from_live_config
+    "odoo.service",
+    _get_settings_from_live_config,
+    version=_get_live_inputs_version,
 )
 current = slot.current
 installed = slot.installed

@@ -45,3 +45,30 @@ class TestTheLiveConfigIsLoggedWhenItChanges:
         snapshot = server_settings.current()
         assert server_settings._last_seen == snapshot
         assert _events(caplog) == []
+
+
+class TestTheSnapshotIsDerivedOncePerChange:
+    def test_a_repeated_read_is_the_same_object(self):
+        assert server_settings.current() is server_settings.current()
+
+    def test_a_config_write_re_derives(self):
+        from odoo.tools import config
+
+        before = server_settings.current()
+        with patch.dict(config.options, {"workers": before.workers + 1}):
+            during = server_settings.current()
+            assert during is not before
+            assert during.workers == before.workers + 1
+        assert server_settings.current().workers == before.workers
+
+    def test_the_socket_activation_environment_is_part_of_the_key(self):
+        import os
+
+        before = server_settings.current()
+        with patch.dict(
+            os.environ, {"LISTEN_FDS": "1", "LISTEN_PID": str(os.getpid())}
+        ):
+            during = server_settings.current()
+            assert during is not before
+            assert during.http_socket_activation is True
+        assert server_settings.current().http_socket_activation is False
