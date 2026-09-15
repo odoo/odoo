@@ -10,6 +10,9 @@ class TestHasGroup(TransactionCase):
     def setUp(self):
         super().setUp()
 
+        # remove group_multi_currency, auto-granted since 2+ currencies are active
+        self.env.ref('base.group_user').sudo()._remove_group(self.env.ref('base.group_multi_currency'))
+
         self.group0 = 'test_user_has_group.group0'
         self.group1 = 'test_user_has_group.group1'
         group0, _group1 = self.env['res.groups']._load_records([

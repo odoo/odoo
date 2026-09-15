@@ -429,7 +429,8 @@ class TestEventSale(TestEventSaleCommon):
         currency_USD = _prepare_currency(self, 'USD')
         currency_VEF = _prepare_currency(self, 'VEF')
 
-        company_test = self.env['res.company'].create({
+        company_test = self.env.ref('base.test_company_template')
+        company_test.write({
             'name': 'TestCompany',
             'country_id': self.env.ref('base.be').id,
             'currency_id': currency_USD.id,

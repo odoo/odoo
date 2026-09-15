@@ -5,6 +5,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 class TestL10nHrEdiCommon(AccountTestInvoicingCommon):
 
     _test_user_groups = None  # FIXME list needed groups
+    country_code = 'hr'
 
     @classmethod
     def setUpClass(cls):
@@ -23,13 +24,6 @@ class TestL10nHrEdiCommon(AccountTestInvoicingCommon):
             'early_pay_discount_computation': 'mixed',
             'line_ids': [Command.create({'value': 'percent', 'value_amount': 100.0, 'nb_days': 30})],
         })
-
-    @classmethod
-    def _create_company(cls, **create_values):
-        # EXTENDS 'account'
-        create_values['currency_id'] = cls.env.ref('base.EUR').id
-        create_values['country_id'] = cls.env.ref('base.hr').id
-        return super()._create_company(**create_values)
 
     def setup_partner_as_hr(self, partner):
         partner.write({

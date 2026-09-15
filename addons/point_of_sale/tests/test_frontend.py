@@ -112,6 +112,10 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         cls.pos_user.partner_id.email = 'pos_user@test.com'
         cls.pos_admin.partner_id.email = 'pos_admin@test.com'
 
+        # drop stray payment methods (e.g. leftover delivery-provider ones), unlink not archive:
+        # archived ones are still loaded client-side and could get picked as "the first" method
+        env['pos.payment.method'].search([('company_id', '=', main_company.id)]).unlink()
+
         cls.bank_journal = journal_obj.create({
             'name': 'Bank Test',
             'type': 'bank',

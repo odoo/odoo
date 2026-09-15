@@ -74,7 +74,7 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
             "product_tag": 1,
             "product_template": 2,
             "product_template_attribute_line": 2,
-            "res_company": 2,
+            "res_company": 3,
             "res_currency": 1,
             "res_partner": 2,
             "res_users": 1,
@@ -82,7 +82,6 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
             "website_page": 1,
         })
         if self._has_demo_data():
-            res["res_company"] += 1
             if "website_sale_stock" in self.installed_modules:
                 res["product_template"] += 1
                 # Out of Stock Ribbon in demo data
@@ -121,7 +120,7 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
             "product_template": 3,
             "product_template_attribute_line": 2,
             "product_template_attribute_value": 4,
-            "res_company": 2,
+            "res_company": 3,
             "res_currency": 1,
             "res_partner": 2,
             "res_users": 1,
@@ -129,8 +128,6 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
             "website_page": 1,
             "website_sale_extra_field": 1,
         })
-        if self._has_demo_data():
-            res["res_company"] += 1
         if "website_helpdesk" in self.installed_modules:
             # Additional query used to check whether "Helpdesk" menu should be visible
             res["helpdesk_team"] += 1
@@ -149,9 +146,7 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
 
     @warmup
     def test_get_combination_info_route(self):
-        no_product_change_query_count = 30
-        if self._has_demo_data():
-            no_product_change_query_count += 1
+        no_product_change_query_count = 31
         if "website_sale_stock" in self.installed_modules:
             no_product_change_query_count += 1
         with self.assertQueryCount(no_product_change_query_count):
@@ -168,9 +163,7 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
 
         # When a new combination matches another product, additional templates and values are sent
         # to the client (tags, images, ...)
-        product_change_query_count = 42
-        if self._has_demo_data():
-            product_change_query_count += 1
+        product_change_query_count = 43
         if "website_sale_stock" in self.installed_modules:
             product_change_query_count += 1
         with self.assertQueryCount(product_change_query_count):
