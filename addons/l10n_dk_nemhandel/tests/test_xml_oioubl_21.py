@@ -1,4 +1,5 @@
 from freezegun import freeze_time
+from lxml import etree
 from requests import PreparedRequest, Response, Session
 from unittest.mock import patch
 
@@ -255,6 +256,33 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
         self.env.company.partner_id.street = 'Paradisæblevej'
         with self.assertRaisesRegex(UserError, "The following partner's street number is missing"):
             self.create_post_and_send_invoice()
+
+    @freeze_time('2017-01-01')
+    def test_oioubl_export_foreign_partner_without_building_number(self):
+        """ A street number is a Danish requirement, and a foreign address has no
+            reason to carry one: it is reported with the address format that does
+            not demand it, and the export goes through.
+        """
+        self.partner_b.street = 'Rue du Paradis'  # remove the street number
+        invoice = self.create_post_and_send_invoice(partner=self.partner_b)
+        self.assertTrue(invoice.ubl_cii_xml_id)
+        customer_party = etree.fromstring(invoice.ubl_cii_xml_id.raw).find('.//{*}AccountingCustomerParty')
+        self.assertEqual(
+            {node.text.strip() for node in customer_party.iter('{*}AddressFormatCode')},
+            {'StructuredLax'},
+        )
+
+    @freeze_time('2017-01-01')
+    def test_oioubl_export_foreign_partner_without_nemhandel_identifier(self):
+        """ A partner outside Denmark gets no Nemhandel identifier type, and there is
+            no scheme to report an identification under without one, so the node is
+            not reported at all.
+        """
+        self.partner_b.nemhandel_identifier_type = False
+        invoice = self.create_post_and_send_invoice(partner=self.partner_b)
+        self.assertTrue(invoice.ubl_cii_xml_id)
+        customer_party = etree.fromstring(invoice.ubl_cii_xml_id.raw).find('.//{*}AccountingCustomerParty')
+        self.assertIsNone(customer_party.find('.//{*}PartyIdentification'))
 
     @freeze_time('2017-01-01')
     def test_export_partner_fr_without_siret_should_raise_an_error(self):
