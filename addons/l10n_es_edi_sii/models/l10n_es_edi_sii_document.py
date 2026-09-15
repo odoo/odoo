@@ -263,6 +263,13 @@ class L10nEsEdiSiiDocument(models.Model):
 
             except requests.exceptions.SSLError:
                 return response_for_documents(False, {'response_message': self.env._("The SSL certificate could not be validated.")})
+            # If the receiver intentionally rejects the message, he migth return a Fault
+            except zeep.exceptions.Fault as soapfault:
+                return response_for_documents(False, {'response_message': self.env._(
+                    "Fault error:\n[%(code)s] %(message)s",
+                    code=soapfault.code,
+                    message=soapfault.message
+                )})
             except (zeep.exceptions.Error, requests.exceptions.ConnectionError) as error:
                 return response_for_documents(False, {'response_message': self.env._("Networking error:\n%s", error)})
             except Exception as error:  # noqa: BLE001
