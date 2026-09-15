@@ -1393,6 +1393,7 @@ test("Delete record with side-effect compute to insert it should have resulting 
     expect(discussApp.state.thread).toBe(undefined);
 });
 
+<<<<<<< 10b648651e393ba9d4c6f4d733d5b4e1a250edae
 test("side-effect of double deletion of record should work as expected with no crash'", async () => {
     (class Channel extends Record {
         static id = "name";
@@ -1442,6 +1443,58 @@ test("side-effect of double deletion of record should work as expected with no c
     expect(suggestions.exists()).toBe(false);
 });
 
+||||||| 14715a6d439a68c58251c067f92448fc6ece7b45
+=======
+test("side-effect of double deletion of record should work as expected with no crash'", async () => {
+    (class Channel extends Record {
+        static id = "name";
+        name;
+        correspondent = Record.one("Member", {
+            compute() {
+                return this.members[0];
+            },
+        });
+        members = Record.many("Member", {
+            onDelete: (r) => r.delete(),
+        });
+        parent = Record.one("Channel", {
+            onDelete() {
+                this.delete(); // important: triggers double-deletion when deleting sub-thread.
+            },
+        });
+        threads = Record.many("Channel", { inverse: "parent" });
+    }).register(localRegistry);
+    (class Member extends Record {
+        static id = "partner";
+        partner = Record.one("Partner");
+        channel = Record.one("Channel", { inverse: "members" });
+    }).register(localRegistry);
+    (class Partner extends Record {
+        static id = "name";
+        name;
+    }).register(localRegistry);
+    const store = await start();
+    const general = store.Channel.insert("general");
+    const suggestions = store.Channel.insert("Suggestions");
+    suggestions.parent = general;
+    const mitchell = store.Partner.insert("Mitchell");
+    const marc = store.Partner.insert("Marc");
+    const joel = store.Partner.insert("Joel");
+    general.members.push({ partner: mitchell });
+    general.members.push({ partner: marc });
+    general.members.push({ partner: joel });
+    suggestions.members.push({ partner: mitchell });
+    const reactiveGeneral = reactive(general, render);
+    function render() {
+        // Important: observe computed field `correspondent` lazily to trigger internal onChange
+        void reactiveGeneral?.threads.forEach((t) => t.correspondent?.partner.name);
+    }
+    render();
+    suggestions.delete();
+    expect(suggestions.exists()).toBe(false);
+});
+
+>>>>>>> fb859d92755c22512a47af553c3797536731aff6
 test("Record exists is reactive", async () => {
     (class Thread extends Record {
         static id = "name";
