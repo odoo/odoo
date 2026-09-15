@@ -56,8 +56,21 @@ def get_cache_miss_from_storage(
     field: Field, record: BaseModel, env: Environment, record_id
 ):
     recs = field._to_prefetch(record)
+    transaction = env.transaction
+
+    def _batch() -> None:
+        if len(recs) == 1:
+            recs._fetch_field(field)
+            return
+        outer = transaction.prefetch_batch
+        transaction.prefetch_batch = (recs._name, recs._ids)
+        try:
+            recs._fetch_field(field)
+        finally:
+            transaction.prefetch_batch = outer
+
     _run_batch_then_single(
-        lambda: recs._fetch_field(field),
+        _batch,
         lambda: record._fetch_field(field),
         recs,
         catching=(AccessError,),

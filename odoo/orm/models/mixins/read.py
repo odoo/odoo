@@ -3,7 +3,7 @@ import typing
 from collections import deque
 from typing import Self
 
-from odoo.exceptions import MissingError
+from odoo.exceptions import AccessError, MissingError
 from odoo.libs.accel import batch_cache_fill as _batch_cache_fill
 from odoo.libs.debug_log import DebugLog
 from odoo.libs.profiling import _OrmProfile
@@ -27,6 +27,10 @@ if typing.TYPE_CHECKING:
 _logger = logging.getLogger("odoo.models")
 _orm_read = logging.getLogger("odoo.orm.read")
 _debug = DebugLog(__name__)
+
+
+class PrefetchBatchDenied(AccessError):
+    pass
 
 
 class ReadMixin(_ModelStubs):
@@ -375,12 +379,21 @@ class ReadMixin(_ModelStubs):
             field_names, ignore_when_in_cache=True
         )
 
+        in_prefetch_batch = self.env.transaction.prefetch_batch == (
+            self._name,
+            self._ids,
+        )
         if any(field.column_type for field in fields_to_fetch):
             query = self._search([("id", "in", self.ids)], active_test=False)
         else:
             try:
-                self.check_access("read")
+                if not in_prefetch_batch:
+                    self.check_access("read")
+                elif not self.env.su and self._check_access("read"):
+                    raise PrefetchBatchDenied(self._name)
             except MissingError:
+                if in_prefetch_batch:
+                    raise PrefetchBatchDenied(self._name) from None
                 before = len(self)  # debuglog
                 self = self.exists()
                 _debug.logic(
@@ -421,6 +434,8 @@ class ReadMixin(_ModelStubs):
         )
 
         if fetched != self:
+            if in_prefetch_batch:
+                raise PrefetchBatchDenied(self._name)
             forbidden = (self - fetched).exists()
             _debug.logic(
                 "read.fetch.short",

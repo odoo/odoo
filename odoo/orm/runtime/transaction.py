@@ -90,6 +90,7 @@ class Transaction:
         "default_env",
         "envs",
         "observers",
+        "prefetch_batch",
         "registry",
         "unit_of_work",
     )
@@ -129,6 +130,7 @@ class Transaction:
 
         self.cache = Cache(self)
         self._ref_cache: dict[tuple[str, int], bool] = {}
+        self.prefetch_batch: tuple[str, tuple] | None = None
 
         self.observers: tuple[OrmObserver, ...] = enabled_observers()
         _debug.lifecycle(
