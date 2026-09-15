@@ -207,6 +207,16 @@ class TestResourceAsset(TransactionCase):
         meter.invalidate_recordset()
         self.assertEqual(meter.value, 900)
 
+    def test_identifier_columns_read_and_write_the_identifier_rows(self):
+        truck = self._truck(license_plate="ABC-123", vin_sn="1HGCM82633A004352")
+        self.assertEqual(truck.get_identifier("plate"), "ABC-123")
+        self.assertFalse(truck.missing_identifier_type_ids)
+        truck.license_plate = "XYZ-987"
+        self.assertEqual(truck.get_identifier("plate"), "XYZ-987")
+        truck.vin_sn = False
+        self.assertEqual(truck.missing_identifier_type_ids, self.vin)
+        self.assertEqual(self.Asset.search([("license_plate", "=", "XYZ-987")]), truck)
+
     def test_the_odometer_is_the_odometer_meter_latest_reading(self):
         truck = self._truck()
         self.assertFalse(truck.odometer_meter_id)

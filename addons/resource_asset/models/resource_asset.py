@@ -4,6 +4,14 @@ from odoo.fields import Domain
 from odoo.tools import SQL
 from odoo.tools.translate import html_translate
 
+IDENTIFIER_CODE_BY_FIELD = {
+    "license_plate": "plate",
+    "vin_sn": "vin",
+    "engine_sn": "engine",
+    "cadastral_id": "cadastral",
+    "imei": "imei",
+}
+
 
 class ResourceAsset(models.Model):
     _name = "resource.asset"
@@ -85,6 +93,55 @@ class ResourceAsset(models.Model):
         comodel_name="resource.asset.identifier",
         inverse_name="asset_id",
     )
+    license_plate = fields.Char(
+        compute="_compute_identifier_columns",
+        inverse="_inverse_identifier_columns",
+        store=True,
+        copy=False,
+        readonly=False,
+        tracking=True,
+        help="License plate number of the asset (eg plate number for a car)",
+    )
+    vin_sn = fields.Char(
+        string="Serial Number / VIN",
+        compute="_compute_identifier_columns",
+        inverse="_inverse_identifier_columns",
+        store=True,
+        copy=False,
+        readonly=False,
+        tracking=True,
+        help="Unique number written on an asset's chassis (VIN/SN number).",
+    )
+    engine_sn = fields.Char(
+        string="Engine Serial Number",
+        compute="_compute_identifier_columns",
+        inverse="_inverse_identifier_columns",
+        store=True,
+        copy=False,
+        readonly=False,
+        tracking=True,
+        help="Unique number written on the asset's engine.",
+    )
+    cadastral_id = fields.Char(
+        string="Cadastral ID",
+        compute="_compute_identifier_columns",
+        inverse="_inverse_identifier_columns",
+        store=True,
+        copy=False,
+        readonly=False,
+        tracking=True,
+        help="Government-assigned parcel identifier for real estate assets.",
+    )
+    imei = fields.Char(
+        string="IMEI",
+        compute="_compute_identifier_columns",
+        inverse="_inverse_identifier_columns",
+        store=True,
+        copy=False,
+        readonly=False,
+        tracking=True,
+        help="International Mobile Equipment Identity of a cellular-capable asset.",
+    )
     missing_identifier_type_ids = fields.Many2many(
         comodel_name="resource.asset.identifier.type",
         compute="_compute_missing_identifier_type_ids",
@@ -152,6 +209,42 @@ class ResourceAsset(models.Model):
     def _compute_odometer(self):
         for asset in self:
             asset.odometer = asset.odometer_meter_id.value
+
+    @api.depends("identifier_ids.value", "identifier_ids.type_id")
+    def _compute_identifier_columns(self):
+        for asset in self:
+            by_code = {i.type_id.code: i.value for i in asset.identifier_ids}
+            for field_name, code in IDENTIFIER_CODE_BY_FIELD.items():
+                asset[field_name] = by_code.get(code, False)
+
+    def _inverse_identifier_columns(self):
+        types = {
+            identifier_type.code: identifier_type
+            for identifier_type in self.env["resource.asset.identifier.type"]
+            .sudo()
+            .search([("code", "in", list(IDENTIFIER_CODE_BY_FIELD.values()))])
+        }
+        identifier_model = self.env["resource.asset.identifier"].sudo()
+        for asset in self:
+            by_type = {i.type_id: i for i in asset.sudo().identifier_ids}
+            for field_name, code in IDENTIFIER_CODE_BY_FIELD.items():
+                identifier_type = types.get(code)
+                if not identifier_type:
+                    continue
+                value = asset[field_name]
+                current = by_type.get(identifier_type)
+                if value and current and current.value != value:
+                    current.value = value
+                elif value and not current:
+                    identifier_model.create(
+                        {
+                            "asset_id": asset.id,
+                            "type_id": identifier_type.id,
+                            "value": value,
+                        }
+                    )
+                elif not value and current:
+                    current.unlink()
 
     @api.depends("identifier_ids.type_id", "kind_id.identifier_type_ids")
     def _compute_missing_identifier_type_ids(self):
