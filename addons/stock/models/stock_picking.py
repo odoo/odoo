@@ -562,7 +562,7 @@ class StockPicking(models.Model):
         for picking in self:
             if picking.state in ('done', 'cancel'):
                 picking.validate_button_style = 'invisible'
-            if picking.state in ('waiting', 'assigned'):
+            elif picking.state in ('waiting', 'assigned'):
                 picking.validate_button_style = 'primary'
             else:
                 picking.validate_button_style = 'secondary'
