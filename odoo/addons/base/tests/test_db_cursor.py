@@ -5563,20 +5563,14 @@ class TestPartitionedTablesAreVisible(BaseCase):
 
     def test_every_relkind_the_kind_enum_names_is_admitted_as_existing(self):
         named = {k.value for k in sql_schema.TableKind if k.value} - {"t"}
-        cr = db_connect(common.get_db_name()).cursor()
-        try:
-            cr.execute("SELECT 1")
-            src = inspect.getsource(sql_schema.get_tables_existing)
-            for relkind in self.assertSweep(sorted(named)):
-                self.assertIn(
-                    f'"{relkind}"',
-                    src,
-                    f"TableKind names relkind {relkind!r} but get_tables_existing "
-                    f"does not admit it, so get_table_kind and table_exists "
-                    f"disagree about that relation",
-                )
-        finally:
-            cr.close()
+        for relkind in self.assertSweep(sorted(named)):
+            self.assertIn(
+                relkind,
+                sql_schema._EXISTING_RELKINDS,
+                f"TableKind names relkind {relkind!r} but get_tables_existing "
+                f"does not admit it, so get_table_kind and table_exists "
+                f"disagree about that relation",
+            )
 
 
 class TestDdlDrainsSiblingConnections(BaseCase):

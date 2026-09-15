@@ -347,6 +347,10 @@ def create_column(
 def convert_column(
     cr: BaseCursor, tablename: str, columnname: str, columntype: str
 ) -> None:
+    # Every scope that builds SQL from the type guards it itself (test_lint E8501
+    # reads the guard per function); _convert_column checks again for its callers.
+    if not _SQL_TYPE_TOKEN.fullmatch(columntype):
+        raise _refuse_column_type(columntype, tablename, columnname)
     using = SQL("%s::%s", SQL.identifier(columnname), SQL(columntype))
     _convert_column(cr, tablename, columnname, columntype, using)
 
