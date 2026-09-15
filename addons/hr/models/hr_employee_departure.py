@@ -37,13 +37,14 @@ class HrEmployeeDeparture(models.Model):
     departure_date = fields.Date(string="Departure Date", compute="_compute_departure_date",
         store=True, readonly=False, help="Date at which the departure actually takes place.")
     action_date = fields.Date(string="Archive Employee On", compute="_compute_action_date",
-        store=True, help="Date at which the departure actually takes place.")
+        store=True, help="Date at which the employee is archived.")
     is_user_employee = fields.Boolean(
         compute='_compute_is_user_employee',
         export_string_translation=False,
     )
     apply_immediately = fields.Boolean(compute="_compute_apply_immediately")
     apply_date = fields.Date(readonly=True)
+    activity_plan_ids = fields.Many2many("mail.activity.plan", string="Activity Plans")
 
     @api.depends('dismissal_date')
     def _compute_departure_date(self):
@@ -113,6 +114,16 @@ class HrEmployeeDeparture(models.Model):
                 lambda v: v.contract_date_start == version.contract_date_start
                 and v.contract_date_end == version.contract_date_end,
             ).write({"departure_id": departure.id})
+            for plan in departure.activity_plan_ids:
+                wizard = self.env['mail.activity.schedule'].with_context(
+                    plan_mode=True,
+                    active_model='hr.employee',
+                    active_ids=departure.employee_id.ids,
+                ).create({
+                    'plan_id': plan.id,
+                    'plan_date': fields.Date.today(),
+                })
+                wizard.action_schedule_plan()
         return res
 
     def _cron_apply_departure(self):
