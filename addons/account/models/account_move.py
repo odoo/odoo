@@ -6649,7 +6649,6 @@ class AccountMove(models.Model):
             'type': 'ir.actions.act_window',
             'res_model': 'account.move.line',
             'target': 'current',
-            'context': dict(self.env.context),
             'views': [(False, 'list')],
             'domain': [('move_id', '=', self.id), ('display_type', 'not in', ('line_section', 'line_subsection', 'line_note'))],
         }
