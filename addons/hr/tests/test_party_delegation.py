@@ -1,3 +1,5 @@
+from psycopg import IntegrityError
+
 from odoo import Command
 from odoo.exceptions import AccessError
 from odoo.tests import TransactionCase, tagged
@@ -39,20 +41,17 @@ class TestPartyDelegation(TransactionCase):
         )
         self.assertEqual(self.env.cr.fetchone()[0], 0)
 
-    def test_linking_a_user_leaves_a_squatter_with_a_fresh_party(self):
+    def test_an_employee_on_a_users_contact_is_that_users(self):
         user = self.env["res.users"].create(
             {"name": "Party User", "login": "party_user"}
         )
-        squatter = self.env["hr.employee"].create(
-            {"name": "Party Squatter", "partner_id": user.partner_id.id}
+        employee = self.env["hr.employee"].create(
+            {"name": "Party User", "partner_id": user.partner_id.id}
         )
-        owner = self.env["hr.employee"].create(
-            {"name": "Party Owner", "user_id": user.id}
-        )
-        self.assertEqual(owner.partner_id, user.partner_id)
-        self.assertTrue(squatter.partner_id)
-        self.assertNotEqual(squatter.partner_id, user.partner_id)
-        self.assertEqual(squatter.partner_id.name, "Party Squatter")
+        self.assertEqual(employee.user_id, user)
+        self.assertEqual(employee.resource_id.user_id, user)
+        with self.assertRaises(IntegrityError), self.cr.savepoint():
+            self.env["hr.employee"].create({"name": "Party Owner", "user_id": user.id})
 
     def test_a_user_rename_reaches_the_employee_without_a_sync(self):
         user = self.env["res.users"].create(

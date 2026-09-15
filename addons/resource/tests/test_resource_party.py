@@ -1,5 +1,6 @@
 from psycopg import IntegrityError
 
+from odoo import Command
 from odoo.tests import TransactionCase, tagged
 
 
@@ -122,3 +123,47 @@ class TestResourceParty(TransactionCase):
         self.assertFalse(user.partner_id.tz)
         resource.tz = "Europe/Madrid"
         self.assertFalse(user.partner_id.tz)
+
+    def test_a_human_resource_takes_its_partys_login(self):
+        partner = self.env["res.partner"].create({"name": "Login Owner"})
+        resource = self.env["resource.resource"].create({"partner_id": partner.id})
+        self.assertFalse(resource.user_id)
+        user = self.env["res.users"].create(
+            {"name": "Login Owner", "login": "login_owner", "partner_id": partner.id}
+        )
+        self.assertEqual(resource.user_id, user)
+        user.active = False
+        self.assertEqual(resource.user_id, user)
+
+    def test_a_portal_login_or_two_logins_leave_the_user_empty(self):
+        partner = self.env["res.partner"].create({"name": "Many Logins"})
+        resource = self.env["resource.resource"].create({"partner_id": partner.id})
+        portal = self.env.ref("base.group_portal")
+        self.env["res.users"].create(
+            {
+                "name": "Many Logins",
+                "login": "many_logins_portal",
+                "partner_id": partner.id,
+                "group_ids": [Command.set(portal.ids)],
+            }
+        )
+        self.assertFalse(resource.user_id)
+        self.env["res.users"].create(
+            [
+                {
+                    "name": "Many Logins",
+                    "login": f"many_logins_{n}",
+                    "partner_id": partner.id,
+                }
+                for n in range(2)
+            ]
+        )
+        self.assertFalse(resource.user_id)
+
+    def test_a_material_resource_keeps_the_user_it_is_given(self):
+        user = self.env["res.users"].create({"name": "Keeper", "login": "keeper"})
+        lathe = self.env["resource.resource"].create(
+            {"name": "Lathe 3", "resource_type": "material", "user_id": user.id}
+        )
+        self.assertEqual(lathe.user_id, user)
+        self.assertFalse(lathe.partner_id)

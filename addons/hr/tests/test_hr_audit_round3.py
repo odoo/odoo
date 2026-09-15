@@ -52,23 +52,18 @@ class TestHrAuditRound3(TestHrCommon):
         self.assertEqual(here.user_id, user)
         self.assertEqual(there.user_id, user)
 
-    def test_remove_work_contact_id_on_create_without_company(self):
+    def test_a_contact_given_a_login_links_its_employee(self):
+        employee = self.Employee.create({"name": "Hired Before Login"})
         user = self.env["res.users"].create(
-            {"name": "Shared Partner", "login": "shared_partner_r3"}
+            {
+                "name": "Hired Before Login",
+                "login": "hired_before_login",
+                "partner_id": employee.partner_id.id,
+            }
         )
-        squatter = self.Employee.create(
-            {"name": "Squatter", "partner_id": user.partner_id.id}
-        )
-        self.assertEqual(squatter.partner_id, user.partner_id)
-
-        self.Employee.create({"name": "Real Owner", "user_id": user.id})
-
-        self.assertNotEqual(
-            squatter.partner_id,
-            user.partner_id,
-            "the userless employee must lose the partner now claimed by a user",
-        )
-        self.assertEqual(squatter.partner_id.name, "Squatter")
+        self.assertEqual(employee.user_id, user)
+        user.active = False
+        self.assertEqual(employee.user_id, user)
 
     def test_department_subscription_covers_every_written_employee(self):
         dept_a = self.env["hr.department"].create({"name": "R3 A"})

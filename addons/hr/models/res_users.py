@@ -458,6 +458,20 @@ class ResUsers(models.Model):
             self.id,
             self.env.company.id,
         )
+        person = (
+            self.env["hr.employee"]
+            .with_context(active_test=False)
+            .search(
+                [
+                    ("partner_id", "=", self.partner_id.id),
+                    ("company_id", "=", self.env.company.id),
+                ],
+                limit=1,
+            )
+        )
+        if person:
+            person.user_id = self
+            return
         self.env["hr.employee"].create(
             dict(
                 name=self.name,

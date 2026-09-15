@@ -7,7 +7,7 @@ from string import digits
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
-from odoo import Command, api, fields, models, tools
+from odoo import api, fields, models, tools
 from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.libs.datetime import localize_standard, timezone
@@ -861,7 +861,6 @@ class HrEmployee(models.Model):
                     vals.get("partner_id"),
                     vals.get("name"),
                 )
-                self._remove_work_contact_id(user, vals.get("company_id"))
             vals_per_company[vals.get("company_id") or self.env.company.id].append(
                 (idx, vals)
             )
@@ -1067,7 +1066,6 @@ class HrEmployee(models.Model):
                 dbg.rec(self),
                 vals.get("partner_id"),
             )
-            self._remove_work_contact_id(user_to_sync, vals.get("company_id"))
         if vals.get("department_id") or vals.get("user_id"):
             department_ids = (
                 [vals["department_id"]]
@@ -3160,45 +3158,6 @@ class HrEmployee(models.Model):
             for employee, values in zip(self, data, strict=True):
                 values["work_phone"] = employee.phone_ids._primary().number
         return data
-
-    def _remove_work_contact_id(self, user, employee_company=None):
-        if not user:
-            return
-        if employee_company:
-            companies = {employee_company}
-        else:
-            companies = set(self.mapped("company_id").ids) or {self.env.company.id}
-        squatters = user.partner_id.employee_ids.filtered(
-            lambda e: not e.user_id and e.company_id.id in companies and e not in self
-        )
-        if not squatters:
-            return
-        dbg.pipeline.debug(
-            "[user:%s] party %s squatted by %s in companies %s: giving them fresh "
-            "parties",
-            user.id,
-            user.partner_id.id,
-            dbg.rec(squatters),
-            sorted(companies),
-        )
-        fresh = (
-            self.env["res.partner"]
-            .sudo()
-            .create(
-                [
-                    {
-                        "name": employee.name,
-                        "email": employee.work_email,
-                        "phone_ids": [Command.set(employee.phone_ids.ids)],
-                    }
-                    for employee in squatters
-                ]
-            )
-        )
-        for employee, partner in zip(squatters, fresh, strict=True):
-            employee.partner_id = partner
-        self.env["hr.employee"].flush_model(["partner_id"])
-        self.env["resource.resource"].flush_model(["partner_id"])
 
     def _update_missing_avatars(self):
         if not self.env["ir.ui.view"].sudo(False).has_access("write"):

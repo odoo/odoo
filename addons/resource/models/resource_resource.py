@@ -62,8 +62,12 @@ class ResourceResource(models.Model):
     )
     user_id = fields.Many2one(
         comodel_name="res.users",
+        compute="_compute_user_id",
+        precompute=True,
+        store=True,
+        readonly=False,
         index="btree_not_null",
-        help="Related user name for the resource to manage its access.",
+        help="The login of the person this resource is: their party's internal user. Choosing another user makes the resource that user's person.",
     )
     avatar_128 = fields.Image(compute="_compute_avatar_128")
     share = fields.Boolean(related="user_id.share")
@@ -351,6 +355,21 @@ class ResourceResource(models.Model):
     def _compute_name(self):
         for resource in self:
             resource.name = resource.partner_id.name or resource.name
+
+    @api.depends(
+        "resource_type", "partner_id.user_ids.active", "partner_id.user_ids.share"
+    )
+    def _compute_user_id(self):
+        for resource in self:
+            if resource.resource_type != "user":
+                resource.user_id = resource.user_id
+                continue
+            users = resource.partner_id.sudo().with_context(active_test=False).user_ids
+            if resource.user_id in users:
+                resource.user_id = resource.user_id
+                continue
+            logins = users.filtered(lambda user: user.active and not user.share)
+            resource.user_id = logins.id if len(logins) == 1 else False
 
     def _inverse_name(self):
         for resource in self.filtered("partner_id"):
