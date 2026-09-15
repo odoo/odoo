@@ -543,6 +543,20 @@ class IrModuleModule(models.Model):
                 timeout=5.0,
             )
             resp.raise_for_status()
+            company = self.env.company
+            if country := company.country_id:
+                code = country.code.lower()
+                l10n_industry_module_name = f"l10n_{code}_{module_name}"
+                try:
+                    l10n_resp = requests.get(
+                        f"{APPS_URL}/loempia/download/data_app/{l10n_industry_module_name}/{major_version}",
+                        timeout=5.0,
+                    )
+                    l10n_resp.raise_for_status()
+                except (requests.exceptions.HTTPError, requests.exceptions.ConnectionError):
+                    pass
+                else:
+                    resp = l10n_resp
             missing_dependencies_description, unavailable_modules = self._get_missing_dependencies(resp.content)
             if unavailable_modules:
                 raise UserError(missing_dependencies_description)
