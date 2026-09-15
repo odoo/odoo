@@ -488,6 +488,19 @@ class StorageBackend(typing.Protocol):
         offset: int,
     ) -> list[tuple]: ...
 
+    def read_grouping_sets_rows(
+        self,
+        model: BaseModel,
+        select: SQL,
+        *,
+        domain: Domain,
+        query: Query,
+        grouping_sets: typing.Sequence[typing.Sequence[str]],
+        groupby_terms: typing.Mapping[str, SQL],
+        aggregates: typing.Sequence[str],
+        order: str | None,
+    ) -> list[tuple]: ...
+
     def get_existing_ids(
         self, model: BaseModel, ids: typing.Iterable[int]
     ) -> set[int]: ...
@@ -1116,6 +1129,20 @@ class PostgresBackend:
         order: str | None,
         limit: int | None,
         offset: int,
+    ) -> list[tuple]:
+        return model.env.execute_query(select)
+
+    def read_grouping_sets_rows(
+        self,
+        model: BaseModel,
+        select: SQL,
+        *,
+        domain: Domain,
+        query: Query,
+        grouping_sets: typing.Sequence[typing.Sequence[str]],
+        groupby_terms: typing.Mapping[str, SQL],
+        aggregates: typing.Sequence[str],
+        order: str | None,
     ) -> list[tuple]:
         return model.env.execute_query(select)
 

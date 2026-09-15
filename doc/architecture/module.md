@@ -434,7 +434,7 @@ and of the locale goes through the six port objects named under **Seams**; the
 `fields/properties.py`, the import converter and the module list in
 `mixins/load.py`, `res.currency.rate` in `read_group/sql.py`, the in-memory
 reflection in `model_test_env.py` and `registration.py`) and are frozen by
-`odoo/orm/tests/test_architecture_pins.py`, which also freezes the nine
+`odoo/orm/tests/test_architecture_pins.py`, which also freezes the seven
 statements the models, fields and domain layers still execute themselves (DDL
 and schema in `mixins/schema.py` and `fields/_field_ddl.py`, read_group's
 grouping sets and its empty-having probe). Both maps may shrink and must not
@@ -521,7 +521,7 @@ and the transient vacuum's backlog probe moved onto the port and
 | Measure | Value | What it counts |
 |---|---:|---|
 | declared capabilities | 0 | a backend answers every question of the protocol itself; a site that branched on what the backend could do was a site the backend now owns |
-| dispatch sites | 28 across 19 files, 7 in Layer 1 | every `env.backend.<method>(` in the models, fields and domain |
+| dispatch sites | 29 across 20 files, 7 in Layer 1 | every `env.backend.<method>(` in the models, fields and domain |
 | protocol methods without a caller | 0 | every `StorageBackend` method is dispatched from the ORM or from a base model spelling `env.backend.` |
 
 What used to branch now calls the port: a many2many read is `read_m2m_groups`

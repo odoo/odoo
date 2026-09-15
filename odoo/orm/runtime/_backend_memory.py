@@ -21,7 +21,7 @@ from psycopg.errors import (
 from odoo.exceptions import LockError, UserError
 from odoo.libs.accel import fast_clone
 from odoo.libs.debug_log import DebugLog
-from odoo.tools import SQL, OrderedSet, Query, get_lang, partition
+from odoo.tools import SQL, OrderedSet, Query, get_lang, partition, unique
 from odoo.tools.translate import _
 
 from ..components.storage import NamedSequence
@@ -785,6 +785,26 @@ class _InMemoryReadGroup:
         return terms
 
 
+def _order_within_grouping_set(
+    order: str | None,
+    present: typing.Sequence[str],
+    aggregates: typing.Sequence[str],
+    all_specs: typing.Sequence[str],
+) -> str | None:
+    # an order term on a groupby the set lacks sorts a NULL column: nothing
+    if not order:
+        return None
+    kept = []
+    for part in order.split(","):
+        match = regex_order_part_read_group.fullmatch(part)
+        if not match:
+            raise ValueError(f"Invalid order {order!r} for _read_grouping_sets()")
+        term = match["term"]
+        if term in present or term in aggregates or term not in all_specs:
+            kept.append(part.strip())
+    return ", ".join(kept) or None
+
+
 class _ForeignKeyPlan:
     __slots__ = ("backend", "m2m_rows", "nulls", "registry", "rows")
 
@@ -1168,6 +1188,62 @@ class InMemoryBackend:
         return _InMemoryReadGroup(model, domain, groupby, aggregates).rows(
             having, order, limit, offset
         )
+
+    def read_grouping_sets_rows(
+        self,
+        model: BaseModel,
+        select: SQL,
+        *,
+        domain: Domain,
+        query: Query,
+        grouping_sets: typing.Sequence[typing.Sequence[str]],
+        groupby_terms: typing.Mapping[str, SQL],
+        aggregates: typing.Sequence[str],
+        order: str | None,
+    ) -> list[tuple]:
+        # one row per group of every set, shaped as GROUPING SETS answers: the
+        # GROUPING() mask first (a bit per distinct term, set when the term is
+        # absent from the set), then every groupby column (NULL when absent),
+        # then the aggregates; each set sorted on its own by the order terms it
+        # carries, as the SQL sort leaves the absent columns NULL
+        all_specs = list(groupby_terms)
+        mask_by_term = {
+            term: 1 << index
+            for index, term in enumerate(reversed(list(unique(groupby_terms.values()))))
+        }
+        rows: list[tuple] = []
+        seen: set[frozenset] = set()
+        for grouping_set in grouping_sets:
+            terms = frozenset(groupby_terms[spec] for spec in grouping_set)
+            if terms in seen:
+                # SQL groups a set given twice once; the mixin copies its rows
+                continue
+            seen.add(terms)
+            # a spec compiling to a term the set carries groups the same rows
+            present = [spec for spec in all_specs if groupby_terms[spec] in terms]
+            mask = sum(m for term, m in mask_by_term.items() if term not in terms)
+            set_order = _order_within_grouping_set(
+                order, present, aggregates, all_specs
+            )
+            group = _InMemoryReadGroup(model, domain, present, aggregates)
+            for row in group.rows(None, set_order, None, 0):
+                values = dict(zip(present, row[: len(present)], strict=True))
+                rows.append(
+                    (
+                        mask,
+                        *(values.get(spec) for spec in all_specs),
+                        *row[len(present) :],
+                    )
+                )
+        _debug.pipeline(
+            "backend.memory.grouping_sets",
+            model=model._name,
+            sets=len(grouping_sets),
+            groupby=len(all_specs),
+            aggregates=len(aggregates),
+            rows=len(rows),
+        )
+        return rows
 
     def get_existing_ids(self, model: BaseModel, ids: typing.Iterable[int]) -> set[int]:
         return set(self.storage.get_existing_ids(model._table, list(ids)))

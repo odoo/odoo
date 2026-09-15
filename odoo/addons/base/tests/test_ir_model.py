@@ -693,6 +693,26 @@ class TestIrModelFields(TransactionCase):
         )
         return self.env[model.model], field
 
+    def test_a_stored_compute_added_to_a_table_with_rows_is_computed_for_them(self):
+        Model, _field = self._make_manual_field("newcol", ttype="integer")
+        rows = Model.create([{"x_newcol": 2}, {"x_newcol": 5}])
+        rows.flush_recordset()
+        self.env["ir.model.fields"].create(
+            {
+                "name": "x_double",
+                "field_description": "Double",
+                "model_id": self.env["ir.model"]._get(Model._name).id,
+                "ttype": "integer",
+                "store": True,
+                "depends": "x_newcol",
+                "compute": "for r in self:\n    r['x_double'] = r['x_newcol'] * 2",
+            }
+        )
+        self.env.flush_all()
+        self.assertEqual(
+            self.env[Model._name].browse(rows.ids).mapped("x_double"), [4, 10]
+        )
+
     def test_empty_write_skips_registry_setup(self):
         _model, field = self._make_manual_field("empty")
         with patch.object(self.env.registry, "setup_models") as mock_setup:

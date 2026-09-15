@@ -143,7 +143,7 @@ Test organization, tagging strategy, and execution reference for `odoo/addons/ba
 | `test_ir_filters.py` | `post_install`, `-at_install`, `migration` | 8 | 32 | FiltersCase, TransactionCase |
 | `test_ir_job.py` | `post_install`, `-at_install` | 8 | 114 | TransactionCase, BaseCase |
 | `test_ir_logging.py` | `post_install`, `-at_install` | 3 | 7 | TransactionCase |
-| `test_ir_model.py` | `-at_install`, `post_install`, `test_eval_context` | 14 | 131 | TransactionCase, HttpCase |
+| `test_ir_model.py` | `-at_install`, `post_install`, `test_eval_context` | 14 | 132 | TransactionCase, HttpCase |
 | `test_ir_model_data.py` | `post_install`, `-at_install` | 2 | 5 | TransactionCase |
 | `test_mixin_merge.py` | `post_install`, `-at_install` | 1 | 5 | TransactionCase |
 | `test_module_data_remove_xmlid_records.py` | `post_install`, `-at_install` | 1 | 2 | TransactionCase |

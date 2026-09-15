@@ -9,6 +9,7 @@ from odoo.libs.debug_log import DebugLog
 from odoo.tools import SQL, format_list, ormcache
 
 from ... import decorators as api
+from ...domain import Domain
 from ...validation import check_object_name
 from ._model_stubs import _ModelStubs
 
@@ -124,16 +125,14 @@ class SchemaMixin(_ModelStubs):
 
     @ormcache()
     def _has_rows_in_table(self) -> bool:
-        self.env.cr.execute(
-            SQL("SELECT 1 FROM %s LIMIT 1", SQL.identifier(self._table))
-        )
+        has_rows = self.env.backend.has_rows_beyond(self, 0)
         _debug.perf.count(
             "schema.rows_probed",
             model=self._name,
             table=self._table,
-            rows=bool(self.env.cr.rowcount),
+            rows=has_rows,
         )
-        return bool(self.env.cr.rowcount)
+        return has_rows
 
     def _auto_init(self) -> None:
         check_object_name(self._name)
@@ -223,9 +222,11 @@ class SchemaMixin(_ModelStubs):
             self._update_parent_path_of_table()
 
     def _schedule_new_column_computes(self, fields_to_compute: list) -> None:
-        cr = self.env.cr
-        cr.execute(SQL("SELECT id FROM %s", SQL.identifier(self._table)))
-        records = self.browse(row[0] for row in cr.fetchall())
+        records = self.browse(
+            self.with_context(active_test=False)
+            ._search(Domain.TRUE, bypass_access=True)
+            .get_result_ids()
+        )
         _debug.pipeline(
             "schema.new_column_computes_scheduled",
             model=self._name,

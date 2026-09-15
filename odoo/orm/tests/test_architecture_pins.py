@@ -33,9 +33,8 @@ BASE_MODEL_REACHES = {
 # statements the models, fields and domain layers still execute themselves;
 # everything else goes through env.backend and its ports
 EXECUTED_STATEMENTS = {
-    "models/mixins/schema.py": 4,
+    "models/mixins/schema.py": 2,
     "fields/_field_ddl.py": 3,
-    "models/mixins/read_group/mixin.py": 2,
 }
 
 # either quote: the one site that spelled env['ir.model'] inside an f-string

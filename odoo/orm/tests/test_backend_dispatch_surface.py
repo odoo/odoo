@@ -9,7 +9,7 @@ from odoo.orm.runtime._backend_memory import InMemoryBackend
 _ORM_DIR = pathlib.Path(__file__).resolve().parent.parent
 
 # Every place the ORM chooses between the SQL path and env.backend. The surface
-# has grown to twenty-eight sites across nineteen files
+# has grown to thirty sites across twenty files
 # -- including seven in Layer 1, where a field reaches the backend directly
 # rather than through a model mixin. Each entry says what the in-memory branch
 # does NOT do, so a site marked LOSSY is a known gap, not an oversight.
@@ -36,6 +36,10 @@ DISPATCH_SITES: dict[tuple[str, str], str] = {
         "equivalent: the rows that exist are incremented and counted; SKIP "
         "LOCKED has nothing to skip in memory, where no other transaction holds "
         "a row"
+    ),
+    ("models/mixins/schema.py", "_has_rows_in_table"): (
+        "equivalent: has_rows_beyond(model, 0) on both tiers -- LIMIT 1 on "
+        "PostgreSQL, the row count in memory"
     ),
     ("models/transient.py", "_remove_transient_rows_over_count"): (
         "equivalent: OFFSET n LIMIT 1 on PostgreSQL, the table's row count in "
@@ -109,7 +113,17 @@ DISPATCH_SITES: dict[tuple[str, str], str] = {
         "the Locale port picks as the SQL subquery does), having, an explicit "
         "order (an aggregate term outside the selection is computed for the "
         "sort alone, as the SQL path selects it), limit and offset, and raises "
-        "NotImplementedError for an order by an array aggregate"
+        "NotImplementedError for an order by an array aggregate; the "
+        "empty-having probe of a query matching nothing goes through the same "
+        "method, PostgreSQL counting over WHERE FALSE and memory aggregating "
+        "over no record, the having clause deciding on both"
+    ),
+    ("models/mixins/read_group/mixin.py", "_read_grouping_sets"): (
+        "equivalent: PostgresBackend runs the GROUPING SETS statement; "
+        "InMemoryBackend groups once per set through the in-memory read_group, "
+        "each set sorted by the order terms it carries, and shapes the rows as "
+        "SQL does -- the GROUPING() mask, every groupby column (NULL when the "
+        "set lacks it), the aggregates -- so the mixin dispatches them unchanged"
     ),
     ("models/mixins/traversal.py", "_has_cycle"): (
         "equivalent: the reachability CTE over the relation on PostgreSQL, the "
@@ -281,6 +295,8 @@ _NUMBER_WORDS = {
     "twenty-six": 26,
     "twenty-seven": 27,
     "twenty-eight": 28,
+    "twenty-nine": 29,
+    "thirty": 30,
 }
 
 

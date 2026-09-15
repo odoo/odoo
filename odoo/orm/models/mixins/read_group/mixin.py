@@ -166,17 +166,22 @@ class ReadGroupMixin(_ReadGroupSQLMixin, _ReadGroupFormatMixin, _ReadGroupFillMi
             grouping_select_sql = SQL("0")
 
         query.order = self._read_group_orderby(order, groupby_terms, query)
-        grouping_sets_sql = [
-            SQL(
+        # one GROUPING SETS entry per distinct set of terms: a set given twice,
+        # in the same or another order, would be grouped twice by PostgreSQL
+        # and both results would carry the rows twice
+        grouping_sets_sql = {
+            frozenset(
+                groupby_terms[groupby_spec] for groupby_spec in grouping_set
+            ): SQL(
                 "(%s)",
                 SQL(", ").join(
                     groupby_terms[groupby_spec] for groupby_spec in grouping_set
                 ),
             )
-            for grouping_set in grouping_sets
-        ]
+            for grouping_set in reversed(grouping_sets)
+        }
         query.groupby = SQL(
-            "GROUPING SETS (%s)", SQL(", ").join(unique(grouping_sets_sql))
+            "GROUPING SETS (%s)", SQL(", ").join(reversed(grouping_sets_sql.values()))
         )
         return groupby_terms, [
             grouping_select_sql,
@@ -251,7 +256,16 @@ class ReadGroupMixin(_ReadGroupSQLMixin, _ReadGroupFormatMixin, _ReadGroupFillMi
             query, grouping_sets, all_groupby_specs, aggregates, order
         )
 
-        row_values = self.env.execute_query(query.select(*select_args))
+        row_values = self.env.backend.read_grouping_sets_rows(
+            self,
+            query.select(*select_args),
+            domain=domain,
+            query=query,
+            grouping_sets=grouping_sets,
+            groupby_terms=groupby_terms,
+            aggregates=aggregates,
+            order=order,
+        )
         _debug.perf.count(
             "read_group.grouping_sets_rows",
             model=self._name,
@@ -315,8 +329,6 @@ class ReadGroupMixin(_ReadGroupSQLMixin, _ReadGroupFormatMixin, _ReadGroupFillMi
             range(len(all_groupby_specs), len(all_groupby_specs) + len(aggregates))
         )
 
-        mask_grouping_mapping = {}
-
         mask_sql_mapping = {
             sql_groupby: 1 << i
             for i, sql_groupby in enumerate(
@@ -324,7 +336,10 @@ class ReadGroupMixin(_ReadGroupSQLMixin, _ReadGroupFormatMixin, _ReadGroupFillMi
             )
         }
 
-        mask_grouping_result_indexes = defaultdict(list)
+        # every set sharing a mask receives the same rows, each through its
+        # own extractor: two sets naming the same terms in another order
+        # answer the same groups with their own column order
+        dispatch_by_mask: defaultdict[int, list[tuple]] = defaultdict(list)
         for result_index, groupby in enumerate(grouping_sets):
             sql_terms = {groupby_terms[groupby_spec] for groupby_spec in groupby}
             groupby_mask = sum(
@@ -332,10 +347,8 @@ class ReadGroupMixin(_ReadGroupSQLMixin, _ReadGroupFormatMixin, _ReadGroupFillMi
                 for sql_term, mask in mask_sql_mapping.items()
                 if sql_term not in sql_terms
             )
-
-            mask_grouping_result_indexes[groupby_mask].append(result_index)
-            if groupby_mask not in mask_grouping_mapping:
-                mask_grouping_mapping[groupby_mask] = (
+            dispatch_by_mask[groupby_mask].append(
+                (
                     result[result_index].append,
                     get_tuple_itemgetter(
                         list(
@@ -349,10 +362,11 @@ class ReadGroupMixin(_ReadGroupSQLMixin, _ReadGroupFormatMixin, _ReadGroupFillMi
                         )
                     ),
                 )
+            )
 
         aggregates_start_index = len(all_groupby_specs) + 1
         columns: list = list(zip(*row_values, strict=False))
-        dispatch_info = map(mask_grouping_mapping.__getitem__, columns[0])
+        dispatch_info = map(dispatch_by_mask.__getitem__, columns[0])
         columns = [
             *map(
                 self._read_group_postprocess_groupby,
@@ -368,26 +382,17 @@ class ReadGroupMixin(_ReadGroupSQLMixin, _ReadGroupFormatMixin, _ReadGroupFillMi
             ),
         ]
 
-        for (append_method, extractor), *row in zip(
-            dispatch_info, *columns, strict=True
-        ):
-            append_method(extractor(row))
+        for targets, *row in zip(dispatch_info, *columns, strict=True):
+            for append_method, extractor in targets:
+                append_method(extractor(row))
 
-        duplicated_sets = 0  # debuglog
-        for duplicate_groups_indexes in mask_grouping_result_indexes.values():
-            if len(duplicate_groups_indexes) < 2:
-                continue
-            source_result_group = result[duplicate_groups_indexes[0]]
-            for duplicate_group_index in duplicate_groups_indexes[1:]:
-                result[duplicate_group_index] = source_result_group[:]
-                duplicated_sets += 1  # debuglog
-
+        duplicated_sets = sum(len(targets) - 1 for targets in dispatch_by_mask.values())
         _debug.pipeline(
             "read_group.grouping_sets.dispatched",
             model=self._name,
             rows=len(row_values),
             grouping_sets=len(grouping_sets),
-            distinct_masks=len(mask_grouping_mapping),
+            distinct_masks=len(dispatch_by_mask),
             duplicated_sets=duplicated_sets,
         )
         return result
@@ -414,12 +419,26 @@ class ReadGroupMixin(_ReadGroupSQLMixin, _ReadGroupFormatMixin, _ReadGroupFillMi
             self._check_read_group_spec_access(groupby, aggregates, query)
             if not groupby:
                 if having:
+                    # the aggregate row over no record, kept or dropped by the
+                    # having clause as SQL decides it
                     empty_query = Query(self.env, self._table, self._table_sql)
                     empty_query.add_where(SQL("FALSE"))
                     empty_query.having = self._read_group_having(
                         list(having), empty_query
                     )
-                    if not self.env.execute_query(empty_query.select(SQL("COUNT(*)"))):
+                    empty_rows = self.env.backend.read_group_rows(
+                        self,
+                        empty_query.select(SQL("COUNT(*)")),
+                        domain=domain,
+                        query=empty_query,
+                        groupby=(),
+                        aggregates=aggregates,
+                        having=having,
+                        order=None,
+                        limit=None,
+                        offset=0,
+                    )
+                    if not empty_rows:
                         return []
                 return [
                     tuple(
