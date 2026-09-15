@@ -52,8 +52,7 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                         'The total average cost can only be applied to products valued with the standard cost method.',
                     ),
                 )
-            # the closing that makes an evaluated period final leaves a real time
-            # valuation out of its entry, so nothing would protect what is written here
+            # a closing leaves a real time valuation out, so nothing would protect this
             if real_time := products.filtered(lambda p: p.valuation != 'periodic'):
                 raise UserError(
                     self.env._(
@@ -127,8 +126,8 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                             purchases_qty += qty
                             purchases_val += self._get_acquisition_value(move, qty)
                         elif returned_move and self._move_date_local(returned_move) >= self.date_from:
-                            # unlike stock below, these goods are in no opening quantity, so with
-                            # no origin there is neither a period to remove them from nor a price
+                            # never in stock, so with no origin there is no period to take them
+                            # out of, and no price to do it at
                             returns_qty += qty
                             returns_val += self._get_acquisition_value(returned_move, qty)
                     elif (origin_usage in ('supplier', 'transit') and dest_usage == 'internal'):
@@ -161,9 +160,8 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                                 if move.price_unit:
                                     purchases_val += self._get_acquisition_value(move, remaining)
                                 else:
-                                    # nothing links it to the sale it undoes and nothing priced it,
-                                    # so leave it out of both, which is what taking it back in at
-                                    # the cost the period settles on would come to
+                                    # unlinked and unpriced: leaving it out of both is what
+                                    # taking it back at the settled average comes to
                                     purchases_qty -= remaining
                 opening_cost = opening_values[product].value if product in opening_values else product.standard_price
                 init_val = init_qty * opening_cost
@@ -195,7 +193,7 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                     else:
                         unchanged_count += 1
             if batch_revalued:
-                # the issues leave at the average it produced (施行令28条1項1号ハ), which the batch above reads
+                # the issues leave at the average it produced (施行令28条1項1号ハ)
                 # sudo: replaying the valuation writes the value of every move it covers
                 batch_revalued.sudo()._correct_inventory_valuation(period_start)
         if updated_count and unchanged_count:
