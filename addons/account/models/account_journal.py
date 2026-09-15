@@ -842,7 +842,7 @@ class AccountJournal(models.Model):
         return bool(_generated_code_pattern(prefixes).fullmatch(code))
 
     @api.model
-    def _get_type_defaults(self, journal_type, company):
+    def _prepare_type_defaults(self, journal_type, company):
         defaults = {
             "default_account_id": False,
             "profit_account_id": False,
@@ -886,7 +886,7 @@ class AccountJournal(models.Model):
         for journal in self:
             if self._is_generated_code(journal.code):
                 journal.code = False
-            journal.update(self._get_type_defaults(journal.type, journal.company_id))
+            journal.update(self._prepare_type_defaults(journal.type, journal.company_id))
 
         self.env.add_to_compute(self._fields["code"], self)
 
@@ -1392,7 +1392,7 @@ class AccountJournal(models.Model):
                 )
 
         for journal in journals_changing_type:
-            defaults = self._get_type_defaults(journal.type, journal.company_id)
+            defaults = self._prepare_type_defaults(journal.type, journal.company_id)
             journal.update(
                 {fname: value for fname, value in defaults.items() if fname not in vals}
             )
@@ -1742,7 +1742,7 @@ class AccountJournal(models.Model):
                 or self._get_default_name(journal_type, vals.get("code"))
             )
 
-        for fname, value in self._get_type_defaults(journal_type, company).items():
+        for fname, value in self._prepare_type_defaults(journal_type, company).items():
             if value:
                 vals.setdefault(fname, value)
 
