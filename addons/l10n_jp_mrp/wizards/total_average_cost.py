@@ -89,11 +89,10 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
             finished_moves = production.move_finished_ids.filtered(
                 lambda m: m.state == 'done' and m.product_id == production.product_id,
             )
-            finished_qty = sum(finished_moves.mapped('quantity_product_uom'))
             total_cost = abs(sum(production.move_raw_ids.mapped('value')))
             # only the time the period itself paid for, like every other input
             total_cost += production.workorder_ids._cal_cost(period_end)
-            total_cost += production.extra_cost * finished_qty
+            total_cost += self._get_extra_cost(production, finished_moves)
             byproduct_share = sum(
                 product_moves[0].cost_share for product_moves in byproducts_by_product.values()
             )
@@ -101,3 +100,24 @@ class L10nJpTotalAverageCostWizard(models.TransientModel):
                 allocate(product_moves, total_cost * product_moves[0].cost_share / 100)
             allocate(finished_moves, total_cost * (1 - byproduct_share / 100))
         return values
+
+    def _get_extra_cost(self, production, finished_moves):
+        """
+        Return what an order charged on top of its components and its labour.
+
+        A subcontractor's fee is frozen into ``extra_cost`` when the order is marked
+        done, so the bill that follows the goods never reaches it. The receipt that
+        fee was estimated off does carry the bill, so price it there instead.
+        """
+        move_fields = self.env['stock.move']._fields
+        # a fee is only ever billed where the receipt is bought on an order
+        billable = 'is_subcontract' in move_fields and 'purchase_line_id' in move_fields
+        total = 0.0
+        for move in finished_moves:
+            qty = move.quantity_product_uom
+            receipt = billable and move.move_dest_ids.filtered(
+                lambda m: m.state == 'done' and m.is_subcontract and m.purchase_line_id,
+            ).sorted('create_date', reverse=True)[:1]
+            # nobody bills an order made in house, its extra cost is the one stated on it
+            total += self._get_acquisition_value(receipt, qty) if receipt else production.extra_cost * qty
+        return total
