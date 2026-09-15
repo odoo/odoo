@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="pos_order_receipt" inherit_id="point_of_sale.pos_order_receipt">
+        <div name="before-footer" position="after">
+            <div t-if="extra_data.get('sii_ticket_name')" class="text-center">
+                <t t-if="not conditions.get('has_account_move')">Simplified </t>Invoice: <t t-out="extra_data['sii_ticket_name']"/>
+            </div>
+        </div>
+    </template>
+</odoo>
