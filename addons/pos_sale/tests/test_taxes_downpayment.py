@@ -101,6 +101,32 @@ class TestTaxesDownPaymentPOS(TestTaxCommonPOS, TestTaxCommonSale, TestTaxesDown
             round_globally_included_tests[0],
         ])
 
+    def test_pos_settle_downpayment_with_fixed_and_percent_taxes_included(self):
+        taxes = self.env['account.tax'].create([{
+            'name': '20 incl',
+            'amount': 20,
+            'price_include_override': 'tax_included',
+        }, {
+            'name': '1 fixed incl',
+            'amount_type': 'fixed',
+            'amount': 1,
+            'price_include_override': 'tax_included',
+        }])
+        product = self.create_base_line_product({'price_unit': 100.0, 'tax_ids': taxes}, name='product_dp')
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({'product_id': product.id, 'product_uom_qty': 1.0})],
+        })
+        sale_order.action_confirm()
+        self.assertEqual(sale_order.amount_total, 100.0)
+
+        self.start_pos_tour('test_pos_settle_downpayment_with_fixed_and_percent_taxes_included')
+
+        downpayment_invoice_line = sale_order.pos_order_line_ids.order_id.account_move.invoice_line_ids.filtered(
+            lambda line: line.product_id == self.main_pos_config.down_payment_product_id
+        )
+        self.assertEqual(downpayment_invoice_line.price_total, -20.0)
+
     def test_taxes_l10n_be_pos(self):
         tests = self._test_taxes_l10n_be()
         round_per_line_excluded_tests = [next(tests) for _i in range(19)]
