@@ -988,8 +988,7 @@ test("multiline notes use the native text field", async () => {
     expect(queryAllTexts(".o_data_row")).toInclude("this is a note\non 2 lines");
 });
 
-// Will be fixed in odoo/odoo#287378
-test.skip("sections with required content field", async () => {
+test("sections with required content field", async () => {
     await mountView({
         type: "form",
         resModel: "invoice",
