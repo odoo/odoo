@@ -238,3 +238,50 @@ class TestGiftCardCommunication(TestPointOfSaleHttpCommon):
             messages_after, messages_before,
             "No message should be posted when there's no customer",
         )
+
+    def test_updated_gift_card_is_sent_and_printed(self):
+        """Test that an updated gift card with remaining balance is sent and printed."""
+        self.main_pos_config.open_ui()
+
+        gift_card = self.env['loyalty.card'].create({
+            'program_id': self.gift_card_program.id,
+            'partner_id': self.test_partner.id,
+            'code': 'TEST-GIFT-CARD-002',
+            'points': 50,
+        })
+        reward = self.gift_card_program.reward_ids[0]
+        pos_order = self.env['pos.order'].create({
+            'config_id': self.main_pos_config.id,
+            'session_id': self.main_pos_config.current_session_id.id,
+            'partner_id': self.test_partner.id,
+            'lines': [Command.create({
+                'product_id': self.env.ref('loyalty.gift_card_product_50').id,
+                'price_unit': -20,
+                'qty': 1,
+                'price_subtotal': -20.0,
+                'price_subtotal_incl': -20.0,
+                'reward_id': reward.id,
+                'card_id': gift_card.id,
+                'is_reward_line': True,
+            })],
+            'amount_paid': 20.0,
+            'amount_total': 20.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+        })
+
+        pos_order._process_loyalty()
+
+        self.assertEqual(gift_card.points, 30)
+        mail = self.env['mail.mail'].search([
+            ('model', '=', 'loyalty.card'),
+            ('res_id', '=', gift_card.id),
+        ], order='id desc', limit=1)
+
+        self.assertTrue(mail, "An email should be created for the updated gift card")
+        result = pos_order.read_pos_data([], self.main_pos_config)
+        gift_card_data = next(
+            card for card in result['loyalty.card']
+            if card['id'] == gift_card.id
+        )
+        self.assertEqual(gift_card_data['_pos_report_print_id'], self.gift_card_program.pos_report_print_id.id)
