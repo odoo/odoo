@@ -1189,6 +1189,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         state_id = partner_sudo.state_id.id
 
         address_fields = country_sudo and country_sudo.get_address_fields() or ['city', 'zip']
+        show_company_registry = country_sudo.code == 'FR' if country_sudo else False
 
         return {
             'website_sale_order': order_sudo,
@@ -1220,6 +1221,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 )
             ),
             'vat_label': request.env._("VAT"),
+            'show_company_registry': show_company_registry,
         }
 
     @route(
@@ -2280,6 +2282,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'states': [(st.id, st.name, st.code) for st in country.sudo().state_ids],
             'phone_code': country.phone_code,
             'required_fields': list(required_fields),
+            'show_company_registry': country.code == 'FR',
         }
 
     # --------------------------------------------------------------------------
