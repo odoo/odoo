@@ -127,6 +127,7 @@ export class IconPlugin extends Plugin {
                 id: "icon_replace",
                 groupId: "icon_replace",
                 commandId: "replaceIcon",
+                takesFocus: true,
                 icon: "image",
             },
         ],

@@ -32,6 +32,7 @@ export class DynamicFieldPlugin extends Plugin {
                 groupId: "dynamic_field",
                 namespaces: ["compact", "expanded"],
                 commandId: "editDynamicField",
+                takesFocus: true,
             },
         ],
         user_commands: [
@@ -132,14 +133,17 @@ export class DynamicFieldPlugin extends Plugin {
 
     async editField() {
         if (!this.resModel) {
-            return this.services.notification.add(
+            this.services.notification.add(
                 _t("Oops! Select a model for this template before editing fields."),
                 { type: "danger" }
             );
+            this.dependencies.selection.focusEditable();
+            return;
         }
 
         const target = this.getPopoverTarget(true);
         if (!target) {
+            this.dependencies.selection.focusEditable();
             return;
         }
 

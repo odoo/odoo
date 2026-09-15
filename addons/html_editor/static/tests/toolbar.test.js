@@ -238,6 +238,58 @@ test("should move focus from toolbar to editable on escape", async () => {
     expect(el).toBeFocused();
 });
 
+test("clicking a toolbar button restores the focus to the editable", async () => {
+    class TestPlugin extends Plugin {
+        static id = "TestPlugin";
+        resources = {
+            user_commands: { id: "test_cmd", run: () => null },
+            toolbar_groups: withSequence(24, { id: "test_group" }),
+            toolbar_items: [
+                {
+                    id: "test_btn",
+                    groupId: "test_group",
+                    commandId: "test_cmd",
+                    description: "Test Button",
+                    icon: "fa-square",
+                    namespaces: ["compact", "expanded"],
+                },
+            ],
+        };
+    }
+    const { el } = await setupEditor("<p>[test]</p>", {
+        config: { includePlugins: [TestPlugin] },
+    });
+    await contains(".o-we-toolbar .btn[name='test_btn']").click();
+    expect(el).toBeFocused();
+});
+
+test("a toolbar button with takesFocus does not restore the focus to the editable", async () => {
+    class TestPlugin extends Plugin {
+        static id = "TestPlugin";
+        resources = {
+            user_commands: { id: "test_cmd", run: () => null },
+            toolbar_groups: withSequence(24, { id: "test_group" }),
+            toolbar_items: [
+                {
+                    id: "test_btn",
+                    groupId: "test_group",
+                    commandId: "test_cmd",
+                    description: "Test Button",
+                    icon: "fa-square",
+                    namespaces: ["compact", "expanded"],
+                    takesFocus: true,
+                },
+            ],
+        };
+    }
+    const { el } = await setupEditor("<p>[test]</p>", {
+        config: { includePlugins: [TestPlugin] },
+    });
+    await contains(".o-we-toolbar .btn[name='test_btn']").click();
+    expect(el).not.toBeFocused();
+    expect(".o-we-toolbar .btn[name='test_btn']").toBeFocused();
+});
+
 test.tags("desktop");
 test("pressing Escape closes dropdown and returns focus to dropdown button, then editable", async () => {
     const { el } = await setupEditor("<p>[test]</p>");

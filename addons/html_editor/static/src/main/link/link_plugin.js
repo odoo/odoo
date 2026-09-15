@@ -257,6 +257,7 @@ export class LinkPlugin extends Plugin {
                 description: _t("Insert link (Ctrl + K)"),
                 groupId: "link",
                 commandId: "openLinkPopover",
+                takesFocus: true,
                 isActive: isLinkActive,
                 isDisabled: (sel, nodes) =>
                     !this.isLinkAllowedOnSelection() || nodes.some((node) => !isStylable(node)),
@@ -271,6 +272,7 @@ export class LinkPlugin extends Plugin {
                 id: "link",
                 groupId: "image_link",
                 commandId: "openLinkPopover",
+                takesFocus: true,
                 isActive: isLinkActive,
                 isDisabled: (sel, nodes) =>
                     !this.isLinkAllowedOnSelection() || nodes.some((node) => !isStylable(node)),
